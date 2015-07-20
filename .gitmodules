@@ -1,0 +1,3 @@
+[submodule "geostore"]
+	path = geostore
+	url = https://github.com/geosolutions-it/geostore
