@@ -8,6 +8,12 @@ MapStore 2 has several example applications:
 
 MapStore 2 is based on OpenLayers 3, Leaflet and ReactJS, and is licensed under the GPLv3 license.
 
+Clone: 
+
+Remember to clone with --recursive option to automatically clone submodules.
+	  
+i.e. git clone --recursive https://github.com/geosolutions-it/MapStore2.git
+
 Build:
 
 mvn clean install -Pgeostore,extjs,postgres,h2_disk
