@@ -11,7 +11,7 @@ MapStore 2 is based on OpenLayers 3, Leaflet and ReactJS, and is licensed under 
 Quick Start:
 ------------
 
-Clone the repository with --the recursive option to automatically clone submodules:
+Clone the repository with the --recursive option to automatically clone submodules:
 
 `git clone --recursive https://github.com/geosolutions-it/MapStore2.git`
 
@@ -20,6 +20,7 @@ Install NodeJS, if needed, from [here](https://nodejs.org/).
 Start the demo locally:
 
 `npm install`
+
 `npm start`
 
 Install latest Maven, if needed, from [here](https://maven.apache.org/download.cgi) (version 3.1.0 is required).
@@ -29,3 +30,5 @@ Build the deployable war:
 `./build.sh`
 
 Deploy the generated mapstore.war file (in web/target) to your favourite J2EE container (e.g. Tomcat).
+
+Read more on the [wiki](https://github.com/geosolutions-it/MapStore2/wiki).

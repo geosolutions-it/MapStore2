@@ -36,6 +36,7 @@
     "server:reload": "live-server --port=8081 --open=web/index.html",
     "start": "parallelshell \"npm run watch\" \"npm run server:reload\"",
     "test": "karma start",
+    "continuoustest": "karma start --singleRun=false",
     "mvntest": "karma start --reporters junit,dots"
   },
   "author": "GeoSolutions",
