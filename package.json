@@ -2,6 +2,7 @@
   "name": "mapstore2",
   "version": "0.0.1",
   "description": "MapStore 2",
+  "repository": "https://github.com/geosolutions-it/MapStore2",
   "main": "index.js",
   "devDependencies": {
     "expect": "^1.6.0",
@@ -20,7 +21,8 @@
     "karma-sourcemap-loader": "^0.3.3",
     "karma-webpack": "^1.5.0",
     "karma-junit-reporter": "^0.3.1",
-    "webpack": "^1.5.3"
+    "webpack": "^1.5.3",
+    "mkdirp": "^0.5.1"
   },
   "dependencies": {
     "jquery" : "^1.11.3",
@@ -28,9 +30,9 @@
     "react": "^0.13.3"
   },
   "scripts": {
-    "watch": "mkdir -p ./web/dist && watchify -t babelify ./web/examples/viewer/app.jsx -o ./web/dist/viewer.js -v -d",
+    "watch": "mkdirp ./web/dist && watchify -t babelify ./web/examples/viewer/app.jsx -o ./web/dist/viewer.js -v -d",
     "clean": "rm -Rf ./web/dist",
-    "compile": "npm run clean && cd web && mkdir dist && cd .. && browserify -t babelify web/examples/viewer/app.jsx -o web/dist/viewer.js",
+    "compile": "npm run clean && mkdirp ./web/dist && browserify -t babelify web/examples/viewer/app.jsx -o web/dist/viewer.js",
     "server:reload": "live-server --port=8081 --open=web/index.html",
     "start": "parallelshell \"npm run watch\" \"npm run server:reload\"",
     "test": "karma start",
