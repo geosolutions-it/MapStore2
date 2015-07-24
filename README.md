@@ -5,6 +5,8 @@ MapStore 2 is a framework to build *web mapping* applications using standard map
 MapStore 2 has several example applications: 
  * MapViewer is a simple viewer of preconfigured maps (optionally stored in a database using GeoStore)
  * MapPublisher has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents by server like OpenStreetMap, Google Maps, MapQuest or specific servers provided by your organization or third party. 
+ 
+For more information check the [MapStore wiki](https://github.com/geosolutions-it/MapStore2/wiki).
 
 License
 ------------
