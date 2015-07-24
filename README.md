@@ -10,7 +10,7 @@ For more information check the [MapStore wiki](https://github.com/geosolutions-i
 
 License
 ------------
-MapStore 2 is Free and Open Source software, it is based on OpenLayers 3, Leaflet and [ReactJS](https://facebook.github.io/react/), and is licensed under the GPLv3 license.
+MapStore 2 is Free and Open Source software, it is based on OpenLayers 3, Leaflet and [ReactJS](https://facebook.github.io/react/), and is licensed under the BSD license.
 
 Quick Start
 ------------
