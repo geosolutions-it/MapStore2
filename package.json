@@ -21,24 +21,27 @@
     "karma-sourcemap-loader": "^0.3.3",
     "karma-webpack": "^1.5.0",
     "karma-junit-reporter": "^0.3.1",
-    "webpack": "^1.5.3",
+    "webpack": "^1.8.5",
+    "webpack-dev-server": "^1.7.0",
     "mkdirp": "^0.5.1"
   },
   "dependencies": {
-    "jquery" : "^1.11.3",
     "leaflet" : "^0.7.3",
     "react": "^0.13.3"
   },
   "scripts": {
-    "watch": "mkdirp ./web/dist && watchify -t babelify ./web/examples/viewer/app.jsx -o ./web/dist/viewer.js -v -d",
+    "watch": "mkdirp ./web/dist && webpack --watch --devtool inline-source-map --display-error-details",
+    "watchbrowserify": "mkdirp ./web/dist && watchify -t babelify ./web/examples/viewer/app.jsx -o ./web/dist/viewer.js -v -d",
     "clean": "rm -Rf ./web/dist",
-    "compile": "npm run clean && mkdirp ./web/dist && browserify -t babelify web/examples/viewer/app.jsx -o web/dist/viewer.js",
+    "compilebrowserify": "npm run clean && mkdirp ./web/dist && browserify -t babelify web/examples/viewer/app.jsx -o web/dist/viewer.js",
+    "compile": "npm run clean && mkdirp ./web/dist && webpack",
     "server:reload": "live-server --port=8081 --open=web/index.html",
-    "start": "parallelshell \"npm run watch\" \"npm run server:reload\"",
+    "start": "webpack-dev-server --progress --colors --port 8081 --content-base web/",
+    "oldstart": "parallelshell \"npm run watch\" \"npm run dev-server\"",
     "test": "karma start",
     "continuoustest": "karma start --singleRun=false",
     "mvntest": "karma start --reporters junit,dots"
   },
   "author": "GeoSolutions",
-  "license": "GPL-3.0"
+  "license": "BSD-2-Clause"
 }
