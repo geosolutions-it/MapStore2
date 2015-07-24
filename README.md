@@ -34,3 +34,18 @@ Build the deployable war:
 Deploy the generated mapstore.war file (in web/target) to your favourite J2EE container (e.g. Tomcat).
 
 Read more on the [wiki](https://github.com/geosolutions-it/MapStore2/wiki).
+
+Professional Support
+---------------------
+MapStore 2 is being developed by [GeoSolutions](http://www.geo-solutions.it/) hence you can talk to us for professional support. Anyway the project is a real Open Source project hence you can contribute to it (see section below).
+
+Contributing
+---------------------
+We welcome contributions in any form:
+
+* pull requests for new features
+* pull requests for bug fixes
+* pull requests for documentation
+* funding for any combination of the above
+
+For more information check [this](https://github.com/geosolutions-it/MapStore2/blob/master/CONTRIBUTING.md) page.
