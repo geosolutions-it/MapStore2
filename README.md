@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/geosolutions-it/MapStore2/badge.svg?branch=master&service=github)](https://coveralls.io/github/geosolutions-it/MapStore2?branch=master)
+
 MapStore 2
 ==========
 MapStore 2 is a framework to build *web mapping* applications using standard mapping libraries, such as [OpenLayers 3](http://openlayers.org/) and [Leaflet](http://leafletjs.com/).
