@@ -1,3 +1,10 @@
+/**
+ * Copyright 2015, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 var React = require('react/addons');
 var Map = require('../map.jsx');
 var expect = require('expect');
@@ -13,13 +20,13 @@ describe('LeafletMap', function() {
   it('creates a div for leaflet map with given id', function() {
     var map = React.render(<Map id="mymap" center={{lat: 43.9,lng: 10.3}} zoom={11}/>, document.body);
     expect(map).toExist();
-    expect(map.getDOMNode().id).toBe('mymap');
+    expect(React.findDOMNode(map).id).toBe('mymap');
   });
 
   it('creates a div for leaflet map with default id (map)', function() {
     var map = React.render(<Map center={{lat: 43.9,lng: 10.3}} zoom={11}/>, document.body);
     expect(map).toExist();
-    expect(map.getDOMNode().id).toBe('map');
+    expect(React.findDOMNode(map).id).toBe('map');
   });
 
   it('creates multiple maps for different containers', function() {
@@ -54,11 +61,11 @@ describe('LeafletMap', function() {
     expect(leafletMap).toExist();
 
     var zoomIn = document.getElementsByClassName('leaflet-control-zoom-in')[0];
-	zoomIn.click();
+	  zoomIn.click();
     expect(leafletMap.getZoom()).toBe(12);
 
     var zoomOut = document.getElementsByClassName('leaflet-control-zoom-out')[0];
-	zoomOut.click();
+	  zoomOut.click();
     expect(leafletMap.getZoom()).toBe(11);
 
   });
