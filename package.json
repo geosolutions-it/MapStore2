@@ -30,14 +30,9 @@
     "react": "^0.13.3"
   },
   "scripts": {
-    "watch": "mkdirp ./web/dist && webpack --watch --devtool inline-source-map --display-error-details",
-    "watchbrowserify": "mkdirp ./web/dist && watchify -t babelify ./web/examples/viewer/app.jsx -o ./web/dist/viewer.js -v -d",
     "clean": "rm -Rf ./web/dist",
-    "compilebrowserify": "npm run clean && mkdirp ./web/dist && browserify -t babelify web/examples/viewer/app.jsx -o web/dist/viewer.js",
-    "compile": "npm run clean && mkdirp ./web/dist && webpack",
-    "server:reload": "live-server --port=8081 --open=web/index.html",
-    "start": "webpack-dev-server --progress --colors --port 8081 --content-base web/",
-    "oldstart": "parallelshell \"npm run watch\" \"npm run dev-server\"",
+    "compile": "npm run clean && mkdirp ./web/client/dist && webpack",
+    "start": "webpack-dev-server --progress --colors --port 8081 --content-base web/client",
     "test": "karma start",
     "continuoustest": "karma start --singleRun=false",
     "mvntest": "karma start --reporters junit,dots"

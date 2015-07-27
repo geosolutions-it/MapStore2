@@ -109,7 +109,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}</directory>
+                                <directory>${basedir}/client</directory>
                                 <includes>
                                     <include>**/*.html</include>
                                 </includes>
@@ -128,7 +128,7 @@
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/dist</directory>
+                                <directory>${basedir}/client/dist</directory>
                                 <includes>
                                     <include>**/*.js</include>
                                 </includes>
