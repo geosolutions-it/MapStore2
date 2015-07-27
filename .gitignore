@@ -3,3 +3,4 @@ node/
 dist/
 target/
 *.sublime-*
+npm-debug.log
