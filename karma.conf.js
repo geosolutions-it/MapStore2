@@ -23,10 +23,11 @@ module.exports = function karmaConfig(config) {
     },
 
     coverageReporter: {
-      dir: './web/target/karma-coverage-results/',
+      dir: './coverage/',
       reporters: [
         { type: 'html', subdir: 'report-html' },
-        { type: 'cobertura', subdir: '.', file: 'cobertura.txt' }
+        { type: 'cobertura', subdir: '.', file: 'cobertura.txt' },
+        { type: 'lcovonly', subdir: '.' }
       ]
   },
 
