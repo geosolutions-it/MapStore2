@@ -1,6 +1,5 @@
 [![Build Status](https://travis-ci.org/geosolutions-it/MapStore2.svg?branch=master)](https://travis-ci.org/geosolutions-it/MapStore2)
-[![Coverage Status](https://coveralls.io/repos/geosolutions-it/MapStore2/badge.svg?branch=master&service=github)](https://cov
-eralls.io/github/geosolutions-it/MapStore2?branch=master)
+[![Coverage Status](https://coveralls.io/repos/geosolutions-it/MapStore2/badge.svg?branch=master&service=github)](https://coveralls.io/github/geosolutions-it/MapStore2?branch=master)
 
 MapStore 2
 ==========
