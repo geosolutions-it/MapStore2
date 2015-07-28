@@ -15,7 +15,7 @@ module.exports = function karmaConfig(config) {
       'tests.webpack.js': [ 'webpack', 'sourcemap' ]
     },
 
-    reporters: [ 'dots', 'coverage' ],
+    reporters: [ 'dots', 'coverage', 'coveralls' ],
 
     junitReporter: {
       outputDir: './web/target/karma-tests-results',

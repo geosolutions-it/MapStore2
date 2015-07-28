@@ -17,6 +17,7 @@
     "karma-chrome-launcher": "^0.1.7",
     "karma-cli": "0.0.4",
     "karma-coverage": "^0.4.2",
+    "karma-coveralls": "^1.1.2",
     "karma-firefox-launcher": "^0.1.4",
     "karma-ie-launcher": "^0.2.0",
     "karma-junit-reporter": "^0.3.1",
@@ -43,7 +44,7 @@
     "continuoustest": "karma start --singleRun=false",
     "mvntest": "karma start --reporters junit,dots,coverage",
     "lint": "eslint web/client --ext .jsx",
-    "travis": "eslint web/client --ext .jsx && karma start --browsers Firefox --reporters junit,coverage"
+    "travis": "eslint web/client --ext .jsx && karma start --browsers Firefox --reporters junit,coverage,coveralls"
   },
   "author": "GeoSolutions",
   "license": "BSD-2-Clause"
