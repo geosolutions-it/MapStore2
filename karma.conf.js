@@ -18,9 +18,17 @@ module.exports = function karmaConfig(config) {
     reporters: [ 'dots', 'coverage' ],
 
     junitReporter: {
-      outputDir: './web/target',
+      outputDir: './web/target/karma-tests-results',
       suite: ''
     },
+
+    coverageReporter: {
+      dir: './web/target/karma-coverage-results/',
+      reporters: [
+        { type: 'html', subdir: 'report-html' },
+        { type: 'cobertura', subdir: '.', file: 'cobertura.txt' }
+      ]
+  },
 
     webpack: {
       devtool: 'inline-source-map',
