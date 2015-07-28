@@ -42,7 +42,8 @@
     "test": "karma start",
     "continuoustest": "karma start --singleRun=false",
     "mvntest": "karma start --reporters junit,dots,coverage",
-    "lint": "eslint web/client --ext .jsx"
+    "lint": "eslint web/client --ext .jsx",
+    "travis": "eslint web/client --ext .jsx && karma start --browsers Firefox --reporters junit,coverage"
   },
   "author": "GeoSolutions",
   "license": "BSD-2-Clause"

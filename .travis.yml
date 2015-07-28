@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - 0.12
+script: npm run travis
+before_install:
+    - export DISPLAY=:99.0
+    - sh -e /etc/init.d/xvfb start
+before_script:
+    - npm install -g npm && npm install
+branches:
+  only:
+    - master

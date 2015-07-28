@@ -69,18 +69,6 @@
                     </execution>
 
                     <execution>
-                        <id>npm run lint</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <!-- Optional configuration which provides for running any npm command -->
-                        <configuration>
-                            <arguments>run lint</arguments>
-                            <installDirectory>..</installDirectory>
-                        </configuration>
-                    </execution>
-
-                    <execution>
                         <id>npm run compile</id>
                         <goals>
                             <goal>npm</goal>
@@ -93,10 +81,24 @@
                     </execution>
 
                     <execution>
+                        <id>npm run lint</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>test</phase>
+                        <!-- Optional configuration which provides for running any npm command -->
+                        <configuration>
+                            <arguments>run lint</arguments>
+                            <installDirectory>..</installDirectory>
+                        </configuration>
+                    </execution>
+
+                    <execution>
                         <id>npm test</id>
                         <goals>
                             <goal>npm</goal>
                         </goals>
+                        <phase>test</phase>
                         <!-- Optional configuration which provides for running any npm command -->
                         <configuration>
                             <arguments>run mvntest</arguments>
