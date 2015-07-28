@@ -4,3 +4,4 @@ dist/
 target/
 *.sublime-*
 npm-debug.log
+coverage/

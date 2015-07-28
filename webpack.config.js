@@ -1,14 +1,14 @@
 var path = require("path");
 
 module.exports = {
-    entry:  path.join(__dirname, "web","client", "examples" ,"viewer", "app"),
+    entry: path.join(__dirname, "web", "client", "examples", "viewer", "app"),
     output: {
-    	path: path.join(__dirname, "web", "client", "dist"),
+      path: path.join(__dirname, "web", "client", "dist"),
         publicPath: "/dist/",
         filename: "viewer.js"
     },
     resolve: {
-    	extensions: ["",".js",".jsx"]
+      extensions: ["", ".js", ".jsx"]
     },
     module: {
         loaders: [
@@ -17,6 +17,6 @@ module.exports = {
     },
     devServer: {
     },
-    devtool: "eval",
+    devtool: 'inline-source-map',
     debug: true
 };

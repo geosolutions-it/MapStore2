@@ -6,6 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var Map = require('../../components/leaflet/map');
+var LeafletMap = require('../../components/leaflet/map');
 
-React.render(<Map center={{lat: 43.9,lng: 10.3}} zoom={11}/>, document.body);
+React.render(<LeafletMap center={{lat: 43.9, lng: 10.3}} zoom={11}/>, document.body);

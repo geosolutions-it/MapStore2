@@ -1,6 +1,4 @@
-var webpack = require('webpack');
-
-module.exports = function (config) {
+module.exports = function karmaConfig(config) {
   config.set({
 
     browsers: [ 'Chrome' ],
@@ -17,7 +15,7 @@ module.exports = function (config) {
       'tests.webpack.js': [ 'webpack', 'sourcemap' ]
     },
 
-    reporters: [ 'dots' ],
+    reporters: [ 'dots', 'coverage' ],
 
     junitReporter: {
       outputDir: './web/target',
@@ -29,7 +27,12 @@ module.exports = function (config) {
       module: {
         loaders: [
           { test: /\.jsx$/, loader: 'babel-loader' }
-        ]
+        ],
+        postLoaders: [{
+            test: /\.jsx$/,
+            exclude: /(__tests__|node_modules|legacy)\//,
+            loader: 'istanbul-instrumenter'
+        }]
       }
     },
 
