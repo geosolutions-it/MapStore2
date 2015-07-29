@@ -47,7 +47,7 @@ MapStore 2 is being developed by [GeoSolutions](http://www.geo-solutions.it/) he
 
 Communication
 ---------------------
-We currently have two mailing list, [one](https://groups.google.com/forum/#!groupsettings/mapstore-users/information) for users and [one](https://groups.google.com/d/forum/mapstore-developers) for developers. The first one is for those who are willing to use MapStore and need help/directions, the latter is for those trying to extend/proposed fixes for MapStore.
+We currently have two mailing list, [one](https://groups.google.com/d/forum/mapstore-users) for users and [one](https://groups.google.com/d/forum/mapstore-developers) for developers. The first one is for those who are willing to use MapStore and need help/directions, the latter is for those trying to extend/proposed fixes for MapStore.
 
 
 Contributing
