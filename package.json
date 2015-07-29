@@ -34,7 +34,13 @@
   },
   "dependencies": {
     "leaflet": "^0.7.3",
-    "react": "^0.13.3"
+    "react": "^0.13.3",
+    "flux": "^2.0.3",
+    "object-assign": "^3.0.0",
+    "es6-promise": "^2.3.0",
+    "axios": "^0.5.4",
+    "keymirror": "~0.1.1",
+    "proj4": "~2.3.6" 
   },
   "scripts": {
     "clean": "rm -Rf ./web/dist",

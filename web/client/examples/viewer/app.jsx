@@ -6,6 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var LeafletMap = require('../../components/leaflet/map');
+var MapViewController = require('../../components/Map/MapViewController');
+var ConfigUtils = require('../../utils/ConfigUtils');
 
-React.render(<LeafletMap center={{lat: 43.9, lng: 10.3}} zoom={11}/>, document.body);
+var Api = require('../../api/MapConfigDAO');
+
+Api.get("../data/mapStoreConfig.json").then( function(legacyConfig) {
+    const mapId = "map";
+    // convert from legacy
+    const conf = ConfigUtils.convertFromLegacy(legacyConfig);
+    React.render(<MapViewController id={mapId} config={conf}/>, document.body);
+});

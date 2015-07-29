@@ -1,5 +1,5 @@
 module.exports = function karmaConfig(config) {
-  config.set({
+    config.set({
 
     browsers: [ 'Chrome' ],
 
@@ -42,6 +42,9 @@ module.exports = function karmaConfig(config) {
             exclude: /(__tests__|node_modules|legacy)\//,
             loader: 'istanbul-instrumenter'
         }]
+      },
+      resolve: {
+          extensions: ['', '.js', '.json', '.jsx']
       }
     },
 
