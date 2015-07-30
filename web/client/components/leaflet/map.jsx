@@ -20,23 +20,29 @@ var LeafletMap = React.createClass({
         };
     },
     getInitialState() {
-        return {
-            map: null
-        };
+        return { };
     },
     componentDidMount() {
         var map = L.map(this.props.id).setView([this.props.center.lat, this.props.center.lng],
           this.props.zoom);
-        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-              attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          }).addTo(map);
+
         this.map = map;
+        // NOTE: this re-call render function after div creation to have the map initialized.
+        this.forceUpdate();
     },
     componentWillUnmount() {
         this.map.remove();
     },
     render() {
-        return <div id={this.props.id}></div>;
+        const map = this.map;
+        const children = map ? React.Children.map(this.props.children, child => {
+            return child ? React.cloneElement(child, {map: map}) : null;
+        }) : null;
+        return (
+            <div id={this.props.id}>
+                {children}
+            </div>
+        );
     }
 });
 

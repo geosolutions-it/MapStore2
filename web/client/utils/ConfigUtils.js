@@ -1,3 +1,10 @@
+/**
+ * Copyright 2015, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 var Proj4js = require('proj4');
 
 var ConfigUtils = {
@@ -17,7 +24,8 @@ var ConfigUtils = {
             latLng: latLng,
             zoom: zoom,
             maxExtent: maxExtent, // TODO convert maxExtent
-            layers: layers
+            layers: layers,
+            sources: config.gsSources
         };
     }
 };
