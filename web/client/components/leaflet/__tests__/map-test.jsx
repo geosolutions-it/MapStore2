@@ -50,7 +50,7 @@ describe('LeafletMap', () => {
         expect(document.getElementsByClassName('leaflet-tile-pane').length).toBe(1);
         expect(document.getElementsByClassName('leaflet-objects-pane').length).toBe(1);
         expect(document.getElementsByClassName('leaflet-control-container').length).toBe(1);
-    });
+    })
 
     it('enables leaflet controls', () => {
         const map = React.render(<LeafletMap center={{lat: 43.9, lng: 10.3}} zoom={11}/>, document.body);
@@ -73,5 +73,6 @@ describe('LeafletMap', () => {
             <LeafLetLayer source={{ptype: 'gxp_osmsource'}}/>
         </LeafletMap>, document.body);
         expect(map).toExist();
+        expect(document.getElementsByClassName('leaflet-layer').length).toBe(1);
     });
 });
