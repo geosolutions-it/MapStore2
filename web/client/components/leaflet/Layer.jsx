@@ -22,17 +22,16 @@ var LeafletLayer = React.createClass({
         return null;
     },
     createLayer(source) {
-        if (!source.ptype) {
-            source.ptype = "gxp_wmssource";
-        }
-        switch (source.ptype) {
-            case "gxp_osmsource":
-                this.layer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                });
-                this.layer.addTo(this.props.map);
-                break;
-            default:
+        if (source) {
+            switch (source.ptype) {
+                case "gxp_osmsource":
+                    this.layer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    });
+                    this.layer.addTo(this.props.map);
+                    break;
+                default:
+            }
         }
     }
 });
