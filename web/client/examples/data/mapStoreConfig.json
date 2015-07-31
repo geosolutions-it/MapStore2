@@ -18,7 +18,10 @@
 		},
 		"egeos":{
 			"url":"http://213.215.135.196/reflector/open/service?request=getCapabilities"
-		}
+		},
+    "demo":{
+        "url":"http://demo.geo-solutions.it/geoserver/wms"
+    }
 	},
 	"map": {
 		"projection": "EPSG:900913",
@@ -34,7 +37,24 @@
 				"source": "osm",
 				"title": "Open Street Map",
 				"name": "mapnik",
-				"group": "background"
+				"group": "background",
+        "visibility": true
+			},{
+				"source": "egeos",
+        "visibility": false,
+				"title": "e-Geos Ortofoto RealVista 1.0",
+				"name": "rv1",
+				"group": "background",
+				"format": "image/png"
+			},
+      {
+				"source": "demo",
+        "visibility": true,
+        "opacity": 0.5,
+				"title": "Weather data",
+				"name": "nurc:Arc_Sample",
+				"group": "Meteo",
+				"format": "image/png"
 			}
 		]
 	},

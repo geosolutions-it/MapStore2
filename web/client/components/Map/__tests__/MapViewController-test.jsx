@@ -24,7 +24,8 @@ describe('MapViewController', () => {
                 lng: 10
             },
             layers: [{
-                source: "osm"
+                source: "osm",
+                group: "background"
             }],
             sources: {
                 osm: {
