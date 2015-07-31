@@ -75,7 +75,7 @@ Your pull request must:
  * Pass the integration tests run automatically by the Travis Continuous
    Integration system.
 
- * Address a single issue or add a single item of functionality.
+ * Address a single issue or add a single item of functionality. (Start the pull request title with the addressed issues if in case)
 
  * Contain a clean history of small, incremental, logically separate commits,
    with no merge commits.
@@ -100,6 +100,15 @@ The `test` build target runs a number of quick tests on your code.
 
 The `lint` build target runs ESLint checks on your code.  
 
+
+### File Naming Conventions
+
+The test files should in a folder named `__tests__` in the module folder.
+
+If you are testing a specific component follow the following convention:
+
+* Component: `MyComponent.jsx`
+* Test File: `MyComponent-test.jsx`
 
 ### Follow MapStore 2's coding style
 
