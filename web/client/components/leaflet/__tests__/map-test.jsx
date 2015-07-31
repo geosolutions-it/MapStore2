@@ -7,6 +7,7 @@
  */
 var React = require('react/addons');
 var LeafletMap = require('../map.jsx');
+var LeafLetLayer = require('../Layer.jsx');
 var expect = require('expect');
 
 describe('LeafletMap', () => {
@@ -66,5 +67,12 @@ describe('LeafletMap', () => {
         const zoomOut = document.getElementsByClassName('leaflet-control-zoom-out')[0];
         zoomOut.click();
         expect(leafletMap.getZoom()).toBe(11);
+    });
+    it('check layers init', () => {
+        const map = React.render(<LeafletMap center={{lat: 43.9, lng: 10.3}} zoom={11}>
+            <LeafLetLayer source={{ptype: 'gxp_osmsource'}}/>
+        </LeafletMap>, document.body);
+        expect(map).toExist();
+        expect(document.getElementsByClassName('leaflet-layer').length).toBe(1);
     });
 });

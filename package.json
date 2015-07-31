@@ -23,7 +23,7 @@
     "karma-junit-reporter": "^0.3.1",
     "karma-mocha": "^0.1.10",
     "karma-sourcemap-loader": "^0.3.3",
-    "karma-webpack": "^1.5.0",
+    "karma-webpack": "~1.6.0",
     "live-server": "^0.7.1",
     "mkdirp": "^0.5.1",
     "mocha": "^2.1.0",
@@ -40,7 +40,7 @@
     "es6-promise": "^2.3.0",
     "axios": "^0.5.4",
     "keymirror": "~0.1.1",
-    "proj4": "~2.3.6" 
+    "proj4": "~2.3.6"
   },
   "scripts": {
     "clean": "rm -Rf ./web/dist",

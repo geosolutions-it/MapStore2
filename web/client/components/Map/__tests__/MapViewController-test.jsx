@@ -22,7 +22,14 @@ describe('MapViewController', () => {
             latLng: {
                 lat: 12,
                 lng: 10
-            }
+            },
+            layers: [{
+                source: "osm"
+            }],
+            sources: {
+                osm: {
+                    ptype: "gxp_osmsource"
+            }}
         };
         // NOTE: the id will be used as the div id by convention
         const map = React.render(<MapViewController id="mymap" config={config}/>, document.body);

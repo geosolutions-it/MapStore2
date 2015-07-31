@@ -31,45 +31,9 @@
 		],
 		"layers": [
 			{
-				"source": "egeos",
-				"title": "e-Geos Ortofoto RealVista 1.0",
-				"name": "rv1",
-				"group": "background",
-				"format": "image/png"
-			},{
-				"source": "google",
-				"title": "Google Roadmap",
-				"name": "ROADMAP",
-				"group": "background"
-			},{
-				"source": "google",
-				"title": "Google Terrain",
-				"name": "TERRAIN",
-				"group": "background"
-			},{
-				"source": "google",
-				"title": "Google Hybrid",
-				"name": "HYBRID",
-				"group": "background"
-			},{
-				"source": "mapquest",
-				"title": "MapQuest OpenStreetMap",
-				"name": "osm",
-				"group": "background"
-			},{
 				"source": "osm",
 				"title": "Open Street Map",
 				"name": "mapnik",
-				"group": "background"
-			},{
-				"source": "bing",
-				"title": "Bing Aerial",
-				"name": "Aerial",
-				"group": "background"
-			},{
-				"source": "bing",
-				"title": "Bing Aerial With Labels",
-				"name": "AerialWithLabels",
 				"group": "background"
 			}
 		]
