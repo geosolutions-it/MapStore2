@@ -1,4 +1,15 @@
 module.exports = function karmaConfig(config) {
+    var postLoaders = [];
+    // postloader compiles the jsx
+    // so is needed only for coverage test, not in continuostest
+    // assume singleRun = false means you are debugging
+    if (config.singleRun) {
+        postLoaders.push({
+            test: /\.jsx$/,
+            exclude: /(__tests__|node_modules|legacy)\//,
+            loader: 'istanbul-instrumenter'
+        });
+    }
     config.set({
 
     browsers: [ 'Chrome' ],
@@ -37,11 +48,7 @@ module.exports = function karmaConfig(config) {
         loaders: [
           { test: /\.jsx$/, loader: 'babel-loader' }
         ],
-        postLoaders: [{
-            test: /\.jsx$/,
-            exclude: /(__tests__|node_modules|legacy)\//,
-            loader: 'istanbul-instrumenter'
-        }]
+        postLoaders: postLoaders
       },
       resolve: {
           extensions: ['', '.js', '.json', '.jsx']
