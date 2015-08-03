@@ -68,17 +68,22 @@ var ConfigUtils = {
             if (layer) {
                 if (supportedSourceTypes.indexOf(source.ptype) >= 0) {
                     if (layer.group === this.backgroundGroup) {
+                        // force to false if undefined
+                        layer.visibility = layer.visibility || false;
                         if (candidateVisible && candidateVisible.visibility) {
                             /* if more than one layer is visible in the background group
                                shows only the last one hiding the previous.
                             */
                             if (layer.visibility) {
                                 candidateVisible.visibility = false;
+                                candidateVisible = layer;
                             }
                         }else {
                             candidateVisible = layer;
                         }
                     }
+                } else {
+                    layer.visibility = false;
                 }
             }
         }
