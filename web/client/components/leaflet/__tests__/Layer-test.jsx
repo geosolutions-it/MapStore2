@@ -33,4 +33,44 @@ describe('Leaflet layer', () => {
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
     });
+    it('creates a osm layer for leaflet map', () => {
+        var options = {
+            "source": "osm",
+            "title": "Open Street Map",
+            "name": "mapnik",
+            "group": "background"
+        };
+        // create layer
+        var layer = React.render(
+            <LeafLetLayer source={{ptype: 'gxp_osmsource'}}
+                 options={options} map={map}/>, document.body);
+        var lcount = 0;
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+    });
+    it('creates a wms layer for leaflet map', () => {
+        var options = {
+            "source": "demo",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png"
+        };
+        var source = {
+            "ptype": "gxp_wmssource",
+            "url": "http://demo.geo-solutions.it/geoserver/wms"
+        };
+        // create layers
+        var layer = React.render(
+            <LeafLetLayer source={source}
+                 options={options} map={map}/>, document.body);
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+    });
 });

@@ -68,9 +68,14 @@ describe('LeafletMap', () => {
         zoomOut.click();
         expect(leafletMap.getZoom()).toBe(11);
     });
+
     it('check layers init', () => {
+        var options = {
+            "source": "osm",
+            "visibility": true
+        };
         const map = React.render(<LeafletMap center={{lat: 43.9, lng: 10.3}} zoom={11}>
-            <LeafLetLayer source={{ptype: 'gxp_osmsource'}}/>
+            <LeafLetLayer source={{ptype: 'gxp_osmsource'}} options={options} />
         </LeafletMap>, document.body);
         expect(map).toExist();
         expect(document.getElementsByClassName('leaflet-layer').length).toBe(1);
