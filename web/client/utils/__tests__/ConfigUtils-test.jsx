@@ -102,10 +102,10 @@ describe('ConfigUtils', () => {
         var config = ConfigUtils.convertFromLegacy(lconfig);
 
         // check background layer visibility
-        // expect(config.map.layers[0].visibility).toBe(false);
-        // expect(config.map.layers[1].visibility).toBe(false);
-        // expect(config.layers[2].visibility).toBe(false);
-        // expect(config.layers[3].visibility).toBe(true);
+        expect(config.layers[0].visibility).toBe(false);
+        expect(config.layers[1].visibility).toBe(false);
+        expect(config.layers[2].visibility).toBe(false);
+        expect(config.layers[3].visibility).toBe(true);
         expect(config.layers[4].visibility).toBe(true);
     });
 });
