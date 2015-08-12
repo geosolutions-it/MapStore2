@@ -48,8 +48,10 @@ var ConfigUtils = {
             defType = this.defaultSourceType;
         }
         for (source in sources) {
-            if (!sources[source].ptype) {
-                sources[source].ptype = defType;
+            if (sources.hasOwnProperty(source)) {
+                if (!sources[source].ptype) {
+                    sources[source].ptype = defType;
+                }
             }
         }
     },
