@@ -33,9 +33,9 @@ describe('This test for InfoButton', () => {
 
         const btnItems = btn.getElementsByTagName("span");
         expect(btnItems.length).toBe(3);
-        expect(btnItems.item(0).innerText).toBe("");
-        expect(btnItems.item(1).innerText).toBe("");
-        expect(btnItems.item(2).innerText).toBe("Info");
+        expect(btnItems.item(0).innerHTML).toBe("");
+        expect(btnItems.item(1).innerHTML).toBe("");
+        expect(btnItems.item(2).innerHTML).toBe("Info");
     });
 
     it('checks if a click on button shows a modal window', () => {
@@ -78,11 +78,11 @@ describe('This test for InfoButton', () => {
 
         const titleList = headerList.item(0).getElementsByClassName("modal-title");
         expect(titleList.length).toBe(1);
-        expect(titleList.item(0).innerText).toBe("Info");
+        expect(titleList.item(0).innerHTML).toBe("Info");
 
         const bodyList = modalDiv.getElementsByClassName("modal-body");
         expect(bodyList.length).toBe(1);
-        expect(bodyList.item(0).innerText).toBe("");
+        expect(bodyList.item(0).innerHTML).toBe("");
     });
 
     // test CUSTOM
@@ -101,9 +101,9 @@ describe('This test for InfoButton', () => {
 
         const btnItems = btn.getElementsByTagName("span");
         expect(btnItems.length).toBe(3);
-        expect(btnItems.item(0).innerText).toBe("");
-        expect(btnItems.item(1).innerText).toBe("");
-        expect(btnItems.item(2).innerText).toBe(customText);
+        expect(btnItems.item(0).innerHTML).toBe("");
+        expect(btnItems.item(1).innerHTML).toBe("");
+        expect(btnItems.item(2).innerHTML).toBe(customText);
     });
 
     it('checks the button icon', () => {
@@ -115,8 +115,8 @@ describe('This test for InfoButton', () => {
         const btnItems = btn.getElementsByTagName("span");
         expect(btnItems.length).toBe(3);
         expect(btnItems.item(0).className).toBe("glyphicon glyphicon-" + icon);
-        expect(btnItems.item(1).innerText).toBe("\u00A0");
-        expect(btnItems.item(2).innerText).toBe("Info");
+        expect(btnItems.item(1).innerHTML).toBe("&nbsp;");
+        expect(btnItems.item(2).innerHTML).toBe("Info");
     });
 
     it('checks if the button contains only icon', () => {
@@ -128,8 +128,8 @@ describe('This test for InfoButton', () => {
         const btnItems = btn.getElementsByTagName("span");
         expect(btnItems.length).toBe(3);
         expect(btnItems.item(0).className).toBe("glyphicon glyphicon-" + icon);
-        expect(btnItems.item(1).innerText).toBe("");
-        expect(btnItems.item(2).innerText).toBe("");
+        expect(btnItems.item(1).innerHTML).toBe("");
+        expect(btnItems.item(2).innerHTML).toBe("");
     });
 
     it('checks if the button contains at least the default text', () => {
@@ -139,9 +139,9 @@ describe('This test for InfoButton', () => {
 
         const btnItems = btn.getElementsByTagName("span");
         expect(btnItems.length).toBe(3);
-        expect(btnItems.item(0).innerText).toBe("");
-        expect(btnItems.item(1).innerText).toBe("");
-        expect(btnItems.item(2).innerText).toBe("Info");
+        expect(btnItems.item(0).innerHTML).toBe("");
+        expect(btnItems.item(1).innerHTML).toBe("");
+        expect(btnItems.item(2).innerHTML).toBe("Info");
     });
 
     it('checks if the button contains at least the custom text', () => {
@@ -152,9 +152,9 @@ describe('This test for InfoButton', () => {
 
         const btnItems = btn.getElementsByTagName("span");
         expect(btnItems.length).toBe(3);
-        expect(btnItems.item(0).innerText).toBe("");
-        expect(btnItems.item(1).innerText).toBe("");
-        expect(btnItems.item(2).innerText).toBe(customText);
+        expect(btnItems.item(0).innerHTML).toBe("");
+        expect(btnItems.item(1).innerHTML).toBe("");
+        expect(btnItems.item(2).innerHTML).toBe(customText);
     });
 
     it('checks the custom title for the window', () => {
@@ -168,7 +168,7 @@ describe('This test for InfoButton', () => {
         const headerList = modalDiv.getElementsByClassName("modal-header");
         const titleDom = headerList.item(0).getElementsByClassName("modal-title").item(0);
 
-        expect(titleDom.innerText).toBe(customTitle);
+        expect(titleDom.innerHTML).toBe(customTitle);
     });
 
     it('checks the custom body for the window', () => {
@@ -181,7 +181,7 @@ describe('This test for InfoButton', () => {
         const modalDiv = document.getElementsByClassName("modal-content").item(0);
 
         const bodyList = modalDiv.getElementsByClassName("modal-body");
-        expect(bodyList.item(0).innerText).toBe(customBody);
+        expect(bodyList.item(0).innerHTML).toBe(customBody);
     });
 
     it('checks the custom style', () => {
