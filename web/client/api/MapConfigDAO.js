@@ -30,8 +30,8 @@ var Api = {
 
         return axios.all([axios.get(baseConfigURL), axios.get(url)])
             .then( function(args) {
-                var baseConfig = args[0];
-                var mapConfig = args[1];
+                var baseConfig = args[0].data;
+                var mapConfig = args[1].data;
                 return ConfigUtils.mergeConfigs(baseConfig, mapConfig);
             }).catch(function() {
                 // TODO manage the error
