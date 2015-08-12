@@ -8,12 +8,13 @@
 var React = require('react');
 var MapViewController = require('../../components/Map/MapViewController');
 var InfoButton = require('../../components/InfoButton/InfoButton');
-
 var ConfigUtils = require('../../utils/ConfigUtils');
+var url = require('url');
 
 var Api = require('../../api/MapConfigDAO');
 
-Api.get("../data/mapStoreConfig.json").then( function(legacyConfig) {
+// window.geoStoreBase = "http://mapstore.geo-solutions.it/geostore/rest/"
+Api.getMergedConfig("../data/mapStoreConfig.json", url.parse(window.location.href, true).query.mapId, window.geoStoreBase).then( function(legacyConfig) {
     const mapId = "map";
     // convert from legacy
     const conf = ConfigUtils.convertFromLegacy(legacyConfig);

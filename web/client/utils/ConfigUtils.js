@@ -93,6 +93,14 @@ var ConfigUtils = {
         if (candidateVisible) {
             candidateVisible.visibility = true;
         }
+    },
+    /**
+     * Utility to merge different configs
+     */
+    mergeConfigs: function(baseConfig, mapConfig) {
+        baseConfig.map = mapConfig.map;
+        baseConfig.gsSources = mapConfig.gsSources || mapConfig.sources;
+        return baseConfig;
     }
 };
 
