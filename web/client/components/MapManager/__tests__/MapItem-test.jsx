@@ -9,6 +9,8 @@ var React = require('react/addons');
 var MapItem = require('../MapItem.jsx');
 var expect = require('expect');
 
+var TestUtils = require('react/addons').addons.TestUtils;
+
 describe('This test for MapItem', () => {
     afterEach((done) => {
         React.unmountComponentAtNode(document.body);
@@ -42,5 +44,15 @@ describe('This test for MapItem', () => {
         const headings = mapItemDom.getElementsByClassName('list-group-item-heading');
         expect(headings.length).toBe(1);
         expect(headings[0].innerHTML).toBe(testName);
+    });
+
+    it('test viewer url', () => {
+        const testName = "test";
+        const testDescription = "testDescription";
+        var component = TestUtils.renderIntoDocument(<MapItem id={1} name={testName} description={testDescription} viewerUrl="viewer"/>);
+        var a = TestUtils.findRenderedDOMComponentWithTag(
+           component, 'a'
+        );
+        expect(a.props.href).toBe("viewer?mapId=1");
     });
 });

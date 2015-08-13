@@ -9,6 +9,11 @@
 var React = require('react');
 var BootstrapReact = require('react-bootstrap');
 var ListGroupItem = BootstrapReact.ListGroupItem;
+var Button = BootstrapReact.Button;
+var Glyphicon = BootstrapReact.Glyphicon;
+var Tooltip = BootstrapReact.Tooltip;
+var OverlayTrigger = BootstrapReact.OverlayTrigger;
+
 
 var MapItem = React.createClass({
     propTypes: {
@@ -16,11 +21,25 @@ var MapItem = React.createClass({
         name: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         description: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         attributes: React.PropTypes.object,
-        glyphicon: React.PropTypes.string
+        viewerUrl: React.PropTypes.string
+    },
+    renderButtons: function() {
+        // render preview button if the viewerUrl is passed
+        if (this.props.viewerUrl) {
+            const previewURL = this.props.viewerUrl + "?mapId=" + this.props.id;
+            const tooltip = <Tooltip>Open map in a new tab</Tooltip>;
+            return (<div>
+                <OverlayTrigger placement="right" overlay={tooltip}>
+                    <Button bsStyle="info" target="_blank" href={previewURL}> <Glyphicon glyph={"new-window"}/>
+                    </Button>
+                </OverlayTrigger>
+                </div>);
+        }
+        return "";
     },
     render: function() {
         return (
-           <ListGroupItem header={this.props.name}>{this.props.description}</ListGroupItem>
+           <ListGroupItem header={this.props.name}>{this.props.description} {this.renderButtons()}</ListGroupItem>
         );
     }
 });
