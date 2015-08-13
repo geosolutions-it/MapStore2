@@ -15,17 +15,17 @@ var MapItem = require('./MapItem');
 var MapList = React.createClass({
     propTypes: {
         panelProps: React.PropTypes.object,
-        data: React.PropTypes.array
+        data: React.PropTypes.array,
+        viewerUrl: React.PropTypes.string
     },
     getInitialState: function() {
-        return {maps: this.props.data};
+        return {maps: this.props.data || []};
     },
     renderMaps: function(maps) {
-        if (maps) {
-            return this.state.maps.map(function(map) {
-                return <MapItem key={map.id} {...map} />;
-            });
-        }
+        const viewerUrl = this.props.viewerUrl;
+        return maps.map(function(map) {
+            return <MapItem viewerUrl={viewerUrl} key={map.id} {...map} />;
+        });
     },
     render: function() {
         return (<Panel {...this.props.panelProps}><ListGroup>{this.renderMaps(this.state.maps)}</ListGroup></Panel>);
