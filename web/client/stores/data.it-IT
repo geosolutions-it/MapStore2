@@ -1,0 +1,15 @@
+/**
+ * Copyright 2015, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+module.exports = {
+    locale: "it-IT",
+    messages: {
+        msgId0: "{name} ha scattato {numPhotos, plural, =0 {nessuna foto} other {# foto}} il {takenDate, date, long}.",
+        htmlTest: "{name} {surname}",
+        aboutLbl: "Informazioni"
+    }
+};

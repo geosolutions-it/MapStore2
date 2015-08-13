@@ -44,6 +44,7 @@
     "proj4": "~2.3.6",
     "react": "^0.13.3",
     "react-bootstrap": "^0.24.3",
+    "react-intl": "^1.2.0",
     "url": "~0.10.3"
   },
   "scripts": {
