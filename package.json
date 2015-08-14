@@ -44,8 +44,10 @@
     "proj4": "~2.3.6",
     "react": "^0.13.3",
     "react-bootstrap": "^0.24.3",
-    "url": "~0.10.3"
+    "url": "~0.10.3",
+    "leaflet-plugins": "https://github.com/Polyconseil/leaflet-plugins/tarball/master"
   },
+  "//": "replace leaflet-plugins with official on npm when merged this pull request: https://github.com/shramov/leaflet-plugins/pull/178",
   "scripts": {
     "clean": "rm -Rf ./web/dist",
     "compile": "npm run clean && mkdirp ./web/client/dist && webpack",

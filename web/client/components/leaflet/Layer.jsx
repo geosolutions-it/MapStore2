@@ -9,13 +9,15 @@ var React = require('react');
 var L = require('leaflet');
 var LeafletUtils = require('./WMSUtils');
 
-var LeafletLayer = React.createClass({
+var LPlugins = require('leaflet-plugins');
+
+
+const LeafletLayer = React.createClass({
     propTypes: {
         map: React.PropTypes.object,
         source: React.PropTypes.object,
         options: React.PropTypes.object
     },
-
 
     componentDidMount() {
         if (this.props.options && this.props.options.visibility !== false) {
@@ -42,12 +44,31 @@ var LeafletLayer = React.createClass({
                 case "gxp_wmssource":
                     this.layer = L.tileLayer.wms(LeafletUtils.getWMSURL(source.url), LeafletUtils.wmsToLeafletOptions(source, options));
                     break;
+                case "gxp_bingsource":
+                    this.layer = this.createBingLayer(options);
+                    break;
+                case "gxp_googlesource":
+                    this.layer = this.createGoogleLayer(options);
+                    break;
                 default:
             }
             if (this.layer) {
                 this.layer.addTo(this.props.map);
             }
         }
+    },
+    createGoogleLayer: function(layer) {
+        return new L.Google(layer.name);
+    },
+    createBingLayer: function(layer) {
+        return new L.BingLayer("Anqm0F_JjIZvT0P3abS6KONpaBaKuTnITRrnYuiJCE0WOhH6ZbE4DzeT6brvKVR5",
+            {
+                subdomains: [0, 1, 2, 3],
+                type: layer.name,
+                attribution: 'Bing',
+                culture: ''
+            }
+        );
     }
 });
 
