@@ -26,23 +26,19 @@ const AvailableLang = {
 
 const _getDefaultLang = () => {
     var lang;
-    var retval;
     if (navigator) {
         lang = navigator.language || navigator.browserLanguage;
     }
-    if (!lang) {
-        retval = "en-US";
-    } else {
+    if (lang) {
         for (let l in AvailableLang) {
             if (AvailableLang.hasOwnProperty(l)) {
                 if (lang === AvailableLang[l]) {
-                    retval = lang;
+                    return lang;
                 }
             }
         }
-        retval = "en-US";
     }
-    return retval;
+    return "en-US";
 };
 
 var _i18nStore = {
