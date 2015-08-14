@@ -74,7 +74,6 @@ describe('Leaflet layer', () => {
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
     });
-    /*
     it('creates a google layer for leaflet map', () => {
         var options = {
             "source": "demo",
@@ -94,5 +93,26 @@ describe('Leaflet layer', () => {
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
     });
-    */
+
+    it('creates a bing layer for leaflet map', () => {
+        var options = {
+            "source": "bing",
+            "title": "Bing Aerial",
+            "name": "Aerial",
+            "group": "background"
+        };
+        var source = {
+            "ptype": "gxp_bingsource"
+        };
+        // create layers
+        var layer = React.render(
+            <LeafLetLayer source={source}
+                 options={options} map={map}/>, document.body);
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+    });
 });
