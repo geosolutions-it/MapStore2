@@ -21,6 +21,25 @@ describe('Leaflet layer', () => {
         setTimeout(done);
     });
 
+    it('creates a unknown source layer', () => {
+        var options = {
+            "name": "FAKE"
+        };
+        var source = {
+            "ptype": "FAKE",
+            "url": "http://demo.geo-solutions.it/geoserver/wms"
+        };
+        // create layers
+        var layer = React.render(
+            <LeafLetLayer source={source}
+                 options={options} map={map}/>, document.body);
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(0);
+    });
     it('creates a osm layer for leaflet map', () => {
         var options = {};
         // create layers
