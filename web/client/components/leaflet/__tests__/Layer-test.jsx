@@ -21,6 +21,60 @@ describe('Leaflet layer', () => {
         setTimeout(done);
     });
 
+    it('missing layer', () => {
+        var source = {
+            "P_TYPE": "wrong ptype key"
+        };
+        // create layers
+        var layer = React.render(
+            <LeafLetLayer source={source}
+                  map={map}/>, document.body);
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(0);
+    });
+
+    it('creates a unknown source layer', () => {
+        var options = {
+            "name": "FAKE"
+        };
+        var source = {
+            "ptype": "FAKE",
+            "url": "http://demo.geo-solutions.it/geoserver/wms"
+        };
+        // create layers
+        var layer = React.render(
+            <LeafLetLayer source={source}
+                 options={options} map={map}/>, document.body);
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(0);
+    });
+
+    it('creates source with missing ptype', () => {
+        var options = {
+            "name": "FAKE"
+        };
+        var source = {
+            "P_TYPE": "wrong ptype key"
+        };
+        // create layers
+        var layer = React.render(
+            <LeafLetLayer source={source}
+                 options={options} map={map}/>, document.body);
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(0);
+    });
     it('creates a osm layer for leaflet map', () => {
         var options = {};
         // create layers
@@ -50,6 +104,7 @@ describe('Leaflet layer', () => {
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
     });
+
     it('creates a wms layer for leaflet map', () => {
         var options = {
             "source": "demo",
@@ -61,6 +116,47 @@ describe('Leaflet layer', () => {
         var source = {
             "ptype": "gxp_wmssource",
             "url": "http://demo.geo-solutions.it/geoserver/wms"
+        };
+        // create layers
+        var layer = React.render(
+            <LeafLetLayer source={source}
+                 options={options} map={map}/>, document.body);
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+    });
+    it('creates a google layer for leaflet map', () => {
+        var options = {
+            "source": "demo",
+            "name": "ROADMAP"
+        };
+        var source = {
+            "ptype": "gxp_googlesource"
+        };
+        // create layers
+        var layer = React.render(
+            <LeafLetLayer source={source}
+                 options={options} map={map}/>, document.body);
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+    });
+
+    it('creates a bing layer for leaflet map', () => {
+        var options = {
+            "source": "bing",
+            "title": "Bing Aerial",
+            "name": "Aerial",
+            "group": "background"
+        };
+        var source = {
+            "ptype": "gxp_bingsource"
         };
         // create layers
         var layer = React.render(

@@ -33,6 +33,7 @@
     "webpack": "^1.8.5",
     "webpack-dev-server": "^1.7.0"
   },
+  "//": "replace leaflet-plugins with official on npm when merged this pull request: https://github.com/shramov/leaflet-plugins/pull/178",
   "dependencies": {
     "axios": "^0.5.4",
     "bootstrap": "^3.3.5",
@@ -44,7 +45,8 @@
     "proj4": "~2.3.6",
     "react": "^0.13.3",
     "react-bootstrap": "^0.24.3",
-    "url": "~0.10.3"
+    "url": "~0.10.3",
+    "leaflet-plugins": "https://github.com/Polyconseil/leaflet-plugins/tarball/master"
   },
   "scripts": {
     "clean": "rm -Rf ./web/dist",
