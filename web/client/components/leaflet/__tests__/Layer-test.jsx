@@ -40,6 +40,25 @@ describe('Leaflet layer', () => {
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(0);
     });
+
+    it('creates source with missing ptype', () => {
+        var options = {
+            "name": "FAKE"
+        };
+        var source = {
+            "P_TYPE": "wrong ptype key"
+        };
+        // create layers
+        var layer = React.render(
+            <LeafLetLayer source={source}
+                 options={options} map={map}/>, document.body);
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(0);
+    });
     it('creates a osm layer for leaflet map', () => {
         var options = {};
         // create layers
