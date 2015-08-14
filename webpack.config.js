@@ -1,4 +1,5 @@
 var path = require("path");
+var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
 var rewriteUrl = function(replacePath) {
     return function(req, opt) {  // gets called with request and proxy object
         var queryIndex = req.url.indexOf('?');
@@ -7,12 +8,18 @@ var rewriteUrl = function(replacePath) {
     };
 };
 module.exports = {
-    entry: path.join(__dirname, "web", "client", "examples", "viewer", "app"),
+    entry: {
+        viewer: path.join(__dirname, "web", "client", "examples", "viewer", "app"),
+        manager: path.join(__dirname, "web", "client", "examples", "manager", "app")
+    },
     output: {
       path: path.join(__dirname, "web", "client", "dist"),
         publicPath: "/dist/",
-        filename: "viewer.js"
+        filename: "[name].js"
     },
+    plugins: [
+       new CommonsChunkPlugin("commons", "mapstore-commons.js")
+    ],
     resolve: {
       extensions: ["", ".js", ".jsx"]
     },
