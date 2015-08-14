@@ -8,9 +8,8 @@
 var React = require('react');
 var L = require('leaflet');
 var LeafletUtils = require('./WMSUtils');
-
-var LPlugins = require('leaflet-plugins');
-
+var Google = require('leaflet-plugins/layer/tile/Google');
+var Bing = require('leaflet-plugins/layer/tile/Bing');
 
 const LeafletLayer = React.createClass({
     propTypes: {
@@ -53,15 +52,21 @@ const LeafletLayer = React.createClass({
                 default:
             }
             if (this.layer) {
-                this.layer.addTo(this.props.map);
+                // some plugins doesn't have addTo method
+                if (source.type === "gxp_wmssource" || source.type === "gxp_osmsource" ) {
+                    this.layer.addTo(this.props.map);
+                } else {
+                    this.props.map.addLayer(this.layer);
+                }
             }
         }
     },
     createGoogleLayer: function(layer) {
-        return new L.Google(layer.name);
+        return new Google(layer.name);
     },
     createBingLayer: function(layer) {
-        return new L.BingLayer("Anqm0F_JjIZvT0P3abS6KONpaBaKuTnITRrnYuiJCE0WOhH6ZbE4DzeT6brvKVR5",
+        var key = layer.apiKey || "AqTGBsziZHIJYYxgivLBf0hVdrAk9mWO5cQcb8Yux8sW5M8c8opEC2lZqKR1ZZXf";
+        return new Bing(key,
             {
                 subdomains: [0, 1, 2, 3],
                 type: layer.name,

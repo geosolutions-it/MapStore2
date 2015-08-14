@@ -8,7 +8,8 @@ module.exports = function karmaConfig(config) {
         frameworks: [ 'mocha' ],
 
         files: [
-            'tests.webpack.js'
+            'tests.webpack.js',
+            'http://maps.google.com/maps/api/js?v=3&sensor=false' // required for tests with leaflet google background
         ],
 
         preprocessors: {

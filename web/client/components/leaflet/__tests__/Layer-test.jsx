@@ -50,6 +50,7 @@ describe('Leaflet layer', () => {
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
     });
+
     it('creates a wms layer for leaflet map', () => {
         var options = {
             "source": "demo",
@@ -73,4 +74,25 @@ describe('Leaflet layer', () => {
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
     });
+    /*
+    it('creates a google layer for leaflet map', () => {
+        var options = {
+            "source": "demo",
+            "name": "ROADMAP"
+        };
+        var source = {
+            "ptype": "gxp_googlesource"
+        };
+        // create layers
+        var layer = React.render(
+            <LeafLetLayer source={source}
+                 options={options} map={map}/>, document.body);
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+    });
+    */
 });

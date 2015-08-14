@@ -33,6 +33,7 @@
     "webpack": "^1.8.5",
     "webpack-dev-server": "^1.7.0"
   },
+  "//": "replace leaflet-plugins with official on npm when merged this pull request: https://github.com/shramov/leaflet-plugins/pull/178",
   "dependencies": {
     "axios": "^0.5.4",
     "bootstrap": "^3.3.5",
@@ -47,7 +48,6 @@
     "url": "~0.10.3",
     "leaflet-plugins": "https://github.com/Polyconseil/leaflet-plugins/tarball/master"
   },
-  "//": "replace leaflet-plugins with official on npm when merged this pull request: https://github.com/shramov/leaflet-plugins/pull/178",
   "scripts": {
     "clean": "rm -Rf ./web/dist",
     "compile": "npm run clean && mkdirp ./web/client/dist && webpack",
