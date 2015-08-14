@@ -21,6 +21,22 @@ describe('Leaflet layer', () => {
         setTimeout(done);
     });
 
+    it('missing layer', () => {
+        var source = {
+            "P_TYPE": "wrong ptype key"
+        };
+        // create layers
+        var layer = React.render(
+            <LeafLetLayer source={source}
+                  map={map}/>, document.body);
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(0);
+    });
+
     it('creates a unknown source layer', () => {
         var options = {
             "name": "FAKE"
