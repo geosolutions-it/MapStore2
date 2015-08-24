@@ -1,0 +1,55 @@
+module.exports = function karmaConfig(config) {
+    config.set({
+
+        browsers: [ 'Chrome' ],
+
+        singleRun: false,
+
+        frameworks: [ 'mocha' ],
+
+        files: [
+            'tests.webpack.js'
+        ],
+
+        preprocessors: {
+            'tests.webpack.js': [ 'webpack', 'sourcemap' ]
+        },
+
+        reporters: [ 'mocha', 'coverage', 'coveralls' ],
+
+        junitReporter: {
+            outputDir: './web/target/karma-tests-results',
+            suite: ''
+        },
+
+        coverageReporter: {
+            dir: './coverage/',
+            reporters: [
+                { type: 'html', subdir: 'report-html' },
+                { type: 'cobertura', subdir: '.', file: 'cobertura.txt' },
+                { type: 'lcovonly', subdir: '.' }
+            ],
+            instrumenterOptions: {
+                istanbul: { noCompact: true }
+            }
+        },
+
+        webpack: {
+            devtool: 'inline-source-map',
+            module: {
+                loaders: [
+                    { test: /\.jsx$/, loader: 'babel-loader' }
+                ],
+                postLoaders: [ ]
+            },
+            resolve: {
+                extensions: ['', '.js', '.json', '.jsx']
+            }
+        },
+
+        webpackServer: {
+            noInfo: true
+        }
+
+    });
+};
