@@ -24,16 +24,12 @@ const AvailableLang = {
     "Italiano": "it-IT"
 };
 
-const _getDefaultLang = () => {
-    var lang;
-    if (navigator) {
-        lang = navigator.language || navigator.browserLanguage;
-    }
-    if (lang) {
+const _getDefaultLang = locale => {
+    if (locale) {
         for (let l in AvailableLang) {
             if (AvailableLang.hasOwnProperty(l)) {
-                if (lang === AvailableLang[l]) {
-                    return lang;
+                if (locale === AvailableLang[l]) {
+                    return locale;
                 }
             }
         }
@@ -41,9 +37,15 @@ const _getDefaultLang = () => {
     return "en-US";
 };
 
-var _i18nStore = {
-    locales: AvailableLang,
-    data: StaticLangStore[_getDefaultLang()]
+var _i18nStore;
+
+const _initStore = () => {
+    var l = navigator ? navigator.language || navigator.browserLanguage : "en-US";
+
+    _i18nStore = {
+        locales: AvailableLang,
+        data: StaticLangStore[_getDefaultLang(l)]
+    };
 };
 
 var I18NStore = assign({}, EventEmitter.prototype, {
@@ -91,6 +93,8 @@ const _actionsManager = action => {
     }
 };
 
+_initStore();
+
 Dispatcher.register(_actionsManager);
 
 module.exports = I18NStore;
@@ -105,3 +109,4 @@ const _setMockedData = obj => {
     _i18nStore = obj;
 };
 module.exports._set_mocked_data = _setMockedData;
+module.exports._get_default_language = _getDefaultLang;

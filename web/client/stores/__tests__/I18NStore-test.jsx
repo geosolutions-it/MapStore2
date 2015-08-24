@@ -21,6 +21,12 @@ describe('This test for I18NStore', () => {
         setTimeout(done);
     });
 
+    it('checks _getDefaultLang()', () => {
+        expect(I18NStore._get_default_language()).toEqual("en-US");
+        expect(I18NStore._get_default_language("it-IT")).toEqual("it-IT");
+        expect(I18NStore._get_default_language("something")).toEqual("en-US");
+    });
+
     it('checks getCurrentLocale()', () => {
         const mockStoreData = {
             data: {
