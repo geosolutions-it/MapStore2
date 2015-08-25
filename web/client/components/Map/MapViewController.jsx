@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var LMap = require('../leaflet/map');
+var LMap = require('../leaflet/Map');
 var LLayer = require('../leaflet/Layer');
 // var MapConfigActionCreator = require( '../../actions/MapConfigActions');
 
