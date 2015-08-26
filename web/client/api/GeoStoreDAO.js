@@ -15,7 +15,6 @@ var Api = {
         var url = geoStoreBase || "/rest/geostore/";
         url += "data/" + id;
         return axios.get(url).then(function(response) {
-            // render map
             return response.data;
         });
     },

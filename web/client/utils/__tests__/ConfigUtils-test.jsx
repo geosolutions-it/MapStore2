@@ -121,12 +121,12 @@ describe('ConfigUtils', () => {
         // check zoom
         expect(config.zoom).toBe(5);
         // check lat-lng in 4326
-        expect(config.latLng.lat).toBeA('number');
-        expect(config.latLng.lng).toBeA('number');
-        expect(config.latLng.lat).toBeLessThan(90);
-        expect(config.latLng.lat).toBeGreaterThan(-90);
-        expect(config.latLng.lng).toBeLessThan(180);
-        expect(config.latLng.lng).toBeGreaterThan(-180);
+        expect(config.center.lat).toBeA('number');
+        expect(config.center.lng).toBeA('number');
+        expect(config.center.lat).toBeLessThan(90);
+        expect(config.center.lat).toBeGreaterThan(-90);
+        expect(config.center.lng).toBeLessThan(180);
+        expect(config.center.lng).toBeGreaterThan(-180);
     });
     it('check sources default values assigned', () => {
         var config = ConfigUtils.convertFromLegacy(lconfig);

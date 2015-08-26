@@ -22,7 +22,7 @@ var ConfigUtils = {
         // manage projection conversions
         var epsgMap = new Proj4js.Proj(projection);
         var epsg4326 = new Proj4js.Proj('EPSG:4326');
-        var xy = new Proj4js.Point(center);
+        var xy = Proj4js.toPoint(center);
         Proj4js.transform(epsgMap, epsg4326, xy);
         const latLng = {lat: xy.y, lng: xy.x};
 
@@ -30,11 +30,10 @@ var ConfigUtils = {
         this.setupSources(sources, config.defaultSourceType);
         this.setupLayers(layers, sources, ["gxp_osmsource", "gxp_wmssource"]);
         return {
-            latLng: latLng,
+            center: latLng,
             zoom: zoom,
             maxExtent: maxExtent, // TODO convert maxExtent
-            layers: layers,
-            sources: sources
+            layers: layers
         };
     },
 
@@ -67,6 +66,13 @@ var ConfigUtils = {
         for (i = 0; i < layers.length; i++) {
             layer = layers[i];
             source = sources[layer.source];
+            layer.sourceOptions = source;
+            let type = layer.sourceOptions.ptype;
+            if (type) {
+                layer.type = type.replace(/^gxp_(.*)source$/i, "$1");
+            } else {
+                layer.type = 'unknown';
+            }
             if (layer) {
                 if (supportedSourceTypes.indexOf(source.ptype) >= 0) {
                     if (layer.group === this.backgroundGroup) {
@@ -80,7 +86,7 @@ var ConfigUtils = {
                                 candidateVisible.visibility = false;
                                 candidateVisible = layer;
                             }
-                        }else {
+                        } else {
                             candidateVisible = layer;
                         }
                     }

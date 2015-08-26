@@ -28,7 +28,13 @@ var MapList = React.createClass({
         });
     },
     render: function() {
-        return (<Panel {...this.props.panelProps}><ListGroup>{this.renderMaps(this.state.maps)}</ListGroup></Panel>);
+        return (
+            <Panel {...this.props.panelProps}>
+                <ListGroup>
+                    {this.renderMaps(this.state.maps)}
+                </ListGroup>
+            </Panel>
+        );
     }
 });
 

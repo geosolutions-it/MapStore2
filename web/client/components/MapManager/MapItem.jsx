@@ -24,7 +24,6 @@ var MapItem = React.createClass({
         viewerUrl: React.PropTypes.string
     },
     renderButtons: function() {
-        // render preview button if the viewerUrl is passed
         if (this.props.viewerUrl) {
             const previewURL = this.props.viewerUrl + "?mapId=" + this.props.id;
             const tooltip = <Tooltip>Open map in a new tab</Tooltip>;
