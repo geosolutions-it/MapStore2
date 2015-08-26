@@ -38,7 +38,7 @@ module.exports = function karmaConfig(config) {
             devtool: 'inline-source-map',
             module: {
                 loaders: [
-                    { test: /\.jsx$/, loader: 'babel-loader' }
+                    { test: /\.jsx?$/, loader: 'babel-loader' }
                 ],
                 postLoaders: [
                     {
