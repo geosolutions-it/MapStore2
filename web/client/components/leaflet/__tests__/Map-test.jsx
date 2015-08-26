@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react/addons');
-var LeafletMap = require('../map.jsx');
+var LeafletMap = require('../Map.jsx');
 var LeafLetLayer = require('../Layer.jsx');
 var expect = require('expect');
 
