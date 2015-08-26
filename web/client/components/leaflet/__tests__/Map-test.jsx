@@ -75,7 +75,7 @@ describe('LeafletMap', () => {
             "visibility": true
         };
         const map = React.render(<LeafletMap center={{lat: 43.9, lng: 10.3}} zoom={11}>
-            <LeafLetLayer source={{ptype: 'gxp_osmsource'}} options={options} />
+            <LeafLetLayer type="osm" options={options} />
         </LeafletMap>, document.body);
         expect(map).toExist();
         expect(document.getElementsByClassName('leaflet-layer').length).toBe(1);

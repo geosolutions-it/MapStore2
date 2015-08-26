@@ -7,19 +7,19 @@
  */
 var React = require('react');
 var L = require('leaflet');
-var LeafletUtils = require('./WMSUtils');
+var WMSUtils = require('../../utils/leaflet/WMSUtils');
 
 var LeafletLayer = React.createClass({
     propTypes: {
         map: React.PropTypes.object,
-        source: React.PropTypes.object,
+        type: React.PropTypes.string,
         options: React.PropTypes.object
     },
 
 
     componentDidMount() {
         if (this.props.options && this.props.options.visibility !== false) {
-            this.createLayer(this.props.source, this.props.options);
+            this.createLayer(this.props.type, this.props.options);
         }
     },
 
@@ -31,16 +31,19 @@ var LeafletLayer = React.createClass({
     render() {
         return null;
     },
-    createLayer(source, options) {
-        if (source) {
-            switch (source.ptype) {
-                case "gxp_osmsource":
+    createLayer(type, options) {
+        if (type) {
+            switch (type) {
+                case "osm":
                     this.layer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                           attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     });
                     break;
-                case "gxp_wmssource":
-                    this.layer = L.tileLayer.wms(LeafletUtils.getWMSURL(source.url), LeafletUtils.wmsToLeafletOptions(source, options));
+                case "wms":
+                    this.layer = L.tileLayer.wms(
+                        WMSUtils.getWMSURL(options.sourceOptions.url),
+                        WMSUtils.wmsToLeafletOptions(options.sourceOptions, options)
+                    );
                     break;
                 default:
             }

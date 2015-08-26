@@ -21,17 +21,15 @@ var MapViewController = React.createClass({
     renderLayers(sources, layers) {
         if (layers) {
             return layers.map(function(layer) {
-                return <LLayer source={sources[layer.source]} key={layer.name} options={layer} />;
+                return <LLayer type={layer.type} key={layer.name} options={layer} />;
             });
         }
     },
     render() {
-        // first implementation simply uses center and zoom.
-        // a future solution will use a store for the state of the map
         var config = this.props.config;
-        var latLng = config.latLng;
+        var center = config.center;
         var zoom = config.zoom;
-        return (<LMap center={latLng} zoom={zoom} id={this.props.id}>
+        return (<LMap center={center} zoom={zoom} id={this.props.id}>
             {this.renderLayers(config.sources, config.layers)}
         </LMap>);
     }

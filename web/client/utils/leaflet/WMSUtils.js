@@ -1,9 +1,9 @@
 var objectAssign = require('object-assign');
 
-var LeafletUtils = {
+var WMSUtils = {
     wmsToLeafletOptions: function(source, options) {
-        // NOTE: can we use opacity to manage visibility?
         var opacity = options.opacity !== undefined ? options.opacity : 1;
+        // NOTE: can we use opacity to manage visibility?
         return objectAssign({
             layers: options.name,
             styles: options.style || "",
@@ -17,4 +17,4 @@ var LeafletUtils = {
     }
 };
 
-module.exports = LeafletUtils;
+module.exports = WMSUtils;

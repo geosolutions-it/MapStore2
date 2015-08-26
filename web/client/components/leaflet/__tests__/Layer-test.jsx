@@ -25,7 +25,7 @@ describe('Leaflet layer', () => {
         var options = {};
         // create layers
         var layer = React.render(
-            <LeafLetLayer source={{ptype: 'gxp_osmsource'}}
+            <LeafLetLayer type="osm"
                  options={options} map={map}/>, document.body);
         var lcount = 0;
         expect(layer).toExist();
@@ -42,7 +42,7 @@ describe('Leaflet layer', () => {
         };
         // create layer
         var layer = React.render(
-            <LeafLetLayer source={{ptype: 'gxp_osmsource'}}
+            <LeafLetLayer type="osm"
                  options={options} map={map}/>, document.body);
         var lcount = 0;
         expect(layer).toExist();
@@ -56,15 +56,14 @@ describe('Leaflet layer', () => {
             "visibility": true,
             "name": "nurc:Arc_Sample",
             "group": "Meteo",
-            "format": "image/png"
-        };
-        var source = {
-            "ptype": "gxp_wmssource",
-            "url": "http://demo.geo-solutions.it/geoserver/wms"
+            "format": "image/png",
+            "sourceOptions": {
+                "url": "http://demo.geo-solutions.it/geoserver/wms"
+            }
         };
         // create layers
         var layer = React.render(
-            <LeafLetLayer source={source}
+            <LeafLetLayer type="wms"
                  options={options} map={map}/>, document.body);
         var lcount = 0;
 

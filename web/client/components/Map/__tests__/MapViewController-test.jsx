@@ -19,18 +19,14 @@ describe('MapViewController', () => {
     it('creates a MapViewController with the mock configuration', () => {
         var config = {
             zoom: 11,
-            latLng: {
+            center: {
                 lat: 12,
                 lng: 10
             },
             layers: [{
-                source: "osm",
+                type: "osm",
                 group: "background"
-            }],
-            sources: {
-                osm: {
-                    ptype: "gxp_osmsource"
-            }}
+            }]
         };
         // NOTE: the id will be used as the div id by convention
         const map = React.render(<MapViewController id="mymap" config={config}/>, document.body);
