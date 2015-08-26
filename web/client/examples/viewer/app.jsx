@@ -8,6 +8,8 @@
 var React = require('react');
 var MapViewController = require('../../components/Map/MapViewController');
 var InfoButton = require('../../components/InfoButton/InfoButton');
+var I18N = require('../../components/I18N/I18N');
+var LangSelector = require('../../components/LangSelector/LangSelector');
 var ConfigUtils = require('../../utils/ConfigUtils');
 var url = require('url');
 
@@ -22,44 +24,29 @@ Api.getMergedConfig("../data/mapStoreConfig.json", url.parse(window.location.hre
 });
 
 React.render(<InfoButton
-    text="About"
-    title="About this app..."
+    text={<I18N.Message msgId="aboutLbl"/>}
+    title={<I18N.Message msgId="about_title"/>}
     glyphicon="info-sign"
     body={
         <div>
             <h1>MapStore 2</h1>
             <p>
-                MapStore 2 is a framework to build web mapping applications using
-                standard mapping libraries, such as <a href="http://openlayers.org/">OpenLayers 3</a> and <a href="http://leafletjs.com/">Leaflet</a>.
+                <I18N.Message msgId="about_p0-0"/> <a href="http://openlayers.org/">OpenLayers 3</a> <I18N.Message msgId="about_p0-1"/> <a href="http://leafletjs.com/">Leaflet</a>.
             </p>
-            <p>MapStore 2 has several example applications:</p>
+            <p><I18N.Message msgId="about_p1"/></p>
             <ul>
                 <li>
-                    MapViewer is a simple viewer of preconfigured maps (optionally
-                    stored in a database using GeoStore)
+                    <I18N.Message msgId="about_ul0_li0"/>
                 </li>
                 <li>
-                    MapPublisher has been developed to create, save and share in a
-                    simple and intuitive way maps and mashups created selecting
-                    contents by server like OpenStreetMap, Google Maps, MapQuest or
-                    specific servers provided by your organization or third party.
-                    For more information check the <a href="https://github.com/geosolutions-it/MapStore2/wiki">MapStore wiki</a>.
+                    <I18N.Message msgId="about_ul0_li1"/> <a href="https://github.com/geosolutions-it/MapStore2/wiki">MapStore wiki</a>.
                 </li>
             </ul>
-            <h2>License</h2>
+            <h2><I18N.Message msgId="about_h20"/></h2>
             <p>
-                MapStore 2 is Free and Open Source software, it is based on
-                OpenLayers 3, Leaflet and ReactJS, and is licensed under the
-                Simplified BSD License.
+                <I18N.Message msgId="about_p3"/>
             </p>
-            <h2>Contributing</h2>
-            <p>We welcome contributions in any form:</p>
-            <ul>
-                <li>pull requests for new features</li>
-                <li>pull requests for bug fixes</li>
-                <li>pull requests for documentation</li>
-                <li>funding for any combination of the above</li>
-            </ul>
-            <p>For more information check <a href="https://github.com/geosolutions-it/MapStore2/blob/master/CONTRIBUTING.md">this</a> page.</p>
+            <p><I18N.Message msgId="about_p5-0"/> <a href="https://github.com/geosolutions-it/MapStore2/blob/master/CONTRIBUTING.md"><I18N.Message msgId="about_a0"/></a> <I18N.Message msgId="about_p5-1"/></p>
         </div>
     }/>, document.getElementById("aboutContainer"));
+React.render(<LangSelector/>, document.getElementById("langSelContainer"));
