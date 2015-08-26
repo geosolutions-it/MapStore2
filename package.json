@@ -50,11 +50,11 @@
     "clean": "rm -Rf ./web/dist",
     "compile": "npm run clean && mkdirp ./web/client/dist && webpack",
     "start": "webpack-dev-server --progress --colors --port 8081 --content-base web/client",
-    "test": "karma start",
-    "continuoustest": "karma start --singleRun=false",
-    "mvntest": "karma start --reporters junit,dots,coverage",
+    "test": "karma start ./karma.conf.single-run.js",
+    "continuoustest": "karma start ./karma.conf.continuous-test.js",
+    "mvntest": "karma start ./karma.conf.single-run.js --reporters junit,dots,coverage",
     "lint": "eslint web/client --ext .jsx",
-    "travis": "eslint web/client --ext .jsx && karma start --browsers Firefox --reporters junit,coverage,coveralls"
+    "travis": "eslint web/client --ext .jsx && karma start ./karma.conf.single-run.js --browsers Firefox --reporters junit,coverage,coveralls"
   },
   "author": "GeoSolutions",
   "license": "BSD-2-Clause"
