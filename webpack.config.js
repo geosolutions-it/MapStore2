@@ -1,5 +1,6 @@
 var path = require("path");
 var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
+var UglifyJsPlugin = require("webpack/lib/optimize/UglifyJsPlugin");
 var rewriteUrl = function(replacePath) {
     return function(req, opt) {  // gets called with request and proxy object
         var queryIndex = req.url.indexOf('?');
@@ -18,7 +19,11 @@ module.exports = {
         filename: "[name].js"
     },
     plugins: [
-       new CommonsChunkPlugin("commons", "mapstore-commons.js")
+        new CommonsChunkPlugin("commons", "mapstore-commons.js"),
+        new UglifyJsPlugin({
+            compress: {warnings: false},
+            mangle: true
+        })
     ],
     resolve: {
       extensions: ["", ".js", ".jsx"]
