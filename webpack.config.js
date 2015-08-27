@@ -35,7 +35,7 @@ module.exports = {
     },
     devServer: {
         proxy: [{
-            path: new RegExp("/rest/geostore/(.*)"),
+            path: new RegExp("/mapstore/rest/geostore/(.*)"),
             rewrite: rewriteUrl("/geostore/rest/$1"),
             target: "http://mapstore.geo-solutions.it"
         }]
