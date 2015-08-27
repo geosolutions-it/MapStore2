@@ -1,13 +1,6 @@
-/**
- * Copyright 2015, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
-module.exports = {
-    locale: "en-US",
-    messages: {
+{
+    "locale": "en-US",
+    "messages": {
         "msgId0": "{name} took {numPhotos, plural, =0 {no photos} =1 {one photo} other {# photos}} on {takenDate, date, long}.",
         "htmlTest": "{name} {surname}",
         "about_title": "About this app...",
@@ -23,4 +16,4 @@ module.exports = {
         "about_a0": "this",
         "about_p5-1": "page."
     }
-};
+}

@@ -1,7 +1,7 @@
 var objectAssign = require('object-assign');
 
 var WMSUtils = {
-    wmsToLeafletOptions: function(source, options) {
+    wmsToLeafletOptions: function(options) {
         var opacity = options.opacity !== undefined ? options.opacity : 1;
         // NOTE: can we use opacity to manage visibility?
         return objectAssign({
@@ -10,7 +10,7 @@ var WMSUtils = {
             format: options.format || 'image/png',
             transparent: options.transparent !== undefined ? options.transparent : true,
             opacity: opacity
-        }, source.baseParams || {}, options.params || {});
+        }, options.params || {});
     },
     getWMSURL: function( url ) {
         return url.split("\?")[0];

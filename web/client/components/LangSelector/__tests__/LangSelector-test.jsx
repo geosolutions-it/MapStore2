@@ -8,8 +8,6 @@
 var expect = require('expect');
 
 var React = require('react/addons');
-var I18NStore = require('../../../stores/I18NStore');
-var I18NActions = require('../../../actions/I18NActions');
 var LangSelector = require('../LangSelector');
 
 describe('LangSelector', () => {
@@ -32,7 +30,7 @@ describe('LangSelector', () => {
 
         const select = cmpDom.getElementsByTagName("select").item(0);
         const opts = select.childNodes;
-        const langs = I18NStore.getSupportedLocales();
+        const langs = {'Italiano': 'it-IT', 'English': 'en-US'};
 
         for (let i = 0; i < opts.length; i++) {
             lbl = opts[i].innerHTML;
@@ -42,10 +40,9 @@ describe('LangSelector', () => {
         }
     });
 
-    it('checks if a change of the compo fires the proper action', () => {
-        const spy = expect.spyOn(I18NActions, 'launch');
-
-        const cmp = React.render(<LangSelector/>, document.body);
+    it('checks if a change of the combo fires the proper action', () => {
+        let newLang;
+        const cmp = React.render(<LangSelector onLanguageChange={ (lang) => {newLang = lang; }}/>, document.body);
         const cmpDom = React.findDOMNode(cmp);
         const select = cmpDom.getElementsByTagName("select").item(0);
 
@@ -53,7 +50,6 @@ describe('LangSelector', () => {
         React.addons.TestUtils.Simulate.change(select, {target: {value: 'it-IT'}});
         // select.children[1].click();
 
-        expect(spy.calls.length).toBe(1);
-        expect(spy.calls[0].arguments).toEqual([I18NActions.CHANGE_LANG, {locale: "it-IT"}]);
+        expect(newLang).toBe('it-IT');
     });
 });

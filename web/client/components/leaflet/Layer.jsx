@@ -41,8 +41,8 @@ var LeafletLayer = React.createClass({
                     break;
                 case "wms":
                     this.layer = L.tileLayer.wms(
-                        WMSUtils.getWMSURL(options.sourceOptions.url),
-                        WMSUtils.wmsToLeafletOptions(options.sourceOptions, options)
+                        WMSUtils.getWMSURL(options.url),
+                        WMSUtils.wmsToLeafletOptions(options)
                     );
                     break;
                 default:

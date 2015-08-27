@@ -9,40 +9,22 @@ var React = require('react');
 var ReactIntl = require('react-intl');
 var FormattedMessage = ReactIntl.FormattedMessage;
 
-var I18NStore = require('../../stores/I18NStore');
-
 var Message = React.createClass({
     propTypes: {
+        locale: React.PropTypes.string,
+        messages: React.PropTypes.object,
         msgId: React.PropTypes.string.isRequired,
         msgParams: React.PropTypes.object
     },
-    getInitialState() {
-        const currentLocale = I18NStore.getCurrentLocale();
-        const msg = I18NStore.getMsgById(this.props.msgId);
-        return {
-            locales: currentLocale,
-            msg: msg
-        };
-    },
-    // it makes this component reactive when a new language is loaded in
-    // language store.
-    componentDidMount() {
-        I18NStore.register(I18NStore.Event.LANG_CHANGED, this.onLangChanged);
-    },
-    componentWillUnmount() {
-        I18NStore.unregister(I18NStore.Event.LANG_CHANGED, this.onLangChanged);
-    },
-    // it updates the state of this component when the language store loads a new one.
-    onLangChanged() {
-        const currentLocale = I18NStore.getCurrentLocale();
-        const msg = I18NStore.getMsgById(this.props.msgId);
-        this.setState({
-            locales: currentLocale,
-            msg: msg
-        });
+    contextTypes: {
+        locale: React.PropTypes.string.isRequired,
+        messages: React.PropTypes.object
     },
     render() {
-        return <FormattedMessage locales={this.state.locales} message={this.state.msg} {...this.props.msgParams}/>;
+        var locale = this.props.locale || this.context.locale;
+        var messages = this.props.messages || this.context.messages;
+
+        return <FormattedMessage locales={locale} message={messages[this.props.msgId]} {...this.props.msgParams}/>;
     }
 });
 
