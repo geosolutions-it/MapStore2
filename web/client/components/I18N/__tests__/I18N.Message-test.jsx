@@ -8,46 +8,55 @@
 var expect = require('expect');
 
 var React = require('react/addons');
-var I18NStore = require('../../../stores/I18NStore');
 var I18N = require('../I18N');
-var I18NActions = require('../../../actions/I18NActions');
 
-var ita = require('../../../stores/data.it-IT');
-var eng = require('../../../stores/data.en-US');
+var ita = {
+    "locale": "it-IT",
+    "messages": {
+        "aboutLbl": "Info"
+    }
+};
+var eng = {
+    "locale": "en-US",
+    "messages": {
+        "aboutLbl": "About"
+    }
+};
 
 describe('This test for I18N.Message', () => {
+    const msgId = "aboutLbl";
+    const data = {
+        "en-US": eng,
+        "it-IT": ita
+    };
+
     afterEach((done) => {
         React.unmountComponentAtNode(document.body);
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
-    it('checks if the component reacts at I18NStore edits', () => {
-        var testMsg;
-        var currentData;
-        const msgId = "aboutLbl";
-        const data = {
-            "en-US": eng,
-            "it-IT": ita
-        };
-        currentData = data[I18NStore.getCurrentLocale()];
-        testMsg = currentData.messages[msgId];
+    it('checks if the component renders english messages', () => {
+        var currentData = data["en-US"];
+        var testMsg = currentData.messages[msgId];
 
-        const cmp = React.render(<I18N.Message msgId={msgId}/>, document.body);
+        const cmp = React.render(<I18N.Message msgId={msgId} messages={eng.messages} locale="en-US"/>, document.body);
         expect(cmp).toExist();
 
         const cmpDom = React.findDOMNode(cmp);
         expect(cmpDom).toExist();
         expect(cmpDom.innerHTML).toBe(testMsg);
+    });
 
-        const nextLocale = I18NStore.getCurrentLocale() === "it-It" ? "en-US" : "it-IT";
-        I18NStore._emulate_dispatcher({
-            locale: nextLocale,
-            type: I18NActions.CHANGE_LANG
-        });
+    it('checks if the component renders italian messages', () => {
+        var currentData = data["it-IT"];
+        var testMsg = currentData.messages[msgId];
 
-        currentData = data[I18NStore.getCurrentLocale()];
-        testMsg = currentData.messages[msgId];
+        const cmp = React.render(<I18N.Message msgId={msgId} messages={ita.messages} locale="it-IT"/>, document.body);
+        expect(cmp).toExist();
+
+        const cmpDom = React.findDOMNode(cmp);
+        expect(cmpDom).toExist();
         expect(cmpDom.innerHTML).toBe(testMsg);
     });
 });

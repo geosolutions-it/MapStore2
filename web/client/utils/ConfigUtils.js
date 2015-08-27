@@ -7,24 +7,45 @@
  */
 var Proj4js = require('proj4');
 
+const epsg4326 = new Proj4js.Proj('EPSG:4326');
+
 var ConfigUtils = {
     defaultSourceType: "gxp_wmssource",
     backgroundGroup: "background",
+
+    getCenter: function(center, projection) {
+        if (center.lat && center.lng) {
+            return center;
+        }
+        let xy = Proj4js.toPoint(center);
+        if (projection) {
+            const epsgMap = new Proj4js.Proj(projection);
+            Proj4js.transform(epsgMap, epsg4326, xy);
+        }
+        return {lat: xy.y, lng: xy.x};
+    },
+
+    getConfigurationOptions: function(query, defaultName, extension, geoStoreBase) {
+        const mapId = query.mapId;
+        let url;
+        if (mapId) {
+            url = ( geoStoreBase || "/mapstore/rest/geostore/" ) + "data/" + mapId;
+        } else {
+            url = (query.config || defaultName || 'config') + '.' + (extension || 'json');
+        }
+        return {
+            configUrl: url,
+            legacy: !!mapId
+        };
+    },
+
     convertFromLegacy: function(config) {
         var mapConfig = config.map;
-        var sources = config.gsSources;
+        var sources = config.gsSources || config.sources;
         var layers = mapConfig.layers;
-        var center = mapConfig.center;
+        var latLng = ConfigUtils.getCenter(mapConfig.center, mapConfig.projection);
         var zoom = mapConfig.zoom;
         var maxExtent = mapConfig.maxExtent;
-        var projection = mapConfig.projection;
-
-        // manage projection conversions
-        var epsgMap = new Proj4js.Proj(projection);
-        var epsg4326 = new Proj4js.Proj('EPSG:4326');
-        var xy = Proj4js.toPoint(center);
-        Proj4js.transform(epsgMap, epsg4326, xy);
-        const latLng = {lat: xy.y, lng: xy.x};
 
         // setup layers and sources with defaults
         this.setupSources(sources, config.defaultSourceType);
@@ -54,6 +75,16 @@ var ConfigUtils = {
             }
         }
     },
+    /**
+     * Copy important source options to layer options.
+     */
+    copySourceOptions: function(layer, source) {
+        Object.keys(source).forEach((option) => {
+            if (['url', 'baseParams'].indexOf(option) !== -1) {
+                layer[option] = source[option];
+            }
+        });
+    },
 
     /**
      * Setup the layer visibility for the background group.
@@ -66,8 +97,8 @@ var ConfigUtils = {
         for (i = 0; i < layers.length; i++) {
             layer = layers[i];
             source = sources[layer.source];
-            layer.sourceOptions = source;
-            let type = layer.sourceOptions.ptype;
+            ConfigUtils.copySourceOptions(layer, source);
+            let type = source.ptype;
             if (type) {
                 layer.type = type.replace(/^gxp_(.*)source$/i, "$1");
             } else {

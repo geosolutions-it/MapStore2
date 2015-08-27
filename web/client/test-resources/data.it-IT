@@ -1,15 +1,8 @@
-/**
- * Copyright 2015, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
-module.exports = {
-    locale: "it-IT",
-    messages: {
-        msgId0: "{name} ha scattato {numPhotos, plural, =0 {nessuna foto} other {# foto}} il {takenDate, date, long}.",
-        htmlTest: "{name} {surname}",
+{
+    "locale": "it-IT",
+    "messages": {
+        "msgId0": "{name} ha scattato {numPhotos, plural, =0 {nessuna foto} other {# foto}} il {takenDate, date, long}.",
+        "htmlTest": "{name} {surname}",
         "about_title": "Riguardo a questa app...",
         "aboutLbl": "Info",
         "about_p0-0": "MapStore 2 un framework per realizzare applicazioni di web mapping usando librerie di mapping standard, come",
@@ -23,4 +16,4 @@ module.exports = {
         "about_a0": "questa",
         "about_p5-1": "pagina."
     }
-};
+}

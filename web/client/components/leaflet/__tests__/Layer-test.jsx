@@ -52,14 +52,12 @@ describe('Leaflet layer', () => {
     });
     it('creates a wms layer for leaflet map', () => {
         var options = {
-            "source": "demo",
+            "type": "wms",
             "visibility": true,
             "name": "nurc:Arc_Sample",
             "group": "Meteo",
             "format": "image/png",
-            "sourceOptions": {
-                "url": "http://demo.geo-solutions.it/geoserver/wms"
-            }
+            "url": "http://demo.geo-solutions.it/geoserver/wms"
         };
         // create layers
         var layer = React.render(

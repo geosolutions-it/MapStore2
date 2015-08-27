@@ -9,17 +9,18 @@
 var React = require('react');
 var BootstrapReact = require('react-bootstrap');
 var Input = BootstrapReact.Input;
-
-var I18NStore = require('../../stores/I18NStore');
-var I18NActions = require('../../actions/I18NActions');
+var LocaleUtils = require('../../utils/LocaleUtils');
 
 var LangSelector = React.createClass({
     propTypes: {
-        locales: React.PropTypes.object
+        locales: React.PropTypes.object,
+        currentLocale: React.PropTypes.string,
+        onLanguageChange: React.PropTypes.func
     },
     getDefaultProps() {
         return {
-            locales: I18NStore.getSupportedLocales()
+            locales: LocaleUtils.getSupportedLocales(),
+            currentLocale: 'en-US'
         };
     },
     render() {
@@ -28,13 +29,13 @@ var LangSelector = React.createClass({
         var list = [];
         for (let lang in this.props.locales) {
             if (this.props.locales.hasOwnProperty(lang)) {
-                val = this.props.locales[lang];
-                label = lang;
+                val = this.props.locales[lang].code;
+                label = this.props.locales[lang].description;
                 list.push(<option value={val} key={val}>{label}</option>);
             }
         }
         return (
-            <Input type="select" bsSize="small" onChange={this.launchNewLangAction}>
+            <Input defaultValue={this.props.currentLocale} type="select" bsSize="small" onChange={this.launchNewLangAction}>
                 {list}
             </Input>
         );
@@ -42,7 +43,7 @@ var LangSelector = React.createClass({
     launchNewLangAction() {
         var element = React.findDOMNode(this);
         var selectNode = element.getElementsByTagName('select').item(0);
-        I18NActions.launch(I18NActions.CHANGE_LANG, {locale: selectNode.value});
+        this.props.onLanguageChange(selectNode.value);
     }
 });
 

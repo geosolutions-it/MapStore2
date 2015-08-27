@@ -8,6 +8,9 @@ var rewriteUrl = function(replacePath) {
         req.url = req.path.replace(opt.path, replacePath) + query;
     };
 };
+
+var PROD = JSON.parse(process.env.PROD_DEV || "0");
+
 module.exports = {
     entry: {
         viewer: path.join(__dirname, "web", "client", "examples", "viewer", "app"),
@@ -18,12 +21,14 @@ module.exports = {
         publicPath: "/dist/",
         filename: "[name].js"
     },
-    plugins: [
+    plugins: PROD ? [
         new CommonsChunkPlugin("commons", "mapstore-commons.js"),
         new UglifyJsPlugin({
             compress: {warnings: false},
             mangle: true
         })
+    ] : [
+        new CommonsChunkPlugin("commons", "mapstore-commons.js")
     ],
     resolve: {
       extensions: ["", ".js", ".jsx"]

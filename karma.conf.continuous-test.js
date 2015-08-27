@@ -8,7 +8,8 @@ module.exports = function karmaConfig(config) {
         frameworks: [ 'mocha' ],
 
         files: [
-            'tests.webpack.js'
+            'tests.webpack.js',
+            { pattern: './web/client/test-resources/**/*', included: false }
         ],
 
         preprocessors: {
