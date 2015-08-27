@@ -21,7 +21,7 @@ var Api = {
      * Returns Merged configurations from base url and GeoStore
      */
     getMergedConfig: function(baseConfigURL, mapId, geoStoreBase) {
-        var url = ( geoStoreBase || "/rest/geostore/" ) + "data/" + mapId;
+        var url = ( geoStoreBase || "/mapstore/rest/geostore/" ) + "data/" + mapId;
         if (!mapId) {
             return Api.get(baseConfigURL);
         }
