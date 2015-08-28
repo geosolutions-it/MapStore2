@@ -49,7 +49,7 @@ var ConfigUtils = {
 
         // setup layers and sources with defaults
         this.setupSources(sources, config.defaultSourceType);
-        this.setupLayers(layers, sources, ["gxp_osmsource", "gxp_wmssource"]);
+        this.setupLayers(layers, sources, ["gxp_osmsource", "gxp_wmssource", "gxp_googlesource", "gxp_bingsource"]);
         return {
             center: latLng,
             zoom: zoom,

@@ -9,7 +9,8 @@ module.exports = function karmaConfig(config) {
 
         files: [
             'tests.webpack.js',
-            { pattern: './web/client/test-resources/**/*', included: false }
+            { pattern: './web/client/test-resources/**/*', included: false },
+            'http://maps.google.com/maps/api/js?v=3&sensor=false' // required for tests with leaflet google background
         ],
 
         preprocessors: {
