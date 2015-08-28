@@ -10,6 +10,10 @@ var L = require('leaflet');
 var LeafLetLayer = require('../Layer.jsx');
 var expect = require('expect');
 
+require('../../../utils/leaflet/Layers');
+require('../plugins/OSMLayer');
+require('../plugins/WMSLayer');
+
 describe('Leaflet layer', () => {
     document.body.innerHTML = '<div id="map"></div>';
     let map = L.map('map');
