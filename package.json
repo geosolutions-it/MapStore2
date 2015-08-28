@@ -54,7 +54,7 @@
   },
   "scripts": {
     "clean": "rm -Rf ./web/client/dist",
-    "compile": "npm run clean && mkdirp ./web/client/dist && webpack",
+    "compile": "npm run clean && mkdirp ./web/client/dist && webpack --config prod-webpack.config.js",
     "start": "webpack-dev-server --progress --colors --port 8081 --content-base web/client",
     "test": "karma start ./karma.conf.single-run.js",
     "continuoustest": "karma start ./karma.conf.continuous-test.js",
