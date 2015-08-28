@@ -113,7 +113,7 @@
             <version>2.6</version>
             <executions>
                 <execution>
-                    <id>html and configuration files</id>
+                    <id>html, configuration files and images</id>
                     <phase>process-classes</phase>
                     <goals>
                         <goal>copy-resources</goal>
@@ -127,6 +127,7 @@
                                 <includes>
                                     <include>**/*.html</include>
                                     <include>**/*.json</include>
+                                    <include>**/img/*</include>
                                 </includes>
                             </resource>
                         </resources>

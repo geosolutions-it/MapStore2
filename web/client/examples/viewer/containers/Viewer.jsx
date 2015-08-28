@@ -42,7 +42,11 @@ var Viewer = React.createClass({
                     title={<I18N.Message msgId="about_title"/>}
                     glyphicon="info-sign"
                     body={
-                        <div>
+                        <div style={{
+                            backgroundImage: 'url("./img/mapstore-logo-0.20.png")',
+                            backgroundRepeat: 'no-repeat',
+                            backgroundPosition: 'center'
+                        }}>
                             <h1>MapStore 2</h1>
                             <p>
                                 <I18N.Message msgId="about_p0-0"/> <a href="http://openlayers.org/">OpenLayers 3</a> <I18N.Message msgId="about_p0-1"/> <a href="http://leafletjs.com/">Leaflet</a>.
@@ -61,6 +65,9 @@ var Viewer = React.createClass({
                                 <I18N.Message msgId="about_p3"/>
                             </p>
                             <p><I18N.Message msgId="about_p5-0"/> <a href="https://github.com/geosolutions-it/MapStore2/blob/master/CONTRIBUTING.md"><I18N.Message msgId="about_a0"/></a> <I18N.Message msgId="about_p5-1"/></p>
+                            <h3><I18N.Message msgId="about_h21"/></h3>
+                            <p><I18N.Message msgId="about_p6"/></p>
+                            <a href="http://www.geo-solutions.it/"><img src="./img/geosolutions-brand.png" style={{display: "block", margin: "auto"}} alt="GeoSolutions S.A.S."></img></a>
                         </div>
                     }/>
             </div>
