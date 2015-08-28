@@ -8,13 +8,12 @@
 var React = require('react');
 var Layers = require('../../utils/leaflet/Layers');
 
-var LeafletLayer = React.createClass({
+const LeafletLayer = React.createClass({
     propTypes: {
         map: React.PropTypes.object,
         type: React.PropTypes.string,
         options: React.PropTypes.object
     },
-
 
     componentDidMount() {
         if (this.props.options && this.props.options.visibility !== false) {
@@ -35,7 +34,7 @@ var LeafletLayer = React.createClass({
             this.layer = Layers.createLayer(type, options);
 
             if (this.layer) {
-                this.layer.addTo(this.props.map);
+                this.props.map.addLayer(this.layer);
             }
         }
     }

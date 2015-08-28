@@ -16,9 +16,6 @@ var I18N = require('../../../components/I18N/I18N');
 var Localized = require('../../../components/I18N/Localized');
 var loadLocale = require('../../../actions/locale').loadLocale;
 
-require('../../../components/leaflet/plugins/OSMLayer');
-require('../../../components/leaflet/plugins/WMSLayer');
-
 var Viewer = React.createClass({
     propTypes: {
         mapConfig: React.PropTypes.object,
@@ -96,6 +93,12 @@ var Viewer = React.createClass({
         this.props.dispatch(loadLocale('../../translations', lang));
     }
 });
+
+
+require('../../../components/leaflet/plugins/OSMLayer');
+require('../../../components/leaflet/plugins/WMSLayer');
+require('../../../components/leaflet/plugins/GoogleLayer');
+require('../../../components/leaflet/plugins/BingLayer');
 
 module.exports = connect((state) => {
     return {
