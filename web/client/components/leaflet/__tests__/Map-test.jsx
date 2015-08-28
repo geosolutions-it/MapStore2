@@ -10,6 +10,9 @@ var LeafletMap = require('../Map.jsx');
 var LeafLetLayer = require('../Layer.jsx');
 var expect = require('expect');
 
+require('../../../utils/leaflet/Layers');
+require('../plugins/OSMLayer');
+
 describe('LeafletMap', () => {
     afterEach((done) => {
         React.unmountComponentAtNode(document.body);
@@ -71,7 +74,6 @@ describe('LeafletMap', () => {
 
     it('check layers init', () => {
         var options = {
-            "source": "osm",
             "visibility": true
         };
         const map = React.render(<LeafletMap center={{lat: 43.9, lng: 10.3}} zoom={11}>

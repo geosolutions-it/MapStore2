@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var L = require('leaflet');
-var WMSUtils = require('../../utils/leaflet/WMSUtils');
+var Layers = require('../../utils/leaflet/Layers');
 
 var LeafletLayer = React.createClass({
     propTypes: {
@@ -33,20 +32,8 @@ var LeafletLayer = React.createClass({
     },
     createLayer(type, options) {
         if (type) {
-            switch (type) {
-                case "osm":
-                    this.layer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                    });
-                    break;
-                case "wms":
-                    this.layer = L.tileLayer.wms(
-                        WMSUtils.getWMSURL(options.url),
-                        WMSUtils.wmsToLeafletOptions(options)
-                    );
-                    break;
-                default:
-            }
+            this.layer = Layers.createLayer(type, options);
+
             if (this.layer) {
                 this.layer.addTo(this.props.map);
             }

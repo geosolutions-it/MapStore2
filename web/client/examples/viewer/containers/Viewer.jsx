@@ -16,6 +16,9 @@ var I18N = require('../../../components/I18N/I18N');
 var Localized = require('../../../components/I18N/Localized');
 var loadLocale = require('../../../actions/locale').loadLocale;
 
+require('../../../components/leaflet/plugins/OSMLayer');
+require('../../../components/leaflet/plugins/WMSLayer');
+
 var Viewer = React.createClass({
     propTypes: {
         mapConfig: React.PropTypes.object,
