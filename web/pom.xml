@@ -113,7 +113,7 @@
             <version>2.6</version>
             <executions>
                 <execution>
-                    <id>html files</id>
+                    <id>html and configuration files</id>
                     <phase>process-classes</phase>
                     <goals>
                         <goal>copy-resources</goal>
@@ -126,6 +126,7 @@
                                 <directory>${basedir}/client</directory>
                                 <includes>
                                     <include>**/*.html</include>
+                                    <include>**/*.json</include>
                                 </includes>
                             </resource>
                         </resources>
@@ -164,6 +165,25 @@
                                 <directory>${basedir}/client/examples</directory>
                                 <includes>
                                     <include>data/*</include>
+                                </includes>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>translations</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/mapstore</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/client</directory>
+                                <includes>
+                                    <include>translations/*</include>
                                 </includes>
                             </resource>
                         </resources>
