@@ -30,4 +30,16 @@ describe('Test the mapConfig reducer', () => {
         var state = mapConfig(1, {type: 'UNKNOWN'});
         expect(state).toBe(1);
     });
+
+    it('return an updated state with new values for both zoom and center', () => {
+        const oldState = {
+            a: 'zero',
+            zoom: 'zero',
+            center: 'zero'
+        };
+        var state = mapConfig(oldState, {type: 'CHANGE_MAP_VIEW', zoom: 0, center: 0});
+        expect(state.a).toBe(oldState.a);
+        expect(state.zoom).toBe(0);
+        expect(state.center).toBe(0);
+    });
 });

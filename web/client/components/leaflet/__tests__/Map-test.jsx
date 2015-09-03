@@ -82,4 +82,69 @@ describe('LeafletMap', () => {
         expect(map).toExist();
         expect(document.getElementsByClassName('leaflet-layer').length).toBe(1);
     });
+
+    it('check if the handler for "moveend" event is called', () => {
+        var argsOk;
+        const testHandlers = {
+            handler: () => {}
+        };
+        var spy = expect.spyOn(testHandlers, 'handler');
+
+        const map = React.render(
+            <LeafletMap
+                center={{lat: 43.9, lng: 10.3}}
+                zoom={11}
+                onMapViewChanges={testHandlers.handler}
+            />
+        , document.body);
+
+        const leafletMap = map.map;
+
+        leafletMap.setZoom(12);
+        leafletMap.setView({lat: 44, lng: 10});
+
+        expect(spy.calls.length).toEqual(2);
+
+        expect(spy.calls[0].arguments.length).toEqual(2);
+        argsOk = spy.calls[0].arguments[0].lat === 43.9 && spy.calls[0].arguments[0].lng === 10.3;
+        expect(argsOk).toBe(true);
+        expect(spy.calls[0].arguments[1]).toBe(12);
+
+        expect(spy.calls[1].arguments.length).toEqual(2);
+        argsOk = spy.calls[1].arguments[0].lat === 44 && spy.calls[1].arguments[0].lng === 10;
+        expect(argsOk).toBe(true);
+        expect(spy.calls[1].arguments[1]).toBe(12);
+    });
+
+    it('check if the map changes when receive new props', () => {
+        const map = React.render(
+            <LeafletMap
+                center={{lat: 43.9, lng: 10.3}}
+                zoom={11}
+            />
+        , document.body);
+
+        const leafletMap = map.map;
+
+        map.setProps({zoom: 12, center: {lat: 44, lng: 10}});
+        expect(leafletMap.getZoom()).toBe(12);
+        expect(leafletMap.getCenter().lat).toBe(44);
+        expect(leafletMap.getCenter().lng).toBe(10);
+    });
+
+    it('check if the map changes when receive new props', () => {
+        const map = React.render(
+            <LeafletMap
+                center={{lat: 43.9, lng: 10.3}}
+                zoom={11}
+            />
+        , document.body);
+
+        const leafletMap = map.map;
+
+        map.setProps({zoom: 12, center: {lat: 44, lng: 10}});
+        expect(leafletMap.getZoom()).toBe(12);
+        expect(leafletMap.getCenter().lat).toBe(44);
+        expect(leafletMap.getCenter().lng).toBe(10);
+    });
 });
