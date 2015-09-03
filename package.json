@@ -29,6 +29,7 @@
     "mkdirp": "^0.5.1",
     "mocha": "^2.1.0",
     "parallelshell": "^1.1.1",
+    "redux-devtools": "^2.0.0",
     "watchify": "^3.2.1",
     "webpack": "^1.8.5",
     "webpack-dev-server": "^1.7.0"
@@ -38,7 +39,6 @@
     "axios": "^0.5.4",
     "bootstrap": "^3.3.5",
     "es6-promise": "^2.3.0",
-    "flux": "^2.0.3",
     "keymirror": "~0.1.1",
     "leaflet": "^0.7.3",
     "object-assign": "^3.0.0",
@@ -46,8 +46,8 @@
     "react": "^0.13.3",
     "react-bootstrap": "^0.24.3",
     "react-intl": "^1.2.0",
-    "react-redux": "^1.0.0",
-    "redux": "^1.0.0",
+    "react-redux": "^2.0.0",
+    "redux": "^2.0.0",
     "redux-thunk": "^0.1.0",
     "url": "~0.10.3",
     "leaflet-plugins": "https://github.com/Polyconseil/leaflet-plugins/tarball/master"
