@@ -5,12 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var createStore = require('redux').createStore;
-var combineReducers = require('redux').combineReducers;
-var applyMiddleware = require('redux').applyMiddleware;
+var {createStore, compose, combineReducers, applyMiddleware} = require('redux');
+
 var thunkMiddleware = require('redux-thunk');
 var mapConfig = require('../../../reducers/config');
 var locale = require('../../../reducers/locale');
+var url = require('url');
+
+const urlQuery = url.parse(window.location.href, true).query;
 
  // reducers
 const reducers = combineReducers({
@@ -18,9 +20,16 @@ const reducers = combineReducers({
     locale
 });
 
- // store
-const createStoreWithMiddleware = applyMiddleware(
-    thunkMiddleware
-)(createStore);
+let finalCreateStore;
+if (__DEVTOOLS__ && urlQuery.debug) {
+    const { devTools, persistState } = require('redux-devtools');
+    finalCreateStore = compose(
+      applyMiddleware(thunkMiddleware),
+      devTools(),
+      persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/))
+  )(createStore);
+} else {
+    finalCreateStore = applyMiddleware(thunkMiddleware)(createStore);
+}
 
-module.exports = createStoreWithMiddleware(reducers, {});
+module.exports = finalCreateStore(reducers, {});

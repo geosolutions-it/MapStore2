@@ -35,7 +35,7 @@ var LangSelector = React.createClass({
             }
         }
         return (
-            <Input defaultValue={this.props.currentLocale} type="select" bsSize="small" onChange={this.launchNewLangAction}>
+            <Input value={this.props.currentLocale} type="select" bsSize="small" onChange={this.launchNewLangAction}>
                 {list}
             </Input>
         );

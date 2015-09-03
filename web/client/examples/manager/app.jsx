@@ -12,5 +12,7 @@ var MapList = require('../../components/MapManager/MapList');
 var GeoStoreApi = require('../../api/GeoStoreDAO');
 GeoStoreApi.getResourcesByCategory("MAP", "*", {start: 0, limit: 20}).then( function(data) {
     React.render(
-        <MapList data={data.results} viewerUrl="../viewer" panelProps={{header: "Maps", collapsible: true, defaultExpanded: true }} totalCount={data.totalCount}/>, document.getElementById("mapList"));
+        <MapList data={data.results} viewerUrl="../viewer"
+            panelProps={{header: "Maps", collapsible: true, defaultExpanded: true }}
+            totalCount={data.totalCount}/>, document.getElementById("mapList"));
 });
