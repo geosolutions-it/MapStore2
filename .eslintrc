@@ -14,7 +14,8 @@
     "before"     : false,
     "beforeEach" : false,
     "after"      : false,
-    "afterEach"  : false
+    "afterEach"  : false,
+    "__DEVTOOLS__": false
   },
   "ecmaFeatures": {
     "arrowFunctions": true,

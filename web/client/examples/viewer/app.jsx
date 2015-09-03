@@ -26,10 +26,26 @@ store.dispatch(loadMapConfig(configUrl, legacy));
 
 let locale = LocaleUtils.getLocale(urlQuery);
 store.dispatch(loadLocale('../../translations', locale));
-
-React.render(
-    <Provider store={store}>
-        {() => <Viewer />}
-    </Provider>,
-    document.getElementById('container')
-);
+if (__DEVTOOLS__ && urlQuery.debug) {
+    const { DevTools, DebugPanel, LogMonitor } = require('redux-devtools/lib/react');
+    React.render(
+        <div className="fill">
+            <div className="fill-debug">
+                <Provider store={store}>
+                    {() => <Viewer />}
+                </Provider>
+            </div>
+            <DebugPanel top right bottom>
+              <DevTools store={store} monitor={LogMonitor} />
+            </DebugPanel>
+        </div>,
+        document.getElementById('container')
+    );
+} else {
+    React.render(
+        <Provider store={store}>
+            {() => <Viewer />}
+        </Provider>,
+        document.getElementById('container')
+    );
+}
