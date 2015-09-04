@@ -7,7 +7,10 @@
  */
 
 var {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
+var {CHANGE_MAP_VIEW} = require('../actions/map');
+
 var ConfigUtils = require('../utils/ConfigUtils');
+var assign = require('object-assign');
 
 function mapConfig(state = null, action) {
     switch (action.type) {
@@ -17,6 +20,11 @@ function mapConfig(state = null, action) {
             return {
                 loadingError: action.error
             };
+        case CHANGE_MAP_VIEW:
+            return assign({}, state, {
+                center: action.center,
+                zoom: action.zoom
+            });
         default:
             return state;
     }

@@ -15,6 +15,7 @@ var InfoButton = require('../../../components/InfoButton/InfoButton');
 var I18N = require('../../../components/I18N/I18N');
 var Localized = require('../../../components/I18N/Localized');
 var loadLocale = require('../../../actions/locale').loadLocale;
+var changeMapView = require('../../../actions/map').changeMapView;
 
 var Viewer = React.createClass({
     propTypes: {
@@ -84,7 +85,7 @@ var Viewer = React.createClass({
                 <Localized messages={this.props.messages} locale={this.props.locale}>
                     {() =>
                         <div key="viewer" className="fill">
-                            <LMap id="map" center={center} zoom={config.zoom}>
+                            <LMap id="map" center={{lat: center.y, lng: center.x}} zoom={config.zoom} onMapViewChanges={this.manageNewMapView}>
                                 {this.renderLayers(config.layers)}
                             </LMap>
                             {this.renderPlugins(this.props.locale)}
@@ -98,6 +99,10 @@ var Viewer = React.createClass({
     },
     switchLanguage(lang) {
         this.props.dispatch(loadLocale('../../translations', lang));
+    },
+    manageNewMapView(center, zoom) {
+        const normCenter = {x: center.lng, y: center.lat, crs: "EPSG:4326"};
+        this.props.dispatch(changeMapView(normCenter, zoom));
     }
 });
 

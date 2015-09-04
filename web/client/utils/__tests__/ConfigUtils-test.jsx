@@ -121,12 +121,13 @@ describe('ConfigUtils', () => {
         // check zoom
         expect(config.zoom).toBe(5);
         // check lat-lng in 4326
-        expect(config.center.lat).toBeA('number');
-        expect(config.center.lng).toBeA('number');
-        expect(config.center.lat).toBeLessThan(90);
-        expect(config.center.lat).toBeGreaterThan(-90);
-        expect(config.center.lng).toBeLessThan(180);
-        expect(config.center.lng).toBeGreaterThan(-180);
+        expect(config.center.x).toBeA('number');
+        expect(config.center.y).toBeA('number');
+        expect(config.center.x).toBeLessThan(90);
+        expect(config.center.x).toBeGreaterThan(-90);
+        expect(config.center.y).toBeLessThan(180);
+        expect(config.center.y).toBeGreaterThan(-180);
+        expect(config.center.crs).toBe("EPSG:4326");
     });
     it('check sources default values assigned', () => {
         var config = ConfigUtils.convertFromLegacy(lconfig);

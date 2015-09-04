@@ -14,15 +14,24 @@ var ConfigUtils = {
     backgroundGroup: "background",
 
     getCenter: function(center, projection) {
-        if (center.lat && center.lng) {
-            return center;
+        var retval;
+        if (center.x && center.y && center.crs) {
+            if (center.crs !== "EPSG:4326") {
+                let xy = Proj4js.toPoint([center.x, center.y]);
+                const epsgMap = new Proj4js.Proj(center.crs);
+                Proj4js.transform(epsgMap, epsg4326, xy);
+                retval = {y: xy.y, x: xy.x, crs: "EPSG:4326"};
+            } else {
+                retval = center;
+            }
+            return retval;
         }
         let xy = Proj4js.toPoint(center);
         if (projection) {
             const epsgMap = new Proj4js.Proj(projection);
             Proj4js.transform(epsgMap, epsg4326, xy);
         }
-        return {lat: xy.y, lng: xy.x};
+        return {y: xy.y, x: xy.x, crs: "EPSG:4326"};
     },
 
     getConfigurationOptions: function(query, defaultName, extension, geoStoreBase) {

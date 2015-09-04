@@ -12,11 +12,13 @@ var LeafletMap = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         center: React.PropTypes.object,
-        zoom: React.PropTypes.number
+        zoom: React.PropTypes.number,
+        onMapViewChanges: React.PropTypes.function
     },
     getDefaultProps() {
         return {
-          id: 'map'
+          id: 'map',
+          onMapViewChanges() {}
         };
     },
     getInitialState() {
@@ -25,10 +27,25 @@ var LeafletMap = React.createClass({
     componentDidMount() {
         var map = L.map(this.props.id).setView([this.props.center.lat, this.props.center.lng],
           this.props.zoom);
+        map.on('moveend', () => {
+            this.props.onMapViewChanges(map.getCenter(), map.getZoom());
+        });
 
         this.map = map;
         // NOTE: this re-call render function after div creation to have the map initialized.
         this.forceUpdate();
+    },
+    componentWillReceiveProps(newProps) {
+        const currentCenter = this.map.getCenter();
+        const centerIsUpdate = newProps.center.lat === currentCenter.lat &&
+                               newProps.center.lng === currentCenter.lng;
+
+        if (!centerIsUpdate) {
+            this.map.setView(newProps.center);
+        }
+        if (newProps.zoom !== this.map.getZoom()) {
+            this.map.setZoom(newProps.zoom);
+        }
     },
     componentWillUnmount() {
         this.map.remove();
