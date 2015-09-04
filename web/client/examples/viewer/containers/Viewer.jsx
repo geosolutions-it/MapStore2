@@ -85,7 +85,7 @@ var Viewer = React.createClass({
                 <Localized messages={this.props.messages} locale={this.props.locale}>
                     {() =>
                         <div key="viewer" className="fill">
-                            <LMap id="map" center={center} zoom={config.zoom} onMapViewChanges={this.manageNewMapView}>
+                            <LMap id="map" center={{lat: center.y, lng: center.x}} zoom={config.zoom} onMapViewChanges={this.manageNewMapView}>
                                 {this.renderLayers(config.layers)}
                             </LMap>
                             {this.renderPlugins(this.props.locale)}
@@ -101,7 +101,8 @@ var Viewer = React.createClass({
         this.props.dispatch(loadLocale('../../translations', lang));
     },
     manageNewMapView(center, zoom) {
-        this.props.dispatch(changeMapView(center, zoom));
+        const normCenter = {x: center.lng, y: center.lat, crs: "EPSG:4326"};
+        this.props.dispatch(changeMapView(normCenter, zoom));
     }
 });
 
