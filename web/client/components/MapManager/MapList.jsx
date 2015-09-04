@@ -7,34 +7,51 @@
  */
 
 var React = require('react');
-var BootstrapReact = require('react-bootstrap');
-var ListGroup = BootstrapReact.ListGroup;
-var Panel = BootstrapReact.Panel;
+var {ListGroup, Panel, Input, Label} = require('react-bootstrap');
 var MapItem = require('./MapItem');
+var I18N = require('../I18N/I18N');
+var LangSelector = require('../LangSelector/LangSelector');
 
 var MapList = React.createClass({
     propTypes: {
         panelProps: React.PropTypes.object,
-        data: React.PropTypes.array,
-        viewerUrl: React.PropTypes.string
+        maps: React.PropTypes.array,
+        viewerUrl: React.PropTypes.string,
+        mapType: React.PropTypes.string,
+        onChangeMapType: React.PropTypes.func,
+        locale: React.PropTypes.string,
+        onLanguageChange: React.PropTypes.func
     },
-    getInitialState: function() {
-        return {maps: this.props.data || []};
+    getDefaultProps() {
+        return {
+            onChangeMapType: function() {}
+        };
     },
-    renderMaps: function(maps) {
+    renderMaps: function(maps, mapType) {
         const viewerUrl = this.props.viewerUrl;
         return maps.map(function(map) {
-            return <MapItem viewerUrl={viewerUrl} key={map.id} {...map} />;
+            return <MapItem viewerUrl={viewerUrl} key={map.id} mapType={mapType} {...map} />;
         });
     },
     render: function() {
         return (
             <Panel {...this.props.panelProps}>
+                <LangSelector key="langSelector" currentLocale={this.props.locale} onLanguageChange={this.props.onLanguageChange}/>,
+                <Label><I18N.Message msgId="manager_mapTypes_combo"/></Label>
+                <Input value={this.props.mapType} type="select" bsSize="small" onChange={this.changeMapType}>
+                    <option value="leaflet" key="leaflet">Leaflet</option>
+                    <option value="openlayers" key="openlayer">OpenLayers</option>
+                </Input>
                 <ListGroup>
-                    {this.renderMaps(this.state.maps)}
+                    {this.renderMaps(this.props.maps, this.props.mapType)}
                 </ListGroup>
             </Panel>
         );
+    },
+    changeMapType: function() {
+        var element = React.findDOMNode(this);
+        var selectNode = element.getElementsByTagName('select').item(0);
+        this.props.onChangeMapType(selectNode.value);
     }
 });
 

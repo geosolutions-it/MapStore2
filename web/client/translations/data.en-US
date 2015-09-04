@@ -16,6 +16,8 @@
         "about_a0": "this",
         "about_p5-1": "page.",
         "about_h21": "Credits",
-        "about_p6": "MapStore2 is made by:"
+        "about_p6": "MapStore2 is made by:",
+        "manager_mapTypes_combo": "Map Types: ",
+        "manager_maps_title": "Maps"
     }
 }
