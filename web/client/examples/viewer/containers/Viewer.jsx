@@ -12,6 +12,8 @@ var LLayer = require('../../../components/leaflet/Layer');
 var ConfigUtils = require('../../../utils/ConfigUtils');
 var LangSelector = require('../../../components/LangSelector/LangSelector');
 var InfoButton = require('../../../components/InfoButton/InfoButton');
+var ScaleBox = require('../../../api/ScaleBox');
+var ScaleBoxComponent = require('../../../components/ScaleBar/ScaleBox');
 var I18N = require('../../../components/I18N/I18N');
 var Localized = require('../../../components/I18N/Localized');
 var loadLocale = require('../../../actions/locale').loadLocale;
@@ -23,6 +25,11 @@ var Viewer = React.createClass({
         messages: React.PropTypes.object,
         locale: React.PropTypes.string,
         dispatch: React.PropTypes.func
+    },
+    getInitialState() {
+        return {
+            scalebox: new ScaleBox(true, true, 'm')
+        }
     },
     renderLayers(layers) {
         if (layers) {
@@ -37,6 +44,7 @@ var Viewer = React.createClass({
             <div id="langSelContainer" key="langSelContainer">
                 <LangSelector currentLocale={locale} onLanguageChange={this.switchLanguage}/>
             </div>,
+            <ScaleBoxComponent scalebox={this.state.scalebox}/>,
             <div id="aboutContainer" key="aboutContainer">
                 <InfoButton
                     text={<I18N.Message msgId="aboutLbl"/>}
@@ -44,7 +52,7 @@ var Viewer = React.createClass({
                     glyphicon="info-sign"
                     body={
                         <div style={{
-                            backgroundImage: 'url("./img/mapstore-logo-0.20.png")',
+                            backgroundImage: 'url("./assets/img/mapstore-logo-0.20.png")',
                             backgroundRepeat: 'no-repeat',
                             backgroundPosition: 'center'
                         }}>
@@ -68,7 +76,7 @@ var Viewer = React.createClass({
                             <p><I18N.Message msgId="about_p5-0"/> <a href="https://github.com/geosolutions-it/MapStore2/blob/master/CONTRIBUTING.md"><I18N.Message msgId="about_a0"/></a> <I18N.Message msgId="about_p5-1"/></p>
                             <h3><I18N.Message msgId="about_h21"/></h3>
                             <p><I18N.Message msgId="about_p6"/></p>
-                            <a href="http://www.geo-solutions.it/"><img src="./img/geosolutions-brand.png" style={{display: "block", margin: "auto"}} alt="GeoSolutions S.A.S."></img></a>
+                            <a href="http://www.geo-solutions.it/"><img src="./assets/img/geosolutions-brand.png" style={{display: "block", margin: "auto"}} alt="GeoSolutions S.A.S."></img></a>
                         </div>
                     }/>
             </div>

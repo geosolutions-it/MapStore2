@@ -27,6 +27,7 @@ var LeafletMap = React.createClass({
     componentDidMount() {
         var map = L.map(this.props.id).setView([this.props.center.lat, this.props.center.lng],
           this.props.zoom);
+        window.leafMap = map;
         map.on('moveend', () => {
             this.props.onMapViewChanges(map.getCenter(), map.getZoom());
         });
