@@ -37,6 +37,7 @@
             "mapTypes_combo": "Map Type: ",
             "maps_title": "Maps",
             "locales_combo": "Language:"
-        }
+        },
+        "getFeatureInfoTitle": "Feature Info"
     }
 }

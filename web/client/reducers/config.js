@@ -23,7 +23,9 @@ function mapConfig(state = null, action) {
         case CHANGE_MAP_VIEW:
             return assign({}, state, {
                 center: action.center,
-                zoom: action.zoom
+                zoom: action.zoom,
+                bbox: action.bbox,
+                size: action.size
             });
         default:
             return state;

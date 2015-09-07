@@ -84,7 +84,7 @@ describe('LeafletMap', () => {
     });
 
     it('check if the handler for "moveend" event is called', () => {
-        var argsOk;
+        const expectedCalls = 2;
         const testHandlers = {
             handler: () => {}
         };
@@ -100,20 +100,52 @@ describe('LeafletMap', () => {
 
         const leafletMap = map.map;
 
-        leafletMap.setZoom(12);
-        leafletMap.setView({lat: 44, lng: 10});
+        leafletMap.on('moveend', () => {
+            expect(spy.calls.length).toEqual(expectedCalls);
+            expect(spy.calls[0].arguments.length).toEqual(4);
 
-        expect(spy.calls.length).toEqual(2);
+            expect(spy.calls[0].arguments[0].y).toEqual(43.9);
+            expect(spy.calls[0].arguments[0].x).toEqual(10.3);
+            expect(spy.calls[0].arguments[1]).toEqual(11);
 
-        expect(spy.calls[0].arguments.length).toEqual(2);
-        argsOk = spy.calls[0].arguments[0].y === 43.9 && spy.calls[0].arguments[0].x === 10.3;
-        expect(argsOk).toBe(true);
-        expect(spy.calls[0].arguments[1]).toBe(12);
+            expect(spy.calls[1].arguments[0].y).toEqual(44);
+            expect(spy.calls[1].arguments[0].x).toEqual(10);
+            expect(spy.calls[1].arguments[1]).toEqual(12);
 
-        expect(spy.calls[1].arguments.length).toEqual(2);
-        argsOk = spy.calls[1].arguments[0].y === 44 && spy.calls[1].arguments[0].x === 10;
-        expect(argsOk).toBe(true);
-        expect(spy.calls[1].arguments[1]).toBe(12);
+            for (let c = 0; c < expectedCalls; c++) {
+                expect(spy.calls[c].arguments[2].bounds).toExist();
+                expect(spy.calls[c].arguments[2].crs).toExist();
+                expect(spy.calls[c].arguments[3].height).toExist();
+                expect(spy.calls[c].arguments[3].width).toExist();
+            }
+        });
+        leafletMap.setView({lat: 44, lng: 10}, 12);
+    });
+
+    it('check if the handler for "click" event is called', () => {
+        const testHandlers = {
+            handler: () => {}
+        };
+        var spy = expect.spyOn(testHandlers, 'handler');
+
+        const map = React.render(
+            <LeafletMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11}
+                onClick={testHandlers.handler}
+            />
+        , document.body);
+
+        const leafletMap = map.map;
+        const mapDiv = leafletMap.getContainer();
+
+        mapDiv.click();
+
+        expect(spy.calls.length).toEqual(1);
+
+        expect(spy.calls[0].arguments.length).toEqual(1);
+        expect(spy.calls[0].arguments[0].x).toExist();
+        expect(spy.calls[0].arguments[0].y).toExist();
     });
 
     it('check if the map changes when receive new props', () => {

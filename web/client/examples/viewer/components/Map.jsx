@@ -20,7 +20,8 @@ var ConfigUtils = require('../../../utils/ConfigUtils');
 var VMap = React.createClass({
     propTypes: {
         config: ConfigUtils.PropTypes.config,
-        onMapViewChanges: React.PropTypes.func
+        onMapViewChanges: React.PropTypes.func,
+        onClick: React.PropTypes.func
     },
     renderLayers(layers) {
         if (layers) {
@@ -38,7 +39,8 @@ var VMap = React.createClass({
                 center={this.props.config.center}
                 zoom={this.props.config.zoom}
                 projection={this.props.config.projection || 'EPSG:3857'}
-                onMapViewChanges={this.props.onMapViewChanges}>
+                onMapViewChanges={this.props.onMapViewChanges}
+                onClick={this.props.onClick}>
                 {this.renderLayers(this.props.config.layers)}
             </LMap>
         );
