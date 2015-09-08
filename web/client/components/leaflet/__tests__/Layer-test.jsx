@@ -136,10 +136,30 @@ describe('Leaflet layer', () => {
             "type": "google",
             "name": "ROADMAP"
         };
+        var google = {
+            maps: {
+                MapTypeId: {
+                    HYBRID: 'hybrid',
+                    SATELLITE: 'satellite',
+                    ROADMAP: 'roadmap',
+                    TERRAIN: 'terrain'
+                },
+                Map: function() {
+                    this.setMapTypeId = function() {};
+                    this.setCenter = function() {};
+                    this.setZoom = function() {};
+                },
+                LatLng: function() {
+
+                }
+            }
+        };
+        window.google = google;
+
         // create layers
-        var layer = React.render(
+        let layer = React.render(
             <LeafLetLayer type="google" options={options} map={map}/>, document.body);
-        var lcount = 0;
+        let lcount = 0;
 
         expect(layer).toExist();
         // count layers

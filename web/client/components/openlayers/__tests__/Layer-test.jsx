@@ -150,13 +150,33 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().getLength()).toBe(1);
     });
     it('creates a google layer for openlayers map', () => {
+        var google = {
+            maps: {
+                MapTypeId: {
+                    HYBRID: 'hybrid',
+                    SATELLITE: 'satellite',
+                    ROADMAP: 'roadmap',
+                    TERRAIN: 'terrain'
+                },
+                Map: function() {
+                    this.setMapTypeId = function() {};
+                    this.setCenter = function() {};
+                    this.setZoom = function() {};
+                },
+                LatLng: function() {
+
+                }
+            }
+        };
         var options = {
             "type": "google",
             "name": "ROADMAP",
             "visibility": true
         };
+        window.google = google;
+
         // create layers
-        var layer = React.render(
+        let layer = React.render(
             <OpenlayersLayer type="google" options={options} map={map} mapId="map"/>, document.body);
 
         expect(layer).toExist();

@@ -19,6 +19,7 @@ describe('OpenlayersMap', () => {
     var normalizeFloat = function(f, places) {
         return parseFloat(f.toFixed(places));
     };
+
     afterEach((done) => {
         React.unmountComponentAtNode(document.body);
         document.body.innerHTML = '';
