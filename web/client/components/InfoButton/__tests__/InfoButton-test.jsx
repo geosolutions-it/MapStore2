@@ -23,7 +23,7 @@ describe('This test for InfoButton', () => {
 
         const aboutDom = React.findDOMNode(about);
         expect(aboutDom).toExist();
-        expect(aboutDom.id).toNotExist();
+        expect(aboutDom.id).toExist();
 
         const btnList = aboutDom.getElementsByTagName('button');
         expect(btnList.length).toBe(1);

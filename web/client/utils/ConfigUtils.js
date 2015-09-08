@@ -63,7 +63,8 @@ var ConfigUtils = {
             center: latLng,
             zoom: zoom,
             maxExtent: maxExtent, // TODO convert maxExtent
-            layers: layers
+            layers: layers,
+            projection: mapConfig.projection || 'EPSG:3857'
         };
     },
 

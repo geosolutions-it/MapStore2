@@ -23,8 +23,11 @@ var Message = React.createClass({
     render() {
         var locale = this.props.locale || this.context.locale;
         var messages = this.props.messages || this.context.messages;
-
-        return <FormattedMessage locales={locale} message={messages[this.props.msgId]} {...this.props.msgParams}/>;
+        let message = messages;
+        this.props.msgId.split('.').forEach(part => {
+            message = message[part];
+        });
+        return <FormattedMessage locales={locale} message={message} {...this.props.msgParams}/>;
     }
 });
 

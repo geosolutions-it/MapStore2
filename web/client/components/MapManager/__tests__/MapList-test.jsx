@@ -51,7 +51,7 @@ describe('This test for MapList', () => {
     it('checks data', () => {
         var map1 = {id: 1, name: "a", description: "description"};
         var map2 = {id: 2, name: "b", description: "description"};
-        const mapList = React.render(<MapList data={[map1, map2]}/>, document.body);
+        const mapList = React.render(<MapList maps={[map1, map2]}/>, document.body);
         expect(mapList).toExist();
         const dom = React.findDOMNode(mapList);
         expect(dom).toExist();

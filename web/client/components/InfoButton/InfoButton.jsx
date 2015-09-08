@@ -37,7 +37,7 @@ var About = React.createClass({
     },
     getDefaultProps() {
         return {
-            id: undefined,
+            id: "mapstore-infobutton",
             title: "Info",
             body: "",
             style: undefined,

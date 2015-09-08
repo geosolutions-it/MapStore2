@@ -49,10 +49,10 @@ describe('This test for MapItem', () => {
     it('test viewer url', () => {
         const testName = "test";
         const testDescription = "testDescription";
-        var component = TestUtils.renderIntoDocument(<MapItem id={1} name={testName} description={testDescription} viewerUrl="viewer"/>);
+        var component = TestUtils.renderIntoDocument(<MapItem id={1} name={testName} mapType="leaflet" description={testDescription} viewerUrl="viewer"/>);
         var a = TestUtils.findRenderedDOMComponentWithTag(
            component, 'a'
         );
-        expect(a.props.href).toBe("viewer?mapId=1");
+        expect(a.props.href).toBe("viewer?type=leaflet&mapId=1");
     });
 });
