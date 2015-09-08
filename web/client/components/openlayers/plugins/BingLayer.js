@@ -9,13 +9,15 @@
 var Layers = require('../../../utils/openlayers/Layers');
 var ol = require('openlayers');
 
-Layers.registerType('bing', (options) => {
-    var key = options.apiKey || "AqTGBsziZHIJYYxgivLBf0hVdrAk9mWO5cQcb8Yux8sW5M8c8opEC2lZqKR1ZZXf";
-    return new ol.layer.Tile({
-        preload: Infinity,
-        source: new ol.source.BingMaps({
-          key: key,
-          imagerySet: options.name
-        })
-    });
+Layers.registerType('bing', {
+    create: (options) => {
+        var key = options.apiKey || "AqTGBsziZHIJYYxgivLBf0hVdrAk9mWO5cQcb8Yux8sW5M8c8opEC2lZqKR1ZZXf";
+        return new ol.layer.Tile({
+            preload: Infinity,
+            source: new ol.source.BingMaps({
+              key: key,
+              imagerySet: options.name
+            })
+        });
+    }
 });

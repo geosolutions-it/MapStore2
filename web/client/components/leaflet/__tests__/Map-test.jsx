@@ -131,20 +131,4 @@ describe('LeafletMap', () => {
         expect(leafletMap.getCenter().lat).toBe(44);
         expect(leafletMap.getCenter().lng).toBe(10);
     });
-
-    it('check if the map changes when receive new props', () => {
-        const map = React.render(
-            <LeafletMap
-                center={{lat: 43.9, lng: 10.3}}
-                zoom={11}
-            />
-        , document.body);
-
-        const leafletMap = map.map;
-
-        map.setProps({zoom: 12, center: {lat: 44, lng: 10}});
-        expect(leafletMap.getZoom()).toBe(12);
-        expect(leafletMap.getCenter().lat).toBe(44);
-        expect(leafletMap.getCenter().lng).toBe(10);
-    });
 });

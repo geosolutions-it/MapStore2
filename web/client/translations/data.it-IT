@@ -17,7 +17,10 @@
         "about_p5-1": "pagina.",
         "about_h21": "Crediti",
         "about_p6": "MapStore2 è sviluppato da:",
-        "manager_mapTypes_combo": "Tipi di mappa: ",
-        "manager_maps_title": "Mappe"
+        "manager": {
+            "mapTypes_combo": "Tipo di mappa:",
+            "maps_title": "Mappe",
+            "locales_combo": "Lingua:"
+        }
     }
 }

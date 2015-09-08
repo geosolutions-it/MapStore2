@@ -13,18 +13,21 @@ var OpenlayersMap = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         center: React.PropTypes.object,
-        zoom: React.PropTypes.number
+        zoom: React.PropTypes.number,
+        projection: React.PropTypes.string,
+        onMapViewChanges: React.PropTypes.func
     },
     getDefaultProps() {
         return {
-          id: 'map'
+          id: 'map',
+          projection: 'EPSG:3857'
         };
     },
     getInitialState() {
         return { };
     },
     componentDidMount() {
-        var center = CoordinatesUtils.reproject([this.props.center.lng, this.props.center.lat], 'EPSG:4326', 'EPSG:900913');
+        var center = CoordinatesUtils.reproject([this.props.center.lng, this.props.center.lat], 'EPSG:4326', this.props.projection);
         var map = new ol.Map({
           layers: [
           ],
@@ -39,24 +42,46 @@ var OpenlayersMap = React.createClass({
             zoom: this.props.zoom
           })
         });
+        map.on('moveend', () => {
+            let view = map.getView();
+            let c = this.normalizeCenter(view.getCenter());
+            this.props.onMapViewChanges({lng: c[0], lat: c[1]}, view.getZoom());
+        });
 
         this.map = map;
         // NOTE: this re-call render function after div creation to have the map initialized.
         this.forceUpdate();
     },
+    componentWillReceiveProps(newProps) {
+        var view = this.map.getView();
+        const currentCenter = this.normalizeCenter(view.getCenter());
+        const centerIsUpdated = newProps.center.lat === currentCenter[1] &&
+                               newProps.center.lng === currentCenter[0];
+
+        if (!centerIsUpdated) {
+            view.setCenter([newProps.center.lng, newProps.center.lat]);
+        }
+        if (newProps.zoom !== view.getZoom()) {
+            view.setZoom(newProps.zoom);
+        }
+    },
     componentWillUnmount() {
-        this.map.remove();
+        this.map.setTarget(null);
     },
     render() {
         const map = this.map;
         const children = map ? React.Children.map(this.props.children, child => {
-            return child ? React.cloneElement(child, {map: map}) : null;
+            return child ? React.cloneElement(child, {map: map, mapId: this.props.id}) : null;
         }) : null;
+
         return (
             <div id={this.props.id}>
                 {children}
             </div>
         );
+    },
+    normalizeCenter: function(center) {
+        return ol.proj.transform(center, this.props.projection, 'EPSG:4326');
     }
 });
 

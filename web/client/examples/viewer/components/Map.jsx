@@ -38,6 +38,7 @@ var VMap = React.createClass({
             <LMap id="map"
                 center={{lat: center.y, lng: center.x}}
                 zoom={this.props.config.zoom}
+                projection={this.props.config.projection || 'EPSG:3857'}
                 onMapViewChanges={this.props.onMapViewChanges}>
                 {this.renderLayers(this.props.config.layers)}
             </LMap>

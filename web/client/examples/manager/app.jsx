@@ -24,8 +24,25 @@ const urlQuery = url.parse(window.location.href, true).query;
 let locale = LocaleUtils.getLocale(urlQuery);
 store.dispatch(loadLocale('../../translations', locale));
 
-React.render(
-    <Provider store={store}>
-        {() => <Manager />}
-    </Provider>
-    , document.getElementById("mapList"));
+if (__DEVTOOLS__ && urlQuery.debug) {
+    const { DevTools, DebugPanel, LogMonitor } = require('redux-devtools/lib/react');
+    React.render(
+        <div className="fill">
+            <div className="fill-debug">
+                <Provider store={store}>
+                    {() => <Manager />}
+                </Provider>
+            </div>
+            <DebugPanel top right bottom>
+              <DevTools store={store} monitor={LogMonitor} />
+            </DebugPanel>
+        </div>,
+        document.getElementById('container')
+    );
+} else {
+    React.render(
+        <Provider store={store}>
+            {() => <Manager />}
+        </Provider>
+        , document.getElementById("container"));
+}

@@ -14,10 +14,17 @@ var Layers = {
         layerTypes[type] = impl;
     },
 
-    createLayer: function(type, options) {
+    createLayer: function(type, options, map, mapId) {
         var layerCreator = layerTypes[type];
         if (layerCreator) {
-            return layerCreator(options);
+            return layerCreator.create(options, map, mapId);
+        }
+        return null;
+    },
+    renderLayer: function(type, options, map, mapId) {
+        var layerCreator = layerTypes[type];
+        if (layerCreator && layerCreator.render) {
+            return layerCreator.render(options, map, mapId);
         }
         return null;
     }

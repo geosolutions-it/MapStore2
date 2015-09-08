@@ -13,7 +13,8 @@ var LeafletMap = React.createClass({
         id: React.PropTypes.string,
         center: React.PropTypes.object,
         zoom: React.PropTypes.number,
-        onMapViewChanges: React.PropTypes.function
+        projection: React.PropTypes.string,
+        onMapViewChanges: React.PropTypes.func
     },
     getDefaultProps() {
         return {

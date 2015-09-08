@@ -1,0 +1,159 @@
+/**
+ * Copyright 2015, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+var React = require('react/addons');
+var OpenlayersMap = require('../Map.jsx');
+var OpenlayersLayer = require('../Layer.jsx');
+var expect = require('expect');
+var ol = require('openlayers');
+
+require('../../../utils/openlayers/Layers');
+require('../plugins/OSMLayer');
+
+describe('OpenlayersMap', () => {
+
+    var normalizeFloat = function(f, places) {
+        return parseFloat(f.toFixed(places));
+    };
+    afterEach((done) => {
+        React.unmountComponentAtNode(document.body);
+        document.body.innerHTML = '';
+        setTimeout(done);
+    });
+
+    it('creates a div for openlayers map with given id', () => {
+        const map = React.render(<OpenlayersMap id="mymap" center={{lat: 43.9, lng: 10.3}} zoom={11}/>, document.body);
+        expect(map).toExist();
+        expect(React.findDOMNode(map).id).toBe('mymap');
+    });
+
+    it('creates a div for openlayers map with default id (map)', () => {
+        const map = React.render(<OpenlayersMap center={{lat: 43.9, lng: 10.3}} zoom={11}/>, document.body);
+        expect(map).toExist();
+        expect(React.findDOMNode(map).id).toBe('map');
+    });
+
+    it('creates multiple maps for different containers', () => {
+        const container = React.render(
+        (
+            <div>
+                <div id="container1"><OpenlayersMap id="map1" center={{lat: 43.9, lng: 10.3}} zoom={11}/></div>
+                <div id="container2"><OpenlayersMap id="map2" center={{lat: 43.9, lng: 10.3}} zoom={11}/></div>
+            </div>
+        ), document.body);
+        expect(container).toExist();
+
+        expect(document.getElementById('map1')).toExist();
+        expect(document.getElementById('map2')).toExist();
+    });
+
+    it('populates the container with openlayers objects', () => {
+        const map = React.render(<OpenlayersMap center={{lat: 43.9, lng: 10.3}} zoom={11}/>, document.body);
+        expect(map).toExist();
+        expect(document.getElementsByClassName('ol-viewport').length).toBe(1);
+        expect(document.getElementsByClassName('ol-overlaycontainer').length).toBe(1);
+        expect(document.getElementsByTagName('canvas').length).toBe(1);
+    });
+
+    it('enables leaflet controls', () => {
+        const map = React.render(<OpenlayersMap center={{lat: 43.9, lng: 10.3}} zoom={11}/>, document.body);
+        expect(map).toExist();
+        expect(document.getElementsByClassName('ol-zoom-in').length).toBe(1);
+
+        const olMap = map.map;
+        expect(olMap).toExist();
+
+        const zoomIn = document.getElementsByClassName('ol-zoom-in')[0];
+        zoomIn.click();
+        expect(olMap.getView().getZoom()).toBe(12);
+
+        const zoomOut = document.getElementsByClassName('ol-zoom-out')[0];
+        zoomOut.click();
+        expect(olMap.getView().getZoom()).toBe(11);
+    });
+
+    it('check layers init', () => {
+        var options = {
+            "visibility": true
+        };
+        const map = React.render(<OpenlayersMap center={{lat: 43.9, lng: 10.3}} zoom={11}>
+            <OpenlayersLayer type="osm" options={options} />
+        </OpenlayersMap>, document.body);
+        expect(map).toExist();
+        expect(map.map.getLayers().getLength()).toBe(1);
+    });
+
+    it('check if the handler for "moveend" event is called after setZoom', (done) => {
+        const testHandlers = {
+            handler: () => {}
+        };
+        var spy = expect.spyOn(testHandlers, 'handler');
+
+        const map = React.render(
+            <OpenlayersMap
+                center={{lat: 43.9, lng: 10.3}}
+                zoom={11}
+                onMapViewChanges={testHandlers.handler}
+            />
+        , document.body);
+
+        const olMap = map.map;
+        olMap.getView().setZoom(12);
+
+        olMap.on('moveend', () => {
+            expect(spy.calls.length).toEqual(1);
+            expect(spy.calls[0].arguments.length).toEqual(2);
+            expect(normalizeFloat(spy.calls[0].arguments[0].lat, 1)).toBe(43.9);
+            expect(normalizeFloat(spy.calls[0].arguments[0].lng, 1)).toBe(10.3);
+            expect(spy.calls[0].arguments[1]).toBe(12);
+            done();
+        });
+    });
+
+    it('check if the handler for "moveend" event is called after setCenter', (done) => {
+        const testHandlers = {
+            handler: () => {}
+        };
+        var spy = expect.spyOn(testHandlers, 'handler');
+
+        const map = React.render(
+            <OpenlayersMap
+                center={{lat: 43.9, lng: 10.3}}
+                zoom={11}
+                onMapViewChanges={testHandlers.handler}
+            />
+        , document.body);
+
+        const olMap = map.map;
+        olMap.getView().setCenter(ol.proj.transform([10, 44], 'EPSG:4326', 'EPSG:3857'));
+
+        olMap.on('moveend', () => {
+            expect(spy.calls.length).toEqual(1);
+            expect(spy.calls[0].arguments.length).toEqual(2);
+            expect(normalizeFloat(spy.calls[0].arguments[0].lat, 1)).toBe(44);
+            expect(normalizeFloat(spy.calls[0].arguments[0].lng, 1)).toBe(10);
+            expect(spy.calls[0].arguments[1]).toBe(11);
+            done();
+        });
+    });
+
+    it('check if the map changes when receive new props', () => {
+        const map = React.render(
+            <OpenlayersMap
+                center={{lat: 43.9, lng: 10.3}}
+                zoom={11}
+            />
+        , document.body);
+
+        const olMap = map.map;
+
+        map.setProps({zoom: 12, center: {lat: 44, lng: 10}});
+        expect(olMap.getView().getZoom()).toBe(12);
+        expect(olMap.getView().getCenter()[1]).toBe(44);
+        expect(olMap.getView().getCenter()[0]).toBe(10);
+    });
+});

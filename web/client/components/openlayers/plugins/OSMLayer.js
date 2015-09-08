@@ -9,8 +9,10 @@
 var Layers = require('../../../utils/openlayers/Layers');
 var ol = require('openlayers');
 
-Layers.registerType('osm', () => {
-    return new ol.layer.Tile({
-      source: new ol.source.OSM()
-  });
+Layers.registerType('osm', {
+    create: () => {
+        return new ol.layer.Tile({
+          source: new ol.source.OSM()
+        });
+    }
 });
