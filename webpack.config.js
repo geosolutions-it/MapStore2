@@ -13,7 +13,8 @@ var rewriteUrl = function(replacePath) {
 module.exports = {
     entry: {
         viewer: path.join(__dirname, "web", "client", "examples", "viewer", "app"),
-        manager: path.join(__dirname, "web", "client", "examples", "manager", "app")
+        manager: path.join(__dirname, "web", "client", "examples", "manager", "app"),
+        home: path.join(__dirname, "web", "client", "examples", "home", "app")
     },
     output: {
       path: path.join(__dirname, "web", "client", "dist"),

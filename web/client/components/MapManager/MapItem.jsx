@@ -8,6 +8,7 @@
 
 var React = require('react');
 var BootstrapReact = require('react-bootstrap');
+var I18N = require('../I18N/I18N');
 var ListGroupItem = BootstrapReact.ListGroupItem;
 var Button = BootstrapReact.Button;
 var Glyphicon = BootstrapReact.Glyphicon;
@@ -27,7 +28,7 @@ var MapItem = React.createClass({
     renderButtons: function() {
         if (this.props.viewerUrl) {
             const previewURL = this.props.viewerUrl + "?type=" + this.props.mapType + "&mapId=" + this.props.id;
-            const tooltip = <Tooltip>Open map in a new tab</Tooltip>;
+            const tooltip = <Tooltip><I18N.Message msgId="manager.openInANewTab" /></Tooltip>;
             return (<div>
                 <OverlayTrigger placement="right" overlay={tooltip}>
                     <Button bsStyle="info" target="_blank" href={previewURL}> <Glyphicon glyph={"new-window"}/>
