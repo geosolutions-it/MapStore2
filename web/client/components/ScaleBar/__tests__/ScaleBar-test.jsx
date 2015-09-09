@@ -5,9 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react/addons'),
-ScaleBar = require('../ScaleBar.jsx'),
-expect = require('expect');
+var React = require('react/addons');
+var expect = require('expect');
+var ScaleBar = require('../ScaleBar.jsx');
 
 describe('This test for ScaleBar', () => {
     afterEach((done) => {
@@ -40,13 +40,14 @@ describe('This test for ScaleBar', () => {
         const scalebar = React.render(<ScaleBar/>, document.body);
         const scalebarDom = React.findDOMNode(scalebar);
         const scalebarDist = scalebarDom.getElementsByClassName('mapstore-scalebox-bar-dist');
-        
+
         const firstDist = scalebarDist.style.width;
-        
-        if (leafMap.getMaxZoom() !== leafMap.getZoom())
-            leafMap.zoomIn();
-        else
-            leafMap.zoomOut();
+
+        if (this.map.getMaxZoom() !== this.map.getZoom()) {
+            this.map.zoomIn();
+        } else {
+            this.map.zoomOut();
+        }
 
         const secondDist = scalebarDist.style.width;
         expect(firstDist).not.toBe(secondDist);
@@ -55,12 +56,8 @@ describe('This test for ScaleBar', () => {
     // test CUSTOM
     it('checks the custom scalebar text and width', () => {
         var scaleboxVar = {
-            getBarValues: function () {
-                var def = new $.Deferred();
-                setTimeout(function () {
-                    def.resolve(['1:5000', 150]);
-                }, 1000);
-                return def.promise();
+            getBarValues: function() {
+                return ['1:5000', 150];
             }
         };
 

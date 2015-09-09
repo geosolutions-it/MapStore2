@@ -38,6 +38,7 @@ html, body, #container, #map, .fill {
 	margin: 8px;
 	margin-bottom: 23px;
 	bottom: 0px;
+	z-index: 10;
 }
 
 .mapstore-scalebox-combo-main > button.dropdown-toggle,

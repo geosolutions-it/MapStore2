@@ -12,8 +12,6 @@ var VMap = require('../components/Map');
 
 
 var LangSelector = require('../../../components/LangSelector/LangSelector');
-var ScaleBox = require('../../../api/ScaleBox');
-var ScaleBoxComponent = require('../../../components/ScaleBar/ScaleBox');
 var About = require('../components/About');
 var Localized = require('../../../components/I18N/Localized');
 var loadLocale = require('../../../actions/locale').loadLocale;
@@ -28,15 +26,9 @@ var Viewer = React.createClass({
         loadLocale: React.PropTypes.func,
         changeMapView: React.PropTypes.func
     },
-    getInitialState() {
-        return {
-            scalebox: new ScaleBox(true, true, 'm')
-        }
-    },
     renderPlugins(locale) {
         return [
             <LangSelector key="langSelector" currentLocale={locale} onLanguageChange={this.props.loadLocale}/>,
-            <ScaleBoxComponent scalebox={this.state.scalebox}/>,
             <About key="about"/>
         ];
     },

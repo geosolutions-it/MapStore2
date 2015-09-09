@@ -5,9 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react/addons'),
-ScaleCombo = require('../ScaleCombo.jsx'),
-expect = require('expect');
+var React = require('react/addons');
+var expect = require('expect');
+var ScaleCombo = require('../ScaleCombo.jsx');
 
 describe('This test for ScaleCombo', () => {
     afterEach((done) => {
@@ -48,13 +48,14 @@ describe('This test for ScaleCombo', () => {
         const scalecomboMain = scalecomboDom.getElementsByClassName('mapstore-scalebox-combo-main');
         const scalecomboMainBtn = scalecomboMain.getElementsByTagName('button');
         const scalecomboMainSpan = scalecomboMainBtn.getElementsByTagName('span').item(0);
-        
+
         const firstState = scalecomboMainSpan.innerHTML;
-        
-        if (leafMap.getMaxZoom() !== leafMap.getZoom())
-            leafMap.zoomIn();
-        else
-            leafMap.zoomOut();
+
+        if (this.map.getMaxZoom() !== this.map.getZoom()) {
+            this.map.zoomIn();
+        } else {
+            this.map.zoomOut();
+        }
 
         const secondState = scalecomboMainSpan.innerHTML;
         expect(firstState).not.toBe(secondState);
@@ -66,25 +67,26 @@ describe('This test for ScaleCombo', () => {
         const scalecomboMain = scalecomboDom.getElementsByClassName('mapstore-scalebox-combo-main');
         const scalecomboMainUl = scalecomboMain.getElementsByTagName('ul');
         const scalecomboMainLi = scalecomboMainUl.getElementsByTagName('li');
-        
-        var firstItem = scalecomboMainLi.item(0);
-        const zoomLevelFirst = leafMap.getZoom();
 
-        if (parseInt(firstItem.getAttribute("data")) === zoomLevelFirst)
+        var firstItem = scalecomboMainLi.item(0);
+        const zoomLevelFirst = this.map.getZoom();
+
+        if (parseInt((firstItem.getAttribute("data")), 10) === zoomLevelFirst) {
             firstItem = scalecomboMainLi.item(1);
+        }
 
         firstItem.click();
-        const zoomLevelSecond = leafMap.getZoom();
-        
+        const zoomLevelSecond = this.map.getZoom();
+
         expect(zoomLevelFirst).not.toBe(zoomLevelSecond);
     });
 
     // test CUSTOM
     it('checks the custom scalecombo visibility, title, item and glyph', () => {
         const scalebox = {
-            getComboItems: function () {
-                    var items =  [[15,'1:15'], [14,'1:14'], [13,'1:13'], [12,'1:12']];
-                    return items;
+            getComboItems: function() {
+                var items = [[15, '1:15'], [14, '1:14'], [13, '1:13'], [12, '1:12']];
+                return items;
             }
         };
 
