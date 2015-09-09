@@ -139,7 +139,7 @@ var Viewer = React.createClass({
         this.props.dispatch(changeMapView(normCenter, zoom));
     },
     switchLanguage(lang) {
-        this.props.dispatch(loadLocale('../../translations', lang));
+        this.props.dispatch(loadLocale('translations', lang));
     }
 });
 
