@@ -22,7 +22,7 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 // store.dispatch(loadMapConfig(configUrl, legacy));
 let locale = LocaleUtils.getLocale(urlQuery);
-store.dispatch(loadLocale('../../translations', locale));
+store.dispatch(loadLocale('translations', locale));
 store.dispatch(loadMaps());
 
 
