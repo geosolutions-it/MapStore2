@@ -1,6 +1,7 @@
 {
     "locale": "it-IT",
     "messages": {
+        "Language": "Lingua",
         "msgId0": "{name} ha scattato {numPhotos, plural, =0 {nessuna foto} other {# foto}} il {takenDate, date, long}.",
         "htmlTest": "{name} {surname}",
         "about_title": "Riguardo a questa app...",
@@ -17,7 +18,22 @@
         "about_p5-1": "pagina.",
         "about_h21": "Crediti",
         "about_p6": "MapStore2 è sviluppato da:",
+        "home":{
+            "open": "Apri",
+            "description": "MapStore è sviluppato per creare, salvare e condividere in modo semplice ed intuitivo mappe e mashup creati selezionando contenuti da server come Google Maps, OpenStreetMap, MapQuest o da server specifici forniti dalla propria organizzazione o da terzi. <br/> Visita la <a href=\"http://geosolutions-it.github.io/MapStore2/\">home page</a> per maggiori dettagli.",
+            "Applications": "Applicazioni",
+            "Examples": "Esempi",
+            "examples":{
+                "viewer":{
+                    "html":"<h3>Viewer</h3><p>Semplice Visualizzatore di mappa</p>"
+                },
+                "manager":{
+                    "html":"<h3>Manager</h3><p>Sfogla le mappe</p>"
+                }
+            }
+        },
         "manager": {
+            "openInANewTab":"Apri in un nuovo tab",
             "mapTypes_combo": "Tipo di mappa:",
             "maps_title": "Mappe",
             "locales_combo": "Lingua:"

@@ -10,6 +10,7 @@ var expect = require('expect');
 var React = require('react/addons');
 var Localized = require('../Localized');
 var Message = require('../Message');
+var HTML = require('../HTML');
 
 const messages = {
     "testMsg": "my message"
@@ -22,10 +23,21 @@ describe('Test the localization support HOC', () => {
         setTimeout(done);
     });
 
-    it('localizes wrapped component', () => {
+    it('localizes wrapped Message component', () => {
         var localized = React.render(
             <Localized locale="it-IT" messages={messages}>
                 {() => <Message msgId="testMsg"/> }
+            </Localized>
+            , document.body);
+        var dom = React.findDOMNode(localized);
+        expect(dom).toExist();
+        expect(dom.innerHTML).toBe("my message");
+    });
+
+    it('localizes wrapped HTML component', () => {
+        var localized = React.render(
+            <Localized locale="it-IT" messages={messages}>
+                {() => <HTML msgId="testMsg"/> }
             </Localized>
             , document.body);
         var dom = React.findDOMNode(localized);
