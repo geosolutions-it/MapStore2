@@ -9,8 +9,7 @@ module.exports = function karmaConfig(config) {
 
         files: [
             'tests.webpack.js',
-            { pattern: './web/client/test-resources/**/*', included: false },
-            'http://maps.google.com/maps/api/js?v=3&sensor=false' // required for tests with leaflet google background
+            { pattern: './web/client/test-resources/**/*', included: false }
         ],
 
         preprocessors: {
@@ -40,7 +39,7 @@ module.exports = function karmaConfig(config) {
             devtool: 'inline-source-map',
             module: {
                 loaders: [
-                    { test: /\.jsx?$/, loader: 'babel-loader' }
+                    { test: /\.jsx?$/, exclude: /ol\.js$/, loader: 'babel-loader' }
                 ],
                 postLoaders: [
                     {

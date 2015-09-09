@@ -21,11 +21,12 @@ var MapItem = React.createClass({
         name: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         description: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         attributes: React.PropTypes.object,
-        viewerUrl: React.PropTypes.string
+        viewerUrl: React.PropTypes.string,
+        mapType: React.PropTypes.string
     },
     renderButtons: function() {
         if (this.props.viewerUrl) {
-            const previewURL = this.props.viewerUrl + "?mapId=" + this.props.id;
+            const previewURL = this.props.viewerUrl + "?type=" + this.props.mapType + "&mapId=" + this.props.id;
             const tooltip = <Tooltip>Open map in a new tab</Tooltip>;
             return (<div>
                 <OverlayTrigger placement="right" overlay={tooltip}>

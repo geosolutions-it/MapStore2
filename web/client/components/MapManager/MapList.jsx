@@ -7,31 +7,35 @@
  */
 
 var React = require('react');
-var BootstrapReact = require('react-bootstrap');
-var ListGroup = BootstrapReact.ListGroup;
-var Panel = BootstrapReact.Panel;
+var {ListGroup, Panel} = require('react-bootstrap');
 var MapItem = require('./MapItem');
 
 var MapList = React.createClass({
     propTypes: {
         panelProps: React.PropTypes.object,
-        data: React.PropTypes.array,
-        viewerUrl: React.PropTypes.string
+        maps: React.PropTypes.array,
+        viewerUrl: React.PropTypes.string,
+        mapType: React.PropTypes.string,
+        locale: React.PropTypes.string
     },
-    getInitialState: function() {
-        return {maps: this.props.data || []};
+    getDefaultProps() {
+        return {
+            onChangeMapType: function() {},
+            mapType: 'leaflet',
+            maps: []
+        };
     },
-    renderMaps: function(maps) {
+    renderMaps: function(maps, mapType) {
         const viewerUrl = this.props.viewerUrl;
         return maps.map(function(map) {
-            return <MapItem viewerUrl={viewerUrl} key={map.id} {...map} />;
+            return <MapItem viewerUrl={viewerUrl} key={map.id} mapType={mapType} {...map} />;
         });
     },
     render: function() {
         return (
             <Panel {...this.props.panelProps}>
                 <ListGroup>
-                    {this.renderMaps(this.state.maps)}
+                    {this.renderMaps(this.props.maps, this.props.mapType)}
                 </ListGroup>
             </Panel>
         );

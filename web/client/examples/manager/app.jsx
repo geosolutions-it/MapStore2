@@ -7,12 +7,42 @@
  */
 var React = require('react');
 
-var MapList = require('../../components/MapManager/MapList');
+var Provider = require('react-redux').Provider;
+var Manager = require('./containers/Manager');
 
-var GeoStoreApi = require('../../api/GeoStoreDAO');
-GeoStoreApi.getResourcesByCategory("MAP", "*", {start: 0, limit: 20}).then( function(data) {
+var store = require('./stores/managerstore');
+var url = require('url');
+
+var loadMaps = require('../../actions/maps').loadMaps;
+var loadLocale = require('../../actions/locale').loadLocale;
+var LocaleUtils = require('../../utils/LocaleUtils');
+
+store.dispatch(loadMaps());
+
+const urlQuery = url.parse(window.location.href, true).query;
+
+let locale = LocaleUtils.getLocale(urlQuery);
+store.dispatch(loadLocale('../../translations', locale));
+
+if (__DEVTOOLS__ && urlQuery.debug) {
+    const { DevTools, DebugPanel, LogMonitor } = require('redux-devtools/lib/react');
     React.render(
-        <MapList data={data.results} viewerUrl="../viewer"
-            panelProps={{header: "Maps", collapsible: true, defaultExpanded: true }}
-            totalCount={data.totalCount}/>, document.getElementById("mapList"));
-});
+        <div className="fill">
+            <div className="fill-debug">
+                <Provider store={store}>
+                    {() => <Manager />}
+                </Provider>
+            </div>
+            <DebugPanel top right bottom>
+              <DevTools store={store} monitor={LogMonitor} />
+            </DebugPanel>
+        </div>,
+        document.getElementById('container')
+    );
+} else {
+    React.render(
+        <Provider store={store}>
+            {() => <Manager />}
+        </Provider>
+        , document.getElementById("container"));
+}

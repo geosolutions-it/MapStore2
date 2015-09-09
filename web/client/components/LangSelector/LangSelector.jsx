@@ -13,14 +13,17 @@ var LocaleUtils = require('../../utils/LocaleUtils');
 
 var LangSelector = React.createClass({
     propTypes: {
+        id: React.PropTypes.string,
         locales: React.PropTypes.object,
         currentLocale: React.PropTypes.string,
         onLanguageChange: React.PropTypes.func
     },
     getDefaultProps() {
         return {
+            id: "mapstore-langselector",
             locales: LocaleUtils.getSupportedLocales(),
-            currentLocale: 'en-US'
+            currentLocale: 'en-US',
+            onLanguageChange: function() {}
         };
     },
     render() {
@@ -35,9 +38,11 @@ var LangSelector = React.createClass({
             }
         }
         return (
-            <Input value={this.props.currentLocale} type="select" bsSize="small" onChange={this.launchNewLangAction}>
-                {list}
-            </Input>
+            <div id={this.props.id}>
+                <Input value={this.props.currentLocale} type="select" bsSize="small" onChange={this.launchNewLangAction}>
+                    {list}
+                </Input>
+            </div>
         );
     },
     launchNewLangAction() {

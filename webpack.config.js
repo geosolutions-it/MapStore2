@@ -1,6 +1,7 @@
 var path = require("path");
 var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
 var DefinePlugin = require("webpack/lib/DefinePlugin");
+var NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
 var rewriteUrl = function(replacePath) {
     return function(req, opt) {  // gets called with request and proxy object
         var queryIndex = req.url.indexOf('?');
@@ -23,14 +24,17 @@ module.exports = {
         new DefinePlugin({
             "__DEVTOOLS__": true
         }),
-        new CommonsChunkPlugin("commons", "mapstore-commons.js")
+        new CommonsChunkPlugin("commons", "mapstore-commons.js"),
+        new NormalModuleReplacementPlugin(/leaflet$/, path.join(__dirname, "web", "client", "libs", "leaflet")),
+        new NormalModuleReplacementPlugin(/openlayers$/, path.join(__dirname, "web", "client", "libs", "openlayers")),
+        new NormalModuleReplacementPlugin(/proj4$/, path.join(__dirname, "web", "client", "libs", "proj4"))
     ],
     resolve: {
       extensions: ["", ".js", ".jsx"]
     },
     module: {
         loaders: [
-            { test: /\.jsx?$/, loader: "babel-loader" }
+            { test: /\.jsx?$/, exclude: /ol\.js$/, loader: "babel-loader" }
         ]
     },
     devServer: {
