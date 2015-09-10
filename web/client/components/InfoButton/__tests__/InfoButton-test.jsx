@@ -121,7 +121,7 @@ describe('This test for InfoButton', () => {
 
     it('checks if the button contains only icon', () => {
         const icon = 'info-sign';
-        const about = React.render(<InfoButton glyphicon={icon} hiddenText={true}/>, document.body);
+        const about = React.render(<InfoButton glyphicon={icon} hiddenText/>, document.body);
         const aboutDom = React.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
 
@@ -133,7 +133,7 @@ describe('This test for InfoButton', () => {
     });
 
     it('checks if the button contains at least the default text', () => {
-        const about = React.render(<InfoButton hiddenText={true}/>, document.body);
+        const about = React.render(<InfoButton hiddenText/>, document.body);
         const aboutDom = React.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
 
@@ -146,7 +146,7 @@ describe('This test for InfoButton', () => {
 
     it('checks if the button contains at least the custom text', () => {
         const customText = "testText";
-        const about = React.render(<InfoButton hiddenText={true} text={customText}/>, document.body);
+        const about = React.render(<InfoButton hiddenText text={customText}/>, document.body);
         const aboutDom = React.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
 

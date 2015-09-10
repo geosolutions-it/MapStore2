@@ -7,20 +7,20 @@
   <version>1.0-SNAPSHOT</version>
   <name>MapStore 2</name>
   <url>http://www.geo-solutions.it</url>
-  
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <dependencies>
-    
-      
+
+
   </dependencies>
-   
+
   <build>
     
   </build>
-  
+
   <profiles>
     <profile>
       <id>geostore</id>
@@ -28,12 +28,21 @@
       <modules>
         <module>geostore/src</module>
       </modules>
-    
+
+    </profile>
+
+    <profile>
+      <id>proxy</id>
+
+      <modules>
+        <module>http-proxy</module>
+      </modules>
+
     </profile>
   </profiles>
 
   <modules>
     <module>web</module>
   </modules>
-  
+
 </project>
