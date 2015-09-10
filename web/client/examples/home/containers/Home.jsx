@@ -32,7 +32,7 @@ var Viewer = React.createClass({
     },
     renderModules(locale) {
         return (
-            <Grid fluid={true}>
+            <Grid fluid>
                 <Row className="show-grid">
                     <Col xs={12} md={6}>
                         <div>

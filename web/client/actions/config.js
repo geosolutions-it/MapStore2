@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var axios = require('axios');
+var axios = require('../libs/ajax');
 
 const MAP_CONFIG_LOADED = 'MAP_CONFIG_LOADED';
 const MAP_CONFIG_LOAD_ERROR = 'MAP_CONFIG_LOAD_ERROR';
