@@ -64,6 +64,16 @@ var ScaleComboController = React.createClass({
         // list of items in scalecombo
         var comboitems = that.props.scalebox.getComboItems();
 
+        // Disable dragging when user's cursor enters the element
+        that.getDOMNode().addEventListener('mouseover', function() {
+            that.props.scalebox.map.scrollWheelZoom.disable();
+        });
+
+        // Re-enable dragging when user's cursor leaves the element
+        that.getDOMNode().addEventListener('mouseout', function() {
+            that.props.scalebox.map.scrollWheelZoom.enable();
+        });
+
         // start function that creates items as list of html elements
         that.setComboItems(comboitems);
 
