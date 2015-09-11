@@ -24,13 +24,11 @@ var ScaleBarController = React.createClass({
      * @return {[Object]} [return scalebox object]
      */
     getDefaultProps() {
-        const LMap = new L.map(document.body);
         return {
             scalebox: {
                 getBarValues: function() {
                     return ['1:5000', 150];
-                },
-                map: LMap
+                }
             }
         };
     },
@@ -52,9 +50,11 @@ var ScaleBarController = React.createClass({
         that.setStateBar();
 
         // when zoom ends trigger function that changes the state
-        that.props.scalebox.map.on('zoomend', function() {
-            that.setStateBar();
-        });
+        if (that.props.scalebox.map) {
+            that.props.scalebox.map.on('zoomend', function() {
+                that.setStateBar();
+            });
+        }
     },
     /**
      * [render render view]

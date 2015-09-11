@@ -30,14 +30,12 @@ var ScaleComboController = React.createClass(
      * @return {[Object]} [return scalebox object]
      */
     getDefaultProps() {
-        const LMap = new L.map(document.body);
         return {
             scalebox: {
                 getComboItems: function() {
                     var items = [[18, '18'], [17, '17'], [16, '16'], [15, '15'], [14, '14'], [13, '13'], [12, '12'], [11, '11'], [10, '10'], [9, '9'], [8, '8'], [7, '7'], [6, '6'], [5, '5'], [4, '4'], [3, '3'], [2, '2'], [1, '1'], [0, '0']];
                     return items;
-                },
-                map: LMap
+                }
             }
         };
     },
@@ -83,9 +81,11 @@ var ScaleComboController = React.createClass(
         that.setComboItems(comboitems);
 
         // when zoom ends trigger function that changes the scalecombo title
-        that.props.scalebox.map.on('zoomend', function() {
-            that.setComboTitle(comboitems);
-        });
+        if (that.props.scalebox.map) {
+            that.props.scalebox.map.on('zoomend', function() {
+                that.setComboTitle(comboitems);
+            });
+        }
     },
     /**
      * [render render view]
@@ -113,7 +113,9 @@ var ScaleComboController = React.createClass(
         document.getElementsByClassName("mapstore-scalebox-combo-main")[0].getElementsByClassName("dropdown-toggle")[0].click();
 
         // zoom to chosen zoom level
-        /*this.props.scalebox.map.setZoom(parseInt((e.currentTarget.attributes.data.value), 10));*/
+        if (this.props.scalebox.map) {
+            this.props.scalebox.map.setZoom(parseInt((e.currentTarget.attributes.data.value), 10));
+        }
     },
     /**
      * [changeButtonState fired when combo trigger is clicked]
@@ -164,8 +166,12 @@ var ScaleComboController = React.createClass(
      */
     setComboTitle(comboitems) {
         var that = this;
-        var zoomLev = that.props.scalebox.map.getZoom();
+        var zoomLev;
         var i = 0;
+
+        if (that.props.scalebox.map) {
+            zoomLev = that.props.scalebox.map.getZoom();
+        }
 
         for (i; i < comboitems.length; i++) {
             if (comboitems[i][0] === zoomLev) {

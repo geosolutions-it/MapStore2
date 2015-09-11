@@ -26,7 +26,6 @@ var ScaleBoxController = React.createClass({
      * @return {[Object]} [return scalebox object]
      */
     getDefaultProps() {
-        const LMap = new L.map(document.body);
         return {
             scalebox: {
                 combo: false,
@@ -38,8 +37,7 @@ var ScaleBoxController = React.createClass({
                 },
                 getBarValues: function() {
                     return ['1:5000', 150];
-                },
-                map: LMap
+                }
             }
         };
     },

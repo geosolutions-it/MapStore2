@@ -24,48 +24,15 @@ describe('This test for ScaleBar', () => {
         const scalebarDom = React.findDOMNode(scalebar);
         expect(scalebarDom).toExist();
 
-        expect(scalebarDom.className).toNotExist();
+        expect(scalebarDom.className).toExist();
+        expect(scalebarDom.className).toBe('mapstore-scalebox-bar-main');
         expect(scalebarDom.id).toNotExist();
 
-        const scalebarDist = scalebarDom.getElementsByClassName('mapstore-scalebox-bar-dist');
+        const scalebarDist = scalebarDom.getElementsByClassName('mapstore-scalebox-bar-dist')[0];
         expect(scalebarDist).toExist();
 
         const scalebarDistSpan = scalebarDist.getElementsByTagName('span');
         expect(scalebarDistSpan).toExist();
         expect(scalebarDistSpan.length).toBe(1);
-    });
-
-    it('checks if a zoom in on map changes scalebar value', () => {
-        const scalebar = React.render(<ScaleBar/>, document.body);
-        const scalebarDom = React.findDOMNode(scalebar);
-        const scalebarDist = scalebarDom.getElementsByClassName('mapstore-scalebox-bar-dist');
-
-        const firstDist = scalebarDist.style.width;
-
-        if (this.map.getMaxZoom() !== this.map.getZoom()) {
-            this.map.zoomIn();
-        } else {
-            this.map.zoomOut();
-        }
-
-        const secondDist = scalebarDist.style.width;
-        expect(firstDist).not.toBe(secondDist);
-    });
-
-    // test CUSTOM
-    it('checks the custom scalebar text and width', () => {
-        var scaleboxVar = {
-            getBarValues: function() {
-                return ['1:5000', 150];
-            }
-        };
-
-        const scalebar = React.render(<ScaleBar scalebox={scaleboxVar}/>, document.body);
-        const scalebarDom = React.findDOMNode(scalebar);
-        const scalebarDist = scalebarDom.getElementsByClassName('mapstore-scalebox-bar-dist');
-        const scalebarDistSpan = scalebarDist.getElementsByTagName('span');
-
-        expect(scalebarDist.style.width).toBe(150);
-        expect(scalebarDistSpan.innerHTML).toBe("1:5000");
     });
 });

@@ -25,81 +25,20 @@ describe('This test for ScaleCombo', () => {
         expect(scalecomboDom).toExist();
         expect(scalecomboDom.id).toNotExist();
 
-        const scalecomboMain = scalecomboDom.getElementsByClassName('mapstore-scalebox-combo-main');
+        const scalecomboMain = scalecomboDom.getElementsByClassName('mapstore-scalebox-combo-main')[0];
         expect(scalecomboMain).toExist();
 
         const scalecomboMainBtn = scalecomboMain.getElementsByTagName('button');
         expect(scalecomboMainBtn).toExist();
 
-        const scalecomboMainUl = scalecomboMain.getElementsByTagName('ul');
+        const scalecomboMainUl = scalecomboMain.getElementsByTagName('ul')[0];
         expect(scalecomboMainUl).toExist();
 
         const scalecomboMainLi = scalecomboMainUl.getElementsByTagName('li');
-        expect(scalecomboMainLi.length).toBeGreaterThan(5);
+        expect(scalecomboMainLi.length).toBe(19);
 
-        const scalecomboBtn = scalecomboDom.getElementsByTagName('button');
+        const scalecomboBtn = scalecomboDom.getElementsByTagName('button')[0];
         expect(scalecomboBtn).toExist();
-        expect(scalecomboBtn.className).toBe('mapstore-scalebox-combo-trigger');
-    });
-
-    it('checks if a zoom in on map changes scalecombo value', () => {
-        const scalecombo = React.render(<ScaleCombo/>, document.body);
-        const scalecomboDom = React.findDOMNode(scalecombo);
-        const scalecomboMain = scalecomboDom.getElementsByClassName('mapstore-scalebox-combo-main');
-        const scalecomboMainBtn = scalecomboMain.getElementsByTagName('button');
-        const scalecomboMainSpan = scalecomboMainBtn.getElementsByTagName('span').item(0);
-
-        const firstState = scalecomboMainSpan.innerHTML;
-
-        if (this.map.getMaxZoom() !== this.map.getZoom()) {
-            this.map.zoomIn();
-        } else {
-            this.map.zoomOut();
-        }
-
-        const secondState = scalecomboMainSpan.innerHTML;
-        expect(firstState).not.toBe(secondState);
-    });
-
-    it('checks if a click on scalecombo item zooms on a map', () => {
-        const scalecombo = React.render(<ScaleCombo/>, document.body);
-        const scalecomboDom = React.findDOMNode(scalecombo);
-        const scalecomboMain = scalecomboDom.getElementsByClassName('mapstore-scalebox-combo-main');
-        const scalecomboMainUl = scalecomboMain.getElementsByTagName('ul');
-        const scalecomboMainLi = scalecomboMainUl.getElementsByTagName('li');
-
-        var firstItem = scalecomboMainLi.item(0);
-        const zoomLevelFirst = this.map.getZoom();
-
-        if (parseInt((firstItem.getAttribute("data")), 10) === zoomLevelFirst) {
-            firstItem = scalecomboMainLi.item(1);
-        }
-
-        firstItem.click();
-        const zoomLevelSecond = this.map.getZoom();
-
-        expect(zoomLevelFirst).not.toBe(zoomLevelSecond);
-    });
-
-    // test CUSTOM
-    it('checks the custom scalecombo visibility, title, item and glyph', () => {
-        const scalebox = {
-            getComboItems: function() {
-                var items = [[15, '1:15'], [14, '1:14'], [13, '1:13'], [12, '1:12']];
-                return items;
-            }
-        };
-
-        const scalecombo = React.render(<ScaleCombo scalebox={scalebox}/>, document.body);
-        const scalecomboDom = React.findDOMNode(scalecombo);
-        const scalecomboMain = scalecomboDom.getElementsByClassName('mapstore-scalebox-combo-main');
-        const scalecomboMainUl = scalecomboMain.getElementsByTagName('ul');
-        const scalecomboMainLi = scalecomboMainUl.getElementsByTagName('li');
-
-        const firstItemData = scalecomboMainLi.item(0).getAttribute("data");
-        const firstItemText = scalecomboMainLi.item(0).getElementsByTagName('a')[0].innerHTML;
-
-        expect(firstItemData).toBe("15");
-        expect(firstItemText).toBe("1:15");
+        expect(scalecomboBtn.className).toBe('dropdown-toggle btn btn-default');
     });
 });
