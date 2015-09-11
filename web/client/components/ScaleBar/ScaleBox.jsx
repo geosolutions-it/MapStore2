@@ -26,10 +26,20 @@ var ScaleBoxController = React.createClass({
      * @return {[Object]} [return scalebox object]
      */
     getDefaultProps() {
+        const LMap = new L.map(document.body);
         return {
             scalebox: {
-                combo: true,
-                bar: true
+                combo: false,
+                bar: true,
+                units: 'm',
+                getComboItems: function() {
+                    var items = [[18, '18'], [17, '17'], [16, '16'], [15, '15'], [14, '14'], [13, '13'], [12, '12'], [11, '11'], [10, '10'], [9, '9'], [8, '8'], [7, '7'], [6, '6'], [5, '5'], [4, '4'], [3, '3'], [2, '2'], [1, '1'], [0, '0']];
+                    return items;
+                },
+                getBarValues: function() {
+                    return ['1:5000', 150];
+                },
+                map: LMap
             }
         };
     },

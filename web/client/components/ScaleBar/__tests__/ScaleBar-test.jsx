@@ -24,8 +24,7 @@ describe('This test for ScaleBar', () => {
         const scalebarDom = React.findDOMNode(scalebar);
         expect(scalebarDom).toExist();
 
-        expect(scalebarDom.className).toExist();
-        expect(scalebarDom.className).toBe("mapstore-scalebox-bar-main");
+        expect(scalebarDom.className).toNotExist();
         expect(scalebarDom.id).toNotExist();
 
         const scalebarDist = scalebarDom.getElementsByClassName('mapstore-scalebox-bar-dist');

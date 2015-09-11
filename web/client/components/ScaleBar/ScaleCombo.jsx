@@ -17,8 +17,8 @@ var MenuItem = ReactBts.MenuItem;
 /**
  * [ScaleComboController new React Controller for ScaleCombo]
  */
-var ScaleComboController = React.createClass({
-    /**
+var ScaleComboController = React.createClass(
+ {   /**
      * [propTypes types of props]
      * @type {Object}
      */
@@ -30,12 +30,14 @@ var ScaleComboController = React.createClass({
      * @return {[Object]} [return scalebox object]
      */
     getDefaultProps() {
+        const LMap = new L.map(document.body);
         return {
             scalebox: {
                 getComboItems: function() {
                     var items = [[18, '18'], [17, '17'], [16, '16'], [15, '15'], [14, '14'], [13, '13'], [12, '12'], [11, '11'], [10, '10'], [9, '9'], [8, '8'], [7, '7'], [6, '6'], [5, '5'], [4, '4'], [3, '3'], [2, '2'], [1, '1'], [0, '0']];
                     return items;
-                }
+                },
+                map: LMap
             }
         };
     },
@@ -49,7 +51,7 @@ var ScaleComboController = React.createClass({
                 visibility: document.cookie && document.cookie.match('hideCombo') ? 'hidden' : 'visible'
             },
             showGlyph: document.cookie && document.cookie.match('hideCombo') ? 'chevron-left' : 'chevron-right',
-            activeVal: '',
+            activeVal: 'Example',
             items: function() {
                 return;
             }
@@ -61,6 +63,7 @@ var ScaleComboController = React.createClass({
      */
     componentDidMount() {
         var that = this;
+
         // list of items in scalecombo
         var comboitems = that.props.scalebox.getComboItems();
 
@@ -110,7 +113,7 @@ var ScaleComboController = React.createClass({
         document.getElementsByClassName("mapstore-scalebox-combo-main")[0].getElementsByClassName("dropdown-toggle")[0].click();
 
         // zoom to chosen zoom level
-        this.props.scalebox.map.setZoom(parseInt((e.currentTarget.attributes.data.value), 10));
+        /*this.props.scalebox.map.setZoom(parseInt((e.currentTarget.attributes.data.value), 10));*/
     },
     /**
      * [changeButtonState fired when combo trigger is clicked]

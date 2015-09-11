@@ -74,7 +74,7 @@ var LeafletMap = React.createClass({
     },
     includeScalebar(map) {
         React.render(
-            <ScaleBoxComponent scalebox={new ScaleBox(map, true, true, 'm')}/>,
+            <ScaleBoxComponent /*scalebox={new ScaleBox(map, true, true, 'm')}*//>,
             this.refs.scalebar.getDOMNode()
         );
     }

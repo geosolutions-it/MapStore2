@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react/addons');
-var expect = require('expect');
 var ScaleBox = require('../ScaleBox.jsx');
+var expect = require('expect');
 
-describe('This test for ScaleBar', () => {
+describe('This test for ScaleBox', () => {
     afterEach((done) => {
         React.unmountComponentAtNode(document.body);
         document.body.innerHTML = '';
@@ -24,25 +24,10 @@ describe('This test for ScaleBar', () => {
         const scaleboxDom = React.findDOMNode(scalebox);
         expect(scaleboxDom).toExist();
 
-        expect(scaleboxDom.className).toExist();
-        expect(scaleboxDom.className).toBe("mapstore-scalebox-main");
+        expect(scaleboxDom.className).toNotExist();
         expect(scaleboxDom.id).toNotExist();
 
         const scalebarContr = scaleboxDom.getElementsByClassName('mapstore-scalebox-bar-main');
         expect(scalebarContr).toExist();
-    });
-
-    // test CUSTOM
-    it('checks the custom element visibility', () => {
-        var scaleboxVar = {
-            combo: true,
-            bar: false
-        };
-
-        const scalebox = React.render(<ScaleBox scalebox={scaleboxVar}/>, document.body);
-        const scaleboxDom = React.findDOMNode(scalebox);
-        const scalebarContr = scaleboxDom.getElementsByClassName('mapstore-scalebox-bar-main');
-
-        expect(scalebarContr.length).toBe(0);
     });
 });

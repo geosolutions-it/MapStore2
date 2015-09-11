@@ -24,11 +24,13 @@ var ScaleBarController = React.createClass({
      * @return {[Object]} [return scalebox object]
      */
     getDefaultProps() {
+        const LMap = new L.map(document.body);
         return {
             scalebox: {
                 getBarValues: function() {
                     return ['1:5000', 150];
-                }
+                },
+                map: LMap
             }
         };
     },
