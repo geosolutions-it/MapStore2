@@ -8,12 +8,13 @@
 var ol = require('openlayers');
 var React = require('react');
 var CoordinatesUtils = require('../../utils/CoordinatesUtils');
+var ConfigUtils = require('../../utils/ConfigUtils');
 
 var OpenlayersMap = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
-        center: React.PropTypes.object,
-        zoom: React.PropTypes.number,
+        center: ConfigUtils.PropTypes.center,
+        zoom: React.PropTypes.number.isRequired,
         projection: React.PropTypes.string,
         onMapViewChanges: React.PropTypes.func
     },
@@ -27,12 +28,12 @@ var OpenlayersMap = React.createClass({
         return { };
     },
     componentDidMount() {
-        var center = CoordinatesUtils.reproject([this.props.center.lng, this.props.center.lat], 'EPSG:4326', this.props.projection);
+        var center = CoordinatesUtils.reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
         var map = new ol.Map({
           layers: [
           ],
           controls: ol.control.defaults({
-            attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+            attributionOptions: ({
               collapsible: false
             })
           }),
@@ -45,7 +46,7 @@ var OpenlayersMap = React.createClass({
         map.on('moveend', () => {
             let view = map.getView();
             let c = this.normalizeCenter(view.getCenter());
-            this.props.onMapViewChanges({lng: c[0], lat: c[1]}, view.getZoom());
+            this.props.onMapViewChanges({x: c[0], y: c[1], crs: "EPSG:4326"}, view.getZoom());
         });
 
         this.map = map;
@@ -55,11 +56,11 @@ var OpenlayersMap = React.createClass({
     componentWillReceiveProps(newProps) {
         var view = this.map.getView();
         const currentCenter = this.normalizeCenter(view.getCenter());
-        const centerIsUpdated = newProps.center.lat === currentCenter[1] &&
-                               newProps.center.lng === currentCenter[0];
+        const centerIsUpdated = newProps.center.y === currentCenter[1] &&
+                               newProps.center.x === currentCenter[0];
 
         if (!centerIsUpdated) {
-            view.setCenter([newProps.center.lng, newProps.center.lat]);
+            view.setCenter([newProps.center.x, newProps.center.y]);
         }
         if (newProps.zoom !== view.getZoom()) {
             view.setZoom(newProps.zoom);

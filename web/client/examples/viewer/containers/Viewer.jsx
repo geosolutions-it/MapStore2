@@ -16,11 +16,12 @@ var About = require('../components/About');
 var Localized = require('../../../components/I18N/Localized');
 var loadLocale = require('../../../actions/locale').loadLocale;
 var changeMapView = require('../../../actions/map').changeMapView;
+var ConfigUtils = require('../../../utils/ConfigUtils');
 var assign = require('object-assign');
 
 var Viewer = React.createClass({
     propTypes: {
-        mapConfig: React.PropTypes.object,
+        mapConfig: ConfigUtils.PropTypes.config,
         messages: React.PropTypes.object,
         locale: React.PropTypes.string,
         loadLocale: React.PropTypes.func,
@@ -43,7 +44,7 @@ var Viewer = React.createClass({
                 <Localized messages={this.props.messages} locale={this.props.locale}>
                     {() =>
                         <div key="viewer" className="fill">
-                            <VMap config={config} onMapViewChanges={this.manageNewMapView}/>
+                            <VMap config={config} onMapViewChanges={this.props.changeMapView}/>
                             {this.renderPlugins(this.props.locale)}
                         </div>
                     }
@@ -52,10 +53,6 @@ var Viewer = React.createClass({
             );
         }
         return null;
-    },
-    manageNewMapView(center, zoom) {
-        const normCenter = {x: center.lng, y: center.lat, crs: "EPSG:4326"};
-        this.props.changeMapView(normCenter, zoom);
     }
 });
 

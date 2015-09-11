@@ -8,10 +8,26 @@
 var Proj4js = require('proj4');
 
 const epsg4326 = new Proj4js.Proj('EPSG:4326');
+var React = require('react');
+
+const centerPropType = React.PropTypes.shape({
+    x: React.PropTypes.number.isRequired,
+    y: React.PropTypes.number.isRequired,
+    crs: React.PropTypes.string
+});
 
 var ConfigUtils = {
     defaultSourceType: "gxp_wmssource",
     backgroundGroup: "background",
+
+    PropTypes: {
+        center: centerPropType,
+        config: React.PropTypes.shape({
+            center: centerPropType,
+            zoom: React.PropTypes.number.isRequired
+        })
+    },
+
 
     getCenter: function(center, projection) {
         var retval;
@@ -33,7 +49,10 @@ var ConfigUtils = {
         }
         return {y: xy.y, x: xy.x, crs: "EPSG:4326"};
     },
-
+    normalizeConfig: function(config) {
+        config.center = ConfigUtils.getCenter(config.center);
+        return config;
+    },
     getConfigurationOptions: function(query, defaultName, extension, geoStoreBase) {
         const mapId = query.mapId;
         let url;
