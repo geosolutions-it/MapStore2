@@ -14,12 +14,12 @@ const mapType = urlQuery.type || 'leaflet';
 var LMap = require('../../../components/' + mapType + '/Map');
 var LLayer = require('../../../components/' + mapType + '/Layer');
 
-var ConfigUtils = require('../../../utils/ConfigUtils');
 var assign = require('object-assign');
+var ConfigUtils = require('../../../utils/ConfigUtils');
 
 var VMap = React.createClass({
     propTypes: {
-        config: React.PropTypes.object,
+        config: ConfigUtils.PropTypes.config,
         onMapViewChanges: React.PropTypes.func
     },
     renderLayers(layers) {
@@ -33,10 +33,9 @@ var VMap = React.createClass({
         return null;
     },
     render() {
-        let center = ConfigUtils.getCenter(this.props.config.center, this.props.config.projection);
         return (
             <LMap id="map"
-                center={{lat: center.y, lng: center.x}}
+                center={this.props.config.center}
                 zoom={this.props.config.zoom}
                 projection={this.props.config.projection || 'EPSG:3857'}
                 onMapViewChanges={this.props.onMapViewChanges}>
