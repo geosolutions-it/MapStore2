@@ -41,7 +41,17 @@ var About = React.createClass({
                     <p><I18N.Message msgId="about_p5-0"/> <a href="https://github.com/geosolutions-it/MapStore2/blob/master/CONTRIBUTING.md"><I18N.Message msgId="about_a0"/></a> <I18N.Message msgId="about_p5-1"/></p>
                     <h3><I18N.Message msgId="about_h21"/></h3>
                     <p><I18N.Message msgId="about_p6"/></p>
-                    <a href="http://www.geo-solutions.it/"><img src="./assets/img/geosolutions-brand.png" style={{display: "block", margin: "auto"}} alt="GeoSolutions S.A.S."></img></a>
+                    <a href="http://www.geo-solutions.it/">
+                        <img
+                            src="./img/geosolutions-brand.png"
+                            style={{
+                                display: "block",
+                                margin: "auto",
+                                maxWidth: "100%"
+                            }}
+                            alt="GeoSolutions S.A.S.">
+                        </img>
+                    </a>
                 </div>
             }/>);
     }
