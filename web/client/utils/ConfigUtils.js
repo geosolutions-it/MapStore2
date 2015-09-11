@@ -6,15 +6,24 @@
  * LICENSE file in the root directory of this source tree.
  */
 var Proj4js = require('proj4');
-
-const epsg4326 = new Proj4js.Proj('EPSG:4326');
 var React = require('react');
 
+var url = require('url');
+
+var axios = require('axios');
+
+const epsg4326 = Proj4js ? new Proj4js.Proj('EPSG:4326') : null;
 const centerPropType = React.PropTypes.shape({
     x: React.PropTypes.number.isRequired,
     y: React.PropTypes.number.isRequired,
     crs: React.PropTypes.string
 });
+
+const urlQuery = url.parse(window.location.href, true).query;
+let defaultConfig = {
+    proxyUrl: "/mapstore/proxy/?url=",
+    geoStoreUrl: "/mapstore/rest/geostore/"
+};
 
 var ConfigUtils = {
     defaultSourceType: "gxp_wmssource",
@@ -28,6 +37,11 @@ var ConfigUtils = {
         })
     },
 
+    loadConfiguration: function() {
+        return axios.get('localConfig.json').then(response => {
+            defaultConfig = response.data;
+        });
+    },
 
     getCenter: function(center, projection) {
         var retval;
@@ -53,16 +67,19 @@ var ConfigUtils = {
         config.center = ConfigUtils.getCenter(config.center);
         return config;
     },
+    getUserConfiguration: function(defaultName, extension, geoStoreBase) {
+        return ConfigUtils.getConfigurationOptions(urlQuery, defaultName, extension, geoStoreBase);
+    },
     getConfigurationOptions: function(query, defaultName, extension, geoStoreBase) {
         const mapId = query.mapId;
-        let url;
+        let configUrl;
         if (mapId) {
-            url = ( geoStoreBase || "/mapstore/rest/geostore/" ) + "data/" + mapId;
+            configUrl = ( geoStoreBase || defaultConfig.geoStoreUrl ) + "data/" + mapId;
         } else {
-            url = (query.config || defaultName || 'config') + '.' + (extension || 'json');
+            configUrl = (query.config || defaultName || 'config') + '.' + (extension || 'json');
         }
         return {
-            configUrl: url,
+            configUrl: configUrl,
             legacy: !!mapId
         };
     },
@@ -167,6 +184,9 @@ var ConfigUtils = {
         baseConfig.map = mapConfig.map;
         baseConfig.gsSources = mapConfig.gsSources || mapConfig.sources;
         return baseConfig;
+    },
+    getProxyUrl: function(config) {
+        return config.proxyUrl ? config.proxyUrl : defaultConfig.proxyUrl;
     }
 };
 
