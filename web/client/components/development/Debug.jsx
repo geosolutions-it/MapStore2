@@ -13,8 +13,7 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 var Debug = React.createClass({
     propTypes: {
-        store: React.PropTypes.object.isRequired,
-        container: React.PropTypes.string.isRequired
+        store: React.PropTypes.object.isRequired
     },
     render() {
         let child = React.Children.only(this.props.children);

@@ -6,18 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var connect = require('react-redux').connect;
-var bindActionCreators = require('redux').bindActionCreators;
+var assign = require('object-assign');
+
+var {connect} = require('react-redux');
+var {bindActionCreators} = require('redux');
+
+var ConfigUtils = require('../../../utils/ConfigUtils');
+
+var {loadLocale} = require('../../../actions/locale');
+var {changeMapView} = require('../../../actions/map');
+
 var VMap = require('../components/Map');
-
-
 var LangSelector = require('../../../components/LangSelector/LangSelector');
 var About = require('../components/About');
 var Localized = require('../../../components/I18N/Localized');
-var loadLocale = require('../../../actions/locale').loadLocale;
-var changeMapView = require('../../../actions/map').changeMapView;
-var ConfigUtils = require('../../../utils/ConfigUtils');
-var assign = require('object-assign');
 
 var Viewer = React.createClass({
     propTypes: {
@@ -34,7 +36,7 @@ var Viewer = React.createClass({
         ];
     },
     render() {
-        if (this.props.mapConfig && this.props.messages) {
+        if (this.props.mapConfig) {
             let config = this.props.mapConfig;
             if (config.loadingError) {
                 return <div className="mapstore-error">{config.loadingError}</div>;
@@ -48,7 +50,6 @@ var Viewer = React.createClass({
                             {this.renderPlugins(this.props.locale)}
                         </div>
                     }
-
                 </Localized>
             );
         }

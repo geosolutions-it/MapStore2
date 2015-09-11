@@ -107,7 +107,7 @@ module.exports = connect((state) => {
     };
 }, dispatch => {
     return bindActionCreators(assign({}, {
-        loadLocale: loadLocale.bind(null, '../../translations'),
+        loadLocale: loadLocale.bind(null, 'translations'),
         changeMapType: changeMapType
     }), dispatch);
 })(Home);

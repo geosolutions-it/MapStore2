@@ -11,13 +11,17 @@ var Provider = require('react-redux').Provider;
 var {loadLocale} = require('../../actions/locale');
 var {loadMaps} = require('../../actions/maps');
 
+var ConfigUtils = require('../../utils/ConfigUtils');
+
 var Home = require('./containers/Home');
 var Debug = require('../../components/development/Debug');
 
 var store = require('./stores/homestore');
 
-store.dispatch(loadLocale('translations'));
-store.dispatch(loadMaps());
+ConfigUtils.loadConfiguration().then(() => {
+    store.dispatch(loadLocale('translations'));
+    store.dispatch(loadMaps());
+});
 
 React.render(
     <Debug store={store}>

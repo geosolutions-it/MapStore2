@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var axios = require('axios');
-
-var proxy = '/mapstore/proxy/?url=';
+var ConfigUtils = require('../utils/ConfigUtils');
 
 axios.interceptors.request.use(config => {
     var uri = config.url || '';
@@ -25,7 +24,7 @@ axios.interceptors.request.use(config => {
         }
     }
     if (!sameOrigin) {
-        let proxyUrl = config ? config.proxyUrl || proxy : proxy;
+        let proxyUrl = ConfigUtils.getProxyUrl(config);
         if (proxyUrl) {
 
             if (proxyUrl.match(/^http:\/\//i) === null) {
