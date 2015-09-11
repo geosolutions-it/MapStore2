@@ -7,6 +7,8 @@
  */
 var L = require('leaflet');
 var React = require('react');
+var ScaleBox = require('../../api/ScaleBox');
+var ScaleBoxComponent = require('../ScaleBar/ScaleBox');
 var ConfigUtils = require('../../utils/ConfigUtils');
 
 var LeafletMap = React.createClass({
@@ -35,8 +37,12 @@ var LeafletMap = React.createClass({
         });
 
         this.map = map;
+
         // NOTE: this re-call render function after div creation to have the map initialized.
         this.forceUpdate();
+
+        // include scalebar
+        this.includeScalebar(this.map);
     },
     componentWillReceiveProps(newProps) {
         const currentCenter = this.map.getCenter();
@@ -61,7 +67,14 @@ var LeafletMap = React.createClass({
         return (
             <div id={this.props.id}>
                 {children}
+                <div ref="scalebar"/>
             </div>
+        );
+    },
+    includeScalebar(map) {
+        React.render(
+            <ScaleBoxComponent scalebox={new ScaleBox(map, true, true, 'm')}/>,
+            this.refs.scalebar.getDOMNode()
         );
     }
 });

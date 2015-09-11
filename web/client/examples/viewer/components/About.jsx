@@ -17,7 +17,7 @@ var About = React.createClass({
             glyphicon="info-sign"
             body={
                 <div style={{
-                    backgroundImage: 'url("./img/mapstore-logo-0.20.png")',
+                    backgroundImage: 'url("./assets/img/mapstore-logo-0.20.png")',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center'
                 }}>
