@@ -3,10 +3,73 @@
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
-        <title>MapStore 2 - HomePage</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>MapStore 2 Viewer</title>
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <script src="http://maps.google.com/maps/api/js?v=3&sensor=false"></script>
+        <link rel="stylesheet" href="http://css-spinners.com/css/spinner/spinner.css" type="text/css">
+        <!--script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script-->
+
+        <style>
+        html, body, #container, #map, .fill {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .panel{
+            background-color: rgba(255,255,255,0.3);
+        }
+
+        @media (min-width: 992px) {
+            .mapmanager .panel-collapse.in {
+                margin: 8px;
+                overflow-y: auto;
+                max-height: 640px;
+            }
+            #langSelContainer {
+                right:0px;
+                position: absolute;
+            }
+
+        }
+        #langSelContainer {
+            margin: 8px;
+        }
+
+        body{
+            padding: 20px;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-clip: border-box;
+            background-color: rgb(249, 249, 249);
+            background-repeat: no-repeat;
+            background-image: url(examples/home/img/bg.jpg) ;
+            background-position: 0 -30px;
+            background-origin: padding-box;
+            background-size: 100%;
+        }
+
+        img.mapstore-logo {
+            max-width: 100%;
+            max-height: 200px;
+        }
+
+
+        .carousel-caption {
+            text-shadow: black 0.2em 0.2em 0.2em
+        }
+
+
+
+        </style>
     </head>
     <body>
-        <h1>MapStore 2 - HomePage</h1>
-        <a href="examples/viewer">Viewer</a>
+        <div id="container"></div>
+        <script src="dist/mapstore-commons.js"></script>
+        <script src="dist/home.js"></script>
     </body>
 </html>

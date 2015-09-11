@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var axios = require('axios');
+var axios = require('../libs/ajax');
 
 const CHANGE_LOCALE = 'CHANGE_LOCALE';
 const LOCALE_LOAD_ERROR = 'LOCALE_LOAD_ERROR';

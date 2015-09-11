@@ -13,7 +13,8 @@ var rewriteUrl = function(replacePath) {
 module.exports = {
     entry: {
         viewer: path.join(__dirname, "web", "client", "examples", "viewer", "app"),
-        manager: path.join(__dirname, "web", "client", "examples", "manager", "app")
+        manager: path.join(__dirname, "web", "client", "examples", "manager", "app"),
+        home: path.join(__dirname, "web", "client", "examples", "home", "app")
     },
     output: {
       path: path.join(__dirname, "web", "client", "dist"),
@@ -43,6 +44,9 @@ module.exports = {
             rewrite: rewriteUrl("/geostore/rest/$1"),
             host: "mapstore.geo-solutions.it",
             target: "http://mapstore.geo-solutions.it"
+        }, {
+            path: "/mapstore/proxy",
+            target: "http://localhost:8083"
         }]
     },
 
