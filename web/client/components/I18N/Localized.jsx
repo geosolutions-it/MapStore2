@@ -25,11 +25,14 @@ var Localized = React.createClass({
     render() {
         let { children } = this.props;
 
-        if (typeof children === 'function') {
-            children = children();
-        }
+        if (this.props.messages) {
+            if (typeof children === 'function') {
+                children = children();
+            }
 
-        return React.Children.only(children);
+            return React.Children.only(children);
+        }
+        return null;
     }
  });
 

@@ -21,13 +21,13 @@ describe('LeafletMap', () => {
     });
 
     it('creates a div for leaflet map with given id', () => {
-        const map = React.render(<LeafletMap id="mymap" center={{lat: 43.9, lng: 10.3}} zoom={11}/>, document.body);
+        const map = React.render(<LeafletMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.body);
         expect(map).toExist();
         expect(React.findDOMNode(map).id).toBe('mymap');
     });
 
     it('creates a div for leaflet map with default id (map)', () => {
-        const map = React.render(<LeafletMap center={{lat: 43.9, lng: 10.3}} zoom={11}/>, document.body);
+        const map = React.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.body);
         expect(map).toExist();
         expect(React.findDOMNode(map).id).toBe('map');
     });
@@ -36,8 +36,8 @@ describe('LeafletMap', () => {
         const container = React.render(
         (
             <div>
-                <div id="container1"><LeafletMap id="map1" center={{lat: 43.9, lng: 10.3}} zoom={11}/></div>
-                <div id="container2"><LeafletMap id="map2" center={{lat: 43.9, lng: 10.3}} zoom={11}/></div>
+                <div id="container1"><LeafletMap id="map1" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
+                <div id="container2"><LeafletMap id="map2" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
             </div>
         ), document.body);
         expect(container).toExist();
@@ -47,7 +47,7 @@ describe('LeafletMap', () => {
     });
 
     it('populates the container with leaflet objects', () => {
-        const map = React.render(<LeafletMap center={{lat: 43.9, lng: 10.3}} zoom={11}/>, document.body);
+        const map = React.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.body);
         expect(map).toExist();
         expect(document.getElementsByClassName('leaflet-map-pane').length).toBe(1);
         expect(document.getElementsByClassName('leaflet-tile-pane').length).toBe(1);
@@ -56,7 +56,7 @@ describe('LeafletMap', () => {
     });
 
     it('enables leaflet controls', () => {
-        const map = React.render(<LeafletMap center={{lat: 43.9, lng: 10.3}} zoom={11}/>, document.body);
+        const map = React.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.body);
         expect(map).toExist();
         expect(document.getElementsByClassName('leaflet-control-zoom-in').length).toBe(1);
 
@@ -76,7 +76,7 @@ describe('LeafletMap', () => {
         var options = {
             "visibility": true
         };
-        const map = React.render(<LeafletMap center={{lat: 43.9, lng: 10.3}} zoom={11}>
+        const map = React.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}>
             <LeafLetLayer type="osm" options={options} />
         </LeafletMap>, document.body);
         expect(map).toExist();
@@ -92,7 +92,7 @@ describe('LeafletMap', () => {
 
         const map = React.render(
             <LeafletMap
-                center={{lat: 43.9, lng: 10.3}}
+                center={{y: 43.9, x: 10.3}}
                 zoom={11}
                 onMapViewChanges={testHandlers.handler}
             />
@@ -106,12 +106,12 @@ describe('LeafletMap', () => {
         expect(spy.calls.length).toEqual(2);
 
         expect(spy.calls[0].arguments.length).toEqual(2);
-        argsOk = spy.calls[0].arguments[0].lat === 43.9 && spy.calls[0].arguments[0].lng === 10.3;
+        argsOk = spy.calls[0].arguments[0].y === 43.9 && spy.calls[0].arguments[0].x === 10.3;
         expect(argsOk).toBe(true);
         expect(spy.calls[0].arguments[1]).toBe(12);
 
         expect(spy.calls[1].arguments.length).toEqual(2);
-        argsOk = spy.calls[1].arguments[0].lat === 44 && spy.calls[1].arguments[0].lng === 10;
+        argsOk = spy.calls[1].arguments[0].y === 44 && spy.calls[1].arguments[0].x === 10;
         expect(argsOk).toBe(true);
         expect(spy.calls[1].arguments[1]).toBe(12);
     });
@@ -119,14 +119,14 @@ describe('LeafletMap', () => {
     it('check if the map changes when receive new props', () => {
         const map = React.render(
             <LeafletMap
-                center={{lat: 43.9, lng: 10.3}}
+                center={{y: 43.9, x: 10.3}}
                 zoom={11}
             />
         , document.body);
 
         const leafletMap = map.map;
 
-        map.setProps({zoom: 12, center: {lat: 44, lng: 10}});
+        map.setProps({zoom: 12, center: {y: 44, x: 10}});
         expect(leafletMap.getZoom()).toBe(12);
         expect(leafletMap.getCenter().lat).toBe(44);
         expect(leafletMap.getCenter().lng).toBe(10);
