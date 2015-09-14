@@ -8,13 +8,15 @@
 var {combineReducers} = require('redux');
 
 var mapConfig = require('../../../reducers/config');
+var mapInfo = require('../../../reducers/mapInfo');
 var locale = require('../../../reducers/locale');
 
 var DebugUtils = require('../../../utils/DebugUtils');
 
 const reducers = combineReducers({
     mapConfig,
-    locale
+    locale,
+    mapInfo
 });
 
 module.exports = DebugUtils.createDebugStore(reducers, {});

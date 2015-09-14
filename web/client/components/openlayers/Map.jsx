@@ -16,7 +16,8 @@ var OpenlayersMap = React.createClass({
         center: ConfigUtils.PropTypes.center,
         zoom: React.PropTypes.number.isRequired,
         projection: React.PropTypes.string,
-        onMapViewChanges: React.PropTypes.func
+        onMapViewChanges: React.PropTypes.func,
+        onClick: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -46,7 +47,26 @@ var OpenlayersMap = React.createClass({
         map.on('moveend', () => {
             let view = map.getView();
             let c = this.normalizeCenter(view.getCenter());
-            this.props.onMapViewChanges({x: c[0], y: c[1], crs: "EPSG:4326"}, view.getZoom());
+            let bbox = view.calculateExtent(map.getSize());
+            let size = {
+                width: map.getSize()[0],
+                height: map.getSize()[1]
+            };
+            this.props.onMapViewChanges({x: c[0], y: c[1]}, view.getZoom(), {
+                bounds: {
+                    minx: bbox[0],
+                    miny: bbox[1],
+                    maxx: bbox[2],
+                    maxy: bbox[3]
+                },
+                crs: view.getProjection().getCode()
+            }, size);
+        });
+        map.on('click', (event) => {
+            this.props.onClick({
+                x: event.pixel[0],
+                y: event.pixel[1]
+            });
         });
 
         this.map = map;

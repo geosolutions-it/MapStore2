@@ -41,9 +41,17 @@ describe('Test the mapConfig reducer', () => {
             zoom: 'zero',
             center: 'zero'
         };
-        var state = mapConfig(oldState, {type: 'CHANGE_MAP_VIEW', zoom: 0, center: 0});
+        var state = mapConfig(oldState, {
+            type: 'CHANGE_MAP_VIEW',
+            zoom: 0,
+            center: 0,
+            bbox: 0,
+            size: 0
+        });
         expect(state.a).toBe(oldState.a);
         expect(state.zoom).toBe(0);
         expect(state.center).toBe(0);
+        expect(state.bbox).toBe(0);
+        expect(state.size).toBe(0);
     });
 });
