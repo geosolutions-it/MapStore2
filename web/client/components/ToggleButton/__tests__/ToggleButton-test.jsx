@@ -65,7 +65,7 @@ describe("test the ToggleButton", () => {
     });
 
     it('test button state', () => {
-        const tb = React.render(<ToggleButton pressed={true}/>, document.body);
+        const tb = React.render(<ToggleButton pressed/>, document.body);
         expect(tb).toExist();
 
         const tbNode = React.findDOMNode(tb);
@@ -79,7 +79,7 @@ describe("test the ToggleButton", () => {
             onClick: (pressed) => {return pressed; }
         };
         const spy = expect.spyOn(testHandlers, 'onClick');
-        const tb = React.render(<ToggleButton pressed={true} onClick={testHandlers.onClick}/>, document.body);
+        const tb = React.render(<ToggleButton pressed onClick={testHandlers.onClick}/>, document.body);
 
         const tbNode = React.findDOMNode(tb);
         tbNode.click();

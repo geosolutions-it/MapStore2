@@ -44,4 +44,14 @@ describe('Test the localization support HOC', () => {
         expect(dom).toExist();
         expect(dom.innerHTML).toBe("my message");
     });
+
+    it('tests localized component without messages', () => {
+        var localized = React.render(
+            <Localized locale="it-IT">
+                {() => <HTML msgId="testMsg"/> }
+            </Localized>
+            , document.body);
+        var dom = React.findDOMNode(localized);
+        expect(dom).toNotExist();
+    });
 });
