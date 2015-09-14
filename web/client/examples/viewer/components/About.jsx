@@ -14,7 +14,7 @@ var About = React.createClass({
         return (<InfoButton
             text={<I18N.Message msgId="aboutLbl"/>}
             title={<I18N.Message msgId="about_title"/>}
-            glyphicon="info-sign"
+            glyphicon="question-sign"
             body={
                 <div style={{
                     backgroundImage: 'url("./img/mapstore-logo-0.20.png")',
