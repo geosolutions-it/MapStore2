@@ -41,8 +41,35 @@ Layers.registerType('google', {
         let setZoom = function() {
             gmap.setZoom(view.getZoom());
         };
+
+        /*let calculateRotatedSize = function(rotation, size) {
+            let w = size[0];
+            let h = size[1];
+
+            let L1 = w / (Math.sqrt(1 + Math.pow(Math.tan(rotation), 2)));
+            let L2 = L1 * Math.tan(rotation);
+
+            let L1p = h / (Math.sqrt(1 + Math.pow(Math.tan(rotation), 2)));
+            let L2p = L1p * Math.tan(rotation);
+
+            return {width: Math.abs(Math.ceil(L1 + L2p)), height: Math.abs(Math.ceil(L2 + L1p))};
+        };*/
+
+        let setRotation = function() {
+            var rotation = view.getRotation() * 180 / Math.PI;
+            document.getElementById(mapId + 'gmaps').style.transform = "rotate(" + rotation + "deg)";
+            /*let size = calculateRotatedSize(Math.PI - view.getRotation(), map.getSize());
+
+            let mapContainer = document.getElementById(mapId + 'gmaps');
+            mapContainer.style.width = size.width + 'px';
+            mapContainer.style.height = size.height + 'px';
+            mapContainer.style.left = -(Math.round((size.width - map.getSize()[0]) / 2.0)) + 'px';
+            mapContainer.style.top = -(Math.round((size.height - map.getSize()[1]) / 2.0)) + 'px';
+            google.maps.event.trigger(gmap, "resize");*/
+        };
         view.on('change:center', setCenter);
         view.on('change:resolution', setZoom);
+        view.on('change:rotation', setRotation);
         setCenter();
         setZoom();
         return null;
@@ -51,4 +78,5 @@ Layers.registerType('google', {
         var gmapsStyle = {zIndex: -1};
         return <div id={mapId + "gmaps"} className="fill" style={gmapsStyle}></div>;
     }
+
 });
