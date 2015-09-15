@@ -46,6 +46,7 @@
             "maps_title": "Mappe",
             "locales_combo": "Lingua:"
         },
-        "getFeatureInfoTitle": "Informazioni Sulle Feature"
+        "getFeatureInfoTitle": "Informazioni Sulle Feature",
+        "noFeatureInfo": "Non ci sono informazioni disponibili per la feature selezionata"
     }
 }

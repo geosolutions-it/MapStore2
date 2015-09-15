@@ -165,4 +165,31 @@ describe('OpenlayersMap', () => {
         expect(olMap.getView().getCenter()[1]).toBe(44);
         expect(olMap.getView().getCenter()[0]).toBe(10);
     });
+
+    it('check if the map has "auto" cursor as default', () => {
+        const map = React.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11}
+            />
+        , document.body);
+
+        const olMap = map.map;
+        const mapDiv = olMap.getViewport();
+        expect(mapDiv.style.cursor).toBe("auto");
+    });
+
+    it('check if the map can be created with a custom cursor', () => {
+        const map = React.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11}
+                mousePointer="pointer"
+            />
+        , document.body);
+
+        const olMap = map.map;
+        const mapDiv = olMap.getViewport();
+        expect(mapDiv.style.cursor).toBe("pointer");
+    });
 });

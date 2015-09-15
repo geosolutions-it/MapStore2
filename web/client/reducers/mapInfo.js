@@ -6,14 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+var {CLICK_ON_MAP} = require('../actions/map');
+
 var {
+    ERROR_FEATURE_INFO,
+    EXCEPTIONS_FEATURE_INFO,
+    LOAD_FEATURE_INFO,
     CHANGE_MAPINFO_STATE,
     NEW_MAPINFO_REQUEST,
-    LOAD_FEATURE_INFO,
-    EXCEPTIONS_FEATURE_INFO,
-    ERROR_FEATURE_INFO,
     PURGE_MAPINFO_RESULTS
-} = require('../actions/map');
+} = require('../actions/mapInfo');
 
 const assign = require('object-assign');
 
@@ -49,11 +51,16 @@ function mapInfo(state = null, action) {
              * else is a [string] (for eg. if HTML data has been requested)
              */
             let newResponses;
+            let obj = {
+                response: action.data,
+                queryParams: action.requestParams,
+                layerMetadata: action.layerMetadata
+            };
             if (state.responses) {
                 newResponses = state.responses.slice();
-                newResponses.push(action.data);
+                newResponses.push(obj);
             } else {
-                newResponses = [action.data];
+                newResponses = [obj];
             }
             return assign({}, state, {
                 responses: newResponses
@@ -68,11 +75,16 @@ function mapInfo(state = null, action) {
              * }, ...]
              */
             let newResponses;
+            let obj = {
+                response: action.exceptions,
+                queryParams: action.requestParams,
+                layerMetadata: action.layerMetadata
+            };
             if (state.responses) {
                 newResponses = state.responses.slice();
-                newResponses.push(action.exceptions);
+                newResponses.push(obj);
             } else {
-                newResponses = [action.exceptions];
+                newResponses = [obj];
             }
             return assign({}, state, {
                 responses: newResponses
@@ -89,14 +101,24 @@ function mapInfo(state = null, action) {
              * }
              */
             let newResponses;
+            let obj = {
+                response: action.error,
+                queryParams: action.requestParams,
+                layerMetadata: action.layerMetadata
+            };
             if (state.responses) {
                 newResponses = state.responses.slice();
-                newResponses.push(action.error);
+                newResponses.push(obj);
             } else {
-                newResponses = [action.error];
+                newResponses = [obj];
             }
             return assign({}, state, {
                 responses: newResponses
+            });
+        }
+        case CLICK_ON_MAP: {
+            return assign({}, state, {
+                clickPoint: action.point
             });
         }
         default:

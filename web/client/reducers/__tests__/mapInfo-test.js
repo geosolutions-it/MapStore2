@@ -15,57 +15,98 @@ describe('Test the mapInfo reducer', () => {
     });
 
     it('creates a general error ', () => {
-        let state = mapInfo({}, {type: 'ERROR_FEATURE_INFO', error: "error"});
+        let testAction = {
+            type: 'ERROR_FEATURE_INFO',
+            error: "error",
+            requestParams: "params",
+            layerMetadata: "meta"
+        };
+
+        let state = mapInfo({}, testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(1);
-        expect(state.responses[0]).toBe("error");
+        expect(state.responses[0].response).toBe("error");
+        expect(state.responses[0].queryParams).toBe("params");
+        expect(state.responses[0].layerMetadata).toBe("meta");
 
-        state = mapInfo({responses: []}, {type: 'ERROR_FEATURE_INFO', error: "error"});
+        state = mapInfo({responses: []}, testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(1);
-        expect(state.responses[0]).toBe("error");
+        expect(state.responses[0].response).toBe("error");
+        expect(state.responses[0].queryParams).toBe("params");
+        expect(state.responses[0].layerMetadata).toBe("meta");
 
-        state = mapInfo({responses: ["test"]}, {type: 'ERROR_FEATURE_INFO', error: "error"});
+        state = mapInfo({responses: ["test"]}, testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(2);
         expect(state.responses[0]).toBe("test");
-        expect(state.responses[1]).toBe("error");
+        expect(state.responses[1].response).toBe("error");
+        expect(state.responses[1].queryParams).toBe("params");
+        expect(state.responses[1].layerMetadata).toBe("meta");
     });
 
     it('creates an wms feature info exception', () => {
-        let state = mapInfo({}, {type: 'EXCEPTIONS_FEATURE_INFO', exceptions: "exception"});
+        let testAction = {
+            type: 'EXCEPTIONS_FEATURE_INFO',
+            exceptions: "exception",
+            requestParams: "params",
+            layerMetadata: "meta"
+        };
+
+        let state = mapInfo({}, testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(1);
-        expect(state.responses[0]).toBe("exception");
+        expect(state.responses[0].response).toBe("exception");
+        expect(state.responses[0].queryParams).toBe("params");
+        expect(state.responses[0].layerMetadata).toBe("meta");
 
-        state = mapInfo({responses: []}, {type: 'EXCEPTIONS_FEATURE_INFO', exceptions: "exception"});
+        state = mapInfo({responses: []}, testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(1);
-        expect(state.responses[0]).toBe("exception");
+        expect(state.responses[0].response).toBe("exception");
+        expect(state.responses[0].queryParams).toBe("params");
+        expect(state.responses[0].layerMetadata).toBe("meta");
 
-        state = mapInfo({responses: ["test"]}, {type: 'EXCEPTIONS_FEATURE_INFO', exceptions: "exception"});
+
+        state = mapInfo({responses: ["test"]}, testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(2);
         expect(state.responses[0]).toBe("test");
-        expect(state.responses[1]).toBe("exception");
+        expect(state.responses[1].response).toBe("exception");
+        expect(state.responses[1].queryParams).toBe("params");
+        expect(state.responses[1].layerMetadata).toBe("meta");
+
     });
 
     it('creates a feature info data from succesfull request', () => {
-        let state = mapInfo({}, {type: 'LOAD_FEATURE_INFO', data: "data"});
+        let testAction = {
+            type: 'LOAD_FEATURE_INFO',
+            data: "data",
+            requestParams: "params",
+            layerMetadata: "meta"
+        };
+
+        let state = mapInfo({}, testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(1);
-        expect(state.responses[0]).toBe("data");
+        expect(state.responses[0].response).toBe("data");
+        expect(state.responses[0].queryParams).toBe("params");
+        expect(state.responses[0].layerMetadata).toBe("meta");
 
-        state = mapInfo({responses: []}, {type: 'LOAD_FEATURE_INFO', data: "data"});
+        state = mapInfo({responses: []}, testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(1);
-        expect(state.responses[0]).toBe("data");
+        expect(state.responses[0].response).toBe("data");
+        expect(state.responses[0].queryParams).toBe("params");
+        expect(state.responses[0].layerMetadata).toBe("meta");
 
-        state = mapInfo({responses: ["test"]}, {type: 'LOAD_FEATURE_INFO', data: "data"});
+        state = mapInfo({responses: ["test"]}, testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(2);
         expect(state.responses[0]).toBe("test");
-        expect(state.responses[1]).toBe("data");
+        expect(state.responses[1].response).toBe("data");
+        expect(state.responses[1].queryParams).toBe("params");
+        expect(state.responses[1].layerMetadata).toBe("meta");
     });
 
     it('creates a new mapinfo request', () => {
@@ -98,6 +139,16 @@ describe('Test the mapInfo reducer', () => {
         state = mapInfo({responses: ["test"]}, {type: 'PURGE_MAPINFO_RESULTS'});
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(0);
+    });
+
+    it('set a new point on map which has been clicked', () => {
+        let state = mapInfo({}, {type: 'CLICK_ON_MAP', point: "p"});
+        expect(state.clickPoint).toExist();
+        expect(state.clickPoint).toBe('p');
+
+        state = mapInfo({clickPoint: 'oldP'}, {type: 'CLICK_ON_MAP', point: "p"});
+        expect(state.clickPoint).toExist();
+        expect(state.clickPoint).toBe('p');
     });
 
     it('enables map info', () => {
