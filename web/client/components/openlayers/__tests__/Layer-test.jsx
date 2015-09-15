@@ -185,6 +185,43 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().getLength()).toBe(0);
     });
 
+    it('rotates google layer when ol map is', () => {
+        var google = {
+            maps: {
+                MapTypeId: {
+                    HYBRID: 'hybrid',
+                    SATELLITE: 'satellite',
+                    ROADMAP: 'roadmap',
+                    TERRAIN: 'terrain'
+                },
+                Map: function() {
+                    this.setMapTypeId = function() {};
+                    this.setCenter = function() {};
+                    this.setZoom = function() {};
+                },
+                LatLng: function() {
+
+                }
+            }
+        };
+        var options = {
+            "type": "google",
+            "name": "ROADMAP",
+            "visibility": true
+        };
+        window.google = google;
+
+        // create layers
+        let layer = React.render(
+            <OpenlayersLayer type="google" options={options} map={map} mapId="map"/>, document.body);
+
+        expect(layer).toExist();
+        map.getView().setRotation(Math.PI / 2.0);
+        let dom = document.getElementById("mapgmaps");
+        expect(dom).toExist();
+        expect(dom.style.transform).toBe('rotate(90deg)');
+    });
+
     it('creates a bing layer for openlayers map', () => {
         var options = {
             "type": "bing",
