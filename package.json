@@ -39,6 +39,7 @@
     "axios": "^0.5.4",
     "bootstrap": "^3.3.5",
     "es6-promise": "^2.3.0",
+    "intl": "^1.0.0",
     "keymirror": "~0.1.1",
     "leaflet": "^0.7.3",
     "leaflet-plugins": "https://github.com/Polyconseil/leaflet-plugins/tarball/master",
