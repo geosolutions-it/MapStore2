@@ -35,7 +35,15 @@ function loadLocale(translationFolder, language) {
             locale = LocaleUtils.getUserLocale();
         }
         return axios.get(translationFolder + '/data.' + locale).then((response) => {
-            dispatch(changeLocale(response.data));
+            if (typeof response.data === "string") {
+                try {
+                    JSON.parse(response.data);
+                } catch(e) {
+                    dispatch(localeError('Locale file broken  for (' + language + '): ' + e.message));
+                }
+            } else {
+                dispatch(changeLocale(response.data));
+            }
         }).catch((e) => {
             dispatch(localeError(e));
         });

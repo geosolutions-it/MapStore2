@@ -28,6 +28,7 @@ var Viewer = React.createClass({
         messages: React.PropTypes.object,
         locale: React.PropTypes.string,
         mapInfo: React.PropTypes.object,
+        localeError: React.PropTypes.string,
         loadLocale: React.PropTypes.func,
         changeMapView: React.PropTypes.func,
         getFeatureInfo: React.PropTypes.func,
@@ -57,14 +58,14 @@ var Viewer = React.createClass({
         ];
     },
     render() {
-        if (this.props.mapConfig && this.props.messages) {
+        if (this.props.mapConfig) {
             let config = this.props.mapConfig;
             if (config.loadingError) {
                 return <div className="mapstore-error">{config.loadingError}</div>;
             }
 
             return (
-                <Localized messages={this.props.messages} locale={this.props.locale}>
+                <Localized messages={this.props.messages} locale={this.props.locale} loadingError={this.props.localeError}>
                     {() =>
                         <div key="viewer" className="fill">
                             <VMap config={config} onMapViewChanges={this.manageNewMapView} onClick={this.manageClickOnMap}/>
@@ -114,7 +115,8 @@ module.exports = connect((state) => {
         mapConfig: state.mapConfig,
         messages: state.locale ? state.locale.messages : null,
         locale: state.locale ? state.locale.current : null,
-        mapInfo: state.mapInfo ? state.mapInfo : {enabled: false, responses: [], requests: []}
+        mapInfo: state.mapInfo ? state.mapInfo : {enabled: false, responses: [], requests: []},
+        localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined
     };
 }, dispatch => {
     return bindActionCreators(assign({}, {
