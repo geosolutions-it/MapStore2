@@ -17,11 +17,15 @@ var OpenlayersMap = React.createClass({
         zoom: React.PropTypes.number.isRequired,
         projection: React.PropTypes.string,
         onMapViewChanges: React.PropTypes.func,
-        onClick: React.PropTypes.func
+        onClick: React.PropTypes.func,
+        mapOptions: React.PropTypes.object
     },
     getDefaultProps() {
         return {
           id: 'map',
+          onMapViewChanges: React.PropTypes.func,
+          onClick: React.PropTypes.func,
+          mapOptions: {},
           projection: 'EPSG:3857'
         };
     },
@@ -30,14 +34,22 @@ var OpenlayersMap = React.createClass({
     },
     componentDidMount() {
         var center = CoordinatesUtils.reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
-        var map = new ol.Map({
-          layers: [
-          ],
-          controls: ol.control.defaults({
+        let interactions = this.props.mapOptions.interactions || ol.interaction.defaults({
+            dragPan: false,
+            mouseWheelZoom: false
+        }).extend([
+            new ol.interaction.DragPan({kinetic: false}),
+            new ol.interaction.MouseWheelZoom({duration: 0})
+        ]);
+        let controls = this.props.mapOptions.controls || ol.control.defaults({
             attributionOptions: ({
-              collapsible: false
+                collapsible: false
             })
-          }),
+        });
+        var map = new ol.Map({
+          layers: [],
+          controls: controls,
+          interactions: interactions,
           target: this.props.id,
           view: new ol.View({
             center: [center.x, center.y],
@@ -59,7 +71,8 @@ var OpenlayersMap = React.createClass({
                     maxx: bbox[2],
                     maxy: bbox[3]
                 },
-                crs: view.getProjection().getCode()
+                crs: view.getProjection().getCode(),
+                rotation: view.getRotation()
             }, size);
         });
         map.on('click', (event) => {
