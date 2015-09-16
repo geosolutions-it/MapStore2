@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var Provider = require('react-redux').Provider;
+var {Provider} = require('react-redux');
 
 var {loadLocale} = require('../../actions/locale');
 var {loadMaps} = require('../../actions/maps');

@@ -16,19 +16,25 @@ var LeafletMap = React.createClass({
         zoom: React.PropTypes.number.isRequired,
         projection: React.PropTypes.string,
         onMapViewChanges: React.PropTypes.func,
-        onClick: React.PropTypes.func
+        onClick: React.PropTypes.func,
+        mapOptions: React.PropTypes.object
     },
     getDefaultProps() {
         return {
           id: 'map',
-          onMapViewChanges() {}
+          onMapViewChanges() {},
+          onClick() {},
+          mapOptions: {
+              zoomAnimation: false
+          },
+          projection: "EPSG:3857"
         };
     },
     getInitialState() {
         return { };
     },
     componentDidMount() {
-        var map = L.map(this.props.id).setView([this.props.center.y, this.props.center.x],
+        var map = L.map(this.props.id, this.props.mapOptions).setView([this.props.center.y, this.props.center.x],
           this.props.zoom);
 
         this.map = map;
@@ -79,7 +85,8 @@ var LeafletMap = React.createClass({
                 maxx: bbox[2],
                 maxy: bbox[3]
             },
-            crs: 'EPSG:4326'
+            crs: 'EPSG:4326',
+            rotation: 0
         }, size);
     }
 });
