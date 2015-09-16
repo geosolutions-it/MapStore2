@@ -39,7 +39,9 @@ var ConfigUtils = {
 
     loadConfiguration: function() {
         return axios.get('localConfig.json').then(response => {
-            defaultConfig = response.data;
+            if (typeof response.data === 'object') {
+                defaultConfig = response.data;
+            }
         });
     },
 

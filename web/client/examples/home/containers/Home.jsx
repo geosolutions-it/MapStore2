@@ -39,6 +39,7 @@ var Home = React.createClass({
             ])
         }),
         mapType: React.PropTypes.string,
+        localeError: React.PropTypes.string,
         changeMapType: React.PropTypes.func,
         loadLocale: React.PropTypes.func
     },
@@ -87,7 +88,7 @@ var Home = React.createClass({
     },
     render() {
         return (
-            <Localized messages={this.props.messages} locale={this.props.locale}>
+            <Localized messages={this.props.messages} locale={this.props.locale} loadingError={this.props.localeError}>
                 {() => {return this.renderLayout(); }}
             </Localized>
         );
@@ -103,7 +104,8 @@ module.exports = connect((state) => {
         messages: state.locale ? state.locale.messages : null,
         locale: state.locale ? state.locale.current : null,
         mapType: state.mapType,
-        maps: state.maps ? state.maps : null
+        maps: state.maps ? state.maps : null,
+        localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined
     };
 }, dispatch => {
     return bindActionCreators(assign({}, {

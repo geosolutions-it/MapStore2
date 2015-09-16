@@ -29,7 +29,17 @@ function configureError(e) {
 function loadMapConfig(configName, legacy) {
     return (dispatch) => {
         return axios.get(configName).then((response) => {
-            dispatch(configureMap(response.data, legacy));
+            if (typeof response.data === 'object') {
+                dispatch(configureMap(response.data, legacy));
+            } else {
+                try {
+                    JSON.parse(response.data);
+                } catch(e) {
+                    dispatch(configureError('Configuration file broken (' + configName + '): ' + e.message));
+                }
+
+            }
+
         }).catch((e) => {
             dispatch(configureError(e));
         });

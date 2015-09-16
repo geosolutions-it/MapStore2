@@ -10,7 +10,8 @@ var React = require('react');
 var Localized = React.createClass({
     propTypes: {
         locale: React.PropTypes.string,
-        messages: React.PropTypes.object
+        messages: React.PropTypes.object,
+        loadingError: React.PropTypes.string
     },
     childContextTypes: {
         locale: React.PropTypes.string,
@@ -31,6 +32,8 @@ var Localized = React.createClass({
             }
 
             return React.Children.only(children);
+        } else if (this.props.loadingError) {
+            return <div className="loading-locale-error">{this.props.loadingError}</div>;
         }
         return null;
     }
