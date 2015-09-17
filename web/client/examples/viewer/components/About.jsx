@@ -12,9 +12,9 @@ var I18N = require('../../../components/I18N/I18N');
 var About = React.createClass({
     render() {
         return (<InfoButton
-            text={<I18N.Message msgId="aboutLbl"/>}
+            image="./img/mapstore-about.png"
             title={<I18N.Message msgId="about_title"/>}
-            glyphicon="question-sign"
+            btnType="image"
             body={
                 <div style={{
                     backgroundImage: 'url("./img/mapstore-logo-0.20.png")',

@@ -10,6 +10,7 @@ var BootstrapReact = require('react-bootstrap');
 var Modal = BootstrapReact.Modal;
 var Button = BootstrapReact.Button;
 var Glyphicon = BootstrapReact.Glyphicon;
+var ImageButton = require('../ImageButton/ImageButton');
 
 /**
  * A button to show a simple information window.
@@ -18,22 +19,26 @@ var Glyphicon = BootstrapReact.Glyphicon;
  *  - title: {string|element} title of the window shown in its header
  *  - body: {string|element}  content of the window
  *  - style: {object}         a css-like hash to define the style on the component
- *  - glyphicon: {string}    bootstrap glyphicon name
+ *  - glyphicon: {string}     bootstrap glyphicon name
  *  - text: {string|element}  text content for the button
  *  - btnSize: {string}       bootstrap button size ('large', 'small', 'xsmall')
+ *  - btnType: {string}       'normal' to use a standard bootstrap button;
+ *                            'image'  to use a custom image as button
  *
  * Note: the button will not be never empty, it will show at least the text (default or custom)
  */
 var About = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
+        image: React.PropTypes.string,
         title: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         body: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         style: React.PropTypes.object,
         glyphicon: React.PropTypes.string,
         text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         hiddenText: React.PropTypes.bool,
-        btnSize: React.PropTypes.oneOf(['large', 'medium', 'small', 'xsmall'])
+        btnSize: React.PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
+        btnType: React.PropTypes.oneOf(['normal', 'image'])
     },
     getDefaultProps() {
         return {
@@ -44,7 +49,8 @@ var About = React.createClass({
             glyphicon: undefined,
             text: "Info",
             hiddenText: false,
-            btnSize: 'medium'
+            btnSize: 'medium',
+            btnType: 'normal'
         };
     },
     getInitialState() {
@@ -52,20 +58,28 @@ var About = React.createClass({
             isVisible: false
         };
     },
-    render() {
-        return (
-            <div
-                id={this.props.id}
-                style={this.props.style}>
-                <Button
+    getButton() {
+        var btn;
+        if (this.props.btnType === 'normal') {
+            btn = (<Button
                     bsStyle="info"
                     bsSize={this.props.btnSize}
                     onClick={this.open}>
                     {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : ""}
                     {!this.props.hiddenText && this.props.glyphicon ? "\u00A0" : ""}
                     {!(this.props.hiddenText && this.props.glyphicon) ? this.props.text : ""}
-                </Button>
-
+                </Button>);
+        } else {
+            btn = (<ImageButton image={this.props.image} onClick={this.open}/>);
+        }
+        return btn;
+    },
+    render() {
+        return (
+            <div
+                id={this.props.id}
+                style={this.props.style}>
+                {this.getButton()}
                 <Modal
                     show={this.state.isVisible}
                     onHide={this.close}

@@ -198,4 +198,14 @@ describe('This test for InfoButton', () => {
             }
         }
     });
+
+    it('creates the component with a ImageButton', () => {
+        const about = React.render(<InfoButton btnType="image"/>, document.body);
+        expect(about).toExist();
+        const aboutDom = React.findDOMNode(about);
+        expect(aboutDom.getElementsByTagName('button').length).toBe(0);
+        expect(aboutDom.getElementsByTagName('div').length).toBe(1);
+        const imgButtonDom = aboutDom.getElementsByTagName('div')[0];
+        expect(imgButtonDom.getElementsByTagName('img').length).toBe(1);
+    });
 });
