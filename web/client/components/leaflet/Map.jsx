@@ -25,7 +25,8 @@ var LeafletMap = React.createClass({
           onMapViewChanges() {},
           onClick() {},
           mapOptions: {
-              zoomAnimation: false
+              zoomAnimation: false,
+              attributionControl: false
           },
           projection: "EPSG:3857"
         };
