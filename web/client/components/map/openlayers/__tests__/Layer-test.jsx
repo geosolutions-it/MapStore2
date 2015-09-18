@@ -201,6 +201,9 @@ describe('Openlayers layer', () => {
                 },
                 LatLng: function() {
 
+                },
+                event: {
+                    trigger() {}
                 }
             }
         };
