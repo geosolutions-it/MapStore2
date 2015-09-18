@@ -11,8 +11,8 @@ var url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 const mapType = urlQuery.type || 'leaflet';
 
-var LMap = require('../../../components/' + mapType + '/Map');
-var LLayer = require('../../../components/' + mapType + '/Layer');
+var LMap = require('../../../components/map/' + mapType + '/Map');
+var LLayer = require('../../../components/map/' + mapType + '/Layer');
 
 var assign = require('object-assign');
 var ConfigUtils = require('../../../utils/ConfigUtils');
@@ -47,10 +47,10 @@ var VMap = React.createClass({
     }
 });
 
-require('../../../components/' + mapType + '/plugins/OSMLayer');
-require('../../../components/' + mapType + '/plugins/WMSLayer');
-require('../../../components/' + mapType + '/plugins/GoogleLayer');
-require('../../../components/' + mapType + '/plugins/BingLayer');
+require('../../../components/map/' + mapType + '/plugins/OSMLayer');
+require('../../../components/map/' + mapType + '/plugins/WMSLayer');
+require('../../../components/map/' + mapType + '/plugins/GoogleLayer');
+require('../../../components/map/' + mapType + '/plugins/BingLayer');
 
 
 module.exports = VMap;

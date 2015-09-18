@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var InfoButton = require('../../../components/InfoButton/InfoButton');
+var InfoButton = require('../../../components/buttons/InfoButton');
 var I18N = require('../../../components/I18N/I18N');
 
 var About = React.createClass({

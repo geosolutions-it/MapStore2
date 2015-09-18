@@ -11,7 +11,7 @@ var OpenlayersLayer = require('../Layer.jsx');
 var expect = require('expect');
 var ol = require('openlayers');
 
-require('../../../utils/openlayers/Layers');
+require('../../../../utils/openlayers/Layers');
 require('../plugins/OSMLayer');
 
 describe('OpenlayersMap', () => {

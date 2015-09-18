@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var Layers = require('../../utils/openlayers/Layers');
+var Layers = require('../../../utils/openlayers/Layers');
 
 const OpenlayersLayer = React.createClass({
     propTypes: {

@@ -11,8 +11,8 @@ var BootstrapReact = require('react-bootstrap');
 var Modal = BootstrapReact.Modal;
 var I18N = require('../../../components/I18N/I18N');
 
-var ToggleButton = require('../../../components/ToggleButton/ToggleButton');
-var HtmlRenderer = require('../../../components/HtmlRenderer/HtmlRenderer');
+var ToggleButton = require('../../../components/buttons/ToggleButton');
+var HtmlRenderer = require('../../../components/misc/HtmlRenderer');
 
 var GetFeatureInfo = React.createClass({
     propTypes: {

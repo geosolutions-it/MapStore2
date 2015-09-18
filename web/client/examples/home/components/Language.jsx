@@ -8,7 +8,7 @@
 var React = require('react');
 
 var I18N = require('../../../components/I18N/I18N');
-var LangSelector = require('../../../components/LangSelector/LangSelector');
+var LangSelector = require('../../../components/I18N/LangSelector');
 
 var Language = React.createClass({
     propTypes: {

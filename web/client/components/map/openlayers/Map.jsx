@@ -7,8 +7,8 @@
  */
 var ol = require('openlayers');
 var React = require('react');
-var CoordinatesUtils = require('../../utils/CoordinatesUtils');
-var ConfigUtils = require('../../utils/ConfigUtils');
+var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
+var ConfigUtils = require('../../../utils/ConfigUtils');
 
 var OpenlayersMap = React.createClass({
     propTypes: {

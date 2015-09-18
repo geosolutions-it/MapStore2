@@ -9,7 +9,7 @@ var React = require('react');
 
 var I18N = require('../../../components/I18N/I18N');
 var {Label, Input} = require('react-bootstrap');
-var MapList = require('../../../components/MapManager/MapList');
+var MapList = require('../../../components/maps/MapList');
 
 var MapsList = React.createClass({
     propTypes: {
