@@ -10,7 +10,7 @@ var BootstrapReact = require('react-bootstrap');
 var Modal = BootstrapReact.Modal;
 var Button = BootstrapReact.Button;
 var Glyphicon = BootstrapReact.Glyphicon;
-var ImageButton = require('../ImageButton/ImageButton');
+var ImageButton = require('./ImageButton');
 
 /**
  * A button to show a simple information window.

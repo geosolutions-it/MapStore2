@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var Layers = require('../../utils/leaflet/Layers');
+var Layers = require('../../../utils/leaflet/Layers');
 
 const LeafletLayer = React.createClass({
     propTypes: {

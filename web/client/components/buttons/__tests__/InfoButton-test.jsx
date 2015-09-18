@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react/addons');
-var InfoButton = require('../InfoButton.jsx');
+var InfoButton = require('../InfoButton');
 var expect = require('expect');
 
 describe('This test for InfoButton', () => {

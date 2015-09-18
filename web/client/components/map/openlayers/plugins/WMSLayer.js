@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../utils/openlayers/Layers');
+var Layers = require('../../../../utils/openlayers/Layers');
 var ol = require('openlayers');
 var objectAssign = require('object-assign');
-var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
+var CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 
 function wmsToOpenlayersOptions(options) {
     // NOTE: can we use opacity to manage visibility?

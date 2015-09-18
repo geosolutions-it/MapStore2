@@ -7,7 +7,7 @@
  */
 var L = require('leaflet');
 var React = require('react');
-var ConfigUtils = require('../../utils/ConfigUtils');
+var ConfigUtils = require('../../../utils/ConfigUtils');
 
 var LeafletMap = React.createClass({
     propTypes: {

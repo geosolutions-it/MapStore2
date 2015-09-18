@@ -17,7 +17,7 @@ var {loadLocale} = require('../../../actions/locale');
 var {changeMapView, getFeatureInfo, changeMapInfoState, purgeMapInfoResults} = require('../../../actions/map');
 
 var VMap = require('../components/Map');
-var LangSelector = require('../../../components/LangSelector/LangSelector');
+var LangSelector = require('../../../components/I18N/LangSelector');
 var About = require('../components/About');
 var GetFeatureInfo = require('../components/GetFeatureInfo');
 var Localized = require('../../../components/I18N/Localized');

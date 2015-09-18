@@ -10,7 +10,7 @@ var LeafletMap = require('../Map.jsx');
 var LeafLetLayer = require('../Layer.jsx');
 var expect = require('expect');
 
-require('../../../utils/leaflet/Layers');
+require('../../../../utils/leaflet/Layers');
 require('../plugins/OSMLayer');
 
 describe('LeafletMap', () => {

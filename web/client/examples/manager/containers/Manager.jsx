@@ -9,14 +9,14 @@ var React = require('react');
 var connect = require('react-redux').connect;
 var bindActionCreators = require('redux').bindActionCreators;
 
-var MapList = require('../../../components/MapManager/MapList');
+var MapList = require('../../../components/maps/MapList');
 var changeMapType = require('../actions/mapType').changeMapType;
 var loadLocale = require('../../../actions/locale').loadLocale;
 
 var Localized = require('../../../components/I18N/Localized');
 var assign = require('object-assign');
 var I18N = require('../../../components/I18N/I18N');
-var LangSelector = require('../../../components/LangSelector/LangSelector');
+var LangSelector = require('../../../components/I18N/LangSelector');
 var {Label, Input} = require('react-bootstrap');
 
 var Manager = React.createClass({

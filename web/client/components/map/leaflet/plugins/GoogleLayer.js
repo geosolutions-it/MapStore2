@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../utils/leaflet/Layers');
+var Layers = require('../../../../utils/leaflet/Layers');
 var Google = require('leaflet-plugins/layer/tile/Google');
 
 Layers.registerType('google', (options) => {

@@ -6,50 +6,24 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react/addons');
-var ol = require('openlayers');
-var OpenlayersLayer = require('../Layer.jsx');
+var L = require('leaflet');
+var LeafLetLayer = require('../Layer.jsx');
 var expect = require('expect');
 
-require('../../../utils/openlayers/Layers');
+require('../../../../utils/leaflet/Layers');
 require('../plugins/OSMLayer');
 require('../plugins/WMSLayer');
 require('../plugins/GoogleLayer');
 require('../plugins/BingLayer');
 
-describe('Openlayers layer', () => {
+describe('Leaflet layer', () => {
     document.body.innerHTML = '<div id="map"></div>';
-    let map = new ol.Map({
-      layers: [
-      ],
-      controls: ol.control.defaults({
-        attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
-          collapsible: false
-        })
-      }),
-      target: 'map',
-      view: new ol.View({
-        center: [0, 0],
-        zoom: 5
-      })
-    });
+    let map = L.map('map');
 
 
     afterEach((done) => {
         document.body.innerHTML = '<div id="map"></div>';
-        map = new ol.Map({
-          layers: [
-          ],
-          controls: ol.control.defaults({
-            attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
-              collapsible: false
-            })
-          }),
-          target: 'map',
-          view: new ol.View({
-            center: [0, 0],
-            zoom: 5
-          })
-        });
+        map = L.map('map');
         setTimeout(done);
     });
 
@@ -59,12 +33,14 @@ describe('Openlayers layer', () => {
         };
         // create layers
         var layer = React.render(
-            <OpenlayersLayer source={source}
+            <LeafLetLayer source={source}
                   map={map}/>, document.body);
+        var lcount = 0;
 
         expect(layer).toExist();
         // count layers
-        expect(map.getLayers().getLength()).toBe(0);
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(0);
     });
 
     it('creates a unknown source layer', () => {
@@ -77,13 +53,14 @@ describe('Openlayers layer', () => {
         };
         // create layers
         var layer = React.render(
-            <OpenlayersLayer source={source}
+            <LeafLetLayer source={source}
                  options={options} map={map}/>, document.body);
+        var lcount = 0;
 
         expect(layer).toExist();
         // count layers
-        // count layers
-        expect(map.getLayers().getLength()).toBe(0);
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(0);
     });
 
     it('creates source with missing ptype', () => {
@@ -95,25 +72,28 @@ describe('Openlayers layer', () => {
         };
         // create layers
         var layer = React.render(
-            <OpenlayersLayer source={source}
+            <LeafLetLayer source={source}
                  options={options} map={map}/>, document.body);
+        var lcount = 0;
 
         expect(layer).toExist();
         // count layers
-        expect(map.getLayers().getLength()).toBe(0);
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(0);
     });
-    it('creates a osm layer for openlayers map', () => {
+    it('creates a osm layer for leaflet map', () => {
         var options = {};
         // create layers
         var layer = React.render(
-            <OpenlayersLayer type="osm"
+            <LeafLetLayer type="osm"
                  options={options} map={map}/>, document.body);
-
+        var lcount = 0;
         expect(layer).toExist();
         // count layers
-        expect(map.getLayers().getLength()).toBe(1);
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
     });
-    it('creates a osm layer for openlayers map', () => {
+    it('creates a osm layer for leaflet map', () => {
         var options = {
             "source": "osm",
             "title": "Open Street Map",
@@ -122,15 +102,16 @@ describe('Openlayers layer', () => {
         };
         // create layer
         var layer = React.render(
-            <OpenlayersLayer type="osm"
+            <LeafLetLayer type="osm"
                  options={options} map={map}/>, document.body);
-
+        var lcount = 0;
         expect(layer).toExist();
         // count layers
-        expect(map.getLayers().getLength()).toBe(1);
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
     });
 
-    it('creates a wms layer for openlayers map', () => {
+    it('creates a wms layer for leaflet map', () => {
         var options = {
             "type": "wms",
             "visibility": true,
@@ -141,15 +122,20 @@ describe('Openlayers layer', () => {
         };
         // create layers
         var layer = React.render(
-            <OpenlayersLayer type="wms"
+            <LeafLetLayer type="wms"
                  options={options} map={map}/>, document.body);
-
+        var lcount = 0;
 
         expect(layer).toExist();
         // count layers
-        expect(map.getLayers().getLength()).toBe(1);
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
     });
-    it('creates a google layer for openlayers map', () => {
+    it('creates a google layer for leaflet map', () => {
+        var options = {
+            "type": "google",
+            "name": "ROADMAP"
+        };
         var google = {
             maps: {
                 MapTypeId: {
@@ -168,61 +154,20 @@ describe('Openlayers layer', () => {
                 }
             }
         };
-        var options = {
-            "type": "google",
-            "name": "ROADMAP",
-            "visibility": true
-        };
         window.google = google;
 
         // create layers
         let layer = React.render(
-            <OpenlayersLayer type="google" options={options} map={map} mapId="map"/>, document.body);
+            <LeafLetLayer type="google" options={options} map={map}/>, document.body);
+        let lcount = 0;
 
         expect(layer).toExist();
         // count layers
-        // google maps does not create a real ol layer, it is just injecting a gmaps api layer into DOM
-        expect(map.getLayers().getLength()).toBe(0);
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
     });
 
-    it('rotates google layer when ol map is', () => {
-        var google = {
-            maps: {
-                MapTypeId: {
-                    HYBRID: 'hybrid',
-                    SATELLITE: 'satellite',
-                    ROADMAP: 'roadmap',
-                    TERRAIN: 'terrain'
-                },
-                Map: function() {
-                    this.setMapTypeId = function() {};
-                    this.setCenter = function() {};
-                    this.setZoom = function() {};
-                },
-                LatLng: function() {
-
-                }
-            }
-        };
-        var options = {
-            "type": "google",
-            "name": "ROADMAP",
-            "visibility": true
-        };
-        window.google = google;
-
-        // create layers
-        let layer = React.render(
-            <OpenlayersLayer type="google" options={options} map={map} mapId="map"/>, document.body);
-
-        expect(layer).toExist();
-        map.getView().setRotation(Math.PI / 2.0);
-        let dom = document.getElementById("mapgmaps");
-        expect(dom).toExist();
-        expect(dom.style.transform).toBe('rotate(90deg)');
-    });
-
-    it('creates a bing layer for openlayers map', () => {
+    it('creates a bing layer for leaflet map', () => {
         var options = {
             "type": "bing",
             "title": "Bing Aerial",
@@ -231,10 +176,12 @@ describe('Openlayers layer', () => {
         };
         // create layers
         var layer = React.render(
-            <OpenlayersLayer type="bing" options={options} map={map}/>, document.body);
+            <LeafLetLayer type="bing" options={options} map={map}/>, document.body);
+        var lcount = 0;
 
         expect(layer).toExist();
         // count layers
-        expect(map.getLayers().getLength()).toBe(1);
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
     });
 });
