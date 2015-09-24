@@ -60,31 +60,28 @@ var Home = React.createClass({
                     </Col>
                 </Row>
                 <Row className="show-grid">
-                 <Col xs={12} md={6}>
-                    <Row>
-                        <Col>
-                            <Description/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Examples/>
-                        </Col>
-                    </Row>
-                 </Col>
-                 <Col xs={12} md={6}>
-                     <MapsList maps={this.props.maps} onChangeMapType={this.changeMapType}
-                         mapType={this.props.mapType} title={this.props.messages.manager.maps_title}/>
-                 </Col>
-                  </Row>
-                  <Row>
-                      <Col>
-                          <Footer/>
-                      </Col>
-                  </Row>
-              </Grid>
-          )
-        ;
+                    <Col xs={12} md={6}>
+                        <Row>
+                            <Col>
+                                <Description/>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <Examples/>
+                            </Col>
+                        </Row>
+                    </Col>
+                    <Col xs={12} md={6}>
+                        <MapsList
+                            maps={this.props.maps} onChangeMapType={this.changeMapType}
+                            mapType={this.props.mapType} title={this.props.messages.manager.maps_title}
+                        />
+                    </Col>
+                </Row>
+                <Footer/>
+            </Grid>
+        );
     },
     render() {
         return (
