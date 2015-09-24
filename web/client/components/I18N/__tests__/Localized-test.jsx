@@ -54,4 +54,11 @@ describe('Test the localization support HOC', () => {
         var dom = React.findDOMNode(localized);
         expect(dom).toNotExist();
     });
+
+    it('renders a loading error', () => {
+        var localized = React.render(<Localized loadingError="loadingError" />, document.body);
+        var dom = React.findDOMNode(localized);
+        expect(dom).toExist();
+        expect(dom.className.indexOf("loading-locale-error")).toNotBe(-1);
+    });
 });

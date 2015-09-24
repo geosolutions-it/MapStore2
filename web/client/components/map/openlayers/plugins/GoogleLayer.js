@@ -12,6 +12,11 @@ var React = require('react');
 
 var layersMap;
 
+var isTouchSupported = 'ontouchstart' in window;
+var startEvent = isTouchSupported ? 'touchstart' : 'mousedown';
+var moveEvent = isTouchSupported ? 'touchmove' : 'mousemove';
+var endEvent = isTouchSupported ? 'touchend' : 'mouseup';
+
 Layers.registerType('google', {
     create: (options, map, mapId) => {
         let google = window.google;
@@ -111,7 +116,7 @@ Layers.registerType('google', {
         let mousemove = false;
 
         let resizeGoogleLayerIfRotated = function() {
-            let degrees = /[\+\-]?\d+\.\d+/g;
+            let degrees = /[\+\-]?\d+\.?\d*/i;
             let newTrans = document.getElementById(mapId + 'gmaps').style.transform;
             if (newTrans !== oldTrans && newTrans.indexOf('rotate') !== -1) {
                 let mapContainer = document.getElementById(mapId + 'gmaps');
@@ -126,37 +131,19 @@ Layers.registerType('google', {
             }
         };
 
-        // desktop --------------------------------------------------------------
-        viewport.addEventListener('mousedown', () => {
+        viewport.addEventListener(startEvent, () => {
             mousedown = true;
         });
-        viewport.addEventListener('mouseup', () => {
+        viewport.addEventListener(endEvent, () => {
             if (mousemove && mousedown) {
                 resizeGoogleLayerIfRotated();
             }
             oldTrans = document.getElementById(mapId + 'gmaps').style.transform;
             mousedown = false;
         });
-        viewport.addEventListener('mousemove', () => {
+        viewport.addEventListener(moveEvent, () => {
             mousemove = mousedown;
         });
-        // ---------------------------------------------------------------------
-
-        // mobile --------------------------------------------------------------
-        viewport.addEventListener('touchstart', () => {
-            mousedown = true;
-        });
-        viewport.addEventListener('touchend', () => {
-            if (mousemove && mousedown) {
-                resizeGoogleLayerIfRotated();
-            }
-            oldTrans = document.getElementById(mapId + 'gmaps').style.transform;
-            mousedown = false;
-        });
-        viewport.addEventListener('touchmove', () => {
-            mousemove = mousedown;
-        });
-        // ---------------------------------------------------------------------
 
         return null;
     },

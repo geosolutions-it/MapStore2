@@ -99,4 +99,14 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(0);
     });
+
+    it('enables map info', () => {
+        let state = mapInfo({}, {type: 'CHANGE_MAPINFO_STATE', enabled: true});
+        expect(state).toExist();
+        expect(state.enabled).toBe(true);
+
+        state = mapInfo({}, {type: 'CHANGE_MAPINFO_STATE', enabled: false});
+        expect(state).toExist();
+        expect(state.enabled).toBe(false);
+    });
 });

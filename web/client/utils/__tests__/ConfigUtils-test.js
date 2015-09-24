@@ -157,4 +157,80 @@ describe('ConfigUtils', () => {
         expect(config.map.layers.length).toBe(1);
         expect(config.gsSources["gxp-source-508"]).toExist();
     });
+
+    it('getCenter', () => {
+        var center = ConfigUtils.getCenter([13, 43]);
+        expect(center).toExist();
+        expect(center.y).toBe(43);
+        expect(center.x).toBe(13);
+        expect(center.crs).toBe('EPSG:4326');
+
+        center = ConfigUtils.getCenter([13, 43], 'EPSG:4326');
+        expect(center).toExist();
+        expect(center.y).toBe(43);
+        expect(center.x).toBe(13);
+        expect(center.crs).toBe('EPSG:4326');
+
+        center = ConfigUtils.getCenter({y: 43, x: 13, crs: 'EPSG:4326'});
+        expect(center).toExist();
+        expect(center.y).toBe(43);
+        expect(center.x).toBe(13);
+        expect(center.crs).toBe('EPSG:4326');
+
+        center = ConfigUtils.getCenter({y: 4786738, x: 1459732, crs: 'EPSG:900913'});
+        expect(center).toExist();
+        expect(center.y).toExist();
+        expect(center.x).toExist();
+        expect(center.crs).toBe('EPSG:4326');
+    });
+
+    it('getConfigurationOptions', () => {
+        var retval = ConfigUtils.getConfigurationOptions({});
+        expect(retval).toExist();
+        expect(retval.configUrl).toExist();
+        expect(retval.configUrl).toBe('config.json');
+
+        retval = ConfigUtils.getConfigurationOptions({}, 'name', 'extension');
+        expect(retval).toExist();
+        expect(retval.configUrl).toExist();
+        expect(retval.configUrl).toBe('name.extension');
+
+        retval = ConfigUtils.getConfigurationOptions({}, 'name');
+        expect(retval).toExist();
+        expect(retval.configUrl).toExist();
+        expect(retval.configUrl).toBe('name.json');
+
+        retval = ConfigUtils.getConfigurationOptions({}, undefined, 'extension');
+        expect(retval).toExist();
+        expect(retval.configUrl).toExist();
+        expect(retval.configUrl).toBe('config.extension');
+
+        retval = ConfigUtils.getConfigurationOptions({
+            mapId: 42
+        });
+        expect(retval).toExist();
+        expect(retval.configUrl).toExist();
+        expect(retval.configUrl).toBe('/mapstore/rest/geostore/data/42');
+
+        retval = ConfigUtils.getConfigurationOptions({
+            mapId: 42
+        }, undefined, undefined, 'gbase/');
+        expect(retval).toExist();
+        expect(retval.configUrl).toExist();
+        expect(retval.configUrl).toBe('gbase/data/42');
+    });
+
+    it('getUserConfiguration', () => {
+        const testval = ConfigUtils.getConfigurationOptions({});
+        const retval = ConfigUtils.getUserConfiguration();
+        expect(retval).toExist();
+        expect(retval.configUrl).toBe(testval.configUrl);
+        expect(retval.legacy).toBe(testval.legacy);
+    });
+
+    it('loadConfiguration', (done) => {
+        var retval = ConfigUtils.loadConfiguration();
+        expect(retval).toExist();
+        done();
+    });
 });
