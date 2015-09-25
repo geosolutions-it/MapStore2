@@ -11,10 +11,15 @@ var url = require('url');
 var LocaleUtils = require('../LocaleUtils');
 
 describe('LocaleUtils', () => {
-    it('getLocale', () => {
-        var expectedLocal = navigator ? navigator.language || navigator.browserLanguage : "en";
-        expect(LocaleUtils.getLocale({})).toBe(expectedLocal);
+    it('normalizeLocaleCode', () => {
+        expect(LocaleUtils.normalizeLocaleCode()).toBe(undefined);
+        expect(LocaleUtils.normalizeLocaleCode(null)).toBe(undefined);
+        expect(LocaleUtils.normalizeLocaleCode('')).toBe(undefined);
+        expect(LocaleUtils.normalizeLocaleCode('it-IT')).toBe('it');
+        expect(LocaleUtils.normalizeLocaleCode('IT')).toBe('it');
+    });
 
+    it('getLocale', () => {
         expect(LocaleUtils.getLocale({locale: 'it'})).toBe('it-IT');
         expect(LocaleUtils.getLocale({locale: 'en'})).toBe('en-US');
 
