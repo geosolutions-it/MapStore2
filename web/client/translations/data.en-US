@@ -46,6 +46,9 @@
             "maps_title": "Maps",
             "locales_combo": "Language:"
         },
+        "backgroundSwither":{
+            "tooltip": "Select Background"
+        },
         "getFeatureInfoTitle": "Feature Info"
     }
 }

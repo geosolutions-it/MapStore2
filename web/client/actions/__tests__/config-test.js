@@ -7,14 +7,14 @@
  */
 
 var expect = require('expect');
-var loadMapConfig = require('../config').loadMapConfig;
+var {loadMapConfig, changeLayerProperties, MAP_CONFIG_LOAD_ERROR, MAP_CONFIG_LOADED, CHANGE_LAYER_PROPERTIES} = require('../config');
 
 describe('Test configuration related actions', () => {
     it('does not load a missing configuration file', (done) => {
         loadMapConfig('missingConfig.json')((e) => {
             try {
                 expect(e).toExist();
-                expect(e.type).toBe('MAP_CONFIG_LOAD_ERROR');
+                expect(e.type).toBe(MAP_CONFIG_LOAD_ERROR);
                 done();
             } catch(ex) {
                 done(ex);
@@ -26,11 +26,27 @@ describe('Test configuration related actions', () => {
         loadMapConfig('base/web/client/test-resources/testConfig.json')((e) => {
             try {
                 expect(e).toExist();
-                expect(e.type).toBe('MAP_CONFIG_LOADED');
+                expect(e.type).toBe(MAP_CONFIG_LOADED);
                 done();
             } catch(ex) {
                 done(ex);
             }
         });
     });
+    it('test layer properties change action', (done) => {
+        let e = changeLayerProperties({visibility: true}, 0);
+
+        try {
+            expect(e).toExist();
+            expect(e.type).toBe(CHANGE_LAYER_PROPERTIES);
+            expect(e.newProperties).toExist();
+            expect(e.newProperties.visibility).toBe(true);
+            expect(e.position).toBe(0);
+            done();
+        } catch(ex) {
+            done(ex);
+        }
+
+    });
+
 });

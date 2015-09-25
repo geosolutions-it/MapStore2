@@ -46,6 +46,9 @@
             "maps_title": "Mappe",
             "locales_combo": "Lingua:"
         },
+        "backgroundSwither":{
+            "tooltip": "Scegli lo sfondo"
+        },
         "getFeatureInfoTitle": "Informazioni Sulle Feature"
     }
 }

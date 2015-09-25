@@ -14,7 +14,10 @@ var {bindActionCreators} = require('redux');
 var ConfigUtils = require('../../../utils/ConfigUtils');
 
 var {loadLocale} = require('../../../actions/locale');
-var {changeMapView, getFeatureInfo, changeMapInfoState, purgeMapInfoResults} = require('../../../actions/map');
+var {changeMapView, getFeatureInfo, changeMapInfoState, purgeMapInfoResults } = require('../../../actions/map');
+var {changeLayerProperties} = require('../../../actions/config');
+
+var BackgroundSwitcherTool = require("../components/BackgroundSwitcherTool");
 
 var VMap = require('../components/Map');
 var LangSelector = require('../../../components/I18N/LangSelector');
@@ -31,6 +34,7 @@ var Viewer = React.createClass({
         localeError: React.PropTypes.string,
         loadLocale: React.PropTypes.func,
         changeMapView: React.PropTypes.func,
+        changeLayerProperties: React.PropTypes.func,
         getFeatureInfo: React.PropTypes.func,
         changeMapInfoState: React.PropTypes.func,
         purgeMapInfoResults: React.PropTypes.func
@@ -47,6 +51,7 @@ var Viewer = React.createClass({
         return [
             <LangSelector key="langSelector" currentLocale={locale} onLanguageChange={this.props.loadLocale}/>,
             <About key="about"/>,
+                    <BackgroundSwitcherTool key="backgroundSwitcher" layers={this.props.mapConfig.layers} propertiesChangeHandler={this.props.changeLayerProperties}/>,
             <GetFeatureInfo
                 key="getFeatureInfo"
                 enabled={this.props.mapInfo.enabled}
@@ -124,6 +129,7 @@ module.exports = connect((state) => {
         changeMapView,
         getFeatureInfo,
         changeMapInfoState,
-        purgeMapInfoResults
+        purgeMapInfoResults,
+        changeLayerProperties
     }), dispatch);
 })(Viewer);

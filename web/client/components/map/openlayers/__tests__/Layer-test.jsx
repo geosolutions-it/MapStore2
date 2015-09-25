@@ -9,12 +9,13 @@ var React = require('react/addons');
 var ol = require('openlayers');
 var OpenlayersLayer = require('../Layer.jsx');
 var expect = require('expect');
-
+var assign = require('object-assign');
 require('../../../../utils/openlayers/Layers');
 require('../plugins/OSMLayer');
 require('../plugins/WMSLayer');
 require('../plugins/GoogleLayer');
 require('../plugins/BingLayer');
+require('../plugins/MapQuest');
 
 describe('Openlayers layer', () => {
     document.body.innerHTML = '<div id="map"></div>';
@@ -185,6 +186,49 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().getLength()).toBe(0);
     });
 
+    it('change layer visibility for Google Layer', () => {
+        var google = {
+            maps: {
+                MapTypeId: {
+                    HYBRID: 'hybrid',
+                    SATELLITE: 'satellite',
+                    ROADMAP: 'roadmap',
+                    TERRAIN: 'terrain'
+                },
+                Map: function() {
+                    this.setMapTypeId = function() {};
+                    this.setCenter = function() {};
+                    this.setZoom = function() {};
+                },
+                LatLng: function() {
+
+                }
+            }
+        };
+        var options = {
+            "type": "google",
+            "name": "ROADMAP",
+            "visibility": true
+        };
+        window.google = google;
+
+        // create layers
+        let layer = React.render(
+            <OpenlayersLayer type="google" options={options} map={map} mapId="map"/>, document.body);
+
+        expect(layer).toExist();
+        // count layers
+        // google maps does not create a real ol layer, it is just injecting a gmaps api layer into DOM
+        expect(map.getLayers().getLength()).toBe(0);
+        let div = document.getElementById("mapgmaps");
+        expect(div).toExist();
+
+        // if only one layer for google exists, the div will be hidden
+        let newOpts = assign({}, options, {visibility: false});
+        layer.setProps({options: newOpts});
+        expect(div.style.visibility).toBe('hidden');
+    });
+
     it('rotates google layer when ol map is', () => {
         var google = {
             maps: {
@@ -239,5 +283,44 @@ describe('Openlayers layer', () => {
         expect(layer).toExist();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
+    });
+
+    it('change a bing layer visibility', () => {
+        var options = {
+            "type": "bing",
+            "title": "Bing Aerial",
+            "name": "Aerial",
+            "group": "background"
+        };
+        // create layers
+        var layer = React.render(
+            <OpenlayersLayer type="bing" options={options} map={map}/>, document.body);
+
+        expect(layer).toExist();
+        expect(layer.layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getVisible()).toBe(true);
+        layer.setProps({options: assign({}, {
+            "type": "bing",
+            "title": "Bing Aerial",
+            "name": "Aerial",
+            "group": "background"
+        }, {
+            "visibility": true
+        })});
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getVisible()).toBe(true);
+        layer.setProps({options: assign({}, {
+            "type": "bing",
+            "title": "Bing Aerial",
+            "name": "Aerial",
+            "group": "background"
+        }, {
+            "visibility": false
+        })});
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getVisible()).toBe(false);
+
     });
 });

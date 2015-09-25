@@ -151,9 +151,6 @@
                         <resources>
                             <resource>
                                 <directory>${basedir}/client/dist</directory>
-                                <includes>
-                                    <include>**/*.js</include>
-                                </includes>
                             </resource>
                         </resources>
                     </configuration>

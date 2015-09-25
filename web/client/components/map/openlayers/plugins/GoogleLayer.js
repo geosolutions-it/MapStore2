@@ -11,7 +11,8 @@ var ol = require('openlayers');
 var React = require('react');
 
 var layersMap;
-
+var rendererItem;
+var gmap;
 Layers.registerType('google', {
     create: (options, map, mapId) => {
         let google = window.google;
@@ -24,7 +25,7 @@ Layers.registerType('google', {
            };
         }
 
-        let gmap = new google.maps.Map(document.getElementById(mapId + 'gmaps'), {
+        gmap = new google.maps.Map(document.getElementById(mapId + 'gmaps'), {
           disableDefaultUI: true,
           keyboardShortcuts: false,
           draggable: false,
@@ -101,6 +102,7 @@ Layers.registerType('google', {
         view.on('change:resolution', setZoom);
         view.on('change:rotation', setRotation);
 
+
         setCenter();
         setZoom();
 
@@ -111,22 +113,22 @@ Layers.registerType('google', {
         let mousemove = false;
 
         let resizeGoogleLayerIfRotated = function() {
-            let degrees = /[\+\-]?\d+\.\d+/g;
-            let newTrans = document.getElementById(mapId + 'gmaps').style.transform;
-            if (newTrans !== oldTrans && newTrans.indexOf('rotate') !== -1) {
-                let mapContainer = document.getElementById(mapId + 'gmaps');
-                let rotation = parseFloat(newTrans.match(degrees)[0]);
-                let size = calculateRotatedSize(-rotation, map.getSize());
-                mapContainer.style.width = size.width + 'px';
-                mapContainer.style.height = size.height + 'px';
-                mapContainer.style.left = (Math.round((map.getSize()[0] - size.width) / 2.0)) + 'px';
-                mapContainer.style.top = (Math.round((map.getSize()[1] - size.height) / 2.0)) + 'px';
-                google.maps.event.trigger(gmap, "resize");
-                setCenter();
-            }
-        };
+           let degrees = /[\+\-]?\d+\.\d+/g;
+           let newTrans = document.getElementById(mapId + 'gmaps').style.transform;
+           if (newTrans !== oldTrans && newTrans.indexOf('rotate') !== -1) {
+               let mapContainer = document.getElementById(mapId + 'gmaps');
+               let rotation = parseFloat(newTrans.match(degrees)[0]);
+               let size = calculateRotatedSize(-rotation, map.getSize());
+               mapContainer.style.width = size.width + 'px';
+               mapContainer.style.height = size.height + 'px';
+               mapContainer.style.left = (Math.round((map.getSize()[0] - size.width) / 2.0)) + 'px';
+               mapContainer.style.top = (Math.round((map.getSize()[1] - size.height) / 2.0)) + 'px';
+               google.maps.event.trigger(gmap, "resize");
+               setCenter();
+           }
+       };
 
-        // desktop --------------------------------------------------------------
+       // desktop --------------------------------------------------------------
         viewport.addEventListener('mousedown', () => {
             mousedown = true;
         });
@@ -153,16 +155,41 @@ Layers.registerType('google', {
             oldTrans = document.getElementById(mapId + 'gmaps').style.transform;
             mousedown = false;
         });
+
         viewport.addEventListener('touchmove', () => {
             mousemove = mousedown;
         });
-        // ---------------------------------------------------------------------
-
+       // ---------------------------------------------------------------------
         return null;
     },
     render(options, map, mapId) {
-        var gmapsStyle = {zIndex: -1};
-        return <div id={mapId + "gmaps"} className="fill" style={gmapsStyle}></div>;
+        // the first item that call render will take control
+        if (!rendererItem) {
+            rendererItem = options.name;
+        }
+        let gmapsStyle = {zIndex: -1};
+        if (options.visibility === true) {
+            let div = document.getElementById("mapgmaps");
+            if (div) {
+                div.style.visibility = 'visible';
+            }
+            if (gmap && layersMap) {
+                gmap.setMapTypeId(layersMap[options.name]);
+            }
+        } else {
+            gmapsStyle.visibility = 'hidden'; // used only for the renered div
+        }
+        // To hide the map when visibility is set to false for every
+        // instance of google layer
+        if (rendererItem === options.name) {
+            // assume the first render the div for gmaps
+            let div = document.getElementById("mapgmaps");
+            if (div) {
+                div.style.visibility = options.visibility ? 'visible' : 'hidden';
+            }
+            return <div id={mapId + "gmaps"} className="fill" style={gmapsStyle}></div>;
+        }
+        return null;
     }
 
 });
