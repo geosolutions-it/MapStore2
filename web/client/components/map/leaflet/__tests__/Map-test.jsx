@@ -163,4 +163,31 @@ describe('LeafletMap', () => {
         expect(leafletMap.getCenter().lat).toBe(44);
         expect(leafletMap.getCenter().lng).toBe(10);
     });
+
+    it('check if the map has "auto" cursor as default', () => {
+        const map = React.render(
+            <LeafletMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11}
+            />
+        , document.body);
+
+        const leafletMap = map.map;
+        const mapDiv = leafletMap.getContainer();
+        expect(mapDiv.style.cursor).toBe("auto");
+    });
+
+    it('check if the map can be created with a custom cursor', () => {
+        const map = React.render(
+            <LeafletMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11}
+                mousePointer="pointer"
+            />
+        , document.body);
+
+        const leafletMap = map.map;
+        const mapDiv = leafletMap.getContainer();
+        expect(mapDiv.style.cursor).toBe("pointer");
+    });
 });

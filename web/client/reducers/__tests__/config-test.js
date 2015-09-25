@@ -54,4 +54,18 @@ describe('Test the mapConfig reducer', () => {
         expect(state.bbox).toBe(0);
         expect(state.size).toBe(0);
     });
+
+    it('sets a new mouse pointer used over the map', () => {
+        const action = {
+            type: 'CHANGE_MOUSE_POINTER',
+            pointer: "testPointer"
+        };
+
+        var state = mapConfig({}, action);
+        expect(state.mousePointer).toBe(action.pointer);
+
+        state = mapConfig({prop: 'prop'}, action);
+        expect(state.prop).toBe('prop');
+        expect(state.mousePointer).toBe(action.pointer);
+    });
 });

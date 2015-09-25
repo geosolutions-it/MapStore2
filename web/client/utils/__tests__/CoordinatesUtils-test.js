@@ -28,4 +28,14 @@ describe('CoordinatesUtils', () => {
         expect(transformed.y).toNotBe(13);
         expect(transformed.srs).toBe('EPSG:900913');
     });
+    it('convert lat lon bbox to marcator bbox', () => {
+        var bbox = [44, 12, 45, 13];
+        var projbbox = CoordinatesUtils.reprojectBbox(bbox, 'EPSG:4326', 'EPSG:900913');
+
+        expect(projbbox).toExist();
+        expect(projbbox.length).toBe(4);
+        for (let i = 0; i < 4; i++) {
+            expect(projbbox[i]).toNotBe(bbox[i]);
+        }
+    });
 });

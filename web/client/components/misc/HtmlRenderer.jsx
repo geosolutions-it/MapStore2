@@ -25,7 +25,7 @@ var HtmlRenderer = React.createClass({
         };
     },
     render() {
-        return <div id={this.props.id} dangerouslySetInnerHTML={this.getSourceCode()}></div>;
+        return <div id={this.props.id} style={{padding: "8px"}} dangerouslySetInnerHTML={this.getSourceCode()}></div>;
     }
 });
 
