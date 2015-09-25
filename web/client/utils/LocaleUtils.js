@@ -19,11 +19,28 @@ const supportedLocales = {
 };
 
 var LocaleUtils = {
+    normalizeLocaleCode: function(localeCode) {
+        var retval;
+        if (localeCode === undefined || localeCode === null) {
+            retval = undefined;
+        } else {
+            let rg = /^[a-z]+/i;
+            let match = rg.exec(localeCode);
+            if (match && match.length > 0) {
+                retval = match[0].toLowerCase();
+            } else {
+                retval = undefined;
+            }
+        }
+        return retval;
+    },
     getUserLocale: function() {
         return LocaleUtils.getLocale(url.parse(window.location.href, true).query);
     },
     getLocale: function(query) {
-        let locale = supportedLocales[query.locale || (navigator ? navigator.language || navigator.browserLanguage : "en")];
+        let locale = supportedLocales[
+            LocaleUtils.normalizeLocaleCode(query.locale || (navigator ? navigator.language || navigator.browserLanguage : "en"))
+        ];
         return locale ? locale.code : "en-US";
     },
     getSupportedLocales: function() {

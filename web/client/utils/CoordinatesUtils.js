@@ -15,6 +15,30 @@ var CoordinatesUtils = {
 
         return assign({}, Proj4js.transform(sourceProj, destProj, Proj4js.toPoint(point)), {srs: dest});
     },
+    /**
+     * Reprojects a bounding box.
+     *
+     * @param bbox {array} [minx, miny, maxx, maxy]
+     * @param source {string} SRS of the given bbox
+     * @param dest {string} SRS of the returned bbox
+     *
+     * @return {array} [minx, miny, maxx, maxy]
+     */
+    reprojectBbox: function(bbox, source, dest) {
+        let points = {
+            sw: [bbox[0], bbox[1]],
+            ne: [bbox[2], bbox[3]]
+        };
+        let projPoints = [];
+        for (let p in points) {
+            if (points.hasOwnProperty(p)) {
+                let {x, y} = CoordinatesUtils.reproject(points[p], source, dest);
+                projPoints.push(x);
+                projPoints.push(y);
+            }
+        }
+        return projPoints;
+    },
     normalizeSRS: function(srs) {
         return srs === 'EPSG:900913' ? 'EPSG:3857' : srs;
     }

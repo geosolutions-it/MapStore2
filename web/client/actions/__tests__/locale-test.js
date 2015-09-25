@@ -33,4 +33,28 @@ describe('Test locale related actions', () => {
             }
         });
     });
+
+    it('loads an existing translation file', (done) => {
+        loadLocale('base/web/client/test-resources')((e) => {
+            try {
+                expect(e).toExist();
+                expect(e.type).toBe('CHANGE_LOCALE');
+                done();
+            } catch(ex) {
+                done(ex);
+            }
+        });
+    });
+
+    it('loads an existing broken translation file', (done) => {
+        loadLocale('base/web/client/test-resources', 'it-IT-broken')((e) => {
+            try {
+                expect(e).toExist();
+                expect(e.type).toBe('LOCALE_LOAD_ERROR');
+                done();
+            } catch(ex) {
+                done(ex);
+            }
+        });
+    });
 });

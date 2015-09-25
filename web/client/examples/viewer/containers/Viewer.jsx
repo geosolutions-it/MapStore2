@@ -14,9 +14,11 @@ var {bindActionCreators} = require('redux');
 var ConfigUtils = require('../../../utils/ConfigUtils');
 
 var {loadLocale} = require('../../../actions/locale');
-var {changeMapView, getFeatureInfo, changeMapInfoState, purgeMapInfoResults } = require('../../../actions/map');
-var {changeLayerProperties} = require('../../../actions/config');
 
+var {changeMapView, clickOnMap, changeMousePointer} = require('../../../actions/map');
+var {getFeatureInfo, changeMapInfoState, purgeMapInfoResults} = require('../../../actions/mapInfo');
+
+var {changeLayerProperties} = require('../../../actions/config');
 var BackgroundSwitcherTool = require("../components/BackgroundSwitcherTool");
 
 var VMap = require('../components/Map');
@@ -37,7 +39,9 @@ var Viewer = React.createClass({
         changeLayerProperties: React.PropTypes.func,
         getFeatureInfo: React.PropTypes.func,
         changeMapInfoState: React.PropTypes.func,
-        purgeMapInfoResults: React.PropTypes.func
+        purgeMapInfoResults: React.PropTypes.func,
+        clickOnMap: React.PropTypes.func,
+        changeMousePointer: React.PropTypes.func
     },
     getFirstWmsVisibleLayer() {
         for (let i = 0; i < this.props.mapConfig.layers.length; i++) {
@@ -57,8 +61,14 @@ var Viewer = React.createClass({
                 enabled={this.props.mapInfo.enabled}
                 htmlResponses={this.props.mapInfo.responses}
                 btnIcon="info-sign"
-                btnClick={this.manageGetFeatureInfoClick}
-                onCloseResult={this.manageCloseResults}
+                mapConfig={this.props.mapConfig}
+                actions={{
+                    getFeatureInfo: this.props.getFeatureInfo,
+                    changeMapInfoState: this.props.changeMapInfoState,
+                    purgeMapInfoResults: this.props.purgeMapInfoResults,
+                    changeMousePointer: this.props.changeMousePointer
+                }}
+                clickedMapPoint={this.props.mapInfo.clickPoint}
             />
         ];
     },
@@ -73,7 +83,7 @@ var Viewer = React.createClass({
                 <Localized messages={this.props.messages} locale={this.props.locale} loadingError={this.props.localeError}>
                     {() =>
                         <div key="viewer" className="fill">
-                            <VMap config={config} onMapViewChanges={this.manageNewMapView} onClick={this.manageClickOnMap}/>
+                            <VMap config={config} onMapViewChanges={this.manageNewMapView} onClick={this.props.clickOnMap}/>
                             {this.renderPlugins(this.props.locale)}
                         </div>
                     }
@@ -84,34 +94,6 @@ var Viewer = React.createClass({
     },
     manageNewMapView(center, zoom, bbox, size) {
         this.props.changeMapView(center, zoom, bbox, size);
-    },
-    manageClickOnMap(clickPoint) {
-        const bboxBounds = this.props.mapConfig.bbox.bounds;
-        const layer = this.getFirstWmsVisibleLayer();
-        if (this.props.mapInfo && this.props.mapInfo.enabled) {
-            const requestConf = {
-                layers: layer.name,
-                query_layers: layer.name,
-                x: clickPoint.x,
-                y: clickPoint.y,
-                height: this.props.mapConfig.size.height,
-                width: this.props.mapConfig.size.width,
-                crs: this.props.mapConfig.bbox.crs,
-                bbox: bboxBounds.minx + "," +
-                      bboxBounds.miny + "," +
-                      bboxBounds.maxx + "," +
-                      bboxBounds.maxy,
-                info_format: "text/html"
-            };
-            const url = layer.url.replace(/[?].*$/g, '');
-            this.props.getFeatureInfo(url, requestConf);
-        }
-    },
-    manageGetFeatureInfoClick(btnEnabled) {
-        this.props.changeMapInfoState(!btnEnabled);
-    },
-    manageCloseResults() {
-        this.props.purgeMapInfoResults();
     }
 });
 
@@ -130,6 +112,8 @@ module.exports = connect((state) => {
         getFeatureInfo,
         changeMapInfoState,
         purgeMapInfoResults,
+        clickOnMap,
+        changeMousePointer,
         changeLayerProperties
     }), dispatch);
 })(Viewer);

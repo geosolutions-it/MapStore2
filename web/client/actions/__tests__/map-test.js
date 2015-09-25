@@ -9,17 +9,11 @@
 var expect = require('expect');
 var {
     CHANGE_MAP_VIEW,
-    ERROR_FEATURE_INFO,
-    EXCEPTIONS_FEATURE_INFO,
-    LOAD_FEATURE_INFO,
-    CHANGE_MAPINFO_STATE,
-    NEW_MAPINFO_REQUEST,
-    PURGE_MAPINFO_RESULTS,
-    getFeatureInfo,
+    CLICK_ON_MAP,
+    CHANGE_MOUSE_POINTER,
     changeMapView,
-    changeMapInfoState,
-    newMapInfoRequest,
-    purgeMapInfoResults
+    clickOnMap,
+    changeMousePointer
 } = require('../map');
 
 describe('Test correctness of the map actions', () => {
@@ -39,63 +33,21 @@ describe('Test correctness of the map actions', () => {
         expect(retval.size).toBe(testSize);
     });
 
-    it('get feature info data', (done) => {
-        getFeatureInfo('base/web/client/test-resources/featureInfo-response.json', {})((e) => {
-            try {
-                expect(e).toExist();
-                expect(e.type).toBe(LOAD_FEATURE_INFO);
-                done();
-            } catch(ex) {
-                done(ex);
-            }
-        });
-    });
-
-    it('get feature info exception', (done) => {
-        getFeatureInfo('base/web/client/test-resources/featureInfo-exception.json', {})((e) => {
-            try {
-                expect(e).toExist();
-                expect(e.type).toBe(EXCEPTIONS_FEATURE_INFO);
-                done();
-            } catch(ex) {
-                done(ex);
-            }
-        });
-    });
-
-    it('get feature info error', (done) => {
-        getFeatureInfo('requestError.json', {})((e) => {
-            try {
-                expect(e).toExist();
-                expect(e.type).toBe(ERROR_FEATURE_INFO);
-                done();
-            } catch(ex) {
-                done(ex);
-            }
-        });
-    });
-
-    it('change map info state', () => {
+    it('set a new clicked point', () => {
         const testVal = "val";
-        const retval = changeMapInfoState(testVal);
+        const retval = clickOnMap(testVal);
 
-        expect(retval.type).toBe(CHANGE_MAPINFO_STATE);
-        expect(retval.enabled).toExist();
-        expect(retval.enabled).toBe(testVal);
+        expect(retval.type).toBe(CLICK_ON_MAP);
+        expect(retval.point).toExist();
+        expect(retval.point).toBe(testVal);
     });
 
-    it('add new info request', () => {
-        const testVal = "val";
-        const retval = newMapInfoRequest(testVal);
+    it('set a new mouse pointer', () => {
+        const testVal = 'pointer';
+        const retval = changeMousePointer(testVal);
 
-        expect(retval.type).toBe(NEW_MAPINFO_REQUEST);
-        expect(retval.request).toExist();
-        expect(retval.request).toBe(testVal);
-    });
-
-    it('delete all results', () => {
-        const retval = purgeMapInfoResults();
-
-        expect(retval.type).toBe(PURGE_MAPINFO_RESULTS);
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_MOUSE_POINTER);
+        expect(retval.pointer).toBe(testVal);
     });
 });

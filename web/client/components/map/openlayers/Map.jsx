@@ -18,7 +18,8 @@ var OpenlayersMap = React.createClass({
         projection: React.PropTypes.string,
         onMapViewChanges: React.PropTypes.func,
         onClick: React.PropTypes.func,
-        mapOptions: React.PropTypes.object
+        mapOptions: React.PropTypes.object,
+        mousePointer: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -84,11 +85,13 @@ var OpenlayersMap = React.createClass({
         });
 
         this.map = map;
+        this.setMousePointer(this.props.mousePointer);
         // NOTE: this re-call render function after div creation to have the map initialized.
         this.forceUpdate();
     },
     componentWillReceiveProps(newProps) {
         var view = this.map.getView();
+        this.setMousePointer(newProps.mousePointer);
         const currentCenter = this.normalizeCenter(view.getCenter());
         const centerIsUpdated = newProps.center.y === currentCenter[1] &&
                                newProps.center.x === currentCenter[0];
@@ -117,6 +120,12 @@ var OpenlayersMap = React.createClass({
     },
     normalizeCenter: function(center) {
         return ol.proj.transform(center, this.props.projection, 'EPSG:4326');
+    },
+    setMousePointer(pointer) {
+        if (this.map) {
+            const mapDiv = this.map.getViewport();
+            mapDiv.style.cursor = pointer || 'auto';
+        }
     }
 });
 

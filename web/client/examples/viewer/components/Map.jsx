@@ -40,7 +40,8 @@ var VMap = React.createClass({
                 zoom={this.props.config.zoom}
                 projection={this.props.config.projection || 'EPSG:3857'}
                 onMapViewChanges={this.props.onMapViewChanges}
-                onClick={this.props.onClick}>
+                onClick={this.props.onClick}
+                mousePointer={this.props.config.mousePointer}>
                 {this.renderLayers(this.props.config.layers)}
             </LMap>
         );

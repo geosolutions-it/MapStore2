@@ -45,8 +45,8 @@ module.exports = function karmaConfig(config) {
                 ],
                 postLoaders: [
                     {
-                        test: /\.jsx$/,
-                        exclude: /(__tests__|node_modules|legacy)\//,
+                        test: /\.jsx?$/,
+                        exclude: /(__tests__|node_modules|legacy)\/|webpack\.js|utils\/(openlayers|leaflet)/,
                         loader: 'istanbul-instrumenter'
                     }
                 ]

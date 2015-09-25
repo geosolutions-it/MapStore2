@@ -31,4 +31,47 @@ describe('Tests ajax library', () => {
             done(ex);
         });
     });
+
+    it('uses a custom proxy for requests on the same origin with varius query params', (done) => {
+        axios.get('http://fakeexternaldomain.mapstore2', {
+            proxyUrl: '/proxy/?url=',
+            params: {
+                param1: 'param1',
+                param2: '',
+                param3: undefined,
+                param4: null,
+                param5: [],
+                param6: [1, 2, "3", ''],
+                param7: {},
+                param8: {
+                    a: 'a'
+                },
+                param9: new Date()
+            }})
+            .then(() => {
+                done();
+            })
+            .catch((ex) => {
+                expect(ex.config).toExist();
+                expect(ex.config.url).toExist();
+                expect(ex.config.url).toContain('proxy/?url=');
+                done();
+            });
+    });
+
+    it('uses a custom proxy for requests on the same origin with string query param', (done) => {
+        axios.get('http://fakeexternaldomain.mapstore2', {
+                proxyUrl: '/proxy/?url=',
+                params: "params"
+            })
+            .then(() => {
+                done();
+            })
+            .catch((ex) => {
+                expect(ex.config).toExist();
+                expect(ex.config.url).toExist();
+                expect(ex.config.url).toContain('proxy/?url=');
+                done();
+            });
+    });
 });

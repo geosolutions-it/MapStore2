@@ -53,7 +53,7 @@
     "openlayers": "^3.8.2",
     "proj4": "~2.3.6",
     "react": "^0.13.3",
-    "react-bootstrap": "^0.24.3",
+    "react-bootstrap": "^0.25.2",
     "react-intl": "^1.2.0",
     "react-redux": "^2.0.0",
     "redux": "^2.0.0",

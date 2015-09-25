@@ -32,6 +32,8 @@ Start the demo locally:
 
 `npm start`
 
+The demo runs at `http://localhost:8081` afterwards.
+
 Install latest Maven, if needed, from [here](https://maven.apache.org/download.cgi) (version 3.1.0 is required).
 
 Build the deployable war:

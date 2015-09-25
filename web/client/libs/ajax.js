@@ -23,10 +23,6 @@ function isArguments(val) {
 }
 function forEach(arg, fn) {
     var obj;
-    // Don't bother if no value provided
-    if (arg === null || typeof arg === 'undefined') {
-        return;
-    }
 
     // Check if arg is array-like
     const isArrayLike = isArray(arg) || isArguments(arg);

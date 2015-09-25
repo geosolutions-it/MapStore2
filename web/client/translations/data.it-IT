@@ -49,6 +49,7 @@
         "backgroundSwither":{
             "tooltip": "Scegli lo sfondo"
         },
-        "getFeatureInfoTitle": "Informazioni Sulle Feature"
+        "getFeatureInfoTitle": "Informazioni Sulle Feature",
+        "noFeatureInfo": "Non ci sono informazioni disponibili per la feature selezionata"
     }
 }

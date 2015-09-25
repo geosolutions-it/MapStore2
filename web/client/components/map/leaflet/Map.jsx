@@ -17,7 +17,8 @@ var LeafletMap = React.createClass({
         projection: React.PropTypes.string,
         onMapViewChanges: React.PropTypes.func,
         onClick: React.PropTypes.func,
-        mapOptions: React.PropTypes.object
+        mapOptions: React.PropTypes.object,
+        mousePointer: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -43,10 +44,12 @@ var LeafletMap = React.createClass({
         this.map.on('click', (event) => { this.props.onClick(event.containerPoint); });
 
         this.updateMapInfoState();
+        this.setMousePointer(this.props.mousePointer);
         // NOTE: this re-call render function after div creation to have the map initialized.
         this.forceUpdate();
     },
     componentWillReceiveProps(newProps) {
+        this.setMousePointer(newProps.mousePointer);
         const currentCenter = this.map.getCenter();
         const centerIsUpdate = newProps.center.y === currentCenter.lat &&
                                newProps.center.x === currentCenter.lng;
@@ -89,6 +92,12 @@ var LeafletMap = React.createClass({
             crs: 'EPSG:4326',
             rotation: 0
         }, size);
+    },
+    setMousePointer(pointer) {
+        if (this.map) {
+            const mapDiv = this.map.getContainer();
+            mapDiv.style.cursor = pointer || 'auto';
+        }
     }
 });
 

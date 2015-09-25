@@ -264,6 +264,12 @@ describe('Openlayers layer', () => {
 
         expect(layer).toExist();
         map.getView().setRotation(Math.PI / 2.0);
+
+        let viewport = map.getViewport();
+        viewport.dispatchEvent(new MouseEvent('mousedown'));
+        viewport.dispatchEvent(new MouseEvent('mousemove'));
+        viewport.dispatchEvent(new MouseEvent('mouseup'));
+
         let dom = document.getElementById("mapgmaps");
         expect(dom).toExist();
         expect(dom.style.transform).toBe('rotate(90deg)');

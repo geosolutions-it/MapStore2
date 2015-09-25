@@ -57,36 +57,50 @@ describe('Test the mapConfig reducer', () => {
     it('test layer visibility change for background', () => {
         const oldState = {
             layers: [{
-				"type": "osm",
-				"title": "Open Street Map",
-				"name": "mapnik",
-				"group": "background",
+                "type": "osm",
+                "title": "Open Street Map",
+                "name": "mapnik",
+                "group": "background",
                 "visibility": true
-			}, {
-				"type": "wms",
+            }, {
+                "type": "wms",
                 "url": "http://213.215.135.196/reflector/open/service",
                 "visibility": false,
-				"title": "e-Geos Ortofoto RealVista 1.0",
-				"name": "rv1",
-				"group": "background",
-				"format": "image/png"
-			}]
+                "title": "e-Geos Ortofoto RealVista 1.0",
+                "name": "rv1",
+                "group": "background",
+                "format": "image/png"
+            }]
         };
         var state = mapConfig(oldState, {
             type: 'CHANGE_LAYER_PROPERTIES',
             newProperties: {
-				"type": "wms",
+                "type": "wms",
                 "url": "http://213.215.135.196/reflector/open/service",
                 "visibility": true,
-				"title": "e-Geos Ortofoto RealVista 1.0",
-				"name": "rv1",
-				"group": "background",
-				"format": "image/png"
-			},
+                "title": "e-Geos Ortofoto RealVista 1.0",
+                "name": "rv1",
+                "group": "background",
+                "format": "image/png"
+            },
             position: 1
         });
         var layers = state.layers;
         expect(layers[0].visibility).toBe(false);
         expect(layers[1].visibility).toBe(true);
+    });
+
+    it('sets a new mouse pointer used over the map', () => {
+        const action = {
+            type: 'CHANGE_MOUSE_POINTER',
+            pointer: "testPointer"
+        };
+
+        var state = mapConfig({}, action);
+        expect(state.mousePointer).toBe(action.pointer);
+
+        state = mapConfig({prop: 'prop'}, action);
+        expect(state.prop).toBe('prop');
+        expect(state.mousePointer).toBe(action.pointer);
     });
 });
