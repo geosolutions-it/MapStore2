@@ -17,21 +17,30 @@ const OpenlayersLayer = React.createClass({
     },
 
     componentDidMount() {
-        if (this.props.options && this.props.options.visibility !== false) {
-            this.createLayer(this.props.type, this.props.options);
+        this.createLayer(this.props.type, this.props.options);
+    },
+    componentWillReceiveProps(newProps) {
+        var newVisibility = newProps.options && newProps.options.visibility !== false;
+        this.setLayerVisibility(newVisibility);
+        if (this.props.options) {
+            this.props.options.visibility = newVisibility;
         }
     },
-
     componentWillUnmount() {
         if (this.layer && this.props.map) {
             this.props.map.removeLayer(this.layer);
         }
     },
     render() {
-        if (this.props.options && this.props.options.visibility !== false) {
-            return Layers.renderLayer(this.props.type, this.props.options, this.props.map, this.props.mapId);
+        return Layers.renderLayer(this.props.type, this.props.options, this.props.map, this.props.mapId);
+    },
+    setLayerVisibility(visibility) {
+        // check visibility
+        var oldVisibility = this.props.options && this.props.options.visibility !== false;
+        // Only if visibility changed
+        if ( visibility !== oldVisibility && this.layer) {
+            this.layer.setVisible(visibility);
         }
-        return null;
     },
     createLayer(type, options) {
         if (type) {

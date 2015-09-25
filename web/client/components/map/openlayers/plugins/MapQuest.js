@@ -8,13 +8,17 @@
 
 var Layers = require('../../../../utils/openlayers/Layers');
 var ol = require('openlayers');
-
-Layers.registerType('osm', {
+var styles = {
+    osm: 'Road',
+    sat: 'Aerial'
+};
+Layers.registerType('mapquest', {
     create: (options) => {
         return new ol.layer.Tile({
             opacity: options.opacity !== undefined ? options.opacity : 1,
             visible: options.visibility,
-            source: new ol.source.OSM()
+            style: styles[options.name],
+            source: new ol.source.MapQuest({layer: options.name})
         });
     }
 });

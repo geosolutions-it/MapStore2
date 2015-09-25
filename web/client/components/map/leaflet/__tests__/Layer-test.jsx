@@ -15,6 +15,7 @@ require('../plugins/OSMLayer');
 require('../plugins/WMSLayer');
 require('../plugins/GoogleLayer');
 require('../plugins/BingLayer');
+require('../plugins/MapQuest');
 
 describe('Leaflet layer', () => {
     document.body.innerHTML = '<div id="map"></div>';
@@ -93,6 +94,26 @@ describe('Leaflet layer', () => {
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
     });
+
+    it('creates a mapquest layer for openlayers map', () => {
+        var options = {
+			"source": "mapquest",
+			"title": "MapQuest OpenStreetMap",
+			"name": "osm",
+			"group": "background"
+		};
+        // create layer
+        var layer = React.render(
+            <LeafLetLayer type="mapquest"
+                 options={options} map={map}/>, document.body);
+
+        expect(layer).toExist();
+        // count layers
+        let lcount = 0;
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+    });
+
     it('creates a osm layer for leaflet map', () => {
         var options = {
             "source": "osm",
@@ -183,5 +204,23 @@ describe('Leaflet layer', () => {
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
+    });
+
+    it('switch osm layer visibility', () => {
+        var options = {};
+        // create layers
+        var layer = React.render(
+            <LeafLetLayer type="osm"
+                 options={{options}} position={0} map={map}/>, document.body);
+        var lcount = 0;
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+        // not visibile layers are removed from the leaflet maps
+        layer.setProps({options: {visibility: false}, position: 0});
+        expect(map.hasLayer(layer.layer)).toBe(false);
+        layer.setProps({options: {visibility: true}, position: 0});
+        expect(map.hasLayer(layer.layer)).toBe(true);
     });
 });

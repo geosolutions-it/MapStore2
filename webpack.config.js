@@ -37,7 +37,10 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.jsx?$/, exclude: /ol\.js$/, loaders: ["react-hot", "babel-loader"], include: path.join(__dirname, "web", "client") }
+            { test: /\.jsx?$/, exclude: /ol\.js$/, loaders: ["react-hot", "babel-loader"], include: path.join(__dirname, "web", "client") },
+            { test: /\.css$/, loader: 'style!css'},
+            { test: /\.(png|jpg)$/, loader: 'url-loader?name=[path][name].[ext]&limit=8192'} // inline base64 URLs for <=8k images, direct URLs for the rest
+
         ]
     },
     devServer: {

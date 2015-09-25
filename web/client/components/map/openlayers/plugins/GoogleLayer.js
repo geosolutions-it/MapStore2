@@ -11,7 +11,8 @@ var ol = require('openlayers');
 var React = require('react');
 
 var layersMap;
-
+var rendererItem;
+var gmap;
 var isTouchSupported = 'ontouchstart' in window;
 var startEvent = isTouchSupported ? 'touchstart' : 'mousedown';
 var moveEvent = isTouchSupported ? 'touchmove' : 'mousemove';
@@ -29,7 +30,7 @@ Layers.registerType('google', {
            };
         }
 
-        let gmap = new google.maps.Map(document.getElementById(mapId + 'gmaps'), {
+        gmap = new google.maps.Map(document.getElementById(mapId + 'gmaps'), {
           disableDefaultUI: true,
           keyboardShortcuts: false,
           draggable: false,
@@ -106,6 +107,7 @@ Layers.registerType('google', {
         view.on('change:resolution', setZoom);
         view.on('change:rotation', setRotation);
 
+
         setCenter();
         setZoom();
 
@@ -148,8 +150,33 @@ Layers.registerType('google', {
         return null;
     },
     render(options, map, mapId) {
-        var gmapsStyle = {zIndex: -1};
-        return <div id={mapId + "gmaps"} className="fill" style={gmapsStyle}></div>;
+        // the first item that call render will take control
+        if (!rendererItem) {
+            rendererItem = options.name;
+        }
+        let gmapsStyle = {zIndex: -1};
+        if (options.visibility === true) {
+            let div = document.getElementById("mapgmaps");
+            if (div) {
+                div.style.visibility = 'visible';
+            }
+            if (gmap && layersMap) {
+                gmap.setMapTypeId(layersMap[options.name]);
+            }
+        } else {
+            gmapsStyle.visibility = 'hidden'; // used only for the renered div
+        }
+        // To hide the map when visibility is set to false for every
+        // instance of google layer
+        if (rendererItem === options.name) {
+            // assume the first render the div for gmaps
+            let div = document.getElementById("mapgmaps");
+            if (div) {
+                div.style.visibility = options.visibility ? 'visible' : 'hidden';
+            }
+            return <div id={mapId + "gmaps"} className="fill" style={gmapsStyle}></div>;
+        }
+        return null;
     }
 
 });

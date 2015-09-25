@@ -31,6 +31,7 @@ Layers.registerType('wms', {
     create: (options) => {
         return new ol.layer.Tile({
             opacity: options.opacity !== undefined ? options.opacity : 1,
+            visibile: options.visibility !== false,
             source: new ol.source.TileWMS({
               url: getWMSURL(options.url),
               params: wmsToOpenlayersOptions(options)

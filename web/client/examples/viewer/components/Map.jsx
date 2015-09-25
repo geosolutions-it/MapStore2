@@ -26,9 +26,9 @@ var VMap = React.createClass({
     renderLayers(layers) {
         if (layers) {
             let projection = this.props.config.projection || 'EPSG:3857';
-            return layers.map(function(layer) {
+            return layers.map(function(layer, index) {
                 var options = assign({}, layer, {srs: projection});
-                return <LLayer type={layer.type} key={layer.name} options={options} />;
+                return <LLayer type={layer.type} position={index} key={layer.name + ":::" + index} options={options} />;
             });
         }
         return null;
@@ -52,6 +52,7 @@ require('../../../components/map/' + mapType + '/plugins/OSMLayer');
 require('../../../components/map/' + mapType + '/plugins/WMSLayer');
 require('../../../components/map/' + mapType + '/plugins/GoogleLayer');
 require('../../../components/map/' + mapType + '/plugins/BingLayer');
+require('../../../components/map/' + mapType + '/plugins/MapQuest');
 
 
 module.exports = VMap;

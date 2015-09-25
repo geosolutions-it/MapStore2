@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
+var {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR, CHANGE_LAYER_PROPERTIES} = require('../actions/config');
 var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER} = require('../actions/map');
 
 var ConfigUtils = require('../utils/ConfigUtils');
@@ -27,6 +27,20 @@ function mapConfig(state = null, action) {
                 bbox: action.bbox,
                 size: action.size
             });
+        case CHANGE_LAYER_PROPERTIES: {
+            let layers = assign(state.layers);
+            if (layers[action.position].visibility !== action.newProperties.visibility && action.newProperties.group === "background") {
+                layers.map(layer => {
+                    if (layer.group === "background") {
+                        layer.visibility = false;
+                    }
+                } );
+            }
+            layers[action.position] = action.newProperties;
+            return assign({}, state, {
+                layers: layers
+            });
+        }
         case CHANGE_MOUSE_POINTER:
             return assign({}, state, {
                 mousePointer: action.pointer

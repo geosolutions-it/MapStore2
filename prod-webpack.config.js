@@ -26,4 +26,8 @@ webpackConfig.plugins = [
 webpackConfig.devtool = undefined;
 webpackConfig.debug = false;
 
+// this is a workaround for this issue https://github.com/webpack/file-loader/issues/3
+// use `__webpack_public_path__` in the index.html when fixed
+webpackConfig.output.publicPath = "/mapstore/dist/";
+
 module.exports = webpackConfig;

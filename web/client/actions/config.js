@@ -10,6 +10,7 @@ var axios = require('../libs/ajax');
 
 const MAP_CONFIG_LOADED = 'MAP_CONFIG_LOADED';
 const MAP_CONFIG_LOAD_ERROR = 'MAP_CONFIG_LOAD_ERROR';
+const CHANGE_LAYER_PROPERTIES = 'CHANGE_LAYER_PROPERTIES';
 
 function configureMap(conf, legacy) {
     return {
@@ -46,4 +47,13 @@ function loadMapConfig(configName, legacy) {
     };
 }
 
-module.exports = {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR, loadMapConfig};
+function changeLayerProperties(properties, position) {
+    return {
+        type: CHANGE_LAYER_PROPERTIES,
+        newProperties: properties,
+        position: position
+
+    };
+}
+
+module.exports = {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR, CHANGE_LAYER_PROPERTIES, loadMapConfig, changeLayerProperties};
