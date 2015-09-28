@@ -20,6 +20,7 @@ var {getFeatureInfo, changeMapInfoState, purgeMapInfoResults} = require('../../.
 
 var {changeLayerProperties} = require('../../../actions/config');
 var BackgroundSwitcherTool = require("../components/BackgroundSwitcherTool");
+var MapPanel = require("../components/MapPanel");
 
 var VMap = require('../components/Map');
 var LangSelector = require('../../../components/I18N/LangSelector');
@@ -56,6 +57,7 @@ var Viewer = React.createClass({
             <LangSelector key="langSelector" currentLocale={locale} onLanguageChange={this.props.loadLocale}/>,
             <About key="about"/>,
                     <BackgroundSwitcherTool key="backgroundSwitcher" layers={this.props.mapConfig.layers} propertiesChangeHandler={this.props.changeLayerProperties}/>,
+                    <MapPanel layers={this.props.mapConfig.layers} propertiesChangeHandler={this.props.changeLayerProperties}/>,
             <GetFeatureInfo
                 key="getFeatureInfo"
                 enabled={this.props.mapInfo.enabled}
