@@ -7,14 +7,14 @@ var Legend = React.createClass({
         legendWidth: React.PropTypes.number,
         legendOptions: React.PropTypes.string
     },
-    getDefaultProps: function() {
+    getDefaultProps() {
         return {
             legendHeigth: 12,
             legendWidth: 12,
             legendOptions: "forceLabels:on;fontSize:10"
         };
     },
-   render: function() {
+   render() {
        if (this.props.layer && this.props.layer.type === "wms" && this.props.layer.url) {
            let layer = this.props.layer;
            let url = this.props.layer.url;

@@ -29,7 +29,7 @@ let LayerTree = React.createClass({
                     </div>
                 </div>);
     },
-    renderLayer: function(layer, position) {
+    renderLayer(layer, position) {
         return (<div>
                     <div>
                         <input data-position={position} type="checkbox" checked={layer.visibility ? "checked" : ""} onChange={this.changeLayerVisibility} />{layer.title || layer.name}
@@ -37,13 +37,13 @@ let LayerTree = React.createClass({
                     {this.renderLayerLegend(layer)}
             </div>);
     },
-    renderLayerLegend: function(layer) {
+    renderLayerLegend(layer) {
         if (layer && layer.visibility && layer.type === "wms" && layer.group !== "background") {
             return <div style={{marginLeft: "15px"}}><Legend layer={layer}/></div>;
         }
         return null;
     },
-    render: function() {
+    render() {
         if (!this.props.layers) {
             return <div></div>;
         }
@@ -71,7 +71,7 @@ let LayerTree = React.createClass({
         } );
         return <Panel style={{overflow: "auto", height: "400px"}} >{Object.keys(groups).map(groupName => {return this.renderGroup(groupName, groups[groupName]); })}</Panel>;
     },
-    changeLayerVisibility: function(eventObj) {
+    changeLayerVisibility(eventObj) {
         let position = parseInt(eventObj.currentTarget.dataset.position, 10);
         var layer = this.props.layers[position];
         var newLayer = assign({}, layer, {visibility: !layer.visibility});
