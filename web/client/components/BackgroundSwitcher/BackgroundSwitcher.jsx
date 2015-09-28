@@ -57,7 +57,7 @@ let BackgroundSwitcher = React.createClass({
              }
         };
     },
-    renderBackgrounds: function() {
+    renderBackgrounds() {
         if (!this.props.layers) {
             return <div></div>;
         }
@@ -68,7 +68,7 @@ let BackgroundSwitcher = React.createClass({
                 }
             }));
     },
-    renderLayers: function(layers) {
+    renderLayers(layers) {
         let items = [];
         for (let i = 0; i < layers.length; i++) {
             let layer = layers[i];
@@ -81,12 +81,12 @@ let BackgroundSwitcher = React.createClass({
         }
         return items;
     },
-    render: function() {
+    render() {
         return (
            <Grid className="BackgroundSwitcherComponent" header={this.props.name} fluid={false}>{this.renderBackgrounds()}</Grid>
         );
     },
-    changeLayerVisibility: function(eventObj) {
+    changeLayerVisibility(eventObj) {
         let position = parseInt(eventObj.currentTarget.dataset.position, 10);
         var layer = this.props.layers[position];
         var newLayer = assign({}, layer, {visibility: true});

@@ -17,9 +17,11 @@ var {loadLocale} = require('../../../actions/locale');
 
 var {changeMapView, clickOnMap, changeMousePointer} = require('../../../actions/map');
 var {getFeatureInfo, changeMapInfoState, purgeMapInfoResults} = require('../../../actions/mapInfo');
+var {activatePanel} = require('../actions/floatingPanel');
 
 var {changeLayerProperties} = require('../../../actions/config');
 var BackgroundSwitcherTool = require("../components/BackgroundSwitcherTool");
+var ViewerFloatingPanel = require("../components/ViewerFloatingPanel");
 
 var VMap = require('../components/Map');
 var LangSelector = require('../../../components/I18N/LangSelector');
@@ -41,7 +43,9 @@ var Viewer = React.createClass({
         changeMapInfoState: React.PropTypes.func,
         purgeMapInfoResults: React.PropTypes.func,
         clickOnMap: React.PropTypes.func,
-        changeMousePointer: React.PropTypes.func
+        changeMousePointer: React.PropTypes.func,
+        activatePanel: React.PropTypes.func,
+        floatingPanel: React.PropTypes.object
     },
     getFirstWmsVisibleLayer() {
         for (let i = 0; i < this.props.mapConfig.layers.length; i++) {
@@ -56,6 +60,11 @@ var Viewer = React.createClass({
             <LangSelector key="langSelector" currentLocale={locale} onLanguageChange={this.props.loadLocale}/>,
             <About key="about"/>,
                     <BackgroundSwitcherTool key="backgroundSwitcher" layers={this.props.mapConfig.layers} propertiesChangeHandler={this.props.changeLayerProperties}/>,
+                    <ViewerFloatingPanel
+                        layers={this.props.mapConfig.layers}
+                        propertiesChangeHandler={this.props.changeLayerProperties}
+                        activeKey={this.props.floatingPanel.activeKey}
+                        onActivateItem={this.props.activatePanel}/>,
             <GetFeatureInfo
                 key="getFeatureInfo"
                 enabled={this.props.mapInfo.enabled}
@@ -103,6 +112,7 @@ module.exports = connect((state) => {
         messages: state.locale ? state.locale.messages : null,
         locale: state.locale ? state.locale.current : null,
         mapInfo: state.mapInfo ? state.mapInfo : {enabled: false, responses: [], requests: []},
+        floatingPanel: state.floatingPanel ? state.floatingPanel : {activeKey: ""},
         localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined
     };
 }, dispatch => {
@@ -113,6 +123,7 @@ module.exports = connect((state) => {
         changeMapInfoState,
         purgeMapInfoResults,
         clickOnMap,
+        activatePanel,
         changeMousePointer,
         changeLayerProperties
     }), dispatch);
