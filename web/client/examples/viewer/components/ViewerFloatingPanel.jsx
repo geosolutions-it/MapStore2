@@ -15,11 +15,13 @@ var icon = require('../../../components/LayerTree/images/layers.png');
 
 require("./mapPanel.css");
 
-let MapPanel = React.createClass({
+let ViewerFloatingPanel = React.createClass({
     propTypes: {
         layers: React.PropTypes.array,
         panelStyle: React.PropTypes.object,
-        propertiesChangeHandler: React.PropTypes.func
+        propertiesChangeHandler: React.PropTypes.func,
+        onActivateItem: React.PropTypes.func,
+        activeKey: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -34,11 +36,6 @@ let MapPanel = React.createClass({
             }
         };
     },
-    getInitialState() {
-        return {
-          activeKey: 1
-        };
-    },
     render() {
 
         var tooltip = <Tooltip><Message msgId="layers" /></Tooltip>;
@@ -48,14 +45,19 @@ let MapPanel = React.createClass({
             </OverlayTrigger>
         );
         return (
-        <PanelGroup activeKey={this.state.activeKey} style={this.props.panelStyle} className="MainMapPanel" onSelect={this.handleSelect} accordion>
-            <Panel header={layerSwitcherButton} activeKey="1" className="MapPanel" collapsible={true}>
+        <PanelGroup accordion activeKey={this.props.activeKey} style={this.props.panelStyle} className="MainMapPanel" onSelect={this.handleSelect} accordion>
+            <Panel header={layerSwitcherButton} eventKey="1" activeKey="1" className="MapPanel" collapsible={true}>
                 <LayerSwitcher key="layetSwitcher" layers={this.props.layers} propertiesChangeHandler={this.props.propertiesChangeHandler}/>
             </Panel>
         </PanelGroup>);
     },
     handleSelect(activeKey) {
-        this.setState({ activeKey });
+        if (activeKey === this.props.activeKey) {
+            this.props.onActivateItem();
+        }else {
+            this.props.onActivateItem(activeKey);
+        }
+
     }
 });
-module.exports = MapPanel;
+module.exports = ViewerFloatingPanel;
