@@ -169,6 +169,7 @@ describe('Leaflet layer', () => {
                     this.setMapTypeId = function() {};
                     this.setCenter = function() {};
                     this.setZoom = function() {};
+                    this.setTilt = function() {};
                 },
                 LatLng: function() {
 
