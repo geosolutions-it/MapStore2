@@ -11,6 +11,7 @@ var {
     CHANGE_MAP_VIEW,
     CLICK_ON_MAP,
     CHANGE_MOUSE_POINTER,
+    CHANGE_ZOOM_LVL,
     LAYER_LOADING,
     LAYER_LOAD,
     SHOW_SPINNER,
@@ -18,6 +19,7 @@ var {
     changeMapView,
     clickOnMap,
     changeMousePointer,
+    changeZoomLevel,
     layerLoading,
     layerLoad,
     showSpinner,
@@ -57,6 +59,15 @@ describe('Test correctness of the map actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGE_MOUSE_POINTER);
         expect(retval.pointer).toBe(testVal);
+    });
+
+    it('changes a new zoom level', () => {
+        const testVal = 9;
+        const retval = changeZoomLevel(testVal);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_ZOOM_LVL);
+        expect(retval.zoom).toBe(testVal);
     });
 
     it('a layer is loading', () => {

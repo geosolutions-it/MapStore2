@@ -7,7 +7,7 @@
  */
 
 var {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR, CHANGE_LAYER_PROPERTIES} = require('../actions/config');
-var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER, LAYER_LOADING, LAYER_LOAD, SHOW_SPINNER, HIDE_SPINNER} = require('../actions/map');
+var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER, CHANGE_ZOOM_LVL, LAYER_LOADING, LAYER_LOAD, SHOW_SPINNER, HIDE_SPINNER} = require('../actions/map');
 
 var ConfigUtils = require('../utils/ConfigUtils');
 var assign = require('object-assign');
@@ -46,6 +46,10 @@ function mapConfig(state = null, action) {
         case CHANGE_MOUSE_POINTER:
             return assign({}, state, {
                 mousePointer: action.pointer
+            });
+        case CHANGE_ZOOM_LVL:
+            return assign({}, state, {
+                zoom: action.zoom
             });
         case LAYER_LOADING: {
             let loadingLayers = assign({}, (state && state.loadingLayers) || {});
