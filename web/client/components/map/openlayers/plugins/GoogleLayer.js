@@ -162,6 +162,7 @@ Layers.registerType('google', {
             }
             if (gmap && layersMap) {
                 gmap.setMapTypeId(layersMap[options.name]);
+                gmap.setTilt(0);
             }
         } else {
             gmapsStyle.visibility = 'hidden'; // used only for the renered div
