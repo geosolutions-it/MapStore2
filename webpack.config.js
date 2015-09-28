@@ -2,6 +2,8 @@ var path = require("path");
 var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
 var DefinePlugin = require("webpack/lib/DefinePlugin");
 var NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
+var NoErrorsPlugin = require("webpack/lib/NoErrorsPlugin");
+
 var rewriteUrl = function(replacePath) {
     return function(req, opt) {  // gets called with request and proxy object
         var queryIndex = req.url.indexOf('?');
@@ -30,17 +32,46 @@ module.exports = {
         new CommonsChunkPlugin("commons", "mapstore-commons.js"),
         new NormalModuleReplacementPlugin(/leaflet$/, path.join(__dirname, "web", "client", "libs", "leaflet")),
         new NormalModuleReplacementPlugin(/openlayers$/, path.join(__dirname, "web", "client", "libs", "openlayers")),
-        new NormalModuleReplacementPlugin(/proj4$/, path.join(__dirname, "web", "client", "libs", "proj4"))
+        new NormalModuleReplacementPlugin(/proj4$/, path.join(__dirname, "web", "client", "libs", "proj4")),
+        new NoErrorsPlugin()
     ],
     resolve: {
       extensions: ["", ".js", ".jsx"]
     },
     module: {
         loaders: [
-            { test: /\.jsx?$/, exclude: /ol\.js$/, loaders: ["react-hot", "babel-loader"], include: path.join(__dirname, "web", "client") },
             { test: /\.css$/, loader: 'style!css'},
-            { test: /\.(png|jpg)$/, loader: 'url-loader?name=[path][name].[ext]&limit=8192'} // inline base64 URLs for <=8k images, direct URLs for the rest
-
+            { test: /\.(png|jpg)$/, loader: 'url-loader?name=[path][name].[ext]&limit=8192'}, // inline base64 URLs for <=8k images, direct URLs for the rest
+            {
+                test: /\.jsx?$/,
+                exclude: /ol\.js$/,
+                loader: "react-hot",
+                include: path.join(__dirname, "web", "client")
+            }, {
+                test: /\.jsx?$/,
+                exclude: /ol\.js$/,
+                loader: "babel-loader",
+                include: path.join(__dirname, "web", "client"),
+                query: {
+                  "stage": 0,
+                  "env": {
+                    "development": {
+                      "plugins": ["react-transform"],
+                      "extra": {
+                        "react-transform": {
+                          "transforms": [{
+                            "transform": "react-transform-catch-errors",
+                            "imports": [
+                              "react",
+                              "redbox-react"
+                            ]
+                          }]
+                        }
+                      }
+                    }
+                  }
+                }
+            }
         ]
     },
     devServer: {
@@ -52,7 +83,8 @@ module.exports = {
         }, {
             path: new RegExp("/mapstore/proxy(.*)"),
             rewrite: rewriteUrl("/http_proxy/proxy$1"),
-            target: "http://localhost:8083"
+            host: "mapstore.geo-solutions.it",
+            target: "http://mapstore.geo-solutions.it"
         }]
     },
 
