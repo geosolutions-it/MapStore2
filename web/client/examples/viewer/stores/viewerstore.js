@@ -8,16 +8,15 @@
 var {combineReducers} = require('redux');
 
 var mapConfig = require('../../../reducers/config');
-var mapInfo = require('../../../reducers/mapInfo');
 var locale = require('../../../reducers/locale');
-var floatingPanel = require('../reducers/floatingPanel');
 var DebugUtils = require('../../../utils/DebugUtils');
+var assign = require('object-assign');
 
-const reducers = combineReducers({
-    mapConfig,
-    locale,
-    mapInfo,
-    floatingPanel
-});
-
-module.exports = DebugUtils.createDebugStore(reducers, {});
+module.exports = (reducers) => {
+    const reducersObj = assign({}, reducers, {
+        mapConfig,
+        locale
+    });
+    const allReducers = combineReducers(reducersObj);
+    return DebugUtils.createDebugStore(allReducers, {});
+};
