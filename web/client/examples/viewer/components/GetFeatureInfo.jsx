@@ -65,38 +65,31 @@ var GetFeatureInfo = React.createClass({
     componentWillReceiveProps(newProps) {
         // if there's a new clicked point on map and GetFeatureInfo is active
         // it composes and sends a getFeatureInfo action.
-        if (
-            this.props.clickedMapPoint === undefined && newProps.clickedMapPoint !== undefined ||
-            this.props.clickedMapPoint !== undefined && newProps.clickedMapPoint !== undefined && (
-                this.props.clickedMapPoint.x !== newProps.clickedMapPoint.x ||
-                this.props.clickedMapPoint.y !== newProps.clickedMapPoint.y
-            )
-        ) {
-            if (newProps.enabled) {
-                const wmsVisibleLayers = newProps.mapConfig.layers.filter(newProps.layerFilter);
-                const {bounds, crs} = this.reprojectBbox(newProps.mapConfig.bbox, newProps.mapConfig.projection);
-                for (let l = 0; l < wmsVisibleLayers.length; l++) {
-                    const layer = wmsVisibleLayers[l];
-                    const requestConf = {
-                        layers: layer.name,
-                        query_layers: layer.name,
-                        x: newProps.clickedMapPoint.x,
-                        y: newProps.clickedMapPoint.y,
-                        height: newProps.mapConfig.size.height,
-                        width: newProps.mapConfig.size.width,
-                        srs: crs,
-                        bbox: bounds.minx + "," +
-                              bounds.miny + "," +
-                              bounds.maxx + "," +
-                              bounds.maxy,
-                        info_format: "text/html"
-                    };
-                    const layerMetadata = {
-                        title: layer.title
-                    };
-                    const url = layer.url.replace(/[?].*$/g, '');
-                    newProps.actions.getFeatureInfo(url, requestConf, layerMetadata);
-                }
+        if (newProps.enabled && newProps.clickedMapPoint && (!this.props.clickedMapPoint || this.props.clickedMapPoint.x !== newProps.clickedMapPoint.x ||
+                this.props.clickedMapPoint.y !== newProps.clickedMapPoint.y)) {
+            const wmsVisibleLayers = newProps.mapConfig.layers.filter(newProps.layerFilter);
+            const {bounds, crs} = this.reprojectBbox(newProps.mapConfig.bbox, newProps.mapConfig.projection);
+            for (let l = 0; l < wmsVisibleLayers.length; l++) {
+                const layer = wmsVisibleLayers[l];
+                const requestConf = {
+                    layers: layer.name,
+                    query_layers: layer.name,
+                    x: newProps.clickedMapPoint.x,
+                    y: newProps.clickedMapPoint.y,
+                    height: newProps.mapConfig.size.height,
+                    width: newProps.mapConfig.size.width,
+                    srs: crs,
+                    bbox: bounds.minx + "," +
+                          bounds.miny + "," +
+                          bounds.maxx + "," +
+                          bounds.maxy,
+                    info_format: "text/html"
+                };
+                const layerMetadata = {
+                    title: layer.title
+                };
+                const url = layer.url.replace(/[?].*$/g, '');
+                this.props.actions.getFeatureInfo(url, requestConf, layerMetadata);
             }
         }
 
@@ -150,12 +143,14 @@ var GetFeatureInfo = React.createClass({
                     style = style.replace(/body[,]+/g, '');
                     // gets feature info managing an eventually empty response
                     content = response.replace(regexpBody, '$1').trim();
-                    content = content.length === 0 ?
-                        (<p style={{margin: "16px"}}><I18N.Message msgId="noFeatureInfo"/></p>) :
-                        <HtmlRenderer key={i} html={style + content}/>;
+                    if (content.length === 0) {
+                        content = <p style={{margin: "16px"}}><I18N.Message msgId="noFeatureInfo"/></p>;
+                    } else {
+                        content = <HtmlRenderer key={i} html={style + content} />;
+                    }
                 }
                 output.push(
-                    <Tab eventKey={i} title={title}>
+                    <Tab eventKey={i} key={i} title={title}>
                         <div style={{overflow: "auto"}}>
                             {content}
                         </div>
@@ -166,7 +161,7 @@ var GetFeatureInfo = React.createClass({
                 const exArray = response;
                 for (let j = 0; j < exArray.length; j++) {
                     output.push(
-                        <Tab eventKey={i} title={title}>
+                        <Tab eventKey={i} key={i} title={title}>
                             <div style={{overflow: "auto"}}>
                                 <HtmlRenderer key={i} html={
                                     '<h3>Exception: ' + j + '</h3>' +

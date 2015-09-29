@@ -21,20 +21,24 @@ let LayerTree = React.createClass({
     renderGroup(group, layerObjs) {
         var groupTitle = group === "_default" ? "Default" : group;
 
-        return (<div style={{borderBottom: "1px solid lightgray", margin: '6px'}} >
-            <div>
-                <Glyphicon glyph="folder-open" /> {groupTitle}
+        return (
+            <div key={groupTitle} style={{borderBottom: "1px solid lightgray", margin: '6px'}} >
+                <div>
+                    <Glyphicon glyph="folder-open" /> {groupTitle}
                 </div>
-                    <div style={{marginLeft: "15px"}}>{layerObjs.map((layerObj) => {return this.renderLayer(layerObj.layer, layerObj.position); } )}
-                    </div>
-                </div>);
+                <div style={{marginLeft: "15px"}}>
+                    {layerObjs.map((layerObj) => {return this.renderLayer(layerObj.layer, layerObj.position); } )}
+                </div>
+            </div>
+        );
     },
     renderLayer(layer, position) {
-        return (<div>
-                    <div>
-                        <input data-position={position} type="checkbox" checked={layer.visibility ? "checked" : ""} onChange={this.changeLayerVisibility} />{layer.title || layer.name}
-                    </div>
-                    {this.renderLayerLegend(layer)}
+        return (
+            <div key={layer.name}>
+                <div>
+                    <input data-position={position} type="checkbox" checked={layer.visibility ? "checked" : ""} onChange={this.changeLayerVisibility} />{layer.title || layer.name}
+                </div>
+                {this.renderLayerLegend(layer)}
             </div>);
     },
     renderLayerLegend(layer) {

@@ -16,11 +16,19 @@ require("./backgroundTool.css");
 let MyButton = React.createClass({
 
     propTypes: {
+        id: React.PropTypes.string,
         layers: React.PropTypes.array,
         propertiesChangeHandler: React.PropTypes.func
     },
+    getDefaultProps() {
+        return {
+            id: "mapstore-background-switcher",
+            layers: [],
+            propertiesChangeHandler: () => {}
+        };
+    },
     render() {
-        var tooltip = <Tooltip><I18N.Message msgId="backgroundSwither.tooltip" /></Tooltip>;
+        var tooltip = <Tooltip id={this.props.id + "-tooltip"}><I18N.Message msgId="backgroundSwither.tooltip" /></Tooltip>;
         var button = (<OverlayTrigger placement="right" overlay={tooltip}>
                 <Button style={{width: "100%"}}><Glyphicon glyph="globe" /> </Button>
             </OverlayTrigger>);

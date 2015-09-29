@@ -20,13 +20,8 @@ var {getFeatureInfo, changeMapInfoState, purgeMapInfoResults} = require('../../.
 var {activatePanel} = require('../actions/floatingPanel');
 
 var {changeLayerProperties} = require('../../../actions/config');
-var BackgroundSwitcherTool = require("../components/BackgroundSwitcherTool");
-var ViewerFloatingPanel = require("../components/ViewerFloatingPanel");
 
 var VMap = require('../components/Map');
-var LangSelector = require('../../../components/I18N/LangSelector');
-var About = require('../components/About');
-var GetFeatureInfo = require('../components/GetFeatureInfo');
 var Localized = require('../../../components/I18N/Localized');
 
 var Viewer = React.createClass({
@@ -45,7 +40,8 @@ var Viewer = React.createClass({
         clickOnMap: React.PropTypes.func,
         changeMousePointer: React.PropTypes.func,
         activatePanel: React.PropTypes.func,
-        floatingPanel: React.PropTypes.object
+        floatingPanel: React.PropTypes.object,
+        plugins: React.PropTypes.array
     },
     getFirstWmsVisibleLayer() {
         for (let i = 0; i < this.props.mapConfig.layers.length; i++) {
@@ -54,32 +50,6 @@ var Viewer = React.createClass({
             }
         }
         return null;
-    },
-    renderPlugins(locale) {
-        return [
-            <LangSelector key="langSelector" currentLocale={locale} onLanguageChange={this.props.loadLocale}/>,
-            <About key="about"/>,
-                    <BackgroundSwitcherTool key="backgroundSwitcher" layers={this.props.mapConfig.layers} propertiesChangeHandler={this.props.changeLayerProperties}/>,
-                    <ViewerFloatingPanel
-                        layers={this.props.mapConfig.layers}
-                        propertiesChangeHandler={this.props.changeLayerProperties}
-                        activeKey={this.props.floatingPanel.activeKey}
-                        onActivateItem={this.props.activatePanel}/>,
-            <GetFeatureInfo
-                key="getFeatureInfo"
-                enabled={this.props.mapInfo.enabled}
-                htmlResponses={this.props.mapInfo.responses}
-                btnIcon="info-sign"
-                mapConfig={this.props.mapConfig}
-                actions={{
-                    getFeatureInfo: this.props.getFeatureInfo,
-                    changeMapInfoState: this.props.changeMapInfoState,
-                    purgeMapInfoResults: this.props.purgeMapInfoResults,
-                    changeMousePointer: this.props.changeMousePointer
-                }}
-                clickedMapPoint={this.props.mapInfo.clickPoint}
-            />
-        ];
     },
     render() {
         if (this.props.mapConfig) {
@@ -90,11 +60,33 @@ var Viewer = React.createClass({
 
             return (
                 <Localized messages={this.props.messages} locale={this.props.locale} loadingError={this.props.localeError}>
-                    {() =>
-                        <div key="viewer" className="fill">
-                            <VMap config={config} onMapViewChanges={this.manageNewMapView} onClick={this.props.clickOnMap}/>
-                            {this.renderPlugins(this.props.locale)}
-                        </div>
+                    {() => {
+                        let plugins = this.props.plugins(this.props);
+                        if (this.props.mapConfig.plugins) {
+                            let mapPlugins = this.props.mapConfig.plugins.map((plugin) => {
+                                let props = assign({}, plugin);
+                                delete props.type;
+                                for (let propName in props) {
+                                    if (props.hasOwnProperty(propName)) {
+                                        let value = props[propName];
+                                        if (value.indexOf('${') === 0) {
+                                            value = value.substring(2, value.length - 1);
+                                            value = this.props[value];
+                                        }
+                                    }
+                                }
+                                return React.createElement(require('../components/' + plugin.type), props);
+                            });
+                            plugins = plugins.concat(mapPlugins);
+                        }
+                        return (
+                            <div key="viewer" className="fill">
+                                <VMap key="map" config={config} onMapViewChanges={this.manageNewMapView} onClick={this.props.clickOnMap}/>
+                                {plugins}
+                            </div>
+                        );
+                    }
+
                     }
                 </Localized>
             );

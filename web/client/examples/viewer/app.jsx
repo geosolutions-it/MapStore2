@@ -28,11 +28,15 @@ ConfigUtils.loadConfiguration().then(() => {
     store.dispatch(loadLocale('../../translations', locale));
 });
 
-React.render(
-    <Debug store={store}>
-        <Provider store={store}>
-            {() => <Viewer />}
-        </Provider>
-    </Debug>,
-    document.getElementById('container')
-);
+require.ensure(['./plugins'], (require) => {
+    var plugins = require('./plugins');
+
+    React.render(
+        <Debug store={store}>
+            <Provider store={store}>
+                {() => <Viewer plugins={plugins}/>}
+            </Provider>
+        </Debug>,
+        document.getElementById('container')
+    );
+});

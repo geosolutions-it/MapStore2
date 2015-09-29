@@ -23,8 +23,8 @@ var LeafletMap = React.createClass({
     getDefaultProps() {
         return {
           id: 'map',
-          onMapViewChanges() {},
-          onClick() {},
+          onMapViewChanges: () => {},
+          onClick: null,
           mapOptions: {
               zoomAnimation: false,
               attributionControl: false
@@ -41,7 +41,11 @@ var LeafletMap = React.createClass({
 
         this.map = map;
         this.map.on('moveend', this.updateMapInfoState);
-        this.map.on('click', (event) => { this.props.onClick(event.containerPoint); });
+        this.map.on('click', (event) => {
+            if (this.props.onClick) {
+                this.props.onClick(event.containerPoint);
+            }
+        });
 
         this.updateMapInfoState();
         this.setMousePointer(this.props.mousePointer);
@@ -49,15 +53,17 @@ var LeafletMap = React.createClass({
         this.forceUpdate();
     },
     componentWillReceiveProps(newProps) {
-        this.setMousePointer(newProps.mousePointer);
-        const currentCenter = this.map.getCenter();
-        const centerIsUpdate = newProps.center.y === currentCenter.lat &&
-                               newProps.center.x === currentCenter.lng;
+        if (newProps.mousePointer !== this.props.mousePointer) {
+            this.setMousePointer(newProps.mousePointer);
+        }
+        const currentCenter = this.props.center;
+        const centerIsUpdate = newProps.center.y === currentCenter.y &&
+                               newProps.center.x === currentCenter.x;
 
         if (!centerIsUpdate) {
             this.map.setView([newProps.center.y, newProps.center.x]);
         }
-        if (newProps.zoom !== this.map.getZoom()) {
+        if (newProps.zoom !== this.props.zoom) {
             this.map.setZoom(newProps.zoom);
         }
     },

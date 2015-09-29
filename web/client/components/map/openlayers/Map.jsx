@@ -24,8 +24,8 @@ var OpenlayersMap = React.createClass({
     getDefaultProps() {
         return {
           id: 'map',
-          onMapViewChanges: React.PropTypes.func,
-          onClick: React.PropTypes.func,
+          onMapViewChanges: () => {},
+          onClick: null,
           mapOptions: {},
           projection: 'EPSG:3857'
         };
@@ -78,10 +78,12 @@ var OpenlayersMap = React.createClass({
             }, size);
         });
         map.on('click', (event) => {
-            this.props.onClick({
-                x: event.pixel[0],
-                y: event.pixel[1]
-            });
+            if (this.props.onClick) {
+                this.props.onClick({
+                    x: event.pixel[0],
+                    y: event.pixel[1]
+                });
+            }
         });
 
         this.map = map;
@@ -91,15 +93,19 @@ var OpenlayersMap = React.createClass({
     },
     componentWillReceiveProps(newProps) {
         var view = this.map.getView();
-        this.setMousePointer(newProps.mousePointer);
-        const currentCenter = this.normalizeCenter(view.getCenter());
-        const centerIsUpdated = newProps.center.y === currentCenter[1] &&
-                               newProps.center.x === currentCenter[0];
+        if (newProps.mousePointer !== this.props.mousePointer) {
+            this.setMousePointer(newProps.mousePointer);
+        }
+
+        const currentCenter = this.props.center;
+        const centerIsUpdated = newProps.center.y === currentCenter.y &&
+                               newProps.center.x === currentCenter.x;
 
         if (!centerIsUpdated) {
-            view.setCenter([newProps.center.x, newProps.center.y]);
+            let center = ol.proj.transform([newProps.center.x, newProps.center.y], 'EPSG:4326', this.props.projection);
+            view.setCenter(center);
         }
-        if (newProps.zoom !== view.getZoom()) {
+        if (newProps.zoom !== this.props.zoom) {
             view.setZoom(newProps.zoom);
         }
     },
