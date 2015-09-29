@@ -27,17 +27,15 @@ var ToggleButton = React.createClass({
         };
     },
     onClick() {
-        this.props.onClick(this.props.pressed);
+        this.props.onClick(!this.props.pressed);
     },
     render() {
         return (
-            <div id={this.props.id} onClick={this.onClick}>
-                <Button {...this.props.btnConfig} bsStyle={this.props.pressed ? 'primary' : 'default'}>
+                <Button id={this.props.id} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.props.pressed ? 'primary' : 'default'}>
                     {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
                     {this.props.glyphicon && this.props.text ? "\u00A0" : null}
                     {this.props.text}
                 </Button>
-            </div>
         );
     }
 });
