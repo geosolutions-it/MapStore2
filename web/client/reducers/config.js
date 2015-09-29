@@ -28,12 +28,14 @@ function mapConfig(state = null, action) {
                 size: action.size
             });
         case CHANGE_LAYER_PROPERTIES: {
-            let layers = assign(state.layers);
+            let layers = state.layers.slice(0);
             if (layers[action.position].visibility !== action.newProperties.visibility && action.newProperties.group === "background") {
-                layers.map(layer => {
-                    if (layer.group === "background") {
-                        layer.visibility = false;
+                layers = layers.map(layer => {
+                    let newLayer = assign({}, layer);
+                    if (newLayer.group === "background") {
+                        newLayer.visibility = false;
                     }
+                    return newLayer;
                 } );
             }
             layers[action.position] = action.newProperties;

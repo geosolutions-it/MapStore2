@@ -17,6 +17,7 @@ require("./mapPanel.css");
 
 let ViewerFloatingPanel = React.createClass({
     propTypes: {
+        id: React.PropTypes.string,
         layers: React.PropTypes.array,
         panelStyle: React.PropTypes.object,
         propertiesChangeHandler: React.PropTypes.func,
@@ -25,6 +26,7 @@ let ViewerFloatingPanel = React.createClass({
     },
     getDefaultProps() {
         return {
+            id: "mapstore-floating-panel",
             panelStyle: {
                 position: "absolute",
                 bottom: "0px",
@@ -38,14 +40,14 @@ let ViewerFloatingPanel = React.createClass({
     },
     render() {
 
-        var tooltip = <Tooltip><Message msgId="layers" /></Tooltip>;
+        var tooltip = <Tooltip id={this.props.id + "-tooltip"}><Message msgId="layers" /></Tooltip>;
         var layerSwitcherButton = (
             <OverlayTrigger placement="top" overlay={tooltip}>
                 <Button style={{width: "100%"}}><img src={icon} /></Button>
             </OverlayTrigger>
         );
         return (
-        <PanelGroup accordion activeKey={this.props.activeKey} style={this.props.panelStyle} className="MainMapPanel" onSelect={this.handleSelect} accordion>
+        <PanelGroup activeKey={this.props.activeKey} style={this.props.panelStyle} className="MainMapPanel" onSelect={this.handleSelect} accordion>
             <Panel header={layerSwitcherButton} eventKey="1" activeKey="1" className="MapPanel" collapsible={true}>
                 <LayerSwitcher key="layetSwitcher" layers={this.props.layers} propertiesChangeHandler={this.props.propertiesChangeHandler}/>
             </Panel>
