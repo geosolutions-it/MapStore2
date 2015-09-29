@@ -8,7 +8,6 @@
 var React = require('react');
 
 var {Provider} = require('react-redux');
-var Viewer = require('./containers/Viewer');
 
 var {loadMapConfig} = require('../../actions/config');
 var {loadLocale} = require('../../actions/locale');
@@ -18,23 +17,25 @@ var LocaleUtils = require('../../utils/LocaleUtils');
 
 var Debug = require('../../components/development/Debug');
 
-var store = require('./stores/viewerstore');
-
-ConfigUtils.loadConfiguration().then(() => {
-    const { configUrl, legacy } = ConfigUtils.getUserConfiguration('config', 'json');
-    store.dispatch(loadMapConfig(configUrl, legacy));
-
-    let locale = LocaleUtils.getUserLocale();
-    store.dispatch(loadLocale('../../translations', locale));
-});
 
 require.ensure(['./plugins'], (require) => {
     var plugins = require('./plugins');
+    var store = require('./stores/viewerstore')(plugins.reducers);
+    var Viewer = require('./containers/Viewer')(plugins.actions);
+
+
+    ConfigUtils.loadConfiguration().then(() => {
+        const { configUrl, legacy } = ConfigUtils.getUserConfiguration('config', 'json');
+        store.dispatch(loadMapConfig(configUrl, legacy));
+
+        let locale = LocaleUtils.getUserLocale();
+        store.dispatch(loadLocale('../../translations', locale));
+    });
 
     React.render(
         <Debug store={store}>
             <Provider store={store}>
-                {() => <Viewer plugins={plugins}/>}
+                {() => <Viewer plugins={plugins.components}/>}
             </Provider>
         </Debug>,
         document.getElementById('container')

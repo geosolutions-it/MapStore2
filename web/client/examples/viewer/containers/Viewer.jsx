@@ -16,10 +16,6 @@ var ConfigUtils = require('../../../utils/ConfigUtils');
 var {loadLocale} = require('../../../actions/locale');
 
 var {changeMapView, clickOnMap, changeMousePointer} = require('../../../actions/map');
-var {getFeatureInfo, changeMapInfoState, purgeMapInfoResults} = require('../../../actions/mapInfo');
-var {activatePanel} = require('../actions/floatingPanel');
-
-var {changeLayerProperties} = require('../../../actions/config');
 
 var VMap = require('../components/Map');
 var Localized = require('../../../components/I18N/Localized');
@@ -98,25 +94,22 @@ var Viewer = React.createClass({
     }
 });
 
-module.exports = connect((state) => {
-    return {
-        mapConfig: state.mapConfig,
-        messages: state.locale ? state.locale.messages : null,
-        locale: state.locale ? state.locale.current : null,
-        mapInfo: state.mapInfo ? state.mapInfo : {enabled: false, responses: [], requests: []},
-        floatingPanel: state.floatingPanel ? state.floatingPanel : {activeKey: ""},
-        localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined
-    };
-}, dispatch => {
-    return bindActionCreators(assign({}, {
-        loadLocale: loadLocale.bind(null, '../../translations'),
-        changeMapView,
-        getFeatureInfo,
-        changeMapInfoState,
-        purgeMapInfoResults,
-        clickOnMap,
-        activatePanel,
-        changeMousePointer,
-        changeLayerProperties
-    }), dispatch);
-})(Viewer);
+module.exports = (actions) => {
+    return connect((state) => {
+        return {
+            mapConfig: state.mapConfig,
+            messages: state.locale ? state.locale.messages : null,
+            locale: state.locale ? state.locale.current : null,
+            mapInfo: state.mapInfo ? state.mapInfo : {enabled: false, responses: [], requests: []},
+            floatingPanel: state.floatingPanel ? state.floatingPanel : {activeKey: ""},
+            localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined
+        };
+    }, dispatch => {
+        return bindActionCreators(assign({}, {
+            loadLocale: loadLocale.bind(null, '../../translations'),
+            changeMapView,
+            clickOnMap,
+            changeMousePointer
+        }, actions), dispatch);
+    })(Viewer);
+};
