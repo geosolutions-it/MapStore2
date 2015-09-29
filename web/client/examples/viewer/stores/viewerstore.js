@@ -12,8 +12,6 @@ var locale = require('../../../reducers/locale');
 var DebugUtils = require('../../../utils/DebugUtils');
 var assign = require('object-assign');
 
-
-
 module.exports = (reducers) => {
     const reducersObj = assign({}, reducers, {
         mapConfig,
