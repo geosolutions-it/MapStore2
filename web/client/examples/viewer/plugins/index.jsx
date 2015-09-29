@@ -1,7 +1,11 @@
 var About = require('../components/About');
 var LangSelector = require('../../../components/I18N/LangSelector');
-var BackgroundSwitcherTool = require("../components/BackgroundSwitcherTool");
-var ViewerFloatingPanel = require("../components/ViewerFloatingPanel");
+var {Message} = require('../../../components/I18N/I18N');
+
+var ToggleButton = require('../../../components/buttons/ToggleButton');
+var BackgroundSwitcher = require("../../../components/BackgroundSwitcher/BackgroundSwitcher");
+var LayerTree = require("../../../components/LayerTree/LayerTree");
+var MapToolBar = require("../components/MapToolBar");
 var GetFeatureInfo = require("../components/GetFeatureInfo");
 
 var mapInfo = require('../../../reducers/mapInfo');
@@ -21,21 +25,41 @@ module.exports = {
         return [
             <About key="about"/>,
             <LangSelector key="langSelector" currentLocale={props.locale} onLanguageChange={props.loadLocale}/>,
-            <ViewerFloatingPanel key="floatingPanel"
+            <MapToolBar
                 layers={props.mapConfig.layers}
                 propertiesChangeHandler={props.changeLayerProperties}
                 activeKey={props.floatingPanel.activeKey}
-                onActivateItem={props.activatePanel}/>,
-            <BackgroundSwitcherTool key="backgroundSwitcher" layers={props.mapConfig.layers} propertiesChangeHandler={props.changeLayerProperties}/>,
+                onActivateItem={props.activatePanel}
+                mapInfo={props.mapInfo}
+                changeMapInfoState={props.changeMapInfoState}>
+                <ToggleButton
+                    isButton={true}
+                    pressed={props.mapInfo.enabled}
+                    glyphicon="info-sign"
+                    onClick={props.changeMapInfoState}
+                />
+                <LayerTree
+                    key="layerSwitcher"
+                    isPanel={true}
+                    buttonTooltip={<Message msgId="layers"/>}
+                    title={<Message msgId="layers"/>}
+                    layers={props.mapConfig.layers}
+                    propertiesChangeHandler={props.changeLayerProperties}/>
+                <BackgroundSwitcher
+                    key="backgroundSwitcher"
+                    isPanel={true}
+                    layers={props.mapConfig.layers}
+                    title={<div><Message msgId="background"/></div>}
+                    buttonTooltip={<Message msgId="backgroundSwither.tooltip"/>}
+                    propertiesChangeHandler={props.changeLayerProperties}/>
+            </MapToolBar>,
             <GetFeatureInfo
                 key="getFeatureInfo"
                 enabled={props.mapInfo.enabled}
                 htmlResponses={props.mapInfo.responses}
-                btnIcon="info-sign"
                 mapConfig={props.mapConfig}
                 actions={{
                     getFeatureInfo: props.getFeatureInfo,
-                    changeMapInfoState: props.changeMapInfoState,
                     purgeMapInfoResults: props.purgeMapInfoResults,
                     changeMousePointer: props.changeMousePointer
                 }}

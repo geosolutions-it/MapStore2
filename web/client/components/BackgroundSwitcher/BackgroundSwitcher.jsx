@@ -7,7 +7,7 @@
  */
 
 var React = require('react');
-var {Grid, Col, Thumbnail} = require('react-bootstrap');
+var {Grid, Col, Thumbnail, Glyphicon} = require('react-bootstrap');
 var HYBRID = require('./images/mapthumbs/HYBRID.jpg');
 var ROADMAP = require('./images/mapthumbs/ROADMAP.jpg');
 var TERRAIN = require('./images/mapthumbs/TERRAIN.jpg');
@@ -50,6 +50,7 @@ let BackgroundSwitcher = React.createClass({
     },
     getDefaultProps() {
         return {
+            icon: <Glyphicon glyph="globe"/>,
             columnProperties: {
                 xs: 6,
                 sm: 4,
