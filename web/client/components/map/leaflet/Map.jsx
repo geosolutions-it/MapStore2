@@ -30,7 +30,7 @@ var LeafletMap = React.createClass({
           onClick: null,
           onMouseMove: () => {},
           mapOptions: {
-              zoomAnimation: false,
+              zoomAnimation: true,
               attributionControl: false
           },
           projection: "EPSG:3857",
@@ -67,18 +67,24 @@ var LeafletMap = React.createClass({
             event.layer.on('load', (loadEvent) => { this.props.onLayerLoad(loadEvent.target._leaflet_id); });
         });
     },
+
     componentWillReceiveProps(newProps) {
         if (newProps.mousePointer !== this.props.mousePointer) {
             this.setMousePointer(newProps.mousePointer);
         }
-        const currentCenter = this.props.center;
-        const centerIsUpdate = newProps.center.y === currentCenter.y &&
-                               newProps.center.x === currentCenter.x;
-
+        const currentCenter = this.map.getCenter();
+        const isNearlyEqual = function(a, b) {
+            if (a === undefined || b === undefined) {
+                return false;
+            }
+            return ( a - a.toFixed(12) - (b - b.toFixed(12))) === 0;
+        };
+        const centerIsUpdate = isNearlyEqual(newProps.center.x, currentCenter.lng) &&
+                               isNearlyEqual(newProps.center.y, currentCenter.lat);
         if (!centerIsUpdate) {
             this.map.setView([newProps.center.y, newProps.center.x]);
         }
-        if (newProps.zoom !== this.props.zoom) {
+        if (newProps.zoom !== this.map.getZoom()) {
             this.map.setZoom(newProps.zoom);
         }
     },
