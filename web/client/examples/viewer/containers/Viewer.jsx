@@ -26,12 +26,16 @@ var Viewer = React.createClass({
         messages: React.PropTypes.object,
         locale: React.PropTypes.string,
         mapInfo: React.PropTypes.object,
+        mousePosition: React.PropTypes.object,
         localeError: React.PropTypes.string,
         loadLocale: React.PropTypes.func,
         changeMapView: React.PropTypes.func,
         changeLayerProperties: React.PropTypes.func,
         getFeatureInfo: React.PropTypes.func,
         changeMapInfoState: React.PropTypes.func,
+        changeMousePositionState: React.PropTypes.func,
+        changeMousePosition: React.PropTypes.func,
+        changeMousePositionCrs: React.PropTypes.func,
         purgeMapInfoResults: React.PropTypes.func,
         clickOnMap: React.PropTypes.func,
         changeMousePointer: React.PropTypes.func,
@@ -77,7 +81,7 @@ var Viewer = React.createClass({
                         }
                         return (
                             <div key="viewer" className="fill">
-                                <VMap key="map" config={config} onMapViewChanges={this.manageNewMapView} onClick={this.props.clickOnMap}/>
+                                <VMap key="map" config={config} onMapViewChanges={this.manageNewMapView} onClick={this.props.clickOnMap} onMouseMove={this.manageMousePosition}/>
                                 {plugins}
                             </div>
                         );
@@ -91,6 +95,11 @@ var Viewer = React.createClass({
     },
     manageNewMapView(center, zoom, bbox, size) {
         this.props.changeMapView(center, zoom, bbox, size);
+    },
+    manageMousePosition(evt) {
+        if ( this.props.mousePosition.enabled) {
+            this.props.changeMousePosition(evt.position);
+        }
     }
 });
 
@@ -102,7 +111,8 @@ module.exports = (actions) => {
             locale: state.locale ? state.locale.current : null,
             mapInfo: state.mapInfo ? state.mapInfo : {enabled: false, responses: [], requests: []},
             floatingPanel: state.floatingPanel ? state.floatingPanel : {activeKey: ""},
-            localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined
+            localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined,
+            mousePosition: state.mousePosition ? state.mousePosition : {enabled: false, crs: null, position: null}
         };
     }, dispatch => {
         return bindActionCreators(assign({}, {
