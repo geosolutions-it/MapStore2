@@ -12,10 +12,7 @@ var Modal = BootstrapReact.Modal;
 var Tabs = BootstrapReact.Tabs;
 var Tab = BootstrapReact.Tab;
 var I18N = require('../../../components/I18N/I18N');
-
-var ToggleButton = require('../../../components/buttons/ToggleButton');
 var HtmlRenderer = require('../../../components/misc/HtmlRenderer');
-
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var assign = require('object-assign');
 
@@ -23,14 +20,11 @@ var GetFeatureInfo = React.createClass({
     propTypes: {
         htmlResponses: React.PropTypes.array,
         btnConfig: React.PropTypes.object,
-        btnText: React.PropTypes.string,
-        btnIcon: React.PropTypes.string,
         enabled: React.PropTypes.bool,
         mapConfig: React.PropTypes.object,
         layerFilter: React.PropTypes.func,
         actions: React.PropTypes.shape({
             getFeatureInfo: React.PropTypes.func,
-            changeMapInfoState: React.PropTypes.func,
             purgeMapInfoResults: React.PropTypes.func,
             changeMousePointer: React.PropTypes.func
         }),
@@ -53,7 +47,6 @@ var GetFeatureInfo = React.createClass({
             },
             actions: {
                 getFeatureInfo() {},
-                changeMapInfoState() {},
                 purgeMapInfoResults() {},
                 changeMousePointer() {}
             }
@@ -98,9 +91,6 @@ var GetFeatureInfo = React.createClass({
         } else if (!newProps.enabled && this.props.enabled) {
             this.props.actions.changeMousePointer('auto');
         }
-    },
-    onToggleButtonClick(btnEnabled) {
-        this.props.actions.changeMapInfoState(!btnEnabled);
     },
     onModalHiding() {
         this.props.actions.purgeMapInfoResults();
@@ -191,14 +181,6 @@ var GetFeatureInfo = React.createClass({
     },
     render() {
         return (
-            <div id="mapstore-getfeatureinfo">
-                <ToggleButton
-                    pressed={this.props.enabled}
-                    btnConfig={this.props.btnConfig}
-                    text={this.props.btnText}
-                    glyphicon={this.props.btnIcon}
-                    onClick={this.onToggleButtonClick}
-                />
                 <Modal
                     show={this.props.htmlResponses.length !== 0}
                     onHide={this.onModalHiding}
@@ -214,7 +196,7 @@ var GetFeatureInfo = React.createClass({
                         </Tabs>
                     </Modal.Body>
                 </Modal>
-            </div>
+
         );
     },
     reprojectBbox(bbox, destSRS) {

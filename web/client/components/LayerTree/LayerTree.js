@@ -11,12 +11,19 @@ var React = require('react');
 var assign = require('object-assign');
 var Legend = require('../Legend/Legend');
 var {Glyphicon, Panel} = require('react-bootstrap');
+var icon = require('./images/layers.png');
 
 let LayerTree = React.createClass({
     propTypes: {
         id: React.PropTypes.number,
+        buttonContent: React.PropTypes.node,
         layers: React.PropTypes.array,
         propertiesChangeHandler: React.PropTypes.func
+    },
+    getDefaultProps() {
+        return {
+            buttonContent: <img src={icon}/>
+        };
     },
     renderGroup(group, layerObjs) {
         var groupTitle = group === "_default" ? "Default" : group;
@@ -73,7 +80,7 @@ let LayerTree = React.createClass({
                 groups._default.push(layerObj);
             }
         } );
-        return <Panel style={{overflow: "auto", height: "400px"}} >{Object.keys(groups).map(groupName => {return this.renderGroup(groupName, groups[groupName]); })}</Panel>;
+        return <Panel style={{overflow: "auto"}} >{Object.keys(groups).map(groupName => {return this.renderGroup(groupName, groups[groupName]); })}</Panel>;
     },
     changeLayerVisibility(eventObj) {
         let position = parseInt(eventObj.currentTarget.dataset.position, 10);

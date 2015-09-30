@@ -25,11 +25,9 @@ describe("test the ToggleButton", () => {
         expect(tbNode).toExist();
         expect(tbNode.id).toNotExist();
 
-        const button = tbNode.getElementsByTagName('button')[0];
-        expect(button).toExist();
-        expect(button.className.indexOf('default') >= 0).toBe(true);
-
-        expect(button.innerHTML).toNotExist();
+        expect(tbNode).toExist();
+        expect(tbNode.className.indexOf('default') >= 0).toBe(true);
+        expect(tbNode.innerHTML).toNotExist();
     });
 
     it('test glyphicon property', () => {
@@ -38,11 +36,8 @@ describe("test the ToggleButton", () => {
 
         const tbNode = React.findDOMNode(tb);
         expect(tbNode).toExist();
-
-        const button = tbNode.getElementsByTagName('button')[0];
-        expect(button).toExist();
-
-        const icons = button.getElementsByTagName('span');
+        expect(tbNode).toExist();
+        const icons = tbNode.getElementsByTagName('span');
         expect(icons.length).toBe(1);
     });
 
@@ -52,11 +47,9 @@ describe("test the ToggleButton", () => {
 
         const tbNode = React.findDOMNode(tb);
         expect(tbNode).toExist();
+        expect(tbNode).toExist();
 
-        const button = tbNode.getElementsByTagName('button')[0];
-        expect(button).toExist();
-
-        const btnItems = button.getElementsByTagName('span');
+        const btnItems = tbNode.getElementsByTagName('span');
         expect(btnItems.length).toBe(3);
 
         expect(btnItems[0].innerHTML).toBe("");
@@ -69,9 +62,8 @@ describe("test the ToggleButton", () => {
         expect(tb).toExist();
 
         const tbNode = React.findDOMNode(tb);
-        const button = tbNode.getElementsByTagName('button')[0];
 
-        expect(button.className.indexOf('primary') >= 0).toBe(true);
+        expect(tbNode.className.indexOf('primary') >= 0).toBe(true);
     });
 
     it('test click handler', () => {
@@ -85,6 +77,6 @@ describe("test the ToggleButton", () => {
         tbNode.click();
 
         expect(spy.calls.length).toEqual(1);
-        expect(spy.calls[0].arguments).toEqual([true]);
+        expect(spy.calls[0].arguments).toEqual([false]);
     });
 });
