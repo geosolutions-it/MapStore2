@@ -8,6 +8,7 @@ var LayerTree = require("../../../components/LayerTree/LayerTree");
 var MapToolBar = require("../components/MapToolBar");
 var GetFeatureInfo = require("../components/GetFeatureInfo");
 var MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
+var GlobalSpinner = require('../../../components/globalspinner/GlobalSpinner');
 
 var mapInfo = require('../../../reducers/mapInfo');
 var floatingPanel = require('../reducers/floatingPanel');
@@ -18,7 +19,6 @@ var {activatePanel} = require('../actions/floatingPanel');
 var {changeMousePosition, changeMousePositionCrs, changeMousePositionState} = require('../../../actions/mousePosition');
 
 var {changeLayerProperties} = require('../../../actions/config');
-
 
 var React = require('react');
 
@@ -77,7 +77,9 @@ module.exports = {
                     actions={{
                             changeMousePositionCrs: props.changeMousePositionCrs
                     }}
-                    mapProjection={props.mapConfig.projection} />
+                    mapProjection={props.mapConfig.projection} />,
+                <GlobalSpinner loadingLayers={props.mapConfig.loadingLayers}
+            showSpinner={props.showSpinner} hideSpinner={props.hideSpinner} spinnersInfo={props.mapConfig.spinnersInfo}/>
         ];
     },
     reducers: {mapInfo, floatingPanel, mousePosition},

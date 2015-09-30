@@ -103,4 +103,114 @@ describe('Test the mapConfig reducer', () => {
         expect(state.prop).toBe('prop');
         expect(state.mousePointer).toBe(action.pointer);
     });
+
+    it('a layer is loading, loadingLayers is updated', () => {
+        const action = {
+            type: 'LAYER_LOADING',
+            layerId: "layer1"
+        };
+
+        var originalLoadingLayers = {loadingLayers: {layer1: true}};
+        var state = mapConfig(null, action);
+
+        expect(state.loadingLayers).toEqual({layer1: true});
+
+        state = mapConfig({}, action);
+        expect(state.loadingLayers).toEqual({layer1: true});
+
+        state = mapConfig(state, action);
+        expect(state.loadingLayers).toEqual({layer1: true});
+
+        state = mapConfig(originalLoadingLayers, action);
+        expect(state).toEqual(originalLoadingLayers);
+        expect(state).toNotBe(originalLoadingLayers);
+
+        state = mapConfig({layer1: false}, action);
+        expect(state.loadingLayers).toEqual({layer1: true});
+
+        state = mapConfig({loadingLayers: {layer2: true}}, action);
+        expect(state.loadingLayers).toEqual({layer2: true, layer1: true});
+    });
+
+    it('a layer load, loadingLayers is updated', () => {
+        const action = {
+            type: 'LAYER_LOAD',
+            layerId: "layer1"
+        };
+
+        var originalLoadingLayers = {loadingLayers: {layer1: false}};
+        var state = mapConfig(null, action);
+
+        expect(state.loadingLayers).toEqual({layer1: false});
+
+        state = mapConfig({}, action);
+        expect(state.loadingLayers).toEqual({layer1: false});
+
+        state = mapConfig(state, action);
+        expect(state.loadingLayers).toEqual({layer1: false});
+
+        state = mapConfig(originalLoadingLayers, action);
+        expect(state).toEqual(originalLoadingLayers);
+        expect(state).toNotBe(originalLoadingLayers);
+
+        state = mapConfig({layer1: true}, action);
+        expect(state.loadingLayers).toEqual({layer1: false});
+
+        state = mapConfig({loadingLayers: {layer2: true}}, action);
+        expect(state.loadingLayers).toEqual({layer2: true, layer1: false});
+    });
+
+    it('a spinner must be show', () => {
+        const action = {
+            type: 'SHOW_SPINNER',
+            spinnerId: "spinner1"
+        };
+
+        var originalmapConfig = {spinnersInfo: {spinner1: true}};
+        var state = mapConfig(null, action);
+        expect(state.spinnersInfo).toEqual({spinner1: true});
+
+        state = mapConfig({}, action);
+        expect(state.spinnersInfo).toEqual({spinner1: true});
+
+        state = mapConfig(state, action);
+        expect(state.spinnersInfo).toEqual({spinner1: true});
+
+        state = mapConfig(originalmapConfig, action);
+        expect(state).toEqual(originalmapConfig);
+        expect(state).toNotBe(originalmapConfig);
+
+        state = mapConfig({spinner1: false}, action);
+        expect(state.spinnersInfo).toEqual({spinner1: true});
+
+        state = mapConfig({spinnersInfo: {spinner2: true}}, action);
+        expect(state.spinnersInfo).toEqual({spinner2: true, spinner1: true});
+    });
+
+    it('a spinner must be hiden', () => {
+        const action = {
+            type: 'HIDE_SPINNER',
+            spinnerId: "spinner1"
+        };
+
+        var originalmapConfig = {spinnersInfo: {spinner1: false}};
+        var state = mapConfig(null, action);
+        expect(state.spinnersInfo).toEqual({spinner1: false});
+
+        state = mapConfig({}, action);
+        expect(state.spinnersInfo).toEqual({spinner1: false});
+
+        state = mapConfig(state, action);
+        expect(state.spinnersInfo).toEqual({spinner1: false});
+
+        state = mapConfig(originalmapConfig, action);
+        expect(state).toEqual(originalmapConfig);
+        expect(state).toNotBe(originalmapConfig);
+
+        state = mapConfig({spinner1: true}, action);
+        expect(state.spinnersInfo).toEqual({spinner1: false});
+
+        state = mapConfig({spinnersInfo: {spinner2: true}}, action);
+        expect(state.spinnersInfo).toEqual({spinner2: true, spinner1: false});
+    });
 });

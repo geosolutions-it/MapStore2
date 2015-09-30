@@ -19,7 +19,9 @@ var LeafletMap = React.createClass({
         onClick: React.PropTypes.func,
         mapOptions: React.PropTypes.object,
         mousePointer: React.PropTypes.string,
-        onMouseMove: React.PropTypes.func
+        onMouseMove: React.PropTypes.func,
+        onLayerLoading: React.PropTypes.func,
+        onLayerLoad: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -31,7 +33,9 @@ var LeafletMap = React.createClass({
               zoomAnimation: false,
               attributionControl: false
           },
-          projection: "EPSG:3857"
+          projection: "EPSG:3857",
+          onLayerLoading: () => {},
+          onLayerLoad: () => {}
         };
     },
     getInitialState() {
@@ -56,6 +60,12 @@ var LeafletMap = React.createClass({
         this.setMousePointer(this.props.mousePointer);
         // NOTE: this re-call render function after div creation to have the map initialized.
         this.forceUpdate();
+
+        this.map.on('layeradd', (event) => {
+            this.props.onLayerLoading(event.layer._leaflet_id);
+            event.layer.on('loading', (loadingEvent) => { this.props.onLayerLoading(loadingEvent.target._leaflet_id); });
+            event.layer.on('load', (loadEvent) => { this.props.onLayerLoad(loadEvent.target._leaflet_id); });
+        });
     },
     componentWillReceiveProps(newProps) {
         if (newProps.mousePointer !== this.props.mousePointer) {

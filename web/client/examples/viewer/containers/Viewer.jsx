@@ -15,7 +15,8 @@ var ConfigUtils = require('../../../utils/ConfigUtils');
 
 var {loadLocale} = require('../../../actions/locale');
 
-var {changeMapView, clickOnMap, changeMousePointer} = require('../../../actions/map');
+var {changeMapView, clickOnMap, changeMousePointer,
+    layerLoading, layerLoad, showSpinner, hideSpinner} = require('../../../actions/map');
 
 var VMap = require('../components/Map');
 var Localized = require('../../../components/I18N/Localized');
@@ -41,7 +42,11 @@ var Viewer = React.createClass({
         changeMousePointer: React.PropTypes.func,
         activatePanel: React.PropTypes.func,
         floatingPanel: React.PropTypes.object,
-        plugins: React.PropTypes.array
+        plugins: React.PropTypes.array,
+        layerLoading: React.PropTypes.func,
+        layerLoad: React.PropTypes.func,
+        showSpinner: React.PropTypes.func,
+        hideSpinner: React.PropTypes.func
     },
     getFirstWmsVisibleLayer() {
         for (let i = 0; i < this.props.mapConfig.layers.length; i++) {
@@ -81,7 +86,8 @@ var Viewer = React.createClass({
                         }
                         return (
                             <div key="viewer" className="fill">
-                                <VMap key="map" config={config} onMapViewChanges={this.manageNewMapView} onClick={this.props.clickOnMap} onMouseMove={this.manageMousePosition}/>
+                                <VMap key="map" config={config} onMapViewChanges={this.manageNewMapView} onClick={this.props.clickOnMap} onMouseMove={this.manageMousePosition}
+                                onLayerLoading={this.props.layerLoading} onLayerLoad={this.props.layerLoad}/>
                                 {plugins}
                             </div>
                         );
@@ -119,7 +125,11 @@ module.exports = (actions) => {
             loadLocale: loadLocale.bind(null, '../../translations'),
             changeMapView,
             clickOnMap,
-            changeMousePointer
+            changeMousePointer,
+            layerLoading,
+            layerLoad,
+            showSpinner,
+            hideSpinner
         }, actions), dispatch);
     })(Viewer);
 };
