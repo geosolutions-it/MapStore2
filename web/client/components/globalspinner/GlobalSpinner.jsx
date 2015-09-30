@@ -25,14 +25,14 @@ var GlobalSpinner = React.createClass({
             delayMs: 500
         };
     },
-    componentWillReceiveProps(newProps) {
+    /*componentWillReceiveProps(newProps) {
         var id = newProps.id;
         var delayMs = newProps.delayMs;
         var func = this.isSomeLayerLoading(newProps.loadingLayers) ? newProps.showSpinner : newProps.hideSpinner;
         setTimeout(() => func(id), delayMs);
-    },
+    },*/
     render() {
-        if (this.isSomeLayerLoading(this.props.loadingLayers) && this.show()) {
+        if (this.isSomeLayerLoading(this.props.loadingLayers)) {
             return (
                 <div id={this.props.id}></div>
             );

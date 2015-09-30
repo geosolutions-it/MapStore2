@@ -103,13 +103,13 @@ var OpenlayersMap = React.createClass({
             }
         });
 
-        map.on('precompose', () => {
+        /*map.on('precompose', () => {
             map.getLayers().forEach((element, index) => { this.props.onLayerLoading(index); });
         });
 
         map.on('postcompose', () => {
             map.getLayers().forEach((element, index) => { this.props.onLayerLoad(index); });
-        });
+        });*/
 
         this.map = map;
         this.setMousePointer(this.props.mousePointer);
