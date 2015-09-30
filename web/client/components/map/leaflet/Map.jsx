@@ -71,16 +71,29 @@ var LeafletMap = React.createClass({
         if (newProps.mousePointer !== this.props.mousePointer) {
             this.setMousePointer(newProps.mousePointer);
         }
-        const currentCenter = this.props.center;
-        const centerIsUpdate = newProps.center.y === currentCenter.y &&
-                               newProps.center.x === currentCenter.x;
+        const currentCenter = this.map.getCenter();
+        // current implementation will update the map only if the movement
+        // between 12 decimals in the reference system to avoid rounded value
+        // changes due to float mathematic operations.
+        const isNearlyEqual = function(a, b) {
+            if (a === undefined || b === undefined) {
+                return false;
+            }
+            return ( a.toFixed(12) - (b.toFixed(12))) === 0;
+        };
+        const centerIsUpdate = isNearlyEqual(newProps.center.x, currentCenter.lng) &&
+                               isNearlyEqual(newProps.center.y, currentCenter.lat);
+        const zoomChanged = newProps.zoom !== this.map.getZoom();
 
-        if (!centerIsUpdate) {
+        // Do the change at the same time, to avoid glitches
+        if (!centerIsUpdate && zoomChanged) {
+            this.map.setView([newProps.center.y, newProps.center.x], newProps.zoom);
+        } else if (zoomChanged) {
+            this.map.setZoom(newProps.zoom);
+        } else if (!centerIsUpdate) {
             this.map.setView([newProps.center.y, newProps.center.x]);
         }
-        if (newProps.zoom !== this.props.zoom) {
-            this.map.setZoom(newProps.zoom);
-        }
+
     },
     componentWillUnmount() {
         this.map.remove();
