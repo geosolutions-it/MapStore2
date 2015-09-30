@@ -26,7 +26,7 @@ var LeafletMap = React.createClass({
           onMapViewChanges: () => {},
           onClick: null,
           mapOptions: {
-              zoomAnimation: false,
+              zoomAnimation: true,
               attributionControl: false
           },
           projection: "EPSG:3857"
@@ -52,18 +52,24 @@ var LeafletMap = React.createClass({
         // NOTE: this re-call render function after div creation to have the map initialized.
         this.forceUpdate();
     },
+
     componentWillReceiveProps(newProps) {
         if (newProps.mousePointer !== this.props.mousePointer) {
             this.setMousePointer(newProps.mousePointer);
         }
-        const currentCenter = this.props.center;
-        const centerIsUpdate = newProps.center.y === currentCenter.y &&
-                               newProps.center.x === currentCenter.x;
-
+        const currentCenter = this.map.getCenter();
+        const isNearlyEqual = function(a, b) {
+            if (a === undefined || b === undefined) {
+                return false;
+            }
+            return ( a - a.toFixed(12) - (b - b.toFixed(12))) === 0;
+        };
+        const centerIsUpdate = isNearlyEqual(newProps.center.x, currentCenter.lng) &&
+                               isNearlyEqual(newProps.center.y, currentCenter.lat);
         if (!centerIsUpdate) {
             this.map.setView([newProps.center.y, newProps.center.x]);
         }
-        if (newProps.zoom !== this.props.zoom) {
+        if (newProps.zoom !== this.map.getZoom()) {
             this.map.setZoom(newProps.zoom);
         }
     },
