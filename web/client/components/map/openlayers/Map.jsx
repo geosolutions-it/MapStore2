@@ -19,13 +19,15 @@ var OpenlayersMap = React.createClass({
         onMapViewChanges: React.PropTypes.func,
         onClick: React.PropTypes.func,
         mapOptions: React.PropTypes.object,
-        mousePointer: React.PropTypes.string
+        mousePointer: React.PropTypes.string,
+        onMouseMove: React.PropTypes.func
     },
     getDefaultProps() {
         return {
           id: 'map',
           onMapViewChanges: () => {},
           onClick: null,
+          onMouseMove: () => {},
           mapOptions: {},
           projection: 'EPSG:3857'
         };
@@ -83,6 +85,17 @@ var OpenlayersMap = React.createClass({
                     x: event.pixel[0],
                     y: event.pixel[1]
                 });
+            }
+        });
+        map.on('pointermove', (event) => {
+            if (!event.dragging && event.coordinate) {
+                let pos = event.coordinate.slice();
+                let coords = this.normalizeCenter(pos);
+                this.props.onMouseMove({
+                    position: {
+                        lat: coords[1],
+                        lng: coords[0]
+                }});
             }
         });
 

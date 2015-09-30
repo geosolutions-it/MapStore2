@@ -18,13 +18,15 @@ var LeafletMap = React.createClass({
         onMapViewChanges: React.PropTypes.func,
         onClick: React.PropTypes.func,
         mapOptions: React.PropTypes.object,
-        mousePointer: React.PropTypes.string
+        mousePointer: React.PropTypes.string,
+        onMouseMove: React.PropTypes.func
     },
     getDefaultProps() {
         return {
           id: 'map',
           onMapViewChanges: () => {},
           onClick: null,
+          onMouseMove: () => {},
           mapOptions: {
               zoomAnimation: false,
               attributionControl: false
@@ -46,6 +48,9 @@ var LeafletMap = React.createClass({
                 this.props.onClick(event.containerPoint);
             }
         });
+        this.map.on('dragstart', () => { this.map.off('mousemove', this.mouseMoveEvent); });
+        this.map.on('dragend', () => { this.map.on('mousemove', this.mouseMoveEvent); });
+        this.map.on('mousemove', this.mouseMoveEvent);
 
         this.updateMapInfoState();
         this.setMousePointer(this.props.mousePointer);
@@ -104,6 +109,13 @@ var LeafletMap = React.createClass({
             const mapDiv = this.map.getContainer();
             mapDiv.style.cursor = pointer || 'auto';
         }
+    },
+    mouseMoveEvent(event) {
+        this.props.onMouseMove({
+            position: {
+                lat: event.latlng.lat,
+                lng: event.latlng.lng
+            }});
     }
 });
 
