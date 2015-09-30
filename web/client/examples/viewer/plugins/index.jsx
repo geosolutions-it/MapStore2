@@ -7,13 +7,15 @@ var BackgroundSwitcher = require("../../../components/BackgroundSwitcher/Backgro
 var LayerTree = require("../../../components/LayerTree/LayerTree");
 var MapToolBar = require("../components/MapToolBar");
 var GetFeatureInfo = require("../components/GetFeatureInfo");
+var MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
 
 var mapInfo = require('../../../reducers/mapInfo');
 var floatingPanel = require('../reducers/floatingPanel');
-
+var mousePosition = require('../../../reducers/mousePosition');
 
 var {getFeatureInfo, changeMapInfoState, purgeMapInfoResults} = require('../../../actions/mapInfo');
 var {activatePanel} = require('../actions/floatingPanel');
+var {changeMousePosition, changeMousePositionCrs, changeMousePositionState} = require('../../../actions/mousePosition');
 
 var {changeLayerProperties} = require('../../../actions/config');
 
@@ -52,6 +54,11 @@ module.exports = {
                     title={<div><Message msgId="background"/></div>}
                     buttonTooltip={<Message msgId="backgroundSwither.tooltip"/>}
                     propertiesChangeHandler={props.changeLayerProperties}/>
+                    <ToggleButton
+                    isButton={true}
+                    pressed={props.mousePosition.enabled}
+                    glyphicon="eye-open"
+                    onClick={props.changeMousePositionState}/>
             </MapToolBar>,
             <GetFeatureInfo
                 key="getFeatureInfo"
@@ -63,16 +70,25 @@ module.exports = {
                     purgeMapInfoResults: props.purgeMapInfoResults,
                     changeMousePointer: props.changeMousePointer
                 }}
-                clickedMapPoint={props.mapInfo.clickPoint}
-            />
+                clickedMapPoint={props.mapInfo.clickPoint} />,
+                <MousePosition
+                    key="mousePosition"
+                    mousePosition={props.mousePosition}
+                    actions={{
+                            changeMousePositionCrs: props.changeMousePositionCrs
+                    }}
+                    mapProjection={props.mapConfig.projection} />
         ];
     },
-    reducers: {mapInfo, floatingPanel},
+    reducers: {mapInfo, floatingPanel, mousePosition},
     actions: {
         getFeatureInfo,
         changeMapInfoState,
         purgeMapInfoResults,
         activatePanel,
-        changeLayerProperties
+        changeLayerProperties,
+        changeMousePositionState,
+        changeMousePositionCrs,
+        changeMousePosition
     }
 };

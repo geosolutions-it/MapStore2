@@ -21,7 +21,8 @@ var VMap = React.createClass({
     propTypes: {
         config: ConfigUtils.PropTypes.config,
         onMapViewChanges: React.PropTypes.func,
-        onClick: React.PropTypes.func
+        onClick: React.PropTypes.func,
+        onMouseMove: React.PropTypes.func
     },
     renderLayers(layers) {
         if (layers) {
@@ -41,7 +42,8 @@ var VMap = React.createClass({
                 projection={this.props.config.projection || 'EPSG:3857'}
                 onMapViewChanges={this.props.onMapViewChanges}
                 onClick={this.props.onClick}
-                mousePointer={this.props.config.mousePointer}>
+                mousePointer={this.props.config.mousePointer}
+                onMouseMove={this.props.onMouseMove}>
                 {this.renderLayers(this.props.config.layers)}
             </LMap>
         );

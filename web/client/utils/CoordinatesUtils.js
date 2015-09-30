@@ -41,6 +41,15 @@ var CoordinatesUtils = {
     },
     normalizeSRS: function(srs) {
         return srs === 'EPSG:900913' ? 'EPSG:3857' : srs;
+    },
+    getAvailableCRS: function() {
+        let crsList = {};
+        for (let a in Proj4js.defs) {
+            if (Proj4js.defs.hasOwnProperty(a)) {
+                crsList[a] = {label: a};
+            }
+        }
+        return crsList;
     }
 };
 

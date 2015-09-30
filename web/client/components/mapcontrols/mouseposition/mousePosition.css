@@ -1,0 +1,29 @@
+ #mapstore-mouseposition {
+    z-index: 10;
+    top: -10px;
+    right: 45%;
+    position: absolute;
+    margin: 8px;
+}
+
+#mapstore-mouseposition .label {
+    display: inline-block;
+    max-width: 280px;
+    min-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+
+}
+#mapstore-mouseposition .label-info {
+    background-color:rgba(91,192,222,.5);
+}
+#mapstore-crsselector {
+    z-index: 10;
+    top: 0px;
+    right: 90px;
+    position: absolute;
+    margin: 8px;
+    max-width: 200px;
+}
