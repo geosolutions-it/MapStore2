@@ -29,15 +29,16 @@ Layers.registerType('google', {
                'TERRAIN': google.maps.MapTypeId.TERRAIN
            };
         }
-
-        gmap = new google.maps.Map(document.getElementById(mapId + 'gmaps'), {
-          disableDefaultUI: true,
-          keyboardShortcuts: false,
-          draggable: false,
-          disableDoubleClickZoom: true,
-          scrollwheel: false,
-          streetViewControl: false
-        });
+        if (!gmap) {
+            gmap = new google.maps.Map(document.getElementById(mapId + 'gmaps'), {
+              disableDefaultUI: true,
+              keyboardShortcuts: false,
+              draggable: false,
+              disableDoubleClickZoom: true,
+              scrollwheel: false,
+              streetViewControl: false
+            });
+        }
         gmap.setMapTypeId(layersMap[options.name]);
         let view = map.getView();
         let setCenter = function() {
