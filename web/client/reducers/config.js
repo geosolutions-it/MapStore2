@@ -48,28 +48,28 @@ function mapConfig(state = null, action) {
                 mousePointer: action.pointer
             });
         case LAYER_LOADING: {
-            let loadingLayers = assign((state && state.loadingLayers) || {});
+            let loadingLayers = assign({}, (state && state.loadingLayers) || {});
             loadingLayers[action.layerId] = true;
             return assign({}, state, {
                 loadingLayers: loadingLayers
             });
         }
         case LAYER_LOAD: {
-            let loadingLayers = assign((state && state.loadingLayers) || {});
+            let loadingLayers = assign({}, (state && state.loadingLayers) || {});
             loadingLayers[action.layerId] = false;
             return assign({}, state, {
                 loadingLayers: loadingLayers
             });
         }
         case SHOW_SPINNER: {
-            let spinnersInfo = assign((state && state.spinnersInfo) || {});
+            let spinnersInfo = assign({}, (state && state.spinnersInfo) || {});
             spinnersInfo[action.spinnerId] = true;
             return assign({}, state, {
                 spinnersInfo: spinnersInfo
             });
         }
         case HIDE_SPINNER: {
-            let spinnersInfo = assign((state && state.spinnersInfo) || {});
+            let spinnersInfo = assign({}, (state && state.spinnersInfo) || {});
             spinnersInfo[action.spinnerId] = false;
             return assign({}, state, {
                 spinnersInfo: spinnersInfo
