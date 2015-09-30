@@ -20,7 +20,9 @@ var OpenlayersMap = React.createClass({
         onClick: React.PropTypes.func,
         mapOptions: React.PropTypes.object,
         mousePointer: React.PropTypes.string,
-        onMouseMove: React.PropTypes.func
+        onMouseMove: React.PropTypes.func,
+        onLayerLoading: React.PropTypes.func,
+        onLayerLoad: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -29,7 +31,9 @@ var OpenlayersMap = React.createClass({
           onClick: null,
           onMouseMove: () => {},
           mapOptions: {},
-          projection: 'EPSG:3857'
+          projection: 'EPSG:3857',
+          onLayerLoading: () => {},
+          onLayerLoad: () => {}
         };
     },
     getInitialState() {
@@ -97,6 +101,14 @@ var OpenlayersMap = React.createClass({
                         lng: coords[0]
                 }});
             }
+        });
+
+        map.on('precompose', () => {
+            map.getLayers().forEach((element, index) => { this.props.onLayerLoading(index); });
+        });
+
+        map.on('postcompose', () => {
+            map.getLayers().forEach((element, index) => { this.props.onLayerLoad(index); });
         });
 
         this.map = map;
