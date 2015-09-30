@@ -2,7 +2,7 @@
     z-index: 10;
     top: -10px;
     right: 45%;
-    position: relative;
+    position: absolute;
     margin: 8px;
 }
 
