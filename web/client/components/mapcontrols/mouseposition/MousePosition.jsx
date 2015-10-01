@@ -66,7 +66,14 @@ let MousePosition = React.createClass({
                 lngS = (lngM % 1) * 60;
             }
         }
-        return {lat, latM, latS, lng, lngM, lngS};
+        return {
+            lat,
+            latM: Math.abs(latM),
+            latS: Math.abs(latS),
+            lng,
+            lngM: Math.abs(lngM),
+            lngS: Math.abs(lngS)
+        };
     },
     getTemplateComponent() {
         return (this.getUnits(this.props.mousePosition.crs) === "degrees") ? this.props.degreesTemplate : this.props.projectedTemplate;
