@@ -94,11 +94,17 @@ var OpenlayersMap = React.createClass({
         map.on('pointermove', (event) => {
             if (!event.dragging && event.coordinate) {
                 let pos = event.coordinate.slice();
-                let coords = this.normalizeCenter(pos);
+                let coords = ol.proj.toLonLat(pos, this.props.projection);
+                let tLng = (( coords[0] / 360) % 1) * 360;
+                if (tLng < -180) {
+                    tLng = tLng + 360;
+                } else if (tLng > 180) {
+                    tLng = tLng - 360;
+                }
                 this.props.onMouseMove({
                     position: {
                         lat: coords[1],
-                        lng: coords[0]
+                        lng: tLng
                 }});
             }
         });
