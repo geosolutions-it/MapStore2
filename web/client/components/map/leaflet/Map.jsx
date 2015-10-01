@@ -114,11 +114,9 @@ var LeafletMap = React.createClass({
         }
     },
     mouseMoveEvent(event) {
+        let pos = event.latlng.wrap();
         this.props.onMouseMove({
-            position: {
-                lat: event.latlng.lat,
-                lng: event.latlng.lng
-            }});
+            position: pos});
     }
 });
 

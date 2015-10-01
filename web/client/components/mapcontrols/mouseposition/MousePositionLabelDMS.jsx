@@ -21,17 +21,18 @@ var MousePositionLabelDMS = React.createClass({
         lngS: React.PropTypes.number
     },
     render() {
-        let latFormat = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 2, minimumFractionDigits: 2};
-        let lngDFormat = {style: "decimal", minimumIntegerDigits: 3, maximumFractionDigits: 2, minimumFractionDigits: 2};
+        let integerFormat = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 0};
+        let decimalFormat = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 2, minimumFractionDigits: 2};
+        let lngDFormat = {style: "decimal", minimumIntegerDigits: 3, maximumFractionDigits: 0};
         return (
                 <h5>
                 <Label bsSize="lg" bsStyle="info">
-                    <span>Lat: </span><FormattedNumber key="latD" {...latFormat} value={this.props.lat} />
-                    <span>° </span><FormattedNumber key="latM" {...latFormat} value={this.props.latM} />
-                    <span>' </span><FormattedNumber key="latS" {...latFormat} value={this.props.latS} />
+                    <span>Lat: </span><FormattedNumber key="latD" {...integerFormat} value={this.props.lat} />
+                    <span>° </span><FormattedNumber key="latM" {...integerFormat} value={this.props.latM} />
+                    <span>' </span><FormattedNumber key="latS" {...decimalFormat} value={this.props.latS} />
                     <span>'' Lng: </span><FormattedNumber key="lngD" {...lngDFormat} value={this.props.lng} />
-                    <span>° </span><FormattedNumber key="lngM" {...latFormat} value={this.props.lngM} />
-                    <span>' </span><FormattedNumber key="lngS" {...latFormat} value={this.props.lngS} /><span>''</span>
+                    <span>° </span><FormattedNumber key="lngM" {...integerFormat} value={this.props.lngM} />
+                    <span>' </span><FormattedNumber key="lngS" {...decimalFormat} value={this.props.lngS} /><span>''</span>
                 </Label>
                 </h5>);
     }
