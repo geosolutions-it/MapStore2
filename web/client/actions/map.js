@@ -40,10 +40,11 @@ function changeMousePointer(pointerType) {
     };
 }
 
-function changeZoomLevel(zoomLvl) {
+function changeZoomLevel(zoomLvl, mapStateSource) {
     return {
         type: CHANGE_ZOOM_LVL,
-        zoom: zoomLvl
+        zoom: zoomLvl,
+        mapStateSource: mapStateSource
     };
 }
 

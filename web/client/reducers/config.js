@@ -50,7 +50,8 @@ function mapConfig(state = null, action) {
             });
         case CHANGE_ZOOM_LVL:
             return assign({}, state, {
-                zoom: action.zoom
+                zoom: action.zoom,
+                mapStateSource: action.mapStateSource
             });
         case LAYER_LOADING: {
             let loadingLayers = assign({}, (state && state.loadingLayers) || {});
