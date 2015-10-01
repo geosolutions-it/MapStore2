@@ -114,7 +114,7 @@ module.exports = (actions) => {
             mapConfig: state.mapConfig,
             messages: state.locale ? state.locale.messages : null,
             locale: state.locale ? state.locale.current : null,
-            mapInfo: state.mapInfo ? state.mapInfo : {enabled: false, responses: [], requests: []},
+            mapInfo: state.mapInfo ? state.mapInfo : {enabled: false, responses: [], requests: {length: 0}},
             floatingPanel: state.floatingPanel ? state.floatingPanel : {activeKey: ""},
             localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined,
             mousePosition: state.mousePosition ? state.mousePosition : {enabled: false, crs: null, position: null}

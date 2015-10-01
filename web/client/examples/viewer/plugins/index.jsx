@@ -67,6 +67,7 @@ module.exports = {
                 key="getFeatureInfo"
                 enabled={props.mapInfo.enabled}
                 htmlResponses={props.mapInfo.responses}
+                htmlRequests={props.mapInfo.requests}
                 mapConfig={props.mapConfig}
                 actions={{
                     getFeatureInfo: props.getFeatureInfo,
