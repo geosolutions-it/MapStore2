@@ -107,7 +107,7 @@ describe('OpenlayersMap', () => {
 
         olMap.on('moveend', () => {
             expect(spy.calls.length).toEqual(1);
-            expect(spy.calls[0].arguments.length).toEqual(4);
+            expect(spy.calls[0].arguments.length).toEqual(5);
             expect(normalizeFloat(spy.calls[0].arguments[0].y, 1)).toBe(43.9);
             expect(normalizeFloat(spy.calls[0].arguments[0].x, 1)).toBe(10.3);
             expect(spy.calls[0].arguments[1]).toBe(12);
@@ -138,7 +138,7 @@ describe('OpenlayersMap', () => {
 
         olMap.on('moveend', () => {
             expect(spy.calls.length).toEqual(1);
-            expect(spy.calls[0].arguments.length).toEqual(4);
+            expect(spy.calls[0].arguments.length).toEqual(5);
             expect(normalizeFloat(spy.calls[0].arguments[0].y, 1)).toBe(44);
             expect(normalizeFloat(spy.calls[0].arguments[0].x, 1)).toBe(10);
             expect(spy.calls[0].arguments[1]).toBe(11);

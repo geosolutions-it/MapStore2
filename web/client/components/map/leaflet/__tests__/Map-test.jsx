@@ -102,7 +102,7 @@ describe('LeafletMap', () => {
 
         leafletMap.on('moveend', () => {
             expect(spy.calls.length).toEqual(expectedCalls);
-            expect(spy.calls[0].arguments.length).toEqual(4);
+            expect(spy.calls[0].arguments.length).toEqual(5);
 
             expect(spy.calls[0].arguments[0].y).toEqual(43.9);
             expect(spy.calls[0].arguments[0].x).toEqual(10.3);

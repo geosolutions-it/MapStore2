@@ -41,6 +41,7 @@ var VMap = React.createClass({
             <LMap id="map"
                 center={this.props.config.center}
                 zoom={this.props.config.zoom}
+                mapStateSource={this.props.config.mapStateSource}
                 projection={this.props.config.projection || 'EPSG:3857'}
                 onMapViewChanges={this.props.onMapViewChanges}
                 onClick={this.props.onClick}
