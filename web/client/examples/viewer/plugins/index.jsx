@@ -8,6 +8,7 @@ var LayerTree = require("../../../components/LayerTree/LayerTree");
 var MapToolBar = require("../components/MapToolBar");
 var GetFeatureInfo = require("../components/GetFeatureInfo");
 var MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
+var ScaleBox = require("../../../components/ScaleBox/ScaleBox");
 var GlobalSpinner = require('../../../components/globalspinner/GlobalSpinner');
 
 var mapInfo = require('../../../reducers/mapInfo');
@@ -19,6 +20,7 @@ var {activatePanel} = require('../actions/floatingPanel');
 var {changeMousePosition, changeMousePositionCrs, changeMousePositionState} = require('../../../actions/mousePosition');
 
 var {changeLayerProperties} = require('../../../actions/config');
+var {changeZoomLevel} = require('../../../actions/map');
 
 var React = require('react');
 
@@ -38,8 +40,7 @@ module.exports = {
                     isButton={true}
                     pressed={props.mapInfo.enabled}
                     glyphicon="info-sign"
-                    onClick={props.changeMapInfoState}
-                />
+                    onClick={props.changeMapInfoState}/>
                 <LayerTree
                     key="layerSwitcher"
                     isPanel={true}
@@ -54,7 +55,7 @@ module.exports = {
                     title={<div><Message msgId="background"/></div>}
                     buttonTooltip={<Message msgId="backgroundSwither.tooltip"/>}
                     propertiesChangeHandler={props.changeLayerProperties}/>
-                    <ToggleButton
+                <ToggleButton
                     isButton={true}
                     pressed={props.mousePosition.enabled}
                     glyphicon="eye-open"
@@ -71,15 +72,21 @@ module.exports = {
                     changeMousePointer: props.changeMousePointer
                 }}
                 clickedMapPoint={props.mapInfo.clickPoint} />,
-                <MousePosition
-                    key="mousePosition"
-                    mousePosition={props.mousePosition}
-                    actions={{
-                            changeMousePositionCrs: props.changeMousePositionCrs
-                    }}
-                    mapProjection={props.mapConfig.projection} />,
-                <GlobalSpinner loadingLayers={props.mapConfig.loadingLayers}
-            showSpinner={props.showSpinner} hideSpinner={props.hideSpinner} spinnersInfo={props.mapConfig.spinnersInfo}/>
+            <MousePosition
+                key="mousePosition"
+                mousePosition={props.mousePosition}
+                actions={{
+                    changeMousePositionCrs: props.changeMousePositionCrs
+                }}
+                mapProjection={props.mapConfig.projection} />,
+            <ScaleBox
+                onChange={props.changeZoomLevel}
+                currentZoomLvl={props.mapConfig.zoom} />,
+            <GlobalSpinner
+                loadingLayers={props.mapConfig.loadingLayers}
+                showSpinner={props.showSpinner}
+                hideSpinner={props.hideSpinner}
+                spinnersInfo={props.mapConfig.spinnersInfo} />
         ];
     },
     reducers: {mapInfo, floatingPanel, mousePosition},
@@ -91,6 +98,7 @@ module.exports = {
         changeLayerProperties,
         changeMousePositionState,
         changeMousePositionCrs,
-        changeMousePosition
+        changeMousePosition,
+        changeZoomLevel
     }
 };

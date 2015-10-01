@@ -9,6 +9,7 @@
 const CHANGE_MAP_VIEW = 'CHANGE_MAP_VIEW';
 const CLICK_ON_MAP = 'CLICK_ON_MAP';
 const CHANGE_MOUSE_POINTER = 'CHANGE_MOUSE_POINTER';
+const CHANGE_ZOOM_LVL = 'CHANGE_ZOOM_LVL';
 const LAYER_LOADING = 'LAYER_LOADING';
 const LAYER_LOAD = 'LAYER_LOAD';
 const SHOW_SPINNER = 'SHOW_SPINNER';
@@ -36,6 +37,13 @@ function changeMousePointer(pointerType) {
     return {
         type: CHANGE_MOUSE_POINTER,
         pointer: pointerType
+    };
+}
+
+function changeZoomLevel(zoomLvl) {
+    return {
+        type: CHANGE_ZOOM_LVL,
+        zoom: zoomLvl
     };
 }
 
@@ -71,6 +79,7 @@ module.exports = {
     CHANGE_MAP_VIEW,
     CLICK_ON_MAP,
     CHANGE_MOUSE_POINTER,
+    CHANGE_ZOOM_LVL,
     LAYER_LOADING,
     LAYER_LOAD,
     SHOW_SPINNER,
@@ -78,6 +87,7 @@ module.exports = {
     changeMapView,
     clickOnMap,
     changeMousePointer,
+    changeZoomLevel,
     layerLoading,
     layerLoad,
     showSpinner,

@@ -104,6 +104,20 @@ describe('Test the mapConfig reducer', () => {
         expect(state.mousePointer).toBe(action.pointer);
     });
 
+    it('sets a new zoom level', () => {
+        const action = {
+            type: 'CHANGE_ZOOM_LVL',
+            zoom: 9
+        };
+
+        var state = mapConfig({}, action);
+        expect(state.zoom).toBe(action.zoom);
+
+        state = mapConfig({prop: 'prop'}, action);
+        expect(state.prop).toBe('prop');
+        expect(state.zoom).toBe(action.zoom);
+    });
+
     it('a layer is loading, loadingLayers is updated', () => {
         const action = {
             type: 'LAYER_LOADING',

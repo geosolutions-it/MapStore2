@@ -13,6 +13,7 @@ const mapType = urlQuery.type || 'leaflet';
 
 var LMap = require('../../../components/map/' + mapType + '/Map');
 var LLayer = require('../../../components/map/' + mapType + '/Layer');
+var ScaleBar = require('../../../components/map/' + mapType + '/ScaleBar');
 
 var assign = require('object-assign');
 var ConfigUtils = require('../../../utils/ConfigUtils');
@@ -50,6 +51,7 @@ var VMap = React.createClass({
                 onLayerLoading={this.props.onLayerLoading}
                 onLayerLoad={this.props.onLayerLoad}>
                 {this.renderLayers(this.props.config.layers)}
+                <ScaleBar/>
             </LMap>
         );
     }
