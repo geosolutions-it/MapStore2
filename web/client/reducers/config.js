@@ -25,7 +25,8 @@ function mapConfig(state = null, action) {
                 center: action.center,
                 zoom: action.zoom,
                 bbox: action.bbox,
-                size: action.size
+                size: action.size,
+                mapStateSource: action.mapStateSource
             });
         case CHANGE_LAYER_PROPERTIES: {
             let layers = state.layers.slice(0);

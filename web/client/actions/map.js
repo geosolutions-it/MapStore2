@@ -14,13 +14,14 @@ const LAYER_LOAD = 'LAYER_LOAD';
 const SHOW_SPINNER = 'SHOW_SPINNER';
 const HIDE_SPINNER = 'HIDE_SPINNER';
 
-function changeMapView(center, zoom, bbox, size) {
+function changeMapView(center, zoom, bbox, size, mapStateSource) {
     return {
         type: CHANGE_MAP_VIEW,
         center: center,
         zoom: zoom,
         bbox: bbox,
-        size: size
+        size: size,
+        mapStateSource: mapStateSource
     };
 }
 

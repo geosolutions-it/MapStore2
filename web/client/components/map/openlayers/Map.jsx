@@ -15,6 +15,7 @@ var OpenlayersMap = React.createClass({
         id: React.PropTypes.string,
         center: ConfigUtils.PropTypes.center,
         zoom: React.PropTypes.number.isRequired,
+        mapStateSource: ConfigUtils.PropTypes.mapStateSource,
         projection: React.PropTypes.string,
         onMapViewChanges: React.PropTypes.func,
         onClick: React.PropTypes.func,
@@ -81,7 +82,7 @@ var OpenlayersMap = React.createClass({
                 },
                 crs: view.getProjection().getCode(),
                 rotation: view.getRotation()
-            }, size);
+            }, size, this.props.id);
         });
         map.on('click', (event) => {
             if (this.props.onClick) {
@@ -117,21 +118,12 @@ var OpenlayersMap = React.createClass({
         this.forceUpdate();
     },
     componentWillReceiveProps(newProps) {
-        var view = this.map.getView();
         if (newProps.mousePointer !== this.props.mousePointer) {
             this.setMousePointer(newProps.mousePointer);
         }
 
-        const currentCenter = this.props.center;
-        const centerIsUpdated = newProps.center.y === currentCenter.y &&
-                               newProps.center.x === currentCenter.x;
-
-        if (!centerIsUpdated) {
-            let center = ol.proj.transform([newProps.center.x, newProps.center.y], 'EPSG:4326', this.props.projection);
-            view.setCenter(center);
-        }
-        if (newProps.zoom !== this.props.zoom) {
-            view.setZoom(newProps.zoom);
+        if (this.props.id !== newProps.mapStateSource) {
+            this._updateMapPositionFromNewProps(newProps);
         }
     },
     componentWillUnmount() {
@@ -148,6 +140,20 @@ var OpenlayersMap = React.createClass({
                 {children}
             </div>
         );
+    },
+    _updateMapPositionFromNewProps(newProps) {
+        var view = this.map.getView();
+        const currentCenter = this.props.center;
+        const centerIsUpdated = newProps.center.y === currentCenter.y &&
+                               newProps.center.x === currentCenter.x;
+
+        if (!centerIsUpdated) {
+            let center = ol.proj.transform([newProps.center.x, newProps.center.y], 'EPSG:4326', this.props.projection);
+            view.setCenter(center);
+        }
+        if (newProps.zoom !== this.props.zoom) {
+            view.setZoom(newProps.zoom);
+        }
     },
     normalizeCenter: function(center) {
         return ol.proj.transform(center, this.props.projection, 'EPSG:4326');
