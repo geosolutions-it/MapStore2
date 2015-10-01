@@ -10,7 +10,11 @@ var GetFeatureInfo = require("../components/GetFeatureInfo");
 var MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
 var ScaleBox = require("../../../components/ScaleBox/ScaleBox");
 var GlobalSpinner = require('../../../components/globalspinner/GlobalSpinner');
+<<<<<<< HEAD
 var ZoomToMaxExtentButton = require('../../../components/buttons/ToggleButton');
+=======
+var ZoomToMaxExtentButton = require('../../../components/buttons/ZoomToMaxExtentButton');
+>>>>>>> Fix broken UI integration
 
 var mapInfo = require('../../../reducers/mapInfo');
 var floatingPanel = require('../reducers/floatingPanel');
