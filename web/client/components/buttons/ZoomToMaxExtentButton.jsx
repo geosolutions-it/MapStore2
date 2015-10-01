@@ -29,8 +29,7 @@ var ZoomToMaxExtentButton = React.createClass({
         id: React.PropTypes.string,
         style: React.PropTypes.object,
         glyphicon: React.PropTypes.string,
-        text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        hiddenText: React.PropTypes.bool,
+        text: React.PropTypes.string,
         btnSize: React.PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
         // redux store slice with map configuration (bound through connect to store at the end of the file)
         mapConfig: React.PropTypes.object,
@@ -42,7 +41,7 @@ var ZoomToMaxExtentButton = React.createClass({
             id: "mapstore-zoomtomaxextent",
             style: undefined,
             glyphicon: "resize-full",
-            text: "",
+            text: undefined,
             hiddenText: true,
             btnSize: 'xsmall'
         };
@@ -54,9 +53,9 @@ var ZoomToMaxExtentButton = React.createClass({
                 bsStyle="default"
                 bsSize={this.props.btnSize}
                 onClick={() => this.zoomToMaxExtent()}>
-                {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : ""}
-                {!this.props.hiddenText && this.props.glyphicon ? "\u00A0" : ""}
-                {!(this.props.hiddenText && this.props.glyphicon) ? this.props.text : ""}
+                {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
+                {this.props.glyphicon && this.props.text ? "\u00A0" : null}
+                {this.props.text}
             </Button>
         );
     },
