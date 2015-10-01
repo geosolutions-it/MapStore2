@@ -10,6 +10,7 @@ var GetFeatureInfo = require("../components/GetFeatureInfo");
 var MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
 var ScaleBox = require("../../../components/ScaleBox/ScaleBox");
 var GlobalSpinner = require('../../../components/globalspinner/GlobalSpinner');
+var ZoomToMaxExtentButton = require('../../../components/buttons/ToggleButton');
 
 var mapInfo = require('../../../reducers/mapInfo');
 var floatingPanel = require('../reducers/floatingPanel');
@@ -84,7 +85,10 @@ module.exports = {
             <ScaleBox
                 onChange={props.changeZoomLevel}
                 currentZoomLvl={props.mapConfig.zoom} />,
-            <GlobalSpinner loadingLayers={props.mapConfig.loadingLayers}/>
+            <GlobalSpinner loadingLayers={props.mapConfig.loadingLayers}/>,
+            <ZoomToMaxExtentButton
+                key="zoomToMaxExtent"
+            />
         ];
     },
     reducers: {mapInfo, floatingPanel, mousePosition},
