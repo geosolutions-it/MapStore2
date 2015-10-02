@@ -127,11 +127,34 @@ function getZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
     return Math.max(0, i - 1);
 }
 
+/**
+ * Calculates the center for for the given extent.
+ *
+ * @param  {Array} extent [maxx, maxy, minx, miny]
+ * @param  {String} projection projection of the extent
+ * @return {object} center object
+ */
+function getCenterForExtent(extent, projection) {
+
+    var wExtent = extent[0] - extent[2];
+    var hExtent = extent[1] - extent[3];
+
+    var w = (wExtent) / 2;
+    var h = (hExtent) / 2;
+
+    return {
+        x: extent[2] + w,
+        y: extent[3] + h,
+        crs: projection
+    };
+}
+
 module.exports = {
     dpi2dpm,
     getSphericalMercatorScales,
     getSphericalMercatorScale,
     getGoogleMercatorScales,
     getGoogleMercatorScale,
-    getZoomForExtent
+    getZoomForExtent,
+    getCenterForExtent
 };
