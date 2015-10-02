@@ -85,10 +85,53 @@ function getGoogleMercatorScales(minZoom, maxZoom, dpi) {
     );
 }
 
+/**
+ * Calculates the best fitting zoom level for the given extent.
+ *
+ * @param extent {Array} extent to calculate zoom for.
+ * @param mapSize {Object} current size of the map.
+ * @param minZoom {number} min zoom level.
+ * @param maxZoom {number} max zoom level.
+ * @param dpi {number} screen resolution in dot per inch.
+ * @return {Number} the zoom level fitting th extent
+ */
+function getZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
+
+    var dpm = dpi2dpm((dpi || DEFAULT_SCREEN_DPI));
+
+    var wExtent = extent[0] - extent[2];
+    var hExtent = extent[1] - extent[3];
+
+    var xResolution = Math.abs(wExtent / mapSize.width);
+    var yResolution = Math.abs(hExtent / mapSize.height);
+    var extentResolution = Math.max(xResolution, yResolution);
+
+    var scales = getGoogleMercatorScales(
+        minZoom, maxZoom, (dpi || DEFAULT_SCREEN_DPI));
+    var diff;
+    var minDiff = Number.POSITIVE_INFINITY;
+    var i;
+    var len = scales.length;
+    var res;
+    // detect best fitting zoom level
+    for (i = 0; i < len; i++) {
+
+        res = scales[i] / dpm;
+
+        diff = Math.abs(res - extentResolution);
+        if (diff > minDiff) {
+            break;
+        }
+        minDiff = diff;
+    }
+    return Math.max(0, i - 1);
+}
+
 module.exports = {
     dpi2dpm,
     getSphericalMercatorScales,
     getSphericalMercatorScale,
     getGoogleMercatorScales,
-    getGoogleMercatorScale
+    getGoogleMercatorScale,
+    getZoomForExtent
 };

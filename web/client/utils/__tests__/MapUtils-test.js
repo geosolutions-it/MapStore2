@@ -12,7 +12,8 @@ var {
     getSphericalMercatorScales,
     getSphericalMercatorScale,
     getGoogleMercatorScales,
-    getGoogleMercatorScale
+    getGoogleMercatorScale,
+    getZoomForExtent
 } = require('../MapUtils');
 
 describe('Test the MapUtils', () => {
@@ -35,5 +36,10 @@ describe('Test the MapUtils', () => {
     });
     it('getGoogleMercatorScales', () => {
         expect(getGoogleMercatorScales(1, 1, 1).length).toBe(1);
+    });
+    it('getZoomForExtent', () => {
+        var extent = [1291887.4915002766, 5606954.787684047, 1880758.3574092742, 6084533.340409827];
+        var mapSize = {height: 781, width: 963};
+        expect(getZoomForExtent(extent, mapSize, 0, 21, 96)).toBe(8);
     });
 });
