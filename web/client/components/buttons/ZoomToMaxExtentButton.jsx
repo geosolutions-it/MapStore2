@@ -6,9 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { connect } from 'react-redux';
-import { changeMapView } from '../../actions/map';
-
 var React = require('react');
 var BootstrapReact = require('react-bootstrap');
 var Button = BootstrapReact.Button;
@@ -31,10 +28,10 @@ var ZoomToMaxExtentButton = React.createClass({
         glyphicon: React.PropTypes.string,
         text: React.PropTypes.string,
         btnSize: React.PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
-        // redux store slice with map configuration (bound through connect to store at the end of the file)
         mapConfig: React.PropTypes.object,
-        // redux store dispatch func
-        dispatch: React.PropTypes.func
+        actions: React.PropTypes.shape({
+            changeMapView: React.PropTypes.func
+        })
     },
     getDefaultProps() {
         return {
@@ -42,7 +39,6 @@ var ZoomToMaxExtentButton = React.createClass({
             style: undefined,
             glyphicon: "resize-full",
             text: undefined,
-            hiddenText: true,
             btnSize: 'xsmall'
         };
     },
@@ -77,24 +73,18 @@ var ZoomToMaxExtentButton = React.createClass({
                 crs: mapConfig.projection,
                 rotation: 0
             };
-            // adapt the map view by dispatching to the corresponding action
-            this.props.dispatch(changeMapView(this.props.mapConfig.center, -1,
-                bbox, this.props.mapConfig.size));
+            // adapt the map view by calling the corresponding action
+            this.props.actions.changeMapView(this.props.mapConfig.center, -1,
+                bbox, this.props.mapConfig.size);
         } else {
             // zoom to zoom level 1 as fallback if no max extent is defined
 
-            // adapt the map view by dispatching to the corresponding action
-            this.props.dispatch(changeMapView(this.props.mapConfig.center, 1,
-                this.props.mapConfig.maxExtent, this.props.mapConfig.size));
+            // adapt the map view by calling the corresponding action
+            this.props.actions.changeMapView(this.props.mapConfig.center, 1,
+                this.props.mapConfig.maxExtent, this.props.mapConfig.size);
         }
 
     }
 });
 
-// In addition to the state, 'connect' puts 'dispatch' in our props.
-// connect Redux store slice with map configuration
-module.exports = connect((state) => {
-    return {
-        mapConfig: state.mapConfig
-    };
-})(ZoomToMaxExtentButton);
+module.exports = ZoomToMaxExtentButton;
