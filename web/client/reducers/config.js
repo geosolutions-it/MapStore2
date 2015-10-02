@@ -7,7 +7,7 @@
  */
 
 var {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR, CHANGE_LAYER_PROPERTIES} = require('../actions/config');
-var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER, CHANGE_ZOOM_LVL, LAYER_LOADING, LAYER_LOAD, SHOW_SPINNER, HIDE_SPINNER} = require('../actions/map');
+var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER, CHANGE_ZOOM_LVL, LAYER_LOADING, LAYER_LOAD} = require('../actions/map');
 
 var ConfigUtils = require('../utils/ConfigUtils');
 var assign = require('object-assign');
@@ -54,31 +54,19 @@ function mapConfig(state = null, action) {
                 mapStateSource: action.mapStateSource
             });
         case LAYER_LOADING: {
-            let loadingLayers = assign({}, (state && state.loadingLayers) || {});
-            loadingLayers[action.layerId] = true;
+            let loadingLayers = (state && state.loadingLayers && state.loadingLayers.splice(0)) || [];
+            loadingLayers.push(action.layerId);
             return assign({}, state, {
                 loadingLayers: loadingLayers
             });
         }
         case LAYER_LOAD: {
-            let loadingLayers = assign({}, (state && state.loadingLayers) || {});
-            loadingLayers[action.layerId] = false;
+            let loadingLayers = (state && state.loadingLayers && state.loadingLayers.splice(0)) || [];
+            loadingLayers = loadingLayers.filter((el) => {
+                return el !== action.layerId;
+            });
             return assign({}, state, {
                 loadingLayers: loadingLayers
-            });
-        }
-        case SHOW_SPINNER: {
-            let spinnersInfo = assign({}, (state && state.spinnersInfo) || {});
-            spinnersInfo[action.spinnerId] = true;
-            return assign({}, state, {
-                spinnersInfo: spinnersInfo
-            });
-        }
-        case HIDE_SPINNER: {
-            let spinnersInfo = assign({}, (state && state.spinnersInfo) || {});
-            spinnersInfo[action.spinnerId] = false;
-            return assign({}, state, {
-                spinnersInfo: spinnersInfo
             });
         }
         default:

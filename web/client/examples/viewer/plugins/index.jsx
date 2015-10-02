@@ -22,6 +22,8 @@ var {changeMousePosition, changeMousePositionCrs, changeMousePositionState} = re
 var {changeLayerProperties} = require('../../../actions/config');
 var {changeZoomLevel} = require('../../../actions/map');
 
+var {layerLoading, layerLoad} = require('../../../actions/map');
+
 var React = require('react');
 
 module.exports = {
@@ -82,11 +84,7 @@ module.exports = {
             <ScaleBox
                 onChange={props.changeZoomLevel}
                 currentZoomLvl={props.mapConfig.zoom} />,
-            <GlobalSpinner
-                loadingLayers={props.mapConfig.loadingLayers}
-                showSpinner={props.showSpinner}
-                hideSpinner={props.hideSpinner}
-                spinnersInfo={props.mapConfig.spinnersInfo} />
+            <GlobalSpinner loadingLayers={props.mapConfig.loadingLayers}/>
         ];
     },
     reducers: {mapInfo, floatingPanel, mousePosition},
@@ -99,6 +97,8 @@ module.exports = {
         changeMousePositionState,
         changeMousePositionCrs,
         changeMousePosition,
-        changeZoomLevel
+        changeZoomLevel,
+        layerLoading,
+        layerLoad
     }
 };

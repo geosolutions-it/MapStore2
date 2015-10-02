@@ -15,8 +15,7 @@ var ConfigUtils = require('../../../utils/ConfigUtils');
 
 var {loadLocale} = require('../../../actions/locale');
 
-var {changeMapView, clickOnMap, changeMousePointer,
-    layerLoading, layerLoad, showSpinner, hideSpinner} = require('../../../actions/map');
+var {changeMapView, clickOnMap, changeMousePointer} = require('../../../actions/map');
 
 var VMap = require('../components/Map');
 var Localized = require('../../../components/I18N/Localized');
@@ -125,11 +124,7 @@ module.exports = (actions) => {
             loadLocale: loadLocale.bind(null, '../../translations'),
             changeMapView,
             clickOnMap,
-            changeMousePointer,
-            layerLoading,
-            layerLoad,
-            showSpinner,
-            hideSpinner
+            changeMousePointer
         }, actions), dispatch);
     })(Viewer);
 };
