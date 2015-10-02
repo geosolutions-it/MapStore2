@@ -4,7 +4,7 @@ var {Message} = require('../../../components/I18N/I18N');
 
 var ToggleButton = require('../../../components/buttons/ToggleButton');
 var BackgroundSwitcher = require("../../../components/BackgroundSwitcher/BackgroundSwitcher");
-var LayerTree = require("../../../components/LayerTree/LayerTree");
+var LayerTree = require('../components/LayerTree');
 var MapToolBar = require("../components/MapToolBar");
 var GetFeatureInfo = require("../components/GetFeatureInfo");
 var MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
