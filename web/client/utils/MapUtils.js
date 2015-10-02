@@ -88,7 +88,7 @@ function getGoogleMercatorScales(minZoom, maxZoom, dpi) {
 /**
  * Calculates the best fitting zoom level for the given extent.
  *
- * @param extent {Array} extent to calculate zoom for.
+ * @param extent {Array} [minx, miny, maxx, maxy]
  * @param mapSize {Object} current size of the map.
  * @param minZoom {number} min zoom level.
  * @param maxZoom {number} max zoom level.
@@ -99,8 +99,8 @@ function getZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
 
     var dpm = dpi2dpm((dpi || DEFAULT_SCREEN_DPI));
 
-    var wExtent = extent[0] - extent[2];
-    var hExtent = extent[1] - extent[3];
+    var wExtent = extent[2] - extent[0];
+    var hExtent = extent[3] - extent[1];
 
     var xResolution = Math.abs(wExtent / mapSize.width);
     var yResolution = Math.abs(hExtent / mapSize.height);
@@ -130,21 +130,21 @@ function getZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
 /**
  * Calculates the center for for the given extent.
  *
- * @param  {Array} extent [maxx, maxy, minx, miny]
+ * @param  {Array} extent [minx, miny, maxx, maxy]
  * @param  {String} projection projection of the extent
  * @return {object} center object
  */
 function getCenterForExtent(extent, projection) {
 
-    var wExtent = extent[0] - extent[2];
-    var hExtent = extent[1] - extent[3];
+    var wExtent = extent[2] - extent[0];
+    var hExtent = extent[3] - extent[1];
 
     var w = (wExtent) / 2;
     var h = (hExtent) / 2;
 
     return {
-        x: extent[2] + w,
-        y: extent[3] + h,
+        x: extent[0] + w,
+        y: extent[1] + h,
         crs: projection
     };
 }

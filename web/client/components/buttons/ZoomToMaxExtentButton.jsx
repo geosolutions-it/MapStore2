@@ -11,6 +11,9 @@ var BootstrapReact = require('react-bootstrap');
 var Button = BootstrapReact.Button;
 var Glyphicon = BootstrapReact.Glyphicon;
 
+const mapUtils = require('../../utils/MapUtils');
+const configUtils = require('../../utils/ConfigUtils');
+
 
 /**
  * A button to zoom to max. extent of the map or zoom level one.
@@ -58,31 +61,30 @@ var ZoomToMaxExtentButton = React.createClass({
     zoomToMaxExtent() {
         var mapConfig = this.props.mapConfig;
         var maxExtent = mapConfig.maxExtent;
-        var bbox;
+        var mapSize = this.props.mapConfig.size;
+        var newZoom = 1;
+        var newCenter = this.props.mapConfig.center;
+        var proj = "EPSG:900913";
 
         if (maxExtent &&
             Object.prototype.toString.call(maxExtent) === '[object Array]') {
-            // zoom map to the max. extent defined in the map's config
-            bbox = {
-                bounds: {
-                    minx: maxExtent[0],
-                    miny: maxExtent[1],
-                    maxx: maxExtent[2],
-                    maxy: maxExtent[3]
-                },
-                crs: mapConfig.projection,
-                rotation: 0
-            };
-            // adapt the map view by calling the corresponding action
-            this.props.actions.changeMapView(this.props.mapConfig.center, -1,
-                bbox, this.props.mapConfig.size);
-        } else {
-            // zoom to zoom level 1 as fallback if no max extent is defined
+            // zoom by the max. extent defined in the map's config
+            newZoom = mapUtils.getZoomForExtent(maxExtent, mapSize, 0, 21);
 
-            // adapt the map view by calling the corresponding action
-            this.props.actions.changeMapView(this.props.mapConfig.center, 1,
-                this.props.mapConfig.maxExtent, this.props.mapConfig.size);
+            // center by the max. extent defined in the map's config
+            newCenter = mapUtils.getCenterForExtent(maxExtent, proj);
+
+            // do not reproject for 0/0
+            if (newCenter.x !== 0 || newCenter.y !== 0) {
+                // reprojects the center object
+                newCenter = configUtils.getCenter(newCenter, proj);
+            }
+
         }
+
+        // adapt the map view by calling the corresponding action
+        this.props.actions.changeMapView(newCenter, newZoom,
+            this.props.mapConfig.bbox, this.props.mapConfig.size);
 
     }
 });
