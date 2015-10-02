@@ -54,14 +54,16 @@ function mapConfig(state = null, action) {
                 mapStateSource: action.mapStateSource
             });
         case LAYER_LOADING: {
-            let loadingLayers = (state && state.loadingLayers && state.loadingLayers.splice(0)) || [];
-            loadingLayers.push(action.layerId);
+            let loadingLayers = (state && state.loadingLayers && state.loadingLayers.slice(0)) || [];
+            if (loadingLayers.indexOf(action.layerId) === -1) {
+                loadingLayers.push(action.layerId);
+            }
             return assign({}, state, {
                 loadingLayers: loadingLayers
             });
         }
         case LAYER_LOAD: {
-            let loadingLayers = (state && state.loadingLayers && state.loadingLayers.splice(0)) || [];
+            let loadingLayers = (state && state.loadingLayers && state.loadingLayers.slice(0)) || [];
             loadingLayers = loadingLayers.filter((el) => {
                 return el !== action.layerId;
             });

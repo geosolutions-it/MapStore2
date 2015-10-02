@@ -24,7 +24,7 @@ describe('test the globalspinner component', () => {
     });
 
     it('creates the component with layers loading and spinner to show', () => {
-        const globalspinner = React.render(<GlobalSpinner id="globalspinner" loadingLayers={{layer1: true}}
+        const globalspinner = React.render(<GlobalSpinner id="globalspinner" loadingLayers={["layer1"]}
             spinnersInfo={{globalspinner: true}}/>, document.body);
         expect(globalspinner).toExist();
         const globalspinnerDiv = React.findDOMNode(globalspinner);
@@ -40,7 +40,7 @@ describe('test the globalspinner component', () => {
     });*/
 
     it('creates the component with layers load', () => {
-        const globalspinner = React.render(<GlobalSpinner loadingLayers={{layer1: false}}/>, document.body);
+        const globalspinner = React.render(<GlobalSpinner loadingLayers={[]}/>, document.body);
         expect(globalspinner).toExist();
         const globalspinnerDiv = React.findDOMNode(globalspinner);
         expect(globalspinnerDiv).toNotExist();

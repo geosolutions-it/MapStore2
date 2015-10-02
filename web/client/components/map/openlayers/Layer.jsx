@@ -17,6 +17,12 @@ const OpenlayersLayer = React.createClass({
         onLayerLoading: React.PropTypes.func,
         onLayerLoad: React.PropTypes.func
     },
+    getDefaultProps() {
+        return {
+            onLayerLoading: () => {},
+            onLayerLoad: () => {}
+        };
+    },
 
     componentDidMount() {
         this.createLayer(this.props.type, this.props.options);
