@@ -12,8 +12,6 @@ const CHANGE_MOUSE_POINTER = 'CHANGE_MOUSE_POINTER';
 const CHANGE_ZOOM_LVL = 'CHANGE_ZOOM_LVL';
 const LAYER_LOADING = 'LAYER_LOADING';
 const LAYER_LOAD = 'LAYER_LOAD';
-const SHOW_SPINNER = 'SHOW_SPINNER';
-const HIDE_SPINNER = 'HIDE_SPINNER';
 
 function changeMapView(center, zoom, bbox, size, mapStateSource) {
     return {
@@ -62,20 +60,6 @@ function layerLoad(layerId) {
     };
 }
 
-function showSpinner(spinnerId) {
-    return {
-        type: SHOW_SPINNER,
-        spinnerId: spinnerId
-    };
-}
-
-function hideSpinner(spinnerId) {
-    return {
-        type: HIDE_SPINNER,
-        spinnerId: spinnerId
-    };
-}
-
 module.exports = {
     CHANGE_MAP_VIEW,
     CLICK_ON_MAP,
@@ -83,14 +67,10 @@ module.exports = {
     CHANGE_ZOOM_LVL,
     LAYER_LOADING,
     LAYER_LOAD,
-    SHOW_SPINNER,
-    HIDE_SPINNER,
     changeMapView,
     clickOnMap,
     changeMousePointer,
     changeZoomLevel,
     layerLoading,
-    layerLoad,
-    showSpinner,
-    hideSpinner
+    layerLoad
 };

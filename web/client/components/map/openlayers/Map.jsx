@@ -114,7 +114,7 @@ var OpenlayersMap = React.createClass({
             map.getLayers().forEach((element, index) => { this.props.onLayerLoading(index); });
         });
 
-        map.on('postcompose', () => {
+        map.on('change', () => {
             map.getLayers().forEach((element, index) => { this.props.onLayerLoad(index); });
         });*/
 
@@ -138,7 +138,8 @@ var OpenlayersMap = React.createClass({
     render() {
         const map = this.map;
         const children = map ? React.Children.map(this.props.children, child => {
-            return child ? React.cloneElement(child, {map: map, mapId: this.props.id}) : null;
+            return child ? React.cloneElement(child, {map: map, mapId: this.props.id,
+                onLayerLoading: this.props.onLayerLoading, onLayerLoad: this.props.onLayerLoad}) : null;
         }) : null;
 
         return (

@@ -13,7 +13,15 @@ const OpenlayersLayer = React.createClass({
         map: React.PropTypes.object,
         mapId: React.PropTypes.string,
         type: React.PropTypes.string,
-        options: React.PropTypes.object
+        options: React.PropTypes.object,
+        onLayerLoading: React.PropTypes.func,
+        onLayerLoad: React.PropTypes.func
+    },
+    getDefaultProps() {
+        return {
+            onLayerLoading: () => {},
+            onLayerLoad: () => {}
+        };
     },
 
     componentDidMount() {
@@ -48,6 +56,15 @@ const OpenlayersLayer = React.createClass({
 
             if (this.layer) {
                 this.props.map.addLayer(this.layer);
+                this.layer.getSource().on('tileloadstart', () => {
+                    this.props.onLayerLoading(options.name);
+                });
+                this.layer.getSource().on('tileloadend', () => {
+                    this.props.onLayerLoad(options.name);
+                });
+                this.layer.getSource().on('tileloaderror', () => {
+                    this.props.onLayerLoad(options.name);
+                });
             }
         }
     }

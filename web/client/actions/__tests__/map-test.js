@@ -14,16 +14,12 @@ var {
     CHANGE_ZOOM_LVL,
     LAYER_LOADING,
     LAYER_LOAD,
-    SHOW_SPINNER,
-    HIDE_SPINNER,
     changeMapView,
     clickOnMap,
     changeMousePointer,
     changeZoomLevel,
     layerLoading,
-    layerLoad,
-    showSpinner,
-    hideSpinner
+    layerLoad
 } = require('../map');
 
 describe('Test correctness of the map actions', () => {
@@ -86,23 +82,5 @@ describe('Test correctness of the map actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(LAYER_LOAD);
         expect(retval.layerId).toBe(testVal);
-    });
-
-    it('show some spinner', () => {
-        const testVal = 'spinner1';
-        const retval = showSpinner(testVal);
-
-        expect(retval).toExist();
-        expect(retval.type).toBe(SHOW_SPINNER);
-        expect(retval.spinnerId).toBe(testVal);
-    });
-
-    it('hide some spinner', () => {
-        const testVal = 'spinner1';
-        const retval = hideSpinner(testVal);
-
-        expect(retval).toExist();
-        expect(retval.type).toBe(HIDE_SPINNER);
-        expect(retval.spinnerId).toBe(testVal);
     });
 });
