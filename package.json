@@ -53,6 +53,7 @@
     "keymirror": "~0.1.1",
     "leaflet": "^0.7.3",
     "leaflet-plugins": "https://github.com/Polyconseil/leaflet-plugins/tarball/master",
+    "node-uuid": "^1.4.3",
     "object-assign": "^3.0.0",
     "openlayers": "^3.8.2",
     "proj4": "~2.3.6",

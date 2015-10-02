@@ -8,6 +8,7 @@
 
 const assign = require('object-assign');
 const axios = require('axios');
+const uuid = require('node-uuid');
 
 const LOAD_FEATURE_INFO = 'LOAD_FEATURE_INFO';
 const ERROR_FEATURE_INFO = 'ERROR_FEATURE_INFO';
@@ -20,10 +21,11 @@ const PURGE_MAPINFO_RESULTS = 'PURGE_MAPINFO_RESULTS';
  * Private
  * @return a LOAD_FEATURE_INFO action with the response data to a wms GetFeatureInfo
  */
-function loadFeatureInfo(data, rParams, lMetaData) {
+function loadFeatureInfo(reqId, data, rParams, lMetaData) {
     return {
         type: LOAD_FEATURE_INFO,
         data: data,
+        reqId: reqId,
         requestParams: rParams,
         layerMetadata: lMetaData
     };
@@ -33,10 +35,11 @@ function loadFeatureInfo(data, rParams, lMetaData) {
  * Private
  * @return a ERROR_FEATURE_INFO action with the error occured
  */
-function errorFeatureInfo(e, rParams, lMetaData) {
+function errorFeatureInfo(reqId, e, rParams, lMetaData) {
     return {
         type: ERROR_FEATURE_INFO,
         error: e,
+        reqId: reqId,
         requestParams: rParams,
         layerMetadata: lMetaData
     };
@@ -47,12 +50,21 @@ function errorFeatureInfo(e, rParams, lMetaData) {
  * @return a EXCEPTIONS_FEATURE_INFO action with the wms exception occured
  *         during a GetFeatureInfo request.
  */
-function exceptionsFeatureInfo(exceptions, rParams, lMetaData) {
+function exceptionsFeatureInfo(reqId, exceptions, rParams, lMetaData) {
     return {
         type: EXCEPTIONS_FEATURE_INFO,
+        reqId: reqId,
         exceptions: exceptions,
         requestParams: rParams,
         layerMetadata: lMetaData
+    };
+}
+
+function newMapInfoRequest(reqId, reqConfig) {
+    return {
+        type: NEW_MAPINFO_REQUEST,
+        reqId: reqId,
+        request: reqConfig
     };
 }
 
@@ -75,15 +87,17 @@ function getFeatureInfo(wmsBasePath, requestParams, lMetaData) {
         exceptions: 'application/json'
     };
     const param = assign({}, defaultParams, requestParams);
+    const reqId = uuid.v1();
     return (dispatch) => {
-        return axios.get(wmsBasePath, {params: param}).then((response) => {
+        dispatch(newMapInfoRequest(reqId, param));
+        axios.get(wmsBasePath, {params: param}).then((response) => {
             if (response.data.exceptions) {
-                dispatch(exceptionsFeatureInfo(response.data.exceptions, requestParams, lMetaData));
+                dispatch(exceptionsFeatureInfo(reqId, response.data.exceptions, requestParams, lMetaData));
             } else {
-                dispatch(loadFeatureInfo(response.data, requestParams, lMetaData));
+                dispatch(loadFeatureInfo(reqId, response.data, requestParams, lMetaData));
             }
         }).catch((e) => {
-            dispatch(errorFeatureInfo(e, requestParams, lMetaData));
+            dispatch(errorFeatureInfo(reqId, e, requestParams, lMetaData));
         });
     };
 }
@@ -92,13 +106,6 @@ function changeMapInfoState(enabled) {
     return {
         type: CHANGE_MAPINFO_STATE,
         enabled: enabled
-    };
-}
-
-function newMapInfoRequest(reqConfig) {
-    return {
-        type: NEW_MAPINFO_REQUEST,
-        request: reqConfig
     };
 }
 

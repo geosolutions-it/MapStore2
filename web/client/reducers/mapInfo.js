@@ -27,19 +27,18 @@ function mapInfo(state = null, action) {
             });
         case NEW_MAPINFO_REQUEST: {
             let newRequests;
-            if (state.requests) {
-                newRequests = state.requests.slice();
-                newRequests.push(action.request);
-            } else {
-                newRequests = [action.request];
-            }
+            let {reqId, request} = {...action};
+            newRequests = assign({}, state.requests);
+            newRequests.length = (newRequests.length) ? newRequests.length + 1 : 1;
+            newRequests[reqId] = assign({}, { request: request});
             return assign({}, state, {
                 requests: newRequests
             });
         }
         case PURGE_MAPINFO_RESULTS:
             return assign({}, state, {
-                responses: []
+                responses: [],
+                requests: {length: 0 }
             });
         case LOAD_FEATURE_INFO: {
             /* action.data (if a JSON has been requested) is an object like this:
@@ -50,21 +49,25 @@ function mapInfo(state = null, action) {
              * }
              * else is a [string] (for eg. if HTML data has been requested)
              */
-            let newResponses;
-            let obj = {
-                response: action.data,
-                queryParams: action.requestParams,
-                layerMetadata: action.layerMetadata
-            };
-            if (state.responses) {
-                newResponses = state.responses.slice();
-                newResponses.push(obj);
-            } else {
-                newResponses = [obj];
+            let newState;
+            if (state.requests && state.requests[action.reqId]) {
+                let newResponses;
+                let obj = {
+                    response: action.data,
+                    queryParams: action.requestParams,
+                    layerMetadata: action.layerMetadata
+                };
+                if (state.responses) {
+                    newResponses = state.responses.slice();
+                    newResponses.push(obj);
+                } else {
+                    newResponses = [obj];
+                }
+                newState = assign({}, state, {
+                    responses: newResponses
+                });
             }
-            return assign({}, state, {
-                responses: newResponses
-            });
+            return (newState) ? newState : state;
         }
         case EXCEPTIONS_FEATURE_INFO: {
             /* action.exceptions, an array of exceptions like this:
@@ -74,21 +77,25 @@ function mapInfo(state = null, action) {
              *     text: [string]
              * }, ...]
              */
-            let newResponses;
-            let obj = {
-                response: action.exceptions,
-                queryParams: action.requestParams,
-                layerMetadata: action.layerMetadata
-            };
-            if (state.responses) {
-                newResponses = state.responses.slice();
-                newResponses.push(obj);
-            } else {
-                newResponses = [obj];
+            let newState;
+            if (state.requests && state.requests[action.reqId]) {
+                let newResponses;
+                let obj = {
+                    response: action.exceptions,
+                    queryParams: action.requestParams,
+                    layerMetadata: action.layerMetadata
+                };
+                if (state.responses) {
+                    newResponses = state.responses.slice();
+                    newResponses.push(obj);
+                } else {
+                    newResponses = [obj];
+                }
+                newState = assign({}, state, {
+                    responses: newResponses
+                });
             }
-            return assign({}, state, {
-                responses: newResponses
-            });
+            return (newState) ? newState : state;
         }
         case ERROR_FEATURE_INFO: {
             /* action.error, an Object like this:
@@ -100,21 +107,25 @@ function mapInfo(state = null, action) {
              *     statusText: [string]
              * }
              */
-            let newResponses;
-            let obj = {
-                response: action.error,
-                queryParams: action.requestParams,
-                layerMetadata: action.layerMetadata
-            };
-            if (state.responses) {
-                newResponses = state.responses.slice();
-                newResponses.push(obj);
-            } else {
-                newResponses = [obj];
+            let newState;
+            if (state.requests && state.requests[action.reqId]) {
+                let newResponses;
+                let obj = {
+                    response: action.error,
+                    queryParams: action.requestParams,
+                    layerMetadata: action.layerMetadata
+                };
+                if (state.responses) {
+                    newResponses = state.responses.slice();
+                    newResponses.push(obj);
+                } else {
+                    newResponses = [obj];
+                }
+                newState = assign({}, state, {
+                    responses: newResponses
+                });
             }
-            return assign({}, state, {
-                responses: newResponses
-            });
+            return (newState) ? newState : state;
         }
         case CLICK_ON_MAP: {
             return assign({}, state, {

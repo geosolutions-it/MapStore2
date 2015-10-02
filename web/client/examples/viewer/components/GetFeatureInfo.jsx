@@ -15,10 +15,11 @@ var I18N = require('../../../components/I18N/I18N');
 var HtmlRenderer = require('../../../components/misc/HtmlRenderer');
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var assign = require('object-assign');
-
+var Spinner = require('../../../components/misc/BasicSpinner');
 var GetFeatureInfo = React.createClass({
     propTypes: {
         htmlResponses: React.PropTypes.array,
+        htmlRequests: React.PropTypes.object,
         btnConfig: React.PropTypes.object,
         enabled: React.PropTypes.bool,
         mapConfig: React.PropTypes.object,
@@ -37,6 +38,7 @@ var GetFeatureInfo = React.createClass({
         return {
             enabled: false,
             htmlResponses: [],
+            htmlRequests: {length: 0},
             mapConfig: {layers: []},
             layerFilter(l) {
                 return l.visibility &&
@@ -180,17 +182,19 @@ var GetFeatureInfo = React.createClass({
         return output;
     },
     render() {
+        let missingRequests = this.props.htmlRequests.length - this.props.htmlResponses.length;
         return (
                 <Modal
-                    show={this.props.htmlResponses.length !== 0}
+                    show={this.props.htmlRequests.length !== 0}
                     onHide={this.onModalHiding}
                     bsStyle="info"
                     dialogClassName="getFeatureInfo">
-
                     <Modal.Header closeButton>
                         <Modal.Title><I18N.Message msgId="getFeatureInfoTitle" /></Modal.Title>
+                         {(missingRequests !== 0) ? <Spinner value={missingRequests} sSize="sp-small" /> : null }
                     </Modal.Header>
                     <Modal.Body>
+
                         <Tabs defaultActiveKey={0}>
                             {this.getModalContent(this.props.htmlResponses)}
                         </Tabs>

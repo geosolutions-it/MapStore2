@@ -23,49 +23,103 @@ var {
 describe('Test correctness of the map actions', () => {
 
     it('get feature info data', (done) => {
+        /*eslint-disable */
+        let reqId;
+        /*eslint-enable */
         getFeatureInfo('base/web/client/test-resources/featureInfo-response.json', {p: "p"}, "meta")((e) => {
-            try {
-                expect(e).toExist();
-                expect(e.type).toBe(LOAD_FEATURE_INFO);
-                expect(e.data).toExist();
-                expect(e.requestParams).toExist();
-                expect(e.requestParams.p).toBe("p");
-                expect(e.layerMetadata).toBe("meta");
-                done();
-            } catch(ex) {
-                done(ex);
+            if (e.type === NEW_MAPINFO_REQUEST) {
+                reqId = e.reqId;
+                try {
+                    expect(e).toExist();
+                    expect(e.type).toBe(NEW_MAPINFO_REQUEST);
+                    expect(e.reqId).toExist();
+                    expect(e.request).toExist();
+                    expect(e.request.p).toBe("p");
+                } catch(ex) {
+                    done(ex);
+                }
+            } else if (e.type === LOAD_FEATURE_INFO) {
+                try {
+                    expect(e).toExist();
+                    expect(e.type).toBe(LOAD_FEATURE_INFO);
+                    expect(e.data).toExist();
+                    expect(e.requestParams).toExist();
+                    expect(e.reqId).toExist();
+                    expect(e.reqId).toBe(reqId);
+                    expect(e.requestParams.p).toBe("p");
+                    expect(e.layerMetadata).toBe("meta");
+                    done();
+                } catch(ex) {
+                    done(ex);
+                }
             }
         });
     });
 
     it('get feature info exception', (done) => {
+            /*eslint-disable */
+            let reqId;
+            /*eslint-enable */
         getFeatureInfo('base/web/client/test-resources/featureInfo-exception.json', {p: "p"}, "meta")((e) => {
-            try {
-                expect(e).toExist();
-                expect(e.type).toBe(EXCEPTIONS_FEATURE_INFO);
-                expect(e.exceptions).toExist();
-                expect(e.requestParams).toExist();
-                expect(e.requestParams.p).toBe("p");
-                expect(e.layerMetadata).toBe("meta");
-                done();
-            } catch(ex) {
-                done(ex);
+            if (e.type === NEW_MAPINFO_REQUEST) {
+                reqId = e.reqId;
+                try {
+                    expect(e).toExist();
+                    expect(e.type).toBe(NEW_MAPINFO_REQUEST);
+                    expect(e.reqId).toExist();
+                    expect(e.request).toExist();
+                    expect(e.request.p).toBe("p");
+                } catch(ex) {
+                    done(ex);
+                }
+            } else if (e.type === EXCEPTIONS_FEATURE_INFO) {
+                try {
+                    expect(e).toExist();
+                    expect(e.type).toBe(EXCEPTIONS_FEATURE_INFO);
+                    expect(e.exceptions).toExist();
+                    expect(e.reqId).toExist();
+                    expect(e.reqId).toBe(reqId);
+                    expect(e.requestParams).toExist();
+                    expect(e.requestParams.p).toBe("p");
+                    expect(e.layerMetadata).toBe("meta");
+                    done();
+                } catch(ex) {
+                    done(ex);
+                }
             }
         });
     });
 
     it('get feature info error', (done) => {
+        /*eslint-disable */
+        let reqId;
+        /*eslint-enable */
         getFeatureInfo('requestError.json', {p: "p"}, "meta")((e) => {
-            try {
-                expect(e).toExist();
-                expect(e.type).toBe(ERROR_FEATURE_INFO);
-                expect(e.error).toExist();
-                expect(e.requestParams).toExist();
-                expect(e.requestParams.p).toBe("p");
-                expect(e.layerMetadata).toBe("meta");
-                done();
-            } catch(ex) {
-                done(ex);
+            if (e.type === NEW_MAPINFO_REQUEST) {
+                reqId = e.reqId;
+                try {
+                    expect(e).toExist();
+                    expect(e.type).toBe(NEW_MAPINFO_REQUEST);
+                    expect(e.reqId).toExist();
+                    expect(e.request).toExist();
+                    expect(e.request.p).toBe("p");
+                } catch(ex) {
+                    done(ex);
+                }
+            } else if (e.type === ERROR_FEATURE_INFO) {
+                try {
+                    expect(e).toExist();
+                    expect(e.type).toBe(ERROR_FEATURE_INFO);
+                    expect(e.error).toExist();
+                    expect(e.reqId).toExist();
+                    expect(e.reqId).toBe(reqId);
+                    expect(e.requestParams).toExist();
+                    expect(e.requestParams.p).toBe("p");
+                    expect(e.layerMetadata).toBe("meta");
+                    done();
+                } catch(ex) {
+                    done(ex);
+                }
             }
         });
     });
@@ -80,12 +134,16 @@ describe('Test correctness of the map actions', () => {
     });
 
     it('add new info request', () => {
-        const testVal = "val";
-        const retval = newMapInfoRequest(testVal);
-
-        expect(retval.type).toBe(NEW_MAPINFO_REQUEST);
-        expect(retval.request).toExist();
-        expect(retval.request).toBe(testVal);
+        const reqIdVal = 100;
+        const requestVal = {p: "p"};
+        const e = newMapInfoRequest(reqIdVal, requestVal);
+        expect(e).toExist();
+        expect(e.type).toBe(NEW_MAPINFO_REQUEST);
+        expect(e.reqId).toExist();
+        expect(e.reqId).toBeA('number');
+        expect(e.reqId).toBe(100);
+        expect(e.request).toExist();
+        expect(e.request.p).toBe("p");
     });
 
     it('delete all results', () => {
