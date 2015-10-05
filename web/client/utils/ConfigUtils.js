@@ -34,7 +34,8 @@ var ConfigUtils = {
         config: React.PropTypes.shape({
             center: centerPropType,
             zoom: React.PropTypes.number.isRequired
-        })
+        }),
+        mapStateSource: React.PropTypes.string
     },
 
     loadConfiguration: function() {

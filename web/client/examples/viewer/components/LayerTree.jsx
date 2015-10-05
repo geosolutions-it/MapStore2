@@ -13,6 +13,8 @@ var Layers = require('../../../components/Layers/Layers');
 var Group = require('../../../components/Group/Group');
 var Layer = require('../../../components/Layer/Layer');
 
+var InlineSpinner = require('../../../components/spinners/InlineSpinner/InlineSpinner');
+
 var icon = require('../img/layers.png');
 
 var LayerTree = React.createClass({
@@ -20,11 +22,13 @@ var LayerTree = React.createClass({
         id: React.PropTypes.number,
         buttonContent: React.PropTypes.node,
         layers: React.PropTypes.array,
-        propertiesChangeHandler: React.PropTypes.func
+        propertiesChangeHandler: React.PropTypes.func,
+        loadingList: React.PropTypes.array
     },
     getDefaultProps() {
         return {
-            buttonContent: <img src={icon}/>
+            buttonContent: <img src={icon}/>,
+            loadingList: []
         };
     },
     getNoBackgroudLayers(layer) {
@@ -39,9 +43,14 @@ var LayerTree = React.createClass({
             <Panel style={{overflow: "auto"}} >
                 <Layers useGroups
                     filter={this.getNoBackgroudLayers}
-                    layers={this.props.layers}>
+                    layers={this.props.layers}
+                    loadingList={this.props.loadingList}>
                     <Group>
-                        <Layer propertiesChangeHandler={this.props.propertiesChangeHandler}/>
+                        <Layer
+                            propertiesChangeHandler={this.props.propertiesChangeHandler}
+                            showSpinner>
+                            <InlineSpinner/>
+                        </Layer>
                     </Group>
                 </Layers>
             </Panel>

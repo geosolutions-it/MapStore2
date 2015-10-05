@@ -63,9 +63,9 @@ var LeafletMap = React.createClass({
         this.forceUpdate();
 
         this.map.on('layeradd', (event) => {
-            this.props.onLayerLoading(event.layer._leaflet_id);
-            event.layer.on('loading', (loadingEvent) => { this.props.onLayerLoading(loadingEvent.target._leaflet_id); });
-            event.layer.on('load', (loadEvent) => { this.props.onLayerLoad(loadEvent.target._leaflet_id); });
+            this.props.onLayerLoading(event.layer.layerName);
+            event.layer.on('loading', (loadingEvent) => { this.props.onLayerLoading(loadingEvent.target.layerName); });
+            event.layer.on('load', (loadEvent) => { this.props.onLayerLoad(loadEvent.target.layerName); });
         });
     },
     componentWillReceiveProps(newProps) {
