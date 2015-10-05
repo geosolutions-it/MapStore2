@@ -11,33 +11,33 @@ var {Glyphicon} = require('react-bootstrap');
 
 var Group = React.createClass({
     propTypes: {
-        layers: React.PropTypes.array,
-        group: React.PropTypes.string
+        node: React.PropTypes.object,
+        filter: React.PropTypes.func,
+        style: React.PropTypes.object
     },
     getDefaultProps() {
         return {
-            layers: []
+            node: {},
+            filter: () => {
+                return true;
+            },
+            style: {marginBottom: "16px"}
         };
     },
-    getOwnLayers() {
-        return this.props.layers.filter((layer) => {
-            return layer.group === this.props.group;
-        }, this);
-    },
     render() {
-        let now = new Date().getTime();
-        let groupTitle = this.props.group || 'Default';
+        let groupTitle = this.props.node && this.props.node.title || 'Default';
         let content = [];
 
-        let ownLayers = this.getOwnLayers();
-        for (let i = 0; i < ownLayers.length; i++) {
-            content.push(React.cloneElement(this.props.children, {
-                layer: ownLayers[i],
-                key: 'groups-child-' + now + '-' + i
-            }));
+        if (this.props.children) {
+            let nodes = (this.props.node.nodes || []);
+            content = nodes
+                .filter((layer) => this.props.filter(layer, this.props.node))
+                .map((node) => (React.cloneElement(this.props.children, {
+                    node: node
+                })));
         }
         return (
-            <div key={groupTitle} style={{marginBottom: "16px"}} >
+            <div key={groupTitle} style={this.props.style} >
                 <div style={{
                     background: "rgb(240,240,240)",
                     padding: "4px",

@@ -10,8 +10,8 @@ var React = require('react');
 var {Panel} = require('react-bootstrap');
 
 var Layers = require('../../../components/Layers/Layers');
-var Group = require('../../../components/Group/Group');
-var Layer = require('../../../components/Layer/Layer');
+var Group = require('../../../components/Layers/Group');
+var Layer = require('../../../components/Layers/Layer');
 
 var InlineSpinner = require('../../../components/spinners/InlineSpinner/InlineSpinner');
 
@@ -21,9 +21,9 @@ var LayerTree = React.createClass({
     propTypes: {
         id: React.PropTypes.number,
         buttonContent: React.PropTypes.node,
-        layers: React.PropTypes.array,
-        propertiesChangeHandler: React.PropTypes.func,
-        loadingList: React.PropTypes.array
+        loadingList: React.PropTypes.array,
+        groups: React.PropTypes.array,
+        propertiesChangeHandler: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -31,24 +31,24 @@ var LayerTree = React.createClass({
             loadingList: []
         };
     },
-    getNoBackgroudLayers(layer) {
-        return layer.group !== 'background';
+    getNoBackgroudLayers(group) {
+        return group.name !== 'background';
     },
     render() {
-        if (!this.props.layers) {
+        if (!this.props.groups) {
             return <div></div>;
         }
 
         return (
             <Panel style={{overflow: "auto"}} >
-                <Layers useGroups
-                    filter={this.getNoBackgroudLayers}
-                    layers={this.props.layers}
-                    loadingList={this.props.loadingList}>
+                <Layers filter={this.getNoBackgroudLayers}
+                    nodes={this.props.groups}>
                     <Group>
                         <Layer
                             propertiesChangeHandler={this.props.propertiesChangeHandler}
-                            showSpinner>
+                            showSpinner
+                            loadingList={this.props.loadingList}
+                            >
                             <InlineSpinner/>
                         </Layer>
                     </Group>

@@ -27,7 +27,7 @@ describe('test Layer module component', () => {
             storeIndex: 9,
             type: 'wms'
         };
-        const comp = React.render(<Layer layer={l} />, document.body);
+        const comp = React.render(<Layer node={l} />, document.body);
         expect(comp).toExist();
 
         const domNode = React.findDOMNode(comp);
@@ -50,7 +50,7 @@ describe('test Layer module component', () => {
             visibility: false,
             storeIndex: 9
         };
-        const comp = React.render(<Layer layer={l} />, document.body);
+        const comp = React.render(<Layer node={l} />, document.body);
         expect(comp).toExist();
 
         const domNode = React.findDOMNode(comp);
@@ -84,7 +84,7 @@ describe('test Layer module component', () => {
         const comp = React.render(
             <Layer
                 propertiesChangeHandler={handler}
-                layer={l}
+                node={l}
             />, document.body);
         expect(comp).toExist();
 
