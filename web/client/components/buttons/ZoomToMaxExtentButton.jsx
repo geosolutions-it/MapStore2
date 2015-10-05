@@ -64,7 +64,7 @@ var ZoomToMaxExtentButton = React.createClass({
         var mapSize = this.props.mapConfig.size;
         var newZoom = 1;
         var newCenter = this.props.mapConfig.center;
-        var proj = "EPSG:900913";
+        var proj = this.props.mapConfig.projection || "EPSG:3857";
 
         if (maxExtent &&
             Object.prototype.toString.call(maxExtent) === '[object Array]') {
@@ -77,7 +77,7 @@ var ZoomToMaxExtentButton = React.createClass({
             // do not reproject for 0/0
             if (newCenter.x !== 0 || newCenter.y !== 0) {
                 // reprojects the center object
-                newCenter = configUtils.getCenter(newCenter, proj);
+                newCenter = configUtils.getCenter(newCenter, "EPSG:4326");
             }
 
         }

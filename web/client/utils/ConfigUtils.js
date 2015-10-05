@@ -92,7 +92,7 @@ var ConfigUtils = {
         var layers = mapConfig.layers;
         var latLng = ConfigUtils.getCenter(mapConfig.center, mapConfig.projection);
         var zoom = mapConfig.zoom;
-        var maxExtent = mapConfig.maxExtent;
+        var maxExtent = mapConfig.maxExtent || mapConfig.extent;
 
         // setup layers and sources with defaults
         this.setupSources(sources, config.defaultSourceType);
