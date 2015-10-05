@@ -10,6 +10,7 @@ var GetFeatureInfo = require("../components/GetFeatureInfo");
 var MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
 var ScaleBox = require("../../../components/ScaleBox/ScaleBox");
 var GlobalSpinner = require('../../../components/globalspinner/GlobalSpinner');
+var ZoomToMaxExtentButton = require('../../../components/buttons/ZoomToMaxExtentButton');
 
 var mapInfo = require('../../../reducers/mapInfo');
 var floatingPanel = require('../reducers/floatingPanel');
@@ -23,6 +24,7 @@ var {changeLayerProperties} = require('../../../actions/config');
 var {changeZoomLevel} = require('../../../actions/map');
 
 var {layerLoading, layerLoad} = require('../../../actions/map');
+var {changeMapView} = require('../../../actions/map');
 
 var React = require('react');
 
@@ -85,7 +87,13 @@ module.exports = {
             <ScaleBox
                 onChange={props.changeZoomLevel}
                 currentZoomLvl={props.mapConfig.zoom} />,
-            <GlobalSpinner loadingLayers={props.mapConfig.loadingLayers}/>
+            <GlobalSpinner loadingLayers={props.mapConfig.loadingLayers}/>,
+            <ZoomToMaxExtentButton
+                key="zoomToMaxExtent"
+                mapConfig={props.mapConfig}
+                actions={{
+                    changeMapView: props.changeMapView
+                }} />
         ];
     },
     reducers: {mapInfo, floatingPanel, mousePosition},
@@ -100,6 +108,7 @@ module.exports = {
         changeMousePosition,
         changeZoomLevel,
         layerLoading,
-        layerLoad
+        layerLoad,
+        changeMapView
     }
 };

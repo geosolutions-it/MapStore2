@@ -85,10 +85,76 @@ function getGoogleMercatorScales(minZoom, maxZoom, dpi) {
     );
 }
 
+/**
+ * Calculates the best fitting zoom level for the given extent.
+ *
+ * @param extent {Array} [minx, miny, maxx, maxy]
+ * @param mapSize {Object} current size of the map.
+ * @param minZoom {number} min zoom level.
+ * @param maxZoom {number} max zoom level.
+ * @param dpi {number} screen resolution in dot per inch.
+ * @return {Number} the zoom level fitting th extent
+ */
+function getZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
+
+    var dpm = dpi2dpm((dpi || DEFAULT_SCREEN_DPI));
+
+    var wExtent = extent[2] - extent[0];
+    var hExtent = extent[3] - extent[1];
+
+    var xResolution = Math.abs(wExtent / mapSize.width);
+    var yResolution = Math.abs(hExtent / mapSize.height);
+    var extentResolution = Math.max(xResolution, yResolution);
+
+    var scales = getGoogleMercatorScales(
+        minZoom, maxZoom, (dpi || DEFAULT_SCREEN_DPI));
+    var diff;
+    var minDiff = Number.POSITIVE_INFINITY;
+    var i;
+    var len = scales.length;
+    var res;
+    // detect best fitting zoom level
+    for (i = 0; i < len; i++) {
+
+        res = scales[i] / dpm;
+
+        diff = Math.abs(res - extentResolution);
+        if (diff > minDiff) {
+            break;
+        }
+        minDiff = diff;
+    }
+    return Math.max(0, i - 1);
+}
+
+/**
+ * Calculates the center for for the given extent.
+ *
+ * @param  {Array} extent [minx, miny, maxx, maxy]
+ * @param  {String} projection projection of the extent
+ * @return {object} center object
+ */
+function getCenterForExtent(extent, projection) {
+
+    var wExtent = extent[2] - extent[0];
+    var hExtent = extent[3] - extent[1];
+
+    var w = (wExtent) / 2;
+    var h = (hExtent) / 2;
+
+    return {
+        x: extent[0] + w,
+        y: extent[1] + h,
+        crs: projection
+    };
+}
+
 module.exports = {
     dpi2dpm,
     getSphericalMercatorScales,
     getSphericalMercatorScale,
     getGoogleMercatorScales,
-    getGoogleMercatorScale
+    getGoogleMercatorScale,
+    getZoomForExtent,
+    getCenterForExtent
 };
