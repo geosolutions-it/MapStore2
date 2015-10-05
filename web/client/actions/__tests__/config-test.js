@@ -7,7 +7,7 @@
  */
 
 var expect = require('expect');
-var {loadMapConfig, changeLayerProperties, MAP_CONFIG_LOAD_ERROR, MAP_CONFIG_LOADED, CHANGE_LAYER_PROPERTIES} = require('../config');
+var {loadMapConfig, changeLayerProperties, changeBrowserProperties, MAP_CONFIG_LOAD_ERROR, MAP_CONFIG_LOADED, CHANGE_LAYER_PROPERTIES, CHANGE_BROWSER_PROPERTIES} = require('../config');
 
 describe('Test configuration related actions', () => {
     it('does not load a missing configuration file', (done) => {
@@ -59,5 +59,19 @@ describe('Test configuration related actions', () => {
                 done(ex);
             }
         });
+    });
+
+    it('test browser properties change action', (done) => {
+        let e = changeBrowserProperties({touch: true});
+
+        try {
+            expect(e).toExist();
+            expect(e.type).toBe(CHANGE_BROWSER_PROPERTIES);
+            expect(e.newProperties).toExist();
+            expect(e.newProperties.touch).toBe(true);
+            done();
+        } catch(ex) {
+            done(ex);
+        }
     });
 });

@@ -59,11 +59,12 @@ module.exports = {
                     title={<div><Message msgId="background"/></div>}
                     buttonTooltip={<Message msgId="backgroundSwither.tooltip"/>}
                     propertiesChangeHandler={props.changeLayerProperties}/>
-                <ToggleButton
-                    isButton={true}
-                    pressed={props.mousePosition.enabled}
-                    glyphicon="eye-open"
-                    onClick={props.changeMousePositionState}/>
+                    <ToggleButton
+                        isButton={true}
+                        btnConfig={{disabled: (!props.browser.touch) ? false : true}}
+                        pressed={props.mousePosition.enabled}
+                        glyphicon="eye-open"
+                        onClick={props.changeMousePositionState}/>
             </MapToolBar>,
             <GetFeatureInfo
                 key="getFeatureInfo"
