@@ -189,6 +189,71 @@ var ConfigUtils = {
     },
     getProxyUrl: function(config) {
         return config.proxyUrl ? config.proxyUrl : defaultConfig.proxyUrl;
+    },
+    /**
+    * Utiliyu to detect browser properties.
+    * Code from leaflet-src.js
+    */
+    getBrowserProperties: function() {
+
+        let ie = 'ActiveXObject' in window;
+        let ielt9 = ie && !document.addEventListener;
+
+        // terrible browser detection to work around Safari / iOS / Android browser bugs
+        let ua = navigator.userAgent.toLowerCase();
+        let webkit = ua.indexOf('webkit') !== -1;
+        let chrome = ua.indexOf('chrome') !== -1;
+        let phantomjs = ua.indexOf('phantom') !== -1;
+        let android = ua.indexOf('android') !== -1;
+        let android23 = ua.search('android [23]') !== -1;
+        let gecko = ua.indexOf('gecko') !== -1;
+
+        let mobile = typeof window.orientation !== undefined + '';
+        let msPointer = !window.PointerEvent && window.MSPointerEvent;
+        let pointer = (window.PointerEvent && window.navigator.pointerEnabled && window.navigator.maxTouchPoints) ||
+                  msPointer;
+        let retina = ('devicePixelRatio' in window && window.devicePixelRatio > 1) ||
+                 ('matchMedia' in window && window.matchMedia('(min-resolution:144dpi)') &&
+                  window.matchMedia('(min-resolution:144dpi)').matches);
+
+        let doc = document.documentElement;
+        let ie3d = ie && ('transition' in doc.style);
+        let webkit3d = ('WebKitCSSMatrix' in window) && ('m11' in new window.WebKitCSSMatrix()) && !android23;
+        let gecko3d = 'MozPerspective' in doc.style;
+        let opera3d = 'OTransition' in doc.style;
+        let any3d = !window.L_DISABLE_3D && (ie3d || webkit3d || gecko3d || opera3d) && !phantomjs;
+
+        let touch = !window.L_NO_TOUCH && !phantomjs && (pointer || 'ontouchstart' in window ||
+        (window.DocumentTouch && document instanceof window.DocumentTouch));
+
+        return {
+        ie: ie,
+        ielt9: ielt9,
+        webkit: webkit,
+        gecko: gecko && !webkit && !window.opera && !ie,
+
+        android: android,
+        android23: android23,
+
+        chrome: chrome,
+
+        ie3d: ie3d,
+        webkit3d: webkit3d,
+        gecko3d: gecko3d,
+        opera3d: opera3d,
+        any3d: any3d,
+
+        mobile: mobile,
+        mobileWebkit: mobile && webkit,
+        mobileWebkit3d: mobile && webkit3d,
+        mobileOpera: mobile && window.opera,
+
+        touch: touch,
+        msPointer: msPointer,
+        pointer: pointer,
+
+        retina: retina
+        };
     }
 };
 

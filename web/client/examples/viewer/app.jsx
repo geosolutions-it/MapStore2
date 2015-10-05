@@ -9,7 +9,7 @@ var React = require('react');
 
 var {Provider} = require('react-redux');
 
-var {loadMapConfig} = require('../../actions/config');
+var {loadMapConfig, changeBrowserProperties} = require('../../actions/config');
 var {loadLocale} = require('../../actions/locale');
 
 var ConfigUtils = require('../../utils/ConfigUtils');
@@ -23,6 +23,10 @@ require.ensure(['./plugins'], (require) => {
     var store = require('./stores/viewerstore')(plugins.reducers);
     var Viewer = require('./containers/Viewer')(plugins.actions);
 
+    /**
+    * Detect Browser's properties and save in app state.
+    **/
+    store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
 
     ConfigUtils.loadConfiguration().then(() => {
         const { configUrl, legacy } = ConfigUtils.getUserConfiguration('config', 'json');
@@ -31,6 +35,7 @@ require.ensure(['./plugins'], (require) => {
         let locale = LocaleUtils.getUserLocale();
         store.dispatch(loadLocale('../../translations', locale));
     });
+
 
     React.render(
         <Debug store={store}>

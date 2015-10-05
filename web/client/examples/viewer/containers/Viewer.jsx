@@ -23,6 +23,7 @@ var Localized = require('../../../components/I18N/Localized');
 var Viewer = React.createClass({
     propTypes: {
         mapConfig: ConfigUtils.PropTypes.config,
+        browser: ConfigUtils.PropTypes.object,
         messages: React.PropTypes.object,
         locale: React.PropTypes.string,
         mapInfo: React.PropTypes.object,
@@ -112,6 +113,7 @@ module.exports = (actions) => {
     return connect((state) => {
         return {
             mapConfig: state.mapConfig,
+            browser: state.browser,
             messages: state.locale ? state.locale.messages : null,
             locale: state.locale ? state.locale.current : null,
             mapInfo: state.mapInfo ? state.mapInfo : {enabled: false, responses: [], requests: {length: 0}},
