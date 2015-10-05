@@ -12,13 +12,15 @@ var assign = require('object-assign');
 
 var Layer = React.createClass({
     propTypes: {
-        layer: React.PropTypes.object,
+        node: React.PropTypes.object,
         propertiesChangeHandler: React.PropTypes.func,
+        loadingList: React.PropTypes.array,
         showSpinner: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
-            showSpinner: false
+            showSpinner: false,
+            loadingList: []
         };
     },
     renderLayerLegend(layer) {
@@ -28,31 +30,28 @@ var Layer = React.createClass({
         return null;
     },
     renderSpinner() {
-        if (!this.props.showSpinner) {
-            return null;
+        if (this.props.showSpinner && this.props.loadingList.indexOf(this.props.node.name) !== -1 && this.props.children) {
+            return React.cloneElement(this.props.children, {loading: true});
         }
-        return React.cloneElement(this.props.children, {loading: this.props.layer.loading});
+        return null;
+
     },
     render() {
         return (
-            <div key={this.props.layer.name}>
+
+            <div key={this.props.node.name}>
                 <div style={{display: 'flex'}}>
-                    <input
-                        style={{marginRight: "2px"}}
-                        data-position={this.props.layer.storeIndex}
-                        type="checkbox"
-                        checked={this.props.layer.visibility ? "checked" : ""}
-                        onChange={this.changeLayerVisibility} />
+                    <input style={{marginRight: "2px"}} data-position={this.props.node.storeIndex} type="checkbox" checked={this.props.node.visibility ? "checked" : ""} onChange={this.changeLayerVisibility} />
                     {this.renderSpinner()}
-                    {this.props.layer.title || this.props.layer.name}
+                    {this.props.node.title || this.props.node.name}
                 </div>
-                {this.renderLayerLegend(this.props.layer)}
+                {this.renderLayerLegend(this.props.node)}
             </div>
         );
     },
     changeLayerVisibility(eventObj) {
         let position = parseInt(eventObj.currentTarget.dataset.position, 10);
-        var newLayer = assign({}, this.props.layer, {visibility: !this.props.layer.visibility});
+        var newLayer = assign({}, this.props.node, {visibility: !this.props.node.visibility});
         this.props.propertiesChangeHandler(newLayer, position);
     }
 });

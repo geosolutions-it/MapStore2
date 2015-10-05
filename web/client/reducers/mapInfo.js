@@ -27,7 +27,7 @@ function mapInfo(state = null, action) {
             });
         case NEW_MAPINFO_REQUEST: {
             let newRequests;
-            let {reqId, request} = {...action};
+            let {reqId, request} = action;
             newRequests = assign({}, state.requests);
             newRequests.length = (newRequests.length) ? newRequests.length + 1 : 1;
             newRequests[reqId] = assign({}, { request: request});

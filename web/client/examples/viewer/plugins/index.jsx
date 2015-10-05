@@ -50,8 +50,8 @@ module.exports = {
                     isPanel={true}
                     buttonTooltip={<Message msgId="layers"/>}
                     title={<Message msgId="layers"/>}
-                    layers={props.mapConfig.layers}
                     loadingList={props.mapConfig.loadingLayers}
+                    groups={props.mapConfig.groups}
                     propertiesChangeHandler={props.changeLayerProperties}/>
                 <BackgroundSwitcher
                     key="backgroundSwitcher"

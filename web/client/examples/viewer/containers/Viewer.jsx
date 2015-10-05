@@ -109,10 +109,28 @@ var Viewer = React.createClass({
     }
 });
 
+var getLayersByGroup = function(layers) {
+    let i = 0;
+    let mapLayers = (layers || []).map((layer) => assign({}, layer, {storeIndex: i++}));
+    let grps = mapLayers.reduce((groups, layer) => {
+        return groups.indexOf(layer.group) === -1 ? groups.concat([layer.group]) : groups;
+    }, []);
+
+    return grps.map((group) => {
+        return {
+            name: group,
+            title: group,
+            nodes: mapLayers.filter((layer) => layer.group === group)
+        };
+    });
+};
+
 module.exports = (actions) => {
     return connect((state) => {
         return {
-            mapConfig: state.mapConfig,
+            mapConfig: (state.mapConfig && state.mapConfig.layers) ? assign({}, state.mapConfig, {
+                groups: getLayersByGroup(state.mapConfig.layers)
+            }) : state.mapConfig,
             browser: state.browser,
             messages: state.locale ? state.locale.messages : null,
             locale: state.locale ? state.locale.current : null,
