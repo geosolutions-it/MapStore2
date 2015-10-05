@@ -7,6 +7,7 @@
  */
 var expect = require('expect');
 var CoordinatesUtils = require('../CoordinatesUtils');
+var Proj4js = require('proj4');
 
 describe('CoordinatesUtils', () => {
     afterEach((done) => {
@@ -37,5 +38,13 @@ describe('CoordinatesUtils', () => {
         for (let i = 0; i < 4; i++) {
             expect(projbbox[i]).toNotBe(bbox[i]);
         }
+    });
+    it('test getAvailableCRS', () => {
+        const defs = Object.keys(Proj4js.defs);
+        const toCheck = Object.keys(CoordinatesUtils.getAvailableCRS());
+
+        toCheck.forEach(item => {
+            expect(defs.indexOf(item) !== -1);
+        });
     });
 });

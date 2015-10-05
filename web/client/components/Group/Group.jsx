@@ -25,13 +25,15 @@ var Group = React.createClass({
         }, this);
     },
     render() {
+        let now = new Date().getTime();
         let groupTitle = this.props.group || 'Default';
         let content = [];
 
         let ownLayers = this.getOwnLayers();
         for (let i = 0; i < ownLayers.length; i++) {
             content.push(React.cloneElement(this.props.children, {
-                layer: ownLayers[i]
+                layer: ownLayers[i],
+                key: 'groups-child-' + now + '-' + i
             }));
         }
         return (

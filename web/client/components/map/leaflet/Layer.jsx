@@ -61,6 +61,7 @@ const LeafletLayer = React.createClass({
                 opts = assign({}, this.props.options, {zIndex: this.props.position});
             }
             this.layer = Layers.createLayer(type, opts);
+            this.layer.layerName = options.name;
         }
     },
     addLayer() {

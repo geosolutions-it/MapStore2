@@ -15,7 +15,7 @@ var I18N = require('../../../components/I18N/I18N');
 var HtmlRenderer = require('../../../components/misc/HtmlRenderer');
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var assign = require('object-assign');
-var Spinner = require('../../../components/misc/BasicSpinner');
+var Spinner = require('../../../components/spinners/BasicSpinner/BasicSpinner');
 var GetFeatureInfo = React.createClass({
     propTypes: {
         htmlResponses: React.PropTypes.array,

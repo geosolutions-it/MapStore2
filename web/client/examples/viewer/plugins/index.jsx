@@ -9,7 +9,7 @@ var MapToolBar = require("../components/MapToolBar");
 var GetFeatureInfo = require("../components/GetFeatureInfo");
 var MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
 var ScaleBox = require("../../../components/ScaleBox/ScaleBox");
-var GlobalSpinner = require('../../../components/globalspinner/GlobalSpinner');
+var GlobalSpinner = require('../../../components/spinners/GlobalSpinner/GlobalSpinner');
 var ZoomToMaxExtentButton = require('../../../components/buttons/ZoomToMaxExtentButton');
 
 var mapInfo = require('../../../reducers/mapInfo');
@@ -51,6 +51,7 @@ module.exports = {
                     buttonTooltip={<Message msgId="layers"/>}
                     title={<Message msgId="layers"/>}
                     layers={props.mapConfig.layers}
+                    loadingList={props.mapConfig.loadingLayers}
                     propertiesChangeHandler={props.changeLayerProperties}/>
                 <BackgroundSwitcher
                     key="backgroundSwitcher"

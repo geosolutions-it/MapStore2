@@ -28,7 +28,7 @@ var MapItem = React.createClass({
     renderButtons: function() {
         if (this.props.viewerUrl) {
             const previewURL = this.props.viewerUrl + "?type=" + this.props.mapType + "&mapId=" + this.props.id;
-            const tooltip = <Tooltip><I18N.Message msgId="manager.openInANewTab" /></Tooltip>;
+            const tooltip = <Tooltip id="manager.openInANewTab"><I18N.Message msgId="manager.openInANewTab" /></Tooltip>;
             return (<div>
                 <OverlayTrigger placement="right" overlay={tooltip}>
                     <Button bsStyle="info" target="_blank" href={previewURL}> <Glyphicon glyph={"new-window"}/>
