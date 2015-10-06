@@ -23,7 +23,7 @@ var Localized = require('../../../components/I18N/Localized');
 var Viewer = React.createClass({
     propTypes: {
         mapConfig: ConfigUtils.PropTypes.config,
-        browser: ConfigUtils.PropTypes.object,
+        browser: React.PropTypes.object,
         messages: React.PropTypes.object,
         locale: React.PropTypes.string,
         mapInfo: React.PropTypes.object,
