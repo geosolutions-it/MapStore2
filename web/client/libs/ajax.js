@@ -8,6 +8,7 @@
 
 var axios = require('axios');
 var ConfigUtils = require('../utils/ConfigUtils');
+var toString = Object.prototype.toString;
 
 function isArray(val) {
     return toString.call(val) === '[object Array]';
