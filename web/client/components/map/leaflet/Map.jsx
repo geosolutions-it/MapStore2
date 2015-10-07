@@ -143,7 +143,10 @@ var LeafletMap = React.createClass({
     mouseMoveEvent(event) {
         let pos = event.latlng.wrap();
         this.props.onMouseMove({
-            position: pos});
+            x: pos.lng,
+            y: pos.lat,
+            crs: "EPSG:4326"
+        });
     }
 });
 

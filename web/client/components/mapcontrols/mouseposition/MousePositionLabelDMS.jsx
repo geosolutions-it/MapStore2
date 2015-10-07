@@ -13,26 +13,38 @@ var FormattedNumber = ReactIntl.FormattedNumber;
 
 var MousePositionLabelDMS = React.createClass({
     propTypes: {
-        lat: React.PropTypes.number,
-        lng: React.PropTypes.number,
-        latM: React.PropTypes.number,
-        lngM: React.PropTypes.number,
-        latS: React.PropTypes.number,
-        lngS: React.PropTypes.number
+        position: React.PropTypes.shape({
+            lng: React.PropTypes.number,
+            lat: React.PropTypes.number
+        })
+    },
+    getPositionValues(mPos) {
+        let {lng, lat} = (mPos) ? mPos : [null, null];
+        let [latM, lngM] = [(lat % 1) * 60, (lng % 1) * 60];
+        let [latS, lngS] = [(latM % 1) * 60, (lngM % 1) * 60];
+        return {
+            lat,
+            latM: Math.abs(latM),
+            latS: Math.abs(latS),
+            lng,
+            lngM: Math.abs(lngM),
+            lngS: Math.abs(lngS)
+        };
     },
     render() {
+        let pos = this.getPositionValues(this.props.position);
         let integerFormat = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 0};
         let decimalFormat = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 2, minimumFractionDigits: 2};
         let lngDFormat = {style: "decimal", minimumIntegerDigits: 3, maximumFractionDigits: 0};
         return (
                 <h5>
                 <Label bsSize="lg" bsStyle="info">
-                    <span>Lat: </span><FormattedNumber key="latD" {...integerFormat} value={this.props.lat} />
-                    <span>° </span><FormattedNumber key="latM" {...integerFormat} value={this.props.latM} />
-                    <span>' </span><FormattedNumber key="latS" {...decimalFormat} value={this.props.latS} />
-                    <span>'' Lng: </span><FormattedNumber key="lngD" {...lngDFormat} value={this.props.lng} />
-                    <span>° </span><FormattedNumber key="lngM" {...integerFormat} value={this.props.lngM} />
-                    <span>' </span><FormattedNumber key="lngS" {...decimalFormat} value={this.props.lngS} /><span>''</span>
+                    <span>Lat: </span><FormattedNumber key="latD" {...integerFormat} value={pos.lat} />
+                    <span>° </span><FormattedNumber key="latM" {...integerFormat} value={pos.latM} />
+                    <span>' </span><FormattedNumber key="latS" {...decimalFormat} value={pos.latS} />
+                    <span>'' Lng: </span><FormattedNumber key="lngD" {...lngDFormat} value={pos.lng} />
+                    <span>° </span><FormattedNumber key="lngM" {...integerFormat} value={pos.lngM} />
+                    <span>' </span><FormattedNumber key="lngS" {...decimalFormat} value={pos.lngS} /><span>''</span>
                 </Label>
                 </h5>);
     }

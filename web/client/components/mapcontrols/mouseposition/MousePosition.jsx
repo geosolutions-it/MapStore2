@@ -7,90 +7,59 @@
  */
 var React = require('react');
 var proj4js = require('proj4');
+var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var MousePositionLabelDMS = require('./MousePositionLabelDMS');
 var MousePositionLabelYX = require('./MousePositionLabelYX');
-var CRSSelector = require('./CRSSelector');
+
 require("./mousePosition.css");
 
 let MousePosition = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         mousePosition: React.PropTypes.object,
-        origCrs: React.PropTypes.string,
-        labelTemplate: React.PropTypes.object,
-        degreesTemplate: React.PropTypes.func,
-        projectedTemplate: React.PropTypes.func,
-        actions: React.PropTypes.shape({
-            changeMousePositionCrs: React.PropTypes.func
-        }),
-        mapProjection: React.PropTypes.string
+        crs: React.PropTypes.string,
+        enabled: React.PropTypes.bool,
+        degreesTemplate: React.PropTypes.object,
+        projectedTemplate: React.PropTypes.object
     },
     getDefaultProps() {
         return {
             id: "mapstore-mouseposition",
-            mousePosition: {
-                position: {
-                    lat: null,
-                    lng: null
-                },
-                crs: null,
-                enabled: false
-            },
-            origCrs: "EPSG:4326",
+            mousePosition: null,
+            crs: "EPSG:4326",
+            enabled: false,
             degreesTemplate: MousePositionLabelDMS,
-            projectedTemplate: MousePositionLabelYX,
-            actions: {
-                changeMousePositionCrs: () => {}
-            },
-            mapProjection: null
-            };
-    },
-    componentWillMount() {
-        if (!this.props.mousePosition.crs) this.props.actions.changeMousePositionCrs(this.props.mapProjection);
+            projectedTemplate: MousePositionLabelYX
+        };
     },
     getUnits(crs) {
         return proj4js.defs(crs).units;
     },
-    getPositionValues(mPos) {
-        let {lat, lng} = (mPos.position) ? mPos.position : [null, null];
-        let [latM, latS, lngM, lngS] = [null, null, null, null];
-        if (lat && lng) {
-            let units = this.getUnits(this.props.mousePosition.crs);
-            if (proj4js.defs(this.props.mousePosition.crs) !== proj4js.defs(this.props.origCrs)) {
-                [lng, lat] = proj4js(this.props.mousePosition.crs, [lng, lat]);
-            }
-            if (units === "degrees") {
-                latM = (lat % 1) * 60;
-                latS = (latM % 1) * 60;
-                lngM = (lng % 1) * 60;
-                lngS = (lngM % 1) * 60;
-            }
+    getPosition() {
+        let {x, y} = (this.props.mousePosition) ? this.props.mousePosition : [null, null];
+        if (proj4js.defs(this.props.mousePosition.crs) !== proj4js.defs(this.props.crs)) {
+            ({x, y} = CoordinatesUtils.reproject([x, y], this.props.mousePosition.crs, this.props.crs));
         }
-        return {
-            lat,
-            latM: Math.abs(latM),
-            latS: Math.abs(latS),
-            lng,
-            lngM: Math.abs(lngM),
-            lngS: Math.abs(lngS)
-        };
+        let units = this.getUnits(this.props.crs);
+        if (units === "degrees") {
+            return {lat: y, lng: x};
+        }
+        return {x, y};
     },
+
     getTemplateComponent() {
-        return (this.getUnits(this.props.mousePosition.crs) === "degrees") ? this.props.degreesTemplate : this.props.projectedTemplate;
+        return (this.getUnits(this.props.crs) === "degrees") ? this.props.degreesTemplate : this.props.projectedTemplate;
     },
     render() {
-        let Tpl = (this.props.mousePosition.crs) ? this.getTemplateComponent() : null;
-        return (
-                <div>
-                <CRSSelector key="crsSelector"
-                     onCRSChange={this.props.actions.changeMousePositionCrs}
-                     {...this.props.mousePosition}
-                     crs={(this.props.mousePosition.crs) ? this.props.mousePosition.crs : this.props.mapProjection} />
-                <div id={this.props.id}>
-                { (this.props.mousePosition.enabled && Tpl) ? <Tpl {...this.getPositionValues(this.props.mousePosition)} /> : null }
-                </div>
-                </div>
-            );
+        let Template = (this.props.mousePosition) ? this.getTemplateComponent() : null;
+        if (this.props.enabled && Template) {
+            return (
+                    <div id={this.props.id}>
+                        <Template position={this.getPosition()} />
+                    </div>
+                );
+        }
+        return null;
     }
 });
 

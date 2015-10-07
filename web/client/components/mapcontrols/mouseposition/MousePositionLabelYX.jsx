@@ -13,16 +13,18 @@ var FormattedNumber = ReactIntl.FormattedNumber;
 
 var MousePositionLabelYX = React.createClass({
     propTypes: {
-        lat: React.PropTypes.number,
-        lng: React.PropTypes.number
+        position: React.PropTypes.shape({
+            x: React.PropTypes.number,
+            y: React.PropTypes.number
+        })
     },
     render() {
         let format = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 2, minimumFractionDigits: 2};
         return (
              <h5>
                 <Label bsSize="lg" bsStyle="info">
-                    <span>Y: </span><FormattedNumber key="lat" {...format} value={this.props.lat} />
-                    <span> X: </span><FormattedNumber key="lng" {...format} value={this.props.lng} />
+                    <span>X: </span><FormattedNumber key="x" {...format} value={this.props.position.x} />
+                    <span> Y: </span><FormattedNumber key="y" {...format} value={this.props.position.y} />
                 </Label>
             </h5>);
     }

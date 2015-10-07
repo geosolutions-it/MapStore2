@@ -8,6 +8,7 @@ var LayerTree = require('../components/LayerTree');
 var MapToolBar = require("../components/MapToolBar");
 var GetFeatureInfo = require("../components/GetFeatureInfo");
 var MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
+var CRSSelector = require("../../../components/mapcontrols/mouseposition/CRSSelector");
 var ScaleBox = require("../../../components/ScaleBox/ScaleBox");
 var GlobalSpinner = require('../../../components/spinners/GlobalSpinner/GlobalSpinner');
 var ZoomToMaxExtentButton = require('../../../components/buttons/ZoomToMaxExtentButton');
@@ -63,7 +64,7 @@ module.exports = {
                     <ToggleButton
                         isButton={true}
                         btnConfig={{disabled: (!props.browser.touch) ? false : true}}
-                        pressed={props.mousePosition.enabled}
+                        pressed={props.mousePositionEnabled}
                         glyphicon="eye-open"
                         onClick={props.changeMousePositionState}/>
             </MapToolBar>,
@@ -81,11 +82,13 @@ module.exports = {
                 clickedMapPoint={props.mapInfo.clickPoint} />,
             <MousePosition
                 key="mousePosition"
+                enabled={props.mousePositionEnabled}
                 mousePosition={props.mousePosition}
-                actions={{
-                    changeMousePositionCrs: props.changeMousePositionCrs
-                }}
-                mapProjection={props.mapConfig.projection} />,
+                crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.mapConfig.projection}/>,
+            <CRSSelector key="crsSelector"
+                     onCRSChange={props.changeMousePositionCrs}
+                     enabled={props.mousePositionEnabled}
+                     crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.mapConfig.projection} />,
             <ScaleBox
                 onChange={props.changeZoomLevel}
                 currentZoomLvl={props.mapConfig.zoom} />,
