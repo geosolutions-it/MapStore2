@@ -16,14 +16,18 @@ var ScaleBox = React.createClass({
         scales: React.PropTypes.array,
         currentZoomLvl: React.PropTypes.number,
         onChange: React.PropTypes.func,
-        label: React.PropTypes.string
+        readOnly: React.PropTypes.bool,
+        label: React.PropTypes.string,
+        template: React.PropTypes.func
     },
     getDefaultProps() {
         return {
             id: 'mapstore-scalebox',
             scales: mapUtils.getGoogleMercatorScales(0, 21),
             currentZoomLvl: 0,
-            onChange() {}
+            onChange() {},
+            readOnly: false,
+            template: (scale) => ("1 : " + Math.round(scale))
         };
     },
     onComboChange(event) {
@@ -34,17 +38,21 @@ var ScaleBox = React.createClass({
         return this.props.scales.map((item, index) => {
             return (
                 <option value={index} key={index}>
-                    {"1 : " + Math.round(item)}
+                    {this.props.template(item)}
                 </option>
             );
         });
     },
     render() {
+        let control = this.props.readOnly ?
+            <label>{this.props.template(this.props.scales[this.props.currentZoomLvl])}</label>
+        : <Input type="select" label={this.props.label} onChange={this.onComboChange} bsSize="small" value={this.props.currentZoomLvl}>
+            {this.getOptions()}
+        </Input>;
         return (
+
             <div id={this.props.id} >
-                <Input type="select" label={this.props.label} onChange={this.onComboChange} bsSize="small" value={this.props.currentZoomLvl}>
-                    {this.getOptions()}
-                </Input>
+                {control}
             </div>
         );
     }

@@ -51,4 +51,25 @@ describe('ScaleBox', () => {
         React.addons.TestUtils.Simulate.change(domSelect, {target: {value: 5}});
         expect(newZoom).toBe(5);
     });
+
+    it('renders readOnly', () => {
+        const sb = React.render(<ScaleBox readOnly/>, document.body);
+        expect(sb).toExist();
+        const domNode = React.findDOMNode(sb);
+        expect(domNode).toExist();
+        const domLabel = domNode.getElementsByTagName('label').item(0);
+        expect(domLabel).toExist();
+    });
+
+    it('uses template', () => {
+        const sb = React.render(<ScaleBox readOnly template={(scale) => {
+            return "Scale:" + scale;
+        }}/>, document.body);
+        expect(sb).toExist();
+        const domNode = React.findDOMNode(sb);
+        expect(domNode).toExist();
+        const domLabel = domNode.getElementsByTagName('label').item(0);
+        expect(domLabel).toExist();
+        expect(domLabel.innerHTML).toContain("Scale:");
+    });
 });
