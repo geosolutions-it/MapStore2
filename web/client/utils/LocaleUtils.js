@@ -7,7 +7,7 @@
  */
 var url = require('url');
 
-const supportedLocales = {
+let supportedLocales = {
      "it": {
          code: "it-IT",
          description: "Italiano"
@@ -19,6 +19,9 @@ const supportedLocales = {
 };
 
 var LocaleUtils = {
+    setSupportedLocales: function(locales) {
+        supportedLocales = locales;
+    },
     normalizeLocaleCode: function(localeCode) {
         var retval;
         if (localeCode === undefined || localeCode === null) {
