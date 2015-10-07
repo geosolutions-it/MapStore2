@@ -36,7 +36,7 @@ var MapsList = React.createClass({
              </div>
          );
         }
-        return <div className="spinner-loader"></div>;
+        return null;
     }
 });
 
