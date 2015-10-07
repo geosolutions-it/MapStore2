@@ -77,6 +77,7 @@ var Home = React.createClass({
                             maps={this.props.maps} onChangeMapType={this.changeMapType}
                             mapType={this.props.mapType} title={this.props.messages.manager.maps_title}
                         />
+                        {(this.props.maps) ? null : <div className="spinner-loader"></div> }
                     </Col>
                 </Row>
                 <Footer/>
