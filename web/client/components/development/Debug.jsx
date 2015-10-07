@@ -8,10 +8,13 @@
 
 var React = require('react');
 var url = require('url');
+if (!global.Symbol) {
+    require("babel-core/polyfill");
+}
 
 const urlQuery = url.parse(window.location.href, true).query;
 
-var Debug = React.createClass({
+let Debug = React.createClass({
     propTypes: {
         store: React.PropTypes.object.isRequired
     },
