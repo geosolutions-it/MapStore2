@@ -55,31 +55,86 @@
   -webkit-transform-origin: 50% 50%;
   transform-origin: 50% 50%;
 }
+@-moz-keyframes spinner-loader {
+  0% {
+    -moz-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes spinner-loader {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes spinner-loader {
+  0% {
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+/* :not(:required) hides this rule from IE9 and below */
+.spinner-loader:not(:required) {
+  -moz-animation: spinner-loader 1500ms infinite linear;
+  -webkit-animation: spinner-loader 1500ms infinite linear;
+  animation: spinner-loader 1500ms infinite linear;
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+  border-radius: 0.5em;
+  -moz-box-shadow: rgba(0, 0, 51, 0.3) 1.5em 0 0 0, rgba(0, 0, 51, 0.3) 1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) 0 1.5em 0 0, rgba(0, 0, 51, 0.3) -1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) -1.5em 0 0 0, rgba(0, 0, 51, 0.3) -1.1em -1.1em 0 0, rgba(0, 0, 51, 0.3) 0 -1.5em 0 0, rgba(0, 0, 51, 0.3) 1.1em -1.1em 0 0;
+  -webkit-box-shadow: rgba(0, 0, 51, 0.3) 1.5em 0 0 0, rgba(0, 0, 51, 0.3) 1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) 0 1.5em 0 0, rgba(0, 0, 51, 0.3) -1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) -1.5em 0 0 0, rgba(0, 0, 51, 0.3) -1.1em -1.1em 0 0, rgba(0, 0, 51, 0.3) 0 -1.5em 0 0, rgba(0, 0, 51, 0.3) 1.1em -1.1em 0 0;
+  box-shadow: rgba(0, 0, 51, 0.3) 1.5em 0 0 0, rgba(0, 0, 51, 0.3) 1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) 0 1.5em 0 0, rgba(0, 0, 51, 0.3) -1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) -1.5em 0 0 0, rgba(0, 0, 51, 0.3) -1.1em -1.1em 0 0, rgba(0, 0, 51, 0.3) 0 -1.5em 0 0, rgba(0, 0, 51, 0.3) 1.1em -1.1em 0 0;
+  display: inline-block;
+  font-size: 10px;
+  width: 1em;
+  height: 1em;
+  margin: 1.5em;
+  overflow: hidden;
+  text-indent: 100%;
+}
 .spinner{
+  float: left;
   display: table;
-  width: 100%;
+  width: 20px;
   text-align: center;
-  background-color: #FFF;
-  z-index: 100;
+  margin-right: 4px;
+
 }
 .spinner-card{
   display: table-cell;
   text-align: center;
   vertical-align: middle;
   height: 20px;
+  position:relative;
+  top:-7px;
 
 }
-.spinner-bg{
-  z-index: 100;
-}
+
 .spinner-fg{
-  position:relative;
-  top:-14px;
-  z-index: 101;
+  position: relative;
+  top: -36px;
+  left: 1px;
+  font-size: 14px;
 }
 .sp-small{
-    zoom:0.5;
-    -moz-transform: scale(0.5);
+    zoom:0.8;
+    -moz-transform: scale(0.8);
 }
 .sp-big{
     zoom:1.5;

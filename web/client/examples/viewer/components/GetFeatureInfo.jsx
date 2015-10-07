@@ -190,8 +190,11 @@ var GetFeatureInfo = React.createClass({
                     bsStyle="info"
                     dialogClassName="getFeatureInfo">
                     <Modal.Header closeButton>
-                        <Modal.Title><I18N.Message msgId="getFeatureInfoTitle" /></Modal.Title>
-                         {(missingRequests !== 0) ? <Spinner value={missingRequests} sSize="sp-small" /> : null }
+                        <Modal.Title>
+                        { (missingRequests !== 0 ) ? <Spinner value={missingRequests} sSize="sp-small" /> : null }
+                        <I18N.Message msgId="getFeatureInfoTitle" />
+                       </Modal.Title>
+
                     </Modal.Header>
                     <Modal.Body>
 
