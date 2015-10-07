@@ -103,20 +103,12 @@ var OpenlayersMap = React.createClass({
                     tLng = tLng - 360;
                 }
                 this.props.onMouseMove({
-                    position: {
-                        lat: coords[1],
-                        lng: tLng
-                }});
+                    y: coords[1],
+                    x: tLng,
+                    crs: "EPSG:4326"
+                });
             }
         });
-
-        /*map.on('precompose', () => {
-            map.getLayers().forEach((element, index) => { this.props.onLayerLoading(index); });
-        });
-
-        map.on('change', () => {
-            map.getLayers().forEach((element, index) => { this.props.onLayerLoad(index); });
-        });*/
 
         this.map = map;
         this.setMousePointer(this.props.mousePointer);
