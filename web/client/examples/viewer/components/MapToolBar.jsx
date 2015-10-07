@@ -38,7 +38,8 @@ let MapToolBar = React.createClass({
                 top: 0,
                 right: 0,
                 marginRight: "5px",
-                marginTop: "50px"
+                marginTop: "50px",
+                zIndex: 1000
             }
         };
     },
