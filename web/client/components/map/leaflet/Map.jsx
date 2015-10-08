@@ -22,7 +22,8 @@ var LeafletMap = React.createClass({
         mousePointer: React.PropTypes.string,
         onMouseMove: React.PropTypes.func,
         onLayerLoading: React.PropTypes.func,
-        onLayerLoad: React.PropTypes.func
+        onLayerLoad: React.PropTypes.func,
+        resize: React.PropTypes.number
     },
     getDefaultProps() {
         return {
@@ -36,7 +37,8 @@ var LeafletMap = React.createClass({
           },
           projection: "EPSG:3857",
           onLayerLoading: () => {},
-          onLayerLoad: () => {}
+          onLayerLoad: () => {},
+          resize: 0
         };
     },
     getInitialState() {
@@ -75,6 +77,12 @@ var LeafletMap = React.createClass({
         // update the position if the map is not the source of the state change
         if (newProps.mapStateSource !== this.props.id) {
             this._updateMapPositionFromNewProps(newProps);
+        }
+
+        if (this.map && newProps.resize > this.props.resize) {
+            setTimeout(() => {
+                this.map.invalidateSize(false);
+            }, 0);
         }
     },
     componentWillUnmount() {

@@ -25,7 +25,8 @@ var OpenlayersMap = React.createClass({
         mousePointer: React.PropTypes.string,
         onMouseMove: React.PropTypes.func,
         onLayerLoading: React.PropTypes.func,
-        onLayerLoad: React.PropTypes.func
+        onLayerLoad: React.PropTypes.func,
+        resize: React.PropTypes.number
     },
     getDefaultProps() {
         return {
@@ -36,7 +37,8 @@ var OpenlayersMap = React.createClass({
           mapOptions: {},
           projection: 'EPSG:3857',
           onLayerLoading: () => {},
-          onLayerLoad: () => {}
+          onLayerLoad: () => {},
+          resize: 0
         };
     },
     getInitialState() {
@@ -126,6 +128,12 @@ var OpenlayersMap = React.createClass({
 
         if (this.props.id !== newProps.mapStateSource) {
             this._updateMapPositionFromNewProps(newProps);
+        }
+
+        if (this.map && newProps.resize > this.props.resize) {
+            setTimeout(() => {
+                this.map.updateSize();
+            }, 0);
         }
     },
     componentWillUnmount() {
