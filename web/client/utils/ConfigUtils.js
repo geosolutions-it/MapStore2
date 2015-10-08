@@ -48,7 +48,7 @@ var ConfigUtils = {
 
     getCenter: function(center, projection) {
         var retval;
-        if (center.x && center.y && center.crs) {
+        if ((center.x || center.x === 0) && (center.y || center.y === 0) && center.crs) {
             if (center.crs !== "EPSG:4326") {
                 let xy = Proj4js.toPoint([center.x, center.y]);
                 const epsgMap = new Proj4js.Proj(center.crs);
