@@ -56,6 +56,10 @@
             "tooltip": "Select Background"
         },
         "getFeatureInfoTitle": "Feature Info",
-        "noFeatureInfo": "There is no information available for the feature you clicked"
+        "noFeatureInfo": "There is no information available for the feature you clicked",
+        "measureComponent": {
+            "tooltip": "Measure length and area",
+            "title": "Measure"
+        }
     }
 }
