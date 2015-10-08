@@ -7,6 +7,8 @@
  */
 var ol = require('openlayers');
 var React = require('react');
+var assign = require('object-assign');
+
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var ConfigUtils = require('../../../utils/ConfigUtils');
 
@@ -55,15 +57,17 @@ var OpenlayersMap = React.createClass({
               className: "hidden"
             })
         });
+        var viewOptions = assign({}, {
+            projection: this.props.projection,
+            center: [center.x, center.y],
+            zoom: this.props.zoom
+        }, this.props.mapOptions.view || {});
         var map = new ol.Map({
           layers: [],
           controls: controls,
           interactions: interactions,
           target: this.props.id,
-          view: new ol.View({
-            center: [center.x, center.y],
-            zoom: this.props.zoom
-          })
+          view: new ol.View(viewOptions)
         });
         map.on('moveend', () => {
             let view = map.getView();
