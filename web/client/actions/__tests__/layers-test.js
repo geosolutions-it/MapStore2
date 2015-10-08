@@ -10,8 +10,12 @@ var expect = require('expect');
 var {
     TOGGLE_NODE,
     SORT_NODE,
+    REMOVE_NODE,
+    UPDATE_NODE,
     toggleNode,
-    sortNode
+    sortNode,
+    removeNode,
+    updateNode
 } = require('../layers');
 
 describe('Test correctness of the layers actions', () => {
@@ -34,5 +38,24 @@ describe('Test correctness of the layers actions', () => {
         expect(retval.node).toBe('sample');
         expect(retval.nodeType).toBe('groups');
         expect(retval.status).toBe(false);
+    });
+
+    it('removeNode', () => {
+        var retval = removeNode('sampleNode', 'sampleType');
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(REMOVE_NODE);
+        expect(retval.node).toBe('sampleNode');
+        expect(retval.nodeType).toBe('sampleType');
+    });
+
+    it('updateNode', () => {
+        var retval = updateNode('sampleNode', 'sampleType', 'sampleOptions');
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(UPDATE_NODE);
+        expect(retval.node).toBe('sampleNode');
+        expect(retval.nodeType).toBe('sampleType');
+        expect(retval.options).toBe('sampleOptions');
     });
 });

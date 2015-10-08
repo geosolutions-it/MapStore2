@@ -14,6 +14,7 @@ const mapType = urlQuery.type || 'leaflet';
 var LMap = require('../../../components/map/' + mapType + '/Map');
 var LLayer = require('../../../components/map/' + mapType + '/Layer');
 var ScaleBar = require('../../../components/map/' + mapType + '/ScaleBar');
+var MeasurementSupport = require('../../../components/map/' + mapType + '/MeasurementSupport');
 
 var assign = require('object-assign');
 var ConfigUtils = require('../../../utils/ConfigUtils');
@@ -25,7 +26,9 @@ var VMap = React.createClass({
         onClick: React.PropTypes.func,
         onMouseMove: React.PropTypes.func,
         onLayerLoading: React.PropTypes.func,
-        onLayerLoad: React.PropTypes.func
+        onLayerLoad: React.PropTypes.func,
+        changeMeasurementState: React.PropTypes.func,
+        measurement: React.PropTypes.object
     },
     renderLayers(layers) {
         if (layers) {
@@ -49,8 +52,12 @@ var VMap = React.createClass({
                 mousePointer={this.props.config.mousePointer}
                 onMouseMove={this.props.onMouseMove}
                 onLayerLoading={this.props.onLayerLoading}
-                onLayerLoad={this.props.onLayerLoad}>
+                onLayerLoad={this.props.onLayerLoad}
+            >
                 {this.renderLayers(this.props.config.layers)}
+                <MeasurementSupport
+                    changeMeasurementState={this.props.changeMeasurementState}
+                    measurement={this.props.measurement} />
                 <ScaleBar/>
             </LMap>
         );

@@ -50,6 +50,22 @@ var CoordinatesUtils = {
             }
         }
         return crsList;
+    },
+    calculateAzimuth: function(p1, p2, pj) {
+
+        var p1proj = CoordinatesUtils.reproject(p1, pj, 'EPSG:4326');
+        var p2proj = CoordinatesUtils.reproject(p2, pj, 'EPSG:4326');
+        var lon1 = p1proj.x * Math.PI / 180.0;
+        var lat1 = p1proj.y * Math.PI / 180.0;
+        var lon2 = p2proj.x * Math.PI / 180.0;
+        var lat2 = p2proj.y * Math.PI / 180.0;
+        var dLon = lon2 - lon1;
+        var y = Math.sin(dLon) * Math.cos(lat2);
+        var x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+
+        var azimuth = (((Math.atan2(y, x) * 180.0 / Math.PI) + 360 ) % 360 );
+
+        return azimuth;
     }
 };
 

@@ -19,11 +19,13 @@ var CRSSelector = require("../../../components/mapcontrols/mouseposition/CRSSele
 var ScaleBox = require("../../../components/ScaleBox/ScaleBox");
 var GlobalSpinner = require('../../../components/spinners/GlobalSpinner/GlobalSpinner');
 var ZoomToMaxExtentButton = require('../../../components/buttons/ZoomToMaxExtentButton');
+var MeasureComponent = require("../../../components/MeasureComponent/MeasureComponent");
 
 var mapInfo = require('../../../reducers/mapInfo');
 var floatingPanel = require('../reducers/floatingPanel');
 var layers = require('../../../reducers/layers');
 var mousePosition = require('../../../reducers/mousePosition');
+var measurement = require('../../../reducers/measurement');
 
 var {getFeatureInfo, changeMapInfoState, purgeMapInfoResults, changeMapInfoFormat} = require('../../../actions/mapInfo');
 var {activatePanel} = require('../actions/floatingPanel');
@@ -35,6 +37,8 @@ var {changeZoomLevel} = require('../../../actions/map');
 var {layerLoading, layerLoad} = require('../../../actions/map');
 var {changeMapView} = require('../../../actions/map');
 var {toggleNode, sortNode} = require('../../../actions/layers');
+
+var {changeMeasurementState} = require('../../../actions/measurement');
 
 var React = require('react');
 
@@ -80,6 +84,23 @@ module.exports = {
                     title={<div><Message msgId="background"/></div>}
                     buttonTooltip={<Message msgId="backgroundSwither.tooltip"/>}
                     propertiesChangeHandler={props.changeLayerProperties}/>
+                <MeasureComponent
+                    key="measureComponent"
+                    isPanel={true}
+                    title={<div><Message msgId="measureComponent.title"/></div>}
+                    buttonTooltip={<Message msgId="measureComponent.tooltip"/>}
+                    lengthButtonText={<Message msgId="measureComponent.lengthButtonText"/>}
+                    areaButtonText={<Message msgId="measureComponent.areaButtonText"/>}
+                    resetButtonText={<Message msgId="measureComponent.resetButtonText"/>}
+                    lengthLabel={<Message msgId="measureComponent.lengthLabel"/>}
+                    areaLabel={<Message msgId="measureComponent.areaLabel"/>}
+                    bearingLabel={<Message msgId="measureComponent.bearingLabel"/>}
+                    toggleMeasure={props.changeMeasurementState}
+                    lineMeasureEnabled={props.measurement.lineMeasureEnabled}
+                    areaMeasureEnabled={props.measurement.areaMeasureEnabled}
+                    bearingMeasureEnabled={props.measurement.bearingMeasureEnabled}
+                    measurement={props.measurement}
+                />
                 <Settings
                     key="settingsPanel"
                     isPanel={true}
@@ -101,7 +122,6 @@ module.exports = {
                                 pressed={props.mousePositionEnabled}
                                 glyphicon="eye-open"
                                 onClick={props.changeMousePositionState}/>
-
                         }}
                         crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.mapConfig.projection} />
                     <FeatureInfoFormatSelector
@@ -157,7 +177,7 @@ module.exports = {
                 }} />
         ];
     },
-    reducers: {mapInfo, floatingPanel, mousePosition, layers},
+    reducers: {mapInfo, floatingPanel, mousePosition, layers, measurement},
     actions: {
         getFeatureInfo,
         changeMapInfoState,
@@ -175,6 +195,7 @@ module.exports = {
         sortNode,
         undo,
         redo,
-        changeMapInfoFormat
+        changeMapInfoFormat,
+        changeMeasurementState
     }
 };

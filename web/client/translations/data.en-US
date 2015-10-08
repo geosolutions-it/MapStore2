@@ -66,6 +66,16 @@
             "undoBtnTooltip": "Go back",
             "redoBtnTooltip": "Go  forward"
         },
-        "infoFormatLbl": "GetFeatureInfo response format"
+        "infoFormatLbl": "GetFeatureInfo response format",
+        "measureComponent": {
+            "tooltip": "Measure length and area",
+            "title": "Measure",
+            "lengthButtonText": "Line",
+            "areaButtonText": "Area",
+            "resetButtonText": "Reset",
+            "lengthLabel": "Length",
+            "areaLabel": "Area",
+            "bearingLabel": "Bearing"
+        }
     }
 }
