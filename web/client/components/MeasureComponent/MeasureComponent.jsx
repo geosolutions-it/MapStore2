@@ -24,11 +24,10 @@ let MeasureComponent = React.createClass({
         lengthLabel: React.PropTypes.string,
         areaLabel: React.PropTypes.string,
         bearingLabel: React.PropTypes.string,
-        measurement: React.PropTypes.object({
-            length: React.PropTypes.number,
-            area: React.PropTypes.number,
-            bearing: React.PropTypes.number
-        })
+        toggleMeasure: React.PropTypes.func,
+        measurement: React.PropTypes.object,
+        lineMeasureEnabled: React.PropTypes.Boolean,
+        areaMeasureEnabled: React.PropTypes.Boolean
     },
     getDefaultProps() {
         return {
@@ -37,13 +36,38 @@ let MeasureComponent = React.createClass({
                 xs: 6,
                 sm: 4,
                 md: 2
-            },
-            measurement: React.PropTypes.object({
+            }
+        };
+    },
+    onLineClick: function() {
+        var newMeasureState;
+        if (this.props.lineMeasureEnabled === false) {
+            newMeasureState = {
+                lineMeasureEnabled: true,
+                areaMeasureEnabled: false,
+                geomType: 'LineString',
+                // reset old measurements
                 len: 0,
                 area: 0,
                 bearing: 0
-            })
-        };
+            };
+            this.props.toggleMeasure(newMeasureState);
+        }
+    },
+    onAreaClick: function() {
+        var newMeasureState;
+        if (this.props.areaMeasureEnabled === false) {
+            newMeasureState = {
+                lineMeasureEnabled: false,
+                areaMeasureEnabled: true,
+                geomType: 'Polygon',
+                // reset old measurements
+                len: 0,
+                area: 0,
+                bearing: 0
+            };
+            this.props.toggleMeasure(newMeasureState);
+        }
     },
     render() {
         let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
@@ -52,11 +76,15 @@ let MeasureComponent = React.createClass({
                <Grid className="MeasureComponent" header={this.props.name} fluid={false} style={{overflow: "auto", width: "100%"}}>
                    <Col {...this.props.columnProperties}>
                        <ToggleButton
-                           text={this.props.lenghtButtonText} />
+                           text={this.props.lenghtButtonText}
+                           pressed={this.props.lineMeasureEnabled}
+                           onClick={this.onLineClick} />
                    </Col>
                    <Col {...this.props.columnProperties}>
                        <ToggleButton
-                           text={this.props.areaButtonText} />
+                           text={this.props.areaButtonText}
+                           pressed={this.props.areaMeasureEnabled}
+                           onClick={this.onAreaClick} />
                    </Col>
                    <Col {...this.props.columnProperties}>
                        <Button>{this.props.resetButtonText}</Button>
@@ -64,8 +92,8 @@ let MeasureComponent = React.createClass({
                </Grid>
                <Grid style={{"margin-top": "15px"}}>
                    <Col {...this.props.columnProperties}>
-                       <p><span>{this.props.lengthLabel}: </span><span><FormattedNumber key="len" {...decimalFormat} value="0" /> km</span></p>
-                       <p><span>{this.props.areaLabel}: </span><span><FormattedNumber key="area" {...decimalFormat} value="0" /> km²</span></p>
+                       <p><span>{this.props.lengthLabel}: </span><span><FormattedNumber key="len" {...decimalFormat} value={this.props.measurement.len} /> m</span></p>
+                       <p><span>{this.props.areaLabel}: </span><span><FormattedNumber key="area" {...decimalFormat} value={this.props.measurement.area} /> m²</span></p>
                        <p><span>{this.props.bearingLabel}: </span><span><FormattedNumber key="bearing" {...decimalFormat} value="0" /> deg</span></p>
                    </Col>
                </Grid>

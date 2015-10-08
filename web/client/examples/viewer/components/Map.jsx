@@ -25,7 +25,9 @@ var VMap = React.createClass({
         onClick: React.PropTypes.func,
         onMouseMove: React.PropTypes.func,
         onLayerLoading: React.PropTypes.func,
-        onLayerLoad: React.PropTypes.func
+        onLayerLoad: React.PropTypes.func,
+        changeMeasurementState: React.PropTypes.func,
+        measurement: React.PropTypes.object
     },
     renderLayers(layers) {
         if (layers) {
@@ -49,7 +51,9 @@ var VMap = React.createClass({
                 mousePointer={this.props.config.mousePointer}
                 onMouseMove={this.props.onMouseMove}
                 onLayerLoading={this.props.onLayerLoading}
-                onLayerLoad={this.props.onLayerLoad}>
+                onLayerLoad={this.props.onLayerLoad}
+                changeMeasurementState={this.props.changeMeasurementState}
+                measurement={this.props.measurement}>
                 {this.renderLayers(this.props.config.layers)}
                 <ScaleBar/>
             </LMap>

@@ -26,7 +26,9 @@ var OpenlayersMap = React.createClass({
         onMouseMove: React.PropTypes.func,
         onLayerLoading: React.PropTypes.func,
         onLayerLoad: React.PropTypes.func,
-        resize: React.PropTypes.number
+        resize: React.PropTypes.number,
+        measurement: React.PropTypes.object,
+        changeMeasurementState: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -134,6 +136,10 @@ var OpenlayersMap = React.createClass({
                 this.map.updateSize();
             }, 0);
         }
+
+        if (this.props.measurement.geomType !== newProps.measurement.geomType) {
+            this.addDrawInteraction(newProps);
+        }
     },
     componentWillUnmount() {
         this.map.setTarget(null);
@@ -173,6 +179,84 @@ var OpenlayersMap = React.createClass({
             const mapDiv = this.map.getViewport();
             mapDiv.style.cursor = pointer || 'auto';
         }
+    },
+    addDrawInteraction: function(newProps) {
+        var source;
+        var vector;
+        var draw;
+        // cleanup old interaction
+        if (this.drawInteraction) {
+            this.removeDrawInteraction();
+        }
+        // create a layer to draw on
+        source = new ol.source.Vector();
+        vector = new ol.layer.Vector({
+            source: source,
+            style: new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 255, 255, 0.2)'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#ffcc33',
+                  width: 2
+                }),
+                image: new ol.style.Circle({
+                    radius: 7,
+                    fill: new ol.style.Fill({
+                        color: '#ffcc33'
+                    })
+                })
+            })
+        });
+        this.map.addLayer(vector);
+        // create an interaction to draw with
+        draw = new ol.interaction.Draw({
+            source: source,
+            type: /** @type {ol.geom.GeometryType} */ newProps.measurement.geomType,
+            style: new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 255, 255, 0.2)'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: 'rgba(0, 0, 0, 0.5)',
+                    lineDash: [10, 10],
+                    width: 2
+                }),
+                image: new ol.style.Circle({
+                    radius: 5,
+                    stroke: new ol.style.Stroke({
+                        color: 'rgba(0, 0, 0, 0.7)'
+                    }),
+                    fill: new ol.style.Fill({
+                        color: 'rgba(255, 255, 255, 0.2)'
+                    })
+                })
+            })
+        });
+        draw.on('drawend', function(evt) {
+            var newMeasureState = {
+                lineMeasureEnabled: this.props.measurement.lineMeasureEnabled,
+                areaMeasureEnabled: this.props.measurement.areaMeasureEnabled,
+                geomType: this.props.measurement.geomType,
+                len: this.props.measurement.geomType === 'LineString' ? evt.feature.getGeometry().getLength() : 0,
+                area: this.props.measurement.geomType === 'Polygon' ? evt.feature.getGeometry().getArea() : 0,
+                bearing: 0
+            };
+            this.props.changeMeasurementState(newMeasureState);
+        }, this);
+        draw.on('drawstart', function() {
+            // clear previous measurements
+            source.clear();
+        });
+
+        this.map.addInteraction(draw);
+        this.drawInteraction = draw;
+        this.measureLayer = vector;
+    },
+    removeDrawInteraction: function() {
+        this.map.removeInteraction(this.drawInteraction);
+        this.drawInteraction = null;
+        this.map.removeLayer(this.measureLayer);
     }
 });
 

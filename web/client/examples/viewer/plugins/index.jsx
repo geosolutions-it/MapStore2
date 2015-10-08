@@ -20,6 +20,7 @@ var mapInfo = require('../../../reducers/mapInfo');
 var floatingPanel = require('../reducers/floatingPanel');
 var layers = require('../../../reducers/layers');
 var mousePosition = require('../../../reducers/mousePosition');
+var measurement = require('../../../reducers/measurement');
 
 var {getFeatureInfo, changeMapInfoState, purgeMapInfoResults} = require('../../../actions/mapInfo');
 var {activatePanel} = require('../actions/floatingPanel');
@@ -32,6 +33,7 @@ var {layerLoading, layerLoad} = require('../../../actions/map');
 var {changeMapView} = require('../../../actions/map');
 var {toggleNode, sortNode} = require('../../../actions/layers');
 
+var {changeMeasurementState} = require('../../../actions/measurement');
 
 var React = require('react');
 
@@ -78,16 +80,21 @@ module.exports = {
                     buttonTooltip={<Message msgId="backgroundSwither.tooltip"/>}
                     propertiesChangeHandler={props.changeLayerProperties}/>
                 <MeasureComponent
-                      key="measureComponent"
-                      isPanel={true}
-                      title={<div><Message msgId="measureComponent.title"/></div>}
-                      buttonTooltip={<Message msgId="measureComponent.tooltip"/>}
-                      lenghtButtonText="Line"
-                      areaButtonText="Area"
-                      resetButtonText="Reset"
-                      lengthLabel="Length"
-                      areaLabel="Area"
-                      bearingLabel="Bearing"/>
+                    key="measureComponent"
+                    isPanel={true}
+                    title={<div><Message msgId="measureComponent.title"/></div>}
+                    buttonTooltip={<Message msgId="measureComponent.tooltip"/>}
+                    lenghtButtonText="Line"
+                    areaButtonText="Area"
+                    resetButtonText="Reset"
+                    lengthLabel="Length"
+                    areaLabel="Area"
+                    bearingLabel="Bearing"
+                    toggleMeasure={props.changeMeasurementState}
+                    lineMeasureEnabled={props.measurement.lineMeasureEnabled}
+                    areaMeasureEnabled={props.measurement.areaMeasureEnabled}
+                    measurement={props.measurement}
+                />
                 <Settings
                     key="settingsPanel"
                     isPanel={true}
@@ -147,7 +154,7 @@ module.exports = {
                 }} />
         ];
     },
-    reducers: {mapInfo, floatingPanel, mousePosition, layers},
+    reducers: {mapInfo, floatingPanel, mousePosition, layers, measurement},
     actions: {
         getFeatureInfo,
         changeMapInfoState,
@@ -162,6 +169,7 @@ module.exports = {
         layerLoad,
         changeMapView,
         toggleNode,
-        sortNode
+        sortNode,
+        changeMeasurementState
     }
 };
