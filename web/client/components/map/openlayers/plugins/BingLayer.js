@@ -11,7 +11,7 @@ var ol = require('openlayers');
 
 Layers.registerType('bing', {
     create: (options) => {
-        var key = options.apiKey || "AqTGBsziZHIJYYxgivLBf0hVdrAk9mWO5cQcb8Yux8sW5M8c8opEC2lZqKR1ZZXf";
+        var key = options.apiKey;
         return new ol.layer.Tile({
             preload: Infinity,
             opacity: options.opacity !== undefined ? options.opacity : 1,
