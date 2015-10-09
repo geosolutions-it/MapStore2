@@ -10,7 +10,7 @@ var Layers = require('../../../../utils/leaflet/Layers');
 var Bing = require('leaflet-plugins/layer/tile/Bing');
 
 Layers.registerType('bing', (options) => {
-    var key = options.apiKey || "AqTGBsziZHIJYYxgivLBf0hVdrAk9mWO5cQcb8Yux8sW5M8c8opEC2lZqKR1ZZXf";
+    var key = options.apiKey;
     return new Bing(key,
         {
             subdomains: [0, 1, 2, 3],

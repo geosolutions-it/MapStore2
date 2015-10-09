@@ -22,7 +22,8 @@ const centerPropType = React.PropTypes.shape({
 const urlQuery = url.parse(window.location.href, true).query;
 let defaultConfig = {
     proxyUrl: "/mapstore/proxy/?url=",
-    geoStoreUrl: "/mapstore/rest/geostore/"
+    geoStoreUrl: "/mapstore/rest/geostore/",
+    bingApiKey: null
 };
 
 var ConfigUtils = {
@@ -68,6 +69,7 @@ var ConfigUtils = {
     },
     normalizeConfig: function(config) {
         config.center = ConfigUtils.getCenter(config.center);
+        config.layers = config.layers.map(ConfigUtils.setBingKey);
         return config;
     },
     getUserConfiguration: function(defaultName, extension, geoStoreBase) {
@@ -102,7 +104,7 @@ var ConfigUtils = {
             center: latLng,
             zoom: zoom,
             maxExtent: maxExtent, // TODO convert maxExtent
-            layers: layers,
+            layers: layers.map(ConfigUtils.setBingKey),
             projection: mapConfig.projection || 'EPSG:3857'
         };
     },
@@ -255,6 +257,12 @@ var ConfigUtils = {
 
         retina: retina
         };
+    },
+    setBingKey: function(layer) {
+        if (layer.type === 'bing') {
+            layer.apiKey = defaultConfig.bingApiKey;
+        }
+        return layer;
     }
 };
 
