@@ -14,10 +14,12 @@ var {
     CHANGE_MAPINFO_STATE,
     NEW_MAPINFO_REQUEST,
     PURGE_MAPINFO_RESULTS,
+    CHANGE_MAPINFO_FORMAT,
     getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
-    purgeMapInfoResults
+    purgeMapInfoResults,
+    changeMapInfoFormat
 } = require('../mapInfo');
 
 describe('Test correctness of the map actions', () => {
@@ -150,5 +152,12 @@ describe('Test correctness of the map actions', () => {
         const retval = purgeMapInfoResults();
 
         expect(retval.type).toBe(PURGE_MAPINFO_RESULTS);
+    });
+
+    it('change mapInfo format', () => {
+        const retval = changeMapInfoFormat('testFormat');
+
+        expect(retval.type).toBe(CHANGE_MAPINFO_FORMAT);
+        expect(retval.infoFormat).toBe('testFormat');
     });
 });

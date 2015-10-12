@@ -7,17 +7,23 @@
  */
 
 var React = require('react');
-var BootstrapReact = require('react-bootstrap');
-var Modal = BootstrapReact.Modal;
-var Tabs = BootstrapReact.Tabs;
-var Tab = BootstrapReact.Tab;
-var I18N = require('../../../components/I18N/I18N');
-var HtmlRenderer = require('../../../components/misc/HtmlRenderer');
-var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var assign = require('object-assign');
-var Spinner = require('../../../components/spinners/BasicSpinner/BasicSpinner');
+var {Modal} = require('react-bootstrap');
+
+var I18N = require('../../../../components/I18N/I18N');
+var Spinner = require('../../../../components/spinners/BasicSpinner/BasicSpinner');
+var JSONFeatureInfoViewer = require('./infoViewers/JSONFeatureInfoViewer');
+var HTMLFeatureInfoViewer = require('./infoViewers/HTMLFeatureInfoViewer');
+var TEXTFeatureInfoViewer = require('./infoViewers/TEXTFeatureInfoViewer');
+
+var CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
+var MapInfoUtils = require('../../../../utils/MapInfoUtils');
+
 var GetFeatureInfo = React.createClass({
     propTypes: {
+        infoFormat: React.PropTypes.oneOf(
+            MapInfoUtils.getAvailableInfoFormatValues()
+        ),
         htmlResponses: React.PropTypes.array,
         htmlRequests: React.PropTypes.object,
         btnConfig: React.PropTypes.object,
@@ -51,7 +57,8 @@ var GetFeatureInfo = React.createClass({
                 getFeatureInfo() {},
                 purgeMapInfoResults() {},
                 changeMousePointer() {}
-            }
+            },
+            infoFormat: MapInfoUtils.getDefaultInfoFormatValue()
         };
     },
     getInitialState() {
@@ -78,7 +85,7 @@ var GetFeatureInfo = React.createClass({
                           bounds.miny + "," +
                           bounds.maxx + "," +
                           bounds.maxy,
-                    info_format: "text/html"
+                    info_format: this.props.infoFormat
                 };
                 const layerMetadata = {
                     title: layer.title
@@ -97,89 +104,23 @@ var GetFeatureInfo = React.createClass({
     onModalHiding() {
         this.props.actions.purgeMapInfoResults();
     },
-    // returns a array of tabs where each one contains feature info for
-    // a specific layer.
-    getModalContent(responses) {
-        var output = [];
-        var content = "";
-        var title = "";
-        var style = "";
-        const regexpBody = /^[\s\S]*<body>([\s\S]*)<\/body>[\s\S]*$/i;
-        const regexpStyle = /(<style[\s\=\w\/\"]*>[^<]*<\/style>)/i;
-        const regexpException = /<ServiceException[\s]?[\s\w\=\"]*>([^<]*)<\/ServiceException>/i;
-
-        for (let i = 0; i < responses.length; i++) {
-            const {response, layerMetadata} = responses[i];
-
-            title = (
-                <div key={i} style={{
-                        maxWidth: "96px",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap"
-                    }}>
-                    {layerMetadata.title}
-                </div>
-            );
-
-            if (typeof response === "string") {
-                // response can be a HTML feature info or XML exception
-                if (response.indexOf('<?xml') === 0) { // XML exception
-                    let match = regexpException.exec(response);
-                    let exceptionMsg = match && match.length === 2 ? match[1].trim() : "";
-                    content = (<div><h3>Exception</h3><p style={{margin: "16px"}}>{exceptionMsg}</p></div>);
-                } else { // HTML feature info
-                    // gets css rules from the response and removes which are related to body tag.
-                    let styleMatch = regexpStyle.exec(response);
-                    style = styleMatch && styleMatch.length === 2 ? regexpStyle.exec(response)[1] : "";
-                    style = style.replace(/body[,]+/g, '');
-                    // gets feature info managing an eventually empty response
-                    content = response.replace(regexpBody, '$1').trim();
-                    if (content.length === 0) {
-                        content = <p style={{margin: "16px"}}><I18N.Message msgId="noFeatureInfo"/></p>;
-                    } else {
-                        content = <HtmlRenderer key={i} html={style + content} />;
-                    }
-                }
-                output.push(
-                    <Tab eventKey={i} key={i} title={title}>
-                        <div style={{overflow: "auto"}}>
-                            {content}
-                        </div>
-                    </Tab>
-                );
-            } else if (response.length !== undefined) {
-                // response is an array of exceptions
-                const exArray = response;
-                for (let j = 0; j < exArray.length; j++) {
-                    output.push(
-                        <Tab eventKey={i} key={i} title={title}>
-                            <div style={{overflow: "auto"}}>
-                                <HtmlRenderer key={i} html={
-                                    '<h3>Exception: ' + j + '</h3>' +
-                                    '<p>' + exArray[j].text + '</p>'
-                                }/>
-                            </div>
-                        </Tab>
-                    );
-                }
-            } else {
-                let match = regexpBody.exec(response.data);
-                if (match && match.length === 2) {
-                    content = match[1];
-                } else {
-                    content = '<p>' + response.data + '</p>';
-                }
-                output.push(
-                    <Tab eventKey={i} title={title}>
-                        <div style={{overflow: "auto"}}>
-                            <HtmlRenderer key={i} html={content}/>
-                        </div>
-                    </Tab>
-                );
-            }
+    renderInfo() {
+        var retval = null;
+        var infoFormats = MapInfoUtils.getAvailableInfoFormat();
+        switch (this.props.infoFormat) {
+            case infoFormats.JSON:
+                retval = (<JSONFeatureInfoViewer responses={this.props.htmlResponses} />);
+                break;
+            case infoFormats.HTML:
+                retval = (<HTMLFeatureInfoViewer responses={this.props.htmlResponses} />);
+                break;
+            case infoFormats.TEXT:
+                retval = (<TEXTFeatureInfoViewer responses={this.props.htmlResponses} />);
+                break;
+            default:
+                retval = null;
         }
-        return output;
+        return retval;
     },
     render() {
         let missingRequests = this.props.htmlRequests.length - this.props.htmlResponses.length;
@@ -194,16 +135,11 @@ var GetFeatureInfo = React.createClass({
                         { (missingRequests !== 0 ) ? <Spinner value={missingRequests} sSize="sp-small" /> : null }
                         <I18N.Message msgId="getFeatureInfoTitle" />
                        </Modal.Title>
-
                     </Modal.Header>
                     <Modal.Body>
-
-                        <Tabs defaultActiveKey={0}>
-                            {this.getModalContent(this.props.htmlResponses)}
-                        </Tabs>
+                        {this.renderInfo()}
                     </Modal.Body>
                 </Modal>
-
         );
     },
     reprojectBbox(bbox, destSRS) {
