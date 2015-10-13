@@ -12,8 +12,10 @@ var {Glyphicon} = require('react-bootstrap');
 var Group = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
+        expanded: React.PropTypes.bool,
         filter: React.PropTypes.func,
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        onClick: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -21,14 +23,19 @@ var Group = React.createClass({
             filter: () => {
                 return true;
             },
-            style: {marginBottom: "16px"}
+            onClick: () => {},
+            expanded: true,
+            style: {
+                marginBottom: "16px",
+                cursor: "pointer"
+            }
         };
     },
     render() {
         let groupTitle = this.props.node && this.props.node.title || 'Default';
         let content = [];
-
-        if (this.props.children) {
+        let expanded = this.props.node.expanded || this.props.expanded;
+        if (this.props.children && expanded) {
             let nodes = (this.props.node.nodes || []);
             content = nodes
                 .filter((layer) => this.props.filter(layer, this.props.node))
@@ -37,13 +44,13 @@ var Group = React.createClass({
                 })));
         }
         return (
-            <div key={groupTitle} style={this.props.style} >
-                <div style={{
+            <div key={groupTitle} className={expanded ? "group-expanded" : "group-collapsed"} style={this.props.style} >
+                <div onClick={() => this.props.onClick(this.props.node.name, expanded)} style={{
                     background: "rgb(240,240,240)",
                     padding: "4px",
                     borderRadius: "4px"}}
                 >
-                    <Glyphicon style={{marginRight: "8px"}} glyph="folder-open" />{groupTitle}
+                    <Glyphicon style={{marginRight: "8px"}} glyph={expanded ? "folder-open" : "folder-close"} />{groupTitle}
                 </div>
                 <div style={{marginLeft: "15px"}}>
                     {content}

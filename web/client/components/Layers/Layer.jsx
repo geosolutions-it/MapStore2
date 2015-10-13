@@ -15,12 +15,16 @@ var Layer = React.createClass({
         node: React.PropTypes.object,
         propertiesChangeHandler: React.PropTypes.func,
         loadingList: React.PropTypes.array,
-        showSpinner: React.PropTypes.bool
+        showSpinner: React.PropTypes.bool,
+        expanded: React.PropTypes.bool,
+        onClick: React.PropTypes.func
     },
     getDefaultProps() {
         return {
             showSpinner: false,
-            loadingList: []
+            loadingList: [],
+            expanded: true,
+            onClick: () => {}
         };
     },
     renderLayerLegend(layer) {
@@ -37,15 +41,15 @@ var Layer = React.createClass({
 
     },
     render() {
+        let expanded = this.props.node.expanded || this.props.expanded;
         return (
-
             <div key={this.props.node.name}>
                 <div style={{display: 'flex'}}>
                     <input style={{marginRight: "2px"}} data-position={this.props.node.storeIndex} type="checkbox" checked={this.props.node.visibility ? "checked" : ""} onChange={this.changeLayerVisibility} />
                     {this.renderSpinner()}
-                    {this.props.node.title || this.props.node.name}
+                    <span onClick={() => this.props.onClick(this.props.node.name, expanded)}>{this.props.node.title || this.props.node.name}</span>
                 </div>
-                {this.renderLayerLegend(this.props.node)}
+                {expanded ? this.renderLayerLegend(this.props.node) : []}
             </div>
         );
     },

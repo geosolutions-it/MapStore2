@@ -88,4 +88,68 @@ describe('test Group module component', () => {
         const container = children.item(1);
         expect(container.children.length).toBe(1);
     });
+
+    it('test Group collapsed', () => {
+        const layers = [{
+            name: 'layer01',
+            title: 'Layer 1',
+            visibility: true,
+            storeIndex: 0,
+            type: 'wms',
+            group: 'grp'
+        }, {
+            name: 'layer02',
+            title: 'Layer 2',
+            visibility: true,
+            storeIndex: 1,
+            type: 'wms',
+            group: ''
+        }];
+
+        const group = {
+            name: 'grp',
+            title: 'Group',
+            nodes: layers
+        };
+        const comp = React.render(<Group node={group} expanded={false} filter={(layer, node) => layer.group === node.name}><div className="layer"/></Group>, document.body);
+        expect(comp).toExist();
+
+        const domNode = React.findDOMNode(comp);
+        expect(domNode).toExist();
+
+        const children = domNode.getElementsByClassName('layer');
+        expect(children.length).toBe(0);
+    });
+
+    it('test Group expanded', () => {
+        const layers = [{
+            name: 'layer01',
+            title: 'Layer 1',
+            visibility: true,
+            storeIndex: 0,
+            type: 'wms',
+            group: 'grp'
+        }, {
+            name: 'layer02',
+            title: 'Layer 2',
+            visibility: true,
+            storeIndex: 1,
+            type: 'wms',
+            group: ''
+        }];
+
+        const group = {
+            name: 'grp',
+            title: 'Group',
+            nodes: layers
+        };
+        const comp = React.render(<Group node={group} expanded filter={(layer, node) => layer.group === node.name}><div className="layer"/></Group>, document.body);
+        expect(comp).toExist();
+
+        const domNode = React.findDOMNode(comp);
+        expect(domNode).toExist();
+
+        const children = domNode.getElementsByClassName('layer');
+        expect(children.length).toBe(1);
+    });
 });
