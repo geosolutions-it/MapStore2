@@ -25,7 +25,7 @@ var mapquestConstructors = {
         url: 'http://otile{s}.mqcdn.com/tiles/1.0.0/{type}/{z}/{x}/{y}.png',
         options: {
             subdomains: '1234',
-            type: 'osm',
+            type: 'sat',
             attribution: 'Imagery &copy; NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency, ' + mqTilesAttr
         }
     })
