@@ -14,6 +14,7 @@ var Group = require('../../../components/Layers/Group');
 var Layer = require('../../../components/Layers/Layer');
 
 var InlineSpinner = require('../../../components/spinners/InlineSpinner/InlineSpinner');
+var WMSLegend = require('../../../components/Layers/WMSLegend');
 
 var icon = require('../img/layers.png');
 
@@ -55,9 +56,11 @@ var LayerTree = React.createClass({
                             propertiesChangeHandler={this.props.propertiesChangeHandler}
                             showSpinner
                             loadingList={this.props.loadingList}
-                            >
-                            <InlineSpinner/>
-                        </Layer>
+                            spinner={<InlineSpinner/>}
+                            collapsible={(layer) => {
+                                return layer.type === 'wms' ? <WMSLegend/> : null;
+                            }}
+                            />
                     </Group>
                 </Layers>
             </Panel>

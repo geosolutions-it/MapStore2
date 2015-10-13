@@ -7,8 +7,8 @@
  */
 
 var React = require('react');
-var Legend = require('../Legend/Legend');
 var assign = require('object-assign');
+var {isFunction} = require('lodash');
 
 var Layer = React.createClass({
     propTypes: {
@@ -17,28 +17,34 @@ var Layer = React.createClass({
         loadingList: React.PropTypes.array,
         showSpinner: React.PropTypes.bool,
         expanded: React.PropTypes.bool,
-        onClick: React.PropTypes.func
+        onClick: React.PropTypes.func,
+        spinner: React.PropTypes.element,
+        collapsible: React.PropTypes.oneOfType([React.PropTypes.func, React.PropTypes.object])
     },
     getDefaultProps() {
         return {
             showSpinner: false,
             loadingList: [],
             expanded: true,
-            onClick: () => {}
+            onClick: () => {},
+            spinner: null,
+            collapsible: null
         };
     },
-    renderLayerLegend(layer) {
-        if (layer && layer.visibility && layer.type === "wms" && layer.group !== "background") {
-            return <div style={{marginLeft: "15px"}}><Legend layer={layer}/></div>;
+    renderCollapsiblePanel(layer) {
+        if (this.props.collapsible) {
+            if (isFunction(this.props.collapsible)) {
+                return React.cloneElement(this.props.collapsible(layer), {node: layer});
+            }
+            return React.cloneElement(this.props.collapsible, {node: layer});
         }
         return null;
     },
     renderSpinner() {
-        if (this.props.showSpinner && this.props.loadingList.indexOf(this.props.node.name) !== -1 && this.props.children) {
-            return React.cloneElement(this.props.children, {loading: true});
+        if (this.props.spinner && this.props.showSpinner && this.props.loadingList.indexOf(this.props.node.name) !== -1) {
+            return React.cloneElement(this.props.spinner, {loading: true});
         }
         return null;
-
     },
     render() {
         let expanded = this.props.node.expanded || this.props.expanded;
@@ -49,7 +55,7 @@ var Layer = React.createClass({
                     {this.renderSpinner()}
                     <span onClick={() => this.props.onClick(this.props.node.name, expanded)}>{this.props.node.title || this.props.node.name}</span>
                 </div>
-                {expanded ? this.renderLayerLegend(this.props.node) : []}
+                {expanded ? this.renderCollapsiblePanel(this.props.node) : []}
             </div>
         );
     },
