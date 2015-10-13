@@ -10,11 +10,15 @@ var InfoButton = require('../../../components/buttons/InfoButton');
 var I18N = require('../../../components/I18N/I18N');
 
 var About = React.createClass({
+    propTypes: {
+        style: React.PropTypes.object
+    },
     render() {
         return (<InfoButton
             image="./img/mapstore-about.png"
             title={<I18N.Message msgId="about_title"/>}
             btnType="image"
+            style={this.props.style}
             body={
                 <div style={{
                     backgroundImage: 'url("./img/mapstore-logo-0.20.png")',

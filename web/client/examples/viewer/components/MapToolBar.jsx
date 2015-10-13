@@ -38,7 +38,7 @@ let MapToolBar = React.createClass({
                 top: 0,
                 right: 0,
                 marginRight: "5px",
-                marginTop: "50px",
+                marginTop: "5px",
                 zIndex: 1000
             }
         };
@@ -72,7 +72,7 @@ let MapToolBar = React.createClass({
             if (item.props.isPanel) {
                 let tooltip = <Tooltip id="toolbar-map-layers-button">{item.props.buttonTooltip}</Tooltip>;
                 let panelButton = (
-                    <OverlayTrigger placement="left" overlay={tooltip}>
+                    <OverlayTrigger key={"mapToolBar-item-OT" + item.key} rootClose placement="left" overlay={tooltip}>
                         <Button
                             pressed={this.props.activeKey === item.key}
                             style={{width: "100%"}}

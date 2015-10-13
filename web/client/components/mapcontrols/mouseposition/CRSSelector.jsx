@@ -13,6 +13,7 @@ var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 let CRSSelector = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
+        inputProps: React.PropTypes.object,
         availableCRS: React.PropTypes.object,
         crs: React.PropTypes.string,
         enabled: React.PropTypes.bool,
@@ -39,15 +40,16 @@ let CRSSelector = React.createClass({
             }
         }
         return (
-            <div id={this.props.id}>
-              { (this.props.enabled) ? <Input
+              (this.props.enabled) ? (<Input
+                    id={this.props.id}
                     value={this.props.crs}
                     type="select"
                     onChange={this.launchNewCRSAction}
-                    bsSize="small">
+                    bsSize="small"
+                    {...this.props.inputProps}>
                     {list}
-                </Input> : null}
-            </div>
+                </Input>) : null
+
         );
     },
     launchNewCRSAction() {
