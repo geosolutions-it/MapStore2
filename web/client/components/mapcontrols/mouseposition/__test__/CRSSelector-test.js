@@ -22,7 +22,7 @@ describe('CRSSelector', () => {
         const cmp = React.render(<CRSSelector enabled={true}/>, document.body);
         expect(cmp).toExist();
 
-        const cmpDom = cmp.getDOMNode();
+        const cmpDom = React.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
         const select = cmpDom.getElementsByTagName("select").item(0);

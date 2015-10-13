@@ -23,7 +23,7 @@ describe('LangBar', () => {
         const cmp = React.render(<LangBar/>, document.body);
         expect(cmp).toExist();
 
-        const cmpDom = cmp.getDOMNode();
+        const cmpDom = React.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName("button");

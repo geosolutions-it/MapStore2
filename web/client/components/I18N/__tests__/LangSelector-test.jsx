@@ -24,7 +24,7 @@ describe('LangSelector', () => {
         const cmp = React.render(<LangSelector/>, document.body);
         expect(cmp).toExist();
 
-        const cmpDom = cmp.getDOMNode();
+        const cmpDom = React.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
 
