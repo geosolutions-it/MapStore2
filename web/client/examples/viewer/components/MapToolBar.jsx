@@ -74,7 +74,7 @@ let MapToolBar = React.createClass({
                 let panelButton = (
                     <OverlayTrigger key={"mapToolBar-item-OT" + item.key} rootClose placement="left" overlay={tooltip}>
                         <Button
-                            pressed={this.props.activeKey === item.key}
+                            active={this.props.activeKey === item.key}
                             style={{width: "100%"}}
                             onClick={ () => this.handleSelect(item.key)}>
                                 {item.props.buttonContent || item.props.icon}
