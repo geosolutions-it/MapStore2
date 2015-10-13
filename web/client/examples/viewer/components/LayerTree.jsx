@@ -23,15 +23,20 @@ var LayerTree = React.createClass({
         buttonContent: React.PropTypes.node,
         loadingList: React.PropTypes.array,
         groups: React.PropTypes.array,
-        propertiesChangeHandler: React.PropTypes.func
+        propertiesChangeHandler: React.PropTypes.func,
+        onToggleGroup: React.PropTypes.func,
+        onToggleLayer: React.PropTypes.func
     },
     getDefaultProps() {
         return {
             buttonContent: <img src={icon}/>,
-            loadingList: []
+            loadingList: [],
+            propertiesChangeHandler: () => {},
+            onToggleGroup: () => {},
+            onToggleLayer: () => {}
         };
     },
-    getNoBackgroudLayers(group) {
+    getNoBackgroundLayers(group) {
         return group.name !== 'background';
     },
     render() {
@@ -41,10 +46,12 @@ var LayerTree = React.createClass({
 
         return (
             <Panel style={{overflow: "auto"}} >
-                <Layers filter={this.getNoBackgroudLayers}
+                <Layers filter={this.getNoBackgroundLayers}
                     nodes={this.props.groups}>
-                    <Group>
+                    <Group expanded={false} onClick={this.props.onToggleGroup}>
                         <Layer
+                            onClick={this.props.onToggleLayer}
+                            expanded={false}
                             propertiesChangeHandler={this.props.propertiesChangeHandler}
                             showSpinner
                             loadingList={this.props.loadingList}
