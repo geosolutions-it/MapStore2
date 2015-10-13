@@ -12,10 +12,41 @@
 			{
 				"type": "osm",
 				"title": "Open Street Map",
-				"name": "mapnik",
+				"name": "osm",
 				"group": "background",
         "visibility": true
-			},{
+			},
+      {
+        "type": "google",
+        "title": "Google HYBRID",
+        "name": "HYBRID",
+        "group": "background",
+        "visibility": false
+      },
+      {
+        "type": "mapquest",
+        "title": "MapQuest OSM",
+        "name": "osm",
+        "group": "background",
+        "visibility": false
+      },
+      {
+        "type": "bing",
+        "title": "Bing Aerial",
+        "apiKey": "AqTGBsziZHIJYYxgivLBf0hVdrAk9mWO5cQcb8Yux8sW5M8c8opEC2lZqKR1ZZXf",
+        "name": "Aerial",
+        "group": "background",
+        "visibility": false
+      },
+      {
+        "type": "tileprovider",
+        "title": "NASAGIBS Night 2012",
+        "provider": "NASAGIBS.ViirsEarthAtNight2012",
+        "name": "Modis",
+        "group": "background",
+        "visibility": false
+      },
+      {
 				"type": "wms",
         "url":"http://213.215.135.196/reflector/open/service",
         "visibility": false,
