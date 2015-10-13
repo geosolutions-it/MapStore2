@@ -55,8 +55,7 @@ var OpenlayersMap = React.createClass({
         ]);
         let controls = this.props.mapOptions.controls || ol.control.defaults({
             attributionOptions: ({
-              collapsible: false,
-              className: "hidden"
+              collapsible: false
             })
         });
         var viewOptions = assign({}, {

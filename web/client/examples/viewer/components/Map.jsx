@@ -62,6 +62,6 @@ require('../../../components/map/' + mapType + '/plugins/WMSLayer');
 require('../../../components/map/' + mapType + '/plugins/GoogleLayer');
 require('../../../components/map/' + mapType + '/plugins/BingLayer');
 require('../../../components/map/' + mapType + '/plugins/MapQuest');
-
+require('../../../components/map/' + mapType + '/plugins/TileProviderLayer');
 
 module.exports = VMap;
