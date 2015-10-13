@@ -15,6 +15,7 @@ var ZoomToMaxExtentButton = require('../../../components/buttons/ZoomToMaxExtent
 
 var mapInfo = require('../../../reducers/mapInfo');
 var floatingPanel = require('../reducers/floatingPanel');
+var layers = require('../reducers/layers');
 var mousePosition = require('../../../reducers/mousePosition');
 
 var {getFeatureInfo, changeMapInfoState, purgeMapInfoResults} = require('../../../actions/mapInfo');
@@ -26,6 +27,7 @@ var {changeZoomLevel} = require('../../../actions/map');
 
 var {layerLoading, layerLoad} = require('../../../actions/map');
 var {changeMapView} = require('../../../actions/map');
+var {toggleNode} = require('../actions/layers');
 
 var React = require('react');
 
@@ -53,7 +55,10 @@ module.exports = {
                     title={<Message msgId="layers"/>}
                     loadingList={props.mapConfig.loadingLayers}
                     groups={props.mapConfig.groups}
-                    propertiesChangeHandler={props.changeLayerProperties}/>
+                    propertiesChangeHandler={props.changeLayerProperties}
+                    onToggleGroup={(group, status) => props.toggleNode(group, 'groups', status)}
+                    onToggleLayer={(layer, status) => props.toggleNode(layer, 'layers', status)}
+                    />
                 <BackgroundSwitcher
                     key="backgroundSwitcher"
                     isPanel={true}
@@ -101,7 +106,7 @@ module.exports = {
                 }} />
         ];
     },
-    reducers: {mapInfo, floatingPanel, mousePosition},
+    reducers: {mapInfo, floatingPanel, mousePosition, layers},
     actions: {
         getFeatureInfo,
         changeMapInfoState,
@@ -114,6 +119,7 @@ module.exports = {
         changeZoomLevel,
         layerLoading,
         layerLoad,
-        changeMapView
+        changeMapView,
+        toggleNode
     }
 };
