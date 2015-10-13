@@ -24,7 +24,6 @@ describe('CRSSelector', () => {
 
         const cmpDom = React.findDOMNode(cmp);
         expect(cmpDom).toExist();
-        expect(cmpDom.id).toExist();
 
         const select = cmpDom.getElementsByTagName("select").item(0);
         const opts = select.childNodes;

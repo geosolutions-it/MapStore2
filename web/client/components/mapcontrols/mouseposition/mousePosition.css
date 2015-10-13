@@ -19,11 +19,3 @@
 #mapstore-mouseposition .label-info {
     background-color:rgba(91,192,222,.5);
 }
-#mapstore-crsselector {
-    z-index: 10;
-    top: 0px;
-    right: 90px;
-    position: absolute;
-    margin: 8px;
-    max-width: 200px;
-}

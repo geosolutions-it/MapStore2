@@ -7,11 +7,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var BootstrapReact = require('react-bootstrap');
-var Input = BootstrapReact.Input;
+var {ButtonGroup} = require('react-bootstrap');
 var LocaleUtils = require('../../utils/LocaleUtils');
+var FlagButton = require('./FlagButton');
 
-var LangSelector = React.createClass({
+var LangBar = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         locales: React.PropTypes.object,
@@ -27,27 +27,30 @@ var LangSelector = React.createClass({
         };
     },
     render() {
-        var val;
+        var code;
         var label;
         var list = [];
         for (let lang in this.props.locales) {
             if (this.props.locales.hasOwnProperty(lang)) {
-                val = this.props.locales[lang].code;
+                code = this.props.locales[lang].code;
                 label = this.props.locales[lang].description;
-                list.push(<option value={val} key={val}>{label}</option>);
+                list.push(
+                    <FlagButton
+                        key={lang}
+                        code={code}
+                        label={label}
+                        lang={lang}
+                        active={code === this.props.currentLocale}
+                        onFlagSelected={this.props.onLanguageChange}
+                        />);
             }
         }
         return (
-                <Input id={this.props.id} value={this.props.currentLocale} type="select" bsSize="small" onChange={this.launchNewLangAction}>
+                <ButtonGroup id={this.props.id} type="select" bsSize="small">
                     {list}
-                </Input>
+                </ButtonGroup>
         );
-    },
-    launchNewLangAction() {
-        var element = React.findDOMNode(this);
-        var selectNode = element.getElementsByTagName('select').item(0);
-        this.props.onLanguageChange(selectNode.value);
     }
 });
 
-module.exports = LangSelector;
+module.exports = LangBar;

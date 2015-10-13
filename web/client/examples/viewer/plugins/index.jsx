@@ -1,11 +1,13 @@
 var About = require('../components/About');
-var LangSelector = require('../../../components/I18N/LangSelector');
+// var LangSelector = require('../../../components/I18N/LangSelector');
+var LangBar = require('../../../components/I18N/LangBar');
 var {Message} = require('../../../components/I18N/I18N');
 
 var ToggleButton = require('../../../components/buttons/ToggleButton');
 var BackgroundSwitcher = require("../../../components/BackgroundSwitcher/BackgroundSwitcher");
 var LayerTree = require('../components/LayerTree');
 var MapToolBar = require("../components/MapToolBar");
+var Settings = require("../components/Settings");
 var GetFeatureInfo = require("../components/GetFeatureInfo");
 var MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
 var CRSSelector = require("../../../components/mapcontrols/mouseposition/CRSSelector");
@@ -34,8 +36,13 @@ var React = require('react');
 module.exports = {
     components: (props) => {
         return [
-            <About key="about"/>,
-            <LangSelector key="langSelector" currentLocale={props.locale} onLanguageChange={props.loadLocale}/>,
+            <About style={{
+                    position: "absolute",
+                        zIndex: 1000,
+                        bottom: "-8px",
+                        right: "0px",
+                        margin: "8px"
+                    }} key="about"/>,
             <MapToolBar
                 layers={props.mapConfig.layers}
                 propertiesChangeHandler={props.changeLayerProperties}
@@ -66,12 +73,32 @@ module.exports = {
                     title={<div><Message msgId="background"/></div>}
                     buttonTooltip={<Message msgId="backgroundSwither.tooltip"/>}
                     propertiesChangeHandler={props.changeLayerProperties}/>
-                    <ToggleButton
-                        isButton={true}
-                        btnConfig={{disabled: (!props.browser.touch) ? false : true}}
-                        pressed={props.mousePositionEnabled}
-                        glyphicon="eye-open"
-                        onClick={props.changeMousePositionState}/>
+                <Settings
+                    isPanel={true}
+                    buttonTooltip={<Message msgId="settings" />}>
+                    <h5><Message msgId="language" /></h5>
+                    <LangBar key="langSelector"
+                    currentLocale={props.locale}
+                    onLanguageChange={props.loadLocale}/>
+
+
+                    <CRSSelector
+                        key="crsSelector"
+                        onCRSChange={props.changeMousePositionCrs}
+                        enabled={true}
+                        inputProps={{
+                            label: <Message msgId="mousePositionCoordinates" />,
+                            buttonBefore: <ToggleButton
+                                isButton={true}
+                                text={<Message msgId="enable" />}
+                                btnConfig={{disabled: (!props.browser.touch) ? false : true}}
+                                pressed={props.mousePositionEnabled}
+                                glyphicon="eye-open"
+                                onClick={props.changeMousePositionState}/>
+
+                        }}
+                        crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.mapConfig.projection} />
+                </Settings>
             </MapToolBar>,
             <GetFeatureInfo
                 key="getFeatureInfo"
@@ -90,10 +117,6 @@ module.exports = {
                 enabled={props.mousePositionEnabled}
                 mousePosition={props.mousePosition}
                 crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.mapConfig.projection}/>,
-            <CRSSelector key="crsSelector"
-                     onCRSChange={props.changeMousePositionCrs}
-                     enabled={props.mousePositionEnabled}
-                     crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.mapConfig.projection} />,
             <ScaleBox
                 onChange={props.changeZoomLevel}
                 currentZoomLvl={props.mapConfig.zoom} />,
