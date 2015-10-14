@@ -16,6 +16,7 @@ var mapnik = require('./images/mapthumbs/mapnik.jpg');
 var mapquestOsm = require('./images/mapthumbs/mapquest-osm.jpg');
 var empty = require('./images/mapthumbs/none.jpg');
 var unknown = require('./images/mapthumbs/dafault.jpg');
+var Night2012 = require('./images/mapthumbs/NASA_NIGHT.jpg');
 var assign = require('object-assign');
 require("./style.css");
 
@@ -36,6 +37,9 @@ let thumbs = {
     },
     ol: {
         "undefined": empty
+    },
+    nasagibs: {
+        Night2012
     },
     unknown
 };

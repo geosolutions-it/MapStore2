@@ -12,7 +12,8 @@
 			{
 				"type": "osm",
 				"title": "Open Street Map",
-				"name": "osm",
+				"name": "mapnik",
+        "source": "osm",
 				"group": "background",
         "visibility": true
 			},
@@ -20,6 +21,7 @@
         "type": "google",
         "title": "Google HYBRID",
         "name": "HYBRID",
+        "source": "google",
         "group": "background",
         "visibility": false
       },
@@ -27,6 +29,7 @@
         "type": "mapquest",
         "title": "MapQuest OSM",
         "name": "osm",
+        "source": "mapquest",
         "group": "background",
         "visibility": false
       },
@@ -35,6 +38,7 @@
         "title": "Bing Aerial",
         "apiKey": "AqTGBsziZHIJYYxgivLBf0hVdrAk9mWO5cQcb8Yux8sW5M8c8opEC2lZqKR1ZZXf",
         "name": "Aerial",
+        "source": "bing",
         "group": "background",
         "visibility": false
       },
@@ -42,7 +46,8 @@
         "type": "tileprovider",
         "title": "NASAGIBS Night 2012",
         "provider": "NASAGIBS.ViirsEarthAtNight2012",
-        "name": "Modis",
+        "name": "Night2012",
+        "source": "nasagibs",
         "group": "background",
         "visibility": false
       },
