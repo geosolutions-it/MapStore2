@@ -11,10 +11,7 @@ var {Panel} = require('react-bootstrap');
 
 var Layers = require('../../../components/Layers/Layers');
 var Group = require('../../../components/Layers/Group');
-var Layer = require('../../../components/Layers/Layer');
-
-var InlineSpinner = require('../../../components/spinners/InlineSpinner/InlineSpinner');
-var WMSLegend = require('../../../components/Layers/WMSLegend');
+var DefaultLayer = require('../../../components/Layers/DefaultLayer');
 
 var icon = require('../img/layers.png');
 
@@ -50,16 +47,11 @@ var LayerTree = React.createClass({
                 <Layers filter={this.getNoBackgroundLayers}
                     nodes={this.props.groups}>
                     <Group expanded={false} onClick={this.props.onToggleGroup}>
-                        <Layer
+                        <DefaultLayer
                             onClick={this.props.onToggleLayer}
                             expanded={false}
                             propertiesChangeHandler={this.props.propertiesChangeHandler}
-                            showSpinner
                             loadingList={this.props.loadingList}
-                            spinner={<InlineSpinner/>}
-                            collapsible={(layer) => {
-                                return layer.type === 'wms' ? <WMSLegend/> : null;
-                            }}
                             />
                     </Group>
                 </Layers>

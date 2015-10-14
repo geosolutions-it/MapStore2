@@ -7,7 +7,7 @@
  */
 
 var React = require('react');
-var Legend = require('../Legend/Legend');
+var Legend = require('../../Legend/Legend');
 
 var WMSLegend = React.createClass({
     propTypes: {

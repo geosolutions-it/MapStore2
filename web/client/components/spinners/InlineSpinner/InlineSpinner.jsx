@@ -8,10 +8,11 @@
 
 const React = require('react');
 const defaultIcon = require('./img/spinner.gif');
+const {isFunction} = require('lodash');
 
 var InlineSpinner = React.createClass({
     propTypes: {
-        loading: React.PropTypes.bool,
+        loading: React.PropTypes.oneOfType([React.PropTypes.bool, React.PropTypes.func]),
         icon: React.PropTypes.string
     },
     getDefaultProps() {
@@ -21,7 +22,13 @@ var InlineSpinner = React.createClass({
         };
     },
     getDisplayStyle() {
-        return (this.props.loading ? 'inline-block' : 'none');
+        let loading;
+        if (isFunction(this.props.loading)) {
+            loading = this.props.loading(this.props);
+        } else {
+            loading = this.props.loading;
+        }
+        return (loading ? 'inline-block' : 'none');
     },
     render() {
         return (

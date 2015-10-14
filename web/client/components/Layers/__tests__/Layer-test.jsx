@@ -19,7 +19,7 @@ describe('test Layer module component', () => {
         setTimeout(done);
     });
 
-    it('tests Layer component creation (wms)', () => {
+    it('tests Layer component creation', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
@@ -33,75 +33,46 @@ describe('test Layer module component', () => {
         const domNode = React.findDOMNode(comp);
         expect(domNode).toExist();
 
-        const checkbox = domNode.getElementsByTagName('input').item(0);
-        expect(checkbox).toExist();
-        expect(parseInt(checkbox.dataset.position, 10)).toBe(l.storeIndex);
-        expect(checkbox.checked).toBe(l.visibility);
-
-        const label = domNode.getElementsByTagName('span').item(0);
-        expect(label).toExist();
-        expect(label.innerHTML).toBe(l.title || l.name);
+        const container = domNode.getElementsByTagName('div').item(0);
+        expect(container).toExist();
     });
 
-    it('tests Layer component creation (no wms)', () => {
+    it('tests Layer children', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
             visibility: false,
             storeIndex: 9
         };
-        const comp = React.render(<Layer node={l} />, document.body);
+        const comp = React.render(<Layer node={l}><div className="layer-content"/></Layer>, document.body);
         expect(comp).toExist();
 
         const domNode = React.findDOMNode(comp);
         expect(domNode).toExist();
 
-        const checkbox = domNode.getElementsByTagName('input').item(0);
-        expect(checkbox).toExist();
-        expect(parseInt(checkbox.dataset.position, 10)).toBe(l.storeIndex);
-        expect(checkbox.checked).toBe(l.visibility);
+        const layers = domNode.getElementsByClassName('layer-content');
+        expect(layers.length).toBe(1);
 
-        const label = domNode.getElementsByTagName('span').item(0);
-        expect(label).toExist();
-        expect(label.innerHTML).toBe(l.title || l.name);
     });
 
-    it('test change event', () => {
-        let newLayer;
-        let position;
-
-        let handler = (l, p) => {
-            newLayer = l;
-            position = p;
-        };
-
+    it('tests Layer children collapsible', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
             visibility: false,
             storeIndex: 9
         };
-        const comp = React.render(
-            <Layer
-                propertiesChangeHandler={handler}
-                node={l}
-            />, document.body);
+        const comp = React.render(<Layer node={l}><div position="collapsible" className="layer-collapsible"/><div className="layer-content"/></Layer>, document.body);
         expect(comp).toExist();
 
         const domNode = React.findDOMNode(comp);
         expect(domNode).toExist();
 
-        const checkbox = domNode.getElementsByTagName('input').item(0);
-        expect(checkbox).toExist();
+        const layers = domNode.getElementsByClassName('layer-content');
+        expect(layers.length).toBe(1);
 
-        checkbox.checked = !l.visibility;
-        React.addons.TestUtils.Simulate.change(checkbox, {
-            target: {
-                checked: !l.visibility
-            }
-        });
-        expect(newLayer.visibility).toBe(!l.visibility);
-        expect(position).toBe(l.storeIndex);
+        const collapsible = domNode.getElementsByClassName('layer-collapsible');
+        expect(collapsible.length).toBe(1);
+
     });
-
 });
