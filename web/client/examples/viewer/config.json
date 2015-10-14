@@ -46,7 +46,8 @@
         "type": "tileprovider",
         "title": "NASAGIBS Night 2012",
         "provider": "NASAGIBS.ViirsEarthAtNight2012",
-        "name": "Modis",
+        "name": "Night2012",
+        "source": "nasagibs",
         "group": "background",
         "visibility": false
       },
