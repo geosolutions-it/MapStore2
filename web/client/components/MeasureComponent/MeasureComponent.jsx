@@ -33,9 +33,9 @@ let MeasureComponent = React.createClass({
         return {
             icon: <Glyphicon glyph="minus"/>,
             columnProperties: {
-                xs: 6,
+                xs: 4,
                 sm: 4,
-                md: 2
+                md: 4
             }
         };
     },
