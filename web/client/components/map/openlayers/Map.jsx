@@ -238,21 +238,27 @@ var OpenlayersMap = React.createClass({
                 })
             })
         });
-        draw.on('drawend', function(evt) {
+
+        // update measurement results for every new vertex drawn
+        this.map.on('click', function() {
             var newMeasureState = {
                 lineMeasureEnabled: this.props.measurement.lineMeasureEnabled,
                 areaMeasureEnabled: this.props.measurement.areaMeasureEnabled,
                 geomType: this.props.measurement.geomType,
-                len: this.props.measurement.geomType === 'LineString' ? evt.feature.getGeometry().getLength() : 0,
-                area: this.props.measurement.geomType === 'Polygon' ? evt.feature.getGeometry().getArea() : 0,
+                len: this.props.measurement.geomType === 'LineString' ? this.sketchFeature.getGeometry().getLength() : 0,
+                area: this.props.measurement.geomType === 'Polygon' ? this.sketchFeature.getGeometry().getArea() : 0,
                 bearing: 0
             };
             this.props.changeMeasurementState(newMeasureState);
         }, this);
-        draw.on('drawstart', function() {
+
+        draw.on('drawstart', function(evt) {
+            // preserv the sketch feature of the draw controller
+            // to update length/area on drawing a new vertex
+            this.sketchFeature = evt.feature;
             // clear previous measurements
             source.clear();
-        });
+        }, this);
 
         this.map.addInteraction(draw);
         this.drawInteraction = draw;
@@ -263,6 +269,7 @@ var OpenlayersMap = React.createClass({
             this.map.removeInteraction(this.drawInteraction);
             this.drawInteraction = null;
             this.map.removeLayer(this.measureLayer);
+            this.sketchFeature = null;
         }
     }
 });
