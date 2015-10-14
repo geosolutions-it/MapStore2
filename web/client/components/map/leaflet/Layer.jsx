@@ -18,7 +18,7 @@ const LeafletLayer = React.createClass({
     },
     componentDidMount() {
         this.createLayer(this.props.type, this.props.options);
-        if (this.props.options && this.props.options.visibility !== false) {
+        if (this.props.options && this.layer && this.props.options.visibility !== false) {
             this.addLayer();
             this.updateZIndex();
         }
@@ -61,7 +61,9 @@ const LeafletLayer = React.createClass({
                 opts = assign({}, this.props.options, {zIndex: this.props.position});
             }
             this.layer = Layers.createLayer(type, opts);
-            this.layer.layerName = options.name;
+            if (this.layer) {
+                this.layer.layerName = options.name;
+            }
         }
     },
     addLayer() {

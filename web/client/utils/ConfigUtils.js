@@ -194,7 +194,7 @@ var ConfigUtils = {
         return config.proxyUrl ? config.proxyUrl : defaultConfig.proxyUrl;
     },
     /**
-    * Utiliyu to detect browser properties.
+    * Utility to detect browser properties.
     * Code from leaflet-src.js
     */
     getBrowserProperties: function() {
