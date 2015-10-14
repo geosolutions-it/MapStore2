@@ -8,61 +8,35 @@
 
 var React = require('react');
 var assign = require('object-assign');
-var {isFunction} = require('lodash');
 
 var Layer = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
-        propertiesChangeHandler: React.PropTypes.func,
-        loadingList: React.PropTypes.array,
-        showSpinner: React.PropTypes.bool,
-        expanded: React.PropTypes.bool,
-        onClick: React.PropTypes.func,
-        spinner: React.PropTypes.element,
-        collapsible: React.PropTypes.oneOfType([React.PropTypes.func, React.PropTypes.object])
+        expanded: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
-            showSpinner: false,
-            loadingList: [],
-            expanded: true,
-            onClick: () => {},
-            spinner: null,
-            collapsible: null
+            expanded: true
         };
     },
-    renderCollapsiblePanel(layer) {
-        if (this.props.collapsible) {
-            if (isFunction(this.props.collapsible)) {
-                return React.cloneElement(this.props.collapsible(layer), {node: layer});
+    renderChildren(filter = () => true) {
+        return React.Children.map(this.props.children, (child) => {
+            if (filter(child)) {
+                let props = assign({}, this.props, {children: undefined});
+                return React.cloneElement(child, props);
             }
-            return React.cloneElement(this.props.collapsible, {node: layer});
-        }
-        return null;
-    },
-    renderSpinner() {
-        if (this.props.spinner && this.props.showSpinner && this.props.loadingList.indexOf(this.props.node.name) !== -1) {
-            return React.cloneElement(this.props.spinner, {loading: true});
-        }
-        return null;
+        });
     },
     render() {
         let expanded = this.props.node.expanded || this.props.expanded;
         return (
             <div key={this.props.node.name}>
                 <div style={{display: 'flex'}}>
-                    <input style={{marginRight: "2px"}} data-position={this.props.node.storeIndex} type="checkbox" checked={this.props.node.visibility ? "checked" : ""} onChange={this.changeLayerVisibility} />
-                    {this.renderSpinner()}
-                    <span onClick={() => this.props.onClick(this.props.node.name, expanded)}>{this.props.node.title || this.props.node.name}</span>
+                    {this.renderChildren((child) => child.props.position !== 'collapsible')}
                 </div>
-                {expanded ? this.renderCollapsiblePanel(this.props.node) : []}
+                {expanded ? this.renderChildren((child) => child.props.position === 'collapsible') : []}
             </div>
         );
-    },
-    changeLayerVisibility(eventObj) {
-        let position = parseInt(eventObj.currentTarget.dataset.position, 10);
-        var newLayer = assign({}, this.props.node, {visibility: !this.props.node.visibility});
-        this.props.propertiesChangeHandler(newLayer, position);
     }
 });
 
