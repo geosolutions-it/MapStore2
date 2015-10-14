@@ -137,8 +137,13 @@ var OpenlayersMap = React.createClass({
             }, 0);
         }
 
-        if (this.props.measurement.geomType !== newProps.measurement.geomType) {
+        if (this.props.measurement.geomType !== newProps.measurement.geomType &&
+                newProps.measurement.geomType !== null) {
             this.addDrawInteraction(newProps);
+        }
+
+        if (newProps.measurement.geomType === null) {
+            this.removeDrawInteraction();
         }
     },
     componentWillUnmount() {
@@ -254,9 +259,11 @@ var OpenlayersMap = React.createClass({
         this.measureLayer = vector;
     },
     removeDrawInteraction: function() {
-        this.map.removeInteraction(this.drawInteraction);
-        this.drawInteraction = null;
-        this.map.removeLayer(this.measureLayer);
+        if (this.drawInteraction !== null) {
+            this.map.removeInteraction(this.drawInteraction);
+            this.drawInteraction = null;
+            this.map.removeLayer(this.measureLayer);
+        }
     }
 });
 

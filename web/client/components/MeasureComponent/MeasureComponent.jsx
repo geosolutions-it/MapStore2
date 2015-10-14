@@ -69,6 +69,17 @@ let MeasureComponent = React.createClass({
             this.props.toggleMeasure(newMeasureState);
         }
     },
+    onResetClick: function() {
+        var resetMeasureState = {
+            lineMeasureEnabled: false,
+            areaMeasureEnabled: false,
+            geomType: null,
+            len: 0,
+            area: 0,
+            bearing: 0
+        };
+        this.props.toggleMeasure(resetMeasureState);
+    },
     render() {
         let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
         return (
@@ -87,7 +98,10 @@ let MeasureComponent = React.createClass({
                            onClick={this.onAreaClick} />
                    </Col>
                    <Col {...this.props.columnProperties}>
-                       <Button>{this.props.resetButtonText}</Button>
+                       <Button
+                           onClick={this.onResetClick}>
+                           {this.props.resetButtonText}
+                       </Button>
                    </Col>
                </Grid>
                <Grid style={{"margin-top": "15px"}}>
