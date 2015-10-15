@@ -59,7 +59,13 @@
         "noFeatureInfo": "There is no information available for the feature you clicked",
         "measureComponent": {
             "tooltip": "Measure length and area",
-            "title": "Measure"
+            "title": "Measure",
+            "lengthButtonText": "Line",
+            "areaButtonText": "Area",
+            "resetButtonText": "Reset",
+            "lengthLabel": "Length",
+            "areaLabel": "Area",
+            "bearingLabel": "Bearing"
         }
     }
 }

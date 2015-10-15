@@ -59,7 +59,13 @@
         "noFeatureInfo": "Non ci sono informazioni disponibili per la feature selezionata",
         "measureComponent": {
             "tooltip": "Misurazione lunghezza e l'area",
-            "title": "Misurazione"
+            "title": "Misurazione",
+            "lengthButtonText": "Linea",
+            "areaButtonText": "Area",
+            "resetButtonText": "Azzerare",
+            "lengthLabel": "Lunghezza",
+            "areaLabel": "Area",
+            "bearingLabel": "Rilevamento"
         }
     }
 }

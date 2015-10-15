@@ -18,7 +18,7 @@ let MeasureComponent = React.createClass({
         name: React.PropTypes.string,
         columnProperties: React.PropTypes.object,
         propertiesChangeHandler: React.PropTypes.func,
-        lenghtButtonText: React.PropTypes.string,
+        lengthButtonText: React.PropTypes.string,
         areaButtonText: React.PropTypes.string,
         resetButtonText: React.PropTypes.string,
         lengthLabel: React.PropTypes.string,
@@ -83,11 +83,11 @@ let MeasureComponent = React.createClass({
     render() {
         let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
         return (
-            <Panel style={{overflow: "hidden", width: "300px"}} >
+            <Panel style={{overflow: "hidden", width: "320px"}} >
                <Grid className="MeasureComponent" header={this.props.name} fluid={false} style={{overflow: "auto", width: "100%"}}>
                    <Col {...this.props.columnProperties}>
                        <ToggleButton
-                           text={this.props.lenghtButtonText}
+                           text={this.props.lengthButtonText}
                            pressed={this.props.lineMeasureEnabled}
                            onClick={this.onLineClick} />
                    </Col>

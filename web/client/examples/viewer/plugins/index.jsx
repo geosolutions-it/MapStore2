@@ -84,12 +84,12 @@ module.exports = {
                     isPanel={true}
                     title={<div><Message msgId="measureComponent.title"/></div>}
                     buttonTooltip={<Message msgId="measureComponent.tooltip"/>}
-                    lenghtButtonText="Line"
-                    areaButtonText="Area"
-                    resetButtonText="Reset"
-                    lengthLabel="Length"
-                    areaLabel="Area"
-                    bearingLabel="Bearing"
+                    lengthButtonText={<Message msgId="measureComponent.lengthButtonText"/>}
+                    areaButtonText={<Message msgId="measureComponent.areaButtonText"/>}
+                    resetButtonText={<Message msgId="measureComponent.resetButtonText"/>}
+                    lengthLabel={<Message msgId="measureComponent.lengthLabel"/>}
+                    areaLabel={<Message msgId="measureComponent.areaLabel"/>}
+                    bearingLabel={<Message msgId="measureComponent.bearingLabel"/>}
                     toggleMeasure={props.changeMeasurementState}
                     lineMeasureEnabled={props.measurement.lineMeasureEnabled}
                     areaMeasureEnabled={props.measurement.areaMeasureEnabled}
