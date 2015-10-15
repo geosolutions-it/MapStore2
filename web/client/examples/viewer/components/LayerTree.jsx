@@ -44,7 +44,7 @@ var LayerTree = React.createClass({
 
         return (
             <Panel style={{overflow: "auto"}} >
-                <Layers filter={this.getNoBackgroundLayers}
+                <Layers onSort={() => {}} filter={this.getNoBackgroundLayers}
                     nodes={this.props.groups}>
                     <DefaultGroup expanded={false} onToggle={this.props.onToggleGroup}>
                         <DefaultLayer

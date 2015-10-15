@@ -7,19 +7,22 @@
  */
 
 var React = require('react');
+var Sortable = require('react-sortable-items');
 
 var GroupChildren = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
-        filter: React.PropTypes.func
+        filter: React.PropTypes.func,
+        onSort: React.PropTypes.func
     },
     statics: {
-        inheritedPropTypes: ['node', 'filter']
+        inheritedPropTypes: ['node', 'filter', 'onSort']
     },
     getDefaultProps() {
         return {
             node: null,
-            filter: () => true
+            filter: () => true,
+            onSort: null
         };
     },
     render() {
@@ -27,13 +30,28 @@ var GroupChildren = React.createClass({
         if (this.props.children) {
             let nodes = (this.props.node.nodes || [])
                 .filter((node) => this.props.filter(node, this.props.node));
+            let i = 0;
             content = nodes.map((node) => (React.cloneElement(this.props.children, {
-                    node: node
+                node: node,
+                sortData: i++,
+                isDraggable: !!this.props.onSort
             })));
+        }
+        if (this.props.onSort) {
+            return (
+                <div style={{marginLeft: "15px"}}>
+                    <Sortable onSort={this.handleSort}>
+                        {content}
+                    </Sortable>
+                </div>
+            );
         }
         return (
             <div style={{marginLeft: "15px"}}>{content}</div>
         );
+    },
+    handleSort: function(reorder) {
+        this.props.onSort(this.props.node.name, reorder);
     }
 });
 
