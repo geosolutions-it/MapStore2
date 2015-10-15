@@ -16,14 +16,12 @@ var DefaultGroup = React.createClass({
         node: React.PropTypes.object,
         expanded: React.PropTypes.bool,
         style: React.PropTypes.object,
-        onToggle: React.PropTypes.func,
-        filter: React.PropTypes.func
+        onToggle: React.PropTypes.func
     },
     getDefaultProps() {
         return {
             node: {},
             onToggle: () => {},
-            filter: () => {},
             expanded: true,
             style: {
                 marginBottom: "16px",

@@ -28,7 +28,7 @@ var Node = React.createClass({
         return React.Children.map(this.props.children, (child) => {
             if (filter(child)) {
                 let props = (child.type.inheritedPropTypes || ['node']).reduce((previous, propName) => {
-                    return assign(previous, {[propName]: this.props[propName]});
+                    return this.props[propName] ? assign(previous, {[propName]: this.props[propName]}) : previous;
                 }, {});
                 return React.cloneElement(child, props);
             }
