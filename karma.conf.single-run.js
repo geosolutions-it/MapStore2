@@ -39,7 +39,7 @@ module.exports = function karmaConfig(config) {
             devtool: 'inline-source-map',
             module: {
                 loaders: [
-                    { test: /\.jsx?$/, exclude: /ol\.js$/, loader: 'babel-loader' },
+                    { test: /\.jsx?$/, exclude: /ol\.js$/, loader: 'babel-loader', query: {stage: 0} },
                     { test: /\.css$/, loader: 'style!css'},
                     { test: /\.(png|jpg|gif)$/, loader: 'url-loader?name=[path][name].[ext]&limit=8192'} // inline base64 URLs for <=8k images, direct URLs for the rest
                 ],

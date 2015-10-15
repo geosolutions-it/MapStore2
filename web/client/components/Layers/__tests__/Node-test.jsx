@@ -7,11 +7,11 @@
  */
 
 var React = require('react/addons');
-var Layer = require('../Layer');
+var Node = require('../Node');
 
 var expect = require('expect');
 
-describe('test Layer module component', () => {
+describe('test Node module component', () => {
 
     afterEach((done) => {
         React.unmountComponentAtNode(document.body);
@@ -19,7 +19,7 @@ describe('test Layer module component', () => {
         setTimeout(done);
     });
 
-    it('tests Layer component creation', () => {
+    it('tests Node component creation', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
@@ -27,14 +27,11 @@ describe('test Layer module component', () => {
             storeIndex: 9,
             type: 'wms'
         };
-        const comp = React.render(<Layer node={l} />, document.body);
+        const comp = React.render(<Node node={l} />, document.body);
         expect(comp).toExist();
 
         const domNode = React.findDOMNode(comp);
         expect(domNode).toExist();
-
-        const container = domNode.getElementsByTagName('div').item(0);
-        expect(container).toExist();
     });
 
     it('tests Layer children', () => {
@@ -44,7 +41,7 @@ describe('test Layer module component', () => {
             visibility: false,
             storeIndex: 9
         };
-        const comp = React.render(<Layer node={l}><div className="layer-content"/></Layer>, document.body);
+        const comp = React.render(<Node node={l}><div className="layer-content"/></Node>, document.body);
         expect(comp).toExist();
 
         const domNode = React.findDOMNode(comp);
@@ -62,7 +59,7 @@ describe('test Layer module component', () => {
             visibility: false,
             storeIndex: 9
         };
-        const comp = React.render(<Layer node={l}><div position="collapsible" className="layer-collapsible"/><div className="layer-content"/></Layer>, document.body);
+        const comp = React.render(<Node node={l}><div position="collapsible" className="layer-collapsible"/><div className="layer-content"/></Node>, document.body);
         expect(comp).toExist();
 
         const domNode = React.findDOMNode(comp);

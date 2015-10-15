@@ -10,7 +10,7 @@ var React = require('react');
 var {Panel} = require('react-bootstrap');
 
 var Layers = require('../../../components/Layers/Layers');
-var Group = require('../../../components/Layers/Group');
+var DefaultGroup = require('../../../components/Layers/DefaultGroup');
 var DefaultLayer = require('../../../components/Layers/DefaultLayer');
 
 var icon = require('../img/layers.png');
@@ -46,14 +46,14 @@ var LayerTree = React.createClass({
             <Panel style={{overflow: "auto"}} >
                 <Layers filter={this.getNoBackgroundLayers}
                     nodes={this.props.groups}>
-                    <Group expanded={false} onClick={this.props.onToggleGroup}>
+                    <DefaultGroup expanded={false} onToggle={this.props.onToggleGroup}>
                         <DefaultLayer
-                            onClick={this.props.onToggleLayer}
+                            onToggle={this.props.onToggleLayer}
                             expanded={false}
                             propertiesChangeHandler={this.props.propertiesChangeHandler}
                             loadingList={this.props.loadingList}
                             />
-                    </Group>
+                    </DefaultGroup>
                 </Layers>
             </Panel>
         );
