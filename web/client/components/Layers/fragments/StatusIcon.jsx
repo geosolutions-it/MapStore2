@@ -7,8 +7,9 @@
  */
 
 var React = require('react');
+var {Glyphicon} = require('react-bootstrap');
 
-var Title = React.createClass({
+var StatusIcon = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
         onClick: React.PropTypes.func,
@@ -19,13 +20,17 @@ var Title = React.createClass({
     },
     getDefaultProps() {
         return {
-            onClick: () => {}
+            node: null,
+            onClick: () => {},
+            expanded: true
         };
     },
     render() {
         let expanded = this.props.node.expanded || this.props.expanded;
-        return (<span onClick={() => this.props.onClick(this.props.node.name, expanded)}>{this.props.node.title || this.props.node.name}</span>);
+        return (
+            <Glyphicon style={{marginRight: "8px"}} glyph={expanded ? "folder-open" : "folder-close"} />
+        );
     }
 });
 
-module.exports = Title;
+module.exports = StatusIcon;

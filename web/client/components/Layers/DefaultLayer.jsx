@@ -7,7 +7,7 @@
  */
 
 var React = require('react');
-var Layer = require('./Layer');
+var Node = require('./Node');
 var VisibilityCheck = require('./fragments/VisibilityCheck');
 var Title = require('./fragments/Title');
 var InlineSpinner = require('../spinners/InlineSpinner/InlineSpinner');
@@ -19,11 +19,16 @@ var DefaultLayer = React.createClass({
         expanded: React.PropTypes.bool,
         propertiesChangeHandler: React.PropTypes.func,
         loadingList: React.PropTypes.array,
-        onToggleLayer: React.PropTypes.func
+        onToggle: React.PropTypes.func,
+        style: React.PropTypes.object
     },
     getDefaultProps() {
         return {
-            expanded: true
+            style: {},
+            expanded: false,
+            propertiesChangeHandler: () => {},
+            onToggle: () => {},
+            loadingList: []
         };
     },
     renderCollapsible() {
@@ -33,13 +38,14 @@ var DefaultLayer = React.createClass({
         return [];
     },
     render() {
+        let {children, propertiesChangeHandler, onToggle, ...other } = this.props;
         return (
-            <Layer {...this.props}>
+            <Node type="layer" {...other}>
                 <VisibilityCheck propertiesChangeHandler={this.props.propertiesChangeHandler}/>
                 <InlineSpinner loadingList={this.props.loadingList} loading={(props) => (props.loadingList || []).indexOf(props.node.name) !== -1}/>
-                <Title onClick={this.props.onToggleLayer}/>
+                <Title onClick={this.props.onToggle}/>
                 {this.renderCollapsible()}
-            </Layer>
+            </Node>
         );
     }
 });

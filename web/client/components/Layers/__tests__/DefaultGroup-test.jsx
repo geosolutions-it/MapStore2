@@ -7,7 +7,7 @@
  */
 
 var React = require('react/addons');
-var Group = require('../Group');
+var Group = require('../DefaultGroup');
 
 var expect = require('expect');
 
@@ -50,7 +50,7 @@ describe('test Group module component', () => {
         const children = domNode.children;
         expect(children.length).toBe(2);
 
-        const container = children.item(1);
+        const container = children.item(0);
         expect(container.children.length).toBe(2);
     });
 

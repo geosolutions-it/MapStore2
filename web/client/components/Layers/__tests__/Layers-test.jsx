@@ -10,8 +10,8 @@ var expect = require('expect');
 var React = require('react/addons');
 
 var Layers = require('../Layers');
-var Group = require('../Group');
-var Layer = require('../Layer');
+var Group = require('../DefaultGroup');
+var Layer = require('../DefaultLayer');
 
 let testData = [
     {
