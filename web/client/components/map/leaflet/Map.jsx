@@ -23,7 +23,9 @@ var LeafletMap = React.createClass({
         onMouseMove: React.PropTypes.func,
         onLayerLoading: React.PropTypes.func,
         onLayerLoad: React.PropTypes.func,
-        resize: React.PropTypes.number
+        resize: React.PropTypes.number,
+        measurement: React.PropTypes.object,
+        changeMeasurementState: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -65,10 +67,16 @@ var LeafletMap = React.createClass({
         this.forceUpdate();
 
         this.map.on('layeradd', (event) => {
+            // avoid binding if not possible, e.g. for measurement vector layers
+            if (!event.layer.on) {
+                return;
+            }
             this.props.onLayerLoading(event.layer.layerName);
             event.layer.on('loading', (loadingEvent) => { this.props.onLayerLoading(loadingEvent.target.layerName); });
             event.layer.on('load', (loadEvent) => { this.props.onLayerLoad(loadEvent.target.layerName); });
         });
+
+        this.drawControl = null;
     },
     componentWillReceiveProps(newProps) {
         if (newProps.mousePointer !== this.props.mousePointer) {
@@ -83,6 +91,14 @@ var LeafletMap = React.createClass({
             setTimeout(() => {
                 this.map.invalidateSize(false);
             }, 0);
+        }
+
+        if (this.props.measurement.geomType !== newProps.measurement.geomType &&
+                newProps.measurement.geomType !== null) {
+            this.addDrawInteraction(newProps);
+        }
+        if (newProps.measurement.geomType === null) {
+            this.removeDrawInteraction();
         }
     },
     componentWillUnmount() {
@@ -155,7 +171,85 @@ var LeafletMap = React.createClass({
             y: pos.lat,
             crs: "EPSG:4326"
         });
+    },
+    addDrawInteraction: function(newProps) {
+
+        this.removeDrawInteraction();
+
+        if (newProps.measurement.geomType === 'LineString') {
+            this.drawControl = new L.Draw.Polyline(this.map, {
+                shapeOptions: {
+                    color: '#ffcc33',
+                    weight: 2
+                },
+                repeatMode: false
+            });
+        } else if (newProps.measurement.geomType === 'Polygon') {
+            this.drawControl = new L.Draw.Polygon(this.map, {
+                shapeOptions: {
+                    color: '#ffcc33',
+                    weight: 2,
+                    fill: 'rgba(255, 255, 255, 0.2)'
+                },
+                repeatMode: false
+            });
+        }
+        // start the draw control
+        this.drawControl.enable();
+        this.drawing = true;
+
+        this.map.on('draw:created', function(evt) {
+            this.drawing = false;
+            // let drawn geom stay on the map
+            this.map.addLayer(evt.layer);
+            // preserve the currently created layer to remove it later on
+            this.lastLayer = evt.layer;
+        }, this);
+
+        this.map.on('draw:drawstart', function() {
+            this.drawing = true;
+        }, this);
+
+        this.map.on('click', function() {
+            var latLngs;
+            var area;
+            var newMeasureState;
+
+            if (!this.drawing && this.drawControl !== null) {
+                // re-enable draw control, since it is stopped after
+                // every finished sketch
+                this.map.removeLayer(this.lastLayer);
+                this.drawControl.enable();
+                this.drawing = true;
+
+            } else {
+                // update measurement results for every new vertex drawn
+                latLngs = this.drawControl._poly.getLatLngs();
+                area = L.GeometryUtil.geodesicArea(latLngs);
+
+                newMeasureState = {
+                    lineMeasureEnabled: this.props.measurement.lineMeasureEnabled,
+                    areaMeasureEnabled: this.props.measurement.areaMeasureEnabled,
+                    geomType: this.props.measurement.geomType,
+                    len: this.props.measurement.geomType === 'LineString' ? this.drawControl._measurementRunningTotal : 0,
+                    area: this.props.measurement.geomType === 'Polygon' ? area : 0,
+                    bearing: 0
+                };
+                this.props.changeMeasurementState(newMeasureState);
+            }
+
+        }, this);
+
+
+    },
+    removeDrawInteraction: function() {
+        if (this.drawControl !== null) {
+            this.drawControl.disable();
+            this.drawControl = null;
+            this.map.removeLayer(this.lastLayer);
+        }
     }
+
 });
 
 module.exports = LeafletMap;
