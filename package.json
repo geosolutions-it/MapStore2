@@ -45,6 +45,7 @@
     "webpack-dev-server": "^1.7.0"
   },
   "//": "replace leaflet-plugins with official on npm when merged this pull request: https://github.com/shramov/leaflet-plugins/pull/178",
+  "//": "replace react-sortable-items with official on npm when 0.0.10 with remove_deprecated PR in included",
   "dependencies": {
     "axios": "^0.5.4",
     "bootstrap": "^3.3.5",
@@ -65,7 +66,7 @@
     "redux": "^3.0.2",
     "redux-logger": "^2.0.0",
     "redux-thunk": "^0.1.0",
-    "react-sortable-items": "0.0.9",
+    "react-sortable-items": "https://www.github.com/mbarto/react-sortable-items/tarball/remove_deprecated",
     "url": "~0.10.3"
   },
   "scripts": {

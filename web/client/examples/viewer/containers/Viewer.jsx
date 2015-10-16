@@ -43,19 +43,11 @@ var Viewer = React.createClass({
         changeMousePointer: React.PropTypes.func,
         activatePanel: React.PropTypes.func,
         floatingPanel: React.PropTypes.object,
-        plugins: React.PropTypes.array,
+        plugins: React.PropTypes.func,
         layerLoading: React.PropTypes.func,
         layerLoad: React.PropTypes.func,
         showSpinner: React.PropTypes.func,
         hideSpinner: React.PropTypes.func
-    },
-    getFirstWmsVisibleLayer() {
-        for (let i = 0; i < this.props.mapConfig.layers.length; i++) {
-            if (this.props.mapConfig.layers[i].type === 'wms' && this.props.mapConfig.layers[i].visibility) {
-                return this.props.mapConfig.layers[i];
-            }
-        }
-        return null;
     },
     render() {
         if (this.props.mapConfig) {
@@ -111,22 +103,34 @@ var Viewer = React.createClass({
     }
 });
 
+let reorder = (items, order) => {
+    if (order && items.length > 0) {
+        return order.map((idx) => {
+            return items[idx];
+        });
+    }
+    return items;
+};
+
 var getLayersByGroup = function(layers, groupsInfo, layersInfo) {
     let i = 0;
+    let rootInfo = groupsInfo.root || {};
     let mapLayers = (layers || []).map((layer) => assign({}, layer, {storeIndex: i++}));
-    let grps = mapLayers.reduce((groups, layer) => {
+    let grps = reorder(mapLayers.reduce((groups, layer) => {
         return groups.indexOf(layer.group) === -1 ? groups.concat([layer.group]) : groups;
-    }, []);
+    }, []).filter((group) => group !== 'background'), rootInfo.order);
 
     return grps.map((group) => {
+        let groupName = group || 'Default';
+        let groupInfo = groupsInfo[groupName] || {};
         return assign({}, {
-            name: group,
-            title: group,
-            nodes: mapLayers.filter((layer) => layer.group === group).map((layer) => {
+            name: groupName,
+            title: groupName,
+            nodes: reorder(mapLayers.filter((layer) => layer.group === group).map((layer) => {
                 return assign({}, layer, {expanded: false}, layersInfo[layer.name] || {});
-            }),
+            }), groupInfo.order),
             expanded: true
-        }, groupsInfo[group] || {});
+        }, groupInfo);
     });
 };
 
@@ -134,7 +138,7 @@ module.exports = (actions) => {
     return connect((state) => {
         return {
             mapConfig: (state.mapConfig && state.mapConfig.layers) ? assign({}, state.mapConfig, {
-                groups: getLayersByGroup(state.mapConfig.layers, state.layers.groups || {}, state.layers.layers || {})
+                groups: state.layers ? getLayersByGroup(state.mapConfig.layers, state.layers.groups || {}, state.layers.layers || {}) : []
             }) : state.mapConfig,
             browser: state.browser,
             messages: state.locale ? state.locale.messages : null,

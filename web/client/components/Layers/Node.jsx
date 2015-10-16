@@ -16,7 +16,8 @@ var Node = React.createClass({
         expanded: React.PropTypes.bool,
         style: React.PropTypes.object,
         type: React.PropTypes.string,
-        onSort: React.PropTypes.func
+        onSort: React.PropTypes.func,
+        isDraggable: React.PropTypes.bool
     },
     mixins: [SortableMixin],
     getDefaultProps() {

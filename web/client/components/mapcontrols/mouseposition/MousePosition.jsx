@@ -19,8 +19,8 @@ let MousePosition = React.createClass({
         mousePosition: React.PropTypes.object,
         crs: React.PropTypes.string,
         enabled: React.PropTypes.bool,
-        degreesTemplate: React.PropTypes.object,
-        projectedTemplate: React.PropTypes.object
+        degreesTemplate: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
+        projectedTemplate: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func])
     },
     getDefaultProps() {
         return {

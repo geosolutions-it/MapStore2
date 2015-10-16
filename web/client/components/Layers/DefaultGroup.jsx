@@ -16,7 +16,8 @@ var DefaultGroup = React.createClass({
         node: React.PropTypes.object,
         expanded: React.PropTypes.bool,
         style: React.PropTypes.object,
-        onToggle: React.PropTypes.func
+        onToggle: React.PropTypes.func,
+        onSort: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -34,7 +35,7 @@ var DefaultGroup = React.createClass({
         return (
             <Node type="group" {...other}>
                 <GroupTitle onClick={this.props.onToggle}/>
-                <GroupChildren position="collapsible">
+                <GroupChildren onSort={this.props.onSort} position="collapsible">
                     {this.props.children}
                 </GroupChildren>
             </Node>

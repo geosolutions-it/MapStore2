@@ -33,6 +33,7 @@ var Layers = React.createClass({
             content = filteredNodes.map((node) => React.cloneElement(this.props.children, {
                 node: node,
                 sortData: i++,
+                key: node.name || 'default',
                 isDraggable: !!this.props.onSort
             }));
         }

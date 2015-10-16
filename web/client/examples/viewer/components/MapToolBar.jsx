@@ -59,7 +59,7 @@ let MapToolBar = React.createClass({
         var children = this.props.children.map((item) => {
             if (item.props.isPanel) {
                 return (
-                <Collapse in={this.props.activeKey === item.key}>
+                <Collapse key={"mapToolBar-item-collapse-" + item.key} in={this.props.activeKey === item.key}>
                     <Panel header={item.props.title} style={this.getPanelStyle()} >
                         {item}
                     </Panel>
@@ -72,7 +72,7 @@ let MapToolBar = React.createClass({
             if (item.props.isPanel) {
                 let tooltip = <Tooltip id="toolbar-map-layers-button">{item.props.buttonTooltip}</Tooltip>;
                 let panelButton = (
-                    <OverlayTrigger key={"mapToolBar-item-OT" + item.key} rootClose placement="left" overlay={tooltip}>
+                    <OverlayTrigger key={"mapToolBar-item-OT-" + item.key} rootClose placement="left" overlay={tooltip}>
                         <Button
                             active={this.props.activeKey === item.key}
                             style={{width: "100%"}}

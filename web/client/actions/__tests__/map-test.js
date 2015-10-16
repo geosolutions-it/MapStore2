@@ -24,7 +24,7 @@ var {
 
 describe('Test correctness of the map actions', () => {
 
-    it('changeMapVeiw', () => {
+    it('changeMapView', () => {
         const testCenter = 0;
         const testZoom = 3;
         const testBbox = 6;

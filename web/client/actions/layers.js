@@ -7,6 +7,7 @@
  */
 
 const TOGGLE_NODE = 'TOGGLE_NODE';
+const SORT_NODE = 'SORT_NODE';
 
 function toggleNode(node, type, status) {
     return {
@@ -17,4 +18,12 @@ function toggleNode(node, type, status) {
     };
 }
 
-module.exports = {toggleNode, TOGGLE_NODE};
+function sortNode(node, order) {
+    return {
+        type: SORT_NODE,
+        node: node,
+        order: order
+    };
+}
+
+module.exports = {toggleNode, sortNode, TOGGLE_NODE, SORT_NODE};
