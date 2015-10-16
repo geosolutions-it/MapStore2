@@ -42,7 +42,7 @@
                     "html":"<h3>Viewer</h3><p>Semplice Visualizzatore di mappa</p>"
                 },
                 "manager":{
-                    "html":"<h3>Manager</h3><p>Sfogla le mappe</p>"
+                    "html":"<h3>Manager</h3><p>Sfoglia le mappe</p>"
                 }
             }
         },
