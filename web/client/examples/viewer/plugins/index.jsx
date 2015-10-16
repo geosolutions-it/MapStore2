@@ -93,6 +93,7 @@ module.exports = {
                     toggleMeasure={props.changeMeasurementState}
                     lineMeasureEnabled={props.measurement.lineMeasureEnabled}
                     areaMeasureEnabled={props.measurement.areaMeasureEnabled}
+                    bearingMeasureEnabled={props.measurement.bearingMeasureEnabled}
                     measurement={props.measurement}
                 />
                 <Settings

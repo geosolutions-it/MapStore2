@@ -23,6 +23,7 @@ function measurement(state = null, action) {
             return assign({}, state, {
                 lineMeasureEnabled: action.lineMeasureEnabled,
                 areaMeasureEnabled: action.areaMeasureEnabled,
+                bearingMeasureEnabled: action.bearingMeasureEnabled,
                 geomType: action.geomType,
                 len: action.len,
                 area: action.area,

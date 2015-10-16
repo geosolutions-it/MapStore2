@@ -20,6 +20,7 @@ function changeMeasurementState(measureState) {
         type: CHANGE_MEASUREMENT_STATE,
         lineMeasureEnabled: measureState.lineMeasureEnabled,
         areaMeasureEnabled: measureState.areaMeasureEnabled,
+        bearingMeasureEnabled: measureState.bearingMeasureEnabled,
         geomType: measureState.geomType,
         len: measureState.len,
         area: measureState.area,

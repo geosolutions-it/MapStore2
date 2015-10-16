@@ -230,6 +230,7 @@ var LeafletMap = React.createClass({
                 newMeasureState = {
                     lineMeasureEnabled: this.props.measurement.lineMeasureEnabled,
                     areaMeasureEnabled: this.props.measurement.areaMeasureEnabled,
+                    bearingMeasureEnabled: this.props.measurement.bearingMeasureEnabled,
                     geomType: this.props.measurement.geomType,
                     len: this.props.measurement.geomType === 'LineString' ? this.drawControl._measurementRunningTotal : 0,
                     area: this.props.measurement.geomType === 'Polygon' ? area : 0,

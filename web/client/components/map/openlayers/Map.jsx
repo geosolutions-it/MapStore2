@@ -189,6 +189,7 @@ var OpenlayersMap = React.createClass({
         var source;
         var vector;
         var draw;
+        var geometryType;
         // cleanup old interaction
         if (this.drawInteraction) {
             this.removeDrawInteraction();
@@ -214,10 +215,17 @@ var OpenlayersMap = React.createClass({
             })
         });
         this.map.addLayer(vector);
+
+        if (newProps.measurement.geomType === 'Bearing') {
+            geometryType = 'LineString';
+        } else {
+            geometryType = newProps.measurement.geomType;
+        }
+
         // create an interaction to draw with
         draw = new ol.interaction.Draw({
             source: source,
-            type: /** @type {ol.geom.GeometryType} */ newProps.measurement.geomType,
+            type: /** @type {ol.geom.GeometryType} */ geometryType,
             style: new ol.style.Style({
                 fill: new ol.style.Fill({
                     color: 'rgba(255, 255, 255, 0.2)'
@@ -241,13 +249,27 @@ var OpenlayersMap = React.createClass({
 
         // update measurement results for every new vertex drawn
         this.map.on('click', function() {
-            var newMeasureState = {
+
+            var bearing = 0;
+            var sketchCoords = this.sketchFeature.getGeometry().getCoordinates();
+            var newMeasureState;
+
+            if (this.props.measurement.geomType === 'Bearing' &&
+                    sketchCoords.length > 2) {
+                this.drawInteraction.finishDrawing();
+                // calculate the azimuth as base for bearing information
+                bearing = CoordinatesUtils.calculateAzimuth(
+                    sketchCoords[0], sketchCoords[1], this.props.projection);
+            }
+
+            newMeasureState = {
                 lineMeasureEnabled: this.props.measurement.lineMeasureEnabled,
                 areaMeasureEnabled: this.props.measurement.areaMeasureEnabled,
+                bearingMeasureEnabled: this.props.measurement.bearingMeasureEnabled,
                 geomType: this.props.measurement.geomType,
                 len: this.props.measurement.geomType === 'LineString' ? this.sketchFeature.getGeometry().getLength() : 0,
                 area: this.props.measurement.geomType === 'Polygon' ? this.sketchFeature.getGeometry().getArea() : 0,
-                bearing: 0
+                bearing: this.props.measurement.geomType === 'Bearing' ? bearing : 0
             };
             this.props.changeMeasurementState(newMeasureState);
         }, this);

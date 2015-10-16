@@ -27,7 +27,8 @@ let MeasureComponent = React.createClass({
         toggleMeasure: React.PropTypes.func,
         measurement: React.PropTypes.object,
         lineMeasureEnabled: React.PropTypes.Boolean,
-        areaMeasureEnabled: React.PropTypes.Boolean
+        areaMeasureEnabled: React.PropTypes.Boolean,
+        bearingMeasureEnabled: React.PropTypes.Boolean
     },
     getDefaultProps() {
         return {
@@ -45,6 +46,7 @@ let MeasureComponent = React.createClass({
             newMeasureState = {
                 lineMeasureEnabled: true,
                 areaMeasureEnabled: false,
+                bearingMeasureEnabled: false,
                 geomType: 'LineString',
                 // reset old measurements
                 len: 0,
@@ -60,7 +62,24 @@ let MeasureComponent = React.createClass({
             newMeasureState = {
                 lineMeasureEnabled: false,
                 areaMeasureEnabled: true,
+                bearingMeasureEnabled: false,
                 geomType: 'Polygon',
+                // reset old measurements
+                len: 0,
+                area: 0,
+                bearing: 0
+            };
+            this.props.toggleMeasure(newMeasureState);
+        }
+    },
+    onBearingClick: function() {
+        var newMeasureState;
+        if (this.props.areaMeasureEnabled === false) {
+            newMeasureState = {
+                lineMeasureEnabled: false,
+                areaMeasureEnabled: false,
+                bearingMeasureEnabled: true,
+                geomType: 'Bearing',
                 // reset old measurements
                 len: 0,
                 area: 0,
@@ -73,12 +92,28 @@ let MeasureComponent = React.createClass({
         var resetMeasureState = {
             lineMeasureEnabled: false,
             areaMeasureEnabled: false,
+            bearingMeasureEnabled: false,
             geomType: null,
             len: 0,
             area: 0,
             bearing: 0
         };
         this.props.toggleMeasure(resetMeasureState);
+    },
+    getFormattedBearingValue(azimuth) {
+        var bearing = "";
+        if (azimuth >= 0 && azimuth < 90) {
+            bearing = "N " + this.degToDms(azimuth) + " E";
+
+        } else if (azimuth > 90 && azimuth <= 180) {
+            bearing = "S " + this.degToDms(180.0 - azimuth) + " E";
+        } else if (azimuth > 180 && azimuth < 270) {
+            bearing = "S " + this.degToDms(azimuth - 180.0 ) + " W";
+        } else if (azimuth >= 270 && azimuth <= 360) {
+            bearing = "N " + this.degToDms(360 - azimuth ) + " W";
+        }
+
+        return bearing;
     },
     render() {
         let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
@@ -97,22 +132,44 @@ let MeasureComponent = React.createClass({
                            pressed={this.props.areaMeasureEnabled}
                            onClick={this.onAreaClick} />
                    </Col>
-                   <Col {...this.props.columnProperties}>
-                       <Button
-                           onClick={this.onResetClick}>
-                           {this.props.resetButtonText}
-                       </Button>
-                   </Col>
+                       <ToggleButton
+                           text="Bearing"
+                           pressed={this.props.bearingMeasureEnabled}
+                           onClick={this.onBearingClick} />
                </Grid>
                <Grid style={{"margin-top": "15px"}}>
                    <Col {...this.props.columnProperties}>
                        <p><span>{this.props.lengthLabel}: </span><span><FormattedNumber key="len" {...decimalFormat} value={this.props.measurement.len} /> m</span></p>
                        <p><span>{this.props.areaLabel}: </span><span><FormattedNumber key="area" {...decimalFormat} value={this.props.measurement.area} /> m²</span></p>
-                       <p><span>{this.props.bearingLabel}: </span><span><FormattedNumber key="bearing" {...decimalFormat} value="0" /> deg</span></p>
+                       <p><span>{this.props.bearingLabel}: </span><span>{this.getFormattedBearingValue(this.props.measurement.bearing)}</span></p>
+                           <Button
+                               onClick={this.onResetClick}>
+                               {this.props.resetButtonText}
+                           </Button>
                    </Col>
                </Grid>
+
             </Panel>
         );
+    },
+    degToDms: function(deg) {
+        // convert decimal deg to minutes and seconds
+        var d = Math.floor(deg);
+        var minfloat = (deg - d) * 60;
+        var m = Math.floor(minfloat);
+        var secfloat = (minfloat - m) * 60;
+        var s = Math.round(secfloat);
+        // After rounding, the seconds might become 60. These two
+        // if-tests are not necessary if no rounding is done.
+        if (s === 60) {
+            m++;
+            s = 0;
+        }
+        if (m === 60) {
+            d++;
+            m = 0;
+        }
+        return ("" + d + "° " + m + "' " + s + "'' ");
     }
 });
 

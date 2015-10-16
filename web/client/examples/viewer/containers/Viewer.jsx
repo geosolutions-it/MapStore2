@@ -155,7 +155,7 @@ module.exports = (actions) => {
             mousePosition: state.mousePosition ? state.mousePosition.position : null,
             mousePositionCrs: state.mousePosition ? state.mousePosition.crs : null,
             mousePositionEnabled: state.mousePosition ? state.mousePosition.enabled : false,
-            measurement: state.measurement ? state.measurement : {lineMeasureEnabled: false, areaMeasureEnabled: false, geomType: null, len: 0, area: 0, bearing: 0}
+            measurement: state.measurement ? state.measurement : {lineMeasureEnabled: false, areaMeasureEnabled: false, bearingMeasureEnabled: false, geomType: null, len: 0, area: 0, bearing: 0}
         };
     }, dispatch => {
         return bindActionCreators(assign({}, {
