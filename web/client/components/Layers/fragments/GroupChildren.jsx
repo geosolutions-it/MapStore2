@@ -41,7 +41,7 @@ var GroupChildren = React.createClass({
         if (this.props.onSort) {
             return (
                 <div style={{marginLeft: "15px"}}>
-                    <Sortable onSort={this.handleSort}>
+                    <Sortable minDragDistance={5} onSort={this.handleSort}>
                         {content}
                     </Sortable>
                 </div>
