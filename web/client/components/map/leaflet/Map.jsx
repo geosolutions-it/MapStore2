@@ -8,6 +8,7 @@
 var L = require('leaflet');
 var React = require('react');
 var ConfigUtils = require('../../../utils/ConfigUtils');
+var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 
 var LeafletMap = React.createClass({
     propTypes: {
@@ -176,7 +177,8 @@ var LeafletMap = React.createClass({
 
         this.removeDrawInteraction();
 
-        if (newProps.measurement.geomType === 'LineString') {
+        if (newProps.measurement.geomType === 'LineString' ||
+                newProps.measurement.geomType === 'Bearing') {
             this.drawControl = new L.Draw.Polyline(this.map, {
                 shapeOptions: {
                     color: '#ffcc33',
@@ -210,37 +212,7 @@ var LeafletMap = React.createClass({
             this.drawing = true;
         }, this);
 
-        this.map.on('click', function() {
-            var latLngs;
-            var area;
-            var newMeasureState;
-
-            if (!this.drawing && this.drawControl !== null) {
-                // re-enable draw control, since it is stopped after
-                // every finished sketch
-                this.map.removeLayer(this.lastLayer);
-                this.drawControl.enable();
-                this.drawing = true;
-
-            } else {
-                // update measurement results for every new vertex drawn
-                latLngs = this.drawControl._poly.getLatLngs();
-                area = L.GeometryUtil.geodesicArea(latLngs);
-
-                newMeasureState = {
-                    lineMeasureEnabled: this.props.measurement.lineMeasureEnabled,
-                    areaMeasureEnabled: this.props.measurement.areaMeasureEnabled,
-                    bearingMeasureEnabled: this.props.measurement.bearingMeasureEnabled,
-                    geomType: this.props.measurement.geomType,
-                    len: this.props.measurement.geomType === 'LineString' ? this.drawControl._measurementRunningTotal : 0,
-                    area: this.props.measurement.geomType === 'Polygon' ? area : 0,
-                    bearing: 0
-                };
-                this.props.changeMeasurementState(newMeasureState);
-            }
-
-        }, this);
-
+        this.map.on('click', this.mapClickHandler, this);
 
     },
     removeDrawInteraction: function() {
@@ -248,6 +220,65 @@ var LeafletMap = React.createClass({
             this.drawControl.disable();
             this.drawControl = null;
             this.map.removeLayer(this.lastLayer);
+            this.map.off('click', this.mapClickHandler, this);
+        }
+    },
+    mapClickHandler: function() {
+        var latLngs;
+        var area;
+        var newMeasureState;
+        var bearingMarkers;
+        var bearingLatLng1;
+        var bearingLatLng2;
+        var coords1;
+        var coords2;
+        var bearing = 0;
+
+        if (!this.drawing && this.drawControl !== null) {
+            // re-enable draw control, since it is stopped after
+            // every finished sketch
+            this.map.removeLayer(this.lastLayer);
+            this.drawControl.enable();
+            this.drawing = true;
+
+        } else {
+            // update measurement results for every new vertex drawn
+
+            // calculate possible length / area
+            latLngs = this.drawControl._poly.getLatLngs();
+            area = L.GeometryUtil.geodesicArea(latLngs);
+
+            // calculate bearing
+            if (this.props.measurement.geomType === 'Bearing') {
+                bearingMarkers = this.drawControl._markers;
+
+                if (bearingMarkers.length > 1) {
+                    // restrict line drawing to 2 vertices
+                    this.drawControl._finishShape();
+                    this.drawControl.disable();
+                    this.drawing = false;
+
+                    bearingLatLng1 = bearingMarkers[0].getLatLng();
+                    bearingLatLng2 = bearingMarkers[1].getLatLng();
+                    coords1 = [bearingLatLng1.lng, bearingLatLng1.lat];
+                    coords2 = [bearingLatLng2.lng, bearingLatLng2.lat];
+
+                    // calculate the azimuth as base for bearing information
+                    bearing = CoordinatesUtils.calculateAzimuth(
+                        coords1, coords2, this.props.projection);
+                }
+            }
+
+            newMeasureState = {
+                lineMeasureEnabled: this.props.measurement.lineMeasureEnabled,
+                areaMeasureEnabled: this.props.measurement.areaMeasureEnabled,
+                bearingMeasureEnabled: this.props.measurement.bearingMeasureEnabled,
+                geomType: this.props.measurement.geomType,
+                len: this.props.measurement.geomType === 'LineString' ? this.drawControl._measurementRunningTotal : 0,
+                area: this.props.measurement.geomType === 'Polygon' ? area : 0,
+                bearing: bearing
+            };
+            this.props.changeMeasurementState(newMeasureState);
         }
     }
 
