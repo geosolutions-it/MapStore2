@@ -23,7 +23,8 @@ var LayerTree = React.createClass({
         groups: React.PropTypes.array,
         propertiesChangeHandler: React.PropTypes.func,
         onToggleGroup: React.PropTypes.func,
-        onToggleLayer: React.PropTypes.func
+        onToggleLayer: React.PropTypes.func,
+        onSort: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -44,9 +45,9 @@ var LayerTree = React.createClass({
 
         return (
             <Panel style={{overflow: "auto"}} >
-                <Layers filter={this.getNoBackgroundLayers}
+                <Layers onSort={this.props.onSort} filter={this.getNoBackgroundLayers}
                     nodes={this.props.groups}>
-                    <DefaultGroup expanded={false} onToggle={this.props.onToggleGroup}>
+                    <DefaultGroup onSort={this.props.onSort} expanded={false} onToggle={this.props.onToggleGroup}>
                         <DefaultLayer
                             onToggle={this.props.onToggleLayer}
                             expanded={false}

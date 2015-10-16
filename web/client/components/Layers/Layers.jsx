@@ -7,18 +7,21 @@
  */
 
 var React = require('react');
+var Sortable = require('react-sortable-items');
 
 var Layers = React.createClass({
     propTypes: {
         filter: React.PropTypes.func,
         nodes: React.PropTypes.array,
-        id: React.PropTypes.string
+        id: React.PropTypes.string,
+        onSort: React.PropTypes.func
     },
     getDefaultProps() {
         return {
             filter() {return true; },
             nodes: [],
-            id: 'mapstore-layers'
+            id: 'mapstore-layers',
+            onSort: null
         };
     },
 
@@ -26,11 +29,27 @@ var Layers = React.createClass({
         var content = [];
         var filteredNodes = this.props.nodes.filter(this.props.filter);
         if (this.props.children) {
+            let i = 0;
             content = filteredNodes.map((node) => React.cloneElement(this.props.children, {
-                node: node
+                node: node,
+                sortData: i++,
+                key: node.name || 'default',
+                isDraggable: !!this.props.onSort
             }));
         }
+        if (this.props.onSort) {
+            return (
+                <div id={this.props.id}>
+                    <Sortable onSort={this.handleSort}>
+                        {content}
+                    </Sortable>
+                </div>
+            );
+        }
         return <div id={this.props.id}>{content}</div>;
+    },
+    handleSort: function(reorder) {
+        this.props.onSort('root', reorder);
     }
 });
 

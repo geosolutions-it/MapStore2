@@ -17,7 +17,7 @@ var ZoomToMaxExtentButton = require('../../../components/buttons/ZoomToMaxExtent
 
 var mapInfo = require('../../../reducers/mapInfo');
 var floatingPanel = require('../reducers/floatingPanel');
-var layers = require('../reducers/layers');
+var layers = require('../../../reducers/layers');
 var mousePosition = require('../../../reducers/mousePosition');
 
 var {getFeatureInfo, changeMapInfoState, purgeMapInfoResults} = require('../../../actions/mapInfo');
@@ -29,14 +29,16 @@ var {changeZoomLevel} = require('../../../actions/map');
 
 var {layerLoading, layerLoad} = require('../../../actions/map');
 var {changeMapView} = require('../../../actions/map');
-var {toggleNode} = require('../actions/layers');
+var {toggleNode, sortNode} = require('../../../actions/layers');
 
 var React = require('react');
 
 module.exports = {
     components: (props) => {
         return [
-            <About style={{
+            <About
+                key="about"
+                style={{
                     position: "absolute",
                         zIndex: 1000,
                         bottom: "-8px",
@@ -44,13 +46,12 @@ module.exports = {
                         margin: "8px"
                     }} key="about"/>,
             <MapToolBar
-                layers={props.mapConfig.layers}
-                propertiesChangeHandler={props.changeLayerProperties}
                 activeKey={props.floatingPanel.activeKey}
                 onActivateItem={props.activatePanel}
-                mapInfo={props.mapInfo}
-                changeMapInfoState={props.changeMapInfoState}>
+                key="mapToolbar"
+                >
                 <ToggleButton
+                    key="infoButton"
                     isButton={true}
                     pressed={props.mapInfo.enabled}
                     glyphicon="info-sign"
@@ -65,6 +66,7 @@ module.exports = {
                     propertiesChangeHandler={props.changeLayerProperties}
                     onToggleGroup={(group, status) => props.toggleNode(group, 'groups', status)}
                     onToggleLayer={(layer, status) => props.toggleNode(layer, 'layers', status)}
+                    onSort={props.sortNode}
                     />
                 <BackgroundSwitcher
                     key="backgroundSwitcher"
@@ -74,6 +76,7 @@ module.exports = {
                     buttonTooltip={<Message msgId="backgroundSwither.tooltip"/>}
                     propertiesChangeHandler={props.changeLayerProperties}/>
                 <Settings
+                    key="settingsPanel"
                     isPanel={true}
                     buttonTooltip={<Message msgId="settings" />}>
                     <h5><Message msgId="language" /></h5>
@@ -118,9 +121,12 @@ module.exports = {
                 mousePosition={props.mousePosition}
                 crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.mapConfig.projection}/>,
             <ScaleBox
+                key="scaleBox"
                 onChange={props.changeZoomLevel}
                 currentZoomLvl={props.mapConfig.zoom} />,
-            <GlobalSpinner loadingLayers={props.mapConfig.loadingLayers}/>,
+            <GlobalSpinner
+                key="globalSpinner"
+                loadingLayers={props.mapConfig.loadingLayers}/>,
             <ZoomToMaxExtentButton
                 key="zoomToMaxExtent"
                 mapConfig={props.mapConfig}
@@ -143,6 +149,7 @@ module.exports = {
         layerLoading,
         layerLoad,
         changeMapView,
-        toggleNode
+        toggleNode,
+        sortNode
     }
 };

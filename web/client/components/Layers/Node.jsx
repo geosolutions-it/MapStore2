@@ -8,20 +8,25 @@
 
 var React = require('react');
 var assign = require('object-assign');
+var SortableMixin = require('react-sortable-items/SortableItemMixin');
 
 var Node = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
         expanded: React.PropTypes.bool,
         style: React.PropTypes.object,
-        type: React.PropTypes.string
+        type: React.PropTypes.string,
+        onSort: React.PropTypes.func,
+        isDraggable: React.PropTypes.bool
     },
+    mixins: [SortableMixin],
     getDefaultProps() {
         return {
             node: null,
             expanded: true,
             style: {},
-            type: 'node'
+            type: 'node',
+            onSort: null
         };
     },
     renderChildren(filter = () => true) {
@@ -37,12 +42,11 @@ var Node = React.createClass({
     render() {
         let expanded = (this.props.node.expanded !== undefined) ? this.props.node.expanded : this.props.expanded;
         let prefix = this.props.type;
-        return (
-            <div key={this.props.node.name} className={expanded ? prefix + "-expanded" : prefix + "-collapsed"} style={this.props.style} >
-                {this.renderChildren((child) => child.props.position !== 'collapsible')}
-                {expanded ? this.renderChildren((child) => child.props.position === 'collapsible') : []}
-            </div>
-        );
+        let content = (<div key={this.props.node.name} className={expanded ? prefix + "-expanded" : prefix + "-collapsed"} style={this.props.style} >
+            {this.renderChildren((child) => child.props.position !== 'collapsible')}
+            {expanded ? this.renderChildren((child) => child.props.position === 'collapsible') : []}
+        </div>);
+        return this.props.isDraggable ? this.renderWithSortable(content) : content;
     }
 });
 
