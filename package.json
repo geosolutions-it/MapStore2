@@ -49,6 +49,7 @@
   "dependencies": {
     "axios": "^0.5.4",
     "bootstrap": "^3.3.5",
+    "classnames": "^2.1.5",
     "es6-promise": "^2.3.0",
     "intl": "^1.0.0",
     "keymirror": "~0.1.1",
@@ -63,10 +64,10 @@
     "react-bootstrap": "^0.25.2",
     "react-intl": "^1.2.0",
     "react-redux": "^3.0.1",
+    "react-sortable-items": "https://www.github.com/mbarto/react-sortable-items/tarball/remove_deprecated",
     "redux": "^3.0.2",
     "redux-logger": "^2.0.0",
     "redux-thunk": "^0.1.0",
-    "react-sortable-items": "https://www.github.com/mbarto/react-sortable-items/tarball/remove_deprecated",
     "url": "~0.10.3"
   },
   "scripts": {
