@@ -64,7 +64,7 @@
     "react-bootstrap": "^0.25.2",
     "react-intl": "^1.2.0",
     "react-redux": "^3.0.1",
-    "react-sortable-items": "https://www.github.com/mbarto/react-sortable-items/tarball/remove_deprecated",
+    "react-sortable-items": "https://www.github.com/mbarto/react-sortable-items/tarball/min_drag_distance",
     "redux": "^3.0.2",
     "redux-logger": "^2.0.0",
     "redux-thunk": "^0.1.0",

@@ -40,7 +40,7 @@ var Layers = React.createClass({
         if (this.props.onSort) {
             return (
                 <div id={this.props.id}>
-                    <Sortable onSort={this.handleSort}>
+                    <Sortable minDragDistance={5} onSort={this.handleSort}>
                         {content}
                     </Sortable>
                 </div>
