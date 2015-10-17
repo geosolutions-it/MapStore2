@@ -47,4 +47,12 @@ describe('CoordinatesUtils', () => {
             expect(defs.indexOf(item) !== -1);
         });
     });
+    it('test calculateAzimuth', () => {
+        var point1 = [0, 0];
+        var point2 = [1, 1];
+        var proj = 'EPSG:900913';
+        var azimuth = CoordinatesUtils.calculateAzimuth(point1, point2, proj);
+
+        expect(azimuth.toFixed(2)).toBe('45.00');
+    });
 });

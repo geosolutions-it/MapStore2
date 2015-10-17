@@ -137,11 +137,11 @@ let MeasureComponent = React.createClass({
                            pressed={this.props.bearingMeasureEnabled}
                            onClick={this.onBearingClick} />
                </Grid>
-               <Grid style={{"margin-top": "15px"}}>
+               <Grid id="measure-result-grid" style={{"margin-top": "15px"}}>
                    <Col {...this.props.columnProperties}>
-                       <p><span>{this.props.lengthLabel}: </span><span><FormattedNumber key="len" {...decimalFormat} value={this.props.measurement.len} /> m</span></p>
-                       <p><span>{this.props.areaLabel}: </span><span><FormattedNumber key="area" {...decimalFormat} value={this.props.measurement.area} /> m²</span></p>
-                       <p><span>{this.props.bearingLabel}: </span><span>{this.getFormattedBearingValue(this.props.measurement.bearing)}</span></p>
+                       <p><span>{this.props.lengthLabel}: </span><span id="measure-len-res"><FormattedNumber key="len" {...decimalFormat} value={this.props.measurement.len} /> m</span></p>
+                       <p><span>{this.props.areaLabel}: </span><span id="measure-area-res"><FormattedNumber key="area" {...decimalFormat} value={this.props.measurement.area} /> m²</span></p>
+                       <p><span>{this.props.bearingLabel}: </span><span id="measure-bearing-res">{this.getFormattedBearingValue(this.props.measurement.bearing)}</span></p>
                            <Button
                                onClick={this.onResetClick}>
                                {this.props.resetButtonText}
