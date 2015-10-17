@@ -153,6 +153,7 @@ describe('LeafletMap', () => {
             <LeafletMap
                 center={{y: 43.9, x: 10.3}}
                 zoom={11}
+                measurement={{}}
             />
         , document.body);
 
