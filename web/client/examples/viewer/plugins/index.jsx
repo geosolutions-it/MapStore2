@@ -3,6 +3,10 @@ var About = require('../components/About');
 var LangBar = require('../../../components/I18N/LangBar');
 var {Message} = require('../../../components/I18N/I18N');
 
+var HistoryBar = require("../../../components/mapcontrols/navigationhistory/HistoryBar");
+var { ActionCreators } = require('redux-undo');
+var {undo, redo} = ActionCreators;
+
 var ToggleButton = require('../../../components/buttons/ToggleButton');
 var BackgroundSwitcher = require("../../../components/BackgroundSwitcher/BackgroundSwitcher");
 var LayerTree = require('../components/LayerTree');
@@ -101,6 +105,20 @@ module.exports = {
 
                         }}
                         crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.mapConfig.projection} />
+
+
+                    <h5><Message msgId="history.barLabel" /></h5>
+                    <HistoryBar
+                        undoBtnProps={{
+                            onClick: props.undo,
+                            label: <Message msgId="history.undoBtnTooltip"/>,
+                            disabled: (props.mapHistory.past.length > 0) ? false : true
+                        }}
+                        redoBtnProps={{
+                            onClick: props.redo,
+                            label: <Message msgId="history.redoBtnTooltip" />,
+                            disabled: (props.mapHistory.future.length > 0) ? false : true
+                    }}/>
                 </Settings>
             </MapToolBar>,
             <GetFeatureInfo
@@ -150,6 +168,8 @@ module.exports = {
         layerLoad,
         changeMapView,
         toggleNode,
-        sortNode
+        sortNode,
+        undo,
+        redo
     }
 };

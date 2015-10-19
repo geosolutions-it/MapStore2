@@ -137,9 +137,10 @@ var getLayersByGroup = function(layers, groupsInfo, layersInfo) {
 module.exports = (actions) => {
     return connect((state) => {
         return {
-            mapConfig: (state.mapConfig && state.mapConfig.layers) ? assign({}, state.mapConfig, {
-                groups: state.layers ? getLayersByGroup(state.mapConfig.layers, state.layers.groups || {}, state.layers.layers || {}) : []
-            }) : state.mapConfig,
+            mapConfig: (state.mapConfig.present && state.mapConfig.present.layers) ? assign({}, state.mapConfig.present, {
+                groups: state.layers ? getLayersByGroup(state.mapConfig.present.layers, state.layers.groups || {}, state.layers.layers || {}) : []
+            }) : state.mapConfig.present,
+            mapHistory: state.mapConfig,
             browser: state.browser,
             messages: state.locale ? state.locale.messages : null,
             locale: state.locale ? state.locale.current : null,
