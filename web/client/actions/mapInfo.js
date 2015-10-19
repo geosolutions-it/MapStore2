@@ -16,6 +16,7 @@ const EXCEPTIONS_FEATURE_INFO = 'EXCEPTIONS_FEATURE_INFO';
 const CHANGE_MAPINFO_STATE = 'CHANGE_MAPINFO_STATE';
 const NEW_MAPINFO_REQUEST = 'NEW_MAPINFO_REQUEST';
 const PURGE_MAPINFO_RESULTS = 'PURGE_MAPINFO_RESULTS';
+const CHANGE_MAPINFO_FORMAT = 'CHANGE_MAPINFO_FORMAT';
 
 /**
  * Private
@@ -115,6 +116,23 @@ function purgeMapInfoResults() {
     };
 }
 
+/**
+ * Set a new format for GetFeatureInfo request.
+ * @param mimeType {string} correct value are:
+ *   - "text/plain"
+ *   - "text/html"
+ *   - "text/javascript"
+ *   - "application/json"
+ *   - "application/vnd.ogc.gml"
+ *   - "application/vnd.ogc.gml/3.1.1"
+ */
+function changeMapInfoFormat(mimeType) {
+    return {
+        type: CHANGE_MAPINFO_FORMAT,
+        infoFormat: mimeType
+    };
+}
+
 module.exports = {
     ERROR_FEATURE_INFO,
     EXCEPTIONS_FEATURE_INFO,
@@ -122,8 +140,10 @@ module.exports = {
     CHANGE_MAPINFO_STATE,
     NEW_MAPINFO_REQUEST,
     PURGE_MAPINFO_RESULTS,
+    CHANGE_MAPINFO_FORMAT,
     getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
-    purgeMapInfoResults
+    purgeMapInfoResults,
+    changeMapInfoFormat
 };

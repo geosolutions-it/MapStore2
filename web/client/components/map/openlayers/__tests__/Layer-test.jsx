@@ -332,4 +332,20 @@ describe('Openlayers layer', () => {
         expect(layer.layer.getVisible()).toBe(false);
 
     });
+
+    it('creates a mapquest layer for openlayers map', () => {
+        var options = {
+            "type": "mapquest",
+            "title": "MapQuest",
+            "name": "osm",
+            "group": "background"
+        };
+        // create layers
+        var layer = React.render(
+            <OpenlayersLayer type="mapquest" options={options} map={map}/>, document.body);
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+    });
 });

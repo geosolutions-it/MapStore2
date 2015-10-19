@@ -14,7 +14,8 @@ var {
     LOAD_FEATURE_INFO,
     CHANGE_MAPINFO_STATE,
     NEW_MAPINFO_REQUEST,
-    PURGE_MAPINFO_RESULTS
+    PURGE_MAPINFO_RESULTS,
+    CHANGE_MAPINFO_FORMAT
 } = require('../actions/mapInfo');
 
 const assign = require('object-assign');
@@ -130,6 +131,11 @@ function mapInfo(state = null, action) {
         case CLICK_ON_MAP: {
             return assign({}, state, {
                 clickPoint: action.point
+            });
+        }
+        case CHANGE_MAPINFO_FORMAT: {
+            return assign({}, state, {
+                infoFormat: action.infoFormat
             });
         }
         default:

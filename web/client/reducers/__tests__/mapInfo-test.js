@@ -173,4 +173,14 @@ describe('Test the mapInfo reducer', () => {
         expect(state).toExist();
         expect(state.enabled).toBe(false);
     });
+
+    it('change mapinfo format', () => {
+        let state = mapInfo({}, {type: 'CHANGE_MAPINFO_FORMAT', infoFormat: "testFormat"});
+        expect(state).toExist();
+        expect(state.infoFormat).toBe("testFormat");
+
+        state = mapInfo({infoFormat: 'oldFormat'}, {type: 'CHANGE_MAPINFO_FORMAT', infoFormat: "newFormat"});
+        expect(state).toExist();
+        expect(state.infoFormat).toBe('newFormat');
+    });
 });
