@@ -56,6 +56,11 @@
             "tooltip": "Scegli lo sfondo"
         },
         "getFeatureInfoTitle": "Informazioni Sulle Feature",
-        "noFeatureInfo": "Non ci sono informazioni disponibili per la feature selezionata"
+        "noFeatureInfo": "Non ci sono informazioni disponibili per la feature selezionata",
+        "history":{
+            "barLabel": "Storia Mappa",
+            "undoBtnTooltip": "Torna indietro",
+            "redoBtnTooltip": "Vai avanti"
+        }
     }
 }

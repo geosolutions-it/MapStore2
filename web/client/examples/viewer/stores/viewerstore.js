@@ -7,7 +7,7 @@
  */
 var {combineReducers} = require('redux');
 
-var mapConfig = require('../../../reducers/config');
+var mapConfig = require('../../../utils/MapHistory');
 var browser = require('../../../reducers/browserConfig');
 var locale = require('../../../reducers/locale');
 var DebugUtils = require('../../../utils/DebugUtils');
