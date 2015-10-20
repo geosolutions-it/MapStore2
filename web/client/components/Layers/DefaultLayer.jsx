@@ -42,8 +42,8 @@ var DefaultLayer = React.createClass({
         return (
             <Node type="layer" {...other}>
                 <VisibilityCheck propertiesChangeHandler={this.props.propertiesChangeHandler}/>
-                <InlineSpinner loadingList={this.props.loadingList} loading={(props) => (props.loadingList || []).indexOf(props.node.name) !== -1}/>
                 <Title onClick={this.props.onToggle}/>
+                <InlineSpinner loadingList={this.props.loadingList} loading={(props) => (props.loadingList || []).indexOf(props.node.name) !== -1}/>
                 {this.renderCollapsible()}
             </Node>
         );
