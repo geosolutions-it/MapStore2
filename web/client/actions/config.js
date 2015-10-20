@@ -11,6 +11,7 @@ var axios = require('../libs/ajax');
 const MAP_CONFIG_LOADED = 'MAP_CONFIG_LOADED';
 const MAP_CONFIG_LOAD_ERROR = 'MAP_CONFIG_LOAD_ERROR';
 const CHANGE_LAYER_PROPERTIES = 'CHANGE_LAYER_PROPERTIES';
+const CHANGE_GROUP_PROPERTIES = 'CHANGE_GROUP_PROPERTIES';
 const CHANGE_BROWSER_PROPERTIES = 'CHANGE_BROWSER_PROPERTIES';
 
 function configureMap(conf, legacy) {
@@ -48,11 +49,20 @@ function loadMapConfig(configName, legacy) {
     };
 }
 
-function changeLayerProperties(properties, position) {
+function changeLayerProperties(layer, properties) {
     return {
         type: CHANGE_LAYER_PROPERTIES,
         newProperties: properties,
-        position: position
+        layer: layer
+
+    };
+}
+
+function changeGroupProperties(group, properties) {
+    return {
+        type: CHANGE_GROUP_PROPERTIES,
+        newProperties: properties,
+        group: group
 
     };
 }
@@ -63,4 +73,4 @@ function changeBrowserProperties(properties) {
         newProperties: properties
     };
 }
-module.exports = {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR, CHANGE_LAYER_PROPERTIES, CHANGE_BROWSER_PROPERTIES, loadMapConfig, changeLayerProperties, changeBrowserProperties};
+module.exports = {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES, CHANGE_BROWSER_PROPERTIES, loadMapConfig, changeLayerProperties, changeGroupProperties, changeBrowserProperties};

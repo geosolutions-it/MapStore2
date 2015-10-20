@@ -8,6 +8,8 @@
 
 const TOGGLE_NODE = 'TOGGLE_NODE';
 const SORT_NODE = 'SORT_NODE';
+const REMOVE_NODE = 'REMOVE_NODE';
+const UPDATE_NODE = 'UPDATE_NODE';
 
 function toggleNode(node, type, status) {
     return {
@@ -26,4 +28,21 @@ function sortNode(node, order) {
     };
 }
 
-module.exports = {toggleNode, sortNode, TOGGLE_NODE, SORT_NODE};
+function removeNode(node, type) {
+    return {
+        type: REMOVE_NODE,
+        node: node,
+        nodeType: type
+    };
+}
+
+function updateNode(node, type, options) {
+    return {
+        type: UPDATE_NODE,
+        node: node,
+        nodeType: type,
+        options: options
+    };
+}
+
+module.exports = {toggleNode, sortNode, removeNode, updateNode, TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE};

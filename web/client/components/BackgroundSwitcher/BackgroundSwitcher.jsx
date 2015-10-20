@@ -17,7 +17,6 @@ var mapquestOsm = require('./images/mapthumbs/mapquest-osm.jpg');
 var empty = require('./images/mapthumbs/none.jpg');
 var unknown = require('./images/mapthumbs/dafault.jpg');
 var Night2012 = require('./images/mapthumbs/NASA_NIGHT.jpg');
-var assign = require('object-assign');
 require("./style.css");
 
 let thumbs = {
@@ -79,7 +78,8 @@ let BackgroundSwitcher = React.createClass({
             let layer = layers[i];
             let thumb = thumbs[layer.source] && thumbs[layer.source][layer.name] || layer.thumbURL || thumbs.unknown;
             items.push(<Col {...this.props.columnProperties} key={i}>
-          <Thumbnail data-position={i} key={"bkg-swicher-item-" + i} bsStyle={layer.visibility ? "primary" : "default"} src={thumb} alt={layer.source + " " + layer.name} onClick={this.changeLayerVisibility}>
+          <Thumbnail data-position={i} key={"bkg-swicher-item-" + i} bsStyle={layer.visibility ? "primary" : "default"} src={thumb} alt={layer.source + " " + layer.name}
+              onClick={this.changeLayerVisibility}>
                   <div style={{height: '38px', textOverflow: 'ellipsis', overflow: 'hidden'}}><strong>{layer.title}</strong></div>
           </Thumbnail>
       </Col>);
@@ -94,8 +94,7 @@ let BackgroundSwitcher = React.createClass({
     changeLayerVisibility(eventObj) {
         let position = parseInt(eventObj.currentTarget.dataset.position, 10);
         var layer = this.props.layers[position];
-        var newLayer = assign({}, layer, {visibility: true});
-        this.props.propertiesChangeHandler(newLayer, position);
+        this.props.propertiesChangeHandler(layer.name, {visibility: true});
     }
 });
 

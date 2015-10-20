@@ -95,7 +95,7 @@ describe('Test the mapConfig reducer', () => {
                 "group": "background",
                 "format": "image/png"
             },
-            position: 1
+            layer: "rv1"
         });
         var layers = state.layers;
         expect(layers[0].visibility).toBe(false);

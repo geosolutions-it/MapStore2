@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR, CHANGE_LAYER_PROPERTIES} = require('../actions/config');
+var {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES} = require('../actions/config');
 var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER, CHANGE_ZOOM_LVL, LAYER_LOADING, LAYER_LOAD} = require('../actions/map');
 
 var ConfigUtils = require('../utils/ConfigUtils');
@@ -29,17 +29,29 @@ function mapConfig(state = null, action) {
                 mapStateSource: action.mapStateSource
             });
         case CHANGE_LAYER_PROPERTIES: {
-            let layers = state.layers.slice(0);
-            if (layers[action.position].visibility !== action.newProperties.visibility && action.newProperties.group === "background") {
-                layers = layers.map(layer => {
-                    let newLayer = assign({}, layer);
-                    if (newLayer.group === "background") {
-                        newLayer.visibility = false;
-                    }
-                    return newLayer;
-                } );
-            }
-            layers[action.position] = action.newProperties;
+            let isBackground = state.layers.reduce(
+                    (background, layer) => background || (layer.name === action.layer && layer.group === 'background'),
+            false);
+            let layers = state.layers.map((layer) => {
+                if (layer.name === action.layer) {
+                    return assign({}, layer, action.newProperties);
+                } else if (layer.group === 'background' && isBackground && action.newProperties.visibility) {
+                    // TODO remove
+                    return assign({}, layer, {visibility: false});
+                }
+                return assign({}, layer);
+            });
+            return assign({}, state, {
+                layers: layers
+            });
+        }
+        case CHANGE_GROUP_PROPERTIES: {
+            let layers = state.layers.map((layer) => {
+                if (layer.group === action.group || layer.group.indexOf(action.group + ".") === 0) {
+                    return assign({}, layer, action.newProperties);
+                }
+                return assign({}, layer);
+            });
             return assign({}, state, {
                 layers: layers
             });
