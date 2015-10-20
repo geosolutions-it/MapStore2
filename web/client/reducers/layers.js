@@ -7,7 +7,7 @@
  */
 
 var {LAYER_LOADING, LAYER_LOAD} = require('../actions/map');
-var {TOGGLE_NODE, SORT_NODE} = require('../actions/layers');
+var {TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE} = require('../actions/layers');
 
 var assign = require('object-assign');
 
@@ -48,6 +48,17 @@ function layers(state = {groups: {}, layers: {}}, action) {
             let node = assign({}, state.groups[action.node] || {}, {order: order});
             let nodes = assign({}, state.groups, {[action.node]: node});
             return assign({}, state, {groups: nodes});
+        }
+        case REMOVE_NODE: {
+            let node = assign({}, state[action.nodeType][action.node] || {}, {removed: true});
+            let nodes = assign({}, state[action.nodeType], {[action.node]: node});
+            return assign({}, state, {[action.nodeType]: nodes});
+        }
+        case UPDATE_NODE: {
+            let updates = assign({}, (state[action.nodeType][action.node] || {}).updates || {}, action.options);
+            let node = assign({}, state[action.nodeType][action.node] || {}, {updates: updates});
+            let nodes = assign({}, state[action.nodeType], {[action.node]: node});
+            return assign({}, state, {[action.nodeType]: nodes});
         }
         default:
             return state;

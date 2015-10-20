@@ -30,11 +30,11 @@ var GroupTitle = React.createClass({
         };
     },
     render() {
-        let expanded = this.props.node.expanded || this.props.expanded;
+        let expanded = this.props.node.expanded || this.props.expanded || false;
         let groupTitle = this.props.node && this.props.node.title || 'Default';
         return (
             <div onClick={() => this.props.onClick(this.props.node.name, expanded)} style={this.props.style}>
-                <StatusIcon expanded={this.props.expanded} node={this.props.node}/>{groupTitle}
+                <StatusIcon expanded={expanded} node={this.props.node}/>{groupTitle}
             </div>
         );
     }

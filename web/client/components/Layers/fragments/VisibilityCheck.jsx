@@ -7,23 +7,30 @@
  */
 
 var React = require('react');
-var assign = require('object-assign');
+var {isFunction} = require('lodash');
 
 var VisibilityCheck = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
-        propertiesChangeHandler: React.PropTypes.func
+        propertiesChangeHandler: React.PropTypes.func,
+        style: React.PropTypes.object,
+        checkType: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func])
+    },
+    getDefaultProps() {
+        return {
+            style: {marginRight: "2px"},
+            checkType: "checkbox"
+        };
     },
     render() {
-        return (<input style={{marginRight: "2px"}}
-            data-position={this.props.node.storeIndex} type="checkbox"
+        return (<input style={this.props.style}
+            data-position={this.props.node.storeIndex}
+            type={isFunction(this.props.checkType) ? this.props.checkType(this.props.node) : this.props.checkType}
             checked={this.props.node.visibility ? "checked" : ""}
-            onChange={this.changeLayerVisibility} />);
+            onChange={this.changeVisibility} />);
     },
-    changeLayerVisibility(eventObj) {
-        let position = parseInt(eventObj.currentTarget.dataset.position, 10);
-        var newLayer = assign({}, this.props.node, {visibility: !this.props.node.visibility});
-        this.props.propertiesChangeHandler(newLayer, position);
+    changeVisibility() {
+        this.props.propertiesChangeHandler(this.props.node.name, {visibility: !this.props.node.visibility});
     }
 });
 

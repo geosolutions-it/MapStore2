@@ -34,14 +34,14 @@ describe('Test configuration related actions', () => {
         });
     });
     it('test layer properties change action', (done) => {
-        let e = changeLayerProperties({visibility: true}, 0);
+        let e = changeLayerProperties('layer', {visibility: true});
 
         try {
             expect(e).toExist();
             expect(e.type).toBe(CHANGE_LAYER_PROPERTIES);
             expect(e.newProperties).toExist();
             expect(e.newProperties.visibility).toBe(true);
-            expect(e.position).toBe(0);
+            expect(e.layer).toBe('layer');
             done();
         } catch(ex) {
             done(ex);

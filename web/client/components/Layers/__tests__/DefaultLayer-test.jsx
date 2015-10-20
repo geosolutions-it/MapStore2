@@ -67,12 +67,12 @@ describe('test DefaultLayer module component', () => {
     });
 
     it('test change event', () => {
-        let newLayer;
-        let position;
+        let newProperties;
+        let layer;
 
         let handler = (l, p) => {
-            newLayer = l;
-            position = p;
+            layer = l;
+            newProperties = p;
         };
 
         const l = {
@@ -100,8 +100,8 @@ describe('test DefaultLayer module component', () => {
                 checked: !l.visibility
             }
         });
-        expect(newLayer.visibility).toBe(!l.visibility);
-        expect(position).toBe(l.storeIndex);
+        expect(newProperties.visibility).toBe(!l.visibility);
+        expect(layer).toBe('layer00');
     });
 
 });
