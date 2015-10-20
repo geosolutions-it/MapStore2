@@ -26,7 +26,7 @@ var StatusIcon = React.createClass({
         };
     },
     render() {
-        let expanded = this.props.node.expanded || this.props.expanded;
+        let expanded = (this.props.node.expanded !== undefined) ? this.props.node.expanded : this.props.expanded;
         return (
             <Glyphicon style={{marginRight: "8px"}} glyph={expanded ? "folder-open" : "folder-close"} />
         );
