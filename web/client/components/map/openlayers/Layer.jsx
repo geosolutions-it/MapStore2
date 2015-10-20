@@ -28,11 +28,11 @@ const OpenlayersLayer = React.createClass({
         this.createLayer(this.props.type, this.props.options);
     },
     componentWillReceiveProps(newProps) {
-        var newVisibility = newProps.options && newProps.options.visibility !== false;
+        const newVisibility = newProps.options && newProps.options.visibility !== false;
         this.setLayerVisibility(newVisibility);
-        if (this.props.options) {
-            this.props.options.visibility = newVisibility;
-        }
+
+        const newOpacity = (newProps.options && newProps.options.opacity !== undefined) ? newProps.options.opacity : 1.0;
+        this.setLayerOpacity(newOpacity);
     },
     componentWillUnmount() {
         if (this.layer && this.props.map) {
@@ -43,11 +43,15 @@ const OpenlayersLayer = React.createClass({
         return Layers.renderLayer(this.props.type, this.props.options, this.props.map, this.props.mapId);
     },
     setLayerVisibility(visibility) {
-        // check visibility
         var oldVisibility = this.props.options && this.props.options.visibility !== false;
-        // Only if visibility changed
-        if ( visibility !== oldVisibility && this.layer) {
+        if (visibility !== oldVisibility && this.layer) {
             this.layer.setVisible(visibility);
+        }
+    },
+    setLayerOpacity(opacity) {
+        var oldOpacity = (this.props.options && this.props.options.opacity !== undefined) ? this.props.options.opacity : 1.0;
+        if (opacity !== oldOpacity && this.layer) {
+            this.layer.setOpacity(opacity);
         }
     },
     createLayer(type, options) {

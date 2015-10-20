@@ -24,8 +24,11 @@ const LeafletLayer = React.createClass({
         }
     },
     componentWillReceiveProps(newProps) {
-        var newVisibility = newProps.options && newProps.options.visibility !== false;
+        const newVisibility = newProps.options && newProps.options.visibility !== false;
         this.setLayerVisibility(newVisibility);
+
+        const newOpacity = (newProps.options && newProps.options.opacity !== undefined) ? newProps.options.opacity : 1.0;
+        this.setLayerOpacity(newOpacity);
     },
     componentWillUnmount() {
         if (this.layer && this.props.map) {
@@ -36,10 +39,8 @@ const LeafletLayer = React.createClass({
         return null;
     },
     setLayerVisibility(visibility) {
-        // check visibility
         var oldVisibility = this.props.options && this.props.options.visibility !== false;
-        // Only if visibility changed
-        if ( visibility !== oldVisibility ) {
+        if (visibility !== oldVisibility) {
             if (visibility) {
                 this.addLayer();
             } else {
@@ -47,6 +48,12 @@ const LeafletLayer = React.createClass({
             }
             this.updateZIndex();
 
+        }
+    },
+    setLayerOpacity(opacity) {
+        var oldOpacity = (this.props.options && this.props.options.opacity !== undefined) ? this.props.options.opacity : 1.0;
+        if (opacity !== oldOpacity && this.layer) {
+            this.layer.setOpacity(opacity);
         }
     },
     updateZIndex() {
