@@ -52,7 +52,7 @@ var Book = React.createClass({
                 <div style={{textAlign: "center", marginBottom: "12px"}}>
                     {this.renderTitle()}
                 </div>
-                <div>
+                <div style={{overflow: "auto"}}>
                     {this.renderBody()}
                 </div>
                 <Pager>
