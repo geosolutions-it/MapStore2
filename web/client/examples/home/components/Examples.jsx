@@ -23,10 +23,10 @@ var Examples = React.createClass({
                   </div>
                 </CarouselItem>
                 <CarouselItem>
-                  <img width={900} height={500} alt="900x500" src="examples/home/img/Manager.png"/>
+                  <img width={900} height={500} alt="900x500" src="examples/home/img/MousePosition.png"/>
                   <div className="carousel-caption">
-                      <I18N.HTML msgId="home.examples.manager.html" />
-                    <Button href="examples/manager" bsStyle="info" target="_blank"><I18N.Message msgId="home.open" /></Button>
+                      <I18N.HTML msgId="home.examples.mouseposition.html" />
+                    <Button href="examples/mouseposition" bsStyle="info" target="_blank"><I18N.Message msgId="home.open" /></Button>
                   </div>
                 </CarouselItem>
             </Carousel>

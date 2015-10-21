@@ -43,6 +43,9 @@
                 },
                 "manager":{
                     "html":"<h3>Manager</h3><p>Sfoglia le mappe</p>"
+                },
+                "mouseposition":{
+                    "html":"<h3>Posizione del mouse</h3><p>Esempi personalizzati</p>"
                 }
             }
         },

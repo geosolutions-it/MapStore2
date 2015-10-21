@@ -43,6 +43,9 @@
                 },
                 "manager":{
                     "html":"<h3>Manager</h3><p>Browse MapStore Maps</p>"
+                },
+                "mouseposition":{
+                    "html":"<h3>Mouse Position Control</h3><p>Custom examples</p>"
                 }
             }
         },
