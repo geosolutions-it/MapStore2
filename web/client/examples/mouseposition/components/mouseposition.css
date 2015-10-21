@@ -1,0 +1,148 @@
+        #sGeoS {
+            z-index: 10;
+            top: 0px;
+            left: 70px;
+            position: absolute;
+
+        }
+        #sGeoS .label {
+            font-family: "Times New Roman", Georgia, Serif;
+            display: inline-block;
+            width: 280px;
+
+            max-height: 50px;
+            height: auto;
+            font-size: 1.2em;
+        }
+        #sGeoS .label-info {
+            color:rgba(0,0,0,1);
+            background-color:rgba(236,225,150,.6);
+        }
+        #sGeoS .label:div {
+
+            display: inline-block;
+
+            vertical-align: middle;
+
+
+        }
+         #wgs84 {
+            z-index: 10;
+            top: -8px;
+            left: 35%;
+            position: absolute;
+            margin: 8px;
+            font-family: 'Droid Sans' !important;
+            font-style:  normal;
+            font-weight: 400;
+        }
+        #wgs84 .label {
+            display: inline-block;
+            width: 450px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: middle;
+            height: 30px;
+            font-size: 1.5em;
+        }
+        #wgs84 .label-info {
+            background-color:rgba(0,0,0,.8);
+        }
+        #degreedecimal {
+            z-index: 10;
+            top: -8px;
+            right: 5px;
+            position: absolute;
+            margin: 8px;
+            font-family: 'PT Sans' !important;
+            font-style:  italic;
+            font-weight: 700;
+        }
+        #degreedecimal .label {
+            display: inline-block;
+            width: 450px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: middle;
+            height: 30px;
+            font-size: 1.5em;
+        }
+        #degreedecimal .label-info {
+            color:rgba(0,0,0,1);
+            background-color:rgba(255,255,255,.8);
+        }
+        #degreeminute {
+            z-index: 10;
+            bottom: 0px;
+            left: 0px;
+            position: absolute;
+            font-family: 'Droid Sans' !important;
+            font-style:  normal;
+            font-weight: 400;
+            margin:5px
+        }
+        #degreeminute .label {
+            display: inline-block;
+            width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: middle;
+            height: 30px;
+            font-size: 1.3em;
+        }
+        #degreeminute .label-info {
+            background-color:rgba(0,0,0,0);
+        }
+        #dmsnw {
+            z-index: 10;
+            bottom: 50%;
+            left: -150px;
+            position: absolute;
+            margin: 8px;
+            -moz-transform: rotate(90deg);
+            transform: rotate(90deg);
+            font-family: 'PT Sans' !important;
+            font-style:  italic;
+            font-weight: 700;
+        }
+        #dmsnw .label {
+            display: inline-block;
+            width: 350px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: middle;
+            height: 30px;
+            font-size: 1.5em;
+        }
+        #dmsnw .label-info {
+            color:rgba(10,10,10,.8);
+            background-color:rgba(255,255,255,.8);
+        }
+        #google {
+            z-index: 10;
+            bottom: 13px;
+            right: 5px;
+            position: absolute;
+            font-family: 'PT Sans' !important;
+            font-style:  normal;
+            font-weight: 400;
+
+        }
+        #google .label {
+            display: inline-block;
+            width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: middle;
+            height: 20px;
+            font-size: 1.2em;
+        }
+        #google .label-info {
+            color:rgba(10,10,10,1);
+            background-color:rgba(180,180,180,.6);
+        }
