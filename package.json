@@ -54,6 +54,7 @@
     "keymirror": "~0.1.1",
     "leaflet": "^0.7.3",
     "leaflet-plugins": "https://github.com/Polyconseil/leaflet-plugins/tarball/master",
+    "leaflet-draw": "^0.2.3",
     "lodash": "^3.10.1",
     "node-uuid": "^1.4.3",
     "object-assign": "^3.0.0",

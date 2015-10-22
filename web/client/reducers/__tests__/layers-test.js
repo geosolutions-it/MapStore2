@@ -36,7 +36,60 @@ describe('Test the layers reducer', () => {
         };
         let state = layers( {groups: {}}, testAction);
         expect(state.groups.sample).toExist();
-        expect(state.groups.sample.order).toBe(order);
+        expect(state.groups.sample.order).toEqual(order);
+
+        testAction = {
+            type: 'SORT_NODE',
+            node: 'sample',
+            order: order
+        };
+        state = layers( {groups: {sample: {order: order}}}, testAction);
+        expect(state.groups.sample).toExist();
+        expect(state.groups.sample.order).toEqual(order);
+    });
+
+    it('removeNode', () => {
+        let testAction = {
+            type: 'REMOVE_NODE',
+            node: 'sampleNode',
+            nodeType: 'sampleType'
+        };
+        let state = layers({}, testAction);
+        expect(state.sampleType).toExist();
+        expect(state.sampleType.sampleNode).toExist();
+    });
+
+    it('updateNode', () => {
+        let testAction = {
+            type: 'UPDATE_NODE',
+            node: 'sampleNode',
+            nodeType: 'sampleType',
+            options: 'sampleOptions'
+        };
+        let state = layers({}, testAction);
+        expect(state.sampleType).toExist();
+        expect(state.sampleType.sampleNode).toExist();
+        expect(state.sampleType.sampleNode.updates).toExist();
+    });
+
+    it('layerLoading', () => {
+        let testAction = {
+            type: 'LAYER_LOADING',
+            layerId: 'sampleId'
+        };
+        let state = layers({}, testAction);
+        expect(state.loadingLayers).toExist();
+        expect(state.loadingLayers).toEqual(['sampleId']);
+    });
+
+    it('layerLoad', () => {
+        let testAction = {
+            type: 'LAYER_LOAD',
+            layerId: 'sampleId'
+        };
+        let state = layers({loadingLayers: ['sampleId']}, testAction);
+        expect(state.loadingLayers).toExist();
+        expect(state.loadingLayers).toEqual([]);
     });
 
 });

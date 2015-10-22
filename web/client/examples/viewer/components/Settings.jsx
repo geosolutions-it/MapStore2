@@ -16,7 +16,7 @@ var {Glyphicon} = require('react-bootstrap');
 let Settings = React.createClass({
     propTypes: {
         isPanel: React.PropTypes.bool,
-        buttonTooltip: React.PropTypes.string
+        buttonTooltip: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element])
     },
     getDefaultProps() {
         return {

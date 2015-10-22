@@ -50,13 +50,25 @@ function layers(state = {groups: {}, layers: {}}, action) {
             return assign({}, state, {groups: nodes});
         }
         case REMOVE_NODE: {
-            let node = assign({}, state[action.nodeType][action.node] || {}, {removed: true});
+            let node = assign(
+                {},
+                (state[action.nodeType] ? state[action.nodeType][action.node] : {}) || {},
+                {removed: true}
+            );
             let nodes = assign({}, state[action.nodeType], {[action.node]: node});
             return assign({}, state, {[action.nodeType]: nodes});
         }
         case UPDATE_NODE: {
-            let updates = assign({}, (state[action.nodeType][action.node] || {}).updates || {}, action.options);
-            let node = assign({}, state[action.nodeType][action.node] || {}, {updates: updates});
+            let updates = assign(
+                {},
+                ((state[action.nodeType] ? state[action.nodeType][action.node] : {}) || {}).updates || {},
+                action.options
+            );
+            let node = assign(
+                {},
+                (state[action.nodeType] ? state[action.nodeType][action.node] : {}) || {},
+                {updates: updates}
+            );
             let nodes = assign({}, state[action.nodeType], {[action.node]: node});
             return assign({}, state, {[action.nodeType]: nodes});
         }

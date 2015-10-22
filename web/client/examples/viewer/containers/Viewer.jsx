@@ -17,6 +17,8 @@ var {loadLocale} = require('../../../actions/locale');
 
 var {changeMapView, clickOnMap, changeMousePointer} = require('../../../actions/map');
 
+var changeMeasurementState = require('../../../actions/measurement');
+
 var VMap = require('../components/Map');
 var Localized = require('../../../components/I18N/Localized');
 
@@ -47,7 +49,9 @@ var Viewer = React.createClass({
         layerLoading: React.PropTypes.func,
         layerLoad: React.PropTypes.func,
         showSpinner: React.PropTypes.func,
-        hideSpinner: React.PropTypes.func
+        hideSpinner: React.PropTypes.func,
+        changeMeasurementState: React.PropTypes.func,
+        measurement: React.PropTypes.object
     },
     render() {
         if (this.props.mapConfig) {
@@ -81,7 +85,9 @@ var Viewer = React.createClass({
                             <div key="viewer" className="fill">
                                 <VMap key="map" config={config} onMapViewChanges={this.manageNewMapView}
                                     onClick={this.props.clickOnMap} onMouseMove={this.manageMousePosition}
-                                    onLayerLoading={this.props.layerLoading} onLayerLoad={this.props.layerLoad}/>
+                                    onLayerLoading={this.props.layerLoading} onLayerLoad={this.props.layerLoad}
+                                    measurement={this.props.measurement}
+                                    changeMeasurementState={this.props.changeMeasurementState}/>
                                 {plugins}
                             </div>
                         );
@@ -149,14 +155,16 @@ module.exports = (actions) => {
             localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined,
             mousePosition: state.mousePosition ? state.mousePosition.position : null,
             mousePositionCrs: state.mousePosition ? state.mousePosition.crs : null,
-            mousePositionEnabled: state.mousePosition ? state.mousePosition.enabled : false
+            mousePositionEnabled: state.mousePosition ? state.mousePosition.enabled : false,
+            measurement: state.measurement ? state.measurement : {lineMeasureEnabled: false, areaMeasureEnabled: false, bearingMeasureEnabled: false, geomType: null, len: 0, area: 0, bearing: 0}
         };
     }, dispatch => {
         return bindActionCreators(assign({}, {
             loadLocale: loadLocale.bind(null, '../../translations'),
             changeMapView,
             clickOnMap,
-            changeMousePointer
+            changeMousePointer,
+            changeMeasurementState
         }, actions), dispatch);
     })(Viewer);
 };

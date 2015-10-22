@@ -185,4 +185,21 @@ describe('Test the mapConfig reducer', () => {
         state = mapConfig({loadingLayers: ["layer2"]}, action);
         expect(state.loadingLayers).toEqual(["layer2"]);
     });
+
+    it('change group properties', () => {
+        let testAction = {
+            type: "CHANGE_GROUP_PROPERTIES",
+            newProperties: {p: "property"},
+            group: "group"
+        };
+
+        let retval = mapConfig({
+            layers: [{group: "group"}]
+        }, testAction);
+        expect(retval).toExist();
+        expect(retval.layers).toExist();
+        expect(retval.layers[0].group).toExist();
+        expect(retval.layers[0].p).toExist();
+        expect(retval.layers[0].p).toEqual("property");
+    });
 });
