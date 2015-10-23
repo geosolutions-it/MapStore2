@@ -29,6 +29,13 @@ var Examples = React.createClass({
                     <Button href="examples/mouseposition" bsStyle="info" target="_blank"><I18N.Message msgId="home.open" /></Button>
                   </div>
                 </CarouselItem>
+                <CarouselItem>
+                  <img width={900} height={500} alt="900x500" src="examples/home/img/ScaleBar.png"/>
+                  <div className="carousel-caption">
+                      <I18N.HTML msgId="home.examples.scalebar.html" />
+                    <Button href="examples/scalebar" bsStyle="info" target="_blank"><I18N.Message msgId="home.open" /></Button>
+                  </div>
+                </CarouselItem>
             </Carousel>
         </Panel>);
     }
