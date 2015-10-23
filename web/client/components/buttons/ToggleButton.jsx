@@ -7,9 +7,7 @@
  */
 
 var React = require('react');
-var BootstrapReact = require('react-bootstrap');
-var Glyphicon = BootstrapReact.Glyphicon;
-var Button = BootstrapReact.Button;
+var {Button, Glyphicon, OverlayTrigger} = require('react-bootstrap');
 
 var ToggleButton = React.createClass({
     propTypes: {
@@ -18,25 +16,46 @@ var ToggleButton = React.createClass({
         text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         glyphicon: React.PropTypes.string,
         pressed: React.PropTypes.bool,
-        onClick: React.PropTypes.func
+        onClick: React.PropTypes.func,
+        tooltip: React.PropTypes.element,
+        tooltipPlace: React.PropTypes.string
     },
     getDefaultProps() {
         return {
             onClick: () => {},
-            pressed: false
+            pressed: false,
+            tooltipPlace: "top"
         };
     },
     onClick() {
         this.props.onClick(!this.props.pressed);
     },
-    render() {
+    renderButton() {
         return (
-                <Button id={this.props.id} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.props.pressed ? 'primary' : 'default'}>
-                    {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
-                    {this.props.glyphicon && this.props.text ? "\u00A0" : null}
-                    {this.props.text}
-                </Button>
+            <Button id={this.props.id} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.props.pressed ? 'primary' : 'default'}>
+                {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
+                {this.props.glyphicon && this.props.text ? "\u00A0" : null}
+                {this.props.text}
+            </Button>
         );
+    },
+    addTooltip(btn) {
+        return (
+            <OverlayTrigger placement={this.props.tooltipPlace} key={"overlay-trigger." + this.props.id} overlay={this.props.tooltip}>
+                {btn}
+            </OverlayTrigger>
+        );
+    },
+    render() {
+        var retval;
+        var btn = this.renderButton();
+        if (this.props.tooltip) {
+            retval = this.addTooltip(btn);
+        } else {
+            retval = btn;
+        }
+        return retval;
+
     }
 });
 

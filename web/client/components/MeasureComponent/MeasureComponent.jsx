@@ -7,7 +7,7 @@
  */
 
 var React = require('react');
-var {Glyphicon, Button, Panel, ButtonGroup, ButtonToolbar} = require('react-bootstrap');
+var {Button, Panel, ButtonGroup, ButtonToolbar, Tooltip} = require('react-bootstrap');
 var ToggleButton = require('../buttons/ToggleButton');
 var ReactIntl = require('react-intl');
 var FormattedNumber = ReactIntl.FormattedNumber;
@@ -36,7 +36,7 @@ let MeasureComponent = React.createClass({
     },
     getDefaultProps() {
         return {
-            icon: <Glyphicon glyph="minus"/>,
+            icon: <img src={lineRuleIcon} />,
             columnProperties: {
                 xs: 4,
                 sm: 4,
@@ -120,8 +120,16 @@ let MeasureComponent = React.createClass({
 
         return bearing;
     },
+    getToolTips() {
+        return {
+            lineToolTip: <Tooltip id={"tooltip-button.line"}>{this.props.lengthLabel}</Tooltip>,
+            areaToolTip: <Tooltip id={"tooltip-button.area"}>{this.props.areaLabel}</Tooltip>,
+            bearingToolTip: <Tooltip id={"tooltip-button.bearing"}>{this.props.bearingLabel}</Tooltip>
+        };
+    },
     render() {
         let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
+        let {lineToolTip, areaToolTip, bearingToolTip} = this.getToolTips();
         return (
             <Panel id={this.props.id}>
                 <ButtonToolbar>
@@ -129,15 +137,18 @@ let MeasureComponent = React.createClass({
                         <ToggleButton
                             text={<img src={lineRuleIcon}/>}
                             pressed={this.props.lineMeasureEnabled}
-                            onClick={this.onLineClick} />
+                            onClick={this.onLineClick}
+                            tooltip={lineToolTip} />
                         <ToggleButton
                             text={<img src={areaRuleIcon}/>}
                             pressed={this.props.areaMeasureEnabled}
-                            onClick={this.onAreaClick} />
+                            onClick={this.onAreaClick}
+                            tooltip={areaToolTip} />
                         <ToggleButton
                             text={<img src={bearingRuleIcon}/>}
                             pressed={this.props.bearingMeasureEnabled}
-                            onClick={this.onBearingClick} />
+                            onClick={this.onBearingClick}
+                            tooltip={bearingToolTip} />
                     </ButtonGroup>
                     <ButtonGroup>
                         <Button

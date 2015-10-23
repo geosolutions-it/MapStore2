@@ -28,7 +28,8 @@ var VMap = React.createClass({
         onLayerLoading: React.PropTypes.func,
         onLayerLoad: React.PropTypes.func,
         changeMeasurementState: React.PropTypes.func,
-        measurement: React.PropTypes.object
+        measurement: React.PropTypes.object,
+        messages: React.PropTypes.object
     },
     renderLayers(layers) {
         if (layers) {

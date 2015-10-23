@@ -82,6 +82,97 @@
             "lengthLabel": "Lunghezza",
             "areaLabel": "Area",
             "bearingLabel": "Rilevamento"
+        },
+        "drawLocal": {
+            "draw": {
+                "toolbar": {
+                    "actions": {
+                        "title": "Annulla disegno",
+                        "text": "Annulla"
+                    },
+                    "undo": {
+                        "title": "Rimuovi l'ultimo punto disegnato",
+                        "text": "Rimuovi l'ultimo punto"
+                    },
+                    "buttons": {
+                        "polyline": "Disegna una multilinea",
+                        "polygon": "Disegna un poligono",
+                        "rectangle": "Disegna un rettangolo",
+                        "circle": "Disegna un cerchio",
+                        "marker": "Disegna un marker"
+                    }
+                },
+                "handlers": {
+                    "circle": {
+                        "tooltip": {
+                            "start": "Click e trascina per disegnare un cerchio."
+                        }
+                    },
+                    "marker": {
+                        "tooltip": {
+                            "start": "Click sulla mappa per piazzare un marker."
+                        }
+                    },
+                    "polygon": {
+                        "tooltip": {
+                            "start": "Click per incominciare a disegnare una figura.",
+                            "cont": "Click per continuare a disegnare una figura.",
+                            "end": "Click sul primo punto per chiudere la figura."
+                        }
+                    },
+                    "polyline": {
+                        "error": "Errore: i bordi non si possono incrociare!",
+                        "tooltip": {
+                            "start": "Click per iniziare a disegnare una linea.",
+                            "cont": "Click per continuare a disegnare una linea.",
+                            "end": "Click sul l'ultimo punto per terminare la linea."
+                        }
+                    },
+                    "rectangle": {
+                        "tooltip": {
+                            "start": "Click e trascina per disegnare un rettangolo"
+                        }
+                    },
+                    "simpleshape": {
+                        "tooltip": {
+                            "end": "Rilascia il mouse per terminare."
+                        }
+                    }
+                }
+            },
+            "edit": {
+                "toolbar": {
+                    "actions": {
+                        "save": {
+                            "title": "Salva modifiche.",
+                            "text": "Salva"
+                        },
+                        "cancel": {
+                            "title": "Annulla e scarca tutti i cambiamenti.",
+                            "text": "Annulla"
+                        }
+                    },
+                    "buttons": {
+                        "edit": "Modifica livelli.",
+                        "editDisabled": "Nessun livello da modificare.",
+                        "remove": "Cancella livelli.",
+                        "removeDisabled": "Nessun livello da eliminare."
+                    }
+                },
+                "handlers": {
+                    "edit": {
+                        "tooltip": {
+                            "text": "Trascina o selezione per modificare una feature.",
+                            "subtext": "Click annulla per scartare le modifiche to undo changes."
+                        }
+                    },
+                    "remove": {
+                        "tooltip": {
+                            "text": "Click sulla feature da rimuovere."
+                        }
+                    }
+                }
+            }
         }
     }
 }
