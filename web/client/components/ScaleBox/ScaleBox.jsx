@@ -37,15 +37,13 @@ var ScaleBox = React.createClass({
     getOptions() {
         return this.props.scales.map((item, index) => {
             return (
-                <option value={index} key={index}>
-                    {this.props.template(item)}
-                </option>
+                <option value={index} key={index}>{this.props.template(item, index)}</option>
             );
         });
     },
     render() {
         let control = this.props.readOnly ?
-            <label>{this.props.template(this.props.scales[this.props.currentZoomLvl])}</label>
+            <label>{this.props.template(this.props.scales[this.props.currentZoomLvl], this.props.currentZoomLvl)}</label>
         : <Input type="select" label={this.props.label} onChange={this.onComboChange} bsSize="small" value={this.props.currentZoomLvl}>
             {this.getOptions()}
         </Input>;
