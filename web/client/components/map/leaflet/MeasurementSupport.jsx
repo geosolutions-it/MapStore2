@@ -17,9 +17,17 @@ const MeasurementSupport = React.createClass({
         map: React.PropTypes.object,
         projection: React.PropTypes.string,
         measurement: React.PropTypes.object,
-        changeMeasurementState: React.PropTypes.func
+        changeMeasurementState: React.PropTypes.func,
+        messages: React.PropTypes.object
+    },
+    contextTypes: {
+        messages: React.PropTypes.object
     },
     componentWillReceiveProps(newProps) {
+        var drawingStrings = this.props.messages || (this.context.messages) ? this.context.messages.drawLocal : false;
+        if (drawingStrings) {
+            L.drawLocal = drawingStrings;
+        }
 
         if (this.props.measurement.geomType !== newProps.measurement.geomType &&
                 newProps.measurement.geomType !== null) {
