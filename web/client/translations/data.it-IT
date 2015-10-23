@@ -46,6 +46,9 @@
                 },
                 "mouseposition":{
                     "html":"<h3>Posizione del mouse</h3><p>Esempi personalizzati</p>"
+                },
+                "scalebar":{
+                    "html":"<h3>Scale Control</h3><p>Esempi personalizzati</p>"
                 }
             }
         },
