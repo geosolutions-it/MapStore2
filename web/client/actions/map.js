@@ -10,8 +10,7 @@ const CHANGE_MAP_VIEW = 'CHANGE_MAP_VIEW';
 const CLICK_ON_MAP = 'CLICK_ON_MAP';
 const CHANGE_MOUSE_POINTER = 'CHANGE_MOUSE_POINTER';
 const CHANGE_ZOOM_LVL = 'CHANGE_ZOOM_LVL';
-const LAYER_LOADING = 'LAYER_LOADING';
-const LAYER_LOAD = 'LAYER_LOAD';
+
 
 function changeMapView(center, zoom, bbox, size, mapStateSource) {
     return {
@@ -46,31 +45,13 @@ function changeZoomLevel(zoomLvl, mapStateSource) {
     };
 }
 
-function layerLoading(layerId) {
-    return {
-        type: LAYER_LOADING,
-        layerId: layerId
-    };
-}
-
-function layerLoad(layerId) {
-    return {
-        type: LAYER_LOAD,
-        layerId: layerId
-    };
-}
-
 module.exports = {
     CHANGE_MAP_VIEW,
     CLICK_ON_MAP,
     CHANGE_MOUSE_POINTER,
     CHANGE_ZOOM_LVL,
-    LAYER_LOADING,
-    LAYER_LOAD,
     changeMapView,
     clickOnMap,
     changeMousePointer,
-    changeZoomLevel,
-    layerLoading,
-    layerLoad
+    changeZoomLevel
 };

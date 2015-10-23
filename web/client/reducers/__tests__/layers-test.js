@@ -15,37 +15,61 @@ describe('Test the layers reducer', () => {
         expect(state).toBe(1);
     });
 
-    it('toggleNode', () => {
+    it('toggleNode layer', () => {
+        let testAction = {
+            type: 'TOGGLE_NODE',
+            node: 'sample',
+            nodeType: 'layers',
+            status: true
+        };
+        let state = layers( {flat: [{name: 'sample'}]}, testAction);
+        expect(state.flat[0].expanded).toBe(true);
+    });
+
+    it('toggleNode group', () => {
         let testAction = {
             type: 'TOGGLE_NODE',
             node: 'sample',
             nodeType: 'groups',
             status: true
         };
-        let state = layers( {groups: {}}, testAction);
-        expect(state.groups.sample).toExist();
-        expect(state.groups.sample.expanded).toBe(true);
+        let state = layers( {groups: [{name: 'sample'}]}, testAction);
+        expect(state.groups[0].expanded).toBe(true);
     });
 
-    it('sortNode', () => {
-        const order = [0, 1, 2];
+    it('toggleNode group nested', () => {
+        let testAction = {
+            type: 'TOGGLE_NODE',
+            node: 'sample',
+            nodeType: 'groups',
+            status: true
+        };
+        let state = layers( {groups: [{name: 'group', nodes: [{name: "sample"}]}]}, testAction);
+        expect(state.groups[0].nodes[0].expanded).toBe(true);
+    });
+
+    it('sortNode layers', () => {
+        const order = [1, 0];
         let testAction = {
             type: 'SORT_NODE',
-            node: 'sample',
+            node: 'group',
             order: order
         };
-        let state = layers( {groups: {}}, testAction);
-        expect(state.groups.sample).toExist();
-        expect(state.groups.sample.order).toEqual(order);
+        let state = layers( {groups: [{name: 'group', nodes: [{name: "sample1"}, {name: "sample2"}]}]}, testAction);
+        expect(state.groups[0].nodes[0].name).toEqual('sample2');
+        expect(state.groups[0].nodes[1].name).toEqual('sample1');
+    });
 
-        testAction = {
+    it('sortNode groups', () => {
+        const order = [1, 0];
+        let testAction = {
             type: 'SORT_NODE',
-            node: 'sample',
+            node: 'root',
             order: order
         };
-        state = layers( {groups: {sample: {order: order}}}, testAction);
-        expect(state.groups.sample).toExist();
-        expect(state.groups.sample.order).toEqual(order);
+        let state = layers( {groups: [{name: 'group1'}, {name: "group2"}]}, testAction);
+        expect(state.groups[0].name).toEqual('group2');
+        expect(state.groups[1].name).toEqual('group1');
     });
 
     it('removeNode', () => {
@@ -72,24 +96,101 @@ describe('Test the layers reducer', () => {
         expect(state.sampleType.sampleNode.updates).toExist();
     });
 
-    it('layerLoading', () => {
-        let testAction = {
-            type: 'LAYER_LOADING',
-            layerId: 'sampleId'
-        };
-        let state = layers({}, testAction);
-        expect(state.loadingLayers).toExist();
-        expect(state.loadingLayers).toEqual(['sampleId']);
+    it('test layer visibility change for background', () => {
+        const oldState = {flat: [{
+            "type": "osm",
+            "title": "Open Street Map",
+            "name": "mapnik",
+            "group": "background",
+            "visibility": true
+        }, {
+            "type": "wms",
+            "url": "http://213.215.135.196/reflector/open/service",
+            "visibility": false,
+            "title": "e-Geos Ortofoto RealVista 1.0",
+            "name": "rv1",
+            "group": "background",
+            "format": "image/png"
+        }]};
+        var state = layers(oldState, {
+            type: 'CHANGE_LAYER_PROPERTIES',
+            newProperties: {
+                "type": "wms",
+                "url": "http://213.215.135.196/reflector/open/service",
+                "visibility": true,
+                "title": "e-Geos Ortofoto RealVista 1.0",
+                "name": "rv1",
+                "group": "background",
+                "format": "image/png"
+            },
+            layer: "rv1"
+        });
+
+        expect(state.flat[0].visibility).toBe(false);
+        expect(state.flat[1].visibility).toBe(true);
     });
 
-    it('layerLoad', () => {
-        let testAction = {
-            type: 'LAYER_LOAD',
-            layerId: 'sampleId'
+    it('a layer is loading, loading flag is updated', () => {
+        const action1 = {
+            type: 'LAYER_LOADING',
+            layerId: "layer1"
         };
-        let state = layers({loadingLayers: ['sampleId']}, testAction);
-        expect(state.loadingLayers).toExist();
-        expect(state.loadingLayers).toEqual([]);
+        const action2 = {
+            type: 'LAYER_LOADING',
+            layerId: "layer2"
+        };
+
+        var originalLoadingLayers = {flat: [{name: "layer1"}, {name: "layer2"}]};
+        var state = layers(originalLoadingLayers, action1);
+
+        expect(state.flat.filter((layer) => layer.name === 'layer1')[0].loading).toBe(true);
+        expect(state.flat.filter((layer) => layer.loading).length).toBe(1);
+
+        state = layers(state, action2);
+        expect(state.flat.filter((layer) => layer.name === 'layer1')[0].loading).toBe(true);
+        expect(state.flat.filter((layer) => layer.name === 'layer2')[0].loading).toBe(true);
+        expect(state.flat.filter((layer) => layer.loading).length).toBe(2);
+    });
+
+    it('a layer load, loading flag is updated', () => {
+        const action1 = {
+            type: 'LAYER_LOAD',
+            layerId: "layer1"
+        };
+
+        const action2 = {
+            type: 'LAYER_LOAD',
+            layerId: "layer2"
+        };
+
+        var originalLoadingLayers = {flat: [{name: "layer1", loading: true}, {name: "layer2", loading: true}]};
+        var state = layers(originalLoadingLayers, action1);
+
+        expect(state.flat.filter((layer) => layer.name === 'layer1')[0].loading).toBe(false);
+        expect(state.flat.filter((layer) => layer.name === 'layer2')[0].loading).toBe(true);
+        expect(state.flat.filter((layer) => layer.loading).length).toBe(1);
+
+        state = layers(state, action2);
+        expect(state.flat.filter((layer) => layer.name === 'layer1')[0].loading).toBe(false);
+        expect(state.flat.filter((layer) => layer.name === 'layer2')[0].loading).toBe(false);
+        expect(state.flat.filter((layer) => layer.loading).length).toBe(0);
+    });
+
+    it('change group properties', () => {
+        let testAction = {
+            type: "CHANGE_GROUP_PROPERTIES",
+            newProperties: {p: "property"},
+            group: "group"
+        };
+
+        let retval = layers({
+            layers: [{group: "group"}]
+        }, testAction);
+        expect(retval).toExist();
+        expect(retval.layers).toExist();
+        expect(retval.layers[0].group).toExist();
+        expect(retval.layers[0].p).toExist();
+        expect(retval.layers[0].p).toEqual("property");
     });
 
 });

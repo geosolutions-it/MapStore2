@@ -18,7 +18,6 @@ var DefaultLayer = React.createClass({
         node: React.PropTypes.object,
         expanded: React.PropTypes.bool,
         propertiesChangeHandler: React.PropTypes.func,
-        loadingList: React.PropTypes.array,
         onToggle: React.PropTypes.func,
         style: React.PropTypes.object
     },
@@ -27,8 +26,7 @@ var DefaultLayer = React.createClass({
             style: {},
             expanded: false,
             propertiesChangeHandler: () => {},
-            onToggle: () => {},
-            loadingList: []
+            onToggle: () => {}
         };
     },
     renderCollapsible() {
@@ -43,7 +41,7 @@ var DefaultLayer = React.createClass({
             <Node type="layer" {...other}>
                 <VisibilityCheck propertiesChangeHandler={this.props.propertiesChangeHandler}/>
                 <Title onClick={this.props.onToggle}/>
-                <InlineSpinner loadingList={this.props.loadingList} loading={(props) => (props.loadingList || []).indexOf(props.node.name) !== -1}/>
+                <InlineSpinner loading={this.props.node.loading}/>
                 {this.renderCollapsible()}
             </Node>
         );

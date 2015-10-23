@@ -56,7 +56,7 @@ let MapToolBar = React.createClass({
         return assign({}, this.props.panelStyle, {maxWidth: maxWidth + "px", maxHeight: maxHeight + "px"});
     },
     render() {
-        var children = this.props.children.map((item) => {
+        var children = React.Children.map(this.props.children, (item) => {
             if (item.props.isPanel) {
                 return (
                 <Collapse key={"mapToolBar-item-collapse-" + item.key} in={this.props.activeKey === item.key}>
@@ -68,7 +68,7 @@ let MapToolBar = React.createClass({
             return null;
 
         }, this);
-        var buttons = this.props.children.map((item) => {
+        var buttons = React.Children.map(this.props.children, (item) => {
             if (item.props.isPanel) {
                 let tooltip = <Tooltip id="toolbar-map-layers-button">{item.props.buttonTooltip}</Tooltip>;
                 let panelButton = (

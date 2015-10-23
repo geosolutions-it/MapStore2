@@ -27,7 +27,7 @@ let MousePosition = React.createClass({
             id: "mapstore-mouseposition",
             mousePosition: null,
             crs: "EPSG:4326",
-            enabled: false,
+            enabled: true,
             degreesTemplate: MousePositionLabelDMS,
             projectedTemplate: MousePositionLabelYX
         };

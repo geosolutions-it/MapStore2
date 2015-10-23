@@ -12,13 +12,35 @@ var {
     SORT_NODE,
     REMOVE_NODE,
     UPDATE_NODE,
+    CHANGE_LAYER_PROPERTIES,
+    LAYER_LOADING,
+    LAYER_LOAD,
+    changeLayerProperties,
     toggleNode,
     sortNode,
     removeNode,
-    updateNode
+    updateNode,
+    layerLoading,
+    layerLoad
 } = require('../layers');
 
 describe('Test correctness of the layers actions', () => {
+    it('test layer properties change action', (done) => {
+        let e = changeLayerProperties('layer', {visibility: true});
+
+        try {
+            expect(e).toExist();
+            expect(e.type).toBe(CHANGE_LAYER_PROPERTIES);
+            expect(e.newProperties).toExist();
+            expect(e.newProperties.visibility).toBe(true);
+            expect(e.layer).toBe('layer');
+            done();
+        } catch(ex) {
+            done(ex);
+        }
+
+    });
+
     it('sortNode', () => {
         const order = [0, 2, 1];
 
@@ -57,5 +79,23 @@ describe('Test correctness of the layers actions', () => {
         expect(retval.node).toBe('sampleNode');
         expect(retval.nodeType).toBe('sampleType');
         expect(retval.options).toBe('sampleOptions');
+    });
+
+    it('a layer is loading', () => {
+        const testVal = 'layer1';
+        const retval = layerLoading(testVal);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(LAYER_LOADING);
+        expect(retval.layerId).toBe(testVal);
+    });
+
+    it('a layer is load', () => {
+        const testVal = 'layer1';
+        const retval = layerLoad(testVal);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(LAYER_LOAD);
+        expect(retval.layerId).toBe(testVal);
     });
 });

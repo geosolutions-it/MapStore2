@@ -119,15 +119,15 @@ describe('ConfigUtils', () => {
     it('convert from legacy and check projection conversion', () => {
         var config = ConfigUtils.convertFromLegacy(lconfig);
         // check zoom
-        expect(config.zoom).toBe(5);
+        expect(config.map.zoom).toBe(5);
         // check lat-lng in 4326
-        expect(config.center.x).toBeA('number');
-        expect(config.center.y).toBeA('number');
-        expect(config.center.x).toBeLessThan(90);
-        expect(config.center.x).toBeGreaterThan(-90);
-        expect(config.center.y).toBeLessThan(180);
-        expect(config.center.y).toBeGreaterThan(-180);
-        expect(config.center.crs).toBe("EPSG:4326");
+        expect(config.map.center.x).toBeA('number');
+        expect(config.map.center.y).toBeA('number');
+        expect(config.map.center.x).toBeLessThan(90);
+        expect(config.map.center.x).toBeGreaterThan(-90);
+        expect(config.map.center.y).toBeLessThan(180);
+        expect(config.map.center.y).toBeGreaterThan(-180);
+        expect(config.map.center.crs).toBe("EPSG:4326");
     });
     it('check sources default values assigned', () => {
         var config = ConfigUtils.convertFromLegacy(lconfig);

@@ -28,7 +28,8 @@ var GetFeatureInfo = React.createClass({
         htmlRequests: React.PropTypes.object,
         btnConfig: React.PropTypes.object,
         enabled: React.PropTypes.bool,
-        mapConfig: React.PropTypes.object,
+        map: React.PropTypes.object,
+        layers: React.PropTypes.array,
         layerFilter: React.PropTypes.func,
         actions: React.PropTypes.shape({
             getFeatureInfo: React.PropTypes.func,
@@ -45,7 +46,8 @@ var GetFeatureInfo = React.createClass({
             enabled: false,
             htmlResponses: [],
             htmlRequests: {length: 0},
-            mapConfig: {layers: []},
+            map: {},
+            layers: [],
             layerFilter(l) {
                 return l.visibility &&
                     l.type === 'wms' &&
@@ -69,8 +71,8 @@ var GetFeatureInfo = React.createClass({
         // it composes and sends a getFeatureInfo action.
         if (newProps.enabled && newProps.clickedMapPoint && (!this.props.clickedMapPoint || this.props.clickedMapPoint.x !== newProps.clickedMapPoint.x ||
                 this.props.clickedMapPoint.y !== newProps.clickedMapPoint.y)) {
-            const wmsVisibleLayers = newProps.mapConfig.layers.filter(newProps.layerFilter);
-            const {bounds, crs} = this.reprojectBbox(newProps.mapConfig.bbox, newProps.mapConfig.projection);
+            const wmsVisibleLayers = newProps.layers.filter(newProps.layerFilter);
+            const {bounds, crs} = this.reprojectBbox(newProps.map.bbox, newProps.map.projection);
             for (let l = 0; l < wmsVisibleLayers.length; l++) {
                 const layer = wmsVisibleLayers[l];
                 const requestConf = {
@@ -78,8 +80,8 @@ var GetFeatureInfo = React.createClass({
                     query_layers: layer.name,
                     x: newProps.clickedMapPoint.x,
                     y: newProps.clickedMapPoint.y,
-                    height: newProps.mapConfig.size.height,
-                    width: newProps.mapConfig.size.width,
+                    height: newProps.map.size.height,
+                    width: newProps.map.size.width,
                     srs: crs,
                     bbox: bounds.minx + "," +
                           bounds.miny + "," +

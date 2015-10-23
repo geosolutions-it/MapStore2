@@ -9,7 +9,8 @@ var React = require('react');
 
 var {Provider} = require('react-redux');
 
-var {loadMapConfig, changeBrowserProperties} = require('../../actions/config');
+var {loadMapConfig} = require('../../actions/config');
+var {changeBrowserProperties} = require('../../actions/browser');
 var {loadLocale} = require('../../actions/locale');
 
 var ConfigUtils = require('../../utils/ConfigUtils');

@@ -7,11 +7,11 @@
  */
 var expect = require('expect');
 
-var browser = require('../browserConfig');
+var browser = require('../browser');
 var ConfigUtils = require('../../utils/ConfigUtils');
 
 describe('Test the browser reducer', () => {
-    it('Get borwser propertis', () => {
+    it('Get borwser properties', () => {
         var state = browser({}, {type: 'CHANGE_BROWSER_PROPERTIES', newProperties: ConfigUtils.getBrowserProperties()});
         expect(state.hasOwnProperty('touch')).toBe(true);
         expect(state.hasOwnProperty('mobile')).toBe(true);
