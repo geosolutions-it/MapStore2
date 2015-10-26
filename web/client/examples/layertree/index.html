@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>MapStore 2 Example: LayerTree</title>
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel="shortcut icon" href="../home/img/favicon.ico" type="image/x-icon">
+        <script src="http://maps.google.com/maps/api/js?v=3&sensor=false"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.10/proj4.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+
+        <style>
+        html, body, #container, #map, .fill {
+            position:absolute;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .fill-debug {
+            position:absolute;
+            left:0;
+            right: 300px;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+        .rangeslider{margin:20px 0;position:relative;background:#e6e6e6}
+
+        .rangeslider .rangeslider__fill,.rangeslider .rangeslider__handle{position:absolute}
+
+        .rangeslider,.rangeslider .rangeslider__fill{display:block;box-shadow:inset 0 1px 3px rgba(0,0,0,.3)}
+
+        .rangeslider .rangeslider__handle{background:#fff;border:1px solid #ccc;cursor:pointer;display:inline-block;position:absolute}
+
+        .rangeslider .rangeslider__handle:active{background:#999}
+
+        .rangeslider-horizontal{height:20px;border-radius:10px}
+
+        .rangeslider-horizontal .rangeslider__fill{height:100%;background:#27ae60;border-radius:10px;top:0}
+
+        .rangeslider-horizontal .rangeslider__handle{width:40px;height:40px;border-radius:40px;top:-10px}
+
+        .rangeslider-vertical{margin:20px auto;height:150px;max-width:10px;background:none}
+
+        .rangeslider-vertical .rangeslider__fill{width:100%;background:#27ae60;box-shadow:none;bottom:0}
+
+        .rangeslider-vertical .rangeslider__handle{width:30px;height:10px;left:-10px}
+
+        .rangeslider-vertical .rangeslider__handle:active{box-shadow:none}}
+
+        .Sortable {
+          position: relative;
+          display: block;
+          overflow: visible;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          user-select: none;
+        }
+
+        .SortableItem {
+          cursor: -webkit-grab; cursor:-moz-grab; cursor: grab;
+        }
+
+        .SortableItem.is-dragging {
+          cursor: move;
+          position: absolute;
+          z-index: 1688;
+          background-color: rgba(218, 218, 218, 0.8);;
+          border: 1px dashed #8E8E8E;
+          border-radius: 5px;
+          box-shadow: 4px 4px 9px rgba(0, 0, 0, 0.28);
+        }
+
+        .SortableItem.is-placeholder {
+          border: 1px dashed #8E8E8E;
+          border-radius: 5px;
+        }
+
+        .SortableItem.is-undraggable {
+          cursor: not-allowed;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script src="../../dist/mapstore-commons.js"></script>
+        <script src="../../dist/layertree.js"></script>
+    </body>
+</html>

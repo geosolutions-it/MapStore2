@@ -11,11 +11,10 @@ var React = require('react');
 var Title = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
-        onClick: React.PropTypes.func,
-        expanded: React.PropTypes.bool
+        onClick: React.PropTypes.func
     },
     statics: {
-        inheritedPropTypes: ['node', 'expanded']
+        inheritedPropTypes: ['node']
     },
     getDefaultProps() {
         return {
@@ -23,7 +22,7 @@ var Title = React.createClass({
         };
     },
     render() {
-        let expanded = this.props.node.expanded || this.props.expanded;
+        let expanded = (this.props.node.expanded !== undefined) ? this.props.node.expanded : true;
         return (<span onClick={() => this.props.onClick(this.props.node.name, expanded)}>{this.props.node.title || this.props.node.name}</span>);
     }
 });

@@ -21,7 +21,7 @@ var HistoryBar = React.createClass({
             undoBtnProps: {onClick: function() {}},
             redoBtnProps: {
                     onClick: function() {},
-                    label: "puppa"
+                    label: ""
             }
         };
     },

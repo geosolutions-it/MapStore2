@@ -13,11 +13,10 @@ var GroupTitle = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
         onClick: React.PropTypes.func,
-        expanded: React.PropTypes.bool,
         style: React.PropTypes.object
     },
     statics: {
-        inheritedPropTypes: ['node', 'expanded']
+        inheritedPropTypes: ['node']
     },
     getDefaultProps() {
         return {
@@ -30,7 +29,7 @@ var GroupTitle = React.createClass({
         };
     },
     render() {
-        let expanded = this.props.node.expanded || this.props.expanded || false;
+        let expanded = (this.props.node.expanded !== undefined) ? this.props.node.expanded : true;
         let groupTitle = this.props.node && this.props.node.title || 'Default';
         return (
             <div onClick={() => this.props.onClick(this.props.node.name, expanded)} style={this.props.style}>

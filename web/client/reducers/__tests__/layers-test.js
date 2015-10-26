@@ -75,25 +75,44 @@ describe('Test the layers reducer', () => {
     it('removeNode', () => {
         let testAction = {
             type: 'REMOVE_NODE',
-            node: 'sampleNode',
-            nodeType: 'sampleType'
+            node: 'sample1',
+            nodeType: 'groups'
         };
-        let state = layers({}, testAction);
-        expect(state.sampleType).toExist();
-        expect(state.sampleType.sampleNode).toExist();
+        let initialState = {
+            groups: [{name: 'sample1'}, {name: 'sample2'}],
+            flat: [{name: 'layer1', group: 'sample1'}, {name: 'layer2', group: 'sample2'}]
+        };
+        let state = layers(initialState, testAction);
+        expect(state.groups.length).toBe(1);
+        expect(state.flat.length).toBe(1);
+    });
+
+    it('removeNode nested', () => {
+        let testAction = {
+            type: 'REMOVE_NODE',
+            node: 'sample1.nested',
+            nodeType: 'groups'
+        };
+        let initialState = {
+            groups: [{name: 'sample1', nodes: [{name: 'sample1.nested'}]}, {name: 'sample2'}],
+            flat: [{name: 'layer1', group: 'sample1'}, {name: 'layer2', group: 'sample2'}, {name: 'layer3', group: 'sample1.nested'}]
+        };
+        let state = layers(initialState, testAction);
+        expect(state.groups.length).toBe(2);
+        expect(state.groups[0].nodes.length).toBe(0);
+        expect(state.flat.length).toBe(2);
     });
 
     it('updateNode', () => {
         let testAction = {
             type: 'UPDATE_NODE',
-            node: 'sampleNode',
-            nodeType: 'sampleType',
-            options: 'sampleOptions'
+            node: 'sample',
+            nodeType: 'layers',
+            options: {opacity: 0.5}
         };
-        let state = layers({}, testAction);
-        expect(state.sampleType).toExist();
-        expect(state.sampleType.sampleNode).toExist();
-        expect(state.sampleType.sampleNode.updates).toExist();
+        let state = layers({flat: [{name: 'sample'}, {name: 'other'}]}, testAction);
+        expect(state.flat[0].opacity).toBe(0.5);
+        expect(state.flat[1].opacity).toNotExist();
     });
 
     it('test layer visibility change for background', () => {
@@ -183,14 +202,14 @@ describe('Test the layers reducer', () => {
             group: "group"
         };
 
-        let retval = layers({
-            layers: [{group: "group"}]
+        let state = layers({
+            flat: [{group: "group"}]
         }, testAction);
-        expect(retval).toExist();
-        expect(retval.layers).toExist();
-        expect(retval.layers[0].group).toExist();
-        expect(retval.layers[0].p).toExist();
-        expect(retval.layers[0].p).toEqual("property");
+        expect(state).toExist();
+        expect(state.flat).toExist();
+        expect(state.flat[0].group).toExist();
+        expect(state.flat[0].p).toExist();
+        expect(state.flat[0].p).toEqual("property");
     });
 
 });

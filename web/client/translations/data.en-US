@@ -49,6 +49,9 @@
                 },
                 "scalebar":{
                     "html":"<h3>Scale Control</h3><p>Custom examples</p>"
+                },
+                "layertree":{
+                    "html":"<h3>Advanced LayerTree</h3><p>Custom examples</p>"
                 }
             }
         },

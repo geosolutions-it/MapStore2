@@ -20,7 +20,8 @@ module.exports = {
         manager: path.join(__dirname, "web", "client", "examples", "manager", "app"),
         home: path.join(__dirname, "web", "client", "examples", "home", "app"),
         mouseposition: path.join(__dirname, "web", "client", "examples", "mouseposition", "app"),
-        scalebar: path.join(__dirname, "web", "client", "examples", "scalebar", "app")
+        scalebar: path.join(__dirname, "web", "client", "examples", "scalebar", "app"),
+        layertree: path.join(__dirname, "web", "client", "examples", "layertree", "app")
     },
     output: {
       path: path.join(__dirname, "web", "client", "dist"),

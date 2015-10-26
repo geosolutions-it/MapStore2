@@ -45,10 +45,9 @@ var LayerTree = React.createClass({
             <Panel>
                 <Layers onSort={this.props.onSort} filter={this.getNoBackgroundLayers}
                     nodes={this.props.groups}>
-                    <DefaultGroup onSort={this.props.onSort} expanded={false} onToggle={this.props.onToggleGroup}>
+                    <DefaultGroup onSort={this.props.onSort} onToggle={this.props.onToggleGroup}>
                         <DefaultLayer
                             onToggle={this.props.onToggleLayer}
-                            expanded={false}
                             propertiesChangeHandler={this.props.propertiesChangeHandler}
                             />
                     </DefaultGroup>

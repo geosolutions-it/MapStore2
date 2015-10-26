@@ -16,7 +16,6 @@ var WMSLegend = require('./fragments/WMSLegend');
 var DefaultLayer = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
-        expanded: React.PropTypes.bool,
         propertiesChangeHandler: React.PropTypes.func,
         onToggle: React.PropTypes.func,
         style: React.PropTypes.object
@@ -24,7 +23,6 @@ var DefaultLayer = React.createClass({
     getDefaultProps() {
         return {
             style: {},
-            expanded: false,
             propertiesChangeHandler: () => {},
             onToggle: () => {}
         };
