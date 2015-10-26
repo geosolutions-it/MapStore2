@@ -14,7 +14,6 @@ var GroupChildren = require('./fragments/GroupChildren');
 var DefaultGroup = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
-        expanded: React.PropTypes.bool,
         style: React.PropTypes.object,
         onToggle: React.PropTypes.func,
         onSort: React.PropTypes.func
@@ -23,7 +22,6 @@ var DefaultGroup = React.createClass({
         return {
             node: {},
             onToggle: () => {},
-            expanded: true,
             style: {
                 marginBottom: "16px",
                 cursor: "pointer"

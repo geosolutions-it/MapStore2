@@ -12,14 +12,10 @@ var {
     CLICK_ON_MAP,
     CHANGE_MOUSE_POINTER,
     CHANGE_ZOOM_LVL,
-    LAYER_LOADING,
-    LAYER_LOAD,
     changeMapView,
     clickOnMap,
     changeMousePointer,
-    changeZoomLevel,
-    layerLoading,
-    layerLoad
+    changeZoomLevel
 } = require('../map');
 
 describe('Test correctness of the map actions', () => {
@@ -64,23 +60,5 @@ describe('Test correctness of the map actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGE_ZOOM_LVL);
         expect(retval.zoom).toBe(testVal);
-    });
-
-    it('a layer is loading', () => {
-        const testVal = 'layer1';
-        const retval = layerLoading(testVal);
-
-        expect(retval).toExist();
-        expect(retval.type).toBe(LAYER_LOADING);
-        expect(retval.layerId).toBe(testVal);
-    });
-
-    it('a layer is load', () => {
-        const testVal = 'layer1';
-        const retval = layerLoad(testVal);
-
-        expect(retval).toExist();
-        expect(retval.type).toBe(LAYER_LOAD);
-        expect(retval.layerId).toBe(testVal);
     });
 });

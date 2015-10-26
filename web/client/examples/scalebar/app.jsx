@@ -14,21 +14,20 @@ var {bindActionCreators, combineReducers} = require('redux');
 
 var {Provider} = require('react-redux');
 
-var {changeBrowserProperties} = require('../../actions/config');
+var {changeBrowserProperties} = require('../../actions/browser');
 
 var ConfigUtils = require('../../utils/ConfigUtils');
 
 var Debug = require('../../components/development/Debug');
-var mapConfig = require('../../reducers/config');
-var browser = require('../../reducers/browserConfig');
+var mapConfig = require('../../reducers/map');
+var browser = require('../../reducers/browser');
 
 var LMap = require('../../components/map/leaflet/Map');
 var LLayer = require('../../components/map/leaflet/Layer');
 
-var {changeMapView} = require('../../actions/map');
+var {changeMapView, changeZoomLevel} = require('../../actions/map');
 
 var ScaleBox = require("../../components/ScaleBox/ScaleBox");
-var {changeZoomLevel} = require('../../actions/map');
 
 var BootstrapReact = require('react-bootstrap');
 var Grid = BootstrapReact.Grid;
@@ -37,7 +36,7 @@ var Col = BootstrapReact.Col;
 
 // Here we create the store, we use Debug utils but is not necessary
 // Insteed we need to pass here map configuration
-var store = DebugUtils.createDebugStore(combineReducers({mapConfig, browser}),
+var store = DebugUtils.createDebugStore(combineReducers({browser, mapConfig}),
         {mapConfig: {
             zoom: 14,
             center: {
@@ -123,7 +122,7 @@ let App = connect((state) => {
     return {
         mapConfig: state.mapConfig,
         browser: state.browser
-        };
+    };
 }, dispatch => {
     return bindActionCreators({changeMapView, changeZoomLevel}, dispatch);
 })(MyMap);

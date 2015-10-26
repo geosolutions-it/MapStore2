@@ -19,7 +19,6 @@ var LayerTree = React.createClass({
     propTypes: {
         id: React.PropTypes.number,
         buttonContent: React.PropTypes.node,
-        loadingList: React.PropTypes.array,
         groups: React.PropTypes.array,
         propertiesChangeHandler: React.PropTypes.func,
         onToggleGroup: React.PropTypes.func,
@@ -29,7 +28,6 @@ var LayerTree = React.createClass({
     getDefaultProps() {
         return {
             buttonContent: <img src={icon}/>,
-            loadingList: [],
             propertiesChangeHandler: () => {},
             onToggleGroup: () => {},
             onToggleLayer: () => {}
@@ -47,12 +45,10 @@ var LayerTree = React.createClass({
             <Panel>
                 <Layers onSort={this.props.onSort} filter={this.getNoBackgroundLayers}
                     nodes={this.props.groups}>
-                    <DefaultGroup onSort={this.props.onSort} expanded={false} onToggle={this.props.onToggleGroup}>
+                    <DefaultGroup onSort={this.props.onSort} onToggle={this.props.onToggleGroup}>
                         <DefaultLayer
                             onToggle={this.props.onToggleLayer}
-                            expanded={false}
                             propertiesChangeHandler={this.props.propertiesChangeHandler}
-                            loadingList={this.props.loadingList}
                             />
                     </DefaultGroup>
                 </Layers>

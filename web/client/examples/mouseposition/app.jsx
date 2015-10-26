@@ -7,9 +7,9 @@
  */
 var React = require('react');
 var { createStore, combineReducers } = require('redux');
-var { changeBrowserProperties} = require('../../actions/config');
+var { changeBrowserProperties} = require('../../actions/browser');
 var ConfigUtils = require('../../utils/ConfigUtils');
-var browser = require('../../reducers/browserConfig');
+var browser = require('../../reducers/browser');
 var BootstrapReact = require('react-bootstrap');
 var Grid = BootstrapReact.Grid;
 var Row = BootstrapReact.Row;
@@ -39,33 +39,36 @@ let App = React.createClass({
     },
     getDefaultProps() {
         return {
-            browser: {touch: true}
+            browser: {touch: false}
         };
     },
     render() {
+        if (this.props.browser.touch) {
+            return <div className="error">This example does not work on mobile</div>;
+        }
         return (<div id="viewer" >
                 <Grid fluid={false} className="mousepositionsbar">
                 <Row>
                     <Col lg={4} md={6} xs={12}>
-                        <MousePosition id="sGeoS" key="sGeoS" enabled={this.props.browser.touch ? false : true}
+                        <MousePosition id="sGeoS" key="sGeoS"
                             mousePosition={this.props.mousePosition} crs="EPSG:4326"
                             degreesTemplate={SearchGeoS}/>
                     </Col>
                     <Col lg={4} md={6} xs={12}>
-                        <MousePosition id="wgs84" key="wgs84" enabled={this.props.browser.touch ? false : true} mousePosition={this.props.mousePosition} crs="EPSG:4326"/>
+                        <MousePosition id="wgs84" key="wgs84" mousePosition={this.props.mousePosition} crs="EPSG:4326"/>
                     </Col>
                     <Col lg={4} md={4} xs={6}>
-                        <MousePosition id="degreedecimal" key="degreedecimal" enabled={this.props.browser.touch ? false : true}
+                        <MousePosition id="degreedecimal" key="degreedecimal" enabled
                     mousePosition={this.props.mousePosition} crs="EPSG:4326"
                     degreesTemplate={LabelDD}/>
                     </Col>
                 </Row></Grid>
-                <MousePosition id="google" key="google_prj" enabled={this.props.browser.touch ? false : true} mousePosition={this.props.mousePosition} crs="EPSG:900913"/>
+                <MousePosition id="google" key="google_prj" mousePosition={this.props.mousePosition} crs="EPSG:900913"/>
 
-                <MousePosition id="degreeminute" key="degreeminute" enabled={this.props.browser.touch ? false : true}
+                <MousePosition id="degreeminute" key="degreeminute"
                     mousePosition={this.props.mousePosition} crs="EPSG:4326"
                     degreesTemplate={LabelDM}/>
-                <MousePosition id="dmsnw" key="dmsnw" enabled={this.props.browser.touch ? false : true}
+                <MousePosition id="dmsnw" key="dmsnw"
                     mousePosition={this.props.mousePosition} crs="EPSG:4326"
                     degreesTemplate={LabelDMSNW}/>
                 <LMap key="map"
@@ -89,5 +92,3 @@ let App = React.createClass({
 let cmp = React.render(React.createElement(App), document.getElementById('container'));
 store.subscribe(() => cmp.setProps({mousePosition: store.getState().mouseposition.position}));
 store.subscribe(() => cmp.setProps({browser: store.getState().browser}));
-
-

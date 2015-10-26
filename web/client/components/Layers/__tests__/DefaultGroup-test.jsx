@@ -109,9 +109,10 @@ describe('test Group module component', () => {
         const group = {
             name: 'grp',
             title: 'Group',
-            nodes: layers
+            nodes: layers,
+            expanded: false
         };
-        const comp = React.render(<Group node={group} expanded={false} filter={(layer, node) => layer.group === node.name}><div className="layer"/></Group>, document.body);
+        const comp = React.render(<Group node={group} filter={(layer, node) => layer.group === node.name}><div className="layer"/></Group>, document.body);
         expect(comp).toExist();
 
         const domNode = React.findDOMNode(comp);

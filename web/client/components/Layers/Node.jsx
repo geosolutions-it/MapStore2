@@ -13,7 +13,6 @@ var SortableMixin = require('react-sortable-items/SortableItemMixin');
 var Node = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
-        expanded: React.PropTypes.bool,
         style: React.PropTypes.object,
         type: React.PropTypes.string,
         onSort: React.PropTypes.func,
@@ -23,7 +22,6 @@ var Node = React.createClass({
     getDefaultProps() {
         return {
             node: null,
-            expanded: true,
             style: {},
             type: 'node',
             onSort: null
@@ -40,7 +38,7 @@ var Node = React.createClass({
         });
     },
     render() {
-        let expanded = (this.props.node.expanded !== undefined) ? this.props.node.expanded : this.props.expanded;
+        let expanded = (this.props.node.expanded !== undefined) ? this.props.node.expanded : true;
         let prefix = this.props.type;
         let content = (<div key={this.props.node.name} className={expanded ? prefix + "-expanded" : prefix + "-collapsed"} style={this.props.style} >
             {this.renderChildren((child) => child.props.position !== 'collapsible')}

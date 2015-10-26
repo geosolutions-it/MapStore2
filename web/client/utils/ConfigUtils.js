@@ -68,9 +68,13 @@ var ConfigUtils = {
         return {y: xy.y, x: xy.x, crs: "EPSG:4326"};
     },
     normalizeConfig: function(config) {
-        config.center = ConfigUtils.getCenter(config.center);
-        config.layers = config.layers.map(ConfigUtils.setBingKey);
-        return config;
+        const {layers, plugins, ...other} = config;
+        other.center = ConfigUtils.getCenter(other.center);
+        return {
+            map: other,
+            layers: layers.map(ConfigUtils.setBingKey),
+            plugins: plugins
+        };
     },
     getUserConfiguration: function(defaultName, extension, geoStoreBase) {
         return ConfigUtils.getConfigurationOptions(urlQuery, defaultName, extension, geoStoreBase);
@@ -100,13 +104,13 @@ var ConfigUtils = {
         // setup layers and sources with defaults
         this.setupSources(sources, config.defaultSourceType);
         this.setupLayers(layers, sources, ["gxp_osmsource", "gxp_wmssource", "gxp_googlesource", "gxp_bingsource", "gxp_mapquestsource"]);
-        return {
+        return ConfigUtils.normalizeConfig({
             center: latLng,
             zoom: zoom,
             maxExtent: maxExtent, // TODO convert maxExtent
             layers: layers.map(ConfigUtils.setBingKey),
             projection: mapConfig.projection || 'EPSG:3857'
-        };
+        });
     },
 
     /**

@@ -6,10 +6,32 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const CHANGE_LAYER_PROPERTIES = 'CHANGE_LAYER_PROPERTIES';
+const CHANGE_GROUP_PROPERTIES = 'CHANGE_GROUP_PROPERTIES';
 const TOGGLE_NODE = 'TOGGLE_NODE';
 const SORT_NODE = 'SORT_NODE';
 const REMOVE_NODE = 'REMOVE_NODE';
 const UPDATE_NODE = 'UPDATE_NODE';
+const LAYER_LOADING = 'LAYER_LOADING';
+const LAYER_LOAD = 'LAYER_LOAD';
+
+function changeLayerProperties(layer, properties) {
+    return {
+        type: CHANGE_LAYER_PROPERTIES,
+        newProperties: properties,
+        layer: layer
+
+    };
+}
+
+function changeGroupProperties(group, properties) {
+    return {
+        type: CHANGE_GROUP_PROPERTIES,
+        newProperties: properties,
+        group: group
+
+    };
+}
 
 function toggleNode(node, type, status) {
     return {
@@ -45,4 +67,20 @@ function updateNode(node, type, options) {
     };
 }
 
-module.exports = {toggleNode, sortNode, removeNode, updateNode, TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE};
+function layerLoading(layerId) {
+    return {
+        type: LAYER_LOADING,
+        layerId: layerId
+    };
+}
+
+function layerLoad(layerId) {
+    return {
+        type: LAYER_LOAD,
+        layerId: layerId
+    };
+}
+
+module.exports = {changeLayerProperties, changeGroupProperties, toggleNode, sortNode, removeNode, updateNode, layerLoading, layerLoad,
+    CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, LAYER_LOADING, LAYER_LOAD
+};

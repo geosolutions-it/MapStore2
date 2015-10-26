@@ -24,7 +24,9 @@ var Localized = require('../../../components/I18N/Localized');
 
 var Viewer = React.createClass({
     propTypes: {
-        mapConfig: ConfigUtils.PropTypes.config,
+        map: ConfigUtils.PropTypes.config,
+        layers: React.PropTypes.object,
+        configPlugins: React.PropTypes.array,
         browser: React.PropTypes.object,
         messages: React.PropTypes.object,
         locale: React.PropTypes.string,
@@ -54,8 +56,8 @@ var Viewer = React.createClass({
         measurement: React.PropTypes.object
     },
     render() {
-        if (this.props.mapConfig) {
-            let config = this.props.mapConfig;
+        if (this.props.map) {
+            let config = this.props.map;
             if (config.loadingError) {
                 return <div className="mapstore-error">{config.loadingError}</div>;
             }
@@ -64,8 +66,8 @@ var Viewer = React.createClass({
                 <Localized messages={this.props.messages} locale={this.props.locale} loadingError={this.props.localeError}>
                     {() => {
                         let plugins = this.props.plugins(this.props);
-                        if (this.props.mapConfig.plugins) {
-                            let mapPlugins = this.props.mapConfig.plugins.map((plugin) => {
+                        if (this.props.configPlugins) {
+                            let mapPlugins = this.props.configPlugins.map((plugin) => {
                                 let props = assign({}, plugin);
                                 delete props.type;
                                 for (let propName in props) {
@@ -83,7 +85,7 @@ var Viewer = React.createClass({
                         }
                         return (
                             <div key="viewer" className="fill">
-                                <VMap key="map" config={config} onMapViewChanges={this.manageNewMapView}
+                                <VMap key="map" config={this.props.map} layers={this.props.layers.flat} onMapViewChanges={this.manageNewMapView}
                                     onClick={this.props.clickOnMap} onMouseMove={this.manageMousePosition}
                                     onLayerLoading={this.props.layerLoading} onLayerLoad={this.props.layerLoad}
                                     measurement={this.props.measurement}
@@ -109,44 +111,23 @@ var Viewer = React.createClass({
     }
 });
 
-let reorder = (items, order) => {
-    if (order && items.length > 0) {
-        return order.map((idx) => {
-            return items[idx];
-        });
-    }
-    return items;
-};
-
-var getLayersByGroup = function(layers, groupsInfo, layersInfo) {
-    let i = 0;
-    let rootInfo = groupsInfo.root || {};
-    let mapLayers = (layers || []).map((layer) => assign({}, layer, {storeIndex: i++}));
-    let grps = reorder(mapLayers.reduce((groups, layer) => {
-        return groups.indexOf(layer.group) === -1 ? groups.concat([layer.group]) : groups;
-    }, []).filter((group) => group !== 'background'), rootInfo.order);
-
-    return grps.map((group) => {
-        let groupName = group || 'Default';
-        let groupInfo = groupsInfo[groupName] || {};
-        return assign({}, {
-            name: groupName,
-            title: groupName,
-            nodes: reorder(mapLayers.filter((layer) => layer.group === group).map((layer) => {
-                return assign({}, layer, {expanded: false}, layersInfo[layer.name] || {});
-            }), groupInfo.order),
-            expanded: true
-        }, groupInfo);
-    });
+var denormalizeGroups = function(layers, groups) {
+    let normalizedLayers = layers.map((layer) => assign({}, layer, {expanded: layer.expanded || false}));
+    return {
+        flat: normalizedLayers,
+        groups: groups.map((group) => assign({}, group, {
+            nodes: group.nodes.map((layerName) => normalizedLayers.filter((layer) => layer.name === layerName)[0])
+        }))
+    };
 };
 
 module.exports = (actions) => {
     return connect((state) => {
         return {
-            mapConfig: (state.mapConfig.present && state.mapConfig.present.layers) ? assign({}, state.mapConfig.present, {
-                groups: state.layers ? getLayersByGroup(state.mapConfig.present.layers, state.layers.groups || {}, state.layers.layers || {}) : []
-            }) : state.mapConfig.present,
-            mapHistory: state.mapConfig,
+            map: state.map ? state.map.present : null,
+            layers: state.layers ? denormalizeGroups(state.layers.flat, state.layers.groups) : state.layers,
+            configPlugins: state.plugins,
+            mapHistory: state.map,
             browser: state.browser,
             messages: state.locale ? state.locale.messages : null,
             locale: state.locale ? state.locale.current : null,

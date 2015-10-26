@@ -9,26 +9,23 @@
 var React = require('react');
 var {Glyphicon} = require('react-bootstrap');
 
-var StatusIcon = React.createClass({
+var LayersTool = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
-        onClick: React.PropTypes.func
-    },
-    statics: {
-        inheritedPropTypes: ['node', 'expanded']
+        onClick: React.PropTypes.func,
+        style: React.PropTypes.object,
+        glyph: React.PropTypes.string
     },
     getDefaultProps() {
         return {
-            node: null,
+            style: {marginRight: "2px"},
             onClick: () => {}
         };
     },
     render() {
-        let expanded = (this.props.node.expanded !== undefined) ? this.props.node.expanded : true;
-        return (
-            <Glyphicon style={{marginRight: "8px"}} glyph={expanded ? "folder-open" : "folder-close"} />
-        );
+        return (<Glyphicon style={this.props.style} glyph={this.props.glyph}
+            onClick={(options) => this.props.onClick(this.props.node, options || {})}/>);
     }
 });
 
-module.exports = StatusIcon;
+module.exports = LayersTool;

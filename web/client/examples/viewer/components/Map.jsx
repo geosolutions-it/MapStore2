@@ -22,6 +22,7 @@ var ConfigUtils = require('../../../utils/ConfigUtils');
 var VMap = React.createClass({
     propTypes: {
         config: ConfigUtils.PropTypes.config,
+        layers: React.PropTypes.array,
         onMapViewChanges: React.PropTypes.func,
         onClick: React.PropTypes.func,
         onMouseMove: React.PropTypes.func,
@@ -55,7 +56,7 @@ var VMap = React.createClass({
                 onLayerLoading={this.props.onLayerLoading}
                 onLayerLoad={this.props.onLayerLoad}
             >
-                {this.renderLayers(this.props.config.layers)}
+                {this.renderLayers(this.props.layers)}
                 <MeasurementSupport
                     changeMeasurementState={this.props.changeMeasurementState}
                     measurement={this.props.measurement} />
