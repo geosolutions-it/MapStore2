@@ -82,7 +82,7 @@
         }
         #degreeminute .label {
             display: inline-block;
-            width: 300px;
+            width: 350px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;

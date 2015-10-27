@@ -54,7 +54,7 @@ require('../../components/map/leaflet/plugins/TileProviderLayer');
     **/
 store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
 const zoomLabelArray = ['-----------', '----------', '---------', '-------', '-------', '------', '-----',
-                     '----', '---', '--', ',', '+', '++', '+++', '++++', '+++++', '++++++', '+++++++', '++++++++',
+                     '----', '---', '--', '-', '+', '++', '+++', '++++', '+++++', '++++++', '+++++++', '++++++++',
                      '+++++++++', '++++++++++', '+++++++++++' ];
 
 let MyMap = React.createClass({

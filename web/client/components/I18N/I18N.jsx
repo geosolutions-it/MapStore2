@@ -6,15 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-if (!global.Intl) {
-    require.ensure([
-        'intl'
-    ], function(require) {
-        require('intl');
-        module.exports.Message = require('./Message');
-        module.exports.HTML = require('./HTML');
-    });
-} else {
-    module.exports.Message = require('./Message');
-    module.exports.HTML = require('./HTML');
-}
+module.exports.Message = require('./Message');
+module.exports.HTML = require('./HTML');
+
