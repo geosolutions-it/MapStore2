@@ -13,21 +13,35 @@ var {loadMaps} = require('../../actions/maps');
 
 var ConfigUtils = require('../../utils/ConfigUtils');
 
-var Home = require('./containers/Home');
+
 var Debug = require('../../components/development/Debug');
 
 var store = require('./stores/homestore');
 
-ConfigUtils.loadConfiguration().then(() => {
-    store.dispatch(loadLocale('translations'));
-    store.dispatch(loadMaps());
-});
+function startApp() {
+    ConfigUtils.loadConfiguration().then(() => {
+        store.dispatch(loadLocale('translations'));
+        store.dispatch(loadMaps());
+    });
+    let Home = require('./containers/Home');
 
-React.render(
-    <Debug store={store}>
-        <Provider store={store}>
-            {() => <Home />}
-        </Provider>
-    </Debug>,
-    document.getElementById('container')
-);
+    React.render(
+        <Debug store={store}>
+            <Provider store={store}>
+                {() => <Home />}
+            </Provider>
+        </Debug>,
+        document.getElementById('container')
+    );
+}
+
+if (!global.Intl) {
+    require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js'], (require) => {
+        global.Intl = require('intl');
+        require('intl/locale-data/jsonp/en.js');
+        require('intl/locale-data/jsonp/it.js');
+        startApp();
+    });
+}else {
+    startApp();
+}
