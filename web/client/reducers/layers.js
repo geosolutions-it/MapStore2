@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var {LAYER_LOADING, LAYER_LOAD, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE} =
-    require('../actions/layers');
+var {LAYER_LOADING, LAYER_LOAD, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES,
+    TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, UPDATE_NODE_TEMP} = require('../actions/layers');
 
 var assign = require('object-assign');
 var {isObject, isArray} = require('lodash');
@@ -109,19 +109,31 @@ function layers(state = [], action) {
                 });
                 const newNodes = action.node === 'root' ? reorderedNodes :
                     deepChange(state.groups, action.node, 'nodes', reorderedNodes);
-                return assign({}, state, {groups: newNodes});
+                let newLayers = action.sortLayers ? action.sortLayers(newNodes, state.flat) : state.flat;
+                return assign({}, state, {groups: newNodes, flat: newLayers});
             }
         }
         case UPDATE_NODE: {
-            if (action.nodeType === 'groups') {
-                // TODO
-                return state;
-            }
-
             const flatLayers = (state.flat || []);
+            const selector = action.nodeType === 'groups' ? 'group' : 'name';
+
             const newLayers = flatLayers.map((layer) => {
-                if (layer.name === action.node) {
+                if (layer[selector] === action.node || layer[selector].indexOf(action.node + '.') === 0) {
                     return assign({}, layer, action.options);
+                }
+                return assign({}, layer);
+            });
+            return assign({}, state, {flat: newLayers});
+        }
+        case UPDATE_NODE_TEMP: {
+            const flatLayers = (state.flat || []);
+            const selector = action.nodeType === 'groups' ? 'group' : 'name';
+
+            const newLayers = flatLayers.map((layer) => {
+                if (layer[selector] === action.node || layer[selector].indexOf(action.node + '.') === 0) {
+                    return assign({}, layer, {
+                        temp: action.options
+                    });
                 }
                 return assign({}, layer);
             });
