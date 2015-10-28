@@ -14,25 +14,23 @@ var Button = BootstrapReact.Button;
 var Glyphicon = BootstrapReact.Glyphicon;
 var Tooltip = BootstrapReact.Tooltip;
 var OverlayTrigger = BootstrapReact.OverlayTrigger;
-
+var {isFunction} = require('lodash');
 
 var MapItem = React.createClass({
     propTypes: {
-        id: React.PropTypes.number,
-        name: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        description: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        attributes: React.PropTypes.object,
-        viewerUrl: React.PropTypes.string,
+        map: React.PropTypes.object,
+        viewerUrl: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
         mapType: React.PropTypes.string
     },
     renderButtons: function() {
         if (this.props.viewerUrl) {
-            const previewURL = this.props.viewerUrl + "?type=" + this.props.mapType + "&mapId=" + this.props.id;
+            let button = isFunction(this.props.viewerUrl) ?
+            <Button bsStyle="info" onClick={() => this.props.viewerUrl(this.props.map)}> <Glyphicon glyph={"new-window"}/></Button> :
+            <Button bsStyle="info" target="_blank" href={this.props.viewerUrl + "?type=" + this.props.mapType + "&mapId=" + this.props.map.id}> <Glyphicon glyph={"new-window"}/></Button>;
             const tooltip = <Tooltip id="manager.openInANewTab"><I18N.Message msgId="manager.openInANewTab" /></Tooltip>;
             return (<div>
                 <OverlayTrigger placement="right" overlay={tooltip}>
-                    <Button bsStyle="info" target="_blank" href={previewURL}> <Glyphicon glyph={"new-window"}/>
-                    </Button>
+                    {button}
                 </OverlayTrigger>
                 </div>);
         }
@@ -40,7 +38,7 @@ var MapItem = React.createClass({
     },
     render: function() {
         return (
-           <ListGroupItem header={this.props.name}>{this.props.description} {this.renderButtons()}</ListGroupItem>
+           <ListGroupItem header={this.props.map.name}>{this.props.map.description} {this.renderButtons()}</ListGroupItem>
         );
     }
 });
