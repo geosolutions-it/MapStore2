@@ -68,11 +68,12 @@ var ConfigUtils = {
         return {y: xy.y, x: xy.x, crs: "EPSG:4326"};
     },
     normalizeConfig: function(config) {
-        const {layers, plugins, ...other} = config;
+        const {layers, groups, plugins, ...other} = config;
         other.center = ConfigUtils.getCenter(other.center);
         return {
             map: other,
             layers: layers.map(ConfigUtils.setBingKey),
+            groups: groups,
             plugins: plugins
         };
     },

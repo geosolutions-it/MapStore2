@@ -12,6 +12,7 @@ const TOGGLE_NODE = 'TOGGLE_NODE';
 const SORT_NODE = 'SORT_NODE';
 const REMOVE_NODE = 'REMOVE_NODE';
 const UPDATE_NODE = 'UPDATE_NODE';
+const UPDATE_NODE_TEMP = 'UPDATE_NODE_TEMP';
 const LAYER_LOADING = 'LAYER_LOADING';
 const LAYER_LOAD = 'LAYER_LOAD';
 
@@ -42,11 +43,12 @@ function toggleNode(node, type, status) {
     };
 }
 
-function sortNode(node, order) {
+function sortNode(node, order, sortLayers = null) {
     return {
         type: SORT_NODE,
         node: node,
-        order: order
+        order: order,
+        sortLayers
     };
 }
 
@@ -67,6 +69,15 @@ function updateNode(node, type, options) {
     };
 }
 
+function updateNodeTemp(node, type, options) {
+    return {
+        type: UPDATE_NODE_TEMP,
+        node: node,
+        nodeType: type,
+        options: options
+    };
+}
+
 function layerLoading(layerId) {
     return {
         type: LAYER_LOADING,
@@ -81,6 +92,8 @@ function layerLoad(layerId) {
     };
 }
 
-module.exports = {changeLayerProperties, changeGroupProperties, toggleNode, sortNode, removeNode, updateNode, layerLoading, layerLoad,
-    CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, LAYER_LOADING, LAYER_LOAD
+module.exports = {changeLayerProperties, changeGroupProperties, toggleNode,
+    sortNode, removeNode, updateNode, layerLoading, layerLoad, updateNodeTemp,
+    CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE,
+    REMOVE_NODE, UPDATE_NODE, UPDATE_NODE_TEMP, LAYER_LOADING, LAYER_LOAD
 };
