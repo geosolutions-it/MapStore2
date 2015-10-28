@@ -26,8 +26,11 @@ var MapList = React.createClass({
     },
     renderMaps: function(maps, mapType) {
         const viewerUrl = this.props.viewerUrl;
-        return maps.map(function(map) {
-            return <MapItem viewerUrl={viewerUrl} key={map.id} mapType={mapType} map={map} />;
+        return maps.map((map) => {
+            let children = React.Children.count(this.props.children);
+            return children === 1 ?
+                React.cloneElement(React.Children.only(this.props.children), {viewerUrl, key: map.id, mapType, map}) :
+                <MapItem viewerUrl={viewerUrl} key={map.id} mapType={mapType} map={map} />;
         });
     },
     render: function() {
