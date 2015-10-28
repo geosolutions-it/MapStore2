@@ -20,7 +20,7 @@ describe('This test for MapItem', () => {
 
     // test DEFAULTS
     it('creates the component with defaults', () => {
-        const mapItem = React.render(<MapItem/>, document.body);
+        const mapItem = React.render(<MapItem map={{}}/>, document.body);
         expect(mapItem).toExist();
 
         const mapItemDom = React.findDOMNode(mapItem);
@@ -34,7 +34,7 @@ describe('This test for MapItem', () => {
     it('creates the component with data', () => {
         const testName = "test";
         const testDescription = "testDescription";
-        const mapItem = React.render(<MapItem name={testName} description={testDescription}/>, document.body);
+        const mapItem = React.render(<MapItem map={{name: testName, description: testDescription}}/>, document.body);
         expect(mapItem).toExist();
 
         const mapItemDom = React.findDOMNode(mapItem);
@@ -49,7 +49,7 @@ describe('This test for MapItem', () => {
     it('test viewer url', () => {
         const testName = "test";
         const testDescription = "testDescription";
-        var component = TestUtils.renderIntoDocument(<MapItem id={1} name={testName} mapType="leaflet" description={testDescription} viewerUrl="viewer"/>);
+        var component = TestUtils.renderIntoDocument(<MapItem id={1} map={{id: 1, name: testName, description: testDescription}} mapType="leaflet" viewerUrl="viewer"/>);
         var a = TestUtils.findRenderedDOMComponentWithTag(
            component, 'a'
         );

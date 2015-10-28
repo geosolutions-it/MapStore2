@@ -14,9 +14,8 @@ var MapList = React.createClass({
     propTypes: {
         panelProps: React.PropTypes.object,
         maps: React.PropTypes.array,
-        viewerUrl: React.PropTypes.string,
-        mapType: React.PropTypes.string,
-        locale: React.PropTypes.string
+        viewerUrl: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
+        mapType: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -28,7 +27,7 @@ var MapList = React.createClass({
     renderMaps: function(maps, mapType) {
         const viewerUrl = this.props.viewerUrl;
         return maps.map(function(map) {
-            return <MapItem viewerUrl={viewerUrl} key={map.id} mapType={mapType} {...map} />;
+            return <MapItem viewerUrl={viewerUrl} key={map.id} mapType={mapType} map={map} />;
         });
     },
     render: function() {
