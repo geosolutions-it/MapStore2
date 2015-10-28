@@ -120,7 +120,7 @@ function layers(state = [], action) {
             const newLayers = flatLayers.map((layer) => {
                 if (layer[selector] === action.node || layer[selector].indexOf(action.node + '.') === 0) {
                     return assign({}, layer, action.options);
-            }
+                }
                 return assign({}, layer);
             });
             return assign({}, state, {flat: newLayers});
