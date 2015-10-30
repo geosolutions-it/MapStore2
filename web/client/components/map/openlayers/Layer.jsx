@@ -25,6 +25,7 @@ const OpenlayersLayer = React.createClass({
     },
 
     componentDidMount() {
+        this.tilestoload = 0;
         this.createLayer(this.props.type, this.props.options);
     },
     componentWillReceiveProps(newProps) {
@@ -57,17 +58,27 @@ const OpenlayersLayer = React.createClass({
     createLayer(type, options) {
         if (type) {
             this.layer = Layers.createLayer(type, options, this.props.map, this.props.mapId);
-
             if (this.layer) {
                 this.props.map.addLayer(this.layer);
                 this.layer.getSource().on('tileloadstart', () => {
-                    this.props.onLayerLoading(options.name);
+                    if (this.tilestoload === 0) {
+                        this.props.onLayerLoading(options.name);
+                        this.tilestoload++;
+                    } else {
+                        this.tilestoload++;
+                    }
                 });
                 this.layer.getSource().on('tileloadend', () => {
-                    this.props.onLayerLoad(options.name);
+                    this.tilestoload--;
+                    if (this.tilestoload === 0) {
+                        this.props.onLayerLoad(options.name);
+                    }
                 });
                 this.layer.getSource().on('tileloaderror', () => {
-                    this.props.onLayerLoad(options.name);
+                    this.tilestoload--;
+                    if (this.tilestoload === 0) {
+                        this.props.onLayerLoad(options.name);
+                    }
                 });
             }
         }
