@@ -10,6 +10,7 @@ var React = require('react');
 var BootstrapReact = require('react-bootstrap');
 var Button = BootstrapReact.Button;
 var Glyphicon = BootstrapReact.Glyphicon;
+var ImageButton = require('./ImageButton');
 
 const mapUtils = require('../../utils/MapUtils');
 const configUtils = require('../../utils/ConfigUtils');
@@ -28,13 +29,15 @@ var ZoomToMaxExtentButton = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         style: React.PropTypes.object,
+        image: React.PropTypes.string,
         glyphicon: React.PropTypes.string,
         text: React.PropTypes.string,
         btnSize: React.PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
         mapConfig: React.PropTypes.object,
         actions: React.PropTypes.shape({
             changeMapView: React.PropTypes.func
-        })
+        }),
+        btnType: React.PropTypes.oneOf(['normal', 'image'])
     },
     getDefaultProps() {
         return {
@@ -42,21 +45,26 @@ var ZoomToMaxExtentButton = React.createClass({
             style: undefined,
             glyphicon: "resize-full",
             text: undefined,
-            btnSize: 'xsmall'
+            btnSize: 'xsmall',
+            btnType: 'normal'
         };
     },
     render() {
-        return (
-            <Button
-                id={this.props.id}
-                bsStyle="default"
-                bsSize={this.props.btnSize}
-                onClick={() => this.zoomToMaxExtent()}>
-                {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
-                {this.props.glyphicon && this.props.text ? "\u00A0" : null}
-                {this.props.text}
-            </Button>
-        );
+        if (this.props.btnType === 'normal') {
+            return (
+                <Button
+                    id={this.props.id}
+                    bsStyle="default"
+                    bsSize={this.props.btnSize}
+                    onClick={() => this.zoomToMaxExtent()}>
+                    {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
+                    {this.props.glyphicon && this.props.text ? "\u00A0" : null}
+                    {this.props.text}
+                </Button>
+            );
+        }
+        return (<ImageButton id={this.props.id} image={this.props.image}
+            onClick={() => this.zoomToMaxExtent()} style={this.props.style}/>);
     },
     zoomToMaxExtent() {
         var mapConfig = this.props.mapConfig;
@@ -85,7 +93,6 @@ var ZoomToMaxExtentButton = React.createClass({
         // adapt the map view by calling the corresponding action
         this.props.actions.changeMapView(newCenter, newZoom,
             this.props.mapConfig.bbox, this.props.mapConfig.size);
-
     }
 });
 
