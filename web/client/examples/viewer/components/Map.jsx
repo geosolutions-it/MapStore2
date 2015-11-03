@@ -37,7 +37,7 @@ var VMap = React.createClass({
             let projection = this.props.config.projection || 'EPSG:3857';
             return layers.map(function(layer, index) {
                 var options = assign({}, layer, {srs: projection});
-                return <LLayer type={layer.type} position={index} key={layer.name + ":::" + index} options={options} />;
+                return <LLayer type={layer.type} position={index} key={layer.name} options={options} />;
             });
         }
         return null;

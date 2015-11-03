@@ -14,6 +14,7 @@ Layers.registerType('osm', {
         return new ol.layer.Tile({
             opacity: options.opacity !== undefined ? options.opacity : 1,
             visible: options.visibility,
+            zIndex: options.zIndex,
             source: new ol.source.OSM()
         });
     }

@@ -373,4 +373,29 @@ describe('Openlayers layer', () => {
         layer.setProps({options: {opacity: 0.5}, position: 0});
         expect(layer.layer.getOpacity()).toBe(0.5);
     });
+
+    it('respects layer ordering', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "opacity": 1.0,
+            "url": "http://demo.geo-solutions.it/geoserver/wms"
+        };
+        // create layers
+        var layer = React.render(
+            <OpenlayersLayer type="wms" position={10}
+                 options={options} map={map}/>, document.body);
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+
+        expect(layer.layer.getZIndex()).toBe(10);
+
+        layer.setProps({position: 2});
+        expect(layer.layer.getZIndex()).toBe(2);
+    });
 });

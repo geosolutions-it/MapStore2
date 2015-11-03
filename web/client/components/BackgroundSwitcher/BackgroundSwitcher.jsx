@@ -65,12 +65,7 @@ let BackgroundSwitcher = React.createClass({
         if (!this.props.layers) {
             return <div></div>;
         }
-        return this.renderLayers( this.props.layers.filter(
-            (layer) => {
-                if (layer.group === "background") {
-                    return layer;
-                }
-            }));
+        return this.renderLayers(this.props.layers);
     },
     renderLayers(layers) {
         let items = [];

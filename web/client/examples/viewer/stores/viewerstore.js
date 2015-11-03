@@ -42,10 +42,21 @@ var getLayersByGroup = function(configLayers) {
         return assign({}, {
             name: groupName,
             title: groupName,
-            nodes: mapLayers.filter((layer) => layer.group === group).map((layer) => layer.name),
+            nodes: mapLayers.filter((layer) => layer.group === group).map((layer) => layer.name).reverse(),
             expanded: true
         });
-    });
+    }).reverse();
+};
+
+var reorderLayers = (groups, allLayers) => {
+    return groups.slice(0).reverse().reduce((previous, group) => {
+        return previous.concat(allLayers.filter((layer) => (layer.group || 'Default') === group.name))
+            .concat(reorderLayers((group.groups || []).slice(0).reverse(), allLayers, group.name + '.').reverse());
+    }, []);
+};
+
+var reorder = (groups, allLayers) => {
+    return allLayers.filter((layer) => layer.group === 'background').concat(reorderLayers(groups, allLayers));
 };
 
 module.exports = (reducers) => {
@@ -67,7 +78,8 @@ module.exports = (reducers) => {
             plugins: state && state.plugins
         }, action);
         if (mapState && isArray(mapState.layers)) {
-            mapState.layers = {flat: mapState.layers, groups: getLayersByGroup(mapState.layers)};
+            let groups = getLayersByGroup(mapState.layers);
+            mapState.layers = {flat: reorder(groups, mapState.layers), groups: groups};
         }
         if (mapState && mapState.map && mapState.map.center) {
             mapState.map = {

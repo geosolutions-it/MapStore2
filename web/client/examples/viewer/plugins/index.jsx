@@ -39,130 +39,26 @@ var {changeMeasurementState} = require('../../../actions/measurement');
 
 var React = require('react');
 
-/*
-,
-<MapToolBar
-    activeKey={props.floatingPanel.activeKey}
-    onActivateItem={props.activatePanel}
-    key="mapToolbar"
-    >
-    <ToggleButton
-        key="infoButton"
-        isButton={true}
-        pressed={props.mapInfo.enabled}
-        glyphicon="info-sign"
-        onClick={props.changeMapInfoState}/>
-    <LayerTree
-        key="layerSwitcher"
-        isPanel={true}
-        buttonTooltip={<Message msgId="layers"/>}
-        title={<Message msgId="layers"/>}
-        loadingList={props.mapConfig.loadingLayers}
-        groups={props.mapConfig.groups}
-        propertiesChangeHandler={props.changeLayerProperties}
-        onToggleGroup={(group, status) => props.toggleNode(group, 'groups', status)}
-        onToggleLayer={(layer, status) => props.toggleNode(layer, 'layers', status)}
-        onSort={props.sortNode}
-        />
-    <BackgroundSwitcher
-        key="backgroundSwitcher"
-        isPanel={true}
-        layers={props.mapConfig.layers}
-        title={<div><Message msgId="background"/></div>}
-        buttonTooltip={<Message msgId="backgroundSwither.tooltip"/>}
-        propertiesChangeHandler={props.changeLayerProperties}/>
-    <MeasureComponent
-        key="measureComponent"
-        isPanel={true}
-        title={<div><Message msgId="measureComponent.title"/></div>}
-        buttonTooltip={<Message msgId="measureComponent.tooltip"/>}
-        lengthButtonText={<Message msgId="measureComponent.lengthButtonText"/>}
-        areaButtonText={<Message msgId="measureComponent.areaButtonText"/>}
-        resetButtonText={<Message msgId="measureComponent.resetButtonText"/>}
-        lengthLabel={<Message msgId="measureComponent.lengthLabel"/>}
-        areaLabel={<Message msgId="measureComponent.areaLabel"/>}
-        bearingLabel={<Message msgId="measureComponent.bearingLabel"/>}
-        toggleMeasure={props.changeMeasurementState}
-        lineMeasureEnabled={props.measurement.lineMeasureEnabled}
-        areaMeasureEnabled={props.measurement.areaMeasureEnabled}
-        bearingMeasureEnabled={props.measurement.bearingMeasureEnabled}
-        measurement={props.measurement}
-    />*
-    <Settings
-        key="settingsPanel"
-        isPanel={true}
-        buttonTooltip={<Message msgId="settings" />}>
-        <h5><Message msgId="language" /></h5>
-        <LangBar key="langSelector"
-        currentLocale={props.locale}
-        onLanguageChange={props.loadLocale}/>
-        <CRSSelector
-            key="crsSelector"
-            onCRSChange={props.changeMousePositionCrs}
-            enabled={true}
-            inputProps={{
-                label: <Message msgId="mousePositionCoordinates" />,
-                buttonBefore: <ToggleButton
-                    isButton={true}
-                    text={<Message msgId="enable" />}
-                    btnConfig={{disabled: (!props.browser.touch) ? false : true}}
-                    pressed={props.mousePositionEnabled}
-                    glyphicon="eye-open"
-                    onClick={props.changeMousePositionState}/>
-            }}
-            crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.mapConfig.projection} />
-        <FeatureInfoFormatSelector
-            onInfoFormatChange={props.changeMapInfoFormat}
-            inputProps={{
-                label: <Message msgId="infoFormatLbl" />
-            }}
-            infoFormat={props.mapInfo.infoFormat}/>
-        <h5><Message msgId="history.barLabel" /></h5>
-        <HistoryBar
-            undoBtnProps={{
-                onClick: props.undo,
-                label: <Message msgId="history.undoBtnTooltip"/>,
-                disabled: (props.mapHistory.past.length > 0) ? false : true
-            }}
-            redoBtnProps={{
-                onClick: props.redo,
-                label: <Message msgId="history.redoBtnTooltip" />,
-                disabled: (props.mapHistory.future.length > 0) ? false : true
-        }}/>
-    </Settings>
-</MapToolBar>,
-<GetFeatureInfo
-    key="getFeatureInfo"
-    enabled={props.mapInfo.enabled}
-    htmlResponses={props.mapInfo.responses}
-    htmlRequests={props.mapInfo.requests}
-    infoFormat={props.mapInfo.infoFormat}
-    mapConfig={props.mapConfig}
-    actions={{
-        getFeatureInfo: props.getFeatureInfo,
-        purgeMapInfoResults: props.purgeMapInfoResults,
-        changeMousePointer: props.changeMousePointer
-    }}
-    clickedMapPoint={props.mapInfo.clickPoint} />,
-<MousePosition
-    key="mousePosition"
-    enabled={props.mousePositionEnabled}
-    mousePosition={props.mousePosition}
-    crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.mapConfig.projection}/>,
-<ScaleBox
-    key="scaleBox"
-    onChange={props.changeZoomLevel}
-    currentZoomLvl={props.mapConfig.zoom} />,
-<GlobalSpinner
-    key="globalSpinner"
-    loadingLayers={props.mapConfig.loadingLayers}/>,
-<ZoomToMaxExtentButton
-    key="zoomToMaxExtent"
-    mapConfig={props.mapConfig}
-    actions={{
-        changeMapView: props.changeMapView
-    }} />
-*/
+var {isObject} = require('lodash');
+
+const reorderLayers = (groups, allLayers) => {
+    return groups.slice(0).reverse().reduce((previous, group) => {
+        return previous.concat(
+            group.nodes.filter((node) => !isObject(node)).reverse().map((layer) => allLayers.filter((fullLayer) => fullLayer.name === layer)[0])
+        ).concat(reorderLayers((group.nodes || []).filter((node) => isObject(node)).reverse(), allLayers).reverse());
+    }, []);
+};
+
+/*var reorderLayers = (groups, allLayers) => {
+    return groups.reverse().reduce((previous, group) => {
+        return previous.concat(allLayers.filter((layer) => (layer.group || 'Default') === group.name))
+            .concat(reorderLayers((group.groups || []).slice(0).reverse(), allLayers, group.name + '.').reverse());
+    }, []);
+};*/
+
+var sortLayers = (groups, allLayers) => {
+    return allLayers.filter((layer) => layer.group === 'background').concat(reorderLayers(groups, allLayers));
+};
 
 module.exports = {
     components: (props) => {
@@ -198,12 +94,12 @@ module.exports = {
                     propertiesChangeHandler={props.changeLayerProperties}
                     onToggleGroup={(group, status) => props.toggleNode(group, 'groups', status)}
                     onToggleLayer={(layer, status) => props.toggleNode(layer, 'layers', status)}
-                    onSort={props.sortNode}
+                    onSort={(node, reorder) => props.sortNode(node, reorder, sortLayers)}
                     />
                 <BackgroundSwitcher
                     key="backgroundSwitcher"
                     isPanel={true}
-                    layers={props.layers.flat}
+                    layers={props.layers.flat.filter((layer) => layer.group === "background")}
                     title={<div><Message msgId="background"/></div>}
                     buttonTooltip={<Message msgId="backgroundSwither.tooltip"/>}
                     propertiesChangeHandler={props.changeLayerProperties}/>
