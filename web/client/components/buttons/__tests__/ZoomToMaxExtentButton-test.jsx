@@ -74,42 +74,55 @@ describe('This test for ZoomToMaxExtentButton', () => {
     });
 
     it('test if click on button launches the proper action', () => {
-        let actions = {
-            changeMapView: (c, z, mb, ms) => {
-                return {c, z, mb, ms};
-            }
-        };
-        let spy = expect.spyOn(actions, "changeMapView");
-        var cmp = React.render(
-            <ZoomToMaxExtentButton
-                actions={actions}
-                mapConfig={{
-                    maxExtent: [-110, -110, 90, 90],
-                    zoom: 10,
-                    bbox: {
-                        crs: 'EPSG:4326',
-                        bounds: {
-                            minx: "-15",
-                            miny: "-15",
-                            maxx: "5",
-                            maxy: "5"
+
+        let genericTest = function(btnType) {
+            let actions = {
+                changeMapView: (c, z, mb, ms) => {
+                    return {c, z, mb, ms};
+                }
+            };
+            let spy = expect.spyOn(actions, "changeMapView");
+            var cmp = React.render(
+                <ZoomToMaxExtentButton
+                    actions={actions} btnType={btnType}
+                    mapConfig={{
+                        maxExtent: [-110, -110, 90, 90],
+                        zoom: 10,
+                        bbox: {
+                            crs: 'EPSG:4326',
+                            bounds: {
+                                minx: "-15",
+                                miny: "-15",
+                                maxx: "5",
+                                maxy: "5"
+                            }
+                        },
+                        size: {
+                            height: 100,
+                            width: 100
                         }
-                    },
-                    size: {
-                        height: 100,
-                        width: 100
-                    }
-                }}
-            />
-        , document.body);
-        expect(cmp).toExist();
+                    }}
+                />
+            , document.body);
+            expect(cmp).toExist();
 
-        const cmpDom = document.getElementById("mapstore-zoomtomaxextent");
-        expect(cmpDom).toExist();
+            const cmpDom = document.getElementById("mapstore-zoomtomaxextent");
+            expect(cmpDom).toExist();
 
-        cmpDom.click();
-        expect(spy.calls.length).toBe(1);
-        expect(spy.calls[0].arguments.length).toBe(4);
+            cmpDom.click();
+            expect(spy.calls.length).toBe(1);
+            expect(spy.calls[0].arguments.length).toBe(4);
+        };
+
+        genericTest("normal");
+        genericTest("image");
     });
 
+    it('creates the component with a ImageButton', () => {
+        const zmeBtn = React.render(<ZoomToMaxExtentButton btnType="image"/>, document.body);
+        expect(zmeBtn).toExist();
+        const zmeBtnNode = React.findDOMNode(zmeBtn);
+        expect(zmeBtnNode).toExist();
+        expect(zmeBtnNode.localName).toBe("img");
+    });
 });

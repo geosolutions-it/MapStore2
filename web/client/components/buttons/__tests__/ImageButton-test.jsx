@@ -34,6 +34,24 @@ describe('ImageButton', () => {
         expect(btnDiv.style.backgroundColor).toBe("rgb(250, 250, 250)");
     });
 
+    it('creates an empty button with a custom style', () => {
+        const btn = React.render(<ImageButton
+            style={{margin: "4px", border: "1px solid black"}}/>, document.body);
+        expect(btn).toExist();
+
+        const btnDiv = React.findDOMNode(btn);
+        expect(btnDiv.style.cursor).toBe("pointer");
+        expect(btnDiv.style.margin).toBe("4px");
+        expect(btnDiv.style.padding).toBe("0px");
+        expect(btnDiv.style.display).toBe("inline-block");
+
+        expect(btnDiv.style.height).toBe("48px");
+        expect(btnDiv.style.width).toBe("48px");
+        expect(btnDiv.style.border).toBe("1px solid black");
+        expect(btnDiv.style.borderRadius).toBe("4px");
+        expect(btnDiv.style.backgroundColor).toBe("rgb(250, 250, 250)");
+    });
+
     it('create a button with image', () => {
         const btn = React.render(<ImageButton image="fake"/>, document.body);
         expect(btn).toExist();

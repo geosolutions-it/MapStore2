@@ -12,21 +12,22 @@ var ImageButton = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         image: React.PropTypes.string,
-        onClick: React.PropTypes.func
+        onClick: React.PropTypes.func,
+        style: React.PropTypes.object
     },
     getStyle() {
-        var style = {
+        var finalStyle = {
             cursor: "pointer",
             margin: 0,
             padding: 0,
             display: "inline-block"
         };
-        if (this.props.image && this.props.image !== "") {
-            assign(style, {
+        if (this.props.image) {
+            assign(finalStyle, {
                 overflow: "hidden"
             });
         } else {
-            assign(style, {
+            assign(finalStyle, {
                 height: "48px",
                 width: "48px",
                 border: "1px solid grey",
@@ -34,13 +35,12 @@ var ImageButton = React.createClass({
                 backgroundColor: "rgb(250, 250, 250)"
             });
         }
-        return style;
+        assign(finalStyle, this.props.style);
+        return finalStyle;
     },
     render() {
         return (
-            <div id={this.props.id} style={this.getStyle()} onClick={this.props.onClick}>
-                <img src={this.props.image}></img>
-            </div>
+            <img id={this.props.id} style={this.getStyle()} src={this.props.image} onClick={this.props.onClick}></img>
         );
     }
 });
