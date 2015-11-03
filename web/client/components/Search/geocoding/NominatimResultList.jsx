@@ -24,8 +24,7 @@ let ResultList = React.createClass({
     getDefaultProps() {
         return {
             onItemClick: () => {},
-            afterItemClick: () => {},
-            notFoundMessage: <I18N.Message msgId="noresultfound" />
+            afterItemClick: () => {}
         };
     },
     onItemClick(item) {
@@ -34,6 +33,7 @@ let ResultList = React.createClass({
         var bbox = [nBbox[2], nBbox[0], nBbox[3], nBbox[1]];
         // zoom by the max. extent defined in the map's config
         var mapSize = this.props.mapConfig.size;
+
         var newZoom = mapUtils.getZoomForExtent(CoordinatesUtils.reprojectBbox(bbox, "EPSG:4326", this.props.mapConfig.projection), mapSize, 0, 21, null, "EPSG:4326");
 
         // center by the max. extent defined in the map's config
@@ -54,10 +54,14 @@ let ResultList = React.createClass({
         return this.props.results.map((item)=> {return <NominatimResult item={item} onItemClick={this.onItemClick}/>; });
     },
     render() {
+        var notFoundMessage = this.props.notFoundMessage;
+        if (!notFoundMessage) {
+            notFoundMessage = <I18N.Message msgId="noresultfound" />;
+        }
         if (!this.props.results) {
             return null;
         } else if (this.props.results.length === 0) {
-            return <div className="search-result-list">{this.props.notFoundMessage}</div>;
+            return <div className="search-result-list" style={{padding: "10px", textAlign: "center"}}>{notFoundMessage}</div>;
         }
         return (
             <div className="search-result-list">
