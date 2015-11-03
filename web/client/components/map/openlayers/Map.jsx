@@ -182,5 +182,6 @@ var OpenlayersMap = React.createClass({
         }
     }
 });
-
+// add overrides for css
+require('./mapstore-ol-overrides.css');
 module.exports = OpenlayersMap;
