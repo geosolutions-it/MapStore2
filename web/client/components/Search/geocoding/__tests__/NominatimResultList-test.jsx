@@ -35,7 +35,7 @@ describe("test the NominatimResultList", () => {
     });
 
     it('create component with empty items array', () => {
-        const tb = React.render(<NominatimResultList results={[]} notFoundMessage=""/>, document.body);
+        const tb = React.render(<NominatimResultList results={[]} notFoundMessage="not found"/>, document.body);
         expect(tb).toExist();
     });
 
