@@ -7,6 +7,7 @@
  */
 var React = require('react');
 var Layers = require('../../../utils/openlayers/Layers');
+var assign = require('object-assign');
 
 const OpenlayersLayer = React.createClass({
     propTypes: {
@@ -15,7 +16,8 @@ const OpenlayersLayer = React.createClass({
         type: React.PropTypes.string,
         options: React.PropTypes.object,
         onLayerLoading: React.PropTypes.func,
-        onLayerLoad: React.PropTypes.func
+        onLayerLoad: React.PropTypes.func,
+        position: React.PropTypes.number
     },
     getDefaultProps() {
         return {
@@ -26,7 +28,7 @@ const OpenlayersLayer = React.createClass({
 
     componentDidMount() {
         this.tilestoload = 0;
-        this.createLayer(this.props.type, this.props.options);
+        this.createLayer(this.props.type, this.props.options, this.props.position);
     },
     componentWillReceiveProps(newProps) {
         const newVisibility = newProps.options && newProps.options.visibility !== false;
@@ -34,6 +36,10 @@ const OpenlayersLayer = React.createClass({
 
         const newOpacity = (newProps.options && newProps.options.opacity !== undefined) ? newProps.options.opacity : 1.0;
         this.setLayerOpacity(newOpacity);
+
+        if (newProps.position !== this.props.position) {
+            this.layer.setZIndex(newProps.position);
+        }
     },
     componentWillUnmount() {
         if (this.layer && this.props.map) {
@@ -55,9 +61,10 @@ const OpenlayersLayer = React.createClass({
             this.layer.setOpacity(opacity);
         }
     },
-    createLayer(type, options) {
+    createLayer(type, options, position) {
         if (type) {
-            this.layer = Layers.createLayer(type, options, this.props.map, this.props.mapId);
+            const layerOptions = assign({}, options, position ? {zIndex: position} : null);
+            this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
             if (this.layer) {
                 this.props.map.addLayer(this.layer);
                 this.layer.getSource().on('tileloadstart', () => {

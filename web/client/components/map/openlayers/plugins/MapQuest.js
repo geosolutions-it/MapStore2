@@ -18,6 +18,7 @@ Layers.registerType('mapquest', {
             opacity: options.opacity !== undefined ? options.opacity : 1,
             visible: options.visibility,
             style: styles[options.name],
+            zIndex: options.zIndex,
             source: new ol.source.MapQuest({layer: options.name})
         });
     }

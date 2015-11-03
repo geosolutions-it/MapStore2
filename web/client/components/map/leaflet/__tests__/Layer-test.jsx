@@ -251,4 +251,31 @@ describe('Leaflet layer', () => {
         layer.setProps({options: {opacity: 0.5}, position: 0});
         expect(layer.layer.options.opacity).toBe(0.5);
     });
+
+    it('respects layer ordering', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "opacity": 1.0,
+            "url": "http://demo.geo-solutions.it/geoserver/wms"
+        };
+        // create layers
+        var layer = React.render(
+            <LeafLetLayer type="wms"
+                 options={options} map={map} position={10}/>, document.body);
+
+        expect(layer).toExist();
+        // count layers
+        let lcount = 0;
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.options.zIndex).toBe(10);
+
+        layer.setProps({position: 2});
+        expect(layer.layer.options.zIndex).toBe(2);
+    });
 });

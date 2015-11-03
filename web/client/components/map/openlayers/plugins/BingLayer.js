@@ -15,6 +15,7 @@ Layers.registerType('bing', {
         return new ol.layer.Tile({
             preload: Infinity,
             opacity: options.opacity !== undefined ? options.opacity : 1,
+            zIndex: options.zIndex,
             visible: options.visibility,
             source: new ol.source.BingMaps({
               key: key,

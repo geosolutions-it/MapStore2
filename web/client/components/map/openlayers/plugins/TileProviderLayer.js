@@ -60,6 +60,7 @@ function tileXYZToOpenlayersOptions(options) {
     let olOpt = assign({}, {
                 opacity: options.opacity !== undefined ? options.opacity : 1,
                 visible: options.visibility !== false,
+                zIndex: options.zIndex,
                 source: source
                 }, (options.bounds) ? {extent: lBoundsToOlExtent(options.bounds, options.srs ? options.srs : 'EPSG:3857')} : {} );
     return olOpt;

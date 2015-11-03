@@ -17,7 +17,7 @@ const LeafletLayer = React.createClass({
         position: React.PropTypes.number
     },
     componentDidMount() {
-        this.createLayer(this.props.type, this.props.options);
+        this.createLayer(this.props.type, this.props.options, this.props.position);
         if (this.props.options && this.layer && this.props.options.visibility !== false) {
             this.addLayer();
             this.updateZIndex();
@@ -29,6 +29,10 @@ const LeafletLayer = React.createClass({
 
         const newOpacity = (newProps.options && newProps.options.opacity !== undefined) ? newProps.options.opacity : 1.0;
         this.setLayerOpacity(newOpacity);
+
+        if (newProps.position !== this.props.position) {
+            this.updateZIndex(newProps.position);
+        }
     },
     componentWillUnmount() {
         if (this.layer && this.props.map) {
@@ -56,17 +60,15 @@ const LeafletLayer = React.createClass({
             this.layer.setOpacity(opacity);
         }
     },
-    updateZIndex() {
-        if (this.props.position && this.layer && this.layer.setZIndex) {
-            this.layer.setZIndex(this.props.position);
+    updateZIndex(position) {
+        let newPosition = position || this.props.position;
+        if (newPosition && this.layer && this.layer.setZIndex) {
+            this.layer.setZIndex(newPosition);
         }
     },
-    createLayer(type, options) {
+    createLayer(type, options, position) {
         if (type) {
-            let opts = options;
-            if (this.props.position !== undefined) {
-                opts = assign({}, this.props.options, {zIndex: this.props.position});
-            }
+            const opts = assign({}, options, position ? {zIndex: position} : null);
             this.layer = Layers.createLayer(type, opts);
             if (this.layer) {
                 this.layer.layerName = options.name;
