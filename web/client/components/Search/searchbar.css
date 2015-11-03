@@ -1,0 +1,93 @@
+.MapSearchBar {
+    left: 45px;
+    position: absolute;
+    right: 55px;
+    top: 10px;
+}
+.MapSearchBar .input-group-addon{
+    background-color:white;
+    border-top: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
+
+}
+.searchclear {
+    position:absolute;
+    right:45px;
+    top:0;
+    bottom:0;
+    height:14px;
+    margin:auto;
+    font-size:14px;
+    cursor:pointer;
+    color:#ccc;
+}
+.search-result-list{
+    position: absolute;
+    top: 50px;
+    left: 45px;
+    right: 55px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 10px;
+    max-height: 80%;
+    overflow: auto;
+}
+
+.search-result-list .search-result{
+    padding: 15px;
+    border-bottom: 1px solid lightgray;
+    cursor: pointer;
+}
+.search-result-list .search-result:hover{
+    background-color: rgba(204,204,204,0.9);
+}
+.search-result-list .search-result .icon{
+    height: 100%;
+    margin-right: 5px;
+    display: block;
+    vertical-align: middle;
+    float: left;
+}
+
+.search-result-list .search-result:last-child{
+    border-bottom: none;
+    border-radius: 0 0 10px 10px;
+}
+
+.search-result-list .search-result:first-child{
+    border-radius:10px 10px 0 0;
+}
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px ) {
+    .MapSearchBar {
+        width: 500px;
+        right: auto;
+    }
+    .search-result-list{
+        width: 500px;
+        right: auto;
+    }
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .MapSearchBar {
+        width: 500px;
+        right: auto;
+    }
+    .search-result-list{
+        width: 500px;
+        right: auto;
+    }
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .MapSearchBar {
+        width: 500px;
+        position:absolute;
+    }
+    .search-result-list{
+        width: 500px;
+        right: auto;
+    }
+}

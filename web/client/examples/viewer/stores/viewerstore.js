@@ -11,6 +11,7 @@ var mapConfig = require('../../../reducers/config');
 var undoable = require('redux-undo').default;
 var isEqual = require('lodash/lang/isEqual');
 var mapConfigHistory = require('../../../utils/MapHistory');
+var {searchResults} = require('../../../reducers/search');
 var map = mapConfigHistory(undoable(require('../../../reducers/map'), {
     filter: (action, currentState, previousState) => {
         let bool = false;
@@ -52,6 +53,8 @@ module.exports = (reducers) => {
         // layers,
         locale,
         browser,
+        searchResults,
+
         map: () => {return null; },
         layers: () => {return null; },
         configPlugins: () => {return null; }
