@@ -21,6 +21,11 @@ var mapInfo = require('../../../reducers/mapInfo');
 var floatingPanel = require('../reducers/floatingPanel');
 var mousePosition = require('../../../reducers/mousePosition');
 var measurement = require('../../../reducers/measurement');
+var {searchResults} = require('../../../reducers/search');
+
+// search SearchBar
+var SearchBar = require("../../../components/Search/SearchBar");
+var NominatimResultList = require("../../../components/Search/geocoding/NominatimResultList");
 
 var {getFeatureInfo, changeMapInfoState, purgeMapInfoResults, changeMapInfoFormat} = require('../../../actions/mapInfo');
 var {activatePanel} = require('../actions/floatingPanel');
@@ -28,6 +33,7 @@ var {changeMousePosition, changeMousePositionCrs, changeMousePositionState} = re
 
 var {toggleNode, sortNode, changeLayerProperties, layerLoading, layerLoad} = require('../../../actions/layers');
 var {changeMapView, changeZoomLevel} = require('../../../actions/map');
+var {textSearch, resultsPurge} = require("../../../actions/search");
 
 var {changeMeasurementState} = require('../../../actions/measurement');
 
@@ -170,6 +176,8 @@ module.exports = {
                         right: "0px",
                         margin: "8px"
                     }} key="about"/>,
+                <SearchBar onSearch={props.textSearch} onSearchReset={props.resultsPurge}/>,
+                <NominatimResultList results={props.searchResults} onItemClick={(props.changeMapView)} afterItemClick={props.resultsPurge} mapConfig={props.map}/>,
             <MapToolBar
                 activeKey={props.floatingPanel.activeKey}
                 onActivateItem={props.activatePanel}
@@ -292,9 +300,11 @@ module.exports = {
                 }} />
         ];
     },
-    reducers: {mapInfo, floatingPanel, mousePosition, measurement},
+    reducers: {mapInfo, floatingPanel, mousePosition, measurement, searchResults},
     actions: {
         getFeatureInfo,
+        textSearch,
+        resultsPurge,
         changeMapInfoState,
         purgeMapInfoResults,
         activatePanel,
