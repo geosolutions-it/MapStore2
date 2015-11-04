@@ -7,13 +7,14 @@
  */
 var React = require('react');
 var {ButtonGroup, Button, Glyphicon, Tooltip, OverlayTrigger} = require('react-bootstrap');
-
+var ImageButton = require('../../buttons/ImageButton');
 
 var HistoryBar = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         undoBtnProps: React.PropTypes.object,
-        redoBtnProps: React.PropTypes.object
+        redoBtnProps: React.PropTypes.object,
+        btnType: React.PropTypes.oneOf(['normal', 'image'])
     },
     getDefaultProps() {
         return {
@@ -22,10 +23,17 @@ var HistoryBar = React.createClass({
             redoBtnProps: {
                     onClick: function() {},
                     label: ""
-            }
+            },
+            btnType: 'normal'
         };
     },
     render() {
+        if (this.props.btnType === 'normal') {
+            return this.getNormalButtons();
+        }
+        return this.getImageButtons();
+    },
+    getNormalButtons() {
         let undotooltip = <Tooltip id="undo-btn">{this.props.undoBtnProps.label}</Tooltip>;
         let redotooltip = <Tooltip id="redo-btn">{this.props.redoBtnProps.label}</Tooltip>;
         return (
@@ -49,6 +57,14 @@ var HistoryBar = React.createClass({
                         </Button>
                     </OverlayTrigger>
                 </ButtonGroup>
+        );
+    },
+    getImageButtons() {
+        return (
+            <span id={this.props.id} style={{margin: 0, pading: 0}}>
+                <ImageButton {...this.props.undoBtnProps}/>
+                <ImageButton {...this.props.redoBtnProps}/>
+            </span>
         );
     }
 });
