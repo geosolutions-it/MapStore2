@@ -15,6 +15,7 @@ var LMap = require('../../../components/map/' + mapType + '/Map');
 var LLayer = require('../../../components/map/' + mapType + '/Layer');
 var ScaleBar = require('../../../components/map/' + mapType + '/ScaleBar');
 var MeasurementSupport = require('../../../components/map/' + mapType + '/MeasurementSupport');
+var Overview = require('../../../components/map/' + mapType + '/Overview');
 
 var assign = require('object-assign');
 var ConfigUtils = require('../../../utils/ConfigUtils');
@@ -61,6 +62,16 @@ var VMap = React.createClass({
                     changeMeasurementState={this.props.changeMeasurementState}
                     measurement={this.props.measurement} />
                 <ScaleBar/>
+                <Overview
+                    overviewOpt={{ // overviewOpt accept config param for ol and leflet overview control
+                            // refer to https://github.com/Norkart/Leaflet-MiniMap and http://openlayers.org/en/v3.10.1/apidoc/ol.control.OverviewMap.html
+                            position: 'bottomright',
+                            collapsedWidth: 25,
+                            collapsedHeight: 25,
+                            zoomLevelOffset: -5,
+                            toggleDisplay: true
+                    }}// If not passed overview will use osm as default layer
+                    layers={[{type: "osm"}]}/>
             </LMap>
         );
     }

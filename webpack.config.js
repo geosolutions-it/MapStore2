@@ -44,7 +44,7 @@ module.exports = {
     module: {
         loaders: [
             { test: /\.css$/, loader: 'style!css'},
-            { test: /\.(png|jpg|gif)$/, loader: 'url-loader?name=[path][name].[ext]&limit=8192'}, // inline base64 URLs for <=8k images, direct URLs for the rest
+            { test: /\.(png|jpg|gif|svg)$/, loader: 'url-loader?name=[path][name].[ext]&limit=8192'}, // inline base64 URLs for <=8k images, direct URLs for the rest
             {
                 test: /\.jsx?$/,
                 exclude: /ol\.js$/,
