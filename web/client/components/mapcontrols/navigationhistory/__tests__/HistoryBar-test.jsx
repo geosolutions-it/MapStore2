@@ -25,23 +25,48 @@ describe('HistoryBar', () => {
         const cmpDom = React.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
-        const buttons = cmpDom.getElementsByTagName("button");
+        const normalButtons = cmpDom.getElementsByTagName("button");
+        expect(normalButtons.length === 2);
 
-        expect(buttons.length === 2);
-
+        const imageButtons = cmpDom.getElementsByTagName("img");
+        expect(imageButtons.length === 0);
     });
 
     it('checks undo and redo button click', () => {
-        const handlers = {
-            onclick() {}
+
+        let genericTest = function(btnType) {
+            const handlers = {
+                onclick() {}
+            };
+            let spy = expect.spyOn(handlers, "onclick");
+            const cmp = React.render(<HistoryBar btnType={btnType} undoBtnProps={{ onClick: handlers.onclick}}
+                redoBtnProps={{ onClick: handlers.onclick}}/>, document.body);
+            const cmpDom = React.findDOMNode(cmp);
+            const undo = btnType === "normal" ? cmpDom.getElementsByTagName("button").item(0)
+                                              : cmpDom.getElementsByTagName("img").item(0);
+            const redo = btnType === "normal" ? cmpDom.getElementsByTagName("button").item(1)
+                                              : cmpDom.getElementsByTagName("img").item(1);
+            undo.click();
+            redo.click();
+            expect(spy.calls.length).toBe(2);
         };
-        let spy = expect.spyOn(handlers, "onclick");
-        const cmp = React.render(<HistoryBar undoBtnProps={{ onClick: handlers.onclick}} redoBtnProps={{ onClick: handlers.onclick}}/>, document.body);
+
+        genericTest("normal");
+        genericTest("image");
+    });
+
+    it('checks with image buttons', () => {
+
+        const cmp = React.render(<HistoryBar btnType="image"/>, document.body);
+        expect(cmp).toExist();
+
         const cmpDom = React.findDOMNode(cmp);
-        const undo = cmpDom.getElementsByTagName("button").item(0);
-        const redo = cmpDom.getElementsByTagName("button").item(1);
-        undo.click();
-        redo.click();
-        expect(spy.calls.length).toBe(2);
+        expect(cmpDom).toExist();
+
+        const normalButtons = cmpDom.getElementsByTagName("button");
+        expect(normalButtons.length === 0);
+
+        const imageButtons = cmpDom.getElementsByTagName("img");
+        expect(imageButtons.length === 2);
     });
 });
