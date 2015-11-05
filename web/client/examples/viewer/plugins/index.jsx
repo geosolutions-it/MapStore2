@@ -10,7 +10,6 @@ var FeatureInfoFormatSelector = require("../../../components/misc/FeatureInfoFor
 var MeasureComponent = require("../../../components/MeasureComponent/MeasureComponent");
 var GetFeatureInfo = require("../components/getFeatureInfo/GetFeatureInfo");
 var ScaleBox = require("../../../components/ScaleBox/ScaleBox");
-var GlobalSpinner = require('../../../components/spinners/GlobalSpinner/GlobalSpinner');
 var ZoomToMaxExtentButton = require('../../../components/buttons/ZoomToMaxExtentButton');
 var LayerTree = require('../components/LayerTree');
 var HistoryBar = require("../../../components/mapcontrols/navigationhistory/HistoryBar");
@@ -49,16 +48,17 @@ const reorderLayers = (groups, allLayers) => {
     }, []);
 };
 
-/*var reorderLayers = (groups, allLayers) => {
-    return groups.reverse().reduce((previous, group) => {
-        return previous.concat(allLayers.filter((layer) => (layer.group || 'Default') === group.name))
-            .concat(reorderLayers((group.groups || []).slice(0).reverse(), allLayers, group.name + '.').reverse());
-    }, []);
-};*/
-
 var sortLayers = (groups, allLayers) => {
     return allLayers.filter((layer) => layer.group === 'background').concat(reorderLayers(groups, allLayers));
 };
+
+var {connect} = require('react-redux');
+
+var GlobalSpinner = connect((state) => {
+    return {
+        loading: state.layers.flat.some((layer) => layer.loading)
+    };
+})(require('../../../components/spinners/GlobalSpinner/GlobalSpinner'));
 
 module.exports = {
     components: (props) => {
@@ -185,15 +185,13 @@ module.exports = {
                 key="scaleBox"
                 onChange={props.changeZoomLevel}
                 currentZoomLvl={props.map.zoom} />,
-            <GlobalSpinner
-                key="globalSpinner"
-                loadingLayers={props.layers.flat.filter((layer) => layer.loading)}/>,
             <ZoomToMaxExtentButton
                 key="zoomToMaxExtent"
                 mapConfig={props.map}
                 actions={{
                     changeMapView: props.changeMapView
-                }} />
+                }} />,
+            <GlobalSpinner key="globalSpinner"/>
         ];
     },
     reducers: {mapInfo, floatingPanel, mousePosition, measurement, searchResults},
