@@ -20,6 +20,7 @@ var {changeMapView, clickOnMap, changeMousePointer} = require('../../../actions/
 var changeMeasurementState = require('../../../actions/measurement');
 
 var VMap = require('../components/Map');
+
 var Localized = require('../../../components/I18N/Localized');
 
 var Viewer = React.createClass({
@@ -137,7 +138,7 @@ module.exports = (actions) => {
             localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined,
             mousePosition: state.mousePosition ? state.mousePosition.position : null,
             mousePositionCrs: state.mousePosition ? state.mousePosition.crs : null,
-            mousePositionEnabled: state.mousePosition ? state.mousePosition.enabled : false,
+            mousePositionEnabled: state.mousePosition ? state.mousePosition.enabled || false : false,
             measurement: state.measurement ? state.measurement : {lineMeasureEnabled: false, areaMeasureEnabled: false, bearingMeasureEnabled: false, geomType: null, len: 0, area: 0, bearing: 0},
             searchResults: state.searchResults || null
         };

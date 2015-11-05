@@ -10,16 +10,16 @@ var React = require('react');
 var GlobalSpinner = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
-        loadingLayers: React.PropTypes.array
+        loading: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
             id: "mapstore-globalspinner",
-            loadingLayers: []
+            loading: false
         };
     },
     render() {
-        if (this.props.loadingLayers.length > 0) {
+        if (this.props.loading) {
             return (
                 <div id={this.props.id}></div>
             );
