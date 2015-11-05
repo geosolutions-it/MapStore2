@@ -21,6 +21,7 @@ var floatingPanel = require('../reducers/floatingPanel');
 var mousePosition = require('../../../reducers/mousePosition');
 var measurement = require('../../../reducers/measurement');
 var {searchResults} = require('../../../reducers/search');
+var help = require('../../../reducers/help');
 
 var LocateBtn = require("../../../components/mapcontrols/Locate/LocateBtn");
 var locate = require('../../../reducers/locate');
@@ -38,6 +39,9 @@ var {changeMapView, changeZoomLevel} = require('../../../actions/map');
 var {textSearch, resultsPurge} = require("../../../actions/search");
 
 var {changeMeasurementState} = require('../../../actions/measurement');
+
+var {changeHelpState, changeHelpText} = require('../../../actions/help');
+var HelpTextPanel = require('../../../components/Help/HelpTextPanel');
 
 var React = require('react');
 
@@ -168,6 +172,12 @@ module.exports = {
                             disabled: (props.mapHistory.future.length > 0) ? false : true
                     }}/>
                 </Settings>
+                <ToggleButton
+                    key="helpButton"
+                    isButton={true}
+                    glyphicon="question-sign"
+                    pressed={props.help.enabled}
+                    onClick={props.changeHelpState}/>
             </MapToolBar>,
             <GetFeatureInfo
                 key="getFeatureInfo"
@@ -196,12 +206,19 @@ module.exports = {
                 key="zoomToMaxExtent"
                 mapConfig={props.map}
                 actions={{
-                    changeMapView: props.changeMapView
-                }} />,
-            <GlobalSpinner key="globalSpinner"/>
+                    changeMapView: props.changeMapView,
+                    changeHelpText: props.changeHelpText
+                }}
+                helpEnabled={props.help.enabled}
+                helpText="This is the help for ZoomToMaxExtentButton"/>,
+            <GlobalSpinner key="globalSpinner"/>,
+            <HelpTextPanel
+                key="helpTextPanel"
+                isVisible={props.help.enabled}
+                helpText={props.help.helpText}/>
         ];
     },
-    reducers: {mapInfo, floatingPanel, mousePosition, measurement, searchResults, locate},
+    reducers: {mapInfo, floatingPanel, mousePosition, measurement, searchResults, locate, help},
     actions: {
         getFeatureInfo,
         textSearch,
@@ -223,6 +240,8 @@ module.exports = {
         undo,
         redo,
         changeMapInfoFormat,
-        changeMeasurementState
+        changeMeasurementState,
+        changeHelpState,
+        changeHelpText
     }
 };

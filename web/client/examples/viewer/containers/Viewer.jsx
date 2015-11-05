@@ -56,7 +56,9 @@ var Viewer = React.createClass({
         hideSpinner: React.PropTypes.func,
         changeMeasurementState: React.PropTypes.func,
         measurement: React.PropTypes.object,
-        searchResults: React.PropTypes.array
+        searchResults: React.PropTypes.array,
+        changeHelpState: React.PropTypes.func,
+        changeHelpText: React.PropTypes.func
     },
     render() {
         if (this.props.map) {
@@ -143,7 +145,8 @@ module.exports = (actions) => {
             mousePositionCrs: state.mousePosition ? state.mousePosition.crs : null,
             mousePositionEnabled: state.mousePosition ? state.mousePosition.enabled || false : false,
             measurement: state.measurement ? state.measurement : {lineMeasureEnabled: false, areaMeasureEnabled: false, bearingMeasureEnabled: false, geomType: null, len: 0, area: 0, bearing: 0},
-            searchResults: state.searchResults || null
+            searchResults: state.searchResults || null,
+            help: state.help ? state.help : {enabled: false, helpText: ''}
         };
     }, dispatch => {
         return bindActionCreators(assign({}, {
