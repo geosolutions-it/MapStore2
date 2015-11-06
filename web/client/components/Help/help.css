@@ -1,0 +1,7 @@
+#helpbadge-zoomToMaxExtent {
+    display: inline;
+    position: absolute;
+    left: 34px;
+    top: 72px;
+    z-index: 100000
+}

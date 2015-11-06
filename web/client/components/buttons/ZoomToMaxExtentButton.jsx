@@ -11,7 +11,6 @@ var BootstrapReact = require('react-bootstrap');
 var Button = BootstrapReact.Button;
 var Glyphicon = BootstrapReact.Glyphicon;
 var ImageButton = require('./ImageButton');
-var HelpBadge = require('../Help/HelpBadge');
 
 const mapUtils = require('../../utils/MapUtils');
 const configUtils = require('../../utils/ConfigUtils');
@@ -56,32 +55,22 @@ var ZoomToMaxExtentButton = React.createClass({
     render() {
         if (this.props.btnType === 'normal') {
             return (
-                <div id={this.props.id}>
-                    <Button
-                        bsStyle="default"
-                        bsSize={this.props.btnSize}
-                        onClick={() => this.zoomToMaxExtent()}>
-                        {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
-                        {this.props.glyphicon && this.props.text ? "\u00A0" : null}
-                        {this.props.text}
-                    </Button>
-                    <HelpBadge
-                        isVisible = {this.props.helpEnabled}
-                        helpText={this.props.helpText}
-                        changeHelpText={this.props.actions.changeHelpText} />
-                </div>
+                <Button
+                    id={this.props.id}
+                    bsStyle="default"
+                    bsSize={this.props.btnSize}
+                    onClick={() => this.zoomToMaxExtent()}>
+                    {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
+                    {this.props.glyphicon && this.props.text ? "\u00A0" : null}
+                    {this.props.text}
+                </Button>
             );
         }
         return (
-            <div id={this.props.id}>
-                <ImageButton
-                    image={this.props.image}
-                    onClick={() => this.zoomToMaxExtent()} />
-                <HelpBadge
-                    isVisible = {this.props.helpEnabled}
-                    helpText={this.props.helpText}
-                    changeHelpText={this.props.actions.changeHelpText} />
-            </div>
+            <ImageButton
+                id={this.props.id}
+                image={this.props.image}
+                onClick={() => this.zoomToMaxExtent()} />
         );
     },
     zoomToMaxExtent() {

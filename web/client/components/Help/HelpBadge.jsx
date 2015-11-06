@@ -20,6 +20,7 @@ var Badge = BootstrapReact.Badge;
  */
 var HelpBadge = React.createClass({
     propTypes: {
+        id: React.PropTypes.string,
         helpText: React.PropTypes.string,
         isVisible: React.PropTypes.bool,
         changeHelpText: React.PropTypes.func
@@ -36,6 +37,7 @@ var HelpBadge = React.createClass({
     render() {
         return (
             <Badge
+                id={this.props.id}
                 onClick={this.onClick}
                 className={this.props.isVisible ? '' : 'hidden'}
             >?</Badge>

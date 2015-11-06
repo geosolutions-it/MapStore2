@@ -41,6 +41,7 @@ var {textSearch, resultsPurge} = require("../../../actions/search");
 var {changeMeasurementState} = require('../../../actions/measurement');
 
 var {changeHelpState, changeHelpText} = require('../../../actions/help');
+var HelpWrapper = require('../../../components/Help/HelpWrapper');
 var HelpTextPanel = require('../../../components/Help/HelpTextPanel');
 
 var React = require('react');
@@ -202,15 +203,19 @@ module.exports = {
                 key="scaleBox"
                 onChange={props.changeZoomLevel}
                 currentZoomLvl={props.map.zoom} />,
-            <ZoomToMaxExtentButton
-                key="zoomToMaxExtent"
-                mapConfig={props.map}
-                actions={{
-                    changeMapView: props.changeMapView,
-                    changeHelpText: props.changeHelpText
-                }}
+            <HelpWrapper
+                helpText="This is the help for ZoomToMaxExtentButton"
                 helpEnabled={props.help.enabled}
-                helpText="This is the help for ZoomToMaxExtentButton"/>,
+                changeHelpText={props.changeHelpText}
+                >
+                <ZoomToMaxExtentButton
+                    key="zoomToMaxExtent"
+                    mapConfig={props.map}
+                    actions={{
+                        changeMapView: props.changeMapView
+                    }}
+                />
+            </HelpWrapper>,
             <GlobalSpinner key="globalSpinner"/>,
             <HelpTextPanel
                 key="helpTextPanel"
