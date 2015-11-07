@@ -80,8 +80,14 @@ module.exports = {
                         right: "0px",
                         margin: "8px"
                     }} key="about"/>,
-                <SearchBar onSearch={props.textSearch} onSearchReset={props.resultsPurge}/>,
-                <NominatimResultList results={props.searchResults} onItemClick={(props.changeMapView)} afterItemClick={props.resultsPurge} mapConfig={props.map}/>,
+            <HelpWrapper
+                helpText="This is the help for SearchBar"
+                helpEnabled={props.help.enabled}
+                changeHelpText={props.changeHelpText}
+                >
+                <SearchBar key="seachBar" onSearch={props.textSearch} onSearchReset={props.resultsPurge}/>
+            </HelpWrapper>,
+            <NominatimResultList results={props.searchResults} onItemClick={(props.changeMapView)} afterItemClick={props.resultsPurge} mapConfig={props.map}/>,
             <MapToolBar
                 activeKey={props.floatingPanel.activeKey}
                 onActivateItem={props.activatePanel}
@@ -199,10 +205,16 @@ module.exports = {
                 enabled={props.mousePositionEnabled}
                 mousePosition={props.mousePosition}
                 crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.map.projection}/>,
-            <ScaleBox
-                key="scaleBox"
-                onChange={props.changeZoomLevel}
-                currentZoomLvl={props.map.zoom} />,
+            <HelpWrapper
+                helpText="This is the help for ScaleBox"
+                helpEnabled={props.help.enabled}
+                changeHelpText={props.changeHelpText}
+                >
+                <ScaleBox
+                    key="scaleBox"
+                    onChange={props.changeZoomLevel}
+                    currentZoomLvl={props.map.zoom} />
+            </HelpWrapper>,
             <HelpWrapper
                 helpText="This is the help for ZoomToMaxExtentButton"
                 helpEnabled={props.help.enabled}

@@ -28,7 +28,7 @@ let HelpWrapper = React.createClass({
 
     render: function() {
         return (
-            <div style={{position: "absolute"}}>
+            <div>
                 <HelpBadge
                     id={"helpbadge-" + this.props.children.key}
                     isVisible = {this.props.helpEnabled}
