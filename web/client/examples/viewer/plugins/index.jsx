@@ -81,7 +81,7 @@ module.exports = {
                         margin: "8px"
                     }} key="about"/>,
             <HelpWrapper
-                helpText="This is the help for SearchBar"
+                helpText={<Message msgId="helptexts.searchBar"/>}
                 helpEnabled={props.help.enabled}
                 changeHelpText={props.changeHelpText}
                 >
@@ -206,7 +206,7 @@ module.exports = {
                 mousePosition={props.mousePosition}
                 crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.map.projection}/>,
             <HelpWrapper
-                helpText="This is the help for ScaleBox"
+                helpText={<Message msgId="helptexts.scaleBox"/>}
                 helpEnabled={props.help.enabled}
                 changeHelpText={props.changeHelpText}
                 >
@@ -216,7 +216,7 @@ module.exports = {
                     currentZoomLvl={props.map.zoom} />
             </HelpWrapper>,
             <HelpWrapper
-                helpText="This is the help for ZoomToMaxExtentButton"
+                helpText={<Message msgId="helptexts.zoomToMaxExtentButton"/>}
                 helpEnabled={props.help.enabled}
                 changeHelpText={props.changeHelpText}
                 >

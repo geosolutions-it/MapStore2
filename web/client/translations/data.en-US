@@ -184,6 +184,11 @@
         "feetUnit": "feet",
         "popup": "You are within {distance} {unit} from this point",
         "outsideMapBoundsMsg": "You seem located outside the boundaries of the map"
+    },
+        "helptexts": {
+            "scaleBox": "This is the helptext for the ScaleBox",
+            "zoomToMaxExtentButton": "This is the helptext for the ZoomToMaxExtentButton",
+            "searchBar": "This is the helptext for the SearchBar"
         }
     }
 }
