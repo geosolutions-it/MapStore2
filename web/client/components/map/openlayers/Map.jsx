@@ -80,7 +80,7 @@ var OpenlayersMap = React.createClass({
                 width: map.getSize()[0],
                 height: map.getSize()[1]
             };
-            this.props.onMapViewChanges({x: c[0], y: c[1]}, view.getZoom(), {
+            this.props.onMapViewChanges({x: c[0], y: c[1], crs: 'EPSG:4326'}, view.getZoom(), {
                 bounds: {
                     minx: bbox[0],
                     miny: bbox[1],
