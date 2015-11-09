@@ -177,6 +177,14 @@
                     }
                 }
             }
+        },
+    "locate": {
+        "tooltip": "Mia posizione",
+        "metersUnit": "metri",
+        "feetUnit": "piedi",
+        "popup": "Sei nel raggio di {distance} {unit} da questo punto",
+        "outsideMapBoundsMsg": "Sembri al di fuori dei confini della mappa"
+
         }
     }
 }

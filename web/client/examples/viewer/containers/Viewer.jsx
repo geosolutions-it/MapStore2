@@ -32,6 +32,7 @@ var Viewer = React.createClass({
         messages: React.PropTypes.object,
         locale: React.PropTypes.string,
         mapInfo: React.PropTypes.object,
+        locate: React.PropTypes.object,
         mousePosition: React.PropTypes.object,
         mousePositionEnabled: React.PropTypes.bool,
         localeError: React.PropTypes.string,
@@ -91,7 +92,8 @@ var Viewer = React.createClass({
                                     onClick={this.props.clickOnMap} onMouseMove={this.manageMousePosition}
                                     onLayerLoading={this.props.layerLoading} onLayerLoad={this.props.layerLoad}
                                     measurement={this.props.measurement}
-                                    changeMeasurementState={this.props.changeMeasurementState}/>
+                                    changeMeasurementState={this.props.changeMeasurementState}
+                                    locate={this.props.locate} locateMessages={this.props.messages.locate}/>
                                 {plugins}
                             </div>
                         );
@@ -133,6 +135,7 @@ module.exports = (actions) => {
             browser: state.browser,
             messages: state.locale ? state.locale.messages : null,
             locale: state.locale ? state.locale.current : null,
+            locate: state.locate ? state.locate : {enabled: false},
             mapInfo: state.mapInfo ? state.mapInfo : {enabled: false, responses: [], requests: {length: 0}},
             floatingPanel: state.floatingPanel ? state.floatingPanel : {activeKey: ""},
             localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined,
