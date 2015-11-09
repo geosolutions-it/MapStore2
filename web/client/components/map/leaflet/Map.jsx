@@ -8,7 +8,9 @@
 var L = require('leaflet');
 var React = require('react');
 var ConfigUtils = require('../../../utils/ConfigUtils');
-// var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
+var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
+
+var mapUtils = require('../../../utils/MapUtils');
 
 var LeafletMap = React.createClass({
     propTypes: {
@@ -26,7 +28,8 @@ var LeafletMap = React.createClass({
         onLayerLoad: React.PropTypes.func,
         resize: React.PropTypes.number,
         measurement: React.PropTypes.object,
-        changeMeasurementState: React.PropTypes.func
+        changeMeasurementState: React.PropTypes.func,
+        registerHooks: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -41,7 +44,8 @@ var LeafletMap = React.createClass({
           projection: "EPSG:3857",
           onLayerLoading: () => {},
           onLayerLoad: () => {},
-          resize: 0
+          resize: 0,
+          registerHooks: true
         };
     },
     getInitialState() {
@@ -78,6 +82,10 @@ var LeafletMap = React.createClass({
         });
 
         this.drawControl = null;
+
+        if (this.props.registerHooks) {
+            this.registerHooks();
+        }
     },
     componentWillReceiveProps(newProps) {
         if (newProps.mousePointer !== this.props.mousePointer) {
@@ -164,6 +172,14 @@ var LeafletMap = React.createClass({
             x: pos.lng,
             y: pos.lat,
             crs: "EPSG:4326"
+        });
+    },
+    registerHooks() {
+        // mapUtils.registerHook(mapUtils.ZOOM_TO_EXTEND_HOOK, () => {});
+        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTEND_HOOK, (extent) => {
+            var repojectedPointA = CoordinatesUtils.reproject([extent[0], extent[1]], 'EPSG:900913', 'EPSG:4326');
+            var repojectedPointB = CoordinatesUtils.reproject([extent[2], extent[3]], 'EPSG:900913', 'EPSG:4326');
+            return this.map.getBoundsZoom([[repojectedPointA.x, repojectedPointA.y], [repojectedPointB.x, repojectedPointB.y]]);
         });
     }
 });
