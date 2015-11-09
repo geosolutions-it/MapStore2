@@ -8,7 +8,7 @@
  */
 
 var React = require('react');
-var OlLocate = require('../../../utils/openlayers/olLocate');
+var OlLocate = require('../../../utils/openlayers/OlLocate');
 
 
 var Locate = React.createClass({
