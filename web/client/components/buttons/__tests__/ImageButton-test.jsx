@@ -77,4 +77,33 @@ describe('ImageButton', () => {
         btnDiv.click();
         expect(spy.calls.length).toBe(1);
     });
+
+    it('creates a disabled button with default properties', () => {
+        const handlers = {
+            onclick() {}
+        };
+        let spy = expect.spyOn(handlers, "onclick");
+        const btn = React.render(<ImageButton disabled={true} onClick={handlers.onclick}/>, document.body);
+        expect(btn).toExist();
+
+        const btnDiv = React.findDOMNode(btn);
+        expect(btnDiv.style.cursor).toBe("not-allowed");
+        btnDiv.click();
+        expect(spy.calls.length).toBe(0);
+    });
+
+    it('creates a disabled button with a custom style', () => {
+        const handlers = {
+            onclick() {}
+        };
+        let spy = expect.spyOn(handlers, "onclick");
+        const btn = React.render(<ImageButton disabled={true} onClick={handlers.onclick}
+            style={{cursor: "none"}}/>, document.body);
+        expect(btn).toExist();
+
+        const btnDiv = React.findDOMNode(btn);
+        expect(btnDiv.style.cursor).toBe("none");
+        btnDiv.click();
+        expect(spy.calls.length).toBe(0);
+    });
 });

@@ -13,11 +13,18 @@ var ImageButton = React.createClass({
         id: React.PropTypes.string,
         image: React.PropTypes.string,
         onClick: React.PropTypes.func,
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        disabled: React.PropTypes.boolean
+    },
+    getDefaultProps() {
+        return {
+            disabled: false
+        };
     },
     getStyle() {
+        var cursorStyle = this.props.disabled ? "not-allowed" : "pointer";
         var finalStyle = {
-            cursor: "pointer",
+            cursor: cursorStyle,
             margin: 0,
             padding: 0,
             display: "inline-block"
@@ -40,7 +47,8 @@ var ImageButton = React.createClass({
     },
     render() {
         return (
-            <img id={this.props.id} style={this.getStyle()} src={this.props.image} onClick={this.props.onClick}></img>
+            <img id={this.props.id} style={this.getStyle()} src={this.props.image}
+                onClick={this.props.disabled ? null : this.props.onClick}></img>
         );
     }
 });
