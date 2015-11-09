@@ -16,7 +16,7 @@ var map = mapConfigHistory(undoable(require('../../../reducers/map'), {
     filter: (action, currentState, previousState) => {
         let bool = false;
         if (previousState && previousState.mapStateSource && previousState.mapStateSource === 'map'
-                && previousState.center && previousState.zoom) {
+                && previousState.center && previousState.zoom !== undefined) {
             // Check geometry part
             bool = !(isEqual(currentState.center, previousState.center) && currentState.zoom === previousState.zoom);
         }
