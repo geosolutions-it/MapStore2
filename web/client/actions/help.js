@@ -8,6 +8,7 @@
 
 const CHANGE_HELP_STATE = 'CHANGE_HELP_STATE';
 const CHANGE_HELP_TEXT = 'CHANGE_HELP_TEXT';
+const CHANGE_HELPWIN_VIZ = 'CHANGE_HELPWIN_VIZ';
 
 function changeHelpState(enabled) {
     return {
@@ -23,9 +24,18 @@ function changeHelpText(helpText) {
     };
 }
 
+function changeHelpwinVisibility(helpwinViz) {
+    return {
+        type: CHANGE_HELPWIN_VIZ,
+        helpwinViz: helpwinViz
+    };
+}
+
 module.exports = {
     CHANGE_HELP_STATE,
     CHANGE_HELP_TEXT,
+    CHANGE_HELPWIN_VIZ,
     changeHelpState,
-    changeHelpText
+    changeHelpText,
+    changeHelpwinVisibility
 };

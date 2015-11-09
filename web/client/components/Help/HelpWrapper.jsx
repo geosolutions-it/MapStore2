@@ -23,7 +23,8 @@ let HelpWrapper = React.createClass({
     propTypes: {
         helpText: React.PropTypes.string,
         helpEnabled: React.PropTypes.bool,
-        changeHelpText: React.PropTypes.func
+        changeHelpText: React.PropTypes.func,
+        changeHelpwinVisibility: React.PropTypes.func
     },
 
     render: function() {
@@ -34,6 +35,7 @@ let HelpWrapper = React.createClass({
                     isVisible = {this.props.helpEnabled}
                     helpText = {this.props.helpText}
                     changeHelpText = {this.props.changeHelpText}
+                    changeHelpwinVisibility = {this.props.changeHelpwinVisibility}
                 />
                 {this.props.children}
             </div>);

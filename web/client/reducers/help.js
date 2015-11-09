@@ -8,7 +8,8 @@
 
 var {
     CHANGE_HELP_STATE,
-    CHANGE_HELP_TEXT
+    CHANGE_HELP_TEXT,
+    CHANGE_HELPWIN_VIZ
 } = require('../actions/help');
 
 const assign = require('object-assign');
@@ -22,6 +23,11 @@ function help(state = null, action) {
         case CHANGE_HELP_TEXT: {
             return assign({}, state, {
                 helpText: action.helpText
+            });
+        }
+        case CHANGE_HELPWIN_VIZ: {
+            return assign({}, state, {
+                helpwinViz: action.helpwinViz
             });
         }
         default:

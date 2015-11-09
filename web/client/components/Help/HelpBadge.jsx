@@ -23,7 +23,8 @@ var HelpBadge = React.createClass({
         id: React.PropTypes.string,
         helpText: React.PropTypes.string,
         isVisible: React.PropTypes.bool,
-        changeHelpText: React.PropTypes.func
+        changeHelpText: React.PropTypes.func,
+        changeHelpwinVisibility: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -31,14 +32,15 @@ var HelpBadge = React.createClass({
             isVisible: false
         };
     },
-    onClick() {
+    onMouseOver() {
         this.props.changeHelpText({helpText: this.props.helpText});
+        this.props.changeHelpwinVisibility({helpwinViz: true});
     },
     render() {
         return (
             <Badge
                 id={this.props.id}
-                onClick={this.onClick}
+                onMouseOver={this.onMouseOver}
                 className={this.props.isVisible ? '' : 'hidden'}
             >?</Badge>
         );

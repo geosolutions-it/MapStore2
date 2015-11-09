@@ -40,9 +40,10 @@ var {textSearch, resultsPurge} = require("../../../actions/search");
 
 var {changeMeasurementState} = require('../../../actions/measurement');
 
-var {changeHelpState, changeHelpText} = require('../../../actions/help');
+var {changeHelpState, changeHelpText, changeHelpwinVisibility} = require('../../../actions/help');
 var HelpWrapper = require('../../../components/Help/HelpWrapper');
 var HelpTextPanel = require('../../../components/Help/HelpTextPanel');
+var HelpToggleBtn = require('../../../components/Help/HelpToggleBtn');
 
 var React = require('react');
 
@@ -84,6 +85,7 @@ module.exports = {
                 helpText={<Message msgId="helptexts.searchBar"/>}
                 helpEnabled={props.help.enabled}
                 changeHelpText={props.changeHelpText}
+                changeHelpwinVisibility={props.changeHelpwinVisibility}
                 >
                 <SearchBar key="seachBar" onSearch={props.textSearch} onSearchReset={props.resultsPurge}/>
             </HelpWrapper>,
@@ -179,12 +181,10 @@ module.exports = {
                             disabled: (props.mapHistory.future.length > 0) ? false : true
                     }}/>
                 </Settings>
-                <ToggleButton
-                    key="helpButton"
-                    isButton={true}
-                    glyphicon="question-sign"
+                <HelpToggleBtn
                     pressed={props.help.enabled}
-                    onClick={props.changeHelpState}/>
+                    changeHelpState={props.changeHelpState}
+                    changeHelpwinVisibility={props.changeHelpwinVisibility}/>
             </MapToolBar>,
             <GetFeatureInfo
                 key="getFeatureInfo"
@@ -209,6 +209,7 @@ module.exports = {
                 helpText={<Message msgId="helptexts.scaleBox"/>}
                 helpEnabled={props.help.enabled}
                 changeHelpText={props.changeHelpText}
+                changeHelpwinVisibility={props.changeHelpwinVisibility}
                 >
                 <ScaleBox
                     key="scaleBox"
@@ -219,6 +220,7 @@ module.exports = {
                 helpText={<Message msgId="helptexts.zoomToMaxExtentButton"/>}
                 helpEnabled={props.help.enabled}
                 changeHelpText={props.changeHelpText}
+                changeHelpwinVisibility={props.changeHelpwinVisibility}
                 >
                 <ZoomToMaxExtentButton
                     key="zoomToMaxExtent"
@@ -231,7 +233,7 @@ module.exports = {
             <GlobalSpinner key="globalSpinner"/>,
             <HelpTextPanel
                 key="helpTextPanel"
-                isVisible={props.help.enabled}
+                isVisible={props.help.helpwinViz}
                 helpText={props.help.helpText}/>
         ];
     },
@@ -259,6 +261,7 @@ module.exports = {
         changeMapInfoFormat,
         changeMeasurementState,
         changeHelpState,
-        changeHelpText
+        changeHelpText,
+        changeHelpwinVisibility
     }
 };
