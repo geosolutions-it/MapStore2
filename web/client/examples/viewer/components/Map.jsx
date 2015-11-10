@@ -16,6 +16,8 @@ var LLayer = require('../../../components/map/' + mapType + '/Layer');
 var ScaleBar = require('../../../components/map/' + mapType + '/ScaleBar');
 var MeasurementSupport = require('../../../components/map/' + mapType + '/MeasurementSupport');
 var Overview = require('../../../components/map/' + mapType + '/Overview');
+var Locate = require('../../../components/map/' + mapType + '/Locate');
+
 
 var assign = require('object-assign');
 var ConfigUtils = require('../../../utils/ConfigUtils');
@@ -31,7 +33,8 @@ var VMap = React.createClass({
         onLayerLoad: React.PropTypes.func,
         changeMeasurementState: React.PropTypes.func,
         measurement: React.PropTypes.object,
-        messages: React.PropTypes.object
+        locate: React.PropTypes.object,
+        locateMessages: React.PropTypes.object
     },
     renderLayers(layers) {
         if (layers) {
@@ -72,6 +75,7 @@ var VMap = React.createClass({
                             toggleDisplay: true
                     }}// If not passed overview will use osm as default layer
                     layers={[{type: "osm"}]}/>
+                <Locate status={this.props.locate.enabled} messages={ this.props.locateMessages }/>
             </LMap>
         );
     }

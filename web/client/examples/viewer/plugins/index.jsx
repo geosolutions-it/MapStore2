@@ -22,6 +22,9 @@ var mousePosition = require('../../../reducers/mousePosition');
 var measurement = require('../../../reducers/measurement');
 var {searchResults} = require('../../../reducers/search');
 
+var LocateBtn = require("../../../components/mapcontrols/Locate/LocateBtn");
+var locate = require('../../../reducers/locate');
+var {changeLocateState} = require('../../../actions/locate');
 // search SearchBar
 var SearchBar = require("../../../components/Search/SearchBar");
 var NominatimResultList = require("../../../components/Search/geocoding/NominatimResultList");
@@ -79,6 +82,10 @@ module.exports = {
                 onActivateItem={props.activatePanel}
                 key="mapToolbar"
                 >
+                 <LocateBtn
+                        pressed={props.locate.enabled}
+                        onClick={props.changeLocateState}
+                        tooltip={<Message msgId="locate.tooltip"/>}/>
                 <ToggleButton
                     key="infoButton"
                     isButton={true}
@@ -194,7 +201,7 @@ module.exports = {
             <GlobalSpinner key="globalSpinner"/>
         ];
     },
-    reducers: {mapInfo, floatingPanel, mousePosition, measurement, searchResults},
+    reducers: {mapInfo, floatingPanel, mousePosition, measurement, searchResults, locate},
     actions: {
         getFeatureInfo,
         textSearch,
@@ -206,6 +213,7 @@ module.exports = {
         changeMousePositionState,
         changeMousePositionCrs,
         changeMousePosition,
+        changeLocateState,
         changeZoomLevel,
         layerLoading,
         layerLoad,
