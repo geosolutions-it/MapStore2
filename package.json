@@ -56,6 +56,7 @@
     "leaflet-draw": "^0.2.3",
     "leaflet-minimap": "^3.0.0",
     "leaflet-plugins": "https://github.com/Polyconseil/leaflet-plugins/tarball/master",
+    "leaflet.locatecontrol": "^0.45.1",
     "lodash": "^3.10.1",
     "node-uuid": "^1.4.3",
     "object-assign": "^3.0.0",
