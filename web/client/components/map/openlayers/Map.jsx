@@ -28,7 +28,8 @@ var OpenlayersMap = React.createClass({
         onLayerLoad: React.PropTypes.func,
         resize: React.PropTypes.number,
         measurement: React.PropTypes.object,
-        changeMeasurementState: React.PropTypes.func
+        changeMeasurementState: React.PropTypes.func,
+        registerHooks: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -40,7 +41,8 @@ var OpenlayersMap = React.createClass({
           projection: 'EPSG:3857',
           onLayerLoading: () => {},
           onLayerLoad: () => {},
-          resize: 0
+          resize: 0,
+          registerHooks: true
         };
     },
     getInitialState() {
@@ -121,6 +123,10 @@ var OpenlayersMap = React.createClass({
         this.setMousePointer(this.props.mousePointer);
         // NOTE: this re-call render function after div creation to have the map initialized.
         this.forceUpdate();
+
+        if (this.props.registerHooks) {
+            this.registerHooks();
+        }
     },
     componentWillReceiveProps(newProps) {
         if (newProps.mousePointer !== this.props.mousePointer) {
@@ -180,6 +186,8 @@ var OpenlayersMap = React.createClass({
             const mapDiv = this.map.getViewport();
             mapDiv.style.cursor = pointer || 'auto';
         }
+    },
+    registerHooks() {
     }
 });
 // add overrides for css

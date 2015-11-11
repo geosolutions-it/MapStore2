@@ -14,6 +14,18 @@ const GOOGLE_MERCATOR = {
     ZOOM_FACTOR: 2
 };
 
+const ZOOM_TO_EXTEND_HOOK = 'ZOOM_TO_EXTEND_HOOK';
+
+var hooks = {};
+
+function registerHook(name, hook) {
+    hooks[name] = hook;
+}
+
+function getHook(name) {
+    return hooks[name];
+}
+
 /**
  * @param dpi {number} dot per inch resolution
  * @return {number} dot per meter resolution
@@ -85,17 +97,7 @@ function getGoogleMercatorScales(minZoom, maxZoom, dpi) {
     );
 }
 
-/**
- * Calculates the best fitting zoom level for the given extent.
- *
- * @param extent {Array} [minx, miny, maxx, maxy]
- * @param mapSize {Object} current size of the map.
- * @param minZoom {number} min zoom level.
- * @param maxZoom {number} max zoom level.
- * @param dpi {number} screen resolution in dot per inch.
- * @return {Number} the zoom level fitting th extent
- */
-function getZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
+function defaulGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
 
     var dpm = dpi2dpm((dpi || DEFAULT_SCREEN_DPI));
 
@@ -107,7 +109,7 @@ function getZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
     var extentResolution = Math.max(xResolution, yResolution);
 
     var scales = getGoogleMercatorScales(
-        minZoom, maxZoom, (dpi || DEFAULT_SCREEN_DPI));
+    minZoom, maxZoom, (dpi || DEFAULT_SCREEN_DPI));
     var diff;
     var minDiff = Number.POSITIVE_INFINITY;
     var i;
@@ -125,6 +127,23 @@ function getZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
         minDiff = diff;
     }
     return Math.max(0, i - 1);
+}
+
+/**
+ * Calculates the best fitting zoom level for the given extent.
+ *
+ * @param extent {Array} [minx, miny, maxx, maxy]
+ * @param mapSize {Object} current size of the map.
+ * @param minZoom {number} min zoom level.
+ * @param maxZoom {number} max zoom level.
+ * @param dpi {number} screen resolution in dot per inch.
+ * @return {Number} the zoom level fitting th extent
+ */
+function getZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
+    if (getHook("ZOOM_TO_EXTEND_HOOK")) {
+        return getHook("ZOOM_TO_EXTEND_HOOK")(extent, mapSize, minZoom, maxZoom, dpi);
+    }
+    return defaulGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi);
 }
 
 /**
@@ -150,6 +169,8 @@ function getCenterForExtent(extent, projection) {
 }
 
 module.exports = {
+    ZOOM_TO_EXTEND_HOOK,
+    registerHook,
     dpi2dpm,
     getSphericalMercatorScales,
     getSphericalMercatorScale,
