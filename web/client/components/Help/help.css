@@ -1,0 +1,34 @@
+.mapstore-tb-helpbadge {
+    display: block;
+    position: absolute;
+    z-index: 1000;
+}
+
+.mapstore-tb-warpperdiv {
+    margin-top: -1px;
+    margin-bottom: -1px;
+}
+
+#helpbadge-zoomToMaxExtent {
+    display: inline;
+    position: absolute;
+    left: 34px;
+    top: 72px;
+    z-index: 100000
+}
+
+#helpbadge-scaleBox {
+    display: inline;
+    position: absolute;
+    left: 116px;
+    bottom: 48px;
+    z-index: 100000
+}
+
+#helpbadge-seachBar {
+    display: inline;
+    position: absolute;
+    left: 46px;
+    top: 10px;
+    z-index: 100000
+}

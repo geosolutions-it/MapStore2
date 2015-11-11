@@ -21,6 +21,7 @@ var floatingPanel = require('../reducers/floatingPanel');
 var mousePosition = require('../../../reducers/mousePosition');
 var measurement = require('../../../reducers/measurement');
 var {searchResults} = require('../../../reducers/search');
+var help = require('../../../reducers/help');
 
 var LocateBtn = require("../../../components/mapcontrols/Locate/LocateBtn");
 var locate = require('../../../reducers/locate');
@@ -38,6 +39,11 @@ var {changeMapView, changeZoomLevel} = require('../../../actions/map');
 var {textSearch, resultsPurge} = require("../../../actions/search");
 
 var {changeMeasurementState} = require('../../../actions/measurement');
+
+var {changeHelpState, changeHelpText, changeHelpwinVisibility} = require('../../../actions/help');
+var HelpWrapper = require('../../../components/Help/HelpWrapper');
+var HelpTextPanel = require('../../../components/Help/HelpTextPanel');
+var HelpToggleBtn = require('../../../components/Help/HelpToggleBtn');
 
 var React = require('react');
 
@@ -75,14 +81,25 @@ module.exports = {
                         right: "0px",
                         margin: "8px"
                     }} key="about"/>,
-                <SearchBar onSearch={props.textSearch} onSearchReset={props.resultsPurge}/>,
-                <NominatimResultList results={props.searchResults} onItemClick={(props.changeMapView)} afterItemClick={props.resultsPurge} mapConfig={props.map}/>,
+            <HelpWrapper
+                helpText={<Message msgId="helptexts.searchBar"/>}
+                helpEnabled={props.help.enabled}
+                changeHelpText={props.changeHelpText}
+                changeHelpwinVisibility={props.changeHelpwinVisibility}
+                >
+                <SearchBar key="seachBar" onSearch={props.textSearch} onSearchReset={props.resultsPurge}/>
+            </HelpWrapper>,
+            <NominatimResultList results={props.searchResults} onItemClick={(props.changeMapView)} afterItemClick={props.resultsPurge} mapConfig={props.map}/>,
             <MapToolBar
                 activeKey={props.floatingPanel.activeKey}
                 onActivateItem={props.activatePanel}
                 key="mapToolbar"
+                helpEnabled={props.help.enabled}
+                changeHelpText={props.changeHelpText}
+                changeHelpwinVisibility={props.changeHelpwinVisibility}
                 >
                  <LocateBtn
+                     helpText={<Message msgId="helptexts.locateBtn"/>}
                         pressed={props.locate.enabled}
                         onClick={props.changeLocateState}
                         tooltip={<Message msgId="locate.tooltip"/>}/>
@@ -91,12 +108,14 @@ module.exports = {
                     isButton={true}
                     pressed={props.mapInfo.enabled}
                     glyphicon="info-sign"
+                    helpText={<Message msgId="helptexts.infoButton"/>}
                     onClick={props.changeMapInfoState}/>
                 <LayerTree
                     key="layerSwitcher"
                     isPanel={true}
                     buttonTooltip={<Message msgId="layers"/>}
                     title={<Message msgId="layers"/>}
+                    helpText={<Message msgId="helptexts.layerSwitcher"/>}
                     groups={props.layers.groups}
                     propertiesChangeHandler={props.changeLayerProperties}
                     onToggleGroup={(group, status) => props.toggleNode(group, 'groups', status)}
@@ -108,6 +127,7 @@ module.exports = {
                     isPanel={true}
                     layers={props.layers.flat.filter((layer) => layer.group === "background")}
                     title={<div><Message msgId="background"/></div>}
+                    helpText={<Message msgId="helptexts.backgroundSwitcher"/>}
                     buttonTooltip={<Message msgId="backgroundSwither.tooltip"/>}
                     propertiesChangeHandler={props.changeLayerProperties}/>
                 <MeasureComponent
@@ -115,6 +135,7 @@ module.exports = {
                     isPanel={true}
                     title={<div><Message msgId="measureComponent.title"/></div>}
                     buttonTooltip={<Message msgId="measureComponent.tooltip"/>}
+                    helpText={<Message msgId="helptexts.measureComponent"/>}
                     lengthButtonText={<Message msgId="measureComponent.lengthButtonText"/>}
                     areaButtonText={<Message msgId="measureComponent.areaButtonText"/>}
                     resetButtonText={<Message msgId="measureComponent.resetButtonText"/>}
@@ -130,7 +151,8 @@ module.exports = {
                 <Settings
                     key="settingsPanel"
                     isPanel={true}
-                    buttonTooltip={<Message msgId="settings" />}>
+                    buttonTooltip={<Message msgId="settings" />}
+                    helpText={<Message msgId="helptexts.settingsPanel"/>}>
                     <h5><Message msgId="language" /></h5>
                     <LangBar key="langSelector"
                     currentLocale={props.locale}
@@ -168,6 +190,10 @@ module.exports = {
                             disabled: (props.mapHistory.future.length > 0) ? false : true
                     }}/>
                 </Settings>
+                <HelpToggleBtn
+                    pressed={props.help.enabled}
+                    changeHelpState={props.changeHelpState}
+                    changeHelpwinVisibility={props.changeHelpwinVisibility}/>
             </MapToolBar>,
             <GetFeatureInfo
                 key="getFeatureInfo"
@@ -188,20 +214,39 @@ module.exports = {
                 enabled={props.mousePositionEnabled}
                 mousePosition={props.mousePosition}
                 crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.map.projection}/>,
-            <ScaleBox
-                key="scaleBox"
-                onChange={props.changeZoomLevel}
-                currentZoomLvl={props.map.zoom} />,
-            <ZoomToMaxExtentButton
-                key="zoomToMaxExtent"
-                mapConfig={props.map}
-                actions={{
-                    changeMapView: props.changeMapView
-                }} />,
-            <GlobalSpinner key="globalSpinner"/>
+            <HelpWrapper
+                helpText={<Message msgId="helptexts.scaleBox"/>}
+                helpEnabled={props.help.enabled}
+                changeHelpText={props.changeHelpText}
+                changeHelpwinVisibility={props.changeHelpwinVisibility}
+                >
+                <ScaleBox
+                    key="scaleBox"
+                    onChange={props.changeZoomLevel}
+                    currentZoomLvl={props.map.zoom} />
+            </HelpWrapper>,
+            <HelpWrapper
+                helpText={<Message msgId="helptexts.zoomToMaxExtentButton"/>}
+                helpEnabled={props.help.enabled}
+                changeHelpText={props.changeHelpText}
+                changeHelpwinVisibility={props.changeHelpwinVisibility}
+                >
+                <ZoomToMaxExtentButton
+                    key="zoomToMaxExtent"
+                    mapConfig={props.map}
+                    actions={{
+                        changeMapView: props.changeMapView
+                    }}
+                />
+            </HelpWrapper>,
+            <GlobalSpinner key="globalSpinner"/>,
+            <HelpTextPanel
+                key="helpTextPanel"
+                isVisible={props.help.helpwinViz}
+                helpText={props.help.helpText}/>
         ];
     },
-    reducers: {mapInfo, floatingPanel, mousePosition, measurement, searchResults, locate},
+    reducers: {mapInfo, floatingPanel, mousePosition, measurement, searchResults, locate, help},
     actions: {
         getFeatureInfo,
         textSearch,
@@ -223,6 +268,9 @@ module.exports = {
         undo,
         redo,
         changeMapInfoFormat,
-        changeMeasurementState
+        changeMeasurementState,
+        changeHelpState,
+        changeHelpText,
+        changeHelpwinVisibility
     }
 };

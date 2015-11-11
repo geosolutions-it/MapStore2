@@ -184,6 +184,18 @@
         "feetUnit": "feet",
         "popup": "You are within {distance} {unit} from this point",
         "outsideMapBoundsMsg": "You seem located outside the boundaries of the map"
+    },
+        "helptexts": {
+            "scaleBox": "This is the helptext for the ScaleBox",
+            "zoomToMaxExtentButton": "This is the helptext for the ZoomToMaxExtentButton",
+            "searchBar": "This is the helptext for the SearchBar",
+            "layerSwitcher": "This is the helptext for the LayerSwitcher",
+            "settingsPanel": "This is the helptext for the SettingsPanel",
+            "measureComponent": "This is the helptext for the MeasureComponent",
+            "backgroundSwitcher": "This is the helptext for the BackgroundSwitcher",
+            "layerSwitcher": "This is the helptext for the LayerSwitcher",
+            "infoButton": "This is the helptext for the InfoButton",
+            "locateBtn": "This is the helptext for the LocateBtn"
         }
     }
 }

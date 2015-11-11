@@ -184,7 +184,18 @@
         "feetUnit": "piedi",
         "popup": "Sei nel raggio di {distance} {unit} da questo punto",
         "outsideMapBoundsMsg": "Sembri al di fuori dei confini della mappa"
-
+    },
+        "helptexts": {
+            "scaleBox": "Questo è il testo di aiuto per ScaleBox",
+            "zoomToMaxExtentButton": "Questo è il testo di aiuto per ZoomToMaxExtentButton",
+            "searchBar": "Questo è il testo di aiuto per SearchBar",
+            "layerSwitcher": "Questo è il testo di aiuto per LayerSwitcher",
+            "settingsPanel": "Questo è il testo di aiuto per SettingsPanel",
+            "measureComponent": "Questo è il testo di aiuto per MeasureComponent",
+            "backgroundSwitcher": "Questo è il testo di aiuto per BackgroundSwitcher",
+            "layerSwitcher": "Questo è il testo di aiuto per LayerSwitcher",
+            "infoButton": "Questo è il testo di aiuto per InfoButton",
+            "locateBtn": "Questo è il testo di aiuto per LocateBtn"
         }
     }
 }

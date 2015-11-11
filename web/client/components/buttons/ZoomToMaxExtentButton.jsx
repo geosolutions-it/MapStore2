@@ -35,9 +35,12 @@ var ZoomToMaxExtentButton = React.createClass({
         btnSize: React.PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
         mapConfig: React.PropTypes.object,
         actions: React.PropTypes.shape({
-            changeMapView: React.PropTypes.func
+            changeMapView: React.PropTypes.func,
+            changeHelpText: React.PropTypes.func
         }),
-        btnType: React.PropTypes.oneOf(['normal', 'image'])
+        btnType: React.PropTypes.oneOf(['normal', 'image']),
+        helpEnabled: React.PropTypes.bool,
+        helpText: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -63,8 +66,12 @@ var ZoomToMaxExtentButton = React.createClass({
                 </Button>
             );
         }
-        return (<ImageButton id={this.props.id} image={this.props.image}
-            onClick={() => this.zoomToMaxExtent()} style={this.props.style}/>);
+        return (
+            <ImageButton
+                id={this.props.id}
+                image={this.props.image}
+                onClick={() => this.zoomToMaxExtent()} />
+        );
     },
     zoomToMaxExtent() {
         var mapConfig = this.props.mapConfig;

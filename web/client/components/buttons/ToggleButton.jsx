@@ -18,13 +18,15 @@ var ToggleButton = React.createClass({
         pressed: React.PropTypes.bool,
         onClick: React.PropTypes.func,
         tooltip: React.PropTypes.element,
-        tooltipPlace: React.PropTypes.string
+        tooltipPlace: React.PropTypes.string,
+        style: React.PropTypes.object
     },
     getDefaultProps() {
         return {
             onClick: () => {},
             pressed: false,
-            tooltipPlace: "top"
+            tooltipPlace: "top",
+            style: {width: "100%"}
         };
     },
     onClick() {
@@ -32,7 +34,7 @@ var ToggleButton = React.createClass({
     },
     renderButton() {
         return (
-            <Button id={this.props.id} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.props.pressed ? 'primary' : 'default'}>
+            <Button id={this.props.id} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.props.pressed ? 'primary' : 'default'} style={this.props.style}>
                 {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
                 {this.props.glyphicon && this.props.text ? "\u00A0" : null}
                 {this.props.text}
