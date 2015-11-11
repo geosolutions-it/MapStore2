@@ -1,13 +1,12 @@
-.mapstore-tb-helpbadge {
+.mapToolbar .mapstore-tb-helpbadge {
     display: block;
+    background-color: #777;
     position: absolute;
     z-index: 1000;
+    top : -10px;
+    left: -10px;
 }
 
-.mapstore-tb-warpperdiv {
-    margin-top: -1px;
-    margin-bottom: -1px;
-}
 
 #helpbadge-zoomToMaxExtent {
     display: inline;
