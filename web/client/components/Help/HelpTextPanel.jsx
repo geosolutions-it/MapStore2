@@ -35,6 +35,7 @@ var HelpTextPanel = React.createClass({
     render() {
         return (
             <div
+                id={this.props.id}
                 className={this.props.isVisible ? '' : 'hidden'}
                 style={{position: "absolute", top: "140px", "margin-left": "8px"}}>
                 <Panel
