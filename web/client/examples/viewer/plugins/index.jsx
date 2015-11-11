@@ -43,6 +43,7 @@ var {changeMeasurementState} = require('../../../actions/measurement');
 var {changeHelpState, changeHelpText, changeHelpwinVisibility} = require('../../../actions/help');
 var HelpWrapper = require('../../../components/Help/HelpWrapper');
 var HelpTextPanel = require('../../../components/Help/HelpTextPanel');
+var HelpBadge = require('../../../components/Help/HelpBadge');
 var HelpToggleBtn = require('../../../components/Help/HelpToggleBtn');
 
 var React = require('react');
@@ -99,11 +100,24 @@ module.exports = {
                 changeHelpwinVisibility={props.changeHelpwinVisibility}
                 >
                  <LocateBtn
-                     helpText={<Message msgId="helptexts.locateBtn"/>}
+                         text={<HelpBadge
+                         className="mapstore-tb-helpbadge"
+                         helpText={<Message msgId="helptexts.locateBtn"/>}
+                         isVisible={props.help.enabled}
+                         changeHelpText={props.changeHelpText}
+                         changeHelpwinVisibility={props.changeHelpwinVisibility}
+                         />}
                         pressed={props.locate.enabled}
                         onClick={props.changeLocateState}
                         tooltip={<Message msgId="locate.tooltip"/>}/>
                 <ToggleButton
+                    text={<HelpBadge
+                        className="mapstore-tb-helpbadge"
+                        helpText={<Message msgId="helptexts.infoButton"/>}
+                        isVisible={props.help.enabled}
+                        changeHelpText={props.changeHelpText}
+                        changeHelpwinVisibility={props.changeHelpwinVisibility}
+                        />}
                     key="infoButton"
                     isButton={true}
                     pressed={props.mapInfo.enabled}

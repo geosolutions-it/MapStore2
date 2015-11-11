@@ -13,6 +13,7 @@ var LocateBtn = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         btnConfig: React.PropTypes.object,
+        text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         pressed: React.PropTypes.bool,
         onClick: React.PropTypes.func,
         tooltip: React.PropTypes.element,
@@ -34,7 +35,7 @@ var LocateBtn = React.createClass({
     renderButton() {
         return (
             <Button id={this.props.id} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.props.pressed ? 'primary' : 'default'} style={this.props.style}>
-                <Glyphicon glyph="map-marker"/>
+                <Glyphicon glyph="map-marker"/>{this.props.text}
             </Button>
         );
     },

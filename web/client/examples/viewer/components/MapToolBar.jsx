@@ -74,10 +74,9 @@ let MapToolBar = React.createClass({
 
         }, this);
         var buttons = React.Children.map(this.props.children, (item) => {
-            let returnObject;
             if (item.props.isPanel) {
                 let tooltip = <Tooltip id="toolbar-map-layers-button">{item.props.buttonTooltip}</Tooltip>;
-                let panelButton = (
+                return (
                     <OverlayTrigger key={"mapToolBar-item-OT-" + item.key} rootClose placement="left" overlay={tooltip}>
                         <Button
                             active={this.props.activeKey === item.key}
@@ -89,19 +88,13 @@ let MapToolBar = React.createClass({
                                     isVisible={this.props.helpEnabled}
                                     changeHelpText={this.props.changeHelpText}
                                     changeHelpwinVisibility={this.props.changeHelpwinVisibility}
-                                    />) : ""}
+                                    />) : null}
                                 {item.props.buttonContent || item.props.icon}
                         </Button>
                     </OverlayTrigger>
                 );
-                returnObject = panelButton;
-
-            } else {
-                returnObject = item;
             }
-
-            // no help text provided
-            return returnObject;
+            return item;
 
         }, this);
         return (<div style={this.props.containerStyle}>
