@@ -11,6 +11,8 @@ var {Collapse, Panel, Button, ButtonGroup, Tooltip, OverlayTrigger} = require('r
 
 var assign = require('object-assign');
 
+var HelpBadge = require('../../../components/Help/HelpBadge');
+
 /**
  * This toolbar renders as an accordion for big screens, as a
  * toolbar with small screens, rendering the content as a modal
@@ -23,7 +25,10 @@ let MapToolBar = React.createClass({
         containerStyle: React.PropTypes.object,
         propertiesChangeHandler: React.PropTypes.func,
         onActivateItem: React.PropTypes.func,
-        activeKey: React.PropTypes.string
+        activeKey: React.PropTypes.string,
+        helpEnabled: React.PropTypes.bool,
+        changeHelpText: React.PropTypes.func,
+        changeHelpwinVisibility: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -69,6 +74,7 @@ let MapToolBar = React.createClass({
 
         }, this);
         var buttons = React.Children.map(this.props.children, (item) => {
+            let returnObject;
             if (item.props.isPanel) {
                 let tooltip = <Tooltip id="toolbar-map-layers-button">{item.props.buttonTooltip}</Tooltip>;
                 let panelButton = (
@@ -81,9 +87,28 @@ let MapToolBar = React.createClass({
                         </Button>
                     </OverlayTrigger>
                 );
-                return panelButton;
+                returnObject = panelButton;
+
+            } else {
+                returnObject = item;
             }
-            return item;
+
+            // if we have a help text provided we add a HelpBadge
+            if (item.props.helpText && item.props.helpText !== '') {
+                return (
+                    <div className="mapstore-tb-warpperdiv">
+                        <HelpBadge
+                            className="mapstore-tb-helpbadge"
+                            helpText={item.props.helpText}
+                            isVisible={this.props.helpEnabled}
+                            changeHelpText={this.props.changeHelpText}
+                            changeHelpwinVisibility={this.props.changeHelpwinVisibility}
+                            />
+                        {returnObject}
+                    </div>);
+            }
+            // no help text provided
+            return returnObject;
 
         }, this);
         return (<div style={this.props.containerStyle}>

@@ -94,8 +94,12 @@ module.exports = {
                 activeKey={props.floatingPanel.activeKey}
                 onActivateItem={props.activatePanel}
                 key="mapToolbar"
+                helpEnabled={props.help.enabled}
+                changeHelpText={props.changeHelpText}
+                changeHelpwinVisibility={props.changeHelpwinVisibility}
                 >
                  <LocateBtn
+                     helpText={<Message msgId="helptexts.locateBtn"/>}
                         pressed={props.locate.enabled}
                         onClick={props.changeLocateState}
                         tooltip={<Message msgId="locate.tooltip"/>}/>
@@ -104,12 +108,14 @@ module.exports = {
                     isButton={true}
                     pressed={props.mapInfo.enabled}
                     glyphicon="info-sign"
+                    helpText={<Message msgId="helptexts.infoButton"/>}
                     onClick={props.changeMapInfoState}/>
                 <LayerTree
                     key="layerSwitcher"
                     isPanel={true}
                     buttonTooltip={<Message msgId="layers"/>}
                     title={<Message msgId="layers"/>}
+                    helpText={<Message msgId="helptexts.layerSwitcher"/>}
                     groups={props.layers.groups}
                     propertiesChangeHandler={props.changeLayerProperties}
                     onToggleGroup={(group, status) => props.toggleNode(group, 'groups', status)}
@@ -121,6 +127,7 @@ module.exports = {
                     isPanel={true}
                     layers={props.layers.flat.filter((layer) => layer.group === "background")}
                     title={<div><Message msgId="background"/></div>}
+                    helpText={<Message msgId="helptexts.backgroundSwitcher"/>}
                     buttonTooltip={<Message msgId="backgroundSwither.tooltip"/>}
                     propertiesChangeHandler={props.changeLayerProperties}/>
                 <MeasureComponent
@@ -128,6 +135,7 @@ module.exports = {
                     isPanel={true}
                     title={<div><Message msgId="measureComponent.title"/></div>}
                     buttonTooltip={<Message msgId="measureComponent.tooltip"/>}
+                    helpText={<Message msgId="helptexts.measureComponent"/>}
                     lengthButtonText={<Message msgId="measureComponent.lengthButtonText"/>}
                     areaButtonText={<Message msgId="measureComponent.areaButtonText"/>}
                     resetButtonText={<Message msgId="measureComponent.resetButtonText"/>}
@@ -143,7 +151,8 @@ module.exports = {
                 <Settings
                     key="settingsPanel"
                     isPanel={true}
-                    buttonTooltip={<Message msgId="settings" />}>
+                    buttonTooltip={<Message msgId="settings" />}
+                    helpText={<Message msgId="helptexts.settingsPanel"/>}>
                     <h5><Message msgId="language" /></h5>
                     <LangBar key="langSelector"
                     currentLocale={props.locale}
