@@ -13,7 +13,14 @@ var CoordinatesUtils = {
         const sourceProj = new Proj4js.Proj(source);
         const destProj = new Proj4js.Proj(dest);
 
-        return assign({}, Proj4js.transform(sourceProj, destProj, Proj4js.toPoint(point)), {srs: dest});
+        return CoordinatesUtils.normalizePoint(assign({}, Proj4js.transform(sourceProj, destProj, Proj4js.toPoint(point)), {srs: dest}));
+    },
+    normalizePoint: function(point) {
+        return {
+            x: point.x || 0.0,
+            y: point.y || 0.0,
+            srs: point.srs || 'EPSG:4326'
+        };
     },
     /**
      * Reprojects a bounding box.
