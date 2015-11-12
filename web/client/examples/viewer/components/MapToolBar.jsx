@@ -74,46 +74,32 @@ let MapToolBar = React.createClass({
 
         }, this);
         var buttons = React.Children.map(this.props.children, (item) => {
-            let returnObject;
             if (item.props.isPanel) {
                 let tooltip = <Tooltip id="toolbar-map-layers-button">{item.props.buttonTooltip}</Tooltip>;
-                let panelButton = (
+                return (
                     <OverlayTrigger key={"mapToolBar-item-OT-" + item.key} rootClose placement="left" overlay={tooltip}>
                         <Button
                             active={this.props.activeKey === item.key}
                             style={{width: "100%"}}
                             onClick={ () => this.handleSelect(item.key)}>
+                                {item.props.helpText ? (<HelpBadge
+                                    className="mapstore-tb-helpbadge"
+                                    helpText={item.props.helpText}
+                                    isVisible={this.props.helpEnabled}
+                                    changeHelpText={this.props.changeHelpText}
+                                    changeHelpwinVisibility={this.props.changeHelpwinVisibility}
+                                    />) : null}
                                 {item.props.buttonContent || item.props.icon}
                         </Button>
                     </OverlayTrigger>
                 );
-                returnObject = panelButton;
-
-            } else {
-                returnObject = item;
             }
-
-            // if we have a help text provided we add a HelpBadge
-            if (item.props.helpText && item.props.helpText !== '') {
-                return (
-                    <div className="mapstore-tb-warpperdiv">
-                        <HelpBadge
-                            className="mapstore-tb-helpbadge"
-                            helpText={item.props.helpText}
-                            isVisible={this.props.helpEnabled}
-                            changeHelpText={this.props.changeHelpText}
-                            changeHelpwinVisibility={this.props.changeHelpwinVisibility}
-                            />
-                        {returnObject}
-                    </div>);
-            }
-            // no help text provided
-            return returnObject;
+            return item;
 
         }, this);
         return (<div style={this.props.containerStyle}>
             {children}
-            <ButtonGroup vertical>
+            <ButtonGroup vertical className="mapToolbar">
                 {buttons}
             </ButtonGroup>
             </div>);
