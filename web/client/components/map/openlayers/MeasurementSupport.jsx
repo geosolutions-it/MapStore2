@@ -9,8 +9,7 @@
 const React = require('react');
 var ol = require('openlayers');
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
-
-require('leaflet-draw');
+var wgs84Sphere = new ol.Sphere(6378137);
 
 const MeasurementSupport = React.createClass({
     propTypes: {
@@ -139,11 +138,31 @@ const MeasurementSupport = React.createClass({
             areaMeasureEnabled: this.props.measurement.areaMeasureEnabled,
             bearingMeasureEnabled: this.props.measurement.bearingMeasureEnabled,
             geomType: this.props.measurement.geomType,
-            len: this.props.measurement.geomType === 'LineString' ? this.sketchFeature.getGeometry().getLength() : 0,
-            area: this.props.measurement.geomType === 'Polygon' ? this.sketchFeature.getGeometry().getArea() : 0,
+            len: this.props.measurement.geomType === 'LineString' ?
+                this.calculateGeodesicDistance(sketchCoords) : 0,
+            area: this.props.measurement.geomType === 'Polygon' ?
+                this.calculateGeodesicArea(this.sketchFeature.getGeometry().getLinearRing(0).getCoordinates()) : 0,
             bearing: this.props.measurement.geomType === 'Bearing' ? bearing : 0
         };
         this.props.changeMeasurementState(newMeasureState);
+    },
+    reprojectedCoordinates: function(coordinates) {
+        return coordinates.map((coordinate) => {
+            let reprojectedCoordinate = CoordinatesUtils.reproject(coordinate, this.props.projection, 'EPSG:4326');
+            return [reprojectedCoordinate.x, reprojectedCoordinate.y];
+        });
+    },
+    calculateGeodesicDistance: function(coordinates) {
+        let reprojectedCoordinates = this.reprojectedCoordinates(coordinates);
+        let length = 0;
+        for (let i = 0; i < reprojectedCoordinates.length - 1; ++i) {
+            length += wgs84Sphere.haversineDistance(reprojectedCoordinates[i], reprojectedCoordinates[i + 1]);
+        }
+        return length;
+    },
+    calculateGeodesicArea: function(coordinates) {
+        let reprojectedCoordinates = this.reprojectedCoordinates(coordinates);
+        return Math.abs(wgs84Sphere.geodesicArea(reprojectedCoordinates));
     }
 });
 
