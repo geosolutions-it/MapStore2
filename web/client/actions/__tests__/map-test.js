@@ -12,10 +12,12 @@ var {
     CLICK_ON_MAP,
     CHANGE_MOUSE_POINTER,
     CHANGE_ZOOM_LVL,
+    CHANGE_MAP_CRS,
     changeMapView,
     clickOnMap,
     changeMousePointer,
-    changeZoomLevel
+    changeZoomLevel,
+    changeMapCrs
 } = require('../map');
 
 describe('Test correctness of the map actions', () => {
@@ -60,5 +62,14 @@ describe('Test correctness of the map actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGE_ZOOM_LVL);
         expect(retval.zoom).toBe(testVal);
+    });
+
+    it('changes map crs', () => {
+        const testVal = 'EPSG:4326';
+        const retval = changeMapCrs(testVal);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_MAP_CRS);
+        expect(retval.crs).toBe(testVal);
     });
 });

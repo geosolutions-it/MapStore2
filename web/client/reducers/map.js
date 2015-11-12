@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER, CHANGE_ZOOM_LVL} = require('../actions/map');
+var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER, CHANGE_ZOOM_LVL, CHANGE_MAP_CRS} = require('../actions/map');
 
 var assign = require('object-assign');
 
@@ -28,6 +28,10 @@ function mapConfig(state = null, action) {
             return assign({}, state, {
                 zoom: action.zoom,
                 mapStateSource: action.mapStateSource
+            });
+        case CHANGE_MAP_CRS:
+            return assign({}, state, {
+                projection: action.crs
             });
         default:
             return state;
