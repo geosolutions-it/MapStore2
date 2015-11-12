@@ -63,17 +63,12 @@ var OpenlayersMap = React.createClass({
               collapsible: false
             })
         });
-        var viewOptions = assign({}, {
-            projection: this.props.projection,
-            center: [center.x, center.y],
-            zoom: this.props.zoom
-        }, this.props.mapOptions.view || {});
         var map = new ol.Map({
           layers: [],
           controls: controls,
           interactions: interactions,
           target: this.props.id,
-          view: new ol.View(viewOptions)
+          view: this.createView(center, this.props.zoom, this.props.projection, this.props.mapOptions && this.props.mapOptions.view)
         });
         map.on('moveend', () => {
             let view = map.getView();
@@ -83,7 +78,7 @@ var OpenlayersMap = React.createClass({
                 width: map.getSize()[0],
                 height: map.getSize()[1]
             };
-            this.props.onMapViewChanges({x: c[0], y: c[1], crs: 'EPSG:4326'}, view.getZoom(), {
+            this.props.onMapViewChanges({x: c[0] || 0.0, y: c[1] || 0.0, crs: 'EPSG:4326'}, view.getZoom(), {
                 bounds: {
                     minx: bbox[0],
                     miny: bbox[1],
@@ -142,6 +137,15 @@ var OpenlayersMap = React.createClass({
             setTimeout(() => {
                 this.map.updateSize();
             }, 0);
+        }
+
+        if (this.map && this.props.projection !== newProps.projection) {
+            const center = CoordinatesUtils.reproject([
+                this.props.center.x,
+                this.props.center.y
+            ], 'EPSG:4326', newProps.projection);
+            this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view));
+            this.map.render();
         }
     },
     componentWillUnmount() {
@@ -221,6 +225,14 @@ var OpenlayersMap = React.createClass({
                 {children}
             </div>
         );
+    },
+    createView(center, zoom, projection, options) {
+        const viewOptions = assign({}, {
+            projection: projection,
+            center: [center.x, center.y],
+            zoom: zoom
+        }, options || {});
+        return new ol.View(viewOptions);
     },
     _updateMapPositionFromNewProps(newProps) {
         var view = this.map.getView();

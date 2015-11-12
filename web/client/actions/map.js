@@ -10,6 +10,7 @@ const CHANGE_MAP_VIEW = 'CHANGE_MAP_VIEW';
 const CLICK_ON_MAP = 'CLICK_ON_MAP';
 const CHANGE_MOUSE_POINTER = 'CHANGE_MOUSE_POINTER';
 const CHANGE_ZOOM_LVL = 'CHANGE_ZOOM_LVL';
+const CHANGE_MAP_CRS = 'CHANGE_MAP_CRS';
 
 
 function changeMapView(center, zoom, bbox, size, mapStateSource) {
@@ -22,6 +23,14 @@ function changeMapView(center, zoom, bbox, size, mapStateSource) {
         mapStateSource: mapStateSource
     };
 }
+
+function changeMapCrs(crs) {
+    return {
+        type: CHANGE_MAP_CRS,
+        crs: crs
+    };
+}
+
 
 function clickOnMap(point) {
     return {
@@ -50,8 +59,10 @@ module.exports = {
     CLICK_ON_MAP,
     CHANGE_MOUSE_POINTER,
     CHANGE_ZOOM_LVL,
+    CHANGE_MAP_CRS,
     changeMapView,
     clickOnMap,
     changeMousePointer,
-    changeZoomLevel
+    changeZoomLevel,
+    changeMapCrs
 };

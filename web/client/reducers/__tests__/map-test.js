@@ -57,10 +57,24 @@ describe('Test the map reducer', () => {
         };
 
         var state = mapConfig({}, action);
-        expect(state.zoom).toBe(action.zoom);
+        expect(state.zoom).toBe(9);
 
         state = mapConfig({prop: 'prop'}, action);
         expect(state.prop).toBe('prop');
-        expect(state.zoom).toBe(action.zoom);
+        expect(state.zoom).toBe(9);
+    });
+
+    it('sets a new crs', () => {
+        const action = {
+            type: 'CHANGE_MAP_CRS',
+            crs: 'EPSG:4326'
+        };
+
+        var state = mapConfig({}, action);
+        expect(state.projection).toBe('EPSG:4326');
+
+        state = mapConfig({prop: 'prop'}, action);
+        expect(state.prop).toBe('prop');
+        expect(state.projection).toBe('EPSG:4326');
     });
 });
