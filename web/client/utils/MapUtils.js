@@ -14,7 +14,8 @@ const GOOGLE_MERCATOR = {
     ZOOM_FACTOR: 2
 };
 
-const ZOOM_TO_EXTEND_HOOK = 'ZOOM_TO_EXTEND_HOOK';
+const EXTENT_TO_ZOOM_HOOK = 'EXTENT_TO_ZOOM_HOOK';
+const RESOLUTIONS_HOOK = 'RESOLUTIONS_HOOK';
 
 var hooks = {};
 
@@ -97,36 +98,29 @@ function getGoogleMercatorScales(minZoom, maxZoom, dpi) {
     );
 }
 
-function defaulGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
+function getResolutionsFromScales(scales, dpi) {
+    const dpm = dpi2dpm((dpi || DEFAULT_SCREEN_DPI));
 
-    var dpm = dpi2dpm((dpi || DEFAULT_SCREEN_DPI));
+    return scales.map((scale) => scale / dpm);
+}
 
-    var wExtent = extent[2] - extent[0];
-    var hExtent = extent[3] - extent[1];
+function defaulGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, mapResolutions) {
+    const wExtent = extent[2] - extent[0];
+    const hExtent = extent[3] - extent[1];
 
-    var xResolution = Math.abs(wExtent / mapSize.width);
-    var yResolution = Math.abs(hExtent / mapSize.height);
-    var extentResolution = Math.max(xResolution, yResolution);
+    const xResolution = Math.abs(wExtent / mapSize.width);
+    const yResolution = Math.abs(hExtent / mapSize.height);
+    const extentResolution = Math.max(xResolution, yResolution);
 
-    var scales = getGoogleMercatorScales(
-    minZoom, maxZoom, (dpi || DEFAULT_SCREEN_DPI));
-    var diff;
-    var minDiff = Number.POSITIVE_INFINITY;
-    var i;
-    var len = scales.length;
-    var res;
-    // detect best fitting zoom level
-    for (i = 0; i < len; i++) {
+    const resolutions = mapResolutions || getResolutionsFromScales(getGoogleMercatorScales(
+        minZoom, maxZoom, (dpi || DEFAULT_SCREEN_DPI)));
 
-        res = scales[i] / dpm;
+    const {...other, zoom} = resolutions.reduce((previous, resolution, index) => {
+        const diff = Math.abs(resolution - extentResolution);
+        return diff > previous.diff ? previous : {diff: diff, zoom: index};
+    }, {diff: Number.POSITIVE_INFINITY, zoom: 0});
 
-        diff = Math.abs(res - extentResolution);
-        if (diff > minDiff) {
-            break;
-        }
-        minDiff = diff;
-    }
-    return Math.max(0, i - 1);
+    return Math.max(0, zoom);
 }
 
 /**
@@ -140,10 +134,12 @@ function defaulGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
  * @return {Number} the zoom level fitting th extent
  */
 function getZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
-    if (getHook("ZOOM_TO_EXTEND_HOOK")) {
-        return getHook("ZOOM_TO_EXTEND_HOOK")(extent, mapSize, minZoom, maxZoom, dpi);
+    if (getHook("EXTENT_TO_ZOOM_HOOK")) {
+        return getHook("EXTENT_TO_ZOOM_HOOK")(extent, mapSize, minZoom, maxZoom, dpi);
     }
-    return defaulGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi);
+    const resolutions = getHook("RESOLUTIONS_HOOK") ?
+        getHook("RESOLUTIONS_HOOK")(extent, mapSize, minZoom, maxZoom, dpi, dpi2dpm((dpi || DEFAULT_SCREEN_DPI))) : null;
+    return defaulGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, resolutions);
 }
 
 /**
@@ -169,7 +165,9 @@ function getCenterForExtent(extent, projection) {
 }
 
 module.exports = {
-    ZOOM_TO_EXTEND_HOOK,
+    EXTENT_TO_ZOOM_HOOK,
+    RESOLUTIONS_HOOK,
+    DEFAULT_SCREEN_DPI,
     registerHook,
     dpi2dpm,
     getSphericalMercatorScales,

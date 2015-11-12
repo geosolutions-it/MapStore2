@@ -11,6 +11,7 @@ var assign = require('object-assign');
 
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var ConfigUtils = require('../../../utils/ConfigUtils');
+var mapUtils = require('../../../utils/MapUtils');
 
 var OpenlayersMap = React.createClass({
     propTypes: {
@@ -125,7 +126,7 @@ var OpenlayersMap = React.createClass({
         this.forceUpdate();
 
         if (this.props.registerHooks) {
-            this.registerHooks();
+            this.registerHooks(this.getResolutions());
         }
     },
     componentWillReceiveProps(newProps) {
@@ -145,6 +146,63 @@ var OpenlayersMap = React.createClass({
     },
     componentWillUnmount() {
         this.map.setTarget(null);
+    },
+    getResolutions() {
+        if (this.props.mapOptions.resolutions) {
+            return this.props.mapOptions.resolutions;
+        }
+        const defaultMaxZoom = 28;
+        const defaultZoomFactor = 2;
+
+        let minZoom = this.props.mapOptions.minZoom !== undefined ?
+            this.props.mapOptions.minZoom : 0;
+
+        let maxZoom = this.props.mapOptions.maxZoom !== undefined ?
+            this.props.mapOptions.maxZoom : defaultMaxZoom;
+
+        let zoomFactor = this.props.mapOptions.zoomFactor !== undefined ?
+            this.props.mapOptions.zoomFactor : defaultZoomFactor;
+
+        const projection = this.map.getView().getProjection();
+        const extent = projection.getExtent();
+        const size = !extent ?
+            // use an extent that can fit the whole world if need be
+            360 * ol.proj.METERS_PER_UNIT[ol.proj.Units.DEGREES] /
+                ol.proj.METERS_PER_UNIT[projection.getUnits()] :
+            Math.max(ol.extent.getWidth(extent), ol.extent.getHeight(extent));
+
+        const defaultMaxResolution = size / 256 / Math.pow(
+            defaultZoomFactor, 0);
+
+        const defaultMinResolution = defaultMaxResolution / Math.pow(
+            defaultZoomFactor, defaultMaxZoom - 0);
+
+        // user provided maxResolution takes precedence
+        let maxResolution = this.props.mapOptions.maxResolution;
+        if (maxResolution !== undefined) {
+            minZoom = 0;
+        } else {
+            maxResolution = defaultMaxResolution / Math.pow(zoomFactor, minZoom);
+        }
+
+        // user provided minResolution takes precedence
+        let minResolution = this.props.mapOptions.minResolution;
+        if (minResolution === undefined) {
+            if (this.props.mapOptions.maxZoom !== undefined) {
+                if (this.props.mapOptions.maxResolution !== undefined) {
+                    minResolution = maxResolution / Math.pow(zoomFactor, maxZoom);
+                } else {
+                    minResolution = defaultMaxResolution / Math.pow(zoomFactor, maxZoom);
+                }
+            } else {
+                minResolution = defaultMinResolution;
+            }
+        }
+
+        // given discrete zoom levels, minResolution may be different than provided
+        maxZoom = minZoom + Math.floor(
+            Math.log(maxResolution / minResolution) / Math.log(zoomFactor));
+        return Array.apply(0, Array(maxZoom - minZoom + 1)).map((x, y) => maxResolution / Math.pow(zoomFactor, y));
     },
     render() {
         const map = this.map;
@@ -187,7 +245,11 @@ var OpenlayersMap = React.createClass({
             mapDiv.style.cursor = pointer || 'auto';
         }
     },
-    registerHooks() {
+    registerHooks(resolutions) {
+        // mapUtils.registerHook(mapUtils.ZOOM_TO_EXTEND_HOOK, () => {});
+        mapUtils.registerHook(mapUtils.RESOLUTIONS_HOOK, () => {
+            return resolutions;
+        });
     }
 });
 // add overrides for css

@@ -8,7 +8,8 @@
 var expect = require('expect');
 
 var {
-    ZOOM_TO_EXTEND_HOOK,
+    RESOLUTIONS_HOOK,
+    EXTENT_TO_ZOOM_HOOK,
     registerHook,
     dpi2dpm,
     getSphericalMercatorScales,
@@ -43,8 +44,25 @@ describe('Test the MapUtils', () => {
     it('getZoomForExtent without hook', () => {
         var extent = [1880758.3574092742, 6084533.340409827, 1291887.4915002766, 5606954.787684047];
         var mapSize = {height: 781, width: 963};
-        registerHook(ZOOM_TO_EXTEND_HOOK, undefined);
+        registerHook(RESOLUTIONS_HOOK, undefined);
+        registerHook(EXTENT_TO_ZOOM_HOOK, undefined);
         expect(getZoomForExtent(extent, mapSize, 0, 21, 96)).toBe(8);
+    });
+    it('getZoomForExtent with resolutions hook', () => {
+        var extent = [1880758.3574092742, 6084533.340409827, 1291887.4915002766, 5606954.787684047];
+        var mapSize = {height: 781, width: 963};
+        registerHook(RESOLUTIONS_HOOK, () => {
+            return [1, 2, 3];
+        });
+        registerHook(EXTENT_TO_ZOOM_HOOK, undefined);
+        expect(getZoomForExtent(extent, mapSize, 0, 21, 96)).toBe(2);
+    });
+    it('getZoomForExtent with zoom to extent hook', () => {
+        var extent = [1880758.3574092742, 6084533.340409827, 1291887.4915002766, 5606954.787684047];
+        var mapSize = {height: 781, width: 963};
+        registerHook(RESOLUTIONS_HOOK, undefined);
+        registerHook(EXTENT_TO_ZOOM_HOOK, () => 10);
+        expect(getZoomForExtent(extent, mapSize, 0, 21, 96)).toBe(10);
     });
     it('getCenterForExtent', () => {
         var extent = [934366.2338, -3055035.1465, 2872809.2711, -2099878.0411];
