@@ -398,4 +398,34 @@ describe('Openlayers layer', () => {
         layer.setProps({position: 2});
         expect(layer.layer.getZIndex()).toBe(2);
     });
+
+    it('changes wms params', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "opacity": 1.0,
+            "url": "http://demo.geo-solutions.it/geoserver/wms",
+            "params": {
+                "cql_filter": "INCLUDE"
+            }
+        };
+        // create layers
+        var layer = React.render(
+            <OpenlayersLayer type="wms" observables={["cql_filter"]}
+                 options={options} map={map}/>, document.body);
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+
+        expect(layer.layer.getSource()).toExist();
+        expect(layer.layer.getSource().getParams()).toExist();
+        expect(layer.layer.getSource().getParams().cql_filter).toBe("INCLUDE");
+
+        layer.setProps({options: {params: {cql_filter: "EXCLUDE"}}});
+        expect(layer.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
+    });
 });
