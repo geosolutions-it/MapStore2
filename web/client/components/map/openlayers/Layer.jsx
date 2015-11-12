@@ -17,10 +17,12 @@ const OpenlayersLayer = React.createClass({
         options: React.PropTypes.object,
         onLayerLoading: React.PropTypes.func,
         onLayerLoad: React.PropTypes.func,
-        position: React.PropTypes.number
+        position: React.PropTypes.number,
+        observables: React.PropTypes.array
     },
     getDefaultProps() {
         return {
+            observables: [],
             onLayerLoading: () => {},
             onLayerLoad: () => {}
         };
@@ -39,6 +41,17 @@ const OpenlayersLayer = React.createClass({
 
         if (newProps.position !== this.props.position) {
             this.layer.setZIndex(newProps.position);
+        }
+        if (this.props.options && this.props.options.params && this.layer.getSource() && this.layer.getSource().updateParams) {
+            const changed = Object.keys(this.props.options.params).reduce((found, param) => {
+                if (newProps.options.params[param] !== this.props.options.params[param]) {
+                    return true;
+                }
+                return found;
+            }, false);
+            if (changed) {
+                this.layer.getSource().updateParams(newProps.options.params);
+            }
         }
     },
     componentWillUnmount() {
