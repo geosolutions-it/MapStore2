@@ -188,7 +188,7 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().getLength()).toBe(0);
     });
 
-    it('creates a vector layer for openlayers map', () => {
+    /* it('creates a vector layer for openlayers map', () => {
         var options = {
             features: {
               'type': 'FeatureCollection',
@@ -222,7 +222,7 @@ describe('Openlayers layer', () => {
         expect(layer).toExist();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
-    });
+    });*/
 
     it('change layer visibility for Google Layer', () => {
         var google = {
