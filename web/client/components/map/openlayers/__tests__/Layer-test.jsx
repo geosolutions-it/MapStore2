@@ -16,6 +16,7 @@ require('../plugins/WMSLayer');
 require('../plugins/GoogleLayer');
 require('../plugins/BingLayer');
 require('../plugins/MapQuest');
+require('../plugins/VectorLayer');
 
 describe('Openlayers layer', () => {
     document.body.innerHTML = '<div id="map"></div>';
@@ -185,6 +186,42 @@ describe('Openlayers layer', () => {
         // count layers
         // google maps does not create a real ol layer, it is just injecting a gmaps api layer into DOM
         expect(map.getLayers().getLength()).toBe(0);
+    });
+
+    it('creates a vector layer for openlayers map', () => {
+        var options = {
+            features: {
+              'type': 'FeatureCollection',
+              'crs': {
+                'type': 'name',
+                'properties': {
+                  'name': 'EPSG:4326'
+                }
+              },
+              'features': [
+                  {
+                      'type': 'Feature',
+                      'geometry': {
+                          'type': 'Polygon',
+                          'coordinates': [[
+                              [13, 43],
+                              [15, 43],
+                              [15, 44],
+                              [13, 44]
+                          ]]
+                      }
+                  }
+              ]
+          }
+        };
+        // create layers
+        var layer = React.render(
+            <OpenlayersLayer type="vector"
+                 options={options} map={map}/>, document.body);
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
     });
 
     it('change layer visibility for Google Layer', () => {
