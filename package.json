@@ -60,7 +60,7 @@
     "lodash": "^3.10.1",
     "node-uuid": "^1.4.3",
     "object-assign": "^3.0.0",
-    "openlayers": "^3.8.2",
+    "openlayers": "^3.10.1",
     "proj4": "~2.3.6",
     "react": "^0.13.3",
     "react-bootstrap": "^0.25.2",
