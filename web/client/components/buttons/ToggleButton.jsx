@@ -47,7 +47,7 @@ var ToggleButton = React.createClass({
     },
     renderImageButton() {
         return (
-            <ImageButton id={this.props.id} image={this.props.image} onClick={this.onClick()} style={this.props.style}/>
+            <ImageButton id={this.props.id} image={this.props.image} onClick={this.onClick} style={this.props.style}/>
         );
     },
     addTooltip(btn) {
