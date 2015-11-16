@@ -121,7 +121,7 @@ var OpenlayersMap = React.createClass({
         this.forceUpdate();
 
         if (this.props.registerHooks) {
-            this.registerHooks(this.getResolutions());
+            this.registerHooks();
         }
     },
     componentWillReceiveProps(newProps) {
@@ -152,8 +152,8 @@ var OpenlayersMap = React.createClass({
         this.map.setTarget(null);
     },
     getResolutions() {
-        if (this.props.mapOptions.resolutions) {
-            return this.props.mapOptions.resolutions;
+        if (this.props.mapOptions && this.props.mapOptions.view && this.props.mapOptions.view.resolutions) {
+            return this.props.mapOptions.view.resolutions;
         }
         const defaultMaxZoom = 28;
         const defaultZoomFactor = 2;
@@ -241,7 +241,7 @@ var OpenlayersMap = React.createClass({
                                newProps.center.x === currentCenter.x;
 
         if (!centerIsUpdated) {
-            let center = ol.proj.transform([newProps.center.x, newProps.center.y], 'EPSG:4326', this.props.projection);
+            let center = ol.proj.transform([newProps.center.x, newProps.center.y], 'EPSG:4326', newProps.projection);
             view.setCenter(center);
         }
         if (newProps.zoom !== this.props.zoom) {
@@ -257,10 +257,10 @@ var OpenlayersMap = React.createClass({
             mapDiv.style.cursor = pointer || 'auto';
         }
     },
-    registerHooks(resolutions) {
+    registerHooks() {
         // mapUtils.registerHook(mapUtils.ZOOM_TO_EXTEND_HOOK, () => {});
         mapUtils.registerHook(mapUtils.RESOLUTIONS_HOOK, () => {
-            return resolutions;
+            return this.getResolutions();
         });
     }
 });

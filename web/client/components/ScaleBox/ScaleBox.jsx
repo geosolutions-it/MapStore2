@@ -9,6 +9,7 @@
 const React = require('react');
 const {Input} = require('react-bootstrap');
 const mapUtils = require('../../utils/MapUtils');
+const {isEqual} = require('lodash');
 
 var ScaleBox = React.createClass({
     propTypes: {
@@ -29,6 +30,9 @@ var ScaleBox = React.createClass({
             readOnly: false,
             template: (scale) => ("1 : " + Math.round(scale))
         };
+    },
+    shouldComponentUpdate(nextProps) {
+        return !isEqual(nextProps, this.props);
     },
     onComboChange(event) {
         var selectedZoomLvl = parseInt(event.nativeEvent.target.value, 10);

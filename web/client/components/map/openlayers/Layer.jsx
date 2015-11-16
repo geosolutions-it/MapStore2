@@ -56,7 +56,11 @@ const OpenlayersLayer = React.createClass({
     },
     componentWillUnmount() {
         if (this.layer && this.props.map) {
-            this.props.map.removeLayer(this.layer);
+            if (this.layer.detached) {
+                this.layer.remove();
+            } else {
+                this.props.map.removeLayer(this.layer);
+            }
         }
     },
     render() {
@@ -78,7 +82,7 @@ const OpenlayersLayer = React.createClass({
         if (type) {
             const layerOptions = assign({}, options, position ? {zIndex: position} : null);
             this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
-            if (this.layer) {
+            if (this.layer && !this.layer.detached) {
                 this.props.map.addLayer(this.layer);
                 this.layer.getSource().on('tileloadstart', () => {
                     if (this.tilestoload === 0) {

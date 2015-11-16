@@ -46,6 +46,7 @@ const MeasurementSupport = React.createClass({
         source = new ol.source.Vector();
         vector = new ol.layer.Vector({
             source: source,
+            zIndex: 1000000,
             style: new ol.style.Style({
                 fill: new ol.style.Fill({
                     color: 'rgba(255, 255, 255, 0.2)'

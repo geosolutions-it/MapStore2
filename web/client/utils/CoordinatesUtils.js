@@ -7,13 +7,15 @@
  */
 var Proj4js = require('proj4');
 var assign = require('object-assign');
+var {isArray} = require('lodash');
 
 var CoordinatesUtils = {
     reproject: function(point, source, dest) {
         const sourceProj = new Proj4js.Proj(source);
         const destProj = new Proj4js.Proj(dest);
+        let p = isArray(point) ? Proj4js.toPoint(point) : Proj4js.toPoint([point.x, point.y]);
 
-        return CoordinatesUtils.normalizePoint(assign({}, Proj4js.transform(sourceProj, destProj, Proj4js.toPoint(point)), {srs: dest}));
+        return CoordinatesUtils.normalizePoint(assign({}, Proj4js.transform(sourceProj, destProj, p), {srs: dest}));
     },
     normalizePoint: function(point) {
         return {

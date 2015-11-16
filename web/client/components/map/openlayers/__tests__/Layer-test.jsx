@@ -17,6 +17,7 @@ require('../plugins/GoogleLayer');
 require('../plugins/BingLayer');
 require('../plugins/MapQuest');
 require('../plugins/VectorLayer');
+require('../plugins/GraticuleLayer');
 
 describe('Openlayers layer', () => {
     document.body.innerHTML = '<div id="map"></div>';
@@ -37,6 +38,7 @@ describe('Openlayers layer', () => {
 
 
     afterEach((done) => {
+        map.setTarget(null);
         document.body.innerHTML = '<div id="map"></div>';
         map = new ol.Map({
           layers: [
@@ -151,6 +153,25 @@ describe('Openlayers layer', () => {
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
     });
+
+    it('creates a graticule layer for openlayers map', () => {
+        var options = {
+            "visibility": true
+        };
+        // create layers
+        var layer = React.render(
+            <OpenlayersLayer type="graticule"
+                 options={options} map={map}/>, document.body);
+
+
+        expect(layer).toExist();
+        expect(layer.layer).toExist();
+
+        expect(layer.layer.detached).toBe(true);
+
+        layer.layer.remove();
+    });
+
     it('creates a google layer for openlayers map', () => {
         var google = {
             maps: {
