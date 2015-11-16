@@ -70,7 +70,8 @@ var ZoomToMaxExtentButton = React.createClass({
             <ImageButton
                 id={this.props.id}
                 image={this.props.image}
-                onClick={() => this.zoomToMaxExtent()} />
+                onClick={() => this.zoomToMaxExtent()}
+                style={this.props.style}/>
         );
     },
     zoomToMaxExtent() {

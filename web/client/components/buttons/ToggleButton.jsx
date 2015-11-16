@@ -8,6 +8,7 @@
 
 var React = require('react');
 var {Button, Glyphicon, OverlayTrigger} = require('react-bootstrap');
+var ImageButton = require('./ImageButton');
 
 var ToggleButton = React.createClass({
     propTypes: {
@@ -19,26 +20,34 @@ var ToggleButton = React.createClass({
         onClick: React.PropTypes.func,
         tooltip: React.PropTypes.element,
         tooltipPlace: React.PropTypes.string,
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        btnType: React.PropTypes.oneOf(['normal', 'image']),
+        image: React.PropTypes.string
     },
     getDefaultProps() {
         return {
             onClick: () => {},
             pressed: false,
             tooltipPlace: "top",
-            style: {width: "100%"}
+            style: {width: "100%"},
+            btnType: 'normal'
         };
     },
     onClick() {
         this.props.onClick(!this.props.pressed);
     },
-    renderButton() {
+    renderNormalButton() {
         return (
             <Button id={this.props.id} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.props.pressed ? 'primary' : 'default'} style={this.props.style}>
                 {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
                 {this.props.glyphicon && this.props.text ? "\u00A0" : null}
                 {this.props.text}
             </Button>
+        );
+    },
+    renderImageButton() {
+        return (
+            <ImageButton id={this.props.id} image={this.props.image} onClick={this.onClick()} style={this.props.style}/>
         );
     },
     addTooltip(btn) {
@@ -50,7 +59,7 @@ var ToggleButton = React.createClass({
     },
     render() {
         var retval;
-        var btn = this.renderButton();
+        var btn = this.props.btnType === 'normal' ? this.renderNormalButton() : this.renderImageButton();
         if (this.props.tooltip) {
             retval = this.addTooltip(btn);
         } else {
