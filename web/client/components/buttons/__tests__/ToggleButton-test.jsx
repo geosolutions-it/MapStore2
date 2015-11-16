@@ -67,16 +67,29 @@ describe("test the ToggleButton", () => {
     });
 
     it('test click handler', () => {
-        const testHandlers = {
-            onClick: (pressed) => {return pressed; }
+
+        let genericTest = function(btnType) {
+            const testHandlers = {
+                onClick: (pressed) => {return pressed; }
+            };
+            const spy = expect.spyOn(testHandlers, 'onClick');
+            const tb = React.render(<ToggleButton pressed onClick={testHandlers.onClick} btnType={btnType}/>, document.body);
+
+            const tbNode = React.findDOMNode(tb);
+            tbNode.click();
+
+            expect(spy.calls.length).toEqual(1);
+            expect(spy.calls[0].arguments).toEqual([false]);
         };
-        const spy = expect.spyOn(testHandlers, 'onClick');
-        const tb = React.render(<ToggleButton pressed onClick={testHandlers.onClick}/>, document.body);
 
+        genericTest('normal');
+        genericTest('image');
+    });
+
+    it('test image button', () => {
+        const tb = React.render(<ToggleButton btnType={'image'}/>, document.body);
+        expect(tb).toExist();
         const tbNode = React.findDOMNode(tb);
-        tbNode.click();
-
-        expect(spy.calls.length).toEqual(1);
-        expect(spy.calls[0].arguments).toEqual([false]);
+        expect(tbNode.localName).toBe("img");
     });
 });
