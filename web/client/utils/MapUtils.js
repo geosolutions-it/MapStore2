@@ -18,6 +18,7 @@ const EXTENT_TO_ZOOM_HOOK = 'EXTENT_TO_ZOOM_HOOK';
 const RESOLUTIONS_HOOK = 'RESOLUTIONS_HOOK';
 
 var hooks = {};
+var CoordinatesUtils = require('./CoordinatesUtils');
 
 function registerHook(name, hook) {
     hooks[name] = hook;
@@ -104,6 +105,19 @@ function getResolutionsFromScales(scales, dpi) {
     return scales.map((scale) => scale / dpm);
 }
 
+function getResolutions() {
+    if (getHook('RESOLUTIONS_HOOK')) {
+        return getHook('RESOLUTIONS_HOOK')();
+    }
+    return [];
+}
+
+function getScales(projection, dpi) {
+    const units = CoordinatesUtils.getUnits(projection);
+    const dpm = dpi2dpm((dpi || DEFAULT_SCREEN_DPI));
+    return getResolutions().map((resolution) => resolution * dpm * (units === 'degrees' ? 111194.87428468118 : 1));
+}
+
 function defaulGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, mapResolutions) {
     const wExtent = extent[2] - extent[0];
     const hExtent = extent[3] - extent[1];
@@ -169,11 +183,14 @@ module.exports = {
     RESOLUTIONS_HOOK,
     DEFAULT_SCREEN_DPI,
     registerHook,
+    getHook,
     dpi2dpm,
     getSphericalMercatorScales,
     getSphericalMercatorScale,
     getGoogleMercatorScales,
     getGoogleMercatorScale,
     getZoomForExtent,
-    getCenterForExtent
+    getCenterForExtent,
+    getResolutions,
+    getScales
 };
