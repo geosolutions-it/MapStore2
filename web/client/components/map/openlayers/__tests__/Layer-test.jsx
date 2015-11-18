@@ -211,6 +211,7 @@ describe('Openlayers layer', () => {
 
     it('creates a vector layer for openlayers map', () => {
         var options = {
+            crs: 'EPSG:4326',
             features: {
               'type': 'FeatureCollection',
               'crs': {

@@ -87,8 +87,10 @@ var styleFunction = function(feature) {
 
 Layers.registerType('vector', {
     create: (options) => {
+        const features = (new ol.format.GeoJSON()).readFeatures(options.features);
+        features.forEach((f) => f.getGeometry().transform('EPSG:4326', options.crs));
         const source = new ol.source.Vector({
-            features: (new ol.format.GeoJSON()).readFeatures(options.features)
+            features: features
         });
 
         return new ol.layer.Vector({

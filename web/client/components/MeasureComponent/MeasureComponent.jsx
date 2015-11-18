@@ -16,6 +16,8 @@ var lineRuleIcon = require('./img/line-ruler.png');
 var areaRuleIcon = require('./img/area-ruler.png');
 var bearingRuleIcon = require('./img/bearing-ruler.png');
 
+var {isEqual} = require('lodash');
+
 let MeasureComponent = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
@@ -44,6 +46,9 @@ let MeasureComponent = React.createClass({
             },
             id: "measure-result-panel"
         };
+    },
+    shouldComponentUpdate(nextProps) {
+        return !isEqual(nextProps, this.props);
     },
     onLineClick: function() {
         var newMeasureState;

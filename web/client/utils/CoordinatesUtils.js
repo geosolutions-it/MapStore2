@@ -10,6 +10,10 @@ var assign = require('object-assign');
 var {isArray} = require('lodash');
 
 var CoordinatesUtils = {
+    getUnits: function(projection) {
+        const proj = new Proj4js.Proj(projection);
+        return proj.units || 'degrees';
+    },
     reproject: function(point, source, dest) {
         const sourceProj = new Proj4js.Proj(source);
         const destProj = new Proj4js.Proj(dest);

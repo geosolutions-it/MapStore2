@@ -24,6 +24,7 @@ var GetFeatureInfo = React.createClass({
         infoFormat: React.PropTypes.oneOf(
             MapInfoUtils.getAvailableInfoFormatValues()
         ),
+        featureCount: React.PropTypes.number,
         htmlResponses: React.PropTypes.array,
         htmlRequests: React.PropTypes.object,
         btnConfig: React.PropTypes.object,
@@ -44,6 +45,7 @@ var GetFeatureInfo = React.createClass({
     getDefaultProps() {
         return {
             enabled: false,
+            featureCount: 10,
             htmlResponses: [],
             htmlRequests: {length: 0},
             map: {},
@@ -87,6 +89,7 @@ var GetFeatureInfo = React.createClass({
                           bounds.miny + "," +
                           bounds.maxx + "," +
                           bounds.maxy,
+                    feature_count: this.props.featureCount,
                     info_format: this.props.infoFormat
                 };
                 const layerMetadata = {
