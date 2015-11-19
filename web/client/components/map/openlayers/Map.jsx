@@ -145,6 +145,13 @@ var OpenlayersMap = React.createClass({
                 this.props.center.y
             ], 'EPSG:4326', newProps.projection);
             this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view));
+            // We have to force ol to drop tile and reload
+            this.map.getLayers().forEach((l) => {
+                let source = l.getSource();
+                if (source.getTileLoadFunction) {
+                    source.setTileLoadFunction(source.getTileLoadFunction());
+                }
+            });
             this.map.render();
         }
     },
