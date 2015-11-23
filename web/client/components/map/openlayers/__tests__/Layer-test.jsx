@@ -18,6 +18,7 @@ require('../plugins/BingLayer');
 require('../plugins/MapQuest');
 require('../plugins/VectorLayer');
 require('../plugins/GraticuleLayer');
+require('../plugins/OverlayLayer');
 
 describe('Openlayers layer', () => {
     document.body.innerHTML = '<div id="map"></div>';
@@ -207,6 +208,29 @@ describe('Openlayers layer', () => {
         // count layers
         // google maps does not create a real ol layer, it is just injecting a gmaps api layer into DOM
         expect(map.getLayers().getLength()).toBe(0);
+    });
+
+    it('creates and overlay layer for openlayers map', () => {
+        let container = document.createElement('div');
+        container.id = 'container';
+        document.body.appendChild(container);
+
+        let element = document.createElement('div');
+        element.id = 'overlay-1';
+        document.body.appendChild(element);
+
+        let options = {
+            id: 'overlay-1',
+            position: [13, 43]
+        };
+        // create layers
+        let layer = React.render(
+            <OpenlayersLayer type="overlay"
+                 options={options} map={map}/>, document.getElementById('container'));
+
+        expect(layer).toExist();
+
+        expect(document.getElementById('overlay-1-overlay')).toExist();
     });
 
     it('creates a vector layer for openlayers map', () => {
