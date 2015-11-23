@@ -18,6 +18,8 @@ Layers.registerType('overlay', {
             id: options.id,
             element: cloned,
             autoPan: options.autoPan || false,
+            positioning: options.positioning || 'top-left',
+            offset: options.offset || [0, 0],
             autoPanAnimation: {
                 duration: options.autoPanAnimation || 250
             },
