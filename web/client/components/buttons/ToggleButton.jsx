@@ -40,7 +40,7 @@ var ToggleButton = React.createClass({
         return (
             <Button id={this.props.id} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.props.pressed ? 'primary' : 'default'} style={this.props.style}>
                 {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
-                {this.props.glyphicon && this.props.text ? "\u00A0" : null}
+                {this.props.glyphicon && this.props.text && !React.isValidElement(this.props.text) ? "\u00A0" : null}
                 {this.props.text}
             </Button>
         );
