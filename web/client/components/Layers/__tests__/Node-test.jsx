@@ -34,6 +34,28 @@ describe('test Node module component', () => {
         expect(domNode).toExist();
     });
 
+    it('tests Node styler creation', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms'
+        };
+        const styler = () => {
+            return {
+                display: "none"
+            };
+        };
+        const comp = React.render(<Node node={l} styler={styler}/>, document.body);
+        expect(comp).toExist();
+
+        const domNode = React.findDOMNode(comp);
+        expect(domNode).toExist();
+
+        expect(domNode.style.display).toBe('none');
+    });
+
     it('tests Layer children', () => {
         const l = {
             name: 'layer00',
