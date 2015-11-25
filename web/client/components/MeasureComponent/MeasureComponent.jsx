@@ -30,6 +30,12 @@ let MeasureComponent = React.createClass({
         lengthLabel: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         areaLabel: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         bearingLabel: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
+        uom: React.PropTypes.shape({
+                    length: { unit: React.PropTypes.string.required,
+                              label: React.PropTypes.string.required},
+                    area: { unit: React.PropTypes.string.required,
+                            label: React.PropTypes.string.required}
+                        }),
         toggleMeasure: React.PropTypes.func,
         measurement: React.PropTypes.object,
         lineMeasureEnabled: React.PropTypes.bool,
@@ -44,7 +50,11 @@ let MeasureComponent = React.createClass({
                 sm: 4,
                 md: 4
             },
-            id: "measure-result-panel"
+            id: "measure-result-panel",
+            uom: {
+                length: {unit: 'm', label: 'm'},
+                area: {unit: 'sqm', label: 'm²'}
+            }
         };
     },
     shouldComponentUpdate(nextProps) {
@@ -125,6 +135,34 @@ let MeasureComponent = React.createClass({
 
         return bearing;
     },
+    getFormattedLength(length) {
+        switch (this.props.uom.length.unit) {
+            case 'm':
+                return length;
+            case 'ft':
+                return this.mToft(length);
+            case 'km':
+                return this.mTokm(length);
+            case 'mi':
+                return this.mTomi(length);
+            default:
+            return length;
+        }
+    },
+    getFormattedArea(area) {
+        switch (this.props.uom.area.unit) {
+            case 'sqm':
+                return area;
+            case 'sqft':
+                return this.sqmTosqft(area);
+            case 'sqkm':
+                return this.sqmTosqkm(area);
+            case 'sqmi':
+                return this.sqmTosqmi(area);
+            default:
+            return area;
+        }
+    },
     getToolTips() {
         return {
             lineToolTip: <Tooltip id={"tooltip-button.line"}>{this.props.lengthLabel}</Tooltip>,
@@ -164,8 +202,8 @@ let MeasureComponent = React.createClass({
                 </ButtonToolbar>
 
                 <div className="panel-body">
-                    <p><span>{this.props.lengthLabel}: </span><span id="measure-len-res"><FormattedNumber key="len" {...decimalFormat} value={this.props.measurement.len} /> m</span></p>
-                    <p><span>{this.props.areaLabel}: </span><span id="measure-area-res"><FormattedNumber key="area" {...decimalFormat} value={this.props.measurement.area} /> m²</span></p>
+                    <p><span>{this.props.lengthLabel}: </span><span id="measure-len-res"><FormattedNumber key="len" {...decimalFormat} value={this.getFormattedLength(this.props.measurement.len)} /> {this.props.uom.length.label}</span></p>
+                    <p><span>{this.props.areaLabel}: </span><span id="measure-area-res"><FormattedNumber key="area" {...decimalFormat} value={this.getFormattedArea(this.props.measurement.area)} /> {this.props.uom.area.label}</span></p>
                     <p><span>{this.props.bearingLabel}: </span><span id="measure-bearing-res">{this.getFormattedBearingValue(this.props.measurement.bearing)}</span></p>
                 </div>
             </Panel>
@@ -180,6 +218,24 @@ let MeasureComponent = React.createClass({
         var s = Math.floor(secfloat);
 
         return ("" + d + "° " + m + "' " + s + "'' ");
+    },
+    mToft: function(length) {
+        return length * 3.28084;
+    },
+    mTokm: function(length) {
+        return length * 0.001;
+    },
+    mTomi: function(length) {
+        return length * 0.000621371;
+    },
+    sqmTosqft: function(area) {
+        return area * 10.7639;
+    },
+    sqmTosqkm: function(area) {
+        return area * 0.000001;
+    },
+    sqmTosqmi: function(area) {
+        return area * 0.000000386102159;
     }
 });
 
