@@ -14,6 +14,7 @@ var Node = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
         style: React.PropTypes.object,
+        styler: React.PropTypes.func,
         type: React.PropTypes.string,
         onSort: React.PropTypes.func,
         isDraggable: React.PropTypes.bool
@@ -23,6 +24,7 @@ var Node = React.createClass({
         return {
             node: null,
             style: {},
+            styler: () => {},
             type: 'node',
             onSort: null
         };
@@ -40,7 +42,8 @@ var Node = React.createClass({
     render() {
         let expanded = (this.props.node.expanded !== undefined) ? this.props.node.expanded : true;
         let prefix = this.props.type;
-        let content = (<div key={this.props.node.name} className={expanded ? prefix + "-expanded" : prefix + "-collapsed"} style={this.props.style} >
+        const nodeStyle = assign({}, this.props.style, this.props.styler(this.props.node));
+        let content = (<div key={this.props.node.name} className={expanded ? prefix + "-expanded" : prefix + "-collapsed"} style={nodeStyle} >
             {this.renderChildren((child) => child.props.position !== 'collapsible')}
             {expanded ? this.renderChildren((child) => child.props.position === 'collapsible') : []}
         </div>);

@@ -19,7 +19,8 @@ function wmsToOpenlayersOptions(options) {
         FORMAT: options.format || 'image/png',
         TRANSPARENT: options.transparent !== undefined ? options.transparent : true,
         SRS: CoordinatesUtils.normalizeSRS(options.srs),
-        CRS: CoordinatesUtils.normalizeSRS(options.srs)
+        CRS: CoordinatesUtils.normalizeSRS(options.srs),
+        TILED: options.tiled || false
     }, options.params || {});
 }
 
