@@ -9,6 +9,8 @@ var expect = require('expect');
 
 var React = require('react/addons');
 var MeasureComponent = require('../MeasureComponent');
+var ReactIntl = require('react-intl');
+var FormattedNumber = ReactIntl.FormattedNumber;
 
 describe("test the MeasureComponent", () => {
     afterEach((done) => {
@@ -227,7 +229,7 @@ describe("test the MeasureComponent", () => {
             expect(bearingSpan.innerHTML).toBe("N 45° 0' 0''  W");
         });
     });
-    it('test uom format area anf lenght', () => {
+    it('test uom format area and lenght', () => {
         let measurement = {
             lineMeasureEnabled: false,
             areaMeasureEnabled: false,
@@ -237,6 +239,7 @@ describe("test the MeasureComponent", () => {
             area: 0,
             bearing: 0
         };
+        let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
         const cmp = React.render(
             <MeasureComponent uom={{
                 length: {unit: 'km', label: 'km'},
@@ -248,21 +251,24 @@ describe("test the MeasureComponent", () => {
         const lenSpan = document.getElementById('measure-len-res');
         expect(lenSpan).toExist();
 
+        let testDiv = document.createElement("div");
+        document.body.appendChild(testDiv);
+        let val = React.render((<span><FormattedNumber key="len" {...decimalFormat} value={10} />km</span>), testDiv).getDOMNode();
         cmp.setProps({
             measurement: {len: 10000}
         }, () => {
-            expect(lenSpan.firstChild.innerHTML).toBe("10.00");
-            expect(lenSpan.lastChild.innerHTML).toBe("km");
+            expect(lenSpan.firstChild.innerHTML).toBe(val.firstChild.innerHTML);
+            expect(lenSpan.lastChild.innerHTML).toBe(val.lastChild.innerHTML);
         });
 
         const areaSpan = document.getElementById('measure-area-res');
         expect(areaSpan).toExist();
-
+        val = React.render((<span><FormattedNumber key="len" {...decimalFormat} value={1} />km²</span>), testDiv).getDOMNode();
         cmp.setProps({
             measurement: {geomType: 'Polygon', area: 1000000}
         }, () => {
-            expect(areaSpan.firstChild.innerHTML).toBe("1.00");
-            expect(areaSpan.lastChild.innerHTML).toBe("km²");
+            expect(areaSpan.firstChild.innerHTML).toBe(val.firstChild.innerHTML);
+            expect(areaSpan.lastChild.innerHTML).toBe(val.lastChild.innerHTML);
         });
     });
 });
