@@ -227,4 +227,42 @@ describe("test the MeasureComponent", () => {
             expect(bearingSpan.innerHTML).toBe("N 45° 0' 0''  W");
         });
     });
+    it('test uom format area anf lenght', () => {
+        let measurement = {
+            lineMeasureEnabled: false,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: false,
+            geomType: 'LineString',
+            len: 0,
+            area: 0,
+            bearing: 0
+        };
+        const cmp = React.render(
+            <MeasureComponent uom={{
+                length: {unit: 'km', label: 'km'},
+                area: {unit: 'sqkm', label: 'km²'}
+            }} measurement={measurement}/>, document.body
+        );
+        expect(cmp).toExist();
+
+        const lenSpan = document.getElementById('measure-len-res');
+        expect(lenSpan).toExist();
+
+        cmp.setProps({
+            measurement: {len: 10000}
+        }, () => {
+            expect(lenSpan.firstChild.innerHTML).toBe("10.00");
+            expect(lenSpan.lastChild.innerHTML).toBe("km");
+        });
+
+        const areaSpan = document.getElementById('measure-area-res');
+        expect(areaSpan).toExist();
+
+        cmp.setProps({
+            measurement: {geomType: 'Polygon', area: 1000000}
+        }, () => {
+            expect(areaSpan.firstChild.innerHTML).toBe("1.00");
+            expect(areaSpan.lastChild.innerHTML).toBe("km²");
+        });
+    });
 });
