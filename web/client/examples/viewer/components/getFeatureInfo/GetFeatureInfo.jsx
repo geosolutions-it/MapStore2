@@ -8,7 +8,8 @@
 
 var React = require('react');
 var assign = require('object-assign');
-var {Modal, Glyphicon} = require('react-bootstrap');
+var {Glyphicon, Panel} = require('react-bootstrap');
+const Draggable = require('react-draggable');
 
 var I18N = require('../../../../components/I18N/I18N');
 var Spinner = require('../../../../components/spinners/BasicSpinner/BasicSpinner');
@@ -35,12 +36,12 @@ var GetFeatureInfo = React.createClass({
         actions: React.PropTypes.shape({
             getFeatureInfo: React.PropTypes.func,
             purgeMapInfoResults: React.PropTypes.func,
-            changeMousePointer: React.PropTypes.func
+            changeMousePointer: React.PropTypes.func,
+            showMapinfoMarker: React.PropTypes.func,
+            hideMapinfoMarker: React.PropTypes.func
         }),
-        clickedMapPoint: React.PropTypes.shape({
-            x: React.PropTypes.number,
-            y: React.PropTypes.number
-        })
+        clickedMapPoint: React.PropTypes.object,
+        style: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -60,9 +61,20 @@ var GetFeatureInfo = React.createClass({
             actions: {
                 getFeatureInfo() {},
                 purgeMapInfoResults() {},
-                changeMousePointer() {}
+                changeMousePointer() {},
+                showMapinfoMarker() {},
+                hideMapinfoMarker() {}
             },
-            infoFormat: MapInfoUtils.getDefaultInfoFormatValue()
+            infoFormat: MapInfoUtils.getDefaultInfoFormatValue(),
+            clickedMapPoint: {},
+            style: {
+                position: "absolute",
+                maxWidth: "500px",
+                top: "56px",
+                left: "45px",
+                zIndex: 1010,
+                boxShadow: "2px 2px 4px #A7A7A7"
+            }
         };
     },
     getInitialState() {
@@ -71,8 +83,9 @@ var GetFeatureInfo = React.createClass({
     componentWillReceiveProps(newProps) {
         // if there's a new clicked point on map and GetFeatureInfo is active
         // it composes and sends a getFeatureInfo action.
-        if (newProps.enabled && newProps.clickedMapPoint && (!this.props.clickedMapPoint || this.props.clickedMapPoint.x !== newProps.clickedMapPoint.x ||
-                this.props.clickedMapPoint.y !== newProps.clickedMapPoint.y)) {
+        if (newProps.enabled && newProps.clickedMapPoint && newProps.clickedMapPoint.pixel && (!this.props.clickedMapPoint.pixel || this.props.clickedMapPoint.pixel.x !== newProps.clickedMapPoint.pixel.x ||
+                this.props.clickedMapPoint.pixel.y !== newProps.clickedMapPoint.pixel.y)) {
+            this.props.actions.purgeMapInfoResults();
             const wmsVisibleLayers = newProps.layers.filter(newProps.layerFilter);
             const {bounds, crs} = this.reprojectBbox(newProps.map.bbox, newProps.map.projection);
             for (let l = 0; l < wmsVisibleLayers.length; l++) {
@@ -80,8 +93,8 @@ var GetFeatureInfo = React.createClass({
                 const requestConf = {
                     layers: layer.name,
                     query_layers: layer.name,
-                    x: newProps.clickedMapPoint.x,
-                    y: newProps.clickedMapPoint.y,
+                    x: newProps.clickedMapPoint.pixel.x,
+                    y: newProps.clickedMapPoint.pixel.y,
                     height: newProps.map.size.height,
                     width: newProps.map.size.width,
                     srs: crs,
@@ -98,15 +111,19 @@ var GetFeatureInfo = React.createClass({
                 const url = layer.url.replace(/[?].*$/g, '');
                 this.props.actions.getFeatureInfo(url, requestConf, layerMetadata);
             }
+            this.props.actions.showMapinfoMarker();
         }
 
         if (newProps.enabled && !this.props.enabled) {
             this.props.actions.changeMousePointer('pointer');
         } else if (!newProps.enabled && this.props.enabled) {
             this.props.actions.changeMousePointer('auto');
+            this.props.actions.hideMapinfoMarker();
+            this.props.actions.purgeMapInfoResults();
         }
     },
     onModalHiding() {
+        this.props.actions.hideMapinfoMarker();
         this.props.actions.purgeMapInfoResults();
     },
     renderInfo() {
@@ -128,25 +145,24 @@ var GetFeatureInfo = React.createClass({
         }
         return retval;
     },
+    renderHeader(missingRequests) {
+        return (
+            <span>
+                { (missingRequests !== 0 ) ? <Spinner value={missingRequests} sSize="sp-small" /> : null }
+                <Glyphicon glyph="info-sign" />&nbsp;<I18N.Message msgId="getFeatureInfoTitle" />
+                <button onClick={this.onModalHiding} className="close"><span>×</span></button>
+            </span>
+        );
+    },
     render() {
         let missingRequests = this.props.htmlRequests.length - this.props.htmlResponses.length;
-        return (
-                <Modal
-                    show={this.props.htmlRequests.length !== 0}
-                    onHide={this.onModalHiding}
-                    bsStyle="info"
-                    dialogClassName="getFeatureInfo">
-                    <Modal.Header closeButton>
-                        <Modal.Title>
-                            { (missingRequests !== 0 ) ? <Spinner value={missingRequests} sSize="sp-small" /> : null }
-                            <Glyphicon glyph="info-sign" />&nbsp;<I18N.Message msgId="getFeatureInfoTitle" />
-                       </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        {this.renderInfo()}
-                    </Modal.Body>
-                </Modal>
-        );
+        return this.props.htmlRequests.length !== 0 ? (
+            <Draggable handle=".panel-heading">
+                <Panel id="mapstore-getfeatureinfo" header={this.renderHeader(missingRequests)} style={this.props.style}>
+                    {this.renderInfo()}
+                </Panel>
+            </Draggable>
+        ) : null;
     },
     reprojectBbox(bbox, destSRS) {
         let newBbox = CoordinatesUtils.reprojectBbox([

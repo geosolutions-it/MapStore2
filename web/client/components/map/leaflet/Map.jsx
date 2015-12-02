@@ -64,7 +64,10 @@ let LeafletMap = React.createClass({
         // this uses the hook defined in ./SingleClick.js for leaflet 0.7.*
         this.map.on('singleclick', (event) => {
             if (this.props.onClick) {
-                this.props.onClick(event.containerPoint);
+                this.props.onClick({
+                    pixel: event.containerPoint,
+                    latlng: event.latlng
+                });
             }
         });
         this.map.on('dragstart', () => { this.map.off('mousemove', this.mouseMoveEvent); });
@@ -86,9 +89,12 @@ let LeafletMap = React.createClass({
             if (!event.layer.layerName) {
                 return;
             }
-            this.props.onLayerLoading(event.layer.layerName);
-            event.layer.on('loading', (loadingEvent) => { this.props.onLayerLoading(loadingEvent.target.layerName); });
-            event.layer.on('load', (loadEvent) => { this.props.onLayerLoad(loadEvent.target.layerName); });
+            if (event && event.layer && event.layer.on) {
+                // TODO check event.layer.on is a function
+                this.props.onLayerLoading(event.layer.layerName);
+                event.layer.on('loading', (loadingEvent) => { this.props.onLayerLoading(loadingEvent.target.layerName); });
+                event.layer.on('load', (loadEvent) => { this.props.onLayerLoad(loadEvent.target.layerName); });
+            }
         });
 
         this.drawControl = null;

@@ -53,6 +53,30 @@ var MapInfoUtils = {
      */
     getDefaultInfoFormatValue() {
         return INFO_FORMATS[AVAILABLE_FORMAT[0]];
+    },
+    clickedPointToGeoJson(clickedPoint) {
+        if (!clickedPoint) {
+            return [];
+        }
+        return [
+            {
+                id: "get-feature-info-point",
+                type: "Feature",
+                geometry: {
+                    type: 'Point',
+                    coordinates: [parseFloat(clickedPoint.lng), parseFloat(clickedPoint.lat)]
+                }
+            }
+        ];
+    },
+    getMarkerLayer(name, clickedMapPoint) {
+        return {
+            type: 'vector',
+            visibility: true,
+            name: name || "GetFeatureInfo",
+            styleName: "marker",
+            features: MapInfoUtils.clickedPointToGeoJson(clickedMapPoint)
+        };
     }
 };
 

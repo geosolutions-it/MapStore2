@@ -51,7 +51,7 @@ let ResultList = React.createClass({
         this.props.afterItemClick();
     },
     renderResults() {
-        return this.props.results.map((item)=> {return <NominatimResult item={item} onItemClick={this.onItemClick}/>; });
+        return this.props.results.map((item)=> {return <NominatimResult key={item.osm_id} item={item} onItemClick={this.onItemClick}/>; });
     },
     render() {
         var notFoundMessage = this.props.notFoundMessage;

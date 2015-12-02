@@ -143,6 +143,7 @@ require('../../components/map/leaflet/plugins/WMSLayer');
 require('../../components/map/leaflet/plugins/OSMLayer');
 require('../../components/map/leaflet/plugins/BingLayer');
 require('../../components/map/leaflet/plugins/GoogleLayer');
+require('../../components/map/leaflet/plugins/VectorLayer');
 
     /**
     * Detect Browser's properties and save in app state.

@@ -21,10 +21,10 @@ var Layers = {
         }
         return null;
     },
-    renderLayer: function(type, options, map, mapId) {
+    renderLayer: function(type, options, map, mapId, layer) {
         var layerCreator = layerTypes[type];
         if (layerCreator && layerCreator.render) {
-            return layerCreator.render(options, map, mapId);
+            return layerCreator.render(options, map, mapId, layer);
         }
         return null;
     }

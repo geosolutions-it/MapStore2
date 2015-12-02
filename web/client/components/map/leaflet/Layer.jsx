@@ -33,6 +33,7 @@ const LeafletLayer = React.createClass({
         if (newProps.position !== this.props.position) {
             this.updateZIndex(newProps.position);
         }
+        this.updateLayer(newProps, this.props);
     },
     componentWillUnmount() {
         if (this.layer && this.props.map) {
@@ -40,7 +41,19 @@ const LeafletLayer = React.createClass({
         }
     },
     render() {
-        return null;
+        if (this.props.children) {
+            const layer = this.layer;
+            const children = layer ? React.Children.map(this.props.children, child => {
+                return child ? React.cloneElement(child, {container: layer, styleName: this.props.options && this.props.options.styleName}) : null;
+            }) : null;
+            return (
+                <noscript>
+                    {children}
+                </noscript>
+            );
+        }
+        return Layers.renderLayer(this.props.type, this.props.options, this.props.map, this.props.map.id, this.layer);
+
     },
     setLayerVisibility(visibility) {
         var oldVisibility = this.props.options && this.props.options.visibility !== false;
@@ -74,6 +87,9 @@ const LeafletLayer = React.createClass({
                 this.layer.layerName = options.name;
             }
         }
+    },
+    updateLayer(newProps, oldProps) {
+        Layers.updateLayer(newProps.type, this.layer, newProps.options, oldProps.options);
     },
     addLayer() {
         if (this.layer) {
