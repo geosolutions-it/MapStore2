@@ -8,11 +8,41 @@
 
 var Layers = require('../../../../utils/openlayers/Layers');
 var ol = require('openlayers');
+var eventListener = require('eventlistener');
+
+const removeIds = (items) => {
+    if (items.length !== 0) {
+        for (let i = 0; i < items.length; i++) {
+            let item = items.item(i);
+            item.removeAttribute('data-reactid');
+            removeIds(item.children || []);
+        }
+    }
+};
+
+const cloneOriginalOverlay = (original, options) => {
+    let cloned = original.cloneNode(true);
+    cloned.id = options.id + '-overlay';
+    cloned.className = (options.className || original.className) + "-overlay";
+    cloned.removeAttribute('data-reactid');
+    // remove reactjs generated ids from cloned object
+    removeIds(cloned.children || []);
+    // handle optional close button on overlay
+    const closeClassName = options.closeClass || 'close';
+    if (options.onClose && cloned.getElementsByClassName(closeClassName).length === 1) {
+        const close = cloned.getElementsByClassName(closeClassName)[0];
+        const onClose = (e) => {
+            options.onClose(e.target.getAttribute('data-overlayid'));
+        };
+        eventListener.add(close, 'click', onClose);
+    }
+    return cloned;
+};
 
 Layers.registerType('overlay', {
     create: (options, map) => {
-        const cloned = document.getElementById(options.id).cloneNode(true);
-        cloned.id = options.id + '-overlay';
+        const original = document.getElementById(options.id);
+        const cloned = cloneOriginalOverlay(original, options);
         document.body.appendChild(cloned);
         const overlay = new ol.Overlay(({
             id: options.id,

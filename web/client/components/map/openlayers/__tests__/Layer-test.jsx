@@ -233,6 +233,65 @@ describe('Openlayers layer', () => {
         expect(document.getElementById('overlay-1-overlay')).toExist();
     });
 
+    it('creates and overlay layer for openlayers map with close support', () => {
+        let container = document.createElement('div');
+        container.id = 'container';
+        document.body.appendChild(container);
+
+        let element = document.createElement('div');
+        element.id = 'overlay-1';
+        let closeElement = document.createElement('div');
+        closeElement.className = 'close';
+        element.appendChild(closeElement);
+        document.body.appendChild(element);
+        let closed = false;
+        let options = {
+            id: 'overlay-1',
+            position: [13, 43],
+            onClose: () => {
+                closed = true;
+            }
+        };
+        // create layers
+        let layer = React.render(
+            <OpenlayersLayer type="overlay"
+                 options={options} map={map}/>, document.getElementById('container'));
+
+        expect(layer).toExist();
+        const overlayElement = document.getElementById('overlay-1-overlay');
+        expect(overlayElement).toExist();
+        const close = overlayElement.getElementsByClassName('close')[0];
+        close.click();
+        expect(closed).toBe(true);
+    });
+
+    it('creates and overlay layer for openlayers map with no data-reactid attributes', () => {
+        let container = document.createElement('div');
+        container.id = 'container';
+        document.body.appendChild(container);
+
+        let element = document.createElement('div');
+        element.id = 'overlay-1';
+        let closeElement = document.createElement('div');
+        closeElement.className = 'close';
+        element.appendChild(closeElement);
+        document.body.appendChild(element);
+        let options = {
+            id: 'overlay-1',
+            position: [13, 43]
+        };
+        // create layers
+        let layer = React.render(
+            <OpenlayersLayer type="overlay"
+                 options={options} map={map}/>, document.getElementById('container'));
+
+        expect(layer).toExist();
+        const overlayElement = document.getElementById('overlay-1-overlay');
+        expect(overlayElement.getAttribute('data-reactid')).toNotExist();
+        const close = overlayElement.getElementsByClassName('close')[0];
+        expect(close.getAttribute('data-reactid')).toNotExist();
+    });
+
     it('creates a vector layer for openlayers map', () => {
         var options = {
             crs: 'EPSG:4326',
