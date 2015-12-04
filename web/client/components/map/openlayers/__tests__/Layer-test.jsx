@@ -276,13 +276,9 @@ describe('Openlayers layer', () => {
         closeElement.className = 'close';
         element.appendChild(closeElement);
         document.body.appendChild(element);
-        let closed = false;
         let options = {
             id: 'overlay-1',
-            position: [13, 43],
-            onClose: () => {
-                closed = true;
-            }
+            position: [13, 43]
         };
         // create layers
         let layer = React.render(
