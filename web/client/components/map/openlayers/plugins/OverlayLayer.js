@@ -8,7 +8,7 @@
 
 var Layers = require('../../../../utils/openlayers/Layers');
 var ol = require('openlayers');
-var eventListener = require('eventListener');
+var eventListener = require('eventlistener');
 
 const removeIds = (items) => {
     if (items.length !== 0) {
