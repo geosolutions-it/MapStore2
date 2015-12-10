@@ -17,9 +17,9 @@ var ConfigUtils = require('../../utils/ConfigUtils');
 var LocaleUtils = require('../../utils/LocaleUtils');
 
 var Debug = require('../../components/development/Debug');
-
+require('./css/mobile.css');
 function startApp(plugins) {
-    let store = require('./stores/viewerstore')(plugins.reducers);
+    let store = require('./stores/viewerstore')(plugins.reducers, {mapInfo: {enabled: true, infoFormat: 'text/html' }});
     let Viewer = require('./containers/Viewer')(plugins.actions);
 
     /**
@@ -41,9 +41,9 @@ function startApp(plugins) {
             <Provider store={store}>
                 {() =>
                     (<Viewer plugins={plugins.components} mapParams={{
-                        overview: true,
-                        scaleBar: true,
-                        zoomControl: true
+                        overview: false,
+                        scaleBar: false,
+                        zoomControl: false
                     }}/>)
 
                 }
@@ -58,12 +58,12 @@ if (!global.Intl ) {
         global.Intl = require('intl');
         require('intl/locale-data/jsonp/en.js');
         require('intl/locale-data/jsonp/it.js');
-        let plugins = require('./plugins');
+        let plugins = require('./plugins/mobile.jsx');
         startApp(plugins);
     });
 }else {
     require.ensure(["./plugins"], (require) => {
-        var plugins = require('./plugins');
+        var plugins = require('./plugins/mobile.jsx');
         startApp(plugins);
     });
 }

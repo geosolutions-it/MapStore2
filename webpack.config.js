@@ -18,6 +18,7 @@ module.exports = {
         'webpack': 'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
         viewer: path.join(__dirname, "web", "client", "examples", "viewer", "app"),
         manager: path.join(__dirname, "web", "client", "examples", "manager", "app"),
+        mobile: path.join(__dirname, "web", "client", "examples", "viewer", "mobile"),
         home: path.join(__dirname, "web", "client", "examples", "home", "app"),
         mouseposition: path.join(__dirname, "web", "client", "examples", "mouseposition", "app"),
         scalebar: path.join(__dirname, "web", "client", "examples", "scalebar", "app"),

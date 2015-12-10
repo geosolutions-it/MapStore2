@@ -26,6 +26,7 @@ var Localized = require('../../../components/I18N/Localized');
 var Viewer = React.createClass({
     propTypes: {
         map: ConfigUtils.PropTypes.config,
+        mapParams: React.PropTypes.object,
         layers: React.PropTypes.object,
         configPlugins: React.PropTypes.array,
         browser: React.PropTypes.object,
@@ -78,7 +79,7 @@ var Viewer = React.createClass({
                                 for (let propName in props) {
                                     if (props.hasOwnProperty(propName)) {
                                         let value = props[propName];
-                                        if (value.indexOf('${') === 0) {
+                                        if (value.indexOf("${") === 0) {
                                             value = value.substring(2, value.length - 1);
                                             value = this.props[value];
                                         }
@@ -95,8 +96,9 @@ var Viewer = React.createClass({
                                     onLayerLoading={this.props.layerLoading} onLayerLoad={this.props.layerLoad}
                                     measurement={this.props.measurement}
                                     changeMeasurementState={this.props.changeMeasurementState}
-                                    locate={this.props.locate} locateMessages={this.props.messages.locate}/>
-                                {plugins}
+                                    locate={this.props.locate} locateMessages={this.props.messages.locate}
+                                    {...this.props.mapParams} />
+                            {plugins}
                             </div>
                         );
                     }

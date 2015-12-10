@@ -35,7 +35,7 @@ var LocateBtn = React.createClass({
     renderButton() {
         return (
             <Button id={this.props.id} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.props.pressed ? 'primary' : 'default'} style={this.props.style}>
-                <Glyphicon glyph="map-marker"/>{this.props.text}
+                <Glyphicon glyph="screenshot"/>{this.props.text}
             </Button>
         );
     },

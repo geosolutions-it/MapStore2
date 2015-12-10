@@ -49,11 +49,13 @@ let BackgroundSwitcher = React.createClass({
         name: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         layers: React.PropTypes.array,
         columnProperties: React.PropTypes.object,
-        propertiesChangeHandler: React.PropTypes.func
+        propertiesChangeHandler: React.PropTypes.func,
+        fluid: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
             icon: <Glyphicon glyph="globe"/>,
+            fluid: false,
             columnProperties: {
                 xs: 6,
                 sm: 4,
@@ -83,7 +85,7 @@ let BackgroundSwitcher = React.createClass({
     },
     render() {
         return (
-           <Grid className="BackgroundSwitcherComponent" header={this.props.name} fluid={false}>{this.renderBackgrounds()}</Grid>
+           <Grid className="BackgroundSwitcherComponent" header={this.props.name} fluid={this.props.fluid}>{this.renderBackgrounds()}</Grid>
         );
     },
     changeLayerVisibility(eventObj) {

@@ -59,7 +59,7 @@ var reorder = (groups, allLayers) => {
     return allLayers.filter((layer) => layer.group === 'background').concat(reorderLayers(groups, allLayers));
 };
 
-module.exports = (reducers) => {
+module.exports = (reducers, initialState = {}) => {
     const reducersObj = assign({}, reducers, {
         // layers,
         locale,
@@ -96,5 +96,5 @@ module.exports = (reducers) => {
         };
         return newState;
     };
-    return DebugUtils.createDebugStore(rootReducer, {});
+    return DebugUtils.createDebugStore(rootReducer, initialState);
 };
