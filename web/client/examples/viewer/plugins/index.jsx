@@ -81,7 +81,7 @@ module.exports = {
                         bottom: "-8px",
                         right: "0px",
                         margin: "8px"
-                    }} key="about"/>,
+                    }} />,
             <HelpWrapper
                 helpText={<Message msgId="helptexts.searchBar"/>}
                 helpEnabled={props.help.enabled}
