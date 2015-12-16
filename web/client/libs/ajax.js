@@ -107,7 +107,7 @@ axios.interceptors.request.use(config => {
         let proxyUrl = ConfigUtils.getProxyUrl(config);
         if (proxyUrl) {
 
-            if (proxyUrl.match(/^http:\/\//i) === null) {
+            if (proxyUrl.match(/^http(s)?:\/\//i) === null) {
                 proxyUrl = 'http://' + window.location.host + proxyUrl;
             }
             config.url = proxyUrl + encodeURIComponent(buildUrl(uri, config.params));
