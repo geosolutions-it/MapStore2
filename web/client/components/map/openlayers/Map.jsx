@@ -23,6 +23,7 @@ var OpenlayersMap = React.createClass({
         onMapViewChanges: React.PropTypes.func,
         onClick: React.PropTypes.func,
         mapOptions: React.PropTypes.object,
+        zoomControl: React.PropTypes.bool,
         mousePointer: React.PropTypes.string,
         onMouseMove: React.PropTypes.func,
         onLayerLoading: React.PropTypes.func,
@@ -59,6 +60,7 @@ var OpenlayersMap = React.createClass({
             new ol.interaction.MouseWheelZoom({duration: 0})
         ]);
         let controls = this.props.mapOptions.controls || ol.control.defaults({
+            zoom: this.props.zoomControl,
             attributionOptions: ({
               collapsible: false
             })

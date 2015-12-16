@@ -11,13 +11,13 @@ var url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 const mapType = urlQuery.type || 'leaflet';
 
-var LMap = require('../../../components/map/' + mapType + '/Map');
-var LLayer = require('../../../components/map/' + mapType + '/Layer');
-var ScaleBar = require('../../../components/map/' + mapType + '/ScaleBar');
-var MeasurementSupport = require('../../../components/map/' + mapType + '/MeasurementSupport');
-var Overview = require('../../../components/map/' + mapType + '/Overview');
-var Locate = require('../../../components/map/' + mapType + '/Locate');
-
+var {LMap,
+    LLayer,
+    ScaleBar,
+    MeasurementSupport,
+    Overview,
+    Locate
+} = require('../../../components/map/' + mapType + '/index');
 
 var assign = require('object-assign');
 var ConfigUtils = require('../../../utils/ConfigUtils');
@@ -26,6 +26,9 @@ var VMap = React.createClass({
     propTypes: {
         config: ConfigUtils.PropTypes.config,
         layers: React.PropTypes.array,
+        overview: React.PropTypes.bool,
+        scaleBar: React.PropTypes.bool,
+        zoomControl: React.PropTypes.bool,
         onMapViewChanges: React.PropTypes.func,
         onClick: React.PropTypes.func,
         onMouseMove: React.PropTypes.func,
@@ -46,6 +49,28 @@ var VMap = React.createClass({
         }
         return null;
     },
+    renderSupportTools() {
+        var baseTools = [<MeasurementSupport
+            changeMeasurementState={this.props.changeMeasurementState}
+            measurement={this.props.measurement} />,
+            <Locate status={this.props.locate.enabled} messages={ this.props.locateMessages }/>];
+        if (this.props.overview) {
+            baseTools.push(<Overview
+                overviewOpt={{ // overviewOpt accept config param for ol and leflet overview control
+                        // refer to https://github.com/Norkart/Leaflet-MiniMap and http://openlayers.org/en/v3.10.1/apidoc/ol.control.OverviewMap.html
+                        position: 'bottomright',
+                        collapsedWidth: 25,
+                        collapsedHeight: 25,
+                        zoomLevelOffset: -5,
+                        toggleDisplay: true
+                }}// If not passed overview will use osm as default layer
+                layers={[{type: "osm"}]}/>);
+        }
+        if (this.props.scaleBar) {
+            baseTools.push(<ScaleBar/>);
+        }
+        return baseTools;
+    },
     render() {
         return (
             <LMap id="map"
@@ -53,6 +78,7 @@ var VMap = React.createClass({
                 zoom={this.props.config.zoom}
                 mapStateSource={this.props.config.mapStateSource}
                 projection={this.props.config.projection || 'EPSG:3857'}
+                zoomControl={this.props.zoomControl}
                 onMapViewChanges={this.props.onMapViewChanges}
                 onClick={this.props.onClick}
                 mousePointer={this.props.config.mousePointer}
@@ -61,31 +87,12 @@ var VMap = React.createClass({
                 onLayerLoad={this.props.onLayerLoad}
             >
                 {this.renderLayers(this.props.layers)}
-                <MeasurementSupport
-                    changeMeasurementState={this.props.changeMeasurementState}
-                    measurement={this.props.measurement} />
-                <ScaleBar/>
-                <Overview
-                    overviewOpt={{ // overviewOpt accept config param for ol and leflet overview control
-                            // refer to https://github.com/Norkart/Leaflet-MiniMap and http://openlayers.org/en/v3.10.1/apidoc/ol.control.OverviewMap.html
-                            position: 'bottomright',
-                            collapsedWidth: 25,
-                            collapsedHeight: 25,
-                            zoomLevelOffset: -5,
-                            toggleDisplay: true
-                    }}// If not passed overview will use osm as default layer
-                    layers={[{type: "osm"}]}/>
-                <Locate status={this.props.locate.enabled} messages={ this.props.locateMessages }/>
+                {this.renderSupportTools()}
             </LMap>
         );
     }
 });
 
-require('../../../components/map/' + mapType + '/plugins/OSMLayer');
-require('../../../components/map/' + mapType + '/plugins/WMSLayer');
-require('../../../components/map/' + mapType + '/plugins/GoogleLayer');
-require('../../../components/map/' + mapType + '/plugins/BingLayer');
-require('../../../components/map/' + mapType + '/plugins/MapQuest');
-require('../../../components/map/' + mapType + '/plugins/TileProviderLayer');
+require('../../../components/map/' + mapType + '/plugins/index');
 
 module.exports = VMap;

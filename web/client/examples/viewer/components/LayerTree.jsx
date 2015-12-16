@@ -7,7 +7,6 @@
  */
 
 var React = require('react');
-var {Panel} = require('react-bootstrap');
 
 var Layers = require('../../../components/Layers/Layers');
 var DefaultGroup = require('../../../components/Layers/DefaultGroup');
@@ -20,6 +19,7 @@ var LayerTree = React.createClass({
         id: React.PropTypes.number,
         buttonContent: React.PropTypes.node,
         groups: React.PropTypes.array,
+        groupStyle: React.PropTypes.object,
         propertiesChangeHandler: React.PropTypes.func,
         onToggleGroup: React.PropTypes.func,
         onToggleLayer: React.PropTypes.func,
@@ -42,17 +42,17 @@ var LayerTree = React.createClass({
         }
 
         return (
-            <Panel>
+            <div>
                 <Layers onSort={this.props.onSort} filter={this.getNoBackgroundLayers}
                     nodes={this.props.groups}>
-                    <DefaultGroup onSort={this.props.onSort} onToggle={this.props.onToggleGroup}>
+                    <DefaultGroup onSort={this.props.onSort} onToggle={this.props.onToggleGroup} style={this.props.groupStyle}>
                         <DefaultLayer
                             onToggle={this.props.onToggleLayer}
                             propertiesChangeHandler={this.props.propertiesChangeHandler}
                             />
                     </DefaultGroup>
                 </Layers>
-            </Panel>
+            </div>
         );
     }
 });

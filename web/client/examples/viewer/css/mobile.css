@@ -1,0 +1,167 @@
+
+/* General Mobile Usability styles */
+body {
+    font-size: 16px;
+}
+input[type=checkbox], input[type=radio] {
+    width: 20px;
+    height: 20px;
+    vertical-align: bottom;
+}
+
+/* nav drawer */
+.nav-menu {
+    display:block;
+}
+.nav-menu > div.nav-content {
+    position:absolute;
+    z-index:2;
+    top:0;
+    width:300px;
+    height:100%;
+    max-height: 100%;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing:    border-box;
+    -ms-box-sizing:  border-box;
+    -o-box-sizing: border-box;
+
+    -webkit-transition: transform .5s ease;
+     -moz-transition: transform .5s ease;
+       -o-transition: transform .5s ease;
+          transition: transform .5s ease;
+
+}
+div.nav-menu > div.nav-content.left{
+    background: rgba(255,255,255,.7);
+    left:-300px;
+}
+
+div.nav-menu > div.nav-content.visible.left {
+    -webkit-transform:   translate3d(300px, 0, 0);
+    -moz-transform: 	 translate3d(300px, 0, 0);
+    -ms-transform: 		 translate3d(300px, 0, 0);
+    -o-transform: 		 translate3d(300px, 0, 0);
+}
+/*
+div.nav-menu >div.nav-content.right  {
+            background:#6B1919;
+            right:-300px;
+        }
+
+div.nav-menu >div.nav-content.visible.right  {
+    -webkit-transform:   translate3d(300px, 0, 0);
+    -moz-transform: 	 translate3d(300px, 0, 0);
+    -ms-transform: 		 translate3d(300px, 0, 0);
+    -o-transform: 		 translate3d(300px, 0, 0);
+}
+*/
+.nav-menu > .nav-halo {
+    position: absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    width:100%;
+    transition: visibility 0s, opacity 0.3s ease;
+    height:100%;
+    background-color: rgba(0,0,0,.6);
+}
+.nav-menu > .nav-halo {
+    z-index: 100;
+}
+.nav-menu >  div.nav-content {
+    z-index: 101;
+    overflow-y: auto;
+}
+/* search bar override */
+div.MapSearchBar {
+    left: 45px;
+    position: absolute;
+    right: 5px;
+    top: 10px;
+}
+
+/* Layer tree */
+.nav-menu >  div.nav-content .panel-body{
+    padding:0px;
+}
+nav-menu >  div.nav-content .group-expanded,.nav-menu >  div.nav-content .group-collapsed{
+    border-bottom: thin solid #FAFAFA
+
+}
+
+.nav-menu >  div.nav-content .layer-expanded,.nav-menu >  div.nav-content .layer-collapsed{
+    margin: 10px;
+}
+/* Layer tree animations */
+.layertree-group-content-enter {
+  opacity: 0.01;
+}
+
+.layertree-group-content-enter.layertree-group-content-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.layertree-group-content-leave {
+  opacity: 1;
+}
+
+.layertree-group-content-leave.layertree-group-content-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+
+/** Background switcher **/
+.nav-content .BackgroundSwitcherComponent {
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+.nav-content .BackgroundSwitcherComponent .thumbnail {
+    border-radius: 50px;
+    margin-bottom: 40px;
+}
+.nav-content .BackgroundSwitcherComponent .thumbnail img {
+    border-radius: 50px;
+    height: 90px;
+    width: 90px;
+}
+.nav-content .BackgroundSwitcherComponent .thumbnail .caption {
+    font-size: 10px;
+    text-align: center;
+    text-overflow: ellipsis;
+    padding: 0;
+    height: 0;
+    overflow: visible;
+    top: 10px;
+    max-width: 100%;
+    position: relative;
+}
+
+#mapstore-globalspinner{
+    top: 40px;
+}
+
+/* Menu Button */
+#drawer-menu-button:active{
+    box-shadow: none;
+}
+/* Locate Me button */
+
+#locateMeButton{
+    position: absolute;
+    right:15px;
+    bottom: 40px;
+    font-size: 30px;
+    border-radius: 30px;
+    padding-bottom: 0;
+    background-color: rgba(255, 255, 255, 0.50);
+    transition: color 1s ease, background-color 1s ease;
+}
+#locateMeButton:active,#locateMeButton:focus{
+    outline: none;
+}
+#locateMeButton.btn-primary{
+    background-color:rgba(51,122,183,0.5);
+}

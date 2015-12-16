@@ -9,7 +9,7 @@ var L = require('leaflet');
 var React = require('react');
 var ConfigUtils = require('../../../utils/ConfigUtils');
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
-
+var assign = require('object-assign');
 var mapUtils = require('../../../utils/MapUtils');
 
 var LeafletMap = React.createClass({
@@ -22,6 +22,7 @@ var LeafletMap = React.createClass({
         onMapViewChanges: React.PropTypes.func,
         onClick: React.PropTypes.func,
         mapOptions: React.PropTypes.object,
+        zoomControl: React.PropTypes.bool,
         mousePointer: React.PropTypes.string,
         onMouseMove: React.PropTypes.func,
         onLayerLoading: React.PropTypes.func,
@@ -37,6 +38,7 @@ var LeafletMap = React.createClass({
           onMapViewChanges: () => {},
           onClick: null,
           onMouseMove: () => {},
+          zoomControl: true,
           mapOptions: {
               zoomAnimation: true,
               attributionControl: true
@@ -52,7 +54,7 @@ var LeafletMap = React.createClass({
         return { };
     },
     componentDidMount() {
-        var map = L.map(this.props.id, this.props.mapOptions).setView([this.props.center.y, this.props.center.x],
+        var map = L.map(this.props.id, assign({zoomControl: this.props.zoomControl}, this.props.mapOptions) ).setView([this.props.center.y, this.props.center.x],
           this.props.zoom);
 
         this.map = map;
