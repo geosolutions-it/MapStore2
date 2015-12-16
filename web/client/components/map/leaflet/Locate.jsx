@@ -70,8 +70,10 @@ let Locate = React.createClass({
         }
         if (newProps.messages !== this.props.messages) {
             this.locate.setStrings(newProps.messages);
-            this.locate.stop();
-            this.locate.start();
+            if (newProps.status) {
+                this.locate.stop();
+                this.locate.start();
+            }
         }
     },
     render() {
