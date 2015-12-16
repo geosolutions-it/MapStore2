@@ -52,7 +52,6 @@ describe("test the SearchBar", () => {
             onSearchResetHandler: () => {}
         };
 
-        const spy = expect.spyOn(testHandlers, 'onSearchHandler');
         const spyReset = expect.spyOn(testHandlers, 'onSearchResetHandler');
         var tb = React.render(<SearchBar delay={0} typeAhead={false} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler}/>, document.body);
         let input = TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0].getDOMNode();
