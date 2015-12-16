@@ -70,17 +70,17 @@ let SearchBar = React.createClass({
         }
     },
     render() {
-        const innerGlyphicon = <Button onClick={this.search}><Glyphicon glyph="search"/></Button>;
+        //  const innerGlyphicon = <Button onClick={this.search}></Button>;
         const remove = <Glyphicon className="searchclear" glyph="remove" onClick={this.clearSearch}/>;
         var showRemove = this.state.searchText !== "";
         return (
             <div className="MapSearchBar">
                 <Input
+                    key="search-input"
                     type="text"
                     value={this.state.searchText}
                     ref="input"
-                    addonAfter={showRemove ? remove : null}
-                    buttonAfter={innerGlyphicon}
+                    addonAfter={showRemove ? remove : <Glyphicon glyph="search"/>}
                     onKeyDown={this.onKeyDown}
                     onBlur={this.onBlur}
                     onFocus={this.onFocus}

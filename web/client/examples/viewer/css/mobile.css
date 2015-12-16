@@ -42,6 +42,7 @@ div.nav-menu > div.nav-content.visible.left {
     -moz-transform: 	 translate3d(300px, 0, 0);
     -ms-transform: 		 translate3d(300px, 0, 0);
     -o-transform: 		 translate3d(300px, 0, 0);
+    box-shadow: 2px 0px 15px #A7A7A7;
 }
 /*
 div.nav-menu >div.nav-content.right  {
@@ -54,6 +55,7 @@ div.nav-menu >div.nav-content.visible.right  {
     -moz-transform: 	 translate3d(300px, 0, 0);
     -ms-transform: 		 translate3d(300px, 0, 0);
     -o-transform: 		 translate3d(300px, 0, 0);
+    box-shadow: 2px 2px 4px #A7A7A7;
 }
 */
 .nav-menu > .nav-halo {
@@ -76,10 +78,14 @@ div.nav-menu >div.nav-content.visible.right  {
 }
 /* search bar override */
 div.MapSearchBar {
-    left: 45px;
+    left: 5px;
+
     position: absolute;
     right: 5px;
     top: 10px;
+}
+div.MapSearchBar input {
+    padding-left:35px;
 }
 
 /* Layer tree */
@@ -87,8 +93,7 @@ div.MapSearchBar {
     padding:0px;
 }
 nav-menu >  div.nav-content .group-expanded,.nav-menu >  div.nav-content .group-collapsed{
-    border-bottom: thin solid #FAFAFA
-
+    border-bottom: thin solid #FAFAFA;
 }
 
 .nav-menu >  div.nav-content .layer-expanded,.nav-menu >  div.nav-content .layer-collapsed{
@@ -144,6 +149,20 @@ nav-menu >  div.nav-content .group-expanded,.nav-menu >  div.nav-content .group-
 }
 
 /* Menu Button */
+#drawer-menu-button {
+    position: absolute;
+    z-index:10;
+    left: 3px;
+    top: 7px;
+    margin: 5px;
+    background: transparent;
+    outline: none;
+    border: transparent;
+    text-shadow: 2px 2px 4px #A7A7A7;
+    font-size: 14px;
+
+}
+
 #drawer-menu-button:active{
     box-shadow: none;
 }
@@ -153,10 +172,13 @@ nav-menu >  div.nav-content .group-expanded,.nav-menu >  div.nav-content .group-
     position: absolute;
     right:15px;
     bottom: 40px;
-    font-size: 30px;
+    width: 50px;
+    height:50px;
+    font-size: 25px;
     border-radius: 30px;
     padding-bottom: 0;
     background-color: rgba(255, 255, 255, 0.50);
+    box-shadow: 2px 2px 4px #A7A7A7;
     transition: color 1s ease, background-color 1s ease;
 }
 #locateMeButton:active,#locateMeButton:focus{
