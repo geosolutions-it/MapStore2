@@ -122,13 +122,7 @@ module.exports = {
                     </Panel>
                 </PanelGroup>
             </Menu>,
-            <Button id="drawer-menu-button" key="menu-button" style={{position: "absolute", margin: "5px",
-                background: "transparent",
-                outline: "none",
-                border: "transparent",
-                textShadow: "white 0 0 10px",
-                fontSize: "25px"
-            }} onClick={() => {menu.show(); }}><Glyphicon glyph="menu-hamburger"/></Button>,
+            <Button id="drawer-menu-button" key="menu-button" onClick={() => {menu.show(); }}><Glyphicon glyph="menu-hamburger"/></Button>,
             <LocateBtn
                    id="locateMeButton"
                    key="locate-me-button"
