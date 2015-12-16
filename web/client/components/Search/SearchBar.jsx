@@ -7,7 +7,7 @@
  */
 
 var React = require('react');
-var {Input, Glyphicon, Button} = require('react-bootstrap');
+var {Input, Glyphicon} = require('react-bootstrap');
 
 
 var delay = (
