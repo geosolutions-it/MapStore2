@@ -187,3 +187,25 @@ nav-menu >  div.nav-content .group-expanded,.nav-menu >  div.nav-content .group-
 #locateMeButton.btn-primary{
     background-color:rgba(51,122,183,0.5);
 }
+
+#mapstore-mouseposition-mobile {
+        z-index: 10;
+        top: 40px;
+        left:calc(50% - 100px);
+        position: absolute;
+    }
+
+#mapstore-mouseposition-mobile .label {
+        display: inline-block;
+        max-width: 280px;
+        min-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        vertical-align: middle;
+}
+
+#mapstore-mouseposition-mobile .label-info {
+        background-color:rgba(91,192,222,0);
+        color: black;
+    }

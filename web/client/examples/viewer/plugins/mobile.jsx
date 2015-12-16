@@ -7,6 +7,7 @@ var ToggleButton = require('../../../components/buttons/ToggleButton');
 var { ActionCreators } = require('redux-undo');
 var {undo, redo} = ActionCreators;
 var BackgroundSwitcher = require("../../../components/BackgroundSwitcher/BackgroundSwitcher");
+var MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
 var {Message} = require('../../../components/I18N/I18N');
 var Menu = require('../../../components/menu/DrawerMenu');
 var mapInfo = require('../../../reducers/mapInfo');
@@ -112,7 +113,6 @@ module.exports = {
                                     buttonBefore: <ToggleButton
                                         isButton={true}
                                         text={<Message msgId="enable" />}
-                                        btnConfig={{disabled: (!props.browser.touch) ? false : true}}
                                         pressed={props.mousePositionEnabled}
                                         glyphicon="eye-open"
                                         onClick={props.changeMousePositionState}/>
@@ -130,6 +130,12 @@ module.exports = {
                    pressed={props.locate.enabled}
                    onClick={props.changeLocateState}
                    tooltip={<Message msgId="locate.tooltip"/>}/>,
+            <MousePosition
+                id="mapstore-mouseposition-mobile"
+                key="mousePosition"
+                enabled={props.mousePositionEnabled}
+                mousePosition={props.map.center}
+                crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.map.projection}/>,
             <GetFeatureInfo
                 key="getFeatureInfo"
                 enabled={props.mapInfo.enabled}
