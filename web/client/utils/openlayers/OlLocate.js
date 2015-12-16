@@ -69,12 +69,16 @@ var OlLocate = function(map, optOptions) {
 ol.inherits(OlLocate, ol.Object);
 
 OlLocate.prototype.start = function() {
+    this.follow = this.options.follow;
     this.geolocate.setTracking(true);
     this.layer.setMap(this.map);
     this.map.addOverlay(this.overlay);
     if (this.options.showPopup) {
         this.map.on('click', this.mapClick, this);
         this.map.on('touch', this.mapClick, this);
+    }
+    if (this.options.stopFollowingOnDrag) {
+        this.map.on('pointerdrag', this.stopFollow, this);
     }
 };
 
@@ -87,6 +91,14 @@ OlLocate.prototype.stop = function() {
         this.map.un('click', this.mapClick);
         this.map.un('touch', this.mapClick);
     }
+    if (this.options.stopFollowingOnDrag && !this.follow) {
+        this.map.un('pointerdrag', this.stopFollow, this);
+    }
+};
+
+OlLocate.prototype.stopFollow = function() {
+    this.follow = false;
+    this.map.un('pointerdrag', this.stopFollow, this);
 };
 
 OlLocate.prototype._updatePosFt = function() {
@@ -101,7 +113,7 @@ OlLocate.prototype._updatePosFt = function() {
     if (!this.popup.hidden) {
         this._updatePopUpCnt();
     }
-    if (this.options.follow) {
+    if (this.follow) {
         this.updateView(point);
     }
     // Update only once
@@ -111,7 +123,7 @@ OlLocate.prototype._updatePosFt = function() {
 };
 
 OlLocate.prototype.updateView = function(point) {
-    if (this.options.follow) {
+    if (this.follow) {
         this.map.getView().setCenter(point.getCoordinates());
         if (!this.options.keepCurrentZoomLevel) {
             this.map.getView().setZoom(this.options.locateOptions.maxZoom);
