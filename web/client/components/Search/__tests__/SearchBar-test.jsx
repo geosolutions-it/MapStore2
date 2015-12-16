@@ -66,12 +66,6 @@ describe("test the SearchBar", () => {
         expect(spyReset.calls.length).toEqual(1);
         expect(input.value).toEqual("");
 
-        // search button
-        let button = TestUtils.scryRenderedDOMComponentsWithTag(tb, "button")[0].getDOMNode();
-        input.value = "test 2";
-        TestUtils.Simulate.change(input);
-        TestUtils.Simulate.click(button);
-        expect(spy.calls.length).toEqual(1);
     });
 
     it('test typeahead', (done) => {
