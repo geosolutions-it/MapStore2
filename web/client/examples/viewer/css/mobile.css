@@ -153,12 +153,12 @@ nav-menu >  div.nav-content .group-expanded,.nav-menu >  div.nav-content .group-
     position: absolute;
     z-index:10;
     left: 3px;
-    top: 7px;
+    top: 8px;
     margin: 5px;
+    width:30px;
     background: transparent;
     outline: none;
     border: transparent;
-    text-shadow: 2px 2px 4px #A7A7A7;
     font-size: 14px;
 
 }
@@ -174,9 +174,9 @@ nav-menu >  div.nav-content .group-expanded,.nav-menu >  div.nav-content .group-
     bottom: 40px;
     width: 50px;
     height:50px;
-    font-size: 25px;
+    font-size: 17px;
     border-radius: 30px;
-    padding-bottom: 0;
+    padding: 10px 16px 7px 16px;
     background-color: rgba(255, 255, 255, 0.50);
     box-shadow: 2px 2px 4px #A7A7A7;
     transition: color 1s ease, background-color 1s ease;
