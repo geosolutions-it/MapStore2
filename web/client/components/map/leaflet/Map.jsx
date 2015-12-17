@@ -12,7 +12,8 @@ var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var assign = require('object-assign');
 var mapUtils = require('../../../utils/MapUtils');
 
-var LeafletMap = React.createClass({
+require('./SingleClick');
+let LeafletMap = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         center: ConfigUtils.PropTypes.center,
@@ -21,6 +22,7 @@ var LeafletMap = React.createClass({
         projection: React.PropTypes.string,
         onMapViewChanges: React.PropTypes.func,
         onClick: React.PropTypes.func,
+        onRightClick: React.PropTypes.func,
         mapOptions: React.PropTypes.object,
         zoomControl: React.PropTypes.bool,
         mousePointer: React.PropTypes.string,
@@ -59,7 +61,8 @@ var LeafletMap = React.createClass({
 
         this.map = map;
         this.map.on('moveend', this.updateMapInfoState);
-        this.map.on('click', (event) => {
+        // this uses the hook defined in ./SingleClick.js for leaflet 0.7.*
+        this.map.on('singleclick', (event) => {
             if (this.props.onClick) {
                 this.props.onClick(event.containerPoint);
             }
@@ -67,6 +70,11 @@ var LeafletMap = React.createClass({
         this.map.on('dragstart', () => { this.map.off('mousemove', this.mouseMoveEvent); });
         this.map.on('dragend', () => { this.map.on('mousemove', this.mouseMoveEvent); });
         this.map.on('mousemove', this.mouseMoveEvent);
+        this.map.on('contextmenu', () => {
+            if (this.props.onRightClick) {
+                this.props.onRightClick(event.containerPoint);
+            }
+        });
 
         this.updateMapInfoState();
         this.setMousePointer(this.props.mousePointer);
@@ -90,6 +98,7 @@ var LeafletMap = React.createClass({
         }
     },
     componentWillReceiveProps(newProps) {
+
         if (newProps.mousePointer !== this.props.mousePointer) {
             this.setMousePointer(newProps.mousePointer);
         }
@@ -103,6 +112,7 @@ var LeafletMap = React.createClass({
                 this.map.invalidateSize(false);
             }, 0);
         }
+        return false;
     },
     componentWillUnmount() {
         this.map.remove();

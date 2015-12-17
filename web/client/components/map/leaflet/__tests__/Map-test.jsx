@@ -122,7 +122,7 @@ describe('LeafletMap', () => {
         leafletMap.setView({lat: 44, lng: 10}, 12);
     });
 
-    it('check if the handler for "click" event is called', () => {
+    it('check if the handler for "click" event is called', (done) => {
         const testHandlers = {
             handler: () => {}
         };
@@ -140,12 +140,15 @@ describe('LeafletMap', () => {
         const mapDiv = leafletMap.getContainer();
 
         mapDiv.click();
+        setTimeout(() => {
+            expect(spy.calls.length).toEqual(1);
+            expect(spy.calls[0].arguments.length).toEqual(1);
+            expect(spy.calls[0].arguments[0].x).toExist();
+            expect(spy.calls[0].arguments[0].y).toExist();
+            done();
+        }, 600);
 
-        expect(spy.calls.length).toEqual(1);
 
-        expect(spy.calls[0].arguments.length).toEqual(1);
-        expect(spy.calls[0].arguments[0].x).toExist();
-        expect(spy.calls[0].arguments[0].y).toExist();
     });
 
     it('check if the map changes when receive new props', () => {

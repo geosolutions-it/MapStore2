@@ -91,7 +91,7 @@ var OpenlayersMap = React.createClass({
                 rotation: view.getRotation()
             }, size, this.props.id);
         });
-        map.on('click', (event) => {
+        map.on('singleclick', (event) => {
             if (this.props.onClick) {
                 this.props.onClick({
                     x: event.pixel[0],
