@@ -19,7 +19,7 @@ var LocaleUtils = require('../../utils/LocaleUtils');
 var Debug = require('../../components/development/Debug');
 require('./css/mobile.css');
 function startApp(plugins) {
-    let store = require('./stores/viewerstore')(plugins.reducers, {mapInfo: {enabled: true, infoFormat: 'text/html' }});
+    let store = require('./stores/viewerstore')(plugins.reducers, {mapInfo: {enabled: true, infoFormat: 'text/html' }, mousePosition: {enabled: true, crs: "EPSG:4326"}});
     let Viewer = require('./containers/Viewer')(plugins.actions);
 
     /**

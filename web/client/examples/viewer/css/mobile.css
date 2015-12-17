@@ -191,8 +191,11 @@ nav-menu >  div.nav-content .group-expanded,.nav-menu >  div.nav-content .group-
 #mapstore-mouseposition-mobile {
         z-index: 10;
         top: 40px;
-        left:calc(50% - 100px);
         position: absolute;
+        text-shadow: -1px -1px 1px #fff,
+                      1px -1px 1px #fff,
+                     -1px  1px 1px #fff,
+                      1px  1px 1px #fff;
     }
 
 #mapstore-mouseposition-mobile .label {
