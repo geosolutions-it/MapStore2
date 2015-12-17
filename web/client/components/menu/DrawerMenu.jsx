@@ -6,8 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
+var {Glyphicon} = require('react-bootstrap');
 var Menu = React.createClass({
     propTypes: {
+        title: React.PropTypes.string,
         alignment: React.PropTypes.string
     },
     getInitialState() {
@@ -24,7 +26,13 @@ var Menu = React.createClass({
                         visibility: this.state.visible ? "visible" : "hidden",
                         opacity: this.state.visible ? 1 : 0}}
                         onClick={()=> {this.hide(); }}></div>
-                <div className={"nav-content " + (this.state.visible ? "visible " : "") + this.props.alignment}>{this.props.children}</div>
+                <div className={"nav-content " + (this.state.visible ? "visible " : "") + this.props.alignment}>
+                    <div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
+                        {this.props.title}
+                        <Glyphicon glyph="remove" onClick={() => {this.hide(); }} style={{position: "absolute", right: "5px", padding: "10px", cursor: "pointer"}}/>
+                    </div>
+                    {this.props.children}
+                </div>
             </div>
         );
     },

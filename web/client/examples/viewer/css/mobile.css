@@ -1,7 +1,7 @@
 
 /* General Mobile Usability styles */
 body {
-    font-size: 16px;
+    font-size: 14px;
 }
 input[type=checkbox], input[type=radio] {
     width: 20px;
@@ -65,7 +65,7 @@ div.nav-menu >div.nav-content.visible.right  {
     top:0;
     bottom:0;
     width:100%;
-    transition: visibility 0s, opacity 0.3s ease;
+    transition: visibility 500ms ease, opacity 500ms ease;
     height:100%;
     background-color: rgba(0,0,0,.6);
 }
