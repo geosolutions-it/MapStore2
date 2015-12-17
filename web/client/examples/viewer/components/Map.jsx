@@ -31,6 +31,7 @@ var VMap = React.createClass({
         zoomControl: React.PropTypes.bool,
         onMapViewChanges: React.PropTypes.func,
         onClick: React.PropTypes.func,
+        mapOptions: React.PropTypes.object,
         onMouseMove: React.PropTypes.func,
         onLayerLoading: React.PropTypes.func,
         onLayerLoad: React.PropTypes.func,
@@ -85,6 +86,7 @@ var VMap = React.createClass({
                 onMouseMove={this.props.onMouseMove}
                 onLayerLoading={this.props.onLayerLoading}
                 onLayerLoad={this.props.onLayerLoad}
+                mapOptions={this.props.config.mapOptions}
             >
                 {this.renderLayers(this.props.layers)}
                 {this.renderSupportTools()}
