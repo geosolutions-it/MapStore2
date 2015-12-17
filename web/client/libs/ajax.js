@@ -106,12 +106,19 @@ axios.interceptors.request.use(config => {
     if (!sameOrigin) {
         let proxyUrl = ConfigUtils.getProxyUrl(config);
         if (proxyUrl) {
-
-            if (proxyUrl.match(/^http(s)?:\/\//i) === null) {
-                proxyUrl = 'http://' + window.location.host + proxyUrl;
+            let useCORS = [];
+            if (isObject(proxyUrl)) {
+                useCORS = proxyUrl.useCORS || [];
+                proxyUrl = proxyUrl.url;
             }
-            config.url = proxyUrl + encodeURIComponent(buildUrl(uri, config.params));
-            config.params = undefined;
+            const isCORS = useCORS.reduce((found, current) => found || uri.indexOf(current) === 0, false);
+            if (!isCORS) {
+                if (proxyUrl.match(/^http(s)?:\/\//i) === null) {
+                    proxyUrl = 'http://' + window.location.host + proxyUrl;
+                }
+                config.url = proxyUrl + encodeURIComponent(buildUrl(uri, config.params));
+                config.params = undefined;
+            }
         }
     }
     return config;
