@@ -27,6 +27,7 @@ var Viewer = React.createClass({
     propTypes: {
         map: ConfigUtils.PropTypes.config,
         mapParams: React.PropTypes.object,
+        mapOptions: React.PropTypes.object,// specific options to initialize the map tool
         layers: React.PropTypes.object,
         configPlugins: React.PropTypes.array,
         browser: React.PropTypes.object,
@@ -97,6 +98,7 @@ var Viewer = React.createClass({
                                     measurement={this.props.measurement}
                                     changeMeasurementState={this.props.changeMeasurementState}
                                     locate={this.props.locate} locateMessages={this.props.messages.locate}
+                                    mapOptions={this.props.mapOptions}
                                     {...this.props.mapParams} />
                             {plugins}
                             </div>
