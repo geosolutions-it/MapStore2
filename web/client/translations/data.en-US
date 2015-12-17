@@ -22,7 +22,7 @@
         "enable": "Enable",
         "background": "Background",
         "language": "Language",
-        "mousePositionCoordinates": "Mouse position coordinates indicator",
+        "mousePositionCoordinates": "Coordinates indicator",
         "settings": "Settings",
         "noresultfound": "No Result found",
         "home":{

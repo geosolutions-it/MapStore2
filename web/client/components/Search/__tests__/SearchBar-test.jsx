@@ -52,7 +52,6 @@ describe("test the SearchBar", () => {
             onSearchResetHandler: () => {}
         };
 
-        const spy = expect.spyOn(testHandlers, 'onSearchHandler');
         const spyReset = expect.spyOn(testHandlers, 'onSearchResetHandler');
         var tb = React.render(<SearchBar delay={0} typeAhead={false} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler}/>, document.body);
         let input = TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0].getDOMNode();
@@ -66,12 +65,6 @@ describe("test the SearchBar", () => {
         expect(spyReset.calls.length).toEqual(1);
         expect(input.value).toEqual("");
 
-        // search button
-        let button = TestUtils.scryRenderedDOMComponentsWithTag(tb, "button")[0].getDOMNode();
-        input.value = "test 2";
-        TestUtils.Simulate.change(input);
-        TestUtils.Simulate.click(button);
-        expect(spy.calls.length).toEqual(1);
     });
 
     it('test typeahead', (done) => {

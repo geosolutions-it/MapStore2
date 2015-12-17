@@ -71,8 +71,7 @@ let Locate = React.createClass({
         if (newProps.messages !== this.props.messages) {
             this.locate.setStrings(newProps.messages);
             if (newProps.status) {
-                this.locate.stop();
-                this.locate.start();
+                this.locate.drawMarker(this.locate._map);
             }
         }
     },
@@ -82,6 +81,7 @@ let Locate = React.createClass({
     defaultOpt: { // For all configuration options refer to https://github.com/Norkart/Leaflet-MiniMap
             follow: true,  // follow with zoom and pan the user's location
             remainActive: true,
+            stopFollowingOnDrag: true,
             locateOptions: {
                 maximumAge: 2000,
                 enableHighAccuracy: false,
