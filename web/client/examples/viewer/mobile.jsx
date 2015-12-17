@@ -40,7 +40,8 @@ function startApp(plugins) {
         <Debug store={store}>
             <Provider store={store}>
                 {() =>
-                    (<Viewer plugins={plugins.components} mapParams={{
+                    (<Viewer plugins={plugins.components}
+                        mapParams={{
                         overview: false,
                         scaleBar: false,
                         zoomControl: false
