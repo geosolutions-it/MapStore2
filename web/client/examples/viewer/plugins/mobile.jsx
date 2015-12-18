@@ -127,7 +127,7 @@ module.exports = {
                    id="locateMeButton"
                    key="locate-me-button"
                    style={{width: "auto"}}
-                   pressed={props.locate.enabled}
+                   locate={props.locate.state}
                    onClick={props.changeLocateState}
                    tooltip={<Message msgId="locate.tooltip"/>}/>,
             <MousePosition

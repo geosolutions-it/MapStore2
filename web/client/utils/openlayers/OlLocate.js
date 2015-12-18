@@ -12,8 +12,7 @@ var assign = require('object-assign');
 
 
 var OlLocate = function(map, optOptions) {
-
-    ol.Object.call(this);
+    ol.Object.call(this, {state: "DISABLED"});
     this.map = map;
     let defOptions = {
             drawCircle: true,// draw accuracy circle
@@ -47,7 +46,6 @@ var OlLocate = function(map, optOptions) {
                         trackingOptions: this.options.locateOptions
                     });
     this.geolocate.on('change:position', this._updatePosFt, this);
-    this.geolocate.on('error', this.options.onLocationError, this);
     this.popup = popUp;
     this.popup.hidden = true;
     this.popCnt = popUp.getElementsByClassName("ol-popup-cnt")[0];
@@ -69,6 +67,7 @@ var OlLocate = function(map, optOptions) {
 ol.inherits(OlLocate, ol.Object);
 
 OlLocate.prototype.start = function() {
+    this.geolocate.on('error', this.options.onLocationError, this);
     this.follow = this.options.follow;
     this.geolocate.setTracking(true);
     this.layer.setMap(this.map);
@@ -80,9 +79,23 @@ OlLocate.prototype.start = function() {
     if (this.options.stopFollowingOnDrag) {
         this.map.on('pointerdrag', this.stopFollow, this);
     }
+    if (!this.p) {
+        this.set("state", "LOCATING");
+    }else {
+        this._updatePosFt();
+    }
 };
-
+OlLocate.prototype.startFollow = function() {
+    this.follow = true;
+    if (this.options.stopFollowingOnDrag) {
+        this.map.on('pointerdrag', this.stopFollow, this);
+    }
+    if (this.p) {
+        this._updatePosFt();
+    }
+};
 OlLocate.prototype.stop = function() {
+    this.geolocate.un('error', this.options.onLocationError, this);
     this.geolocate.setTracking(false);
     this.popup.hide = true;
     this.map.removeOverlay(this.overlay);
@@ -94,15 +107,24 @@ OlLocate.prototype.stop = function() {
     if (this.options.stopFollowingOnDrag && !this.follow) {
         this.map.un('pointerdrag', this.stopFollow, this);
     }
+    this.set("state", "DISABLED");
 };
+
 
 OlLocate.prototype.stopFollow = function() {
     this.follow = false;
     this.map.un('pointerdrag', this.stopFollow, this);
+    this.set("state", "ENABLED");
 };
 
 OlLocate.prototype._updatePosFt = function() {
+    let state = this.get("state");
+    let nState = (this.follow) ? "FOLLOWING" : "ENABLED";
+    if (nState !== state) {
+        this.set("state", nState);
+    }
     let p = this.geolocate.getPosition();
+    this.p = p;
     let point = new ol.geom.Point([parseFloat(p[0]), parseFloat(p[1])]);
     if (this.options.drawCircle) {
         let accuracy = new ol.geom.Circle([parseFloat(p[0]), parseFloat(p[1])], this.geolocate.getAccuracy());

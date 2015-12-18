@@ -18,7 +18,7 @@ describe("test the Locate Button", () => {
     });
 
     it('test default properties', () => {
-        const tb = React.render(<LocateBtn/>, document.body);
+        const tb = React.render(<LocateBtn locate="DISABLED" />, document.body);
         expect(tb).toExist();
 
         const tbNode = React.findDOMNode(tb);
@@ -33,7 +33,7 @@ describe("test the Locate Button", () => {
     });
 
     it('test button state', () => {
-        const tb = React.render(<LocateBtn pressed/>, document.body);
+        const tb = React.render(<LocateBtn locate="FOLLOWING"/>, document.body);
         expect(tb).toExist();
 
         const tbNode = React.findDOMNode(tb);
@@ -46,12 +46,12 @@ describe("test the Locate Button", () => {
             onClick: (pressed) => {return pressed; }
         };
         const spy = expect.spyOn(testHandlers, 'onClick');
-        const tb = React.render(<LocateBtn pressed onClick={testHandlers.onClick}/>, document.body);
+        const tb = React.render(<LocateBtn locate="ENABLED" onClick={testHandlers.onClick}/>, document.body);
 
         const tbNode = React.findDOMNode(tb);
         tbNode.click();
 
         expect(spy.calls.length).toEqual(1);
-        expect(spy.calls[0].arguments).toEqual([false]);
+        expect(spy.calls[0].arguments).toEqual(["FOLLOWING"]);
     });
 });

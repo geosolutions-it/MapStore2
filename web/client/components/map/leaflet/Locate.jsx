@@ -31,7 +31,15 @@ L.Control.MSLocate = L.Control.Locate.extend({
         this.bindEvents(map);
     },
     _setClasses: function(state) {
+        this._map.fire('locatestatus', {state: state});
         return state;
+    },
+    _toggleContainerStyle: function() {
+        if (this._following) {
+            this._setClasses('following');
+        } else if (this._active) {
+            this._setClasses('active');
+        }
     },
     _cleanClasses: function() {
         return null;
@@ -44,36 +52,54 @@ L.Control.MSLocate = L.Control.Locate.extend({
 let Locate = React.createClass({
     propTypes: {
         map: React.PropTypes.object,
-        status: React.PropTypes.bool,
-        messages: React.PropTypes.object
+        status: React.PropTypes.String,
+        messages: React.PropTypes.object,
+        changeLocateState: React.PropTypes.func,
+        onLocateError: React.PropTypes.func
     },
     getDefaultProps() {
         return {
             id: 'overview',
-            status: false
+            status: "DISABLED",
+            changeLocateState: () => {},
+            onLocateError: () => {}
         };
     },
     componentDidMount() {
         if (this.props.map ) {
             this.locate = new L.Control.MSLocate(this.defaultOpt);
             this.locate.setMap(this.props.map);
+            this.props.map.on('locatestatus', this.locateControlState);
+            this.locate.options.onLocationError = this.onLocationError;
+            this.locate.options.onLocationOutsideMapBounds = this.onLocationError;
         }
-        if (this.props.status) {
+        if (this.props.status.enabled) {
             this.locate.start();
         }
     },
     componentWillReceiveProps(newProps) {
-        if (newProps.status !== this.props.status && newProps.status) {
-            this.locate.start();
-        }else if (newProps.status !== this.props.status && !newProps.status) {
-            this.locate.stop();
+        if (newProps.status !== this.props.status) {
+            if ( newProps.status === "ENABLED" && !this.locate._active) {
+                this.locate.start();
+            }else if (newProps.status === "FOLLOWING" && this.locate._active && !this.locate._following) {
+                this.props.status = "FOLLOWING";
+                this.locate.stop();
+                this.locate.start();
+            }else if ( newProps.status === "DISABLED") {
+                this.locate._following = false;
+                this.locate.stop();
+            }
         }
         if (newProps.messages !== this.props.messages) {
             this.locate.setStrings(newProps.messages);
-            if (newProps.status) {
+            if (newProps.status !== "DISABLED") {
                 this.locate.drawMarker(this.locate._map);
             }
         }
+    },
+    onLocationError(err) {
+        this.props.onLocateError(err.message);
+        this.props.changeLocateState("DISABLED");
     },
     render() {
         return null;
@@ -89,7 +115,16 @@ let Locate = React.createClass({
                 maxZoom: Infinity,
                 watch: true  // if you overwrite this, visualization cannot be updated
                 }
-            }
+            },
+    locateControlState(state) {
+        if (state.state === 'requesting' && this.props.status !== "LOCATING" ) {
+            this.props.changeLocateState("LOCATING");
+        }else if (state.state === 'following' && this.props.status !== "FOLLOWING" ) {
+            this.props.changeLocateState("FOLLOWING");
+        }else if (state.state === 'active' && this.props.status !== "ENABLED" ) {
+            this.props.changeLocateState("ENABLED");
+        }
+    }
 });
 
 module.exports = Locate;
