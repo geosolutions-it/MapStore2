@@ -187,6 +187,9 @@ nav-menu >  div.nav-content .group-expanded,.nav-menu >  div.nav-content .group-
 #locateMeButton.btn-primary{
     background-color:rgba(51,122,183,0.5);
 }
+#locateMeButton.btn-info{
+    background-color:rgba(91, 192, 222, 0.5);
+}
 
 #mapstore-mouseposition-mobile {
         z-index: 1;
