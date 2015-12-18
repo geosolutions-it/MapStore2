@@ -189,7 +189,7 @@ nav-menu >  div.nav-content .group-expanded,.nav-menu >  div.nav-content .group-
 }
 
 #mapstore-mouseposition-mobile {
-        z-index: 10;
+        z-index: 1;
         top: 40px;
         position: absolute;
         text-shadow: -1px -1px 1px #fff,
@@ -212,3 +212,8 @@ nav-menu >  div.nav-content .group-expanded,.nav-menu >  div.nav-content .group-
         background-color:rgba(91,192,222,0);
         color: black;
     }
+.search-result-list{
+    z-index:2 !important;
+    left: 5px !important;
+    right:5px !important;
+}
