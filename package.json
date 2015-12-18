@@ -47,7 +47,7 @@
   },
   "//": "replace react-sortable-items with official on npm when 0.0.10 with remove_deprecated PR in included",
   "dependencies": {
-    "axios": "^0.5.4",
+    "axios": "^0.8.1",
     "bootstrap": "^3.3.5",
     "classnames": "^2.1.5",
     "es6-promise": "^2.3.0",

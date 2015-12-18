@@ -74,4 +74,37 @@ describe('Tests ajax library', () => {
                 done();
             });
     });
+
+    it('does not use proxy for requests to CORS enabled urls', (done) => {
+        axios.get('http://cors.mapstore2', {
+            timeout: 500,
+            proxyUrl: {
+                url: '/proxy/?url=',
+                useCORS: ['http://cors.mapstore2']
+            }
+        }).then(() => {
+            done();
+        }).catch((ex) => {
+            expect(ex.config).toExist();
+            expect(ex.config.url).toExist();
+            expect(ex.config.url).toBe('http://cors.mapstore2');
+            done();
+        });
+    });
+
+    it('does use proxy for requests on not CORS enabled urls', (done) => {
+        axios.get('http://notcors.mapstore2', {
+            proxyUrl: {
+                url: '/proxy/?url=',
+                useCORS: ['http://cors.mapstore2']
+            }
+        }).then(() => {
+            done();
+        }).catch((ex) => {
+            expect(ex.config).toExist();
+            expect(ex.config.url).toExist();
+            expect(ex.config.url).toContain('proxy/?url=');
+            done();
+        });
+    });
 });
