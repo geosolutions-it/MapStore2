@@ -7,16 +7,23 @@
  */
 
 const CHANGE_LOCATE_STATE = 'CHANGE_LOCATE_STATE';
+const LOCATE_ERROR = 'LOCATE_ERROR';
 
-function changeLocateState(enabled) {
+function changeLocateState(state) {
     return {
         type: CHANGE_LOCATE_STATE,
-        enabled: enabled
+        state: state
     };
 }
-
-
+function onLocateError(error) {
+    return {
+        type: LOCATE_ERROR,
+        error: error
+    };
+}
 module.exports = {
     CHANGE_LOCATE_STATE,
-    changeLocateState
+    LOCATE_ERROR,
+    changeLocateState,
+    onLocateError
 };
