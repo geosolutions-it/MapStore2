@@ -10,14 +10,19 @@ var locate = require('../locate');
 
 describe('Test the locate reducer', () => {
 
-    it('enables/disable locate', () => {
-        let state = locate({}, {type: 'CHANGE_LOCATE_STATE', enabled: true});
+    it('locate state', () => {
+        let state = locate({}, {type: 'CHANGE_LOCATE_STATE', state: "ENABLED"});
         expect(state).toExist();
-        expect(state.enabled).toBe(true);
-
-        state = locate({}, {type: 'CHANGE_LOCATE_STATE', enabled: false});
+        expect(state.state).toBe("ENABLED");
+        state = locate({}, {type: 'CHANGE_LOCATE_STATE', state: "DISABLED"});
         expect(state).toExist();
-        expect(state.enabled).toBe(false);
+        expect(state.state).toBe("DISABLED");
+        state = locate({}, {type: 'CHANGE_LOCATE_STATE', state: "FOLLOWING"});
+        expect(state).toExist();
+        expect(state.state).toBe("FOLLOWING");
+        state = locate({}, {type: 'CHANGE_LOCATE_STATE', state: "LOCATING"});
+        expect(state).toExist();
+        expect(state.state).toBe("LOCATING");
     });
 
 });
