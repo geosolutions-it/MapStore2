@@ -107,7 +107,7 @@ module.exports = {
                          changeHelpText={props.changeHelpText}
                          changeHelpwinVisibility={props.changeHelpwinVisibility}
                          />}
-                        pressed={props.locate.enabled}
+                        locate={props.locate.state}
                         onClick={props.changeLocateState}
                         tooltip={<Message msgId="locate.tooltip"/>}/>
                 <ToggleButton

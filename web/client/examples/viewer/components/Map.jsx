@@ -38,7 +38,9 @@ var VMap = React.createClass({
         changeMeasurementState: React.PropTypes.func,
         measurement: React.PropTypes.object,
         locate: React.PropTypes.object,
-        locateMessages: React.PropTypes.object
+        locateMessages: React.PropTypes.object,
+        changeLocateState: React.PropTypes.func,
+        onLocateError: React.PropTypes.func
     },
     renderLayers(layers) {
         if (layers) {
@@ -54,7 +56,7 @@ var VMap = React.createClass({
         var baseTools = [<MeasurementSupport
             changeMeasurementState={this.props.changeMeasurementState}
             measurement={this.props.measurement} />,
-            <Locate status={this.props.locate.enabled} messages={ this.props.locateMessages }/>];
+            <Locate status={this.props.locate.state} changeLocateState={this.props.changeLocateState} onLocateError={this.props.onLocateError} messages={this.props.locateMessages }/>];
         if (this.props.overview) {
             baseTools.push(<Overview
                 overviewOpt={{ // overviewOpt accept config param for ol and leflet overview control

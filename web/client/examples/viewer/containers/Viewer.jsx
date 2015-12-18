@@ -15,6 +15,8 @@ var ConfigUtils = require('../../../utils/ConfigUtils');
 
 var {loadLocale} = require('../../../actions/locale');
 
+var {changeLocateState, onLocateError} = require('../../../actions/locate');
+
 var {changeMapView, clickOnMap, changeMousePointer} = require('../../../actions/map');
 
 var changeMeasurementState = require('../../../actions/measurement');
@@ -60,7 +62,9 @@ var Viewer = React.createClass({
         measurement: React.PropTypes.object,
         searchResults: React.PropTypes.array,
         changeHelpState: React.PropTypes.func,
-        changeHelpText: React.PropTypes.func
+        changeHelpText: React.PropTypes.func,
+        changeLocateState: React.PropTypes.func,
+        onLocateError: React.PropTypes.func
     },
     render() {
         if (this.props.map) {
@@ -99,7 +103,8 @@ var Viewer = React.createClass({
                                     changeMeasurementState={this.props.changeMeasurementState}
                                     locate={this.props.locate} locateMessages={this.props.messages.locate}
                                     mapOptions={this.props.mapOptions}
-                                    {...this.props.mapParams} />
+                                    changeLocateState={this.props.changeLocateState}
+                                    onLocateError={this.props.onLocateError} />
                             {plugins}
                             </div>
                         );
@@ -141,7 +146,7 @@ module.exports = (actions) => {
             browser: state.browser,
             messages: state.locale ? state.locale.messages : null,
             locale: state.locale ? state.locale.current : null,
-            locate: state.locate ? state.locate : {enabled: false},
+            locate: state.locate ? state.locate : {state: "DISABLED"},
             mapInfo: state.mapInfo ? state.mapInfo : {enabled: false, responses: [], requests: {length: 0}},
             floatingPanel: state.floatingPanel ? state.floatingPanel : {activeKey: ""},
             localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined,
@@ -158,7 +163,9 @@ module.exports = (actions) => {
             changeMapView,
             clickOnMap,
             changeMousePointer,
-            changeMeasurementState
+            changeMeasurementState,
+            changeLocateState,
+            onLocateError
         }, actions), dispatch);
     })(Viewer);
 };
