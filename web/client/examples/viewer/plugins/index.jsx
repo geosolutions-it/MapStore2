@@ -24,8 +24,10 @@ var {searchResults} = require('../../../reducers/search');
 var help = require('../../../reducers/help');
 
 var LocateBtn = require("../../../components/mapcontrols/Locate/LocateBtn");
+var Notification = require("../../../components/mapcontrols/Locate/LocateNotification");
+
 var locate = require('../../../reducers/locate');
-var {changeLocateState} = require('../../../actions/locate');
+var {changeLocateState, onLocateError} = require('../../../actions/locate');
 // search SearchBar
 var SearchBar = require("../../../components/Search/SearchBar");
 var NominatimResultList = require("../../../components/Search/geocoding/NominatimResultList");
@@ -99,7 +101,7 @@ module.exports = {
                 changeHelpText={props.changeHelpText}
                 changeHelpwinVisibility={props.changeHelpwinVisibility}
                 >
-                 <LocateBtn
+                <LocateBtn
                          text={<HelpBadge
                          className="mapstore-tb-helpbadge"
                          helpText={<Message msgId="helptexts.locateBtn"/>}
@@ -209,6 +211,13 @@ module.exports = {
                     changeHelpState={props.changeHelpState}
                     changeHelpwinVisibility={props.changeHelpwinVisibility}/>
             </MapToolBar>,
+            <Notification
+                            isActive={ (props.locate.error) ? true : false }
+                            message={props.locate.error || ""}
+                            action="close"
+                            onDismiss={() => { props.onLocateError(null); props.changeLocateState("DISABLED"); }}
+                            onClick={() => { props.onLocateError(null); props.changeLocateState("DISABLED"); }}
+                            style={{bar: {font: '1.5rem normal Roboto, sans-serif'}, action: {font: '1.25rem normal Roboto, sans-serif'}}}/>,
             <GetFeatureInfo
                 key="getFeatureInfo"
                 enabled={props.mapInfo.enabled}
@@ -273,6 +282,7 @@ module.exports = {
         changeMousePositionCrs,
         changeMousePosition,
         changeLocateState,
+        onLocateError,
         changeZoomLevel,
         layerLoading,
         layerLoad,
