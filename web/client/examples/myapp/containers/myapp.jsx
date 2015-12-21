@@ -1,8 +1,7 @@
 var React = require('react');
 var connect = require('react-redux').connect;
-var LMap = require('../../../components/leaflet/Map');
-var LLayer = require('../../../components/leaflet/Layer');
-var ConfigUtils = require('../../../utils/ConfigUtils');
+var LMap = require('../../../components/map/leaflet/Map');
+var LLayer = require('../../../components/map/leaflet/Layer');
 
 var MyApp = React.createClass({
     propTypes: {
@@ -21,12 +20,10 @@ var MyApp = React.createClass({
     },
     render() {
         // wait for loaded configuration before rendering
-        if (this.props.mapConfig) {
-            let config = this.props.mapConfig;
-            let center = ConfigUtils.getCenter(config.center, config.projection);
+        if (this.props.mapConfig && this.props.mapConfig.map) {
             return (
-                <LMap id="map" center={center} zoom={config.zoom}>
-                     {this.renderLayers(config.layers)}
+                <LMap id="map" center={this.props.mapConfig.map.center} zoom={this.props.mapConfig.map.zoom}>
+                     {this.renderLayers(this.props.mapConfig.layers)}
                 </LMap>
             );
         }
@@ -35,8 +32,8 @@ var MyApp = React.createClass({
 });
 
 // include support for OSM and WMS layers
-require('../../../components/leaflet/plugins/OSMLayer');
-require('../../../components/leaflet/plugins/WMSLayer');
+require('../../../components/map/leaflet/plugins/OSMLayer');
+require('../../../components/map/leaflet/plugins/WMSLayer');
 
 // connect Redux store slice with map configuration
 module.exports = connect((state) => {
