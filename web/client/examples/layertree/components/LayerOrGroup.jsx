@@ -41,14 +41,14 @@ var LayerOrGroup = React.createClass({
         if (this.props.node) {
             let {children, onSettings, ...props} = this.props;
             let LayerChildren = [
-                <VisibilityCheck propertiesChangeHandler={this.props.propertiesChangeHandler}
+                <VisibilityCheck key="visibility" propertiesChangeHandler={this.props.propertiesChangeHandler}
                     checkType={(node) => node.group === 'background' ? 'radio' : 'checkbox'}/>,
-                <Title/>].concat(this.props.node.group !== 'background' ?
-                    [<LayersTool style={{"float": "right", marginTop: "5px", marginRight: "10px", cursor: "pointer"}} glyph="adjust"
+                <Title key="title"/>].concat(this.props.node.group !== 'background' ?
+                    [<LayersTool key="toolsettings" style={{"float": "right", marginTop: "5px", marginRight: "10px", cursor: "pointer"}} glyph="adjust"
                         onClick={(node) => this.props.onSettings(node, "layers", {opacity: parseFloat(node.opacity) || 1.0})}/>,
-                    <LayersTool ref="target" style={{"float": "right", marginTop: "5px", marginRight: "10px", cursor: "pointer"}} glyph="list"
+                    <LayersTool key="toollegend" ref="target" style={{"float": "right", marginTop: "5px", marginRight: "10px", cursor: "pointer"}} glyph="list"
                     onClick={(node) => this.props.onLegend(node)}/>,
-                <WMSLegend position="collapsible"/>] : [])
+                <WMSLegend key="wmslegend" position="collapsible"/>] : [])
             ;
             if (this.props.node.type === 'group') {
                 return (

@@ -6,24 +6,30 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var MapItem = require('../MapItem.jsx');
 var expect = require('expect');
 
 var TestUtils = require('react/addons').addons.TestUtils;
 
 describe('This test for MapItem', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     // test DEFAULTS
     it('creates the component with defaults', () => {
-        const mapItem = React.render(<MapItem map={{}}/>, document.body);
+        const mapItem = ReactDOM.render(<MapItem map={{}}/>, document.getElementById("container"));
         expect(mapItem).toExist();
 
-        const mapItemDom = React.findDOMNode(mapItem);
+        const mapItemDom = ReactDOM.findDOMNode(mapItem);
         expect(mapItemDom).toExist();
 
         expect(mapItemDom.className).toBe('list-group-item');
@@ -34,10 +40,10 @@ describe('This test for MapItem', () => {
     it('creates the component with data', () => {
         const testName = "test";
         const testDescription = "testDescription";
-        const mapItem = React.render(<MapItem map={{name: testName, description: testDescription}}/>, document.body);
+        const mapItem = ReactDOM.render(<MapItem map={{name: testName, description: testDescription}}/>, document.getElementById("container"));
         expect(mapItem).toExist();
 
-        const mapItemDom = React.findDOMNode(mapItem);
+        const mapItemDom = ReactDOM.findDOMNode(mapItem);
         expect(mapItemDom).toExist();
 
         expect(mapItemDom.className).toBe('list-group-item');
@@ -53,6 +59,6 @@ describe('This test for MapItem', () => {
         var a = TestUtils.findRenderedDOMComponentWithTag(
            component, 'a'
         );
-        expect(a.props.href).toBe("viewer?type=leaflet&mapId=1");
+        expect(a.href).toContain("viewer?type=leaflet&mapId=1");
     });
 });

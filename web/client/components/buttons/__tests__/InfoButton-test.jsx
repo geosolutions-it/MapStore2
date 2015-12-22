@@ -6,22 +6,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var InfoButton = require('../InfoButton');
 var expect = require('expect');
 
 describe('This test for InfoButton', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     // test DEFAULTS
     it('creates the component with defaults', () => {
-        const about = React.render(<InfoButton/>, document.body);
+        const about = ReactDOM.render(<InfoButton/>, document.getElementById("container"));
         expect(about).toExist();
 
-        const aboutDom = React.findDOMNode(about);
+        const aboutDom = ReactDOM.findDOMNode(about);
         expect(aboutDom).toExist();
         expect(aboutDom.id).toExist();
 
@@ -39,8 +45,8 @@ describe('This test for InfoButton', () => {
     });
 
     it('checks if a click on button shows a modal window', () => {
-        const about = React.render(<InfoButton/>, document.body);
-        const aboutDom = React.findDOMNode(about);
+        const about = ReactDOM.render(<InfoButton/>, document.getElementById("container"));
+        const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
         btn.click();
 
@@ -49,8 +55,8 @@ describe('This test for InfoButton', () => {
     });
 
     it('checks if a click on window button hides the window itself', () => {
-        const about = React.render(<InfoButton/>, document.body);
-        const aboutDom = React.findDOMNode(about);
+        const about = ReactDOM.render(<InfoButton/>, document.getElementById("container"));
+        const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
         btn.click();
 
@@ -65,8 +71,8 @@ describe('This test for InfoButton', () => {
     });
 
     it('checks the default content of the modal window', () => {
-        const about = React.render(<InfoButton/>, document.body);
-        const aboutDom = React.findDOMNode(about);
+        const about = ReactDOM.render(<InfoButton/>, document.getElementById("container"));
+        const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
         btn.click();
 
@@ -88,15 +94,15 @@ describe('This test for InfoButton', () => {
     // test CUSTOM
     it('checks the custom id', () => {
         const customID = 'id-test';
-        const about = React.render(<InfoButton id={customID}/>, document.body);
-        const aboutDom = React.findDOMNode(about);
+        const about = ReactDOM.render(<InfoButton id={customID}/>, document.getElementById("container"));
+        const aboutDom = ReactDOM.findDOMNode(about);
         expect(aboutDom.id).toBe(customID);
     });
 
     it('checks the custom button text', () => {
         const customText = 'btnText';
-        const about = React.render(<InfoButton text={customText}/>, document.body);
-        const aboutDom = React.findDOMNode(about);
+        const about = ReactDOM.render(<InfoButton text={customText}/>, document.getElementById("container"));
+        const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
 
         const btnItems = btn.getElementsByTagName("span");
@@ -108,8 +114,8 @@ describe('This test for InfoButton', () => {
 
     it('checks the button icon', () => {
         const icon = 'info-sign';
-        const about = React.render(<InfoButton glyphicon={icon}/>, document.body);
-        const aboutDom = React.findDOMNode(about);
+        const about = ReactDOM.render(<InfoButton glyphicon={icon}/>, document.getElementById("container"));
+        const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
 
         const btnItems = btn.getElementsByTagName("span");
@@ -121,8 +127,8 @@ describe('This test for InfoButton', () => {
 
     it('checks if the button contains only icon', () => {
         const icon = 'info-sign';
-        const about = React.render(<InfoButton glyphicon={icon} hiddenText/>, document.body);
-        const aboutDom = React.findDOMNode(about);
+        const about = ReactDOM.render(<InfoButton glyphicon={icon} hiddenText/>, document.getElementById("container"));
+        const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
 
         const btnItems = btn.getElementsByTagName("span");
@@ -133,8 +139,8 @@ describe('This test for InfoButton', () => {
     });
 
     it('checks if the button contains at least the default text', () => {
-        const about = React.render(<InfoButton hiddenText/>, document.body);
-        const aboutDom = React.findDOMNode(about);
+        const about = ReactDOM.render(<InfoButton hiddenText/>, document.getElementById("container"));
+        const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
 
         const btnItems = btn.getElementsByTagName("span");
@@ -146,8 +152,8 @@ describe('This test for InfoButton', () => {
 
     it('checks if the button contains at least the custom text', () => {
         const customText = "testText";
-        const about = React.render(<InfoButton hiddenText text={customText}/>, document.body);
-        const aboutDom = React.findDOMNode(about);
+        const about = ReactDOM.render(<InfoButton hiddenText text={customText}/>, document.getElementById("container"));
+        const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
 
         const btnItems = btn.getElementsByTagName("span");
@@ -159,8 +165,8 @@ describe('This test for InfoButton', () => {
 
     it('checks the custom title for the window', () => {
         const customTitle = "testTitle";
-        const about = React.render(<InfoButton title={customTitle}/>, document.body);
-        const aboutDom = React.findDOMNode(about);
+        const about = ReactDOM.render(<InfoButton title={customTitle}/>, document.getElementById("container"));
+        const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
         btn.click();
 
@@ -173,8 +179,8 @@ describe('This test for InfoButton', () => {
 
     it('checks the custom body for the window', () => {
         const customBody = "customBody";
-        const about = React.render(<InfoButton body={customBody}/>, document.body);
-        const aboutDom = React.findDOMNode(about);
+        const about = ReactDOM.render(<InfoButton body={customBody}/>, document.getElementById("container"));
+        const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
         btn.click();
 
@@ -190,8 +196,8 @@ describe('This test for InfoButton', () => {
             top: '5px',
             left: '1px'
         };
-        const about = React.render(<InfoButton style={customStyle}/>, document.body);
-        const aboutDom = React.findDOMNode(about);
+        const about = ReactDOM.render(<InfoButton style={customStyle}/>, document.getElementById("container"));
+        const aboutDom = ReactDOM.findDOMNode(about);
         for (let p in customStyle) {
             if (customStyle.hasOwnProperty(p)) {
                 expect(aboutDom.style[p]).toBe(customStyle[p]);
@@ -200,9 +206,9 @@ describe('This test for InfoButton', () => {
     });
 
     it('creates the component with a ImageButton', () => {
-        const about = React.render(<InfoButton btnType="image"/>, document.body);
+        const about = ReactDOM.render(<InfoButton btnType="image"/>, document.getElementById("container"));
         expect(about).toExist();
-        const aboutDom = React.findDOMNode(about);
+        const aboutDom = ReactDOM.findDOMNode(about);
         expect(aboutDom.getElementsByTagName('button').length).toBe(0);
         expect(aboutDom.getElementsByTagName('img').length).toBe(1);
     });

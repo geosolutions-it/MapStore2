@@ -8,6 +8,7 @@
 
 var expect = require('expect');
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var L = require('leaflet');
 var MeasurementSupport = require('../MeasurementSupport');
 
@@ -23,7 +24,7 @@ describe('Leaflet MeasurementSupport', () => {
         setTimeout(done);
     });
     afterEach((done) => {
-        React.unmountComponentAtNode(msNode);
+        ReactDOM.unmountComponentAtNode(msNode);
         document.body.innerHTML = '';
         msNode = undefined;
         setTimeout(done);
@@ -36,7 +37,7 @@ describe('Leaflet MeasurementSupport', () => {
             geomType: null
         };
 
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <MeasurementSupport
                 map={map}
                 projection={proj}
@@ -57,7 +58,7 @@ describe('Leaflet MeasurementSupport', () => {
             geomType: null
         };
         let initialLayersNum = getMapLayersNum(map);
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <MeasurementSupport
                 map={map}
                 projection={proj}
@@ -85,7 +86,7 @@ describe('Leaflet MeasurementSupport', () => {
         let measurement = {
             geomType: null
         };
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <MeasurementSupport
                 map={map}
                 projection={proj}
@@ -122,7 +123,7 @@ describe('Leaflet MeasurementSupport', () => {
         let measurement = {
             geomType: null
         };
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <MeasurementSupport
                 map={map}
                 projection={proj}
@@ -154,7 +155,7 @@ describe('Leaflet MeasurementSupport', () => {
         let measurement = {
             geomType: null
         };
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <MeasurementSupport
                 map={map}
                 projection={proj}
@@ -186,7 +187,7 @@ describe('Leaflet MeasurementSupport', () => {
         let measurement = {
             geomType: null
         };
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <MeasurementSupport
                 map={map}
                 projection={proj}

@@ -9,7 +9,7 @@ var {combineReducers} = require('redux');
 
 var maps = require('../../../reducers/maps');
 var locale = require('../../../reducers/locale');
-var mapType = require('../../manager/reducers/mapType');
+var mapType = require('../reducers/mapType');
 
 var DebugUtils = require('../../../utils/DebugUtils');
 

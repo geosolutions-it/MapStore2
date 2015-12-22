@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
+var ReactDOM = require('react-dom');
 
 var DebugUtils = require('../../utils/DebugUtils');
 
@@ -35,11 +36,12 @@ var Layers = require('../../components/Layers/Layers');
 var Group = require('./components/Group');
 var LayerOrGroup = require('./components/LayerOrGroup');
 var {Panel, Modal, Label, Button} = require('react-bootstrap');
-var Slider = require('react-rangeslider');
 
 let {sources, layers: mapLayers} = require('./config.json');
 
 let {isObject} = require('lodash');
+
+var Slider = require('react-nouislider');
 
 ConfigUtils.setupSources(sources, "gxp_wmssource");
 ConfigUtils.setupLayers(mapLayers, sources, ["gxp_osmsource", "gxp_wmssource", "gxp_googlesource", "gxp_bingsource", "gxp_mapquestsource"]);
@@ -152,7 +154,7 @@ store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
 let MyMap = React.createClass({
     propTypes: {
         mapConfig: ConfigUtils.PropTypes.config,
-        layers: React.PropTypes.array,
+        layers: React.PropTypes.object,
         groups: React.PropTypes.array,
         changeMapView: React.PropTypes.func,
         changeZoomLevel: React.PropTypes.func,
@@ -209,11 +211,8 @@ let MyMap = React.createClass({
                     <Modal.Header><Modal.Title>Opacity</Modal.Title></Modal.Header>
                     <Modal.Body>
                         <Slider
-                            value={Math.round(this.props.controls.Settings.options.opacity * 100)}
-                            min={0}
-                            max={100}
-                            step={1}
-                            orientation="horizontal"
+                            start={[Math.round(this.props.controls.Settings.options.opacity * 100)]}
+                            range={{min: 0, max: 100}}
                             onChange={this.props.updateOpacity}
                         />
                     <Label>{Math.round(this.props.controls.Settings.options.opacity * 100) + "%"}</Label>
@@ -260,11 +259,12 @@ let App = connect((state) => {
     }, dispatch);
 })(MyMap);
 
-React.render(
-        <Debug store={store}>
-            <Provider store={store}>
-                {() => <App />}
-            </Provider>
-        </Debug>,
+ReactDOM.render(
+        <Provider store={store}>
+            <div>
+                <App />
+                <Debug/>
+            </div>
+        </Provider>,
         document.getElementById('container')
     );

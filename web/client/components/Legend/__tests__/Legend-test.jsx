@@ -8,11 +8,17 @@
 var expect = require('expect');
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var Legend = require('../Legend');
 
 describe("test the Layer legend", () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
@@ -25,14 +31,14 @@ describe("test the Layer legend", () => {
             "group": "background",
             "visibility": true
         };
-        const tb = React.render(<Legend layer={layer}/>, document.body);
+        const tb = ReactDOM.render(<Legend layer={layer}/>, document.getElementById("container"));
         expect(tb).toExist();
 
     });
 
     it('create component without layer', () => {
 
-        const tb = React.render(<Legend />, document.body);
+        const tb = ReactDOM.render(<Legend />, document.getElementById("container"));
         expect(tb).toExist();
 
     });
@@ -47,7 +53,7 @@ describe("test the Layer legend", () => {
             "name": "layer3",
             "format": "image/png"
         };
-        var tb = React.render(<Legend layer={layer} />, document.body);
+        var tb = ReactDOM.render(<Legend layer={layer} />, document.getElementById("container"));
         let thumbs = TestUtils.scryRenderedDOMComponentsWithTag(tb, "img");
         expect(thumbs.length).toBe(1);
     });

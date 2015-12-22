@@ -7,15 +7,20 @@
  */
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var GroupChildren = require('../GroupChildren');
 var Node = require('../../Node');
 
 var expect = require('expect');
 
 describe('test GroupChildren module component', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
 
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
@@ -35,9 +40,9 @@ describe('test GroupChildren module component', () => {
             title: "G1",
             nodes: [l1]
         };
-        const comp = React.render(<GroupChildren node={g}><div className="layer"></div></GroupChildren>, document.body);
+        const comp = ReactDOM.render(<GroupChildren node={g}><div className="layer"></div></GroupChildren>, document.getElementById("container"));
 
-        const domNode = React.findDOMNode(comp);
+        const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
 
         const layers = domNode.getElementsByClassName('layer');
@@ -60,9 +65,9 @@ describe('test GroupChildren module component', () => {
             title: "G1",
             nodes: [l1]
         };
-        const comp = React.render(<GroupChildren onSort={() => {}} node={g}><Node node={l1}/></GroupChildren>, document.body);
+        const comp = ReactDOM.render(<GroupChildren onSort={() => {}} node={g}><Node node={l1}/></GroupChildren>, document.getElementById("container"));
 
-        const domNode = React.findDOMNode(comp);
+        const domNode = ReactDOM.findDOMNode(comp);
 
         const sortable = domNode.getElementsByClassName('Sortable');
         expect(sortable).toExist();

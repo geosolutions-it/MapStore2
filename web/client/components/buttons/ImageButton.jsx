@@ -14,7 +14,7 @@ var ImageButton = React.createClass({
         image: React.PropTypes.string,
         onClick: React.PropTypes.func,
         style: React.PropTypes.object,
-        disabled: React.PropTypes.boolean
+        disabled: React.PropTypes.bool
     },
     getDefaultProps() {
         return {

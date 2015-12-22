@@ -14,7 +14,7 @@ var OlLocate = require('../../../utils/openlayers/OlLocate');
 var Locate = React.createClass({
     propTypes: {
         map: React.PropTypes.object,
-        status: React.PropTypes.String,
+        status: React.PropTypes.string,
         messages: React.PropTypes.object,
         changeLocateState: React.PropTypes.func,
         onLocateError: React.PropTypes.func

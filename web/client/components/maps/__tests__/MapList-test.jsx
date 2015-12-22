@@ -6,22 +6,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var MapList = require('../MapList.jsx');
 var expect = require('expect');
 
 describe('This test for MapList', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     // test DEFAULTS
     it('creates the component with defaults', () => {
-        const mapList = React.render(<MapList/>, document.body);
+        const mapList = ReactDOM.render(<MapList/>, document.getElementById("container"));
         expect(mapList).toExist();
 
-        const dom = React.findDOMNode(mapList);
+        const dom = ReactDOM.findDOMNode(mapList);
         expect(dom).toExist();
         // check body existence
         const panelBody = dom.getElementsByClassName('panel-body');
@@ -33,10 +39,10 @@ describe('This test for MapList', () => {
 
     it('checks properties', () => {
         const testTitle = "testTitle";
-        const mapList = React.render(<MapList panelProps={{header: testTitle}}/>, document.body);
+        const mapList = ReactDOM.render(<MapList panelProps={{header: testTitle}}/>, document.getElementById("container"));
         expect(mapList).toExist();
 
-        const dom = React.findDOMNode(mapList);
+        const dom = ReactDOM.findDOMNode(mapList);
         expect(dom).toExist();
         // check body
         const panelBody = dom.getElementsByClassName('panel-body');
@@ -51,9 +57,9 @@ describe('This test for MapList', () => {
     it('checks data', () => {
         var map1 = {id: 1, name: "a", description: "description"};
         var map2 = {id: 2, name: "b", description: "description"};
-        const mapList = React.render(<MapList maps={[map1, map2]}/>, document.body);
+        const mapList = ReactDOM.render(<MapList maps={[map1, map2]}/>, document.getElementById("container"));
         expect(mapList).toExist();
-        const dom = React.findDOMNode(mapList);
+        const dom = ReactDOM.findDOMNode(mapList);
         expect(dom).toExist();
 
         // check body
@@ -61,10 +67,7 @@ describe('This test for MapList', () => {
         expect(panelBody.length).toBe(1, "Panel Body Missing");
 
         // check list
-        const list = panelBody[0].getElementsByTagName("ul");
-        expect(list.length).toBe(1, " list missing");
-
-        // check child number
-        expect(list[0].childNodes.length).toBe(2);
+        const list = panelBody[0].getElementsByClassName("list-group-item");
+        expect(list.length).toBe(2, " list missing");
     });
 });

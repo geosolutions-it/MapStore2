@@ -8,34 +8,41 @@
 var expect = require('expect');
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var NominatimResultList = require('../NominatimResultList');
 var NominatimResult = require('../NominatimResult');
 
 
 describe("test the NominatimResultList", () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     it('test component creation', () => {
         var results = [{
+            osm_id: 1,
             display_name: "Name",
             boundingbox: []
         }];
-        const tb = React.render(<NominatimResultList results={results}/>, document.body);
+        const tb = ReactDOM.render(<NominatimResultList results={results}/>, document.getElementById("container"));
         expect(tb).toExist();
 
     });
 
     it('create component without items', () => {
-        const tb = React.render(<NominatimResultList />, document.body);
+        const tb = ReactDOM.render(<NominatimResultList />, document.getElementById("container"));
         expect(tb).toExist();
     });
 
     it('create component with empty items array', () => {
-        const tb = React.render(<NominatimResultList results={[]} notFoundMessage="not found"/>, document.body);
+        const tb = ReactDOM.render(<NominatimResultList results={[]} notFoundMessage="not found"/>, document.getElementById("container"));
         expect(tb).toExist();
     });
 
@@ -46,18 +53,19 @@ describe("test the NominatimResultList", () => {
             afterClick: () => {}
         };
         var items = [{
+            osm_id: 1,
             display_name: "Name",
             boundingbox: [1, 2, 3, 4]
         }];
         const spy = expect.spyOn(testHandlers, 'clickHandler');
-        var tb = React.render(<NominatimResultList results={items} mapConfig={{size: 100, projection: "EPSG:4326"}}
+        var tb = ReactDOM.render(<NominatimResultList results={items} mapConfig={{size: 100, projection: "EPSG:4326"}}
             onItemClick={testHandlers.clickHandler}
-            afterItemClick={testHandlers.afterItemClick}/>, document.body);
+            afterItemClick={testHandlers.afterItemClick}/>, document.getElementById("container"));
         let elem = TestUtils.scryRenderedComponentsWithType(tb, NominatimResult);
         expect(elem.length).toBe(1);
 
         let elem1 = TestUtils.findRenderedDOMComponentWithClass(elem[0], "search-result");
-        React.findDOMNode(elem1).click();
+        ReactDOM.findDOMNode(elem1).click();
         expect(spy.calls.length).toEqual(1);
     });
 });

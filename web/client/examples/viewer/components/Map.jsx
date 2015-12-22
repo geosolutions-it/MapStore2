@@ -54,11 +54,13 @@ var VMap = React.createClass({
     },
     renderSupportTools() {
         var baseTools = [<MeasurementSupport
+            key="measuresupport"
             changeMeasurementState={this.props.changeMeasurementState}
             measurement={this.props.measurement} />,
-            <Locate status={this.props.locate.state} changeLocateState={this.props.changeLocateState} onLocateError={this.props.onLocateError} messages={this.props.locateMessages }/>];
+        <Locate key="locate" status={this.props.locate.state} changeLocateState={this.props.changeLocateState} onLocateError={this.props.onLocateError} messages={this.props.locateMessages }/>];
         if (this.props.overview) {
             baseTools.push(<Overview
+                key="overview"
                 overviewOpt={{ // overviewOpt accept config param for ol and leflet overview control
                         // refer to https://github.com/Norkart/Leaflet-MiniMap and http://openlayers.org/en/v3.10.1/apidoc/ol.control.OverviewMap.html
                         position: 'bottomright',
@@ -70,7 +72,7 @@ var VMap = React.createClass({
                 layers={[{type: "osm"}]}/>);
         }
         if (this.props.scaleBar) {
-            baseTools.push(<ScaleBar/>);
+            baseTools.push(<ScaleBar key="scalebar"/>);
         }
         return baseTools;
     },

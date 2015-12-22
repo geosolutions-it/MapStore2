@@ -17,7 +17,6 @@ module.exports = {
         'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:8081', // WebpackDevServer host and port
         'webpack': 'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
         viewer: path.join(__dirname, "web", "client", "examples", "viewer", "app"),
-        manager: path.join(__dirname, "web", "client", "examples", "manager", "app"),
         mobile: path.join(__dirname, "web", "client", "examples", "viewer", "mobile"),
         home: path.join(__dirname, "web", "client", "examples", "home", "app"),
         mouseposition: path.join(__dirname, "web", "client", "examples", "mouseposition", "app"),

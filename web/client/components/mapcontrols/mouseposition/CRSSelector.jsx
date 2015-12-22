@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
+var ReactDOM = require('react-dom');
 var BootstrapReact = require('react-bootstrap');
 var {Input} = BootstrapReact;
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
@@ -53,7 +54,7 @@ let CRSSelector = React.createClass({
         );
     },
     launchNewCRSAction() {
-        var element = React.findDOMNode(this);
+        var element = ReactDOM.findDOMNode(this);
         var selectNode = element.getElementsByTagName('select').item(0);
         this.props.onCRSChange(selectNode.value);
     }

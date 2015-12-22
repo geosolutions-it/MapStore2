@@ -25,7 +25,7 @@ describe('leaflet Locate component', () => {
     });
 
     it('create Locate with defaults', () => {
-        // const ov = React.render(<Locate map={map}/>, document.body);
+        // const ov = ReactDOM.render(<Locate map={map}/>, document.getElementById("container"));
         expect(map).toExist();
     });
 });

@@ -7,21 +7,27 @@
  */
 var expect = require('expect');
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 
 var ImageButton = require('../ImageButton');
 
 describe('ImageButton', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     it('create a empty button', () => {
-        const btn = React.render(<ImageButton/>, document.body);
+        const btn = ReactDOM.render(<ImageButton/>, document.getElementById("container"));
         expect(btn).toExist();
 
-        const btnDiv = React.findDOMNode(btn);
+        const btnDiv = ReactDOM.findDOMNode(btn);
         expect(btnDiv.style.cursor).toBe("pointer");
         expect(btnDiv.style.margin).toBe("0px");
         expect(btnDiv.style.padding).toBe("0px");
@@ -35,11 +41,11 @@ describe('ImageButton', () => {
     });
 
     it('creates an empty button with a custom style', () => {
-        const btn = React.render(<ImageButton
-            style={{margin: "4px", border: "1px solid black"}}/>, document.body);
+        const btn = ReactDOM.render(<ImageButton
+            style={{margin: "4px", border: "1px solid black"}}/>, document.getElementById("container"));
         expect(btn).toExist();
 
-        const btnDiv = React.findDOMNode(btn);
+        const btnDiv = ReactDOM.findDOMNode(btn);
         expect(btnDiv.style.cursor).toBe("pointer");
         expect(btnDiv.style.margin).toBe("4px");
         expect(btnDiv.style.padding).toBe("0px");
@@ -53,10 +59,10 @@ describe('ImageButton', () => {
     });
 
     it('create a button with image', () => {
-        const btn = React.render(<ImageButton image="fake"/>, document.body);
+        const btn = ReactDOM.render(<ImageButton image="fake"/>, document.getElementById("container"));
         expect(btn).toExist();
 
-        const btnDiv = React.findDOMNode(btn);
+        const btnDiv = ReactDOM.findDOMNode(btn);
         expect(btnDiv.style.cursor).toBe("pointer");
         expect(btnDiv.style.margin).toBe("0px");
         expect(btnDiv.style.padding).toBe("0px");
@@ -70,10 +76,10 @@ describe('ImageButton', () => {
             onclick() {}
         };
         let spy = expect.spyOn(handlers, "onclick");
-        const btn = React.render(<ImageButton onClick={handlers.onclick}/>, document.body);
+        const btn = ReactDOM.render(<ImageButton onClick={handlers.onclick}/>, document.getElementById("container"));
         expect(btn).toExist();
 
-        const btnDiv = React.findDOMNode(btn);
+        const btnDiv = ReactDOM.findDOMNode(btn);
         btnDiv.click();
         expect(spy.calls.length).toBe(1);
     });
@@ -83,10 +89,10 @@ describe('ImageButton', () => {
             onclick() {}
         };
         let spy = expect.spyOn(handlers, "onclick");
-        const btn = React.render(<ImageButton disabled={true} onClick={handlers.onclick}/>, document.body);
+        const btn = ReactDOM.render(<ImageButton disabled={true} onClick={handlers.onclick}/>, document.getElementById("container"));
         expect(btn).toExist();
 
-        const btnDiv = React.findDOMNode(btn);
+        const btnDiv = ReactDOM.findDOMNode(btn);
         expect(btnDiv.style.cursor).toBe("not-allowed");
         btnDiv.click();
         expect(spy.calls.length).toBe(0);
@@ -97,11 +103,11 @@ describe('ImageButton', () => {
             onclick() {}
         };
         let spy = expect.spyOn(handlers, "onclick");
-        const btn = React.render(<ImageButton disabled={true} onClick={handlers.onclick}
-            style={{cursor: "none"}}/>, document.body);
+        const btn = ReactDOM.render(<ImageButton disabled={true} onClick={handlers.onclick}
+            style={{cursor: "none"}}/>, document.getElementById("container"));
         expect(btn).toExist();
 
-        const btnDiv = React.findDOMNode(btn);
+        const btnDiv = ReactDOM.findDOMNode(btn);
         expect(btnDiv.style.cursor).toBe("none");
         btnDiv.click();
         expect(spy.calls.length).toBe(0);

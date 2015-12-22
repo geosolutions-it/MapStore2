@@ -8,31 +8,37 @@
 
 var expect = require('expect');
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 
 var InlineSpinner = require('../InlineSpinner');
 
 describe('InlineSpinner', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     it('test defaults', () => {
-        const spinner = React.render(<InlineSpinner />, document.body);
+        const spinner = ReactDOM.render(<InlineSpinner />, document.getElementById("container"));
         expect(spinner).toExist();
 
-        const domNode = React.findDOMNode(spinner);
+        const domNode = ReactDOM.findDOMNode(spinner);
         expect(domNode).toExist();
 
         expect(domNode.style.display).toBe('none');
     });
 
     it('test loading animation', () => {
-        const spinner = React.render(<InlineSpinner loading/>, document.body);
+        const spinner = ReactDOM.render(<InlineSpinner loading/>, document.getElementById("container"));
         expect(spinner).toExist();
 
-        const domNode = React.findDOMNode(spinner);
+        const domNode = ReactDOM.findDOMNode(spinner);
         expect(domNode).toExist();
 
         expect(domNode.style.display).toBe('inline-block');

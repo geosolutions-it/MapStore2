@@ -6,22 +6,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var L = require('leaflet');
 var ScaleBar = require('../ScaleBar');
 var expect = require('expect');
 
 describe('leaflet ScaleBar component', () => {
-    document.body.innerHTML = '<div id="map"></div>';
-    let map = L.map('map');
+    let map;
+
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
+        map = L.map("map");
+        setTimeout(done);
+    });
 
     afterEach((done) => {
-        document.body.innerHTML = '<div id="map"></div>';
-        map = L.map('map');
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
+        document.body.innerHTML = '';
         setTimeout(done);
     });
 
     it('create ScaleBar with defaults', () => {
-        const sb = React.render(<ScaleBar map={map}/>, document.body);
+        const sb = ReactDOM.render(<ScaleBar map={map}/>, document.getElementById("container"));
         expect(sb).toExist();
         const domMap = map.getContainer();
         const scaleBars = domMap.getElementsByClassName('leaflet-control-scale-line');

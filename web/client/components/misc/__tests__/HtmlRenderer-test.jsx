@@ -8,39 +8,45 @@
 
 var expect = require('expect');
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var HtmlRenderer = require('../HtmlRenderer');
 
 describe("This test for HtmlRenderer component", () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     it('creates componet with defaults', () => {
-        const cmp = React.render(<HtmlRenderer/>, document.body);
+        const cmp = ReactDOM.render(<HtmlRenderer/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const node = React.findDOMNode(cmp);
+        const node = ReactDOM.findDOMNode(cmp);
         expect(node.id).toNotExist();
         expect(node.childNodes.length).toBe(0);
     });
 
     it('creates empty componet with id', () => {
-        const cmp = React.render(<HtmlRenderer id="testId"/>, document.body);
+        const cmp = ReactDOM.render(<HtmlRenderer id="testId"/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const node = React.findDOMNode(cmp);
+        const node = ReactDOM.findDOMNode(cmp);
         expect(node.id).toBe("testId");
         expect(node.childNodes.length).toBe(0);
     });
 
     it('creates a filled componet', () => {
         const srcCode = '<p id="innerP"><span id="innerSPAN">text</span></p>';
-        const cmp = React.render(<HtmlRenderer html={srcCode}/>, document.body);
+        const cmp = ReactDOM.render(<HtmlRenderer html={srcCode}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const node = React.findDOMNode(cmp);
+        const node = ReactDOM.findDOMNode(cmp);
         expect(node.childNodes.length).toBe(1);
 
         const innerP = node.childNodes[0];

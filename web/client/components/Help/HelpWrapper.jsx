@@ -21,7 +21,7 @@ require("./help.css");
  */
 let HelpWrapper = React.createClass({
     propTypes: {
-        helpText: React.PropTypes.string,
+        helpText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         helpEnabled: React.PropTypes.bool,
         changeHelpText: React.PropTypes.func,
         changeHelpwinVisibility: React.PropTypes.func

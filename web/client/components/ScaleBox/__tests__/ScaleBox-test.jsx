@@ -8,19 +8,25 @@
 
 var expect = require('expect');
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var ScaleBox = require('../ScaleBox');
 var mapUtils = require('../../../utils/MapUtils');
 
 describe('ScaleBox', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
     it('create component with defaults', () => {
-        const sb = React.render(<ScaleBox />, document.body);
+        const sb = ReactDOM.render(<ScaleBox />, document.getElementById("container"));
         expect(sb).toExist();
-        const domNode = React.findDOMNode(sb);
+        const domNode = ReactDOM.findDOMNode(sb);
         expect(domNode).toExist();
         expect(domNode.id).toBe('mapstore-scalebox');
 
@@ -40,9 +46,9 @@ describe('ScaleBox', () => {
     it('test handler for onChange event', () => {
         var newZoom;
 
-        const sb = React.render(<ScaleBox onChange={(z) => {newZoom = z; }}/>, document.body);
+        const sb = ReactDOM.render(<ScaleBox onChange={(z) => {newZoom = z; }}/>, document.getElementById("container"));
         expect(sb).toExist();
-        const domNode = React.findDOMNode(sb);
+        const domNode = ReactDOM.findDOMNode(sb);
         expect(domNode).toExist();
         const domSelect = domNode.getElementsByTagName('select').item(0);
         expect(domSelect).toExist();
@@ -53,20 +59,20 @@ describe('ScaleBox', () => {
     });
 
     it('renders readOnly', () => {
-        const sb = React.render(<ScaleBox readOnly/>, document.body);
+        const sb = ReactDOM.render(<ScaleBox readOnly/>, document.getElementById("container"));
         expect(sb).toExist();
-        const domNode = React.findDOMNode(sb);
+        const domNode = ReactDOM.findDOMNode(sb);
         expect(domNode).toExist();
         const domLabel = domNode.getElementsByTagName('label').item(0);
         expect(domLabel).toExist();
     });
 
     it('uses template', () => {
-        const sb = React.render(<ScaleBox readOnly template={(scale) => {
+        const sb = ReactDOM.render(<ScaleBox readOnly template={(scale) => {
             return "Scale:" + scale;
-        }}/>, document.body);
+        }}/>, document.getElementById("container"));
         expect(sb).toExist();
-        const domNode = React.findDOMNode(sb);
+        const domNode = ReactDOM.findDOMNode(sb);
         expect(domNode).toExist();
         const domLabel = domNode.getElementsByTagName('label').item(0);
         expect(domLabel).toExist();
