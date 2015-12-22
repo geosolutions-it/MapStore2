@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
+var ReactDOM = require('react-dom');
 var {Provider} = require('react-redux');
 
 var {loadLocale} = require('../../actions/locale');
@@ -25,12 +26,13 @@ function startApp() {
     });
     let Home = require('./containers/Home');
 
-    React.render(
-        <Debug store={store}>
-            <Provider store={store}>
-                {() => <Home />}
-            </Provider>
-        </Debug>,
+    ReactDOM.render(
+        <Provider store={store}>
+            <div className="fill">
+                <Debug/>
+                <Home />
+            </div>
+        </Provider>,
         document.getElementById('container')
     );
 }

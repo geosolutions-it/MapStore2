@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var LeafletMap = require('../Map.jsx');
 var LeafLetLayer = require('../Layer.jsx');
 var expect = require('expect');
@@ -14,32 +15,37 @@ require('../../../../utils/leaflet/Layers');
 require('../plugins/OSMLayer');
 
 describe('LeafletMap', () => {
+
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     it('creates a div for leaflet map with given id', () => {
-        const map = React.render(<LeafletMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.body);
+        const map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
         expect(map).toExist();
-        expect(React.findDOMNode(map).id).toBe('mymap');
+        expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
     });
 
     it('creates a div for leaflet map with default id (map)', () => {
-        const map = React.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.body);
+        const map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
         expect(map).toExist();
-        expect(React.findDOMNode(map).id).toBe('map');
+        expect(ReactDOM.findDOMNode(map).id).toBe('map');
     });
 
     it('creates multiple maps for different containers', () => {
-        const container = React.render(
+        const container = ReactDOM.render(
         (
             <div>
                 <div id="container1"><LeafletMap id="map1" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
                 <div id="container2"><LeafletMap id="map2" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
             </div>
-        ), document.body);
+        ), document.getElementById("container"));
         expect(container).toExist();
 
         expect(document.getElementById('map1')).toExist();
@@ -47,7 +53,7 @@ describe('LeafletMap', () => {
     });
 
     it('populates the container with leaflet objects', () => {
-        const map = React.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.body);
+        const map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
         expect(map).toExist();
         expect(document.getElementsByClassName('leaflet-map-pane').length).toBe(1);
         expect(document.getElementsByClassName('leaflet-tile-pane').length).toBe(1);
@@ -56,7 +62,7 @@ describe('LeafletMap', () => {
     });
 
     it('enables leaflet controls', () => {
-        const map = React.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.body);
+        const map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
         expect(map).toExist();
         expect(document.getElementsByClassName('leaflet-control-zoom-in').length).toBe(1);
 
@@ -76,9 +82,9 @@ describe('LeafletMap', () => {
         var options = {
             "visibility": true
         };
-        const map = React.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}>
+        const map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}>
             <LeafLetLayer type="osm" options={options} />
-        </LeafletMap>, document.body);
+        </LeafletMap>, document.getElementById("container"));
         expect(map).toExist();
         expect(document.getElementsByClassName('leaflet-layer').length).toBe(1);
     });
@@ -90,13 +96,13 @@ describe('LeafletMap', () => {
         };
         var spy = expect.spyOn(testHandlers, 'handler');
 
-        const map = React.render(
+        const map = ReactDOM.render(
             <LeafletMap
                 center={{y: 43.9, x: 10.3}}
                 zoom={11}
                 onMapViewChanges={testHandlers.handler}
             />
-        , document.body);
+        , document.getElementById("container"));
 
         const leafletMap = map.map;
 
@@ -128,13 +134,13 @@ describe('LeafletMap', () => {
         };
         var spy = expect.spyOn(testHandlers, 'handler');
 
-        const map = React.render(
+        const map = ReactDOM.render(
             <LeafletMap
                 center={{y: 43.9, x: 10.3}}
                 zoom={11}
                 onClick={testHandlers.handler}
             />
-        , document.body);
+        , document.getElementById("container"));
 
         const leafletMap = map.map;
         const mapDiv = leafletMap.getContainer();
@@ -152,13 +158,13 @@ describe('LeafletMap', () => {
     });
 
     it('check if the map changes when receive new props', () => {
-        const map = React.render(
+        const map = ReactDOM.render(
             <LeafletMap
                 center={{y: 43.9, x: 10.3}}
                 zoom={11}
                 measurement={{}}
             />
-        , document.body);
+        , document.getElementById("container"));
 
         const leafletMap = map.map;
 
@@ -169,12 +175,12 @@ describe('LeafletMap', () => {
     });
 
     it('check if the map has "auto" cursor as default', () => {
-        const map = React.render(
+        const map = ReactDOM.render(
             <LeafletMap
                 center={{y: 43.9, x: 10.3}}
                 zoom={11}
             />
-        , document.body);
+        , document.getElementById("container"));
 
         const leafletMap = map.map;
         const mapDiv = leafletMap.getContainer();
@@ -182,13 +188,13 @@ describe('LeafletMap', () => {
     });
 
     it('check if the map can be created with a custom cursor', () => {
-        const map = React.render(
+        const map = ReactDOM.render(
             <LeafletMap
                 center={{y: 43.9, x: 10.3}}
                 zoom={11}
                 mousePointer="pointer"
             />
-        , document.body);
+        , document.getElementById("container"));
 
         const leafletMap = map.map;
         const mapDiv = leafletMap.getContainer();

@@ -8,10 +8,11 @@
 
 var expect = require('expect');
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var ol = require('openlayers');
 var MeasurementSupport = require('../MeasurementSupport');
 
-describe('Leaflet MeasurementSupport', () => {
+describe('Openlayers MeasurementSupport', () => {
     var msNode;
     function getMapLayersNum(map) {
         return map.getLayers().getLength();
@@ -23,7 +24,7 @@ describe('Leaflet MeasurementSupport', () => {
         setTimeout(done);
     });
     afterEach((done) => {
-        React.unmountComponentAtNode(msNode);
+        ReactDOM.unmountComponentAtNode(msNode);
         document.body.innerHTML = '';
         msNode = undefined;
         setTimeout(done);
@@ -40,7 +41,7 @@ describe('Leaflet MeasurementSupport', () => {
           view: new ol.View(viewOptions)
         });
 
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <MeasurementSupport
                 map={map}
                 measurement={{
@@ -63,7 +64,7 @@ describe('Leaflet MeasurementSupport', () => {
           view: new ol.View(viewOptions)
         });
 
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <MeasurementSupport
                 map={map}
                 measurement={{
@@ -94,7 +95,7 @@ describe('Leaflet MeasurementSupport', () => {
           view: new ol.View(viewOptions)
         });
 
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <MeasurementSupport
                 map={map}
                 measurement={{

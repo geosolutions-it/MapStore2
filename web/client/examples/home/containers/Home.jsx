@@ -12,7 +12,7 @@ var assign = require('object-assign');
 var {bindActionCreators} = require('redux');
 
 var {loadLocale} = require('../../../actions/locale');
-var {changeMapType} = require('../../manager/actions/mapType');
+var {changeMapType} = require('../actions/mapType');
 
 var {Grid, Col, Row} = require('react-bootstrap');
 
@@ -44,50 +44,53 @@ var Home = React.createClass({
         loadLocale: React.PropTypes.func
     },
     renderLayout() {
-        return (
-            <Grid fluid>
-                <Row className="show-grid">
-                    <Col xs={12} md={6}>
-                        <Brand/>
-                    </Col>
-                    <Col xs={12} md={6}>
-                        <Language locale={this.props.locale} onChange={this.props.loadLocale}/>
-                    </Col>
-                </Row>
-                <Row className="show-grid">
-                    <Col xs={12} md={12}>
-                        <Logo/>
-                    </Col>
-                </Row>
-                <Row className="show-grid">
-                    <Col xs={12} md={6}>
-                        <Row>
-                            <Col>
-                                <Description/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Examples/>
-                            </Col>
-                        </Row>
-                    </Col>
-                    <Col xs={12} md={6}>
-                        <MapsList
-                            maps={this.props.maps} onChangeMapType={this.changeMapType}
-                            mapType={this.props.mapType} title={this.props.messages.manager.maps_title}
-                        />
-                        {(this.props.maps) ? null : <div className="spinner-loader"></div> }
-                    </Col>
-                </Row>
-                <Footer/>
-            </Grid>
-        );
+        if (this.props.messages) {
+            return (
+                <Grid fluid>
+                    <Row className="show-grid">
+                        <Col xs={12} md={6}>
+                            <Brand/>
+                        </Col>
+                        <Col xs={12} md={6}>
+                            <Language locale={this.props.locale} onChange={this.props.loadLocale}/>
+                        </Col>
+                    </Row>
+                    <Row className="show-grid">
+                        <Col xs={12} md={12}>
+                            <Logo/>
+                        </Col>
+                    </Row>
+                    <Row className="show-grid">
+                        <Col xs={12} md={6}>
+                            <Row>
+                                <Col>
+                                    <Description/>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Examples/>
+                                </Col>
+                            </Row>
+                        </Col>
+                        <Col xs={12} md={6}>
+                            <MapsList
+                                maps={this.props.maps} onChangeMapType={this.changeMapType}
+                                mapType={this.props.mapType} title={this.props.messages.manager.maps_title}
+                            />
+                            {(this.props.maps) ? null : <div className="spinner-loader"></div> }
+                        </Col>
+                    </Row>
+                    <Footer/>
+                </Grid>
+            );
+        }
+        return null;
     },
     render() {
         return (
             <Localized messages={this.props.messages} locale={this.props.locale} loadingError={this.props.localeError}>
-                {() => {return this.renderLayout(); }}
+                {this.renderLayout()}
             </Localized>
         );
     },

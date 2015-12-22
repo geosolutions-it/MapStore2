@@ -8,21 +8,27 @@
 var expect = require('expect');
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var HistoryBar = require('../HistoryBar');
 
 describe('HistoryBar', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     it('checks default', () => {
 
-        const cmp = React.render(<HistoryBar/>, document.body);
+        const cmp = ReactDOM.render(<HistoryBar/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
         const normalButtons = cmpDom.getElementsByTagName("button");
@@ -39,9 +45,9 @@ describe('HistoryBar', () => {
                 onclick() {}
             };
             let spy = expect.spyOn(handlers, "onclick");
-            const cmp = React.render(<HistoryBar btnType={btnType} undoBtnProps={{ onClick: handlers.onclick}}
-                redoBtnProps={{ onClick: handlers.onclick}}/>, document.body);
-            const cmpDom = React.findDOMNode(cmp);
+            const cmp = ReactDOM.render(<HistoryBar btnType={btnType} undoBtnProps={{ onClick: handlers.onclick}}
+                redoBtnProps={{ onClick: handlers.onclick}}/>, document.getElementById("container"));
+            const cmpDom = ReactDOM.findDOMNode(cmp);
             const undo = btnType === "normal" ? cmpDom.getElementsByTagName("button").item(0)
                                               : cmpDom.getElementsByTagName("img").item(0);
             const redo = btnType === "normal" ? cmpDom.getElementsByTagName("button").item(1)
@@ -57,10 +63,10 @@ describe('HistoryBar', () => {
 
     it('checks with image buttons', () => {
 
-        const cmp = React.render(<HistoryBar btnType="image"/>, document.body);
+        const cmp = ReactDOM.render(<HistoryBar btnType="image"/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
         const normalButtons = cmpDom.getElementsByTagName("button");

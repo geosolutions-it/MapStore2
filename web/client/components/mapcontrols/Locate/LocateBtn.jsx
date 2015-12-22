@@ -15,7 +15,7 @@ var LocateBtn = React.createClass({
         id: React.PropTypes.string,
         btnConfig: React.PropTypes.object,
         text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        locate: React.PropTypes.String,
+        locate: React.PropTypes.string,
         onClick: React.PropTypes.func,
         tooltip: React.PropTypes.element,
         tooltipPlace: React.PropTypes.string,

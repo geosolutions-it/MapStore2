@@ -8,6 +8,7 @@
 
 var expect = require('expect');
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 
 var Layers = require('../Layers');
 var Group = require('../DefaultGroup');
@@ -82,24 +83,29 @@ let layers = [
 ];
 
 describe('Layers component', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHtml = '';
         setTimeout(done);
     });
 
     it('test Layers component that use group as own direct children', () => {
 
-        const element = React.render(
+        const element = ReactDOM.render(
             <Layers nodes={testData}>
                 <Group>
                     <Layer/>
                 </Group>
             </Layers>,
-        document.body);
+        document.getElementById("container"));
         expect(element).toExist();
 
-        const domNode = React.findDOMNode(element);
+        const domNode = ReactDOM.findDOMNode(element);
         expect(domNode).toExist();
         expect(domNode.children.length).toBe(3);
     });
@@ -109,38 +115,38 @@ describe('Layers component', () => {
             return layer.name !== 'G2';
         };
 
-        const element = React.render(
+        const element = ReactDOM.render(
             <Layers filter={filter} nodes={testData}>
                 <Group>
                     <Layer/>
                 </Group>
             </Layers>,
-        document.body);
+        document.getElementById("container"));
         expect(element).toExist();
 
-        const domNode = React.findDOMNode(element);
+        const domNode = ReactDOM.findDOMNode(element);
         expect(domNode).toExist();
         expect(domNode.children.length).toBe(2);
     });
 
     it('test Layers component that use layers as own direct children', () => {
 
-        var element = React.render(
+        var element = ReactDOM.render(
             <Layers nodes={layers}>
                 <Layer/>
             </Layers>,
-        document.body);
+        document.getElementById("container"));
         expect(element).toExist();
 
-        const domNode = React.findDOMNode(element);
+        const domNode = ReactDOM.findDOMNode(element);
         expect(domNode).toExist();
         expect(domNode.children.length).toBe(layers.length);
     });
 
     it('tests Layers component sortable', () => {
-        const comp = React.render(<Layers onSort={() => {}} nodes={layers}><Layer/></Layers>, document.body);
+        const comp = ReactDOM.render(<Layers onSort={() => {}} nodes={layers}><Layer/></Layers>, document.getElementById("container"));
 
-        const domNode = React.findDOMNode(comp);
+        const domNode = ReactDOM.findDOMNode(comp);
 
         const sortable = domNode.getElementsByClassName('Sortable');
         expect(sortable).toExist();

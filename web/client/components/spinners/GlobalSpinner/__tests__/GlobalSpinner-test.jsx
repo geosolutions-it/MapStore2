@@ -6,35 +6,41 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var GlobalSpinner = require('../GlobalSpinner');
 var expect = require('expect');
 
 describe('test the globalspinner component', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     it('creates the component with defaults', () => {
-        const globalspinner = React.render(<GlobalSpinner/>, document.body);
+        const globalspinner = ReactDOM.render(<GlobalSpinner/>, document.getElementById("container"));
         expect(globalspinner).toExist();
-        const globalspinnerDiv = React.findDOMNode(globalspinner);
+        const globalspinnerDiv = ReactDOM.findDOMNode(globalspinner);
         expect(globalspinnerDiv).toNotExist();
     });
 
     it('creates the component with layers loading and spinner to show', () => {
-        const globalspinner = React.render(<GlobalSpinner id="globalspinner" loading
-            spinnersInfo={{globalspinner: true}}/>, document.body);
+        const globalspinner = ReactDOM.render(<GlobalSpinner id="globalspinner" loading
+            spinnersInfo={{globalspinner: true}}/>, document.getElementById("container"));
         expect(globalspinner).toExist();
-        const globalspinnerDiv = React.findDOMNode(globalspinner);
+        const globalspinnerDiv = ReactDOM.findDOMNode(globalspinner);
         expect(globalspinnerDiv).toExist();
     });
 
     it('creates the component with layers load', () => {
-        const globalspinner = React.render(<GlobalSpinner loading={false}/>, document.body);
+        const globalspinner = ReactDOM.render(<GlobalSpinner loading={false}/>, document.getElementById("container"));
         expect(globalspinner).toExist();
-        const globalspinnerDiv = React.findDOMNode(globalspinner);
+        const globalspinnerDiv = ReactDOM.findDOMNode(globalspinner);
         expect(globalspinnerDiv).toNotExist();
     });
 });

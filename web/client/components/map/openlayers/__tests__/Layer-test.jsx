@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var ol = require('openlayers');
 var OpenlayersLayer = require('../Layer.jsx');
 var expect = require('expect');
@@ -22,25 +23,10 @@ require('../plugins/OverlayLayer');
 
 describe('Openlayers layer', () => {
     document.body.innerHTML = '<div id="map"></div>';
-    let map = new ol.Map({
-      layers: [
-      ],
-      controls: ol.control.defaults({
-        attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
-          collapsible: false
-        })
-      }),
-      target: 'map',
-      view: new ol.View({
-        center: [0, 0],
-        zoom: 5
-      })
-    });
+    let map;
 
-
-    afterEach((done) => {
-        map.setTarget(null);
-        document.body.innerHTML = '<div id="map"></div>';
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
         map = new ol.Map({
           layers: [
           ],
@@ -58,14 +44,20 @@ describe('Openlayers layer', () => {
         setTimeout(done);
     });
 
+    afterEach((done) => {
+        map.setTarget(null);
+        document.body.innerHTML = '';
+        setTimeout(done);
+    });
+
     it('missing layer', () => {
         var source = {
             "P_TYPE": "wrong ptype key"
         };
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <OpenlayersLayer source={source}
-                  map={map}/>, document.body);
+                  map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -81,9 +73,9 @@ describe('Openlayers layer', () => {
             "url": "http://demo.geo-solutions.it/geoserver/wms"
         };
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <OpenlayersLayer source={source}
-                 options={options} map={map}/>, document.body);
+                 options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -99,9 +91,9 @@ describe('Openlayers layer', () => {
             "P_TYPE": "wrong ptype key"
         };
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <OpenlayersLayer source={source}
-                 options={options} map={map}/>, document.body);
+                 options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -110,9 +102,9 @@ describe('Openlayers layer', () => {
     it('creates a osm layer for openlayers map', () => {
         var options = {};
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <OpenlayersLayer type="osm"
-                 options={options} map={map}/>, document.body);
+                 options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -126,9 +118,9 @@ describe('Openlayers layer', () => {
             "group": "background"
         };
         // create layer
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <OpenlayersLayer type="osm"
-                 options={options} map={map}/>, document.body);
+                 options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -145,9 +137,9 @@ describe('Openlayers layer', () => {
             "url": "http://demo.geo-solutions.it/geoserver/wms"
         };
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                 options={options} map={map}/>, document.body);
+                 options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -160,9 +152,9 @@ describe('Openlayers layer', () => {
             "visibility": true
         };
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <OpenlayersLayer type="graticule"
-                 options={options} map={map}/>, document.body);
+                 options={options} map={map}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -201,8 +193,8 @@ describe('Openlayers layer', () => {
         window.google = google;
 
         // create layers
-        let layer = React.render(
-            <OpenlayersLayer type="google" options={options} map={map} mapId="map"/>, document.body);
+        let layer = ReactDOM.render(
+            <OpenlayersLayer type="google" options={options} map={map} mapId="map"/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -212,7 +204,7 @@ describe('Openlayers layer', () => {
 
     it('creates and overlay layer for openlayers map', () => {
         let container = document.createElement('div');
-        container.id = 'container';
+        container.id = 'ovcontainer';
         document.body.appendChild(container);
 
         let element = document.createElement('div');
@@ -224,9 +216,9 @@ describe('Openlayers layer', () => {
             position: [13, 43]
         };
         // create layers
-        let layer = React.render(
+        let layer = ReactDOM.render(
             <OpenlayersLayer type="overlay"
-                 options={options} map={map}/>, document.getElementById('container'));
+                 options={options} map={map}/>, document.getElementById('ovcontainer'));
 
         expect(layer).toExist();
 
@@ -235,7 +227,7 @@ describe('Openlayers layer', () => {
 
     it('creates and overlay layer for openlayers map with close support', () => {
         let container = document.createElement('div');
-        container.id = 'container';
+        container.id = 'ovcontainer';
         document.body.appendChild(container);
 
         let element = document.createElement('div');
@@ -253,9 +245,9 @@ describe('Openlayers layer', () => {
             }
         };
         // create layers
-        let layer = React.render(
+        let layer = ReactDOM.render(
             <OpenlayersLayer type="overlay"
-                 options={options} map={map}/>, document.getElementById('container'));
+                 options={options} map={map}/>, document.getElementById('ovcontainer'));
 
         expect(layer).toExist();
         const overlayElement = document.getElementById('overlay-1-overlay');
@@ -267,7 +259,7 @@ describe('Openlayers layer', () => {
 
     it('creates and overlay layer for openlayers map with no data-reactid attributes', () => {
         let container = document.createElement('div');
-        container.id = 'container';
+        container.id = 'ovcontainer';
         document.body.appendChild(container);
 
         let element = document.createElement('div');
@@ -281,9 +273,9 @@ describe('Openlayers layer', () => {
             position: [13, 43]
         };
         // create layers
-        let layer = React.render(
+        let layer = ReactDOM.render(
             <OpenlayersLayer type="overlay"
-                 options={options} map={map}/>, document.getElementById('container'));
+                 options={options} map={map}/>, document.getElementById('ovcontainer'));
 
         expect(layer).toExist();
         const overlayElement = document.getElementById('overlay-1-overlay');
@@ -320,9 +312,9 @@ describe('Openlayers layer', () => {
           }
         };
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <OpenlayersLayer type="vector"
-                 options={options} map={map}/>, document.body);
+                 options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -357,8 +349,8 @@ describe('Openlayers layer', () => {
         window.google = google;
 
         // create layers
-        let layer = React.render(
-            <OpenlayersLayer type="google" options={options} map={map} mapId="map"/>, document.body);
+        let layer = ReactDOM.render(
+            <OpenlayersLayer type="google" options={options} map={map} mapId="map"/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -404,8 +396,8 @@ describe('Openlayers layer', () => {
         window.google = google;
 
         // create layers
-        let layer = React.render(
-            <OpenlayersLayer type="google" options={options} map={map} mapId="map"/>, document.body);
+        let layer = ReactDOM.render(
+            <OpenlayersLayer type="google" options={options} map={map} mapId="map"/>, document.getElementById("container"));
 
         expect(layer).toExist();
         map.getView().setRotation(Math.PI / 2.0);
@@ -428,8 +420,8 @@ describe('Openlayers layer', () => {
             "group": "background"
         };
         // create layers
-        var layer = React.render(
-            <OpenlayersLayer type="bing" options={options} map={map}/>, document.body);
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -444,8 +436,8 @@ describe('Openlayers layer', () => {
             "group": "background"
         };
         // create layers
-        var layer = React.render(
-            <OpenlayersLayer type="bing" options={options} map={map}/>, document.body);
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(layer.layer).toExist();
@@ -483,8 +475,8 @@ describe('Openlayers layer', () => {
             "group": "background"
         };
         // create layers
-        var layer = React.render(
-            <OpenlayersLayer type="mapquest" options={options} map={map}/>, document.body);
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="mapquest" options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -502,9 +494,9 @@ describe('Openlayers layer', () => {
             "url": "http://demo.geo-solutions.it/geoserver/wms"
         };
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                 options={options} map={map}/>, document.body);
+                 options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -527,9 +519,9 @@ describe('Openlayers layer', () => {
             "url": "http://demo.geo-solutions.it/geoserver/wms"
         };
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <OpenlayersLayer type="wms" position={10}
-                 options={options} map={map}/>, document.body);
+                 options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -555,9 +547,9 @@ describe('Openlayers layer', () => {
             }
         };
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
-                 options={options} map={map}/>, document.body);
+                 options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers

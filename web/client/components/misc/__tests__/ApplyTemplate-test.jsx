@@ -8,31 +8,37 @@
 
 var expect = require('expect');
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var ApplyTemplate = require('../ApplyTemplate');
 
 describe('ApplyTemplate', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
     it('test defaults', () => {
-        const cmp = React.render(<ApplyTemplate />, document.body);
+        const cmp = ReactDOM.render(<ApplyTemplate />, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
         expect(cmpDom.innerHTML).toBe("");
     });
     it('test child rendering', () => {
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <ApplyTemplate data={{id: "p-id"}}>
                 <p></p>
-            </ApplyTemplate>, document.body);
+            </ApplyTemplate>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
         expect(cmpDom.childNodes.length).toBe(1);

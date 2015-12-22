@@ -7,14 +7,19 @@
  */
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var Node = require('../Node');
 
 var expect = require('expect');
 
 describe('test Node module component', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
 
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
@@ -27,10 +32,10 @@ describe('test Node module component', () => {
             storeIndex: 9,
             type: 'wms'
         };
-        const comp = React.render(<Node node={l} />, document.body);
+        const comp = ReactDOM.render(<Node node={l} />, document.getElementById("container"));
         expect(comp).toExist();
 
-        const domNode = React.findDOMNode(comp);
+        const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
     });
 
@@ -47,10 +52,10 @@ describe('test Node module component', () => {
                 display: "none"
             };
         };
-        const comp = React.render(<Node node={l} styler={styler}/>, document.body);
+        const comp = ReactDOM.render(<Node node={l} isDraggable={false} styler={styler}/>, document.getElementById("container"));
         expect(comp).toExist();
 
-        const domNode = React.findDOMNode(comp);
+        const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
 
         expect(domNode.style.display).toBe('none');
@@ -63,10 +68,10 @@ describe('test Node module component', () => {
             visibility: false,
             storeIndex: 9
         };
-        const comp = React.render(<Node node={l}><div className="layer-content"/></Node>, document.body);
+        const comp = ReactDOM.render(<Node node={l}><div className="layer-content"/></Node>, document.getElementById("container"));
         expect(comp).toExist();
 
-        const domNode = React.findDOMNode(comp);
+        const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
 
         const layers = domNode.getElementsByClassName('layer-content');
@@ -81,10 +86,10 @@ describe('test Node module component', () => {
             visibility: false,
             storeIndex: 9
         };
-        const comp = React.render(<Node node={l}><div position="collapsible" className="layer-collapsible"/><div className="layer-content"/></Node>, document.body);
+        const comp = ReactDOM.render(<Node node={l}><div position="collapsible" className="layer-collapsible"/><div className="layer-content"/></Node>, document.getElementById("container"));
         expect(comp).toExist();
 
-        const domNode = React.findDOMNode(comp);
+        const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
 
         const layers = domNode.getElementsByClassName('layer-content');

@@ -7,6 +7,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
+var ReactDOM = require('react-dom');
 var BootstrapReact = require('react-bootstrap');
 var Input = BootstrapReact.Input;
 var LocaleUtils = require('../../utils/LocaleUtils');
@@ -44,7 +45,7 @@ var LangSelector = React.createClass({
         );
     },
     launchNewLangAction() {
-        var element = React.findDOMNode(this);
+        var element = ReactDOM.findDOMNode(this);
         var selectNode = element.getElementsByTagName('select').item(0);
         this.props.onLanguageChange(selectNode.value);
     }

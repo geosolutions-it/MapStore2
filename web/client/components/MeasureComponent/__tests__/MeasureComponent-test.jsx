@@ -8,28 +8,34 @@
 var expect = require('expect');
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var MeasureComponent = require('../MeasureComponent');
 var ReactIntl = require('react-intl');
 var FormattedNumber = ReactIntl.FormattedNumber;
 
 describe("test the MeasureComponent", () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     it('test component creation', () => {
         let measurement = {};
-        const mc = React.render(<MeasureComponent measurement={measurement}/>, document.body);
+        const mc = ReactDOM.render(<MeasureComponent measurement={measurement}/>, document.getElementById("container"));
         expect(mc).toExist();
     });
 
     it('test creation of button UIs ', () => {
         let measurement = {};
-        const mc = React.render(<MeasureComponent measurement={measurement}/>, document.body);
+        const mc = ReactDOM.render(<MeasureComponent measurement={measurement}/>, document.getElementById("container"));
         expect(mc).toExist();
-        const domNode = React.findDOMNode(mc);
+        const domNode = ReactDOM.findDOMNode(mc);
         expect(domNode).toExist();
         const domButtons = domNode.getElementsByTagName('button');
         expect(domButtons).toExist();
@@ -38,9 +44,9 @@ describe("test the MeasureComponent", () => {
 
     it('test creation of measurement result panel UI ', () => {
         let measurement = {};
-        const mc = React.render(<MeasureComponent measurement={measurement}/>, document.body);
+        const mc = ReactDOM.render(<MeasureComponent measurement={measurement}/>, document.getElementById("container"));
         expect(mc).toExist();
-        const domNode = React.findDOMNode(mc);
+        const domNode = ReactDOM.findDOMNode(mc);
         expect(domNode).toExist();
         const domResultPanel = document.getElementById('measure-result-panel');
         expect(domResultPanel).toExist();
@@ -57,17 +63,17 @@ describe("test the MeasureComponent", () => {
             area: 0,
             bearing: 0
         };
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <MeasureComponent
                 measurement={measurement}
                 toggleMeasure={(data) => {
                     newMeasureState = data;
                 }}
-                lineMeasureEnabled={false} />, document.body
+                lineMeasureEnabled={false} />, document.getElementById("container")
         );
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
@@ -91,17 +97,17 @@ describe("test the MeasureComponent", () => {
             area: 0,
             bearing: 0
         };
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <MeasureComponent
                 measurement={measurement}
                 toggleMeasure={(data) => {
                     newMeasureState = data;
                 }}
-                areaMeasureEnabled={false} />, document.body
+                areaMeasureEnabled={false} />, document.getElementById("container")
         );
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
@@ -125,17 +131,17 @@ describe("test the MeasureComponent", () => {
             area: 0,
             bearing: 0
         };
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <MeasureComponent
                 measurement={measurement}
                 toggleMeasure={(data) => {
                     newMeasureState = data;
                 }}
-                bearingMeasureEnabled={false} />, document.body
+                bearingMeasureEnabled={false} />, document.getElementById("container")
         );
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
@@ -159,16 +165,16 @@ describe("test the MeasureComponent", () => {
             area: 0,
             bearing: 0
         };
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <MeasureComponent
                 measurement={measurement}
                 toggleMeasure={(data) => {
                     newMeasureState = data;
-                }} />, document.body
+                }} />, document.getElementById("container")
         );
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
@@ -197,8 +203,8 @@ describe("test the MeasureComponent", () => {
             area: 0,
             bearing: 0
         };
-        const cmp = React.render(
-            <MeasureComponent measurement={measurement}/>, document.body
+        const cmp = ReactDOM.render(
+            <MeasureComponent measurement={measurement}/>, document.getElementById("container")
         );
         expect(cmp).toExist();
 
@@ -240,11 +246,11 @@ describe("test the MeasureComponent", () => {
             bearing: 0
         };
         let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <MeasureComponent uom={{
                 length: {unit: 'km', label: 'km'},
                 area: {unit: 'sqkm', label: 'km²'}
-            }} measurement={measurement}/>, document.body
+            }} measurement={measurement}/>, document.getElementById("container")
         );
         expect(cmp).toExist();
 
@@ -253,7 +259,7 @@ describe("test the MeasureComponent", () => {
 
         let testDiv = document.createElement("div");
         document.body.appendChild(testDiv);
-        let val = React.render((<span><FormattedNumber key="len" {...decimalFormat} value={10} />km</span>), testDiv).getDOMNode();
+        let val = ReactDOM.findDOMNode(ReactDOM.render((<span><FormattedNumber key="len" {...decimalFormat} value={10} />km</span>), testDiv));
         cmp.setProps({
             measurement: {len: 10000}
         }, () => {
@@ -263,7 +269,7 @@ describe("test the MeasureComponent", () => {
 
         const areaSpan = document.getElementById('measure-area-res');
         expect(areaSpan).toExist();
-        val = React.render((<span><FormattedNumber key="len" {...decimalFormat} value={1} />km²</span>), testDiv).getDOMNode();
+        val = ReactDOM.findDOMNode(ReactDOM.render((<span><FormattedNumber key="len" {...decimalFormat} value={1} />km²</span>), testDiv));
         cmp.setProps({
             measurement: {geomType: 'Polygon', area: 1000000}
         }, () => {

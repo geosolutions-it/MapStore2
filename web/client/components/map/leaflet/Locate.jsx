@@ -52,7 +52,7 @@ L.Control.MSLocate = L.Control.Locate.extend({
 let Locate = React.createClass({
     propTypes: {
         map: React.PropTypes.object,
-        status: React.PropTypes.String,
+        status: React.PropTypes.string,
         messages: React.PropTypes.object,
         changeLocateState: React.PropTypes.func,
         onLocateError: React.PropTypes.func

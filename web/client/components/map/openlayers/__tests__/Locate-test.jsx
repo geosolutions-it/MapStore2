@@ -7,29 +7,16 @@
  */
 var expect = require('expect');
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var ol = require('openlayers');
 var Locate = require('../Locate');
 
 
 describe('Openlayers Locate component', () => {
-    document.body.innerHTML = '<div id="map"></div>';
-    let map = new ol.Map({
-      layers: [
-      ],
-      controls: ol.control.defaults({
-        attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
-          collapsible: false
-        })
-      }),
-      target: 'map',
-      view: new ol.View({
-        center: [0, 0],
-        zoom: 5
-      })
-    });
+    let map;
 
-    afterEach((done) => {
-        document.body.innerHTML = '<div id="map"></div>';
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
         map = new ol.Map({
           layers: [
           ],
@@ -46,8 +33,15 @@ describe('Openlayers Locate component', () => {
         });
         setTimeout(done);
     });
+
+    afterEach((done) => {
+        map.setTarget(null);
+        document.body.innerHTML = '';
+        setTimeout(done);
+    });
+
     it('create Locate with defaults', () => {
-        const ov = React.render(<Locate map={map}/>, document.body);
+        const ov = ReactDOM.render(<Locate map={map}/>, document.getElementById("container"));
         expect(ov).toExist();
     });
 });

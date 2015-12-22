@@ -28,11 +28,11 @@ var MapItem = React.createClass({
             <Button bsStyle="info" onClick={() => this.props.viewerUrl(this.props.map)}> <Glyphicon glyph={"new-window"}/></Button> :
             <Button bsStyle="info" target="_blank" href={this.props.viewerUrl + "?type=" + this.props.mapType + "&mapId=" + this.props.map.id}> <Glyphicon glyph={"new-window"}/></Button>;
             const tooltip = <Tooltip id="manager.openInANewTab"><I18N.Message msgId="manager.openInANewTab" /></Tooltip>;
-            return (<div>
+            return (<span style={{display: "block"}}>
                 <OverlayTrigger placement="right" overlay={tooltip}>
                     {button}
                 </OverlayTrigger>
-                </div>);
+            </span>);
         }
         return "";
     },

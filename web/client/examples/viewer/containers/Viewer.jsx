@@ -67,6 +67,47 @@ const Viewer = React.createClass({
         changeLocateState: React.PropTypes.func,
         onLocateError: React.PropTypes.func
     },
+    renderViewer() {
+        if (this.props.messages) {
+            let plugins = this.props.plugins(this.props);
+            if (this.props.configPlugins) {
+                let mapPlugins = this.props.configPlugins.map((plugin) => {
+                    let props = assign({}, plugin);
+                    delete props.type;
+                    for (let propName in props) {
+                        if (props.hasOwnProperty(propName)) {
+                            let value = props[propName];
+                            if (value.indexOf("${") === 0) {
+                                value = value.substring(2, value.length - 1);
+                                value = this.props[value];
+                            }
+                        }
+                    }
+                    return React.createElement(require('../components/' + plugin.type), props);
+                });
+                plugins = plugins.concat(mapPlugins);
+            }
+            let layers = this.props.mapInfo.showMarker ?
+                [...this.props.layers.flat, MapInfoUtils.getMarkerLayer("GetFeatureInfo", this.props.mapInfo.clickPoint.latlng)] :
+                [...this.props.layers.flat];
+            return (
+                <div key="viewer" className="fill">
+                    <VMap key="map" config={this.props.map} layers={layers} onMapViewChanges={this.manageNewMapView}
+                        onClick={this.props.clickOnMap} onMouseMove={this.manageMousePosition}
+                        onLayerLoading={this.props.layerLoading} onLayerLoad={this.props.layerLoad}
+                        measurement={this.props.measurement}
+                        changeMeasurementState={this.props.changeMeasurementState}
+                        locate={this.props.locate} locateMessages={this.props.messages.locate}
+                        mapOptions={this.props.mapOptions}
+                        changeLocateState={this.props.changeLocateState}
+                        onLocateError={this.props.onLocateError}
+                        {...this.props.mapParams} />
+                {plugins}
+                </div>
+            );
+        }
+        return null;
+    },
     render() {
         if (this.props.map) {
             let config = this.props.map;
@@ -76,46 +117,7 @@ const Viewer = React.createClass({
 
             return (
                 <Localized messages={this.props.messages} locale={this.props.locale} loadingError={this.props.localeError}>
-                    {() => {
-                        let plugins = this.props.plugins(this.props);
-                        if (this.props.configPlugins) {
-                            let mapPlugins = this.props.configPlugins.map((plugin) => {
-                                let props = assign({}, plugin);
-                                delete props.type;
-                                for (let propName in props) {
-                                    if (props.hasOwnProperty(propName)) {
-                                        let value = props[propName];
-                                        if (value.indexOf("${") === 0) {
-                                            value = value.substring(2, value.length - 1);
-                                            value = this.props[value];
-                                        }
-                                    }
-                                }
-                                return React.createElement(require('../components/' + plugin.type), props);
-                            });
-                            plugins = plugins.concat(mapPlugins);
-                        }
-                        let layers = this.props.mapInfo.showMarker ?
-                            [...this.props.layers.flat, MapInfoUtils.getMarkerLayer("GetFeatureInfo", this.props.mapInfo.clickPoint.latlng)] :
-                            [...this.props.layers.flat];
-                        return (
-                            <div key="viewer" className="fill">
-                                <VMap key="map" config={this.props.map} layers={layers} onMapViewChanges={this.manageNewMapView}
-                                    onClick={this.props.clickOnMap} onMouseMove={this.manageMousePosition}
-                                    onLayerLoading={this.props.layerLoading} onLayerLoad={this.props.layerLoad}
-                                    measurement={this.props.measurement}
-                                    changeMeasurementState={this.props.changeMeasurementState}
-                                    locate={this.props.locate} locateMessages={this.props.messages.locate}
-                                    mapOptions={this.props.mapOptions}
-                                    changeLocateState={this.props.changeLocateState}
-                                    onLocateError={this.props.onLocateError}
-                                    {...this.props.mapParams} />
-                            {plugins}
-                            </div>
-                        );
-                    }
-
-                    }
+                    {this.renderViewer()}
                 </Localized>
             );
         }

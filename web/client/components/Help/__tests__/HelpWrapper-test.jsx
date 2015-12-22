@@ -6,22 +6,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var HelpWrapper = require('../HelpWrapper');
 var expect = require('expect');
 
 describe('Test for HelpWrapper', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     // test DEFAULTS
     it('wraps child component properly', () => {
-        const helpWrapper = React.render(<HelpWrapper><div id="child-div" key="child-key"></div></HelpWrapper>, document.body);
+        const helpWrapper = ReactDOM.render(<HelpWrapper><div id="child-div" key="child-key"></div></HelpWrapper>, document.getElementById("container"));
         expect(helpWrapper).toExist();
 
-        const helpWrapperDom = React.findDOMNode(helpWrapper);
+        const helpWrapperDom = ReactDOM.findDOMNode(helpWrapper);
         expect(helpWrapperDom).toExist();
 
         // creates a help badge

@@ -8,21 +8,27 @@
 var expect = require('expect');
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var FlagButton = require('../FlagButton');
 
 describe('FlagButton', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     it('checks default', () => {
 
-        const cmp = React.render(<FlagButton/>, document.body);
+        const cmp = ReactDOM.render(<FlagButton/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
     });
 });

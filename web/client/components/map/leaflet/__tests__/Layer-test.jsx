@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var L = require('leaflet');
 var LeafLetLayer = require('../Layer.jsx');
 var expect = require('expect');
@@ -18,13 +19,18 @@ require('../plugins/BingLayer');
 require('../plugins/MapQuest');
 
 describe('Leaflet layer', () => {
-    document.body.innerHTML = '<div id="map"></div>';
-    let map = L.map('map');
+    let map;
 
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
+        map = L.map('map');
+        setTimeout(done);
+    });
 
     afterEach((done) => {
-        document.body.innerHTML = '<div id="map"></div>';
-        map = L.map('map');
+        ReactDOM.unmountComponentAtNode(document.getElementById("map"));
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
+        document.body.innerHTML = '';
         setTimeout(done);
     });
 
@@ -33,9 +39,9 @@ describe('Leaflet layer', () => {
             "P_TYPE": "wrong ptype key"
         };
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <LeafLetLayer source={source}
-                  map={map}/>, document.body);
+                  map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
         expect(layer).toExist();
@@ -53,9 +59,9 @@ describe('Leaflet layer', () => {
             "url": "http://demo.geo-solutions.it/geoserver/wms"
         };
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <LeafLetLayer source={source}
-                 options={options} map={map}/>, document.body);
+                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
         expect(layer).toExist();
@@ -72,9 +78,9 @@ describe('Leaflet layer', () => {
             "P_TYPE": "wrong ptype key"
         };
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <LeafLetLayer source={source}
-                 options={options} map={map}/>, document.body);
+                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
         expect(layer).toExist();
@@ -85,9 +91,9 @@ describe('Leaflet layer', () => {
     it('creates a osm layer for leaflet map', () => {
         var options = {};
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <LeafLetLayer type="osm"
-                 options={options} map={map}/>, document.body);
+                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
         expect(layer).toExist();
         // count layers
@@ -103,9 +109,9 @@ describe('Leaflet layer', () => {
 			"group": "background"
 		};
         // create layer
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <LeafLetLayer type="mapquest"
-                 options={options} map={map}/>, document.body);
+                 options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers
@@ -122,9 +128,9 @@ describe('Leaflet layer', () => {
             "group": "background"
         };
         // create layer
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <LeafLetLayer type="osm"
-                 options={options} map={map}/>, document.body);
+                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
         expect(layer).toExist();
         // count layers
@@ -142,9 +148,9 @@ describe('Leaflet layer', () => {
             "url": "http://demo.geo-solutions.it/geoserver/wms"
         };
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <LeafLetLayer type="wms"
-                 options={options} map={map}/>, document.body);
+                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
         expect(layer).toExist();
@@ -179,8 +185,8 @@ describe('Leaflet layer', () => {
         window.google = google;
 
         // create layers
-        let layer = React.render(
-            <LeafLetLayer type="google" options={options} map={map}/>, document.body);
+        let layer = ReactDOM.render(
+            <LeafLetLayer type="google" options={options} map={map}/>, document.getElementById("container"));
         let lcount = 0;
 
         expect(layer).toExist();
@@ -197,8 +203,8 @@ describe('Leaflet layer', () => {
             "group": "background"
         };
         // create layers
-        var layer = React.render(
-            <LeafLetLayer type="bing" options={options} map={map}/>, document.body);
+        var layer = ReactDOM.render(
+            <LeafLetLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
         expect(layer).toExist();
@@ -210,9 +216,9 @@ describe('Leaflet layer', () => {
     it('switch osm layer visibility', () => {
         var options = {};
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <LeafLetLayer type="osm"
-                 options={{options}} position={0} map={map}/>, document.body);
+                 options={{options}} position={0} map={map}/>, document.getElementById("container"));
         var lcount = 0;
         expect(layer).toExist();
         // count layers
@@ -236,9 +242,9 @@ describe('Leaflet layer', () => {
             "url": "http://demo.geo-solutions.it/geoserver/wms"
         };
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <LeafLetLayer type="wms"
-                 options={options} map={map}/>, document.body);
+                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
         expect(layer).toExist();
@@ -263,9 +269,9 @@ describe('Leaflet layer', () => {
             "url": "http://demo.geo-solutions.it/geoserver/wms"
         };
         // create layers
-        var layer = React.render(
+        var layer = ReactDOM.render(
             <LeafLetLayer type="wms"
-                 options={options} map={map} position={10}/>, document.body);
+                 options={options} map={map} position={10}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         // count layers

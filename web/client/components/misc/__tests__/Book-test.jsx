@@ -8,30 +8,36 @@
 
 var expect = require('expect');
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var Book = require('../Book');
 
 describe('Book', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
     it('test defaults', () => {
-        const cmp = React.render(<Book/>, document.body);
+        const cmp = ReactDOM.render(<Book/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
     });
     it('page rentering', () => {
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <Book currentPage={1}>
                 <div id="page0"></div>
                 <div id="page1"></div>
-            </Book>, document.body);
+            </Book>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
         expect(cmpDom.childNodes.length).toBe(4);
@@ -41,32 +47,32 @@ describe('Book', () => {
         expect(pageContainer.childNodes.item(0).id).toBe("page1");
     });
     it('title rendering', () => {
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <Book
                 currentPage={1}
                 pageTitles={['title0', 'title1']}>
                 <div id="page0"></div>
                 <div id="page1"></div>
-            </Book>, document.body);
+            </Book>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
         expect(cmpDom.childNodes.length).toBe(4);
         expect(cmpDom.childNodes.item(0).innerHTML).toBe("title1");
     });
     it('test page switching', () => {
-        const cmp = React.render(
+        const cmp = ReactDOM.render(
             <Book
                 currentPage={1}
                 pageTitles={['title0', 'title1']}>
                 <div id="page0"></div>
                 <div id="page1"></div>
-            </Book>, document.body);
+            </Book>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
         expect(cmpDom.childNodes.length).toBe(4);
