@@ -6,59 +6,70 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var Alert = require('react-bootstrap').Alert;
+const React = require('react');
+const {Alert, Accordion, Panel} = require('react-bootstrap');
 
-var Book = require('../../../../../components/misc/Book');
-var I18N = require('../../../../../components/I18N/I18N');
+const I18N = require('../../../../../components/I18N/I18N');
 
-var HtmlRenderer = require('../../../../../components/misc/HtmlRenderer');
-
-var TEXTFeatureInfoViewer = React.createClass({
+const TEXTFeatureInfoViewer = React.createClass({
     propTypes: {
-        responses: React.PropTypes.array
+        responses: React.PropTypes.array,
+        missingRequests: React.PropTypes.number
     },
     getDefaultProps() {
         return {
-            responses: []
+            responses: [],
+            missingRequests: 0
         };
     },
     renderInfo(responses) {
-        var output = [];
-
-        output = responses.map((res, i) => {
-            let content = "";
+        const filteredResponses = responses.filter((res) => res.response !== "" && res.response !== "no features were found\n" && (typeof res.response === "string" && res.response.indexOf("<?xml") !== 0));
+        if (this.props.missingRequests === 0 && filteredResponses.length === 0) {
+            return (
+                <Alert bsStyle={"danger"}>
+                    <h4><I18N.HTML msgId={"noFeatureInfo"}/></h4>
+                </Alert>
+            );
+        }
+        return filteredResponses.map((res, i) => {
             const {response, layerMetadata} = res;
-
-            if (typeof response === "string" && response.indexOf("<?xml") !== 0) {
-                content = (
-                    <HtmlRenderer
-                        key={i}
-                        html={'<div style="font-family: monospace; font-size: 12px;">' + response.replace(/\n/g, "<br/>") + "</div>"}/>
-                );
-            } else {
-                content = (
-                    <Alert bsStyle={"danger"} key={i}>
-                        <h4><I18N.HTML msgId={"getFeatureInfoError.title"}/></h4>
-                        <p><I18N.HTML msgId={"getFeatureInfoError.text"}/></p>
-                    </Alert>
-                );
-            }
-
-            return {component: content, title: layerMetadata.title};
+            return (
+                <Panel header={layerMetadata.title} eventKey={i + 1} key={i}>
+                    <pre>{response}</pre>
+                </Panel>
+            );
         });
-        return output.reduce((prev, item) => {
-            prev.titles.push(<span><b>Layer: </b>{item.title}</span>);
-            prev.pages.push(item.component);
-            return prev;
-        }, {titles: [], pages: []});
+    },
+    renderEmpryLayer(responses) {
+        const notEmptyResponses = responses.filter((res) => res.response !== "" && res.response !== "no features were found\n" && (typeof res.response === "string" && res.response.indexOf("<?xml") !== 0)).length;
+        const filteredResponses = responses.filter((res) => res.response === "" || res.response === "no features were found\n" || res.response && (typeof res.response === "string" && res.response.indexOf("<?xml") === 0));
+        if (this.props.missingRequests === 0 && notEmptyResponses === 0) {
+            return null;
+        }
+        if (filteredResponses.length !== 0) {
+            const titles = filteredResponses.map((res) => {
+                const {layerMetadata} = res;
+                return layerMetadata.title;
+            });
+            return (
+                <Alert bsStyle={"info"}>
+                    <I18N.Message msgId={"noInfoForLayers"} />
+                    <b>{titles.join(', ')}</b>
+                </Alert>
+            );
+        }
+        return null;
     },
     render() {
-        var {titles, pages} = this.renderInfo(this.props.responses);
+        var pages = this.renderInfo(this.props.responses);
+        let emptyLayers = this.renderEmpryLayer(this.props.responses);
         return (
-            <Book pageTitles={titles}>
-                {pages}
-            </Book>
+            <div>
+                <Accordion defaultActiveKey={1}>
+                    {pages}
+                </Accordion>
+                {emptyLayers}
+            </div>
         );
     }
 });

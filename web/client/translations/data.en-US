@@ -72,6 +72,7 @@
             "text": "An error has occurred during this <b>GetFeatureInfo</b> request"
         },
         "noFeatureInfo": "There is no information available for the feature you clicked",
+        "noInfoForLayers": "There are no features for the following layers: ",
         "history":{
             "barLabel": "Map history",
             "undoBtnTooltip": "Go back",

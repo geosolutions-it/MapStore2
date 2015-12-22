@@ -7,24 +7,24 @@
  */
 
 var React = require('react');
-var Alert = require('react-bootstrap').Alert;
+var {Alert, Accordion, Panel} = require('react-bootstrap');
 
 var ApplyTemplate = require('../../../../../components/misc/ApplyTemplate');
 var PropertiesViewer = require('../../../../../components/misc/PropertiesViewer');
-var Book = require('../../../../../components/misc/Book');
 var I18N = require('../../../../../components/I18N/I18N');
 
 var JSONFeatureInfoViewr = React.createClass({
     propTypes: {
-        responses: React.PropTypes.array
+        responses: React.PropTypes.array,
+        missingRequests: React.PropTypes.number
     },
     getDefaultProps() {
         return {
-            responses: []
+            responses: [],
+            missingRequests: 0
         };
     },
     renderInfo(responses) {
-        var output = [];
         const getFeatureProps = feature => feature.properties;
         const getFormattedContent = (feature, i) => {
             return (
@@ -33,36 +33,54 @@ var JSONFeatureInfoViewr = React.createClass({
                 </ApplyTemplate>
             );
         };
-
-        output = responses.map((res, i) => {
-            let content = "";
+        const filteredResponses = responses.filter((res) => res.response && res.response.features && res.response.features.length);
+        if (this.props.missingRequests === 0 && filteredResponses.length === 0) {
+            return (
+                <Alert bsStyle={"danger"}>
+                    <h4><I18N.HTML msgId={"noFeatureInfo"}/></h4>
+                </Alert>
+            );
+        }
+        return filteredResponses.map((res, i) => {
             const {response, layerMetadata} = res;
 
-            if (response.features) {
-                content = <div key={i}>{response.features.map(getFormattedContent)}</div>;
-            } else {
-                content = (
-                    <Alert bsStyle={"danger"} key={i}>
-                        <h4><I18N.HTML msgId={"getFeatureInfoError.title"}/></h4>
-                        <p><I18N.HTML msgId={"getFeatureInfoError.text"}/></p>
-                    </Alert>
-                );
-            }
-
-            return {component: content, title: layerMetadata.title};
+            return (
+                <Panel header={layerMetadata.title} eventKey={i + 1} key={i}>
+                    {response.features.map(getFormattedContent)}
+                </Panel>
+            );
         });
-        return output.reduce((prev, item) => {
-            prev.titles.push(<span><b>Layer: </b>{item.title}</span>);
-            prev.pages.push(item.component);
-            return prev;
-        }, {titles: [], pages: []});
+    },
+    renderEmpryLayer(responses) {
+        const notEmptyResponses = responses.filter((res) => res.response && res.response.features && res.response.features.length).length;
+        const filteredResponses = responses.filter((res) => res.response && res.response.features && res.response.features.length === 0);
+        if (this.props.missingRequests === 0 && notEmptyResponses === 0) {
+            return null;
+        }
+        if (filteredResponses.length !== 0) {
+            const titles = filteredResponses.map((res) => {
+                const {layerMetadata} = res;
+                return layerMetadata.title;
+            });
+            return (
+                <Alert bsStyle={"info"}>
+                    <I18N.Message msgId={"noInfoForLayers"} />
+                    <b>{titles.join(', ')}</b>
+                </Alert>
+            );
+        }
+        return null;
     },
     render() {
-        var {titles, pages} = this.renderInfo(this.props.responses);
+        let pages = this.renderInfo(this.props.responses);
+        let emptyLayers = this.renderEmpryLayer(this.props.responses);
         return (
-            <Book pageTitles={titles}>
-                {pages}
-            </Book>
+            <div>
+                <Accordion defaultActiveKey={1}>
+                    {pages}
+                </Accordion>
+                {emptyLayers}
+            </div>
         );
     }
 });
