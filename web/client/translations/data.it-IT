@@ -87,6 +87,9 @@
             "areaLabel": "Area",
             "bearingLabel": "Rilevamento"
         },
+        "search":{
+            "placeholder": "Cerca un indirizzo o inserisci coordinate..."
+        },
         "drawLocal": {
             "draw": {
                 "toolbar": {
@@ -188,7 +191,7 @@
         "helptexts": {
             "scaleBox": "Questo è il testo di aiuto per ScaleBox",
             "zoomToMaxExtentButton": "Questo è il testo di aiuto per ZoomToMaxExtentButton",
-            "searchBar": "Questo è il testo di aiuto per SearchBar",
+            "searchBar": "Scrivi un indirizzo di un luogo oer trovarlo. esempio:  '1st avenue, new york'. Puoi anche digitare le coordinate in questo formato: 43.87,10.20",
             "layerSwitcher": "Questo è il testo di aiuto per LayerSwitcher",
             "settingsPanel": "Questo è il testo di aiuto per SettingsPanel",
             "measureComponent": "Questo è il testo di aiuto per MeasureComponent",

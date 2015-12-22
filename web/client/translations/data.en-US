@@ -87,6 +87,9 @@
             "areaLabel": "Area",
             "bearingLabel": "Bearing"
         },
+        "search":{
+            "placeholder": "Search by location name or coordinates ..."
+        },
         "drawLocal": {
             "draw": {
                 "toolbar": {
@@ -188,7 +191,7 @@
         "helptexts": {
             "scaleBox": "This is the helptext for the ScaleBox",
             "zoomToMaxExtentButton": "This is the helptext for the ZoomToMaxExtentButton",
-            "searchBar": "This is the helptext for the SearchBar",
+            "searchBar": "Write the address of a place to find. e.g.  '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20",
             "layerSwitcher": "This is the helptext for the LayerSwitcher",
             "settingsPanel": "This is the helptext for the SettingsPanel",
             "measureComponent": "This is the helptext for the MeasureComponent",

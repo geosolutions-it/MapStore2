@@ -8,6 +8,7 @@
 
 var React = require('react');
 var {Input, Glyphicon} = require('react-bootstrap');
+var LocaleUtils = require('../../utils/LocaleUtils');
 
 
 var delay = (
@@ -27,6 +28,7 @@ let SearchBar = React.createClass({
     propTypes: {
         onSearch: React.PropTypes.func,
         onSearchReset: React.PropTypes.func,
+        placeholder: React.PropTypes.string,
         delay: React.PropTypes.number,
         hideOnBlur: React.PropTypes.bool,
         blurResetDelay: React.PropTypes.number,
@@ -39,6 +41,7 @@ let SearchBar = React.createClass({
             delay: 1000,
             blurResetDelay: 300,
             hideOnBlur: true,
+            placeholder: "Search by location name or coordinates ...",
             typeAhead: true
 
         };
@@ -73,11 +76,25 @@ let SearchBar = React.createClass({
         //  const innerGlyphicon = <Button onClick={this.search}></Button>;
         const remove = <Glyphicon className="searchclear" glyph="remove" onClick={this.clearSearch}/>;
         var showRemove = this.state.searchText !== "";
+        let placeholder = this.props.placeholder;
+        // workaround to localize message for placeholder, that needs to be pure text
+        if (this.props.placeholder._context && this.props.placeholder._context.messages && this.props.placeholder.props) {
+            let messages = this.props.placeholder._context.messages;
+            let msgId = this.props.placeholder.props.msgId;
+            if (msgId) {
+                placeholder = LocaleUtils.getMessageById(messages, msgId);
+            }
+
+        }
         return (
             <div className="MapSearchBar">
                 <Input
                     key="search-input"
+                    placeholder={placeholder}
                     type="text"
+                    style={{
+                        textOverflow: "ellipsis"
+                    }}
                     value={this.state.searchText}
                     ref="input"
                     addonAfter={showRemove ? remove : <Glyphicon glyph="search"/>}

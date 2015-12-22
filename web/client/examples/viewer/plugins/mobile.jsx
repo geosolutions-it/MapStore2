@@ -60,7 +60,7 @@ module.exports = {
     components: (props) => {
         return [
 
-            <SearchBar key="seachBar" onSearch={props.textSearch} onSearchReset={props.resultsPurge}/>,
+            <SearchBar key="seachBar" onSearch={props.textSearch} onSearchReset={props.resultsPurge} placeholder={<Message msgId="search.placeholder"/>}/>,
             <NominatimResultList key="nominatim-result-list" results={props.searchResults} onItemClick={(props.changeMapView)} afterItemClick={props.resultsPurge} mapConfig={props.map}/>,
             <Menu key="drawermenu" ref={ (ref) => { menu = ref; } } alignment="left">
                 <PanelGroup accordion defaultActiveKey="1">

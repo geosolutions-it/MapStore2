@@ -48,6 +48,13 @@ var LocaleUtils = {
     },
     getSupportedLocales: function() {
         return supportedLocales;
+    },
+    getMessageById(messages, msgId) {
+        var message = messages;
+        msgId.split('.').forEach(part => {
+            message = message[part];
+        });
+        return message;
     }
 };
 
