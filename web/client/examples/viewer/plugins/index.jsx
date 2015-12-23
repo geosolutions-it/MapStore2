@@ -88,7 +88,7 @@ module.exports = {
                 changeHelpText={props.changeHelpText}
                 changeHelpwinVisibility={props.changeHelpwinVisibility}
                 >
-                <SearchBar key="seachBar" onSearch={props.textSearch} onSearchReset={props.resultsPurge} placeholder={<Message msgId="search.placeholder"/>}/>
+                <SearchBar key="seachBar" onSearch={props.textSearch} onSearchReset={props.resultsPurge} />
             </HelpWrapper>,
             <NominatimResultList results={props.searchResults} onItemClick={(props.changeMapView)} afterItemClick={props.resultsPurge} mapConfig={props.map}/>,
             <MapToolBar
