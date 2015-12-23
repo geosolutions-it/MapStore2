@@ -6,6 +6,7 @@
   "main": "index.js",
   "devDependencies": {
     "babel-eslint": "^3.1.26",
+    "babel-core": "^5.0.0",
     "babel-loader": "^5.0.0",
     "babel-plugin-react-transform": "^1.1.1",
     "babelify": "^6.1.2",
@@ -72,7 +73,7 @@
     "react-bootstrap": "0.28.1",
     "react-dom": "^0.14.3",
     "react-draggable": "^0.8.5",
-    "react-intl": "^1.2.0",
+    "react-intl": "https://github.com/geosolutions-it/react-intl/tarball/react_014_1x",
     "react-nouislider": "^1.6.0",
     "react-redux": "^4.0.2",
     "react-sortable-items": "0.0.11",
