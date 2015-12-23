@@ -52,7 +52,7 @@ var LocaleUtils = {
     getMessageById: function(messages, msgId) {
         var message = messages;
         msgId.split('.').forEach(part => {
-            message = message[part];
+            message = message ? message[part] : null;
         });
         return message;
     }
