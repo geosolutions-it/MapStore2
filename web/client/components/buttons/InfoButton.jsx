@@ -84,7 +84,6 @@ var About = React.createClass({
                     show={this.state.isVisible}
                     onHide={this.close}
                     bsStyle="info">
-
                     <Modal.Header closeButton>
                         <Modal.Title>{this.props.title}</Modal.Title>
                     </Modal.Header>
