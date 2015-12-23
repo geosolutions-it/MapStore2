@@ -1,4 +1,5 @@
 var GetFeatureInfo = require("../components/getFeatureInfo/GetFeatureInfo");
+var AboutContent = require('../components/AboutContent');
 var LayerTree = require('../components/LayerTree');
 var Settings = require('../components/Settings');
 var LangBar = require('../../../components/I18N/LangBar');
@@ -120,6 +121,10 @@ module.exports = {
                                 crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.map.projection} />
                         </Settings>
                     </Section>
+                    <Section eventKey="about" renderInModal="true" header={<Message msgId="about_title" />}>
+                        <AboutContent />
+                    </Section>
+
             </Menu>,
             <Button id="drawer-menu-button" key="menu-button" onClick={() => {menu.show(); }}><Glyphicon glyph="menu-hamburger"/></Button>,
             <LocateBtn

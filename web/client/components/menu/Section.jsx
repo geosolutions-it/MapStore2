@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var {Glyphicon} = require('react-bootstrap');
+var {Glyphicon, Modal} = require('react-bootstrap');
+const assign = require('object-assign');
 var Section = React.createClass({
     propTypes: {
         key: React.PropTypes.string,
@@ -14,6 +15,7 @@ var Section = React.createClass({
         headerClassName: React.PropTypes.string,
         open: React.PropTypes.bool,
         onHeaderClick: React.PropTypes.func,
+        renderInModal: React.PropTypes.bool,
         header: React.PropTypes.node
     },
     getDefaultProps() {
@@ -22,10 +24,13 @@ var Section = React.createClass({
         };
     },
     onHeaderClick() {
-        this.props.onHeaderClick(this.props.eventKey);
+        this.props.onHeaderClick(this.props.eventKey, !this.props.renderInModal);
+    },
+    onModalClose() {
+        this.setProps(assign(this.props, {open: false}));
     },
     getHeight() {
-        if (this.props.open) {
+        if (this.props.open && this.refs.sectionContent) {
             return this.refs.sectionContent.getDOMNode().scrollHeight + 10;
         }
         return "0";
@@ -39,10 +44,18 @@ var Section = React.createClass({
         return (
             <div className={"section"}>
                 <div className="sectionHeader" style={{width: "100%"}} onClick={this.onHeaderClick}>
-                    <Glyphicon glyph="triangle-right" style={this.props.open ? {transform: "rotate(90deg)"} : {} } />
+                    { !this.props.renderInModal ? <Glyphicon glyph="triangle-right" style={this.props.open ? {transform: "rotate(90deg)"} : {} } /> : null }
                     <span className={this.headerClassName} ref="sectionTitle" className="sectionTitle" >{this.props.header}</span>
                 </div>
-                <div ref="sectionContent" className="sectionContent" style={style} >{this.props.children}</div>
+                {!this.props.renderInModal ?
+                     <div ref="sectionContent" className="sectionContent" style={style} >{this.props.children}</div>
+                         :
+                     (<Modal ref="modal" show={this.props.open}
+                         onHide={this.onHeaderClick}>
+                        <Modal.Header closeButton >
+                         <Modal.Title>{this.props.header}</Modal.Title>
+                     </Modal.Header>
+                     <Modal.Body>{this.props.children}</Modal.Body></Modal>)}
             </div>
         );
     }
