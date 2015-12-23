@@ -65,7 +65,7 @@ module.exports = {
             <SearchBar key="seachBar" onSearch={props.textSearch} onSearchReset={props.resultsPurge}/>,
             <NominatimResultList key="nominatim-result-list" results={props.searchResults} onItemClick={(props.changeMapView)} afterItemClick={props.resultsPurge} mapConfig={props.map}/>,
             <Menu key="drawermenu" activeKey="1" ref={ (ref) => { menu = ref; } } title={<Message msgId="menu" />} alignment="left">
-                    <Section eventKey="1" header="Layers" >
+                    <Section eventKey="1" header={<Message msgId="layers" />}>
                         <LayerTree
                             key="layerSwitcher"
                             isPanel={true}
@@ -79,7 +79,7 @@ module.exports = {
                             onToggleLayer={(layer, status) => props.toggleNode(layer, 'layers', status)}
                             />
                     </Section>
-                    <Section eventKey="2" header="Backgrounds" >
+                    <Section eventKey="2" header={<Message msgId="background" />}>
                         <BackgroundSwitcher
                             key="backgroundSwitcher"
                             isPanel={true}
@@ -95,7 +95,7 @@ module.exports = {
                             buttonTooltip={<Message msgId="backgroundSwither.tooltip"/>}
                             propertiesChangeHandler={props.changeLayerProperties}/>
                     </Section>
-                    <Section eventKey="3" header="Settings">
+                    <Section eventKey="3" header={<Message msgId="settings" />}>
                         <Settings
                             key="settingsPanel"
                             isPanel={true}
@@ -121,7 +121,7 @@ module.exports = {
                                 crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.map.projection} />
                         </Settings>
                     </Section>
-                    <Section eventKey="about" renderInModal="true" header={<Message msgId="about_title" />}>
+                    <Section eventKey="about" renderInModal="true" header={<Message msgId="aboutLbl" />}>
                         <AboutContent />
                     </Section>
 
