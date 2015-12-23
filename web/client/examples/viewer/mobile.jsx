@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
+var ReactDOM = require('react-dom');
 
 var {Provider} = require('react-redux');
 
@@ -36,20 +37,18 @@ function startApp(plugins) {
     });
 
 
-    React.render(
-        <Debug store={store}>
+    ReactDOM.render(
             <Provider store={store}>
-                {() =>
-                    (<Viewer plugins={plugins.components}
+                <div>
+                    <Viewer plugins={plugins.components}
                         mapParams={{
                         overview: false,
                         scaleBar: false,
                         zoomControl: false
-                    }}/>)
-
-                }
-            </Provider>
-        </Debug>,
+                    }}/>
+                    <Debug/>
+                </div>
+            </Provider>,
         document.getElementById('container')
     );
 
