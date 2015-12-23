@@ -10,14 +10,31 @@ var {Glyphicon} = require('react-bootstrap');
 var Menu = React.createClass({
     propTypes: {
         title: React.PropTypes.string,
-        alignment: React.PropTypes.string
+        alignment: React.PropTypes.string,
+        activeKey: React.PropTypes.string
     },
     getInitialState() {
         return {
-            visible: false
+            visible: false,
+            activeKey: this.props.activeKey
         };
     },
 
+    onHeaderClick( eventKey ) {
+        this.setState({visible: this.state.visible, activeKey: this.state.activeKey === eventKey ? null : eventKey });
+    },
+    renderChildren(child, index) {
+        let props = {
+          key: child.key ? child.key : index,
+          onHeaderClick: this.onHeaderClick,
+          ref: child.ref,
+          open: this.state.activeKey && this.state.activeKey === child.props.eventKey
+        };
+        return React.cloneElement(
+          child,
+          props
+        );
+    },
     render() {
         return (
             <div className="nav-menu">
@@ -28,23 +45,23 @@ var Menu = React.createClass({
                         onClick={()=> {this.hide(); }}></div>
                 <div className={"nav-content " + (this.state.visible ? "visible " : "") + this.props.alignment}>
                     <div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
-                        {this.props.title}
-                        <Glyphicon glyph="remove" onClick={() => {this.hide(); }} style={{position: "absolute", right: "5px", padding: "10px", cursor: "pointer"}}/>
+                        <span className="title">{this.props.title}</span>
+                        <Glyphicon glyph="remove" onClick={() => {this.hide(); }} style={{position: "absolute", right: "0", padding: "15px", cursor: "pointer"}}/>
                     </div>
-                    {this.props.children}
+                    {this.props.children.map(this.renderChildren)}
                 </div>
             </div>
         );
     },
 
     show() {
-        this.setState({ visible: true });
+        this.setState({ visible: true, activeKey: this.state.activeKey });
         // document.addEventListener("click", this.hide.bind(this));
     },
 
     hide() {
         // document.removeEventListener("click", this.hide.bind(this));
-        this.setState({ visible: false });
+        this.setState({ visible: false, activeKey: this.state.activeKey });
     }
 });
 
