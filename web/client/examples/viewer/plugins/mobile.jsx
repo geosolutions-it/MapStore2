@@ -10,6 +10,7 @@ var BackgroundSwitcher = require("../../../components/BackgroundSwitcher/Backgro
 var MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
 var {Message} = require('../../../components/I18N/I18N');
 var Menu = require('../../../components/menu/DrawerMenu');
+var Section = require('../../../components/menu//Section');
 var mapInfo = require('../../../reducers/mapInfo');
 var floatingPanel = require('../reducers/floatingPanel');
 var mousePosition = require('../../../reducers/mousePosition');
@@ -33,7 +34,7 @@ var {changeMapView, changeZoomLevel} = require('../../../actions/map');
 var {textSearch, resultsPurge} = require("../../../actions/search");
 
 var {changeMeasurementState} = require('../../../actions/measurement');
-var {Button, PanelGroup, Panel, Glyphicon} = require('react-bootstrap');
+var {Button, Glyphicon} = require('react-bootstrap');
 var {changeHelpState, changeHelpText, changeHelpwinVisibility} = require('../../../actions/help');
 
 var React = require('react');
@@ -62,9 +63,8 @@ module.exports = {
 
             <SearchBar key="seachBar" onSearch={props.textSearch} onSearchReset={props.resultsPurge}/>,
             <NominatimResultList key="nominatim-result-list" results={props.searchResults} onItemClick={(props.changeMapView)} afterItemClick={props.resultsPurge} mapConfig={props.map}/>,
-            <Menu key="drawermenu" ref={ (ref) => { menu = ref; } } alignment="left">
-                <PanelGroup accordion defaultActiveKey="1">
-                    <Panel eventKey="1" header="Layers" collapsible>
+            <Menu key="drawermenu" activeKey="1" ref={ (ref) => { menu = ref; } } title={<Message msgId="menu" />} alignment="left">
+                    <Section eventKey="1" header="Layers" >
                         <LayerTree
                             key="layerSwitcher"
                             isPanel={true}
@@ -77,8 +77,8 @@ module.exports = {
                             onToggleGroup={(group, status) => props.toggleNode(group, 'groups', status)}
                             onToggleLayer={(layer, status) => props.toggleNode(layer, 'layers', status)}
                             />
-                    </Panel>
-                    <Panel eventKey="2" header="Backgrounds" collapsible>
+                    </Section>
+                    <Section eventKey="2" header="Backgrounds" >
                         <BackgroundSwitcher
                             key="backgroundSwitcher"
                             isPanel={true}
@@ -93,8 +93,8 @@ module.exports = {
                             helpText={<Message msgId="helptexts.backgroundSwitcher"/>}
                             buttonTooltip={<Message msgId="backgroundSwither.tooltip"/>}
                             propertiesChangeHandler={props.changeLayerProperties}/>
-                    </Panel>
-                    <Panel eventKey="3" header="Settings">
+                    </Section>
+                    <Section eventKey="3" header="Settings">
                         <Settings
                             key="settingsPanel"
                             isPanel={true}
@@ -119,8 +119,7 @@ module.exports = {
                                 }}
                                 crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.map.projection} />
                         </Settings>
-                    </Panel>
-                </PanelGroup>
+                    </Section>
             </Menu>,
             <Button id="drawer-menu-button" key="menu-button" onClick={() => {menu.show(); }}><Glyphicon glyph="menu-hamburger"/></Button>,
             <LocateBtn

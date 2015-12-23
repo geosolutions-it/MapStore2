@@ -23,6 +23,7 @@
         "background": "Background",
         "language": "Language",
         "mousePositionCoordinates": "Coordinates indicator",
+        "menu": "Menu",
         "settings": "Settings",
         "noresultfound": "No Result found",
         "home":{
