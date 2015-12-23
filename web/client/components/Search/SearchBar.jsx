@@ -77,14 +77,9 @@ let SearchBar = React.createClass({
         const remove = <Glyphicon className="searchclear" glyph="remove" onClick={this.clearSearch}/>;
         var showRemove = this.state.searchText !== "";
         let placeholder = this.props.placeholder;
-        // workaround to localize message for placeholder, that needs to be pure text
-        if (this.props.placeholder._context && this.props.placeholder._context.messages && this.props.placeholder.props) {
-            let messages = this.props.placeholder._context.messages;
-            let msgId = this.props.placeholder.props.msgId;
-            if (msgId) {
-                placeholder = LocaleUtils.getMessageById(messages, msgId);
-            }
-
+        let placeholderLocMessage = LocaleUtils.getMessageFromMessageComponent(placeholder);
+        if (placeholderLocMessage) {
+            placeholder = placeholderLocMessage;
         }
         return (
             <div className="MapSearchBar">

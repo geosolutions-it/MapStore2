@@ -49,7 +49,18 @@ var LocaleUtils = {
     getSupportedLocales: function() {
         return supportedLocales;
     },
-    getMessageById(messages, msgId) {
+    // workaround to localize message for the message component, for elements like "placeholder" that need pure text
+    getMessageFromMessageComponent: function(component) {
+        if (component._context && component._context.messages && component.props) {
+            let messages = component._context.messages;
+            let msgId = component.props.msgId;
+            if (msgId) {
+                return LocaleUtils.getMessageById(messages, msgId);
+            }
+
+        }
+    },
+    getMessageById: function(messages, msgId) {
         var message = messages;
         msgId.split('.').forEach(part => {
             message = message[part];
