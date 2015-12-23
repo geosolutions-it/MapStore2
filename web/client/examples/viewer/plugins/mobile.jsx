@@ -62,7 +62,7 @@ module.exports = {
     components: (props) => {
         return [
 
-            <SearchBar key="seachBar" onSearch={props.textSearch} onSearchReset={props.resultsPurge}/>,
+            <SearchBar key="seachBar" onSearch={props.textSearch} onSearchReset={props.resultsPurge} />,
             <NominatimResultList key="nominatim-result-list" results={props.searchResults} onItemClick={(props.changeMapView)} afterItemClick={props.resultsPurge} mapConfig={props.map}/>,
             <Menu key="drawermenu" activeKey="1" ref={ (ref) => { menu = ref; } } title={<Message msgId="menu" />} alignment="left">
                     <Section eventKey="1" header="Layers" >

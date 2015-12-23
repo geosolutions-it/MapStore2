@@ -8,6 +8,7 @@
 
 var React = require('react');
 var {Input, Glyphicon} = require('react-bootstrap');
+var LocaleUtils = require('../../utils/LocaleUtils');
 
 
 var delay = (
@@ -27,15 +28,21 @@ let SearchBar = React.createClass({
     propTypes: {
         onSearch: React.PropTypes.func,
         onSearchReset: React.PropTypes.func,
+        placeholder: React.PropTypes.string,
+        placeholderMsgId: React.PropTypes.string,
         delay: React.PropTypes.number,
         hideOnBlur: React.PropTypes.bool,
         blurResetDelay: React.PropTypes.number,
         typeAhead: React.PropTypes.bool
     },
+    contextTypes: {
+        messages: React.PropTypes.object
+    },
     getDefaultProps() {
         return {
             onSearch: () => {},
             onSearchReset: () => {},
+            placeholderMsgId: "search.placeholder",
             delay: 1000,
             blurResetDelay: 300,
             hideOnBlur: true,
@@ -73,11 +80,24 @@ let SearchBar = React.createClass({
         //  const innerGlyphicon = <Button onClick={this.search}></Button>;
         const remove = <Glyphicon className="searchclear" glyph="remove" onClick={this.clearSearch}/>;
         var showRemove = this.state.searchText !== "";
+        let placeholder;
+        if (!this.props.placeholder && this.context.messages) {
+            let placeholderLocMessage = LocaleUtils.getMessageById(this.context.messages, this.props.placeholderMsgId);
+            if (placeholderLocMessage) {
+                placeholder = placeholderLocMessage;
+            }
+        } else {
+            placeholder = this.props.placeholder;
+        }
         return (
             <div className="MapSearchBar">
                 <Input
                     key="search-input"
+                    placeholder={placeholder}
                     type="text"
+                    style={{
+                        textOverflow: "ellipsis"
+                    }}
                     value={this.state.searchText}
                     ref="input"
                     addonAfter={showRemove ? remove : <Glyphicon glyph="search"/>}
