@@ -7,6 +7,8 @@
  */
 
 var Layers = require('../../../../utils/openlayers/Layers');
+var markerIcon = require('../img/marker-icon.png');
+var markerShadow = require('../img/marker-shadow.png');
 var ol = require('openlayers');
 
 const image = new ol.style.Circle({
@@ -17,7 +19,7 @@ const image = new ol.style.Circle({
 
 const defaultStyles = {
   'Point': [new ol.style.Style({
-    image: image
+      image: image
   })],
   'LineString': [new ol.style.Style({
     stroke: new ol.style.Stroke({
@@ -78,7 +80,22 @@ const defaultStyles = {
     fill: new ol.style.Fill({
       color: 'rgba(255,0,0,0.2)'
     })
-  })]
+})],
+  'marker': [new ol.style.Style({
+    image: new ol.style.Icon(({
+      anchor: [14, 41],
+      anchorXUnits: 'pixels',
+      anchorYUnits: 'pixels',
+      src: markerShadow
+    }))
+}), new ol.style.Style({
+    image: new ol.style.Icon(({
+      anchor: [0.5, 1],
+      anchorXUnits: 'fraction',
+      anchorYUnits: 'fraction',
+      src: markerIcon
+    }))
+    })]
 };
 
 var styleFunction = function(feature) {
@@ -87,16 +104,23 @@ var styleFunction = function(feature) {
 
 Layers.registerType('vector', {
     create: (options) => {
-        const features = (new ol.format.GeoJSON()).readFeatures(options.features);
-        features.forEach((f) => f.getGeometry().transform('EPSG:4326', options.crs));
+        var featureCollection = options.features;
+        if (Array.isArray(options.features)) {
+            featureCollection = { "type": "FeatureCollection", features: featureCollection};
+        }
+        // Uncomment features to render directly from geojson
+        // const features = (new ol.format.GeoJSON()).readFeatures(featureCollection);
+        // features.forEach((f) => f.getGeometry().transform('EPSG:4326', options.crs || 'EPSG:3857'));
         const source = new ol.source.Vector({
-            features: features
+            // features: features
         });
-
         return new ol.layer.Vector({
             source: source,
             zIndex: options.zIndex,
-            style: options.style || styleFunction
+            style: options.styleName ? () => {return defaultStyles[options.styleName]; } : options.style || styleFunction
         });
+    },
+    render: () => {
+        return null;
     }
 });

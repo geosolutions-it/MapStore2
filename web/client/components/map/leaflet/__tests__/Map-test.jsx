@@ -143,8 +143,8 @@ describe('LeafletMap', () => {
         setTimeout(() => {
             expect(spy.calls.length).toEqual(1);
             expect(spy.calls[0].arguments.length).toEqual(1);
-            expect(spy.calls[0].arguments[0].x).toExist();
-            expect(spy.calls[0].arguments[0].y).toExist();
+            expect(spy.calls[0].arguments[0].pixel).toExist();
+            expect(spy.calls[0].arguments[0].latlng).toExist();
             done();
         }, 600);
 

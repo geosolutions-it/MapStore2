@@ -16,7 +16,8 @@ var {LMap,
     ScaleBar,
     MeasurementSupport,
     Overview,
-    Locate
+    Locate,
+    Feature
 } = require('../../../components/map/' + mapType + '/index');
 
 var assign = require('object-assign');
@@ -45,9 +46,12 @@ var VMap = React.createClass({
     renderLayers(layers) {
         if (layers) {
             let projection = this.props.config.projection || 'EPSG:3857';
-            return layers.map(function(layer, index) {
+            let me = this; // TODO find the reason why the arrow function doesn't get this object
+            return layers.map((layer, index) => {
                 var options = assign({}, layer, {srs: projection});
-                return <LLayer type={layer.type} position={index} key={layer.name} options={options} />;
+                return (<LLayer type={layer.type} position={index} key={layer.name} options={options}>
+                    {me.renderLayerContent(layer)}
+                </LLayer>);
             });
         }
         return null;
@@ -73,6 +77,19 @@ var VMap = React.createClass({
             baseTools.push(<ScaleBar/>);
         }
         return baseTools;
+    },
+    renderLayerContent(layer) {
+        if (layer.features && layer.type === "vector") {
+            // TODO remove this DIV. What container can be used for this component.
+            return layer.features.map( (feature) => {
+                return (<Feature
+                    key={feature.id}
+                    type={feature.type}
+                    geometry={feature.geometry}
+                />);
+            });
+        }
+        return null;
     },
     render() {
         return (

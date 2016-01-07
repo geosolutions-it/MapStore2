@@ -71,7 +71,7 @@
             "title": "Ooops! Qualcosa non va",
             "text": "Si è verificato un errore nel fare questa richiesta <b>GetFeatureInfo</b>"
         },
-        "noFeatureInfo": "Non ci sono informazioni disponibili per la feature selezionata",
+        "noFeatureInfo": "Non ci sono informazioni disponibili per il punto selezionato",
         "noInfoForLayers": "Non ci sono features per i seguenti layers: ",
         "history":{
             "barLabel": "Storia Mappa",
