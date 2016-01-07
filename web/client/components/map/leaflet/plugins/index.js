@@ -13,5 +13,6 @@ module.exports = {
     MapQuest: require('./MapQuest'),
     OSMLayer: require('./OSMLayer'),
     TileProviderLayer: require('./TileProviderLayer'),
-    WMSLayer: require('./WMSLayer')
+    WMSLayer: require('./WMSLayer'),
+    VectorLayer: require('./VectorLayer')
 };

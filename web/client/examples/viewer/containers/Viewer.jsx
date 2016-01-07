@@ -5,27 +5,28 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var assign = require('object-assign');
+const React = require('react');
+const assign = require('object-assign');
 
-var {connect} = require('react-redux');
-var {bindActionCreators} = require('redux');
+const {connect} = require('react-redux');
+const {bindActionCreators} = require('redux');
 
-var ConfigUtils = require('../../../utils/ConfigUtils');
+const ConfigUtils = require('../../../utils/ConfigUtils');
+const MapInfoUtils = require('../../../utils/MapInfoUtils');
 
-var {loadLocale} = require('../../../actions/locale');
+const {loadLocale} = require('../../../actions/locale');
 
-var {changeLocateState, onLocateError} = require('../../../actions/locate');
+const {changeLocateState, onLocateError} = require('../../../actions/locate');
 
-var {changeMapView, clickOnMap, changeMousePointer} = require('../../../actions/map');
+const {changeMapView, clickOnMap, changeMousePointer} = require('../../../actions/map');
 
-var changeMeasurementState = require('../../../actions/measurement');
+const changeMeasurementState = require('../../../actions/measurement');
 
-var VMap = require('../components/Map');
+const VMap = require('../components/Map');
 
-var Localized = require('../../../components/I18N/Localized');
+const Localized = require('../../../components/I18N/Localized');
 
-var Viewer = React.createClass({
+const Viewer = React.createClass({
     propTypes: {
         map: ConfigUtils.PropTypes.config,
         mapParams: React.PropTypes.object,
@@ -94,9 +95,12 @@ var Viewer = React.createClass({
                             });
                             plugins = plugins.concat(mapPlugins);
                         }
+                        let layers = this.props.mapInfo.showMarker ?
+                            [...this.props.layers.flat, MapInfoUtils.getMarkerLayer("GetFeatureInfo", this.props.mapInfo.clickPoint.latlng)] :
+                            [...this.props.layers.flat];
                         return (
                             <div key="viewer" className="fill">
-                                <VMap key="map" config={this.props.map} layers={this.props.layers.flat} onMapViewChanges={this.manageNewMapView}
+                                <VMap key="map" config={this.props.map} layers={layers} onMapViewChanges={this.manageNewMapView}
                                     onClick={this.props.clickOnMap} onMouseMove={this.manageMousePosition}
                                     onLayerLoading={this.props.layerLoading} onLayerLoad={this.props.layerLoad}
                                     measurement={this.props.measurement}
@@ -148,7 +152,7 @@ module.exports = (actions) => {
             messages: state.locale ? state.locale.messages : null,
             locale: state.locale ? state.locale.current : null,
             locate: state.locate ? state.locate : {state: "DISABLED"},
-            mapInfo: state.mapInfo ? state.mapInfo : {enabled: false, responses: [], requests: {length: 0}},
+            mapInfo: state.mapInfo ? state.mapInfo : {enabled: false, responses: [], requests: {length: 0}, clickPoint: {}, showMarker: false},
             floatingPanel: state.floatingPanel ? state.floatingPanel : {activeKey: ""},
             localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined,
             mousePosition: state.mousePosition ? state.mousePosition.position : null,

@@ -64,7 +64,18 @@ const OpenlayersLayer = React.createClass({
         }
     },
     render() {
-        return Layers.renderLayer(this.props.type, this.props.options, this.props.map, this.props.mapId);
+        if (this.props.children) {
+            const layer = this.layer;
+            const children = layer ? React.Children.map(this.props.children, child => {
+                return child ? React.cloneElement(child, {container: layer, styleName: this.props.options && this.props.options.styleName}) : null;
+            }) : null;
+            return (
+                <noscript>
+                    {children}
+                </noscript>
+            );
+        }
+        return Layers.renderLayer(this.props.type, this.props.options, this.props.map, this.props.mapId, this.layer);
     },
     setLayerVisibility(visibility) {
         var oldVisibility = this.props.options && this.props.options.visibility !== false;
