@@ -8,7 +8,7 @@
 
 var React = require('react');
 var assign = require('object-assign');
-var {Modal} = require('react-bootstrap');
+var {Modal, Glyphicon} = require('react-bootstrap');
 
 var I18N = require('../../../../components/I18N/I18N');
 var Spinner = require('../../../../components/spinners/BasicSpinner/BasicSpinner');
@@ -111,16 +111,17 @@ var GetFeatureInfo = React.createClass({
     },
     renderInfo() {
         var retval = null;
+        let missingRequests = this.props.htmlRequests.length - this.props.htmlResponses.length;
         var infoFormats = MapInfoUtils.getAvailableInfoFormat();
         switch (this.props.infoFormat) {
             case infoFormats.JSON:
-                retval = (<JSONFeatureInfoViewer responses={this.props.htmlResponses} />);
+                retval = (<JSONFeatureInfoViewer responses={this.props.htmlResponses} missingRequests={missingRequests}/>);
                 break;
             case infoFormats.HTML:
                 retval = (<HTMLFeatureInfoViewer responses={this.props.htmlResponses} />);
                 break;
             case infoFormats.TEXT:
-                retval = (<TEXTFeatureInfoViewer responses={this.props.htmlResponses} />);
+                retval = (<TEXTFeatureInfoViewer responses={this.props.htmlResponses} missingRequests={missingRequests}/>);
                 break;
             default:
                 retval = null;
@@ -137,8 +138,8 @@ var GetFeatureInfo = React.createClass({
                     dialogClassName="getFeatureInfo">
                     <Modal.Header closeButton>
                         <Modal.Title>
-                        { (missingRequests !== 0 ) ? <Spinner value={missingRequests} sSize="sp-small" /> : null }
-                        <I18N.Message msgId="getFeatureInfoTitle" />
+                            { (missingRequests !== 0 ) ? <Spinner value={missingRequests} sSize="sp-small" /> : null }
+                            <Glyphicon glyph="info-sign" />&nbsp;<I18N.Message msgId="getFeatureInfoTitle" />
                        </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
