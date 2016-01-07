@@ -27,9 +27,10 @@ input[type=checkbox], input[type=radio] {
     -o-box-sizing: border-box;
 
     -webkit-transition: transform .5s ease;
-     -moz-transition: transform .5s ease;
-       -o-transition: transform .5s ease;
-          transition: transform .5s ease;
+    -moz-transition: transform .5s ease;
+    -o-transition: transform .5s ease;
+    -ms-transition: transform .5s ease;
+    transition: transform .5s ease;
 
 }
 div.nav-menu > div.nav-content.left{
@@ -65,8 +66,11 @@ div.nav-menu >div.nav-content.visible.right  {
     top:0;
     bottom:0;
     width:100%;
+    -webkit-transition: visibility 500ms ease, opacity 500ms ease;
+    -moz-transition: visibility 500ms ease, opacity 500ms ease;
+    -o-transition: visibility 500ms ease, opacity 500ms ease;
     transition: visibility 500ms ease, opacity 500ms ease;
-    height:100%;
+    height:100%; 
     background-color: rgba(0,0,0,.6);
 }
 .nav-menu > .nav-halo {
@@ -93,6 +97,7 @@ div.nav-menu >div.nav-content.visible.right  {
 }
 .nav-content  .section .sectionHeader{
     padding: 5px;
+    cursor: pointer;
 }
 .nav-content .section .sectionHeader>.glyphicon{
     /* Firefox */
@@ -109,7 +114,11 @@ div.nav-menu >div.nav-content.visible.right  {
 
 }
 .nav-content  .section .sectionContent{
-    transition: max-height .5s ease;
+    -moz-transition: max-height .3s ease;
+    -webkit-transition: max-height .3s ease;
+    -o-transition: max-height .3s ease;
+    transition: max-height .3s ease;
+
     box-shadow: inset 0px 0px 10px rgba(0,0,0,.5);
     background: rgba(255,255,255,.4);
     padding: 5px;

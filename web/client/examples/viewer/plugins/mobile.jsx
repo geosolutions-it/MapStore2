@@ -26,7 +26,7 @@ var {changeLocateState} = require('../../../actions/locate');
 var SearchBar = require("../../../components/Search/SearchBar");
 var NominatimResultList = require("../../../components/Search/geocoding/NominatimResultList");
 
-var {getFeatureInfo, changeMapInfoState, purgeMapInfoResults, changeMapInfoFormat} = require('../../../actions/mapInfo');
+var {getFeatureInfo, changeMapInfoState, purgeMapInfoResults, changeMapInfoFormat, showMapinfoMarker, hideMapinfoMarker} = require('../../../actions/mapInfo');
 var {activatePanel} = require('../actions/floatingPanel');
 var {changeMousePosition, changeMousePositionCrs, changeMousePositionState} = require('../../../actions/mousePosition');
 
@@ -151,14 +151,16 @@ module.exports = {
                 actions={{
                     getFeatureInfo: props.getFeatureInfo,
                     purgeMapInfoResults: props.purgeMapInfoResults,
-                    changeMousePointer: props.changeMousePointer
+                    changeMousePointer: props.changeMousePointer,
+                     showMapinfoMarker: props.showMapinfoMarker,
+                     hideMapinfoMarker: props.hideMapinfoMarker
                 }}
                 clickedMapPoint={props.mapInfo.clickPoint} />,
             <GlobalSpinner key="globalSpinner"/>
         ];
     },
     reducers: {
-        mapInfo,
+        mapInfo: mapInfo ? mapInfo : {enabled: false, responses: [], requests: {length: 0}, clickPoint: {}, showMarker: false},
         floatingPanel,
         mousePosition,
         measurement,
@@ -190,6 +192,8 @@ module.exports = {
         changeMeasurementState,
         changeHelpState,
         changeHelpText,
-        changeHelpwinVisibility
+        changeHelpwinVisibility,
+        showMapinfoMarker,
+        hideMapinfoMarker
     }
 };
