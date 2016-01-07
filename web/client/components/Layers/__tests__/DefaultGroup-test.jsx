@@ -7,14 +7,19 @@
  */
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var Group = require('../DefaultGroup');
 
 var expect = require('expect');
 
 describe('test Group module component', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
 
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
@@ -41,10 +46,10 @@ describe('test Group module component', () => {
             title: 'Group',
             nodes: layers
         };
-        const comp = React.render(<Group node={group}><div/></Group>, document.body);
+        const comp = ReactDOM.render(<Group node={group}><div/></Group>, document.getElementById("container"));
         expect(comp).toExist();
 
-        const domNode = React.findDOMNode(comp);
+        const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
 
         const children = domNode.children;
@@ -76,10 +81,10 @@ describe('test Group module component', () => {
             title: 'Group',
             nodes: layers
         };
-        const comp = React.render(<Group node={group} filter={(layer, node) => layer.group === node.name}><div/></Group>, document.body);
+        const comp = ReactDOM.render(<Group node={group} filter={(layer, node) => layer.group === node.name}><div/></Group>, document.getElementById("container"));
         expect(comp).toExist();
 
-        const domNode = React.findDOMNode(comp);
+        const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
 
         const children = domNode.children;
@@ -112,10 +117,10 @@ describe('test Group module component', () => {
             nodes: layers,
             expanded: false
         };
-        const comp = React.render(<Group node={group} filter={(layer, node) => layer.group === node.name}><div className="layer"/></Group>, document.body);
+        const comp = ReactDOM.render(<Group node={group} filter={(layer, node) => layer.group === node.name}><div className="layer"/></Group>, document.getElementById("container"));
         expect(comp).toExist();
 
-        const domNode = React.findDOMNode(comp);
+        const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
 
         const children = domNode.getElementsByClassName('layer');
@@ -144,10 +149,10 @@ describe('test Group module component', () => {
             title: 'Group',
             nodes: layers
         };
-        const comp = React.render(<Group node={group} expanded filter={(layer, node) => layer.group === node.name}><div className="layer"/></Group>, document.body);
+        const comp = ReactDOM.render(<Group node={group} expanded filter={(layer, node) => layer.group === node.name}><div className="layer"/></Group>, document.getElementById("container"));
         expect(comp).toExist();
 
-        const domNode = React.findDOMNode(comp);
+        const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
 
         const children = domNode.getElementsByClassName('layer');

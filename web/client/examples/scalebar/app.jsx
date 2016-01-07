@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
+var ReactDOM = require('react-dom');
 
 var DebugUtils = require('../../utils/DebugUtils');
 
@@ -127,11 +128,12 @@ let App = connect((state) => {
     return bindActionCreators({changeMapView, changeZoomLevel}, dispatch);
 })(MyMap);
 
-React.render(
-        <Debug store={store}>
-            <Provider store={store}>
-                {() => <App />}
-            </Provider>
-        </Debug>,
+ReactDOM.render(
+        <Provider store={store}>
+            <div>
+                <App />
+                <Debug/>
+            </div>
+        </Provider>,
         document.getElementById('container')
     );

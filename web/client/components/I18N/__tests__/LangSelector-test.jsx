@@ -8,11 +8,17 @@
 var expect = require('expect');
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var LangSelector = require('../LangSelector');
 
 describe('LangSelector', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
@@ -21,10 +27,10 @@ describe('LangSelector', () => {
         var lbl;
         var value;
 
-        const cmp = React.render(<LangSelector/>, document.body);
+        const cmp = ReactDOM.render(<LangSelector/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
 
@@ -42,8 +48,8 @@ describe('LangSelector', () => {
 
     it('checks if a change of the combo fires the proper action', () => {
         let newLang;
-        const cmp = React.render(<LangSelector onLanguageChange={ (lang) => {newLang = lang; }}/>, document.body);
-        const cmpDom = React.findDOMNode(cmp);
+        const cmp = ReactDOM.render(<LangSelector onLanguageChange={ (lang) => {newLang = lang; }}/>, document.getElementById("container"));
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         const select = cmpDom.getElementsByTagName("select").item(0);
 
         select.value = "it-IT";

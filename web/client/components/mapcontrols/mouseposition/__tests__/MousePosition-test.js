@@ -8,55 +8,61 @@
 var expect = require('expect');
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var MousePosition = require('../MousePosition');
 
-describe('CRSSelector', () => {
+describe('MousePosition', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     it('checks enabled', () => {
-        const cmp = React.render(<MousePosition enabled={true} mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}/>, document.body);
+        const cmp = ReactDOM.render(<MousePosition enabled={true} mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
         expect(cmpDom.id).toExist();
     });
 
     it('checks disabled', () => {
-        const cmp = React.render(<MousePosition enabled={false} mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}/>, document.body);
+        const cmp = ReactDOM.render(<MousePosition enabled={false} mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toNotExist();
     });
 
     it('checks no position', () => {
-        const cmp = React.render(<MousePosition enabled={true}/>, document.body);
+        const cmp = ReactDOM.render(<MousePosition enabled={true}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toNotExist();
     });
 
     it('checks default templates degrees', () => {
-        const cmp = React.render(<MousePosition enabled={true} mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}/>, document.body);
+        const cmp = ReactDOM.render(<MousePosition enabled={true} mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
         expect(cmpDom.innerHTML).toContain('Lat:');
         expect(cmpDom.innerHTML).toContain('Lng:');
     });
 
     it('checks default templates meters', () => {
-        const cmp = React.render(<MousePosition enabled={true} crs="EPSG:3857" mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}/>, document.body);
+        const cmp = ReactDOM.render(<MousePosition enabled={true} crs="EPSG:3857" mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
         expect(cmpDom.innerHTML).toContain('Y:');
         expect(cmpDom.innerHTML).toContain('X:');
@@ -71,10 +77,10 @@ describe('CRSSelector', () => {
                 return <div>{this.props.position.lng},{this.props.position.lat}</div>;
             }
         });
-        const cmp = React.render(<MousePosition degreesTemplate={Template} enabled={true} mousePosition={{x: 11, y: 12, crs: "EPSG:4326"}}/>, document.body);
+        const cmp = ReactDOM.render(<MousePosition degreesTemplate={Template} enabled={true} mousePosition={{x: 11, y: 12, crs: "EPSG:4326"}}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
         expect(cmpDom.innerHTML).toContain('11');
         expect(cmpDom.innerHTML).toContain('12');

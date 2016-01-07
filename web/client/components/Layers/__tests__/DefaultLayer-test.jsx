@@ -7,14 +7,19 @@
  */
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var Layer = require('../DefaultLayer');
 
 var expect = require('expect');
 
 describe('test DefaultLayer module component', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
 
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
@@ -27,10 +32,10 @@ describe('test DefaultLayer module component', () => {
             storeIndex: 9,
             type: 'wms'
         };
-        const comp = React.render(<Layer node={l} />, document.body);
+        const comp = ReactDOM.render(<Layer node={l} />, document.getElementById("container"));
         expect(comp).toExist();
 
-        const domNode = React.findDOMNode(comp);
+        const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
 
         const checkbox = domNode.getElementsByTagName('input').item(0);
@@ -50,10 +55,10 @@ describe('test DefaultLayer module component', () => {
             visibility: false,
             storeIndex: 9
         };
-        const comp = React.render(<Layer node={l} />, document.body);
+        const comp = ReactDOM.render(<Layer node={l} />, document.getElementById("container"));
         expect(comp).toExist();
 
-        const domNode = React.findDOMNode(comp);
+        const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
 
         const checkbox = domNode.getElementsByTagName('input').item(0);
@@ -81,14 +86,14 @@ describe('test DefaultLayer module component', () => {
             visibility: false,
             storeIndex: 9
         };
-        const comp = React.render(
+        const comp = ReactDOM.render(
             <Layer
                 propertiesChangeHandler={handler}
                 node={l}
-            />, document.body);
+            />, document.getElementById("container"));
         expect(comp).toExist();
 
-        const domNode = React.findDOMNode(comp);
+        const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
 
         const checkbox = domNode.getElementsByTagName('input').item(0);

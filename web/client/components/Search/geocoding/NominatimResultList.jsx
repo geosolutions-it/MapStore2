@@ -19,7 +19,7 @@ let ResultList = React.createClass({
         mapConfig: React.PropTypes.object,
         onItemClick: React.PropTypes.func,
         afterItemClick: React.PropTypes.func,
-        notFoundMessage: React.PropTypes.object
+        notFoundMessage: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string])
     },
     getDefaultProps() {
         return {

@@ -8,22 +8,28 @@
 var expect = require('expect');
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var LangBar = require('../LangBar');
 var LocaleUtils = require('../../../utils/LocaleUtils');
 
 describe('LangBar', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     it('checks default', () => {
 
-        const cmp = React.render(<LangBar/>, document.body);
+        const cmp = ReactDOM.render(<LangBar/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName("button");
@@ -34,8 +40,8 @@ describe('LangBar', () => {
 
     it('checks button click fires the proper action', () => {
         let newLang;
-        const cmp = React.render(<LangBar onLanguageChange={ (lang) => {newLang = lang; }}/>, document.body);
-        const cmpDom = React.findDOMNode(cmp);
+        const cmp = ReactDOM.render(<LangBar onLanguageChange={ (lang) => {newLang = lang; }}/>, document.getElementById("container"));
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         const select = cmpDom.getElementsByTagName("button").item(0);
 
         select.value = "it-IT";

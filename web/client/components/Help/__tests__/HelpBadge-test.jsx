@@ -6,23 +6,29 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var HelpBadge = require('../HelpBadge');
 var expect = require('expect');
 var ReactTestUtils = React.addons.TestUtils;
 
 describe('Test for HelpBadge', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     // test DEFAULTS
     it('creates the component with defaults', () => {
-        const helpBadge = React.render(<HelpBadge/>, document.body);
+        const helpBadge = ReactDOM.render(<HelpBadge/>, document.getElementById("container"));
         expect(helpBadge).toExist();
 
-        const helpToggleBtnDom = React.findDOMNode(helpBadge);
+        const helpToggleBtnDom = ReactDOM.findDOMNode(helpBadge);
         expect(helpToggleBtnDom).toExist();
         expect(helpToggleBtnDom.className.indexOf('badge') >= 0).toBe(true);
         expect(helpToggleBtnDom.className.indexOf('hidden') >= 0).toBe(true);
@@ -30,14 +36,14 @@ describe('Test for HelpBadge', () => {
     });
 
     it('creates the component with custom props', () => {
-        const helpBadge = React.render(<HelpBadge
+        const helpBadge = ReactDOM.render(<HelpBadge
                         id="fooid"
                         isVisible={true}
                         className="foofoo"
-                        />, document.body);
+                        />, document.getElementById("container"));
         expect(helpBadge).toExist();
 
-        const helpBadgeDom = React.findDOMNode(helpBadge);
+        const helpBadgeDom = ReactDOM.findDOMNode(helpBadge);
         expect(helpBadgeDom).toExist();
         expect(helpBadgeDom.id).toExist();
         expect(helpBadgeDom.className.indexOf('foofoo') >= 0).toBe(true);
@@ -50,11 +56,11 @@ describe('Test for HelpBadge', () => {
             changeHelpText: () => {triggered++; },
             changeHelpwinVisibility: () => {triggered++; }
         };
-        const helpBadge = React.render(<HelpBadge
+        const helpBadge = ReactDOM.render(<HelpBadge
             changeHelpText={onMouseOverFn.changeHelpText}
-            changeHelpwinVisibility={onMouseOverFn.changeHelpwinVisibility}/>, document.body);
+            changeHelpwinVisibility={onMouseOverFn.changeHelpwinVisibility}/>, document.getElementById("container"));
         expect(helpBadge).toExist();
-        const helpBadgeDom = React.findDOMNode(helpBadge);
+        const helpBadgeDom = ReactDOM.findDOMNode(helpBadge);
         expect(helpBadgeDom).toExist();
 
         ReactTestUtils.Simulate.mouseOver(helpBadgeDom);

@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var ZoomToMaxExtentButton = require('../ZoomToMaxExtentButton');
 var expect = require('expect');
 
@@ -14,22 +15,27 @@ var Provider = require('react-redux').Provider;
 var store = require('./../../../examples/myapp/stores/myappstore');
 
 describe('This test for ZoomToMaxExtentButton', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     // test DEFAULTS
     it('test default properties', () => {
-        const zmeBtn = React.render(
+        const zmeBtn = ReactDOM.render(
             <Provider store={store}>
-                {() => <ZoomToMaxExtentButton/>}
+                <ZoomToMaxExtentButton/>
             </Provider>,
-            document.body);
+            document.getElementById("container"));
         expect(zmeBtn).toExist();
 
-        const zmeBtnNode = React.findDOMNode(zmeBtn);
+        const zmeBtnNode = ReactDOM.findDOMNode(zmeBtn);
         expect(zmeBtnNode).toExist();
         expect(zmeBtnNode.id).toBe("mapstore-zoomtomaxextent");
 
@@ -39,14 +45,14 @@ describe('This test for ZoomToMaxExtentButton', () => {
     });
 
     it('test glyphicon property', () => {
-        const zmeBtn = React.render(
+        const zmeBtn = ReactDOM.render(
             <Provider store={store}>
-                {() => <ZoomToMaxExtentButton/>}
+                <ZoomToMaxExtentButton/>
             </Provider>,
-            document.body);
+            document.getElementById("container"));
         expect(zmeBtn).toExist();
 
-        const zmeBtnNode = React.findDOMNode(zmeBtn);
+        const zmeBtnNode = ReactDOM.findDOMNode(zmeBtn);
         expect(zmeBtnNode).toExist();
         expect(zmeBtnNode).toExist();
         const icons = zmeBtnNode.getElementsByTagName('span');
@@ -54,14 +60,14 @@ describe('This test for ZoomToMaxExtentButton', () => {
     });
 
     it('test glyphicon property with text', () => {
-        const zmeBtn = React.render(
+        const zmeBtn = ReactDOM.render(
             <Provider store={store}>
-                {() => <ZoomToMaxExtentButton glyphicon="info-sign" text="button"/>}
+                <ZoomToMaxExtentButton glyphicon="info-sign" text="button"/>
             </Provider>,
-            document.body);
+            document.getElementById("container"));
         expect(zmeBtn).toExist();
 
-        const zmeBtnNode = React.findDOMNode(zmeBtn);
+        const zmeBtnNode = ReactDOM.findDOMNode(zmeBtn);
         expect(zmeBtnNode).toExist();
         expect(zmeBtnNode).toExist();
 
@@ -82,7 +88,7 @@ describe('This test for ZoomToMaxExtentButton', () => {
                 }
             };
             let spy = expect.spyOn(actions, "changeMapView");
-            var cmp = React.render(
+            var cmp = ReactDOM.render(
                 <ZoomToMaxExtentButton
                     actions={actions} btnType={btnType}
                     mapConfig={{
@@ -103,7 +109,7 @@ describe('This test for ZoomToMaxExtentButton', () => {
                         }
                     }}
                 />
-            , document.body);
+            , document.getElementById("container"));
             expect(cmp).toExist();
 
             const cmpDom = document.getElementById("mapstore-zoomtomaxextent");
@@ -119,9 +125,9 @@ describe('This test for ZoomToMaxExtentButton', () => {
     });
 
     it('creates the component with a ImageButton', () => {
-        const zmeBtn = React.render(<ZoomToMaxExtentButton btnType="image"/>, document.body);
+        const zmeBtn = ReactDOM.render(<ZoomToMaxExtentButton btnType="image"/>, document.getElementById("container"));
         expect(zmeBtn).toExist();
-        const zmeBtnNode = React.findDOMNode(zmeBtn);
+        const zmeBtnNode = ReactDOM.findDOMNode(zmeBtn);
         expect(zmeBtnNode).toExist();
         expect(zmeBtnNode.localName).toBe("img");
     });

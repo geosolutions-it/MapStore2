@@ -7,7 +7,8 @@
  */
 var expect = require('expect');
 
-var React = require('react/addons');
+var React = require('react');
+var ReactDOM = require('react-dom');
 var I18N = require('../I18N');
 
 var ita = {
@@ -29,9 +30,13 @@ describe('This test for I18N.Message', () => {
         "en-US": eng,
         "it-IT": ita
     };
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
 
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
@@ -40,10 +45,10 @@ describe('This test for I18N.Message', () => {
         var currentData = data["en-US"];
         var testMsg = currentData.messages[msgId];
 
-        const cmp = React.render(<I18N.Message msgId={msgId} messages={eng.messages} locale="en-US"/>, document.body);
+        const cmp = ReactDOM.render(<I18N.Message msgId={msgId} messages={eng.messages} locale="en-US"/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
         expect(cmpDom.innerHTML).toBe(testMsg);
     });
@@ -52,10 +57,10 @@ describe('This test for I18N.Message', () => {
         var currentData = data["it-IT"];
         var testMsg = currentData.messages[msgId];
 
-        const cmp = React.render(<I18N.Message msgId={msgId} messages={ita.messages} locale="it-IT"/>, document.body);
+        const cmp = ReactDOM.render(<I18N.Message msgId={msgId} messages={ita.messages} locale="it-IT"/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        const cmpDom = React.findDOMNode(cmp);
+        const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
         expect(cmpDom.innerHTML).toBe(testMsg);
     });

@@ -7,6 +7,7 @@
  */
 
 const React = require('react');
+const ReactDOM = require('react-dom');
 const MapInfoUtils = require('../../utils/MapInfoUtils');
 
 const {Input} = require('react-bootstrap');
@@ -47,7 +48,7 @@ var FeatureInfoFormatSelector = React.createClass({
         );
     },
     launchChangeInfoFormatAction() {
-        var element = React.findDOMNode(this);
+        var element = ReactDOM.findDOMNode(this);
         var selectNode = element.getElementsByTagName('select').item(0);
         this.props.onInfoFormatChange(selectNode.value);
     }

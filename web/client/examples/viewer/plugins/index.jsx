@@ -83,6 +83,7 @@ module.exports = {
                         margin: "8px"
                     }} />,
             <HelpWrapper
+                key="seachBar-help"
                 helpText={<Message msgId="helptexts.searchBar"/>}
                 helpEnabled={props.help.enabled}
                 changeHelpText={props.changeHelpText}
@@ -90,7 +91,7 @@ module.exports = {
                 >
                 <SearchBar key="seachBar" onSearch={props.textSearch} onSearchReset={props.resultsPurge} />
             </HelpWrapper>,
-            <NominatimResultList results={props.searchResults} onItemClick={(props.changeMapView)} afterItemClick={props.resultsPurge} mapConfig={props.map}/>,
+            <NominatimResultList key="nominatimresults" results={props.searchResults} onItemClick={(props.changeMapView)} afterItemClick={props.resultsPurge} mapConfig={props.map}/>,
             <MapToolBar
                 activeKey={props.floatingPanel.activeKey}
                 onActivateItem={props.activatePanel}
@@ -107,6 +108,7 @@ module.exports = {
                          changeHelpText={props.changeHelpText}
                          changeHelpwinVisibility={props.changeHelpwinVisibility}
                          />}
+                         key="locate"
                         locate={props.locate.state}
                         onClick={props.changeLocateState}
                         tooltip={<Message msgId="locate.tooltip"/>}/>
@@ -187,12 +189,14 @@ module.exports = {
                         }}
                         crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.map.projection} />
                     <FeatureInfoFormatSelector
+                        key="featureinfoformat"
                         onInfoFormatChange={props.changeMapInfoFormat}
                         inputProps={{
                             label: <Message msgId="infoFormatLbl" />
                         }}
                         infoFormat={props.mapInfo.infoFormat}/>
                     <HistoryBar
+                        key="history"
                         undoBtnProps={{
                             onClick: props.undo,
                             label: <Message msgId="history.undoBtnTooltip"/>,
@@ -205,6 +209,7 @@ module.exports = {
                     }}/>
                 </Settings>
                 <HelpToggleBtn
+                    key="help"
                     pressed={props.help.enabled}
                     changeHelpState={props.changeHelpState}
                     changeHelpwinVisibility={props.changeHelpwinVisibility}/>
@@ -231,6 +236,7 @@ module.exports = {
                 mousePosition={props.mousePosition}
                 crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.map.projection}/>,
             <HelpWrapper
+                key="scalebox-help"
                 helpText={<Message msgId="helptexts.scaleBox"/>}
                 helpEnabled={props.help.enabled}
                 changeHelpText={props.changeHelpText}
@@ -242,6 +248,7 @@ module.exports = {
                     currentZoomLvl={props.map.zoom} />
             </HelpWrapper>,
             <HelpWrapper
+                key="zoomall-help"
                 helpText={<Message msgId="helptexts.zoomToMaxExtentButton"/>}
                 helpEnabled={props.help.enabled}
                 changeHelpText={props.changeHelpText}

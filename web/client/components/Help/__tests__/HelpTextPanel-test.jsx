@@ -6,22 +6,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var HelpTextPanel = require('../HelpTextPanel');
 var expect = require('expect');
 
 describe('Test for HelpTextPanel', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     // test DEFAULTS
     it('creates the component with defaults', () => {
-        const helpPanel = React.render(<HelpTextPanel/>, document.body);
+        const helpPanel = ReactDOM.render(<HelpTextPanel/>, document.getElementById("container"));
         expect(helpPanel).toExist();
 
-        const helpPanelDom = React.findDOMNode(helpPanel);
+        const helpPanelDom = ReactDOM.findDOMNode(helpPanel);
         expect(helpPanelDom).toExist();
         // expect(helpPanelDom.id).toExist();
         expect(helpPanelDom.className.indexOf('hidden') >= 0).toBe(true);
@@ -38,15 +44,15 @@ describe('Test for HelpTextPanel', () => {
     });
 
     it('creates the component with custom props', () => {
-        const helpPanel = React.render(<HelpTextPanel
+        const helpPanel = ReactDOM.render(<HelpTextPanel
                         id="fooid"
                         isVisible={true}
                         title="footitle"
                         helpText="foohelptext"
-                        />, document.body);
+                        />, document.getElementById("container"));
         expect(helpPanel).toExist();
 
-        const helpPanelDom = React.findDOMNode(helpPanel);
+        const helpPanelDom = ReactDOM.findDOMNode(helpPanel);
         expect(helpPanelDom).toExist();
         expect(helpPanelDom.id).toBe("fooid");
         expect(helpPanelDom.className.indexOf('hidden') < 0).toBe(true);

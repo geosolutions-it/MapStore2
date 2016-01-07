@@ -17,7 +17,7 @@ var Message = React.createClass({
         msgParams: React.PropTypes.object
     },
     contextTypes: {
-        locale: React.PropTypes.string.isRequired,
+        locale: React.PropTypes.string,
         messages: React.PropTypes.object
     },
     render() {

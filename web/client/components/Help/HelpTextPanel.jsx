@@ -37,7 +37,7 @@ var HelpTextPanel = React.createClass({
             <div
                 id={this.props.id}
                 className={this.props.isVisible ? '' : 'hidden'}
-                style={{position: "absolute", top: "140px", "margin-left": "8px"}}>
+                style={{position: "absolute", top: "140px", marginLeft: "8px"}}>
                 <Panel
                     header={this.props.title}>
                     {this.props.helpText}

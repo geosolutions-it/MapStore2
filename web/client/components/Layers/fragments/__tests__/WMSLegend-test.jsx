@@ -7,14 +7,19 @@
  */
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var WMSLegend = require('../WMSLegend');
 
 var expect = require('expect');
 
 describe('test WMSLegend module component', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
 
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
@@ -28,9 +33,9 @@ describe('test WMSLegend module component', () => {
             type: 'wms',
             url: 'fakeurl'
         };
-        const comp = React.render(<WMSLegend node={l} />, document.body);
+        const comp = ReactDOM.render(<WMSLegend node={l} />, document.getElementById("container"));
 
-        const domNode = React.findDOMNode(comp);
+        const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
 
         const image = domNode.getElementsByTagName('img');

@@ -8,20 +8,26 @@
 var expect = require('expect');
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var LocateBtn = require('../LocateBtn');
 
 describe("test the Locate Button", () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.body);
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     it('test default properties', () => {
-        const tb = React.render(<LocateBtn locate="DISABLED" />, document.body);
+        const tb = ReactDOM.render(<LocateBtn locate="DISABLED" />, document.getElementById("container"));
         expect(tb).toExist();
 
-        const tbNode = React.findDOMNode(tb);
+        const tbNode = ReactDOM.findDOMNode(tb);
         expect(tbNode).toExist();
         expect(tbNode.id).toBe("locate-btn");
 
@@ -33,10 +39,10 @@ describe("test the Locate Button", () => {
     });
 
     it('test button state', () => {
-        const tb = React.render(<LocateBtn locate="FOLLOWING"/>, document.body);
+        const tb = ReactDOM.render(<LocateBtn locate="FOLLOWING"/>, document.getElementById("container"));
         expect(tb).toExist();
 
-        const tbNode = React.findDOMNode(tb);
+        const tbNode = ReactDOM.findDOMNode(tb);
 
         expect(tbNode.className.indexOf('primary') >= 0).toBe(true);
     });
@@ -46,9 +52,9 @@ describe("test the Locate Button", () => {
             onClick: (pressed) => {return pressed; }
         };
         const spy = expect.spyOn(testHandlers, 'onClick');
-        const tb = React.render(<LocateBtn locate="ENABLED" onClick={testHandlers.onClick}/>, document.body);
+        const tb = ReactDOM.render(<LocateBtn locate="ENABLED" onClick={testHandlers.onClick}/>, document.getElementById("container"));
 
-        const tbNode = React.findDOMNode(tb);
+        const tbNode = ReactDOM.findDOMNode(tb);
         tbNode.click();
 
         expect(spy.calls.length).toEqual(1);

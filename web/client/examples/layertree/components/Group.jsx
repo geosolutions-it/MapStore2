@@ -49,9 +49,9 @@ var Group = React.createClass({
         return (
             <Node type="group" {...other}>
                 {this.props.node.name !== 'background' ?
-                    [<Glyphicon style={{"float": "left", marginTop: "5px", marginLeft: "5px"}} glyph="remove-sign"
+                    [<Glyphicon key="remove" style={{"float": "left", marginTop: "5px", marginLeft: "5px"}} glyph="remove-sign"
                         onClick={() => this.props.onRemove(this.props.node)}/>,
-                    <VisibilityCheck propertiesChangeHandler={this.props.propertiesChangeHandler} style={visibilityStyle}/>] : []}
+                    <VisibilityCheck key="visibility" propertiesChangeHandler={this.props.propertiesChangeHandler} style={visibilityStyle}/>] : []}
                 <GroupTitle onClick={this.props.onToggle}/>
                 <GroupChildren onSort={this.props.onSort} position="collapsible">
                     {this.props.children}

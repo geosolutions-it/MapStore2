@@ -8,12 +8,18 @@
 var expect = require('expect');
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var BackgroundSwitcher = require('../BackgroundSwitcher');
 var {Thumbnail} = require('react-bootstrap');
 
 describe("test the BakckgroundSwitcher", () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
@@ -34,14 +40,14 @@ describe("test the BakckgroundSwitcher", () => {
             "group": "background",
             "format": "image/png"
         }];
-        const tb = React.render(<BackgroundSwitcher layers={layers}/>, document.body);
+        const tb = ReactDOM.render(<BackgroundSwitcher layers={layers}/>, document.getElementById("container"));
         expect(tb).toExist();
 
     });
 
     it('create component without layers', () => {
 
-        const tb = React.render(<BackgroundSwitcher />, document.body);
+        const tb = ReactDOM.render(<BackgroundSwitcher />, document.getElementById("container"));
         expect(tb).toExist();
 
     });
@@ -67,10 +73,10 @@ describe("test the BakckgroundSwitcher", () => {
             "format": "image/png"
         }];
         const spy = expect.spyOn(testHandlers, 'propertiesChangeHandler');
-        var tb = React.render(<BackgroundSwitcher layers={layers} propertiesChangeHandler={testHandlers.propertiesChangeHandler}/>, document.body);
+        var tb = ReactDOM.render(<BackgroundSwitcher layers={layers} propertiesChangeHandler={testHandlers.propertiesChangeHandler}/>, document.getElementById("container"));
         let thumbs = TestUtils.scryRenderedComponentsWithType(tb, Thumbnail);
         expect(thumbs.length).toBe(2);
-        React.findDOMNode(thumbs[0]).click();
+        ReactDOM.findDOMNode(thumbs[0]).click();
         expect(spy.calls.length).toEqual(1);
     });
 });

@@ -8,17 +8,23 @@
 var expect = require('expect');
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var SearchBar = require('../SearchBar');
 
 describe("test the SearchBar", () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     it('test component creation', () => {
-        const tb = React.render(<SearchBar/>, document.body);
+        const tb = ReactDOM.render(<SearchBar/>, document.getElementById("container"));
         expect(tb).toExist();
     });
 
@@ -31,8 +37,8 @@ describe("test the SearchBar", () => {
 
         const spy = expect.spyOn(testHandlers, 'onSearchHandler');
         const spyReset = expect.spyOn(testHandlers, 'onSearchResetHandler');
-        var tb = React.render(<SearchBar delay={0} typeAhead={false} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler}/>, document.body);
-        let input = TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0].getDOMNode();
+        var tb = ReactDOM.render(<SearchBar delay={0} typeAhead={false} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler}/>, document.getElementById("container"));
+        let input = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0]);
 
         expect(input).toExist();
         input.value = "test";
@@ -53,8 +59,8 @@ describe("test the SearchBar", () => {
         };
 
         const spyReset = expect.spyOn(testHandlers, 'onSearchResetHandler');
-        var tb = React.render(<SearchBar delay={0} typeAhead={false} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler}/>, document.body);
-        let input = TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0].getDOMNode();
+        var tb = ReactDOM.render(<SearchBar delay={0} typeAhead={false} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler}/>, document.getElementById("container"));
+        let input = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0]);
         // test reset button
         expect(input).toExist();
         input.value = "test";
@@ -73,8 +79,8 @@ describe("test the SearchBar", () => {
             onSearchHandler: (text) => {return text; }
         };
         const spy = expect.spyOn(testHandlers, 'onSearchHandler');
-        var tb = React.render(<SearchBar delay={0} typeAhead={true} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler}/>, document.body);
-        let input = TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0].getDOMNode();
+        var tb = ReactDOM.render(<SearchBar delay={0} typeAhead={true} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler}/>, document.getElementById("container"));
+        let input = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0]);
 
         expect(input).toExist();
         input.value = "test";
@@ -91,10 +97,10 @@ describe("test the SearchBar", () => {
 
         const spy = expect.spyOn(testHandlers, 'onSearchHandler');
         const spyReset = expect.spyOn(testHandlers, 'onSearchResetHandler');
-        var tb = React.render(<SearchBar delay={0} typeAhead={true} blurResetDelay={0} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler}/>, document.body);
+        var tb = ReactDOM.render(<SearchBar delay={0} typeAhead={true} blurResetDelay={0} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler}/>, document.getElementById("container"));
         let input = TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0];
         expect(input).toExist();
-        input = React.findDOMNode(input);
+        input = ReactDOM.findDOMNode(input);
         input.value = "test";
 
         TestUtils.Simulate.click(input);

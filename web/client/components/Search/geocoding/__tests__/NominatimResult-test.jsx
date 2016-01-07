@@ -8,28 +8,35 @@
 var expect = require('expect');
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var NominatimResult = require('../NominatimResult');
 
 
 describe("test the NominatimResult", () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     it('test component creation', () => {
         var item = {
+            osm_id: 1,
             display_name: "Name",
             boundingbox: []
         };
-        const tb = React.render(<NominatimResult item={item}/>, document.body);
+        const tb = ReactDOM.render(<NominatimResult item={item}/>, document.getElementById("container"));
         expect(tb).toExist();
 
     });
 
     it('create component without item', () => {
-        const tb = React.render(<NominatimResult />, document.body);
+        const tb = ReactDOM.render(<NominatimResult />, document.getElementById("container"));
         expect(tb).toExist();
     });
 
@@ -39,15 +46,16 @@ describe("test the NominatimResult", () => {
             clickHandler: (pressed) => {return pressed; }
         };
         var item = {
+            osm_id: 1,
             display_name: "Name",
             boundingbox: []
         };
         const spy = expect.spyOn(testHandlers, 'clickHandler');
-        var tb = React.render(<NominatimResult item={item} onItemClick={testHandlers.clickHandler}/>, document.body);
+        var tb = ReactDOM.render(<NominatimResult item={item} onItemClick={testHandlers.clickHandler}/>, document.getElementById("container"));
         let elem = TestUtils.findRenderedDOMComponentWithClass(tb, "search-result");
 
         expect(elem).toExist();
-        React.findDOMNode(elem).click();
+        ReactDOM.findDOMNode(elem).click();
         expect(spy.calls.length).toEqual(1);
     });
 });

@@ -21,7 +21,7 @@ var Badge = BootstrapReact.Badge;
 var HelpBadge = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
-        helpText: React.PropTypes.string,
+        helpText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         isVisible: React.PropTypes.bool,
         changeHelpText: React.PropTypes.func,
         changeHelpwinVisibility: React.PropTypes.func,
@@ -34,8 +34,8 @@ var HelpBadge = React.createClass({
         };
     },
     onMouseOver() {
-        this.props.changeHelpText({helpText: this.props.helpText});
-        this.props.changeHelpwinVisibility({helpwinViz: true});
+        this.props.changeHelpText(this.props.helpText);
+        this.props.changeHelpwinVisibility(true);
     },
     render() {
         return (

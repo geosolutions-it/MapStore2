@@ -8,6 +8,7 @@
 var expect = require('expect');
 
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var Localized = require('../Localized');
 var Message = require('../Message');
 var HTML = require('../HTML');
@@ -17,47 +18,52 @@ const messages = {
 };
 
 describe('Test the localization support HOC', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     it('localizes wrapped Message component', () => {
-        var localized = React.render(
+        var localized = ReactDOM.render(
             <Localized locale="it-IT" messages={messages}>
                 {() => <Message msgId="testMsg"/> }
             </Localized>
-            , document.body);
-        var dom = React.findDOMNode(localized);
+            , document.getElementById("container"));
+        var dom = ReactDOM.findDOMNode(localized);
         expect(dom).toExist();
         expect(dom.innerHTML).toBe("my message");
     });
 
     it('localizes wrapped HTML component', () => {
-        var localized = React.render(
+        var localized = ReactDOM.render(
             <Localized locale="it-IT" messages={messages}>
                 {() => <HTML msgId="testMsg"/> }
             </Localized>
-            , document.body);
-        var dom = React.findDOMNode(localized);
+            , document.getElementById("container"));
+        var dom = ReactDOM.findDOMNode(localized);
         expect(dom).toExist();
         expect(dom.innerHTML).toBe("my message");
     });
 
     it('tests localized component without messages', () => {
-        var localized = React.render(
+        var localized = ReactDOM.render(
             <Localized locale="it-IT">
                 {() => <HTML msgId="testMsg"/> }
             </Localized>
-            , document.body);
-        var dom = React.findDOMNode(localized);
+            , document.getElementById("container"));
+        var dom = ReactDOM.findDOMNode(localized);
         expect(dom).toNotExist();
     });
 
     it('renders a loading error', () => {
-        var localized = React.render(<Localized loadingError="loadingError" />, document.body);
-        var dom = React.findDOMNode(localized);
+        var localized = ReactDOM.render(<Localized loadingError="loadingError" />, document.getElementById("container"));
+        var dom = ReactDOM.findDOMNode(localized);
         expect(dom).toExist();
         expect(dom.className.indexOf("loading-locale-error")).toNotBe(-1);
     });

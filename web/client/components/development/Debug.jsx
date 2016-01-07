@@ -15,25 +15,14 @@ if (!global.Symbol) {
 const urlQuery = url.parse(window.location.href, true).query;
 
 let Debug = React.createClass({
-    propTypes: {
-        store: React.PropTypes.object.isRequired
-    },
     render() {
-        let child = React.Children.only(this.props.children);
         if (__DEVTOOLS__ && urlQuery.debug) {
-            const { DevTools, DebugPanel, LogMonitor } = require('redux-devtools/lib/react');
+            const DevTools = require('./DevTools');
             return (
-                <div className="fill">
-                    <div className="fill-debug">
-                        {child}
-                    </div>
-                    <DebugPanel top right bottom>
-                      <DevTools store={this.props.store} monitor={LogMonitor} />
-                    </DebugPanel>
-                </div>
+                <DevTools/>
             );
         }
-        return child;
+        return null;
     }
 });
 

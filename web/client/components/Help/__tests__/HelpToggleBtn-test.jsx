@@ -6,22 +6,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react/addons');
+var ReactDOM = require('react-dom');
 var HelpToggleBtn = require('../HelpToggleBtn');
 var expect = require('expect');
 
 describe('Test for HelpToggleBtn', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
     afterEach((done) => {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
 
     // test DEFAULTS
     it('creates the component with defaults', () => {
-        const helpToggleBtn = React.render(<HelpToggleBtn/>, document.body);
+        const helpToggleBtn = ReactDOM.render(<HelpToggleBtn/>, document.getElementById("container"));
         expect(helpToggleBtn).toExist();
 
-        const helpToggleBtnDom = React.findDOMNode(helpToggleBtn);
+        const helpToggleBtnDom = ReactDOM.findDOMNode(helpToggleBtn);
         expect(helpToggleBtnDom).toExist();
 
         const icons = helpToggleBtnDom.getElementsByTagName('span');
@@ -32,10 +38,10 @@ describe('Test for HelpToggleBtn', () => {
     });
 
     it('test button state', () => {
-        const helpToggleBtn = React.render(<HelpToggleBtn pressed/>, document.body);
+        const helpToggleBtn = ReactDOM.render(<HelpToggleBtn pressed/>, document.getElementById("container"));
         expect(helpToggleBtn).toExist();
 
-        const helpToggleBtnDom = React.findDOMNode(helpToggleBtn);
+        const helpToggleBtnDom = ReactDOM.findDOMNode(helpToggleBtn);
 
         expect(helpToggleBtnDom.className.indexOf('primary') >= 0).toBe(true);
     });
@@ -47,12 +53,12 @@ describe('Test for HelpToggleBtn', () => {
             changeHelpwinVisibility: () => {triggered++; }
         };
         // const spy = expect.spyOn(testHandlers, 'onClick');
-        const helpToggleBtn = React.render(<HelpToggleBtn
+        const helpToggleBtn = ReactDOM.render(<HelpToggleBtn
             pressed
             changeHelpState={clickFn.changeHelpState}
-            changeHelpwinVisibility={clickFn.changeHelpwinVisibility}/>, document.body);
+            changeHelpwinVisibility={clickFn.changeHelpwinVisibility}/>, document.getElementById("container"));
 
-        const helpToggleBtnDom = React.findDOMNode(helpToggleBtn);
+        const helpToggleBtnDom = ReactDOM.findDOMNode(helpToggleBtn);
         helpToggleBtnDom.click();
 
         expect(triggered).toEqual(2);

@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
+var ReactDOM = require('react-dom');
 var { createStore, combineReducers } = require('redux');
 var { changeBrowserProperties} = require('../../actions/browser');
 var ConfigUtils = require('../../utils/ConfigUtils');
@@ -92,9 +93,10 @@ function startApp() {
         }
     });
 
-    let cmp = React.render(React.createElement(App), document.getElementById('container'));
-    store.subscribe(() => cmp.setProps({mousePosition: store.getState().mouseposition.position}));
-    store.subscribe(() => cmp.setProps({browser: store.getState().browser}));
+    ReactDOM.render(<App/>, document.getElementById('container'));
+    store.subscribe(() =>
+        ReactDOM.render(<App mousePosition={store.getState().mouseposition.position}
+        browser={store.getState().browser}/>, document.getElementById('container')));
 }
 
 if (!global.Intl ) {

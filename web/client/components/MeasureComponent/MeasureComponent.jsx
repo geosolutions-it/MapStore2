@@ -31,10 +31,10 @@ let MeasureComponent = React.createClass({
         areaLabel: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         bearingLabel: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         uom: React.PropTypes.shape({
-                    length: { unit: React.PropTypes.string.required,
-                              label: React.PropTypes.string.required},
-                    area: { unit: React.PropTypes.string.required,
-                            label: React.PropTypes.string.required}
+                    length: React.PropTypes.shape({ unit: React.PropTypes.string.isRequired,
+                              label: React.PropTypes.string.isRequired}),
+                    area: React.PropTypes.shape({ unit: React.PropTypes.string.isRequired,
+                            label: React.PropTypes.string.isRequired})
                         }),
         toggleMeasure: React.PropTypes.func,
         measurement: React.PropTypes.object,
@@ -120,7 +120,7 @@ let MeasureComponent = React.createClass({
         };
         this.props.toggleMeasure(resetMeasureState);
     },
-    getFormattedBearingValue(azimuth) {
+    getFormattedBearingValue(azimuth = 0) {
         var bearing = "";
         if (azimuth >= 0 && azimuth < 90) {
             bearing = "N " + this.degToDms(azimuth) + " E";
@@ -135,7 +135,7 @@ let MeasureComponent = React.createClass({
 
         return bearing;
     },
-    getFormattedLength(length) {
+    getFormattedLength(length = 0) {
         switch (this.props.uom.length.unit) {
             case 'm':
                 return length;
@@ -149,7 +149,7 @@ let MeasureComponent = React.createClass({
             return length;
         }
     },
-    getFormattedArea(area) {
+    getFormattedArea(area = 0) {
         switch (this.props.uom.area.unit) {
             case 'sqm':
                 return area;
