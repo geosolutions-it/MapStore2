@@ -121,7 +121,7 @@ module.exports = {
                                 crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.map.projection} />
                         </Settings>
                     </Section>
-                    <Section eventKey="about" renderInModal="true" header={<Message msgId="aboutLbl" />}>
+                    <Section eventKey="about" renderInModal header={<Message msgId="aboutLbl" />}>
                         <AboutContent />
                     </Section>
 

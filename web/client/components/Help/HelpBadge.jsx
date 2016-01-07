@@ -34,8 +34,8 @@ var HelpBadge = React.createClass({
         };
     },
     onMouseOver() {
-        this.props.changeHelpText({helpText: this.props.helpText});
-        this.props.changeHelpwinVisibility({helpwinViz: true});
+        this.props.changeHelpText(this.props.helpText);
+        this.props.changeHelpwinVisibility(true);
     },
     render() {
         return (

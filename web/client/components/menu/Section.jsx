@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
+
 var {Glyphicon, Modal} = require('react-bootstrap');
 const assign = require('object-assign');
 var Section = React.createClass({
@@ -31,7 +32,7 @@ var Section = React.createClass({
     },
     getHeight() {
         if (this.props.open && this.refs.sectionContent) {
-            return this.refs.sectionContent.getDOMNode().scrollHeight + 10;
+            return this.refs.sectionContent.scrollHeight + 10;
         }
         return "0";
     },
