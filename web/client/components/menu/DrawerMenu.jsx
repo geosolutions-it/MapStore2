@@ -7,6 +7,7 @@
  */
 var React = require('react');
 var {Glyphicon} = require('react-bootstrap');
+var Sidebar = require('react-sidebar').default;
 var Menu = React.createClass({
     propTypes: {
         title: React.PropTypes.string,
@@ -35,22 +36,25 @@ var Menu = React.createClass({
           props
         );
     },
+    renderContent() {
+        return (<div className={"nav-content"}>
+            <div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
+                <span className="title">{this.props.title}</span>
+                <Glyphicon glyph="remove" onClick={() => {this.hide(); }} style={{position: "absolute", right: "0", padding: "15px", cursor: "pointer"}}/>
+            </div>
+            {this.props.children.map(this.renderChildren)}
+        </div>);
+    },
     render() {
         return (
-            <div className="nav-menu">
-                <div className={"nav-halo"}
-                        style={{
-                        visibility: this.state.visible ? "visible" : "hidden",
-                        opacity: this.state.visible ? 1 : 0}}
-                        onClick={()=> {this.hide(); }}></div>
-                <div className={"nav-content " + (this.state.visible ? "visible " : "") + this.props.alignment}>
-                    <div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
-                        <span className="title">{this.props.title}</span>
-                        <Glyphicon glyph="remove" onClick={() => {this.hide(); }} style={{position: "absolute", right: "0", padding: "15px", cursor: "pointer"}}/>
-                    </div>
-                    {this.props.children.map(this.renderChildren)}
-                </div>
-            </div>
+            <Sidebar styles={{sidebar: { zIndex: 3} }} sidebarClassName="nav-menu" onSetOpen={(open) => {
+                if (open) {
+                    this.show();
+                } else {
+                    this.hide();
+                } }} open={this.state.visible} sidebar={this.renderContent()}>
+                <div></div>
+            </Sidebar>
         );
     },
 
