@@ -47,12 +47,22 @@ var Menu = React.createClass({
     },
     render() {
         return (
-            <Sidebar styles={{sidebar: { zIndex: 3} }} sidebarClassName="nav-menu" onSetOpen={(open) => {
-                if (open) {
-                    this.show();
-                } else {
-                    this.hide();
-                } }} open={this.state.visible} sidebar={this.renderContent()}>
+            <Sidebar styles={{
+                    sidebar: {
+                        zIndex: 3,
+                        width: '300px'
+                    },
+                     root: {
+                         right: this.state.visible ? 0 : 'auto',
+                         width: '0',
+                         overflow: 'visible'
+                     }
+                }} sidebarClassName="nav-menu" onSetOpen={(open) => {
+                    if (open) {
+                        this.show();
+                    } else {
+                        this.hide();
+                    } }} open={this.state.visible} sidebar={this.renderContent()}>
                 <div></div>
             </Sidebar>
         );
