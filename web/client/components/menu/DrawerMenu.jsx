@@ -10,7 +10,7 @@ var {Glyphicon} = require('react-bootstrap');
 var Sidebar = require('react-sidebar').default;
 var Menu = React.createClass({
     propTypes: {
-        title: React.PropTypes.string,
+        title: React.PropTypes.node,
         alignment: React.PropTypes.string,
         activeKey: React.PropTypes.string
     },
