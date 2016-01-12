@@ -9,15 +9,14 @@
 var React = require('react');
 var assign = require('object-assign');
 var {Glyphicon, Panel} = require('react-bootstrap');
+var GetFeatureInfoViewer = require('./GetFeatureInfoViewer');
 const Draggable = require('react-draggable');
 
 var I18N = require('../../../../components/I18N/I18N');
 var Spinner = require('../../../../components/spinners/BasicSpinner/BasicSpinner');
-var JSONFeatureInfoViewer = require('./infoViewers/JSONFeatureInfoViewer');
-var HTMLFeatureInfoViewer = require('./infoViewers/HTMLFeatureInfoViewer');
-var TEXTFeatureInfoViewer = require('./infoViewers/TEXTFeatureInfoViewer');
 
 var CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
+
 var MapInfoUtils = require('../../../../utils/MapInfoUtils');
 
 var GetFeatureInfo = React.createClass({
@@ -41,12 +40,17 @@ var GetFeatureInfo = React.createClass({
             hideMapinfoMarker: React.PropTypes.func
         }),
         clickedMapPoint: React.PropTypes.object,
-        style: React.PropTypes.object
+        display: React.PropTypes.string,
+        draggable: React.PropTypes.bool,
+        style: React.PropTypes.object,
+        collapsible: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
             enabled: false,
             featureCount: 10,
+            draggable: true,
+            display: "accordion",
             htmlResponses: [],
             htmlRequests: {length: 0},
             map: {},
@@ -83,8 +87,19 @@ var GetFeatureInfo = React.createClass({
     componentWillReceiveProps(newProps) {
         // if there's a new clicked point on map and GetFeatureInfo is active
         // it composes and sends a getFeatureInfo action.
-        if (newProps.enabled && newProps.clickedMapPoint && newProps.clickedMapPoint.pixel && (!this.props.clickedMapPoint.pixel || this.props.clickedMapPoint.pixel.x !== newProps.clickedMapPoint.pixel.x ||
-                this.props.clickedMapPoint.pixel.y !== newProps.clickedMapPoint.pixel.y)) {
+        var refreshInfo = () => {
+            if (newProps.enabled && newProps.clickedMapPoint && newProps.clickedMapPoint.pixel) {
+                if (!this.props.clickedMapPoint.pixel || this.props.clickedMapPoint.pixel.x !== newProps.clickedMapPoint.pixel.x ||
+                        this.props.clickedMapPoint.pixel.y !== newProps.clickedMapPoint.pixel.y ) {
+                    return true;
+                }
+                if (!this.props.clickedMapPoint.pixel || newProps.clickedMapPoint.pixel && this.props.infoFormat !== newProps.infoFormat) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        if ( refreshInfo() ) {
             this.props.actions.purgeMapInfoResults();
             const wmsVisibleLayers = newProps.layers.filter(newProps.layerFilter);
             const {bounds, crs} = this.reprojectBbox(newProps.map.bbox, newProps.map.projection);
@@ -102,8 +117,8 @@ var GetFeatureInfo = React.createClass({
                           bounds.miny + "," +
                           bounds.maxx + "," +
                           bounds.maxy,
-                    feature_count: this.props.featureCount,
-                    info_format: this.props.infoFormat
+                    feature_count: newProps.featureCount,
+                    info_format: newProps.infoFormat
                 };
                 const layerMetadata = {
                     title: layer.title
@@ -126,24 +141,8 @@ var GetFeatureInfo = React.createClass({
         this.props.actions.hideMapinfoMarker();
         this.props.actions.purgeMapInfoResults();
     },
-    renderInfo() {
-        var retval = null;
-        let missingRequests = this.props.htmlRequests.length - this.props.htmlResponses.length;
-        var infoFormats = MapInfoUtils.getAvailableInfoFormat();
-        switch (this.props.infoFormat) {
-            case infoFormats.JSON:
-                retval = (<JSONFeatureInfoViewer responses={this.props.htmlResponses} missingRequests={missingRequests}/>);
-                break;
-            case infoFormats.HTML:
-                retval = (<HTMLFeatureInfoViewer responses={this.props.htmlResponses} />);
-                break;
-            case infoFormats.TEXT:
-                retval = (<TEXTFeatureInfoViewer responses={this.props.htmlResponses} missingRequests={missingRequests}/>);
-                break;
-            default:
-                retval = null;
-        }
-        return retval;
+    renderInfo(missingRequests) {
+        return (<GetFeatureInfoViewer infoFormat={this.props.infoFormat} missingRequests={missingRequests} responses={this.props.htmlResponses} display={this.props.display}/>);
     },
     renderHeader(missingRequests) {
         return (
@@ -154,15 +153,27 @@ var GetFeatureInfo = React.createClass({
             </span>
         );
     },
-    render() {
+
+    renderContent() {
         let missingRequests = this.props.htmlRequests.length - this.props.htmlResponses.length;
-        return this.props.htmlRequests.length !== 0 ? (
-            <Draggable handle=".panel-heading">
-                <Panel id="mapstore-getfeatureinfo" header={this.renderHeader(missingRequests)} style={this.props.style}>
-                    {this.renderInfo()}
-                </Panel>
-            </Draggable>
-        ) : null;
+        return (<Panel
+            defaultExpanded={true}
+            collapsible={this.props.collapsible}
+            id="mapstore-getfeatureinfo"
+            header={this.renderHeader(missingRequests)}
+            style={this.props.style}>
+            {this.renderInfo(missingRequests)}
+        </Panel>);
+    },
+    render() {
+        if (this.props.htmlRequests.length !== 0) {
+            return this.props.draggable ? (
+                    <Draggable>
+                        {this.renderContent()}
+                    </Draggable>
+                ) : this.renderContent();
+        }
+        return null;
     },
     reprojectBbox(bbox, destSRS) {
         let newBbox = CoordinatesUtils.reprojectBbox([

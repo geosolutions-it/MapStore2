@@ -7,24 +7,20 @@
  */
 
 var React = require('react');
-var {Alert, Accordion, Panel} = require('react-bootstrap');
+
 
 var ApplyTemplate = require('../../../../../components/misc/ApplyTemplate');
 var PropertiesViewer = require('../../../../../components/misc/PropertiesViewer');
-var I18N = require('../../../../../components/I18N/I18N');
 
 var JSONFeatureInfoViewr = React.createClass({
     propTypes: {
-        responses: React.PropTypes.array,
-        missingRequests: React.PropTypes.number
+        response: React.PropTypes.string,
+        layerMetadata: React.PropTypes.object
     },
-    getDefaultProps() {
-        return {
-            responses: [],
-            missingRequests: 0
-        };
+    shouldComponentUpdate(nextProps) {
+        return nextProps.response !== this.props.response || nextProps.layerMetadata !== this.props.layerMetadata;
     },
-    renderInfo(responses) {
+    render() {
         const getFeatureProps = feature => feature.properties;
         const getFormattedContent = (feature, i) => {
             return (
@@ -33,53 +29,8 @@ var JSONFeatureInfoViewr = React.createClass({
                 </ApplyTemplate>
             );
         };
-        const filteredResponses = responses.filter((res) => res.response && res.response.features && res.response.features.length);
-        if (this.props.missingRequests === 0 && filteredResponses.length === 0) {
-            return (
-                <Alert bsStyle={"danger"}>
-                    <h4><I18N.HTML msgId={"noFeatureInfo"}/></h4>
-                </Alert>
-            );
-        }
-        return filteredResponses.map((res, i) => {
-            const {response, layerMetadata} = res;
-
-            return (
-                <Panel header={layerMetadata.title} eventKey={i + 1} key={i}>
-                    {response.features.map(getFormattedContent)}
-                </Panel>
-            );
-        });
-    },
-    renderEmpryLayer(responses) {
-        const notEmptyResponses = responses.filter((res) => res.response && res.response.features && res.response.features.length).length;
-        const filteredResponses = responses.filter((res) => res.response && res.response.features && res.response.features.length === 0);
-        if (this.props.missingRequests === 0 && notEmptyResponses === 0) {
-            return null;
-        }
-        if (filteredResponses.length !== 0) {
-            const titles = filteredResponses.map((res) => {
-                const {layerMetadata} = res;
-                return layerMetadata.title;
-            });
-            return (
-                <Alert bsStyle={"info"}>
-                    <I18N.Message msgId={"noInfoForLayers"} />
-                    <b>{titles.join(', ')}</b>
-                </Alert>
-            );
-        }
-        return null;
-    },
-    render() {
-        let pages = this.renderInfo(this.props.responses);
-        let emptyLayers = this.renderEmpryLayer(this.props.responses);
-        return (
-            <div>
-                <Accordion defaultActiveKey={1}>
-                    {pages}
-                </Accordion>
-                {emptyLayers}
+        return (<div>
+                {this.props.response.features.map(getFormattedContent)}
             </div>
         );
     }

@@ -142,6 +142,17 @@ module.exports = {
                 crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.map.projection}/>,
             <GetFeatureInfo
                 key="getFeatureInfo"
+                style={{position: "absolute",
+                    width: "100%",
+                    bottom: "0px",
+                    zIndex: 1010,
+                    maxHeight: "70%",
+                    marginBottom: 0
+                }}
+                draggable={false}
+                collapsible={true}
+                display="swipe"
+                bodyClass="mobile-feature-info"
                 enabled={props.mapInfo.enabled}
                 htmlResponses={props.mapInfo.responses}
                 htmlRequests={props.mapInfo.requests}
