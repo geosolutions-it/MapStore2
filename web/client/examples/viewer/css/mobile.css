@@ -225,3 +225,16 @@ div.MapSearchBar input {
     left: 5px !important;
     right:5px !important;
 }
+#mapstore-getfeatureinfo {
+    margin-bottom: 0;
+}
+#mapstore-getfeatureinfo > .panel-body{
+    padding: 0;
+}
+#mapstore-getfeatureinfo > .panel-body .panel-heading {
+    text-align: center;
+}
+#mapstore-getfeatureinfo > .panel-body .panel-body{
+    max-height: 170px;
+    overflow-y: auto;
+}

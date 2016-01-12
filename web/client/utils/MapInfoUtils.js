@@ -6,15 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const INFO_FORMATS = {
-    "TEXT": "text/plain",
-    "HTML": "text/html",
-    "JSONP": "text/javascript",
-    "JSON": "application/json",
-    "GML 2": "application/vnd.ogc.gml",
-    "GML 3": "application/vnd.ogc.gml/3.1.1"
-};
-
+const INFO_FORMATS = require("./FeatureInfoUtils").INFO_FORMATS;
 /**
  * specifies which info formats are currently supported
  */
