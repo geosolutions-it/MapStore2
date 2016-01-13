@@ -17,6 +17,8 @@ const CHANGE_MAPINFO_STATE = 'CHANGE_MAPINFO_STATE';
 const NEW_MAPINFO_REQUEST = 'NEW_MAPINFO_REQUEST';
 const PURGE_MAPINFO_RESULTS = 'PURGE_MAPINFO_RESULTS';
 const CHANGE_MAPINFO_FORMAT = 'CHANGE_MAPINFO_FORMAT';
+const SHOW_MAPINFO_MARKER = 'SHOW_MAPINFO_MARKER';
+const HIDE_MAPINFO_MARKER = 'HIDE_MAPINFO_MARKER';
 
 /**
  * Private
@@ -66,6 +68,18 @@ function newMapInfoRequest(reqId, reqConfig) {
         type: NEW_MAPINFO_REQUEST,
         reqId: reqId,
         request: reqConfig
+    };
+}
+
+function showMapinfoMarker() {
+    return {
+        type: SHOW_MAPINFO_MARKER
+    };
+}
+
+function hideMapinfoMarker() {
+    return {
+        type: HIDE_MAPINFO_MARKER
     };
 }
 
@@ -141,9 +155,13 @@ module.exports = {
     NEW_MAPINFO_REQUEST,
     PURGE_MAPINFO_RESULTS,
     CHANGE_MAPINFO_FORMAT,
+    SHOW_MAPINFO_MARKER,
+    HIDE_MAPINFO_MARKER,
     getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
     purgeMapInfoResults,
-    changeMapInfoFormat
+    changeMapInfoFormat,
+    showMapinfoMarker,
+    hideMapinfoMarker
 };

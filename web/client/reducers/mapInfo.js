@@ -15,7 +15,9 @@ var {
     CHANGE_MAPINFO_STATE,
     NEW_MAPINFO_REQUEST,
     PURGE_MAPINFO_RESULTS,
-    CHANGE_MAPINFO_FORMAT
+    CHANGE_MAPINFO_FORMAT,
+    SHOW_MAPINFO_MARKER,
+    HIDE_MAPINFO_MARKER
 } = require('../actions/mapInfo');
 
 const assign = require('object-assign');
@@ -41,6 +43,16 @@ function mapInfo(state = null, action) {
                 responses: [],
                 requests: {length: 0 }
             });
+        case SHOW_MAPINFO_MARKER: {
+            return assign({}, state, {
+                showMarker: true
+            });
+        }
+        case HIDE_MAPINFO_MARKER: {
+            return assign({}, state, {
+                showMarker: false
+            });
+        }
         case LOAD_FEATURE_INFO: {
             /* action.data (if a JSON has been requested) is an object like this:
              * {

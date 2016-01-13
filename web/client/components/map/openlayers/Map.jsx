@@ -89,11 +89,23 @@ var OpenlayersMap = React.createClass({
                 rotation: view.getRotation()
             }, size, this.props.id);
         });
-        map.on('click', (event) => {
+        map.on('singleclick', (event) => {
             if (this.props.onClick) {
+                let pos = event.coordinate.slice();
+                let coords = ol.proj.toLonLat(pos, this.props.projection);
+                let tLng = (( coords[0] / 360) % 1) * 360;
+                if (tLng < -180) {
+                    tLng = tLng + 360;
+                } else if (tLng > 180) {
+                    tLng = tLng - 360;
+                }
                 this.props.onClick({
                     x: event.pixel[0],
-                    y: event.pixel[1]
+                    y: event.pixel[1],
+                    latlng: {
+                        lat: coords[1],
+                        lng: tLng
+                    }
                 });
             }
         });
