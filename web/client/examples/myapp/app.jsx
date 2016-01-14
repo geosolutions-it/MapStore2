@@ -1,4 +1,5 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
 
 var Provider = require('react-redux').Provider;
 
@@ -22,9 +23,9 @@ const { configUrl, legacy } = ConfigUtils.getConfigurationOptions(urlQuery, 'con
 store.dispatch(loadMapConfig(configUrl, legacy));
 
 // Renders the application, wrapped by the Redux Provider to connect the store to components
-React.render(
+ReactDOM.render(
     <Provider store={store}>
-        {() => <MyApp />}
+        <MyApp />
     </Provider>,
     document.getElementById('container')
 );
