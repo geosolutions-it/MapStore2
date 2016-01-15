@@ -20,20 +20,23 @@ describe('Test the map reducer', () => {
         const oldState = {
             a: 'zero',
             zoom: 'zero',
-            center: 'zero'
+            center: 'zero',
+            projection: 'EPSG:4326'
         };
         var state = mapConfig(oldState, {
             type: 'CHANGE_MAP_VIEW',
             zoom: 0,
             center: 0,
             bbox: 0,
-            size: 0
+            size: 0,
+            projection: 'EPSG:3857'
         });
         expect(state.a).toBe(oldState.a);
         expect(state.zoom).toBe(0);
         expect(state.center).toBe(0);
         expect(state.bbox).toBe(0);
         expect(state.size).toBe(0);
+        expect(state.projection).toBe('EPSG:3857');
     });
 
     it('sets a new mouse pointer used over the map', () => {

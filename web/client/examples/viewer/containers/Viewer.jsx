@@ -123,8 +123,8 @@ const Viewer = React.createClass({
         }
         return null;
     },
-    manageNewMapView(center, zoom, bbox, size, mapStateSource) {
-        this.props.changeMapView(center, zoom, bbox, size, mapStateSource);
+    manageNewMapView(center, zoom, bbox, size, mapStateSource, projection) {
+        this.props.changeMapView(center, zoom, bbox, size, mapStateSource, projection);
     },
     manageMousePosition(position) {
         if (this.props.mousePositionEnabled) {

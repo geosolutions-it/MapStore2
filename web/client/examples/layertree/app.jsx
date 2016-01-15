@@ -233,8 +233,8 @@ let MyMap = React.createClass({
           </div>
            );
     },
-    manageNewMapView(center, zoom, bbox, size, mapStateSource) {
-        this.props.changeMapView(center, zoom, bbox, size, mapStateSource);
+    manageNewMapView(center, zoom, bbox, size, mapStateSource, projection) {
+        this.props.changeMapView(center, zoom, bbox, size, mapStateSource, projection);
     }
 });
 let App = connect((state) => {

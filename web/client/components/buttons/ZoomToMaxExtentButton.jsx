@@ -100,7 +100,7 @@ var ZoomToMaxExtentButton = React.createClass({
 
         // adapt the map view by calling the corresponding action
         this.props.actions.changeMapView(newCenter, newZoom,
-            this.props.mapConfig.bbox, this.props.mapConfig.size);
+            this.props.mapConfig.bbox, this.props.mapConfig.size, null, this.props.mapConfig.projection);
     }
 });
 

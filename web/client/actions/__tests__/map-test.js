@@ -27,7 +27,8 @@ describe('Test correctness of the map actions', () => {
         const testZoom = 3;
         const testBbox = 6;
         const testSize = 9;
-        var retval = changeMapView(testCenter, testZoom, testBbox, testSize);
+        const testProjection = 'EPSG:32632';
+        var retval = changeMapView(testCenter, testZoom, testBbox, testSize, null, testProjection);
 
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGE_MAP_VIEW);
@@ -35,6 +36,7 @@ describe('Test correctness of the map actions', () => {
         expect(retval.zoom).toBe(testZoom);
         expect(retval.bbox).toBe(testBbox);
         expect(retval.size).toBe(testSize);
+        expect(retval.projection).toBe(testProjection);
     });
 
     it('set a new clicked point', () => {
