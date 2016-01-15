@@ -89,7 +89,7 @@ var OpenlayersMap = React.createClass({
                 },
                 crs: view.getProjection().getCode(),
                 rotation: view.getRotation()
-            }, size, this.props.id);
+            }, size, this.props.id, this.props.projection);
         });
         map.on('singleclick', (event) => {
             if (this.props.onClick) {

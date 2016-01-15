@@ -117,7 +117,7 @@ describe('This test for ZoomToMaxExtentButton', () => {
 
             cmpDom.click();
             expect(spy.calls.length).toBe(1);
-            expect(spy.calls[0].arguments.length).toBe(4);
+            expect(spy.calls[0].arguments.length).toBe(6);
         };
 
         genericTest("normal");

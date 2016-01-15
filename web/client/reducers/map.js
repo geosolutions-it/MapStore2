@@ -16,13 +16,8 @@ var CoordinatesUtils = require('../utils/CoordinatesUtils');
 function mapConfig(state = null, action) {
     switch (action.type) {
         case CHANGE_MAP_VIEW:
-            return assign({}, state, {
-                center: action.center,
-                zoom: action.zoom,
-                bbox: action.bbox,
-                size: action.size,
-                mapStateSource: action.mapStateSource
-            });
+            const {type, ...params} = action;
+            return assign({}, state, params);
         case CHANGE_MOUSE_POINTER:
             return assign({}, state, {
                 mousePointer: action.pointer

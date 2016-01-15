@@ -15,14 +15,15 @@ const ZOOM_TO_EXTENT = 'ZOOM_TO_EXTENT';
 const CHANGE_MAP_CRS = 'CHANGE_MAP_CRS';
 
 
-function changeMapView(center, zoom, bbox, size, mapStateSource) {
+function changeMapView(center, zoom, bbox, size, mapStateSource, projection) {
     return {
         type: CHANGE_MAP_VIEW,
-        center: center,
-        zoom: zoom,
-        bbox: bbox,
-        size: size,
-        mapStateSource: mapStateSource
+        center,
+        zoom,
+        bbox,
+        size,
+        mapStateSource,
+        projection
     };
 }
 

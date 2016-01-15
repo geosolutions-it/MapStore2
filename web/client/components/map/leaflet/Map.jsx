@@ -176,7 +176,7 @@ let LeafletMap = React.createClass({
             },
             crs: 'EPSG:4326',
             rotation: 0
-        }, size, this.props.id );
+        }, size, this.props.id, this.props.projection );
     },
     setMousePointer(pointer) {
         if (this.map) {
