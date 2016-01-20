@@ -24,8 +24,8 @@ function wmsToOpenlayersOptions(options) {
     }, options.params || {});
 }
 
-function getWMSURL( url ) {
-    return url.split("\?")[0];
+function getWMSURLs( urls ) {
+    return urls.map((url) => url.split("\?")[0]);
 }
 
 Layers.registerType('wms', {
@@ -36,7 +36,7 @@ Layers.registerType('wms', {
                 visible: options.visibility !== false,
                 zIndex: options.zIndex,
                 source: new ol.source.ImageWMS({
-                    url: getWMSURL(options.url),
+                    url: getWMSURLs(options.url)[0],
                     params: wmsToOpenlayersOptions(options)
                 })
             });
@@ -46,7 +46,7 @@ Layers.registerType('wms', {
             visible: options.visibility !== false,
             zIndex: options.zIndex,
             source: new ol.source.TileWMS({
-              url: getWMSURL(options.url),
+              urls: getWMSURLs(options.url),
               params: wmsToOpenlayersOptions(options)
             })
         });
