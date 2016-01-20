@@ -138,7 +138,7 @@ var denormalizeGroups = function(layers, groups) {
     return {
         flat: normalizedLayers,
         groups: groups.map((group) => assign({}, group, {
-            nodes: group.nodes.map((layerName) => normalizedLayers.filter((layer) => layer.name === layerName)[0])
+            nodes: group.nodes.map((layerId) => normalizedLayers.filter((layer) => layer.id === layerId)[0])
         }))
     };
 };

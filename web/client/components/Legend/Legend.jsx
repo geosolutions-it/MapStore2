@@ -30,6 +30,7 @@ var Legend = React.createClass({
                    height: this.props.legendHeigth,
                    width: this.props.legendWidth,
                    layer: layer.name,
+                   style: layer.style || null,
                    LEGEND_OPTIONS: this.props.legendOptions
               // SCALE TODO
                }

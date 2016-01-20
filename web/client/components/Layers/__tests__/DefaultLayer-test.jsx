@@ -82,6 +82,7 @@ describe('test DefaultLayer module component', () => {
 
         const l = {
             name: 'layer00',
+            id: 'layer00',
             title: 'Layer',
             visibility: false,
             storeIndex: 9

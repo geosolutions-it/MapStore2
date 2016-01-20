@@ -23,7 +23,7 @@ var Title = React.createClass({
     },
     render() {
         let expanded = (this.props.node.expanded !== undefined) ? this.props.node.expanded : true;
-        return (<span onClick={() => this.props.onClick(this.props.node.name, expanded)}>{this.props.node.title || this.props.node.name}</span>);
+        return (<span onClick={() => this.props.onClick(this.props.node.id || this.props.node.name, expanded)}>{this.props.node.title || this.props.node.name}</span>);
     }
 });
 

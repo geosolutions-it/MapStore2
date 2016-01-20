@@ -40,9 +40,10 @@ var getLayersByGroup = function(configLayers) {
         let groupName = group || 'Default';
 
         return assign({}, {
+            id: groupName,
             name: groupName,
             title: groupName,
-            nodes: mapLayers.filter((layer) => layer.group === group).map((layer) => layer.name).reverse(),
+            nodes: mapLayers.filter((layer) => layer.group === group).map((layer) => layer.id).reverse(),
             expanded: true
         });
     }).reverse();

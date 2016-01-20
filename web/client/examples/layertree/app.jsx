@@ -45,6 +45,7 @@ var Slider = require('react-nouislider');
 
 ConfigUtils.setupSources(sources, "gxp_wmssource");
 ConfigUtils.setupLayers(mapLayers, sources, ["gxp_osmsource", "gxp_wmssource", "gxp_googlesource", "gxp_bingsource", "gxp_mapquestsource"]);
+mapLayers = mapLayers.map(ConfigUtils.setLayerId);
 
 const getGroup = (group, allLayers) => {
     let groupName = group || 'Default';
@@ -55,16 +56,18 @@ const getGroup = (group, allLayers) => {
         }, []);
 
     return assign({}, {
+        id: groupName,
         name: groupName,
         title: groupName,
-        nodes: allLayers.filter((layer) => layer.group === group).map((layer) => layer.name).concat(
+        nodes: allLayers.filter((layer) => layer.group === group).map((layer) => layer.id).concat(
             subGroups.map((subGroupName) => {
                 return {
+                    id: groupName + '.' + subGroupName,
                     type: "group",
                     name: groupName + '.' + subGroupName,
                     title: subGroupName,
                     expanded: true,
-                    nodes: allLayers.filter((layer) => layer.group === (groupName + '.' + subGroupName)).map((layer) => layer.name)
+                    nodes: allLayers.filter((layer) => layer.group === (groupName + '.' + subGroupName)).map((layer) => layer.id)
                 };
             })
         ),
@@ -123,10 +126,10 @@ let denormalizeGroups = function(allLayers, groups) {
             nodes: group.nodes.map((node) => {
                 if (isObject(node)) {
                     return assign({}, node, {
-                        nodes: node.nodes.map((layerName) => normalizedLayers.filter((layer) => layer.name === layerName)[0])
+                        nodes: node.nodes.map((layerId) => normalizedLayers.filter((layer) => layer.id === layerId)[0])
                     });
                 }
-                return normalizedLayers.filter((layer) => layer.name === node)[0];
+                return normalizedLayers.filter((layer) => layer.id === node)[0];
             }).map((subGroup) => {
                 if (subGroup.nodes && subGroup.nodes.length > 0) {
                     return assign(subGroup, {
@@ -178,7 +181,7 @@ let MyMap = React.createClass({
     renderLayers() {
         return this.props.layers.flat.map(function(layer, index) {
             var options = assign({}, layer, {srs: "EPSG:3857"});
-            return <LLayer type={layer.type} position={index} key={layer.name + ":::" + index} options={options} />;
+            return <LLayer type={layer.type} position={index} key={layer.id + ":::" + index} options={options} />;
         });
     },
     render() {
@@ -195,15 +198,15 @@ let MyMap = React.createClass({
                 <Panel style={{position: "fixed", top: "50px", right: "50px", width: "400px", bottom: "50px", overflow: "auto"}}>
                     <Layers nodes={this.props.layers.groups}>
                         <Group propertiesChangeHandler={this.props.changeGroupProperties}
-                            onRemove={(node) => this.props.removeNode(node.name, 'groups')}
+                            onRemove={(node) => this.props.removeNode(node.id, 'groups')}
                             onToggle={(group, status) => this.props.toggleNode(group, 'groups', status)}
                             >
                             <LayerOrGroup
-                                onLegend={(node) => this.props.toggleNode(node.name, 'layers', node.expanded)}
-                                onSettings={(node, nodeType, options) => this.props.showSettings(node.name, nodeType, options)}
+                                onLegend={(node) => this.props.toggleNode(node.id, 'layers', node.expanded)}
+                                onSettings={(node, nodeType, options) => this.props.showSettings(node.id, nodeType, options)}
                                 propertiesChangeHandler={this.props.changeLayerProperties}
                                 groupPropertiesChangeHandler={this.props.changeGroupProperties}
-                                onRemoveGroup={(node) => this.props.removeNode(node.name, 'groups')}
+                                onRemoveGroup={(node) => this.props.removeNode(node.id, 'groups')}
                             />
                         </Group>
                     </Layers>

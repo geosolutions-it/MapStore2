@@ -22,7 +22,7 @@ describe('Test the layers reducer', () => {
             nodeType: 'layers',
             status: true
         };
-        let state = layers( {flat: [{name: 'sample'}]}, testAction);
+        let state = layers( {flat: [{id: 'sample'}]}, testAction);
         expect(state.flat[0].expanded).toBe(true);
     });
 
@@ -33,7 +33,7 @@ describe('Test the layers reducer', () => {
             nodeType: 'groups',
             status: true
         };
-        let state = layers( {groups: [{name: 'sample'}]}, testAction);
+        let state = layers( {groups: [{id: 'sample'}]}, testAction);
         expect(state.groups[0].expanded).toBe(true);
     });
 
@@ -44,7 +44,7 @@ describe('Test the layers reducer', () => {
             nodeType: 'groups',
             status: true
         };
-        let state = layers( {groups: [{name: 'group', nodes: [{name: "sample"}]}]}, testAction);
+        let state = layers( {groups: [{name: 'group', nodes: [{id: "sample"}]}]}, testAction);
         expect(state.groups[0].nodes[0].expanded).toBe(true);
     });
 
@@ -55,9 +55,9 @@ describe('Test the layers reducer', () => {
             node: 'group',
             order: order
         };
-        let state = layers( {groups: [{name: 'group', nodes: [{name: "sample1"}, {name: "sample2"}]}]}, testAction);
-        expect(state.groups[0].nodes[0].name).toEqual('sample2');
-        expect(state.groups[0].nodes[1].name).toEqual('sample1');
+        let state = layers( {groups: [{name: 'group', id: 'group', nodes: [ "sample1", "sample2"]}]}, testAction);
+        expect(state.groups[0].nodes[0]).toEqual('sample2');
+        expect(state.groups[0].nodes[1]).toEqual('sample1');
     });
 
     it('sortNode groups', () => {
@@ -80,7 +80,7 @@ describe('Test the layers reducer', () => {
         };
         let initialState = {
             groups: [{name: 'sample1'}, {name: 'sample2'}],
-            flat: [{name: 'layer1', group: 'sample1'}, {name: 'layer2', group: 'sample2'}]
+            flat: [{id: 'layer1', group: 'sample1'}, {id: 'layer2', group: 'sample2'}]
         };
         let state = layers(initialState, testAction);
         expect(state.groups.length).toBe(1);
@@ -95,7 +95,7 @@ describe('Test the layers reducer', () => {
         };
         let initialState = {
             groups: [{name: 'sample1', nodes: [{name: 'sample1.nested'}]}, {name: 'sample2'}],
-            flat: [{name: 'layer1', group: 'sample1'}, {name: 'layer2', group: 'sample2'}, {name: 'layer3', group: 'sample1.nested'}]
+            flat: [{id: 'layer1', group: 'sample1'}, {id: 'layer2', group: 'sample2'}, {id: 'layer3', group: 'sample1.nested'}]
         };
         let state = layers(initialState, testAction);
         expect(state.groups.length).toBe(2);
@@ -110,7 +110,7 @@ describe('Test the layers reducer', () => {
             nodeType: 'layers',
             options: {opacity: 0.5}
         };
-        let state = layers({flat: [{name: 'sample'}, {name: 'other'}]}, testAction);
+        let state = layers({flat: [{id: 'sample'}, {id: 'other'}]}, testAction);
         expect(state.flat[0].opacity).toBe(0.5);
         expect(state.flat[1].opacity).toNotExist();
     });
@@ -120,6 +120,7 @@ describe('Test the layers reducer', () => {
             "type": "osm",
             "title": "Open Street Map",
             "name": "mapnik",
+            "id": "mapnik",
             "group": "background",
             "visibility": true
         }, {
@@ -128,6 +129,7 @@ describe('Test the layers reducer', () => {
             "visibility": false,
             "title": "e-Geos Ortofoto RealVista 1.0",
             "name": "rv1",
+            "id": "rv1",
             "group": "background",
             "format": "image/png"
         }]};
@@ -139,6 +141,7 @@ describe('Test the layers reducer', () => {
                 "visibility": true,
                 "title": "e-Geos Ortofoto RealVista 1.0",
                 "name": "rv1",
+                "id": "rv1",
                 "group": "background",
                 "format": "image/png"
             },
@@ -159,7 +162,7 @@ describe('Test the layers reducer', () => {
             layerId: "layer2"
         };
 
-        var originalLoadingLayers = {flat: [{name: "layer1"}, {name: "layer2"}]};
+        var originalLoadingLayers = {flat: [{id: "layer1", name: "layer1"}, {id: "layer2", name: "layer2"}]};
         var state = layers(originalLoadingLayers, action1);
 
         expect(state.flat.filter((layer) => layer.name === 'layer1')[0].loading).toBe(true);
@@ -182,7 +185,7 @@ describe('Test the layers reducer', () => {
             layerId: "layer2"
         };
 
-        var originalLoadingLayers = {flat: [{name: "layer1", loading: true}, {name: "layer2", loading: true}]};
+        var originalLoadingLayers = {flat: [{id: "layer1", name: "layer1", loading: true}, {id: "layer2", name: "layer2", loading: true}]};
         var state = layers(originalLoadingLayers, action1);
 
         expect(state.flat.filter((layer) => layer.name === 'layer1')[0].loading).toBe(false);

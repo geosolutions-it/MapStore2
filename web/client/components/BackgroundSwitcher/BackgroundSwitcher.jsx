@@ -91,7 +91,7 @@ let BackgroundSwitcher = React.createClass({
     changeLayerVisibility(eventObj) {
         let position = parseInt(eventObj.currentTarget.dataset.position, 10);
         var layer = this.props.layers[position];
-        this.props.propertiesChangeHandler(layer.name, {visibility: true});
+        this.props.propertiesChangeHandler(layer.id, {visibility: true});
     }
 });
 

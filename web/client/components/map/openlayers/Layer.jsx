@@ -97,7 +97,7 @@ const OpenlayersLayer = React.createClass({
                 this.props.map.addLayer(this.layer);
                 this.layer.getSource().on('tileloadstart', () => {
                     if (this.tilestoload === 0) {
-                        this.props.onLayerLoading(options.name);
+                        this.props.onLayerLoading(options.id);
                         this.tilestoload++;
                     } else {
                         this.tilestoload++;
@@ -106,13 +106,13 @@ const OpenlayersLayer = React.createClass({
                 this.layer.getSource().on('tileloadend', () => {
                     this.tilestoload--;
                     if (this.tilestoload === 0) {
-                        this.props.onLayerLoad(options.name);
+                        this.props.onLayerLoad(options.id);
                     }
                 });
                 this.layer.getSource().on('tileloaderror', () => {
                     this.tilestoload--;
                     if (this.tilestoload === 0) {
-                        this.props.onLayerLoad(options.name);
+                        this.props.onLayerLoad(options.id);
                     }
                 });
             }

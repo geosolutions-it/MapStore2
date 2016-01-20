@@ -86,14 +86,14 @@ let LeafletMap = React.createClass({
 
         this.map.on('layeradd', (event) => {
             // avoid binding if not possible, e.g. for measurement vector layers
-            if (!event.layer.layerName) {
+            if (!event.layer.layerId) {
                 return;
             }
             if (event && event.layer && event.layer.on) {
                 // TODO check event.layer.on is a function
-                this.props.onLayerLoading(event.layer.layerName);
-                event.layer.on('loading', (loadingEvent) => { this.props.onLayerLoading(loadingEvent.target.layerName); });
-                event.layer.on('load', (loadEvent) => { this.props.onLayerLoad(loadEvent.target.layerName); });
+                this.props.onLayerLoading(event.layer.layerId);
+                event.layer.on('loading', (loadingEvent) => { this.props.onLayerLoading(loadingEvent.target.layerId); });
+                event.layer.on('load', (loadEvent) => { this.props.onLayerLoad(loadEvent.target.layerId); });
             }
         });
 
