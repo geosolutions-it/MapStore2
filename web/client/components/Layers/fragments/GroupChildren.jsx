@@ -33,7 +33,7 @@ var GroupChildren = React.createClass({
             let i = 0;
             content = nodes.map((node) => (React.cloneElement(this.props.children, {
                 node: node,
-                key: node.name,
+                key: node.id,
                 sortData: i++,
                 isDraggable: !!this.props.onSort
             })));
@@ -52,7 +52,7 @@ var GroupChildren = React.createClass({
         );
     },
     handleSort: function(reorder) {
-        this.props.onSort(this.props.node.name, reorder);
+        this.props.onSort(this.props.node.id, reorder);
     }
 });
 

@@ -16,7 +16,7 @@ const deepChange = (nodes, findValue, propName, propValue) => {
     if (nodes && isArray(nodes) && nodes.length > 0) {
         return nodes.map((node) => {
             if (isObject(node)) {
-                return node.name === findValue ?
+                return node.id === findValue ?
                     assign({}, node, {[propName]: propValue}) :
                     assign({}, node, {nodes: deepChange(node.nodes, findValue, propName, propValue)});
             }
@@ -57,23 +57,23 @@ function layers(state = [], action) {
     switch (action.type) {
         case LAYER_LOADING: {
             const newLayers = (state.flat || []).map((layer) => {
-                return layer.name === action.layerId ? assign({}, layer, {loading: true}) : layer;
+                return layer.id === action.layerId ? assign({}, layer, {loading: true}) : layer;
             });
             return assign({}, state, {flat: newLayers});
         }
         case LAYER_LOAD: {
             const newLayers = (state.flat || []).map((layer) => {
-                return layer.name === action.layerId ? assign({}, layer, {loading: false}) : layer;
+                return layer.id === action.layerId ? assign({}, layer, {loading: false}) : layer;
             });
             return assign({}, state, {flat: newLayers});
         }
         case CHANGE_LAYER_PROPERTIES: {
             const flatLayers = (state.flat || []);
             let isBackground = flatLayers.reduce(
-                    (background, layer) => background || (layer.name === action.layer && layer.group === 'background'),
+                    (background, layer) => background || (layer.id === action.layer && layer.group === 'background'),
             false);
             const newLayers = flatLayers.map((layer) => {
-                if (layer.name === action.layer) {
+                if (layer.id === action.layer) {
                     return assign({}, layer, action.newProperties);
                 } else if (layer.group === 'background' && isBackground && action.newProperties.visibility) {
                     // TODO remove
@@ -115,7 +115,7 @@ function layers(state = [], action) {
         }
         case UPDATE_NODE: {
             const flatLayers = (state.flat || []);
-            const selector = action.nodeType === 'groups' ? 'group' : 'name';
+            const selector = action.nodeType === 'groups' ? 'group' : 'id';
 
             const newLayers = flatLayers.map((layer) => {
                 if (layer[selector] === action.node || layer[selector].indexOf(action.node + '.') === 0) {
@@ -127,7 +127,7 @@ function layers(state = [], action) {
         }
         case UPDATE_NODE_TEMP: {
             const flatLayers = (state.flat || []);
-            const selector = action.nodeType === 'groups' ? 'group' : 'name';
+            const selector = action.nodeType === 'groups' ? 'group' : 'id';
 
             const newLayers = flatLayers.map((layer) => {
                 if (layer[selector] === action.node || layer[selector].indexOf(action.node + '.') === 0) {

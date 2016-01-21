@@ -30,7 +30,7 @@ var VisibilityCheck = React.createClass({
             onChange={this.changeVisibility} />);
     },
     changeVisibility() {
-        this.props.propertiesChangeHandler(this.props.node.name, {visibility: !this.props.node.visibility});
+        this.props.propertiesChangeHandler(this.props.node.id, {visibility: !this.props.node.visibility});
     }
 });
 

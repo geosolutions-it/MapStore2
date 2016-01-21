@@ -49,7 +49,7 @@ var VMap = React.createClass({
             let me = this; // TODO find the reason why the arrow function doesn't get this object
             return layers.map((layer, index) => {
                 var options = assign({}, layer, {srs: projection});
-                return (<LLayer type={layer.type} position={index} key={layer.name} options={options}>
+                return (<LLayer type={layer.type} position={index} key={layer.id || layer.name} options={options}>
                     {me.renderLayerContent(layer)}
                 </LLayer>);
             });

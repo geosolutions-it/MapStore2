@@ -72,7 +72,7 @@ var ConfigUtils = {
         other.center = ConfigUtils.getCenter(other.center);
         return {
             map: other,
-            layers: layers.map(ConfigUtils.setBingKey),
+            layers: layers.map(ConfigUtils.setBingKey).map(ConfigUtils.setLayerId),
             groups: groups,
             plugins: plugins
         };
@@ -109,7 +109,7 @@ var ConfigUtils = {
             center: latLng,
             zoom: zoom,
             maxExtent: maxExtent, // TODO convert maxExtent
-            layers: layers.map(ConfigUtils.setBingKey),
+            layers: layers,
             projection: mapConfig.projection || 'EPSG:3857'
         });
     },
@@ -266,6 +266,12 @@ var ConfigUtils = {
     setBingKey: function(layer) {
         if (layer.type === 'bing') {
             layer.apiKey = defaultConfig.bingApiKey;
+        }
+        return layer;
+    },
+    setLayerId: function(layer, i) {
+        if (!layer.id) {
+            layer.id = layer.name + "__" + i;
         }
         return layer;
     }

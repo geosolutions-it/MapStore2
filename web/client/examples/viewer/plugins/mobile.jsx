@@ -45,7 +45,7 @@ var {isObject} = require('lodash');
 const reorderLayers = (groups, allLayers) => {
     return groups.slice(0).reverse().reduce((previous, group) => {
         return previous.concat(
-            group.nodes.filter((node) => !isObject(node)).reverse().map((layer) => allLayers.filter((fullLayer) => fullLayer.name === layer)[0])
+            group.nodes.filter((node) => !isObject(node)).reverse().map((layer) => allLayers.filter((fullLayer) => fullLayer.id === layer)[0])
         ).concat(reorderLayers((group.nodes || []).filter((node) => isObject(node)).reverse(), allLayers).reverse());
     }, []);
 };

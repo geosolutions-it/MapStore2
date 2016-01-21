@@ -106,6 +106,7 @@ var GetFeatureInfo = React.createClass({
             for (let l = 0; l < wmsVisibleLayers.length; l++) {
                 const layer = wmsVisibleLayers[l];
                 const requestConf = {
+                    id: layer.id,
                     layers: layer.name,
                     query_layers: layer.name,
                     x: newProps.clickedMapPoint.pixel.x,
