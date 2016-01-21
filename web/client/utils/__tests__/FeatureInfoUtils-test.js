@@ -56,10 +56,10 @@ describe('FeatureInfoUtils', () => {
         expect(invalidRegexResults.length).toBe(0);
 
         validRegexResults = FeatureInfoUtils.Validator.HTML.getNoValidResponses([{response: emptyHTML}, {response: rowHTML, layerMetadata: {regex: validRegex }}]);
-        expect(validRegexResults.length).toBe(0);
+        expect(validRegexResults.length).toBe(1); // only the empty is not valid
 
         invalidRegexResults = FeatureInfoUtils.Validator.HTML.getNoValidResponses([{response: emptyHTML}, {response: rowHTML, layerMetadata: {regex: invalidRegex }}]);
-        expect(invalidRegexResults.length).toBe(2);
+        expect(invalidRegexResults.length).toBe(2); // both are not valid
 
 
     });
