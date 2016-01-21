@@ -46,7 +46,7 @@ var Section = React.createClass({
             <div className={"section"}>
                 <div className="sectionHeader" style={{width: "100%"}} onClick={this.onHeaderClick}>
                     { !this.props.renderInModal ? <Glyphicon glyph="triangle-right" style={this.props.open ? {transform: "rotate(90deg)"} : {} } /> : null }
-                    <span className={this.headerClassName} ref="sectionTitle" className="sectionTitle" >{this.props.header}</span>
+                    <span className={this.headerClassName + " sectionTitle"} ref="sectionTitle" >{this.props.header}</span>
                 </div>
                 {!this.props.renderInModal ?
                      <div ref="sectionContent" className="sectionContent" style={style} >{this.props.children}</div>

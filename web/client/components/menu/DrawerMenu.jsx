@@ -49,8 +49,11 @@ var Menu = React.createClass({
         return (
             <Sidebar styles={{
                     sidebar: {
-                        zIndex: 3,
+                        zIndex: 1022,
                         width: '300px'
+                    },
+                    overlay: {
+                        zIndex: 1021
                     },
                      root: {
                          right: this.state.visible ? 0 : 'auto',
