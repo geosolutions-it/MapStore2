@@ -78,11 +78,12 @@ let Locate = React.createClass({
         }
     },
     componentWillReceiveProps(newProps) {
+        this.fol = false;
         if (newProps.status !== this.props.status) {
             if ( newProps.status === "ENABLED" && !this.locate._active) {
                 this.locate.start();
             }else if (newProps.status === "FOLLOWING" && this.locate._active && !this.locate._following) {
-                this.props.status = "FOLLOWING";
+                this.fol = true;
                 this.locate.stop();
                 this.locate.start();
             }else if ( newProps.status === "DISABLED") {
@@ -119,7 +120,7 @@ let Locate = React.createClass({
     locateControlState(state) {
         if (state.state === 'requesting' && this.props.status !== "LOCATING" ) {
             this.props.changeLocateState("LOCATING");
-        }else if (state.state === 'following' && this.props.status !== "FOLLOWING" ) {
+        }else if (state.state === 'following' && !this.fol ) {
             this.props.changeLocateState("FOLLOWING");
         }else if (state.state === 'active' && this.props.status !== "ENABLED" ) {
             this.props.changeLocateState("ENABLED");
