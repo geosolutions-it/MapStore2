@@ -12,6 +12,7 @@ var ol = require('openlayers');
 Layers.registerType('bing', {
     create: (options) => {
         var key = options.apiKey;
+        var maxNativeZoom = options.maxNativeZoom || 19;
         return new ol.layer.Tile({
             preload: Infinity,
             opacity: options.opacity !== undefined ? options.opacity : 1,
@@ -19,7 +20,8 @@ Layers.registerType('bing', {
             visible: options.visibility,
             source: new ol.source.BingMaps({
               key: key,
-              imagerySet: options.name
+              imagerySet: options.name,
+              maxZoom: maxNativeZoom
             })
         });
     }
