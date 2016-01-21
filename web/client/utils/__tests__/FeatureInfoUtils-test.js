@@ -45,12 +45,13 @@ describe('FeatureInfoUtils', () => {
         expect(notValidResults[0].response).toBe(emptyHTML);
 
         // test regex
-        let validRegex = "<div[^>]*>][\\s\\S]*<\\/div>";
+        let validRegex = "<div[^>]*>[\\s\\S]*<\\/div>";
+        let invalidRegex = "<table[^>]*>[\\s\\S]*<\\/table>";
+
         let validRegexResults = FeatureInfoUtils.Validator.HTML.getValidResponses([{response: emptyHTML}, {response: rowHTML, layerMetadata: {regex: validRegex }}]);
         expect(validRegexResults.length).toBe(1);
         expect(validRegexResults[0].response).toBe(rowHTML);
 
-        let invalidRegex = "<table[^>]*>][\\s\\S]*<\\/table>";
         let invalidRegexResults = FeatureInfoUtils.Validator.HTML.getValidResponses([{response: emptyHTML}, {response: rowHTML, layerMetadata: {regex: invalidRegex }}]);
         expect(invalidRegexResults.length).toBe(0);
 
