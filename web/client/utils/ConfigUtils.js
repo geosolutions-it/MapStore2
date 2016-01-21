@@ -109,7 +109,7 @@ var ConfigUtils = {
             center: latLng,
             zoom: zoom,
             maxExtent: maxExtent, // TODO convert maxExtent
-            layers: layers.map(ConfigUtils.setBingKey),
+            layers: layers,
             projection: mapConfig.projection || 'EPSG:3857'
         });
     },
@@ -269,9 +269,9 @@ var ConfigUtils = {
         }
         return layer;
     },
-    setLayerId: function(layer) {
+    setLayerId: function(layer, i) {
         if (!layer.id) {
-            layer.id = layer.name;
+            layer.id = layer.name + "__" + i;
         }
         return layer;
     }
