@@ -122,7 +122,8 @@ var GetFeatureInfo = React.createClass({
                     info_format: newProps.infoFormat
                 };
                 const layerMetadata = {
-                    title: layer.title
+                    title: layer.title,
+                    regex: layer.featureInfoRegex
                 };
                 const url = layer.url.replace(/[?].*$/g, '');
                 this.props.actions.getFeatureInfo(url, requestConf, layerMetadata);
