@@ -43,6 +43,25 @@ describe('FeatureInfoUtils', () => {
         let notValidResults = FeatureInfoUtils.Validator.HTML.getNoValidResponses([{response: emptyHTML}, {response: rowHTML}]);
         expect(notValidResults.length).toBe(1);
         expect(notValidResults[0].response).toBe(emptyHTML);
+
+        // test regex
+        let validRegex = "<div[^>]*>[\\s\\S]*<\\/div>";
+        let invalidRegex = "<table[^>]*>[\\s\\S]*<\\/table>";
+
+        let validRegexResults = FeatureInfoUtils.Validator.HTML.getValidResponses([{response: emptyHTML}, {response: rowHTML, layerMetadata: {regex: validRegex }}]);
+        expect(validRegexResults.length).toBe(1);
+        expect(validRegexResults[0].response).toBe(rowHTML);
+
+        let invalidRegexResults = FeatureInfoUtils.Validator.HTML.getValidResponses([{response: emptyHTML}, {response: rowHTML, layerMetadata: {regex: invalidRegex }}]);
+        expect(invalidRegexResults.length).toBe(0);
+
+        validRegexResults = FeatureInfoUtils.Validator.HTML.getNoValidResponses([{response: emptyHTML}, {response: rowHTML, layerMetadata: {regex: validRegex }}]);
+        expect(validRegexResults.length).toBe(1); // only the empty is not valid
+
+        invalidRegexResults = FeatureInfoUtils.Validator.HTML.getNoValidResponses([{response: emptyHTML}, {response: rowHTML, layerMetadata: {regex: invalidRegex }}]);
+        expect(invalidRegexResults.length).toBe(2); // both are not valid
+
+
     });
 
     // **********************************

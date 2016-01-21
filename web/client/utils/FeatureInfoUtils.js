@@ -7,8 +7,19 @@ const INFO_FORMATS = {
     "GML 2": "application/vnd.ogc.gml",
     "GML 3": "application/vnd.ogc.gml/3.1.1"
 };
-const regexpBody = /^[\s\S]*<body>([\s\S]*)<\/body>[\s\S]*$/i;
+const regexpBody = /^[\s\S]*<body[^>]*>([\s\S]*)<\/body>[\s\S]*$/i;
 const regexpStyle = /(<style[\s\=\w\/\"]*>[^<]*<\/style>)/i;
+
+function parseHTMLResponse(res) {
+    if ( typeof res.response === "string" && res.response.indexOf("<?xml") !== 0 ) {
+        let match = res.response.match(regexpBody);
+        if ( res.layerMetadata && res.layerMetadata.regex ) {
+            return match && match[1] && match[1].match(res.layerMetadata.regex);
+        }
+        return match && match[1] && match[1].trim().length > 0;
+    }
+    return false;
+}
 
 const Validator = {
     HTML: {
@@ -16,13 +27,13 @@ const Validator = {
          *Parse the HTML to get only the valid html responses
          */
         getValidResponses(responses) {
-            return responses.filter((res) => typeof res.response === "string" && res.response.indexOf("<?xml") !== 0 && res.response.replace(regexpBody, '$1').trim().length !== 0);
+            return responses.filter(parseHTMLResponse);
         },
         /**
          * Parse the HTML to get only the NOT valid html responses
          */
         getNoValidResponses(responses) {
-            return responses.filter((res) => !(typeof res.response === "string" && res.response.indexOf("<?xml") !== 0 && res.response.replace(regexpBody, '$1').trim().length !== 0));
+            return responses.filter((res) => {return !parseHTMLResponse(res); });
         }
     },
     TEXT: {
