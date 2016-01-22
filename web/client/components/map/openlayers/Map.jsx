@@ -52,19 +52,19 @@ var OpenlayersMap = React.createClass({
     },
     componentDidMount() {
         var center = CoordinatesUtils.reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
-        let interactions = this.props.mapOptions.interactions || ol.interaction.defaults({
+        let interactions = ol.interaction.defaults(assign({
             dragPan: false,
             mouseWheelZoom: false
-        }).extend([
+        }, this.props.mapOptions.interactions, {})).extend([
             new ol.interaction.DragPan({kinetic: false}),
             new ol.interaction.MouseWheelZoom({duration: 0})
         ]);
-        let controls = this.props.mapOptions.controls || ol.control.defaults({
+        let controls = ol.control.defaults(assign({
             zoom: this.props.zoomControl,
             attributionOptions: ({
               collapsible: false
             })
-        });
+        }, this.props.mapOptions.controls));
         var map = new ol.Map({
           layers: [],
           controls: controls,
