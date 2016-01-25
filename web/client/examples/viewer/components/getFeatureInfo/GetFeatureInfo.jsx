@@ -109,6 +109,7 @@ var GetFeatureInfo = React.createClass({
                     id: layer.id,
                     layers: layer.name,
                     query_layers: layer.name,
+                    styles: layer.style,
                     x: newProps.clickedMapPoint.pixel.x,
                     y: newProps.clickedMapPoint.pixel.y,
                     height: newProps.map.size.height,
