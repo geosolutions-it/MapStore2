@@ -52,6 +52,7 @@
   "dependencies": {
     "axios": "^0.8.1",
     "bootstrap": "^3.3.5",
+    "cesium": "^1.17.0",
     "classnames": "^2.1.5",
     "es6-promise": "^2.3.0",
     "eventlistener": "0.0.1",

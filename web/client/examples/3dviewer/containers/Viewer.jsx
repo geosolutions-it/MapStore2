@@ -1,0 +1,81 @@
+const React = require('react');
+const connect = require('react-redux').connect;
+const LMap = require('../../../components/map/cesium/Map');
+const LLayer = require('../../../components/map/cesium/Layer');
+
+const SearchBar = require("../../../components/Search/SearchBar");
+const NominatimResultList = require("../../../components/Search/geocoding/NominatimResultList");
+
+const {changeMapView} = require('../../../actions/map');
+const {textSearch, resultsPurge} = require("../../../actions/search");
+
+const Localized = require('../../../components/I18N/Localized');
+
+const Viewer = React.createClass({
+    propTypes: {
+        // redux store slice with map configuration (bound through connect to store at the end of the file)
+        map: React.PropTypes.object,
+        layers: React.PropTypes.array,
+        // redux store dispatch func
+        dispatch: React.PropTypes.func,
+        textSearch: React.PropTypes.func,
+        resultsPurge: React.PropTypes.func,
+        changeMapView: React.PropTypes.func,
+        messages: React.PropTypes.object,
+        locale: React.PropTypes.string,
+        localeError: React.PropTypes.string,
+        searchResults: React.PropTypes.array,
+        mapStateSource: React.PropTypes.string
+    },
+    renderLayers(layers) {
+        if (layers) {
+            return layers.map(function(layer) {
+                return <LLayer type={layer.type} key={layer.name} options={layer} />;
+            });
+        }
+        return null;
+
+    },
+    render() {
+        // wait for loaded configuration before rendering
+        if (this.props.map && this.props.layers && this.props.messages) {
+            return (
+                <Localized messages={this.props.messages} locale={this.props.locale} loadingError={this.props.localeError}>
+                    <div className="fill">
+                        <LMap id="map" center={this.props.map.center} zoom={this.props.map.zoom}
+                            onMapViewChanges={this.props.changeMapView} mapStateSource={this.props.mapStateSource}>
+                            {this.renderLayers(this.props.layers)}
+                        </LMap>
+                        <SearchBar key="seachBar" onSearch={this.props.textSearch} onSearchReset={this.props.resultsPurge} />
+                        <NominatimResultList key="nominatimresults"
+                            results={this.props.searchResults}
+                            onItemClick={(this.props.changeMapView)}
+                            afterItemClick={this.props.resultsPurge}
+                            mapConfig={this.props.map}/>,
+                    </div>
+                </Localized>
+            );
+        }
+        return null;
+    }
+});
+
+
+require('../../../components/map/cesium/plugins/index');
+
+// connect Redux store slice with map configuration
+module.exports = connect((state) => {
+    return {
+        map: state.map || state.mapConfig && state.mapConfig.map,
+        mapStateSource: state.map && state.map.mapStateSource,
+        layers: state.mapConfig && state.mapConfig.layers,
+        messages: state.locale ? state.locale.messages : null,
+        locale: state.locale ? state.locale.current : null,
+        localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined,
+        searchResults: state.searchResults
+    };
+}, {
+    textSearch,
+    resultsPurge,
+    changeMapView
+})(Viewer);
