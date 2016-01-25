@@ -10,7 +10,7 @@ var ReactDOM = require('react-dom');
 var CesiumMap = require('../Map.jsx');
 var CesiumLayer = require('../Layer.jsx');
 var expect = require('expect');
-
+var Cesium = require('../../../../libs/cesium');
 
 require('../../../../utils/cesium/Layers');
 require('../plugins/OSMLayer');
@@ -24,9 +24,11 @@ describe('CesiumMap', () => {
         setTimeout(done);
     });
     afterEach((done) => {
+        /*eslint-disable */
         try {
             ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         } catch(e) {}
+        /*eslint-enable */
         document.body.innerHTML = '';
         setTimeout(done);
     });

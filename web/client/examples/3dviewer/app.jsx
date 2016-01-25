@@ -5,7 +5,6 @@ var Provider = require('react-redux').Provider;
 
 // include application component
 var Viewer = require('./containers/Viewer');
-var url = require('url');
 
 var {loadMapConfig} = require('../../actions/config');
 var {loadLocale} = require('../../actions/locale');

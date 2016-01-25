@@ -27,11 +27,13 @@ describe('Cesium layer', () => {
     });
 
     afterEach((done) => {
+        /*eslint-disable */
         try {
             ReactDOM.unmountComponentAtNode(document.getElementById("map"));
             ReactDOM.unmountComponentAtNode(document.getElementById("container"));
             ReactDOM.unmountComponentAtNode(document.getElementById("container2"));
         } catch(e) {}
+        /*eslint-enable */
         document.body.innerHTML = '';
         setTimeout(done);
     });
