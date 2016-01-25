@@ -126,7 +126,7 @@ var GetFeatureInfo = React.createClass({
                     regex: layer.featureInfoRegex
                 };
                 const url = layer.url.replace(/[?].*$/g, '');
-                this.props.actions.getFeatureInfo(url, requestConf, layerMetadata);
+                this.props.actions.getFeatureInfo(url, requestConf, layerMetadata, layer.featureInfoParams);
             }
             this.props.actions.showMapinfoMarker();
         }

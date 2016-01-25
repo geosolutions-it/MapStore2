@@ -78,8 +78,8 @@ function newMapInfoRequest(reqId, reqConfig) {
  * @param wmsBasePath {string} base path to the wms service
  * @param requestParams {object} map of params for a getfeatureinfo request.
  */
-function getFeatureInfo(wmsBasePath, requestParams, lMetaData) {
-    const defaultParams = {
+function getFeatureInfo(wmsBasePath, requestParams, lMetaData, options = {}) {
+    const defaultParams = assign({
         service: 'WMS',
         version: '1.1.1',
         request: 'GetFeatureInfo',
@@ -88,7 +88,7 @@ function getFeatureInfo(wmsBasePath, requestParams, lMetaData) {
         x: 0,
         y: 0,
         exceptions: 'application/json'
-    };
+    }, options);
     const param = assign({}, defaultParams, requestParams);
     const reqId = uuid.v1();
     return (dispatch) => {
