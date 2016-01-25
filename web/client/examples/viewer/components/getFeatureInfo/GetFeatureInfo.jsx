@@ -110,10 +110,10 @@ var GetFeatureInfo = React.createClass({
                     layers: layer.name,
                     query_layers: layer.name,
                     styles: layer.style,
-                    x: newProps.clickedMapPoint.pixel.x,
-                    y: newProps.clickedMapPoint.pixel.y,
-                    height: newProps.map.size.height,
-                    width: newProps.map.size.width,
+                    x: parseInt(newProps.clickedMapPoint.pixel.x, 10),
+                    y: parseInt(newProps.clickedMapPoint.pixel.y, 10),
+                    height: parseInt(newProps.map.size.height, 10),
+                    width: parseInt(newProps.map.size.width, 10),
                     srs: crs,
                     bbox: bounds.minx + "," +
                           bounds.miny + "," +
