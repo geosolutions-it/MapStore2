@@ -66,7 +66,7 @@ describe('OpenlayersMap', () => {
         expect(document.getElementsByTagName('canvas').length).toBe(1);
     });
 
-    it('enables leaflet controls', () => {
+    it('enables openlayers controls', () => {
         const map = ReactDOM.render(<OpenlayersMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("map"));
         expect(map).toExist();
         expect(document.getElementsByClassName('ol-zoom-in').length).toBe(1);

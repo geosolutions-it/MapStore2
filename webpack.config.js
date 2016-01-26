@@ -21,7 +21,8 @@ module.exports = {
         home: path.join(__dirname, "web", "client", "examples", "home", "app"),
         mouseposition: path.join(__dirname, "web", "client", "examples", "mouseposition", "app"),
         scalebar: path.join(__dirname, "web", "client", "examples", "scalebar", "app"),
-        layertree: path.join(__dirname, "web", "client", "examples", "layertree", "app")
+        layertree: path.join(__dirname, "web", "client", "examples", "layertree", "app"),
+        "3dviewer": path.join(__dirname, "web", "client", "examples", "3dviewer", "app")
     },
     output: {
       path: path.join(__dirname, "web", "client", "dist"),
@@ -34,6 +35,7 @@ module.exports = {
         }),
         new CommonsChunkPlugin("commons", "mapstore-commons.js"),
         new NormalModuleReplacementPlugin(/leaflet$/, path.join(__dirname, "web", "client", "libs", "leaflet")),
+        new NormalModuleReplacementPlugin(/cesium$/, path.join(__dirname, "web", "client", "libs", "cesium")),
         new NormalModuleReplacementPlugin(/openlayers$/, path.join(__dirname, "web", "client", "libs", "openlayers")),
         new NormalModuleReplacementPlugin(/proj4$/, path.join(__dirname, "web", "client", "libs", "proj4")),
         new NoErrorsPlugin()
@@ -46,13 +48,13 @@ module.exports = {
             { test: /\.css$/, loader: 'style!css'},
             { test: /\.(png|jpg|gif|svg)$/, loader: 'url-loader?name=[path][name].[ext]&limit=8192'}, // inline base64 URLs for <=8k images, direct URLs for the rest
             {
-                test: /\.jsx?$/,
-                exclude: /ol\.js$/,
+                test: /\.jsx$/,
+                exclude: /(ol\.js)$|(Cesium\.js)$/,
                 loader: "react-hot",
                 include: path.join(__dirname, "web", "client")
             }, {
                 test: /\.jsx?$/,
-                exclude: /ol\.js$/,
+                exclude: /(ol\.js)$|(Cesium\.js)$/,
                 loader: "babel-loader",
                 include: path.join(__dirname, "web", "client"),
                 query: {

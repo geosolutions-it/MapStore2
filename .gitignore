@@ -5,3 +5,4 @@ target/
 *.sublime-*
 npm-debug.log
 coverage/
+web/client/libs/Cesium/
