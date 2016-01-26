@@ -16,6 +16,8 @@ require('../plugins/OSMLayer');
 require('../plugins/WMSLayer');
 require('../plugins/BingLayer');
 
+window.CESIUM_BASE_URL = "web/client/libs/Cesium/Build/Cesium";
+
 describe('Cesium layer', () => {
     let map;
 

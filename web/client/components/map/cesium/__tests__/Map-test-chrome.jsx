@@ -15,7 +15,7 @@ var Cesium = require('../../../../libs/cesium');
 require('../../../../utils/cesium/Layers');
 require('../plugins/OSMLayer');
 
-window.CESIUM_BASE_URL = "web/client/libs/Cesium";
+window.CESIUM_BASE_URL = "web/client/libs/Cesium/Build/Cesium";
 
 describe('CesiumMap', () => {
 

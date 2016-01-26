@@ -5,16 +5,18 @@
   "repository": "https://github.com/geosolutions-it/MapStore2",
   "main": "index.js",
   "devDependencies": {
-    "babel-eslint": "^3.1.26",
     "babel-core": "^5.0.0",
+    "babel-eslint": "^3.1.26",
     "babel-loader": "^5.0.0",
     "babel-plugin-react-transform": "^1.1.1",
     "babelify": "^6.1.2",
     "browserify": "^10.2.1",
     "css-loader": "^0.19.0",
+    "download-cli": "^1.0.1",
     "escope": "3.2.0",
     "eslint": "0.24.1",
     "eslint-plugin-react": "~3.0.0",
+    "exists-file": "^1.0.0",
     "expect": "^1.6.0",
     "extract-text-webpack-plugin": "^0.8.2",
     "file-loader": "^0.8.4",
@@ -52,7 +54,6 @@
   "dependencies": {
     "axios": "^0.8.1",
     "bootstrap": "^3.3.5",
-    "cesium": "^1.17.0",
     "classnames": "^2.1.5",
     "es6-promise": "^2.3.0",
     "eventlistener": "0.0.1",
@@ -86,6 +87,7 @@
     "url": "~0.10.3"
   },
   "scripts": {
+    "postinstall": "node checkCesium.js && mkdirp ./web/client/libs/Cesium && download --extract --out ./web/client/libs/Cesium https://cesiumjs.org/releases/Cesium-1.17.zip || echo Cesium already installed",
     "clean": "rm -Rf ./web/client/dist",
     "compile": "npm run clean && mkdirp ./web/client/dist && webpack --config prod-webpack.config.js",
     "start": "webpack-dev-server --progress --colors --port 8081 --hot --inline --content-base web/client",
