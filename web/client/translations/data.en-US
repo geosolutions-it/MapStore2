@@ -43,6 +43,9 @@
                 "viewer":{
                     "html":"<h3>Viewer</h3><p>Simple Viewer</p>"
                 },
+                "3dviewer":{
+                    "html":"<h3>3D Viewer</h3><p>Simple CesiumJS based 3D Viewer</p>"
+                },
                 "manager":{
                     "html":"<h3>Manager</h3><p>Browse MapStore Maps</p>"
                 },

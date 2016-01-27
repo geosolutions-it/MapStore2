@@ -43,6 +43,9 @@
                 "viewer":{
                     "html":"<h3>Viewer</h3><p>Semplice Visualizzatore di mappa</p>"
                 },
+                "3dviewer":{
+                    "html":"<h3>Viewer 3D</h3><p>Visualizzatore 3D basato su CesiumJS</p>"
+                },
                 "manager":{
                     "html":"<h3>Manager</h3><p>Sfoglia le mappe</p>"
                 },
