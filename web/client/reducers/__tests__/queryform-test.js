@@ -69,7 +69,7 @@ describe('Test the queryform reducer', () => {
         expect(state.filterFields[0].exception).toBe(null);
 
         expect(state.filterFields[1].rowId).toNotEqual(state.filterFields[0].rowId);
-        expect(state.filterFields[1].attribute).toBe("");
+        expect(state.filterFields[1].attribute).toBe(null);
         expect(state.filterFields[1].operator).toBe(null);
         expect(state.filterFields[1].value).toBe(null);
         expect(state.filterFields[1].exception).toBe(null);
@@ -113,7 +113,7 @@ describe('Test the queryform reducer', () => {
         let testAction = {
             type: 'UPDATE_FILTER_FIELD',
             rowId: 100,
-            fieldName: "attributeField",
+            fieldName: "attribute",
             fieldValue: "attributeName1"
         };
 
@@ -142,7 +142,7 @@ describe('Test the queryform reducer', () => {
         testAction = {
             type: 'UPDATE_FILTER_FIELD',
             rowId: 100,
-            fieldName: "operatorField",
+            fieldName: "operator",
             fieldValue: "<"
         };
 
@@ -156,7 +156,7 @@ describe('Test the queryform reducer', () => {
         testAction = {
             type: 'UPDATE_FILTER_FIELD',
             rowId: 100,
-            fieldName: "valueField",
+            fieldName: "value",
             fieldValue: "attributeValue1"
         };
 

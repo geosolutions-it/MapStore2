@@ -10,6 +10,7 @@ const {Input} = require('react-bootstrap');
 
 const ComboField = React.createClass({
     propTypes: {
+        width: React.PropTypes.number,
         fieldOptions: React.PropTypes.array,
         fieldName: React.PropTypes.string,
         fieldRowId: React.PropTypes.number,
@@ -20,6 +21,7 @@ const ComboField = React.createClass({
     },
     getDefaultProps() {
         return {
+            width: 250,
             fieldOptions: [],
             fieldName: null,
             fieldRowId: null,
@@ -33,7 +35,7 @@ const ComboField = React.createClass({
         return (<option key={fieldOpt} value={fieldOpt}>{fieldOpt}</option>);
     },
     render() {
-        const style = {width: "250px"};
+        const style = {width: this.props.width + "px"};
         return (
             <Input
                 key={this.props.fieldValue}

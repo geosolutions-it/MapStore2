@@ -31,7 +31,7 @@ const FilterField = React.createClass({
         return (
             <ComboField
                 fieldOptions= {this.props.operatorOptions}
-                fieldName="operatorField"
+                fieldName="operator"
                 fieldRowId={this.props.filterField.rowId}
                 fieldValue={this.props.filterField.operator}
                 onUpdateField={this.updateFieldElement}/>
@@ -41,7 +41,7 @@ const FilterField = React.createClass({
         const valueElement = React.cloneElement(
             React.Children.toArray(this.props.children).filter((node) => node.props.attType === selectedAttribute.type)[0],
             {
-                fieldName: "valueField",
+                fieldName: "value",
                 fieldRowId: this.props.filterField.rowId,
                 fieldValue: this.props.filterField.value,
                 fieldException: this.props.filterField.exception,
@@ -62,7 +62,7 @@ const FilterField = React.createClass({
                 <Col xs={3}>
                     <ComboField
                         fieldOptions={[null, ...this.props.attributes.map((attribute) => attribute.id)]}
-                        fieldName="attributeField"
+                        fieldName="attribute"
                         fieldRowId={this.props.filterField.rowId}
                         fieldValue={this.props.filterField.attribute}
                         onUpdateField={this.updateFieldElement}/>
