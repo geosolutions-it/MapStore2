@@ -104,15 +104,18 @@ var styleFunction = function(feature) {
 
 Layers.registerType('vector', {
     create: (options) => {
-        var featureCollection = options.features;
-        if (Array.isArray(options.features)) {
-            featureCollection = { "type": "FeatureCollection", features: featureCollection};
+        let features;
+        if (options.features) {
+            let featureCollection = options.features;
+            if (Array.isArray(options.features)) {
+                featureCollection = { "type": "FeatureCollection", features: featureCollection};
+            }
+            features = (new ol.format.GeoJSON()).readFeatures(featureCollection);
+            features.forEach((f) => f.getGeometry().transform('EPSG:4326', options.crs || 'EPSG:3857'));
         }
-        // Uncomment features to render directly from geojson
-        // const features = (new ol.format.GeoJSON()).readFeatures(featureCollection);
-        // features.forEach((f) => f.getGeometry().transform('EPSG:4326', options.crs || 'EPSG:3857'));
+
         const source = new ol.source.Vector({
-            // features: features
+            features: features
         });
         return new ol.layer.Vector({
             source: source,
