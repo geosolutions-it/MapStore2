@@ -62,7 +62,7 @@
 			},
       {
 				"type": "wms",
-        "url":"http://demo.geo-solutions.it/geoserver/wms",
+        "url":["http://demo.geo-solutions.it/geoserver/wms", "http://188.165.246.13/geoserver/wms"],
         "visibility": true,
         "opacity": 0.5,
 				"title": "Weather data",
