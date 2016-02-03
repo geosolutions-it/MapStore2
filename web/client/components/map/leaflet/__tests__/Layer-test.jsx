@@ -157,7 +157,35 @@ describe('Leaflet layer', () => {
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
+        let urls;
+        map.eachLayer((l) => urls = l._urls);
+        expect(urls.length).toBe(1);
     });
+
+    it('creates a wms layer with multiple urls for leaflet map', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": ["http://demo.geo-solutions.it/geoserver/wms", "http://demo.geo-solutions.it/geoserver/wms"]
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <LeafLetLayer type="wms"
+                 options={options} map={map}/>, document.getElementById("container"));
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+        let urls;
+        map.eachLayer((l) => urls = l._urls);
+        expect(urls.length).toBe(2);
+    });
+
     it('creates a google layer for leaflet map', () => {
         var options = {
             "type": "google",

@@ -10,10 +10,10 @@ var Layers = require('../../../../utils/cesium/Layers');
 var ConfigUtils = require('../../../../utils/ConfigUtils');
 var Cesium = require('../../../../libs/cesium');
 var assign = require('object-assign');
-var {isObject} = require('lodash');
+var {isObject, isArray} = require('lodash');
 
-function getWMSURL( url ) {
-    return url.split("\?")[0];
+function getWMSURLs( urls ) {
+    return urls.map((url) => url.split("\?")[0]);
 }
 
 function WMSProxy(proxy) {
@@ -21,10 +21,19 @@ function WMSProxy(proxy) {
 }
 
 WMSProxy.prototype.getURL = function(resource) {
-    return this.proxy + encodeURIComponent(resource);
+    let url = resource;
+    let queryString = "";
+    if (resource.indexOf('?') !== -1) {
+        url = resource.substring(0, resource.indexOf('?') + 1);
+        if (url.indexOf('%') !== -1) {
+            url = decodeURIComponent(url);
+        }
+        queryString = resource.substring(resource.indexOf('?') + 1);
+    }
+    return this.proxy + encodeURIComponent(url + queryString);
 };
 
-function wmsToLeafletOptions(options) {
+function wmsToCesiumOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
@@ -39,7 +48,8 @@ function wmsToLeafletOptions(options) {
     }
     // NOTE: can we use opacity to manage visibility?
     return assign({
-        url: getWMSURL(options.url),
+        url: "{s}",
+        subdomains: getWMSURLs(isArray(options.url) ? options.url : [options.url]),
         proxy: proxy && new WMSProxy(proxy),
         layers: options.name,
         parameters: {
@@ -52,5 +62,5 @@ function wmsToLeafletOptions(options) {
 }
 
 Layers.registerType('wms', (options) => {
-    return new Cesium.WebMapServiceImageryProvider(wmsToLeafletOptions(options));
+    return new Cesium.WebMapServiceImageryProvider(wmsToCesiumOptions(options));
 });

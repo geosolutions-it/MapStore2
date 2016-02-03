@@ -129,6 +129,28 @@ describe('Cesium layer', () => {
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
+        expect(map.imageryLayers._layers[0]._imageryProvider._url).toBe('{s}');
+        expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(1);
+    });
+
+    it('creates a wms layer with multiple urls for CesiumLayer map', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": ["http://demo.geo-solutions.it/geoserver/wms", "http://demo.geo-solutions.it/geoserver/wms"]
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <CesiumLayer type="wms"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.imageryLayers.length).toBe(1);
+        expect(map.imageryLayers._layers[0]._imageryProvider._url).toBe('{s}');
+        expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(2);
     });
 
     it('creates a bing layer for leaflet map', () => {

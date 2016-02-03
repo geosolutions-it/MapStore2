@@ -1,5 +1,7 @@
 const urlUtil = require('url');
 const React = require('react');
+const {isArray} = require('lodash');
+
 var Legend = React.createClass({
     propTypes: {
         layer: React.PropTypes.object,
@@ -17,7 +19,10 @@ var Legend = React.createClass({
    render() {
        if (this.props.layer && this.props.layer.type === "wms" && this.props.layer.url) {
            let layer = this.props.layer;
-           let url = this.props.layer.url;
+           const url = isArray(layer.url) ?
+               layer.url[Math.floor(Math.random() * layer.url.length)] :
+               layer.url.replace(/[?].*$/g, '');
+
            let urlObj = urlUtil.parse(url);
            let legendUrl = urlUtil.format({
                host: urlObj.host,
