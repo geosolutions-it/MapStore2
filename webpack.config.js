@@ -22,7 +22,8 @@ module.exports = {
         mouseposition: path.join(__dirname, "web", "client", "examples", "mouseposition", "app"),
         scalebar: path.join(__dirname, "web", "client", "examples", "scalebar", "app"),
         layertree: path.join(__dirname, "web", "client", "examples", "layertree", "app"),
-        "3dviewer": path.join(__dirname, "web", "client", "examples", "3dviewer", "app")
+        "3dviewer": path.join(__dirname, "web", "client", "examples", "3dviewer", "app"),
+        queryform: path.join(__dirname, "web", "client", "examples", "queryform", "app")
     },
     output: {
       path: path.join(__dirname, "web", "client", "dist"),
@@ -46,6 +47,9 @@ module.exports = {
     module: {
         loaders: [
             { test: /\.css$/, loader: 'style!css'},
+            { test: /\.less$/, loader: "style!css!less-loader" },
+            { test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/, loader: "url-loader?mimetype=application/font-woff" },
+            { test: /\.(ttf|eot|svg)(\?v=[0-9].[0-9].[0-9])?$/, loader: "file-loader?name=[name].[ext]" },
             { test: /\.(png|jpg|gif|svg)$/, loader: 'url-loader?name=[path][name].[ext]&limit=8192'}, // inline base64 URLs for <=8k images, direct URLs for the rest
             {
                 test: /\.jsx$/,
