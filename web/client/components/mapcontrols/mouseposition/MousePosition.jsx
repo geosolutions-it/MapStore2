@@ -20,7 +20,8 @@ let MousePosition = React.createClass({
         crs: React.PropTypes.string,
         enabled: React.PropTypes.bool,
         degreesTemplate: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
-        projectedTemplate: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func])
+        projectedTemplate: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
+        style: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -29,7 +30,8 @@ let MousePosition = React.createClass({
             crs: "EPSG:4326",
             enabled: true,
             degreesTemplate: MousePositionLabelDMS,
-            projectedTemplate: MousePositionLabelYX
+            projectedTemplate: MousePositionLabelYX,
+            style: {}
         };
     },
     getUnits(crs) {
@@ -54,7 +56,7 @@ let MousePosition = React.createClass({
         let Template = (this.props.mousePosition) ? this.getTemplateComponent() : null;
         if (this.props.enabled && Template) {
             return (
-                    <div id={this.props.id}>
+                    <div id={this.props.id} style={this.props.style}>
                         <Template position={this.getPosition()} />
                     </div>
                 );
