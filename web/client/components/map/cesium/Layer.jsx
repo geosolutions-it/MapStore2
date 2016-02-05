@@ -50,6 +50,10 @@ const CesiumLayer = React.createClass({
     },
     componentWillUnmount() {
         if (this.layer && this.props.map && !this.props.map.isDestroyed()) {
+            if (this.layer.destroy) {
+                this.layer.destroy();
+            }
+
             this.props.map.imageryLayers.remove(this.layer);
         }
     },

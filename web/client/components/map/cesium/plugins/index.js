@@ -10,5 +10,5 @@ module.exports = {
     BingLayer: require('./BingLayer'),
     OSMLayer: require('./OSMLayer'),
     WMSLayer: require('./WMSLayer'),
-    WMSLayer: require('./GraticuleLayer')
+    GraticuleLayer: require('./GraticuleLayer')
 };

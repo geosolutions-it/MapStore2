@@ -308,6 +308,16 @@ var Graticule = (function() {
         return Cesium.Rectangle.fromCartographicArray(this._ellipsoid.cartesianArrayToCartographicArray(corners));
     };
 
+    _.prototype.destroy = function() {
+        this._show = false;
+        if (this._polylines) {
+            this._scene.primitives.remove(this._polylines);
+        }
+        if (this._labels) {
+            this._scene.primitives.remove(this._labels);
+        }
+    };
+
     function gridPrecision(dDeg) {
         if (dDeg < 0.01) return 3;
         if (dDeg < 0.1) return 2;
@@ -322,11 +332,13 @@ var Graticule = (function() {
 Layers.registerType('graticule', {
     create: (options, map) => {
         var scene = map.scene;
+
         let grid = new Graticule(assign({
             tileWidth: 512,
             tileHeight: 512,
             numLines: 10
         }, options || {}), scene);
+
         if (options.visibility) {
             grid.setVisible(true);
         }
