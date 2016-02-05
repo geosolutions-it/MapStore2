@@ -16,6 +16,9 @@ const QueryBuilder = React.createClass({
     propTypes: {
         filterFields: React.PropTypes.array,
         attributes: React.PropTypes.array,
+        fieldWidth: React.PropTypes.string,
+        removeButtonIcon: React.PropTypes.string,
+        addButtonIcon: React.PropTypes.string,
         onAddFilterField: React.PropTypes.func,
         onRemoveFilterField: React.PropTypes.func,
         onUpdateFilterField: React.PropTypes.func,
@@ -25,6 +28,9 @@ const QueryBuilder = React.createClass({
         return {
             filterFields: [],
             attributes: [],
+            fieldWidth: "100%",
+            removeButtonIcon: "glyphicon glyphicon-minus",
+            addButtonIcon: "glyphicon glyphicon-plus",
             onAddFilterField: () => {},
             onRemoveFilterField: () => {},
             onUpdateFilterField: () => {},
@@ -36,10 +42,7 @@ const QueryBuilder = React.createClass({
 
         return (
             <Row key={filterField.rowId}>
-                <Col xs={1}>
-                    <Button onClick={() => this.props.onRemoveFilterField(filterField.rowId)}><Glyphicon glyph="glyphicon glyphicon-minus"/></Button>
-                </Col>
-                <Col xs={11}>
+                <Col xs={10}>
                     <FilterField
                         attributes={this.props.attributes}
                         filterField={filterField}
@@ -48,10 +51,14 @@ const QueryBuilder = React.createClass({
                         onUpdateExceptionField={this.props.onUpdateExceptionField}>
                         <ComboField
                             attType="list"
+                            width={this.props.fieldWidth}
                             fieldOptions={selectedAttribute && selectedAttribute.type === "list" ? [null, ...selectedAttribute.values] : null}/>
                         <DateField attType="date"
                             operator={filterField.operator}/>
                     </FilterField>
+                </Col>
+                <Col xs={2}>
+                    <Button onClick={() => this.props.onRemoveFilterField(filterField.rowId)}><Glyphicon glyph={this.props.removeButtonIcon}/></Button>
                 </Col>
             </Row>
         );
@@ -60,7 +67,7 @@ const QueryBuilder = React.createClass({
         return (
             <form>
                 {this.props.filterFields.map(this.renderFilterField)}
-                <Button onClick={this.props.onAddFilterField}><Glyphicon glyph="glyphicon glyphicon-plus"/></Button>
+                <Button onClick={this.props.onAddFilterField}><Glyphicon glyph={this.props.addButtonIcon}/></Button>
             </form>
         );
     }

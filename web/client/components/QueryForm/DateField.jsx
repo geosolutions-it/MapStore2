@@ -46,14 +46,14 @@ const DateField = React.createClass({
         let dateRow = this.props.operator === "<>" ? (
                 <div>
                     <Row>
-                        <Col xs={3}>
+                        <Col xs={6}>
                             <DateTimePicker
                                 defaultValue={this.props.fieldValue ? this.props.fieldValue.startDate : null}
                                 time={this.props.timeEnabled}
                                 format={this.props.dateFormat}
                                 onChange={(date) => this.updateValueState({startDate: date, endDate: this.props.fieldValue ? this.props.fieldValue.endDate : null})}/>
                         </Col>
-                        <Col xs={3}>
+                        <Col xs={6}>
                             <DateTimePicker
                                 defaultValue={this.props.fieldValue ? this.props.fieldValue.endDate : null}
                                 time={this.props.timeEnabled}
@@ -75,7 +75,7 @@ const DateField = React.createClass({
                 </div>
             ) : (
                 <Row>
-                    <Col xs={3}>
+                    <Col xs={12}>
                         <DateTimePicker
                             defaultValue={this.props.fieldValue ? this.props.fieldValue.startDate : null}
                             time={this.props.timeEnabled}

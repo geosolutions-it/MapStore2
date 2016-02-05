@@ -59,7 +59,7 @@ const FilterField = React.createClass({
 
         return (
             <Row>
-                <Col xs={3}>
+                <Col xs={4}>
                     <ComboField
                         fieldOptions={[null, ...this.props.attributes.map((attribute) => attribute.id)]}
                         fieldName="attribute"
@@ -67,7 +67,7 @@ const FilterField = React.createClass({
                         fieldValue={this.props.filterField.attribute}
                         onUpdateField={this.updateFieldElement}/>
                 </Col>
-                <Col xs={3}>{selectedAttribute ? this.renderOperatorField() : null}</Col>
+                <Col xs={2}>{selectedAttribute ? this.renderOperatorField() : null}</Col>
                 <Col xs={6}>{selectedAttribute && this.props.filterField.operator ? this.renderValueField(selectedAttribute) : null}</Col>
             </Row>
         );

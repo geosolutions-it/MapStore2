@@ -9,7 +9,17 @@
 const {ADD_FILTER_FIELD, REMOVE_FILTER_FIELD, UPDATE_FILTER_FIELD, UPDATE_EXCEPTION_FIELD} = require('../actions/queryform');
 const assign = require('object-assign');
 
-const initialState = {};
+const initialState = {
+    filterFields: [
+        {
+            rowId: 0,
+            attribute: null,
+            operator: null,
+            value: null,
+            exception: null
+        }
+    ]
+};
 
 function queryform(state = initialState, action) {
     switch (action.type) {
