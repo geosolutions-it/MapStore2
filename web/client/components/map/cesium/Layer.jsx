@@ -17,7 +17,7 @@ const CesiumLayer = React.createClass({
         position: React.PropTypes.number
     },
     componentDidMount() {
-        this.createLayer(this.props.type, this.props.options, this.props.position);
+        this.createLayer(this.props.type, this.props.options, this.props.position, this.props.map);
         if (this.props.options && this.layer && this.props.options.visibility !== false) {
             this.addLayer();
             // this.updateZIndex();
@@ -50,6 +50,10 @@ const CesiumLayer = React.createClass({
     },
     componentWillUnmount() {
         if (this.layer && this.props.map && !this.props.map.isDestroyed()) {
+            if (this.layer.destroy) {
+                this.layer.destroy();
+            }
+
             this.props.map.imageryLayers.remove(this.layer);
         }
     },
@@ -93,10 +97,10 @@ const CesiumLayer = React.createClass({
             this.provider.alpha = opacity;
         }
     },
-    createLayer(type, options, position) {
+    createLayer(type, options, position, map) {
         if (type) {
             const opts = assign({}, options, position ? {zIndex: position} : null);
-            this.layer = Layers.createLayer(type, opts);
+            this.layer = Layers.createLayer(type, opts, map);
             if (this.layer) {
                 this.layer.layerName = options.name;
                 this.layer.layerId = options.id;
