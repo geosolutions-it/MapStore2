@@ -15,6 +15,7 @@ require('../../../../utils/cesium/Layers');
 require('../plugins/OSMLayer');
 require('../plugins/WMSLayer');
 require('../plugins/BingLayer');
+require('../plugins/GraticuleLayer');
 
 window.CESIUM_BASE_URL = "web/client/libs/Cesium/Build/Cesium";
 
@@ -250,5 +251,19 @@ describe('Cesium layer', () => {
 
         expect(map.imageryLayers.get(0)).toBe(layer2.provider);
         expect(map.imageryLayers.get(1)).toBe(layer1.provider);
+    });
+
+    it('creates a graticule layer for cesium map', () => {
+        var options = {
+            "visibility": true
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <CesiumLayer type="graticule"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        expect(map.imageryLayers.length).toBe(1);
     });
 });

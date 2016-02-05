@@ -10,6 +10,7 @@ const MousePosition = require("../../../components/mapcontrols/mouseposition/Mou
 const {changeMapView} = require('../../../actions/map');
 const {changeMousePosition} = require('../../../actions/mousePosition');
 const {textSearch, resultsPurge} = require("../../../actions/search");
+const {toggleGraticule} = require('../actions/controls');
 
 const Localized = require('../../../components/I18N/Localized');
 
@@ -24,18 +25,24 @@ const Viewer = React.createClass({
         resultsPurge: React.PropTypes.func,
         changeMapView: React.PropTypes.func,
         changeMousePosition: React.PropTypes.func,
+        toggleGraticule: React.PropTypes.func,
         mousePosition: React.PropTypes.object,
         messages: React.PropTypes.object,
         locale: React.PropTypes.string,
         localeError: React.PropTypes.string,
         searchResults: React.PropTypes.array,
-        mapStateSource: React.PropTypes.string
+        mapStateSource: React.PropTypes.string,
+        showGraticule: React.PropTypes.bool
     },
     renderLayers(layers) {
         if (layers) {
             return layers.map(function(layer) {
                 return <LLayer type={layer.type} key={layer.name} options={layer} />;
-            });
+            }).concat(this.props.showGraticule ? [<LLayer type="graticule" key="graticule" options={{
+                name: "graticule",
+                visibility: true,
+                color: [0.0, 0.0, 0.0, 1.0]
+            }}/>] : []);
         }
         return null;
 
@@ -51,6 +58,17 @@ const Viewer = React.createClass({
                             onClick={this.props.changeMousePosition}>
                             {this.renderLayers(this.props.layers)}
                         </LMap>
+                        <div style={{
+                                position: "absolute",
+                                zIndex: 1000,
+                                right: "20px",
+                                top: "20px",
+                                backgroundColor: "white",
+                                opacity: 0.7,
+                                padding: "10px"
+                            }}>
+                            <label>Graticule:&nbsp;&nbsp;<input type="checkbox" checked={this.props.showGraticule} onChange={this.props.toggleGraticule}/></label>
+                        </div>
                         <SearchBar key="seachBar" onSearch={this.props.textSearch} onSearchReset={this.props.resultsPurge} />
                         <NominatimResultList key="nominatimresults"
                             results={this.props.searchResults}
@@ -87,11 +105,13 @@ module.exports = connect((state) => {
             x: state.mousePosition.position.latlng.lng,
             y: state.mousePosition.position.latlng.lat,
             crs: "EPSG:4326"
-        } : null
+        } : null,
+        showGraticule: state.controls && state.controls.graticule || false
     };
 }, {
     textSearch,
     resultsPurge,
     changeMapView,
-    changeMousePosition
+    changeMousePosition,
+    toggleGraticule
 })(Viewer);
