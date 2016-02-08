@@ -70,6 +70,7 @@ function wmsToCesiumOptions(options) {
         subdomains: getWMSURLs(isArray(options.url) ? options.url : [options.url]),
         proxy: proxy && new WMSProxy(proxy) || new NoProxy(),
         layers: options.name,
+        enablePickFeatures: false,
         parameters: assign({
             styles: options.style || "",
             format: options.format || 'image/png',

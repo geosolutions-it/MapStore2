@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const TOGGLE_GRATICULE = 'TOGGLE_GRATICULE';
+const UPDATE_MARKER = 'UPDATE_MARKER';
 
 
 function toggleGraticule() {
@@ -13,4 +14,12 @@ function toggleGraticule() {
         type: TOGGLE_GRATICULE
     };
 }
-module.exports = {TOGGLE_GRATICULE, toggleGraticule};
+
+function updateMarker(point) {
+    return {
+        type: UPDATE_MARKER,
+        point
+    };
+}
+
+module.exports = {TOGGLE_GRATICULE, UPDATE_MARKER, toggleGraticule, updateMarker};

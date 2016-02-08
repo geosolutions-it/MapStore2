@@ -16,6 +16,8 @@ require('../plugins/OSMLayer');
 require('../plugins/WMSLayer');
 require('../plugins/BingLayer');
 require('../plugins/GraticuleLayer');
+require('../plugins/OverlayLayer');
+require('../plugins/MarkerLayer');
 
 window.CESIUM_BASE_URL = "web/client/libs/Cesium/Build/Cesium";
 
@@ -265,5 +267,98 @@ describe('Cesium layer', () => {
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
+    });
+
+    it('creates and overlay layer for cesium map', () => {
+        let container = document.createElement('div');
+        container.id = 'ovcontainer';
+        document.body.appendChild(container);
+
+        let element = document.createElement('div');
+        element.id = 'overlay-1';
+        document.body.appendChild(element);
+
+        let options = {
+            id: 'overlay-1',
+            position: [13, 43]
+        };
+        // create layers
+        let layer = ReactDOM.render(
+            <CesiumLayer type="overlay"
+                 options={options} map={map}/>, document.getElementById('ovcontainer'));
+
+        expect(layer).toExist();
+        expect(map.scene.primitives.length).toBe(1);
+    });
+
+    it('creates and overlay layer for cesium map with close support', () => {
+        let container = document.createElement('div');
+        container.id = 'ovcontainer';
+        document.body.appendChild(container);
+
+        let element = document.createElement('div');
+        element.id = 'overlay-1';
+        let closeElement = document.createElement('div');
+        closeElement.className = 'close';
+        element.appendChild(closeElement);
+        document.body.appendChild(element);
+        let closed = false;
+        let options = {
+            id: 'overlay-1',
+            position: [13, 43],
+            onClose: () => {
+                closed = true;
+            }
+        };
+        // create layers
+        let layer = ReactDOM.render(
+            <CesiumLayer type="overlay"
+                 options={options} map={map}/>, document.getElementById('ovcontainer'));
+
+        expect(layer).toExist();
+        const content = map.scene.primitives.get(0)._content;
+        expect(content).toExist();
+        const close = content.getElementsByClassName('close')[0];
+        close.click();
+        expect(closed).toBe(true);
+    });
+
+    it('creates and overlay layer for cesium map with no data-reactid attributes', () => {
+        let container = document.createElement('div');
+        container.id = 'ovcontainer';
+        document.body.appendChild(container);
+
+        let element = document.createElement('div');
+        element.id = 'overlay-1';
+        let closeElement = document.createElement('div');
+        closeElement.className = 'close';
+        element.appendChild(closeElement);
+        document.body.appendChild(element);
+        let options = {
+            id: 'overlay-1',
+            position: [13, 43]
+        };
+        // create layers
+        let layer = ReactDOM.render(
+            <CesiumLayer type="overlay"
+                 options={options} map={map}/>, document.getElementById('ovcontainer'));
+
+        expect(layer).toExist();
+        const content = map.scene.primitives.get(0)._content;
+        expect(content).toExist();
+        const close = content.getElementsByClassName('close')[0];
+        expect(close.getAttribute('data-reactid')).toNotExist();
+    });
+
+    it('creates a marker layer for cesium map', () => {
+        let options = {
+            point: [13, 43]
+        };
+        // create layers
+        let layer = ReactDOM.render(
+            <CesiumLayer type="marker"
+                 options={options} map={map}/>, document.getElementById('container'));
+        expect(layer).toExist();
+        expect(map.entities._entities.length).toBe(1);
     });
 });

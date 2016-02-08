@@ -6,15 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var {TOGGLE_GRATICULE} = require('../actions/controls');
+var {TOGGLE_GRATICULE, UPDATE_MARKER} = require('../actions/controls');
 var assign = require('object-assign');
 
-function controls(state = {graticule: false}, action) {
+const initialState = {
+    graticule: false,
+    marker: null
+};
+
+function controls(state = initialState, action) {
     switch (action.type) {
         case TOGGLE_GRATICULE: {
             return assign({}, state,
                 {
                     graticule: !state.graticule
+                }
+            );
+        }
+        case UPDATE_MARKER: {
+            return assign({}, state,
+                {
+                    marker: action.point
                 }
             );
         }
