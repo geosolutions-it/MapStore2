@@ -10,7 +10,7 @@ const MousePosition = require("../../../components/mapcontrols/mouseposition/Mou
 const {changeMapView} = require('../../../actions/map');
 const {changeMousePosition} = require('../../../actions/mousePosition');
 const {textSearch, resultsPurge} = require("../../../actions/search");
-const {toggleGraticule} = require('../actions/controls');
+const {toggleGraticule, updateMarker} = require('../actions/controls');
 
 const Localized = require('../../../components/I18N/Localized');
 
@@ -26,13 +26,19 @@ const Viewer = React.createClass({
         changeMapView: React.PropTypes.func,
         changeMousePosition: React.PropTypes.func,
         toggleGraticule: React.PropTypes.func,
+        updateMarker: React.PropTypes.func,
         mousePosition: React.PropTypes.object,
         messages: React.PropTypes.object,
         locale: React.PropTypes.string,
         localeError: React.PropTypes.string,
         searchResults: React.PropTypes.array,
         mapStateSource: React.PropTypes.string,
-        showGraticule: React.PropTypes.bool
+        showGraticule: React.PropTypes.bool,
+        marker: React.PropTypes.object
+    },
+    onSearchClick: function(center) {
+        this.props.updateMarker({lng: center.x, lat: center.y});
+        this.props.changeMapView.apply(null, arguments);
     },
     renderLayers(layers) {
         if (layers) {
@@ -42,6 +48,10 @@ const Viewer = React.createClass({
                 name: "graticule",
                 visibility: true,
                 color: [0.0, 0.0, 0.0, 1.0]
+            }}/>] : []).concat(this.props.marker ? [<LLayer type="marker" key="marker" options={{
+                name: "marker",
+                visibility: true,
+                point: this.props.marker
             }}/>] : []);
         }
         return null;
@@ -55,7 +65,7 @@ const Viewer = React.createClass({
                     <div className="fill">
                         <LMap id="map" center={this.props.map.center} zoom={this.props.map.zoom}
                             onMapViewChanges={this.props.changeMapView} mapStateSource={this.props.mapStateSource}
-                            onClick={this.props.changeMousePosition}>
+                            onMouseMove={this.props.changeMousePosition}>
                             {this.renderLayers(this.props.layers)}
                         </LMap>
                         <div style={{
@@ -72,7 +82,7 @@ const Viewer = React.createClass({
                         <SearchBar key="seachBar" onSearch={this.props.textSearch} onSearchReset={this.props.resultsPurge} />
                         <NominatimResultList key="nominatimresults"
                             results={this.props.searchResults}
-                            onItemClick={(this.props.changeMapView)}
+                            onItemClick={this.onSearchClick}
                             afterItemClick={this.props.resultsPurge}
                             mapConfig={this.props.map}/>
                             <MousePosition
@@ -101,17 +111,15 @@ module.exports = connect((state) => {
         locale: state.locale ? state.locale.current : null,
         localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined,
         searchResults: state.searchResults,
-        mousePosition: state.mousePosition && state.mousePosition.position ? {
-            x: state.mousePosition.position.latlng.lng,
-            y: state.mousePosition.position.latlng.lat,
-            crs: "EPSG:4326"
-        } : null,
-        showGraticule: state.controls && state.controls.graticule || false
+        mousePosition: state.mousePosition && state.mousePosition.position || null,
+        showGraticule: state.controls && state.controls.graticule || false,
+        marker: state.controls && state.controls.marker || null
     };
 }, {
     textSearch,
     resultsPurge,
     changeMapView,
     changeMousePosition,
-    toggleGraticule
+    toggleGraticule,
+    updateMarker
 })(Viewer);
