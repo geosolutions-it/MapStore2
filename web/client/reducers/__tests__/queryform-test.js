@@ -70,7 +70,7 @@ describe('Test the queryform reducer', () => {
 
         expect(state.filterFields[1].rowId).toNotEqual(state.filterFields[0].rowId);
         expect(state.filterFields[1].attribute).toBe(null);
-        expect(state.filterFields[1].operator).toBe(null);
+        expect(state.filterFields[1].operator).toBe("=");
         expect(state.filterFields[1].value).toBe(null);
         expect(state.filterFields[1].exception).toBe(null);
     });

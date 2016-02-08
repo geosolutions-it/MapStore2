@@ -55,7 +55,7 @@ describe('DateField', () => {
     });
 
     it('creates the DateField component with date range', () => {
-        let operator = "<>";
+        let operator = "><";
         let fieldName = "valueField";
         let fieldRowId = 200;
         let fieldValue = {startDate: new Date(86400000), endDate: new Date(96400000)};

@@ -22,7 +22,7 @@ const FilterField = React.createClass({
         return {
             attributes: [],
             filterField: null,
-            operatorOptions: [" ", "=", ">", "<", ">=", "<=", "<>"],
+            operatorOptions: ["=", ">", "<", ">=", "<=", "<>", "><"],
             onUpdateField: () => {},
             onUpdateExceptionField: () => {}
         };

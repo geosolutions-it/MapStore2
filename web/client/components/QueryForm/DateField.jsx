@@ -43,7 +43,7 @@ const DateField = React.createClass({
         };
     },
     render() {
-        let dateRow = this.props.operator === "<>" ? (
+        let dateRow = this.props.operator === "><" ? (
                 <div>
                     <Row>
                         <Col xs={6}>
