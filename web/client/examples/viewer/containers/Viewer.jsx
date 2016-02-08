@@ -38,6 +38,7 @@ const Viewer = React.createClass({
         locale: React.PropTypes.string,
         mapInfo: React.PropTypes.object,
         locate: React.PropTypes.object,
+        snapshot: React.PropTypes.object,
         mousePosition: React.PropTypes.object,
         mousePositionEnabled: React.PropTypes.bool,
         localeError: React.PropTypes.string,
@@ -162,7 +163,8 @@ module.exports = (actions) => {
             mousePositionEnabled: state.mousePosition ? state.mousePosition.enabled || false : false,
             measurement: state.measurement ? state.measurement : {lineMeasureEnabled: false, areaMeasureEnabled: false, bearingMeasureEnabled: false, geomType: null, len: 0, area: 0, bearing: 0},
             searchResults: state.searchResults || null,
-            help: state.help ? state.help : {enabled: false, helpText: ''}
+            help: state.help ? state.help : {enabled: false, helpText: ''},
+            snapshot: state.snapshot ? state.snapshot : {state: "DISABLED", img: {}}
         };
     }, dispatch => {
         return bindActionCreators(assign({}, {
