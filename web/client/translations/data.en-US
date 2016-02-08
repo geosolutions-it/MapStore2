@@ -186,13 +186,13 @@
                 }
             }
         },
-    "locate": {
-        "tooltip": "Locate me",
-        "metersUnit": "meters",
-        "feetUnit": "feet",
-        "popup": "You are within {distance} {unit} from this point",
-        "outsideMapBoundsMsg": "You seem located outside the boundaries of the map"
-    },
+        "locate": {
+            "tooltip": "Locate me",
+            "metersUnit": "meters",
+            "feetUnit": "feet",
+            "popup": "You are within {distance} {unit} from this point",
+            "outsideMapBoundsMsg": "You seem located outside the boundaries of the map"
+        },
         "helptexts": {
             "scaleBox": "This is the helptext for the ScaleBox",
             "zoomToMaxExtentButton": "This is the helptext for the ZoomToMaxExtentButton",
@@ -203,12 +203,17 @@
             "backgroundSwitcher": "This is the helptext for the BackgroundSwitcher",
             "layerSwitcher": "This is the helptext for the LayerSwitcher",
             "infoButton": "This is the helptext for the InfoButton",
-            "locateBtn": "This is the helptext for the LocateBtn"
+            "locateBtn": "This is the helptext for the LocateBtn",
+            "snapshot": "This is the helptext for the Snapshot"
         },
         "queryform": {
             "datefield": {
                 "wrong_date_range": "Start date must be lower than end date"
-            }
+            },
+        "snapshot": {
+            "title": "Snapshot Preview",
+            "tooltip": "Capture map status",
+            "googleBingError": "Goggole and Bing layers arn't availabel for the snapshot, due to copyrigth restricitions."
         }
     }
 }

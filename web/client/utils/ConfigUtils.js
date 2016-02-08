@@ -274,6 +274,10 @@ var ConfigUtils = {
             layer.id = layer.name + "__" + i;
         }
         return layer;
+    },
+    getConfigProp: function(prop) {
+        return defaultConfig[prop];
+
     }
 };
 
