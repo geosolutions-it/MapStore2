@@ -15,6 +15,7 @@ require('../../../../utils/cesium/Layers');
 require('../plugins/OSMLayer');
 require('../plugins/WMSLayer');
 require('../plugins/BingLayer');
+require('../plugins/GraticuleLayer');
 
 window.CESIUM_BASE_URL = "web/client/libs/Cesium/Build/Cesium";
 
@@ -129,6 +130,28 @@ describe('Cesium layer', () => {
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
+        expect(map.imageryLayers._layers[0]._imageryProvider._url).toBe('{s}');
+        expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(1);
+    });
+
+    it('creates a wms layer with multiple urls for CesiumLayer map', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": ["http://demo.geo-solutions.it/geoserver/wms", "http://demo.geo-solutions.it/geoserver/wms"]
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <CesiumLayer type="wms"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.imageryLayers.length).toBe(1);
+        expect(map.imageryLayers._layers[0]._imageryProvider._url).toBe('{s}');
+        expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(2);
     });
 
     it('creates a bing layer for leaflet map', () => {
@@ -228,5 +251,19 @@ describe('Cesium layer', () => {
 
         expect(map.imageryLayers.get(0)).toBe(layer2.provider);
         expect(map.imageryLayers.get(1)).toBe(layer1.provider);
+    });
+
+    it('creates a graticule layer for cesium map', () => {
+        var options = {
+            "visibility": true
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <CesiumLayer type="graticule"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        expect(map.imageryLayers.length).toBe(1);
     });
 });

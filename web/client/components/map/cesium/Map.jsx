@@ -19,6 +19,7 @@ let CesiumMap = React.createClass({
         projection: React.PropTypes.string,
         onMapViewChanges: React.PropTypes.func,
         onClick: React.PropTypes.func,
+        onMouseMove: React.PropTypes.func,
         mapOptions: React.PropTypes.object
     },
     getDefaultProps() {
@@ -49,8 +50,8 @@ let CesiumMap = React.createClass({
         }, this.props.mapOptions));
         map.imageryLayers.removeAll();
         map.camera.moveEnd.addEventListener(this.updateMapInfoState);
-        const hand = new Cesium.ScreenSpaceEventHandler(map.scene.canvas);
-        hand.setInputAction((movement) => {
+        this.hand = new Cesium.ScreenSpaceEventHandler(map.scene.canvas);
+        this.hand.setInputAction((movement) => {
             if (this.props.onClick && movement.position !== null) {
                 const cartesian = map.camera.pickEllipsoid(movement.position, map.scene.globe.ellipsoid);
                 if (cartesian) {
@@ -70,6 +71,20 @@ let CesiumMap = React.createClass({
             }
         }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
+        this.hand.setInputAction((movement) => {
+            if (this.props.onMouseMove && movement.endPosition) {
+                const cartesian = map.camera.pickEllipsoid(movement.endPosition, map.scene.globe.ellipsoid);
+                if (cartesian) {
+                    const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+                    this.props.onMouseMove({
+                        y: cartographic.latitude * 180.0 / Math.PI,
+                        x: cartographic.longitude * 180.0 / Math.PI,
+                        crs: "EPSG:4326"
+                    });
+                }
+            }
+        }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
         map.camera.setView({
             destination: Cesium.Cartesian3.fromDegrees(
                 this.props.center.x,
@@ -88,6 +103,7 @@ let CesiumMap = React.createClass({
         return false;
     },
     componentWillUnmount() {
+        this.hand.destroy();
         this.map.destroy();
     },
     getCenter() {

@@ -4,6 +4,7 @@ var thunkMiddleware = require('redux-thunk');
 var mapConfig = require('../../../reducers/config');
 var map = require('../../../reducers/map');
 var locale = require('../../../reducers/locale');
+var controls = require('../reducers/controls');
 var mousePosition = require('../../../reducers/mousePosition');
 var {searchResults} = require('../../../reducers/search');
 
@@ -13,7 +14,8 @@ const reducers = combineReducers({
     map,
     locale,
     searchResults,
-    mousePosition
+    mousePosition,
+    controls
 });
 
 // compose middleware(s) to createStore

@@ -11,10 +11,8 @@ var ol = require('openlayers');
 var objectAssign = require('object-assign');
 var CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 var ConfigUtils = require('../../../../utils/ConfigUtils');
+const {isArray, isObject} = require('lodash');
 
-function isObject(val) {
-    return val !== null && typeof val === 'object';
-}
 
 function wmsToOpenlayersOptions(options) {
     // NOTE: can we use opacity to manage visibility?
@@ -29,8 +27,8 @@ function wmsToOpenlayersOptions(options) {
     }, options.params || {});
 }
 
-function getWMSURL( url ) {
-    return url.split("\?")[0];
+function getWMSURLs( urls ) {
+    return urls.map((url) => url.split("\?")[0]);
 }
 
 function needProxy(uri) {
@@ -87,7 +85,7 @@ Layers.registerType('wms', {
             visible: options.visibility !== false,
             zIndex: options.zIndex,
             source: new ol.source.TileWMS(objectAssign({
-              url: getWMSURL(options.url),
+              urls: getWMSURLs(isArray(options.url) ? options.url : [options.url]),
               params: wmsToOpenlayersOptions(options)
             }, (options.forceProxy) ? {tileLoadFunction: proxyTileLoadFunction} : {}))
         });

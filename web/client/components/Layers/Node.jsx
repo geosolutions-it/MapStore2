@@ -8,7 +8,27 @@
 
 var React = require('react');
 var assign = require('object-assign');
-var SortableMixin = require('react-sortable-items/SortableItemMixin');
+const cx = require('classnames');
+
+var SortableMixin = assign(require('react-sortable-items/SortableItemMixin'), {
+    renderWithSortable: function(item) {
+        var classNames = cx(assign({
+          'SortableItem': true,
+          'is-dragging': this.props._isDragging,
+          'is-undraggable': !this.props.isDraggable,
+          'is-placeholder': this.props._isPlaceholder
+        }), item.props.className || {});
+        return React.cloneElement(
+          this.props._isPlaceholder && this.getPlaceholderContent && Object.prototype.toString.call(this.getPlaceholderContent) === '[object Function]'
+            ? this.getPlaceholderContent() : item, {
+          className: classNames,
+          style: item.props.style || this.props.sortableStyle,
+          key: this.props.sortableIndex,
+          onMouseDown: this.handleSortableItemMouseDown,
+          onMouseUp: this.handleSortableItemMouseUp
+        });
+    }
+});
 
 var Node = React.createClass({
     propTypes: {

@@ -17,7 +17,7 @@ const CesiumLayer = React.createClass({
         position: React.PropTypes.number
     },
     componentDidMount() {
-        this.createLayer(this.props.type, this.props.options, this.props.position);
+        this.createLayer(this.props.type, this.props.options, this.props.position, this.props.map);
         if (this.props.options && this.layer && this.props.options.visibility !== false) {
             this.addLayer();
             // this.updateZIndex();
@@ -33,10 +33,27 @@ const CesiumLayer = React.createClass({
         if (newProps.position !== this.props.position) {
             this.updateZIndex(newProps.position - (this.props.position || 0));
         }
+        if (this.props.options && this.props.options.params && this.layer.updateParams) {
+            const changed = Object.keys(this.props.options.params).reduce((found, param) => {
+                if (newProps.options.params[param] !== this.props.options.params[param]) {
+                    return true;
+                }
+                return found;
+            }, false);
+            if (changed) {
+                this.layer.updateParams(newProps.options.params);
+                this.props.map.scene.globe._surface._tileProvider._quadtree.invalidateAllTiles();
+                this.props.map.render();
+            }
+        }
         this.updateLayer(newProps, this.props);
     },
     componentWillUnmount() {
-        if (this.layer && this.props.map) {
+        if (this.layer && this.props.map && !this.props.map.isDestroyed()) {
+            if (this.layer.destroy) {
+                this.layer.destroy();
+            }
+
             this.props.map.imageryLayers.remove(this.layer);
         }
     },
@@ -80,10 +97,10 @@ const CesiumLayer = React.createClass({
             this.provider.alpha = opacity;
         }
     },
-    createLayer(type, options, position) {
+    createLayer(type, options, position, map) {
         if (type) {
             const opts = assign({}, options, position ? {zIndex: position} : null);
-            this.layer = Layers.createLayer(type, opts);
+            this.layer = Layers.createLayer(type, opts, map);
             if (this.layer) {
                 this.layer.layerName = options.name;
                 this.layer.layerId = options.id;

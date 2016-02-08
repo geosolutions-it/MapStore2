@@ -19,6 +19,8 @@ var CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 
 var MapInfoUtils = require('../../../../utils/MapInfoUtils');
 
+const {isArray} = require('lodash');
+
 var GetFeatureInfo = React.createClass({
     propTypes: {
         infoFormat: React.PropTypes.oneOf(
@@ -126,7 +128,9 @@ var GetFeatureInfo = React.createClass({
                     title: layer.title,
                     regex: layer.featureInfoRegex
                 };
-                const url = layer.url.replace(/[?].*$/g, '');
+                const url = isArray(layer.url) ?
+                    layer.url[0] :
+                    layer.url.replace(/[?].*$/g, '');
                 this.props.actions.getFeatureInfo(url, requestConf, layerMetadata, layer.featureInfoParams);
             }
             this.props.actions.showMapinfoMarker();
