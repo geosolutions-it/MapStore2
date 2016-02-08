@@ -46,7 +46,7 @@ const QueryBuilder = React.createClass({
                     <FilterField
                         attributes={this.props.attributes}
                         filterField={filterField}
-                        operatorOptions={selectedAttribute && selectedAttribute.type === "list" ? [" ", "="] : [" ", "=", ">", "<", ">=", "<=", "<>"]}
+                        operatorOptions={selectedAttribute && selectedAttribute.type === "list" ? ["="] : ["=", ">", "<", ">=", "<=", "<>", "><"]}
                         onUpdateField={this.props.onUpdateFilterField}
                         onUpdateExceptionField={this.props.onUpdateExceptionField}>
                         <ComboField

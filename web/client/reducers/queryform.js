@@ -14,7 +14,7 @@ const initialState = {
         {
             rowId: 0,
             attribute: null,
-            operator: null,
+            operator: "=",
             value: null,
             exception: null
         }
@@ -30,7 +30,7 @@ function queryform(state = initialState, action) {
             const newElement = {
                 rowId: new Date().getUTCMilliseconds(),
                 attribute: null,
-                operator: null,
+                operator: "=",
                 value: null,
                 exception: null
             };
