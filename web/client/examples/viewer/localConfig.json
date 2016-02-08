@@ -4,5 +4,6 @@
 		"useCORS": []
 	},
 	"geoStoreUrl": "/mapstore/rest/geostore/",
+    "serviceBoxUrl": "/mapstore/rest/services/saveimage/",
 	"bingApiKey": "AnPVX7vx5Qydc2F7gtwyNffWEi22yogqI62AzkGDu16goDilS5Z-BdkjOlnCDxJD"
 }
