@@ -7,7 +7,7 @@ const initialState = {
         {
             rowId: 0,
             attribute: null,
-            operator: null,
+            operator: "=",
             value: null,
             exception: null
         }

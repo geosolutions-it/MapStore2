@@ -37,8 +37,29 @@ const QueryBuilder = React.createClass({
             onUpdateExceptionField: () => {}
         };
     },
+    getComboValues(selected, attributes) {
+        if (selected && selected.dependson) {
+            // //////////////////////////////////////////////////////////
+            // Retrieving the filterField related the selected Province
+            // //////////////////////////////////////////////////////////
+            let filterField = this.props.filterFields.filter((field) => field.attribute === selected.dependson.field)[0];
+            if (filterField && filterField.value) {
+                // The complete attribute config object
+                let attribute = attributes.filter((attr) => attr.id === filterField.attribute)[0];
+                // The reference ID of the related attribute field value
+                let attributeRefId = attribute.values.filter((value) => value.name === filterField.value)[0][selected.dependson.from];
+                // The filtered values that match the attribute refId
+                let values = selected.values.filter((value) => value[selected.dependson.to] === attributeRefId);
+
+                return (selected && selected.type === "list" ? values.map((value) => value.name || value) : null);
+            }
+        }
+
+        return (selected && selected.type === "list" ? selected.values.map((value) => value.name || value) : null);
+    },
     renderFilterField(filterField) {
         let selectedAttribute = this.props.attributes.filter((attribute) => attribute.id === filterField.attribute)[0];
+        let comboValues = this.getComboValues(selectedAttribute, this.props.attributes);
 
         return (
             <Row key={filterField.rowId}>
@@ -52,7 +73,7 @@ const QueryBuilder = React.createClass({
                         <ComboField
                             attType="list"
                             width={this.props.fieldWidth}
-                            fieldOptions={selectedAttribute && selectedAttribute.type === "list" ? [null, ...selectedAttribute.values] : null}/>
+                            fieldOptions={comboValues ? [null, ...comboValues] : []}/>
                         <DateField attType="date"
                             operator={filterField.operator}/>
                     </FilterField>
