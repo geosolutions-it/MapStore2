@@ -24,7 +24,7 @@ describe("test the SnapshotIcon", () => {
     });
 
     it('test component creation', () => {
-        const tb = ReactDOM.render(<SnapshotIcon status="SHOTING" />, document.getElementById("container"));
+        const tb = ReactDOM.render(<SnapshotIcon />, document.getElementById("container"));
         expect(tb).toExist();
 
     });

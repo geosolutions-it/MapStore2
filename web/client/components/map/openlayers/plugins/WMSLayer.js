@@ -9,9 +9,9 @@
 var Layers = require('../../../../utils/openlayers/Layers');
 var ol = require('openlayers');
 var objectAssign = require('object-assign');
-var CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
-var ConfigUtils = require('../../../../utils/ConfigUtils');
-const {isArray, isObject} = require('lodash');
+const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
+const ProxyUtils = require('../../../../utils/ProxyUtils');
+const {isArray} = require('lodash');
 
 
 function wmsToOpenlayersOptions(options) {
@@ -31,49 +31,12 @@ function getWMSURLs( urls ) {
     return urls.map((url) => url.split("\?")[0]);
 }
 
-function needProxy(uri) {
-    var needed = false;
-    var sameOrigin = !(uri.indexOf("http") === 0);
-    var urlParts = !sameOrigin && uri.match(/([^:]*:)\/\/([^:]*:?[^@]*@)?([^:\/\?]*):?([^\/\?]*)/);
-    if (urlParts) {
-        let location = window.location;
-        sameOrigin =
-            urlParts[1] === location.protocol &&
-            urlParts[3] === location.hostname;
-        let uPort = urlParts[4];
-        let lPort = location.port;
-        if (uPort !== 80 && uPort !== "" || lPort !== "80" && lPort !== "") {
-            sameOrigin = sameOrigin && uPort === lPort;
-        }
-    }
-    if (!sameOrigin) {
-        let proxyUrl = ConfigUtils.getProxyUrl({});
-        if (proxyUrl) {
-            let useCORS = [];
-            if (isObject(proxyUrl)) {
-                useCORS = proxyUrl.useCORS || [];
-                proxyUrl = proxyUrl.url;
-            }
-            const isCORS = useCORS.reduce((found, current) => found || uri.indexOf(current) === 0, false);
-            if (!isCORS) {
-                needed = true;
-            }
-        }
-    }
-    return needed;
-}
-
 // Works with geosolutions proxy
 function proxyTileLoadFunction(imageTile, src) {
     var newSrc = src;
-    if (needProxy(src)) {
-        let proxyUrl = ConfigUtils.getProxyUrl({});
-        if (proxyUrl) {
-            if (isObject(proxyUrl)) {
-                proxyUrl = proxyUrl.url;
-            }
-            newSrc = proxyUrl + encodeURIComponent(src);
-        }
+    if (ProxyUtils.needProxy(src)) {
+        let proxyUrl = ProxyUtils.getProxyUrl();
+        newSrc = proxyUrl + encodeURIComponent(src);
     }
     imageTile.getImage().src = newSrc;
 }

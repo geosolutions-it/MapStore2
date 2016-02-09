@@ -11,8 +11,8 @@ var {Button, Col, Grid, Row, Image, Glyphicon, Table} = require('react-bootstrap
 var {DateFormat} = require('../I18N/I18N');
 require("./style.css");
 const configUtils = require('../../utils/ConfigUtils');
-
-
+const shotingImg = require('./shoting.gif');
+const {isEqual} = require('lodash');
 let SnapshotPanel = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
@@ -42,20 +42,26 @@ let SnapshotPanel = React.createClass({
             dateFormat: {day: "numeric", month: "long", year: "numeric"}
         };
     },
+    shouldComponentUpdate(nextProps) {
+        return (nextProps.status === "DISABLED" || !isEqual(nextProps.snapshot, this.props.snapshot));
+    },
     renderLayers() {
         let items = this.props.layers.map((layer) => {
             if (layer.visibility) {
-                return (layer.title);
+                return (<li>{layer.title}</li>);
             }
         });
         return items;
     },
     localDownload() {
-        return (<Button bsSize="xs" disabled={(this.props.snapshot.state === "SHOTING")}
+        return (this.props.snapshot && this.props.snapshot.img && this.props.snapshot.img.data) ?
+        (<Button bsSize="xs" disabled={(this.props.snapshot.state === "SHOTING")}
             href={this.props.snapshot.img.data.replace(/^data:image\/[^;]/, 'data:application/octet-stream')} download="snapshot.png"
                             >
+                <Glyphicon glyph="floppy-save" />{this.props.saveBtnText}
+        </Button>) : (<Button bsSize="xs" disabled={(this.props.snapshot.state === "SHOTING")}>
                             <Glyphicon glyph="floppy-save" />{this.props.saveBtnText}
-                            </Button>);
+        </Button>);
     },
     remoteDownload() {
         return (<Button bsSize="xs" disabled={(this.props.snapshot.state === "SHOTING")}
@@ -70,19 +76,27 @@ let SnapshotPanel = React.createClass({
                     </Row>);
         }
     },
+    renderPreview() {
+        return (this.props.snapshot.state === "READY") ? (<Image src={this.props.snapshot.img.data} responsive thumbnail/>) :
+        (<Image src={shotingImg} style={{margin: "0 auto"}}responsive/>);
+    },
+    renderSize() {
+        return (this.props.snapshot && this.props.snapshot.img) ? (<td>{this.props.snapshot.img.width}X{this.props.snapshot.img.height}</td>) :
+        '';
+    },
     render() {
-        return ( (this.props.snapshot.img && this.props.snapshot.img.data) || this.props.snapshot.state === "READY") ? (
+        return ( this.props.snapshot.state !== "DISABLED") ? (
             <Grid header={this.props.name} className="snapshot-panel" fluid={true}>
                 <Row>
-                    <Col xs={7} sm={7} md={7}><Image src={this.props.snapshot.img.data} responsive thumbnail/></Col>
+                    <Col xs={7} sm={7} md={7}>{this.renderPreview()}</Col>
                     <Col xs={5} sm={5} md={5}>
                        <Table responsive>
                             <tbody>
                                <tr>
                                 <td>Date</td><td> <DateFormat dateParams={this.props.dateFormat}/></td>
                                 </tr>
-                                <tr><td>Layers</td><td>{this.renderLayers()}</td></tr>
-                                <tr><td>Size</td><td>{this.props.snapshot.img.width}X{this.props.snapshot.img.height}</td>
+                                <tr><td>Layers</td><td><ul>{this.renderLayers()}</ul></td></tr>
+                                <tr><td>Size{this.renderSize()}</td>
                                 </tr>
                             </tbody>
                         </Table>
@@ -90,7 +104,7 @@ let SnapshotPanel = React.createClass({
                 </Row>
 
                 <Row className="pull-right" style={{marginTop: "5px"}}>
-                    {(this.props.browser.ie || (this.props.snapshot.img.size > 2000 && this.props.browser.chrome)) ? this.remoteDownload() : this.localDownload()}
+                    {(this.props.browser.ie || (this.props.snapshot.img && this.props.snapshot.img.size > 1800 && this.props.browser.chrome)) ? this.remoteDownload() : this.localDownload()}
                 </Row>
                 {this.renderError()}
             </Grid>

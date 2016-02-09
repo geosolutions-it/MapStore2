@@ -46,13 +46,6 @@ var SnapshotBtn = React.createClass({
     },
     render() {
         return (this.props.status === "SHOTING") ? this.renderLoadingButton() : this.renderButton();
-    },
-    getBtnStyle() {
-        let style = "default";
-        if (this.props.status === "ENABLED") {
-            style = "info";
-        }
-        return style;
     }
 });
 

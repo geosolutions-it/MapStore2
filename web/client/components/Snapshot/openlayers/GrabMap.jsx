@@ -10,10 +10,11 @@ var {LMap,
     LLayer,
     Feature
 } = require('../../map/openlayers/index');
-var assign = require('object-assign');
-var ConfigUtils = require('../../../utils/ConfigUtils');
+const assign = require('object-assign');
+const ConfigUtils = require('../../../utils/ConfigUtils');
+require("./snapshotMapStyle.css");
 
-var GrabOlMap = React.createClass({
+let GrabOlMap = React.createClass({
     propTypes: {
             config: ConfigUtils.PropTypes.config,
             layers: React.PropTypes.array,
@@ -33,9 +34,6 @@ var GrabOlMap = React.createClass({
             onStatusChange: () => {},
             onSnapshotError: () => {}
         };
-    },
-    getInitialState() {
-        return {shot: null};
     },
     renderLayers(layers) {
         if (layers) {
@@ -75,7 +73,7 @@ var GrabOlMap = React.createClass({
     },
     render() {
         return (this.props.active) ? (
-            <LMap id="snapshot_map"
+            <LMap id="snapshot_hidden_map"
                 center={this.props.config.center}
                 zoom={this.props.config.zoom}
                 mapStateSource={this.props.config.mapStateSource}

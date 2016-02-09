@@ -30,13 +30,6 @@ describe("test the SnapshotPanel", () => {
     });
 
     it('test component to draw snapshot img', () => {
-        // layers={props.layers.flat}
-        //             browser={props.browser}
-        //             key="snapshotPanel"
-        //             snapshot={props.snapshot}
-        //             onStatusChange={props.changeSnapshotState}
-        //             icon={<SnapshotIcon status={props.snapshot.state}/>}
-        //             downloadImg={props.postCanvas}
         const snapstate = {
             state: "READY",
             img: {
@@ -44,9 +37,11 @@ describe("test the SnapshotPanel", () => {
                 width: 20,
                 height: 20,
                 size: 20
-            }
+            },
+            error: "Test Error"
         };
-        const tb = ReactDOM.render(<SnapshotPanel snapshot={snapstate} />, document.getElementById("container"));
+        const layers = [{title: "test", visibility: true}, {title: "test 2", visibility: false}];
+        const tb = ReactDOM.render(<SnapshotPanel snapshot={snapstate} layers={layers} />, document.getElementById("container"));
         expect(tb).toExist();
         const tbNode = ReactDOM.findDOMNode(tb);
         const img = tbNode.getElementsByTagName('img');
@@ -56,13 +51,8 @@ describe("test the SnapshotPanel", () => {
     });
 
     it('test component save button', () => {
-        // layers={props.layers.flat}
-        //             browser={props.browser}
-        //             key="snapshotPanel"
-        //             snapshot={props.snapshot}
-        //             onStatusChange={props.changeSnapshotState}
-        //             icon={<SnapshotIcon status={props.snapshot.state}/>}
-        //             downloadImg={props.postCanvas}
+        let downRes;
+        const downImg = (imgData) => {downRes = imgData; };
         const snapstate = {
             state: "READY",
             img: {
@@ -72,10 +62,12 @@ describe("test the SnapshotPanel", () => {
                 size: 20
             }
         };
-        const tb = ReactDOM.render(<SnapshotPanel snapshot={snapstate} browser={{ie: true}}/>, document.getElementById("container"));
+        const tb = ReactDOM.render(<SnapshotPanel downloadImg={downImg} snapshot={snapstate} browser={{ie: true}}/>, document.getElementById("container"));
         expect(tb).toExist();
         const tbNode = ReactDOM.findDOMNode(tb);
         const btn = tbNode.getElementsByTagName('button');
         expect(btn.length).toBe(1);
+        btn[0].click();
+        expect(downRes).toEqual(snapstate.img.data);
     });
 });

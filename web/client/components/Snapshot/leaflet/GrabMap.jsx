@@ -63,7 +63,7 @@ var GrabLMap = React.createClass({
                 return html2canvas(l, {
                         logging: false,
                         proxy: this.proxy,
-                        useCORS: false,
+                        useCORS: true,
                         type: "view" });
             }, this);
             let cSnap = this.createSnapshot;
@@ -91,22 +91,6 @@ var GrabLMap = React.createClass({
     },
     render() {
         return null;
-    },
-    layerLoading() {
-        if (this.props.snapstate.state !== "SHOTING") {
-            this.props.onStatusChange("SHOTING");
-        }
-        this.toLoad = (this.toLoad) ? this.toLoad : 0;
-        this.toLoad++;
-    },
-    layerLoad() {
-        this.toLoad--;
-        if (this.toLoad === 0) {
-            let map = this.refs.snapMap.map;
-            if (map) {
-                map.once('postcompose', (e) => this.createSnapshot(e.context.canvas));
-            }
-        }
     },
     createSnapshot(canvas) {
         let imgData = canvas.toDataURL('image/png');
