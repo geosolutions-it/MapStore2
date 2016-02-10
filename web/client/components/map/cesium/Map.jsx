@@ -181,7 +181,12 @@ let CesiumMap = React.createClass({
                     newProps.center.x,
                     newProps.center.y,
                     this.getHeightFromZoom(newProps.zoom)
-                )
+                ),
+                orientation: {
+                    heading: this.map.camera.heading,
+                    pitch: this.map.camera.pitch,
+                    roll: this.map.camera.roll
+                }
             });
         }
     },
