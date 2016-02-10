@@ -33,7 +33,7 @@ const CesiumLayer = React.createClass({
         if (newProps.position !== this.props.position) {
             this.updateZIndex(newProps.position - (this.props.position || 0));
         }
-        if (this.props.options && this.props.options.params && this.layer.updateParams) {
+        if (this.props.options && this.props.options.params && this.layer.updateParams && newProps.options.visibility) {
             const changed = Object.keys(this.props.options.params).reduce((found, param) => {
                 if (newProps.options.params[param] !== this.props.options.params[param]) {
                     return true;
@@ -41,9 +41,10 @@ const CesiumLayer = React.createClass({
                 return found;
             }, false);
             if (changed) {
-                this.layer.updateParams(newProps.options.params);
-                this.props.map.scene.globe._surface._tileProvider._quadtree.invalidateAllTiles();
-                this.props.map.render();
+                const newLayer = this.layer.updateParams(newProps.options.params);
+                this.removeLayer();
+                this.layer = newLayer;
+                this.addLayer();
             }
         }
         this.updateLayer(newProps, this.props);
@@ -57,7 +58,7 @@ const CesiumLayer = React.createClass({
                     this.layer.destroy();
                 }
 
-                this.props.map.imageryLayers.remove(this.layer);
+                this.props.map.imageryLayers.remove(this.provider);
             }
         }
     },
