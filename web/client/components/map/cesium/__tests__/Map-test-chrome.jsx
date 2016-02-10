@@ -122,7 +122,6 @@ describe('CesiumMap', () => {
         });
     });
 
-
     it('check if the map changes when receive new props', () => {
         const map = ReactDOM.render(
             <CesiumMap
@@ -137,5 +136,28 @@ describe('CesiumMap', () => {
         expect(Math.round(cesiumMap.camera.positionCartographic.height - map.getHeightFromZoom(12))).toBe(0);
         expect(Math.round(cesiumMap.camera.positionCartographic.latitude * 180.0 / Math.PI)).toBe(44);
         expect(Math.round(cesiumMap.camera.positionCartographic.longitude * 180.0 / Math.PI)).toBe(10);
+    });
+
+    it('check that the map orientation does not change on pan / zoom', () => {
+        const map = ReactDOM.render(
+            <CesiumMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={10}
+            />
+        , document.getElementById("container"));
+
+        const cesiumMap = map.map;
+        cesiumMap.camera.lookUp(1.0);
+        cesiumMap.camera.lookRight(1.0);
+        const precision = Math.pow(10, 8);
+        const heading = Math.round(cesiumMap.camera.heading * precision) / precision;
+        const pitch = Math.round(cesiumMap.camera.pitch * precision) / precision;
+        const roll = Math.round(cesiumMap.camera.roll * precision) / precision;
+
+        map.setProps({zoom: 12, center: {y: 44, x: 10}});
+        expect(Math.round(cesiumMap.camera.heading * precision) / precision).toBe(heading);
+        expect(Math.round(cesiumMap.camera.pitch * precision) / precision).toBe(pitch);
+        expect(Math.round(cesiumMap.camera.roll * precision) / precision).toBe(roll);
+
     });
 });
