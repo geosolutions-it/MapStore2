@@ -112,4 +112,12 @@ describe('ImageButton', () => {
         btnDiv.click();
         expect(spy.calls.length).toBe(0);
     });
+
+    it('creates a button with a tooltip', () => {
+        const btn = ReactDOM.render(<ImageButton tooltip="Tooltip"/>, document.getElementById("container"));
+        expect(btn).toExist();
+
+        const btnDiv = ReactDOM.findDOMNode(btn);
+        expect(btnDiv.title).toBe("Tooltip");
+    });
 });
