@@ -80,26 +80,15 @@ function wmsToCesiumOptions(options) {
     });
 }
 
-
-function updateUrl(originalUrl, params) {
-    let {url, queryString} = splitUrl(originalUrl);
-    let parts = queryString.split('&').reduce((previous, current) => {
-        const [key, value] = current.split('=');
-        return assign({}, previous, {[key]: value});
-    }, {});
-    Object.keys(params).forEach((key) => {
-        parts[key] = encodeURIComponent(params[key]);
-    });
-    return url + Object.keys(parts).map((key) => key + '=' + parts[key]).join('&');
-}
-
-Layers.registerType('wms', (options) => {
+const createLayer = (options) => {
     let layer = new Cesium.WebMapServiceImageryProvider(wmsToCesiumOptions(options));
     layer.updateParams = (params) => {
-        const provider = layer._tileProvider;
-
-        provider._url = updateUrl(provider._url, params);
-        provider._urlParts[1] = updateUrl(provider._urlParts[1], params);
+        const newOptions = assign({}, options, {
+            params: assign({}, options.params || {}, params)
+        });
+        return createLayer(newOptions);
     };
     return layer;
-});
+};
+
+Layers.registerType('wms', createLayer);
