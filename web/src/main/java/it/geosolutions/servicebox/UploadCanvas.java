@@ -231,13 +231,14 @@ public class UploadCanvas extends HttpServlet {
 
 		} catch (FileNotFoundException e) {
 			LOGGER.info(e.getMessage());
-
-			// response.getWriter().print("<html><head></head><body><h3>Couldn't download this file. </h3></body</html>");
 		} catch (IOException e) {
 			LOGGER.info(e.getMessage());
 			response.getWriter()
 					.print("<html><head></head><body><h3>Sorry. We was unable to process your request. </h3></body</html>");
-		} finally {
+		} catch (Exception e){
+			LOGGER.warning(e.getLocalizedMessage());
+			throw new ServletException(e);
+		}finally {
 			if (out != null) {
 				try {
 					out.close();
