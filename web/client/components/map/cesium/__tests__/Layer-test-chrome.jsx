@@ -211,7 +211,7 @@ describe('Cesium layer', () => {
         expect(layer.provider.alpha).toBe(0.5);
     });
 
-    it('respects layer ordering', () => {
+    it('respects layer ordering 1', () => {
         var options1 = {
             "type": "wms",
             "visibility": true,
@@ -360,5 +360,26 @@ describe('Cesium layer', () => {
                  options={options} map={map}/>, document.getElementById('container'));
         expect(layer).toExist();
         expect(map.entities._entities.length).toBe(1);
+    });
+
+    it('respects layer ordering 2', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "opacity": 1.0,
+            "url": "http://demo.geo-solutions.it/geoserver/wms"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <CesiumLayer type="wms" position={10}
+                 options={options} map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+
+        const position = map.imageryLayers.get(0)._position;
+        expect(position).toBe(10);
     });
 });
