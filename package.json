@@ -56,6 +56,7 @@
   "//": "replace react-sortable-items with official on npm when 0.0.10 with remove_deprecated PR in included",
   "dependencies": {
     "axios": "^0.8.1",
+    "babel-standalone": "^6.4.4",
     "bootstrap": "^3.3.5",
     "classnames": "^2.1.5",
     "es6-promise": "^2.3.0",
@@ -83,8 +84,8 @@
     "react-sidebar": "^2.1.1",
     "react-sortable-items": "0.0.11",
     "react-swipe": "^3.0.0",
-    "redux": "3.1.3",
     "react-widgets": "^3.1.7",
+    "redux": "3.1.3",
     "redux-logger": "^2.0.0",
     "redux-thunk": "^0.1.0",
     "redux-undo": "^0.5.0",
