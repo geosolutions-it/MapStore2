@@ -1,3 +1,5 @@
+var path = require("path");
+var NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
 module.exports = function karmaConfig(config) {
     config.set({
 
@@ -38,6 +40,9 @@ module.exports = function karmaConfig(config) {
 
         webpack: {
             devtool: 'inline-source-map',
+            plugins: [
+                new NormalModuleReplacementPlugin(/babel-standalone$/, path.join(__dirname, "web", "client", "libs", "babel"))
+            ],
             module: {
                 loaders: [
                     { test: /\.jsx?$/, exclude: /(ol\.js$)/, loader: 'babel-loader', query: {stage: 0} },
