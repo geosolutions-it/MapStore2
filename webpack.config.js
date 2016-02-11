@@ -90,11 +90,17 @@ module.exports = {
             host: "mapstore.geo-solutions.it",
             target: "http://mapstore.geo-solutions.it"
         }, {
+            path: new RegExp("/mapstore/rest/services/saveimage/(.*)"),
+            rewrite: rewriteUrl("/servicebox/UploadCanvas$1"),
+            host: "mapstore2.geo-solutions.it",
+            target: "http://mapstore2.geo-solutions.it"
+        }, {
             path: new RegExp("/mapstore/proxy(.*)"),
             rewrite: rewriteUrl("/http_proxy/proxy$1"),
             host: "mapstore.geo-solutions.it",
             target: "http://mapstore.geo-solutions.it"
-        }]
+        }
+        ]
     },
 
     devtool: 'inline-source-map',
