@@ -37,7 +37,19 @@
       <scope>test</scope>
       <version>4.4</version>
     </dependency>
-
+    <!--  mockito -->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>1.9.5</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- servlet -->
+    <dependency>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+          <version>2.5</version>
+      </dependency>
   </dependencies>
 
   <build>
@@ -55,7 +67,7 @@
                         <goal>run</goal>
                     </goals>
                     <configuration>
-                        <target>
+                        <target unless="skipcesiumdownload">
                             <!-- download file -->
                             <get src=" https://cesiumjs.org/releases/Cesium-1.17.zip"
                                  dest="${basedir}/cesium.zip"
@@ -259,7 +271,45 @@
                 </overlays>
             </configuration>
         </plugin>
+         <plugin>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-maven-plugin</artifactId>
+          <version>9.2.11.v20150529</version>
+          <configuration>
+                <systemProperties>
+                    <systemProperty>
+                        <name>log4j.configuration</name>
+                        <value>log4j-test.properties</value>
+                    </systemProperty>
+                </systemProperties>
+            </configuration>
+        </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+        <id>serveronly</id>
+        <properties>
+            <skipTests>true</skipTests>
+            <skipcesiumdownload>true</skipcesiumdownload>
+        </properties>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.6</version>
+                    <executions></executions>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
+</profiles>
 
 </project>
