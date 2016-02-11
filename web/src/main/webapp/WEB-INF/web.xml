@@ -15,13 +15,13 @@
         <param-name>webAppRootKey</param-name>
         <param-value>geostore.root</param-value>
     </context-param>
-    
+
     <context-param>
       <param-name>proxyPropPath</param-name>
       <param-value>/proxy.properties</param-value>
     </context-param>
-    
-	<!-- <context-param> <param-name>log4jConfigLocation</param-name> <param-value>file:${config.dir}/log4j.xml</param-value> 
+
+	<!-- <context-param> <param-name>log4jConfigLocation</param-name> <param-value>file:${config.dir}/log4j.xml</param-value>
 		</context-param> -->
 
 	<!-- spring context loader -->
@@ -48,6 +48,21 @@
 		<url-pattern>/rest/*</url-pattern>
 	</filter-mapping>
 
+	<!-- Upload Canvas Servlet -->
+	<servlet>
+		<servlet-name>UploadCanvas</servlet-name>
+		<servlet-class>it.geosolutions.servicebox.UploadCanvas</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>UploadCanvas</servlet-name>
+		<url-pattern>/rest/services/saveimage/*</url-pattern>
+	</servlet-mapping>
+	<context-param>
+		<description>location of the upload canvas properties file</description>
+		<param-name>uploadcanvas.properties</param-name>
+		<param-value>/mapstore2.properties</param-value>
+	</context-param>
 	<!-- CXF Servlet -->
 	<servlet>
 		<servlet-name>CXFServlet</servlet-name>
@@ -58,13 +73,13 @@
 		<servlet-name>CXFServlet</servlet-name>
 		<url-pattern>/rest/geostore/*</url-pattern>
 	</servlet-mapping>
-    
+
     <!-- Proxy Servlet -->
     <servlet>
       <servlet-name>HttpProxy</servlet-name>
       <servlet-class>it.geosolutions.httpproxy.HTTPProxy</servlet-class>
     </servlet>
-  
+
     <servlet-mapping>
       <servlet-name>HttpProxy</servlet-name>
       <url-pattern>/proxy/*</url-pattern>
