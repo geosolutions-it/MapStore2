@@ -204,6 +204,11 @@
             "layerSwitcher": "Questo è il testo di aiuto per LayerSwitcher",
             "infoButton": "Questo è il testo di aiuto per InfoButton",
             "locateBtn": "Questo è il testo di aiuto per LocateBtn"
+        },
+        "queryform": {
+            "datefield": {
+                "wrong_date_range": "La data di inizio deve essere inferiore a quella di fine"
+            }
         }
     }
 }
