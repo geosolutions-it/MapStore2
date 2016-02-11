@@ -15,6 +15,8 @@ momentLocalizer(Moment);
 const {DateTimePicker} = require('react-widgets');
 const {Row, Col, Modal, Button} = require('react-bootstrap');
 
+const I18N = require('../I18N/I18N');
+
 require('react-widgets/lib/less/react-widgets.less');
 
 const DateField = React.createClass({
@@ -66,7 +68,7 @@ const DateField = React.createClass({
                             <Modal.Title>Date Exception</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <p>{this.props.fieldException}</p>
+                            <p><I18N.Message msgId={this.props.fieldException || ""}/></p>
                         </Modal.Body>
                         <Modal.Footer>
                             <Button style={{"float": "right"}} onClick={this.cleanFields}>Close</Button>
@@ -94,7 +96,7 @@ const DateField = React.createClass({
     },
     updateValueState(value) {
         if (value.startDate && value.endDate && (value.startDate > value.endDate)) {
-            this.props.onUpdateExceptionField(this.props.fieldRowId, "The Left Date must be less than the Date on the right");
+            this.props.onUpdateExceptionField(this.props.fieldRowId, "queryform.datefield.wrong_date_range");
         }
 
         this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value);
