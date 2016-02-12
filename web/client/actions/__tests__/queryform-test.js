@@ -9,22 +9,43 @@
 const expect = require('expect');
 const {
     ADD_FILTER_FIELD,
+    ADD_GROUP_FIELD,
     REMOVE_FILTER_FIELD,
     UPDATE_FILTER_FIELD,
     UPDATE_EXCEPTION_FIELD,
+    UPDATE_LOGIC_COMBO,
+    REMOVE_GROUP_FIELD,
     addFilterField,
+    addGroupField,
     removeFilterField,
     updateFilterField,
-    updateExceptionField
+    updateExceptionField,
+    updateLogicCombo,
+    removeGroupField
 } = require('../queryform');
 
 describe('Test correctness of the queryform actions', () => {
 
     it('addFilterField', () => {
-        var retval = addFilterField();
+        let groupId = 1;
+
+        var retval = addFilterField(groupId);
 
         expect(retval).toExist();
         expect(retval.type).toBe(ADD_FILTER_FIELD);
+        expect(retval.groupId).toBe(1);
+    });
+
+    it('addGroupField', () => {
+        let groupId = 1;
+        let index = 0;
+
+        var retval = addGroupField(groupId, index);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(ADD_GROUP_FIELD);
+        expect(retval.groupId).toBe(1);
+        expect(retval.index).toBe(0);
     });
 
     it('removeFilterField', () => {
@@ -61,5 +82,27 @@ describe('Test correctness of the queryform actions', () => {
         expect(retval.type).toBe(UPDATE_EXCEPTION_FIELD);
         expect(retval.rowId).toBe(100);
         expect(retval.exceptionMessage).toBe("message");
+    });
+
+    it('updateLogicCombo', () => {
+        let groupId = 100;
+        let logic = "OR";
+
+        let retval = updateLogicCombo(groupId, logic);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(UPDATE_LOGIC_COMBO);
+        expect(retval.groupId).toBe(100);
+        expect(retval.logic).toBe("OR");
+    });
+
+    it('removeGroupField', () => {
+        let groupId = 100;
+
+        let retval = removeGroupField(groupId);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(REMOVE_GROUP_FIELD);
+        expect(retval.groupId).toBe(100);
     });
 });

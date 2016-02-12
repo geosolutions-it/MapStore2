@@ -1,14 +1,31 @@
-var {combineReducers} = require('redux');
+/**
+ * Copyright 2016, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 var DebugUtils = require('../../../utils/DebugUtils');
 
-var queryForm = require('../../../reducers/queryform');
 var locale = require('../../../reducers/locale');
+const {combineReducers} = require('redux');
+
+const queryform = require('../../../reducers/queryform');
 
 const initialState = {
+    groupLevels: 5,
+    groupFields: [
+        {
+            id: 1,
+            logic: "OR",
+            index: 0
+        }
+    ],
     filterFields: [
         {
             rowId: 0,
+            groupId: 1,
             attribute: null,
             operator: "=",
             value: null,
@@ -36,9 +53,9 @@ const initialState = {
 
  // reducers
 const reducers = combineReducers({
-    queryForm,
+    queryform,
     locale
 });
 
 // export the store with the given reducers
-module.exports = DebugUtils.createDebugStore(reducers, {queryForm: initialState});
+module.exports = DebugUtils.createDebugStore(reducers, {queryform: initialState});
