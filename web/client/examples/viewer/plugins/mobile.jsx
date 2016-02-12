@@ -15,6 +15,7 @@ var Menu = require('../../../components/menu/DrawerMenu');
 var Section = require('../../../components/menu//Section');
 var mapInfo = require('../../../reducers/mapInfo');
 var floatingPanel = require('../reducers/floatingPanel');
+var fullScreen = require('../reducers/fullScreen');
 var mousePosition = require('../../../reducers/mousePosition');
 var measurement = require('../../../reducers/measurement');
 var {searchResults} = require('../../../reducers/search');
@@ -29,6 +30,7 @@ var NominatimResultList = require("../../../components/Search/geocoding/Nominati
 
 var {getFeatureInfo, changeMapInfoState, purgeMapInfoResults, changeMapInfoFormat, showMapinfoMarker, hideMapinfoMarker} = require('../../../actions/mapInfo');
 var {activatePanel} = require('../actions/floatingPanel');
+var {activateButton} = require('../actions/fullScreen');
 var {changeMousePosition, changeMousePositionCrs, changeMousePositionState} = require('../../../actions/mousePosition');
 
 var {toggleNode, sortNode, changeLayerProperties, layerLoad} = require('../../../actions/layers');
@@ -124,7 +126,7 @@ module.exports = {
                     </Section>
                     <Section eventKey="fullscreen" header={<Message msgId="settings-scr" />}>
                         <h5>Fullscreen</h5>
-                        <FullScreen />
+                        <FullScreen activeKey="1" />
                     </Section>
                     <Section eventKey="about" renderInModal header={<Message msgId="aboutLbl" />}>
                         <AboutContent />
@@ -178,6 +180,7 @@ module.exports = {
     reducers: {
         mapInfo: mapInfo ? mapInfo : {enabled: false, responses: [], requests: {length: 0}, clickPoint: {}, showMarker: false},
         floatingPanel,
+        fullScreen,
         mousePosition,
         measurement,
         searchResults,
@@ -191,6 +194,7 @@ module.exports = {
         changeMapInfoState,
         purgeMapInfoResults,
         activatePanel,
+        activateButton,
         changeLayerProperties,
         changeMousePositionState,
         changeMousePositionCrs,

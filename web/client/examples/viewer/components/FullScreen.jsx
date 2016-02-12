@@ -4,15 +4,25 @@ var {Button, Glyphicon} = require('react-bootstrap');
 
 var full = React.createClass({
     propTypes: {
-        active: React.PropTypes.bool
+        activeKey: React.PropTypes.string
     },
-    getDefaultProps() {
+    getInitialState() {
         return {
-            active: true
+            active_full_button: false,
+            active_resize_button: true,
+            activeKey: this.props.activeKey
         };
     },
-	enterFullscreen: function () {
-		var docElm = document.documentElement;
+    render() {
+        return (
+                <ButtonGroup id="screen-switcher" type="select" bsSize="small">
+                    <Button id="enter-full-screen-button" active={this.state.active_full_button} onClick = {() => {this.enterFullscreen(); }}><Glyphicon glyph="resize-full"/>ON</Button>
+                    <Button id="exit-full-screen-button" active={this.state.active_resize_button} onClick = {() => {this.exitFullscreen(); }} ><Glyphicon glyph="resize-small" />OFF</Button>
+                </ButtonGroup>
+        		);
+    },
+    enterFullscreen () {
+        var docElm = document.documentElement;
         if (docElm.requestFullscreen) {
             docElm.requestFullscreen();
         }
@@ -26,8 +36,9 @@ var full = React.createClass({
             docElm.webkitRequestFullScreen();
         }
         return false;
-  	},
-    exitFullscreen: function () {
+        this.setState({ active_full_button: true, active_resize_button: false, activeKey: this.state.activeKey });
+    },
+    exitFullscreen () {
         if (document.exitFullscreen) {
             document.exitFullscreen();
         }
@@ -39,16 +50,9 @@ var full = React.createClass({
         }
         else if (document.webkitCancelFullScreen) {
             document.webkitCancelFullScreen();
-        } 
+        }
         return false;
-    },
-    render() {
-        return (
-                <ButtonGroup id="screen-switcher" type="select" bsSize="small">
-                    <Button id="enter-full-screen-button" onClick = {this.enterFullscreen}><Glyphicon glyph="resize-full"/>ON</Button>
-                    <Button id="exit-full-screen-button" active={this.props.active} onClick = {this.exitFullscreen} ><Glyphicon glyph="resize-small" />OFF</Button>
-                </ButtonGroup>
-        		);
+        this.setState({ active_full_button: false, active_resize_button:true, activeKey: this.state.activeKey });
     }
 });
 
