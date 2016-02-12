@@ -9,10 +9,22 @@ const ADD_FILTER_FIELD = 'ADD_FILTER_FIELD';
 const REMOVE_FILTER_FIELD = 'REMOVE_FILTER_FIELD';
 const UPDATE_FILTER_FIELD = 'UPDATE_FILTER_FIELD';
 const UPDATE_EXCEPTION_FIELD = 'UPDATE_EXCEPTION_FIELD';
+const ADD_GROUP_FIELD = 'ADD_GROUP_FIELD';
+const UPDATE_LOGIC_COMBO = 'UPDATE_LOGIC_COMBO';
+const REMOVE_GROUP_FIELD = 'REMOVE_GROUP_FIELD';
 
-function addFilterField() {
+function addFilterField(groupId) {
     return {
-        type: ADD_FILTER_FIELD
+        type: ADD_FILTER_FIELD,
+        groupId: groupId
+    };
+}
+
+function addGroupField(groupId, index) {
+    return {
+        type: ADD_GROUP_FIELD,
+        groupId: groupId,
+        index: index
     };
 }
 
@@ -40,13 +52,34 @@ function updateExceptionField(rowId, message) {
     };
 }
 
+function updateLogicCombo(groupId, logic) {
+    return {
+        type: UPDATE_LOGIC_COMBO,
+        groupId: groupId,
+        logic: logic
+    };
+}
+
+function removeGroupField(groupId) {
+    return {
+        type: REMOVE_GROUP_FIELD,
+        groupId: groupId
+    };
+}
+
 module.exports = {
     ADD_FILTER_FIELD,
     REMOVE_FILTER_FIELD,
     UPDATE_FILTER_FIELD,
     UPDATE_EXCEPTION_FIELD,
+    ADD_GROUP_FIELD,
+    UPDATE_LOGIC_COMBO,
+    REMOVE_GROUP_FIELD,
     addFilterField,
     removeFilterField,
     updateFilterField,
-    updateExceptionField
+    updateExceptionField,
+    addGroupField,
+    updateLogicCombo,
+    removeGroupField
 };

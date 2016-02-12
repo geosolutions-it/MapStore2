@@ -14,10 +14,17 @@ const Localized = require('../../../components/I18N/Localized');
 // include application component
 const QueryBuilder = require('../../../components/QueryForm/QueryBuilder');
 
-
 const {bindActionCreators} = require('redux');
-const {addFilterField, removeFilterField,
-    updateFilterField, updateExceptionField} = require('../../../actions/queryform');
+const {
+    // QueryBuilder action functions
+    addGroupField,
+    addFilterField,
+    removeFilterField,
+    updateFilterField,
+    updateExceptionField,
+    updateLogicCombo,
+    removeGroupField
+} = require('../../../actions/queryform');
 
 // connecting a Dumb component to the store
 // makes it a smart component
@@ -25,15 +32,26 @@ const {addFilterField, removeFilterField,
 // and actions to event handlers
 const SmartQueryForm = connect((state) => {
     return {
-        filterFields: state.queryForm.filterFields,
-        attributes: state.queryForm.attributes
+        // QueryBuilder props
+        groupLevels: state.queryform.groupLevels,
+        groupFields: state.queryform.groupFields,
+        filterFields: state.queryform.filterFields,
+        attributes: state.queryform.attributes
     };
-}, (dispatch) => bindActionCreators({
-    onAddFilterField: addFilterField,
-    onRemoveFilterField: removeFilterField,
-    onUpdateFilterField: updateFilterField,
-    onUpdateExceptionField: updateExceptionField
-}, dispatch))(QueryBuilder);
+}, dispatch => {
+    return {
+        actions: bindActionCreators({
+            // QueryBuilder actions
+            onAddGroupField: addGroupField,
+            onAddFilterField: addFilterField,
+            onRemoveFilterField: removeFilterField,
+            onUpdateFilterField: updateFilterField,
+            onUpdateExceptionField: updateExceptionField,
+            onUpdateLogicCombo: updateLogicCombo,
+            onRemoveGroupField: removeGroupField
+        }, dispatch)
+    };
+})(QueryBuilder);
 
 module.exports = connect((state) => {
     return {
