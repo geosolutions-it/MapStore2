@@ -25,6 +25,7 @@
         "mousePositionCoordinates": "Coordinates indicator",
         "menu": "Menu",
         "settings": "Settings",
+        "settings-scr": "Screen Settings",
         "noresultfound": "No Result found",
         "home":{
             "open": "Open",
