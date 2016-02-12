@@ -25,6 +25,7 @@
         "mousePositionCoordinates": "Indicatore di coordinate",
         "menu": "Menu",
         "settings": "Impostazioni",
+        "settings-scr": "Impostazioni schermata",
         "noresultfound": "Nessun Risultato Trovato",
         "home":{
             "open": "Apri",
