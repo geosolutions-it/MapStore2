@@ -62,6 +62,33 @@
 			},
       {
 				"type": "wms",
+        "url":"http://demo.geo-solutions.it/geoserver/wms",
+        "visibility": false,
+				"title": "Natural Earth",
+				"name": "sde:NE2_HR_LC_SR_W_DR",
+				"group": "background",
+				"format": "image/png"
+			},
+      {
+				"type": "wms",
+        "url":"http://demo.geo-solutions.it/geoserver/wms",
+        "visibility": false,
+				"title": "Hypsometric",
+				"name": "sde:HYP_HR_SR_OB_DR",
+				"group": "background",
+				"format": "image/png"
+			},
+			{
+				"type": "wms",
+        "url":"http://demo.geo-solutions.it/geoserver/wms",
+        "visibility": false,
+				"title": "Gray Earth",
+				"name": "sde:GRAY_HR_SR_OB_DR",
+				"group": "background",
+				"format": "image/png"
+			},
+      {
+				"type": "wms",
         "url":["http://demo.geo-solutions.it/geoserver/wms", "http://188.165.246.13/geoserver/wms"],
         "visibility": true,
         "opacity": 0.5,
