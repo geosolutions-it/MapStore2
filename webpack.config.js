@@ -90,11 +90,6 @@ module.exports = {
             host: "mapstore.geo-solutions.it",
             target: "http://mapstore.geo-solutions.it"
         }, {
-            path: new RegExp("/mapstore/rest/services/saveimage/(.*)"),
-            rewrite: rewriteUrl("/servicebox/UploadCanvas$1"),
-            host: "localhost:8080",
-            target: "http://localhost:8080"
-        }, {
             path: new RegExp("/mapstore/proxy(.*)"),
             rewrite: rewriteUrl("/http_proxy/proxy$1"),
             host: "mapstore.geo-solutions.it",

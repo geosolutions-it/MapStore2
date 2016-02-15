@@ -209,7 +209,8 @@
         "queryform": {
             "datefield": {
                 "wrong_date_range": "Start date must be lower than end date"
-            },
+            }
+        },
         "snapshot": {
             "title": "Snapshot Preview",
             "tooltip": "Capture map status",

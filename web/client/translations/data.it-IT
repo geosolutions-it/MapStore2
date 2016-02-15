@@ -209,7 +209,8 @@
         "queryform": {
             "datefield": {
                 "wrong_date_range": "La data di inizio deve essere inferiore a quella di fine"
-            },
+            }
+        },
         "snapshot": {
             "title": "Istantana",
             "tooltip": "Cattura lo stato della mappa",
