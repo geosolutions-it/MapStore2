@@ -213,8 +213,8 @@
         },
         "snapshot": {
             "title": "Snapshot Preview",
-            "tooltip": "Capture map status",
-            "googleBingError": "Goggole and Bing layers arn't availabel for the snapshot, due to copyrigth restricitions."
+            "tooltip": "Save a snapshot of the map.",
+            "googleBingError": "Googole and Bing layers aren't available for the snapshot, due to copyright restrictions."
         }
     }
 }

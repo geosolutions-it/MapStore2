@@ -78,6 +78,20 @@
                                    dest="${basedir}/client/libs/Cesium">
                             </unzip>
                          </target>
+                         <target unless="skiphtml2canvas">
+                            <!-- download file -->
+                            <get src=" https://github.com/niklasvh/html2canvas/archive/0.4.1.zip"
+                                 dest="${basedir}/html2canvas.zip"
+                                 verbose="true"
+                                 usetimestamp="true"/>
+                            <unzip src="${basedir}/html2canvas.zip"
+                                   dest="${basedir}/client/libs/">
+                            </unzip>
+                            <mkdir dir="${basedir}/client/libs/html2canvas"/>
+                            <move todir="${basedir}/client/libs/html2canvas/" >
+                                    <fileset dir="${basedir}/client/libs/html2canvas-0.4.1"/>
+                            </move>
+                         </target>
                      </configuration>
                  </execution>
              </executions>
@@ -251,6 +265,22 @@
                         </resources>
                     </configuration>
                 </execution>
+                <execution>
+                    <id>Html2Canvas</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/mapstore/libs/html2canvas</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/client/libs/html2canvas</directory>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
             </executions>
         </plugin>
 
@@ -292,6 +322,7 @@
         <properties>
             <skipTests>true</skipTests>
             <skipcesiumdownload>true</skipcesiumdownload>
+            <skiphtml2canvas>true</skiphtml2canvas>
         </properties>
         <build>
             <plugins>

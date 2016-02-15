@@ -9,3 +9,5 @@ web/client/libs/Cesium/
 web/cesium.zip
 web/.classpath
 web/.project
+web/client/libs/html2canvas/
+web/html2canvas.zip

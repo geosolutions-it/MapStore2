@@ -8,7 +8,7 @@
 const React = require('react');
 const ConfigUtils = require('../../../utils/ConfigUtils');
 const {isEqual} = require('lodash');
-require('../../../libs/html2canvas/html2canvas');
+require('../../../libs/html2canvas/build/html2canvas');
 
 let GrabLMap = React.createClass({
     propTypes: {
