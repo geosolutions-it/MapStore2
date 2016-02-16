@@ -100,7 +100,6 @@ let Locate = React.createClass({
     },
     onLocationError(err) {
         this.props.onLocateError(err.message);
-        this.props.changeLocateState("DISABLED");
     },
     render() {
         return null;

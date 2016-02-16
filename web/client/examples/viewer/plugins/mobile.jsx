@@ -20,8 +20,10 @@ var {searchResults} = require('../../../reducers/search');
 var help = require('../../../reducers/help');
 
 var LocateBtn = require("../../../components/mapcontrols/Locate/LocateBtn");
+var Notification = require("../../../components/mapcontrols/Locate/LocateNotification");
+
 var locate = require('../../../reducers/locate');
-var {changeLocateState} = require('../../../actions/locate');
+var {changeLocateState, onLocateError} = require('../../../actions/locate');
 // search SearchBar
 var SearchBar = require("../../../components/Search/SearchBar");
 var NominatimResultList = require("../../../components/Search/geocoding/NominatimResultList");
@@ -134,6 +136,13 @@ module.exports = {
                    locate={props.locate.state}
                    onClick={props.changeLocateState}
                    tooltip={<Message msgId="locate.tooltip"/>}/>,
+            <Notification
+                isActive={ (props.locate.error) ? true : false }
+                message={props.locate.error || ""}
+                action="close"
+                onDismiss={() => { props.onLocateError(null); props.changeLocateState("DISABLED"); }}
+                onClick={() => { props.onLocateError(null); props.changeLocateState("DISABLED"); }}
+                style={{bar: {font: '1.25rem normal Roboto, sans-serif'}, action: {font: '1rem normal Roboto, sans-serif'}}}/>,
             <MousePosition
                 id="mapstore-mouseposition-mobile"
                 key="mousePosition"
@@ -191,6 +200,7 @@ module.exports = {
         changeMousePositionCrs,
         changeMousePosition,
         changeLocateState,
+        onLocateError,
         changeZoomLevel,
         // layerLoading,
         layerLoad,

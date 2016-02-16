@@ -24,5 +24,10 @@ describe('Test the locate reducer', () => {
         expect(state).toExist();
         expect(state.state).toBe("LOCATING");
     });
+    it('locate error', () => {
+        let state = locate({}, {type: 'LOCATE_ERROR', error: "Error message"});
+        expect(state).toExist();
+        expect(state.error).toBe("Error message");
+    });
 
 });

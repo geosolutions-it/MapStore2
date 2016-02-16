@@ -55,8 +55,8 @@ var Locate = React.createClass({
         }
     },
     onLocationError(err) {
-        this.props.onLocateError(err.message);
-        this.props.changeLocateState("DISABLED");
+        let message = (err.message.length > 0 ) ? err.message : "Geolocation error: position unavailable";
+        this.props.onLocateError(message);
     },
     render() {
         return null;
