@@ -31,14 +31,15 @@ const Template = React.createClass({
     shouldComponentUpdate(nextProps) {
         return !isEqual(nextProps, this.props);
     },
-    renderCard() {
+    renderContent() {
         /*eslint-disable */
         let model = this.props.model;
         return eval(this.comp);
         /*eslint-enable */
     },
     render() {
-        return (<div>{this.renderCard()}</div>);
+        let content = this.renderContent();
+        return (content === '"use strict";') ? null : content;
     },
     parseTemplate(temp) {
         let template = (typeof temp === 'function') ? temp() : temp;
