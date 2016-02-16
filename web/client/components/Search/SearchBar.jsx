@@ -26,6 +26,7 @@ require('./searchbar.css');
  */
 let SearchBar = React.createClass({
     propTypes: {
+        className: React.PropTypes.string,
         onSearch: React.PropTypes.func,
         onSearchReset: React.PropTypes.func,
         placeholder: React.PropTypes.string,
@@ -40,6 +41,7 @@ let SearchBar = React.createClass({
     },
     getDefaultProps() {
         return {
+            className: "MapSearchBar",
             onSearch: () => {},
             onSearchReset: () => {},
             placeholderMsgId: "search.placeholder",
@@ -90,7 +92,7 @@ let SearchBar = React.createClass({
             placeholder = this.props.placeholder;
         }
         return (
-            <div className="MapSearchBar">
+            <div className={this.props.className}>
                 <Input
                     key="search-input"
                     placeholder={placeholder}
