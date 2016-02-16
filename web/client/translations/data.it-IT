@@ -214,7 +214,7 @@
         "snapshot": {
             "title": "Istantanea",
             "tooltip": "Salva un' istantanea della mappa.",
-            "googleBingError": "Istantanea non disponibile per le restrizione all' utilizzo dei layer Googole e Bing."
+            "googleBingError": "Istantanea non disponibile per le restrizioni all' utilizzo dei layer Google e Bing."
         }
     }
 }
