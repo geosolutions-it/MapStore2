@@ -72,4 +72,15 @@ describe("Test JSX Template", () => {
         expect(cmpDom.id).toExist();
         expect(cmpDom.id).toBe("template-update");
     });
+    it('Test Template update template', () => {
+        let comp = ReactDOM.render(
+            <Template template="<div id={model.id}/>" model={{id: "temp"}} />
+            , document.getElementById("container"));
+        expect(comp).toExist();
+        let cmpDom = document.getElementById("temp");
+        expect(cmpDom).toExist();
+        comp.setProps({template: "<div id='template'/>"});
+        cmpDom = document.getElementById("template");
+        expect(cmpDom).toExist();
+    });
 });

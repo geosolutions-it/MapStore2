@@ -21,20 +21,29 @@ const Template = React.createClass({
         };
     },
     componentWillMount() {
-        let template = (typeof this.props.template === 'function') ? this.props.template() : this.props.template;
-        this.comp = Babel.transform(template, { presets: ['es2015', 'react', 'stage-0'] }).code;
+        this.parseTemplate(this.props.template);
+    },
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.template !== this.props.template) {
+            this.parseTemplate(nextProps.template);
+        }
     },
     shouldComponentUpdate(nextProps) {
         return !isEqual(nextProps, this.props);
     },
-    renderCard() {
+    renderContent() {
         /*eslint-disable */
         let model = this.props.model;
         return eval(this.comp);
         /*eslint-enable */
     },
     render() {
-        return (<div>{this.renderCard()}</div>);
+        let content = this.renderContent();
+        return (content === '"use strict";') ? null : content;
+    },
+    parseTemplate(temp) {
+        let template = (typeof temp === 'function') ? temp() : temp;
+        this.comp = Babel.transform(template, { presets: ['es2015', 'react', 'stage-0'] }).code;
     }
 });
 
