@@ -133,7 +133,7 @@ const CesiumLayer = React.createClass({
         }
     },
     addLayer() {
-        if (this.layer) {
+        if (this.layer && !this.layer.detached) {
             this.provider = this.props.map.imageryLayers.addImageryProvider(this.layer);
             this.provider._position = this.props.position;
             if (this.props.options.opacity) {
