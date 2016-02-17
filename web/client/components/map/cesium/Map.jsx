@@ -60,29 +60,7 @@ let CesiumMap = React.createClass({
         map.camera.moveEnd.addEventListener(this.updateMapInfoState);
         this.hand = new Cesium.ScreenSpaceEventHandler(map.scene.canvas);
         this.hand.setInputAction((movement) => {
-            if (this.props.onClick && movement.position !== null) {
-                const cartesian = map.camera.pickEllipsoid(movement.position, map.scene.globe.ellipsoid);
-                if (cartesian) {
-                    const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-                    const latitude = cartographic.latitude * 180.0 / Math.PI;
-                    const longitude = cartographic.longitude * 180.0 / Math.PI;
-
-                    const y = ((90.0 - latitude) / 180.0) * this.props.standardHeight * (this.props.zoom + 1);
-                    const x = ((180.0 + longitude) / 360.0) * this.props.standardWidth * (this.props.zoom + 1);
-
-                    this.props.onClick({
-                        pixel: {
-                            x: x,
-                            y: y
-                        },
-                        latlng: {
-                            lat: latitude,
-                            lng: longitude
-                        },
-                        crs: "EPSG:4326"
-                    });
-                }
-            }
+            this.onClick(map, movement);
         }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
         this.hand.setInputAction((movement) => {
@@ -124,6 +102,31 @@ let CesiumMap = React.createClass({
     componentWillUnmount() {
         this.hand.destroy();
         this.map.destroy();
+    },
+    onClick(map, movement) {
+        if (this.props.onClick && movement.position !== null) {
+            const cartesian = map.camera.pickEllipsoid(movement.position, map.scene.globe.ellipsoid);
+            if (cartesian) {
+                const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+                const latitude = cartographic.latitude * 180.0 / Math.PI;
+                const longitude = cartographic.longitude * 180.0 / Math.PI;
+
+                const y = ((90.0 - latitude) / 180.0) * this.props.standardHeight * (this.props.zoom + 1);
+                const x = ((180.0 + longitude) / 360.0) * this.props.standardWidth * (this.props.zoom + 1);
+
+                this.props.onClick({
+                    pixel: {
+                        x: x,
+                        y: y
+                    },
+                    latlng: {
+                        lat: latitude,
+                        lng: longitude
+                    },
+                    crs: "EPSG:4326"
+                });
+            }
+        }
     },
     getCenter() {
         const center = this.map.camera.positionCartographic;
@@ -193,13 +196,12 @@ let CesiumMap = React.createClass({
 
 
     updateMapInfoState() {
-        // const bbox = this.map.getBounds().toBBoxString().split(',');
-        const size = {
-            height: Math.round(this.props.standardWidth * (this.props.zoom + 1)),
-            width: Math.round(this.props.standardHeight * (this.props.zoom + 1))
-        };
         const center = this.getCenter();
         const zoom = this.getZoomFromHeight(center.height);
+        const size = {
+            height: Math.round(this.props.standardWidth * (zoom + 1)),
+            width: Math.round(this.props.standardHeight * (zoom + 1))
+        };
         this.props.onMapViewChanges({
             x: center.longitude,
             y: center.latitude,
