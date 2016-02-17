@@ -34,7 +34,8 @@ const QueryBuilder = React.createClass({
                 onUpdateFilterField: () => {},
                 onUpdateExceptionField: () => {},
                 onUpdateLogicCombo: () => {},
-                onRemoveGroupField: () => {}
+                onRemoveGroupField: () => {},
+                onChangeCascadingValue: () => {}
             }
         };
     },

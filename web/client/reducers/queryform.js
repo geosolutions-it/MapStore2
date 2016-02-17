@@ -13,8 +13,10 @@ const {
     UPDATE_EXCEPTION_FIELD,
     ADD_GROUP_FIELD,
     UPDATE_LOGIC_COMBO,
-    REMOVE_GROUP_FIELD
+    REMOVE_GROUP_FIELD,
+    CHANGE_CASCADING_VALUE
 } = require('../actions/queryform');
+
 const assign = require('object-assign');
 
 const initialState = {
@@ -95,6 +97,16 @@ function queryform(state = initialState, action) {
                 filterFields: state.filterFields.filter((field) => field.groupId !== action.groupId),
                 groupFields: state.groupFields.filter((group) => group.id !== action.groupId)
             });
+        }
+        case CHANGE_CASCADING_VALUE: {
+            return assign({}, state, {filterFields: state.filterFields.map((field) => {
+                for (let i = 0; i < action.attributes.length; i++) {
+                    if (field.attribute === action.attributes[i].id) {
+                        return assign({}, field, {value: null});
+                    }
+                }
+                return field;
+            })});
         }
         default:
             return state;

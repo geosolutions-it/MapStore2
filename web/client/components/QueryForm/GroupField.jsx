@@ -33,7 +33,6 @@ const GroupField = React.createClass({
             groupFields: [],
             filterFields: [],
             attributes: [],
-            fieldWidth: "100%",
             removeButtonIcon: "glyphicon glyphicon-minus",
             addButtonIcon: "glyphicon glyphicon-plus",
             logicComboOptions: [{logic: "OR", name: "any"}, {logic: "AND", name: "all"}, {logic: "NOR", name: "none"}],
@@ -44,15 +43,16 @@ const GroupField = React.createClass({
                 onUpdateFilterField: () => {},
                 onUpdateExceptionField: () => {},
                 onUpdateLogicCombo: () => {},
-                onRemoveGroupField: () => {}
+                onRemoveGroupField: () => {},
+                onChangeCascadingValue: () => {}
             }
         };
     },
     getComboValues(selected, attributes) {
         if (selected && selected.dependson) {
-            // //////////////////////////////////////////////////////////
-            // Retrieving the filterField related the selected Province
-            // //////////////////////////////////////////////////////////
+            // ///////////////////////////////////////////////////////////////////////////
+            // Retrieving the filterField which depends the selected one (the main field)
+            // ///////////////////////////////////////////////////////////////////////////
             let filterField = this.props.filterFields.filter((field) => field.attribute === selected.dependson.field)[0];
             if (filterField && filterField.value) {
                 // The complete attribute config object
@@ -80,11 +80,12 @@ const GroupField = React.createClass({
                         filterField={filterField}
                         operatorOptions={selectedAttribute && selectedAttribute.type === "list" ? ["="] : ["=", ">", "<", ">=", "<=", "<>", "><"]}
                         onUpdateField={this.props.actions.onUpdateFilterField}
-                        onUpdateExceptionField={this.props.actions.onUpdateExceptionField}>
+                        onUpdateExceptionField={this.props.actions.onUpdateExceptionField}
+                        onChangeCascadingValue={this.props.actions.onChangeCascadingValue}>
                         <ComboField
                             attType="list"
-                            width={this.props.fieldWidth}
-                            fieldOptions={comboValues ? [null, ...comboValues] : []}/>
+                            fieldOptions={comboValues ? comboValues : []}
+                            comboFilterType={"contains"}/>
                         <DateField attType="date"
                             operator={filterField.operator}/>
                     </FilterField>
@@ -118,7 +119,7 @@ const GroupField = React.createClass({
                         <ComboField
                             fieldOptions={this.props.logicComboOptions.map((opt) => opt.name)}
                             fieldName="logic"
-                            width="85px"
+                            style={{width: "85px", marginTop: "3px"}}
                             fieldRowId={groupField.id}
                             fieldValue={this.props.logicComboOptions.filter((opt) => groupField.logic === opt.logic)[0].name}
                             onUpdateField={this.updateLogicCombo}/>

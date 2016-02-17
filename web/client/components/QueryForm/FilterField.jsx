@@ -16,7 +16,8 @@ const FilterField = React.createClass({
         filterField: React.PropTypes.object,
         operatorOptions: React.PropTypes.array,
         onUpdateField: React.PropTypes.func,
-        onUpdateExceptionField: React.PropTypes.func
+        onUpdateExceptionField: React.PropTypes.func,
+        onChangeCascadingValue: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -24,7 +25,8 @@ const FilterField = React.createClass({
             filterField: null,
             operatorOptions: ["=", ">", "<", ">=", "<=", "<>", "><"],
             onUpdateField: () => {},
-            onUpdateExceptionField: () => {}
+            onUpdateExceptionField: () => {},
+            onChangeCascadingValue: () => {}
         };
     },
     renderOperatorField() {
@@ -61,11 +63,12 @@ const FilterField = React.createClass({
             <Row>
                 <Col xs={4}>
                     <ComboField
-                        fieldOptions={[null, ...this.props.attributes.map((attribute) => attribute.id)]}
+                        fieldOptions={this.props.attributes.map((attribute) => attribute.id)}
                         fieldName="attribute"
                         fieldRowId={this.props.filterField.rowId}
                         fieldValue={this.props.filterField.attribute}
-                        onUpdateField={this.updateFieldElement}/>
+                        onUpdateField={this.updateFieldElement}
+                        comboFilterType={"contains"}/>
                 </Col>
                 <Col xs={2}>{selectedAttribute ? this.renderOperatorField() : null}</Col>
                 <Col xs={6}>{selectedAttribute && this.props.filterField.operator ? this.renderValueField(selectedAttribute) : null}</Col>
@@ -77,6 +80,15 @@ const FilterField = React.createClass({
     },
     updateFieldElement(rowId, name, value) {
         this.props.onUpdateField(rowId, name, value);
+
+        if (name === "value") {
+            // For cascading: filter the attributes that depends on
+            let dependsOnAttributes = this.props.attributes.filter((attribute) => attribute.dependson && attribute.dependson.field === this.props.filterField.attribute);
+            if (dependsOnAttributes.length > 0) {
+                // Perhaps There is some filterFields that need to reset their value
+                this.props.onChangeCascadingValue(dependsOnAttributes);
+            }
+        }
     }
 });
 

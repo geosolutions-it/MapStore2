@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -12,6 +12,7 @@ const UPDATE_EXCEPTION_FIELD = 'UPDATE_EXCEPTION_FIELD';
 const ADD_GROUP_FIELD = 'ADD_GROUP_FIELD';
 const UPDATE_LOGIC_COMBO = 'UPDATE_LOGIC_COMBO';
 const REMOVE_GROUP_FIELD = 'REMOVE_GROUP_FIELD';
+const CHANGE_CASCADING_VALUE = 'CHANGE_CASCADING_VALUE';
 
 function addFilterField(groupId) {
     return {
@@ -67,6 +68,13 @@ function removeGroupField(groupId) {
     };
 }
 
+function changeCascadingValue(attributes) {
+    return {
+        type: CHANGE_CASCADING_VALUE,
+        attributes: attributes
+    };
+}
+
 module.exports = {
     ADD_FILTER_FIELD,
     REMOVE_FILTER_FIELD,
@@ -75,11 +83,13 @@ module.exports = {
     ADD_GROUP_FIELD,
     UPDATE_LOGIC_COMBO,
     REMOVE_GROUP_FIELD,
+    CHANGE_CASCADING_VALUE,
     addFilterField,
     removeFilterField,
     updateFilterField,
     updateExceptionField,
     addGroupField,
     updateLogicCombo,
-    removeGroupField
+    removeGroupField,
+    changeCascadingValue
 };

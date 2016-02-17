@@ -6,46 +6,54 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {Input} = require('react-bootstrap');
+const assign = require('object-assign');
+// const {Input} = require('react-bootstrap');
+
+const {DropdownList} = require('react-widgets');
 
 const ComboField = React.createClass({
     propTypes: {
-        width: React.PropTypes.string,
+        style: React.PropTypes.object,
         fieldOptions: React.PropTypes.array,
         fieldName: React.PropTypes.string,
         fieldRowId: React.PropTypes.number,
         fieldValue: React.PropTypes.string,
         fieldException: React.PropTypes.object,
+        comboFilterType: React.PropTypes.oneOfType([
+            React.PropTypes.bool,
+            React.PropTypes.string
+        ]),
         onUpdateField: React.PropTypes.func,
         onUpdateExceptionField: React.PropTypes.func
     },
     getDefaultProps() {
         return {
-            width: "100%",
+            style: {
+                width: "100%"
+            },
             fieldOptions: [],
             fieldName: null,
             fieldRowId: null,
             fieldValue: null,
             fieldException: null,
+            comboFilterType: false,
             onUpdateField: () => {},
             onUpdateExceptionField: () => {}
         };
     },
-    renderfieldOptions(fieldOpt) {
-        return (<option key={fieldOpt} value={fieldOpt}>{fieldOpt}</option>);
-    },
     render() {
-        const style = {width: this.props.width};
+        const style = assign({}, this.props.style, {marginBottom: "15px"});
+
         return (
-            <Input
-                key={this.props.fieldValue}
-                type="select"
-                style={style}
-                placeholder="select"
+            <DropdownList
+                data={this.props.fieldOptions}
                 value={this.props.fieldValue}
-                onChange={(evt) => this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, evt.target.value)}>
-                {this.props.fieldOptions.map(this.renderfieldOptions)}
-            </Input>
+                caseSensitive={false}
+                minLength={3}
+                placeholder="Select"
+                filter={this.props.comboFilterType}
+                style={style}
+                onChange={(value) => this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value)}/>
         );
     }
 });
