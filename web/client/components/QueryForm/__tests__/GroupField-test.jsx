@@ -30,7 +30,7 @@ describe('GroupField', () => {
         expect(groupfield).toExist();
     });
 
-    it('creates the QueryBuilder component with initial content', () => {
+    it('creates the GroupField component with initial content', () => {
         const groupLevels = 5;
 
         const groupFields = [{
@@ -103,7 +103,7 @@ describe('GroupField', () => {
         expect(buttons.length).toBe(4);
     });
 
-    it('creates the QueryBuilder with cascading', () => {
+    it('creates the GroupField with cascading', () => {
         const groupLevels = 5;
 
         const groupFields = [{
@@ -187,9 +187,11 @@ describe('GroupField', () => {
         let childNodes = groupPanel.childNodes;
         expect(childNodes.length).toBe(4);
 
-        let options = groupFieldDOMNode.actual.getElementsByClassName('form-control')[6].options;
-        expect(options.length).toBe(3);
-        expect(options[1].value).toBe("attribute_a");
-        expect(options[2].value).toBe("attribute_b");
+        let selectBtn = groupFieldDOMNode.actual.getElementsByClassName('rw-dropdownlist-picker rw-select rw-btn')[6];
+        selectBtn.click();
+        let options = groupFieldDOMNode.actual.getElementsByClassName('rw-list-option');
+        expect(options.length).toBe(2);
+        expect(options[0].childNodes[0].nodeValue).toBe("attribute_a");
+        expect(options[1].childNodes[0].nodeValue).toBe("attribute_b");
     });
 });

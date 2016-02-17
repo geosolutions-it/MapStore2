@@ -50,7 +50,16 @@ describe('ComboField', () => {
         const comboFieldDOMNode = expect(ReactDOM.findDOMNode(combofield));
         expect(comboFieldDOMNode).toExist();
 
-        let childNodes = comboFieldDOMNode.actual.getElementsByClassName('form-control')[0];
-        expect(childNodes.length).toBe(5);
+        let childNodes = comboFieldDOMNode.actual.childNodes;
+        expect(childNodes.length).toBe(3);
+
+        let rwDropdownlist = comboFieldDOMNode.actual.getElementsByClassName('rw-dropdownlist-picker rw-select rw-btn')[0];
+        expect(rwDropdownlist).toExist();
+
+        let rwInput = comboFieldDOMNode.actual.getElementsByClassName('rw-input')[0];
+        expect(rwInput).toExist();
+
+        let rwPopup = comboFieldDOMNode.actual.getElementsByClassName('rw-popup-container rw-popup-animating')[0];
+        expect(rwPopup).toExist();
     });
 });

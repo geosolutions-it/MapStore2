@@ -27,7 +27,7 @@ describe('FilterField', () => {
         setTimeout(done);
     });
 
-    it('creates the FilterField component with his default content', () => {
+    it('creates the FilterField component', () => {
         const filterField = {
             rowId: 200,
             attribute: "Attribute1",
@@ -88,10 +88,16 @@ describe('FilterField', () => {
 
         expect(childNodes.length).toBe(3);
 
-        const attributeSelect = childNodes[0].childNodes[0].getElementsByClassName('form-control')[0];
-        expect(attributeSelect.value).toBe("Attribute1");
+        const inputFields = filterFieldDOMNode.actual.getElementsByClassName('rw-input');
+        expect(inputFields.length).toBe(4);
 
-        const valueSelect = childNodes[2].childNodes[0].getElementsByClassName('form-control')[0];
-        expect(valueSelect.value).toBe("attribute1");
+        const attributeSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[0];
+        expect(attributeSelect.childNodes[0].nodeValue).toBe("Attribute1");
+
+        const operatorSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[2];
+        expect(operatorSelect.childNodes[0].nodeValue).toBe("=");
+
+        const valueSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[3];
+        expect(valueSelect.childNodes[0].nodeValue).toBe("attribute1");
     });
 });

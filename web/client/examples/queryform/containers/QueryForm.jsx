@@ -23,7 +23,8 @@ const {
     updateFilterField,
     updateExceptionField,
     updateLogicCombo,
-    removeGroupField
+    removeGroupField,
+    changeCascadingValue
 } = require('../../../actions/queryform');
 
 // connecting a Dumb component to the store
@@ -48,7 +49,8 @@ const SmartQueryForm = connect((state) => {
             onUpdateFilterField: updateFilterField,
             onUpdateExceptionField: updateExceptionField,
             onUpdateLogicCombo: updateLogicCombo,
-            onRemoveGroupField: removeGroupField
+            onRemoveGroupField: removeGroupField,
+            onChangeCascadingValue: changeCascadingValue
         }, dispatch)
     };
 })(QueryBuilder);
