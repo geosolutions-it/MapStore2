@@ -15,6 +15,9 @@ const DateField = require('./DateField');
 
 require('./queryform.css');
 
+const LocaleUtils = require('../../utils/LocaleUtils');
+const I18N = require('../I18N/I18N');
+
 const GroupField = React.createClass({
     propTypes: {
         groupLevels: React.PropTypes.number,
@@ -27,6 +30,9 @@ const GroupField = React.createClass({
         logicComboOptions: React.PropTypes.array,
         actions: React.PropTypes.object
     },
+    contextTypes: {
+        messages: React.PropTypes.object
+    },
     getDefaultProps() {
         return {
             groupLevels: 1,
@@ -35,7 +41,11 @@ const GroupField = React.createClass({
             attributes: [],
             removeButtonIcon: "glyphicon glyphicon-minus",
             addButtonIcon: "glyphicon glyphicon-plus",
-            logicComboOptions: [{logic: "OR", name: "any"}, {logic: "AND", name: "all"}, {logic: "NOR", name: "none"}],
+            logicComboOptions: [
+                {logic: "OR", name: "queryform.groupField.any"},
+                {logic: "AND", name: "queryform.groupField.all"},
+                {logic: "NOR", name: "queryform.groupField.none"}
+            ],
             actions: {
                 onAddGroupField: () => {},
                 onAddFilterField: () => {},
@@ -91,7 +101,9 @@ const GroupField = React.createClass({
                     </FilterField>
                 </Col>
                 <Col xs={2}>
-                    <Button id="remove-filter-field" onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}><Glyphicon glyph={this.props.removeButtonIcon}/></Button>
+                    <Button id="remove-filter-field" onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
+                        <Glyphicon glyph={this.props.removeButtonIcon}/>
+                    </Button>
                 </Col>
             </Row>
         );
@@ -113,20 +125,27 @@ const GroupField = React.createClass({
         return (
             <Row className="logicHeader">
                 {removeButton}
-                <Col xs={3}>
-                    <div style={{"paddingTop": "9px", "float": "left"}}>Match</div>
+                <Col xs={4}>
+                    <div style={{"paddingTop": "9px", "float": "left"}}><I18N.Message msgId={"queryform.form.group_label_a"}/></div>
                     <div style={{"float": "right"}}>
                         <ComboField
-                            fieldOptions={this.props.logicComboOptions.map((opt) => opt.name)}
+                            fieldOptions={
+                                this.props.logicComboOptions.map((opt) => {
+                                    return LocaleUtils.getMessageById(this.context.messages, opt.name);
+                                })
+                            }
                             fieldName="logic"
-                            style={{width: "85px", marginTop: "3px"}}
+                            style={{width: "140px", marginTop: "3px"}}
                             fieldRowId={groupField.id}
-                            fieldValue={this.props.logicComboOptions.filter((opt) => groupField.logic === opt.logic)[0].name}
+                            fieldValue={
+                                LocaleUtils.getMessageById(this.context.messages,
+                                    this.props.logicComboOptions.filter((opt) => groupField.logic === opt.logic)[0].name)
+                            }
                             onUpdateField={this.updateLogicCombo}/>
                     </div>
                 </Col>
-                <Col xs={8}>
-                    <div style={{"paddingTop": "9px"}}><span> of the following:</span></div>
+                <Col xs={7}>
+                    <div style={{"paddingTop": "9px"}}><span><I18N.Message msgId={"queryform.form.group_label_b"}/></span></div>
                 </Col>
             </Row>
         );
@@ -151,7 +170,7 @@ const GroupField = React.createClass({
         const removeButton = groupField.index <= this.props.groupLevels ?
             (
                 <Button id="add-condition-group" onClick={() => this.props.actions.onAddGroupField(groupField.id, groupField.index)}>
-                    <Glyphicon glyph={this.props.addButtonIcon}/> add group</Button>
+                    <Glyphicon glyph={this.props.addButtonIcon}/><I18N.Message msgId={"queryform.form.add_group"}/></Button>
             ) : (
                 <span/>
             );
@@ -162,7 +181,10 @@ const GroupField = React.createClass({
                 {container}
                 <Row>
                     <Col xs={3}>
-                        <Button id="add-filter-field" onClick={() => this.props.actions.onAddFilterField(groupField.id)}><Glyphicon glyph={this.props.addButtonIcon}/> add condition</Button>
+                        <Button id="add-filter-field" onClick={() => this.props.actions.onAddFilterField(groupField.id)}>
+                            <Glyphicon glyph={this.props.addButtonIcon}/>
+                            <I18N.Message msgId={"queryform.form.add_condition"}/>
+                        </Button>
                     </Col>
                     <Col xs={9}>
                         {removeButton}
@@ -177,7 +199,11 @@ const GroupField = React.createClass({
         );
     },
     updateLogicCombo(groupId, name, value) {
-        const logic = this.props.logicComboOptions.filter((opt) => value === opt.name)[0].logic;
+        const logic = this.props.logicComboOptions.filter((opt) => {
+            if (value === LocaleUtils.getMessageById(this.context.messages, opt.name)) {
+                return opt;
+            }
+        })[0].logic;
         this.props.actions.onUpdateLogicCombo(groupId, logic);
     }
 });

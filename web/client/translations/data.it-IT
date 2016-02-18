@@ -186,13 +186,13 @@
                 }
             }
         },
-    "locate": {
-        "tooltip": "Mia posizione",
-        "metersUnit": "metri",
-        "feetUnit": "piedi",
-        "popup": "Sei nel raggio di {distance} {unit} da questo punto",
-        "outsideMapBoundsMsg": "Sembri al di fuori dei confini della mappa"
-    },
+        "locate": {
+            "tooltip": "Mia posizione",
+            "metersUnit": "metri",
+            "feetUnit": "piedi",
+            "popup": "Sei nel raggio di {distance} {unit} da questo punto",
+            "outsideMapBoundsMsg": "Sembri al di fuori dei confini della mappa"
+        },
         "helptexts": {
             "scaleBox": "Questo è il testo di aiuto per ScaleBox",
             "zoomToMaxExtentButton": "Questo è il testo di aiuto per ZoomToMaxExtentButton",
@@ -206,6 +206,22 @@
             "locateBtn": "Questo è il testo di aiuto per LocateBtn"
         },
         "queryform": {
+            "config": {
+                "load_config_exception": "Errore Caricamento Configurazione"
+            },
+            "groupField": {
+                "any": "ciascuna delle",
+                "all": "tutte le",
+                "none": "nessuna delle"
+            },
+            "form": {
+                "form_title": "Filtri",
+                "add_condition": " Aggiungi Condizione",
+                "add_group": " Aggiungi Gruppo",
+                "group_label_a": "Soddisfa",
+                "group_label_b": "seguenti condizioni:",
+                "combo_placeholder": "Seleziona"
+            },
             "datefield": {
                 "wrong_date_range": "La data di inizio deve essere inferiore a quella di fine"
             }

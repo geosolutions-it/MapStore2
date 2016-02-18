@@ -186,13 +186,13 @@
                 }
             }
         },
-    "locate": {
-        "tooltip": "Locate me",
-        "metersUnit": "meters",
-        "feetUnit": "feet",
-        "popup": "You are within {distance} {unit} from this point",
-        "outsideMapBoundsMsg": "You seem located outside the boundaries of the map"
-    },
+        "locate": {
+            "tooltip": "Locate me",
+            "metersUnit": "meters",
+            "feetUnit": "feet",
+            "popup": "You are within {distance} {unit} from this point",
+            "outsideMapBoundsMsg": "You seem located outside the boundaries of the map"
+        },
         "helptexts": {
             "scaleBox": "This is the helptext for the ScaleBox",
             "zoomToMaxExtentButton": "This is the helptext for the ZoomToMaxExtentButton",
@@ -206,6 +206,22 @@
             "locateBtn": "This is the helptext for the LocateBtn"
         },
         "queryform": {
+            "config": {
+                "load_config_exception": "Error Loading Configuration"
+            },
+            "groupField": {
+                "any": "any",
+                "all": "all",
+                "none": "none"
+            },
+            "form": {
+                "form_title": "Filters",
+                "add_condition": " Add Condition",
+                "add_group": " Add Group",
+                "group_label_a": "Match",
+                "group_label_b": "of the following conditions:",
+                "combo_placeholder": "Select"
+            },
             "datefield": {
                 "wrong_date_range": "Start date must be lower than end date"
             }
