@@ -15,12 +15,14 @@ var ImageButton = React.createClass({
         onClick: React.PropTypes.func,
         style: React.PropTypes.object,
         disabled: React.PropTypes.bool,
-        tooltip: React.PropTypes.string
+        tooltip: React.PropTypes.string,
+        className: React.PropTypes.string
     },
     getDefaultProps() {
         return {
             disabled: false,
-            tooltip: null
+            tooltip: null,
+            className: undefined
         };
     },
     getStyle() {
@@ -49,7 +51,7 @@ var ImageButton = React.createClass({
     },
     render() {
         return (
-            <img id={this.props.id} title={this.props.tooltip} style={this.getStyle()} src={this.props.image}
+            <img className={this.props.className} id={this.props.id} title={this.props.tooltip} style={this.getStyle()} src={this.props.image}
                 onClick={this.props.disabled ? null : this.props.onClick}></img>
         );
     }
