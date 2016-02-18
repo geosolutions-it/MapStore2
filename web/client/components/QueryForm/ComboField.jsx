@@ -7,9 +7,10 @@
  */
 const React = require('react');
 const assign = require('object-assign');
-// const {Input} = require('react-bootstrap');
 
 const {DropdownList} = require('react-widgets');
+
+const LocaleUtils = require('../../utils/LocaleUtils');
 
 const ComboField = React.createClass({
     propTypes: {
@@ -25,6 +26,9 @@ const ComboField = React.createClass({
         ]),
         onUpdateField: React.PropTypes.func,
         onUpdateExceptionField: React.PropTypes.func
+    },
+    contextTypes: {
+        messages: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -44,13 +48,14 @@ const ComboField = React.createClass({
     render() {
         const style = assign({}, this.props.style, {marginBottom: "15px"});
 
+        const placeholder = LocaleUtils.getMessageById(this.context.messages, "queryform.form.combo_placeholder");
         return (
             <DropdownList
                 data={this.props.fieldOptions}
                 value={this.props.fieldValue}
                 caseSensitive={false}
                 minLength={3}
-                placeholder="Select"
+                placeholder={placeholder}
                 filter={this.props.comboFilterType}
                 style={style}
                 onChange={(value) => this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value)}/>
