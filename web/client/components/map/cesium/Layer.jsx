@@ -44,10 +44,14 @@ const CesiumLayer = React.createClass({
                 return found;
             }, false);
             if (changed) {
+                const oldProvider = this.provider;
                 const newLayer = this.layer.updateParams(newProps.options.params);
-                this.removeLayer();
                 this.layer = newLayer;
                 this.addLayer();
+                setTimeout(() => {
+                    this.removeLayer(oldProvider);
+                }, 1000);
+
             }
         }
         this.updateLayer(newProps, this.props);
@@ -141,9 +145,10 @@ const CesiumLayer = React.createClass({
             }
         }
     },
-    removeLayer() {
-        if (this.provider) {
-            this.props.map.imageryLayers.remove(this.provider);
+    removeLayer(provider) {
+        const toRemove = provider || this.provider;
+        if (toRemove) {
+            this.props.map.imageryLayers.remove(toRemove);
         }
     }
 });
