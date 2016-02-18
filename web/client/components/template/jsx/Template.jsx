@@ -12,7 +12,8 @@ const {isEqual} = require("lodash");
 const Template = React.createClass({
     propTypes: {
         template: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
-        model: React.PropTypes.object
+        model: React.PropTypes.object,
+        renderContent: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -31,15 +32,15 @@ const Template = React.createClass({
     shouldComponentUpdate(nextProps) {
         return !isEqual(nextProps, this.props);
     },
+    /*eslint-disable */
     renderContent() {
-        /*eslint-disable */
         let model = this.props.model;
         return eval(this.comp);
-        /*eslint-enable */
     },
+    /*eslint-enable */
     render() {
-        let content = this.renderContent();
-        return (content === '"use strict";') ? null : content;
+        let content = (this.props.renderContent) ? this.props.renderContent(this.comp, this.props.model) : this.renderContent();
+        return ( React.isValidElement(content)) ? content : null;
     },
     parseTemplate(temp) {
         let template = (typeof temp === 'function') ? temp() : temp;
