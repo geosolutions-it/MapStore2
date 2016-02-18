@@ -131,4 +131,27 @@ describe('This test for ZoomToMaxExtentButton', () => {
         expect(zmeBtnNode).toExist();
         expect(zmeBtnNode.localName).toBe("img");
     });
+
+    it('creates the component with a ImageButton and a custom css class', () => {
+        const zmeBtn = ReactDOM.render(<ZoomToMaxExtentButton className="custom" btnType="image"/>, document.getElementById("container"));
+        expect(zmeBtn).toExist();
+        const zmeBtnNode = ReactDOM.findDOMNode(zmeBtn);
+        expect(zmeBtnNode).toExist();
+        expect(zmeBtnNode.localName).toBe("img");
+        expect(zmeBtnNode.className).toBe("custom");
+    });
+
+    it('create glyphicon with custom css class', () => {
+        const zmeBtn = ReactDOM.render(
+            <Provider store={store}>
+                <ZoomToMaxExtentButton className="custom" glyphicon="info-sign" text="button"/>
+            </Provider>,
+            document.getElementById("container"));
+        expect(zmeBtn).toExist();
+
+        const zmeBtnNode = ReactDOM.findDOMNode(zmeBtn);
+        expect(zmeBtnNode).toExist();
+
+        expect(zmeBtnNode.className.indexOf('custom') !== -1).toBe(true);
+    });
 });

@@ -40,7 +40,8 @@ var ZoomToMaxExtentButton = React.createClass({
         }),
         btnType: React.PropTypes.oneOf(['normal', 'image']),
         helpEnabled: React.PropTypes.bool,
-        helpText: React.PropTypes.string
+        helpText: React.PropTypes.string,
+        className: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -49,7 +50,8 @@ var ZoomToMaxExtentButton = React.createClass({
             glyphicon: "resize-full",
             text: undefined,
             btnSize: 'xsmall',
-            btnType: 'normal'
+            btnType: 'normal',
+            className: undefined
         };
     },
     render() {
@@ -59,7 +61,9 @@ var ZoomToMaxExtentButton = React.createClass({
                     id={this.props.id}
                     bsStyle="default"
                     bsSize={this.props.btnSize}
-                    onClick={() => this.zoomToMaxExtent()}>
+                    onClick={() => this.zoomToMaxExtent()}
+                    className={this.props.className}
+                    >
                     {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
                     {this.props.glyphicon && this.props.text ? "\u00A0" : null}
                     {this.props.text}
@@ -71,7 +75,8 @@ var ZoomToMaxExtentButton = React.createClass({
                 id={this.props.id}
                 image={this.props.image}
                 onClick={() => this.zoomToMaxExtent()}
-                style={this.props.style}/>
+                style={this.props.style}
+                className={this.props.className}/>
         );
     },
     zoomToMaxExtent() {

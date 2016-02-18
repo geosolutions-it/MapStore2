@@ -120,4 +120,12 @@ describe('ImageButton', () => {
         const btnDiv = ReactDOM.findDOMNode(btn);
         expect(btnDiv.title).toBe("Tooltip");
     });
+
+    it('creates a button with a custom css class', () => {
+        const btn = ReactDOM.render(<ImageButton className="custom"/>, document.getElementById("container"));
+        expect(btn).toExist();
+
+        const btnDiv = ReactDOM.findDOMNode(btn);
+        expect(btnDiv.className).toBe("custom");
+    });
 });
