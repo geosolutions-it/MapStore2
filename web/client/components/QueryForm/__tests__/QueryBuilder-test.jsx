@@ -91,6 +91,6 @@ describe('QueryBuilder', () => {
 
         expect(queryBuilderDOMNode).toExist();
         let childNodes = queryBuilderDOMNode.actual.childNodes;
-        expect(childNodes.length).toBe(1);
+        expect(childNodes.length).toBe(2);
     });
 });

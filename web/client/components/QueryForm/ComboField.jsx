@@ -48,7 +48,7 @@ const ComboField = React.createClass({
     render() {
         const style = assign({}, this.props.style, {marginBottom: "15px"});
 
-        const placeholder = LocaleUtils.getMessageById(this.context.messages, "queryform.form.combo_placeholder");
+        const placeholder = LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.combo_placeholder");
         return (
             <DropdownList
                 data={this.props.fieldOptions}

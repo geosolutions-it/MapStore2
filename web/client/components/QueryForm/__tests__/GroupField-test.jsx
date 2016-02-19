@@ -90,8 +90,12 @@ describe('GroupField', () => {
         const groupFieldDOMNode = expect(ReactDOM.findDOMNode(groupfield));
         expect(groupFieldDOMNode).toExist();
 
-        let groupPanel = document.getElementsByClassName('panel-body')[0];
-        let childNodes = groupPanel.childNodes;
+        let containerGroupPanel = document.getElementsByClassName('panel-body')[0];
+        let childNodes = containerGroupPanel.childNodes;
+        expect(childNodes.length).toBe(1);
+
+        let groupPanel = containerGroupPanel.getElementsByClassName('panel-body')[0];
+        childNodes = groupPanel.childNodes;
         expect(childNodes.length).toBe(4);
 
         for (let i = 0; i < childNodes.length; i++) {
@@ -185,7 +189,7 @@ describe('GroupField', () => {
 
         let groupPanel = document.getElementsByClassName('panel-body')[0];
         let childNodes = groupPanel.childNodes;
-        expect(childNodes.length).toBe(4);
+        expect(childNodes.length).toBe(1);
 
         let selectBtn = groupFieldDOMNode.actual.getElementsByClassName('rw-dropdownlist-picker rw-select rw-btn')[6];
         selectBtn.click();

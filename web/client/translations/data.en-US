@@ -209,21 +209,36 @@
             "config": {
                 "load_config_exception": "Error Loading Configuration"
             },
-            "groupField": {
-                "any": "any",
-                "all": "all",
-                "none": "none"
-            },
             "form": {
-                "form_title": "Filters",
+                "header": "Find in the dataset",
+                "dataset_header": "Dataset"
+            },
+            "attributefilter":{
                 "add_condition": " Add Condition",
                 "add_group": " Add Group",
                 "group_label_a": "Match",
                 "group_label_b": "of the following conditions:",
-                "combo_placeholder": "Select"
+                "combo_placeholder": "Select",
+                "attribute_filter_header": "Attribute Filter",
+                "groupField": {
+                    "any": "any",
+                    "all": "all",
+                    "none": "none"
+                },
+                "datefield": {
+                    "wrong_date_range": "Start date must be lower than end date"
+                }
             },
-            "datefield": {
-                "wrong_date_range": "Start date must be lower than end date"
+            "spatialfilter": {
+                "selection_method": "Selection Method",
+                "spatial_filter_header": "Spatial Filter",
+                "methods_options": {
+                    "zone": "Zone",
+                    "box": "BoundingBox",
+                    "buffer": "Buffer",
+                    "circle": "Circle",
+                    "poly": "Polygon"
+                }
             }
         }
     }

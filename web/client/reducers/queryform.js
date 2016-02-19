@@ -14,12 +14,17 @@ const {
     ADD_GROUP_FIELD,
     UPDATE_LOGIC_COMBO,
     REMOVE_GROUP_FIELD,
-    CHANGE_CASCADING_VALUE
+    CHANGE_CASCADING_VALUE,
+    EXPAND_ATTRIBUTE_PANEL,
+    EXPAND_SPATIAL_PANEL
 } = require('../actions/queryform');
 
 const assign = require('object-assign');
 
 const initialState = {
+    attributePanelExpanded: true,
+    spatialPanelExpanded: true,
+    groupLevels: 1,
     groupFields: [
         {
             id: 1,
@@ -107,6 +112,16 @@ function queryform(state = initialState, action) {
                 }
                 return field;
             })});
+        }
+        case EXPAND_ATTRIBUTE_PANEL: {
+            return assign({}, state, {
+                attributePanelExpanded: action.expand
+            });
+        }
+        case EXPAND_SPATIAL_PANEL: {
+            return assign({}, state, {
+                spatialPanelExpanded: action.expand
+            });
         }
         default:
             return state;

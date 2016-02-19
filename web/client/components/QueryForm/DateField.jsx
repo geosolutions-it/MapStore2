@@ -96,7 +96,7 @@ const DateField = React.createClass({
     },
     updateValueState(value) {
         if (value.startDate && value.endDate && (value.startDate > value.endDate)) {
-            this.props.onUpdateExceptionField(this.props.fieldRowId, "queryform.datefield.wrong_date_range");
+            this.props.onUpdateExceptionField(this.props.fieldRowId, "queryform.attributefilter.datefield.wrong_date_range");
         }
 
         this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value);

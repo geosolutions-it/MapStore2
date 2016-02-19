@@ -8,6 +8,9 @@
 const React = require('react');
 
 const GroupField = require('./GroupField');
+const SpatialFilter = require('./SpatialFilter');
+
+require('./queryform.css');
 
 const QueryBuilder = React.createClass({
     propTypes: {
@@ -17,7 +20,10 @@ const QueryBuilder = React.createClass({
         groupFields: React.PropTypes.array,
         removeButtonIcon: React.PropTypes.string,
         addButtonIcon: React.PropTypes.string,
-        actions: React.PropTypes.object
+        attributePanelExpanded: React.PropTypes.bool,
+        spatialPanelExpanded: React.PropTypes.bool,
+        attributeFilterActions: React.PropTypes.object,
+        spatialFilterActions: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -27,7 +33,9 @@ const QueryBuilder = React.createClass({
             attributes: [],
             removeButtonIcon: "glyphicon glyphicon-minus",
             addButtonIcon: "glyphicon glyphicon-plus",
-            actions: {
+            attributePanelExpanded: true,
+            spatialPanelExpanded: true,
+            attributeFilterActions: {
                 onAddGroupField: () => {},
                 onAddFilterField: () => {},
                 onRemoveFilterField: () => {},
@@ -35,13 +43,17 @@ const QueryBuilder = React.createClass({
                 onUpdateExceptionField: () => {},
                 onUpdateLogicCombo: () => {},
                 onRemoveGroupField: () => {},
-                onChangeCascadingValue: () => {}
+                onChangeCascadingValue: () => {},
+                onExpandAttributeFilterPanel: () => {}
+            },
+            spatialFilterActions: {
+                onExpandSpatialFilterPanel: () => {}
             }
         };
     },
     render() {
         return (
-            <form>
+            <form id="queryFormPanel">
                 <GroupField
                     attributes={this.props.attributes}
                     groupLevels={this.props.groupLevels}
@@ -49,7 +61,11 @@ const QueryBuilder = React.createClass({
                     groupFields={this.props.groupFields}
                     removeButtonIcon={this.props.removeButtonIcon}
                     addButtonIcon={this.props.addButtonIcon}
-                    actions={this.props.actions} />
+                    attributePanelExpanded={this.props.attributePanelExpanded}
+                    actions={this.props.attributeFilterActions}/>
+                <SpatialFilter
+                    spatialPanelExpanded={this.props.spatialPanelExpanded}
+                    actions={this.props.spatialFilterActions}/>
             </form>
         );
     }

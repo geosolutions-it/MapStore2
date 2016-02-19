@@ -14,6 +14,8 @@ const {combineReducers} = require('redux');
 const queryform = require('../../../reducers/queryform');
 
 const initialState = {
+    attributePanelExpanded: true,
+    spatialPanelExpanded: true,
     groupLevels: 5,
     groupFields: [
         {

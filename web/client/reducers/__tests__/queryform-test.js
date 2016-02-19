@@ -298,4 +298,38 @@ describe('Test the queryform reducer', () => {
 
         expect(state.filterFields.length).toBe(0);
     });
+
+    it('Expand the Attribute Filter Panel', () => {
+        let testAction = {
+            type: 'EXPAND_ATTRIBUTE_PANEL',
+            expand: false
+        };
+
+        const initialState = {
+            attributePanelExpanded: true,
+            spatialPanelExpanded: true
+        };
+
+        let state = queryform(initialState, testAction);
+        expect(state).toExist();
+
+        expect(state.attributePanelExpanded).toEqual(false);
+    });
+
+    it('Expand the Spatial Filter Panel', () => {
+        let testAction = {
+            type: 'EXPAND_SPATIAL_PANEL',
+            expand: false
+        };
+
+        const initialState = {
+            attributePanelExpanded: true,
+            spatialPanelExpanded: true
+        };
+
+        let state = queryform(initialState, testAction);
+        expect(state).toExist();
+
+        expect(state.spatialPanelExpanded).toEqual(false);
+    });
 });

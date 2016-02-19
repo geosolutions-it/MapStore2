@@ -15,13 +15,19 @@ const {
     UPDATE_EXCEPTION_FIELD,
     UPDATE_LOGIC_COMBO,
     REMOVE_GROUP_FIELD,
+    CHANGE_CASCADING_VALUE,
+    EXPAND_ATTRIBUTE_PANEL,
+    EXPAND_SPATIAL_PANEL,
     addFilterField,
     addGroupField,
     removeFilterField,
     updateFilterField,
     updateExceptionField,
     updateLogicCombo,
-    removeGroupField
+    removeGroupField,
+    changeCascadingValue,
+    expandAttributeFilterPanel,
+    expandSpatialFilterPanel
 } = require('../queryform');
 
 describe('Test correctness of the queryform actions', () => {
@@ -104,5 +110,35 @@ describe('Test correctness of the queryform actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(REMOVE_GROUP_FIELD);
         expect(retval.groupId).toBe(100);
+    });
+
+    it('changeCascadingValue', () => {
+        let attributes = [];
+
+        let retval = changeCascadingValue(attributes);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_CASCADING_VALUE);
+        expect(retval.attributes.length).toBe(0);
+    });
+
+    it('expandAttributeFilterPanel', () => {
+        let expanded = false;
+
+        let retval = expandAttributeFilterPanel(expanded);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(EXPAND_ATTRIBUTE_PANEL);
+        expect(retval.expand).toBe(false);
+    });
+
+    it('expandSpatialFilterPanel', () => {
+        let expanded = false;
+
+        let retval = expandSpatialFilterPanel(expanded);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(EXPAND_SPATIAL_PANEL);
+        expect(retval.expand).toBe(false);
     });
 });
