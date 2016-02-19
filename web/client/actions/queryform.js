@@ -13,6 +13,8 @@ const ADD_GROUP_FIELD = 'ADD_GROUP_FIELD';
 const UPDATE_LOGIC_COMBO = 'UPDATE_LOGIC_COMBO';
 const REMOVE_GROUP_FIELD = 'REMOVE_GROUP_FIELD';
 const CHANGE_CASCADING_VALUE = 'CHANGE_CASCADING_VALUE';
+const EXPAND_ATTRIBUTE_PANEL = 'EXPAND_ATTRIBUTE_PANEL';
+const EXPAND_SPATIAL_PANEL = 'EXPAND_SPATIAL_PANEL';
 
 function addFilterField(groupId) {
     return {
@@ -75,6 +77,20 @@ function changeCascadingValue(attributes) {
     };
 }
 
+function expandAttributeFilterPanel(expand) {
+    return {
+        type: EXPAND_ATTRIBUTE_PANEL,
+        expand: expand
+    };
+}
+
+function expandSpatialFilterPanel(expand) {
+    return {
+        type: EXPAND_SPATIAL_PANEL,
+        expand: expand
+    };
+}
+
 module.exports = {
     ADD_FILTER_FIELD,
     REMOVE_FILTER_FIELD,
@@ -84,6 +100,8 @@ module.exports = {
     UPDATE_LOGIC_COMBO,
     REMOVE_GROUP_FIELD,
     CHANGE_CASCADING_VALUE,
+    EXPAND_ATTRIBUTE_PANEL,
+    EXPAND_SPATIAL_PANEL,
     addFilterField,
     removeFilterField,
     updateFilterField,
@@ -91,5 +109,7 @@ module.exports = {
     addGroupField,
     updateLogicCombo,
     removeGroupField,
-    changeCascadingValue
+    changeCascadingValue,
+    expandAttributeFilterPanel,
+    expandSpatialFilterPanel
 };

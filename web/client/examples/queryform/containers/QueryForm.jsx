@@ -24,7 +24,9 @@ const {
     updateExceptionField,
     updateLogicCombo,
     removeGroupField,
-    changeCascadingValue
+    changeCascadingValue,
+    expandAttributeFilterPanel,
+    expandSpatialFilterPanel
 } = require('../../../actions/queryform');
 
 // connecting a Dumb component to the store
@@ -37,12 +39,13 @@ const SmartQueryForm = connect((state) => {
         groupLevels: state.queryform.groupLevels,
         groupFields: state.queryform.groupFields,
         filterFields: state.queryform.filterFields,
-        attributes: state.queryform.attributes
+        attributes: state.queryform.attributes,
+        attributePanelExpanded: state.queryform.attributePanelExpanded,
+        spatialPanelExpanded: state.queryform.spatialPanelExpanded
     };
 }, dispatch => {
     return {
-        actions: bindActionCreators({
-            // QueryBuilder actions
+        attributeFilterActions: bindActionCreators({
             onAddGroupField: addGroupField,
             onAddFilterField: addFilterField,
             onRemoveFilterField: removeFilterField,
@@ -50,7 +53,11 @@ const SmartQueryForm = connect((state) => {
             onUpdateExceptionField: updateExceptionField,
             onUpdateLogicCombo: updateLogicCombo,
             onRemoveGroupField: removeGroupField,
-            onChangeCascadingValue: changeCascadingValue
+            onChangeCascadingValue: changeCascadingValue,
+            onExpandAttributeFilterPanel: expandAttributeFilterPanel
+        }, dispatch),
+        spatialFilterActions: bindActionCreators({
+            onExpandSpatialFilterPanel: expandSpatialFilterPanel
         }, dispatch)
     };
 })(QueryBuilder);

@@ -13,8 +13,6 @@ const FilterField = require('./FilterField');
 const ComboField = require('./ComboField');
 const DateField = require('./DateField');
 
-require('./queryform.css');
-
 const LocaleUtils = require('../../utils/LocaleUtils');
 const I18N = require('../I18N/I18N');
 
@@ -28,6 +26,7 @@ const GroupField = React.createClass({
         removeButtonIcon: React.PropTypes.string,
         addButtonIcon: React.PropTypes.string,
         logicComboOptions: React.PropTypes.array,
+        attributePanelExpanded: React.PropTypes.bool,
         actions: React.PropTypes.object
     },
     contextTypes: {
@@ -41,10 +40,11 @@ const GroupField = React.createClass({
             attributes: [],
             removeButtonIcon: "glyphicon glyphicon-minus",
             addButtonIcon: "glyphicon glyphicon-plus",
+            attributePanelExpanded: true,
             logicComboOptions: [
-                {logic: "OR", name: "queryform.groupField.any"},
-                {logic: "AND", name: "queryform.groupField.all"},
-                {logic: "NOR", name: "queryform.groupField.none"}
+                {logic: "OR", name: "queryform.attributefilter.groupField.any"},
+                {logic: "AND", name: "queryform.attributefilter.groupField.all"},
+                {logic: "NOT", name: "queryform.attributefilter.groupField.none"}
             ],
             actions: {
                 onAddGroupField: () => {},
@@ -54,7 +54,8 @@ const GroupField = React.createClass({
                 onUpdateExceptionField: () => {},
                 onUpdateLogicCombo: () => {},
                 onRemoveGroupField: () => {},
-                onChangeCascadingValue: () => {}
+                onChangeCascadingValue: () => {},
+                onExpandAttributeFilterPanel: () => {}
             }
         };
     },
@@ -126,7 +127,7 @@ const GroupField = React.createClass({
             <Row className="logicHeader">
                 {removeButton}
                 <Col xs={4}>
-                    <div style={{"paddingTop": "9px", "float": "left"}}><I18N.Message msgId={"queryform.form.group_label_a"}/></div>
+                    <div style={{"paddingTop": "9px", "float": "left"}}><I18N.Message msgId={"queryform.attributefilter.group_label_a"}/></div>
                     <div style={{"float": "right"}}>
                         <ComboField
                             fieldOptions={
@@ -145,7 +146,7 @@ const GroupField = React.createClass({
                     </div>
                 </Col>
                 <Col xs={7}>
-                    <div style={{"paddingTop": "9px"}}><span><I18N.Message msgId={"queryform.form.group_label_b"}/></span></div>
+                    <div style={{"paddingTop": "9px"}}><span><I18N.Message msgId={"queryform.attributefilter.group_label_b"}/></span></div>
                 </Col>
             </Row>
         );
@@ -170,7 +171,7 @@ const GroupField = React.createClass({
         const removeButton = groupField.index <= this.props.groupLevels ?
             (
                 <Button id="add-condition-group" onClick={() => this.props.actions.onAddGroupField(groupField.id, groupField.index)}>
-                    <Glyphicon glyph={this.props.addButtonIcon}/><I18N.Message msgId={"queryform.form.add_group"}/></Button>
+                    <Glyphicon glyph={this.props.addButtonIcon}/><I18N.Message msgId={"queryform.attributefilter.add_group"}/></Button>
             ) : (
                 <span/>
             );
@@ -183,7 +184,7 @@ const GroupField = React.createClass({
                     <Col xs={3}>
                         <Button id="add-filter-field" onClick={() => this.props.actions.onAddFilterField(groupField.id)}>
                             <Glyphicon glyph={this.props.addButtonIcon}/>
-                            <I18N.Message msgId={"queryform.form.add_condition"}/>
+                            <I18N.Message msgId={"queryform.attributefilter.add_condition"}/>
                         </Button>
                     </Col>
                     <Col xs={9}>
@@ -193,9 +194,30 @@ const GroupField = React.createClass({
             </Panel>
         );
     },
+    renderHeader() {
+        const attributeFilterHeader = LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.attribute_filter_header");
+
+        return this.props.attributePanelExpanded ? (
+            <span>
+                <span>{attributeFilterHeader}</span>
+                <button onClick={this.props.actions.onExpandAttributeFilterPanel.bind(null, false)} className="close">
+                    <Glyphicon glyph="glyphicon glyphicon-collapse-down"/>
+                </button>
+            </span>
+        ) : (
+            <span>
+                <span>{attributeFilterHeader}</span>
+                <button onClick={this.props.actions.onExpandAttributeFilterPanel.bind(null, true)} className="close">
+                    <Glyphicon glyph="glyphicon glyphicon-expand"/>
+                </button>
+            </span>
+        );
+    },
     render() {
         return (
-            <div>{this.props.groupFields.filter(g => !g.groupId).map(this.renderGroupField)}</div>
+            <Panel id="attributeFilterPanel" collapsible expanded={this.props.attributePanelExpanded} header={this.renderHeader()}>
+                {this.props.groupFields.filter(g => !g.groupId).map(this.renderGroupField)}
+            </Panel>
         );
     },
     updateLogicCombo(groupId, name, value) {
