@@ -153,6 +153,8 @@ div.MapSearchBar input {
     top: 40px;
 }
 
+/* FullScreen Menu */
+#screen-switcher .glyphicon {padding-right: 5px}
 /* Menu Button */
 #drawer-menu-button {
     position: absolute;
