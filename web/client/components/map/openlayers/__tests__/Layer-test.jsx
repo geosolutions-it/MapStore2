@@ -169,6 +169,28 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().item(0).getSource().urls.length).toBe(2);
     });
 
+    it('creates a wms layer with proxy  for openlayers map', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "forceProxy": true,
+            "url": ["http://demo.geo-solutions.it/geoserver/wms", "http://demo.geo-solutions.it/geoserver/wms"]
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(map.getLayers().item(0).getSource().urls.length).toBe(2);
+    });
+
     it('creates a graticule layer for openlayers map', () => {
         var options = {
             "visibility": true

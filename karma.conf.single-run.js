@@ -55,7 +55,7 @@ module.exports = function karmaConfig(config) {
                 postLoaders: [
                     {
                         test: /\.jsx?$/,
-                        exclude: /(__tests__|node_modules|legacy|libs\\Cesium)\\|(__tests__|node_modules|legacy|libs\/Cesium)\/|webpack\.js|utils\/(openlayers|leaflet)/,
+                        exclude: /(__tests__|node_modules|legacy|libs\\Cesium|libs\\html2canvas)\\|(__tests__|node_modules|legacy|libs\/Cesium|libs\/html2canvas)\/|webpack\.js|utils\/(openlayers|leaflet)/,
                         loader: 'istanbul-instrumenter'
                     }
                 ]

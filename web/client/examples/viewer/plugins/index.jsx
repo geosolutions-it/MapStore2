@@ -23,6 +23,12 @@ var measurement = require('../../../reducers/measurement');
 var {searchResults} = require('../../../reducers/search');
 var help = require('../../../reducers/help');
 
+var SnapshotPanel = require("../../../components/Snapshot/SnapshotPanel.jsx");
+var SnapshotSupport = require("../../../components/Snapshot/SnapshotSupport.jsx");
+var SnapshotIcon = require("../../../components/Snapshot/SnapshotIcon.jsx");
+var snapshot = require('../../../reducers/snapshot');
+var {changeSnapshotState, onSnapshotError, onSnapshotReady, postCanvas} = require('../../../actions/snapshot');
+
 var LocateBtn = require("../../../components/mapcontrols/Locate/LocateBtn");
 var locate = require('../../../reducers/locate');
 var {changeLocateState} = require('../../../actions/locate');
@@ -162,8 +168,20 @@ module.exports = {
                     lineMeasureEnabled={props.measurement.lineMeasureEnabled}
                     areaMeasureEnabled={props.measurement.areaMeasureEnabled}
                     bearingMeasureEnabled={props.measurement.bearingMeasureEnabled}
-                    measurement={props.measurement}
-                />
+                    measurement={props.measurement}/>
+                <SnapshotPanel
+                    title={<div><Message msgId="snapshot.title"/></div>}
+                    buttonTooltip={<Message msgId="snapshot.tooltip"/>}
+                    helpText={<Message msgId="helptexts.snapshot"/>}
+                    isPanel={true}
+                    layers={props.layers.flat}
+                    browser={props.browser}
+                    key="snapshotPanel"
+                    snapshot={props.snapshot}
+                    onStatusChange={props.changeSnapshotState}
+                    icon={<SnapshotIcon status={props.snapshot.state}/>}
+                    downloadImg={props.postCanvas}
+                    />
                 <Settings
                     key="settingsPanel"
                     isPanel={true}
@@ -266,7 +284,16 @@ module.exports = {
             <HelpTextPanel
                 key="helpTextPanel"
                 isVisible={props.help.helpwinViz}
-                helpText={props.help.helpText}/>
+                helpText={props.help.helpText}/>,
+            <SnapshotSupport key="snapshotMap"
+                config={props.map}
+                layers={props.layers.flat}
+                snapstate={props.snapshot}
+                active={(props.floatingPanel.activeKey === "snapshotPanel")}
+                onSnapshotReady={props.onSnapshotReady}
+                onStatusChange={props.changeSnapshotState}
+                onSnapshotError={props.onSnapshotError}
+                browser={props.browser}/>
         ];
     },
     reducers: {
@@ -276,6 +303,7 @@ module.exports = {
         measurement,
         searchResults,
         locate,
+        snapshot,
         help
     },
     actions: {
@@ -304,6 +332,10 @@ module.exports = {
         changeHelpText,
         changeHelpwinVisibility,
         showMapinfoMarker,
-        hideMapinfoMarker
+        hideMapinfoMarker,
+        changeSnapshotState,
+        onSnapshotError,
+        onSnapshotReady,
+        postCanvas
     }
 };

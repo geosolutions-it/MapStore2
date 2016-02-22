@@ -93,7 +93,7 @@
     "url": "~0.10.3"
   },
   "scripts": {
-    "postinstall": "node checkCesium.js && mkdirp ./web/client/libs/Cesium && download --extract --out ./web/client/libs/Cesium https://cesiumjs.org/releases/Cesium-1.17.zip || echo Cesium already installed",
+    "postinstall": "node checkCesium.js && mkdirp ./web/client/libs/Cesium && download --extract --out ./web/client/libs/Cesium https://cesiumjs.org/releases/Cesium-1.17.zip || echo Cesium already installed; node checkHtml2Canvas.js && download --extract --out ./web/client/libs https://github.com/niklasvh/html2canvas/archive/0.4.1.zip && mv ./web/client/libs/html2canvas-0.4.1 ./web/client/libs/html2canvas  || echo html2canvas already installed",
     "clean": "rm -Rf ./web/client/dist",
     "compile": "npm run clean && mkdirp ./web/client/dist && webpack --config prod-webpack.config.js",
     "start": "webpack-dev-server --progress --colors --port 8081 --hot --inline --content-base web/client",

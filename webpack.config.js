@@ -94,7 +94,8 @@ module.exports = {
             rewrite: rewriteUrl("/http_proxy/proxy$1"),
             host: "mapstore.geo-solutions.it",
             target: "http://mapstore.geo-solutions.it"
-        }]
+        }
+        ]
     },
 
     devtool: 'inline-source-map',

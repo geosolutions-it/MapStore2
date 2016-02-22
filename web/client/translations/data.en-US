@@ -203,7 +203,8 @@
             "backgroundSwitcher": "This is the helptext for the BackgroundSwitcher",
             "layerSwitcher": "This is the helptext for the LayerSwitcher",
             "infoButton": "This is the helptext for the InfoButton",
-            "locateBtn": "This is the helptext for the LocateBtn"
+            "locateBtn": "This is the helptext for the LocateBtn",
+            "snapshot": "This is the helptext for the Snapshot"
         },
         "queryform": {
             "config": {
@@ -240,6 +241,11 @@
                     "poly": "Polygon"
                 }
             }
+        },
+        "snapshot": {
+            "title": "Snapshot Preview",
+            "tooltip": "Save a snapshot of the map.",
+            "googleBingError": "Googole and Bing layers aren't available for the snapshot, due to copyright restrictions."
         }
     }
 }
