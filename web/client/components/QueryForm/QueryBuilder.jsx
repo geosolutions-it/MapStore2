@@ -18,10 +18,12 @@ const QueryBuilder = React.createClass({
         groupLevels: React.PropTypes.number,
         filterFields: React.PropTypes.array,
         groupFields: React.PropTypes.array,
+        spatialField: React.PropTypes.object,
         removeButtonIcon: React.PropTypes.string,
         addButtonIcon: React.PropTypes.string,
         attributePanelExpanded: React.PropTypes.bool,
         spatialPanelExpanded: React.PropTypes.bool,
+        showDetailsPanel: React.PropTypes.bool,
         attributeFilterActions: React.PropTypes.object,
         spatialFilterActions: React.PropTypes.object
     },
@@ -31,10 +33,12 @@ const QueryBuilder = React.createClass({
             groupFields: [],
             filterFields: [],
             attributes: [],
+            spatialField: {},
             removeButtonIcon: "glyphicon glyphicon-minus",
             addButtonIcon: "glyphicon glyphicon-plus",
             attributePanelExpanded: true,
             spatialPanelExpanded: true,
+            showDetailsPanel: false,
             attributeFilterActions: {
                 onAddGroupField: () => {},
                 onAddFilterField: () => {},
@@ -47,7 +51,13 @@ const QueryBuilder = React.createClass({
                 onExpandAttributeFilterPanel: () => {}
             },
             spatialFilterActions: {
-                onExpandSpatialFilterPanel: () => {}
+                onExpandSpatialFilterPanel: () => {},
+                onSelectSpatialMethod: () => {},
+                onSelectSpatialOperation: () => {},
+                onChangeDrawingStatus: () => {},
+                onRemoveSpatialSelection: () => {},
+                onShowSpatialSelectionDetails: () => {},
+                onEndDrawing: () => {}
             }
         };
     },
@@ -64,7 +74,9 @@ const QueryBuilder = React.createClass({
                     attributePanelExpanded={this.props.attributePanelExpanded}
                     actions={this.props.attributeFilterActions}/>
                 <SpatialFilter
+                    spatialField={this.props.spatialField}
                     spatialPanelExpanded={this.props.spatialPanelExpanded}
+                    showDetailsPanel={this.props.showDetailsPanel}
                     actions={this.props.spatialFilterActions}/>
             </form>
         );

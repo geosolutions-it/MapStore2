@@ -22,3 +22,20 @@
     cursor: text;
     text-decoration:none;
 }
+
+.detail_geom_button{
+    text-align: right;
+    margin-top: 3px;
+}
+
+.detail_geom_label{
+    text-align: left;
+}
+
+.details-panel{
+    width: 400px;
+    height: 400px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}

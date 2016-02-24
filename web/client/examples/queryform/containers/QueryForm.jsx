@@ -6,79 +6,31 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-
+const Debug = require('../../../components/development/Debug');
+const Localized = require('../../../components/I18N/Localized');
 const {connect} = require('react-redux');
 
-const Localized = require('../../../components/I18N/Localized');
+const QueryFormMap = require('../components/QueryFormMap');
+const SmartQueryForm = require('../components/SmartQueryForm');
 
-// include application component
-const QueryBuilder = require('../../../components/QueryForm/QueryBuilder');
+const QueryForm = (props) => (
+    <Localized messages={props.messages} locale={props.locale}>
+        <div>
+            <QueryFormMap/>
+            <SmartQueryForm/>
+            <Debug/>
+        </div>
+    </Localized>
+);
 
-const {bindActionCreators} = require('redux');
-const {
-    // QueryBuilder action functions
-    addGroupField,
-    addFilterField,
-    removeFilterField,
-    updateFilterField,
-    updateExceptionField,
-    updateLogicCombo,
-    removeGroupField,
-    changeCascadingValue,
-    expandAttributeFilterPanel,
-    expandSpatialFilterPanel
-} = require('../../../actions/queryform');
-
-// connecting a Dumb component to the store
-// makes it a smart component
-// we both connect state => props
-// and actions to event handlers
-const SmartQueryForm = connect((state) => {
-    return {
-        // QueryBuilder props
-        groupLevels: state.queryform.groupLevels,
-        groupFields: state.queryform.groupFields,
-        filterFields: state.queryform.filterFields,
-        attributes: state.queryform.attributes,
-        attributePanelExpanded: state.queryform.attributePanelExpanded,
-        spatialPanelExpanded: state.queryform.spatialPanelExpanded
-    };
-}, dispatch => {
-    return {
-        attributeFilterActions: bindActionCreators({
-            onAddGroupField: addGroupField,
-            onAddFilterField: addFilterField,
-            onRemoveFilterField: removeFilterField,
-            onUpdateFilterField: updateFilterField,
-            onUpdateExceptionField: updateExceptionField,
-            onUpdateLogicCombo: updateLogicCombo,
-            onRemoveGroupField: removeGroupField,
-            onChangeCascadingValue: changeCascadingValue,
-            onExpandAttributeFilterPanel: expandAttributeFilterPanel
-        }, dispatch),
-        spatialFilterActions: bindActionCreators({
-            onExpandSpatialFilterPanel: expandSpatialFilterPanel
-        }, dispatch)
-    };
-})(QueryBuilder);
+QueryForm.propTypes = {
+    messages: React.PropTypes.object,
+    locale: React.PropTypes.string
+};
 
 module.exports = connect((state) => {
     return {
-        messages: state.locale ? state.locale.messages : null,
-        locale: state.locale ? state.locale.current : null,
-        localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined
+        locale: state.locale && state.locale.locale,
+        messages: state.locale && state.locale.messages || {}
     };
-})(React.createClass({
-    propTypes: {
-        messages: React.PropTypes.object,
-        locale: React.PropTypes.string,
-        localeError: React.PropTypes.string
-    },
-    render() {
-        return (
-            <Localized messages={this.props.messages} locale={this.props.locale} loadingError={this.props.localeError}>
-                <SmartQueryForm/>
-            </Localized>
-        );
-    }
-}));
+})(QueryForm);

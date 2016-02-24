@@ -18,6 +18,10 @@ const {
     CHANGE_CASCADING_VALUE,
     EXPAND_ATTRIBUTE_PANEL,
     EXPAND_SPATIAL_PANEL,
+    SELECT_SPATIAL_METHOD,
+    SELECT_SPATIAL_OPERATION,
+    REMOVE_SPATIAL_SELECT,
+    SHOW_SPATIAL_DETAILS,
     addFilterField,
     addGroupField,
     removeFilterField,
@@ -27,7 +31,11 @@ const {
     removeGroupField,
     changeCascadingValue,
     expandAttributeFilterPanel,
-    expandSpatialFilterPanel
+    expandSpatialFilterPanel,
+    selectSpatialMethod,
+    selectSpatialOperation,
+    removeSpatialSelection,
+    showSpatialSelectionDetails
 } = require('../queryform');
 
 describe('Test correctness of the queryform actions', () => {
@@ -140,5 +148,46 @@ describe('Test correctness of the queryform actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(EXPAND_SPATIAL_PANEL);
         expect(retval.expand).toBe(false);
+    });
+
+    it('selectSpatialMethod', () => {
+        let method = "BBOX";
+        let fieldName = "method";
+
+        let retval = selectSpatialMethod(method, fieldName);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(SELECT_SPATIAL_METHOD);
+        expect(retval.method).toBe("BBOX");
+        expect(retval.fieldName).toBe("method");
+    });
+
+    it('selectSpatialOperation', () => {
+        let operation = "DWITHIN";
+        let fieldName = "operation";
+
+        let retval = selectSpatialOperation(operation, fieldName);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(SELECT_SPATIAL_OPERATION);
+        expect(retval.operation).toBe("DWITHIN");
+        expect(retval.fieldName).toBe("operation");
+    });
+
+    it('removeSpatialSelection', () => {
+        let retval = removeSpatialSelection();
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(REMOVE_SPATIAL_SELECT);
+    });
+
+    it('showSpatialSelectionDetails', () => {
+        let show = true;
+
+        let retval = showSpatialSelectionDetails(show);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(SHOW_SPATIAL_DETAILS);
+        expect(retval.show).toBe(true);
     });
 });

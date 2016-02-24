@@ -8,14 +8,12 @@
 
 var DebugUtils = require('../../../utils/DebugUtils');
 
-var locale = require('../../../reducers/locale');
 const {combineReducers} = require('redux');
-
-const queryform = require('../../../reducers/queryform');
 
 const initialState = {
     attributePanelExpanded: true,
     spatialPanelExpanded: true,
+    showDetailsPanel: false,
     groupLevels: 5,
     groupFields: [
         {
@@ -34,6 +32,12 @@ const initialState = {
             exception: null
         }
     ],
+    spatialField: {
+        method: null,
+        attribute: "the_geom",
+        operation: "INTERSECTS",
+        geometry: null
+    },
     attributes: [
         {
             id: "ListAttribute",
@@ -55,8 +59,12 @@ const initialState = {
 
  // reducers
 const reducers = combineReducers({
-    queryform,
-    locale
+    browser: require('../../../reducers/browser'),
+    config: require('../../../reducers/config'),
+    locale: require('../../../reducers/locale'),
+    map: require('../../../reducers/map'),
+    draw: require('../../../reducers/draw'),
+    queryform: require('../../../reducers/queryform')
 });
 
 // export the store with the given reducers
