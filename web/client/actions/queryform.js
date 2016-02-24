@@ -15,6 +15,10 @@ const REMOVE_GROUP_FIELD = 'REMOVE_GROUP_FIELD';
 const CHANGE_CASCADING_VALUE = 'CHANGE_CASCADING_VALUE';
 const EXPAND_ATTRIBUTE_PANEL = 'EXPAND_ATTRIBUTE_PANEL';
 const EXPAND_SPATIAL_PANEL = 'EXPAND_SPATIAL_PANEL';
+const SELECT_SPATIAL_METHOD = 'SELECT_SPATIAL_METHOD';
+const SELECT_SPATIAL_OPERATION = 'SELECT_SPATIAL_OPERATION';
+const REMOVE_SPATIAL_SELECT = 'REMOVE_SPATIAL_SELECT';
+const SHOW_SPATIAL_DETAILS = 'SHOW_SPATIAL_DETAILS';
 
 function addFilterField(groupId) {
     return {
@@ -91,6 +95,35 @@ function expandSpatialFilterPanel(expand) {
     };
 }
 
+function selectSpatialMethod(method, fieldName) {
+    return {
+        type: SELECT_SPATIAL_METHOD,
+        fieldName: fieldName,
+        method: method
+    };
+}
+
+function selectSpatialOperation(operation, fieldName) {
+    return {
+        type: SELECT_SPATIAL_OPERATION,
+        fieldName: fieldName,
+        operation: operation
+    };
+}
+
+function removeSpatialSelection() {
+    return {
+        type: REMOVE_SPATIAL_SELECT
+    };
+}
+
+function showSpatialSelectionDetails(show) {
+    return {
+        type: SHOW_SPATIAL_DETAILS,
+        show: show
+    };
+}
+
 module.exports = {
     ADD_FILTER_FIELD,
     REMOVE_FILTER_FIELD,
@@ -102,6 +135,10 @@ module.exports = {
     CHANGE_CASCADING_VALUE,
     EXPAND_ATTRIBUTE_PANEL,
     EXPAND_SPATIAL_PANEL,
+    SELECT_SPATIAL_METHOD,
+    SELECT_SPATIAL_OPERATION,
+    REMOVE_SPATIAL_SELECT,
+    SHOW_SPATIAL_DETAILS,
     addFilterField,
     removeFilterField,
     updateFilterField,
@@ -111,5 +148,9 @@ module.exports = {
     removeGroupField,
     changeCascadingValue,
     expandAttributeFilterPanel,
-    expandSpatialFilterPanel
+    expandSpatialFilterPanel,
+    selectSpatialMethod,
+    selectSpatialOperation,
+    removeSpatialSelection,
+    showSpatialSelectionDetails
 };

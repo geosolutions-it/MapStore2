@@ -231,13 +231,31 @@
             },
             "spatialfilter": {
                 "selection_method": "Selection Method",
+                "geometric_operation": "Operazione Geometrica",
                 "spatial_filter_header": "Spatial Filter",
-                "methods_options": {
+                "draw_start_label": "Draw the region on interest in the map",
+                "details": {
+                    "detail_button_label": "Details",
+                    "details_header": "Selection Details",
+                    "details_bbox_label": "Edit the coordinates to modify the area",
+                    "details_circle_label": "Edit the numeric field to modify the radius",
+                    "reset_bbox": "Reset",
+                    "save_bbox": "Save BBOX modifications",
+                    "save_radius": "Save the Radius modifications"
+                },
+                "methods": {
                     "zone": "Zone",
                     "box": "BoundingBox",
                     "buffer": "Buffer",
                     "circle": "Circle",
                     "poly": "Polygon"
+                },
+                "operations": {
+                    "intersects": "INTERSECTS",
+                    "bbox": "BBOX",
+                    "contains": "CONTAINS",
+                    "dwithin": "DWITHIN",
+                    "within": "WITHIN"
                 }
             }
         }

@@ -25,15 +25,43 @@ describe('SpatialFilter', () => {
         setTimeout(done);
     });
 
-    it('creates the SpatialFilter component with options', () => {
+    it('creates the SpatialFilter component', () => {
+        let spatialField = {
+            method: null,
+            attribute: "the_geom",
+            operation: "INTERSECTS",
+            geometry: null
+        };
+
         const spatialfilter = ReactDOM.render(
-            <SpatialFilter/>,
+            <SpatialFilter
+                spatialField={spatialField}
+                spatialPanelExpanded={true}
+                showDetailsPanel={false}/>,
             document.getElementById("container")
         );
 
         expect(spatialfilter).toExist();
+        expect(spatialfilter.props.spatialField).toExist();
+        expect(spatialfilter.props.spatialField).toBe(spatialField);
+        expect(spatialfilter.props.spatialPanelExpanded).toBe(true);
+        expect(spatialfilter.props.showDetailsPanel).toBe(false);
 
         const spatialFilterDOMNode = expect(ReactDOM.findDOMNode(spatialfilter));
         expect(spatialFilterDOMNode).toExist();
+
+        let spatialPanel = spatialFilterDOMNode.actual.childNodes[0].childNodes[1].id;
+        expect(spatialPanel).toExist();
+        expect(spatialPanel).toBe("spatialFilterPanel");
+
+        let combosPanel = spatialFilterDOMNode.actual.getElementsByClassName('panel-body');
+        expect(combosPanel).toExist();
+
+        let logicHeader = combosPanel[1].childNodes[0];
+        expect(logicHeader).toExist();
+        expect(logicHeader.className).toBe("logicHeader row");
+
+        let operationPanelRows = combosPanel[2].getElementsByClassName('row');
+        expect(operationPanelRows.length).toBe(2);
     });
 });

@@ -5,9 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-var queryform = require('../queryform');
-
+const expect = require('expect');
+const queryform = require('../queryform');
 
 describe('Test the queryform reducer', () => {
 
@@ -331,5 +330,89 @@ describe('Test the queryform reducer', () => {
         expect(state).toExist();
 
         expect(state.spatialPanelExpanded).toEqual(false);
+    });
+
+    it('Select Spatial Method', () => {
+        let testAction = {
+            type: "SELECT_SPATIAL_METHOD",
+            fieldName: "method",
+            method: "BBOX"
+        };
+
+        const initialState = {
+            spatialField: {
+                method: null,
+                attribute: "the_geom",
+                operation: "INTERSECTS",
+                geometry: null
+            }
+        };
+
+        let state = queryform(initialState, testAction);
+        expect(state).toExist();
+
+        expect(state.spatialField.method).toEqual("BBOX");
+    });
+
+    it('Select Spatial Operation', () => {
+        let testAction = {
+            type: "SELECT_SPATIAL_OPERATION",
+            fieldName: "operation",
+            operation: "DWITHIN"
+        };
+
+        const initialState = {
+            spatialField: {
+                method: null,
+                attribute: "the_geom",
+                operation: "INTERSECTS",
+                geometry: null
+            }
+        };
+
+        let state = queryform(initialState, testAction);
+        expect(state).toExist();
+
+        expect(state.spatialField.operation).toEqual("DWITHIN");
+    });
+
+    it('Remove Spatial Selection', () => {
+        let testAction = {
+            type: "REMOVE_SPATIAL_SELECT"
+        };
+
+        const initialState = {
+            spatialField: {
+                method: "BBOX",
+                attribute: "the_geom",
+                operation: "DWITHIN",
+                geometry: '{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-635956.0753326667,5466776.262955805],[-635956.0753326667,4723196.8517976105],[-29351.81886150781,4723196.8517976105],[-29351.81886150781,5466776.262955805],[-635956.0753326667,5466776.262955805]]]},"properties":null}'
+            }
+        };
+
+        let state = queryform(initialState, testAction);
+        expect(state).toExist();
+        expect(state.spatialField).toExist();
+
+        expect(state.spatialField.method).toEqual(null);
+        expect(state.spatialField.attribute).toEqual("the_geom");
+        expect(state.spatialField.operation).toEqual("INTERSECTS");
+        expect(state.spatialField.geometry).toEqual(null);
+    });
+
+    it('Show Spatial Details Panel', () => {
+        let testAction = {
+            type: "SHOW_SPATIAL_DETAILS",
+            show: true
+        };
+
+        const initialState = {
+            showDetailsPanel: false
+        };
+
+        let state = queryform(initialState, testAction);
+        expect(state).toExist();
+
+        expect(state.showDetailsPanel).toEqual(true);
     });
 });
