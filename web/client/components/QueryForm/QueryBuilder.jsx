@@ -14,6 +14,8 @@ require('./queryform.css');
 
 const QueryBuilder = React.createClass({
     propTypes: {
+        map: React.PropTypes.object,
+        useMapProjection: React.PropTypes.bool,
         attributes: React.PropTypes.array,
         groupLevels: React.PropTypes.number,
         filterFields: React.PropTypes.array,
@@ -29,6 +31,8 @@ const QueryBuilder = React.createClass({
     },
     getDefaultProps() {
         return {
+            map: {},
+            useMapProjection: true,
             groupLevels: 1,
             groupFields: [],
             filterFields: [],
@@ -74,6 +78,8 @@ const QueryBuilder = React.createClass({
                     attributePanelExpanded={this.props.attributePanelExpanded}
                     actions={this.props.attributeFilterActions}/>
                 <SpatialFilter
+                    map={this.props.map}
+                    useMapProjection={this.props.useMapProjection}
                     spatialField={this.props.spatialField}
                     spatialPanelExpanded={this.props.spatialPanelExpanded}
                     showDetailsPanel={this.props.showDetailsPanel}

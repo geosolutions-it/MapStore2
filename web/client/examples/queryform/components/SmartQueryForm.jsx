@@ -45,6 +45,8 @@ const {
 const SmartQueryForm = connect((state) => {
     return {
         // QueryBuilder props
+        map: (state.map && state.map) || (state.config && state.config.map),
+        useMapProjection: state.queryform.useMapProjection,
         groupLevels: state.queryform.groupLevels,
         groupFields: state.queryform.groupFields,
         filterFields: state.queryform.filterFields,

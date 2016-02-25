@@ -15,6 +15,7 @@ const initialState = {
     spatialPanelExpanded: true,
     showDetailsPanel: false,
     groupLevels: 5,
+    useMapProjection: false,
     groupFields: [
         {
             id: 1,

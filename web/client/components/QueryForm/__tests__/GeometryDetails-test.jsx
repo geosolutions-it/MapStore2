@@ -52,9 +52,9 @@ describe('GeometryDetails', () => {
 
         let panelBodyRows = childNodes[1].getElementsByClassName('row');
         expect(panelBodyRows).toExist();
-        expect(panelBodyRows.length).toBe(1);
+        expect(panelBodyRows.length).toBe(2);
 
-        expect(panelBodyRows[0].childNodes.length).toBe(3);
+        expect(panelBodyRows[0].childNodes.length).toBe(4);
     });
 
     it('creates the GeometryDetails component with BBOX selection', () => {

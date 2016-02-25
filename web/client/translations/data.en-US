@@ -238,10 +238,11 @@
                     "detail_button_label": "Details",
                     "details_header": "Selection Details",
                     "details_bbox_label": "Edit the coordinates to modify the area",
-                    "details_circle_label": "Edit the numeric field to modify the radius",
+                    "details_circle_label": "Edit the numeric fields to modify the radius and center of the circle",
                     "reset_bbox": "Reset",
                     "save_bbox": "Save BBOX modifications",
-                    "save_radius": "Save the Radius modifications"
+                    "save_radius": "Save the radius/center modifications",
+                    "radius": "Radius"
                 },
                 "methods": {
                     "zone": "Zone",

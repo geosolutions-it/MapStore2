@@ -185,6 +185,7 @@ const DrawSupport = React.createClass({
 
         this.props.map.addInteraction(draw);
         this.drawInteraction = draw;
+        this.drawSource.clear();
     },
     removeDrawInteraction: function() {
         if (this.drawInteraction !== null) {
