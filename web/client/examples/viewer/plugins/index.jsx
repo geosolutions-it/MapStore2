@@ -45,6 +45,7 @@ var HelpWrapper = require('../../../components/Help/HelpWrapper');
 var HelpTextPanel = require('../../../components/Help/HelpTextPanel');
 var HelpBadge = require('../../../components/Help/HelpBadge');
 var HelpToggleBtn = require('../../../components/Help/HelpToggleBtn');
+var MadeWithLove = require('../img/mwlii.png');
 
 var React = require('react');
 
@@ -266,7 +267,16 @@ module.exports = {
             <HelpTextPanel
                 key="helpTextPanel"
                 isVisible={props.help.helpwinViz}
-                helpText={props.help.helpText}/>
+                helpText={props.help.helpText}/>,
+                <div style={{
+                        position: "absolute",
+                        bottom: "50px",
+                        left: "0",
+                        height: 0,
+                        width: "100%",
+                        overflow: "visible",
+                        textAlign: "center"
+                    }} ><img src={MadeWithLove} /></div>
         ];
     },
     reducers: {
