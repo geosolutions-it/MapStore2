@@ -7,10 +7,10 @@
  */
 
 var React = require('react');
-var Node = require('../../../components/Layers/Node');
-var GroupTitle = require('../../../components/Layers/fragments/GroupTitle');
-var GroupChildren = require('../../../components/Layers/fragments/GroupChildren');
-var VisibilityCheck = require('../../../components/Layers/fragments/VisibilityCheck');
+var Node = require('../../../components/TOC/Node');
+var GroupTitle = require('../../../components/TOC/fragments/GroupTitle');
+var GroupChildren = require('../../../components/TOC/fragments/GroupChildren');
+var VisibilityCheck = require('../../../components/TOC/fragments/VisibilityCheck');
 var {Glyphicon} = require('react-bootstrap');
 
 var Group = React.createClass({

@@ -9,9 +9,9 @@
 const React = require('react');
 const {Alert, Accordion, Panel, Glyphicon} = require('react-bootstrap');
 const ReactSwipe = require('react-swipe');
-var JSONFeatureInfoViewer = require('./infoViewers/JSONFeatureInfoViewer');
-var HTMLFeatureInfoViewer = require('./infoViewers/HTMLFeatureInfoViewer');
-var TEXTFeatureInfoViewer = require('./infoViewers/TEXTFeatureInfoViewer');
+var JSONFeatureInfoViewer = require('../../../../components/data/identify/viewers/JSONViewer');
+var HTMLFeatureInfoViewer = require('../../../../components/data/identify/viewers/HTMLViewer');
+var TEXTFeatureInfoViewer = require('../../../../components/data/identify/viewers/TextViewer');
 var FeatureInfoUtils = require('../../../../utils/FeatureInfoUtils');
 var MapInfoUtils = require('../../../../utils/MapInfoUtils');
 const I18N = require('../../../../components/I18N/I18N');

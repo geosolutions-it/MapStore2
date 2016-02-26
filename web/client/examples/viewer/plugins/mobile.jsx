@@ -7,11 +7,11 @@ var CRSSelector = require("../../../components/mapcontrols/mouseposition/CRSSele
 var ToggleButton = require('../../../components/buttons/ToggleButton');
 var { ActionCreators } = require('redux-undo');
 var {undo, redo} = ActionCreators;
-var BackgroundSwitcher = require("../../../components/BackgroundSwitcher/BackgroundSwitcher");
+var BackgroundSwitcher = require("../../../components/TOC/background/BackgroundSwitcher");
 var MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
 var {Message} = require('../../../components/I18N/I18N');
-var Menu = require('../../../components/menu/DrawerMenu');
-var Section = require('../../../components/menu//Section');
+var Menu = require('../components/DrawerMenu');
+var Section = require('../components/Section');
 var mapInfo = require('../../../reducers/mapInfo');
 var floatingPanel = require('../reducers/floatingPanel');
 var mousePosition = require('../../../reducers/mousePosition');
@@ -19,12 +19,12 @@ var measurement = require('../../../reducers/measurement');
 var {searchResults} = require('../../../reducers/search');
 var help = require('../../../reducers/help');
 
-var LocateBtn = require("../../../components/mapcontrols/Locate/LocateBtn");
+var LocateBtn = require("../../../components/mapcontrols/locate/LocateBtn");
 var locate = require('../../../reducers/locate');
 var {changeLocateState} = require('../../../actions/locate');
 // search SearchBar
-var SearchBar = require("../../../components/Search/SearchBar");
-var NominatimResultList = require("../../../components/Search/geocoding/NominatimResultList");
+var SearchBar = require("../../../components/mapcontrols/search/SearchBar");
+var NominatimResultList = require("../../../components/mapcontrols/search/geocoding/NominatimResultList");
 
 var {getFeatureInfo, changeMapInfoState, purgeMapInfoResults, changeMapInfoFormat, showMapinfoMarker, hideMapinfoMarker} = require('../../../actions/mapInfo');
 var {activatePanel} = require('../actions/floatingPanel');
@@ -56,7 +56,7 @@ var GlobalSpinner = connect((state) => {
     return {
         loading: state.layers.flat.some((layer) => layer.loading)
     };
-})(require('../../../components/spinners/GlobalSpinner/GlobalSpinner'));
+})(require('../../../components/misc/spinners/GlobalSpinner/GlobalSpinner'));
 var menu;
 module.exports = {
     components: (props) => {

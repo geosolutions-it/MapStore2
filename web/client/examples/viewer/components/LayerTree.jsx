@@ -8,9 +8,9 @@
 
 var React = require('react');
 
-var Layers = require('../../../components/Layers/Layers');
-var DefaultGroup = require('../../../components/Layers/DefaultGroup');
-var DefaultLayer = require('../../../components/Layers/DefaultLayer');
+var TOC = require('../../../components/TOC/TOC');
+var DefaultGroup = require('../../../components/TOC/DefaultGroup');
+var DefaultLayer = require('../../../components/TOC/DefaultLayer');
 
 var icon = require('../img/layers.png');
 
@@ -43,7 +43,7 @@ var LayerTree = React.createClass({
 
         return (
             <div>
-                <Layers onSort={this.props.onSort} filter={this.getNoBackgroundLayers}
+                <TOC onSort={this.props.onSort} filter={this.getNoBackgroundLayers}
                     nodes={this.props.groups}>
                     <DefaultGroup onSort={this.props.onSort} onToggle={this.props.onToggleGroup} style={this.props.groupStyle}>
                         <DefaultLayer
@@ -51,7 +51,7 @@ var LayerTree = React.createClass({
                             propertiesChangeHandler={this.props.propertiesChangeHandler}
                             />
                     </DefaultGroup>
-                </Layers>
+                </TOC>
             </div>
         );
     }

@@ -11,7 +11,7 @@ var {Collapse, Panel, Button, ButtonGroup, Tooltip, OverlayTrigger} = require('r
 
 var assign = require('object-assign');
 
-var HelpBadge = require('../../../components/Help/HelpBadge');
+var HelpBadge = require('../../../components/help/HelpBadge');
 
 /**
  * This toolbar renders as an accordion for big screens, as a
