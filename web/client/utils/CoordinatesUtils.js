@@ -7,7 +7,7 @@
  */
 var Proj4js = require('proj4');
 var assign = require('object-assign');
-var {isArray} = require('lodash');
+var {isArray, flattenDeep, chunk} = require('lodash');
 
 var CoordinatesUtils = {
     getUnits: function(projection) {
@@ -79,6 +79,67 @@ var CoordinatesUtils = {
         var azimuth = (((Math.atan2(y, x) * 180.0 / Math.PI) + 360 ) % 360 );
 
         return azimuth;
+    },
+    /**
+     * Extend an extent given another one
+     *
+     * @param extent1 {array} [minx, miny, maxx, maxy]
+     * @param extent2 {array} [minx, miny, maxx, maxy]
+     *
+     * @return {array} [minx, miny, maxx, maxy]
+     */
+    extendExtent: function(extent1, extent2) {
+        let newExtent = extent1.slice();
+        if (extent2[0] < extent1[0]) {
+            newExtent[0] = extent2[0];
+        }
+        if (extent2[2] > extent1[2]) {
+            newExtent[2] = extent2[2];
+        }
+        if (extent2[1] < extent1[1]) {
+            newExtent[1] = extent2[1];
+        }
+        if (extent2[3] > extent1[3]) {
+            newExtent[3] = extent2[3];
+        }
+        return newExtent;
+    },
+    getGeoJSONExtent: function(geoJSON) {
+        let newExtent = [Infinity, Infinity, -Infinity, -Infinity];
+        if (geoJSON.type !== "Point" && geoJSON.type !== "GeometryCollection") {
+            const flatCoordinates = chunk(flattenDeep(geoJSON.coordinates), 2);
+            flatCoordinates.reduce((extent, point) => {
+                extent[0] = (point[0] < newExtent[0]) ? point[0] : newExtent[0];
+                extent[1] = (point[1] < newExtent[1]) ? point[1] : newExtent[1];
+                extent[2] = (point[0] > newExtent[2]) ? point[0] : newExtent[2];
+                extent[3] = (point[1] > newExtent[3]) ? point[1] : newExtent[3];
+                return extent;
+            }, newExtent);
+        }else if (geoJSON.type === "GeometryCollection") {
+            geoJSON.geometies.reduce((extent, geometry) => {
+                let ext = this.getGeoJSONExtent(geometry);
+                if (this.isValidExtent(ext)) {
+                    extent[0] = (ext[0] < newExtent[0]) ? ext[0] : newExtent[0];
+                    extent[1] = (ext[1] < newExtent[1]) ? ext[1] : newExtent[1];
+                    extent[2] = (ext[2] > newExtent[2]) ? ext[2] : newExtent[2];
+                    extent[3] = (ext[3] > newExtent[3]) ? ext[3] : newExtent[3];
+                }
+            }, newExtent);
+        }
+        return newExtent;
+    },
+    /**
+     * Check extent validity
+     *
+     * @param extent {array} [minx, miny, maxx, maxy]
+     *
+     * @return {bool}
+     */
+    isValidExtent: function(extent) {
+        return !(
+            extent.indexOf(Infinity) !== -1 || extent.indexOf(-Infinity) !== -1 ||
+            extent[1] >= extent[2] || extent[1] >= extent[3]
+            );
     }
 };
 
