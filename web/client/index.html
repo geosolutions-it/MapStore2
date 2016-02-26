@@ -6,7 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>MapStore 2 HomePage</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-        <link rel="stylesheet" href="http://css-spinners.com/css/spinner/spinner.css" type="text/css">
         <link rel="shortcut icon" href="examples/home/img/favicon.ico" type="image/x-icon">
 
         <style>
@@ -77,6 +76,57 @@
             text-shadow: black 0px 0px 6px,black 0px 0px 3px;
         }
 
+        @keyframes spin {
+            to { transform: rotate(1turn); }
+        }
+
+        .spinner-loader {
+            position: relative;
+            display: inline-block;
+            width: 5em;
+            height: 5em;
+            margin: 0 .5em;
+            font-size: 12px;
+            text-indent: 999em;
+            overflow: hidden;
+            animation: spin 1s infinite steps(8);
+            font-size: 24px;
+        }
+
+        .spinner-loader:before,
+        .spinner-loader:after,
+        .spinner-loader > div:before,
+        .spinner-loader > div:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 2.25em; /* (container width - part width)/2  */
+            width: .5em;
+            height: 1.5em;
+            border-radius: .2em;
+            background: #eee;
+            box-shadow: 0 3.5em #eee; /* container height - part height */
+            transform-origin: 50% 2.5em; /* container height / 2 */
+        }
+
+        .spinner-loader:before {
+            background: #555;
+        }
+
+        .spinner-loader:after {
+            transform: rotate(-45deg);
+            background: #777;
+        }
+
+        .spinner-loader > div:before {
+            transform: rotate(-90deg);
+            background: #999;
+        }
+
+        .spinner-loader > div:after {
+            transform: rotate(-135deg);
+            background: #bbb;
+        }
 
 
         </style>
