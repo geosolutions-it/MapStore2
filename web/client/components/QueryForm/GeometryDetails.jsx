@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const ol = require('openlayers');
 
 const {Row, Col, Panel, Input, Button, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
 
@@ -16,9 +15,12 @@ const I18N = require('../I18N/I18N');
 
 const assign = require('object-assign');
 
+const CoordinatesUtils = require("../../utils/CoordinatesUtils");
+
 const GeometryDetails = React.createClass({
     propTypes: {
-        geometry: React.PropTypes.string,
+        useMapProjection: React.PropTypes.bool,
+        geometry: React.PropTypes.object,
         type: React.PropTypes.string,
         onShowPanel: React.PropTypes.func,
         onChangeDrawingStatus: React.PropTypes.func,
@@ -26,6 +28,7 @@ const GeometryDetails = React.createClass({
     },
     getDefaultProps() {
         return {
+            useMapProjection: true,
             geometry: null,
             type: null,
             onShowPanel: () => {},
@@ -43,31 +46,36 @@ const GeometryDetails = React.createClass({
             }
         }
 
-        let bbox = ol.geom.Polygon.fromExtent(coordinates);
+        let bbox = !this.props.useMapProjection ?
+            CoordinatesUtils.reprojectBbox(coordinates, 'EPSG:4326', this.props.geometry.projection) : coordinates;
 
-        let feature = new ol.Feature({
-            geometry: bbox
-        });
+        let geometry = {
+            type: this.props.geometry.type,
+            extent: bbox,
+            projection: this.props.geometry.projection
+        };
 
-        this.props.onChangeDrawingStatus("replace", undefined, "queryform", [feature]);
+        this.props.onChangeDrawingStatus("replace", undefined, "queryform", [geometry]);
     },
-    onUpdateRadius(value, name) {
+    onUpdateCircle(value, name) {
         this.tempCircle[name] = parseFloat(value);
 
-        let circle = new ol.geom.Circle(this.tempCircle.center, this.tempCircle[name]);
-        circle = ol.geom.Polygon.fromCircle(circle, 100);
+        let center = !this.props.useMapProjection ?
+            CoordinatesUtils.reproject([this.tempCircle.x, this.tempCircle.y], 'EPSG:4326', this.props.geometry.projection) : [this.tempCircle.x, this.tempCircle.y];
 
-        let feature = new ol.Feature({
-            geometry: circle
-        });
+        let geometry = {
+            type: this.props.geometry.type,
+            center: center,
+            radius: this.tempCircle.radius,
+            projection: this.props.geometry.projection
+        };
 
-        this.props.onChangeDrawingStatus("replace", undefined, "queryform", [feature]);
+        this.props.onChangeDrawingStatus("replace", undefined, "queryform", [geometry]);
     },
     onModifyGeometry() {
-        let geoJsonFormat = new ol.format.GeoJSON();
-        let feature;
+        let geometry;
 
-        // Update the geometry status
+        // Update the geometry
         if (this.props.type === "BBOX") {
             this.extent = this.tempExtent;
 
@@ -78,31 +86,36 @@ const GeometryDetails = React.createClass({
                 }
             }
 
-            let geometry = ol.geom.Polygon.fromExtent(coordinates);
-            feature = new ol.Feature({
-                geometry: geometry
-            });
+            let bbox = !this.props.useMapProjection ?
+                CoordinatesUtils.reprojectBbox(coordinates, 'EPSG:4326', this.props.geometry.projection) : coordinates;
 
-            this.props.onEndDrawing(geoJsonFormat.writeFeature(feature), "queryform");
+            geometry = {
+                type: this.props.geometry.type,
+                extent: bbox,
+                projection: this.props.geometry.projection
+            };
         } else if (this.props.type === "Circle") {
             this.circle = this.tempCircle;
 
-            let geometry = new ol.geom.Circle(this.circle.center, this.circle.radius);
-            geometry = ol.geom.Polygon.fromCircle(geometry, 100);
+            let center = !this.props.useMapProjection ?
+                CoordinatesUtils.reproject([this.tempCircle.x, this.tempCircle.y], 'EPSG:4326', this.props.geometry.projection) : [this.tempCircle.x, this.tempCircle.y];
 
-            feature = new ol.Feature({
-                geometry: geometry
-            });
+            geometry = {
+                type: this.props.geometry.type,
+                center: center,
+                radius: this.circle.radius,
+                projection: this.props.geometry.projection
+            };
         }
 
-        this.props.onEndDrawing(geoJsonFormat.writeFeature(feature), "queryform");
+        this.props.onEndDrawing(geometry, "queryform");
         this.props.onShowPanel(false);
     },
     onClosePanel() {
         if (this.props.type === "BBOX") {
             this.resetBBOX();
         } else if (this.props.type === "Circle") {
-            this.resetRadius();
+            this.resetCircle();
         }
 
         this.props.onShowPanel(false);
@@ -117,40 +130,38 @@ const GeometryDetails = React.createClass({
             </div>
         );
     },
-    renderCoordinateField(defaultValue, name) {
+    renderCoordinateField(value, name) {
         return (
             <Input
                 style={{"width": "105px"}}
                 type="number"
                 id={"queryform_bbox_" + name}
-                defaultValue={defaultValue}
+                defaultValue={value}
                 onChange={(evt) => this.onUpdateBBOX(evt.target.value, name)}/>
         );
     },
-    renderRadiusField(radius, name) {
+    renderCircleField(value, name) {
         return (
             <Input
-                style={{"width": "200px"}}
                 type="number"
                 id={"queryform_circle_" + name}
-                defaultValue={radius}
-                onChange={(evt) => this.onUpdateRadius(evt.target.value, name)}/>
+                defaultValue={value}
+                onChange={(evt) => this.onUpdateCircle(evt.target.value, name)}/>
         );
     },
     renderDetailsContent() {
         let detailsContent;
-
-        let geoJsonFormat = new ol.format.GeoJSON();
-        let feature = geoJsonFormat.readFeature(this.props.geometry);
-        let geometry = feature.getGeometry();
-        let geomExtent = geometry.getExtent();
+        let geometry = this.props.geometry;
 
         if (this.props.type === "BBOX") {
+            let geomExtent = geometry.projection !== 'EPSG:4326' && !this.props.useMapProjection ?
+                CoordinatesUtils.reprojectBbox(geometry.extent, geometry.projection, 'EPSG:4326') : geometry.extent;
+
             this.extent = {
-                "west": geomExtent[0],
-                "sud": geomExtent[1],
-                "est": geomExtent[2],
-                "north": geomExtent[3]
+                "west": Math.round(geomExtent[0] * 100) / 100,
+                "sud": Math.round(geomExtent[1] * 100) / 100,
+                "est": Math.round(geomExtent[2] * 100) / 100,
+                "north": Math.round(geomExtent[3] * 100) / 100
             };
 
             this.tempExtent = assign({}, this.extent, {});
@@ -214,22 +225,42 @@ const GeometryDetails = React.createClass({
                 </div>
             );
         } else if (this.props.type === "Circle") {
-            let center = ol.extent.getCenter(geomExtent);
-            let coordinate = geometry.getFirstCoordinate();
-            let radius = Math.sqrt(Math.pow(center[0] - coordinate[0], 2) + Math.pow(center[1] - coordinate[1], 2));
+            // Show the center coordinates in 4326
+            let center = geometry.projection !== 'EPSG:4326' && !this.props.useMapProjection ?
+                CoordinatesUtils.reproject(geometry.center, geometry.projection, 'EPSG:4326') : geometry.center;
+
+            let radius = geometry.radius;
 
             this.circle = {
-                "center": center,
-                "radius": radius
+                "x": Math.round(center.x * 100) / 100,
+                "y": Math.round(center.y * 100) / 100,
+                "radius": Math.round(radius * 100) / 100
             };
 
             this.tempCircle = assign({}, this.circle, {});
 
             detailsContent = (
-                <div style={{"marginTop": "80px"}}>
+                <div style={{"marginTop": "70px"}}>
                     <Row>
-                        <Col xs={8}>
-                            {this.renderRadiusField(this.circle.radius, "radius")}
+                        <Col xs={2} style={{"paddingTop": "6px"}}>
+                            <span><strong>X: </strong></span>
+                        </Col>
+                        <Col xs={4}>
+                            {this.renderCircleField(this.circle.x, "x")}
+                        </Col>
+                        <Col xs={2} style={{"paddingTop": "6px"}}>
+                            <span><strong>Y: </strong></span>
+                        </Col>
+                        <Col xs={4}>
+                            {this.renderCircleField(this.circle.y, "y")}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={2} style={{"paddingTop": "6px"}}>
+                            <span><strong><I18N.Message msgId={"queryform.spatialfilter.details.radius"}/>: </strong></span>
+                        </Col>
+                        <Col xs={6}>
+                            {this.renderCircleField(this.circle.radius, "radius")}
                         </Col>
                         <Col xs={2}>
                             <OverlayTrigger placement="bottom" overlay={(<Tooltip id="save-radius-tooltip"><strong><I18N.Message msgId={"queryform.spatialfilter.details.save_radius"}/></strong></Tooltip>)}>
@@ -240,7 +271,7 @@ const GeometryDetails = React.createClass({
                         </Col>
                         <Col xs={2}>
                             <OverlayTrigger placement="bottom" overlay={(<Tooltip id="reset-radius-tooltip"><strong><I18N.Message msgId={"queryform.spatialfilter.details.reset"}/></strong></Tooltip>)}>
-                                <Button id="reset-radius" onClick={() => this.resetRadius()}>
+                                <Button id="reset-radius" onClick={() => this.resetCircle()}>
                                     <Glyphicon glyph="glyphicon glyphicon-remove"/>
                                 </Button>
                             </OverlayTrigger>
@@ -274,10 +305,18 @@ const GeometryDetails = React.createClass({
             }
         }
     },
-    resetRadius() {
-        let coordinateInput = document.getElementById("queryform_circle_radius");
-        coordinateInput.value = this.circle.radius;
-        this.onUpdateRadius(coordinateInput.value, "radius");
+    resetCircle() {
+        let radiusInput = document.getElementById("queryform_circle_radius");
+        radiusInput.value = this.circle.radius;
+        this.onUpdateCircle(radiusInput.value, "radius");
+
+        let coordinateXInput = document.getElementById("queryform_circle_x");
+        coordinateXInput.value = this.circle.x;
+        this.onUpdateCircle(coordinateXInput.value, "x");
+
+        let coordinateYInput = document.getElementById("queryform_circle_y");
+        coordinateYInput.value = this.circle.y;
+        this.onUpdateCircle(coordinateYInput.value, "y");
     }
 });
 

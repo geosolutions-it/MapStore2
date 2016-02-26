@@ -238,10 +238,11 @@
                     "detail_button_label": "Dettagli",
                     "details_header": "Dettaglio Selezione",
                     "details_bbox_label": "Edita le coordinate per modificare l'area",
-                    "details_circle_label": "Edita il campo numerico per modificare il raggio",
+                    "details_circle_label": "Edita i campi numerici per modificare raggio e centro del cerchio",
                     "reset": "Reimposta allo stato iniziale",
                     "save_bbox": "Salva le modifiche al BBOX",
-                    "save_radius": "Salva le modifiche al Raggio"
+                    "save_radius": "Salva le modifiche al raggio e/o al centro",
+                    "radius": "Raggio"
                 },
                 "methods": {
                     "zone": "Zona",
