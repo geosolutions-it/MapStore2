@@ -32,7 +32,7 @@ var {changeMapView, changeZoomLevel} = require('../../actions/map');
 var {toggleNode, removeNode, changeLayerProperties, changeGroupProperties, updateNode, sortNode} = require('../../actions/layers');
 var {showSettings, hideSettings, updateOpacity} = require('./actions/layertree');
 var assign = require('object-assign');
-var Layers = require('../../components/Layers/Layers');
+var TOC = require('../../components/TOC/TOC');
 var Group = require('./components/Group');
 var LayerOrGroup = require('./components/LayerOrGroup');
 var {Panel, Modal, Label, Button} = require('react-bootstrap');
@@ -196,7 +196,7 @@ let MyMap = React.createClass({
                 </LMap>
 
                 <Panel style={{position: "fixed", top: "50px", right: "50px", width: "400px", bottom: "50px", overflow: "auto"}}>
-                    <Layers nodes={this.props.layers.groups}>
+                    <TOC nodes={this.props.layers.groups}>
                         <Group propertiesChangeHandler={this.props.changeGroupProperties}
                             onRemove={(node) => this.props.removeNode(node.id, 'groups')}
                             onToggle={(group, status) => this.props.toggleNode(group, 'groups', status)}
@@ -209,7 +209,7 @@ let MyMap = React.createClass({
                                 onRemoveGroup={(node) => this.props.removeNode(node.id, 'groups')}
                             />
                         </Group>
-                    </Layers>
+                    </TOC>
                 </Panel>
                 <Modal.Dialog style={{visibility: this.props.controls.Settings.expanded ? "visible" : "hidden"}}>
                     <Modal.Header><Modal.Title>Opacity</Modal.Title></Modal.Header>

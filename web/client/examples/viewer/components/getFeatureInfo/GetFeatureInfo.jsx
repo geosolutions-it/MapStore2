@@ -13,7 +13,7 @@ var GetFeatureInfoViewer = require('./GetFeatureInfoViewer');
 const Draggable = require('react-draggable');
 
 var I18N = require('../../../../components/I18N/I18N');
-var Spinner = require('../../../../components/spinners/BasicSpinner/BasicSpinner');
+var Spinner = require('../../../../components/misc/spinners/BasicSpinner/BasicSpinner');
 
 var CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 

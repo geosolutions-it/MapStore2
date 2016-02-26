@@ -9,11 +9,11 @@
 var React = require('react');
 var Group = require('./Group');
 var LayersTool = require('./LayersTool');
-var Node = require('../../../components/Layers/Node');
+var Node = require('../../../components/TOC/Node');
 
-var VisibilityCheck = require('../../../components/Layers/fragments/VisibilityCheck');
-var Title = require('../../../components/Layers/fragments/Title');
-var WMSLegend = require('../../../components/Layers/fragments/WMSLegend');
+var VisibilityCheck = require('../../../components/TOC/fragments/VisibilityCheck');
+var Title = require('../../../components/TOC/fragments/Title');
+var WMSLegend = require('../../../components/TOC/fragments/WMSLegend');
 
 var LayerOrGroup = React.createClass({
     propTypes: {

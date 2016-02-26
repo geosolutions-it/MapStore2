@@ -12,7 +12,7 @@ const {connect} = require('react-redux');
 const Localized = require('../../../components/I18N/Localized');
 
 // include application component
-const QueryBuilder = require('../../../components/QueryForm/QueryBuilder');
+const QueryBuilder = require('../../../components/data/query/QueryBuilder');
 
 const {bindActionCreators} = require('redux');
 const {

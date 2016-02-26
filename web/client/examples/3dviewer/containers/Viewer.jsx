@@ -3,8 +3,8 @@ const connect = require('react-redux').connect;
 const LMap = require('../../../components/map/cesium/Map');
 const LLayer = require('../../../components/map/cesium/Layer');
 
-const SearchBar = require("../../../components/Search/SearchBar");
-const NominatimResultList = require("../../../components/Search/geocoding/NominatimResultList");
+const SearchBar = require("../../../components/mapcontrols/search/SearchBar");
+const NominatimResultList = require("../../../components/mapcontrols/search/geocoding/NominatimResultList");
 const MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
 
 const {changeMapView} = require('../../../actions/map');

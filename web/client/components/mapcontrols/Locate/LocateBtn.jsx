@@ -8,7 +8,7 @@
 
 var React = require('react');
 var {Button, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
-const defaultIcon = require('../../spinners/InlineSpinner/img/spinner.gif');
+const defaultIcon = require('../../misc/spinners/InlineSpinner/img/spinner.gif');
 
 var LocateBtn = React.createClass({
     propTypes: {

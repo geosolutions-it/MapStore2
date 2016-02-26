@@ -28,7 +28,7 @@ var LLayer = require('../../components/map/leaflet/Layer');
 
 var {changeMapView, changeZoomLevel} = require('../../actions/map');
 
-var ScaleBox = require("../../components/ScaleBox/ScaleBox");
+var ScaleBox = require("../../components/mapcontrols/scale/ScaleBox");
 
 var BootstrapReact = require('react-bootstrap');
 var Grid = BootstrapReact.Grid;
