@@ -149,6 +149,7 @@
                         <phase>test</phase>
                         <!-- Optional configuration which provides for running any npm command -->
                         <configuration>
+                            <skip>${skipTests}</skip>
                             <arguments>run mvntest</arguments>
                             <installDirectory>..</installDirectory>
                         </configuration>
