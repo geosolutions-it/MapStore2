@@ -1,5 +1,4 @@
 var path = require("path");
-var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
 var DefinePlugin = require("webpack/lib/DefinePlugin");
 var NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
 var NoErrorsPlugin = require("webpack/lib/NoErrorsPlugin");
@@ -34,7 +33,6 @@ module.exports = {
         new DefinePlugin({
             "__DEVTOOLS__": true
         }),
-        new CommonsChunkPlugin("commons", "mapstore-commons.js"),
         new NormalModuleReplacementPlugin(/leaflet$/, path.join(__dirname, "web", "client", "libs", "leaflet")),
         new NormalModuleReplacementPlugin(/cesium$/, path.join(__dirname, "web", "client", "libs", "cesium")),
         new NormalModuleReplacementPlugin(/openlayers$/, path.join(__dirname, "web", "client", "libs", "openlayers")),
