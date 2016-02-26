@@ -104,7 +104,16 @@ const DrawSupport = React.createClass({
             this.addLayer(newProps);
         } else {
             this.drawSource.clear();
-            newProps.features.map((feature) => this.drawSource.addFeature(feature));
+            newProps.features.map((geom) => {
+                let geometry = geom.radius ?
+                    ol.geom.Polygon.fromCircle(new ol.geom.Circle([geom.center.x, geom.center.y], geom.radius), 100) : ol.geom.Polygon.fromExtent(geom.extent);
+
+                let feature = new ol.Feature({
+                    geometry: geometry
+                });
+
+                this.drawSource.addFeature(feature);
+            });
         }
     },
     addDrawInteraction: function(newProps) {
@@ -179,7 +188,23 @@ const DrawSupport = React.createClass({
 
         draw.on('drawend', function(evt) {
             this.sketchFeature = evt.feature;
-            this.props.onEndDrawing(this.geojson.writeFeature(this.sketchFeature), this.props.drawOwner);
+            let drawnGeometry = this.sketchFeature.getGeometry();
+
+            let extent = drawnGeometry.getExtent();
+            let center = ol.extent.getCenter(drawnGeometry.getExtent());
+            let coordinates = drawnGeometry.getCoordinates();
+            let radius = Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2));
+
+            let geometry = {
+                type: drawnGeometry.getType(),
+                extent: extent,
+                center: center,
+                coordinates: coordinates,
+                radius: radius,
+                projection: this.props.map.getView().getProjection().getCode()
+            };
+
+            this.props.onEndDrawing(geometry, this.props.drawOwner);
             this.props.onChangeDrawingStatus('stop', this.props.drawMethod, this.props.drawOwner);
         }, this);
 

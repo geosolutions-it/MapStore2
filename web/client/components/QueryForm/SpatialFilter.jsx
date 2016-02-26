@@ -16,7 +16,6 @@ const I18N = require('../I18N/I18N');
 
 const SpatialFilter = React.createClass({
     propTypes: {
-        map: React.PropTypes.object,
         useMapProjection: React.PropTypes.bool,
         spatialField: React.PropTypes.object,
         spatialOperations: React.PropTypes.array,
@@ -30,7 +29,6 @@ const SpatialFilter = React.createClass({
     },
     getDefaultProps() {
         return {
-            map: {},
             useMapProjection: true,
             method: null,
             operation: null,
@@ -160,7 +158,6 @@ const SpatialFilter = React.createClass({
 
         const detailsPanel = this.props.showDetailsPanel ? (
             <GeometryDetails
-                map={this.props.map}
                 useMapProjection={this.props.useMapProjection}
                 geometry={this.props.spatialField.geometry}
                 type={this.props.spatialField.method}
