@@ -47,6 +47,7 @@
     "redux-devtools-dock-monitor": "^1.0.1",
     "redux-devtools-log-monitor": "^1.0.1",
     "redux-immutable-state-invariant": "^1.1.0",
+    "rimraf": "^2.5.2",
     "style-loader": "^0.12.4",
     "url-loader": "^0.5.7",
     "watchify": "^3.2.1",
@@ -94,7 +95,7 @@
   },
   "scripts": {
     "postinstall": "node checkCesium.js && mkdirp ./web/client/libs/Cesium && download --extract --out ./web/client/libs/Cesium https://cesiumjs.org/releases/Cesium-1.17.zip || echo Cesium already installed",
-    "clean": "rm -Rf ./web/client/dist",
+    "clean": "rimraf ./web/client/dist",
     "compile": "npm run clean && mkdirp ./web/client/dist && webpack --config prod-webpack.config.js",
     "start": "webpack-dev-server --progress --colors --port 8081 --hot --inline --content-base web/client",
     "test": "karma start ./karma.conf.single-run.js",
