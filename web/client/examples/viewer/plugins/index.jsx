@@ -45,6 +45,7 @@ var HelpWrapper = require('../../../components/help/HelpWrapper');
 var HelpTextPanel = require('../../../components/help/HelpTextPanel');
 var HelpBadge = require('../../../components/help/HelpBadge');
 var HelpToggleBtn = require('../../../components/help/HelpToggleBtn');
+var MadeWithLove = require('../img/mwlii.png');
 
 var React = require('react');
 
