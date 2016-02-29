@@ -45,10 +45,12 @@ var HelpWrapper = require('../../../components/help/HelpWrapper');
 var HelpTextPanel = require('../../../components/help/HelpTextPanel');
 var HelpBadge = require('../../../components/help/HelpBadge');
 var HelpToggleBtn = require('../../../components/help/HelpToggleBtn');
+var MadeWithLove = require('../img/mwlii.png');
 
 var React = require('react');
 
 var {isObject} = require('lodash');
+
 
 const reorderLayers = (groups, allLayers) => {
     return groups.slice(0).reverse().reduce((previous, group) => {
@@ -266,7 +268,16 @@ module.exports = {
             <HelpTextPanel
                 key="helpTextPanel"
                 isVisible={props.help.helpwinViz}
-                helpText={props.help.helpText}/>
+                helpText={props.help.helpText}/>,
+                <div style={{
+                        position: "absolute",
+                        bottom: "50px",
+                        left: "0",
+                        height: 0,
+                        width: "100%",
+                        overflow: "visible",
+                        textAlign: "center"
+                    }} ><img src={MadeWithLove} /></div>
         ];
     },
     reducers: {
