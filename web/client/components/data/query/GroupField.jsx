@@ -69,15 +69,15 @@ const GroupField = React.createClass({
                 // The complete attribute config object
                 let attribute = attributes.filter((attr) => attr.id === filterField.attribute)[0];
                 // The reference ID of the related attribute field value
-                let attributeRefId = attribute.values.filter((value) => value.name === filterField.value)[0][selected.dependson.from];
+                let attributeRefId = attribute.values.filter((value) => value[attribute.labelField] === filterField.value)[0][selected.dependson.from];
                 // The filtered values that match the attribute refId
                 let values = selected.values.filter((value) => value[selected.dependson.to] === attributeRefId);
 
-                return (selected && selected.type === "list" ? values.map((value) => value.name || value) : null);
+                return (selected && selected.type === "list" ? values.map((value) => value[selected.labelField] || value) : null);
             }
         }
 
-        return (selected && selected.type === "list" ? selected.values.map((value) => value.name || value) : null);
+        return (selected && selected.type === "list" ? selected.values.map((value) => value[selected.labelField] || value) : null);
     },
     renderFilterField(filterField) {
         let selectedAttribute = this.props.attributes.filter((attribute) => attribute.id === filterField.attribute)[0];
