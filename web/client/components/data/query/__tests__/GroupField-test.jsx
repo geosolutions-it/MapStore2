@@ -138,6 +138,8 @@ describe('GroupField', () => {
             {
                 id: "Attribute",
                 type: "list",
+                idField: "id",
+                labelField: "name",
                 values: [
                     {id: 1, name: "attribute1"},
                     {id: 2, name: "attribute2"},
@@ -149,6 +151,8 @@ describe('GroupField', () => {
                 id: "Attribute2",
                 dependson: {field: "Attribute", from: "id", to: "id"},
                 type: "list",
+                idField: "id",
+                labelField: "name",
                 values: [
                     {id: 1, name: "attribute_a"},
                     {id: 1, name: "attribute_b"},
