@@ -56,6 +56,8 @@
   },
   "//": "replace react-sortable-items with official on npm when 0.0.10 with remove_deprecated PR in included",
   "dependencies": {
+    "ag-grid": "^3.3.3",
+    "ag-grid-react": "^3.3.0",
     "axios": "^0.8.1",
     "babel-standalone": "^6.4.4",
     "bootstrap": "^3.3.5",
@@ -63,6 +65,7 @@
     "es6-promise": "^2.3.0",
     "eventlistener": "0.0.1",
     "intl": "^1.0.0",
+    "json-loader": "^0.5.4",
     "keymirror": "~0.1.1",
     "leaflet": "^0.7.3",
     "leaflet-draw": "^0.2.3",
