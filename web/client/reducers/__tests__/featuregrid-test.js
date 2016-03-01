@@ -18,7 +18,7 @@ describe('Test the featuregrid reducer', () => {
     it('FeatureGrid selectFeature', () => {
         let testAction = {
             type: 'SELECT_FEATURES',
-             geometries: [1, 2]
+            features: [1, 2]
         };
         let state = featuregrid( {}, testAction);
         expect(state.select).toExist();

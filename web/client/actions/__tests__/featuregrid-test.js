@@ -15,14 +15,14 @@ const {
 describe('Test correctness of featurgrid actions', () => {
 
     it('Test selectFeature action creator', () => {
-        const geometries = [1, 2];
+        const features = [1, 2];
 
-        const retval = selectFeatures(geometries);
+        const retval = selectFeatures(features);
 
         expect(retval).toExist();
         expect(retval.type).toBe(SELECT_FEATURES);
-        expect(retval.geometries).toExist();
-        expect(retval.geometries).toBe(geometries);
+        expect(retval.features).toExist();
+        expect(retval.features).toBe(features);
     });
 
 });

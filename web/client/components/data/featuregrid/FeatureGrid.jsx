@@ -88,13 +88,14 @@ const FeatureGrid = React.createClass({
                     datasource={(isPagingOrVirtual) ? this.setDataSource() : null}
                     enableServerSideSorting={(isPagingOrVirtual)}
                     // or provide props the old way with no binding
-                    onRowSelected={this.selectFeature}
-                    rowSelection="single"
+                    onSelectionChanged={this.selectFeatures}
+                    rowSelection="multiple"
                     enableColResize={true}
                     enableSorting={(!isPagingOrVirtual)}
                     toolPanelSuppressValues={true}
                     toolPanelSuppressGroups={true}
                     showToolPanel={false}
+                    rowDeselection={true}
                     localeText={{
                         next: '>',
                         last: '>|',
@@ -183,8 +184,8 @@ const FeatureGrid = React.createClass({
         }
 
     },
-    selectFeature(params) {
-        this.props.selectFeatures([params.node.data.geometry]);
+    selectFeatures(params) {
+        this.props.selectFeatures(params.selectedRows.slice());
     },
     sortData(sortModel, data) {
         // do an in memory sort of the data, across all the fields

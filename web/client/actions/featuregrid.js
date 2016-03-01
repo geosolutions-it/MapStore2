@@ -8,10 +8,10 @@
 
 const SELECT_FEATURES = 'SELECT_FEATURES';
 
-function selectFeatures(geometries) {
+function selectFeatures(features) {
     return {
         type: SELECT_FEATURES,
-        geometries: geometries
+        features: features
     };
 }
 
