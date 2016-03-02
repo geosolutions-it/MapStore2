@@ -12,6 +12,8 @@ if (!projectName || !projectVersion || !projectDescription || !repoURL || !outFo
 const fs = require('fs');
 const ncp = require('ncp').ncp;
 
+const mkdirp = require('mkdirp');
+
 function createPackageJSON() {
     console.log('Creating package.json...');
 
@@ -42,39 +44,57 @@ function copyStaticFiles() {
                     if (err) {
                         return console.log(err);
                     }
-                    copyTemplates();
+                    copyTemplates(0,'');
                 });
             }
         });
     });
 }
 
-function copyTemplates() {
+function copyTemplates(level, path, callback) {
     console.log('Copying templated files...');
-    fs.readdir('./project', function (err,files) {
+    fs.readdir('./project' + path, function (err,files) {
       if (err) {
         return console.log(err);
       }
       files.forEach(function(file, index) {
-        fs.stat('./project/' + file, function(err, stats) {
+        fs.stat('./project' + path + '/' + file, function(err, stats) {
             if (err) {
                 return console.log(err);
             }
             if (stats.isFile()) {
-                fs.readFile('./project/' + file, 'UTF-8', function(err, data) {
+                fs.readFile('./project' + path + '/' + file, 'UTF-8', function(err, data) {
                     data = data.replace(/__PROJECTNAME__/g, projectName);
                     data = data.replace(/__PROJECTDESCRIPTION__/g, projectDescription);
                     data = data.replace(/__REPOURL__/g, repoURL);
-                    fs.writeFile(outFolder + '/' + file, data, 'UTF-8', function(err) {
-                        if (err) {
-                            return console.log(err);
-                        }
-                        console.log('Copied ' + file);
-                        if (index === files.length - 1) {
-                            initGit();
+                    
+                    mkdirp(outFolder + path, function (err) {
+                        if (err) console.error(err)
+                        else {
+                            fs.writeFile(outFolder + path + '/' + file, data, 'UTF-8', function(err) {
+                                if (err) {
+                                    return console.log(err);
+                                }
+                                console.log('Copied ' + file);
+                                if (level === 0 && index === files.length - 1) {
+                                    initGit();
+                                } else if(index === files.length - 1 && callback) {
+                                    callback.call();
+                                }
+                            });
                         }
                     });
                 });
+            } else if(stats.isDirectory()) {
+                if(file !== 'static') {
+                    copyTemplates(level + 1, path + '/' + file, function() {
+                        if (level === 0 && index === files.length - 1) {
+                            initGit();
+                        } else if(index === files.length - 1 && callback) {
+                            callback.call();
+                        }
+                    });                    
+                }
             }
         });
       });

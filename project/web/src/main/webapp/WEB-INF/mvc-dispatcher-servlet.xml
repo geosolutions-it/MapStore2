@@ -1,0 +1,37 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+
+    <context:component-scan base-package="it.geosolutions.csi.sira" />
+
+<!--     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" /> -->
+
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+        <property name="useDefaultSuffixPattern" value="false" />
+    </bean>
+
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="jsonConverter" />
+                <!-- <ref bean="marshallingConverter" /> <ref bean="stringHttpMessageConverter" /> -->
+            </list>
+        </property>
+    </bean>
+
+    <!-- Configure bean to convert JSON to POJO and vice versa -->
+    <bean id="jsonConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+    </bean>
+
+    <mvc:annotation-driven></mvc:annotation-driven> <!-- TODO: is this really needed? it is specified in applicationContext.xml as well -->
+
+    <context:annotation-config />
+</beans>
