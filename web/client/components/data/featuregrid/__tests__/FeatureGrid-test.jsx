@@ -53,8 +53,8 @@ describe("Test FeatureGrid Component", () => {
         let params = {data: {geometry: {}}};
         comp.zoomToFeature(params);
         comp.zoomToFeatures();
-        params = {node: {data: {geometry: {}}}};
-        comp.selectFeature(params);
+        params = {selectedRows: []};
+        comp.selectFeatures(params);
         expect(comp).toExist();
 
     });

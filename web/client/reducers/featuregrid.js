@@ -11,7 +11,7 @@ const {SELECT_FEATURES} = require('../actions/featuregrid');
 function featuregrid(state = null, action) {
     switch (action.type) {
         case SELECT_FEATURES:
-            return assign({}, state, {select: action.geometries});
+            return assign({}, state, {select: action.features});
         default:
             return state;
     }
