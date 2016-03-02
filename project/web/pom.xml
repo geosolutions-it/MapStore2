@@ -1,0 +1,260 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>it.geosolutions.__PROJECTNAME__</groupId>
+    <artifactId>__PROJECTNAME__-root</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>__PROJECTNAME__-web</artifactId>
+  <packaging>war</packaging>
+  <name>__PROJECTDESCRIPTION__ - WAR</name>
+  <url>http://www.geo-solutions.it</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <!-- ================================================================ -->
+    <!-- __PROJECTDESCRIPTION__ modules -->
+    <!-- ================================================================ -->
+    <dependency>
+        <groupId>it.geosolutions.__PROJECTNAME__</groupId>
+        <artifactId>__PROJECTNAME__-backend</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <!-- ================================================================ -->
+    <!-- GeoStore modules -->
+    <!-- ================================================================ -->
+    <dependency>
+      <groupId>it.geosolutions.geostore</groupId>
+      <artifactId>geostore-webapp</artifactId>
+      <version>1.3-SNAPSHOT</version>
+      <type>war</type>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>proxy</groupId>
+      <artifactId>http_proxy</artifactId>
+      <version>1.1-SNAPSHOT</version>
+      <type>war</type>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- JUnit -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>__PROJECTNAME__</finalName>
+    <plugins>
+        <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>0.0.24</version>
+
+                <executions>
+
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v0.12.4</nodeVersion>
+                            <npmVersion>2.10.1</npmVersion>
+                            <installDirectory>..</installDirectory>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <!-- Optional configuration which provides for running any npm command -->
+                        <configuration>
+                            <arguments>install</arguments>
+                            <installDirectory>..</installDirectory>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>npm run compile</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <!-- Optional configuration which provides for running any npm command -->
+                        <configuration>
+                            <arguments>run compile</arguments>
+                            <installDirectory>..</installDirectory>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>npm run lint</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>test</phase>
+                        <!-- Optional configuration which provides for running any npm command -->
+                        <configuration>
+                            <arguments>run lint</arguments>
+                            <installDirectory>..</installDirectory>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>npm test</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>test</phase>
+                        <!-- Optional configuration which provides for running any npm command -->
+                        <configuration>
+                            <arguments>run mvntest</arguments>
+                            <installDirectory>..</installDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+                <execution>
+                    <id>html, configuration files and images</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/..</directory>
+                                <includes>
+                                    <include>*.html</include>
+                                    <include>*.json</include>
+                                    <include>img/*</include>
+                                </includes>
+                                <excludes>
+                                    <exclude>MapStore2/*</exclude>
+                                    <exclude>MapStore2/**/*</exclude>
+                                </excludes>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>js files</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__/dist</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/../dist</directory>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>CSS files</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__/assets</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/../assets</directory>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>translations</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__/MapStore2/web/client</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/../js</directory>
+                                <includes>
+                                    <include>translations/*</include>
+                                </includes>
+                            </resource>
+                            <resource>
+                                <directory>${basedir}/../MapStore2/web/client</directory>
+                                <includes>
+                                    <include>translations/*</include>
+                                </includes>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>2.1.1</version>
+            <configuration>
+                <overlays>
+                    <overlay>
+                        <groupId>it.geosolutions.geostore</groupId>
+                        <artifactId>geostore-webapp</artifactId>
+                        <excludes>
+                            <exclude>WEB-INF/lib/commons-logging-*</exclude>
+                        </excludes>
+                    </overlay>
+                    <overlay>
+                        <groupId>proxy</groupId>
+                        <artifactId>http_proxy</artifactId>
+                        <excludes>
+                            <exclude>WEB-INF/lib/commons-codec-*</exclude>
+                            <exclude>WEB-INF/lib/commons-logging-*</exclude>
+                            <exclude>WEB-INF/lib/log4j-*</exclude>
+                        </excludes>
+                    </overlay>
+                </overlays>
+            </configuration>
+        </plugin>
+
+        <!-- Run the application using "mvn jetty:run" -->
+        <plugin>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>maven-jetty-plugin</artifactId>
+            <version>6.1.20</version>
+            <configuration>
+                <webAppConfig>
+                    <contextPath>/__PROJECTNAME__</contextPath>
+                </webAppConfig>
+                <connectors>
+                    <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                        <port>9191</port>
+                        <maxIdleTime>60000</maxIdleTime>
+                    </connector>
+                </connectors>
+                <reload>manual</reload>
+            </configuration>
+        </plugin>
+    </plugins>
+  </build>
+
+</project>
