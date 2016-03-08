@@ -13,20 +13,42 @@ const {connect} = require('react-redux');
 const QueryFormMap = require('../components/QueryFormMap');
 const SmartQueryForm = require('../components/SmartQueryForm');
 
-const QueryForm = (props) => (
-    <Localized messages={props.messages} locale={props.locale}>
-        <div>
-            <QueryFormMap/>
-            <SmartQueryForm/>
-            <Debug/>
-        </div>
-    </Localized>
-);
+const {Panel} = require('react-bootstrap');
+const Draggable = require('react-draggable');
 
-QueryForm.propTypes = {
-    messages: React.PropTypes.object,
-    locale: React.PropTypes.string
-};
+require('./queryform.css');
+
+const QueryForm = React.createClass({
+    propTypes: {
+        messages: React.PropTypes.object,
+        locale: React.PropTypes.string
+    },
+    renderHeader() {
+        return (
+            <div className="handle_querypanel">
+                <span>
+                    <span>Query Panel</span>
+                </span>
+            </div>
+        );
+    },
+    render() {
+        return (
+            <Localized messages={this.props.messages} locale={this.props.locale}>
+                <div>
+                    <QueryFormMap/>
+                    <Draggable start={{x: 670, y: 15}} handle=".handle_querypanel">
+                        <Panel className="querypanel-container" header={this.renderHeader()} bsStyle="primary">
+                            <SmartQueryForm/>
+                        </Panel>
+                    </Draggable>
+                    <Debug/>
+                </div>
+            </Localized>
+        );
+    }
+
+});
 
 module.exports = connect((state) => {
     return {

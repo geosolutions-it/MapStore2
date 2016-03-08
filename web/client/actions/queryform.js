@@ -19,6 +19,12 @@ const SELECT_SPATIAL_METHOD = 'SELECT_SPATIAL_METHOD';
 const SELECT_SPATIAL_OPERATION = 'SELECT_SPATIAL_OPERATION';
 const REMOVE_SPATIAL_SELECT = 'REMOVE_SPATIAL_SELECT';
 const SHOW_SPATIAL_DETAILS = 'SHOW_SPATIAL_DETAILS';
+const QUERY_FORM_SEARCH = 'QUERY_FORM_SEARCH';
+const QUERY_FORM_RESET = 'QUERY_FORM_RESET';
+const WFS_LOAD_ERROR = 'WFS_LOAD_ERROR';
+const SHOW_GENERATED_FILTER = 'SHOW_GENERATED_FILTER';
+
+// const axios = require('../libs/ajax');
 
 function addFilterField(groupId) {
     return {
@@ -42,12 +48,13 @@ function removeFilterField(rowId) {
     };
 }
 
-function updateFilterField(rowId, fieldName, fieldValue) {
+function updateFilterField(rowId, fieldName, fieldValue, fieldType) {
     return {
         type: UPDATE_FILTER_FIELD,
         rowId: rowId,
         fieldName: fieldName,
-        fieldValue: fieldValue
+        fieldValue: fieldValue,
+        fieldType: fieldType
     };
 }
 
@@ -124,6 +131,40 @@ function showSpatialSelectionDetails(show) {
     };
 }
 
+function querySearchResponse(response) {
+    return {
+        type: QUERY_FORM_SEARCH,
+        response: response
+    };
+}
+
+function wfsLoadError(e) {
+    return {
+        type: WFS_LOAD_ERROR,
+        error: e
+    };
+}
+
+function query(seachURL, data) {
+    return {
+        type: SHOW_GENERATED_FILTER,
+        data: data
+    };
+    /*return (dispatch) => {
+        return axios.post(seachURL, data).then((response) => {
+            dispatch(querySearchResponse(response.data));
+        }).catch((e) => {
+            dispatch(wfsLoadError(e));
+        });
+    };*/
+}
+
+function reset() {
+    return {
+        type: QUERY_FORM_RESET
+    };
+}
+
 module.exports = {
     ADD_FILTER_FIELD,
     REMOVE_FILTER_FIELD,
@@ -139,6 +180,10 @@ module.exports = {
     SELECT_SPATIAL_OPERATION,
     REMOVE_SPATIAL_SELECT,
     SHOW_SPATIAL_DETAILS,
+    QUERY_FORM_SEARCH,
+    QUERY_FORM_RESET,
+    WFS_LOAD_ERROR,
+    SHOW_GENERATED_FILTER,
     addFilterField,
     removeFilterField,
     updateFilterField,
@@ -152,5 +197,9 @@ module.exports = {
     selectSpatialMethod,
     selectSpatialOperation,
     removeSpatialSelection,
-    showSpatialSelectionDetails
+    showSpatialSelectionDetails,
+    query,
+    reset,
+    wfsLoadError,
+    querySearchResponse
 };

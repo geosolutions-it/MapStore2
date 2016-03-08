@@ -20,21 +20,26 @@ const {
     SELECT_SPATIAL_METHOD,
     SELECT_SPATIAL_OPERATION,
     REMOVE_SPATIAL_SELECT,
-    SHOW_SPATIAL_DETAILS
+    SHOW_SPATIAL_DETAILS,
+    QUERY_FORM_RESET,
+    SHOW_GENERATED_FILTER
 } = require('../actions/queryform');
 
 const {
-    END_DRAWING
+    END_DRAWING,
+    CHANGE_DRAWING_STATUS
 } = require('../actions/draw');
 
 const assign = require('object-assign');
 
 const initialState = {
+    seachURL: null,
     attributePanelExpanded: true,
     spatialPanelExpanded: true,
     showDetailsPanel: false,
     groupLevels: 1,
     useMapProjection: false,
+    toolbarEnabled: true,
     groupFields: [
         {
             id: 1,
@@ -42,16 +47,7 @@ const initialState = {
             index: 0
         }
     ],
-    filterFields: [
-        {
-            rowId: 0,
-            groupId: 1,
-            attribute: null,
-            operator: "=",
-            value: null,
-            exception: null
-        }
-    ],
+    filterFields: [],
     spatialField: {
         method: null,
         attribute: "the_geom",
@@ -72,6 +68,7 @@ function queryform(state = initialState, action) {
                 attribute: null,
                 operator: "=",
                 value: null,
+                type: null,
                 exception: null
             };
 
@@ -83,7 +80,7 @@ function queryform(state = initialState, action) {
         case UPDATE_FILTER_FIELD: {
             return assign({}, state, {filterFields: state.filterFields.map((field) => {
                 if (field.rowId === action.rowId) {
-                    return assign({}, field, {[action.fieldName]: action.fieldValue});
+                    return assign({}, field, {[action.fieldName]: action.fieldValue, type: action.fieldType});
                 }
                 return field;
             })});
@@ -145,10 +142,17 @@ function queryform(state = initialState, action) {
         case SELECT_SPATIAL_OPERATION: {
             return assign({}, state, {spatialField: assign({}, state.spatialField, {[action.fieldName]: action.operation})});
         }
+        case CHANGE_DRAWING_STATUS: {
+            if (action.owner === "queryform" && action.status === "start") {
+                return assign({}, state, {toolbarEnabled: false});
+            }
+
+            return state;
+        }
         case END_DRAWING: {
             let newState;
             if (action.owner === "queryform") {
-                newState = assign({}, state, {spatialField: assign({}, state.spatialField, {geometry: action.geometry})});
+                newState = assign({}, state, {toolbarEnabled: true, spatialField: assign({}, state.spatialField, {geometry: action.geometry})});
             } else {
                 newState = state;
             }
@@ -160,6 +164,12 @@ function queryform(state = initialState, action) {
         }
         case SHOW_SPATIAL_DETAILS: {
             return assign({}, state, {showDetailsPanel: action.show});
+        }
+        case QUERY_FORM_RESET: {
+            return assign({}, state, initialState);
+        }
+        case SHOW_GENERATED_FILTER: {
+            return assign({}, state, {searchUrl: action.data});
         }
         default:
             return state;

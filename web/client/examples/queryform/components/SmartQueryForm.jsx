@@ -30,7 +30,9 @@ const {
     selectSpatialMethod,
     selectSpatialOperation,
     removeSpatialSelection,
-    showSpatialSelectionDetails
+    showSpatialSelectionDetails,
+    query,
+    reset
 } = require('../../../actions/queryform');
 
 const {
@@ -52,8 +54,10 @@ const SmartQueryForm = connect((state) => {
         attributes: state.queryform.attributes,
         spatialField: state.queryform.spatialField,
         showDetailsPanel: state.queryform.showDetailsPanel,
+        toolbarEnabled: state.queryform.toolbarEnabled,
         attributePanelExpanded: state.queryform.attributePanelExpanded,
-        spatialPanelExpanded: state.queryform.spatialPanelExpanded
+        spatialPanelExpanded: state.queryform.spatialPanelExpanded,
+        searchUrl: state.queryform.searchUrl
     };
 }, dispatch => {
     return {
@@ -76,6 +80,11 @@ const SmartQueryForm = connect((state) => {
             onRemoveSpatialSelection: removeSpatialSelection,
             onShowSpatialSelectionDetails: showSpatialSelectionDetails,
             onEndDrawing: endDrawing
+        }, dispatch),
+        queryToolbarActions: bindActionCreators({
+            onQuery: query,
+            onReset: reset,
+            onChangeDrawingStatus: changeDrawingStatus
         }, dispatch)
     };
 })(QueryBuilder);
@@ -95,17 +104,7 @@ module.exports = connect((state) => {
     render() {
         return (
             <Localized messages={this.props.messages} locale={this.props.locale} loadingError={this.props.localeError}>
-                <div style={{
-                        height: "750px",
-                        width: "850px",
-                        maxHeight: "750px",
-                        overflowX: "hidden",
-                        overflowY: "auto",
-                        position: "absolute",
-                        top: "50px",
-                        left: "670px"}}>
-                    <SmartQueryForm/>
-                </div>
+                <SmartQueryForm/>
             </Localized>
         );
     }

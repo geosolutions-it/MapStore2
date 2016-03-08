@@ -78,8 +78,8 @@ const FilterField = React.createClass({
     updateExceptionFieldElement(rowId, message) {
         this.props.onUpdateExceptionField(rowId, message);
     },
-    updateFieldElement(rowId, name, value) {
-        this.props.onUpdateField(rowId, name, value);
+    updateFieldElement(rowId, name, value, type) {
+        this.props.onUpdateField(rowId, name, value, type);
 
         if (name === "value") {
             // For cascading: filter the attributes that depends on

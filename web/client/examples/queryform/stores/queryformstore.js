@@ -11,11 +11,13 @@ var DebugUtils = require('../../../utils/DebugUtils');
 const {combineReducers} = require('redux');
 
 const initialState = {
+    seachURL: null,
     attributePanelExpanded: true,
     spatialPanelExpanded: true,
     showDetailsPanel: false,
     groupLevels: 5,
     useMapProjection: false,
+    toolbarEnabled: true,
     groupFields: [
         {
             id: 1,
@@ -23,16 +25,7 @@ const initialState = {
             index: 0
         }
     ],
-    filterFields: [
-        {
-            rowId: 0,
-            groupId: 1,
-            attribute: null,
-            operator: "=",
-            value: null,
-            exception: null
-        }
-    ],
+    filterFields: [],
     spatialField: {
         method: null,
         attribute: "the_geom",

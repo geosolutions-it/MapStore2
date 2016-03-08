@@ -206,6 +206,8 @@
             "locateBtn": "Questo è il testo di aiuto per LocateBtn"
         },
         "queryform": {
+            "query": "Ricerca",
+            "reset": "Reimposta",
             "config": {
                 "load_config_exception": "Errore Caricamento Configurazione"
             },
@@ -221,7 +223,7 @@
                 "combo_placeholder": "Seleziona",
                 "attribute_filter_header": "Filtro Attributi",
                 "groupField": {
-                    "any": "ciascuna delle",
+                    "any": "almeno una delle",
                     "all": "tutte le",
                     "none": "nessuna delle"
                 },
