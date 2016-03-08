@@ -39,3 +39,16 @@
     top: 10px;
     left: 10px;
 }
+
+.querypanel{
+    height: 660px;
+    max-height: 660px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: none;
+}
+
+.queryFormToolbar{
+    float: right;
+    padding-top: 15px;
+}

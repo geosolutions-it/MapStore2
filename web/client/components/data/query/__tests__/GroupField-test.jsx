@@ -104,7 +104,7 @@ describe('GroupField', () => {
         }
 
         const buttons = document.getElementsByClassName('btn btn-default');
-        expect(buttons.length).toBe(4);
+        expect(buttons.length).toBe(6);
     });
 
     it('creates the GroupField with cascading', () => {

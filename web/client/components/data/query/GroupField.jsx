@@ -44,7 +44,7 @@ const GroupField = React.createClass({
             logicComboOptions: [
                 {logic: "OR", name: "queryform.attributefilter.groupField.any"},
                 {logic: "AND", name: "queryform.attributefilter.groupField.all"},
-                {logic: "NOT", name: "queryform.attributefilter.groupField.none"}
+                {logic: "AND NOT", name: "queryform.attributefilter.groupField.none"}
             ],
             actions: {
                 onAddGroupField: () => {},
@@ -97,7 +97,8 @@ const GroupField = React.createClass({
                             attType="list"
                             fieldOptions={comboValues ? comboValues : []}
                             comboFilterType={"contains"}/>
-                        <DateField attType="date"
+                        <DateField
+                            attType="date"
                             operator={filterField.operator}/>
                     </FilterField>
                 </Col>
@@ -113,7 +114,7 @@ const GroupField = React.createClass({
         const removeButton = groupField.groupId ?
             (
                 <Col xs={1}>
-                    <Button onClick={() => this.props.actions.onRemoveGroupField(groupField.id)}>
+                    <Button style={{"marginTop": "2px"}} onClick={() => this.props.actions.onRemoveGroupField(groupField.id)}>
                         <Glyphicon glyph={this.props.removeButtonIcon}/>
                     </Button>
                 </Col>
@@ -126,7 +127,7 @@ const GroupField = React.createClass({
         return (
             <Row className="logicHeader">
                 {removeButton}
-                <Col xs={4}>
+                <Col xs={5}>
                     <div style={{"paddingTop": "9px", "float": "left"}}><I18N.Message msgId={"queryform.attributefilter.group_label_a"}/></div>
                     <div style={{"float": "right"}}>
                         <ComboField
@@ -145,7 +146,7 @@ const GroupField = React.createClass({
                             onUpdateField={this.updateLogicCombo}/>
                     </div>
                 </Col>
-                <Col xs={7}>
+                <Col xs={6}>
                     <div style={{"paddingTop": "9px"}}><span><I18N.Message msgId={"queryform.attributefilter.group_label_b"}/></span></div>
                 </Col>
             </Row>

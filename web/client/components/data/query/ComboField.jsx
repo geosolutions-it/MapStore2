@@ -18,6 +18,7 @@ const ComboField = React.createClass({
         fieldOptions: React.PropTypes.array,
         fieldName: React.PropTypes.string,
         fieldRowId: React.PropTypes.number,
+        attType: React.PropTypes.string,
         fieldValue: React.PropTypes.string,
         fieldException: React.PropTypes.object,
         comboFilterType: React.PropTypes.oneOfType([
@@ -58,7 +59,7 @@ const ComboField = React.createClass({
                 placeholder={placeholder}
                 filter={this.props.comboFilterType}
                 style={style}
-                onChange={(value) => this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value)}/>
+                onChange={(value) => this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value, this.props.attType)}/>
         );
     }
 });

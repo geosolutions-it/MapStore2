@@ -26,6 +26,7 @@ const DateField = React.createClass({
         operator: React.PropTypes.string,
         fieldName: React.PropTypes.string,
         fieldRowId: React.PropTypes.number,
+        attType: React.PropTypes.string,
         fieldValue: React.PropTypes.object,
         fieldException: React.PropTypes.string,
         onUpdateField: React.PropTypes.func,
@@ -38,6 +39,7 @@ const DateField = React.createClass({
             operator: null,
             fieldName: null,
             fieldRowId: null,
+            attType: null,
             fieldValue: null,
             fieldException: null,
             onUpdateField: () => {},
@@ -64,7 +66,7 @@ const DateField = React.createClass({
                         </Col>
                     </Row>
                     <Modal show={this.props.fieldException ? true : false} bsSize="small">
-                        <Modal.Header closeButton>
+                        <Modal.Header>
                             <Modal.Title>Date Exception</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
@@ -99,7 +101,7 @@ const DateField = React.createClass({
             this.props.onUpdateExceptionField(this.props.fieldRowId, "queryform.attributefilter.datefield.wrong_date_range");
         }
 
-        this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value);
+        this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value, this.props.attType);
     }
 });
 

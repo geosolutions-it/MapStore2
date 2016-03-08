@@ -206,6 +206,8 @@
             "locateBtn": "This is the helptext for the LocateBtn"
         },
         "queryform": {
+            "query": "Search",
+            "reset": "Reset",
             "config": {
                 "load_config_exception": "Error Loading Configuration"
             },
