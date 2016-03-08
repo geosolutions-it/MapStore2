@@ -2,7 +2,7 @@
   "map": {
     "projection": "EPSG:900913",
 		"units": "m",
-		"center": {"x": -10976101, "y": 3051421, "crs": "EPSG:900913"},
+		"center": {"x": -10976101, "y": 4251421, "crs": "EPSG:900913"},
     "zoom":4,
     "layers": [
       {
