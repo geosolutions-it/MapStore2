@@ -36,7 +36,8 @@ const FeatureGrid = React.createClass({
         columnDefaultOptions: React.PropTypes.object,
         excludeFields: React.PropTypes.array,
         map: React.PropTypes.object,
-        enableZoomToFeature: React.PropTypes.bool
+        enableZoomToFeature: React.PropTypes.bool,
+        srs: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -55,7 +56,8 @@ const FeatureGrid = React.createClass({
             },
             excludeFields: [],
             map: {},
-            enableZoomToFeature: true
+            enableZoomToFeature: true,
+            srs: "EPSG:4326"
         };
     },
     shouldComponentUpdate(nextProps) {
@@ -183,7 +185,7 @@ const FeatureGrid = React.createClass({
         let newCenter = this.props.map.center;
         const proj = this.props.map.projection || "EPSG:3857";
         if (extent) {
-            extent = CoordinateUtils.reprojectBbox(extent, "EPSG:4326", proj);
+            extent = (this.props.srs !== proj) ? CoordinateUtils.reprojectBbox(extent, this.props.srs, proj) : extent;
             // zoom by the max. extent defined in the map's config
             newZoom = mapUtils.getZoomForExtent(extent, mapSize, 0, 21);
 

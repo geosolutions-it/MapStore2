@@ -115,6 +115,12 @@ var CoordinatesUtils = {
                 extent[3] = (point[1] > newExtent[3]) ? point[1] : newExtent[3];
                 return extent;
             }, newExtent);
+        }else if (geoJSON.type === "Point") {
+            let point = geoJSON.coordinates;
+            newExtent[0] = point[0] - point[0] * 0.01;
+            newExtent[1] = point[1] - point[1] * 0.01;
+            newExtent[2] = point[0] + point[0] * 0.01;
+            newExtent[3] = point[1] + point[1] * 0.01;
         }else if (geoJSON.type === "GeometryCollection") {
             geoJSON.geometies.reduce((extent, geometry) => {
                 let ext = this.getGeoJSONExtent(geometry);
