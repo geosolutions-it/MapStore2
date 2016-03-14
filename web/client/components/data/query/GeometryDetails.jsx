@@ -51,7 +51,13 @@ const GeometryDetails = React.createClass({
 
         let geometry = {
             type: this.props.geometry.type,
-            extent: bbox,
+            coordinates: [[
+                [bbox[0], bbox[1]],
+                [bbox[0], bbox[3]],
+                [bbox[2], bbox[3]],
+                [bbox[2], bbox[1]],
+                [bbox[0], bbox[1]]
+            ]],
             projection: this.props.geometry.projection
         };
 
@@ -89,9 +95,20 @@ const GeometryDetails = React.createClass({
             let bbox = !this.props.useMapProjection ?
                 CoordinatesUtils.reprojectBbox(coordinates, 'EPSG:4326', this.props.geometry.projection) : coordinates;
 
+            let center = [(bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2];
+
             geometry = {
                 type: this.props.geometry.type,
                 extent: bbox,
+                center: center,
+                coordinates: [[
+                    [bbox[0], bbox[1]],
+                    [bbox[0], bbox[3]],
+                    [bbox[2], bbox[3]],
+                    [bbox[2], bbox[1]],
+                    [bbox[0], bbox[1]]
+                ]],
+                radius: Math.sqrt(Math.pow(center[0] - bbox[0], 2) + Math.pow(center[1] - bbox[1], 2)),
                 projection: this.props.geometry.projection
             };
         } else if (this.props.type === "Circle") {
@@ -100,9 +117,18 @@ const GeometryDetails = React.createClass({
             let center = !this.props.useMapProjection ?
                 CoordinatesUtils.reproject([this.tempCircle.x, this.tempCircle.y], 'EPSG:4326', this.props.geometry.projection) : [this.tempCircle.x, this.tempCircle.y];
 
+            let extent = [
+                [center[0] - this.circle.radius, center[1] - this.circle.radius],
+                [center[0] - this.circle.radius, center[1] + this.circle.radius],
+                [center[0] + this.circle.radius, center[1] + this.circle.radius],
+                [center[0] + this.circle.radius, center[1] - this.circle.radius]
+            ];
+
             geometry = {
                 type: this.props.geometry.type,
+                extent: extent,
                 center: center,
+                coordinates: CoordinatesUtils.calculateCircleCoordinates(center, this.circle.radius, 100),
                 radius: this.circle.radius,
                 projection: this.props.geometry.projection
             };
@@ -158,9 +184,13 @@ const GeometryDetails = React.createClass({
                 CoordinatesUtils.reprojectBbox(geometry.extent, geometry.projection, 'EPSG:4326') : geometry.extent;
 
             this.extent = {
+                // minx
                 "west": Math.round(geomExtent[0] * 100) / 100,
+                // miny
                 "sud": Math.round(geomExtent[1] * 100) / 100,
+                // maxx
                 "est": Math.round(geomExtent[2] * 100) / 100,
+                // maxy
                 "north": Math.round(geomExtent[3] * 100) / 100
             };
 

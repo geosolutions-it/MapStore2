@@ -63,10 +63,12 @@ const FilterField = React.createClass({
             <Row>
                 <Col xs={4}>
                     <ComboField
-                        fieldOptions={this.props.attributes.map((attribute) => attribute.id)}
+                        valueField={'id'}
+                        textField={'name'}
+                        fieldOptions={this.props.attributes.map((attribute) => { return {id: attribute.id, name: attribute.fieldName}; })}
+                        fieldValue={this.props.filterField.attribute}
                         fieldName="attribute"
                         fieldRowId={this.props.filterField.rowId}
-                        fieldValue={this.props.filterField.attribute}
                         onUpdateField={this.updateFieldElement}
                         comboFilterType={"contains"}/>
                 </Col>

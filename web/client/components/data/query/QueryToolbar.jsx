@@ -19,6 +19,11 @@ const QueryToolbar = React.createClass({
         spatialField: React.PropTypes.object,
         toolbarEnabled: React.PropTypes.bool,
         searchUrl: React.PropTypes.string,
+        showGeneratedFilter: React.PropTypes.oneOfType([
+            React.PropTypes.bool,
+            React.PropTypes.string
+        ]),
+        featureTypeName: React.PropTypes.string,
         actions: React.PropTypes.object
     },
     getDefaultProps() {
@@ -28,6 +33,8 @@ const QueryToolbar = React.createClass({
             spatialField: {},
             toolbarEnabled: true,
             searchUrl: null,
+            showGeneratedFilter: false,
+            featureTypeName: null,
             actions: {
                 onQuery: () => {},
                 onReset: () => {},
@@ -36,11 +43,19 @@ const QueryToolbar = React.createClass({
         };
     },
     render() {
+        let fieldsExceptions = this.props.filterFields.filter((field) => field.exception).length > 0;
+        let fieldsWithoutValues = this.props.filterFields.filter((field) => !field.value).length > 0;
+
+        let queryDisabled =
+            fieldsWithoutValues ||
+            fieldsExceptions ||
+            !this.props.toolbarEnabled ||
+            (!(this.props.filterFields.length > 0) && !this.props.spatialField.geometry);
+
         return (
             <div>
                 <ButtonToolbar className="queryFormToolbar">
-                    <Button disabled={!this.props.toolbarEnabled ||
-                            (!(this.props.filterFields.length > 0) && !this.props.spatialField.geometry)} id="query" onClick={this.search}>
+                    <Button disabled={queryDisabled} id="query" onClick={this.search}>
                         <Glyphicon glyph="glyphicon glyphicon-search"/>
                         <span style={{paddingLeft: "2px"}}><strong><I18N.Message msgId={"queryform.query"}/></strong></span>
                     </Button>
@@ -49,12 +64,12 @@ const QueryToolbar = React.createClass({
                         <span style={{paddingLeft: "2px"}}><strong><I18N.Message msgId={"queryform.reset"}/></strong></span>
                     </Button>
                 </ButtonToolbar>
-                <Modal show={this.props.searchUrl ? true : false} bsSize="large">
+                <Modal show={this.props.showGeneratedFilter ? true : false} bsSize="large">
                     <Modal.Header>
                         <Modal.Title>Generated Filter</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <textarea style={{width: "862px", maxWidth: "862px", height: "236px", maxHeight: "236px"}}>{this.props.searchUrl}</textarea>
+                        <textarea style={{width: "862px", maxWidth: "862px", height: "236px", maxHeight: "236px"}}>{this.props.showGeneratedFilter}</textarea>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button style={{"float": "right"}} onClick={() => this.props.actions.onQuery(null, null)}>Close</Button>
@@ -70,7 +85,7 @@ const QueryToolbar = React.createClass({
             spatialField: this.props.spatialField
         };
 
-        let filter = FilterUtils.toCQLFilter(filterObj);
+        let filter = FilterUtils.toOGCFilter(this.props.featureTypeName, filterObj);
         this.props.actions.onQuery(this.props.searchUrl, filter);
     },
     reset() {

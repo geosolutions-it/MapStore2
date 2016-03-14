@@ -45,6 +45,7 @@ describe('GroupField', () => {
             attribute: "",
             operator: null,
             value: null,
+            type: null,
             exception: null
         }, {
             rowId: 200,
@@ -52,19 +53,23 @@ describe('GroupField', () => {
             attribute: "Attribute",
             operator: "=",
             value: "attribute1",
+            type: "list",
             exception: null
         }];
 
         const attributes = [{
-            id: "Attribute",
-            type: "list",
-            values: [
-                "attribute1",
-                "attribute2",
-                "attribute3",
-                "attribute4",
-                "attribute5"
-            ]
+           id: "Attribute",
+           fieldName: "Attribute",
+           type: "list",
+           valueId: "id",
+           valueLabel: "name",
+           values: [
+               {id: "attribute1", name: "attribute1"},
+               {id: "attribute2", name: "attribute2"},
+               {id: "attribute3", name: "attribute3"},
+               {id: "attribute4", name: "attribute4"},
+               {id: "attribute5", name: "attribute5"}
+           ]
         }];
 
         const groupfield = ReactDOM.render(
@@ -122,7 +127,8 @@ describe('GroupField', () => {
                 groupId: 1,
                 attribute: "Attribute",
                 operator: "=",
-                value: "attribute1",
+                value: 1,
+                type: "list",
                 exception: null
             }, {
                 rowId: 200,
@@ -130,6 +136,7 @@ describe('GroupField', () => {
                 attribute: "Attribute2",
                 operator: "=",
                 value: null,
+                type: "list",
                 exception: null
             }
         ];
@@ -137,9 +144,10 @@ describe('GroupField', () => {
         const attributes = [
             {
                 id: "Attribute",
+                fieldName: "Attribute",
                 type: "list",
-                idField: "id",
-                labelField: "name",
+                valueId: "id",
+                valueLabel: "name",
                 values: [
                     {id: 1, name: "attribute1"},
                     {id: 2, name: "attribute2"},
@@ -149,10 +157,11 @@ describe('GroupField', () => {
                 ]
             }, {
                 id: "Attribute2",
+                fieldName: "Attribute2",
                 dependson: {field: "Attribute", from: "id", to: "id"},
                 type: "list",
-                idField: "id",
-                labelField: "name",
+                valueId: "id",
+                valueLabel: "name",
                 values: [
                     {id: 1, name: "attribute_a"},
                     {id: 1, name: "attribute_b"},

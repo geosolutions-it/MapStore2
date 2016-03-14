@@ -22,7 +22,8 @@ const {
     REMOVE_SPATIAL_SELECT,
     SHOW_SPATIAL_DETAILS,
     QUERY_FORM_RESET,
-    SHOW_GENERATED_FILTER
+    SHOW_GENERATED_FILTER,
+    CHANGE_DWITHIN_VALUE
 } = require('../actions/queryform');
 
 const {
@@ -33,11 +34,12 @@ const {
 const assign = require('object-assign');
 
 const initialState = {
-    seachURL: null,
+    searchUrl: null,
+    showGeneratedFilter: false,
     attributePanelExpanded: true,
     spatialPanelExpanded: true,
     showDetailsPanel: false,
-    groupLevels: 1,
+    groupLevels: 5,
     useMapProjection: false,
     toolbarEnabled: true,
     groupFields: [
@@ -169,7 +171,10 @@ function queryform(state = initialState, action) {
             return assign({}, state, initialState);
         }
         case SHOW_GENERATED_FILTER: {
-            return assign({}, state, {searchUrl: action.data});
+            return assign({}, state, {showGeneratedFilter: action.data});
+        }
+        case CHANGE_DWITHIN_VALUE: {
+            return assign({}, state, {spatialField: assign({}, state.spatialField, {geometry: assign({}, state.spatialField.geometry, {distance: action.distance})})});
         }
         default:
             return state;

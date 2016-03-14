@@ -36,27 +36,35 @@ describe('FilterField', () => {
             exception: null
         };
 
-        const attributes = [{
-            id: "Attribute1",
-            type: "list",
-            values: [
-                "attribute1",
-                "attribute2",
-                "attribute3",
-                "attribute4",
-                "attribute5"
-            ]
-        }, {
-            id: "Attribute2",
-            type: "list",
-            values: [
-                "attribute6",
-                "attribute7",
-                "attribute8",
-                "attribute9",
-                "attribute10"
-            ]
-        }];
+        const attributes = [
+            {
+               id: "Attribute1",
+               fieldName: "Attribute1",
+               type: "list",
+               values: [
+                   {id: "attribute1", name: "attribute1"},
+                   {id: "Attribute2", name: "attribute2"},
+                   {id: "attribute3", name: "attribute3"},
+                   {id: "attribute4", name: "attribute4"},
+                   {id: "attribute5", name: "attribute5"}
+               ],
+               valueId: "id",
+               valueLabel: "name"
+            }, {
+               id: "Attribute2",
+               fieldName: "Attribute2",
+               type: "list",
+               values: [
+                   {id: "attribute6", name: "attribute6"},
+                   {id: "Attribute7", name: "Attribute7"},
+                   {id: "attribute8", name: "attribute8"},
+                   {id: "attribute9", name: "attribute9"},
+                   {id: "attribute10", name: "attribute10"}
+               ],
+               valueId: "id",
+               valueLabel: "name"
+            }
+        ];
 
         const filterfield = ReactDOM.render(
             <FilterField
@@ -64,8 +72,11 @@ describe('FilterField', () => {
                 filterField={filterField}>
                     <ComboField
                         attType="list"
+                        valueField={'id'}
+                        textField={'name'}
                         fieldOptions={attributes[0] && attributes[0].type === "list" ? [null, ...attributes[0].values] : null}/>
-                    <DateField attType="date"
+                    <DateField
+                        attType="date"
                         operator={filterField.operator}/>
                 </FilterField>,
                 document.getElementById("container"));

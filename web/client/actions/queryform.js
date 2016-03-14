@@ -19,10 +19,11 @@ const SELECT_SPATIAL_METHOD = 'SELECT_SPATIAL_METHOD';
 const SELECT_SPATIAL_OPERATION = 'SELECT_SPATIAL_OPERATION';
 const REMOVE_SPATIAL_SELECT = 'REMOVE_SPATIAL_SELECT';
 const SHOW_SPATIAL_DETAILS = 'SHOW_SPATIAL_DETAILS';
-const QUERY_FORM_SEARCH = 'QUERY_FORM_SEARCH';
+// const QUERY_FORM_SEARCH = 'QUERY_FORM_SEARCH';
 const QUERY_FORM_RESET = 'QUERY_FORM_RESET';
-const WFS_LOAD_ERROR = 'WFS_LOAD_ERROR';
+// const WFS_LOAD_ERROR = 'WFS_LOAD_ERROR';
 const SHOW_GENERATED_FILTER = 'SHOW_GENERATED_FILTER';
+const CHANGE_DWITHIN_VALUE = 'CHANGE_DWITHIN_VALUE';
 
 // const axios = require('../libs/ajax');
 
@@ -131,7 +132,14 @@ function showSpatialSelectionDetails(show) {
     };
 }
 
-function querySearchResponse(response) {
+function changeDwithinValue(distance) {
+    return {
+        type: CHANGE_DWITHIN_VALUE,
+        distance: distance
+    };
+}
+
+/*function querySearchResponse(response) {
     return {
         type: QUERY_FORM_SEARCH,
         response: response
@@ -143,7 +151,7 @@ function wfsLoadError(e) {
         type: WFS_LOAD_ERROR,
         error: e
     };
-}
+}*/
 
 function query(seachURL, data) {
     return {
@@ -180,10 +188,11 @@ module.exports = {
     SELECT_SPATIAL_OPERATION,
     REMOVE_SPATIAL_SELECT,
     SHOW_SPATIAL_DETAILS,
-    QUERY_FORM_SEARCH,
+    // QUERY_FORM_SEARCH,
     QUERY_FORM_RESET,
-    WFS_LOAD_ERROR,
+    // WFS_LOAD_ERROR,
     SHOW_GENERATED_FILTER,
+    CHANGE_DWITHIN_VALUE,
     addFilterField,
     removeFilterField,
     updateFilterField,
@@ -200,6 +209,7 @@ module.exports = {
     showSpatialSelectionDetails,
     query,
     reset,
-    wfsLoadError,
-    querySearchResponse
+    changeDwithinValue
+    // wfsLoadError,
+    // querySearchResponse
 };

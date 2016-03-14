@@ -145,7 +145,26 @@ var CoordinatesUtils = {
         return !(
             extent.indexOf(Infinity) !== -1 || extent.indexOf(-Infinity) !== -1 ||
             extent[1] >= extent[2] || extent[1] >= extent[3]
-            );
+        );
+    },
+    calculateCircleCoordinates: function(center, radius, sides, rotation) {
+        let angle = Math.PI * ((1 / sides) - (1 / 2));
+
+        if (rotation) {
+            angle += (rotation / 180) * Math.PI;
+        }
+
+        let rotatedAngle; let x; let y;
+        let points = [[]];
+        for (let i = 0; i < sides; i++) {
+            rotatedAngle = angle + (i * 2 * Math.PI / sides);
+            x = center.x + (radius * Math.cos(rotatedAngle));
+            y = center.y + (radius * Math.sin(rotatedAngle));
+            points[0].push([x, y]);
+        }
+
+        points[0].push(points[0][0]);
+        return points;
     }
 };
 
