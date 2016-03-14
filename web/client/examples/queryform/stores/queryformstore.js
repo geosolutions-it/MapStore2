@@ -12,6 +12,7 @@ const {combineReducers} = require('redux');
 
 const initialState = {
     seachURL: null,
+    showGeneratedFilter: false,
     attributePanelExpanded: true,
     spatialPanelExpanded: true,
     showDetailsPanel: false,
@@ -35,17 +36,21 @@ const initialState = {
     attributes: [
         {
             id: "ListAttribute",
+            fieldName: "ListAttribute",
             type: "list",
+            valueId: "id",
+            valueLabel: "name",
             values: [
-                "value1",
-                "value2",
-                "value3",
-                "value4",
-                "value5"
+                {id: "value1", name: "value1"},
+                {id: "value2", name: "value2"},
+                {id: "value3", name: "value3"},
+                {id: "value4", name: "value4"},
+                {id: "value5", name: "value5"}
             ]
         },
         {
             id: "DateAttribute",
+            fieldName: "DateAttribute",
             type: "date"
         }
     ]

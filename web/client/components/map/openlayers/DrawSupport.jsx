@@ -105,8 +105,8 @@ const DrawSupport = React.createClass({
         } else {
             this.drawSource.clear();
             newProps.features.map((geom) => {
-                let geometry = geom.radius ?
-                    ol.geom.Polygon.fromCircle(new ol.geom.Circle([geom.center.x, geom.center.y], geom.radius), 100) : ol.geom.Polygon.fromExtent(geom.extent);
+                let geometry = geom.radius && geom.center ?
+                    ol.geom.Polygon.fromCircle(new ol.geom.Circle([geom.center.x, geom.center.y], geom.radius), 100) : new ol.geom.Polygon(geom.coordinates);
 
                 let feature = new ol.Feature({
                     geometry: geometry

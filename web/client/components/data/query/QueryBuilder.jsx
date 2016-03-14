@@ -28,6 +28,11 @@ const QueryBuilder = React.createClass({
         showDetailsPanel: React.PropTypes.bool,
         toolbarEnabled: React.PropTypes.bool,
         searchUrl: React.PropTypes.string,
+        showGeneratedFilter: React.PropTypes.oneOfType([
+            React.PropTypes.bool,
+            React.PropTypes.string
+        ]),
+        featureTypeName: React.PropTypes.string,
         attributeFilterActions: React.PropTypes.object,
         spatialFilterActions: React.PropTypes.object,
         queryToolbarActions: React.PropTypes.object
@@ -47,6 +52,8 @@ const QueryBuilder = React.createClass({
             showDetailsPanel: false,
             toolbarEnabled: true,
             searchUrl: "",
+            showGeneratedFilter: false,
+            featureTypeName: null,
             attributeFilterActions: {
                 onAddGroupField: () => {},
                 onAddFilterField: () => {},
@@ -65,7 +72,8 @@ const QueryBuilder = React.createClass({
                 onChangeDrawingStatus: () => {},
                 onRemoveSpatialSelection: () => {},
                 onShowSpatialSelectionDetails: () => {},
-                onEndDrawing: () => {}
+                onEndDrawing: () => {},
+                onChangeDwithinValue: () => {}
             },
             queryToolbarActions: {
                 onQuery: () => {},
@@ -100,6 +108,8 @@ const QueryBuilder = React.createClass({
                     spatialField={this.props.spatialField}
                     toolbarEnabled={this.props.toolbarEnabled}
                     searchUrl={this.props.searchUrl}
+                    showGeneratedFilter={this.props.showGeneratedFilter}
+                    featureTypeName={this.props.featureTypeName}
                     actions={this.props.queryToolbarActions}/>
             </div>
         );

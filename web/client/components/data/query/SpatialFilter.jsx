@@ -7,7 +7,7 @@
  */
 const React = require('react');
 
-const {Row, Col, Panel, Button, Glyphicon} = require('react-bootstrap');
+const {Row, Col, Panel, Button, Glyphicon, Input} = require('react-bootstrap');
 const ComboField = require('./ComboField');
 const GeometryDetails = require('./GeometryDetails');
 
@@ -53,7 +53,8 @@ const SpatialFilter = React.createClass({
                 onChangeDrawingStatus: () => {},
                 onRemoveSpatialSelection: () => {},
                 onShowSpatialSelectionDetails: () => {},
-                onEndDrawing: () => {}
+                onEndDrawing: () => {},
+                onChangeDwithinValue: () => {}
             }
         };
     },
@@ -103,7 +104,7 @@ const SpatialFilter = React.createClass({
             <span/>
         );
 
-        const resetButton = this.props.spatialField.geometry ? (
+        const resetButton = this.props.spatialField.geometry && this.props.spatialField.geometry.coordinates ? (
             <Button id="remove-filter-field" onClick={() => this.resetSpatialFilter()}>
                 <Glyphicon glyph="glyphicon glyphicon-minus-sign"/>
             </Button>
@@ -142,7 +143,7 @@ const SpatialFilter = React.createClass({
         );
     },
     render() {
-        const selecteOperation = this.props.spatialOperations.filter((opt) => this.props.spatialField.operation === opt.id)[0];
+        const selectedOperation = this.props.spatialOperations.filter((opt) => this.props.spatialField.operation === opt.id)[0];
 
         let drawLabel = (<span/>);
         if (this.props.spatialField.method) {
@@ -168,32 +169,71 @@ const SpatialFilter = React.createClass({
             <span/>
         );
 
+        const dWithinRow = selectedOperation && selectedOperation.id === "DWITHIN" ? (
+            <Row>
+                <Col xs={5}>
+                    <div style={{"paddingTop": "9px"}}><I18N.Message msgId={"queryform.spatialfilter.geometric_operation"}/></div>
+                </Col>
+                <Col xs={4}>
+                    <ComboField
+                        fieldOptions={
+                            this.props.spatialOperations.map((opt) => {
+                                return LocaleUtils.getMessageById(this.context.messages, opt.name);
+                            })
+                        }
+                        fieldName="operation"
+                        style={{width: "140px", marginTop: "3px"}}
+                        fieldRowId={new Date().getUTCMilliseconds()}
+                        fieldValue={
+                            LocaleUtils.getMessageById(this.context.messages, selectedOperation ? selectedOperation.name : "")
+                        }
+                        onUpdateField={this.updateSpatialOperation}/>
+                </Col>
+                <Col xs={1}>
+                    <div style={{"paddingTop": "9px"}}><I18N.Message msgId={"queryform.spatialfilter.dwithin_label"}/></div>
+                </Col>
+                <Col xs={2}>
+                    <div style={{"paddingTop": "4px"}}>
+                        <Input
+                            type="number"
+                            min="0"
+                            defaultValue="0"
+                            disabled={!this.props.spatialField.geometry}
+                            id={"queryform_dwithin_field"}
+                            onChange={(evt) => this.props.actions.onChangeDwithinValue(evt.target.value, name)}/>
+                    </div>
+                </Col>
+            </Row>
+        ) : (
+            <Row>
+                <Col xs={5}>
+                    <div style={{"paddingTop": "9px"}}><I18N.Message msgId={"queryform.spatialfilter.geometric_operation"}/></div>
+                </Col>
+                <Col xs={7}>
+                    <ComboField
+                        fieldOptions={
+                            this.props.spatialOperations.map((opt) => {
+                                return LocaleUtils.getMessageById(this.context.messages, opt.name);
+                            })
+                        }
+                        fieldName="operation"
+                        style={{width: "140px", marginTop: "3px"}}
+                        fieldRowId={new Date().getUTCMilliseconds()}
+                        fieldValue={
+                            LocaleUtils.getMessageById(this.context.messages, selectedOperation ? selectedOperation.name : "")
+                        }
+                        onUpdateField={this.updateSpatialOperation}/>
+                </Col>
+            </Row>
+        );
+
         return (
             <div>
                 <Panel id="spatialFilterPanel" collapsible expanded={this.props.spatialPanelExpanded} header={this.renderHeader()}>
                     <Panel>
                         {this.renderSpatialHeader()}
                         <Panel>
-                            <Row>
-                                <Col xs={5}>
-                                    <div style={{"paddingTop": "9px"}}><I18N.Message msgId={"queryform.spatialfilter.geometric_operation"}/></div>
-                                </Col>
-                                <Col xs={7}>
-                                    <ComboField
-                                        fieldOptions={
-                                            this.props.spatialOperations.map((opt) => {
-                                                return LocaleUtils.getMessageById(this.context.messages, opt.name);
-                                            })
-                                        }
-                                        fieldName="operation"
-                                        style={{width: "140px", marginTop: "3px"}}
-                                        fieldRowId={new Date().getUTCMilliseconds()}
-                                        fieldValue={
-                                            LocaleUtils.getMessageById(this.context.messages, selecteOperation ? selecteOperation.name : "")
-                                        }
-                                        onUpdateField={this.updateSpatialOperation}/>
-                                </Col>
-                            </Row>
+                            {dWithinRow}
                             <Row>
                                 <Col xs={12}>
                                     {drawLabel}
