@@ -14,7 +14,7 @@ var {
 
 const assign = require('object-assign');
 
-function mousePosition(state = null, action) {
+function mousePosition(state = {enabled: false, position: null, crs: null}, action) {
     switch (action.type) {
         case CHANGE_MOUSE_POSITION_STATE:
             return assign({}, state, {

@@ -1,4 +1,4 @@
 {
 	"proxyUrl": "/mapstore/proxy/?url=",
-	"geoStoreUrl": "/mapstore/rest/geostore"
+	"geoStoreUrl": "/mapstore/rest/geostore/"
 }

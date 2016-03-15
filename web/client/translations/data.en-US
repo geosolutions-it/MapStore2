@@ -25,6 +25,7 @@
         "mousePositionCoordinates": "Coordinates indicator",
         "menu": "Menu",
         "settings": "Settings",
+        "gohome": "Go home",
         "noresultfound": "No Result found",
         "home":{
             "open": "Open",
@@ -57,6 +58,12 @@
                 },
                 "layertree":{
                     "html":"<h3>Advanced LayerTree</h3><p>Custom examples</p>"
+                },
+                "queryform":{
+                    "html":"<h3>Query Builder</h3><p>Custom examples</p>"
+                },
+                "featuregrid":{
+                    "html":"<h3>Feature Grid</h3><p>Custom examples</p>"
                 }
             }
         },
@@ -199,6 +206,7 @@
             "searchBar": "Write the address of a place to find. e.g.  '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20",
             "layerSwitcher": "This is the helptext for the LayerSwitcher",
             "settingsPanel": "This is the helptext for the SettingsPanel",
+            "gohome": "This is the helptext forr Home",
             "measureComponent": "This is the helptext for the MeasureComponent",
             "backgroundSwitcher": "This is the helptext for the BackgroundSwitcher",
             "layerSwitcher": "This is the helptext for the LayerSwitcher",

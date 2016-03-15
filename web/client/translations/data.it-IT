@@ -25,6 +25,7 @@
         "mousePositionCoordinates": "Indicatore di coordinate",
         "menu": "Menu",
         "settings": "Impostazioni",
+        "gohome": "Torna alla home",
         "noresultfound": "Nessun Risultato Trovato",
         "home":{
             "open": "Apri",
@@ -57,6 +58,12 @@
                 },
                 "layertree":{
                     "html":"<h3>LayerTree Avanzato</h3><p>Esempi personalizzati</p>"
+                },
+                "queryform":{
+                    "html":"<h3>Query Builder</h3><p>Esempi personalizzati</p>"
+                },
+                "featuregrid":{
+                    "html":"<h3>Feature Grid</h3><p>Esempi personalizzati</p>"
                 }
             }
         },
@@ -199,6 +206,7 @@
             "searchBar": "Scrivi un indirizzo di un luogo oer trovarlo. esempio:  '1st avenue, new york'. Puoi anche digitare le coordinate in questo formato: 43.87,10.20",
             "layerSwitcher": "Questo è il testo di aiuto per LayerSwitcher",
             "settingsPanel": "Questo è il testo di aiuto per SettingsPanel",
+            "gohome": "Questo è il testo di aiuto per Home",
             "measureComponent": "Questo è il testo di aiuto per MeasureComponent",
             "backgroundSwitcher": "Questo è il testo di aiuto per BackgroundSwitcher",
             "layerSwitcher": "Questo è il testo di aiuto per LayerSwitcher",
