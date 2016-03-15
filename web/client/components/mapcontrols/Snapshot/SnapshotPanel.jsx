@@ -182,10 +182,9 @@ let SnapshotPanel = React.createClass({
         });
     },
     isBingOrGoogle() {
-        return (
-            this.props.layers.find((layer) => {
-                return (layer.type === 'google' && layer.visibility ) || (layer.type === 'bing' && layer.visibility );
-            }) ) ? true : false;
+        return this.props.layers.some((layer) => {
+            return (layer.type === 'google' && layer.visibility ) || (layer.type === 'bing' && layer.visibility );
+        });
     },
     getgoogleBingError() {
         return this.props.googleBingErrorMsg;
