@@ -16,6 +16,7 @@ var mapUtils = require('../../../utils/MapUtils');
 var OpenlayersMap = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
+        style: React.PropTypes.object,
         center: ConfigUtils.PropTypes.center,
         zoom: React.PropTypes.number.isRequired,
         mapStateSource: ConfigUtils.PropTypes.mapStateSource,
@@ -244,7 +245,7 @@ var OpenlayersMap = React.createClass({
         }) : null;
 
         return (
-            <div id={this.props.id}>
+            <div id={this.props.id} style={this.props.style}>
                 {children}
             </div>
         );

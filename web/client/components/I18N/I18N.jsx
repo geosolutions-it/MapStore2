@@ -8,4 +8,5 @@
 
 module.exports.Message = require('./Message');
 module.exports.HTML = require('./HTML');
+module.exports.DateFormat = require('./Date');
 

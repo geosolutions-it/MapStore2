@@ -1,0 +1,7 @@
+ .snapshot-panel {
+    width: 700px;
+}
+.snapshot-panel ul {
+    list-style:none;
+    padding-left:0;
+}

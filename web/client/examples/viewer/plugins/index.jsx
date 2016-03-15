@@ -23,6 +23,12 @@ var measurement = require('../../../reducers/measurement');
 var {searchResults} = require('../../../reducers/search');
 var help = require('../../../reducers/help');
 
+var SnapshotPanel = require("../../../components/mapcontrols/Snapshot/SnapshotPanel.jsx");
+var SnapshotQueue = require("../../../components/mapcontrols/Snapshot/SnapshotQueue.jsx");
+
+var snapshot = require('../../../reducers/snapshot');
+var {changeSnapshotState, onSnapshotError, onSnapshotReady, onCreateSnapshot, saveImage, onRemoveSnapshot} = require('../../../actions/snapshot');
+
 var LocateBtn = require("../../../components/mapcontrols/locate/LocateBtn");
 var locate = require('../../../reducers/locate');
 var {changeLocateState} = require('../../../actions/locate');
@@ -50,7 +56,6 @@ var MadeWithLove = require('../img/mwlii.png');
 var React = require('react');
 
 var {isObject} = require('lodash');
-
 
 const reorderLayers = (groups, allLayers) => {
     return groups.slice(0).reverse().reduce((previous, group) => {
@@ -164,8 +169,25 @@ module.exports = {
                     lineMeasureEnabled={props.measurement.lineMeasureEnabled}
                     areaMeasureEnabled={props.measurement.areaMeasureEnabled}
                     bearingMeasureEnabled={props.measurement.bearingMeasureEnabled}
-                    measurement={props.measurement}
-                />
+                    measurement={props.measurement}/>
+                <SnapshotPanel
+                    map={props.map}
+                    title={<div><Message msgId="snapshot.title"/></div>}
+                    buttonTooltip={<Message msgId="snapshot.tooltip"/>}
+                    googleBingErrorMsg={<Message msgId="snapshot.googleBingError" />}
+                    saveBtnText={<Message msgId="snapshot.save" />}
+                    downloadingMsg={<Message msgId="snapshot.downloadingSnapshots" />}
+                    helpText={<Message msgId="helptexts.snapshot"/>}
+                    active={(props.floatingPanel.activeKey === "snapshotPanel")}
+                    isPanel={true}
+                    layers={props.layers.flat}
+                    browser={props.browser}
+                    onCreateSnapshot={props.onCreateSnapshot}
+                    key="snapshotPanel"
+                    snapshot={props.snapshot}
+                    onStatusChange={props.changeSnapshotState}
+                    downloadImg={props.saveImage}
+                    />
                 <Settings
                     key="settingsPanel"
                     isPanel={true}
@@ -269,15 +291,22 @@ module.exports = {
                 key="helpTextPanel"
                 isVisible={props.help.helpwinViz}
                 helpText={props.help.helpText}/>,
-                <div style={{
-                        position: "absolute",
-                        bottom: "50px",
-                        left: "0",
-                        height: 0,
-                        width: "100%",
-                        overflow: "visible",
-                        textAlign: "center"
-                    }} ><img src={MadeWithLove} /></div>
+             <div style={{
+                     position: "absolute",
+                     bottom: "50px",
+                     left: "0",
+                     height: 0,
+                     width: "100%",
+                     overflow: "visible",
+                     textAlign: "center"
+            }} ><img src={MadeWithLove} /></div>,
+            <SnapshotQueue
+                key="snapshotqueue"
+                downloadImg={props.saveImage}
+                onRemoveSnapshot={props.onRemoveSnapshot}
+                queue={props.snapshot.queue}
+            />
+
         ];
     },
     reducers: {
@@ -287,6 +316,7 @@ module.exports = {
         measurement,
         searchResults,
         locate,
+        snapshot,
         help
     },
     actions: {
@@ -315,6 +345,12 @@ module.exports = {
         changeHelpText,
         changeHelpwinVisibility,
         showMapinfoMarker,
-        hideMapinfoMarker
+        hideMapinfoMarker,
+        changeSnapshotState,
+        onCreateSnapshot,
+        onRemoveSnapshot,
+        onSnapshotError,
+        onSnapshotReady,
+        saveImage
     }
 };
