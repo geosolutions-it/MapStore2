@@ -25,9 +25,9 @@ function loadError(e) {
     };
 }
 
-function loadMaps() {
+function loadMaps(geoStoreUrl) {
     return (dispatch) => {
-        GeoStoreApi.getResourcesByCategory("MAP", "*", {start: 0, limit: 20}).then((response) => {
+        GeoStoreApi.getResourcesByCategory("MAP", "*", {start: 0, limit: 20}, geoStoreUrl).then((response) => {
             dispatch(mapsLoaded(response));
         }).catch((e) => {
             dispatch(loadError(e));

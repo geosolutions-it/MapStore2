@@ -21,7 +21,7 @@ let SnapshotQueue = React.createClass({
         queue: React.PropTypes.array,
         browser: React.PropTypes.string,
         onRemoveSnapshot: React.PropTypes.func,
-        downloadImg: React.PropTypes.funct
+        downloadImg: React.PropTypes.func
 
     },
     contextTypes: {

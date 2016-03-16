@@ -15,19 +15,11 @@ module.exports = {
     entry: {
         'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:8081', // WebpackDevServer host and port
         'webpack': 'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
-        viewer: path.join(__dirname, "web", "client", "examples", "viewer", "app"),
-        mobile: path.join(__dirname, "web", "client", "examples", "viewer", "mobile"),
-        home: path.join(__dirname, "web", "client", "examples", "home", "app"),
-        mouseposition: path.join(__dirname, "web", "client", "examples", "mouseposition", "app"),
-        scalebar: path.join(__dirname, "web", "client", "examples", "scalebar", "app"),
-        layertree: path.join(__dirname, "web", "client", "examples", "layertree", "app"),
-        "3dviewer": path.join(__dirname, "web", "client", "examples", "3dviewer", "app"),
-        queryform: path.join(__dirname, "web", "client", "examples", "queryform", "app"),
-        featuregrid: path.join(__dirname, "web", "client", "examples", "featuregrid", "app")
+        "mapstore2": path.join(__dirname, "web", "client", "product", "app")
     },
     output: {
       path: path.join(__dirname, "web", "client", "dist"),
-        publicPath: "/dist/",
+        publicPath: "/dist",
         filename: "[name].js"
     },
     plugins: [
