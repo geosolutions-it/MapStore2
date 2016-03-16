@@ -7,6 +7,7 @@
  */
 
 const TOGGLE_CONTROL = 'TOGGLE_CONTROL';
+const CHOOSE_MENU = 'CHOOSE_MENU';
 const SHOW_TOOLBAR_CONTROL = 'SHOW_TOOLBAR_CONTROL';
 
 function toggleControl(control) {
@@ -23,4 +24,12 @@ function showToolbarControl(control) {
     };
 }
 
-module.exports = {TOGGLE_CONTROL, SHOW_TOOLBAR_CONTROL, toggleControl, showToolbarControl};
+function chooseMenu(menu) {
+    return {
+        type: CHOOSE_MENU,
+        menu
+    };
+}
+
+module.exports = {TOGGLE_CONTROL, SHOW_TOOLBAR_CONTROL, CHOOSE_MENU,
+    toggleControl, showToolbarControl, chooseMenu};

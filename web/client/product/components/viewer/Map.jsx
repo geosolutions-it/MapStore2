@@ -18,8 +18,6 @@ const {changeLocateState, onLocateError} = require('../../../actions/locate');
 const {changeMeasurementState} = require('../../../actions/measurement');
 const {changeMousePosition} = require('../../../actions/mousePosition');
 
-const {isEqual} = require('lodash');
-
 const MapInfoUtils = require('../../../utils/MapInfoUtils');
 
 module.exports = (mapType) => {
@@ -51,9 +49,6 @@ module.exports = (mapType) => {
             locateMessages: React.PropTypes.object,
             changeLocateState: React.PropTypes.func,
             onLocateError: React.PropTypes.func
-        },
-        shouldComponentUpdate(nextProps) {
-            return !isEqual(nextProps, this.props);
         },
         renderLayers(layers) {
             if (layers) {

@@ -45,18 +45,6 @@ const Info = connect((state) => ({
     onClick: changeMapInfoState
 })(require('../../components/buttons/ToggleButton'));
 
-const toggle = (type, toggleFun) => {
-    return (node, status) => {
-        return toggleFun(node, type, status);
-    };
-};
-
-const sort = (sortFun, action) => {
-    return (node, reorder) => {
-        return action(node, reorder, sortFun);
-    };
-};
-
 const layersIcon = require('../assets/img/layers.png');
 const lineRuleIcon = require('../assets/img/line-ruler.png');
 
@@ -64,9 +52,9 @@ const LayerTree = connect((state) => ({
     groups: state.layers && state.layers.groups && LayersUtils.denormalizeGroups(state.layers.flat, state.layers.groups).groups || []
 }), {
     propertiesChangeHandler: changeLayerProperties,
-    onToggleGroup: toggle('groups', toggleNode),
-    onToggleLayer: toggle('layers', toggleNode),
-    onSort: sort(LayersUtils.sortLayers, sortNode)
+    onToggleGroup: LayersUtils.toggleByType('groups', toggleNode),
+    onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
+    onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode)
 })(require('../components/viewer/LayerTree'));
 
 const BackgroundSwitcher = connect((state) => ({

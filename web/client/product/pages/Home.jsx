@@ -48,7 +48,7 @@ const Home = React.createClass({
                             <Brand/>
                         </Col>
                         <Col xs={12} md={6}>
-                            <Language locale={this.props.locale.current} onChange={this.props.loadLocale.bind(null, '../translations')}/>
+                            <Language locale={this.props.locale.current} onChange={this.props.loadLocale.bind(null, 'translations')}/>
                         </Col>
                     </Row>
                     <Row className="show-grid">

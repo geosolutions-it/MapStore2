@@ -7,6 +7,7 @@
  */
 const {combineReducers} = require('redux');
 const {isEqual} = require('lodash');
+const assign = require('object-assign');
 
 const undoable = require('redux-undo').default;
 const mapConfigHistory = require('../../utils/MapHistory');
@@ -30,6 +31,7 @@ const mapConfig = require('../../reducers/config');
 const DebugUtils = require('../../utils/DebugUtils');
 const {isArray} = require('lodash');
 const LayersUtils = require('../../utils/LayersUtils');
+const {CHANGE_BROWSER_PROPERTIES} = require('../../actions/browser');
 
 const allReducers = combineReducers({
     home: require('../reducers/home'),
@@ -46,6 +48,7 @@ const allReducers = combineReducers({
     layers: () => {return null; },
     mousePosition: require('../../reducers/mousePosition')
 });
+const mobileOverride = {mapInfo: {enabled: true, infoFormat: 'text/html' }, mousePosition: {enabled: true, crs: "EPSG:4326"}};
 
 const rootReducer = (state, action) => {
     let mapState = mapConfig({
@@ -68,6 +71,9 @@ const rootReducer = (state, action) => {
         map: mapState && mapState.map ? map(mapState.map, action) : null,
         layers: mapState ? layers(mapState.layers, action) : null
     };
+    if (action && action.type === CHANGE_BROWSER_PROPERTIES && newState.browser.touch) {
+        newState = assign(newState, mobileOverride);
+    }
     return newState;
 };
 

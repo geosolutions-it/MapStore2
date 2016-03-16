@@ -11,7 +11,7 @@ const {Glyphicon, Tooltip} = require('react-bootstrap');
 const ToggleButton = require('../../../components/buttons/ToggleButton');
 const Message = require('../../../components/I18N/Message');
 
-const Home = React.createClass({
+const MapType = React.createClass({
     propTypes: {
         isPanel: React.PropTypes.bool,
         buttonTooltip: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
@@ -32,7 +32,6 @@ const Home = React.createClass({
         let tooltip = <Tooltip id="toolbar-home-button">{this.props.buttonTooltip}</Tooltip>;
         return (
             <ToggleButton
-                id="home-button"
                 key="gohome"
                 isButton={true}
                 pressed={false}
@@ -48,4 +47,4 @@ const Home = React.createClass({
         this.context.router.push("/");
     }
 });
-module.exports = Home;
+module.exports = MapType;

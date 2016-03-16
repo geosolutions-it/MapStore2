@@ -60,6 +60,16 @@ var LayersUtils = {
     sortLayers: (groups, allLayers) => {
         return allLayers.filter((layer) => layer.group === 'background')
             .concat(reorderLayers(groups, allLayers));
+    },
+    toggleByType: (type, toggleFun) => {
+        return (node, status) => {
+            return toggleFun(node, type, status);
+        };
+    },
+    sortUsing: (sortFun, action) => {
+        return (node, reorder) => {
+            return action(node, reorder, sortFun);
+        };
     }
 };
 

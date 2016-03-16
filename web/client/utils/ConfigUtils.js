@@ -38,7 +38,9 @@ var ConfigUtils = {
         }),
         mapStateSource: React.PropTypes.string
     },
-
+    getDefaults: function() {
+        return defaultConfig;
+    },
     loadConfiguration: function() {
         return axios.get('localConfig.json').then(response => {
             if (typeof response.data === 'object') {

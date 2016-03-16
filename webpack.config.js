@@ -19,7 +19,7 @@ module.exports = {
     },
     output: {
       path: path.join(__dirname, "web", "client", "dist"),
-        publicPath: "/",
+        publicPath: "/dist",
         filename: "[name].js"
     },
     plugins: [

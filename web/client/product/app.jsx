@@ -26,9 +26,9 @@ function startApp() {
 
     ConfigUtils.loadConfiguration().then(() => {
         let locale = LocaleUtils.getUserLocale();
-        store.dispatch(loadLocale('../translations', locale));
+        store.dispatch(loadLocale('translations', locale));
 
-        store.dispatch(loadMaps());
+        store.dispatch(loadMaps(ConfigUtils.getDefaults().geoStoreUrl));
     });
 
 

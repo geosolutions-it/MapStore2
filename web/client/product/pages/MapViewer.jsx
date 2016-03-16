@@ -7,10 +7,13 @@
  */
 const React = require('react');
 
+require('../assets/css/viewer.css');
+
 const {bindActionCreators} = require('redux');
 const {connect} = require('react-redux');
+const {Button, Glyphicon} = require('react-bootstrap');
 
-require('../assets/css/viewer.css');
+const url = require('url');
 
 const ConfigUtils = require('../../utils/ConfigUtils');
 
@@ -20,10 +23,17 @@ const {getFeatureInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker
 const {changeMousePointer, changeZoomLevel, changeMapView} = require('../../actions/map');
 
 const {textSearch, resultsPurge} = require("../../actions/search");
+const {toggleControl} = require('../actions/controls');
 
 const MousePosition = connect((state) => ({
     enabled: state.mousePosition.enabled,
     mousePosition: state.mousePosition.position,
+    crs: state.mousePosition.crs || state.map && state.map.present && state.map.present.projection || 'EPSG:3857'
+}))(require("../../components/mapcontrols/mouseposition/MousePosition"));
+
+const MousePositionMobile = connect((state) => ({
+    enabled: state.mousePosition.enabled,
+    mousePosition: state.map && state.map.present && state.map.present.center,
     crs: state.mousePosition.crs || state.map && state.map.present && state.map.present.projection || 'EPSG:3857'
 }))(require("../../components/mapcontrols/mouseposition/MousePosition"));
 
@@ -33,6 +43,8 @@ const HelpTextPanel = connect((state) => ({
 }))(require('../../components/help/HelpTextPanel'));
 
 const Toolbar = require('../containers/Toolbar');
+const DrawerMenu = require('../containers/DrawerMenu');
+
 const GetFeatureInfo = connect((state) => ({
     enabled: state.mapInfo && state.mapInfo.enabled || false,
     htmlResponses: state.mapInfo && state.mapInfo.responses || [],
@@ -103,14 +115,35 @@ const NominatimResultList = connect((state) => ({
     afterItemClick: resultsPurge
 })(require('../../components/mapcontrols/search/geocoding/NominatimResultList'));
 
+const {changeLocateState} = require('../../actions/locate');
+
+const LocateBtn = connect((state) => ({
+    locate: state.locate && state.locate.state || 'DISABLED'
+}), {
+    onClick: changeLocateState
+})(require('../../components/mapcontrols/locate/LocateBtn'));
+
+const Home = require('../components/viewer/Home');
+
 let VMap;
 const MapViewer = React.createClass({
     propTypes: {
+        mobile: React.PropTypes.bool,
         params: React.PropTypes.object,
-        loadMapConfig: React.PropTypes.func
+        loadMapConfig: React.PropTypes.func,
+        toggleMenu: React.PropTypes.func
+    },
+    getDefaultProps() {
+        return {
+            mobile: false
+        };
     },
     componentWillMount() {
         if (this.props.params.mapType && this.props.params.mapId) {
+            if (this.props.mobile) {
+                require('../assets/css/mobile.css');
+            }
+
             VMap = require('../components/viewer/Map')(this.props.params.mapType);
             const mapId = (this.props.params.mapId === '0') ? null : this.props.params.mapId;
             const {configUrl} = ConfigUtils.getConfigurationOptions({mapId: mapId});
@@ -123,6 +156,42 @@ const MapViewer = React.createClass({
         }
     },
     render() {
+        return this.props.mobile ? this.renderMobile() : this.renderDesktop();
+    },
+    renderMobile() {
+        return (
+            <div key="viewer" className="viewer">
+                <VMap key="map" overview={false} zoomControl={false} scaleBar={false}/>
+                <SearchBar key="seachBar"/>
+                <NominatimResultList key="nominatim-result-list"/>
+                <DrawerMenu key ="drawermenu"/>
+                <Button id="drawer-menu-button" key="menu-button" onClick={this.props.toggleMenu}><Glyphicon glyph="menu-hamburger"/></Button>
+                <Home key="home"/>
+                <LocateBtn
+                       id="locateMeButton"
+                       key="locate-me-button"
+                       style={{width: "auto"}}
+                       tooltip={<Message msgId="locate.tooltip"/>}/>
+               <MousePositionMobile
+                   id="mapstore-mouseposition-mobile"
+                   key="mousePosition"/>
+               <GetFeatureInfo
+                   key="getFeatureInfo"
+                   style={{position: "absolute",
+                       width: "100%",
+                       bottom: "0px",
+                       zIndex: 1010,
+                       maxHeight: "70%",
+                       marginBottom: 0
+                   }}
+                   draggable={false}
+                   collapsible={true}
+                   display="swipe"
+                   bodyClass="mobile-feature-info" />
+            </div>
+        );
+    },
+    renderDesktop() {
         return (
             <div key="viewer" className="viewer">
                 <VMap key="map" overview={true} zoomControl={true} scaleBar={true}/>
@@ -174,7 +243,12 @@ const MapViewer = React.createClass({
     }
 });
 
-module.exports = connect(() => ({}),
+const urlQuery = url.parse(window.location.href, true).query;
+
+module.exports = connect((state) => ({
+    mobile: urlQuery.mobile || (state.browser && state.browser.touch)
+}),
 {
-    loadMapConfig
+    loadMapConfig,
+    toggleMenu: toggleControl.bind(null, 'drawer')
 })(MapViewer);
