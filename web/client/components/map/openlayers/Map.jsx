@@ -32,7 +32,8 @@ var OpenlayersMap = React.createClass({
         resize: React.PropTypes.number,
         measurement: React.PropTypes.object,
         changeMeasurementState: React.PropTypes.func,
-        registerHooks: React.PropTypes.bool
+        registerHooks: React.PropTypes.bool,
+        disableDefaultInteractions: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -45,7 +46,8 @@ var OpenlayersMap = React.createClass({
           onLayerLoading: () => {},
           onLayerLoad: () => {},
           resize: 0,
-          registerHooks: true
+          registerHooks: true,
+          disableDefaultInteractions: false
         };
     },
     getInitialState() {
@@ -56,17 +58,20 @@ var OpenlayersMap = React.createClass({
         let interactions = ol.interaction.defaults(assign({
             dragPan: false,
             mouseWheelZoom: false
-        }, this.props.mapOptions.interactions, {})).extend([
-            new ol.interaction.DragPan({kinetic: false}),
-            new ol.interaction.MouseWheelZoom({duration: 0})
-        ]);
+        }, this.props.mapOptions.interactions, {}));
+        if (!this.props.disableDefaultInteractions) {
+            interactions.extend([
+                new ol.interaction.DragPan({kinetic: false}),
+                new ol.interaction.MouseWheelZoom({duration: 0})
+            ]);
+        }
         let controls = ol.control.defaults(assign({
             zoom: this.props.zoomControl,
             attributionOptions: ({
               collapsible: false
             })
         }, this.props.mapOptions.controls));
-        var map = new ol.Map({
+        let map = new ol.Map({
           layers: [],
           controls: controls,
           interactions: interactions,
