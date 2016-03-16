@@ -88,6 +88,20 @@ const InfoHelp = connect((state) => ({
     changeHelpwinVisibility
 })(require('../../components/help/HelpBadge'));
 
+const {onCreateSnapshot, changeSnapshotState, saveImage} = require('../../actions/snapshot');
+
+const SnapshotPanel = connect((state) => ({
+    map: state.map && state.map.present,
+    active: state.controls.toolbar.active === "snapshotPanel",
+    layers: state.layers && state.layers.flat || [],
+    browser: state.browser,
+    snapshot: state.snapshot || {queue: []}
+}), {
+    onCreateSnapshot: onCreateSnapshot,
+    onStatusChange: changeSnapshotState,
+    downloadImg: saveImage
+})(require("../../components/mapcontrols/Snapshot/SnapshotPanel"));
+
 const Toolbar = React.createClass({
     render() {
         return (
@@ -141,6 +155,17 @@ const Toolbar = React.createClass({
                     areaLabel={<Message msgId="measureComponent.areaLabel"/>}
                     bearingLabel={<Message msgId="measureComponent.bearingLabel"/>}
                 />
+                <SnapshotPanel
+                    title={<div><Message msgId="snapshot.title"/></div>}
+                    buttonTooltip={<Message msgId="snapshot.tooltip"/>}
+                    googleBingErrorMsg={<Message msgId="snapshot.googleBingError" />}
+                    saveBtnText={<Message msgId="snapshot.save" />}
+                    downloadingMsg={<Message msgId="snapshot.downloadingSnapshots" />}
+                    helpText={<Message msgId="helptexts.snapshot"/>}
+                    isPanel={true}
+                    key="snapshotPanel"
+                    icon={<Glyphicon glyph="camera"/>}
+                    />
                 <Settings key="settingsPanel"
                     isPanel={true}
                     buttonTooltip={<Message msgId="settings" />}

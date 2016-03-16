@@ -125,6 +125,15 @@ const LocateBtn = connect((state) => ({
 
 const Home = require('../components/viewer/Home');
 
+const {saveImage, onRemoveSnapshot} = require('../../actions/snapshot');
+
+const SnapshotQueue = connect((state) => ({
+    queue: state.snapshot && state.snapshot.queue || []
+}), {
+    downloadImg: saveImage,
+    onRemoveSnapshot
+})(require("../../components/mapcontrols/Snapshot/SnapshotQueue"));
+
 let VMap;
 const MapViewer = React.createClass({
     propTypes: {
@@ -229,6 +238,7 @@ const MapViewer = React.createClass({
                     <ZoomToMaxExtentButton
                         key="zoomToMaxExtent"/>
                 </HelpWrapper>
+                <SnapshotQueue key="snapshotqueue"/>
                 <div style={{
                         position: "absolute",
                         bottom: "50px",

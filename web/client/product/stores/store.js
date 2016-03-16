@@ -44,6 +44,7 @@ const allReducers = combineReducers({
     locate: require('../../reducers/locate'),
     search: require('../../reducers/search').searchResults,
     measurement: require('../../reducers/measurement'),
+    snapshot: require('../../reducers/snapshot'),
     map: () => {return null; },
     layers: () => {return null; },
     mousePosition: require('../../reducers/mousePosition')
