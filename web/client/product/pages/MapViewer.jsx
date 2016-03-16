@@ -134,6 +134,8 @@ const SnapshotQueue = connect((state) => ({
     onRemoveSnapshot
 })(require("../../components/mapcontrols/Snapshot/SnapshotQueue"));
 
+const urlQuery = url.parse(window.location.href, true).query;
+
 let VMap;
 const MapViewer = React.createClass({
     propTypes: {
@@ -155,7 +157,8 @@ const MapViewer = React.createClass({
 
             VMap = require('../components/viewer/Map')(this.props.params.mapType);
             const mapId = (this.props.params.mapId === '0') ? null : this.props.params.mapId;
-            const {configUrl} = ConfigUtils.getConfigurationOptions({mapId: mapId});
+            const config = urlQuery && urlQuery.config || null;
+            const {configUrl} = ConfigUtils.getConfigurationOptions({mapId, config});
             this.props.loadMapConfig(configUrl, mapId !== null);
         }
     },
@@ -252,8 +255,6 @@ const MapViewer = React.createClass({
         );
     }
 });
-
-const urlQuery = url.parse(window.location.href, true).query;
 
 module.exports = connect((state) => ({
     mobile: urlQuery.mobile || (state.browser && state.browser.touch)
