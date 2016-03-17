@@ -35,6 +35,7 @@ const assign = require('object-assign');
 
 const initialState = {
     searchUrl: null,
+    featureTypeConfigUrl: null,
     showGeneratedFilter: false,
     attributePanelExpanded: true,
     spatialPanelExpanded: true,
@@ -82,7 +83,11 @@ function queryform(state = initialState, action) {
         case UPDATE_FILTER_FIELD: {
             return assign({}, state, {filterFields: state.filterFields.map((field) => {
                 if (field.rowId === action.rowId) {
-                    return assign({}, field, {[action.fieldName]: action.fieldValue, type: action.fieldType});
+                    let f = assign({}, field, {[action.fieldName]: action.fieldValue, type: action.fieldType});
+                    if (action.fieldName === "attribute") {
+                        f.value = null;
+                    }
+                    return f;
                 }
                 return field;
             })});
