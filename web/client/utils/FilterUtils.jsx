@@ -63,7 +63,7 @@ const FilterUtils = {
             'xmlns:gml="http://www.opengis.net/gml" ' +
             'xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd" ' +
             'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' +
-            '<wfs:Query typeName="' + ftName + '">';
+            '<wfs:Query typeName="' + ftName + '" srsName="EPSG:4326">';
         ogcFilter += filter;
         ogcFilter +=
             '</wfs:Query>' +

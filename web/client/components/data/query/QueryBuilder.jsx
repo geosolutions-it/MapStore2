@@ -11,10 +11,14 @@ const GroupField = require('./GroupField');
 const SpatialFilter = require('./SpatialFilter');
 const QueryToolbar = require('./QueryToolbar');
 
+const Spinner = require('react-spinkit');
+
 require('./queryform.css');
 
 const QueryBuilder = React.createClass({
     propTypes: {
+        authParam: React.PropTypes.object,
+        featureTypeConfigUrl: React.PropTypes.string,
         useMapProjection: React.PropTypes.bool,
         attributes: React.PropTypes.array,
         groupLevels: React.PropTypes.number,
@@ -39,6 +43,8 @@ const QueryBuilder = React.createClass({
     },
     getDefaultProps() {
         return {
+            authParam: {},
+            featureTypeConfigUrl: null,
             useMapProjection: true,
             groupLevels: 1,
             groupFields: [],
@@ -63,7 +69,8 @@ const QueryBuilder = React.createClass({
                 onUpdateLogicCombo: () => {},
                 onRemoveGroupField: () => {},
                 onChangeCascadingValue: () => {},
-                onExpandAttributeFilterPanel: () => {}
+                onExpandAttributeFilterPanel: () => {},
+                onLoadFeatureTypeConfig: () => {}
             },
             spatialFilterActions: {
                 onExpandSpatialFilterPanel: () => {},
@@ -82,8 +89,21 @@ const QueryBuilder = React.createClass({
             }
         };
     },
+    componentWillReceiveProps(props) {
+        let url = props.featureTypeConfigUrl;
+        if (url !== this.props.featureTypeConfigUrl) {
+            this.props.attributeFilterActions.onLoadFeatureTypeConfig(
+                url, {authkey: this.props.authParam.authkey});
+        }
+    },
+    componentDidMount() {
+        if (this.props.featureTypeConfigUrl) {
+            this.props.attributeFilterActions.onLoadFeatureTypeConfig(
+                this.props.featureTypeConfigUrl, {authkey: this.props.authParam.authkey});
+        }
+    },
     render() {
-        return (
+        return this.props.attributes.length > 0 ? (
             <div id="queryFormPanel">
                 <div className="querypanel">
                     <GroupField
@@ -103,6 +123,7 @@ const QueryBuilder = React.createClass({
                         actions={this.props.spatialFilterActions}/>
                 </div>
                 <QueryToolbar
+                    authParam={this.props.authParam}
                     filterFields={this.props.filterFields}
                     groupFields={this.props.groupFields}
                     spatialField={this.props.spatialField}
@@ -112,7 +133,7 @@ const QueryBuilder = React.createClass({
                     featureTypeName={this.props.featureTypeName}
                     actions={this.props.queryToolbarActions}/>
             </div>
-        );
+        ) : (<div style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce"/></div>);
     }
 });
 

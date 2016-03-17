@@ -96,6 +96,7 @@
     "react-redux": "^4.1.1",
     "react-sidebar": "^2.1.1",
     "react-sortable-items": "0.0.11",
+    "react-spinkit": "^1.1.4",
     "react-swipe": "^3.0.0",
     "react-widgets": "^3.1.7",
     "redux": "3.1.3",

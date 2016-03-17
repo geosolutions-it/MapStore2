@@ -14,6 +14,8 @@ const FilterUtils = require('../../../utils/FilterUtils');
 
 const QueryToolbar = React.createClass({
     propTypes: {
+        filterType: React.PropTypes.string,
+        authParam: React.PropTypes.object,
         filterFields: React.PropTypes.array,
         groupFields: React.PropTypes.array,
         spatialField: React.PropTypes.object,
@@ -28,6 +30,8 @@ const QueryToolbar = React.createClass({
     },
     getDefaultProps() {
         return {
+            filterType: "OGC",
+            authParam: {},
             groupFields: [],
             filterFields: [],
             spatialField: {},
@@ -85,8 +89,11 @@ const QueryToolbar = React.createClass({
             spatialField: this.props.spatialField
         };
 
-        let filter = FilterUtils.toOGCFilter(this.props.featureTypeName, filterObj);
-        this.props.actions.onQuery(this.props.searchUrl, filter);
+        let filter = this.props.filterType === "OGC" ?
+            FilterUtils.toOGCFilter(this.props.featureTypeName, filterObj) :
+            FilterUtils.toCQLFilter(this.props.featureTypeName, filterObj);
+
+        this.props.actions.onQuery(this.props.searchUrl, filter, {authkey: this.props.authParam.authkey});
     },
     reset() {
         this.props.actions.onChangeDrawingStatus('clean', null, "queryform", []);
