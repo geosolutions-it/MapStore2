@@ -56,17 +56,24 @@ var OpenlayersMap = React.createClass({
         let interactions = ol.interaction.defaults(assign({
             dragPan: false,
             mouseWheelZoom: false
-        }, this.props.mapOptions.interactions, {})).extend([
-            new ol.interaction.DragPan({kinetic: false}),
-            new ol.interaction.MouseWheelZoom({duration: 0})
-        ]);
+        }, this.props.mapOptions.interactions, {}));
+        if (this.props.mapOptions.interactions === undefined || this.props.mapOptions.interactions.dragPan === undefined || this.props.mapOptions.interactions.dragPan) {
+            interactions.extend([
+                new ol.interaction.DragPan({kinetic: false})
+            ]);
+        }
+        if (this.props.mapOptions.interactions === undefined || this.props.mapOptions.interactions.mouseWheelZoom === undefined || this.props.mapOptions.interactions.mouseWheelZoom) {
+            interactions.extend([
+                new ol.interaction.MouseWheelZoom({duration: 0})
+            ]);
+        }
         let controls = ol.control.defaults(assign({
             zoom: this.props.zoomControl,
             attributionOptions: ({
               collapsible: false
             })
         }, this.props.mapOptions.controls));
-        var map = new ol.Map({
+        let map = new ol.Map({
           layers: [],
           controls: controls,
           interactions: interactions,
