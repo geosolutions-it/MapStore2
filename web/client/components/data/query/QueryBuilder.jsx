@@ -97,7 +97,7 @@ const QueryBuilder = React.createClass({
         }
     },
     componentDidMount() {
-        if (this.props.featureTypeConfigUrl) {
+        if (this.props.featureTypeConfigUrl && this.props.attributes.length < 1) {
             this.props.attributeFilterActions.onLoadFeatureTypeConfig(
                 this.props.featureTypeConfigUrl, {authkey: this.props.authParam.authkey});
         }
