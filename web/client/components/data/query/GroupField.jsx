@@ -73,11 +73,15 @@ const GroupField = React.createClass({
                 // The filtered values that match the attribute refId
                 let values = selected.values.filter((value) => value[selected.dependson.to] === attributeRefId);
 
-                return (selected && selected.type === "list" ? values.map((value) => { return {id: value[selected.valueId], name: value[selected.valueLabel]}; }) : null);
+                return (selected && selected.type === "list" ? values.map((value) => {
+                    return {id: (selected.fidPrefix ? selected.fidPrefix + "." + value[selected.valueId] : value[selected.valueId]), name: value[selected.valueLabel]};
+                }) : null);
             }
         }
 
-        return (selected && selected.type === "list" ? selected.values.map((value) => { return {id: value[selected.valueId], name: value[selected.valueLabel]}; }) : null);
+        return (selected && selected.type === "list" ? selected.values.map((value) => {
+            return {id: (selected.fidPrefix ? selected.fidPrefix + "." + value[selected.valueId] : value[selected.valueId]), name: value[selected.valueLabel]};
+        }) : null);
     },
     renderFilterField(filterField) {
         let selectedAttribute = this.props.attributes.filter((attribute) => attribute.id === filterField.attribute)[0];
