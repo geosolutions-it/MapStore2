@@ -273,7 +273,7 @@ var ConfigUtils = {
     },
     setUrlPlaceholders: function(layer) {
         if (layer.url) {
-            layer.url.match(/\{.*?\}/g).forEach((placeholder) => {
+            (layer.url.match(/\{.*?\}/g) || []).forEach((placeholder) => {
                 layer.url = layer.url.replace(placeholder, defaultConfig[placeholder.substring(1, placeholder.length - 1)] || '');
             });
         }
