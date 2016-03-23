@@ -18,7 +18,7 @@
     "eslint": "0.24.1",
     "eslint-plugin-react": "~3.0.0",
     "exists-file": "^1.0.0",
-    "expect": "^1.6.0",
+    "expect": "1.13.4",
     "extract-text-webpack-plugin": "^0.8.2",
     "file-loader": "^0.8.5",
     "html-webpack-plugin": "^2.9.0",
