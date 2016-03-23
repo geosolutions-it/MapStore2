@@ -74,7 +74,7 @@ var ConfigUtils = {
         other.center = ConfigUtils.getCenter(other.center);
         return {
             map: other,
-            layers: layers.map(ConfigUtils.setBingKey).map(ConfigUtils.setLayerId),
+            layers: layers.map(ConfigUtils.setBingKey).map(ConfigUtils.setLayerId).map(ConfigUtils.setUrlPlaceholders),
             groups: groups,
             plugins: plugins
         };
@@ -268,6 +268,14 @@ var ConfigUtils = {
     setBingKey: function(layer) {
         if (layer.type === 'bing') {
             layer.apiKey = defaultConfig.bingApiKey;
+        }
+        return layer;
+    },
+    setUrlPlaceholders: function(layer) {
+        if (layer.url) {
+            layer.url.match(/\{.*?\}/g).forEach((placeholder) => {
+                layer.url = layer.url.replace(placeholder, defaultConfig[placeholder.substring(1, placeholder.length - 1)] || '');
+            });
         }
         return layer;
     },
