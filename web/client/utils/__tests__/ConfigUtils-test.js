@@ -233,4 +233,9 @@ describe('ConfigUtils', () => {
         expect(retval).toExist();
         done();
     });
+
+    it('placeholders', () => {
+        const layer = ConfigUtils.setUrlPlaceholders({url: '{proxyUrl}'});
+        expect(layer.url).toBe(ConfigUtils.getConfigProp('proxyUrl'));
+    });
 });
