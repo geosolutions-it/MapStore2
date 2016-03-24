@@ -12,6 +12,8 @@ var url = require('url');
 
 var axios = require('axios');
 
+const {isArray} = require('lodash');
+
 const epsg4326 = Proj4js ? new Proj4js.Proj('EPSG:4326') : null;
 const centerPropType = React.PropTypes.shape({
     x: React.PropTypes.number.isRequired,
@@ -273,11 +275,22 @@ var ConfigUtils = {
     },
     setUrlPlaceholders: function(layer) {
         if (layer.url) {
-            (layer.url.match(/\{.*?\}/g) || []).forEach((placeholder) => {
-                layer.url = layer.url.replace(placeholder, defaultConfig[placeholder.substring(1, placeholder.length - 1)] || '');
-            });
+            if (isArray(layer.url)) {
+                layer.url = layer.url.map((currentUrl) => {
+                    return ConfigUtils.replacePlaceholders(currentUrl);
+                });
+            } else {
+                layer.url = ConfigUtils.replacePlaceholders(layer.url);
+            }
         }
         return layer;
+    },
+    replacePlaceholders: function(inputUrl) {
+        let currentUrl = inputUrl;
+        (currentUrl.match(/\{.*?\}/g) || []).forEach((placeholder) => {
+            currentUrl = currentUrl.replace(placeholder, defaultConfig[placeholder.substring(1, placeholder.length - 1)] || '');
+        });
+        return currentUrl;
     },
     setLayerId: function(layer, i) {
         if (!layer.id) {
