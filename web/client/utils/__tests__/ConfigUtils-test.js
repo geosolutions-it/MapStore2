@@ -238,4 +238,16 @@ describe('ConfigUtils', () => {
         const layer = ConfigUtils.setUrlPlaceholders({url: '{proxyUrl}'});
         expect(layer.url).toBe(ConfigUtils.getConfigProp('proxyUrl'));
     });
+
+    it('multiple placeholders', () => {
+        const layer = ConfigUtils.setUrlPlaceholders({url: '{proxyUrl}{proxyUrl}'});
+        expect(layer.url).toBe(ConfigUtils.getConfigProp('proxyUrl') + ConfigUtils.getConfigProp('proxyUrl'));
+    });
+
+    it('placeholders in array', () => {
+        const layer = ConfigUtils.setUrlPlaceholders({url: ['{proxyUrl}', '{proxyUrl}']});
+        expect(layer.url.length).toBe(2);
+        expect(layer.url[0]).toBe(ConfigUtils.getConfigProp('proxyUrl'));
+        expect(layer.url[1]).toBe(ConfigUtils.getConfigProp('proxyUrl'));
+    });
 });

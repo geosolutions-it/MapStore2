@@ -23,6 +23,9 @@ function createPackageJSON() {
     packageJSON.description = projectDescription;
     packageJSON.repository = repoURL;
     packageJSON.scripts = require('./projectScripts.json');
+    packageJSON.dependencies = {
+        "MapStore2": "file:./MapStore2"
+    };
 
     fs.writeFile(outFolder + '/package.json', JSON.stringify(packageJSON, null, 4), copyStaticFiles);
     console.log('package.json OK');
