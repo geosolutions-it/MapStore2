@@ -180,10 +180,10 @@ const MapViewer = React.createClass({
                 <Button id="drawer-menu-button" key="menu-button" onClick={this.props.toggleMenu}><Glyphicon glyph="menu-hamburger"/></Button>
                 <Home key="home"/>
                 <LocateBtn
-                       id="locateMeButton"
-                       key="locate-me-button"
-                       style={{width: "auto"}}
-                       tooltip={<Message msgId="locate.tooltip"/>}/>
+                   id="locateMeButton"
+                   key="locate-me-button"
+                   style={{width: "auto"}}
+                   tooltip={<Message msgId="locate.tooltip"/>}/>
                <MousePositionMobile
                    id="mapstore-mouseposition-mobile"
                    key="mousePosition"/>

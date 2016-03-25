@@ -133,7 +133,7 @@ const GetFeatureInfoViewer = React.createClass({
                     collapsible={this.props.display === "accordion"}
                     header={pageHeader}
                     style={this.props.display === "accordion" ?
-                        {overflowX: "auto"} : {maxHeight: "100%", overflow: "auto"}}>
+                        {maxHeight: "500px", overflow: "auto"} : {maxHeight: "500px", overflow: "auto"}}>
                     {this.renderInfoPage(response)}
                 </Panel>
             );

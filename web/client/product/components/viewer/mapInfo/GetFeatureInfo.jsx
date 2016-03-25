@@ -23,6 +23,7 @@ const {isArray} = require('lodash');
 
 var GetFeatureInfo = React.createClass({
     propTypes: {
+        params: React.PropTypes.object,
         infoFormat: React.PropTypes.oneOf(
             MapInfoUtils.getAvailableInfoFormatValues()
         ),
@@ -107,7 +108,7 @@ var GetFeatureInfo = React.createClass({
             const {bounds, crs} = this.reprojectBbox(newProps.map.bbox, newProps.map.projection);
             for (let l = 0; l < wmsVisibleLayers.length; l++) {
                 const layer = wmsVisibleLayers[l];
-                const requestConf = {
+                let requestConf = {
                     id: layer.id,
                     layers: layer.name,
                     query_layers: layer.name,
@@ -124,6 +125,11 @@ var GetFeatureInfo = React.createClass({
                     feature_count: newProps.featureCount,
                     info_format: newProps.infoFormat
                 };
+
+                if (newProps.params) {
+                    requestConf = assign({}, requestConf, newProps.params);
+                }
+
                 const layerMetadata = {
                     title: layer.title,
                     regex: layer.featureInfoRegex
@@ -163,14 +169,16 @@ var GetFeatureInfo = React.createClass({
 
     renderContent() {
         let missingRequests = this.props.htmlRequests.length - this.props.htmlResponses.length;
-        return (<Panel
-            defaultExpanded={true}
-            collapsible={this.props.collapsible}
-            id="mapstore-getfeatureinfo"
-            header={this.renderHeader(missingRequests)}
-            style={this.props.style}>
-            {this.renderInfo(missingRequests)}
-        </Panel>);
+        return (
+            <Panel
+                defaultExpanded={true}
+                collapsible={this.props.collapsible}
+                id="mapstore-getfeatureinfo"
+                header={this.renderHeader(missingRequests)}
+                style={this.props.style}>
+                {this.renderInfo(missingRequests)}
+            </Panel>
+        );
     },
     render() {
         if (this.props.htmlRequests.length !== 0) {

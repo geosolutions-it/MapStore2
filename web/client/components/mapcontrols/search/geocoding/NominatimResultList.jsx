@@ -34,10 +34,11 @@ let ResultList = React.createClass({
         // zoom by the max. extent defined in the map's config
         var mapSize = this.props.mapConfig.size;
 
-        var newZoom = mapUtils.getZoomForExtent(CoordinatesUtils.reprojectBbox(bbox, "EPSG:4326", this.props.mapConfig.projection), mapSize, 0, 21, null, "EPSG:4326");
+        var newZoom = mapUtils.getZoomForExtent(CoordinatesUtils.reprojectBbox(bbox, "EPSG:4326", this.props.mapConfig.projection), mapSize, 0, 21, null);
 
         // center by the max. extent defined in the map's config
         var newCenter = mapUtils.getCenterForExtent(bbox, "EPSG:4326");
+
         this.props.onItemClick(newCenter, newZoom, {
             bounds: {
                minx: bbox[0],
@@ -47,7 +48,7 @@ let ResultList = React.createClass({
             },
             crs: "EPSG:4326",
              rotation: 0
-            }, this.props.mapConfig.size);
+         }, this.props.mapConfig.size, null, this.props.mapConfig.projection);
         this.props.afterItemClick();
     },
     renderResults() {
