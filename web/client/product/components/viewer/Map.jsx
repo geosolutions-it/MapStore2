@@ -94,11 +94,12 @@ module.exports = (mapType) => {
             if (layer.features && layer.type === "vector") {
                 // TODO remove this DIV. What container can be used for this component.
                 return layer.features.map( (feature) => {
-                    return (<Feature
-                        key={feature.id}
-                        type={feature.type}
-                        geometry={feature.geometry}
-                    />);
+                    return (
+                        <Feature
+                            key={feature.id}
+                            type={feature.type}
+                            geometry={feature.geometry}/>
+                    );
                 });
             }
             return null;
@@ -118,8 +119,7 @@ module.exports = (mapType) => {
                         onClick={this.props.onClick}
                         onMouseMove={this.props.onMouseMove}
                         onLayerLoading={this.props.onLayerLoading}
-                        onLayerLoad={this.props.onLayerLoad}
-                    >
+                        onLayerLoad={this.props.onLayerLoad}>
                         {this.renderLayers(this.props.layers)}
                         {this.renderSupportTools()}
                     </LMap>

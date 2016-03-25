@@ -27,7 +27,6 @@ const map = mapConfigHistory(undoable(require('../../reducers/map'), {
 const layers = require('../../reducers/layers');
 const mapConfig = require('../../reducers/config');
 
-
 const DebugUtils = require('../../utils/DebugUtils');
 const {isArray} = require('lodash');
 const LayersUtils = require('../../utils/LayersUtils');
@@ -49,6 +48,7 @@ const allReducers = combineReducers({
     layers: () => {return null; },
     mousePosition: require('../../reducers/mousePosition')
 });
+
 const mobileOverride = {mapInfo: {enabled: true, infoFormat: 'text/html' }, mousePosition: {enabled: true, crs: "EPSG:4326"}};
 
 const rootReducer = (state, action) => {
