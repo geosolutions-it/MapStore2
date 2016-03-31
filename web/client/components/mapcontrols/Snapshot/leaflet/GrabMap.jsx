@@ -30,8 +30,8 @@ let GrabLMap = React.createClass({
             browser: React.PropTypes.object,
             canvas: React.PropTypes.node,
             timeout: React.PropTypes.number,
-            mapId: React.PropTypes.string,
-            drawCanvas: React.PropTypes.bool
+            drawCanvas: React.PropTypes.bool,
+            mapId: React.PropTypes.string
     },
     getDefaultProps() {
         return {
