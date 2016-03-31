@@ -11,7 +11,7 @@ var React = require('react/addons');
 var ReactDOM = require('react-dom');
 var GrabMap = require('../GrabMap');
 
-describe("test the OL GrabMap component", () => {
+describe("the OL GrabMap component", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="snap"></div><div id="map"><canvas></canvas></div>';
         setTimeout(done);
@@ -23,16 +23,16 @@ describe("test the OL GrabMap component", () => {
         setTimeout(done);
     });
 
-    it('test component creation', () => {
+    it('component creation', () => {
         const tb = ReactDOM.render(<GrabMap active={false}/>, document.getElementById("snap"));
         expect(tb).toExist();
     });
-    it('test component update', () => {
+    it('component update', () => {
         const tb = ReactDOM.render(<GrabMap active={false}/>, document.getElementById("snap"));
         expect(tb).toExist();
         tb.setProps({active: false});
     });
-    it('test component snapshot img creation', (done) => {
+    it('component snapshot img creation', (done) => {
         let layers = [{
             "source": "mapquest",
             "title": "MapQuest OpenStreetMap",
