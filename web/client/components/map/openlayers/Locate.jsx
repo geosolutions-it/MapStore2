@@ -10,7 +10,6 @@
 var React = require('react');
 var OlLocate = require('../../../utils/openlayers/OlLocate');
 
-
 var Locate = React.createClass({
     propTypes: {
         map: React.PropTypes.object,
@@ -28,7 +27,7 @@ var Locate = React.createClass({
         };
     },
     componentDidMount() {
-        if (this.props.map ) {
+        if (this.props.map) {
             this.locate = new OlLocate(this.props.map, this.defaultOpt);
             this.locate.options.onLocationError = this.onLocationError;
             this.locate.on("propertychange", (e) => {this.onStateChange(e.target.get(e.key)); });
@@ -62,18 +61,18 @@ var Locate = React.createClass({
         return null;
     },
     defaultOpt: {
-            follow: true,// follow with zoom and pan the user's location
-            remainActive: true,
-            metric: true,
-            stopFollowingOnDrag: true,
-            keepCurrentZoomLevel: false,
-            locateOptions: {
-                maximumAge: 2000,
-                enableHighAccuracy: false,
-                timeout: 10000,
-                maxZoom: 18
-                }
-            }
+        follow: true,// follow with zoom and pan the user's location
+        remainActive: true,
+        metric: true,
+        stopFollowingOnDrag: true,
+        keepCurrentZoomLevel: false,
+        locateOptions: {
+            maximumAge: 2000,
+            enableHighAccuracy: false,
+            timeout: 10000,
+            maxZoom: 18
+        }
+    }
 });
 
 module.exports = Locate;

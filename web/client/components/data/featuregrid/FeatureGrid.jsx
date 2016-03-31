@@ -111,9 +111,9 @@ const FeatureGrid = React.createClass({
                 />
             </div>
             <ButtonToolbar style={{marginTop: "5px", marginLeft: "0px"}}bsSize="sm">
-                    <button onClick={this.zoomToFeatures}><img src={img} width={16}/></button>
-                    <button onClick={() => {this.api.exportDataAsCsv(); }}>Export</button>
-                    <button onClick={() => {this.api.showToolPanel(!this.api.isToolPanelShowing()); }}>Tool Panel</button>
+                <button onClick={this.zoomToFeatures}><img src={img} width={16}/></button>
+                <button onClick={() => {this.api.exportDataAsCsv(); }}>Export</button>
+                <button onClick={() => {this.api.showToolPanel(!this.api.isToolPanelShowing()); }}>Tool Panel</button>
             </ButtonToolbar>
             </div>);
     },

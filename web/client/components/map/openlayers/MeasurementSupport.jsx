@@ -33,11 +33,11 @@ const MeasurementSupport = React.createClass({
         return null;
     },
     addDrawInteraction: function(newProps) {
-
         var source;
         var vector;
         var draw;
         var geometryType;
+
         // cleanup old interaction
         if (this.drawInteraction) {
             this.removeDrawInteraction();
@@ -63,6 +63,7 @@ const MeasurementSupport = React.createClass({
                 })
             })
         });
+
         this.props.map.addLayer(vector);
 
         if (newProps.measurement.geomType === 'Bearing') {
@@ -121,7 +122,6 @@ const MeasurementSupport = React.createClass({
         }
     },
     updateMeasurementResults() {
-
         var bearing = 0;
         var sketchCoords = this.sketchFeature.getGeometry().getCoordinates();
         var newMeasureState;
@@ -145,6 +145,7 @@ const MeasurementSupport = React.createClass({
                 this.calculateGeodesicArea(this.sketchFeature.getGeometry().getLinearRing(0).getCoordinates()) : 0,
             bearing: this.props.measurement.geomType === 'Bearing' ? bearing : 0
         };
+
         this.props.changeMeasurementState(newMeasureState);
     },
     reprojectedCoordinates: function(coordinates) {

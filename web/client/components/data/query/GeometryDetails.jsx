@@ -319,7 +319,7 @@ const GeometryDetails = React.createClass({
     },
     render() {
         return (
-            <Draggable start={{x: 100, y: 55}} handle=".handle">
+            <Draggable start={{x: 100, y: 55}} handle=".handle,.handle *">
                 <Panel className="details-panel" header={this.renderHeader()} bsStyle="primary">
                     {this.renderDetailsContent()}
                 </Panel>
