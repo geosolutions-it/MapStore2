@@ -35,11 +35,12 @@ const Template = React.createClass({
     /*eslint-disable */
     renderContent() {
         let model = this.props.model;
+        let props = this.props;
         return eval(this.comp);
     },
     /*eslint-enable */
     render() {
-        let content = (this.props.renderContent) ? this.props.renderContent(this.comp, this.props.model) : this.renderContent();
+        let content = (this.props.renderContent) ? this.props.renderContent(this.comp, this.props) : this.renderContent();
         return ( React.isValidElement(content)) ? content : null;
     },
     parseTemplate(temp) {

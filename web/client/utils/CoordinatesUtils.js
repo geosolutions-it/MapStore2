@@ -65,7 +65,6 @@ var CoordinatesUtils = {
         return crsList;
     },
     calculateAzimuth: function(p1, p2, pj) {
-
         var p1proj = CoordinatesUtils.reproject(p1, pj, 'EPSG:4326');
         var p2proj = CoordinatesUtils.reproject(p2, pj, 'EPSG:4326');
         var lon1 = p1proj.x * Math.PI / 180.0;

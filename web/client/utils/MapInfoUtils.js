@@ -7,20 +7,21 @@
  */
 
 const INFO_FORMATS = require("./FeatureInfoUtils").INFO_FORMATS;
-/**
- * specifies which info formats are currently supported
- */
-//           default format ↴
-const AVAILABLE_FORMAT = ['TEXT', 'JSON', 'HTML'];
 
 var MapInfoUtils = {
+    /**
+     * specifies which info formats are currently supported
+     */
+    //           default format ↴
+    AVAILABLE_FORMAT: ['TEXT', 'JSON', 'HTML'],
+
     /**
      * @return a filtered version of INFO_FORMATS object.
      * the returned object contains only keys that AVAILABLE_FORMAT contains.
      */
     getAvailableInfoFormat() {
         return Object.keys(INFO_FORMATS).filter((k) => {
-            return AVAILABLE_FORMAT.indexOf(k) !== -1;
+            return MapInfoUtils.AVAILABLE_FORMAT.indexOf(k) !== -1;
         }).reduce((prev, k) => {
             prev[k] = INFO_FORMATS[k];
             return prev;
@@ -44,7 +45,7 @@ var MapInfoUtils = {
      * @return {string} the default info format value
      */
     getDefaultInfoFormatValue() {
-        return INFO_FORMATS[AVAILABLE_FORMAT[0]];
+        return INFO_FORMATS[MapInfoUtils.AVAILABLE_FORMAT[0]];
     },
     clickedPointToGeoJson(clickedPoint) {
         if (!clickedPoint) {

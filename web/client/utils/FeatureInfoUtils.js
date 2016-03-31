@@ -4,9 +4,12 @@ const INFO_FORMATS = {
     "HTML": "text/html",
     "JSONP": "text/javascript",
     "JSON": "application/json",
-    "GML 2": "application/vnd.ogc.gml",
-    "GML 3": "application/vnd.ogc.gml/3.1.1"
+    "GML2": "application/vnd.ogc.gml",
+    "GML3": "application/vnd.ogc.gml/3.1.1"
 };
+
+const regexpXML = /^[\s\S]*<gml:featureMembers[^>]*>([\s\S]*)<\/gml:featureMembers>[\s\S]*$/i;
+
 const regexpBody = /^[\s\S]*<body[^>]*>([\s\S]*)<\/body>[\s\S]*$/i;
 const regexpStyle = /(<style[\s\=\w\/\"]*>[^<]*<\/style>)/i;
 
@@ -16,6 +19,14 @@ function parseHTMLResponse(res) {
         if ( res.layerMetadata && res.layerMetadata.regex ) {
             return match && match[1] && match[1].match(res.layerMetadata.regex);
         }
+        return match && match[1] && match[1].trim().length > 0;
+    }
+    return false;
+}
+
+function parseXMLResponse(res) {
+    if ( typeof res.response === "string" && res.response.indexOf("<?xml") !== -1 ) {
+        let match = res.response.match(regexpXML);
         return match && match[1] && match[1].trim().length > 0;
     }
     return false;
@@ -62,6 +73,20 @@ const Validator = {
          */
         getNoValidResponses(responses) {
             return responses.filter((res) => res.response && res.response.features && res.response.features.length === 0);
+        }
+    },
+    GML3: {
+        /**
+         *Parse the HTML to get only the valid html responses
+         */
+        getValidResponses(responses) {
+            return responses.filter(parseXMLResponse);
+        },
+        /**
+         * Parse the HTML to get only the NOT valid html responses
+         */
+        getNoValidResponses(responses) {
+            return responses.filter((res) => {return !parseXMLResponse(res); });
         }
     }
 };

@@ -13,7 +13,11 @@ var {
 
 const assign = require('object-assign');
 
-function measurement(state = null, action) {
+function measurement(state = {
+    lineMeasureEnabled: false,
+    areaMeasureEnabled: false,
+    bearingMeasureEnabled: false
+}, action) {
     switch (action.type) {
         case CHANGE_MEASUREMENT:
             return assign({}, state, {
