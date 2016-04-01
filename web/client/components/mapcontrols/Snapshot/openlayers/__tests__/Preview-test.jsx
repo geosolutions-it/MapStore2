@@ -28,23 +28,23 @@ describe("test the OL Snapshot Preview component", () => {
         setTimeout(done);
     });
 
-    it('test component creation', () => {
+    it('component creation', () => {
         const tb = ReactDOM.render(<GrabMap active={false}/>, document.getElementById("snap"));
         expect(tb).toExist();
     });
-    it('test component snapshot img creation', (done) => {
+    it('component snapshot img creation', (done) => {
         const map = ReactDOM.render(<OLMap center={{y: 43.9, x: 10.3}} zoom={11} />, document.getElementById("map"));
         expect(map).toExist();
         const tb = ReactDOM.render(<GrabMap mapId="map" snapstate={{error: "Test"}} active={false} timeout={0} onSnapshotReady={() => { expect(tb.isTainted(false)); expect(tb.exportImage()).toExist(); done(); }}/>, document.getElementById("snap"));
         expect(tb).toExist();
         tb.setProps({active: true});
     });
-    it('test component timeout clean do not generate snapshot', () => {
+    it('component deactivation do not generate snapshot', () => {
         const map = ReactDOM.render(<OLMap center={{y: 43.9, x: 10.3}} zoom={11} />, document.getElementById("map"));
         expect(map).toExist();
-        const tb = ReactDOM.render(<GrabMap mapId="map" snapstate={{error: "Test"}} active={true} timeout={0} onSnapshotReady={() => { expect(true).toBe(false); }}/>, document.getElementById("snap"));
+        // set a big timeout to make you sure that the snapshot is not not generated
+        const tb = ReactDOM.render(<GrabMap mapId="map" snapstate={{error: "Test"}} active={true} timeout={10000} onSnapshotReady={() => { expect(true).toBe(false); }}/>, document.getElementById("snap"));
         expect(tb).toExist();
         tb.setProps({active: false});
     });
-
 });

@@ -26,7 +26,7 @@ describe("test the Leaflet Preview component", () => {
         setTimeout(done);
     });
 
-    it('test component creation', () => {
+    it('component creation', () => {
         let status;
         const onStatusChange = (val) => {status = val; };
         const tb = ReactDOM.render(<GrabMap active={false} onStatusChange={onStatusChange} timeout={0} />, document.getElementById("snap"));
@@ -34,7 +34,7 @@ describe("test the Leaflet Preview component", () => {
         tb.setProps({active: false, snapstate: {error: "Test"}});
         expect(status).toEqual("DISABLED");
     });
-    it('test snapshot creation', (done) => {
+    it('snapshot creation', (done) => {
         const tb = ReactDOM.render(<GrabMap active={false} onSnapshotReady={() => { expect(tb.isTainted(false)); expect(tb.exportImage()).toExist(); done(); }} timeout={0} layers={[{loading: false}, {loading: false}]}/>, document.getElementById("snap"));
         expect(tb).toExist();
         tb.setProps({active: true});

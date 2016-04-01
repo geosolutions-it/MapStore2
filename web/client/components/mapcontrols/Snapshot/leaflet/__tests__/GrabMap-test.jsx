@@ -12,6 +12,7 @@ var ReactDOM = require('react-dom');
 var GrabMap = require('../GrabMap');
 
 describe("test the Leaflet GrabMap component", () => {
+
     beforeEach((done) => {
         // emulate empty map
         document.body.innerHTML = '<div><div id="snap"></div>' +
@@ -26,7 +27,7 @@ describe("test the Leaflet GrabMap component", () => {
         setTimeout(done);
     });
 
-    it('test component creation', () => {
+    it('component creation', () => {
         let status;
         const onStatusChange = (val) => {status = val; };
         const tb = ReactDOM.render(<GrabMap active={false} onStatusChange={onStatusChange} timeout={0} />, document.getElementById("snap"));
@@ -35,14 +36,15 @@ describe("test the Leaflet GrabMap component", () => {
         expect(status).toEqual("DISABLED");
     });
 
-    it('test snapshot creation', (done) => {
+    it('snapshot creation', (done) => {
         const tb = ReactDOM.render(<GrabMap active={true} timeout={0} onSnapshotReady={() => { expect(tb.isTainted()).toBe(false); done(); }} layers={[{loading: false, visibility: true}, {loading: false}]}/>, document.getElementById("snap"));
         expect(tb).toExist();
     });
-
-    it('test snapshot update', (done) => {
+/*
+    it('snapshot update', (done) => {
         const tb = ReactDOM.render(<GrabMap active={false} timeout={0} onSnapshotReady={() => { expect(tb.isTainted()).toBe(false); done(); }} layers={[{loading: false, visibility: true}, {loading: false}]}/>, document.getElementById("snap"));
         expect(tb).toExist();
         tb.setProps({active: true});
     });
+*/
 });

@@ -22,18 +22,25 @@ describe("test the SnapshotPanel", () => {
         setTimeout(done);
     });
 
-    it('test component creation', () => {
+    afterEach((done) => {
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
+        document.body.innerHTML = '';
+        setTimeout(done);
+    });
+
+    it('component creation', () => {
         const tb = ReactDOM.render(<SnapshotPanel timeout={0} snapshot={{state: "DISABLED"}} active={false}/>, document.getElementById("container"));
         expect(tb).toExist();
 
     });
-    it('test component update', () => {
+
+    it('component update', () => {
         const tb = ReactDOM.render(<SnapshotPanel timeout={0} snapshot={{state: "DISABLED"}} active={false}/>, document.getElementById("container"));
         expect(tb).toExist();
         tb.setProps({active: false, snapshot: {state: "DISABLED"}, layers: []});
     });
 
-    it('test component error', () => {
+    it('component error', () => {
         let layers = [{loading: false, type: "google", visibility: true}, {loading: true}];
         let map = {size: {width: 20, height: 20}, zoom: 10};
         const tb = ReactDOM.render(<SnapshotPanel map={map} layers={layers} timeout={0} snapshot={{state: "DISABLED"}} active={true}/>, document.getElementById("container"));
@@ -41,12 +48,11 @@ describe("test the SnapshotPanel", () => {
         expect(document.getElementsByTagName('h4').length).toBe(1);
     });
 
-    it('test loading queue display', () => {
+    it('loading queue display', () => {
         let layers = [{loading: false, type: "google", visibility: true}, {loading: true}];
         let map = {size: {width: 20, height: 20}, zoom: 10};
         const tb = ReactDOM.render(<SnapshotPanel map={map} layers={layers} timeout={0} snapshot={{state: "DISABLED", queue: [{key: 1}]}} active={true}/>, document.getElementById("container"));
         expect(tb).toExist();
         ReactTestUtils.scryRenderedDOMComponentsWithClass(tb, "label-danger");
     });
-
 });
