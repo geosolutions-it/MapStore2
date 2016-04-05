@@ -6,5 +6,6 @@ module.exports = {
     layertree: path.join(__dirname, "web", "client", "examples", "layertree", "app"),
     "3dviewer": path.join(__dirname, "web", "client", "examples", "3dviewer", "app"),
     queryform: path.join(__dirname, "web", "client", "examples", "queryform", "app"),
-    featuregrid: path.join(__dirname, "web", "client", "examples", "featuregrid", "app")
+    featuregrid: path.join(__dirname, "web", "client", "examples", "featuregrid", "app"),
+    print: path.join(__dirname, "web", "client", "examples", "print", "app")
 };

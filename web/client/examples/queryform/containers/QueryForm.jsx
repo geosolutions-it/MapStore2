@@ -37,10 +37,12 @@ const QueryForm = React.createClass({
             <Localized messages={this.props.messages} locale={this.props.locale}>
                 <div>
                     <QueryFormMap/>
-                    <Draggable start={{x: 670, y: 15}} handle=".handle_querypanel">
-                        <Panel className="querypanel-container" header={this.renderHeader()} bsStyle="primary">
-                            <SmartQueryForm/>
-                        </Panel>
+                    <Draggable start={{x: 670, y: 15}} handle=".handle_querypanel, .handle_querypanel *">
+                        <div>
+                            <Panel className="querypanel-container" header={this.renderHeader()} bsStyle="primary">
+                                <SmartQueryForm/>
+                            </Panel>
+                        </div>
                     </Draggable>
                     <Debug/>
                 </div>

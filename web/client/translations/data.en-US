@@ -26,6 +26,7 @@
         "menu": "Menu",
         "settings": "Settings",
         "gohome": "Go home",
+        "printbutton": "Print",
         "noresultfound": "No Result found",
         "home":{
             "open": "Open",
@@ -64,6 +65,9 @@
                 },
                 "featuregrid":{
                     "html":"<h3>Feature Grid</h3><p>Custom examples</p>"
+                },
+                "print":{
+                    "html":"<h3>Printing</h3><p>Custom examples</p>"
                 }
             }
         },
@@ -72,6 +76,32 @@
             "mapTypes_combo": "Select Map Viewer: ",
             "maps_title": "Maps",
             "locales_combo": "Language:"
+        },
+        "print":{
+            "paneltitle": "Print",
+            "layout": "Layout",
+            "sheetsize": "Sheet size:",
+            "legendoptions": "Legend options",
+            "submit": "Print",
+            "title": "Title",
+            "titleplaceholder": "Enter a title...",
+            "description": "Description",
+            "descriptionplaceholder": "Enter a description...",
+            "resolution": "Resolution:",
+            "printtooltip": "Print",
+            "alternatives": {
+                "legend": "Include legend",
+                "2pages": "Legend on distinct page",
+                "landscape": "Landscape"
+            },
+            "legend": {
+                "font": "Labels Config:",
+                "forceLabels": "Force Labels:",
+                "antiAliasing": "Font Anti Aliasing:",
+                "iconsSize": "Icons size:",
+                "dpi": "Dpi:"
+            },
+            "layoutWarning": "Not allowed layout"
         },
         "backgroundSwither":{
             "tooltip": "Select Background"
@@ -212,7 +242,8 @@
             "layerSwitcher": "This is the helptext for the LayerSwitcher",
             "infoButton": "This is the helptext for the InfoButton",
             "locateBtn": "This is the helptext for the LocateBtn",
-            "snapshot": "This is the helptext for the Snapshot"
+            "snapshot": "This is the helptext for the Snapshot",
+            "print": "This is the helptext for Print"
         },
         "queryform": {
             "query": "Search",

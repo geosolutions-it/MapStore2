@@ -96,3 +96,43 @@ html, body, #container, .fill {
 .SortableItem.is-undraggable {
   cursor: not-allowed;
 }
+
+#mappreview-scalebox {
+    position: relative;
+    top: -36px;
+    width: 150px;
+    left: 10px;
+}
+
+.print-error {
+    height: 100px;
+    color: #600;
+    background-color: #E8BABA;
+    border: solid #600 1px;
+    border-radius: 10px;
+    padding: 10px;
+}
+.print-error span, .print-warning span {
+    display: inline-block;
+    max-height: 80px;
+    overflow: auto;
+    width: 100%;
+}
+.print-warning {
+    height: 50px;
+    color: #660;
+    background-color: #E6E8BA;
+    border: solid #660 1px;
+    border-radius: 10px;
+    padding: 10px;
+}
+.print-preview-panel .spinner {
+    display: inline-block;
+}
+
+.print-mappreview-refresh {
+    position: relative;
+    top: -83px;
+    right: -155px;
+    z-index: 1000;
+}

@@ -23,7 +23,7 @@ const {getFeatureInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker
 const {changeMousePointer, changeZoomLevel, changeMapView} = require('../../actions/map');
 
 const {textSearch, resultsPurge} = require("../../actions/search");
-const {toggleControl} = require('../actions/controls');
+const {toggleControl} = require('../../actions/controls');
 
 const MousePosition = connect((state) => ({
     enabled: state.mousePosition.enabled,
@@ -134,6 +134,10 @@ const SnapshotQueue = connect((state) => ({
     onRemoveSnapshot
 })(require("../../components/mapcontrols/Snapshot/SnapshotQueue"));
 
+const PrintPanel = connect((state) => ({
+    open: state.controls && state.controls.print && state.controls.print.enabled || false
+}))(require('../components/viewer/PrintPanel'));
+
 const urlQuery = url.parse(window.location.href, true).query;
 
 let VMap;
@@ -141,6 +145,9 @@ const MapViewer = React.createClass({
     propTypes: {
         mobile: React.PropTypes.bool,
         params: React.PropTypes.object,
+        map: React.PropTypes.object,
+        layers: React.PropTypes.array,
+        printCapabilities: React.PropTypes.object,
         loadMapConfig: React.PropTypes.func,
         toggleMenu: React.PropTypes.func
     },
@@ -207,7 +214,7 @@ const MapViewer = React.createClass({
         return (
             <div key="viewer" className="viewer">
                 <VMap key="map" overview={true} zoomControl={true} scaleBar={true}/>
-                <Toolbar/>
+                <Toolbar key="toolbar" mapType={this.props.params.mapType}/>
 
                 <HelpWrapper
                     key="seachBar-help"
@@ -241,7 +248,11 @@ const MapViewer = React.createClass({
                     <ZoomToMaxExtentButton
                         key="zoomToMaxExtent"/>
                 </HelpWrapper>
-                <SnapshotQueue key="snapshotqueue"/>
+                <SnapshotQueue key="snapshotqueue" mapType={this.props.params.mapType}/>
+                <PrintPanel key="printpanel"
+                    map={this.props.map}
+                    layers={this.props.layers}
+                    />
                 <div style={{
                         position: "absolute",
                         bottom: "50px",
@@ -257,7 +268,10 @@ const MapViewer = React.createClass({
 });
 
 module.exports = connect((state) => ({
-    mobile: urlQuery.mobile || (state.browser && state.browser.touch)
+    mobile: urlQuery.mobile || (state.browser && state.browser.touch),
+    map: state.map && state.map.present,
+    layers: state.layers && state.layers.flat || [],
+    printCapabilities: state.print && state.print.capabilities
 }),
 {
     loadMapConfig,

@@ -14,13 +14,14 @@ const Message = require('../../components/I18N/Message');
 const LayersUtils = require('../../utils/LayersUtils');
 
 const {changeLayerProperties, toggleNode} = require('../../actions/layers');
-const {toggleControl, chooseMenu} = require('../actions/controls');
+const {toggleControl} = require('../../actions/controls');
+const {chooseMenu} = require('../actions/controls');
 
 const Menu = connect((state) => ({
     show: state.controls.drawer.enabled,
     activeKey: state.controls.drawer.menu
 }), {
-    onToggle: toggleControl.bind(null, 'drawer'),
+    onToggle: toggleControl.bind(null, 'drawer', null),
     onChoose: chooseMenu
 })(require('../components/viewer/Menu'));
 const Section = require('../components/viewer/Section');

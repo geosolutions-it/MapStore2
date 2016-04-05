@@ -62,7 +62,7 @@ module.exports = connect((state) => {
     render() {
         return (
             <Localized messages={this.props.messages} locale={this.props.locale} loadingError={this.props.localeError}>
-               <Draggable start={{x: 0, y: 0}} handle=".panel-heading">
+               <Draggable start={{x: 0, y: 0}} handle=".panel-heading, .panel-heading *">
                 <Panel collapsible expanded={this.state.open} header={this.renderHeader()} style={this.props.style}>
                     <SmartFeatureGrid {...this.props} style={{height: "300px", width: "100%"}}/>
                 </Panel>

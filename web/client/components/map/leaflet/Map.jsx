@@ -19,6 +19,7 @@ let LeafletMap = React.createClass({
         center: ConfigUtils.PropTypes.center,
         zoom: React.PropTypes.number.isRequired,
         mapStateSource: ConfigUtils.PropTypes.mapStateSource,
+        style: React.PropTypes.object,
         projection: React.PropTypes.string,
         onMapViewChanges: React.PropTypes.func,
         onClick: React.PropTypes.func,
@@ -32,7 +33,8 @@ let LeafletMap = React.createClass({
         resize: React.PropTypes.number,
         measurement: React.PropTypes.object,
         changeMeasurementState: React.PropTypes.func,
-        registerHooks: React.PropTypes.bool
+        registerHooks: React.PropTypes.bool,
+        interactive: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -49,14 +51,25 @@ let LeafletMap = React.createClass({
           onLayerLoading: () => {},
           onLayerLoad: () => {},
           resize: 0,
-          registerHooks: true
+          registerHooks: true,
+          style: {},
+          interactive: true
         };
     },
     getInitialState() {
         return { };
     },
     componentDidMount() {
-        var map = L.map(this.props.id, assign({zoomControl: this.props.zoomControl}, this.props.mapOptions) ).setView([this.props.center.y, this.props.center.x],
+        let mapOptions = assign({}, this.props.interactive ? {} : {
+            dragging: false,
+            touchZoom: false,
+            scrollWheelZoom: false,
+            doubleClickZoom: false,
+            boxZoom: false,
+            tap: false
+        }, this.props.mapOptions);
+
+        var map = L.map(this.props.id, assign({zoomControl: this.props.zoomControl}, mapOptions) ).setView([this.props.center.y, this.props.center.x],
           this.props.zoom);
 
         this.map = map;
@@ -130,7 +143,7 @@ let LeafletMap = React.createClass({
             return child ? React.cloneElement(child, {map: map, projection: mapProj}) : null;
         }) : null;
         return (
-            <div id={this.props.id}>
+            <div id={this.props.id} style={this.props.style}>
                 {children}
             </div>
         );
@@ -197,7 +210,7 @@ let LeafletMap = React.createClass({
         mapUtils.registerHook(mapUtils.EXTENT_TO_ZOOM_HOOK, (extent) => {
             var repojectedPointA = CoordinatesUtils.reproject([extent[0], extent[1]], this.props.projection, 'EPSG:4326');
             var repojectedPointB = CoordinatesUtils.reproject([extent[2], extent[3]], this.props.projection, 'EPSG:4326');
-            return this.map.getBoundsZoom([[repojectedPointA.x, repojectedPointA.y], [repojectedPointB.x, repojectedPointB.y]]);
+            return this.map.getBoundsZoom([[repojectedPointA.x, repojectedPointA.y], [repojectedPointB.x, repojectedPointB.y]]) - 1;
         });
     }
 });
