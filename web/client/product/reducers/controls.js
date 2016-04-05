@@ -6,10 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {TOGGLE_CONTROL, SHOW_TOOLBAR_CONTROL, CHOOSE_MENU} = require('../actions/controls');
+const {SHOW_TOOLBAR_CONTROL, CHOOSE_MENU} = require('../actions/controls');
 const assign = require('object-assign');
 const initialState = {
     help: {
+        enabled: false
+    },
+    print: {
         enabled: false
     },
     toolbar: {
@@ -22,10 +25,6 @@ const initialState = {
 };
 function controls(state = initialState, action) {
     switch (action.type) {
-        case TOGGLE_CONTROL:
-            return assign({}, state, {
-                [action.control]: assign({}, state[action.control], {enabled: !state[action.control].enabled})
-            });
         case SHOW_TOOLBAR_CONTROL:
             return assign({}, state, {
                 toolbar: assign({}, state.toolbar, {active: action.control})

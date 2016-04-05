@@ -32,7 +32,8 @@ var OpenlayersMap = React.createClass({
         resize: React.PropTypes.number,
         measurement: React.PropTypes.object,
         changeMeasurementState: React.PropTypes.func,
-        registerHooks: React.PropTypes.bool
+        registerHooks: React.PropTypes.bool,
+        interactive: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -45,24 +46,34 @@ var OpenlayersMap = React.createClass({
           onLayerLoading: () => {},
           onLayerLoad: () => {},
           resize: 0,
-          registerHooks: true
+          registerHooks: true,
+          interactive: true
         };
-    },
-    getInitialState() {
-        return { };
     },
     componentDidMount() {
         var center = CoordinatesUtils.reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
+
+        let interactionsOptions = assign(this.props.interactive ? {} : {
+            doubleClickZoom: false,
+            dragPan: false,
+            altShiftDragRotate: false,
+            keyboard: false,
+            mouseWheelZoom: false,
+            shiftDragZoom: false,
+            pinchRotate: false,
+            pinchZoom: false
+        }, this.props.mapOptions.interactions);
+
         let interactions = ol.interaction.defaults(assign({
             dragPan: false,
             mouseWheelZoom: false
-        }, this.props.mapOptions.interactions, {}));
-        if (this.props.mapOptions.interactions === undefined || this.props.mapOptions.interactions.dragPan === undefined || this.props.mapOptions.interactions.dragPan) {
+        }, interactionsOptions, {}));
+        if (interactionsOptions === undefined || interactionsOptions.dragPan === undefined || interactionsOptions.dragPan) {
             interactions.extend([
                 new ol.interaction.DragPan({kinetic: false})
             ]);
         }
-        if (this.props.mapOptions.interactions === undefined || this.props.mapOptions.interactions.mouseWheelZoom === undefined || this.props.mapOptions.interactions.mouseWheelZoom) {
+        if (interactionsOptions === undefined || interactionsOptions.mouseWheelZoom === undefined || interactionsOptions.mouseWheelZoom) {
             interactions.extend([
                 new ol.interaction.MouseWheelZoom({duration: 0})
             ]);

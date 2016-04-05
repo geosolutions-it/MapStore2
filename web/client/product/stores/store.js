@@ -31,25 +31,45 @@ const DebugUtils = require('../../utils/DebugUtils');
 const {isArray} = require('lodash');
 const LayersUtils = require('../../utils/LayersUtils');
 const {CHANGE_BROWSER_PROPERTIES} = require('../../actions/browser');
+const baseControls = require('../../reducers/controls');
+const controls = require('../reducers/controls');
 
 const allReducers = combineReducers({
     home: require('../reducers/home'),
     locale: require('../../reducers/locale'),
     maps: require('../../reducers/maps'),
     browser: require('../../reducers/browser'),
-    controls: require('../reducers/controls'),
+    controls: () => {return null; },
     mapInfo: require('../../reducers/mapInfo'),
     help: require('../../reducers/help'),
     locate: require('../../reducers/locate'),
     search: require('../../reducers/search').searchResults,
     measurement: require('../../reducers/measurement'),
     snapshot: require('../../reducers/snapshot'),
+    print: require('../../reducers/print'),
     map: () => {return null; },
     layers: () => {return null; },
     mousePosition: require('../../reducers/mousePosition')
 });
 
 const mobileOverride = {mapInfo: {enabled: true, infoFormat: 'text/html' }, mousePosition: {enabled: true, crs: "EPSG:4326"}};
+
+const initialState = {
+    print: {
+        spec: {
+            antiAliasing: true,
+            iconSize: 24,
+            legendDpi: 96,
+            fontFamily: "Verdana",
+            fontSize: 8,
+            bold: false,
+            italic: false,
+            resolution: 96,
+            name: '',
+            description: ''
+        }
+    }
+};
 
 const rootReducer = (state, action) => {
     let mapState = mapConfig({
@@ -69,6 +89,7 @@ const rootReducer = (state, action) => {
     }
     let newState = {
         ...allReducers(state, action),
+        controls: baseControls(controls(state.controls, action), action),
         map: mapState && mapState.map ? map(mapState.map, action) : null,
         layers: mapState ? layers(mapState.layers, action) : null
     };
@@ -78,4 +99,4 @@ const rootReducer = (state, action) => {
     return newState;
 };
 
-module.exports = DebugUtils.createDebugStore(rootReducer, {});
+module.exports = DebugUtils.createDebugStore(rootReducer, initialState);

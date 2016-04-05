@@ -14,7 +14,7 @@ const ConfigUtils = require('../../../utils/ConfigUtils');
 const shotingImg = require('./shoting.gif');
 const notAvailable = require('./not-available.png');
 const {isEqual} = require('lodash');
-const SnapshotSupport = require('./SnapshotSupport');
+let SnapshotSupport;
 const BasicSpinner = require('../../misc/spinners/BasicSpinner/BasicSpinner');
 /**
  * SnapshotPanel allow to export a snapshot of the current map, showing a
@@ -41,7 +41,16 @@ let SnapshotPanel = React.createClass({
         dateFormat: React.PropTypes.object,
         googleBingErrorMsg: React.PropTypes.node,
         downloadingMsg: React.PropTypes.node,
-        timeout: React.PropTypes.number
+        timeout: React.PropTypes.number,
+        mapType: React.PropTypes.string
+    },
+    componentWillMount() {
+        SnapshotSupport = require('./SnapshotSupport')(this.props.mapType);
+    },
+    componentWillReceiveProps(newProps) {
+        if (newProps.mapType !== this.props.mapType) {
+            SnapshotSupport = require('./SnapshotSupport')(this.props.mapType);
+        }
     },
     getDefaultProps() {
         return {
@@ -58,7 +67,8 @@ let SnapshotPanel = React.createClass({
             dateFormat: {day: "numeric", month: "long", year: "numeric"},
             googleBingErrorMsg: "snapshot.googleBingError",
             downloadingMsg: "snapshot.downloadingSnapshots",
-            timeout: 1000
+            timeout: 1000,
+            mapType: 'leaflet'
         };
     },
     shouldComponentUpdate(nextProps) {

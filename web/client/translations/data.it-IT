@@ -26,6 +26,7 @@
         "menu": "Menu",
         "settings": "Impostazioni",
         "gohome": "Torna alla home",
+        "printbutton": "Stampa",
         "noresultfound": "Nessun Risultato Trovato",
         "home":{
             "open": "Apri",
@@ -64,6 +65,9 @@
                 },
                 "featuregrid":{
                     "html":"<h3>Feature Grid</h3><p>Esempi personalizzati</p>"
+                },
+                "print":{
+                    "html":"<h3>Printing</h3><p>Esempi personalizzati</p>"
                 }
             }
         },
@@ -72,6 +76,33 @@
             "mapTypes_combo": "Seleziona il visualizzatore di mappa:",
             "maps_title": "Mappe",
             "locales_combo": "Lingua:"
+        },
+        "print":{
+            "paneltitle": "Stampa",
+            "layout": "Layout",
+            "sheetsize": "Dimensioni del foglio:",
+            "legendoptions": "Opzioni legenda",
+            "title": "Titolo",
+            "titleplaceholder": "Inserisci un titolo...",
+            "description": "Descrizione",
+            "descriptionplaceholder": "Inserisci una descrizione...",
+            "submit": "Stampa",
+            "submit": "Stampa",
+            "resolution": "Risoluzione:",
+            "printtooltip": "Stampa",
+            "alternatives": {
+                "legend": "Includere la legenda",
+                "2pages": "Legenda su pagina separata",
+                "landscape": "Landscape"
+            },
+            "legend": {
+                "font": "Config. Etichette:",
+                "forceLabels": "Forza etichette:",
+                "antiAliasing": "Font Anti Aliasing:",
+                "iconsSize": "Dimensione icone:",
+                "dpi": "Dpi:"
+            },
+            "layoutWarning": "Layout non consentito"
         },
         "backgroundSwither":{
             "tooltip": "Scegli lo sfondo"
@@ -212,7 +243,8 @@
             "layerSwitcher": "Questo è il testo di aiuto per LayerSwitcher",
             "infoButton": "Questo è il testo di aiuto per InfoButton",
             "locateBtn": "Questo è il testo di aiuto per LocateBtn",
-            "snapshot": "Questo è il testo di aiuto per Snapshot"
+            "snapshot": "Questo è il testo di aiuto per Snapshot",
+            "print": "Questo è il testo di aiuto per Print"
         },
         "queryform": {
             "query": "Ricerca",

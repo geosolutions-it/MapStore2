@@ -17,6 +17,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const LocaleUtils = require('../utils/LocaleUtils');
 
 const {loadMaps} = require('../actions/maps');
+const {loadPrintCapabilities} = require('../actions/print');
 
 function startApp() {
     const store = require('./stores/store');
@@ -29,6 +30,8 @@ function startApp() {
         store.dispatch(loadLocale('translations', locale));
 
         store.dispatch(loadMaps(ConfigUtils.getDefaults().geoStoreUrl));
+
+        store.dispatch(loadPrintCapabilities(ConfigUtils.getConfigProp('printUrl')));
     });
 
 

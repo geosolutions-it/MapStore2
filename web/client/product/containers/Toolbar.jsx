@@ -11,12 +11,13 @@ const {connect} = require('react-redux');
 const MapToolBar = require("../components/viewer/MapToolBar");
 
 const Home = require('../components/viewer/Home');
+
 const Settings = require('./toolbar/Settings');
 
 const {Glyphicon} = require('react-bootstrap');
 
 const {changeHelpwinVisibility, changeHelpText} = require('../../actions/help');
-const {toggleControl} = require('../actions/controls');
+const {toggleControl} = require('../../actions/controls');
 const {changeLocateState} = require('../../actions/locate');
 const {changeMapInfoState} = require('../../actions/mapInfo');
 const {changeLayerProperties, toggleNode, sortNode} = require('../../actions/layers');
@@ -26,10 +27,16 @@ const Message = require('../../components/I18N/Message');
 
 const LayersUtils = require('../../utils/LayersUtils');
 
+const Print = connect((state) => ({
+    enabled: state.controls.print.enabled
+}), {
+    onToggle: toggleControl.bind(null, "print", null)
+})(require('../components/viewer/Print'));
+
 const HelpToggleBtn = connect((state) => ({
     pressed: state.controls.help.enabled
 }), {
-    changeHelpState: toggleControl.bind(null, 'help'),
+    changeHelpState: toggleControl.bind(null, 'help', null),
     changeHelpwinVisibility
 })(require('../../components/help/HelpToggleBtn'));
 
@@ -103,6 +110,14 @@ const SnapshotPanel = connect((state) => ({
 })(require("../../components/mapcontrols/Snapshot/SnapshotPanel"));
 
 const Toolbar = React.createClass({
+    propTypes: {
+        mapType: React.PropTypes.string
+    },
+    getDefaultProps() {
+        return {
+            mapType: 'leaflet'
+        };
+    },
     render() {
         return (
             <MapToolBar key="mapToolbar">
@@ -155,6 +170,10 @@ const Toolbar = React.createClass({
                     areaLabel={<Message msgId="measureComponent.areaLabel"/>}
                     bearingLabel={<Message msgId="measureComponent.bearingLabel"/>}
                 />
+                <Print key="print"
+                    buttonTooltip={<Message msgId="printbutton" />}
+                    helpText={<Message msgId="helptexts.print"/>}
+                    />
                 <SnapshotPanel
                     title={<div><Message msgId="snapshot.title"/></div>}
                     buttonTooltip={<Message msgId="snapshot.tooltip"/>}
@@ -165,6 +184,7 @@ const Toolbar = React.createClass({
                     isPanel={true}
                     key="snapshotPanel"
                     icon={<Glyphicon glyph="camera"/>}
+                    mapType={this.props.mapType}
                     />
                 <Settings key="settingsPanel"
                     isPanel={true}

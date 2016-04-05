@@ -6,16 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const TOGGLE_CONTROL = 'TOGGLE_CONTROL';
 const CHOOSE_MENU = 'CHOOSE_MENU';
 const SHOW_TOOLBAR_CONTROL = 'SHOW_TOOLBAR_CONTROL';
-
-function toggleControl(control) {
-    return {
-        type: TOGGLE_CONTROL,
-        control
-    };
-}
 
 function showToolbarControl(control) {
     return {
@@ -31,5 +23,5 @@ function chooseMenu(menu) {
     };
 }
 
-module.exports = {TOGGLE_CONTROL, SHOW_TOOLBAR_CONTROL, CHOOSE_MENU,
-    toggleControl, showToolbarControl, chooseMenu};
+module.exports = {SHOW_TOOLBAR_CONTROL, CHOOSE_MENU,
+    showToolbarControl, chooseMenu};

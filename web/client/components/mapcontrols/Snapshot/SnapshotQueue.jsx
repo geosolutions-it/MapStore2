@@ -11,7 +11,7 @@ const React = require('react');
 require("./style.css");
 
 
-const SnapshotSupport = require('./SnapshotSupport');
+let SnapshotSupport;
 /**
  * This Class is a support class to manage and generate snapshots in the queue
  * property. The queues are configurations for SnapshotSupport.GrabMap.
@@ -21,14 +21,26 @@ let SnapshotQueue = React.createClass({
         queue: React.PropTypes.array,
         browser: React.PropTypes.string,
         onRemoveSnapshot: React.PropTypes.func,
-        downloadImg: React.PropTypes.func
+        downloadImg: React.PropTypes.func,
+        mapType: React.PropTypes.string
 
     },
     contextTypes: {
         messages: React.PropTypes.object
     },
+    componentWillMount() {
+        SnapshotSupport = require('./SnapshotSupport')(this.props.mapType);
+    },
+    componentWillReceiveProps(newProps) {
+        if (newProps.mapType !== this.props.mapType) {
+            SnapshotSupport = require('./SnapshotSupport')(this.props.mapType);
+        }
+    },
     getDefaultProps() {
-        return {onRemoveSnapshot: () => {}};
+        return {
+            onRemoveSnapshot: () => {},
+            mapType: 'leaflet'
+        };
     },
     renderGrabMaps(queue) {
         return queue.map((config) => {

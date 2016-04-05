@@ -36,7 +36,7 @@ var ScaleBox = React.createClass({
     },
     onComboChange(event) {
         var selectedZoomLvl = parseInt(event.nativeEvent.target.value, 10);
-        this.props.onChange(selectedZoomLvl);
+        this.props.onChange(selectedZoomLvl, this.props.scales[selectedZoomLvl]);
     },
     getOptions() {
         return this.props.scales.map((item, index) => {
