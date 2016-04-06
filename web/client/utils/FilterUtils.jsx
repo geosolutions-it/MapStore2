@@ -9,70 +9,119 @@
 const FilterUtils = {
     ogcVersion: "2.0",
     ogcLogicalOperator: {
-        "AND": {startTag: "<fes:And>", endTag: "</fes:And>"},
-        "OR": {startTag: "<fes:Or>", endTag: "</fes:Or>"},
-        "AND NOT": {startTag: "<fes:Not>", endTag: "</fes:Not>"}
+        "AND": {startTag: "<{namespace}:And>", endTag: "</{namespace}:And>"},
+        "OR": {startTag: "<{namespace}:Or>", endTag: "</{namespace}:Or>"},
+        "AND NOT": {startTag: "<{namespace}:Not>", endTag: "</{namespace}:Not>"}
     },
     ogcComparisonOperators: {
-        "=": {startTag: "<fes:PropertyIsEqualTo>", endTag: "</fes:PropertyIsEqualTo>"},
-        ">": {startTag: "<fes:PropertyIsGreaterThan>", endTag: "</fes:PropertyIsGreaterThan>"},
-        "<": {startTag: "<fes:PropertyIsLessThan>", endTag: "</fes:PropertyIsLessThan>"},
-        ">=": {startTag: "<fes:PropertyIsGreaterThanOrEqualTo>", endTag: "</fes:PropertyIsGreaterThanOrEqualTo>"},
-        "<=": {startTag: "<fes:PropertyIsLessThanOrEqualTo>", endTag: "</fes:PropertyIsLessThanOrEqualTo>"},
-        "<>": {startTag: "<fes:PropertyIsNotEqualTo>", endTag: "</fes:PropertyIsNotEqualTo>"},
-        "><": {startTag: "<fes:PropertyIsBetween>", endTag: "</fes:PropertyIsBetween>"}
+        "=": {startTag: "<{namespace}:PropertyIsEqualTo>", endTag: "</{namespace}:PropertyIsEqualTo>"},
+        ">": {startTag: "<{namespace}:PropertyIsGreaterThan>", endTag: "</{namespace}:PropertyIsGreaterThan>"},
+        "<": {startTag: "<{namespace}:PropertyIsLessThan>", endTag: "</{namespace}:PropertyIsLessThan>"},
+        ">=": {startTag: "<{namespace}:PropertyIsGreaterThanOrEqualTo>", endTag: "</{namespace}:PropertyIsGreaterThanOrEqualTo>"},
+        "<=": {startTag: "<{namespace}:PropertyIsLessThanOrEqualTo>", endTag: "</{namespace}:PropertyIsLessThanOrEqualTo>"},
+        "<>": {startTag: "<{namespace}:PropertyIsNotEqualTo>", endTag: "</{namespace}:PropertyIsNotEqualTo>"},
+        "><": {startTag: "<{namespace}:PropertyIsBetween>", endTag: "</{namespace}:PropertyIsBetween>"}
     },
     ogcSpatialOperator: {
-        "INTERSECTS": {startTag: "<fes:Intersects>", endTag: "</fes:Intersects>"},
-        "BBOX": {startTag: "<fes:BBOX>", endTag: "</fes:BBOX>"},
-        "CONTAINS": {startTag: "<fes:Contains>", endTag: "</fes:Contains>"},
-        "DWITHIN": {startTag: "<fes:DWithin>", endTag: "</fes:DWithin>"},
-        "WITHIN": {startTag: "<fes:Within>", endTag: "</fes:Within>"}
+        "INTERSECTS": {startTag: "<{namespace}:Intersects>", endTag: "</{namespace}:Intersects>"},
+        "BBOX": {startTag: "<{namespace}:BBOX>", endTag: "</{namespace}:BBOX>"},
+        "CONTAINS": {startTag: "<{namespace}:Contains>", endTag: "</{namespace}:Contains>"},
+        "DWITHIN": {startTag: "<{namespace}:DWithin>", endTag: "</{namespace}:DWithin>"},
+        "WITHIN": {startTag: "<{namespace}:Within>", endTag: "</{namespace}:Within>"}
     },
-    toOGCFilter: function(ftName, json) {
+    propertyTagReference: {
+        "ogc": {startTag: "<ogc:PropertyName>", endTag: "</ogc:PropertyName>"},
+        "fes": {startTag: "<fes:ValueReference>", endTag: "</fes:ValueReference>"}
+    },
+    toOGCFilter: function(ftName, json, version) {
         try {
             this.objFilter = (json instanceof Object) ? json : JSON.parse(json);
         } catch(e) {
             return e;
         }
 
+        const versionOGC = version || this.ogcVersion;
+        this.nsplaceholder = versionOGC === "2.0" ? "fes" : "ogc";
+
+        this.setOperatorsPlaceholders("{namespace}", this.nsplaceholder);
+
+        let ogcFilter = this.getGetFeatureBase(versionOGC, this.nsplaceholder);
         let filters = [];
 
         let attributeFilter;
-        if (this.objFilter.filterFields.length > 0) {
+        if (this.objFilter.filterFields && this.objFilter.filterFields.length > 0) {
             attributeFilter = this.processOGCFilterGroup(this.objFilter.groupFields[0]);
             filters.push(attributeFilter);
         }
 
         let spatialFilter;
-        if (this.objFilter.spatialField.geometry && this.objFilter.spatialField.method) {
+        if (this.objFilter.spatialField && this.objFilter.spatialField.geometry && this.objFilter.spatialField.method) {
             spatialFilter = this.processOGCSpatialFilter();
             filters.push(spatialFilter);
         }
 
-        let filter = "<fes:Filter><fes:And>";
+        let filter = "<" + this.nsplaceholder + ":Filter><" + this.nsplaceholder + ":And>";
         filters.forEach((subFilter) => {
             filter += subFilter;
         });
-        filter += "</fes:And></fes:Filter>";
+        filter += "</" + this.nsplaceholder + ":And></" + this.nsplaceholder + ":Filter>";
 
-        let ogcFilter =
-            '<wfs:GetFeature service="WFS" version="' + this.ogcVersion + '" ' +
-                'xmlns:wfs="http://www.opengis.net/wfs/2.0" ' +
-                'xmlns:fes="http://www.opengis.net/fes/2.0" ' +
-                'xmlns:gml="http://www.opengis.net/gml/3.2" ' +
-                'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
-                'xsi:schemaLocation="http://www.opengis.net/wfs/2.0 ' +
-                    'http://schemas.opengis.net/wfs/2.0/wfs.xsd ' +
-                    'http://www.opengis.net/gml/3.2 ' +
-                    'http://schemas.opengis.net/gml/3.2.1/gml.xsd">' +
-                    '<wfs:Query typeNames="' + ftName + '" srsName="EPSG:4326">';
+        ogcFilter += '<wfs:Query ' + (versionOGC === "2.0" ? "typeNames" : "typeName") + '="' + ftName + '" srsName="EPSG:4326">';
         ogcFilter += filter;
         ogcFilter +=
                     '</wfs:Query>' +
             '</wfs:GetFeature>';
 
+        this.setOperatorsPlaceholders(this.nsplaceholder, "{namespace}");
+
         return ogcFilter;
+    },
+    setOperatorsPlaceholders: function(placeholder, replacement) {
+        [
+            this.ogcLogicalOperator,
+            this.ogcComparisonOperators,
+            this.ogcSpatialOperator
+        ].forEach((operator) => {
+            for (let op in operator) {
+                if (operator.hasOwnProperty(op)) {
+                    operator[op].startTag = operator[op].startTag.replace(placeholder, replacement);
+                    operator[op].endTag = operator[op].endTag.replace(placeholder, replacement);
+                }
+            }
+        });
+    },
+    getGetFeatureBase: function(version) {
+        let ver = !version ? "2.0" : version;
+
+        switch (ver) {
+            case "1.0.0":
+                return '<wfs:GetFeature service="WFS" version="' + ver + '" ' +
+                    'outputFormat="GML2" ' +
+                    'xmlns:gml="http://www.opengis.net/gml" ' +
+                    'xmlns:wfs="http://www.opengis.net/wfs" ' +
+                    'xmlns:ogc="http://www.opengis.net/ogc" ' +
+                    'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+                    'xsi:schemaLocation="http://www.opengis.net/wfs ' +
+                        'http://schemas.opengis.net/wfs/1.0.0/WFS-basic.xsd">';
+            case "1.1.0":
+                return '<wfs:GetFeature service="WFS" version="' + ver + '" ' +
+                    'xmlns:gml="http://www.opengis.net/gml" ' +
+                    'xmlns:wfs="http://www.opengis.net/wfs" ' +
+                    'xmlns:ogc="http://www.opengis.net/ogc" ' +
+                    'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+                    'xsi:schemaLocation="http://www.opengis.net/wfs ' +
+                        'http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">';
+            default: // default is wfs 2.0
+                return '<wfs:GetFeature service="WFS" version="' + ver + '" ' +
+                    'xmlns:wfs="http://www.opengis.net/wfs/2.0" ' +
+                    'xmlns:fes="http://www.opengis.net/fes/2.0" ' +
+                    'xmlns:gml="http://www.opengis.net/gml/3.2" ' +
+                    'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+                    'xsi:schemaLocation="http://www.opengis.net/wfs/2.0 ' +
+                        'http://schemas.opengis.net/wfs/2.0/wfs.xsd ' +
+                        'http://www.opengis.net/gml/3.2 ' +
+                        'http://schemas.opengis.net/gml/3.2.1/gml.xsd">';
+        }
     },
     processOGCFilterGroup: function(root) {
         let ogc =
@@ -103,17 +152,25 @@ const FilterUtils = {
                         if (field.value.startDate && field.value.endDate) {
                             fieldFilter =
                                 this.ogcComparisonOperators[field.operator].startTag +
-                                    "<fes:ValueReference>" + field.attribute + "</fes:ValueReference>" +
-                                    "<fes:LowerBoundary><fes:Literal>" + field.value.startDate.toISOString() + "</fes:Literal></fes:LowerBoundary>" +
-                                    "<fes:UpperBoundary><fes:Literal>" + field.value.endDate.toISOString() + "</fes:Literal></fes:UpperBoundary>" +
+                                    this.propertyTagReference[this.nsplaceholder].startTag +
+                                        field.attribute +
+                                    this.propertyTagReference[this.nsplaceholder].endTag +
+                                    "<" + this.nsplaceholder + ":LowerBoundary>" +
+                                        "<" + this.nsplaceholder + ":Literal>" + field.value.startDate.toISOString() + "</" + this.nsplaceholder + ":Literal>" +
+                                    "</" + this.nsplaceholder + ":LowerBoundary>" +
+                                    "<" + this.nsplaceholder + ":UpperBoundary>" +
+                                        "<" + this.nsplaceholder + ":Literal>" + field.value.endDate.toISOString() + "</" + this.nsplaceholder + ":Literal>" +
+                                    "</" + this.nsplaceholder + ":UpperBoundary>" +
                                 this.ogcComparisonOperators[field.operator].endTag;
                         }
                     } else {
                         if (field.value.startDate) {
                             fieldFilter =
                                 this.ogcComparisonOperators[field.operator].startTag +
-                                    "<fes:ValueReference>" + field.attribute + "</fes:ValueReference>" +
-                                    "<fes:Literal>" + field.value.startDate.toISOString() + "</fes:Literal>" +
+                                    this.propertyTagReference[this.nsplaceholder].startTag +
+                                        field.attribute +
+                                    this.propertyTagReference[this.nsplaceholder].endTag +
+                                    "<" + this.nsplaceholder + ":Literal>" + field.value.startDate.toISOString() + "</" + this.nsplaceholder + ":Literal>" +
                                 this.ogcComparisonOperators[field.operator].endTag;
                         }
                     }
@@ -121,8 +178,10 @@ const FilterUtils = {
                     if (field.value) {
                         fieldFilter =
                             this.ogcComparisonOperators[field.operator].startTag +
-                                "<fes:ValueReference>" + field.attribute + "</fes:ValueReference>" +
-                                "<fes:Literal>" + field.value + "</fes:Literal>" +
+                                this.propertyTagReference[this.nsplaceholder].startTag +
+                                    field.attribute +
+                                this.propertyTagReference[this.nsplaceholder].endTag +
+                                "<" + this.nsplaceholder + ":Literal>" + field.value + "</" + this.nsplaceholder + ":Literal>" +
                             this.ogcComparisonOperators[field.operator].endTag;
                     }
                 }
@@ -138,9 +197,11 @@ const FilterUtils = {
         return filter;
     },
     processOGCSpatialFilter: function() {
-        let ogc =
-            this.ogcSpatialOperator[this.objFilter.spatialField.operation].startTag;
-        ogc += "<fes:ValueReference>" + this.objFilter.spatialField.attribute + "</fes:ValueReference>";
+        let ogc = this.ogcSpatialOperator[this.objFilter.spatialField.operation].startTag;
+        ogc +=
+            this.propertyTagReference[this.nsplaceholder].startTag +
+                this.objFilter.spatialField.attribute +
+            this.propertyTagReference[this.nsplaceholder].endTag;
 
         switch (this.objFilter.spatialField.operation) {
             case "INTERSECTS":
@@ -152,19 +213,26 @@ const FilterUtils = {
                     return coordinate[0] + " " + coordinate[1];
                 });
 
-                ogc +=
-                    '<gml:Polygon srsName="' + this.objFilter.spatialField.geometry.projection + '">' +
-                        '<gml:exterior>' +
-                            '<gml:LinearRing>' +
-                                '<gml:posList>' +
-                                    coordinates.join(" ") +
-                                '</gml:posList>' +
-                            '</gml:LinearRing>' +
-                        '</gml:exterior>' +
-                    '</gml:Polygon>';
+                if (this.objFilter.spatialField.method === "POINT") {
+                    ogc +=
+                        '<gml:Point srsDimension="2" srsName="' + this.objFilter.spatialField.geometry.projection + '">' +
+                            '<gml:pos>' + coordinates.join(" ") + '</gml:pos>' +
+                        '</gml:Point>';
+                } else {
+                    ogc +=
+                        '<gml:Polygon srsName="' + this.objFilter.spatialField.geometry.projection + '">' +
+                            '<gml:exterior>' +
+                                '<gml:LinearRing>' +
+                                    '<gml:posList>' +
+                                        coordinates.join(" ") +
+                                    '</gml:posList>' +
+                                '</gml:LinearRing>' +
+                            '</gml:exterior>' +
+                        '</gml:Polygon>';
+                }
 
                 if (this.objFilter.spatialField.operation === "DWITHIN") {
-                    ogc += '<fes:Distance units="m">' + (this.objFilter.spatialField.geometry.distance || 0) + '</fes:Distance>';
+                    ogc += '<' + this.nsplaceholder + ':Distance units="m">' + (this.objFilter.spatialField.geometry.distance || 0) + '</' + this.nsplaceholder + ':Distance>';
                 }
 
                 break;

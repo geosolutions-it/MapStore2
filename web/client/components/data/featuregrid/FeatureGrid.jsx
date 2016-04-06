@@ -38,7 +38,8 @@ const FeatureGrid = React.createClass({
         map: React.PropTypes.object,
         enableZoomToFeature: React.PropTypes.bool,
         srs: React.PropTypes.string,
-        maxZoom: React.PropTypes.number
+        maxZoom: React.PropTypes.number,
+        toolbar: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -58,7 +59,12 @@ const FeatureGrid = React.createClass({
             excludeFields: [],
             map: {},
             enableZoomToFeature: true,
-            srs: "EPSG:4326"
+            srs: "EPSG:4326",
+            toolbar: {
+                zoom: true,
+                exporter: true,
+                toolPanel: true
+            }
         };
     },
     shouldComponentUpdate(nextProps) {
@@ -83,6 +89,21 @@ const FeatureGrid = React.createClass({
     },
     render() {
         let isPagingOrVirtual = (this.props.virtualPaging || this.props.paging);
+
+        let tools = [];
+
+        if (this.props.toolbar.zoom) {
+            tools.push(<button key="zoom" onClick={this.zoomToFeatures}><img src={img} width={16}/></button>);
+        }
+
+        if (this.props.toolbar.exporter) {
+            tools.push(<button key="exporter" onClick={() => {this.api.exportDataAsCsv(); }}>Export</button>);
+        }
+
+        if (this.props.toolbar.toolPanel) {
+            tools.push(<button key="toolPanel" onClick={() => {this.api.showToolPanel(!this.api.isToolPanelShowing()); }}>Tool Panel</button>);
+        }
+
         return (
             <div>
             <div fluid={false} style={this.props.style} className="ag-fresh">
@@ -110,10 +131,9 @@ const FeatureGrid = React.createClass({
                     {...this.props.agGridOptions}
                 />
             </div>
+
             <ButtonToolbar style={{marginTop: "5px", marginLeft: "0px"}}bsSize="sm">
-                <button onClick={this.zoomToFeatures}><img src={img} width={16}/></button>
-                <button onClick={() => {this.api.exportDataAsCsv(); }}>Export</button>
-                <button onClick={() => {this.api.showToolPanel(!this.api.isToolPanelShowing()); }}>Tool Panel</button>
+                {tools.map((tool) => tool)}
             </ButtonToolbar>
             </div>);
     },

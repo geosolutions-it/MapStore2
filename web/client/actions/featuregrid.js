@@ -7,6 +7,7 @@
  */
 
 const SELECT_FEATURES = 'SELECT_FEATURES';
+const SET_FEATURES = 'SET_FEATURES';
 
 function selectFeatures(features) {
     return {
@@ -15,7 +16,16 @@ function selectFeatures(features) {
     };
 }
 
+function setFeatures(features) {
+    return {
+        type: SET_FEATURES,
+        features: features
+    };
+}
+
 module.exports = {
     SELECT_FEATURES,
-    selectFeatures
+    SET_FEATURES,
+    selectFeatures,
+    setFeatures
 };
