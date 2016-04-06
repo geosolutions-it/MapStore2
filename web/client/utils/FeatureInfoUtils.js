@@ -107,4 +107,10 @@ const Parser = {
         }
     }
 };
-module.exports = {INFO_FORMATS, Validator, Parser};
+
+module.exports = {
+    INFO_FORMATS,
+    Validator,
+    Parser,
+    parseXMLResponse,
+    parseHTMLResponse};
