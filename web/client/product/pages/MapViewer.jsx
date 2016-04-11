@@ -140,7 +140,9 @@ const PrintPanel = connect((state) => ({
 
 const urlQuery = url.parse(window.location.href, true).query;
 
-let VMap;
+const MapPlugin = require('../../plugins/Map');
+
+// let VMap;
 const MapViewer = React.createClass({
     propTypes: {
         mobile: React.PropTypes.bool,
@@ -162,25 +164,25 @@ const MapViewer = React.createClass({
                 require('../assets/css/mobile.css');
             }
 
-            VMap = require('../components/viewer/Map')(this.props.params.mapType);
+            // VMap = require('../components/viewer/Map')(this.props.params.mapType);
             const mapId = (this.props.params.mapId === '0') ? null : this.props.params.mapId;
             const config = urlQuery && urlQuery.config || null;
             const {configUrl} = ConfigUtils.getConfigurationOptions({mapId, config});
             this.props.loadMapConfig(configUrl, mapId !== null);
         }
     },
-    componentWillReceiveProps(newProps) {
+    /*componentWillReceiveProps(newProps) {
         if (newProps.params.mapType !== this.props.params.mapType) {
             VMap = require('../components/viewer/Map')(this.props.params.mapType);
         }
-    },
+    },*/
     render() {
         return this.props.mobile ? this.renderMobile() : this.renderDesktop();
     },
     renderMobile() {
         return (
             <div key="viewer" className="viewer">
-                <VMap key="map" overview={false} zoomControl={false} scaleBar={false}/>
+                <MapPlugin mapType={this.props.params.mapType} zoomControl={false} key="map" tools={['measurement', 'locate']}/>
                 <SearchBar key="seachBar"/>
                 <NominatimResultList key="nominatim-result-list"/>
                 <DrawerMenu key ="drawermenu"/>
@@ -213,7 +215,7 @@ const MapViewer = React.createClass({
     renderDesktop() {
         return (
             <div key="viewer" className="viewer">
-                <VMap key="map" overview={true} zoomControl={true} scaleBar={true}/>
+                <MapPlugin mapType={this.props.params.mapType} key="map"/>
                 <Toolbar key="toolbar" mapType={this.props.params.mapType}/>
 
                 <HelpWrapper
@@ -275,5 +277,5 @@ module.exports = connect((state) => ({
 }),
 {
     loadMapConfig,
-    toggleMenu: toggleControl.bind(null, 'drawer')
+    toggleMenu: toggleControl.bind(null, 'drawer', null)
 })(MapViewer);
