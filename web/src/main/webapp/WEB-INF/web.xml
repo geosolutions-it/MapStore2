@@ -48,21 +48,6 @@
 		<url-pattern>/rest/*</url-pattern>
 	</filter-mapping>
 
-	<!-- Upload Canvas Servlet -->
-	<servlet>
-		<servlet-name>UploadCanvas</servlet-name>
-		<servlet-class>it.geosolutions.servicebox.UploadCanvas</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>UploadCanvas</servlet-name>
-		<url-pattern>/rest/services/saveimage/*</url-pattern>
-	</servlet-mapping>
-	<context-param>
-		<description>location of the upload canvas properties file</description>
-		<param-name>uploadcanvas.properties</param-name>
-		<param-value>/mapstore2.properties</param-value>
-	</context-param>
 	<!-- CXF Servlet -->
 	<servlet>
 		<servlet-name>CXFServlet</servlet-name>
