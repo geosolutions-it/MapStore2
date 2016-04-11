@@ -23,9 +23,6 @@ function createPackageJSON() {
     packageJSON.description = projectDescription;
     packageJSON.repository = repoURL;
     packageJSON.scripts = require('./projectScripts.json');
-    packageJSON.dependencies = {
-        "MapStore2": "file:./MapStore2"
-    };
 
     fs.writeFile(outFolder + '/package.json', JSON.stringify(packageJSON, null, 4), copyStaticFiles);
     console.log('package.json OK');
@@ -70,7 +67,7 @@ function copyTemplates(level, path, callback) {
                     data = data.replace(/__PROJECTNAME__/g, projectName);
                     data = data.replace(/__PROJECTDESCRIPTION__/g, projectDescription);
                     data = data.replace(/__REPOURL__/g, repoURL);
-                    
+
                     mkdirp(outFolder + path, function (err) {
                         if (err) console.error(err)
                         else {
@@ -96,7 +93,7 @@ function copyTemplates(level, path, callback) {
                         } else if(index === files.length - 1 && callback) {
                             callback.call();
                         }
-                    });                    
+                    });
                 }
             }
         });
@@ -116,13 +113,3 @@ function initGit() {
 }
 
 createPackageJSON();
-
-
-
-
-
-
-
-
-
-
