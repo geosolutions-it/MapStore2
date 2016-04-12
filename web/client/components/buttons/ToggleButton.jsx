@@ -15,6 +15,7 @@ var ToggleButton = React.createClass({
         id: React.PropTypes.string,
         btnConfig: React.PropTypes.object,
         text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
+        help: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         glyphicon: React.PropTypes.string,
         pressed: React.PropTypes.bool,
         onClick: React.PropTypes.func,
@@ -42,6 +43,7 @@ var ToggleButton = React.createClass({
                 {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
                 {this.props.glyphicon && this.props.text && !React.isValidElement(this.props.text) ? "\u00A0" : null}
                 {this.props.text}
+                {this.props.help}
             </Button>
         );
     },

@@ -36,6 +36,7 @@ var About = React.createClass({
         style: React.PropTypes.object,
         glyphicon: React.PropTypes.string,
         text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
+        help: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         hiddenText: React.PropTypes.bool,
         btnSize: React.PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
         btnType: React.PropTypes.oneOf(['normal', 'image'])
@@ -67,7 +68,7 @@ var About = React.createClass({
                     onClick={this.open}>
                     {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : ""}
                     {!this.props.hiddenText && this.props.glyphicon ? "\u00A0" : ""}
-                    {!(this.props.hiddenText && this.props.glyphicon) ? this.props.text : ""}
+                    {!(this.props.hiddenText && this.props.glyphicon) ? (this.props.text || this.props.help) : ""}
                 </Button>);
         } else {
             btn = (<ImageButton image={this.props.image} onClick={this.open}/>);

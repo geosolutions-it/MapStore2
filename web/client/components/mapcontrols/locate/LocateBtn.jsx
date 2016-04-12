@@ -15,6 +15,7 @@ var LocateBtn = React.createClass({
         id: React.PropTypes.string,
         btnConfig: React.PropTypes.object,
         text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
+        help: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         locate: React.PropTypes.string,
         onClick: React.PropTypes.func,
         tooltip: React.PropTypes.element,
@@ -56,7 +57,7 @@ var LocateBtn = React.createClass({
     renderButton() {
         return (
             <Button id={this.props.id} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.getBtnStyle()} style={this.props.style}>
-                <Glyphicon glyph="screenshot"/>{this.props.text}
+                <Glyphicon glyph="screenshot"/>{this.props.text}{this.props.help}
             </Button>
         );
     },

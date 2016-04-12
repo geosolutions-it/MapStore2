@@ -13,6 +13,7 @@ var url = require('url');
 var axios = require('axios');
 
 const {isArray} = require('lodash');
+const assign = require('object-assign');
 
 const epsg4326 = Proj4js ? new Proj4js.Proj('EPSG:4326') : null;
 const centerPropType = React.PropTypes.shape({
@@ -26,6 +27,7 @@ let defaultConfig = {
     proxyUrl: "/mapstore/proxy/?url=",
     geoStoreUrl: "/mapstore/rest/geostore/",
     printUrl: "/mapstore/print/info.json",
+    translationsPath: "translations",
     bingApiKey: null
 };
 
@@ -47,7 +49,7 @@ var ConfigUtils = {
     loadConfiguration: function() {
         return axios.get('localConfig.json').then(response => {
             if (typeof response.data === 'object') {
-                defaultConfig = response.data;
+                defaultConfig = assign({}, defaultConfig, response.data);
             }
         });
     },

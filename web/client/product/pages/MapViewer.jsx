@@ -42,7 +42,7 @@ const HelpTextPanel = connect((state) => ({
     helpText: state.help && state.help.helpText
 }))(require('../../components/help/HelpTextPanel'));
 
-const Toolbar = require('../containers/Toolbar');
+const ToolbarPlugin = require('../../plugins/Toolbar');
 const DrawerMenu = require('../containers/DrawerMenu');
 
 const GetFeatureInfo = connect((state) => ({
@@ -216,7 +216,7 @@ const MapViewer = React.createClass({
         return (
             <div key="viewer" className="viewer">
                 <MapPlugin mapType={this.props.params.mapType} key="map"/>
-                <Toolbar key="toolbar" mapType={this.props.params.mapType}/>
+                <ToolbarPlugin mapType={this.props.params.mapType} key="toolbar"/>
 
                 <HelpWrapper
                     key="seachBar-help"
