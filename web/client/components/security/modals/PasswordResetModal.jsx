@@ -14,33 +14,40 @@
   */
 
 const React = require('react');
-const PasswordReset = require('./PasswordReset');
+const PasswordReset = require('../forms/PasswordReset');
 const {Modal, Button} = require('react-bootstrap');
 
 
   /**
    * A Modal window to show password reset form
    */
-const UserMenu = React.createClass({
+const PasswordResetModal = React.createClass({
   propTypes: {
       // props
       user: React.PropTypes.object,
-      onPasswordChange: React.PropTypes.func
+      show: React.PropTypes.bool,
+      onPasswordChange: React.PropTypes.func,
+      onClose: React.PropTypes.func
   },
   getDefaultProps() {
       return {
           user: {
               name: "Guest"
           },
-          onPasswordChange: () => {}
+          onPasswordChange: () => {},
+          onClose: () => {}
+      };
+  },
+  getInitialState() {
+      return {
+        passwordValid: false
       };
   },
   onPasswordChange() {
       this.props.onPasswordChange(this.props.user, this.refs.passwordResetForm.getPassword());
   },
   render() {
-
-      return (<Modal show={this.state.showPasswordReset} onHide={this.closeModals}>
+      return (<Modal show={this.props.show} onHide={this.props.onClose}>
           <Modal.Header key="passwordChange" closeButton>
             <Modal.Title>Change Password</Modal.Title>
           </Modal.Header>
@@ -52,17 +59,18 @@ const UserMenu = React.createClass({
           </Modal.Body>
           <Modal.Footer>
             <Button
+                ref="passwordChangeButton"
+                key="passwordChangeButton"
                 bsStyle="primary"
-                onClick={this.onPasswordReset}
                 disabled={!this.state.passwordValid}
                 onClick={this.onPasswordChange}>Reset Password</Button>
-            <Button onClick={this.closeModals}>Close</Button>
+            <Button
+                key="closeButton"
+                ref="closeButton"
+                onClick={this.props.onClose}>Close</Button>
           </Modal.Footer>
       </Modal>);
-  },
-  closeModals() {
-      this.setState({show: false});
   }
 });
 
-module.exports = UserMenu;
+module.exports = PasswordResetModal;

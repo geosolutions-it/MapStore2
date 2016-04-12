@@ -26,6 +26,7 @@ const LoginForm = React.createClass({
       // props
       userDetails: React.PropTypes.object,
       onLoginSuccess: React.PropTypes.func,
+      showSubmitButton: React.PropTypes.bool,
 
       // actions
       onSubmit: React.PropTypes.func,
@@ -41,6 +42,7 @@ const LoginForm = React.createClass({
         return {
           onSubmit: () => {},
           onLoginError: () => {},
+          showSubmitButton: true,
           userNameText: "Username",
           passwordText: "Password",
           loginFailedMessage: "Login Fail",
@@ -52,7 +54,10 @@ const LoginForm = React.createClass({
       };
     },
     componentWillReceiveProps(nextProps) {
-        if (nextProps.userDetails && nextProps.userDetails.user !== this.props.userDetails.user && !this.props.userDetails.user) {
+        let newUser = nextProps.userDetails && nextProps.userDetails.user;
+        let oldUser = this.props.userDetails && this.props.userDetails.user;
+        let userChange = newUser !== oldUser;
+        if ( newUser && userChange ) {
             this.props.onLoginSuccess(nextProps.userDetails);
         }
         this.setState({
@@ -77,6 +82,15 @@ const LoginForm = React.createClass({
     renderLoading() {
         return this.state.loading ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn/> : null;
     },
+    renderSubmit() {
+        if (this.props.showSubmitButton) {
+            return (<ButtonInput
+                type="submit"
+                value="Sign-in"
+                bsStyle="primary"
+                key="submit"/>);
+        }
+    },
     render() {
         return (
             <form ref="loginForm" onSubmit={this.handleSubmit}>
@@ -92,25 +106,18 @@ const LoginForm = React.createClass({
                     label={this.props.passwordText}
                     onChange={this.handlePasswordChange}
                     placeholder="Password" />
-                <ButtonInput
-                    type="submit"
-                    value="Sign-in"
-                    bsStyle="primary"
-                    key="submit"/>
+                {this.renderSubmit()}
                 {this.renderError()}
                 <div style={{"float": "right"}}>{this.renderLoading()}</div>
             </form>
         );
     },
 
-    handleUsernameChange() {
-        // TODO validate form
-    },
-    handlePasswordChange() {
-        // TODO validate form
-    },
     handleSubmit(e) {
         e.preventDefault();
+        this.submit();
+    },
+    submit() {
         let username = this.refs.username && this.refs.username.getValue();
         let password = this.refs.password && this.refs.password.getValue();
         if (!username || !password) {

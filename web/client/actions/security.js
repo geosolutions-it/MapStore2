@@ -66,15 +66,17 @@ function changePasswordSuccess(newPassword) {
     };
 }
 
-function changePasswordFail() {
+function changePasswordFail(e) {
     return {
-        type: GEOSTORE_CHANGE_PASSWORD_FAIL
+        type: GEOSTORE_CHANGE_PASSWORD_FAIL,
+        error: e
     };
 }
 function geoStoreChangePassword(user, newPassword) {
 
-    return (dispatch) => {
-        GeoStoreAPI.changePassword(user, newPassword).then(() => {
+    return (dispatch, getState) => {
+        let opts = GeoStoreAPI.getAuthOptionsFromState(getState());
+        GeoStoreAPI.changePassword(user, newPassword, opts).then(() => {
             dispatch(changePasswordSuccess(user, newPassword));
         }).catch((e) => {
             dispatch(changePasswordFail(e));

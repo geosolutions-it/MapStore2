@@ -7,7 +7,7 @@
  */
 
 const expect = require('expect');
-const React = require('react/addons');
+const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactTestUtils = require('react-addons-test-utils');
 const LoginForm = require('../LoginForm');
@@ -30,20 +30,26 @@ describe("Test the login form component", () => {
         expect(cmp).toExist();
     });
 
-    it('creates empty componet with error', () => {
-        const cmp = ReactDOM.render(<LoginForm loginError={{status: 0}}/>, document.getElementById("container"));
+    it('creates empty component with error', () => {
+        const cmp = ReactDOM.render(<LoginForm userDetails={{loginError: {status: 0}}}/>, document.getElementById("container"));
         expect(cmp).toExist();
-        const node = ReactTestUtils.scryRenderedDOMComponentsWithClass(cmp, "label-danger");
-        expect(node.childNodes.length).toBe(1);
+        const node = ReactTestUtils.scryRenderedDOMComponentsWithClass(cmp, "alert-danger");
+        expect(node.length).toBe(1);
     });
 
     it('test component sumbit', () => {
         const testHandlers = {
-            onSubmit: (user, password) => {return {user: user, password: password}; }
+            onSubmit: (user, password) => {
+                return {user: user, password: password};
+            },
+            onLoginSuccess: () => {
+
+            }
         };
 
         const spy = expect.spyOn(testHandlers, 'onSubmit');
-        const cmp = ReactDOM.render(<LoginForm onSubmit={testHandlers.onSubmit}/>, document.getElementById("container"));
+        const spySuccess = expect.spyOn(testHandlers, 'onLoginSuccess');
+        const cmp = ReactDOM.render(<LoginForm key="test" onLoginSuccess={testHandlers.onLoginSuccess} onSubmit={testHandlers.onSubmit}/>, document.getElementById("container"));
         expect(cmp).toExist();
         let username = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "input")[0]);
         expect(username).toExist();
@@ -53,9 +59,12 @@ describe("Test the login form component", () => {
         expect(password).toExist();
         password.value = "test";
 
-        let submit = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "input")[2]);
-        ReactTestUtils.Simulate.click(submit);
+        let form = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "form")[0]);
+        ReactTestUtils.Simulate.submit(form);
         expect(spy.calls.length).toEqual(1);
+        ReactDOM.render(<LoginForm key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} userDetails={{user: {name: "TEST"}}} />, document.getElementById("container"));
+        // cmp.setProps({onSubmit: testHandlers.onSubmit, userDetails: }});
+        expect(spySuccess.calls.length).toEqual(1);
 
 
     });

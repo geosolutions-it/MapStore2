@@ -6,36 +6,30 @@
  * LICENSE file in the root directory of this source tree.
  */
 const axios = require('../libs/ajax');
-const assign = require('object-assign');
+const _ = require('lodash');
 var defaultBaseURL = "/mapstore/rest/geostore/";
 var geoStoreClient = axios.create({
     baseURL: defaultBaseURL
 });
-
+var parseOptions = (opts) => opts;
 /**
  * API for local config
  */
 var Api = {
-    getData: function(id, geoStoreBase) {
-        let baseURL = geoStoreBase ? geoStoreBase : defaultBaseURL;
+    getData: function(id, options) {
         let url = "data/" + id;
-        return geoStoreClient.get(url, {
-            baseURL: baseURL
-        }).then(function(response) {
+        return geoStoreClient.get(url, parseOptions(options)).then(function(response) {
             return response.data;
         });
     },
-    getResourcesByCategory: function(category, query, params, geoStoreBase) {
-        let baseURL = geoStoreBase ? geoStoreBase : defaultBaseURL;
+    getResourcesByCategory: function(category, query, options) {
         let q = query || "*";
         let url = "extjs/search/category/" + category + "/*" + q + "*/";
-        return geoStoreClient.get(url, assign(params, {baseURL: baseURL}, {})).then(function(response) {return response.data; });
+        return geoStoreClient.get(url, parseOptions(options)).then(function(response) {return response.data; });
     },
-    basicLogin: function(username, password, geoStoreBase) {
-        let baseURL = geoStoreBase ? geoStoreBase : defaultBaseURL;
+    basicLogin: function(username, password, options) {
         let url = "users/user/details";
-        return geoStoreClient.get(url, {
-            baseURL: baseURL,
+        return geoStoreClient.get(url, _.merge({
             auth: {
                 username: username,
                 password: password
@@ -43,14 +37,7 @@ var Api = {
             params: {
                 includeattributes: true
             }
-        }).then(function(response) {
-            geoStoreClient = axios.create({
-                baseURL: baseURL,
-                auth: {
-                    username: username,
-                    password: password
-                }
-            });
+        }, options)).then(function(response) {
             return response.data;
         });
     },
@@ -59,21 +46,29 @@ var Api = {
             baseURL: defaultBaseURL
         });
     },
-    changePassword: function(user, newPassword) {
-        return geoStoreClient.put("users/user/" + user.id, "<User><newPassword>" + newPassword + "</newPassword></User>", {
-            headers: {
-                'Content-Type': "application/xml"
-            }
-        }).then(function() {
-            geoStoreClient = axios.create(
-                assign(geoStoreClient.defaultConfig, {
-                     auth: {
-                        username: user.name,
-                        password: newPassword
-                    }
-                })
-            );
-        });
+    changePassword: function(user, newPassword, options) {
+        return geoStoreClient.put(
+            "users/user/" + user.id, "<User><newPassword>" + newPassword + "</newPassword></User>",
+            _.merge({
+                headers: {
+                    'Content-Type': "application/xml"
+                }
+            }, options));
+    },
+    // utility function
+    // parses the state to get the auth header and so on.
+    getAuthOptionsFromState: function(state, baseParams = {}) {
+        let authHeader = state && state.userDetails && state.userDetails.authHeader;
+        if (authHeader) {
+            return _.merge({
+                // TODO support deep merge of attributes
+                headers: {
+                    'Authorization': authHeader
+                }
+            }, baseParams);
+        }
+        return baseParams;
+
     }
 };
 

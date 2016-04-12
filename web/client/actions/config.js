@@ -10,6 +10,7 @@ var axios = require('../libs/ajax');
 
 const MAP_CONFIG_LOADED = 'MAP_CONFIG_LOADED';
 const MAP_CONFIG_LOAD_ERROR = 'MAP_CONFIG_LOAD_ERROR';
+const {getAuthOptionsFromState} = require('../api/GeoStoreDAO');
 
 function configureMap(conf, legacy) {
     return {
@@ -27,8 +28,9 @@ function configureError(e) {
 }
 
 function loadMapConfig(configName, legacy) {
-    return (dispatch) => {
-        return axios.get(configName).then((response) => {
+    return (dispatch, getState) => {
+        let options = getAuthOptionsFromState(getState);
+        return axios.get(configName, legacy ? options : null).then((response) => {
             if (typeof response.data === 'object') {
                 dispatch(configureMap(response.data, legacy));
             } else {

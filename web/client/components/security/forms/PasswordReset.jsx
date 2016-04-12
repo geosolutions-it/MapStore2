@@ -48,7 +48,6 @@ const PasswordReset = React.createClass({
       if (this.isValid()) {
           return this.refs.password.getValue();
       }
-
   },
   getPwStyle() {
       if (!this.refs.password) {
@@ -87,9 +86,6 @@ const PasswordReset = React.createClass({
       }
       let pw = this.refs.password.getValue();
       return pw !== null && pw.length > this.props.minPasswordSize && pw === this.refs.passwordcheck.getValue();
-  },
-  closeModals() {
-      this.setState({showDetails: false, showPasswordReset: false});
   }
 });
 
