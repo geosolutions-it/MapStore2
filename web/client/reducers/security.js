@@ -14,7 +14,6 @@ function loginlogout(state = {userDetails: null, errorCause: null}, action) {
     switch (action.type) {
 
         case LOGIN_SUCCESS:
-
             return assign({}, state, {
                 user: action.userDetails.User,
                 token: action.userDetails.User.attribute.reduce((prev, curr) => {

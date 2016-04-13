@@ -7,5 +7,6 @@ module.exports = {
     "3dviewer": path.join(__dirname, "web", "client", "examples", "3dviewer", "app"),
     queryform: path.join(__dirname, "web", "client", "examples", "queryform", "app"),
     featuregrid: path.join(__dirname, "web", "client", "examples", "featuregrid", "app"),
-    print: path.join(__dirname, "web", "client", "examples", "print", "app")
+    print: path.join(__dirname, "web", "client", "examples", "print", "app"),
+    login: path.join(__dirname, "web", "client", "examples", "login", "app")
 };
