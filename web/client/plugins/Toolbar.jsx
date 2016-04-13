@@ -13,8 +13,6 @@ const tools = require('./toolbar/index');
 const {setControlProperty} = require('../actions/controls');
 const {changeHelpText, changeHelpwinVisibility} = require('../actions/help');
 
-require('./print/print.css');
-
 const MapToolbar = connect((state) => ({
     activeKey: state.controls && state.controls.toolbar && state.controls.toolbar.active || null
 }),
