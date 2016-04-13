@@ -73,7 +73,8 @@ function wmsToLeafletOptions(options) {
         styles: options.style || "",
         format: options.format || 'image/png',
         transparent: options.transparent !== undefined ? options.transparent : true,
-        opacity: opacity
+        opacity: opacity,
+        version: options.version || "1.3.0"
     }, options.params || {});
 }
 

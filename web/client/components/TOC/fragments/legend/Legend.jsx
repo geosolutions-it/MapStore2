@@ -2,6 +2,8 @@ const urlUtil = require('url');
 const React = require('react');
 const {isArray} = require('lodash');
 
+const assign = require('object-assign');
+
 var Legend = React.createClass({
     propTypes: {
         layer: React.PropTypes.object,
@@ -24,21 +26,24 @@ var Legend = React.createClass({
                layer.url.replace(/[?].*$/g, '');
 
            let urlObj = urlUtil.parse(url);
+           let query = assign({}, {
+               service: "WMS",
+               request: "GetLegendGraphic",
+               format: "image/png",
+               height: this.props.legendHeigth,
+               width: this.props.legendWidth,
+               layer: layer.name,
+               style: layer.style || null,
+               version: layer.version || "1.3.0",
+               LEGEND_OPTIONS: this.props.legendOptions
+               // SCALE TODO
+           }, layer.legendParams || {});
+
            let legendUrl = urlUtil.format({
                host: urlObj.host,
                protocol: urlObj.protocol,
                pathname: urlObj.pathname,
-               query: {
-                   service: "WMS",
-                   request: "GetLegendGraphic",
-                   format: "image/png",
-                   height: this.props.legendHeigth,
-                   width: this.props.legendWidth,
-                   layer: layer.name,
-                   style: layer.style || null,
-                   LEGEND_OPTIONS: this.props.legendOptions
-              // SCALE TODO
-               }
+               query: query
            });
            return <img src={legendUrl} style={{maxWidth: "100%"}}/>;
        }

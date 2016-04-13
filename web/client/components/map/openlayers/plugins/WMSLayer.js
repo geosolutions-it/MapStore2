@@ -23,7 +23,8 @@ function wmsToOpenlayersOptions(options) {
         TRANSPARENT: options.transparent !== undefined ? options.transparent : true,
         SRS: CoordinatesUtils.normalizeSRS(options.srs),
         CRS: CoordinatesUtils.normalizeSRS(options.srs),
-        TILED: options.tiled || false
+        TILED: options.tiled || false,
+        VERSION: options.version || "1.3.0"
     }, options.params || {});
 }
 
