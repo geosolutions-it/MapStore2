@@ -7,7 +7,7 @@
 */
 
 const expect = require('expect');
-const {layersSelector, layerSelectorWithMarkers} = require('../layers');
+const {layersSelector, layerSelectorWithMarkers, groupsSelector} = require('../layers');
 
 describe('Test layers selectors', () => {
     it('test layersSelector from config', () => {
@@ -48,5 +48,32 @@ describe('Test layers selectors', () => {
 
         expect(props.length).toBe(2);
         expect(props[1].type).toBe("vector");
+    });
+
+    it('test groupsSelector from layers flat one group', () => {
+        const props = groupsSelector({layers: {
+            flat: [{type: "osm", name: "layer1", group: "group1"}, {type: "wms", name: "layer2", group: "group1"}],
+            groups: [{name: "group1", nodes: ["layer1", "layer2"]}]
+        }});
+
+        expect(props.length).toBe(1);
+        expect(props[0].nodes.length).toBe(2);
+        expect(props[0].nodes[0]).toNotBeA('string');
+    });
+
+    it('test groupsSelector from layers flat more groups', () => {
+        const props = groupsSelector({layers: {
+            flat: [{type: "osm", name: "layer1", group: "group1"}, {type: "wms", name: "layer2", group: "group2"}],
+            groups: [
+                {name: "group1", nodes: ["layer1"]},
+                {name: "group2", nodes: ["layer2"]}
+            ]
+        }});
+
+        expect(props.length).toBe(2);
+        expect(props[0].nodes.length).toBe(1);
+        expect(props[1].nodes.length).toBe(1);
+        expect(props[0].nodes[0]).toNotBeA('string');
+        expect(props[1].nodes[0]).toNotBeA('string');
     });
 });

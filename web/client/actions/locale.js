@@ -10,6 +10,8 @@ var axios = require('../libs/ajax');
 
 var LocaleUtils = require('../utils/LocaleUtils');
 
+const ConfigUtils = require('../utils/ConfigUtils');
+
 const CHANGE_LOCALE = 'CHANGE_LOCALE';
 const LOCALE_LOAD_ERROR = 'LOCALE_LOAD_ERROR';
 
@@ -34,7 +36,7 @@ function loadLocale(translationFolder, language) {
         if (!locale) {
             locale = LocaleUtils.getUserLocale();
         }
-        return axios.get(translationFolder + '/data.' + locale).then((response) => {
+        return axios.get((translationFolder || ConfigUtils.getConfigProp('translationsPath')) + '/data.' + locale).then((response) => {
             if (typeof response.data === "string") {
                 try {
                     JSON.parse(response.data);

@@ -7,7 +7,7 @@
  */
 
 const assign = require('object-assign');
-const {isObject} = require('lodash');
+const {isObject, isArray} = require('lodash');
 
 const initialReorderLayers = (groups, allLayers) => {
     return groups.slice(0).reverse().reduce((previous, group) => {
@@ -70,6 +70,18 @@ var LayersUtils = {
         return (node, reorder) => {
             return action(node, reorder, sortFun);
         };
+    },
+    splitMapAndLayers: (mapState) => {
+        if (mapState && isArray(mapState.layers)) {
+            const groups = LayersUtils.getLayersByGroup(mapState.layers);
+            return assign({}, mapState, {
+                layers: {
+                    flat: LayersUtils.reorder(groups, mapState.layers),
+                    groups: groups
+                }
+            });
+        }
+        return mapState;
     }
 };
 
