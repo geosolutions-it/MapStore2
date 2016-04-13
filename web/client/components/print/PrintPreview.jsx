@@ -38,7 +38,7 @@ const PrintPreview = React.createClass({
             setScale: () => {},
             setPage: () => {},
             setPages: () => {},
-            style: {height: "700px", width: "800px", overflow: "auto", backgroundColor: "#888", padding: "10px"}
+            style: {height: "500px", width: "800px", overflow: "auto", backgroundColor: "#888", padding: "10px"}
         };
     },
     onDocumentComplete(pages) {

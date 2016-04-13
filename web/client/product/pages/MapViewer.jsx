@@ -134,10 +134,6 @@ const SnapshotQueue = connect((state) => ({
     onRemoveSnapshot
 })(require("../../components/mapcontrols/Snapshot/SnapshotQueue"));
 
-const PrintPanel = connect((state) => ({
-    open: state.controls && state.controls.print && state.controls.print.enabled || false
-}))(require('../components/viewer/PrintPanel'));
-
 const urlQuery = url.parse(window.location.href, true).query;
 
 const MapPlugin = require('../../plugins/Map');
@@ -251,10 +247,6 @@ const MapViewer = React.createClass({
                         key="zoomToMaxExtent"/>
                 </HelpWrapper>
                 <SnapshotQueue key="snapshotqueue" mapType={this.props.params.mapType}/>
-                <PrintPanel key="printpanel"
-                    map={this.props.map}
-                    layers={this.props.layers}
-                    />
                 <div style={{
                         position: "absolute",
                         bottom: "50px",

@@ -54,23 +54,6 @@ const allReducers = combineReducers({
 
 const mobileOverride = {mapInfo: {enabled: true, infoFormat: 'text/html' }, mousePosition: {enabled: true, crs: "EPSG:4326"}};
 
-const initialState = {
-    print: {
-        spec: {
-            antiAliasing: true,
-            iconSize: 24,
-            legendDpi: 96,
-            fontFamily: "Verdana",
-            fontSize: 8,
-            bold: false,
-            italic: false,
-            resolution: 96,
-            name: '',
-            description: ''
-        }
-    }
-};
-
 const rootReducer = (state, action) => {
     let mapState = mapConfig({
         map: state && state.map,
@@ -99,4 +82,4 @@ const rootReducer = (state, action) => {
     return newState;
 };
 
-module.exports = DebugUtils.createDebugStore(rootReducer, initialState);
+module.exports = DebugUtils.createDebugStore(rootReducer, {});

@@ -21,7 +21,20 @@ const {
 
 const assign = require('object-assign');
 
-function print(state = {spec: {}, capabilities: null, map: null, isLoading: false, pdfUrl: null}, action) {
+const initialSpec = {
+    antiAliasing: true,
+    iconSize: 24,
+    legendDpi: 96,
+    fontFamily: "Verdana",
+    fontSize: 8,
+    bold: false,
+    italic: false,
+    resolution: 96,
+    name: '',
+    description: ''
+};
+
+function print(state = {spec: initialSpec, capabilities: null, map: null, isLoading: false, pdfUrl: null}, action) {
     switch (action.type) {
         case PRINT_CAPABILITIES_LOADED: {
             return assign({}, state, {
