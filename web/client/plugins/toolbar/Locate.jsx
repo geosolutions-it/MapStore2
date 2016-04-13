@@ -9,10 +9,14 @@ const React = require('react');
 
 const LocateBtn = require('../../components/mapcontrols/locate/LocateBtn');
 const Message = require('../../components/I18N/Message');
-const ToolUtils = require('../../utils/ToolUtils');
 
 const Locate = React.createClass({
-    propTypes: ToolUtils.ToolShape,
+    propTypes: {
+        isPanel: React.PropTypes.bool,
+        help: React.PropTypes.object,
+        changeHelpText: React.PropTypes.func,
+        changeHelpwinVisibility: React.PropTypes.func
+    },
     contextTypes: {
         messages: React.PropTypes.object
     },

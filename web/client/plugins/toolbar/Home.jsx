@@ -10,10 +10,14 @@ const React = require('react');
 const {Glyphicon, Tooltip} = require('react-bootstrap');
 const ToggleButton = require('../../components/buttons/ToggleButton');
 const Message = require('../../components/I18N/Message');
-const ToolUtils = require('../../utils/ToolUtils');
 
 const Home = React.createClass({
-    propTypes: ToolUtils.ToolShape,
+    propTypes: {
+        isPanel: React.PropTypes.bool,
+        help: React.PropTypes.object,
+        changeHelpText: React.PropTypes.func,
+        changeHelpwinVisibility: React.PropTypes.func
+    },
     contextTypes: {
         router: React.PropTypes.object,
         messages: React.PropTypes.object
