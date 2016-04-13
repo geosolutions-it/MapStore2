@@ -22,7 +22,8 @@ const PrintPreview = React.createClass({
         back: React.PropTypes.func,
         setScale: React.PropTypes.func,
         setPage: React.PropTypes.func,
-        setPages: React.PropTypes.func
+        setPages: React.PropTypes.func,
+        style: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -36,7 +37,8 @@ const PrintPreview = React.createClass({
             back: () => {},
             setScale: () => {},
             setPage: () => {},
-            setPages: () => {}
+            setPages: () => {},
+            style: {height: "700px", width: "800px", overflow: "auto", backgroundColor: "#888", padding: "10px"}
         };
     },
     onDocumentComplete(pages) {
@@ -46,7 +48,7 @@ const PrintPreview = React.createClass({
     render() {
         return (
             <div>
-                <div style={{height: "700px", width: "800px", overflow: "auto", backgroundColor: "#888", padding: "10px"}}>
+                <div style={this.props.style}>
                     <PDF file={this.props.url} scale={this.props.scale} page={this.props.currentPage} onDocumentComplete={this.onDocumentComplete}/>
                 </div>
                 <div style={{marginTop: "10px"}}>
