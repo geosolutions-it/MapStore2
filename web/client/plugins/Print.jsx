@@ -27,6 +27,8 @@ const assign = require('object-assign');
 
 const {head} = require('lodash');
 
+require('./print/print.css');
+
 const {
     Name,
     Description,
