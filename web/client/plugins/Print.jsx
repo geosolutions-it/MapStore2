@@ -13,10 +13,15 @@ const LocaleUtils = require('../utils/LocaleUtils');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
 const MapUtils = require('../utils/MapUtils');
 
-const {Grid, Row, Col, Panel, Glyphicon, Accordion} = require('react-bootstrap');
+const {Grid, Row, Col, Panel, Accordion} = require('react-bootstrap');
 
 const {toggleControl} = require('../actions/controls');
 const {printSubmit, printSubmitting, configurePrintMap} = require('../actions/print');
+
+const {mapSelector} = require('../selectors/map');
+const {layersSelector} = require('../selectors/layers');
+
+const {createSelector} = require('reselect');
 
 const assign = require('object-assign');
 
@@ -117,16 +122,6 @@ const Print = React.createClass({
         const layoutName = this.props.getLayoutName(this.props.printSpec);
         return head(this.props.capabilities.layouts.filter((l) => l.name === layoutName));
     },
-    renderHeader() {
-        return (
-            <span>
-                <span>{LocaleUtils.getMessageById(this.context.messages, this.props.title)}</span>
-                <button onClick={this.props.toggleControl} className="close">
-                    <Glyphicon glyph={(this.props.open) ? "glyphicon glyphicon-collapse-down" : "glyphicon glyphicon-expand"}/>
-                </button>
-            </span>
-        );
-    },
     renderLayoutsAlternatives() {
         return this.props.alternatives.map((alternative) => (
             <alternative.component key={"printoption_" + alternative.name}
@@ -196,9 +191,9 @@ const Print = React.createClass({
         return this.renderPrintPanel();
     },
     render() {
-        if (this.props.capabilities || this.props.error) {
+        if ((this.props.capabilities || this.props.error) && this.props.open) {
             return this.props.withContainer ?
-                (<Panel collapsible expanded={this.props.open} header={this.renderHeader()} style={this.props.style}>
+                (<Panel className="mapstore-print-panel" header={<Message msgId="print.paneltitle"/>} style={this.props.style}>
                     {this.renderBody()}
                 </Panel>) : this.renderBody();
         }
@@ -228,13 +223,25 @@ const Print = React.createClass({
     }
 });
 
-module.exports = connect((state) => ({
-    open: state.controls.print && state.controls.print.enabled,
-    capabilities: state.print && state.print.capabilities,
-    printSpec: state.print && state.print.spec && assign({}, state.print.spec, state.print.map || {}),
-    pdfUrl: state.print && state.print.pdfUrl,
-    error: state.print && state.print.error
-}), {
+const selector = createSelector([
+    (state) => state.controls.print && state.controls.print.enabled,
+    (state) => state.print && state.print.capabilities,
+    (state) => state.print && state.print.spec && assign({}, state.print.spec, state.print.map || {}),
+    (state) => state.print && state.print.pdfUrl,
+    (state) => state.print && state.print.error,
+    mapSelector,
+    layersSelector
+], (open, capabilities, printSpec, pdfUrl, error, map, layers) => ({
+    open,
+    capabilities,
+    printSpec,
+    pdfUrl,
+    error,
+    map,
+    layers
+}));
+
+module.exports = connect(selector, {
     toggleControl: toggleControl.bind(null, 'print', null),
     onPrint: printSubmit,
     onBeforePrint: printSubmitting,

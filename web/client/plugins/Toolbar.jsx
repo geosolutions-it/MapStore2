@@ -13,6 +13,8 @@ const tools = require('./toolbar/index');
 const {setControlProperty} = require('../actions/controls');
 const {changeHelpText, changeHelpwinVisibility} = require('../actions/help');
 
+require('./print/print.css');
+
 const MapToolbar = connect((state) => ({
     activeKey: state.controls && state.controls.toolbar && state.controls.toolbar.active || null
 }),
@@ -32,6 +34,9 @@ const Toolbar = React.createClass({
         tools: React.PropTypes.array,
         mapType: React.PropTypes.string
     },
+    getPanels() {
+        return this.getTools().filter((tool) => tool.panel).map((tool) => tool.panel);
+    },
     getTools() {
         return this.props.tools && this.props.tools.reduce((previous, current) => {
             return previous.concat(tools.filter((tool) => tool.name === current)[0]);
@@ -44,11 +49,20 @@ const Toolbar = React.createClass({
             return <Tool key={tool.name} {...help} mapType={this.props.mapType} {...(tool.props || {})}/>;
         });
     },
+    renderPanels() {
+        return this.getPanels().map((panel) => {
+            const Panel = panel.panel;
+            return <Panel key={panel.name} mapType={this.props.mapType} {...(panel.props || {})}/>;
+        });
+    },
     render() {
         return (
+            <span>
             <MapToolbar>
                 {this.renderTools()}
             </MapToolbar>
+                {this.renderPanels()}
+            </span>
         );
     }
 });

@@ -79,6 +79,8 @@ const Print = connect((state) => ({
     onToggle: toggleControl.bind(null, "print", null)
 })(require('./Print'));
 
+const PrintPanel = require('../Print');
+
 const snapshotSelector = createSelector([
     mapSelector,
     layersSelector,
@@ -167,6 +169,10 @@ module.exports = [{
         isPanel: false,
         icon: <Glyphicon glyph="print"/>,
         buttonTooltip: <Message msgId="printbutton" />
+    },
+    panel: {
+        name: "print_panel",
+        panel: PrintPanel
     }
 }, {
     name: 'snapshot',
