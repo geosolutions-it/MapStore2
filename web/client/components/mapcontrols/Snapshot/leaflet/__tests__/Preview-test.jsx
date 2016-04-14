@@ -9,7 +9,7 @@ var expect = require('expect');
 
 var React = require('react/addons');
 var ReactDOM = require('react-dom');
-var GrabMap = require('../GrabMap');
+var GrabMap = require('../Preview');
 
 describe("test the Leaflet Preview component", () => {
     beforeEach((done) => {
@@ -35,8 +35,7 @@ describe("test the Leaflet Preview component", () => {
         expect(status).toEqual("DISABLED");
     });
     it('snapshot creation', (done) => {
-        const tb = ReactDOM.render(<GrabMap active={false} onSnapshotReady={() => { expect(tb.isTainted(false)); expect(tb.exportImage()).toExist(); done(); }} timeout={0} layers={[{loading: false}, {loading: false}]}/>, document.getElementById("snap"));
+        const tb = ReactDOM.render(<GrabMap active={true} timeout={0} onSnapshotReady={() => { expect(tb.isTainted()).toBe(false); done(); }} layers={[{loading: false, visibility: true}, {loading: false}]}/>, document.getElementById("snap"));
         expect(tb).toExist();
-        tb.setProps({active: true});
     });
 });
