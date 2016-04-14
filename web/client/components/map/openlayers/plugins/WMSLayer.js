@@ -44,6 +44,17 @@ function proxyTileLoadFunction(imageTile, src) {
 
 Layers.registerType('wms', {
     create: (options) => {
+        if (options.singleTile) {
+            return new ol.layer.Image({
+                opacity: options.opacity !== undefined ? options.opacity : 1,
+                visible: options.visibility !== false,
+                zIndex: options.zIndex,
+                source: new ol.source.ImageWMS({
+                    url: getWMSURLs(options.url),
+                    params: wmsToOpenlayersOptions(options)
+                })
+            });
+        }
         return new ol.layer.Tile({
             opacity: options.opacity !== undefined ? options.opacity : 1,
             visible: options.visibility !== false,
