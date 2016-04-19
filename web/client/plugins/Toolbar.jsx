@@ -16,10 +16,7 @@ const {ButtonGroup, Button, Tooltip, OverlayTrigger, Panel, Collapse} = require(
 
 require('./toolbar/assets/css/toolbar.css');
 
-const Message = module.exports = connect((state) => ({
-    locale: state.locale && state.locale.currentLocale,
-    messages: state.locale && state.locale.messages || []
-}))(require('../components/I18N/Message'));
+const Message = require('./Message');
 
 const {toggleControl} = require('../actions/controls');
 

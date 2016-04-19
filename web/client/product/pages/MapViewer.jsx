@@ -19,7 +19,7 @@ const ConfigUtils = require('../../utils/ConfigUtils');
 
 const {loadMapConfig} = require('../../actions/config');
 
-const {changeZoomLevel, changeMapView} = require('../../actions/map');
+const {changeMapView} = require('../../actions/map');
 
 const {textSearch, resultsPurge} = require("../../actions/search");
 const {toggleControl} = require('../../actions/controls');
@@ -30,10 +30,7 @@ const MousePositionMobile = connect((state) => ({
     crs: state.mousePosition.crs || state.map && state.map.present && state.map.present.projection || 'EPSG:3857'
 }))(require("../../components/mapcontrols/mouseposition/MousePosition"));
 
-const HelpTextPanel = connect((state) => ({
-    isVisible: state.help && state.help.helpwinViz || false,
-    helpText: state.help && state.help.helpText
-}))(require('../../components/help/HelpTextPanel'));
+const HelpTextPanel = require('../../plugins/HelpTextPanel');
 
 const DrawerMenu = require('../containers/DrawerMenu');
 
@@ -45,22 +42,11 @@ const GlobalSpinner = connect((state) => {
     };
 })(require('../../components/misc/spinners/GlobalSpinner/GlobalSpinner'));
 
-const {changeHelpwinVisibility, changeHelpText} = require('../../actions/help');
-
 const Message = require('../../components/I18N/Message');
 
-const HelpWrapper = connect((state) => ({
-    helpEnabled: state.controls.help.enabled
-}), {
-    changeHelpText,
-    changeHelpwinVisibility
-})(require('../../components/help/HelpWrapper'));
+const HelpWrapper = require('../../plugins/HelpWrapper');
 
-const ScaleBox = connect((state) => ({
-    currentZoomLvl: state.map && state.map.present && state.map.present.zoom
-}), {
-    onChange: changeZoomLevel
-})(require("../../components/mapcontrols/scale/ScaleBox"));
+const {ScaleBoxPlugin} = require('../../plugins/ScaleBox');
 
 const ZoomToMaxExtentButton = connect((state) => ({
     mapConfig: state.map && state.map.present || {}
@@ -209,11 +195,7 @@ const MapViewer = React.createClass({
                             margin: "8px"
                         }} />
                 <GlobalSpinner key="globalSpinner"/>
-                <HelpWrapper
-                    key="scalebox-help"
-                    helpText={<Message msgId="helptexts.scaleBox"/>}>
-                    <ScaleBox key="scaleBox"/>
-                </HelpWrapper>
+                <ScaleBoxPlugin key="scaleBox"/>
                 <HelpWrapper
                     key="zoomall-help"
                     helpText={<Message msgId="helptexts.zoomToMaxExtentButton"/>}>

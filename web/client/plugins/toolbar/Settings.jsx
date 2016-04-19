@@ -43,10 +43,7 @@ const HistoryBar = require('../../components/mapcontrols/navigationhistory/Histo
 const { ActionCreators } = require('redux-undo');
 const {undo, redo} = ActionCreators;
 
-const Message = module.exports = connect((state) => ({
-    locale: state.locale && state.locale.currentLocale,
-    messages: state.locale && state.locale.messages || []
-}))(require('../../components/I18N/Message'));
+const Message = require('../Message');
 
 
 const SettingsButton = React.createClass({

@@ -19,10 +19,7 @@ const {layersSelector, groupsSelector} = require('../../selectors/layers');
 
 const LayersUtils = require('../../utils/LayersUtils');
 
-const Message = module.exports = connect((state) => ({
-    locale: state.locale && state.locale.currentLocale,
-    messages: state.locale && state.locale.messages || []
-}))(require('../../components/I18N/Message'));
+const Message = require('../Message');
 
 const {Glyphicon} = require('react-bootstrap');
 
