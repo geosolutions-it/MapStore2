@@ -19,17 +19,10 @@ const ConfigUtils = require('../../utils/ConfigUtils');
 
 const {loadMapConfig} = require('../../actions/config');
 
-const {getFeatureInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker} = require('../../actions/mapInfo');
-const {changeMousePointer, changeZoomLevel, changeMapView} = require('../../actions/map');
+const {changeZoomLevel, changeMapView} = require('../../actions/map');
 
 const {textSearch, resultsPurge} = require("../../actions/search");
 const {toggleControl} = require('../../actions/controls');
-
-const MousePosition = connect((state) => ({
-    enabled: state.mousePosition.enabled,
-    mousePosition: state.mousePosition.position,
-    crs: state.mousePosition.crs || state.map && state.map.present && state.map.present.projection || 'EPSG:3857'
-}))(require("../../components/mapcontrols/mouseposition/MousePosition"));
 
 const MousePositionMobile = connect((state) => ({
     enabled: state.mousePosition.enabled,
@@ -42,28 +35,7 @@ const HelpTextPanel = connect((state) => ({
     helpText: state.help && state.help.helpText
 }))(require('../../components/help/HelpTextPanel'));
 
-const ToolbarPlugin = require('../../plugins/Toolbar');
 const DrawerMenu = require('../containers/DrawerMenu');
-
-const GetFeatureInfo = connect((state) => ({
-    enabled: state.mapInfo && state.mapInfo.enabled || false,
-    htmlResponses: state.mapInfo && state.mapInfo.responses || [],
-    htmlRequests: state.mapInfo && state.mapInfo.requests || {length: 0},
-    infoFormat: state.mapInfo && state.mapInfo.infoFormat,
-    map: state.map && state.map.present,
-    layers: state.layers && state.layers.flat || [],
-    clickedMapPoint: state.mapInfo && state.mapInfo.clickPoint
-}), (dispatch) => {
-    return {
-        actions: bindActionCreators({
-            getFeatureInfo,
-            purgeMapInfoResults,
-            changeMousePointer,
-            showMapinfoMarker,
-            hideMapinfoMarker
-        }, dispatch)
-    };
-})(require('../components/viewer/mapInfo/GetFeatureInfo'));
 
 const About = require('../components/viewer/about/About');
 
@@ -136,7 +108,6 @@ const SnapshotQueue = connect((state) => ({
 
 const urlQuery = url.parse(window.location.href, true).query;
 
-const MapPlugin = require('../../plugins/Map');
 
 // let VMap;
 const MapViewer = React.createClass({
@@ -147,7 +118,8 @@ const MapViewer = React.createClass({
         layers: React.PropTypes.array,
         printCapabilities: React.PropTypes.object,
         loadMapConfig: React.PropTypes.func,
-        toggleMenu: React.PropTypes.func
+        toggleMenu: React.PropTypes.func,
+        plugins: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -176,6 +148,7 @@ const MapViewer = React.createClass({
         return this.props.mobile ? this.renderMobile() : this.renderDesktop();
     },
     renderMobile() {
+        const {MapPlugin, IdentifyPlugin} = this.props.plugins;
         return (
             <div key="viewer" className="viewer">
                 <MapPlugin mapType={this.props.params.mapType} zoomControl={false} key="map" tools={['measurement', 'locate']}/>
@@ -192,7 +165,7 @@ const MapViewer = React.createClass({
                <MousePositionMobile
                    id="mapstore-mouseposition-mobile"
                    key="mousePosition"/>
-               <GetFeatureInfo
+               <IdentifyPlugin
                    key="getFeatureInfo"
                    style={{position: "absolute",
                        width: "100%",
@@ -209,6 +182,7 @@ const MapViewer = React.createClass({
         );
     },
     renderDesktop() {
+        const {MapPlugin, ToolbarPlugin, MousePositionPlugin, IdentifyPlugin} = this.props.plugins;
         return (
             <div key="viewer" className="viewer">
                 <MapPlugin mapType={this.props.params.mapType} key="map"/>
@@ -221,10 +195,10 @@ const MapViewer = React.createClass({
                 </HelpWrapper>
                 <NominatimResultList key="nominatimresults"/>
 
-                <MousePosition key="mousePosition"/>
+                <MousePositionPlugin key="mousePosition"/>
                 <HelpTextPanel
                     key="helpTextPanel"/>
-                <GetFeatureInfo key="getFeatureInfo"/>
+                <IdentifyPlugin key="getFeatureInfo"/>
                 <About
                     key="about"
                     style={{

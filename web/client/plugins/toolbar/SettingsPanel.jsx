@@ -21,7 +21,7 @@ const SettingsPanel = React.createClass({
         };
     },
     render() {
-        return (<div>
+        return (<div style={{width: "300px"}}>
             {this.props.children}
         </div>);
 

@@ -5,9 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var BootstrapReact = require('react-bootstrap');
-var Panel = BootstrapReact.Panel;
+const React = require('react');
+const BootstrapReact = require('react-bootstrap');
+const Panel = BootstrapReact.Panel;
+
+require("./help.css");
 
 /**
  * A panel showning th current selectd help text.
@@ -18,7 +20,7 @@ var Panel = BootstrapReact.Panel;
  *  - isVisible: {bool}       flag to steer visibility of the badge
  *  - title (string)          header text of this panel
  */
-var HelpTextPanel = React.createClass({
+const HelpTextPanel = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         helpText: React.PropTypes.string,

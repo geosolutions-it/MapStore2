@@ -16,12 +16,13 @@ function toggleControl(control, property) {
     };
 }
 
-function setControlProperty(control, property, value) {
+function setControlProperty(control, property, value, toggle) {
     return {
         type: SET_CONTROL_PROPERTY,
         control,
         property,
-        value
+        value,
+        toggle
     };
 }
 

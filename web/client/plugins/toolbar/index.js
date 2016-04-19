@@ -9,42 +9,35 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 
-const {changeHelpwinVisibility, changeHelpText} = require('../../actions/help');
 const {changeLocateState} = require('../../actions/locate');
-const {changeMapInfoState} = require('../../actions/mapInfo');
 const {changeMeasurementState} = require('../../actions/measurement');
-const {toggleControl} = require('../../actions/controls');
 const {changeLayerProperties, toggleNode, sortNode} = require('../../actions/layers');
 const {onCreateSnapshot, changeSnapshotState, saveImage} = require('../../actions/snapshot');
-
+const {goToPage} = require('../../actions/router');
 const {mapSelector} = require('../../selectors/map');
 const {layersSelector, groupsSelector} = require('../../selectors/layers');
 
 const LayersUtils = require('../../utils/LayersUtils');
 
-const Message = require('../../components/I18N/Message');
+const Message = module.exports = connect((state) => ({
+    locale: state.locale && state.locale.currentLocale,
+    messages: state.locale && state.locale.messages || []
+}))(require('../../components/I18N/Message'));
 
 const {Glyphicon} = require('react-bootstrap');
-
-const Home = connect(() => ({}), {
-    changeHelpwinVisibility,
-    changeHelpText
-})(require('./Home'));
 
 const Locate = connect((state) => ({
     locate: state.locate && state.locate.state || 'DISABLED'
 }), {
     onClick: changeLocateState
-})(require('./Locate'));
-
-const Info = connect((state) => ({
-    pressed: state.mapInfo && state.mapInfo.enabled
-}), {
-    onClick: changeMapInfoState
-})(require('./Info'));
+})(require('../../components/mapcontrols/locate/LocateBtn'));
 
 const tocSelector = createSelector(
-    [groupsSelector], (groups) => ({
+    [
+        (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
+        groupsSelector
+    ], (enabled, groups) => ({
+        enabled,
         groups
     })
 );
@@ -71,15 +64,9 @@ const MeasureComponent = connect((state) => {
     };
 }, {
     toggleMeasure: changeMeasurementState
-})(require('../../components/mapcontrols/measure/MeasureComponent'));
+})(require('./MeasureComponent'));
 
-const Print = connect((state) => ({
-    enabled: state.controls && state.controls.print && state.controls.print.enabled || false
-}), {
-    onToggle: toggleControl.bind(null, "print", null)
-})(require('./Print'));
-
-const PrintPanel = require('../Print');
+const {PrintPlugin} = require('../Print');
 
 const snapshotSelector = createSelector([
     mapSelector,
@@ -103,100 +90,87 @@ const SnapshotPanel = connect(snapshotSelector, {
 
 const Settings = require('./Settings');
 
-const HelpToggleBtn = connect((state) => ({
-    pressed: state.controls.help && state.controls.help.enabled
-}), {
-    changeHelpState: toggleControl.bind(null, 'help', null),
-    changeHelpwinVisibility
-})(require('../../components/help/HelpToggleBtn'));
+const HelpTextPanel = connect((state) => ({
+    isVisible: state.controls.help && state.controls.help.enabled || false,
+    helpText: state.help && state.help.helpText
+}))(require('../../components/help/HelpTextPanel'));
 
 const layersIcon = require('./assets/img/layers.png');
 const lineRuleIcon = require('./assets/img/line-ruler.png');
 
-module.exports = [{
+module.exports = (context) => ([{
     name: 'home',
-    tool: Home,
-    help: <Message msgId="helptexts.gohome"/>
+    tooltip: "gohome",
+    icon: <Glyphicon glyph="home"/>,
+    help: <Message msgId="helptexts.gohome"/>,
+    action: goToPage.bind(null, '/', context.router)
 }, {
     name: 'locate',
     tool: Locate,
+    tooltip: "locate.tooltip",
+    icon: <Glyphicon glyph="screenshot"/>,
     help: <Message msgId="helptexts.locateBtn"/>
 }, {
     name: 'info',
-    tool: Info,
-    help: <Message msgId="helptexts.infoButton"/>
+    tooltip: "info.tooltip",
+    icon: <Glyphicon glyph="info-sign"/>,
+    help: <Message msgId="helptexts.infoButton"/>,
+    toggle: true
 }, {
     name: 'toc',
-    tool: TOC,
+    exclusive: true,
+    panel: TOC,
     help: <Message msgId="helptexts.layerSwitcher"/>,
-    props: {
-        isPanel: true,
-        buttonContent: <img src={layersIcon}/>,
-        buttonTooltip: <Message msgId="layers"/>,
-        title: <Message msgId="layers"/>
-    }
+    tooltip: "layers",
+    wrap: true,
+    title: 'layers',
+    icon: <img src={layersIcon}/>
 }, {
     name: 'backgroundswitcher',
-    tool: BackgroundSwitcher,
+    exclusive: true,
+    panel: BackgroundSwitcher,
     help: <Message msgId="helptexts.backgroundSwitcher"/>,
-    props: {
-        isPanel: true,
-        icon: <Glyphicon glyph="globe"/>,
-        title: <Message msgId="background"/>,
-        buttonTooltip: <Message msgId="backgroundSwither.tooltip"/>
-    }
+    tooltip: "backgroundSwither.tooltip",
+    icon: <Glyphicon glyph="globe"/>,
+    wrap: true,
+    title: 'background'
 }, {
     name: 'measurement',
-    tool: MeasureComponent,
+    panel: MeasureComponent,
+    exclusive: true,
+    wrap: true,
     help: <Message msgId="helptexts.measureComponent"/>,
-    props: {
-        icon: <img src={lineRuleIcon} />,
-        isPanel: true,
-        title: <Message msgId="measureComponent.title"/>,
-        buttonTooltip: <Message msgId="measureComponent.tooltip"/>,
-        lengthButtonText: <Message msgId="measureComponent.lengthButtonText"/>,
-        areaButtonText: <Message msgId="measureComponent.areaButtonText"/>,
-        resetButtonText: <Message msgId="measureComponent.resetButtonText"/>,
-        lengthLabel: <Message msgId="measureComponent.lengthLabel"/>,
-        areaLabel: <Message msgId="measureComponent.areaLabel"/>,
-        bearingLabel: <Message msgId="measureComponent.bearingLabel"/>
-    }
+    tooltip: "measureComponent.tooltip",
+    icon: <img src={lineRuleIcon} />,
+    title: "measureComponent.title"
 }, {
     name: 'print',
-    tool: Print,
     help: <Message msgId="helptexts.print"/>,
-    props: {
-        isPanel: false,
-        icon: <Glyphicon glyph="print"/>,
-        buttonTooltip: <Message msgId="printbutton" />
-    },
-    panel: {
-        name: "print_panel",
-        panel: PrintPanel
-    }
+    tooltip: "printbutton",
+    icon: <Glyphicon glyph="print"/>,
+    exclusive: true,
+    panel: PrintPlugin
 }, {
     name: 'snapshot',
-    tool: SnapshotPanel,
+    panel: SnapshotPanel,
     help: <Message msgId="helptexts.snapshot"/>,
-    props: {
-        title: <Message msgId="snapshot.title"/>,
-        buttonTooltip: <Message msgId="snapshot.tooltip"/>,
-        googleBingErrorMsg: <Message msgId="snapshot.googleBingError" />,
-        saveBtnText: <Message msgId="snapshot.save" />,
-        downloadingMsg: <Message msgId="snapshot.downloadingSnapshots" />,
-        isPanel: true,
-        icon: <Glyphicon glyph="camera"/>
-    }
+    tooltip: "snapshot.tooltip",
+    icon: <Glyphicon glyph="camera"/>,
+    wrap: true,
+    title: "snapshot.title",
+    exclusive: true
 }, {
     name: 'settings',
-    tool: Settings,
+    tooltip: "settings",
     help: <Message msgId="helptexts.settingsPanel"/>,
-    props: {
-        isPanel: true,
-        buttonTooltip: <Message msgId="settings" />,
-        icon: <Glyphicon glyph="cog"/>
-    }
+    icon: <Glyphicon glyph="cog"/>,
+    panel: Settings,
+    wrap: true,
+    exclusive: true
 }, {
     name: 'help',
-    tool: HelpToggleBtn
-}];
+    icon: <Glyphicon glyph="question-sign"/>,
+    tooltip: "help",
+    toggle: true,
+    panel: HelpTextPanel
+}]);

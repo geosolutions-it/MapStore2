@@ -15,12 +15,14 @@ const {loadLocale} = require('../actions/locale');
 
 const ConfigUtils = require('../utils/ConfigUtils');
 const LocaleUtils = require('../utils/LocaleUtils');
+const PluginsUtils = require('../utils/PluginsUtils');
 
 const {loadMaps} = require('../actions/maps');
 const {loadPrintCapabilities} = require('../actions/print');
 
 function startApp() {
-    const store = require('./stores/store');
+    const plugins = require('./plugins.js');
+    const store = require('./stores/store')(plugins);
     const App = require('./containers/App');
 
     store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
@@ -37,7 +39,7 @@ function startApp() {
 
     ReactDOM.render(
         <Provider store={store}>
-            <App/>
+            <App plugins={PluginsUtils.getPlugins(plugins)}/>
         </Provider>,
         document.getElementById('container')
     );

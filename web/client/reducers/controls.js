@@ -19,6 +19,13 @@ function controls(state = {}, action) {
                 })
             });
         case SET_CONTROL_PROPERTY:
+            if (action.toggle === true && state[action.control] && state[action.control][action.property] === action.value) {
+                return assign({}, state, {
+                    [action.control]: assign({}, state[action.control], {
+                        [action.property]: undefined
+                    })
+                });
+            }
             return assign({}, state, {
                 [action.control]: assign({}, state[action.control], {
                     [action.property]: action.value

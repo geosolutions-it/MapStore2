@@ -9,7 +9,7 @@ const React = require('react');
 const Debug = require('../../../components/development/Debug');
 const Localized = require('../../../components/I18N/Localized');
 const {connect} = require('react-redux');
-const UserMenu = require('../../../plugins/Login');
+const {LoginPlugin} = require('../../../plugins/Login');
 const {Jumbotron} = require('react-bootstrap');
 
 const Login = React.createClass({
@@ -31,7 +31,7 @@ const Login = React.createClass({
     render() {
         return (<Localized messages={this.props.messages} locale={this.props.locale}>
             <div className="fill">
-                <UserMenu />
+                <LoginPlugin />
                     <Jumbotron className="fill">
                     <h1>Hello, {this.props.userDetails && this.props.userDetails.user && this.props.userDetails.user.name || "Guest user. Please login"}</h1>
                     <p>This is a sample of the login functionality. In the future you will able to login to MapStore to create maps or admin a server.</p>
@@ -45,7 +45,6 @@ const Login = React.createClass({
 });
 module.exports = connect((state) => {
     return {
-        enabled: state.map && state.print.capabilities,
         locale: state.locale && state.locale.locale,
         messages: state.locale && state.locale.messages || {},
         userDetails: state.userDetails

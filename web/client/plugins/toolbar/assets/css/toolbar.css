@@ -1,0 +1,8 @@
+.mapToolbar {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    marginRight: 5px;
+    marginTop: 5px;
+    zIndex: 1000;
+}

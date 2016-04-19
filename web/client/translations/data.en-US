@@ -25,6 +25,7 @@
         "mousePositionCoordinates": "Coordinates indicator",
         "menu": "Menu",
         "settings": "Settings",
+        "help": "Help",
         "gohome": "Go home",
         "printbutton": "Print",
         "noresultfound": "No Result found",
@@ -108,6 +109,9 @@
         },
         "backgroundSwither":{
             "tooltip": "Select Background"
+        },
+        "info":{
+            "tooltip": "Query objects on map"
         },
         "getFeatureInfoTitle": "Feature Info",
         "getFeatureInfoError": {

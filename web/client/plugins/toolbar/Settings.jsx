@@ -43,54 +43,83 @@ const HistoryBar = require('../../components/mapcontrols/navigationhistory/Histo
 const { ActionCreators } = require('redux-undo');
 const {undo, redo} = ActionCreators;
 
-const Message = require('../../components/I18N/Message');
+const Message = module.exports = connect((state) => ({
+    locale: state.locale && state.locale.currentLocale,
+    messages: state.locale && state.locale.messages || []
+}))(require('../../components/I18N/Message'));
+
 
 const SettingsButton = React.createClass({
     propTypes: {
         undo: React.PropTypes.func,
         redo: React.PropTypes.func,
-        mapHistory: React.PropTypes.object
+        mapHistory: React.PropTypes.object,
+        settings: React.PropTypes.object
+    },
+    getDefaultProps() {
+        return {
+            settings: {
+                language: true,
+                mousePosition: true,
+                featureInfo: true,
+                history: true
+            }
+        };
+    },
+    renderSettings() {
+        const settings = {
+            language: <LangBar key="langSelector"/>,
+            mousePosition: <CRSSelector
+                key="crsSelector"
+                enabled={true}
+                inputProps={{
+                    label: <Message msgId="mousePositionCoordinates" />,
+                    buttonBefore: <MousePositionButton
+                        isButton={true}
+                        text={<Message msgId="enable" />}
+                        glyphicon="eye-open"
+                    />
+                }}
+                />,
+            featureInfo: <FeatureInfoFormatSelector
+                key="featureinfoformat"
+                inputProps={{
+                    label: <Message msgId="infoFormatLbl" />
+            }}/>,
+            history: <HistoryBar
+                key="history"
+                undoBtnProps={{
+                    onClick: this.props.undo,
+                    label: <Message msgId="history.undoBtnTooltip"/>,
+                    disabled: (this.props.mapHistory.past.length > 0) ? false : true
+                }}
+                redoBtnProps={{
+                    onClick: this.props.redo,
+                    label: <Message msgId="history.redoBtnTooltip" />,
+                    disabled: (this.props.mapHistory.future.length > 0) ? false : true
+            }}/>
+        };
+
+        return Object.keys(settings).filter((setting) => this.props.settings[setting])
+            .map((setting) => settings[setting]);
     },
     render() {
         return (
             <SettingsPanel>
                 <h5><Message msgId="language" /></h5>
-                <LangBar key="langSelector"/>
-                <CRSSelector
-                    key="crsSelector"
-                    enabled={true}
-                    inputProps={{
-                        label: <Message msgId="mousePositionCoordinates" />,
-                        buttonBefore: <MousePositionButton
-                            isButton={true}
-                            text={<Message msgId="enable" />}
-                            glyphicon="eye-open"
-                        />
-                    }}
-                    />
-                <FeatureInfoFormatSelector
-                    key="featureinfoformat"
-                    inputProps={{
-                        label: <Message msgId="infoFormatLbl" />
-                    }}/>
-                <HistoryBar
-                    key="history"
-                    undoBtnProps={{
-                        onClick: this.props.undo,
-                        label: <Message msgId="history.undoBtnTooltip"/>,
-                        disabled: (this.props.mapHistory.past.length > 0) ? false : true
-                    }}
-                    redoBtnProps={{
-                        onClick: this.props.redo,
-                        label: <Message msgId="history.redoBtnTooltip" />,
-                        disabled: (this.props.mapHistory.future.length > 0) ? false : true
-                }}/>
+                {this.renderSettings()}
             </SettingsPanel>
         );
     }
 });
 module.exports = connect((state) => ({
-    mapHistory: state.map && state.map.past && {past: state.map.past, future: state.map.future} || {past: [], future: []}
+    mapHistory: state.map && state.map.past && {past: state.map.past, future: state.map.future} || {past: [], future: []},
+    settings: {
+        language: state.locale,
+        mousePosition: state.mousePosition,
+        featureInfo: state.mapInfo,
+        history: state.map && state.map.history
+    }
 }), {
     undo,
     redo

@@ -25,6 +25,7 @@
         "mousePositionCoordinates": "Indicatore di coordinate",
         "menu": "Menu",
         "settings": "Impostazioni",
+        "help": "Aiuto",
         "gohome": "Torna alla home",
         "printbutton": "Stampa",
         "noresultfound": "Nessun Risultato Trovato",
@@ -109,6 +110,9 @@
         },
         "backgroundSwither":{
             "tooltip": "Scegli lo sfondo"
+        },
+        "info":{
+            "tooltip": "Interroga gli oggetti sulla mappa"
         },
         "getFeatureInfoTitle": "Informazioni Sulle Feature",
         "getFeatureInfoError": {

@@ -10,16 +10,18 @@ const { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT } = require('../actions/security');
 
 const assign = require('object-assign');
 
-function loginlogout(state = {userDetails: null, errorCause: null}, action) {
+function security(state = {userDetails: null, errorCause: null}, action) {
     switch (action.type) {
 
         case LOGIN_SUCCESS:
             return assign({}, state, {
                 user: action.userDetails.User,
-                token: action.userDetails.User.attribute.reduce((prev, curr) => {
+                token: (action.userDetails.User.attribute || []).reduce((prev, curr) => {
                     if (curr.name === "UUID") {
                         return curr.value;
-                    }}),
+                    }
+                    return '';
+                }, ''),
                 authHeader: action.authHeader,
                 loginError: null
             });
@@ -39,4 +41,4 @@ function loginlogout(state = {userDetails: null, errorCause: null}, action) {
     }
 }
 
-module.exports = loginlogout;
+module.exports = security;
