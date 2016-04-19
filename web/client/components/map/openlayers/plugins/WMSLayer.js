@@ -50,7 +50,7 @@ Layers.registerType('wms', {
                 visible: options.visibility !== false,
                 zIndex: options.zIndex,
                 source: new ol.source.ImageWMS({
-                    url: getWMSURLs(options.url),
+                    url: getWMSURLs(options.url)[0],
                     params: wmsToOpenlayersOptions(options)
                 })
             });
