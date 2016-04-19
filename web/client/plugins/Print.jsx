@@ -71,7 +71,10 @@ const Print = React.createClass({
         configurePrintMap: React.PropTypes.func,
         getPrintSpecification: React.PropTypes.func,
         getLayoutName: React.PropTypes.func,
-        error: React.PropTypes.string
+        error: React.PropTypes.string,
+        getZoomForExtent: React.PropTypes.func,
+        minZoom: React.PropTypes.number,
+        maxZoom: React.PropTypes.number
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -87,9 +90,12 @@ const Print = React.createClass({
             printSpecTemplate: {},
             getPrintSpecification: PrintUtils.getMapfishPrintSpecification,
             getLayoutName: PrintUtils.getLayoutName,
+            getZoomForExtent: MapUtils.defaulGetZoomForExtent,
             pdfUrl: null,
             mapWidth: 370,
             mapType: "leaflet",
+            minZoom: 1,
+            maxZoom: 23,
             alternatives: [{
                 name: "legend",
                 component: LegendOption,
@@ -210,7 +216,7 @@ const Print = React.createClass({
                 this.props.map.bbox.bounds.maxy
             ], this.props.map.bbox.crs, this.props.map.projection);
             const mapSize = this.getMapSize();
-            const mapZoom = MapUtils.getZoomForExtent(bbox, mapSize);
+            const mapZoom = this.props.getZoomForExtent(bbox, mapSize, this.props.minZoom, this.props.maxZoom);
             const scales = PrintUtils.getPrintScales(this.props.capabilities);
             const scaleZoom = PrintUtils.getNearestZoom(this.props.map.zoom, scales);
 
