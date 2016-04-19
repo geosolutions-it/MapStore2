@@ -22,7 +22,7 @@ var {
 
 const assign = require('object-assign');
 
-function mapInfo(state = null, action) {
+function mapInfo(state = {}, action) {
     switch (action.type) {
         case CHANGE_MAPINFO_STATE:
             return assign({}, state, {

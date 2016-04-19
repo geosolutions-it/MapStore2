@@ -12,11 +12,13 @@ const Debug = require('../../components/development/Debug');
 const {Router, Route, hashHistory} = require('react-router');
 
 const Home = require('../pages/Home');
-const MapViewer = require('../pages/MapViewer');
 
 const Localized = require('../../components/I18N/Localized');
 
 const App = (props) => {
+    const MapViewer = connect(() => ({
+        plugins: props.plugins
+    }))(require('../pages/MapViewer'));
     return (
         <div className="fill">
             <Localized messages={props.messages} locale={props.current} loadingError={props.localeError}>

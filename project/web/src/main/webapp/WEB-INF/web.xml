@@ -3,6 +3,15 @@
     http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
     <display-name>__PROJECTDESCRIPTION__ - Web App</display-name>
+	<context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>geostore.root</param-value>
+    </context-param>
+
+    <context-param>
+      <param-name>proxyPropPath</param-name>
+      <param-value>/proxy.properties</param-value>
+    </context-param>
 
     <!-- spring context loader -->
     <listener>
@@ -20,11 +29,43 @@
         <url-pattern>/services/*</url-pattern>
     </servlet-mapping>
 
+    <!-- CXF Servlet -->
+	<servlet>
+		<servlet-name>CXFServlet</servlet-name>
+		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+	</servlet>
+
+    <servlet-mapping>
+		<servlet-name>CXFServlet</servlet-name>
+		<url-pattern>/rest/geostore/*</url-pattern>
+	</servlet-mapping>
+
+    <!-- Proxy Servlet -->
+    <servlet>
+      <servlet-name>HttpProxy</servlet-name>
+      <servlet-class>it.geosolutions.httpproxy.HTTPProxy</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+      <servlet-name>HttpProxy</servlet-name>
+      <url-pattern>/proxy/*</url-pattern>
+    </servlet-mapping>
+
     <!-- pick up all spring application contexts -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>/WEB-INF/applicationContext.xml</param-value>
     </context-param>
+    
+    <!-- Spring Security Servlet -->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/rest/*</url-pattern>
+	</filter-mapping>
 
     <!-- Spring Security -->
 <!--     <filter> -->

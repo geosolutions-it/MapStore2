@@ -114,4 +114,7 @@ const selector = createSelector(
         layers
     })
 );
-module.exports = connect(selector)(MapPlugin);
+module.exports = {
+    MapPlugin: connect(selector)(MapPlugin),
+    reducers: {}
+};

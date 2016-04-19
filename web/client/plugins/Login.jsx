@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {UserDetails, PasswordReset, UserMenu, Login } = require('./login');
+const {UserDetails, PasswordReset, UserMenu, Login } = require('./login/index');
 
 const LoginTool = React.createClass({
     propTypes: {
@@ -35,4 +35,7 @@ const LoginTool = React.createClass({
         </div>);
     }
 });
-module.exports = LoginTool;
+module.exports = {
+    LoginPlugin: LoginTool,
+    reducers: {security: require('../reducers/security')}
+};

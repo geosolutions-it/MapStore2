@@ -8,12 +8,7 @@
 const React = require('react');
 const Draggable = require('react-draggable');
 
-const {connect} = require('react-redux');
-
-const Print = connect((state) => ({
-    map: (state.map && state.map) || (state.config && state.config.map),
-    layers: state.config && state.config.layers || []
-}))(require('../../../plugins/Print'));
+const {PrintPlugin} = require('../../../plugins/Print');
 
 const PrintPreview = React.createClass({
     propTypes: {
@@ -23,7 +18,7 @@ const PrintPreview = React.createClass({
         return (
            <Draggable start={{x: 0, y: 0}} handle=".panel-heading, .panel-heading *">
                <div>
-                   <Print style={this.props.style}
+                   <PrintPlugin style={this.props.style}
                        />
                </div>
            </Draggable>

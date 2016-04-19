@@ -27,8 +27,8 @@ var SearchTarget = React.createClass({
         return {
             position: null,
             geosolutions: {
-                lng: 10.276508,
-                lat: 43.878160
+                lng: 10.298046,
+                lat: 43.883948
             }
         };
     },

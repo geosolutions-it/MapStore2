@@ -226,7 +226,7 @@ const Print = React.createClass({
 });
 
 const selector = createSelector([
-    (state) => state.controls.print && state.controls.print.enabled,
+    (state) => (state.controls.print && state.controls.print.enabled ) || (state.controls.toolbar && state.controls.toolbar.active === 'print'),
     (state) => state.print && state.print.capabilities,
     (state) => state.print && state.print.spec && assign({}, state.print.spec, state.print.map || {}),
     (state) => state.print && state.print.pdfUrl,
@@ -243,9 +243,12 @@ const selector = createSelector([
     layers
 }));
 
-module.exports = connect(selector, {
-    toggleControl: toggleControl.bind(null, 'print', null),
-    onPrint: printSubmit,
-    onBeforePrint: printSubmitting,
-    configurePrintMap
-})(Print);
+module.exports = {
+        PrintPlugin: connect(selector, {
+        toggleControl: toggleControl.bind(null, 'print', null),
+        onPrint: printSubmit,
+        onBeforePrint: printSubmitting,
+        configurePrintMap
+    })(Print),
+    reducers: {print: require('../reducers/print')}
+};
