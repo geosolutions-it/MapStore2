@@ -9,7 +9,7 @@
 const React = require('react');
 
 const Measure = require('../../components/mapcontrols/measure/MeasureComponent');
-const Message = require('../../components/I18N/Message');
+const Message = require('../Message');
 
 
 const MeasureComponent = React.createClass({
