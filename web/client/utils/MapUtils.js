@@ -190,6 +190,7 @@ module.exports = {
     getGoogleMercatorScales,
     getGoogleMercatorScale,
     getZoomForExtent,
+    defaulGetZoomForExtent,
     getCenterForExtent,
     getResolutions,
     getScales
