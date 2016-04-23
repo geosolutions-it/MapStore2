@@ -318,6 +318,13 @@
             "tooltip": "Salva un' istantanea della mappa.",
             "googleBingError": "Istantanea non disponibile per le restrizioni all' utilizzo dei layer Google e Bing.",
             "downloadingSnapshots": "generazioni di istantanee in corso..."
+        },
+        "shapefile": {
+            "title": "Carica Shape File",
+            "tooltip": "Aggiungi uno shape file alla mappa.",
+            "placeholder": "Drop or click per importare uno Shapefile",
+            "error": {"select": "Seleziona Shapefile compresso"},
+            "add": "Importa"
         }
     }
 }

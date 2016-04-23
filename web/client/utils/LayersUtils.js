@@ -82,7 +82,23 @@ var LayersUtils = {
             });
         }
         return mapState;
+    },
+    geoJSONToLayer: (geoJSON) => {
+        return {
+            type: 'vector',
+            visibility: true,
+            group: 'Local shape',
+            name: geoJSON.fileName,
+            hideLoading: true,
+            features: geoJSON.features.map((feature, idx) => {
+                if (!feature.id) {
+                    feature.id = idx;
+                }
+                return feature;
+            })
+        };
     }
+
 };
 
 module.exports = LayersUtils;

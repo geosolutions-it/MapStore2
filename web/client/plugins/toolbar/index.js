@@ -85,6 +85,8 @@ const SnapshotPanel = connect(snapshotSelector, {
     downloadImg: saveImage
 })(require("../../components/mapcontrols/Snapshot/SnapshotPanel"));
 
+const {ShapeFile} = require('../ShapeFile');
+
 const Settings = require('./Settings');
 
 const HelpTextPanel = connect((state) => ({
@@ -155,6 +157,15 @@ module.exports = (context) => ([{
     icon: <Glyphicon glyph="camera"/>,
     wrap: true,
     title: "snapshot.title",
+    exclusive: true
+}, {
+    name: 'shapefile',
+    panel: ShapeFile,
+    help: <Message msgId="helptexts.snapshot"/>,
+    title: "shapefile.title",
+    tooltip: "shapefile.tooltip",
+    wrap: true,
+    icon: <Glyphicon glyph="open-file"/>,
     exclusive: true
 }, {
     name: 'settings',

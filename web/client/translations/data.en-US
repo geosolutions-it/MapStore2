@@ -317,6 +317,13 @@
             "tooltip": "Save a snapshot of the map.",
             "googleBingError": "Googole and Bing layers aren't available for the snapshot, due to copyright restrictions.",
             "downloadingSnapshots": "pending snapshot generation"
+        },
+        "shapefile": {
+            "title": "Add Local Shape File",
+            "tooltip": "Add a local shape file to the map.",
+            "placeholder": "Drop or click to import a local Shape",
+            "error": {"select": "Select one or more zip file"},
+            "add": "Add"
         }
     }
 }
