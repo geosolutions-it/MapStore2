@@ -11,5 +11,7 @@ module.exports = {
     PrintPlugin: require('../plugins/Print'),
     Identify: require('../plugins/Identify'),
     MapPlugin: require('../plugins/Map'),
-    ToolbarPlugin: require('../plugins/Toolbar')
+    ToolbarPlugin: require('../plugins/Toolbar'),
+    ShapeFilePlugin: require('../plugins/ShapeFile')
+
 };

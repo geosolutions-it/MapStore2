@@ -18,10 +18,12 @@ var defaultStyle = {
 };
 
 var createVectorLayer = function(options) {
+    const {hideLoading} = options;
     return L.geoJson([]/* options.features */, {
         pointToLayer: options.styleName !== "marker" ? function(feature, latlng) {
             return L.circleMarker(latlng, defaultStyle);
-        } : null
+        } : null,
+        hideLoading: hideLoading
     });
 };
 
