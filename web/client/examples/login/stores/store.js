@@ -18,7 +18,7 @@ const allReducers = combineReducers({
     config: require('../../../reducers/config'),
     locale: require('../../../reducers/locale'),
     map: () => {return null; },
-    userDetails: require('../../../reducers/security'),
+    security: require('../../../reducers/security'),
     controls: require('../../../reducers/controls')
 });
 

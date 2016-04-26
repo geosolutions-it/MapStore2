@@ -21,10 +21,11 @@ const {Modal, Button} = require('react-bootstrap');
   /**
    * A Modal window to show password reset form
    */
-const PasswordResetModal = React.createClass({
+const LoginModal = React.createClass({
   propTypes: {
       // props
-      userDetails: React.PropTypes.object,
+      user: React.PropTypes.object,
+      loginError: React.PropTypes.object,
       show: React.PropTypes.bool,
 
       // CALLBACKS
@@ -50,7 +51,8 @@ const PasswordResetModal = React.createClass({
               <LoginForm
                   ref="loginForm"
                   showSubmitButton={false}
-                  userDetails={this.props.userDetails}
+                  user={this.props.user}
+                  loginError={this.props.loginError}
                   onLoginSuccess={this.props.onLoginSuccess}
                   onSubmit={this.props.onSubmit}
                   onError={this.props.onError}
@@ -76,4 +78,4 @@ const PasswordResetModal = React.createClass({
   }
 });
 
-module.exports = PasswordResetModal;
+module.exports = LoginModal;
