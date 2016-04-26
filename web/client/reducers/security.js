@@ -10,7 +10,7 @@ const { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT } = require('../actions/security');
 
 const assign = require('object-assign');
 
-function security(state = {userDetails: null, errorCause: null}, action) {
+function security(state = {user: null, errorCause: null}, action) {
     switch (action.type) {
 
         case LOGIN_SUCCESS:

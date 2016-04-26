@@ -58,7 +58,7 @@ var Api = {
     // utility function
     // parses the state to get the auth header and so on.
     getAuthOptionsFromState: function(state, baseParams = {}) {
-        let authHeader = state && state.userDetails && state.userDetails.authHeader;
+        let authHeader = state && state.security && state.security.authHeader;
         if (authHeader) {
             return _.merge({
                 // TODO support deep merge of attributes

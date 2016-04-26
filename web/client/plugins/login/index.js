@@ -10,7 +10,7 @@ const security = require('../../actions/security');
 const {setControlProperty} = require('../../actions/controls');
 
 const UserMenu = connect((state) => ({
-    user: state.userDetails && state.userDetails.user
+    user: state.security && state.security.user
 }), {
     onShowLogin: setControlProperty.bind(null, "LoginForm", "enabled", true),
     onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true),
@@ -19,14 +19,14 @@ const UserMenu = connect((state) => ({
 })(require('../../components/security/UserMenu'));
 
 const UserDetails = connect((state) => ({
-    user: state.userDetails && state.userDetails.user,
+    user: state.security && state.security.user,
     show: state.controls.AccountInfo && state.controls.AccountInfo.enabled}
 ), {
     onClose: setControlProperty.bind(null, "AccountInfo", "enabled", false)
 })(require('../../components/security/modals/UserDetailsModal'));
 
 const PasswordReset = connect((state) => ({
-    user: state.userDetails && state.userDetails.user,
+    user: state.security && state.security.user,
     show: state.controls.ResetPassword && state.controls.ResetPassword.enabled
 }), {
     onPasswordChange: (user, pass) => { return security.geoStoreChangePassword(user, pass); },
@@ -35,7 +35,8 @@ const PasswordReset = connect((state) => ({
 
 const Login = connect((state) => ({
     show: state.controls.LoginForm && state.controls.LoginForm.enabled,
-    userDetails: state.userDetails
+    user: state.security && state.security.user,
+    loginError: state.security && state.security.loginError
 }), {
     onLoginSuccess: setControlProperty.bind(null, 'LoginForm', 'enabled', false),
     onClose: setControlProperty.bind(null, 'LoginForm', 'enabled', false),

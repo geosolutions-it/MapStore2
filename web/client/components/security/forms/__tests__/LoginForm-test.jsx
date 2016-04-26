@@ -31,7 +31,7 @@ describe("Test the login form component", () => {
     });
 
     it('creates empty component with error', () => {
-        const cmp = ReactDOM.render(<LoginForm userDetails={{loginError: {status: 0}}}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<LoginForm loginError={{status: 0}} />, document.getElementById("container"));
         expect(cmp).toExist();
         const node = ReactTestUtils.scryRenderedDOMComponentsWithClass(cmp, "alert-danger");
         expect(node.length).toBe(1);
@@ -62,7 +62,7 @@ describe("Test the login form component", () => {
         let form = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "form")[0]);
         ReactTestUtils.Simulate.submit(form);
         expect(spy.calls.length).toEqual(1);
-        ReactDOM.render(<LoginForm key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} userDetails={{user: {name: "TEST"}}} />, document.getElementById("container"));
+        ReactDOM.render(<LoginForm key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} user={{user: {name: "TEST"}}} />, document.getElementById("container"));
         // cmp.setProps({onSubmit: testHandlers.onSubmit, userDetails: }});
         expect(spySuccess.calls.length).toEqual(1);
 

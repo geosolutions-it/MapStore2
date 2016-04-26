@@ -32,7 +32,7 @@ describe("Test the login modal", () => {
     });
 
     it('creates empty component with error', () => {
-        const cmp = ReactDOM.render(<LoginForm show={true} userDetails={{loginError: {status: 0}}}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<LoginForm show={true} loginError={{status: 0}}/>, document.getElementById("container"));
         expect(cmp).toExist();
         let modalInstance = ReactTestUtils.findRenderedComponentWithType(cmp, Modal);
         let node = ReactTestUtils.scryRenderedDOMComponentsWithClass(modalInstance._modal, "alert-danger");
@@ -65,7 +65,7 @@ describe("Test the login modal", () => {
         let button = cmp.refs.submit;
         button.props.onClick();
         expect(spy.calls.length).toEqual(1);
-        ReactDOM.render(<LoginForm show={true} key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} userDetails={{user: {name: "TEST"}}} />, document.getElementById("container"));
+        ReactDOM.render(<LoginForm show={true} key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} user={{name: "TEST"}} />, document.getElementById("container"));
         expect(spySuccess.calls.length).toEqual(1);
 
 

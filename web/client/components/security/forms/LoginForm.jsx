@@ -24,9 +24,10 @@ const Spinner = require('react-spinkit');
 const LoginForm = React.createClass({
     propTypes: {
       // props
-      userDetails: React.PropTypes.object,
+      user: React.PropTypes.object,
       onLoginSuccess: React.PropTypes.func,
       showSubmitButton: React.PropTypes.bool,
+      loginError: React.PropTypes.object,
 
       // actions
       onSubmit: React.PropTypes.func,
@@ -54,11 +55,11 @@ const LoginForm = React.createClass({
       };
     },
     componentWillReceiveProps(nextProps) {
-        let newUser = nextProps.userDetails && nextProps.userDetails.user;
-        let oldUser = this.props.userDetails && this.props.userDetails.user;
+        let newUser = nextProps.user;
+        let oldUser = this.props.user;
         let userChange = newUser !== oldUser;
         if ( newUser && userChange ) {
-            this.props.onLoginSuccess(nextProps.userDetails);
+            this.props.onLoginSuccess(nextProps.user);
         }
         this.setState({
             loading: false
@@ -68,7 +69,7 @@ const LoginForm = React.createClass({
         return {loading: false};
     },
     renderError() {
-        let error = this.props.userDetails && this.props.userDetails.loginError;
+        let error = this.props.loginError;
         if (error) {
             return (<Alert bsStyle="danger" key="errorMessage">
                     <strong>{this.props.loginFailedMessage}</strong> {this.renderErrorText(error)}
