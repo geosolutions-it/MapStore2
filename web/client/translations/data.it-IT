@@ -251,7 +251,8 @@
             "infoButton": "Questo è il testo di aiuto per InfoButton",
             "locateBtn": "Questo è il testo di aiuto per LocateBtn",
             "snapshot": "Questo è il testo di aiuto per Snapshot",
-            "print": "Questo è il testo di aiuto per Print"
+            "print": "Questo è il testo di aiuto per Print",
+            "shapefile": "Questo è il testo di aiuto per Shapefile"
         },
         "queryform": {
             "query": "Ricerca",
@@ -318,6 +319,13 @@
             "tooltip": "Salva un' istantanea della mappa.",
             "googleBingError": "Istantanea non disponibile per le restrizioni all' utilizzo dei layer Google e Bing.",
             "downloadingSnapshots": "generazioni di istantanee in corso..."
+        },
+        "shapefile": {
+            "title": "Carica Shape File",
+            "tooltip": "Aggiungi uno shape file alla mappa.",
+            "placeholder": "Trascina qui il file o fai click per selezionare lo shape file da importare.",
+            "error": {"select": "Seleziona Shapefile compresso"},
+            "add": "Importa"
         }
     }
 }

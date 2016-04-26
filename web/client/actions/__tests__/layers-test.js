@@ -15,13 +15,15 @@ var {
     CHANGE_LAYER_PROPERTIES,
     LAYER_LOADING,
     LAYER_LOAD,
+    ADD_LAYER,
     changeLayerProperties,
     toggleNode,
     sortNode,
     removeNode,
     updateNode,
     layerLoading,
-    layerLoad
+    layerLoad,
+    addLayer
 } = require('../layers');
 
 describe('Test correctness of the layers actions', () => {
@@ -98,4 +100,14 @@ describe('Test correctness of the layers actions', () => {
         expect(retval.type).toBe(LAYER_LOAD);
         expect(retval.layerId).toBe(testVal);
     });
+
+    it('add layer', () => {
+        const testVal = 'layer1';
+        const retval = addLayer(testVal);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(ADD_LAYER);
+        expect(retval.layer).toBe(testVal);
+    });
+
 });
