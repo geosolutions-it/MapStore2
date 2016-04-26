@@ -8,6 +8,7 @@
 
 const FileSaver = require('browser-filesaver');
 const toBlob = require('canvas-to-blob');
+const shp = require('shpjs');
 
 
 const FileUtils = {
@@ -19,6 +20,18 @@ const FileUtils = {
 
     downloadCanvasDataURL: function(dataURL, name, mimetype) {
         FileUtils.download(toBlob(dataURL), "snapshot.png", mimetype);
+    },
+    shpToGeoJSON: function(zipBuffer) {
+        return [].concat(shp.parseZip(zipBuffer));
+    },
+    readZip: function(file) {
+        return new Promise((resolve, reject) => {
+            let reader = new FileReader();
+            reader.onload = function() { resolve(reader.result); };
+            reader.onerror = function() { reject(reader.error.name); };
+            reader.readAsArrayBuffer(file);
+        });
+
     }
 };
 module.exports = FileUtils;

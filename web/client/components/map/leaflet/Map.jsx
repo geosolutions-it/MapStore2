@@ -102,9 +102,15 @@ let LeafletMap = React.createClass({
             if (!event.layer.layerId) {
                 return;
             }
-            if (event && event.layer && event.layer.on) {
+            if (event.layer && event.layer.options && event.layer.options.msLayer === 'vector') {
+                return;
+            }
+            if (event && event.layer && event.layer.on ) {
                 // TODO check event.layer.on is a function
-                this.props.onLayerLoading(event.layer.layerId);
+                // Needed to fix GeoJSON Layer neverending loading
+                if (!(event.layer.options && event.layer.options.hideLoading)) {
+                    this.props.onLayerLoading(event.layer.layerId);
+                }
                 event.layer.on('loading', (loadingEvent) => { this.props.onLayerLoading(loadingEvent.target.layerId); });
                 event.layer.on('load', (loadEvent) => { this.props.onLayerLoad(loadEvent.target.layerId); });
             }

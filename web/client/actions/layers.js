@@ -15,6 +15,7 @@ const UPDATE_NODE = 'UPDATE_NODE';
 const UPDATE_NODE_TEMP = 'UPDATE_NODE_TEMP';
 const LAYER_LOADING = 'LAYER_LOADING';
 const LAYER_LOAD = 'LAYER_LOAD';
+const ADD_LAYER = 'ADD_LAYER';
 
 function changeLayerProperties(layer, properties) {
     return {
@@ -92,8 +93,15 @@ function layerLoad(layerId) {
     };
 }
 
-module.exports = {changeLayerProperties, changeGroupProperties, toggleNode,
-    sortNode, removeNode, updateNode, layerLoading, layerLoad, updateNodeTemp,
+function addLayer(layer) {
+    return {
+        type: ADD_LAYER,
+        layer
+    };
+}
+
+module.exports = {changeLayerProperties, changeGroupProperties, toggleNode, sortNode,
+    removeNode, updateNode, layerLoading, layerLoad, updateNodeTemp, addLayer,
     CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE,
-    REMOVE_NODE, UPDATE_NODE, UPDATE_NODE_TEMP, LAYER_LOADING, LAYER_LOAD
+    REMOVE_NODE, UPDATE_NODE, UPDATE_NODE_TEMP, LAYER_LOADING, LAYER_LOAD, ADD_LAYER
 };

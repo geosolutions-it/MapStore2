@@ -7,10 +7,12 @@
  */
 
 var {LAYER_LOADING, LAYER_LOAD, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES,
-    TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, UPDATE_NODE_TEMP} = require('../actions/layers');
+    TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, UPDATE_NODE_TEMP, ADD_LAYER} = require('../actions/layers');
 
 var assign = require('object-assign');
 var {isObject, isArray} = require('lodash');
+
+const LayersUtils = require('../utils/LayersUtils');
 
 const deepChange = (nodes, findValue, propName, propValue) => {
     if (nodes && isArray(nodes) && nodes.length > 0) {
@@ -150,6 +152,26 @@ function layers(state = [], action) {
                 };
             }
             // TODO: layers
+        }
+        case ADD_LAYER: {
+            let newLayers = (state.flat || []).slice();
+            let newGroups = (state.groups || []).slice();
+            const newLayer = (action.layer.id) ? action.layer : assign({}, action.layer, {id: action.layer.name + "__" + newLayers.length});
+            newLayers.push(newLayer);
+            const groupName = newLayer.group || 'Default';
+            if (groupName !== "background") {
+                let node = getNode(newGroups, groupName );
+                if (node) {
+                    node.nodes.push(newLayer.id);
+                } else {
+                    const newGroup = LayersUtils.getLayersByGroup([newLayer]);
+                    newGroups = newGroup.concat(newGroups);
+                }
+            }
+            return {
+                    flat: newLayers,
+                    groups: newGroups
+            };
         }
         default:
             return state;

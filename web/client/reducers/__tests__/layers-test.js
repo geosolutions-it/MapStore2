@@ -215,4 +215,21 @@ describe('Test the layers reducer', () => {
         expect(state.flat[0].p).toEqual("property");
     });
 
+    it('add new layer', () => {
+        let testAction = {
+            type: "ADD_LAYER",
+            layer: {group: "test", id: "test_id"}
+        };
+
+        let state = layers({}, testAction);
+        expect(state).toExist();
+        expect(state.flat).toExist();
+        expect(state.flat[0].group).toExist();
+        expect(state.flat[0].id).toExist();
+        expect(state.flat[0].id).toBe("test_id");
+        expect(state.groups).toExist();
+        expect(state.groups[0].name).toBe("test");
+        expect(state.groups[0].nodes[0]).toBe("test_id");
+    });
+
 });
