@@ -9,7 +9,7 @@
 var React = require('react');
 var url = require('url');
 if (!global.Symbol) {
-    require("babel-core/polyfill");
+    require("babel-polyfill");
 }
 
 const urlQuery = url.parse(window.location.href, true).query;
