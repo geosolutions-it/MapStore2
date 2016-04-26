@@ -51,26 +51,7 @@ module.exports = {
                 test: /\.jsx?$/,
                 exclude: /(ol\.js)$|(Cesium\.js)$/,
                 loader: "babel-loader",
-                include: path.join(__dirname, "web", "client"),
-                query: {
-                  "stage": 0,
-                  "env": {
-                    "development": {
-                      "plugins": ["react-transform"],
-                      "extra": {
-                        "react-transform": {
-                          "transforms": [{
-                            "transform": "react-transform-catch-errors",
-                            "imports": [
-                              "react",
-                              "redbox-react"
-                            ]
-                          }]
-                        }
-                      }
-                    }
-                  }
-                }
+                include: path.join(__dirname, "web", "client")
             }
         ]
     },

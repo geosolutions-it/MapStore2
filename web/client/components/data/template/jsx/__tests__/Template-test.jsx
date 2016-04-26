@@ -9,14 +9,9 @@ var React = require('react/addons');
 var expect = require('expect');
 var ReactDOM = require('react-dom');
 var Template = require('../Template');
-const Babel = require('babel-standalone');
 
 describe("Test JSX Template", () => {
     beforeEach((done) => {
-        Babel.bind({
-            "<div id='template'/>": "'use strict';React.createElement('div', { id: 'template' })",
-            "<div id={model.id}/>": "'use strict';React.createElement('div', { id: model.id })"
-      });
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
     });
@@ -24,7 +19,6 @@ describe("Test JSX Template", () => {
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
-        Babel.clear();
         setTimeout(done);
     });
 
