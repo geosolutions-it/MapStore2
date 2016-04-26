@@ -250,7 +250,8 @@
             "infoButton": "This is the helptext for the InfoButton",
             "locateBtn": "This is the helptext for the LocateBtn",
             "snapshot": "This is the helptext for the Snapshot",
-            "print": "This is the helptext for Print"
+            "print": "This is the helptext for Print",
+            "shapefile": "This is the helptext for the Shapefile"
         },
         "queryform": {
             "query": "Search",
@@ -321,7 +322,7 @@
         "shapefile": {
             "title": "Add Local Shape File",
             "tooltip": "Add a local shape file to the map.",
-            "placeholder": "Drop or click to import a local Shape",
+            "placeholder": "Drop your file here or click to select shape file to import.",
             "error": {"select": "Select one or more zip file"},
             "add": "Add"
         }

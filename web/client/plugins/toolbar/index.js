@@ -161,7 +161,7 @@ module.exports = (context) => ([{
 }, {
     name: 'shapefile',
     panel: ShapeFile,
-    help: <Message msgId="helptexts.snapshot"/>,
+    help: <Message msgId="helptexts.shapefile"/>,
     title: "shapefile.title",
     tooltip: "shapefile.tooltip",
     wrap: true,
