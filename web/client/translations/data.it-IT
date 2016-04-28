@@ -97,7 +97,8 @@
             "alternatives": {
                 "legend": "Includere la legenda",
                 "2pages": "Legenda su pagina separata",
-                "landscape": "Landscape"
+                "landscape": "Landscape",
+                "portrait": "Portrait"
             },
             "legend": {
                 "font": "Config. Etichette:",

@@ -45,3 +45,7 @@
     right: 60px;
     zIndex: 100;
 }
+
+.mapstore-print-panel .form-inline label {
+    margin-right: 20px;
+}

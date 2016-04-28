@@ -37,13 +37,17 @@ const initialSpec = {
 function print(state = {spec: initialSpec, capabilities: null, map: null, isLoading: false, pdfUrl: null}, action) {
     switch (action.type) {
         case PRINT_CAPABILITIES_LOADED: {
+            let sheetName = action.capabilities
+                && action.capabilities.layouts
+                && action.capabilities.layouts.length
+                && action.capabilities.layouts[0].name;
+            if (sheetName && sheetName.indexOf('_') !== -1) {
+                sheetName = sheetName.substring(0, sheetName.indexOf("_"));
+            }
             return assign({}, state, {
                 capabilities: action.capabilities,
                 spec: assign({}, state.spec || {}, {
-                    sheet: action.capabilities
-                        && action.capabilities.layouts
-                        && action.capabilities.layouts.length
-                        && action.capabilities.layouts[0].name,
+                    sheet: sheetName,
                     resolution: action.capabilities
                         && action.capabilities.dpis
                         && action.capabilities.dpis.length

@@ -45,8 +45,7 @@ const Sheet = connect((state) => ({
     onChange: setPrintParameter.bind(null, 'sheet')
 })(require('../../components/print/Sheet'));
 
-const currentLayouts = (state) => state.print && state.print.capabilities &&
-state.print.capabilities.layouts.filter((layout) => layout.name.indexOf(state.print.spec.sheet) === 0) || [];
+const {currentLayouts} = require('../../selectors/print');
 
 const LegendOption = connect((state) => ({
     checked: state.print && state.print.spec && !!state.print.spec.includeLegend,
@@ -63,11 +62,12 @@ const MultiPageOption = connect((state) => ({
 })(require('../../components/print/PrintOption'));
 
 const LandscapeOption = connect((state) => ({
-    checked: state.print && state.print.spec && !!state.print.spec.landscape,
-    layouts: currentLayouts(state)
+    selected: (state.print && state.print.spec && state.print.spec.landscape) ? 'landscape' : 'portrait',
+    layouts: currentLayouts(state),
+    options: [{label: 'print.alternatives.landscape', value: 'landscape'}, {label: 'print.alternatives.portrait', value: 'portrait'}]
 }), {
-    onChange: setPrintParameter.bind(null, 'landscape')
-})(require('../../components/print/PrintOption'));
+    onChange: compose(setPrintParameter.bind(null, 'landscape'), (selected) => selected === 'landscape')
+})(require('../../components/print/PrintOptions'));
 
 const ForceLabelsOption = connect((state) => ({
     checked: state.print && state.print.spec && !!state.print.spec.forceLabels

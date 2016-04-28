@@ -96,7 +96,8 @@
             "alternatives": {
                 "legend": "Include legend",
                 "2pages": "Legend on distinct page",
-                "landscape": "Landscape"
+                "landscape": "Landscape",
+                "portrait": "Portrait"
             },
             "legend": {
                 "font": "Labels Config:",
