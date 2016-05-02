@@ -15,7 +15,7 @@ const MapUtils = require('../utils/MapUtils');
 
 const {Grid, Row, Col, Panel, Accordion} = require('react-bootstrap');
 
-const {toggleControl} = require('../actions/controls');
+const {toggleControl, setControlProperty} = require('../actions/controls');
 const {printSubmit, printSubmitting, configurePrintMap} = require('../actions/print');
 
 const {mapSelector} = require('../selectors/map');
@@ -67,6 +67,7 @@ const Print = React.createClass({
         alternatives: React.PropTypes.array,
         toggleControl: React.PropTypes.func,
         onBeforePrint: React.PropTypes.func,
+        setPage: React.PropTypes.func,
         onPrint: React.PropTypes.func,
         configurePrintMap: React.PropTypes.func,
         getPrintSpecification: React.PropTypes.func,
@@ -85,6 +86,7 @@ const Print = React.createClass({
             title: 'print.paneltitle',
             toggleControl: () => {},
             onBeforePrint: () => {},
+            setPage: () => {},
             onPrint: () => {},
             configurePrintMap: () => {},
             printSpecTemplate: {},
@@ -226,6 +228,7 @@ const Print = React.createClass({
     },
     print() {
         const spec = this.props.getPrintSpecification(this.props.printSpec);
+        this.props.setPage(1);
         this.props.onBeforePrint();
         this.props.onPrint(this.props.capabilities.createURL, spec);
     }
@@ -254,6 +257,7 @@ module.exports = {
         toggleControl: toggleControl.bind(null, 'print', null),
         onPrint: printSubmit,
         onBeforePrint: printSubmitting,
+        setPage: setControlProperty.bind(null, 'print', 'currentPage'),
         configurePrintMap
     })(Print),
     reducers: {print: require('../reducers/print')}
