@@ -98,8 +98,8 @@ describe("Test the Sheet component", () => {
         const node = ReactDOM.findDOMNode(cmp);
         const options = node.getElementsByTagName('option');
         expect(options.length).toBe(2);
-        expect(options[0].innerText).toBe('L1');
-        expect(options[1].innerText).toBe('L2');
+        expect(options[0].innerHTML).toBe('L1');
+        expect(options[1].innerHTML).toBe('L2');
 
     });
 
@@ -110,8 +110,8 @@ describe("Test the Sheet component", () => {
         const node = ReactDOM.findDOMNode(cmp);
         const options = node.getElementsByTagName('option');
         expect(options.length).toBe(2);
-        expect(options[0].innerText).toBe('A4 sheet');
-        expect(options[1].innerText).toBe('A3 sheet');
+        expect(options[0].innerHTML).toBe('A4 sheet');
+        expect(options[1].innerHTML).toBe('A3 sheet');
 
     });
 });
