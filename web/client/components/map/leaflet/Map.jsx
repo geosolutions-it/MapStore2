@@ -132,7 +132,7 @@ let LeafletMap = React.createClass({
             this._updateMapPositionFromNewProps(newProps);
         }
 
-        if (this.map && newProps.resize > this.props.resize) {
+        if (this.map && newProps.resize !== this.props.resize) {
             setTimeout(() => {
                 this.map.invalidateSize(false);
             }, 0);

@@ -90,7 +90,7 @@ const Print = React.createClass({
             printSpecTemplate: {},
             getPrintSpecification: PrintUtils.getMapfishPrintSpecification,
             getLayoutName: PrintUtils.getLayoutName,
-            getZoomForExtent: MapUtils.defaulGetZoomForExtent,
+            getZoomForExtent: MapUtils.defaultGetZoomForExtent,
             pdfUrl: null,
             mapWidth: 370,
             mapType: "leaflet",

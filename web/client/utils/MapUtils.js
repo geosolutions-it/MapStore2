@@ -118,7 +118,7 @@ function getScales(projection, dpi) {
     return getResolutions().map((resolution) => resolution * dpm * (units === 'degrees' ? 111194.87428468118 : 1));
 }
 
-function defaulGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, mapResolutions) {
+function defaultGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, mapResolutions) {
     const wExtent = extent[2] - extent[0];
     const hExtent = extent[3] - extent[1];
 
@@ -153,7 +153,7 @@ function getZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
     }
     const resolutions = getHook("RESOLUTIONS_HOOK") ?
         getHook("RESOLUTIONS_HOOK")(extent, mapSize, minZoom, maxZoom, dpi, dpi2dpm((dpi || DEFAULT_SCREEN_DPI))) : null;
-    return defaulGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, resolutions);
+    return defaultGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, resolutions);
 }
 
 /**
@@ -190,7 +190,7 @@ module.exports = {
     getGoogleMercatorScales,
     getGoogleMercatorScale,
     getZoomForExtent,
-    defaulGetZoomForExtent,
+    defaultGetZoomForExtent,
     getCenterForExtent,
     getResolutions,
     getScales

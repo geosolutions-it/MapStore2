@@ -13,6 +13,8 @@ var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var ConfigUtils = require('../../../utils/ConfigUtils');
 var mapUtils = require('../../../utils/MapUtils');
 
+const {isEqual} = require('lodash');
+
 var OpenlayersMap = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
@@ -168,13 +170,13 @@ var OpenlayersMap = React.createClass({
             this._updateMapPositionFromNewProps(newProps);
         }
 
-        if (this.map && newProps.resize > this.props.resize) {
+        if (this.map && newProps.resize !== this.props.resize) {
             setTimeout(() => {
                 this.map.updateSize();
             }, 0);
         }
 
-        if (this.map && this.props.projection !== newProps.projection) {
+        if (this.map && ((this.props.projection !== newProps.projection) || this.haveResolutionsChanged(newProps))) {
             const center = CoordinatesUtils.reproject([
                 this.props.center.x,
                 this.props.center.y
@@ -267,6 +269,13 @@ var OpenlayersMap = React.createClass({
                 {children}
             </div>
         );
+    },
+    haveResolutionsChanged(newProps) {
+        if (this.props.mapOptions && this.props.mapOptions.view && this.props.mapOptions.view.resolutions &&
+            newProps.mapOptions && newProps.mapOptions.view && newProps.mapOptions.view.resolutions) {
+            return !isEqual(newProps.mapOptions.view.resolutions, this.props.mapOptions.view.resolutions);
+        }
+        return false;
     },
     createView(center, zoom, projection, options) {
         const viewOptions = assign({}, {
