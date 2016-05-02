@@ -87,4 +87,31 @@ describe("Test the Sheet component", () => {
 
         expect(called).toBe(true);
     });
+
+    it('uses custom layoutNames', () => {
+        const layoutNames = {
+            'A4': 'L1',
+            'A3': 'L2'
+        };
+        const cmp = ReactDOM.render(<Sheet layouts={layouts} layoutNames={layoutNames}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        const node = ReactDOM.findDOMNode(cmp);
+        const options = node.getElementsByTagName('option');
+        expect(options.length).toBe(2);
+        expect(options[0].innerHTML).toBe('L1');
+        expect(options[1].innerHTML).toBe('L2');
+
+    });
+
+    it('uses custom layoutNames function', () => {
+        const layoutNames = (layout) => layout + " sheet";
+        const cmp = ReactDOM.render(<Sheet layouts={layouts} layoutNames={layoutNames}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        const node = ReactDOM.findDOMNode(cmp);
+        const options = node.getElementsByTagName('option');
+        expect(options.length).toBe(2);
+        expect(options[0].innerHTML).toBe('A4 sheet');
+        expect(options[1].innerHTML).toBe('A3 sheet');
+
+    });
 });

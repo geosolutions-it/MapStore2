@@ -46,6 +46,20 @@ const PrintUtils = {
             return current < mapScale ? previous : index;
         }, 0);
     },
+    getMapSize: (layout, maxWidth) => {
+        if (layout) {
+            const width = layout.rotation ? layout.map.height : layout.map.width;
+            const height = layout.rotation ? layout.map.width : layout.map.height;
+            return {
+                width: maxWidth,
+                height: height / width * maxWidth
+            };
+        }
+        return {
+            width: 100,
+            height: 100
+        };
+    },
     getMapfishPrintSpecification: (spec) => {
         const projectedCenter = CoordinatesUtils.reproject(spec.center, 'EPSG:4326', spec.projection);
         return {

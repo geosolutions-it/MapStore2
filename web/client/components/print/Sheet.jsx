@@ -8,6 +8,7 @@
 
 const React = require('react');
 const Choice = require('./Choice');
+const {isFunction} = require('lodash');
 
 const Sheet = React.createClass({
     propTypes: {
@@ -15,7 +16,8 @@ const Sheet = React.createClass({
         sheetRegex: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string]),
         label: React.PropTypes.string,
         onChange: React.PropTypes.func,
-        selected: React.PropTypes.string
+        selected: React.PropTypes.string,
+        layoutNames: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func])
     },
     getDefaultProps() {
         return {
@@ -26,12 +28,21 @@ const Sheet = React.createClass({
             selected: ''
         };
     },
+    getLayoutName(layout) {
+        if (this.props.layoutNames) {
+            if (isFunction(this.props.layoutNames)) {
+                return this.props.layoutNames(layout);
+            }
+            return this.props.layoutNames[layout] || layout;
+        }
+        return layout;
+    },
     getSheetFormats() {
         return this.props.layouts.reduce((previous, current) => {
             const layout = current.name.match(this.props.sheetRegex);
             return layout && layout.length > 0 && previous.indexOf(layout[layout.length - 1]) === -1
                 && previous.concat([layout[layout.length - 1]]) || previous;
-        }, []).map((layout) => ({name: layout, value: layout}));
+        }, []).map((layout) => ({name: this.getLayoutName(layout), value: layout}));
     },
     render() {
         const {children, sheetRegex, layouts, ...props} = this.props;
