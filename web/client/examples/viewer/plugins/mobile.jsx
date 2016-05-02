@@ -5,6 +5,7 @@ var Settings = require('../components/Settings');
 var LangBar = require('../../../components/I18N/LangBar');
 var CRSSelector = require("../../../components/mapcontrols/mouseposition/CRSSelector");
 var ToggleButton = require('../../../components/buttons/ToggleButton');
+var FullScreen = require('../components/FullScreen');
 var { ActionCreators } = require('redux-undo');
 var {undo, redo} = ActionCreators;
 var BackgroundSwitcher = require("../../../components/TOC/background/BackgroundSwitcher");
@@ -18,6 +19,7 @@ var mousePosition = require('../../../reducers/mousePosition');
 var measurement = require('../../../reducers/measurement');
 var {searchResults} = require('../../../reducers/search');
 var help = require('../../../reducers/help');
+var fullScreen = require('../../../reducers/fullScreen');
 
 var LocateBtn = require("../../../components/mapcontrols/locate/LocateBtn");
 var locate = require('../../../reducers/locate');
@@ -33,6 +35,8 @@ var {changeMousePosition, changeMousePositionCrs, changeMousePositionState} = re
 var {toggleNode, sortNode, changeLayerProperties, layerLoad} = require('../../../actions/layers');
 var {changeMapView, changeZoomLevel} = require('../../../actions/map');
 var {textSearch, resultsPurge} = require("../../../actions/search");
+
+var {toggleFullScreen} = require('../../../actions/fullScreen');
 
 var {changeMeasurementState} = require('../../../actions/measurement');
 var {Button, Glyphicon} = require('react-bootstrap');
@@ -105,6 +109,8 @@ module.exports = {
                             <LangBar key="langSelector"
                             currentLocale={props.locale}
                             onLanguageChange={props.loadLocale}/>
+                            <h5>Fullscreen</h5>
+                            <FullScreen fullscreen={false} propertiesToggle={props.toggleFullScreen} />
                             <CRSSelector
                                 key="crsSelector"
                                 onCRSChange={props.changeMousePositionCrs}
@@ -173,6 +179,7 @@ module.exports = {
     reducers: {
         mapInfo: mapInfo ? mapInfo : {enabled: false, responses: [], requests: {length: 0}, clickPoint: {}, showMarker: false},
         floatingPanel,
+        fullScreen,
         mousePosition,
         measurement,
         searchResults,
@@ -186,6 +193,7 @@ module.exports = {
         changeMapInfoState,
         purgeMapInfoResults,
         activatePanel,
+        toggleFullScreen,
         changeLayerProperties,
         changeMousePositionState,
         changeMousePositionCrs,
