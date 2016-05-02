@@ -42,7 +42,6 @@ const PrintPreview = React.createClass({
         };
     },
     onDocumentComplete(pages) {
-        this.props.setPage(1);
         this.props.setPages(pages);
     },
     render() {
@@ -57,12 +56,24 @@ const PrintPreview = React.createClass({
                     <Button disabled={this.props.scale <= this.props.minScale} onClick={this.zoomOut}><Glyphicon glyph="zoom-out"/></Button>
                     <label style={{marginLeft: "10px", marginRight: "10px"}}>{this.props.scale}x</label>
                     <Button style={{marginRight: "10px"}}><a href={this.props.url} target="_blank"><Glyphicon glyph="save"/></a></Button>
+                    <Button disabled={this.props.currentPage === 1} onClick={this.firstPage}><Glyphicon glyph="step-backward"/></Button>
                     <Button disabled={this.props.currentPage === 1} onClick={this.prevPage}><Glyphicon glyph="chevron-left"/></Button>
                     <label style={{marginLeft: "10px", marginRight: "10px"}}>{this.props.currentPage} / {this.props.pages}</label>
                     <Button disabled={this.props.currentPage === this.props.pages} onClick={this.nextPage}><Glyphicon glyph="chevron-right"/></Button>
+                    <Button disabled={this.props.currentPage === this.props.pages} onClick={this.lastPage}><Glyphicon glyph="step-forward"/></Button>
                 </div>
             </div>
         );
+    },
+    firstPage() {
+        if (this.props.currentPage > 1) {
+            this.props.setPage(1);
+        }
+    },
+    lastPage() {
+        if (this.props.currentPage < this.props.pages) {
+            this.props.setPage(this.props.pages);
+        }
     },
     prevPage() {
         if (this.props.currentPage > 1) {
