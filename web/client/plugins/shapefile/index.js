@@ -8,6 +8,7 @@
 const {connect} = require('react-redux');
 
 const {onShapeError} = require('../../actions/shapefile');
+const {setStyleParameter} = require('../../actions/style');
 
 const SelectShape = connect((state) => (
         {
@@ -16,6 +17,34 @@ const SelectShape = connect((state) => (
         ), {
     onShapeError: onShapeError
 })(require('../../components/shapefile/SelectShape'));
+
+const StylePolygon = connect((state) => (
+        {
+            shapeStyle: state.style || {}
+        }
+        ), {
+    setStyleParameter: setStyleParameter
+})(require('../../components/style/StylePolygon'));
+
+const StylePoint = connect((state) => (
+        {
+            shapeStyle: state.style || {}
+        }
+        ), {
+    setStyleParameter: setStyleParameter
+})(require('../../components/style/StylePoint'));
+
+const StylePolyline = connect((state) => (
+        {
+            shapeStyle: state.style || {}
+        }
+        ), {
+    setStyleParameter: setStyleParameter
+})(require('../../components/style/StylePolyline'));
+
 module.exports = {
-    SelectShape
+    SelectShape,
+    StylePolygon,
+    StylePolyline,
+    StylePoint
 };

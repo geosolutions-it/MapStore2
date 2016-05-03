@@ -10,10 +10,10 @@ const ON_SHAPE_ERROR = 'ON_SHAPE_ERROR';
 const SHAPE_LOADING = 'SHAPE_LOADING';
 
 
-function onShapeChoosen(files) {
+function onShapeChoosen(layers) {
     return {
         type: ON_SHAPE_CHOOSEN,
-        files
+        layers
     };
 }
 function onShapeError(message) {

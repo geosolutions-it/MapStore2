@@ -15,7 +15,7 @@ const {
 const assign = require('object-assign');
 
 const initialState = {
-    files: null,
+    layers: null,
     error: null,
     loading: false
 };
@@ -23,7 +23,7 @@ const initialState = {
 function shapefile(state = initialState, action) {
     switch (action.type) {
         case ON_SHAPE_CHOOSEN: {
-            return assign({}, state, {files: action.files});
+            return assign({}, state, {layers: action.layers});
         }
         case ON_SHAPE_ERROR: {
             return assign({}, state, {error: action.message});
