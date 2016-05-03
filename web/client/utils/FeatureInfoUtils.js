@@ -8,6 +8,15 @@ const INFO_FORMATS = {
     "GML3": "application/vnd.ogc.gml/3.1.1"
 };
 
+const INFO_FORMATS_BY_MIME_TYPE = {
+    "text/plain": "TEXT",
+    "text/html": "HTML",
+    "text/javascript": "JSONP",
+    "application/json": "JSON",
+    "application/vnd.ogc.gml": "GML2",
+    "application/vnd.ogc.gml/3.1.1": "GML3"
+};
+
 const regexpXML = /^[\s\S]*<gml:featureMembers[^>]*>([\s\S]*)<\/gml:featureMembers>[\s\S]*$/i;
 
 const regexpBody = /^[\s\S]*<body[^>]*>([\s\S]*)<\/body>[\s\S]*$/i;
@@ -52,13 +61,13 @@ const Validator = {
          *Parse the TEXT to get only the valid text responses
          */
         getValidResponses(responses) {
-            return responses.filter((res) => res.response !== "" && res.response !== "no features were found\n" && (typeof res.response === "string" && res.response.indexOf("<?xml") !== 0));
+            return responses.filter((res) => res.response !== "" && (res.response.indexOf("no features were found") !== 0) && (typeof res.response === "string" && res.response.indexOf("<?xml") !== 0));
         },
         /**
          * Parse the TEXT to get only the NOT valid text responses
          */
         getNoValidResponses(responses) {
-            return responses.filter((res) => res.response === "" || res.response === "no features were found\n" || res.response && (typeof res.response === "string" && res.response.indexOf("<?xml") === 0));
+            return responses.filter((res) => res.response === "" || (res.response.indexOf("no features were found") === 0) || res.response && (typeof res.response === "string" && res.response.indexOf("<?xml") === 0));
         }
     },
     JSON: {
@@ -110,6 +119,7 @@ const Parser = {
 
 module.exports = {
     INFO_FORMATS,
+    INFO_FORMATS_BY_MIME_TYPE,
     Validator,
     Parser,
     parseXMLResponse,

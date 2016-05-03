@@ -115,6 +115,7 @@
             "tooltip": "Query objects on map"
         },
         "getFeatureInfoTitle": "Feature Info",
+        "identifyTitle": "Feature Info",
         "getFeatureInfoError": {
             "title": "Ooops! Something's wrong",
             "text": "An error has occurred during this <b>GetFeatureInfo</b> request"
