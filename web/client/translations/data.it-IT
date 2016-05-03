@@ -326,7 +326,8 @@
             "tooltip": "Aggiungi uno shape file alla mappa.",
             "placeholder": "Trascina qui il file o fai click per selezionare lo shape file da importare.",
             "error": {"select": "Seleziona Shapefile compresso"},
-            "add": "Importa"
+            "add": "Importa",
+            "cancel": "Annulla"
         }
     }
 }

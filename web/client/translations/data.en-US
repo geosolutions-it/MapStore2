@@ -325,7 +325,8 @@
             "tooltip": "Add a local shape file to the map.",
             "placeholder": "Drop your file here or click to select shape file to import.",
             "error": {"select": "Select one or more zip file"},
-            "add": "Add"
+            "add": "Add",
+            "cancel": "Cancel"
         }
     }
 }

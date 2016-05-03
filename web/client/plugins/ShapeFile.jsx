@@ -15,22 +15,26 @@ const FileUtils = require('../utils/FileUtils');
 let StyleUtils;
 const {Grid, Row, Col, Button} = require('react-bootstrap');
 
+const Combobox = require('react-widgets').Combobox;
 
 const Message = require('./Message');
 
 const {SelectShape, StylePolygon, StylePolyline, StylePoint} = require('./shapefile/index');
-const {onShapeError, shapeLoading, onShapeChoosen} = require('../actions/shapefile');
+const {onShapeError, shapeLoading, onShapeChoosen, onSelectLayer, onLayerAdded} = require('../actions/shapefile');
 const {addLayer} = require('../actions/layers');
 
 const ShapeFile = React.createClass({
     propTypes: {
         layers: React.PropTypes.array,
+        selected: React.PropTypes.object,
         style: React.PropTypes.object,
         shapeStyle: React.PropTypes.object,
         onShapeError: React.PropTypes.func,
         onShapeChoosen: React.PropTypes.func,
         addShapeLayer: React.PropTypes.func,
         shapeLoading: React.PropTypes.func,
+        onSelectLayer: React.PropTypes.func,
+        onLayerAdded: React.PropTypes.func,
         error: React.PropTypes.string,
         mapType: React.PropTypes.string
     },
@@ -42,9 +46,9 @@ const ShapeFile = React.createClass({
             useDefaultStyle: false
         };
     },
-    getGeomType(layers) {
-        if (layers[0] && layers[0].features && layers[0].features[0] && layers[0].features[0].geometry) {
-            return layers[0].features[0].geometry.type;
+    getGeomType(layer) {
+        if (layer && layer.features && layer.features[0].geometry) {
+            return layer.features[0].geometry.type;
         }
     },
     renderError() {
@@ -53,7 +57,7 @@ const ShapeFile = React.createClass({
                 </Row>);
     },
     renderStyle() {
-        switch (this.getGeomType(this.props.layers || [])) {
+        switch (this.getGeomType(this.props.selected)) {
             case 'Polygon':
             case 'MultiPolygon': {
                 return (<StylePolygon/>);
@@ -73,7 +77,7 @@ const ShapeFile = React.createClass({
         }
     },
     renderDefaultStyle() {
-        return (this.props.layers && this.props.layers[0]) ? (
+        return (this.props.selected) ? (
             <Row>
                 <Col xs={1}>
                     <input aria-label="..." type="checkbox" defaultChecked={this.state.useDefaultStyle} onChange={(e) => {this.setState({useDefaultStyle: e.target.checked}); }}/>
@@ -88,15 +92,23 @@ const ShapeFile = React.createClass({
             <Grid style={{width: "300px"}} fluid>
                 {(this.props.error) ? this.renderError() : null}
             <Row style={{textAlign: "center"}}>
+                {
+            (this.props.selected) ?
+                <Combobox data={this.props.layers} value={this.props.selected} onChange={(value)=> this.props.onSelectLayer(value)}valueField={"id"} textField={"name"} /> :
                 <SelectShape errorMessage="shapefile.error.select" text={<Message msgId="shapefile.placeholder"/>} onShapeChoosen={this.addShape}/>
+            }
             </Row>
             <Row style={{marginBottom: 10}}>
                 {(this.state.useDefaultStyle) ? null : this.renderStyle()}
             </Row>
             {this.renderDefaultStyle()}
-            <Row >
-                <Col xsOffset={9} xs={4}> <Button disabled={!this.props.layers} onClick={this.addToMap}>{<Message msgId="shapefile.add"/>}</Button></Col>
-            </Row>
+
+                {(this.props.selected) ?
+                (<Row >
+                    <Col xsOffset={6} xs={3}> <Button disabled={!this.props.selected} onClick={() => {this.props.onShapeChoosen(null); }}>{<Message msgId="shapefile.cancel"/>}</Button></Col>
+                    <Col xs={3}> <Button disabled={!this.props.selected} onClick={this.addToMap}>{<Message msgId="shapefile.add"/>}</Button></Col>
+                </Row>
+                    ) : null }
             </Grid>
             );
     },
@@ -123,17 +135,14 @@ const ShapeFile = React.createClass({
         });
     },
     addToMap() {
-
         this.props.shapeLoading(true);
-        let queue = this.props.layers.map((layer) => {
-            let styledLayer = layer;
-            if (!this.state.useDefaultStyle) {
-                styledLayer = StyleUtils.toVectorStyle(layer, this.props.shapeStyle);
-            }
-            Promise.resolve(this.props.addShapeLayer( styledLayer ));
-        }, this);
-        Promise.all(queue).then(() => {
+        let styledLayer = this.props.selected;
+        if (!this.state.useDefaultStyle) {
+            styledLayer = StyleUtils.toVectorStyle(styledLayer, this.props.shapeStyle);
+        }
+        Promise.resolve(this.props.addShapeLayer( styledLayer )).then(() => {
             this.props.shapeLoading(false);
+            this.props.onLayerAdded(this.props.selected);
         }).catch((e) => {
             this.props.shapeLoading(false);
             this.props.onShapeError(e.message || e);
@@ -145,11 +154,14 @@ module.exports = {
     ShapeFile: connect((state) => (
         {
             layers: state.shapefile && state.shapefile.layers || null,
+            selected: state.shapefile && state.shapefile.selected || null,
             error: state.shapefile && state.shapefile.error || null,
             shapeStyle: state.style || {}
         }
         ), {
             onShapeChoosen: onShapeChoosen,
+            onLayerAdded: onLayerAdded,
+            onSelectLayer: onSelectLayer,
             onShapeError: onShapeError,
             addShapeLayer: addLayer,
             shapeLoading: shapeLoading
