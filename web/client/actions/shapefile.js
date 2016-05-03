@@ -7,13 +7,21 @@
  */
 const ON_SHAPE_CHOOSEN = 'ON_SHAPE_CHOOSEN';
 const ON_SHAPE_ERROR = 'ON_SHAPE_ERROR';
+const ON_SELECT_LAYER = 'ON_SELECT_LAYER';
 const SHAPE_LOADING = 'SHAPE_LOADING';
+const ON_LAYER_ADDED = 'ON_LAYER_ADDED';
 
 
-function onShapeChoosen(files) {
+function onShapeChoosen(layers) {
     return {
         type: ON_SHAPE_CHOOSEN,
-        files
+        layers
+    };
+}
+function onSelectLayer(layer) {
+    return {
+        type: ON_SELECT_LAYER,
+        layer
     };
 }
 function onShapeError(message) {
@@ -28,11 +36,21 @@ function shapeLoading(status) {
         status
     };
 }
+function onLayerAdded(layer) {
+    return {
+        type: ON_LAYER_ADDED,
+        layer
+    };
+}
 module.exports = {
     ON_SHAPE_CHOOSEN,
     ON_SHAPE_ERROR,
     SHAPE_LOADING,
+    ON_SELECT_LAYER,
+    ON_LAYER_ADDED,
     onShapeChoosen,
     onShapeError,
-    shapeLoading
+    shapeLoading,
+    onSelectLayer,
+    onLayerAdded
 };

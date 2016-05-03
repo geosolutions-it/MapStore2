@@ -19,7 +19,7 @@ describe('Test the shapefile reducer', () => {
         const state = shapefile(undefined, {
             type: ''
         });
-        expect(state.files).toBe(null);
+        expect(state.layers).toBe(null);
         expect(state.error).toBe(null);
         expect(state.loading).toBe(false);
 
@@ -27,9 +27,9 @@ describe('Test the shapefile reducer', () => {
     it('shepefile choosen', () => {
         const state = shapefile(undefined, {
             type: ON_SHAPE_CHOOSEN,
-            files: 'test'
+            layers: 'test'
         });
-        expect(state.files).toBe('test');
+        expect(state.layers).toBe('test');
     });
 
     it('shepefile error', () => {

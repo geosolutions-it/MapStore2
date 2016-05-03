@@ -58,12 +58,12 @@ var geometryToLayer = function(geojson, options) {
     case 'LineString':
     case 'MultiLineString':
         latlngs = coordsToLatLngs(coords, geometry.type === 'LineString' ? 0 : 1, coordsToLatLng);
-        return new L.Polyline(latlngs, options);
+        return new L.Polyline(latlngs, options.style);
 
     case 'Polygon':
     case 'MultiPolygon':
         latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
-        return new L.Polygon(latlngs, options);
+        return new L.Polygon(latlngs, options.style);
 
     case 'GeometryCollection':
         for (i = 0, len = geometry.geometries.length; i < len; i++) {
@@ -90,15 +90,18 @@ let Feature = React.createClass({
         styleName: React.PropTypes.string,
         properties: React.PropTypes.object,
         container: React.PropTypes.object, // TODO it must be a L.GeoJSON
-        geometry: React.PropTypes.object // TODO check for geojson format for geometry
+        geometry: React.PropTypes.object, // TODO check for geojson format for geometry
+        style: React.PropTypes.object
     },
     componentDidMount() {
         if (this.props.container) {
+            let style = this.props.style;
             this._layer = geometryToLayer({
                 type: this.props.type,
-                geometry: this.props.geometry,
+                geometry: this.props.geometry}, {
+                style: style,
                 pointToLayer: this.props.styleName !== "marker" ? function(feature, latlng) {
-                    return L.circleMarker(latlng, {
+                    return L.circleMarker(latlng, style || {
                         radius: 5,
                         color: "red",
                         weight: 1,
@@ -115,9 +118,11 @@ let Feature = React.createClass({
             this.props.container.removeLayer(this._layer);
             this._layer = geometryToLayer({
                 type: newProps.type,
-                geometry: newProps.geometry,
+                geometry: newProps.geometry},
+                {
+                style: newProps.style,
                 pointToLayer: newProps.styleName !== "marker" ? function(feature, latlng) {
-                    return L.circleMarker(latlng, {
+                    return L.circleMarker(latlng, newProps.style || {
                         radius: 5,
                         color: "red",
                         weight: 1,

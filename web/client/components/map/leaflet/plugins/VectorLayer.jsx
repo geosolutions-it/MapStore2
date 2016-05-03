@@ -21,9 +21,10 @@ var createVectorLayer = function(options) {
     const {hideLoading} = options;
     return L.geoJson([]/* options.features */, {
         pointToLayer: options.styleName !== "marker" ? function(feature, latlng) {
-            return L.circleMarker(latlng, defaultStyle);
+            return L.circleMarker(latlng, options.style || defaultStyle);
         } : null,
-        hideLoading: hideLoading
+        hideLoading: hideLoading,
+        style: options.style || defaultStyle
     });
 };
 

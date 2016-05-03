@@ -22,7 +22,7 @@ describe('Test correctness of the shapefile actions', () => {
         const retVal = onShapeChoosen('val');
         expect(retVal).toExist();
         expect(retVal.type).toBe(ON_SHAPE_CHOOSEN);
-        expect(retVal.files).toBe('val');
+        expect(retVal.layers).toBe('val');
     });
 
     it('onShapeError', () => {
