@@ -51,7 +51,7 @@ const StylePoint = React.createClass({
                                 <ColorPicker
                                     disabled={this.props.shapeStyle.marker}
                                     value={this.props.shapeStyle.color}
-                                    line={true}
+                                    line={false}
                                     text="Stroke"
                                     onChangeColor={(color) => {if (color) { this.props.setStyleParameter("color", color); } }} />
                             </Col>

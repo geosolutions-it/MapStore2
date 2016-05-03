@@ -40,7 +40,7 @@ const StylePolygon = React.createClass({
                             <Col xs={4}>
                                 <ColorPicker
                                     value={this.props.shapeStyle.color}
-                                    line={true}
+                                    line={false}
                                     text="Stroke"
                                     onChangeColor={(color) => {if (color) { this.props.setStyleParameter("color", color); } }} />
                             </Col>
