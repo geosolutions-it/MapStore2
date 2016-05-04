@@ -24,6 +24,9 @@ const {changeMapView} = require('../../actions/map');
 const {textSearch, resultsPurge} = require("../../actions/search");
 const {toggleControl} = require('../../actions/controls');
 
+const ReactSwipe = require('react-swipe');
+const SwipeHeader = require('../../components/data/identify/SwipeHeader');
+
 const MousePositionMobile = connect((state) => ({
     enabled: state.mousePosition.enabled,
     mousePosition: state.map && state.map.present && state.map.present.center,
@@ -162,7 +165,7 @@ const MapViewer = React.createClass({
                    }}
                    draggable={false}
                    collapsible={true}
-                   display="swipe"
+                   viewerOptions={{container: ReactSwipe, header: SwipeHeader, collapsible: false}}
                    bodyClass="mobile-feature-info" />
             </div>
         );

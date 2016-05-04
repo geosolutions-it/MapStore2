@@ -38,10 +38,18 @@ var CoordinatesUtils = {
      * @return {array} [minx, miny, maxx, maxy]
      */
     reprojectBbox: function(bbox, source, dest) {
-        let points = {
-            sw: [bbox[0], bbox[1]],
-            ne: [bbox[2], bbox[3]]
-        };
+        let points;
+        if (isArray(bbox)) {
+            points = {
+                sw: [bbox[0], bbox[1]],
+                ne: [bbox[2], bbox[3]]
+            };
+        } else {
+            points = {
+                sw: [bbox.minx, bbox.miny],
+                ne: [bbox.maxx, bbox.maxy]
+            };
+        }
         let projPoints = [];
         for (let p in points) {
             if (points.hasOwnProperty(p)) {

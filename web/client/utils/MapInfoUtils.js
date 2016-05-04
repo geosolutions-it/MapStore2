@@ -6,9 +6,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const INFO_FORMATS = require("./FeatureInfoUtils").INFO_FORMATS;
+const FeatureInfoUtils = require("./FeatureInfoUtils");
+const INFO_FORMATS = FeatureInfoUtils.INFO_FORMATS;
+const INFO_FORMATS_BY_MIME_TYPE = FeatureInfoUtils.INFO_FORMATS_BY_MIME_TYPE;
 
-var MapInfoUtils = {
+const {isArray} = require('lodash');
+const assign = require('object-assign');
+const CoordinatesUtils = require('./CoordinatesUtils');
+
+const reprojectBbox = (bbox, projection) => {
+    let newBbox = CoordinatesUtils.reprojectBbox(bbox.bounds, bbox.crs, projection);
+    return assign({}, {
+        crs: projection,
+        bounds: {
+            minx: newBbox[0],
+            miny: newBbox[1],
+            maxx: newBbox[2],
+            maxy: newBbox[3]
+        }
+    });
+};
+
+const MapInfoUtils = {
     /**
      * specifies which info formats are currently supported
      */
@@ -70,6 +89,59 @@ var MapInfoUtils = {
             styleName: "marker",
             features: MapInfoUtils.clickedPointToGeoJson(clickedMapPoint)
         };
+    },
+    buildIdentifyRequest(layer, props) {
+        const {bounds, crs} = reprojectBbox(props.map.bbox, props.map.projection);
+        if (layer.type === 'wms') {
+            return {
+                request: {
+                    id: layer.id,
+                    layers: layer.name,
+                    query_layers: layer.name,
+                    styles: layer.style,
+                    x: parseInt(props.point.pixel.x, 10),
+                    y: parseInt(props.point.pixel.y, 10),
+                    height: parseInt(props.map.size.height, 10),
+                    width: parseInt(props.map.size.width, 10),
+                    srs: crs,
+                    bbox: bounds.minx + "," +
+                          bounds.miny + "," +
+                          bounds.maxx + "," +
+                          bounds.maxy,
+                    feature_count: props.maxItems,
+                    info_format: props.format,
+                    ...(props.params || {})
+                },
+                metadata: {
+                    title: layer.title,
+                    regex: layer.featureInfoRegex
+                },
+                url: isArray(layer.url) ?
+                    layer.url[0] :
+                    layer.url.replace(/[?].*$/g, '')
+            };
+        }
+        return {};
+    },
+    getValidator(format) {
+        return FeatureInfoUtils.Validator[INFO_FORMATS_BY_MIME_TYPE[format]] || {
+            getValidResponses: (responses) => responses,
+            getNoValidResponses: () => []
+        };
+    },
+    getViewers() {
+        return {
+            [FeatureInfoUtils.INFO_FORMATS.JSON]: require('../components/data/identify/viewers/JSONViewer'),
+            [FeatureInfoUtils.INFO_FORMATS.HTML]: require('../components/data/identify/viewers/HTMLViewer'),
+            [FeatureInfoUtils.INFO_FORMATS.TEXT]: require('../components/data/identify/viewers/TextViewer')
+        };
+    },
+    defaultQueryableFilter(l) {
+        return l.visibility &&
+            l.type === 'wms' &&
+            (l.queryable === undefined || l.queryable) &&
+            l.group !== "background"
+        ;
     }
 };
 

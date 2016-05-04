@@ -9,11 +9,10 @@
 const React = require('react');
 const {Alert, Accordion, Panel, Glyphicon} = require('react-bootstrap');
 const ReactSwipe = require('react-swipe');
-var JSONFeatureInfoViewer = require('../../components/data/identify/viewers/JSONViewer');
-var HTMLFeatureInfoViewer = require('../../components/data/identify/viewers/HTMLViewer');
-var TEXTFeatureInfoViewer = require('../../components/data/identify/viewers/TextViewer');
-var FeatureInfoUtils = require('../../utils/FeatureInfoUtils');
+
 var MapInfoUtils = require('../../utils/MapInfoUtils');
+var FeatureInfoUtils = require('../../utils/FeatureInfoUtils');
+
 const I18N = require('../../components/I18N/I18N');
 
 const GetFeatureInfoViewer = React.createClass({
@@ -23,30 +22,25 @@ const GetFeatureInfoViewer = React.createClass({
         ),
         responses: React.PropTypes.array,
         missingRequests: React.PropTypes.number,
-        display: React.PropTypes.string
+        display: React.PropTypes.string,
+        getValidator: React.PropTypes.func,
+        viewers: React.PropTypes.object
     },
     getDefaultProps() {
         return {
             display: "accordion",
             responses: [],
-            missingRequests: 0
+            missingRequests: 0,
+            getValidator: MapInfoUtils.getValidator,
+            viewers: {
+                [FeatureInfoUtils.INFO_FORMATS.JSON]: require('../../components/data/identify/viewers/JSONViewer'),
+                [FeatureInfoUtils.INFO_FORMATS.HTML]: require('../../components/data/identify/viewers/HTMLViewer'),
+                [FeatureInfoUtils.INFO_FORMATS.TEXT]: require('../../components/data/identify/viewers/TextViewer')
+            }
         };
     },
     shouldComponentUpdate(nextProps) {
         return nextProps.responses !== this.props.responses || nextProps.missingRequests !== this.props.missingRequests;
-    },
-    getValidator() {
-        var infoFormats = MapInfoUtils.getAvailableInfoFormat();
-        switch (this.props.infoFormat) {
-            case infoFormats.JSON:
-                return FeatureInfoUtils.Validator.JSON;
-            case infoFormats.HTML:
-                return FeatureInfoUtils.Validator.HTML;
-            case infoFormats.TEXT:
-                return FeatureInfoUtils.Validator.TEXT;
-            default:
-                return null;
-        }
     },
     /**
      * render empty layers or not valid responses section.
@@ -75,32 +69,19 @@ const GetFeatureInfoViewer = React.createClass({
      * Render a single layer feature info
      */
     renderInfoPage(response) {
-        var infoFormats = MapInfoUtils.getAvailableInfoFormat();
-        switch (this.props.infoFormat) {
-            case infoFormats.JSON:
-                return <JSONFeatureInfoViewer display={this.props.display} response={response} />;
-            case infoFormats.HTML:
-                return <HTMLFeatureInfoViewer display={this.props.display} response={response} />;
-            case infoFormats.TEXT:
-                return <TEXTFeatureInfoViewer display={this.props.display} response={response} />;
-            default:
-                return null;
+        const Viewer = this.props.viewers[this.props.infoFormat];
+        if (Viewer) {
+            return <Viewer display={this.props.display} response={response} />;
         }
+        return null;
     },
     /**
      * Some info about the event
      */
     renderAdditionalInfo() {
-        var infoFormats = MapInfoUtils.getAvailableInfoFormat();
-        switch (this.props.infoFormat) {
-            case infoFormats.JSON:
-                return this.renderEmptyLayers(FeatureInfoUtils.Validator.JSON);
-            case infoFormats.HTML:
-                return this.renderEmptyLayers(FeatureInfoUtils.Validator.HTML);
-            case infoFormats.TEXT:
-                return this.renderEmptyLayers(FeatureInfoUtils.Validator.TEXT);
-            default:
-                return null;
+        const validator = this.props.getValidator(this.props.infoFormat);
+        if (validator) {
+            this.renderEmptyLayers(validator);
         }
     },
     renderLeftButton() {
@@ -141,7 +122,7 @@ const GetFeatureInfoViewer = React.createClass({
     },
     render() {
         const Container = this.props.display === "accordion" ? Accordion : ReactSwipe;
-        const validator = this.getValidator();
+        const validator = this.props.getValidator(this.props.infoFormat);
         const validResponses = validator.getValidResponses(this.props.responses);
         return (<div>
                 <Container ref="container" defaultActiveKey={0} key={"swiper-" + this.props.responses.length + "-" + this.props.missingRequests} shouldUpdate={(nextProps, props) => {return nextProps !== props; }}>

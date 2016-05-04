@@ -116,6 +116,7 @@
             "tooltip": "Interroga gli oggetti sulla mappa"
         },
         "getFeatureInfoTitle": "Informazioni Sulle Feature",
+        "identifyTitle": "Informazioni Sulle Feature",
         "getFeatureInfoError": {
             "title": "Ooops! Qualcosa non va",
             "text": "Si è verificato un errore nel fare questa richiesta <b>GetFeatureInfo</b>"
