@@ -7,12 +7,19 @@
  */
 
 const {connect} = require('react-redux');
+const {mapSelector} = require('../selectors/map');
+const {createSelector} = require('reselect');
+
+const selector = createSelector([
+    mapSelector || {},
+    (state) => state.mousePosition || {}
+], (map, mousePosition) => ({
+    enabled: mousePosition.enabled,
+    mousePosition: mousePosition.showCenter && map && map.center || mousePosition.position,
+    crs: mousePosition.crs || map && map.projection || 'EPSG:3857'
+}));
 
 module.exports = {
-    MousePositionPlugin: connect((state) => ({
-        enabled: state.mousePosition.enabled,
-        mousePosition: state.mousePosition.position,
-        crs: state.mousePosition.crs || state.map && state.map.present && state.map.present.projection || state.map && state.map.projection || 'EPSG:3857'
-    }))(require('../components/mapcontrols/mouseposition/MousePosition')),
+    MousePositionPlugin: connect(selector)(require('../components/mapcontrols/mouseposition/MousePosition')),
     reducers: {mousePosition: require('../reducers/mousePosition')}
 };

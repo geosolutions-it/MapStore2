@@ -33,8 +33,6 @@ module.exports = (plugins) => {
         browser: require('../../reducers/browser'),
         controls: () => {return null; },
         help: require('../../reducers/help'),
-        locate: require('../../reducers/locate'),
-        search: require('../../reducers/search').searchResults,
         measurement: require('../../reducers/measurement'),
         snapshot: require('../../reducers/snapshot'),
         map: () => {return null; },
@@ -42,7 +40,7 @@ module.exports = (plugins) => {
         ...pluginsReducers
     });
 
-    const mobileOverride = {mapInfo: {enabled: true, infoFormat: 'text/html' }, mousePosition: {enabled: true, crs: "EPSG:4326"}};
+    const mobileOverride = {mapInfo: {enabled: true, infoFormat: 'text/html' }, mousePosition: {enabled: true, crs: "EPSG:4326", showCenter: true}};
 
     const rootReducer = (state, action) => {
         let mapState = createHistory(LayersUtils.splitMapAndLayers(mapConfig(state, action)));

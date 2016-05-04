@@ -9,9 +9,13 @@
 module.exports = {
     MousePositionPlugin: require('../plugins/MousePosition'),
     PrintPlugin: require('../plugins/Print'),
-    Identify: require('../plugins/Identify'),
+    IdentifyPlugin: require('../plugins/Identify'),
     MapPlugin: require('../plugins/Map'),
     ToolbarPlugin: require('../plugins/Toolbar'),
-    ShapeFilePlugin: require('../plugins/ShapeFile')
-
+    ShapeFilePlugin: require('../plugins/ShapeFile'),
+    SearchPlugin: require('../plugins/Search'),
+    ScaleBoxPlugin: require('../plugins/ScaleBox'),
+    LocatePlugin: require('../plugins/Locate'),
+    ZoomAllPlugin: require('../plugins/ZoomAll'),
+    MapLoadingPlugin: require('../plugins/MapLoading')
 };

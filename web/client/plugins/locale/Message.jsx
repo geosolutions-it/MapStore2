@@ -7,11 +7,7 @@
  */
 const {connect} = require('react-redux');
 
-const {changeHelpwinVisibility, changeHelpText} = require('../actions/help');
-
 module.exports = connect((state) => ({
-    helpEnabled: state.controls && state.controls.help && state.controls.help.enabled
-}), {
-    changeHelpText,
-    changeHelpwinVisibility
-})(require('../components/help/HelpWrapper'));
+    locale: state.locale && state.locale.currentLocale,
+    messages: state.locale && state.locale.messages || []
+}))(require('../../components/I18N/Message'));

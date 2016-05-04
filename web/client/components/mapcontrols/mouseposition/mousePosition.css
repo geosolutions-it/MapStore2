@@ -4,11 +4,15 @@
     right: 45%;
     position: absolute;
     margin: 8px;
+    text-shadow: -1px -1px 1px #000,
+                  1px -1px 1px #000,
+                 -1px  1px 1px #000,
+                  1px  1px 1px #000;
 }
 
 #mapstore-mouseposition .label {
     display: inline-block;
-    max-width: 280px;
+    max-width: 350px;
     min-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -17,5 +21,7 @@
 
 }
 #mapstore-mouseposition .label-info {
-    background-color:rgba(91,192,222,.5);
+    background-color:rgba(91,192,222,0);
+    color: white;
+    font-size: 110%;
 }

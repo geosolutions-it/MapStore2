@@ -13,8 +13,8 @@ const {createSelector} = require('reselect');
 const {mapSelector} = require('../selectors/map');
 const {changeZoomLevel} = require('../actions/map');
 
-const HelpWrapper = require('./HelpWrapper');
-const Message = require('./Message');
+const HelpWrapper = require('./help/HelpWrapper');
+const Message = require('./locale/Message');
 const ScaleBox = require("../components/mapcontrols/scale/ScaleBox");
 
 const selector = createSelector([mapSelector], (map) => ({

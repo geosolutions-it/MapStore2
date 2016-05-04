@@ -9,7 +9,6 @@ const React = require('react');
 
 require('../assets/css/viewer.css');
 
-const {bindActionCreators} = require('redux');
 const {connect} = require('react-redux');
 const {Button, Glyphicon} = require('react-bootstrap');
 
@@ -19,70 +18,17 @@ const ConfigUtils = require('../../utils/ConfigUtils');
 
 const {loadMapConfig} = require('../../actions/config');
 
-const {changeMapView} = require('../../actions/map');
 
-const {textSearch, resultsPurge} = require("../../actions/search");
 const {toggleControl} = require('../../actions/controls');
 
 const ReactSwipe = require('react-swipe');
 const SwipeHeader = require('../../components/data/identify/SwipeHeader');
 
-const MousePositionMobile = connect((state) => ({
-    enabled: state.mousePosition.enabled,
-    mousePosition: state.map && state.map.present && state.map.present.center,
-    crs: state.mousePosition.crs || state.map && state.map.present && state.map.present.projection || 'EPSG:3857'
-}))(require("../../components/mapcontrols/mouseposition/MousePosition"));
-
-const HelpTextPanel = require('../../plugins/HelpTextPanel');
-
 const DrawerMenu = require('../containers/DrawerMenu');
 
 const About = require('../components/viewer/about/About');
 
-const GlobalSpinner = connect((state) => {
-    return {
-        loading: state.layers && state.layers.flat.some((layer) => layer.loading)
-    };
-})(require('../../components/misc/spinners/GlobalSpinner/GlobalSpinner'));
-
-const Message = require('../../components/I18N/Message');
-
-const HelpWrapper = require('../../plugins/HelpWrapper');
-
-const {ScaleBoxPlugin} = require('../../plugins/ScaleBox');
-
-const ZoomToMaxExtentButton = connect((state) => ({
-    mapConfig: state.map && state.map.present || {}
-}), (dispatch) => {
-    return {
-        actions: bindActionCreators({
-            changeMapView
-        }, dispatch)
-    };
-})(require("../../components/buttons/ZoomToMaxExtentButton"));
-
 const MadeWithLove = require('../assets/img/mwlii.png');
-
-const SearchBar = connect(() => ({}), {
-     onSearch: textSearch,
-     onSearchReset: resultsPurge
-})(require('../../components/mapcontrols/search/SearchBar'));
-
-const NominatimResultList = connect((state) => ({
-    results: state.search || null,
-    mapConfig: state.map && state.map.present || {}
-}), {
-    onItemClick: changeMapView,
-    afterItemClick: resultsPurge
-})(require('../../components/mapcontrols/search/geocoding/NominatimResultList'));
-
-const {changeLocateState} = require('../../actions/locate');
-
-const LocateBtn = connect((state) => ({
-    locate: state.locate && state.locate.state || 'DISABLED'
-}), {
-    onClick: changeLocateState
-})(require('../../components/mapcontrols/locate/LocateBtn'));
 
 const Home = require('../components/viewer/Home');
 
@@ -137,57 +83,44 @@ const MapViewer = React.createClass({
         return this.props.mobile ? this.renderMobile() : this.renderDesktop();
     },
     renderMobile() {
-        const {MapPlugin, IdentifyPlugin} = this.props.plugins;
+        const pluginsCfg = {
+            Map: {
+                zoomControl: false,
+                tools: ['measurement', 'locate']
+            },
+            Locate: {
+                id: "locateMeButton"
+            },
+            MousePosition: {
+                id: "mapstore-mouseposition-mobile"
+            },
+            Identify: {
+                style: {position: "absolute",
+                    width: "100%",
+                    bottom: "0px",
+                    zIndex: 1010,
+                    maxHeight: "70%",
+                    marginBottom: 0
+                },
+                draggable: false,
+                collapsible: true,
+                viewerOptions: {container: ReactSwipe, header: SwipeHeader, collapsible: false},
+                bodyClass: "mobile-feature-info"
+            }
+        };
         return (
             <div key="viewer" className="viewer">
-                <MapPlugin mapType={this.props.params.mapType} zoomControl={false} key="map" tools={['measurement', 'locate']}/>
-                <SearchBar key="seachBar"/>
-                <NominatimResultList key="nominatim-result-list"/>
+                {this.renderPlugins(pluginsCfg)}
                 <DrawerMenu key ="drawermenu"/>
                 <Button id="drawer-menu-button" key="menu-button" onClick={this.props.toggleMenu}><Glyphicon glyph="menu-hamburger"/></Button>
                 <Home key="home"/>
-                <LocateBtn
-                   id="locateMeButton"
-                   key="locate-me-button"
-                   style={{width: "auto"}}
-                   tooltip={<Message msgId="locate.tooltip"/>}/>
-               <MousePositionMobile
-                   id="mapstore-mouseposition-mobile"
-                   key="mousePosition"/>
-               <IdentifyPlugin
-                   key="getFeatureInfo"
-                   style={{position: "absolute",
-                       width: "100%",
-                       bottom: "0px",
-                       zIndex: 1010,
-                       maxHeight: "70%",
-                       marginBottom: 0
-                   }}
-                   draggable={false}
-                   collapsible={true}
-                   viewerOptions={{container: ReactSwipe, header: SwipeHeader, collapsible: false}}
-                   bodyClass="mobile-feature-info" />
             </div>
         );
     },
     renderDesktop() {
-        const {MapPlugin, ToolbarPlugin, MousePositionPlugin, IdentifyPlugin} = this.props.plugins;
         return (
             <div key="viewer" className="viewer">
-                <MapPlugin mapType={this.props.params.mapType} key="map"/>
-                <ToolbarPlugin mapType={this.props.params.mapType} key="toolbar"/>
-
-                <HelpWrapper
-                    key="seachBar-help"
-                    helpText={<Message msgId="helptexts.searchBar"/>}>
-                    <SearchBar key="seachBar" />
-                </HelpWrapper>
-                <NominatimResultList key="nominatimresults"/>
-
-                <MousePositionPlugin key="mousePosition"/>
-                <HelpTextPanel
-                    key="helpTextPanel"/>
-                <IdentifyPlugin key="getFeatureInfo"/>
+                {this.renderPlugins({})}
                 <About
                     key="about"
                     style={{
@@ -197,14 +130,6 @@ const MapViewer = React.createClass({
                             right: "0px",
                             margin: "8px"
                         }} />
-                <GlobalSpinner key="globalSpinner"/>
-                <ScaleBoxPlugin key="scaleBox"/>
-                <HelpWrapper
-                    key="zoomall-help"
-                    helpText={<Message msgId="helptexts.zoomToMaxExtentButton"/>}>
-                    <ZoomToMaxExtentButton
-                        key="zoomToMaxExtent"/>
-                </HelpWrapper>
                 <SnapshotQueue key="snapshotqueue" mapType={this.props.params.mapType}/>
                 <div style={{
                         position: "absolute",
@@ -217,6 +142,18 @@ const MapViewer = React.createClass({
                     }} ><img src={MadeWithLove} /></div>
             </div>
         );
+    },
+    renderPlugins(cfg) {
+        const plugins = (this.props.mobile ?
+            ['Map', 'Identify', 'MousePosition', 'Search', 'Locate'] :
+            ['Map', 'Identify', 'MousePosition', 'Search', 'Toolbar', 'ScaleBox', 'ZoomAll', 'MapLoading'])
+            .map((pluginName) => ({
+                impl: this.props.plugins[pluginName + 'Plugin'],
+                cfg: cfg[pluginName] || {}
+            }));
+        return plugins.map((Plugin) => <Plugin.impl {...this.props.params} {...Plugin.cfg}/>);
+
+
     }
 });
 

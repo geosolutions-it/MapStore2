@@ -16,7 +16,7 @@ const {ButtonGroup, Button, Tooltip, OverlayTrigger, Panel, Collapse} = require(
 
 require('./toolbar/assets/css/toolbar.css');
 
-const Message = require('./Message');
+const Message = require('./locale/Message');
 
 const {toggleControl} = require('../actions/controls');
 

@@ -27,8 +27,7 @@ var LocateBtn = React.createClass({
             id: "locate-btn",
             onClick: () => {},
             locate: "DISABLED",
-            tooltipPlace: "left",
-            style: {width: "100%"}
+            tooltipPlace: "left"
         };
     },
     onClick() {

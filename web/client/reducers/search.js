@@ -8,7 +8,7 @@
 
 var {TEXT_SEARCH_RESULTS_LOADED, TEXT_SEARCH_RESULTS_PURGE} = require('../actions/search');
 
-function searchResults(state = null, action) {
+function search(state = null, action) {
     switch (action.type) {
         case TEXT_SEARCH_RESULTS_LOADED:
             return action.results;
@@ -19,4 +19,4 @@ function searchResults(state = null, action) {
     }
 }
 
-module.exports = {searchResults};
+module.exports = search;

@@ -6,7 +6,7 @@ var map = require('../../../reducers/map');
 var locale = require('../../../reducers/locale');
 var controls = require('../reducers/controls');
 var mousePosition = require('../../../reducers/mousePosition');
-var {searchResults} = require('../../../reducers/search');
+var searchResults = require('../../../reducers/search');
 
  // reducers
 const reducers = combineReducers({

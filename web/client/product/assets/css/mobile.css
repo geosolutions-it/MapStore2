@@ -177,7 +177,7 @@ div.MapSearchBar input {
     position: absolute;
     right:15px;
     bottom: 40px;
-    width: 50px;
+    width: auto;
     height:50px;
     font-size: 17px;
     border-radius: 30px;
@@ -200,10 +200,10 @@ div.MapSearchBar input {
         z-index: 1;
         top: 40px;
         position: absolute;
-        text-shadow: -1px -1px 1px #fff,
-                      1px -1px 1px #fff,
-                     -1px  1px 1px #fff,
-                      1px  1px 1px #fff;
+        text-shadow: -1px -1px 1px #000,
+                      1px -1px 1px #000,
+                     -1px  1px 1px #000,
+                      1px  1px 1px #000;
     }
 
 #mapstore-mouseposition-mobile .label {
@@ -218,7 +218,8 @@ div.MapSearchBar input {
 
 #mapstore-mouseposition-mobile .label-info {
         background-color:rgba(91,192,222,0);
-        color: black;
+        color: white;
+        font-size: 90%;
     }
 .search-result-list{
     z-index:2 !important;
