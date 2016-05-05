@@ -16,7 +16,7 @@ var mapInfo = require('../../../reducers/mapInfo');
 var floatingPanel = require('../reducers/floatingPanel');
 var mousePosition = require('../../../reducers/mousePosition');
 var measurement = require('../../../reducers/measurement');
-var {searchResults} = require('../../../reducers/search');
+var searchResults = require('../../../reducers/search');
 var help = require('../../../reducers/help');
 
 var LocateBtn = require("../../../components/mapcontrols/locate/LocateBtn");

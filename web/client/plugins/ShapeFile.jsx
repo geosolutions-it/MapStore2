@@ -17,7 +17,7 @@ const {Grid, Row, Col, Button} = require('react-bootstrap');
 
 const Combobox = require('react-widgets').Combobox;
 
-const Message = require('./Message');
+const Message = require('./locale/Message');
 
 const {SelectShape, StylePolygon, StylePolyline, StylePoint} = require('./shapefile/index');
 const {onShapeError, shapeLoading, onShapeChoosen, onSelectLayer, onLayerAdded} = require('../actions/shapefile');

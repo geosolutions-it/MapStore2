@@ -19,7 +19,7 @@ const {layersSelector, groupsSelector} = require('../../selectors/layers');
 
 const LayersUtils = require('../../utils/LayersUtils');
 
-const Message = require('../Message');
+const Message = require('../locale/Message');
 
 const {Glyphicon} = require('react-bootstrap');
 
@@ -89,10 +89,7 @@ const {ShapeFile} = require('../ShapeFile');
 
 const Settings = require('./Settings');
 
-const HelpTextPanel = connect((state) => ({
-    isVisible: state.controls.help && state.controls.help.enabled || false,
-    helpText: state.help && state.help.helpText
-}))(require('../../components/help/HelpTextPanel'));
+const HelpTextPanel = require('../help/HelpTextPanel');
 
 const layersIcon = require('./assets/img/layers.png');
 const lineRuleIcon = require('./assets/img/line-ruler.png');

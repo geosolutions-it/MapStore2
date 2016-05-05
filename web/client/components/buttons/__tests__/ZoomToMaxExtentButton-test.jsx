@@ -90,7 +90,7 @@ describe('This test for ZoomToMaxExtentButton', () => {
             let spy = expect.spyOn(actions, "changeMapView");
             var cmp = ReactDOM.render(
                 <ZoomToMaxExtentButton
-                    actions={actions} btnType={btnType}
+                    {...actions} btnType={btnType}
                     mapConfig={{
                         maxExtent: [-110, -110, 90, 90],
                         zoom: 10,

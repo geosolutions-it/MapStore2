@@ -14,12 +14,15 @@ var CoordinatesUtils = {
         const proj = new Proj4js.Proj(projection);
         return proj.units || 'degrees';
     },
-    reproject: function(point, source, dest) {
+    reproject: function(point, source, dest, normalize = true) {
         const sourceProj = new Proj4js.Proj(source);
         const destProj = new Proj4js.Proj(dest);
         let p = isArray(point) ? Proj4js.toPoint(point) : Proj4js.toPoint([point.x, point.y]);
-
-        return CoordinatesUtils.normalizePoint(assign({}, Proj4js.transform(sourceProj, destProj, p), {srs: dest}));
+        const transformed = assign({}, Proj4js.transform(sourceProj, destProj, p), {srs: dest});
+        if (normalize) {
+            return CoordinatesUtils.normalizePoint(transformed);
+        }
+        return transformed;
     },
     normalizePoint: function(point) {
         return {
@@ -37,7 +40,7 @@ var CoordinatesUtils = {
      *
      * @return {array} [minx, miny, maxx, maxy]
      */
-    reprojectBbox: function(bbox, source, dest) {
+    reprojectBbox: function(bbox, source, dest, normalize = true) {
         let points;
         if (isArray(bbox)) {
             points = {
@@ -53,7 +56,7 @@ var CoordinatesUtils = {
         let projPoints = [];
         for (let p in points) {
             if (points.hasOwnProperty(p)) {
-                let {x, y} = CoordinatesUtils.reproject(points[p], source, dest);
+                let {x, y} = CoordinatesUtils.reproject(points[p], source, dest, normalize);
                 projPoints.push(x);
                 projPoints.push(y);
             }
