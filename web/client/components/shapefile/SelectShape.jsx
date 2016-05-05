@@ -15,7 +15,6 @@ const LocaleUtils = require('../../utils/LocaleUtils');
 const SelectShape = React.createClass({
     propTypes: {
         text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        accept: React.PropTypes.string,
         loading: React.PropTypes.bool,
         onShapeChoosen: React.PropTypes.func,
         onShapeError: React.PropTypes.func,
@@ -28,7 +27,6 @@ const SelectShape = React.createClass({
     getDefaultProps() {
         return {
             text: "Drop or click to import a local Shape",
-            accept: "application/zip",
             onShapeChoosen: () => {},
             onShapeError: () => {},
             errorMessage: "shapefile.error.select"
@@ -37,13 +35,13 @@ const SelectShape = React.createClass({
     render() {
         return (
             (this.props.loading) ? (<div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle"/></div>) :
-            (<Dropzone rejectClassName="alert-danger" className="alert alert-info" accept={this.props.accept} onDrop={this.checkfile}>
+            (<Dropzone rejectClassName="alert-danger" className="alert alert-info" onDrop={this.checkfile}>
               <div style={{textAlign: "center"}}>{this.props.text}</div>
             </Dropzone>)
             );
     },
     checkfile(files) {
-        const allZip = (files.filter((file) => { return file.type !== 'application/zip'; }).length === 0 );
+        const allZip = (files.filter((file) => { return file.type !== 'application/zip' && file.type !== 'application/x-zip-compressed'; }).length === 0 );
         if (allZip) {
             if (this.props.error) {
                 this.props.onShapeError(null);
