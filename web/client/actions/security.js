@@ -18,7 +18,6 @@ const LOGOUT = 'LOGOUT';
 
 
 function loginSuccess(userDetails, username, password, authProvider) {
-
     return {
         type: LOGIN_SUCCESS,
         userDetails: userDetails,
@@ -28,11 +27,9 @@ function loginSuccess(userDetails, username, password, authProvider) {
         password: password,
         authProvider: authProvider
     };
-
 }
 
 function loginFail(e) {
-
     return {
         type: LOGIN_FAIL,
         error: e
@@ -48,7 +45,6 @@ function logout(redirectUrl) {
 }
 
 function geoStoreLoginSubmit(username, password) {
-
     return (dispatch) => {
         GeoStoreAPI.basicLogin(username, password).then((response) => {
             dispatch(loginSuccess(response, username, password, 'geostore'));
@@ -56,13 +52,13 @@ function geoStoreLoginSubmit(username, password) {
             dispatch(loginFail(e));
         });
     };
-
 }
 
-function changePasswordSuccess(newPassword) {
-    GeoStoreAPI.setPassword(newPassword);
+function changePasswordSuccess(user, newPassword) {
     return {
-        type: GEOSTORE_CHANGE_PASSWORD_SUCCESS
+        type: GEOSTORE_CHANGE_PASSWORD_SUCCESS,
+        user: user,
+        authHeader: 'Basic ' + btoa(user.name + ':' + newPassword)
     };
 }
 
@@ -73,7 +69,6 @@ function changePasswordFail(e) {
     };
 }
 function geoStoreChangePassword(user, newPassword) {
-
     return (dispatch, getState) => {
         let opts = GeoStoreAPI.getAuthOptionsFromState(getState());
         GeoStoreAPI.changePassword(user, newPassword, opts).then(() => {
@@ -82,7 +77,6 @@ function geoStoreChangePassword(user, newPassword) {
             dispatch(changePasswordFail(e));
         });
     };
-
 }
 
 module.exports = {

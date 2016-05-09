@@ -25,10 +25,10 @@ function loadError(e) {
     };
 }
 
-function loadMaps(geoStoreUrl) {
+function loadMaps(geoStoreUrl, searchText="*") {
     return (dispatch, getState) => {
         let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
-        GeoStoreApi.getResourcesByCategory("MAP", "*", opts).then((response) => {
+        GeoStoreApi.getResourcesByCategory("MAP", searchText, opts).then((response) => {
             dispatch(mapsLoaded(response));
         }).catch((e) => {
             dispatch(loadError(e));

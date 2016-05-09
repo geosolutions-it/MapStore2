@@ -71,9 +71,11 @@ const LoginForm = React.createClass({
     renderError() {
         let error = this.props.loginError;
         if (error) {
-            return (<Alert bsStyle="danger" key="errorMessage">
+            return (
+                <Alert bsStyle="danger" key="errorMessage">
                     <strong>{this.props.loginFailedMessage}</strong> {this.renderErrorText(error)}
-              </Alert>);
+                </Alert>
+            );
         }
         return null;
     },
@@ -113,7 +115,6 @@ const LoginForm = React.createClass({
             </form>
         );
     },
-
     handleSubmit(e) {
         e.preventDefault();
         this.submit();

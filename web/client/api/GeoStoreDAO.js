@@ -7,10 +7,14 @@
  */
 const axios = require('../libs/ajax');
 const _ = require('lodash');
-var defaultBaseURL = "/mapstore/rest/geostore/";
-var geoStoreClient = axios.create({
+
+const ConfigUtils = require('../utils/ConfigUtils');
+
+const defaultBaseURL = "/mapstore/rest/geostore/";
+let geoStoreClient = axios.create({
     baseURL: defaultBaseURL
 });
+
 var parseOptions = (opts) => opts;
 /**
  * API for local config
@@ -18,18 +22,18 @@ var parseOptions = (opts) => opts;
 var Api = {
     getData: function(id, options) {
         let url = "data/" + id;
-        return geoStoreClient.get(url, parseOptions(options)).then(function(response) {
+        return this.getGeoStoreClient().get(url, parseOptions(options)).then(function(response) {
             return response.data;
         });
     },
     getResourcesByCategory: function(category, query, options) {
         let q = query || "*";
         let url = "extjs/search/category/" + category + "/*" + q + "*/";
-        return geoStoreClient.get(url, parseOptions(options)).then(function(response) {return response.data; });
+        return this.getGeoStoreClient().get(url, parseOptions(options)).then(function(response) {return response.data; });
     },
     basicLogin: function(username, password, options) {
         let url = "users/user/details";
-        return geoStoreClient.get(url, _.merge({
+        return this.getGeoStoreClient().get(url, _.merge({
             auth: {
                 username: username,
                 password: password
@@ -42,12 +46,10 @@ var Api = {
         });
     },
     logout() {
-        geoStoreClient = axios.create({
-            baseURL: defaultBaseURL
-        });
+        this.getGeoStoreClient();
     },
     changePassword: function(user, newPassword, options) {
-        return geoStoreClient.put(
+        return this.getGeoStoreClient().put(
             "users/user/" + user.id, "<User><newPassword>" + newPassword + "</newPassword></User>",
             _.merge({
                 headers: {
@@ -69,6 +71,13 @@ var Api = {
         }
         return baseParams;
 
+    },
+    getGeoStoreClient: function() {
+        geoStoreClient = axios.create({
+            baseURL: ConfigUtils.getDefaults().geoStoreUrl
+        });
+
+        return geoStoreClient;
     }
 };
 

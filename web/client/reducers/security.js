@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT } = require('../actions/security');
+const { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, GEOSTORE_CHANGE_PASSWORD_SUCCESS } = require('../actions/security');
 
 const assign = require('object-assign');
 
@@ -35,6 +35,11 @@ function security(state = {user: null, errorCause: null}, action) {
                 token: null,
                 authHeader: null,
                 loginError: null
+            });
+        case GEOSTORE_CHANGE_PASSWORD_SUCCESS:
+            return assign({}, state, {
+                user: assign({}, state.user, assign({}, action.user, {date: new Date().getUTCMilliseconds()})),
+                authHeader: action.authHeader
             });
         default:
             return state;
