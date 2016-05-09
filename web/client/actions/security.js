@@ -8,12 +8,12 @@
 // const axios = require('axios');
 const GeoStoreAPI = require('../api/GeoStoreDAO');
 
-const GEOSTORE_LOGIN_SUBMIT = 'GEOSTORE_LOGIN_SUBMIT';
-const LOGIN_SUCCESS = 'GEOSTORE_LOGIN_SUCCESS';
-const LOGIN_FAIL = 'GEOSTORE_LOGIN_FAIL';
-const GEOSTORE_CHANGE_PASSWORD = 'GEOSTORE_CHANGE_PASSWORD';
-const GEOSTORE_CHANGE_PASSWORD_SUCCESS = 'GEOSTORE_CHANGE_PASSWORD_SUCCESS';
-const GEOSTORE_CHANGE_PASSWORD_FAIL = 'GEOSTORE_CHANGE_PASSWORD_FAIL';
+const LOGIN_SUBMIT = 'LOGIN_SUBMIT';
+const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+const LOGIN_FAIL = 'LOGIN_FAIL';
+const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
+const CHANGE_PASSWORD_SUCCESS = 'CHANGE_PASSWORD_SUCCESS';
+const CHANGE_PASSWORD_FAIL = 'CHANGE_PASSWORD_FAIL';
 const LOGOUT = 'LOGOUT';
 
 
@@ -56,7 +56,7 @@ function geoStoreLoginSubmit(username, password) {
 
 function changePasswordSuccess(user, newPassword) {
     return {
-        type: GEOSTORE_CHANGE_PASSWORD_SUCCESS,
+        type: CHANGE_PASSWORD_SUCCESS,
         user: user,
         authHeader: 'Basic ' + btoa(user.name + ':' + newPassword)
     };
@@ -64,7 +64,7 @@ function changePasswordSuccess(user, newPassword) {
 
 function changePasswordFail(e) {
     return {
-        type: GEOSTORE_CHANGE_PASSWORD_FAIL,
+        type: CHANGE_PASSWORD_FAIL,
         error: e
     };
 }
@@ -80,10 +80,10 @@ function geoStoreChangePassword(user, newPassword) {
 }
 
 module.exports = {
-    GEOSTORE_LOGIN_SUBMIT,
-    GEOSTORE_CHANGE_PASSWORD,
-    GEOSTORE_CHANGE_PASSWORD_SUCCESS,
-    GEOSTORE_CHANGE_PASSWORD_FAIL,
+    LOGIN_SUBMIT,
+    CHANGE_PASSWORD,
+    CHANGE_PASSWORD_SUCCESS,
+    CHANGE_PASSWORD_FAIL,
     LOGIN_SUCCESS,
     LOGIN_FAIL,
     LOGOUT,
