@@ -101,7 +101,7 @@
     "react-intl": "https://github.com/geosolutions-it/react-intl/tarball/react_014_1x",
     "react-nouislider": "^1.6.0",
     "react-pdf": "0.0.10",
-    "react-redux": "^4.1.1",
+    "react-redux": "4.4.1",
     "react-sidebar": "^2.1.1",
     "react-sortable-items": "0.0.11",
     "react-spinkit": "1.1.6",
