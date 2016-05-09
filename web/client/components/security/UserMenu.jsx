@@ -49,13 +49,13 @@ const UserMenu = React.createClass({
       };
   },
   renderGuestTools(username) {
-      return (<DropdownButton key="loginButton" pullRight bsStyle="primary" title={username} key="user-menu" id="dropdown-basic-primary">
+      return (<DropdownButton id="loginButton" key="loginButton" pullRight bsStyle="primary" title={username} key="user-menu" id="dropdown-basic-primary">
           <MenuItem key="login" onClick={this.props.onShowLogin}><Glyphicon glyph="log-out" /> Login</MenuItem>
       </DropdownButton>);
   },
   renderLoggedTools(username) {
       return (
-      <DropdownButton key="loginButton" pullRight bsStyle="primary" title={username} >
+      <DropdownButton id="loginButton" key="loginButton" pullRight bsStyle="primary" title={username} >
           <MenuItem key="accountInfo" onClick={this.props.onShowAccountInfo}> <Glyphicon glyph="user" /> Account Info</MenuItem>
           <MenuItem key="passwordChange" onClick={this.props.onShowChangePassword}> <Glyphicon glyph="asterisk" /> Change Password</MenuItem>
           <MenuItem key="divider" divider />
