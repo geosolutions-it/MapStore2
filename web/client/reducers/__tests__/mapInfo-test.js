@@ -5,9 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
-var mapInfo = require('../mapInfo');
-var assign = require('object-assign');
+
+const expect = require('expect');
+const mapInfo = require('../mapInfo');
+const assign = require('object-assign');
+
+require('babel-polyfill');
 
 describe('Test the mapInfo reducer', () => {
     let appState = {requests: [{reqId: 10, request: "test"}]};
