@@ -13,7 +13,7 @@ const LocaleUtils = require('../utils/LocaleUtils');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
 const MapUtils = require('../utils/MapUtils');
 
-const {Grid, Row, Col, Panel, Accordion} = require('react-bootstrap');
+const {Grid, Row, Col, Panel, Accordion, Glyphicon} = require('react-bootstrap');
 
 const {toggleControl, setControlProperty} = require('../actions/controls');
 const {printSubmit, printSubmitting, configurePrintMap} = require('../actions/print');
@@ -252,13 +252,25 @@ const selector = createSelector([
     layers
 }));
 
+const PrintPlugin = connect(selector, {
+    toggleControl: toggleControl.bind(null, 'print', null),
+    onPrint: printSubmit,
+    onBeforePrint: printSubmitting,
+    setPage: setControlProperty.bind(null, 'print', 'currentPage'),
+    configurePrintMap
+})(Print);
+
 module.exports = {
-        PrintPlugin: connect(selector, {
-        toggleControl: toggleControl.bind(null, 'print', null),
-        onPrint: printSubmit,
-        onBeforePrint: printSubmitting,
-        setPage: setControlProperty.bind(null, 'print', 'currentPage'),
-        configurePrintMap
-    })(Print),
+    PrintPlugin: assign(PrintPlugin, {
+        Toolbar: {
+            name: 'print',
+            position: 7,
+            help: <Message msgId="helptexts.print"/>,
+            tooltip: "printbutton",
+            icon: <Glyphicon glyph="print"/>,
+            exclusive: true,
+            panel: true
+        }
+    }),
     reducers: {print: require('../reducers/print')}
 };

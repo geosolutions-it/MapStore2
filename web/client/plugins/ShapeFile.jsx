@@ -23,6 +23,9 @@ const {SelectShape, StylePolygon, StylePolyline, StylePoint} = require('./shapef
 const {onShapeError, shapeLoading, onShapeChoosen, onSelectLayer, onLayerAdded} = require('../actions/shapefile');
 const {addLayer} = require('../actions/layers');
 
+const assign = require('object-assign');
+const {Glyphicon} = require('react-bootstrap');
+
 const ShapeFile = React.createClass({
     propTypes: {
         layers: React.PropTypes.array,
@@ -150,22 +153,36 @@ const ShapeFile = React.createClass({
     }
 });
 
+const ShapeFilePlugin = connect((state) => (
+{
+    layers: state.shapefile && state.shapefile.layers || null,
+    selected: state.shapefile && state.shapefile.selected || null,
+    error: state.shapefile && state.shapefile.error || null,
+    shapeStyle: state.style || {}
+}
+), {
+    onShapeChoosen: onShapeChoosen,
+    onLayerAdded: onLayerAdded,
+    onSelectLayer: onSelectLayer,
+    onShapeError: onShapeError,
+    addShapeLayer: addLayer,
+    shapeLoading: shapeLoading
+})(ShapeFile);
+
 module.exports = {
-    ShapeFile: connect((state) => (
-        {
-            layers: state.shapefile && state.shapefile.layers || null,
-            selected: state.shapefile && state.shapefile.selected || null,
-            error: state.shapefile && state.shapefile.error || null,
-            shapeStyle: state.style || {}
+    ShapeFilePlugin: assign(ShapeFilePlugin, {
+        Toolbar: {
+            name: 'shapefile',
+            position: 9,
+            panel: true,
+            help: <Message msgId="helptexts.shapefile"/>,
+            title: "shapefile.title",
+            tooltip: "shapefile.tooltip",
+            wrap: true,
+            icon: <Glyphicon glyph="open-file"/>,
+            exclusive: true
         }
-        ), {
-            onShapeChoosen: onShapeChoosen,
-            onLayerAdded: onLayerAdded,
-            onSelectLayer: onSelectLayer,
-            onShapeError: onShapeError,
-            addShapeLayer: addLayer,
-            shapeLoading: shapeLoading
-        })(ShapeFile),
+    }),
     reducers: {
         shapefile: require('../reducers/shapefile'),
         style: require('../reducers/style')

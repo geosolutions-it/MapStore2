@@ -128,7 +128,7 @@
             "undoBtnTooltip": "Torna indietro",
             "redoBtnTooltip": "Vai avanti"
         },
-        "infoFormatLbl": "Formato risposte GetFeatureInfo",
+        "infoFormatLbl": "Formato risposte interrogazioni su mappa",
         "measureComponent": {
             "tooltip": "Misurazione lunghezza e l'area",
             "title": "Misurazione",
@@ -320,7 +320,10 @@
             "save": "Salva",
             "tooltip": "Salva un' istantanea della mappa.",
             "googleBingError": "Istantanea non disponibile per le restrizioni all' utilizzo dei layer Google e Bing.",
-            "downloadingSnapshots": "generazioni di istantanee in corso..."
+            "downloadingSnapshots": "generazioni di istantanee in corso...",
+            "date": "Data",
+            "layers": "Livelli",
+            "size": "Dimensione"
         },
         "shapefile": {
             "title": "Carica Shape File",

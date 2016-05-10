@@ -7,15 +7,30 @@
  */
 
 module.exports = {
-    MousePositionPlugin: require('../plugins/MousePosition'),
-    PrintPlugin: require('../plugins/Print'),
-    IdentifyPlugin: require('../plugins/Identify'),
-    MapPlugin: require('../plugins/Map'),
-    ToolbarPlugin: require('../plugins/Toolbar'),
-    ShapeFilePlugin: require('../plugins/ShapeFile'),
-    SearchPlugin: require('../plugins/Search'),
-    ScaleBoxPlugin: require('../plugins/ScaleBox'),
-    LocatePlugin: require('../plugins/Locate'),
-    ZoomAllPlugin: require('../plugins/ZoomAll'),
-    MapLoadingPlugin: require('../plugins/MapLoading')
+    plugins: {
+        MousePositionPlugin: require('../plugins/MousePosition'),
+        PrintPlugin: require('../plugins/Print'),
+        IdentifyPlugin: require('../plugins/Identify'),
+        TOCPlugin: require('../plugins/TOC'),
+        BackgroundSwitcherPlugin: require('../plugins/BackgroundSwitcher'),
+        MeasurePlugin: require('../plugins/Measure'),
+        MapPlugin: require('../plugins/Map'),
+        ToolbarPlugin: require('../plugins/Toolbar'),
+        DrawerMenuPlugin: require('../plugins/DrawerMenu'),
+        ShapeFilePlugin: require('../plugins/ShapeFile'),
+        SnapshotPlugin: require('../plugins/Snapshot'),
+        SettingsPlugin: require('../plugins/Settings'),
+        SearchPlugin: require('../plugins/Search'),
+        ScaleBoxPlugin: require('../plugins/ScaleBox'),
+        LocatePlugin: require('../plugins/Locate'),
+        ZoomAllPlugin: require('../plugins/ZoomAll'),
+        MapLoadingPlugin: require('../plugins/MapLoading'),
+        AboutPlugin: require('./plugins/About'),
+        HomePlugin: require('./plugins/Home'),
+        MadeWithLovePlugin: require('./plugins/MadeWithLove')
+    },
+    requires: {
+        ReactSwipe: require('react-swipe'),
+        SwipeHeader: require('../components/data/identify/SwipeHeader')
+    }
 };

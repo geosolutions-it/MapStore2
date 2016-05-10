@@ -27,6 +27,8 @@ const HelpBadge = connect((state) => ({
     changeHelpwinVisibility
 })(require('../components/help/HelpBadge'));
 
+const assign = require('object-assign');
+
 let tools;
 
 const Toolbar = React.createClass({
@@ -34,7 +36,8 @@ const Toolbar = React.createClass({
         tools: React.PropTypes.array,
         mapType: React.PropTypes.string,
         panelStyle: React.PropTypes.object,
-        active: React.PropTypes.string
+        active: React.PropTypes.string,
+        items: React.PropTypes.array
     },
     contextTypes: {
         messages: React.PropTypes.object,
@@ -47,23 +50,37 @@ const Toolbar = React.createClass({
                 right: "52px",
                 position: "absolute",
                 overflow: "auto"
-            }
+            },
+            items: []
         };
     },
     componentWillMount() {
         tools = require('./toolbar/index')(this.context);
     },
+    getPanel(tool) {
+        if (tool.panel === true) {
+            return tool.plugin;
+        }
+        return tool.panel;
+    },
     getPanels() {
         return this.getTools()
             .filter((tool) => tool.panel)
-            .map((tool) => ({name: tool.name, title: tool.title, panel: tool.panel, wrap: tool.wrap || false}));
+            .map((tool) => ({name: tool.name, title: tool.title, panel: this.getPanel(tool), items: tool.items, wrap: tool.wrap || false}));
+    },
+    getAllTools() {
+        const unsorted = [...tools, ...this.props.items].map((item, index) => assign({}, item, {position: item.position || index}));
+        return unsorted.sort((a, b) => a.position - b.position);
     },
     getTools() {
         return this.props.tools && this.props.tools.reduce((previous, current) => {
             return previous.concat(tools.filter((tool) => tool.name === current)[0]);
-        }, []) || tools;
+        }, []) || this.getAllTools();
     },
     getTool(tool) {
+        if (tool.tool) {
+            return tool.tool === true ? tool.plugin : tool.tool;
+        }
         let selector = () => ({});
         const actions = {};
         if (tool.exclusive) {
@@ -86,7 +103,7 @@ const Toolbar = React.createClass({
             const help = tool.help ? <HelpBadge className="mapstore-tb-helpbadge" helpText={tool.help}/> : null;
             const tooltip = tool.tooltip ? <Message msgId={tool.tooltip}/> : null;
 
-            const ToolbarButton = tool.tool || this.getTool(tool);
+            const ToolbarButton = this.getTool(tool);
 
             return this.addTooltip(
                 <ToolbarButton tooltip={tooltip} help={help} key={tool.name} mapType={this.props.mapType}>
@@ -98,7 +115,9 @@ const Toolbar = React.createClass({
     renderPanels() {
         return this.getPanels().map((panel) => {
             const ToolPanelComponent = panel.panel;
-            const ToolPanel = <ToolPanelComponent key={panel.name} mapType={this.props.mapType} {...(panel.props || {})}/>;
+            const ToolPanel = (<ToolPanelComponent
+                key={panel.name} mapType={this.props.mapType} {...(panel.props || {})}
+                items={panel.items || []}/>);
             const title = panel.title ? <Message msgId={panel.title}/> : null;
             if (panel.wrap) {
                 return (

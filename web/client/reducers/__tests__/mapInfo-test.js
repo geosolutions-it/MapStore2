@@ -10,7 +10,7 @@ var mapInfo = require('../mapInfo');
 var assign = require('object-assign');
 
 describe('Test the mapInfo reducer', () => {
-    let appState = {requests: {10: {request: "test"}, length: 1}};
+    let appState = {requests: [{reqId: 10, request: "test"}]};
 
     it('returns original state on unrecognized action', () => {
         let state = mapInfo(1, {type: 'UNKNOWN'});
@@ -119,19 +119,19 @@ describe('Test the mapInfo reducer', () => {
         let state = mapInfo({}, {type: 'NEW_MAPINFO_REQUEST', reqId: 1, request: "request"});
         expect(state.requests).toExist();
         expect(state.requests.length).toBe(1);
-        expect(state.requests["1"].request).toBe("request");
+        expect(state.requests.filter((req) => req.reqId === 1)[0].request).toBe("request");
 
         state = mapInfo({requests: {} }, {type: 'NEW_MAPINFO_REQUEST', reqId: 1, request: "request"});
         expect(state.requests).toExist();
         expect(state.requests.length).toBe(1);
-        expect(state.requests["1"].request).toBe("request");
+        expect(state.requests.filter((req) => req.reqId === 1)[0].request).toBe("request");
 
         state = mapInfo( appState, {type: 'NEW_MAPINFO_REQUEST', reqId: 1, request: "request"});
 
         expect(state.requests).toExist();
         expect(state.requests.length).toBe(2);
-        expect(state.requests["10"].request).toBe("test");
-        expect(state.requests["1"].request).toBe("request");
+        expect(state.requests.filter((req) => req.reqId === 10)[0].request).toBe("test");
+        expect(state.requests.filter((req) => req.reqId === 1)[0].request).toBe("request");
     });
 
     it('clear request queue', () => {

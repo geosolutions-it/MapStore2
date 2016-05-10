@@ -33,8 +33,6 @@ module.exports = (plugins) => {
         browser: require('../../reducers/browser'),
         controls: () => {return null; },
         help: require('../../reducers/help'),
-        measurement: require('../../reducers/measurement'),
-        snapshot: require('../../reducers/snapshot'),
         map: () => {return null; },
         layers: () => {return null; },
         ...pluginsReducers
