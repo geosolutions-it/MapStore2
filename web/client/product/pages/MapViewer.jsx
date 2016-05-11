@@ -10,60 +10,36 @@ const React = require('react');
 require('../assets/css/viewer.css');
 
 const {connect} = require('react-redux');
-const {Button, Glyphicon} = require('react-bootstrap');
 
 const url = require('url');
 
 const ConfigUtils = require('../../utils/ConfigUtils');
+const PluginsUtils = require('../../utils/PluginsUtils');
 
 const {loadMapConfig} = require('../../actions/config');
 
 
-const {toggleControl} = require('../../actions/controls');
-
-const ReactSwipe = require('react-swipe');
-const SwipeHeader = require('../../components/data/identify/SwipeHeader');
-
-const DrawerMenu = require('../containers/DrawerMenu');
-
-const About = require('../components/viewer/about/About');
-
-const MadeWithLove = require('../assets/img/mwlii.png');
-
-const Home = require('../components/viewer/Home');
-
-const {saveImage, onRemoveSnapshot} = require('../../actions/snapshot');
-
-const SnapshotQueue = connect((state) => ({
-    queue: state.snapshot && state.snapshot.queue || []
-}), {
-    downloadImg: saveImage,
-    onRemoveSnapshot
-})(require("../../components/mapcontrols/Snapshot/SnapshotQueue"));
+const {resetControls} = require('../../actions/controls');
 
 const urlQuery = url.parse(window.location.href, true).query;
 
-
-// let VMap;
 const MapViewer = React.createClass({
     propTypes: {
-        mobile: React.PropTypes.bool,
+        mode: React.PropTypes.string,
         params: React.PropTypes.object,
-        map: React.PropTypes.object,
-        layers: React.PropTypes.array,
-        printCapabilities: React.PropTypes.object,
         loadMapConfig: React.PropTypes.func,
-        toggleMenu: React.PropTypes.func,
-        plugins: React.PropTypes.object
+        reset: React.PropTypes.func,
+        plugins: React.PropTypes.object,
+        pluginsConfig: React.PropTypes.object
     },
     getDefaultProps() {
         return {
-            mobile: false
+            mode: 'desktop'
         };
     },
     componentWillMount() {
         if (this.props.params.mapType && this.props.params.mapId) {
-            if (this.props.mobile) {
+            if (this.props.mode === 'mobile') {
                 require('../assets/css/mobile.css');
             }
 
@@ -71,99 +47,38 @@ const MapViewer = React.createClass({
             const mapId = (this.props.params.mapId === '0') ? null : this.props.params.mapId;
             const config = urlQuery && urlQuery.config || null;
             const {configUrl} = ConfigUtils.getConfigurationOptions({mapId, config});
+            this.props.reset();
             this.props.loadMapConfig(configUrl, mapId !== null);
         }
     },
-    /*componentWillReceiveProps(newProps) {
-        if (newProps.params.mapType !== this.props.params.mapType) {
-            VMap = require('../components/viewer/Map')(this.props.params.mapType);
-        }
-    },*/
+    getPluginDescriptor(plugin) {
+        return PluginsUtils.getPluginDescriptor(this.props.plugins,
+                this.props.pluginsConfig[this.props.mode], plugin);
+    },
+    renderPlugins(plugins) {
+        return plugins
+            .filter((Plugin) => !Plugin.hide)
+            .map(this.getPluginDescriptor)
+            .map((Plugin) => <Plugin.impl key={Plugin.name}
+                {...this.props.params} {...Plugin.cfg} items={Plugin.items}/>);
+    },
     render() {
-        return this.props.mobile ? this.renderMobile() : this.renderDesktop();
-    },
-    renderMobile() {
-        const pluginsCfg = {
-            Map: {
-                zoomControl: false,
-                tools: ['measurement', 'locate']
-            },
-            Locate: {
-                id: "locateMeButton"
-            },
-            MousePosition: {
-                id: "mapstore-mouseposition-mobile"
-            },
-            Identify: {
-                style: {position: "absolute",
-                    width: "100%",
-                    bottom: "0px",
-                    zIndex: 1010,
-                    maxHeight: "70%",
-                    marginBottom: 0
-                },
-                draggable: false,
-                collapsible: true,
-                viewerOptions: {container: ReactSwipe, header: SwipeHeader, collapsible: false},
-                bodyClass: "mobile-feature-info"
-            }
-        };
-        return (
-            <div key="viewer" className="viewer">
-                {this.renderPlugins(pluginsCfg)}
-                <DrawerMenu key ="drawermenu"/>
-                <Button id="drawer-menu-button" key="menu-button" onClick={this.props.toggleMenu}><Glyphicon glyph="menu-hamburger"/></Button>
-                <Home key="home"/>
-            </div>
-        );
-    },
-    renderDesktop() {
-        return (
-            <div key="viewer" className="viewer">
-                {this.renderPlugins({})}
-                <About
-                    key="about"
-                    style={{
-                        position: "absolute",
-                            zIndex: 1000,
-                            bottom: "-8px",
-                            right: "0px",
-                            margin: "8px"
-                        }} />
-                <SnapshotQueue key="snapshotqueue" mapType={this.props.params.mapType}/>
-                <div style={{
-                        position: "absolute",
-                        bottom: "50px",
-                        left: "0",
-                        height: 0,
-                        width: "100%",
-                        overflow: "visible",
-                        textAlign: "center"
-                    }} ><img src={MadeWithLove} /></div>
-            </div>
-        );
-    },
-    renderPlugins(cfg) {
-        const plugins = (this.props.mobile ?
-            ['Map', 'Identify', 'MousePosition', 'Search', 'Locate'] :
-            ['Map', 'Identify', 'MousePosition', 'Search', 'Toolbar', 'ScaleBox', 'ZoomAll', 'MapLoading'])
-            .map((pluginName) => ({
-                impl: this.props.plugins[pluginName + 'Plugin'],
-                cfg: cfg[pluginName] || {}
-            }));
-        return plugins.map((Plugin) => <Plugin.impl {...this.props.params} {...Plugin.cfg}/>);
-
-
+        if (this.props.pluginsConfig) {
+            return (
+                <div key="viewer" className="viewer">
+                    {this.renderPlugins(this.props.pluginsConfig[this.props.mode])}
+                </div>
+            );
+        }
+        return null;
     }
 });
 
 module.exports = connect((state) => ({
-    mobile: urlQuery.mobile || (state.browser && state.browser.touch),
-    map: state.map && state.map.present,
-    layers: state.layers && state.layers.flat || [],
-    printCapabilities: state.print && state.print.capabilities
+    pluginsConfig: state.plugins || ConfigUtils.getConfigProp('plugins') || null,
+    mode: (urlQuery.mobile || (state.browser && state.browser.touch)) ? 'mobile' : 'desktop'
 }),
 {
     loadMapConfig,
-    toggleMenu: toggleControl.bind(null, 'drawer', null)
+    reset: resetControls
 })(MapViewer);

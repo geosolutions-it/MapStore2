@@ -16,6 +16,8 @@ const notAvailable = require('./not-available.png');
 const {isEqual} = require('lodash');
 let SnapshotSupport;
 const BasicSpinner = require('../../misc/spinners/BasicSpinner/BasicSpinner');
+
+const Message = require('../../I18N/Message');
 /**
  * SnapshotPanel allow to export a snapshot of the current map, showing a
  * preview of the snapshot, with some info about the map.
@@ -62,7 +64,7 @@ let SnapshotPanel = React.createClass({
             onStatusChange: () => {},
             onCreateSnapshot: () => {},
             downloadImg: () => {},
-            saveBtnText: "Save",
+            saveBtnText: "snapshot.save",
             serviceBoxUrl: null,
             dateFormat: {day: "numeric", month: "long", year: "numeric"},
             googleBingErrorMsg: "snapshot.googleBingError",
@@ -85,7 +87,7 @@ let SnapshotPanel = React.createClass({
     renderButton(enabled) {
         return (<Button bsSize="xs" disabled={!enabled}
                 onClick={this.onClick}>
-                <Glyphicon glyph="floppy-save" disabled={{}}/>{this.props.saveBtnText}
+                <Glyphicon glyph="floppy-save" disabled={{}}/><Message msgId={this.props.saveBtnText}/>
                 </Button>);
     },
     renderError() {
@@ -139,7 +141,7 @@ let SnapshotPanel = React.createClass({
         }
     },
     renderDownloadMessage() {
-        return this.props.downloadingMsg;
+        return <Message msgId={this.props.downloadingMsg}/>;
     },
     render() {
         let bingOrGoogle = this.isBingOrGoogle();
@@ -152,10 +154,10 @@ let SnapshotPanel = React.createClass({
                        <Table responsive>
                             <tbody>
                                <tr>
-                                <td>Date</td><td> <DateFormat dateParams={this.props.dateFormat}/></td>
+                                <td><Message msgId="snapshot.date"/></td><td> <DateFormat dateParams={this.props.dateFormat}/></td>
                                 </tr>
-                                <tr><td>Layers</td><td><ul>{this.renderLayers()}</ul></td></tr>
-                                <tr><td>Size</td><td>{this.renderSize()}</td>
+                                <tr><td><Message msgId="snapshot.layers"/></td><td><ul>{this.renderLayers()}</ul></td></tr>
+                                <tr><td><Message msgId="snapshot.size"/></td><td>{this.renderSize()}</td>
                                 </tr>
                             </tbody>
                         </Table>
@@ -197,7 +199,7 @@ let SnapshotPanel = React.createClass({
         });
     },
     getgoogleBingError() {
-        return this.props.googleBingErrorMsg;
+        return <Message msgId={this.props.googleBingErrorMsg}/>;
     },
     isSnapshotReady() {
         return this.props.snapshot.state === "READY" && !this.mapIsLoading(this.props.layers);

@@ -127,7 +127,7 @@
             "undoBtnTooltip": "Go back",
             "redoBtnTooltip": "Go  forward"
         },
-        "infoFormatLbl": "GetFeatureInfo response format",
+        "infoFormatLbl": "Identify response format",
         "measureComponent": {
             "tooltip": "Measure length and area",
             "title": "Measure",
@@ -319,7 +319,10 @@
             "save": "Save",
             "tooltip": "Save a snapshot of the map.",
             "googleBingError": "Googole and Bing layers aren't available for the snapshot, due to copyright restrictions.",
-            "downloadingSnapshots": "pending snapshot generation"
+            "downloadingSnapshots": "pending snapshot generation",
+            "date": "Date",
+            "layers": "Layers",
+            "size": "Size"
         },
         "shapefile": {
             "title": "Add Local Shape File",

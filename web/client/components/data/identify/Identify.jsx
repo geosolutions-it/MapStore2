@@ -29,7 +29,7 @@ const Identify = React.createClass({
         requests: React.PropTypes.array,
         responses: React.PropTypes.array,
         viewerOptions: React.PropTypes.object,
-        viewer: React.PropTypes.object,
+        viewer: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
         purgeResults: React.PropTypes.func,
         queryableLayersFilter: React.PropTypes.func,
         buildRequest: React.PropTypes.func,

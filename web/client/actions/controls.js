@@ -7,6 +7,7 @@
  */
 const TOGGLE_CONTROL = 'TOGGLE_CONTROL';
 const SET_CONTROL_PROPERTY = 'SET_CONTROL_PROPERTY';
+const RESET_CONTROLS = 'RESET_CONTROLS';
 
 function toggleControl(control, property) {
     return {
@@ -26,4 +27,11 @@ function setControlProperty(control, property, value, toggle) {
     };
 }
 
-module.exports = {TOGGLE_CONTROL, SET_CONTROL_PROPERTY, toggleControl, setControlProperty};
+function resetControls() {
+    return {
+        type: RESET_CONTROLS
+    };
+}
+
+module.exports = {TOGGLE_CONTROL, SET_CONTROL_PROPERTY, RESET_CONTROLS,
+    toggleControl, setControlProperty, resetControls};

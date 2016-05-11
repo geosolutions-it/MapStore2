@@ -21,6 +21,22 @@ var {
 } = require('../actions/mapInfo');
 
 const assign = require('object-assign');
+const {head} = require('lodash');
+
+function receiveResponse(state, action, type) {
+    const request = head((state.requests || []).filter((req) => req.reqId === action.reqId));
+    if (request) {
+        const responses = state.responses || [];
+        return assign({}, state, {
+            responses: [...responses, {
+                response: action[type],
+                queryParams: action.requestParams,
+                layerMetadata: action.layerMetadata
+            }]
+        });
+    }
+    return state;
+}
 
 function mapInfo(state = {}, action) {
     switch (action.type) {
@@ -29,106 +45,25 @@ function mapInfo(state = {}, action) {
                 enabled: action.enabled
             });
         case NEW_MAPINFO_REQUEST: {
-            let newRequests;
-            let {reqId, request} = action;
-            newRequests = assign({}, state.requests);
-            newRequests.length = (newRequests.length) ? newRequests.length + 1 : 1;
-            newRequests[reqId] = assign({}, { request: request});
+            const {reqId, request} = action;
+            const requests = state.requests || [];
             return assign({}, state, {
-                requests: newRequests
+                requests: [...requests, {request, reqId}]
             });
         }
         case PURGE_MAPINFO_RESULTS:
             return assign({}, state, {
                 responses: [],
-                requests: {length: 0 }
+                requests: []
             });
         case LOAD_FEATURE_INFO: {
-            /* action.data (if a JSON has been requested) is an object like this:
-             * {
-             *     crs: [object],
-             *     features: [array],
-             *     type: [string]
-             * }
-             * else is a [string] (for eg. if HTML data has been requested)
-             */
-            let newState;
-            if (state.requests && state.requests[action.reqId]) {
-                let newResponses;
-                let obj = {
-                    response: action.data,
-                    queryParams: action.requestParams,
-                    layerMetadata: action.layerMetadata
-                };
-                if (state.responses) {
-                    newResponses = state.responses.slice();
-                    newResponses.push(obj);
-                } else {
-                    newResponses = [obj];
-                }
-                newState = assign({}, state, {
-                    responses: newResponses
-                });
-            }
-            return (newState) ? newState : state;
+            return receiveResponse(state, action, 'data');
         }
         case EXCEPTIONS_FEATURE_INFO: {
-            /* action.exceptions, an array of exceptions like this:
-             * [{
-             *     code: [string],
-             *     locator: [string],
-             *     text: [string]
-             * }, ...]
-             */
-            let newState;
-            if (state.requests && state.requests[action.reqId]) {
-                let newResponses;
-                let obj = {
-                    response: action.exceptions,
-                    queryParams: action.requestParams,
-                    layerMetadata: action.layerMetadata
-                };
-                if (state.responses) {
-                    newResponses = state.responses.slice();
-                    newResponses.push(obj);
-                } else {
-                    newResponses = [obj];
-                }
-                newState = assign({}, state, {
-                    responses: newResponses
-                });
-            }
-            return (newState) ? newState : state;
+            return receiveResponse(state, action, 'exceptions');
         }
         case ERROR_FEATURE_INFO: {
-            /* action.error, an Object like this:
-             * {
-             *     config: [Object],
-             *     data: [string],
-             *     headers: [Object],
-             *     status: [number],
-             *     statusText: [string]
-             * }
-             */
-            let newState;
-            if (state.requests && state.requests[action.reqId]) {
-                let newResponses;
-                let obj = {
-                    response: action.error,
-                    queryParams: action.requestParams,
-                    layerMetadata: action.layerMetadata
-                };
-                if (state.responses) {
-                    newResponses = state.responses.slice();
-                    newResponses.push(obj);
-                } else {
-                    newResponses = [obj];
-                }
-                newState = assign({}, state, {
-                    responses: newResponses
-                });
-            }
-            return (newState) ? newState : state;
+            return receiveResponse(state, action, 'error');
         }
         case CLICK_ON_MAP: {
             return assign({}, state, {

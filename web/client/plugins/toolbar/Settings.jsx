@@ -50,7 +50,8 @@ const SettingsButton = React.createClass({
         undo: React.PropTypes.func,
         redo: React.PropTypes.func,
         mapHistory: React.PropTypes.object,
-        settings: React.PropTypes.object
+        settings: React.PropTypes.object,
+        items: React.PropTypes.array
     },
     getDefaultProps() {
         return {

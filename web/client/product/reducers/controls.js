@@ -7,6 +7,8 @@
  */
 
 const {SHOW_TOOLBAR_CONTROL, CHOOSE_MENU} = require('../actions/controls');
+const {RESET_CONTROLS} = require('../../actions/controls');
+
 const assign = require('object-assign');
 const initialState = {
     help: {
@@ -29,6 +31,8 @@ function controls(state = initialState, action) {
             return assign({}, state, {
                 toolbar: assign({}, state.toolbar, {active: action.control})
             });
+        case RESET_CONTROLS:
+            return assign({}, initialState);
         case CHOOSE_MENU:
             return assign({}, state, {
                 drawer: assign({}, state.drawer, {menu: action.menu === state.drawer.menu ? null : action.menu})

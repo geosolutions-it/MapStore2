@@ -20,8 +20,8 @@ const DefaultViewer = React.createClass({
         collapsible: React.PropTypes.bool,
         responses: React.PropTypes.array,
         missingResponses: React.PropTypes.number,
-        container: React.PropTypes.object,
-        header: React.PropTypes.object,
+        container: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
+        header: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
         validator: React.PropTypes.func,
         viewers: React.PropTypes.object,
         style: React.PropTypes.object

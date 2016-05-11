@@ -1,5 +1,95 @@
 {
 	"proxyUrl": "/mapstore/proxy/?url=",
 	"geoStoreUrl": "/mapstore/rest/geostore/",
-  "printUrl": "http://demo.geo-solutions.it/geoserver/pdf/info.json"
+  "printUrl": "http://demo.geo-solutions.it/geoserver/pdf/info.json",
+	"plugins": {
+		"mobile": ["Home", {
+			"name": "About",
+			"hide": true
+		}, {
+			"name": "Map",
+			"cfg": {
+					"zoomControl": false,
+					"tools": ["measurement", "locate"]
+			}
+		 }, {
+			 	"name": "DrawerMenu"
+		 }, {
+			 	"name": "TOC",
+				"hide": true
+		 }, {
+			 	"name": "Settings",
+				"hide": true,
+				"cfg": {
+					"overrideSettings": {
+	            "language": true,
+	            "history": false
+	        },
+					"style": {
+						"width": "auto"
+					}
+				}
+		 }, {
+			  "name": "BackgroundSwitcher",
+				"cfg": {
+					"fluid": true,
+		      "columnProperties": {
+              "xs": 6,
+              "sm": 6,
+              "md": 6
+          }
+				},
+				"hide": true
+		 }, {
+			 	"name": "Identify",
+				"hideFrom": ["Settings"],
+				"cfg": {
+					"style": {
+						  "position": "absolute",
+							"width": "100%",
+							"bottom": "0px",
+							"zIndex": 1010,
+							"maxHeight": "70%",
+							"marginBottom": 0
+					},
+					"draggable": false,
+					"collapsible": true,
+					"viewerOptions": {
+						"container": "{context.ReactSwipe}",
+						"header": "{context.SwipeHeader}",
+						"collapsible": false
+					},
+					"bodyClass": "mobile-feature-info"
+				}
+		 }, {
+			 	"name": "MousePosition",
+				"cfg": {
+					"id": "mapstore-mouseposition-mobile"
+				}
+		 }, "Search", {
+			 	"name": "Locate",
+				"cfg": {
+					"id": "locateMeButton"
+				}
+		 }],
+		"desktop": ["Map", "Locate", "Identify", "MadeWithLove", {
+				"name": "TOC",
+				"hide": true
+		}, {
+				"name": "BackgroundSwitcher",
+				"hide": true
+		}, {
+				"name": "Measure",
+				"hide": true
+		}, {
+				"name": "Print",
+				"hide": true
+		}, {
+				"name": "ShapeFile",
+				"hide": true
+		}, {
+				"name": "Settings",
+				"hide": true
+		}, "About", "MousePosition", "Search", "Toolbar", "ScaleBox", "ZoomAll", "MapLoading", "Snapshot"]
+	}
 }

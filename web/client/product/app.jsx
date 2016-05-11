@@ -20,8 +20,10 @@ const PluginsUtils = require('../utils/PluginsUtils');
 const {loadMaps} = require('../actions/maps');
 const {loadPrintCapabilities} = require('../actions/print');
 
+const assign = require('object-assign');
+
 function startApp() {
-    const plugins = require('./plugins.js');
+    const {plugins, requires} = require('./plugins.js');
     const store = require('./stores/store')(plugins);
     const App = require('./containers/App');
 
@@ -39,7 +41,7 @@ function startApp() {
 
     ReactDOM.render(
         <Provider store={store}>
-            <App plugins={PluginsUtils.getPlugins(plugins)}/>
+            <App plugins={assign(PluginsUtils.getPlugins(plugins), {requires})}/>
         </Provider>,
         document.getElementById('container')
     );

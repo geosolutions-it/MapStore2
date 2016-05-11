@@ -96,3 +96,13 @@ html, body, #container, .fill {
 .SortableItem.is-undraggable {
   cursor: not-allowed;
 }
+
+#mapstore-madewithlove {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    height: 0;
+    width: 100%;
+    overflow: visible;
+    text-align: center;
+}
