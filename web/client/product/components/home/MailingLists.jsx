@@ -9,6 +9,8 @@ var React = require('react');
 var {Col, Row} = require('react-bootstrap');
 var I18N = require('../../../components/I18N/I18N');
 
+const googleGroups = require('../../assets/img/groups_logo_sm.gif');
+
 var MailingLists = React.createClass({
     contextTypes: {
         messages: React.PropTypes.object
@@ -28,7 +30,7 @@ var MailingLists = React.createClass({
                             <tbody>
                             <tr>
                                 <td>
-                                    <img src="examples/home/img/groups_logo_sm.gif" height="30" width="136" alt="Google Groups" />
+                                    <img src={googleGroups} height="30" width="136" alt="Google Groups" />
                                 </td>
                             </tr>
                             <tr>
@@ -57,7 +59,7 @@ var MailingLists = React.createClass({
                             <tbody>
                             <tr>
                                 <td>
-                                    <img src="examples/home/img/groups_logo_sm.gif" height="30" width="136" alt="Google Groups" />
+                                    <img src={googleGroups} height="30" width="136" alt="Google Groups" />
                                 </td>
                             </tr>
                             <tr>
