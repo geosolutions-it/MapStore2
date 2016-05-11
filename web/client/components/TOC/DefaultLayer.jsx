@@ -18,11 +18,13 @@ var DefaultLayer = React.createClass({
         node: React.PropTypes.object,
         propertiesChangeHandler: React.PropTypes.func,
         onToggle: React.PropTypes.func,
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        sortableStyle: React.PropTypes.object
     },
     getDefaultProps() {
         return {
             style: {},
+            sortableStyle: {},
             propertiesChangeHandler: () => {},
             onToggle: () => {}
         };
@@ -36,7 +38,7 @@ var DefaultLayer = React.createClass({
     render() {
         let {children, propertiesChangeHandler, onToggle, ...other } = this.props;
         return (
-            <Node type="layer" {...other}>
+            <Node sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
                 <VisibilityCheck propertiesChangeHandler={this.props.propertiesChangeHandler}/>
                 <Title onClick={this.props.onToggle}/>
                 <InlineSpinner loading={this.props.node.loading}/>

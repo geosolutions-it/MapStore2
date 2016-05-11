@@ -22,7 +22,7 @@ var SortableMixin = assign(require('react-sortable-items/SortableItemMixin'), {
           this.props._isPlaceholder && this.getPlaceholderContent && Object.prototype.toString.call(this.getPlaceholderContent) === '[object Function]'
             ? this.getPlaceholderContent() : item, {
           className: classNames,
-          style: item.props.style || this.props.sortableStyle,
+          style: assign({}, item.props.style, this.props.sortableStyle),
           key: this.props.sortableIndex,
           onMouseDown: this.handleSortableItemMouseDown,
           onMouseUp: this.handleSortableItemMouseUp

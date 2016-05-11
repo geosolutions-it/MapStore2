@@ -196,10 +196,11 @@ let MyMap = React.createClass({
                 </LMap>
 
                 <Panel style={{position: "fixed", top: "50px", right: "50px", width: "400px", bottom: "50px", overflow: "auto"}}>
-                    <TOC nodes={this.props.layers.groups}>
+                    <TOC onSort={this.props.sortNode} nodes={this.props.layers.groups}>
                         <Group propertiesChangeHandler={this.props.changeGroupProperties}
                             onRemove={(node) => this.props.removeNode(node.id, 'groups')}
                             onToggle={(group, status) => this.props.toggleNode(group, 'groups', status)}
+                            onSort={this.props.sortNode}
                             >
                             <LayerOrGroup
                                 onLegend={(node) => this.props.toggleNode(node.id, 'layers', node.expanded)}
@@ -207,6 +208,7 @@ let MyMap = React.createClass({
                                 propertiesChangeHandler={this.props.changeLayerProperties}
                                 groupPropertiesChangeHandler={this.props.changeGroupProperties}
                                 onRemoveGroup={(node) => this.props.removeNode(node.id, 'groups')}
+                                onSortGroup={this.props.sortNode}
                             />
                         </Group>
                     </TOC>

@@ -7,6 +7,7 @@
  */
 
 var Layers = require('../../../../utils/leaflet/Layers');
+var CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 var L = require('leaflet');
 var objectAssign = require('object-assign');
 const {isArray} = require('lodash');
@@ -74,7 +75,9 @@ function wmsToLeafletOptions(options) {
         format: options.format || 'image/png',
         transparent: options.transparent !== undefined ? options.transparent : true,
         opacity: opacity,
-        version: options.version || "1.3.0"
+        version: options.version || "1.3.0",
+        SRS: CoordinatesUtils.normalizeSRS(options.srs),
+        CRS: CoordinatesUtils.normalizeSRS(options.srs)
     }, options.params || {});
 }
 
