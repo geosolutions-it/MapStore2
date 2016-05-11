@@ -17,6 +17,11 @@ License
 ------------
 MapStore 2 is Free and Open Source software, it is based on OpenLayers 3, Leaflet and [ReactJS](https://facebook.github.io/react/), and is licensed under the Simplified BSD License.
 
+
+Demos
+------------
+We have a QA instance, which can be accessed [here](qa.mapstore2.geo-solutions.it), where all the changes are deployed once they are published in our repo and a stable instance [here](mapstore2.geo-solutions.it), that gets deployed on demand after manual testing.
+
 Quick Start
 ------------
 
