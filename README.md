@@ -20,7 +20,7 @@ MapStore 2 is Free and Open Source software, it is based on OpenLayers 3, Leafle
 
 Demos
 ------------
-We have a QA instance, which can be accessed [here](qa.mapstore2.geo-solutions.it), where all the changes are deployed once they are published in our repo and a stable instance [here](mapstore2.geo-solutions.it), that gets deployed on demand after manual testing.
+We have a QA instance, which can be accessed [here](http://qa.mapstore2.geo-solutions.it), where all the changes are deployed once they are published in our repo and a stable instance [here](http://mapstore2.geo-solutions.it), that gets deployed on demand after manual testing.
 
 Quick Start
 ------------
