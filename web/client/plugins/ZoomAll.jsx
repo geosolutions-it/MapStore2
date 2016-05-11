@@ -10,7 +10,7 @@ const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {mapSelector} = require('../selectors/map');
 
-const selector = createSelector([mapSelector], (map) => ({mapConfig: map}));
+const selector = createSelector([mapSelector, state => state.mapInitialConfig], (map, mapInitialConfig) => ({mapConfig: map, mapInitialConfig: mapInitialConfig}));
 
 const {changeMapView} = require('../actions/map');
 
@@ -27,7 +27,7 @@ const ZoomAllPlugin = React.createClass({
             key="zoomall-help"
             helpText={<Message msgId="helptexts.zoomToMaxExtentButton"/>}>
             <ZoomToMaxExtentButton
-                key="zoomToMaxExtent"/>
+                key="zoomToMaxExtent" useInitialExtent="true"/>
         </HelpWrapper>);
     }
 });

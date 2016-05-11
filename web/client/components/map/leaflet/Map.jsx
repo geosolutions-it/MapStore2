@@ -212,11 +212,29 @@ let LeafletMap = React.createClass({
         });
     },
     registerHooks() {
-        // mapUtils.registerHook(mapUtils.ZOOM_TO_EXTEND_HOOK, () => {});
         mapUtils.registerHook(mapUtils.EXTENT_TO_ZOOM_HOOK, (extent) => {
             var repojectedPointA = CoordinatesUtils.reproject([extent[0], extent[1]], this.props.projection, 'EPSG:4326');
             var repojectedPointB = CoordinatesUtils.reproject([extent[2], extent[3]], this.props.projection, 'EPSG:4326');
             return this.map.getBoundsZoom([[repojectedPointA.x, repojectedPointA.y], [repojectedPointB.x, repojectedPointB.y]]) - 1;
+        });
+        mapUtils.registerHook(mapUtils.COMPUTE_BBOX_HOOK, (center, zoom) => {
+            let latLngCenter = L.latLng([center.y, center.x]);
+            // this call will use map internal size
+            let topLeftPoint = this.map._getNewTopLeftPoint(latLngCenter, zoom);
+            let pixelBounds = new L.Bounds(topLeftPoint, topLeftPoint.add(this.map.getSize()));
+            let southWest = this.map.unproject(pixelBounds.getBottomLeft(), zoom);
+            let northEast = this.map.unproject(pixelBounds.getTopRight(), zoom);
+            let bbox = new L.LatLngBounds(southWest, northEast).toBBoxString().split(',');
+            return {
+                bounds: {
+                    minx: bbox[0],
+                    miny: bbox[1],
+                    maxx: bbox[2],
+                    maxy: bbox[3]
+                },
+                crs: 'EPSG:4326',
+                rotation: 0
+            };
         });
     }
 });

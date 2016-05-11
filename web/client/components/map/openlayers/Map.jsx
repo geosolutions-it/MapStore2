@@ -309,9 +309,24 @@ var OpenlayersMap = React.createClass({
         }
     },
     registerHooks() {
-        // mapUtils.registerHook(mapUtils.ZOOM_TO_EXTEND_HOOK, () => {});
         mapUtils.registerHook(mapUtils.RESOLUTIONS_HOOK, () => {
             return this.getResolutions();
+        });
+        mapUtils.registerHook(mapUtils.COMPUTE_BBOX_HOOK, (center, zoom) => {
+            var olCenter = CoordinatesUtils.reproject([center.x, center.y], 'EPSG:4326', this.props.projection);
+            let view = this.createView(olCenter, zoom, this.props.projection, this.props.mapOptions && this.props.mapOptions.view);
+            let size = this.map.getSize();
+            let bbox = view.calculateExtent(size);
+            return {
+                bounds: {
+                    minx: bbox[0],
+                    miny: bbox[1],
+                    maxx: bbox[2],
+                    maxy: bbox[3]
+                },
+                crs: this.props.projection,
+                rotation: this.map.getView().getRotation()
+            };
         });
     }
 });

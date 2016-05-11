@@ -36,6 +36,7 @@ module.exports = (plugins) => {
         measurement: require('../../reducers/measurement'),
         snapshot: require('../../reducers/snapshot'),
         map: () => {return null; },
+        mapInitialConfig: () => {return null; },
         layers: () => {return null; },
         ...pluginsReducers
     });
@@ -48,11 +49,13 @@ module.exports = (plugins) => {
             ...allReducers(state, action),
             controls: baseControls(controls(state.controls, action), action),
             map: mapState && mapState.map ? map(mapState.map, action) : null,
+            mapInitialConfig: mapState ? mapState.mapInitialConfig : null,
             layers: mapState ? layers(mapState.layers, action) : null
         };
         if (action && action.type === CHANGE_BROWSER_PROPERTIES && newState.browser.touch) {
             newState = assign(newState, mobileOverride);
         }
+
         return newState;
     };
     return DebugUtils.createDebugStore(rootReducer, {});
