@@ -112,10 +112,17 @@ describe('This test for ZoomToMaxExtentButton', () => {
             , document.getElementById("container"));
             expect(cmp).toExist();
 
+            let componentSpy = expect.spyOn(cmp, 'zoomToMaxExtent').andCallThrough();
+
             const cmpDom = document.getElementById("mapstore-zoomtomaxextent");
             expect(cmpDom).toExist();
 
             cmpDom.click();
+
+            // check that the correct zoom to extent method has been invoked
+            expect(componentSpy.calls.length).toBe(1);
+            componentSpy.restore();
+
             expect(spy.calls.length).toBe(1);
             expect(spy.calls[0].arguments.length).toBe(6);
         };
@@ -153,5 +160,63 @@ describe('This test for ZoomToMaxExtentButton', () => {
         expect(zmeBtnNode).toExist();
 
         expect(zmeBtnNode.className.indexOf('custom') !== -1).toBe(true);
+    });
+
+    it('test zoom to initial extent', () => {
+
+        let genericTest = function(btnType) {
+            let actions = {
+                changeMapView: (c, z, mb, ms) => {
+                    return {c, z, mb, ms};
+                }
+            };
+            let actionsSpy = expect.spyOn(actions, "changeMapView");
+            var cmp = ReactDOM.render(
+                <ZoomToMaxExtentButton
+                    {...actions} btnType={btnType}
+                    useInitialExtent={true}
+                    mapConfig={{
+                        size: {
+                            height: 100,
+                            width: 100
+                        }
+                    }}
+                    mapInitialConfig={{
+                        zoom: 10,
+                        center: {
+                            x: 1250000.000000,
+                            y: 5370000.000000,
+                            crs: "EPSG:900913"
+                        },
+                        projection: "EPSG:900913"
+                    }}
+                />
+            , document.getElementById("container"));
+            expect(cmp).toExist();
+
+            let componentSpy = expect.spyOn(cmp, 'zoomToInitialExtent').andCallThrough();
+
+            const cmpDom = document.getElementById("mapstore-zoomtomaxextent");
+            expect(cmpDom).toExist();
+
+            cmpDom.click();
+
+            // check that the correct zoom to extent method has been invoked
+            expect(componentSpy.calls.length).toBe(1);
+            componentSpy.restore();
+
+            expect(actionsSpy.calls.length).toBe(1);
+            expect(actionsSpy.calls[0].arguments.length).toBe(6);
+            expect(actionsSpy.calls[0].arguments[0]).toExist();
+            expect(actionsSpy.calls[0].arguments[1]).toExist();
+            // the bbox is null since no hook was registered
+            expect(actionsSpy.calls[0].arguments[2]).toNotExist();
+            expect(actionsSpy.calls[0].arguments[3]).toExist();
+            expect(actionsSpy.calls[0].arguments[4]).toNotExist();
+            expect(actionsSpy.calls[0].arguments[5]).toExist();
+        };
+
+        genericTest("normal");
+        genericTest("image");
     });
 });

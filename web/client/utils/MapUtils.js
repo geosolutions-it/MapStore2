@@ -16,6 +16,7 @@ const GOOGLE_MERCATOR = {
 
 const EXTENT_TO_ZOOM_HOOK = 'EXTENT_TO_ZOOM_HOOK';
 const RESOLUTIONS_HOOK = 'RESOLUTIONS_HOOK';
+const COMPUTE_BBOX_HOOK = 'COMPUTE_BBOX_HOOK';
 
 var hooks = {};
 var CoordinatesUtils = require('./CoordinatesUtils');
@@ -26,6 +27,17 @@ function registerHook(name, hook) {
 
 function getHook(name) {
     return hooks[name];
+}
+
+function executeHook(hookName, existCallback, dontExistCallback) {
+    const hook = getHook(hookName);
+    if (hook) {
+        return existCallback(hook);
+    }
+    if (dontExistCallback) {
+        return dontExistCallback();
+    }
+    return null;
 }
 
 /**
@@ -178,9 +190,24 @@ function getCenterForExtent(extent, projection) {
     };
 }
 
+/**
+ * Calculates the bounding box for the given center and zoom.
+ *
+ * @param  {object} center object
+ * @param  {number} zoom level
+ */
+function getBbox(center, zoom) {
+    return executeHook("COMPUTE_BBOX_HOOK",
+        (hook) => {
+            return hook(center, zoom);
+        }
+    );
+}
+
 module.exports = {
     EXTENT_TO_ZOOM_HOOK,
     RESOLUTIONS_HOOK,
+    COMPUTE_BBOX_HOOK,
     DEFAULT_SCREEN_DPI,
     registerHook,
     getHook,
@@ -193,5 +220,6 @@ module.exports = {
     defaultGetZoomForExtent,
     getCenterForExtent,
     getResolutions,
-    getScales
+    getScales,
+    getBbox
 };

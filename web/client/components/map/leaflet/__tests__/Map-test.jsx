@@ -10,6 +10,7 @@ var ReactDOM = require('react-dom');
 var LeafletMap = require('../Map.jsx');
 var LeafLetLayer = require('../Layer.jsx');
 var expect = require('expect');
+var mapUtils = require('../../../../utils/MapUtils');
 
 require('../../../../utils/leaflet/Layers');
 require('../plugins/OSMLayer');
@@ -199,5 +200,27 @@ describe('LeafletMap', () => {
         const leafletMap = map.map;
         const mapDiv = leafletMap.getContainer();
         expect(mapDiv.style.cursor).toBe("pointer");
+    });
+
+    it('test COMPUTE_BBOX_HOOK hook execution', () => {
+        // instanciating the map that will be used to compute the bounfing box
+        const map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
+        // computing the bounding box for the new center and the new zoom
+        const bbox = mapUtils.getBbox({y: 44, x: 10}, 5);
+        // update the map with the new center and the new zoom so we can check our computed bouding box
+        map.setProps({zoom: 5, center: {y: 44, x: 10}});
+        const mapBbox = map.map.getBounds().toBBoxString().split(',');
+        // check our computed bounding box agains the map computed one
+        expect(bbox).toExist();
+        expect(mapBbox).toExist();
+        expect(bbox.bounds).toExist();
+        expect(bbox.bounds.minx).toBe(mapBbox[0]);
+        expect(bbox.bounds.miny).toBe(mapBbox[1]);
+        expect(bbox.bounds.maxx).toBe(mapBbox[2]);
+        expect(bbox.bounds.maxy).toBe(mapBbox[3]);
+        expect(bbox.crs).toExist();
+        // in the case of leaflet the bounding box CRS should always be "EPSG:4326" and the roation 0
+        expect(bbox.crs).toBe("EPSG:4326");
+        expect(bbox.rotation).toBe(0);
     });
 });

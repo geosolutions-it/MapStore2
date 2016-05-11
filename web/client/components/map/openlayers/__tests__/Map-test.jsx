@@ -11,6 +11,7 @@ var OpenlayersMap = require('../Map.jsx');
 var OpenlayersLayer = require('../Layer.jsx');
 var expect = require('expect');
 var ol = require('openlayers');
+var mapUtils = require('../../../../utils/MapUtils');
 
 require('../../../../utils/openlayers/Layers');
 require('../plugins/OSMLayer');
@@ -199,5 +200,27 @@ describe('OpenlayersMap', () => {
         const olMap = map.map;
         const mapDiv = olMap.getViewport();
         expect(mapDiv.style.cursor).toBe("pointer");
+    });
+
+    it('test COMPUTE_BBOX_HOOK hook execution', () => {
+        // instanciating the map that will be used to compute the bounfing box
+        const map = ReactDOM.render(<OpenlayersMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("map"));
+        // computing the bounding box for the new center and the new zoom
+        const bbox = mapUtils.getBbox({y: 44, x: 10}, 5);
+        // update the map with the new center and the new zoom so we can check our computed bouding box
+        map.setProps({zoom: 5, center: {y: 44, x: 10}});
+        const mapBbox = map.map.getView().calculateExtent(map.map.getSize());
+        // check our computed bounding box agains the map computed one
+        expect(bbox).toExist();
+        expect(mapBbox).toExist();
+        expect(bbox.bounds).toExist();
+        expect(Math.abs(bbox.bounds.minx - mapBbox[0])).toBeLessThan(0.0001);
+        expect(Math.abs(bbox.bounds.miny - mapBbox[1])).toBeLessThan(0.0001);
+        expect(Math.abs(bbox.bounds.maxx - mapBbox[2])).toBeLessThan(0.0001);
+        expect(Math.abs(bbox.bounds.maxy - mapBbox[3])).toBeLessThan(0.0001);
+        expect(bbox.crs).toExist();
+        // by default ol3 will use the "EPSG:3857" crs and rotation in this case should be zero
+        expect(bbox.crs).toBe("EPSG:3857");
+        expect(bbox.rotation).toBe(0);
     });
 });

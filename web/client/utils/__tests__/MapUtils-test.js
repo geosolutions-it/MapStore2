@@ -10,6 +10,7 @@ var expect = require('expect');
 var {
     RESOLUTIONS_HOOK,
     EXTENT_TO_ZOOM_HOOK,
+    COMPUTE_BBOX_HOOK,
     registerHook,
     dpi2dpm,
     getSphericalMercatorScales,
@@ -17,7 +18,8 @@ var {
     getGoogleMercatorScales,
     getGoogleMercatorScale,
     getZoomForExtent,
-    getCenterForExtent
+    getCenterForExtent,
+    getBbox
 } = require('../MapUtils');
 
 describe('Test the MapUtils', () => {
@@ -70,5 +72,15 @@ describe('Test the MapUtils', () => {
         expect(ctr.x.toFixed(4)).toBe('1903587.7525');
         expect(ctr.y.toFixed(4)).toBe('-2577456.5938');
         expect(ctr.crs).toBe("EPSG:900913");
+    });
+    it('getBboxForExtent without the COMPUTE_BBOX_HOOK hook', () => {
+        registerHook(COMPUTE_BBOX_HOOK, undefined);
+        let bbox = getBbox(null, null, null);
+        expect(bbox).toNotExist();
+    });
+    it('getBboxForExtent with a COMPUTE_BBOX_HOOK hook', () => {
+        registerHook(COMPUTE_BBOX_HOOK, () => "bbox");
+        let bbox = getBbox(null, null, null);
+        expect(bbox).toBe("bbox");
     });
 });
