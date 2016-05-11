@@ -27,7 +27,7 @@ const ZoomAllPlugin = React.createClass({
             key="zoomall-help"
             helpText={<Message msgId="helptexts.zoomToMaxExtentButton"/>}>
             <ZoomToMaxExtentButton
-                key="zoomToMaxExtent" useInitialExtent="true"/>
+                key="zoomToMaxExtent" useInitialExtent={true}/>
         </HelpWrapper>);
     }
 });
