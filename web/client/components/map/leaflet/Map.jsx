@@ -155,8 +155,7 @@ let LeafletMap = React.createClass({
         );
     },
     _updateMapPositionFromNewProps(newProps) {
-        // Do the change at the same time, to avoid glitches
-        const currentCenter = this.map.getCenter();
+
         // current implementation will update the map only if the movement
         // between 12 decimals in the reference system to avoid rounded value
         // changes due to float mathematic operations.
@@ -166,16 +165,36 @@ let LeafletMap = React.createClass({
             }
             return ( a.toFixed(12) - (b.toFixed(12))) === 0;
         };
-        const centerIsUpdate = isNearlyEqual(newProps.center.x, currentCenter.lng) &&
-                               isNearlyEqual(newProps.center.y, currentCenter.lat);
-        const zoomChanged = newProps.zoom !== this.map.getZoom();
 
-         // Do the change at the same time, to avoid glitches
-        if (!centerIsUpdate && zoomChanged) {
+        // getting all centers we need to check
+        const newCenter = newProps.center;
+        const currentCenter = this.props.center;
+        const mapCenter = this.map.getCenter();
+        // checking if the current props are the same
+        const propsCentersEqual = isNearlyEqual(newCenter.x, currentCenter.x) &&
+                                  isNearlyEqual(newCenter.y, currentCenter.y);
+        // if props are the same nothing to do, otherwise
+        // we need to check if the new center is equal to map center
+        const centerIsNotUpdated = propsCentersEqual ||
+                                   (isNearlyEqual(newCenter.x, mapCenter.lng) &&
+                                    isNearlyEqual(newCenter.y, mapCenter.lat));
+
+        // getting all zoom values we need to check
+        const newZoom = newProps.zoom;
+        const currentZoom = this.props.zoom;
+        const mapZoom = this.map.getZoom();
+        // checking if the current props are the same
+        const propsZoomEqual = newZoom === currentZoom;
+        // if props are the same nothing to do, otherwise
+        // we need to check if the new zoom is equal to map zoom
+        const zoomIsNotUpdated = propsZoomEqual || newZoom === mapZoom;
+
+         // do the change at the same time, to avoid glitches
+        if (!centerIsNotUpdated && !zoomIsNotUpdated) {
             this.map.setView([newProps.center.y, newProps.center.x], newProps.zoom);
-        } else if (zoomChanged) {
+        } else if (!zoomIsNotUpdated) {
             this.map.setZoom(newProps.zoom);
-        } else if (!centerIsUpdate) {
+        } else if (!centerIsNotUpdated) {
             this.map.setView([newProps.center.y, newProps.center.x]);
         }
     },
