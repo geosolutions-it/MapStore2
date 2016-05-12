@@ -24,6 +24,7 @@ const MapPlugin = React.createClass({
         zoomControl: React.PropTypes.bool,
         mapLoadingMessage: React.PropTypes.string,
         tools: React.PropTypes.array,
+        options: React.PropTypes.object,
         toolsOptions: React.PropTypes.object
     },
     getDefaultProps() {
@@ -32,6 +33,7 @@ const MapPlugin = React.createClass({
             zoomControl: true,
             mapLoadingMessage: "map.loading",
             tools: ['measurement', 'locate', 'overview', 'scalebar'],
+            options: {},
             toolsOptions: {
                 measurement: {},
                 locate: {},
@@ -93,9 +95,9 @@ const MapPlugin = React.createClass({
         if (this.props.map) {
             return (
                 <plugins.Map id="map"
+                    {...this.props.options}
                     {...this.props.map}
-                    zoomControl={this.props.zoomControl}
-                >
+                    zoomControl={this.props.zoomControl}>
                     {this.renderLayers()}
                     {this.renderSupportTools()}
                 </plugins.Map>
