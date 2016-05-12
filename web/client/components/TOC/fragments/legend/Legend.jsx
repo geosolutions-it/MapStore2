@@ -4,7 +4,7 @@ const {isArray} = require('lodash');
 
 const assign = require('object-assign');
 
-var Legend = React.createClass({
+const Legend = React.createClass({
     propTypes: {
         layer: React.PropTypes.object,
         legendHeigth: React.PropTypes.number,
