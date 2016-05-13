@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -45,6 +45,9 @@ var LocateBtn = React.createClass({
             case "LOCATING":
                 status = "DISABLED";
                 break;
+            case "PERMISSION_DENIED":
+                status = "DISABLED";
+                break;
             default:
                 break;
         }
@@ -54,8 +57,9 @@ var LocateBtn = React.createClass({
         return this.props.locate !== nextProps.locate;
     },
     renderButton() {
+        const geoLocationDisabled = this.props.locate === "PERMISSION_DENIED";
         return (
-            <Button id={this.props.id} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.getBtnStyle()} style={this.props.style}>
+            <Button id={this.props.id} disabled={geoLocationDisabled} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.getBtnStyle()} style={this.props.style}>
                 <Glyphicon glyph="screenshot"/>{this.props.text}{this.props.help}
             </Button>
         );
@@ -76,7 +80,6 @@ var LocateBtn = React.createClass({
             </Button>
         );
     },
-
     addTooltip(btn) {
         let tooltip = <Tooltip id="locate-tooltip">{this.props.tooltip}</Tooltip>;
         return (
@@ -84,6 +87,14 @@ var LocateBtn = React.createClass({
                 {btn}
             </OverlayTrigger>
         );
+    },
+    componentWillMount() {
+        // check if we are allowed to use geolocation feature
+        navigator.geolocation.getCurrentPosition(() => {}, (error) => {
+            if (error.code === 1) {
+                this.props.onClick("PERMISSION_DENIED");
+            }
+        });
     },
     render() {
         var retval;
