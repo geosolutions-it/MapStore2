@@ -11,10 +11,7 @@ var { createStore, combineReducers } = require('redux');
 var { changeBrowserProperties} = require('../../actions/browser');
 var ConfigUtils = require('../../utils/ConfigUtils');
 var browser = require('../../reducers/browser');
-var BootstrapReact = require('react-bootstrap');
-var Grid = BootstrapReact.Grid;
-var Row = BootstrapReact.Row;
-var Col = BootstrapReact.Col;
+var {Modal, Grid, Row, Col, Button} = require('react-bootstrap');
 var LMap = require('../../components/map/leaflet/Map');
 var LLayer = require('../../components/map/leaflet/Layer');
 var mouseposition = require('../../reducers/mousePosition');
@@ -46,11 +43,30 @@ function startApp() {
                 browser: {touch: false}
             };
         },
+        getInitialState() {
+            return {
+                showAlert: false
+            };
+        },
+        onCopy() {
+            this.setState({showAlert: true});
+        },
         render() {
             if (this.props.browser.touch) {
                 return <div className="error">This example does not work on mobile</div>;
             }
             return (<div id="viewer" >
+            <Modal show={this.state.showAlert} onHide={this.closeAlert}>
+              <Modal.Header closeButton>
+                <Modal.Title>Clipboard</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                Succesfully copied to clipboard!
+              </Modal.Body>
+              <Modal.Footer>
+                <Button onClick={this.closeAlert}>Close</Button>
+              </Modal.Footer>
+            </Modal>
                     <Grid fluid={false} className="mousepositionsbar">
                     <Row>
                         <Col lg={4} md={6} xs={12}>
@@ -59,7 +75,10 @@ function startApp() {
                                 degreesTemplate={SearchGeoS}/>
                         </Col>
                         <Col lg={4} md={6} xs={12}>
-                            <MousePosition id="wgs84" key="wgs84" mousePosition={this.props.mousePosition} crs="EPSG:4326"/>
+                            <MousePosition
+                                copyToClipboardEnabled
+                                onCopy={this.onCopy}
+                                id="wgs84" key="wgs84" mousePosition={this.props.mousePosition} crs="EPSG:4326"/>
                         </Col>
                         <Col lg={4} md={4} xs={6}>
                             <MousePosition id="degreedecimal" key="degreedecimal" enabled
@@ -67,7 +86,10 @@ function startApp() {
                         degreesTemplate={LabelDD}/>
                         </Col>
                     </Row></Grid>
-                    <MousePosition id="google" key="google_prj" mousePosition={this.props.mousePosition} crs="EPSG:900913"/>
+                    <MousePosition id="google"
+                        copyToClipboardEnabled
+                        onCopy={this.onCopy}
+                        key="google_prj" mousePosition={this.props.mousePosition} crs="EPSG:900913"/>
 
                     <MousePosition id="degreeminute" key="degreeminute"
                         mousePosition={this.props.mousePosition} crs="EPSG:4326"
@@ -90,6 +112,9 @@ function startApp() {
                     </LMap>
               </div>
                );
+        },
+        closeAlert() {
+            this.setState({showAlert: false});
         }
     });
 

@@ -46,6 +46,11 @@
             background-color:rgba(0,0,0,.8);
         }
 
+        #wgs84 h5 {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
         #degreedecimal {
             font-family: 'PT Sans' !important;
             font-style:  italic;
@@ -142,4 +147,8 @@
         #google .label-info {
             color:rgba(10,10,10,1);
             background-color:rgba(180,180,180,.6);
+        }
+        #google h5 {
+            display: inline-block;
+            margin-right: 10px;
         }
