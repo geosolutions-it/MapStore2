@@ -17,10 +17,28 @@ const {changeMousePositionCrs, changeMousePositionState} = require('../actions/m
 
 const selector = createSelector([
     mapSelector || {},
-    (state) => state.mousePosition || {}
-], (map, mousePosition) => ({
+    (state) => state.mousePosition || {},
+    (state) => {
+        if (state.mousePosition.showCenter && state.map) {
+            return state.map.center;
+        }
+        if (state.mousePosition.showOnClick) {
+            if (state.mapInfo.clickPoint && state.mapInfo.clickPoint.latlng) {
+                return {
+                    x: state.mapInfo.clickPoint.latlng.lng,
+                    y: state.mapInfo.clickPoint.latlng.lat,
+                    crs: "EPSG:4326"
+                };
+            }
+            return {
+                crs: "EPSG:4326"
+            };
+        }
+        return state.mousePosition.position;
+    }
+], (map, mousePosition, position) => ({
     enabled: mousePosition.enabled,
-    mousePosition: mousePosition.showCenter && map && map.center || mousePosition.position,
+    mousePosition: position,
     crs: mousePosition.crs || map && map.projection || 'EPSG:3857'
 }));
 
