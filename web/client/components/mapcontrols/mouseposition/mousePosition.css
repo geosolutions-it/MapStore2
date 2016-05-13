@@ -11,7 +11,6 @@
 }
 
 #mapstore-mouseposition .label {
-    display: inline-block;
     max-width: 350px;
     min-width: 200px;
     overflow: hidden;
@@ -20,8 +19,13 @@
     vertical-align: middle;
 
 }
+
 #mapstore-mouseposition .label-info {
     background-color:rgba(91,192,222,0);
     color: white;
     font-size: 110%;
+}
+
+#mapstore-mouseposition h5 {
+    display: inline-block;
 }
