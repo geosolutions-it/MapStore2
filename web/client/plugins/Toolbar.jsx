@@ -66,7 +66,7 @@ const Toolbar = React.createClass({
     getPanels() {
         return this.getTools()
             .filter((tool) => tool.panel)
-            .map((tool) => ({name: tool.name, title: tool.title, panel: this.getPanel(tool), items: tool.items, wrap: tool.wrap || false}));
+            .map((tool) => ({name: tool.name, title: tool.title, cfg: tool.cfg, panel: this.getPanel(tool), items: tool.items, wrap: tool.wrap || false}));
     },
     getAllTools() {
         const unsorted = [...tools, ...this.props.items].map((item, index) => assign({}, item, {position: item.position || index}));
@@ -116,7 +116,7 @@ const Toolbar = React.createClass({
         return this.getPanels().map((panel) => {
             const ToolPanelComponent = panel.panel;
             const ToolPanel = (<ToolPanelComponent
-                key={panel.name} mapType={this.props.mapType} {...(panel.props || {})}
+                key={panel.name} mapType={this.props.mapType} {...panel.cfg} {...(panel.props || {})}
                 items={panel.items || []}/>);
             const title = panel.title ? <Message msgId={panel.title}/> : null;
             if (panel.wrap) {
