@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -10,6 +10,8 @@ var expect = require('expect');
 var React = require('react/addons');
 var ReactDOM = require('react-dom');
 var LocateBtn = require('../LocateBtn');
+
+const ReactTestUtils = require('react-addons-test-utils');
 
 describe("test the Locate Button", () => {
     beforeEach((done) => {
@@ -60,4 +62,15 @@ describe("test the Locate Button", () => {
         expect(spy.calls.length).toEqual(1);
         expect(spy.calls[0].arguments).toEqual(["FOLLOWING"]);
     });
+
+    it('test permission denied state', () => {
+        const component = ReactDOM.render(<LocateBtn locate="PERMISSION_DENIED"/>,
+                        document.getElementById("container"));
+        expect(component).toExist();
+        // check if the button was correctly disabled
+        const button = ReactTestUtils.findRenderedDOMComponentWithTag(component, "button");
+        expect(button).toExist();
+        expect(button.disabled).toEqual(true);
+    });
+
 });
