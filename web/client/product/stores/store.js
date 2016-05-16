@@ -5,7 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {combineReducers} = require('redux');
 const assign = require('object-assign');
 
 const {mapConfigHistory, createHistory} = require('../../utils/MapHistoryUtils');
@@ -16,7 +15,7 @@ const layers = require('../../reducers/layers');
 const mapConfig = require('../../reducers/config');
 
 const DebugUtils = require('../../utils/DebugUtils');
-const PluginsUtils = require('../../utils/PluginsUtils');
+const {combineReducers} = require('../../utils/PluginsUtils');
 
 const LayersUtils = require('../../utils/LayersUtils');
 const {CHANGE_BROWSER_PROPERTIES} = require('../../actions/browser');
@@ -24,9 +23,7 @@ const baseControls = require('../../reducers/controls');
 const controls = require('../reducers/controls');
 
 module.exports = (plugins) => {
-    const pluginsReducers = PluginsUtils.getReducers(plugins);
-
-    const allReducers = combineReducers({
+    const allReducers = combineReducers(plugins, {
         home: require('../reducers/home'),
         locale: require('../../reducers/locale'),
         maps: require('../../reducers/maps'),
@@ -35,8 +32,7 @@ module.exports = (plugins) => {
         help: require('../../reducers/help'),
         map: () => {return null; },
         mapInitialConfig: () => {return null; },
-        layers: () => {return null; },
-        ...pluginsReducers
+        layers: () => {return null; }
     });
 
     const mobileOverride = {mapInfo: {enabled: true, infoFormat: 'text/html' }, mousePosition: {enabled: true, crs: "EPSG:4326", showCenter: true}};

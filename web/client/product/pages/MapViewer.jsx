@@ -12,16 +12,19 @@ require('../assets/css/viewer.css');
 const {connect} = require('react-redux');
 
 const url = require('url');
+const urlQuery = url.parse(window.location.href, true).query;
 
 const ConfigUtils = require('../../utils/ConfigUtils');
-const PluginsUtils = require('../../utils/PluginsUtils');
+
+const PluginsContainer = connect((state) => ({
+    pluginsConfig: state.plugins || ConfigUtils.getConfigProp('plugins') || null,
+    mode: (urlQuery.mobile || (state.browser && state.browser.touch)) ? 'mobile' : 'desktop'
+}))(require('../../components/plugins/PluginsContainer'));
 
 const {loadMapConfig} = require('../../actions/config');
 
 
 const {resetControls} = require('../../actions/controls');
-
-const urlQuery = url.parse(window.location.href, true).query;
 
 const MapViewer = React.createClass({
     propTypes: {
@@ -29,8 +32,7 @@ const MapViewer = React.createClass({
         params: React.PropTypes.object,
         loadMapConfig: React.PropTypes.func,
         reset: React.PropTypes.func,
-        plugins: React.PropTypes.object,
-        pluginsConfig: React.PropTypes.object
+        plugins: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -51,31 +53,15 @@ const MapViewer = React.createClass({
             this.props.loadMapConfig(configUrl, mapId !== null);
         }
     },
-    getPluginDescriptor(plugin) {
-        return PluginsUtils.getPluginDescriptor(this.props.plugins,
-                this.props.pluginsConfig[this.props.mode], plugin);
-    },
-    renderPlugins(plugins) {
-        return plugins
-            .filter((Plugin) => !Plugin.hide)
-            .map(this.getPluginDescriptor)
-            .map((Plugin) => <Plugin.impl key={Plugin.name}
-                {...this.props.params} {...Plugin.cfg} items={Plugin.items}/>);
-    },
     render() {
-        if (this.props.pluginsConfig) {
-            return (
-                <div key="viewer" className="viewer">
-                    {this.renderPlugins(this.props.pluginsConfig[this.props.mode])}
-                </div>
-            );
-        }
-        return null;
+        return (<PluginsContainer key="viewer" id="viewer" className="viewer"
+            plugins={this.props.plugins}
+            params={this.props.params}
+            />);
     }
 });
 
 module.exports = connect((state) => ({
-    pluginsConfig: state.plugins || ConfigUtils.getConfigProp('plugins') || null,
     mode: (urlQuery.mobile || (state.browser && state.browser.touch)) ? 'mobile' : 'desktop'
 }),
 {
