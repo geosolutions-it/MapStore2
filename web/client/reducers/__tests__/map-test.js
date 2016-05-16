@@ -80,4 +80,17 @@ describe('Test the map reducer', () => {
         expect(state.prop).toBe('prop');
         expect(state.projection).toBe('EPSG:4326');
     });
+
+    it('zoom to extent', () => {
+        const action = {
+            type: 'ZOOM_TO_EXTENT',
+            extent: [10, 44, 12, 46],
+            crs: "EPSG:4326"
+        };
+
+        var state = mapConfig({}, action);
+        expect(state.mapStateSource).toBe(undefined);
+        expect(state.center.x).toBe(11);
+        expect(state.center.y).toBe(45);
+    });
 });

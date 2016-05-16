@@ -38,7 +38,8 @@ function mapConfig(state = null, action) {
                 action.crs, 'EPSG:4326');
             return assign({}, state, {
                 zoom,
-                center
+                center,
+                mapStateSource: action.mapStateSource
             });
         }
         case PAN_TO: {

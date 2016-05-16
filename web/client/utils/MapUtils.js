@@ -146,7 +146,7 @@ function defaultGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, mapReso
         return diff > previous.diff ? previous : {diff: diff, zoom: index};
     }, {diff: Number.POSITIVE_INFINITY, zoom: 0});
 
-    return Math.max(0, zoom);
+    return Math.max(0, zoom, Math.min(zoom, maxZoom));
 }
 
 /**
