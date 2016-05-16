@@ -66,7 +66,7 @@ function wmsToCesiumOptionsSingleTile(options) {
     }, options.params || {});
 
     return {
-        url: options.url + '?service=WMS&version=1.1.0&request=GetMap&' + getQueryString(parameters)
+        url: (isArray(options.url) ? options.url[Math.round(Math.random() * (options.url.length - 1))] : options.url) + '?service=WMS&version=1.1.0&request=GetMap&' + getQueryString(parameters)
     };
 }
 
