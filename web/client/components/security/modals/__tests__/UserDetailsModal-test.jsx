@@ -26,12 +26,12 @@ describe("Test user details modal", () => {
     });
 
     it('creates component with defaults', () => {
-        const cmp = ReactDOM.render(<UDModal/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<UDModal options={{animation: false}}/>, document.getElementById("container"));
         expect(cmp).toExist();
     });
 
     it('creates component to show', () => {
-        const cmp = ReactDOM.render(<UDModal show={true} userDetails={{user: {name: "user"}}}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<UDModal options={{animation: false}} show={true} userDetails={{user: {name: "user"}}}/>, document.getElementById("container"));
         expect(cmp).toExist();
     });
 
@@ -70,7 +70,7 @@ describe("Test user details modal", () => {
         let displayAttributes = (attr) => {
             return attr.name && attr.name === "email" || attr.name === "company";
         };
-        const cmp = ReactDOM.render(<UDModal show={true} displayAttributes={displayAttributes} user={testUser}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<UDModal options={{animation: false}} show={true} displayAttributes={displayAttributes} user={testUser}/>, document.getElementById("container"));
         expect(cmp).toExist();
         let modalInstance = ReactTestUtils.findRenderedComponentWithType(cmp, Modal);
         expect(ReactTestUtils.scryRenderedDOMComponentsWithTag(modalInstance._modal, "th").length).toEqual(2);

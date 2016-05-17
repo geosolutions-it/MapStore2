@@ -21,6 +21,7 @@ const PasswordResetModal = React.createClass({
         user: React.PropTypes.object,
         authHeader: React.PropTypes.string,
         show: React.PropTypes.bool,
+        options: React.PropTypes.object,
         onPasswordChange: React.PropTypes.func,
         onPasswordChanged: React.PropTypes.func,
         onClose: React.PropTypes.func
@@ -32,7 +33,8 @@ const PasswordResetModal = React.createClass({
             },
             onPasswordChange: () => {},
             onPasswordChanged: () => {},
-            onClose: () => {}
+            onClose: () => {},
+            options: {}
         };
     },
     componentWillReceiveProps(nextProps) {
@@ -61,7 +63,7 @@ const PasswordResetModal = React.createClass({
     },
     render() {
         return (
-            <Modal show={this.props.show} onHide={this.props.onClose}>
+            <Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
                 <Modal.Header key="passwordChange" closeButton>
                     <Modal.Title>Change Password</Modal.Title>
                 </Modal.Header>
