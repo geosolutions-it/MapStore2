@@ -27,7 +27,7 @@ var ImageButton = require('./ImageButton');
  *
  * Note: the button will not be never empty, it will show at least the text (default or custom)
  */
-var About = React.createClass({
+var InfoButton = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         image: React.PropTypes.string,
@@ -39,7 +39,8 @@ var About = React.createClass({
         help: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         hiddenText: React.PropTypes.bool,
         btnSize: React.PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
-        btnType: React.PropTypes.oneOf(['normal', 'image'])
+        btnType: React.PropTypes.oneOf(['normal', 'image']),
+        modalOptions: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -51,7 +52,8 @@ var About = React.createClass({
             text: "Info",
             hiddenText: false,
             btnSize: 'medium',
-            btnType: 'normal'
+            btnType: 'normal',
+            modalOptions: {}
         };
     },
     getInitialState() {
@@ -82,6 +84,7 @@ var About = React.createClass({
                 style={this.props.style}>
                 {this.getButton()}
                 <Modal
+                    {...this.props.modalOptions}
                     show={this.state.isVisible}
                     onHide={this.close}
                     bsStyle="info">
@@ -105,4 +108,4 @@ var About = React.createClass({
     }
 });
 
-module.exports = About;
+module.exports = InfoButton;

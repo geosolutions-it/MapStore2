@@ -27,6 +27,7 @@ const UserDetails = React.createClass({
       user: React.PropTypes.object,
       show: React.PropTypes.bool,
       displayAttributes: React.PropTypes.func,
+      options: React.PropTypes.object,
       onClose: React.PropTypes.func
   },
   getDefaultProps() {
@@ -37,7 +38,8 @@ const UserDetails = React.createClass({
           displayAttributes: (attr) => {
               return attr.name === "email";
           },
-          onClose: () => {}
+          onClose: () => {},
+          options: {}
       };
   },
   renderAttributes() {
@@ -52,7 +54,7 @@ const UserDetails = React.createClass({
       return <Table responsive striped condensed hover><tbody>{attrsRendered}</tbody></Table>;
   },
   render() {
-      return (<Modal show={this.props.show} onHide={this.props.onClose}>
+      return (<Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
           <Modal.Header key="details" closeButton>
             <Modal.Title>User Details</Modal.Title>
           </Modal.Header>
