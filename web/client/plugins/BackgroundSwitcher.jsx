@@ -24,7 +24,7 @@ module.exports = {
     BackgroundSwitcherPlugin: assign(BackgroundSwitcherPlugin, {
         Toolbar: {
             name: 'backgroundswitcher',
-            position: 4,
+            position: 5,
             exclusive: true,
             panel: true,
             help: <Message msgId="helptexts.backgroundSwitcher"/>,

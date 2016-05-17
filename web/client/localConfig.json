@@ -72,7 +72,7 @@
 					"id": "locateMeButton"
 				}
 		 }],
-		"desktop": ["Map", "Identify", "MadeWithLove", {
+		"desktop": ["Home", "Map", "Help", "Identify", "MadeWithLove", {
 			  "name": "Locate",
 				"hide": true
 		}, {
