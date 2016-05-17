@@ -6,19 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var {Button, Panel, ButtonGroup, ButtonToolbar, Tooltip} = require('react-bootstrap');
-var ToggleButton = require('../../buttons/ToggleButton');
-var ReactIntl = require('react-intl');
-var FormattedNumber = ReactIntl.FormattedNumber;
+const React = require('react');
+const {Button, Panel, ButtonGroup, ButtonToolbar, Tooltip} = require('react-bootstrap');
+const ToggleButton = require('../../buttons/ToggleButton');
+const ReactIntl = require('react-intl');
+const FormattedNumber = ReactIntl.FormattedNumber;
 
-var lineRuleIcon = require('./img/line-ruler.png');
-var areaRuleIcon = require('./img/area-ruler.png');
-var bearingRuleIcon = require('./img/bearing-ruler.png');
+const lineRuleIcon = require('./img/line-ruler.png');
+const areaRuleIcon = require('./img/area-ruler.png');
+const bearingRuleIcon = require('./img/bearing-ruler.png');
 
-var {isEqual} = require('lodash');
+const {isEqual} = require('lodash');
 
-let MeasureComponent = React.createClass({
+const MeasureComponent = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         name: React.PropTypes.string,

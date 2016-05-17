@@ -26,7 +26,8 @@ module.exports = {
         ZoomAllPlugin: require('../plugins/ZoomAll'),
         MapLoadingPlugin: require('../plugins/MapLoading'),
         AboutPlugin: require('./plugins/About'),
-        HomePlugin: require('./plugins/Home'),
+        HelpPlugin: require('../plugins/help/HelpTextPanel'),
+        HomePlugin: require('../plugins/Home'),
         MadeWithLovePlugin: require('./plugins/MadeWithLove')
     },
     requires: {
