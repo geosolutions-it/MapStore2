@@ -96,7 +96,16 @@
 				"name": "nurc:Arc_Sample",
 				"group": "Meteo",
 				"format": "image/png"
-			}
+			},
+      {
+        "type": "tileprovider",
+        "title": "OpenTopoMap",
+        "provider": "OpenTopoMap",
+        "name": "OpenTopoMap",
+        "source": "OpenTopoMap",
+        "group": "background",
+        "visibility": false
+      }
 		]
 	}
 }
