@@ -90,15 +90,15 @@ describe('Test the map reducer', () => {
         // full extent
         const action2 = {
             type: 'ZOOM_TO_EXTENT',
-            extent: [10, 44, 12, 46],
+            extent: [-180, -90, 180, 90],
             crs: "EPSG:4326"
         };
 
-        var state = mapConfig({}, action);
+        var state = mapConfig({projection: "EPSG:4326"}, action);
         expect(state.mapStateSource).toBe(undefined);
         expect(state.center.x).toBe(11);
         expect(state.center.y).toBe(45);
-        state = mapConfig({}, action2);
+        state = mapConfig({projection: "EPSG:900913"}, action2);
         expect(state.zoom).toBe(2);
 
     });
