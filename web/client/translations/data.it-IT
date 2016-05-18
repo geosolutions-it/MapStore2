@@ -339,7 +339,8 @@
             "addToMap": "Aggiungi alla mappa",
             "getWMSLink": "Ottieni link WMS",
             "error": "C'è stato un errore durante il caricamento del catalogo",
-            "pageInfo": "Risultati {start}-{end} di {total}"
+            "pageInfo": "Risultati {start}-{end} di {total}",
+            "noRecordsMatched": "Nessun risultato trovato"
         }
     }
 }

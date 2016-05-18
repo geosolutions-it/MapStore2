@@ -9,6 +9,7 @@ const axios = require('../libs/ajax');
 
 const {CSW, marshaller, unmarshaller} = require('../utils/ogc/CSW');
 const {Filter} = require('../utils/ogc/Filter');
+const urlUtil = require('url');
 const _ = require('lodash');
 
 
@@ -58,7 +59,7 @@ var Api = {
                                     if (el && el.value) {
                                         let lc = el.value.lowerCorner;
                                         let uc = el.value.upperCorner;
-                                        bbox = [uc[0], lc[1], uc[1], lc[0]];
+                                        bbox = [lc[1], lc[0], uc[1], uc[0]];
                                         // TODO parse the extent's crs
                                         let crsCode = el.value.crs.split(":::")[1];
                                         if (crsCode === "WGS 1984") {
@@ -81,17 +82,36 @@ var Api = {
                                     let dc = {
                                     };
                                     for (let j = 0; j < dcElement.length; j++) {
-                                        let el = dcElement[j];
-                                        let elName = el.name.localPart;
-                                        if (dc[elName] && Array.isArray(dc[elName])) {
-                                            dc[elName].push(el.value.content && el.value.content[0] || el.value.content || el.value);
-                                        } else if (dc[elName]) {
-                                            dc[elName] = [dc[elName], el.value.content && el.value.content[0] || el.value.content || el.value];
+                                        let dcel = dcElement[j];
+                                        let elName = dcel.name.localPart;
+                                        let finalEl = {};
+                                        /* Some services (e.g. GeoServer ) support http://schemas.opengis.net/csw/2.0.2/record.xsd only
+                                        * Usually they publish the WMS URL at dct:"references" with scheme=OGC:WMS
+                                        * So we place references as they are.
+                                        */
+                                        if (elName === "references" && dcel.value && dcel.value.scheme === "OGC:WMS") {
+                                            let urlString = dcel.value.content && dcel.value.content[0] || dcel.value.content || dcel.value;
+                                            let urlObj = urlUtil.parse(urlString, true);
+                                            let layerName = urlObj.query && urlObj.query.layers;
+                                            finalEl = {
+                                                value: urlString,
+                                                scheme: dcel.value.scheme,
+                                                name: layerName
+                                            };
                                         } else {
-                                            dc[elName] = el.value.content && el.value.content[0] || el.value.content || el.value;
+                                            finalEl = dcel.value.content && dcel.value.content[0] || dcel.value.content || dcel.value;
+                                        }
+
+                                        if (dc[elName] && Array.isArray(dc[elName])) {
+                                            dc[elName].push(finalEl);
+                                        } else if (dc[elName]) {
+                                            dc[elName] = [dc[elName], finalEl];
+                                        } else {
+                                            dc[elName] = finalEl;
                                         }
                                     }
                                     obj.dc = dc;
+
                                 }
                                 records.push(obj);
 
@@ -107,10 +127,10 @@ var Api = {
     },
     textSearch: function(url, startPosition, maxRecords, text) {
         // creates a request like this:
-        // <ogc:PropertyName>apiso:AnyText</ogc:PropertyName><ogc:Literal>a</ogc:Literal></ogc:PropertyIsLike>
+        // <ogc:PropertyName>apiso:AnyText</ogc:PropertyName><ogc:Literal>%a%</ogc:Literal></ogc:PropertyIsLike>
         let filter = null;
         if (text) {
-            let ops = Filter.propertyIsLike("apiso:AnyText", text);
+            let ops = Filter.propertyIsLike("csw:AnyText", "%" + text + "%");
             filter = Filter.filter(ops);
         }
         return Api.getRecords(url, startPosition, maxRecords, filter);

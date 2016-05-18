@@ -10,6 +10,8 @@ const Message = require('../I18N/Message');
 const {Image, Panel, Button, Glyphicon} = require('react-bootstrap');
 const _ = require('lodash');
 
+const defaultThumb = require('./img/default.jpg');
+
 const RecordItem = React.createClass({
     propTypes: {
         catalogURL: React.PropTypes.string,
@@ -26,23 +28,25 @@ const RecordItem = React.createClass({
         };
     },
     renderThumb(thumbURL, dc) {
+        let thumbSrc = defaultThumb;
         if (thumbURL) {
-            let thumbSrc = thumbURL;
+            thumbSrc = thumbURL;
             let absolute = (thumbURL.indexOf("http") === 0);
             if (!absolute) {
                 thumbSrc = this.props.catalogURL + "/" + thumbURL;
             }
-            return (<Image src={thumbSrc} alt={dc.title} style={{
-                "float": "left",
-                width: "150px",
-                maxHeight: "150px",
-                marginRight: "20px"
-            }}/>);
         }
+        return (<Image src={thumbSrc} alt={dc.title} style={{
+            "float": "left",
+            width: "150px",
+            maxHeight: "150px",
+            marginRight: "20px"
+        }}/>);
+
     },
     renderWMSButtons(wms) {
         if (wms) {
-            return (<div>
+            return (<div className="record-buttons">
                 <Button
                 bsStyle="success"
                 onClick={() => {this.addLayer(wms); }}
@@ -63,11 +67,16 @@ const RecordItem = React.createClass({
         let dc = this.props.record && this.props.record.dc || {};
         let thumbURL;
         let wms;
-        // let wms;
+        // find wms and thumbnail
         if (dc && dc.URI) {
             let thumb = _.head([].filter.call(dc.URI, (uri) => {return uri.name === "thumbnail"; }) );
             thumbURL = thumb ? thumb.value : null;
             wms = _.head([].filter.call(dc.URI, (uri) => { return uri.protocol === "OGC:WMS-1.1.1-http-get-map"; }));
+        }
+        // try with references
+        if (!wms && dc.references) {
+            let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
+            wms = _.head([].filter.call( refs, (ref) => { return ref.scheme === "OGC:WMS"; }));
         }
         return (
             <Panel className="record-item">
@@ -90,8 +99,9 @@ const RecordItem = React.createClass({
         this.props.onLayerAdd({
             type: "wms",
             url: wmsURL,
+            visibility: true,
             name: wms.name,
-            title: wms.description || wms.name
+            title: this.props.record.dc && this.props.record.dc.title || wms.name
         });
         if (this.props.record.boundingBox) {
             let extent = this.props.record.boundingBox.extent;

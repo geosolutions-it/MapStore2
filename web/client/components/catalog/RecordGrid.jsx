@@ -11,12 +11,14 @@ const {Grid, Row, Col} = require('react-bootstrap');
 
 const RecordItem = require('./RecordItem');
 
+
 const RecordGrid = React.createClass({
     propTypes: {
         catalogURL: React.PropTypes.string,
         onZoomToExtent: React.PropTypes.func,
         onLayerAdd: React.PropTypes.func,
-        records: React.PropTypes.array
+        records: React.PropTypes.array,
+        style: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -43,7 +45,7 @@ const RecordGrid = React.createClass({
         if (this.props.records) {
             let mapsList = this.props.records instanceof Array ? this.props.records : [this.props.records];
             return (
-                <Grid className="record-grid">
+                <Grid className="record-grid" style={this.props.style}>
                     <Row>
 						{mapsList.map(this.renderRecordItem)}
 					</Row>

@@ -15,6 +15,7 @@ const {textSearch} = require("../actions/catalog");
 const {addLayer} = require("../actions/layers");
 const {zoomToExtent} = require("../actions/map");
 const Message = require("../components/I18N/Message");
+require('./metadataexplorer/css/style.css');
 
 
 const RecordGrid = connect((state) => ({
@@ -72,13 +73,18 @@ const MetadataExplorerComponent = React.createClass({
     },
     renderResult() {
         if (this.props.result) {
+            if (this.props.result.numberOfRecordsMatched === 0) {
+                return (<div>
+                    <Message msgId="catalog.noRecordsMatched" />
+                </div>);
+            }
             return this.renderRecords();
         } else if (this.props.loadingError) {
             return this.renderError();
         }
     },
     renderError() {
-        return (<Alert bsStyle="error">
+        return (<Alert bsStyle="danger">
             <Message msgId="catalog.error" />
           </Alert>);
     },
@@ -108,16 +114,10 @@ const MetadataExplorerComponent = React.createClass({
     },
     renderRecords() {
         return (<div>
-                <div style={{
-                        maxHeight: "400px",
-                        overflowX: "hidden",
-                        overflowY: "auto"
-                    }}>
                 <RecordGrid key="records"
                     catalogURL={this.getCatalogUrl() }
                     onLayerAdd={this.props.onLayerAdd}
                 />
-                </div>
                 {this.renderPagination()}
         </div>);
     },

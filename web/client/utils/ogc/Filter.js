@@ -43,7 +43,7 @@ const Filter = {
         return {
             'ogc:PropertyIsLike': {
                 TYPE_NAME: "Filter_1_1_0.PropertyIsLikeType",
-                escapeChar: "",
+                escapeChar: "\\\\",
                 singleChar: "_",
                 wildCard: "%",
                 literal: {
