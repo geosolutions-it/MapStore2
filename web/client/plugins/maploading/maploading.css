@@ -1,0 +1,15 @@
+#mapstore-globalspinner  {
+    width: 28px;
+    height: 28px;
+    box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.2);
+    background: url("./spinner.gif") no-repeat scroll center center #FFF;
+    background-size: 80px 80px;
+    background-repeat: no-repeat;
+    border-radius: 4px;
+    border: 1px solid #999;
+    z-index: 10;
+    top: 90px;
+    left: 2px;
+    position: absolute;
+    margin: 8px;
+}

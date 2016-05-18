@@ -76,8 +76,8 @@ function wmsToLeafletOptions(options) {
         transparent: options.transparent !== undefined ? options.transparent : true,
         opacity: opacity,
         version: options.version || "1.3.0",
-        SRS: CoordinatesUtils.normalizeSRS(options.srs),
-        CRS: CoordinatesUtils.normalizeSRS(options.srs)
+        SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857'),
+        CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857')
     }, options.params || {});
 }
 

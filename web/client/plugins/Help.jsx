@@ -15,7 +15,7 @@ const {Glyphicon} = require('react-bootstrap');
 const HelpTextPanel = connect((state) => ({
     isVisible: state.controls && state.controls.help && state.controls.help.enabled,
     helpText: state.help && state.help.helpText
-}))(require('../../components/help/HelpTextPanel'));
+}))(require('../components/help/HelpTextPanel'));
 
 module.exports = {
     HelpPlugin: assign(HelpTextPanel, {
@@ -27,5 +27,5 @@ module.exports = {
             toggle: true
         }
     }),
-    reducers: {}
+    reducers: {help: require('../reducers/help')}
 };

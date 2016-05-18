@@ -160,5 +160,5 @@ module.exports = {
     ToolbarPlugin: connect((state) => ({
         active: state.controls && state.controls.toolbar && state.controls.toolbar.active
     }))(Toolbar),
-    reducers: {}
+    reducers: {controls: require('../reducers/controls')}
 };

@@ -30,7 +30,8 @@ module.exports = {
             tool: true,
             tooltip: "locate.tooltip",
             icon: <Glyphicon glyph="screenshot"/>,
-            help: <Message msgId="helptexts.locateBtn"/>
+            help: <Message msgId="helptexts.locateBtn"/>,
+            hide: true
         }
     }),
     reducers: {locate: require('../reducers/locate')}

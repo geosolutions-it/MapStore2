@@ -1,0 +1,7 @@
+#mapstore-scalebox {
+    z-index: 10;
+    bottom: 6px;
+    left: -2px;
+    position: absolute;
+    margin: 8px;
+}

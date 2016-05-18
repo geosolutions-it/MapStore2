@@ -269,7 +269,8 @@ module.exports = {
             tooltip: "printbutton",
             icon: <Glyphicon glyph="print"/>,
             exclusive: true,
-            panel: true
+            panel: true,
+            hide: true
         }
     }),
     reducers: {print: require('../reducers/print')}
