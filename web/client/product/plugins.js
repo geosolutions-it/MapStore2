@@ -28,7 +28,8 @@ module.exports = {
         AboutPlugin: require('./plugins/About'),
         HelpPlugin: require('../plugins/Help'),
         HomePlugin: require('../plugins/Home'),
-        MadeWithLovePlugin: require('./plugins/MadeWithLove')
+        MadeWithLovePlugin: require('./plugins/MadeWithLove'),
+        MetadataExplorerPlugin: require('../plugins/MetadataExplorer')
     },
     requires: {
         ReactSwipe: require('react-swipe'),
