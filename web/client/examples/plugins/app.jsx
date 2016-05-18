@@ -52,7 +52,9 @@ const configurePlugin = (pluginName, callback, cfg) => {
     try {
         userCfg[pluginName] = JSON.parse(cfg);
     } catch(e) {
+        /*eslint-disable */
         alert('Error in JSON');
+        /*eslint-enable */
     }
     callback();
 };
