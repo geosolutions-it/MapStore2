@@ -35,6 +35,10 @@ html, body, #container, #map {
     font-size: 20px;
 }
 
+#plugins-list label {
+    display: block;
+}
+
 .my {
     position: absolute;
     top: 100px;

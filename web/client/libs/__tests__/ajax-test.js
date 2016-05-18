@@ -85,9 +85,7 @@ describe('Tests ajax library', () => {
         }).then(() => {
             done();
         }).catch((ex) => {
-            expect(ex.config).toExist();
-            expect(ex.config.url).toExist();
-            expect(ex.config.url).toBe('http://cors.mapstore2');
+            expect(ex.code).toBe("ECONNABORTED");
             done();
         });
     });
