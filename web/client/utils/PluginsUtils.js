@@ -8,6 +8,7 @@
 
 const assign = require('object-assign');
 const {omit, isObject, head, isArray} = require('lodash');
+const {combineReducers} = require('redux');
 
 const isPluginConfigured = (pluginsConfig, plugin) => {
     const cfg = pluginsConfig;
@@ -67,10 +68,14 @@ const parsePluginConfig = (requires, cfg) => {
     }
     return parseExpression(requires, cfg);
 };
-
+const getReducers = (plugins) => Object.keys(plugins).map((name) => plugins[name].reducers)
+                            .reduce((previous, current) => assign({}, previous, current), {});
 const PluginsUtils = {
-    getReducers: (plugins) => Object.keys(plugins).map((name) => plugins[name].reducers)
-                                .reduce((previous, current) => assign({}, previous, current), {}),
+    combineReducers: (plugins, reducers) => {
+        const pluginsReducers = getReducers(plugins);
+        return combineReducers(assign({}, reducers, pluginsReducers));
+    },
+    getReducers,
     getPlugins: (plugins) => Object.keys(plugins).map((name) => plugins[name])
                                 .reduce((previous, current) => assign({}, previous, omit(current, 'reducers')), {}),
     getPluginDescriptor: (plugins, pluginsConfig, pluginDef) => {

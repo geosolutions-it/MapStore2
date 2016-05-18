@@ -26,12 +26,12 @@ describe("Test password reset modal", () => {
     });
 
     it('creates component with defaults', () => {
-        const cmp = ReactDOM.render(<PRModal/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<PRModal options={{animation: false}}/>, document.getElementById("container"));
         expect(cmp).toExist();
     });
 
     it('creates component to show', () => {
-        const cmp = ReactDOM.render(<PRModal show={true} />, document.getElementById("container"));
+        const cmp = ReactDOM.render(<PRModal options={{animation: false}} show={true} />, document.getElementById("container"));
         expect(cmp).toExist();
     });
 
@@ -43,7 +43,7 @@ describe("Test password reset modal", () => {
             }
         };
         let spy = expect.spyOn(callbacks, 'onPasswordChange');
-        const cmp = ReactDOM.render(<PRModal show={true} user={{name: "test"}} onPasswordChange={callbacks.onPasswordChange}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<PRModal options={{animation: false}} show={true} user={{name: "test"}} onPasswordChange={callbacks.onPasswordChange}/>, document.getElementById("container"));
         expect(cmp).toExist();
         let modalInstance = ReactTestUtils.findRenderedComponentWithType(cmp, Modal);
         let inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag(modalInstance._modal, "input");

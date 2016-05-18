@@ -45,17 +45,18 @@ describe('This test for InfoButton', () => {
     });
 
     it('checks if a click on button shows a modal window', () => {
-        const about = ReactDOM.render(<InfoButton/>, document.getElementById("container"));
+        const about = ReactDOM.render(<InfoButton modalOptions={{animation: false}}/>, document.getElementById("container"));
         const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
         btn.click();
 
         const modalDivList = document.getElementsByClassName("modal-content");
         expect(modalDivList.length).toBe(1);
+
     });
 
     it('checks if a click on window button hides the window itself', () => {
-        const about = ReactDOM.render(<InfoButton/>, document.getElementById("container"));
+        const about = ReactDOM.render(<InfoButton modalOptions={{animation: false}}/>, document.getElementById("container"));
         const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
         btn.click();
@@ -71,7 +72,7 @@ describe('This test for InfoButton', () => {
     });
 
     it('checks the default content of the modal window', () => {
-        const about = ReactDOM.render(<InfoButton/>, document.getElementById("container"));
+        const about = ReactDOM.render(<InfoButton modalOptions={{animation: false}}/>, document.getElementById("container"));
         const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
         btn.click();
@@ -165,7 +166,7 @@ describe('This test for InfoButton', () => {
 
     it('checks the custom title for the window', () => {
         const customTitle = "testTitle";
-        const about = ReactDOM.render(<InfoButton title={customTitle}/>, document.getElementById("container"));
+        const about = ReactDOM.render(<InfoButton modalOptions={{animation: false}} title={customTitle}/>, document.getElementById("container"));
         const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
         btn.click();
@@ -179,7 +180,7 @@ describe('This test for InfoButton', () => {
 
     it('checks the custom body for the window', () => {
         const customBody = "customBody";
-        const about = ReactDOM.render(<InfoButton body={customBody}/>, document.getElementById("container"));
+        const about = ReactDOM.render(<InfoButton modalOptions={{animation: false}} body={customBody}/>, document.getElementById("container"));
         const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
         btn.click();

@@ -27,6 +27,7 @@ const LoginModal = React.createClass({
       user: React.PropTypes.object,
       loginError: React.PropTypes.object,
       show: React.PropTypes.bool,
+      options: React.PropTypes.object,
 
       // CALLBACKS
       onLoginSuccess: React.PropTypes.func,
@@ -39,11 +40,12 @@ const LoginModal = React.createClass({
           onLoginSuccess: () => {},
           onSubmit: () => {},
           onError: () => {},
-          onClose: () => {}
+          onClose: () => {},
+          options: {}
       };
   },
   render() {
-      return (<Modal show={this.props.show} onHide={this.props.onClose}>
+      return (<Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
           <Modal.Header key="passwordChange" closeButton>
             <Modal.Title>Login</Modal.Title>
           </Modal.Header>

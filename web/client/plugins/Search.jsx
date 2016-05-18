@@ -8,6 +8,7 @@
 
 const React = require('react');
 const {connect} = require('react-redux');
+const {createSelector} = require('reselect');
 
 const HelpWrapper = require('./help/HelpWrapper');
 const Message = require('./locale/Message');
@@ -20,10 +21,17 @@ const SearchBar = connect(() => ({}), {
     onSearchReset: resultsPurge
 })(require("../components/mapcontrols/search/SearchBar"));
 
-const NominatimResultList = connect((state) => ({
-    results: state.search || null,
-    mapConfig: state.map && state.map.present || {}
-}), {
+const {mapSelector} = require('../selectors/map');
+
+const selector = createSelector([
+    mapSelector,
+    state => state.search || null
+], (mapConfig, results) => ({
+    mapConfig,
+    results
+}));
+
+const NominatimResultList = connect(selector, {
     onItemClick: changeMapView,
     afterItemClick: resultsPurge
 })(require('../components/mapcontrols/search/geocoding/NominatimResultList'));

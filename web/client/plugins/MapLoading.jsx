@@ -13,6 +13,8 @@ const selector = createSelector([layersSelector], (layers) => ({
     loading: layers && layers.some((layer) => layer.loading)
 }));
 
+require('./maploading/maploading.css');
+
 const MapLoadingPlugin = connect(selector)(require('../components/misc/spinners/GlobalSpinner/GlobalSpinner'));
 
 module.exports = {

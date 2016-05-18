@@ -8,5 +8,6 @@ module.exports = {
     queryform: path.join(__dirname, "web", "client", "examples", "queryform", "app"),
     featuregrid: path.join(__dirname, "web", "client", "examples", "featuregrid", "app"),
     print: path.join(__dirname, "web", "client", "examples", "print", "app"),
-    login: path.join(__dirname, "web", "client", "examples", "login", "app")
+    login: path.join(__dirname, "web", "client", "examples", "login", "app"),
+    plugins: path.join(__dirname, "web", "client", "examples", "plugins", "app")
 };

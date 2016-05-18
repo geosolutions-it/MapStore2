@@ -28,6 +28,7 @@ const HelpBadge = connect((state) => ({
 })(require('../components/help/HelpBadge'));
 
 const assign = require('object-assign');
+const {partial} = require('lodash');
 
 let tools;
 
@@ -48,6 +49,7 @@ const Toolbar = React.createClass({
             panelStyle: {
                 minWidth: "300px",
                 right: "52px",
+                zIndex: 100,
                 position: "absolute",
                 overflow: "auto"
             },
@@ -94,7 +96,7 @@ const Toolbar = React.createClass({
             });
             actions.onClick = toggleControl.bind(null, tool.name, null);
         } else if (tool.action) {
-            actions.onClick = tool.action;
+            actions.onClick = partial(tool.action, this.context);
         }
         return connect(selector, actions)(Button);
     },
@@ -126,7 +128,7 @@ const Toolbar = React.createClass({
                             {ToolPanel}
                         </Panel>
                     </Collapse>
-                    );
+                );
             }
             return ToolPanel;
         });
@@ -158,5 +160,5 @@ module.exports = {
     ToolbarPlugin: connect((state) => ({
         active: state.controls && state.controls.toolbar && state.controls.toolbar.active
     }))(Toolbar),
-    reducers: {}
+    reducers: {controls: require('../reducers/controls')}
 };

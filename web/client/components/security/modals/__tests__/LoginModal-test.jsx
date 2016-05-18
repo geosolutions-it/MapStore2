@@ -27,12 +27,12 @@ describe("Test the login modal", () => {
     });
 
     it('creates component with defaults', () => {
-        const cmp = ReactDOM.render(<LoginForm/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<LoginForm options={{animation: false}}/>, document.getElementById("container"));
         expect(cmp).toExist();
     });
 
     it('creates empty component with error', () => {
-        const cmp = ReactDOM.render(<LoginForm show={true} loginError={{status: 0}}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<LoginForm options={{animation: false}} show={true} loginError={{status: 0}}/>, document.getElementById("container"));
         expect(cmp).toExist();
         let modalInstance = ReactTestUtils.findRenderedComponentWithType(cmp, Modal);
         let node = ReactTestUtils.scryRenderedDOMComponentsWithClass(modalInstance._modal, "alert-danger");
@@ -51,7 +51,7 @@ describe("Test the login modal", () => {
 
         const spy = expect.spyOn(testHandlers, 'onSubmit');
         const spySuccess = expect.spyOn(testHandlers, 'onLoginSuccess');
-        const cmp = ReactDOM.render(<LoginForm show={true} key="test" onLoginSuccess={testHandlers.onLoginSuccess} onSubmit={testHandlers.onSubmit}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<LoginForm options={{animation: false}} show={true} key="test" onLoginSuccess={testHandlers.onLoginSuccess} onSubmit={testHandlers.onSubmit}/>, document.getElementById("container"));
         expect(cmp).toExist();
         let modalInstance = ReactTestUtils.findRenderedComponentWithType(cmp, Modal);
         let username = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(modalInstance._modal, "input")[0]);
@@ -65,7 +65,7 @@ describe("Test the login modal", () => {
         let button = cmp.refs.submit;
         button.props.onClick();
         expect(spy.calls.length).toEqual(1);
-        ReactDOM.render(<LoginForm show={true} key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} user={{name: "TEST"}} />, document.getElementById("container"));
+        ReactDOM.render(<LoginForm options={{animation: false}} show={true} key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} user={{name: "TEST"}} />, document.getElementById("container"));
         expect(spySuccess.calls.length).toEqual(1);
 
 

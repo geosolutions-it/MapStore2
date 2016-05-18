@@ -54,7 +54,8 @@ module.exports = {
             help: <Message msgId="helptexts.measureComponent"/>,
             tooltip: "measureComponent.tooltip",
             icon: <img src={lineRuleIcon} />,
-            title: "measureComponent.title"
+            title: "measureComponent.title",
+            hide: true
         }
     }),
     reducers: {measurement: require('../reducers/measurement')}

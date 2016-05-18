@@ -85,14 +85,15 @@ module.exports = {
     TOCPlugin: assign(TOCPlugin, {
         Toolbar: {
             name: 'toc',
-            position: 3,
+            position: 4,
             exclusive: true,
             panel: true,
             help: <Message msgId="helptexts.layerSwitcher"/>,
             tooltip: "layers",
             wrap: true,
             title: 'layers',
-            icon: <img src={layersIcon}/>
+            icon: <img src={layersIcon}/>,
+            hide: true
         },
         DrawerMenu: {
             name: 'toc',
