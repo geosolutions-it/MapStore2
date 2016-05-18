@@ -32,14 +32,24 @@ function mapConfig(state = null, action) {
                 projection: action.crs
             });
         case ZOOM_TO_EXTENT: {
-            const zoom = MapUtils.getZoomForExtent(action.extent, state.size, 0, 21);
-            const center = CoordinatesUtils.reproject(
-                MapUtils.getCenterForExtent(action.extent, action.crs),
-                action.crs, 'EPSG:4326');
+            let zoom = 0;
+            let bbox = CoordinatesUtils.reprojectBbox(action.extent, action.crs, state.bbox && state.bbox.crs || "EPSG:4326");
+            let wgs84BBox = CoordinatesUtils.reprojectBbox(action.extent, action.crs, "EPSG:4326");
+            // center by the max. extent defined in the map's config
+            let center = MapUtils.getCenterForExtent(wgs84BBox, "EPSG:4326");
+            // workaround to get zoom 0 for -180 -90... - TODO do it better
+            let full = action.crs === "EPSG:4326" && action.extent && action.extent[0] <= -180 && action.extent[1] <= -90 && action.extent[2] >= 180 && action.extent[3] >= 90;
+            if ( full ) {
+                zoom = 2;
+            } else {
+                let mapBBox = CoordinatesUtils.reprojectBbox(action.extent, action.crs, state.projection);
+                zoom = MapUtils.getZoomForExtent(mapBBox, state.size, 0, 21, null);
+            }
             return assign({}, state, {
-                zoom,
                 center,
-                mapStateSource: action.mapStateSource
+                zoom,
+                mapStateSource: action.mapStateSource,
+                bbox: bbox
             });
         }
         case PAN_TO: {
