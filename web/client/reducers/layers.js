@@ -154,8 +154,8 @@ function layers(state = [], action) {
             // TODO: layers
         }
         case ADD_LAYER: {
-            let newLayers = (state.flat || []).slice();
-            let newGroups = (state.groups || []).slice();
+            let newLayers = (state.flat || []).concat();
+            let newGroups = (state.groups || []).concat();
             const newLayer = (action.layer.id) ? action.layer : assign({}, action.layer, {id: action.layer.name + "__" + newLayers.length});
             newLayers.push(newLayer);
             const groupName = newLayer.group || 'Default';
