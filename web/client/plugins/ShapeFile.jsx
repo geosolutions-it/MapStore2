@@ -180,7 +180,8 @@ module.exports = {
             tooltip: "shapefile.tooltip",
             wrap: true,
             icon: <Glyphicon glyph="open-file"/>,
-            exclusive: true
+            exclusive: true,
+            hide: true
         }
     }),
     reducers: {

@@ -7,7 +7,6 @@
  */
 const React = require('react');
 const ReactDOM = require('react-dom');
-const {connect} = require('react-redux');
 
 const ConfigUtils = require('../../utils/ConfigUtils');
 const LocaleUtils = require('../../utils/LocaleUtils');
@@ -16,30 +15,19 @@ const PluginsUtils = require('../../utils/PluginsUtils');
 const {changeBrowserProperties} = require('../../actions/browser');
 const {loadMapConfig} = require('../../actions/config');
 const {loadLocale} = require('../../actions/locale');
-const {loadPrintCapabilities} = require('../../actions/print');
 
 const PluginsContainer = require('../../components/plugins/PluginsContainer');
 
 const {plugins} = require('./plugins');
-
-const pluginsCfg = {
-    standard: ['Map', 'Toolbar']
-};
-
-const userCfg = {};
+const pluginsCfg = require('./pluginsConfig');
 
 const {Provider} = require('react-redux');
+
+const {Input} = require('react-bootstrap');
 
 const Debug = require('../../components/development/Debug');
 const store = require('./store')(plugins);
 
-require('./assets/css/plugins.css');
-
-const Localized = connect((state) => ({
-    messages: state.locale && state.locale.messages,
-    locale: state.locale && state.locale.current,
-    loadingError: state.locale && state.locale.localeError
-}))(require('../../components/I18N/Localized'));
 
 const togglePlugin = (pluginName, callback) => {
     pluginsCfg.standard = pluginsCfg.standard.indexOf(pluginName) !== -1 ?
@@ -48,24 +36,16 @@ const togglePlugin = (pluginName, callback) => {
     callback();
 };
 
-const configurePlugin = (pluginName, callback, cfg) => {
-    try {
-        userCfg[pluginName] = JSON.parse(cfg);
-    } catch(e) {
-        alert('Error in JSON');
-    }
-    callback();
-};
-
-const PluginConfigurator = require('./components/PluginConfigurator');
 
 const renderPlugins = (callback) => {
     return Object.keys(plugins).map((plugin) => {
         const pluginName = plugin.substring(0, plugin.length - 6);
-        return (<PluginConfigurator pluginName={pluginName} pluginsCfg={pluginsCfg.standard}
-            onToggle={togglePlugin.bind(null, pluginName, callback)}
-            onApplyCfg={configurePlugin.bind(null, plugin, callback)}
-            />);
+        return (<li>
+            <Input type="checkbox"
+                checked={pluginsCfg.standard.indexOf(pluginName) !== -1}
+                label={pluginName}
+                onChange={togglePlugin.bind(null, pluginName, callback)}/>
+        </li>);
     });
 };
 
@@ -75,8 +55,7 @@ const getPluginsConfiguration = () => {
     return {
         standard: pluginsCfg.standard.map((plugin) => ({
             name: plugin,
-            hide: isHidden(plugin),
-            cfg: userCfg[plugin + 'Plugin'] || {}
+            hide: isHidden(plugin)
         }))
     };
 };
@@ -86,9 +65,8 @@ const renderPage = () => {
         (
             <Provider store={store}>
                 <Localized>
-                    <div style={{width: "100%", height: "100%"}}>
-                        <div id="plugins-list" style={{position: "absolute", right: "75%", left: 0, height: "100%", overflow: "auto"}}>
-                            <h5>Configure application plugins</h5>
+                    <div>
+                        <div style={{position: "absolute", right: "75%", left: 0, height: "100%"}}>
                             <ul>
                                 {renderPlugins(renderPage)}
                             </ul>
@@ -113,8 +91,6 @@ ConfigUtils.loadConfiguration().then(() => {
 
     let locale = LocaleUtils.getUserLocale();
     store.dispatch(loadLocale('../../translations', locale));
-
-    store.dispatch(loadPrintCapabilities(ConfigUtils.getConfigProp('printUrl')));
 
     renderPage();
 });

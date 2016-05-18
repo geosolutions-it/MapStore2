@@ -92,7 +92,8 @@ module.exports = {
             tooltip: "layers",
             wrap: true,
             title: 'layers',
-            icon: <img src={layersIcon}/>
+            icon: <img src={layersIcon}/>,
+            hide: true
         },
         DrawerMenu: {
             name: 'toc',

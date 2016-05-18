@@ -7,6 +7,7 @@
  */
 const {combineReducers} = require('../../utils/PluginsUtils');
 const {createDebugStore} = require('../../utils/DebugUtils');
+const LayersUtils = require('../../utils/LayersUtils');
 
 const map = require('../../reducers/map');
 
@@ -16,13 +17,14 @@ const mapConfig = require('../../reducers/config');
 module.exports = (plugins) => {
     const allReducers = combineReducers(plugins, {
         locale: require('../../reducers/locale'),
+        browser: require('../../reducers/browser'),
         map: () => {return null; },
         mapInitialConfig: () => {return null; },
         layers: () => {return null; }
     });
 
     const rootReducer = (state, action) => {
-        let mapState = mapConfig(state, action);
+        let mapState = LayersUtils.splitMapAndLayers(mapConfig(state, action));
         let newState = {
             ...allReducers(state, action),
             map: mapState && mapState.map ? map(mapState.map, action) : null,

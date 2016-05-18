@@ -6,8 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const {MY_ACTION} = require('../actions/my');
+
 function my(state = {}, action) {
     switch (action.type) {
+        case MY_ACTION: {
+            return {content: action.payload};
+        }
         default:
             return state;
     }

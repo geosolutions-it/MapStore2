@@ -115,7 +115,8 @@ module.exports = {
             icon: <Glyphicon glyph="cog"/>,
             panel: true,
             wrap: true,
-            exclusive: true
+            exclusive: true,
+            hide: true
         },
         DrawerMenu: {
             name: 'settings',

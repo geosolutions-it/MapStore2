@@ -31,7 +31,8 @@ module.exports = {
             tooltip: "backgroundSwither.tooltip",
             icon: <Glyphicon glyph="globe"/>,
             wrap: true,
-            title: 'background'
+            title: 'background',
+            hide: true
         },
         DrawerMenu: {
             name: 'backgroundswitcher',

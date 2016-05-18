@@ -21,6 +21,8 @@ const selector = createSelector([mapSelector], (map) => ({
     currentZoomLvl: map && map.zoom
 }));
 
+require('./scalebox/scalebox.css');
+
 const ScaleBoxPlugin = React.createClass({
     render() {
         return (<HelpWrapper

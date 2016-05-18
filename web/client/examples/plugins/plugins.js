@@ -9,7 +9,24 @@
 module.exports = {
     plugins: {
         MapPlugin: require('../../plugins/Map'),
-        MyPlugin: require('./plugins/My')
+        ToolbarPlugin: require('../../plugins/Toolbar'),
+        MousePositionPlugin: require('../../plugins/MousePosition'),
+        PrintPlugin: require('../../plugins/Print'),
+        IdentifyPlugin: require('../../plugins/Identify'),
+        TOCPlugin: require('../../plugins/TOC'),
+        BackgroundSwitcherPlugin: require('../../plugins/BackgroundSwitcher'),
+        MeasurePlugin: require('../../plugins/Measure'),
+        ShapeFilePlugin: require('../../plugins/ShapeFile'),
+        SnapshotPlugin: require('../../plugins/Snapshot'),
+        SettingsPlugin: require('../../plugins/Settings'),
+        SearchPlugin: require('../../plugins/Search'),
+        ScaleBoxPlugin: require('../../plugins/ScaleBox'),
+        LocatePlugin: require('../../plugins/Locate'),
+        ZoomAllPlugin: require('../../plugins/ZoomAll'),
+        MapLoadingPlugin: require('../../plugins/MapLoading'),
+        HelpPlugin: require('../../plugins/Help'),
+        MyPlugin: require('./plugins/My'),
+        MessagePlugin: require('./plugins/Message')
     },
     requires: {}
 };
