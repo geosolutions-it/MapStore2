@@ -76,18 +76,16 @@ describe('Tests ajax library', () => {
     });
 
     it('does not use proxy for requests to CORS enabled urls', (done) => {
-        axios.get('http://cors.mapstore2', {
-            timeout: 500,
+        axios.get('http://www.google.com', {
+            timeout: 1,
             proxyUrl: {
                 url: '/proxy/?url=',
-                useCORS: ['http://cors.mapstore2']
+                useCORS: ['http://www.google.com']
             }
         }).then(() => {
             done();
         }).catch((ex) => {
-            expect(ex.config).toExist();
-            expect(ex.config.url).toExist();
-            expect(ex.config.url).toBe('http://cors.mapstore2');
+            expect(ex.code).toBe("ECONNABORTED");
             done();
         });
     });
