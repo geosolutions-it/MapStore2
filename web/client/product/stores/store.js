@@ -34,7 +34,7 @@ module.exports = (plugins) => {
         mapInitialConfig: () => {return null; },
         layers: () => {return null; }
     });
-
+    const defaultState = {mousePosition: {enabled: false}};
     const mobileOverride = {mapInfo: {enabled: true, infoFormat: 'text/html' }, mousePosition: {enabled: true, crs: "EPSG:4326", showCenter: true}};
 
     const rootReducer = (state, action) => {
@@ -52,5 +52,5 @@ module.exports = (plugins) => {
 
         return newState;
     };
-    return DebugUtils.createDebugStore(rootReducer, {});
+    return DebugUtils.createDebugStore(rootReducer, defaultState);
 };

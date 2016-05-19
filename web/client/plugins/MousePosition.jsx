@@ -15,30 +15,32 @@ const assign = require('object-assign');
 
 const {changeMousePositionCrs, changeMousePositionState} = require('../actions/mousePosition');
 
-const selector = createSelector([
-    mapSelector || {},
-    (state) => state.mousePosition || {},
-    (state) => {
-        if (state.mousePosition.showCenter && state.map) {
-            return state.map.center;
-        }
-        if (state.mousePosition.showOnClick) {
-            if (state.mapInfo.clickPoint && state.mapInfo.clickPoint.latlng) {
-                return {
-                    x: state.mapInfo.clickPoint.latlng.lng,
-                    y: state.mapInfo.clickPoint.latlng.lat,
-                    crs: "EPSG:4326"
-                };
-            }
+const getDesiredPosition = (map, mousePosition, mapInfo) => {
+    if (mousePosition.showCenter && map) {
+        return map.center;
+    }
+    if (mousePosition.showOnClick) {
+        if (mapInfo.clickPoint && mapInfo.clickPoint.latlng) {
             return {
+                x: mapInfo.clickPoint.latlng.lng,
+                y: mapInfo.clickPoint.latlng.lat,
                 crs: "EPSG:4326"
             };
         }
-        return state.mousePosition.position;
+        return {
+            crs: "EPSG:4326"
+        };
     }
-], (map, mousePosition, position) => ({
+    return mousePosition.position;
+};
+
+const selector = createSelector([
+    mapSelector,
+    (state) => state.mousePosition || {},
+    (state) => state.mapInfo || {}
+], (map, mousePosition, mapInfo) => ({
     enabled: mousePosition.enabled,
-    mousePosition: position,
+    mousePosition: getDesiredPosition(map, mousePosition, mapInfo),
     crs: mousePosition.crs || map && map.projection || 'EPSG:3857'
 }));
 
