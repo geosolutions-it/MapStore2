@@ -9,7 +9,7 @@ const axios = require('../libs/ajax');
 
 const {CSW, marshaller, unmarshaller} = require('../utils/ogc/CSW');
 const {Filter} = require('../utils/ogc/Filter');
-const urlUtil = require('url');
+
 const _ = require('lodash');
 
 
@@ -89,14 +89,12 @@ var Api = {
                                         * Usually they publish the WMS URL at dct:"references" with scheme=OGC:WMS
                                         * So we place references as they are.
                                         */
-                                        if (elName === "references" && dcel.value && dcel.value.scheme === "OGC:WMS") {
+                                        if (elName === "references" && dcel.value) {
                                             let urlString = dcel.value.content && dcel.value.content[0] || dcel.value.content || dcel.value;
-                                            let urlObj = urlUtil.parse(urlString, true);
-                                            let layerName = urlObj.query && urlObj.query.layers;
+
                                             finalEl = {
                                                 value: urlString,
-                                                scheme: dcel.value.scheme,
-                                                name: layerName
+                                                scheme: dcel.value.scheme
                                             };
                                         } else {
                                             finalEl = dcel.value.content && dcel.value.content[0] || dcel.value.content || dcel.value;

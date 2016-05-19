@@ -28,10 +28,8 @@ const RecordGrid = React.createClass({
         };
     },
     renderRecordItem(record) {
-        let dc = record.dc;
-        let id = dc.identifier && dc.identifier;
         return (
-			<Col xs={12} sm={6} md={6} lg={6} key={id}>
+			<Col xs={12} sm={6} md={6} lg={6} key={record.identifier}>
                 <RecordItem
                     onLayerAdd={this.props.onLayerAdd}
                     onZoomToExtent={this.props.onZoomToExtent}

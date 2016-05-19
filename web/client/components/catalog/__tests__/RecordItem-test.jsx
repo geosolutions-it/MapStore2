@@ -13,6 +13,11 @@ const expect = require('expect');
 const TestUtils = require('react/addons').addons.TestUtils;
 
 const sampleRecord = {
+    identifier: "test-identifier",
+    title: "sample title",
+    tags: ["subject1", "subject2"],
+    description: "sample abstract",
+    thumbnail: "img.jpg",
     boundingBox: {
         extent: [10.686,
                 44.931,
@@ -21,24 +26,11 @@ const sampleRecord = {
         crs: "EPSG:4326"
 
     },
-    dc: {
-        identifier: "test-identifier",
-        title: "sample title",
-        subject: ["subject1", "subject2"],
-        "abstract": "sample abstract",
-        URI: [{
-            TYPE_NAME: "DC_1_1.URI",
-            protocol: "OGC:WMS-1.1.1-http-get-map",
-            name: "workspace:layername",
-            description: "sample layer description",
-            value: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&"
-        }, {
-            TYPE_NAME: "DC_1_1.URI",
-            protocol: "image/png",
-            name: "thumbnail",
-            value: "resources.get?id=187105&fname=55b9f7b9-53ff-4e2d-8537-4e681c3218c5_s.png&access=public"
-        }]
-    }
+    references: [{
+        type: "OGC:WMS",
+        url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
+        params: {name: "workspace:layername"}
+    }]
 };
 
 describe('This test for RecordItem', () => {

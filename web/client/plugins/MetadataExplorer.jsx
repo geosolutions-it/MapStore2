@@ -9,6 +9,8 @@
 const React = require('react');
 const {connect} = require('react-redux');
 const assign = require('object-assign');
+const {cswToCatalogSelector} = require("../selectors/cswtocatalog");
+const {createDefaultMemorizeSelector} = require("../selectors/common");
 const {Glyphicon, Input, Alert, Pagination} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 const {textSearch} = require("../actions/catalog");
@@ -17,11 +19,8 @@ const {zoomToExtent} = require("../actions/map");
 const Message = require("../components/I18N/Message");
 require('./metadataexplorer/css/style.css');
 
-
-const RecordGrid = connect((state) => ({
-    searchOptions: state.catalog && state.catalog.searchOptions,
-    records: state.catalog && state.catalog.result && state.catalog.result.records
-}), {
+const memorizedCswToCatalogSelector = createDefaultMemorizeSelector([cswToCatalogSelector], (records) => {return {records}; });
+const RecordGrid = connect(memorizedCswToCatalogSelector, {
     // add layer action to pass to the layers
     onZoomToExtent: zoomToExtent
 })(require("../components/catalog/RecordGrid"));

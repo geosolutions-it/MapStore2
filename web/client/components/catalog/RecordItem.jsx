@@ -11,10 +11,32 @@ const {Image, Panel, Button, Glyphicon} = require('react-bootstrap');
 const _ = require('lodash');
 
 const defaultThumb = require('./img/default.jpg');
+const removeURLParameter = function(url, parameter) {
+    // prefer to use l.search if you have a location/link object
+    if (!url) {
+        return url;
+    }
+    let urlparts = url.split('?');
+    if (urlparts.length >= 2) {
 
+        let prefix = encodeURIComponent(parameter) + '=';
+        let pars = urlparts[1].split(/[&;]/g);
+
+        // reverse iteration as may be destructive
+        for (let i = pars.length; i-- > 0; ) {
+            // idiom for string.startsWith
+            if (pars[i].lastIndexOf(prefix, 0) !== -1) {
+                pars.splice(i, 1);
+            }
+        }
+
+        return urlparts[0] + (pars.length > 0 ? '?' + pars.join('&') : "");
+    }
+    return url;
+
+};
 const RecordItem = React.createClass({
     propTypes: {
-        catalogURL: React.PropTypes.string,
         onLayerAdd: React.PropTypes.func,
         onZoomToExtent: React.PropTypes.func,
         record: React.PropTypes.object
@@ -27,16 +49,10 @@ const RecordItem = React.createClass({
             style: {}
         };
     },
-    renderThumb(thumbURL, dc) {
-        let thumbSrc = defaultThumb;
-        if (thumbURL) {
-            thumbSrc = thumbURL;
-            let absolute = (thumbURL.indexOf("http") === 0);
-            if (!absolute) {
-                thumbSrc = this.props.catalogURL + "/" + thumbURL;
-            }
-        }
-        return (<Image src={thumbSrc} alt={dc.title} style={{
+    renderThumb(thumbURL, record) {
+        let thumbSrc = thumbURL || defaultThumb;
+
+        return (<Image src={thumbSrc} alt={record && record.title} style={{
             "float": "left",
             width: "150px",
             maxHeight: "150px",
@@ -56,34 +72,27 @@ const RecordItem = React.createClass({
             </div>);
         }
     },
-    renderDescription(dc) {
-        if (typeof dc.abstract === "string") {
-            return dc.abstract;
-        } else if (Array.isArray(dc.abstract)) {
-            return dc.abstract.join(", ");
+    renderDescription(record) {
+        if (typeof record.description === "string") {
+            return record.description;
+        } else if (Array.isArray(record.description)) {
+            return record.description.join(", ");
         }
     },
     render() {
-        let dc = this.props.record && this.props.record.dc || {};
-        let thumbURL;
+        let record = this.props.record;
         let wms;
-        // find wms and thumbnail
-        if (dc && dc.URI) {
-            let thumb = _.head([].filter.call(dc.URI, (uri) => {return uri.name === "thumbnail"; }) );
-            thumbURL = thumb ? thumb.value : null;
-            wms = _.head([].filter.call(dc.URI, (uri) => { return uri.protocol === "OGC:WMS-1.1.1-http-get-map"; }));
+        if (record) {
+            wms = _.head(record.references.filter(rec => rec && rec.type && rec.type.indexOf("OGC:WMS") >= 0));
         }
-        // try with references
-        if (!wms && dc.references) {
-            let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
-            wms = _.head([].filter.call( refs, (ref) => { return ref.scheme === "OGC:WMS"; }));
-        }
+
+
         return (
             <Panel className="record-item">
-                {this.renderThumb(thumbURL, dc)}
+                {this.renderThumb(record && record.thumbnail, record)}
                 <div>
-                    <h4>{dc.title}</h4>
-                    <p className="record-item-description">{this.renderDescription(dc)}</p>
+                    <h4>{record.title}</h4>
+                    <p className="record-item-description">{this.renderDescription(record)}</p>
                 </div>
                   {this.renderWMSButtons(wms)}
 
@@ -91,17 +100,14 @@ const RecordItem = React.createClass({
         );
     },
     addLayer(wms) {
-        let wmsURL = wms.value;
-        let absolute = (wmsURL.indexOf("http") === 0);
-        if (!absolute) {
-            wmsURL = this.props.catalogURL + "/" + wmsURL;
-        }
+        let url = removeURLParameter(wms.url, "request");
+        url = removeURLParameter(url, "layer");
         this.props.onLayerAdd({
             type: "wms",
-            url: wmsURL,
+            url: url,
             visibility: true,
-            name: wms.name,
-            title: this.props.record.dc && this.props.record.dc.title || wms.name
+            name: wms.params && wms.params.name,
+            title: this.props.record.title || (wms.params && wms.params.name)
         });
         if (this.props.record.boundingBox) {
             let extent = this.props.record.boundingBox.extent;
