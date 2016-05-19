@@ -77,7 +77,7 @@ describe('Tests ajax library', () => {
 
     it('does not use proxy for requests to CORS enabled urls', (done) => {
         axios.get('http://cors.mapstore2', {
-            timeout: 500,
+            timeout: 10,
             proxyUrl: {
                 url: '/proxy/?url=',
                 useCORS: ['http://cors.mapstore2']
