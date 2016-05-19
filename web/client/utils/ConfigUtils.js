@@ -23,6 +23,9 @@ const centerPropType = React.PropTypes.shape({
 });
 
 const urlQuery = url.parse(window.location.href, true).query;
+
+const isMobile = require('ismobilejs');
+
 let defaultConfig = {
     proxyUrl: "/mapstore/proxy/?url=",
     geoStoreUrl: "/mapstore/rest/geostore/",
@@ -213,6 +216,7 @@ var ConfigUtils = {
 
         let ie = 'ActiveXObject' in window;
         let ielt9 = ie && !document.addEventListener;
+        let ie11 = ie && (window.location.hash = !!window.MSInputMethodContext && !!document.documentMode);
 
         // terrible browser detection to work around Safari / iOS / Android browser bugs
         let ua = navigator.userAgent.toLowerCase();
@@ -223,7 +227,7 @@ var ConfigUtils = {
         let android23 = ua.search('android [23]') !== -1;
         let gecko = ua.indexOf('gecko') !== -1;
 
-        let mobile = typeof window.orientation !== undefined + '';
+        let mobile = isMobile.any; // typeof window.orientation !== undefined + '';
         let msPointer = !window.PointerEvent && window.MSPointerEvent;
         let pointer = (window.PointerEvent && window.navigator.pointerEnabled && window.navigator.maxTouchPoints) ||
                   msPointer;
@@ -243,6 +247,7 @@ var ConfigUtils = {
 
         return {
         ie: ie,
+        ie11: ie11,
         ielt9: ielt9,
         webkit: webkit,
         gecko: gecko && !webkit && !window.opera && !ie,

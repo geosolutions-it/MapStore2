@@ -14,6 +14,7 @@ html, body, #container, #map {
 }
 #plugins-list li .form-group:nth-child(2) {
     display: inline-block;
+    margin-bottom: 5px;
 }
 #plugins-list textarea {
     max-width: 90%;
@@ -26,8 +27,8 @@ html, body, #container, #map {
 #plugins-list li {
     list-style-type: none;
 }
-#plugins-list li button:nth-child(4) {
-    margin-bottom: 10px;
+#plugins-list li button:nth-child(5) {
+    margin-bottom: 5px;
 }
 
 #plugins-list h5 {

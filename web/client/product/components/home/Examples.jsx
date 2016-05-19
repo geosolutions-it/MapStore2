@@ -18,7 +18,8 @@ const carouselImages = {
     layertree: require('../../assets/img/LayerTree.png'),
     queryform: require('../../assets/img/QueryForm.png'),
     featuregrid: require('../../assets/img/FeatureGrid.png'),
-    print: require('../../assets/img/Print.png')
+    print: require('../../assets/img/Print.png'),
+    plugins: require('../../assets/img/Plugins.png')
 };
 
 var Examples = React.createClass({
@@ -80,6 +81,13 @@ var Examples = React.createClass({
                   <div className="carousel-caption">
                       <I18N.HTML msgId="home.examples.print.html" />
                     <Button href="examples/print" bsStyle="info" target="_blank"><I18N.Message msgId="home.open" /></Button>
+                  </div>
+                </CarouselItem>
+                <CarouselItem>
+                  <img width={900} height={500} alt="900x500" src={carouselImages.plugins}/>
+                  <div className="carousel-caption">
+                      <I18N.HTML msgId="home.examples.plugins.html" />
+                    <Button href="examples/plugins" bsStyle="info" target="_blank"><I18N.Message msgId="home.open" /></Button>
                   </div>
                 </CarouselItem>
             </Carousel>

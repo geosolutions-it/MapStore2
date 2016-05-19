@@ -69,6 +69,9 @@
                 },
                 "print":{
                     "html":"<h3>Printing</h3><p>Custom examples</p>"
+                },
+                "plugins":{
+                    "html":"<h3>Plugins</h3><p>Build your own application</p>"
                 }
             }
         },

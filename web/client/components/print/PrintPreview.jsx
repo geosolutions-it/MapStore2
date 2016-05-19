@@ -45,25 +45,28 @@ const PrintPreview = React.createClass({
         this.props.setPages(pages);
     },
     render() {
-        return (
-            <div>
-                <div style={this.props.style}>
-                    <PDF file={this.props.url} scale={this.props.scale} page={this.props.currentPage} onDocumentComplete={this.onDocumentComplete}/>
+        if (window.PDFJS) {
+            return (
+                <div>
+                    <div style={this.props.style}>
+                        <PDF file={this.props.url} scale={this.props.scale} page={this.props.currentPage} onDocumentComplete={this.onDocumentComplete}/>
+                    </div>
+                    <div style={{marginTop: "10px"}}>
+                        <Button style={{marginRight: "10px"}} onClick={this.props.back}><Glyphicon glyph="arrow-left"/></Button>
+                        <Button disabled={this.props.scale >= this.props.maxScale} onClick={this.zoomIn}><Glyphicon glyph="zoom-in"/></Button>
+                        <Button disabled={this.props.scale <= this.props.minScale} onClick={this.zoomOut}><Glyphicon glyph="zoom-out"/></Button>
+                        <label style={{marginLeft: "10px", marginRight: "10px"}}>{this.props.scale}x</label>
+                        <div className="print-download"><a href={this.props.url} target="_blank"><Glyphicon glyph="save"/></a></div>
+                        <Button disabled={this.props.currentPage === 1} onClick={this.firstPage}><Glyphicon glyph="step-backward"/></Button>
+                        <Button disabled={this.props.currentPage === 1} onClick={this.prevPage}><Glyphicon glyph="chevron-left"/></Button>
+                        <label style={{marginLeft: "10px", marginRight: "10px"}}>{this.props.currentPage} / {this.props.pages}</label>
+                        <Button disabled={this.props.currentPage === this.props.pages} onClick={this.nextPage}><Glyphicon glyph="chevron-right"/></Button>
+                        <Button disabled={this.props.currentPage === this.props.pages} onClick={this.lastPage}><Glyphicon glyph="step-forward"/></Button>
+                    </div>
                 </div>
-                <div style={{marginTop: "10px"}}>
-                    <Button style={{marginRight: "10px"}} onClick={this.props.back}><Glyphicon glyph="arrow-left"/></Button>
-                    <Button disabled={this.props.scale >= this.props.maxScale} onClick={this.zoomIn}><Glyphicon glyph="zoom-in"/></Button>
-                    <Button disabled={this.props.scale <= this.props.minScale} onClick={this.zoomOut}><Glyphicon glyph="zoom-out"/></Button>
-                    <label style={{marginLeft: "10px", marginRight: "10px"}}>{this.props.scale}x</label>
-                    <Button style={{marginRight: "10px"}}><a href={this.props.url} target="_blank"><Glyphicon glyph="save"/></a></Button>
-                    <Button disabled={this.props.currentPage === 1} onClick={this.firstPage}><Glyphicon glyph="step-backward"/></Button>
-                    <Button disabled={this.props.currentPage === 1} onClick={this.prevPage}><Glyphicon glyph="chevron-left"/></Button>
-                    <label style={{marginLeft: "10px", marginRight: "10px"}}>{this.props.currentPage} / {this.props.pages}</label>
-                    <Button disabled={this.props.currentPage === this.props.pages} onClick={this.nextPage}><Glyphicon glyph="chevron-right"/></Button>
-                    <Button disabled={this.props.currentPage === this.props.pages} onClick={this.lastPage}><Glyphicon glyph="step-forward"/></Button>
-                </div>
-            </div>
-        );
+            );
+        }
+        return null;
     },
     firstPage() {
         if (this.props.currentPage > 1) {

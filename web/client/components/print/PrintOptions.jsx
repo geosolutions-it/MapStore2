@@ -35,8 +35,12 @@ const PrintOptions = React.createClass({
         this.props.onChange(e.target.value);
     },
     renderOptions() {
-        return this.props.options.map((option) => <Input disabled={!this.isEnabled()} ref={"input" + option.value} checked={this.props.selected === option.value}
-            type="radio" label={LocaleUtils.getMessageById(this.context.messages, option.label)} onChange={this.onChange}
+        return this.props.options.map((option) => <Input
+            key={option.label}
+            disabled={!this.isEnabled()} ref={"input" + option.value}
+            checked={this.props.selected === option.value}
+            type="radio" label={LocaleUtils.getMessageById(this.context.messages, option.label)}
+            onChange={this.onChange}
             value={option.value}
         />);
     },

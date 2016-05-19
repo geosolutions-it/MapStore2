@@ -20,6 +20,8 @@ const BackgroundSwitcherPlugin = connect((state) => ({
     propertiesChangeHandler: changeLayerProperties
 })(require('../components/TOC/background/BackgroundSwitcher'));
 
+require('./background/background.css');
+
 module.exports = {
     BackgroundSwitcherPlugin: assign(BackgroundSwitcherPlugin, {
         Toolbar: {

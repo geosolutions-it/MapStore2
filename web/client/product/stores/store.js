@@ -46,7 +46,7 @@ module.exports = (plugins) => {
             mapInitialConfig: mapState ? mapState.mapInitialConfig : null,
             layers: mapState ? layers(mapState.layers, action) : null
         };
-        if (action && action.type === CHANGE_BROWSER_PROPERTIES && newState.browser.touch) {
+        if (action && action.type === CHANGE_BROWSER_PROPERTIES && newState.browser.mobile) {
             newState = assign(newState, mobileOverride);
         }
 

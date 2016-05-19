@@ -29,16 +29,15 @@ const PluginConfigurator = React.createClass({
         ] : null;
     },
     render() {
-        return (<li key={this.props.pluginName + "enable"}>
-            <Button onClick={this.toggleCfg}><Glyphicon glyph={this.state.configVisible ? "minus" : "plus"}/></Button>
-            <Input className="pluginEnable" type="checkbox"
+        return (<li style={{border: "solid 1px lightgrey", borderRadius: "3px", paddingLeft: "10px", paddingRight: "10px", marginBottom: "3px", marginRight: "10px"}} key={this.props.pluginName + "enable"}>
+            <Button bsSize="small" onClick={this.toggleCfg}><Glyphicon glyph={this.state.configVisible ? "minus" : "plus"}/></Button>
+            <Input className="pluginEnable" type="checkbox" name="toolscontainer"
                 disabled={this.props.pluginName === 'Map'}
                 checked={this.props.pluginsCfg.indexOf(this.props.pluginName) !== -1}
                 label={this.props.pluginName}
                 onChange={this.props.onToggle}/>
 
             {this.renderCfg()}
-
         </li>);
     },
     toggleCfg() {
