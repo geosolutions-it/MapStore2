@@ -89,13 +89,13 @@ const renderPage = () => {
             <Provider store={store}>
                 <Localized>
                     <div style={{width: "100%", height: "100%"}}>
-                        <div id="plugins-list" style={{position: "absolute", right: "75%", left: 0, height: "100%", overflow: "auto"}}>
+                        <div id="plugins-list" style={{position: "absolute", zIndex: "10000", backgroundColor: "white", width: "300px", left: 0, height: "100%", overflow: "auto"}}>
                             <h5>Configure application plugins</h5>
                             <ul>
                                 {renderPlugins(renderPage)}
                             </ul>
                         </div>
-                        <div style={{position: "absolute", right: 0, left: "25%", height: "100%"}}>
+                        <div style={{position: "absolute", right: 0, left: "300px", height: "100%"}}>
                             <PluginsContainer params={{mapType: "leaflet"}} plugins={PluginsUtils.getPlugins(plugins)} pluginsConfig={getPluginsConfiguration()} mode="standard"/>
                         </div>
                         <Debug/>

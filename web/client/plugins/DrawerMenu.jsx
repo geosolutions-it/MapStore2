@@ -20,12 +20,14 @@ const Section = require('./drawer/Section');
 const {partialRight} = require('lodash');
 
 const Menu = connect((state) => ({
-    show: state.controls.drawer.enabled,
-    activeKey: state.controls.drawer.menu
+    show: state.controls.drawer && state.controls.drawer.enabled,
+    activeKey: state.controls.drawer && state.controls.drawer.menu
 }), {
     onToggle: toggleControl.bind(null, 'drawer', null),
     onChoose: partialRight(setControlProperty.bind(null, 'drawer', 'menu'), true)
 })(require('./drawer/Menu'));
+
+require('./drawer/drawer.css');
 
 const DrawerMenu = React.createClass({
     propTypes: {

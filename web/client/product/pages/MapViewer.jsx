@@ -18,7 +18,7 @@ const ConfigUtils = require('../../utils/ConfigUtils');
 
 const PluginsContainer = connect((state) => ({
     pluginsConfig: state.plugins || ConfigUtils.getConfigProp('plugins') || null,
-    mode: (urlQuery.mobile || (state.browser && state.browser.touch)) ? 'mobile' : 'desktop'
+    mode: (urlQuery.mobile || (state.browser && state.browser.mobile)) ? 'mobile' : 'desktop'
 }))(require('../../components/plugins/PluginsContainer'));
 
 const {loadMapConfig} = require('../../actions/config');
@@ -62,7 +62,7 @@ const MapViewer = React.createClass({
 });
 
 module.exports = connect((state) => ({
-    mode: (urlQuery.mobile || (state.browser && state.browser.touch)) ? 'mobile' : 'desktop'
+    mode: (urlQuery.mobile || (state.browser && state.browser.mobile)) ? 'mobile' : 'desktop'
 }),
 {
     loadMapConfig,

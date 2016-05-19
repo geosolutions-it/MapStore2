@@ -1,0 +1,78 @@
+/* Menu Button */
+#drawer-menu-button {
+    position: absolute;
+    z-index:1000;
+    left: 30px;
+    top: 8px;
+    width:30px;
+    background: transparent;
+    outline: none;
+    border: transparent;
+    font-size: 14px;
+
+}
+
+#drawer-menu-button:active{
+    box-shadow: none;
+}
+
+.nav-menu {
+
+    max-width:300px;
+
+}
+div.nav-menu{
+    background: rgba(255,255,255,.7);
+    left:-300px;
+}
+
+div.nav-menu {
+    -webkit-transform:   translate3d(300px, 0, 0);
+    -moz-transform: 	 translate3d(300px, 0, 0);
+    -ms-transform: 		 translate3d(300px, 0, 0);
+    -o-transform: 		 translate3d(300px, 0, 0);
+    box-shadow: 2px 0px 15px #A7A7A7;
+}
+
+.nav-menu  .navHeader {
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.75);
+}
+.nav-menu > .nav-content .navHeader .title{
+    font-size: 16px;
+    position: absolute;
+    margin: 13px;
+    font-weight: bold;
+}
+.nav-content  .section {
+    margin-bottom: 2px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+.nav-content  .section .sectionHeader{
+    padding: 5px;
+    cursor: pointer;
+}
+.nav-content .section .sectionHeader>.glyphicon{
+    /* Firefox */
+    -moz-transition: all .3s ease;
+    /* WebKit */
+    -webkit-transition: all .3s ease;
+    /* Opera */
+    -o-transition: all .3s ease;
+    /* Standard */
+    transition: all .3s ease;
+}
+.nav-content  .section .sectionTitle{
+    padding-left: 10px;
+
+}
+.nav-content  .section .sectionContent{
+    -moz-transition: max-height .3s ease;
+    -webkit-transition: max-height .3s ease;
+    -o-transition: max-height .3s ease;
+    transition: max-height .3s ease;
+
+    box-shadow: inset 0px 0px 10px rgba(0,0,0,.5);
+    background: rgba(255,255,255,.4);
+    padding: 5px;
+}

@@ -10,6 +10,7 @@ module.exports = {
     plugins: {
         MapPlugin: require('../../plugins/Map'),
         ToolbarPlugin: require('../../plugins/Toolbar'),
+        DrawerMenuPlugin: require('../../plugins/DrawerMenu'),
         MousePositionPlugin: require('../../plugins/MousePosition'),
         PrintPlugin: require('../../plugins/Print'),
         IdentifyPlugin: require('../../plugins/Identify'),
@@ -24,9 +25,7 @@ module.exports = {
         LocatePlugin: require('../../plugins/Locate'),
         ZoomAllPlugin: require('../../plugins/ZoomAll'),
         MapLoadingPlugin: require('../../plugins/MapLoading'),
-        HelpPlugin: require('../../plugins/Help'),
-        MyPlugin: require('./plugins/My'),
-        MessagePlugin: require('./plugins/Message')
+        HelpPlugin: require('../../plugins/Help')
     },
     requires: {}
 };

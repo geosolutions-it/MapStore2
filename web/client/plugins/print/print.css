@@ -49,3 +49,17 @@
 .mapstore-print-panel .form-inline label {
     margin-right: 20px;
 }
+
+.print-download {
+    margin-right: 10px;
+    display: inline-block;
+    width: 30px;
+    height: 34px;
+    border: solid 1px #CCC;
+    padding: 7px;
+    border-radius: 4px;
+    padding-right: 25px;
+    padding-left: 11px;
+    top: 2px;
+    position: relative;
+}

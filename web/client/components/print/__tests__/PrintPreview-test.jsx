@@ -64,7 +64,7 @@ describe("Test the PrintPreview component", () => {
         const cmp = ReactDOM.render(<PrintPreview pages={10} currentPage={1} setPage={handler} url="base/web/client/test-resources/print.pdf"/>, document.getElementById("container"));
         expect(cmp).toExist();
         const node = ReactDOM.findDOMNode(cmp);
-        ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[6]);
+        ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[5]);
     });
 
     it('pdf last page', (done) => {
@@ -75,7 +75,7 @@ describe("Test the PrintPreview component", () => {
         const cmp = ReactDOM.render(<PrintPreview pages={10} currentPage={1} setPage={handler} url="base/web/client/test-resources/print.pdf"/>, document.getElementById("container"));
         expect(cmp).toExist();
         const node = ReactDOM.findDOMNode(cmp);
-        ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[7]);
+        ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[6]);
     });
 
     it('pdf first page', (done) => {
@@ -86,7 +86,7 @@ describe("Test the PrintPreview component", () => {
         const cmp = ReactDOM.render(<PrintPreview pages={10} currentPage={10} setPage={handler} url="base/web/client/test-resources/print.pdf"/>, document.getElementById("container"));
         expect(cmp).toExist();
         const node = ReactDOM.findDOMNode(cmp);
-        ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[4]);
+        ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[3]);
     });
 
     it('pdf prev page', (done) => {
@@ -97,7 +97,7 @@ describe("Test the PrintPreview component", () => {
         const cmp = ReactDOM.render(<PrintPreview pages={10} currentPage={10} setPage={handler} url="base/web/client/test-resources/print.pdf"/>, document.getElementById("container"));
         expect(cmp).toExist();
         const node = ReactDOM.findDOMNode(cmp);
-        ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[5]);
+        ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[4]);
     });
 
     it('pdf zoom in', (done) => {

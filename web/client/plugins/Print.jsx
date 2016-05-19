@@ -75,7 +75,8 @@ const Print = React.createClass({
         error: React.PropTypes.string,
         getZoomForExtent: React.PropTypes.func,
         minZoom: React.PropTypes.number,
-        maxZoom: React.PropTypes.number
+        maxZoom: React.PropTypes.number,
+        usePreview: React.PropTypes.bool
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -110,10 +111,17 @@ const Print = React.createClass({
                 name: "landscape",
                 component: LandscapeOption,
                 regex: /landscape/
-            }]
+            }],
+            usePreview: true
         };
     },
     componentWillMount() {
+        if (this.props.usePreview && !window.PDFJS) {
+            const s = document.createElement("script");
+            s.type = "text/javascript";
+            s.src = "https://npmcdn.com/pdfjs-dist@1.4.79/build/pdf.combined.js";
+            document.head.appendChild(s);
+        }
         this.configurePrintMap();
     },
     componentWillReceiveProps(nextProps) {
@@ -189,13 +197,20 @@ const Print = React.createClass({
                         onMapRefresh={this.configurePrintMap}
                         />
                     <PrintSubmit disabled={!layout} onPrint={this.print}/>
+                    {this.renderDownload()}
                 </Col>
             </Row>
         </Grid>
         );
     },
+    renderDownload() {
+        if (this.props.pdfUrl && !this.props.usePreview) {
+            return <iframe src={this.props.pdfUrl} style={{visibility: "hidden", display: "none"}}/>;
+        }
+        return null;
+    },
     renderBody() {
-        if (this.props.pdfUrl) {
+        if (this.props.pdfUrl && this.props.usePreview) {
             return this.renderPreviewPanel();
         }
         return this.renderPrintPanel();
@@ -241,15 +256,17 @@ const selector = createSelector([
     (state) => state.print && state.print.pdfUrl,
     (state) => state.print && state.print.error,
     mapSelector,
-    layersSelector
-], (open, capabilities, printSpec, pdfUrl, error, map, layers) => ({
+    layersSelector,
+    (state) => state.browser && (!state.browser.ie || state.browser.ie11)
+], (open, capabilities, printSpec, pdfUrl, error, map, layers, usePreview) => ({
     open,
     capabilities,
     printSpec,
     pdfUrl,
     error,
     map,
-    layers
+    layers,
+    usePreview
 }));
 
 const PrintPlugin = connect(selector, {
