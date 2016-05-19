@@ -1,9 +1,14 @@
 /**
+ * Copyright 2016, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+ /**
  * This definition of DC add the dc:URI to the possible Dublin core elements
  * originally available in the ogc-schemas mappings.
  */
-
-
 module.exports = {
     n: 'DC_1_1',
     dens: 'http:\/\/purl.org\/dc\/elements\/1.1\/',

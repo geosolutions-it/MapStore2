@@ -73,6 +73,9 @@ const RecordItem = React.createClass({
         }
     },
     renderDescription(record) {
+        if (!record) {
+            return null;
+        }
         if (typeof record.description === "string") {
             return record.description;
         } else if (Array.isArray(record.description)) {
@@ -91,7 +94,7 @@ const RecordItem = React.createClass({
             <Panel className="record-item">
                 {this.renderThumb(record && record.thumbnail, record)}
                 <div>
-                    <h4>{record.title}</h4>
+                    <h4>{record && record.title}</h4>
                     <p className="record-item-description">{this.renderDescription(record)}</p>
                 </div>
                   {this.renderWMSButtons(wms)}
