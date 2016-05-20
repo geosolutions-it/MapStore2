@@ -16,6 +16,31 @@ const UPDATE_NODE_TEMP = 'UPDATE_NODE_TEMP';
 const LAYER_LOADING = 'LAYER_LOADING';
 const LAYER_LOAD = 'LAYER_LOAD';
 const ADD_LAYER = 'ADD_LAYER';
+const SHOW_SETTINGS = 'SHOW_SETTINGS';
+const HIDE_SETTINGS = 'HIDE_SETTINGS';
+const UPDATE_SETTINGS = 'UPDATE_SETTINGS';
+
+function showSettings(node, nodeType, options) {
+    return {
+        type: SHOW_SETTINGS,
+        node: node,
+        nodeType: nodeType,
+        options: options
+    };
+}
+
+function hideSettings() {
+    return {
+        type: HIDE_SETTINGS
+    };
+}
+
+function updateSettings(options) {
+    return {
+        type: UPDATE_SETTINGS,
+        options
+    };
+}
 
 function changeLayerProperties(layer, properties) {
     return {
@@ -100,8 +125,9 @@ function addLayer(layer) {
     };
 }
 
-module.exports = {changeLayerProperties, changeGroupProperties, toggleNode, sortNode,
-    removeNode, updateNode, layerLoading, layerLoad, updateNodeTemp, addLayer,
+module.exports = {changeLayerProperties, changeGroupProperties, toggleNode, sortNode, removeNode,
+    updateNode, layerLoading, layerLoad, updateNodeTemp, addLayer, showSettings, hideSettings, updateSettings,
     CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE,
-    REMOVE_NODE, UPDATE_NODE, UPDATE_NODE_TEMP, LAYER_LOADING, LAYER_LOAD, ADD_LAYER
+    REMOVE_NODE, UPDATE_NODE, UPDATE_NODE_TEMP, LAYER_LOADING, LAYER_LOAD, ADD_LAYER,
+    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS
 };

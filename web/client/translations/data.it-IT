@@ -29,6 +29,9 @@
         "gohome": "Torna alla home",
         "printbutton": "Stampa",
         "noresultfound": "Nessun Risultato Trovato",
+        "save": "Salva",
+        "opacity": "Opacità",
+        "close": "Chuidi",
         "home":{
             "open": "Apri",
             "description": "MapStore è sviluppato per creare, salvare e condividere in modo semplice ed intuitivo mappe e mashup creati selezionando contenuti da server come Google Maps, OpenStreetMap, MapQuest o da server specifici forniti dalla propria organizzazione o da terzi. <br/> Visita la <a href=\"http://geosolutions-it.github.io/MapStore2/\">home page</a> per maggiori dettagli.",

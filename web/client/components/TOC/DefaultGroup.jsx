@@ -10,6 +10,7 @@ var React = require('react');
 var Node = require('./Node');
 var GroupTitle = require('./fragments/GroupTitle');
 var GroupChildren = require('./fragments/GroupChildren');
+const VisibilityCheck = require('./fragments/VisibilityCheck');
 
 var DefaultGroup = React.createClass({
     propTypes: {
@@ -17,7 +18,9 @@ var DefaultGroup = React.createClass({
         style: React.PropTypes.object,
         sortableStyle: React.PropTypes.object,
         onToggle: React.PropTypes.func,
-        onSort: React.PropTypes.func
+        onSort: React.PropTypes.func,
+        propertiesChangeHandler: React.PropTypes.func,
+        groupVisibilityCheckbox: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -27,13 +30,25 @@ var DefaultGroup = React.createClass({
                 marginBottom: "16px",
                 cursor: "pointer"
             },
-            sortableStyle: {}
+            sortableStyle: {},
+            propertiesChangeHandler: () => {},
+            groupVisibilityCheckbox: false
         };
     },
     render() {
         let {children, onToggle, ...other } = this.props;
+        const visibilityStyle = {
+            visibility: 'visible',
+            marginLeft: "5px",
+            marginRight: "5px", "float": "left",
+            marginTop: "7px"
+        };
         return (
             <Node sortableStyle={this.props.sortableStyle} style={this.props.style} type="group" {...other}>
+                { this.props.groupVisibilityCheckbox &&
+                  <VisibilityCheck key="visibility"
+                            propertiesChangeHandler={this.props.propertiesChangeHandler}
+                            style={visibilityStyle}/>}
                 <GroupTitle onClick={this.props.onToggle}/>
                 <GroupChildren onSort={this.props.onSort} position="collapsible">
                     {this.props.children}
