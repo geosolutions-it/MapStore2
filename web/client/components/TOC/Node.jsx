@@ -64,8 +64,8 @@ var Node = React.createClass({
         let prefix = this.props.type;
         const nodeStyle = assign({}, this.props.style, this.props.styler(this.props.node));
         let content = (<div key={this.props.node.name} className={expanded ? prefix + "-expanded" : prefix + "-collapsed"} style={nodeStyle} >
-            {this.renderChildren((child) => child.props.position !== 'collapsible')}
-            {expanded ? this.renderChildren((child) => child.props.position === 'collapsible') : []}
+            {this.renderChildren((child) => child && child.props.position !== 'collapsible')}
+            {expanded ? this.renderChildren((child) => child && child.props.position === 'collapsible') : []}
         </div>);
         return this.props.isDraggable ? this.renderWithSortable(content) : content;
     }

@@ -48,15 +48,43 @@ var LayersUtils = {
         return allLayers.filter((layer) => layer.group === 'background')
             .concat(initialReorderLayers(groups, allLayers));
     },
-    denormalizeGroups: (layers, groups) => {
-        let normalizedLayers = layers.map((layer) => assign({}, layer, {expanded: layer.expanded || false}));
+    denormalizeGroups: (allLayers, groups) => {
+
+        let getGroupVisibility = (nodes) => {
+            let visibility = true;
+            nodes.forEach((node) => {
+                if (!node.visibility) {
+                    visibility = false;
+                }
+            });
+            return visibility;
+        };
+
+        let normalizedLayers = allLayers.map((layer) => assign({}, layer, {expanded: layer.expanded || false}));
         return {
             flat: normalizedLayers,
             groups: groups.map((group) => assign({}, group, {
-                nodes: group.nodes.map((layerId) => normalizedLayers.filter((layer) => layer.id === layerId)[0])
+                nodes: group.nodes.map((node) => {
+                    if (isObject(node)) {
+                        return assign({}, node, {
+                            nodes: node.nodes.map((layerId) => normalizedLayers.filter((layer) => layer.id === layerId)[0])
+                        });
+                    }
+                    return normalizedLayers.filter((layer) => layer.id === node)[0];
+                }).map((subGroup) => {
+                    if (subGroup && subGroup.nodes && subGroup.nodes.length > 0) {
+                        return assign(subGroup, {
+                            visibility: getGroupVisibility(subGroup.nodes)
+                        });
+                    }
+                    return subGroup;
+                })
+            })).map((group) => assign(group, {
+                visibility: getGroupVisibility(group.nodes)
             }))
         };
     },
+
     sortLayers: (groups, allLayers) => {
         return allLayers.filter((layer) => layer.group === 'background')
             .concat(reorderLayers(groups, allLayers));

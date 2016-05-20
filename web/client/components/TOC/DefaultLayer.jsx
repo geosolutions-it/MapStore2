@@ -12,21 +12,36 @@ var VisibilityCheck = require('./fragments/VisibilityCheck');
 var Title = require('./fragments/Title');
 var InlineSpinner = require('../misc/spinners/InlineSpinner/InlineSpinner');
 var WMSLegend = require('./fragments/WMSLegend');
+const LayersTool = require('./fragments/LayersTool');
+const SettingsModal = require('./fragments/SettingsModal');
 
 var DefaultLayer = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
+        settings: React.PropTypes.object,
         propertiesChangeHandler: React.PropTypes.func,
         onToggle: React.PropTypes.func,
+        onSettings: React.PropTypes.func,
         style: React.PropTypes.object,
-        sortableStyle: React.PropTypes.object
+        sortableStyle: React.PropTypes.object,
+        hideSettings: React.PropTypes.func,
+        updateSettings: React.PropTypes.func,
+        updateNode: React.PropTypes.func,
+        activateLegendTool: React.PropTypes.bool,
+        activateSettingsTool: React.PropTypes.bool,
+        opacityText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
+        saveText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
+        closeText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element])
     },
     getDefaultProps() {
         return {
             style: {},
             sortableStyle: {},
             propertiesChangeHandler: () => {},
-            onToggle: () => {}
+            onToggle: () => {},
+            onSettings: () => {},
+            activateLegendTool: false,
+            activateSettingsTool: false
         };
     },
     renderCollapsible() {
@@ -34,6 +49,36 @@ var DefaultLayer = React.createClass({
             return <WMSLegend position="collapsible"/>;
         }
         return [];
+    },
+    renderTools() {
+        let tools = [];
+        if (this.props.activateSettingsTool) {
+            tools.push(
+                <LayersTool key="toolsettings"
+                        style={{"float": "right", marginTop: "5px", marginRight: "10px", cursor: "pointer"}}
+                        glyph="adjust"
+                        onClick={(node) => this.props.onSettings(node.id, "layers",
+                            {opacity: parseFloat(node.opacity !== undefined && node.opacity || 1)})}/>
+                );
+            tools.push(
+                <SettingsModal key="toolcsettingsmodal" hideSettings={this.props.hideSettings}
+                           settings={this.props.settings}
+                           updateSettings={this.props.updateSettings}
+                           updateNode={this.props.updateNode}
+                           opacityText={this.props.opacityText}
+                           saveText={this.props.saveText}
+                           closeText={this.props.closeText}/>);
+        }
+        if (this.props.activateLegendTool) {
+            tools.push(
+                <LayersTool key="toollegend"
+                        ref="target"
+                        style={{"float": "right", marginTop: "5px", marginRight: "10px", cursor: "pointer"}}
+                        glyph="list"
+                        onClick={(node) => this.props.onToggle(node.id, node.expanded)}/>
+                );
+        }
+        return tools;
     },
     render() {
         let {children, propertiesChangeHandler, onToggle, ...other } = this.props;
@@ -43,6 +88,7 @@ var DefaultLayer = React.createClass({
                 <Title onClick={this.props.onToggle}/>
                 <InlineSpinner loading={this.props.node.loading}/>
                 {this.renderCollapsible()}
+                {this.renderTools()}
             </Node>
         );
     }

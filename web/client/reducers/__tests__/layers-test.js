@@ -232,4 +232,56 @@ describe('Test the layers reducer', () => {
         expect(state.groups[0].nodes[0]).toBe("test_id");
     });
 
+    it('show settings', () => {
+        const action = {
+            type: "SHOW_SETTINGS",
+            node: "node1",
+            nodeType: "layers",
+            options: {opacity: 0.5, size: 500}
+        };
+        const state = layers({}, action);
+        expect(state).toExist();
+        expect(state.settings).toExist();
+        expect(state.settings.expanded).toBe(true);
+        expect(state.settings.node).toBe("node1");
+        expect(state.settings.nodeType).toBe("layers");
+        expect(state.settings.options).toEqual({opacity: 0.5, size: 500});
+    });
+
+    it('hide settings', () => {
+        const action = {
+            type: "HIDE_SETTINGS"
+        };
+        const state = layers({}, action);
+        expect(state).toExist();
+        expect(state.settings).toExist();
+        expect(state.settings.expanded).toBe(false);
+        expect(state.settings.node).toNotExist();
+        expect(state.settings.nodeType).toNotExist();
+        expect(state.settings.options).toEqual({});
+    });
+
+    it('update settings', () => {
+        const action = {
+            type: "UPDATE_SETTINGS",
+            options: {opacity: 0.8, size: 400}
+        };
+        const state = layers({}, action);
+        expect(state).toExist();
+        expect(state.settings).toExist();
+        expect(state.settings.options).toEqual({opacity: 0.8, size: 400});
+    });
+
+    it('update existing settings', () => {
+        const action = {
+            type: "UPDATE_SETTINGS",
+            options: {size: 450}
+        };
+        const state = layers({settings: {options: {opacity: 0.8, size: 400}}}, action);
+        expect(state).toExist();
+        expect(state.settings).toExist();
+        expect(state.settings.options).toEqual({opacity: 0.8, size: 450});
+    });
+
+
 });

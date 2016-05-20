@@ -23,8 +23,10 @@ var LayersTool = React.createClass({
         };
     },
     render() {
-        return (<Glyphicon style={this.props.style} glyph={this.props.glyph}
-            onClick={(options) => this.props.onClick(this.props.node, options || {})}/>);
+        return (
+            <Glyphicon style={this.props.style}
+                       glyph={this.props.glyph}
+                       onClick={(options) => this.props.onClick(this.props.node, options || {})}/>);
     }
 });
 
