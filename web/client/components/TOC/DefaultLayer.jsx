@@ -31,7 +31,8 @@ var DefaultLayer = React.createClass({
         activateSettingsTool: React.PropTypes.bool,
         opacityText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         saveText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        closeText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element])
+        closeText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
+        modalOptions: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -41,7 +42,8 @@ var DefaultLayer = React.createClass({
             onToggle: () => {},
             onSettings: () => {},
             activateLegendTool: false,
-            activateSettingsTool: false
+            activateSettingsTool: false,
+            modalOptions: {}
         };
     },
     renderCollapsible() {
@@ -61,7 +63,8 @@ var DefaultLayer = React.createClass({
                             {opacity: parseFloat(node.opacity !== undefined && node.opacity || 1)})}/>
                 );
             tools.push(
-                <SettingsModal key="toolcsettingsmodal" hideSettings={this.props.hideSettings}
+                <SettingsModal key="toolcsettingsmodal" options={this.props.modalOptions}
+                            hideSettings={this.props.hideSettings}
                            settings={this.props.settings}
                            updateSettings={this.props.updateSettings}
                            updateNode={this.props.updateNode}

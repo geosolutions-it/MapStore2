@@ -20,11 +20,13 @@ const SettingsModal = React.createClass({
         updateNode: React.PropTypes.func,
         opacityText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         saveText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        closeText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element])
+        closeText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
+        options: React.PropTypes.object
     },
     getDefaultProps() {
         return {
             settings: {expanded: true, options: {opacity: 0.5}},
+            options: {},
             updateSettings: () => {},
             hideSettings: () => {},
             updateNode: () => {}
@@ -32,7 +34,7 @@ const SettingsModal = React.createClass({
     },
     render() {
         return (
-            <Modal show={this.props.settings.expanded} container={document.getElementById("body")}>
+            <Modal {...this.props.options} show={this.props.settings.expanded} container={document.getElementById("body")}>
                 <Modal.Header><Modal.Title>{this.props.opacityText}</Modal.Title></Modal.Header>
                 <Modal.Body>
                     <Slider start={[Math.round(this.props.settings.options.opacity * 100)]}

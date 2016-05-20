@@ -149,7 +149,7 @@ describe('test DefaultLayer module component', () => {
             onSettings: () => {}
         };
         let spy = expect.spyOn(actions, "onSettings");
-        const comp = ReactDOM.render(<Layer node={l} activateSettingsTool={true} onSettings={actions.onSettings}/>,
+        const comp = ReactDOM.render(<Layer modalOptions={{animation: false}} node={l} activateSettingsTool={true} onSettings={actions.onSettings}/>,
             document.getElementById("container"));
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
