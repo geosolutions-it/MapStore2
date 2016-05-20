@@ -126,9 +126,9 @@ let Overview = React.createClass({
         className: 'ol-overviewmap ol-custom-overviewmap',
         collapseLabel: '\u00BB',
         label: '\u00AB',
-        collapsed: false,
+        collapsed: true,
         collapsible: true
-        }
+    }
 
 });
 

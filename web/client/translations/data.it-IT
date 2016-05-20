@@ -329,7 +329,8 @@
             "downloadingSnapshots": "generazioni di istantanee in corso...",
             "date": "Data",
             "layers": "Livelli",
-            "size": "Dimensione"
+            "size": "Dimensione",
+            "notsupported": "Snapshot non supportato"
         },
         "shapefile": {
             "title": "Carica Shape File",

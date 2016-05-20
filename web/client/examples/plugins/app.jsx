@@ -30,10 +30,14 @@ const userCfg = {};
 
 const {Provider} = require('react-redux');
 
+const {Input} = require('react-bootstrap');
+
 const Debug = require('../../components/development/Debug');
 const store = require('./store')(plugins);
 
 require('./assets/css/plugins.css');
+
+let mapType = 'leaflet';
 
 const Localized = connect((state) => ({
     messages: state.locale && state.locale.messages,
@@ -64,7 +68,7 @@ const PluginConfigurator = require('./components/PluginConfigurator');
 const renderPlugins = (callback) => {
     return Object.keys(plugins).map((plugin) => {
         const pluginName = plugin.substring(0, plugin.length - 6);
-        return (<PluginConfigurator pluginName={pluginName} pluginsCfg={pluginsCfg.standard}
+        return (<PluginConfigurator key={pluginName} pluginName={pluginName} pluginsCfg={pluginsCfg.standard}
             onToggle={togglePlugin.bind(null, pluginName, callback)}
             onApplyCfg={configurePlugin.bind(null, plugin, callback)}
             />);
@@ -83,6 +87,11 @@ const getPluginsConfiguration = () => {
     };
 };
 
+const changeMapType = (callback, e) => {
+    mapType = e.target.options[e.target.selectedIndex].value;
+    callback();
+};
+
 const renderPage = () => {
     ReactDOM.render(
         (
@@ -91,12 +100,17 @@ const renderPage = () => {
                     <div style={{width: "100%", height: "100%"}}>
                         <div id="plugins-list" style={{position: "absolute", zIndex: "10000", backgroundColor: "white", width: "300px", left: 0, height: "100%", overflow: "auto"}}>
                             <h5>Configure application plugins</h5>
+                            <Input value={mapType} type="select" bsSize="small" onChange={changeMapType.bind(null, renderPage)}>
+                                <option value="leaflet" key="leaflet">Leaflet</option>
+                                <option value="openlayers" key="openlayer">OpenLayers</option>
+                                <option value="cesium" key="cesium">CesiumJS</option>
+                            </Input>
                             <ul>
                                 {renderPlugins(renderPage)}
                             </ul>
                         </div>
                         <div style={{position: "absolute", right: 0, left: "300px", height: "100%"}}>
-                            <PluginsContainer params={{mapType: "leaflet"}} plugins={PluginsUtils.getPlugins(plugins)} pluginsConfig={getPluginsConfiguration()} mode="standard"/>
+                            <PluginsContainer params={{mapType}} plugins={PluginsUtils.getPlugins(plugins)} pluginsConfig={getPluginsConfiguration()} mode="standard"/>
                         </div>
                         <Debug/>
                     </div>

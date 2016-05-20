@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-module.exports = (mapType) => {
-    return require('../../map/' + mapType + '/SnapshotSupport');
+module.exports = {
+    GrabMap: null,
+    Preview: null
 };

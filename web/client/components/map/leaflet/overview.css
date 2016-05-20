@@ -6,9 +6,9 @@
     transition: all .2s;
 }
 .leafletbottom.leafletright, .leaflet-control-minimap{
-            position:relative;
-            bottom:60px;
-        }
+    position:relative;
+    bottom:5px;
+}
 .leaflet-control-minimap a {
     background-color: rgba(255, 255, 255, 1.0);
     background-repeat: no-repeat;

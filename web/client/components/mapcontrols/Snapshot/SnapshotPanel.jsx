@@ -51,7 +51,7 @@ let SnapshotPanel = React.createClass({
     },
     componentWillReceiveProps(newProps) {
         if (newProps.mapType !== this.props.mapType) {
-            SnapshotSupport = require('./SnapshotSupport')(this.props.mapType);
+            SnapshotSupport = require('./SnapshotSupport')(newProps.mapType);
         }
     },
     getDefaultProps() {
@@ -106,6 +106,11 @@ let SnapshotPanel = React.createClass({
         return layers.some((layer) => layer.loading);
     },
     renderPreview() {
+
+        if (!SnapshotSupport.Preview) {
+            return <div className="snapshot-notsupported"><Message msgId="snapshot.notsupported"/></div>;
+        }
+
         let bingOrGoogle = this.isBingOrGoogle();
         let snapshotReady = this.isSnapshotReady();
         let replaceImage;

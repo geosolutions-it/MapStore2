@@ -33,7 +33,7 @@ let SnapshotQueue = React.createClass({
     },
     componentWillReceiveProps(newProps) {
         if (newProps.mapType !== this.props.mapType) {
-            SnapshotSupport = require('./SnapshotSupport')(this.props.mapType);
+            SnapshotSupport = require('./SnapshotSupport')(newProps.mapType);
         }
     },
     getDefaultProps() {
