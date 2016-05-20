@@ -86,7 +86,7 @@ const RecordItem = React.createClass({
         let record = this.props.record;
         let wms;
         if (record) {
-            wms = head.head(record.references.filter(rec => rec && rec.type && rec.type.indexOf("OGC:WMS") >= 0));
+            wms = head(record.references.filter(rec => rec && rec.type && rec.type.indexOf("OGC:WMS") >= 0));
         }
 
 
