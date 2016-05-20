@@ -87,6 +87,7 @@
     "moment": "2.13.0",
     "node-uuid": "1.4.3",
     "object-assign": "3.0.0",
+    "ogc-schemas": "2.6.1",
     "openlayers": "3.15.1",
     "pdfviewer": "0.3.2",
     "proj4": "2.3.14",
@@ -113,7 +114,8 @@
     "reselect": "2.5.1",
     "shpjs": "3.3.2",
     "swipe-js-iso": "2.0.3",
-    "url": "0.10.3"
+    "url": "0.10.3",
+    "w3c-schemas": "1.4.0"
   },
   "scripts": {
     "postinstall": "node checkCesium.js && mkdirp ./web/client/libs/Cesium && download --extract --out ./web/client/libs/Cesium https://cesiumjs.org/releases/Cesium-1.17.zip || echo Cesium already installed",

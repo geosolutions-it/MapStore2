@@ -1,0 +1,41 @@
+{
+    "proxyUrl": "/mapstore/proxy/?url=",
+    "geoStoreUrl": "/mapstore/rest/geostore/",
+    "printUrl": "http://demo.geo-solutions.it/geoserver/pdf/info.json",
+    "translationsPath": "../../translations",
+    "plugins": {
+        "mobile": [{
+            "name": "Map",
+            "cfg": {
+                    "zoomControl": false
+            }
+         }, {
+                "name": "DrawerMenu"
+         }, {
+                "name": "TOC",
+                "hide": true
+         }, {
+                "name": "Settings",
+                "hide": true,
+                "cfg": {
+                    "overrideSettings": {
+                "language": true,
+                "history": false
+            },
+                    "style": {
+                        "width": "auto"
+                    }
+                }
+         }],
+        "desktop": ["Map", "MadeWithLove", {
+                "name": "TOC",
+                "hide": true
+        }, {
+                "name": "RasterStyler",
+                "hide": true
+        },{
+                "name": "Settings",
+                "hide": true
+        }, "Toolbar", "MapLoading"]
+    }
+}
