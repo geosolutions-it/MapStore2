@@ -8,7 +8,7 @@
 const React = require('react');
 const Message = require('../I18N/Message');
 const {Image, Panel, Button, Glyphicon} = require('react-bootstrap');
-const _ = require('lodash');
+const {head} = require('lodash');
 
 const defaultThumb = require('./img/default.jpg');
 const removeURLParameter = function(url, parameter) {
@@ -86,7 +86,7 @@ const RecordItem = React.createClass({
         let record = this.props.record;
         let wms;
         if (record) {
-            wms = _.head(record.references.filter(rec => rec && rec.type && rec.type.indexOf("OGC:WMS") >= 0));
+            wms = head.head(record.references.filter(rec => rec && rec.type && rec.type.indexOf("OGC:WMS") >= 0));
         }
 
 

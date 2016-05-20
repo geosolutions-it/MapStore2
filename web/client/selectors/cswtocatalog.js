@@ -7,7 +7,7 @@
  */
 
 const assign = require('object-assign');
-const _ = require('lodash');
+const {head} = require('lodash');
 const urlUtil = require('url');
 
 /**
@@ -25,21 +25,21 @@ const cswToCatalogSelector = (catalog) => {
             let wms;
             // look in URI objects for wms and thumbnail
             if (dc && dc.URI) {
-                let thumb = _.head([].filter.call(dc.URI, (uri) => {return uri.name === "thumbnail"; }) );
+                let thumb = head([].filter.call(dc.URI, (uri) => {return uri.name === "thumbnail"; }) );
                 thumbURL = thumb ? thumb.value : null;
-                wms = _.head([].filter.call(dc.URI, (uri) => { return uri.protocol === "OGC:WMS-1.1.1-http-get-map"; }));
+                wms = head([].filter.call(dc.URI, (uri) => { return uri.protocol === "OGC:WMS-1.1.1-http-get-map"; }));
             }
             // look in references objects
             if (!wms && dc.references) {
                 let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
-                wms = _.head([].filter.call( refs, (ref) => { return ref.scheme === "OGC:WMS-1.1.1-http-get-map" || ref.scheme === "OGC:WMS"; }));
+                wms = head([].filter.call( refs, (ref) => { return ref.scheme === "OGC:WMS-1.1.1-http-get-map" || ref.scheme === "OGC:WMS"; }));
                 let urlObj = urlUtil.parse(wms.value, true);
                 let layerName = urlObj.query && urlObj.query.layers;
                 wms = assign({}, wms, {name: layerName} );
             }
             if (!thumbURL && dc.references) {
                 let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
-                let thumb = _.head([].filter.call( refs, (ref) => { return ref.scheme === "WWW:LINK-1.0-http--image-thumbnail" || ref.scheme === "thumbnail"; }));
+                let thumb = head([].filter.call( refs, (ref) => { return ref.scheme === "WWW:LINK-1.0-http--image-thumbnail" || ref.scheme === "thumbnail"; }));
                 if (thumb) {
                     thumbURL = thumb.value;
                 }

@@ -14,6 +14,7 @@ const RecordItem = require('./RecordItem');
 
 const RecordGrid = React.createClass({
     propTypes: {
+        recordItem: React.PropTypes.element,
         catalogURL: React.PropTypes.string,
         onZoomToExtent: React.PropTypes.func,
         onLayerAdd: React.PropTypes.func,
@@ -23,14 +24,14 @@ const RecordGrid = React.createClass({
     getDefaultProps() {
         return {
             records: [],
-            onLayerAdd: () => {},
-            mapType: "leaflet"
+            onLayerAdd: () => {}
         };
     },
     renderRecordItem(record) {
+        let Item = this.props.recordItem || RecordItem;
         return (
 			<Col xs={12} sm={6} md={6} lg={6} key={record.identifier}>
-                <RecordItem
+                <Item
                     onLayerAdd={this.props.onLayerAdd}
                     onZoomToExtent={this.props.onZoomToExtent}
                     catalogURL={this.props.catalogURL}
