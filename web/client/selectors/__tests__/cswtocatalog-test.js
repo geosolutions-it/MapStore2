@@ -97,7 +97,7 @@ describe('Test csw to catalog selector', () => {
 
             }
         };
-        const records = cswToCatalogSelector(testState);
+        const records = cswToCatalogSelector(testState.catalog);
         expect(records).toExist();
         expect(records[0]).toExist();
         expect(_.isEqual(records[0], sampleRecord)).toBe(true);
@@ -116,7 +116,7 @@ describe('Test csw to catalog selector', () => {
 
             }
         };
-        const records = cswToCatalogSelector(testState);
+        const records = cswToCatalogSelector(testState.catalog);
         expect(records).toExist();
         expect(records[0]).toExist();
         expect(_.isEqual(records[0], sampleRecord)).toBe(true);

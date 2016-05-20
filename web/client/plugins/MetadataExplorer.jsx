@@ -10,7 +10,8 @@ const React = require('react');
 const {connect} = require('react-redux');
 const assign = require('object-assign');
 const {cswToCatalogSelector} = require("../selectors/cswtocatalog");
-const {createDefaultMemorizeSelector} = require("../selectors/common");
+// const {createDefaultMemorizeSelector} = require("../selectors/common");
+const {createSelector} = require("reselect");
 const {Glyphicon, Input, Alert, Pagination} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 const {textSearch} = require("../actions/catalog");
@@ -18,9 +19,21 @@ const {addLayer} = require("../actions/layers");
 const {zoomToExtent} = require("../actions/map");
 const Message = require("../components/I18N/Message");
 require('./metadataexplorer/css/style.css');
+const makeCatalogSelector = () => {
+    return createSelector([(state) => state.catalog], cswToCatalogSelector);
+};
 
-const memorizedCswToCatalogSelector = createDefaultMemorizeSelector([cswToCatalogSelector], (records) => {return {records}; });
-const RecordGrid = connect(memorizedCswToCatalogSelector, {
+const makeMapStateToProps = () => {
+    const getCatalogRecords = makeCatalogSelector();
+    const mapStateToProps = (state, props) => {
+        return {
+          records: getCatalogRecords(state, props)
+      };
+    };
+    return mapStateToProps;
+};
+
+const RecordGrid = connect(makeMapStateToProps, {
     // add layer action to pass to the layers
     onZoomToExtent: zoomToExtent
 })(require("../components/catalog/RecordGrid"));

@@ -15,8 +15,7 @@ const urlUtil = require('url');
  * records:
  *
  */
-const cswToCatalogSelector = (state) => {
-    let catalog = state.catalog;
+const cswToCatalogSelector = (catalog) => {
     let result = catalog.result;
     let searchOptions = catalog.searchOptions;
     if (result && result.records) {
