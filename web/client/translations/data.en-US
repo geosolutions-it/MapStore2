@@ -256,7 +256,8 @@
             "locateBtn": "This is the helptext for the LocateBtn",
             "snapshot": "This is the helptext for the Snapshot",
             "print": "This is the helptext for Print",
-            "shapefile": "This is the helptext for the Shapefile"
+            "shapefile": "This is the helptext for the Shapefile",
+            "rasterstyler": "Define min value, max value, number of classes and color ramp and generate new classified raster layer"
         },
         "queryform": {
             "query": "Search",
@@ -334,6 +335,67 @@
             "error": {"select": "Select one or more zip file"},
             "add": "Add",
             "cancel": "Cancel"
+        },
+        "rasterstyler": {
+            "tooltip": "Create and edit raster layer style",
+            "paneltitle": "Raster Styler",
+            "layerlabel": "Layer",
+            "typelabel": "Style Type",
+            "opacitylabel": "Opacity",
+            "redtitle": "Red",
+            "greentitle": "Green",
+            "bluetitle": "Blue",
+            "graytitle": "Gray",
+            "pseudobandtitle": "Band Selection",
+            "eqinttitle": "Equal Interval Classification",
+            "pseudotitle": "PseudoColor Settings",
+            "applybtn": "Apply Style"
+        },
+        "bandselector": {
+            "band" : "Band",
+            "enhancement" : "Enhancement",
+            "algorithmTitle" : "Optional Algorithm",
+            "value" : "Value",
+            "min": "Min",
+            "max": "Max",
+            "enha": {
+                "none": "None",
+                "Normalize": "Normalize",
+                "Histogram": "Histogram",
+                "GammaValue": "GammaValue"
+            },
+            "algorithm": {
+                "none": "None",
+                "StretchToMinimumMaximum": "Stretch",
+                "ClipToMinimumMaximum": "Clip",
+                "ClipToZero": "Clip To Zero"
+            }
+        },
+        "equalinterval": {
+            "min": "Min",
+            "max": "Max",
+            "classes": "Classes",
+            "ramp": "Color Ramp",
+            "classify": "Classify"
+        },
+        "colormapgrid": {
+            "color": "Color",
+            "quantity": "Quantity",
+            "label": "Label"
+        },
+        "pseudocolorsettings": {
+            "type": "Type",
+            "extended": "Extended",
+            "colormap": "Color Map",
+            "add": "Add Entry",
+            "remove": "Remove Entry"
+        },
+        "rasterstyletype": {
+            "rgb": "Red Green Blue",
+            "gray": "GrayScale",
+            "pseudo": "PseudoColor",
+            "multi": "Multi Band",
+            "single": "Single Band"
         }
     }
 }
