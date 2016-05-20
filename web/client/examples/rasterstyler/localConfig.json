@@ -10,8 +10,6 @@
                     "zoomControl": false
             }
          }, {
-                "name": "DrawerMenu"
-         }, {
                 "name": "TOC",
                 "hide": true
          }, {
@@ -26,7 +24,11 @@
                         "width": "auto"
                     }
                 }
-         }],
+         },"Toolbar",{
+                "name": "RasterStyler",
+                "hide": false
+        }
+     ],
         "desktop": ["Map", "MadeWithLove", {
                 "name": "TOC",
                 "hide": true

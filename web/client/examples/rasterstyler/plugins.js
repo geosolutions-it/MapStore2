@@ -11,15 +11,13 @@ module.exports = {
         TOCPlugin: require('../../plugins/TOC'),
         MapPlugin: require('../../plugins/Map'),
         ToolbarPlugin: require('../../plugins/Toolbar'),
-        DrawerMenuPlugin: require('../../plugins/DrawerMenu'),
         SettingsPlugin: require('../../plugins/Settings'),
         MapLoadingPlugin: require('../../plugins/MapLoading'),
         MadeWithLovePlugin: require('./plugins/MadeWithLove'),
         RasterStylerPlugin: require('../../plugins/RasterStyler')
     },
     requires: {
-        ReactSwipe: require('react-swipe'),
-        SwipeHeader: require('../../components/data/identify/SwipeHeader')
+        ReactSwipe: require('react-swipe')
     }
 };
 

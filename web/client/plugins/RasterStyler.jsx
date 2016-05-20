@@ -13,7 +13,7 @@ const {Grid, Row, Col, Panel, PanelGroup, Button, Glyphicon} = require('react-bo
 
 const Combobox = require('react-widgets').Combobox;
 
-
+const {getWindowSize} = require('../utils/AgentUtils');
 const {setRasterStyleParameter, setRasterLayer} = require('../actions/rasterstyler');
 const {changeLayerProperties} = require('../actions/layers');
 
@@ -80,6 +80,17 @@ const RasterStyler = React.createClass({
     componentWillUpdate(nextProps) {
         this.bands = nextProps.layer && nextProps.layer.describeLayer ? nextProps.layer.describeLayer.bands : undefined;
 
+    },
+    getPanelStyle() {
+        let size = getWindowSize();
+        let maxHeight = size.maxHeight - 10;
+        let maxWidth = size.maxWidth - 70;
+        let style = {maxHeight: maxHeight, maxWidth: maxWidth};
+        if ( maxHeight < 600 ) {
+            style.height = maxHeight;
+            style.overflowY = "auto";
+        }
+        return style;
     },
     renderError() {
         if (this.props.error) {
@@ -177,8 +188,10 @@ const RasterStyler = React.createClass({
     render() {
         if (this.props.open) {
             return this.props.withContainer ?
-                (<Panel className="mapstore-rasterstyler-panel" header={<label><Message msgId="rasterstyler.paneltitle"/></label>} style={this.props.style}>
-                    {this.renderBody()}
+                (<Panel className="mapstore-rasterstyler-panel"
+                        style={this.getPanelStyle()}
+                        header={<label><Message msgId="rasterstyler.paneltitle"/></label>}>
+                        {this.renderBody()}
                 </Panel>) : this.renderBody();
         }
         return null;

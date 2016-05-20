@@ -34,7 +34,6 @@ function startApp() {
 
     });
 
-
     ReactDOM.render(
         <Provider store={store}>
             <App plugins={assign(PluginsUtils.getPlugins(plugins), {requires})}/>

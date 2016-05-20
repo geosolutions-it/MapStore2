@@ -33,7 +33,7 @@ const ColorPickerRenderer = React.createClass({
             this.props.onChangeColor( this.props.params.node, {color: color, opacity: opacity});
         }
     },
-    getBeckgroundColor(data) {
+    getBackgroundColor(data) {
         let color = 'blue';
         if ( data && data.color) {
             let rgb = this.hexToRgb(data.color);
@@ -46,7 +46,7 @@ const ColorPickerRenderer = React.createClass({
         let data = this.props.params.data;
         let colorValue = ( data && data.color) ? this.hexToRgb(data.color) : {r: 0, g: 0, b: 255};
         colorValue.a = (data.opacity !== undefined) ? data.opacity : 1;
-        let bkgColor = this.getBeckgroundColor(data);
+        let bkgColor = this.getBackgroundColor(data);
         return (
             <div>
                 <div className="cpr-color"

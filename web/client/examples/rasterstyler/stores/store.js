@@ -20,8 +20,6 @@ const PluginsUtils = require('../../../utils/PluginsUtils');
 
 const LayersUtils = require('../../../utils/LayersUtils');
 const {CHANGE_BROWSER_PROPERTIES} = require('../../../actions/browser');
-const baseControls = require('../../../reducers/controls');
-const controls = require('../reducers/controls');
 
 module.exports = (plugins) => {
     const pluginsReducers = PluginsUtils.getReducers(plugins);
@@ -29,7 +27,7 @@ module.exports = (plugins) => {
     const allReducers = combineReducers({
         locale: require('../../../reducers/locale'),
         browser: require('../../../reducers/browser'),
-        controls: () => {return null; },
+        controls: require('../../../reducers/controls'),
         help: require('../../../reducers/help'),
         map: () => {return null; },
         mapInitialConfig: () => {return null; },
@@ -43,7 +41,6 @@ module.exports = (plugins) => {
         let mapState = createHistory(LayersUtils.splitMapAndLayers(mapConfig(state, action)));
         let newState = {
             ...allReducers(state, action),
-            controls: baseControls(controls(state.controls, action), action),
             map: mapState && mapState.map ? map(mapState.map, action) : null,
             mapInitialConfig: mapState ? mapState.mapInitialConfig : null,
             layers: mapState ? layers(mapState.layers, action) : null
