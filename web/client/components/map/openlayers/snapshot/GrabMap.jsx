@@ -9,7 +9,7 @@ var React = require('react');
 var {LMap,
     LLayer,
     Feature
-} = require('../../../map/openlayers/index');
+} = require('../index');
 const assign = require('object-assign');
 const ConfigUtils = require('../../../../utils/ConfigUtils');
 require("./snapshotMapStyle.css");

@@ -75,3 +75,11 @@ html, body, #container, .fill {
     overflow: visible;
     text-align: center;
 }
+
+.leafletbottom.leafletright, .leaflet-control-minimap{
+    bottom: 50px !important;
+}
+
+.ol-custom-overviewmap, .ol-custom-overviewmap.ol-uncollapsible {
+    bottom: 70px !important;
+}

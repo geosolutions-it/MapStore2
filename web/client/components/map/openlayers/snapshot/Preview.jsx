@@ -9,11 +9,9 @@ const React = require('react');
 const ConfigUtils = require('../../../../utils/ConfigUtils');
 const ProxyUtils = require('../../../../utils/ProxyUtils');
 const {isEqual} = require('lodash');
-const html2canvas = require('html2canvas');
-
 /**
- * GrabMap for Leaflet uses HTML2CANVAS to generate the image for the existing
- * leaflet map.
+ * Preview for OpenLayers map generate is a fast system to get the image
+ * directly from the original map canvas.
  * if it is not tainted, this can be used also to generate snapshot
  * (extracting the image URL from the canvas).
  */
@@ -50,7 +48,7 @@ let GrabLMap = React.createClass({
         };
     },
     componentDidMount() {
-        this.mapDiv = document.getElementById(this.props.mapId);
+
         this.proxy = null;
         let proxyUrl = ProxyUtils.getProxyUrl();
         if (proxyUrl) {
@@ -129,60 +127,24 @@ let GrabLMap = React.createClass({
         delay);
     },
     doSnapshot() {
-        let layers = [].slice.call(this.mapDiv.getElementsByClassName("leaflet-tile-pane")[0].getElementsByClassName("leaflet-layer"), 0);
-        layers.sort(function compare(a, b) {
-            return Number.parseFloat(a.style.zIndex) - Number.parseFloat(b.style.zIndex);
-        });
-        let canvas = this.refs.canvas;
-        let context = canvas.getContext("2d");
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        let queue = layers.map(function(l) {
-            return html2canvas(l, {
-                    logging: false,
-                    proxy: this.proxy,
-                    allowTaint: this.props.allowTaint,
-                    // TODO: improve to useCORS if every source has CORS enabled
-                    useCORS: this.props.allowTaint,
-                    type: "view" });
-        }, this);
-        queue = [this.refs.canvas, ...queue];
-        // an issue in the html2canvas lib don't manage opacity correctly.
-        // this is a workaround that apply the opacity on each layer snapshot,
-        // then merges all the snapshots.
-        Promise.all(queue).then((canvases) => {
-            canvases.reduce((pCanv, canv, idx) => {
-                let l = layers[idx - 1];
-                if (l === undefined) {
-                    return pCanv;
-                }
-                let cx = pCanv.getContext("2d");
-                if (l.style && !isNaN(Number.parseFloat(l.style.opacity))) {
-                    cx.globalAlpha = Number.parseFloat(l.style.opacity);
-                }else {
-                    cx.globalAlpha = 1;
-                }
-                cx.drawImage(canv, 0, 0);
-
-                return pCanv;
-
-            });
+        var div = document.getElementById(this.props.mapId);
+        let sourceCanvas = div.getElementsByTagName("canvas")[0];
+        if (sourceCanvas) {
+            let canvas = this.refs.canvas;
+            let context = canvas.getContext("2d");
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(sourceCanvas, 0, 0);
             this.props.onStatusChange("READY");
-            this.props.onSnapshotReady(canvas);
-        });
+            this.props.onSnapshotReady(sourceCanvas);
+        }
     },
-    /**
-     * Check if the canvas is tainted, so if it is allowed to export images
-     * from it.
-     */
     isTainted() {
         let canvas = this.refs.canvas;
         let ctx = canvas.getContext("2d");
         try {
-            // try to generate a small image
             ctx.getImageData(0, 0, 1, 1);
             return false;
         } catch(err) {
-            // check the error code for tainted resources
             return (err.code === 18);
         }
     },

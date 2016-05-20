@@ -6,6 +6,8 @@
 * LICENSE file in the root directory of this source tree.
 */
 
+const React = require('react');
+
 const {changeMapView, clickOnMap} = require('../../actions/map');
 const {layerLoading, layerLoad} = require('../../actions/layers');
 const {changeMousePosition} = require('../../actions/mousePosition');
@@ -15,7 +17,12 @@ const {changeLocateState, onLocateError} = require('../../actions/locate');
 const {connect} = require('react-redux');
 const assign = require('object-assign');
 
+const Empty = () => { return <span/>; };
+
 module.exports = (mapType) => {
+
+    const components = require('./' + mapType + '/index');
+
     const LMap = connect((state) => ({
         mousePosition: state.mousePosition || {enabled: false}
     }), {
@@ -28,32 +35,32 @@ module.exports = (mapType) => {
         return assign({}, ownProps, stateProps, assign({}, dispatchProps, {
             onMouseMove: stateProps.mousePosition.enabled ? dispatchProps.onMouseMove : () => {}
         }));
-    })(require('../../components/map/' + mapType + '/Map'));
+    })(components.LMap);
 
     const MeasurementSupport = connect((state) => ({
         measurement: state.measurement || {}
     }), {
         changeMeasurementState
-    })(require('../../components/map/' + mapType + '/MeasurementSupport'));
+    })(components.MeasurementSupport || Empty);
 
     const Locate = connect((state) => ({
         status: state.locate && state.locate.state
     }), {
         changeLocateState,
         onLocateError
-    })(require('../../components/map/' + mapType + '/Locate'));
+    })(components.Locate || Empty);
 
     require('../../components/map/' + mapType + '/plugins/index');
 
     return {
         Map: LMap,
-        Layer: require('../../components/map/' + mapType + '/Layer'),
-        Feature: require('../../components/map/' + mapType + '/Feature'),
+        Layer: components.Layer || Empty,
+        Feature: components.Feature || Empty,
         tools: {
             measurement: MeasurementSupport,
             locate: Locate,
-            overview: require('../../components/map/' + mapType + '/Overview'),
-            scalebar: require('../../components/map/' + mapType + '/ScaleBar')
+            overview: components.Overview || Empty,
+            scalebar: components.ScaleBar || Empty
         }
     };
 };

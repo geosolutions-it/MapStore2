@@ -57,8 +57,9 @@ let Overview = React.createClass({
             zoomLevelFixed: null,
             zoomAnimation: false,
             toggleDisplay: true,
-            autoToggleDisplay: false
-            }
+            autoToggleDisplay: false,
+            minimized: true
+    }
 });
 
 module.exports = Overview;
