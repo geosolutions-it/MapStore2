@@ -13,7 +13,6 @@ module.exports = {
         ToolbarPlugin: require('../../plugins/Toolbar'),
         SettingsPlugin: require('../../plugins/Settings'),
         MapLoadingPlugin: require('../../plugins/MapLoading'),
-        MadeWithLovePlugin: require('./plugins/MadeWithLove'),
         RasterStylerPlugin: require('../../plugins/RasterStyler')
     },
     requires: {

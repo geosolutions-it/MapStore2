@@ -29,7 +29,7 @@
                 "hide": false
         }
      ],
-        "desktop": ["Map", "MadeWithLove", {
+        "desktop": ["Map", {
                 "name": "TOC",
                 "hide": true
         }, {
