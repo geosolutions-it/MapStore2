@@ -260,7 +260,8 @@
             "locateBtn": "Questo è il testo di aiuto per LocateBtn",
             "snapshot": "Questo è il testo di aiuto per Snapshot",
             "print": "Questo è il testo di aiuto per Print",
-            "shapefile": "Questo è il testo di aiuto per Shapefile"
+            "shapefile": "Seleziona lo shapfile compresso, setta lo style ed importa il nuovo layer locale",
+            "rasterstyler": "Imposta min, max, numero delle classi e colorRamp e genera una nuova classificazione per il raster layer selezionato"
         },
         "queryform": {
             "query": "Ricerca",
@@ -348,6 +349,65 @@
             "error": "C'è stato un errore durante il caricamento del catalogo",
             "pageInfo": "Risultati {start}-{end} di {total}",
             "noRecordsMatched": "Nessun risultato trovato"
+        },
+        "rasterstyler": {
+            "paneltitle": "Raster Styler",
+            "tooltip": "Crea e modifica lo stile dei layer raster",
+            "layerlabel": "Layer",
+            "typelabel": "Tipo",
+            "opacitylabel": "Opacity",
+            "redtitle": "Red",
+            "greentitle": "Green",
+            "bluetitle": "Blue",
+            "graytitle": "Gray",
+            "pseudobandtitle": "Selezione Banda",
+            "eqinttitle": "Classificazione Equal Interval",
+            "pseudotitle": "PseudoColor ",
+            "applybtn": "Aggiorna Stile"
+        },
+        "bandselector": {
+            "band": "Banda",
+            "enhancement": "Correzioni",
+            "algorithmTitle": "Algoritmo Opzionale",
+            "value": "Valore",
+            "enha": {
+                "none": "Nessuno",
+                "Normalize": "Normalizza",
+                "Histogram": "Histogramma",
+                "GammaValue": "GammaValue"
+            },
+            "algorithm": {
+                "none": "Nessuno",
+                "StretchToMinimumMaximum": "Stretch",
+                "ClipToMinimumMaximum": "Clip",
+                "ClipToZero": "Clip To Zero"
+            }
+        },
+        "equalinterval": {
+            "min": "Min",
+            "max": "Max",
+            "classes": "Classes",
+            "ramp": "Color Ramp",
+            "classify": "Classify"
+        },
+        "colormapgrid": {
+            "color": "Colore",
+            "quantity": "Valore",
+            "label": "Descrizione"
+        },
+        "pseudocolorsettings": {
+            "type": "Tipo",
+            "extended": "Extended",
+            "colormap": "Mappa colori",
+            "add": "Nuovo Elemento",
+            "remove": "Rimuovi Elemento"
+        },
+        "rasterstyletype": {
+            "rgb": "Red Green Blue",
+            "gray": "GrayScale",
+            "pseudo": "PseudoColor",
+            "multi": "Multi Banda",
+            "single": "Banda Singola"
         }
     }
 }
