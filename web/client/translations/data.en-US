@@ -338,6 +338,15 @@
             "error": {"select": "Select one or more zip file"},
             "add": "Add",
             "cancel": "Cancel"
+        },
+        "catalog": {
+            "title": "Catalog",
+            "tooltip": "Browse Catalog",
+            "addToMap": "Add To Map",
+            "getWMSLink": "Get WMS Link",
+            "error": "There was an error loading records from the catalog",
+            "pageInfo": "Results {start}-{end} of {total}",
+            "noRecordsMatched": "No record matched"
         }
     }
 }
