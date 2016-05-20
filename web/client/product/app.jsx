@@ -33,7 +33,7 @@ function startApp() {
         let locale = LocaleUtils.getUserLocale();
         store.dispatch(loadLocale('translations', locale));
 
-        store.dispatch(loadMaps(ConfigUtils.getDefaults().geoStoreUrl));
+        store.dispatch(loadMaps(ConfigUtils.getDefaults().geoStoreUrl, "MS2"));
 
         store.dispatch(loadPrintCapabilities(ConfigUtils.getConfigProp('printUrl')));
     });
