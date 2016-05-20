@@ -85,8 +85,15 @@ function getWMSURLs( urls ) {
     return urls.map((url) => url.split("\?")[0]);
 }
 
-Layers.registerType('wms', (options) => {
-    return L.tileLayer.multipleUrlWMS(
+Layers.registerType('wms', {
+    create: (options) => {
+        return L.tileLayer.multipleUrlWMS(
         getWMSURLs(isArray(options.url) ? options.url : [options.url]),
         wmsToLeafletOptions(options));
+    },
+    update: function(layer, newOptions, oldOptions) {
+        if (newOptions.params !== oldOptions.params) {
+            layer.setParams(newOptions.params);
+        }
+    }
 });
