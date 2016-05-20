@@ -8,7 +8,7 @@
 
 var React = require('react');
 var Group = require('./Group');
-var LayersTool = require('./LayersTool');
+var LayersTool = require('../../../components/TOC/fragments/LayersTool');
 var Node = require('../../../components/TOC/Node');
 
 var VisibilityCheck = require('../../../components/TOC/fragments/VisibilityCheck');

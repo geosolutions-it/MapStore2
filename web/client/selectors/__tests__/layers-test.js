@@ -52,7 +52,7 @@ describe('Test layers selectors', () => {
 
     it('test groupsSelector from layers flat one group', () => {
         const props = groupsSelector({layers: {
-            flat: [{type: "osm", name: "layer1", group: "group1"}, {type: "wms", name: "layer2", group: "group1"}],
+            flat: [{type: "osm", id: "layer1", group: "group1"}, {type: "wms", id: "layer2", group: "group1"}],
             groups: [{name: "group1", nodes: ["layer1", "layer2"]}]
         }});
 
@@ -63,7 +63,7 @@ describe('Test layers selectors', () => {
 
     it('test groupsSelector from layers flat more groups', () => {
         const props = groupsSelector({layers: {
-            flat: [{type: "osm", name: "layer1", group: "group1"}, {type: "wms", name: "layer2", group: "group2"}],
+            flat: [{type: "osm", id: "layer1", group: "group1"}, {type: "wms", id: "layer2", group: "group2"}],
             groups: [
                 {name: "group1", nodes: ["layer1"]},
                 {name: "group2", nodes: ["layer2"]}

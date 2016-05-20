@@ -7,7 +7,8 @@
  */
 
 var {LAYER_LOADING, LAYER_LOAD, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES,
-    TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, UPDATE_NODE_TEMP, ADD_LAYER} = require('../actions/layers');
+    TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, UPDATE_NODE_TEMP, ADD_LAYER,
+    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS} = require('../actions/layers');
 
 var assign = require('object-assign');
 var {isObject, isArray} = require('lodash');
@@ -172,6 +173,38 @@ function layers(state = [], action) {
                     flat: newLayers,
                     groups: newGroups
             };
+        }
+        case SHOW_SETTINGS: {
+            let settings = assign({}, state.settings, {
+                expanded: true,
+                node: action.node,
+                nodeType: action.nodeType,
+                options: action.options
+            });
+            return assign({}, state, {
+                settings: settings
+            });
+        }
+        case HIDE_SETTINGS: {
+            let settings = assign({}, state.Settings, {
+                expanded: false,
+                node: null,
+                nodeType: null,
+                options: {}
+            });
+            return assign({}, state, {
+                settings: settings
+            });
+        }
+        case UPDATE_SETTINGS: {
+            const options = assign({},
+                state.settings && state.settings.options,
+                action.options
+            );
+            const settings = assign({}, state.settings, {options: options});
+            return assign({}, state, {
+                settings: settings
+            });
         }
         default:
             return state;

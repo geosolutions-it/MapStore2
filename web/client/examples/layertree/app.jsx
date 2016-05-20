@@ -9,6 +9,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 
 var DebugUtils = require('../../utils/DebugUtils');
+const LayersUtils = require('../../utils/LayersUtils');
 
 var {connect} = require('react-redux');
 var {bindActionCreators, combineReducers} = require('redux');
@@ -29,7 +30,8 @@ var LMap = require('../../components/map/leaflet/Map');
 var LLayer = require('../../components/map/leaflet/Layer');
 
 var {changeMapView, changeZoomLevel} = require('../../actions/map');
-var {toggleNode, removeNode, changeLayerProperties, changeGroupProperties, updateNode, sortNode} = require('../../actions/layers');
+var {toggleNode, removeNode, changeLayerProperties,
+     changeGroupProperties, updateNode, sortNode} = require('../../actions/layers');
 var {showSettings, hideSettings, updateOpacity} = require('./actions/layertree');
 var assign = require('object-assign');
 var TOC = require('../../components/TOC/TOC');
@@ -38,8 +40,6 @@ var LayerOrGroup = require('./components/LayerOrGroup');
 var {Panel, Modal, Label, Button} = require('react-bootstrap');
 
 let {sources, layers: mapLayers} = require('./config.json');
-
-let {isObject} = require('lodash');
 
 var Slider = require('react-nouislider');
 
@@ -107,42 +107,6 @@ let store = DebugUtils.createDebugStore(combineReducers({browser, mapConfig, lay
             groups: groupsTree
         },
         browser: {}});
-
-let getGroupVisibility = (nodes) => {
-    let visibility = true;
-    nodes.forEach((node) => {
-        if (!node.visibility) {
-            visibility = false;
-        }
-    });
-    return visibility;
-};
-
-let denormalizeGroups = function(allLayers, groups) {
-    let normalizedLayers = allLayers.map((layer) => assign({}, layer, {expanded: layer.expanded || false}));
-    return {
-        flat: normalizedLayers,
-        groups: groups.map((group) => assign({}, group, {
-            nodes: group.nodes.map((node) => {
-                if (isObject(node)) {
-                    return assign({}, node, {
-                        nodes: node.nodes.map((layerId) => normalizedLayers.filter((layer) => layer.id === layerId)[0])
-                    });
-                }
-                return normalizedLayers.filter((layer) => layer.id === node)[0];
-            }).map((subGroup) => {
-                if (subGroup.nodes && subGroup.nodes.length > 0) {
-                    return assign(subGroup, {
-                        visibility: getGroupVisibility(subGroup.nodes)
-                    });
-                }
-                return subGroup;
-            })
-        })).map((group) => assign(group, {
-            visibility: getGroupVisibility(group.nodes)
-        }))
-    };
-};
 
 require('../../components/map/leaflet/plugins/WMSLayer');
 require('../../components/map/leaflet/plugins/OSMLayer');
@@ -246,7 +210,7 @@ let App = connect((state) => {
     return {
         mapConfig: state.mapConfig,
         browser: state.browser,
-        layers: state.layers ? denormalizeGroups(state.layers.flat, state.layers.groups) : state.layers,
+        layers: state.layers ? LayersUtils.denormalizeGroups(state.layers.flat, state.layers.groups) : state.layers,
         controls: state.layertree
     };
 }, dispatch => {

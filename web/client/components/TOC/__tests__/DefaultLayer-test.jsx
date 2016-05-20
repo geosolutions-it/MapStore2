@@ -110,4 +110,58 @@ describe('test DefaultLayer module component', () => {
         expect(layer).toBe('layer00');
     });
 
+    it('tests legend tool', () => {
+        const TestUtils = React.addons.TestUtils;
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms'
+        };
+        const actions = {
+            onToggle: () => {}
+        };
+        let spy = expect.spyOn(actions, "onToggle");
+        const comp = ReactDOM.render(<Layer node={l} activateLegendTool={true} onToggle={actions.onToggle}/>,
+            document.getElementById("container"));
+        expect(comp).toExist();
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "glyphicon")[0]);
+        expect(tool).toExist();
+        tool.click();
+        expect(spy.calls.length).toBe(1);
+    });
+
+    it('tests settings tool', () => {
+        const TestUtils = React.addons.TestUtils;
+        const l = {
+            id: 'layerId1',
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            opacity: 0.5
+        };
+        const actions = {
+            onSettings: () => {}
+        };
+        let spy = expect.spyOn(actions, "onSettings");
+        const comp = ReactDOM.render(<Layer node={l} activateSettingsTool={true} onSettings={actions.onSettings}/>,
+            document.getElementById("container"));
+        expect(comp).toExist();
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "glyphicon")[0]);
+        expect(tool).toExist();
+        tool.click();
+        expect(spy.calls.length).toBe(1);
+        expect(spy.calls[0].arguments.length).toBe(3);
+        expect(spy.calls[0].arguments[0]).toBe("layerId1");
+        expect(spy.calls[0].arguments[1]).toBe("layers");
+        expect(spy.calls[0].arguments[2]).toEqual({opacity: 0.5});
+    });
+
 });

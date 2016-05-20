@@ -16,6 +16,9 @@ var {
     LAYER_LOADING,
     LAYER_LOAD,
     ADD_LAYER,
+    SHOW_SETTINGS,
+    HIDE_SETTINGS,
+    UPDATE_SETTINGS,
     changeLayerProperties,
     toggleNode,
     sortNode,
@@ -23,7 +26,10 @@ var {
     updateNode,
     layerLoading,
     layerLoad,
-    addLayer
+    addLayer,
+    showSettings,
+    hideSettings,
+    updateSettings
 } = require('../layers');
 
 describe('Test correctness of the layers actions', () => {
@@ -110,4 +116,25 @@ describe('Test correctness of the layers actions', () => {
         expect(retval.layer).toBe(testVal);
     });
 
+    it('show settings', () => {
+        const action = showSettings("node1", "layers", {opacity: 0.5});
+        expect(action).toExist();
+        expect(action.type).toBe(SHOW_SETTINGS);
+        expect(action.node).toBe("node1");
+        expect(action.nodeType).toBe("layers");
+        expect(action.options).toEqual({opacity: 0.5});
+    });
+
+    it('hide settings', () => {
+        const action = hideSettings();
+        expect(action).toExist();
+        expect(action.type).toBe(HIDE_SETTINGS);
+    });
+
+    it('update settings', () => {
+        const action = updateSettings({opacity: 0.5, size: 500});
+        expect(action).toExist();
+        expect(action.type).toBe(UPDATE_SETTINGS);
+        expect(action.options).toEqual({opacity: 0.5, size: 500});
+    });
 });
