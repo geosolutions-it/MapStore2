@@ -9,6 +9,8 @@
 const React = require('react');
 
 const Slider = require('react-nouislider');
+
+require("react-nouislider/example/nouislider.css");
 require("./opacitypicker.css");
 
 const OpacityPicker = React.createClass({
@@ -24,6 +26,7 @@ const OpacityPicker = React.createClass({
     },
     render() {
         return (
+            <div className="opacity-picker">
                 <Slider
                     start={[this.props.opacity * 100 ]}
                     range={{min: 0, max: 100}}
@@ -35,7 +38,8 @@ const OpacityPicker = React.createClass({
                         }
                         }
                         ]}
-                />);
+                />
+            </div>);
     }
 });
 
