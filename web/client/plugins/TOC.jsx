@@ -23,11 +23,14 @@ const tocSelector = createSelector(
     [
         (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
         groupsSelector,
-        (state) => state.layers.settings || {expanded: false, options: {opacity: 1}}
-    ], (enabled, groups, settings) => ({
+        (state) => state.layers.settings || {expanded: false, options: {opacity: 1}},
+        (state) => state.toc || {activateLegendTool: true, activateSettingsTool: true}
+    ], (enabled, groups, settings, toc) => ({
         enabled,
         groups,
-        settings
+        settings,
+        activateLegendTool: toc.activateLegendTool !== undefined ? toc.activateLegendTool : true,
+        activateSettingsTool: toc.activateSettingsTool !== undefined ? toc.activateSettingsTool : true
     })
 );
 
@@ -50,7 +53,9 @@ const LayerTree = React.createClass({
         onSettings: React.PropTypes.func,
         hideSettings: React.PropTypes.func,
         updateSettings: React.PropTypes.func,
-        updateNode: React.PropTypes.func
+        updateNode: React.PropTypes.func,
+        activateLegendTool: React.PropTypes.bool,
+        activateSettingsTool: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -87,8 +92,8 @@ const LayerTree = React.createClass({
                             settings={this.props.settings}
                             updateSettings={this.props.updateSettings}
                             updateNode={this.props.updateNode}
-                            activateLegendTool={true}
-                            activateSettingsTool={true}
+                            activateLegendTool={this.props.activateLegendTool}
+                            activateSettingsTool={this.props.activateSettingsTool}
                             opacityText={<Message msgId="opacity"/>}
                             saveText={<Message msgId="save"/>}
                             closeText={<Message msgId="close"/>}/>
