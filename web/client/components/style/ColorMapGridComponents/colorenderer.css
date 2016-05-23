@@ -1,5 +1,6 @@
 .cpr-color
  {
+  box-sizing: border-box;
   width: 100%;
   min-height: 28px;
   -webkit-border-radius: 3px;
