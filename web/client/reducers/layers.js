@@ -88,7 +88,9 @@ function layers(state = [], action) {
         }
         case CHANGE_GROUP_PROPERTIES: {
             let newLayers = state.flat.map((layer) => {
-                if (layer.group === action.group || layer.group.indexOf(action.group + ".") === 0) {
+                const layerGroup = layer.group || 'Default';
+                if (layerGroup === action.group || layerGroup.indexOf(action.group + ".") === 0) {
+
                     return assign({}, layer, action.newProperties);
                 }
                 return assign({}, layer);

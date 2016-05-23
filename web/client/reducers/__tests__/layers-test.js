@@ -215,6 +215,30 @@ describe('Test the layers reducer', () => {
         expect(state.flat[0].p).toEqual("property");
     });
 
+    it('change group properties with default group', () => {
+        // action targeting the Default group
+        let action = {
+            type: "CHANGE_GROUP_PROPERTIES",
+            newProperties: {visibility: true},
+            group: "Default"
+        };
+        // second layer don't have a group so it belongs to the Default group
+        let state = layers({
+            flat: [{name: "layer1", group: "meteo"}, {name: "layer2"}]
+        }, action);
+        // the state should exists
+        expect(state).toExist();
+        expect(state.flat).toExist();
+        // no changes in layer1
+        expect(state.flat[0].group).toExist();
+        expect(state.flat[0].group).toBe("meteo");
+        expect(state.flat[0].visibility).toNotExist();
+        // visibility property has been added to layer2
+        expect(state.flat[1].group).toNotExist();
+        expect(state.flat[1].visibility).toExist();
+        expect(state.flat[1].visibility).toBe(true);
+    });
+
     it('add new layer', () => {
         let testAction = {
             type: "ADD_LAYER",
