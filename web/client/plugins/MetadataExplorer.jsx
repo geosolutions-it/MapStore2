@@ -49,20 +49,22 @@ const MetadataExplorerComponent = React.createClass({
         initialCatalogURL: React.PropTypes.string,
         result: React.PropTypes.object,
         loadingError: React.PropTypes.object,
-        searchOptions: React.PropTypes.object
+        searchOptions: React.PropTypes.object,
+        chooseCatalogUrl: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
             active: false,
             pageSize: 6,
             onSearch: () => {},
-            onLayerAdd: () => {}
-
+            onLayerAdd: () => {},
+            chooseCatalogUrl: true
         };
     },
     getInitialState() {
         return {
-            loading: false
+            loading: false,
+            catalogURL: null
         };
     },
     componentWillReceiveProps(nextProps) {
@@ -81,7 +83,7 @@ const MetadataExplorerComponent = React.createClass({
         }
     },
     getCatalogUrl() {
-        return this.props.searchOptions && this.props.searchOptions.url || this.props.initialCatalogURL;
+        return this.state.catalogURL || (this.props.searchOptions && this.props.searchOptions.url) || this.props.initialCatalogURL;
     },
     renderResult() {
         if (this.props.result) {
@@ -133,10 +135,20 @@ const MetadataExplorerComponent = React.createClass({
                 {this.renderPagination()}
         </div>);
     },
+    renderURLInput() {
+        if (!this.getCatalogUrl() || this.props.chooseCatalogUrl) {
+            return (<Input
+                ref="catalogURL"
+                type="text"
+                placeholder={"Enter catalog URL..."}
+                onChange={this.setCatalogUrl}/>);
+        }
+    },
     render() {
         return (
              <div>
                  <div>
+                     {this.renderURLInput()}
                      <Input
                          ref="searchText"
                          type="text"
@@ -151,6 +163,9 @@ const MetadataExplorerComponent = React.createClass({
                  </div>
              </div>
         );
+    },
+    setCatalogUrl(e) {
+        this.setState({catalogURL: e.target.value});
     },
     handlePage(mouseEvent, pageEvent) {
         if (pageEvent && pageEvent.eventKey !== undefined) {
@@ -182,7 +197,9 @@ module.exports = {
             tooltip: "catalog.tooltip",
             wrap: true,
             title: 'catalog.title',
-            icon: <Glyphicon glyph="folder-open" />
+            help: <Message msgId="helptexts.metadataExplorer"/>,
+            icon: <Glyphicon glyph="folder-open" />,
+            hide: true
         }
     }),
     reducers: {catalog: require('../reducers/catalog')}

@@ -250,6 +250,7 @@
             "zoomToMaxExtentButton": "This is the helptext for the ZoomToMaxExtentButton",
             "searchBar": "Write the address of a place to find. e.g.  '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20",
             "layerSwitcher": "This is the helptext for the LayerSwitcher",
+            "metadataExplorer": "This is the helptext for the MetadataExplorer",
             "settingsPanel": "This is the helptext for the SettingsPanel",
             "gohome": "This is the helptext forr Home",
             "measureComponent": "This is the helptext for the MeasureComponent",

@@ -7,7 +7,7 @@ div.record-grid {
 div.record-grid:after {
     content:"";
     position: absolute;
-    top:470px;
+    bottom:110px;
     left:0;
     height:40px;
     width:100%;
