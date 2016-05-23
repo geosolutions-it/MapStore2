@@ -33,7 +33,7 @@ var DebugUtils = {
 
             finalCreateStore = compose(
               applyMiddleware.apply(null, middlewares),
-              DevTools.instrument(),
+            window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument(),
               persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/))
           )(createStore);
         } else {
