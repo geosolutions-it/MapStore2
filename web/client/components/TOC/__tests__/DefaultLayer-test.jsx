@@ -209,4 +209,37 @@ describe('test DefaultLayer module component', () => {
         render([element3, element4]);
         expect(getModals().length).toBe(1);
     });
+
+    it('tests settings tool with a zero opacity', () => {
+        // layer with a zero opacity value
+        const layer = {
+            id: 'layer1',
+            name: 'layer1',
+            opacity: 0.0
+        };
+        // on settings method to be invoked by the tool click with a spy on it
+        const actions = {
+            onSettings: () => {}
+        };
+        const spy = expect.spyOn(actions, "onSettings");
+        // instanciating a layer component with the zero opacity layer
+        const component = ReactDOM.render(
+                <Layer modalOptions={{animation: false}}
+                       node={layer}
+                       activateSettingsTool={true}
+                       onSettings={actions.onSettings}/>,
+                   document.getElementById("container"));
+        expect(component).toExist();
+        // let's find the settings tool and click on it
+        const tool = ReactDOM.findDOMNode(
+            TestUtils.scryRenderedDOMComponentsWithClass(component, "glyphicon")[0]);
+        expect(tool).toExist();
+        tool.click();
+        // the onSettings method must have been invoked
+        expect(spy.calls.length).toBe(1);
+        expect(spy.calls[0].arguments.length).toBe(3);
+        expect(spy.calls[0].arguments[0]).toBe("layer1");
+        expect(spy.calls[0].arguments[1]).toBe("layers");
+        expect(spy.calls[0].arguments[2]).toEqual({opacity: 0.0});
+    });
 });

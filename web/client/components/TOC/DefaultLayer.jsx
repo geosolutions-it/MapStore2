@@ -53,14 +53,14 @@ var DefaultLayer = React.createClass({
         return [];
     },
     renderTools() {
-        let tools = [];
+        const tools = [];
         if (this.props.activateSettingsTool) {
             tools.push(
                 <LayersTool key="toolsettings"
                         style={{"float": "right", marginTop: "5px", marginRight: "10px", cursor: "pointer"}}
                         glyph="adjust"
                         onClick={(node) => this.props.onSettings(node.id, "layers",
-                            {opacity: parseFloat(node.opacity !== undefined && node.opacity || 1)})}/>
+                            {opacity: parseFloat(node.opacity !== undefined ? node.opacity : 1)})}/>
             );
             if (this.props.settings && this.props.settings.node === this.props.node.id) {
                 tools.push(
