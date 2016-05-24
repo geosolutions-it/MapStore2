@@ -22,7 +22,7 @@ var warningFilterKey = function(warning) {
 };
 
 var DebugUtils = {
-    createDebugStore: function(reducer, initialState, userMiddlewares) {
+    createDebugStore: function(reducer, initialState, userMiddlewares, enhancer) {
         let finalCreateStore;
         if (__DEVTOOLS__ && urlQuery.debug) {
             let logger = require('redux-logger')();
@@ -40,7 +40,7 @@ var DebugUtils = {
             let middlewares = (userMiddlewares || []).concat([thunkMiddleware]);
             finalCreateStore = applyMiddleware.apply(null, middlewares)(createStore);
         }
-        return finalCreateStore(reducer, initialState);
+        return finalCreateStore(reducer, initialState, enhancer);
     }
 };
 
