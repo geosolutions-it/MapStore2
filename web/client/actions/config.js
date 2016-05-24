@@ -28,8 +28,8 @@ function configureError(e) {
 }
 
 function loadMapConfig(configName, legacy) {
-    return (dispatch, getState) => {
-        let options = getAuthOptionsFromState(getState);
+    return (dispatch, getState = () => {}) => {
+        let options = getAuthOptionsFromState(getState());
         return axios.get(configName, legacy ? options : null).then((response) => {
             if (typeof response.data === 'object') {
                 dispatch(configureMap(response.data, legacy));
