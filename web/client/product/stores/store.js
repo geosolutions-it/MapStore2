@@ -35,7 +35,9 @@ module.exports = (plugins) => {
         layers: () => {return null; }
     });
     const defaultState = {mousePosition: {enabled: false}};
-    const mobileOverride = {mapInfo: {enabled: true, infoFormat: 'text/html' }, mousePosition: {enabled: true, crs: "EPSG:4326", showCenter: true}};
+    const mobileOverride = {mapInfo: {enabled: true, infoFormat: 'text/html' },
+                            mousePosition: {enabled: true, crs: "EPSG:4326", showCenter: true},
+                            toc: {activateLegendTool: true, activateSettingsTool: false}};
 
     const rootReducer = (state, action) => {
         let mapState = createHistory(LayersUtils.splitMapAndLayers(mapConfig(state, action)));

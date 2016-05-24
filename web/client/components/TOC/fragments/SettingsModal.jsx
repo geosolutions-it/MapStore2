@@ -25,7 +25,7 @@ const SettingsModal = React.createClass({
     },
     getDefaultProps() {
         return {
-            settings: {expanded: true, options: {opacity: 0.5}},
+            settings: {expanded: false},
             options: {},
             updateSettings: () => {},
             hideSettings: () => {},
@@ -33,28 +33,31 @@ const SettingsModal = React.createClass({
         };
     },
     render() {
-        return (
-            <Modal {...this.props.options} show={this.props.settings.expanded} container={document.getElementById("body")}>
-                <Modal.Header><Modal.Title>{this.props.opacityText}</Modal.Title></Modal.Header>
-                <Modal.Body>
-                    <Slider start={[Math.round(this.props.settings.options.opacity * 100)]}
-                            range={{min: 0, max: 100}}
-                            onChange={(opacity) => this.props.updateSettings({"opacity": opacity / 100})}/>
-                    <Label>{Math.round(this.props.settings.options.opacity * 100) + "%"}</Label>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={this.props.hideSettings}>{this.props.closeText}</Button>
-                    <Button bsStyle="primary" onClick={() => {
-                        this.props.updateNode(
-                            this.props.settings.node,
-                            this.props.settings.nodeType,
-                            this.props.settings.options
-                        );
-                        this.props.hideSettings();
-                    }}>{this.props.saveText}</Button>
-                </Modal.Footer>
-        </Modal>
-        );
+        if (this.props.settings.expanded) {
+            return (
+                <Modal {...this.props.options} show={this.props.settings.expanded} container={document.getElementById("body")}>
+                    <Modal.Header><Modal.Title>{this.props.opacityText}</Modal.Title></Modal.Header>
+                    <Modal.Body>
+                        <Slider start={[Math.round(this.props.settings.options.opacity * 100)]}
+                                range={{min: 0, max: 100}}
+                                onChange={(opacity) => this.props.updateSettings({"opacity": opacity / 100})}/>
+                        <Label>{Math.round(this.props.settings.options.opacity * 100) + "%"}</Label>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={this.props.hideSettings}>{this.props.closeText}</Button>
+                        <Button bsStyle="primary" onClick={() => {
+                            this.props.updateNode(
+                                this.props.settings.node,
+                                this.props.settings.nodeType,
+                                this.props.settings.options
+                            );
+                            this.props.hideSettings();
+                        }}>{this.props.saveText}</Button>
+                    </Modal.Footer>
+            </Modal>
+            );
+        }
+        return null;
     }
 });
 

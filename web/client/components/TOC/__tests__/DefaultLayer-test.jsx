@@ -12,6 +12,8 @@ var Layer = require('../DefaultLayer');
 
 var expect = require('expect');
 
+const TestUtils = React.addons.TestUtils;
+
 describe('test DefaultLayer module component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -111,7 +113,6 @@ describe('test DefaultLayer module component', () => {
     });
 
     it('tests legend tool', () => {
-        const TestUtils = React.addons.TestUtils;
         const l = {
             name: 'layer00',
             title: 'Layer',
@@ -135,7 +136,6 @@ describe('test DefaultLayer module component', () => {
     });
 
     it('tests settings tool', () => {
-        const TestUtils = React.addons.TestUtils;
         const l = {
             id: 'layerId1',
             name: 'layer00',
@@ -164,4 +164,82 @@ describe('test DefaultLayer module component', () => {
         expect(spy.calls[0].arguments[2]).toEqual({opacity: 0.5});
     });
 
+    it('test that settings modal is present only if all the requirements are met', () => {
+        // helper function to render layers components
+        var TestRoot = React.createClass({
+            propTypes: {
+                elements: React.PropTypes.array
+            },
+            render: function() {
+                var elements = this.props.elements.map( function(element) {
+                    return (<Layer key={element.layer.id}
+                               modalOptions={{animation: false}}
+                               node={element.layer}
+                               activateSettingsTool={true}
+                               settings={element.settings}/>);
+                });
+                return <div>{elements}</div>;
+            }
+        });
+        const render = function(elements) {
+            ReactDOM.render(
+                <TestRoot elements={elements} />,
+                document.getElementById("container")
+            );
+        };
+        // helper function to get current modals
+        const getModals = function() {
+            return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
+        };
+        // no modals should be available
+        const element1 = {layer: {id: 'layer1', name: 'layer1'}, settings: {}};
+        const element2 = {layer: {id: 'layer2', name: 'layer2'}, settings: {}};
+        render([element1, element2]);
+        expect(getModals().length).toBe(0);
+        // only one modal should be available (for layer3)
+        let settings1 = {
+            node: 'layer3',
+            expanded: true,
+            options: {
+                opacity: 0.5
+            }
+        };
+        const element3 = {layer: {id: 'layer3', name: 'layer3'}, settings: settings1};
+        const element4 = {layer: {id: 'layer4', name: 'layer4'}, settings: settings1};
+        render([element3, element4]);
+        expect(getModals().length).toBe(1);
+    });
+
+    it('tests settings tool with a zero opacity', () => {
+        // layer with a zero opacity value
+        const layer = {
+            id: 'layer1',
+            name: 'layer1',
+            opacity: 0.0
+        };
+        // on settings method to be invoked by the tool click with a spy on it
+        const actions = {
+            onSettings: () => {}
+        };
+        const spy = expect.spyOn(actions, "onSettings");
+        // instanciating a layer component with the zero opacity layer
+        const component = ReactDOM.render(
+                <Layer modalOptions={{animation: false}}
+                       node={layer}
+                       activateSettingsTool={true}
+                       onSettings={actions.onSettings}/>,
+                   document.getElementById("container"));
+        expect(component).toExist();
+        // let's find the settings tool and click on it
+        const tool = ReactDOM.findDOMNode(
+            TestUtils.scryRenderedDOMComponentsWithClass(component, "glyphicon")[0]);
+        expect(tool).toExist();
+        tool.click();
+        // the onSettings method must have been invoked
+        expect(spy.calls.length).toBe(1);
+        expect(spy.calls[0].arguments.length).toBe(3);
+        expect(spy.calls[0].arguments[0]).toBe("layer1");
+        expect(spy.calls[0].arguments[1]).toBe("layers");
+        expect(spy.calls[0].arguments[2]).toEqual({opacity: 0.0});
+    });
 });
