@@ -225,7 +225,7 @@ const Print = React.createClass({
         return null;
     },
     configurePrintMap() {
-        if (this.props.map && this.props.capabilities) {
+        if (this.props.map && this.props.map.bbox && this.props.capabilities) {
             const bbox = CoordinatesUtils.reprojectBbox([
                 this.props.map.bbox.bounds.minx,
                 this.props.map.bbox.bounds.miny,

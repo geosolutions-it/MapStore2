@@ -19,11 +19,13 @@ module.exports = {
         LocatePlugin: require('../../plugins/Locate'),
         IdentifyPlugin: require('../../plugins/Identify'),
         TOCPlugin: require('../../plugins/TOC'),
+        RasterStylerPlugin: require('../../plugins/RasterStyler'),
         BackgroundSwitcherPlugin: require('../../plugins/BackgroundSwitcher'),
         MeasurePlugin: require('../../plugins/Measure'),
         PrintPlugin: require('../../plugins/Print'),
         SnapshotPlugin: require('../../plugins/Snapshot'),
         ShapeFilePlugin: require('../../plugins/ShapeFile'),
+        MetadataExplorerPlugin: require('../../plugins/MetadataExplorer'),
         SettingsPlugin: require('../../plugins/Settings'),
         HelpPlugin: require('../../plugins/Help')
     },

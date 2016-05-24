@@ -251,6 +251,7 @@
             "zoomToMaxExtentButton": "Questo è il testo di aiuto per ZoomToMaxExtentButton",
             "searchBar": "Scrivi un indirizzo di un luogo oer trovarlo. esempio:  '1st avenue, new york'. Puoi anche digitare le coordinate in questo formato: 43.87,10.20",
             "layerSwitcher": "Questo è il testo di aiuto per LayerSwitcher",
+            "metadataExplorer": "Questo è il testo di aiuto per MetadataExplorer",
             "settingsPanel": "Questo è il testo di aiuto per SettingsPanel",
             "gohome": "Questo è il testo di aiuto per Home",
             "measureComponent": "Questo è il testo di aiuto per MeasureComponent",

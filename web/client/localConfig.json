@@ -102,6 +102,7 @@
 				"name": "MetadataExplorer",
 				"hide": true,
 				"cfg": {
+					"chooseCatalogUrl": false,
 					"initialCatalogURL": "http://demo.geo-solutions.it/geoserver/csw"
 				}
 		}, "About", "MousePosition", "Search", "Toolbar", "ScaleBox", "ZoomAll", "MapLoading", "Snapshot"]
