@@ -11,6 +11,8 @@ const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 
 const assign = require('object-assign');
+var Spinner = require('react-spinkit');
+
 
 const Message = require('../components/I18N/Message');
 
@@ -23,6 +25,7 @@ const MapPlugin = React.createClass({
         layers: React.PropTypes.array,
         zoomControl: React.PropTypes.bool,
         mapLoadingMessage: React.PropTypes.string,
+        loadingSpinner: React.PropTypes.bool,
         tools: React.PropTypes.array,
         options: React.PropTypes.object,
         toolsOptions: React.PropTypes.object
@@ -32,6 +35,7 @@ const MapPlugin = React.createClass({
             mapType: 'leaflet',
             zoomControl: true,
             mapLoadingMessage: "map.loading",
+            loadingSpinner: true,
             tools: ['measurement', 'locate', 'overview', 'scalebar'],
             options: {},
             toolsOptions: {
@@ -103,7 +107,16 @@ const MapPlugin = React.createClass({
                 </plugins.Map>
             );
         }
-        return <div><Message msgId={this.props.mapLoadingMessage}/></div>;
+        return (<div style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+            }} className="mapLoadingMessage">
+                {this.props.loadingSpinner ? <Spinner spinnerName="circle" /> : null}
+                <Message msgId={this.props.mapLoadingMessage}/>
+        </div>);
     },
     updatePlugins(props) {
         plugins = require('./map/index')(props.mapType);
