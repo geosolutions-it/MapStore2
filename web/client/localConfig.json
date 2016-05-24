@@ -18,7 +18,11 @@
 			 	"name": "DrawerMenu"
 		 }, {
 			 	"name": "TOC",
-				"hide": true
+				"hide": true,
+				"cfg": {
+					"activateLegendTool": true,
+					"activateSettingsTool": false
+				}
 		 }, {
 			 	"name": "Settings",
 				"hide": true,

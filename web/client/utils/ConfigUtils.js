@@ -141,15 +141,18 @@ var ConfigUtils = {
             }
         }
     },
+    normalizeSourceUrl: function(sourceUrl) {
+        if (sourceUrl && sourceUrl.indexOf('?') !== -1) {
+            return sourceUrl.split('?')[0];
+        }
+        return sourceUrl;
+    },
     /**
      * Copy important source options to layer options.
      */
     copySourceOptions: function(layer, source) {
-        Object.keys(source).forEach((option) => {
-            if (['url', 'baseParams'].indexOf(option) !== -1) {
-                layer[option] = source[option];
-            }
-        });
+        layer.baseParams = source.baseParams;
+        layer.url = ConfigUtils.normalizeSourceUrl(source.url);
     },
 
     /**

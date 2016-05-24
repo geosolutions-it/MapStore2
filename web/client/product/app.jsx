@@ -7,52 +7,38 @@
  */
 const React = require('react');
 const ReactDOM = require('react-dom');
-
-const {Provider} = require('react-redux');
-
-const {changeBrowserProperties} = require('../actions/browser');
-const {loadLocale} = require('../actions/locale');
-
+const {connect} = require('react-redux');
 const ConfigUtils = require('../utils/ConfigUtils');
-const LocaleUtils = require('../utils/LocaleUtils');
-const PluginsUtils = require('../utils/PluginsUtils');
 
 const {loadMaps} = require('../actions/maps');
-const {loadPrintCapabilities} = require('../actions/print');
 
-const assign = require('object-assign');
+const StandardApp = require('../components/app/StandardApp');
 
-function startApp() {
-    const {plugins, requires} = require('./plugins.js');
-    const store = require('./stores/store')(plugins);
-    const App = require('./containers/App');
+const {pages, pluginsDef, initialState} = require('./appConfig');
 
-    store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
+const StandardRouter = connect((state) => ({
+    locale: state.locale || {},
+    pages
+}))(require('../components/app/StandardRouter'));
 
-    ConfigUtils.loadConfiguration().then(() => {
-        let locale = LocaleUtils.getUserLocale();
-        store.dispatch(loadLocale('translations', locale));
+const appStore = require('../stores/StandardStore').bind(null, initialState, {
+    home: require('./reducers/home'),
+    maps: require('../reducers/maps')
+});
 
-        store.dispatch(loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*"));
+const initialActions = [
+    () => loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*")
+];
 
-        store.dispatch(loadPrintCapabilities(ConfigUtils.getConfigProp('printUrl')));
-    });
+const appConfig = {
+    appStore,
+    pluginsDef,
+    initialActions,
+    appComponent: StandardRouter,
+    printingEnabled: true
+};
 
-
-    ReactDOM.render(
-        <Provider store={store}>
-            <App plugins={assign(PluginsUtils.getPlugins(plugins), {requires})}/>
-        </Provider>,
-        document.getElementById('container')
-    );
-}
-if (!global.Intl ) {
-    require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js'], (require) => {
-        global.Intl = require('intl');
-        require('intl/locale-data/jsonp/en.js');
-        require('intl/locale-data/jsonp/it.js');
-        startApp();
-    });
-} else {
-    startApp();
-}
+ReactDOM.render(
+    <StandardApp {...appConfig}/>,
+    document.getElementById('container')
+);
