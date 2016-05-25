@@ -22,6 +22,25 @@ const {
     SELECT_SPATIAL_OPERATION,
     REMOVE_SPATIAL_SELECT,
     SHOW_SPATIAL_DETAILS,
+    ZONE_SEARCH,
+    ZONE_SEARCH_ERROR,
+    ZONE_FILTER,
+    OPEN_MENU,
+    ZONE_CHANGE,
+    ZONES_RESET,
+    SHOW_GENERATED_FILTER,
+    QUERY_FORM_RESET,
+    CHANGE_DWITHIN_VALUE,
+    changeDwithinValue,
+    resetZones,
+    zoneChange,
+    openMenu,
+    zoneSearch,
+    zoneSearchError,
+    zoneFilter,
+    zoneGetValues,
+    query,
+    reset,
     addFilterField,
     addGroupField,
     removeFilterField,
@@ -189,5 +208,91 @@ describe('Test correctness of the queryform actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(SHOW_SPATIAL_DETAILS);
         expect(retval.show).toBe(true);
+    });
+
+    it('changeDwithinValue', () => {
+        let retval = changeDwithinValue(1);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_DWITHIN_VALUE);
+        expect(retval.distance).toBe(1);
+    });
+
+    it('query', () => {
+        let retval = query("url", null);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(SHOW_GENERATED_FILTER);
+        expect(retval.data).toBe(null);
+    });
+
+    it('reset', () => {
+        let retval = reset();
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(QUERY_FORM_RESET);
+    });
+
+    it('resetZones', () => {
+        let retval = resetZones();
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(ZONES_RESET);
+    });
+
+    it('zoneFilter', () => {
+        let retval = zoneFilter(null, 1);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(ZONE_FILTER);
+        expect(retval.data).toBe(null);
+        expect(retval.id).toBe(1);
+    });
+
+    it('zoneSearchError', () => {
+        let retval = zoneSearchError("error");
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(ZONE_SEARCH_ERROR);
+        expect(retval.error).toBe("error");
+    });
+
+    it('zoneSearch', () => {
+        let retval = zoneSearch(true, 1);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(ZONE_SEARCH);
+        expect(retval.active).toBe(true);
+        expect(retval.id).toBe(1);
+    });
+
+    it('loads an existing zones file', (done) => {
+        zoneGetValues('../../test-resources/featureGrid-test-data.json')((e) => {
+            try {
+                expect(e).toExist();
+                done();
+            } catch(ex) {
+                done(ex);
+            }
+        });
+    });
+
+    it('openMenu', () => {
+        let retval = openMenu(true, 1);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(OPEN_MENU);
+        expect(retval.active).toBe(true);
+        expect(retval.id).toBe(1);
+    });
+
+    it('zoneChange', () => {
+        let retval = zoneChange(1, "value", null);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(ZONE_CHANGE);
+        expect(retval.value).toBe("value");
+        expect(retval.id).toBe(1);
+        expect(retval.rawValue).toBe(null);
     });
 });

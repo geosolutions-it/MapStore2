@@ -14,6 +14,7 @@ const LocaleUtils = require('../../../utils/LocaleUtils');
 
 const ComboField = React.createClass({
     propTypes: {
+        busy: React.PropTypes.bool,
         style: React.PropTypes.object,
         valueField: React.PropTypes.string,
         textField: React.PropTypes.string,
@@ -28,9 +29,14 @@ const ComboField = React.createClass({
         fieldException: React.PropTypes.object,
         comboFilterType: React.PropTypes.oneOfType([
             React.PropTypes.bool,
-            React.PropTypes.string
+            React.PropTypes.string,
+            React.PropTypes.func
         ]),
+        disabled: React.PropTypes.bool,
+        options: React.PropTypes.object,
         onUpdateField: React.PropTypes.func,
+        onToggle: React.PropTypes.func,
+        onSearch: React.PropTypes.func,
         onUpdateExceptionField: React.PropTypes.func
     },
     contextTypes: {
@@ -38,9 +44,12 @@ const ComboField = React.createClass({
     },
     getDefaultProps() {
         return {
+            options: {},
+            busy: false,
             style: {
                 width: "100%"
             },
+            disabled: false,
             valueField: null,
             textField: null,
             fieldOptions: [],
@@ -50,6 +59,8 @@ const ComboField = React.createClass({
             fieldException: null,
             comboFilterType: false,
             onUpdateField: () => {},
+            onToggle: () => {},
+            onSearch: () => {},
             onUpdateExceptionField: () => {}
         };
     },
@@ -60,6 +71,9 @@ const ComboField = React.createClass({
 
         const ddList = this.props.valueField !== null && this.props.textField !== null ? (
             <DropdownList
+                {...this.props.options}
+                busy={this.props.busy}
+                disabled={this.props.disabled}
                 valueField={this.props.valueField}
                 textField={this.props.textField}
                 data={this.props.fieldOptions}
@@ -69,9 +83,14 @@ const ComboField = React.createClass({
                 placeholder={placeholder}
                 filter={this.props.comboFilterType}
                 style={style}
-                onChange={(value) => this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value[this.props.valueField], this.props.attType)}/>
+                onChange={(value) => this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value[this.props.valueField], this.props.attType, value)}
+                onToggle={this.props.onToggle}
+                onSearch={this.props.onSearch}/>
         ) : (
             <DropdownList
+                {...this.props.options}
+                busy={this.props.busy}
+                disabled={this.props.disabled}
                 data={this.props.fieldOptions}
                 value={this.props.fieldValue}
                 caseSensitive={false}
@@ -79,7 +98,9 @@ const ComboField = React.createClass({
                 placeholder={placeholder}
                 filter={this.props.comboFilterType}
                 style={style}
-                onChange={(value) => this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value, this.props.attType)}/>
+                onChange={(value) => this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value, this.props.attType)}
+                onToggle={this.props.onToggle}
+                onSearch={this.props.onSearch}/>
         );
 
         return ddList;

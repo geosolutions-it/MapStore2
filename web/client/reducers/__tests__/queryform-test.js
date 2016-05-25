@@ -8,6 +8,8 @@
 const expect = require('expect');
 const queryform = require('../queryform');
 
+const {featureCollection} = require('../../test-resources/featureCollectionZone.js');
+
 describe('Test the queryform reducer', () => {
 
     it('returns the initial state on unrecognized action', () => {
@@ -414,5 +416,318 @@ describe('Test the queryform reducer', () => {
         expect(state).toExist();
 
         expect(state.showDetailsPanel).toEqual(true);
+    });
+
+    it('Query Form Reset', () => {
+        let testAction = {
+            type: "QUERY_FORM_RESET"
+        };
+
+        const initialState = {
+            test: true
+        };
+
+        let state = queryform(initialState, testAction);
+        expect(state).toExist();
+
+        expect(state.test).toEqual(true);
+    });
+
+    it('Show Generated Filter', () => {
+        let testAction = {
+            type: "SHOW_GENERATED_FILTER",
+            data: "data"
+        };
+
+        const initialState = {
+            showGeneratedFilter: "test"
+        };
+
+        let state = queryform(initialState, testAction);
+        expect(state).toExist();
+
+        expect(state.showGeneratedFilter).toEqual("data");
+    });
+
+    it('Zone Filter', () => {
+        let testAction = {
+            type: "ZONE_FILTER",
+            data: {features: [{
+                id: 1,
+                name: "value1"
+            }, {
+                id: 2,
+                name: "value2"
+            }]},
+            id: 1
+        };
+
+        const initialState = {
+            spatialField: {
+                method: "ZONE",
+                attribute: "geom3857",
+                operation: "INTERSECTS",
+                geometry: null,
+                zoneFields: [{
+                    id: 1,
+                    url: "http://localhost:8080/",
+                    typeName: "typeName1",
+                    values: [],
+                    value: null,
+                    valueField: "properties.attr1",
+                    textField: "properties.attr2",
+                    searchText: "*",
+                    searchMethod: "ilike",
+                    searchAttribute: "att2",
+                    label: "Attribute"
+                }, {
+                    id: 2,
+                    url: "http://localhost:8080/",
+                    typeName: "typeName1",
+                    values: [],
+                    value: null,
+                    valueField: "properties.attr1",
+                    textField: "properties.attr2",
+                    searchText: "*",
+                    searchMethod: "ilike",
+                    searchAttribute: "att2",
+                    label: "Attribute",
+                    disabled: true,
+                    dependson: {
+                        id: 1,
+                        field: "att3",
+                        value: null
+                    }
+                }]
+            }
+        };
+
+        let state = queryform(initialState, testAction);
+        expect(state).toExist();
+        expect(state.spatialField).toExist();
+        expect(state.spatialField.zoneFields[0].values.length).toBe(2);
+
+        expect(state.spatialField.zoneFields[0].open).toBe(true);
+    });
+
+    it('Zone Search', () => {
+        let testAction = {
+            type: "ZONE_SEARCH",
+            active: true,
+            id: 1
+        };
+
+        const initialState = {
+            spatialField: {
+                method: "ZONE",
+                attribute: "geom3857",
+                operation: "INTERSECTS",
+                geometry: null,
+                zoneFields: [{
+                    id: 1,
+                    url: "http://localhost:8080/",
+                    typeName: "typeName1",
+                    values: [],
+                    value: null,
+                    valueField: "properties.attr1",
+                    textField: "properties.attr2",
+                    searchText: "*",
+                    searchMethod: "ilike",
+                    searchAttribute: "att2",
+                    label: "Attribute"
+                }, {
+                    id: 2,
+                    url: "http://localhost:8080/",
+                    typeName: "typeName1",
+                    values: [],
+                    value: null,
+                    valueField: "properties.attr1",
+                    textField: "properties.attr2",
+                    searchText: "*",
+                    searchMethod: "ilike",
+                    searchAttribute: "att2",
+                    label: "Attribute",
+                    disabled: true,
+                    dependson: {
+                        id: 1,
+                        field: "att3",
+                        value: null
+                    }
+                }]
+            }
+        };
+
+        let state = queryform(initialState, testAction);
+        expect(state).toExist();
+        expect(state.spatialField).toExist();
+        expect(state.spatialField.zoneFields[0].busy).toBe(true);
+    });
+
+    it('Zone Change', () => {
+        let testAction = {
+            type: "ZONE_CHANGE",
+            id: 1,
+            value: "Five",
+            rawValue: {
+                "type": "Feature",
+                "id": "zones.5",
+                "geometry": {
+                    "type": "MultiPolygon",
+                    "coordinates": [
+                        [
+                            [
+                                [
+                                    -112.52004032,
+                                    43.54002689
+                                ],
+                                [
+                                    -112.52008024,
+                                    43.42515586
+                                ],
+                                [
+                                    -112.2234772,
+                                    43.42473004
+                                ],
+                                [
+                                    -112.1032533,
+                                    43.42498078
+                                ],
+                                [
+                                    -112.52004032,
+                                    43.54002689
+                                ]
+                            ]
+                        ]
+                    ]
+                },
+                "geometry_name": "the_geom",
+                "properties": {
+                    "Shape_Leng": 732018.056416,
+                    "Shape_Area": 2.44128352236E10,
+                    "District_N": "5",
+                    "SUM_Counti": 7,
+                    "Orient": 0,
+                    "OrientPg": 0,
+                    "ITD_Dist_n": 5,
+                    "DistNum": "Five",
+                    "Area_sqmi": 9425.848
+                }
+            }
+        };
+
+        const initialState = {
+            spatialField: {
+                method: "ZONE",
+                attribute: "the_geom",
+                operation: "INTERSECTS",
+                geometry: null,
+                zoneFields: [{
+                    id: 1,
+                    url: "http://localhost:8080/",
+                    typeName: "typeName1",
+                    values: featureCollection.features,
+                    value: null,
+                    valueField: "properties.attr1",
+                    textField: "properties.attr2",
+                    searchText: "*",
+                    searchMethod: "ilike",
+                    searchAttribute: "att2",
+                    label: "Attribute"
+                }, {
+                    id: 2,
+                    url: "http://localhost:8080/",
+                    typeName: "typeName1",
+                    values: [],
+                    value: null,
+                    valueField: "properties.attr1",
+                    textField: "properties.attr2",
+                    searchText: "*",
+                    searchMethod: "ilike",
+                    searchAttribute: "att2",
+                    label: "Attribute",
+                    disabled: true,
+                    dependson: {
+                        id: 1,
+                        field: "att3",
+                        value: null
+                    }
+                }]
+            }
+        };
+
+        let state = queryform(initialState, testAction);
+        expect(state).toExist();
+        expect(state.spatialField).toExist();
+
+        expect(state.spatialField.zoneFields[0].value).toEqual("Five");
+        expect(state.spatialField.zoneFields[0].rawValue).toExist();
+    });
+
+    it('Zone Reset', () => {
+        let testAction = {
+            type: "ZONES_RESET"
+        };
+
+        const initialState = {
+            spatialField: {
+                method: "ZONE",
+                attribute: "the_geom",
+                operation: "INTERSECTS",
+                geometry: null,
+                zoneFields: [{
+                    id: 1,
+                    url: "http://localhost:8080/",
+                    typeName: "typeName1",
+                    values: featureCollection.features,
+                    value: null,
+                    valueField: "properties.attr1",
+                    textField: "properties.attr2",
+                    searchText: "*",
+                    searchMethod: "ilike",
+                    searchAttribute: "att2",
+                    label: "Attribute"
+                }]
+            }
+        };
+
+        let state = queryform(initialState, testAction);
+        expect(state).toExist();
+        expect(state.spatialField).toExist();
+        expect(state.spatialField.zoneFields[0].values.length).toBe(0);
+    });
+
+    it('Open Zones Menu', () => {
+        let testAction = {
+            type: "OPEN_MENU",
+            active: true,
+            id: 1
+        };
+
+        const initialState = {
+            spatialField: {
+                method: "ZONE",
+                attribute: "the_geom",
+                operation: "INTERSECTS",
+                geometry: null,
+                zoneFields: [{
+                    id: 1,
+                    url: "http://localhost:8080/",
+                    typeName: "typeName1",
+                    values: featureCollection.features,
+                    value: null,
+                    valueField: "properties.attr1",
+                    textField: "properties.attr2",
+                    searchText: "*",
+                    searchMethod: "ilike",
+                    searchAttribute: "att2",
+                    label: "Attribute"
+                }]
+            }
+        };
+
+        let state = queryform(initialState, testAction);
+        expect(state).toExist();
+        expect(state.spatialField).toExist();
+        expect(state.spatialField.zoneFields[0].open).toBe(true);
     });
 });

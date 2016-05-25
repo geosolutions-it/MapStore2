@@ -11,6 +11,8 @@ const {Row, Col, Panel, Button, Glyphicon, Input} = require('react-bootstrap');
 const ComboField = require('./ComboField');
 const GeometryDetails = require('./GeometryDetails');
 
+const ZoneField = require('./ZoneField');
+
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const I18N = require('../../I18N/I18N');
 
@@ -22,6 +24,7 @@ const SpatialFilter = React.createClass({
         spatialMethodOptions: React.PropTypes.array,
         spatialPanelExpanded: React.PropTypes.bool,
         showDetailsPanel: React.PropTypes.bool,
+        withContainer: React.PropTypes.bool,
         actions: React.PropTypes.object
     },
     contextTypes: {
@@ -30,10 +33,10 @@ const SpatialFilter = React.createClass({
     getDefaultProps() {
         return {
             useMapProjection: true,
-            method: null,
-            operation: null,
+            spatialField: {},
             spatialPanelExpanded: true,
             showDetailsPanel: false,
+            withContainer: true,
             spatialMethodOptions: [
                 {id: "BBOX", name: "queryform.spatialfilter.methods.box"},
                 {id: "Circle", name: "queryform.spatialfilter.methods.circle"},
@@ -54,7 +57,10 @@ const SpatialFilter = React.createClass({
                 onRemoveSpatialSelection: () => {},
                 onShowSpatialSelectionDetails: () => {},
                 onEndDrawing: () => {},
-                onChangeDwithinValue: () => {}
+                onChangeDwithinValue: () => {},
+                zoneFilter: () => {},
+                zoneSearch: () => {},
+                zoneChange: () => {}
             }
         };
     },
@@ -142,11 +148,63 @@ const SpatialFilter = React.createClass({
             methodSelector
         );
     },
+    renderZoneFields() {
+        return this.props.spatialField.method &&
+            this.props.spatialField.method === "ZONE" &&
+            this.props.spatialField.zoneFields &&
+            this.props.spatialField.zoneFields.length > 0 ?
+                this.props.spatialField.zoneFields.map((zone) => {
+                    return (
+                        <ZoneField
+                            key={zone.id}
+                            open={zone.open}
+                            zoneId={zone.id}
+                            url={zone.url}
+                            typeName={zone.typeName}
+                            wfs={zone.wfs}
+                            busy={zone.busy}
+                            label={zone.label}
+                            values={zone.values}
+                            value={zone.value}
+                            valueField= {zone.valueField}
+                            textField= {zone.textField}
+                            searchText={zone.searchText}
+                            searchMethod={zone.searchMethod}
+                            searchAttribute={zone.searchAttribute}
+                            disabled={zone.disabled}
+                            dependsOn={zone.dependson}
+                            onSearch={this.props.actions.zoneSearch}
+                            onFilter={this.props.actions.zoneFilter}
+                            onOpenMenu={this.props.actions.openMenu}
+                            onChange={this.props.actions.zoneChange}/>
+                    );
+                }) : (<span/>);
+    },
+    renderSpatialPanel(operationRow, drawLabel) {
+        return (
+            <Panel>
+                {this.props.spatialMethodOptions.length > 1 ? this.renderSpatialHeader() : <span/>}
+                {this.renderZoneFields()}
+                {this.props.spatialOperations.length > 1 ? (
+                    <Panel>
+                        {operationRow}
+                        <Row>
+                            <Col xs={12}>
+                                {drawLabel}
+                            </Col>
+                        </Row>
+                    </Panel>
+                ) : (
+                    <span/>
+                )}
+            </Panel>
+        );
+    },
     render() {
         const selectedOperation = this.props.spatialOperations.filter((opt) => this.props.spatialField.operation === opt.id)[0];
 
         let drawLabel = (<span/>);
-        if (this.props.spatialField.method) {
+        if (this.props.spatialField.method && this.props.spatialField.method !== "ZONE") {
             drawLabel = !this.props.spatialField.geometry ? (
                 <span>
                     <hr width="100%" style={{"borderTop": "1px solid #337AB7"}}/>
@@ -169,7 +227,7 @@ const SpatialFilter = React.createClass({
             <span/>
         );
 
-        const dWithinRow = selectedOperation && selectedOperation.id === "DWITHIN" ? (
+        const operationRow = selectedOperation && selectedOperation.id === "DWITHIN" ? (
             <Row>
                 <Col xs={5}>
                     <div style={{"paddingTop": "9px"}}><I18N.Message msgId={"queryform.spatialfilter.geometric_operation"}/></div>
@@ -229,19 +287,13 @@ const SpatialFilter = React.createClass({
 
         return (
             <div>
-                <Panel id="spatialFilterPanel" collapsible expanded={this.props.spatialPanelExpanded} header={this.renderHeader()}>
-                    <Panel>
-                        {this.renderSpatialHeader()}
-                        <Panel>
-                            {dWithinRow}
-                            <Row>
-                                <Col xs={12}>
-                                    {drawLabel}
-                                </Col>
-                            </Row>
+                {
+                    this.props.withContainer ? (
+                        <Panel id="spatialFilterPanel" collapsible expanded={this.props.spatialPanelExpanded} header={this.renderHeader()}>
+                            {this.renderSpatialPanel(operationRow, drawLabel)}
                         </Panel>
-                    </Panel>
-                </Panel>
+                    ) : this.renderSpatialPanel(operationRow, drawLabel)
+                }
                 {detailsPanel}
             </div>
         );
@@ -256,7 +308,10 @@ const SpatialFilter = React.createClass({
         })[0].id;
 
         this.props.actions.onSelectSpatialMethod(method, name);
-        this.changeDrawingStatus('start', method, "queryform", []);
+
+        if (method !== "ZONE") {
+            this.changeDrawingStatus('start', method, "queryform", []);
+        }
     },
     updateSpatialOperation(id, name, value) {
         const opeartion = this.props.spatialOperations.filter((opt) => {

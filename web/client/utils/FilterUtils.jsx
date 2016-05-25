@@ -20,7 +20,9 @@ const FilterUtils = {
         ">=": {startTag: "<{namespace}:PropertyIsGreaterThanOrEqualTo>", endTag: "</{namespace}:PropertyIsGreaterThanOrEqualTo>"},
         "<=": {startTag: "<{namespace}:PropertyIsLessThanOrEqualTo>", endTag: "</{namespace}:PropertyIsLessThanOrEqualTo>"},
         "<>": {startTag: "<{namespace}:PropertyIsNotEqualTo>", endTag: "</{namespace}:PropertyIsNotEqualTo>"},
-        "><": {startTag: "<{namespace}:PropertyIsBetween>", endTag: "</{namespace}:PropertyIsBetween>"}
+        "><": {startTag: "<{namespace}:PropertyIsBetween>", endTag: "</{namespace}:PropertyIsBetween>"},
+        "like": {startTag: "<{namespace}:PropertyIsLike matchCase=\"true\" wildCard=\"*\" singleChar=\".\" escapeChar=\"!\">", endTag: "</{namespace}:PropertyIsLike>"},
+        "ilike": {startTag: "<{namespace}:PropertyIsLike matchCase=\"false\" wildCard=\"*\" singleChar=\".\" escapeChar=\"!\">  ", endTag: "</{namespace}:PropertyIsLike>"}
     },
     ogcSpatialOperator: {
         "INTERSECTS": {startTag: "<{namespace}:Intersects>", endTag: "</{namespace}:Intersects>"},
@@ -33,7 +35,7 @@ const FilterUtils = {
         "ogc": {startTag: "<ogc:PropertyName>", endTag: "</ogc:PropertyName>"},
         "fes": {startTag: "<fes:ValueReference>", endTag: "</fes:ValueReference>"}
     },
-    toOGCFilter: function(ftName, json, version) {
+    toOGCFilter: function(ftName, json, version, sortOptions) {
         try {
             this.objFilter = (json instanceof Object) ? json : JSON.parse(json);
         } catch(e) {
@@ -50,7 +52,12 @@ const FilterUtils = {
 
         let attributeFilter;
         if (this.objFilter.filterFields && this.objFilter.filterFields.length > 0) {
-            attributeFilter = this.processOGCFilterGroup(this.objFilter.groupFields[0]);
+            if (this.objFilter.groupFields && this.objFilter.groupFields.length > 0) {
+                attributeFilter = this.processOGCFilterGroup(this.objFilter.groupFields[0]);
+            } else {
+                attributeFilter = this.processOGCFilterFields();
+            }
+
             filters.push(attributeFilter);
         }
 
@@ -68,6 +75,21 @@ const FilterUtils = {
 
         ogcFilter += '<wfs:Query ' + (versionOGC === "2.0" ? "typeNames" : "typeName") + '="' + ftName + '" srsName="EPSG:4326">';
         ogcFilter += filter;
+
+        if (sortOptions && sortOptions.sortBy && sortOptions.sortOrder) {
+            ogcFilter +=
+                "<" + this.nsplaceholder + ":SortBy>" +
+                    "<" + this.nsplaceholder + ":SortProperty>" +
+                        this.propertyTagReference[this.nsplaceholder].startTag +
+                            sortOptions.sortBy +
+                        this.propertyTagReference[this.nsplaceholder].endTag +
+                    "</" + this.nsplaceholder + ":SortProperty>" +
+                    "<" + this.nsplaceholder + ":SortOrder>" +
+                        sortOptions.sortOrder +
+                    "</" + this.nsplaceholder + ":SortOrder>" +
+                "</" + this.nsplaceholder + ":SortBy>";
+        }
+
         ogcFilter +=
                     '</wfs:Query>' +
             '</wfs:GetFeature>';
@@ -140,7 +162,7 @@ const FilterUtils = {
         return ogc;
     },
     processOGCFilterFields: function(group) {
-        let fields = this.objFilter.filterFields.filter((field) => field.groupId === group.id);
+        let fields = group ? this.objFilter.filterFields.filter((field) => field.groupId === group.id) : this.objFilter.filterFields;
 
         let filter = [];
         if (fields) {
@@ -215,7 +237,7 @@ const FilterUtils = {
 
                 if (this.objFilter.spatialField.method === "POINT") {
                     ogc +=
-                        '<gml:Point srsDimension="2" srsName="' + this.objFilter.spatialField.geometry.projection + '">' +
+                        '<gml:Point srsDimension="2" srsName="' + this.objFilter.spatialField.geometry.projection || "EPSG:4326" + '">' +
                             '<gml:pos>' + coordinates.join(" ") + '</gml:pos>' +
                         '</gml:Point>';
                 } else {
