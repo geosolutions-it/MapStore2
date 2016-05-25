@@ -23,14 +23,11 @@ const tocSelector = createSelector(
     [
         (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
         groupsSelector,
-        (state) => state.layers.settings || {expanded: false, options: {opacity: 1}},
-        (state) => state.toc || {activateLegendTool: true, activateSettingsTool: true}
-    ], (enabled, groups, settings, toc) => ({
+        (state) => state.layers.settings || {expanded: false, options: {opacity: 1}}
+    ], (enabled, groups, settings) => ({
         enabled,
         groups,
-        settings,
-        activateLegendTool: toc.activateLegendTool !== undefined ? toc.activateLegendTool : true,
-        activateSettingsTool: toc.activateSettingsTool !== undefined ? toc.activateSettingsTool : true
+        settings
     })
 );
 
@@ -64,7 +61,9 @@ const LayerTree = React.createClass({
             onToggleGroup: () => {},
             onToggleLayer: () => {},
             onSettings: () => {},
-            updateNode: () => {}
+            updateNode: () => {},
+            activateLegendTool: true,
+            activateSettingsTool: true
         };
     },
     getNoBackgroundLayers(group) {

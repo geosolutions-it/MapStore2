@@ -26,6 +26,8 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 const isMobile = require('ismobilejs');
 
+let localConfigFile = 'localConfig.json';
+
 let defaultConfig = {
     proxyUrl: "/mapstore/proxy/?url=",
     geoStoreUrl: "/mapstore/rest/geostore/",
@@ -49,8 +51,11 @@ var ConfigUtils = {
     getDefaults: function() {
         return defaultConfig;
     },
+    setLocalConfigurationFile(file) {
+        localConfigFile = file;
+    },
     loadConfiguration: function() {
-        return axios.get('localConfig.json').then(response => {
+        return axios.get(localConfigFile).then(response => {
             if (typeof response.data === 'object') {
                 defaultConfig = assign({}, defaultConfig, response.data);
             }
@@ -141,15 +146,18 @@ var ConfigUtils = {
             }
         }
     },
+    normalizeSourceUrl: function(sourceUrl) {
+        if (sourceUrl && sourceUrl.indexOf('?') !== -1) {
+            return sourceUrl.split('?')[0];
+        }
+        return sourceUrl;
+    },
     /**
      * Copy important source options to layer options.
      */
     copySourceOptions: function(layer, source) {
-        Object.keys(source).forEach((option) => {
-            if (['url', 'baseParams'].indexOf(option) !== -1) {
-                layer[option] = source[option];
-            }
-        });
+        layer.baseParams = source.baseParams;
+        layer.url = ConfigUtils.normalizeSourceUrl(source.url);
     },
 
     /**

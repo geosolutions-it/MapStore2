@@ -62,6 +62,9 @@ function resetLConfig() {
             },
             "demo": {
                 "url": "http://demo.geo-solutions.it/geoserver/wms"
+            },
+            "demo2": {
+                "url": "http://demo.geo-solutions.it/geoserver/wms?params"
             }
         },
         "map": {
@@ -103,6 +106,14 @@ function resetLConfig() {
                     "name": "nurc:Arc_Sample",
                     "group": "Meteo",
                     "format": "image/png"
+                }, {
+                    "source": "demo2",
+                    "visibility": true,
+                    "opacity": 0.5,
+                    "title": "Weather data 2",
+                    "name": "nurc:Arc_Sample2",
+                    "group": "Meteo",
+                    "format": "image/png"
                 }]
         }
     };
@@ -128,6 +139,13 @@ describe('ConfigUtils', () => {
         expect(config.map.center.y).toBeLessThan(180);
         expect(config.map.center.y).toBeGreaterThan(-180);
         expect(config.map.center.crs).toBe("EPSG:4326");
+    });
+
+    it('convert from legacy and check url normalization', () => {
+        var config = ConfigUtils.convertFromLegacy(lconfig);
+        const layers = config.layers.filter((layer) => layer.name === "nurc:Arc_Sample2");
+        expect(layers.length).toBe(1);
+        expect(layers[0].url).toBe("http://demo.geo-solutions.it/geoserver/wms");
     });
     it('check sources default values assigned', () => {
         var config = ConfigUtils.convertFromLegacy(lconfig);
