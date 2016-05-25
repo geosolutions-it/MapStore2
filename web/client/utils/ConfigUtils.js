@@ -26,6 +26,8 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 const isMobile = require('ismobilejs');
 
+let localConfigFile = 'localConfig.json';
+
 let defaultConfig = {
     proxyUrl: "/mapstore/proxy/?url=",
     geoStoreUrl: "/mapstore/rest/geostore/",
@@ -49,8 +51,11 @@ var ConfigUtils = {
     getDefaults: function() {
         return defaultConfig;
     },
+    setLocalConfigurationFile(file) {
+        localConfigFile = file;
+    },
     loadConfiguration: function() {
-        return axios.get('localConfig.json').then(response => {
+        return axios.get(localConfigFile).then(response => {
             if (typeof response.data === 'object') {
                 defaultConfig = assign({}, defaultConfig, response.data);
             }

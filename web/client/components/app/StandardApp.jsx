@@ -30,7 +30,9 @@ const StandardApp = React.createClass({
         return {
             pluginsDef: {plugins: {}, requires: {}},
             initialActions: [],
-            printingEnabled: false
+            printingEnabled: false,
+            appStore: () => ({dispatch: () => {}}),
+            appComponent: () => <span/>
         };
     },
     componentWillMount() {
