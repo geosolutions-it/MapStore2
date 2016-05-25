@@ -113,9 +113,6 @@ axios.interceptors.request.use(config => {
             }
             const isCORS = useCORS.reduce((found, current) => found || uri.indexOf(current) === 0, false);
             if (!isCORS) {
-                if (proxyUrl.match(/^http(s)?:\/\//i) === null) {
-                    proxyUrl = 'http://' + window.location.host + proxyUrl;
-                }
                 config.url = proxyUrl + encodeURIComponent(buildUrl(uri, config.params));
                 config.params = undefined;
             }
