@@ -23,7 +23,12 @@ const {
     SHOW_SPATIAL_DETAILS,
     QUERY_FORM_RESET,
     SHOW_GENERATED_FILTER,
-    CHANGE_DWITHIN_VALUE
+    CHANGE_DWITHIN_VALUE,
+    ZONE_FILTER,
+    ZONE_SEARCH,
+    OPEN_MENU,
+    ZONE_CHANGE,
+    ZONES_RESET
 } = require('../actions/queryform');
 
 const {
@@ -180,6 +185,114 @@ function queryform(state = initialState, action) {
         }
         case CHANGE_DWITHIN_VALUE: {
             return assign({}, state, {spatialField: assign({}, state.spatialField, {geometry: assign({}, state.spatialField.geometry, {distance: action.distance})})});
+        }
+        case ZONE_FILTER: {
+            return assign({}, state, {spatialField: assign({}, state.spatialField, {zoneFields: state.spatialField.zoneFields.map((field) => {
+                if (field.id === action.id && action.data.features && action.data.features.length > 0) {
+                    return assign({}, field, {
+                        values: action.data.features,
+                        open: true
+                    });
+                }
+
+                return field;
+            })})});
+        }
+        case ZONE_SEARCH: {
+            return assign({}, state, {spatialField: assign({}, state.spatialField, {zoneFields: state.spatialField.zoneFields.map((field) => {
+                if (field.id === action.id) {
+                    return assign({}, field, {
+                        busy: action.active
+                    });
+                }
+                return field;
+            })})});
+        }
+        case ZONE_CHANGE: {
+            let value; let geometry;
+            const zoneFields = state.spatialField.zoneFields.map((field) => {
+                if (field.id === action.id) {
+                    value = action.value;
+                    geometry = {coordinates: action.rawValue.geometry.coordinates[0][0], geometryName: action.rawValue.geometry_name};
+                    return assign({}, field, {
+                        value: value,
+                        rawValue: action.rawValue
+                    });
+                }
+
+                if (field.dependson && action.id === field.dependson.id) {
+                    return assign({}, field, {
+                        disabled: false,
+                        values: [],
+                        value: null,
+                        dependson: assign({}, field.dependson, {value: value})
+                    });
+                }
+
+                return field;
+            });
+
+            // TODO: checks for wfs version
+            let minx; let miny; let maxx; let maxy;
+            geometry.coordinates.forEach((coordinate) => {
+                if (!minx || minx > coordinate[0]) {
+                    minx = coordinate[0];
+                }
+
+                if (!miny || miny > coordinate[1]) {
+                    miny = coordinate[1];
+                }
+
+                if (!maxx || maxx < coordinate[0]) {
+                    maxx = coordinate[0];
+                }
+
+                if (!maxy || maxy < coordinate[1]) {
+                    maxy = coordinate[1];
+                }
+            });
+
+            let extent = [minx, miny, maxx, maxy];
+
+            return assign({}, state, {spatialField: assign({}, state.spatialField, {
+                zoneFields: zoneFields,
+                geometry: {
+                    extent: extent,
+                    coordinates: geometry.coordinates
+                }
+            })});
+        }
+        case ZONES_RESET: {
+            return assign({}, state, {spatialField: assign({}, state.spatialField, {
+                zoneFields: state.spatialField.zoneFields.map((field) => {
+                    let f = assign({}, field, {
+                        values: [],
+                        value: null,
+                        open: false
+                    });
+
+                    if (field.dependson) {
+                        return assign({}, f, {
+                            disabled: true,
+                            open: false,
+                            dependson: assign({}, field.dependson, {value: null})
+                        });
+                    }
+
+                    return f;
+                }),
+                geometry: null
+            })});
+        }
+        case OPEN_MENU: {
+            return assign({}, state, {spatialField: assign({}, state.spatialField, {zoneFields: state.spatialField.zoneFields.map((field) => {
+                if (field.id === action.id) {
+                    return assign({}, field, {
+                        open: action.active
+                    });
+                }
+                return field;
+            })})});
         }
         default:
             return state;

@@ -42,13 +42,20 @@ const OpenlayersLayer = React.createClass({
         if (newProps.position !== this.props.position && this.layer.setZIndex) {
             this.layer.setZIndex(newProps.position);
         }
-        if (this.props.options && this.props.options.params && this.layer && this.layer.getSource() && this.layer.getSource().updateParams) {
-            const changed = Object.keys(this.props.options.params).reduce((found, param) => {
-                if (newProps.options.params[param] !== this.props.options.params[param]) {
-                    return true;
-                }
-                return found;
-            }, false);
+
+        if (this.props.options && this.layer && this.layer.getSource() && this.layer.getSource().updateParams) {
+            let changed = false;
+            if (this.props.options.params && newProps.options.params) {
+                changed = Object.keys(this.props.options.params).reduce((found, param) => {
+                    if (newProps.options.params[param] !== this.props.options.params[param]) {
+                        return true;
+                    }
+                    return found;
+                }, false);
+            } else if (!this.props.options.params && newProps.options.params) {
+                changed = true;
+            }
+
             if (changed) {
                 this.layer.getSource().updateParams(newProps.options.params);
             }

@@ -10,6 +10,8 @@ const ReactDOM = require('react-dom');
 
 const SpatialFilter = require('../SpatialFilter.jsx');
 
+const {featureCollection} = require('../../../../test-resources/featureCollectionZone.js');
+
 const expect = require('expect');
 
 describe('SpatialFilter', () => {
@@ -63,5 +65,72 @@ describe('SpatialFilter', () => {
 
         let operationPanelRows = combosPanel[2].getElementsByClassName('row');
         expect(operationPanelRows.length).toBe(2);
+    });
+
+    it('creates the SpatialFilter with the ZoneField component', () => {
+        let spatialField = {
+            method: "ZONE",
+            attribute: "the_geom",
+            operation: "INTERSECTS",
+            geometry: null,
+            zoneFields: [{
+                id: 1,
+                url: null,
+                typeName: "geosolutions:zones",
+                values: featureCollection.features,
+                value: null,
+                valueField: "properties.ITD_Dist_n",
+                textField: "properties.DistNum",
+                searchText: "*",
+                searchMethod: "ilike",
+                searchAttribute: "DistNum",
+                label: "Zones"
+            }, {
+                id: 2,
+                url: null,
+                typeName: "geosolutions:county",
+                label: "County",
+                values: [],
+                value: null,
+                valueField: "properties.juris_code",
+                textField: "properties.name2",
+                searchText: "*",
+                searchMethod: "ilike",
+                searchAttribute: "name2",
+                disabled: true,
+                dependson: {
+                    id: 1,
+                    field: "itd_dist",
+                    value: null
+                }
+            }]
+        };
+
+        const spatialfilter = ReactDOM.render(
+            <SpatialFilter
+                spatialField={spatialField}
+                spatialPanelExpanded={false}
+                showDetailsPanel={false}
+                spatialMethodOptions={[
+                    {id: "ZONE", name: "queryform.spatialfilter.methods.zone"}
+                ]}
+                spatialOperations={[
+                    {id: "INTERSECTS", name: "queryform.spatialfilter.operations.intersects"}
+                ]}/>,
+            document.getElementById("container")
+        );
+
+        expect(spatialfilter).toExist();
+        expect(spatialfilter.props.spatialField).toExist();
+        expect(spatialfilter.props.spatialField).toBe(spatialField);
+        expect(spatialfilter.props.spatialPanelExpanded).toBe(false);
+        expect(spatialfilter.props.showDetailsPanel).toBe(false);
+
+        const spatialFilterDOMNode = expect(ReactDOM.findDOMNode(spatialfilter));
+        expect(spatialFilterDOMNode).toExist();
+
+        let combosPanels = spatialFilterDOMNode.actual.getElementsByClassName('zone-combo');
+        expect(combosPanels).toExist();
+        expect(combosPanels.length).toBe(2);
     });
 });

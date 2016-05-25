@@ -25,7 +25,17 @@ const QUERY_FORM_RESET = 'QUERY_FORM_RESET';
 const SHOW_GENERATED_FILTER = 'SHOW_GENERATED_FILTER';
 const CHANGE_DWITHIN_VALUE = 'CHANGE_DWITHIN_VALUE';
 
-// const axios = require('../libs/ajax');
+const ZONE_SEARCH = 'ZONE_SEARCH';
+const ZONE_SEARCH_ERROR = 'ZONE_SEARCH_ERROR';
+const ZONE_FILTER = 'ZONE_FILTER';
+
+const OPEN_MENU = 'OPEN_MENU';
+
+const ZONE_CHANGE = 'ZONE_CHANGE';
+
+const ZONES_RESET = 'ZONES_RESET';
+
+const axios = require('../libs/ajax');
 
 function addFilterField(groupId) {
     return {
@@ -173,6 +183,75 @@ function reset() {
     };
 }
 
+function resetZones() {
+    return {
+        type: ZONES_RESET
+    };
+}
+
+function zoneFilter(searchResult, id) {
+    return {
+        type: ZONE_FILTER,
+        data: searchResult,
+        id: id
+    };
+}
+
+function zoneSearchError(error) {
+    return {
+        type: ZONE_SEARCH_ERROR,
+        error: error
+    };
+}
+
+function zoneSearch(active, id) {
+    return {
+        type: ZONE_SEARCH,
+        active: active,
+        id: id
+    };
+}
+
+function zoneGetValues(url, filter, id) {
+    return (dispatch) => {
+        return axios.post(url, filter, {
+            timeout: 10000,
+            headers: {'Accept': 'application/json', 'Content-Type': 'text/plain'}
+        }).then((response) => {
+            let config = response.data;
+            if (typeof config !== "object") {
+                try {
+                    config = JSON.parse(config);
+                } catch(e) {
+                    dispatch(zoneSearchError('Search result broken (' + url + ":   " + filter + '): ' + e.message));
+                }
+            }
+
+            dispatch(zoneFilter(config, id));
+            dispatch(zoneSearch(false, id));
+        }).catch((e) => {
+            dispatch(zoneSearchError(e));
+        });
+    };
+}
+
+function openMenu(active, id) {
+    return {
+        type: OPEN_MENU,
+        active: active,
+        id: id
+    };
+}
+
+function zoneChange(id, value, rawValue) {
+    return {
+        type: ZONE_CHANGE,
+        id: id,
+        value: value,
+        rawValue: rawValue
+    };
+}
+
 module.exports = {
     ADD_FILTER_FIELD,
     REMOVE_FILTER_FIELD,
@@ -193,6 +272,19 @@ module.exports = {
     // WFS_LOAD_ERROR,
     SHOW_GENERATED_FILTER,
     CHANGE_DWITHIN_VALUE,
+    ZONE_SEARCH,
+    ZONE_SEARCH_ERROR,
+    ZONE_FILTER,
+    OPEN_MENU,
+    ZONE_CHANGE,
+    ZONES_RESET,
+    resetZones,
+    zoneChange,
+    openMenu,
+    zoneSearch,
+    zoneSearchError,
+    zoneFilter,
+    zoneGetValues,
     addFilterField,
     removeFilterField,
     updateFilterField,
