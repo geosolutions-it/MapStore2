@@ -13,10 +13,12 @@ module.exports = {
         ToolbarPlugin: require('../../plugins/Toolbar'),
         SettingsPlugin: require('../../plugins/Settings'),
         MapLoadingPlugin: require('../../plugins/MapLoading'),
-        RasterStylerPlugin: require('../../plugins/RasterStyler')
+        RasterStylerPlugin: require('../../plugins/RasterStyler'),
+        IdentifyPlugin: require('../../plugins/Identify')
     },
     requires: {
-        ReactSwipe: require('react-swipe')
+        ReactSwipe: require('react-swipe'),
+        SwipeHeader: require('../../components/data/identify/SwipeHeader')
     }
 };
 

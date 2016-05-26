@@ -8,9 +8,7 @@
 const {combineReducers} = require('redux');
 const assign = require('object-assign');
 
-const {mapConfigHistory, createHistory} = require('../../../utils/MapHistoryUtils');
-
-const map = mapConfigHistory(require('../../../reducers/map'));
+const map = require('../../../reducers/map');
 
 const layers = require('../../../reducers/layers');
 const mapConfig = require('../../../reducers/config');
@@ -38,7 +36,7 @@ module.exports = (plugins) => {
     const mobileOverride = {mapInfo: {enabled: true, infoFormat: 'text/html' }, mousePosition: {enabled: true, crs: "EPSG:4326", showCenter: true}};
 
     const rootReducer = (state, action) => {
-        let mapState = createHistory(LayersUtils.splitMapAndLayers(mapConfig(state, action)));
+        let mapState = LayersUtils.splitMapAndLayers(mapConfig(state, action));
         let newState = {
             ...allReducers(state, action),
             map: mapState && mapState.map ? map(mapState.map, action) : null,
