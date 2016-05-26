@@ -77,7 +77,7 @@
                     "html":"<h3>Plugins</h3><p>Costruisci la tua applicazione</p>"
                 },
                 "rasterstyler":{
-                    "html":"<h3>Raster Styler</h3><p>Creao uno style raster</p>"
+                    "html":"<h3>Raster Styler</h3><p>Crea stile per dati raster</p>"
                 }
             }
         },
