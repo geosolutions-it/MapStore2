@@ -105,6 +105,7 @@ const RasterStyler = React.createClass({
         return null;
     },
     renderSelector() {
+        let disabled = (this.props.styletype === 'pseudo' && this.props.rasterstyler.pseudocolor.colorMapEntry.length === 0) ? true : false;
         return (<Row style={{marginBottom: "22px"}}>
                     <Row>
                         <Col xs={4}><label><Message msgId="rasterstyler.layerlabel"/></label></Col>
@@ -120,7 +121,7 @@ const RasterStyler = React.createClass({
                                 textField={"title"} />
                         </Col>
                         {this.props.layer ? (<Col xs={4}> <RasterStyleTypePicker styletype={this.props.styletype}/> </Col>) : null}
-                        {this.props.layer ? (<Col xs={4} style={{paddingRight: "27px", "paddingTop": "7px"}}> <OpacityPicker opacity={this.props.opacity}/> </Col>) : null}
+                        {this.props.layer ? (<Col xs={4} style={{paddingRight: "27px", "paddingTop": "7px"}}> <OpacityPicker disabled={disabled} opacity={this.props.opacity}/> </Col>) : null}
                     </Row>
                 </Row>);
     },
