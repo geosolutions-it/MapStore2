@@ -16,18 +16,21 @@ require("./opacitypicker.css");
 const OpacityPicker = React.createClass({
     propTypes: {
         opacity: React.PropTypes.oneOfType([React.PropTypes.number, React.PropTypes.string]),
-        onChange: React.PropTypes.func
+        onChange: React.PropTypes.func,
+        disabled: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
             opacity: "1",
-            onChange: () => {}
+            onChange: () => {},
+            disabled: false
         };
     },
     render() {
         return (
             <div className="opacity-picker">
                 <Slider
+                    disabled={this.props.disabled}
                     start={[this.props.opacity * 100 ]}
                     range={{min: 0, max: 100}}
                     onChange={(v) => this.props.onChange("opacity", (v / 100).toFixed(2))}
