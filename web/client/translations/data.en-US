@@ -291,7 +291,8 @@
             "rasterstyler": "Define min value, max value, number of classes and color ramp and generate new classified raster layer",
             "expandToolbar": "This is the helptext for Expand / Collapse",
             "historyundo": "Use this button to go to the previous map zoom and location",
-            "historyredo": "Use this button to go to the next map zoom and location"
+            "historyredo": "Use this button to go to the next map zoom and location",
+            "vectorstyler": "Add rule, and generate new styled vector layer"
         },
         "queryform": {
             "query": "Search",
@@ -466,6 +467,7 @@
             "multi": "Multi Band",
             "single": "Single Band"
         },
+
         "featuregrid": {
             "header": "Search results list",
             "tools": "Tool Panel",
@@ -477,6 +479,19 @@
                 "of":   "of",
                 "to":   "to"
             }
+        },
+        "vectorstyler": {
+            "tooltip": "Create and edit vector layer style",
+            "paneltitle": "Vector Styler",
+            "layerlabel": "Layer",
+            "rulelabel": "Rules",
+            "namelabel": "Rule Name",
+            "symboltitle": "Symbol",
+            "labeltitle": "Label",
+            "conditiontitle": "Conditions",
+            "applybtn": "Apply Style",
+            "addrulebtn": "Add Rule",
+            "removerulebtn": "Remove Rule"
         }
     }
 }

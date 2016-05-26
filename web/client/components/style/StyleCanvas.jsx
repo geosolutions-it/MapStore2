@@ -41,8 +41,8 @@ const StyleCanvas = React.createClass({
   paint(ctx) {
       ctx.save();
       ctx.beginPath();
-      ctx.fillStyle = `rgba(${ this.props.shapeStyle.fill.r }, ${ this.props.shapeStyle.fill.g }, ${ this.props.shapeStyle.fill.b }, ${ this.props.shapeStyle.fill.a })`;
-      ctx.strokeStyle = `rgba(${ this.props.shapeStyle.color.r }, ${ this.props.shapeStyle.color.g }, ${ this.props.shapeStyle.color.b }, ${ this.props.shapeStyle.color.a })`;
+      ctx.fillStyle = (this.props.shapeStyle.fill) ? `rgba(${ this.props.shapeStyle.fill.r }, ${ this.props.shapeStyle.fill.g }, ${ this.props.shapeStyle.fill.b }, ${ this.props.shapeStyle.fill.a })` : null;
+      ctx.strokeStyle = (this.props.shapeStyle.color) ? `rgba(${ this.props.shapeStyle.color.r }, ${ this.props.shapeStyle.color.g }, ${ this.props.shapeStyle.color.b }, ${ this.props.shapeStyle.color.a })` : null;
       ctx.lineWidth = this.props.shapeStyle.width;
       switch (this.props.geomType) {
           case 'Polygon': {
