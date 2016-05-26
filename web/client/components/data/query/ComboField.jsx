@@ -8,6 +8,8 @@
 const React = require('react');
 const assign = require('object-assign');
 
+const {OverlayTrigger, Tooltip} = require('react-bootstrap');
+
 const {DropdownList} = require('react-widgets');
 
 const LocaleUtils = require('../../../utils/LocaleUtils');
@@ -26,7 +28,10 @@ const ComboField = React.createClass({
             React.PropTypes.number,
             React.PropTypes.string
         ]),
-        fieldException: React.PropTypes.object,
+        fieldException: React.PropTypes.oneOfType([
+            React.PropTypes.object,
+            React.PropTypes.string
+        ]),
         comboFilterType: React.PropTypes.oneOfType([
             React.PropTypes.bool,
             React.PropTypes.string,
@@ -65,7 +70,11 @@ const ComboField = React.createClass({
         };
     },
     render() {
-        const style = assign({}, this.props.style, {marginBottom: "15px"});
+        let style = assign({}, this.props.style, {marginBottom: "15px", borderColor: "#dedede"});
+
+        if (this.props.fieldException) {
+            style = assign({}, style, {borderColor: "#FF0000"});
+        }
 
         const placeholder = LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.combo_placeholder");
 
@@ -103,7 +112,19 @@ const ComboField = React.createClass({
                 onSearch={this.props.onSearch}/>
         );
 
-        return ddList;
+        return this.props.fieldException ? (
+            <OverlayTrigger placement="bottom" overlay={(
+                    <Tooltip id={this.props.fieldRowId + "_tooltip"}>
+                        <strong>
+                            {this.props.fieldException}
+                        </strong>
+                    </Tooltip>
+            )}>
+                {ddList}
+            </OverlayTrigger>
+        ) : (
+            ddList
+        );
     }
 });
 

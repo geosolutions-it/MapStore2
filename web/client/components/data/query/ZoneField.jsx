@@ -29,6 +29,11 @@ const ZoneField = React.createClass({
         searchText: React.PropTypes.string,
         searchMethod: React.PropTypes.string,
         searchAttribute: React.PropTypes.string,
+        sort: React.PropTypes.object,
+        error: React.PropTypes.oneOfType([
+            React.PropTypes.object,
+            React.PropTypes.string
+        ]),
         comboFilterType: React.PropTypes.oneOfType([
             React.PropTypes.bool,
             React.PropTypes.string,
@@ -60,6 +65,7 @@ const ZoneField = React.createClass({
             textField: null,
             label: null,
             disabled: false,
+            error: null,
             searchText: "*",
             searchMethod: "ilike",
             searchAttribute: null,
@@ -89,7 +95,7 @@ const ZoneField = React.createClass({
             });
         }
 
-        const filter = FilterUtils.toOGCFilter(this.props.typeName, filterObj, this.props.wfs, {
+        const filter = FilterUtils.toOGCFilter(this.props.typeName, filterObj, this.props.wfs, this.props.sort || {
             sortBy: this.props.searchAttribute,
             sortOrder: "ASC"
         });
@@ -116,6 +122,11 @@ const ZoneField = React.createClass({
 
         let label = this.props.label ? (<label>{this.props.label}</label>) : (<span/>);
 
+        let error = this.props.error;
+        if (error) {
+            error = typeof error !== "object" ? error : error.status + " " + error.statusText + ": " + error.data;
+        }
+
         return (
             <div className="zone-combo">
                 {label}
@@ -123,11 +134,13 @@ const ZoneField = React.createClass({
                     key={new Date().getUTCMilliseconds()}
                     busy={this.props.busy}
                     disabled={this.props.disabled}
+                    fieldRowId={this.props.zoneId}
                     valueField={'id'}
                     textField={'name'}
                     fieldOptions={values}
                     fieldValue={this.props.value}
                     fieldName="zone"
+                    fieldException={error}
                     options={{
                         open: this.props.open
                     }}

@@ -28,7 +28,8 @@ const {
     ZONE_SEARCH,
     OPEN_MENU,
     ZONE_CHANGE,
-    ZONES_RESET
+    ZONES_RESET,
+    ZONE_SEARCH_ERROR
 } = require('../actions/queryform');
 
 const {
@@ -191,10 +192,10 @@ function queryform(state = initialState, action) {
                 if (field.id === action.id && action.data.features && action.data.features.length > 0) {
                     return assign({}, field, {
                         values: action.data.features,
-                        open: true
+                        open: true,
+                        error: null
                     });
                 }
-
                 return field;
             })})});
         }
@@ -268,7 +269,8 @@ function queryform(state = initialState, action) {
                     let f = assign({}, field, {
                         values: [],
                         value: null,
-                        open: false
+                        open: false,
+                        error: null
                     });
 
                     if (field.dependson) {
@@ -289,6 +291,22 @@ function queryform(state = initialState, action) {
                 if (field.id === action.id) {
                     return assign({}, field, {
                         open: action.active
+                    });
+                }
+                return field;
+            })})});
+        }
+        case ZONE_SEARCH_ERROR: {
+            return assign({}, state, {spatialField: assign({}, state.spatialField, {zoneFields: state.spatialField.zoneFields.map((field) => {
+                if (field.id === action.id) {
+                    let error = typeof action.error !== "object" ? action.error : {
+                        status: action.error.status,
+                        statusText: action.error.statusText,
+                        data: action.error.data
+                    };
+                    return assign({}, field, {
+                        error: error,
+                        busy: false
                     });
                 }
                 return field;
