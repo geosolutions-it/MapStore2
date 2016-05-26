@@ -75,6 +75,9 @@
                 },
                 "plugins":{
                     "html":"<h3>Plugins</h3><p>Build your own application</p>"
+                },
+                "rasterstyler":{
+                    "html":"<h3>Raster Styler</h3><p>Style your raster layer</p>"
                 }
             }
         },
