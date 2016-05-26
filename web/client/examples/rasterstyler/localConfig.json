@@ -24,7 +24,30 @@
                         "width": "auto"
                     }
                 }
-         },"Toolbar",{
+         },{
+                "name": "Identify",
+                "hideFrom": ["Settings"],
+                "cfg": {
+                    "style": {
+                          "position": "absolute",
+                            "width": "100%",
+                            "bottom": "0px",
+                            "zIndex": 1010,
+                            "maxHeight": "70%",
+                            "marginBottom": 0
+                    },
+                    "draggable": false,
+                    "collapsible": true,
+                    "viewerOptions": {
+                        "container": "{context.ReactSwipe}",
+                        "header": "{context.SwipeHeader}",
+                        "collapsible": false
+                    },
+                    "bodyClass": "mobile-feature-info"
+                }
+         },
+         "Toolbar",
+         {
                 "name": "RasterStyler",
                 "hide": false
         }
@@ -38,6 +61,6 @@
         },{
                 "name": "Settings",
                 "hide": true
-        }, "Toolbar", "MapLoading"]
+        }, "Toolbar", "Identify", "MapLoading"]
     }
 }
