@@ -197,10 +197,11 @@ function zoneFilter(searchResult, id) {
     };
 }
 
-function zoneSearchError(error) {
+function zoneSearchError(error, id) {
     return {
         type: ZONE_SEARCH_ERROR,
-        error: error
+        error: error,
+        id: id
     };
 }
 
@@ -223,14 +224,14 @@ function zoneGetValues(url, filter, id) {
                 try {
                     config = JSON.parse(config);
                 } catch(e) {
-                    dispatch(zoneSearchError('Search result broken (' + url + ":   " + filter + '): ' + e.message));
+                    dispatch(zoneSearchError('Search result broken (' + url + ":   " + filter + '): ' + e.message, id));
                 }
             }
 
             dispatch(zoneFilter(config, id));
             dispatch(zoneSearch(false, id));
         }).catch((e) => {
-            dispatch(zoneSearchError(e));
+            dispatch(zoneSearchError(e, id));
         });
     };
 }
