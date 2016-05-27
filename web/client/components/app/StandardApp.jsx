@@ -22,6 +22,7 @@ const StandardApp = React.createClass({
     propTypes: {
         appStore: React.PropTypes.func,
         pluginsDef: React.PropTypes.object,
+        storeOpts: React.PropTypes.object,
         initialActions: React.PropTypes.array,
         appComponent: React.PropTypes.func,
         printingEnabled: React.PropTypes.bool
@@ -36,7 +37,7 @@ const StandardApp = React.createClass({
         };
     },
     componentWillMount() {
-        this.store = this.props.appStore(this.props.pluginsDef.plugins);
+        this.store = this.props.appStore(this.props.pluginsDef.plugins, this.props.storeOpts);
         if (!global.Intl ) {
             require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js'], (require) => {
                 global.Intl = require('intl');

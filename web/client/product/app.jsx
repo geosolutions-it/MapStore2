@@ -14,7 +14,7 @@ const {loadMaps} = require('../actions/maps');
 
 const StandardApp = require('../components/app/StandardApp');
 
-const {pages, pluginsDef, initialState} = require('./appConfig');
+const {pages, pluginsDef, initialState, storeOpts} = require('./appConfig');
 
 const StandardRouter = connect((state) => ({
     locale: state.locale || {},
@@ -31,6 +31,7 @@ const initialActions = [
 ];
 
 const appConfig = {
+    storeOpts,
     appStore,
     pluginsDef,
     initialActions,
