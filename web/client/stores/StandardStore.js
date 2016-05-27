@@ -19,8 +19,9 @@ const {combineReducers} = require('../utils/PluginsUtils');
 
 const LayersUtils = require('../utils/LayersUtils');
 const {CHANGE_BROWSER_PROPERTIES} = require('../actions/browser');
+const {persistStore, autoRehydrate} = require('redux-persist');
 
-module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {}, plugins) => {
+module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {}, plugins, storeOpts) => {
     const allReducers = combineReducers(plugins, {
         ...appReducers,
         locale: require('../reducers/locale'),
@@ -48,5 +49,12 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
 
         return newState;
     };
+    if (storeOpts && storeOpts.persist) {
+        let store = DebugUtils.createDebugStore(rootReducer, defaultState, [], autoRehydrate());
+        persistStore(store, storeOpts.persistOptions);
+        return store;
+    }
     return DebugUtils.createDebugStore(rootReducer, defaultState);
+
+
 };
