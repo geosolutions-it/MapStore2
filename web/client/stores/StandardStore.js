@@ -51,7 +51,7 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
     };
     if (storeOpts && storeOpts.persist) {
         let store = DebugUtils.createDebugStore(rootReducer, defaultState, [], autoRehydrate());
-        persistStore(store, storeOpts.persistOptions);
+        persistStore(store, storeOpts.persist);
         return store;
     }
     return DebugUtils.createDebugStore(rootReducer, defaultState);
