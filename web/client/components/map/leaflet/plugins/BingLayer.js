@@ -8,15 +8,20 @@
 
 var Layers = require('../../../../utils/leaflet/Layers');
 var Bing = require('leaflet-plugins/layer/tile/Bing');
+const assign = require('object-assign');
 
 Layers.registerType('bing', (options) => {
     var key = options.apiKey;
-    return new Bing(key,
-        {
-            subdomains: [0, 1, 2, 3],
-            type: options.name,
-            attribution: 'Bing',
-            culture: ''
-        }
-    );
+    let layerOptions = {
+        subdomains: [0, 1, 2, 3],
+        type: options.name,
+        attribution: 'Bing',
+        culture: ''
+    };
+    if (options.zoomOffset) {
+        layerOptions = assign({}, layerOptions, {
+            zoomOffset: options.zoomOffset
+        });
+    }
+    return new Bing(key, layerOptions);
 });

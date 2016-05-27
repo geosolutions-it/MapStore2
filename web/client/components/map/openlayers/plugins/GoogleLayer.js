@@ -12,7 +12,7 @@ var React = require('react');
 
 var layersMap;
 var rendererItem;
-var gmap;
+var gmaps = {};
 var isTouchSupported = 'ontouchstart' in window;
 var startEvent = isTouchSupported ? 'touchstart' : 'mousedown';
 var moveEvent = isTouchSupported ? 'touchmove' : 'mousemove';
@@ -29,8 +29,8 @@ Layers.registerType('google', {
                'TERRAIN': google.maps.MapTypeId.TERRAIN
            };
         }
-        if (!gmap) {
-            gmap = new google.maps.Map(document.getElementById(mapId + 'gmaps'), {
+        if (!gmaps[mapId]) {
+            gmaps[mapId] = new google.maps.Map(document.getElementById(mapId + 'gmaps'), {
               disableDefaultUI: true,
               keyboardShortcuts: false,
               draggable: false,
@@ -39,14 +39,14 @@ Layers.registerType('google', {
               streetViewControl: false
             });
         }
-        gmap.setMapTypeId(layersMap[options.name]);
+        gmaps[mapId].setMapTypeId(layersMap[options.name]);
         let view = map.getView();
         let setCenter = function() {
             var center = ol.proj.transform(view.getCenter(), 'EPSG:3857', 'EPSG:4326');
-            gmap.setCenter(new google.maps.LatLng(center[1], center[0]));
+            gmaps[mapId].setCenter(new google.maps.LatLng(center[1], center[0]));
         };
         let setZoom = function() {
-            gmap.setZoom(view.getZoom());
+            gmaps[mapId].setZoom(view.getZoom());
         };
 
         /**
@@ -101,7 +101,7 @@ Layers.registerType('google', {
             let mapContainer = document.getElementById(mapId + 'gmaps');
 
             mapContainer.style.transform = "rotate(" + rotation + "deg)";
-            google.maps.event.trigger(gmap, "resize");
+            google.maps.event.trigger(gmaps[mapId], "resize");
         };
 
         view.on('change:center', setCenter);
@@ -129,7 +129,7 @@ Layers.registerType('google', {
                 mapContainer.style.height = size.height + 'px';
                 mapContainer.style.left = (Math.round((map.getSize()[0] - size.width) / 2.0)) + 'px';
                 mapContainer.style.top = (Math.round((map.getSize()[1] - size.height) / 2.0)) + 'px';
-                google.maps.event.trigger(gmap, "resize");
+                google.maps.event.trigger(gmaps[mapId], "resize");
                 setCenter();
             }
         };
@@ -155,15 +155,15 @@ Layers.registerType('google', {
         if (!rendererItem) {
             rendererItem = options.name;
         }
-        let gmapsStyle = {zIndex: -1};
+        let gmapsStyle = {zIndex: 0};
         if (options.visibility === true) {
-            let div = document.getElementById("mapgmaps");
+            let div = document.getElementById(mapId + "gmaps");
             if (div) {
                 div.style.visibility = 'visible';
             }
-            if (gmap && layersMap) {
-                gmap.setMapTypeId(layersMap[options.name]);
-                gmap.setTilt(0);
+            if (gmaps[mapId] && layersMap) {
+                gmaps[mapId].setMapTypeId(layersMap[options.name]);
+                gmaps[mapId].setTilt(0);
             }
         } else {
             gmapsStyle.visibility = 'hidden'; // used only for the renered div
@@ -172,7 +172,7 @@ Layers.registerType('google', {
         // instance of google layer
         if (rendererItem === options.name) {
             // assume the first render the div for gmaps
-            let div = document.getElementById("mapgmaps");
+            let div = document.getElementById(mapId + "gmaps");
             if (div) {
                 div.style.visibility = options.visibility ? 'visible' : 'hidden';
             }

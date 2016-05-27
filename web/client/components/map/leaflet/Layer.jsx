@@ -14,7 +14,8 @@ const LeafletLayer = React.createClass({
         map: React.PropTypes.object,
         type: React.PropTypes.string,
         options: React.PropTypes.object,
-        position: React.PropTypes.number
+        position: React.PropTypes.number,
+        zoomOffset: React.PropTypes.number
     },
     componentDidMount() {
         this.createLayer(this.props.type, this.props.options, this.props.position);
@@ -81,7 +82,7 @@ const LeafletLayer = React.createClass({
     },
     createLayer(type, options, position) {
         if (type) {
-            const opts = assign({}, options, position ? {zIndex: position} : null);
+            const opts = assign({}, options, position ? {zIndex: position} : null, {zoomOffset: -this.props.zoomOffset});
             this.layer = Layers.createLayer(type, opts);
             if (this.layer) {
                 this.layer.layerName = options.name;

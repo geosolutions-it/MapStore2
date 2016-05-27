@@ -10,5 +10,5 @@ var Layers = require('../../../../utils/leaflet/Layers');
 var Google = require('leaflet-plugins/layer/tile/Google');
 
 Layers.registerType('google', (options) => {
-    return new Google(options.name);
+    return new Google(options.name, {zoomOffset: options.zoomOffset});
 });

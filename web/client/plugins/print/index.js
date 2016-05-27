@@ -95,6 +95,12 @@ const LegendDpiOption = connect((state) => ({
     onChange: compose(setPrintParameter.bind(null, 'legendDpi'), (e) => parseInt(e.target.value, 10))
 })(Input);
 
+const DefaultBackgroundOption = connect((state) => ({
+    checked: state.print && state.print.spec && !!state.print.spec.defaultBackground
+}), {
+    onChange: setPrintParameter.bind(null, 'defaultBackground')
+})(require('../../components/print/PrintOption'));
+
 const Font = connect((state) => ({
     family: state.print && state.print.spec && state.print.spec.fontFamily,
     size: state.print && state.print.spec && state.print.spec.fontSize,
@@ -136,6 +142,7 @@ module.exports = {
     Name,
     Description,
     Resolution,
+    DefaultBackgroundOption,
     Sheet,
     LegendOption,
     MultiPageOption,

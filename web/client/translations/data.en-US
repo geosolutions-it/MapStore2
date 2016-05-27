@@ -98,6 +98,7 @@
             "description": "Description",
             "descriptionplaceholder": "Enter a description...",
             "resolution": "Resolution:",
+            "defaultBackground": "Use OSM as a background",
             "printtooltip": "Print",
             "alternatives": {
                 "legend": "Include legend",

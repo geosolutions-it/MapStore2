@@ -8,29 +8,30 @@
 
 var Layers = require('../../../../utils/leaflet/Layers');
 var L = require('leaflet');
-var Common = require('./Commons');
+
 var mqTilesAttr = 'Tiles &copy; <a href="https://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png" />';
 
+const assign = require('object-assign');
 
-var mapquestConstructors = {
-    osm: Common.extend({
+var mapquestOptions = {
+    osm: {
         url: 'http://otile{s}.mqcdn.com/tiles/1.0.0/{type}/{z}/{x}/{y}.png',
         options: {
             subdomains: '1234',
             type: 'osm',
             attribution: 'Map data ' + L.TileLayer.OSM_ATTR + ', ' + mqTilesAttr
         }
-    }),
-    sat: Common.extend({
+    },
+    sat: {
         url: 'http://otile{s}.mqcdn.com/tiles/1.0.0/{type}/{z}/{x}/{y}.png',
         options: {
             subdomains: '1234',
             type: 'sat',
             attribution: 'Imagery &copy; NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency, ' + mqTilesAttr
         }
-    })
+    }
 };
 
 Layers.registerType('mapquest', (options) => {
-    return new mapquestConstructors[options.name]();
+    return L.tileLayer(mapquestOptions[options.name].url, assign({}, mapquestOptions[options.name].options, options.zoomOffset ? {zoomOffset: options.zoomOffset} : {}), options);
 });

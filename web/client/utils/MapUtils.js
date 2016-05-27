@@ -117,6 +117,10 @@ function getResolutionsFromScales(scales, dpi) {
     return scales.map((scale) => scale / dpm);
 }
 
+function getGoogleMercatorResolutions(minZoom, maxZoom, dpi) {
+    return getResolutionsFromScales(getGoogleMercatorScales(minZoom, maxZoom, dpi), dpi);
+}
+
 function getResolutions() {
     if (getHook('RESOLUTIONS_HOOK')) {
         return getHook('RESOLUTIONS_HOOK')();
@@ -204,6 +208,19 @@ function getBbox(center, zoom) {
     );
 }
 
+const isNearlyEqual = function(a, b) {
+    if (a === undefined || b === undefined) {
+        return false;
+    }
+    return ( a.toFixed(12) - (b.toFixed(12))) === 0;
+};
+
+function mapUpdated(oldMap, newMap) {
+    const centersEqual = isNearlyEqual(newMap.center.x, oldMap.center.x) &&
+                          isNearlyEqual(newMap.center.y, oldMap.center.y);
+    return !centersEqual || (newMap.zoom !== oldMap.zoom);
+}
+
 module.exports = {
     EXTENT_TO_ZOOM_HOOK,
     RESOLUTIONS_HOOK,
@@ -215,11 +232,13 @@ module.exports = {
     getSphericalMercatorScales,
     getSphericalMercatorScale,
     getGoogleMercatorScales,
+    getGoogleMercatorResolutions,
     getGoogleMercatorScale,
     getZoomForExtent,
     defaultGetZoomForExtent,
     getCenterForExtent,
     getResolutions,
     getScales,
-    getBbox
+    getBbox,
+    mapUpdated
 };
