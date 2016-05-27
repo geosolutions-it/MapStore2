@@ -82,7 +82,7 @@
             }
         },
         "manager": {
-            "openInANewTab":"Apri in un nuovo tab",
+            "openInANewTab":"Apri mappa",
             "mapTypes_combo": "Seleziona il visualizzatore di mappa:",
             "maps_title": "Mappe",
             "locales_combo": "Lingua:"
