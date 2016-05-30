@@ -7,41 +7,28 @@
  */
 const React = require('react');
 const ReactDOM = require('react-dom');
+const {connect} = require('react-redux');
 
-const {Provider} = require('react-redux');
+const StandardApp = require('../MapStore2/web/client/components/app/StandardApp');
 
-const {Router, Route, hashHistory} = require('react-router');
+const {pages, pluginsDef, initialState, storeOpts} = require('./appConfig');
 
-const Main = require('./containers/Main');
-const Home = require('./containers/Home');
+const StandardRouter = connect((state) => ({
+    locale: state.locale || {},
+    pages
+}))(require('../MapStore2/web/client/components/app/StandardRouter'));
 
-const store = require('./stores/store');
+const appStore = require('../MapStore2/web/client/stores/StandardStore').bind(null, initialState, {});
 
-const {loadMapConfig} = require('../MapStore2/web/client/actions/config');
-const {changeBrowserProperties} = require('../MapStore2/web/client/actions/browser');
-const {loadLocale} = require('../MapStore2/web/client/actions/locale');
-
-const ConfigUtils = require('../MapStore2/web/client/utils/ConfigUtils');
-const LocaleUtils = require('../MapStore2/web/client/utils/LocaleUtils');
-
-store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
-
-ConfigUtils
-    .loadConfiguration()                       // localConfig.json: Global configuration
-    .then(() => {                              // config.json: app configuration
-        const { configUrl, legacy } = ConfigUtils.getUserConfiguration('config', 'json');
-        store.dispatch(loadMapConfig(configUrl, legacy));
-
-        let locale = LocaleUtils.getUserLocale();
-        store.dispatch(loadLocale('MapStore2/web/client/translations', locale));
-    });
+const appConfig = {
+    storeOpts,
+    appStore,
+    pluginsDef,
+    initialActions: [],
+    appComponent: StandardRouter
+};
 
 ReactDOM.render(
-    <Provider store={store}>
-        <Router history={hashHistory}>
-            <Route path="/" component={Home}/>
-            <Route path="/main" component={Main}/>
-        </Router>
-    </Provider>
-    , document.getElementById("container")
+    <StandardApp {...appConfig}/>,
+    document.getElementById('container')
 );
