@@ -105,7 +105,6 @@ const RasterStyler = React.createClass({
         return null;
     },
     renderSelector() {
-        let disabled = (this.props.styletype === 'pseudo' && this.props.rasterstyler.pseudocolor.colorMapEntry.length === 0) ? true : false;
         return (<Row style={{marginBottom: "22px"}}>
                     <Row>
                         <Col xs={4}><label><Message msgId="rasterstyler.layerlabel"/></label></Col>
@@ -121,7 +120,7 @@ const RasterStyler = React.createClass({
                                 textField={"title"} />
                         </Col>
                         {this.props.layer ? (<Col xs={4}> <RasterStyleTypePicker styletype={this.props.styletype}/> </Col>) : null}
-                        {this.props.layer ? (<Col xs={4} style={{paddingRight: "27px", "paddingTop": "7px"}}> <OpacityPicker disabled={disabled} opacity={this.props.opacity}/> </Col>) : null}
+                        {this.props.layer ? (<Col xs={4} style={{paddingRight: "27px", "paddingTop": "7px"}}> <OpacityPicker disabled={this.canApply()} opacity={this.props.opacity}/> </Col>) : null}
                     </Row>
                 </Row>);
     },
@@ -172,10 +171,9 @@ const RasterStyler = React.createClass({
         );
     },
     renderApplyBtn() {
-        let disabled = (this.props.styletype === 'pseudo' && this.props.rasterstyler.pseudocolor.colorMapEntry.length === 0) ? true : false;
         return (
             <Row><Button style={{"float": "right"}} onClick={this.apply}
-            disabled={disabled} ><Message msgId="rasterstyler.applybtn"/></Button></Row>);
+            disabled={this.canApply()} ><Message msgId="rasterstyler.applybtn"/></Button></Row>);
     },
     renderBody() {
 
@@ -208,6 +206,16 @@ const RasterStyler = React.createClass({
     apply() {
         let style = jsonToSLD(this.props.styletype, this.props.opacity, this.props.rasterstyler, this.props.layer);
         this.props.changeLayerProperties(this.props.layer.id, { params: assign({}, this.props.layer.params, {SLD_BODY: style})});
+    },
+    canApply() {
+        let rstyler = this.props.rasterstyler;
+        let entryLength = 0;
+        if (rstyler && rstyler.pseudocolor) {
+            entryLength = (rstyler.pseudocolor.type === "ramp" || rstyler.pseudocolor.type === "intervals") ? 1 : 0;
+        }
+
+        let disabled = (this.props.styletype === 'pseudo' && this.props.rasterstyler.pseudocolor.colorMapEntry.length <= entryLength) ? true : false;
+        return disabled;
     }
 });
 const selector = createSelector([
