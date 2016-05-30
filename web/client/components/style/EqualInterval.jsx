@@ -8,7 +8,8 @@
 
 
 const React = require('react');
-const {Grid, Row, Col, Button} = require('react-bootstrap');
+const {findDOMNode} = require('react-dom');
+const {Grid, Row, Col, Button, Popover, Label, Overlay} = require('react-bootstrap');
 
 const Combobox = require('react-widgets').Combobox;
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
@@ -28,7 +29,8 @@ const EqualInterval = React.createClass({
         classes: React.PropTypes.number,
         onChange: React.PropTypes.func,
         onClassify: React.PropTypes.func,
-        ramp: React.PropTypes.string
+        ramp: React.PropTypes.string,
+        error: React.PropTypes.object
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -40,7 +42,8 @@ const EqualInterval = React.createClass({
             classes: 5,
             ramp: "Blues",
             onChange: () => {},
-            onClassify: () => {}
+            onClassify: () => {},
+            error: null
         };
     },
     shouldComponentUpdate() {
@@ -59,6 +62,17 @@ const EqualInterval = React.createClass({
         }
         return ramp;
     },
+    renderErrorPopOver() {
+        return (
+            <Overlay
+            target={() => findDOMNode(this.refs[this.props.error.type])}
+                show={true} placement="top" >
+                <Popover>
+                    <Label bsStyle="danger" > <Message msgId={this.props.error.msg}/></Label>
+                </Popover>
+            </Overlay>
+            );
+    },
     render() {
         return (
             <Grid fluid>
@@ -69,11 +83,13 @@ const EqualInterval = React.createClass({
                         </Col></Row>
                         <Row><Col xs={12} >
                             <NumberPicker
-                                onChange={(number) => this.props.onChange("min", number)}
+                                ref="min"
+                                onChange={this.changeMin}
                                 value={this.props.min}
                                 format="-#,###.##"
                                 precision={3}
                             />
+                         {(this.props.error && this.props.error.type === 'min') ? this.renderErrorPopOver() : null}
                         </Col></Row>
                     </Col>
                     <Col xs={4}>
@@ -82,12 +98,13 @@ const EqualInterval = React.createClass({
                         </Col></Row>
                         <Row><Col xs={12} >
                             <NumberPicker
-                                min={this.props.min + 1}
-                                onChange={(number) => this.props.onChange("max", number)}
+                                ref="max"
+                                onChange={this.changeMax}
                                 value={this.props.max}
                                 format="-#,###.##"
                                 precision={3}
                             />
+                            {(this.props.error && this.props.error.type === 'max') ? this.renderErrorPopOver() : null}
                          </Col></Row>
                     </Col>
                     <Col xs={4}>
@@ -123,12 +140,17 @@ const EqualInterval = React.createClass({
                     <Col xs={6}>
                         <Row style={{paddingTop: "25px"}}>
                         <Col xs={12} >
-                        <Button onClick={this.generateEqualIntervalRamp} style={{"float": "right"}}>
+                        <Button disabled={this.classifyDisabled()}
+                                onClick={this.generateEqualIntervalRamp}
+                                style={{"float": "right"}}>
                         <Message msgId="equalinterval.classify"/></Button>
                         </Col></Row>
                     </Col>
                 </Row>
             </Grid>);
+    },
+    classifyDisabled() {
+        return (this.props.error && this.props.error.type) ? true : false;
     },
     generateEqualIntervalRamp() {
         let ramp = colors[this.props.ramp][this.props.classes];
@@ -139,6 +161,33 @@ const EqualInterval = React.createClass({
             return {color: color, quantity: min + (idx * step)};
         });
         this.props.onClassify("colorRamp", colorRamp);
+    },
+    changeMin(value) {
+        if (value < this.props.max) {
+            if (this.props.error) {
+                this.props.onChange("error", {});
+            }
+            this.props.onChange("min", value);
+        } else {
+            this.props.onChange("error", {
+                type: "min",
+                msg: "equalinterval.minerror"
+            });
+        }
+
+    },
+    changeMax(value) {
+        if (value > this.props.min) {
+            if (this.props.error) {
+                this.props.onChange("error", {});
+            }
+            this.props.onChange("max", value);
+        }else {
+            this.props.onChange("error", {
+                type: "max",
+                msg: "equalinterval.maxerror"
+            });
+        }
     }
 });
 
