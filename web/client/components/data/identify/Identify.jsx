@@ -37,7 +37,8 @@ const Identify = React.createClass({
         showMarker: React.PropTypes.func,
         hideMarker: React.PropTypes.func,
         changeMousePointer: React.PropTypes.func,
-        maxItems: React.PropTypes.number
+        maxItems: React.PropTypes.number,
+        excludeParams: React.PropTypes.array
     },
     getDefaultProps() {
         return {
@@ -67,7 +68,8 @@ const Identify = React.createClass({
             point: {},
             map: {},
             layers: [],
-            maxItems: 10
+            maxItems: 10,
+            excludeParams: ["SLD_BODY"]
         };
     },
     componentWillReceiveProps(newProps) {
@@ -76,7 +78,7 @@ const Identify = React.createClass({
             const queryableLayers = newProps.layers.filter(newProps.queryableLayersFilter);
             queryableLayers.forEach((layer) => {
                 const {url, request, metadata} = this.props.buildRequest(layer, newProps);
-                this.props.sendRequest(url, request, metadata, layer);
+                this.props.sendRequest(url, request, metadata, this.filterRequestParams(layer));
             });
             this.props.showMarker();
         }
@@ -140,6 +142,28 @@ const Identify = React.createClass({
             }
         }
         return false;
+    },
+    filterRequestParams(layer) {
+        let options = layer;
+        let excludeList = this.props.excludeParams;
+        if (layer.params && excludeList && excludeList.length > 0) {
+            options = Object.keys(layer).reduce((op, next) => {
+                if (next !== "params") {
+                    op[next] = layer[next];
+                }else {
+                    let params = layer[next];
+                    op[next] = Object.keys(params).reduce((pr, n) => {
+                        if (excludeList.findIndex((el) => {return (el === n); }) === -1) {
+                            pr[n] = params[n];
+                        }
+                        return pr;
+                    }, {});
+                }
+                return op;
+            }, {});
+
+        }
+        return options;
     }
 });
 
