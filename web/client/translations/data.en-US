@@ -399,7 +399,8 @@
         "colormapgrid": {
             "color": "Color",
             "quantity": "Quantity",
-            "label": "Label"
+            "label": "Label",
+            "minmaxerror": "The value must be between the values ​​of the previous and next cell"
         },
         "pseudocolorsettings": {
             "type": "Type",

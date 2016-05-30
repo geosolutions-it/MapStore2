@@ -63,7 +63,7 @@ const ColorMapGrid = React.createClass({
                         width: 135,
                         headerName: LocaleUtils.getMessageById(this.context.messages, "colormapgrid.quantity"),
                         field: "quantity",
-                        cellRenderer: reactCellRendererFactory(NumberRenderer, { onChangeValue: this.changeQuantity})
+                        cellRenderer: reactCellRendererFactory(NumberRenderer, { onChangeValue: this.changeQuantity, errorMessage: LocaleUtils.getMessageById(this.context.messages, "colormapgrid.minmaxerror")})
                     }, {
                         width: 160,
                         headerName: LocaleUtils.getMessageById(this.context.messages, "colormapgrid.label"),
