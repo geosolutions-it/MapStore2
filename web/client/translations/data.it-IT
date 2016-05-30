@@ -399,7 +399,7 @@
             "color": "Colore",
             "quantity": "Valore",
             "label": "Descrizione",
-            "minmaxerror": "Il valore deve essere compreso tra quelli della cella prcedente e successiva"
+            "minmaxerror": "Il valore deve essere compreso tra quelli della cella precedente e successiva"
         },
         "pseudocolorsettings": {
             "type": "Tipo",
