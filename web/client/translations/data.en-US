@@ -394,7 +394,9 @@
             "max": "Max",
             "classes": "Classes",
             "ramp": "Color Ramp",
-            "classify": "Classify"
+            "classify": "Classify",
+            "maxerror": "Max value should be greater then min value",
+            "minerror": "Min value should be less then max value"
         },
         "colormapgrid": {
             "color": "Color",

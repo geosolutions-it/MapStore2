@@ -393,7 +393,9 @@
             "max": "Max",
             "classes": "Classes",
             "ramp": "Color Ramp",
-            "classify": "Classify"
+            "classify": "Classify",
+            "maxerror": "Il massimo deve essre maggiore del minimo",
+            "minerror": "Il minimo deve essre minore del massimo"
         },
         "colormapgrid": {
             "color": "Colore",
