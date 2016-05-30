@@ -26,19 +26,28 @@ const MapPreview = React.createClass({
         onMapRefresh: React.PropTypes.func,
         height: React.PropTypes.number,
         width: React.PropTypes.number,
-        mapType: React.PropTypes.string
+        mapType: React.PropTypes.string,
+        enableRefresh: React.PropTypes.bool,
+        enableScalebox: React.PropTypes.bool,
+        resolutions: React.PropTypes.array,
+        printRatio: React.PropTypes.number,
+        layout: React.PropTypes.string,
+        layoutSize: React.PropTypes.object
     },
     getDefaultProps() {
         return {
             map: null,
             layers: [],
             mapType: "leaflet",
-            style: {display: "block", border: "1px solid black"},
+            style: {display: "block", border: "1px solid black", position: "relative"},
             onChangeZoomLevel: () => {},
             onMapViewChanges: () => {},
             onMapRefresh: () => {},
             width: 370,
-            height: 270
+            height: 270,
+            enableRefresh: true,
+            enableScalebox: true,
+            printRatio: 96.0 / 72.0
         };
     },
     componentWillMount() {
@@ -46,12 +55,33 @@ const MapPreview = React.createClass({
         Layer = require('../map/' + this.props.mapType + '/Layer');
         require('../map/' + this.props.mapType + '/plugins/index');
     },
+    getRatio() {
+        if (this.props.width && this.props.layoutSize && this.props.resolutions) {
+            return this.props.layoutSize.width / this.props.width * this.props.printRatio;
+        }
+        return 1;
+    },
+    getResolutions() {
+        if (this.props.width && this.props.layoutSize && this.props.resolutions) {
+            return this.props.resolutions.map((resolution) => resolution * this.getRatio());
+        }
+        return this.props.resolutions;
+    },
+    adjustResolution(layer) {
+        const ratio = this.getRatio();
+        return assign({}, layer, {
+            params: assign({}, layer.params, {
+                "format_options": "dpi:" + Math.round((96.0 / ratio))
+            })
+        });
+    },
     render() {
         const style = assign({}, this.props.style, {
             width: this.props.width + "px",
             height: this.props.height + "px"
         });
-
+        const resolutions = this.getResolutions();
+        const mapOptions = resolutions ? {view: {resolutions}} : {};
         return this.props.map && this.props.map.center ?
         (
                 <div><PMap
@@ -66,18 +96,19 @@ const MapPreview = React.createClass({
                 center={this.props.map.center}
                 id="print_preview"
                 registerHooks={false}
+                mapOptions={mapOptions}
                 >
                 {this.props.layers.map((layer, index) =>
                     <Layer key={layer.name} position={index} type={layer.type}
-                        options={assign({}, layer)}/>
+                        options={assign({}, this.adjustResolution(layer))}/>
                 )}
                 </PMap>
-                <ScaleBox id="mappreview-scalebox"
+                {this.props.enableScalebox ? <ScaleBox id="mappreview-scalebox"
                     currentZoomLvl={this.props.map.scaleZoom}
                     scales={this.props.scales}
                     onChange={this.props.onChangeZoomLevel}
-                    />
-                <Button onClick={this.props.onMapRefresh} className="print-mappreview-refresh"><Glyphicon glyph="refresh"/></Button>
+                    /> : null}
+                {this.props.enableRefresh ? <Button onClick={this.props.onMapRefresh} className="print-mappreview-refresh"><Glyphicon glyph="refresh"/></Button> : null}
                 </div>
         ) : <span/>;
     }

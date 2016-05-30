@@ -166,7 +166,7 @@ var OpenlayersMap = React.createClass({
             this.setMousePointer(newProps.mousePointer);
         }
 
-        if (this.props.id !== newProps.mapStateSource) {
+        if (this.map && this.props.id !== newProps.mapStateSource) {
             this._updateMapPositionFromNewProps(newProps);
         }
 

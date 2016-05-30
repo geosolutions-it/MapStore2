@@ -34,7 +34,8 @@ let LeafletMap = React.createClass({
         measurement: React.PropTypes.object,
         changeMeasurementState: React.PropTypes.func,
         registerHooks: React.PropTypes.bool,
-        interactive: React.PropTypes.bool
+        interactive: React.PropTypes.bool,
+        resolutions: React.PropTypes.array
     },
     getDefaultProps() {
         return {
@@ -53,11 +54,25 @@ let LeafletMap = React.createClass({
           resize: 0,
           registerHooks: true,
           style: {},
-          interactive: true
+          interactive: true,
+          resolutions: mapUtils.getGoogleMercatorResolutions(0, 23)
         };
     },
     getInitialState() {
         return { };
+    },
+    componentWillMount() {
+        this.zoomOffset = 0;
+        if (this.props.mapOptions && this.props.mapOptions.view && this.props.mapOptions.view.resolutions && this.props.mapOptions.view.resolutions.length > 0) {
+            const scaleFun = L.CRS.EPSG3857.scale;
+            const ratio = this.props.mapOptions.view.resolutions[0] / mapUtils.getGoogleMercatorResolutions(0, 23)[0];
+            this.crs = assign({}, L.CRS.EPSG3857, {
+                scale: (zoom) => {
+                    return scaleFun.call(L.CRS.EPSG3857, zoom) / Math.pow(2, Math.round(Math.log2(ratio)));
+                }
+            });
+            this.zoomOffset = Math.round(Math.log2(ratio));
+        }
     },
     componentDidMount() {
         let mapOptions = assign({}, this.props.interactive ? {} : {
@@ -67,12 +82,14 @@ let LeafletMap = React.createClass({
             doubleClickZoom: false,
             boxZoom: false,
             tap: false
-        }, this.props.mapOptions);
+        }, this.props.mapOptions, this.crs ? {crs: this.crs} : {});
 
-        var map = L.map(this.props.id, assign({zoomControl: this.props.zoomControl}, mapOptions) ).setView([this.props.center.y, this.props.center.x],
+        const map = L.map(this.props.id, assign({zoomControl: this.props.zoomControl}, mapOptions) ).setView([this.props.center.y, this.props.center.x],
           this.props.zoom);
 
         this.map = map;
+
+
         this.map.on('moveend', this.updateMapInfoState);
         // this uses the hook defined in ./SingleClick.js for leaflet 0.7.*
         this.map.on('singleclick', (event) => {
@@ -105,6 +122,7 @@ let LeafletMap = React.createClass({
             if (event.layer && event.layer.options && event.layer.options.msLayer === 'vector') {
                 return;
             }
+
             if (event && event.layer && event.layer.on ) {
                 // TODO check event.layer.on is a function
                 // Needed to fix GeoJSON Layer neverending loading
@@ -128,7 +146,7 @@ let LeafletMap = React.createClass({
             this.setMousePointer(newProps.mousePointer);
         }
         // update the position if the map is not the source of the state change
-        if (newProps.mapStateSource !== this.props.id) {
+        if (this.map && newProps.mapStateSource !== this.props.id) {
             this._updateMapPositionFromNewProps(newProps);
         }
 
@@ -142,11 +160,14 @@ let LeafletMap = React.createClass({
     componentWillUnmount() {
         this.map.remove();
     },
+    getResolutions() {
+        return this.props.resolutions;
+    },
     render() {
         const map = this.map;
         const mapProj = this.props.projection;
         const children = map ? React.Children.map(this.props.children, child => {
-            return child ? React.cloneElement(child, {map: map, projection: mapProj}) : null;
+            return child ? React.cloneElement(child, {map: map, projection: mapProj, zoomOffset: this.zoomOffset}) : null;
         }) : null;
         return (
             <div id={this.props.id} style={this.props.style}>
@@ -235,6 +256,9 @@ let LeafletMap = React.createClass({
             var repojectedPointA = CoordinatesUtils.reproject([extent[0], extent[1]], this.props.projection, 'EPSG:4326');
             var repojectedPointB = CoordinatesUtils.reproject([extent[2], extent[3]], this.props.projection, 'EPSG:4326');
             return this.map.getBoundsZoom([[repojectedPointA.x, repojectedPointA.y], [repojectedPointB.x, repojectedPointB.y]]) - 1;
+        });
+        mapUtils.registerHook(mapUtils.RESOLUTIONS_HOOK, () => {
+            return this.getResolutions();
         });
         mapUtils.registerHook(mapUtils.COMPUTE_BBOX_HOOK, (center, zoom) => {
             let latLngCenter = L.latLng([center.y, center.x]);

@@ -102,6 +102,7 @@
             "submit": "Stampa",
             "submit": "Stampa",
             "resolution": "Risoluzione:",
+            "defaultBackground": "Usa OSM come background",
             "printtooltip": "Stampa",
             "alternatives": {
                 "legend": "Includere la legenda",
