@@ -398,7 +398,8 @@
         "colormapgrid": {
             "color": "Colore",
             "quantity": "Valore",
-            "label": "Descrizione"
+            "label": "Descrizione",
+            "minmaxerror": "Il valore deve essere compreso tra quelli della cella precedente e successiva"
         },
         "pseudocolorsettings": {
             "type": "Tipo",

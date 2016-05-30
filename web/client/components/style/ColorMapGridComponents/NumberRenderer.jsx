@@ -7,6 +7,8 @@
  */
 
 const React = require('react');
+const {findDOMNode} = require('react-dom');
+const {Popover, Label, Overlay} = require('react-bootstrap');
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 numberLocalizer();
 const {NumberPicker} = require('react-widgets');
@@ -15,12 +17,19 @@ require('./numberpicker.css');
 const NumberRenderer = React.createClass({
     propTypes: {
         params: React.PropTypes.object,
-        onChangeValue: React.PropTypes.func
+        onChangeValue: React.PropTypes.func,
+        errorMessage: React.PropTypes.string
     },
     getInitialState() {
         return {
             displayNumberPicker: false,
-            onChangeValue: () => {}
+            showError: false
+        };
+    },
+    getDefaultProps() {
+        return {
+            onChangeValue: () => {},
+            errorMessage: "Value not valid"
         };
     },
     componentDidMount() {
@@ -38,7 +47,7 @@ const NumberRenderer = React.createClass({
         return {min: min, max: max};
     },
     render() {
-        let range = this.getRange();
+
         return (
             <div onClick={ () => {
                 if (!this.state.displayNumberPicker) {
@@ -50,14 +59,19 @@ const NumberRenderer = React.createClass({
                         <div style={{position: "fixed", top: 0, right: 0, bottom: 0, left: 0}}
                             onClick={this.stopEditing}/>
                     <div className="numberpicker" onClickCapture={ (e) => {e.stopPropagation(); }}>
-                        <NumberPicker
-                        min={range.min}
-                        max={range.max}
+                        <NumberPicker ref="colorMapNumberPicker"
                         format="-#,###.##"
                         precision={3}
-                        defaultValue={this.state.value || this.props.params.value}
-                        onChange={(v)=> this.setState({value: v})}
+                        value={this.state.value || this.props.params.value}
+                        onChange={this.changeNumber}
                         />
+                    <Overlay
+                        target={() => findDOMNode(this.refs.colorMapNumberPicker)}
+                        show={this.state.showError} placement="top" >
+                        <Popover id="quantitypickererror" style={{maxWidht: 400}}>
+                            <Label bsStyle="danger" >{this.props.errorMessage}</Label>
+                        </Popover>
+                    </Overlay>
                     </div>
                     </div>) :
                 <span>{(this.props.params.value.toFixed) ? this.props.params.value.toFixed(2) : this.props.params.value}</span> }
@@ -70,9 +84,17 @@ const NumberRenderer = React.createClass({
         }
     },
     stopEditing() {
-        this.setState({ displayNumberPicker: false});
+        this.setState({ displayNumberPicker: false, showError: false});
         if (this.state.value !== this.props.params.value) {
             this.props.onChangeValue(this.props.params.node, this.state.value || this.props.params.value);
+        }
+    },
+    changeNumber(value) {
+        let range = this.getRange();
+        if (range.min < value && value < range.max) {
+            this.setState({value: value, showError: false});
+        } else {
+            this.setState({showError: true});
         }
     }
 });
