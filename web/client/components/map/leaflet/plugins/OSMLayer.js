@@ -12,6 +12,6 @@ var L = require('leaflet');
 Layers.registerType('osm', (options) => {
     return L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
           attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-          zoomOffset: options.zoomOffset
+          zoomOffset: options.zoomOffset || 0
     });
 });

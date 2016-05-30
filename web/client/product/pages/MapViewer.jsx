@@ -16,17 +16,12 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 const ConfigUtils = require('../../utils/ConfigUtils');
 
-const PluginsContainer = connect((state) => ({
-    pluginsConfig: state.plugins || ConfigUtils.getConfigProp('plugins') || null,
-    mode: (urlQuery.mobile || (state.browser && state.browser.mobile)) ? 'mobile' : 'desktop'
-}))(require('../../components/plugins/PluginsContainer'));
-
 const {loadMapConfig} = require('../../actions/config');
-
-
 const {resetControls} = require('../../actions/controls');
 
-const MapViewer = React.createClass({
+const MapViewer = require('../../containers/MapViewer');
+
+const MapViewerPage = React.createClass({
     propTypes: {
         mode: React.PropTypes.string,
         params: React.PropTypes.object,
@@ -54,7 +49,7 @@ const MapViewer = React.createClass({
         }
     },
     render() {
-        return (<PluginsContainer key="viewer" id="viewer" className="viewer"
+        return (<MapViewer
             plugins={this.props.plugins}
             params={this.props.params}
             />);
@@ -67,4 +62,4 @@ module.exports = connect((state) => ({
 {
     loadMapConfig,
     reset: resetControls
-})(MapViewer);
+})(MapViewerPage);

@@ -31,7 +31,7 @@ function createPackageJSON() {
 function copyStaticFiles() {
     console.log('Copying static files...');
     var copied = 0;
-    var streams = ['.editorconfig', '.eslintrc', '.eslintignore', 'LICENSE'].map(function(fileName) {
+    var streams = ['.editorconfig', '.eslintrc', '.eslintignore', 'LICENSE', '.babelrc'].map(function(fileName) {
        const toWrite = fs.createWriteStream(outFolder + '/' + fileName);
        fs.createReadStream(fileName).pipe(toWrite);
        console.log('Copied ' + fileName);

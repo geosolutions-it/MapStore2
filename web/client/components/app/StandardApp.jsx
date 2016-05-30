@@ -64,7 +64,7 @@ const StandardApp = React.createClass({
 
         ConfigUtils.loadConfiguration().then(() => {
             const locale = LocaleUtils.getUserLocale();
-            this.store.dispatch(loadLocale('translations', locale));
+            this.store.dispatch(loadLocale(null, locale));
             if (this.props.printingEnabled) {
                 this.store.dispatch(loadPrintCapabilities(ConfigUtils.getConfigProp('printUrl')));
             }
