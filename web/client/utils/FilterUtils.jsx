@@ -245,12 +245,12 @@ const FilterUtils = {
 
                 if (this.objFilter.spatialField.method === "POINT") {
                     ogc +=
-                        '<gml:Point srsDimension="2" srsName="' + this.objFilter.spatialField.geometry.projection || "EPSG:4326" + '">' +
+                        '<gml:Point srsDimension="2" srsName="' + (this.objFilter.spatialField.geometry.projection || "EPSG:4326") + '">' +
                             '<gml:pos>' + coordinates.join(" ") + '</gml:pos>' +
                         '</gml:Point>';
                 } else {
                     ogc +=
-                        '<gml:Polygon srsName="' + this.objFilter.spatialField.geometry.projection + '">' +
+                        '<gml:Polygon srsName="' + (this.objFilter.spatialField.geometry.projection || "EPSG:4326") + '">' +
                             '<gml:exterior>' +
                                 '<gml:LinearRing>' +
                                     '<gml:posList>' +
