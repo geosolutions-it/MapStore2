@@ -145,7 +145,9 @@ let GrabLMap = React.createClass({
                         allowTaint: this.props.allowTaint,
                         // TODO: improve to useCORS if every source has CORS enabled
                         useCORS: this.props.allowTaint,
-                        type: "view" });
+                    width: canvas.width,
+                    height: canvas.height
+                });
             }, this);
             queue = [this.refs.canvas, ...queue];
             // an issue in the html2canvas lib don't manage opacity correctly.
