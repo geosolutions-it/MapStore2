@@ -13,13 +13,14 @@ const {bindActionCreators} = require('redux');
 const assign = require('object-assign');
 
 const {changeMapView} = require('../../../actions/map');
-
+const url = require('url');
+const urlQuery = url.parse(window.location.href, true).query;
 const {
     changeDrawingStatus,
     endDrawing
 } = require('../../../actions/draw');
 
-const mapType = "openlayers";
+const mapType = urlQuery.map ? urlQuery.map : "leaflet";
 const WMap = require('../../../components/map/' + mapType + '/Map');
 const Layer = require('../../../components/map/' + mapType + '/Layer');
 require('../../../components/map/' + mapType + '/plugins/index');
@@ -55,7 +56,7 @@ QueryFormMap.propTypes = {
 };
 
 QueryFormMap.defaultProps = {
-    mapType: 'openlayers',
+    mapType: 'leaflet',
     drawStatus: null,
     drawOwner: null,
     drawMethod: null,

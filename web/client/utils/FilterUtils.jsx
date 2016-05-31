@@ -260,11 +260,11 @@ const FilterUtils = {
                 break;
             }
             case "BBOX": {
-                let lowerCorner = this.objFilter.spatialField.geometry[0] + " " + this.objFilter.spatialField.geometry[1];
-                let upperCorner = this.objFilter.spatialField.geometry[2] + " " + this.objFilter.spatialField.geometry[3];
+                let lowerCorner = this.objFilter.spatialField.geometry.extent[0] + " " + this.objFilter.spatialField.geometry.extent[1];
+                let upperCorner = this.objFilter.spatialField.geometry.extent[2] + " " + this.objFilter.spatialField.geometry.extent[3];
 
                 ogc +=
-                    '<gml:Envelope' + ' srsName="' + this.objFilter.spatialField.projection + '">' +
+                    '<gml:Envelope' + ' srsName="' + this.objFilter.spatialField.geometry.projection + '">' +
                         '<gml:lowerCorner>' + lowerCorner + '</gml:lowerCorner>' +
                         '<gml:upperCorner>' + upperCorner + '</gml:upperCorner>' +
                     '</gml:Envelope>';

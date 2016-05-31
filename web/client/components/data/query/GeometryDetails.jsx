@@ -69,9 +69,12 @@ const GeometryDetails = React.createClass({
         let center = !this.props.useMapProjection ?
             CoordinatesUtils.reproject([this.tempCircle.x, this.tempCircle.y], 'EPSG:4326', this.props.geometry.projection) : [this.tempCircle.x, this.tempCircle.y];
 
+        center = (center.x === undefined) ? {x: center[0], y: center[1]} : center;
+
         let geometry = {
             type: this.props.geometry.type,
             center: center,
+            coordinates: [center.x, center.y],
             radius: this.tempCircle.radius,
             projection: this.props.geometry.projection
         };
@@ -117,11 +120,11 @@ const GeometryDetails = React.createClass({
             let center = !this.props.useMapProjection ?
                 CoordinatesUtils.reproject([this.tempCircle.x, this.tempCircle.y], 'EPSG:4326', this.props.geometry.projection) : [this.tempCircle.x, this.tempCircle.y];
 
+            center = (center.x === undefined) ? {x: center[0], y: center[1]} : center;
+
             let extent = [
-                [center[0] - this.circle.radius, center[1] - this.circle.radius],
-                [center[0] - this.circle.radius, center[1] + this.circle.radius],
-                [center[0] + this.circle.radius, center[1] + this.circle.radius],
-                [center[0] + this.circle.radius, center[1] - this.circle.radius]
+                center.x - this.circle.radius, center.y - this.circle.radius,
+                center.x + this.circle.radius, center.y + this.circle.radius
             ];
 
             geometry = {
@@ -258,6 +261,9 @@ const GeometryDetails = React.createClass({
             // Show the center coordinates in 4326
             let center = geometry.projection !== 'EPSG:4326' && !this.props.useMapProjection ?
                 CoordinatesUtils.reproject(geometry.center, geometry.projection, 'EPSG:4326') : geometry.center;
+
+            // If point isn't reprojected, it's an array cast to object.
+            center = (center.x === undefined) ? {x: center[0], y: center[1]} : center;
 
             let radius = geometry.radius;
 
