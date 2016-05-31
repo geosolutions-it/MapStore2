@@ -48,13 +48,14 @@ const QueryToolbar = React.createClass({
     },
     render() {
         let fieldsExceptions = this.props.filterFields.filter((field) => field.exception).length > 0;
-        let fieldsWithoutValues = this.props.filterFields.filter((field) => !field.value).length > 0;
+        // let fieldsWithoutValues = this.props.filterFields.filter((field) => !field.value).length > 0;
+        let fieldsWithValues = this.props.filterFields.filter((field) => field.value).length > 0;
 
         let queryDisabled =
-            fieldsWithoutValues ||
+            // fieldsWithoutValues ||
             fieldsExceptions ||
             !this.props.toolbarEnabled ||
-            (!(this.props.filterFields.length > 0) && !this.props.spatialField.geometry);
+            (!fieldsWithValues && !this.props.spatialField.geometry);
 
         return (
             <div>
@@ -85,7 +86,7 @@ const QueryToolbar = React.createClass({
     search() {
         let filterObj = {
             groupFields: this.props.groupFields,
-            filterFields: this.props.filterFields,
+            filterFields: this.props.filterFields.filter((field) => field.value),
             spatialField: this.props.spatialField
         };
 

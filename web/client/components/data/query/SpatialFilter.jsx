@@ -67,18 +67,13 @@ const SpatialFilter = React.createClass({
     renderHeader() {
         const spatialFilterHeader = LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.spatial_filter_header");
 
-        return this.props.spatialPanelExpanded ? (
+        return (
             <span>
-                <span>{spatialFilterHeader}</span>
-                <button onClick={this.props.actions.onExpandSpatialFilterPanel.bind(null, false)} className="close">
-                    <Glyphicon glyph="glyphicon glyphicon-collapse-down"/>
-                </button>
-            </span>
-        ) : (
-            <span>
-                <span>{spatialFilterHeader}</span>
-                <button onClick={this.props.actions.onExpandSpatialFilterPanel.bind(null, true)} className="close">
-                    <Glyphicon glyph="glyphicon glyphicon-expand"/>
+                <span
+                    style={{cursor: "pointer"}}
+                    onClick={this.props.actions.onExpandSpatialFilterPanel.bind(null, !this.props.spatialPanelExpanded)}>{spatialFilterHeader}</span>
+                <button onClick={this.props.actions.onExpandSpatialFilterPanel.bind(null, !this.props.spatialPanelExpanded)} className="close">
+                    {this.props.spatialPanelExpanded ? <Glyphicon glyph="glyphicon glyphicon-collapse-down"/> : <Glyphicon glyph="glyphicon glyphicon-expand"/>}
                 </button>
             </span>
         );

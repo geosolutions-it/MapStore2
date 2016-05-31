@@ -11,6 +11,8 @@ var markerIcon = require('../img/marker-icon.png');
 var markerShadow = require('../img/marker-shadow.png');
 var ol = require('openlayers');
 
+const assign = require('object-assign');
+
 const image = new ol.style.Circle({
   radius: 5,
   fill: null,
@@ -117,10 +119,32 @@ Layers.registerType('vector', {
         const source = new ol.source.Vector({
             features: features
         });
+
+        let style = null;
+        if (options.style) {
+            style = {
+                stroke: new ol.style.Stroke( options.style.stroke ? options.style.stroke : {
+                    color: 'blue',
+                    width: 1
+                }),
+                fill: new ol.style.Fill(options.style.fill ? options.style.fill : {
+                    color: 'blue'
+                })
+            };
+
+            if (options.style.type === "Point") {
+                style = {
+                    image: new ol.style.Circle(assign({}, style, {radius: options.style.radius || 5}))
+                };
+            }
+
+            style = new ol.style.Style(style);
+        }
+
         return new ol.layer.Vector({
             source: source,
             zIndex: options.zIndex,
-            style: options.styleName ? () => {return defaultStyles[options.styleName]; } : options.style || styleFunction
+            style: options.styleName ? () => {return defaultStyles[options.styleName]; } : style || styleFunction
         });
     },
     render: () => {

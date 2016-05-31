@@ -116,32 +116,36 @@ var CoordinatesUtils = {
     },
     getGeoJSONExtent: function(geoJSON) {
         let newExtent = [Infinity, Infinity, -Infinity, -Infinity];
-        if (geoJSON.type !== "Point" && geoJSON.type !== "GeometryCollection") {
-            const flatCoordinates = chunk(flattenDeep(geoJSON.coordinates), 2);
-            flatCoordinates.reduce((extent, point) => {
-                extent[0] = (point[0] < newExtent[0]) ? point[0] : newExtent[0];
-                extent[1] = (point[1] < newExtent[1]) ? point[1] : newExtent[1];
-                extent[2] = (point[0] > newExtent[2]) ? point[0] : newExtent[2];
-                extent[3] = (point[1] > newExtent[3]) ? point[1] : newExtent[3];
-                return extent;
-            }, newExtent);
-        }else if (geoJSON.type === "Point") {
-            let point = geoJSON.coordinates;
-            newExtent[0] = point[0] - point[0] * 0.01;
-            newExtent[1] = point[1] - point[1] * 0.01;
-            newExtent[2] = point[0] + point[0] * 0.01;
-            newExtent[3] = point[1] + point[1] * 0.01;
-        }else if (geoJSON.type === "GeometryCollection") {
-            geoJSON.geometies.reduce((extent, geometry) => {
-                let ext = this.getGeoJSONExtent(geometry);
-                if (this.isValidExtent(ext)) {
-                    extent[0] = (ext[0] < newExtent[0]) ? ext[0] : newExtent[0];
-                    extent[1] = (ext[1] < newExtent[1]) ? ext[1] : newExtent[1];
-                    extent[2] = (ext[2] > newExtent[2]) ? ext[2] : newExtent[2];
-                    extent[3] = (ext[3] > newExtent[3]) ? ext[3] : newExtent[3];
-                }
-            }, newExtent);
+
+        if (geoJSON.coordinates) {
+            if (geoJSON.type !== "Point" && geoJSON.type !== "GeometryCollection") {
+                const flatCoordinates = chunk(flattenDeep(geoJSON.coordinates), 2);
+                flatCoordinates.reduce((extent, point) => {
+                    extent[0] = (point[0] < newExtent[0]) ? point[0] : newExtent[0];
+                    extent[1] = (point[1] < newExtent[1]) ? point[1] : newExtent[1];
+                    extent[2] = (point[0] > newExtent[2]) ? point[0] : newExtent[2];
+                    extent[3] = (point[1] > newExtent[3]) ? point[1] : newExtent[3];
+                    return extent;
+                }, newExtent);
+            }else if (geoJSON.type === "Point") {
+                let point = geoJSON.coordinates;
+                newExtent[0] = point[0] - point[0] * 0.01;
+                newExtent[1] = point[1] - point[1] * 0.01;
+                newExtent[2] = point[0] + point[0] * 0.01;
+                newExtent[3] = point[1] + point[1] * 0.01;
+            }else if (geoJSON.type === "GeometryCollection") {
+                geoJSON.geometies.reduce((extent, geometry) => {
+                    let ext = this.getGeoJSONExtent(geometry);
+                    if (this.isValidExtent(ext)) {
+                        extent[0] = (ext[0] < newExtent[0]) ? ext[0] : newExtent[0];
+                        extent[1] = (ext[1] < newExtent[1]) ? ext[1] : newExtent[1];
+                        extent[2] = (ext[2] > newExtent[2]) ? ext[2] : newExtent[2];
+                        extent[3] = (ext[3] > newExtent[3]) ? ext[3] : newExtent[3];
+                    }
+                }, newExtent);
+            }
         }
+
         return newExtent;
     },
     /**

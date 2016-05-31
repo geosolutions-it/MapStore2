@@ -214,25 +214,22 @@ const GroupField = React.createClass({
     renderHeader() {
         const attributeFilterHeader = LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.attribute_filter_header");
 
-        return this.props.attributePanelExpanded ? (
+        return (
             <span>
-                <span>{attributeFilterHeader}</span>
-                <button onClick={this.props.actions.onExpandAttributeFilterPanel.bind(null, false)} className="close">
-                    <Glyphicon glyph="glyphicon glyphicon-collapse-down"/>
-                </button>
-            </span>
-        ) : (
-            <span>
-                <span>{attributeFilterHeader}</span>
-                <button onClick={this.props.actions.onExpandAttributeFilterPanel.bind(null, true)} className="close">
-                    <Glyphicon glyph="glyphicon glyphicon-expand"/>
+                <span
+                    style={{cursor: "pointer"}}
+                    onClick={this.props.actions.onExpandAttributeFilterPanel.bind(null, !this.props.attributePanelExpanded)}>{attributeFilterHeader}</span>
+                <button onClick={this.props.actions.onExpandAttributeFilterPanel.bind(null, !this.props.attributePanelExpanded)} className="close">
+                    {this.props.attributePanelExpanded ? <Glyphicon glyph="glyphicon glyphicon-collapse-down"/> : <Glyphicon glyph="glyphicon glyphicon-expand"/>}
                 </button>
             </span>
         );
     },
     render() {
         return (
-            <Panel id="attributeFilterPanel" collapsible expanded={this.props.attributePanelExpanded} header={this.renderHeader()}>
+            <Panel id="attributeFilterPanel" collapsible
+                expanded={this.props.attributePanelExpanded}
+                header={this.renderHeader()}>
                 {this.props.groupFields.filter(g => !g.groupId).map(this.renderGroupField)}
             </Panel>
         );
