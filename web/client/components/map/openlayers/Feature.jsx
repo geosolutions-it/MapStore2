@@ -18,8 +18,10 @@ let Feature = React.createClass({
         geometry: React.PropTypes.object // TODO check for geojson format for geometry
     },
     componentDidMount() {
-        var format = new ol.format.GeoJSON();
-        if (this.props.container) {
+        const format = new ol.format.GeoJSON();
+        const geometry = this.props.geometry && this.props.geometry.coordinates;
+
+        if (this.props.container && geometry) {
             this._feature = format.readFeatures({type: this.props.type, properties: this.props.properties, geometry: this.props.geometry});
             this._feature.forEach((f) => f.getGeometry().transform('EPSG:4326', 'EPSG:3857')); // TODO support map reference system
             this.props.container.getSource().addFeatures(this._feature);
@@ -34,8 +36,11 @@ let Feature = React.createClass({
                     this.props.container.getSource().removeFeature(this._feature);
                 }
             }
-            let format = new ol.format.GeoJSON();
-            if (newProps.container) {
+
+            const format = new ol.format.GeoJSON();
+            const geometry = newProps.geometry && newProps.geometry.coordinates;
+
+            if (newProps.container && geometry) {
                 this._feature = format.readFeatures({type: newProps.type, properties: newProps.properties, geometry: newProps.geometry});
                 this._feature.forEach((f) => f.getGeometry().transform('EPSG:4326', 'EPSG:3857')); // TODO support map reference system
                 newProps.container.getSource().addFeatures(this._feature);

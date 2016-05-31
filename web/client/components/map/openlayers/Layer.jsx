@@ -82,6 +82,7 @@ const OpenlayersLayer = React.createClass({
                 </noscript>
             );
         }
+
         return Layers.renderLayer(this.props.type, this.props.options, this.props.map, this.props.mapId, this.layer);
     },
     setLayerVisibility(visibility) {

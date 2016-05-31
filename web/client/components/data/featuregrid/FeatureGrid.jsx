@@ -18,6 +18,8 @@ const CoordinateUtils = require('../../../utils/CoordinatesUtils');
 
 const img = require('./images/magnifier.png');
 
+const I18N = require('../../I18N/I18N');
+
 require("ag-grid/dist/styles/ag-grid.css");
 require("ag-grid/dist/styles/theme-fresh.css");
 
@@ -97,11 +99,15 @@ const FeatureGrid = React.createClass({
         }
 
         if (this.props.toolbar.exporter) {
-            tools.push(<button key="exporter" onClick={() => {this.api.exportDataAsCsv(); }}>Export</button>);
+            tools.push(<button key="exporter" onClick={() => {this.api.exportDataAsCsv(); }}>
+                <I18N.Message msgId={"featuregrid.export"}/>
+            </button>);
         }
 
         if (this.props.toolbar.toolPanel) {
-            tools.push(<button key="toolPanel" onClick={() => {this.api.showToolPanel(!this.api.isToolPanelShowing()); }}>Tool Panel</button>);
+            tools.push(<button key="toolPanel" onClick={() => { this.api.showToolPanel(!this.api.isToolPanelShowing()); }}>
+                <I18N.Message msgId={"featuregrid.tools"}/>
+            </button>);
         }
 
         return (
@@ -172,10 +178,14 @@ const FeatureGrid = React.createClass({
         };
     },
     zoomToFeature(params) {
-        this.changeMapView([params.data.geometry]);
+        let geometry = params.data.geometry;
+        if (geometry.coordinates) {
+            this.changeMapView([geometry]);
+        }
     },
     zoomToFeatures() {
         let geometries = [];
+
         let getGeoms = function(nodes) {
             let geom = [];
             nodes.forEach(function(node) {
@@ -187,6 +197,7 @@ const FeatureGrid = React.createClass({
             });
             return geom;
         };
+
         let model = this.api.getModel();
         model.forEachNode(function(node) {
             if (node.group) {
@@ -195,16 +206,23 @@ const FeatureGrid = React.createClass({
                 geometries.push(node.data.geometry);
             }
         });
-        this.changeMapView(geometries);
+
+        geometries = geometries.filter((geometry) => geometry.coordinates);
+
+        if (geometries.length > 0) {
+            this.changeMapView(geometries);
+        }
     },
     changeMapView(geometries) {
         let extent = geometries.reduce((prev, next) => {
             return CoordinateUtils.extendExtent(prev, CoordinateUtils.getGeoJSONExtent(next));
         }, CoordinateUtils.getGeoJSONExtent(geometries[0]));
+
         const mapSize = this.props.map.size;
         let newZoom = 1;
         let newCenter = this.props.map.center;
         const proj = this.props.map.projection || "EPSG:3857";
+
         if (extent) {
             extent = (this.props.srs !== proj) ? CoordinateUtils.reprojectBbox(extent, this.props.srs, proj) : extent;
             // zoom by the max. extent defined in the map's config
@@ -223,7 +241,6 @@ const FeatureGrid = React.createClass({
             this.props.changeMapView(newCenter, newZoom,
                 this.props.map.bbox, this.props.map.size, null, proj);
         }
-
     },
     selectFeatures(params) {
         this.props.selectFeatures(params.selectedRows.slice());

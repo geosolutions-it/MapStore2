@@ -67,11 +67,19 @@ const FilterUtils = {
             filters.push(spatialFilter);
         }
 
-        let filter = "<" + this.nsplaceholder + ":Filter><" + this.nsplaceholder + ":And>";
-        filters.forEach((subFilter) => {
-            filter += subFilter;
-        });
-        filter += "</" + this.nsplaceholder + ":And></" + this.nsplaceholder + ":Filter>";
+        let filter = "<" + this.nsplaceholder + ":Filter>";
+
+        if (filters.length > 1) {
+            filter += "<" + this.nsplaceholder + ":And>";
+            filters.forEach((subFilter) => {
+                filter += subFilter;
+            });
+            filter += "</" + this.nsplaceholder + ":And>";
+        } else {
+            filter += filters[0];
+        }
+
+        filter += "</" + this.nsplaceholder + ":Filter>";
 
         ogcFilter += '<wfs:Query ' + (versionOGC === "2.0" ? "typeNames" : "typeName") + '="' + ftName + '" srsName="EPSG:4326">';
         ogcFilter += filter;
