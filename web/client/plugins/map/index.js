@@ -13,6 +13,7 @@ const {layerLoading, layerLoad} = require('../../actions/layers');
 const {changeMousePosition} = require('../../actions/mousePosition');
 const {changeMeasurementState} = require('../../actions/measurement');
 const {changeLocateState, onLocateError} = require('../../actions/locate');
+const {changeDrawingStatus, endDrawing} = require('../../actions/draw');
 
 const {connect} = require('react-redux');
 const assign = require('object-assign');
@@ -50,6 +51,12 @@ module.exports = (mapType) => {
         onLocateError
     })(components.Locate || Empty);
 
+    const DrawSupport = connect((state) => (
+        state.draw || {}), {
+        onChangeDrawingStatus: changeDrawingStatus,
+        onEndDrawing: endDrawing
+    })( components.DrawSupport || Empty);
+
     require('../../components/map/' + mapType + '/plugins/index');
 
     return {
@@ -60,7 +67,8 @@ module.exports = (mapType) => {
             measurement: MeasurementSupport,
             locate: Locate,
             overview: components.Overview || Empty,
-            scalebar: components.ScaleBar || Empty
+            scalebar: components.ScaleBar || Empty,
+            draw: DrawSupport
         }
     };
 };
