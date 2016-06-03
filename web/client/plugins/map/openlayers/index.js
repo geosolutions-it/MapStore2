@@ -13,5 +13,6 @@ module.exports = {
     Locate: require('../../../components/map/openlayers/Locate'),
     MeasurementSupport: require('../../../components/map/openlayers/MeasurementSupport'),
     Overview: require('../../../components/map/openlayers/Overview'),
-    ScaleBar: require('../../../components/map/openlayers/ScaleBar')
+    ScaleBar: require('../../../components/map/openlayers/ScaleBar'),
+    DrawSupport: require('../../../components/map/openlayers/DrawSupport')
 };

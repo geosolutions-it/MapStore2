@@ -13,5 +13,6 @@ module.exports = {
     Locate: require('../../../components/map/leaflet/Locate'),
     MeasurementSupport: require('../../../components/map/leaflet/MeasurementSupport'),
     Overview: require('../../../components/map/leaflet/Overview'),
-    ScaleBar: require('../../../components/map/leaflet/ScaleBar')
+    ScaleBar: require('../../../components/map/leaflet/ScaleBar'),
+    DrawSupport: require('../../../components/map/leaflet/DrawSupport')
 };
