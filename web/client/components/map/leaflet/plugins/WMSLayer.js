@@ -10,7 +10,7 @@ var Layers = require('../../../../utils/leaflet/Layers');
 var CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 var L = require('leaflet');
 var objectAssign = require('object-assign');
-const {isArray} = require('lodash');
+const {isArray, isEqual} = require('lodash');
 
 L.TileLayer.MultipleUrlWMS = L.TileLayer.WMS.extend({
     initialize: function(urls, options) {
@@ -92,7 +92,7 @@ Layers.registerType('wms', {
         wmsToLeafletOptions(options));
     },
     update: function(layer, newOptions, oldOptions) {
-        if (newOptions.params !== oldOptions.params) {
+        if (!isEqual(newOptions.params, oldOptions.params)) {
             layer.setParams(newOptions.params);
         }
     }

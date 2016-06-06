@@ -78,7 +78,7 @@ const PrintUtils = {
                     projectedCenter.x,
                     projectedCenter.y
                  ],
-                 "scale": spec.scale,
+                 "scale": spec.scale || defaultScales[spec.scaleZoom],
                  "rotation": 0
               }
            ],
