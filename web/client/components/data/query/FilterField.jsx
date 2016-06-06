@@ -70,7 +70,7 @@ const FilterField = React.createClass({
                         fieldName="attribute"
                         fieldRowId={this.props.filterField.rowId}
                         onUpdateField={this.updateFieldElement}
-                        comboFilterType={"contains"}/>
+                        comboFilter={"contains"}/>
                 </Col>
                 <Col xs={2}>{selectedAttribute ? this.renderOperatorField() : null}</Col>
                 <Col xs={6}>{selectedAttribute && this.props.filterField.operator ? this.renderValueField(selectedAttribute) : null}</Col>

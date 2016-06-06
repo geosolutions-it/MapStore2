@@ -567,51 +567,55 @@ describe('Test the queryform reducer', () => {
         let testAction = {
             type: "ZONE_CHANGE",
             id: 1,
-            value: "Five",
-            rawValue: {
-                "type": "Feature",
-                "id": "zones.5",
-                "geometry": {
-                    "type": "MultiPolygon",
-                    "coordinates": [
-                        [
-                            [
+            value: {
+                value: ["Five"],
+                feature: [
+                    {
+                        "type": "Feature",
+                        "id": "zones.5",
+                        "geometry": {
+                            "type": "MultiPolygon",
+                            "coordinates": [
                                 [
-                                    -112.52004032,
-                                    43.54002689
-                                ],
-                                [
-                                    -112.52008024,
-                                    43.42515586
-                                ],
-                                [
-                                    -112.2234772,
-                                    43.42473004
-                                ],
-                                [
-                                    -112.1032533,
-                                    43.42498078
-                                ],
-                                [
-                                    -112.52004032,
-                                    43.54002689
+                                    [
+                                        [
+                                            -112.52004032,
+                                            43.54002689
+                                        ],
+                                        [
+                                            -112.52008024,
+                                            43.42515586
+                                        ],
+                                        [
+                                            -112.2234772,
+                                            43.42473004
+                                        ],
+                                        [
+                                            -112.1032533,
+                                            43.42498078
+                                        ],
+                                        [
+                                            -112.52004032,
+                                            43.54002689
+                                        ]
+                                    ]
                                 ]
                             ]
-                        ]
-                    ]
-                },
-                "geometry_name": "the_geom",
-                "properties": {
-                    "Shape_Leng": 732018.056416,
-                    "Shape_Area": 2.44128352236E10,
-                    "District_N": "5",
-                    "SUM_Counti": 7,
-                    "Orient": 0,
-                    "OrientPg": 0,
-                    "ITD_Dist_n": 5,
-                    "DistNum": "Five",
-                    "Area_sqmi": 9425.848
-                }
+                        },
+                        "geometry_name": "the_geom",
+                        "properties": {
+                            "Shape_Leng": 732018.056416,
+                            "Shape_Area": 2.44128352236E10,
+                            "District_N": "5",
+                            "SUM_Counti": 7,
+                            "Orient": 0,
+                            "OrientPg": 0,
+                            "ITD_Dist_n": 5,
+                            "DistNum": "Five",
+                            "Area_sqmi": 9425.848
+                        }
+                    }
+                ]
             }
         };
 
@@ -627,6 +631,7 @@ describe('Test the queryform reducer', () => {
                     typeName: "typeName1",
                     values: featureCollection.features,
                     value: null,
+                    multivalue: false,
                     valueField: "properties.attr1",
                     textField: "properties.attr2",
                     searchText: "*",
@@ -660,7 +665,7 @@ describe('Test the queryform reducer', () => {
         expect(state.spatialField).toExist();
 
         expect(state.spatialField.zoneFields[0].value).toEqual("Five");
-        expect(state.spatialField.zoneFields[0].rawValue).toExist();
+        expect(state.spatialField.zoneFields[0].geometryName).toEqual("the_geom");
     });
 
     it('Zone Reset', () => {
@@ -693,10 +698,10 @@ describe('Test the queryform reducer', () => {
         let state = queryform(initialState, testAction);
         expect(state).toExist();
         expect(state.spatialField).toExist();
-        expect(state.spatialField.zoneFields[0].values.length).toBe(0);
+        expect(state.spatialField.zoneFields[0].values).toBe(null);
     });
 
-    it('Open Zones Menu', () => {
+    /*it('Open Zones Menu', () => {
         let testAction = {
             type: "OPEN_MENU",
             active: true,
@@ -729,5 +734,5 @@ describe('Test the queryform reducer', () => {
         expect(state).toExist();
         expect(state.spatialField).toExist();
         expect(state.spatialField.zoneFields[0].open).toBe(true);
-    });
+    });*/
 });

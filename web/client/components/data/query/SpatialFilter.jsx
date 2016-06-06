@@ -60,7 +60,9 @@ const SpatialFilter = React.createClass({
                 onChangeDwithinValue: () => {},
                 zoneFilter: () => {},
                 zoneSearch: () => {},
+                // openMenu: () => {},
                 zoneChange: () => {}
+                // zoneSelect: () => {}
             }
         };
     },
@@ -161,8 +163,8 @@ const SpatialFilter = React.createClass({
                             label={zone.label}
                             values={zone.values}
                             value={zone.value}
-                            valueField= {zone.valueField}
-                            textField= {zone.textField}
+                            valueField={zone.valueField}
+                            textField={zone.textField}
                             searchText={zone.searchText}
                             searchMethod={zone.searchMethod}
                             searchAttribute={zone.searchAttribute}
@@ -170,9 +172,12 @@ const SpatialFilter = React.createClass({
                             error={zone.error}
                             disabled={zone.disabled}
                             dependsOn={zone.dependson}
+                            groupBy={zone.groupBy}
+                            multivalue={zone.multivalue}
                             onSearch={this.props.actions.zoneSearch}
                             onFilter={this.props.actions.zoneFilter}
-                            onOpenMenu={this.props.actions.openMenu}
+                            // onOpenMenu={this.props.actions.openMenu}
+                            // onSelect={this.props.actions.zoneSelect}
                             onChange={this.props.actions.zoneChange}/>
                     );
                 }) : (<span/>);
@@ -308,6 +313,8 @@ const SpatialFilter = React.createClass({
 
         if (method !== "ZONE") {
             this.changeDrawingStatus('start', method, "queryform", []);
+        } else {
+            this.changeDrawingStatus('clean', null, "queryform", []);
         }
     },
     updateSpatialOperation(id, name, value) {

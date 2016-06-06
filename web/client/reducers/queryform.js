@@ -26,7 +26,7 @@ const {
     CHANGE_DWITHIN_VALUE,
     ZONE_FILTER,
     ZONE_SEARCH,
-    OPEN_MENU,
+    // OPEN_MENU,
     ZONE_CHANGE,
     ZONES_RESET,
     ZONE_SEARCH_ERROR
@@ -38,6 +38,8 @@ const {
 } = require('../actions/draw');
 
 const assign = require('object-assign');
+
+const {union, bbox} = require('turf');
 
 const initialState = {
     searchUrl: null,
@@ -213,19 +215,38 @@ function queryform(state = initialState, action) {
             let value; let geometry;
             const zoneFields = state.spatialField.zoneFields.map((field) => {
                 if (field.id === action.id) {
-                    value = action.value;
-                    geometry = {coordinates: action.rawValue.geometry.coordinates[0][0], geometryName: action.rawValue.geometry_name};
+                    value = field.multivalue ? action.value.value : action.value.value[0];
+
+                    if (action.value.feature[0]) {
+                        let f = action.value.feature[0];
+                        let geometryName = f.geometry_name;
+                        if (field.multivalue && action.value.feature.length > 1) {
+                            for (let i = 1; i < action.value.feature.length; i++) {
+                                let feature = action.value.feature[i];
+                                if (feature) {
+                                    f = union(f, feature);
+                                }
+                            }
+
+                            geometry = {coordinates: f.geometry.coordinates, geometryName: geometryName};
+                        } else {
+                            geometry = {coordinates: f.geometry.coordinates, geometryName: geometryName};
+                        }
+                    }
+
                     return assign({}, field, {
                         value: value,
-                        rawValue: action.rawValue
+                        open: false,
+                        geometryName: geometry ? geometry.geometryName : null
                     });
                 }
 
                 if (field.dependson && action.id === field.dependson.id) {
                     return assign({}, field, {
                         disabled: false,
-                        values: [],
+                        values: null,
                         value: null,
+                        open: false,
                         dependson: assign({}, field.dependson, {value: value})
                     });
                 }
@@ -233,41 +254,24 @@ function queryform(state = initialState, action) {
                 return field;
             });
 
-            // TODO: checks for wfs version
-            let minx; let miny; let maxx; let maxy;
-            geometry.coordinates.forEach((coordinate) => {
-                if (!minx || minx > coordinate[0]) {
-                    minx = coordinate[0];
-                }
-
-                if (!miny || miny > coordinate[1]) {
-                    miny = coordinate[1];
-                }
-
-                if (!maxx || maxx < coordinate[0]) {
-                    maxx = coordinate[0];
-                }
-
-                if (!maxy || maxy < coordinate[1]) {
-                    maxy = coordinate[1];
-                }
+            let extent = bbox({
+                type: "FeatureCollection",
+                features: action.value.feature
             });
-
-            let extent = [minx, miny, maxx, maxy];
 
             return assign({}, state, {spatialField: assign({}, state.spatialField, {
                 zoneFields: zoneFields,
-                geometry: {
+                geometry: extent && geometry ? {
                     extent: extent,
-                    coordinates: geometry.coordinates
-                }
+                    coordinates: geometry.coordinates[0]
+                } : null
             })});
         }
         case ZONES_RESET: {
             return assign({}, state, {spatialField: assign({}, state.spatialField, {
                 zoneFields: state.spatialField.zoneFields.map((field) => {
                     let f = assign({}, field, {
-                        values: [],
+                        values: null,
                         value: null,
                         open: false,
                         error: null
@@ -277,6 +281,7 @@ function queryform(state = initialState, action) {
                         return assign({}, f, {
                             disabled: true,
                             open: false,
+                            value: null,
                             dependson: assign({}, field.dependson, {value: null})
                         });
                     }
@@ -286,7 +291,7 @@ function queryform(state = initialState, action) {
                 geometry: null
             })});
         }
-        case OPEN_MENU: {
+        /*case OPEN_MENU: {
             return assign({}, state, {spatialField: assign({}, state.spatialField, {zoneFields: state.spatialField.zoneFields.map((field) => {
                 if (field.id === action.id) {
                     return assign({}, field, {
@@ -295,7 +300,7 @@ function queryform(state = initialState, action) {
                 }
                 return field;
             })})});
-        }
+        }*/
         case ZONE_SEARCH_ERROR: {
             return assign({}, state, {spatialField: assign({}, state.spatialField, {zoneFields: state.spatialField.zoneFields.map((field) => {
                 if (field.id === action.id) {
