@@ -84,7 +84,7 @@ const ComboField = React.createClass({
         let style = assign({}, {marginBottom: "15px", borderColor: "#dedede"}, this.props.style);
 
         if (this.props.fieldException) {
-            style = assign({}, this.style, {borderColor: "#FF0000"});
+            style = assign({}, style, {borderColor: "#FF0000"});
         }
 
         let placeholder = LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.combo_placeholder");
