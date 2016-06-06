@@ -41,6 +41,7 @@ const MapPlugin = React.createClass({
             toolsOptions: {
                 measurement: {},
                 locate: {},
+                scalebar: {},
                 overview: {
                     overviewOpt: {
                         position: 'bottomright',
@@ -91,7 +92,7 @@ const MapPlugin = React.createClass({
     renderSupportTools() {
         return this.props.tools.map((tool) => {
             const Tool = plugins.tools[tool];
-            const options = this.props.toolsOptions[tool] || {};
+            const options = (this.props.toolsOptions[tool] && this.props.toolsOptions[tool][this.props.mapType]) || this.props.toolsOptions[tool] || {};
             return <Tool key={tool} {...options}/>;
         });
     },
