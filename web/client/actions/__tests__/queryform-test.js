@@ -25,7 +25,7 @@ const {
     ZONE_SEARCH,
     ZONE_SEARCH_ERROR,
     ZONE_FILTER,
-    OPEN_MENU,
+    // OPEN_MENU,
     ZONE_CHANGE,
     ZONES_RESET,
     SHOW_GENERATED_FILTER,
@@ -34,7 +34,7 @@ const {
     changeDwithinValue,
     resetZones,
     zoneChange,
-    openMenu,
+   //  openMenu,
     zoneSearch,
     zoneSearchError,
     zoneFilter,
@@ -277,22 +277,21 @@ describe('Test correctness of the queryform actions', () => {
         });
     });
 
-    it('openMenu', () => {
+    /*it('openMenu', () => {
         let retval = openMenu(true, 1);
 
         expect(retval).toExist();
         expect(retval.type).toBe(OPEN_MENU);
         expect(retval.active).toBe(true);
         expect(retval.id).toBe(1);
-    });
+    });*/
 
     it('zoneChange', () => {
-        let retval = zoneChange(1, "value", null);
+        let retval = zoneChange(1, "value");
 
         expect(retval).toExist();
         expect(retval.type).toBe(ZONE_CHANGE);
         expect(retval.value).toBe("value");
         expect(retval.id).toBe(1);
-        expect(retval.rawValue).toBe(null);
     });
 });

@@ -29,10 +29,9 @@ const ZONE_SEARCH = 'ZONE_SEARCH';
 const ZONE_SEARCH_ERROR = 'ZONE_SEARCH_ERROR';
 const ZONE_FILTER = 'ZONE_FILTER';
 
-const OPEN_MENU = 'OPEN_MENU';
+// const OPEN_MENU = 'OPEN_MENU';
 
 const ZONE_CHANGE = 'ZONE_CHANGE';
-
 const ZONES_RESET = 'ZONES_RESET';
 
 const axios = require('../libs/ajax');
@@ -236,20 +235,19 @@ function zoneGetValues(url, filter, id) {
     };
 }
 
-function openMenu(active, id) {
+/*function openMenu(active, id) {
     return {
         type: OPEN_MENU,
         active: active,
         id: id
     };
-}
+}*/
 
-function zoneChange(id, value, rawValue) {
+function zoneChange(id, value) {
     return {
         type: ZONE_CHANGE,
         id: id,
-        value: value,
-        rawValue: rawValue
+        value: value
     };
 }
 
@@ -276,12 +274,12 @@ module.exports = {
     ZONE_SEARCH,
     ZONE_SEARCH_ERROR,
     ZONE_FILTER,
-    OPEN_MENU,
+    // OPEN_MENU,
     ZONE_CHANGE,
     ZONES_RESET,
     resetZones,
     zoneChange,
-    openMenu,
+    // openMenu,
     zoneSearch,
     zoneSearchError,
     zoneFilter,

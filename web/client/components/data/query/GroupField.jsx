@@ -102,7 +102,7 @@ const GroupField = React.createClass({
                             valueField={'id'}
                             textField={'name'}
                             fieldOptions={comboValues ? comboValues : []}
-                            comboFilterType={"contains"}/>
+                            comboFilter={"contains"}/>
                         <DateField
                             attType="date"
                             operator={filterField.operator}/>

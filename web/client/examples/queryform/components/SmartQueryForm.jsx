@@ -33,7 +33,10 @@ const {
     showSpatialSelectionDetails,
     query,
     reset,
-    changeDwithinValue
+    changeDwithinValue,
+    zoneGetValues,
+    zoneSearch,
+    zoneChange
 } = require('../../../actions/queryform');
 
 const {
@@ -82,7 +85,10 @@ const SmartQueryForm = connect((state) => {
             onRemoveSpatialSelection: removeSpatialSelection,
             onShowSpatialSelectionDetails: showSpatialSelectionDetails,
             onEndDrawing: endDrawing,
-            onChangeDwithinValue: changeDwithinValue
+            onChangeDwithinValue: changeDwithinValue,
+            zoneFilter: zoneGetValues,
+            zoneSearch,
+            zoneChange
         }, dispatch),
         queryToolbarActions: bindActionCreators({
             onQuery: query,

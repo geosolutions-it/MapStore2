@@ -10,7 +10,7 @@ const assign = require('object-assign');
 
 const {OverlayTrigger, Tooltip} = require('react-bootstrap');
 
-const {DropdownList} = require('react-widgets');
+const {DropdownList, Multiselect} = require('react-widgets');
 
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
@@ -26,22 +26,30 @@ const ComboField = React.createClass({
         attType: React.PropTypes.string,
         fieldValue: React.PropTypes.oneOfType([
             React.PropTypes.number,
-            React.PropTypes.string
+            React.PropTypes.string,
+            React.PropTypes.array
         ]),
         fieldException: React.PropTypes.oneOfType([
             React.PropTypes.object,
             React.PropTypes.string
         ]),
-        comboFilterType: React.PropTypes.oneOfType([
+        comboFilter: React.PropTypes.oneOfType([
             React.PropTypes.bool,
             React.PropTypes.string,
             React.PropTypes.func
         ]),
+        groupBy: React.PropTypes.oneOfType([
+            React.PropTypes.string,
+            React.PropTypes.func
+        ]),
+        multivalue: React.PropTypes.bool,
         disabled: React.PropTypes.bool,
         options: React.PropTypes.object,
-        onUpdateField: React.PropTypes.func,
+        onSelect: React.PropTypes.func,
         onToggle: React.PropTypes.func,
         onSearch: React.PropTypes.func,
+        onUpdateField: React.PropTypes.func,
+        onClick: React.PropTypes.func,
         onUpdateExceptionField: React.PropTypes.func
     },
     contextTypes: {
@@ -54,6 +62,7 @@ const ComboField = React.createClass({
             style: {
                 width: "100%"
             },
+            multivalue: false,
             disabled: false,
             valueField: null,
             textField: null,
@@ -62,10 +71,12 @@ const ComboField = React.createClass({
             fieldRowId: null,
             fieldValue: null,
             fieldException: null,
-            comboFilterType: false,
-            onUpdateField: () => {},
+            comboFilter: false,
+            groupBy: () => {},
+            onSelect: () => {},
             onToggle: () => {},
             onSearch: () => {},
+            onUpdateField: () => {},
             onUpdateExceptionField: () => {}
         };
     },
@@ -76,10 +87,12 @@ const ComboField = React.createClass({
             style = assign({}, style, {borderColor: "#FF0000"});
         }
 
-        const placeholder = LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.combo_placeholder");
+        let placeholder = LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.combo_placeholder");
 
-        const ddList = this.props.valueField !== null && this.props.textField !== null ? (
-            <DropdownList
+        const ListComponent = this.props.multivalue ? Multiselect : DropdownList;
+
+        const list = this.props.valueField !== null && this.props.textField !== null ? (
+            <ListComponent
                 {...this.props.options}
                 busy={this.props.busy}
                 disabled={this.props.disabled}
@@ -90,13 +103,15 @@ const ComboField = React.createClass({
                 caseSensitive={false}
                 minLength={3}
                 placeholder={placeholder}
-                filter={this.props.comboFilterType}
+                filter={this.props.comboFilter}
                 style={style}
-                onChange={(value) => this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value[this.props.valueField], this.props.attType, value)}
+                groupBy={this.props.groupBy}
+                onSelect={this.props.onSelect}
+                onChange={(value) => this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, this.props.multivalue ? value : value[this.props.valueField], this.props.attType)}
                 onToggle={this.props.onToggle}
                 onSearch={this.props.onSearch}/>
         ) : (
-            <DropdownList
+            <ListComponent
                 {...this.props.options}
                 busy={this.props.busy}
                 disabled={this.props.disabled}
@@ -105,8 +120,10 @@ const ComboField = React.createClass({
                 caseSensitive={false}
                 minLength={3}
                 placeholder={placeholder}
-                filter={this.props.comboFilterType}
+                filter={this.props.comboFilter}
                 style={style}
+                groupBy={this.props.groupBy}
+                onSelect={this.props.onSelect}
                 onChange={(value) => this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value, this.props.attType)}
                 onToggle={this.props.onToggle}
                 onSearch={this.props.onSearch}/>
@@ -120,10 +137,10 @@ const ComboField = React.createClass({
                         </strong>
                     </Tooltip>
             )}>
-                {ddList}
+                {list}
             </OverlayTrigger>
         ) : (
-            ddList
+            list
         );
     }
 });
