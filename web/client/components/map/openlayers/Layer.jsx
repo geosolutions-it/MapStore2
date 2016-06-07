@@ -18,17 +18,20 @@ const OpenlayersLayer = React.createClass({
         onLayerLoading: React.PropTypes.func,
         onLayerLoad: React.PropTypes.func,
         position: React.PropTypes.number,
-        observables: React.PropTypes.array
+        observables: React.PropTypes.array,
+        onInvalid: React.PropTypes.func
     },
     getDefaultProps() {
         return {
             observables: [],
             onLayerLoading: () => {},
-            onLayerLoad: () => {}
+            onLayerLoad: () => {},
+            onInvalid: () => {}
         };
     },
 
     componentDidMount() {
+        this.valid = true;
         this.tilestoload = 0;
         this.createLayer(this.props.type, this.props.options, this.props.position);
     },
@@ -87,7 +90,7 @@ const OpenlayersLayer = React.createClass({
     },
     setLayerVisibility(visibility) {
         var oldVisibility = this.props.options && this.props.options.visibility !== false;
-        if (visibility !== oldVisibility && this.layer) {
+        if (visibility !== oldVisibility && this.layer && this.isValid()) {
             this.layer.setVisible(visibility);
         }
     },
@@ -102,29 +105,42 @@ const OpenlayersLayer = React.createClass({
             const layerOptions = assign({}, options, position ? {zIndex: position} : null);
             this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
             if (this.layer && !this.layer.detached) {
-                this.props.map.addLayer(this.layer);
-                this.layer.getSource().on('tileloadstart', () => {
-                    if (this.tilestoload === 0) {
-                        this.props.onLayerLoading(options.id);
-                        this.tilestoload++;
-                    } else {
-                        this.tilestoload++;
-                    }
-                });
-                this.layer.getSource().on('tileloadend', () => {
-                    this.tilestoload--;
-                    if (this.tilestoload === 0) {
-                        this.props.onLayerLoad(options.id);
-                    }
-                });
-                this.layer.getSource().on('tileloaderror', () => {
-                    this.tilestoload--;
-                    if (this.tilestoload === 0) {
-                        this.props.onLayerLoad(options.id);
-                    }
-                });
+                this.addLayer(options);
             }
         }
+    },
+    addLayer(options) {
+        if (this.isValid()) {
+            this.props.map.addLayer(this.layer);
+            this.layer.getSource().on('tileloadstart', () => {
+                if (this.tilestoload === 0) {
+                    this.props.onLayerLoading(options.id);
+                    this.tilestoload++;
+                } else {
+                    this.tilestoload++;
+                }
+            });
+            this.layer.getSource().on('tileloadend', () => {
+                this.tilestoload--;
+                if (this.tilestoload === 0) {
+                    this.props.onLayerLoad(options.id);
+                }
+            });
+            this.layer.getSource().on('tileloaderror', () => {
+                this.tilestoload--;
+                if (this.tilestoload === 0) {
+                    this.props.onLayerLoad(options.id);
+                }
+            });
+        }
+    },
+    isValid() {
+        const valid = Layers.isValid(this.props.type, this.layer);
+        if (this.valid && !valid) {
+            this.props.onInvalid(this.props.type, this.props.options);
+        }
+        this.valid = valid;
+        return valid;
     }
 });
 

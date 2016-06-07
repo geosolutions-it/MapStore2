@@ -1,5 +1,6 @@
 .BackgroundSwitcherComponent .thumbnail {
     box-shadow: 5px 5px 5px #4C4C4C;
+    cursor: pointer;
 }
 .BackgroundSwitcherComponent .thumbnail:hover {
     top: -1px;
@@ -14,4 +15,16 @@
 
     border-color: #337ab7;
     background-color:#5bc0de;
+}
+
+.BackgroundSwitcherComponent .thumbnail-warning {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.BackgroundSwitcherComponent .thumbnail-warning:hover {
+    top: 0;
+    left: 0;
+    position: relative;
+    box-shadow: 5px 5px 5px #4C4C4C;
 }

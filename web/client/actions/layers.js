@@ -15,6 +15,7 @@ const UPDATE_NODE = 'UPDATE_NODE';
 const UPDATE_NODE_TEMP = 'UPDATE_NODE_TEMP';
 const LAYER_LOADING = 'LAYER_LOADING';
 const LAYER_LOAD = 'LAYER_LOAD';
+const INVALID_LAYER = 'INVALID_LAYER';
 const ADD_LAYER = 'ADD_LAYER';
 const SHOW_SETTINGS = 'SHOW_SETTINGS';
 const HIDE_SETTINGS = 'HIDE_SETTINGS';
@@ -125,9 +126,17 @@ function addLayer(layer) {
     };
 }
 
-module.exports = {changeLayerProperties, changeGroupProperties, toggleNode, sortNode, removeNode,
+function invalidLayer(layerType, options) {
+    return {
+        type: INVALID_LAYER,
+        layerType,
+        options
+    };
+}
+
+module.exports = {changeLayerProperties, changeGroupProperties, toggleNode, sortNode, removeNode, invalidLayer,
     updateNode, layerLoading, layerLoad, updateNodeTemp, addLayer, showSettings, hideSettings, updateSettings,
     CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE,
     REMOVE_NODE, UPDATE_NODE, UPDATE_NODE_TEMP, LAYER_LOADING, LAYER_LOAD, ADD_LAYER,
-    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS
+    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, INVALID_LAYER
 };

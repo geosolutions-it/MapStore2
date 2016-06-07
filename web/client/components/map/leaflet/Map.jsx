@@ -35,12 +35,14 @@ let LeafletMap = React.createClass({
         changeMeasurementState: React.PropTypes.func,
         registerHooks: React.PropTypes.bool,
         interactive: React.PropTypes.bool,
-        resolutions: React.PropTypes.array
+        resolutions: React.PropTypes.array,
+        onInvalidLayer: React.PropTypes.func
     },
     getDefaultProps() {
         return {
           id: 'map',
           onMapViewChanges: () => {},
+          onInvalidLayer: () => {},
           onClick: null,
           onMouseMove: () => {},
           zoomControl: true,
@@ -167,7 +169,12 @@ let LeafletMap = React.createClass({
         const map = this.map;
         const mapProj = this.props.projection;
         const children = map ? React.Children.map(this.props.children, child => {
-            return child ? React.cloneElement(child, {map: map, projection: mapProj, zoomOffset: this.zoomOffset}) : null;
+            return child ? React.cloneElement(child, {
+                map: map,
+                projection: mapProj,
+                zoomOffset: this.zoomOffset,
+                onInvalid: this.props.onInvalidLayer
+            }) : null;
         }) : null;
         return (
             <div id={this.props.id} style={this.props.style}>

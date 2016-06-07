@@ -15,9 +15,16 @@ const LeafletLayer = React.createClass({
         type: React.PropTypes.string,
         options: React.PropTypes.object,
         position: React.PropTypes.number,
-        zoomOffset: React.PropTypes.number
+        zoomOffset: React.PropTypes.number,
+        onInvalid: React.PropTypes.func
+    },
+    getDefaultProps() {
+        return {
+            onInvalid: () => {}
+        };
     },
     componentDidMount() {
+        this.valid = true;
         this.createLayer(this.props.type, this.props.options, this.props.position);
         if (this.props.options && this.layer && this.props.options.visibility !== false) {
             this.addLayer();
@@ -94,14 +101,22 @@ const LeafletLayer = React.createClass({
         Layers.updateLayer(newProps.type, this.layer, newProps.options, oldProps.options);
     },
     addLayer() {
-        if (this.layer) {
+        if (this.isValid()) {
             this.props.map.addLayer(this.layer);
         }
     },
     removeLayer() {
-        if (this.layer) {
+        if (this.isValid()) {
             this.props.map.removeLayer(this.layer);
         }
+    },
+    isValid() {
+        const valid = Layers.isValid(this.props.type, this.layer);
+        if (this.valid && !valid) {
+            this.props.onInvalid(this.props.type, this.props.options);
+        }
+        this.valid = valid;
+        return valid;
     }
 });
 
