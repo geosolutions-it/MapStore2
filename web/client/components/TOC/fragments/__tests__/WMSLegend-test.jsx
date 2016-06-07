@@ -42,4 +42,19 @@ describe('test WMSLegend module component', () => {
         expect(image).toExist();
         expect(image.length).toBe(1);
     });
+
+    it('tests WMSLegend is not shown if node is not visible', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: false,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const comp = ReactDOM.render(<WMSLegend node={l} showOnlyIfVisible={true} />, document.getElementById("container"));
+
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toNotExist();
+    });
 });

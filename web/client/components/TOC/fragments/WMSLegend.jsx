@@ -11,14 +11,23 @@ var Legend = require('./legend/Legend');
 
 var WMSLegend = React.createClass({
     propTypes: {
-        node: React.PropTypes.object
+        node: React.PropTypes.object,
+        showOnlyIfVisible: React.PropTypes.bool
+    },
+    getDefaultProps() {
+        return {
+            showOnlyIfVisible: false
+        };
     },
     render() {
         let node = this.props.node || {};
-        if (node.visibility && node.type === "wms" && node.group !== "background") {
+        if (this.canShow(node) && node.type === "wms" && node.group !== "background") {
             return <div style={{marginLeft: "15px"}}><Legend layer={node}/></div>;
         }
         return null;
+    },
+    canShow(node) {
+        return node.visibility || !this.props.showOnlyIfVisible;
     }
 });
 
