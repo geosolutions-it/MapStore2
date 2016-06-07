@@ -149,7 +149,8 @@ const DrawSupport = React.createClass({
                         color: 'rgba(255, 255, 255, 0.2)'
                     })
                 })
-            })
+            }),
+            condition: ol.events.condition.always
         };
 
         // Prepare the properties for the BBOX drawing

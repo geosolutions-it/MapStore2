@@ -14,6 +14,7 @@ const {changeMousePosition} = require('../../actions/mousePosition');
 const {changeMeasurementState} = require('../../actions/measurement');
 const {changeLocateState, onLocateError} = require('../../actions/locate');
 const {changeDrawingStatus, endDrawing} = require('../../actions/draw');
+const {updateHighlighted} = require('../../actions/highlight');
 
 const {connect} = require('react-redux');
 const assign = require('object-assign');
@@ -58,6 +59,9 @@ module.exports = (mapType) => {
         onEndDrawing: endDrawing
     })( components.DrawSupport || Empty);
 
+    const HighlightSupport = connect((state) => (
+        state.highlight || {}), {updateHighlighted})( components.HighlightFeatureSupport || Empty);
+
     require('../../components/map/' + mapType + '/plugins/index');
 
     return {
@@ -69,7 +73,8 @@ module.exports = (mapType) => {
             locate: Locate,
             overview: components.Overview || Empty,
             scalebar: components.ScaleBar || Empty,
-            draw: DrawSupport
+            draw: DrawSupport,
+            highlight: HighlightSupport
         }
     };
 };
