@@ -35,12 +35,14 @@ var OpenlayersMap = React.createClass({
         measurement: React.PropTypes.object,
         changeMeasurementState: React.PropTypes.func,
         registerHooks: React.PropTypes.bool,
-        interactive: React.PropTypes.bool
+        interactive: React.PropTypes.bool,
+        onInvalidLayer: React.PropTypes.func
     },
     getDefaultProps() {
         return {
           id: 'map',
           onMapViewChanges: () => {},
+          onInvalidLayer: () => {},
           onClick: null,
           onMouseMove: () => {},
           mapOptions: {},
@@ -260,7 +262,8 @@ var OpenlayersMap = React.createClass({
                 mapId: this.props.id,
                 onLayerLoading: this.props.onLayerLoading,
                 onLayerLoad: this.props.onLayerLoad,
-                projection: this.props.projection
+                projection: this.props.projection,
+                onInvalid: this.props.onInvalidLayer
             }) : null;
         }) : null;
 

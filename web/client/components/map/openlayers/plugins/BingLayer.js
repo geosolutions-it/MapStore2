@@ -24,5 +24,11 @@ Layers.registerType('bing', {
               maxZoom: maxNativeZoom
             })
         });
+    },
+    isValid: (layer) => {
+        if (layer.getSource && layer.getSource().getState() === 'error') {
+            return false;
+        }
+        return true;
     }
 });

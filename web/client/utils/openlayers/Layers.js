@@ -27,6 +27,13 @@ var Layers = {
             return layerCreator.render(options, map, mapId, layer);
         }
         return null;
+    },
+    isValid(type, layer) {
+        var layerCreator = layerTypes[type];
+        if (layerCreator && layerCreator.isValid) {
+            return layerCreator.isValid(layer);
+        }
+        return true;
     }
 };
 

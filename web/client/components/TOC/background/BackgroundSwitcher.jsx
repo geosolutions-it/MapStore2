@@ -76,12 +76,21 @@ let BackgroundSwitcher = React.createClass({
         for (let i = 0; i < layers.length; i++) {
             let layer = layers[i];
             let thumb = thumbs[layer.source] && thumbs[layer.source][layer.name] || layer.thumbURL || thumbs.unknown;
-            items.push(<Col {...this.props.columnProperties} key={i}>
-          <Thumbnail data-position={i} key={"bkg-swicher-item-" + i} bsStyle={layer.visibility ? "primary" : "default"} src={thumb} alt={layer.source + " " + layer.name}
-              onClick={this.changeLayerVisibility}>
-                  <div style={{height: '38px', textOverflow: 'ellipsis', overflow: 'hidden'}}><strong>{layer.title}</strong></div>
-          </Thumbnail>
-      </Col>);
+            if (layer.invalid) {
+                items.push(<Col {...this.props.columnProperties} key={i}>
+              <Thumbnail data-position={i} key={"bkg-swicher-item-" + i} bsStyle="warning" src={thumb} alt={layer.source + " " + layer.name}>
+                      <div style={{height: '38px', textOverflow: 'ellipsis', overflow: 'hidden'}}><strong>{layer.title}</strong></div>
+              </Thumbnail>
+          </Col>);
+            } else {
+                items.push(<Col {...this.props.columnProperties} key={i}>
+              <Thumbnail data-position={i} key={"bkg-swicher-item-" + i} bsStyle={layer.visibility ? "primary" : "default"} src={thumb} alt={layer.source + " " + layer.name}
+                  onClick={this.changeLayerVisibility}>
+                      <div style={{height: '38px', textOverflow: 'ellipsis', overflow: 'hidden'}}><strong>{layer.title}</strong></div>
+              </Thumbnail>
+          </Col>);
+            }
+
         }
         return items;
     },

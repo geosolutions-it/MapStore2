@@ -9,7 +9,7 @@
 const React = require('react');
 
 const {changeMapView, clickOnMap} = require('../../actions/map');
-const {layerLoading, layerLoad} = require('../../actions/layers');
+const {layerLoading, layerLoad, invalidLayer} = require('../../actions/layers');
 const {changeMousePosition} = require('../../actions/mousePosition');
 const {changeMeasurementState} = require('../../actions/measurement');
 const {changeLocateState, onLocateError} = require('../../actions/locate');
@@ -31,7 +31,8 @@ module.exports = (mapType) => {
         onClick: clickOnMap,
         onMouseMove: changeMousePosition,
         onLayerLoading: layerLoading,
-        onLayerLoad: layerLoad
+        onLayerLoad: layerLoad,
+        onInvalidLayer: invalidLayer
     }, (stateProps, dispatchProps, ownProps) => {
         return assign({}, ownProps, stateProps, assign({}, dispatchProps, {
             onMouseMove: stateProps.mousePosition.enabled ? dispatchProps.onMouseMove : () => {}

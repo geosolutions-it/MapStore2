@@ -8,7 +8,7 @@
 
 var {LAYER_LOADING, LAYER_LOAD, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES,
     TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, UPDATE_NODE_TEMP, ADD_LAYER,
-    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS} = require('../actions/layers');
+    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, INVALID_LAYER} = require('../actions/layers');
 
 var assign = require('object-assign');
 var {isObject, isArray} = require('lodash');
@@ -125,6 +125,17 @@ function layers(state = [], action) {
             const newLayers = flatLayers.map((layer) => {
                 if (layer[selector] === action.node || layer[selector].indexOf(action.node + '.') === 0) {
                     return assign({}, layer, action.options);
+                }
+                return assign({}, layer);
+            });
+            return assign({}, state, {flat: newLayers});
+        }
+        case INVALID_LAYER: {
+            const flatLayers = (state.flat || []);
+
+            const newLayers = flatLayers.map((layer) => {
+                if (layer.id === action.options.id) {
+                    return assign({}, layer, {invalid: true});
                 }
                 return assign({}, layer);
             });
