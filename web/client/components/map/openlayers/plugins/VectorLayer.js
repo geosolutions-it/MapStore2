@@ -142,6 +142,7 @@ Layers.registerType('vector', {
         }
 
         return new ol.layer.Vector({
+            msId: options.id,
             source: source,
             zIndex: options.zIndex,
             style: options.styleName ? () => {return defaultStyles[options.styleName]; } : style || styleFunction
