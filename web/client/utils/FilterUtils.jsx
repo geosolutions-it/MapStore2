@@ -238,27 +238,51 @@ const FilterUtils = {
             case "DWITHIN":
             case "WITHIN":
             case "CONTAINS": {
-                let arr = this.objFilter.spatialField.geometry.coordinates[0];
-                let coordinates = arr.map((coordinate) => {
-                    return coordinate[0] + " " + coordinate[1];
-                });
+                switch (this.objFilter.spatialField.geometry.type) {
+                    case "Point":
+                        ogc += this.getGmlPointElement(this.objFilter.spatialField.geometry.coordinates,
+                            this.objFilter.spatialField.geometry.projection || "EPSG:4326");
+                        break;
+                    case "MultiPoint":
+                        ogc += '<gml:MultiPoint srsName="' + (this.objFilter.spatialField.geometry.projection || "EPSG:4326") + '">';
 
-                if (this.objFilter.spatialField.method === "POINT") {
-                    ogc +=
-                        '<gml:Point srsDimension="2" srsName="' + (this.objFilter.spatialField.geometry.projection || "EPSG:4326") + '">' +
-                            '<gml:pos>' + coordinates.join(" ") + '</gml:pos>' +
-                        '</gml:Point>';
-                } else {
-                    ogc +=
-                        '<gml:Polygon srsName="' + (this.objFilter.spatialField.geometry.projection || "EPSG:4326") + '">' +
-                            '<gml:exterior>' +
-                                '<gml:LinearRing>' +
-                                    '<gml:posList>' +
-                                        coordinates.join(" ") +
-                                    '</gml:posList>' +
-                                '</gml:LinearRing>' +
-                            '</gml:exterior>' +
-                        '</gml:Polygon>';
+                        // //////////////////////////////////////////////////////////////////////////
+                        // Coordinates of a MultiPoint are an array of positions
+                        // //////////////////////////////////////////////////////////////////////////
+                        this.objFilter.spatialField.geometry.coordinates.forEach((element) => {
+                            let point = element;
+                            if (point) {
+                                ogc += "<gml:pointMember>";
+                                ogc += this.getGmlPointElement(point);
+                                ogc += "</gml:pointMember>";
+                            }
+                        });
+
+                        ogc += '</gml:MultiPoint>';
+                        break;
+                    case "Polygon":
+                        ogc += this.getGmlPolygonElement(this.objFilter.spatialField.geometry.coordinates,
+                            this.objFilter.spatialField.geometry.projection || "EPSG:4326");
+                        break;
+                    case "MultiPolygon":
+                        ogc += '<gml:MultiPolygon srsName="' + (this.objFilter.spatialField.geometry.projection || "EPSG:4326") + '">';
+
+                        // //////////////////////////////////////////////////////////////////////////
+                        // Coordinates of a MultiPolygon are an array of Polygon coordinate arrays
+                        // //////////////////////////////////////////////////////////////////////////
+                        this.objFilter.spatialField.geometry.coordinates.forEach((element) => {
+                            let polygon = element;
+                            if (polygon) {
+                                ogc += "<gml:polygonMember>";
+                                ogc += this.getGmlPolygonElement(polygon);
+                                ogc += "</gml:polygonMember>";
+                            }
+                        });
+
+                        ogc += '</gml:MultiPolygon>';
+                        break;
+                    default:
+                        break;
                 }
 
                 if (this.objFilter.spatialField.operation === "DWITHIN") {
@@ -286,6 +310,64 @@ const FilterUtils = {
         ogc += this.ogcSpatialOperator[this.objFilter.spatialField.operation].endTag;
         return ogc;
     },
+    getGmlPointElement: function(coordinates, srsName) {
+        let gmlPoint = '<gml:Point srsDimension="2"';
+
+        gmlPoint += srsName ? ' srsName="' + srsName + '">' : '>';
+
+        // ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Array of LinearRing coordinate array. The first element in the array represents the exterior ring.
+        // Any subsequent elements represent interior rings (or holes).
+        // ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        coordinates.forEach((element) => {
+            let coords = element.map((coordinate) => {
+                return coordinate[0] + " " + coordinate[1];
+            });
+
+            gmlPoint += '<gml:pos>' + coords.join(" ") + '</gml:pos>';
+        });
+
+        gmlPoint += '</gml:Point>';
+        return gmlPoint;
+    },
+    getGmlPolygonElement: function(coordinates, srsName) {
+        let gmlPolygon = '<gml:Polygon';
+
+        gmlPolygon += srsName ? ' srsName="' + srsName + '">' : '>';
+
+        // ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Array of LinearRing coordinate array. The first element in the array represents the exterior ring.
+        // Any subsequent elements represent interior rings (or holes).
+        // ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        coordinates.forEach((element, index) => {
+            let coords = element.map((coordinate) => {
+                return coordinate[0] + " " + coordinate[1];
+            });
+
+            if (index < 1) {
+                gmlPolygon +=
+                    '<gml:exterior>' +
+                        '<gml:LinearRing>' +
+                            '<gml:posList>' +
+                                coords.join(" ") +
+                            '</gml:posList>' +
+                        '</gml:LinearRing>' +
+                    '</gml:exterior>';
+            } else {
+                gmlPolygon +=
+                    '<gml:interior>' +
+                        '<gml:LinearRing>' +
+                            '<gml:posList>' +
+                                coords.join(" ") +
+                            '</gml:posList>' +
+                        '</gml:LinearRing>' +
+                    '</gml:interior>';
+            }
+        });
+
+        gmlPolygon += '</gml:Polygon>';
+        return gmlPolygon;
+    },
     toCQLFilter: function(json) {
         try {
             this.objFilter = (json instanceof Object) ? json : JSON.parse(json);
@@ -296,13 +378,13 @@ const FilterUtils = {
         let filters = [];
 
         let attributeFilter;
-        if (this.objFilter.filterFields.length > 0) {
+        if (this.objFilter.filterFields && this.objFilter.filterFields.length > 0) {
             attributeFilter = this.processCQLFilterGroup(this.objFilter.groupFields[0]);
             filters.push(attributeFilter);
         }
 
         let spatialFilter;
-        if (this.objFilter.spatialField.geometry && this.objFilter.spatialField.method) {
+        if (this.objFilter.spatialField && this.objFilter.spatialField.geometry && this.objFilter.spatialField.method) {
             spatialFilter = this.processCQLSpatialFilter();
             filters.push(spatialFilter);
         }
@@ -359,17 +441,62 @@ const FilterUtils = {
     },
     processCQLSpatialFilter: function() {
         let cql = this.objFilter.spatialField.operation + "(" +
-            this.objFilter.spatialField.attribute + ", " +
-            this.objFilter.spatialField.geometry.type + "((";
+            this.objFilter.spatialField.attribute + ", ";
 
-        let arr = this.objFilter.spatialField.geometry.coordinates[0];
-        let coordinates = arr.map((coordinate) => {
-            return coordinate[0] + " " + coordinate[1];
-        });
-
-        cql += coordinates.join(", ") + "))";
+        cql += this.getCQLGeometryElement(this.objFilter.spatialField.geometry.coordinates, this.objFilter.spatialField.geometry.type);
 
         return cql + ")";
+    },
+    getCQLGeometryElement: function(coordinates, type) {
+        let geometry = type + "(";
+
+        switch (type) {
+            case "Point":
+                geometry += coordinates.join(" ");
+                break;
+            case "MultiPoint":
+                coordinates.forEach((position, index) => {
+                    geometry += position.join(" ");
+                    geometry += index < coordinates.length - 1 ? ", " : "";
+                });
+                break;
+            case "Polygon":
+                coordinates.forEach((element, index) => {
+                    geometry += "(";
+                    let coords = element.map((coordinate) => {
+                        return coordinate[0] + " " + coordinate[1];
+                    });
+
+                    geometry += coords.join(", ");
+                    geometry += ")";
+
+                    geometry += index < coordinates.length - 1 ? ", " : "";
+                });
+                break;
+            case "MultiPolygon":
+                coordinates.forEach((polygon, idx) => {
+                    geometry += "(";
+                    polygon.forEach((element, index) => {
+                        geometry += "(";
+                        let coords = element.map((coordinate) => {
+                            return coordinate[0] + " " + coordinate[1];
+                        });
+
+                        geometry += coords.join(", ");
+                        geometry += ")";
+
+                        geometry += index < polygon.length - 1 ? ", " : "";
+                    });
+                    geometry += ")";
+                    geometry += idx < coordinates.length - 1 ? ", " : "";
+                });
+                break;
+            default:
+                break;
+        }
+
+        geometry += ")";
+        return geometry;
     },
     findSubGroups: function(root, groups) {
         let subGroups = groups.filter((g) => g.groupId === root.id);
