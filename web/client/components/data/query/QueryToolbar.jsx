@@ -92,7 +92,7 @@ const QueryToolbar = React.createClass({
 
         let filter = this.props.filterType === "OGC" ?
             FilterUtils.toOGCFilter(this.props.featureTypeName, filterObj) :
-            FilterUtils.toCQLFilter(this.props.featureTypeName, filterObj);
+            FilterUtils.toCQLFilter(filterObj);
 
         this.props.actions.onQuery(this.props.searchUrl, filter, {authkey: this.props.authParam.authkey});
     },

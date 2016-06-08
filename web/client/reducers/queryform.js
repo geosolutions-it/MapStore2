@@ -228,9 +228,9 @@ function queryform(state = initialState, action) {
                                 }
                             }
 
-                            geometry = {coordinates: f.geometry.coordinates, geometryName: geometryName};
+                            geometry = {coordinates: f.geometry.coordinates, geometryName: geometryName, geometryType: f.geometry.type};
                         } else {
-                            geometry = {coordinates: f.geometry.coordinates, geometryName: geometryName};
+                            geometry = {coordinates: f.geometry.coordinates, geometryName: geometryName, geometryType: f.geometry.type};
                         }
                     }
 
@@ -263,7 +263,8 @@ function queryform(state = initialState, action) {
                 zoneFields: zoneFields,
                 geometry: extent && geometry ? {
                     extent: extent,
-                    coordinates: geometry.coordinates[0]
+                    type: geometry.geometryType,
+                    coordinates: geometry.coordinates
                 } : null
             })});
         }
