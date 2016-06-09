@@ -125,9 +125,10 @@ describe('Leaflet DrawSupport', () => {
             drawStatus: "replace",
             drawMethod: "Circle",
             features: [{
+                projection: "EPSG:4326",
                 coordinates: [ -21150.703250721977, 5855989.620460],
                 radius: 122631.43,
-                type: "Point"}
+                type: "Polygon"}
                 ]});
     });
 

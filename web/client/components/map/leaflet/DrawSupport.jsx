@@ -77,6 +77,7 @@ const DrawSupport = React.createClass({
             let radius = layer.getRadius ? layer.getRadius() : 0;
             let coordinates = geoJesonFt.geometry.coordinates;
             let projection = "EPSG:4326";
+            let type = geoJesonFt.geometry.type;
             if (evt.layerType === "circle") {
                 // Circle needs to generate path and needs to be projected before
                 // When GeometryDetails update circle it's in charge to generete path
@@ -88,12 +89,13 @@ const DrawSupport = React.createClass({
                 geoJesonFt.radius = radius;
                 coordinates = CoordinatesUtils.calculateCircleCoordinates(center, radius, 100);
                 center = [center.x, center.y];
+                type = "Polygon";
             }
             // We always draw geoJson feature
             this.drawLayer.addData(geoJesonFt);
             // Geometry respect query form panel needs
             let geometry = {
-                type: geoJesonFt.geometry.type,
+                type: type,
                 extent: extent,
                 center: center,
                 coordinates: coordinates,
@@ -127,8 +129,9 @@ const DrawSupport = React.createClass({
         });
         this.props.map.addLayer(vector);
         // Immidiatly draw passed features
-        if (newProps.features && newProps.features > 0) {
-            vector.addData(newProps.features);
+        if (newProps.features && newProps.features.length > 0) {
+
+            vector.addData(this.convertFeaturesPolygonToPoint(newProps.features, this.props.drawMethod));
         }
         this.drawLayer = vector;
     },
@@ -137,7 +140,7 @@ const DrawSupport = React.createClass({
             this.addLayer(newProps);
         } else {
             this.drawLayer.clearLayers();
-            this.drawLayer.addData(newProps.features);
+            this.drawLayer.addData(this.convertFeaturesPolygonToPoint(newProps.features, this.props.drawMethod));
         }
     },
     addDrawInteraction: function(newProps) {
@@ -145,8 +148,8 @@ const DrawSupport = React.createClass({
             this.addLayer(newProps);
         }else {
             this.drawLayer.clearLayers();
-            if (newProps.features && newProps.features > 0) {
-                this.drawLayer.addData(newProps.features);
+            if (newProps.features && newProps.features.lenght > 0) {
+                this.drawLayer.addData(this.convertFeaturesPolygonToPoint(newProps.features, this.props.drawMethod));
             }
         }
 
@@ -227,6 +230,12 @@ const DrawSupport = React.createClass({
     },
     boundsToOLExtent: function(bounds) {
         return [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
+    },
+    convertFeaturesPolygonToPoint(features, method) {
+        return method === 'Circle' ? features.map((f) => {
+            return {...f, type: "Point"};
+        }) : features;
+
     }
 });
 
