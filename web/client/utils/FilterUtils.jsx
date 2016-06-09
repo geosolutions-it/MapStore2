@@ -47,7 +47,7 @@ const FilterUtils = {
 
         this.setOperatorsPlaceholders("{namespace}", this.nsplaceholder);
 
-        let ogcFilter = this.getGetFeatureBase(versionOGC, this.nsplaceholder);
+        let ogcFilter = this.getGetFeatureBase(versionOGC, this.objFilter.pagination);
         let filters = [];
 
         let attributeFilter;
@@ -63,7 +63,7 @@ const FilterUtils = {
 
         let spatialFilter;
         if (this.objFilter.spatialField && this.objFilter.spatialField.geometry && this.objFilter.spatialField.method) {
-            spatialFilter = this.processOGCSpatialFilter();
+            spatialFilter = this.processOGCSpatialFilter(versionOGC);
             filters.push(spatialFilter);
         }
 
@@ -120,12 +120,17 @@ const FilterUtils = {
             }
         });
     },
-    getGetFeatureBase: function(version) {
+    getGetFeatureBase: function(version, pagination) {
         let ver = !version ? "2.0" : version;
+
+        let getFeature = '<wfs:GetFeature ';
+        getFeature += pagination && (pagination.startIndex || pagination.startIndex === 0) ? 'startIndex="' + pagination.startIndex + '" ' : "";
 
         switch (ver) {
             case "1.0.0":
-                return '<wfs:GetFeature service="WFS" version="' + ver + '" ' +
+                getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
+
+                getFeature += 'service="WFS" version="' + ver + '" ' +
                     'outputFormat="GML2" ' +
                     'xmlns:gml="http://www.opengis.net/gml" ' +
                     'xmlns:wfs="http://www.opengis.net/wfs" ' +
@@ -133,16 +138,22 @@ const FilterUtils = {
                     'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
                     'xsi:schemaLocation="http://www.opengis.net/wfs ' +
                         'http://schemas.opengis.net/wfs/1.0.0/WFS-basic.xsd">';
+                break;
             case "1.1.0":
-                return '<wfs:GetFeature service="WFS" version="' + ver + '" ' +
+                getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
+
+                getFeature += 'service="WFS" version="' + ver + '" ' +
                     'xmlns:gml="http://www.opengis.net/gml" ' +
                     'xmlns:wfs="http://www.opengis.net/wfs" ' +
                     'xmlns:ogc="http://www.opengis.net/ogc" ' +
                     'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
                     'xsi:schemaLocation="http://www.opengis.net/wfs ' +
                         'http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">';
+                break;
             default: // default is wfs 2.0
-                return '<wfs:GetFeature service="WFS" version="' + ver + '" ' +
+                getFeature += pagination && pagination.maxFeatures ? 'count="' + pagination.maxFeatures + '" ' : "";
+
+                getFeature += 'service="WFS" version="' + ver + '" ' +
                     'xmlns:wfs="http://www.opengis.net/wfs/2.0" ' +
                     'xmlns:fes="http://www.opengis.net/fes/2.0" ' +
                     'xmlns:gml="http://www.opengis.net/gml/3.2" ' +
@@ -152,6 +163,8 @@ const FilterUtils = {
                         'http://www.opengis.net/gml/3.2 ' +
                         'http://schemas.opengis.net/gml/3.2.1/gml.xsd">';
         }
+
+        return getFeature;
     },
     processOGCFilterGroup: function(root) {
         let ogc =
@@ -226,7 +239,7 @@ const FilterUtils = {
 
         return filter;
     },
-    processOGCSpatialFilter: function() {
+    processOGCSpatialFilter: function(version) {
         let ogc = this.ogcSpatialOperator[this.objFilter.spatialField.operation].startTag;
         ogc +=
             this.propertyTagReference[this.nsplaceholder].startTag +
@@ -265,7 +278,10 @@ const FilterUtils = {
                             this.objFilter.spatialField.geometry.projection || "EPSG:4326");
                         break;
                     case "MultiPolygon":
-                        ogc += '<gml:MultiPolygon srsName="' + (this.objFilter.spatialField.geometry.projection || "EPSG:4326") + '">';
+                        const multyPolygonTagName = version === "2.0" ? "MultiSurface" : "MultiPolygon";
+                        const polygonMemberTagName = version === "2.0" ? "surfaceMembers" : "polygonMember";
+
+                        ogc += '<gml:' + multyPolygonTagName + ' srsName="' + (this.objFilter.spatialField.geometry.projection || "EPSG:4326") + '">';
 
                         // //////////////////////////////////////////////////////////////////////////
                         // Coordinates of a MultiPolygon are an array of Polygon coordinate arrays
@@ -273,13 +289,13 @@ const FilterUtils = {
                         this.objFilter.spatialField.geometry.coordinates.forEach((element) => {
                             let polygon = element;
                             if (polygon) {
-                                ogc += "<gml:polygonMember>";
+                                ogc += "<gml:" + polygonMemberTagName + ">";
                                 ogc += this.getGmlPolygonElement(polygon);
-                                ogc += "</gml:polygonMember>";
+                                ogc += "</gml:" + polygonMemberTagName + ">";
                             }
                         });
 
-                        ogc += '</gml:MultiPolygon>';
+                        ogc += '</gml:' + multyPolygonTagName + '>';
                         break;
                     default:
                         break;
