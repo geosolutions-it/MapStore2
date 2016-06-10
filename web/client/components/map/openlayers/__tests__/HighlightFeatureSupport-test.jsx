@@ -50,7 +50,7 @@ const layer = {
         }
 };
 
-describe('HighlightFeatureSupport', () => {
+describe('HighlightFeatureSupport Ol', () => {
     let msNode;
 
     beforeEach((done) => {
@@ -66,7 +66,7 @@ describe('HighlightFeatureSupport', () => {
     });
 
 
-    it('create a HighlightFeatureSupport component', () => {
+    it('create a OL HighlightFeatureSupport component', () => {
         var viewOptions = {
             projection: 'EPSG:3857',
             center: [0, 0],

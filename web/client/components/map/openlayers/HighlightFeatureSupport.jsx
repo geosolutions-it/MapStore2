@@ -13,9 +13,10 @@ const HighlightFeatureSupport = React.createClass({
     propTypes: {
         map: React.PropTypes.object,
         layer: React.PropTypes.string.isRequired,
-        status: React.PropTypes.oneOf(['disabled', 'enabled']),
+        status: React.PropTypes.oneOf(['disabled', 'enabled', 'update']),
         updateHighlighted: React.PropTypes.func,
-        selectedStyle: React.PropTypes.object
+        selectedStyle: React.PropTypes.object,
+        features: React.PropTypes.array
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -38,6 +39,10 @@ const HighlightFeatureSupport = React.createClass({
         };
     },
     componentDidMount() {
+        this.features = new ol.Collection();
+        if (this.props.features) {
+            this.highlightFeatures(this.props.features);
+        }
         this.createSelectInteraction();
         if (this.props.status === 'enabled') {
             this._selectInteraction.setActive(true);
@@ -47,7 +52,10 @@ const HighlightFeatureSupport = React.createClass({
     },
     shouldComponentUpdate(nx) {
         let pr = this.props;
-        return nx.status !== pr.status || nx.layer !== pr.layer;
+        return nx.status !== pr.status ||
+            nx.layer !== pr.layer ||
+            (nx.status === 'update' &&
+             nx.features.toString() !== pr.features.toString());
     },
     componentWillUpdate(np) {
         switch (np.status) {
@@ -57,6 +65,10 @@ const HighlightFeatureSupport = React.createClass({
             }
             case "disabled": {
                 this.cleanSupport();
+                break;
+            }
+            case "update": {
+                this.highlightFeatures(np.features);
                 break;
             }
             default:
@@ -69,6 +81,15 @@ const HighlightFeatureSupport = React.createClass({
         this.props.map.removeInteraction(this._selectInteraction);
         this._selectInteraction = null;
         this._style = null;
+    },
+    getLayer() {
+        let layer;
+        this.props.map.getLayers().forEach((l) => {
+            if (this.layersFilter(l)) {
+                layer = l;
+            }
+        }, this);
+        return layer;
     },
     render() {
         return null;
@@ -88,12 +109,14 @@ const HighlightFeatureSupport = React.createClass({
         this.props.map.addInteraction(this._selectInteraction);
     },
     selectionChange() {
-        this.props.updateHighlighted(this._selectInteraction.getFeatures().getLength());
+        let newHighlighted = [];
+        this._selectInteraction.getFeatures().forEach((f) => { newHighlighted.push(f.getId()); });
+        this.props.updateHighlighted(newHighlighted, "");
     },
     cleanSupport() {
         if (this._selectInteraction.getActive()) {
             this._selectInteraction.getFeatures().clear();
-            this.props.updateHighlighted(0);
+            this.props.updateHighlighted([], "");
             this._selectInteraction.setActive(false);
         }
 
@@ -118,6 +141,19 @@ const HighlightFeatureSupport = React.createClass({
                 };
         }
         this._style = new ol.style.Style(style);
+    },
+    highlightFeatures(features) {
+        let layer = this.getLayer();
+        let ftColl = this._selectInteraction.getFeatures();
+        ftColl.clear();
+        if (layer) {
+            let ft = layer.getSource().getFeatures();
+            ft.map((f)=> {
+                if (features.includes(f.getId())) {
+                    ftColl.push(f);
+                }
+            }, this);
+        }
     }
 });
 

@@ -12,9 +12,10 @@ const HighlightFeatureSupport = React.createClass({
     propTypes: {
         map: React.PropTypes.object,
         layer: React.PropTypes.string.isRequired,
-        status: React.PropTypes.oneOf(['disabled', 'enabled']),
+        status: React.PropTypes.oneOf(['disabled', 'enabled', 'update']),
         updateHighlighted: React.PropTypes.func,
-        selectedStyle: React.PropTypes.object
+        selectedStyle: React.PropTypes.object,
+        features: React.PropTypes.array
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -30,7 +31,8 @@ const HighlightFeatureSupport = React.createClass({
                 "fillOpacity": 1,
                 "color": "yellow",
                 "fillColor": "red"
-            }
+            },
+            features: []
         };
     },
     componentDidMount() {
@@ -42,7 +44,7 @@ const HighlightFeatureSupport = React.createClass({
     },
     shouldComponentUpdate(nx) {
         let pr = this.props;
-        return nx.status !== pr.status || nx.layer !== pr.layer;
+        return nx.status !== pr.status || nx.layer !== pr.layer || (nx.status === 'update' && nx.features.toString() !== pr.features.toString());
     },
     componentWillUpdate(np) {
         switch (np.status) {
@@ -52,6 +54,10 @@ const HighlightFeatureSupport = React.createClass({
             }
             case "disabled": {
                 this.cleanSupport();
+                break;
+            }
+            case "update": {
+                this.highlightFeatures(np.features);
                 break;
             }
             default:
@@ -78,6 +84,7 @@ const HighlightFeatureSupport = React.createClass({
             newLayer.on("click", this.featureClicked, this);
         }
         this._layer = newLayer;
+        this.highlightFeatures(this.props.features);
     },
     featureClicked(e) {
         let layer = e.layer;
@@ -100,7 +107,7 @@ const HighlightFeatureSupport = React.createClass({
             layer.bringToFront();
             layer.setStyle(this.props.selectedStyle);
         }
-        this.props.updateHighlighted(this._selectedFeatures.length);
+        this.props.updateHighlighted(this._selectedFeatures.map((f) => {return f.msId; }), "");
     },
     cleanSupport() {
         if (this._layer !== null) {
@@ -109,7 +116,20 @@ const HighlightFeatureSupport = React.createClass({
         }
         this._selectedFeatures = [];
         this._layer = null;
-        this.props.updateHighlighted(this._selectedFeatures.length);
+        this.props.updateHighlighted([], "");
+    },
+    highlightFeatures(features) {
+        if (!this._layer) {
+            this.setLayer();
+        }
+        this._selectedFeatures.map((f) => {this._layer.resetStyle(f); });
+        this._layer.eachLayer((l)=> {
+            if (features.includes(l.msId)) {
+                this._selectedFeatures.push(l);
+                l.bringToFront();
+                l.setStyle(this.props.selectedStyle);
+            }
+        }, this);
     }
 });
 

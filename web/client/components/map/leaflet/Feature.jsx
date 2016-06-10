@@ -42,32 +42,37 @@ var geometryToLayer = function(geojson, options) {
     if (!coords && !geometry) {
         return null;
     }
-
+    let layer;
     switch (geometry.type) {
     case 'Point':
         latlng = coordsToLatLng(coords);
-        return pointToLayer ? pointToLayer(geojson, latlng) : new L.Marker(latlng);
-
+        layer = pointToLayer ? pointToLayer(geojson, latlng) : new L.Marker(latlng);
+        layer.msId = geojson.id;
+        return layer;
     case 'MultiPoint':
         for (i = 0, len = coords.length; i < len; i++) {
             latlng = coordsToLatLng(coords[i]);
-            layers.push(pointToLayer ? pointToLayer(geojson, latlng) : new L.Marker(latlng));
+            layer = pointToLayer ? pointToLayer(geojson, latlng) : new L.Marker(latlng);
+            layer.msId = geojson.id;
+            layers.push(layer);
         }
         return new L.FeatureGroup(layers);
 
     case 'LineString':
     case 'MultiLineString':
         latlngs = coordsToLatLngs(coords, geometry.type === 'LineString' ? 0 : 1, coordsToLatLng);
-        return new L.Polyline(latlngs, options.style);
-
+        layer = new L.Polyline(latlngs, options.style);
+        layer.msId = geojson.id;
+        return layer;
     case 'Polygon':
     case 'MultiPolygon':
         latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
-        return new L.Polygon(latlngs, options.style);
-
+        layer = new L.Polygon(latlngs, options.style);
+        layer.msId = geojson.id;
+        return layer;
     case 'GeometryCollection':
         for (i = 0, len = geometry.geometries.length; i < len; i++) {
-            let layer = this.geometryToLayer({
+            layer = this.geometryToLayer({
                 geometry: geometry.geometries[i],
                 type: 'Feature',
                 properties: geojson.properties
@@ -86,6 +91,7 @@ var geometryToLayer = function(geojson, options) {
 
 let Feature = React.createClass({
     propTypes: {
+        msId: React.PropTypes.string,
         type: React.PropTypes.string,
         styleName: React.PropTypes.string,
         properties: React.PropTypes.object,
@@ -98,7 +104,8 @@ let Feature = React.createClass({
             let style = this.props.style;
             this._layer = geometryToLayer({
                 type: this.props.type,
-                geometry: this.props.geometry}, {
+                geometry: this.props.geometry,
+                id: this.props.msId}, {
                 style: style,
                 pointToLayer: this.props.styleName !== "marker" ? function(feature, latlng) {
                     return L.circleMarker(latlng, style || {
@@ -118,7 +125,8 @@ let Feature = React.createClass({
             this.props.container.removeLayer(this._layer);
             this._layer = geometryToLayer({
                 type: newProps.type,
-                geometry: newProps.geometry},
+                geometry: newProps.geometry,
+                msId: this.props.msId},
                 {
                 style: newProps.style,
                 pointToLayer: newProps.styleName !== "marker" ? function(feature, latlng) {
