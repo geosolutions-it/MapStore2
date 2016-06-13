@@ -29,6 +29,7 @@ const FeatureGrid = React.createClass({
         columnDefs: React.PropTypes.array,
         changeMapView: React.PropTypes.func,
         selectFeatures: React.PropTypes.func,
+        highlightedFeatures: React.PropTypes.array,
         style: React.PropTypes.object,
         virtualPaging: React.PropTypes.bool,
         paging: React.PropTypes.bool,
@@ -45,6 +46,7 @@ const FeatureGrid = React.createClass({
     },
     getDefaultProps() {
         return {
+            highlightedFeatures: null,
             features: null,
             columnDefs: null,
             changeMapView: () => {},
@@ -72,9 +74,17 @@ const FeatureGrid = React.createClass({
     shouldComponentUpdate(nextProps) {
         return !isEqual(nextProps, this.props);
     },
+    componentDidUpdate() {
+        if (this.props.highlightedFeatures) {
+            this.selectHighlighted();
+        }
+    },
     onGridReady(params) {
         this.api = params.api;
         this.columnApi = params.columnApi;
+        if (this.props.highlightedFeatures) {
+            this.selectHighlighted();
+        }
     },
     // Internal function that simulate data source getRows for in memory data
     getRows(params) {
@@ -148,7 +158,7 @@ const FeatureGrid = React.createClass({
         let defs = this.props.columnDefs;
         let defaultOptions = this.props.columnDefaultOptions;
         let exclude = this.props.excludeFields;
-        if (!defs) {
+        if (!defs && this.props.features && this.props.features[0]) {
             defs = keys(this.props.features[0].properties).filter((val) => {
                 return exclude.indexOf(val) === -1;
             }).map(function(key) {
@@ -243,7 +253,11 @@ const FeatureGrid = React.createClass({
         }
     },
     selectFeatures(params) {
-        this.props.selectFeatures(params.selectedRows.slice());
+        if (!this.suppresSelectionEvent) {
+            this.props.selectFeatures(params.selectedRows.slice());
+        }else {
+            this.suppresSelectionEvent = false;
+        }
     },
     sortData(sortModel, data) {
         // do an in memory sort of the data, across all the fields
@@ -272,6 +286,21 @@ const FeatureGrid = React.createClass({
             return 0;
         });
         return resultOfSort;
+    },
+    // If highlighted features are passed we try to select corresponding row
+    // using geojson feature id
+    selectHighlighted() {
+        let selectedId = this.props.highlightedFeatures;
+        let me = this;
+        this.api.forEachNode((n) => {
+            if (selectedId.includes(n.data.id)) {
+                me.api.selectNode(n, true, true);
+            }else {
+                me.suppresSelectionEvent = true;
+                me.api.deselectNode(n);
+
+            }
+        });
     }
 });
 

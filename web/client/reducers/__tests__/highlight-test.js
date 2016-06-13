@@ -16,6 +16,7 @@ describe('Test the highlight reducer', () => {
         const initialState = {
             status: 'disabled',
             layer: 'featureselector',
+            features: [],
             highlighted: 0
         };
 
@@ -32,7 +33,9 @@ describe('Test the highlight reducer', () => {
         const initialState = {
             status: 'disabled',
             layer: 'featureselector',
+            features: [],
             highlighted: 0
+
         };
 
         let state = highlight(initialState, testAction);
@@ -46,15 +49,18 @@ describe('Test the highlight reducer', () => {
     it('Change the UPDATE_HIGHLIGHTED ', () => {
         let testAction = {
             type: "UPDATE_HIGHLIGHTED",
-            count: 10
+            features: [0, 1, 2, 3],
+            status: 'update'
         };
 
 
         let state = highlight( undefined, testAction);
         expect(state).toExist();
 
-        expect(state.status).toBe("disabled");
+        expect(state.status).toBe("update");
         expect(state.layer).toBe("featureselector");
-        expect(state.highlighted).toBe(10);
+        expect(state.highlighted).toBe(4);
+        expect(state.features[1]).toBe(1);
+
     });
 });

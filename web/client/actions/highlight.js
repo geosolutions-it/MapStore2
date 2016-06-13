@@ -15,10 +15,11 @@ function highlightStatus(status) {
         status
     };
 }
-function updateHighlighted(count) {
+function updateHighlighted(features, status) {
     return {
         type: UPDATE_HIGHLIGHTED,
-        count
+        features,
+        status
     };
 }
 

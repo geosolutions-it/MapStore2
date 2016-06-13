@@ -27,12 +27,14 @@ describe('Test correctness of the highlight actions', () => {
     });
 
     it('updateHighlighted', () => {
-        let count = 10;
+        let features = ["One", "Two"];
 
-        let retval = updateHighlighted(count);
+        let retval = updateHighlighted(features, 'update');
 
         expect(retval).toExist();
         expect(retval.type).toBe(UPDATE_HIGHLIGHTED);
-        expect(retval.count).toBe(count);
+        expect(retval.features).toBe(features);
+        expect(retval.status).toBe('update');
+
     });
 });

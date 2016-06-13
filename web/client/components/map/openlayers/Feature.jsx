@@ -15,14 +15,15 @@ let Feature = React.createClass({
         type: React.PropTypes.string,
         properties: React.PropTypes.object,
         container: React.PropTypes.object, // TODO it must be a ol.layer.vector (maybe pass the source is more correct here?)
-        geometry: React.PropTypes.object // TODO check for geojson format for geometry
+        geometry: React.PropTypes.object, // TODO check for geojson format for geometry
+        msId: React.PropTypes.string
     },
     componentDidMount() {
         const format = new ol.format.GeoJSON();
         const geometry = this.props.geometry && this.props.geometry.coordinates;
 
         if (this.props.container && geometry) {
-            this._feature = format.readFeatures({type: this.props.type, properties: this.props.properties, geometry: this.props.geometry});
+            this._feature = format.readFeatures({type: this.props.type, properties: this.props.properties, geometry: this.props.geometry, id: this.props.msId});
             this._feature.forEach((f) => f.getGeometry().transform('EPSG:4326', 'EPSG:3857')); // TODO support map reference system
             this.props.container.getSource().addFeatures(this._feature);
         }
@@ -41,7 +42,7 @@ let Feature = React.createClass({
             const geometry = newProps.geometry && newProps.geometry.coordinates;
 
             if (newProps.container && geometry) {
-                this._feature = format.readFeatures({type: newProps.type, properties: newProps.properties, geometry: newProps.geometry});
+                this._feature = format.readFeatures({type: newProps.type, properties: newProps.properties, geometry: newProps.geometry, id: this.props.msId});
                 this._feature.forEach((f) => f.getGeometry().transform('EPSG:4326', 'EPSG:3857')); // TODO support map reference system
                 newProps.container.getSource().addFeatures(this._feature);
             }

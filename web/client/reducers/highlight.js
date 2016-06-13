@@ -15,6 +15,7 @@ const {
 const initialState = {
     status: 'disabled',
     layer: 'featureselector',
+    features: [],
     highlighted: 0
 };
 
@@ -24,7 +25,7 @@ function highlight(state = initialState, action) {
             return {...state, status: action.status};
         }
         case UPDATE_HIGHLIGHTED: {
-            return {...state, highlighted: action.count};
+            return {...state, highlighted: action.features.length, features: action.features, status: action.status || state.status};
         }
         default:
             return state;
