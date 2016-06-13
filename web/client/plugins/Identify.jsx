@@ -54,7 +54,7 @@ module.exports = {
     IdentifyPlugin: assign(IdentifyPlugin, {
         Toolbar: {
             name: 'info',
-            position: 3,
+            position: 4,
             tooltip: "info.tooltip",
             icon: <Glyphicon glyph="info-sign"/>,
             help: <Message msgId="helptexts.infoButton"/>,

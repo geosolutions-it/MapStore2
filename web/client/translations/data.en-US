@@ -249,6 +249,9 @@
             "popup": "You are within {distance} {unit} from this point",
             "outsideMapBoundsMsg": "You seem located outside the boundaries of the map"
         },
+        "zoombuttons": {
+            "zoomAllTooltip": "Zoom Alla Massima Estensione"
+        },
         "helptexts": {
             "scaleBox": "This is the helptext for the ScaleBox",
             "zoomToMaxExtentButton": "This is the helptext for the ZoomToMaxExtentButton",
