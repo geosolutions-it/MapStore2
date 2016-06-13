@@ -88,7 +88,7 @@ const HighlightFeatureSupport = React.createClass({
     },
     featureClicked(e) {
         let layer = e.layer;
-        if (e.originalEvent.shiftKey && layer) {
+        if ((e.originalEvent.ctrlKey || e.originalEvent.metaKey) && layer) {
             let idx = this._selectedFeatures.findIndex((f) => {
                 return f === layer;
             });

@@ -103,7 +103,8 @@ const HighlightFeatureSupport = React.createClass({
         this.createStyle();
         this._selectInteraction = new ol.interaction.Select({
             layers: this.layersFilter,
-            style: this._style
+            style: this._style,
+            toggleCondition: ol.events.condition.platformModifierKeyOnly
             });
         this._selectInteraction.on('select', this.selectionChange, this);
         this.props.map.addInteraction(this._selectInteraction);
