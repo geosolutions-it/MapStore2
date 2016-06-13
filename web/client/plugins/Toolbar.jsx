@@ -108,7 +108,7 @@ const Toolbar = React.createClass({
             const ToolbarButton = this.getTool(tool);
 
             return this.addTooltip(
-                <ToolbarButton tooltip={tooltip} help={help} key={tool.name} mapType={this.props.mapType}>
+                <ToolbarButton tooltip={tooltip} help={help} key={tool.name} {...tool.cfg} mapType={this.props.mapType}>
                     {help}{tool.icon}
                 </ToolbarButton>,
             tool);

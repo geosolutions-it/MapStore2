@@ -78,7 +78,12 @@
 					"id": "locateMeButton"
 				}
 		 }],
-		"desktop": ["Map", "Help", "Identify", "MadeWithLove", {
+		"desktop": [{
+			"name": "Map",
+			"cfg": {
+					"zoomControl": false
+			}
+		 }, "Help", "Identify", "MadeWithLove", {
 			  "name": "Locate",
 				"hide": true
 		}, {
@@ -114,6 +119,22 @@
       "name": "ZoomAll",
       "hide": true
     },
-    "MapLoading", "Snapshot"]
+    "MapLoading", "Snapshot",
+    {
+      "name":"ZoomIn",
+      "hide": true,
+      "cfg":{
+        "step": 1,
+        "glyphicon": "plus"
+        }
+    },
+    {
+      "name":"ZoomOut",
+      "hide": true,
+      "cfg":{
+        "step": -1,
+        "glyphicon": "minus"
+        }
+    }]
 	}
 }
