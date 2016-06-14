@@ -64,8 +64,8 @@ const StandardApp = React.createClass({
     },
     init() {
         this.store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
-        if (urlQuery.appConfig) {
-            ConfigUtils.setLocalConfigurationFile(urlQuery.appConfig + '.json');
+        if (urlQuery.localConfig) {
+            ConfigUtils.setLocalConfigurationFile(urlQuery.localConfig + '.json');
         }
         ConfigUtils.loadConfiguration().then(() => {
             const locale = LocaleUtils.getUserLocale();

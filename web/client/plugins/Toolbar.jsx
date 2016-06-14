@@ -12,7 +12,7 @@ const {connect} = require('react-redux');
 const {setControlProperty} = require('../actions/controls');
 const {changeHelpText, changeHelpwinVisibility} = require('../actions/help');
 
-const {ButtonGroup, Button, Tooltip, OverlayTrigger, Panel, Collapse} = require('react-bootstrap');
+const {Button, Tooltip, OverlayTrigger, Panel, Collapse} = require('react-bootstrap');
 
 require('./toolbar/assets/css/toolbar.css');
 
