@@ -250,6 +250,9 @@
             "popup": "Sei nel raggio di {distance} {unit} da questo punto",
             "outsideMapBoundsMsg": "Sembri al di fuori dei confini della mappa"
         },
+        "zoombuttons": {
+            "zoomAllTooltip": "Zoom Alla Massima Estensione"
+        },
         "helptexts": {
             "scaleBox": "Questo è il testo di aiuto per ScaleBox",
             "zoomToMaxExtentButton": "Questo è il testo di aiuto per ZoomToMaxExtentButton",

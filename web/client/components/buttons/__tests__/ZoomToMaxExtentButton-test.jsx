@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -129,23 +129,6 @@ describe('This test for ZoomToMaxExtentButton', () => {
 
         genericTest("normal");
         genericTest("image");
-    });
-
-    it('creates the component with a ImageButton', () => {
-        const zmeBtn = ReactDOM.render(<ZoomToMaxExtentButton btnType="image"/>, document.getElementById("container"));
-        expect(zmeBtn).toExist();
-        const zmeBtnNode = ReactDOM.findDOMNode(zmeBtn);
-        expect(zmeBtnNode).toExist();
-        expect(zmeBtnNode.localName).toBe("img");
-    });
-
-    it('creates the component with a ImageButton and a custom css class', () => {
-        const zmeBtn = ReactDOM.render(<ZoomToMaxExtentButton className="custom" btnType="image"/>, document.getElementById("container"));
-        expect(zmeBtn).toExist();
-        const zmeBtnNode = ReactDOM.findDOMNode(zmeBtn);
-        expect(zmeBtnNode).toExist();
-        expect(zmeBtnNode.localName).toBe("img");
-        expect(zmeBtnNode.className).toBe("custom");
     });
 
     it('create glyphicon with custom css class', () => {
