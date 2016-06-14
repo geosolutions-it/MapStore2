@@ -295,7 +295,7 @@ const FeatureGrid = React.createClass({
         this.api.forEachNode((n) => {
             if (selectedId.includes(n.data.id)) {
                 me.api.selectNode(n, true, true);
-            }else {
+            }else if (me.api.isNodeSelected(n)) {
                 me.suppresSelectionEvent = true;
                 me.api.deselectNode(n);
 

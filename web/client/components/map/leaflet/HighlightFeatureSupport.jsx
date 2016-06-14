@@ -94,7 +94,7 @@ const HighlightFeatureSupport = React.createClass({
             });
             if (idx !== -1) {
                 this._layer.resetStyle(layer);
-                this._selectedFeatures.splice(idx, 1);
+                this._selectedFeatures = this._selectedFeatures.filter((l, i) => {return i !== idx; });
                 layer = null;
             }else {
                 this._selectedFeatures.push(layer);
@@ -123,6 +123,7 @@ const HighlightFeatureSupport = React.createClass({
             this.setLayer();
         }
         this._selectedFeatures.map((f) => {this._layer.resetStyle(f); });
+        this._selectedFeatures = [];
         this._layer.eachLayer((l)=> {
             if (features.includes(l.msId)) {
                 this._selectedFeatures.push(l);

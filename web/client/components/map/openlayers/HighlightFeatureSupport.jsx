@@ -39,15 +39,15 @@ const HighlightFeatureSupport = React.createClass({
         };
     },
     componentDidMount() {
-        this.features = new ol.Collection();
-        if (this.props.features) {
-            this.highlightFeatures(this.props.features);
-        }
+
         this.createSelectInteraction();
         if (this.props.status === 'enabled') {
             this._selectInteraction.setActive(true);
         }else {
             this._selectInteraction.setActive(false);
+        }
+        if (this.props.features) {
+            this.highlightFeatures(this.props.features);
         }
     },
     shouldComponentUpdate(nx) {
@@ -76,11 +76,13 @@ const HighlightFeatureSupport = React.createClass({
         }
     },
     componentWillUnmount() {
-        this.cleanSupport();
-        this._selectInteraction.un('select', this.selectionChange, this);
-        this.props.map.removeInteraction(this._selectInteraction);
-        this._selectInteraction = null;
-        this._style = null;
+        if (this._selectInteraction) {
+            this.cleanSupport();
+            this._selectInteraction.un('select', this.selectionChange, this);
+            this.props.map.removeInteraction(this._selectInteraction);
+            this._selectInteraction = null;
+            this._style = null;
+        }
     },
     getLayer() {
         let layer;
@@ -115,7 +117,7 @@ const HighlightFeatureSupport = React.createClass({
         this.props.updateHighlighted(newHighlighted, "");
     },
     cleanSupport() {
-        if (this._selectInteraction.getActive()) {
+        if (this._selectInteraction && this._selectInteraction.getActive()) {
             this._selectInteraction.getFeatures().clear();
             this.props.updateHighlighted([], "");
             this._selectInteraction.setActive(false);
