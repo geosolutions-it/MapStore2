@@ -9,6 +9,7 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {mapSelector} = require('../selectors/map');
+const {Glyphicon} = require('react-bootstrap');
 
 const selector = createSelector([mapSelector, state => state.mapInitialConfig], (map, mapInitialConfig) => ({mapConfig: map, mapInitialConfig: mapInitialConfig}));
 
@@ -18,23 +19,29 @@ const ZoomToMaxExtentButton = connect(selector, {
     changeMapView
 })(require('../components/buttons/ZoomToMaxExtentButton'));
 
-const HelpWrapper = require('./help/HelpWrapper');
 const Message = require('../components/I18N/Message');
-
-require('./zoomall/zoomall.css');
 
 const ZoomAllPlugin = React.createClass({
     render() {
-        return (<HelpWrapper
-            key="zoomall-help"
-            helpText={<Message msgId="helptexts.zoomToMaxExtentButton"/>}>
+        return (
             <ZoomToMaxExtentButton
-                key="zoomToMaxExtent" useInitialExtent={true}/>
-        </HelpWrapper>);
+                key="zoomToMaxExtent" useInitialExtent={true}/>);
     }
 });
 
+const assign = require('object-assign');
+
 module.exports = {
-    ZoomAllPlugin,
+    ZoomAllPlugin: assign(ZoomAllPlugin, {
+        Toolbar: {
+            name: "ZoomAll",
+            position: 3,
+            tooltip: "zoombuttons.zoomAllTooltip",
+            icon: <Glyphicon glyph="resize-full"/>,
+            help: <Message msgId="helptexts.zoomToMaxExtentButton"/>,
+            tool: true,
+            hide: true
+        }
+    }),
     reducers: {}
 };
