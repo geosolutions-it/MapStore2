@@ -20,6 +20,7 @@ module.exports = {
         ShapeFilePlugin: require('../plugins/ShapeFile'),
         SnapshotPlugin: require('../plugins/Snapshot'),
         SettingsPlugin: require('../plugins/Settings'),
+        ExpanderPlugin: require('../plugins/Expander'),
         SearchPlugin: require('../plugins/Search'),
         ScaleBoxPlugin: require('../plugins/ScaleBox'),
         LocatePlugin: require('../plugins/Locate'),

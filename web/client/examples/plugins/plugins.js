@@ -27,6 +27,7 @@ module.exports = {
         ShapeFilePlugin: require('../../plugins/ShapeFile'),
         MetadataExplorerPlugin: require('../../plugins/MetadataExplorer'),
         SettingsPlugin: require('../../plugins/Settings'),
+        ExpanderPlugin: require('../../plugins/Expander'),
         HelpPlugin: require('../../plugins/Help')
     },
     requires: {}

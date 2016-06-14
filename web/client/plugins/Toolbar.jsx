@@ -12,13 +12,15 @@ const {connect} = require('react-redux');
 const {setControlProperty} = require('../actions/controls');
 const {changeHelpText, changeHelpwinVisibility} = require('../actions/help');
 
-const {ButtonGroup, Button, Tooltip, OverlayTrigger, Panel, Collapse} = require('react-bootstrap');
+const {Button, Tooltip, OverlayTrigger, Panel, Collapse} = require('react-bootstrap');
 
 require('./toolbar/assets/css/toolbar.css');
 
 const Message = require('./locale/Message');
 
 const {toggleControl} = require('../actions/controls');
+
+const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
 const HelpBadge = connect((state) => ({
     isVisible: state.controls && state.controls.help && state.controls.help.enabled
@@ -30,15 +32,14 @@ const HelpBadge = connect((state) => ({
 const assign = require('object-assign');
 const {partial} = require('lodash');
 
-let tools;
-
 const Toolbar = React.createClass({
     propTypes: {
         tools: React.PropTypes.array,
         mapType: React.PropTypes.string,
         panelStyle: React.PropTypes.object,
         active: React.PropTypes.string,
-        items: React.PropTypes.array
+        items: React.PropTypes.array,
+        allVisible: React.PropTypes.bool
     },
     contextTypes: {
         messages: React.PropTypes.object,
@@ -53,11 +54,9 @@ const Toolbar = React.createClass({
                 position: "absolute",
                 overflow: "auto"
             },
-            items: []
+            items: [],
+            allVisible: true
         };
-    },
-    componentWillMount() {
-        tools = require('./toolbar/index')(this.context);
     },
     getPanel(tool) {
         if (tool.panel === true) {
@@ -70,14 +69,11 @@ const Toolbar = React.createClass({
             .filter((tool) => tool.panel)
             .map((tool) => ({name: tool.name, title: tool.title, cfg: tool.cfg, panel: this.getPanel(tool), items: tool.items, wrap: tool.wrap || false}));
     },
-    getAllTools() {
-        const unsorted = [...tools, ...this.props.items].map((item, index) => assign({}, item, {position: item.position || index}));
-        return unsorted.sort((a, b) => a.position - b.position);
-    },
     getTools() {
-        return this.props.tools && this.props.tools.reduce((previous, current) => {
-            return previous.concat(tools.filter((tool) => tool.name === current)[0]);
-        }, []) || this.getAllTools();
+        const unsorted = this.props.items
+            .filter((item) => item.alwaysVisible || this.props.allVisible)
+            .map((item, index) => assign({}, item, {position: item.position || index}));
+        return unsorted.sort((a, b) => a.position - b.position);
     },
     getTool(tool) {
         if (tool.tool) {
@@ -92,9 +88,9 @@ const Toolbar = React.createClass({
             actions.onClick = setControlProperty.bind(null, 'toolbar', 'active', tool.name, true);
         } else if (tool.toggle) {
             selector = (state) => ({
-                bsStyle: state.controls[tool.name] && state.controls[tool.name].enabled ? 'primary' : 'default'
+                bsStyle: state.controls[tool.toggleControl || tool.name] && state.controls[tool.toggleControl || tool.name][tool.toggleProperty || "enabled"] ? 'primary' : 'default'
             });
-            actions.onClick = toggleControl.bind(null, tool.name, null);
+            actions.onClick = toggleControl.bind(null, tool.toggleControl || tool.name, tool.toggleProperty || null);
         } else if (tool.action) {
             actions.onClick = partial(tool.action, this.context);
         }
@@ -136,9 +132,9 @@ const Toolbar = React.createClass({
     render() {
         return (
             <span>
-                <ButtonGroup vertical className="mapToolbar">
+                <ReactCSSTransitionGroup className="mapToolbar btn-group-vertical" transitionName="toolbarexpand" transitionEnterTimeout={500} transitionLeaveTimeout={300}>
                     {this.renderButtons()}
-                </ButtonGroup>
+                </ReactCSSTransitionGroup>
                 {this.renderPanels()}
             </span>
         );
@@ -158,7 +154,8 @@ const Toolbar = React.createClass({
 
 module.exports = {
     ToolbarPlugin: connect((state) => ({
-        active: state.controls && state.controls.toolbar && state.controls.toolbar.active
+        active: state.controls && state.controls.toolbar && state.controls.toolbar.active,
+        allVisible: state.controls && state.controls.toolbar && state.controls.toolbar.expanded
     }))(Toolbar),
     reducers: {controls: require('../reducers/controls')}
 };

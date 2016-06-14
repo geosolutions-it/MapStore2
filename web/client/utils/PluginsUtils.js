@@ -33,6 +33,7 @@ const getPluginItems = (plugins, pluginsConfig, name) => {
                 const pluginCfg = isPluginConfigured(pluginsConfig, plugin);
                 return assign({},
                     pluginImpl[name],
+                    pluginCfg.override && pluginCfg.override[name] || {},
                     {
                         cfg: pluginCfg && pluginCfg.cfg || undefined
                     },

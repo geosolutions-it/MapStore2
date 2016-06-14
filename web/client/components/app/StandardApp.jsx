@@ -17,6 +17,9 @@ const LocaleUtils = require('../../utils/LocaleUtils');
 const PluginsUtils = require('../../utils/PluginsUtils');
 
 const assign = require('object-assign');
+const url = require('url');
+
+const urlQuery = url.parse(window.location.href, true).query;
 
 const StandardApp = React.createClass({
     propTypes: {
@@ -61,7 +64,9 @@ const StandardApp = React.createClass({
     },
     init() {
         this.store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
-
+        if (urlQuery.localConfig) {
+            ConfigUtils.setLocalConfigurationFile(urlQuery.localConfig + '.json');
+        }
         ConfigUtils.loadConfiguration().then(() => {
             const locale = LocaleUtils.getUserLocale();
             this.store.dispatch(loadLocale(null, locale));

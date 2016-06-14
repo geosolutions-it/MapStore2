@@ -80,7 +80,12 @@
 		 }],
 		"desktop": ["Map", "Help", "Identify", "MadeWithLove", {
 			  "name": "Locate",
-				"hide": true
+				"hide": true,
+				"override": {
+					"Toolbar": {
+						"alwaysVisible": true
+					}
+				}
 		}, {
 			  "name": "Home",
 				"hide": true
@@ -102,7 +107,7 @@
 		}, {
 				"name": "Settings",
 				"hide": true
-		},{
+		}, {
 				"name": "MetadataExplorer",
 				"hide": true,
 				"cfg": {
