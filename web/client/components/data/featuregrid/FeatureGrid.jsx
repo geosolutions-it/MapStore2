@@ -75,7 +75,7 @@ const FeatureGrid = React.createClass({
         return !isEqual(nextProps, this.props);
     },
     componentWillUpdate(nextProps) {
-        if (!isEqual(nextProps.fatures, this.props.features) && this.props.highlightedFeatures ) {
+        if (!isEqual(nextProps.features, this.props.features) && (this.api.getSelectedNodes().length > 0)) {
             this.suppresSelectionEvent = true;
         }
     },
