@@ -17,15 +17,22 @@ var defaultStyle = {
     fillOpacity: 0
 };
 
+const assign = require('object-assign');
+
 var createVectorLayer = function(options) {
     const {hideLoading} = options;
-    return L.geoJson([]/* options.features */, {
+    const layer = L.geoJson([]/* options.features */, {
         pointToLayer: options.styleName !== "marker" ? function(feature, latlng) {
             return L.circleMarker(latlng, options.style || defaultStyle);
         } : null,
         hideLoading: hideLoading,
         style: options.style || defaultStyle
     });
+    layer.setOpacity = (opacity) => {
+        const style = assign({}, layer.options.style || defaultStyle, {opacity: opacity, fillOpacity: opacity});
+        layer.setStyle(style);
+    };
+    return layer;
 };
 
 Layers.registerType('vector', {

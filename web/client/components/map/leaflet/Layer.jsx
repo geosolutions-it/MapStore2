@@ -77,7 +77,7 @@ const LeafletLayer = React.createClass({
     },
     setLayerOpacity(opacity) {
         var oldOpacity = (this.props.options && this.props.options.opacity !== undefined) ? this.props.options.opacity : 1.0;
-        if (opacity !== oldOpacity && this.layer) {
+        if (opacity !== oldOpacity && this.layer && this.layer.setOpacity) {
             this.layer.setOpacity(opacity);
         }
     },
