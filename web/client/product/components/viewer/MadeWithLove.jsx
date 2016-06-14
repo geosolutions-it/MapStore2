@@ -7,11 +7,9 @@
  */
 const React = require('react');
 
-const img = require('../../assets/img/mwlii.png');
-
 const MadeWithLove = React.createClass({
     render() {
-        return (<div id="mapstore-madewithlove" ><img src={img} /></div>);
+        return (<div className="with-love"></div>);
     }
 });
 module.exports = MadeWithLove;

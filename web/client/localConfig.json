@@ -78,7 +78,18 @@
 					"id": "locateMeButton"
 				}
 		 }],
-		"desktop": ["Map", "Help", "Identify", "MadeWithLove", {
+		"desktop": [{
+			"name": "Map",
+			"cfg": {
+				"toolsOptions": {
+					"scalebar": {
+						"leaflet": {
+							"position": "bottomright"
+						}
+					}
+				}
+			}
+		}, "Help", "Identify", "MadeWithLove", {
 			  "name": "Locate",
 				"hide": true,
 				"override": {

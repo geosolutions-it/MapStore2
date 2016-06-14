@@ -34,6 +34,7 @@ var InfoButton = React.createClass({
         title: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         body: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         style: React.PropTypes.object,
+        className: React.PropTypes.string,
         glyphicon: React.PropTypes.string,
         text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         help: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
@@ -81,7 +82,8 @@ var InfoButton = React.createClass({
         return (
             <div
                 id={this.props.id}
-                style={this.props.style}>
+                style={this.props.style}
+                className={this.props.className}>
                 {this.getButton()}
                 <Modal
                     {...this.props.modalOptions}

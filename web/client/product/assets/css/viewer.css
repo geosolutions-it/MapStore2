@@ -66,20 +66,82 @@ html, body, #container, .fill {
   cursor: not-allowed;
 }
 
-#mapstore-madewithlove {
+.map-logo{
+	position:absolute;
+	width:90px;
+	height:27px;
+	bottom:5px;
+	left:5px;
+	background-image:url(../img/mapstore2_logo.png);
+	background-repeat:no-repeat;
+	background-size:contain;
+    cursor: pointer;
+}
+
+.map-logo img{
+    width: 90px;
+    height: 27px;
+    opacity: 0;
+}
+
+.with-love {
+    position:absolute;
+	width:90px;
+	height:27px;
+	bottom:5px;
+	margin-left:auto;
+	margin-right:auto;
+	left:0;
+	right:0;
+    background-image:url(../img/made-in-italy-logo.png);
+	background-size:contain;
+}
+
+#mapstore-scalebox {
+    z-index: 10;
+    bottom: 6px;
+    right: 50px;
+    left: auto !important;
     position: absolute;
-    bottom: 50px;
-    left: 0;
-    height: 0;
-    width: 100%;
-    overflow: visible;
-    text-align: center;
+    margin: 8px;
 }
 
 .leafletbottom.leafletright, .leaflet-control-minimap{
-    bottom: 50px !important;
+    bottom: 57px !important;
+    right: 49px !important;
+}
+
+.leaflet-control-scale {
+    position: absolute;
+    bottom: 0px;
+    right: 47px;
+    z-index: 1000;
+}
+.leaflet-control-attribution {
+    width: 165px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.leaflet-bottom.leaflet-right {
+    margin-bottom: 0 !important;
 }
 
 .ol-custom-overviewmap, .ol-custom-overviewmap.ol-uncollapsible {
-    bottom: 70px !important;
+    bottom: 65px !important;
+    left: auto !important;
+    right: 60px !important;
+    top: auto !important;
+}
+
+.ol-scale-line.ol-unselectable {
+    right: 58px;
+    left: auto;
+    bottom: 5px;
+}
+
+.mapToolbar {
+    top: auto !important;
+    bottom: 5px;
 }

@@ -9,7 +9,7 @@ var React = require('react');
 var InfoButton = require('../../../../components/buttons/InfoButton');
 var AboutContent = require('./AboutContent');
 var I18N = require('../../../../components/I18N/I18N');
-var aboutImg = require('../../../assets/img/mapstore-about.png');
+var aboutImg = require('../../../assets/img/blank.gif');
 
 var About = React.createClass({
     propTypes: {
@@ -31,7 +31,7 @@ var About = React.createClass({
             image={aboutImg}
             title={<I18N.Message msgId="about_title"/>}
             btnType="image"
-            style={this.props.style}
+            className="map-logo"
             body={
                 <AboutContent />
             }/>);
