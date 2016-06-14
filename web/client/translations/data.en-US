@@ -124,6 +124,9 @@
         "info":{
             "tooltip": "Query objects on map"
         },
+        "expandtoolbar": {
+            "tooltip": "Expand / Collapse"
+        },
         "getFeatureInfoTitle": "Feature Info",
         "identifyTitle": "Feature Info",
         "getFeatureInfoError": {
@@ -265,7 +268,8 @@
             "snapshot": "This is the helptext for the Snapshot",
             "print": "This is the helptext for Print",
             "shapefile": "This is the helptext for the Shapefile",
-            "rasterstyler": "Define min value, max value, number of classes and color ramp and generate new classified raster layer"
+            "rasterstyler": "Define min value, max value, number of classes and color ramp and generate new classified raster layer",
+            "expandToolbar": "This is the helptext for Expand / Collapse"
         },
         "queryform": {
             "query": "Search",
