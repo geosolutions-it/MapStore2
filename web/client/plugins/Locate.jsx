@@ -26,7 +26,7 @@ module.exports = {
     LocatePlugin: assign(LocatePlugin, {
         Toolbar: {
             name: 'locate',
-            position: 2,
+            position: 4,
             tool: true,
             tooltip: "locate.tooltip",
             icon: <Glyphicon glyph="screenshot"/>,

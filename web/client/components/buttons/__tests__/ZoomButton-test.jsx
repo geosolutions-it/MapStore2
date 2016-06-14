@@ -1,5 +1,5 @@
 /**
- * Copyright 2015-2016, GeoSolutions Sas.
+ * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -7,14 +7,14 @@
  */
 var React = require('react/addons');
 var ReactDOM = require('react-dom');
-var ZoomToMaxExtentButton = require('../ZoomToMaxExtentButton');
+var ZoomButton = require('../ZoomButton');
 var expect = require('expect');
 
 // initializes Redux store
 var Provider = require('react-redux').Provider;
 var store = require('./../../../examples/myapp/stores/myappstore');
 
-describe('This test for ZoomToMaxExtentButton', () => {
+describe('This test for ZoomButton', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -30,24 +30,24 @@ describe('This test for ZoomToMaxExtentButton', () => {
     it('test default properties', () => {
         const zmeBtn = ReactDOM.render(
             <Provider store={store}>
-                <ZoomToMaxExtentButton/>
+                <ZoomButton/>
             </Provider>,
             document.getElementById("container"));
         expect(zmeBtn).toExist();
 
         const zmeBtnNode = ReactDOM.findDOMNode(zmeBtn);
         expect(zmeBtnNode).toExist();
-        expect(zmeBtnNode.id).toBe("mapstore-zoomtomaxextent");
+        expect(zmeBtnNode.id).toBe("mapstore-zoom");
 
         expect(zmeBtnNode).toExist();
-        expect(zmeBtnNode.className.indexOf('default') >= 0).toBe(true);
+        expect(zmeBtnNode.className.indexOf('square-button') >= 0).toBe(true);
         expect(zmeBtnNode.innerHTML).toExist();
     });
 
     it('test glyphicon property', () => {
         const zmeBtn = ReactDOM.render(
             <Provider store={store}>
-                <ZoomToMaxExtentButton/>
+                <ZoomButton/>
             </Provider>,
             document.getElementById("container"));
         expect(zmeBtn).toExist();
@@ -62,7 +62,7 @@ describe('This test for ZoomToMaxExtentButton', () => {
     it('test glyphicon property with text', () => {
         const zmeBtn = ReactDOM.render(
             <Provider store={store}>
-                <ZoomToMaxExtentButton glyphicon="info-sign" text="button"/>
+                <ZoomButton glyphicon="info-sign" text="button"/>
             </Provider>,
             document.getElementById("container"));
         expect(zmeBtn).toExist();
@@ -81,16 +81,16 @@ describe('This test for ZoomToMaxExtentButton', () => {
 
     it('test if click on button launches the proper action', () => {
 
-        let genericTest = function(btnType) {
+        let genericTest = function() {
             let actions = {
-                changeMapView: (c, z, mb, ms) => {
-                    return {c, z, mb, ms};
+                onZoom: (c) => {
+                    return {c};
                 }
             };
-            let spy = expect.spyOn(actions, "changeMapView");
+            let spy = expect.spyOn(actions, "onZoom");
             var cmp = ReactDOM.render(
-                <ZoomToMaxExtentButton
-                    {...actions} btnType={btnType}
+                <ZoomButton
+                    {...actions}
                     mapConfig={{
                         maxExtent: [-110, -110, 90, 90],
                         zoom: 10,
@@ -112,29 +112,23 @@ describe('This test for ZoomToMaxExtentButton', () => {
             , document.getElementById("container"));
             expect(cmp).toExist();
 
-            let componentSpy = expect.spyOn(cmp, 'zoomToMaxExtent').andCallThrough();
-
-            const cmpDom = document.getElementById("mapstore-zoomtomaxextent");
+            const cmpDom = document.getElementById("mapstore-zoom");
             expect(cmpDom).toExist();
 
             cmpDom.click();
 
-            // check that the correct zoom to extent method has been invoked
-            expect(componentSpy.calls.length).toBe(1);
-            componentSpy.restore();
-
             expect(spy.calls.length).toBe(1);
-            expect(spy.calls[0].arguments.length).toBe(6);
+            expect(spy.calls[0].arguments.length).toBe(1);
         };
 
-        genericTest("normal");
-        genericTest("image");
+        genericTest();
+
     });
 
     it('create glyphicon with custom css class', () => {
         const zmeBtn = ReactDOM.render(
             <Provider store={store}>
-                <ZoomToMaxExtentButton className="custom" glyphicon="info-sign" text="button"/>
+                <ZoomButton className="custom" glyphicon="info-sign" text="button"/>
             </Provider>,
             document.getElementById("container"));
         expect(zmeBtn).toExist();
@@ -145,19 +139,18 @@ describe('This test for ZoomToMaxExtentButton', () => {
         expect(zmeBtnNode.className.indexOf('custom') !== -1).toBe(true);
     });
 
-    it('test zoom to initial extent', () => {
+    it('test zoom in', () => {
 
-        let genericTest = function(btnType) {
+        let genericTest = function() {
             let actions = {
-                changeMapView: (c, z, mb, ms) => {
-                    return {c, z, mb, ms};
+                onZoom: (c) => {
+                    return {c};
                 }
             };
-            let actionsSpy = expect.spyOn(actions, "changeMapView");
+            let actionsSpy = expect.spyOn(actions, "onZoom");
             var cmp = ReactDOM.render(
-                <ZoomToMaxExtentButton
-                    {...actions} btnType={btnType}
-                    useInitialExtent={true}
+                <ZoomButton
+                    {...actions}
                     mapConfig={{
                         size: {
                             height: 100,
@@ -177,29 +170,16 @@ describe('This test for ZoomToMaxExtentButton', () => {
             , document.getElementById("container"));
             expect(cmp).toExist();
 
-            let componentSpy = expect.spyOn(cmp, 'zoomToInitialExtent').andCallThrough();
-
-            const cmpDom = document.getElementById("mapstore-zoomtomaxextent");
+            const cmpDom = document.getElementById("mapstore-zoom");
             expect(cmpDom).toExist();
 
             cmpDom.click();
 
-            // check that the correct zoom to extent method has been invoked
-            expect(componentSpy.calls.length).toBe(1);
-            componentSpy.restore();
-
             expect(actionsSpy.calls.length).toBe(1);
-            expect(actionsSpy.calls[0].arguments.length).toBe(6);
+            expect(actionsSpy.calls[0].arguments.length).toBe(1);
             expect(actionsSpy.calls[0].arguments[0]).toExist();
-            expect(actionsSpy.calls[0].arguments[1]).toExist();
-            // the bbox is null since no hook was registered
-            expect(actionsSpy.calls[0].arguments[2]).toNotExist();
-            expect(actionsSpy.calls[0].arguments[3]).toExist();
-            expect(actionsSpy.calls[0].arguments[4]).toNotExist();
-            expect(actionsSpy.calls[0].arguments[5]).toExist();
         };
 
-        genericTest("normal");
-        genericTest("image");
+        genericTest();
     });
 });

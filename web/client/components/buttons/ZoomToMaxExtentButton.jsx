@@ -7,10 +7,8 @@
  */
 
 var React = require('react');
-var BootstrapReact = require('react-bootstrap');
-var Button = BootstrapReact.Button;
-var Glyphicon = BootstrapReact.Glyphicon;
-var ImageButton = require('./ImageButton');
+
+const {Button, Glyphicon} = require('react-bootstrap');
 
 const mapUtils = require('../../utils/MapUtils');
 const configUtils = require('../../utils/ConfigUtils');
@@ -28,11 +26,10 @@ const configUtils = require('../../utils/ConfigUtils');
 var ZoomToMaxExtentButton = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
-        style: React.PropTypes.object,
         image: React.PropTypes.string,
         glyphicon: React.PropTypes.string,
         text: React.PropTypes.string,
-        btnSize: React.PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
+        btnSize: React.PropTypes.oneOf(['large', 'small', 'xsmall']),
         mapConfig: React.PropTypes.object,
         mapInitialConfig: React.PropTypes.object,
         changeMapView: React.PropTypes.func,
@@ -45,38 +42,33 @@ var ZoomToMaxExtentButton = React.createClass({
     getDefaultProps() {
         return {
             id: "mapstore-zoomtomaxextent",
-            style: undefined,
             glyphicon: "resize-full",
             text: undefined,
-            btnSize: 'xsmall',
+            btnSize: undefined,
             btnType: 'normal',
-            className: undefined,
             useInitialExtent: false
         };
     },
-    render() {
-        if (this.props.btnType === 'normal') {
-            return (
-                <Button
-                    id={this.props.id}
-                    bsStyle="default"
-                    bsSize={this.props.btnSize}
-                    onClick={() => this.props.useInitialExtent ? this.zoomToInitialExtent() : this.zoomToMaxExtent()}
-                    className={this.props.className}
-                    >
-                    {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
-                    {this.props.glyphicon && this.props.text ? "\u00A0" : null}
-                    {this.props.text}
-                </Button>
-            );
+    onClick() {
+        if (this.props.useInitialExtent) {
+            this.zoomToInitialExtent();
+        } else {
+            this.zoomToMaxExtent();
         }
+    },
+    render() {
         return (
-            <ImageButton
+            <Button
                 id={this.props.id}
-                image={this.props.image}
-                onClick={() => this.props.useInitialExtent ? this.zoomToInitialExtent() : this.zoomToMaxExtent()}
-                style={this.props.style}
-                className={this.props.className}/>
+                bsStyle="default"
+                bsSize={this.props.btnSize}
+                onClick={this.onClick}
+                className={this.props.className}
+                >
+                {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
+                {this.props.glyphicon && this.props.text ? "\u00A0" : null}
+                {this.props.text}
+            </Button>
         );
     },
     zoomToMaxExtent() {
