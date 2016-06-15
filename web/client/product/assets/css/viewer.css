@@ -141,7 +141,17 @@ html, body, #container, .fill {
     bottom: 5px;
 }
 
-.mapToolbar {
+#navigationBar .mapToolbar {
     top: auto !important;
     bottom: 5px;
+}
+
+#navigationBar .toolbar-panel {
+    bottom: 80px !important;
+}
+
+#identifyBar .mapToolbar {
+    top: auto !important;
+    bottom: 5px;
+    right: 190px !important;
 }

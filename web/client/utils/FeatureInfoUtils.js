@@ -61,13 +61,13 @@ const Validator = {
          *Parse the TEXT to get only the valid text responses
          */
         getValidResponses(responses) {
-            return responses.filter((res) => res.response !== "" && (res.response.indexOf("no features were found") !== 0) && (typeof res.response === "string" && res.response.indexOf("<?xml") !== 0));
+            return responses.filter((res) => res.response !== "" && (typeof res.response === "string" && res.response.indexOf("no features were found") !== 0) && (typeof res.response === "string" && res.response.indexOf("<?xml") !== 0));
         },
         /**
          * Parse the TEXT to get only the NOT valid text responses
          */
         getNoValidResponses(responses) {
-            return responses.filter((res) => res.response === "" || (res.response.indexOf("no features were found") === 0) || res.response && (typeof res.response === "string" && res.response.indexOf("<?xml") === 0));
+            return responses.filter((res) => res.response === "" || (typeof res.response === "string" && res.response.indexOf("no features were found") === 0) || res.response && (typeof res.response === "string" && res.response.indexOf("<?xml") === 0));
         }
     },
     JSON: {
