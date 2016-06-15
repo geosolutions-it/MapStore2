@@ -23,6 +23,7 @@
         "background": "Sfondo",
         "language": "Lingua",
         "mousePositionCoordinates": "Indicatore di coordinate",
+        "showMousePositionCoordinates": "Mostra Coordinate",
         "menu": "Menu",
         "settings": "Impostazioni",
         "help": "Aiuto",

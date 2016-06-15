@@ -64,18 +64,20 @@ const MousePositionPlugin = connect(selector)(require('../components/mapcontrols
 module.exports = {
     MousePositionPlugin: assign(MousePositionPlugin, {
         Settings: {
-            tool: <CRSSelector
+            tool: <div>
+            <CRSSelector
                 key="crsSelector"
                 enabled={true}
                 inputProps={{
-                    label: <Message msgId="mousePositionCoordinates" />,
-                    buttonBefore: <MousePositionButton
-                        isButton={true}
-                        text={<Message msgId="enable" />}
-                        glyphicon="eye-open"
-                    />
+                    label: <Message msgId="mousePositionCoordinates" />
                 }}
-                />,
+            />
+            <MousePositionButton
+                key="mousepositionbutton"
+                isButton={true}
+                text={<Message msgId="showMousePositionCoordinates" />}
+            />
+            </div>,
             position: 2
         }
     }),
