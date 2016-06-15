@@ -87,7 +87,8 @@
 							"position": "bottomright"
 						}
 					}
-				}
+				},
+        "zoomControl": false
 			}
 		}, "Help", "Identify", "MadeWithLove", {
 			  "name": "Locate",
@@ -130,6 +131,14 @@
       "name": "ZoomAll",
       "hide": true
     },
-    "MapLoading", "Snapshot"]
+    "MapLoading", "Snapshot",
+    {
+      "name":"ZoomIn",
+      "hide": true
+    },
+    {
+      "name":"ZoomOut",
+      "hide": true
+    }]
 	}
 }

@@ -254,6 +254,8 @@
             "outsideMapBoundsMsg": "Sembri al di fuori dei confini della mappa"
         },
         "zoombuttons": {
+            "zoomInTooltip": "Aumenta Zoom",
+            "zoomOutTooltip": "Diminuisci Zoom",
             "zoomAllTooltip": "Zoom Alla Massima Estensione"
         },
         "helptexts": {
