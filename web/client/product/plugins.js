@@ -24,6 +24,8 @@ module.exports = {
         SearchPlugin: require('../plugins/Search'),
         ScaleBoxPlugin: require('../plugins/ScaleBox'),
         LocatePlugin: require('../plugins/Locate'),
+        ZoomInPlugin: require('../plugins/ZoomIn'),
+        ZoomOutPlugin: require('../plugins/ZoomOut'),
         ZoomAllPlugin: require('../plugins/ZoomAll'),
         MapLoadingPlugin: require('../plugins/MapLoading'),
         AboutPlugin: require('./plugins/About'),

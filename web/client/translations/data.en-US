@@ -253,6 +253,8 @@
             "outsideMapBoundsMsg": "You seem located outside the boundaries of the map"
         },
         "zoombuttons": {
+            "zoomInTooltip": "Increase Zoom",
+            "zoomOutTooltip": "Decrease Zoom",
             "zoomAllTooltip": "Zoom To Max Extent"
         },
         "helptexts": {
@@ -262,7 +264,7 @@
             "layerSwitcher": "This is the helptext for the LayerSwitcher",
             "metadataExplorer": "This is the helptext for the MetadataExplorer",
             "settingsPanel": "This is the helptext for the SettingsPanel",
-            "gohome": "This is the helptext forr Home",
+            "gohome": "This is the helptext for Home",
             "measureComponent": "This is the helptext for the MeasureComponent",
             "backgroundSwitcher": "This is the helptext for the BackgroundSwitcher",
             "layerSwitcher": "This is the helptext for the LayerSwitcher",
