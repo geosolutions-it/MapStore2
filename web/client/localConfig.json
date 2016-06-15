@@ -90,7 +90,10 @@
 				},
         "zoomControl": false
 			}
-		}, "Help", "Identify", "MadeWithLove", {
+		}, "Help", {
+       "name": "Identify",
+       "showIn": ["IdentifyBar", "Settings"]
+    }, "MadeWithLove", {
 			  "name": "Locate",
 				"hide": true,
 				"override": {
@@ -126,7 +129,21 @@
 					"chooseCatalogUrl": false,
 					"initialCatalogURL": "http://demo.geo-solutions.it/geoserver/csw"
 				}
-		}, "About", "MousePosition", "Search", "Toolbar", "ScaleBox",
+		}, "About", "MousePosition", "Search", {
+      "name": "Toolbar",
+      "id": "NavigationBar",
+      "stateSelector": "toolbar",
+      "cfg": {
+        "id": "navigationBar"
+      }
+    }, {
+      "name": "Toolbar",
+      "id": "IdentifyBar",
+      "cfg": {
+        "id": "identifyBar"
+      },
+      "isDefault": false
+    }, "ScaleBox",
     {
       "name": "ZoomAll",
       "hide": true

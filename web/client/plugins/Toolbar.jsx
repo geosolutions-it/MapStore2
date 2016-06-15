@@ -34,12 +34,16 @@ const {partial} = require('lodash');
 
 const Toolbar = React.createClass({
     propTypes: {
+        id: React.PropTypes.string,
         tools: React.PropTypes.array,
         mapType: React.PropTypes.string,
         panelStyle: React.PropTypes.object,
+        panelClassName: React.PropTypes.string,
         active: React.PropTypes.string,
         items: React.PropTypes.array,
-        allVisible: React.PropTypes.bool
+        allVisible: React.PropTypes.bool,
+        layout: React.PropTypes.string,
+        stateSelector: React.PropTypes.string
     },
     contextTypes: {
         messages: React.PropTypes.object,
@@ -47,6 +51,7 @@ const Toolbar = React.createClass({
     },
     getDefaultProps() {
         return {
+            id: "mapstore-toolbar",
             panelStyle: {
                 minWidth: "300px",
                 right: "52px",
@@ -54,8 +59,11 @@ const Toolbar = React.createClass({
                 position: "absolute",
                 overflow: "auto"
             },
+            panelClassName: "toolbar-panel",
             items: [],
-            allVisible: true
+            allVisible: true,
+            layout: "vertical",
+            stateSelector: "toolbar"
         };
     },
     getPanel(tool) {
@@ -83,9 +91,9 @@ const Toolbar = React.createClass({
         const actions = {};
         if (tool.exclusive) {
             selector = (state) => ({
-                active: state.controls && state.controls.toolbar && state.controls.toolbar.active === tool.name
+                active: state.controls && state.controls[this.props.stateSelector] && state.controls[this.props.stateSelector].active === tool.name
             });
-            actions.onClick = setControlProperty.bind(null, 'toolbar', 'active', tool.name, true);
+            actions.onClick = setControlProperty.bind(null, this.props.stateSelector, 'active', tool.name, true);
         } else if (tool.toggle) {
             selector = (state) => ({
                 bsStyle: state.controls[tool.toggleControl || tool.name] && state.controls[tool.toggleControl || tool.name][tool.toggleProperty || "enabled"] ? 'primary' : 'default'
@@ -98,7 +106,7 @@ const Toolbar = React.createClass({
     },
     renderButtons() {
         return this.getTools().map((tool) => {
-            const help = tool.help ? <HelpBadge className="mapstore-tb-helpbadge" helpText={tool.help}/> : null;
+            const help = tool.help ? <HelpBadge className="mapstore-tb-helpbadge" helpText={tool.help}/> : <span/>;
             const tooltip = tool.tooltip ? <Message msgId={tool.tooltip}/> : null;
 
             const ToolbarButton = this.getTool(tool);
@@ -120,7 +128,7 @@ const Toolbar = React.createClass({
             if (panel.wrap) {
                 return (
                     <Collapse key={"mapToolBar-item-collapse-" + panel.name} in={this.props.active === panel.name}>
-                        <Panel header={title} style={this.props.panelStyle}>
+                        <Panel header={title} style={this.props.panelStyle} className={this.props.panelClassName}>
                             {ToolPanel}
                         </Panel>
                     </Collapse>
@@ -131,8 +139,8 @@ const Toolbar = React.createClass({
     },
     render() {
         return (
-            <span>
-                <ReactCSSTransitionGroup className="mapToolbar btn-group-vertical" transitionName="toolbarexpand" transitionEnterTimeout={500} transitionLeaveTimeout={300}>
+            <span id={this.props.id}>
+                <ReactCSSTransitionGroup className={"mapToolbar btn-group-" + this.props.layout} transitionName="toolbarexpand" transitionEnterTimeout={500} transitionLeaveTimeout={300}>
                     {this.renderButtons()}
                 </ReactCSSTransitionGroup>
                 {this.renderPanels()}
@@ -153,9 +161,10 @@ const Toolbar = React.createClass({
 });
 
 module.exports = {
-    ToolbarPlugin: connect((state) => ({
-        active: state.controls && state.controls.toolbar && state.controls.toolbar.active,
-        allVisible: state.controls && state.controls.toolbar && state.controls.toolbar.expanded
-    }))(Toolbar),
+    ToolbarPlugin: (stateSelector = 'toolbar') => (connect((state) => ({
+        active: state.controls && state.controls[stateSelector] && state.controls[stateSelector].active,
+        allVisible: state.controls && state.controls[stateSelector] && state.controls[stateSelector].expanded,
+        stateSelector
+    }))(Toolbar)),
     reducers: {controls: require('../reducers/controls')}
 };

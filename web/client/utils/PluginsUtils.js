@@ -16,16 +16,19 @@ const isPluginConfigured = (pluginsConfig, plugin) => {
     return head(cfg.filter((cfgObj) => cfgObj.name === pluginName || cfgObj === pluginName));
 };
 
-const isHiddenIn = (cfg, name) => {
-    return cfg.hideFrom && cfg.hideFrom.indexOf(name) !== -1;
+const showIn = (cfg, name, id, isDefault) => {
+    return ((id && cfg.showIn && cfg.showIn.indexOf(id) !== -1) ||
+            (cfg.showIn && cfg.showIn.indexOf(name) !== -1) ||
+            (!cfg.showIn && isDefault)) &&
+            !((cfg.hideFrom && cfg.hideFrom.indexOf(name) !== -1) || (id && cfg.hideFrom && cfg.hideFrom.indexOf(id) !== -1));
 };
 
-const getPluginItems = (plugins, pluginsConfig, name) => {
+const getPluginItems = (plugins, pluginsConfig, name, id, isDefault) => {
     return Object.keys(plugins)
             .filter((plugin) => plugins[plugin][name])
             .filter((plugin) => {
                 const cfgObj = isPluginConfigured(pluginsConfig, plugin);
-                return cfgObj && !isHiddenIn(cfgObj, name);
+                return cfgObj && showIn(cfgObj, name, id, isDefault);
             })
             .map((plugin) => {
                 const pluginImpl = plugins[plugin];
@@ -39,7 +42,7 @@ const getPluginItems = (plugins, pluginsConfig, name) => {
                     },
                     {
                         plugin: pluginImpl,
-                        items: getPluginItems(plugins, pluginsConfig, pluginName)
+                        items: getPluginItems(plugins, pluginsConfig, pluginName, null, true)
                     });
             });
 };
@@ -81,12 +84,16 @@ const PluginsUtils = {
                                 .reduce((previous, current) => assign({}, previous, omit(current, 'reducers')), {}),
     getPluginDescriptor: (plugins, pluginsConfig, pluginDef) => {
         const name = isObject(pluginDef) ? pluginDef.name : pluginDef;
+        const id = isObject(pluginDef) ? pluginDef.id : null;
+        const stateSelector = isObject(pluginDef) ? pluginDef.stateSelector : id;
+        const isDefault = isObject(pluginDef) && (typeof pluginDef.isDefault === 'undefined') && true || pluginDef.isDefault;
         const impl = plugins[(isObject(pluginDef) ? pluginDef.name : pluginDef) + 'Plugin'];
         return {
+            id: id || name,
             name,
-            impl,
+            impl: impl.displayName ? impl : impl(stateSelector),
             cfg: isObject(pluginDef) ? parsePluginConfig(plugins.requires, pluginDef.cfg) : {},
-            items: getPluginItems(plugins, pluginsConfig, name)
+            items: getPluginItems(plugins, pluginsConfig, name, id, isDefault)
         };
     }
 };
