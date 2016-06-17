@@ -66,7 +66,7 @@ const DrawerMenu = React.createClass({
     render() {
         return (
             <div id={this.props.id}>
-                <Button id="drawer-menu-button" key="menu-button" onClick={this.props.toggleMenu}><Glyphicon glyph="menu-hamburger"/></Button>
+                <Button id="drawer-menu-button" key="menu-button" className="square-button" onClick={this.props.toggleMenu}><Glyphicon glyph="menu-hamburger"/></Button>
                 <Menu title={<Message msgId="menu" />} alignment="left">
                     {this.renderItems()}
                 </Menu>

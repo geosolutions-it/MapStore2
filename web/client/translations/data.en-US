@@ -143,6 +143,7 @@
         },
         "infoFormatLbl": "Identify response format",
         "measureComponent": {
+            "Measure": "Measure",
             "tooltip": "Measure length and area",
             "title": "Measure",
             "lengthButtonText": "Line",
