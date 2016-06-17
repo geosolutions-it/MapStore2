@@ -45,6 +45,7 @@ const Toolbar = React.createClass({
         layout: React.PropTypes.string,
         stateSelector: React.PropTypes.string,
         buttonStyle: React.PropTypes.string,
+        buttonSize: React.PropTypes.string,
         pressedButtonStyle: React.PropTypes.string
     },
     contextTypes: {
@@ -67,6 +68,7 @@ const Toolbar = React.createClass({
             layout: "vertical",
             stateSelector: "toolbar",
             buttonStyle: 'default',
+            buttonSize: null,
             pressedButtonStyle: 'primary'
         };
     },
@@ -116,7 +118,7 @@ const Toolbar = React.createClass({
             const ToolbarButton = this.getTool(tool);
 
             return this.addTooltip(
-                <ToolbarButton tooltip={tooltip} bsStyle={this.props.buttonStyle} help={help} key={tool.name} mapType={this.props.mapType}>
+                <ToolbarButton tooltip={tooltip} btnSize={this.props.buttonSize} bsStyle={this.props.buttonStyle} help={help} key={tool.name} mapType={this.props.mapType}>
                     {help}{tool.icon}
                 </ToolbarButton>,
             tool);
