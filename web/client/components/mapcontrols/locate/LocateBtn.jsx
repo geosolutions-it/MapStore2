@@ -20,14 +20,16 @@ var LocateBtn = React.createClass({
         onClick: React.PropTypes.func,
         tooltip: React.PropTypes.element,
         tooltipPlace: React.PropTypes.string,
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        bsStyle: React.PropTypes.string
     },
     getDefaultProps() {
         return {
             id: "locate-btn",
             onClick: () => {},
             locate: "DISABLED",
-            tooltipPlace: "left"
+            tooltipPlace: "left",
+            bsStyle: "default"
         };
     },
     onClick() {
@@ -108,9 +110,9 @@ var LocateBtn = React.createClass({
 
     },
     getBtnStyle() {
-        let style = "default";
+        let style = this.props.bsStyle;
         if (this.props.locate === "FOLLOWING") {
-            style = "primary";
+            style = "success";
         }else if (this.props.locate === "ENABLED") {
             style = "info";
         }

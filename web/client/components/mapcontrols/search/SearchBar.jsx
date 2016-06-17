@@ -20,7 +20,7 @@ var delay = (
     };
     })();
 
-require('./searchbar.css');
+
 /**
  * Search Bar component. With AutoComplete
  */

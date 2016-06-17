@@ -64,7 +64,7 @@ const MousePositionPlugin = connect(selector)(require('../components/mapcontrols
 module.exports = {
     MousePositionPlugin: assign(MousePositionPlugin, {
         Settings: {
-            tool: <div>
+            tool: <div id="mapstore-mousepositionsettings" key="mousepositionsettings">
             <CRSSelector
                 key="crsSelector"
                 enabled={true}

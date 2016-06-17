@@ -38,7 +38,7 @@ module.exports = function karmaConfig(config) {
         },
 
         webpack: {
-            devtool: 'inline-source-map',
+            devtool: 'eval',
             module: {
                 loaders: [
                     { test: /\.jsx?$/, exclude: /(ol\.js$|node_modules)/, loader: 'babel-loader', include: path.join(__dirname, "web", "client") },

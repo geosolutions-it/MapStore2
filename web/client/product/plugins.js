@@ -32,7 +32,10 @@ module.exports = {
         HelpPlugin: require('../plugins/Help'),
         HomePlugin: require('../plugins/Home'),
         MadeWithLovePlugin: require('./plugins/MadeWithLove'),
-        MetadataExplorerPlugin: require('../plugins/MetadataExplorer')
+        MetadataExplorerPlugin: require('../plugins/MetadataExplorer'),
+        LoginPlugin: require('../plugins/Login'),
+        OmniBarPlugin: require('../plugins/OmniBar'),
+        BurgerMenuPlugin: require('../plugins/BurgerMenu')
     },
     requires: {
         ReactSwipe: require('react-swipe'),

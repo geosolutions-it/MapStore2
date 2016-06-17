@@ -9,6 +9,9 @@ var React = require('react');
 var BootstrapReact = require('react-bootstrap');
 var Badge = BootstrapReact.Badge;
 
+const {isString} = require('lodash');
+const LocaleUtils = require('../../utils/LocaleUtils');
+
 /**
  * A badge to show that there is a help text available for the parent component.
  * Also updates the current help text (state) when the badge is clicked.
@@ -27,6 +30,9 @@ var HelpBadge = React.createClass({
         changeHelpwinVisibility: React.PropTypes.func,
         className: React.PropTypes.string
     },
+    contextTypes: {
+        messages: React.PropTypes.object
+    },
     getDefaultProps() {
         return {
             helpText: '',
@@ -34,7 +40,8 @@ var HelpBadge = React.createClass({
         };
     },
     onMouseOver() {
-        this.props.changeHelpText(this.props.helpText);
+        const helpText = isString(this.props.helpText) ? this.props.helpText : LocaleUtils.getMessageById(this.context.messages, this.props.helpText.props.msgId);
+        this.props.changeHelpText(helpText);
         this.props.changeHelpwinVisibility(true);
     },
     render() {

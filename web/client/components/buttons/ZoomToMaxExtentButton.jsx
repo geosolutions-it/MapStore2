@@ -37,7 +37,8 @@ var ZoomToMaxExtentButton = React.createClass({
         helpEnabled: React.PropTypes.bool,
         helpText: React.PropTypes.string,
         className: React.PropTypes.string,
-        useInitialExtent: React.PropTypes.bool
+        useInitialExtent: React.PropTypes.bool,
+        bsStyle: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -46,17 +47,18 @@ var ZoomToMaxExtentButton = React.createClass({
             text: undefined,
             btnSize: 'xsmall',
             btnType: 'normal',
-            useInitialExtent: false
+            useInitialExtent: false,
+            bsStyle: "default"
         };
     },
     render() {
         return (
             <Button
                 id={this.props.id}
-                bsStyle="default"
                 bsSize={this.props.btnSize}
                 onClick={() => this.props.useInitialExtent ? this.zoomToInitialExtent() : this.zoomToMaxExtent()}
                 className={this.props.className}
+                bsStyle={this.props.bsStyle}
                 >
                 {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
                 {this.props.glyphicon && this.props.text ? "\u00A0" : null}

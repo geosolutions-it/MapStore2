@@ -35,7 +35,7 @@ describe('Test for HelpTextPanel', () => {
         // header text
         const panelHeader = helpPanelDom.getElementsByClassName('panel-heading').item(0);
         expect(panelHeader).toExist();
-        expect(panelHeader.innerHTML === "HELP").toBe(true);
+        expect(panelHeader.innerHTML.indexOf("HELP") !== -1).toBe(true);
 
         // text in body
         const panelBody = helpPanelDom.getElementsByClassName('panel-body').item(0);
@@ -60,12 +60,12 @@ describe('Test for HelpTextPanel', () => {
         // header text
         const panelHeader = helpPanelDom.getElementsByClassName('panel-heading').item(0);
         expect(panelHeader).toExist();
-        expect(panelHeader.innerHTML).toBe("footitle");
+        expect(panelHeader.innerHTML.indexOf("footitle") !== -1).toBe(true);
 
         // text in body
         const panelBody = helpPanelDom.getElementsByClassName('panel-body').item(0);
         expect(panelBody).toExist();
-        expect(panelBody.innerHTML).toBe("foohelptext");
+        expect(panelBody.innerHTML.indexOf("foohelptext") !== -1).toBe(true);
     });
 
 });

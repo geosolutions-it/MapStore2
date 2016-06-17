@@ -12,10 +12,16 @@ const {connect} = require('react-redux');
 const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
 
+const Message = require('../components/I18N/Message');
+
+const {toggleControl} = require('../actions/controls');
+
 const HelpTextPanel = connect((state) => ({
     isVisible: state.controls && state.controls.help && state.controls.help.enabled,
     helpText: state.help && state.help.helpText
-}))(require('../components/help/HelpTextPanel'));
+}), {
+    onClose: toggleControl.bind(null, 'help', null)
+})(require('../components/help/HelpTextPanel'));
 
 module.exports = {
     HelpPlugin: assign(HelpTextPanel, {
@@ -25,6 +31,13 @@ module.exports = {
             icon: <Glyphicon glyph="question-sign"/>,
             tooltip: "help",
             toggle: true
+        },
+        BurgerMenu: {
+            name: 'help',
+            position: 4,
+            text: <Message msgId="help"/>,
+            icon: <Glyphicon glyph="question-sign"/>,
+            action: toggleControl.bind(null, 'help', null)
         }
     }),
     reducers: {help: require('../reducers/help')}

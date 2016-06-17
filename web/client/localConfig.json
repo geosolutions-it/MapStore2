@@ -90,7 +90,10 @@
 				},
         "zoomControl": false
 			}
-		}, "Help", {
+		}, {
+			"name": "Help",
+			"hideFrom": "Toolbar"
+		},  {
        "name": "Identify",
        "showIn": ["IdentifyBar", "Settings"]
     }, "MadeWithLove", {
@@ -103,7 +106,8 @@
 				}
 		}, {
 			  "name": "Home",
-				"hide": true
+				"hide": true,
+				"hideFrom": ["Toolbar"]
 		}, {
 				"name": "TOC",
 				"hide": true
@@ -115,13 +119,16 @@
 				"hide": true
 		}, {
 				"name": "Print",
-				"hide": true
+				"hideFrom": ["Toolbar"]
 		}, {
 				"name": "ShapeFile",
 				"hide": true
 		}, {
 				"name": "Settings",
-				"hide": true
+				"hideFrom": ["Toolbar"],
+				"cfg": {
+					"wrap": true
+				}
 		}, {
 				"name": "MetadataExplorer",
 				"hide": true,
@@ -129,7 +136,13 @@
 					"chooseCatalogUrl": false,
 					"initialCatalogURL": "http://demo.geo-solutions.it/geoserver/csw"
 				}
-		}, "About", "MousePosition", "Search", {
+		}, "About", "MousePosition", {
+				"name": "Search",
+				"cfg": {
+					"withToggle": ["max-width: 768px", "min-width: 768px"]
+				},
+				"hide": true
+		}, {
       "name": "Toolbar",
       "id": "NavigationBar",
       "stateSelector": "toolbar",
@@ -156,6 +169,20 @@
     {
       "name":"ZoomOut",
       "hide": true
-    }]
+    }, {
+			"name": "Login",
+			"hide": true,
+      "cfg": {
+          "nav": false,
+          "menuProps": {
+              "noCaret": true
+          }
+      }
+		},
+		"OmniBar",
+		{
+			"name": "BurgerMenu",
+			"hide": true
+		}]
 	}
 }

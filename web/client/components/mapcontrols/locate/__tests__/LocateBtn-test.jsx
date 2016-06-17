@@ -46,7 +46,7 @@ describe("test the Locate Button", () => {
 
         const tbNode = ReactDOM.findDOMNode(tb);
 
-        expect(tbNode.className.indexOf('primary') >= 0).toBe(true);
+        expect(tbNode.className.indexOf('success') >= 0).toBe(true);
     });
 
     it('test click handler', () => {

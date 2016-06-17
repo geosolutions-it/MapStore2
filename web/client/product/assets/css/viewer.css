@@ -155,3 +155,27 @@ html, body, #container, .fill {
     bottom: 5px;
     right: 190px !important;
 }
+
+.panel-close {
+    float: right;
+    width: 10px;
+    cursor: pointer;
+}
+
+.panel-close:after {
+    content: 'x';
+}
+
+#mapstore-mousepositionsettings .form-group {
+    margin-bottom: 0 !important;
+}
+
+#mapstore-mousepositionsettings select, #mapstore-mousepositionsettings button {
+    width: 50% !important;
+    float: right;
+    height: 35px;
+}
+
+#mapstore-mousepositionsettings label {
+    width: 100% !important;
+}

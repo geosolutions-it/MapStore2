@@ -43,7 +43,9 @@ const Toolbar = React.createClass({
         items: React.PropTypes.array,
         allVisible: React.PropTypes.bool,
         layout: React.PropTypes.string,
-        stateSelector: React.PropTypes.string
+        stateSelector: React.PropTypes.string,
+        buttonStyle: React.PropTypes.string,
+        pressedButtonStyle: React.PropTypes.string
     },
     contextTypes: {
         messages: React.PropTypes.object,
@@ -63,7 +65,9 @@ const Toolbar = React.createClass({
             items: [],
             allVisible: true,
             layout: "vertical",
-            stateSelector: "toolbar"
+            stateSelector: "toolbar",
+            buttonStyle: 'default',
+            pressedButtonStyle: 'primary'
         };
     },
     getPanel(tool) {
@@ -96,7 +100,7 @@ const Toolbar = React.createClass({
             actions.onClick = setControlProperty.bind(null, this.props.stateSelector, 'active', tool.name, true);
         } else if (tool.toggle) {
             selector = (state) => ({
-                bsStyle: state.controls[tool.toggleControl || tool.name] && state.controls[tool.toggleControl || tool.name][tool.toggleProperty || "enabled"] ? 'primary' : 'default'
+                bsStyle: state.controls[tool.toggleControl || tool.name] && state.controls[tool.toggleControl || tool.name][tool.toggleProperty || "enabled"] ? this.props.pressedButtonStyle : this.props.buttonStyle
             });
             actions.onClick = toggleControl.bind(null, tool.toggleControl || tool.name, tool.toggleProperty || null);
         } else if (tool.action) {
@@ -112,7 +116,7 @@ const Toolbar = React.createClass({
             const ToolbarButton = this.getTool(tool);
 
             return this.addTooltip(
-                <ToolbarButton tooltip={tooltip} help={help} key={tool.name} mapType={this.props.mapType}>
+                <ToolbarButton tooltip={tooltip} bsStyle={this.props.buttonStyle} help={help} key={tool.name} mapType={this.props.mapType}>
                     {help}{tool.icon}
                 </ToolbarButton>,
             tool);
