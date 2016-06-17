@@ -34,7 +34,7 @@ module.exports = {
         },
         BurgerMenu: {
             name: 'help',
-            position: 4,
+            position: 1000,
             text: <Message msgId="help"/>,
             icon: <Glyphicon glyph="question-sign"/>,
             action: toggleControl.bind(null, 'help', null)

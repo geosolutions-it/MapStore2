@@ -144,6 +144,7 @@ html, body, #container, .fill {
 #navigationBar .mapToolbar {
     top: auto !important;
     bottom: 5px;
+    right: 0 !important;
 }
 
 #navigationBar .toolbar-panel {

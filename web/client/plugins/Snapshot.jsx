@@ -15,6 +15,8 @@ const {onCreateSnapshot, changeSnapshotState, saveImage, onRemoveSnapshot} = req
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
 
+const {toggleControl} = require('../actions/controls');
+
 const assign = require('object-assign');
 const Message = require('./locale/Message');
 const {Glyphicon} = require('react-bootstrap');
@@ -22,7 +24,7 @@ const {Glyphicon} = require('react-bootstrap');
 const snapshotSelector = createSelector([
     mapSelector,
     layersSelector,
-    (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === "snapshot",
+    (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === "snapshot" || state.controls.snapshot && state.controls.snapshot.enabled,
     (state) => state.browser,
     (state) => state.snapshot || {queue: []}
 ], (map, layers, active, browser, snapshot) => ({
@@ -36,7 +38,8 @@ const snapshotSelector = createSelector([
 const SnapshotPanel = connect(snapshotSelector, {
     onCreateSnapshot: onCreateSnapshot,
     onStatusChange: changeSnapshotState,
-    downloadImg: saveImage
+    downloadImg: saveImage,
+    toggleControl: toggleControl.bind(null, 'snapshot', null)
 })(require("../components/mapcontrols/Snapshot/SnapshotPanel"));
 
 const SnapshotPlugin = connect((state) => ({
@@ -59,6 +62,14 @@ module.exports = {
             wrap: true,
             title: "snapshot.title",
             exclusive: true
+        },
+        BurgerMenu: {
+            name: 'snapshot',
+            position: 3,
+            panel: SnapshotPanel,
+            text: <Message msgId="snapshot.title"/>,
+            icon: <Glyphicon glyph="camera"/>,
+            action: toggleControl.bind(null, 'snapshot', null)
         }
     }),
     reducers: {

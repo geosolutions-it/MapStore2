@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Button, Col, Grid, Row, Image, Glyphicon, Table} = require('react-bootstrap');
+const {Button, Col, Grid, Row, Image, Glyphicon, Table, Panel} = require('react-bootstrap');
 const {DateFormat} = require('../../I18N/I18N');
 require("./style.css");
 const ConfigUtils = require('../../../utils/ConfigUtils');
@@ -44,7 +44,11 @@ let SnapshotPanel = React.createClass({
         googleBingErrorMsg: React.PropTypes.node,
         downloadingMsg: React.PropTypes.node,
         timeout: React.PropTypes.number,
-        mapType: React.PropTypes.string
+        mapType: React.PropTypes.string,
+        wrap: React.PropTypes.bool,
+        panelStyle: React.PropTypes.object,
+        panelClassName: React.PropTypes.string,
+        toggleControl: React.PropTypes.func
     },
     componentWillMount() {
         SnapshotSupport = require('./SnapshotSupport')(this.props.mapType);
@@ -63,6 +67,7 @@ let SnapshotPanel = React.createClass({
             icon: <Glyphicon glyph="camera"/>,
             onStatusChange: () => {},
             onCreateSnapshot: () => {},
+            toggleControl: () => {},
             downloadImg: () => {},
             saveBtnText: "snapshot.save",
             serviceBoxUrl: null,
@@ -70,7 +75,17 @@ let SnapshotPanel = React.createClass({
             googleBingErrorMsg: "snapshot.googleBingError",
             downloadingMsg: "snapshot.downloadingSnapshots",
             timeout: 1000,
-            mapType: 'leaflet'
+            mapType: 'leaflet',
+            wrap: false,
+            panelStyle: {
+                minWidth: "720px",
+                zIndex: 100,
+                position: "absolute",
+                overflow: "auto",
+                top: "60px",
+                right: "100px"
+            },
+            panelClassName: "snapshot-panel"
         };
     },
     shouldComponentUpdate(nextProps) {
@@ -148,10 +163,18 @@ let SnapshotPanel = React.createClass({
     renderDownloadMessage() {
         return <Message msgId={this.props.downloadingMsg}/>;
     },
+    wrap(panel) {
+        if (this.props.wrap) {
+            return (<Panel id={this.props.id} header={<span><span className="snapshot-panel-title"><Message msgId="snapshot.title"/></span><span className="settings-panel-close panel-close" onClick={this.props.toggleControl}></span></span>} style={this.props.panelStyle} className={this.props.panelClassName}>
+                {panel}
+            </Panel>);
+        }
+        return panel;
+    },
     render() {
         let bingOrGoogle = this.isBingOrGoogle();
         let snapshotReady = this.isSnapshotReady();
-        return ( this.props.active ) ? (
+        return ( this.props.active ) ? this.wrap(
             <Grid header={this.props.name} className="snapshot-panel" fluid={true}>
                 <Row key="main">
                     <Col key="previewCol" xs={7} sm={7} md={7}>{this.renderPreview()}</Col>
