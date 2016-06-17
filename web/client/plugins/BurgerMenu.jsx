@@ -58,11 +58,21 @@ const BurgerMenu = React.createClass({
             }
         }}>{tool.icon} {tool.text}</MenuItem>);
     },
+    renderPanels() {
+        return this.props.items.filter((item) => item.panel).map((panel) => {
+            const ToolPanelComponent = panel.panel;
+            return (<ToolPanelComponent
+                key={panel.name} mapType={this.props.mapType} {...panel.cfg} {...(panel.props || {})}
+                items={panel.items || []}/>);
+        });
+    },
     render() {
-        return (<DropdownButton className="square-button" id={this.props.id} noCaret pullRight bsStyle="primary" title={<Glyphicon glyph="menu-hamburger" />} >
+        return (<span><DropdownButton className="square-button" id={this.props.id} noCaret pullRight bsStyle="primary" title={<Glyphicon glyph="menu-hamburger" />} >
                 {this.props.title}
                 {this.props.items.sort((a, b) => a.position - b.position).map(this.renderNavItem)}
             </DropdownButton>
+            {this.renderPanels()}
+        </span>
             );
     }
 });

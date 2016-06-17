@@ -8,7 +8,7 @@
 
 var React = require('react');
 
-const {Button, Glyphicon} = require('react-bootstrap');
+const {Button, Glyphicon, Tooltip, OverlayTrigger} = require('react-bootstrap');
 
 const mapUtils = require('../../utils/MapUtils');
 const configUtils = require('../../utils/ConfigUtils');
@@ -36,6 +36,8 @@ var ZoomToMaxExtentButton = React.createClass({
         btnType: React.PropTypes.oneOf(['normal', 'image']),
         helpEnabled: React.PropTypes.bool,
         helpText: React.PropTypes.string,
+        tooltip: React.PropTypes.element,
+        tooltipPlace: React.PropTypes.string,
         className: React.PropTypes.string,
         useInitialExtent: React.PropTypes.bool,
         bsStyle: React.PropTypes.string
@@ -48,11 +50,12 @@ var ZoomToMaxExtentButton = React.createClass({
             btnSize: 'xsmall',
             btnType: 'normal',
             useInitialExtent: false,
+            tooltipPlace: "left",
             bsStyle: "default"
         };
     },
     render() {
-        return (
+        return this.addTooltip(
             <Button
                 id={this.props.id}
                 bsSize={this.props.btnSize}
@@ -64,6 +67,14 @@ var ZoomToMaxExtentButton = React.createClass({
                 {this.props.glyphicon && this.props.text ? "\u00A0" : null}
                 {this.props.text}
             </Button>
+        );
+    },
+    addTooltip(btn) {
+        let tooltip = <Tooltip id="locate-tooltip">{this.props.tooltip}</Tooltip>;
+        return (
+            <OverlayTrigger placement={this.props.tooltipPlace} key={"overlay-trigger." + this.props.id} overlay={tooltip}>
+                {btn}
+            </OverlayTrigger>
         );
     },
     zoomToMaxExtent() {

@@ -22,12 +22,14 @@ const Message = require('./locale/Message');
 const {SelectShape, StylePolygon, StylePolyline, StylePoint} = require('./shapefile/index');
 const {onShapeError, shapeLoading, onShapeChoosen, onSelectLayer, onLayerAdded} = require('../actions/shapefile');
 const {addLayer} = require('../actions/layers');
+const {toggleControl} = require('../actions/controls');
 
 const assign = require('object-assign');
-const {Glyphicon} = require('react-bootstrap');
+const {Glyphicon, Panel} = require('react-bootstrap');
 
 const ShapeFile = React.createClass({
     propTypes: {
+        id: React.PropTypes.string,
         layers: React.PropTypes.array,
         selected: React.PropTypes.object,
         style: React.PropTypes.object,
@@ -39,7 +41,29 @@ const ShapeFile = React.createClass({
         onSelectLayer: React.PropTypes.func,
         onLayerAdded: React.PropTypes.func,
         error: React.PropTypes.string,
-        mapType: React.PropTypes.string
+        mapType: React.PropTypes.string,
+        wrap: React.PropTypes.bool,
+        panelStyle: React.PropTypes.object,
+        panelClassName: React.PropTypes.string,
+        visible: React.PropTypes.bool,
+        toggleControl: React.PropTypes.func
+    },
+    getDefaultProps() {
+        return {
+            id: "mapstore-shapefile-upload",
+            wrap: false,
+            panelStyle: {
+                minWidth: "360px",
+                zIndex: 100,
+                position: "absolute",
+                overflow: "auto",
+                top: "100px",
+                left: "calc(50% - 150px)"
+            },
+            panelClassName: "toolbar-panel",
+            visible: false,
+            toggleControl: () => {}
+        };
     },
     componentWillMount() {
         StyleUtils = require('../utils/StyleUtils')(this.props.mapType);
@@ -91,7 +115,7 @@ const ShapeFile = React.createClass({
             </Row>) : null;
     },
     render() {
-        return (
+        const panel = (
             <Grid style={{width: "300px"}} fluid>
                 {(this.props.error) ? this.renderError() : null}
             <Row style={{textAlign: "center"}}>
@@ -113,7 +137,16 @@ const ShapeFile = React.createClass({
                 </Row>
                     ) : null }
             </Grid>
-            );
+        );
+        if (this.props.wrap) {
+            if (this.props.visible) {
+                return (<Panel id={this.props.id} header={<span><span className="shapefile-panel-title"><Message msgId="shapefile.title"/></span><span className="shapefile-panel-close panel-close" onClick={this.props.toggleControl}></span></span>} style={this.props.panelStyle} className={this.props.panelClassName}>
+                    {panel}
+                </Panel>);
+            }
+            return null;
+        }
+        return panel;
     },
     addShape(files) {
         this.props.shapeLoading(true);
@@ -155,6 +188,7 @@ const ShapeFile = React.createClass({
 
 const ShapeFilePlugin = connect((state) => (
 {
+    visible: state.controls && state.controls.shapefile && state.controls.shapefile.enabled,
     layers: state.shapefile && state.shapefile.layers || null,
     selected: state.shapefile && state.shapefile.selected || null,
     error: state.shapefile && state.shapefile.error || null,
@@ -166,7 +200,8 @@ const ShapeFilePlugin = connect((state) => (
     onSelectLayer: onSelectLayer,
     onShapeError: onShapeError,
     addShapeLayer: addLayer,
-    shapeLoading: shapeLoading
+    shapeLoading: shapeLoading,
+    toggleControl: toggleControl.bind(null, 'shapefile', null)
 })(ShapeFile);
 
 module.exports = {
@@ -182,6 +217,13 @@ module.exports = {
             icon: <Glyphicon glyph="open-file"/>,
             exclusive: true,
             hide: true
+        },
+        BurgerMenu: {
+            name: 'shapefile',
+            position: 4,
+            text: <Message msgId="shapefile.title"/>,
+            icon: <Glyphicon glyph="open-file"/>,
+            action: toggleControl.bind(null, 'shapefile', null)
         }
     }),
     reducers: {

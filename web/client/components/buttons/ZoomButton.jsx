@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Button, Glyphicon} = require('react-bootstrap');
+const {Button, Glyphicon, Tooltip, OverlayTrigger} = require('react-bootstrap');
 
 const ZoomButton = React.createClass({
     propTypes: {
@@ -23,6 +23,7 @@ const ZoomButton = React.createClass({
         maxZoom: React.PropTypes.number,
         onZoom: React.PropTypes.func,
         tooltip: React.PropTypes.element,
+        tooltipPlace: React.PropTypes.string,
         bsStyle: React.PropTypes.string
     },
     getDefaultProps() {
@@ -31,6 +32,7 @@ const ZoomButton = React.createClass({
             className: "square-button",
             glyphicon: "plus",
             btnSize: 'xsmall',
+            tooltipPlace: "left",
             step: 1,
             currentZoom: 3,
             minZoom: 0,
@@ -40,7 +42,7 @@ const ZoomButton = React.createClass({
         };
     },
     render() {
-        return (
+        return this.addTooltip(
             <Button
                 id={this.props.id}
                 onClick={() => this.props.onZoom(this.props.currentZoom + this.props.step)}
@@ -54,6 +56,14 @@ const ZoomButton = React.createClass({
                 {this.props.glyphicon && this.props.text ? "\u00A0" : null}
                 {this.props.text}
             </Button>
+        );
+    },
+    addTooltip(btn) {
+        let tooltip = <Tooltip id="locate-tooltip">{this.props.tooltip}</Tooltip>;
+        return (
+            <OverlayTrigger placement={this.props.tooltipPlace} key={"overlay-trigger." + this.props.id} overlay={tooltip}>
+                {btn}
+            </OverlayTrigger>
         );
     }
 });

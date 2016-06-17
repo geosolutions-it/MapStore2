@@ -122,7 +122,10 @@
 				"hideFrom": ["Toolbar"]
 		}, {
 				"name": "ShapeFile",
-				"hide": true
+				"hideFrom": ["Toolbar"],
+				"cfg": {
+					"wrap": true
+				}
 		}, {
 				"name": "Settings",
 				"hideFrom": ["Toolbar"],
@@ -131,8 +134,9 @@
 				}
 		}, {
 				"name": "MetadataExplorer",
-				"hide": true,
+				"hideFrom": ["Toolbar"],
 				"cfg": {
+					"wrap": true,
 					"chooseCatalogUrl": false,
 					"initialCatalogURL": "http://demo.geo-solutions.it/geoserver/csw"
 				}
@@ -161,7 +165,14 @@
       "name": "ZoomAll",
       "hide": true
     },
-    "MapLoading", "Snapshot",
+    "MapLoading", {
+				"name": "Snapshot",
+				"hide": true,
+				"hideFrom": ["Toolbar"],
+				"cfg": {
+					"wrap": true
+				}
+		},
     {
       "name":"ZoomIn",
       "hide": true
