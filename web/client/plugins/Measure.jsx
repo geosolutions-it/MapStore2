@@ -47,7 +47,7 @@ module.exports = {
     MeasurePlugin: assign(MeasurePlugin, {
         Toolbar: {
             name: 'measurement',
-            position: 6,
+            position: 9,
             panel: true,
             exclusive: true,
             wrap: true,

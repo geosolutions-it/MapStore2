@@ -119,7 +119,7 @@ module.exports = {
     TOCPlugin: assign(TOCPlugin, {
         Toolbar: {
             name: 'toc',
-            position: 4,
+            position: 7,
             exclusive: true,
             panel: true,
             help: <Message msgId="helptexts.layerSwitcher"/>,
