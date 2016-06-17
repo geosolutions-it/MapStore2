@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Button, Panel, ButtonGroup, ButtonToolbar, Tooltip} = require('react-bootstrap');
+const {Panel, ButtonGroup, Tooltip} = require('react-bootstrap');
 const ToggleButton = require('../../buttons/ToggleButton');
 const ReactIntl = require('react-intl');
 const FormattedNumber = ReactIntl.FormattedNumber;
@@ -16,7 +16,12 @@ const lineRuleIcon = require('./img/line-ruler.png');
 const areaRuleIcon = require('./img/area-ruler.png');
 const bearingRuleIcon = require('./img/bearing-ruler.png');
 
+const measureUtils = require('../../../utils/MeasureUtils');
+const localeUtils = require('../../../utils/LocaleUtils');
+
 const {isEqual} = require('lodash');
+
+require('./measure.css');
 
 const MeasureComponent = React.createClass({
     propTypes: {
@@ -40,7 +45,11 @@ const MeasureComponent = React.createClass({
         measurement: React.PropTypes.object,
         lineMeasureEnabled: React.PropTypes.bool,
         areaMeasureEnabled: React.PropTypes.bool,
-        bearingMeasureEnabled: React.PropTypes.bool
+        bearingMeasureEnabled: React.PropTypes.bool,
+        showResults: React.PropTypes.bool
+    },
+    contextTypes: {
+        messages: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -54,7 +63,8 @@ const MeasureComponent = React.createClass({
             uom: {
                 length: {unit: 'm', label: 'm'},
                 area: {unit: 'sqm', label: 'm²'}
-            }
+            },
+            showResults: true
         };
     },
     shouldComponentUpdate(nextProps) {
@@ -74,6 +84,13 @@ const MeasureComponent = React.createClass({
                 bearing: 0
             };
             this.props.toggleMeasure(newMeasureState);
+        } else {
+            newMeasureState = {
+                lineMeasureEnabled: false,
+                areaMeasureEnabled: false,
+                bearingMeasureEnabled: false
+            };
+            this.props.toggleMeasure(newMeasureState);
         }
     },
     onAreaClick: function() {
@@ -88,6 +105,13 @@ const MeasureComponent = React.createClass({
                 len: 0,
                 area: 0,
                 bearing: 0
+            };
+            this.props.toggleMeasure(newMeasureState);
+        } else {
+            newMeasureState = {
+                lineMeasureEnabled: false,
+                areaMeasureEnabled: false,
+                bearingMeasureEnabled: false
             };
             this.props.toggleMeasure(newMeasureState);
         }
@@ -106,61 +130,13 @@ const MeasureComponent = React.createClass({
                 bearing: 0
             };
             this.props.toggleMeasure(newMeasureState);
-        }
-    },
-    onResetClick: function() {
-        var resetMeasureState = {
-            lineMeasureEnabled: false,
-            areaMeasureEnabled: false,
-            bearingMeasureEnabled: false,
-            geomType: null,
-            len: 0,
-            area: 0,
-            bearing: 0
-        };
-        this.props.toggleMeasure(resetMeasureState);
-    },
-    getFormattedBearingValue(azimuth = 0) {
-        var bearing = "";
-        if (azimuth >= 0 && azimuth < 90) {
-            bearing = "N " + this.degToDms(azimuth) + " E";
-
-        } else if (azimuth > 90 && azimuth <= 180) {
-            bearing = "S " + this.degToDms(180.0 - azimuth) + " E";
-        } else if (azimuth > 180 && azimuth < 270) {
-            bearing = "S " + this.degToDms(azimuth - 180.0 ) + " W";
-        } else if (azimuth >= 270 && azimuth <= 360) {
-            bearing = "N " + this.degToDms(360 - azimuth ) + " W";
-        }
-
-        return bearing;
-    },
-    getFormattedLength(length = 0) {
-        switch (this.props.uom.length.unit) {
-            case 'm':
-                return length;
-            case 'ft':
-                return this.mToft(length);
-            case 'km':
-                return this.mTokm(length);
-            case 'mi':
-                return this.mTomi(length);
-            default:
-            return length;
-        }
-    },
-    getFormattedArea(area = 0) {
-        switch (this.props.uom.area.unit) {
-            case 'sqm':
-                return area;
-            case 'sqft':
-                return this.sqmTosqft(area);
-            case 'sqkm':
-                return this.sqmTosqkm(area);
-            case 'sqmi':
-                return this.sqmTosqmi(area);
-            default:
-            return area;
+        } else {
+            newMeasureState = {
+                lineMeasureEnabled: false,
+                areaMeasureEnabled: false,
+                bearingMeasureEnabled: false
+            };
+            this.props.toggleMeasure(newMeasureState);
         }
     },
     getToolTips() {
@@ -170,72 +146,49 @@ const MeasureComponent = React.createClass({
             bearingToolTip: <Tooltip id={"tooltip-button.bearing"}>{this.props.bearingLabel}</Tooltip>
         };
     },
-    render() {
+    renderMeasurements() {
         let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
+        return (
+               <div className="panel-body">
+                    <p><span>{this.props.lengthLabel}: </span><span id="measure-len-res"><FormattedNumber key="len" {...decimalFormat} value={measureUtils.getFormattedLength(this.props.uom.length.unit, this.props.measurement.len)} /> {this.props.uom.length.label}</span></p>
+                    <p><span>{this.props.areaLabel}: </span><span id="measure-area-res"><FormattedNumber key="area" {...decimalFormat} value={measureUtils.getFormattedArea(this.props.uom.area.unit, this.props.measurement.area)} /> {this.props.uom.area.label}</span></p>
+                    <p><span>{this.props.bearingLabel}: </span><span id="measure-bearing-res">{measureUtils.getFormattedBearingValue(this.props.measurement.bearing)}</span></p>
+                </div>
+            );
+    },
+    renderPanel() {
+        if (this.props.showResults) {
+            return (this.renderMeasurements());
+        }
+        return null;
+    },
+    render() {
         let {lineToolTip, areaToolTip, bearingToolTip} = this.getToolTips();
         return (
             <Panel id={this.props.id}>
-                <ButtonToolbar>
-                    <ButtonGroup>
-                        <ToggleButton
-                            text={<img src={lineRuleIcon}/>}
-                            pressed={this.props.lineMeasureEnabled}
-                            onClick={this.onLineClick}
-                            tooltip={lineToolTip} />
-                        <ToggleButton
-                            text={<img src={areaRuleIcon}/>}
-                            pressed={this.props.areaMeasureEnabled}
-                            onClick={this.onAreaClick}
-                            tooltip={areaToolTip} />
-                        <ToggleButton
-                            text={<img src={bearingRuleIcon}/>}
-                            pressed={this.props.bearingMeasureEnabled}
-                            onClick={this.onBearingClick}
-                            tooltip={bearingToolTip} />
-                    </ButtonGroup>
-                    <ButtonGroup>
-                        <Button
-                            onClick={this.onResetClick}>
-                            {this.props.resetButtonText}
-                        </Button>
-                    </ButtonGroup>
-                </ButtonToolbar>
-
-                <div className="panel-body">
-                    <p><span>{this.props.lengthLabel}: </span><span id="measure-len-res"><FormattedNumber key="len" {...decimalFormat} value={this.getFormattedLength(this.props.measurement.len)} /> {this.props.uom.length.label}</span></p>
-                    <p><span>{this.props.areaLabel}: </span><span id="measure-area-res"><FormattedNumber key="area" {...decimalFormat} value={this.getFormattedArea(this.props.measurement.area)} /> {this.props.uom.area.label}</span></p>
-                    <p><span>{this.props.bearingLabel}: </span><span id="measure-bearing-res">{this.getFormattedBearingValue(this.props.measurement.bearing)}</span></p>
-                </div>
+                <ButtonGroup vertical block>
+                    <ToggleButton
+                        text={<span><span className="option-icon"><img src={lineRuleIcon}/></span>{localeUtils.getMessageById(this.context.messages, "measureComponent.Measure")} {this.props.lengthLabel}</span>}
+                        style={{"width": "100%", "text-align": "left"}}
+                        pressed={this.props.lineMeasureEnabled}
+                        onClick={this.onLineClick}
+                        tooltip={lineToolTip} />
+                    <ToggleButton
+                        text={<span><span className="option-icon"><img src={areaRuleIcon}/></span>{localeUtils.getMessageById(this.context.messages, "measureComponent.Measure")} {this.props.areaLabel}</span>}
+                        style={{"width": "100%", "text-align": "left"}}
+                        pressed={this.props.areaMeasureEnabled}
+                        onClick={this.onAreaClick}
+                        tooltip={areaToolTip} />
+                    <ToggleButton
+                        text={<span><span className="option-icon"><img src={bearingRuleIcon}/></span>{localeUtils.getMessageById(this.context.messages, "measureComponent.Measure")} {this.props.bearingLabel}</span>}
+                        style={{"width": "100%", "text-align": "left"}}
+                        pressed={this.props.bearingMeasureEnabled}
+                        onClick={this.onBearingClick}
+                        tooltip={bearingToolTip} />
+                </ButtonGroup>
+                {this.renderPanel()}
             </Panel>
         );
-    },
-    degToDms: function(deg) {
-        // convert decimal deg to minutes and seconds
-        var d = Math.floor(deg);
-        var minfloat = (deg - d) * 60;
-        var m = Math.floor(minfloat);
-        var secfloat = (minfloat - m) * 60;
-        var s = Math.floor(secfloat);
-
-        return ("" + d + "° " + m + "' " + s + "'' ");
-    },
-    mToft: function(length) {
-        return length * 3.28084;
-    },
-    mTokm: function(length) {
-        return length * 0.001;
-    },
-    mTomi: function(length) {
-        return length * 0.000621371;
-    },
-    sqmTosqft: function(area) {
-        return area * 10.7639;
-    },
-    sqmTosqkm: function(area) {
-        return area * 0.000001;
-    },
-    sqmTosqmi: function(area) {
-        return area * 0.000000386102159;
     }
 });
 

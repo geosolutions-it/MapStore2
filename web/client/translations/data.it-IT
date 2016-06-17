@@ -145,6 +145,7 @@
         },
         "infoFormatLbl": "Formato risposte interrogazioni su mappa",
         "measureComponent": {
+            "Measure": "Misura",
             "tooltip": "Misurazione lunghezza e l'area",
             "title": "Misurazione",
             "lengthButtonText": "Linea",

@@ -39,7 +39,7 @@ describe("test the MeasureComponent", () => {
         expect(domNode).toExist();
         const domButtons = domNode.getElementsByTagName('button');
         expect(domButtons).toExist();
-        expect(domButtons.length).toBe(4);
+        expect(domButtons.length).toBe(3);
     });
 
     it('test creation of measurement result panel UI ', () => {
@@ -77,7 +77,7 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(4);
+        expect(buttons.length).toBe(3);
 
         const lineBtn = buttons.item(0);
         lineBtn.click();
@@ -111,7 +111,7 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(4);
+        expect(buttons.length).toBe(3);
 
         const areaBtn = buttons.item(1);
         areaBtn.click();
@@ -145,7 +145,7 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(4);
+        expect(buttons.length).toBe(3);
 
         const bearingBtn = buttons.item(2);
         bearingBtn.click();
@@ -178,19 +178,19 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(4);
+        expect(buttons.length).toBe(3);
 
-        const resetBtn = buttons.item(3);
-        resetBtn.click();
+        const bearingBtn = buttons.item(2);
+        // Activate
+        bearingBtn.click();
+
+        // Dectivate
+        bearingBtn.click();
 
         expect(newMeasureState).toExist();
         expect(newMeasureState.lineMeasureEnabled).toBe(false);
         expect(newMeasureState.areaMeasureEnabled).toBe(false);
         expect(newMeasureState.bearingMeasureEnabled).toBe(false);
-        expect(newMeasureState.geomType).toBe(null);
-        expect(newMeasureState.len).toBe(0);
-        expect(newMeasureState.area).toBe(0);
-        expect(newMeasureState.bearing).toBe(0);
     });
 
     it('test bearing format', () => {

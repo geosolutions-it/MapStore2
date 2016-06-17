@@ -93,10 +93,15 @@
 		}, {
 			"name": "Help",
 			"hideFrom": "Toolbar"
-		},  {
+		}, {
+        "name": "DrawerMenu"
+    },
+    {
        "name": "Identify",
        "showIn": ["IdentifyBar", "Settings"]
-    }, "MadeWithLove", {
+    },
+    "MadeWithLove",
+    {
 			  "name": "Locate",
 				"hide": true,
 				"override": {
@@ -116,7 +121,13 @@
 				"hide": true
 		}, {
 				"name": "Measure",
-				"hide": true
+				"hide": true,
+        "showIn": ["DrawerMenu"],
+        "cfg":{
+          "showResults": false
+        }
+		}, {
+				"name": "MeasureResults"
 		}, {
 				"name": "Print",
 				"hideFrom": ["Toolbar"]
@@ -160,12 +171,14 @@
         "id": "identifyBar"
       },
       "isDefault": false
-    }, "ScaleBox",
+    },
+    "ScaleBox",
     {
       "name": "ZoomAll",
       "hide": true
     },
-    "MapLoading", {
+    "MapLoading",
+    {
 				"name": "Snapshot",
 				"hide": true,
 				"hideFrom": ["Toolbar"],

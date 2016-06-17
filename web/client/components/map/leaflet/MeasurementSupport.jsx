@@ -29,11 +29,11 @@ const MeasurementSupport = React.createClass({
             L.drawLocal = drawingStrings;
         }
 
-        if (this.props.measurement.geomType !== newProps.measurement.geomType &&
-                newProps.measurement.geomType !== null) {
+        if (newProps.measurement.geomType && newProps.measurement.geomType !== this.props.measurement.geomType ) {
             this.addDrawInteraction(newProps);
         }
-        if (newProps.measurement.geomType === null) {
+
+        if (!newProps.measurement.geomType) {
             this.removeDrawInteraction();
         }
     },

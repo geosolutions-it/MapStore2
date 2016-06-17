@@ -10,29 +10,22 @@ const {connect} = require('react-redux');
 
 const Message = require('./locale/Message');
 
-const lineRuleIcon = require('./toolbar/assets/img/line-ruler.png');
-
-const assign = require('object-assign');
-
 const {changeMeasurementState} = require('../actions/measurement');
 
-const Measure = require('../components/mapcontrols/measure/MeasureComponent');
+const MeasureRes = require('../components/mapcontrols/measure/MeasureResults');
 
 const MeasureComponent = React.createClass({
     render() {
         const labels = {
-            lengthButtonText: <Message msgId="measureComponent.lengthButtonText"/>,
-            areaButtonText: <Message msgId="measureComponent.areaButtonText"/>,
-            resetButtonText: <Message msgId="measureComponent.resetButtonText"/>,
             lengthLabel: <Message msgId="measureComponent.lengthLabel"/>,
             areaLabel: <Message msgId="measureComponent.areaLabel"/>,
             bearingLabel: <Message msgId="measureComponent.bearingLabel"/>
         };
-        return <Measure {...labels} {...this.props}/>;
+        return <MeasureRes {...labels} {...this.props}/>;
     }
 });
 
-const MeasurePlugin = connect((state) => {
+const MeasureResultsPlugin = connect((state) => {
     return {
         measurement: state.measurement || {},
         lineMeasureEnabled: state.measurement && state.measurement.lineMeasureEnabled || false,
@@ -44,25 +37,6 @@ const MeasurePlugin = connect((state) => {
 })(MeasureComponent);
 
 module.exports = {
-    MeasurePlugin: assign(MeasurePlugin, {
-        Toolbar: {
-            name: 'measurement',
-            position: 9,
-            panel: true,
-            exclusive: true,
-            wrap: true,
-            help: <Message msgId="helptexts.measureComponent"/>,
-            tooltip: "measureComponent.tooltip",
-            icon: <img src={lineRuleIcon} />,
-            title: "measureComponent.title",
-            hide: true
-        },
-        DrawerMenu: {
-            name: 'measurement',
-            position: 3,
-            title: 'measureComponent.title',
-            showPanel: false
-        }
-    }),
+    MeasureResultsPlugin,
     reducers: {measurement: require('../reducers/measurement')}
 };
