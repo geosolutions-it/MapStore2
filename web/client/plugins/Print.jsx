@@ -242,7 +242,7 @@ const Print = React.createClass({
     render() {
         if ((this.props.capabilities || this.props.error) && this.props.open) {
             return this.props.withContainer ?
-                (<Panel className="mapstore-print-panel" header={<Message msgId="print.paneltitle"/>} style={this.props.style}>
+                (<Panel className="mapstore-print-panel" header={<span><span className="print-panel-title"><Message msgId="print.paneltitle"/></span><span className="print-panel-close panel-close" onClick={this.props.toggleControl}></span></span>} style={this.props.style}>
                     {this.renderBody()}
                 </Panel>) : this.renderBody();
         }
@@ -335,6 +335,13 @@ module.exports = {
             exclusive: true,
             panel: true,
             hide: true
+        },
+        BurgerMenu: {
+            name: 'print',
+            position: 2,
+            text: <Message msgId="printbutton"/>,
+            icon: <Glyphicon glyph="print"/>,
+            action: toggleControl.bind(null, 'print', null)
         }
     }),
     reducers: {print: require('../reducers/print')}

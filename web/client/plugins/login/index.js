@@ -5,9 +5,11 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
+const React = require('react');
 const {connect} = require('react-redux');
-const security = require('../../actions/security');
+const {geoStoreLoginSubmit, loginFail, logout, geoStoreChangePassword} = require('../../actions/security');
 const {setControlProperty} = require('../../actions/controls');
+const {Glyphicon} = require('react-bootstrap');
 
 const UserMenu = connect((state) => ({
     user: state.security && state.security.user
@@ -15,7 +17,7 @@ const UserMenu = connect((state) => ({
     onShowLogin: setControlProperty.bind(null, "LoginForm", "enabled", true),
     onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true),
     onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true),
-    onLogout: () => {security.logout(); }
+    onLogout: logout
 })(require('../../components/security/UserMenu'));
 
 const UserDetails = connect((state) => ({
@@ -29,7 +31,7 @@ const PasswordReset = connect((state) => ({
     user: state.security && state.security.user,
     show: state.controls.ResetPassword && state.controls.ResetPassword.enabled
 }), {
-    onPasswordChange: (user, pass) => { return security.geoStoreChangePassword(user, pass); },
+    onPasswordChange: (user, pass) => { return geoStoreChangePassword(user, pass); },
     onClose: setControlProperty.bind(null, "ResetPassword", "enabled", false)
 })(require('../../components/security/modals/PasswordResetModal'));
 
@@ -40,13 +42,27 @@ const Login = connect((state) => ({
 }), {
     onLoginSuccess: setControlProperty.bind(null, 'LoginForm', 'enabled', false),
     onClose: setControlProperty.bind(null, 'LoginForm', 'enabled', false),
-    onSubmit: security.geoStoreLoginSubmit,
-    onError: security.loginFail
+    onSubmit: geoStoreLoginSubmit,
+    onError: loginFail
 })(require('../../components/security/modals/LoginModal'));
 
+const LoginNav = connect((state) => ({
+    user: state.security && state.security.user,
+    nav: false,
+    renderButtonText: false,
+    renderButtonContent: () => {return <Glyphicon glyph="user" />; },
+    bsStyle: "primary",
+    className: "square-button"
+}), {
+    onShowLogin: setControlProperty.bind(null, "LoginForm", "enabled", true),
+    onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true),
+    onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true),
+    onLogout: logout
+})(require('../../components/security/UserMenu'));
 module.exports = {
     UserDetails,
     UserMenu,
     PasswordReset,
-    Login
+    Login,
+    LoginNav
 };

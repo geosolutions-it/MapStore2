@@ -34,8 +34,9 @@ const getPluginItems = (plugins, pluginsConfig, name, id, isDefault) => {
                 const pluginImpl = plugins[plugin];
                 const pluginName = plugin.substring(0, plugin.length - 6);
                 const pluginCfg = isPluginConfigured(pluginsConfig, plugin);
+                const item = pluginImpl[name].impl || pluginImpl[name];
                 return assign({},
-                    pluginImpl[name],
+                    item,
                     pluginCfg.override && pluginCfg.override[name] || {},
                     {
                         cfg: pluginCfg && pluginCfg.cfg || undefined
@@ -86,7 +87,7 @@ const PluginsUtils = {
         const name = isObject(pluginDef) ? pluginDef.name : pluginDef;
         const id = isObject(pluginDef) ? pluginDef.id : null;
         const stateSelector = isObject(pluginDef) ? pluginDef.stateSelector : id;
-        const isDefault = isObject(pluginDef) && (typeof pluginDef.isDefault === 'undefined') && true || pluginDef.isDefault;
+        const isDefault = isObject(pluginDef) ? ((typeof pluginDef.isDefault === 'undefined') && true || pluginDef.isDefault) : true;
         const impl = plugins[(isObject(pluginDef) ? pluginDef.name : pluginDef) + 'Plugin'];
         return {
             id: id || name,

@@ -56,6 +56,38 @@
 .search-result-list .search-result:first-child{
     border-radius:10px 10px 0 0;
 }
+
+#mapstore-navbar .MapSearchBar {
+    top: 0;
+    left: -500px;
+}
+
+#mapstore-navbar .search-result-list{
+    top: 35px;
+    left: -500px;
+}
+
+.search-toggle {
+    display: none;
+}
+
+@media (max-width: 768px ) {
+    #mapstore-navbar .search-toggle {
+        display: inline-block;
+    }
+    #mapstore-navbar .MapSearchBar {
+        width: 400px;
+        top: 50px;
+        left: auto;
+    }
+
+    #mapstore-navbar .search-result-list{
+        top: 85px;
+        left: auto;
+        width: 400px;
+    }
+}
+
 /* Small devices (tablets, 768px and up) */
 @media (min-width: 768px ) {
     .MapSearchBar {

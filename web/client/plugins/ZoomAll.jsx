@@ -25,7 +25,7 @@ const ZoomAllPlugin = React.createClass({
     render() {
         return (
             <ZoomToMaxExtentButton
-                key="zoomToMaxExtent" useInitialExtent={true}/>);
+                key="zoomToMaxExtent" {...this.props} useInitialExtent={true}/>);
     }
 });
 

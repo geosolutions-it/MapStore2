@@ -25,13 +25,15 @@ const HelpTextPanel = React.createClass({
         id: React.PropTypes.string,
         helpText: React.PropTypes.string,
         isVisible: React.PropTypes.bool,
-        title: React.PropTypes.string
+        title: React.PropTypes.string,
+        onClose: React.PropTypes.func
     },
     getDefaultProps() {
         return {
             id: 'mapstore-helptext-panel',
             isVisible: false,
-            title: 'HELP'
+            title: 'HELP',
+            onClose: () => {}
         };
     },
     render() {
@@ -41,7 +43,7 @@ const HelpTextPanel = React.createClass({
                 className={this.props.isVisible ? '' : 'hidden'}
                 style={{position: "absolute", top: "140px", marginLeft: "8px"}}>
                 <Panel
-                    header={this.props.title}>
+                    header={<span><span className="help-panel-title">{this.props.title}</span><span className="help-panel-close panel-close" onClick={this.props.onClose}></span></span>}>
                     {this.props.helpText}
                 </Panel>
             </div>

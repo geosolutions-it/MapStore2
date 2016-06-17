@@ -7,7 +7,8 @@
  */
 
 const React = require('react');
-const {UserDetails, PasswordReset, UserMenu, Login } = require('./login/index');
+const assign = require('object-assign');
+const {UserDetails, PasswordReset, UserMenu, Login, LoginNav } = require('./login/index');
 
 const LoginTool = React.createClass({
     propTypes: {
@@ -16,10 +17,6 @@ const LoginTool = React.createClass({
     getDefaultProps() {
         return {
             menuStyle: {
-                position: "absolute",
-                right: "0px",
-                top: "0px",
-                margin: "20px",
                 zIndex: 30
             }
         };
@@ -36,6 +33,13 @@ const LoginTool = React.createClass({
     }
 });
 module.exports = {
-    LoginPlugin: LoginTool,
+    LoginPlugin: assign(LoginTool, {
+        OmniBar: {
+            name: "login",
+            position: 3,
+            tool: LoginNav,
+            tools: [UserDetails, PasswordReset, Login]
+        }
+    }),
     reducers: {security: require('../reducers/security')}
 };
