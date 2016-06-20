@@ -9,28 +9,19 @@
 const React = require('react');
 const {connect} = require('react-redux');
 
-const {setControlProperty} = require('../actions/controls');
-const {changeHelpText, changeHelpwinVisibility} = require('../actions/help');
-
-const {Button, Tooltip, OverlayTrigger, Panel, Collapse} = require('react-bootstrap');
-
 require('./toolbar/assets/css/toolbar.css');
-
-const Message = require('./locale/Message');
-
-const {toggleControl} = require('../actions/controls');
 
 const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
-const HelpBadge = connect((state) => ({
-    isVisible: state.controls && state.controls.help && state.controls.help.enabled
-}), {
-    changeHelpText,
-    changeHelpwinVisibility
-})(require('../components/help/HelpBadge'));
-
 const assign = require('object-assign');
-const {partial} = require('lodash');
+
+const ToolsContainer = require('./containers/ToolsContainer');
+
+const AnimatedContainer = connect(() => ({
+     transitionName: "toolbarexpand",
+     transitionEnterTimeout: 500,
+     transitionLeaveTimeout: 300
+}))(ReactCSSTransitionGroup);
 
 const Toolbar = React.createClass({
     propTypes: {
@@ -89,80 +80,20 @@ const Toolbar = React.createClass({
             .map((item, index) => assign({}, item, {position: item.position || index}));
         return unsorted.sort((a, b) => a.position - b.position);
     },
-    getTool(tool) {
-        if (tool.tool) {
-            return tool.tool === true ? tool.plugin : tool.tool;
-        }
-        let selector = () => ({});
-        const actions = {};
-        if (tool.exclusive) {
-            selector = (state) => ({
-                active: state.controls && state.controls[this.props.stateSelector] && state.controls[this.props.stateSelector].active === tool.name
-            });
-            actions.onClick = setControlProperty.bind(null, this.props.stateSelector, 'active', tool.name, true);
-        } else if (tool.toggle) {
-            selector = (state) => ({
-                bsStyle: state.controls[tool.toggleControl || tool.name] && state.controls[tool.toggleControl || tool.name][tool.toggleProperty || "enabled"] ? this.props.pressedButtonStyle : this.props.buttonStyle
-            });
-            actions.onClick = toggleControl.bind(null, tool.toggleControl || tool.name, tool.toggleProperty || null);
-        } else if (tool.action) {
-            actions.onClick = partial(tool.action, this.context);
-        }
-        return connect(selector, actions)(Button);
-    },
-    renderButtons() {
-        return this.getTools().map((tool) => {
-            const help = tool.help ? <HelpBadge className="mapstore-tb-helpbadge" helpText={tool.help}/> : <span/>;
-            const tooltip = tool.tooltip ? <Message msgId={tool.tooltip}/> : null;
-
-            const ToolbarButton = this.getTool(tool);
-
-            return this.addTooltip(
-                <ToolbarButton tooltip={tooltip} btnSize={this.props.buttonSize} bsStyle={this.props.buttonStyle} help={help} key={tool.name} mapType={this.props.mapType}>
-                    {help}{tool.icon}
-                </ToolbarButton>,
-            tool);
-        });
-    },
-    renderPanels() {
-        return this.getPanels().map((panel) => {
-            const ToolPanelComponent = panel.panel;
-            const ToolPanel = (<ToolPanelComponent
-                key={panel.name} mapType={this.props.mapType} {...panel.cfg} {...(panel.props || {})}
-                items={panel.items || []}/>);
-            const title = panel.title ? <Message msgId={panel.title}/> : null;
-            if (panel.wrap) {
-                return (
-                    <Collapse key={"mapToolBar-item-collapse-" + panel.name} in={this.props.active === panel.name}>
-                        <Panel header={title} style={this.props.panelStyle} className={this.props.panelClassName}>
-                            {ToolPanel}
-                        </Panel>
-                    </Collapse>
-                );
-            }
-            return ToolPanel;
-        });
-    },
     render() {
-        return (
-            <span id={this.props.id}>
-                <ReactCSSTransitionGroup className={"mapToolbar btn-group-" + this.props.layout} transitionName="toolbarexpand" transitionEnterTimeout={500} transitionLeaveTimeout={300}>
-                    {this.renderButtons()}
-                </ReactCSSTransitionGroup>
-                {this.renderPanels()}
-            </span>
-        );
-    },
-    addTooltip(button, spec) {
-        if (spec.tooltip) {
-            let tooltip = <Tooltip id={"toolbar-map-" + spec.name + "-button"}><Message msgId={spec.tooltip}/></Tooltip>;
-            return (
-                <OverlayTrigger key={"mapToolBar-item-OT-" + spec.name} rootClose placement="left" overlay={tooltip}>
-                    {button}
-                </OverlayTrigger>
-            );
-        }
-        return button;
+        return (<ToolsContainer id={this.props.id} className={"mapToolbar btn-group-" + this.props.layout}
+            container={AnimatedContainer}
+            mapType={this.props.mapType}
+            toolStyle={this.props.buttonStyle}
+            activeStyle={this.props.pressedButtonStyle}
+            toolSize={this.props.buttonSize}
+            stateSelector={this.props.stateSelector}
+            tools={this.getTools()}
+            panels={this.getPanels()}
+            activePanel={this.props.active}
+            panelStyle={this.props.panelStyle}
+            panelClassName={this.props.panelClassName}
+            />);
     }
 });
 

@@ -9,15 +9,19 @@ const React = require('react');
 
 require('./omnibar/omnibar.css');
 
+const ToolsContainer = require('./containers/ToolsContainer');
+
 const OmniBar = React.createClass({
     propTypes: {
         items: React.PropTypes.array,
-        id: React.PropTypes.string
+        id: React.PropTypes.string,
+        mapType: React.PropTypes.string
     },
     getDefaultProps() {
         return {
             items: [],
-            id: "mapstore-navbar"
+            id: "mapstore-navbar",
+            mapType: "leaflet"
         };
     },
     getTool(tool) {
@@ -27,26 +31,28 @@ const OmniBar = React.createClass({
         }
         return <li key={tool.name}><span/></li>;
     },
-    renderExtraTools() {
-        return this.props.items.map((item) => this.renderExtraTool(item));
+    getPanels() {
+        return this.props.items.filter((item) => item.tools).reduce((previous, current) => {
+            return previous.concat(
+                current.tools.map((tool, index) => ({name: current.name + index, panel: tool}))
+            );
+        }, []);
+
     },
-    renderExtraTool(tool) {
-        if (tool.tools) {
-            return tool.tools.map((Tool, index) => <Tool key={name + index}/>);
-        }
-        return null;
+    getTools() {
+        return this.props.items.sort((a, b) => a.position - b.position);
     },
-    renderPlugins() {
-        return this.props.items.sort((a, b) => a.position - b.position).map((item) => this.getTool(item));
-    },
-    /* {this.renderUserMenu()} {this.renderMenu()}*/
     render() {
-        return (<div id={this.props.id} className="navbar-dx shadow">
-            <ul>
-                {this.renderPlugins()}
-            </ul>
-            {this.renderExtraTools()}
-            </div>);
+        return (<ToolsContainer id={this.props.id} className="navbar-dx shadow"
+            mapType={this.props.mapType}
+            container={(props) => <div {...props}><ul>{props.children}</ul></div>}
+            toolStyle="primary"
+            activeStyle="default"
+            stateSelector="omnibar"
+            tool={(props) => <li>{props.children}</li>}
+            tools={this.getTools()}
+            panels={this.getPanels()}
+        />);
     }
 });
 

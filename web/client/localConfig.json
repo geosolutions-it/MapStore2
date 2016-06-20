@@ -115,9 +115,11 @@
 				"hideFrom": ["Toolbar"]
 		}, {
 				"name": "TOC",
+				"hideFrom": ["Toolbar"],
 				"hide": true
 		}, {
 				"name": "BackgroundSwitcher",
+				"hideFrom": ["Toolbar"],
 				"hide": true
 		}, {
 				"name": "Measure",
@@ -139,7 +141,7 @@
 				}
 		}, {
 				"name": "Settings",
-				"hideFrom": ["Toolbar"],
+				"hideFrom": ["Toolbar", "DrawerMenu"],
 				"cfg": {
 					"wrap": true
 				}
@@ -151,7 +153,10 @@
 					"chooseCatalogUrl": false,
 					"initialCatalogURL": "http://demo.geo-solutions.it/geoserver/csw"
 				}
-		}, "About", "MousePosition", {
+		}, {
+			"name": "About",
+			"hideFrom": ["DrawerMenu"]
+		}, "MousePosition", {
 				"name": "Search",
 				"cfg": {
 					"withToggle": ["max-width: 768px", "min-width: 768px"]
@@ -167,6 +172,7 @@
     }, {
       "name": "Toolbar",
       "id": "IdentifyBar",
+			"stateSelector": "identify",
       "cfg": {
         "id": "identifyBar"
       },
@@ -188,11 +194,21 @@
 		},
     {
       "name":"ZoomIn",
-      "hide": true
+      "hide": true,
+			"override": {
+				"Toolbar": {
+					"alwaysVisible": true
+				}
+			}
     },
     {
       "name":"ZoomOut",
-      "hide": true
+      "hide": true,
+			"override": {
+				"Toolbar": {
+					"alwaysVisible": true
+				}
+			}
     }, {
 			"name": "Login",
 			"hide": true,
@@ -206,6 +222,9 @@
 		"OmniBar",
 		{
 			"name": "BurgerMenu",
+			"hide": true
+		}, {
+			"name": "Expander",
 			"hide": true
 		}]
 	}
