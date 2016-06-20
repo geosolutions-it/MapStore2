@@ -42,7 +42,9 @@ var MousePositionLabelDMS = React.createClass({
                     <span>Lat: </span><FormattedNumber key="latD" {...integerFormat} value={pos.lat} />
                     <span>° </span><FormattedNumber key="latM" {...integerFormat} value={pos.latM} />
                     <span>' </span><FormattedNumber key="latS" {...decimalFormat} value={pos.latS} />
-                    <span>'' Lng: </span><FormattedNumber key="lngD" {...lngDFormat} value={pos.lng} />
+                    <span>''</span>
+                    <span className="mouseposition-separator"/>
+                    <span> Lng: </span><FormattedNumber key="lngD" {...lngDFormat} value={pos.lng} />
                     <span>° </span><FormattedNumber key="lngM" {...integerFormat} value={pos.lngM} />
                     <span>' </span><FormattedNumber key="lngS" {...decimalFormat} value={pos.lngS} /><span>''</span>
                 </Label>

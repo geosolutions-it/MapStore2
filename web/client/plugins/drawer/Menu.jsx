@@ -6,36 +6,61 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var {Glyphicon} = require('react-bootstrap');
+var {Glyphicon, Button} = require('react-bootstrap');
 var Sidebar = require('react-sidebar').default;
+
 var Menu = React.createClass({
     propTypes: {
         title: React.PropTypes.node,
         alignment: React.PropTypes.string,
         activeKey: React.PropTypes.string,
+        docked: React.PropTypes.bool,
         show: React.PropTypes.bool,
         onToggle: React.PropTypes.func,
-        onChoose: React.PropTypes.func
+        onChoose: React.PropTypes.func,
+        single: React.PropTypes.bool
+    },
+    getDefaultProps() {
+        return {
+            docked: false,
+            single: false
+        };
     },
     renderChildren(child, index) {
         let props = {
           key: child.key ? child.key : index,
           onHeaderClick: this.props.onChoose,
           ref: child.ref,
-          open: this.props.activeKey && this.props.activeKey === child.props.eventKey
+          open: this.props.activeKey && this.props.activeKey === child.props.eventKey,
+          icon: ""
         };
         return React.cloneElement(
           child,
           props
         );
     },
+    renderButtons() {
+        return this.props.children.map((child) => (
+            <Button onClick={this.props.onChoose.bind(null, child.props.eventKey)} bsStyle={this.props.activeKey === child.props.eventKey ? 'default' : 'primary'}>
+                {child.props.icon}
+            </Button>
+        ));
+    },
     renderContent() {
-        return (<div className={"nav-content"}>
+        const header = this.props.single ? (
             <div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
-                <span className="title">{this.props.title}</span>
-                <Glyphicon glyph="remove" onClick={this.props.onToggle} style={{position: "absolute", right: "0", padding: "15px", cursor: "pointer"}}/>
+                <Glyphicon glyph="remove" onClick={this.props.onToggle} style={{position: "absolute", left: "0", padding: "15px", cursor: "pointer"}}/>
+                <div className="navButtons">
+                    {this.renderButtons()}
+                </div>
             </div>
-            {this.props.children.map(this.renderChildren)}
+        ) : (<div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
+            <span className="title">{this.props.title}</span>
+            <Glyphicon glyph="remove" onClick={this.props.onToggle} style={{position: "absolute", right: "0", padding: "15px", cursor: "pointer"}}/>
+        </div>);
+        return (<div className={"nav-content"}>
+            {header}
+            {this.props.children.filter((child) => !this.props.single || this.props.activeKey === child.props.eventKey).map(this.renderChildren)}
         </div>);
     },
     render() {
@@ -55,7 +80,7 @@ var Menu = React.createClass({
                      }
                 }} sidebarClassName="nav-menu" onSetOpen={() => {
                     this.props.onToggle();
-                }} open={this.props.show} sidebar={this.renderContent()}>
+                }} open={this.props.show} docked={this.props.docked} sidebar={this.renderContent()}>
                 <div></div>
             </Sidebar>
         );

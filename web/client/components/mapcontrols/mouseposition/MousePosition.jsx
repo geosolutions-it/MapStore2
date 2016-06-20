@@ -13,8 +13,6 @@ const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 const MousePositionLabelDMS = require('./MousePositionLabelDMS');
 const MousePositionLabelYX = require('./MousePositionLabelYX');
 
-require("./mousePosition.css");
-
 let MousePosition = React.createClass({
     propTypes: {
         id: React.PropTypes.string,

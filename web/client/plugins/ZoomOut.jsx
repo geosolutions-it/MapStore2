@@ -26,7 +26,7 @@ module.exports = {
     ZoomOutPlugin: assign(ZoomOutButton, {
         Toolbar: {
             name: "ZoomOut",
-            position: 3,
+            position: 4,
             tooltip: "zoombuttons.zoomOutTooltip",
             tool: true,
             hide: true

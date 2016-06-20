@@ -60,6 +60,7 @@ module.exports = {
         DrawerMenu: {
             name: 'measurement',
             position: 3,
+            icon: <img src={lineRuleIcon} />,
             title: 'measureComponent.title',
             showPanel: false
         }
