@@ -45,11 +45,11 @@ const OmniBar = React.createClass({
     render() {
         return (<ToolsContainer id={this.props.id} className="navbar-dx shadow"
             mapType={this.props.mapType}
-            container={(props) => <div {...props}><ul>{props.children}</ul></div>}
+            container={(props) => <div {...props}>{props.children}</div>}
             toolStyle="primary"
             activeStyle="default"
             stateSelector="omnibar"
-            tool={(props) => <li>{props.children}</li>}
+            tool={(props) => <div>{props.children}</div>}
             tools={this.getTools()}
             panels={this.getPanels()}
         />);

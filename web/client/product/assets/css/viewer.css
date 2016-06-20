@@ -248,3 +248,12 @@ html, body, #container, .fill {
 .nav-content #background-switcher {
     margin-top: 10px;
 }
+
+#mapstore-drawermenu .nav-menu {
+    background: rgba(255,255,255,1);
+}
+
+#mapstore-drawermenu .panel {
+    border: none !important;
+    box-shadow: none !important;
+}

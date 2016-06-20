@@ -52,3 +52,7 @@
        height: 50px;
     }
 }
+
+.navbar-dx > * {
+	display: inline-block;
+}
