@@ -1,0 +1,258 @@
+{
+	"proxyUrl": "/mapstore/proxy/?url=",
+	"geoStoreUrl": "/mapstore/rest/geostore/",
+  "printUrl": "http://demo.geo-solutions.it/geoserver/pdf/info.json",
+	"bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
+	"initialMapFilter": "MS2",
+	"plugins": {
+		"mobile": ["Home", {
+			"name": "About",
+			"hide": true
+		}, {
+			"name": "Map",
+			"cfg": {
+					"zoomControl": false,
+					"tools": ["measurement", "locate"]
+			}
+		 }, {
+			 	"name": "DrawerMenu"
+		 }, {
+			 	"name": "TOC",
+				"hide": true,
+				"cfg": {
+					"activateLegendTool": true,
+					"activateSettingsTool": false
+				}
+		 }, {
+			 	"name": "Settings",
+				"hide": true,
+				"cfg": {
+					"overrideSettings": {
+	            "language": true,
+	            "history": false
+	        },
+					"style": {
+						"width": "auto"
+					}
+				}
+		 }, {
+			  "name": "BackgroundSwitcher",
+				"cfg": {
+					"id": "mobile-background-switcher",
+					"fluid": true,
+		      "columnProperties": {
+              "xs": 6,
+              "sm": 6,
+              "md": 6
+          }
+				},
+				"hide": true
+		 }, {
+			 	"name": "Identify",
+				"hideFrom": ["Settings"],
+				"cfg": {
+					"style": {
+						  "position": "absolute",
+							"width": "100%",
+							"bottom": "0px",
+							"zIndex": 1010,
+							"maxHeight": "70%",
+							"marginBottom": 0
+					},
+					"draggable": false,
+					"collapsible": true,
+					"viewerOptions": {
+						"container": "{context.ReactSwipe}",
+						"header": "{context.SwipeHeader}",
+						"collapsible": false
+					},
+					"bodyClass": "mobile-feature-info"
+				}
+		 }, {
+			 	"name": "MousePosition",
+				"cfg": {
+					"id": "mapstore-mouseposition-mobile"
+				}
+		 }, "Search", {
+			 	"name": "Locate",
+				"cfg": {
+					"id": "locateMeButton"
+				}
+		 }],
+		"desktop": [{
+			"name": "Map",
+			"cfg": {
+				"toolsOptions": {
+					"scalebar": {
+						"leaflet": {
+							"position": "bottomright"
+						}
+					}
+				},
+        "zoomControl": false
+			}
+		}, {
+			"name": "Help",
+			"hideFrom": "Toolbar"
+		}, {
+        "name": "DrawerMenu",
+				"cfg": {
+					"glyph": "pencil",
+					"buttonStyle": "primary",
+					"singleSection": true
+				}
+    },
+    {
+       "name": "Identify",
+       "showIn": ["IdentifyBar", "Settings"]
+    },
+    "MadeWithLove",
+    {
+			  "name": "Locate",
+				"hide": true,
+				"cfg": {
+					"glyph": "1-position-1"
+				},
+				"override": {
+					"Toolbar": {
+						"alwaysVisible": true
+					}
+				}
+		}, {
+			  "name": "Home",
+				"hide": true,
+				"hideFrom": ["Toolbar"]
+		}, {
+				"name": "TOC",
+				"hideFrom": ["Toolbar"],
+				"hide": true
+		}, {
+				"name": "BackgroundSwitcher",
+				"hideFrom": ["Toolbar"],
+				"hide": true,
+				"cfg": {
+					"fluid": true,
+		      "columnProperties": {
+              "xs": 12,
+              "sm": 12,
+              "md": 12
+          }
+				}
+		}, {
+				"name": "Measure",
+				"hide": true,
+        "showIn": ["DrawerMenu"],
+        "cfg":{
+          "showResults": false
+        }
+		}, {
+				"name": "MeasureResults"
+		}, {
+				"name": "Print",
+				"hideFrom": ["Toolbar"]
+		}, {
+				"name": "ShapeFile",
+				"hideFrom": ["Toolbar"],
+				"cfg": {
+					"wrap": true
+				}
+		}, {
+				"name": "Settings",
+				"hideFrom": ["Toolbar", "DrawerMenu"],
+				"cfg": {
+					"wrap": true
+				}
+		}, {
+				"name": "MetadataExplorer",
+				"hideFrom": ["Toolbar"],
+				"cfg": {
+					"wrap": true,
+					"chooseCatalogUrl": false,
+					"initialCatalogURL": "http://demo.geo-solutions.it/geoserver/csw"
+				}
+		}, {
+			"name": "About",
+			"hideFrom": ["DrawerMenu"]
+		}, "MousePosition", {
+				"name": "Search",
+				"cfg": {
+					"withToggle": ["max-width: 768px", "min-width: 768px"]
+				},
+				"hide": true
+		}, {
+      "name": "Toolbar",
+      "id": "NavigationBar",
+      "stateSelector": "toolbar",
+      "cfg": {
+				"buttonStyle": "primary",
+        "id": "navigationBar"
+      }
+    }, {
+      "name": "Toolbar",
+      "id": "IdentifyBar",
+			"stateSelector": "identify",
+      "cfg": {
+				"buttonStyle": "primary",
+        "id": "identifyBar"
+      },
+      "isDefault": false
+    },
+    "ScaleBox",
+    {
+      "name": "ZoomAll",
+      "hide": true
+    },
+    {
+			"name": "MapLoading",
+			"hide": true,
+			"override": {
+				"Toolbar": {
+					"alwaysVisible": true
+				}
+			}
+		},
+    {
+				"name": "Snapshot",
+				"hide": true,
+				"hideFrom": ["Toolbar"],
+				"cfg": {
+					"wrap": true
+				}
+		},
+    {
+      "name":"ZoomIn",
+      "hide": true,
+			"override": {
+				"Toolbar": {
+					"alwaysVisible": true
+				}
+			}
+    },
+    {
+      "name":"ZoomOut",
+      "hide": true,
+			"override": {
+				"Toolbar": {
+					"alwaysVisible": true
+				}
+			}
+    }, {
+			"name": "Login",
+			"hide": true,
+      "cfg": {
+          "nav": false,
+          "menuProps": {
+              "noCaret": true
+          }
+      }
+		},
+		"OmniBar",
+		{
+			"name": "BurgerMenu",
+			"hide": true
+		}, {
+			"name": "Expander",
+			"hide": true
+		}]
+	}
+}
