@@ -180,3 +180,71 @@ html, body, #container, .fill {
 #mapstore-mousepositionsettings label {
     width: 100% !important;
 }
+
+#mapstore-globalspinner  {
+    margin: 0 !important;
+    width: 40px !important;
+    position:static !important;
+    border-radius: 0 !important;
+}
+
+#mapstore-mouseposition .label-info {
+    white-space: normal !important;
+    color: black !important;
+    font-size: 110%;
+    padding: 0 !important;
+}
+
+#mapstore-mouseposition {
+    bottom: 5px !important;
+    right: 237px !important;
+    top: auto !important;
+    margin: 0 !important;
+    text-shadow: none !important;
+    background-color: white !important;
+    width: 160px !important;
+    height: 50px !important;
+    padding: 5px !important;
+}
+
+#mapstore-mouseposition h5 {
+    margin-top: 5px !important;
+}
+
+.mouseposition-separator {
+    display: block;
+}
+
+ #drawer-menu-button {
+     position: absolute;
+ }
+
+#mapstore-drawermenu > div > div:nth-child(2) {
+    display: none;
+}
+
+.navButtons {
+    float: right;
+}
+
+.nav-content #background-switcher .thumbnail {
+    border-radius: 0 !important;
+    margin-bottom: 40px;
+    width: 220px !important;
+}
+.nav-content #background-switcher .thumbnail img {
+    border-radius: 0 !important;
+    height: 90px;
+    width: 220px !important;
+}
+
+.nav-content #background-switcher .thumbnail .caption {
+    font-size: 14px !important;
+    text-align: left !important;
+    top: -20px !important;
+    position: absolute !important;
+}
+
+.nav-content #background-switcher {
+    margin-top: 10px;
+}

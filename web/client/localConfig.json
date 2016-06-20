@@ -38,6 +38,7 @@
 		 }, {
 			  "name": "BackgroundSwitcher",
 				"cfg": {
+					"id": "mobile-background-switcher",
 					"fluid": true,
 		      "columnProperties": {
               "xs": 6,
@@ -94,7 +95,12 @@
 			"name": "Help",
 			"hideFrom": "Toolbar"
 		}, {
-        "name": "DrawerMenu"
+        "name": "DrawerMenu",
+				"cfg": {
+					"glyph": "pencil",
+					"buttonStyle": "primary",
+					"singleSection": true
+				}
     },
     {
        "name": "Identify",
@@ -120,7 +126,15 @@
 		}, {
 				"name": "BackgroundSwitcher",
 				"hideFrom": ["Toolbar"],
-				"hide": true
+				"hide": true,
+				"cfg": {
+					"fluid": true,
+		      "columnProperties": {
+              "xs": 12,
+              "sm": 12,
+              "md": 12
+          }
+				}
 		}, {
 				"name": "Measure",
 				"hide": true,
@@ -183,7 +197,15 @@
       "name": "ZoomAll",
       "hide": true
     },
-    "MapLoading",
+    {
+			"name": "MapLoading",
+			"hide": true,
+			"override": {
+				"Toolbar": {
+					"alwaysVisible": true
+				}
+			}
+		},
     {
 				"name": "Snapshot",
 				"hide": true,

@@ -24,6 +24,7 @@ var MousePositionLabelYX = React.createClass({
              <h5>
                 <Label bsSize="lg" bsStyle="info">
                     <span>X: </span><FormattedNumber key="x" {...format} value={this.props.position.x} />
+                    <span className="mouseposition-separator"/>
                     <span> Y: </span><FormattedNumber key="y" {...format} value={this.props.position.y} />
                 </Label>
             </h5>);

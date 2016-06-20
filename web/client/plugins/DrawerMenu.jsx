@@ -13,7 +13,7 @@ const Message = require('./locale/Message');
 
 const {toggleControl, setControlProperty} = require('../actions/controls');
 
-const {Button, Glyphicon} = require('react-bootstrap');
+const {Button, Glyphicon, Panel} = require('react-bootstrap');
 
 const Section = require('./drawer/Section');
 
@@ -34,7 +34,11 @@ const DrawerMenu = React.createClass({
         items: React.PropTypes.array,
         active: React.PropTypes.string,
         toggleMenu: React.PropTypes.func,
-        id: React.PropTypes.string
+        id: React.PropTypes.string,
+        glyph: React.PropTypes.string,
+        buttonStyle: React.PropTypes.string,
+        menuOptions: React.PropTypes.object,
+        singleSection: React.PropTypes.bool
     },
     contextTypes: {
         messages: React.PropTypes.object,
@@ -44,30 +48,39 @@ const DrawerMenu = React.createClass({
         return {
             id: "mapstore-drawermenu",
             items: [],
-            toggleMenu: () => {}
+            toggleMenu: () => {},
+            glyph: "menu-hamburger",
+            buttonStyle: "default",
+            menuOptions: {},
+            singleSection: false
         };
     },
     renderItems() {
         return this.props.items.map((tool, index) => {
             const Plugin = tool.panel || tool.plugin;
-            return (<Section key={tool.name} renderInModal={tool.renderInModal || false} eventKey={(index + 1) + ""} header={<Message msgId={tool.title} />}>
-                <Plugin
-                    isPanel={true}
-                    {...tool.cfg}
-                    items={tool.items || []}
-                    groupStyle={{style: {
-                        marginBottom: "0px",
-                        cursor: "pointer"
-                    }}}
-                    />
+            const plugin = (<Plugin
+                isPanel={true}
+                {...tool.cfg}
+                items={tool.items || []}
+                groupStyle={{style: {
+                    marginBottom: "0px",
+                    cursor: "pointer"
+                }}}
+                />);
+            return this.props.singleSection ? (
+                <Panel icon={tool.icon} key={tool.name} header={<Message msgId={tool.title}/>} eventKey={(index + 1) + ""}>
+                    {plugin}
+                </Panel>
+            ) : (<Section key={tool.name} renderInModal={tool.renderInModal || false} eventKey={(index + 1) + ""} header={<Message msgId={tool.title} />}>
+                {plugin}
             </Section>);
         });
     },
     render() {
         return (
             <div id={this.props.id}>
-                <Button id="drawer-menu-button" key="menu-button" className="square-button" onClick={this.props.toggleMenu}><Glyphicon glyph="menu-hamburger"/></Button>
-                <Menu title={<Message msgId="menu" />} alignment="left">
+                <Button id="drawer-menu-button" bsStyle={this.props.buttonStyle} key="menu-button" className="square-button" onClick={this.props.toggleMenu}><Glyphicon glyph={this.props.glyph}/></Button>
+                <Menu single={this.props.singleSection} {...this.props.menuOptions} title={<Message msgId="menu" />} alignment="left">
                     {this.renderItems()}
                 </Menu>
             </div>

@@ -26,7 +26,7 @@ module.exports = {
     ZoomInPlugin: assign(ZoomInButton, {
         Toolbar: {
             name: "ZoomIn",
-            position: 2,
+            position: 3,
             tooltip: "zoombuttons.zoomInTooltip",
             tool: true,
             hide: true

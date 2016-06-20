@@ -39,6 +39,7 @@ module.exports = {
         DrawerMenu: {
             name: 'backgroundswitcher',
             position: 2,
+            icon: <Glyphicon glyph="globe"/>,
             title: 'background'
         }
     }),
