@@ -58,7 +58,7 @@ const MeasureResults = React.createClass({
             title: <Message msgId="measureComponent.title"/>,
             panelStyle: {
                 minWidth: "300px",
-                left: "52px",
+                left: "302px",
                 zIndex: 100,
                 position: "absolute",
                 overflow: "auto"
