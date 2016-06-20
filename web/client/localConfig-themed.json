@@ -160,6 +160,9 @@
 				"name": "Settings",
 				"hideFrom": ["Toolbar", "DrawerMenu"],
 				"cfg": {
+          "overrideSettings": {
+            "history": false
+          },
 					"wrap": true
 				}
 		}, {
@@ -253,6 +256,20 @@
 		}, {
 			"name": "Expander",
 			"hide": true
-		}]
+		}, {
+      "name": "Undo",
+      "hide": true,
+      "cfg": {
+        "glyph": "1-screen-backward",
+        "buttonStyle": "primary"
+      }
+    }, {
+      "name": "Redo",
+      "hide": true,
+      "cfg": {
+        "glyph": "1-screen-forward",
+        "buttonStyle": "primary"
+      }
+    }]
 	}
 }

@@ -276,7 +276,9 @@
             "print": "This is the helptext for Print",
             "shapefile": "This is the helptext for the Shapefile",
             "rasterstyler": "Define min value, max value, number of classes and color ramp and generate new classified raster layer",
-            "expandToolbar": "This is the helptext for Expand / Collapse"
+            "expandToolbar": "This is the helptext for Expand / Collapse",
+            "historyundo": "Use this button to go to the previous map zoom and location",
+            "historyredo": "Use this button to go to the next map zoom and location"
         },
         "queryform": {
             "query": "Search",
