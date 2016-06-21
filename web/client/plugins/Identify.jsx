@@ -13,7 +13,7 @@ const {createSelector} = require('reselect');
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
 
-const {getFeatureInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker} = require('../actions/mapInfo');
+const {getFeatureInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode} = require('../actions/mapInfo');
 const {changeMousePointer} = require('../actions/map');
 const {changeMapInfoFormat} = require('../actions/mapInfo');
 
@@ -30,10 +30,12 @@ const selector = createSelector([
     (state) => state.mapInfo && state.mapInfo.infoFormat,
     mapSelector,
     layersSelector,
-    (state) => state.mapInfo && state.mapInfo.clickPoint
+    (state) => state.mapInfo && state.mapInfo.clickPoint,
+    (state) => state.mapInfo && state.mapInfo.showModalReverse,
+    (state) => state.mapInfo && state.mapInfo.reverseGeocodeData
 
-], (enabled, responses, requests, format, map, layers, point) => ({
-    enabled, responses, requests, format, map, layers, point
+], (enabled, responses, requests, format, map, layers, point, showModalReverse, reverseGeocodeData) => ({
+    enabled, responses, requests, format, map, layers, point, showModalReverse, reverseGeocodeData
 }));
 
 const IdentifyPlugin = connect(selector, {
@@ -41,7 +43,9 @@ const IdentifyPlugin = connect(selector, {
     purgeResults: purgeMapInfoResults,
     changeMousePointer,
     showMarker: showMapinfoMarker,
-    hideMarker: hideMapinfoMarker
+    hideMarker: hideMapinfoMarker,
+    showRevGeocode: showMapinfoRevGeocode,
+    hideRevGeocode: hideMapinfoRevGeocode
 })(require('../components/data/identify/Identify'));
 
 const FeatureInfoFormatSelector = connect((state) => ({

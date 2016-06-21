@@ -15,11 +15,15 @@ var {
     NEW_MAPINFO_REQUEST,
     PURGE_MAPINFO_RESULTS,
     CHANGE_MAPINFO_FORMAT,
+    SHOW_REVERSE_GEOCODE,
+    HIDE_REVERSE_GEOCODE,
     getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
     purgeMapInfoResults,
-    changeMapInfoFormat
+    changeMapInfoFormat,
+    showMapinfoRevGeocode,
+    hideMapinfoRevGeocode
 } = require('../mapInfo');
 
 describe('Test correctness of the map actions', () => {
@@ -159,5 +163,21 @@ describe('Test correctness of the map actions', () => {
 
         expect(retval.type).toBe(CHANGE_MAPINFO_FORMAT);
         expect(retval.infoFormat).toBe('testFormat');
+    });
+
+    it('get reverse geocode data', () => {
+        let placeId;
+        showMapinfoRevGeocode({lat: 40, lng: 10})((e) => {
+            placeId = e.reverseGeocodeData.place_id;
+            expect(e).toExist();
+            expect(e.type).toBe(SHOW_REVERSE_GEOCODE);
+            expect(placeId).toExist();
+        });
+    });
+
+    it('reset reverse geocode data', () => {
+        const e = hideMapinfoRevGeocode();
+        expect(e).toExist();
+        expect(e.type).toBe(HIDE_REVERSE_GEOCODE);
     });
 });

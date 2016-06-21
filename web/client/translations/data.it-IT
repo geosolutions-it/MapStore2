@@ -26,7 +26,6 @@
         "showMousePositionCoordinates": "Mostra Coordinate",
         "menu": "Menu",
         "settings": "Impostazioni",
-        "settings": "Impostazioni",
         "help": "Aiuto",
         "gohome": "Torna alla home",
         "printbutton": "Stampa",
@@ -132,6 +131,11 @@
         },
         "getFeatureInfoTitle": "Informazioni Sulle Feature",
         "identifyTitle": "Informazioni Sulle Feature",
+        "identifyRevGeocodeHeader": "Coordinate",
+        "identifyRevGeocodeModalTitle": "Indirizzo",
+        "identifyRevGeocodeSubmitText": "Più informazioni",
+        "identifyRevGeocodeCloseText": "Chiudi",
+        "identifyRevGeocodeError": "Impossibile eseguire il geocoding",
         "getFeatureInfoError": {
             "title": "Ooops! Qualcosa non va",
             "text": "Si è verificato un errore nel fare questa richiesta <b>GetFeatureInfo</b>"

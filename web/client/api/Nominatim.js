@@ -9,6 +9,7 @@ var axios = require('../libs/ajax');
 const urlUtil = require('url');
 const assign = require('object-assign');
 const DEFAULT_URL = '//nominatim.openstreetmap.org';
+const DEFAUTL_REVERSE_URL = '//nominatim.openstreetmap.org/reverse';
 const defaultOptions = {
     format: 'json',
     bounded: 0,
@@ -25,6 +26,14 @@ const Api = {
             query: params
         });
         return axios.get(url); // TODO the jsonp method returns .promise and .cancel method,the last can be called when user cancel the query
+    },
+    reverseGeocode: function(coords, options) {
+        const params = assign({lat: coords.lat, lon: coords.lng}, options || {}, defaultOptions);
+        const url = urlUtil.format({
+            host: DEFAUTL_REVERSE_URL,
+            query: params
+        });
+        return axios.get(url);
     }
 };
 

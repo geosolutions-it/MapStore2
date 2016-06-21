@@ -186,4 +186,21 @@ describe('Test the mapInfo reducer', () => {
         expect(state).toExist();
         expect(state.infoFormat).toBe('newFormat');
     });
+
+    it('show reverese geocode', () => {
+        let state = mapInfo({}, {type: 'SHOW_REVERSE_GEOCODE'});
+        expect(state).toExist();
+        expect(state.showModalReverse).toBe(true);
+
+        state = mapInfo({reverseGeocodeData: {}}, {type: "SHOW_REVERSE_GEOCODE", reverseGeocodeData: "newData"});
+        expect(state).toExist();
+        expect(state.reverseGeocodeData).toBe('newData');
+    });
+
+    it('hide reverese geocode', () => {
+        let state = mapInfo({}, {type: 'HIDE_REVERSE_GEOCODE'});
+        expect(state).toExist();
+        expect(state.showModalReverse).toBe(false);
+        expect(state.reverseGeocodeData).toBe(undefined);
+    });
 });
