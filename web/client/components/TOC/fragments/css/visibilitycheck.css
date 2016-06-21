@@ -1,0 +1,7 @@
+input[type="checkbox"].visibility-check,input[type="radio"].visibility-check {
+    visibility: visible;
+    margin-left: 5px;
+    margin-right: 5px;
+    float: left;
+    margin-top: 7px;
+}

@@ -24,7 +24,7 @@ var LayersTool = React.createClass({
     },
     render() {
         return (
-            <Glyphicon style={this.props.style}
+            <Glyphicon className="toc-layer-tool" style={this.props.style}
                        glyph={this.props.glyph}
                        onClick={(options) => this.props.onClick(this.props.node, options || {})}/>);
     }

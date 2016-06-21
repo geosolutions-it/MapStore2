@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var Sortable = require('react-sortable-items');
+const React = require('react');
+const Sortable = require('react-sortable-items');
+require('./css/groupchildren.css');
 
-var GroupChildren = React.createClass({
+const GroupChildren = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
         filter: React.PropTypes.func,
@@ -40,7 +41,7 @@ var GroupChildren = React.createClass({
         }
         if (this.props.onSort) {
             return (
-                <div style={{marginLeft: "15px"}}>
+                <div className="toc-group-children" >
                     <Sortable minDragDistance={5} onSort={this.handleSort}>
                         {content}
                     </Sortable>
@@ -48,7 +49,7 @@ var GroupChildren = React.createClass({
             );
         }
         return (
-            <div style={{marginLeft: "15px"}}>{content}</div>
+            <div className="toc-group-children" >{content}</div>
         );
     },
     handleSort: function(reorder) {

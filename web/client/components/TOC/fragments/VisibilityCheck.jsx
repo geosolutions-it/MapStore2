@@ -6,24 +6,39 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var {isFunction} = require('lodash');
+const React = require('react');
+const {isFunction} = require('lodash');
+const {Glyphicon} = require('react-bootstrap');
+require("./css/visibilitycheck.css");
 
-var VisibilityCheck = React.createClass({
+const VisibilityCheck = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
         propertiesChangeHandler: React.PropTypes.func,
         style: React.PropTypes.object,
-        checkType: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func])
+        checkType: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
+        glyphChecked: React.PropTypes.string,
+        glyphUnchecked: React.PropTypes.string
     },
     getDefaultProps() {
         return {
             style: {marginRight: "2px"},
-            checkType: "checkbox"
+            checkType: "glyph",
+            glyphChecked: "eye-open",
+            glyphUnchecked: "eye-close"
         };
     },
     render() {
-        return (<input style={this.props.style}
+        if (this.props.checkType === "glyph") {
+            return (<Glyphicon
+                style={this.props.style}
+                className={"visibility-check" + (this.props.node.visibility ? " checked" : "")}
+                data-position={this.props.node.storeIndex}
+                glyph={this.props.node.visibility ? this.props.glyphChecked : this.props.glyphUnchecked}
+                onClick={this.changeVisibility}
+                />);
+        }
+        return (<input className="visibility-check" style={this.props.style}
             data-position={this.props.node.storeIndex}
             type={isFunction(this.props.checkType) ? this.props.checkType(this.props.node) : this.props.checkType}
             checked={this.props.node.visibility ? "checked" : ""}

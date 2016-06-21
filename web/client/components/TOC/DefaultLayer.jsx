@@ -89,7 +89,7 @@ var DefaultLayer = React.createClass({
     render() {
         let {children, propertiesChangeHandler, onToggle, ...other } = this.props;
         return (
-            <Node sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
+            <Node className="toc-default-layer" sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
                 <VisibilityCheck propertiesChangeHandler={this.props.propertiesChangeHandler}/>
                 <Title onClick={this.props.onToggle}/>
                 <InlineSpinner loading={this.props.node.loading}/>
