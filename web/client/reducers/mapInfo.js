@@ -17,7 +17,9 @@ var {
     PURGE_MAPINFO_RESULTS,
     CHANGE_MAPINFO_FORMAT,
     SHOW_MAPINFO_MARKER,
-    HIDE_MAPINFO_MARKER
+    HIDE_MAPINFO_MARKER,
+    SHOW_REVERSE_GEOCODE,
+    HIDE_REVERSE_GEOCODE
 } = require('../actions/mapInfo');
 
 const assign = require('object-assign');
@@ -83,6 +85,18 @@ function mapInfo(state = {}, action) {
         case HIDE_MAPINFO_MARKER: {
             return assign({}, state, {
                 showMarker: false
+            });
+        }
+        case SHOW_REVERSE_GEOCODE: {
+            return assign({}, state, {
+                showModalReverse: true,
+                reverseGeocodeData: action.reverseGeocodeData
+            });
+        }
+        case HIDE_REVERSE_GEOCODE: {
+            return assign({}, state, {
+                showModalReverse: false,
+                reverseGeocodeData: undefined
             });
         }
         default:

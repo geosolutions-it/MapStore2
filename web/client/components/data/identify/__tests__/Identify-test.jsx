@@ -197,4 +197,26 @@ describe('Identify', () => {
         expect(viewer.length).toBe(1);
         expect(viewer[0].innerHTML).toBe('2');
     });
+
+    it('creates the Identify component with reverse geocode enable', () => {
+        const Viewer = (props) => <span className="myviewer">{props.responses.length}</span>;
+        const identify = ReactDOM.render(
+            <Identify
+                enableRevGeocode={true}
+                queryableLayersFilter={() => true}
+                point={{latlng: {lat: 40, lng: 10}}}
+                viewer={Viewer}
+                enabled={true}
+                layers={[{}, {}]}
+                sendRequest={[{}, {}]}
+                buildRequest={() => ({})}
+                requests={[{}]}
+                reverseGeocodeData={{display_name: "test"}} />,
+            document.getElementById("container")
+        );
+        expect(identify).toExist();
+        const dom = ReactDOM.findDOMNode(identify);
+        expect(dom.innerHTML.indexOf('Lat:') !== -1).toBe(true);
+        expect(dom.innerHTML.indexOf('Long:') !== -1).toBe(true);
+    });
 });

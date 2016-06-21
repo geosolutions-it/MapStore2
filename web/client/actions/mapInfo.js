@@ -9,6 +9,7 @@
 const assign = require('object-assign');
 const axios = require('axios');
 const uuid = require('node-uuid');
+const GeoCodingApi = require('../api/Nominatim');
 
 const LOAD_FEATURE_INFO = 'LOAD_FEATURE_INFO';
 const ERROR_FEATURE_INFO = 'ERROR_FEATURE_INFO';
@@ -19,6 +20,8 @@ const PURGE_MAPINFO_RESULTS = 'PURGE_MAPINFO_RESULTS';
 const CHANGE_MAPINFO_FORMAT = 'CHANGE_MAPINFO_FORMAT';
 const SHOW_MAPINFO_MARKER = 'SHOW_MAPINFO_MARKER';
 const HIDE_MAPINFO_MARKER = 'HIDE_MAPINFO_MARKER';
+const SHOW_REVERSE_GEOCODE = 'SHOW_REVERSE_GEOCODE';
+const HIDE_REVERSE_GEOCODE = 'HIDE_REVERSE_GEOCODE';
 
 /**
  * Private
@@ -147,6 +150,29 @@ function hideMapinfoMarker() {
     };
 }
 
+function revGeocodeInfo(results) {
+    return {
+        type: SHOW_REVERSE_GEOCODE,
+        reverseGeocodeData: results.data
+    };
+}
+
+function showMapinfoRevGeocode(latlng) {
+    return (dispatch) => {
+        GeoCodingApi.reverseGeocode(latlng).then((response) => {
+            dispatch(revGeocodeInfo(response));
+        }).catch((e) => {
+            dispatch(revGeocodeInfo(e));
+        });
+    };
+}
+
+function hideMapinfoRevGeocode() {
+    return {
+        type: HIDE_REVERSE_GEOCODE
+    };
+}
+
 module.exports = {
     ERROR_FEATURE_INFO,
     EXCEPTIONS_FEATURE_INFO,
@@ -157,11 +183,16 @@ module.exports = {
     CHANGE_MAPINFO_FORMAT,
     SHOW_MAPINFO_MARKER,
     HIDE_MAPINFO_MARKER,
+    SHOW_REVERSE_GEOCODE,
+    HIDE_REVERSE_GEOCODE,
     getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
     purgeMapInfoResults,
     changeMapInfoFormat,
     showMapinfoMarker,
-    hideMapinfoMarker
+    hideMapinfoMarker,
+    revGeocodeInfo,
+    hideMapinfoRevGeocode,
+    showMapinfoRevGeocode
 };
