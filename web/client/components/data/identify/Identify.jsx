@@ -16,6 +16,7 @@ const Spinner = require('../../misc/spinners/BasicSpinner/BasicSpinner');
 const Message = require('../../I18N/Message');
 const DefaultViewer = require('./DefaultViewer');
 const GeocodeViewer = require('./GeocodeViewer');
+const Dialog = require('../../misc/Dialog');
 
 const Identify = React.createClass({
     propTypes: {
@@ -122,10 +123,10 @@ const Identify = React.createClass({
     },
     renderHeader(missing) {
         return (
-            <span>
+            <span role="header">
                 { (missing !== 0 ) ? <Spinner value={missing} sSize="sp-small" /> : null }
                 {this.props.headerGlyph ? <Glyphicon glyph={this.props.headerGlyph} /> : null}&nbsp;<Message msgId="identifyTitle" />
-            <button onClick={this.onModalHiding} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
+                <button onClick={this.onModalHiding} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
             </span>
         );
     },
@@ -168,15 +169,17 @@ const Identify = React.createClass({
                 {this.renderResults(missingResponses)}
             </Panel>
         ) : (
-            <div id="mapstore-getfeatureinfo" style={this.props.style} className={this.props.panelClassName}>
-                <div className={this.props.headerClassName}>
-                    {this.renderHeader(missingResponses)}
-                </div>
-                <div className={this.props.bodyClassName}>
+            <Dialog id="mapstore-getfeatureinfo" style={this.props.style}
+                className={this.props.panelClassName}
+                headerClassName={this.props.headerClassName}
+                bodyClassName={this.props.bodyClassName}
+                >
+                {this.renderHeader(missingResponses)}
+                <div role="body">
                     {this.renderReverseGeocode(latlng)}
                     {this.renderResults(missingResponses)}
                 </div>
-            </div>
+            </Dialog>
         );
     },
     render() {

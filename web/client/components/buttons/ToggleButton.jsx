@@ -23,7 +23,9 @@ var ToggleButton = React.createClass({
         tooltipPlace: React.PropTypes.string,
         style: React.PropTypes.object,
         btnType: React.PropTypes.oneOf(['normal', 'image']),
-        image: React.PropTypes.string
+        image: React.PropTypes.string,
+        pressedStyle: React.PropTypes.string,
+        defaultStyle: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -31,7 +33,9 @@ var ToggleButton = React.createClass({
             pressed: false,
             tooltipPlace: "top",
             style: {width: "100%"},
-            btnType: 'normal'
+            btnType: 'normal',
+            pressedStyle: 'primary',
+            defaultStyle: 'default'
         };
     },
     onClick() {
@@ -39,7 +43,7 @@ var ToggleButton = React.createClass({
     },
     renderNormalButton() {
         return (
-            <Button id={this.props.id} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.props.pressed ? 'primary' : 'default'} style={this.props.style}>
+            <Button id={this.props.id} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.props.pressed ? this.props.pressedStyle : this.props.defaultStyle} style={this.props.style}>
                 {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
                 {this.props.glyphicon && this.props.text && !React.isValidElement(this.props.text) ? "\u00A0" : null}
                 {this.props.text}

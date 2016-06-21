@@ -181,6 +181,8 @@
 				"name": "Settings",
 				"hideFrom": ["Toolbar", "DrawerMenu"],
 				"cfg": {
+					"wrapWithPanel": false,
+					"closeGlyph": "1-close",
           "overrideSettings": {
             "history": false
           },

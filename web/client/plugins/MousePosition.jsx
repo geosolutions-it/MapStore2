@@ -57,7 +57,12 @@ const CRSSelector = connect((state) => ({
 
 const MousePositionButton = connect((state) => ({
     pressed: state.mousePosition && state.mousePosition.enabled,
-    btnConfig: {disabled: (!state.browser.touch) ? false : true}
+    active: state.mousePosition && state.mousePosition.enabled,
+    pressedStyle: "default",
+    defaultStyle: "primary",
+    btnConfig: {
+        bsSize: "small",
+        disabled: (!state.browser.touch) ? false : true}
 }), {
     onClick: changeMousePositionState
 })(require('../components/buttons/ToggleButton'));

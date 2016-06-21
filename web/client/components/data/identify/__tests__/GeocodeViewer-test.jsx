@@ -31,7 +31,7 @@ describe('GeocodeViewer', () => {
     });
 
     it('creates the GeocodeViewer component with defaults', () => {
-        let component = <Wrapper><GeocodeViewer show="true" latlng={{lat: 42, lng: 10}} showModalReverse="false"/></Wrapper>;
+        let component = <Wrapper><GeocodeViewer modalOptions={{animation: false}} show="true" latlng={{lat: 42, lng: 10}} showModalReverse="false"/></Wrapper>;
         const header = ReactDOM.render(
             component,
             document.getElementById("container")
@@ -41,7 +41,7 @@ describe('GeocodeViewer', () => {
     });
 
     it('creates the GeocodeViewer component with latlng', () => {
-        let component = <Wrapper><GeocodeViewer show="true" latlng={{lat: 42, lng: 10}} showModalReverse="false"/></Wrapper>;
+        let component = <Wrapper><GeocodeViewer modalOptions={{animation: false}} show="true" latlng={{lat: 42, lng: 10}} showModalReverse="false"/></Wrapper>;
         const header = ReactDOM.render(
             component,
             document.getElementById("container")
@@ -59,7 +59,7 @@ describe('GeocodeViewer', () => {
             clickHandler: (pressed) => {return pressed; }
         };
         const spy = expect.spyOn(testHandlers, 'clickHandler');
-        var geocode = ReactDOM.render(<Wrapper><GeocodeViewer latlng={{lat: 42, lng: 10}} showRevGeocode={testHandlers.clickHandler} showModalReverse={true}/></Wrapper>, document.getElementById("container"));
+        var geocode = ReactDOM.render(<Wrapper><GeocodeViewer modalOptions={{animation: false}} latlng={{lat: 42, lng: 10}} showRevGeocode={testHandlers.clickHandler} showModalReverse={true}/></Wrapper>, document.getElementById("container"));
         let elem = TestUtils.findRenderedDOMComponentWithTag(geocode, "button");
 
         const getModals = function() {

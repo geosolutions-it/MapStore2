@@ -21,7 +21,7 @@ const GeocodeViewer = (props) => {
                 onClick={() => props.showRevGeocode(props.latlng)} >
                 {props.identifyRevGeocodeSubmitText}
             </Button>
-            <Modal show={props.showModalReverse} bsSize="large" container={document.getElementById("body")}>
+            <Modal {...props.modalOptions} show={props.showModalReverse} bsSize="large" container={document.getElementById("body")}>
                 <Modal.Header>
                     <Modal.Title>{props.identifyRevGeocodeModalTitle}</Modal.Title>
                 </Modal.Header>
@@ -36,7 +36,7 @@ const GeocodeViewer = (props) => {
     );
 };
 
-GeocodeViewer.PropTypes = {
+GeocodeViewer.propTypes = {
     latlng: PropTypes.object.isRequired,
     showRevGeocode: PropTypes.func.isRequired,
     showModalReverse: PropTypes.bool.isRequired,
@@ -44,7 +44,12 @@ GeocodeViewer.PropTypes = {
     revGeocodeDisplayName: PropTypes.object.isRequired,
     hideRevGeocode: PropTypes.func.isRequired,
     identifyRevGeocodeSubmitText: PropTypes.string.isRequired,
-    identifyRevGeocodeCloseText: PropTypes.string.isRequired
+    identifyRevGeocodeCloseText: PropTypes.string.isRequired,
+    modalOptions: React.PropTypes.object
+};
+
+GeocodeViewer.defaultProps = {
+    modalOptions: {}
 };
 
 module.exports = GeocodeViewer;

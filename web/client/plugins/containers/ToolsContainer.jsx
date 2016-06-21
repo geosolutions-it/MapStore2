@@ -71,7 +71,8 @@ const ToolsContainer = React.createClass({
             actions[this.props.eventSelector] = setControlProperty.bind(null, this.props.stateSelector, 'active', tool.name, true);
         } else if (tool.toggle) {
             selector = (state) => ({
-                bsStyle: state.controls[tool.toggleControl || tool.name] && state.controls[tool.toggleControl || tool.name][tool.toggleProperty || "enabled"] ? this.props.activeStyle : this.props.toolStyle
+                bsStyle: state.controls[tool.toggleControl || tool.name] && state.controls[tool.toggleControl || tool.name][tool.toggleProperty || "enabled"] ? this.props.activeStyle : this.props.toolStyle,
+                active: state.controls[tool.toggleControl || tool.name] && state.controls[tool.toggleControl || tool.name][tool.toggleProperty || "enabled"] || false
             });
             actions[this.props.eventSelector] = toggleControl.bind(null, tool.toggleControl || tool.name, tool.toggleProperty || null);
         } else if (tool.action) {
