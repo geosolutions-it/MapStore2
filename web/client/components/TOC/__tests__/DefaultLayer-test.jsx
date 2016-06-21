@@ -34,7 +34,7 @@ describe('test DefaultLayer module component', () => {
             storeIndex: 9,
             type: 'wms'
         };
-        const comp = ReactDOM.render(<Layer node={l} />, document.getElementById("container"));
+        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} />, document.getElementById("container"));
         expect(comp).toExist();
 
         const domNode = ReactDOM.findDOMNode(comp);
@@ -57,7 +57,7 @@ describe('test DefaultLayer module component', () => {
             visibility: false,
             storeIndex: 9
         };
-        const comp = ReactDOM.render(<Layer node={l} />, document.getElementById("container"));
+        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} />, document.getElementById("container"));
         expect(comp).toExist();
 
         const domNode = ReactDOM.findDOMNode(comp);
@@ -91,6 +91,7 @@ describe('test DefaultLayer module component', () => {
         };
         const comp = ReactDOM.render(
             <Layer
+                visibilityCheckType="checkbox"
                 propertiesChangeHandler={handler}
                 node={l}
             />, document.getElementById("container"));
@@ -124,7 +125,7 @@ describe('test DefaultLayer module component', () => {
             onToggle: () => {}
         };
         let spy = expect.spyOn(actions, "onToggle");
-        const comp = ReactDOM.render(<Layer node={l} activateLegendTool={true} onToggle={actions.onToggle}/>,
+        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} activateLegendTool={true} onToggle={actions.onToggle}/>,
             document.getElementById("container"));
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
@@ -149,7 +150,7 @@ describe('test DefaultLayer module component', () => {
             onSettings: () => {}
         };
         let spy = expect.spyOn(actions, "onSettings");
-        const comp = ReactDOM.render(<Layer modalOptions={{animation: false}} node={l} activateSettingsTool={true} onSettings={actions.onSettings}/>,
+        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" modalOptions={{animation: false}} node={l} activateSettingsTool={true} onSettings={actions.onSettings}/>,
             document.getElementById("container"));
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
@@ -173,6 +174,7 @@ describe('test DefaultLayer module component', () => {
             render: function() {
                 var elements = this.props.elements.map( function(element) {
                     return (<Layer key={element.layer.id}
+                                visibilityCheckType="checkbox"
                                modalOptions={{animation: false}}
                                node={element.layer}
                                activateSettingsTool={true}
@@ -225,6 +227,7 @@ describe('test DefaultLayer module component', () => {
         // instanciating a layer component with the zero opacity layer
         const component = ReactDOM.render(
                 <Layer modalOptions={{animation: false}}
+                        visibilityCheckType="checkbox"
                        node={layer}
                        activateSettingsTool={true}
                        onSettings={actions.onSettings}/>,

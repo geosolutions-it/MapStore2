@@ -32,7 +32,8 @@ var DefaultLayer = React.createClass({
         opacityText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         saveText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         closeText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        modalOptions: React.PropTypes.object
+        modalOptions: React.PropTypes.object,
+        visibilityCheckType: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -43,7 +44,8 @@ var DefaultLayer = React.createClass({
             onSettings: () => {},
             activateLegendTool: false,
             activateSettingsTool: false,
-            modalOptions: {}
+            modalOptions: {},
+            visibilityCheckType: "glyph"
         };
     },
     renderCollapsible() {
@@ -89,8 +91,8 @@ var DefaultLayer = React.createClass({
     render() {
         let {children, propertiesChangeHandler, onToggle, ...other } = this.props;
         return (
-            <Node sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
-                <VisibilityCheck propertiesChangeHandler={this.props.propertiesChangeHandler}/>
+            <Node className="toc-default-layer" sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
+                <VisibilityCheck checkType={this.props.visibilityCheckType} propertiesChangeHandler={this.props.propertiesChangeHandler}/>
                 <Title onClick={this.props.onToggle}/>
                 <InlineSpinner loading={this.props.node.loading}/>
                 {this.renderCollapsible()}

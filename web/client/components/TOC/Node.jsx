@@ -17,7 +17,7 @@ var SortableMixin = assign(require('react-sortable-items/SortableItemMixin'), {
           'is-dragging': this.props._isDragging,
           'is-undraggable': !this.props.isDraggable,
           'is-placeholder': this.props._isPlaceholder
-        }), item.props.className || {});
+      }), item.props.className || {});
         return React.cloneElement(
           this.props._isPlaceholder && this.getPlaceholderContent && Object.prototype.toString.call(this.getPlaceholderContent) === '[object Function]'
             ? this.getPlaceholderContent() : item, {
@@ -35,6 +35,7 @@ var Node = React.createClass({
         node: React.PropTypes.object,
         style: React.PropTypes.object,
         styler: React.PropTypes.func,
+        className: React.PropTypes.string,
         type: React.PropTypes.string,
         onSort: React.PropTypes.func,
         isDraggable: React.PropTypes.bool
@@ -45,6 +46,7 @@ var Node = React.createClass({
             node: null,
             style: {},
             styler: () => {},
+            className: "",
             type: 'node',
             onSort: null
         };
@@ -63,7 +65,7 @@ var Node = React.createClass({
         let expanded = (this.props.node.expanded !== undefined) ? this.props.node.expanded : true;
         let prefix = this.props.type;
         const nodeStyle = assign({}, this.props.style, this.props.styler(this.props.node));
-        let content = (<div key={this.props.node.name} className={expanded ? prefix + "-expanded" : prefix + "-collapsed"} style={nodeStyle} >
+        let content = (<div key={this.props.node.name} className={(expanded ? prefix + "-expanded" : prefix + "-collapsed") + " " + this.props.className} style={nodeStyle} >
             {this.renderChildren((child) => child && child.props.position !== 'collapsible')}
             {expanded ? this.renderChildren((child) => child && child.props.position === 'collapsible') : []}
         </div>);

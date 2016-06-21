@@ -177,13 +177,42 @@ describe('test Group module component', () => {
             propertiesChangeHandler: () => {}
         };
         let spy = expect.spyOn(actions, "propertiesChangeHandler");
-        const comp = ReactDOM.render(<Group node={group} groupVisibilityCheckbox={true}
+        const comp = ReactDOM.render(<Group node={group} groupVisibilityCheckbox={true} visibilityCheckType="checkbox"
             propertiesChangeHandler={actions.propertiesChangeHandler}><div/></Group>,
             document.getElementById("container"));
         expect(comp).toExist();
         const cmpDom = ReactDOM.findDOMNode(comp);
         expect(cmpDom).toExist();
         const checkBox = cmpDom.getElementsByTagName('input')[0];
+        expect(checkBox).toExist();
+        checkBox.click();
+        expect(spy.calls.length).toBe(1);
+    });
+    it('test group visibility glyph', () => {
+        const layers = [{
+            name: 'layer01',
+            title: 'Layer 1',
+            visibility: true,
+            storeIndex: 0,
+            type: 'wms',
+            group: 'grp'
+        }];
+        const group = {
+            name: 'grp',
+            title: 'Group',
+            nodes: layers
+        };
+        const actions = {
+            propertiesChangeHandler: () => {}
+        };
+        let spy = expect.spyOn(actions, "propertiesChangeHandler");
+        const comp = ReactDOM.render(<Group node={group} groupVisibilityCheckbox={true} visibilityCheckType="glyph"
+            propertiesChangeHandler={actions.propertiesChangeHandler}><div/></Group>,
+            document.getElementById("container"));
+        expect(comp).toExist();
+        const cmpDom = ReactDOM.findDOMNode(comp);
+        expect(cmpDom).toExist();
+        const checkBox = cmpDom.getElementsByClassName('glyphicon')[0];
         expect(checkBox).toExist();
         checkBox.click();
         expect(spy.calls.length).toBe(1);

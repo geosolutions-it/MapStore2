@@ -20,7 +20,8 @@ var DefaultGroup = React.createClass({
         onToggle: React.PropTypes.func,
         onSort: React.PropTypes.func,
         propertiesChangeHandler: React.PropTypes.func,
-        groupVisibilityCheckbox: React.PropTypes.bool
+        groupVisibilityCheckbox: React.PropTypes.bool,
+        visibilityCheckType: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -32,7 +33,8 @@ var DefaultGroup = React.createClass({
             },
             sortableStyle: {},
             propertiesChangeHandler: () => {},
-            groupVisibilityCheckbox: false
+            groupVisibilityCheckbox: false,
+            visibilityCheckType: "glyph"
         };
     },
     render() {
@@ -46,7 +48,9 @@ var DefaultGroup = React.createClass({
         return (
             <Node sortableStyle={this.props.sortableStyle} style={this.props.style} type="group" {...other}>
                 { this.props.groupVisibilityCheckbox &&
-                  <VisibilityCheck key="visibility"
+                  <VisibilityCheck
+                            key="visibility"
+                            checkType={this.props.visibilityCheckType}
                             propertiesChangeHandler={this.props.propertiesChangeHandler}
                             style={visibilityStyle}/>}
                 <GroupTitle onClick={this.props.onToggle}/>
