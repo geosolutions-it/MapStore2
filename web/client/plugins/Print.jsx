@@ -12,6 +12,7 @@ const {connect} = require('react-redux');
 const LocaleUtils = require('../utils/LocaleUtils');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
 const MapUtils = require('../utils/MapUtils');
+const Dialog = require('../components/misc/Dialog');
 
 const {Grid, Row, Col, Panel, Accordion, Glyphicon} = require('react-bootstrap');
 
@@ -61,6 +62,7 @@ const Print = React.createClass({
         printSpec: React.PropTypes.object,
         printSpecTemplate: React.PropTypes.object,
         withContainer: React.PropTypes.bool,
+        withPanelAsContainer: React.PropTypes.bool,
         open: React.PropTypes.bool,
         pdfUrl: React.PropTypes.string,
         title: React.PropTypes.string,
@@ -85,7 +87,9 @@ const Print = React.createClass({
         useFixedScales: React.PropTypes.bool,
         scales: React.PropTypes.array,
         ignoreLayers: React.PropTypes.array,
-        defaultBackground: React.PropTypes.string
+        defaultBackground: React.PropTypes.string,
+        closeGlyph: React.PropTypes.string,
+        submitConfig: React.PropTypes.object
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -93,6 +97,7 @@ const Print = React.createClass({
     getDefaultProps() {
         return {
             withContainer: true,
+            withPanelAsContainer: true,
             title: 'print.paneltitle',
             toggleControl: () => {},
             onBeforePrint: () => {},
@@ -127,7 +132,14 @@ const Print = React.createClass({
             useFixedScales: true,
             scales: [],
             ignoreLayers: ["google", "bing"],
-            defaultBackground: "osm"
+            defaultBackground: "osm",
+            closeGlyph: "",
+            submitConfig: {
+                buttonConfig: {
+                    bsSize: "large"
+                },
+                glyph: "print"
+            }
         };
     },
     componentWillMount() {
@@ -167,7 +179,7 @@ const Print = React.createClass({
         ));
     },
     renderPreviewPanel() {
-        return <PrintPreview prevPage={this.prevPage} nextPage={this.nextPage}/>;
+        return <PrintPreview role="body" prevPage={this.prevPage} nextPage={this.nextPage}/>;
     },
     renderError() {
         if (this.props.error) {
@@ -186,7 +198,7 @@ const Print = React.createClass({
         const layoutName = this.props.getLayoutName(this.props.printSpec);
         const mapSize = this.getMapSize(layout);
         return (
-            <Grid fluid>
+            <Grid fluid role="body">
             {this.renderError()}
             {this.renderWarning(layout)}
             <Row>
@@ -194,14 +206,14 @@ const Print = React.createClass({
                     <Name label={LocaleUtils.getMessageById(this.context.messages, 'print.title')} placeholder={LocaleUtils.getMessageById(this.context.messages, 'print.titleplaceholder')} />
                     <Description label={LocaleUtils.getMessageById(this.context.messages, 'print.description')} placeholder={LocaleUtils.getMessageById(this.context.messages, 'print.descriptionplaceholder')} />
                     <Accordion defaultActiveKey="1">
-                        <Panel header={LocaleUtils.getMessageById(this.context.messages, "print.layout")} eventKey="1" collapsible>
+                        <Panel className="print-layout" header={LocaleUtils.getMessageById(this.context.messages, "print.layout")} eventKey="1" collapsible>
                             <Sheet key="sheetsize"
                                 layouts={this.props.capabilities.layouts}
                                 label={LocaleUtils.getMessageById(this.context.messages, "print.sheetsize")}
                                 />
                             {this.renderLayoutsAlternatives()}
                         </Panel>
-                        <Panel header={LocaleUtils.getMessageById(this.context.messages, "print.legendoptions")} eventKey="2" collapsible>
+                        <Panel className="print-legend-options" header={LocaleUtils.getMessageById(this.context.messages, "print.legendoptions")} eventKey="2" collapsible>
                             <Font label={LocaleUtils.getMessageById(this.context.messages, "print.legend.font")}/>
                             <ForceLabelsOption label={LocaleUtils.getMessageById(this.context.messages, "print.legend.forceLabels")}/>
                             <AntiAliasingOption label={LocaleUtils.getMessageById(this.context.messages, "print.legend.antiAliasing")}/>
@@ -220,7 +232,7 @@ const Print = React.createClass({
                         {...this.props.mapPreviewOptions}
                         />
                     {this.isBackgroundIgnored() ? <DefaultBackgroundOption label={LocaleUtils.getMessageById(this.context.messages, "print.defaultBackground")}/> : null}
-                    <PrintSubmit disabled={!layout} onPrint={this.print}/>
+                    <PrintSubmit {...this.props.submitConfig} disabled={!layout} onPrint={this.print}/>
                     {this.renderDownload()}
                 </Col>
             </Row>
@@ -241,10 +253,18 @@ const Print = React.createClass({
     },
     render() {
         if ((this.props.capabilities || this.props.error) && this.props.open) {
-            return this.props.withContainer ?
-                (<Panel className="mapstore-print-panel" header={<span><span className="print-panel-title"><Message msgId="print.paneltitle"/></span><span className="print-panel-close panel-close" onClick={this.props.toggleControl}></span></span>} style={this.props.style}>
+            if (this.props.withContainer) {
+                if (this.props.withPanelAsContainer) {
+                    return (<Panel className="mapstore-print-panel" header={<span><span className="print-panel-title"><Message msgId="print.paneltitle"/></span><span className="print-panel-close panel-close" onClick={this.props.toggleControl}></span></span>} style={this.props.style}>
+                        {this.renderBody()}
+                    </Panel>);
+                }
+                return (<Dialog id="mapstore-print-panel" style={this.props.style}>
+                    <span role="header"><span className="print-panel-title"><Message msgId="print.paneltitle"/></span><button onClick={this.props.toggleControl} className="print-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
                     {this.renderBody()}
-                </Panel>) : this.renderBody();
+                </Dialog>);
+            }
+            return this.renderBody();
         }
         return null;
     },

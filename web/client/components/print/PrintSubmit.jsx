@@ -17,19 +17,26 @@ const PrintSubmit = React.createClass({
     propTypes: {
         loading: React.PropTypes.bool,
         onPrint: React.PropTypes.func,
-        disabled: React.PropTypes.bool
+        disabled: React.PropTypes.bool,
+        buttonConfig: React.PropTypes.object,
+        glyph: React.PropTypes.string
     },
     getDefaultProps() {
         return {
             loading: false,
             onPrint: () => {},
-            disabled: false
+            disabled: false,
+            buttonConfig: {
+                bsSize: "large"
+            },
+            glyph: "print"
         };
     },
     render() {
+        const glyph = this.props.glyph ? <Glyphicon glyph={this.props.glyph}/> : <span/>;
         return (
-            <Button disabled={this.props.disabled} bsSize="large" style={{marginTop: "10px"}} onClick={this.props.onPrint}>
-                {this.props.loading ? <Spinner spinnerName="circle"/> : <Glyphicon glyph="print"/>} <Message msgId="print.submit"/>
+            <Button className="print-submit" disabled={this.props.disabled} {...this.props.buttonConfig} style={{marginTop: "10px"}} onClick={this.props.onPrint}>
+                {this.props.loading ? <Spinner spinnerName="circle"/> : glyph} <Message msgId="print.submit"/>
             </Button>
         );
     }
