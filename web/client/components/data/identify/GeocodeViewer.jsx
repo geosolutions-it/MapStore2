@@ -17,6 +17,7 @@ const GeocodeViewer = (props) => {
             <Button
                 style={{"float": "right"}}
                 bsStyle="primary"
+                bsSize="small"
                 onClick={() => props.showRevGeocode(props.latlng)} >
                 {props.identifyRevGeocodeSubmitText}
             </Button>
@@ -28,7 +29,7 @@ const GeocodeViewer = (props) => {
                     <p>{props.revGeocodeDisplayName}</p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button style={{"float": "right"}} bsStyle="primary" onClick={props.hideRevGeocode}>{props.identifyRevGeocodeCloseText}</Button>
+                    <Button bsSize="small" style={{"float": "right"}} bsStyle="primary" onClick={props.hideRevGeocode}>{props.identifyRevGeocodeCloseText}</Button>
                 </Modal.Footer>
             </Modal>
         </div>

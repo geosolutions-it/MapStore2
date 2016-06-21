@@ -44,7 +44,14 @@ const Identify = React.createClass({
         hideRevGeocode: React.PropTypes.func,
         showModalReverse: React.PropTypes.bool,
         reverseGeocodeData: React.PropTypes.object,
-        enableRevGeocode: React.PropTypes.bool
+        enableRevGeocode: React.PropTypes.bool,
+        wrapRevGeocode: React.PropTypes.bool,
+        panelClassName: React.PropTypes.string,
+        headerClassName: React.PropTypes.string,
+        bodyClassName: React.PropTypes.string,
+        asPanel: React.PropTypes.bool,
+        headerGlyph: React.PropTypes.string,
+        closeGlyph: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -67,6 +74,7 @@ const Identify = React.createClass({
             showModalReverse: false,
             reverseGeocodeData: {},
             enableRevGeocode: false,
+            wrapRevGeocode: true,
             queryableLayersFilter: MapInfoUtils.defaultQueryableFilter,
             style: {
                 position: "absolute",
@@ -80,7 +88,13 @@ const Identify = React.createClass({
             map: {},
             layers: [],
             maxItems: 10,
-            excludeParams: ["SLD_BODY"]
+            excludeParams: ["SLD_BODY"],
+            panelClassName: "panel default-panel",
+            headerClassName: "panel-heading",
+            bodyClassName: "panel-body",
+            asPanel: true,
+            headerGlyph: "info-sign",
+            closeGlyph: ""
         };
     },
     componentWillReceiveProps(newProps) {
@@ -110,8 +124,8 @@ const Identify = React.createClass({
         return (
             <span>
                 { (missing !== 0 ) ? <Spinner value={missing} sSize="sp-small" /> : null }
-                <Glyphicon glyph="info-sign" />&nbsp;<Message msgId="identifyTitle" />
-                <button onClick={this.onModalHiding} className="close"><span>×</span></button>
+                {this.props.headerGlyph ? <Glyphicon glyph={this.props.headerGlyph} /> : null}&nbsp;<Message msgId="identifyTitle" />
+            <button onClick={this.onModalHiding} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
             </span>
         );
     },
@@ -122,36 +136,47 @@ const Identify = React.createClass({
     renderReverseGeocode(latlng) {
         if (this.props.enableRevGeocode) {
             let reverseGeocodeData = this.props.reverseGeocodeData;
-            return (
+            const Viewer = (<GeocodeViewer
+                latlng={latlng}
+                showRevGeocode={this.props.showRevGeocode}
+                showModalReverse={this.props.showModalReverse}
+                identifyRevGeocodeModalTitle={<Message msgId="identifyRevGeocodeModalTitle" />}
+                revGeocodeDisplayName={reverseGeocodeData.error ? <Message msgId="identifyRevGeocodeError" /> : this.props.reverseGeocodeData.display_name}
+                hideRevGeocode={this.props.hideRevGeocode}
+                identifyRevGeocodeSubmitText={<Message msgId="identifyRevGeocodeSubmitText" />}
+                identifyRevGeocodeCloseText={<Message msgId="identifyRevGeocodeCloseText" />} />);
+            return this.props.wrapRevGeocode ? (
                 <Panel
                     header={<span><Glyphicon glyph="globe" />&nbsp;<Message msgId="identifyRevGeocodeHeader" /></span>}>
-                    <GeocodeViewer
-                        latlng={latlng}
-                        showRevGeocode={this.props.showRevGeocode}
-                        showModalReverse={this.props.showModalReverse}
-                        identifyRevGeocodeModalTitle={<Message msgId="identifyRevGeocodeModalTitle" />}
-                        revGeocodeDisplayName={reverseGeocodeData.error ? <Message msgId="identifyRevGeocodeError" /> : this.props.reverseGeocodeData.display_name}
-                        hideRevGeocode={this.props.hideRevGeocode}
-                        identifyRevGeocodeSubmitText={<Message msgId="identifyRevGeocodeSubmitText" />}
-                        identifyRevGeocodeCloseText={<Message msgId="identifyRevGeocodeCloseText" />} />
+                    {Viewer}
                 </Panel>
-            );
+            ) : (<div id="mapstore-identify-revgeocoder">{Viewer}</div>);
         }
         return null;
     },
     renderContent() {
         let missingResponses = this.props.requests.length - this.props.responses.length;
         let latlng = this.props.point.latlng;
-        return (
+        return this.props.asPanel ? (
             <Panel
                 defaultExpanded={true}
                 collapsible={this.props.collapsible}
                 id="mapstore-getfeatureinfo"
                 header={this.renderHeader(missingResponses)}
-                style={this.props.style}>
+                style={this.props.style} className={this.props.panelClassName}>
                 {this.renderReverseGeocode(latlng)}
                 {this.renderResults(missingResponses)}
             </Panel>
+        ) : (
+            <div id="mapstore-getfeatureinfo" style={this.props.style} className={this.props.panelClassName}>
+                <div className={this.props.headerClassName}>
+                    {this.renderHeader(missingResponses)}
+                </div>
+                <div className={this.props.bodyClassName}>
+                    {this.renderReverseGeocode(latlng)}
+                    {this.renderResults(missingResponses)}
+                </div>
+            </div>
         );
     },
     render() {
