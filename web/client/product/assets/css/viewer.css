@@ -99,21 +99,22 @@ html, body, #container, .fill {
 
 #mapstore-scalebox {
     z-index: 10;
-    bottom: 6px;
+    bottom: -2px !important;
     right: 50px;
     left: auto !important;
     position: absolute;
     margin: 8px;
+    width: 148px;
 }
 
 .leafletbottom.leafletright, .leaflet-control-minimap{
-    bottom: 57px !important;
+    bottom: 47px !important;
     right: 49px !important;
 }
 
 .leaflet-control-scale {
     position: absolute;
-    bottom: 0px;
+    bottom: -1px;
     right: 47px;
     z-index: 1000;
 }
@@ -129,16 +130,16 @@ html, body, #container, .fill {
 }
 
 .ol-custom-overviewmap, .ol-custom-overviewmap.ol-uncollapsible {
-    bottom: 65px !important;
+    bottom: 55px !important;
     left: auto !important;
-    right: 60px !important;
+    right: 57px !important;
     top: auto !important;
 }
 
 .ol-scale-line.ol-unselectable {
     right: 58px;
     left: auto;
-    bottom: 5px;
+    bottom: 3px;
 }
 
 #navigationBar .mapToolbar {
@@ -154,7 +155,7 @@ html, body, #container, .fill {
 #identifyBar .mapToolbar {
     top: auto !important;
     bottom: 5px;
-    right: 190px !important;
+    right: 212px !important;
 }
 
 .panel-close {
@@ -197,14 +198,15 @@ html, body, #container, .fill {
 
 #mapstore-mouseposition {
     bottom: 5px !important;
-    right: 237px !important;
+    right: 264px !important;
     top: auto !important;
     margin: 0 !important;
     text-shadow: none !important;
     background-color: white !important;
     width: 160px !important;
-    height: 50px !important;
-    padding: 5px !important;
+    height: 46px !important;
+    padding-left: 5px;
+    padding-top: 2px;
 }
 
 #mapstore-mouseposition h5 {
