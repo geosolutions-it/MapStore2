@@ -31,6 +31,7 @@ const assign = require('object-assign');
 
 const SettingsPanel = require('./settings/SettingsPanel');
 const {Panel} = require('react-bootstrap');
+const Dialog = require('../components/misc/Dialog');
 
 const SettingsButton = React.createClass({
     propTypes: {
@@ -43,10 +44,12 @@ const SettingsButton = React.createClass({
         items: React.PropTypes.array,
         style: React.PropTypes.object,
         wrap: React.PropTypes.bool,
+        wrapWithPanel: React.PropTypes.bool,
         panelStyle: React.PropTypes.object,
         panelClassName: React.PropTypes.string,
         visible: React.PropTypes.bool,
-        toggleControl: React.PropTypes.func
+        toggleControl: React.PropTypes.func,
+        closeGlyph: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -60,17 +63,20 @@ const SettingsButton = React.createClass({
                 width: "300px"
             },
             wrap: false,
+            wrapWithPanel: true,
             panelStyle: {
                 minWidth: "300px",
                 zIndex: 100,
                 position: "absolute",
                 overflow: "auto",
                 top: "100px",
-                left: "calc(50% - 150px)"
+                left: "calc(50% - 150px)",
+                backgroundColor: "white"
             },
             panelClassName: "toolbar-panel",
             visible: false,
-            toggleControl: () => {}
+            toggleControl: () => {},
+            closeGlyph: ""
         };
     },
     renderSettings() {
@@ -104,16 +110,25 @@ const SettingsButton = React.createClass({
     },
     render() {
         const settings = (
-            <SettingsPanel style={this.props.style}>
-                <h5><Message msgId="language" /></h5>
+            <SettingsPanel role="body" style={this.props.style}>
+                <label><Message msgId="language" /></label>
                 {this.renderSettings()}
             </SettingsPanel>
         );
         if (this.props.wrap) {
             if (this.props.visible) {
-                return (<Panel id={this.props.id} header={<span><span className="settings-panel-title"><Message msgId="settings"/></span><span className="settings-panel-close panel-close" onClick={this.props.toggleControl}></span></span>} style={this.props.panelStyle} className={this.props.panelClassName}>
+                if (this.props.wrapWithPanel) {
+                    return (<Panel id={this.props.id} header={<span><span className="settings-panel-title"><Message msgId="settings"/></span><span className="settings-panel-close panel-close" onClick={this.props.toggleControl}></span></span>} style={this.props.panelStyle} className={this.props.panelClassName}>
+                        {settings}
+                    </Panel>);
+                }
+                return (<Dialog id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
+                    <span role="header">
+                        <span className="settings-panel-title"><Message msgId="settings"/></span>
+                        <button onClick={this.props.toggleControl} className="settings-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
+                    </span>
                     {settings}
-                </Panel>);
+                </Dialog>);
             }
         } else {
             return settings;
