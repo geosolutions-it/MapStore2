@@ -35,7 +35,7 @@ module.exports = {
     ZoomAllPlugin: assign(ZoomAllPlugin, {
         Toolbar: {
             name: "ZoomAll",
-            position: 4,
+            position: 7,
             tooltip: "zoombuttons.zoomAllTooltip",
             icon: <Glyphicon glyph="resize-full"/>,
             help: <Message msgId="helptexts.zoomToMaxExtentButton"/>,

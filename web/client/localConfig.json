@@ -157,6 +157,9 @@
 				"name": "Settings",
 				"hideFrom": ["Toolbar", "DrawerMenu"],
 				"cfg": {
+          "overrideSettings": {
+            "history": false
+          },
 					"wrap": true
 				}
 		}, {
@@ -247,6 +250,12 @@
 			"hide": true
 		}, {
 			"name": "Expander",
+			"hide": true
+		}, {
+			"name": "Undo",
+			"hide": true
+		}, {
+			"name": "Redo",
 			"hide": true
 		}]
 	}

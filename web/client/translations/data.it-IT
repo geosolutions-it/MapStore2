@@ -282,7 +282,9 @@
             "print": "Questo è il testo di aiuto per Print",
             "shapefile": "Seleziona lo shapfile compresso, setta lo style ed importa il nuovo layer locale",
             "rasterstyler": "Imposta min, max, numero delle classi e colorRamp e genera una nuova classificazione per il raster layer selezionato",
-            "expandToolbar": "Questo è il testo di aiuto per Espandi / Collassa"
+            "expandToolbar": "Questo è il testo di aiuto per Espandi / Collassa",
+            "historyundo": "Usa questo pulsante per tornare alla vista della mappa precedente",
+            "historyredo": "Use questo pulsante per andare alla vista della mappa successiva"
         },
         "queryform": {
             "query": "Ricerca",
