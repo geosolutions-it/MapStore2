@@ -31,7 +31,6 @@ module.exports = {
         BurgerMenu: {
             name: 'home',
             position: 1,
-            tooltip: "gohome",
             text: <Message msgId="gohome"/>,
             icon: <Glyphicon glyph="home"/>,
             action: (context) => goToPage('/', context.router)

@@ -132,6 +132,7 @@ module.exports = {
         DrawerMenu: {
             name: 'toc',
             position: 1,
+            icon: <img src={layersIcon}/>,
             title: 'layers'
         }
     }),

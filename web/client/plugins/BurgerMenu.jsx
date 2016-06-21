@@ -12,7 +12,14 @@ const assign = require('object-assign');
 
 const {DropdownButton, Glyphicon, MenuItem} = require('react-bootstrap');
 
-const {partial} = require('lodash');
+const Container = connect(() => ({
+    noCaret: true,
+    pullRight: true,
+    bsStyle: "primary",
+    title: <Glyphicon glyph="menu-hamburger"/>
+}))(DropdownButton);
+
+const ToolsContainer = require('./containers/ToolsContainer');
 
 const BurgerMenu = React.createClass({
     propTypes: {
@@ -48,32 +55,27 @@ const BurgerMenu = React.createClass({
             panelClassName: "toolbar-panel"
         };
     },
-    renderNavItem(tool) {
-        return (<MenuItem key={tool.name + "-menu"} onSelect={(e) => {
-            e.preventDefault();
-            if (tool.action) {
-                this.props.dispatch(partial(tool.action, this.context)());
-            } else {
-                this.props.onItemClick(tool);
-            }
-        }}>{tool.icon} {tool.text}</MenuItem>);
+    getPanels() {
+        return this.props.items.filter((item) => item.panel);
     },
-    renderPanels() {
-        return this.props.items.filter((item) => item.panel).map((panel) => {
-            const ToolPanelComponent = panel.panel;
-            return (<ToolPanelComponent
-                key={panel.name} mapType={this.props.mapType} {...panel.cfg} {...(panel.props || {})}
-                items={panel.items || []}/>);
-        });
+    getTools() {
+        return [{element: <span>{this.props.title}</span>}, ...this.props.items.sort((a, b) => a.position - b.position)];
     },
     render() {
-        return (<span><DropdownButton className="square-button" id={this.props.id} noCaret pullRight bsStyle="primary" title={<Glyphicon glyph="menu-hamburger" />} >
-                {this.props.title}
-                {this.props.items.sort((a, b) => a.position - b.position).map(this.renderNavItem)}
-            </DropdownButton>
-            {this.renderPanels()}
-        </span>
-            );
+        return (
+            <ToolsContainer id={this.props.id} className="square-button"
+                container={Container}
+                mapType={this.props.mapType}
+                toolStyle="primary"
+                activeStyle="default"
+                stateSelector="burgermenu"
+                eventSelector="onSelect"
+                tool={MenuItem}
+                tools={this.getTools()}
+                panels={this.getPanels()}
+                panelStyle={this.props.panelStyle}
+                panelClassName={this.props.panelClassName}
+            />);
     }
 });
 

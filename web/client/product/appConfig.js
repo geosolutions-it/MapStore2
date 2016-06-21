@@ -28,7 +28,8 @@ module.exports = {
                     enabled: false
                 },
                 toolbar: {
-                    active: null
+                    active: null,
+                    expanded: false
                 },
                 drawer: {
                     enabled: false,

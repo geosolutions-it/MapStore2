@@ -56,6 +56,7 @@ let BackgroundSwitcher = React.createClass({
     },
     getDefaultProps() {
         return {
+            id: "background-switcher",
             icon: <Glyphicon glyph="globe"/>,
             fluid: false,
             columnProperties: {
@@ -96,7 +97,7 @@ let BackgroundSwitcher = React.createClass({
     },
     render() {
         return (
-           <Grid className="BackgroundSwitcherComponent" header={this.props.name} fluid={this.props.fluid}>{this.renderBackgrounds()}</Grid>
+           <Grid id={this.props.id} className="BackgroundSwitcherComponent" header={this.props.name} fluid={this.props.fluid}>{this.renderBackgrounds()}</Grid>
         );
     },
     changeLayerVisibility(eventObj) {

@@ -110,6 +110,9 @@
     {
 			  "name": "Locate",
 				"hide": true,
+				"cfg": {
+					"glyph": "1-position-1"
+				},
 				"override": {
 					"Toolbar": {
 						"alwaysVisible": true
@@ -181,6 +184,7 @@
       "id": "NavigationBar",
       "stateSelector": "toolbar",
       "cfg": {
+				"buttonStyle": "primary",
         "id": "navigationBar"
       }
     }, {
@@ -188,6 +192,7 @@
       "id": "IdentifyBar",
 			"stateSelector": "identify",
       "cfg": {
+				"buttonStyle": "primary",
         "id": "identifyBar"
       },
       "isDefault": false

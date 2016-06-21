@@ -9,6 +9,8 @@ const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {layersSelector} = require('../selectors/layers');
 
+const assign = require('object-assign');
+
 const selector = createSelector([layersSelector], (layers) => ({
     loading: layers && layers.some((layer) => layer.loading)
 }));
@@ -18,6 +20,12 @@ require('./maploading/maploading.css');
 const MapLoadingPlugin = connect(selector)(require('../components/misc/spinners/GlobalSpinner/GlobalSpinner'));
 
 module.exports = {
-    MapLoadingPlugin,
+    MapLoadingPlugin: assign(MapLoadingPlugin, {
+        Toolbar: {
+            name: 'maploading',
+            position: 1,
+            tool: true
+        }
+    }),
     reducers: {}
 };
