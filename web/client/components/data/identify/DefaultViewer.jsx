@@ -22,9 +22,11 @@ const DefaultViewer = React.createClass({
         missingResponses: React.PropTypes.number,
         container: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
         header: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
+        headerOptions: React.PropTypes.object,
         validator: React.PropTypes.func,
         viewers: React.PropTypes.object,
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        containerProps: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -33,10 +35,12 @@ const DefaultViewer = React.createClass({
             missingResponses: 0,
             collapsible: true,
             header: DefaultHeader,
+            headerOptions: {},
             container: Accordion,
             validator: MapInfoUtils.getValidator,
             viewers: MapInfoUtils.getViewers(),
-            style: {maxHeight: "500px", overflow: "auto"}
+            style: {maxHeight: "500px", overflow: "auto"},
+            containerProps: {}
         };
     },
     shouldComponentUpdate(nextProps) {
@@ -85,7 +89,7 @@ const DefaultViewer = React.createClass({
                     eventKey={i}
                     key={i}
                     collapsible={this.props.collapsible}
-                    header={<span><PageHeader {...layerMetadata} container={() => this.refs.container}/></span>}
+                    header={<span><PageHeader {...this.props.headerOptions} {...layerMetadata} container={() => this.refs.container}/></span>}
                     style={this.props.style}>
                     {this.renderPage(response)}
                 </Panel>
@@ -103,7 +107,7 @@ const DefaultViewer = React.createClass({
         const validator = this.props.validator(this.props.format);
         const validResponses = validator.getValidResponses(this.props.responses);
         return (<div>
-                <Container ref="container" defaultActiveKey={0} key={"swiper-" + this.props.responses.length + "-" + this.props.missingResponses} shouldUpdate={(nextProps, props) => {return nextProps !== props; }}>
+                <Container {...this.props.containerProps} ref="container" defaultActiveKey={0} key={"swiper-" + this.props.responses.length + "-" + this.props.missingResponses} shouldUpdate={(nextProps, props) => {return nextProps !== props; }}>
                     {this.renderPages(validResponses)}
                 </Container>
                 {this.renderAdditionalInfo()}

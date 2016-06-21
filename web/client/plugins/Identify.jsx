@@ -23,6 +23,8 @@ const {Glyphicon} = require('react-bootstrap');
 
 const assign = require('object-assign');
 
+require('./identify/identify.css');
+
 const selector = createSelector([
     (state) => (state.mapInfo && state.mapInfo.enabled) || (state.controls && state.controls.info && state.controls.info.enabled) || false,
     (state) => state.mapInfo && state.mapInfo.responses || [],

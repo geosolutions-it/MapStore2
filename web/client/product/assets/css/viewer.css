@@ -257,3 +257,65 @@ html, body, #container, .fill {
     border: none !important;
     box-shadow: none !important;
 }
+
+.swipe-header-left-button {
+    float: none !important;
+    right: 45px;
+    top: 4px;
+    position: absolute;
+}
+
+.swipe-header-right-button {
+    float: none !important;
+    position: absolute;
+    top: 4px;
+    right: 5px;
+}
+
+#mapstore-identify-revgeocoder {
+    min-height: 40px;
+    margin-bottom: 10px;
+    border-bottom: solid 1px #BBB;
+}
+
+#mapstore-getfeatureinfo {
+    width: 500px !important;
+}
+
+#mapstore-getfeatureinfo .modal-body .panel-heading {
+    background-color: white;
+    border: none;
+    height: 60px;
+    padding: 0;
+}
+
+#mapstore-getfeatureinfo .modal-body .panel {
+    border: none;
+}
+
+#mapstore-getfeatureinfo .modal-body .panel-body {
+    padding: 0;
+}
+
+#mapstore-getfeatureinfo .modal-body .panel-heading .swipe-header-left-button {
+    right: 55px;
+    top: 0;
+}
+
+#mapstore-getfeatureinfo .modal-body .panel-heading .swipe-header-right-button {
+    top: 0;
+}
+
+#mapstore-getfeatureinfo .modal-header button.close {
+    margin-top: -12px;
+    opacity: 1;
+}
+
+#mapstore-getfeatureinfo .modal-header button.close:hover {
+    opacity: 0.5;
+    color: white;
+}
+
+#mapstore-getfeatureinfo .modal-body .panel-title {
+    font-weight: bold;
+}
