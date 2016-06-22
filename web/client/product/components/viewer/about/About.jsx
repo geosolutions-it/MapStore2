@@ -13,7 +13,8 @@ var aboutImg = require('../../../assets/img/Blank.gif');
 
 var About = React.createClass({
     propTypes: {
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        modalConfig: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -23,11 +24,13 @@ var About = React.createClass({
                 bottom: "-8px",
                 right: "0px",
                 margin: "8px"
-            }
+            },
+            modalConfig: {}
         };
     },
     render() {
         return (<InfoButton
+            {...this.props.modalConfig}
             image={aboutImg}
             title={<I18N.Message msgId="about_title"/>}
             btnType="image"

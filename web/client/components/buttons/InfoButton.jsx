@@ -11,7 +11,9 @@ var Modal = BootstrapReact.Modal;
 var Button = BootstrapReact.Button;
 var Glyphicon = BootstrapReact.Glyphicon;
 var ImageButton = require('./ImageButton');
+const Dialog = require('../misc/Dialog');
 
+const assign = require('object-assign');
 /**
  * A button to show a simple information window.
  * Component's properies:
@@ -41,7 +43,9 @@ var InfoButton = React.createClass({
         hiddenText: React.PropTypes.bool,
         btnSize: React.PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
         btnType: React.PropTypes.oneOf(['normal', 'image']),
-        modalOptions: React.PropTypes.object
+        modalOptions: React.PropTypes.object,
+        useModal: React.PropTypes.bool,
+        closeGlyph: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -54,7 +58,9 @@ var InfoButton = React.createClass({
             hiddenText: false,
             btnSize: 'medium',
             btnType: 'normal',
-            modalOptions: {}
+            modalOptions: {},
+            useModal: true,
+            closeGlyph: ""
         };
     },
     getInitialState() {
@@ -79,22 +85,28 @@ var InfoButton = React.createClass({
         return btn;
     },
     render() {
+        const dialog = this.props.useModal ? (<Modal
+            {...this.props.modalOptions}
+            show={this.state.isVisible}
+            onHide={this.close}
+            bsStyle="info">
+            <Modal.Header closeButton>
+                <Modal.Title>{this.props.title}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>{this.props.body}</Modal.Body>
+        </Modal>) : (
+            <Dialog id="mapstore-about" style={assign({}, this.props.style, {display: this.state.isVisible ? "block" : "none"})}>
+                <span role="header"><span className="about-panel-title">{this.props.title}</span><button onClick={this.close} className="about-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
+                <div role="body">{this.props.body}</div>
+            </Dialog>
+        );
         return (
             <div
                 id={this.props.id}
                 style={this.props.style}
                 className={this.props.className}>
                 {this.getButton()}
-                <Modal
-                    {...this.props.modalOptions}
-                    show={this.state.isVisible}
-                    onHide={this.close}
-                    bsStyle="info">
-                    <Modal.Header closeButton>
-                        <Modal.Title>{this.props.title}</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>{this.props.body}</Modal.Body>
-                </Modal>
+                {dialog}
             </div>
         );
     },
