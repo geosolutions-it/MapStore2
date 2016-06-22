@@ -12,13 +12,15 @@ const {isFunction} = require('lodash');
 
 var InlineSpinner = React.createClass({
     propTypes: {
+        className: React.PropTypes.string,
         loading: React.PropTypes.oneOfType([React.PropTypes.bool, React.PropTypes.func]),
         icon: React.PropTypes.string
     },
     getDefaultProps() {
         return {
             loading: false,
-            icon: defaultIcon
+            icon: defaultIcon,
+            className: "inline-spinner"
         };
     },
     getDisplayStyle() {
@@ -32,7 +34,7 @@ var InlineSpinner = React.createClass({
     },
     render() {
         return (
-            <img src={this.props.icon} style={{
+            <img className={this.props.className} src={this.props.icon} style={{
                 display: this.getDisplayStyle(),
                 margin: '4px',
                 padding: 0,

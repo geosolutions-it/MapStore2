@@ -59,7 +59,7 @@ var DefaultLayer = React.createClass({
         if (this.props.activateSettingsTool) {
             tools.push(
                 <LayersTool key="toolsettings"
-                        style={{"float": "right", marginTop: "5px", marginRight: "10px", cursor: "pointer"}}
+                        style={{"float": "right", cursor: "pointer"}}
                         glyph="adjust"
                         onClick={(node) => this.props.onSettings(node.id, "layers",
                             {opacity: parseFloat(node.opacity !== undefined ? node.opacity : 1)})}/>
@@ -81,7 +81,7 @@ var DefaultLayer = React.createClass({
             tools.push(
                 <LayersTool key="toollegend"
                         ref="target"
-                        style={{"float": "right", marginTop: "5px", marginRight: "10px", cursor: "pointer"}}
+                        style={{"float": "right", cursor: "pointer"}}
                         glyph="list"
                         onClick={(node) => this.props.onToggle(node.id, node.expanded)}/>
                 );

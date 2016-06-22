@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var {Glyphicon} = require('react-bootstrap');
-
-var LayersTool = React.createClass({
+const React = require('react');
+const {Glyphicon} = require('react-bootstrap');
+require("./css/layertool.css");
+const LayersTool = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
         onClick: React.PropTypes.func,
