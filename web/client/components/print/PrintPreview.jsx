@@ -58,7 +58,7 @@ const PrintPreview = React.createClass({
                         <Button bsStyle={this.props.buttonStyle} disabled={this.props.scale >= this.props.maxScale} onClick={this.zoomIn}><Glyphicon glyph="zoom-in"/></Button>
                         <Button bsStyle={this.props.buttonStyle} disabled={this.props.scale <= this.props.minScale} onClick={this.zoomOut}><Glyphicon glyph="zoom-out"/></Button>
                         <label style={{marginLeft: "10px", marginRight: "10px"}}>{this.props.scale}x</label>
-                        <div className="print-download btn btn-primary"><a href={this.props.url} target="_blank"><Glyphicon glyph="save"/></a></div>
+                        <div className={"print-download btn btn-" + this.props.buttonStyle}><a href={this.props.url} target="_blank"><Glyphicon glyph="save"/></a></div>
                         <Button bsStyle={this.props.buttonStyle} disabled={this.props.currentPage === 1} onClick={this.firstPage}><Glyphicon glyph="step-backward"/></Button>
                         <Button bsStyle={this.props.buttonStyle} disabled={this.props.currentPage === 1} onClick={this.prevPage}><Glyphicon glyph="chevron-left"/></Button>
                         <label style={{marginLeft: "10px", marginRight: "10px"}}>{this.props.currentPage} / {this.props.pages}</label>

@@ -16,6 +16,7 @@ const notAvailable = require('./not-available.png');
 const {isEqual} = require('lodash');
 let SnapshotSupport;
 const BasicSpinner = require('../../misc/spinners/BasicSpinner/BasicSpinner');
+const Dialog = require('../../misc/Dialog');
 
 const Message = require('../../I18N/Message');
 /**
@@ -46,9 +47,13 @@ let SnapshotPanel = React.createClass({
         timeout: React.PropTypes.number,
         mapType: React.PropTypes.string,
         wrap: React.PropTypes.bool,
+        wrapWithPanel: React.PropTypes.bool,
         panelStyle: React.PropTypes.object,
         panelClassName: React.PropTypes.string,
-        toggleControl: React.PropTypes.func
+        toggleControl: React.PropTypes.func,
+        style: React.PropTypes.object,
+        closeGlyph: React.PropTypes.string,
+        buttonStyle: React.PropTypes.string
     },
     componentWillMount() {
         SnapshotSupport = require('./SnapshotSupport')(this.props.mapType);
@@ -77,6 +82,7 @@ let SnapshotPanel = React.createClass({
             timeout: 1000,
             mapType: 'leaflet',
             wrap: false,
+            wrapWithPanel: true,
             panelStyle: {
                 minWidth: "720px",
                 zIndex: 100,
@@ -85,7 +91,9 @@ let SnapshotPanel = React.createClass({
                 top: "60px",
                 right: "100px"
             },
-            panelClassName: "snapshot-panel"
+            panelClassName: "snapshot-panel",
+            closeGlyph: "",
+            buttonStyle: "default"
         };
     },
     shouldComponentUpdate(nextProps) {
@@ -100,7 +108,7 @@ let SnapshotPanel = React.createClass({
         return items;
     },
     renderButton(enabled) {
-        return (<Button bsSize="xs" disabled={!enabled}
+        return (<Button bsStyle={this.props.buttonStyle} bsSize="xs" disabled={!enabled}
                 onClick={this.onClick}>
                 <Glyphicon glyph="floppy-save" disabled={{}}/><Message msgId={this.props.saveBtnText}/>
                 </Button>);
@@ -165,9 +173,15 @@ let SnapshotPanel = React.createClass({
     },
     wrap(panel) {
         if (this.props.wrap) {
-            return (<Panel id={this.props.id} header={<span><span className="snapshot-panel-title"><Message msgId="snapshot.title"/></span><span className="settings-panel-close panel-close" onClick={this.props.toggleControl}></span></span>} style={this.props.panelStyle} className={this.props.panelClassName}>
+            if (this.props.wrapWithPanel) {
+                return (<Panel id={this.props.id} header={<span><span className="snapshot-panel-title"><Message msgId="snapshot.title"/></span><span className="settings-panel-close panel-close" onClick={this.props.toggleControl}></span></span>} style={this.props.panelStyle} className={this.props.panelClassName}>
+                    {panel}
+                </Panel>);
+            }
+            return (<Dialog id="mapstore-snapshot-panel" style={this.props.style}>
+                <span role="header"><span className="snapshot-panel-title"><Message msgId="snapshot.title"/></span><button onClick={this.props.toggleControl} className="print-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
                 {panel}
-            </Panel>);
+            </Dialog>);
         }
         return panel;
     },
@@ -175,7 +189,7 @@ let SnapshotPanel = React.createClass({
         let bingOrGoogle = this.isBingOrGoogle();
         let snapshotReady = this.isSnapshotReady();
         return ( this.props.active ) ? this.wrap(
-            <Grid header={this.props.name} className="snapshot-panel" fluid={true}>
+            <Grid role="body" header={this.props.name} className="snapshot-panel" fluid={true}>
                 <Row key="main">
                     <Col key="previewCol" xs={7} sm={7} md={7}>{this.renderPreview()}</Col>
                     <Col key="dataCol" xs={5} sm={5} md={5}>
