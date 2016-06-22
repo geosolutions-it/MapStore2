@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-
-var Title = React.createClass({
+const React = require('react');
+require("./css/toctitle.css");
+const Title = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
         onClick: React.PropTypes.func

@@ -44,9 +44,9 @@ var LayerOrGroup = React.createClass({
                 <VisibilityCheck key="visibility" propertiesChangeHandler={this.props.propertiesChangeHandler}
                     checkType={(node) => node.group === 'background' ? 'radio' : 'checkbox'}/>,
                 <Title key="title"/>].concat(this.props.node.group !== 'background' ?
-                    [<LayersTool key="toolsettings" style={{"float": "right", marginTop: "5px", marginRight: "10px", cursor: "pointer"}} glyph="adjust"
+                    [<LayersTool key="toolsettings" style={{"float": "right", cursor: "pointer"}} glyph="adjust"
                         onClick={(node) => this.props.onSettings(node, "layers", {opacity: parseFloat(node.opacity) || 1.0})}/>,
-                    <LayersTool key="toollegend" ref="target" style={{"float": "right", marginTop: "5px", marginRight: "10px", cursor: "pointer"}} glyph="list"
+                    <LayersTool key="toollegend" ref="target" glyph="list"
                     onClick={(node) => this.props.onLegend(node)}/>,
                 <WMSLegend key="wmslegend" position="collapsible"/>] : [])
             ;
