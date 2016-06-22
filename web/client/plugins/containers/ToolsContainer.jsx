@@ -13,7 +13,7 @@ const {compose} = require('redux');
 const HelpBadge = require('../../components/help/HelpBadge');
 const Message = require('../../components/I18N/Message');
 
-const {Button, Tooltip, OverlayTrigger, Panel, Collapse} = require('react-bootstrap');
+const {Button, Tooltip, OverlayTrigger, Panel, Collapse, Glyphicon} = require('react-bootstrap');
 
 const {setControlProperty, toggleControl} = require('../../actions/controls');
 const {partial} = require('lodash');
@@ -98,7 +98,7 @@ const ToolsContainer = React.createClass({
             return this.addTooltip(
                 <Tool tooltip={tooltip} btnSize={this.props.toolSize} bsStyle={this.props.toolStyle} help={help} key={tool.name} mapType={this.props.mapType}
                     {...tool.cfg} items={tool.items || []}>
-                    {help}{tool.icon} {tool.text}
+                    {help}{(tool.cfg && tool.cfg.glyph) ? <Glyphicon glyph={tool.cfg.glyph}/> : tool.icon} {tool.text}
                 </Tool>,
             tool);
         });
