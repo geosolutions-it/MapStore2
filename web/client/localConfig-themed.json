@@ -271,7 +271,10 @@
 				"hide": true,
 				"hideFrom": ["Toolbar"],
 				"cfg": {
-					"wrap": true
+					"wrap": true,
+					"wrapWithPanel": false,
+					"closeGlyph": "1-close",
+					"buttonStyle": "primary"
 				}
 		},
     {
