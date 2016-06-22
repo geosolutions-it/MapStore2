@@ -111,6 +111,7 @@
 				 "bodyClassName": "modal-body info-wrap",
 				 "asPanel": false,
 				 "headerGlyph": "",
+         "glyph": "map-marker",
 				 "closeGlyph": "1-close",
 				 "wrapRevGeocode": false,
 				 "enableRevGeocode": true,
@@ -174,7 +175,10 @@
 				"hide": true,
         "showIn": ["DrawerMenu"],
         "cfg":{
-          "showResults": false
+          "showResults": false,
+          "lineGlyph": "1-measure-lenght",
+          "areaGlyph": "1-measure-area",
+          "bearingGlyph": "1-bearing"
         },
 				"override": {
 					"DrawerMenu": {

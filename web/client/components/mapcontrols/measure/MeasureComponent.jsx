@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Panel, ButtonGroup, Tooltip} = require('react-bootstrap');
+const {Panel, ButtonGroup, Tooltip, Glyphicon} = require('react-bootstrap');
 const ToggleButton = require('../../buttons/ToggleButton');
 const ReactIntl = require('react-intl');
 const FormattedNumber = ReactIntl.FormattedNumber;
@@ -46,7 +46,10 @@ const MeasureComponent = React.createClass({
         lineMeasureEnabled: React.PropTypes.bool,
         areaMeasureEnabled: React.PropTypes.bool,
         bearingMeasureEnabled: React.PropTypes.bool,
-        showResults: React.PropTypes.bool
+        showResults: React.PropTypes.bool,
+        lineGlyph: React.PropTypes.string,
+        areaGlyph: React.PropTypes.string,
+        bearingGlyph: React.PropTypes.string
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -168,19 +171,28 @@ const MeasureComponent = React.createClass({
             <Panel id={this.props.id}>
                 <ButtonGroup vertical block>
                     <ToggleButton
-                        text={<span><span className="option-icon"><img src={lineRuleIcon}/></span>{localeUtils.getMessageById(this.context.messages, "measureComponent.Measure")} {this.props.lengthLabel}</span>}
+                        text={<span>
+                            <span className="option-icon">{this.props.lineGlyph ? <Glyphicon glyph={this.props.lineGlyph}/> : <img src={lineRuleIcon}/>}</span>
+                            <span className="option-text">{localeUtils.getMessageById(this.context.messages, "measureComponent.MeasureLength")}</span>
+                            </span>}
                         style={{"width": "100%", "text-align": "left"}}
                         pressed={this.props.lineMeasureEnabled}
                         onClick={this.onLineClick}
                         tooltip={lineToolTip} />
                     <ToggleButton
-                        text={<span><span className="option-icon"><img src={areaRuleIcon}/></span>{localeUtils.getMessageById(this.context.messages, "measureComponent.Measure")} {this.props.areaLabel}</span>}
+                        text={<span>
+                            <span className="option-icon">{this.props.areaGlyph ? <Glyphicon glyph={this.props.areaGlyph}/> : <img src={areaRuleIcon}/>}</span>
+                            <span className="option-text">{localeUtils.getMessageById(this.context.messages, "measureComponent.MeasureArea")}</span>
+                            </span>}
                         style={{"width": "100%", "text-align": "left"}}
                         pressed={this.props.areaMeasureEnabled}
                         onClick={this.onAreaClick}
                         tooltip={areaToolTip} />
                     <ToggleButton
-                        text={<span><span className="option-icon"><img src={bearingRuleIcon}/></span>{localeUtils.getMessageById(this.context.messages, "measureComponent.Measure")} {this.props.bearingLabel}</span>}
+                        text={<span>
+                            <span className="option-icon">{this.props.bearingGlyph ? <Glyphicon glyph={this.props.bearingGlyph}/> : <img src={bearingRuleIcon}/>}</span>
+                            <span className="option-text">{localeUtils.getMessageById(this.context.messages, "measureComponent.MeasureBearing")}</span>
+                            </span>}
                         style={{"width": "100%", "text-align": "left"}}
                         pressed={this.props.bearingMeasureEnabled}
                         onClick={this.onBearingClick}
