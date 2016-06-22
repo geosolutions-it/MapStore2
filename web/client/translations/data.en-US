@@ -149,6 +149,9 @@
         "infoFormatLbl": "Identify response format",
         "measureComponent": {
             "Measure": "Measure",
+            "MeasureLength": "Measure Distance",
+            "MeasureArea": "Measure Area",
+            "MeasureBearing": "Measure Bearing",
             "tooltip": "Measure length and area",
             "title": "Measure",
             "lengthButtonText": "Line",

@@ -150,6 +150,9 @@
         "infoFormatLbl": "Formato risposte interrogazioni su mappa",
         "measureComponent": {
             "Measure": "Misura",
+            "MeasureLength": "Misura Distanza",
+            "MeasureArea": "Misura Area",
+            "MeasureBearing": "Misura Direzione",
             "tooltip": "Misurazione lunghezza e l'area",
             "title": "Misurazione",
             "lengthButtonText": "Linea",
@@ -157,7 +160,7 @@
             "resetButtonText": "Azzerare",
             "lengthLabel": "Lunghezza",
             "areaLabel": "Area",
-            "bearingLabel": "Rilevamento"
+            "bearingLabel": "Direzione"
         },
         "search":{
             "placeholder": "Cerca un indirizzo o inserisci coordinate..."
