@@ -84,7 +84,7 @@ const MapPreview = React.createClass({
         const mapOptions = resolutions ? {view: {resolutions}} : {};
         return this.props.map && this.props.map.center ?
         (
-                <div><PMap
+                <div className="print-map-preview"><PMap
                 ref="mappa"
                 {...this.props.map}
                 resize={this.props.height}
@@ -108,7 +108,7 @@ const MapPreview = React.createClass({
                     scales={this.props.scales}
                     onChange={this.props.onChangeZoomLevel}
                     /> : null}
-                {this.props.enableRefresh ? <Button onClick={this.props.onMapRefresh} className="print-mappreview-refresh"><Glyphicon glyph="refresh"/></Button> : null}
+                {this.props.enableRefresh ? <Button bsStyle="primary" onClick={this.props.onMapRefresh} className="print-mappreview-refresh"><Glyphicon glyph="refresh"/></Button> : null}
                 </div>
         ) : <span/>;
     }

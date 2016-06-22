@@ -170,6 +170,20 @@
 				"name": "MeasureResults"
 		}, {
 				"name": "Print",
+				"cfg": {
+					"closeGlyph": "1-close",
+					"submitConfig": {
+						"buttonConfig": {
+							"bsSize": "medium",
+							"bsStyle": "primary"
+						},
+						"glyph": ""
+					},
+					"previewOptions": {
+						"buttonStyle": "primary"
+					},
+					"withPanelAsContainer": false
+				},
 				"hideFrom": ["Toolbar"]
 		}, {
 				"name": "ShapeFile",
