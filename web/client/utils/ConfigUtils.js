@@ -224,7 +224,7 @@ var ConfigUtils = {
 
         let ie = 'ActiveXObject' in window;
         let ielt9 = ie && !document.addEventListener;
-        let ie11 = ie && (window.location.hash = !!window.MSInputMethodContext && !!document.documentMode);
+        let ie11 = ie && (window.location.hash === !!window.MSInputMethodContext && !!document.documentMode);
 
         // terrible browser detection to work around Safari / iOS / Android browser bugs
         let ua = navigator.userAgent.toLowerCase();

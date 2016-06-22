@@ -8,6 +8,9 @@
  */
 
 const React = require('react');
+
+const Draggable = require('react-draggable');
+
 const Dialog = React.createClass({
     propTypes: {
         id: React.PropTypes.string.isRequired,
@@ -31,14 +34,18 @@ const Dialog = React.createClass({
         return React.Children.toArray(this.props.children).filter((child) => child.props.role === 'body');
     },
     render() {
-        return (<div id={this.props.id} style={this.props.style} className={this.props.className}>
-            <div className={this.props.headerClassName}>
-                {this.renderHeader()}
-            </div>
-            <div className={this.props.bodyClassName}>
-                {this.renderBody()}
-            </div>
-        </div>);
+        return (
+            <Draggable start={{x: 0, y: 0}} handle=".draggable-header, .draggable-header *">
+                <div id={this.props.id} style={this.props.style} className={this.props.className}>
+                    <div className={this.props.headerClassName + " draggable-header"}>
+                        {this.renderHeader()}
+                    </div>
+                    <div className={this.props.bodyClassName}>
+                        {this.renderBody()}
+                    </div>
+                </div>
+            </Draggable>
+        );
     }
 });
 

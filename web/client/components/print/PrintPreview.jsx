@@ -23,7 +23,8 @@ const PrintPreview = React.createClass({
         setScale: React.PropTypes.func,
         setPage: React.PropTypes.func,
         setPages: React.PropTypes.func,
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        buttonStyle: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -38,7 +39,8 @@ const PrintPreview = React.createClass({
             setScale: () => {},
             setPage: () => {},
             setPages: () => {},
-            style: {height: "500px", width: "800px", overflow: "auto", backgroundColor: "#888", padding: "10px"}
+            style: {height: "500px", width: "800px", overflow: "auto", backgroundColor: "#888", padding: "10px"},
+            buttonStyle: "default"
         };
     },
     onDocumentComplete(pages) {
@@ -52,16 +54,16 @@ const PrintPreview = React.createClass({
                         <PDF file={this.props.url} scale={this.props.scale} page={this.props.currentPage} onDocumentComplete={this.onDocumentComplete}/>
                     </div>
                     <div style={{marginTop: "10px"}}>
-                        <Button style={{marginRight: "10px"}} onClick={this.props.back}><Glyphicon glyph="arrow-left"/></Button>
-                        <Button disabled={this.props.scale >= this.props.maxScale} onClick={this.zoomIn}><Glyphicon glyph="zoom-in"/></Button>
-                        <Button disabled={this.props.scale <= this.props.minScale} onClick={this.zoomOut}><Glyphicon glyph="zoom-out"/></Button>
+                        <Button bsStyle={this.props.buttonStyle} style={{marginRight: "10px"}} onClick={this.props.back}><Glyphicon glyph="arrow-left"/></Button>
+                        <Button bsStyle={this.props.buttonStyle} disabled={this.props.scale >= this.props.maxScale} onClick={this.zoomIn}><Glyphicon glyph="zoom-in"/></Button>
+                        <Button bsStyle={this.props.buttonStyle} disabled={this.props.scale <= this.props.minScale} onClick={this.zoomOut}><Glyphicon glyph="zoom-out"/></Button>
                         <label style={{marginLeft: "10px", marginRight: "10px"}}>{this.props.scale}x</label>
-                        <div className="print-download"><a href={this.props.url} target="_blank"><Glyphicon glyph="save"/></a></div>
-                        <Button disabled={this.props.currentPage === 1} onClick={this.firstPage}><Glyphicon glyph="step-backward"/></Button>
-                        <Button disabled={this.props.currentPage === 1} onClick={this.prevPage}><Glyphicon glyph="chevron-left"/></Button>
+                        <div className="print-download btn btn-primary"><a href={this.props.url} target="_blank"><Glyphicon glyph="save"/></a></div>
+                        <Button bsStyle={this.props.buttonStyle} disabled={this.props.currentPage === 1} onClick={this.firstPage}><Glyphicon glyph="step-backward"/></Button>
+                        <Button bsStyle={this.props.buttonStyle} disabled={this.props.currentPage === 1} onClick={this.prevPage}><Glyphicon glyph="chevron-left"/></Button>
                         <label style={{marginLeft: "10px", marginRight: "10px"}}>{this.props.currentPage} / {this.props.pages}</label>
-                        <Button disabled={this.props.currentPage === this.props.pages} onClick={this.nextPage}><Glyphicon glyph="chevron-right"/></Button>
-                        <Button disabled={this.props.currentPage === this.props.pages} onClick={this.lastPage}><Glyphicon glyph="step-forward"/></Button>
+                        <Button bsStyle={this.props.buttonStyle} disabled={this.props.currentPage === this.props.pages} onClick={this.nextPage}><Glyphicon glyph="chevron-right"/></Button>
+                        <Button bsStyle={this.props.buttonStyle} disabled={this.props.currentPage === this.props.pages} onClick={this.lastPage}><Glyphicon glyph="step-forward"/></Button>
                     </div>
                 </div>
             );
