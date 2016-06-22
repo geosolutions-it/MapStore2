@@ -222,6 +222,8 @@
 				"hideFrom": ["Toolbar"],
 				"cfg": {
 					"wrap": true,
+					"wrapWithPanel": false,
+					"closeGlyph": "1-close",
 					"chooseCatalogUrl": false,
 					"initialCatalogURL": "http://demo.geo-solutions.it/geoserver/csw"
 				}
