@@ -97,7 +97,7 @@
 		}, {
         "name": "DrawerMenu",
 				"cfg": {
-					"glyph": "pencil",
+					"glyph": "1-stilo",
 					"buttonStyle": "primary",
 					"singleSection": true
 				}
@@ -146,7 +146,12 @@
 		}, {
 				"name": "TOC",
 				"hideFrom": ["Toolbar"],
-				"hide": true
+				"hide": true,
+				"override": {
+					"DrawerMenu": {
+						"glyph": "1-layer"
+					}
+				}
 		}, {
 				"name": "BackgroundSwitcher",
 				"hideFrom": ["Toolbar"],
@@ -158,6 +163,11 @@
               "sm": 12,
               "md": 12
           }
+				},
+				"override": {
+					"DrawerMenu": {
+							"glyph": "1-map"
+						}
 				}
 		}, {
 				"name": "Measure",
@@ -165,7 +175,12 @@
         "showIn": ["DrawerMenu"],
         "cfg":{
           "showResults": false
-        }
+        },
+				"override": {
+					"DrawerMenu": {
+						"glyph": "1-stilo"
+					}
+				}
 		}, {
 				"name": "MeasureResults"
 		}, {
