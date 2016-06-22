@@ -58,10 +58,10 @@ const Font = React.createClass({
                         <Input ref="size" type="number" value={this.props.size} onChange={this.onChangeSize}/>
                     </Col>
                     <Col xs={2}>
-                        <Button active={this.props.bold} onClick={this.toggleBold}><Glyphicon glyph="bold"/></Button>
+                        <Button bsStyle="primary" bsSize="small" active={this.props.bold} onClick={this.toggleBold}><Glyphicon glyph="bold"/></Button>
                     </Col>
                     <Col xs={2}>
-                        <Button active={this.props.italic} onClick={this.toggleItalic}><Glyphicon glyph="italic"/></Button>
+                        <Button bsStyle="primary" bsSize="small" active={this.props.italic} onClick={this.toggleItalic}><Glyphicon glyph="italic"/></Button>
                     </Col>
                 </Row>
             </Grid>
