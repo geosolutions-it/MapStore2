@@ -39,6 +39,7 @@ const RecordGrid = connect(makeMapStateToProps, {
     onZoomToExtent: zoomToExtent
 })(require("../components/catalog/RecordGrid"));
 
+const Dialog = require('../components/misc/Dialog');
 
 const MetadataExplorerComponent = React.createClass({
     propTypes: {
@@ -54,9 +55,13 @@ const MetadataExplorerComponent = React.createClass({
         searchOptions: React.PropTypes.object,
         chooseCatalogUrl: React.PropTypes.bool,
         wrap: React.PropTypes.bool,
+        wrapWithPanel: React.PropTypes.bool,
         panelStyle: React.PropTypes.object,
         panelClassName: React.PropTypes.string,
-        toggleControl: React.PropTypes.func
+        toggleControl: React.PropTypes.func,
+        closeGlyph: React.PropTypes.string,
+        buttonStyle: React.PropTypes.string,
+        style: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -67,6 +72,7 @@ const MetadataExplorerComponent = React.createClass({
             onLayerAdd: () => {},
             chooseCatalogUrl: true,
             wrap: false,
+            wrapWithPanel: true,
             panelStyle: {
                 minWidth: "300px",
                 zIndex: 100,
@@ -76,7 +82,9 @@ const MetadataExplorerComponent = React.createClass({
                 right: "100px"
             },
             panelClassName: "toolbar-panel",
-            toggleControl: () => {}
+            toggleControl: () => {},
+            closeGlyph: "",
+            buttonStyle: "default"
         };
     },
     getInitialState() {
@@ -121,8 +129,7 @@ const MetadataExplorerComponent = React.createClass({
           </Alert>);
     },
     renderLoading() {
-        return (<div><Spinner spinnerName="circle"/></div>);
-
+        return (<Spinner spinnerName="circle" noFadeIn/>);
     },
     renderPagination() {
         let total = this.props.result.numberOfRecordsMatched;
@@ -141,6 +148,7 @@ const MetadataExplorerComponent = React.createClass({
           onSelect={this.handlePage} />
         <div className="push-right">
             <Message msgId="catalog.pageInfo" msgParams={{start, end: start + returned - 1, total}} />
+            {this.state.loading ? this.renderLoading() : null}
         </div>
   </div>);
     },
@@ -164,7 +172,7 @@ const MetadataExplorerComponent = React.createClass({
     },
     render() {
         const panel = (
-             <div>
+             <div role="body">
                  <div>
                      {this.renderURLInput()}
                      <Input
@@ -177,15 +185,21 @@ const MetadataExplorerComponent = React.createClass({
                          onKeyDown={this.onKeyDown}/>
                  </div>
                  <div>
-                    {this.state.loading ? this.renderLoading() : this.renderResult()}
+                    {this.renderResult()}
                  </div>
              </div>
         );
         if (this.props.wrap) {
             if (this.props.active) {
-                return (<Panel id={this.props.id} header={<span><span className="metadataexplorer-panel-title"><Message msgId="catalog.title"/></span><span className="shapefile-panel-close panel-close" onClick={this.props.toggleControl}></span></span>} style={this.props.panelStyle} className={this.props.panelClassName}>
+                if (this.props.wrapWithPanel) {
+                    return (<Panel id={this.props.id} header={<span><span className="metadataexplorer-panel-title"><Message msgId="catalog.title"/></span><span className="shapefile-panel-close panel-close" onClick={this.props.toggleControl}></span></span>} style={this.props.panelStyle} className={this.props.panelClassName}>
+                        {panel}
+                    </Panel>);
+                }
+                return (<Dialog id="mapstore-catalog-panel" style={this.props.style}>
+                    <span role="header"><span className="metadataexplorer-panel-title"><Message msgId="catalog.title"/></span><button onClick={this.props.toggleControl} className="print-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
                     {panel}
-                </Panel>);
+                </Dialog>);
             }
             return null;
         }

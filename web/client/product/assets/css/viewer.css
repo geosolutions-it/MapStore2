@@ -405,6 +405,17 @@ html, body, #container, .fill {
     min-width: 725px;
 }
 
+#mapstore-catalog-panel {
+    width: auto;
+    position: absolute;
+    right: 200px;
+    display: inline-block;
+}
+
+#mapstore-catalog-panel .record-item {
+    height: 150px;
+}
+
 .draggable-header {
     cursor: move;
 }

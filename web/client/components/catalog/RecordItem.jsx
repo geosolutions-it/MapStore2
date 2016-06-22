@@ -39,14 +39,16 @@ const RecordItem = React.createClass({
     propTypes: {
         onLayerAdd: React.PropTypes.func,
         onZoomToExtent: React.PropTypes.func,
-        record: React.PropTypes.object
+        record: React.PropTypes.object,
+        buttonSize: React.PropTypes.string
     },
     getDefaultProps() {
         return {
             mapType: "leaflet",
             onLayerAdd: () => {},
             onZoomToExtent: () => {},
-            style: {}
+            style: {},
+            buttonSize: "small"
         };
     },
     renderThumb(thumbURL, record) {
@@ -65,6 +67,7 @@ const RecordItem = React.createClass({
             return (<div className="record-buttons">
                 <Button
                 bsStyle="success"
+                bsSize={this.props.buttonSize}
                 onClick={() => {this.addLayer(wms); }}
                 key="addlayer">
                     <Glyphicon glyph="plus" />&nbsp;<Message msgId="catalog.addToMap" />
