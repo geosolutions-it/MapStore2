@@ -233,7 +233,13 @@
 				}
 		}, {
 			"name": "About",
-			"hideFrom": ["DrawerMenu"]
+			"hideFrom": ["DrawerMenu"],
+			"cfg": {
+				"modalConfig": {
+						"useModal": false,
+			      "closeGlyph": "1-close"
+				}
+			}
 		}, "MousePosition", {
 				"name": "Search",
 				"cfg": {

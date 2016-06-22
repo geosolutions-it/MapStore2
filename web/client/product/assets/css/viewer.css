@@ -78,7 +78,7 @@ html, body, #container, .fill {
     cursor: pointer;
 }
 
-.map-logo img{
+.map-logo > img{
     width: 90px;
     height: 27px;
     opacity: 0;
@@ -414,6 +414,13 @@ html, body, #container, .fill {
 
 #mapstore-catalog-panel .record-item {
     height: 150px;
+}
+
+#mapstore-about {
+    position: fixed;
+    top: 0;
+    left: calc(50% - 500px);
+    width: 500px;
 }
 
 .draggable-header {
