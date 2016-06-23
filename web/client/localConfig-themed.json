@@ -112,7 +112,8 @@
 				 "asPanel": false,
 				 "headerGlyph": "",
          "glyph": "map-marker",
-				 "closeGlyph": "1-close",
+				 "className": "square-button",
+         "closeGlyph": "1-close",
 				 "wrapRevGeocode": false,
 				 "enableRevGeocode": true,
 				 "viewerOptions": {
@@ -133,7 +134,10 @@
 			  "name": "Locate",
 				"hide": true,
 				"cfg": {
-					"glyph": "1-position-1"
+					"glyph": "1-position-1",
+          "btnConfig": {
+            "className": "square-button"
+          }
 				},
 				"override": {
 					"Toolbar": {
@@ -283,7 +287,10 @@
     "ScaleBox",
     {
       "name": "ZoomAll",
-      "hide": true
+      "hide": true,
+      "cfg":{
+        "className": "square-button"
+      }
     },
     {
 			"name": "MapLoading",
@@ -357,7 +364,10 @@
 			"hide": true
 		}, {
 			"name": "Expander",
-			"hide": true
+			"hide": true,
+      "cfg":{
+        "className": "square-button"
+      }
 		}, {
       "name": "Undo",
       "hide": true,
