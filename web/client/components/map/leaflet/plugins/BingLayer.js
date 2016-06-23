@@ -9,6 +9,38 @@
 var Layers = require('../../../../utils/leaflet/Layers');
 var Bing = require('leaflet-plugins/layer/tile/Bing');
 const assign = require('object-assign');
+const L = require('leaflet');
+
+Bing.prototype.loadMetadata = function() {
+    var _this = this;
+    var cbid = '_bing_metadata_' + L.Util.stamp(this);
+    window[cbid] = function(meta) {
+        _this.meta = meta;
+        window[cbid] = undefined;
+        const e = document.getElementById(cbid);
+        e.parentNode.removeChild(e);
+        if (meta.errorDetails) {
+            _this.fire('load', {layer: _this});
+            return _this.onError(meta);
+        }
+        _this.initMetadata();
+    };
+    const urlScheme = (document.location.protocol === 'file:') ? 'http' : document.location.protocol.slice(0, -1);
+    const url = urlScheme + '://dev.virtualearth.net/REST/v1/Imagery/Metadata/'
+                + this.options.type + '?include=ImageryProviders&jsonp=' + cbid +
+                '&key=' + this._key + '&UriScheme=' + urlScheme;
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = url;
+    script.id = cbid;
+    document.getElementsByTagName('head')[0].appendChild(script);
+};
+
+Bing.prototype.onError = function(meta) {
+    if (this.options.onError) {
+        return this.options.onError(meta);
+    }
+};
 
 Layers.registerType('bing', {
     create: (options) => {
@@ -17,7 +49,8 @@ Layers.registerType('bing', {
             subdomains: [0, 1, 2, 3],
             type: options.name,
             attribution: 'Bing',
-            culture: ''
+            culture: '',
+            onError: options.onError
         };
         if (options.zoomOffset) {
             layerOptions = assign({}, layerOptions, {

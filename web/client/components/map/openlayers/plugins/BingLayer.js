@@ -9,11 +9,22 @@
 var Layers = require('../../../../utils/openlayers/Layers');
 var ol = require('openlayers');
 
+const checkLoaded = (layer, options) => {
+    if (layer.getSource && layer.getSource().getState() === 'error') {
+        if (options.onError) {
+            options.onError(layer);
+        }
+    }
+    if (layer.getSource && layer.getSource().getState() === 'loading') {
+        setTimeout(checkLoaded.bind(null, layer, options), 1000);
+    }
+};
+
 Layers.registerType('bing', {
     create: (options) => {
         var key = options.apiKey;
         var maxNativeZoom = options.maxNativeZoom || 19;
-        return new ol.layer.Tile({
+        const layer = new ol.layer.Tile({
             preload: Infinity,
             opacity: options.opacity !== undefined ? options.opacity : 1,
             zIndex: options.zIndex,
@@ -24,6 +35,8 @@ Layers.registerType('bing', {
               maxZoom: maxNativeZoom
             })
         });
+        setTimeout(checkLoaded.bind(null, layer, options), 1000);
+        return layer;
     },
     isValid: (layer) => {
         if (layer.getSource && layer.getSource().getState() === 'error') {
