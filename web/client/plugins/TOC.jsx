@@ -52,7 +52,8 @@ const LayerTree = React.createClass({
         updateSettings: React.PropTypes.func,
         updateNode: React.PropTypes.func,
         activateLegendTool: React.PropTypes.bool,
-        activateSettingsTool: React.PropTypes.bool
+        activateSettingsTool: React.PropTypes.bool,
+        visibilityCheckType: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -63,7 +64,8 @@ const LayerTree = React.createClass({
             onSettings: () => {},
             updateNode: () => {},
             activateLegendTool: true,
-            activateSettingsTool: true
+            activateSettingsTool: true,
+            visibilityCheckType: "checkbox"
         };
     },
     getNoBackgroundLayers(group) {
@@ -82,7 +84,9 @@ const LayerTree = React.createClass({
                                   propertiesChangeHandler={this.props.groupPropertiesChangeHandler}
                                   onToggle={this.props.onToggleGroup}
                                   style={this.props.groupStyle}
-                                  groupVisibilityCheckbox={true}>
+                                  groupVisibilityCheckbox={true}
+                                  visibilityCheckType={this.props.visibilityCheckType}
+                                  >
                     <DefaultLayer
                             onToggle={this.props.onToggleLayer}
                             onSettings={this.props.onSettings}
@@ -91,6 +95,7 @@ const LayerTree = React.createClass({
                             settings={this.props.settings}
                             updateSettings={this.props.updateSettings}
                             updateNode={this.props.updateNode}
+                            visibilityCheckType={this.props.visibilityCheckType}
                             activateLegendTool={this.props.activateLegendTool}
                             activateSettingsTool={this.props.activateSettingsTool}
                             opacityText={<Message msgId="opacity"/>}
