@@ -175,7 +175,7 @@ const MeasureComponent = React.createClass({
                             <span className="option-icon">{this.props.lineGlyph ? <Glyphicon glyph={this.props.lineGlyph}/> : <img src={lineRuleIcon}/>}</span>
                             <span className="option-text">{localeUtils.getMessageById(this.context.messages, "measureComponent.MeasureLength")}</span>
                             </span>}
-                        style={{"width": "100%", "text-align": "left"}}
+                        style={{"width": "100%", textAlign: "left"}}
                         pressed={this.props.lineMeasureEnabled}
                         onClick={this.onLineClick}
                         tooltip={lineToolTip} />
@@ -184,7 +184,7 @@ const MeasureComponent = React.createClass({
                             <span className="option-icon">{this.props.areaGlyph ? <Glyphicon glyph={this.props.areaGlyph}/> : <img src={areaRuleIcon}/>}</span>
                             <span className="option-text">{localeUtils.getMessageById(this.context.messages, "measureComponent.MeasureArea")}</span>
                             </span>}
-                        style={{"width": "100%", "text-align": "left"}}
+                        style={{"width": "100%", textAlign: "left"}}
                         pressed={this.props.areaMeasureEnabled}
                         onClick={this.onAreaClick}
                         tooltip={areaToolTip} />
@@ -193,7 +193,7 @@ const MeasureComponent = React.createClass({
                             <span className="option-icon">{this.props.bearingGlyph ? <Glyphicon glyph={this.props.bearingGlyph}/> : <img src={bearingRuleIcon}/>}</span>
                             <span className="option-text">{localeUtils.getMessageById(this.context.messages, "measureComponent.MeasureBearing")}</span>
                             </span>}
-                        style={{"width": "100%", "text-align": "left"}}
+                        style={{"width": "100%", textAlign: "left"}}
                         pressed={this.props.bearingMeasureEnabled}
                         onClick={this.onBearingClick}
                         tooltip={bearingToolTip} />
