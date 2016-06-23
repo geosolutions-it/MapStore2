@@ -34,6 +34,11 @@ const ZONE_FILTER = 'ZONE_FILTER';
 const ZONE_CHANGE = 'ZONE_CHANGE';
 const ZONES_RESET = 'ZONES_RESET';
 
+const SIMPLE_FILTER_FIELD_UPDATE = 'SIMPLE_FILTER_FIELD_UPDATE';
+const ADD_SIMPLE_FILTER_FIELD = 'ADD_SIMPLE_FILTER_FIELD';
+const REMOVE_SIMPLE_FILTER_FIELD = 'REMOVE_SIMPLE_FILTER_FIELD';
+const REMOVE_ALL_SIMPLE_FILTER_FIELDS = 'REMOVE_ALL_SIMPLE_FILTER_FIELDS';
+
 const axios = require('../libs/ajax');
 
 function addFilterField(groupId) {
@@ -251,6 +256,34 @@ function zoneChange(id, value) {
     };
 }
 
+function simpleFilterFieldUpdate(id, properties) {
+    return {
+        type: SIMPLE_FILTER_FIELD_UPDATE,
+        id,
+        properties
+    };
+}
+
+function addSimpleFilterField(properties) {
+    return {
+        type: ADD_SIMPLE_FILTER_FIELD,
+        properties
+    };
+}
+
+function removeSimpleFilterField(id) {
+    return {
+        type: REMOVE_SIMPLE_FILTER_FIELD,
+        id
+    };
+}
+
+function removeAllSimpleFilterFields() {
+    return {
+        type: REMOVE_ALL_SIMPLE_FILTER_FIELDS
+    };
+}
+
 module.exports = {
     ADD_FILTER_FIELD,
     REMOVE_FILTER_FIELD,
@@ -277,6 +310,10 @@ module.exports = {
     // OPEN_MENU,
     ZONE_CHANGE,
     ZONES_RESET,
+    SIMPLE_FILTER_FIELD_UPDATE,
+    ADD_SIMPLE_FILTER_FIELD,
+    REMOVE_SIMPLE_FILTER_FIELD,
+    REMOVE_ALL_SIMPLE_FILTER_FIELDS,
     resetZones,
     zoneChange,
     // openMenu,
@@ -300,7 +337,11 @@ module.exports = {
     showSpatialSelectionDetails,
     query,
     reset,
-    changeDwithinValue
+    changeDwithinValue,
+    simpleFilterFieldUpdate,
+    addSimpleFilterField,
+    removeSimpleFilterField,
+    removeAllSimpleFilterFields
     // wfsLoadError,
     // querySearchResponse
 };

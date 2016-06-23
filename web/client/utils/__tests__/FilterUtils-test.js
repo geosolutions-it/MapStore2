@@ -205,4 +205,50 @@ describe('FilterUtils', () => {
         expect(filter.indexOf('maxFeatures="20"') !== -1).toBe(false);
         expect(filter.indexOf('startIndex="1"') !== -1).toBe(false);
     });
+    it('Check SimpleFilterField ogc', () => {
+        let filterObj = {
+            simpleFilterFields: [{
+                    "fieldId": 1,
+                    "label": "Highway System",
+                    "attribute": "highway_system",
+                    "multivalue": false,
+                    "values": ["state"],
+                    "optionsValues": ["local", "state"],
+                    "optionsLabels": {
+                        "local": "Local",
+                        "state": "State"
+                    },
+                    "required": true,
+                    "sort": "ASC",
+                    "defaultExpanded": true,
+                    "collapsible": true
+                    }]
+        };
+        let expected = '<wfs:GetFeature service="WFS" version="2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd"><wfs:Query typeNames="ft_name_test" srsName="EPSG:4326"><fes:Filter><fes:And><fes:Or><fes:PropertyIsEqualTo><fes:ValueReference>highway_system</fes:ValueReference><fes:Literal>state</fes:Literal></fes:PropertyIsEqualTo></fes:Or></fes:And></fes:Filter></wfs:Query></wfs:GetFeature>';
+        let filter = FilterUtils.toOGCFilter("ft_name_test", filterObj);
+        expect(filter).toEqual(expected);
+    });
+    it('Check SimpleFilterField cql', () => {
+        let filterObj = {
+            simpleFilterFields: [{
+                    "fieldId": 1,
+                    "label": "Highway System",
+                    "attribute": "highway_system",
+                    "multivalue": false,
+                    "values": ["state"],
+                    "optionsValues": ["local", "state"],
+                    "optionsLabels": {
+                        "local": "Local",
+                        "state": "State"
+                    },
+                    "required": true,
+                    "sort": "ASC",
+                    "defaultExpanded": true,
+                    "collapsible": true
+                    }]
+        };
+        let expected = "((highway_system='state'))";
+        let filter = FilterUtils.toCQLFilter(filterObj);
+        expect(filter).toEqual(expected);
+    });
 });

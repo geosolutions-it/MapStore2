@@ -701,6 +701,55 @@ describe('Test the queryform reducer', () => {
         expect(state.spatialField.zoneFields[0].values).toBe(null);
     });
 
+    it('Simple Filter update', () => {
+        let testAction = {
+            type: "SIMPLE_FILTER_FIELD_UPDATE",
+            id: 1,
+            properties: {combo: true}
+        };
+
+        let state = queryform({simpleFilterFields: [{fieldId: 1, combo: false}, {fieldId: 2, combo: true}]}, testAction);
+        expect(state).toExist();
+        expect(state.simpleFilterFields).toExist();
+        expect(state.simpleFilterFields[0].combo).toBe(true);
+    });
+
+    it('Add Simple Filter', () => {
+        let testAction = {
+            type: "ADD_SIMPLE_FILTER_FIELD",
+            properties: {fieldId: 1, combo: true}
+        };
+
+        let state = queryform( {simpleFilterFields: []}, testAction);
+        expect(state).toExist();
+        expect(state.simpleFilterFields).toExist();
+        expect(state.simpleFilterFields[0].combo).toBe(true);
+        expect(state.simpleFilterFields[0].fieldId).toBe(1);
+    });
+
+    it('Remove Simple Filter', () => {
+        let testAction = {
+            type: "REMOVE_SIMPLE_FILTER_FIELD",
+            id: 1
+        };
+
+        let state = queryform({simpleFilterFields: [{fieldId: 1, combo: false}]}, testAction);
+        expect(state).toExist();
+        expect(state.simpleFilterFields).toExist();
+        expect(state.simpleFilterFields.length).toBe(0);
+    });
+
+    it('Remove All Simple Filter', () => {
+        let testAction = {
+            type: "REMOVE_ALL_SIMPLE_FILTER_FIELDS"
+        };
+
+        let state = queryform({simpleFilterFields: [{fieldId: 1, combo: false}]}, testAction);
+        expect(state).toExist();
+        expect(state.simpleFilterFields).toExist();
+        expect(state.simpleFilterFields.length).toBe(0);
+    });
+
     /*it('Open Zones Menu', () => {
         let testAction = {
             type: "OPEN_MENU",

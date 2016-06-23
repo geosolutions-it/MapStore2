@@ -31,6 +31,10 @@ const {
     SHOW_GENERATED_FILTER,
     QUERY_FORM_RESET,
     CHANGE_DWITHIN_VALUE,
+    SIMPLE_FILTER_FIELD_UPDATE,
+    ADD_SIMPLE_FILTER_FIELD,
+    REMOVE_SIMPLE_FILTER_FIELD,
+    REMOVE_ALL_SIMPLE_FILTER_FIELDS,
     changeDwithinValue,
     resetZones,
     zoneChange,
@@ -54,7 +58,11 @@ const {
     selectSpatialMethod,
     selectSpatialOperation,
     removeSpatialSelection,
-    showSpatialSelectionDetails
+    showSpatialSelectionDetails,
+    simpleFilterFieldUpdate,
+    addSimpleFilterField,
+    removeSimpleFilterField,
+    removeAllSimpleFilterFields
 } = require('../queryform');
 
 describe('Test correctness of the queryform actions', () => {
@@ -293,5 +301,35 @@ describe('Test correctness of the queryform actions', () => {
         expect(retval.type).toBe(ZONE_CHANGE);
         expect(retval.value).toBe("value");
         expect(retval.id).toBe(1);
+    });
+
+    it('simpleFilterFieldUpdate', () => {
+        let retval = simpleFilterFieldUpdate(1, "value");
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(SIMPLE_FILTER_FIELD_UPDATE);
+        expect(retval.properties).toBe("value");
+        expect(retval.id).toBe(1);
+    });
+
+    it('addSimpleFilterField', () => {
+        let retval = addSimpleFilterField("value");
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(ADD_SIMPLE_FILTER_FIELD);
+        expect(retval.properties).toBe("value");
+    });
+    it('removeSimpleFilterField', () => {
+        let retval = removeSimpleFilterField(1);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(REMOVE_SIMPLE_FILTER_FIELD);
+        expect(retval.id).toBe(1);
+    });
+    it('removeAllSimpleFilterFields', () => {
+        let retval = removeAllSimpleFilterFields();
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(REMOVE_ALL_SIMPLE_FILTER_FIELDS);
     });
 });
