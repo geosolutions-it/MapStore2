@@ -3,7 +3,7 @@
 	"geoStoreUrl": "/mapstore/rest/geostore/",
   "printUrl": "http://demo.geo-solutions.it/geoserver/pdf/info.json",
 	"bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
-	"initialMapFilter": "MS2",
+	"initialMapFilter": "*",
 	"plugins": {
 		"mobile": ["Home", {
 			"name": "About",
@@ -276,6 +276,9 @@
     {
 			"name": "MapLoading",
 			"hide": true,
+			"cfg": {
+				"className": "ms2-loading"
+			},
 			"override": {
 				"Toolbar": {
 					"alwaysVisible": true
@@ -317,7 +320,23 @@
           "nav": false,
           "menuProps": {
               "noCaret": true
-          }
+          },
+					"toolsCfg": [{
+						"buttonSize": "small",
+						"includeCloseButton": false,
+						"useModal": false,
+						"closeGlyph": "1-close"
+					}, {
+						"buttonSize": "small",
+						"includeCloseButton": false,
+						"useModal": false,
+						"closeGlyph": "1-close"
+					}, {
+						"buttonSize": "small",
+						"includeCloseButton": false,
+						"useModal": false,
+						"closeGlyph": "1-close"
+					}]
       }
 		},
 		"OmniBar",

@@ -34,7 +34,11 @@ const OmniBar = React.createClass({
     getPanels() {
         return this.props.items.filter((item) => item.tools).reduce((previous, current) => {
             return previous.concat(
-                current.tools.map((tool, index) => ({name: current.name + index, panel: tool}))
+                current.tools.map((tool, index) => ({
+                    name: current.name + index,
+                    panel: tool,
+                    cfg: current.cfg.toolsCfg ? current.cfg.toolsCfg[index] : {}
+                }))
             );
         }, []);
 

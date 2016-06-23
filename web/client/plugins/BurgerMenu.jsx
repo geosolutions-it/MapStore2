@@ -59,7 +59,7 @@ const BurgerMenu = React.createClass({
         return this.props.items.filter((item) => item.panel);
     },
     getTools() {
-        return [{element: <span>{this.props.title}</span>}, ...this.props.items.sort((a, b) => a.position - b.position)];
+        return [{element: <span key="burger-menu-title">{this.props.title}</span>}, ...this.props.items.sort((a, b) => a.position - b.position)];
     },
     render() {
         return (

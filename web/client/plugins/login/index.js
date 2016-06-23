@@ -59,6 +59,7 @@ const LoginNav = connect((state) => ({
     onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true),
     onLogout: logout
 })(require('../../components/security/UserMenu'));
+
 module.exports = {
     UserDetails,
     UserMenu,

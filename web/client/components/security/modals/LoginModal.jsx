@@ -15,8 +15,11 @@
 
 const React = require('react');
 const LoginForm = require('../forms/LoginForm');
-const {Modal, Button} = require('react-bootstrap');
+const {Modal, Button, Glyphicon} = require('react-bootstrap');
 
+const Dialog = require('../../misc/Dialog');
+
+const assign = require('object-assign');
 
   /**
    * A Modal window to show password reset form
@@ -33,7 +36,12 @@ const LoginModal = React.createClass({
       onLoginSuccess: React.PropTypes.func,
       onSubmit: React.PropTypes.func,
       onError: React.PropTypes.func,
-      onClose: React.PropTypes.func
+      onClose: React.PropTypes.func,
+      useModal: React.PropTypes.bool,
+      closeGlyph: React.PropTypes.string,
+      style: React.PropTypes.object,
+      buttonSize: React.PropTypes.string,
+      includeCloseButton: React.PropTypes.bool
   },
   getDefaultProps() {
       return {
@@ -41,39 +49,57 @@ const LoginModal = React.createClass({
           onSubmit: () => {},
           onError: () => {},
           onClose: () => {},
-          options: {}
+          options: {},
+          useModal: true,
+          closeGlyph: "",
+          style: {},
+          buttonSize: "large",
+          includeCloseButton: true
       };
   },
   render() {
-      return (<Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
+      const form = (<LoginForm
+          role="body"
+          ref="loginForm"
+          showSubmitButton={false}
+          user={this.props.user}
+          loginError={this.props.loginError}
+          onLoginSuccess={this.props.onLoginSuccess}
+          onSubmit={this.props.onSubmit}
+          onError={this.props.onError}
+          />);
+      const footer = (<span role="footer">
+          <Button
+              ref="submit"
+              value="Sign-in"
+              bsStyle="primary"
+              bsSize={this.props.buttonSize}
+              className="pull-left"
+              onClick={this.loginSubmit}
+              key="submit">Sign-in</Button>
+          {this.props.includeCloseButton ? <Button
+            key="closeButton"
+            ref="closeButton"
+            bsSize={this.props.buttonSize}
+            onClick={this.props.onClose}>Close</Button> : <span/>}
+      </span>);
+      return this.props.useModal ? (<Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
           <Modal.Header key="passwordChange" closeButton>
             <Modal.Title>Login</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-              <LoginForm
-                  ref="loginForm"
-                  showSubmitButton={false}
-                  user={this.props.user}
-                  loginError={this.props.loginError}
-                  onLoginSuccess={this.props.onLoginSuccess}
-                  onSubmit={this.props.onSubmit}
-                  onError={this.props.onError}
-                  />
+              {form}
           </Modal.Body>
           <Modal.Footer>
-              <Button
-                  ref="submit"
-                  value="Sign-in"
-                  bsStyle="primary"
-                  className="pull-left"
-                  onClick={this.loginSubmit}
-                  key="submit">Sign-in</Button>
-            <Button
-                key="closeButton"
-                ref="closeButton"
-                onClick={this.props.onClose}>Close</Button>
+              {footer}
           </Modal.Footer>
-      </Modal>);
+      </Modal>) : (
+          <Dialog modal id="mapstore-login-panel" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
+              <span role="header"><span className="login-panel-title">Login</span><button onClick={this.props.onClose} className="login-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
+              {form}
+              {footer}
+          </Dialog>
+      );
   },
   loginSubmit() {
       this.refs.loginForm.submit();
