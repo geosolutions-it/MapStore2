@@ -22,7 +22,8 @@ const FilterUtils = {
         "<>": {startTag: "<{namespace}:PropertyIsNotEqualTo>", endTag: "</{namespace}:PropertyIsNotEqualTo>"},
         "><": {startTag: "<{namespace}:PropertyIsBetween>", endTag: "</{namespace}:PropertyIsBetween>"},
         "like": {startTag: "<{namespace}:PropertyIsLike matchCase=\"true\" wildCard=\"*\" singleChar=\".\" escapeChar=\"!\">", endTag: "</{namespace}:PropertyIsLike>"},
-        "ilike": {startTag: "<{namespace}:PropertyIsLike matchCase=\"false\" wildCard=\"*\" singleChar=\".\" escapeChar=\"!\">  ", endTag: "</{namespace}:PropertyIsLike>"}
+        "ilike": {startTag: "<{namespace}:PropertyIsLike matchCase=\"false\" wildCard=\"*\" singleChar=\".\" escapeChar=\"!\">  ", endTag: "</{namespace}:PropertyIsLike>"},
+        "isNull": {startTag: "<{namespace}:PropertyIsNull>", endTag: "</{namespace}:PropertyIsNull>"}
     },
     ogcSpatialOperator: {
         "INTERSECTS": {startTag: "<{namespace}:Intersects>", endTag: "</{namespace}:Intersects>"},
@@ -59,6 +60,14 @@ const FilterUtils = {
             }
 
             filters.push(attributeFilter);
+        }else if (this.objFilter.simpleFilterFields && this.objFilter.simpleFilterFields.length > 0) {
+            let ogc = "";
+            ogc += this.ogcLogicalOperator.AND.startTag;
+            this.objFilter.simpleFilterFields.forEach((filter) => {
+                ogc += this.processOGCSimpleFilterField(filter);
+            }, this);
+            ogc += this.ogcLogicalOperator.AND.endTag;
+            filters.push(ogc);
         }
 
         let spatialFilter;
@@ -239,6 +248,25 @@ const FilterUtils = {
 
         return filter;
     },
+    processOGCSimpleFilterField: function(field) {
+        // If value === null we test for isNull properties improve with better test
+        let filter = "";
+        if (field.values && field.values.length > 0 ) {
+            filter = field.values.reduce((ogc, val) => {
+                let op = (val === null || val === "null") ? "isNull" : "=";
+                let literal = (val !== null) ? "<" + this.nsplaceholder + ":Literal>" + val + "</" + this.nsplaceholder + ":Literal>" : "";
+                return ogc +
+                            this.ogcComparisonOperators[op].startTag +
+                                this.propertyTagReference[this.nsplaceholder].startTag +
+                                    field.attribute +
+                                this.propertyTagReference[this.nsplaceholder].endTag +
+                                literal +
+                            this.ogcComparisonOperators[op].endTag;
+            }, this.ogcLogicalOperator.OR.startTag);
+            filter += this.ogcLogicalOperator.OR.endTag;
+        }
+        return filter;
+    },
     processOGCSpatialFilter: function(version) {
         let ogc = this.ogcSpatialOperator[this.objFilter.spatialField.operation].startTag;
         ogc +=
@@ -397,6 +425,11 @@ const FilterUtils = {
         if (this.objFilter.filterFields && this.objFilter.filterFields.length > 0) {
             attributeFilter = this.processCQLFilterGroup(this.objFilter.groupFields[0]);
             filters.push(attributeFilter);
+        }else if (this.objFilter.simpleFilterFields && this.objFilter.simpleFilterFields.length > 0) {
+            let simpleFilter = this.objFilter.simpleFilterFields.reduce((cql, field, idx) => {
+                return ( idx > 0) ? cql + " AND (" + this.processCQLSimpleFilterField(field) + ")" : "(" + this.processCQLSimpleFilterField(field) + ")";
+            }, "");
+            filters.push(simpleFilter);
         }
 
         let spatialFilter;
@@ -408,7 +441,7 @@ const FilterUtils = {
         return "(" + (filters.length > 1 ? filters.join(") AND (") : filters[0]) + ")";
     },
     processCQLFilterGroup: function(root) {
-        let cql = this.processFilterFields(root);
+        let cql = this.processCQLFilterFields(root);
 
         let subGroups = this.findSubGroups(root, this.objFilter.groupFields);
         if (subGroups.length > 0) {
@@ -454,6 +487,17 @@ const FilterUtils = {
         }
 
         return filter;
+    },
+    processCQLSimpleFilterField: function(field) {
+        let filter = field.values.reduce((arr, value) => {
+            if (value === null || value === "null") {
+                arr.push( "isNull(" + field.attribute + ")=true");
+            } else {
+                arr.push( field.attribute + "='" + value + "'");
+            }
+            return arr;
+        }, []);
+        return filter.length > 0 ? filter.join(" OR ") : "INCLUDE";
     },
     processCQLSpatialFilter: function() {
         let cql = this.objFilter.spatialField.operation + "(" +
