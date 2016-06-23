@@ -7,6 +7,7 @@
  */
 
 const React = require('react');
+const {isEqual} = require('lodash');
 
 const ComboField = require('./ComboField');
 
@@ -59,6 +60,9 @@ const ZoneField = React.createClass({
     contextTypes: {
         messages: React.PropTypes.object
     },
+    getInitialState() {
+        return { open: false};
+    },
     getDefaultProps() {
         return {
             open: false,
@@ -86,6 +90,11 @@ const ZoneField = React.createClass({
             onChange: () => {},
             onSelect: () => {}
         };
+    },
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.values && !isEqual(this.props.values, nextProps.values) && nextProps.values.length > 0) {
+            this.setState({open: true});
+        }
     },
     getFilter(searchText = "*", operator = "=") {
         let filterObj = {
@@ -193,9 +202,9 @@ const ZoneField = React.createClass({
                     fieldValue={this.props.value}
                     fieldName="zone"
                     fieldException={error}
-                    /*options={{
-                        open: this.props.open
-                    }}*/
+                    options={{
+                        defaultOpen: this.state.open
+                    }}
                     groupBy={this.props.groupBy ?
                         (option) => option.feature.properties[this.props.groupBy] : () => {} }
                     multivalue={this.props.multivalue}
@@ -203,10 +212,6 @@ const ZoneField = React.createClass({
                     onSelect={this.props.onSelect}
                     onUpdateField={this.changeZoneValue}
                     onToggle={(toggle) => {
-                        /*if (values && values.length > 0) {
-                            this.props.onOpenMenu(!this.props.open, this.props.zoneId);
-                        }*/
-
                         if (toggle && (!this.props.values || this.props.values.length < 1)) {
                             const filter = this.getFilter(this.props.searchText, this.props.searchMethod);
                             this.props.onSearch(true, this.props.zoneId);
@@ -217,6 +222,7 @@ const ZoneField = React.createClass({
         );
     },
     changeZoneValue(id, fieldName, value) {
+        this.setState({open: false});
         let val;
         if (this.props.multivalue) {
             val = {
