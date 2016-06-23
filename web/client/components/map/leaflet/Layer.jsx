@@ -116,12 +116,15 @@ const LeafletLayer = React.createClass({
         }
     },
     isValid() {
-        const valid = Layers.isValid(this.props.type, this.layer);
-        if (this.valid && !valid) {
-            this.props.onInvalid(this.props.type, this.props.options);
+        if (this.layer) {
+            const valid = Layers.isValid(this.props.type, this.layer);
+            if (this.valid && !valid) {
+                this.props.onInvalid(this.props.type, this.props.options);
+            }
+            this.valid = valid;
+            return valid;
         }
-        this.valid = valid;
-        return valid;
+        return false;
     }
 });
 

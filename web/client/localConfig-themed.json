@@ -3,7 +3,7 @@
 	"geoStoreUrl": "/mapstore/rest/geostore/",
   "printUrl": "http://demo.geo-solutions.it/geoserver/pdf/info.json",
 	"bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
-	"initialMapFilter": "*",
+	"initialMapFilter": "MS2",
 	"plugins": {
 		"mobile": ["Home", {
 			"name": "About",
@@ -149,7 +149,13 @@
 				"hideFrom": ["Toolbar"],
 				"hide": true,
 				"cfg": {
-					"visibilityCheckType": "glyph"
+					"visibilityCheckType": "glyph",
+					"settingsOptions": {
+						"includeCloseButton": false,
+						"closeGlyph": "1-close",
+						"asModal": false,
+						"buttonSize": "small"
+					}
 				},
 				"override": {
 					"DrawerMenu": {
@@ -215,7 +221,10 @@
 				"name": "ShapeFile",
 				"hideFrom": ["Toolbar"],
 				"cfg": {
-					"wrap": true
+					"wrap": true,
+					"wrapWithPanel": false,
+					"closeGlyph": "1-close",
+					"buttonSize": "small"
 				}
 		}, {
 				"name": "Settings",

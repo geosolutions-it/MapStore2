@@ -33,6 +33,7 @@ var DefaultLayer = React.createClass({
         saveText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         closeText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         modalOptions: React.PropTypes.object,
+        settingsOptions: React.PropTypes.object,
         visibilityCheckType: React.PropTypes.string
     },
     getDefaultProps() {
@@ -45,6 +46,7 @@ var DefaultLayer = React.createClass({
             activateLegendTool: false,
             activateSettingsTool: false,
             modalOptions: {},
+            settingsOptions: {},
             visibilityCheckType: "glyph"
         };
     },
@@ -67,6 +69,7 @@ var DefaultLayer = React.createClass({
             if (this.props.settings && this.props.settings.node === this.props.node.id) {
                 tools.push(
                     <SettingsModal key="toolsettingsmodal" options={this.props.modalOptions}
+                               {...this.props.settingsOptions}
                                hideSettings={this.props.hideSettings}
                                settings={this.props.settings}
                                updateSettings={this.props.updateSettings}

@@ -47,7 +47,7 @@ let thumbs = {
 
 let BackgroundSwitcher = React.createClass({
     propTypes: {
-        id: React.PropTypes.number,
+        id: React.PropTypes.string,
         name: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         layers: React.PropTypes.array,
         columnProperties: React.PropTypes.object,

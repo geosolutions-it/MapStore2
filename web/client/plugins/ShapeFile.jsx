@@ -27,6 +27,8 @@ const {toggleControl} = require('../actions/controls');
 const assign = require('object-assign');
 const {Glyphicon, Panel} = require('react-bootstrap');
 
+const Dialog = require('../components/misc/Dialog');
+
 const ShapeFile = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
@@ -43,15 +45,19 @@ const ShapeFile = React.createClass({
         error: React.PropTypes.string,
         mapType: React.PropTypes.string,
         wrap: React.PropTypes.bool,
+        wrapWithPanel: React.PropTypes.bool,
         panelStyle: React.PropTypes.object,
         panelClassName: React.PropTypes.string,
         visible: React.PropTypes.bool,
-        toggleControl: React.PropTypes.func
+        toggleControl: React.PropTypes.func,
+        closeGlyph: React.PropTypes.string,
+        buttonSize: React.PropTypes.string
     },
     getDefaultProps() {
         return {
             id: "mapstore-shapefile-upload",
             wrap: false,
+            wrapWithPanel: true,
             panelStyle: {
                 minWidth: "360px",
                 zIndex: 100,
@@ -62,7 +68,9 @@ const ShapeFile = React.createClass({
             },
             panelClassName: "toolbar-panel",
             visible: false,
-            toggleControl: () => {}
+            toggleControl: () => {},
+            closeGlyph: "",
+            buttonSize: "large"
         };
     },
     componentWillMount() {
@@ -116,7 +124,7 @@ const ShapeFile = React.createClass({
     },
     render() {
         const panel = (
-            <Grid style={{width: "300px"}} fluid>
+            <Grid role="body" style={{width: "300px"}} fluid>
                 {(this.props.error) ? this.renderError() : null}
             <Row style={{textAlign: "center"}}>
                 {
@@ -132,17 +140,26 @@ const ShapeFile = React.createClass({
 
                 {(this.props.selected) ?
                 (<Row >
-                    <Col xsOffset={6} xs={3}> <Button disabled={!this.props.selected} onClick={() => {this.props.onShapeChoosen(null); }}>{<Message msgId="shapefile.cancel"/>}</Button></Col>
-                    <Col xs={3}> <Button disabled={!this.props.selected} onClick={this.addToMap}>{<Message msgId="shapefile.add"/>}</Button></Col>
+                    <Col xsOffset={6} xs={3}> <Button bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={() => {this.props.onShapeChoosen(null); }}>{<Message msgId="shapefile.cancel"/>}</Button></Col>
+                    <Col xs={3}> <Button bsStyle="primary" bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={this.addToMap}>{<Message msgId="shapefile.add"/>}</Button></Col>
                 </Row>
                     ) : null }
             </Grid>
         );
         if (this.props.wrap) {
             if (this.props.visible) {
-                return (<Panel id={this.props.id} header={<span><span className="shapefile-panel-title"><Message msgId="shapefile.title"/></span><span className="shapefile-panel-close panel-close" onClick={this.props.toggleControl}></span></span>} style={this.props.panelStyle} className={this.props.panelClassName}>
+                if (this.props.wrapWithPanel) {
+                    return (<Panel id={this.props.id} header={<span><span className="shapefile-panel-title"><Message msgId="shapefile.title"/></span><span className="shapefile-panel-close panel-close" onClick={this.props.toggleControl}></span></span>} style={this.props.panelStyle} className={this.props.panelClassName}>
+                        {panel}
+                    </Panel>);
+                }
+                return (<Dialog id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
+                    <span role="header">
+                        <span className="shapefile-panel-title"><Message msgId="shapefile.title"/></span>
+                        <button onClick={this.props.toggleControl} className="shapefile-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
+                    </span>
                     {panel}
-                </Panel>);
+                </Dialog>);
             }
             return null;
         }

@@ -103,6 +103,7 @@
     "react-dropzone": "3.4.0",
     "react-intl": "https://github.com/geosolutions-it/react-intl/tarball/react_014_1x",
     "react-nouislider": "1.11.0",
+    "react-overlays": "0.6.3",
     "react-pdf": "0.0.10",
     "react-redux": "4.4.1",
     "react-responsive": "1.1.3",
