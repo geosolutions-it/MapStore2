@@ -186,7 +186,11 @@
 					}
 				}
 		}, {
-				"name": "MeasureResults"
+				"name": "MeasureResults",
+        "cfg":{
+          "closeGlyph": "1-close",
+          "withPanelAsContainer": false
+        }
 		}, {
 				"name": "Print",
 				"cfg": {
