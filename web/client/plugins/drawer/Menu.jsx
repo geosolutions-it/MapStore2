@@ -41,7 +41,7 @@ var Menu = React.createClass({
     },
     renderButtons() {
         return this.props.children.map((child) => (
-            <Button bsSize="large" className="square-button" onClick={this.props.onChoose.bind(null, child.props.eventKey)} bsStyle={this.props.activeKey === child.props.eventKey ? 'default' : 'primary'}>
+            <Button key={child.props.eventKey} bsSize="large" className="square-button" onClick={this.props.onChoose.bind(null, child.props.eventKey)} bsStyle={this.props.activeKey === child.props.eventKey ? 'default' : 'primary'}>
                 {child.props.glyph ? <Glyphicon glyph={child.props.glyph} /> : child.props.icon}
             </Button>
         ));

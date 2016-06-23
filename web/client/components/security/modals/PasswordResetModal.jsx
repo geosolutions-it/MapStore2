@@ -8,7 +8,11 @@
 
 const React = require('react');
 const PasswordReset = require('../forms/PasswordReset');
-const {Modal, Button} = require('react-bootstrap');
+
+const {Modal, Button, Glyphicon} = require('react-bootstrap');
+
+const Dialog = require('../../../components/misc/Dialog');
+const assign = require('object-assign');
 
 const Spinner = require('react-spinkit');
 
@@ -24,7 +28,12 @@ const PasswordResetModal = React.createClass({
         options: React.PropTypes.object,
         onPasswordChange: React.PropTypes.func,
         onPasswordChanged: React.PropTypes.func,
-        onClose: React.PropTypes.func
+        onClose: React.PropTypes.func,
+        useModal: React.PropTypes.bool,
+        closeGlyph: React.PropTypes.string,
+        style: React.PropTypes.object,
+        buttonSize: React.PropTypes.string,
+        includeCloseButton: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -34,7 +43,12 @@ const PasswordResetModal = React.createClass({
             onPasswordChange: () => {},
             onPasswordChanged: () => {},
             onClose: () => {},
-            options: {}
+            options: {},
+            useModal: true,
+            closeGlyph: "",
+            style: {},
+            buttonSize: "large",
+            includeCloseButton: true
         };
     },
     componentWillReceiveProps(nextProps) {
@@ -62,34 +76,44 @@ const PasswordResetModal = React.createClass({
         return this.state.loading ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn/> : null;
     },
     render() {
-        return (
+        const footer = (<span role="footer"><div style={{"float": "left"}}>{this.renderLoading()}</div>
+        <Button
+            ref="passwordChangeButton"
+            key="passwordChangeButton"
+            bsStyle="primary"
+            bsSize={this.props.buttonSize}
+            disabled={!this.state.passwordValid}
+            onClick={() => {
+                this.setState({loading: true});
+                this.onPasswordChange();
+            }}>Reset Password</Button>
+        {this.props.includeCloseButton ? <Button
+            key="closeButton"
+            ref="closeButton"
+            bsSize={this.props.buttonSize}
+            onClick={this.props.onClose}>Close</Button> : <span/>}
+        </span>);
+        const body = (<PasswordReset role="body" ref="passwordResetForm"
+            onChange={() => {
+                this.setState({passwordValid: this.refs.passwordResetForm.isValid()});
+            }} />);
+        return this.props.useModal ? (
             <Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
                 <Modal.Header key="passwordChange" closeButton>
-                    <Modal.Title>Change Password</Modal.Title>
+                  <Modal.Title>Change Password</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <PasswordReset ref="passwordResetForm"
-                        onChange={() => {
-                            this.setState({passwordValid: this.refs.passwordResetForm.isValid()});
-                        }} />
+                    {body}
                 </Modal.Body>
                 <Modal.Footer>
-                    <div style={{"float": "left"}}>{this.renderLoading()}</div>
-                    <Button
-                        ref="passwordChangeButton"
-                        key="passwordChangeButton"
-                        bsStyle="primary"
-                        disabled={!this.state.passwordValid}
-                        onClick={() => {
-                            this.setState({loading: true});
-                            this.onPasswordChange();
-                        }}>Reset Password</Button>
-                    <Button
-                        key="closeButton"
-                        ref="closeButton"
-                        onClick={this.props.onClose}>Close</Button>
+                  {footer}
                 </Modal.Footer>
-            </Modal>
+            </Modal>) : (
+            <Dialog id="mapstore-changepassword-panel" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
+                <span role="header"><span className="changepassword-panel-title">Change Password</span><button onClick={this.props.onClose} className="login-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
+                {body}
+                {footer}
+            </Dialog>
         );
     }
 });

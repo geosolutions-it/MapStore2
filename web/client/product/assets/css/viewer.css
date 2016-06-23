@@ -423,6 +423,32 @@ html, body, #container, .fill {
     width: 500px;
 }
 
+#mapstore-login-panel {
+    width: 300px;
+}
+#mapstore-login-panel button {
+    float: right !important;
+}
+
+.modal {
+    overflow-y: auto !important;
+}
+
 .draggable-header {
     cursor: move;
+}
+
+.ms2-loading {
+    background-color: #078aa3 !important;
+    border-bottom: 2px solid #5C9FB4 !important;
+}
+
+.ms2-loading .circle-wrapper {
+    width: 30px;
+    height: 30px;
+    margin: 10px;
+}
+
+.ms2-loading .circle-wrapper .circle:before {
+    background-color: white !important;
 }

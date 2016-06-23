@@ -25,7 +25,7 @@ let BasicSpinner = React.createClass({
         return (
                 <div className="spinner">
                     <div className={ "spinner-card " + this.props.sSize}>
-                        <div className="spinner-bg spinner-loader" >Loadin..</div>
+                        <div className="spinner-bg spinner-loader" >Loading..</div>
                         <div className="spinner-fg">{this.props.value}</div>
                     </div>
                 </div>
