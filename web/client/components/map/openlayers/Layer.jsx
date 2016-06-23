@@ -102,7 +102,11 @@ const OpenlayersLayer = React.createClass({
     },
     createLayer(type, options, position) {
         if (type) {
-            const layerOptions = assign({}, options, position ? {zIndex: position} : null);
+            const layerOptions = assign({}, options, position ? {zIndex: position} : null, {
+                onError: () => {
+                    this.props.onInvalid(this.props.type, this.props.options);
+                }
+            });
             this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
             if (this.layer && !this.layer.detached) {
                 this.addLayer(options);
