@@ -148,6 +148,9 @@
 				"name": "TOC",
 				"hideFrom": ["Toolbar"],
 				"hide": true,
+				"cfg": {
+					"visibilityCheckType": "glyph"
+				},
 				"override": {
 					"DrawerMenu": {
 						"glyph": "1-layer"
