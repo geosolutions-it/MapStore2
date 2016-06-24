@@ -61,6 +61,9 @@
         },{
                 "name": "Settings",
                 "hide": true
-        }, "Toolbar", "Identify", "MapLoading"]
+        }, "Toolbar", "Identify", {
+          "name": "MapLoading",
+          "hideFrom": ["Toolbar"]
+        }]
     }
 }

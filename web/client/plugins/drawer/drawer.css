@@ -9,7 +9,10 @@
     outline: none;
     border: transparent;
     font-size: 14px;
+}
 
+.drawer-menu-button:hover {
+    background: transparent;
 }
 
 #drawer-menu-button:active{

@@ -13,9 +13,6 @@ const {createSelector} = require('reselect');
 
 const assign = require('object-assign');
 
-
-require("./mouseposition/mousePosition.css");
-
 const {changeMousePositionCrs, changeMousePositionState} = require('../actions/mousePosition');
 
 const getDesiredPosition = (map, mousePosition, mapInfo) => {

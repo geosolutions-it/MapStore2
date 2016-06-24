@@ -28,8 +28,6 @@ const {isArray} = require('lodash');
 
 const MediaQuery = require('react-responsive');
 
-require('./searchbar/searchbar.css');
-
 const selector = createSelector([
     mapSelector,
     state => state.search || null

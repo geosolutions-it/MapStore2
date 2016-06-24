@@ -213,9 +213,9 @@ html, body, #container, .fill {
     display: block;
 }
 
- #drawer-menu-button {
+#drawer-menu-button {
      position: absolute;
- }
+}
 
 #mapstore-drawermenu > div > div:nth-child(2) {
     display: none;

@@ -10,7 +10,6 @@ var React = require('react');
 var {Input, Glyphicon} = require('react-bootstrap');
 var LocaleUtils = require('../../../utils/LocaleUtils');
 
-
 var delay = (
     function() {
         var timer = 0;
@@ -20,6 +19,7 @@ var delay = (
     };
     })();
 
+require('./searchbar.css');
 
 /**
  * Search Bar component. With AutoComplete
