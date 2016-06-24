@@ -68,7 +68,6 @@ img.mapstore-logo {
 .spinner-loader:after,
 .spinner-loader > div:before,
 .spinner-loader > div:after {
-    content: '';
     position: absolute;
     top: 0;
     left: 2.25em; /* (container width - part width)/2  */

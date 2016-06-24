@@ -374,14 +374,20 @@
       "hide": true,
       "cfg": {
         "glyph": "1-screen-backward",
-        "buttonStyle": "primary"
+        "buttonStyle": "primary",
+        "btnConfig": {
+          "className": "square-button"
+        }
       }
     }, {
       "name": "Redo",
       "hide": true,
       "cfg": {
         "glyph": "1-screen-forward",
-        "buttonStyle": "primary"
+        "buttonStyle": "primary",
+        "btnConfig": {
+          "className": "square-button"
+        }
       }
     }]
 	}

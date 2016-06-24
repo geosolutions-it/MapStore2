@@ -330,11 +330,16 @@ html, body, #container, .fill {
 }
 
 .modal-header button.close {
-    margin-top: -12px;
+    margin-top: -7px;
     opacity: 1;
 }
 
 .modal-header button.close:hover {
+    opacity: 0.5;
+    color: white;
+}
+
+.modal-header button.close:focus {
     opacity: 0.5;
     color: white;
 }

@@ -21,7 +21,6 @@ const {undo, redo} = ActionCreators;
 const UndoButton = connect((state) => {
     let mapHistory = state.map && state.map.past && {past: state.map.past, future: state.map.future} || {past: [], future: []};
     return {
-        btnConfig: {disabled: (mapHistory.past.length > 0) ? false : true},
         disabled: (mapHistory.past.length > 0) ? false : true
     };
 }, {
@@ -31,7 +30,6 @@ const UndoButton = connect((state) => {
 const RedoButton = connect((state) => {
     let mapHistory = state.map && state.map.past && {past: state.map.past, future: state.map.future} || {past: [], future: []};
     return {
-        btnConfig: {disabled: (mapHistory.future.length > 0) ? false : true},
         disabled: (mapHistory.future.length > 0) ? false : true
     };
 }, {

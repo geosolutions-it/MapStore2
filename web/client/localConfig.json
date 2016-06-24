@@ -99,6 +99,7 @@
 				"cfg": {
 					"glyph": "pencil",
 					"buttonStyle": "primary",
+          "buttonClassName": "square-button",
 					"singleSection": true
 				}
     },
