@@ -61,7 +61,6 @@ module.exports = {
             position: 4,
             text: <Message msgId="shapefile.title"/>,
             icon: <Glyphicon glyph="upload"/>,
-            panel: true,
             action: toggleControl.bind(null, 'shapefile', null)
         }
     }),

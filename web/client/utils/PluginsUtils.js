@@ -25,7 +25,7 @@ const showIn = (cfg, name, id, isDefault) => {
 
 const includeLoaded = (name, loadedPlugins, plugin) => {
     if (loadedPlugins[name]) {
-        return assign({}, plugin, {impl: loadedPlugins[name], loadPlugin: undefined});
+        return assign(loadedPlugins[name], plugin, {loadPlugin: undefined});
     }
     return plugin;
 };
