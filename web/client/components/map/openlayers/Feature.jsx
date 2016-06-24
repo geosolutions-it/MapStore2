@@ -30,14 +30,7 @@ let Feature = React.createClass({
     },
     componentWillReceiveProps(newProps) {
         if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry)) {
-            if (this._feature) {
-                if (Array.isArray(this._feature)) {
-                    this._feature.forEach((feature) => {this.props.container.getSource().removeFeature(feature); });
-                } else {
-                    this.props.container.getSource().removeFeature(this._feature);
-                }
-            }
-
+            this.removeFromContainer();
             const format = new ol.format.GeoJSON();
             const geometry = newProps.geometry && newProps.geometry.coordinates;
 
@@ -52,16 +45,22 @@ let Feature = React.createClass({
         return !isEqual(nextProps.properties, this.props.properties) || !isEqual(nextProps.geometry, this.props.geometry);
     },
     componentWillUnmount() {
+        this.removeFromContainer();
+    },
+    render() {
+        return null;
+    },
+    removeFromContainer() {
         if (this._feature) {
             if (Array.isArray(this._feature)) {
-                this._feature.forEach((feature) => {this.props.container.getSource().removeFeature(feature); });
+                const layersSource = this.props.container.getSource();
+                this._feature.forEach((feature) => {
+                    layersSource.removeFeature(layersSource.getFeatureById(feature.getId()));
+                });
             } else {
                 this.props.container.getSource().removeFeature(this._feature);
             }
         }
-    },
-    render() {
-        return null;
     }
 });
 
