@@ -38,7 +38,8 @@ const DrawerMenu = React.createClass({
         glyph: React.PropTypes.string,
         buttonStyle: React.PropTypes.string,
         menuOptions: React.PropTypes.object,
-        singleSection: React.PropTypes.bool
+        singleSection: React.PropTypes.bool,
+        buttonClassName: React.PropTypes.string
     },
     contextTypes: {
         messages: React.PropTypes.object,
@@ -52,7 +53,8 @@ const DrawerMenu = React.createClass({
             glyph: "menu-hamburger",
             buttonStyle: "default",
             menuOptions: {},
-            singleSection: false
+            singleSection: false,
+            buttonClassName: "drawer-menu-button"
         };
     },
     renderItems() {
@@ -79,7 +81,7 @@ const DrawerMenu = React.createClass({
     render() {
         return (
             <div id={this.props.id}>
-                <Button id="drawer-menu-button" bsStyle={this.props.buttonStyle} key="menu-button" className="square-button" onClick={this.props.toggleMenu}><Glyphicon glyph={this.props.glyph}/></Button>
+                <Button id="drawer-menu-button" bsStyle={this.props.buttonStyle} key="menu-button" className={this.props.buttonClassName} onClick={this.props.toggleMenu}><Glyphicon glyph={this.props.glyph}/></Button>
                 <Menu single={this.props.singleSection} {...this.props.menuOptions} title={<Message msgId="menu" />} alignment="left">
                     {this.renderItems()}
                 </Menu>

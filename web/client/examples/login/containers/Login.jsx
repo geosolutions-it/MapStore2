@@ -31,8 +31,8 @@ const Login = React.createClass({
     render() {
         return (<Localized messages={this.props.messages} locale={this.props.locale}>
             <div className="fill">
-                <LoginPlugin />
-                    <Jumbotron className="fill">
+                    <div style={{textAlign: "right"}}><LoginPlugin /></div>
+                    <Jumbotron style={{position: "absolute", bottom: 0, left: 0, right: 0, top: "35px"}}>
                     <h1>Hello, {this.props.security && this.props.security.user && this.props.security.user.name || "Guest user. Please login"}</h1>
                     <p>This is a sample of the login functionality. In the future you will able to login to MapStore to create maps or admin a server.</p>
                     <p>{this.renderGroups()}</p>
