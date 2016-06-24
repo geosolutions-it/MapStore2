@@ -317,7 +317,7 @@
             },
             "spatialfilter": {
                 "selection_method": "Selection Method",
-                "geometric_operation": "Operazione Geometrica",
+                "geometric_operation": "Geometric Operation",
                 "spatial_filter_header": "Spatial Filter",
                 "draw_start_label": "Draw the region on interest in the map",
                 "dwithin_label": "meters",
@@ -401,7 +401,7 @@
                 "none": "None",
                 "Normalize": "Normalize",
                 "Histogram": "Histogram",
-                "GammaValue": "GammaValue"
+                "GammaValue": "Gamma Correction"
             },
             "algorithm": {
                 "none": "None",

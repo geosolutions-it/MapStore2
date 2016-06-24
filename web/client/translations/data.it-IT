@@ -399,8 +399,8 @@
             "enha": {
                 "none": "Nessuno",
                 "Normalize": "Normalizza",
-                "Histogram": "Histogramma",
-                "GammaValue": "GammaValue"
+                "Histogram": "Istogramma",
+                "GammaValue": "Correzione Gamma"
             },
             "algorithm": {
                 "none": "Nessuno",
