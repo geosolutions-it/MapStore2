@@ -57,7 +57,7 @@ const FilterField = React.createClass({
         );
     },
     render() {
-        let selectedAttribute = this.props.attributes.filter((attribute) => attribute.id === this.props.filterField.attribute)[0];
+        let selectedAttribute = this.props.attributes.filter((attribute) => attribute.attribute === this.props.filterField.attribute)[0];
 
         return (
             <Row>
@@ -65,7 +65,7 @@ const FilterField = React.createClass({
                     <ComboField
                         valueField={'id'}
                         textField={'name'}
-                        fieldOptions={this.props.attributes.map((attribute) => { return {id: attribute.id, name: attribute.fieldName}; })}
+                        fieldOptions={this.props.attributes.map((attribute) => { return {id: attribute.attribute, name: attribute.label}; })}
                         fieldValue={this.props.filterField.attribute}
                         fieldName="attribute"
                         fieldRowId={this.props.filterField.rowId}

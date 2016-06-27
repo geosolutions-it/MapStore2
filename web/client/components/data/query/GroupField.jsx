@@ -67,7 +67,7 @@ const GroupField = React.createClass({
             let filterField = this.props.filterFields.filter((field) => field.attribute === selected.dependson.field)[0];
             if (filterField && filterField.value) {
                 // The complete attribute config object
-                let attribute = attributes.filter((attr) => attr.id === filterField.attribute)[0];
+                let attribute = attributes.filter((attr) => attr.attribute === filterField.attribute)[0];
                 // The reference ID of the related attribute field value
                 let attributeRefId = attribute.values.filter((value) => value[attribute.valueId] === filterField.value)[0][selected.dependson.from];
                 // The filtered values that match the attribute refId
@@ -84,7 +84,7 @@ const GroupField = React.createClass({
         }) : null);
     },
     renderFilterField(filterField) {
-        let selectedAttribute = this.props.attributes.filter((attribute) => attribute.id === filterField.attribute)[0];
+        let selectedAttribute = this.props.attributes.filter((attribute) => attribute.attribute === filterField.attribute)[0];
         let comboValues = this.getComboValues(selectedAttribute, this.props.attributes);
 
         return (

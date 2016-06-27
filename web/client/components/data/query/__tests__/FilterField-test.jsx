@@ -38,8 +38,8 @@ describe('FilterField', () => {
 
         const attributes = [
             {
-               id: "Attribute1",
-               fieldName: "Attribute1",
+               attribute: "Attribute1",
+               label: "Attribute1",
                type: "list",
                values: [
                    {id: "attribute1", name: "attribute1"},
@@ -51,8 +51,8 @@ describe('FilterField', () => {
                valueId: "id",
                valueLabel: "name"
             }, {
-               id: "Attribute2",
-               fieldName: "Attribute2",
+               attribute: "Attribute2",
+               label: "Attribute2",
                type: "list",
                values: [
                    {id: "attribute6", name: "attribute6"},
