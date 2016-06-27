@@ -23,7 +23,8 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 const PluginsContainer = connect((state) => ({
     pluginsConfig: state.plugins || ConfigUtils.getConfigProp('plugins') || null,
-    mode: (urlQuery.mobile || (state.browser && state.browser.touch)) ? 'mobile' : 'desktop'
+    mode: (urlQuery.mobile || (state.browser && state.browser.touch)) ? 'mobile' : 'desktop',
+    pluginsState: state
 }))(require('../../../components/plugins/PluginsContainer'));
 
 
@@ -65,4 +66,3 @@ module.exports = connect((state) => ({
     loadMapConfig,
     reset: resetControls
 })(MapViewer);
-
