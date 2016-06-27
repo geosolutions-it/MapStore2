@@ -23,21 +23,7 @@ const showIn = (cfg, name, id, isDefault) => {
             !((cfg.hideFrom && cfg.hideFrom.indexOf(name) !== -1) || (id && cfg.hideFrom && cfg.hideFrom.indexOf(id) !== -1));
 };
 
-const includeLoaded = (name, loadedPlugins, plugin) => {
-    if (loadedPlugins[name]) {
-        return assign(loadedPlugins[name], plugin, {loadPlugin: undefined});
-    }
-    return plugin;
-};
-
-const includeLoadedItem = (name, loadedPlugins, plugin) => {
-    if (loadedPlugins[name]) {
-        return assign(loadedPlugins[name], plugin, {loadPlugin: undefined});
-    }
-    return plugin;
-};
-
-const getPluginItems = (plugins, pluginsConfig, name, id, isDefault, loadedPlugins) => {
+const getPluginItems = (plugins, pluginsConfig, name, id, isDefault) => {
     return Object.keys(plugins)
             .filter((plugin) => plugins[plugin][name])
             .filter((plugin) => {
@@ -45,8 +31,8 @@ const getPluginItems = (plugins, pluginsConfig, name, id, isDefault, loadedPlugi
                 return cfgObj && showIn(cfgObj, name, id, isDefault);
             })
             .map((plugin) => {
+                const pluginImpl = plugins[plugin];
                 const pluginName = plugin.substring(0, plugin.length - 6);
-                const pluginImpl = includeLoadedItem(pluginName, loadedPlugins, plugins[plugin]);
                 const pluginCfg = isPluginConfigured(pluginsConfig, plugin);
                 const item = pluginImpl[name].impl || pluginImpl[name];
                 return assign({},
@@ -57,7 +43,7 @@ const getPluginItems = (plugins, pluginsConfig, name, id, isDefault, loadedPlugi
                     },
                     {
                         plugin: pluginImpl,
-                        items: getPluginItems(plugins, pluginsConfig, pluginName, null, true, loadedPlugins)
+                        items: getPluginItems(plugins, pluginsConfig, pluginName, null, true)
                     });
             });
 };
@@ -89,7 +75,6 @@ const parsePluginConfig = (requires, cfg) => {
 };
 const getReducers = (plugins) => Object.keys(plugins).map((name) => plugins[name].reducers)
                             .reduce((previous, current) => assign({}, previous, current), {});
-
 const PluginsUtils = {
     combineReducers: (plugins, reducers) => {
         const pluginsReducers = getReducers(plugins);
@@ -98,7 +83,7 @@ const PluginsUtils = {
     getReducers,
     getPlugins: (plugins) => Object.keys(plugins).map((name) => plugins[name])
                                 .reduce((previous, current) => assign({}, previous, omit(current, 'reducers')), {}),
-    getPluginDescriptor: (plugins, pluginsConfig, pluginDef, loadedPlugins = {}) => {
+    getPluginDescriptor: (plugins, pluginsConfig, pluginDef) => {
         const name = isObject(pluginDef) ? pluginDef.name : pluginDef;
         const id = isObject(pluginDef) ? pluginDef.id : null;
         const stateSelector = isObject(pluginDef) ? pluginDef.stateSelector : id || undefined;
@@ -107,9 +92,9 @@ const PluginsUtils = {
         return {
             id: id || name,
             name,
-            impl: includeLoaded(name, loadedPlugins, (impl.loadPlugin || impl.displayName) ? impl : impl(stateSelector)),
+            impl: impl.displayName ? impl : impl(stateSelector),
             cfg: isObject(pluginDef) ? parsePluginConfig(plugins.requires, pluginDef.cfg) : {},
-            items: getPluginItems(plugins, pluginsConfig, name, id, isDefault, loadedPlugins)
+            items: getPluginItems(plugins, pluginsConfig, name, id, isDefault)
         };
     }
 };
