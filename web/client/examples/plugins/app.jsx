@@ -19,7 +19,7 @@ const {loadLocale} = require('../../actions/locale');
 const {loadPrintCapabilities} = require('../../actions/print');
 
 const PluginsContainer = connect((state) => ({
-    pluginsState: state
+    pluginsState: state && state.controls || {}
 }))(require('../../components/plugins/PluginsContainer'));
 
 const {plugins} = require('./plugins');

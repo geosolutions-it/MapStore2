@@ -43,7 +43,7 @@ module.exports = {
 
             resolve(ShapeFilePlugin);
         });
-    }, enabler: (state) => state.controls && state.controls.shapefile && state.controls.shapefile.enabled || state.controls && state.controls.toolbar && state.controls.toolbar.active === 'shapefile'}, {
+    }, enabler: (state) => state.shapefile && state.shapefile.enabled || state.toolbar && state.toolbar.active === 'shapefile'}, {
         Toolbar: {
             name: 'shapefile',
             position: 9,
