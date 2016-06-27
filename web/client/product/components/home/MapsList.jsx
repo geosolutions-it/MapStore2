@@ -9,7 +9,7 @@ var React = require('react');
 
 var I18N = require('../../../components/I18N/I18N');
 var {Label, Input} = require('react-bootstrap');
-var MapList = require('../../../components/maps/MapList');
+var MapsGrid = require('../../../components/maps/MapGrid');
 
 var MapsList = React.createClass({
     propTypes: {
@@ -28,7 +28,7 @@ var MapsList = React.createClass({
                     <option value="leaflet" key="leaflet">Leaflet</option>
                     <option value="openlayers" key="openlayer">OpenLayers</option>
                 </Input>
-                <MapList mapType={this.props.mapType} viewerUrl={this.props.onGoToMap}
+                <MapsGrid mapType={this.props.mapType} viewerUrl={this.props.onGoToMap}
             maps={this.props.maps && this.props.maps.results ? this.props.maps.results : []}
             panelProps={{className: "mapmanager",
                 header: this.props.title,
