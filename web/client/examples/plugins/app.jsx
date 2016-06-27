@@ -18,9 +18,7 @@ const {loadMapConfig} = require('../../actions/config');
 const {loadLocale} = require('../../actions/locale');
 const {loadPrintCapabilities} = require('../../actions/print');
 
-const PluginsContainer = connect((state) => ({
-    pluginsState: state
-}))(require('../../components/plugins/PluginsContainer'));
+const PluginsContainer = require('../../components/plugins/PluginsContainer');
 
 const {plugins} = require('./plugins');
 
