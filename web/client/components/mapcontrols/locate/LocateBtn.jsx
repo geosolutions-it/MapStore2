@@ -93,12 +93,14 @@ var LocateBtn = React.createClass({
         );
     },
     componentWillMount() {
-        // check if we are allowed to use geolocation feature
-        navigator.geolocation.getCurrentPosition(() => {}, (error) => {
-            if (error.code === 1) {
-                this.props.onClick("PERMISSION_DENIED");
-            }
-        });
+        if (this.props.locate !== 'PERMISSION_DENIED') {
+            // check if we are allowed to use geolocation feature
+            navigator.geolocation.getCurrentPosition(() => {}, (error) => {
+                if (error.code === 1) {
+                    this.props.onClick("PERMISSION_DENIED");
+                }
+            });
+        }
     },
     render() {
         var retval;

@@ -104,7 +104,8 @@ const ToolsContainer = React.createClass({
         });
     },
     renderPanels() {
-        return this.props.panels.map((panel) => {
+        return this.props.panels
+        .filter((panel) => !panel.panel.loadPlugin).map((panel) => {
             const ToolPanelComponent = panel.panel;
             const ToolPanel = (<ToolPanelComponent
                 key={panel.name} mapType={this.props.mapType} {...panel.cfg} {...(panel.props || {})}
