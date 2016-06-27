@@ -9,10 +9,14 @@ const React = require('react');
 const img = require('./images/magnifier.png');
 
 const ZoomToFeatureRenderer = React.createClass({
+    propTypes: {
+        params: React.PropTypes.object
+    },
     render() {
-        return (
+        const geometry = this.props.params.data.geometry;
+        return geometry && geometry.coordinates ? (
             <img src={img} width={16}/>
-        );
+        ) : null;
     }
 });
 
