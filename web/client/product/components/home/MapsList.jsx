@@ -28,10 +28,10 @@ var MapsList = React.createClass({
                     <option value="leaflet" key="leaflet">Leaflet</option>
                     <option value="openlayers" key="openlayer">OpenLayers</option>
                 </Input>
+                <h3>{this.props.title}</h3>
                 <MapsGrid mapType={this.props.mapType} viewerUrl={this.props.onGoToMap}
             maps={this.props.maps && this.props.maps.results ? this.props.maps.results : []}
             panelProps={{className: "mapmanager",
-                header: this.props.title,
                  collapsible: true,
                  defaultExpanded: true}} />
              </div>
