@@ -1,0 +1,21 @@
+.gridcard-title {
+    padding-left: 10px;
+    padding-top: 3px;
+    min-height: 40px;
+}
+.gridcard-tools {
+    height: 30px;
+    position: absolute;
+    bottom: 0;
+    right: 15px;
+}
+
+.gridcard-button {
+    height: 30px;
+    width: 30px;
+}
+.gridcard-button span.glyphicon {
+    font-size: 20px;
+    margin-top: -3px;
+    margin-left: -7px;
+}
