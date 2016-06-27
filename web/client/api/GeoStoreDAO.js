@@ -28,7 +28,7 @@ var Api = {
     },
     getResourcesByCategory: function(category, query, options) {
         let q = query || "*";
-        let url = "extjs/search/category/" + category + "/*" + q + "*/";
+        let url = "extjs/search/category/" + category + "/*" + q + "*/thumbnail"; // comma-separated list of wanted attributes
         return this.getGeoStoreClient().get(url, parseOptions(options)).then(function(response) {return response.data; });
     },
     basicLogin: function(username, password, options) {

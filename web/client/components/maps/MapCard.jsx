@@ -10,6 +10,7 @@ const React = require('react');
 const Message = require('../I18N/Message');
 const GridCard = require('../misc/GridCard');
 const thumbUrl = require('./style/default.png');
+const assign = require('object-assign');
 require("./style/mapcard.css");
 
 const MapCard = React.createClass({
@@ -30,7 +31,12 @@ const MapCard = React.createClass({
         };
     },
     getCardStyle() {
-        return this.props.style; // TODO use map thumb
+        if (this.props.map.thumbnail) {
+            return assign({}, this.props.style, {
+                backgroundImage: 'url(' + this.props.map.thumbnail + ')'
+            });
+        }
+        return this.props.style;
     },
     render: function() {
 
