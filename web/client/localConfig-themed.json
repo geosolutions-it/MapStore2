@@ -93,7 +93,11 @@
 			}
 		}, {
 			"name": "Help",
-			"hideFrom": "Toolbar"
+			"hideFrom": "Toolbar",
+			"cfg": {
+				"asPanel": false,
+				"closeGlyph": "1-close"
+			}
 		}, {
         "name": "DrawerMenu",
 				"cfg": {

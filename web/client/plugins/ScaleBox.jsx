@@ -25,7 +25,7 @@ require('./scalebox/scalebox.css');
 
 const ScaleBoxPlugin = React.createClass({
     render() {
-        return (<HelpWrapper
+        return (<HelpWrapper id="mapstore-scalebox-container"
             key="scalebox-help"
             helpText={<Message msgId="helptexts.scaleBox"/>}>
                 <ScaleBox key="scaleBox" {...this.props}/>

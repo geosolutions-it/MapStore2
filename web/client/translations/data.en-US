@@ -270,6 +270,8 @@
         "helptexts": {
             "scaleBox": "This is the helptext for the ScaleBox",
             "zoomToMaxExtentButton": "This is the helptext for the ZoomToMaxExtentButton",
+            "zoomIn": "This is the helptext for the ZoomIn",
+            "zoomOut": "This is the helptext for the ZoomOut",
             "searchBar": "Write the address of a place to find. e.g.  '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20",
             "layerSwitcher": "This is the helptext for the LayerSwitcher",
             "metadataExplorer": "This is the helptext for the MetadataExplorer",
