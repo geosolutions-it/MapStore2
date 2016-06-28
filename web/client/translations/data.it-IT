@@ -271,6 +271,8 @@
         "helptexts": {
             "scaleBox": "Questo è il testo di aiuto per ScaleBox",
             "zoomToMaxExtentButton": "Questo è il testo di aiuto per ZoomToMaxExtentButton",
+            "zoomIn": "Questo è il testo di aiuto per ZoomIn",
+            "zoomOut": "Questo è il testo di aiuto per ZoomOut",
             "searchBar": "Scrivi un indirizzo di un luogo oer trovarlo. esempio:  '1st avenue, new york'. Puoi anche digitare le coordinate in questo formato: 43.87,10.20",
             "layerSwitcher": "Questo è il testo di aiuto per LayerSwitcher",
             "metadataExplorer": "Questo è il testo di aiuto per MetadataExplorer",

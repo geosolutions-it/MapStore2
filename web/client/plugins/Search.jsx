@@ -78,6 +78,7 @@ const SearchPlugin = connect((state) => ({
     render() {
         return (<span>
             <HelpWrapper
+                id="search-help"
                 key="seachBar-help"
                     helpText={<Message msgId="helptexts.searchBar"/>}>
                     {this.getSearchAndToggleButton()}

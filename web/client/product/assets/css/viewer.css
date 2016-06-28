@@ -97,13 +97,17 @@ html, body, #container, .fill {
 	background-size:contain;
 }
 
-#mapstore-scalebox {
+#mapstore-scalebox-container {
     z-index: 10;
-    bottom: -2px !important;
-    right: 50px;
+    bottom: -16px !important;
+    right: 55px;
     left: auto !important;
     position: absolute;
     margin: 8px;
+    width: 148px;
+}
+
+#mapstore-scalebox {
     width: 148px;
 }
 
@@ -534,4 +538,34 @@ html, body, #container, .fill {
 
 #mapstore-layer-settings .noUi-handle:before, #mapstore-layer-settings .noUi-handle:after {
     background: none;
+}
+
+.btn .badge {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+}
+
+.themed .btn .badge {
+    top: -35px;
+    left: -50px;
+}
+
+#helpbadge-scaleBox {
+    left: 0 !important;
+    background-color: #078aa3;
+    color: #ffffff;
+}
+
+#mapstore-navbar #helpbadge-search-help {
+    position: absolute;
+    left: -10px;
+    bottom: -8px;
+    z-index: 1;
+    background-color: #078aa3;
+    color: #ffffff;
+}
+
+.badge {
+    cursor: pointer;
 }

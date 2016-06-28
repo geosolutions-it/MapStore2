@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const BootstrapReact = require('react-bootstrap');
-const Panel = BootstrapReact.Panel;
+const {Panel, Glyphicon} = require('react-bootstrap');
+
+const Dialog = require('../misc/Dialog');
 
 require("./help.css");
 
@@ -26,26 +27,39 @@ const HelpTextPanel = React.createClass({
         helpText: React.PropTypes.string,
         isVisible: React.PropTypes.bool,
         title: React.PropTypes.string,
-        onClose: React.PropTypes.func
+        onClose: React.PropTypes.func,
+        asPanel: React.PropTypes.bool,
+        closeGlyph: React.PropTypes.string,
+        panelStyle: React.PropTypes.object,
+        panelClassName: React.PropTypes.string
     },
     getDefaultProps() {
         return {
             id: 'mapstore-helptext-panel',
             isVisible: false,
             title: 'HELP',
-            onClose: () => {}
+            onClose: () => {},
+            asPanel: true,
+            closeGlyph: ""
         };
     },
     render() {
+        const panel = this.props.asPanel ? (<Panel
+            header={<span><span className="help-panel-title">{this.props.title}</span><span className="help-panel-close panel-close" onClick={this.props.onClose}></span></span>}>
+            {this.props.helpText}
+        </Panel>) : (<Dialog id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
+            <span role="header">
+                <span className="help-panel-title">{this.props.title}</span>
+                <button onClick={this.props.onClose} className="help-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
+            </span>
+            <span role="body">{this.props.helpText}</span>
+        </Dialog>);
         return (
             <div
                 id={this.props.id}
                 className={this.props.isVisible ? '' : 'hidden'}
                 style={{position: "absolute", top: "140px", marginLeft: "8px"}}>
-                <Panel
-                    header={<span><span className="help-panel-title">{this.props.title}</span><span className="help-panel-close panel-close" onClick={this.props.onClose}></span></span>}>
-                    {this.props.helpText}
-                </Panel>
+                {panel}
             </div>
         );
     }

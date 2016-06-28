@@ -10,7 +10,15 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {compose} = require('redux');
 
-const HelpBadge = require('../../components/help/HelpBadge');
+const {changeHelpText, changeHelpwinVisibility} = require('../../actions/help');
+
+const HelpBadge = connect((state) => ({
+    isVisible: state.controls && state.controls.help && state.controls.help.enabled
+}), {
+    changeHelpText,
+    changeHelpwinVisibility
+})(require('../../components/help/HelpBadge'));
+
 const Message = require('../../components/I18N/Message');
 
 const {Button, Tooltip, OverlayTrigger, Panel, Collapse, Glyphicon} = require('react-bootstrap');
@@ -98,7 +106,7 @@ const ToolsContainer = React.createClass({
             return this.addTooltip(
                 <Tool tooltip={tooltip} btnSize={this.props.toolSize} bsStyle={this.props.toolStyle} help={help} key={tool.name} mapType={this.props.mapType}
                     {...tool.cfg} items={tool.items || []}>
-                    {help}{(tool.cfg && tool.cfg.glyph) ? <Glyphicon glyph={tool.cfg.glyph}/> : tool.icon} {tool.text}
+                    {(tool.cfg && tool.cfg.glyph) ? <Glyphicon glyph={tool.cfg.glyph}/> : tool.icon}{help} {tool.text}
                 </Tool>,
             tool);
         });
