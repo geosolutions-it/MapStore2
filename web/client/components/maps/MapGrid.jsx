@@ -23,7 +23,8 @@ var MapGrid = React.createClass({
             onChangeMapType: function() {},
             mapType: 'leaflet',
             colProps: {
-                xs: 6,
+                xs: 12,
+                sm: 6,
                 style: {
                     "marginBottom": "20px"
                 }
@@ -37,7 +38,7 @@ var MapGrid = React.createClass({
             let children = React.Children.count(this.props.children);
             return children === 1 ?
                 React.cloneElement(React.Children.only(this.props.children), {viewerUrl, key: map.id, mapType, map}) :
-                <Col {...this.props.colProps}><MapCard viewerUrl={viewerUrl} key={map.id} mapType={mapType} map={map} /></Col>;
+                <Col key={map.id} {...this.props.colProps}><MapCard viewerUrl={viewerUrl} mapType={mapType} map={map} /></Col>;
         });
     },
     render: function() {
