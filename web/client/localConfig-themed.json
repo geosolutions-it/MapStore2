@@ -168,7 +168,10 @@
 				},
 				"override": {
 					"DrawerMenu": {
-						"glyph": "1-layer"
+						"glyph": "1-layer",
+            "buttonConfig": {
+              "buttonClassName": "square-button no-border"
+            }
 					}
 				}
 		}, {
@@ -185,7 +188,10 @@
 				},
 				"override": {
 					"DrawerMenu": {
-							"glyph": "1-map"
+							"glyph": "1-map",
+              "buttonConfig": {
+                "buttonClassName": "square-button no-border"
+              }
 						}
 				}
 		}, {
@@ -200,7 +206,10 @@
         },
 				"override": {
 					"DrawerMenu": {
-						"glyph": "1-stilo"
+						"glyph": "1-stilo",
+            "buttonConfig": {
+              "buttonClassName": "square-button no-border"
+            }
 					}
 				}
 		}, {
