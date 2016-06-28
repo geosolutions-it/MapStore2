@@ -212,7 +212,7 @@ const FeatureGrid = React.createClass({
     zoomToFeature(params) {
         let geometry = params.data.geometry;
         if (geometry.coordinates) {
-            this.changeMapView([geometry]);
+            this.changeMapView([geometry], this.props.zoom);
         }
     },
     zoomToFeatures() {
@@ -245,7 +245,7 @@ const FeatureGrid = React.createClass({
             this.changeMapView(geometries);
         }
     },
-    changeMapView(geometries) {
+    changeMapView(geometries, zoom) {
         let extent = geometries.reduce((prev, next) => {
             return CoordinateUtils.extendExtent(prev, CoordinateUtils.getGeoJSONExtent(next));
         }, CoordinateUtils.getGeoJSONExtent(geometries[0]));
@@ -258,7 +258,7 @@ const FeatureGrid = React.createClass({
         if (extent) {
             extent = (this.props.srs !== proj) ? CoordinateUtils.reprojectBbox(extent, this.props.srs, proj) : extent;
             // zoom by the max. extent defined in the map's config
-            newZoom = this.props.zoom ? this.props.zoom : mapUtils.getZoomForExtent(extent, mapSize, 0, 21);
+            newZoom = zoom ? zoom : mapUtils.getZoomForExtent(extent, mapSize, 0, 21);
             newZoom = (this.props.maxZoom && newZoom > this.props.maxZoom) ? this.props.maxZoom : newZoom;
 
             // center by the max. extent defined in the map's config
