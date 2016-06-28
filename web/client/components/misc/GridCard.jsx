@@ -21,8 +21,7 @@ const GridCard = React.createClass({
     getDefaultProps() {
         return {
             actions: [],
-            header: "",
-            className: ""
+            header: ""
         };
     },
     renderActions() {
@@ -40,7 +39,7 @@ const GridCard = React.createClass({
     render: function() {
         return (<div
                style={this.props.style}
-               className={"gridcard " + this.props.className}>
+               className={"gridcard" + (this.props.className ? " " + this.props.className : "")}>
                <div className="gridcard-title bg-primary">{this.props.header}</div>
                {this.props.children}
                {this.renderActions()}

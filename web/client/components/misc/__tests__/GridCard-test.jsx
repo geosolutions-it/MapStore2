@@ -26,10 +26,10 @@ describe('This test for GridCard', () => {
 
     // test DEFAULTS
     it('creates the component with defaults', () => {
-        const mapItem = ReactDOM.render(<GridCard />, document.getElementById("container"));
-        expect(mapItem).toExist();
+        const item = ReactDOM.render(<GridCard />, document.getElementById("container"));
+        expect(item).toExist();
 
-        const mapItemDom = ReactDOM.findDOMNode(mapItem);
+        const mapItemDom = ReactDOM.findDOMNode(item);
         expect(mapItemDom).toExist();
 
         expect(mapItemDom.className).toBe('gridcard');
@@ -40,14 +40,14 @@ describe('This test for GridCard', () => {
     it('creates the component with data', () => {
         const testName = "test";
         const testDescription = "testDescription";
-        const mapItem = ReactDOM.render(<GridCard header={testName}>{testDescription}</GridCard>, document.getElementById("container"));
-        expect(mapItem).toExist();
+        const item = ReactDOM.render(<GridCard header={testName}>{testDescription}</GridCard>, document.getElementById("container"));
+        expect(item).toExist();
 
-        const mapItemDom = ReactDOM.findDOMNode(mapItem);
-        expect(mapItemDom).toExist();
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
 
-        expect(mapItemDom.className).toBe('gridcard');
-        const headings = mapItemDom.getElementsByClassName('gridcard-title');
+        expect(itemDom.className).toBe('gridcard');
+        const headings = itemDom.getElementsByClassName('gridcard-title');
         expect(headings.length).toBe(1);
         expect(headings[0].innerHTML).toBe(testName);
     });
