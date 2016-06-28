@@ -60,7 +60,9 @@ var Menu = React.createClass({
         </div>);
         return (<div className={"nav-content"}>
             {header}
+            <div className={"nav-body"}>
             {this.props.children.filter((child) => !this.props.single || this.props.activeKey === child.props.eventKey).map(this.renderChildren)}
+            </div>
         </div>);
     },
     render() {
