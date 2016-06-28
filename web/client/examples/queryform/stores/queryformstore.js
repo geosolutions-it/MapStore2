@@ -10,6 +10,8 @@ var DebugUtils = require('../../../utils/DebugUtils');
 
 const {combineReducers} = require('redux');
 
+// STATE_FIPS	SUB_REGION	STATE_ABBR	LAND_KM	WATER_KM	PERSONS	FAMILIES	HOUSHOLD	MALE	FEMALE	WORKERS	DRVALONE	CARPOOL	PUBTRANS	EMPLOYED	UNEMPLOY	SERVICE	MANUAL	P_MALE	P_FEMALE	SAMP_POP
+
 const initialState = {
     seachURL: null,
     showGeneratedFilter: false,
@@ -35,8 +37,8 @@ const initialState = {
     },
     attributes: [
         {
-            id: "ListAttribute",
-            fieldName: "ListAttribute",
+            label: "State Name",
+            attribute: "STATE_NAME",
             type: "list",
             valueId: "id",
             valueLabel: "name",
@@ -49,8 +51,8 @@ const initialState = {
             ]
         },
         {
-            id: "DateAttribute",
-            fieldName: "DateAttribute",
+            label: "DateAttribute",
+            attribute: "DateAttribute",
             type: "date"
         }
     ]
@@ -63,7 +65,8 @@ const reducers = combineReducers({
     locale: require('../../../reducers/locale'),
     map: require('../../../reducers/map'),
     draw: require('../../../reducers/draw'),
-    queryform: require('../../../reducers/queryform')
+    queryform: require('../../../reducers/queryform'),
+    query: require('../reducers/query')
 });
 
 // export the store with the given reducers

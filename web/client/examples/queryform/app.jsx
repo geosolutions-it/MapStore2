@@ -16,6 +16,7 @@ var store = require('./stores/queryformstore');
 const {loadMapConfig} = require('../../actions/config');
 const {changeBrowserProperties} = require('../../actions/browser');
 const {loadLocale} = require('../../actions/locale');
+const {describeFeatureType, loadFeature} = require('./actions/query');
 
 const ConfigUtils = require('../../utils/ConfigUtils');
 const LocaleUtils = require('../../utils/LocaleUtils');
@@ -31,6 +32,9 @@ const { configUrl, legacy } = ConfigUtils.getConfigurationOptions(urlQuery, 'con
 store.dispatch(loadMapConfig(configUrl, legacy));
 
 store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
+
+store.dispatch(describeFeatureType('http://demo.geo-solutions.it/geoserver/wfs', 'topp:states'));
+store.dispatch(loadFeature('http://demo.geo-solutions.it/geoserver/wfs', 'topp:states'));
 
 const QueryForm = require('./containers/QueryForm');
 
