@@ -8,7 +8,7 @@
 
 const React = require('react');
 const {Glyphicon, Button, Tooltip, OverlayTrigger} = require('react-bootstrap');
-const Card = require('react-material-card');
+
 require('./style/gridcard.css');
 
 const GridCard = React.createClass({
@@ -21,8 +21,7 @@ const GridCard = React.createClass({
     getDefaultProps() {
         return {
             actions: [],
-            header: "",
-            className: "gridcard"
+            header: ""
         };
     },
     renderActions() {
@@ -38,15 +37,13 @@ const GridCard = React.createClass({
         </div>);
     },
     render: function() {
-        return (<Card
-                onOver={card => card.setLevel(3)}
-                onOut={card => card.setLevel(1)}
+        return (<div
                style={this.props.style}
-               className={this.props.className}>
+               className={"gridcard" + (this.props.className ? " " + this.props.className : "")}>
                <div className="gridcard-title bg-primary">{this.props.header}</div>
                {this.props.children}
                {this.renderActions()}
-           </Card>
+           </div>
         );
     }
 });
