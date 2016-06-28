@@ -40,16 +40,24 @@ const StandardApp = React.createClass({
         };
     },
     componentWillMount() {
-        this.store = this.props.appStore(this.props.pluginsDef.plugins, this.props.storeOpts);
-        if (!global.Intl ) {
-            require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js'], (require) => {
-                global.Intl = require('intl');
-                require('intl/locale-data/jsonp/en.js');
-                require('intl/locale-data/jsonp/it.js');
+        const onInit = () => {
+            if (!global.Intl ) {
+                require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js'], (require) => {
+                    global.Intl = require('intl');
+                    require('intl/locale-data/jsonp/en.js');
+                    require('intl/locale-data/jsonp/it.js');
+                    this.init();
+                });
+            } else {
                 this.init();
-            });
-        } else {
-            this.init();
+            }
+        };
+        const opts = assign({}, this.props.storeOpts, {
+            onPersist: onInit
+        });
+        this.store = this.props.appStore(this.props.pluginsDef.plugins, opts);
+        if (!opts.persist) {
+            onInit();
         }
     },
     render() {
