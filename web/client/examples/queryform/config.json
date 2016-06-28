@@ -2,8 +2,8 @@
   "map": {
     "projection": "EPSG:900913",
 		"units": "m",
-		"center": {"x": 1250000.000000, "y": 5370000.000000, "crs": "EPSG:900913"},
-    "zoom":5,
+    "center": {"x": -10976101, "y": 4251421, "crs": "EPSG:900913"},
+    "zoom":4,
     "layers": [
       {
         "type": "osm",
@@ -16,10 +16,10 @@
         "type": "wms",
         "url":"http://demo.geo-solutions.it/geoserver/wms",
         "visibility": true,
-        "opacity": 0.5,
-        "title": "Weather data",
-        "name": "nurc:Arc_Sample",
-        "group": "Meteo",
+        "opacity": 0.8,
+        "title": "USA Population",
+        "name": "topp:states",
+        "group": "Overlays",
         "format": "image/png"
       }
     ]
