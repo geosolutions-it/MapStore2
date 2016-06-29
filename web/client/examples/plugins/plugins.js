@@ -12,10 +12,14 @@ module.exports = {
         MousePositionPlugin: require('../../plugins/MousePosition'),
         MapLoadingPlugin: require('../../plugins/MapLoading'),
         ZoomAllPlugin: require('../../plugins/ZoomAll'),
+        ZoomInPlugin: require('../../plugins/ZoomIn'),
+        ZoomOutPlugin: require('../../plugins/ZoomOut'),
         SearchPlugin: require('../../plugins/Search'),
         ScaleBoxPlugin: require('../../plugins/ScaleBox'),
         ToolbarPlugin: require('../../plugins/Toolbar'),
         DrawerMenuPlugin: require('../../plugins/DrawerMenu'),
+        BurgerMenuPlugin: require('../../plugins/BurgerMenu'),
+        OmniBarPlugin: require('../../plugins/OmniBar'),
         LocatePlugin: require('../../plugins/Locate'),
         IdentifyPlugin: require('../../plugins/Identify'),
         TOCPlugin: require('../../plugins/TOC'),
@@ -28,7 +32,9 @@ module.exports = {
         MetadataExplorerPlugin: require('../../plugins/MetadataExplorer'),
         SettingsPlugin: require('../../plugins/Settings'),
         ExpanderPlugin: require('../../plugins/Expander'),
-        HelpPlugin: require('../../plugins/Help')
+        HelpPlugin: require('../../plugins/Help'),
+        HomePlugin: require('../../plugins/Home'),
+        LoginPlugin: require('../../plugins/Login')
     },
     requires: {}
 };

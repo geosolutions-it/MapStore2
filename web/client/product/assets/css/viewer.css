@@ -281,8 +281,13 @@ html, body, #container, .fill {
 }
 
 #mapstore-getfeatureinfo {
-    width: 500px !important;
     max-width: 100%;
+}
+
+@media (min-width: 500px) {
+    #mapstore-getfeatureinfo {
+        min-width: 500px !important;
+    }
 }
 
 #mapstore-getfeatureinfo .modal-body .panel-heading {
@@ -456,7 +461,8 @@ html, body, #container, .fill {
 .ms2-loading .circle-wrapper {
     width: 30px;
     height: 30px;
-    margin: 10px;
+    margin-left: 10px !important;
+    margin-top: 10px !important;
 }
 
 .ms2-loading .circle-wrapper .circle:before {
@@ -569,4 +575,8 @@ html, body, #container, .fill {
 
 .badge {
     cursor: pointer;
+}
+
+#navigationBar #locate-btn {
+    position: static;
 }

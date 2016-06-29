@@ -6,8 +6,7 @@
 	"initialMapFilter": "MS2",
 	"plugins": {
 		"mobile": ["Home", {
-			"name": "About",
-			"hide": true
+			"name": "About"
 		}, {
 			"name": "Map",
 			"cfg": {
@@ -18,14 +17,12 @@
 			 	"name": "DrawerMenu"
 		 }, {
 			 	"name": "TOC",
-				"hide": true,
 				"cfg": {
 					"activateLegendTool": true,
 					"activateSettingsTool": false
 				}
 		 }, {
 			 	"name": "Settings",
-				"hide": true,
 				"cfg": {
 					"overrideSettings": {
 	            "language": true,
@@ -45,8 +42,7 @@
               "sm": 6,
               "md": 6
           }
-				},
-				"hide": true
+				}
 		 }, {
 			 	"name": "Identify",
 				"hideFrom": ["Settings"],
@@ -92,8 +88,7 @@
         "zoomControl": false
 			}
 		}, {
-			"name": "Help",
-			"hideFrom": "Toolbar"
+			"name": "Help"
 		}, {
         "name": "DrawerMenu",
 				"cfg": {
@@ -124,24 +119,17 @@
     "MadeWithLove",
     {
 			  "name": "Locate",
-				"hide": true,
 				"override": {
 					"Toolbar": {
 						"alwaysVisible": true
 					}
 				}
 		}, {
-			  "name": "Home",
-				"hide": true,
-				"hideFrom": ["Toolbar"]
+			  "name": "Home"
 		}, {
-				"name": "TOC",
-				"hideFrom": ["Toolbar"],
-				"hide": true
+				"name": "TOC"
 		}, {
 				"name": "BackgroundSwitcher",
-				"hideFrom": ["Toolbar"],
-				"hide": true,
 				"cfg": {
 					"fluid": true,
 		      "columnProperties": {
@@ -152,25 +140,20 @@
 				}
 		}, {
 				"name": "Measure",
-				"hide": true,
-        "showIn": ["DrawerMenu"],
         "cfg":{
           "showResults": false
         }
 		}, {
 				"name": "MeasureResults"
 		}, {
-				"name": "Print",
-				"hideFrom": ["Toolbar"]
+				"name": "Print"
 		}, {
 				"name": "ShapeFile",
-				"hideFrom": ["Toolbar"],
 				"cfg": {
 					"wrap": true
 				}
 		}, {
 				"name": "Settings",
-				"hideFrom": ["Toolbar", "DrawerMenu"],
 				"cfg": {
           "overrideSettings": {
             "history": false
@@ -179,7 +162,6 @@
 				}
 		}, {
 				"name": "MetadataExplorer",
-				"hideFrom": ["Toolbar"],
 				"cfg": {
 					"wrap": true,
 					"chooseCatalogUrl": false,
@@ -192,8 +174,7 @@
 				"name": "Search",
 				"cfg": {
 					"withToggle": ["max-width: 768px", "min-width: 768px"]
-				},
-				"hide": true
+				}
 		}, {
       "name": "Toolbar",
       "id": "NavigationBar",
@@ -212,12 +193,10 @@
     },
     "ScaleBox",
     {
-      "name": "ZoomAll",
-      "hide": true
+      "name": "ZoomAll"
     },
     {
 			"name": "MapLoading",
-			"hide": true,
 			"override": {
 				"Toolbar": {
 					"alwaysVisible": true
@@ -226,7 +205,6 @@
 		},
     {
 				"name": "Snapshot",
-				"hide": true,
 				"hideFrom": ["Toolbar"],
 				"cfg": {
 					"wrap": true
@@ -234,7 +212,6 @@
 		},
     {
       "name":"ZoomIn",
-      "hide": true,
 			"override": {
 				"Toolbar": {
 					"alwaysVisible": true
@@ -243,7 +220,6 @@
     },
     {
       "name":"ZoomOut",
-      "hide": true,
 			"override": {
 				"Toolbar": {
 					"alwaysVisible": true
@@ -251,7 +227,6 @@
 			}
     }, {
 			"name": "Login",
-			"hide": true,
       "cfg": {
           "nav": false,
           "menuProps": {
@@ -261,17 +236,13 @@
 		},
 		"OmniBar",
 		{
-			"name": "BurgerMenu",
-			"hide": true
+			"name": "BurgerMenu"
 		}, {
-			"name": "Expander",
-			"hide": true
+			"name": "Expander"
 		}, {
-			"name": "Undo",
-			"hide": true
+			"name": "Undo"
 		}, {
-			"name": "Redo",
-			"hide": true
+			"name": "Redo"
 		}]
 	}
 }

@@ -55,14 +55,15 @@ module.exports = {
             tooltip: "measureComponent.tooltip",
             icon: <img src={lineRuleIcon} />,
             title: "measureComponent.title",
-            hide: true
+            priority: 1
         },
         DrawerMenu: {
             name: 'measurement',
             position: 3,
             icon: <img src={lineRuleIcon} />,
             title: 'measureComponent.title',
-            showPanel: false
+            showPanel: false,
+            priority: 2
         }
     }),
     reducers: {measurement: require('../reducers/measurement')}
