@@ -54,14 +54,16 @@ module.exports = {
             wrap: true,
             icon: <Glyphicon glyph="open-file"/>,
             exclusive: true,
-            hide: true
+            priority: 1
         },
         BurgerMenu: {
             name: 'shapefile',
             position: 4,
             text: <Message msgId="shapefile.title"/>,
             icon: <Glyphicon glyph="upload"/>,
-            action: toggleControl.bind(null, 'shapefile', null)
+            action: toggleControl.bind(null, 'shapefile', null),
+            priority: 2,
+            doNotHide: true
         }
     }),
     reducers: {

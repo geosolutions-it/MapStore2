@@ -21,6 +21,8 @@ const Container = connect(() => ({
 
 const ToolsContainer = require('./containers/ToolsContainer');
 
+require('./burgermenu/burgermenu.css');
+
 const BurgerMenu = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
@@ -87,7 +89,8 @@ module.exports = {
         OmniBar: {
             name: "burgermenu",
             position: 2,
-            tool: true
+            tool: true,
+            priority: 1
         }
     }),
     reducers: {}

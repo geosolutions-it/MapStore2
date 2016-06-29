@@ -34,13 +34,14 @@ module.exports = {
             icon: <Glyphicon glyph="globe"/>,
             wrap: true,
             title: 'background',
-            hide: true
+            priority: 1
         },
         DrawerMenu: {
             name: 'backgroundswitcher',
             position: 2,
             icon: <Glyphicon glyph="globe"/>,
-            title: 'background'
+            title: 'background',
+            priority: 2
         }
     }),
     reducers: {}

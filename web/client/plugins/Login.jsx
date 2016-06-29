@@ -10,19 +10,23 @@ const React = require('react');
 const assign = require('object-assign');
 const {UserDetails, PasswordReset, UserMenu, Login, LoginNav } = require('./login/index');
 
+require('./login/login.css');
+
 const LoginTool = React.createClass({
     propTypes: {
+        id: React.PropTypes.string,
         menuStyle: React.PropTypes.object
     },
     getDefaultProps() {
         return {
+            id: "mapstore-login-menu",
             menuStyle: {
                 zIndex: 30
             }
         };
     },
     render() {
-        return (<div>
+        return (<div id={this.props.id}>
             <div style={this.props.menuStyle}>
                 <UserMenu />
             </div>
@@ -38,7 +42,8 @@ module.exports = {
             name: "login",
             position: 3,
             tool: LoginNav,
-            tools: [UserDetails, PasswordReset, Login]
+            tools: [UserDetails, PasswordReset, Login],
+            priority: 1
         }
     }),
     reducers: {security: require('../reducers/security')}
