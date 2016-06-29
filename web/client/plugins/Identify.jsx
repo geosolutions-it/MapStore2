@@ -39,7 +39,7 @@ const selector = createSelector([
 ], (enabled, responses, requests, format, map, layers, point, showModalReverse, reverseGeocodeData) => ({
     enabled, responses, requests, format, map, layers, point, showModalReverse, reverseGeocodeData
 }));
-
+// result panel
 const IdentifyPlugin = connect(selector, {
     sendRequest: getFeatureInfo,
     purgeResults: purgeMapInfoResults,
@@ -49,7 +49,7 @@ const IdentifyPlugin = connect(selector, {
     showRevGeocode: showMapinfoRevGeocode,
     hideRevGeocode: hideMapinfoRevGeocode
 })(require('../components/data/identify/Identify'));
-
+// configuration UI
 const FeatureInfoFormatSelector = connect((state) => ({
     infoFormat: state.mapInfo && state.mapInfo.infoFormat
 }), {

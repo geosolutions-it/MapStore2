@@ -28,28 +28,32 @@
        "name": "Identify",
        "showIn": ["Settings"],
 			 "cfg": {
+         "enableRevGeocode": true,
+         "wrapRevGeocode": false,
 				 "panelClassName": "modal-dialog info-panel modal-content",
 				 "headerClassName": "modal-header",
 				 "bodyClassName": "modal-body info-wrap",
-				 "asPanel": false,
 				 "headerGlyph": "",
          "glyph": "map-marker",
 				 "className": "square-button",
          "closeGlyph": "1-close",
-				 "wrapRevGeocode": false,
-				 "enableRevGeocode": true,
-				 "viewerOptions": {
-					"container": "{context.ReactSwipe}",
-					"header": "{context.SwipeHeader}",
-					"headerOptions": {
-						"useButtons": true
-					},
-					"containerProps": {
-						"continuous": false
-					},
-					"collapsible": false
-				}
-			 }
+				 "style": {
+             "position": "absolute",
+             "width": "100%",
+             "bottom": "0px",
+             "zIndex": 1010,
+             "maxHeight": "70%",
+             "marginBottom": 0
+         },
+         "draggable": false,
+         "collapsible": true,
+         "viewerOptions": {
+           "container": "{context.ReactSwipe}",
+           "header": "{context.SwipeHeader}",
+           "collapsible": false
+         },
+         "bodyClass": "mobile-feature-info"
+      }
     },
     {
 			  "name": "Locate",
