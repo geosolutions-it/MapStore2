@@ -33,7 +33,7 @@ module.exports = {
             tooltip: "zoombuttons.zoomInTooltip",
             help: <Message msgId="helptexts.zoomIn"/>,
             tool: true,
-            hide: true
+            priority: 1
         }
     }),
     reducers: { zoomIn: require("../reducers/map")}

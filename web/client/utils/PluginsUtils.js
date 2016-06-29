@@ -37,6 +37,13 @@ const includeLoadedItem = (name, loadedPlugins, plugin) => {
     return plugin;
 };
 
+const getMorePrioritizedContainer = (pluginImpl, plugins, priority) => {
+    return plugins.reduce((previous, current) => {
+        const pluginName = current.name || current;
+        return pluginImpl[pluginName] && pluginImpl[pluginName].priority > previous.priority ? {plugin: {name: pluginName, impl: pluginImpl[pluginName]}, priority: pluginImpl[pluginName].priority} : previous;
+    }, {plugin: null, priority: priority});
+};
+
 const getPluginItems = (plugins, pluginsConfig, name, id, isDefault, loadedPlugins) => {
     return Object.keys(plugins)
             .filter((plugin) => plugins[plugin][name])
@@ -44,6 +51,7 @@ const getPluginItems = (plugins, pluginsConfig, name, id, isDefault, loadedPlugi
                 const cfgObj = isPluginConfigured(pluginsConfig, plugin);
                 return cfgObj && showIn(cfgObj, name, id, isDefault);
             })
+            .filter((plugin) => getMorePrioritizedContainer(plugins[plugin], pluginsConfig, plugins[plugin][name].priority || 0).plugin === null)
             .map((plugin) => {
                 const pluginName = plugin.substring(0, plugin.length - 6);
                 const pluginImpl = includeLoadedItem(pluginName, loadedPlugins, plugins[plugin]);
@@ -111,6 +119,7 @@ const PluginsUtils = {
             cfg: isObject(pluginDef) ? parsePluginConfig(plugins.requires, pluginDef.cfg) : {},
             items: getPluginItems(plugins, pluginsConfig, name, id, isDefault, loadedPlugins)
         };
-    }
+    },
+    getMorePrioritizedContainer
 };
 module.exports = PluginsUtils;

@@ -25,7 +25,8 @@ module.exports = {
             help: <Message msgId="helptexts.expandToolbar"/>,
             toggle: true,
             toggleControl: 'toolbar',
-            toggleProperty: 'expanded'
+            toggleProperty: 'expanded',
+            priority: 1
         }
     }),
     reducers: {}

@@ -14,7 +14,7 @@ const {Glyphicon, Button} = require('react-bootstrap');
 const SwipeHeader = React.createClass({
     propTypes: {
         title: React.PropTypes.string,
-        container: React.PropTypes.object,
+        container: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
         useButtons: React.PropTypes.bool
     },
     getDefaultProps() {

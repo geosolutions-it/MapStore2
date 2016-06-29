@@ -40,7 +40,7 @@ module.exports = {
             icon: <Glyphicon glyph="resize-full"/>,
             help: <Message msgId="helptexts.zoomToMaxExtentButton"/>,
             tool: true,
-            hide: true
+            priority: 1
         }
     }),
     reducers: {}

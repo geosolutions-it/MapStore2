@@ -13,8 +13,7 @@
         "tools": ["locate"]
 			}
 		}, {
-			"name": "Help",
-			"hideFrom": "Toolbar"
+			"name": "Help"
 		}, {
         "name": "DrawerMenu",
 				"cfg": {
@@ -57,7 +56,6 @@
     },
     {
 			  "name": "Locate",
-				"hide": true,
 				"cfg": {
 					"glyph": "1-position-1",
           "btnConfig": {
@@ -70,13 +68,9 @@
 					}
 				}
 		}, {
-			  "name": "Home",
-				"hide": true,
-				"hideFrom": ["Toolbar", "BurgerMenu"]
+			  "name": "Home"
 		}, {
 				"name": "TOC",
-				"hideFrom": ["Toolbar"],
-				"hide": true,
 				"cfg": {
 					"visibilityCheckType": "glyph",
 					"settingsOptions": {
@@ -96,8 +90,6 @@
 				}
 		}, {
 				"name": "BackgroundSwitcher",
-				"hideFrom": ["Toolbar"],
-				"hide": true,
 				"cfg": {
 					"fluid": true,
 		      "columnProperties": {
@@ -116,7 +108,6 @@
 				}
 		}, {
 				"name": "Settings",
-				"hideFrom": ["Toolbar", "DrawerMenu"],
 				"cfg": {
 					"wrapWithPanel": false,
 					"closeGlyph": "1-close",
@@ -127,7 +118,7 @@
 				}
 		}, {
 			"name": "About",
-			"hideFrom": ["DrawerMenu"],
+			"hideFrom": "DrawerMenu",
 			"cfg": {
 				"modalConfig": {
 						"useModal": false,
@@ -145,8 +136,7 @@
 				"name": "Search",
 				"cfg": {
 					"withToggle": ["max-width: 768px", "min-width: 768px"]
-				},
-				"hide": true
+				}
 		}, {
       "name": "Toolbar",
       "id": "NavigationBar",
@@ -254,7 +244,6 @@
 			}
 		}, {
 			"name": "Help",
-			"hideFrom": "Toolbar",
 			"cfg": {
 				"asPanel": false,
 				"closeGlyph": "1-close"
@@ -298,7 +287,6 @@
     "MadeWithLove",
     {
 			  "name": "Locate",
-				"hide": true,
 				"cfg": {
 					"glyph": "1-position-1",
           "btnConfig": {
@@ -311,13 +299,9 @@
 					}
 				}
 		}, {
-			  "name": "Home",
-				"hide": true,
-				"hideFrom": ["Toolbar", "BurgerMenu"]
+			  "name": "Home"
 		}, {
 				"name": "TOC",
-				"hideFrom": ["Toolbar"],
-				"hide": true,
 				"cfg": {
 					"visibilityCheckType": "glyph",
 					"settingsOptions": {
@@ -337,8 +321,6 @@
 				}
 		}, {
 				"name": "BackgroundSwitcher",
-				"hideFrom": ["Toolbar"],
-				"hide": true,
 				"cfg": {
 					"fluid": true,
 		      "columnProperties": {
@@ -357,8 +339,6 @@
 				}
 		}, {
 				"name": "Measure",
-				"hide": true,
-        "showIn": ["DrawerMenu"],
         "cfg":{
           "showResults": false,
           "lineGlyph": "1-measure-lenght",
@@ -395,11 +375,9 @@
 						"buttonStyle": "primary"
 					},
 					"withPanelAsContainer": false
-				},
-				"hideFrom": ["Toolbar"]
+				}
 		}, {
 				"name": "ShapeFile",
-				"hideFrom": ["Toolbar"],
 				"cfg": {
 					"wrap": true,
 					"wrapWithPanel": false,
@@ -419,7 +397,6 @@
 				}
 		}, {
 				"name": "MetadataExplorer",
-				"hideFrom": ["Toolbar"],
 				"cfg": {
 					"wrap": true,
 					"wrapWithPanel": false,
@@ -440,8 +417,7 @@
 				"name": "Search",
 				"cfg": {
 					"withToggle": ["max-width: 768px", "min-width: 768px"]
-				},
-				"hide": true
+				}
 		}, {
       "name": "Toolbar",
       "id": "NavigationBar",
@@ -463,14 +439,12 @@
     "ScaleBox",
     {
       "name": "ZoomAll",
-      "hide": true,
       "cfg":{
         "className": "square-button"
       }
     },
     {
 			"name": "MapLoading",
-			"hide": true,
 			"cfg": {
 				"className": "ms2-loading"
 			},
@@ -482,8 +456,6 @@
 		},
     {
 				"name": "Snapshot",
-				"hide": true,
-				"hideFrom": ["Toolbar"],
 				"cfg": {
 					"wrap": true,
 					"wrapWithPanel": false,
@@ -493,7 +465,6 @@
 		},
     {
       "name":"ZoomIn",
-      "hide": true,
 			"override": {
 				"Toolbar": {
 					"alwaysVisible": true
@@ -502,7 +473,6 @@
     },
     {
       "name":"ZoomOut",
-      "hide": true,
 			"override": {
 				"Toolbar": {
 					"alwaysVisible": true
@@ -510,7 +480,6 @@
 			}
     }, {
 			"name": "Login",
-			"hide": true,
       "cfg": {
           "nav": false,
           "menuProps": {
@@ -536,17 +505,14 @@
 		},
 		"OmniBar",
 		{
-			"name": "BurgerMenu",
-			"hide": true
+			"name": "BurgerMenu"
 		}, {
 			"name": "Expander",
-			"hide": true,
       "cfg":{
         "className": "square-button"
       }
 		}, {
       "name": "Undo",
-      "hide": true,
       "cfg": {
         "glyph": "1-screen-backward",
         "buttonStyle": "primary",
@@ -556,7 +522,6 @@
       }
     }, {
       "name": "Redo",
-      "hide": true,
       "cfg": {
         "glyph": "1-screen-forward",
         "buttonStyle": "primary",

@@ -30,14 +30,17 @@ module.exports = {
             position: 1000,
             icon: <Glyphicon glyph="question-sign"/>,
             tooltip: "help",
-            toggle: true
+            toggle: true,
+            priority: 1
         },
         BurgerMenu: {
             name: 'help',
             position: 1000,
             text: <Message msgId="help"/>,
             icon: <Glyphicon glyph="question-sign"/>,
-            action: toggleControl.bind(null, 'help', null)
+            action: toggleControl.bind(null, 'help', null),
+            priority: 2,
+            doNotHide: true
         }
     }),
     reducers: {help: require('../reducers/help')}

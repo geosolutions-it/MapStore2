@@ -24,7 +24,8 @@ module.exports = {
         Toolbar: {
             name: 'maploading',
             position: 1,
-            tool: true
+            tool: true,
+            priority: 1
         }
     }),
     reducers: {}
