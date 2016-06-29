@@ -10,7 +10,10 @@ const {
     FEATURE_TYPE_LOADED,
     FEATURE_TYPE_ERROR,
     FEATURE_LOADED,
-    FEATURE_ERROR
+    FEATURE_ERROR,
+    QUERY_RESULT,
+    QUERY_ERROR,
+    RESET_QUERY
 } = require('../actions/query');
 
 const assign = require('object-assign');
@@ -19,17 +22,6 @@ const types = {
     'xsd:string': 'list',
     'xsd:dateTime': 'date'
 };
-
-/*
-valueId: "id",
-valueLabel: "name",
-values: [
-    {id: "value1", name: "value1"},
-    {id: "value2", name: "value2"},
-    {id: "value3", name: "value3"},
-    {id: "value4", name: "value4"},
-    {id: "value5", name: "value5"}
-]*/
 
 const extractInfo = (featureType) => {
     return {
@@ -68,7 +60,9 @@ const extractData = (feature) => {
 
 const initialState = {
     featureTypes: {},
-    data: {}
+    data: {},
+    result: '',
+    resultError: null
 };
 
 function query(state = initialState, action) {
@@ -91,6 +85,24 @@ function query(state = initialState, action) {
         case FEATURE_ERROR: {
             return assign({}, state, {
                 featureTypes: assign({}, state.data, {[action.typeName]: {error: action.error}})
+            });
+        }
+        case QUERY_RESULT: {
+            return assign({}, state, {
+                result: action.result,
+                resultError: null
+            });
+        }
+        case QUERY_ERROR: {
+            return assign({}, state, {
+                result: '',
+                resultError: action.error
+            });
+        }
+        case RESET_QUERY: {
+            return assign({}, state, {
+                result: '',
+                resultError: null
             });
         }
         default:

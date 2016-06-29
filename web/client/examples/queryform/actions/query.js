@@ -9,6 +9,9 @@ const FEATURE_TYPE_LOADED = 'FEATURE_TYPE_LOADED';
 const FEATURE_LOADED = 'FEATURE_LOADED';
 const FEATURE_TYPE_ERROR = 'FEATURE_TYPE_ERROR';
 const FEATURE_ERROR = 'FEATURE_ERROR';
+const QUERY_RESULT = 'QUERY_RESULT';
+const QUERY_ERROR = 'QUERY_ERROR';
+const RESET_QUERY = 'RESET_QUERY';
 
 const axios = require('../../../libs/ajax');
 
@@ -40,6 +43,20 @@ function featureError(typeName, error) {
     return {
         type: FEATURE_ERROR,
         typeName,
+        error
+    };
+}
+
+function querySearchResponse(result) {
+    return {
+        type: QUERY_RESULT,
+        result
+    };
+}
+
+function queryError(error) {
+    return {
+        type: QUERY_ERROR,
         error
     };
 }
@@ -84,11 +101,35 @@ function loadFeature(baseUrl, typeName) {
     };
 }
 
+function query(seachURL, data) {
+    return (dispatch) => {
+        return axios.post(seachURL + '&outputFormat=json', data, {
+          timeout: 60000,
+          headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
+        }).then((response) => {
+            dispatch(querySearchResponse(response.data));
+        }).catch((e) => {
+            dispatch(queryError(e));
+        });
+    };
+}
+
+function resetQuery() {
+    return {
+        type: RESET_QUERY
+    };
+}
+
 module.exports = {
     FEATURE_TYPE_LOADED,
     FEATURE_LOADED,
     FEATURE_TYPE_ERROR,
     FEATURE_ERROR,
+    QUERY_RESULT,
+    QUERY_ERROR,
+    RESET_QUERY,
     describeFeatureType,
-    loadFeature
+    loadFeature,
+    query,
+    resetQuery
 };

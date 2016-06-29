@@ -26,7 +26,9 @@ const QueryToolbar = React.createClass({
             React.PropTypes.string
         ]),
         featureTypeName: React.PropTypes.string,
-        actions: React.PropTypes.object
+        actions: React.PropTypes.object,
+        ogcVersion: React.PropTypes.string,
+        resultTitle: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -39,6 +41,7 @@ const QueryToolbar = React.createClass({
             searchUrl: null,
             showGeneratedFilter: false,
             featureTypeName: null,
+            resultTitle: "Generated Filter",
             actions: {
                 onQuery: () => {},
                 onReset: () => {},
@@ -71,7 +74,7 @@ const QueryToolbar = React.createClass({
                 </ButtonToolbar>
                 <Modal show={this.props.showGeneratedFilter ? true : false} bsSize="large">
                     <Modal.Header>
-                        <Modal.Title>Generated Filter</Modal.Title>
+                        <Modal.Title>{this.props.resultTitle}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <textarea style={{width: "862px", maxWidth: "862px", height: "236px", maxHeight: "236px"}}>{this.props.showGeneratedFilter}</textarea>
@@ -91,7 +94,7 @@ const QueryToolbar = React.createClass({
         };
 
         let filter = this.props.filterType === "OGC" ?
-            FilterUtils.toOGCFilter(this.props.featureTypeName, filterObj) :
+            FilterUtils.toOGCFilter(this.props.featureTypeName, filterObj, this.props.ogcVersion) :
             FilterUtils.toCQLFilter(filterObj);
 
         this.props.actions.onQuery(this.props.searchUrl, filter, this.props.params);
