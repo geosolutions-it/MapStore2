@@ -36,10 +36,13 @@ const QueryBuilder = React.createClass({
             React.PropTypes.bool,
             React.PropTypes.string
         ]),
+        filterType: React.PropTypes.string,
         featureTypeName: React.PropTypes.string,
+        ogcVersion: React.PropTypes.string,
         attributeFilterActions: React.PropTypes.object,
         spatialFilterActions: React.PropTypes.object,
-        queryToolbarActions: React.PropTypes.object
+        queryToolbarActions: React.PropTypes.object,
+        resultTitle: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -131,7 +134,10 @@ const QueryBuilder = React.createClass({
                     searchUrl={this.props.searchUrl}
                     showGeneratedFilter={this.props.showGeneratedFilter}
                     featureTypeName={this.props.featureTypeName}
-                    actions={this.props.queryToolbarActions}/>
+                    ogcVersion={this.props.ogcVersion}
+                    filterType={this.props.filterType}
+                    actions={this.props.queryToolbarActions}
+                    resultTitle={this.props.resultTitle}/>
             </div>
         ) : (<div style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce"/></div>);
     }

@@ -31,13 +31,14 @@ const {
     selectSpatialOperation,
     removeSpatialSelection,
     showSpatialSelectionDetails,
-    query,
     reset,
     changeDwithinValue,
     zoneGetValues,
     zoneSearch,
     zoneChange
 } = require('../../../actions/queryform');
+
+const {query} = require('../actions/query');
 
 const {
     changeDrawingStatus,
@@ -69,8 +70,11 @@ const SmartQueryForm = connect((state) => {
         toolbarEnabled: state.queryform.toolbarEnabled,
         attributePanelExpanded: state.queryform.attributePanelExpanded,
         spatialPanelExpanded: state.queryform.spatialPanelExpanded,
-        searchUrl: state.queryform.searchUrl,
-        showGeneratedFilter: state.queryform.showGeneratedFilter
+        searchUrl: "http://demo.geo-solutions.it/geoserver/ows?service=WFS",
+        featureTypeName: "topp:states",
+        ogcVersion: "1.1.0",
+        resultTitle: "Query Result",
+        showGeneratedFilter: false
     };
 }, dispatch => {
     return {
