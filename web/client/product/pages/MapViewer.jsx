@@ -36,8 +36,11 @@ const MapViewerPage = React.createClass({
     },
     componentWillMount() {
         if (this.props.params.mapType && this.props.params.mapId) {
-            if (this.props.mode === 'mobile') {
-                require('../assets/css/mobile.css');
+
+            if (!ConfigUtils.getDefaults().ignoreMobileCss) {
+                if (this.props.mode === 'mobile') {
+                    require('../assets/css/mobile.css');
+                }
             }
 
             // VMap = require('../components/viewer/Map')(this.props.params.mapType);

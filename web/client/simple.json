@@ -93,17 +93,13 @@
 			}
 		}, {
 			"name": "Help",
-			"hideFrom": "Toolbar",
-			"cfg": {
-				"asPanel": false,
-				"closeGlyph": "1-close"
-			}
+			"hideFrom": "Toolbar"
 		}, {
         "name": "DrawerMenu",
 				"cfg": {
-					"glyph": "1-stilo",
+					"glyph": "pencil",
 					"buttonStyle": "primary",
-					"buttonClassName": "square-button",
+          "buttonClassName": "square-button",
 					"singleSection": true
 				}
     },
@@ -111,15 +107,6 @@
        "name": "Identify",
        "showIn": ["IdentifyBar", "Settings"],
 			 "cfg": {
-				 "panelClassName": "modal-dialog info-panel modal-content",
-				 "headerClassName": "modal-header",
-				 "bodyClassName": "modal-body info-wrap",
-				 "asPanel": false,
-				 "headerGlyph": "",
-         "glyph": "map-marker",
-				 "className": "square-button",
-         "closeGlyph": "1-close",
-				 "wrapRevGeocode": false,
 				 "enableRevGeocode": true,
 				 "viewerOptions": {
 					"container": "{context.ReactSwipe}",
@@ -138,12 +125,6 @@
     {
 			  "name": "Locate",
 				"hide": true,
-				"cfg": {
-					"glyph": "1-position-1",
-          "btnConfig": {
-            "className": "square-button"
-          }
-				},
 				"override": {
 					"Toolbar": {
 						"alwaysVisible": true
@@ -156,24 +137,7 @@
 		}, {
 				"name": "TOC",
 				"hideFrom": ["Toolbar"],
-				"hide": true,
-				"cfg": {
-					"visibilityCheckType": "glyph",
-					"settingsOptions": {
-						"includeCloseButton": false,
-						"closeGlyph": "1-close",
-						"asModal": false,
-						"buttonSize": "small"
-					}
-				},
-				"override": {
-					"DrawerMenu": {
-						"glyph": "1-layer",
-            "buttonConfig": {
-              "buttonClassName": "square-button no-border"
-            }
-					}
-				}
+				"hide": true
 		}, {
 				"name": "BackgroundSwitcher",
 				"hideFrom": ["Toolbar"],
@@ -185,71 +149,29 @@
               "sm": 12,
               "md": 12
           }
-				},
-				"override": {
-					"DrawerMenu": {
-							"glyph": "1-map",
-              "buttonConfig": {
-                "buttonClassName": "square-button no-border"
-              }
-						}
 				}
 		}, {
 				"name": "Measure",
 				"hide": true,
         "showIn": ["DrawerMenu"],
         "cfg":{
-          "showResults": false,
-          "lineGlyph": "1-measure-lenght",
-          "areaGlyph": "1-measure-area",
-          "bearingGlyph": "1-bearing"
-        },
-				"override": {
-					"DrawerMenu": {
-						"glyph": "1-stilo",
-            "buttonConfig": {
-              "buttonClassName": "square-button no-border"
-            }
-					}
-				}
-		}, {
-				"name": "MeasureResults",
-        "cfg":{
-          "closeGlyph": "1-close",
-          "withPanelAsContainer": false
+          "showResults": false
         }
 		}, {
+				"name": "MeasureResults"
+		}, {
 				"name": "Print",
-				"cfg": {
-					"closeGlyph": "1-close",
-					"submitConfig": {
-						"buttonConfig": {
-							"bsSize": "medium",
-							"bsStyle": "primary"
-						},
-						"glyph": ""
-					},
-					"previewOptions": {
-						"buttonStyle": "primary"
-					},
-					"withPanelAsContainer": false
-				},
 				"hideFrom": ["Toolbar"]
 		}, {
 				"name": "ShapeFile",
 				"hideFrom": ["Toolbar"],
 				"cfg": {
-					"wrap": true,
-					"wrapWithPanel": false,
-					"closeGlyph": "1-close",
-					"buttonSize": "small"
+					"wrap": true
 				}
 		}, {
 				"name": "Settings",
 				"hideFrom": ["Toolbar", "DrawerMenu"],
 				"cfg": {
-					"wrapWithPanel": false,
-					"closeGlyph": "1-close",
           "overrideSettings": {
             "history": false
           },
@@ -260,20 +182,12 @@
 				"hideFrom": ["Toolbar"],
 				"cfg": {
 					"wrap": true,
-					"wrapWithPanel": false,
-					"closeGlyph": "1-close",
 					"chooseCatalogUrl": false,
 					"initialCatalogURL": "http://demo.geo-solutions.it/geoserver/csw"
 				}
 		}, {
 			"name": "About",
-			"hideFrom": ["DrawerMenu"],
-			"cfg": {
-				"modalConfig": {
-						"useModal": false,
-			      "closeGlyph": "1-close"
-				}
-			}
+			"hideFrom": ["DrawerMenu"]
 		}, "MousePosition", {
 				"name": "Search",
 				"cfg": {
@@ -285,7 +199,6 @@
       "id": "NavigationBar",
       "stateSelector": "toolbar",
       "cfg": {
-				"buttonStyle": "primary",
         "id": "navigationBar"
       }
     }, {
@@ -293,7 +206,6 @@
       "id": "IdentifyBar",
 			"stateSelector": "identify",
       "cfg": {
-				"buttonStyle": "primary",
         "id": "identifyBar"
       },
       "isDefault": false
@@ -301,17 +213,11 @@
     "ScaleBox",
     {
       "name": "ZoomAll",
-      "hide": true,
-      "cfg":{
-        "className": "square-button"
-      }
+      "hide": true
     },
     {
 			"name": "MapLoading",
 			"hide": true,
-			"cfg": {
-				"className": "ms2-loading"
-			},
 			"override": {
 				"Toolbar": {
 					"alwaysVisible": true
@@ -323,10 +229,7 @@
 				"hide": true,
 				"hideFrom": ["Toolbar"],
 				"cfg": {
-					"wrap": true,
-					"wrapWithPanel": false,
-					"closeGlyph": "1-close",
-					"buttonStyle": "primary"
+					"wrap": true
 				}
 		},
     {
@@ -353,23 +256,7 @@
           "nav": false,
           "menuProps": {
               "noCaret": true
-          },
-					"toolsCfg": [{
-						"buttonSize": "small",
-						"includeCloseButton": false,
-						"useModal": false,
-						"closeGlyph": "1-close"
-					}, {
-						"buttonSize": "small",
-						"includeCloseButton": false,
-						"useModal": false,
-						"closeGlyph": "1-close"
-					}, {
-						"buttonSize": "small",
-						"includeCloseButton": false,
-						"useModal": false,
-						"closeGlyph": "1-close"
-					}]
+          }
       }
 		},
 		"OmniBar",
@@ -378,30 +265,13 @@
 			"hide": true
 		}, {
 			"name": "Expander",
-			"hide": true,
-      "cfg":{
-        "className": "square-button"
-      }
+			"hide": true
 		}, {
-      "name": "Undo",
-      "hide": true,
-      "cfg": {
-        "glyph": "1-screen-backward",
-        "buttonStyle": "primary",
-        "btnConfig": {
-          "className": "square-button"
-        }
-      }
-    }, {
-      "name": "Redo",
-      "hide": true,
-      "cfg": {
-        "glyph": "1-screen-forward",
-        "buttonStyle": "primary",
-        "btnConfig": {
-          "className": "square-button"
-        }
-      }
-    }]
+			"name": "Undo",
+			"hide": true
+		}, {
+			"name": "Redo",
+			"hide": true
+		}]
 	}
 }
