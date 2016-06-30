@@ -426,9 +426,15 @@ const FilterUtils = {
             attributeFilter = this.processCQLFilterGroup(this.objFilter.groupFields[0]);
             filters.push(attributeFilter);
         }else if (this.objFilter.simpleFilterFields && this.objFilter.simpleFilterFields.length > 0) {
-            let simpleFilter = this.objFilter.simpleFilterFields.reduce((cql, field, idx) => {
-                return ( idx > 0) ? cql + " AND (" + this.processCQLSimpleFilterField(field) + ")" : "(" + this.processCQLSimpleFilterField(field) + ")";
+            let simpleFilter = this.objFilter.simpleFilterFields.reduce((cql, field) => {
+                let tmp = cql;
+                let strFilter = this.processCQLSimpleFilterField(field);
+                if (strFilter !== false) {
+                    tmp = cql.length > 0 ? cql + " AND (" + strFilter + ")" : "(" + strFilter + ")";
+                }
+                return tmp;
             }, "");
+            simpleFilter = simpleFilter.length > 0 ? simpleFilter : "INCLUDE";
             filters.push(simpleFilter);
         }
 
@@ -489,15 +495,23 @@ const FilterUtils = {
         return filter;
     },
     processCQLSimpleFilterField: function(field) {
-        let filter = field.values.reduce((arr, value) => {
-            if (value === null || value === "null") {
-                arr.push( "isNull(" + field.attribute + ")=true");
-            } else {
-                arr.push( field.attribute + "='" + value + "'");
+        let strFilter = false;
+        if (field.values.length !== field.optionsValues.length && (field.type === undefined || field.type === 'list')) {
+            let addNull = false;
+            let filter = field.values.reduce((arr, value) => {
+                if (value === null || value === "null") {
+                    addNull = true;
+                } else {
+                    arr.push( "'" + value + "'");
+                }
+                return arr;
+            }, []);
+            strFilter = filter.length > 0 ? field.attribute + " IN(" + filter.join(",") + ")" : strFilter;
+            if (addNull) {
+                strFilter = (strFilter) ? strFilter + " OR isNull(" + field.attribute + ")=true" : "isNull(" + field.attribute + ")=true";
             }
-            return arr;
-        }, []);
-        return filter.length > 0 ? filter.join(" OR ") : "INCLUDE";
+        }
+        return strFilter;
     },
     processCQLSpatialFilter: function() {
         let cql = this.objFilter.spatialField.operation + "(" +
