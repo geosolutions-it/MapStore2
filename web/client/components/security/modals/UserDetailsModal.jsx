@@ -18,6 +18,7 @@ const React = require('react');
 const {Modal, Button, Table, Glyphicon} = require('react-bootstrap');
 const Dialog = require('../../../components/misc/Dialog');
 const assign = require('object-assign');
+const SecurityUtils = require('../../../utils/SecurityUtils');
 
   /**
    * A Modal window to show password reset form
@@ -57,9 +58,8 @@ const UserDetails = React.createClass({
       if (!this.props.user || !this.props.user.attribute) {
           return null;
       }
-      let attrs = this.props.user.attribute.filter(this.props.displayAttributes);
-
-      let attrsRendered = attrs.map((attr) => {
+      let userAttributes = SecurityUtils.getUserAttributes(this.props.user);
+      let attrsRendered = userAttributes.filter(this.props.displayAttributes).map((attr) => {
           return (<tr key={attr.name + "-row"}><th>{attr.name}</th><td> {attr.value}</td></tr>);
       });
       return <Table role="body" responsive striped condensed hover><tbody>{attrsRendered}</tbody></Table>;
