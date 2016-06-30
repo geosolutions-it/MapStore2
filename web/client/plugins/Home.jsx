@@ -34,6 +34,12 @@ module.exports = {
             text: <Message msgId="gohome"/>,
             icon: <Glyphicon glyph="home"/>,
             action: (context) => goToPage('/', context.router)
+        },
+        OmniBar: {
+            name: 'home',
+            position: 2,
+            tool: true,
+            action: (context) => goToPage('/', context.router)
         }
     }),
     reducers: {}
