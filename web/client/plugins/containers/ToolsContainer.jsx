@@ -67,6 +67,8 @@ const ToolsContainer = React.createClass({
         };
     },
     getTool(tool) {
+        // tool attribute, if boolean, tells to render directly the plugin
+        // otherwise tool is the component to render inside this container
         if (tool.tool) {
             return tool.tool === true ? tool.plugin : tool.tool;
         }

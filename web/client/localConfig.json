@@ -144,7 +144,7 @@
      {
 				"name": "Search",
 				"cfg": {
-					"withToggle": ["max-width: 768px", "min-width: 420px"]
+					"withToggle": ["max-width: 768px", "min-width: 768px"]
 				},
 				"hide": true
 		}, {
@@ -563,6 +563,35 @@
           "className": "square-button"
         }
       }
-    }]
+    }],
+		"page": [{
+			"name": "OmniBar",
+			"cfg": {
+				"className": "navbar shadow navbar-home"
+			}
+		}, {
+			"name": "Login",
+			"hide": true,
+      "cfg": {
+          "nav": false,
+          "menuProps": {
+              "noCaret": true
+          }
+      }
+		}, {
+			"name" : "Attribution",
+			"hide": true
+		}, {
+			"name": "Footer",
+			"cfg": {
+				"bottom": true
+			}
+			}],
+
+		"maps": [
+			{"name": "Header"},
+			{"name": "MapSearch"},
+			{"name": "Maps"}
+		]
 	}
 }
