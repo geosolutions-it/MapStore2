@@ -72,7 +72,7 @@
 		}, {
 			  "name": "Home",
 				"hide": true,
-				"hideFrom": ["Toolbar"]
+				"hideFrom": ["Toolbar", "BurgerMenu"]
 		}, {
 				"name": "TOC",
 				"hideFrom": ["Toolbar"],
@@ -313,7 +313,7 @@
 		}, {
 			  "name": "Home",
 				"hide": true,
-				"hideFrom": ["Toolbar"]
+				"hideFrom": ["Toolbar", "BurgerMenu"]
 		}, {
 				"name": "TOC",
 				"hideFrom": ["Toolbar"],
