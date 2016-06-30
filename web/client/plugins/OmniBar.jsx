@@ -13,6 +13,7 @@ const ToolsContainer = require('./containers/ToolsContainer');
 
 const OmniBar = React.createClass({
     propTypes: {
+        className: React.PropTypes.string,
         items: React.PropTypes.array,
         id: React.PropTypes.string,
         mapType: React.PropTypes.string
@@ -20,16 +21,10 @@ const OmniBar = React.createClass({
     getDefaultProps() {
         return {
             items: [],
+            className: "navbar-dx shadow",
             id: "mapstore-navbar",
             mapType: "leaflet"
         };
-    },
-    getTool(tool) {
-        if (tool.tool) {
-            const Tool = tool.tool === true ? tool.plugin : tool.tool;
-            return <li key={tool.name}><Tool {...tool.cfg} items={tool.items || []}/></li>;
-        }
-        return <li key={tool.name}><span/></li>;
     },
     getPanels() {
         return this.props.items.filter((item) => item.tools).reduce((previous, current) => {
@@ -47,7 +42,7 @@ const OmniBar = React.createClass({
         return this.props.items.sort((a, b) => a.position - b.position);
     },
     render() {
-        return (<ToolsContainer id={this.props.id} className="navbar-dx shadow"
+        return (<ToolsContainer id={this.props.id} className={this.props.className}
             mapType={this.props.mapType}
             container={(props) => <div {...props}>{props.children}</div>}
             toolStyle="primary"

@@ -12,6 +12,10 @@ module.exports = {
         path: "/",
         component: require('./pages/Home')
     }, {
+        name: "maps",
+        path: "/maps",
+        component: require('./pages/Maps')
+    }, {
         name: "mapviewer",
         path: "/viewer/:mapType/:mapId",
         component: require('./pages/MapViewer')
