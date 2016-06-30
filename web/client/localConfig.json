@@ -363,7 +363,8 @@
           "showResults": false,
           "lineGlyph": "1-measure-lenght",
           "areaGlyph": "1-measure-area",
-          "bearingGlyph": "1-bearing"
+          "bearingGlyph": "1-bearing",
+          "useButtonGroup": false
         },
 				"override": {
 					"DrawerMenu": {
