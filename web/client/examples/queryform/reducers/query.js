@@ -20,27 +20,35 @@ const assign = require('object-assign');
 
 const types = {
     'xsd:string': 'list',
-    'xsd:dateTime': 'date'
+    'xsd:dateTime': 'date',
+    'xsd:number': 'number'
 };
-
+const fieldConfig = {
+    "STATE_NAME": {
+        type: "string"
+    }
+};
 const extractInfo = (featureType) => {
     return {
         attributes: featureType.featureTypes[0].properties
             .filter((attribute) => attribute.type.indexOf('gml:') !== 0)
-            .filter((attribute) => attribute.type !== 'xsd:number')
-            .map((attribute) => ({
-                label: attribute.name,
-                attribute: attribute.name,
-                type: types[attribute.type],
-                valueId: "id",
-                valueLabel: "name",
-                values: []
-            }))
+            .map((attribute) => {
+                let conf = {
+                    label: attribute.name,
+                    attribute: attribute.name,
+                    type: types[attribute.type],
+                    valueId: "id",
+                    valueLabel: "name",
+                    values: []
+                };
+                conf = fieldConfig[attribute.name] ? {...conf, ...fieldConfig[attribute.name]} : conf;
+                return conf;
+            })
     };
 };
 
 const extractData = (feature) => {
-    return ['STATE_NAME', 'STATE_ABBR', 'SUB_REGION', 'STATE_FIPS'].map((attribute) => ({
+    return ['STATE_NAME', 'STATE_ABBR', 'SUB_REGION', 'STATE_FIPS' ].map((attribute) => ({
         attribute,
         values: feature.features.reduce((previous, current) => {
             if (previous.indexOf(current.properties[attribute]) === -1) {
