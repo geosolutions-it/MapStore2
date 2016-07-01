@@ -24,15 +24,17 @@ const PluginsContainer = connect((state) => ({
 
 const {plugins} = require('./plugins');
 
-const pluginsCfg = {
+let pluginsCfg = {
     standard: ['Map', 'Toolbar']
 };
 
-const userCfg = {};
+let userCfg = {};
 
 const {Provider} = require('react-redux');
 
 const {Input} = require('react-bootstrap');
+
+const SaveAndLoad = require('./components/SaveAndLoad');
 
 const Debug = require('../../components/development/Debug');
 const store = require('./store')(plugins);
@@ -89,9 +91,38 @@ const getPluginsConfiguration = () => {
     };
 };
 
+const assign = require('object-assign');
+
 const changeMapType = (callback, e) => {
     mapType = e.target.options[e.target.selectedIndex].value;
     callback();
+};
+
+const save = (callback, name) => {
+    const state = assign({}, store.getState(), {
+        map: assign({}, store.getState().map, {mapStateSource: null})
+    });
+    localStorage.setItem('mapstore.example.plugins.' + name, JSON.stringify({
+        pluginsCfg,
+        userCfg,
+        mapType,
+        state: state
+    }));
+    callback();
+};
+
+const load = (callback, name) => {
+    const loaded = localStorage.getItem('mapstore.example.plugins.' + name);
+    if (loaded) {
+        const obj = JSON.parse(loaded);
+        pluginsCfg = obj.pluginsCfg;
+        userCfg = obj.userCfg;
+        mapType = obj.mapType || mapType;
+        if (obj.state) {
+            store.dispatch({type: 'LOADED_STATE', state: obj.state});
+        }
+        callback();
+    }
 };
 
 const renderPage = () => {
@@ -107,6 +138,7 @@ const renderPage = () => {
                                 <option value="openlayers" key="openlayer">OpenLayers</option>
                                 <option value="cesium" key="cesium">CesiumJS</option>
                             </Input>
+                            <SaveAndLoad onSave={save.bind(null, renderPage)} onLoad={load.bind(null, renderPage)}/>
                             <ul>
                                 {renderPlugins(renderPage)}
                             </ul>

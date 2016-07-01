@@ -36,9 +36,14 @@ html, body, #container, #map {
     font-size: 20px;
 }
 
-#plugins-list .form-group-sm {
+#plugins-list .form-group {
     padding-left: 10px;
     padding-right: 10px;
+}
+
+.save button {
+    margin-left: 10px;
+    float: left;
 }
 
 #plugins-list label {
