@@ -151,6 +151,7 @@
 			"stateSelector": "identify",
       "cfg": {
 				"buttonStyle": "primary",
+        "pressedButtonStyle": "success",
         "id": "identifyBar"
       },
       "isDefault": false
@@ -432,6 +433,7 @@
 			"stateSelector": "identify",
       "cfg": {
 				"buttonStyle": "primary",
+        "pressedButtonStyle": "success",
         "id": "identifyBar"
       },
       "isDefault": false
