@@ -187,7 +187,7 @@ const Identify = React.createClass({
         );
     },
     render() {
-        if (this.props.requests.length !== 0) {
+        if (this.props.enabled && this.props.requests.length !== 0) {
             return this.props.draggable ? (
                     <Draggable>
                         {this.renderContent()}
