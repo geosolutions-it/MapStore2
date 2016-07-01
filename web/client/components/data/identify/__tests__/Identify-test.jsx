@@ -36,7 +36,7 @@ describe('Identify', () => {
 
     it('creates the Identify component with available requests', () => {
         const identify = ReactDOM.render(
-            <Identify requests={[{}]}/>,
+            <Identify enabled={true} requests={[{}]}/>,
             document.getElementById("container")
         );
 
@@ -47,7 +47,7 @@ describe('Identify', () => {
 
     it('creates the Identify component with missing responses', () => {
         const identify = ReactDOM.render(
-            <Identify requests={[{}]}/>,
+            <Identify enabled={true} requests={[{}]}/>,
             document.getElementById("container")
         );
 
@@ -58,7 +58,7 @@ describe('Identify', () => {
 
     it('creates the Identify component with no missing responses', () => {
         const identify = ReactDOM.render(
-            <Identify requests={[{}]} responses={[{}]}/>,
+            <Identify enabled={true} requests={[{}]} responses={[{}]}/>,
             document.getElementById("container")
         );
 
