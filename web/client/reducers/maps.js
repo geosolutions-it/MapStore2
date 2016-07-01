@@ -6,12 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var {MAPS_LIST_LOADED, MAPS_LIST_LOAD_ERROR} = require('../actions/maps');
-
+const {MAPS_LIST_LOADED, MAPS_LIST_LOAD_ERROR} = require('../actions/maps');
+const assign = require('object-assign');
 function maps(state = null, action) {
     switch (action.type) {
         case MAPS_LIST_LOADED:
-            return action.maps;
+            if (action.maps && action.maps.results && Array.isArray(action.maps.results)) {
+                return action.maps;
+            }
+            return assign({}, action.maps, {results: [action.maps.results]});
         case MAPS_LIST_LOAD_ERROR:
             return {
                 loadingError: action.error
