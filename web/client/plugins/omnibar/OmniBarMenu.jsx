@@ -9,6 +9,7 @@ const React = require('react');
 const {NavDropdown, Button, Glyphicon, MenuItem} = require('react-bootstrap');
 const {connect} = require("react-redux");
 const {partial} = require('lodash');
+const Message = require('../locale/Message');
 
 const OmniBarMenu = React.createClass({
     propTypes: {
@@ -25,7 +26,7 @@ const OmniBarMenu = React.createClass({
         return {
             items: [],
             onItemClick: () => {},
-            title: <MenuItem header>Options</MenuItem>
+            title: <MenuItem header><Message msgId="options"/></MenuItem>
         };
     },
     renderNavItem(tool) {
