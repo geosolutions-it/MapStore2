@@ -22,6 +22,8 @@ const LocatePlugin = connect((state) => ({
     onClick: changeLocateState
 })(require('../components/mapcontrols/locate/LocateBtn'));
 
+require('./locate/locate.css');
+
 module.exports = {
     LocatePlugin: assign(LocatePlugin, {
         Toolbar: {
@@ -31,7 +33,7 @@ module.exports = {
             tooltip: "locate.tooltip",
             icon: <Glyphicon glyph="screenshot"/>,
             help: <Message msgId="helptexts.locateBtn"/>,
-            hide: true
+            priority: 1
         }
     }),
     reducers: {locate: require('../reducers/locate')}

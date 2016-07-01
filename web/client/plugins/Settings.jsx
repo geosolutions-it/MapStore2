@@ -165,19 +165,22 @@ module.exports = {
             panel: true,
             wrap: true,
             exclusive: true,
-            hide: true
+            priority: 1
         },
         DrawerMenu: {
             name: 'settings',
             position: 3,
-            title: 'settings'
+            title: 'settings',
+            priority: 2
         },
         BurgerMenu: {
             name: 'settings',
             position: 100,
             text: <Message msgId="settings"/>,
             icon: <Glyphicon glyph="cog"/>,
-            action: toggleControl.bind(null, 'settings', null)
+            action: toggleControl.bind(null, 'settings', null),
+            priority: 3,
+            doNotHide: true
         }
     }),
     reducers: {}

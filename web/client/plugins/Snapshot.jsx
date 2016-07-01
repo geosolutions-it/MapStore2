@@ -61,7 +61,8 @@ module.exports = {
             icon: <Glyphicon glyph="camera"/>,
             wrap: true,
             title: "snapshot.title",
-            exclusive: true
+            exclusive: true,
+            priority: 1
         },
         BurgerMenu: {
             name: 'snapshot',
@@ -69,7 +70,8 @@ module.exports = {
             panel: SnapshotPanel,
             text: <Message msgId="snapshot.title"/>,
             icon: <Glyphicon glyph="camera"/>,
-            action: toggleControl.bind(null, 'snapshot', null)
+            action: toggleControl.bind(null, 'snapshot', null),
+            priority: 2
         }
     }),
     reducers: {

@@ -95,7 +95,7 @@ module.exports = {
             name: 'search',
             position: 1,
             tool: true,
-            hide: true
+            priority: 1
         }
     }),
     reducers: {search: require('../reducers/search')}
