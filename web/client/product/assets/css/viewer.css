@@ -281,8 +281,13 @@ html, body, #container, .fill {
 }
 
 #mapstore-getfeatureinfo {
-    width: 500px !important;
     max-width: 100%;
+}
+
+@media (min-width: 500px) {
+    #mapstore-getfeatureinfo {
+        min-width: 500px !important;
+    }
 }
 
 #mapstore-getfeatureinfo .modal-body .panel-heading {
