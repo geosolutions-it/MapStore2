@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -42,8 +42,7 @@ const HelpTextPanel = React.createClass({
                 id={this.props.id}
                 className={this.props.isVisible ? '' : 'hidden'}
                 style={{position: "absolute", top: "140px", marginLeft: "8px"}}>
-                <Panel
-                    header={<span><span className="help-panel-title">{this.props.title}</span><span className="help-panel-close panel-close" onClick={this.props.onClose}></span></span>}>
+                <Panel header={<span><span className="help-panel-title">{this.props.title}</span><span className="help-panel-close panel-close" onClick={this.props.onClose}></span></span>}>
                     {this.props.helpText}
                 </Panel>
             </div>

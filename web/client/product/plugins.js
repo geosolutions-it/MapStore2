@@ -38,7 +38,8 @@ module.exports = {
         OmniBarPlugin: require('../plugins/OmniBar'),
         BurgerMenuPlugin: require('../plugins/BurgerMenu'),
         UndoPlugin: require('../plugins/History'),
-        RedoPlugin: require('../plugins/History')
+        RedoPlugin: require('../plugins/History'),
+        SharePlugin: require('../plugins/Share')
     },
     requires: {
         ReactSwipe: require('react-swipe'),

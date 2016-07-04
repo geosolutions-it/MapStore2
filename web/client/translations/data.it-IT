@@ -348,6 +348,16 @@
                 }
             }
         },
+        "share":{
+            "title": "Condividi",
+            "titlePanel": "Condividi la mappa",
+            "socialIntro": "Sul tuo social preferito",
+            "directLinkTitle": "Con un Link diretto",
+            "embeddedLinkTitle": "Con il codice embedded",
+            "QRCodeLinkTitle": "Usando il QR Code",
+            "msgCopiedUrl":"Copiato",
+            "msgToCopyUrl":"Clicca per copiare"
+        },
         "snapshot": {
             "title": "Istantanea",
             "save": "Salva",
