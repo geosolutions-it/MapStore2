@@ -99,6 +99,10 @@ function queryform(state = initialState, action) {
                     let f = assign({}, field, {[action.fieldName]: action.fieldValue, type: action.fieldType});
                     if (action.fieldName === "attribute") {
                         f.value = null;
+                        f.operator = "=";
+                    }
+                    if (action.fieldName === "operator") {
+                        f.value = null;
                     }
                     return f;
                 }

@@ -13,7 +13,7 @@ const NumberField = require('./NumberField');
 const TextField = require('./TextField');
 const {isEqual} = require('lodash');
 
-const SimpleFilterFiled = React.createClass({
+const SimpleFilterField = React.createClass({
     propTypes: {
         operator: React.PropTypes.string.isRequired,
         maxLabelSize: React.PropTypes.number,
@@ -298,4 +298,4 @@ const SimpleFilterFiled = React.createClass({
 
 });
 
-module.exports = SimpleFilterFiled;
+module.exports = SimpleFilterField;
