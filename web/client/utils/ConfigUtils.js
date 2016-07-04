@@ -157,6 +157,15 @@ var ConfigUtils = {
      */
     copySourceOptions: function(layer, source) {
         layer.baseParams = source.baseParams;
+        if (source.url) {
+            let sourceParts = url.parse(source.url, true);
+            for (let k in sourceParts.query) {
+                if (k.toUpperCase() === "REQUEST" ) {
+                    delete sourceParts.query[k];
+                }
+            }
+            layer.baseParams = assign({}, layer.baseParams, sourceParts.query);
+        }
         layer.url = ConfigUtils.normalizeSourceUrl(source.url);
     },
 

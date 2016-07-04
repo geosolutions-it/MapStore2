@@ -69,7 +69,7 @@ L.tileLayer.multipleUrlWMS = function(urls, options) {
 function wmsToLeafletOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
     // NOTE: can we use opacity to manage visibility?
-    return objectAssign({
+    return objectAssign({}, options.baseParams, {
         layers: options.name,
         styles: options.style || "",
         format: options.format || 'image/png',

@@ -16,7 +16,7 @@ const {isArray} = require('lodash');
 
 function wmsToOpenlayersOptions(options) {
     // NOTE: can we use opacity to manage visibility?
-    return objectAssign({
+    return objectAssign({}, options.baseParams, {
         LAYERS: options.name,
         STYLES: options.style || "",
         FORMAT: options.format || 'image/png',
