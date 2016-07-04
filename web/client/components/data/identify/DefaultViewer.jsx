@@ -14,10 +14,12 @@ const Message = require('../../../components/I18N/Message');
 const {Alert, Panel, Accordion} = require('react-bootstrap');
 
 const DefaultHeader = require('./DefaultHeader');
+const ViewerPage = require('./viewers/ViewerPage');
 const DefaultViewer = React.createClass({
     propTypes: {
         format: React.PropTypes.string,
         collapsible: React.PropTypes.bool,
+        requests: React.PropTypes.array,
         responses: React.PropTypes.array,
         missingResponses: React.PropTypes.number,
         container: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
@@ -27,6 +29,11 @@ const DefaultViewer = React.createClass({
         viewers: React.PropTypes.object,
         style: React.PropTypes.object,
         containerProps: React.PropTypes.object
+    },
+    getInitialState() {
+        return {
+            index: 0
+        };
     },
     getDefaultProps() {
         return {
@@ -39,12 +46,22 @@ const DefaultViewer = React.createClass({
             container: Accordion,
             validator: MapInfoUtils.getValidator,
             viewers: MapInfoUtils.getViewers(),
-            style: {maxHeight: "500px", overflow: "auto"},
+            style: {
+                maxHeight: "500px",
+                position: "relative",
+                marginBottom: 0
+            },
             containerProps: {}
         };
     },
-    shouldComponentUpdate(nextProps) {
-        return nextProps.responses !== this.props.responses || nextProps.missingResponses !== this.props.missingResponses;
+    componentWillReceiveProps(nextProps) {
+        // reset current page on new requests set
+        if (nextProps.requests !== this.props.requests) {
+            this.setState({index: 0});
+        }
+    },
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.responses !== this.props.responses || nextProps.missingResponses !== this.props.missingResponses || nextState.index !== this.state.index;
     },
     renderEmptyLayers(validator) {
         const notEmptyResponses = validator.getValidResponses(this.props.responses).length;
@@ -86,12 +103,20 @@ const DefaultViewer = React.createClass({
             const PageHeader = this.props.header;
             return (
                 <Panel
+
                     eventKey={i}
                     key={i}
                     collapsible={this.props.collapsible}
-                    header={<span><PageHeader {...this.props.headerOptions} {...layerMetadata} container={() => this.refs.container}/></span>}
+                    header={<span><PageHeader
+                        size={responses.length}
+                        {...this.props.headerOptions}
+                        {...layerMetadata}
+                        index={this.state.index}
+                        onNext={() => this.next()}
+                        onPrevious={() => this.previous()}/></span>
+                    }
                     style={this.props.style}>
-                    {this.renderPage(response)}
+                    <ViewerPage response={response} format={this.props.format} viewers={this.props.viewers} />
                 </Panel>
             );
         });
@@ -107,12 +132,25 @@ const DefaultViewer = React.createClass({
         const validator = this.props.validator(this.props.format);
         const validResponses = validator.getValidResponses(this.props.responses);
         return (<div>
-                <Container {...this.props.containerProps} ref="container" defaultActiveKey={0} key={"swiper-" + this.props.responses.length + "-" + this.props.missingResponses} shouldUpdate={(nextProps, props) => {return nextProps !== props; }}>
+                <Container {...this.props.containerProps}
+                    onChangeIndex={(index) => {this.setState({index}); }}
+                    ref="container"
+                    defaultActiveKey={0}
+                    index={this.state.index || 0}
+                    key={"swiper"}
+                    className="swipeable-view"
+                    >
                     {this.renderPages(validResponses)}
                 </Container>
                 {this.renderAdditionalInfo()}
             </div>
         );
+    },
+    next() {
+        this.setState({index: Math.min(this.props.validator(this.props.format).getValidResponses(this.props.responses).length - 1, this.state.index + 1)});
+    },
+    previous() {
+        this.setState({index: Math.max(0, this.state.index - 1) });
     }
 });
 

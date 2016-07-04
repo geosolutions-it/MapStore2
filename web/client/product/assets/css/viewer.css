@@ -290,14 +290,14 @@ html, body, #container, .fill {
     }
 }
 
-#mapstore-getfeatureinfo .modal-body .panel-heading {
+#mapstore-getfeatureinfo .swipeable-view .panel-heading {
     background-color: white;
     border: none;
     height: 60px;
     padding: 0;
 }
 
-#mapstore-getfeatureinfo .modal-body .panel {
+#mapstore-getfeatureinfo .swipeable-view .panel {
     border: none;
 }
 
@@ -305,16 +305,16 @@ html, body, #container, .fill {
     padding: 0;
 }
 
-#mapstore-getfeatureinfo .modal-body .panel-heading .swipe-header-left-button {
+#mapstore-getfeatureinfo .swipeable-view .panel-heading .swipe-header-left-button {
     right: 55px;
     top: 0;
 }
 
-#mapstore-getfeatureinfo .modal-body .panel-heading .swipe-header-right-button {
+#mapstore-getfeatureinfo .swipeable-view .panel-heading .swipe-header-right-button {
     top: 0;
 }
 
-#mapstore-getfeatureinfo .modal-body .panel-title {
+#mapstore-getfeatureinfo .swipeable-view .panel-title {
     font-weight: bold;
 }
 
