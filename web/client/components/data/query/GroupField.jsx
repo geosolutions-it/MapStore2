@@ -12,6 +12,8 @@ const {Row, Col, Button, Glyphicon, Panel, OverlayTrigger, Tooltip} = require('r
 const FilterField = require('./FilterField');
 const ComboField = require('./ComboField');
 const DateField = require('./DateField');
+const NumberField = require('./NumberField');
+const TextField = require('./TextField');
 
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const I18N = require('../../I18N/I18N');
@@ -83,6 +85,19 @@ const GroupField = React.createClass({
             return {id: (selected.fidPrefix ? selected.fidPrefix + "." + value[selected.valueId] : value[selected.valueId]), name: value[selected.valueLabel]};
         }) : null);
     },
+    getOperator(selectedAttribute) {
+        let type = (selectedAttribute && selectedAttribute.type) ? selectedAttribute.type : "";
+        switch (type) {
+            case "list": {
+                return ["="];
+            }
+            case "string": {
+                return ["=", "like", "ilike", "isNull"];
+            }
+            default:
+                return ["=", ">", "<", ">=", "<=", "<>", "><"];
+        }
+    },
     renderFilterField(filterField) {
         let selectedAttribute = this.props.attributes.filter((attribute) => attribute.attribute === filterField.attribute)[0];
         let comboValues = this.getComboValues(selectedAttribute, this.props.attributes);
@@ -93,7 +108,7 @@ const GroupField = React.createClass({
                     <FilterField
                         attributes={this.props.attributes}
                         filterField={filterField}
-                        operatorOptions={selectedAttribute && selectedAttribute.type === "list" ? ["="] : ["=", ">", "<", ">=", "<=", "<>", "><"]}
+                        operatorOptions={this.getOperator(selectedAttribute)}
                         onUpdateField={this.props.actions.onUpdateFilterField}
                         onUpdateExceptionField={this.props.actions.onUpdateExceptionField}
                         onChangeCascadingValue={this.props.actions.onChangeCascadingValue}>
@@ -106,6 +121,13 @@ const GroupField = React.createClass({
                         <DateField
                             attType="date"
                             operator={filterField.operator}/>
+                        <NumberField
+                            operator={filterField.operator}
+                            attType="number"
+                        />
+                        <TextField
+                            operator={filterField.operator}
+                            attType="string"/>
                     </FilterField>
                 </Col>
                 <Col xs={2}>

@@ -9,21 +9,24 @@
 const React = require('react');
 const {Panel, ButtonToolbar, Button, OverlayTrigger, Tooltip} = require('react-bootstrap');
 const ComboField = require('./ComboField');
+const NumberField = require('./NumberField');
+const TextField = require('./TextField');
 const {isEqual} = require('lodash');
 
-const SimpleFilterFiled = React.createClass({
+const SimpleFilterField = React.createClass({
     propTypes: {
+        operator: React.PropTypes.string.isRequired,
         maxLabelSize: React.PropTypes.number,
         label: React.PropTypes.string,
         attribute: React.PropTypes.string.isRequired,
         optionsValues: React.PropTypes.array,
         defaultOptions: React.PropTypes.array,
         optionsLabels: React.PropTypes.object,
-        values: React.PropTypes.array,
+        values: React.PropTypes.oneOfType([React.PropTypes.array, React.PropTypes.object, React.PropTypes.number, React.PropTypes.string]),
         multivalue: React.PropTypes.bool,
         combo: React.PropTypes.bool,
         toolbar: React.PropTypes.bool,
-        type: React.PropTypes.oneOf(['list', 'date', 'bool']),
+        type: React.PropTypes.oneOf(['list', 'number', 'string']).isRequired,
         collapsible: React.PropTypes.bool,
         defaultExpanded: React.PropTypes.bool,
         eventKey: React.PropTypes.string,
@@ -32,17 +35,24 @@ const SimpleFilterFiled = React.createClass({
         radioStyle: React.PropTypes.object,
         comboStyle: React.PropTypes.object,
         sort: React.PropTypes.oneOf(['ASC', 'DESC', false]),
-        exception: React.PropTypes.bool,
+        exception: React.PropTypes.oneOfType([
+            React.PropTypes.object,
+            React.PropTypes.bool,
+            React.PropTypes.string
+        ]),
         required: React.PropTypes.bool,
         addAllOpt: React.PropTypes.bool,
         updateFilter: React.PropTypes.func,
-        valueFormatter: React.PropTypes.func
+        valueFormatter: React.PropTypes.func,
+        options: React.PropTypes.object
     },
     contextTypes: {
         messages: React.PropTypes.object
     },
     getDefaultProps() {
         return {
+            options: null,
+            operator: null,
             maxLabelSize: 20,
             sort: false,
             required: false,
@@ -58,7 +68,7 @@ const SimpleFilterFiled = React.createClass({
             multivalue: false,
             combo: false,
             toolbar: false,
-            type: 'list',
+            type: null,
             collapsible: false,
             defaultExpanded: false,
             updateFilter: () => {},
@@ -69,6 +79,36 @@ const SimpleFilterFiled = React.createClass({
     },
     shouldComponentUpdate(nextProps) {
         return !isEqual(this.props, nextProps);
+    },
+    onRChange(e) {
+        this.props.updateFilter(this.props.fieldId, {values: [e.target.value]});
+    },
+    onCheckChange(e) {
+        let values;
+        if (e.target.checked) {
+            values = [...this.props.values, e.target.value];
+        }else {
+            values = this.props.values.filter((v) => {
+                return v !== e.target.value;
+            });
+        }
+        let exception = (this.props.required && values.length === 0) ? true : false;
+        this.props.updateFilter(this.props.fieldId, {values: values, exception: exception});
+    },
+    onComboChange(id, fieldName, value ) {
+        let values = (Array.isArray(value)) ? value : [value];
+        let exception = (this.props.required && values.length === 0) ? true : false;
+        this.props.updateFilter(id, {values: values, exception: exception});
+    },
+    onNumberChange(id, fieldName, value) {
+        this.props.updateFilter(id, {values: value});
+    },
+    onNumberException(id, exception) {
+        this.props.updateFilter(id, {exception: exception});
+    },
+    onTextChange(id, fieldName, value) {
+        let exception = (this.props.required && value.length === 0) ? true : false;
+        this.props.updateFilter(id, {values: value, exception: exception});
     },
     getOptionsValue() {
         let optionsValues = this.props.optionsValues.map((opt) => {
@@ -122,16 +162,7 @@ const SimpleFilterFiled = React.createClass({
         }, this);
     },
     renderRadioPanel() {
-        return (
-            <Panel
-                eventKey={this.props.eventKey || this.props.attribute}
-                header={this.props.label || this.props.attribute}
-                collapsible={this.props.collapsible}
-                defaultExpanded={this.props.defaultExpanded}
-                bsStyle={this.props.exception ? "danger" : "default"}>
-                {this.renderRadioElements()}
-            </Panel>
-            );
+        return this.renderRadioElements();
     },
     renderCheckboxElements() {
         let optionsValues = this.getOptionsValue();
@@ -161,15 +192,10 @@ const SimpleFilterFiled = React.createClass({
     },
     renderCheckboxPanel() {
         return (
-            <Panel
-                eventKey={this.props.eventKey || this.props.attribute}
-                header={this.props.label || this.props.attribute}
-                collapsible={this.props.collapsible}
-                defaultExpanded={this.props.defaultExpanded}
-                bsStyle={this.props.exception ? "danger" : "default"}>
+                <div>
                     {this.renderCheckboxElements()}
-                {(this.props.toolbar) ? this.renderToolbar() : null}
-            </Panel>
+                    {(this.props.toolbar) ? this.renderToolbar() : null}
+                </div>
             );
     },
     renderCombo() {
@@ -179,12 +205,7 @@ const SimpleFilterFiled = React.createClass({
         }, this);
         let val = (this.props.values && this.props.values.length > 0) ? {fieldValue: (this.props.multivalue) ? this.props.values : this.props.values[0] } : {};
         return (
-            <Panel
-                eventKey={this.props.eventKey || this.props.attribute}
-                header={this.props.label || this.props.attribute}
-                collapsible={this.props.collapsible}
-                defaultExpanded={this.props.defaultExpanded}
-                bsStyle={this.props.exception ? "danger" : "default"}>
+            <div>
                     <ComboField
                     valueField="val"
                     textField="text"
@@ -198,34 +219,74 @@ const SimpleFilterFiled = React.createClass({
                     {...val}
                     />
                  {(this.props.toolbar && this.props.multivalue) ? this.renderToolbar() : null}
-            </Panel>
+            </div>
             );
     },
     renderCheckOrRadio() {
         return (this.props.multivalue) ? this.renderCheckboxPanel() : this.renderRadioPanel();
     },
-    render() {
+    renderText() {
+        return (
+                <TextField
+                    operator={this.props.operator}
+                    fieldName={this.props.attribute}
+                    fieldRowId={this.props.fieldId}
+                    fieldValue={this.props.values}
+                    attType={this.props.type}
+                    onUpdateField={this.onTextChange}
+                    />
+            );
+
+    },
+    renderNumber() {
+        return (
+                <NumberField
+                    operator={"><"}
+                    lowLabel={this.props.optionsLabels.lowLabel}
+                    upLabel={this.props.optionsLabels.upLabel}
+                    fieldName={this.props.attribute}
+                    fieldRowId={this.props.fieldId}
+                    fieldValue={this.props.values}
+                    attType={this.props.type}
+                    onUpdateField={this.onNumberChange}
+                    onUpdateExceptionField={this.onNumberException}
+                    fieldException={this.props.exception}
+                    options={this.props.options}
+
+                />);
+    },
+    renderList() {
         return (this.props.combo) ? this.renderCombo() : this.renderCheckOrRadio();
     },
-    onRChange(e) {
-        this.props.updateFilter(this.props.fieldId, {values: [e.target.value]});
-    },
-    onCheckChange(e) {
-        let values;
-        if (e.target.checked) {
-            values = [...this.props.values, e.target.value];
-        }else {
-            values = this.props.values.filter((v) => {
-                return v !== e.target.value;
-            });
+    render() {
+        let comp;
+        switch (this.props.type) {
+            case "list": {
+                comp = this.renderList();
+                break;
+            }
+            case "number": {
+                comp = this.renderNumber();
+                break;
+            }
+            case "string": {
+                comp = this.renderText();
+                break;
+            }
+            default: {
+                comp = this.renderList();
+            }
         }
-        let exception = (this.props.required && values.length === 0) ? true : false;
-        this.props.updateFilter(this.props.fieldId, {values: values, exception: exception});
-    },
-    onComboChange(id, fieldName, value ) {
-        let values = (Array.isArray(value)) ? value : [value];
-        let exception = (this.props.required && values.length === 0) ? true : false;
-        this.props.updateFilter(id, {values: values, exception: exception});
+        return (
+            <Panel
+                eventKey={this.props.eventKey || this.props.attribute}
+                header={this.props.label || this.props.attribute}
+                collapsible={this.props.collapsible}
+                defaultExpanded={this.props.defaultExpanded}
+                bsStyle={this.props.exception ? "danger" : "default"}>
+                    {comp}
+            </Panel>
+            );
     },
     selectAll() {
         let values = this.getOptionsValue();
@@ -237,4 +298,4 @@ const SimpleFilterFiled = React.createClass({
 
 });
 
-module.exports = SimpleFilterFiled;
+module.exports = SimpleFilterField;

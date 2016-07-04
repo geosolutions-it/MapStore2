@@ -13,6 +13,7 @@ describe('FilterUtils', () => {
         let filterObj = {
             filterFields: [{
                 attribute: "attribute1",
+                groupId: 1,
                 exception: null,
                 operator: "=",
                 rowId: "1",
@@ -21,10 +22,47 @@ describe('FilterUtils', () => {
             }, {
                 attribute: "attribute2",
                 exception: null,
+                groupId: 1,
                 operator: "=",
                 rowId: "2",
                 type: "list",
                 value: "value2"
+            },
+            {
+                attribute: "attribute3",
+                exception: null,
+                groupId: 1,
+                operator: "=",
+                rowId: "3",
+                type: "number",
+                value: "value1"
+            },
+            {
+                attribute: "attribute4",
+                exception: null,
+                operator: "><",
+                groupId: 1,
+                rowId: "4",
+                type: "number",
+                value: {lowBound: 10, upBound: 20}
+            },
+            {
+                attribute: "attribute5",
+                exception: null,
+                operator: "isNull",
+                groupId: 1,
+                rowId: "5",
+                type: "string",
+                value: ''
+            },
+            {
+                attribute: "attribute5",
+                exception: null,
+                operator: "ilike",
+                groupId: 1,
+                rowId: "6",
+                type: "string",
+                value: 'pa'
             }],
             groupFields: [{
                 id: 1,
@@ -32,6 +70,7 @@ describe('FilterUtils', () => {
                 logic: "OR"
             }],
             spatialField: {
+                groupId: 1,
                 attribute: "the_geom",
                 geometry: {
                     center: [1, 1],
@@ -61,6 +100,7 @@ describe('FilterUtils', () => {
     it('Calculate CQL filter', () => {
         let filterObj = {
             filterFields: [{
+                groupId: 1,
                 attribute: "attribute1",
                 exception: null,
                 operator: "=",
@@ -68,12 +108,49 @@ describe('FilterUtils', () => {
                 type: "list",
                 value: "value1"
             }, {
+                groupId: 1,
                 attribute: "attribute2",
                 exception: null,
                 operator: "=",
                 rowId: "2",
                 type: "list",
                 value: "value2"
+            },
+            {
+                groupId: 1,
+                attribute: "attribute3",
+                exception: null,
+                operator: "=",
+                rowId: "3",
+                type: "number",
+                value: "value1"
+            },
+            {
+                groupId: 1,
+                attribute: "attribute4",
+                exception: null,
+                operator: "><",
+                rowId: "4",
+                type: "number",
+                value: {lowBound: 10, upBound: 20}
+            },
+            {
+                attribute: "attribute5",
+                exception: null,
+                operator: "isNull",
+                groupId: 1,
+                rowId: "5",
+                type: "string",
+                value: ''
+            },
+            {
+                attribute: "attribute5",
+                exception: null,
+                operator: "ilike",
+                groupId: 1,
+                rowId: "6",
+                type: "string",
+                value: 'pa'
             }],
             groupFields: [{
                 id: 1,
@@ -81,6 +158,7 @@ describe('FilterUtils', () => {
                 logic: "OR"
             }],
             spatialField: {
+                groupId: 1,
                 attribute: "the_geom",
                 geometry: {
                     center: [1, 1],
@@ -103,7 +181,7 @@ describe('FilterUtils', () => {
             }
         };
 
-        let filter = FilterUtils.toCQLFilter("ft_name_test", filterObj);
+        let filter = FilterUtils.toCQLFilter(filterObj);
         expect(filter).toExist();
     });
 
@@ -218,6 +296,8 @@ describe('FilterUtils', () => {
                         "local": "Local",
                         "state": "State"
                     },
+                    "type": "list",
+                    "operator": "=",
                     "required": true,
                     "sort": "ASC",
                     "defaultExpanded": true,
@@ -236,6 +316,8 @@ describe('FilterUtils', () => {
                     "attribute": "highway_system",
                     "multivalue": false,
                     "values": ["state"],
+                    "type": "list",
+                    "operator": "=",
                     "optionsValues": ["local", "state"],
                     "optionsLabels": {
                         "local": "Local",

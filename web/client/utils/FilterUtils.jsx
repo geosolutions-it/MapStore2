@@ -58,7 +58,6 @@ const FilterUtils = {
             } else {
                 attributeFilter = this.processOGCFilterFields();
             }
-
             filters.push(attributeFilter);
         }else if (this.objFilter.simpleFilterFields && this.objFilter.simpleFilterFields.length > 0) {
             let ogc = "";
@@ -193,55 +192,32 @@ const FilterUtils = {
     },
     processOGCFilterFields: function(group) {
         let fields = group ? this.objFilter.filterFields.filter((field) => field.groupId === group.id) : this.objFilter.filterFields;
-
         let filter = [];
+
         if (fields) {
-            fields.forEach((field) => {
+            filter = fields.reduce((arr, field) => {
                 let fieldFilter;
-
-                if (field.type === "date") {
-                    if (field.operator === "><") {
-                        if (field.value.startDate && field.value.endDate) {
-                            fieldFilter =
-                                this.ogcComparisonOperators[field.operator].startTag +
-                                    this.propertyTagReference[this.nsplaceholder].startTag +
-                                        field.attribute +
-                                    this.propertyTagReference[this.nsplaceholder].endTag +
-                                    "<" + this.nsplaceholder + ":LowerBoundary>" +
-                                        "<" + this.nsplaceholder + ":Literal>" + field.value.startDate.toISOString() + "</" + this.nsplaceholder + ":Literal>" +
-                                    "</" + this.nsplaceholder + ":LowerBoundary>" +
-                                    "<" + this.nsplaceholder + ":UpperBoundary>" +
-                                        "<" + this.nsplaceholder + ":Literal>" + field.value.endDate.toISOString() + "</" + this.nsplaceholder + ":Literal>" +
-                                    "</" + this.nsplaceholder + ":UpperBoundary>" +
-                                this.ogcComparisonOperators[field.operator].endTag;
-                        }
-                    } else {
-                        if (field.value.startDate) {
-                            fieldFilter =
-                                this.ogcComparisonOperators[field.operator].startTag +
-                                    this.propertyTagReference[this.nsplaceholder].startTag +
-                                        field.attribute +
-                                    this.propertyTagReference[this.nsplaceholder].endTag +
-                                    "<" + this.nsplaceholder + ":Literal>" + field.value.startDate.toISOString() + "</" + this.nsplaceholder + ":Literal>" +
-                                this.ogcComparisonOperators[field.operator].endTag;
-                        }
-                    }
-                } else if (field.type === "list") {
-                    if (field.value) {
-                        fieldFilter =
-                            this.ogcComparisonOperators[field.operator].startTag +
-                                this.propertyTagReference[this.nsplaceholder].startTag +
-                                    field.attribute +
-                                this.propertyTagReference[this.nsplaceholder].endTag +
-                                "<" + this.nsplaceholder + ":Literal>" + field.value + "</" + this.nsplaceholder + ":Literal>" +
-                            this.ogcComparisonOperators[field.operator].endTag;
-                    }
+                switch (field.type) {
+                    case "date":
+                        fieldFilter = this.ogcDateField(field.attribute, field.operator, field.value);
+                        break;
+                    case "number":
+                        fieldFilter = this.ogcNumberField(field.attribute, field.operator, field.value);
+                        break;
+                    case "string":
+                        fieldFilter = this.ogcStringField(field.attribute, field.operator, field.value);
+                        break;
+                    case "list":
+                        fieldFilter = this.ogcListField(field.attribute, field.operator, field.value);
+                        break;
+                    default:
+                        break;
                 }
-
                 if (fieldFilter) {
-                    filter.push(fieldFilter);
+                    arr.push(fieldFilter);
                 }
-            });
+                return arr;
+            }, []);
 
             filter = filter.join("");
         }
@@ -249,23 +225,148 @@ const FilterUtils = {
         return filter;
     },
     processOGCSimpleFilterField: function(field) {
-        // If value === null we test for isNull properties improve with better test
         let filter = "";
-        if (field.values && field.values.length > 0 ) {
-            filter = field.values.reduce((ogc, val) => {
-                let op = (val === null || val === "null") ? "isNull" : "=";
-                let literal = (val !== null) ? "<" + this.nsplaceholder + ":Literal>" + val + "</" + this.nsplaceholder + ":Literal>" : "";
-                return ogc +
-                            this.ogcComparisonOperators[op].startTag +
-                                this.propertyTagReference[this.nsplaceholder].startTag +
-                                    field.attribute +
-                                this.propertyTagReference[this.nsplaceholder].endTag +
-                                literal +
-                            this.ogcComparisonOperators[op].endTag;
-            }, this.ogcLogicalOperator.OR.startTag);
-            filter += this.ogcLogicalOperator.OR.endTag;
+        switch (field.type) {
+            case "date":
+                filter = this.ogcDateField(field.attribute, field.operator, field.values);
+                break;
+            case "number":
+                filter = this.ogcNumberField(field.attribute, field.operator, field.values);
+                break;
+            case "string":
+                filter = this.ogcStringField(field.attribute, field.operator, field.values);
+                break;
+            case "list": {
+                if (field.values && field.values.length > 0 ) {
+                    filter = field.values.reduce((ogc, val) => {
+                        let op = (val === null || val === "null") ? "isNull" : "=";
+                        return ogc + this.ogcStringField(field.attribute, op, val);
+                    }, this.ogcLogicalOperator.OR.startTag);
+                    filter += this.ogcLogicalOperator.OR.endTag;
+                }
+                break;
+            }
+            default:
+                break;
         }
         return filter;
+    },
+    ogcDateField: function(attribute, operator, value) {
+        let fieldFilter;
+        if (operator === "><") {
+            if (value.startDate && value.endDate) {
+                fieldFilter =
+                            this.ogcComparisonOperators[operator].startTag +
+                                this.propertyTagReference[this.nsplaceholder].startTag +
+                                    attribute +
+                                this.propertyTagReference[this.nsplaceholder].endTag +
+                                "<" + this.nsplaceholder + ":LowerBoundary>" +
+                                    "<" + this.nsplaceholder + ":Literal>" + value.startDate.toISOString() + "</" + this.nsplaceholder + ":Literal>" +
+                                "</" + this.nsplaceholder + ":LowerBoundary>" +
+                                "<" + this.nsplaceholder + ":UpperBoundary>" +
+                                    "<" + this.nsplaceholder + ":Literal>" + value.endDate.toISOString() + "</" + this.nsplaceholder + ":Literal>" +
+                                "</" + this.nsplaceholder + ":UpperBoundary>" +
+                            this.ogcComparisonOperators[operator].endTag;
+            }
+        } else {
+            if (value.startDate) {
+                fieldFilter =
+                            this.ogcComparisonOperators[operator].startTag +
+                                this.propertyTagReference[this.nsplaceholder].startTag +
+                                    attribute +
+                                this.propertyTagReference[this.nsplaceholder].endTag +
+                                "<" + this.nsplaceholder + ":Literal>" + value.startDate.toISOString() + "</" + this.nsplaceholder + ":Literal>" +
+                            this.ogcComparisonOperators[operator].endTag;
+            }
+        }
+        return fieldFilter;
+    },
+    ogcListField: function(attribute, operator, value) {
+        let fieldFilter;
+        if (value) {
+            fieldFilter =
+                this.ogcComparisonOperators[operator].startTag +
+                    this.propertyTagReference[this.nsplaceholder].startTag +
+                        attribute +
+                    this.propertyTagReference[this.nsplaceholder].endTag +
+                    "<" + this.nsplaceholder + ":Literal>" + value + "</" + this.nsplaceholder + ":Literal>" +
+                this.ogcComparisonOperators[operator].endTag;
+        }
+        return fieldFilter;
+    },
+    ogcStringField: function(attribute, operator, value) {
+        let fieldFilter;
+        if (value) {
+            if (operator === "isNull") {
+                fieldFilter =
+                    this.ogcComparisonOperators[operator].startTag +
+                        this.propertyTagReference[this.nsplaceholder].startTag +
+                            attribute +
+                        this.propertyTagReference[this.nsplaceholder].endTag +
+                    this.ogcComparisonOperators[operator].endTag;
+            }else if (operator === "=") {
+                fieldFilter =
+                    this.ogcComparisonOperators[operator].startTag +
+                        this.propertyTagReference[this.nsplaceholder].startTag +
+                            attribute +
+                        this.propertyTagReference[this.nsplaceholder].endTag +
+                        "<" + this.nsplaceholder + ":Literal>" + value + "</" + this.nsplaceholder + ":Literal>" +
+                    this.ogcComparisonOperators[operator].endTag;
+            }else {
+                fieldFilter =
+                    this.ogcComparisonOperators[operator].startTag +
+                        this.propertyTagReference[this.nsplaceholder].startTag +
+                            attribute +
+                        this.propertyTagReference[this.nsplaceholder].endTag +
+                        "<" + this.nsplaceholder + ":Literal>*" + value + "*</" + this.nsplaceholder + ":Literal>" +
+                    this.ogcComparisonOperators[operator].endTag;
+            }
+        }
+        return fieldFilter;
+    },
+    ogcNumberField: function(attribute, operator, value) {
+        let fieldFilter;
+        if (operator === "><") {
+            if (value && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
+                fieldFilter = this.ogcComparisonOperators[">="].startTag +
+                                this.propertyTagReference[this.nsplaceholder].startTag +
+                                    attribute +
+                                this.propertyTagReference[this.nsplaceholder].endTag +
+                             "<" + this.nsplaceholder + ":Literal>" + value.lowBound + "</" + this.nsplaceholder + ":Literal>" +
+                                        this.ogcComparisonOperators[">="].endTag;
+            }else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
+                fieldFilter = this.ogcComparisonOperators["<="].startTag +
+                                this.propertyTagReference[this.nsplaceholder].startTag +
+                                    attribute +
+                                this.propertyTagReference[this.nsplaceholder].endTag +
+                             "<" + this.nsplaceholder + ":Literal>" + value.upBound + "</" + this.nsplaceholder + ":Literal>" +
+                                        this.ogcComparisonOperators["<="].endTag;
+            }else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
+                fieldFilter =
+                            this.ogcComparisonOperators[operator].startTag +
+                                this.propertyTagReference[this.nsplaceholder].startTag +
+                                    attribute +
+                                this.propertyTagReference[this.nsplaceholder].endTag +
+                                "<" + this.nsplaceholder + ":LowerBoundary>" +
+                                    "<" + this.nsplaceholder + ":Literal>" + value.lowBound + "</" + this.nsplaceholder + ":Literal>" +
+                                "</" + this.nsplaceholder + ":LowerBoundary>" +
+                                "<" + this.nsplaceholder + ":UpperBoundary>" +
+                                    "<" + this.nsplaceholder + ":Literal>" + value.upBound + "</" + this.nsplaceholder + ":Literal>" +
+                                "</" + this.nsplaceholder + ":UpperBoundary>" +
+                            this.ogcComparisonOperators[operator].endTag;
+            }
+        } else {
+            let val = value && (value.lowBound !== null && value.lowBound !== undefined) ? value.lowBound : value;
+            if (val) {
+                fieldFilter = this.ogcComparisonOperators[operator].startTag +
+                                this.propertyTagReference[this.nsplaceholder].startTag +
+                                    attribute +
+                                this.propertyTagReference[this.nsplaceholder].endTag +
+                             "<" + this.nsplaceholder + ":Literal>" + val + "</" + this.nsplaceholder + ":Literal>" +
+                                        this.ogcComparisonOperators[operator].endTag;
+            }
+        }
+        return fieldFilter;
     },
     processOGCSpatialFilter: function(version) {
         let ogc = this.ogcSpatialOperator[this.objFilter.spatialField.operation].startTag;
@@ -466,24 +567,22 @@ const FilterUtils = {
             fields.forEach((field) => {
                 let fieldFilter;
 
-                if (field.type === "date") {
-                    if (field.operator === "><") {
-                        if (field.value.startDate && field.value.endDate) {
-                            fieldFilter = "(" + field.attribute + ">='" + field.value.startDate.toISOString() +
-                                "' AND " + field.attribute + "<='" + field.value.endDate.toISOString() + "')";
-                        }
-                    } else {
-                        if (field.value.startDate) {
-                            fieldFilter = field.attribute + field.operator + "'" + field.value.startDate.toISOString() + "'";
-                        }
-                    }
-                } else if (field.type === "list") {
-                    if (field.value) {
-                        let value = "'" + field.value + "'";
-                        fieldFilter = field.attribute + field.operator + value;
-                    }
+                switch (field.type) {
+                    case "date":
+                        fieldFilter = this.cqlDateField(field.attribute, field.operator, field.value);
+                        break;
+                    case "number":
+                        fieldFilter = this.cqlNumberField(field.attribute, field.operator, field.value);
+                        break;
+                    case "string":
+                        fieldFilter = this.cqlStringField(field.attribute, field.operator, field.value);
+                        break;
+                    case "list":
+                        fieldFilter = this.cqlListField(field.attribute, field.operator, field.value);
+                        break;
+                    default:
+                        break;
                 }
-
                 if (fieldFilter) {
                     filter.push(fieldFilter);
                 }
@@ -496,22 +595,93 @@ const FilterUtils = {
     },
     processCQLSimpleFilterField: function(field) {
         let strFilter = false;
-        if (field.values.length !== field.optionsValues.length && (field.type === undefined || field.type === 'list')) {
-            let addNull = false;
-            let filter = field.values.reduce((arr, value) => {
-                if (value === null || value === "null") {
-                    addNull = true;
-                } else {
-                    arr.push( "'" + value + "'");
+        switch (field.type) {
+            case "date":
+                strFilter = this.cqlDateField(field.attribute, field.operator, field.values);
+                break;
+            case "number":
+                strFilter = this.cqlNumberField(field.attribute, field.operator, field.values);
+                break;
+            case "string":
+                strFilter = this.cqlStringField(field.attribute, field.operator, field.values);
+                break;
+            case "list": {
+                if (field.values.length !== field.optionsValues.length) {
+                    let addNull = false;
+                    let filter = field.values.reduce((arr, value) => {
+                        if (value === null || value === "null") {
+                            addNull = true;
+                        } else {
+                            arr.push( "'" + value + "'");
+                        }
+                        return arr;
+                    }, []);
+                    strFilter = filter.length > 0 ? field.attribute + " IN(" + filter.join(",") + ")" : strFilter;
+                    if (addNull) {
+                        strFilter = (strFilter) ? strFilter + " OR isNull(" + field.attribute + ")=true" : "isNull(" + field.attribute + ")=true";
+                    }
                 }
-                return arr;
-            }, []);
-            strFilter = filter.length > 0 ? field.attribute + " IN(" + filter.join(",") + ")" : strFilter;
-            if (addNull) {
-                strFilter = (strFilter) ? strFilter + " OR isNull(" + field.attribute + ")=true" : "isNull(" + field.attribute + ")=true";
+                break;
+            }
+            default:
+                break;
+        }
+
+        return (strFilter && strFilter.length > 0) ? strFilter : false;
+    },
+    cqlListField: function(attribute, operator, value) {
+        return this.cqlStringField(attribute, operator, value);
+    },
+    cqlStringField: function(attribute, operator, value) {
+        let fieldFilter;
+        if (value) {
+            if (operator === "isNull") {
+                fieldFilter = "isNull(" + attribute + ")=true";
+            } else if (operator === "=") {
+                let val = "'" + value + "'";
+                fieldFilter = attribute + operator + val;
+            } else if (operator === "ilike") {
+                let val = "'%" + value.toLowerCase() + "%'";
+                fieldFilter = "strToLowerCase(" + attribute + ") LIKE " + val;
+            } else {
+                let val = "'%" + value + "%'";
+                fieldFilter = attribute + "LIKE " + val;
             }
         }
-        return strFilter;
+        return fieldFilter;
+    },
+    cqlNumberField: function(attribute, operator, value) {
+        let fieldFilter;
+        if (operator === "><") {
+            if (value && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
+                fieldFilter = "(" + attribute + ">='" + value.lowBound + "')";
+            }else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
+                fieldFilter = "(" + attribute + "<='" + value.upBound + "')";
+            } else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
+                fieldFilter = "(" + attribute + ">='" + value.lowBound +
+                    "' AND " + attribute + "<='" + value.upBound + "')";
+            }
+        } else {
+            let val = value && (value.lowBound !== null && value.lowBound !== undefined) ? value.lowBound : value;
+            if (val ) {
+                fieldFilter = attribute + operator + "'" + val + "'";
+            }
+        }
+        return fieldFilter;
+    },
+    cqlDateField: function(attribute, operator, value) {
+        let fieldFilter;
+        if (operator === "><") {
+            if (value.startDate && value.endDate) {
+                fieldFilter = "(" + attribute + ">='" + value.startDate.toISOString() +
+                    "' AND " + attribute + "<='" + value.endDate.toISOString() + "')";
+            }
+        } else {
+            if (value.startDate) {
+                fieldFilter = attribute + operator + "'" + value.startDate.toISOString() + "'";
+            }
+        }
+        return fieldFilter;
     },
     processCQLSpatialFilter: function() {
         let cql = this.objFilter.spatialField.operation + "(" +

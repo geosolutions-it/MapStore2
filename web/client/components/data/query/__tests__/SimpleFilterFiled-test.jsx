@@ -67,6 +67,8 @@ describe('SimpleFilterField', () => {
                     "required": true,
                     "sort": "ASC",
                     "toolbar": true,
+                    "type": "list",
+                    "operator": "=",
                     "defaultExpanded": true,
                     "collapsible": true,
                     "optionsValues": ["Monday", "Tuesday", "Wednesday"],
@@ -99,6 +101,8 @@ describe('SimpleFilterField', () => {
                     "multivalue": false,
                     "sort": "ASC",
                     "toolbar": true,
+                    "type": "list",
+                    "operator": "=",
                     "defaultExpanded": true,
                     "collapsible": true,
                     "optionsValues": [false, true, null],
@@ -125,6 +129,8 @@ describe('SimpleFilterField', () => {
                     "sort": "DESC",
                     "toolbar": true,
                     "combo": true,
+                    "type": "list",
+                    "operator": "=",
                     "defaultExpanded": true,
                     "collapsible": true,
                     "optionsValues": ["Monday", "Tuesday", "Wednesday"],
@@ -135,5 +141,40 @@ describe('SimpleFilterField', () => {
         cmp.selectAll();
         cmp.clearAll();
         cmp.shouldComponentUpdate("");
+    });
+    it('create a SimpleFilterField rendering number', () => {
+        let conf = {
+                    "fieldId": 4,
+                    "label": "Day(s) of Week",
+                    "attribute": "day_of_week",
+                    "sort": "DESC",
+                    "type": "number",
+                    "operator": "><",
+                    "defaultExpanded": true,
+                    "collapsible": true
+                };
+        const cmp = ReactDOM.render(<SimpleFilterField {...conf} />, document.getElementById("container"));
+        expect(cmp).toExist();
+        cmp.selectAll();
+        cmp.clearAll();
+        cmp.onNumberChange(4, "day_of_week", 10);
+        cmp.onNumberException(4, "exception");
+    });
+    it('create a SimpleFilterField rendering text', () => {
+        let conf = {
+                    "fieldId": 4,
+                    "label": "Day(s) of Week",
+                    "attribute": "day_of_week",
+                    "sort": "DESC",
+                    "type": "text",
+                    "operator": "ilike",
+                    "defaultExpanded": true,
+                    "collapsible": true
+                };
+        const cmp = ReactDOM.render(<SimpleFilterField {...conf} />, document.getElementById("container"));
+        expect(cmp).toExist();
+        cmp.selectAll();
+        cmp.clearAll();
+        cmp.onTextChange(4, "day_of_week", "10");
     });
 });

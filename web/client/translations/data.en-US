@@ -308,11 +308,16 @@
                 "group_label_a": "Match",
                 "group_label_b": "of the following conditions:",
                 "combo_placeholder": "Select",
+                "text_placeholder": "Type text to search",
                 "attribute_filter_header": "Attribute Filter",
                 "groupField": {
                     "any": "any",
                     "all": "all",
                     "none": "none"
+                },
+                "numberfield": {
+                    "isRequired": "Field value required",
+                    "wrong_range": "Lower boundary must be lower upper boundary"
                 },
                 "datefield": {
                     "wrong_date_range": "Start date must be lower than end date"
