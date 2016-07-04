@@ -103,6 +103,7 @@ const DefaultViewer = React.createClass({
             const PageHeader = this.props.header;
             return (
                 <Panel
+
                     eventKey={i}
                     key={i}
                     collapsible={this.props.collapsible}
@@ -137,6 +138,7 @@ const DefaultViewer = React.createClass({
                     defaultActiveKey={0}
                     index={this.state.index || 0}
                     key={"swiper"}
+                    className="swipeable-view"
                     >
                     {this.renderPages(validResponses)}
                 </Container>
