@@ -24,6 +24,9 @@ module.exports = (plugins) => {
     });
 
     const rootReducer = (state, action) => {
+        if (action.type === 'LOADED_STATE') {
+            return action.state;
+        }
         let mapState = LayersUtils.splitMapAndLayers(mapConfig(state, action));
         let newState = {
             ...allReducers(state, action),
