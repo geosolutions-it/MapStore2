@@ -7,6 +7,7 @@
  */
 
 const { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, CHANGE_PASSWORD_SUCCESS } = require('../actions/security');
+const SecurityUtils = require('../utils/SecurityUtils');
 
 const assign = require('object-assign');
 
@@ -14,9 +15,10 @@ function security(state = {user: null, errorCause: null}, action) {
     switch (action.type) {
 
         case LOGIN_SUCCESS:
+            let userAttributes = SecurityUtils.getUserAttributes( action.userDetails.User);
             return assign({}, state, {
                 user: action.userDetails.User,
-                token: (action.userDetails.User.attribute || []).reduce((prev, curr) => {
+                token: userAttributes.reduce((prev, curr) => {
                     if (curr.name === "UUID") {
                         return curr.value;
                     }

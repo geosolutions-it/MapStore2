@@ -20,6 +20,9 @@ const Container = connect(() => ({
 }))(DropdownButton);
 
 const ToolsContainer = require('./containers/ToolsContainer');
+const Message = require('./locale/Message');
+
+require('./burgermenu/burgermenu.css');
 
 const BurgerMenu = React.createClass({
     propTypes: {
@@ -42,7 +45,7 @@ const BurgerMenu = React.createClass({
             id: "mapstore-burger-menu",
             items: [],
             onItemClick: () => {},
-            title: <MenuItem header>Options</MenuItem>,
+            title: <MenuItem header><Message msgId="options"/></MenuItem>,
             controls: [],
             mapType: "leaflet",
             panelStyle: {
@@ -56,7 +59,8 @@ const BurgerMenu = React.createClass({
         };
     },
     getPanels() {
-        return this.props.items.filter((item) => item.panel);
+        return this.props.items.filter((item) => item.panel)
+            .map((item) => assign({}, item, {panel: item.panel === true ? item.plugin : item.panel}));
     },
     getTools() {
         return [{element: <span key="burger-menu-title">{this.props.title}</span>}, ...this.props.items.sort((a, b) => a.position - b.position)];
@@ -86,7 +90,8 @@ module.exports = {
         OmniBar: {
             name: "burgermenu",
             position: 2,
-            tool: true
+            tool: true,
+            priority: 1
         }
     }),
     reducers: {}

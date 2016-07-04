@@ -31,7 +31,6 @@ const {
     selectSpatialOperation,
     removeSpatialSelection,
     showSpatialSelectionDetails,
-    query,
     reset,
     changeDwithinValue,
     zoneGetValues,
@@ -39,10 +38,20 @@ const {
     zoneChange
 } = require('../../../actions/queryform');
 
+const {query} = require('../actions/query');
+
 const {
     changeDrawingStatus,
     endDrawing
 } = require('../../../actions/draw');
+
+const assign = require('object-assign');
+
+const attributesSelector = (state) => (state.query.featureTypes["topp:states"] && state.query.featureTypes["topp:states"].attributes && state.query.data["topp:states"] &&
+        state.query.featureTypes["topp:states"].attributes.map((attribute) => {
+            return assign({}, attribute, {values: state.query.data["topp:states"][attribute.attribute]});
+        })
+    ) || [];  //   &&
 
 // connecting a Dumb component to the store
 // makes it a smart component
@@ -55,14 +64,17 @@ const SmartQueryForm = connect((state) => {
         groupLevels: state.queryform.groupLevels,
         groupFields: state.queryform.groupFields,
         filterFields: state.queryform.filterFields,
-        attributes: state.queryform.attributes,
+        attributes: attributesSelector(state),
         spatialField: state.queryform.spatialField,
         showDetailsPanel: state.queryform.showDetailsPanel,
         toolbarEnabled: state.queryform.toolbarEnabled,
         attributePanelExpanded: state.queryform.attributePanelExpanded,
         spatialPanelExpanded: state.queryform.spatialPanelExpanded,
-        searchUrl: state.queryform.searchUrl,
-        showGeneratedFilter: state.queryform.showGeneratedFilter
+        searchUrl: "http://demo.geo-solutions.it/geoserver/ows?service=WFS",
+        featureTypeName: "topp:states",
+        ogcVersion: "1.1.0",
+        resultTitle: "Query Result",
+        showGeneratedFilter: false
     };
 }, dispatch => {
     return {

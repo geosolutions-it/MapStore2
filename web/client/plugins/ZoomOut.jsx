@@ -8,6 +8,7 @@
  /**
  * Plugin for Zoom out
  */
+const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {mapSelector} = require('../selectors/map');
@@ -15,6 +16,8 @@ const {mapSelector} = require('../selectors/map');
 const selector = createSelector([mapSelector], (map) => ({currentZoom: map && map.zoom, id: "zoomin-btn", step: -1, glyphicon: "minus"}));
 
 const {changeZoomLevel} = require('../actions/map');
+
+const Message = require('../components/I18N/Message');
 
 const ZoomOutButton = connect(selector, {
     onZoom: changeZoomLevel
@@ -28,8 +31,9 @@ module.exports = {
             name: "ZoomOut",
             position: 4,
             tooltip: "zoombuttons.zoomOutTooltip",
+            help: <Message msgId="helptexts.zoomOut"/>,
             tool: true,
-            hide: true
+            priority: 1
         }
     }),
     reducers: {zoomOut: require("../reducers/map")}

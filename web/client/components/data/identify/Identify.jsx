@@ -163,13 +163,17 @@ const Identify = React.createClass({
                 defaultExpanded={true}
                 collapsible={this.props.collapsible}
                 id="mapstore-getfeatureinfo"
-                header={this.renderHeader(missingResponses)}
-                style={this.props.style} className={this.props.panelClassName}>
+                style={this.props.style}
+                className={this.props.panelClassName}>
+                <div className={this.props.headerClassName ? this.props.headerClassName : "panel-heading"}>
+                    {this.renderHeader(missingResponses)}
+                </div>
                 {this.renderReverseGeocode(latlng)}
                 {this.renderResults(missingResponses)}
             </Panel>
         ) : (
-            <Dialog id="mapstore-getfeatureinfo" style={this.props.style}
+            <Dialog id="mapstore-getfeatureinfo"
+                style={this.props.style}
                 className={this.props.panelClassName}
                 headerClassName={this.props.headerClassName}
                 bodyClassName={this.props.bodyClassName}
@@ -183,7 +187,7 @@ const Identify = React.createClass({
         );
     },
     render() {
-        if (this.props.requests.length !== 0) {
+        if (this.props.enabled && this.props.requests.length !== 0) {
             return this.props.draggable ? (
                     <Draggable>
                         {this.renderContent()}

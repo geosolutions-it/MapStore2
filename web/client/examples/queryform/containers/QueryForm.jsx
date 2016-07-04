@@ -12,6 +12,7 @@ const {connect} = require('react-redux');
 
 const QueryFormMap = require('../components/QueryFormMap');
 const SmartQueryForm = require('../components/SmartQueryForm');
+const Results = require('../components/Results');
 
 const {Panel} = require('react-bootstrap');
 const Draggable = require('react-draggable');
@@ -44,6 +45,7 @@ const QueryForm = React.createClass({
                             </Panel>
                         </div>
                     </Draggable>
+                    <Results/>
                     <Debug/>
                 </div>
             </Localized>

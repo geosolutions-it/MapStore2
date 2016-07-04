@@ -42,7 +42,7 @@ var PropertiesViewer = React.createClass({
             .filter(this.toExlude)
             .map((key) => {
                 return (
-                    <p style={this.props.listStyle}><b>{key}</b> {this.props[key]}</p>
+                    <p key={key} style={this.props.listStyle}><b>{key}</b> {this.props[key]}</p>
                 );
             });
     },

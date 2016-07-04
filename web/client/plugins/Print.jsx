@@ -355,14 +355,16 @@ module.exports = {
             icon: <Glyphicon glyph="print"/>,
             exclusive: true,
             panel: true,
-            hide: true
+            priority: 1
         },
         BurgerMenu: {
             name: 'print',
             position: 2,
             text: <Message msgId="printbutton"/>,
             icon: <Glyphicon glyph="print"/>,
-            action: toggleControl.bind(null, 'print', null)
+            action: toggleControl.bind(null, 'print', null),
+            priority: 2,
+            doNotHide: true
         }
     }),
     reducers: {print: require('../reducers/print')}

@@ -1,5 +1,4 @@
-/*navbar */
-
+/*viewer navbar */
 .navbar-dx{
 	position:absolute;
 	right:0;
@@ -55,4 +54,12 @@
 
 .navbar-dx > * {
 	display: inline-block;
+}
+/* Page Navbar */
+.navbar-home .dropdown {
+	float: right;
+}
+.navbar-home .navbar-header {
+	margin-top: 7px;
+	margin-left: 10px;
 }

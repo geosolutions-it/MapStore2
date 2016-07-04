@@ -247,7 +247,7 @@ describe('FilterUtils', () => {
                     "collapsible": true
                     }]
         };
-        let expected = "((highway_system='state'))";
+        let expected = "((highway_system IN('state')))";
         let filter = FilterUtils.toCQLFilter(filterObj);
         expect(filter).toEqual(expected);
     });

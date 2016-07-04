@@ -49,7 +49,8 @@ const MeasureComponent = React.createClass({
         showResults: React.PropTypes.bool,
         lineGlyph: React.PropTypes.string,
         areaGlyph: React.PropTypes.string,
-        bearingGlyph: React.PropTypes.string
+        bearingGlyph: React.PropTypes.string,
+        useButtonGroup: React.PropTypes.bool
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -67,7 +68,8 @@ const MeasureComponent = React.createClass({
                 length: {unit: 'm', label: 'm'},
                 area: {unit: 'sqm', label: 'm²'}
             },
-            showResults: true
+            showResults: true,
+            useButtonGroup: true
         };
     },
     shouldComponentUpdate(nextProps) {
@@ -165,11 +167,10 @@ const MeasureComponent = React.createClass({
         }
         return null;
     },
-    render() {
+    renderButtons() {
         let {lineToolTip, areaToolTip, bearingToolTip} = this.getToolTips();
         return (
-            <Panel id={this.props.id}>
-                <ButtonGroup vertical block>
+                <div>
                     <ToggleButton
                         text={<span>
                             <span className="option-icon">{this.props.lineGlyph ? <Glyphicon glyph={this.props.lineGlyph}/> : <img src={lineRuleIcon}/>}</span>
@@ -197,7 +198,20 @@ const MeasureComponent = React.createClass({
                         pressed={this.props.bearingMeasureEnabled}
                         onClick={this.onBearingClick}
                         tooltip={bearingToolTip} />
+                </div>
+        );
+    },
+    renderButtonGroup() {
+        return (
+                <ButtonGroup vertical block>
+                    {this.renderButtons()}
                 </ButtonGroup>
+        );
+    },
+    render() {
+        return (
+            <Panel id={this.props.id}>
+                {this.props.useButtonGroup ? this.renderButtonGroup() : this.renderButtons() }
                 {this.renderPanel()}
             </Panel>
         );

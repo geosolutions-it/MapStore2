@@ -17,6 +17,7 @@ const ZoomButton = React.createClass({
         text: React.PropTypes.string,
         btnSize: React.PropTypes.oneOf(['large', 'small', 'xsmall']),
         className: React.PropTypes.string,
+        help: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         step: React.PropTypes.number,
         currentZoom: React.PropTypes.number,
         minZoom: React.PropTypes.number,
@@ -55,6 +56,7 @@ const ZoomButton = React.createClass({
                 {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
                 {this.props.glyphicon && this.props.text ? "\u00A0" : null}
                 {this.props.text}
+                {this.props.help}
             </Button>
         );
     },

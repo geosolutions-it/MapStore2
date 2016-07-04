@@ -135,13 +135,14 @@ module.exports = {
             wrap: true,
             title: 'layers',
             icon: <img src={layersIcon}/>,
-            hide: true
+            priority: 1
         },
         DrawerMenu: {
             name: 'toc',
             position: 1,
             icon: <img src={layersIcon}/>,
-            title: 'layers'
+            title: 'layers',
+            priority: 2
         }
     }),
     reducers: {}

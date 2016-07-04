@@ -9,6 +9,8 @@ const React = require('react');
 
 const PluginsUtils = require('../../utils/PluginsUtils');
 
+const assign = require('object-assign');
+
 const PluginsContainer = React.createClass({
     propTypes: {
         mode: React.PropTypes.string,
@@ -17,7 +19,8 @@ const PluginsContainer = React.createClass({
         pluginsConfig: React.PropTypes.object,
         id: React.PropTypes.string,
         className: React.PropTypes.string,
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        pluginsState: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -27,17 +30,31 @@ const PluginsContainer = React.createClass({
             pluginsConfig: {},
             id: "plugins-container",
             className: "plugins-container",
-            style: {}
+            style: {},
+            pluginsState: {}
         };
+    },
+    getInitialState() {
+        return {
+            loadedPlugins: {}
+        };
+    },
+    componentWillMount() {
+        this.loadPlugins(this.props.pluginsState);
+    },
+    componentWillReceiveProps(newProps) {
+        this.loadPlugins(newProps.pluginsState);
     },
     getPluginDescriptor(plugin) {
         return PluginsUtils.getPluginDescriptor(this.props.plugins,
-                this.props.pluginsConfig[this.props.mode], plugin);
+                    this.props.pluginsConfig[this.props.mode], plugin, this.state.loadedPlugins);
     },
     renderPlugins(plugins) {
         return plugins
             .filter((Plugin) => !Plugin.hide)
             .map(this.getPluginDescriptor)
+            .filter((Plugin) => !Plugin.impl.loadPlugin)
+            .filter(this.filterPlugins)
             .map((Plugin) => <Plugin.impl key={Plugin.id}
                 {...this.props.params} {...Plugin.cfg} items={Plugin.items}/>);
     },
@@ -50,6 +67,27 @@ const PluginsContainer = React.createClass({
             );
         }
         return null;
+    },
+    filterPlugins(Plugin) {
+        const container = PluginsUtils.getMorePrioritizedContainer(Plugin.impl, this.props.pluginsConfig[this.props.mode], 0);
+        return !container.plugin || !container.plugin.impl || container.plugin.impl.doNotHide;
+    },
+    loadPlugins(state) {
+        (this.props.pluginsConfig && this.props.pluginsConfig[this.props.mode] || [])
+            .map((plugin) => PluginsUtils.getPluginDescriptor(this.props.plugins,
+                this.props.pluginsConfig[this.props.mode], plugin, this.state.loadedPlugins))
+            .filter((plugin) => plugin.impl.loadPlugin).forEach((plugin) => {
+                if (!this.state.loadedPlugins[plugin.name]) {
+                    if (!plugin.impl.enabler || plugin.impl.enabler(state)) {
+                        plugin.impl.loadPlugin((impl) => this.loadPlugin(plugin, impl));
+                    }
+                }
+            });
+    },
+    loadPlugin(plugin, impl) {
+        this.setState({
+            loadedPlugins: assign({}, this.state.loadedPlugins, {[plugin.name]: impl})
+        });
     }
 });
 

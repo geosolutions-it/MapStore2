@@ -34,8 +34,7 @@ var ZoomToMaxExtentButton = React.createClass({
         mapInitialConfig: React.PropTypes.object,
         changeMapView: React.PropTypes.func,
         btnType: React.PropTypes.oneOf(['normal', 'image']),
-        helpEnabled: React.PropTypes.bool,
-        helpText: React.PropTypes.string,
+        help: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         tooltip: React.PropTypes.element,
         tooltipPlace: React.PropTypes.string,
         className: React.PropTypes.string,
@@ -66,6 +65,7 @@ var ZoomToMaxExtentButton = React.createClass({
                 {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
                 {this.props.glyphicon && this.props.text ? "\u00A0" : null}
                 {this.props.text}
+                {this.props.help}
             </Button>
         );
     },

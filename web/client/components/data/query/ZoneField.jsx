@@ -129,7 +129,7 @@ const ZoneField = React.createClass({
                     this.props.dependsOn.value.forEach((val) => {
                         filterObj.filterFields.push({
                             attribute: this.props.dependsOn.field,
-                            operator: "=",
+                            operator: this.props.dependsOn.operator || "=",
                             value: val,
                             groupId: 2,
                             type: "list"
@@ -138,7 +138,7 @@ const ZoneField = React.createClass({
                 } else {
                     filterObj.filterFields.push({
                        attribute: this.props.dependsOn.field,
-                       operator: "=",
+                       operator: this.props.dependsOn.operator || "=",
                        value: this.props.dependsOn.value,
                        groupId: 2,
                        type: "list"
@@ -147,7 +147,7 @@ const ZoneField = React.createClass({
             } else {
                 filterObj.filterFields.push({
                     attribute: this.props.dependsOn.field,
-                    operator: "=",
+                    operator: this.props.dependsOn.operator || "=",
                     value: this.props.dependsOn.value,
                     groupId: 1,
                     type: "list"

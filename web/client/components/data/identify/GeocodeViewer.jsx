@@ -40,11 +40,11 @@ GeocodeViewer.propTypes = {
     latlng: PropTypes.object.isRequired,
     showRevGeocode: PropTypes.func.isRequired,
     showModalReverse: PropTypes.bool.isRequired,
-    identifyRevGeocodeModalTitle: PropTypes.string.isRequired,
-    revGeocodeDisplayName: PropTypes.object.isRequired,
+    identifyRevGeocodeModalTitle: React.PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.object.isRequired]),
+    revGeocodeDisplayName: React.PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     hideRevGeocode: PropTypes.func.isRequired,
-    identifyRevGeocodeSubmitText: PropTypes.string.isRequired,
-    identifyRevGeocodeCloseText: PropTypes.string.isRequired,
+    identifyRevGeocodeSubmitText: React.PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.object.isRequired]),
+    identifyRevGeocodeCloseText: React.PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.object.isRequired]),
     modalOptions: React.PropTypes.object
 };
 

@@ -11,7 +11,7 @@ var PropertiesViewer = require('./row/PropertiesViewer');
 
 var JSONViewer = React.createClass({
     propTypes: {
-        response: React.PropTypes.string,
+        response: React.PropTypes.object,
         rowViewer: React.PropTypes.object
     },
     shouldComponentUpdate(nextProps) {

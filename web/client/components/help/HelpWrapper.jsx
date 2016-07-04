@@ -21,6 +21,7 @@ require("./help.css");
  */
 let HelpWrapper = React.createClass({
     propTypes: {
+        id: React.PropTypes.string,
         helpText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         helpEnabled: React.PropTypes.bool,
         changeHelpText: React.PropTypes.func,
@@ -29,9 +30,9 @@ let HelpWrapper = React.createClass({
 
     render: function() {
         return (
-            <div>
+            <div id={this.props.id}>
                 <HelpBadge
-                    id={"helpbadge-" + this.props.children.key}
+                    id={"helpbadge-" + (this.props.children.key || this.props.id)}
                     isVisible = {this.props.helpEnabled}
                     helpText = {this.props.helpText}
                     changeHelpText = {this.props.changeHelpText}

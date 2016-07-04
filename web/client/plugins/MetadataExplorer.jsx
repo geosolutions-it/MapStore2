@@ -241,14 +241,16 @@ module.exports = {
             title: 'catalog.title',
             help: <Message msgId="helptexts.metadataExplorer"/>,
             icon: <Glyphicon glyph="folder-open" />,
-            hide: true
+            priority: 1
         },
         BurgerMenu: {
             name: 'metadataexplorer',
             position: 5,
             text: <Message msgId="catalog.title"/>,
             icon: <Glyphicon glyph="folder-open"/>,
-            action: toggleControl.bind(null, 'metadataexplorer', null)
+            action: toggleControl.bind(null, 'metadataexplorer', null),
+            priority: 2,
+            doNotHide: true
         }
     }),
     reducers: {catalog: require('../reducers/catalog')}

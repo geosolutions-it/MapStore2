@@ -58,8 +58,8 @@ describe('GroupField', () => {
         }];
 
         const attributes = [{
-           id: "Attribute",
-           fieldName: "Attribute",
+           attribute: "Attribute",
+           label: "Attribute",
            type: "list",
            valueId: "id",
            valueLabel: "name",
@@ -143,8 +143,8 @@ describe('GroupField', () => {
 
         const attributes = [
             {
-                id: "Attribute",
-                fieldName: "Attribute",
+                attribute: "Attribute",
+                label: "Attribute",
                 type: "list",
                 valueId: "id",
                 valueLabel: "name",
@@ -156,8 +156,8 @@ describe('GroupField', () => {
                     {id: 5, name: "attribute5"}
                 ]
             }, {
-                id: "Attribute2",
-                fieldName: "Attribute2",
+                attribute: "Attribute2",
+                label: "Attribute2",
                 dependson: {field: "Attribute", from: "id", to: "id"},
                 type: "list",
                 valueId: "id",

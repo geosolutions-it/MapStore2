@@ -70,7 +70,7 @@ const DrawerMenu = React.createClass({
                 }}}
                 />);
             return this.props.singleSection ? (
-                <Panel icon={tool.icon} glyph={tool.glyph} key={tool.name} header={<Message msgId={tool.title}/>} eventKey={(index + 1) + ""}>
+                <Panel icon={tool.icon} glyph={tool.glyph} buttonConfig={tool.buttonConfig} key={tool.name} header={<Message msgId={tool.title}/>} eventKey={(index + 1) + ""}>
                     {plugin}
                 </Panel>
             ) : (<Section key={tool.name} renderInModal={tool.renderInModal || false} eventKey={(index + 1) + ""} header={<Message msgId={tool.title} />}>

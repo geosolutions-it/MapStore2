@@ -26,6 +26,7 @@ require("ag-grid/dist/styles/theme-fresh.css");
 const FeatureGrid = React.createClass({
     propTypes: {
         features: React.PropTypes.oneOfType([React.PropTypes.array, React.PropTypes.func]),
+        select: React.PropTypes.array,
         columnDefs: React.PropTypes.array,
         changeMapView: React.PropTypes.func,
         selectFeatures: React.PropTypes.func,
@@ -42,12 +43,14 @@ const FeatureGrid = React.createClass({
         enableZoomToFeature: React.PropTypes.bool,
         srs: React.PropTypes.string,
         maxZoom: React.PropTypes.number,
+        zoom: React.PropTypes.number,
         toolbar: React.PropTypes.object
     },
     getDefaultProps() {
         return {
             highlightedFeatures: null,
             features: null,
+            select: [],
             columnDefs: null,
             changeMapView: () => {},
             selectFeatures: () => {},
@@ -62,12 +65,14 @@ const FeatureGrid = React.createClass({
             },
             excludeFields: [],
             map: {},
+            zoom: null,
             enableZoomToFeature: true,
             srs: "EPSG:4326",
             toolbar: {
                 zoom: true,
                 exporter: true,
-                toolPanel: true
+                toolPanel: true,
+                selectAll: true
             }
         };
     },
@@ -122,6 +127,18 @@ const FeatureGrid = React.createClass({
         if (this.props.toolbar.toolPanel) {
             tools.push(<button key="toolPanel" onClick={() => { this.api.showToolPanel(!this.api.isToolPanelShowing()); }}>
                 <I18N.Message msgId={"featuregrid.tools"}/>
+            </button>);
+        }
+
+        if (this.props.toolbar.selectAll) {
+            tools.push(<button key="allrowsselection" onClick={() => { this.selectAllRows(this.props.select.length < this.props.features.length); }}>
+                {
+                    this.props.select.length < this.props.features.length ? (
+                        <I18N.Message msgId={"featuregrid.selectall"}/>
+                    ) : (
+                        <I18N.Message msgId={"featuregrid.deselectall"}/>
+                    )
+                }
             </button>);
         }
 
@@ -195,7 +212,7 @@ const FeatureGrid = React.createClass({
     zoomToFeature(params) {
         let geometry = params.data.geometry;
         if (geometry.coordinates) {
-            this.changeMapView([geometry]);
+            this.changeMapView([geometry], this.props.zoom);
         }
     },
     zoomToFeatures() {
@@ -228,7 +245,7 @@ const FeatureGrid = React.createClass({
             this.changeMapView(geometries);
         }
     },
-    changeMapView(geometries) {
+    changeMapView(geometries, zoom) {
         let extent = geometries.reduce((prev, next) => {
             return CoordinateUtils.extendExtent(prev, CoordinateUtils.getGeoJSONExtent(next));
         }, CoordinateUtils.getGeoJSONExtent(geometries[0]));
@@ -241,9 +258,9 @@ const FeatureGrid = React.createClass({
         if (extent) {
             extent = (this.props.srs !== proj) ? CoordinateUtils.reprojectBbox(extent, this.props.srs, proj) : extent;
             // zoom by the max. extent defined in the map's config
-            newZoom = mapUtils.getZoomForExtent(extent, mapSize, 0, 21);
-
+            newZoom = zoom ? zoom : mapUtils.getZoomForExtent(extent, mapSize, 0, 21);
             newZoom = (this.props.maxZoom && newZoom > this.props.maxZoom) ? this.props.maxZoom : newZoom;
+
             // center by the max. extent defined in the map's config
             newCenter = mapUtils.getCenterForExtent(extent, proj);
 
@@ -255,6 +272,14 @@ const FeatureGrid = React.createClass({
             // adapt the map view by calling the corresponding action
             this.props.changeMapView(newCenter, newZoom,
                 this.props.map.bbox, this.props.map.size, null, proj);
+        }
+    },
+    selectAllRows(select) {
+        // this.props.selectFeatures(this.props.features.slice());
+        if (select === true) {
+            this.api.selectAll();
+        } else {
+            this.api.deselectAll();
         }
     },
     selectFeatures(params) {

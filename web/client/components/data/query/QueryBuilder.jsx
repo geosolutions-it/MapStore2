@@ -17,7 +17,7 @@ require('./queryform.css');
 
 const QueryBuilder = React.createClass({
     propTypes: {
-        authParam: React.PropTypes.object,
+        params: React.PropTypes.object,
         featureTypeConfigUrl: React.PropTypes.string,
         useMapProjection: React.PropTypes.bool,
         attributes: React.PropTypes.array,
@@ -36,14 +36,17 @@ const QueryBuilder = React.createClass({
             React.PropTypes.bool,
             React.PropTypes.string
         ]),
+        filterType: React.PropTypes.string,
         featureTypeName: React.PropTypes.string,
+        ogcVersion: React.PropTypes.string,
         attributeFilterActions: React.PropTypes.object,
         spatialFilterActions: React.PropTypes.object,
-        queryToolbarActions: React.PropTypes.object
+        queryToolbarActions: React.PropTypes.object,
+        resultTitle: React.PropTypes.string
     },
     getDefaultProps() {
         return {
-            authParam: {},
+            params: {},
             featureTypeConfigUrl: null,
             useMapProjection: true,
             groupLevels: 1,
@@ -91,15 +94,15 @@ const QueryBuilder = React.createClass({
     },
     componentWillReceiveProps(props) {
         let url = props.featureTypeConfigUrl;
+        let params = props.params !== this.props.params ? props.params : this.props.params;
         if (url !== this.props.featureTypeConfigUrl) {
-            this.props.attributeFilterActions.onLoadFeatureTypeConfig(
-                url, {authkey: this.props.authParam.authkey});
+            this.props.attributeFilterActions.onLoadFeatureTypeConfig(url, params);
         }
     },
     componentDidMount() {
         if (this.props.featureTypeConfigUrl && this.props.attributes.length < 1) {
             this.props.attributeFilterActions.onLoadFeatureTypeConfig(
-                this.props.featureTypeConfigUrl, {authkey: this.props.authParam.authkey});
+                this.props.featureTypeConfigUrl, this.props.params);
         }
     },
     render() {
@@ -123,7 +126,7 @@ const QueryBuilder = React.createClass({
                         actions={this.props.spatialFilterActions}/>
                 </div>
                 <QueryToolbar
-                    authParam={this.props.authParam}
+                    params={this.props.params}
                     filterFields={this.props.filterFields}
                     groupFields={this.props.groupFields}
                     spatialField={this.props.spatialField}
@@ -131,7 +134,10 @@ const QueryBuilder = React.createClass({
                     searchUrl={this.props.searchUrl}
                     showGeneratedFilter={this.props.showGeneratedFilter}
                     featureTypeName={this.props.featureTypeName}
-                    actions={this.props.queryToolbarActions}/>
+                    ogcVersion={this.props.ogcVersion}
+                    filterType={this.props.filterType}
+                    actions={this.props.queryToolbarActions}
+                    resultTitle={this.props.resultTitle}/>
             </div>
         ) : (<div style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce"/></div>);
     }

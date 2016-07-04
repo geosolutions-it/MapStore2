@@ -45,7 +45,7 @@ module.exports = {
             tooltip: "history.undoBtnTooltip",
             icon: <Glyphicon glyph="step-backward"/>,
             help: <Message msgId="helptexts.historyundo"/>,
-            hide: true
+            priority: 1
         }
     }),
     RedoPlugin: assign(RedoButton, {
@@ -56,7 +56,7 @@ module.exports = {
             tooltip: "history.redoBtnTooltip",
             icon: <Glyphicon glyph="step-forward"/>,
             help: <Message msgId="helptexts.historyredo"/>,
-            hide: true
+            priority: 1
         }
     }),
     reducers: {}

@@ -123,3 +123,23 @@
         right: auto;
     }
 }
+
+/* Maps Search */
+.maps-search.MapSearchBar{
+    width: 90%;
+    left: 0px;
+    position: relative;
+    right: 0px;
+    top: 0px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.maps-search.MapSearchBar .input-group {
+    width: 100%;
+
+}
+@media (min-width: 768px) {
+    .maps-search.MapSearchBar {
+        width: 580px;
+    }
+}
