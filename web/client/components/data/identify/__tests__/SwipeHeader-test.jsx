@@ -54,28 +54,28 @@ describe('SwipeHeader', () => {
 
         expect(header).toExist();
         const dom = ReactDOM.findDOMNode(header);
-        expect(dom.getElementsByTagName('a').length).toBe(2);
+        expect(dom.getElementsByTagName('button').length).toBe(2);
     });
 
     it('calls containers handler when swipe buttons are pressed', () => {
         const testHandlers = {
-            next: () => {},
-            prev: () => {}
+            onNext: () => {},
+            onPrevious: () => {}
         };
 
         const container = () => ({
             swipe: testHandlers
         });
 
-        const spyNext = expect.spyOn(testHandlers, 'next');
-        const spyPrev = expect.spyOn(testHandlers, 'prev');
+        const spyNext = expect.spyOn(testHandlers, 'onNext');
+        const spyPrev = expect.spyOn(testHandlers, 'onPrevious');
 
         const header = ReactDOM.render(
-            <SwipeHeader title="mytitle" container={container}/>,
+            <SwipeHeader title="mytitle" container={container} onNext={testHandlers.onNext} onPrevious={testHandlers.onPrevious}/>,
             document.getElementById("container")
         );
         const dom = ReactDOM.findDOMNode(header);
-        const buttons = dom.getElementsByTagName('a');
+        const buttons = dom.getElementsByTagName('button');
 
         ReactTestUtils.Simulate.click(buttons[0]);
         expect(spyPrev.calls.length).toEqual(1);

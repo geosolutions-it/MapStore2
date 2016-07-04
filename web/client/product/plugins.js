@@ -46,7 +46,7 @@ module.exports = {
         FooterPlugin: require('./plugins/Footer')
     },
     requires: {
-        ReactSwipe: require('react-swipe'),
+        ReactSwipe: require('react-swipeable-views').default,
         SwipeHeader: require('../components/data/identify/SwipeHeader')
     }
 };
