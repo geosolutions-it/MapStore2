@@ -29,15 +29,18 @@ const ShareEmbed = React.createClass({
         return {copied: false};
     },
   render() {
-      const codeEmbedded = "<iframe style='border: none;' height='400' width='600' src='" + this.props.shareUrl + "'></iframe>";
-      const tooltip = (<Tooltip placement="bottom" className="in" id="tooltip-bottom">
-        {this.state.copied ? <Message msgId="share.msgCopiedUrl"/> : <Message msgId="share.msgToCopyUrl"/>}
-      </Tooltip>);
-      const copyTo = (<OverlayTrigger placement="left" overlay={tooltip}>
-          <CopyToClipboard text={codeEmbedded} onCopy={ () => this.setState({copied: true}) } >
-              <Button className="buttonCopyTextArea" bsStyle="info"><Glyphicon glyph="paperclip" onMouseLeave={() => {this.setState({copied: false}); }} /></Button>
-         </CopyToClipboard></OverlayTrigger>);
 
+      const codeEmbedded = "<iframe style=\"border: none;\" height=\"400\" width=\"600\" src=\"" + this.props.shareUrl + "\"></iframe>";
+      const tooltip = (<Tooltip placement="bottom" className="in" id="tooltip-bottom">
+                           {this.state.copied ? <Message msgId="share.msgCopiedUrl"/> : <Message msgId="share.msgToCopyUrl"/>}
+                       </Tooltip>);
+      const copyTo = (<OverlayTrigger placement="bottom" overlay={tooltip}>
+                          <CopyToClipboard text={codeEmbedded} onCopy={ () => this.setState({copied: true}) } >
+                              <Button className="buttonCopyTextArea" bsStyle="info">
+                                  <Glyphicon glyph="paperclip" onMouseLeave={() => {this.setState({copied: false}); }} />
+                              </Button>
+                          </CopyToClipboard>
+                      </OverlayTrigger>);
       return (
           <div className="input-link">
               <Grid className="embed-box" fluid={true}>
@@ -47,7 +50,7 @@ const ShareEmbed = React.createClass({
                         </h4>
                     </Row>
                     <Row key="data" className="row-button">
-                        <Col key="textarea" xs={10} sm={10} md={10}><textarea name="description" rows="6" value={codeEmbedded} enabled="false"/></Col>
+                        <Col key="textarea" xs={10} sm={10} md={10}><textarea name="description" rows="6" value={codeEmbedded} enabled="false" readOnly /></Col>
                         <Col key="button" xs={2} sm={2} md={2}>
                             {copyTo}
                         </Col>

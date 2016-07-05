@@ -29,40 +29,38 @@ let SharePanel = React.createClass({
         title: React.PropTypes.node,
         shareUrl: React.PropTypes.string,
         onClose: React.PropTypes.func,
-        toggleControl: React.PropTypes.func,
         closeGlyph: React.PropTypes.string
     },
     getDefaultProps() {
         return {
             title: <Message msgId="share.titlePanel"/>,
-            toggleControl: () => {},
             onClose: () => {}
         };
     },
     render() {
-        /* if the prop shareUrl is not defined it takes the url from location.href */
+        // ************************ START CHANGE URL PARAMATER FOR EMBED CODE ****************************
+        /* if the property shareUrl is not defined it takes the url from location.href */
         let shareUrl = this.props.shareUrl || location.href;
-
-        // ************************ START CHANGE URL PARAMATER ****************************
-        /* if the parametere mode is present it should be changed into embedded
-           here i modify the url for the embedded share */
-        let urlParsed = Url.parse(shareUrl, true);
-        urlParsed.search = null;
-        if (urlParsed && urlParsed.query && urlParsed.query.mode) {
-            urlParsed.query.mode = "embedded";
+        /* the sharing url is parsed in order to check the query parameters from the complete url */
+        let urlParsedObj = Url.parse(shareUrl, true);
+        /* if not null, the search attribute will prevale over the query attribute hiding the query
+           one, so is necessary to nullify it */
+        urlParsedObj.search = null;
+        if (urlParsedObj && urlParsedObj.query) {
+            urlParsedObj.query.mode = "embedded";
         }
-        let urlformatted = Url.format(urlParsed);
-
-        // ************************ END CHANGE URL PARAMATER ****************************
+        /* in order to obtain the complete url is necessary to format the obj into a string */
+        let urlformatted = Url.format(urlParsedObj);
+        /* shareEmbeddedUrl is the url used for embedded part */
         let shareEmbeddedUrl = urlformatted;
-
+        // ************************ END CHANGE URL PARAMATER FOR EMBED CODE ****************************
         let sharePanel = (
             <Dialog id="share-panel-dialog" className="modal-dialog modal-content share-win">
                 <span role="header">
                     <span className="share-panel-title">
                         <Message msgId="share.title"/>
                     </span>
-                    <button onClick={this.props.toggleControl} className="print-panel-close close">
+                    <button onClick={this.props.onClose} className="print-panel-close close">
                         {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}
                     </button>
                 </span>

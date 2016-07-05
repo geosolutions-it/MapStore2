@@ -250,6 +250,11 @@
 				"closeGlyph": "1-close"
 			}
 		}, {
+			"name" : "Share",
+			"cfg": {
+				"closeGlyph" : "1-close"
+		}
+		}, {
         "name": "DrawerMenu",
 				"cfg": {
 					"glyph": "1-stilo",
@@ -531,7 +536,173 @@
           "className": "square-button"
         }
       }
-    }],
+    }], "embedded": [
+			{
+				"name": "Map",
+				"cfg": {
+	        "zoomControl": false,
+	        "tools": ["locate"]
+				}
+			}, {
+				"name": "Help"
+			}, {
+	        "name": "DrawerMenu",
+					"cfg": {
+						"glyph": "1-stilo",
+						"buttonStyle": "primary",
+						"buttonClassName": "square-button",
+						"singleSection": true
+					}
+	    },
+	    {
+	       "name": "Identify",
+	       "showIn": ["Settings"],
+				 "cfg": {
+	         "enableRevGeocode": true,
+	         "wrapRevGeocode": false,
+					 "panelClassName": "modal-dialog info-panel modal-content",
+					 "headerClassName": "modal-header",
+					 "bodyClassName": "modal-body info-wrap",
+					 "headerGlyph": "",
+	         "glyph": "map-marker",
+					 "className": "square-button",
+	         "closeGlyph": "1-close",
+					 "style": {
+	             "position": "absolute",
+	             "width": "100%",
+	             "bottom": "0px",
+	             "zIndex": 1010,
+	             "maxHeight": "70%",
+	             "marginBottom": 0
+	         },
+	         "draggable": false,
+	         "collapsible": true,
+	         "viewerOptions": {
+	           "container": "{context.ReactSwipe}",
+	           "header": "{context.SwipeHeader}",
+	           "collapsible": false
+	         },
+	         "bodyClass": "mobile-feature-info"
+	      }
+	    },
+	    {
+				  "name": "Locate",
+					"cfg": {
+						"glyph": "1-position-1",
+	          "btnConfig": {
+	            "className": "square-button"
+	          }
+					},
+					"override": {
+						"Toolbar": {
+							"alwaysVisible": true
+						}
+					}
+			}, {
+					"name": "TOC",
+					"cfg": {
+						"visibilityCheckType": "glyph",
+						"settingsOptions": {
+							"includeCloseButton": false,
+							"closeGlyph": "1-close",
+							"asModal": false,
+							"buttonSize": "small"
+						}
+					},
+					"override": {
+						"DrawerMenu": {
+							"glyph": "1-layer",
+	            "buttonConfig": {
+	              "buttonClassName": "square-button no-border"
+	            }
+						}
+					}
+			}, {
+					"name": "BackgroundSwitcher",
+					"cfg": {
+						"fluid": true,
+			      "columnProperties": {
+	              "xs": 12,
+	              "sm": 12,
+	              "md": 12
+	          }
+					},
+					"override": {
+						"DrawerMenu": {
+								"glyph": "1-map",
+	              "buttonConfig": {
+	                "buttonClassName": "square-button no-border"
+	              }
+							}
+					}
+			}, {
+					"name": "Settings",
+					"cfg": {
+						"wrapWithPanel": false,
+						"closeGlyph": "1-close",
+	          "overrideSettings": {
+	            "history": false
+	          },
+						"wrap": true
+					}
+			}, {
+				"name": "About",
+				"hideFrom": "DrawerMenu",
+				"cfg": {
+					"modalConfig": {
+							"useModal": false,
+				      "closeGlyph": "1-close"
+					}
+				}
+			},
+	    {
+	       "name": "MousePosition",
+	       "cfg": {
+	         "id": "mapstore-mouseposition-mobile"
+	       }
+	    },
+	     {
+					"name": "Search",
+					"cfg": {
+						"withToggle": ["max-width: 768px", "min-width: 768px"]
+					}
+			}, {
+	      "name": "Toolbar",
+	      "id": "NavigationBar",
+	      "stateSelector": "toolbar",
+	      "cfg": {
+					"buttonStyle": "primary",
+	        "id": "navigationBar"
+	      }
+	    }, {
+	      "name": "Toolbar",
+	      "id": "IdentifyBar",
+				"stateSelector": "identify",
+	      "cfg": {
+					"buttonStyle": "primary",
+	        "pressedButtonStyle": "success",
+	        "id": "identifyBar"
+	      },
+	      "isDefault": false
+	    },
+	    {
+				"name": "MapLoading",
+				"hide": true,
+				"cfg": {
+					"className": "ms2-loading"
+				},
+				"override": {
+					"Toolbar": {
+						"alwaysVisible": true
+					}
+				}
+			},
+			"OmniBar",
+			{
+				"name": "BurgerMenu",
+				"hide": true
+			}
+		],
 		"page": [{
 			"name": "OmniBar",
 			"cfg": {

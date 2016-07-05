@@ -31,18 +31,19 @@ const ShareLink = React.createClass({
         const tooltip = (<Tooltip placement="bottom" className="in" id="tooltip-bottom">
           {this.state.copied ? <Message msgId="share.msgCopiedUrl"/> : <Message msgId="share.msgToCopyUrl"/>}
       </Tooltip>);
-        const copyTo = (<OverlayTrigger placement="left" overlay={tooltip}>
-            <CopyToClipboard text={this.props.shareUrl} onCopy={ () => this.setState({copied: true}) } >
-                <Button className="buttonCopy" bsStyle="info" onMouseLeave={() => {this.setState({copied: false}); }} >
-                <Glyphicon glyph="paperclip"/>
-                </Button>
-           </CopyToClipboard></OverlayTrigger>);
+        const copyTo = (<OverlayTrigger placement="bottom" overlay={tooltip}>
+                            <CopyToClipboard text={this.props.shareUrl} onCopy={ () => this.setState({copied: true}) } >
+                                <Button className="buttonCopy" bsStyle="info" onMouseLeave={() => {this.setState({copied: false}); }} >
+                                    <Glyphicon glyph="paperclip"/>
+                                </Button>
+                            </CopyToClipboard>
+                        </OverlayTrigger>);
         return (
             <div className="input-link">
                   <h4>
                      <Message msgId="share.directLinkTitle"/>
                   </h4>
-                  <Input ref="copytext" type="text" value={this.props.shareUrl} addonAfter={copyTo} enabled="false"/>
+                  <Input ref="copytext" type="text" value={this.props.shareUrl} addonAfter={copyTo} readOnly/>
             </div>
         );
     }

@@ -26,9 +26,9 @@ const {toggleControl} = require('../actions/controls');
 
 const Share = connect((state) => ({
     isVisible: state.controls && state.controls.share && state.controls.share.enabled,
-    shareUrl: "www.google.it"
+    shareUrl: location.href
 }), {
-    toggleControl: toggleControl.bind(null, 'share', null)
+    onClose: toggleControl.bind(null, 'share', null)
 })(require('../components/share/SharePanel'));
 
 module.exports = {

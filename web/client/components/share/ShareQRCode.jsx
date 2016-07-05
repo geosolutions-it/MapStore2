@@ -20,7 +20,7 @@ const ShareQRCode = React.createClass({
     },
   render() {
       return (
-        <div className="Demo__container">
+        <div className="qr-code">
             <p>
                  <Message msgId="share.QRCodeLinkTitle"/>
             </p>
