@@ -8,38 +8,49 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const {connect} = require('react-redux');
-const ConfigUtils = require('../utils/ConfigUtils');
+const LocaleUtils = require('../utils/LocaleUtils');
 
-const {loadMaps} = require('../actions/maps');
+const startApp = () => {
+    const ConfigUtils = require('../utils/ConfigUtils');
 
-const StandardApp = require('../components/app/StandardApp');
+    const {loadMaps} = require('../actions/maps');
 
-const {pages, pluginsDef, initialState, storeOpts} = require('./appConfig');
+    const StandardApp = require('../components/app/StandardApp');
 
-const StandardRouter = connect((state) => ({
-    locale: state.locale || {},
-    pages
-}))(require('../components/app/StandardRouter'));
+    const {pages, pluginsDef, initialState, storeOpts} = require('./appConfig');
 
-const appStore = require('../stores/StandardStore').bind(null, initialState, {
-    home: require('./reducers/home'),
-    maps: require('../reducers/maps')
-});
+    const StandardRouter = connect((state) => ({
+        locale: state.locale || {},
+        pages
+    }))(require('../components/app/StandardRouter'));
 
-const initialActions = [
-    () => loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*")
-];
+    const appStore = require('../stores/StandardStore').bind(null, initialState, {
+        home: require('./reducers/home'),
+        maps: require('../reducers/maps')
+    });
 
-const appConfig = {
-    storeOpts,
-    appStore,
-    pluginsDef,
-    initialActions,
-    appComponent: StandardRouter,
-    printingEnabled: true
+    const initialActions = [
+        () => loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*")
+    ];
+
+    const appConfig = {
+        storeOpts,
+        appStore,
+        pluginsDef,
+        initialActions,
+        appComponent: StandardRouter,
+        printingEnabled: true
+    };
+
+    ReactDOM.render(
+        <StandardApp {...appConfig}/>,
+        document.getElementById('container')
+    );
 };
 
-ReactDOM.render(
-    <StandardApp {...appConfig}/>,
-    document.getElementById('container')
-);
+if (!global.Intl ) {
+    // Ensure Intl is loaded, then call the given callback
+    LocaleUtils.ensureIntl(startApp);
+}else {
+    startApp();
+}
