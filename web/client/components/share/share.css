@@ -38,7 +38,7 @@ font-size: 28px;
 .share-win .modal-body {
     padding: 0;
 }
-.input-group{
+.input-link .form-group .input-group{
     width: 100%;
 }
 

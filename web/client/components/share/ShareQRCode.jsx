@@ -21,9 +21,9 @@ const ShareQRCode = React.createClass({
   render() {
       return (
         <div className="qr-code">
-            <p>
+            <h4>
                  <Message msgId="share.QRCodeLinkTitle"/>
-            </p>
+            </h4>
           <QRCode value={this.props.shareUrl} />
       </div>
     );
