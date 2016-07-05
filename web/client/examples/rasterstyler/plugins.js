@@ -16,9 +16,5 @@ module.exports = {
         RasterStylerPlugin: require('../../plugins/RasterStyler'),
         IdentifyPlugin: require('../../plugins/Identify')
     },
-    requires: {
-        ReactSwipe: require('react-swipe'),
-        SwipeHeader: require('../../components/data/identify/SwipeHeader')
-    }
+    requires: {}
 };
-
