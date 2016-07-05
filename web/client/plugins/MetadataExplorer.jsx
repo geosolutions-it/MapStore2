@@ -61,7 +61,8 @@ const MetadataExplorerComponent = React.createClass({
         toggleControl: React.PropTypes.func,
         closeGlyph: React.PropTypes.string,
         buttonStyle: React.PropTypes.string,
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        showGetCapLinks: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -157,6 +158,7 @@ const MetadataExplorerComponent = React.createClass({
                 <RecordGrid key="records"
                     catalogURL={this.getCatalogUrl() }
                     onLayerAdd={this.props.onLayerAdd}
+                    showGetCapLinks={this.props.showGetCapLinks}
                 />
                 {this.renderPagination()}
         </div>);

@@ -78,6 +78,7 @@ var Api = {
                                         let dcElement = rawRec.dcElement;
                                         if (dcElement) {
                                             let dc = {
+                                                references: []
                                             };
                                             for (let j = 0; j < dcElement.length; j++) {
                                                 let dcel = dcElement[j];

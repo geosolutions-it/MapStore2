@@ -44,7 +44,28 @@ const cswToCatalogSelector = (catalog) => {
                     thumbURL = thumb.value;
                 }
             }
+
             let references = [];
+
+            // extract get capabilities references and add them to the final references
+            if (dc.references) {
+                // make sure we have an array of references
+                let rawReferences = Array.isArray(dc.references) ? dc.references : [dc.references];
+                rawReferences.filter((reference) => {
+                    // filter all references that correspond to a get capabilities reference
+                    return reference.scheme.indexOf("http-get-capabilities") > -1;
+                }).forEach((reference) => {
+                    // a get capabilities reference should be absolute and filter by the layer name
+                    let referenceUrl = reference.value.indexOf("http") === 0 ? reference.value
+                        : searchOptions.catalogURL + "/" + reference.value;
+                    // add the references to the final list
+                    references.push({
+                        type: reference.scheme,
+                        url: referenceUrl
+                    });
+                });
+            }
+
             /*
             References have this form:
                 {

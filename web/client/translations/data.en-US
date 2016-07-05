@@ -381,7 +381,12 @@
             "getWMSLink": "Get WMS Link",
             "error": "There was an error loading records from the catalog",
             "pageInfo": "Results {start}-{end} of {total}",
-            "noRecordsMatched": "No record matched"
+            "noRecordsMatched": "No record matched",
+            "wmsGetCapLink": "WMS",
+            "wfsGetCapLink": "WFS",
+            "share": "Share",
+            "copyToClipboard": "Copy to clipboard",
+            "copied": "Copied!"
         },
         "rasterstyler": {
             "tooltip": "Create and edit raster layer style",
