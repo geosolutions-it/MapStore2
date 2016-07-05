@@ -364,9 +364,6 @@ html, body, #container, .fill {
         width: 500px !important;
     }
 }
-#mapstore-getfeatureinfo {
-    min-width: 500px !important;
-}
 
 .panel-close:after {
     content: 'x';
