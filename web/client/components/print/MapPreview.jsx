@@ -69,9 +69,11 @@ const MapPreview = React.createClass({
     },
     adjustResolution(layer) {
         const ratio = this.getRatio();
+        const dpi = Math.round((96.0 / ratio));
         return assign({}, layer, {
             params: assign({}, layer.params, {
-                "format_options": "dpi:" + Math.round((96.0 / ratio))
+                "format_options": "dpi:" + dpi,
+                "MAP.RESOLUTION": dpi
             })
         });
     },
@@ -82,6 +84,7 @@ const MapPreview = React.createClass({
         });
         const resolutions = this.getResolutions();
         const mapOptions = resolutions ? {view: {resolutions}} : {};
+        const projection = this.props.map.projection || 'EPSG:3857';
         return this.props.map && this.props.map.center ?
         (
                 <div className="print-map-preview"><PMap
@@ -100,7 +103,7 @@ const MapPreview = React.createClass({
                 >
                 {this.props.layers.map((layer, index) =>
                     <Layer key={layer.name} position={index} type={layer.type}
-                        options={assign({}, this.adjustResolution(layer))}/>
+                        options={assign({}, this.adjustResolution(layer), {srs: projection})}/>
                 )}
                 </PMap>
                 {this.props.enableScalebox ? <ScaleBox id="mappreview-scalebox"
