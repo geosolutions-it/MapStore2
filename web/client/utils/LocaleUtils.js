@@ -19,6 +19,16 @@ let supportedLocales = {
 };
 
 var LocaleUtils = {
+    ensureIntl(callback) {
+        require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js'], (require) => {
+            global.Intl = require('intl');
+            require('intl/locale-data/jsonp/en.js');
+            require('intl/locale-data/jsonp/it.js');
+            if (callback) {
+                callback();
+            }
+        });
+    },
     setSupportedLocales: function(locales) {
         supportedLocales = locales;
     },
