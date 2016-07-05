@@ -60,7 +60,17 @@ const BurgerMenu = React.createClass({
     },
     getPanels() {
         return this.props.items.filter((item) => item.panel)
-            .map((item) => assign({}, item, {panel: item.panel === true ? item.plugin : item.panel}));
+            .map((item) => assign({}, item, {panel: item.panel === true ? item.plugin : item.panel})).concat(
+                this.props.items.filter((item) => item.tools).reduce((previous, current) => {
+                    return previous.concat(
+                        current.tools.map((tool, index) => ({
+                            name: current.name + index,
+                            panel: tool,
+                            cfg: current.cfg.toolsCfg ? current.cfg.toolsCfg[index] : {}
+                        }))
+                    );
+                }, [])
+            );
     },
     getTools() {
         return [{element: <span key="burger-menu-title">{this.props.title}</span>}, ...this.props.items.sort((a, b) => a.position - b.position)];
