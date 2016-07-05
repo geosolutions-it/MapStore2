@@ -7,8 +7,8 @@
  */
 
  /** DESCRIPTION
-  * SharePanel allow to share a piece of the current map in some different ways.
-  * You can share it on socials networks, copy the direct link, copy the embedded
+  * SharePanel allow to share the current map in some different ways.
+  * You can share it on socials networks(facebook,twitter,google+,linkedin), copy the direct link, copy the embedded
   * code or just using the QR code
   */
 
