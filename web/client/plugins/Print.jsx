@@ -203,7 +203,7 @@ const Print = React.createClass({
             {this.renderError()}
             {this.renderWarning(layout)}
             <Row>
-                <Col xs={6}>
+                <Col xs={12} md={6}>
                     <Name label={LocaleUtils.getMessageById(this.context.messages, 'print.title')} placeholder={LocaleUtils.getMessageById(this.context.messages, 'print.titleplaceholder')} />
                     <Description label={LocaleUtils.getMessageById(this.context.messages, 'print.description')} placeholder={LocaleUtils.getMessageById(this.context.messages, 'print.descriptionplaceholder')} />
                     <Accordion defaultActiveKey="1">
@@ -223,7 +223,7 @@ const Print = React.createClass({
                         </Panel>
                     </Accordion>
                 </Col>
-                <Col xs={6} style={{textAlign: "center"}}>
+                <Col xs={12} md={6} style={{textAlign: "center"}}>
                     <Resolution label={LocaleUtils.getMessageById(this.context.messages, "print.resolution")}/>
                     <MapPreview width={mapSize.width} height={mapSize.height} mapType={this.props.mapType}
                         onMapRefresh={() => this.configurePrintMap()}

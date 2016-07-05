@@ -353,9 +353,19 @@ html, body, #container, .fill {
     opacity: 0.5;
     color: white;
 }
+@media (min-width: 992px) {
+    #mapstore-print-panel {
+        width: 825px !important;
+    }
+}
 
-#mapstore-print-panel {
-    width: 825px !important;
+@media (max-width: 991px) {
+    #mapstore-print-panel {
+        width: 500px !important;
+    }
+}
+#mapstore-getfeatureinfo {
+    min-width: 500px !important;
 }
 
 .panel-close:after {
@@ -375,7 +385,7 @@ html, body, #container, .fill {
 }
 
 #mapstore-print-panel .print-map-preview {
-    margin-bottom: -40px;
+    margin-bottom: 15px;
 }
 
 #mapstore-print-panel .panel-default {

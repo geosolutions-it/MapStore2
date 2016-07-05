@@ -19,6 +19,8 @@ const {
     PRINT_CANCEL
 } = require('../actions/print');
 
+const {TOGGLE_CONTROL} = require('../actions/controls');
+
 const assign = require('object-assign');
 
 const initialSpec = {
@@ -36,6 +38,12 @@ const initialSpec = {
 
 function print(state = {spec: initialSpec, capabilities: null, map: null, isLoading: false, pdfUrl: null}, action) {
     switch (action.type) {
+        case TOGGLE_CONTROL: {
+            if (action.control === 'print') {
+                return assign({}, state, {pdfUrl: null, isLoading: false, error: null});
+            }
+            return state;
+        }
         case PRINT_CAPABILITIES_LOADED: {
             let sheetName = action.capabilities
                 && action.capabilities.layouts

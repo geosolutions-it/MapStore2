@@ -364,6 +364,12 @@
 		}, {
 				"name": "Print",
 				"cfg": {
+					"useFixedScales": false,
+					"syncMapPreview": true,
+					"mapPreviewOptions": {
+						"enableScalebox": false,
+						"enableRefresh": false
+					},
 					"closeGlyph": "1-close",
 					"submitConfig": {
 						"buttonConfig": {
