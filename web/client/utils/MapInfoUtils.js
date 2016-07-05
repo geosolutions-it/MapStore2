@@ -103,14 +103,14 @@ const MapInfoUtils = {
                     y: parseInt(props.point.pixel.y, 10),
                     height: parseInt(props.map.size.height, 10),
                     width: parseInt(props.map.size.width, 10),
-                    srs: crs,
+                    srs: CoordinatesUtils.normalizeSRS(crs),
                     bbox: bounds.minx + "," +
                           bounds.miny + "," +
                           bounds.maxx + "," +
                           bounds.maxy,
                     feature_count: props.maxItems,
                     info_format: props.format,
-                    ...(props.params || {})
+                    ...assign({}, layer.baseParams, props.params)
                 },
                 metadata: {
                     title: layer.title,
