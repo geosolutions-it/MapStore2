@@ -20,11 +20,13 @@ const PluginsContainer = React.createClass({
         id: React.PropTypes.string,
         className: React.PropTypes.string,
         style: React.PropTypes.object,
-        pluginsState: React.PropTypes.object
+        pluginsState: React.PropTypes.object,
+        defaultMode: React.PropTypes.string
     },
     getDefaultProps() {
         return {
             mode: 'desktop',
+            defaultMode: 'desktop',
             params: {},
             plugins: {},
             pluginsConfig: {},
@@ -62,7 +64,9 @@ const PluginsContainer = React.createClass({
         if (this.props.pluginsConfig) {
             return (
                 <div id={this.props.id} className={this.props.className} style={this.props.style}>
-                    {this.renderPlugins(this.props.pluginsConfig[this.props.mode])}
+                    {
+                     this.props.pluginsConfig[this.props.mode] ? this.renderPlugins(this.props.pluginsConfig[this.props.mode]) : this.props.pluginsConfig[this.props.defaultMode]
+                    }
                 </div>
             );
         }

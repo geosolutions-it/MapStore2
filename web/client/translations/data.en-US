@@ -355,6 +355,16 @@
                 }
             }
         },
+        "share":{
+            "title": "Share",
+            "titlePanel": "Share the map",
+            "socialIntro": "In your favourite social network",
+            "directLinkTitle": "Via a direct link",
+            "embeddedLinkTitle": "Via the embedded code",
+            "QRCodeLinkTitle": "qr code",
+            "msgCopiedUrl":"Copied",
+            "msgToCopyUrl":"Click to copy"
+        },
         "snapshot": {
             "title": "Snapshot Preview",
             "save": "Save",
