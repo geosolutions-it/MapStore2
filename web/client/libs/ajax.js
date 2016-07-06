@@ -10,6 +10,53 @@ var axios = require('axios');
 var ConfigUtils = require('../utils/ConfigUtils');
 var toString = Object.prototype.toString;
 
+const SecurityUtils = require('../utils/SecurityUtils');
+const assign = require('object-assign');
+
+/**
+ * Internal helper that adds an extra paramater to an axios configuration.
+ */
+function addParameterToAxiosConfig(axiosConfig, parameterName, parameterValue) {
+    // FIXME: the parameters can also be a URLSearchParams
+    axiosConfig.params = assign({}, axiosConfig.params, {[parameterName]: parameterValue});
+}
+
+/**
+ * Internal helper that adds or overrides an http header in a axios configuration.
+ */
+function addHeaderToAxiosConfig(axiosConfig, headerName, headerValue) {
+    axiosConfig.headers = assign({}, axiosConfig.headers, {[headerName]: headerValue});
+}
+
+/**
+ * Internal helper that will add to the axios config object the correct
+ * authentication method based on the request URL.
+ */
+function addAuthenticationToAxios(axiosConfig) {
+    if (!axiosConfig || !axiosConfig.url || !SecurityUtils.isAuthenticationActivated()) {
+        return axiosConfig;
+    }
+    switch (SecurityUtils.getAuthenticationMethod(axiosConfig.url)) {
+        case 'authkey':
+            const token = SecurityUtils.getToken();
+            if (!token) {
+                return axiosConfig;
+            }
+            addParameterToAxiosConfig(axiosConfig, 'authkey', token);
+            return axiosConfig;
+        case 'basic':
+            const basicAuthHeader = SecurityUtils.getBasicAuthHeader();
+            if (!basicAuthHeader) {
+                return axiosConfig;
+            }
+            addHeaderToAxiosConfig(axiosConfig, 'Authorization', basicAuthHeader);
+            return axiosConfig;
+        default:
+            // we cannot handle the required authentication method
+            return axiosConfig;
+    }
+}
+
 function isArray(val) {
     return toString.call(val) === '[object Array]';
 }
@@ -92,6 +139,7 @@ axios.interceptors.request.use(config => {
     var uri = config.url || '';
     var sameOrigin = !(uri.indexOf("http") === 0);
     var urlParts = !sameOrigin && uri.match(/([^:]*:)\/\/([^:]*:?[^@]*@)?([^:\/\?]*):?([^\/\?]*)/);
+    addAuthenticationToAxios(config);
     if (urlParts) {
         let location = window.location;
         sameOrigin =

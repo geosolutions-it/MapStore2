@@ -26,8 +26,8 @@ function loadError(e) {
 }
 
 function loadMaps(geoStoreUrl, searchText="*") {
-    return (dispatch, getState) => {
-        let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
+    return (dispatch) => {
+        let opts = {params: {start: 0, limit: 20}, baseURL: geoStoreUrl };
         GeoStoreApi.getResourcesByCategory("MAP", searchText, opts).then((response) => {
             dispatch(mapsLoaded(response));
         }).catch((e) => {

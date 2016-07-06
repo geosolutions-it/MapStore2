@@ -11,6 +11,7 @@ var CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 var L = require('leaflet');
 var objectAssign = require('object-assign');
 const {isArray, isEqual} = require('lodash');
+const SecurityUtils = require('../../../../utils/SecurityUtils');
 
 L.TileLayer.MultipleUrlWMS = L.TileLayer.WMS.extend({
     initialize: function(urls, options) {
@@ -87,9 +88,10 @@ function getWMSURLs( urls ) {
 
 Layers.registerType('wms', {
     create: (options) => {
-        return L.tileLayer.multipleUrlWMS(
-        getWMSURLs(isArray(options.url) ? options.url : [options.url]),
-        wmsToLeafletOptions(options));
+        const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
+        const queryParameters = wmsToLeafletOptions(options) || {};
+        urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
+        return L.tileLayer.multipleUrlWMS(urls, queryParameters);
     },
     update: function(layer, newOptions, oldOptions) {
         if (!isEqual(newOptions.params, oldOptions.params)) {

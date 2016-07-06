@@ -62,7 +62,8 @@ const MetadataExplorerComponent = React.createClass({
         closeGlyph: React.PropTypes.string,
         buttonStyle: React.PropTypes.string,
         style: React.PropTypes.object,
-        showGetCapLinks: React.PropTypes.bool
+        showGetCapLinks: React.PropTypes.bool,
+        addAuthentication: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -159,6 +160,7 @@ const MetadataExplorerComponent = React.createClass({
                     catalogURL={this.getCatalogUrl() }
                     onLayerAdd={this.props.onLayerAdd}
                     showGetCapLinks={this.props.showGetCapLinks}
+                    addAuthentication={this.props.addAuthentication}
                 />
                 {this.renderPagination()}
         </div>);

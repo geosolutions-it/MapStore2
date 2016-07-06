@@ -5,6 +5,13 @@
 	"bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
 	"initialMapFilter": "MS2",
   "ignoreMobileCss" : true,
+  "useAuthenticationRules": true,
+	"authenticationRules": [
+	  {
+	    "urlPattern": ".*geostore.*",
+	    "method": "basic"
+	  }
+	],
 	"plugins": {
 		"mobile": [{
 			"name": "Map",
@@ -390,6 +397,8 @@
 		}, {
 				"name": "MetadataExplorer",
 				"cfg": {
+					"showGetCapLinks": false,
+					"addAuthentication": false,
 					"wrap": true,
 					"wrapWithPanel": false,
 					"closeGlyph": "1-close",

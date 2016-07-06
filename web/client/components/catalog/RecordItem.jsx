@@ -46,7 +46,8 @@ const RecordItem = React.createClass({
         record: React.PropTypes.object,
         buttonSize: React.PropTypes.string,
         onCopy: React.PropTypes.func,
-        showGetCapLinks: React.PropTypes.bool
+        showGetCapLinks: React.PropTypes.bool,
+        addAuthentication: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -124,7 +125,7 @@ const RecordItem = React.createClass({
             }
             if (links.length > 0) {
                 buttons.push(<SharingLinks key="sharing-links" popoverContainer={this} links={links}
-                    onCopy={this.props.onCopy} buttonSize={this.props.buttonSize}/>);
+                    onCopy={this.props.onCopy} buttonSize={this.props.buttonSize} addAuthentication={this.props.addAuthentication}/>);
             }
         }
 

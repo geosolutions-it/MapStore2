@@ -17,7 +17,8 @@ const SharingLinks = React.createClass({
         messages: React.PropTypes.object,
         locale: React.PropTypes.string,
         buttonSize: React.PropTypes.string,
-        popoverContainer: React.PropTypes.object
+        popoverContainer: React.PropTypes.object,
+        addAuthentication: React.PropTypes.bool
     },
     render() {
         if (!this.props.links || this.props.links.length === 0) {

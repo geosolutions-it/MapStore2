@@ -37,7 +37,6 @@ function loginFail(e) {
 }
 
 function logout(redirectUrl) {
-    GeoStoreAPI.logout(); // this resets the credentials
     return {
         type: LOGOUT,
         redirectUrl: redirectUrl
@@ -69,9 +68,8 @@ function changePasswordFail(e) {
     };
 }
 function geoStoreChangePassword(user, newPassword) {
-    return (dispatch, getState) => {
-        let opts = GeoStoreAPI.getAuthOptionsFromState(getState());
-        GeoStoreAPI.changePassword(user, newPassword, opts).then(() => {
+    return (dispatch) => {
+        GeoStoreAPI.changePassword(user, newPassword).then(() => {
             dispatch(changePasswordSuccess(user, newPassword));
         }).catch((e) => {
             dispatch(changePasswordFail(e));

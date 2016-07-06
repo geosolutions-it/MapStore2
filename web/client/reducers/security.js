@@ -15,15 +15,11 @@ function security(state = {user: null, errorCause: null}, action) {
     switch (action.type) {
 
         case LOGIN_SUCCESS:
-            let userAttributes = SecurityUtils.getUserAttributes( action.userDetails.User);
+            const userAttributes = SecurityUtils.getUserAttributes(action.userDetails.User);
+            const userUuid = userAttributes.find(attribute => attribute.name.toLowerCase() === 'uuid');
             return assign({}, state, {
                 user: action.userDetails.User,
-                token: userAttributes.reduce((prev, curr) => {
-                    if (curr.name === "UUID") {
-                        return curr.value;
-                    }
-                    return '';
-                }, ''),
+                token: userUuid && userUuid.value || '',
                 authHeader: action.authHeader,
                 loginError: null
             });

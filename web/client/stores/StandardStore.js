@@ -21,6 +21,8 @@ const LayersUtils = require('../utils/LayersUtils');
 const {CHANGE_BROWSER_PROPERTIES} = require('../actions/browser');
 const {persistStore, autoRehydrate} = require('redux-persist');
 
+const SecurityUtils = require('../utils/SecurityUtils');
+
 module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {}, plugins, storeOpts) => {
     const allReducers = combineReducers(plugins, {
         ...appReducers,
@@ -49,12 +51,13 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
 
         return newState;
     };
+    let store;
     if (storeOpts && storeOpts.persist) {
-        let store = DebugUtils.createDebugStore(rootReducer, defaultState, [], autoRehydrate());
+        store = DebugUtils.createDebugStore(rootReducer, defaultState, [], autoRehydrate());
         persistStore(store, storeOpts.persist, storeOpts.onPersist);
-        return store;
+    } else {
+        store = DebugUtils.createDebugStore(rootReducer, defaultState);
     }
-    return DebugUtils.createDebugStore(rootReducer, defaultState);
-
-
+    SecurityUtils.setStore(store);
+    return store;
 };

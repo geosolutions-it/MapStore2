@@ -12,6 +12,7 @@ var objectAssign = require('object-assign');
 const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 const ProxyUtils = require('../../../../utils/ProxyUtils');
 const {isArray} = require('lodash');
+const SecurityUtils = require('../../../../utils/SecurityUtils');
 
 
 function wmsToOpenlayersOptions(options) {
@@ -44,14 +45,17 @@ function proxyTileLoadFunction(imageTile, src) {
 
 Layers.registerType('wms', {
     create: (options) => {
+        const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
+        const queryParameters = wmsToOpenlayersOptions(options) || {};
+        urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
         if (options.singleTile) {
             return new ol.layer.Image({
                 opacity: options.opacity !== undefined ? options.opacity : 1,
                 visible: options.visibility !== false,
                 zIndex: options.zIndex,
                 source: new ol.source.ImageWMS({
-                    url: getWMSURLs(options.url)[0],
-                    params: wmsToOpenlayersOptions(options)
+                    url: urls[0],
+                    params: queryParameters
                 })
             });
         }
@@ -60,8 +64,8 @@ Layers.registerType('wms', {
             visible: options.visibility !== false,
             zIndex: options.zIndex,
             source: new ol.source.TileWMS(objectAssign({
-              urls: getWMSURLs(isArray(options.url) ? options.url : [options.url]),
-              params: wmsToOpenlayersOptions(options)
+              urls: urls,
+              params: queryParameters
             }, (options.forceProxy) ? {tileLoadFunction: proxyTileLoadFunction} : {}))
         });
     }
