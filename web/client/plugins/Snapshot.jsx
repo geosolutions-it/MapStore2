@@ -71,6 +71,7 @@ module.exports = {
             text: <Message msgId="snapshot.title"/>,
             icon: <Glyphicon glyph="camera"/>,
             action: toggleControl.bind(null, 'snapshot', null),
+            tools: [SnapshotPlugin],
             priority: 2
         }
     }),
