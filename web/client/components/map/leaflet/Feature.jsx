@@ -27,6 +27,23 @@ var coordsToLatLngs = function(coords, levelsDeep, coordsToLatLng) {
 
     return latlngs;
 };
+// Create a new Leaflet layer with custom icon marker or circleMarker
+var getPointLayer = function(pointToLayer, geojson, latlng, options) {
+    if (pointToLayer) {
+        return pointToLayer(geojson, latlng);
+    }
+    if (options && options.style && options.style.iconUrl) {
+        return L.marker(
+            latlng,
+            {
+                icon: L.icon({
+                        iconUrl: options.style.iconUrl
+                })
+            });
+    }
+    return new L.Marker(latlng);
+};
+
 var geometryToLayer = function(geojson, options) {
 
     var geometry = geojson.type === 'Feature' ? geojson.geometry : geojson;
@@ -46,13 +63,13 @@ var geometryToLayer = function(geojson, options) {
     switch (geometry.type) {
     case 'Point':
         latlng = coordsToLatLng(coords);
-        layer = pointToLayer ? pointToLayer(geojson, latlng) : new L.Marker(latlng);
+        layer = getPointLayer(pointToLayer, geojson, latlng, options);
         layer.msId = geojson.id;
         return layer;
     case 'MultiPoint':
         for (i = 0, len = coords.length; i < len; i++) {
             latlng = coordsToLatLng(coords[i]);
-            layer = pointToLayer ? pointToLayer(geojson, latlng) : new L.Marker(latlng);
+            layer = getPointLayer(pointToLayer, geojson, latlng, options);
             layer.msId = geojson.id;
             layers.push(layer);
         }
@@ -105,7 +122,8 @@ let Feature = React.createClass({
             this._layer = geometryToLayer({
                 type: this.props.type,
                 geometry: this.props.geometry,
-                id: this.props.msId}, {
+                id: this.props.msId
+            }, {
                 style: style,
                 pointToLayer: this.props.styleName !== "marker" ? function(feature, latlng) {
                     return L.circleMarker(latlng, style || {
@@ -115,7 +133,8 @@ let Feature = React.createClass({
                         opacity: 1,
                         fillOpacity: 0
                     });
-                } : null}
+                } : null
+            }
             );
             this.props.container.addLayer(this._layer);
         }
@@ -126,8 +145,8 @@ let Feature = React.createClass({
             this._layer = geometryToLayer({
                 type: newProps.type,
                 geometry: newProps.geometry,
-                msId: this.props.msId},
-                {
+                msId: this.props.msId
+            }, {
                 style: newProps.style,
                 pointToLayer: newProps.styleName !== "marker" ? function(feature, latlng) {
                     return L.circleMarker(latlng, newProps.style || {
@@ -137,7 +156,8 @@ let Feature = React.createClass({
                         opacity: 1,
                         fillOpacity: 0
                     });
-                } : null}
+                } : null
+            }
             );
             newProps.container.addLayer(this._layer);
         }

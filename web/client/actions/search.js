@@ -11,6 +11,9 @@ var GeoCodingApi = require('../api/Nominatim');
 const TEXT_SEARCH_RESULTS_LOADED = 'TEXT_SEARCH_RESULTS_LOADED';
 const TEXT_SEARCH_PERFORMED = 'TEXT_SEARCH_PERFORMED';
 const TEXT_SEARCH_RESULTS_PURGE = 'TEXT_SEARCH_RESULTS_PURGE';
+const TEXT_SEARCH_RESET = 'TEXT_SEARCH_RESET';
+const TEXT_SEARCH_ADD_MARKER = 'TEXT_SEARCH_ADD_MARKER';
+
 function searchResultLoaded(results) {
     return {
         type: TEXT_SEARCH_RESULTS_LOADED,
@@ -23,6 +26,20 @@ function resultsPurge() {
         type: TEXT_SEARCH_RESULTS_PURGE
     };
 }
+
+function resetSearch() {
+    return {
+        type: TEXT_SEARCH_RESET
+    };
+}
+
+function addMarker(itemPosition) {
+    return {
+        type: TEXT_SEARCH_ADD_MARKER,
+        markerPosition: itemPosition
+    };
+}
+
 function textSearch(text) {
     return (dispatch) => {
         GeoCodingApi.geocode(text).then((response) => {
@@ -34,4 +51,14 @@ function textSearch(text) {
 }
 
 
-module.exports = { TEXT_SEARCH_RESULTS_LOADED, TEXT_SEARCH_PERFORMED, TEXT_SEARCH_RESULTS_PURGE, textSearch, resultsPurge };
+module.exports = {
+    TEXT_SEARCH_RESULTS_LOADED,
+    TEXT_SEARCH_PERFORMED,
+    TEXT_SEARCH_RESULTS_PURGE,
+    TEXT_SEARCH_RESET,
+    TEXT_SEARCH_ADD_MARKER,
+    textSearch,
+    resultsPurge,
+    resetSearch,
+    addMarker
+};

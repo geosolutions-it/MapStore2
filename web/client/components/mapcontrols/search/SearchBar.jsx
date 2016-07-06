@@ -29,6 +29,7 @@ let SearchBar = React.createClass({
         className: React.PropTypes.string,
         onSearch: React.PropTypes.func,
         onSearchReset: React.PropTypes.func,
+        onPurgeResults: React.PropTypes.func,
         placeholder: React.PropTypes.string,
         placeholderMsgId: React.PropTypes.string,
         delay: React.PropTypes.number,
@@ -43,6 +44,7 @@ let SearchBar = React.createClass({
         return {
             onSearch: () => {},
             onSearchReset: () => {},
+            onPurgeResults: () => {},
             placeholderMsgId: "search.placeholder",
             delay: 1000,
             blurResetDelay: 300,
@@ -77,7 +79,7 @@ let SearchBar = React.createClass({
     onBlur() {
         // delay this to make the click on result run anyway
         if (this.props.hideOnBlur) {
-            delay(() => {this.props.onSearchReset(); }, this.props.blurResetDelay);
+            delay(() => {this.props.onPurgeResults(); }, this.props.blurResetDelay);
         }
     },
     render() {

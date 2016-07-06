@@ -81,13 +81,14 @@ const MapInfoUtils = {
             }
         ];
     },
-    getMarkerLayer(name, clickedMapPoint) {
+    getMarkerLayer(name, clickedMapPoint, styleName, otherParams) {
         return {
             type: 'vector',
             visibility: true,
             name: name || "GetFeatureInfo",
-            styleName: "marker",
-            features: MapInfoUtils.clickedPointToGeoJson(clickedMapPoint)
+            styleName: styleName || "marker",
+            features: MapInfoUtils.clickedPointToGeoJson(clickedMapPoint),
+            ...otherParams
         };
     },
     buildIdentifyRequest(layer, props) {
