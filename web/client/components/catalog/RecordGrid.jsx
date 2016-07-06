@@ -19,7 +19,8 @@ const RecordGrid = React.createClass({
         onZoomToExtent: React.PropTypes.func,
         onLayerAdd: React.PropTypes.func,
         records: React.PropTypes.array,
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        showGetCapLinks: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -36,7 +37,8 @@ const RecordGrid = React.createClass({
                     onZoomToExtent={this.props.onZoomToExtent}
                     catalogURL={this.props.catalogURL}
                     record={record}
-                    style={{height: "215px", maxHeight: "215px"}}/>
+                    style={{height: "215px", maxHeight: "215px"}}
+                    showGetCapLinks={this.props.showGetCapLinks}/>
 			</Col>
         );
     },

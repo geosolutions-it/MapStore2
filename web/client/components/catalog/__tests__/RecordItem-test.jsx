@@ -1,4 +1,4 @@
-/**
+ /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -32,6 +32,19 @@ const sampleRecord = {
         params: {name: "workspace:layername"}
     }]
 };
+
+const getCapRecord = Object.assign({}, sampleRecord, {references: [{
+        type: "OGC:WMS",
+        url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
+        params: {name: "workspace:layername"}
+    }, {
+        type: "OGC:WMS-1.3.0-http-get-capabilities",
+        url: "http://wms.sample.service:80/geoserver/workspace/layername/wms?service=wms&version=1.3.0&request=GetCapabilities&"
+    }, {
+        type: "OGC:WFS-1.0.0-http-get-capabilities",
+        url: "http://wfs.sample.service:80/geoserver/workspace/layername/wfs?service=wfs&version=1.0.0&request=GetCapabilities"
+    }
+]});
 
 describe('This test for RecordItem', () => {
     beforeEach((done) => {
@@ -94,4 +107,42 @@ describe('This test for RecordItem', () => {
         expect(actionsSpy2.calls.length).toBe(1);
     });
 
+    it('test create record item with no get capabilities links', () => {
+        // instanciating a record item component
+        const component = ReactDOM.render(<ReactItem record={sampleRecord} showGetCapLinks={true}/>,
+            document.getElementById("container"));
+        // check that the component was intanciated
+        expect(component).toExist();
+        const componentDom = ReactDOM.findDOMNode(component);
+        expect(componentDom).toExist();
+        // we should have two buttons enable
+        const buttons = componentDom.getElementsByTagName('button');
+        expect(buttons.length).toBe(1);
+    });
+
+    it('test create record item with get capabilities links', () => {
+        // instanciating a record item component
+        const component = ReactDOM.render(<ReactItem record={getCapRecord} showGetCapLinks={true}/>,
+            document.getElementById("container"));
+        // check that the component was intanciated
+        expect(component).toExist();
+        const componentDom = ReactDOM.findDOMNode(component);
+        expect(componentDom).toExist();
+        // we should have two buttons enable
+        const buttons = componentDom.getElementsByTagName('button');
+        expect(buttons.length).toBe(2);
+    });
+
+    it('test create record item with get capabilities links but show get capabilities links disable', () => {
+        // instanciating a record item component
+        const component = ReactDOM.render(<ReactItem showGetCapLinks={false} record={getCapRecord} showGetCapLinks={false}/>,
+            document.getElementById("container"));
+        // check that the component was intanciated
+        expect(component).toExist();
+        const componentDom = ReactDOM.findDOMNode(component);
+        expect(componentDom).toExist();
+        // we should have only one button
+        const buttons = componentDom.getElementsByTagName('button');
+        expect(buttons.length).toBe(1);
+    });
 });

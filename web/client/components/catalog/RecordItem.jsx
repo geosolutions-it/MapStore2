@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const SharingLinks = require('./SharingLinks');
 const Message = require('../I18N/Message');
 const {Image, Panel, Button, Glyphicon} = require('react-bootstrap');
 const {head} = require('lodash');
@@ -35,12 +36,17 @@ const removeURLParameter = function(url, parameter) {
     return url;
 
 };
+
+require("./RecordItem.css");
+
 const RecordItem = React.createClass({
     propTypes: {
         onLayerAdd: React.PropTypes.func,
         onZoomToExtent: React.PropTypes.func,
         record: React.PropTypes.object,
-        buttonSize: React.PropTypes.string
+        buttonSize: React.PropTypes.string,
+        onCopy: React.PropTypes.func,
+        showGetCapLinks: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -48,8 +54,20 @@ const RecordItem = React.createClass({
             onLayerAdd: () => {},
             onZoomToExtent: () => {},
             style: {},
-            buttonSize: "small"
+            buttonSize: "small",
+            onCopy: () => {},
+            showGetCapLinks: false
         };
+    },
+    getInitialState() {
+        return {};
+    },
+    componentWillMount: function() {
+        document.addEventListener('click', this.handleClick, false);
+    },
+
+    componentWillUnmount: function() {
+        document.removeEventListener('click', this.handleClick, false);
     },
     renderThumb(thumbURL, record) {
         let thumbSrc = thumbURL || defaultThumb;
@@ -62,18 +80,59 @@ const RecordItem = React.createClass({
         }}/>);
 
     },
-    renderWMSButtons(wms) {
-        if (wms) {
-            return (<div className="record-buttons">
-                <Button
-                bsStyle="success"
-                bsSize={this.props.buttonSize}
-                onClick={() => {this.addLayer(wms); }}
-                key="addlayer">
-                    <Glyphicon glyph="plus" />&nbsp;<Message msgId="catalog.addToMap" />
-                </Button>&nbsp;
-            </div>);
+    renderButtons(record) {
+        if (!record || !record.references) {
+            // we don't have a valid record so no buttons to add
+            return null;
         }
+        // let's extract the references we need
+        let wms = head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMS"
+            || ((reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-map") > -1)))));
+        // let's create the buttons
+        let buttons = [];
+        if (wms) {
+            buttons.push(
+                <Button
+                    key="wms-button"
+                    className="record-button"
+                    bsStyle="success"
+                    bsSize={this.props.buttonSize}
+                    onClick={() => { this.addLayer(wms); }}
+                    key="addlayer">
+                        <Glyphicon glyph="plus" />&nbsp;<Message msgId="catalog.addToMap"/>
+                </Button>
+            );
+        }
+        // creating get capbilities links that will be used to share layers info
+        if (this.props.showGetCapLinks) {
+            let wmsGetCap = head(record.references.filter(reference => reference.type &&
+                reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
+            let wfsGetCap = head(record.references.filter(reference => reference.type &&
+                reference.type.indexOf("OGC:WFS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
+            let links = [];
+            if (wmsGetCap) {
+                links.push({
+                    url: wmsGetCap.url,
+                    labelId: 'catalog.wmsGetCapLink'
+                });
+            }
+            if (wfsGetCap) {
+                links.push({
+                    url: wfsGetCap.url,
+                    labelId: 'catalog.wfsGetCapLink'
+                });
+            }
+            if (links.length > 0) {
+                buttons.push(<SharingLinks key="sharing-links" popoverContainer={this} links={links}
+                    onCopy={this.props.onCopy} buttonSize={this.props.buttonSize}/>);
+            }
+        }
+
+        return (
+            <div className="record-buttons">
+                {buttons}
+            </div>
+        );
     },
     renderDescription(record) {
         if (!record) {
@@ -87,12 +146,6 @@ const RecordItem = React.createClass({
     },
     render() {
         let record = this.props.record;
-        let wms;
-        if (record) {
-            wms = head(record.references.filter(rec => rec && rec.type && rec.type.indexOf("OGC:WMS") >= 0));
-        }
-
-
         return (
             <Panel className="record-item">
                 {this.renderThumb(record && record.thumbnail, record)}
@@ -100,10 +153,15 @@ const RecordItem = React.createClass({
                     <h4>{record && record.title}</h4>
                     <p className="record-item-description">{this.renderDescription(record)}</p>
                 </div>
-                  {this.renderWMSButtons(wms)}
-
+                  {this.renderButtons(record)}
             </Panel>
         );
+    },
+    isLinkCopied(key) {
+        return this.state[key];
+    },
+    setLinkCopiedStatus(key, status) {
+        this.setState({[key]: status});
     },
     addLayer(wms) {
         let url = removeURLParameter(wms.url, "request");
