@@ -39,7 +39,8 @@ require('./share.css');
 
 const ShareSocials = React.createClass({
     propTypes: {
-        shareUrl: React.PropTypes.string
+        shareUrl: React.PropTypes.string,
+         getCount: React.PropTypes.func
     },
   render() {
       const title = 'GeoSolutions';
@@ -62,6 +63,7 @@ const ShareSocials = React.createClass({
               </FacebookShareButton>
               <FacebookShareCount
                 url={this.props.shareUrl}
+                getCount={this.props.getCount}
                 className="Demo__some-network__share-count">
                 {count => count}
               </FacebookShareCount>
@@ -92,6 +94,7 @@ const ShareSocials = React.createClass({
                 </GooglePlusShareButton>
                 <GooglePlusShareCount
                   url={this.props.shareUrl}
+                  getCount={this.props.getCount}
                   className="Demo__some-network__share-count">
                   {count => count}
                 </GooglePlusShareCount>
@@ -108,6 +111,7 @@ const ShareSocials = React.createClass({
                 </LinkedinShareButton>
                   <LinkedinShareCount
                   url={this.props.shareUrl}
+                  getCount={this.props.getCount}
                   className="Demo__some-network__share-count">
                   {count => count}
                 </LinkedinShareCount>

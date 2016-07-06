@@ -28,9 +28,10 @@ let SharePanel = React.createClass({
 
     propTypes: {
         isVisible: React.PropTypes.bool,
-        title: React.PropTypes.node.isRequired,
-        shareUrl: React.PropTypes.string.isRequired,
+        title: React.PropTypes.node,
+        shareUrl: React.PropTypes.string,
         onClose: React.PropTypes.func,
+        getCount: React.PropTypes.func,
         closeGlyph: React.PropTypes.string
     },
     getDefaultProps() {
@@ -67,7 +68,7 @@ let SharePanel = React.createClass({
                     </button>
                 </span>
                 <div role="body" className="share-panels">
-                    <ShareSocials shareUrl={shareUrl}/>
+                    <ShareSocials shareUrl={shareUrl} getCount={this.props.getCount}/>
                     <ShareLink shareUrl={shareUrl}/>
                     <ShareEmbed shareUrl={shareEmbeddedUrl}/>
                     <ShareQRCode shareUrl={shareUrl}/>
