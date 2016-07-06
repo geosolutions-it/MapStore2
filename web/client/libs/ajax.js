@@ -78,7 +78,7 @@ function buildUrl(argUrl, params) {
             } else if (isObject(v)) {
                 v = JSON.stringify(v);
             }
-            parts.push(encodeURI(key) + '=' + encodeURI(v));
+            parts.push(encodeURI(key) + '=' + encodeURIComponent(v));
         });
     });
 
