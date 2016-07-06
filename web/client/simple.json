@@ -89,20 +89,20 @@
 			}
 		}, {
 			"name": "Help"
-		}, {
+		},
+		{
 			"name" : "Share",
 			"cfg": {
-				"closeGlyph" : "1-close"
-		}
+		    "closeGlyph" : "1-close"
+				}
 		},
-			{
+		{
         "name": "DrawerMenu",
 				"cfg": {
 					"glyph": "pencil",
 					"buttonStyle": "primary",
           "buttonClassName": "square-button",
 					"singleSection": true
-
 				}
     },
     {

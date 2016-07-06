@@ -65,7 +65,6 @@ const PluginsContainer = React.createClass({
             return (
                 <div id={this.props.id} className={this.props.className} style={this.props.style}>
                     {
-
                      this.props.pluginsConfig[this.props.mode] ? this.renderPlugins(this.props.pluginsConfig[this.props.mode]) : this.props.pluginsConfig[this.props.defaultMode]
                     }
                 </div>
