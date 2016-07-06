@@ -7,13 +7,11 @@
  */
 
  /************** DESCRIPTION OF COMPONENT **************
- * This component it is part of the plugin container
- * containing an icon and a text.
- * it shares a map in 4 different ways:
- * 1) social network
- * 2) direct link
- * 3) embed code
- * 4) qr code
+ The share plugin should provide functionalities to:
+ 1. Share the map on social networks: Facebook, Twitter (linkedin and Google+ is a plus)
+ 2. Copy the unique link to the map.
+ 3. Copy a code to embed the map in your site (using an iframe).
+ 4. Using QR-Code for mobile devices.
 */
 
 const React = require('react');

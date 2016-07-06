@@ -8,8 +8,10 @@
 
  /** DESCRIPTION
   * SharePanel allow to share the current map in some different ways.
-  * You can share it on socials networks(facebook,twitter,google+,linkedin), copy the direct link, copy the embedded
-  * code or just via the QR code
+  * You can share it on socials networks(facebook,twitter,google+,linkedin)
+  * copying the direct link
+  * copying the embedded code
+  * using the QR code with mobile apps
   */
 
 const React = require('react');
@@ -26,8 +28,8 @@ let SharePanel = React.createClass({
 
     propTypes: {
         isVisible: React.PropTypes.bool,
-        title: React.PropTypes.node,
-        shareUrl: React.PropTypes.string,
+        title: React.PropTypes.node.isRequired,
+        shareUrl: React.PropTypes.string.isRequired,
         onClose: React.PropTypes.func,
         closeGlyph: React.PropTypes.string
     },
