@@ -210,27 +210,7 @@
       "cfg":{
         "className": "square-button"
       }
-		}, {
-      "name": "Undo",
-      "hide": true,
-      "cfg": {
-        "glyph": "1-screen-backward",
-        "buttonStyle": "primary",
-        "btnConfig": {
-          "className": "square-button"
-        }
-      }
-    }, {
-      "name": "Redo",
-      "hide": true,
-      "cfg": {
-        "glyph": "1-screen-forward",
-        "buttonStyle": "primary",
-        "btnConfig": {
-          "className": "square-button"
-        }
-      }
-    }],
+		}],
 		"desktop": [{
 			"name": "Map",
 			"cfg": {
