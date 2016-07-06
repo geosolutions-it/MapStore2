@@ -18,12 +18,14 @@ let ResultList = React.createClass({
         results: React.PropTypes.array,
         mapConfig: React.PropTypes.object,
         onItemClick: React.PropTypes.func,
+        addMarker: React.PropTypes.func,
         afterItemClick: React.PropTypes.func,
         notFoundMessage: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string])
     },
     getDefaultProps() {
         return {
             onItemClick: () => {},
+            addMarker: () => {},
             afterItemClick: () => {}
         };
     },
@@ -49,6 +51,7 @@ let ResultList = React.createClass({
             crs: "EPSG:4326",
              rotation: 0
          }, this.props.mapConfig.size, null, this.props.mapConfig.projection);
+        this.props.addMarker({lat: newCenter.y, lng: newCenter.x});
         this.props.afterItemClick();
     },
     renderResults() {

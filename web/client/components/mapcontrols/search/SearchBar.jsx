@@ -29,12 +29,15 @@ let SearchBar = React.createClass({
         className: React.PropTypes.string,
         onSearch: React.PropTypes.func,
         onSearchReset: React.PropTypes.func,
+        onPurgeResults: React.PropTypes.func,
+        onSearchTextChange: React.PropTypes.func,
         placeholder: React.PropTypes.string,
         placeholderMsgId: React.PropTypes.string,
         delay: React.PropTypes.number,
         hideOnBlur: React.PropTypes.bool,
         blurResetDelay: React.PropTypes.number,
-        typeAhead: React.PropTypes.bool
+        typeAhead: React.PropTypes.bool,
+        searchText: React.PropTypes.string
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -43,22 +46,25 @@ let SearchBar = React.createClass({
         return {
             onSearch: () => {},
             onSearchReset: () => {},
+            onPurgeResults: () => {},
+            onSearchTextChange: () => {},
             placeholderMsgId: "search.placeholder",
             delay: 1000,
             blurResetDelay: 300,
             hideOnBlur: true,
-            typeAhead: true
-
+            typeAhead: true,
+            searchText: ""
         };
     },
     getInitialState() {
         return {
-            searchText: ""
+            searchText: this.props.searchText || ""
             };
     },
     onChange() {
         var text = this.refs.input.getValue();
         this.setState({searchText: text});
+        this.props.onSearchTextChange(text);
         if (this.props.typeAhead) {
             delay(() => {this.search(); }, this.props.delay);
         }
@@ -72,12 +78,11 @@ let SearchBar = React.createClass({
         if (this.props.typeAhead ) {
             this.search();
         }
-
     },
     onBlur() {
         // delay this to make the click on result run anyway
         if (this.props.hideOnBlur) {
-            delay(() => {this.props.onSearchReset(); }, this.props.blurResetDelay);
+            delay(() => {this.props.onPurgeResults(); }, this.props.blurResetDelay);
         }
     },
     render() {
