@@ -8,7 +8,7 @@
 var expect = require('expect');
 
 var SecurityUtils = require('../SecurityUtils');
-
+const assign = require('object-assign');
 const adminA = {
     User: {
         enabled: true,
@@ -19,14 +19,14 @@ const adminA = {
     }
 };
 
-const adminB = Object.assign({}, adminA, {
+const adminB = assign({}, adminA, {
     attribute: {
         name: "UUID",
         value: "263c6917-543f-43e3-8e1a-6a0d29952f72"
     }
 });
 
-const adminC = Object.assign({}, adminA, {
+const adminC = assign({}, adminA, {
     attribute: [{
         name: "UUID",
         value: "263c6917-543f-43e3-8e1a-6a0d29952f72"
