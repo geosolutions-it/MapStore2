@@ -11,14 +11,20 @@ const PropTypes = React.PropTypes;
 const {Modal, Button} = require('react-bootstrap');
 
 const GeocodeViewer = (props) => {
+    /* lngCorrected is the converted longitude in order to have the value between
+       the range (-180 / +180).
+    */
+    let lngCorrected = Math.round(props.latlng.lng * 100000) / 100000;
+    /* the following formula apply the converion */
+    lngCorrected = lngCorrected - (360) * Math.floor(lngCorrected / (360) + 0.5);
     return (
         <div>
-            <span>Lat: {Math.round(props.latlng.lat * 100000) / 100000 } - Long: {Math.round(props.latlng.lng * 100000) / 100000}</span>
+            <span>Lat: {Math.round(props.latlng.lat * 100000) / 100000 } - Long: { lngCorrected }</span>
             <Button
                 style={{"float": "right"}}
                 bsStyle="primary"
                 bsSize="small"
-                onClick={() => props.showRevGeocode(props.latlng)} >
+                onClick={() => props.showRevGeocode({lat: props.latlng.lat, lng: lngCorrected})} >
                 {props.identifyRevGeocodeSubmitText}
             </Button>
             <Modal {...props.modalOptions} show={props.showModalReverse} bsSize="large" container={document.getElementById("body")}>
