@@ -1,14 +1,14 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
-var {CLICK_ON_MAP} = require('../actions/map');
+const {CLICK_ON_MAP} = require('../actions/map');
 
-var {
+const {
     ERROR_FEATURE_INFO,
     EXCEPTIONS_FEATURE_INFO,
     LOAD_FEATURE_INFO,
@@ -21,6 +21,8 @@ var {
     SHOW_REVERSE_GEOCODE,
     HIDE_REVERSE_GEOCODE
 } = require('../actions/mapInfo');
+
+const {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
 const {head} = require('lodash');
@@ -98,6 +100,13 @@ function mapInfo(state = {}, action) {
                 showModalReverse: false,
                 reverseGeocodeData: undefined
             });
+        }
+        case RESET_CONTROLS: {
+            return assign({}, state, {
+                  showMarker: false,
+                  responses: [],
+                  requests: []
+              });
         }
         default:
             return state;

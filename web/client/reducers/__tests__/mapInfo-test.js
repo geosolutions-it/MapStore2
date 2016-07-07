@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -202,5 +202,11 @@ describe('Test the mapInfo reducer', () => {
         expect(state).toExist();
         expect(state.showModalReverse).toBe(false);
         expect(state.reverseGeocodeData).toBe(undefined);
+    });
+
+    it('should reset the state', () => {
+        let state = mapInfo({showMarker: true}, {type: 'RESET_CONTROLS'});
+        expect(state).toExist();
+        expect(state.showMarker).toBe(false);
     });
 });
