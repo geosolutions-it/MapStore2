@@ -43,6 +43,10 @@ const ShareSocials = React.createClass({
          getCount: React.PropTypes.func
     },
   render() {
+      let countProps = {};
+      if (this.props.getCount) {
+          countProps.getCount = this.props.getCount;
+      }
       const title = 'GeoSolutions';
 
       return (
@@ -63,8 +67,8 @@ const ShareSocials = React.createClass({
               </FacebookShareButton>
               <FacebookShareCount
                 url={this.props.shareUrl}
-                getCount={this.props.getCount}
-                className="Demo__some-network__share-count">
+                {...countProps}
+                className="share-facebook-count">
                 {count => count}
               </FacebookShareCount>
             </div>
@@ -73,12 +77,12 @@ const ShareSocials = React.createClass({
                 <TwitterShareButton
                   url={this.props.shareUrl}
                   title={title}
-                  className="Demo__some-network__share-button">
+                  className="share-twitter">
                   <TwitterIcon
                     size={32}
                     round />
                 </TwitterShareButton>
-                <div className="Demo__some-network__share-count">
+                <div className="share-twitter-count">
                   &nbsp;
                 </div>
               </div>
@@ -87,15 +91,15 @@ const ShareSocials = React.createClass({
               <div className="social-box google">
                 <GooglePlusShareButton
                   url={this.props.shareUrl}
-                  className="Demo__some-network__share-button">
+                  className="share-google-count">
                   <GooglePlusIcon
                     size={32}
                     round />
                 </GooglePlusShareButton>
                 <GooglePlusShareCount
                   url={this.props.shareUrl}
-                  getCount={this.props.getCount}
-                  className="Demo__some-network__share-count">
+                  {...countProps}
+                  className="share-google-count">
                   {count => count}
                 </GooglePlusShareCount>
               </div>
@@ -104,15 +108,15 @@ const ShareSocials = React.createClass({
                 <LinkedinShareButton
                   url={this.props.shareUrl}
                   title={title}
-                  className="Demo__some-network__share-button">
+                  className="share-linkedin-count">
                   <LinkedinIcon
                     size={32}
                     round />
                 </LinkedinShareButton>
                   <LinkedinShareCount
                   url={this.props.shareUrl}
-                  getCount={this.props.getCount}
-                  className="Demo__some-network__share-count">
+                  {...countProps}
+                  className="share-linkedin-count">
                   {count => count}
                 </LinkedinShareCount>
               </div>
