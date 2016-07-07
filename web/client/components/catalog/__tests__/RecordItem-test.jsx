@@ -9,6 +9,7 @@ const React = require('react/addons');
 const ReactDOM = require('react-dom');
 const ReactItem = require('../RecordItem.jsx');
 const expect = require('expect');
+const assign = require('object-assign');
 
 const TestUtils = require('react/addons').addons.TestUtils;
 
@@ -33,7 +34,7 @@ const sampleRecord = {
     }]
 };
 
-const getCapRecord = Object.assign({}, sampleRecord, {references: [{
+const getCapRecord = assign({}, sampleRecord, {references: [{
         type: "OGC:WMS",
         url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
         params: {name: "workspace:layername"}
