@@ -138,6 +138,17 @@ Layers.registerType('vector', {
                 };
             }
 
+            if (options.style.iconUrl) {
+                style = {
+                    image: new ol.style.Icon(({
+                      anchor: [0.5, 1],
+                      anchorXUnits: 'fraction',
+                      anchorYUnits: 'fraction',
+                      src: options.style.iconUrl
+                    }))
+                };
+            }
+
             style = new ol.style.Style(style);
         }
 
@@ -145,7 +156,7 @@ Layers.registerType('vector', {
             msId: options.id,
             source: source,
             zIndex: options.zIndex,
-            style: options.styleName ? () => {return defaultStyles[options.styleName]; } : style || styleFunction
+            style: (options.styleName && !options.overrideOLStyle) ? () => {return defaultStyles[options.styleName]; } : style || styleFunction
         });
     },
     render: () => {
