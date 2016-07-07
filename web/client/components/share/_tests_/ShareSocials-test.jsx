@@ -25,12 +25,12 @@ describe("The ShareSocials component", () => {
     });
 
     it('is created with defaults', () => {
-        const cmpShareSocials = ReactDOM.render(<ShareSocials shareUrl="www.geo-solutions.it"/>, document.getElementById("container"));
+        const cmpShareSocials = ReactDOM.render(<ShareSocials getCount={()=>0} shareUrl="www.geo-solutions.it"/>, document.getElementById("container"));
         expect(cmpShareSocials).toExist();
     });
 
     it('should have the facebook circle', () => {
-        const cmpShareSocials = ReactDOM.render(<ShareSocials shareUrl="www.geo-solutions.it"/>, document.getElementById("container"));
+        const cmpShareSocials = ReactDOM.render(<ShareSocials getCount={()=>0} shareUrl="www.geo-solutions.it"/>, document.getElementById("container"));
         expect(cmpShareSocials).toExist();
 
         const socialBox = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpShareSocials, "circle")[0]);

@@ -25,12 +25,12 @@ describe("The SharePanel component", () => {
     });
 
     it('is created with defaults', () => {
-        const cmp = ReactDOM.render(<SharePanel/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<SharePanel getCount={()=>0} shareUrl="www.geo-solutions.it"/>, document.getElementById("container"));
         expect(cmp).toExist();
     });
 
     it('should be visible', () => {
-        const cmpSharePanel = ReactDOM.render(<SharePanel isVisible={true} />, document.getElementById("container"));
+        const cmpSharePanel = ReactDOM.render(<SharePanel getCount={()=>0} shareUrl="www.geo-solutions.it" isVisible={true} />, document.getElementById("container"));
         expect(cmpSharePanel).toExist();
 
         const cmpSharePanelDom = ReactDOM.findDOMNode(cmpSharePanel);
@@ -40,7 +40,7 @@ describe("The SharePanel component", () => {
     });
 
     it('should not be visible', () => {
-        const cmpSharePanel = ReactDOM.render(<SharePanel isVisible={false} />, document.getElementById("container"));
+        const cmpSharePanel = ReactDOM.render(<SharePanel getCount={()=>0} shareUrl="www.geo-solutions.it" isVisible={false} />, document.getElementById("container"));
         expect(cmpSharePanel).toExist();
         const cmpSharePanelDom = ReactDOM.findDOMNode(cmpSharePanel);
         expect(cmpSharePanelDom).toBeFalsy();
