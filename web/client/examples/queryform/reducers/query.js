@@ -23,11 +23,7 @@ const types = {
     'xsd:dateTime': 'date',
     'xsd:number': 'number'
 };
-const fieldConfig = {
-    "STATE_NAME": {
-        type: "string"
-    }
-};
+const fieldConfig = {};
 const extractInfo = (featureType) => {
     return {
         attributes: featureType.featureTypes[0].properties
