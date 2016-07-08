@@ -20,7 +20,8 @@ const RecordGrid = React.createClass({
         onLayerAdd: React.PropTypes.func,
         records: React.PropTypes.array,
         style: React.PropTypes.object,
-        showGetCapLinks: React.PropTypes.bool
+        showGetCapLinks: React.PropTypes.bool,
+        addAuthentication: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -38,7 +39,8 @@ const RecordGrid = React.createClass({
                     catalogURL={this.props.catalogURL}
                     record={record}
                     style={{height: "215px", maxHeight: "215px"}}
-                    showGetCapLinks={this.props.showGetCapLinks}/>
+                    showGetCapLinks={this.props.showGetCapLinks}
+                    addAuthentication={this.props.addAuthentication}/>
 			</Col>
         );
     },
