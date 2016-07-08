@@ -41,7 +41,7 @@ const MapCard = React.createClass({
     render: function() {
 
         return (
-           <GridCard className="map-thumb" style={this.getCardStyle()} header={this.props.map.name} actions={
+           <GridCard className="map-thumb" style={this.getCardStyle()} header={this.props.map.title || this.props.map.name} actions={
                    [{
                        onClick: () => this.props.viewerUrl(this.props.map),
                        glyph: "chevron-right",

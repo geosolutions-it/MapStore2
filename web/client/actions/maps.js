@@ -9,12 +9,22 @@
 var GeoStoreApi = require('../api/GeoStoreDAO');
 
 const MAPS_LIST_LOADED = 'MAPS_LIST_LOADED';
+const MAPS_LIST_LOADING = 'MAPS_LIST_LOADING';
 const MAPS_LIST_LOAD_ERROR = 'MAPS_LIST_LOAD_ERROR';
+function mapsLoading(searchText, params) {
+    return {
+        type: MAPS_LIST_LOADING,
+        searchText,
+        params
+    };
+}
 
-function mapsLoaded(maps) {
+function mapsLoaded(maps, params, searchText) {
     return {
         type: MAPS_LIST_LOADED,
-        maps: maps
+        params,
+        maps,
+        searchText
     };
 }
 
@@ -25,15 +35,16 @@ function loadError(e) {
     };
 }
 
-function loadMaps(geoStoreUrl, searchText="*") {
+function loadMaps(geoStoreUrl, searchText="*", params={start: 0, limit: 20}) {
     return (dispatch) => {
-        let opts = {params: {start: 0, limit: 20}, baseURL: geoStoreUrl };
+        let opts = {params, baseURL: geoStoreUrl };
+        dispatch(mapsLoading(searchText, params));
         GeoStoreApi.getResourcesByCategory("MAP", searchText, opts).then((response) => {
-            dispatch(mapsLoaded(response));
+            dispatch(mapsLoaded(response, params, searchText));
         }).catch((e) => {
             dispatch(loadError(e));
         });
     };
 }
 
-module.exports = {MAPS_LIST_LOADED, MAPS_LIST_LOAD_ERROR, loadMaps};
+module.exports = {MAPS_LIST_LOADED, MAPS_LIST_LOADING, MAPS_LIST_LOAD_ERROR, loadMaps};

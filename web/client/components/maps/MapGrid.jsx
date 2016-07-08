@@ -9,11 +9,15 @@
 const React = require('react');
 const {Grid, Row, Col} = require('react-bootstrap');
 const MapCard = require('./MapCard');
+const Spinner = require('react-spinkit');
 
 var MapGrid = React.createClass({
     propTypes: {
         panelProps: React.PropTypes.object,
+        bottom: React.PropTypes.node,
+        loading: React.PropTypes.bool,
         maps: React.PropTypes.array,
+        fluid: React.PropTypes.bool,
         viewerUrl: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
         mapType: React.PropTypes.string,
         colProps: React.PropTypes.object
@@ -22,6 +26,8 @@ var MapGrid = React.createClass({
         return {
             onChangeMapType: function() {},
             mapType: 'leaflet',
+            bottom: "",
+            fluid: true,
             colProps: {
                 xs: 12,
                 sm: 6,
@@ -41,11 +47,19 @@ var MapGrid = React.createClass({
                 <Col key={map.id} {...this.props.colProps}><MapCard viewerUrl={viewerUrl} mapType={mapType} map={map} /></Col>;
         });
     },
+    renderLoading() {
+        return (<div style={{width: "100px", overflow: "visible", margin: "auto"}}>Loading...<Spinner spinnerName="circle" noFadeIn/></div>);
+    },
     render: function() {
         return (
-                <Grid fluid><Row>
-                    {this.renderMaps(this.props.maps || [], this.props.mapType)}
-                </Row></Grid>
+                <Grid fluid={this.props.fluid}>
+                    <Row>
+                        {this.props.loading && this.props.maps.length === 0 ? this.renderLoading() : this.renderMaps(this.props.maps || [], this.props.mapType)}
+                    </Row>
+                    <Row>
+                        {this.props.bottom}
+                    </Row>
+                </Grid>
         );
     }
 });

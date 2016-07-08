@@ -5,12 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react/addons');
-var ReactDOM = require('react-dom');
-var GridCard = require('../GridCard.jsx');
-var expect = require('expect');
+const React = require('react/addons');
+const ReactDOM = require('react-dom');
+const GridCard = require('../GridCard.jsx');
+const expect = require('expect');
 
-var TestUtils = require('react/addons').addons.TestUtils;
+const TestUtils = require('react/addons').addons.TestUtils;
 
 describe('This test for GridCard', () => {
     beforeEach((done) => {
