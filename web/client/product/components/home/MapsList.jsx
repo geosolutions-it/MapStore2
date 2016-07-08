@@ -30,6 +30,7 @@ var MapsList = React.createClass({
                 </Input>
                 <h3>{this.props.title}</h3>
                 <MapsGrid mapType={this.props.mapType} viewerUrl={this.props.onGoToMap}
+                    loading={this.props.maps && this.props.maps.loading}
             maps={this.props.maps && this.props.maps.results ? this.props.maps.results : []}
             panelProps={{className: "mapmanager",
                  collapsible: true,

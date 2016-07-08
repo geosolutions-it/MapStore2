@@ -111,7 +111,11 @@ const PluginsUtils = {
         const id = isObject(pluginDef) ? pluginDef.id : null;
         const stateSelector = isObject(pluginDef) ? pluginDef.stateSelector : id || undefined;
         const isDefault = isObject(pluginDef) ? ((typeof pluginDef.isDefault === 'undefined') && true || pluginDef.isDefault) : true;
-        const impl = plugins[(isObject(pluginDef) ? pluginDef.name : pluginDef) + 'Plugin'];
+        const pluginKey = (isObject(pluginDef) ? pluginDef.name : pluginDef) + 'Plugin';
+        const impl = plugins[pluginKey];
+        if (!impl) {
+            throw "the plugin \"" + pluginKey + " \"is undefinded";
+        }
         return {
             id: id || name,
             name,

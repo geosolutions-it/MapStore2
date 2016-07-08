@@ -8,28 +8,69 @@
 
 const React = require('react');
 const {connect} = require('react-redux');
+const {loadMaps} = require('../actions/maps');
+const ConfigUtils = require('../utils/ConfigUtils');
 const MapsGrid = connect((state) => {
     return {
+        bsSize: "small",
         maps: state.maps && state.maps.results ? state.maps.results : [],
-        mapType: state.home.mapType
+        loading: state.maps && state.maps.loading,
+        mapType: state.home && state.home.mapType
     };
 }, {
+    loadMaps
 })(require('../components/maps/MapGrid'));
+
+const PaginationToolbar = connect((state) => {
+    if (!state.maps ) {
+        return {};
+    }
+    let {start, limit, results, loading, totalCount, searchText} = state.maps;
+    let page = 0;
+    let total = totalCount || 0;
+    if (results && totalCount) { // must be !==0 and exist to do the division
+        page = Math.ceil(start / total);
+    }
+
+    return {
+        page: page,
+        pageSize: limit,
+        items: results,
+        total: totalCount,
+        searchText,
+        loading
+    };
+}, {onSelect: loadMaps}, (stateProps, dispatchProps) => {
+
+    return {
+        ...stateProps,
+        onSelect: (pageNumber) => {
+            let start = stateProps.pageSize * pageNumber;
+            let limit = stateProps.pageSize;
+            dispatchProps.onSelect(ConfigUtils.getDefaults().geoStoreUrl, stateProps.searchText, {start, limit});
+        }
+    };
+})(require('../components/misc/PaginationToolbar'));
 
 const Maps = React.createClass({
     propTypes: {
         mapType: React.PropTypes.string,
         onGoToMap: React.PropTypes.func,
+        loadMaps: React.PropTypes.func,
         maps: React.PropTypes.object,
         colProps: React.PropTypes.object
     },
     contextTypes: {
         router: React.PropTypes.object
     },
+    componentDidMount() {
+        this.props.loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*", {start: 0, limit: 12});
+    },
     getDefaultProps() {
         return {
             mapType: "leaflet",
             onGoToMap: () => {},
+            loadMaps: () => {},
             fluid: false,
             colProps: {
                 xs: 12,
@@ -46,10 +87,13 @@ const Maps = React.createClass({
         };
     },
     render() {
-        return (<MapsGrid colProps={this.props.colProps} viewerUrl={(map) => {this.context.router.push("/viewer/" + this.props.mapType + "/" + map.id); }} />);
+        return (<MapsGrid colProps={this.props.colProps} viewerUrl={(map) => {this.context.router.push("/viewer/" + this.props.mapType + "/" + map.id); }} bottom={<PaginationToolbar />}/>);
     }
 });
 
 module.exports = {
-    MapsPlugin: Maps
+    MapsPlugin: connect(() => ({}), {
+        loadMaps
+    })(Maps),
+    reducers: require('../reducers/maps')
 };
