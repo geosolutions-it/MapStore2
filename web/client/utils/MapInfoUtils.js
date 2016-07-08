@@ -15,7 +15,35 @@ const assign = require('object-assign');
 const CoordinatesUtils = require('./CoordinatesUtils');
 
 const reprojectBbox = (bbox, projection) => {
-    let newBbox = CoordinatesUtils.reprojectBbox(bbox.bounds, bbox.crs, projection);
+    /********************* START SHIFTING BBOX **********************************
+        it is needed to be shifted the bbox to the right if minx < -180° lng,
+        to the left if maxx > 180° */
+    let offsetX = 0;
+
+    let minx = parseFloat(bbox.bounds.minx);
+    let maxx = parseFloat(bbox.bounds.maxx);
+    if (minx < -180) {
+        /* in this case the offset is negative, the longitude als negative
+           so it necessary to subtract a negative offset in order to shift
+           to the right */
+        offsetX = (minx + 180);
+        minx -= offsetX;
+        maxx -= offsetX;
+    }
+    if (maxx > 180) {
+        /* as before but viceversa */
+        offsetX = (maxx - 180) * (-1);
+        minx += offsetX;
+        maxx += offsetX;
+    }
+    let bboxBounds = {
+        minx: minx,
+        miny: bbox.bounds.miny,
+        maxx: maxx,
+        maxy: bbox.bounds.maxy
+    };
+    let newBbox = CoordinatesUtils.reprojectBbox(bboxBounds, bbox.crs, projection);
+    /********************* END SHIFTING BBOX ********************************** */
     return assign({}, {
         crs: projection,
         bounds: {
