@@ -38,6 +38,7 @@ function loadError(e) {
 function loadMaps(geoStoreUrl, searchText="*", params={start: 0, limit: 20}) {
     return (dispatch) => {
         let opts = {params, baseURL: geoStoreUrl };
+        dispatch(mapsLoading(searchText, params));
         GeoStoreApi.getResourcesByCategory("MAP", searchText, opts).then((response) => {
             dispatch(mapsLoaded(response, params, searchText));
         }).catch((e) => {
