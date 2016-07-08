@@ -33,7 +33,6 @@ const Print = React.createClass({
                 <PrintMap/>
                 {this.props.enabled ? <PrintPreview
                     title="Print Preview" style={{
-                            width: "50%",
                             position: "absolute",
                             top: "10px",
                             left: "40px",
@@ -47,7 +46,7 @@ const Print = React.createClass({
 });
 module.exports = connect((state) => {
     return {
-        enabled: state.map && state.print.capabilities,
+        enabled: state.map && state.print.capabilities && true || false,
         locale: state.locale && state.locale.locale,
         messages: state.locale && state.locale.messages || {}
     };
