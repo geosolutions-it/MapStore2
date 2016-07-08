@@ -12,7 +12,18 @@ const MapInfoUtils = require('../utils/MapInfoUtils');
 const LayersUtils = require('../utils/LayersUtils');
 
 const layersSelector = (state) => (state.layers && state.layers.flat) || (state.layers) || (state.config && state.config.layers) || [];
-const markerSelector = (state) => state.mapInfo && state.mapInfo.showMarker && [MapInfoUtils.getMarkerLayer("GetFeatureInfo", state.mapInfo.clickPoint.latlng)] || [];
+const markerSelector = (state) => (state.mapInfo && state.mapInfo.showMarker && [MapInfoUtils.getMarkerLayer("GetFeatureInfo", state.mapInfo.clickPoint.latlng)] || []).concat(
+    state.search && state.search.markerPosition &&
+    [MapInfoUtils.getMarkerLayer("GeoCoder", state.search.markerPosition, "marker", {overrideOLStyle: true, style: {iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png"}} /*, "altro", {
+        radius: 5,
+        color: "red",
+        weight: 5,
+        opacity: 1,
+        fillOpacity: 0
+    }*/
+)] || []
+);
+
 const layerSelectorWithMarkers = createSelector(
     [layersSelector, markerSelector],
     (layers, marker) => ([...layers, ...marker])

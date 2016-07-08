@@ -15,12 +15,20 @@ const assign = require('object-assign');
 const HelpWrapper = require('./help/HelpWrapper');
 const Message = require('./locale/Message');
 
-const {textSearch, resultsPurge} = require("../actions/search");
+const {textSearch, resultsPurge, resetSearch, addMarker, searchTextChanged} = require("../actions/search");
 const {changeMapView} = require('../actions/map');
 
-const SearchBar = connect(() => ({}), {
+const searchSelector = createSelector([
+    state => state.search || null
+], (searchState) => ({
+    searchText: searchState ? searchState.searchText : ""
+}));
+
+const SearchBar = connect(searchSelector, {
     onSearch: textSearch,
-    onSearchReset: resultsPurge
+    onPurgeResults: resultsPurge,
+    onSearchReset: resetSearch,
+    onSearchTextChange: searchTextChanged
 })(require("../components/mapcontrols/search/SearchBar"));
 
 const {mapSelector} = require('../selectors/map');
@@ -31,13 +39,14 @@ const MediaQuery = require('react-responsive');
 const selector = createSelector([
     mapSelector,
     state => state.search || null
-], (mapConfig, results) => ({
+], (mapConfig, searchState) => ({
     mapConfig,
-    results
+    results: searchState ? searchState.results : null
 }));
 
 const NominatimResultList = connect(selector, {
     onItemClick: changeMapView,
+    addMarker: addMarker,
     afterItemClick: resultsPurge
 })(require('../components/mapcontrols/search/geocoding/NominatimResultList'));
 
@@ -98,5 +107,8 @@ module.exports = {
             priority: 1
         }
     }),
-    reducers: {search: require('../reducers/search')}
+    reducers: {
+        search: require('../reducers/search'),
+        mapInfo: require('../reducers/mapInfo')
+    }
 };

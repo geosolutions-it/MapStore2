@@ -92,12 +92,12 @@ describe("test the SearchBar", () => {
         var TestUtils = React.addons.TestUtils;
         const testHandlers = {
             onSearchHandler: (text) => {return text; },
-            onSearchResetHandler: () => {}
+            onPurgeResultsHandler: () => {}
         };
 
         const spy = expect.spyOn(testHandlers, 'onSearchHandler');
-        const spyReset = expect.spyOn(testHandlers, 'onSearchResetHandler');
-        var tb = ReactDOM.render(<SearchBar delay={0} typeAhead={true} blurResetDelay={0} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler}/>, document.getElementById("container"));
+        const spyReset = expect.spyOn(testHandlers, 'onPurgeResultsHandler');
+        var tb = ReactDOM.render(<SearchBar delay={0} typeAhead={true} blurResetDelay={0} onSearch={testHandlers.onSearchHandler} onPurgeResults={testHandlers.onPurgeResultsHandler}/>, document.getElementById("container"));
         let input = TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0];
         expect(input).toExist();
         input = ReactDOM.findDOMNode(input);
