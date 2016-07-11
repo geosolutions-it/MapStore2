@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -16,6 +16,7 @@ const GOOGLE_MERCATOR = {
 
 const EXTENT_TO_ZOOM_HOOK = 'EXTENT_TO_ZOOM_HOOK';
 const RESOLUTIONS_HOOK = 'RESOLUTIONS_HOOK';
+const RESOLUTION_HOOK = 'RESOLUTION_HOOK';
 const COMPUTE_BBOX_HOOK = 'COMPUTE_BBOX_HOOK';
 
 var hooks = {};
@@ -173,6 +174,24 @@ function getZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
 }
 
 /**
+* It returns the current resolution.
+*
+* @param currentZoom {number} the current zoom
+* @param minZoom {number} min zoom level.
+* @param maxZoom {number} max zoom level.
+* @param dpi {number} screen resolution in dot per inch.
+* @return {Number} the actual resolution
+*/
+function getCurrentResolution(currentZoom, minZoom, maxZoom, dpi) {
+    if (getHook("RESOLUTION_HOOK")) {
+        return getHook("RESOLUTION_HOOK")(currentZoom, minZoom, maxZoom, dpi);
+    }
+    /* if no hook is registered (leaflet) it is used the GoogleMercatorResolutions in
+       in order to get the list of resolutions */
+    return getGoogleMercatorResolutions(minZoom, maxZoom, dpi)[currentZoom];
+}
+
+/**
  * Calculates the center for for the given extent.
  *
  * @param  {Array} extent [minx, miny, maxx, maxy]
@@ -224,6 +243,7 @@ function mapUpdated(oldMap, newMap) {
 module.exports = {
     EXTENT_TO_ZOOM_HOOK,
     RESOLUTIONS_HOOK,
+    RESOLUTION_HOOK,
     COMPUTE_BBOX_HOOK,
     DEFAULT_SCREEN_DPI,
     registerHook,
@@ -240,5 +260,6 @@ module.exports = {
     getResolutions,
     getScales,
     getBbox,
-    mapUpdated
+    mapUpdated,
+    getCurrentResolution
 };

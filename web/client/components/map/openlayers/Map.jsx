@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -314,6 +314,9 @@ var OpenlayersMap = React.createClass({
     registerHooks() {
         mapUtils.registerHook(mapUtils.RESOLUTIONS_HOOK, () => {
             return this.getResolutions();
+        });
+        mapUtils.registerHook(mapUtils.RESOLUTION_HOOK, () => {
+            return this.map.getView().getResolution();
         });
         mapUtils.registerHook(mapUtils.COMPUTE_BBOX_HOOK, (center, zoom) => {
             var olCenter = CoordinatesUtils.reproject([center.x, center.y], 'EPSG:4326', this.props.projection);

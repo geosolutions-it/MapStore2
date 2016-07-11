@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -11,15 +11,18 @@ var {
     RESOLUTIONS_HOOK,
     EXTENT_TO_ZOOM_HOOK,
     COMPUTE_BBOX_HOOK,
+    RESOLUTION_HOOK,
     registerHook,
     dpi2dpm,
     getSphericalMercatorScales,
     getSphericalMercatorScale,
     getGoogleMercatorScales,
+    getGoogleMercatorResolutions,
     getGoogleMercatorScale,
     getZoomForExtent,
     getCenterForExtent,
-    getBbox
+    getBbox,
+    getCurrentResolution
 } = require('../MapUtils');
 
 describe('Test the MapUtils', () => {
@@ -82,5 +85,17 @@ describe('Test the MapUtils', () => {
         registerHook(COMPUTE_BBOX_HOOK, () => "bbox");
         let bbox = getBbox(null, null, null);
         expect(bbox).toBe("bbox");
+    });
+    it('getCurrentResolution using the RESOLUTION_HOOK', () => {
+        registerHook(RESOLUTION_HOOK, () => {
+            return 2;
+        });
+        expect(getCurrentResolution(5, 0, 21, 96)).toBe(2);
+    });
+    it('getCurrentResolution with no HOOK', () => {
+        registerHook(RESOLUTION_HOOK, undefined );
+        let resolution = getGoogleMercatorResolutions(0, 21, 96)[2];
+        let resolution2 = getCurrentResolution(2, 0, 21, 96);
+        expect(resolution2).toEqual(resolution);
     });
 });

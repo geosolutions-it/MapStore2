@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -11,7 +11,9 @@ var {
     getAvailableInfoFormat,
     getAvailableInfoFormatLabels,
     getAvailableInfoFormatValues,
-    getDefaultInfoFormatValue
+    getDefaultInfoFormatValue,
+    createOrUpdate,
+    getForViewAndSize
 } = require('../MapInfoUtils');
 
 describe('MapInfoUtils', () => {
@@ -60,5 +62,21 @@ describe('MapInfoUtils', () => {
         let results = getDefaultInfoFormatValue();
         expect(results).toExist();
         expect(results).toBe('text/plain');
+    });
+
+    it('it should returns a bbox', () => {
+        let results = createOrUpdate(-10, 10, -10, 10);
+        expect(results).toExist();
+        expect(results.maxx).toBe(-10);
+    });
+
+    it('it should tests the creation of a bbox given the center, resolution and size', () => {
+        let center = {x: 0, y: 0};
+        let resolution = 1;
+        let size = [10, 10];
+        let bbox = getForViewAndSize(center, resolution, 0, size, null);
+        expect(bbox).toExist();
+        expect(bbox.maxx).toBeGreaterThan(bbox.minx);
+        expect(bbox.maxy).toBeGreaterThan(bbox.miny);
     });
 });

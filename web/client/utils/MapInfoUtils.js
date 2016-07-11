@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -13,48 +13,7 @@ const INFO_FORMATS_BY_MIME_TYPE = FeatureInfoUtils.INFO_FORMATS_BY_MIME_TYPE;
 const {isArray} = require('lodash');
 const assign = require('object-assign');
 const CoordinatesUtils = require('./CoordinatesUtils');
-
-const reprojectBbox = (bbox, projection) => {
-    /********************* START SHIFTING BBOX **********************************
-        it is needed to be shifted the bbox to the right if minx < -180° lng,
-        to the left if maxx > 180° */
-    let offsetX = 0;
-
-    let minx = parseFloat(bbox.bounds.minx);
-    let maxx = parseFloat(bbox.bounds.maxx);
-    if (minx < -180) {
-        /* in this case the offset is negative, the longitude als negative
-           so it necessary to subtract a negative offset in order to shift
-           to the right */
-        offsetX = (minx + 180);
-        minx -= offsetX;
-        maxx -= offsetX;
-    }
-    if (maxx > 180) {
-        /* as before but viceversa */
-        offsetX = (maxx - 180) * (-1);
-        minx += offsetX;
-        maxx += offsetX;
-    }
-    let bboxBounds = {
-        minx: minx,
-        miny: bbox.bounds.miny,
-        maxx: maxx,
-        maxy: bbox.bounds.maxy
-    };
-    let newBbox = CoordinatesUtils.reprojectBbox(bboxBounds, bbox.crs, projection);
-    /********************* END SHIFTING BBOX ********************************** */
-    return assign({}, {
-        crs: projection,
-        bounds: {
-            minx: newBbox[0],
-            miny: newBbox[1],
-            maxx: newBbox[2],
-            maxy: newBbox[3]
-        }
-    });
-};
-
+const MapUtils = require('./MapUtils');
 const MapInfoUtils = {
     /**
      * specifies which info formats are currently supported
@@ -118,8 +77,74 @@ const MapInfoUtils = {
             features: MapInfoUtils.clickedPointToGeoJson(clickedMapPoint)
         };
     },
+    /**
+     * Create a new extent or update the provided extent.
+     * @param {number} minX Minimum X.
+     * @param {number} minY Minimum Y.
+     * @param {number} maxX Maximum X.
+     * @param {number} maxY Maximum Y.
+     * @param {Object} optExtent Destination extent.
+     * @return {Object Extent.
+     */
+    createOrUpdate(minX, minY, maxX, maxY, optExtent) {
+        if (optExtent) {
+            optExtent.maxx = maxX;
+            optExtent.maxy = maxY;
+            optExtent.minx = minX;
+            optExtent.miny = minY;
+            return optExtent;
+        }
+        return { maxx: maxX, maxy: maxY, minx: minX, miny: minY };
+    },
+    /**
+     * Creates a bbox of size dimensions areund the center point given to it given the
+     * resolution and the rotation
+     * @param center {object} the x,y coordinate of the point
+     * @param resolution {number} the resolution of the map
+     * @param rotation {number} the optional rotation of the new bbox
+     * @param size {object} width,height of the desired bbox
+     * @param opt_extent {object}  optional bbox if passed it will be updated
+     * @return {object} the desired bbox {minx, miny, maxx, maxy}
+     */
+     getForViewAndSize(center, resolution, rotation = 0, size, optExtent) {
+        let dx = resolution * size[0] / 2;
+        let dy = resolution * size[1] / 2;
+        let cosRotation = Math.cos(rotation);
+        let sinRotation = Math.sin(rotation);
+        let xCos = dx * cosRotation;
+        let xSin = dx * sinRotation;
+        let yCos = dy * cosRotation;
+        let ySin = dy * sinRotation;
+        let x = center.x;
+        let y = center.y;
+        let x0 = x - xCos + ySin;
+        let x1 = x - xCos - ySin;
+        let x2 = x + xCos - ySin;
+        let x3 = x + xCos + ySin;
+        let y0 = y - xSin - yCos;
+        let y1 = y - xSin + yCos;
+        let y2 = y + xSin + yCos;
+        let y3 = y + xSin - yCos;
+        let bbox = MapInfoUtils.createOrUpdate(
+            Math.min(x0, x1, x2, x3), Math.min(y0, y1, y2, y3),
+            Math.max(x0, x1, x2, x3), Math.max(y0, y1, y2, y3),
+            optExtent);
+        return bbox;
+    },
     buildIdentifyRequest(layer, props) {
-        const {bounds, crs} = reprojectBbox(props.map.bbox, props.map.projection);
+        /* In order to create a valid feature info request
+         * we create a bbox of 101x101 pixel that wrap the point.
+         * center point is repojected then is built a box of 101x101pixel around it
+         */
+        let wrongLng = props.point.latlng.lng;
+        // longitude restricted to the -180,180 range
+        let lngCorrected = wrongLng - (360) * Math.floor(wrongLng / (360) + 0.5);
+        const center = {x: lngCorrected, y: props.point.latlng.lat};
+        let centerProjected = CoordinatesUtils.reproject(center, "EPSG:4326", "EPSG:900913");
+        const resolution = MapUtils.getCurrentResolution(props.map.zoom, 0, 21, 96);
+        const rotation = 0;
+        const size = [101, 101];
+        let bounds = MapInfoUtils.getForViewAndSize(centerProjected, resolution, rotation, size, null);
         if (layer.type === 'wms') {
             return {
                 request: {
@@ -127,11 +152,11 @@ const MapInfoUtils = {
                     layers: layer.name,
                     query_layers: layer.name,
                     styles: layer.style,
-                    x: parseInt(props.point.pixel.x, 10),
-                    y: parseInt(props.point.pixel.y, 10),
-                    height: parseInt(props.map.size.height, 10),
-                    width: parseInt(props.map.size.width, 10),
-                    srs: CoordinatesUtils.normalizeSRS(crs),
+                    x: 51,
+                    y: 51,
+                    height: 101,
+                    width: 101,
+                    srs: CoordinatesUtils.normalizeSRS(props.map.projection),
                     bbox: bounds.minx + "," +
                           bounds.miny + "," +
                           bounds.maxx + "," +
