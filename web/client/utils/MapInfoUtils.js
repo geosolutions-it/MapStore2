@@ -78,7 +78,7 @@ const MapInfoUtils = {
         };
     },
     /**
-     * Create a new extent or update the provided extent.
+     * Creates a new bbox.
      * @param {number} minX Minimum X.
      * @param {number} minY Minimum Y.
      * @param {number} maxX Maximum X.
@@ -86,15 +86,14 @@ const MapInfoUtils = {
      * @param {Object} optExtent Destination extent.
      * @return {Object Extent.
      */
-    createOrUpdate(minX, minY, maxX, maxY, optExtent) {
+    createBBox(minX, minY, maxX, maxY, optExtent) {
         if (optExtent) {
             optExtent.maxx = maxX;
             optExtent.maxy = maxY;
             optExtent.minx = minX;
             optExtent.miny = minY;
-            return optExtent;
         }
-        return { maxx: maxX, maxy: maxY, minx: minX, miny: minY };
+        return assign(optExtent || {}, { maxx: maxX, maxy: maxY, minx: minX, miny: minY });
     },
     /**
      * Creates a bbox of size dimensions areund the center point given to it given the
@@ -106,7 +105,7 @@ const MapInfoUtils = {
      * @param opt_extent {object}  optional bbox if passed it will be updated
      * @return {object} the desired bbox {minx, miny, maxx, maxy}
      */
-     getForViewAndSize(center, resolution, rotation = 0, size, optExtent) {
+     getProjectedBBox(center, resolution, rotation = 0, size, optExtent) {
         let dx = resolution * size[0] / 2;
         let dy = resolution * size[1] / 2;
         let cosRotation = Math.cos(rotation);
@@ -125,7 +124,7 @@ const MapInfoUtils = {
         let y1 = y - xSin + yCos;
         let y2 = y + xSin + yCos;
         let y3 = y + xSin - yCos;
-        let bbox = MapInfoUtils.createOrUpdate(
+        let bbox = MapInfoUtils.createBBox(
             Math.min(x0, x1, x2, x3), Math.min(y0, y1, y2, y3),
             Math.max(x0, x1, x2, x3), Math.max(y0, y1, y2, y3),
             optExtent);
@@ -136,15 +135,17 @@ const MapInfoUtils = {
          * we create a bbox of 101x101 pixel that wrap the point.
          * center point is repojected then is built a box of 101x101pixel around it
          */
+        const heightBBox = (props && props.sizeBBox && props.sizeBBox.height) || 101;
+        const widthBBox = (props && props.sizeBBox && props.sizeBBox.width) || 101;
+        const size = [heightBBox, widthBBox];
+        const rotation = 0;
+        const resolution = MapUtils.getCurrentResolution(props.map.zoom, 0, 21, 96);
         let wrongLng = props.point.latlng.lng;
-        // longitude restricted to the -180,180 range
+        // longitude restricted to the [-180°,+180°] range
         let lngCorrected = wrongLng - (360) * Math.floor(wrongLng / (360) + 0.5);
         const center = {x: lngCorrected, y: props.point.latlng.lat};
-        let centerProjected = CoordinatesUtils.reproject(center, "EPSG:4326", "EPSG:900913");
-        const resolution = MapUtils.getCurrentResolution(props.map.zoom, 0, 21, 96);
-        const rotation = 0;
-        const size = [101, 101];
-        let bounds = MapInfoUtils.getForViewAndSize(centerProjected, resolution, rotation, size, null);
+        let centerProjected = CoordinatesUtils.reproject(center, props.map.bbox.crs, props.map.projection);
+        let bounds = MapInfoUtils.getProjectedBBox(centerProjected, resolution, rotation, size, null);
         if (layer.type === 'wms') {
             return {
                 request: {
@@ -152,10 +153,10 @@ const MapInfoUtils = {
                     layers: layer.name,
                     query_layers: layer.name,
                     styles: layer.style,
-                    x: 51,
-                    y: 51,
-                    height: 101,
-                    width: 101,
+                    x: ((widthBBox % 2) === 1) ? Math.ceil(widthBBox / 2) : widthBBox / 2,
+                    y: ((widthBBox % 2) === 1) ? Math.ceil(widthBBox / 2) : widthBBox / 2,
+                    height: heightBBox,
+                    width: widthBBox,
                     srs: CoordinatesUtils.normalizeSRS(props.map.projection),
                     bbox: bounds.minx + "," +
                           bounds.miny + "," +

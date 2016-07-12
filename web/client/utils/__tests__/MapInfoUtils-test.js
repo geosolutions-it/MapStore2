@@ -12,8 +12,8 @@ var {
     getAvailableInfoFormatLabels,
     getAvailableInfoFormatValues,
     getDefaultInfoFormatValue,
-    createOrUpdate,
-    getForViewAndSize
+    createBBox,
+    getProjectedBBox
 } = require('../MapInfoUtils');
 
 describe('MapInfoUtils', () => {
@@ -65,7 +65,7 @@ describe('MapInfoUtils', () => {
     });
 
     it('it should returns a bbox', () => {
-        let results = createOrUpdate(-10, 10, -10, 10);
+        let results = createBBox(-10, 10, -10, 10);
         expect(results).toExist();
         expect(results.maxx).toBe(-10);
     });
@@ -74,7 +74,7 @@ describe('MapInfoUtils', () => {
         let center = {x: 0, y: 0};
         let resolution = 1;
         let size = [10, 10];
-        let bbox = getForViewAndSize(center, resolution, 0, size, null);
+        let bbox = getProjectedBBox(center, resolution, 0, size, null);
         expect(bbox).toExist();
         expect(bbox.maxx).toBeGreaterThan(bbox.minx);
         expect(bbox.maxy).toBeGreaterThan(bbox.miny);
