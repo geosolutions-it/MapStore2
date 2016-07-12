@@ -135,7 +135,7 @@ const MapInfoUtils = {
         // longitude restricted to the [-180°,+180°] range
         let lngCorrected = wrongLng - (360) * Math.floor(wrongLng / (360) + 0.5);
         const center = {x: lngCorrected, y: props.point.latlng.lat};
-        let centerProjected = CoordinatesUtils.reproject(center, props.map.bbox.crs, props.map.projection);
+        let centerProjected = CoordinatesUtils.reproject(center, 'EPSG:4326', props.map.projection);
         let bounds = MapInfoUtils.getProjectedBBox(centerProjected, resolution, rotation, size, null);
         if (layer.type === 'wms') {
             return {
