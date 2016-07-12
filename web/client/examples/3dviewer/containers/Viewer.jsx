@@ -110,7 +110,7 @@ module.exports = connect((state) => {
         messages: state.locale ? state.locale.messages : null,
         locale: state.locale ? state.locale.current : null,
         localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined,
-        searchResults: state.searchResults,
+        searchResults: state.searchResults && state.searchResults.results ? state.searchResults.results : null,
         mousePosition: state.mousePosition && state.mousePosition.position || null,
         showGraticule: state.controls && state.controls.graticule || false,
         marker: state.controls && state.controls.marker || null
