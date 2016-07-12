@@ -73,8 +73,9 @@ describe('MapInfoUtils', () => {
     it('it should tests the creation of a bbox given the center, resolution and size', () => {
         let center = {x: 0, y: 0};
         let resolution = 1;
+        let rotation = 0;
         let size = [10, 10];
-        let bbox = getProjectedBBox(center, resolution, 0, size, null);
+        let bbox = getProjectedBBox(center, resolution, rotation, size);
         expect(bbox).toExist();
         expect(bbox.maxx).toBeGreaterThan(bbox.minx);
         expect(bbox.maxy).toBeGreaterThan(bbox.miny);

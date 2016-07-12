@@ -78,22 +78,15 @@ const MapInfoUtils = {
         };
     },
     /**
-     * Creates a new bbox.
+     * Returns a bounds object.
      * @param {number} minX Minimum X.
      * @param {number} minY Minimum Y.
      * @param {number} maxX Maximum X.
      * @param {number} maxY Maximum Y.
-     * @param {Object} optExtent Destination extent.
-     * @return {Object Extent.
+     * @return {Object} Extent.
      */
-    createBBox(minX, minY, maxX, maxY, optExtent) {
-        if (optExtent) {
-            optExtent.maxx = maxX;
-            optExtent.maxy = maxY;
-            optExtent.minx = minX;
-            optExtent.miny = minY;
-        }
-        return assign(optExtent || {}, { maxx: maxX, maxy: maxY, minx: minX, miny: minY });
+    createBBox(minX, minY, maxX, maxY) {
+        return { minx: minX, miny: minY, maxx: maxX, maxy: maxY };
     },
     /**
      * Creates a bbox of size dimensions areund the center point given to it given the
@@ -102,10 +95,9 @@ const MapInfoUtils = {
      * @param resolution {number} the resolution of the map
      * @param rotation {number} the optional rotation of the new bbox
      * @param size {object} width,height of the desired bbox
-     * @param opt_extent {object}  optional bbox if passed it will be updated
      * @return {object} the desired bbox {minx, miny, maxx, maxy}
      */
-     getProjectedBBox(center, resolution, rotation = 0, size, optExtent) {
+     getProjectedBBox(center, resolution, rotation = 0, size) {
         let dx = resolution * size[0] / 2;
         let dy = resolution * size[1] / 2;
         let cosRotation = Math.cos(rotation);
@@ -124,11 +116,10 @@ const MapInfoUtils = {
         let y1 = y - xSin + yCos;
         let y2 = y + xSin + yCos;
         let y3 = y + xSin - yCos;
-        let bbox = MapInfoUtils.createBBox(
+        let bounds = MapInfoUtils.createBBox(
             Math.min(x0, x1, x2, x3), Math.min(y0, y1, y2, y3),
-            Math.max(x0, x1, x2, x3), Math.max(y0, y1, y2, y3),
-            optExtent);
-        return bbox;
+            Math.max(x0, x1, x2, x3), Math.max(y0, y1, y2, y3));
+        return bounds;
     },
     buildIdentifyRequest(layer, props) {
         /* In order to create a valid feature info request
