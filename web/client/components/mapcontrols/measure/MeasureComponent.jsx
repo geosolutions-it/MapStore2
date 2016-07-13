@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Panel, ButtonGroup, Tooltip, Glyphicon} = require('react-bootstrap');
+const {Panel, ButtonGroup, Tooltip, Glyphicon, Button} = require('react-bootstrap');
 const ToggleButton = require('../../buttons/ToggleButton');
 const ReactIntl = require('react-intl');
 const FormattedNumber = ReactIntl.FormattedNumber;
@@ -50,7 +50,8 @@ const MeasureComponent = React.createClass({
         lineGlyph: React.PropTypes.string,
         areaGlyph: React.PropTypes.string,
         bearingGlyph: React.PropTypes.string,
-        useButtonGroup: React.PropTypes.bool
+        useButtonGroup: React.PropTypes.bool,
+        withReset: React.PropTypes.bool
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -69,7 +70,8 @@ const MeasureComponent = React.createClass({
                 area: {unit: 'sqm', label: 'm²'}
             },
             showResults: true,
-            useButtonGroup: true
+            useButtonGroup: true,
+            withReset: false
         };
     },
     shouldComponentUpdate(nextProps) {
@@ -144,6 +146,18 @@ const MeasureComponent = React.createClass({
             this.props.toggleMeasure(newMeasureState);
         }
     },
+    onResetClick: function() {
+        var resetMeasureState = {
+            lineMeasureEnabled: false,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: false,
+            geomType: null,
+            len: 0,
+            area: 0,
+            bearing: 0
+        };
+        this.props.toggleMeasure(resetMeasureState);
+    },
     getToolTips() {
         return {
             lineToolTip: <Tooltip id={"tooltip-button.line"}>{this.props.lengthLabel}</Tooltip>,
@@ -198,6 +212,12 @@ const MeasureComponent = React.createClass({
                         pressed={this.props.bearingMeasureEnabled}
                         onClick={this.onBearingClick}
                         tooltip={bearingToolTip} />
+                    {this.props.withReset ? <ButtonGroup>
+                        <Button
+                            onClick={this.onResetClick}>
+                            {this.props.resetButtonText}
+                        </Button>
+                    </ButtonGroup> : <span/>}
                 </div>
         );
     },
