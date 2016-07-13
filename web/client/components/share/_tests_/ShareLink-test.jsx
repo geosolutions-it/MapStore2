@@ -41,6 +41,5 @@ describe("The ShareLink component", () => {
 
     });
 
-    it('it simulates the click and verify the call of onClick');
 
 });
