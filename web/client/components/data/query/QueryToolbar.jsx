@@ -28,7 +28,10 @@ const QueryToolbar = React.createClass({
         featureTypeName: React.PropTypes.string,
         actions: React.PropTypes.object,
         ogcVersion: React.PropTypes.string,
-        resultTitle: React.PropTypes.string
+        resultTitle: React.PropTypes.string,
+        pagination: React.PropTypes.object,
+        sortOptions: React.PropTypes.object,
+        hits: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -42,6 +45,9 @@ const QueryToolbar = React.createClass({
             showGeneratedFilter: false,
             featureTypeName: null,
             resultTitle: "Generated Filter",
+            pagination: null,
+            sortOptions: null,
+            hits: false,
             actions: {
                 onQuery: () => {},
                 onReset: () => {},
@@ -90,11 +96,12 @@ const QueryToolbar = React.createClass({
         let filterObj = {
             groupFields: this.props.groupFields,
             filterFields: this.props.filterFields.filter((field) => field.value),
-            spatialField: this.props.spatialField
+            spatialField: this.props.spatialField,
+            pagination: this.props.pagination
         };
 
         let filter = this.props.filterType === "OGC" ?
-            FilterUtils.toOGCFilter(this.props.featureTypeName, filterObj, this.props.ogcVersion) :
+            FilterUtils.toOGCFilter(this.props.featureTypeName, filterObj, this.props.ogcVersion, this.props.sortOptions, this.props.hits) :
             FilterUtils.toCQLFilter(filterObj);
 
         this.props.actions.onQuery(this.props.searchUrl, filter, this.props.params);
