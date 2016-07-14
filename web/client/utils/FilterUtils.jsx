@@ -36,7 +36,7 @@ const FilterUtils = {
         "ogc": {startTag: "<ogc:PropertyName>", endTag: "</ogc:PropertyName>"},
         "fes": {startTag: "<fes:ValueReference>", endTag: "</fes:ValueReference>"}
     },
-    toOGCFilter: function(ftName, json, version, sortOptions) {
+    toOGCFilter: function(ftName, json, version, sortOptions = null, hits = false) {
         try {
             this.objFilter = (json instanceof Object) ? json : JSON.parse(json);
         } catch(e) {
@@ -48,7 +48,7 @@ const FilterUtils = {
 
         this.setOperatorsPlaceholders("{namespace}", this.nsplaceholder);
 
-        let ogcFilter = this.getGetFeatureBase(versionOGC, this.objFilter.pagination);
+        let ogcFilter = this.getGetFeatureBase(versionOGC, this.objFilter.pagination, hits);
         let filters = [];
 
         let attributeFilter;
@@ -99,10 +99,10 @@ const FilterUtils = {
                         this.propertyTagReference[this.nsplaceholder].startTag +
                             sortOptions.sortBy +
                         this.propertyTagReference[this.nsplaceholder].endTag +
+                        "<" + this.nsplaceholder + ":SortOrder>" +
+                            sortOptions.sortOrder +
+                        "</" + this.nsplaceholder + ":SortOrder>" +
                     "</" + this.nsplaceholder + ":SortProperty>" +
-                    "<" + this.nsplaceholder + ":SortOrder>" +
-                        sortOptions.sortOrder +
-                    "</" + this.nsplaceholder + ":SortOrder>" +
                 "</" + this.nsplaceholder + ":SortBy>";
         }
 
@@ -128,7 +128,7 @@ const FilterUtils = {
             }
         });
     },
-    getGetFeatureBase: function(version, pagination) {
+    getGetFeatureBase: function(version, pagination, hits) {
         let ver = !version ? "2.0" : version;
 
         let getFeature = '<wfs:GetFeature ';
@@ -137,6 +137,8 @@ const FilterUtils = {
         switch (ver) {
             case "1.0.0":
                 getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
+
+                getFeature = hits ? getFeature + ' resultType="hits"' : getFeature;
 
                 getFeature += 'service="WFS" version="' + ver + '" ' +
                     'outputFormat="GML2" ' +
@@ -150,6 +152,8 @@ const FilterUtils = {
             case "1.1.0":
                 getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
 
+                getFeature = hits ? getFeature + ' resultType="hits"' : getFeature;
+
                 getFeature += 'service="WFS" version="' + ver + '" ' +
                     'xmlns:gml="http://www.opengis.net/gml" ' +
                     'xmlns:wfs="http://www.opengis.net/wfs" ' +
@@ -160,6 +164,8 @@ const FilterUtils = {
                 break;
             default: // default is wfs 2.0
                 getFeature += pagination && pagination.maxFeatures ? 'count="' + pagination.maxFeatures + '" ' : "";
+
+                getFeature = hits && !pagination ? getFeature + ' resultType="hits"' : getFeature;
 
                 getFeature += 'service="WFS" version="' + ver + '" ' +
                     'xmlns:wfs="http://www.opengis.net/wfs/2.0" ' +

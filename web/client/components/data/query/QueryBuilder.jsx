@@ -42,7 +42,10 @@ const QueryBuilder = React.createClass({
         attributeFilterActions: React.PropTypes.object,
         spatialFilterActions: React.PropTypes.object,
         queryToolbarActions: React.PropTypes.object,
-        resultTitle: React.PropTypes.string
+        resultTitle: React.PropTypes.string,
+        pagination: React.PropTypes.object,
+        sortOptions: React.PropTypes.object,
+        hits: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -63,6 +66,9 @@ const QueryBuilder = React.createClass({
             searchUrl: "",
             showGeneratedFilter: false,
             featureTypeName: null,
+            pagination: null,
+            sortOptions: null,
+            hits: false,
             attributeFilterActions: {
                 onAddGroupField: () => {},
                 onAddFilterField: () => {},
@@ -137,7 +143,11 @@ const QueryBuilder = React.createClass({
                     ogcVersion={this.props.ogcVersion}
                     filterType={this.props.filterType}
                     actions={this.props.queryToolbarActions}
-                    resultTitle={this.props.resultTitle}/>
+                    resultTitle={this.props.resultTitle}
+                    pagination={this.props.pagination}
+                    sortOptions={this.props.sortOptions}
+                    hits={this.props.hits}
+                    />
             </div>
         ) : (<div style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce"/></div>);
     }
