@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {MAPS_LIST_LOADED, MAPS_LIST_LOADING, MAPS_LIST_LOAD_ERROR} = require('../actions/maps');
+const {MAPS_LIST_LOADED, MAPS_LIST_LOADING, MAPS_LIST_LOAD_ERROR, MAP_UPDATED, MAP_DELETED} = require('../actions/maps');
 const assign = require('object-assign');
 function maps(state = null, action) {
     switch (action.type) {
@@ -32,6 +32,22 @@ function maps(state = null, action) {
             return {
                 loadingError: action.error
             };
+        case MAP_UPDATED: {
+            let newMaps = (state.results === "" ? [] : [...state.results] );
+
+            for (let i = 0; i < newMaps.length; i++) {
+                if (newMaps[i].id && newMaps[i].id === action.resourceId) {
+                    newMaps[i] = assign({}, newMaps[i], {description: action.newDescription, name: action.newName});
+                }
+            }
+            return assign({}, state, {results: newMaps});
+        }
+        case MAP_DELETED: {
+            let newMaps = (state.results === "" ? [] : [...state.results] );
+            return assign({}, state, {results: newMaps.filter(function(el) {
+                return el.id && el.id !== action.resourceId;
+            })});
+        }
         default:
             return state;
     }

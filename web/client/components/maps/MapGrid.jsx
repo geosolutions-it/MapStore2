@@ -20,11 +20,15 @@ var MapGrid = React.createClass({
         fluid: React.PropTypes.bool,
         viewerUrl: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
         mapType: React.PropTypes.string,
-        colProps: React.PropTypes.object
+        colProps: React.PropTypes.object,
+        updateMapMetadata: React.PropTypes.func,
+        deleteMap: React.PropTypes.func
     },
     getDefaultProps() {
         return {
             onChangeMapType: function() {},
+            updateMapMetadata: () => {},
+            deleteMap: () => {},
             mapType: 'leaflet',
             bottom: "",
             fluid: true,
@@ -44,7 +48,9 @@ var MapGrid = React.createClass({
             let children = React.Children.count(this.props.children);
             return children === 1 ?
                 React.cloneElement(React.Children.only(this.props.children), {viewerUrl, key: map.id, mapType, map}) :
-                <Col key={map.id} {...this.props.colProps}><MapCard viewerUrl={viewerUrl} mapType={mapType} map={map} /></Col>;
+                <Col key={map.id} {...this.props.colProps}>
+                    <MapCard viewerUrl={viewerUrl} mapType={mapType} map={map} onMetadataEdit={this.props.updateMapMetadata} onMapDelete={this.props.deleteMap} />
+                </Col>;
         });
     },
     renderLoading() {

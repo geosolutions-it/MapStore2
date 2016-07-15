@@ -35,6 +35,7 @@
         "save": "Salva",
         "opacity": "Opacità",
         "close": "Chiudi",
+        "cancel": "Annulla",
         "pageInfo": "{total, plural, =0 {Nessun Elemento} =1 {{total} Elemento di {total}} other {Elementi {start}-{end} di {total}}}",
         "home":{
             "open": "Apri",
@@ -87,12 +88,21 @@
         },
         "manager": {
             "openInANewTab":"Apri mappa",
+            "deleteMap":"Elimina Mappa",
+            "deleteMapMessage": "Vuoi eliminare questa mappa?",
+            "editMapMetadata":"Modifica Metadati",
             "mapTypes_combo": "Seleziona il visualizzatore di mappa:",
             "maps_title": "Mappe",
             "locales_combo": "Lingua:"
         },
         "map": {
-            "loading": "In caricamento..."
+            "loading": "In caricamento...",
+            "name": "Nome",
+            "description": "Descrizione",
+            "namePlaceholder": "Nome Mappa",
+            "descriptionPlaceholder": "Descrizione Mappa",
+            "saveTitle": "Salva mappa",
+            "saveText": "Salvare la mappa corrente?"
         },
         "print":{
             "paneltitle": "Stampa",

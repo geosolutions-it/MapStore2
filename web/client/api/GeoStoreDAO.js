@@ -52,6 +52,33 @@ var Api = {
     },
     addBaseUrl: function(options) {
         return assign(options, {baseURL: ConfigUtils.getDefaults().geoStoreUrl});
+    },
+    putResourceMetadata: function(resourceId, newName, newDescription, options) {
+        return axios.put(
+            "resources/resource/" + resourceId,
+            "<Resource><description>" + (newDescription || "") + "</description><metadata></metadata>" +
+            "<name>" + (newName || "") + "</name></Resource>",
+            this.addBaseUrl(_.merge({
+                headers: {
+                    'Content-Type': "application/xml"
+                }
+            }, options)));
+    },
+    putResource: function(resourceId, content, options) {
+        return axios.put(
+            "resources/resource/" + resourceId,
+            content,
+            this.addBaseUrl(_.merge({
+                headers: {
+                    'Content-Type': "application/json"
+                }
+            }, options)));
+    },
+    deleteResource: function(resourceId, options) {
+        return axios.delete(
+            "resources/resource/" + resourceId,
+            this.addBaseUrl(_.merge({
+            }, options)));
     }
 };
 

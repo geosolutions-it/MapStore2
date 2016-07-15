@@ -8,7 +8,7 @@
 
 const React = require('react');
 const {connect} = require('react-redux');
-const {loadMaps} = require('../actions/maps');
+const {loadMaps, updateMapMetadata, deleteMap} = require('../actions/maps');
 const ConfigUtils = require('../utils/ConfigUtils');
 const MapsGrid = connect((state) => {
     return {
@@ -18,7 +18,9 @@ const MapsGrid = connect((state) => {
         mapType: state.home && state.home.mapType
     };
 }, {
-    loadMaps
+    loadMaps,
+    updateMapMetadata,
+    deleteMap
 })(require('../components/maps/MapGrid'));
 
 const PaginationToolbar = connect((state) => {
