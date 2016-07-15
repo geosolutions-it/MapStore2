@@ -456,6 +456,18 @@
             "pseudo": "PseudoColor",
             "multi": "Multi Banda",
             "single": "Banda Singola"
+        },
+        "featuregrid": {
+            "header": "Elenco risultati ricerca",
+            "tools": "Gestione tabella",
+            "export": "Esporta risultati",
+            "selectall": "Seleziona tutti",
+            "deselectall": "Deseleziona tutti",
+            "pagination": {
+                "page": "Pagina",
+                "of":   "di",
+                "to":   "a"
+            }
         }
     }
 }

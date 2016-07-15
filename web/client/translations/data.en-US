@@ -462,6 +462,18 @@
             "pseudo": "PseudoColor",
             "multi": "Multi Band",
             "single": "Single Band"
+        },
+        "featuregrid": {
+            "header": "Search results list",
+            "tools": "Tool Panel",
+            "export": "Export",
+            "selectall": "Select All",
+            "deselectall": "Clear Selection",
+            "pagination": {
+                "page": "Page",
+                "of":   "of",
+                "to":   "to"
+            }
         }
     }
 }
