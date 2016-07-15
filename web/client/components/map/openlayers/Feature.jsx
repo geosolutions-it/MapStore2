@@ -54,8 +54,13 @@ let Feature = React.createClass({
         if (this._feature) {
             if (Array.isArray(this._feature)) {
                 const layersSource = this.props.container.getSource();
-                this._feature.forEach((feature) => {
-                    layersSource.removeFeature(layersSource.getFeatureById(feature.getId()));
+                this._feature.map((feature) => {
+                    let fetureId = feature.getId();
+                    if (fetureId === undefined) {
+                        layersSource.removeFeature(feature);
+                    }else {
+                        layersSource.removeFeature(layersSource.getFeatureById(fetureId));
+                    }
                 });
             } else {
                 this.props.container.getSource().removeFeature(this._feature);
