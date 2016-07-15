@@ -19,6 +19,7 @@ const CoordinateUtils = require('../../../utils/CoordinatesUtils');
 const img = require('./images/magnifier.png');
 
 const I18N = require('../../I18N/I18N');
+const LocaleUtils = require('../../../utils/LocaleUtils');
 
 require("ag-grid/dist/styles/ag-grid.css");
 require("ag-grid/dist/styles/theme-fresh.css");
@@ -46,6 +47,9 @@ const FeatureGrid = React.createClass({
         zoom: React.PropTypes.number,
         toolbar: React.PropTypes.object,
         dataSource: React.PropTypes.object
+    },
+    contextTypes: {
+        messages: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -168,6 +172,9 @@ const FeatureGrid = React.createClass({
                     showToolPanel={false}
                     rowDeselection={true}
                     localeText={{
+                        page: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.page") || 'Page',
+                        of: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.of") || 'of',
+                        to: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.to") || 'to',
                         next: '>',
                         last: '>|',
                         first: '|<',
