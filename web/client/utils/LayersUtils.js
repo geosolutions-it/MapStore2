@@ -111,11 +111,12 @@ var LayersUtils = {
         }
         return mapState;
     },
-    geoJSONToLayer: (geoJSON) => {
+    geoJSONToLayer: (geoJSON, id) => {
         return {
             type: 'vector',
             visibility: true,
             group: 'Local shape',
+            id,
             name: geoJSON.fileName,
             hideLoading: true,
             features: geoJSON.features.map((feature, idx) => {

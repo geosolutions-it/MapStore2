@@ -10,13 +10,15 @@ const {connect} = require('react-redux');
 const {onShapeError} = require('../../actions/shapefile');
 const {setStyleParameter} = require('../../actions/style');
 
-const SelectShape = connect((state) => (
+const ShapeFileUploadAndStyle = connect((state) => (
         {
+            uploadOptions: {
             error: state.shapefile && state.shapefile.error || null,
             loading: state.shapefile && state.shapefile.loading || false }
+            }
         ), {
     onShapeError: onShapeError
-})(require('../../components/shapefile/SelectShape'));
+})(require('../../components/shapefile/ShapeFileUploadAndStyle'));
 
 const StylePolygon = connect((state) => (
         {
@@ -43,7 +45,7 @@ const StylePolyline = connect((state) => (
 })(require('../../components/style/StylePolyline'));
 
 module.exports = {
-    SelectShape,
+    ShapeFileUploadAndStyle,
     StylePolygon,
     StylePolyline,
     StylePoint
