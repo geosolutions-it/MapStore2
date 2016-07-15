@@ -120,8 +120,8 @@ Layers.registerType('vector', {
             features: features
         });
 
-        let style = null;
-        if (options.style) {
+        let style = options.nativeStyle;
+        if (!style && options.style) {
             style = {
                 stroke: new ol.style.Stroke( options.style.stroke ? options.style.stroke : {
                     color: 'blue',
