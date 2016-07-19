@@ -8,6 +8,7 @@
 
 const React = require('react');
 const MapInfoUtils = require('../../../utils/MapInfoUtils');
+const FeatureInfoUtils = require('../../../utils/FeatureInfoUtils');
 const HTML = require('../../../components/I18N/HTML');
 const Message = require('../../../components/I18N/Message');
 
@@ -99,7 +100,7 @@ const DefaultViewer = React.createClass({
             );
         }
         return responses.map((res, i) => {
-            const {response, layerMetadata} = res;
+            const {response, layerMetadata, format} = res;
             const PageHeader = this.props.header;
             return (
                 <Panel
@@ -116,7 +117,7 @@ const DefaultViewer = React.createClass({
                         onPrevious={() => this.previous()}/></span>
                     }
                     style={this.props.style}>
-                    <ViewerPage response={response} format={this.props.format} viewers={this.props.viewers} />
+                    <ViewerPage response={response} format={(format && FeatureInfoUtils.INFO_FORMATS[format]) || this.props.format} viewers={this.props.viewers} />
                 </Panel>
             );
         });

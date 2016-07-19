@@ -16,7 +16,7 @@ let Feature = React.createClass({
         properties: React.PropTypes.object,
         container: React.PropTypes.object, // TODO it must be a ol.layer.vector (maybe pass the source is more correct here?)
         geometry: React.PropTypes.object, // TODO check for geojson format for geometry
-        msId: React.PropTypes.string
+        msId: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
     },
     componentDidMount() {
         const format = new ol.format.GeoJSON();

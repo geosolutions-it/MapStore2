@@ -76,17 +76,35 @@ var geometryToLayer = function(geojson, options) {
         return new L.FeatureGroup(layers);
 
     case 'LineString':
-    case 'MultiLineString':
         latlngs = coordsToLatLngs(coords, geometry.type === 'LineString' ? 0 : 1, coordsToLatLng);
         layer = new L.Polyline(latlngs, options.style);
         layer.msId = geojson.id;
         return layer;
+    case 'MultiLineString':
+        latlngs = coordsToLatLngs(coords, geometry.type === 'LineString' ? 0 : 1, coordsToLatLng);
+        for (i = 0, len = latlngs.length; i < len; i++) {
+            layer = new L.Polyline(latlngs[i], options.style);
+            layer.msId = geojson.id;
+            if (layer) {
+                layers.push(layer);
+            }
+        }
+        return new L.FeatureGroup(layers);
     case 'Polygon':
-    case 'MultiPolygon':
         latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
         layer = new L.Polygon(latlngs, options.style);
         layer.msId = geojson.id;
         return layer;
+    case 'MultiPolygon':
+        latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
+        for (i = 0, len = latlngs.length; i < len; i++) {
+            layer = new L.Polygon(latlngs[i], options.style);
+            layer.msId = geojson.id;
+            if (layer) {
+                layers.push(layer);
+            }
+        }
+        return new L.FeatureGroup(layers);
     case 'GeometryCollection':
         for (i = 0, len = geometry.geometries.length; i < len; i++) {
             layer = this.geometryToLayer({
@@ -108,13 +126,14 @@ var geometryToLayer = function(geojson, options) {
 
 let Feature = React.createClass({
     propTypes: {
-        msId: React.PropTypes.string,
+        msId: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
         type: React.PropTypes.string,
         styleName: React.PropTypes.string,
         properties: React.PropTypes.object,
         container: React.PropTypes.object, // TODO it must be a L.GeoJSON
         geometry: React.PropTypes.object, // TODO check for geojson format for geometry
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        onClick: React.PropTypes.func
     },
     componentDidMount() {
         if (this.props.container) {
@@ -137,6 +156,14 @@ let Feature = React.createClass({
             }
             );
             this.props.container.addLayer(this._layer);
+            this._layer.on('click', (event) => {
+                if (this.props.onClick) {
+                    this.props.onClick({
+                        pixel: event.containerPoint,
+                        latlng: event.latlng
+                    });
+                }
+            });
         }
     },
     componentWillReceiveProps(newProps) {

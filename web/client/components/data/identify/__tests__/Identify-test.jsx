@@ -95,7 +95,25 @@ describe('Identify', () => {
         const identify = ReactDOM.render(
             <Identify
                 queryableLayersFilter={() => true}
-                enabled={true} layers={[{}, {}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({})}
+                enabled={true} layers={[{}, {}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
+                />,
+            document.getElementById("container")
+        );
+        identify.setProps({point: {pixel: {x: 1, y: 1}}});
+        expect(spySendRequest.calls.length).toEqual(2);
+    });
+
+    it('creates the Identify component sends local requess on point if no url is specified', () => {
+        const testHandlers = {
+            sendRequest: () => {}
+        };
+
+        const spySendRequest = expect.spyOn(testHandlers, 'sendRequest');
+
+        const identify = ReactDOM.render(
+            <Identify
+                queryableLayersFilter={() => true}
+                enabled={true} layers={[{}, {}]} localRequest={testHandlers.sendRequest} buildRequest={() => ({url: ""})}
                 />,
             document.getElementById("container")
         );
@@ -131,7 +149,7 @@ describe('Identify', () => {
         const identify = ReactDOM.render(
             <Identify
                 queryableLayersFilter={(layer) => layer.type === "wms"}
-                enabled={true} layers={[{type: "wms"}, {type: "osm"}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({})}
+                enabled={true} layers={[{type: "wms"}, {type: "osm"}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
                 />,
             document.getElementById("container")
         );

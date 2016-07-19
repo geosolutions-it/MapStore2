@@ -22,6 +22,7 @@ const SHOW_MAPINFO_MARKER = 'SHOW_MAPINFO_MARKER';
 const HIDE_MAPINFO_MARKER = 'HIDE_MAPINFO_MARKER';
 const SHOW_REVERSE_GEOCODE = 'SHOW_REVERSE_GEOCODE';
 const HIDE_REVERSE_GEOCODE = 'HIDE_REVERSE_GEOCODE';
+const GET_VECTOR_INFO = 'GET_VECTOR_INFO';
 
 /**
  * Private
@@ -73,6 +74,16 @@ function newMapInfoRequest(reqId, reqConfig) {
         request: reqConfig
     };
 }
+
+function getVectorInfo(layer, request, metadata) {
+    return {
+        type: GET_VECTOR_INFO,
+        layer,
+        request,
+        metadata
+    };
+}
+
 
 /**
  * Sends a wms GetFeatureInfo request and dispatches the right action
@@ -185,6 +196,7 @@ module.exports = {
     HIDE_MAPINFO_MARKER,
     SHOW_REVERSE_GEOCODE,
     HIDE_REVERSE_GEOCODE,
+    GET_VECTOR_INFO,
     getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
@@ -194,5 +206,6 @@ module.exports = {
     hideMapinfoMarker,
     revGeocodeInfo,
     hideMapinfoRevGeocode,
-    showMapinfoRevGeocode
+    showMapinfoRevGeocode,
+    getVectorInfo
 };

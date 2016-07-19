@@ -14,6 +14,7 @@ const {isArray} = require('lodash');
 const assign = require('object-assign');
 const CoordinatesUtils = require('./CoordinatesUtils');
 const MapUtils = require('./MapUtils');
+
 const MapInfoUtils = {
     /**
      * specifies which info formats are currently supported
@@ -122,7 +123,20 @@ const MapInfoUtils = {
             Math.max(x0, x1, x2, x3), Math.max(y0, y1, y2, y3));
         return bounds;
     },
-    buildIdentifyRequest(layer, props) {
+    buildIdentifyVectorRequest(layer, props) {
+        return {
+            request: {
+                lat: props.point.latlng.lat,
+                lng: props.point.latlng.lng
+            },
+            metadata: {
+                fields: Object.keys(layer.features[0].properties),
+                title: layer.name
+            },
+            url: ""
+        };
+    },
+    buildIdentifyWMSRequest(layer, props) {
         /* In order to create a valid feature info request
          * we create a bbox of 101x101 pixel that wrap the point.
          * center point is repojected then is built a box of 101x101pixel around it
@@ -138,41 +152,62 @@ const MapInfoUtils = {
         const center = {x: lngCorrected, y: props.point.latlng.lat};
         let centerProjected = CoordinatesUtils.reproject(center, 'EPSG:4326', props.map.projection);
         let bounds = MapInfoUtils.getProjectedBBox(centerProjected, resolution, rotation, size, null);
+
+        return {
+            request: {
+                id: layer.id,
+                layers: layer.name,
+                query_layers: layer.name,
+                styles: layer.style,
+                x: ((widthBBox % 2) === 1) ? Math.ceil(widthBBox / 2) : widthBBox / 2,
+                y: ((widthBBox % 2) === 1) ? Math.ceil(widthBBox / 2) : widthBBox / 2,
+                height: heightBBox,
+                width: widthBBox,
+                srs: CoordinatesUtils.normalizeSRS(props.map.projection),
+                bbox: bounds.minx + "," +
+                      bounds.miny + "," +
+                      bounds.maxx + "," +
+                      bounds.maxy,
+                feature_count: props.maxItems,
+                info_format: props.format,
+                ...assign({}, layer.baseParams, props.params)
+            },
+            metadata: {
+                title: layer.title,
+                regex: layer.featureInfoRegex
+            },
+            url: isArray(layer.url) ?
+                layer.url[0] :
+                layer.url.replace(/[?].*$/g, '')
+        };
+    },
+    buildIdentifyRequest(layer, props) {
         if (layer.type === 'wms') {
-            return {
-                request: {
-                    id: layer.id,
-                    layers: layer.name,
-                    query_layers: layer.name,
-                    styles: layer.style,
-                    x: ((widthBBox % 2) === 1) ? Math.ceil(widthBBox / 2) : widthBBox / 2,
-                    y: ((widthBBox % 2) === 1) ? Math.ceil(widthBBox / 2) : widthBBox / 2,
-                    height: heightBBox,
-                    width: widthBBox,
-                    srs: CoordinatesUtils.normalizeSRS(props.map.projection),
-                    bbox: bounds.minx + "," +
-                          bounds.miny + "," +
-                          bounds.maxx + "," +
-                          bounds.maxy,
-                    feature_count: props.maxItems,
-                    info_format: props.format,
-                    ...assign({}, layer.baseParams, props.params)
-                },
-                metadata: {
-                    title: layer.title,
-                    regex: layer.featureInfoRegex
-                },
-                url: isArray(layer.url) ?
-                    layer.url[0] :
-                    layer.url.replace(/[?].*$/g, '')
-            };
+            return MapInfoUtils.buildIdentifyWMSRequest(layer, props);
+        }
+        if (layer.type === 'vector') {
+            return MapInfoUtils.buildIdentifyVectorRequest(layer, props);
         }
         return {};
     },
     getValidator(format) {
-        return FeatureInfoUtils.Validator[INFO_FORMATS_BY_MIME_TYPE[format]] || {
+        const defaultValidator = {
             getValidResponses: (responses) => responses,
             getNoValidResponses: () => []
+        };
+        return {
+            getValidResponses: (responses) => {
+                return responses.reduce((previous, current) => {
+                    const valid = (FeatureInfoUtils.Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getValidResponses([current]);
+                    return [...previous, ...valid];
+                }, []);
+            },
+            getNoValidResponses: (responses) => {
+                return responses.reduce((previous, current) => {
+                    const valid = (FeatureInfoUtils.Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getNoValidResponses([current]);
+                    return [...previous, ...valid];
+                }, []);
+            }
         };
     },
     getViewers() {
@@ -184,7 +219,7 @@ const MapInfoUtils = {
     },
     defaultQueryableFilter(l) {
         return l.visibility &&
-            l.type === 'wms' &&
+            (l.type === 'wms' || l.type === 'vector') &&
             (l.queryable === undefined || l.queryable) &&
             l.group !== "background"
         ;

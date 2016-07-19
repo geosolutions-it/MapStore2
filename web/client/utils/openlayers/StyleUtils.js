@@ -30,7 +30,7 @@ const toVectorStyle = function(layer, style) {
             switch (getGeomType(layer)) {
                 case 'Polygon':
                 case 'MultiPolygon': {
-                    newLayer.style = new ol.style.Style({
+                    newLayer.nativeStyle = new ol.style.Style({
                         stroke: stroke,
                         fill: fill
                     });
@@ -39,14 +39,14 @@ const toVectorStyle = function(layer, style) {
                 case 'MultiLineString':
                 case 'LineString':
                 {
-                    newLayer.style = new ol.style.Style({
+                    newLayer.nativeStyle = new ol.style.Style({
                         stroke: stroke
                     });
                     break;
                 }
                 case 'Point':
                 case 'MultiPoint': {
-                    newLayer.style = new ol.style.Style({
+                    newLayer.nativeStyle = new ol.style.Style({
                         image: new ol.style.Circle({
                             radius: style.radius,
                             fill: fill,

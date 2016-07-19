@@ -20,7 +20,7 @@ var JSONViewer = React.createClass({
     render() {
         const RowViewer = this.props.rowViewer || PropertiesViewer;
         return (<div>
-                {this.props.response.features.map((feature, i) => {
+                {(this.props.response.features || []).map((feature, i) => {
                     return <RowViewer key={i} title={feature.id} exclude={["bbox"]} {...feature.properties}/>;
                 })}
             </div>
