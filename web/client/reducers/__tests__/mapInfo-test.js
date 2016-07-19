@@ -118,6 +118,42 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[1].layerMetadata).toBe("meta");
     });
 
+    it('creates a feature info data from vector info request', () => {
+        let testAction = {
+            type: 'GET_VECTOR_INFO',
+            layer: {
+                features: [{
+                    "type": "Feature",
+                     "geometry": {
+                       "type": "Polygon",
+                       "coordinates": [
+                         [ [9.0, 42.0], [11.0, 42.0], [11.0, 44.0],
+                           [9.0, 44.0], [9.0, 42.0] ]
+                         ]
+                     },
+                     "properties": {
+                       "prop0": "value0",
+                       "prop1": {"this": "that"}
+                     }
+                }]
+            },
+            request: {
+                lng: 10.0,
+                lat: 43.0
+            },
+            metadata: "meta"
+        };
+
+        let state = mapInfo(appState, testAction);
+        expect(state.responses).toExist();
+        expect(state.responses.length).toBe(1);
+        expect(state.responses[0].response).toExist();
+        expect(state.responses[0].response.features.length).toBe(1);
+        expect(state.responses[0].format).toBe('JSON');
+        expect(state.responses[0].queryParams.lng).toBe(10.0);
+        expect(state.responses[0].layerMetadata).toBe("meta");
+    });
+
     it('creates a new mapinfo request', () => {
         let state = mapInfo({}, {type: 'NEW_MAPINFO_REQUEST', reqId: 1, request: "request"});
         expect(state.requests).toExist();

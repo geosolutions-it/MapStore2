@@ -19,13 +19,15 @@ const {
     SHOW_MAPINFO_MARKER,
     HIDE_MAPINFO_MARKER,
     SHOW_REVERSE_GEOCODE,
-    HIDE_REVERSE_GEOCODE
+    HIDE_REVERSE_GEOCODE,
+    GET_VECTOR_INFO
 } = require('../actions/mapInfo');
 
 const {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
 const {head} = require('lodash');
+const {inside} = require('turf');
 
 function receiveResponse(state, action, type) {
     const request = head((state.requests || []).filter((req) => req.reqId === action.reqId));
@@ -106,6 +108,32 @@ function mapInfo(state = {}, action) {
                 showMarker: false,
                 responses: [],
                 requests: []
+            });
+        }
+        case GET_VECTOR_INFO: {
+            const point = {
+              "type": "Feature",
+              "properties": {},
+              "geometry": {
+                "type": "Point",
+                "coordinates": [action.request.lng, action.request.lat]
+              }
+            };
+            const intersected = action.layer.features.filter((feature) => inside(point, feature));
+            const responses = state.responses || [];
+            return assign({}, state, {
+                requests: [...state.requests, {}],
+                responses: [...responses, {
+                    response: {
+                        crs: null,
+                        features: intersected,
+                        totalFeatures: "unknown",
+                        type: "FeatureCollection"
+                    },
+                    queryParams: action.request,
+                    layerMetadata: action.metadata,
+                    format: 'JSON'
+                }]
             });
         }
         default:

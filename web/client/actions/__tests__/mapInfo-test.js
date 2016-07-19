@@ -17,13 +17,15 @@ var {
     CHANGE_MAPINFO_FORMAT,
     SHOW_REVERSE_GEOCODE,
     HIDE_REVERSE_GEOCODE,
+    GET_VECTOR_INFO,
     getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
     purgeMapInfoResults,
     changeMapInfoFormat,
     showMapinfoRevGeocode,
-    hideMapinfoRevGeocode
+    hideMapinfoRevGeocode,
+    getVectorInfo
 } = require('../mapInfo');
 
 describe('Test correctness of the map actions', () => {
@@ -128,6 +130,15 @@ describe('Test correctness of the map actions', () => {
                 }
             }
         });
+    });
+
+    it('gets vector info', () => {
+        const retval = getVectorInfo('layer', 'request', 'metadata');
+
+        expect(retval.type).toBe(GET_VECTOR_INFO);
+        expect(retval.layer).toBe('layer');
+        expect(retval.request).toBe('request');
+        expect(retval.metadata).toBe('metadata');
     });
 
     it('change map info state', () => {

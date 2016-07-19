@@ -13,7 +13,7 @@ const {createSelector} = require('reselect');
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
 
-const {getFeatureInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode} = require('../actions/mapInfo');
+const {getFeatureInfo, getVectorInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode} = require('../actions/mapInfo');
 const {changeMousePointer} = require('../actions/map');
 const {changeMapInfoFormat} = require('../actions/mapInfo');
 
@@ -42,6 +42,7 @@ const selector = createSelector([
 // result panel
 const IdentifyPlugin = connect(selector, {
     sendRequest: getFeatureInfo,
+    localRequest: getVectorInfo,
     purgeResults: purgeMapInfoResults,
     changeMousePointer,
     showMarker: showMapinfoMarker,

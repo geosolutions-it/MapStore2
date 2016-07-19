@@ -173,7 +173,8 @@ let LeafletMap = React.createClass({
                 map: map,
                 projection: mapProj,
                 zoomOffset: this.zoomOffset,
-                onInvalid: this.props.onInvalidLayer
+                onInvalid: this.props.onInvalidLayer,
+                onClick: this.props.onClick
             }) : null;
         }) : null;
         return (

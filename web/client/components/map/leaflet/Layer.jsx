@@ -16,7 +16,8 @@ const LeafletLayer = React.createClass({
         options: React.PropTypes.object,
         position: React.PropTypes.number,
         zoomOffset: React.PropTypes.number,
-        onInvalid: React.PropTypes.func
+        onInvalid: React.PropTypes.func,
+        onClick: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -52,7 +53,7 @@ const LeafletLayer = React.createClass({
         if (this.props.children) {
             const layer = this.layer;
             const children = layer ? React.Children.map(this.props.children, child => {
-                return child ? React.cloneElement(child, {container: layer, styleName: this.props.options && this.props.options.styleName}) : null;
+                return child ? React.cloneElement(child, {container: layer, styleName: this.props.options && this.props.options.styleName, onClick: this.props.onClick}) : null;
             }) : null;
             return (
                 <noscript>
