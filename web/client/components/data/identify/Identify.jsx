@@ -42,6 +42,7 @@ const Identify = React.createClass({
         changeMousePointer: React.PropTypes.func,
         maxItems: React.PropTypes.number,
         excludeParams: React.PropTypes.array,
+        excludeOptions: React.PropTypes.array,
         showRevGeocode: React.PropTypes.func,
         hideRevGeocode: React.PropTypes.func,
         showModalReverse: React.PropTypes.bool,
@@ -92,6 +93,7 @@ const Identify = React.createClass({
             layers: [],
             maxItems: 10,
             excludeParams: ["SLD_BODY"],
+            excludeOptions: [],
             panelClassName: "panel default-panel",
             headerClassName: "panel-heading",
             bodyClassName: "panel-body",
@@ -215,26 +217,23 @@ const Identify = React.createClass({
         }
         return false;
     },
-    filterRequestParams(layer) {
-        let options = layer;
-        let excludeList = this.props.excludeParams;
-        if (layer.params && excludeList && excludeList.length > 0) {
-            options = Object.keys(layer).reduce((op, next) => {
-                if (next !== "params") {
-                    op[next] = layer[next];
-                }else {
-                    let params = layer[next];
-                    op[next] = Object.keys(params).reduce((pr, n) => {
-                        if (excludeList.findIndex((el) => {return (el === n); }) === -1) {
-                            pr[n] = params[n];
-                        }
-                        return pr;
-                    }, {});
-                }
-                return op;
-            }, {});
-
-        }
+   filterRequestParams(layer) {
+        let excludeOpt = this.props.excludeOptions || [];
+        let excludeList = this.props.excludeParams || [];
+        let options = Object.keys(layer).reduce((op, next) => {
+            if (next !== "params" && excludeOpt.indexOf(next) === -1) {
+                op[next] = layer[next];
+            }else if (next === "params" && excludeList.length > 0) {
+                let params = layer[next];
+                op[next] = Object.keys(params).reduce((pr, n) => {
+                    if (excludeList.findIndex((el) => {return (el === n); }) === -1) {
+                        pr[n] = params[n];
+                    }
+                    return pr;
+                }, {});
+            }
+            return op;
+        }, {});
         return options;
     }
 });
