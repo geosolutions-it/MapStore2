@@ -18,7 +18,7 @@ const ShapeFileUploadAndStyle = connect((state) => (
             }
         ), {
     onShapeError: onShapeError
-})(require('../../components/shapefile/ShapeFileUploadAndStyle'));
+})(require('../../components/shapefile/ShapefileUploadAndStyle'));
 
 const StylePolygon = connect((state) => (
         {
