@@ -21,6 +21,7 @@ webpackConfig.plugins = [
     new NormalModuleReplacementPlugin(/openlayers$/, path.join(__dirname, "web", "client", "libs", "openlayers")),
     new NormalModuleReplacementPlugin(/proj4$/, path.join(__dirname, "web", "client", "libs", "proj4")),
     new UglifyJsPlugin({
+        sourceMap: false,
         compress: {warnings: false},
         mangle: true
     })
