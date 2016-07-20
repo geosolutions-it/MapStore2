@@ -148,7 +148,7 @@ const DrawSupport = React.createClass({
             this.addLayer(newProps);
         }else {
             this.drawLayer.clearLayers();
-            if (newProps.features && newProps.features.lenght > 0) {
+            if (newProps.features && newProps.features.length > 0) {
                 this.drawLayer.addData(this.convertFeaturesPolygonToPoint(newProps.features, this.props.drawMethod));
             }
         }
