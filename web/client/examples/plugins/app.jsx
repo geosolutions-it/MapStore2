@@ -39,6 +39,8 @@ const SaveAndLoad = require('./components/SaveAndLoad');
 const Debug = require('../../components/development/Debug');
 const store = require('./store')(plugins);
 
+const {savePluginConfig} = require('./actions/config');
+
 require('./assets/css/plugins.css');
 
 let mapType = 'leaflet';
@@ -59,6 +61,7 @@ const togglePlugin = (pluginName, callback) => {
 const configurePlugin = (pluginName, callback, cfg) => {
     try {
         userCfg[pluginName] = JSON.parse(cfg);
+        store.dispatch(savePluginConfig(pluginName, userCfg[pluginName]));
     } catch(e) {
         /*eslint-disable */
         alert('Error in JSON');
@@ -75,6 +78,7 @@ const renderPlugins = (callback) => {
         return (<PluginConfigurator key={pluginName} pluginName={pluginName} pluginsCfg={pluginsCfg.standard}
             onToggle={togglePlugin.bind(null, pluginName, callback)}
             onApplyCfg={configurePlugin.bind(null, plugin, callback)}
+            pluginConfig={userCfg[pluginName + 'Plugin'] && JSON.stringify(userCfg[pluginName + 'Plugin'], null, 2) || "{}"}
             />);
     });
 };

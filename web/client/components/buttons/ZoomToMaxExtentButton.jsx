@@ -39,7 +39,8 @@ var ZoomToMaxExtentButton = React.createClass({
         tooltipPlace: React.PropTypes.string,
         className: React.PropTypes.string,
         useInitialExtent: React.PropTypes.bool,
-        bsStyle: React.PropTypes.string
+        bsStyle: React.PropTypes.string,
+        style: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -57,6 +58,7 @@ var ZoomToMaxExtentButton = React.createClass({
         return this.addTooltip(
             <Button
                 id={this.props.id}
+                style={this.props.style}
                 bsSize={this.props.btnSize}
                 onClick={() => this.props.useInitialExtent ? this.zoomToInitialExtent() : this.zoomToMaxExtent()}
                 className={this.props.className}

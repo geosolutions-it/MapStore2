@@ -8,23 +8,45 @@
 const React = require('react');
 const {Input, Button, Glyphicon} = require('react-bootstrap');
 
+const Codemirror = require('react-codemirror');
+require('react-codemirror/node_modules/codemirror/lib/codemirror.css');
+
+require('react-codemirror/node_modules/codemirror/mode/javascript/javascript');
+
 
 const PluginConfigurator = React.createClass({
     propTypes: {
         pluginName: React.PropTypes.string,
         pluginsCfg: React.PropTypes.array,
         onToggle: React.PropTypes.func,
-        onApplyCfg: React.PropTypes.func
+        onApplyCfg: React.PropTypes.func,
+        pluginConfig: React.PropTypes.string
     },
     getInitialState() {
         return {
-            configVisible: false
+            configVisible: false,
+            code: "{}"
         };
+    },
+    componentWillMount() {
+        this.setState({
+            code: this.props.pluginConfig
+        });
+    },
+    componentWillReceiveProps(newProps) {
+        if (newProps.pluginConfig !== this.props.pluginConfig) {
+            this.setState({
+                code: newProps.pluginConfig
+            });
+        }
     },
     renderCfg() {
         return this.state.configVisible ? [
             <label key="config-label">Enter a JSON object to configure plugin properties</label>,
-            <Input key="config-field" type="textarea" ref="cfg"/>,
+            <Codemirror key="code-mirror" value={this.state.code} onChange={this.updateCode} options={{
+                    mode: {name: "javascript", json: true},
+                    lineNumbers: true
+                }}/>,
             <Button key="apply-cfg" onClick={this.applyCfg}>Apply</Button>
         ] : null;
     },
@@ -40,11 +62,16 @@ const PluginConfigurator = React.createClass({
             {this.renderCfg()}
         </li>);
     },
+    updateCode: function(newCode) {
+        this.setState({
+            code: newCode
+        });
+    },
     toggleCfg() {
         this.setState({configVisible: !this.state.configVisible});
     },
     applyCfg() {
-        this.props.onApplyCfg(this.refs.cfg.getValue());
+        this.props.onApplyCfg(this.state.code);
     }
 });
 

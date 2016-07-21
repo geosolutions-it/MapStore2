@@ -37,7 +37,8 @@ let SearchBar = React.createClass({
         hideOnBlur: React.PropTypes.bool,
         blurResetDelay: React.PropTypes.number,
         typeAhead: React.PropTypes.bool,
-        searchText: React.PropTypes.string
+        searchText: React.PropTypes.string,
+        style: React.PropTypes.object
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -99,7 +100,7 @@ let SearchBar = React.createClass({
             placeholder = this.props.placeholder;
         }
         return (
-            <div className={"MapSearchBar" + (this.props.className ? " " + this.props.className : "")}>
+            <div style={this.props.style} className={"MapSearchBar" + (this.props.className ? " " + this.props.className : "")}>
                 <Input
                     key="search-input"
                     placeholder={placeholder}

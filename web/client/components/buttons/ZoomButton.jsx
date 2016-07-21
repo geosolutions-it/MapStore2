@@ -46,6 +46,7 @@ const ZoomButton = React.createClass({
         return this.addTooltip(
             <Button
                 id={this.props.id}
+                style={this.props.style}
                 onClick={() => this.props.onZoom(this.props.currentZoom + this.props.step)}
                 className={this.props.className}
                 tooltip={this.props.tooltip}

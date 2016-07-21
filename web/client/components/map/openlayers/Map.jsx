@@ -168,6 +168,14 @@ var OpenlayersMap = React.createClass({
             this.setMousePointer(newProps.mousePointer);
         }
 
+        if (newProps.zoomControl !== this.props.zoomControl) {
+            if (newProps.zoomControl) {
+                this.map.addControl(new ol.control.Zoom());
+            } else {
+                this.map.removeControl(this.map.getControls().getArray().filter((ctl) => ctl instanceof ol.control.Zoom)[0]);
+            }
+        }
+
         if (this.map && this.props.id !== newProps.mapStateSource) {
             this._updateMapPositionFromNewProps(newProps);
         }
