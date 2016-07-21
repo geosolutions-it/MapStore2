@@ -146,19 +146,19 @@ const ShapeFileUploadAndStyle = React.createClass({
         if (!this.state.useDefaultStyle) {
             styledLayer = StyleUtils.toVectorStyle(styledLayer, this.props.shapeStyle);
         }
-        let bbox = this.props.bbox;
         Promise.resolve(this.props.addShapeLayer( styledLayer )).then(() => {
             this.props.shapeLoading(false);
 
-            // calculate the max bbox that contain all shapefiles
-            let layers = this.props.layers;
-            layers[0].features.reduce((total, feature) => {
-                let actualBBox = feature.geometry.bbox;
-                bbox[0] = Math.min(bbox[0], actualBBox[0]); // minx
-                bbox[1] = Math.min(bbox[1], actualBBox[1]); // miny
-                bbox[2] = Math.max(bbox[2], actualBBox[2]); // maxx
-                bbox[3] = Math.max(bbox[3], actualBBox[3]); // maxy
-            }, bbox);
+            // calculates the bbox that contain last shapefile and the previous added
+            const layers = this.props.layers;
+            const bbox = layers[0].features.reduce((bboxtotal, feature) => {
+                return [
+                    Math.min(bboxtotal[0], feature.geometry.bbox[0]),
+                    Math.min(bboxtotal[1], feature.geometry.bbox[1]),
+                    Math.max(bboxtotal[2], feature.geometry.bbox[2]),
+                    Math.max(bboxtotal[3], feature.geometry.bbox[3])
+                ];
+            }, this.props.bbox);
             if (this.state.zoomOnShapefiles) {
                 this.props.updateShapeBBox(bbox);
                 this.props.onZoomSelected(bbox, "EPSG:4326");
