@@ -11,11 +11,12 @@ const shapefile = require('../shapefile');
 const {
     ON_SHAPE_CHOOSEN,
     ON_SHAPE_ERROR,
-    SHAPE_LOADING
+    SHAPE_LOADING,
+    UPDATE_SHAPE_BBOX
 } = require('../../actions/shapefile');
 
 describe('Test the shapefile reducer', () => {
-    it('shepefile defaults', () => {
+    it('shapefile defaults', () => {
         const state = shapefile(undefined, {
             type: ''
         });
@@ -24,7 +25,7 @@ describe('Test the shapefile reducer', () => {
         expect(state.loading).toBe(false);
 
     });
-    it('shepefile choosen', () => {
+    it('shapefile choosen', () => {
         const state = shapefile(undefined, {
             type: ON_SHAPE_CHOOSEN,
             layers: 'test'
@@ -32,7 +33,7 @@ describe('Test the shapefile reducer', () => {
         expect(state.layers).toBe('test');
     });
 
-    it('shepefile error', () => {
+    it('shapefile error', () => {
         const state = shapefile(undefined, {
             type: ON_SHAPE_ERROR,
             message: 'error'
@@ -40,11 +41,20 @@ describe('Test the shapefile reducer', () => {
         expect(state.error).toBe('error');
     });
 
-    it('shepefile loading', () => {
+    it('shapefile loading', () => {
         const state = shapefile(undefined, {
             type: SHAPE_LOADING,
             status: true
         });
         expect(state.loading).toBe(true);
+    });
+
+    it('shapefile updateShapeBBox', () => {
+        const bbox = [0, 0, 0, 0];
+        const state = shapefile(undefined, {
+            type: UPDATE_SHAPE_BBOX,
+            bbox: bbox
+        });
+        expect(state.bbox).toBe(bbox);
     });
 });

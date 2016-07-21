@@ -11,9 +11,11 @@ const {
     ON_SHAPE_CHOOSEN,
     ON_SHAPE_ERROR,
     SHAPE_LOADING,
+    UPDATE_SHAPE_BBOX,
     onShapeChoosen,
     onShapeError,
-    shapeLoading
+    shapeLoading,
+    updateShapeBBox
 } = require('../shapefile');
 
 describe('Test correctness of the shapefile actions', () => {
@@ -37,6 +39,14 @@ describe('Test correctness of the shapefile actions', () => {
         expect(retVal).toExist();
         expect(retVal.type).toBe(SHAPE_LOADING);
         expect(retVal.status).toBe(true);
+    });
+
+    it('updateShapeBBox', () => {
+        const bbox = [0, 0, 0, 0];
+        const retVal = updateShapeBBox(bbox);
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(UPDATE_SHAPE_BBOX);
+        expect(retVal.bbox).toBe(bbox);
     });
 
 });

@@ -381,6 +381,8 @@
             "title": "Add Local Shape File",
             "tooltip": "Add a local shape file to the map.",
             "placeholder": "Drop your file here or click to select shape file to import.",
+            "defaultStyle": "Default style",
+            "zoom": "Zoom on the shapefiles",
             "error": {"select": "Select one or more zip file"},
             "add": "Add",
             "cancel": "Cancel"

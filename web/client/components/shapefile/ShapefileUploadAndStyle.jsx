@@ -8,7 +8,7 @@
 
 const React = require('react');
 
-
+const Message = require('../../components/I18N/Message');
 const LayersUtils = require('../../utils/LayersUtils');
 const FileUtils = require('../../utils/FileUtils');
 let StyleUtils;
@@ -20,6 +20,7 @@ const SelectShape = require('./SelectShape');
 
 const ShapeFileUploadAndStyle = React.createClass({
     propTypes: {
+        bbox: React.PropTypes.array,
         layers: React.PropTypes.array,
         selected: React.PropTypes.object,
         style: React.PropTypes.object,
@@ -30,6 +31,8 @@ const ShapeFileUploadAndStyle = React.createClass({
         shapeLoading: React.PropTypes.func,
         onSelectLayer: React.PropTypes.func,
         onLayerAdded: React.PropTypes.func,
+        onZoomSelected: React.PropTypes.func,
+        updateShapeBBox: React.PropTypes.func,
         error: React.PropTypes.string,
         mapType: React.PropTypes.string,
         buttonSize: React.PropTypes.string,
@@ -45,7 +48,8 @@ const ShapeFileUploadAndStyle = React.createClass({
             mapType: "leaflet",
             buttonSize: "large",
             uploadOptions: {},
-            createId: () => undefined
+            createId: () => undefined,
+            bbox: null
         };
     },
     componentWillMount() {
@@ -53,7 +57,8 @@ const ShapeFileUploadAndStyle = React.createClass({
     },
     getInitialState() {
         return {
-            useDefaultStyle: false
+            useDefaultStyle: false,
+            zoomOnShapefiles: true
         };
     },
     getGeomType(layer) {
@@ -72,13 +77,21 @@ const ShapeFileUploadAndStyle = React.createClass({
     renderDefaultStyle() {
         return (this.props.selected) ? (
             <Row>
-                <Col xs={1}>
+                <Col xs={2}>
                     <input aria-label="..." type="checkbox" defaultChecked={this.state.useDefaultStyle} onChange={(e) => {this.setState({useDefaultStyle: e.target.checked}); }}/>
                 </Col>
-                <Col style={{paddingLeft: 0, paddingTop: 1}} xs={5}>
-                    <label>Default style</label>
+                <Col style={{paddingLeft: 0, paddingTop: 1}} xs={10}>
+                    <label><Message msgId="shapefile.defaultStyle"/></label>
                 </Col>
-            </Row>) : null;
+
+                <Col xs={2}>
+                    <input aria-label="..." type="checkbox" defaultChecked={this.state.zoomOnShapefiles} onChange={(e) => {this.setState({zoomOnShapefiles: e.target.checked}); }}/>
+                </Col>
+                <Col style={{paddingLeft: 0, paddingTop: 1}} xs={10}>
+                    <label><Message msgId="shapefile.zoom"/></label>
+                </Col>
+            </Row>
+        ) : null;
     },
     render() {
         return (
@@ -97,7 +110,7 @@ const ShapeFileUploadAndStyle = React.createClass({
             {this.renderDefaultStyle()}
 
                 {(this.props.selected) ?
-                (<Row >
+                (<Row>
                     <Col xsOffset={6} xs={3}> <Button bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={() => {this.props.onShapeChoosen(null); }}>{this.props.cancelMessage}</Button></Col>
                     <Col xs={3}> <Button bsStyle="primary" bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={this.addToMap}>{this.props.addMessage}</Button></Col>
                 </Row>
@@ -127,14 +140,29 @@ const ShapeFileUploadAndStyle = React.createClass({
             this.props.onShapeError(e.message || e);
         });
     },
-    addToMap() {
+        addToMap() {
         this.props.shapeLoading(true);
         let styledLayer = this.props.selected;
         if (!this.state.useDefaultStyle) {
             styledLayer = StyleUtils.toVectorStyle(styledLayer, this.props.shapeStyle);
         }
+        let bbox = this.props.bbox;
         Promise.resolve(this.props.addShapeLayer( styledLayer )).then(() => {
             this.props.shapeLoading(false);
+
+            // calculate the max bbox that contain all shapefiles
+            let layers = this.props.layers;
+            layers[0].features.reduce((total, feature) => {
+                let actualBBox = feature.geometry.bbox;
+                bbox[0] = Math.min(bbox[0], actualBBox[0]); // minx
+                bbox[1] = Math.min(bbox[1], actualBBox[1]); // miny
+                bbox[2] = Math.max(bbox[2], actualBBox[2]); // maxx
+                bbox[3] = Math.max(bbox[3], actualBBox[3]); // maxy
+            }, bbox);
+            if (this.state.zoomOnShapefiles) {
+                this.props.updateShapeBBox(bbox);
+                this.props.onZoomSelected(bbox, "EPSG:4326");
+            }
             this.props.onLayerAdded(this.props.selected);
         }).catch((e) => {
             this.props.shapeLoading(false);

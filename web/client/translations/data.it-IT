@@ -382,6 +382,8 @@
             "title": "Carica Shape File",
             "tooltip": "Aggiungi uno shape file alla mappa.",
             "placeholder": "Trascina qui il file o fai click per selezionare lo shape file da importare.",
+            "defaultStyle": "Stile di default",
+            "zoom": "Zoom sugli shapefile",
             "error": {"select": "Seleziona Shapefile compresso"},
             "add": "Importa",
             "cancel": "Annulla"

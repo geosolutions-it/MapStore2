@@ -11,7 +11,8 @@ const {
     ON_SHAPE_ERROR,
     ON_SELECT_LAYER,
     SHAPE_LOADING,
-    ON_LAYER_ADDED
+    ON_LAYER_ADDED,
+    UPDATE_SHAPE_BBOX
 } = require('../actions/shapefile');
 
 const assign = require('object-assign');
@@ -20,14 +21,15 @@ const initialState = {
     layers: null,
     error: null,
     loading: false,
-    selected: null
+    selected: null,
+    bbox: [190, 190, -190, -190]
 };
 
 function shapefile(state = initialState, action) {
     switch (action.type) {
         case ON_SHAPE_CHOOSEN: {
             let selected = (action.layers && action.layers[0]) ? action.layers[0] : null;
-            return assign({}, state, {layers: action.layers, selected: selected});
+            return assign({}, state, {layers: action.layers, selected: selected, bbox: [190, 190, -190, -190]});
         }
         case ON_SHAPE_ERROR: {
             return assign({}, state, {error: action.message});
@@ -43,7 +45,10 @@ function shapefile(state = initialState, action) {
                 return action.layer.name !== l.name;
             }, this);
             let selected = (newLayers && newLayers[0]) ? newLayers[0] : null;
-            return assign({}, state, {layers: newLayers, selected: selected});
+            return assign({}, state, {layers: newLayers, selected: selected}, !selected ? {bbox: [190, 190, -190, -190]} : {});
+        }
+        case UPDATE_SHAPE_BBOX: {
+            return assign({}, state, {bbox: action.bbox});
         }
         default:
             return state;
