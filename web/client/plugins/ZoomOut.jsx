@@ -13,7 +13,7 @@ const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {mapSelector} = require('../selectors/map');
 // TODO: make step and glyphicon configurable
-const selector = createSelector([mapSelector], (map) => ({currentZoom: map && map.zoom, id: "zoomin-btn", step: -1, glyphicon: "minus"}));
+const selector = createSelector([mapSelector], (map) => ({currentZoom: map && map.zoom, id: "zoomout-btn", step: -1, glyphicon: "minus"}));
 
 const {changeZoomLevel} = require('../actions/map');
 
@@ -22,6 +22,8 @@ const Message = require('../components/I18N/Message');
 const ZoomOutButton = connect(selector, {
     onZoom: changeZoomLevel
 })(require('../components/buttons/ZoomButton'));
+
+require('./zoom/zoom.css');
 
 const assign = require('object-assign');
 

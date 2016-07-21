@@ -21,6 +21,8 @@ const ZoomToMaxExtentButton = connect(selector, {
 
 const Message = require('../components/I18N/Message');
 
+require('./zoomall/zoomall.css');
+
 const ZoomAllPlugin = React.createClass({
     render() {
         return (

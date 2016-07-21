@@ -151,7 +151,13 @@ let LeafletMap = React.createClass({
         if (this.map && newProps.mapStateSource !== this.props.id) {
             this._updateMapPositionFromNewProps(newProps);
         }
-
+        if (newProps.zoomControl !== this.props.zoomControl) {
+            if (newProps.zoomControl) {
+                this.map.addControl(L.control.zoom());
+            } else {
+                this.map.removeControl(this.map.zoomControl);
+            }
+        }
         if (this.map && newProps.resize !== this.props.resize) {
             setTimeout(() => {
                 this.map.invalidateSize(false);

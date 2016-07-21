@@ -14,6 +14,7 @@ const {isEqual} = require('lodash');
 var ScaleBox = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
+        style: React.PropTypes.object,
         scales: React.PropTypes.array,
         currentZoomLvl: React.PropTypes.number,
         onChange: React.PropTypes.func,
@@ -53,7 +54,7 @@ var ScaleBox = React.createClass({
         </Input>;
         return (
 
-            <div id={this.props.id} >
+            <div id={this.props.id} style={this.props.style}>
                 {control}
             </div>
         );

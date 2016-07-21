@@ -20,7 +20,8 @@ module.exports = (plugins) => {
         browser: require('../../reducers/browser'),
         map: () => {return null; },
         mapInitialConfig: () => {return null; },
-        layers: () => {return null; }
+        layers: () => {return null; },
+        pluginsConfig: require('./reducers/config')
     });
 
     const rootReducer = (state, action) => {

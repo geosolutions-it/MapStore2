@@ -23,6 +23,8 @@ const ZoomInButton = connect(selector, {
     onZoom: changeZoomLevel
 })(require('../components/buttons/ZoomButton'));
 
+require('./zoom/zoom.css');
+
 const assign = require('object-assign');
 
 module.exports = {

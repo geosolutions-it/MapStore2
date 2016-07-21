@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {MY_ACTION} = require('../actions/my');
+const {SAVE_PLUGIN_CONFIG} = require('../actions/config');
+const assign = require('object-assign');
 
 function my(state = {}, action) {
     switch (action.type) {
-        case MY_ACTION: {
-            return {content: action.payload};
+        case SAVE_PLUGIN_CONFIG: {
+            return assign({}, state, {[action.plugin]: action.cfg});
         }
         default:
             return state;

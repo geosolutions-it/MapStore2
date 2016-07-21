@@ -57,9 +57,6 @@ var LocateBtn = React.createClass({
         }
         this.props.onClick(status);
     },
-    shouldComponentUpdate(nextProps) {
-        return this.props.locate !== nextProps.locate;
-    },
     renderButton() {
         const geoLocationDisabled = this.props.locate === "PERMISSION_DENIED";
         return (
