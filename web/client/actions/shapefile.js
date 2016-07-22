@@ -10,6 +10,7 @@ const ON_SHAPE_ERROR = 'ON_SHAPE_ERROR';
 const ON_SELECT_LAYER = 'ON_SELECT_LAYER';
 const SHAPE_LOADING = 'SHAPE_LOADING';
 const ON_LAYER_ADDED = 'ON_LAYER_ADDED';
+const UPDATE_SHAPE_BBOX = 'UPDATE_SHAPE_BBOX';
 
 
 function onShapeChoosen(layers) {
@@ -42,15 +43,24 @@ function onLayerAdded(layer) {
         layer
     };
 }
+function updateShapeBBox(bbox) {
+    return {
+        type: UPDATE_SHAPE_BBOX,
+        bbox
+    };
+}
+
 module.exports = {
     ON_SHAPE_CHOOSEN,
     ON_SHAPE_ERROR,
     SHAPE_LOADING,
     ON_SELECT_LAYER,
     ON_LAYER_ADDED,
+    UPDATE_SHAPE_BBOX,
     onShapeChoosen,
     onShapeError,
     shapeLoading,
     onSelectLayer,
-    onLayerAdded
+    onLayerAdded,
+    updateShapeBBox
 };
