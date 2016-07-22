@@ -147,7 +147,8 @@ axios.interceptors.request.use(config => {
             urlParts[3] === location.hostname;
         let uPort = urlParts[4];
         let lPort = location.port;
-        if (uPort !== 80 && uPort !== "" || lPort !== "80" && lPort !== "") {
+        let defaultPort = location.protocol.indexOf("https") === 0 ? 443 : 80;
+        if (uPort !== defaultPort && uPort !== "" || lPort !== ("" + defaultPort) && lPort !== "") {
             sameOrigin = sameOrigin && uPort === lPort;
         }
     }
