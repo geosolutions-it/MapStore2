@@ -30,9 +30,9 @@ var ScaleBar = React.createClass({
             this.props.map.addControl(this.scalebar);
             let scaleDom = document.getElementsByClassName('ol-scale-line').item(0);
             if (scaleDom) {
-                scaleDom.style.backgroundColor = 'rgba(46, 89, 141, 0.8)';
-                scaleDom.style.padding = 0;
-                scaleDom.style.borderRadius = 0;
+                scaleDom.style.backgroundColor = 'rgba(7, 138, 163, 1)';
+                scaleDom.style.color = 'white';
+                scaleDom.style.borderColor = 'black';
             }
         }
     },
