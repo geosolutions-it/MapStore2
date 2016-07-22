@@ -29,6 +29,7 @@ var DefaultLayer = React.createClass({
         updateNode: React.PropTypes.func,
         activateLegendTool: React.PropTypes.bool,
         activateSettingsTool: React.PropTypes.bool,
+        settingsText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         opacityText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         saveText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         closeText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
@@ -62,7 +63,7 @@ var DefaultLayer = React.createClass({
             tools.push(
                 <LayersTool key="toolsettings"
                         style={{"float": "right", cursor: "pointer"}}
-                        glyph="adjust"
+                        glyph="cog"
                         onClick={(node) => this.props.onSettings(node.id, "layers",
                             {opacity: parseFloat(node.opacity !== undefined ? node.opacity : 1)})}/>
             );
@@ -72,8 +73,10 @@ var DefaultLayer = React.createClass({
                                {...this.props.settingsOptions}
                                hideSettings={this.props.hideSettings}
                                settings={this.props.settings}
+                               element={this.props.node}
                                updateSettings={this.props.updateSettings}
                                updateNode={this.props.updateNode}
+                               titleText={this.props.settingsText}
                                opacityText={this.props.opacityText}
                                saveText={this.props.saveText}
                                closeText={this.props.closeText}/>
