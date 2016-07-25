@@ -31,7 +31,8 @@ const Catalog = React.createClass({
         chooseCatalogUrl: React.PropTypes.bool,
         showGetCapLinks: React.PropTypes.bool,
         addAuthentication: React.PropTypes.bool,
-        records: React.PropTypes.array
+        records: React.PropTypes.array,
+        gridOptions: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -114,7 +115,7 @@ const Catalog = React.createClass({
     },
     renderRecords() {
         return (<div>
-                <RecordGrid key="records"
+                <RecordGrid {...this.props.gridOptions} key="records"
                     records={this.props.records}
                     catalogURL={this.getCatalogUrl() }
                     onLayerAdd={this.props.onLayerAdd}

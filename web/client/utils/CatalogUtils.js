@@ -10,6 +10,24 @@ const assign = require('object-assign');
 const {head} = require('lodash');
 const urlUtil = require('url');
 
+const getWMSBBox = (record) => {
+    let layer = record;
+    let bbox = layer.EX_GeographicBoundingBox;
+    while (!bbox && layer.Layer && layer.Layer.length) {
+        layer = layer.Layer[0];
+        bbox = layer.EX_GeographicBoundingBox;
+    }
+    if (!bbox) {
+        bbox = {
+            westBoundLongitude: -180.0,
+            southBoundLatitude: -90.0,
+            eastBoundLongitude: 180.0,
+            northBoundLatitude: 90.0
+        };
+    }
+    return bbox;
+};
+
 const converters = {
     csw: (records, options) => {
         let result = records;
@@ -99,17 +117,19 @@ const converters = {
     },
     wms: (records, options) => {
         if (records && records.records) {
-            return records.records.map((record) => ({
+            return records.records.map((record) => {
+                const bbox = getWMSBBox(record);
+                return {
                 title: record.Title || record.Name,
                 description: record.Abstract || record.Title || record.Name,
                 identifier: record.Name,
                 tags: "",
                 boundingBox: {
                     extent: [
-                        record.EX_GeographicBoundingBox.westBoundLongitude,
-                        record.EX_GeographicBoundingBox.southBoundLatitude,
-                        record.EX_GeographicBoundingBox.eastBoundLongitude,
-                        record.EX_GeographicBoundingBox.northBoundLatitude
+                            bbox.westBoundLongitude,
+                            bbox.southBoundLatitude,
+                            bbox.eastBoundLongitude,
+                            bbox.northBoundLatitude
                     ],
                     crs: "EPSG:4326"
                 },
@@ -120,7 +140,8 @@ const converters = {
                         name: record.Name
                     }
                 }]
-            }));
+                };
+            });
         }
     }
 };
