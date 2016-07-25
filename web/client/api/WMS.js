@@ -28,8 +28,14 @@ const parseUrl = (url) => {
     }));
 };
 
+const flatLayers = (root) => {
+    return root.Layer ? (isArray(root.Layer) && root.Layer || [root.Layer]).reduce((previous, current) => {
+        return previous.concat(flatLayers(current)).concat((current.Layer && current.Name) ? [current] : []);
+    }, []) : (root.Name && [root] || []);
+};
+
 const searchAndPaginate = (json, startPosition, maxRecords, text) => {
-    const layersObj = json.WMS_Capabilities.Capability.Layer.Layer || json.WMS_Capabilities.Capability.Layer;
+    const layersObj = flatLayers(json.WMS_Capabilities.Capability);
     const layers = isArray(layersObj) ? layersObj : [layersObj];
     const filteredLayers = layers
         .filter((layer) => !text || layer.Name.toLowerCase().indexOf(text.toLowerCase()) !== -1 || (layer.Title && layer.Title.toLowerCase().indexOf(text.toLowerCase()) !== -1) || (layer.Abstract && layer.Abstract.toLowerCase().indexOf(text.toLowerCase()) !== -1));
@@ -46,7 +52,9 @@ const Api = {
     getRecords: function(url, startPosition, maxRecords, text) {
         const cached = capabilitiesCache[url];
         if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
-            return searchAndPaginate(cached.data, startPosition, maxRecords, text);
+            return new Promise((resolve) => {
+                resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text));
+            });
         }
         return axios.get(parseUrl(url)).then((response) => {
             let json;

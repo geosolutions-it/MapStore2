@@ -21,18 +21,20 @@ const RecordGrid = React.createClass({
         records: React.PropTypes.array,
         style: React.PropTypes.object,
         showGetCapLinks: React.PropTypes.bool,
-        addAuthentication: React.PropTypes.bool
+        addAuthentication: React.PropTypes.bool,
+        column: React.PropTypes.object
     },
     getDefaultProps() {
         return {
             records: [],
-            onLayerAdd: () => {}
+            onLayerAdd: () => {},
+            column: {xs: 12, sm: 6, md: 6, lg: 6}
         };
     },
     renderRecordItem(record) {
         let Item = this.props.recordItem || RecordItem;
         return (
-			<Col xs={12} sm={6} md={6} lg={6} key={record.identifier}>
+			<Col {...this.props.column} key={record.identifier}>
                 <Item
                     onLayerAdd={this.props.onLayerAdd}
                     onZoomToExtent={this.props.onZoomToExtent}
