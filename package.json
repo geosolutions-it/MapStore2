@@ -125,7 +125,8 @@
     "shpjs": "3.3.2",
     "turf": "3.0.10",
     "url": "0.10.3",
-    "w3c-schemas": "1.3.1"
+    "w3c-schemas": "1.3.1",
+    "xml2js": "0.4.17"
   },
   "scripts": {
     "postinstall": "node checkCesium.js && mkdirp ./web/client/libs/Cesium && download --extract --out ./web/client/libs/Cesium https://cesiumjs.org/releases/Cesium-1.17.zip || echo Cesium already installed",

@@ -6,10 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var API = require('../api/CSW');
+var API = {
+    csw: require('../api/CSW'),
+    wms: require('../api/WMS')
+};
 
 const RECORD_LIST_LOADED = 'RECORD_LIST_LOADED';
 const RECORD_LIST_LOAD_ERROR = 'RECORD_LIST_LOAD_ERROR';
+const CHANGE_CATALOG_FORMAT = 'CHANGE_CATALOG_FORMAT';
 
 function recordsLoaded(options, result) {
     return {
@@ -19,16 +23,23 @@ function recordsLoaded(options, result) {
     };
 }
 
+function changeCatalogFormat(format) {
+    return {
+        type: CHANGE_CATALOG_FORMAT,
+        format
+    };
+}
+
 function recordsLoadError(e) {
     return {
         type: RECORD_LIST_LOAD_ERROR,
         error: e
     };
 }
-function getRecords(url, startPosition = 1, maxRecords, filter, options) {
+function getRecords(format, url, startPosition = 1, maxRecords, filter, options) {
     return (dispatch /* , getState */) => {
         // TODO auth (like) let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
-        API.getRecords(url, startPosition, maxRecords, filter, options).then((result) => {
+        API[format].getRecords(url, startPosition, maxRecords, filter, options).then((result) => {
             dispatch(recordsLoaded({
                 url,
                 startPosition,
@@ -40,10 +51,10 @@ function getRecords(url, startPosition = 1, maxRecords, filter, options) {
         });
     };
 }
-function textSearch(url, startPosition, maxRecords, text, options) {
+function textSearch(format, url, startPosition, maxRecords, text, options) {
     return (dispatch /* , getState */) => {
         // TODO auth (like) let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
-        API.textSearch(url, startPosition, maxRecords, text, options).then((result) => {
+        API[format].textSearch(url, startPosition, maxRecords, text, options).then((result) => {
             dispatch(recordsLoaded({
                 url,
                 startPosition,
@@ -56,4 +67,11 @@ function textSearch(url, startPosition, maxRecords, text, options) {
     };
 }
 
-module.exports = {RECORD_LIST_LOADED, RECORD_LIST_LOAD_ERROR, getRecords, textSearch};
+module.exports = {
+    RECORD_LIST_LOADED,
+    RECORD_LIST_LOAD_ERROR,
+    CHANGE_CATALOG_FORMAT,
+    getRecords,
+    textSearch,
+    changeCatalogFormat
+};
