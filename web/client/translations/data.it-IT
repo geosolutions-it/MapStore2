@@ -380,9 +380,9 @@
             "notsupported": "Snapshot non supportato"
         },
         "shapefile": {
-            "title": "Carica Shape File",
-            "tooltip": "Aggiungi uno shape file alla mappa.",
-            "placeholder": "Trascina qui il file o fai click per selezionare lo shape file da importare.",
+            "title": "Carica Shapefile",
+            "tooltip": "Aggiungi uno shapefile alla mappa.",
+            "placeholder": "Trascina qui il file o fai click per selezionare lo shapefile da importare.",
             "defaultStyle": "Stile di default",
             "zoom": "Zoom sugli shapefile",
             "error": {"select": "Seleziona Shapefile compresso"},
