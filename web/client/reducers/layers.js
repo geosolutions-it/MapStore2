@@ -7,7 +7,7 @@
  */
 
 var {LAYER_LOADING, LAYER_LOAD, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES,
-    TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, UPDATE_NODE_TEMP, ADD_LAYER,
+    TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, ADD_LAYER,
     SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, INVALID_LAYER} = require('../actions/layers');
 
 var assign = require('object-assign');
@@ -136,20 +136,6 @@ function layers(state = [], action) {
             const newLayers = flatLayers.map((layer) => {
                 if (layer.id === action.options.id) {
                     return assign({}, layer, {invalid: true});
-                }
-                return assign({}, layer);
-            });
-            return assign({}, state, {flat: newLayers});
-        }
-        case UPDATE_NODE_TEMP: {
-            const flatLayers = (state.flat || []);
-            const selector = action.nodeType === 'groups' ? 'group' : 'id';
-
-            const newLayers = flatLayers.map((layer) => {
-                if (layer[selector] === action.node || layer[selector].indexOf(action.node + '.') === 0) {
-                    return assign({}, layer, {
-                        temp: action.options
-                    });
                 }
                 return assign({}, layer);
             });

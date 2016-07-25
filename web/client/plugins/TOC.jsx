@@ -101,6 +101,7 @@ const LayerTree = React.createClass({
                             visibilityCheckType={this.props.visibilityCheckType}
                             activateLegendTool={this.props.activateLegendTool}
                             activateSettingsTool={this.props.activateSettingsTool}
+                            settingsText={<Message msgId="layerProperties"/>}
                             opacityText={<Message msgId="opacity"/>}
                             saveText={<Message msgId="save"/>}
                             closeText={<Message msgId="close"/>}/>
