@@ -37,7 +37,7 @@ const ShareEmbed = React.createClass({
       const copyTo = (<OverlayTrigger placement="bottom" overlay={tooltip}>
                           <CopyToClipboard text={codeEmbedded} onCopy={ () => this.setState({copied: true}) } >
                               <Button className="buttonCopyTextArea" bsStyle="info">
-                                  <Glyphicon glyph="paperclip" onMouseLeave={() => {this.setState({copied: false}); }} />
+                                  <Glyphicon glyph="copy" onMouseLeave={() => {this.setState({copied: false}); }} />
                               </Button>
                           </CopyToClipboard>
                       </OverlayTrigger>);
