@@ -11,7 +11,7 @@ const {getRecords} = require('../catalog');
 describe('Test correctness of the catalog actions', () => {
 
     it('getRecords ISO Metadata Profile', (done) => {
-        getRecords('base/web/client/test-resources/csw/getRecordsResponseISO.xml', 1, 1)((actionResult) => {
+        getRecords('csw', 'base/web/client/test-resources/csw/getRecordsResponseISO.xml', 1, 1)((actionResult) => {
             try {
                 let result = actionResult && actionResult.result;
                 expect(result).toExist();
@@ -24,7 +24,7 @@ describe('Test correctness of the catalog actions', () => {
         });
     });
     it('getRecords Dublin Core', (done) => {
-        getRecords('base/web/client/test-resources/csw/getRecordsResponseDC.xml', 1, 2)((actionResult) => {
+        getRecords('csw', 'base/web/client/test-resources/csw/getRecordsResponseDC.xml', 1, 2)((actionResult) => {
             try {
                 let result = actionResult && actionResult.result;
                 expect(result).toExist();
