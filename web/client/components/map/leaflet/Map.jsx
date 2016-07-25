@@ -269,7 +269,7 @@ let LeafletMap = React.createClass({
         mapUtils.registerHook(mapUtils.EXTENT_TO_ZOOM_HOOK, (extent) => {
             var repojectedPointA = CoordinatesUtils.reproject([extent[0], extent[1]], this.props.projection, 'EPSG:4326');
             var repojectedPointB = CoordinatesUtils.reproject([extent[2], extent[3]], this.props.projection, 'EPSG:4326');
-            return this.map.getBoundsZoom([[repojectedPointA.x, repojectedPointA.y], [repojectedPointB.x, repojectedPointB.y]]) - 1;
+            return this.map.getBoundsZoom([[repojectedPointA.y, repojectedPointA.x], [repojectedPointB.y, repojectedPointB.x]]) - 1;
         });
         mapUtils.registerHook(mapUtils.RESOLUTIONS_HOOK, () => {
             return this.getResolutions();
