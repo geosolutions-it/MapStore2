@@ -10,6 +10,7 @@ const React = require('react');
 
 const Message = require('../../components/I18N/Message');
 const LayersUtils = require('../../utils/LayersUtils');
+const LocaleUtils = require('../../utils/LocaleUtils');
 const FileUtils = require('../../utils/FileUtils');
 let StyleUtils;
 const {Grid, Row, Col, Button} = require('react-bootstrap');
@@ -26,6 +27,7 @@ const ShapeFileUploadAndStyle = React.createClass({
         style: React.PropTypes.object,
         shapeStyle: React.PropTypes.object,
         onShapeError: React.PropTypes.func,
+        onShapeSuccess: React.PropTypes.func,
         onShapeChoosen: React.PropTypes.func,
         addShapeLayer: React.PropTypes.func,
         shapeLoading: React.PropTypes.func,
@@ -34,6 +36,7 @@ const ShapeFileUploadAndStyle = React.createClass({
         onZoomSelected: React.PropTypes.func,
         updateShapeBBox: React.PropTypes.func,
         error: React.PropTypes.string,
+        success: React.PropTypes.string,
         mapType: React.PropTypes.string,
         buttonSize: React.PropTypes.string,
         uploadMessage: React.PropTypes.object,
@@ -42,6 +45,9 @@ const ShapeFileUploadAndStyle = React.createClass({
         stylers: React.PropTypes.object,
         uploadOptions: React.PropTypes.object,
         createId: React.PropTypes.func
+    },
+    contextTypes: {
+        messages: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -71,6 +77,11 @@ const ShapeFileUploadAndStyle = React.createClass({
                    <div style={{textAlign: "center"}} className="alert alert-danger">{this.props.error}</div>
                 </Row>);
     },
+    renderSuccess() {
+        return (<Row>
+                   <div style={{textAlign: "center"}} className="alert alert-success">{this.props.success}</div>
+                </Row>);
+    },
     renderStyle() {
         return this.props.stylers[this.getGeomType(this.props.selected)];
     },
@@ -97,6 +108,7 @@ const ShapeFileUploadAndStyle = React.createClass({
         return (
             <Grid role="body" style={{width: "300px"}} fluid>
                 {(this.props.error) ? this.renderError() : null}
+                {(this.props.success) ? this.renderSuccess() : null}
             <Row style={{textAlign: "center"}}>
                 {
             (this.props.selected) ?
@@ -140,7 +152,7 @@ const ShapeFileUploadAndStyle = React.createClass({
             this.props.onShapeError(e.message || e);
         });
     },
-        addToMap() {
+    addToMap() {
         this.props.shapeLoading(true);
         let styledLayer = this.props.selected;
         if (!this.state.useDefaultStyle) {
@@ -150,8 +162,7 @@ const ShapeFileUploadAndStyle = React.createClass({
             this.props.shapeLoading(false);
 
             // calculates the bbox that contain last shapefile and the previous added
-            const layers = this.props.layers;
-            const bbox = layers[0].features.reduce((bboxtotal, feature) => {
+            const bbox = this.props.layers[0].features.reduce((bboxtotal, feature) => {
                 return [
                     Math.min(bboxtotal[0], feature.geometry.bbox[0]),
                     Math.min(bboxtotal[1], feature.geometry.bbox[1]),
@@ -163,6 +174,7 @@ const ShapeFileUploadAndStyle = React.createClass({
                 this.props.updateShapeBBox(bbox);
                 this.props.onZoomSelected(bbox, "EPSG:4326");
             }
+            this.props.onShapeSuccess(this.props.layers[0].name + LocaleUtils.getMessageById(this.context.messages, "shapefile.success"));
             this.props.onLayerAdded(this.props.selected);
         }).catch((e) => {
             this.props.shapeLoading(false);

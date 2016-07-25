@@ -12,8 +12,11 @@ const {
     ON_SELECT_LAYER,
     SHAPE_LOADING,
     ON_LAYER_ADDED,
-    UPDATE_SHAPE_BBOX
+    UPDATE_SHAPE_BBOX,
+    ON_SHAPE_SUCCESS
 } = require('../actions/shapefile');
+
+const {TOGGLE_CONTROL} = require('../actions/controls');
 
 const assign = require('object-assign');
 
@@ -32,7 +35,7 @@ function shapefile(state = initialState, action) {
             return assign({}, state, {layers: action.layers, selected: selected, bbox: [190, 190, -190, -190]});
         }
         case ON_SHAPE_ERROR: {
-            return assign({}, state, {error: action.message});
+            return assign({}, state, {error: action.message, success: null});
         }
         case SHAPE_LOADING: {
             return assign({}, state, {loading: action.status});
@@ -49,6 +52,15 @@ function shapefile(state = initialState, action) {
         }
         case UPDATE_SHAPE_BBOX: {
             return assign({}, state, {bbox: action.bbox});
+        }
+        case ON_SHAPE_SUCCESS: {
+            return assign({}, state, {success: action.message, error: null});
+        }
+        case TOGGLE_CONTROL: {
+            if (action.control === 'shapefile') {
+                return assign({}, state, {error: null, success: null});
+            }
+            return state;
         }
         default:
             return state;
