@@ -387,7 +387,8 @@
             "zoom": "Zoom sugli shapefile",
             "error": {"select": "Seleziona Shapefile compresso"},
             "add": "Importa",
-            "cancel": "Annulla"
+            "cancel": "Annulla",
+            "success" : " correttamente importato"
         },
         "catalog": {
             "title": "Catalogo",

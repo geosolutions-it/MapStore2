@@ -11,7 +11,7 @@ const ON_SELECT_LAYER = 'ON_SELECT_LAYER';
 const SHAPE_LOADING = 'SHAPE_LOADING';
 const ON_LAYER_ADDED = 'ON_LAYER_ADDED';
 const UPDATE_SHAPE_BBOX = 'UPDATE_SHAPE_BBOX';
-
+const ON_SHAPE_SUCCESS = 'ON_SHAPE_SUCCESS';
 
 function onShapeChoosen(layers) {
     return {
@@ -49,6 +49,12 @@ function updateShapeBBox(bbox) {
         bbox
     };
 }
+function onShapeSuccess(message) {
+    return {
+        type: ON_SHAPE_SUCCESS,
+        message
+    };
+}
 
 module.exports = {
     ON_SHAPE_CHOOSEN,
@@ -57,10 +63,12 @@ module.exports = {
     ON_SELECT_LAYER,
     ON_LAYER_ADDED,
     UPDATE_SHAPE_BBOX,
+    ON_SHAPE_SUCCESS,
     onShapeChoosen,
     onShapeError,
     shapeLoading,
     onSelectLayer,
     onLayerAdded,
-    updateShapeBBox
+    updateShapeBBox,
+    onShapeSuccess
 };

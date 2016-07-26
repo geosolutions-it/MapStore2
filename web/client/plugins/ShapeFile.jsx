@@ -11,7 +11,7 @@ const {connect} = require('react-redux');
 
 const Message = require('./locale/Message');
 
-const {onShapeError, shapeLoading, onShapeChoosen, onSelectLayer, onLayerAdded, updateShapeBBox} = require('../actions/shapefile');
+const {onShapeError, shapeLoading, onShapeChoosen, onSelectLayer, onLayerAdded, updateShapeBBox, onShapeSuccess} = require('../actions/shapefile');
 const {zoomToExtent} = require('../actions/map');
 const {addLayer} = require('../actions/layers');
 const {toggleControl} = require('../actions/controls');
@@ -30,6 +30,7 @@ module.exports = {
                 layers: state.shapefile && state.shapefile.layers || null,
                 selected: state.shapefile && state.shapefile.selected || null,
                 bbox: state.shapefile && state.shapefile.bbox || null,
+                success: state.shapefile && state.shapefile.success || null,
                 error: state.shapefile && state.shapefile.error || null,
                 shapeStyle: state.style || {}
             }
@@ -38,6 +39,7 @@ module.exports = {
                 onLayerAdded: onLayerAdded,
                 onSelectLayer: onSelectLayer,
                 onShapeError: onShapeError,
+                onShapeSuccess: onShapeSuccess,
                 addShapeLayer: addLayer,
                 onZoomSelected: zoomToExtent,
                 updateShapeBBox: updateShapeBBox,

@@ -386,7 +386,8 @@
             "zoom": "Zoom on the shapefiles",
             "error": {"select": "Select one or more zip file"},
             "add": "Add",
-            "cancel": "Cancel"
+            "cancel": "Cancel",
+            "success" : " correctly imported"
         },
         "catalog": {
             "title": "Catalog",
