@@ -12,7 +12,7 @@ var mapConfig = require('../config');
 
 describe('Test the mapConfig reducer', () => {
     it('creates a configuration object from loaded config', () => {
-        var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', config: { map: { center: {x: 1, y: 1}, zoom: 11, layers: [] }}});
+        var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', config: { version: 2, map: { center: {x: 1, y: 1}, zoom: 11, layers: [] }}});
         expect(state.map).toExist();
         expect(state.map.zoom).toExist();
         expect(state.map.center).toExist();
@@ -21,7 +21,7 @@ describe('Test the mapConfig reducer', () => {
     });
 
     it('creates a configuration object from legacy config', () => {
-        var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', config: { map: { center: [1361886.8627049, 5723464.1181097], zoom: 11, layers: [] }}}, true);
+        var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', config: { map: { center: [1361886.8627049, 5723464.1181097], zoom: 11, layers: [] }}});
         expect(state.map).toExist();
         expect(state.map.zoom).toExist();
         expect(state.map.center).toExist();
@@ -30,7 +30,7 @@ describe('Test the mapConfig reducer', () => {
     });
 
     it('checks if bing layer gets the apiKey', () => {
-        var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', config: { map: { center: {x: 1, y: 1}, zoom: 11, layers: [{type: 'bing'}] }}});
+        var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', config: { version: 2, map: { center: {x: 1, y: 1}, zoom: 11, layers: [{type: 'bing'}] }}});
         expect(state.map.zoom).toExist();
         expect(state.map.center).toExist();
         expect(state.map.center.crs).toExist();

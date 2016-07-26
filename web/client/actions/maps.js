@@ -13,6 +13,7 @@ const MAPS_LIST_LOADING = 'MAPS_LIST_LOADING';
 const MAPS_LIST_LOAD_ERROR = 'MAPS_LIST_LOAD_ERROR';
 const MAP_UPDATED = 'MAP_UPDATED';
 const MAP_DELETED = 'MAP_DELETED';
+const MAP_SAVED = 'MAP_SAVED';
 
 function mapsLoading(searchText, params) {
     return {
@@ -100,4 +101,4 @@ function deleteMap(resourceId, options) {
     };
 }
 
-module.exports = {MAPS_LIST_LOADED, MAPS_LIST_LOADING, MAPS_LIST_LOAD_ERROR, MAP_UPDATED, MAP_DELETED, loadMaps, updateMap, updateMapMetadata, deleteMap};
+module.exports = {MAPS_LIST_LOADED, MAPS_LIST_LOADING, MAPS_LIST_LOAD_ERROR, MAP_UPDATED, MAP_DELETED, MAP_SAVED, loadMaps, updateMap, updateMapMetadata, deleteMap};

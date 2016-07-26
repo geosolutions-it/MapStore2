@@ -66,7 +66,7 @@ var Api = {
     },
     putResource: function(resourceId, content, options) {
         return axios.put(
-            "resources/resource/" + resourceId,
+            "data/" + resourceId,
             content,
             this.addBaseUrl(_.merge({
                 headers: {

@@ -28,8 +28,8 @@ const Metadata = React.createClass({
       // I18N
       nameFieldText: React.PropTypes.node,
       descriptionFieldText: React.PropTypes.node,
-      namePlaceholderText: React.PropTypes.String,
-      descriptionPlaceholderText: React.PropTypes.String
+      namePlaceholderText: React.PropTypes.string,
+      descriptionPlaceholderText: React.PropTypes.string
   },
   getDefaultProps() {
       return {
