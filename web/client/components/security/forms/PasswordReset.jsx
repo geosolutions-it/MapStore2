@@ -15,7 +15,8 @@
 
 const React = require('react');
 const {Input} = require('react-bootstrap');
-
+const Message = require('../../../components/I18N/Message');
+const LocaleUtils = require('../../../utils/LocaleUtils');
   /**
    * A DropDown menu for user details:
    */
@@ -30,6 +31,9 @@ const PasswordReset = React.createClass({
       newPasswordText: React.PropTypes.node,
       passwordCheckText: React.PropTypes.node
   },
+  contextTypes: {
+      messages: React.PropTypes.object
+  },
   getDefaultProps() {
       return {
           // config
@@ -39,9 +43,8 @@ const PasswordReset = React.createClass({
           onChange: () => {},
 
           // I18N
-          newPasswordText: "New Password",
-          passwordCheckText: "Retype Password"
-
+          newPasswordText: <Message msgId="user.newPwd"/>,
+          passwordCheckText: <Message msgId="user.retypePwd"/>
       };
   },
   getPassword() {
@@ -69,7 +72,7 @@ const PasswordReset = React.createClass({
               label={this.props.newPasswordText}
               bsStyle={this.getPwStyle()}
               onChange={this.props.onChange}
-              placeholder="New Password" />
+              placeholder={LocaleUtils.getMessageById(this.context.messages, "user.newPwd")} />
           <Input ref="passwordcheck"
               key="passwordcheck"
               bsStyle={this.isValid() && this.getPwStyle() ? "success" : "error"}
@@ -77,7 +80,7 @@ const PasswordReset = React.createClass({
               type="password"
               label={this.props.passwordCheckText}
               onChange={this.props.onChange}
-              placeholder="Retype Password" />
+              placeholder={LocaleUtils.getMessageById(this.context.messages, "user.retypePwd")} />
       </form>);
   },
   isValid() {

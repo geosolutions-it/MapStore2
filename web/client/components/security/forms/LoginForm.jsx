@@ -16,7 +16,8 @@
 const React = require('react');
 const {Input, ButtonInput, Alert} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
-
+const Message = require('../../../components/I18N/Message');
+const LocaleUtils = require('../../../utils/LocaleUtils');
 
   /**
    * A Form to login menu for user details:
@@ -39,17 +40,20 @@ const LoginForm = React.createClass({
       loginFailedStatusMessages: React.PropTypes.object,
       loginFailedMessage: React.PropTypes.node
     },
+    contextTypes: {
+        messages: React.PropTypes.object
+    },
     getDefaultProps() {
         return {
           onSubmit: () => {},
           onLoginError: () => {},
           showSubmitButton: true,
-          userNameText: "Username",
-          passwordText: "Password",
-          loginFailedMessage: "Login Fail",
+          userNameText: <Message msgId="user.username"/>,
+          passwordText: <Message msgId="user.password"/>,
+          loginFailedMessage: <Message msgId="user.loginFail"/>,
           loginFailedStatusMessages: {
-              0: "Please insert username and password",
-              401: "Username or password incorrect"
+              0: <Message msgId="user.loginFailedStatusMessages.usernamePwdInsert"/>,
+              401: <Message msgId="user.loginFailedStatusMessages.usernamePwdIncorrect"/>
           }
 
       };
@@ -89,7 +93,7 @@ const LoginForm = React.createClass({
         if (this.props.showSubmitButton) {
             return (<ButtonInput
                 type="submit"
-                value="Sign-in"
+                value={LocaleUtils.getMessageById(this.context.messages, "user.signIn")}
                 bsStyle="primary"
                 key="submit"/>);
         }
@@ -102,13 +106,13 @@ const LoginForm = React.createClass({
                     type="text"
                     label={this.props.userNameText}
                     onChange={this.handleUsernameChangethis}
-                    placeholder="User Name" />
+                    placeholder={LocaleUtils.getMessageById(this.context.messages, "user.username")} />
                 <Input ref="password"
                     key="password"
                     type="password"
                     label={this.props.passwordText}
                     onChange={this.handlePasswordChange}
-                    placeholder="Password" />
+                    placeholder={LocaleUtils.getMessageById(this.context.messages, "user.password")} />
                 {this.renderSubmit()}
                 {this.renderError()}
                 <div style={{"float": "right"}}>{this.renderLoading()}</div>

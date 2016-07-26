@@ -358,6 +358,22 @@
                 }
             }
         },
+        "user":{
+            "login": "Login",
+            "logout": "Logout",
+            "info": " Informazioni Account",
+            "changePwd": "Cambia Password",
+            "newPwd": "Nuova Password",
+            "retypePwd": "Conferma Password",
+            "username": "Username",
+            "password": "Password",
+            "signIn":"Accedi",
+            "loginFail":"Login Fallito",
+            "loginFailedStatusMessages": {
+                "usernamePwdInsert": "Per favore, Inserisci username e password",
+                "usernamePwdIncorrect":"Username o password non corretti"
+            }
+        },
         "share":{
             "title": "Condividi",
             "titlePanel": "Condividi la mappa",
