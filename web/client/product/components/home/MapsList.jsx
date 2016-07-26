@@ -9,7 +9,9 @@ var React = require('react');
 
 var I18N = require('../../../components/I18N/I18N');
 var {Label, Input} = require('react-bootstrap');
-var MapsGrid = require('../../../components/maps/MapGrid');
+const {connect} = require('react-redux');
+const {updateMapMetadata, deleteMap} = require('../../../actions/maps');
+const MapGrid = connect(() => ({}), {updateMapMetadata, deleteMap})(require('../../../components/maps/MapGrid'));
 
 var MapsList = React.createClass({
     propTypes: {
@@ -29,12 +31,14 @@ var MapsList = React.createClass({
                     <option value="openlayers" key="openlayer">OpenLayers</option>
                 </Input>
                 <h3>{this.props.title}</h3>
-                <MapsGrid mapType={this.props.mapType} viewerUrl={this.props.onGoToMap}
+                <MapGrid mapType={this.props.mapType}
+                    viewerUrl={this.props.onGoToMap}
                     loading={this.props.maps && this.props.maps.loading}
-            maps={this.props.maps && this.props.maps.results ? this.props.maps.results : []}
-            panelProps={{className: "mapmanager",
-                 collapsible: true,
-                 defaultExpanded: true}} />
+                    maps={this.props.maps && this.props.maps.results ? this.props.maps.results : []}
+                    panelProps={{className: "mapmanager",
+                        collapsible: true,
+                        defaultExpanded: true}}
+                    />
              </div>
          );
         }

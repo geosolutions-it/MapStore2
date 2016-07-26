@@ -35,6 +35,7 @@
         "save": "Save",
         "opacity": "Opacity",
         "close": "Close",
+        "cancel": "Cancel",
         "pageInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {Items {start}-{end} of {total}}}",
         "home":{
             "open": "Open",
@@ -87,12 +88,21 @@
         },
         "manager": {
             "openInANewTab":"Open map",
+            "deleteMap":"Delete Map",
+            "deleteMapMessage": "Do you really want to delete this map?",
+            "editMapMetadata":"Edit Map Metadata",
             "mapTypes_combo": "Select Map Viewer: ",
             "maps_title": "Maps",
             "locales_combo": "Language:"
         },
         "map": {
-            "loading": "Loading..."
+            "loading": "Loading...",
+            "name": "Name",
+            "description": "Description",
+            "namePlaceholder": "Map Name",
+            "descriptionPlaceholder": "Map Description",
+            "saveTitle": "Save map",
+            "saveText": "Save current map?"
         },
         "print":{
             "paneltitle": "Print",
