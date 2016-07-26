@@ -49,14 +49,14 @@ var Menu = React.createClass({
     renderContent() {
         const header = this.props.single ? (
             <div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
-                <Glyphicon glyph="remove" onClick={this.props.onToggle} style={{position: "absolute", left: "0", padding: "15px", cursor: "pointer"}}/>
+                <Glyphicon glyph="1-close" className="no-border btn-default" onClick={this.props.onToggle} style={{position: "absolute", left: "0", padding: "15px", cursor: "pointer"}}/>
                 <div className="navButtons">
                     {this.renderButtons()}
                 </div>
             </div>
         ) : (<div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
             <span className="title">{this.props.title}</span>
-            <Glyphicon glyph="remove" onClick={this.props.onToggle} style={{position: "absolute", right: "0", padding: "15px", cursor: "pointer"}}/>
+            <Glyphicon glyph="1-close" className="no-border btn-default" onClick={this.props.onToggle} style={{position: "absolute", right: "0", padding: "15px", cursor: "pointer"}}/>
         </div>);
         return (<div className={"nav-content"}>
             {header}
