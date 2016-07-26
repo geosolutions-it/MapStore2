@@ -19,9 +19,8 @@
         "zoomControl": false,
         "tools": ["locate"]
 			}
-		}, {
-			"name": "Help"
-		}, {
+		},
+		{
         "name": "DrawerMenu",
 				"cfg": {
 					"glyph": "1-stilo",
