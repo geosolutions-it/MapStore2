@@ -44,7 +44,8 @@ module.exports = {
         AttributionPlugin: require('./plugins/Attribution'),
         HeaderPlugin: require('./plugins/Header'),
         FooterPlugin: require('./plugins/Footer'),
-        SharePlugin: require('../plugins/Share')
+        SharePlugin: require('../plugins/Share'),
+        SavePlugin: require('../plugins/Save')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

@@ -87,6 +87,8 @@ const ToolsContainer = React.createClass({
             actions[this.props.eventSelector] = toggleControl.bind(null, tool.toggleControl || tool.name, tool.toggleProperty || null);
         } else if (tool.action) {
             actions[this.props.eventSelector] = partial(tool.action, this.context);
+            // action tools can define their own selector
+            selector = tool.selector || selector;
         }
         return connect(selector, actions, (stateProps, dispatchProps, parentProps) => {
             return this.mergeHandlers({
