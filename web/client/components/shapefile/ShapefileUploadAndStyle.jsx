@@ -52,7 +52,7 @@ const ShapeFileUploadAndStyle = React.createClass({
     getDefaultProps() {
         return {
             mapType: "leaflet",
-            buttonSize: "large",
+            buttonSize: "small",
             uploadOptions: {},
             createId: () => undefined,
             bbox: null

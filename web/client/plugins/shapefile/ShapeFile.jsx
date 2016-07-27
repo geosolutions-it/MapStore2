@@ -57,7 +57,7 @@ const ShapeFile = React.createClass({
             visible: false,
             toggleControl: () => {},
             closeGlyph: "",
-            buttonSize: "large"
+            buttonSize: "small"
         };
     },
     render() {
