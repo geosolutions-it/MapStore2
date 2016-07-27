@@ -39,5 +39,34 @@ describe("Test the StyleCanvas style component", () => {
         const cmp = ReactDOM.render(<StyleCanvas shapeStyle={shapeStyle} geomType="Marker"/>, document.getElementById("container"));
         expect(cmp).toExist();
     });
-
+    it('test component drawing point with circle mark', () => {
+        let style = {...shapeStyle, markName: "circle"};
+        const cmp = ReactDOM.render(<StyleCanvas shapeStyle={style} geomType="Point"/>, document.getElementById("container"));
+        expect(cmp).toExist();
+    });
+    it('test component drawing point with square mark', () => {
+        let style = {...shapeStyle, markName: "square"};
+        const cmp = ReactDOM.render(<StyleCanvas shapeStyle={style} geomType="Point"/>, document.getElementById("container"));
+        expect(cmp).toExist();
+    });
+    it('test component drawing point with triangle mark', () => {
+        let style = {...shapeStyle, markName: "triangle"};
+        const cmp = ReactDOM.render(<StyleCanvas shapeStyle={style} geomType="Point"/>, document.getElementById("container"));
+        expect(cmp).toExist();
+    });
+    it('test component drawing point with star mark', () => {
+        let style = {...shapeStyle, markName: "star"};
+        const cmp = ReactDOM.render(<StyleCanvas shapeStyle={style} geomType="Point"/>, document.getElementById("container"));
+        expect(cmp).toExist();
+    });
+    it('test component drawing point with cross mark', () => {
+        let style = {...shapeStyle, markName: "cross"};
+        const cmp = ReactDOM.render(<StyleCanvas shapeStyle={style} geomType="Point"/>, document.getElementById("container"));
+        expect(cmp).toExist();
+    });
+    it('test component drawing point with X mark', () => {
+        let style = {...shapeStyle, markName: "x"};
+        const cmp = ReactDOM.render(<StyleCanvas shapeStyle={style} geomType="Point"/>, document.getElementById("container"));
+        expect(cmp).toExist();
+    });
 });

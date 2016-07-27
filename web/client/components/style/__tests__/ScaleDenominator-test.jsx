@@ -22,12 +22,15 @@ describe('ScaleDenominator', () => {
         setTimeout(done);
     });
     it('create component with defaults', () => {
-        const sb = ReactDOM.render(<ScaleDenominator />, document.getElementById("container"));
+        const sb = ReactDOM.render(<ScaleDenominator minValue={1000} maxValue={10000}/>, document.getElementById("container"));
         expect(sb).toExist();
         const domNode = ReactDOM.findDOMNode(sb);
         expect(domNode).toExist();
 
         const comboItems = sb.scales;
         expect(comboItems.length).toBe(23);
+        sb.onChange("minDenominator", {value: 1000});
+        sb.onChange("minDenominator", {value: 100000});
+        sb.onChange("maxDenominator", {value: 100});
     });
 });
