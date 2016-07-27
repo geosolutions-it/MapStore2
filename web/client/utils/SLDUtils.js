@@ -54,6 +54,10 @@ const context = new Jsonix.Context([
 
 const marshall = context.createMarshaller();
 
+const rgbToHex = function({r, g, b}) {
+    return `#${r < 16 ? 0 : ''}${(r).toString(16)}${g < 16 ? 0 : ''}${(g).toString(16)}${b < 16 ? 0 : ''}${(b).toString(16)}`;
+};
+
 const convertOpacity = function(opacity) {
     return {TYPE_NAME: "SLD_1_0_0.ParameterValueType", content: [opacity]};
 };
@@ -131,7 +135,8 @@ const getSLDObjc = function(layer, rasterSymbolizer) {
                             "rule": [{"TYPE_NAME": "SLD_1_0_0.Rule", "symbolizer": [{"sld:RasterSymbolizer": rasterSymbolizer}]}]}]}]}]}};
 
     };
-const jsonToSLD = function(styletype, opacity, state, layer) {
+const jsonToSLD = function({styletype, opacity = "1.0", state, layer} = {}) {
+
     let rasterSymbolizer = {TYPE_NAME: "SLD_1_0_0.RasterSymbolizer"};
     rasterSymbolizer.opacity = convertOpacity(opacity);
     switch (styletype) {
@@ -156,8 +161,87 @@ const jsonToSLD = function(styletype, opacity, state, layer) {
     }
     return marshall.marshalString(getSLDObjc(layer, rasterSymbolizer));
 };
+const getStroke = function({a = 1, r = 0, g = 0, b = 255, width = 1} = {}) {
+    return {cssParameter: [
+            {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [rgbToHex({r, g, b})], name: "stroke"},
+            {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [`${a}`], name: "stroke-opacity"},
+            {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [`${width}`], name: "stroke-width"}
 
+            ]
+        };
+};
+const getFill = function({a = 1, r = 0, g = 0, b = 255} = {}) {
+    return {cssParameter: [
+            {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [rgbToHex({r, g, b})], name: "fill"},
+            {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [`${a}`], name: "fill-opacity"}
+            ]
+        };
+
+};
+const getSize = function(size) {
+    return {"TYPE_NAME": "SLD_1_0_0.ParameterValueType", content: [`${size}`]};
+};
+const getWellKnownName = function(markName) {
+    return {"TYPE_NAME": "SLD_1_0_0.WellKnownName", content: [markName]};
+};
+const getMark = function(symbolyzer) {
+    return {"TYPE_NAME": "SLD_1_0_0.Mark", fill: getFill(symbolyzer.fill), stroke: getStroke({...symbolyzer.color, width: symbolyzer.width}), wellKnownName: getWellKnownName(symbolyzer.markName)};
+};
+const getGraphic = function(symbolyzer) {
+    return {"TYPE_NAME": "SLD_1_0_0.Graphic", externalGraphicOrMark: [getMark(symbolyzer)], size: getSize(symbolyzer.radius)};
+};
+const getPolygonSymbolyzer = function(symbolyzer) {
+    return {"TYPE_NAME": "SLD_1_0_0.PolygonSymbolizer", fill: getFill(symbolyzer.fill), stroke: getStroke({...symbolyzer.color, width: symbolyzer.width})};
+};
+const getLineSymbolyzer = function(symbolyzer) {
+    return {"TYPE_NAME": "SLD_1_0_0.LineSymbolizer", stroke: getStroke({...symbolyzer.color, width: symbolyzer.width})};
+};
+const getPointSymbolyzer = function(symbolyzer) {
+    return {"TYPE_NAME": "SLD_1_0_0.PointSymbolizer", graphic: getGraphic(symbolyzer)};
+};
+
+const getSymbolyzer = function(symbolyzer) {
+    switch (symbolyzer.type) {
+        case "Point":
+            return {"PointSymbolizer": getPointSymbolyzer(symbolyzer)};
+        case "Line":
+            return {"LineSymbolizer": getLineSymbolyzer(symbolyzer)};
+        case "Polygon":
+            return {"PolygonSymbolizer": getPolygonSymbolyzer(symbolyzer)};
+        default:
+            return getPolygonSymbolyzer(symbolyzer);
+    }
+};
+
+const getRules = function(rules) {
+    return rules.map((rule) => {
+        let den = {};
+        if (rule.maxDenominator) {
+            den.maxScaleDenominator = rule.maxDenominator;
+        }
+        if (rule.minDenominator) {
+            den.minScaleDenominator = rule.minDenominator;
+        }
+        return {
+                "TYPE_NAME": "SLD_1_0_0.Rule",
+                "symbolizer": [getSymbolyzer(rule.symbol)],
+                ...den
+                };
+    }
+    );
+};
+
+const vecStyleToSLD = function({rules= [], layer = {}} = {}) {
+    return marshall.marshalString({
+            "sld:StyledLayerDescriptor": {"TYPE_NAME": "SLD_1_0_0.StyledLayerDescriptor", "version": "1.0.0",
+                "namedLayerOrUserLayer": [{"TYPE_NAME": "SLD_1_0_0.NamedLayer", "name": layer.name,
+                    "namedStyleOrUserStyle": [{"TYPE_NAME": "SLD_1_0_0.UserStyle",
+                        "featureTypeStyle": [{"TYPE_NAME": "SLD_1_0_0.FeatureTypeStyle",
+                            "rule": getRules(rules)}]}]}]}}
+                            );
+};
 
 module.exports = {
-    jsonToSLD: jsonToSLD
+    jsonToSLD: jsonToSLD,
+    vecStyleToSLD: vecStyleToSLD
 };

@@ -22,8 +22,11 @@ const StylePolyline = connect(symbolselector, {
     setStyleParameter: setVectorStyleParameter.bind(null, 'symbol')
 })(require('../../components/style/StylePolyline'));
 
+const ScaleDenominator = require("../../components/style/ScaleDenominator");
+
 module.exports = {
     StylePolygon,
     StylePolyline,
-    StylePoint
+    StylePoint,
+    ScaleDenominator
 };

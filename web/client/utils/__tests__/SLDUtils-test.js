@@ -21,11 +21,26 @@ const layer = {name: "sde:HYP_HR_SR_OB_DR"};
 describe('SLDUtils', () => {
 
     it('convert rasterlayer state to sld strings', () => {
-        let pseudo = jsonToSLD("pseudo", "0.50", rasterstylerstate, layer);
+        let pseudo = jsonToSLD({
+            styletype: "pseudo",
+            opacity: "0.50",
+            state: rasterstylerstate,
+            layer: layer});
         expect(pseudo).toExist();
-        let rgb = jsonToSLD("rgb", "0.50", rasterstylerstate, layer);
+        let rgb = jsonToSLD(
+            {
+            styletype: "rgb",
+            opacity: "0.50",
+            state: rasterstylerstate,
+            layer: layer
+        });
         expect(rgb).toExist();
-        let gray = jsonToSLD("gray", "0.50", rasterstylerstate, layer);
+        let gray = jsonToSLD({
+            styletype: "gray",
+            opacity: "0.50",
+            state: rasterstylerstate,
+            layer: layer
+        });
         expect(gray).toExist();
     });
 });

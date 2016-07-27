@@ -19,20 +19,24 @@ const assign = require('object-assign');
 const {isObject} = require('lodash');
 const baseStyle = {
     Point: {
+            type: "Point",
             color: { r: 0, g: 0, b: 255, a: 1 },
             width: 3,
             fill: { r: 0, g: 0, b: 255, a: 0.1 },
             radius: 10,
-            marker: false
+            marker: false,
+            markName: "circle"
             },
     Line: {
+            type: "Line",
             color: { r: 0, g: 0, b: 255, a: 1 },
             width: 3
             },
     Polygon: {
-        color: { r: 0, g: 0, b: 255, a: 1 },
-        width: 3,
-        fill: { r: 0, g: 0, b: 255, a: 0.1 }
+            type: "Polygon",
+            color: { r: 0, g: 0, b: 255, a: 1 },
+            width: 3,
+            fill: { r: 0, g: 0, b: 255, a: 0.1 }
     }
 
 };

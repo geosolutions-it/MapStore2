@@ -25,7 +25,8 @@ const {changeLayerProperties} = require('../actions/layers');
 const {
     StylePolygon,
     StylePolyline,
-    StylePoint} = require('./vectorstyler/index');
+    StylePoint,
+    ScaleDenominator} = require('./vectorstyler/index');
 
 const {layersSelector} = require('../selectors/layers');
 const {ruleselctor} = require('../selectors/vectorstyler');
@@ -38,7 +39,7 @@ require('./vectorstyler/vectorstyler.css');
 
 const Message = require('./locale/Message');
 
-// const {jsonToSLD} = require("../utils/SLDUtils");
+const {vecStyleToSLD} = require("../utils/SLDUtils");
 
 const VectorStyler = React.createClass({
     propTypes: {
@@ -48,6 +49,7 @@ const VectorStyler = React.createClass({
         rule: React.PropTypes.object,
         withContainer: React.PropTypes.bool,
         open: React.PropTypes.bool,
+        forceOpen: React.PropTypes.bool,
         style: React.PropTypes.object,
         selectLayer: React.PropTypes.func,
         setVectorStyleParameter: React.PropTypes.func,
@@ -56,7 +58,8 @@ const VectorStyler = React.createClass({
         selectRule: React.PropTypes.func,
         setRuleParameter: React.PropTypes.func,
         error: React.PropTypes.string,
-        changeLayerProperties: React.PropTypes.func
+        changeLayerProperties: React.PropTypes.func,
+        hideLayerSelector: React.PropTypes.bool
 
     },
     contextTypes: {
@@ -69,13 +72,14 @@ const VectorStyler = React.createClass({
     },
     getDefaultProps() {
         return {
+            hideLayerSelector: false,
             open: false,
             layers: [],
             layer: null,
+            forceOpen: false,
             withContainer: true,
             selectLayer: () => {},
             setVectorStyleParameter: () => {},
-            styletype: "pseudo",
             opacity: "1.00",
             style: {},
             changeLayerProperties: () => {},
@@ -127,7 +131,7 @@ const VectorStyler = React.createClass({
             }
             case 'Point':
             case 'MultiPoint': {
-                return (<StylePoint/>);
+                return (<StylePoint showMarker={false} showMarkSelector={true}/>);
             }
             default: {
                 return null;
@@ -157,28 +161,21 @@ const VectorStyler = React.createClass({
     renderAvancedRule() {
         return (<Panel header={(<label><Message msgId="vectorstyler.conditiontitle"/></label>)} eventKey="3">
                 <Grid fluid>
-                     <Row>
-                            <Col xs={1}>
-                                <input aria-label="..." type="checkbox" defaultChecked={false} />
-                            </Col>
-                            <Col style={{paddingLeft: 0, paddingTop: 1}} xs={4}>
-                                <label>Limit by Scale</label>
-                            </Col>
-                        </Row>
+                        <ScaleDenominator minValue={this.props.rule.minDenominator} maxValue={this.props.rule.maxDenominator} onChange={this.props.setRuleParameter}/>
                 </Grid>
                 </Panel>);
     },
     renderSelector() {
         return (<Row style={{marginBottom: "22px"}}>
                     <Row>
-                        <Col sm={4} >
+                        {!this.props.hideLayerSelector ? (<Col sm={4} >
                         <label><Message msgId="vectorstyler.layerlabel"/></label>
                             <Combobox data={this.props.layers.reverse()}
                                 value={(this.props.layer) ? this.props.layer.id : null}
                                 onChange={(value)=> this.props.selectLayer(value)}
                                 valueField={"id"}
                                 textField={"title"} />
-                        </Col>
+                        </Col>) : null}
                         {this.props.layer ? (<Col sm={4}>
                             <label><Message msgId="vectorstyler.rulelabel"/></label>
                          <Combobox data={this.props.rules}
@@ -199,7 +196,6 @@ const VectorStyler = React.createClass({
             <Row>
             <PanelGroup defaultActiveKey="1" accordion>
                     {(this.props.rule) ? this.renderSymbolStyler() : null}
-                    {(this.props.rule) ? this.renderLabelStyler() : null}
                     {(this.props.rule) ? this.renderAvancedRule() : null}
             </PanelGroup>
             </Row>) : null;
@@ -230,7 +226,7 @@ const VectorStyler = React.createClass({
                 </Grid>);
     },
     render() {
-        if (this.props.open) {
+        if (this.props.forceOpen || this.props.open) {
             return this.props.withContainer ?
                 (<Panel className="mapstore-vectorstyler-panel"
                         style={this.getPanelStyle()}
@@ -241,8 +237,8 @@ const VectorStyler = React.createClass({
         return null;
     },
     apply() {
-       // let style = jsonToSLD(this.props.styletype, this.props.opacity, this.props.rasterstyler, this.props.layer);
-       // this.props.changeLayerProperties(this.props.layer.id, { params: assign({}, this.props.layer.params, {SLD_BODY: style})});
+        let style = vecStyleToSLD({rules: this.props.rules, layer: this.props.layer});
+        this.props.changeLayerProperties(this.props.layer.id, { params: assign({}, this.props.layer.params, {SLD_BODY: style})});
     }
 });
 const selector = createSelector([

@@ -82,6 +82,39 @@
             },
             {
                 "describeLayer": {
+                    "bands": [
+                        "1"
+                    ],
+                    "owsType": "WCS",
+                    "range": {
+                        "max": 10000.0,
+                        "min": -9999.0
+                    }
+                },
+                "format": "image/png",
+                "group": "Meteo",
+                "name": "nurc:Arc_Sample",
+                "opacity": 1,
+                "title": "Weather data",
+                "type": "wms",
+                "url": "http://demo.geo-solutions.it/geoserver/wms",
+                "visibility": true
+            },
+      {
+        "type": "wms",
+        "describeLayer": {
+                    "owsType": "WCS"
+                },
+        "url":"http://demo.geo-solutions.it/geoserver/wms",
+        "visibility": true,
+        "opacity": 1,
+        "title": "HYP_HR_SR_OB_DR",
+        "name": "sde:HYP_HR_SR_OB_DR",
+        "group": "Meteo",
+        "format": "image/png"
+      },
+            {
+                "describeLayer": {
                     "owsType": "WFS",
                     "geometryType": "Polygon"
                 },
@@ -131,6 +164,6 @@
         ],
         "projection": "EPSG:900913",
         "units": "m",
-        "zoom": 4
+        "zoom": 3
     }
 }

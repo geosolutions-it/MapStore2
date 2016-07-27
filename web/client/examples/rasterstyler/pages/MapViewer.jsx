@@ -23,8 +23,7 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 const PluginsContainer = connect((state) => ({
     pluginsConfig: state.plugins || ConfigUtils.getConfigProp('plugins') || null,
-    mode: (urlQuery.mobile || (state.browser && state.browser.touch)) ? 'mobile' : 'desktop',
-    pluginsState: state
+    mode: (urlQuery.mobile || (state.browser && state.browser.touch)) ? 'mobile' : 'desktop'
 }))(require('../../../components/plugins/PluginsContainer'));
 
 

@@ -12,11 +12,14 @@ module.exports = {
         MapPlugin: require('../../plugins/Map'),
         ToolbarPlugin: require('../../plugins/Toolbar'),
         SettingsPlugin: require('../../plugins/Settings'),
-        MapLoadingPlugin: require('../../plugins/MapLoading'),
-        VectorStylerPlugin: require('../../plugins/VectorStyler')
+        IdentifyPlugin: require('../../plugins/Identify'),
+        StylerPlugin: require('../../plugins/Styler'),
+        ScaleBoxPlugin: require('../../plugins/ScaleBox'),
+        OmniBarPlugin: require('../../plugins/OmniBar'),
+        BurgerMenuPlugin: require('../../plugins/BurgerMenu'),
+        MapLoadingPlugin: require('../../plugins/MapLoading')
     },
     requires: {
-        ReactSwipe: require('react-swipe')
     }
 };
 
