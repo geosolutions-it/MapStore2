@@ -37,7 +37,8 @@ const Legend = React.createClass({
                version: layer.version || "1.3.0",
                LEGEND_OPTIONS: this.props.legendOptions
                // SCALE TODO
-           }, layer.legendParams || {});
+           }, layer.legendParams || {},
+           layer.params && layer.params.SLD_BODY ? {SLD_BODY: layer.params.SLD_BODY} : {});
 
            let legendUrl = urlUtil.format({
                host: urlObj.host,
