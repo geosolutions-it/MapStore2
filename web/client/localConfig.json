@@ -47,7 +47,7 @@
              "position": "absolute",
              "width": "100%",
              "bottom": "0px",
-             "zIndex": 1010,
+             "zIndex": 1022,
              "maxHeight": "70%",
              "marginBottom": 0
          },
