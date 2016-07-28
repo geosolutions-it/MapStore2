@@ -11,11 +11,12 @@ var axios = require('../libs/ajax');
 const MAP_CONFIG_LOADED = 'MAP_CONFIG_LOADED';
 const MAP_CONFIG_LOAD_ERROR = 'MAP_CONFIG_LOAD_ERROR';
 
-function configureMap(conf, legacy) {
+function configureMap(conf, mapId) {
     return {
         type: MAP_CONFIG_LOADED,
         config: conf,
-        legacy: legacy || false
+        legacy: mapId !== null,
+        mapId: mapId
     };
 }
 
@@ -26,11 +27,11 @@ function configureError(e) {
     };
 }
 
-function loadMapConfig(configName, legacy) {
+function loadMapConfig(configName, mapId) {
     return (dispatch) => {
         return axios.get(configName).then((response) => {
             if (typeof response.data === 'object') {
-                dispatch(configureMap(response.data, legacy));
+                dispatch(configureMap(response.data, mapId));
             } else {
                 try {
                     JSON.parse(response.data);

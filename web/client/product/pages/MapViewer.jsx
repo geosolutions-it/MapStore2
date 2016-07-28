@@ -48,7 +48,7 @@ const MapViewerPage = React.createClass({
             const config = urlQuery && urlQuery.config || null;
             const {configUrl} = ConfigUtils.getConfigurationOptions({mapId, config});
             this.props.reset();
-            this.props.loadMapConfig(configUrl, mapId !== null);
+            this.props.loadMapConfig(configUrl, mapId);
         }
     },
     render() {

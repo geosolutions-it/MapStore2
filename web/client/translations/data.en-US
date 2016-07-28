@@ -101,7 +101,7 @@
             "description": "Description",
             "namePlaceholder": "Map Name",
             "descriptionPlaceholder": "Map Description",
-            "saveTitle": "Save map",
+            "saveTitle": "Save Map",
             "saveText": "Save current map?"
         },
         "print":{

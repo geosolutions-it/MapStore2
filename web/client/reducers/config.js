@@ -14,8 +14,12 @@ var ConfigUtils = require('../utils/ConfigUtils');
 function mapConfig(state = null, action) {
     switch (action.type) {
         case MAP_CONFIG_LOADED:
+            let isLegacy = (!action.config.version || action.config.version < 2);
             // we get from the configuration what will be used as the initial state
-            let mapState = action.legacy ? ConfigUtils.convertFromLegacy(action.config) : ConfigUtils.normalizeConfig(action.config.map);
+            let mapState = isLegacy ? ConfigUtils.convertFromLegacy(action.config) : ConfigUtils.normalizeConfig(action.config.map);
+            if (action.mapId) {
+                mapState.map = assign({}, mapState.map, {mapId: action.mapId});
+            }
             // we store the map initial state for future usage
             return assign({}, mapState, {mapInitialConfig: mapState.map});
         case MAP_CONFIG_LOAD_ERROR:

@@ -1,0 +1,126 @@
+/**
+ * Copyright 2016, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+const React = require('react');
+const {connect} = require('react-redux');
+const {createSelector} = require('reselect');
+const assign = require('object-assign');
+const {Glyphicon} = require('react-bootstrap');
+const Message = require('../components/I18N/Message');
+const {toggleControl} = require('../actions/controls');
+const {updateMap} = require('../actions/maps');
+const ConfirmModal = require('../components/maps/modals/ConfirmModal');
+
+const {mapSelector} = require('../selectors/map');
+const {layersSelector} = require('../selectors/layers');
+const stateSelector = state => state;
+
+const selector = createSelector(mapSelector, stateSelector, layersSelector, (map, state, layers) => ({
+    currentZoomLvl: map && map.zoom,
+    show: state.controls && state.controls.save && state.controls.save.enabled,
+    map,
+    mapId: map && map.mapId,
+    layers
+}));
+
+const Save = React.createClass({
+    propTypes: {
+        show: React.PropTypes.bool,
+        mapId: React.PropTypes.string,
+        onClose: React.PropTypes.func,
+        onMapSave: React.PropTypes.func,
+        map: React.PropTypes.object,
+        layers: React.PropTypes.array,
+        params: React.PropTypes.object
+    },
+    getDefaultProps() {
+        return {
+            onMapSave: () => {},
+            show: false
+        };
+    },
+    render() {
+        return (<ConfirmModal
+            confirmText={<Message msgId="save" />}
+            cancelText={<Message msgId="cancel" />}
+            titleText={<Message msgId="map.saveTitle" />}
+            body={<Message msgId="map.saveText" />}
+            show={this.props.show}
+            onClose={this.props.onClose}
+            onConfirm={this.goForTheUpdate}
+            />);
+    },
+    goForTheUpdate() {
+        if (this.props.mapId) {
+            if (this.props.map && this.props.layers) {
+                let map =
+                    {
+                        center: this.props.map.center,
+                        maxExtent: this.props.map.maxExtent,
+                        projection: this.props.map.projection,
+                        units: this.props.map.units,
+                        zoom: this.props.map.zoom
+                    };
+                let layers = this.props.layers.map((layer) => {
+                    return {
+                        format: layer.format,
+                        group: layer.group,
+                        source: layer.source,
+                        name: layer.name,
+                        opacity: layer.opacity,
+                        styles: layer.styles,
+                        title: layer.title,
+                        transparent: layer.transparent,
+                        type: layer.type,
+                        url: layer.url,
+                        visibility: layer.visibility
+                    };
+                });
+                // Groups are ignored, as they already are defined in the layers
+                let resultingmap = {
+                    version: 2,
+                    // layers are defined inside the map object
+                    map: assign({}, map, {layers})
+                };
+                this.props.onMapSave(this.props.mapId, JSON.stringify(resultingmap));
+                this.props.onClose();
+            }
+        }
+    }
+});
+
+module.exports = {
+    // TODO: Add SaveAs plugin
+    SavePlugin: connect(selector,
+    {
+        onClose: toggleControl.bind(null, 'save', false),
+        onMapSave: updateMap
+    })(assign(Save, {
+        BurgerMenu: {
+            name: 'save',
+            position: 900,
+            text: <Message msgId="save"/>,
+            icon: <Glyphicon glyph="floppy-save"/>,
+            action: toggleControl.bind(null, 'save', null),
+            // display the BurgerMenu button only if the map can be edited
+            selector: (state) => {
+                let map = (state.map && state.map.present) || (state.map) || (state.config && state.config.map) || null;
+                if (map && map.mapId) {
+                    if (state.maps && state.maps.results) {
+                        let mapId = map.mapId;
+                        let currentMap = state.maps.results.filter(item=> item && ('' + item.id) === mapId);
+                        if (currentMap && currentMap.length > 0 && currentMap[0].canEdit) {
+                            return { };
+                        }
+                    }
+                }
+                return { style: {display: "none"} };
+            }
+        }
+    }))
+};
