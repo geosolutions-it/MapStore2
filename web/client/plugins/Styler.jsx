@@ -19,7 +19,7 @@ const {setRasterLayer} = require('../actions/rasterstyler');
 
 const {layersSelector} = require('../selectors/layers');
 
-const Vector = require("./Vectorstyler").VectorStylerPlugin;
+const Vector = require("./VectorStyler").VectorStylerPlugin;
 const Raster = require("./RasterStyler").RasterStylerPlugin;
 
 const {createSelector} = require('reselect');
