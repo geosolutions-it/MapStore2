@@ -36,7 +36,7 @@ describe('LangSelector', () => {
 
         const select = cmpDom.getElementsByTagName("select").item(0);
         const opts = select.childNodes;
-        const langs = {'Italiano': 'it-IT', 'English': 'en-US'};
+        const langs = {'Italiano': 'it-IT', 'English': 'en-US', 'Français': 'fr-FR'};
 
         for (let i = 0; i < opts.length; i++) {
             lbl = opts[i].innerHTML;
