@@ -79,7 +79,7 @@ const ShapeFileUploadAndStyle = React.createClass({
     },
     renderSuccess() {
         return (<Row>
-                   <div style={{textAlign: "center"}} className="alert alert-success">{this.props.success}</div>
+                   <div style={{textAlign: "center", overflowWrap: "break-word"}} className="alert alert-success">{this.props.success}</div>
                 </Row>);
     },
     renderStyle() {
