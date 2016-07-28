@@ -6,12 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/leaflet/Layers');
-var CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
-var L = require('leaflet');
-var objectAssign = require('object-assign');
+const Layers = require('../../../../utils/leaflet/Layers');
+const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
+const WMSUtils = require('../../../../utils/leaflet/WMSUtils');
+const L = require('leaflet');
+const objectAssign = require('object-assign');
 const {isArray, isEqual} = require('lodash');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
+
 
 L.TileLayer.MultipleUrlWMS = L.TileLayer.WMS.extend({
     initialize: function(urls, options) {
@@ -75,6 +77,7 @@ function wmsToLeafletOptions(options) {
         styles: options.style || "",
         format: options.format || 'image/png',
         transparent: options.transparent !== undefined ? options.transparent : true,
+        tiled: options.tiled !== undefined ? options.tiled : true,
         opacity: opacity,
         version: options.version || "1.3.0",
         SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857'),
@@ -94,7 +97,16 @@ Layers.registerType('wms', {
         return L.tileLayer.multipleUrlWMS(urls, queryParameters);
     },
     update: function(layer, newOptions, oldOptions) {
-        if (!isEqual(newOptions.params, oldOptions.params)) {
+        // find the options that make a parameter change
+        let oldqueryParameters = WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(oldOptions));
+        let newQueryParameters = WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(newOptions));
+        let newParameters = Object.keys(newQueryParameters).filter((key) => {return newQueryParameters[key] !== oldqueryParameters[key]; });
+        let newParams = {};
+        if ( newParameters.length > 0 ) {
+            newParameters.forEach( key => newParams[key] = newQueryParameters[key] );
+            // set new options as parameters, merged with params
+            layer.setParams(objectAssign(newParams, newParams.params, newOptions.params));
+        } else if (!isEqual(newOptions.params, oldOptions.params)) {
             layer.setParams(newOptions.params);
         }
     }

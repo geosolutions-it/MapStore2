@@ -20,7 +20,15 @@
         "about_p6": "MapStore2 è sviluppato da:",
         "enable": "Abilita",
         "layers": "Livelli",
-        "layerProperties": "Proprietà del livello",
+        "layerProperties": {
+            "windowTitle": "Proprietà del livello",
+            "title": "Titolo",
+            "name": "Nome",
+            "general": "Generale",
+            "display": "Visualizzazione",
+            "style": "Stile",
+            "format": "Formato"
+        },
         "background": "Sfondo",
         "language": "Lingua",
         "mousePositionCoordinates": "Indicatore di coordinate",

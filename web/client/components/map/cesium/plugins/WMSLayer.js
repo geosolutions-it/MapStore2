@@ -58,6 +58,7 @@ function wmsToCesiumOptionsSingleTile(options) {
         format: options.format || 'image/png',
         transparent: options.transparent !== undefined ? options.transparent : true,
         opacity: opacity,
+        tiled: options.tiled !== undefined ? options.tiled : true,
         layers: options.name,
         width: options.size || 2000,
         height: options.size || 2000,

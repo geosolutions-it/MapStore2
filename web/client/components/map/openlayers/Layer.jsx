@@ -8,11 +8,13 @@
 var React = require('react');
 var Layers = require('../../../utils/openlayers/Layers');
 var assign = require('object-assign');
+const _ = require('lodash');
 
 const OpenlayersLayer = React.createClass({
     propTypes: {
         map: React.PropTypes.object,
         mapId: React.PropTypes.string,
+        srs: React.PropTypes.string,
         type: React.PropTypes.string,
         options: React.PropTypes.object,
         onLayerLoading: React.PropTypes.func,
@@ -29,7 +31,6 @@ const OpenlayersLayer = React.createClass({
             onInvalid: () => {}
         };
     },
-
     componentDidMount() {
         this.valid = true;
         this.tilestoload = 0;
@@ -45,23 +46,8 @@ const OpenlayersLayer = React.createClass({
         if (newProps.position !== this.props.position && this.layer.setZIndex) {
             this.layer.setZIndex(newProps.position);
         }
-
-        if (this.props.options && this.layer && this.layer.getSource() && this.layer.getSource().updateParams) {
-            let changed = false;
-            if (this.props.options.params && newProps.options.params) {
-                changed = Object.keys(this.props.options.params).reduce((found, param) => {
-                    if (newProps.options.params[param] !== this.props.options.params[param]) {
-                        return true;
-                    }
-                    return found;
-                }, false);
-            } else if (!this.props.options.params && newProps.options.params) {
-                changed = true;
-            }
-
-            if (changed) {
-                this.layer.getSource().updateParams(newProps.options.params);
-            }
+        if (this.props.options) {
+            this.updateLayer(newProps, this.props);
         }
     },
     componentWillUnmount() {
@@ -100,18 +86,36 @@ const OpenlayersLayer = React.createClass({
             this.layer.setOpacity(opacity);
         }
     },
+    generateOpts(options, position, srs) {
+        return assign({}, options, position ? {zIndex: position, srs} : null, {
+            onError: () => {
+                this.props.onInvalid(this.props.type, options);
+            }
+        });
+    },
     createLayer(type, options, position) {
         if (type) {
-            const layerOptions = assign({}, options, position ? {zIndex: position} : null, {
-                onError: () => {
-                    this.props.onInvalid(this.props.type, this.props.options);
-                }
-            });
+            const layerOptions = this.generateOpts(options, position, this.props.srs);
             this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
             if (this.layer && !this.layer.detached) {
                 this.addLayer(options);
             }
         }
+    },
+    updateLayer(newProps, oldProps) {
+        // optimization to avoid to update the layer if not necessary
+        if (newProps.position === oldProps.position && newProps.srs === oldProps.srs) {
+            // check if options are the same, except loading
+            if (newProps.options === oldProps.options) return;
+            if (_.isEqual( _.omit(newProps.options, ["loading"]), _.omit(oldProps.options, ["loading"]) ) ) {
+                return;
+            }
+        }
+        Layers.updateLayer(
+            this.props.type,
+            this.layer,
+            this.generateOpts(newProps.options, newProps.position, newProps.srs),
+            this.generateOpts(oldProps.options, oldProps.position, oldProps.srs));
     },
     addLayer(options) {
         if (this.isValid()) {

@@ -68,5 +68,32 @@ Layers.registerType('wms', {
               params: queryParameters
             }, (options.forceProxy) ? {tileLoadFunction: proxyTileLoadFunction} : {}))
         });
+    },
+    update: (layer, newOptions, oldOptions) => {
+        if (oldOptions && layer && layer.getSource() && layer.getSource().updateParams) {
+            let changed = false;
+            if (oldOptions.params && newOptions.params) {
+                changed = Object.keys(oldOptions.params).reduce((found, param) => {
+                    if (newOptions.params[param] !== oldOptions.params[param]) {
+                        return true;
+                    }
+                    return found;
+                }, false);
+            } else if (!oldOptions.params && newOptions.params) {
+                changed = true;
+            }
+            let oldParams = wmsToOpenlayersOptions(oldOptions);
+            let newParams = wmsToOpenlayersOptions(newOptions);
+            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION" ].reduce((found, param) => {
+                if (oldParams[param] !== newParams[param]) {
+                    return true;
+                }
+                return found;
+            }, false);
+
+            if (changed) {
+                layer.getSource().updateParams(objectAssign(newParams, newOptions.params));
+            }
+        }
     }
 });

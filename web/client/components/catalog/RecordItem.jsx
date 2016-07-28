@@ -63,12 +63,32 @@ const RecordItem = React.createClass({
     getInitialState() {
         return {};
     },
-    componentWillMount: function() {
+    componentWillMount() {
         document.addEventListener('click', this.handleClick, false);
     },
 
-    componentWillUnmount: function() {
+    componentWillUnmount() {
         document.removeEventListener('click', this.handleClick, false);
+    },
+    getLinks(record) {
+        let wmsGetCap = head(record.references.filter(reference => reference.type &&
+            reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
+        let wfsGetCap = head(record.references.filter(reference => reference.type &&
+            reference.type.indexOf("OGC:WFS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
+        let links = [];
+        if (wmsGetCap) {
+            links.push({
+                url: wmsGetCap.url,
+                labelId: 'catalog.wmsGetCapLink'
+            });
+        }
+        if (wfsGetCap) {
+            links.push({
+                url: wfsGetCap.url,
+                labelId: 'catalog.wfsGetCapLink'
+            });
+        }
+        return links;
     },
     renderThumb(thumbURL, record) {
         let thumbSrc = thumbURL || defaultThumb;
@@ -106,23 +126,7 @@ const RecordItem = React.createClass({
         }
         // creating get capbilities links that will be used to share layers info
         if (this.props.showGetCapLinks) {
-            let wmsGetCap = head(record.references.filter(reference => reference.type &&
-                reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
-            let wfsGetCap = head(record.references.filter(reference => reference.type &&
-                reference.type.indexOf("OGC:WFS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
-            let links = [];
-            if (wmsGetCap) {
-                links.push({
-                    url: wmsGetCap.url,
-                    labelId: 'catalog.wmsGetCapLink'
-                });
-            }
-            if (wfsGetCap) {
-                links.push({
-                    url: wfsGetCap.url,
-                    labelId: 'catalog.wfsGetCapLink'
-                });
-            }
+            let links = this.getLinks(record);
             if (links.length > 0) {
                 buttons.push(<SharingLinks key="sharing-links" popoverContainer={this} links={links}
                     onCopy={this.props.onCopy} buttonSize={this.props.buttonSize} addAuthentication={this.props.addAuthentication}/>);
@@ -172,7 +176,9 @@ const RecordItem = React.createClass({
             url: url,
             visibility: true,
             name: wms.params && wms.params.name,
-            title: this.props.record.title || (wms.params && wms.params.name)
+            title: this.props.record.title || (wms.params && wms.params.name),
+            boundingBox: this.props.record.boundingBox,
+            links: this.getLinks(this.props.record)
         });
         if (this.props.record.boundingBox) {
             let extent = this.props.record.boundingBox.extent;

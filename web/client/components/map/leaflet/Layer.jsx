@@ -13,6 +13,7 @@ const LeafletLayer = React.createClass({
     propTypes: {
         map: React.PropTypes.object,
         type: React.PropTypes.string,
+        srs: React.PropTypes.string,
         options: React.PropTypes.object,
         position: React.PropTypes.number,
         zoomOffset: React.PropTypes.number,
@@ -82,6 +83,14 @@ const LeafletLayer = React.createClass({
             this.layer.setOpacity(opacity);
         }
     },
+    generateOpts(options, position) {
+        return assign({}, options, position ? {zIndex: position, srs: this.props.srs } : null, {
+            zoomOffset: -this.props.zoomOffset,
+            onError: () => {
+                this.props.onInvalid(this.props.type, this.props.options);
+            }
+        });
+    },
     updateZIndex(position) {
         let newPosition = position || this.props.position;
         if (newPosition && this.layer && this.layer.setZIndex) {
@@ -90,12 +99,7 @@ const LeafletLayer = React.createClass({
     },
     createLayer(type, options, position) {
         if (type) {
-            const opts = assign({}, options, position ? {zIndex: position} : null, {
-                zoomOffset: -this.props.zoomOffset,
-                onError: () => {
-                    this.props.onInvalid(this.props.type, this.props.options);
-                }
-            });
+            const opts = this.generateOpts(options, position);
             this.layer = Layers.createLayer(type, opts);
             if (this.layer) {
                 this.layer.layerName = options.name;
@@ -104,7 +108,7 @@ const LeafletLayer = React.createClass({
         }
     },
     updateLayer(newProps, oldProps) {
-        Layers.updateLayer(newProps.type, this.layer, newProps.options, oldProps.options);
+        Layers.updateLayer(newProps.type, this.layer, this.generateOpts(newProps.options, newProps.position), this.generateOpts(oldProps.options, oldProps.position));
     },
     addLayer() {
         if (this.isValid()) {
