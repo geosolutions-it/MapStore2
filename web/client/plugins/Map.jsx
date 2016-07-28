@@ -10,7 +10,6 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 
-const assign = require('object-assign');
 var Spinner = require('react-spinkit');
 
 
@@ -82,9 +81,8 @@ const MapPlugin = React.createClass({
     renderLayers() {
         const projection = this.props.map.projection || 'EPSG:3857';
         return this.props.layers.map((layer, index) => {
-            const options = assign({}, layer, {srs: projection});
             return (
-                <plugins.Layer type={layer.type} position={index} key={layer.id || layer.name} options={options}>
+                <plugins.Layer type={layer.type} srs={projection} position={index} key={layer.id || layer.name} options={layer}>
                     {this.renderLayerContent(layer)}
                 </plugins.Layer>
             );

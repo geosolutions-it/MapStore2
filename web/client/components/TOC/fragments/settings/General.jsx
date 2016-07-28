@@ -8,6 +8,7 @@
 
 var React = require('react');
 const {Input} = require('react-bootstrap');
+const Message = require('../../../I18N/Message');
 
 /**
  * General Settings form for layer
@@ -17,15 +18,21 @@ var General = React.createClass({
         updateSettings: React.PropTypes.func,
         element: React.PropTypes.object
     },
+    getDefaultProps() {
+        return {
+            element: {},
+            updateSettings: () => {}
+        };
+    },
     render() {
         return (<form ref="settings">
-                <Input label="title"
+                <Input label={<Message msgId="layerProperties.title" />}
                     value={this.props.element.title}
                     key="title"
                     type="text"
                     onChange={this.updateEntry.bind(null, "title")}
                 />
-                <Input label="name"
+            <Input label={<Message msgId="layerProperties.name" />}
                     value={this.props.element.name}
                     key="name"
                     type="text"

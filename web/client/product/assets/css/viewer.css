@@ -490,7 +490,7 @@ html, body, #container, .fill {
 }
 
 #mapstore-layer-settings {
-    width: 300px;
+    min-width: 400px;
 }
 
 #mapstore-layer-settings .noUi-background {

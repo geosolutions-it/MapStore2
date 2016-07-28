@@ -7,15 +7,17 @@
  */
 
 const React = require('react');
-const {Modal, Label, Button, Glyphicon} = require('react-bootstrap');
-const Slider = require('react-nouislider');
+const {Modal, Button, Glyphicon, Tabs, Tab} = require('react-bootstrap');
+
 
 require("./settingsModal.css");
 
 const Dialog = require('../../misc/Dialog');
 const General = require('./settings/General');
+const Display = require('./settings/Display');
 const {Portal} = require('react-overlays');
 const assign = require('object-assign');
+const Message = require('../../I18N/Message');
 
 const SettingsModal = React.createClass({
     propTypes: {
@@ -81,16 +83,17 @@ const SettingsModal = React.createClass({
         this.props.hideSettings();
     },
     render() {
-        const settings = [
-            <General updateSettings={this.updateParams} element={this.props.element} key="general" on/>,
-            (<span key="opacity">
-                <label className="control-label">{this.props.opacityText}</label>
-                    <Slider start={[Math.round(this.props.settings.options.opacity * 100)]}
-                        range={{min: 0, max: 100}}
-                        onChange={(opacity) => this.updateParams({opacity: opacity / 100}, this.props.realtimeUpdate)}/>
-                    <Label>{Math.round(this.props.settings.options.opacity * 100) + "%"}</Label></span>
-
-            )];
+        const general = <General updateSettings={this.updateParams} element={this.props.element} key="general" on/>;
+        const display = (<Display
+            opacityText={this.props.opacityText}
+            element={this.props.element}
+            settings={this.props.settings}
+            onChange={(key, value) => this.updateParams({[key]: value}, this.props.realtimeUpdate)} />);
+        const tabs = (<Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
+            <Tab eventKey={1} title={<Message msgId="layerProperties.general" />}>{general}</Tab>
+            <Tab eventKey={2} title={<Message msgId="layerProperties.display" />}>{display}</Tab>
+            <Tab eventKey={3} title={<Message msgId="layerProperties.style" />} disabled>Tab 3 content</Tab>
+          </Tabs>);
         const footer = (<span role="footer">
             {this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} onClick={this.onClose}>{this.props.closeText}</Button> : <span/>}
             <Button bsSize={this.props.buttonSize} bsStyle="primary" onClick={() => {
@@ -104,7 +107,7 @@ const SettingsModal = React.createClass({
                 <Modal {...this.props.options} show={this.props.settings.expanded} container={document.getElementById("body")}>
                     <Modal.Header><Modal.Title>{this.props.titleText}</Modal.Title></Modal.Header>
                     <Modal.Body>
-                        {settings}
+                        {tabs}
                     </Modal.Body>
                     <Modal.Footer>
                         {footer}
@@ -116,7 +119,7 @@ const SettingsModal = React.createClass({
                     <button onClick={this.onClose} className="layer-settings-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
                 </span>
                 <div role="body">
-                    {settings}
+                    {tabs}
                 </div>
                 {footer}
             </Dialog></Portal>);
