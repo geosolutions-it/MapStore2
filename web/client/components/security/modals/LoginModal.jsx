@@ -16,8 +16,9 @@
 const React = require('react');
 const LoginForm = require('../forms/LoginForm');
 const {Modal, Button, Glyphicon} = require('react-bootstrap');
-
+const Message = require('../../../components/I18N/Message');
 const Dialog = require('../../misc/Dialog');
+const LocaleUtils = require('../../../utils/LocaleUtils');
 
 const assign = require('object-assign');
 
@@ -42,6 +43,9 @@ const LoginModal = React.createClass({
       style: React.PropTypes.object,
       buttonSize: React.PropTypes.string,
       includeCloseButton: React.PropTypes.bool
+  },
+  contextTypes: {
+      messages: React.PropTypes.object
   },
   getDefaultProps() {
       return {
@@ -71,12 +75,12 @@ const LoginModal = React.createClass({
       const footer = (<span role="footer">
           <Button
               ref="submit"
-              value="Sign-in"
+              value={LocaleUtils.getMessageById(this.context.messages, "user.signIn")}
               bsStyle="primary"
               bsSize={this.props.buttonSize}
               className="pull-left"
               onClick={this.loginSubmit}
-              key="submit">Sign-in</Button>
+              key="submit">{LocaleUtils.getMessageById(this.context.messages, "user.signIn")}</Button>
           {this.props.includeCloseButton ? <Button
             key="closeButton"
             ref="closeButton"
@@ -85,7 +89,7 @@ const LoginModal = React.createClass({
       </span>);
       return this.props.useModal ? (<Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
           <Modal.Header key="passwordChange" closeButton>
-            <Modal.Title>Login</Modal.Title>
+            <Modal.Title><Message msgId="user.login"/></Modal.Title>
           </Modal.Header>
           <Modal.Body>
               {form}
@@ -95,7 +99,7 @@ const LoginModal = React.createClass({
           </Modal.Footer>
       </Modal>) : (
           <Dialog modal id="mapstore-login-panel" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
-              <span role="header"><span className="login-panel-title">Login</span><button onClick={this.props.onClose} className="login-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
+              <span role="header"><span className="login-panel-title"><Message msgId="user.login"/></span><button onClick={this.props.onClose} className="login-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
               {form}
               {footer}
           </Dialog>

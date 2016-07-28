@@ -369,6 +369,22 @@
                 }
             }
         },
+        "user":{
+            "login": "Login",
+            "logout": "Logout",
+            "info": " Account Info",
+            "changePwd": "Change Password",
+            "newPwd": "New Password",
+            "retypePwd": "Retype Password",
+            "username": "Username",
+            "password": "Password",
+            "signIn":"Sign-in"
+            "loginFail":"Login Fail",
+            "loginFailedStatusMessages": {
+                "usernamePwdInsert": "Please insert username and password",
+                "usernamePwdIncorrect":"Username or password incorrect"
+            }
+        },
         "share":{
             "title": "Share",
             "titlePanel": "Share the map",

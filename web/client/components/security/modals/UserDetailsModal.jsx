@@ -19,6 +19,7 @@ const {Modal, Button, Table, Glyphicon} = require('react-bootstrap');
 const Dialog = require('../../../components/misc/Dialog');
 const assign = require('object-assign');
 const SecurityUtils = require('../../../utils/SecurityUtils');
+const Message = require('../../../components/I18N/Message');
 
   /**
    * A Modal window to show password reset form
@@ -65,7 +66,7 @@ const UserDetails = React.createClass({
       return <Table role="body" responsive striped condensed hover><tbody>{attrsRendered}</tbody></Table>;
   },
   render() {
-      const footer = this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} onClick={this.props.onClose}>Close</Button> : <span/>;
+      const footer = this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} onClick={this.props.onClose}><Message msgId="messages.close"/></Button> : <span/>;
       return this.props.useModal ? (
           <Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
               <Modal.Header key="details" closeButton>

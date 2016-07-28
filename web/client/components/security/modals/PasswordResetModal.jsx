@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PasswordReset = require('../forms/PasswordReset');
-
+const Message = require('../../../components/I18N/Message');
 const {Modal, Button, Glyphicon} = require('react-bootstrap');
 
 const Dialog = require('../../../components/misc/Dialog');
@@ -86,12 +86,12 @@ const PasswordResetModal = React.createClass({
             onClick={() => {
                 this.setState({loading: true});
                 this.onPasswordChange();
-            }}>Reset Password</Button>
+            }}><Message msgId="user.changePwd"/></Button>
         {this.props.includeCloseButton ? <Button
             key="closeButton"
             ref="closeButton"
             bsSize={this.props.buttonSize}
-            onClick={this.props.onClose}>Close</Button> : <span/>}
+            onClick={this.props.onClose}><Message msgId="messages.close"/></Button> : <span/>}
         </span>);
         const body = (<PasswordReset role="body" ref="passwordResetForm"
             onChange={() => {
@@ -100,7 +100,7 @@ const PasswordResetModal = React.createClass({
         return this.props.useModal ? (
             <Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
                 <Modal.Header key="passwordChange" closeButton>
-                  <Modal.Title>Change Password</Modal.Title>
+                  <Modal.Title><Message msgId="user.changePwd"/></Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     {body}
@@ -110,7 +110,7 @@ const PasswordResetModal = React.createClass({
                 </Modal.Footer>
             </Modal>) : (
             <Dialog id="mapstore-changepassword-panel" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
-                <span role="header"><span className="changepassword-panel-title">Change Password</span><button onClick={this.props.onClose} className="login-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
+                <span role="header"><span className="changepassword-panel-title"><Message msgId="user.changePwd"/></span><button onClick={this.props.onClose} className="login-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
                 {body}
                 {footer}
             </Dialog>
