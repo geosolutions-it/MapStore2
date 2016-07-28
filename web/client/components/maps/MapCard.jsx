@@ -68,14 +68,14 @@ const MapCard = React.createClass({
         }];
 
         if (this.props.map.canEdit === true) {
-            availableAction.unshift({
-                 onClick: () => this.displayDeleteDialog(),
-                 glyph: "1-close",
-                 tooltip: <Message msgId="manager.deleteMap" />
-         }, {
+            availableAction.push({
                  onClick: () => this.onEdit(this.props.map),
                  glyph: "wrench",
                  tooltip: <Message msgId="manager.editMapMetadata" />
+         }, {
+                 onClick: () => this.displayDeleteDialog(),
+                 glyph: "remove-circle",
+                 tooltip: <Message msgId="manager.deleteMap" />
          });
         }
         return (
