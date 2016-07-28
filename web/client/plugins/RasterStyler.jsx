@@ -49,12 +49,14 @@ const RasterStyler = React.createClass({
         opacity: React.PropTypes.string,
         withContainer: React.PropTypes.bool,
         open: React.PropTypes.bool,
+        forceOpen: React.PropTypes.bool,
         style: React.PropTypes.object,
         selectLayer: React.PropTypes.func,
         setRasterStyleParameter: React.PropTypes.func,
         error: React.PropTypes.string,
         rasterstyler: React.PropTypes.object,
-        changeLayerProperties: React.PropTypes.func
+        changeLayerProperties: React.PropTypes.func,
+        hideLayerSelector: React.PropTypes.bool
 
     },
     contextTypes: {
@@ -63,6 +65,7 @@ const RasterStyler = React.createClass({
     getDefaultProps() {
         return {
             open: false,
+            forceOpen: false,
             layers: [],
             layer: null,
             withContainer: true,
@@ -72,7 +75,8 @@ const RasterStyler = React.createClass({
             opacity: "1.00",
             style: {},
             rasterstyler: {},
-            changeLayerProperties: () => {}
+            changeLayerProperties: () => {},
+            hideLayerSelector: false
         };
     },
     componentWillMount() {
@@ -107,20 +111,21 @@ const RasterStyler = React.createClass({
     renderSelector() {
         return (<Row style={{marginBottom: "22px"}}>
                     <Row>
-                        <Col xs={4}><label><Message msgId="rasterstyler.layerlabel"/></label></Col>
-                        {this.props.layer ? (<Col xs={4}><label><Message msgId="rasterstyler.typelabel"/></label></Col>) : null}
-                        {this.props.layer ? (<Col xs={4}><label><Message msgId="rasterstyler.opacitylabel"/></label></Col>) : null}
-                    </Row>
-                    <Row>
-                        <Col xs={4} >
+                       {!this.props.hideLayerSelector ? ( <Col xs={4} >
+                            <label><Message msgId="rasterstyler.layerlabel"/></label>
                             <Combobox data={this.props.layers.reverse()}
                                 value={(this.props.layer) ? this.props.layer.id : null}
                                 onChange={(value)=> this.props.selectLayer(value)}
                                 valueField={"id"}
                                 textField={"title"} />
-                        </Col>
-                        {this.props.layer ? (<Col xs={4}> <RasterStyleTypePicker styletype={this.props.styletype}/> </Col>) : null}
-                        {this.props.layer ? (<Col xs={4} style={{paddingRight: "27px", "paddingTop": "7px"}}> <OpacityPicker disabled={this.canApply()} opacity={this.props.opacity}/> </Col>) : null}
+                        </Col>) : null }
+                        {this.props.layer ? (<Col xs={4}>
+                            <label><Message msgId="rasterstyler.typelabel"/></label>
+                            <RasterStyleTypePicker styletype={this.props.styletype}/> </Col>) : null}
+                        {this.props.layer ? (<Col xs={4} style={{paddingRight: "27px", "paddingTop": "7px"}}>
+                            <label><Message msgId="rasterstyler.opacitylabel"/></label>
+                            <OpacityPicker disabled={this.canApply()} opacity={this.props.opacity}/>
+                         </Col>) : null}
                     </Row>
                 </Row>);
     },
@@ -165,7 +170,7 @@ const RasterStyler = React.createClass({
                 </Panel>
                  <Panel header={(<label><Message msgId="rasterstyler.pseudotitle"/></label>)}
                     eventKey="2">
-                    <PseudoColor/>
+                    {this.props.rasterstyler.pseudocolor.activepanel === "2" ? (<PseudoColor/>) : null}
                  </Panel>
             </PanelGroup>
         );
@@ -185,7 +190,7 @@ const RasterStyler = React.createClass({
                 </Grid>);
     },
     render() {
-        if (this.props.open) {
+        if (this.props.forceOpen || this.props.open) {
             return this.props.withContainer ?
                 (<Panel className="mapstore-rasterstyler-panel"
                         style={this.getPanelStyle()}
@@ -204,7 +209,11 @@ const RasterStyler = React.createClass({
         this.props.setRasterStyleParameter("pseudocolor", "colorMapEntry", newColorMapEntry);
     },
     apply() {
-        let style = jsonToSLD(this.props.styletype, this.props.opacity, this.props.rasterstyler, this.props.layer);
+        let style = jsonToSLD({
+            styletype: this.props.styletype,
+            opacity: this.props.opacity,
+            state: this.props.rasterstyler,
+            layer: this.props.layer});
         this.props.changeLayerProperties(this.props.layer.id, { params: assign({}, this.props.layer.params, {SLD_BODY: style})});
     },
     canApply() {

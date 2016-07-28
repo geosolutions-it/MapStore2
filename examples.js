@@ -10,5 +10,6 @@ module.exports = {
     print: path.join(__dirname, "web", "client", "examples", "print", "app"),
     login: path.join(__dirname, "web", "client", "examples", "login", "app"),
     plugins: path.join(__dirname, "web", "client", "examples", "plugins", "app"),
-    rasterstyler: path.join(__dirname, "web", "client", "examples", "rasterstyler", "app")
+    rasterstyler: path.join(__dirname, "web", "client", "examples", "rasterstyler", "app"),
+    styler: path.join(__dirname, "web", "client", "examples", "styler", "app")
 };

@@ -7,7 +7,7 @@
  */
 const React = require('react');
 
-require('../assets/css/viewer.css');
+require('../../../product/assets/css/viewer.css');
 
 const {connect} = require('react-redux');
 
@@ -65,3 +65,4 @@ module.exports = connect((state) => ({
     loadMapConfig,
     reset: resetControls
 })(MapViewer);
+

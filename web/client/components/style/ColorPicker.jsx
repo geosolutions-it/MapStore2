@@ -49,7 +49,7 @@ const ColorPicker = React.createClass({
         {this.props.text}
         </div>
         { this.state.displayColorPicker ? <div className="cp-popover">
-          <div className="cp-cover" onClick={ () => { this.setState({ displayColorPicker: false }); this.props.onChangeColor(this.state.color); }}/>
+          <div className="cp-cover" onClick={ () => { this.setState({ displayColorPicker: false, color: undefined}); this.props.onChangeColor(this.state.color); }}/>
           <SketchPicker color={ this.state.color || this.props.value} onChange={ (color) => { this.setState({ color: color.rgb }); }} />
         </div> : null }
 

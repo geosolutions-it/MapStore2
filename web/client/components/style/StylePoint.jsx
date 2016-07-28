@@ -10,6 +10,8 @@ const React = require('react');
 const {Grid, Row, Col} = require('react-bootstrap');
 const ColorPicker = require('./ColorPicker');
 const StyleCanvas = require('./StyleCanvas');
+const MarkNameSelector = require('./MarkNameSelector');
+
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 numberLocalizer();
 const {NumberPicker} = require('react-widgets');
@@ -18,11 +20,15 @@ require('react-widgets/lib/less/react-widgets.less');
 const StylePoint = React.createClass({
     propTypes: {
         shapeStyle: React.PropTypes.object,
-        setStyleParameter: React.PropTypes.func
+        setStyleParameter: React.PropTypes.func,
+        showMarker: React.PropTypes.bool,
+        showMarkSelector: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
             shapeStyle: {},
+            showMarker: true,
+            showMarkSelector: false,
             setStyleParameter: () => {}
         };
     },
@@ -38,14 +44,20 @@ const StylePoint = React.createClass({
                         />
                     </Col>
                     <Col xs={7}>
-                        <Row>
+                        {this.props.showMarker ? (<Row>
                             <Col xs={1}>
                                 <input aria-label="..." type="checkbox" defaultChecked={this.props.shapeStyle.marker} onChange={(e) => { this.props.setStyleParameter("marker", e.target.checked); }}/>
                             </Col>
                             <Col style={{paddingLeft: 0, paddingTop: 1}} xs={4}>
                                 <label>Marker</label>
                             </Col>
-                        </Row>
+                        </Row>) : null}
+                        {this.props.showMarkSelector ? (<Row style={{marginBottom: 4}}>
+                            <Col style={{paddingTop: 7}}xs={4}><label>Mark</label></Col>
+                            <Col xs={8} style={{paddingRight: 0, paddingLeft: 30}}>
+                                <MarkNameSelector onChange={this.props.setStyleParameter} markName={this.props.shapeStyle.markName}/>
+                            </Col>
+                        </Row>) : null}
                         <Row >
                             <Col xs={4}>
                                 <ColorPicker
@@ -69,7 +81,7 @@ const StylePoint = React.createClass({
                                     onChangeColor={(color) => { if (color) { this.props.setStyleParameter("fill", color); } }} />
                             </Col>
                             <Col xs={8} style={{paddingRight: 0, paddingLeft: 30}}>
-                                <NumberPicker disabled={this.props.shapeStyle.marker} onChange={(number) => {this.props.setStyleParameter("radius", number); }} min={1} max={35} step={1} value={this.props.shapeStyle.radius}/>
+                                <NumberPicker disabled={this.props.shapeStyle.marker} onChange={(number) => {this.props.setStyleParameter("radius", number); }} min={1} max={50} step={1} value={this.props.shapeStyle.radius}/>
                             </Col>
                         </Row>
                     </Col>

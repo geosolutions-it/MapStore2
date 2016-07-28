@@ -41,8 +41,8 @@ const StyleCanvas = React.createClass({
   paint(ctx) {
       ctx.save();
       ctx.beginPath();
-      ctx.fillStyle = `rgba(${ this.props.shapeStyle.fill.r }, ${ this.props.shapeStyle.fill.g }, ${ this.props.shapeStyle.fill.b }, ${ this.props.shapeStyle.fill.a })`;
-      ctx.strokeStyle = `rgba(${ this.props.shapeStyle.color.r }, ${ this.props.shapeStyle.color.g }, ${ this.props.shapeStyle.color.b }, ${ this.props.shapeStyle.color.a })`;
+      ctx.fillStyle = (this.props.shapeStyle.fill) ? `rgba(${ this.props.shapeStyle.fill.r }, ${ this.props.shapeStyle.fill.g }, ${ this.props.shapeStyle.fill.b }, ${ this.props.shapeStyle.fill.a })` : null;
+      ctx.strokeStyle = (this.props.shapeStyle.color) ? `rgba(${ this.props.shapeStyle.color.r }, ${ this.props.shapeStyle.color.g }, ${ this.props.shapeStyle.color.b }, ${ this.props.shapeStyle.color.a })` : null;
       ctx.lineWidth = this.props.shapeStyle.width;
       switch (this.props.geomType) {
           case 'Polygon': {
@@ -54,7 +54,7 @@ const StyleCanvas = React.createClass({
               break;
           }
           case 'Point': {
-              this.paintPoint(ctx);
+              this.paintPoint(ctx, this.props.shapeStyle.markName);
               break;
           }
           case 'Marker': {
@@ -87,9 +87,47 @@ const StyleCanvas = React.createClass({
       ctx.bezierCurveTo(40, 40, 70, 0, 90, 20);
       ctx.stroke();
   },
-  paintPoint(ctx) {
+  paintPoint(ctx, markName) {
       // ctx.moveTo(50, 40);
-      ctx.arc(50, 48.5, this.props.shapeStyle.radius, 0, 2 * Math.PI);
+      let r = this.props.shapeStyle.radius;
+      let rm = r / 2;
+      switch (markName) {
+          case 'square': {
+              ctx.rect(50 - rm, 48.5 - rm, r, r);
+              break;
+          }
+          case 'circle': {
+              ctx.arc(50, 48.5, rm, 0, 2 * Math.PI);
+              break;
+          }
+          case 'triangle': {
+              let h = Math.sqrt(3) * r / 2;
+              // ctx.arc(50, 48.5, rm, 0, 2 * Math.PI);
+              let bc = h / 3;
+              ctx.moveTo(50, 48.5 - (2 * bc));
+              ctx.lineTo(50 + rm, 48.5 + bc);
+              ctx.lineTo(50 - rm, 48.5 + bc);
+              ctx.closePath();
+              break;
+          }
+          case 'star': {
+              this.paintStar(ctx, 50, 48.5, 5, rm, rm / 2);
+              break;
+          }
+          case 'cross': {
+              this.paintCross(ctx, 50, 48.5, r, 0.23);
+              break;
+          }
+          case 'x': {
+              ctx.translate(50, 48.5);
+              ctx.rotate(45 * Math.PI / 180);
+              ctx.translate(-50, -48.5);
+              this.paintCross(ctx, 50, 48.5, r, 0.23);
+              break;
+          }
+          default:
+            ctx.arc(50, 48.5, r, 0, 2 * Math.PI);
+      }
       ctx.fill();
       ctx.stroke();
   },
@@ -102,6 +140,45 @@ const StyleCanvas = React.createClass({
       }catch (e) {
           return;
       }
+  },
+  // http://jsfiddle.net/m1erickson/8j6kdf4o/
+  paintStar(ctx, cx, cy, spikes = 5, outerRadius, innerRadius) {
+      let rot = Math.PI / 2 * 3;
+      let x = cx;
+      let y = cy;
+      const step = Math.PI / spikes;
+      ctx.moveTo(cx, cy - outerRadius);
+      for (let i = 0; i < spikes; i++) {
+          x = cx + Math.cos(rot) * outerRadius;
+          y = cy + Math.sin(rot) * outerRadius;
+          ctx.lineTo(x, y);
+          rot += step;
+
+          x = cx + Math.cos(rot) * innerRadius;
+          y = cy + Math.sin(rot) * innerRadius;
+          ctx.lineTo(x, y);
+          rot += step;
+      }
+      ctx.lineTo(cx, cy - outerRadius);
+      ctx.closePath();
+  },
+  paintCross(ctx, cx, cy, r, p) {
+      const w = r * p;
+      const wm = w / 2;
+      const rm = r / 2;
+      ctx.moveTo(cx - wm, cy - rm);
+      ctx.lineTo(cx + wm, cy - rm);
+      ctx.lineTo(cx + wm, cy - wm);
+      ctx.lineTo(cx + rm, cy - wm);
+      ctx.lineTo(cx + rm, cy + wm);
+      ctx.lineTo(cx + wm, cy + wm);
+      ctx.lineTo(cx + wm, cy + rm);
+      ctx.lineTo(cx - wm, cy + rm);
+      ctx.lineTo(cx - wm, cy + wm);
+      ctx.lineTo(cx - rm, cy + wm);
+      ctx.lineTo(cx - rm, cy - wm);
+      ctx.lineTo(cx - wm, cy - wm);
+      ctx.closePath();
   }
 });
 
