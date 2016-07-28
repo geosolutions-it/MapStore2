@@ -378,7 +378,7 @@
             "retypePwd": "Retype Password",
             "username": "Username",
             "password": "Password",
-            "signIn":"Sign-in"
+            "signIn":"Sign-in",
             "loginFail":"Login Fail",
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Please insert username and password",
