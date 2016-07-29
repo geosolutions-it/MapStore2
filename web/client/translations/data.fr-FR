@@ -18,8 +18,17 @@
         "about_p5-1": "page.",
         "about_h21": "Crédits",
         "about_p6": "MapStore2 est développé par:",
-        "layers": "couches",
         "enable": "Activer",
+        "layers": "couches",
+        "layerProperties": {
+            "windowTitle": "Propriétés de la couche",
+            "title": "Titre",
+            "name": "Nom",
+            "general": "Général",
+            "display": "Affichage",
+            "style": "Style",
+            "format": "Format"
+        },
         "background": "Fond de plan",
         "language": "langue",
         "mousePositionCoordinates": "Coordonnées",
@@ -86,23 +95,32 @@
         },
         "manager": {
             "openInANewTab":"Ouvrir la carte",
+            "deleteMap":"Supprimer la carte",
+            "deleteMapMessage": "Voulez-vous supprimer cette carte?",
+            "editMapMetadata":"Modifier les metadonnées de la carte",
             "mapTypes_combo": "Selectionner le viewer de carte: ",
             "maps_title": "Cartes",
             "locales_combo": "Langue:"
         },
         "map": {
-            "loading": "Chargement..."
+            "loading": "Chargement...",
+            "name": "Nom",
+            "description": "Description",
+            "namePlaceholder": "Nom de la carte",
+            "descriptionPlaceholder": "Description de la carte",
+            "saveTitle": "Sauver la carte",
+            "saveText": "Sauver la carte courante?"
         },
         "print":{
             "paneltitle": "Impression",
             "layout": "Mise en page",
             "sheetsize": "Taille du papier:",
             "legendoptions": "Options de la légende",
-            "submit": "Imprimer",
             "title": "Titre",
             "titleplaceholder": "Entrer un titre...",
             "description": "Description",
             "descriptionplaceholder": "Entrer une description...",
+            "submit": "Imprimer",
             "resolution": "Résolution:",
             "defaultBackground": "Utiliser OSM comme fond de plan",
             "printtooltip": "Impression",
@@ -291,7 +309,9 @@
             "rasterstyler": "Définir une valeur minimale, maximale, le nombre de classe et une gamme de couleur et générer une nouvelle couche image classifiée",
             "expandToolbar": "This is the helptext for Expand / Collapse",
             "historyundo": "Utiliser ce bouton pour revenir à l'extension et la position précédente",
-            "historyredo": "Utiliser ce bouton pour revenir à l'extension et la position suivante"
+            "historyredo": "Utiliser ce bouton pour revenir à l'extension et la position suivante",
+            "vectorstyler": "Créer un style pour la couche vectorielle sélectionnée",
+            "styler": "Créer un style pour la couche sélectionnée"
         },
         "queryform": {
             "query": "Recherche",
@@ -357,7 +377,22 @@
                 }
             }
         },
-        "share":{
+        "user":{
+            "login": "Login",
+            "logout": "Logout",
+            "info": " Informations du compte",
+            "changePwd": "Changer le mot de passe",
+            "newPwd": "Nouveau mot de passe",
+            "retypePwd": "Confirmer le mot de passe",
+            "username": "Nom d'utilisateur",
+            "password": "Mot de passe",
+            "signIn":"S'authentifier",
+            "loginFail":"Erreur d'authentification",
+            "loginFailedStatusMessages": {
+                "usernamePwdInsert": "Merci d'entrer vos nom d'utilisateur et mot de passe",
+                "usernamePwdIncorrect":"Nom d'utilisateur ou mot de passe incorrect"
+            }
+        },"share":{
             "title": "Partager",
             "titlePanel": "Partager la carte",
             "socialIntro": "via votre réseau social favori",
@@ -382,9 +417,12 @@
             "title": "Ajouter un fichier Shape local",
             "tooltip": "Ajouter un fichier Shape local à la carte.",
             "placeholder": "Déposer votre fichier ici ou cliquer pour choisir le fichier shape à importer.",
+            "defaultStyle": "Style par défaut",
+            "zoom": "Zoomer sur le fichier shape",
             "error": {"select": "Sélectionner un ou plusieurs fichiers zip"},
             "add": "Ajouter",
-            "cancel": "Annuler"
+            "cancel": "Annuler",
+            "success" : " Import correct"
         },
         "catalog": {
             "title": "Catalogue",
@@ -393,16 +431,11 @@
             "getWMSLink": "Lien WMS",
             "error": "Une erreur s'est produite lors du chargement des données du catalogue",
             "pageInfo": "{start}-{end} résultats parmi {total}",
-            "noRecordsMatched": "Aucun enregistrement correspondant",
-            "wmsGetCapLink": "WMS",
-            "wfsGetCapLink": "WFS",
-            "share": "Partager",
-            "copyToClipboard": "Copier vers le presse-papier",
-            "copied": "Copié!"
+            "noRecordsMatched": "Aucun enregistrement correspondant"
         },
         "rasterstyler": {
-            "tooltip": "Créer et éditer un style pour une couche image",
             "paneltitle": "Editeur de style d'image",
+            "tooltip": "Créer et éditer un style pour une couche image",
             "layerlabel": "Couche",
             "typelabel": "Type de style",
             "opacitylabel": "Opacité",
@@ -420,8 +453,6 @@
             "enhancement" : "Amélioration",
             "algorithmTitle" : "Algorithme optionnel",
             "value" : "Valeur",
-            "min": "Min",
-            "max": "Max",
             "enha": {
                 "none": "Aucun",
                 "Normalize": "Normaliser",
@@ -463,6 +494,51 @@
             "pseudo": "Fausse couleur",
             "multi": "Bandes multiples",
             "single": "simple bande"
+        },
+        "featuregrid": {
+            "header": "Rechercher la liste des résultats",
+            "tools": "Panneau d'outils",
+            "export": "Exporter",
+            "selectall": "Tout sélectionner",
+            "deselectall": "Tout désélectionner",
+            "pagination": {
+                "page": "Page",
+                "of":   "de",
+                "to":   "à"
+            }
+        },
+        "vectorstyler": {
+            "tooltip": "Créer et éditer un style de couche vectorielle",
+            "paneltitle": "Style de couche",
+            "layerlabel": "Couche",
+            "rulelabel": "Règles",
+            "namelabel": "Nom de règle",
+            "symboltitle": "Symbole",
+            "labeltitle": "Label",
+            "conditiontitle": "Conditions",
+            "applybtn": "Appliquer le style",
+            "addrulebtn": "Ajouter une règle",
+            "removerulebtn": "Retirer une règle"
+        },
+        "scaledenominator": {
+            "minlabel": "Dénominateur d'échelle minimum",
+            "maxlabel": "Dénominateur d'échelle maximum",
+            "maxerror": "La valeur max doit être plus grande que la valeur min",
+            "minerror": "La vleur min doit être plus petite que la valeur max",
+            "none": "Aucun"
+        },
+        "markNameSelector": {
+            "circle": "Cercle",
+            "square": "Carré",
+            "triangle": "Triangle",
+            "star": "Etoile",
+            "cross": "Croix",
+            "x": "X"
+        },
+        "styler": {
+            "tooltip": "Créer et éditer un style de couche",
+            "paneltitle": "Style de couche",
+            "layerlabel": "Couche"
         }
     }
 }
