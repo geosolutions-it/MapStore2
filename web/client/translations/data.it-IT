@@ -24,6 +24,7 @@
             "windowTitle": "Proprietà del livello",
             "title": "Titolo",
             "name": "Nome",
+            "group": "Gruppo",
             "general": "Generale",
             "display": "Visualizzazione",
             "style": "Stile",

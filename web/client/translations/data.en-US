@@ -23,6 +23,7 @@
             "windowTitle": "Layer Properties",
             "title": "Title",
             "name": "Name",
+            "group": "Group",
             "general": "General",
             "display": "Display",
             "style": "Style",

@@ -30,6 +30,10 @@ const deepChange = (nodes, findValue, propName, propValue) => {
     return [];
 };
 
+/**
+Removes a group even if it is nested
+Cannot be used to remove layers as well
+**/
 const deepRemove = (nodes, findValue) => {
     if (nodes && isArray(nodes) && nodes.length > 0) {
         return nodes.filter((node) => node.name !== findValue).map((node) => isObject(node) ? assign({}, node, node.nodes ? {
@@ -37,6 +41,61 @@ const deepRemove = (nodes, findValue) => {
         } : {}) : node);
     }
     return nodes;
+};
+
+/*
+Removes a Layer from the TOC
+Currently supports only one level of depth
+*/
+const removeNode = (groups, nodeId) => {
+    if (groups && isArray(groups) && groups.length > 0) {
+        return groups.map((group) => group.nodes && group.nodes.length ?
+            assign({}, group, {nodes: group.nodes.filter((layerId) => layerId !== nodeId)}
+            )
+         : group);
+    }
+    return groups;
+};
+
+// add the newGroup to the list if it does not already exists
+const addGroup = (groups, newGroup) => {
+    return groups.find(
+        (group) => group.id === newGroup
+    ) ?
+    groups :
+    groups.concat({
+            id: newGroup,
+            name: newGroup,
+            title: newGroup,
+            nodes: [],
+            expanded: true
+        });
+};
+
+/*
+Moves a Layer to a new group
+*/
+const moveNode = (groups, nodeId, newGroup) => {
+    if (groups && isArray(groups) && groups.length > 0) {
+        return removeNode(addGroup(groups, newGroup), nodeId)
+        // Add the layer to the new group
+        .map((group) => {
+            if (isObject(group)) {
+                return group.id === newGroup ?
+                    assign({}, group, {nodes: (group.nodes || []).concat(nodeId)}) :
+                    group;
+            }
+            return group;
+        })
+        // Remove empty groups
+        .filter((group) => group &&
+            (
+                group.name === 'Default' ||
+                group.nodes && isArray(group.nodes) && group.nodes.length > 0
+            )
+        );
+    }
+    return groups;
 };
 
 const getNode = (nodes, name) => {
@@ -123,12 +182,27 @@ function layers(state = [], action) {
             const flatLayers = (state.flat || []);
             const selector = action.nodeType === 'groups' ? 'group' : 'id';
 
+            // const newGroups = action.options && action.options.group && action.options.group !== layer;
+            let sameGroup = false;
+
             const newLayers = flatLayers.map((layer) => {
                 if (layer[selector] === action.node || layer[selector].indexOf(action.node + '.') === 0) {
+                    if (!action.options.hasOwnProperty("group") || layer.group === (action.options.group || 'Default')) {
+                        // If the layer didn't change group, raise a flag to prevent groups update
+                        sameGroup = true;
+                    }
+                    // Edit the layer with the new options
                     return assign({}, layer, action.options);
                 }
                 return assign({}, layer);
             });
+
+            if (!sameGroup) {
+                return assign({}, state, {
+                    flat: newLayers,
+                    groups: moveNode(state.groups, action.node, (action.options.group || 'Default'))
+                });
+            }
             return assign({}, state, {flat: newLayers});
         }
         case INVALID_LAYER: {

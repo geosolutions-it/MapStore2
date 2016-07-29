@@ -38,7 +38,8 @@ const SettingsModal = React.createClass({
         panelStyle: React.PropTypes.object,
         panelClassName: React.PropTypes.string,
         includeCloseButton: React.PropTypes.bool,
-        realtimeUpdate: React.PropTypes.bool
+        realtimeUpdate: React.PropTypes.bool,
+        groups: React.PropTypes.array
     },
     getDefaultProps() {
         return {
@@ -55,7 +56,7 @@ const SettingsModal = React.createClass({
                 minWidth: "300px",
                 zIndex: 100,
                 position: "absolute",
-                overflow: "auto",
+                // overflow: "auto",
                 top: "100px",
                 left: "calc(50% - 150px)",
                 backgroundColor: "white"
@@ -83,7 +84,12 @@ const SettingsModal = React.createClass({
         this.props.hideSettings();
     },
     render() {
-        const general = <General updateSettings={this.updateParams} element={this.props.element} key="general" on/>;
+        const general = (<General
+            updateSettings={this.updateParams}
+            element={this.props.element}
+            groups={this.props.groups}
+            key="general"
+            on/>);
         const display = (<Display
             opacityText={this.props.opacityText}
             element={this.props.element}
@@ -127,7 +133,7 @@ const SettingsModal = React.createClass({
         return null;
     },
     updateParams(newParams, updateNode = true) {
-        let originalSettings = {};
+        let originalSettings = assign({}, this.state.originalSettings);
         // TODO one level only storage of original settings for the moment
         Object.keys(newParams).forEach((key) => {
             originalSettings[key] = this.state.initialState[key];

@@ -35,7 +35,8 @@ var DefaultLayer = React.createClass({
         closeText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         modalOptions: React.PropTypes.object,
         settingsOptions: React.PropTypes.object,
-        visibilityCheckType: React.PropTypes.string
+        visibilityCheckType: React.PropTypes.string,
+        groups: React.PropTypes.array
     },
     getDefaultProps() {
         return {
@@ -79,7 +80,8 @@ var DefaultLayer = React.createClass({
                                titleText={this.props.settingsText}
                                opacityText={this.props.opacityText}
                                saveText={this.props.saveText}
-                               closeText={this.props.closeText}/>
+                               closeText={this.props.closeText}
+                               groups={this.props.groups}/>
                 );
             }
         }

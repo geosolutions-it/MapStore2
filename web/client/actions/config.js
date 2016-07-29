@@ -38,9 +38,7 @@ function loadMapConfig(configName, mapId) {
                 } catch(e) {
                     dispatch(configureError('Configuration file broken (' + configName + '): ' + e.message));
                 }
-
             }
-
         }).catch((e) => {
             dispatch(configureError(e));
         });
