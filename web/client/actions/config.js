@@ -15,7 +15,7 @@ function configureMap(conf, mapId) {
     return {
         type: MAP_CONFIG_LOADED,
         config: conf,
-        legacy: mapId !== null,
+        legacy: !!mapId,
         mapId: mapId
     };
 }
