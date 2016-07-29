@@ -19,7 +19,7 @@ const {isArray} = require('lodash');
 
 const parseUrl = (url) => {
     const parsed = urlUtil.parse(url, true);
-    return urlUtil.format(assign({}, parsed, {
+    return urlUtil.format(assign({}, parsed, {search: null}, {
         query: assign({
             service: "WMS",
             version: "1.3.0",

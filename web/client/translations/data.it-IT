@@ -433,7 +433,10 @@
             "getWMSLink": "Ottieni link WMS",
             "error": "C'è stato un errore durante il caricamento del catalogo",
             "pageInfo": "Risultati {start}-{end} di {total}",
-            "noRecordsMatched": "Nessun risultato trovato"
+            "noRecordsMatched": "Nessun risultato trovato",
+            "catalogUrlPlaceholder": "URL del catalogo...",
+            "textSearchPlaceholder": "testo da cercare...",
+            "search": "Cerca"
         },
         "rasterstyler": {
             "paneltitle": "Raster Styler",

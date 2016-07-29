@@ -437,7 +437,10 @@
             "wfsGetCapLink": "WFS",
             "share": "Share",
             "copyToClipboard": "Copy to clipboard",
-            "copied": "Copied!"
+            "copied": "Copied!",
+            "catalogUrlPlaceholder": "Enter catalog URL...",
+            "textSearchPlaceholder": "text to search...",
+            "search": "Search"
         },
         "rasterstyler": {
             "tooltip": "Create and edit raster layer style",

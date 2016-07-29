@@ -8,8 +8,9 @@
 const React = require('react');
 
 const Message = require('../I18N/Message');
+const LocaleUtils = require('../../utils/LocaleUtils');
 
-const {Input, Alert, Pagination} = require('react-bootstrap');
+const {Input, Alert, Pagination, Button} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 
 const RecordGrid = require('./RecordGrid');
@@ -32,7 +33,12 @@ const Catalog = React.createClass({
         showGetCapLinks: React.PropTypes.bool,
         addAuthentication: React.PropTypes.bool,
         records: React.PropTypes.array,
-        gridOptions: React.PropTypes.object
+        gridOptions: React.PropTypes.object,
+        includeSearchButton: React.PropTypes.bool,
+        buttonStyle: React.PropTypes.object
+    },
+    contextTypes: {
+        messages: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -44,7 +50,11 @@ const Catalog = React.createClass({
             chooseCatalogUrl: true,
             records: [],
             formats: [{name: 'csw', label: 'CSW'}],
-            format: 'csw'
+            format: 'csw',
+            includeSearchButton: false,
+            buttonStyle: {
+                marginBottom: "10px"
+            }
         };
     },
     getInitialState() {
@@ -62,10 +72,7 @@ const Catalog = React.createClass({
     },
     onKeyDown(event) {
         if (event.keyCode === 13) {
-            this.props.onSearch(this.props.format, this.getCatalogUrl(), 1, this.props.pageSize, this.refs.searchText.getValue());
-            this.setState({
-                loading: true
-            });
+            this.search();
         }
     },
     getCatalogUrl() {
@@ -131,8 +138,15 @@ const Catalog = React.createClass({
             return (<Input
                 ref="catalogURL"
                 type="text"
-                placeholder={"Enter catalog URL..."}
+                placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.catalogUrlPlaceholder")}
                 onChange={this.setCatalogUrl}/>);
+        }
+    },
+    renderSearchButton() {
+        if (this.props.includeSearchButton) {
+            return (<Button style={this.props.buttonStyle} onClick={this.search}>
+                        <Message msgId="catalog.search"/>
+                    </Button>);
         }
     },
     renderFormatChoice() {
@@ -156,14 +170,21 @@ const Catalog = React.createClass({
                          style={{
                              textOverflow: "ellipsis"
                          }}
-                         placeholder={"text to search..."}
+                         placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.textSearchPlaceholder")}
                          onKeyDown={this.onKeyDown}/>
+                     {this.renderSearchButton()}
                  </div>
                  <div>
                     {this.renderResult()}
                  </div>
              </div>
         );
+    },
+    search() {
+        this.props.onSearch(this.props.format, this.getCatalogUrl(), 1, this.props.pageSize, this.refs.searchText.getValue());
+        this.setState({
+            loading: true
+        });
     },
     setCatalogUrl(e) {
         this.setState({catalogURL: e.target.value});
