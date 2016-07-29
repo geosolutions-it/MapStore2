@@ -3,6 +3,7 @@ node_js:
   - 0.12
 script: npm run travis
 before_install:
+    - npm install -g npm@3.10.5
     - export DISPLAY=:99.0
     - sh -e /etc/init.d/xvfb start
 before_script:
