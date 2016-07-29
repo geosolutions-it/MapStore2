@@ -18,6 +18,7 @@
         "about_p5-1": "page.",
         "about_h21": "Crédits",
         "about_p6": "MapStore2 est développé par:",
+<<<<<<< HEAD
         "enable": "Activer",
         "layers": "couches",
         "layerProperties": {
@@ -29,6 +30,10 @@
             "style": "Style",
             "format": "Format"
         },
+=======
+        "layers": "couches",
+        "enable": "Activer",
+>>>>>>> 973cced6d27d9f4d9aa070ad94085d701f75d9a2
         "background": "Fond de plan",
         "language": "langue",
         "mousePositionCoordinates": "Coordonnées",
@@ -95,14 +100,18 @@
         },
         "manager": {
             "openInANewTab":"Ouvrir la carte",
+<<<<<<< HEAD
             "deleteMap":"Supprimer la carte",
             "deleteMapMessage": "Voulez-vous supprimer cette carte?",
             "editMapMetadata":"Modifier les metadonnées de la carte",
+=======
+>>>>>>> 973cced6d27d9f4d9aa070ad94085d701f75d9a2
             "mapTypes_combo": "Selectionner le viewer de carte: ",
             "maps_title": "Cartes",
             "locales_combo": "Langue:"
         },
         "map": {
+<<<<<<< HEAD
             "loading": "Chargement...",
             "name": "Nom",
             "description": "Description",
@@ -110,17 +119,27 @@
             "descriptionPlaceholder": "Description de la carte",
             "saveTitle": "Sauver la carte",
             "saveText": "Sauver la carte courante?"
+=======
+            "loading": "Chargement..."
+>>>>>>> 973cced6d27d9f4d9aa070ad94085d701f75d9a2
         },
         "print":{
             "paneltitle": "Impression",
             "layout": "Mise en page",
             "sheetsize": "Taille du papier:",
             "legendoptions": "Options de la légende",
+<<<<<<< HEAD
+=======
+            "submit": "Imprimer",
+>>>>>>> 973cced6d27d9f4d9aa070ad94085d701f75d9a2
             "title": "Titre",
             "titleplaceholder": "Entrer un titre...",
             "description": "Description",
             "descriptionplaceholder": "Entrer une description...",
+<<<<<<< HEAD
             "submit": "Imprimer",
+=======
+>>>>>>> 973cced6d27d9f4d9aa070ad94085d701f75d9a2
             "resolution": "Résolution:",
             "defaultBackground": "Utiliser OSM comme fond de plan",
             "printtooltip": "Impression",
@@ -309,9 +328,13 @@
             "rasterstyler": "Définir une valeur minimale, maximale, le nombre de classe et une gamme de couleur et générer une nouvelle couche image classifiée",
             "expandToolbar": "This is the helptext for Expand / Collapse",
             "historyundo": "Utiliser ce bouton pour revenir à l'extension et la position précédente",
+<<<<<<< HEAD
             "historyredo": "Utiliser ce bouton pour revenir à l'extension et la position suivante",
             "vectorstyler": "Créer un style pour la couche vectorielle sélectionnée",
             "styler": "Créer un style pour la couche sélectionnée"
+=======
+            "historyredo": "Utiliser ce bouton pour revenir à l'extension et la position suivante"
+>>>>>>> 973cced6d27d9f4d9aa070ad94085d701f75d9a2
         },
         "queryform": {
             "query": "Recherche",
@@ -377,6 +400,7 @@
                 }
             }
         },
+<<<<<<< HEAD
         "user":{
             "login": "Login",
             "logout": "Logout",
@@ -393,6 +417,9 @@
                 "usernamePwdIncorrect":"Nom d'utilisateur ou mot de passe incorrect"
             }
         },"share":{
+=======
+        "share":{
+>>>>>>> 973cced6d27d9f4d9aa070ad94085d701f75d9a2
             "title": "Partager",
             "titlePanel": "Partager la carte",
             "socialIntro": "via votre réseau social favori",
@@ -417,12 +444,18 @@
             "title": "Ajouter un fichier Shape local",
             "tooltip": "Ajouter un fichier Shape local à la carte.",
             "placeholder": "Déposer votre fichier ici ou cliquer pour choisir le fichier shape à importer.",
+<<<<<<< HEAD
             "defaultStyle": "Style par défaut",
             "zoom": "Zoomer sur le fichier shape",
             "error": {"select": "Sélectionner un ou plusieurs fichiers zip"},
             "add": "Ajouter",
             "cancel": "Annuler",
             "success" : " Import correct"
+=======
+            "error": {"select": "Sélectionner un ou plusieurs fichiers zip"},
+            "add": "Ajouter",
+            "cancel": "Annuler"
+>>>>>>> 973cced6d27d9f4d9aa070ad94085d701f75d9a2
         },
         "catalog": {
             "title": "Catalogue",
@@ -431,11 +464,24 @@
             "getWMSLink": "Lien WMS",
             "error": "Une erreur s'est produite lors du chargement des données du catalogue",
             "pageInfo": "{start}-{end} résultats parmi {total}",
+<<<<<<< HEAD
             "noRecordsMatched": "Aucun enregistrement correspondant"
         },
         "rasterstyler": {
             "paneltitle": "Editeur de style d'image",
             "tooltip": "Créer et éditer un style pour une couche image",
+=======
+            "noRecordsMatched": "Aucun enregistrement correspondant",
+            "wmsGetCapLink": "WMS",
+            "wfsGetCapLink": "WFS",
+            "share": "Partager",
+            "copyToClipboard": "Copier vers le presse-papier",
+            "copied": "Copié!"
+        },
+        "rasterstyler": {
+            "tooltip": "Créer et éditer un style pour une couche image",
+            "paneltitle": "Editeur de style d'image",
+>>>>>>> 973cced6d27d9f4d9aa070ad94085d701f75d9a2
             "layerlabel": "Couche",
             "typelabel": "Type de style",
             "opacitylabel": "Opacité",
@@ -453,6 +499,11 @@
             "enhancement" : "Amélioration",
             "algorithmTitle" : "Algorithme optionnel",
             "value" : "Valeur",
+<<<<<<< HEAD
+=======
+            "min": "Min",
+            "max": "Max",
+>>>>>>> 973cced6d27d9f4d9aa070ad94085d701f75d9a2
             "enha": {
                 "none": "Aucun",
                 "Normalize": "Normaliser",
@@ -494,6 +545,7 @@
             "pseudo": "Fausse couleur",
             "multi": "Bandes multiples",
             "single": "simple bande"
+<<<<<<< HEAD
         },
         "featuregrid": {
             "header": "Rechercher la liste des résultats",
@@ -539,6 +591,8 @@
             "tooltip": "Créer et éditer un style de couche",
             "paneltitle": "Style de couche",
             "layerlabel": "Couche"
+=======
+>>>>>>> 973cced6d27d9f4d9aa070ad94085d701f75d9a2
         }
     }
 }
