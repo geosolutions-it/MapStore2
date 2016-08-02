@@ -14,7 +14,7 @@
 .mapstore-styler-panel button:disabled{
     color:white;
 }
-.panel-heading{
+.mapstore-styler-panel .panel-heading{
     background-color: #078AA3 !important;
     color:white !important;
 }
@@ -23,10 +23,7 @@
     height: 32px !important;
 
 }
-#mapstore-langselector {
-    width: 100px;
-    margin-left:5px;
-}
+
 .mapstore-styler-panel, .panel, .panel-default{
     overflow: visible !important;
 }

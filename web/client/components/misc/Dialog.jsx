@@ -10,6 +10,7 @@
 const React = require('react');
 
 const Draggable = require('react-draggable');
+require('./style/dialog.css');
 
 const Dialog = React.createClass({
     propTypes: {
@@ -36,7 +37,7 @@ const Dialog = React.createClass({
     },
     render() {
         const dialog = (<Draggable start={{x: 0, y: 0}} handle=".draggable-header, .draggable-header *">
-            <div id={this.props.id} style={this.props.style} className={this.props.className}>
+            <div id={this.props.id} style={this.props.style} className={this.props.className + " modal-dialog-container"}>
                 <div className={this.props.headerClassName + " draggable-header"}>
                     {this.renderRole('header')}
                 </div>
