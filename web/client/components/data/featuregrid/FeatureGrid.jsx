@@ -175,6 +175,7 @@ const FeatureGrid = React.createClass({
                         page: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.page") || 'Page',
                         of: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.of") || 'of',
                         to: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.to") || 'to',
+                        more: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.more") || 'more',
                         next: '>',
                         last: '>|',
                         first: '|<',

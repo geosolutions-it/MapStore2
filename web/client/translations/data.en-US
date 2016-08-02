@@ -516,7 +516,8 @@
             "pagination": {
                 "page": "Page",
                 "of":   "of",
-                "to":   "to"
+                "to":   "to",
+                "more": "more"
             }
         },
         "vectorstyler": {
