@@ -62,18 +62,18 @@ const MapCard = React.createClass({
     render: function() {
 
         var availableAction = [{
-            onClick: () => this.props.viewerUrl(this.props.map),
+            onClick: (evt) => {this.stopPropagate(evt); this.props.viewerUrl(this.props.map); },
             glyph: "chevron-right",
             tooltip: <Message msgId="manager.openInANewTab" />
         }];
 
         if (this.props.map.canEdit === true) {
             availableAction.push({
-                 onClick: () => this.onEdit(this.props.map),
+                 onClick: (evt) => {this.stopPropagate(evt); this.onEdit(this.props.map); },
                  glyph: "wrench",
                  tooltip: <Message msgId="manager.editMapMetadata" />
          }, {
-                 onClick: () => this.displayDeleteDialog(),
+                 onClick: (evt) => {this.stopPropagate(evt); this.displayDeleteDialog(); },
                  glyph: "remove-circle",
                  tooltip: <Message msgId="manager.deleteMap" />
          });
@@ -85,6 +85,14 @@ const MapCard = React.createClass({
                <ConfirmModal ref="deleteMapModal" show={this.state.displayDeleteDialog} onHide={this.close} onClose={this.close} onConfirm={this.onConfirmDelete} titleText={<Message msgId="manager.deleteMap" />} confirmText={<Message msgId="manager.deleteMap" />} cancelText={<Message msgId="cancel" />} body={<Message msgId="manager.deleteMapMessage" />} />
            </GridCard>
         );
+    },
+    stopPropagate(event) {
+        // prevent click on parent container
+        const e = event || window.event || {};
+        e.cancelBubble = true;
+        if (e.stopPropagation) {
+            e.stopPropagation();
+        }
     },
     close() {
         this.setState({
