@@ -21,6 +21,13 @@
     right: 15px;
 }
 
+.gridcard-tools .spinner{
+    left: -8px
+}
+.gridcard-tools .spinner div:before{
+    background-color: white
+}
+
 .gridcard-button {
     height: 30px;
     width: 30px;
