@@ -161,7 +161,7 @@ const ShapeFileUploadAndStyle = React.createClass({
         Promise.resolve(this.props.addShapeLayer( styledLayer )).then(() => {
             this.props.shapeLoading(false);
 
-            // calculates the bbox that contain last shapefile and the previous added
+            // calculates the bbox that contains all shapefiles added
             const bbox = this.props.layers[0].features.reduce((bboxtotal, feature) => {
                 return [
                     Math.min(bboxtotal[0], feature.geometry.bbox[0]),

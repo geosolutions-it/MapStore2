@@ -10,8 +10,8 @@ var React = require('react');
 var I18N = require('../../../components/I18N/I18N');
 var {Label, Input} = require('react-bootstrap');
 const {connect} = require('react-redux');
-const {updateMapMetadata, deleteMap} = require('../../../actions/maps');
-const MapGrid = connect(() => ({}), {updateMapMetadata, deleteMap})(require('../../../components/maps/MapGrid'));
+const {updateMapMetadata, deleteMap, createThumbnail} = require('../../../actions/maps');
+const MapGrid = connect(() => ({}), {updateMapMetadata, deleteMap, createThumbnail})(require('../../../components/maps/MapGrid'));
 
 var MapsList = React.createClass({
     propTypes: {

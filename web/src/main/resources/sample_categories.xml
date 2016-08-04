@@ -3,4 +3,7 @@
     <Category>
         <name>MAP</name>
     </Category>
+    <Category>
+        <name>THUMBNAIL</name>
+    </Category>
 </CategoryList>

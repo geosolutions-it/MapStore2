@@ -7,6 +7,7 @@
  */
 
 var {MAP_CONFIG_LOADED, MAP_INFO_LOAD_START, MAP_INFO_LOADED, MAP_INFO_LOAD_ERROR, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
+const MAP_CREATED = 'MAP_CREATED'; // from maps.js actions
 
 var assign = require('object-assign');
 var ConfigUtils = require('../utils/ConfigUtils');
@@ -50,6 +51,13 @@ function mapConfig(state = null, action) {
                 return assign({}, state, {map: map});
             }
             return state;
+        case MAP_CREATED: {
+            map = state && state.map && state.map.present ? state.map.present : state && state.map;
+            if (map && (!map.mapId)) {
+                map = assign({}, map, {newMapId: action.resourceId});
+                return assign({}, state, {map: map});
+            }
+        }
         default:
             return state;
     }

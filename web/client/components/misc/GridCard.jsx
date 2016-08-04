@@ -8,6 +8,7 @@
 
 const React = require('react');
 const {Glyphicon, Button, Tooltip, OverlayTrigger} = require('react-bootstrap');
+const Spinner = require('react-spinkit');
 
 require('./style/gridcard.css');
 
@@ -39,8 +40,8 @@ const GridCard = React.createClass({
             {this.props.actions.map((action, index) => {
                 let tooltip = <Tooltip id="tooltip">{action.tooltip}</Tooltip>;
                 return (<OverlayTrigger key={"gridcard-tool" + index} placement="bottom" overlay={tooltip}>
-                    <Button key={"gridcard-tool" + index} onClick={action.onClick} className="gridcard-button" bsStyle="primary">
-                        <Glyphicon glyph={action.glyph} />
+                    <Button key={"gridcard-tool" + index} onClick={action.onClick} className="gridcard-button" bsStyle="primary" disabled={action.disabled}>
+                        {action.loading ? <Spinner spinnerName="circle" noFadeIn/> : <Glyphicon glyph={action.glyph} /> }
                     </Button>
                     </OverlayTrigger>);
             })}

@@ -10,7 +10,6 @@ var axios = require('../libs/ajax');
 
 const MAP_CONFIG_LOADED = 'MAP_CONFIG_LOADED';
 const MAP_CONFIG_LOAD_ERROR = 'MAP_CONFIG_LOAD_ERROR';
-
 const MAP_INFO_LOAD_START = 'MAP_INFO_LOAD_START';
 const MAP_INFO_LOADED = 'MAP_INFO_LOADED';
 const MAP_INFO_LOAD_ERROR = 'MAP_INFO_LOAD_ERROR';
@@ -89,7 +88,6 @@ function loadMapInfo(url, mapId) {
         }).catch((e) => {
             dispatch(mapInfoLoadError(mapId, e));
         });
-
     };
 
 }

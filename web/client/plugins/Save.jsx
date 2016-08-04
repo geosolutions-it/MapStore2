@@ -135,7 +135,8 @@ module.exports = {
                         if (currentMap && currentMap.length > 0 && currentMap[0].canEdit) {
                             return { };
                         }
-                    } else if (map.info && map.info.canEdit) {
+                    }
+                    if (map.info && map.info.canEdit) {
                         return { };
                     }
                 }
