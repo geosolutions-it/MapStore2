@@ -49,6 +49,27 @@ const searchAndPaginate = (json, startPosition, maxRecords, text) => {
 };
 
 const Api = {
+    describeLayer: function(url, layers) {
+        const parsed = urlUtil.parse(url, true);
+        const describeLayerUrl = urlUtil.format(assign({}, parsed, {
+            query: assign({
+                service: "WMS",
+                version: "1.1.1",
+                layers: layers,
+                request: "DescribeLayer"
+            }, parsed.query)
+        }));
+        return new Promise((resolve) => {
+            require.ensure(['../utils/ogc/WMS'], () => {
+                const {unmarshaller} = require('../utils/ogc/WMS');
+                resolve(axios.get(parseUrl(describeLayerUrl)).then((response) => {
+                    let json = unmarshaller.unmarshalString(response.data);
+                    return json && json.value && json.value.layerDescription && json.value.layerDescription[0];
+
+                }));
+            });
+        });
+    },
     getRecords: function(url, startPosition, maxRecords, text) {
         const cached = capabilitiesCache[url];
         if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {

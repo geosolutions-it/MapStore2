@@ -121,7 +121,8 @@ const VectorStyler = React.createClass({
     renderStyle() {
         switch (this.props.layer.describeLayer.geometryType) {
             case 'Polygon':
-            case 'MultiPolygon': {
+            case 'MultiPolygon':
+            case 'MultiSurfacePropertyType': {
                 return (<StylePolygon/>);
             }
             case 'MultiLineString':

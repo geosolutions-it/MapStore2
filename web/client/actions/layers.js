@@ -20,6 +20,13 @@ const SHOW_SETTINGS = 'SHOW_SETTINGS';
 const HIDE_SETTINGS = 'HIDE_SETTINGS';
 const UPDATE_SETTINGS = 'UPDATE_SETTINGS';
 
+// const DESCRIBE_LAYER_LOADED = 'DESCRIBE_LAYER_LOADED';
+// const DESCRIBE_LAYER_LOAD_ERROR = 'DESCRIBE_LAYER_LOAD_ERROR';
+const WMS = require('../api/WMS');
+const WFS = require('../api/WFS');
+const WCS = require('../api/WCS');
+const _ = require('lodash');
+
 function showSettings(node, nodeType, options) {
     return {
         type: SHOW_SETTINGS,
@@ -124,8 +131,41 @@ function invalidLayer(layerType, options) {
     };
 }
 
+function getDescribeLayer(url, layer, options) {
+    return (dispatch /* , getState */) => {
+        return WMS.describeLayer(url, layer.name, options).then((describeLayer) => {
+            if (describeLayer && describeLayer.owsType === "WFS") {
+                return WFS.describeFeatureType(url, describeLayer.name).then((describeFeatureType) => {
+                    // TODO move the management of this geometryType in the proper components, getting the describeFeatureType entry:
+                    let types = _.get(describeFeatureType, "complexType[0].complexContent.extension.sequence.element");
+                    let geometryType = _.head(types && types.filter( elem => (elem.name === "the_geom" || elem.type.prefix.indexOf("gml") === 0)));
+                    geometryType = geometryType && geometryType.type.localPart;
+                    describeLayer.geometryType = geometryType;
+                    dispatch(updateNode(layer.id, "id", {describeLayer, describeFeatureType}));
+                });
+            } else if ( describeLayer && describeLayer.owsType === "WCS" ) {
+                WCS.describeCoverage(url, describeLayer.name).then((describeCoverage) => {
+                    // TODO move the management of this bands in the proper components, getting the describeFeatureType entry:
+                    let axis = _.get(describeCoverage, "wcs:CoverageDescriptions.wcs:CoverageDescription.wcs:Range.wcs:Field.wcs:Axis.wcs:AvailableKeys.wcs:Key");
+                    if (axis && typeof axis === "string") {
+                        describeLayer.bands = [1];
+                    } else {
+                        describeLayer.bands = axis.map((el, index) => (index)); // array of 1 2 3 because the sld do not recognize the name
+                    }
+
+                    dispatch(updateNode(layer.id, "id", {describeLayer, describeCoverage}));
+                });
+            }
+            return dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe Layer found"}}));
+
+        });
+    };
+}
+
+
 module.exports = {changeLayerProperties, changeGroupProperties, toggleNode, sortNode, removeNode, invalidLayer,
     updateNode, layerLoading, layerLoad, addLayer, showSettings, hideSettings, updateSettings,
+    getDescribeLayer,
     CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE,
     REMOVE_NODE, UPDATE_NODE, LAYER_LOADING, LAYER_LOAD, ADD_LAYER,
     SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, INVALID_LAYER
