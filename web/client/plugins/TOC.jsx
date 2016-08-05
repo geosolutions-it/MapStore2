@@ -9,7 +9,7 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {changeLayerProperties, changeGroupProperties, toggleNode,
-       sortNode, showSettings, hideSettings, updateSettings, updateNode} = require('../actions/layers');
+       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode} = require('../actions/layers');
 const {groupsSelector} = require('../selectors/layers');
 
 const LayersUtils = require('../utils/LayersUtils');
@@ -51,6 +51,7 @@ const LayerTree = React.createClass({
         hideSettings: React.PropTypes.func,
         updateSettings: React.PropTypes.func,
         updateNode: React.PropTypes.func,
+        removeNode: React.PropTypes.func,
         activateLegendTool: React.PropTypes.bool,
         activateSettingsTool: React.PropTypes.bool,
         visibilityCheckType: React.PropTypes.string,
@@ -64,6 +65,7 @@ const LayerTree = React.createClass({
             onToggleLayer: () => {},
             onSettings: () => {},
             updateNode: () => {},
+            removeNode: () => {},
             activateLegendTool: true,
             activateSettingsTool: true,
             visibilityCheckType: "checkbox",
@@ -98,6 +100,7 @@ const LayerTree = React.createClass({
                             settings={this.props.settings}
                             updateSettings={this.props.updateSettings}
                             updateNode={this.props.updateNode}
+                            removeNode={this.props.removeNode}
                             visibilityCheckType={this.props.visibilityCheckType}
                             activateLegendTool={this.props.activateLegendTool}
                             activateSettingsTool={this.props.activateSettingsTool}
@@ -120,9 +123,10 @@ const TOCPlugin = connect(tocSelector, {
     onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
     onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
     onSettings: showSettings,
-    hideSettings: hideSettings,
-    updateSettings: updateSettings,
-    updateNode: updateNode
+    hideSettings,
+    updateSettings,
+    updateNode,
+    removeNode
 })(LayerTree);
 
 module.exports = {

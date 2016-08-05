@@ -9,10 +9,10 @@
 const React = require('react');
 const {Modal, Button, Glyphicon, Tabs, Tab} = require('react-bootstrap');
 
-
 require("./settingsModal.css");
 
 const Dialog = require('../../misc/Dialog');
+const ConfirmButton = require('../../buttons/ConfirmButton');
 const General = require('./settings/General');
 const Display = require('./settings/Display');
 const {Portal} = require('react-overlays');
@@ -27,9 +27,12 @@ const SettingsModal = React.createClass({
         updateSettings: React.PropTypes.func,
         hideSettings: React.PropTypes.func,
         updateNode: React.PropTypes.func,
+        removeNode: React.PropTypes.func,
         titleText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         opacityText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         saveText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
+        deleteText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
+        confirmDeleteText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         closeText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         options: React.PropTypes.object,
         asModal: React.PropTypes.bool,
@@ -38,6 +41,7 @@ const SettingsModal = React.createClass({
         panelStyle: React.PropTypes.object,
         panelClassName: React.PropTypes.string,
         includeCloseButton: React.PropTypes.bool,
+        includeDeleteButton: React.PropTypes.bool,
         realtimeUpdate: React.PropTypes.bool,
         groups: React.PropTypes.array
     },
@@ -49,6 +53,7 @@ const SettingsModal = React.createClass({
             updateSettings: () => {},
             hideSettings: () => {},
             updateNode: () => {},
+            removeNode: () => {},
             asModal: true,
             buttonSize: "large",
             closeGlyph: "",
@@ -63,7 +68,10 @@ const SettingsModal = React.createClass({
             },
             panelClassName: "toolbar-panel",
             includeCloseButton: true,
-            realtimeUpdate: true
+            includeDeleteButton: true,
+            realtimeUpdate: true,
+            deleteText: <Message msgId="layerProperties.delete" />,
+            confirmDeleteText: <Message msgId="layerProperties.confirmDelete" />
         };
     },
     getInitialState() {
@@ -74,6 +82,13 @@ const SettingsModal = React.createClass({
     },
     componentWillMount() {
         this.setState({initialState: this.props.element});
+    },
+    onDelete() {
+        this.props.removeNode(
+            this.props.settings.node,
+            this.props.settings.nodeType
+        );
+        this.props.hideSettings();
     },
     onClose() {
         this.props.updateNode(
@@ -95,13 +110,22 @@ const SettingsModal = React.createClass({
             element={this.props.element}
             settings={this.props.settings}
             onChange={(key, value) => this.updateParams({[key]: value}, this.props.realtimeUpdate)} />);
-        const tabs = (<Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
+        const tabs = (<Tabs defaultActiveKey={1} id="layerProperties-tabs">
             <Tab eventKey={1} title={<Message msgId="layerProperties.general" />}>{general}</Tab>
             <Tab eventKey={2} title={<Message msgId="layerProperties.display" />}>{display}</Tab>
             <Tab eventKey={3} title={<Message msgId="layerProperties.style" />} disabled>Tab 3 content</Tab>
           </Tabs>);
         const footer = (<span role="footer">
             {this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} onClick={this.onClose}>{this.props.closeText}</Button> : <span/>}
+            {this.props.includeDeleteButton ?
+                <ConfirmButton
+                  onConfirm={this.onDelete}
+                  text={this.props.deleteText}
+                  confirming={{
+                      text: this.props.confirmDeleteText
+                  }}
+                />
+            : <span/>}
             <Button bsSize={this.props.buttonSize} bsStyle="primary" onClick={() => {
                 this.updateParams(this.props.settings.options.opacity, true);
                 this.props.hideSettings();

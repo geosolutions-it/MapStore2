@@ -28,7 +28,9 @@
             "general": "Generale",
             "display": "Visualizzazione",
             "style": "Stile",
-            "format": "Formato"
+            "format": "Formato",
+            "delete": "Elimina",
+            "confirmDelete": "Sei sicuro?"
         },
         "background": "Sfondo",
         "language": "Lingua",

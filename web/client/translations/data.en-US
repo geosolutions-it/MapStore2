@@ -27,7 +27,9 @@
             "general": "General",
             "display": "Display",
             "style": "Style",
-            "format": "Format"
+            "format": "Format",
+            "delete": "Delete",
+            "confirmDelete": "Are you sure?"
         },
         "enable": "Enable",
         "background": "Background",

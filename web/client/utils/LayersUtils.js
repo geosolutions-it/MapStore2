@@ -29,7 +29,7 @@ var LayersUtils = {
         let i = 0;
         let mapLayers = configLayers.map((layer) => assign({}, layer, {storeIndex: i++}));
         let groupNames = mapLayers.reduce((groups, layer) => {
-            return groups.indexOf(layer.group || 'Default') === -1 ? groups.concat([layer.group]) : groups;
+            return groups.indexOf(layer.group || 'Default') === -1 ? groups.concat([layer.group || 'Default']) : groups;
         }, []).filter((group) => group !== 'background');
         return groupNames.map((group) => {
             let groupName = group || 'Default';
