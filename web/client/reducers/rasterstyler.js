@@ -11,7 +11,9 @@ const {
     SET_RASTER_LAYER
 } = require('../actions/rasterstyler');
 
+
 const assign = require('object-assign');
+const { STYLER_RESET } = require('../actions/styler');
 
 const initialSpec = {
     pseudoband: {band: '1', contrast: 'none', algorithm: "none", gammaValue: 1, min: 1, max: 255},
@@ -55,6 +57,9 @@ function rasterstyler(state = initialSpec, action) {
         case SET_RASTER_LAYER: {
 
             return assign({}, setBaseOptions(action.layer.describeLayer), { layer: action.layer});
+        }
+        case STYLER_RESET: {
+            return initialSpec;
         }
         default:
             return state;
