@@ -104,7 +104,8 @@ const LayerTree = React.createClass({
                             settingsText={<Message msgId="layerProperties.windowTitle"/>}
                             opacityText={<Message msgId="opacity"/>}
                             saveText={<Message msgId="save"/>}
-                            closeText={<Message msgId="close"/>}/>
+                            closeText={<Message msgId="close"/>}
+                            groups={this.props.groups}/>
                     </DefaultGroup>
                 </TOC>
             </div>
