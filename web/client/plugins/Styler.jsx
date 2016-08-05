@@ -20,10 +20,12 @@ const {getWindowSize} = require('../utils/AgentUtils');
 const {setVectorLayer} = require('../actions/vectorstyler');
 const {setRasterLayer} = require('../actions/rasterstyler');
 const {toggleControl} = require('../actions/controls');
-const {getDescribeLayer, changeLayerProperties} = require('../actions/layers');
-const {saveLayerDefaultStyle} = require('../actions/styler');
+const {getDescribeLayer, getLayerCapabilities, changeLayerProperties} = require('../actions/layers');
+const {saveLayerDefaultStyle, reset} = require('../actions/styler');
 
 const {layersSelector} = require('../selectors/layers');
+
+const {zoomToExtent} = require('../actions/map');
 
 const Vector = require("./VectorStyler").VectorStylerPlugin;
 const Raster = require("./RasterStyler").RasterStylerPlugin;
@@ -52,7 +54,10 @@ const Styler = React.createClass({
         error: React.PropTypes.string,
         changeLayerProperties: React.PropTypes.func,
         getDescribeLayer: React.PropTypes.func,
+        getLayerCapabilities: React.PropTypes.func,
+        zoomToExtent: React.PropTypes.func,
         saveStyle: React.PropTypes.func,
+        reset: React.PropTypes.func,
         hideLayerSelector: React.PropTypes.bool
 
     },
@@ -61,7 +66,7 @@ const Styler = React.createClass({
     },
     getInitialState() {
         return {
-
+            counter: 1
         };
     },
     getDefaultProps() {
@@ -76,24 +81,49 @@ const Styler = React.createClass({
             selectVectorLayer: () => {},
             selectRasterLayer: () => {},
             getDescribeLayer: () => {},
+            getLayerCapabilities: () => {},
             toggleControl: () => {},
             style: {},
             saveStyle: () => {},
-            changeLayerProperties: () => {}
+            changeLayerProperties: () => {},
+            zoomToExtent: () => {},
+            reset: () => {}
         };
     },
+    componentWillMount() {
+        this.props.reset();
+    },
     componentWillReceiveProps(nextProps) {
-
+        // intial setup
         if (this.state.layer) {
             let originalLayer = head(nextProps.layers.filter((l) => (l.id === this.state.layer.id)));
             if (originalLayer && originalLayer.describeLayer && !originalLayer.describeLayer.error) {
+                this.props.reset();
                 this.setState({layer: null});
                 this.setLayer(originalLayer);
             } else if (originalLayer && originalLayer.describeLayer && originalLayer.describeLayer.error ) {
                 this.setState({error: originalLayer.describeLayer.error});
+            } else if (!originalLayer) {
+                this.props.reset();
+                this.setState({layer: null});
             }
         } else if (!nextProps.layer && this.props.layers.length === 1) {
+            this.props.reset();
             this.setLayer(this.props.layers[0]);
+        } else if (nextProps.layer && this.props.layer && (nextProps.layer.id !== this.props.layer.id) ) {
+            this.setLayer(nextProps.layer);
+        }
+        // zoom when capabilities received;
+        if (nextProps.layer) {
+            let originalLayer = head(nextProps.layers.filter((l) => (l.id === nextProps.layer.id)));
+            if (originalLayer && originalLayer.capabilities ) {
+                let extent = originalLayer.capabilities.latLonBoundingBox;
+                if (extent && !this.state.zoomed) {
+                    this.props.zoomToExtent([extent.minx, extent.miny, extent.maxx, extent.maxy], "EPSG:4326");
+                    this.setState({zoomed: true});
+                }
+            }
+
         }
     },
     getPanelStyle() {
@@ -220,8 +250,16 @@ const Styler = React.createClass({
         }
         return null;
     },
+    /**
+     * add a incremental value as layer parameter (to force invalidation of the cache) and clear the sldbody
+     */
+    clearLayerStyle() {
+        this.props.changeLayerProperties(this.props.layer.id, { params: assign({}, this.props.layer.params, {SLD_BODY: null, _dc: this.state.counter})});
+        this.setState({counter: this.state.counter + 1});
+    },
     reset() {
-        this.props.changeLayerProperties(this.props.layer.id, { params: assign({}, this.props.layer.params, {SLD_BODY: null})});
+        this.clearLayerStyle();
+        this.props.reset();
     },
     setLayer(l) {
         if (l.describeLayer && l.describeLayer.owsType) {
@@ -237,6 +275,9 @@ const Styler = React.createClass({
                 default:
                 break;
             }
+            if (!l.capabilities || !l.capabilities.error) {
+                this.props.getLayerCapabilities(l);
+            }
         } else if (!l.describeLayer || !l.describeLayer.error) {
             this.props.getDescribeLayer(l.url, l);
             this.setState({layer: l});
@@ -248,14 +289,18 @@ const Styler = React.createClass({
         let layer = head(this.props.layers.filter((l) => (l.id === this.props.layer.id)));
         if (layer.params && layer.params.SLD_BODY) {
             this.props.saveStyle(this.getRestURL(layer.url), layer.name, layer.params.SLD_BODY);
+            setTimeout(this.clearLayerStyle, 2000);
         }
     }
 });
 const selector = createSelector([
     (state) => (state.controls.styler && state.controls.styler.enabled === true),
-    (state) => state.styler && state.styler.layer,
+    (state) => state.vectorstyler,
+    (state) => state.rasterstyler,
+    (state) => state.styler && state.styler.type,
     layersSelector
-], (open, layer, layers) => {
+], (open, vectorstate, rasterstate, type, layers) => {
+    let layer = type === "vector" ? vectorstate.layer : rasterstate.layer;
     return {
         open,
         layer,
@@ -267,9 +312,12 @@ const StylerPlugin = connect(selector, {
         selectVectorLayer: setVectorLayer,
         selectRasterLayer: setRasterLayer,
         getDescribeLayer,
+        getLayerCapabilities,
         changeLayerProperties,
         saveStyle: saveLayerDefaultStyle,
-        toggleControl
+        toggleControl,
+        zoomToExtent,
+        reset
     })(Styler);
 
 module.exports = {

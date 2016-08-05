@@ -14,7 +14,7 @@ const {
     SET_VECTOR_LAYER,
     SET_VECTOR_RULE_PARAMETER
 } = require('../actions/vectorstyler');
-
+const { STYLER_RESET } = require('../actions/styler');
 const assign = require('object-assign');
 const {isObject} = require('lodash');
 const baseStyle = {
@@ -123,6 +123,9 @@ function vectorstyler(state = initialSpec, action) {
         }
         case SET_VECTOR_LAYER: {
             return assign({}, initialSpec, { layer: action.layer});
+        }
+        case STYLER_RESET: {
+            return initialSpec;
         }
         default:
             return state;
