@@ -226,7 +226,14 @@ function layers(state = [], action) {
                     groups: newGroups
                 };
             }
-            // TODO: layers
+            if (action.nodeType === 'layers') {
+                const newGroups = removeNode(state.groups, action.node);
+                const newLayers = state.flat.filter((layer) => layer.name !== action.node);
+                return assign({}, state, {
+                    flat: newLayers,
+                    groups: newGroups
+                });
+            }
         }
         case ADD_LAYER: {
             let newLayers = (state.flat || []).concat();
