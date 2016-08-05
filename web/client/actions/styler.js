@@ -46,6 +46,7 @@ function saveLayerDefaultStyle(geoserverBaseUrl, layerName, style) {
 }
 module.exports = {
     STYLE_SAVED,
+    STYLER_RESET,
     saveLayerDefaultStyle,
     reset
 };
