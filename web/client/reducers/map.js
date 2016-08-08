@@ -43,6 +43,7 @@ function mapConfig(state = null, action) {
                 zoom = 2;
             } else {
                 let mapBBox = CoordinatesUtils.reprojectBbox(action.extent, action.crs, state.projection || "EPSG:4326");
+                // NOTE: STATE should contain size !!!
                 zoom = MapUtils.getZoomForExtent(mapBBox, state.size, 0, 21, null);
             }
             return assign({}, state, {

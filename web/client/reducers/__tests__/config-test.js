@@ -48,4 +48,16 @@ describe('Test the mapConfig reducer', () => {
         var state = mapConfig(1, {type: 'UNKNOWN'});
         expect(state).toBe(1);
     });
+    it('get map info', () => {
+        var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', mapId: 1, config: { version: 2, map: {center: {x: 1, y: 1}, zoom: 11, layers: [] }}});
+        state = mapConfig(state, {type: "MAP_INFO_LOAD_START", mapId: 1});
+        expect(state.map).toExist();
+        expect(state.map.info).toExist();
+        expect(state.map.info.loading).toBe(true);
+        expect(state.map.center.crs).toExist();
+        state = mapConfig(state, {type: "MAP_INFO_LOADED", mapId: 1, info: {canEdit: true, canDelete: true}});
+        expect(state.map).toExist();
+        expect(state.map.info).toExist();
+        expect(state.map.info.canEdit).toBe(true);
+    });
 });
