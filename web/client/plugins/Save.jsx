@@ -13,8 +13,10 @@ const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
 const {toggleControl} = require('../actions/controls');
+const {loadMapInfo} = require('../actions/config');
 const {updateMap} = require('../actions/maps');
 const ConfirmModal = require('../components/maps/modals/ConfirmModal');
+const ConfigUtils = require('../utils/ConfigUtils');
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
@@ -34,6 +36,7 @@ const Save = React.createClass({
         mapId: React.PropTypes.string,
         onClose: React.PropTypes.func,
         onMapSave: React.PropTypes.func,
+        loadMapInfo: React.PropTypes.func,
         map: React.PropTypes.object,
         layers: React.PropTypes.array,
         params: React.PropTypes.object
@@ -41,8 +44,21 @@ const Save = React.createClass({
     getDefaultProps() {
         return {
             onMapSave: () => {},
+            loadMapInfo: () => {},
             show: false
         };
+    },
+    componentWillMount() {
+        this.onMissingInfo(this.props);
+    },
+    componentWillReceiveProps(nextProps) {
+        this.onMissingInfo(nextProps);
+    },
+    onMissingInfo(props) {
+        let map = props.map;
+        if (map && props.mapId && !map.info) {
+            this.props.loadMapInfo(ConfigUtils.getConfigProp("geoStoreUrl") + "extjs/resource/" + props.mapId, props.mapId);
+        }
     },
     render() {
         return (<ConfirmModal
@@ -92,6 +108,7 @@ const Save = React.createClass({
             }
         }
     }
+
 });
 
 module.exports = {
@@ -99,13 +116,14 @@ module.exports = {
     SavePlugin: connect(selector,
     {
         onClose: toggleControl.bind(null, 'save', false),
-        onMapSave: updateMap
+        onMapSave: updateMap,
+        loadMapInfo
     })(assign(Save, {
         BurgerMenu: {
             name: 'save',
             position: 900,
             text: <Message msgId="save"/>,
-            icon: <Glyphicon glyph="floppy-save"/>,
+        icon: <Glyphicon glyph="floppy-open"/>,
             action: toggleControl.bind(null, 'save', null),
             // display the BurgerMenu button only if the map can be edited
             selector: (state) => {
@@ -117,6 +135,8 @@ module.exports = {
                         if (currentMap && currentMap.length > 0 && currentMap[0].canEdit) {
                             return { };
                         }
+                    } else if (map.info && map.info.canEdit) {
+                        return { };
                     }
                 }
                 return { style: {display: "none"} };

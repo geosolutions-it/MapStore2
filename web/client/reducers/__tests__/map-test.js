@@ -94,7 +94,7 @@ describe('Test the map reducer', () => {
             crs: "EPSG:4326"
         };
 
-        var state = mapConfig({projection: "EPSG:4326"}, action);
+        var state = mapConfig({projection: "EPSG:4326", size: {width: 400, height: 400}}, action);
         expect(state.mapStateSource).toBe(undefined);
         expect(state.center.x).toBe(11);
         expect(state.center.y).toBe(45);
