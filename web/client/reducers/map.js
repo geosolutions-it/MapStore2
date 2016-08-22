@@ -7,7 +7,7 @@
  */
 
 var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER,
-    CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, ZOOM_TO_EXTENT, PAN_TO} = require('../actions/map');
+    CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, ZOOM_TO_EXTENT, PAN_TO, CHANGE_MAP_STYLE} = require('../actions/map');
 
 var assign = require('object-assign');
 var MapUtils = require('../utils/MapUtils');
@@ -60,6 +60,9 @@ function mapConfig(state = null, action) {
             return assign({}, state, {
                 center
             });
+        }
+        case CHANGE_MAP_STYLE: {
+            return assign({}, state, {mapStateSource: action.mapStateSource, style: action.style, resize: state.resize ? state.resize + 1 : 1});
         }
         default:
             return state;

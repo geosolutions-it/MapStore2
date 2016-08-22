@@ -102,4 +102,14 @@ describe('Test the map reducer', () => {
         expect(state.zoom).toBe(2);
 
     });
+    it('change map style', () => {
+        const action = {
+            type: 'CHANGE_MAP_STYLE',
+            style: {width: 100},
+            mapStateSource: "test"
+        };
+        var state = mapConfig({projection: "EPSG:4326"}, action);
+        expect(state.mapStateSource).toBe("test");
+        expect(state.style.width).toBe(100);
+    });
 });
