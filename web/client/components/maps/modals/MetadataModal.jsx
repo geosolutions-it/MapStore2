@@ -52,7 +52,7 @@ const MetadataModal = React.createClass({
             useModal: true,
             closeGlyph: "",
             style: {},
-            buttonSize: "large",
+            buttonSize: "default",
             includeCloseButton: true
         };
     },

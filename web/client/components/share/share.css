@@ -23,12 +23,13 @@ font-size: 28px;
 }
 
 .buttonCopy{
-    height: 100%;
+    font-size: 29px;
 }
 
 .buttonCopyTextArea{
     height: 50px;
     width: 52px;
+    font-size: 29px;
 }
 
 .share-panels > div {
