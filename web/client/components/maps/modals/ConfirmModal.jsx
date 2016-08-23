@@ -42,7 +42,7 @@ const ConfirmModal = React.createClass({
             useModal: true,
             closeGlyph: "",
             style: {},
-            buttonSize: "large",
+            buttonSize: "default",
             includeCloseButton: true,
             body: "",
             titleText: "Confirm Delete",
