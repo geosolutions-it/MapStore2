@@ -198,9 +198,11 @@ function layers(state = [], action) {
             });
 
             if (!sameGroup) {
+                let newGroups = moveNode(state.groups, action.node, (action.options.group || 'Default'));
+                let orderedNewLayers = LayersUtils.sortLayers ? LayersUtils.sortLayers(newGroups, newLayers) : newLayers;
                 return assign({}, state, {
-                    flat: newLayers,
-                    groups: moveNode(state.groups, action.node, (action.options.group || 'Default'))
+                    flat: orderedNewLayers,
+                    groups: newGroups
                 });
             }
             return assign({}, state, {flat: newLayers});
@@ -250,8 +252,9 @@ function layers(state = [], action) {
                     newGroups = newGroup.concat(newGroups);
                 }
             }
+            let orderedNewLayers = LayersUtils.sortLayers ? LayersUtils.sortLayers(newGroups, newLayers) : newLayers;
             return {
-                    flat: newLayers,
+                    flat: orderedNewLayers,
                     groups: newGroups
             };
         }
