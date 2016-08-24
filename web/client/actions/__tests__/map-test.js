@@ -13,11 +13,13 @@ var {
     CHANGE_MOUSE_POINTER,
     CHANGE_ZOOM_LVL,
     CHANGE_MAP_CRS,
+    CHANGE_MAP_STYLE,
     changeMapView,
     clickOnMap,
     changeMousePointer,
     changeZoomLevel,
-    changeMapCrs
+    changeMapCrs,
+    changeMapStyle
 } = require('../map');
 
 describe('Test correctness of the map actions', () => {
@@ -73,5 +75,16 @@ describe('Test correctness of the map actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGE_MAP_CRS);
         expect(retval.crs).toBe(testVal);
+    });
+
+    it('changeMapStyle', () => {
+        let style = {width: 100};
+        let mapStateSource = "test";
+        var retval = changeMapStyle(style, mapStateSource);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_MAP_STYLE);
+        expect(retval.style).toBe(style);
+        expect(retval.mapStateSource).toBe(mapStateSource);
     });
 });

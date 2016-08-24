@@ -13,6 +13,8 @@ const Message = require('./locale/Message');
 
 const {toggleControl, setControlProperty} = require('../actions/controls');
 
+const {changeMapStyle} = require('../actions/map');
+
 const {Button, Glyphicon, Panel} = require('react-bootstrap');
 
 const Section = require('./drawer/Section');
@@ -24,7 +26,8 @@ const Menu = connect((state) => ({
     activeKey: state.controls.drawer && state.controls.drawer.menu
 }), {
     onToggle: toggleControl.bind(null, 'drawer', null),
-    onChoose: partialRight(setControlProperty.bind(null, 'drawer', 'menu'), true)
+    onChoose: partialRight(setControlProperty.bind(null, 'drawer', 'menu'), true),
+    changeMapStyle: changeMapStyle
 })(require('./drawer/Menu'));
 
 require('./drawer/drawer.css');
