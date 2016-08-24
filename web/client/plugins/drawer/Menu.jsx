@@ -34,13 +34,13 @@ var Menu = React.createClass({
     componentDidMount() {
         if (!this.overlapMap && this.props.show) {
             let style = {left: this.props.width, width: `calc(100% - ${this.props.width}px)`};
-            this.props.changeMapStyle(style, "drawerManu");
+            this.props.changeMapStyle(style, "drawerMenu");
         }
     },
     componentDidUpdate(prevProps) {
         if (!this.props.overlapMap && prevProps.show !== this.props.show) {
             let style = this.props.show ? {left: this.props.width, width: `calc(100% - ${this.props.width}px)`} : {};
-            this.props.changeMapStyle(style, "drawerManu");
+            this.props.changeMapStyle(style, "drawerMenu");
         }
     },
     renderChildren(child, index) {
