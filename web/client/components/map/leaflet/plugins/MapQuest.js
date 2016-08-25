@@ -7,31 +7,19 @@
  */
 
 var Layers = require('../../../../utils/leaflet/Layers');
-var L = require('leaflet');
+const MQ = require('../../../../libs/mapquest');
 
-var mqTilesAttr = 'Tiles &copy; <a href="https://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png" />';
-
-const assign = require('object-assign');
-
-var mapquestOptions = {
-    osm: {
-        url: 'http://otile{s}.mqcdn.com/tiles/1.0.0/{type}/{z}/{x}/{y}.png',
-        options: {
-            subdomains: '1234',
-            type: 'osm',
-            attribution: 'Map data ' + L.TileLayer.OSM_ATTR + ', ' + mqTilesAttr
+Layers.registerType('mapquest', {
+    create: (options) => {
+        if (MQ) {
+            return MQ.mapLayer(options);
         }
+        if (options && options.onError) {
+            options.onError();
+        }
+        return false;
     },
-    sat: {
-        url: 'http://otile{s}.mqcdn.com/tiles/1.0.0/{type}/{z}/{x}/{y}.png',
-        options: {
-            subdomains: '1234',
-            type: 'sat',
-            attribution: 'Imagery &copy; NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency, ' + mqTilesAttr
-        }
+    isValid: () => {
+        return MQ ? true : false;
     }
-};
-
-Layers.registerType('mapquest', (options) => {
-    return L.tileLayer(mapquestOptions[options.name].url, assign({}, mapquestOptions[options.name].options, options.zoomOffset ? {zoomOffset: options.zoomOffset} : {}), options);
 });

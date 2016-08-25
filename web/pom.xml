@@ -77,11 +77,11 @@
                             <unzip src="${basedir}/cesium.zip"
                                    dest="${basedir}/client/libs/Cesium">
                             </unzip>
-                         </target>
-                     </configuration>
-                 </execution>
-             </executions>
-         </plugin>
+                        </target>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
         <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
@@ -155,7 +155,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+        </plugin>
 
         <plugin>
             <artifactId>maven-resources-plugin</artifactId>
@@ -272,7 +272,7 @@
                 </overlays>
             </configuration>
         </plugin>
-         <plugin>
+        <plugin>
           <groupId>org.eclipse.jetty</groupId>
           <artifactId>jetty-maven-plugin</artifactId>
           <version>9.2.11.v20150529</version>
@@ -283,6 +283,28 @@
                         <value>log4j-test.properties</value>
                     </systemProperty>
                 </systemProperties>
+            </configuration>
+        </plugin>
+        <plugin>
+            <groupId>com.google.code.maven-replacer-plugin</groupId>
+            <artifactId>replacer</artifactId>
+            <version>1.5.3</version>
+            <executions>
+                <execution>
+                    <phase>prepare-package</phase>
+                    <goals>
+                        <goal>replace</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <file>target/mapstore/index.html</file>
+                <replacements>
+                    <replacement>
+                        <token>__API_KEY_MAPQUEST__</token>
+                        <value>${__API_KEY_MAPQUEST__}</value>
+                    </replacement>
+                </replacements>
             </configuration>
         </plugin>
     </plugins>
@@ -311,6 +333,6 @@
             </plugins>
         </build>
     </profile>
-</profiles>
+  </profiles>
 
 </project>

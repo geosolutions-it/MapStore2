@@ -24,7 +24,8 @@ module.exports = {
     },
     plugins: [
         new DefinePlugin({
-            "__DEVTOOLS__": true
+            "__DEVTOOLS__": true,
+            "__API_KEY_MAPQUEST__": JSON.stringify(process.env.__API_KEY_MAPQUEST__ || '')
         }),
         new NormalModuleReplacementPlugin(/leaflet$/, path.join(__dirname, "web", "client", "libs", "leaflet")),
         new NormalModuleReplacementPlugin(/cesium$/, path.join(__dirname, "web", "client", "libs", "cesium")),
