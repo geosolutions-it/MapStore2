@@ -159,6 +159,15 @@ Layers.registerType('vector', {
             style: (options.styleName && !options.overrideOLStyle) ? () => {return defaultStyles[options.styleName]; } : style || styleFunction
         });
     },
+    update: (layer, newOptions, oldOptions) => {
+        const oldCrs = oldOptions.crs || 'EPSG:3857';
+        const newCrs = newOptions.crs || 'EPSG:3857';
+        if (newCrs !== oldCrs) {
+            layer.getSource().forEachFeature((f) => {
+                f.getGeometry().transform(oldCrs, newCrs);
+            });
+        }
+    },
     render: () => {
         return null;
     }
