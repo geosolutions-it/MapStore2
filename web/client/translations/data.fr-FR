@@ -19,16 +19,20 @@
         "about_h21": "Crédits",
         "about_p6": "MapStore2 est développé par:",
         "enable": "Activer",
-        "layers": "couches",
+        "layers": "Couches",
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
             "title": "Titre",
             "name": "Nom",
+            "group": "Groupe",
             "general": "Général",
             "display": "Affichage",
             "style": "Style",
-            "format": "Format"
+            "format": "Format",
+            "delete": "Effacer",
+            "confirmDelete": "Êtes-vous sûr?"
         },
+        "enable": "Activer",
         "background": "Fond de plan",
         "language": "langue",
         "mousePositionCoordinates": "Coordonnées",
@@ -43,6 +47,7 @@
         "save": "Sauver",
         "opacity": "Opacité",
         "close": "Fermer",
+        "cancel": "Annuler",
         "pageInfo": "{total, plural, =0 {aucun objet} =1 {{total} objet parmi {total}} other {objets {start}-{end} parmi {total}}}",
         "home":{
             "open": "Ouvrir",
@@ -432,7 +437,15 @@
             "getWMSLink": "Lien WMS",
             "error": "Une erreur s'est produite lors du chargement des données du catalogue",
             "pageInfo": "{start}-{end} résultats parmi {total}",
-            "noRecordsMatched": "Aucun enregistrement correspondant"
+            "noRecordsMatched": "Aucun enregistrement correspondant",
+            "wmsGetCapLink": "WMS",
+            "wfsGetCapLink": "WFS",
+            "share": "Partager",
+            "copyToClipboard": "Copier dans le presse-papier",
+            "copied": "Copié!",
+            "catalogUrlPlaceholder": "Entrez catalogue URL...",
+            "textSearchPlaceholder": "texte à rechercher...",
+            "search": "Chercher"
         },
         "rasterstyler": {
             "paneltitle": "Editeur de style d'image",
@@ -454,6 +467,8 @@
             "enhancement" : "Amélioration",
             "algorithmTitle" : "Algorithme optionnel",
             "value" : "Valeur",
+            "min": "Min",
+            "max": "Max",
             "enha": {
                 "none": "Aucun",
                 "Normalize": "Normaliser",
