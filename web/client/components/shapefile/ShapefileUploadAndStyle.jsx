@@ -15,7 +15,7 @@ const FileUtils = require('../../utils/FileUtils');
 let StyleUtils;
 const {Grid, Row, Col, Button} = require('react-bootstrap');
 
-const Combobox = require('react-widgets').Combobox;
+const Combobox = require('react-widgets').DropdownList;
 
 const SelectShape = require('./SelectShape');
 
@@ -112,7 +112,7 @@ const ShapeFileUploadAndStyle = React.createClass({
             <Row style={{textAlign: "center"}}>
                 {
             (this.props.selected) ?
-                <Combobox data={this.props.layers} value={this.props.selected} onChange={(value)=> this.props.onSelectLayer(value)}valueField={"id"} textField={"name"} /> :
+                <Combobox data={this.props.layers} value={this.props.selected} onSelect={(value)=> this.props.onSelectLayer(value)} valueField={"id"} textField={"name"} /> :
                 <SelectShape {...this.props.uploadOptions} errorMessage="shapefile.error.select" text={this.props.uploadMessage} onShapeChoosen={this.addShape}/>
             }
             </Row>

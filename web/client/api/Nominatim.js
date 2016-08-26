@@ -8,8 +8,8 @@
 var axios = require('../libs/ajax');
 const urlUtil = require('url');
 const assign = require('object-assign');
-const DEFAULT_URL = '//nominatim.openstreetmap.org';
-const DEFAUTL_REVERSE_URL = '//nominatim.openstreetmap.org/reverse';
+const DEFAULT_URL = 'nominatim.openstreetmap.org';
+const DEFAUTL_REVERSE_URL = 'nominatim.openstreetmap.org/reverse';
 const defaultOptions = {
     format: 'json',
     bounded: 0,
@@ -22,6 +22,7 @@ const Api = {
     geocode: function(text, options) {
         var params = assign({q: text}, options || {}, defaultOptions);
         var url = urlUtil.format({
+            protocol: window.location.protocol,
             host: DEFAULT_URL,
             query: params
         });
@@ -30,6 +31,7 @@ const Api = {
     reverseGeocode: function(coords, options) {
         const params = assign({lat: coords.lat, lon: coords.lng}, options || {}, defaultOptions);
         const url = urlUtil.format({
+            protocol: window.location.protocol,
             host: DEFAUTL_REVERSE_URL,
             query: params
         });
