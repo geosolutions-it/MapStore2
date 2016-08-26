@@ -15,15 +15,20 @@ let supportedLocales = {
      "en": {
         code: "en-US",
         description: "English"
+     },
+     "fr": {
+       code: "fr-FR",
+       description: "Français"
      }
 };
 
 var LocaleUtils = {
     ensureIntl(callback) {
-        require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js'], (require) => {
+        require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js', 'intl/locale-data/jsonp/fr.js'], (require) => {
             global.Intl = require('intl');
             require('intl/locale-data/jsonp/en.js');
             require('intl/locale-data/jsonp/it.js');
+            require('intl/locale-data/jsonp/fr.js');
             if (callback) {
                 callback();
             }
