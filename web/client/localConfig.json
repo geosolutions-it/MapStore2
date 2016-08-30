@@ -725,8 +725,12 @@
 
 		"maps": [
 			{"name": "Header"},
+			{"name": "Language"},
 			{"name": "MapSearch"},
-			{"name": "Maps"}
+			{"name": "HomeDescription"},
+			{"name": "MapType"},
+			{"name": "Maps"},
+			{"name": "Examples"}
 		]
 	}
 }

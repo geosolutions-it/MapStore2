@@ -19,3 +19,28 @@
 .page-maps > .container-fluid {
     width: 80%
 }
+
+#mapstore-navbar #mapstore-langselector {
+    position: absolute;
+    right: 65px;
+    top: 10px;
+    width: auto;
+}
+
+div#mailinglists {
+    width: 745px;
+    text-align: center;
+    padding-top: 128px;
+}
+div#mailinglists h1 {
+    font-size: 26px;
+    text-align: center;
+}
+
+div#mapstore-maptype {
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    margin-top: -35px;
+}

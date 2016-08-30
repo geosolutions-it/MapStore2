@@ -94,7 +94,9 @@ const Maps = React.createClass({
 });
 
 module.exports = {
-    MapsPlugin: connect(() => ({}), {
+    MapsPlugin: connect((state) => ({
+        mapType: state.home && state.home.mapType || 'leaflet'
+    }), {
         loadMaps
     })(Maps),
     reducers: require('../reducers/maps')
