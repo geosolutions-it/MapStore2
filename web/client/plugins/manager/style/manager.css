@@ -1,0 +1,15 @@
+.Manager-Container {
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+    height: 100%;
+}
+
+.Manager-Container .Manager-Tools-Nav .glyphicon {
+    font-size: 25px;
+    vertical-align: middle;
+}
+.Manager-Container .Manager-Tools-Nav {
+    order: -1;
+    flex: 0 0 15em;
+}
