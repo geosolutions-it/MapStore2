@@ -10,7 +10,7 @@ module.exports = {
     pages: [{
         name: "home",
         path: "/",
-        component: require('./pages/Home')
+        component: require('./pages/Maps')
     }, {
         name: "maps",
         path: "/maps",

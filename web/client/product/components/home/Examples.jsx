@@ -25,7 +25,7 @@ const carouselImages = {
 
 var Examples = React.createClass({
     render() {
-        return (<Panel>
+        return (<Panel className="mapstore-home-examples">
             <h3><I18N.Message msgId="home.Applications"/></h3>
             <Carousel>
                 <CarouselItem>
