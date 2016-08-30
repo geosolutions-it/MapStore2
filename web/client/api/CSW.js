@@ -133,6 +133,18 @@ var Api = {
                 resolve(Api.getRecords(url, startPosition, maxRecords, filter));
             });
         });
+    },
+    workspaceSearch: function(url, startPosition, maxRecords, text, workspace) {
+        return new Promise((resolve) => {
+            require.ensure(['../utils/ogc/CSW', '../utils/ogc/Filter'], () => {
+                const {Filter} = require('../utils/ogc/Filter');
+                const workspaceTerm = workspace || "%";
+                const layerNameTerm = text && "%" + text + "%" || "%";
+                const ops = Filter.propertyIsLike("identifier", workspaceTerm + ":" + layerNameTerm);
+                const filter = Filter.filter(ops);
+                resolve(Api.getRecords(url, startPosition, maxRecords, filter));
+            });
+        });
     }
 };
 

@@ -548,6 +548,38 @@
             "tooltip": "Crea e modifica lo stile dei layer",
             "paneltitle": "Styler",
             "layerlabel": "Layer"
+        },
+        "rulesmanager": {
+            "title": "Regole Di Accesso",
+            "role": "Ruolo",
+            "user": "Utente",
+            "service": "Servizio",
+            "request": "Richiesta",
+            "workspace": "Workspace",
+            "layer": "Layer",
+            "filters": "Filtri",
+            "rules": "Regole",
+            "access": "Accesso",
+            "newModal": "Nuova Regola",
+            "editModal": "Modifica Regola",
+            "newButton": "Crea",
+            "editButton": "Salva",
+            "close": "Chiudi",
+            "previous": "precedente",
+            "next": "prossima",
+            "errorLoadingRoles": "Errore durante il caricamento dei ruoli",
+            "errorLoadingUsers": "Errore durante il caricamento  degli utenti.",
+            "errorLoadingWorkspaces": "Errore durante il caricamento dei workspaces.",
+            "errorLoadingLayers": "Errore durante il caricamento dei layers.",
+            "errorLoadingRules": "Errore durante il caricamento delle regole.",
+            "errorMovingRules": "Errore durante il caricamento delle regole.",
+            "errorDeletingRules": "Errore durante la cancellazione della regola.",
+            "errorAddingRule": "Errore durante la creazione della regola.",
+            "errorUpdatingRule": "Errore durante l'aggiornamento della regola.",
+            "deleteModal": "Elimina Regola",
+            "selectedRulesDelete": "Vuoi eliminare le regole selezionate?",
+            "deleteButton": "Elimina",
+            "cancelButton": "Annulla"
         }
     }
 }

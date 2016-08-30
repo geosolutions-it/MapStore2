@@ -48,7 +48,8 @@ module.exports = {
         AttributionPlugin: require('./plugins/Attribution'),
         HeaderPlugin: require('./plugins/Header'),
         FooterPlugin: require('./plugins/Footer'),
-        ManagerPlugin: require('..//plugins/manager/Manager'),
+        ManagerPlugin: require('../plugins/manager/Manager'),
+        RulesManagerPlugin: require('../plugins/manager/RulesManager'),
         ManagerMenuPlugin: require('../plugins/manager/ManagerMenu'),
         SharePlugin: require('../plugins/Share'),
         SavePlugin: require('../plugins/Save')
