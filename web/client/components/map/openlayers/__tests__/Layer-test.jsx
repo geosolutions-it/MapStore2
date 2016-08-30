@@ -524,7 +524,8 @@ describe('Openlayers layer', () => {
 
         expect(layer).toExist();
         // count layers
-        expect(map.getLayers().getLength()).toBe(1);
+        // MapQuest is not supported on Openlayers
+        expect(map.getLayers().getLength()).toBe(0);
     });
 
     it('changes wms layer opacity', () => {

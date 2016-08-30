@@ -33,7 +33,8 @@ let defaultConfig = {
     geoStoreUrl: "/mapstore/rest/geostore/",
     printUrl: "/mapstore/print/info.json",
     translationsPath: "translations",
-    bingApiKey: null
+    bingApiKey: null,
+    mapquestApiKey: null
 };
 
 var ConfigUtils = {
@@ -87,7 +88,7 @@ var ConfigUtils = {
         other.center = ConfigUtils.getCenter(other.center);
         return {
             map: other,
-            layers: layers.map(ConfigUtils.setBingKey, config).map(ConfigUtils.setLayerId).map(ConfigUtils.setUrlPlaceholders),
+            layers: layers.map(ConfigUtils.setApiKeys, config).map(ConfigUtils.setLayerId).map(ConfigUtils.setUrlPlaceholders),
             groups: groups,
             plugins: plugins
         };
@@ -292,9 +293,12 @@ var ConfigUtils = {
         retina: retina
         };
     },
-    setBingKey: function(layer) {
+    setApiKeys: function(layer) {
         if (layer.type === 'bing') {
             layer.apiKey = this.bingApiKey || defaultConfig.bingApiKey;
+        }
+        if (layer.type === 'mapquest') {
+            layer.apiKey = this.mapquestApiKey || defaultConfig.mapquestApiKey;
         }
         return layer;
     },

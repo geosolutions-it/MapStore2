@@ -101,7 +101,7 @@ describe('Leaflet layer', () => {
         expect(lcount).toBe(1);
     });
 
-    it('creates a mapquest layer for openlayers map', () => {
+    it('creates a mapquest layer for leaflet map without API key', () => {
         var options = {
 			"source": "mapquest",
 			"title": "MapQuest OpenStreetMap",
@@ -117,7 +117,8 @@ describe('Leaflet layer', () => {
         // count layers
         let lcount = 0;
         map.eachLayer(function() {lcount++; });
-        expect(lcount).toBe(1);
+        // No API key is defined, no layer should be added.
+        expect(lcount).toBe(0);
     });
 
     it('creates a osm layer for leaflet map', () => {
