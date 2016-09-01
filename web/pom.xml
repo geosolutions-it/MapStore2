@@ -285,28 +285,6 @@
                 </systemProperties>
             </configuration>
         </plugin>
-        <plugin>
-            <groupId>com.google.code.maven-replacer-plugin</groupId>
-            <artifactId>replacer</artifactId>
-            <version>1.5.3</version>
-            <executions>
-                <execution>
-                    <phase>prepare-package</phase>
-                    <goals>
-                        <goal>replace</goal>
-                    </goals>
-                </execution>
-            </executions>
-            <configuration>
-                <file>target/mapstore/index.html</file>
-                <replacements>
-                    <replacement>
-                        <token>__API_KEY_MAPQUEST__</token>
-                        <value>${__API_KEY_MAPQUEST__}</value>
-                    </replacement>
-                </replacements>
-            </configuration>
-        </plugin>
     </plugins>
   </build>
   <profiles>
@@ -329,6 +307,35 @@
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>2.6</version>
                     <executions></executions>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
+    <profile>
+        <id>api_mapquest</id>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>com.google.code.maven-replacer-plugin</groupId>
+                    <artifactId>replacer</artifactId>
+                    <version>1.5.3</version>
+                    <executions>
+                        <execution>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>replace</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <file>target/mapstore/index.html</file>
+                        <replacements>
+                            <replacement>
+                                <token>__API_KEY_MAPQUEST__</token>
+                                <value>${__API_KEY_MAPQUEST__}</value>
+                            </replacement>
+                        </replacements>
+                    </configuration>
                 </plugin>
             </plugins>
         </build>
