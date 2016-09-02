@@ -447,6 +447,53 @@
             "textSearchPlaceholder": "texte à rechercher...",
             "search": "Chercher"
         },
+        "uploader": {
+            "filename": "File Name",
+            "type": "Type",
+            "lastModified": "Last Modified",
+            "filesize": "Size",
+            "beforeUpload": " Doing pre-upload operations... ",
+            "uploadingFiles": "Uploading Files...",
+            "dropfile": "drop files here to upload",
+            "dropfileImport": "drop here files to add it to this process"
+        },
+        "importer": {
+            "imports": "Processus d'importation",
+            "importN": "Processus {id}",
+            "creatingImportProcess": "Création d'importation ...",
+            "dropfile": "faire glisser des fichiers ici pour créer un nouveau processus d'importation",
+            "dropfileImport": "faites glisser les fichiers ici pour ajouter à ce processus",
+            "process": "Processus",
+            "import": {
+                "actions": "Actes",
+                "tasks": "paquet",
+                "runImport": "Début",
+                "deleteImport": "Supprimer processus",
+                "deleteTask": "Supprimer",
+                "status": "Statut",
+                "archive": "Archives",
+                "deleting": "Clearing ...",
+                "applyingPreset": "Presets d'application ..."
+            },
+            "task": {
+                "panelTitle": "Paquet {id}",
+                "status": "Statut",
+                "updateMode": "Mode refresh",
+                "originalData": "fichier original",
+                "format": "Format",
+                "targetStore": "target store",
+                "storeType": "Type de store",
+                "storeName": "Le nom du store",
+                "transforms": "Chaîne de transformations"
+            },
+            "transform": {
+                "panelTitle": "Transformation {id}",
+                "type": "Type de transformation",
+                "actions": "Actes",
+                "options": "transformations des options",
+                "overviewlevels": "Vue d'ensemble des niveaux"
+            }
+        },
         "rasterstyler": {
             "paneltitle": "Editeur de style d'image",
             "tooltip": "Créer et éditer un style pour une couche image",

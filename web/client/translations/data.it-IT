@@ -441,6 +441,53 @@
             "textSearchPlaceholder": "testo da cercare...",
             "search": "Cerca"
         },
+        "uploader": {
+            "filename": "File Name",
+            "type": "Type",
+            "lastModified": "Last Modified",
+            "filesize": "Size",
+            "beforeUpload": " Doing pre-upload operations... ",
+            "uploadingFiles": "Uploading Files...",
+            "dropfile": "drop files here to upload",
+            "dropfileImport": "drop here files to add it to this process"
+        },
+        "importer": {
+            "imports": "Processi di Importazione",
+            "importN": "Processo {id}",
+            "creatingImportProcess": "Creazione del processo di importazione... ",
+            "dropfile": "trascina i file qui per creare un nuovo processo di importazione",
+            "dropfileImport": "trascina i file qui per aggiungerli a questo processo",
+            "process": "Processo",
+            "import": {
+                "actions": "Azioni",
+                "tasks": "Pacchetti",
+                "runImport": "Avvia",
+                "deleteImport": "Elimina Processo",
+                "deleteTask": "Elimina",
+                "status": "Stato",
+                "archive": "Archivia",
+                "deleting": "Cancellazione in corso...",
+                "applyingPreset": "Applicazione dei preset..."
+            },
+            "task": {
+                "panelTitle": "Pacchetto {id}",
+                "status": "Stato",
+                "updateMode": "Modalità di aggiornamento",
+                "originalData": "File Originale",
+                "format": "Formato",
+                "targetStore": "Destinazione",
+                "storeType": "Tipo di Destinazione",
+                "storeName": "Nome Destinazione",
+                "transforms": "Catena di transformazioni"
+            },
+            "transform": {
+                "panelTitle": "Trasformazione {id}",
+                "type": "Tipo di trasformazione",
+                "actions": "Azioni",
+                "options": "Opzioni trasformazioni",
+                "overviewlevels": "Livelli di overview"
+            }
+        },
         "rasterstyler": {
             "paneltitle": "Raster Styler",
             "tooltip": "Crea e modifica lo stile dei layer raster",
