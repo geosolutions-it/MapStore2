@@ -17,18 +17,23 @@ var MapGrid = React.createClass({
         bottom: React.PropTypes.node,
         loading: React.PropTypes.bool,
         maps: React.PropTypes.array,
+        currentMap: React.PropTypes.object,
         fluid: React.PropTypes.bool,
         viewerUrl: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
         mapType: React.PropTypes.string,
         colProps: React.PropTypes.object,
+        // CALLBACKS
         updateMapMetadata: React.PropTypes.func,
+        editMap: React.PropTypes.func,
+        saveMap: React.PropTypes.func,
+        errorCurrentMap: React.PropTypes.func,
+        updateCurrentMap: React.PropTypes.func,
+        createThumbnail: React.PropTypes.func,
+        deleteThumbnail: React.PropTypes.func,
         deleteMap: React.PropTypes.func
     },
     getDefaultProps() {
         return {
-            onChangeMapType: function() {},
-            updateMapMetadata: () => {},
-            deleteMap: () => {},
             mapType: 'leaflet',
             bottom: "",
             fluid: true,
@@ -39,7 +44,17 @@ var MapGrid = React.createClass({
                     "marginBottom": "20px"
                 }
             },
-            maps: []
+            maps: [],
+            // CALLBACKS
+            onChangeMapType: function() {},
+            updateMapMetadata: () => {},
+            createThumbnail: () => {},
+            deleteThumbnail: () => {},
+            errorCurrentMap: () => {},
+            updateCurrentMap: () => {},
+            deleteMap: () => {},
+            saveMap: () => {},
+            editMap: () => {}
         };
     },
     renderMaps: function(maps, mapType) {
@@ -49,7 +64,17 @@ var MapGrid = React.createClass({
             return children === 1 ?
                 React.cloneElement(React.Children.only(this.props.children), {viewerUrl, key: map.id, mapType, map}) :
                 <Col key={map.id} {...this.props.colProps}>
-                    <MapCard viewerUrl={viewerUrl} mapType={mapType} map={map} onMetadataEdit={this.props.updateMapMetadata} onMapDelete={this.props.deleteMap} />
+                    <MapCard viewerUrl={viewerUrl} mapType={mapType}
+                        map={map}
+                        onSave={this.props.updateMapMetadata}
+                        onSaveMap={this.props.saveMap}
+                        onEdit={this.props.editMap}
+                        onCreateThumbnail={this.props.createThumbnail}
+                        onDeleteThumbnail={this.props.deleteThumbnail}
+                        onMapDelete={this.props.deleteMap}
+                        onErrorCurrentMap={this.props.errorCurrentMap}
+                        onUpdateCurrentMap={this.props.updateCurrentMap}
+                        currentMap={this.props.currentMap}/>
                 </Col>;
         });
     },

@@ -9,6 +9,7 @@
 var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER,
     CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, ZOOM_TO_EXTENT, PAN_TO, CHANGE_MAP_STYLE} = require('../actions/map');
 
+
 var assign = require('object-assign');
 var MapUtils = require('../utils/MapUtils');
 var CoordinatesUtils = require('../utils/CoordinatesUtils');

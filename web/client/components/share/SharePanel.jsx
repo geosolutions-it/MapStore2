@@ -41,7 +41,7 @@ let SharePanel = React.createClass({
         };
     },
     render() {
-        // ************************ START CHANGE URL PARAMATER FOR EMBED CODE ****************************
+        // ************************ CHANGE URL PARAMATER FOR EMBED CODE ****************************
         /* if the property shareUrl is not defined it takes the url from location.href */
         let shareUrl = this.props.shareUrl || location.href;
         /* the sharing url is parsed in order to check the query parameters from the complete url */
@@ -56,7 +56,6 @@ let SharePanel = React.createClass({
         let urlformatted = Url.format(urlParsedObj);
         /* shareEmbeddedUrl is the url used for embedded part */
         let shareEmbeddedUrl = urlformatted;
-        // ************************ END CHANGE URL PARAMATER FOR EMBED CODE ****************************
         let sharePanel = (
             <Dialog id="share-panel-dialog" className="modal-dialog modal-content share-win">
                 <span role="header">

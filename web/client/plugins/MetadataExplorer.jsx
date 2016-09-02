@@ -40,6 +40,7 @@ const MetadataExplorerComponent = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         active: React.PropTypes.bool,
+        formats: React.PropTypes.array,
         wrap: React.PropTypes.bool,
         wrapWithPanel: React.PropTypes.bool,
         panelStyle: React.PropTypes.object,
@@ -74,7 +75,7 @@ const MetadataExplorerComponent = React.createClass({
         if (this.props.wrap) {
             if (this.props.active) {
                 if (this.props.wrapWithPanel) {
-                    return (<Panel id={this.props.id} header={<span><span className="metadataexplorer-panel-title"><Message msgId="catalog.title"/></span><span className="shapefile-panel-close panel-close" onClick={this.props.toggleControl}></span></span>} style={this.props.panelStyle} className={this.props.panelClassName}>
+                    return (<Panel id={this.props.id} header={<span><span className="metadataexplorer-panel-title"><Message msgId="catalog.title"/></span><span className="shapefile-panel-close panel-close" onClick={ toggleControl.bind(null, 'styler', null)}></span></span>} style={this.props.panelStyle} className={this.props.panelClassName}>
                         {panel}
                     </Panel>);
                 }
