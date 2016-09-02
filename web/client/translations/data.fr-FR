@@ -520,7 +520,8 @@
             "pagination": {
                 "page": "Page",
                 "of":   "de",
-                "to":   "à"
+                "to":   "à",
+                "more": "plus"
             }
         },
         "vectorstyler": {
@@ -555,6 +556,38 @@
             "tooltip": "Créer et éditer un style de couche",
             "paneltitle": "Style de couche",
             "layerlabel": "Couche"
+        },
+        "rulesmanager": {
+            "title": "Règles d'accès",
+            "role": "Rôle",
+            "user": "Utilisateur",
+            "service": "Service",
+            "request": "Request",
+            "workspace": "Workspace",
+            "layer": "Layer",
+            "filters": "Filtres",
+            "rules": "Règles",
+            "access": "Accès",
+            "newModal": "Nouvelle règle",
+            "editModal": "Modifier la règle",
+            "newButton": "Créer",
+            "editButton": "Enregistrer",
+            "close": "Fermer",
+            "previous": "précédent",
+            "next": "prochain",
+            "errorLoadingRoles": "Erreur lors du chargement des rôles.",
+            "errorLoadingUsers": "Erreur lors du chargement des utilisateurs.",
+            "errorLoadingWorkspaces": "Erreur lors du chargement des  workspaces.",
+            "errorLoadingLayers": "Erreur lors du chargement des layers.",
+            "errorLoadingRules": "Erreur lors du chargement des règles.",
+            "errorMovingRules": "Erreur lors du déplacement des règles.",
+            "errorDeletingRules": "Erreur de suppression des règles.",
+            "errorAddingRule": "Erreur lors de l'ajout de la règle.",
+            "errorUpdatingRule": "Erreur lors de la mise à jour règle.",
+            "deleteModal": "Supprimer la règle",
+            "selectedRulesDelete": "Voulez-vous supprimer les règles sélectionnées ?",
+            "deleteButton": "Effacer",
+            "cancelButton": "Annuler"
         }
     }
 }
