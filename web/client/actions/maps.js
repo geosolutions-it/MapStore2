@@ -189,7 +189,13 @@ function createThumbnail(nameThumbnail, dataThumbnail, categoryThumbnail, resour
             let state = getState();
             let groups = get(state, "security.user.groups.group");
             let index = findIndex(groups, function(g) { return g.groupName === "everyone"; });
-            let group = groups[index];
+            let group;
+            if (index < 0 && groups && groups.groupName === "everyone") {
+                group = groups;
+            } else {
+                group = groups[index];
+            }
+
             let user = get(state, "security.user");
             let userPermission = {
                 canRead: true,
