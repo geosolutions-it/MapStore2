@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react/addons');
-var ReactDOM = require('react-dom');
-var RuleAttributes = require('../RuleAttributes.jsx');
-var expect = require('expect');
+const React = require('react/addons');
+const ReactDOM = require('react-dom');
+const RuleAttributes = require('../RuleAttributes.jsx');
+const expect = require('expect');
 
 describe('test rule attributes component', () => {
 

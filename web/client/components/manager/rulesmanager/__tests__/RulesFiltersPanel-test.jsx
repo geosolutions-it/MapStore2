@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react/addons');
-var ReactDOM = require('react-dom');
-var RulesFilterPanel = require('../RulesFiltersPanel.jsx');
-var expect = require('expect');
+const React = require('react/addons');
+const ReactDOM = require('react-dom');
+const RulesFilterPanel = require('../RulesFiltersPanel.jsx');
+const expect = require('expect');
 
 describe('test rules filters panel component', () => {
 

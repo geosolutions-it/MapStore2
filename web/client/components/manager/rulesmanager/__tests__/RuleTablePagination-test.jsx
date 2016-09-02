@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react/addons');
-var ReactDOM = require('react-dom');
-var RulesTablePagination = require('../RulesTablePagination.jsx');
-var expect = require('expect');
+const React = require('react/addons');
+const ReactDOM = require('react-dom');
+const RulesTablePagination = require('../RulesTablePagination.jsx');
+const expect = require('expect');
 
 describe('test rules table pagination component', () => {
 
