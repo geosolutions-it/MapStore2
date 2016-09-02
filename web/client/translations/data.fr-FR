@@ -122,9 +122,9 @@
             "errorSize": "taille maximum autorisée: 500kb",
             "error": "L'image fournie est pas valide",
             "thumbnailError": {
-                    "error404" : "Une erreur est survenue lors de la création de la vignette",
-                    "error403" : "Une erreur est survenue lors de la suppression de la vignette",
-                    "errorDefault" : "Une erreur est survenue sur le serveur"
+                "error404" : "Une erreur est survenue lors de la création de la vignette",
+                "error403" : "Une erreur est survenue lors de la suppression de la vignette",
+                "errorDefault" : "Une erreur est survenue sur le serveur"
             }
         },
         "print":{

@@ -29,7 +29,7 @@ const selector = createSelector(mapSelector, stateSelector, layersSelector, (map
     layers
 }));
 
-const Save = React.createClass({
+const SaveAs = React.createClass({
     propTypes: {
         show: React.PropTypes.bool,
         mapId: React.PropTypes.string,
@@ -139,14 +139,13 @@ const Save = React.createClass({
 });
 
 module.exports = {
-    // TODO: Add SaveAs plugin
     SaveAsPlugin: connect(selector,
     {
         onClose: toggleControl.bind(null, 'saveAs', false),
         onMapSave: createMap,
         loadMapInfo,
         onCreateThumbnail: createThumbnail
-    })(assign(Save, {
+    })(assign(SaveAs, {
         BurgerMenu: {
             name: 'saveAs',
             position: 900,
