@@ -439,7 +439,9 @@
             "noRecordsMatched": "Nessun risultato trovato",
             "catalogUrlPlaceholder": "URL del catalogo...",
             "textSearchPlaceholder": "testo da cercare...",
-            "search": "Cerca"
+            "search": "Cerca",
+            "reset": "Reset",
+            "options": "Opzioni"
         },
         "rasterstyler": {
             "paneltitle": "Raster Styler",

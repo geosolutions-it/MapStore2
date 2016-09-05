@@ -10,7 +10,7 @@ const React = require('react');
 const Message = require('../I18N/Message');
 const LocaleUtils = require('../../utils/LocaleUtils');
 
-const {Input, Alert, Pagination, Button} = require('react-bootstrap');
+const {Input, Alert, Pagination, Button, Panel} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 
 const RecordGrid = require('./RecordGrid');
@@ -20,6 +20,7 @@ const Catalog = React.createClass({
         formats: React.PropTypes.array,
         format: React.PropTypes.string,
         onSearch: React.PropTypes.func,
+        onReset: React.PropTypes.func,
         onChangeFormat: React.PropTypes.func,
         onLayerAdd: React.PropTypes.func,
         onZoomToExtent: React.PropTypes.func,
@@ -35,6 +36,8 @@ const Catalog = React.createClass({
         records: React.PropTypes.array,
         gridOptions: React.PropTypes.object,
         includeSearchButton: React.PropTypes.bool,
+        includeResetButton: React.PropTypes.bool,
+        wrapOptions: React.PropTypes.bool,
         buttonStyle: React.PropTypes.object
     },
     contextTypes: {
@@ -44,6 +47,7 @@ const Catalog = React.createClass({
         return {
             pageSize: 6,
             onSearch: () => {},
+            onReset: () => {},
             onChangeFormat: () => {},
             onLayerAdd: () => {},
             onZoomToExtent: () => {},
@@ -52,6 +56,8 @@ const Catalog = React.createClass({
             formats: [{name: 'csw', label: 'CSW'}],
             format: 'csw',
             includeSearchButton: false,
+            includeResetButton: false,
+            wrapOptions: false,
             buttonStyle: {
                 marginBottom: "10px"
             }
@@ -142,12 +148,19 @@ const Catalog = React.createClass({
                 onChange={this.setCatalogUrl}/>);
         }
     },
-    renderSearchButton() {
+    renderButtons() {
+        const buttons = [];
         if (this.props.includeSearchButton) {
-            return (<Button style={this.props.buttonStyle} onClick={this.search}>
+            buttons.push(<Button style={this.props.buttonStyle} onClick={this.search}>
                         <Message msgId="catalog.search"/>
                     </Button>);
         }
+        if (this.props.includeResetButton) {
+            buttons.push(<Button style={this.props.buttonStyle} onClick={this.reset}>
+                        <Message msgId="catalog.reset"/>
+                    </Button>);
+        }
+        return buttons;
     },
     renderFormatChoice() {
         if (this.props.formats.length > 1) {
@@ -159,20 +172,24 @@ const Catalog = React.createClass({
         return this.props.formats.map((format) => <option value={format.name}>{format.label}</option>);
     },
     render() {
+        const textSearch = (<Input
+            ref="searchText"
+            type="text"
+            style={{
+                textOverflow: "ellipsis"
+            }}
+            placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.textSearchPlaceholder")}
+            onKeyDown={this.onKeyDown}/>);
         return (
              <div>
                  <div>
                      {this.renderFormatChoice()}
                      {this.renderURLInput()}
-                     <Input
-                         ref="searchText"
-                         type="text"
-                         style={{
-                             textOverflow: "ellipsis"
-                         }}
-                         placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.textSearchPlaceholder")}
-                         onKeyDown={this.onKeyDown}/>
-                     {this.renderSearchButton()}
+
+                     {this.props.wrapOptions ? (<Panel collapsible defaultExpanded={false} header={LocaleUtils.getMessageById(this.context.messages, "catalog.options")}>
+                         {textSearch}
+                     </Panel>) : textSearch}
+                     {this.renderButtons()}
                  </div>
                  <div>
                     {this.renderResult()}
@@ -185,6 +202,15 @@ const Catalog = React.createClass({
         this.setState({
             loading: true
         });
+    },
+    reset() {
+        if (this.refs.catalogURL) {
+            this.refs.catalogURL.refs.input.value = '';
+        }
+        if (this.refs.searchText) {
+            this.refs.searchText.refs.input.value = '';
+        }
+        this.props.onReset();
     },
     setCatalogUrl(e) {
         this.setState({catalogURL: e.target.value});

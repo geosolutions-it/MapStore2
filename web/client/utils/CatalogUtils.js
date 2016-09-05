@@ -124,6 +124,7 @@ const converters = {
                 description: record.Abstract || record.Title || record.Name,
                 identifier: record.Name,
                 tags: "",
+                capabilities: record,
                 boundingBox: {
                     extent: [
                             bbox.westBoundLongitude,

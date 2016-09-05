@@ -12,6 +12,7 @@ var API = {
 };
 
 const RECORD_LIST_LOADED = 'RECORD_LIST_LOADED';
+const RESET_CATALOG = 'RESET_CATALOG';
 const RECORD_LIST_LOAD_ERROR = 'RECORD_LIST_LOAD_ERROR';
 const CHANGE_CATALOG_FORMAT = 'CHANGE_CATALOG_FORMAT';
 
@@ -27,6 +28,12 @@ function changeCatalogFormat(format) {
     return {
         type: CHANGE_CATALOG_FORMAT,
         format
+    };
+}
+
+function resetCatalog() {
+    return {
+        type: RESET_CATALOG
     };
 }
 
@@ -71,7 +78,9 @@ module.exports = {
     RECORD_LIST_LOADED,
     RECORD_LIST_LOAD_ERROR,
     CHANGE_CATALOG_FORMAT,
+    RESET_CATALOG,
     getRecords,
     textSearch,
-    changeCatalogFormat
+    changeCatalogFormat,
+    resetCatalog
 };

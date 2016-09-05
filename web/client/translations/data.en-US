@@ -443,7 +443,9 @@
             "copied": "Copied!",
             "catalogUrlPlaceholder": "Enter catalog URL...",
             "textSearchPlaceholder": "text to search...",
-            "search": "Search"
+            "search": "Search",
+            "reset": "Clear",
+            "options": "Options"
         },
         "rasterstyler": {
             "tooltip": "Create and edit raster layer style",
