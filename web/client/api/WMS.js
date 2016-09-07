@@ -43,6 +43,7 @@ const searchAndPaginate = (json, startPosition, maxRecords, text) => {
         numberOfRecordsMatched: filteredLayers.length,
         numberOfRecordsReturned: Math.min(maxRecords, filteredLayers.length),
         nextRecord: startPosition + Math.min(maxRecords, filteredLayers.length) + 1,
+        service: json.WMS_Capabilities.Service,
         records: filteredLayers
             .filter((layer, index) => index >= (startPosition - 1) && index < (startPosition - 1) + maxRecords)
     };

@@ -125,6 +125,7 @@ const converters = {
                 identifier: record.Name,
                 tags: "",
                 capabilities: record,
+                service: records.service,
                 boundingBox: {
                     extent: [
                             bbox.westBoundLongitude,
