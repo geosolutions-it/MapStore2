@@ -10,7 +10,7 @@ const React = require('react');
 const {Grid, Row, Col} = require('react-bootstrap');
 const MapCard = require('./MapCard');
 const Spinner = require('react-spinkit');
-
+const MetadataModal = require('./modals/MetadataModal');
 var MapGrid = React.createClass({
     propTypes: {
         panelProps: React.PropTypes.object,
@@ -25,7 +25,10 @@ var MapGrid = React.createClass({
         // CALLBACKS
         updateMapMetadata: React.PropTypes.func,
         editMap: React.PropTypes.func,
+        saveAll: React.PropTypes.func,
         saveMap: React.PropTypes.func,
+        onDisplayMetadataEdit: React.PropTypes.func,
+        removeThumbnail: React.PropTypes.func,
         errorCurrentMap: React.PropTypes.func,
         updateCurrentMap: React.PropTypes.func,
         createThumbnail: React.PropTypes.func,
@@ -51,9 +54,12 @@ var MapGrid = React.createClass({
             createThumbnail: () => {},
             deleteThumbnail: () => {},
             errorCurrentMap: () => {},
+            saveAll: () => {},
+            onDisplayMetadataEdit: () => {},
             updateCurrentMap: () => {},
             deleteMap: () => {},
             saveMap: () => {},
+            removeThumbnail: () => {},
             editMap: () => {}
         };
     },
@@ -66,8 +72,11 @@ var MapGrid = React.createClass({
                 <Col key={map.id} {...this.props.colProps}>
                     <MapCard viewerUrl={viewerUrl} mapType={mapType}
                         map={map}
+                        onSaveAll={this.props.saveAll}
+                        onDisplayMetadataEdit={this.props.onDisplayMetadataEdit}
                         onSave={this.props.updateMapMetadata}
                         onSaveMap={this.props.saveMap}
+                        onRemoveThumbnail={this.props.removeThumbnail}
                         onEdit={this.props.editMap}
                         onCreateThumbnail={this.props.createThumbnail}
                         onDeleteThumbnail={this.props.deleteThumbnail}
@@ -90,6 +99,18 @@ var MapGrid = React.createClass({
                     <Row>
                         {this.props.bottom}
                     </Row>
+                    <MetadataModal ref="metadataModal" show={this.props.currentMap.displayMetadataEdit} onHide={() => {this.props.onDisplayMetadataEdit(false); }}
+                        onClose={() => {this.props.onDisplayMetadataEdit(false); }}
+                        map={this.props.currentMap}
+                        onSaveAll={this.props.saveAll}
+                        onSave={this.props.saveMap}
+                        onEdit={this.props.editMap}
+                        onRemoveThumbnail={this.props.removeThumbnail}
+                        onSaveMap={this.props.saveMap}
+                        onDeleteThumbnail={this.props.deleteThumbnail}
+                        onCreateThumbnail={this.props.createThumbnail}
+                        onErrorCurrentMap={this.props.errorCurrentMap}
+                        onUpdateCurrentMap={this.props.updateCurrentMap}/>
                 </Grid>
         );
     }

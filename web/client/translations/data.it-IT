@@ -122,8 +122,8 @@
             "error": "L'immagine fornita non è valida",
             "thumbnailError": {
                 "error404" : "Non è stato possibile creare la thumbnail sul server",
-                "error403" : "Non disponi dei permessi per aggiornare la thumbnail",
-                "errorDefault" : "Il server ha riscontrato un errore"
+                "error403" : "Non disponi dei permessi per aggiornare la mappa",
+                "errorDefault" : "Errore di rete"
             }
         },
         "print":{
