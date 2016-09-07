@@ -8,7 +8,7 @@
 const React = require('react');
 const {Grid, Col, Row, Panel, Label, Button, Alert} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
-const {DropdownList} = require('react-widgets');
+// const {DropdownList} = require('react-widgets');
 require('react-widgets/lib/less/react-widgets.less');
 const {Message} = require('../../I18N/I18N');
 const ImporterUtils = require('../../../utils/ImporterUtils');
@@ -59,7 +59,10 @@ const Task = React.createClass({
     renderErrorMessage(task) {
         if (task.errorMessage && task.state === "ERROR") {
             return (
-                <Alert bsStyle="danger">{task.errorMessage}</Alert>);
+                <Alert bsStyle="danger" style={{
+                    maxHeight: "80px",
+                    overflow: "auto"
+                    }}>{task.errorMessage}</Alert>);
         }
         return null;
 
@@ -70,7 +73,11 @@ const Task = React.createClass({
               <dt><Message msgId="importer.task.status" /></dt>
               <dd><Label bsStyle={this.getbsStyleForState(task.state)}>{task.state}</Label>{this.renderErrorMessage(task)}</dd>
               <dt><Message msgId="importer.task.updateMode" /></dt>
-              <dd>{this.props.task.state === "READY" ? <DropdownList data={["APPEND", "CREATE", "REPLACE"]} value={task.updateMode} onChange={this.updateMode}/> : task.updateMode}</dd>
+              <dd>{
+                      /*this.props.task.state === "READY"
+                      this.props.task ? <DropdownList data={["APPEND", "CREATE", "REPLACE"]} value={task.updateMode} onChange={this.updateMode}/> : */
+                      // force this to default because APPEND and REPLACE are not supported yet.
+                      task.updateMode}</dd>
             </dl>
         </Panel>);
     },

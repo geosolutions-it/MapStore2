@@ -51,6 +51,10 @@ var Api = {
         let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId + "/layer";
         return axios.put(url, layer, options);
     },
+    loadTarget: function( geoserverBaseUrl, importId, taskId, options) {
+        let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId + "/target";
+        return axios.get(url, options);
+    },
     runImport: function( geoserverBaseUrl, importId, options) {
         let url = geoserverBaseUrl + "imports/" + importId + "?async=true";
         return axios.post(url, null, options);

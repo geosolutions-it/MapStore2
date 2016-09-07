@@ -19,7 +19,7 @@ const Task = React.createClass({
         "import": React.PropTypes.object,
         loadImport: React.PropTypes.func,
         loadTask: React.PropTypes.func,
-        loadLayer: React.PropTypes.func,
+        loadStylerTool: React.PropTypes.func,
         runImport: React.PropTypes.func,
         updateProgress: React.PropTypes.func,
         deleteImport: React.PropTypes.func,
@@ -35,7 +35,7 @@ const Task = React.createClass({
             loadTask: () => {},
             runImport: () => {},
             loadImport: () => {},
-            loadLayer: () => {},
+            loadStylerTool: () => {},
             updateProgress: () => {},
             deleteImport: () => {},
             deleteTask: () => {}
@@ -149,7 +149,7 @@ const Task = React.createClass({
     },
     editDefaultStyle(taskId) {
         this.context.router.push("/styler/openlayers");
-        this.props.loadLayer(taskId);
+        this.props.loadStylerTool(taskId);
     }
 });
 module.exports = Task;

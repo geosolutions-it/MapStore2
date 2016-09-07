@@ -7,11 +7,19 @@
  */
 
 const STYLE_SAVED = 'STYLER_STYLE_SAVED';
+const SET_STYLER_LAYER = 'SET_STYLER_LAYER';
 const STYLE_SAVE_ERROR = 'STYLE_SAVE_ERROR';
 const STYLER_RESET = 'STYLER_RESET';
 
 const {getLayer} = require('../api/geoserver/Layers');
 const {saveStyle} = require('../api/geoserver/Styles');
+
+function setStylerLayer(layer) {
+    return {
+        type: SET_STYLER_LAYER,
+        layer
+    };
+}
 function styleSaved(name, style) {
     return {
         type: STYLE_SAVED,
@@ -47,6 +55,8 @@ function saveLayerDefaultStyle(geoserverBaseUrl, layerName, style) {
 module.exports = {
     STYLE_SAVED,
     STYLER_RESET,
+    SET_STYLER_LAYER,
     saveLayerDefaultStyle,
+    setStylerLayer,
     reset
 };

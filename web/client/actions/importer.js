@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var API = require('../api/geoserver/Importer');
-
+const {configureMap} = require('./config');
 const IMPORTS_LOADING = 'IMPORTS_LOADING';
 const IMPORTS_CREATION_ERROR = 'IMPORTS_CREATION_ERROR';
 const IMPORT_CREATED = 'IMPORT_CREATED';
@@ -280,7 +280,12 @@ function uploadProgress(progress) {
 function createImport(geoserverRestURL, body = {}) {
     return (dispatch) => {
         dispatch(loading());
-        API.createImport(geoserverRestURL, body).then((response) => {
+        let options = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        API.createImport(geoserverRestURL, body, options).then((response) => {
             dispatch(importCreated(response && response.data && response.data.import));
             dispatch(loading(null, false));
         }).catch((e) => {
@@ -549,6 +554,51 @@ function uploadImportFiles(geoserverRestURL, importId, files, presets) {
     };
 }
 
+/** STYLER **/
+function loadStylerTool(geoserverRestURL, importId, taskId) {
+    return (dispatch, getState) => {
+        return API.loadLayer(geoserverRestURL, importId, taskId).then((layerResponse) => {
+            let layer = layerResponse && layerResponse.data && layerResponse.data.layer;
+
+            let importObj = getState && getState().importer && getState().importer.selectedImport;
+            let workspace = importObj.targetWorkspace && importObj.targetWorkspace.workspace.name;
+            let stylerMapConfig = {
+                  "version": 2,
+                  "map": {
+                    "projection": "EPSG:3857",
+                    "units": "m",
+                    "center": {"x": 0, "y": 0, "crs": "EPSG:3857"},
+                    "zoom": 2,
+                    "maxExtent": [
+                      -20037508.34, -20037508.34,
+                      20037508.34, 20037508.34
+                    ],
+                    "layers": [{
+                      "type": "osm",
+                      "title": "Open Street Map",
+                      "name": "mapnik",
+                      "source": "osm",
+                      "group": "background",
+                            "visibility": true
+                        }]
+                  }
+              };
+            let config = stylerMapConfig;
+            config.map.layers = (config.map.layers || []).concat({
+                "type": "wms",
+                "url": "/geoserver/wms",
+                "visibility": true,
+                "title": layer.title,
+                "name": workspace + ":" + layer.name,
+                "group": "Styler",
+                "format": "image/png8"
+            });
+            dispatch(configureMap(config));
+        });
+
+    };
+}
+
 module.exports = {
     loadImports, createImport, uploadImportFiles,
     loadImport, runImport, deleteImport,
@@ -556,6 +606,7 @@ module.exports = {
     updateProgress,
     loadLayer, updateLayer,
     loadTransform, updateTransform, deleteTransform,
+    loadStylerTool,
     IMPORTS_LOADING,
     IMPORTS_LIST_LOADED,
     IMPORTS_LIST_LOAD_ERROR,

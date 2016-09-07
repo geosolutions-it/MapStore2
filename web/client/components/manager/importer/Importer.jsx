@@ -36,6 +36,7 @@ const Importer = React.createClass({
         updateProgress: React.PropTypes.func,
         loadLayer: React.PropTypes.func,
         updateLayer: React.PropTypes.func,
+        loadStylerTool: React.PropTypes.func,
         loadTransform: React.PropTypes.func,
         updateTranform: React.PropTypes.func,
         deleteTransform: React.PropTypes.func,
@@ -130,6 +131,7 @@ const Importer = React.createClass({
             return (<div>
                 {breadcrumb}
                 <Import
+                    loadStylerTool={this.props.loadStylerTool.bind(null, this.props.selectedImport.id)}
                     import={this.props.selectedImport}
                     loadTask={this.props.loadTask.bind(null, this.props.selectedImport.id)}
                     loadLayer={this.props.loadLayer.bind(null, this.props.selectedImport.id)}

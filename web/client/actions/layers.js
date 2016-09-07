@@ -152,7 +152,7 @@ function getDescribeLayer(url, layer, options) {
                     if (axis && typeof axis === "string") {
                         describeLayer.bands = [1 + ""];
                     } else {
-                        describeLayer.bands = axis.map((el, index) => (index + "")); // array of 1 2 3 because the sld do not recognize the name
+                        describeLayer.bands = axis.map((el, index) => ((index + 1) + "")); // array of 1 2 3 because the sld do not recognize the name
                     }
 
                     dispatch(updateNode(layer.id, "id", {describeLayer, describeCoverage}));

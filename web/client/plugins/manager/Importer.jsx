@@ -17,7 +17,8 @@ const {
     uploadImportFiles, loadTask, updateTask, deleteTask,
     updateProgress,
     loadLayer, updateLayer,
-    loadTransform, deleteTransform
+    loadTransform, deleteTransform,
+    loadStylerTool
 } = require('../../actions/importer');
 
 const assign = require('object-assign');
@@ -52,7 +53,8 @@ const ImporterPlugin = connect(
             deleteImport: deleteImport.bind(null, getURL(ownProps)),
             deleteTask: deleteTask.bind(null, getURL(ownProps)),
             loadLayer: loadLayer.bind(null, getURL(ownProps)),
-            updateLayer: updateLayer.bind(null, getURL(ownProps))
+            updateLayer: updateLayer.bind(null, getURL(ownProps)),
+            loadStylerTool: loadStylerTool.bind(null, getURL(ownProps))
         }, dispatch);
     }, (stateProps, dispatchProps, ownProps) => {
         return assign({}, ownProps, stateProps, dispatchProps, {

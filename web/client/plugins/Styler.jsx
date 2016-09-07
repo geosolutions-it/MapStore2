@@ -96,7 +96,7 @@ const Styler = React.createClass({
     componentWillReceiveProps(nextProps) {
         // intial setup
         if (this.state.layer) {
-            let originalLayer = head(nextProps.layers.filter((l) => (l.id === this.state.layer.id)));
+            let originalLayer = this.findOriginalLayer(nextProps, this.state);
             if (originalLayer && originalLayer.describeLayer && !originalLayer.describeLayer.error) {
                 this.props.reset();
                 this.setState({layer: null});
@@ -113,18 +113,7 @@ const Styler = React.createClass({
         } else if (nextProps.layer && this.props.layer && (nextProps.layer.id !== this.props.layer.id) ) {
             this.setLayer(nextProps.layer);
         }
-        // zoom when capabilities received;
-        if (nextProps.layer) {
-            let originalLayer = head(nextProps.layers.filter((l) => (l.id === nextProps.layer.id)));
-            if (originalLayer && originalLayer.capabilities ) {
-                let extent = originalLayer.capabilities.latLonBoundingBox;
-                if (extent && !this.state.zoomed) {
-                    this.props.zoomToExtent([extent.minx, extent.miny, extent.maxx, extent.maxy], "EPSG:4326");
-                    this.setState({zoomed: true});
-                }
-            }
 
-        }
     },
     getPanelStyle() {
         let size = getWindowSize();
@@ -206,11 +195,11 @@ const Styler = React.createClass({
                 </Row>);
     },
     renderSave() {
-        let layer = head(this.props.layers.filter((l) => (l.id === this.props.layer.id)));
+        let layer = this.findOriginalLayer(this.props, this.props);
 
         if (layer && layer.params && layer.params.SLD_BODY && this.props.layer && this.getRestURL(this.props.layer.url)) {
             return (
-                <Button onClick={this.saveStyle}>Save</Button>
+                <Button style={{margin: "4px"}} onClick={this.saveStyle}>Save</Button>
             );
         }
 
@@ -218,8 +207,14 @@ const Styler = React.createClass({
     renderReset() {
         if (this.props.layer) {
             return (
-                <Button onClick={this.reset}>Reset</Button>
+                <Button key="reset-btn" onClick={this.reset}>Reset</Button>
             );
+        }
+    },
+    renderZoom() {
+        let originalLayer = this.findOriginalLayer(this.props, this.props);
+        if (originalLayer && originalLayer.capabilities) {
+            return <Button key="zoom-btn" onClick={this.zoomToLayerExtent} ><Glyphicon glyph="search" />Zoom To Layer</Button>;
         }
     },
     renderBody() {
@@ -231,12 +226,15 @@ const Styler = React.createClass({
                     {this.props.layer && this.props.canSave ? this.renderSave() : null}
                     {this.renderReset()}
                 </Row>
+                <Row>
+                    {this.renderZoom()}
+                </Row>
                 </Grid>);
     },
     render() {
         if (this.props.open || this.props.forceOpen) {
             return this.props.withContainer ?
-                (<Dialog className="mapstore-styler-panel"
+                (<Dialog id="wms-styler-dialog" className="mapstore-styler-panel"
                         style={this.getPanelStyle()}
                         >
                         <span role="header"><span className="metadataexplorer-panel-title">
@@ -284,12 +282,24 @@ const Styler = React.createClass({
         }
 
     },
-
+    findOriginalLayer(props, state) {
+        return head(props.layers.filter((l) => (l && state.layer && (l.id === state.layer.id))));
+    },
     saveStyle() {
-        let layer = head(this.props.layers.filter((l) => (l.id === this.props.layer.id)));
+        let layer = this.findOriginalLayer(this.props, this.props);
         if (layer.params && layer.params.SLD_BODY) {
             this.props.saveStyle(this.getRestURL(layer.url), layer.name, layer.params.SLD_BODY);
             setTimeout(this.clearLayerStyle, 2000);
+        }
+    },
+    zoomToLayerExtent() {
+        let originalLayer = this.findOriginalLayer(this.props, this.props);
+        if (originalLayer && originalLayer.capabilities ) {
+            let extent = originalLayer.capabilities.latLonBoundingBox;
+            if (extent && !this.state.zoomed) {
+                this.props.zoomToExtent([extent.minx, extent.miny, extent.maxx, extent.maxy], "EPSG:4326");
+                this.setState({zoomed: true});
+            }
         }
     }
 });

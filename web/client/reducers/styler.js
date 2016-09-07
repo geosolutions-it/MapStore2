@@ -12,7 +12,8 @@ const {
 const {
     SET_RASTER_LAYER
 } = require('../actions/rasterstyler');
-const { STYLER_RESET } = require('../actions/styler');
+
+const { SET_STYLER_LAYER, STYLER_RESET } = require('../actions/styler');
 function styler(state = {}, action) {
     switch (action.type) {
         case SET_VECTOR_LAYER: {
@@ -23,6 +24,9 @@ function styler(state = {}, action) {
         }
         case STYLER_RESET: {
             return {};
+        }
+        case SET_STYLER_LAYER: {
+            return {...state, layer: action.layer};
         }
         default:
             return state;
