@@ -11,9 +11,11 @@ var {
     // CREATE_THUMBNAIL, createThumbnail,
     MAP_UPDATING, mapUpdating,
     PERMISSIONS_UPDATED, permissionsUpdated,
-    THUMBNAIL_DELETED, thumbnailDeleted,
     ATTRIBUTE_UPDATED, attributeUpdated,
-    SAVE_MAP, saveMap
+    SAVE_MAP, saveMap,
+    DISPLAY_METADATA_EDIT, onDisplayMetadataEdit,
+    RESET_UPDATING, resetUpdating,
+    THUMBNAIL_ERROR, thumbnailError
 } = require('../maps');
 
 describe('Test correctness of the maps actions', () => {
@@ -48,14 +50,6 @@ describe('Test correctness of the maps actions', () => {
         expect(retval.user).toBe(user);
     });
 
-    it('thumbnailDeleted', () => {
-        let resourceId = 13;
-        var retval = thumbnailDeleted(resourceId);
-        expect(retval).toExist();
-        expect(retval.type).toBe(THUMBNAIL_DELETED);
-        expect(retval.resourceId).toBe(resourceId);
-    });
-
     it('attributeUpdated', () => {
         let resourceId = 13;
         let name = "thumbnail";
@@ -69,6 +63,31 @@ describe('Test correctness of the maps actions', () => {
         expect(retval.value).toBe(value);
     });
 
+    it('thumbnailError', () => {
+        let resourceId = 1;
+        let error = {status: 404, message: "not found"};
+        let retval = thumbnailError(resourceId, error);
+        expect(retval).toExist();
+        expect(retval.type).toBe(THUMBNAIL_ERROR);
+        expect(retval.resourceId).toBe(resourceId);
+        expect(retval.error.status).toBe(error.status);
+    });
+
+    it('resetUpdating', () => {
+        let resourceId = 1;
+        let retval = resetUpdating(resourceId);
+        expect(retval).toExist();
+        expect(retval.type).toBe(RESET_UPDATING);
+        expect(retval.resourceId).toBe(resourceId);
+    });
+
+    it('onDisplayMetadataEdit', () => {
+        let dispMetadataValue = true;
+        let retval = onDisplayMetadataEdit(dispMetadataValue);
+        expect(retval).toExist();
+        expect(retval.type).toBe(DISPLAY_METADATA_EDIT);
+        expect(retval.displayMetadataEditValue).toBe(dispMetadataValue);
+    });
 
     it('saveMap', () => {
         let thumbnail = "myThumnbnailUrl";

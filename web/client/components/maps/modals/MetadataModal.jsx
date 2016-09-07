@@ -41,6 +41,8 @@ const MetadataModal = React.createClass({
         // CALLBACKS
         onSave: React.PropTypes.func,
         onSaveMap: React.PropTypes.func,
+        onSaveAll: React.PropTypes.func,
+        onRemoveThumbnail: React.PropTypes.func,
         onErrorCurrentMap: React.PropTypes.func,
         onUpdateCurrentMap: React.PropTypes.func,
         onCreateThumbnail: React.PropTypes.func,
@@ -69,6 +71,8 @@ const MetadataModal = React.createClass({
             onCreateThumbnail: ()=> {},
             onDeleteThumbnail: ()=> {},
             onSave: ()=> {},
+            onSaveAll: () => {},
+            onRemoveThumbnail: ()=> {},
             onSaveMap: ()=> {},
             onClose: () => {}
         };
@@ -78,21 +82,41 @@ const MetadataModal = React.createClass({
             this.refs.mapMetadataForm.setMapNameValue(newName);
         }
     },
+    componentWillReceiveProps(newProps) {
+        if (newProps.map && this.props.map && !newProps.map.loading && this.state && this.state.saving) {
+            this.setState({
+              saving: false
+            });
+        }
+        // if ((newProps.map && newProps.map.errors && newProps.map.errors.length === 0) && !newProps.map.thumbnailError) {
+        /*if (this.props.map && newProps.map && (this.props.map.updating === true && newProps.map.updating === false )) {
+            this.props.onClose();
+        }*/
+        /*if (this.props.map &&
+            this.props.map.thumbnailUpdating === true && newProps.map.thumbnailUpdating === false &&
+            this.props.map.metadataUpdating === true && newProps.map.metadataUpdating === false &&
+            this.props.map.updating === true && newProps.map.updating === false &&
+            (newProps.map && newProps.map.errors && newProps.map.errors.length === 0) && !newProps.map.thumbnailError) {
+            this.props.onClose();
+        }*/
+        // }
+    },
     onSave() {
+        this.setState({
+            saving: true
+        });
+        let metadata = null;
 
         if ( this.isMetadataChanged() ) {
             let name = this.refs.mapMetadataForm.refs.mapName.getValue();
             let description = this.refs.mapMetadataForm.refs.mapDescription.getValue();
-            this.props.onSave(this.props.map.id, name, description);
+            metadata = {
+                name: name,
+                description: description
+            };
+            // this.props.onSave(this.props.map.id, name, description);
         }
-        this.refs.thumbnail.updateThumbnail();
-        if (this.props.map.errors && this.props.map.errors.length === 0 && !this.props.map.thumbnailError) {
-            this.props.onSaveMap(this.props.map, this.props.map.id);
-            this.setState({
-                saving: true
-            });
-            this.props.onClose();
-        }
+        this.refs.thumbnail.updateThumbnail(this.props.map, metadata);
     },
     renderLoading() {
         return this.props.map && this.props.map.updating ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn/> : null;
@@ -139,6 +163,8 @@ const MetadataModal = React.createClass({
                             <Col xs={7}>
                                 <Thumbnail
                                     map={this.props.map}
+                                    onSaveAll={this.props.onSaveAll}
+                                    onRemoveThumbnail={this.props.onRemoveThumbnail}
                                     onError={this.props.onErrorCurrentMap}
                                     onUpdate={this.props.onUpdateCurrentMap}
                                     onCreateThumbnail={this.props.onCreateThumbnail}
@@ -167,6 +193,9 @@ const MetadataModal = React.createClass({
             this.refs.mapMetadataForm.refs.mapDescription.getValue() !== this.props.map.description ||
             this.refs.mapMetadataForm.refs.mapName.getValue() !== this.props.map.name
         );
+    },
+    isThumbnailChanged() {
+        return this.refs && this.refs.thumbnail && this.refs.thumbnail.files && this.refs.thumbnail.files.length > 0;
     }
 });
 

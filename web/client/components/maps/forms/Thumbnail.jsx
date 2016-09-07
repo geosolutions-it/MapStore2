@@ -25,6 +25,7 @@ const Thumbnail = React.createClass({
         onDrop: React.PropTypes.func,
         onError: React.PropTypes.func,
         onUpdate: React.PropTypes.func,
+        onSaveAll: React.PropTypes.func,
         onCreateThumbnail: React.PropTypes.func,
         onDeleteThumbnail: React.PropTypes.func,
         onRemoveThumbnail: React.PropTypes.func,
@@ -45,6 +46,7 @@ const Thumbnail = React.createClass({
             onDrop: () => {},
             onError: () => {},
             onUpdate: () => {},
+            onSaveAll: () => {},
             onRemoveThumbnail: () => {},
             onCreateThumbnail: () => {},
             onDeleteThumbnail: () => {},
@@ -60,7 +62,9 @@ const Thumbnail = React.createClass({
     },
     onRemoveThumbnail(event) {
         event.stopPropagation();
-        this.props.onUpdate([], null);
+        this.files = null;
+        this.props.onUpdate(null, null);
+        this.props.onRemoveThumbnail();
         this.props.onError([], this.props.map.id);
     },
     getThumbnailUrl() {
@@ -72,7 +76,7 @@ const Thumbnail = React.createClass({
     },
     getDataUri(images, callback) {
         let filesSelected = images;
-        if (filesSelected.length > 0) {
+        if (filesSelected && filesSelected.length > 0) {
             let fileToLoad = filesSelected[0];
             let fileReader = new FileReader();
             fileReader.onload = (event) => (callback(event.target.result));
@@ -89,7 +93,8 @@ const Thumbnail = React.createClass({
             if (isAnImage && data && data.length < 500000) {
                 // without errors
                 this.props.onError([], this.props.map.id);
-                this.props.onUpdate(images, images[0].preview);
+                this.files = images;
+                this.props.onUpdate(null, images[0].preview);
             } else {
                 // with at least one error
                 if (!isAnImage) {
@@ -99,7 +104,8 @@ const Thumbnail = React.createClass({
                     errors.push("SIZE");
                 }
                 this.props.onError(errors, this.props.map.id);
-                this.props.onUpdate(images, null);
+                this.files = images;
+                this.props.onUpdate(null, null);
             }
         });
     },
@@ -127,23 +133,33 @@ const Thumbnail = React.createClass({
         }
         return callback(null);
     },*/
-    updateThumbnail() {
-        if (this.props.map.errors && this.props.map.errors.length === 0) {
-            this.getDataUri(this.props.map.files, (data) => {
+    updateThumbnail(map, metadata) {
+        if (this.props.map.errors && this.props.map.errors.length === 0 ) {
+            this.getDataUri(this.files, (data) => {
                 const name = this.generateUUID(); // create new unique name
                 const category = "THUMBNAIL";
                 // user removed the thumbnail (the original url is present but not the preview)
-                if (this.props.map && !data && this.props.map.thumbnail && !this.refs.imgThumbnail) {
+                if (this.props.map && !data && this.props.map.thumbnail && !this.refs.imgThumbnail && !metadata) {
                     this.deleteThumbnail(this.props.map.thumbnail, this.props.map.id);
                 // there is a thumbnail to upload
-                } else if ( this.props.map && data ) {
-                    // remove old one if present
-                    if (this.props.map.thumbnail) {
-                        this.deleteThumbnail(this.props.map.thumbnail);
-                        // create the new one (and update the thumbnail attribute)
-                    }
-                    this.props.onCreateThumbnail(name, data, category, this.props.map.id);
                 }
+                if (this.props.map && !data && this.props.map.thumbnail && !this.refs.imgThumbnail && metadata) {
+                    this.deleteThumbnail(this.props.map.thumbnail, this.props.map.id);
+                    this.props.onSaveAll(map, metadata, name, data, category, this.props.map.id);
+                // there is a thumbnail to upload
+                }
+                // remove old one if present
+                if (this.props.map.thumbnail && data && this.refs.imgThumbnail) {
+                    this.deleteThumbnail(this.props.map.thumbnail, null);
+                    // create the new one (and update the thumbnail attribute)
+                    this.props.onSaveAll(map, metadata, name, data, category, this.props.map.id);
+                }
+                // nothing dropped it will be closed the modal
+                if (this.props.map.thumbnail && !data && this.refs.imgThumbnail) {
+                    this.props.onSaveAll(map, metadata, name, data, category, this.props.map.id);
+                }
+                // this.props.onCreateThumbnail(map, metadata, name, data, category, this.props.map.id);
+
                 return data;
             });
         }
@@ -165,6 +181,12 @@ const Thumbnail = React.createClass({
     render() {
         const withoutThumbnail = (<div className="dropzone-content-image">{this.props.message}<br/>{this.props.suggestion}</div>);
         const thumbnailErrorStatus = (this.props.map && this.props.map.thumbnailError && this.props.map.thumbnailError.status ? this.props.map.thumbnailError.status : null);
+        let messageIdError = "";
+        if (thumbnailErrorStatus === 404 || thumbnailErrorStatus === 403) {
+            messageIdError = thumbnailErrorStatus;
+        } else {
+            messageIdError = "Default";
+        }
         return (
             (this.props.loading) ? (<div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle"/></div>) :
             (
@@ -190,8 +212,8 @@ const Thumbnail = React.createClass({
 
                     {(this.props.map && this.props.map.thumbnailError) ?
                         (<div className="dropzone-errorBox alert-danger">
-                            <div id={"error" + thumbnailErrorStatus} key={"error" + thumbnailErrorStatus} className={"error" + thumbnailErrorStatus}>
-                                <Message msgId={"map.thumbnailError.error" + thumbnailErrorStatus}/> , {this.props.map.thumbnailError.data}
+                            <div id={"error" + messageIdError} key={"error" + messageIdError} className={"error" + messageIdError}>
+                                <Message msgId={"map.thumbnailError.error" + messageIdError}/>
                             </div>
                         </div>)
                     : null }

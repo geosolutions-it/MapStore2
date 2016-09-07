@@ -9,6 +9,7 @@
 const EDIT_MAP = 'EDIT_MAP';
 const UPDATE_CURRENT_MAP = 'UPDATE_CURRENT_MAP';
 const ERROR_CURRENT_MAP = 'ERROR_CURRENT_MAP';
+const REMOVE_THUMBNAIL = 'REMOVE_THUMBNAIL';
 
 function editMap(map) {
     return {
@@ -35,8 +36,16 @@ function errorCurrentMap(errors, resourceId) {
 }
 
 
+function removeThumbnail(resourceId) {
+    return {
+        type: REMOVE_THUMBNAIL,
+        resourceId
+    };
+}
+
 module.exports = {
     EDIT_MAP, editMap,
     UPDATE_CURRENT_MAP, updateCurrentMap,
-    ERROR_CURRENT_MAP, errorCurrentMap
+    ERROR_CURRENT_MAP, errorCurrentMap,
+    REMOVE_THUMBNAIL, removeThumbnail
 };

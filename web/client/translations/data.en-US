@@ -122,9 +122,9 @@
             "errorSize": "Max allowed size: 500kb",
             "error": "The provided image is not valid",
             "thumbnailError": {
-                "error404" : "An error occured during the creation of the thumbnail",
-                "error403" : "An error occured during the deletion of the thumbnail",
-                "errorDefault" : "An error occurred on the server"
+                "error404" : "An error occured while creating the thumbnail",
+                "error403" : "You are not allowed to update the map",
+                "errorDefault" : "Network error"
             }
         },
         "print":{
