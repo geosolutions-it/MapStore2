@@ -10,6 +10,7 @@ const {Provider} = require('react-redux');
 
 const {changeBrowserProperties} = require('../../actions/browser');
 const {loadLocale} = require('../../actions/locale');
+const {localConfigLoaded} = require('../../actions/localConfig');
 const {loadPrintCapabilities} = require('../../actions/print');
 
 const ConfigUtils = require('../../utils/ConfigUtils');
@@ -75,7 +76,8 @@ const StandardApp = React.createClass({
         if (urlQuery.localConfig) {
             ConfigUtils.setLocalConfigurationFile(urlQuery.localConfig + '.json');
         }
-        ConfigUtils.loadConfiguration().then(() => {
+        ConfigUtils.loadConfiguration().then((config) => {
+            this.store.dispatch(localConfigLoaded(config));
             const locale = LocaleUtils.getUserLocale();
             this.store.dispatch(loadLocale(null, locale));
             if (this.props.printingEnabled) {
