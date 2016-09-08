@@ -188,6 +188,8 @@ function getLayerCapabilities(layer, options) {
                     return layer.name === capability.name;
                 } else if (capability.name.split(":").length === 2) {
                     return (layer.name === capability.name.split(":")[1]);
+                } else if (layer.name.split(":").length === 2) {
+                    return layer.name.split(":")[1] === capability.name;
                 }
                 return layer.name === capability.name;
             }));

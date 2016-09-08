@@ -8,7 +8,7 @@
 const React = require('react');
 const {Grid, Col, Row, Panel, Label, Button, Alert} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
-// const {DropdownList} = require('react-widgets');
+const {DropdownList} = require('react-widgets');
 require('react-widgets/lib/less/react-widgets.less');
 const {Message} = require('../../I18N/I18N');
 const ImporterUtils = require('../../../utils/ImporterUtils');
@@ -74,9 +74,8 @@ const Task = React.createClass({
               <dd><Label bsStyle={this.getbsStyleForState(task.state)}>{task.state}</Label>{this.renderErrorMessage(task)}</dd>
               <dt><Message msgId="importer.task.updateMode" /></dt>
               <dd>{
-                      /*this.props.task.state === "READY"
-                      this.props.task ? <DropdownList data={["APPEND", "CREATE", "REPLACE"]} value={task.updateMode} onChange={this.updateMode}/> : */
-                      // force this to default because APPEND and REPLACE are not supported yet.
+                      // this.props.task.state === "READY" // force this to default because APPEND and REPLACE are not supported yet.
+                      this.props.task ? <DropdownList data={["APPEND", "CREATE", "REPLACE"]} value={task.updateMode} onChange={this.updateMode}/> :
                       task.updateMode}</dd>
             </dl>
         </Panel>);

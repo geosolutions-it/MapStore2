@@ -95,22 +95,15 @@ const Styler = React.createClass({
     },
     componentWillReceiveProps(nextProps) {
         // intial setup
-        if (this.state.layer) {
-            let originalLayer = this.findOriginalLayer(nextProps, this.state);
-            if (originalLayer && originalLayer.describeLayer && !originalLayer.describeLayer.error) {
-                this.props.reset();
-                this.setState({layer: null});
-                this.setLayer(originalLayer);
-            } else if (originalLayer && originalLayer.describeLayer && originalLayer.describeLayer.error ) {
-                this.setState({error: originalLayer.describeLayer.error});
-            } else if (!originalLayer) {
-                this.props.reset();
-                this.setState({layer: null});
-            }
-        } else if (!nextProps.layer && this.props.layers.length === 1) {
+        if (!nextProps.layer && this.props.layers.length === 1) {
             this.props.reset();
             this.setLayer(this.props.layers[0]);
-        } else if (nextProps.layer && this.props.layer && (nextProps.layer.id !== this.props.layer.id) ) {
+        } else if (nextProps.layer && this.props.layers.length === 1 && this.props.layers[0].id !== nextProps.layer.id) {
+            let original = this.findOriginalLayer(this.props, nextProps);
+            if (!original) {
+                this.props.reset();
+            }
+        } else if (nextProps.layer && this.props.layer && (nextProps.layer.name !== this.props.layer.name) ) {
             this.setLayer(nextProps.layer);
         }
 
@@ -278,7 +271,6 @@ const Styler = React.createClass({
             }
         } else if (!l.describeLayer || !l.describeLayer.error) {
             this.props.getDescribeLayer(l.url, l);
-            this.setState({layer: l});
         }
 
     },
