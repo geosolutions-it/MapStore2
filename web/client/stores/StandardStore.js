@@ -26,6 +26,7 @@ const SecurityUtils = require('../utils/SecurityUtils');
 module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {}, plugins, storeOpts) => {
     const allReducers = combineReducers(plugins, {
         ...appReducers,
+        localConfig: require('../reducers/localConfig'),
         locale: require('../reducers/locale'),
         browser: require('../reducers/browser'),
         controls: require('../reducers/controls'),
