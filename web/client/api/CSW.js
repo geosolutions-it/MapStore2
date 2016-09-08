@@ -60,7 +60,7 @@ var Api = {
                                                 let uc = el.value.upperCorner;
                                                 bbox = [lc[1], lc[0], uc[1], uc[0]];
                                                 // TODO parse the extent's crs
-                                                let crsCode = el.value.crs.split(":::")[1];
+                                                let crsCode = el.value && el.value.crs && el.value.crs.split(":::")[1];
                                                 if (crsCode === "WGS 1984") {
                                                     crs = "EPSG:4326";
                                                 } else if (crsCode) {
