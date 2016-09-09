@@ -70,3 +70,7 @@ div#mapstore-maptype {
     margin-bottom: 20px;
     margin-top: -35px;
 }
+.mapstore-home-examples .carousel-caption{
+    background-color: rgba(0,0,0,0.4);
+    box-shadow: 0 0 12px rgba(0,0,0,0.4);
+}
