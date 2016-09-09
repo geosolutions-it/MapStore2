@@ -7,6 +7,7 @@
  */
 // const axios = require('axios');
 const GeoStoreAPI = require('../api/GeoStoreDAO');
+const {loadMaps} = require('./maps');
 
 const LOGIN_SUBMIT = 'LOGIN_SUBMIT';
 const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -43,10 +44,18 @@ function logout(redirectUrl) {
     };
 }
 
+function logoutWithReload(redirectUrl) {
+    return (dispatch) => {
+        dispatch(logout(redirectUrl));
+        dispatch(loadMaps(false));
+    };
+}
+
 function geoStoreLoginSubmit(username, password) {
     return (dispatch) => {
         GeoStoreAPI.basicLogin(username, password).then((response) => {
             dispatch(loginSuccess(response, username, password, 'geostore'));
+            dispatch(loadMaps(false));
         }).catch((e) => {
             dispatch(loginFail(e));
         });
@@ -89,5 +98,6 @@ module.exports = {
     loginSuccess,
     loginFail,
     logout,
-    geoStoreChangePassword
+    geoStoreChangePassword,
+    logoutWithReload
 };
