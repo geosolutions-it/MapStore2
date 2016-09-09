@@ -11,7 +11,7 @@ const {
 } = require('../actions/currentMap');
 
 const {
-    THUMBNAIL_ERROR
+    THUMBNAIL_ERROR, MAP_UPDATING, SAVE_MAP, DISPLAY_METADATA_EDIT, RESET_UPDATING
 } = require('../actions/maps');
 
 
@@ -20,22 +20,36 @@ const assign = require('object-assign');
 const initialState = {
     files: [],
     errors: [],
-    newThumbnail: null
+    newThumbnail: null,
+    thumbnailError: null,
+    displayMetadataEdit: false
 };
 
 function currentMap(state = initialState, action) {
     switch (action.type) {
         case EDIT_MAP: {
-            return assign({}, state, action.map, {newThumbnail: (action.map && action.map.thumbnail) ? action.map.thumbnail : null });
+            return assign({}, state, action.map, {newThumbnail: (action.map && action.map.thumbnail) ? action.map.thumbnail : null, displayMetadataEdit: true, thumbnailError: null });
         }
         case UPDATE_CURRENT_MAP: {
             return assign({}, state, {newThumbnail: action.thumbnail, files: action.files});
+        }
+        case MAP_UPDATING: {
+            return assign({}, state, {updating: true});
         }
         case ERROR_CURRENT_MAP: {
             return assign({}, state, {thumbnailError: null, errors: action.errors});
         }
         case THUMBNAIL_ERROR: {
-            return assign({}, state, {thumbnailError: action.error || null, errors: null });
+            return assign({}, state, {thumbnailError: action.error, errors: [], updating: false});
+        }
+        case SAVE_MAP: {
+            return assign({}, state, {thumbnailError: null});
+        }
+        case DISPLAY_METADATA_EDIT: {
+            return assign({}, state, {displayMetadataEdit: action.displayMetadataEditValue});
+        }
+        case RESET_UPDATING: {
+            return assign({}, state, {updating: false});
         }
         default:
             return state;

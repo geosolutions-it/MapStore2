@@ -11,7 +11,7 @@ const Message = require('../I18N/Message');
 const GridCard = require('../misc/GridCard');
 const thumbUrl = require('./style/default.png');
 const assign = require('object-assign');
-const MetadataModal = require('./modals/MetadataModal');
+
 const ConfirmModal = require('./modals/ConfirmModal');
 
 
@@ -29,6 +29,9 @@ const MapCard = React.createClass({
         onEdit: React.PropTypes.func,
         onSaveMap: React.PropTypes.func,
         onSave: React.PropTypes.func,
+        onSaveAll: React.PropTypes.func,
+        onDisplayMetadataEdit: React.PropTypes.func,
+        onRemoveThumbnail: React.PropTypes.func,
         onErrorCurrentMap: React.PropTypes.func,
         onUpdateCurrentMap: React.PropTypes.func,
         onCreateThumbnail: React.PropTypes.func,
@@ -50,6 +53,9 @@ const MapCard = React.createClass({
             onErrorCurrentMap: ()=> {},
             onUpdateCurrentMap: ()=> {},
             onEdit: ()=> {},
+            onDisplayMetadataEdit: ()=> {},
+            onSaveAll: () => {},
+            onRemoveThumbnail: ()=> {},
             onSave: ()=> {},
             onSaveMap: () => {}
         };
@@ -60,9 +66,7 @@ const MapCard = React.createClass({
         };
     },
     onEdit: function(map) {
-        this.refs.metadataModal.setMapNameValue(map.name);
         this.props.onEdit(map);
-        this.open();
     },
     onConfirmDelete() {
         this.props.onMapDelete(this.props.map.id);
@@ -102,15 +106,6 @@ const MapCard = React.createClass({
         return (
            <GridCard className="map-thumb" style={this.getCardStyle()} header={this.props.map.title || this.props.map.name} actions={availableAction}>
                <div className="map-thumb-description">{this.props.map.description}</div>
-               <MetadataModal ref="metadataModal" show={this.state.displayMetadataEdit} onHide={this.close} onClose={this.close}
-                   map={this.props.currentMap}
-                   onSave={this.props.onSave}
-                   onEdit={this.props.onEdit}
-                   onSaveMap={this.props.onSaveMap}
-                   onDeleteThumbnail={this.props.onDeleteThumbnail}
-                   onCreateThumbnail={this.props.onCreateThumbnail}
-                   onErrorCurrentMap={this.props.onErrorCurrentMap}
-                   onUpdateCurrentMap={this.props.onUpdateCurrentMap}/>
                <ConfirmModal ref="deleteMapModal" show={this.state.displayDeleteDialog} onHide={this.close} onClose={this.close} onConfirm={this.onConfirmDelete} titleText={<Message msgId="manager.deleteMap" />} confirmText={<Message msgId="manager.deleteMap" />} cancelText={<Message msgId="cancel" />} body={<Message msgId="manager.deleteMapMessage" />} />
            </GridCard>
         );
@@ -124,14 +119,17 @@ const MapCard = React.createClass({
         }
     },
     close() {
-        this.props.onUpdateCurrentMap([], this.props.map.thumbnail);
-        this.props.onErrorCurrentMap([], this.props.map.id);
+        // When the modal is closed the state of currentMap is restored to the initial situation
+        this.props.onUpdateCurrentMap([], this.props.map && this.props.map.thumbnail);
+        this.props.onErrorCurrentMap([], this.props.map && this.props.map.id);
+        // TODO Launch an action in order to change the state
         this.setState({
             displayMetadataEdit: false,
             displayDeleteDialog: false
         });
     },
     open() {
+        this.props.onDisplayMetadataEdit(true);
         this.setState({
             displayMetadataEdit: true
         });
