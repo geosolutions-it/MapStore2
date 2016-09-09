@@ -14,10 +14,10 @@ const ExamplesPlugin = React.createClass({
     render() {
         return (<Grid fluid>
             <Row className="show-grid">
-                <Col xs={12} md={6}>
+                <Col xs={12} lg={6}>
                     <Examples/>
                 </Col>
-                <Col xs={12} md={6}>
+                <Col xs={12} lg={6}>
                     <MailingLists/>
                 </Col>
             </Row>
