@@ -20,14 +20,16 @@ const {
     deleteTask, IMPORTS_TASK_DELETE,
     loadTransform, IMPORTS_TRANSFORM_LOAD,
     updateTransform, IMPORTS_TRANSFORM_UPDATED,
-    deleteTransform, IMPORTS_TRANSFORM_DELETE} = require('../importer');
+    deleteTransform, IMPORTS_TRANSFORM_DELETE,
+    loadStylerTool} = require('../importer');
+const {MAP_CONFIG_LOADED} = require('../config');
 
 /* This utility function runs a serie of test on an action creator
    with multiple dispatch inside
    You have to pass an array of functions that tests the action dispatched by
    the action creator. TODO evaulate to put in a TestUtils.
 */
-const runAsyncTest = (url, action, tests, done, params = []) => {
+const runAsyncTest = (url, action, tests, done, params = [], state) => {
     let count = 0;
     action(url, ...params)((actionResult) => {
         try {
@@ -41,7 +43,7 @@ const runAsyncTest = (url, action, tests, done, params = []) => {
         }
 
 
-    });
+    }, () => (state));
 };
 // NOTE use # to skip parameters by the API
 describe('Test correctness of the importer actions', () => {
@@ -200,5 +202,19 @@ describe('Test correctness of the importer actions', () => {
         let url = 'base/web/client/test-resources/importer/transform.json#';
         let tests = [testLoading, testdeleteTransform, testLoading ];
         runAsyncTest(url, deleteTransform, tests, done, [1, 2, 3]);
+    });
+    // load styler
+    it('load styler tool', (done) => {
+        const testConfigureMap = (actionResult) => {
+            expect(actionResult.type).toBe(MAP_CONFIG_LOADED);
+            expect(actionResult.config).toExist();
+            expect(actionResult.config.map).toExist();
+            expect(actionResult.config.map.layers).toExist();
+            expect(actionResult.config.map.layers.length).toBe(2);
+            done();
+        };
+        let url = 'base/web/client/test-resources/importer/layer.json#';
+        let tests = [testConfigureMap];
+        runAsyncTest(url, loadStylerTool, tests, done, [], {importer: {selectedImport: {targetWorkspace: { workspace: {name: "TEST"}}}}});
     });
 });
