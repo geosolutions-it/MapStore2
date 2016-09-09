@@ -74,8 +74,8 @@ const Task = React.createClass({
               <dd><Label bsStyle={this.getbsStyleForState(task.state)}>{task.state}</Label>{this.renderErrorMessage(task)}</dd>
               <dt><Message msgId="importer.task.updateMode" /></dt>
               <dd>{
-                      // this.props.task.state === "READY" // force this to default because APPEND and REPLACE are not supported yet.
-                      this.props.task ? <DropdownList data={["APPEND", "CREATE", "REPLACE"]} value={task.updateMode} onChange={this.updateMode}/> :
+                      this.props.task.state === "READY" // force this to default because APPEND and REPLACE are not supported yet.
+                     /* this.props.task */? <DropdownList data={["APPEND", "CREATE", "REPLACE"]} value={task.updateMode} onChange={this.updateMode}/> :
                       task.updateMode}</dd>
             </dl>
         </Panel>);
