@@ -21,9 +21,10 @@
 }
 
 #mapstore-navbar #mapstore-langselector {
-    position: absolute;
-    right: 65px;
-    top: 10px;
+    float: right;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    margin-right: 10px;
     width: auto;
 }
 
