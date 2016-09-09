@@ -52,7 +52,8 @@ module.exports = {
         RulesManagerPlugin: require('../plugins/manager/RulesManager'),
         ManagerMenuPlugin: require('../plugins/manager/ManagerMenu'),
         SharePlugin: require('../plugins/Share'),
-        SavePlugin: require('../plugins/Save')
+        SavePlugin: require('../plugins/Save'),
+        SaveAsPlugin: require('../plugins/SaveAs')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

@@ -99,7 +99,8 @@ var MapGrid = React.createClass({
                     <Row>
                         {this.props.bottom}
                     </Row>
-                    <MetadataModal ref="metadataModal" show={this.props.currentMap.displayMetadataEdit} onHide={() => {this.props.onDisplayMetadataEdit(false); }}
+                    <MetadataModal ref="metadataModal" show={this.props.currentMap.displayMetadataEdit}
+                        onHide={() => {this.props.onDisplayMetadataEdit(false); }}
                         onClose={() => {this.props.onDisplayMetadataEdit(false); }}
                         map={this.props.currentMap}
                         onSaveAll={this.props.saveAll}

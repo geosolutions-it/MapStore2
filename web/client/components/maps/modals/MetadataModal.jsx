@@ -38,6 +38,9 @@ const MetadataModal = React.createClass({
         map: React.PropTypes.object,
         style: React.PropTypes.object,
         fluid: React.PropTypes.bool,
+        // I18N
+        errorImage: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
+        errorMessages: React.PropTypes.object,
         // CALLBACKS
         onSave: React.PropTypes.func,
         onSaveMap: React.PropTypes.func,
@@ -74,7 +77,10 @@ const MetadataModal = React.createClass({
             onSaveAll: () => {},
             onRemoveThumbnail: ()=> {},
             onSaveMap: ()=> {},
-            onClose: () => {}
+            onClose: () => {},
+            // I18N
+            errorMessages: {"FORMAT": <Message msgId="map.errorFormat"/>, "SIZE": <Message msgId="map.errorSize"/>},
+            errorImage: <Message msgId="map.error"/>
         };
     },
     setMapNameValue(newName) {
@@ -88,18 +94,6 @@ const MetadataModal = React.createClass({
               saving: false
             });
         }
-        // if ((newProps.map && newProps.map.errors && newProps.map.errors.length === 0) && !newProps.map.thumbnailError) {
-        /*if (this.props.map && newProps.map && (this.props.map.updating === true && newProps.map.updating === false )) {
-            this.props.onClose();
-        }*/
-        /*if (this.props.map &&
-            this.props.map.thumbnailUpdating === true && newProps.map.thumbnailUpdating === false &&
-            this.props.map.metadataUpdating === true && newProps.map.metadataUpdating === false &&
-            this.props.map.updating === true && newProps.map.updating === false &&
-            (newProps.map && newProps.map.errors && newProps.map.errors.length === 0) && !newProps.map.thumbnailError) {
-            this.props.onClose();
-        }*/
-        // }
     },
     onSave() {
         this.setState({
@@ -114,7 +108,7 @@ const MetadataModal = React.createClass({
                 name: name,
                 description: description
             };
-            // this.props.onSave(this.props.map.id, name, description);
+            this.props.onSave(this.props.map.id, name, description);
         }
         this.refs.thumbnail.updateThumbnail(this.props.map, metadata);
     },
@@ -123,20 +117,20 @@ const MetadataModal = React.createClass({
     },
     render() {
         const footer = (<span role="footer"><div style={{"float": "left"}}>{this.renderLoading()}</div>
-        <Button
-            ref="metadataSaveButton"
-            key="metadataSaveButton"
-            bsStyle="primary"
-            bsSize={this.props.buttonSize}
-            onClick={() => {
-                this.onSave();
-            }}><Message msgId="save" /></Button>
-        {this.props.includeCloseButton ? <Button
-            key="closeButton"
-            ref="closeButton"
-            bsSize={this.props.buttonSize}
-            onClick={this.props.onClose}><Message msgId="close" /></Button> : <span/>}
-        </span>);
+            <Button
+                ref="metadataSaveButton"
+                key="metadataSaveButton"
+                bsStyle="primary"
+                bsSize={this.props.buttonSize}
+                onClick={() => {
+                    this.onSave();
+                }}><Message msgId="save" /></Button>
+            {this.props.includeCloseButton ? <Button
+                key="closeButton"
+                ref="closeButton"
+                bsSize={this.props.buttonSize}
+                onClick={this.props.onClose}><Message msgId="close" /></Button> : <span/>}
+            </span>);
         const body = (<Metadata role="body" ref="mapMetadataForm"
             onChange={() => {
                 this.setState({metadataValid: this.refs.mapMetadataForm.isValid()});
@@ -147,6 +141,20 @@ const MetadataModal = React.createClass({
             namePlaceholderText={LocaleUtils.getMessageById(this.context.messages, "map.namePlaceholder") || "Map Name"}
             descriptionPlaceholderText={LocaleUtils.getMessageById(this.context.messages, "map.descriptionPlaceholder") || "Map Description"}
             />);
+        const mapErrorStatus = (this.props.map && this.props.map.mapError && this.props.map.mapError.status ? this.props.map.mapError.status : null);
+        let messageIdMapError = "";
+        if (mapErrorStatus === 404 || mapErrorStatus === 403 || mapErrorStatus === 409) {
+            messageIdMapError = mapErrorStatus;
+        } else {
+            messageIdMapError = "Default";
+        }
+        const thumbnailErrorStatus = (this.props.map && this.props.map.thumbnailError && this.props.map.thumbnailError.status ? this.props.map.thumbnailError.status : null);
+        let messageIdError = "";
+        if (thumbnailErrorStatus === 404 || thumbnailErrorStatus === 403 || thumbnailErrorStatus === 409) {
+            messageIdError = thumbnailErrorStatus;
+        } else {
+            messageIdError = "Default";
+        }
         return this.props.useModal ? (
             <Modal {...this.props.options}
                 show={this.props.show}
@@ -159,6 +167,28 @@ const MetadataModal = React.createClass({
                 </Modal.Header>
                 <Modal.Body>
                     <Grid fluid={this.props.fluid}>
+                        <Row>
+                            {(this.props.map && this.props.map.mapError) ?
+                                (<div className="dropzone-errorBox alert-danger">
+                                    <div id={"error" + messageIdMapError} key={"error" + messageIdMapError} className={"error" + messageIdMapError}>
+                                        <Message msgId={"map.mapError.error" + messageIdMapError}/>
+                                    </div>
+                                </div>)
+                            : null }
+                            {(this.props.map && this.props.map.errors && this.props.map.errors.length > 0 ) ?
+                            (<div className="dropzone-errorBox alert-danger">
+                                <p>{this.props.errorImage}</p>
+                                { (this.props.map.errors.map((error) => <div id={"error" + error} key={"error" + error} className={"error" + error}> {this.props.errorMessages[error]} </div>))}
+                            </div>)
+                            : null }
+                            {(this.props.map && this.props.map.thumbnailError) ?
+                                (<div className="dropzone-errorBox alert-danger">
+                                    <div id={"error" + messageIdError} key={"error" + messageIdError} className={"error" + messageIdError}>
+                                        <Message msgId={"map.thumbnailError.error" + messageIdError}/>
+                                    </div>
+                                </div>)
+                            : null }
+                        </Row>
                         <Row>
                             <Col xs={7}>
                                 <Thumbnail
