@@ -7,7 +7,7 @@
 */
 const React = require('react');
 const {connect} = require('react-redux');
-const {geoStoreLoginSubmit, loginFail, logout, geoStoreChangePassword} = require('../../actions/security');
+const {geoStoreLoginSubmit, loginFail, logoutWithReload, geoStoreChangePassword} = require('../../actions/security');
 const {setControlProperty} = require('../../actions/controls');
 const {Glyphicon} = require('react-bootstrap');
 
@@ -17,7 +17,7 @@ const UserMenu = connect((state) => ({
     onShowLogin: setControlProperty.bind(null, "LoginForm", "enabled", true),
     onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true),
     onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true),
-    onLogout: logout
+    onLogout: logoutWithReload
 })(require('../../components/security/UserMenu'));
 
 const UserDetails = connect((state) => ({
@@ -57,7 +57,7 @@ const LoginNav = connect((state) => ({
     onShowLogin: setControlProperty.bind(null, "LoginForm", "enabled", true),
     onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true),
     onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true),
-    onLogout: logout
+    onLogout: logoutWithReload
 })(require('../../components/security/UserMenu'));
 
 module.exports = {

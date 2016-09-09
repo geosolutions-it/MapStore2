@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var GeoStoreApi = require('../api/GeoStoreDAO');
+const GeoStoreApi = require('../api/GeoStoreDAO');
 const ConfigUtils = require('../utils/ConfigUtils');
 const assign = require('object-assign');
 const {get, findIndex} = require('lodash');
@@ -149,10 +149,9 @@ function resetUpdating(resourceId) {
     };
 }
 
-
 function loadMaps(geoStoreUrl, searchText="*", params={start: 0, limit: 20}) {
     return (dispatch) => {
-        let opts = {params, baseURL: geoStoreUrl };
+        let opts = assign({}, {params}, geoStoreUrl ? {baseURL: geoStoreUrl} : {});
         dispatch(mapsLoading(searchText, params));
         GeoStoreApi.getResourcesByCategory("MAP", searchText, opts).then((response) => {
             dispatch(mapsLoaded(response, params, searchText));
@@ -318,8 +317,34 @@ function deleteMap(resourceId, options) {
     };
 }
 
-
 module.exports = {
-    MAPS_LIST_LOADED, MAPS_LIST_LOADING, MAPS_LIST_LOAD_ERROR, MAP_CREATED, MAP_UPDATING, MAP_UPDATED, MAP_DELETED, MAP_DELETING, MAP_SAVED, ATTRIBUTE_UPDATED, PERMISSIONS_UPDATED, SAVE_MAP, THUMBNAIL_ERROR, SAVE_ALL, DISPLAY_METADATA_EDIT, RESET_UPDATING,
-    loadMaps, updateMap, updateMapMetadata, deleteMap, deleteThumbnail, createThumbnail, createMap, mapUpdating, updatePermissions, permissionsUpdated, attributeUpdated, saveMap, thumbnailError, saveAll, onDisplayMetadataEdit, resetUpdating
+    MAPS_LIST_LOADED,
+    MAPS_LIST_LOADING,
+    MAPS_LIST_LOAD_ERROR,
+    MAP_CREATED, MAP_UPDATING,
+    MAP_UPDATED, MAP_DELETED,
+    MAP_DELETING, MAP_SAVED,
+    ATTRIBUTE_UPDATED,
+    PERMISSIONS_UPDATED,
+    SAVE_MAP,
+    THUMBNAIL_ERROR,
+    SAVE_ALL,
+    DISPLAY_METADATA_EDIT,
+    RESET_UPDATING,
+    loadMaps,
+    updateMap,
+    updateMapMetadata,
+    deleteMap,
+    deleteThumbnail,
+    createThumbnail,
+    createMap,
+    mapUpdating,
+    updatePermissions,
+    permissionsUpdated,
+    attributeUpdated,
+    saveMap,
+    thumbnailError,
+    saveAll,
+    onDisplayMetadataEdit,
+    resetUpdating
 };
