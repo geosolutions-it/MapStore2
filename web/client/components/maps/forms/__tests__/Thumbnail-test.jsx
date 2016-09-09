@@ -83,48 +83,4 @@ describe('This test for Thumbnail', () => {
         expect(content).toExist();
     });
 
-    it('creates the component with a format error', () => {
-        let thumbnail = "myThumnbnailUrl";
-        let errors = ["FORMAT"];
-        let map = {
-            thumbnail: thumbnail,
-            id: 123,
-            canWrite: true,
-            errors: errors
-        };
-        const thumbnailItem = ReactDOM.render(<Thumbnail map={map}/>, document.getElementById("container"));
-        expect(thumbnailItem).toExist();
-
-        const thumbnailItemDom = ReactDOM.findDOMNode(thumbnailItem);
-        expect(thumbnailItemDom).toExist();
-
-        const errorFORMAT = TestUtils.findRenderedDOMComponentWithClass(thumbnailItem, 'errorFORMAT');
-        expect(errorFORMAT).toExist();
-
-        const noImg = TestUtils.findRenderedDOMComponentWithClass(thumbnailItem, 'dropzone-content-image');
-        expect(noImg).toExist();
-    });
-
-    it('creates the component with a size error', () => {
-        let thumbnail = "myThumnbnailUrl";
-        let errors = ["SIZE"];
-        let map = {
-            thumbnail: thumbnail,
-            id: 123,
-            canWrite: true,
-            errors: errors
-        };
-        const thumbnailItem = ReactDOM.render(<Thumbnail map={map}/>, document.getElementById("container"));
-        expect(thumbnailItem).toExist();
-
-        const thumbnailItemDom = ReactDOM.findDOMNode(thumbnailItem);
-        expect(thumbnailItemDom).toExist();
-
-        const errorSIZE = TestUtils.findRenderedDOMComponentWithClass(thumbnailItem, 'errorSIZE');
-        expect(errorSIZE).toExist();
-
-        const noImg = TestUtils.findRenderedDOMComponentWithClass(thumbnailItem, 'dropzone-content-image');
-        expect(noImg).toExist();
-    });
-
 });

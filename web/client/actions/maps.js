@@ -23,6 +23,7 @@ const MAP_SAVED = 'MAP_SAVED';
 const ATTRIBUTE_UPDATED = 'ATTRIBUTE_UPDATED';
 const PERMISSIONS_UPDATED = 'PERMISSIONS_UPDATED';
 const THUMBNAIL_ERROR = 'THUMBNAIL_ERROR';
+const MAP_ERROR = 'MAP_ERROR';
 const SAVE_ALL = 'SAVE_ALL';
 const DISPLAY_METADATA_EDIT = 'DISPLAY_METADATA_EDIT';
 const RESET_UPDATING = 'RESET_UPDATING';
@@ -123,6 +124,13 @@ function thumbnailError(resourceId, error) {
     return {
         type: THUMBNAIL_ERROR,
         resourceId,
+        error
+    };
+}
+
+function mapError(error) {
+    return {
+        type: MAP_ERROR,
         error
     };
 }
@@ -294,14 +302,18 @@ function deleteThumbnail(resourceId, resourceIdMap, options) {
 
 function createMap(metadata, content, thumbnail, options) {
     return (dispatch) => {
+        dispatch(mapUpdating(null));
         GeoStoreApi.createResource(metadata, content, "MAP", options).then((response) => {
             let resourceId = response.data;
             if (thumbnail && thumbnail.data) {
-                dispatch(createThumbnail(thumbnail.name, thumbnail.data, thumbnail.category, resourceId, options));
+                dispatch(createThumbnail(null, null, thumbnail.name, thumbnail.data, thumbnail.category, resourceId, options));
             }
             dispatch(mapCreated(response.data, assign({id: response.data, canDelete: true, canEdit: true, canCopy: true}, metadata), content));
+            dispatch(onDisplayMetadataEdit(false));
+            // dispatch(thumbnailError(resourceId, null));
         }).catch((e) => {
-            dispatch(loadError(e));
+            // dispatch(loadError(e));
+            dispatch(mapError(e));
         });
     };
 }
@@ -331,6 +343,7 @@ module.exports = {
     SAVE_ALL,
     DISPLAY_METADATA_EDIT,
     RESET_UPDATING,
+    MAP_ERROR,
     loadMaps,
     updateMap,
     updateMapMetadata,
@@ -346,5 +359,6 @@ module.exports = {
     thumbnailError,
     saveAll,
     onDisplayMetadataEdit,
-    resetUpdating
+    resetUpdating,
+    mapError
 };
