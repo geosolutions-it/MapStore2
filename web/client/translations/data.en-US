@@ -456,6 +456,60 @@
             "catalogUrlPlaceholder": "Enter catalog URL...",
             "textSearchPlaceholder": "text to search...",
             "search": "Search"
+        },"uploader": {
+            "filename": "File Name",
+            "type": "Type",
+            "lastModified": "Last Modified",
+            "filesize": "Size",
+            "beforeUpload": " Doing pre-upload operations... ",
+            "uploadingFiles": "Uploading Files...",
+            "dropfile": "drop files here to upload",
+            "dropfileImport": "drop here files to add it to this process"
+        },
+        "importer": {
+            "title": "Import Data",
+            "imports": "Import Sessions",
+            "importN": "Session {id}",
+            "creatingImportProcess": " Creating Import Session... ",
+            "dropfile": "drop files here to create a new importing session",
+            "dropfileImport": "drop here files to add it to this session",
+            "process": "Session",
+            "import": {
+                "actions": "Actions",
+                "tasks": "Packages",
+                "runImport": "Run",
+                "deleteImport": "Delete Session",
+                "deleteTask": "Delete",
+                "status": "Status",
+                "archive": "Archive",
+                "deleting": "Deleting...",
+                "analyzing": "Analyzing package...",
+                "applyingPreset": "Applying Presets..."
+            },
+            "task": {
+                "panelTitle": "Import Package {id}",
+                "general": "General Info",
+                "status": "Status",
+                "updateMode": "Update Mode",
+                "originalData": "Original File",
+                "file": "File Name",
+                "format": "Format",
+                "targetStore": "Target Store",
+                "storeType": "Store Type",
+                "storeName": "Store Name",
+                "layer": "Layer",
+                "transforms": "Trasformations Chain",
+                "update": "Update",
+                "run": "Import This Package",
+                "delete": "Delete This Package"
+            },
+            "transform": {
+                "panelTitle": "Transformation {id}",
+                "type": "Transformation Type",
+                "actions": "Actions",
+                "options": "Transformation Options",
+                "overviewlevels": "Overview Levels"
+            }
         },
         "rasterstyler": {
             "tooltip": "Create and edit raster layer style",

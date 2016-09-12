@@ -152,7 +152,7 @@ function getDescribeLayer(url, layer, options) {
                     if (axis && typeof axis === "string") {
                         describeLayer.bands = [1 + ""];
                     } else {
-                        describeLayer.bands = axis.map((el, index) => (index + "")); // array of 1 2 3 because the sld do not recognize the name
+                        describeLayer.bands = axis.map((el, index) => ((index + 1) + "")); // array of 1 2 3 because the sld do not recognize the name
                     }
 
                     dispatch(updateNode(layer.id, "id", {describeLayer, describeCoverage}));
@@ -188,6 +188,8 @@ function getLayerCapabilities(layer, options) {
                     return layer.name === capability.name;
                 } else if (capability.name.split(":").length === 2) {
                     return (layer.name === capability.name.split(":")[1]);
+                } else if (layer.name.split(":").length === 2) {
+                    return layer.name.split(":")[1] === capability.name;
                 }
                 return layer.name === capability.name;
             }));
