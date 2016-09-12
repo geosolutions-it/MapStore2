@@ -72,6 +72,14 @@ const MapCard = React.createClass({
         this.props.onMapDelete(this.props.map.id);
         this.close();
     },
+    onClick(evt) {
+        // Users can select Title and Description without triggering the click
+        var selection = window.getSelection();
+        if (!selection.toString()) {
+            this.stopPropagate(evt);
+            this.props.viewerUrl(this.props.map);
+        }
+    },
     getCardStyle() {
         if (this.props.map.thumbnail) {
             return assign({}, this.props.style, {
@@ -104,7 +112,9 @@ const MapCard = React.createClass({
          });
         }
         return (
-           <GridCard className="map-thumb" style={this.getCardStyle()} header={this.props.map.title || this.props.map.name} actions={availableAction}>
+           <GridCard className="map-thumb" style={this.getCardStyle()} header={this.props.map.title || this.props.map.name}
+                actions={availableAction} onClick={this.onClick}
+               >
                <div className="map-thumb-description">{this.props.map.description}</div>
                <ConfirmModal ref="deleteMapModal" show={this.state.displayDeleteDialog} onHide={this.close} onClose={this.close} onConfirm={this.onConfirmDelete} titleText={<Message msgId="manager.deleteMap" />} confirmText={<Message msgId="manager.deleteMap" />} cancelText={<Message msgId="cancel" />} body={<Message msgId="manager.deleteMapMessage" />} />
            </GridCard>
