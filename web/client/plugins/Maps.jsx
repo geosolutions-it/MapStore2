@@ -17,7 +17,7 @@ const MapsGrid = connect((state) => {
         maps: state.maps && state.maps.results ? state.maps.results : [],
         currentMap: state.currentMap,
         loading: state.maps && state.maps.loading,
-        mapType: (state.home && state.home.mapType) || state.maps && state.maps.mapType
+        mapType: (state.home && state.home.mapType) || (state.maps && state.maps.mapType)
     };
 }, {
     loadMaps,
@@ -108,7 +108,7 @@ const Maps = React.createClass({
 
 module.exports = {
     MapsPlugin: connect((state) => ({
-        mapType: state.home && state.home.mapType || 'leaflet'
+        mapType: state.home && state.home.mapType || (state.maps && state.maps.mapType) || 'leaflet'
     }), {
         loadMaps
     })(Maps),
