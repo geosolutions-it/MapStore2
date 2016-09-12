@@ -60,7 +60,7 @@ var Api = {
                                                 let uc = el.value.upperCorner;
                                                 bbox = [lc[1], lc[0], uc[1], uc[0]];
                                                 // TODO parse the extent's crs
-                                                let crsCode = el.value.crs.split(":::")[1];
+                                                let crsCode = el.value && el.value.crs && el.value.crs.split(":::")[1];
                                                 if (crsCode === "WGS 1984") {
                                                     crs = "EPSG:4326";
                                                 } else if (crsCode) {
@@ -130,6 +130,18 @@ var Api = {
                     let ops = Filter.propertyIsLike("csw:AnyText", "%" + text + "%");
                     filter = Filter.filter(ops);
                 }
+                resolve(Api.getRecords(url, startPosition, maxRecords, filter));
+            });
+        });
+    },
+    workspaceSearch: function(url, startPosition, maxRecords, text, workspace) {
+        return new Promise((resolve) => {
+            require.ensure(['../utils/ogc/CSW', '../utils/ogc/Filter'], () => {
+                const {Filter} = require('../utils/ogc/Filter');
+                const workspaceTerm = workspace || "%";
+                const layerNameTerm = text && "%" + text + "%" || "%";
+                const ops = Filter.propertyIsLike("identifier", workspaceTerm + ":" + layerNameTerm);
+                const filter = Filter.filter(ops);
                 resolve(Api.getRecords(url, startPosition, maxRecords, filter));
             });
         });

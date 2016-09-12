@@ -7,7 +7,7 @@
  */
 
 const assign = require('object-assign');
-const {head} = require('lodash');
+const {head, isArray} = require('lodash');
 const urlUtil = require('url');
 
 const getWMSBBox = (record) => {
@@ -39,17 +39,20 @@ const converters = {
                 let wms;
                 // look in URI objects for wms and thumbnail
                 if (dc && dc.URI) {
-                    let thumb = head([].filter.call(dc.URI, (uri) => {return uri.name === "thumbnail"; }) );
+                    const URI = isArray(dc.URI) ? dc.URI : (dc.URI && [dc.URI] || []);
+                    let thumb = head([].filter.call(URI, (uri) => {return uri.name === "thumbnail"; }) );
                     thumbURL = thumb ? thumb.value : null;
-                    wms = head([].filter.call(dc.URI, (uri) => { return uri.protocol === "OGC:WMS-1.1.1-http-get-map"; }));
+                    wms = head([].filter.call(URI, (uri) => { return uri.protocol === "OGC:WMS-1.1.1-http-get-map"; }));
                 }
                 // look in references objects
-                if (!wms && dc.references) {
+                if (!wms && dc.references && dc.references.length) {
                     let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
                     wms = head([].filter.call( refs, (ref) => { return ref.scheme === "OGC:WMS-1.1.1-http-get-map" || ref.scheme === "OGC:WMS"; }));
-                    let urlObj = urlUtil.parse(wms.value, true);
-                    let layerName = urlObj.query && urlObj.query.layers;
-                    wms = assign({}, wms, {name: layerName} );
+                    if (wms) {
+                        let urlObj = urlUtil.parse(wms.value, true);
+                        let layerName = urlObj.query && urlObj.query.layers;
+                        wms = assign({}, wms, {name: layerName} );
+                    }
                 }
                 if (!thumbURL && dc.references) {
                     let refs = Array.isArray(dc.references) ? dc.references : [dc.references];

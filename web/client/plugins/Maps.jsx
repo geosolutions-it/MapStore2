@@ -8,18 +8,31 @@
 
 const React = require('react');
 const {connect} = require('react-redux');
-const {loadMaps, updateMapMetadata, deleteMap} = require('../actions/maps');
+const {loadMaps, updateMapMetadata, deleteMap, createThumbnail, deleteThumbnail, saveMap, thumbnailError, saveAll, onDisplayMetadataEdit, resetUpdating} = require('../actions/maps');
+const {editMap, updateCurrentMap, errorCurrentMap, removeThumbnail} = require('../actions/currentMap');
 const ConfigUtils = require('../utils/ConfigUtils');
 const MapsGrid = connect((state) => {
     return {
         bsSize: "small",
         maps: state.maps && state.maps.results ? state.maps.results : [],
+        currentMap: state.currentMap,
         loading: state.maps && state.maps.loading,
-        mapType: state.home && state.home.mapType
+        mapType: (state.home && state.home.mapType) || state.maps && state.maps.mapType
     };
 }, {
     loadMaps,
     updateMapMetadata,
+    editMap,
+    saveMap,
+    removeThumbnail,
+    onDisplayMetadataEdit,
+    resetUpdating,
+    saveAll,
+    updateCurrentMap,
+    errorCurrentMap,
+    thumbnailError,
+    createThumbnail,
+    deleteThumbnail,
     deleteMap
 })(require('../components/maps/MapGrid'));
 
@@ -99,5 +112,8 @@ module.exports = {
     }), {
         loadMaps
     })(Maps),
-    reducers: require('../reducers/maps')
+    reducers: {
+        maps: require('../reducers/maps'),
+        currentMap: require('../reducers/currentMap')
+    }
 };

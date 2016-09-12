@@ -22,7 +22,7 @@ module.exports = {
     LanguagePlugin: assign(LangBar, {
         OmniBar: {
             name: 'language',
-            position: 1,
+            position: 4,
             tool: true,
             priority: 1
         }

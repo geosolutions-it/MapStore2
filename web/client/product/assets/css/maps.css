@@ -21,17 +21,43 @@
 }
 
 #mapstore-navbar #mapstore-langselector {
-    position: absolute;
-    right: 65px;
-    top: 10px;
+    float: right;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    margin-right: 10px;
     width: auto;
 }
 
 div#mailinglists {
-    width: 745px;
+    max-width: 745px;
     text-align: center;
-    padding-top: 128px;
+    padding-top: 50px;
 }
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    div#mailinglists {
+        max-width: 500px;
+    }
+
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    div#mailinglists {
+        max-width: 600px;
+    }
+
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    div#mailinglists {
+        max-width: 600px;
+    }
+
+}
+
+
 div#mailinglists h1 {
     font-size: 26px;
     text-align: center;

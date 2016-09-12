@@ -7,6 +7,7 @@
  */
 var React = require('react');
 var Layers = require('../../../utils/openlayers/Layers');
+var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var assign = require('object-assign');
 const _ = require('lodash');
 
@@ -95,7 +96,7 @@ const OpenlayersLayer = React.createClass({
     },
     createLayer(type, options, position) {
         if (type) {
-            const layerOptions = this.generateOpts(options, position, this.props.srs);
+            const layerOptions = this.generateOpts(options, position, CoordinatesUtils.normalizeSRS(this.props.srs));
             this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
             if (this.layer && !this.layer.detached) {
                 this.addLayer(options);

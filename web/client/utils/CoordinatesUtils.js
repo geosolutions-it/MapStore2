@@ -15,14 +15,17 @@ var CoordinatesUtils = {
         return proj.units || 'degrees';
     },
     reproject: function(point, source, dest, normalize = true) {
-        const sourceProj = new Proj4js.Proj(source);
-        const destProj = new Proj4js.Proj(dest);
-        let p = isArray(point) ? Proj4js.toPoint(point) : Proj4js.toPoint([point.x, point.y]);
-        const transformed = assign({}, Proj4js.transform(sourceProj, destProj, p), {srs: dest});
-        if (normalize) {
-            return CoordinatesUtils.normalizePoint(transformed);
+        const sourceProj = Proj4js.defs(source) ? new Proj4js.Proj(source) : null;
+        const destProj = Proj4js.defs(dest) ? new Proj4js.Proj(dest) : null;
+        if (sourceProj && destProj) {
+            let p = isArray(point) ? Proj4js.toPoint(point) : Proj4js.toPoint([point.x, point.y]);
+            const transformed = assign({}, Proj4js.transform(sourceProj, destProj, p), {srs: dest});
+            if (normalize) {
+                return CoordinatesUtils.normalizePoint(transformed);
+            }
+            return transformed;
         }
-        return transformed;
+        return null;
     },
     normalizePoint: function(point) {
         return {
@@ -56,9 +59,14 @@ var CoordinatesUtils = {
         let projPoints = [];
         for (let p in points) {
             if (points.hasOwnProperty(p)) {
-                let {x, y} = CoordinatesUtils.reproject(points[p], source, dest, normalize);
-                projPoints.push(x);
-                projPoints.push(y);
+                const projected = CoordinatesUtils.reproject(points[p], source, dest, normalize);
+                if (projected) {
+                    let {x, y} = projected;
+                    projPoints.push(x);
+                    projPoints.push(y);
+                } else {
+                    return null;
+                }
             }
         }
         return projPoints;

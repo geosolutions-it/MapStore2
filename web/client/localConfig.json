@@ -732,6 +732,10 @@
 			{"name": "MapType"},
 			{"name": "Maps"},
 			{"name": "Examples"}
-		]
+		],
+		"manager": ["Manager", {
+			"name": "Home",
+			"hide": true
+			}]
 	}
 }

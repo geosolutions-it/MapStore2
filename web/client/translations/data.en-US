@@ -44,6 +44,7 @@
         "printbutton": "Print",
         "noresultfound": "No Result found",
         "save": "Save",
+		"saveAs": "Save As...",
         "opacity": "Opacity",
         "close": "Close",
         "cancel": "Cancel",
@@ -112,8 +113,19 @@
             "description": "Description",
             "namePlaceholder": "Map Name",
             "descriptionPlaceholder": "Map Description",
-            "saveTitle": "Save Map",
-            "saveText": "Save current map?"
+            "saveTitle": "Save map",
+            "saveText": "Save current map?",
+            "thumbnail": "Thumbnail",
+            "message": "Drop or click to import an image",
+            "suggestion": "(best 300px X 180px, max 500kb)",
+            "errorFormat": "Supported formats: png/jpg",
+            "errorSize": "Max allowed size: 500kb",
+            "error": "The provided image is not valid",
+            "thumbnailError": {
+                "error404" : "An error occured while creating the thumbnail",
+                "error403" : "You are not allowed to update the map",
+                "errorDefault" : "Network error"
+            }
         },
         "print":{
             "paneltitle": "Print",
@@ -609,6 +621,38 @@
             "tooltip": "Create and edit layer style",
             "paneltitle": "Styler",
             "layerlabel": "Layer"
+        },
+        "rulesmanager": {
+            "title": "Access Rules",
+            "role": "Role",
+            "user": "User",
+            "service": "Service",
+            "request": "Request",
+            "workspace": "Workspace",
+            "layer": "Layer",
+            "filters": "Filters",
+            "rules": "Rules",
+            "access": "Access",
+            "newModal": "New Rule",
+            "editModal": "Edit Rule",
+            "newButton": "Create",
+            "editButton": "Save",
+            "close": "Close",
+            "previous": "previous",
+            "next": "next",
+            "errorLoadingRoles": "Error loading roles.",
+            "errorLoadingUsers": "Error loading users.",
+            "errorLoadingWorkspaces": "Error loading workspaces.",
+            "errorLoadingLayers": "Error loading layers.",
+            "errorLoadingRules": "Error loading rules.",
+            "errorMovingRules": "Error moving rules.",
+            "errorDeletingRules": "Error deleting rules.",
+            "errorAddingRule": "Error adding rule.",
+            "errorUpdatingRule": "Error updating rule.",
+            "deleteModal": "Delete Rules",
+            "selectedRulesDelete": "Delete selected rules ?",
+            "deleteButton": "Delete",
+            "cancelButton": "Cancel"
         }
     }
 }

@@ -112,8 +112,19 @@
             "description": "Descrizione",
             "namePlaceholder": "Nome Mappa",
             "descriptionPlaceholder": "Descrizione Mappa",
-            "saveTitle": "Salva Mappa",
-            "saveText": "Salvare la mappa corrente?"
+            "saveTitle": "Salva mappa",
+            "saveText": "Salvare la mappa corrente?",
+            "thumbnail": "Thumbnail",
+            "message": "Clicca o trascina un'immagine",
+            "suggestion": "(best 300px X 180px, max 500kb)",
+            "errorFormat": "Formati supportati: png/jpg",
+            "errorSize": "Dimensione massima consentita: 500kb",
+            "error": "L'immagine fornita non è valida",
+            "thumbnailError": {
+                "error404" : "Non è stato possibile creare la thumbnail sul server",
+                "error403" : "Non disponi dei permessi per aggiornare la mappa",
+                "errorDefault" : "Errore di rete"
+            }
         },
         "print":{
             "paneltitle": "Stampa",
@@ -595,6 +606,38 @@
             "tooltip": "Crea e modifica lo stile dei layer",
             "paneltitle": "Styler",
             "layerlabel": "Layer"
+        },
+        "rulesmanager": {
+            "title": "Regole Di Accesso",
+            "role": "Ruolo",
+            "user": "Utente",
+            "service": "Servizio",
+            "request": "Richiesta",
+            "workspace": "Workspace",
+            "layer": "Layer",
+            "filters": "Filtri",
+            "rules": "Regole",
+            "access": "Accesso",
+            "newModal": "Nuova Regola",
+            "editModal": "Modifica Regola",
+            "newButton": "Crea",
+            "editButton": "Salva",
+            "close": "Chiudi",
+            "previous": "precedente",
+            "next": "prossima",
+            "errorLoadingRoles": "Errore durante il caricamento dei ruoli",
+            "errorLoadingUsers": "Errore durante il caricamento  degli utenti.",
+            "errorLoadingWorkspaces": "Errore durante il caricamento dei workspaces.",
+            "errorLoadingLayers": "Errore durante il caricamento dei layers.",
+            "errorLoadingRules": "Errore durante il caricamento delle regole.",
+            "errorMovingRules": "Errore durante il caricamento delle regole.",
+            "errorDeletingRules": "Errore durante la cancellazione della regola.",
+            "errorAddingRule": "Errore durante la creazione della regola.",
+            "errorUpdatingRule": "Errore durante l'aggiornamento della regola.",
+            "deleteModal": "Elimina Regola",
+            "selectedRulesDelete": "Vuoi eliminare le regole selezionate?",
+            "deleteButton": "Elimina",
+            "cancelButton": "Annulla"
         }
     }
 }

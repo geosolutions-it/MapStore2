@@ -112,7 +112,6 @@ const Save = React.createClass({
 });
 
 module.exports = {
-    // TODO: Add SaveAs plugin
     SavePlugin: connect(selector,
     {
         onClose: toggleControl.bind(null, 'save', false),
@@ -123,7 +122,7 @@ module.exports = {
             name: 'save',
             position: 900,
             text: <Message msgId="save"/>,
-        icon: <Glyphicon glyph="floppy-open"/>,
+            icon: <Glyphicon glyph="floppy-open"/>,
             action: toggleControl.bind(null, 'save', null),
             // display the BurgerMenu button only if the map can be edited
             selector: (state) => {
@@ -135,7 +134,8 @@ module.exports = {
                         if (currentMap && currentMap.length > 0 && currentMap[0].canEdit) {
                             return { };
                         }
-                    } else if (map.info && map.info.canEdit) {
+                    }
+                    if (map.info && map.info.canEdit) {
                         return { };
                     }
                 }
