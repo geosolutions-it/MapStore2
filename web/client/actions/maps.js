@@ -303,6 +303,7 @@ function deleteThumbnail(resourceId, resourceIdMap, options) {
 
 function createMap(metadata, content, thumbnail, options) {
     return (dispatch) => {
+        dispatch(mapUpdating(null));
         GeoStoreApi.createResource(metadata, content, "MAP", options).then((response) => {
             let resourceId = response.data;
             if (thumbnail && thumbnail.data) {

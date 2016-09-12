@@ -119,6 +119,7 @@ const SaveAs = React.createClass({
                 transparent: layer.transparent,
                 type: layer.type,
                 url: layer.url,
+                provider: layer.provider,
                 visibility: layer.visibility
             };
         });
@@ -130,7 +131,6 @@ const SaveAs = React.createClass({
         };
         return resultingmap;
     },
-    // thumbnail is missing
     saveMap(id, name, description) {
         this.props.editMap(this.props.map);
         let thumbComponent = this.refs.metadataModal.refs.thumbnail;
