@@ -13,6 +13,7 @@ const {
     loadImport, IMPORT_LOADED,
     createImport, IMPORT_CREATED,
     deleteImport, IMPORT_DELETE,
+    runImport, IMPORT_RUN_SUCCESS,
     loadLayer, LAYER_LOADED,
     updateLayer,
     loadTask, IMPORTS_TASK_LOADED,
@@ -87,6 +88,15 @@ describe('Test correctness of the importer actions', () => {
         let tests = [testLoading, testDeleteImport, testLoading ];
         runAsyncTest(url, deleteImport, tests, done, [1]);
     });
+    it('import run', (done) => {
+        const testRunImport = (actionResult) => {
+            expect(actionResult.type).toBe(IMPORT_RUN_SUCCESS);
+            expect(actionResult.importId).toBe(1);
+        };
+        let url = 'base/web/client/test-resources/importer/import.json#';
+        let tests = [testLoading, testRunImport, testLoading ];
+        runAsyncTest(url, runImport, tests, done, [1]);
+    });
 
     // layer
     it('layer load', (done) => {
@@ -136,8 +146,12 @@ describe('Test correctness of the importer actions', () => {
             expect(actionResult.taskId).toBe(2);
             expect(actionResult.task).toExist();
         };
+        const testUpdateUI = (fun) => {
+            expect(fun).toExist();
+            fun('base/web/client/test-resources/importer/task.json#', 1, 2);
+        };
         let url = 'base/web/client/test-resources/importer/task.json#';
-        let tests = [testLoading, testLoadTask, testLoadLayer, testLoading ];
+        let tests = [testLoading, testLoadTask, testLoadLayer, testUpdateUI];
         runAsyncTest(url, updateTask, tests, done, [1, 2, {}]);
     });
 
