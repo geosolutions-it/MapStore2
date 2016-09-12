@@ -11,13 +11,14 @@ const {
 } = require('../actions/currentMap');
 
 const {
-    THUMBNAIL_ERROR, MAP_UPDATING, SAVE_MAP, DISPLAY_METADATA_EDIT, RESET_UPDATING
+    THUMBNAIL_ERROR, MAP_UPDATING, SAVE_MAP, DISPLAY_METADATA_EDIT, RESET_UPDATING, MAP_ERROR, MAP_CREATED
 } = require('../actions/maps');
 
 
 const assign = require('object-assign');
 
 const initialState = {
+    mapId: null,
     files: [],
     errors: [],
     newThumbnail: null,
@@ -28,7 +29,7 @@ const initialState = {
 function currentMap(state = initialState, action) {
     switch (action.type) {
         case EDIT_MAP: {
-            return assign({}, state, action.map, {newThumbnail: (action.map && action.map.thumbnail) ? action.map.thumbnail : null, displayMetadataEdit: true, thumbnailError: null });
+            return assign({}, state, action.map, {newThumbnail: (action.map && action.map.thumbnail) ? action.map.thumbnail : null, displayMetadataEdit: true, thumbnailError: null, errors: [] });
         }
         case UPDATE_CURRENT_MAP: {
             return assign({}, state, {newThumbnail: action.thumbnail, files: action.files});
@@ -37,10 +38,13 @@ function currentMap(state = initialState, action) {
             return assign({}, state, {updating: true});
         }
         case ERROR_CURRENT_MAP: {
-            return assign({}, state, {thumbnailError: null, errors: action.errors});
+            return assign({}, state, {thumbnailError: null, mapError: null, errors: action.errors});
         }
         case THUMBNAIL_ERROR: {
             return assign({}, state, {thumbnailError: action.error, errors: [], updating: false});
+        }
+        case MAP_ERROR: {
+            return assign({}, state, {mapError: action.error, errors: [], updating: false});
         }
         case SAVE_MAP: {
             return assign({}, state, {thumbnailError: null});
@@ -50,6 +54,9 @@ function currentMap(state = initialState, action) {
         }
         case RESET_UPDATING: {
             return assign({}, state, {updating: false});
+        }
+        case MAP_CREATED: {
+            return assign({}, state, {newMapId: action.resourceId, mapId: action.resourceId});
         }
         default:
             return state;
