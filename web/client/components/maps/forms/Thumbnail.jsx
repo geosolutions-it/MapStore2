@@ -30,8 +30,6 @@ const Thumbnail = React.createClass({
         onDeleteThumbnail: React.PropTypes.func,
         onRemoveThumbnail: React.PropTypes.func,
         // I18N
-        errorImage: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        errorMessages: React.PropTypes.object,
         message: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         suggestion: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element])
     },
@@ -51,10 +49,8 @@ const Thumbnail = React.createClass({
             onCreateThumbnail: () => {},
             onDeleteThumbnail: () => {},
             // I18N
-            errorMessages: {"FORMAT": <Message msgId="map.errorFormat"/>, "SIZE": <Message msgId="map.errorSize"/>},
             message: <Message msgId="map.message"/>,
-            suggestion: <Message msgId="map.suggestion"/>,
-            errorImage: <Message msgId="map.error"/>
+            suggestion: <Message msgId="map.suggestion"/>
         };
     },
     getInitialState() {
@@ -143,19 +139,19 @@ const Thumbnail = React.createClass({
                     this.deleteThumbnail(this.props.map.thumbnail, this.props.map.id);
                 // there is a thumbnail to upload
                 }
-                if (this.props.map && !data && this.props.map.thumbnail && !this.refs.imgThumbnail && metadata) {
+                if (this.props.map && !data && this.props.map.newThumbnail && !this.refs.imgThumbnail && metadata) {
                     this.deleteThumbnail(this.props.map.thumbnail, this.props.map.id);
                     this.props.onSaveAll(map, metadata, name, data, category, this.props.map.id);
                 // there is a thumbnail to upload
                 }
                 // remove old one if present
-                if (this.props.map.thumbnail && data && this.refs.imgThumbnail) {
+                if (this.props.map.newThumbnail && data && this.refs.imgThumbnail) {
                     this.deleteThumbnail(this.props.map.thumbnail, null);
                     // create the new one (and update the thumbnail attribute)
                     this.props.onSaveAll(map, metadata, name, data, category, this.props.map.id);
                 }
                 // nothing dropped it will be closed the modal
-                if (this.props.map.thumbnail && !data && this.refs.imgThumbnail) {
+                if (this.props.map.newThumbnail && !data && this.refs.imgThumbnail) {
                     this.props.onSaveAll(map, metadata, name, data, category, this.props.map.id);
                 }
                 // this.props.onCreateThumbnail(map, metadata, name, data, category, this.props.map.id);
@@ -163,6 +159,9 @@ const Thumbnail = React.createClass({
                 return data;
             });
         }
+    },
+    getThumbnailDataUri(callback) {
+        this.getDataUri(this.files, callback);
     },
     deleteThumbnail(thumbnail, mapId) {
         if (thumbnail && thumbnail.includes("geostore")) {
@@ -180,13 +179,6 @@ const Thumbnail = React.createClass({
     },
     render() {
         const withoutThumbnail = (<div className="dropzone-content-image">{this.props.message}<br/>{this.props.suggestion}</div>);
-        const thumbnailErrorStatus = (this.props.map && this.props.map.thumbnailError && this.props.map.thumbnailError.status ? this.props.map.thumbnailError.status : null);
-        let messageIdError = "";
-        if (thumbnailErrorStatus === 404 || thumbnailErrorStatus === 403) {
-            messageIdError = thumbnailErrorStatus;
-        } else {
-            messageIdError = "Default";
-        }
         return (
             (this.props.loading) ? (<div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle"/></div>) :
             (
@@ -203,20 +195,6 @@ const Thumbnail = React.createClass({
                         </div>) : withoutThumbnail
                     }
                     </Dropzone>
-                    {(this.props.map && this.props.map.errors && this.props.map.errors.length > 0 ) ?
-                    (<div className="dropzone-errorBox alert-danger">
-                        <p>{this.props.errorImage}</p>
-                        { (this.props.map.errors.map((error) => <div id={"error" + error} key={"error" + error} className={"error" + error}> {this.props.errorMessages[error]} </div>))}
-                    </div>)
-                    : null }
-
-                    {(this.props.map && this.props.map.thumbnailError) ?
-                        (<div className="dropzone-errorBox alert-danger">
-                            <div id={"error" + messageIdError} key={"error" + messageIdError} className={"error" + messageIdError}>
-                                <Message msgId={"map.thumbnailError.error" + messageIdError}/>
-                            </div>
-                        </div>)
-                    : null }
                 </div>
             )
         );

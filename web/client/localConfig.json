@@ -240,7 +240,7 @@
 			"name" : "Share",
 			"cfg": {
 				"closeGlyph" : "1-close"
-		}
+			}
 		}, {
         "name": "DrawerMenu",
 				"cfg": {

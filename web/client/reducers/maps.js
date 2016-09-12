@@ -113,7 +113,12 @@ function maps(state = {
 
             for (let i = 0; i < newMaps.length; i++) {
                 if (newMaps[i].id && newMaps[i].id === action.resourceId ) {
-                    newMaps[i] = assign({}, newMaps[i], {files: action.map.files, errors: action.map.errors, newThumbnail: action.map.newThumbnail, thumbnailError: action.map.thumbnailError, thumbnail: action.map.thumbnail});
+                    newMaps[i] = assign({}, newMaps[i], {
+                        files: action.map && action.map.files,
+                        errors: action.map && action.map.errors,
+                        newThumbnail: action.map && action.map.newThumbnail,
+                        thumbnailError: action.map && action.map.thumbnailError,
+                        thumbnail: action.map && action.map.thumbnail });
                 }
             }
             return assign({}, state, {results: newMaps});
