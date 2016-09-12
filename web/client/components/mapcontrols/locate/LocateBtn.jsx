@@ -10,6 +10,9 @@ var React = require('react');
 var {Button, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
 const defaultIcon = require('../../misc/spinners/InlineSpinner/img/spinner.gif');
 
+let checkingGeoLocation = false;
+let geoLocationAllowed = false;
+
 var LocateBtn = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
@@ -90,9 +93,14 @@ var LocateBtn = React.createClass({
         );
     },
     componentWillMount() {
-        if (this.props.locate !== 'PERMISSION_DENIED') {
+        if (this.props.locate !== 'PERMISSION_DENIED' && !checkingGeoLocation && !geoLocationAllowed) {
             // check if we are allowed to use geolocation feature
-            navigator.geolocation.getCurrentPosition(() => {}, (error) => {
+            checkingGeoLocation = true;
+            navigator.geolocation.getCurrentPosition(() => {
+                checkingGeoLocation = false;
+                geoLocationAllowed = true;
+            }, (error) => {
+                checkingGeoLocation = false;
                 if (error.code === 1) {
                     this.props.onClick("PERMISSION_DENIED");
                 }
