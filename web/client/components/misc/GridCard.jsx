@@ -17,23 +17,14 @@ const GridCard = React.createClass({
         style: React.PropTypes.object,
         className: React.PropTypes.string,
         header: React.PropTypes.node,
-        actions: React.PropTypes.array
+        actions: React.PropTypes.array,
+        onClick: React.PropTypes.func
     },
     getDefaultProps() {
         return {
             actions: [],
             header: ""
         };
-    },
-    // click on the card triggers the first available action
-    onClick() {
-        // Users can select Title and Description without triggering the click
-        var selection = window.getSelection();
-        if (!selection.toString()) {
-            if (this.props.actions && this.props.actions[0] && this.props.actions[0].onClick) {
-                this.props.actions[0].onClick();
-            }
-        }
     },
     renderActions() {
         return (<div className="gridcard-tools">
@@ -51,7 +42,7 @@ const GridCard = React.createClass({
         return (<div
                style={this.props.style}
                className={"gridcard" + (this.props.className ? " " + this.props.className : "")}
-               onClick={this.onClick}>
+               onClick={this.props.onClick}>
                <div className="gridcard-title bg-primary">{this.props.header}</div>
                {this.props.children}
                {this.renderActions()}
