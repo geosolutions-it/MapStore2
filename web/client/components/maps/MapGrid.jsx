@@ -47,6 +47,7 @@ var MapGrid = React.createClass({
                     "marginBottom": "20px"
                 }
             },
+            currentMap: {},
             maps: [],
             // CALLBACKS
             onChangeMapType: function() {},
