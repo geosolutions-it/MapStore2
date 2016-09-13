@@ -44,7 +44,8 @@
         "gohome": "Retour",
         "printbutton": "Imprimer",
         "noresultfound": "Aucun résultat trouvé",
-        "save": "Sauver",
+        "save": "Enregistrer",
+        "saveAs": "Enregistrer sous",
         "opacity": "Opacité",
         "close": "Fermer",
         "cancel": "Annuler",
@@ -122,8 +123,15 @@
             "errorSize": "taille maximum autorisée: 500kb",
             "error": "L'image fournie est pas valide",
             "thumbnailError": {
-                "error404" : "Une erreur est survenue lors de la création de la vignette",
                 "error403" : "Une erreur est survenue lors de la suppression de la vignette",
+                "error404" : "Une erreur est survenue lors de la création de la vignette",
+                "error409" : "Nom de la vignette déjà choisie",
+                "errorDefault" : "Une erreur est survenue sur le serveur"
+            },
+            "mapError": {
+                "error403" : "Une erreur est survenue lors de la suppression de la carte",
+                "error404" : "Une erreur est survenue lors de la création de la carte",
+                "error409" : "Nom de la carte déjà choisie",
                 "errorDefault" : "Une erreur est survenue sur le serveur"
             }
         },
