@@ -14,6 +14,7 @@ const ToolsContainer = require('./containers/ToolsContainer');
 const OmniBar = React.createClass({
     propTypes: {
         className: React.PropTypes.string,
+        style: React.PropTypes.object,
         items: React.PropTypes.array,
         id: React.PropTypes.string,
         mapType: React.PropTypes.string
@@ -22,6 +23,7 @@ const OmniBar = React.createClass({
         return {
             items: [],
             className: "navbar-dx shadow",
+            style: {},
             id: "mapstore-navbar",
             mapType: "leaflet"
         };
@@ -42,7 +44,9 @@ const OmniBar = React.createClass({
         return this.props.items.sort((a, b) => a.position - b.position);
     },
     render() {
-        return (<ToolsContainer id={this.props.id} className={this.props.className}
+        return (<ToolsContainer id={this.props.id}
+            style={this.props.style}
+            className={this.props.className}
             mapType={this.props.mapType}
             container={(props) => <div {...props}>{props.children}</div>}
             toolStyle="primary"

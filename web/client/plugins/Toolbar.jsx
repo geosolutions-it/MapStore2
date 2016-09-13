@@ -28,6 +28,7 @@ const Toolbar = React.createClass({
         id: React.PropTypes.string,
         tools: React.PropTypes.array,
         mapType: React.PropTypes.string,
+        style: React.PropTypes.object,
         panelStyle: React.PropTypes.object,
         panelClassName: React.PropTypes.string,
         active: React.PropTypes.string,
@@ -46,6 +47,7 @@ const Toolbar = React.createClass({
     getDefaultProps() {
         return {
             id: "mapstore-toolbar",
+            style: {},
             panelStyle: {
                 minWidth: "300px",
                 right: "52px",
@@ -91,6 +93,7 @@ const Toolbar = React.createClass({
             tools={this.getTools()}
             panels={this.getPanels()}
             activePanel={this.props.active}
+            style={this.props.style}
             panelStyle={this.props.panelStyle}
             panelClassName={this.props.panelClassName}
             />);

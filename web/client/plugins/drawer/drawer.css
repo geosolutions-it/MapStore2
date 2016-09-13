@@ -25,8 +25,44 @@
 
 }
 div.nav-menu{
-    background: rgba(255,255,255,.7);
+    background: rgba(255,255,255,1);
     left:-300px;
+}
+
+#mapstore-drawermenu > div > div:nth-child(2) {
+    display: none;
+}
+
+.nav-content #background-switcher .thumbnail {
+    border-radius: 0 !important;
+    margin-bottom: 40px;
+    width: 220px !important;
+}
+.nav-content #background-switcher .thumbnail img {
+    border-radius: 0 !important;
+    height: 90px;
+    width: 220px !important;
+}
+
+.nav-content #background-switcher .thumbnail .caption {
+    font-size: 14px !important;
+    text-align: left !important;
+    top: -20px !important;
+    position: absolute !important;
+}
+
+.nav-content #background-switcher {
+    margin-top: 10px;
+}
+
+
+#mapstore-drawermenu .nav-menu {
+    background: rgba(255,255,255,1);
+}
+
+#mapstore-drawermenu .panel {
+    border: none !important;
+    box-shadow: none !important;
 }
 
 div.nav-menu {
@@ -78,4 +114,9 @@ div.nav-menu {
     box-shadow: inset 0px 0px 10px rgba(0,0,0,.5);
     background: rgba(255,255,255,.4);
     padding: 5px;
+}
+
+
+.navButtons {
+    float: right;
 }
