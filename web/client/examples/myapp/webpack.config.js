@@ -14,7 +14,7 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.jsx?$/, loader: "babel-loader" }
+            { test: /\.jsx?$/, loader: "babel-loader", exclude: /node_modules/ }
         ]
     },
     devtool: 'inline-source-map',
