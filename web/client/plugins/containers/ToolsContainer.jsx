@@ -34,6 +34,7 @@ const ToolsContainer = React.createClass({
         container: React.PropTypes.func,
         tool: React.PropTypes.func,
         className: React.PropTypes.string,
+        style: React.PropTypes.object,
         tools: React.PropTypes.array,
         panels: React.PropTypes.array,
         mapType: React.PropTypes.string,
@@ -54,6 +55,7 @@ const ToolsContainer = React.createClass({
         return {
             container: Panel,
             className: "tools-container",
+            style: {},
             toolStyle: "default",
             activeStyle: "primary",
             tools: [],
@@ -139,7 +141,7 @@ const ToolsContainer = React.createClass({
         const Container = this.props.container;
         return (
             <span id={this.props.id}>
-                <Container id={this.props.id + "-container"} className={this.props.className}>
+                <Container id={this.props.id + "-container"} style={this.props.style} className={this.props.className}>
                     {this.renderTools()}
                 </Container>
                 {this.renderPanels()}

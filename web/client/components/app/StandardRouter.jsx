@@ -29,7 +29,11 @@ const StandardRouter = React.createClass({
     },
     renderPages() {
         return this.props.pages.map((page) => {
-            const Component = connect(() => ({plugins: this.props.plugins}))(page.component);
+            const pageConfig = page.pageConfig || {};
+            const Component = connect(() => ({
+                plugins: this.props.plugins,
+                ...pageConfig
+            }))(page.component);
             return (<Route key={page.name || page.path} path={page.path} component={Component}/>);
         });
     },
