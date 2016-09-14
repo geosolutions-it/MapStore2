@@ -4,7 +4,7 @@ var ReactDOM = require('react-dom');
 var Provider = require('react-redux').Provider;
 
 // include application component
-var MyApp = require('./containers/MyApp');
+var MyApp = require('./containers/myapp');
 var url = require('url');
 
 var loadMapConfig = require('../../actions/config').loadMapConfig;
