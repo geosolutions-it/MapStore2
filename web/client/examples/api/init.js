@@ -378,8 +378,9 @@ function buildPluginsCfg(plugins, cfg) {
         desktop: pluginsCfg
     };
 }
-
+/*eslint-disable */
 function init() {
+/*eslint-enable */
     var mapName;
     var params;
     var param;
@@ -572,7 +573,9 @@ function init() {
 
     pluginsCfg = cfg && buildPluginsCfg(cfg.pluginsCfg.standard, cfg.userCfg) || embeddedPlugins;
     initialDefaultState = cfg && {} || defaultState;
+    /*eslint-disable */
     MapStore2.create('container', {
+    /*eslint-enable */
         plugins: pluginsCfg,
         initialState: {
             defaultState: initialDefaultState
