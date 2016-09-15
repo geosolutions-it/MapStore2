@@ -40,7 +40,7 @@ describe('This test for MetadataModal', () => {
 
         const modalDivList = document.getElementsByClassName("modal-content");
         const closeBtnList = modalDivList.item(0).getElementsByTagName('button');
-        expect(closeBtnList.length).toBe(3);
+        expect(closeBtnList.length).toBe(4);
         // expect(metadataModalItemDom.id).toBe('MetadataModal');
     });
 
@@ -65,7 +65,7 @@ describe('This test for MetadataModal', () => {
 
         const modalDivList = document.getElementsByClassName("modal-content");
         const closeBtnList = modalDivList.item(0).getElementsByTagName('button');
-        expect(closeBtnList.length).toBe(3);
+        expect(closeBtnList.length).toBe(4);
 
         const errorFORMAT = modalDivList.item(0).getElementsByTagName('errorFORMAT');
         expect(errorFORMAT).toExist();
@@ -92,7 +92,7 @@ describe('This test for MetadataModal', () => {
 
         const modalDivList = document.getElementsByClassName("modal-content");
         const closeBtnList = modalDivList.item(0).getElementsByTagName('button');
-        expect(closeBtnList.length).toBe(3);
+        expect(closeBtnList.length).toBe(4);
 
         const errorFORMAT = modalDivList.item(0).getElementsByTagName('errorSIZE');
         expect(errorFORMAT).toExist();

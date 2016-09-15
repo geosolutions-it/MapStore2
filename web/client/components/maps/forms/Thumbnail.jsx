@@ -118,8 +118,9 @@ const Thumbnail = React.createClass({
         });
         return uuid;
     },
+
     updateThumbnail(map, metadata) {
-        if (this.props.map.errors && this.props.map.errors.length === 0 ) {
+        if (!this.props.map.errors || !this.props.map.errors.length ) {
             this.getDataUri(this.files, (data) => {
                 const name = this.generateUUID(); // create new unique name
                 const category = "THUMBNAIL";

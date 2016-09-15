@@ -30,24 +30,10 @@ describe('Test correctness of the maps actions', () => {
 
     it('permissionsUpdated', () => {
         let resourceId = 13;
-        let group = {groupName: "everyone", id: 3};
-        let user = {name: "tt", id: 20};
-        let userPermission = {
-            canRead: true,
-            canWrite: true
-        };
-        let groupPermission = {
-            canRead: true,
-            canWrite: false
-        };
-        var retval = permissionsUpdated(resourceId, groupPermission, group, userPermission, user, null);
+        var retval = permissionsUpdated(resourceId, null);
         expect(retval).toExist();
         expect(retval.type).toBe(PERMISSIONS_UPDATED);
         expect(retval.resourceId).toBe(resourceId);
-        expect(retval.groupPermission).toBe(groupPermission);
-        expect(retval.group).toBe(group);
-        expect(retval.userPermission).toBe(userPermission);
-        expect(retval.user).toBe(user);
     });
 
     it('attributeUpdated', () => {

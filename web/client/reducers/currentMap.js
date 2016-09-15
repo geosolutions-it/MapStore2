@@ -7,25 +7,29 @@
  */
 
 const {
-    EDIT_MAP, UPDATE_CURRENT_MAP, ERROR_CURRENT_MAP
+    EDIT_MAP,
+    UPDATE_CURRENT_MAP,
+    ERROR_CURRENT_MAP,
+    UPDATE_CURRENT_MAP_PERMISSIONS,
+    UPDATE_CURRENT_MAP_GROUPS,
+    RESET_CURRENT_MAP,
+    ADD_CURRENT_MAP_PERMISSION
 } = require('../actions/currentMap');
 
 const {
-    THUMBNAIL_ERROR, MAP_UPDATING, SAVE_MAP, DISPLAY_METADATA_EDIT, RESET_UPDATING, MAP_ERROR, MAP_CREATED, RESET_CURRENT_MAP
+    THUMBNAIL_ERROR,
+    MAP_UPDATING,
+    SAVE_MAP,
+    DISPLAY_METADATA_EDIT,
+    RESET_UPDATING,
+    MAP_ERROR,
+    MAP_CREATED
 } = require('../actions/maps');
 
 const assign = require('object-assign');
+const _ = require('lodash');
 
-const initialState = {
-    mapId: null,
-    files: [],
-    errors: [],
-    newThumbnail: null,
-    thumbnailError: null,
-    displayMetadataEdit: false
-};
-
-function currentMap(state = initialState, action) {
+function currentMap(state = {}, action) {
     switch (action.type) {
         case EDIT_MAP: {
             return assign({}, state, action.map, {newThumbnail: (action.map && action.map.thumbnail) ? action.map.thumbnail : null, displayMetadataEdit: true, thumbnailError: null, errors: [] });
@@ -35,6 +39,36 @@ function currentMap(state = initialState, action) {
         }
         case MAP_UPDATING: {
             return assign({}, state, {updating: true});
+        }
+        case UPDATE_CURRENT_MAP_PERMISSIONS: {
+            // Fix to overcome GeoStore bad encoding of single object arrays
+            let fixedSecurityRule = [];
+            if (action.permissions && action.permissions.SecurityRuleList && action.permissions.SecurityRuleList.SecurityRule) {
+                if ( _.isArray(action.permissions.SecurityRuleList.SecurityRule)) {
+                    fixedSecurityRule = action.permissions.SecurityRuleList.SecurityRule;
+                } else {
+                    fixedSecurityRule.push(action.permissions.SecurityRuleList.SecurityRule);
+                }
+            }
+            return assign({}, state, {permissions: {
+                SecurityRuleList: {
+                    SecurityRule: fixedSecurityRule
+                }
+            }});
+        }
+        case UPDATE_CURRENT_MAP_GROUPS: {
+            return assign({}, state, {availableGroups: action.groups});
+        }
+        case ADD_CURRENT_MAP_PERMISSION: {
+            let newPermissions = {
+                SecurityRuleList: {
+                    SecurityRule: state.permissions && state.permissions.SecurityRuleList && state.permissions.SecurityRuleList.SecurityRule ? state.permissions.SecurityRuleList.SecurityRule.slice() : []
+                }
+            };
+            if (action.rule) {
+                newPermissions.SecurityRuleList.SecurityRule.push(action.rule);
+            }
+            return assign({}, state, { permissions: newPermissions });
         }
         case ERROR_CURRENT_MAP: {
             return assign({}, state, {thumbnailError: null, mapError: null, errors: action.errors});
@@ -57,6 +91,7 @@ function currentMap(state = initialState, action) {
         case MAP_CREATED: {
             return assign({}, state, {mapId: action.resourceId, newMapId: action.resourceId});
         }
+        /*
         case RESET_CURRENT_MAP: {
             // resetting all the keys of the currentMap state
             let newCurrentMap = Object.keys(state).reduce(function(previous, current) {
@@ -64,6 +99,9 @@ function currentMap(state = initialState, action) {
                 return previous;
             }, {});
             return assign({}, newCurrentMap);
+        }*/
+        case RESET_CURRENT_MAP: {
+            return {};
         }
         default:
             return state;
