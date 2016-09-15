@@ -6,9 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {MAPS_LIST_LOADED, MAPS_LIST_LOADING, MAPS_LIST_LOAD_ERROR, MAP_CREATED, MAP_UPDATING, MAP_UPDATED, MAP_DELETING, MAP_DELETED, ATTRIBUTE_UPDATED, SAVE_MAP, PERMISSIONS_UPDATED, THUMBNAIL_ERROR, RESET_UPDATING} = require('../actions/maps');
+const {
+    MAPS_LIST_LOADED, MAPS_LIST_LOADING, MAPS_LIST_LOAD_ERROR, MAP_CREATED, MAP_UPDATING,
+    MAP_METADATA_UPDATED, MAP_DELETING, MAP_DELETED, ATTRIBUTE_UPDATED,
+    PERMISSIONS_LIST_LOADED, SAVE_MAP, PERMISSIONS_UPDATED, THUMBNAIL_ERROR, RESET_UPDATING} = require('../actions/maps');
 const MAP_TYPE_CHANGED = "MAP_TYPE_CHANGED"; // NOTE: this is from home action in product. move to maps actions when finished;
 const assign = require('object-assign');
+const _ = require('lodash');
+
 function maps(state = {
     mapType: "openlayers",
     enabled: false,
@@ -51,7 +56,7 @@ function maps(state = {
             }
             return assign({}, state, {results: newMaps});
         }
-        case MAP_UPDATED: {
+        case MAP_METADATA_UPDATED: {
             let newMaps = (state.results === "" ? [] : [...state.results] );
 
             for (let i = 0; i < newMaps.length; i++) {
@@ -142,6 +147,35 @@ function maps(state = {
                 }
             }
             return assign({}, state, {results: newMaps});
+        }
+        case PERMISSIONS_LIST_LOADED: {
+            let newMaps = (state.results === "" ? [] : [...state.results] );
+            // TODO: Add the fix for GeoStore single-item arrays
+            let newState = assign({}, state, {
+                results: newMaps.map(function(map) {
+                        if (map.id === action.mapId) {
+
+                            // Fix to overcome GeoStore bad encoding of single object arrays
+                            let fixedSecurityRule = [];
+                            if (action.permissions && action.permissions.SecurityRuleList && action.permissions.SecurityRuleList.SecurityRule) {
+                                if ( _.isArray(action.permissions.SecurityRuleList.SecurityRule)) {
+                                    fixedSecurityRule = action.permissions.SecurityRuleList.SecurityRule;
+                                } else {
+                                    fixedSecurityRule.push(action.permissions.SecurityRuleList.SecurityRule);
+                                }
+                            }
+
+                            return assign({}, map, {permissions: {
+                                SecurityRuleList: {
+                                    SecurityRule: fixedSecurityRule
+                                }
+                            }});
+                        }
+                        return map;
+                    })
+                }
+            );
+            return newState;
         }
         default:
             return state;
