@@ -249,7 +249,7 @@
                         }
                     },
                     "polyline": {
-                        "error": "Errore: the edges can not cross!",
+                        "error": "Errore: i bordi non si possono incrociare!",
                         "tooltip": {
                             "start": "Click per iniziare a disegnare una linea.",
                             "cont": "Click per continuare a disegnare una linea.",
