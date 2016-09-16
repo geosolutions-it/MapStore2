@@ -9,8 +9,9 @@
 const React = require('react');
 const assign = require('object-assign');
 const _ = require('lodash');
+const Select = require('react-select');
+const Spinner = require('react-spinkit');
 const {Table, Button, Glyphicon} = require('react-bootstrap');
-const Choice = require('../form/Choice');
 const Message = require('../I18N/Message');
 
 /**
@@ -61,14 +62,13 @@ const PermissionEditor = React.createClass({
             groups: []
         };
     },
-    onNewGroupChoose(id) {
+    onNewGroupChoose(selected) {
         // TODO: use _.find(this.props.availableGroups,['id', _.toInteger(id)]) when lodash will be updated to version 4
-        this.props.onNewGroupChoose(_.find(this.props.availableGroups, (o)=> o.id.toString() === id));
+        this.props.onNewGroupChoose(_.find(this.props.availableGroups, (o)=> o.id === selected.value));
     },
     onAddPermission() {
         // Check if the new permission will edit ad existing one
-        if (this.props.map && this.props.map.permissions && this.props.map.permissions.SecurityRuleList && this.props.map.permissions.SecurityRuleList.SecurityRule &&
-            _.findIndex(this.props.map.permissions.SecurityRuleList.SecurityRule, (o) => o.group && o.group.groupName === this.props.newGroup.groupName) >= 0) {
+        if (this.isPermissionPresent(this.props.newGroup.groupName)) {
             this.props.onGroupsChange(
                 {
                     SecurityRuleList: {
@@ -119,6 +119,60 @@ const PermissionEditor = React.createClass({
          );
         }
     },
+    getSelectableGroups() {
+        return this.props.availableGroups && this.props.availableGroups.filter( (group) => {
+            return !this.isPermissionPresent(group.groupName);
+        }
+
+        ).map((group) => ({label: group.groupName, value: group.id}));
+    },
+    getPermissonLabel(perm) {
+        // TODO support I18N
+        switch (perm) {
+            case "canRead":
+                return "Can view";
+            case "canWrite":
+                return "Can edit";
+            default:
+                return perm;
+        }
+    },
+    getAvailablePermissions() {
+        return this.props.availablePermissions.map((perm) => ({value: perm, label: this.getPermissonLabel(perm)}));
+    },
+    renderPermissionRows() {
+        if (this.localGroups.length === 0) {
+            return <tr><td colSpan="3">No rules</td></tr>;
+
+        }
+        return this.localGroups.map((group, index) => {
+            return (
+                <tr style={{display: "flex"}} key={index} className={index / 2 === 0 ? "even" : "odd"}>
+                    <td style={{flex: 1}}>{group.name}</td>
+                    <td style={{width: "150px"}}>
+                        <Select
+                            ref="permChoice"
+                            onChange={(sel) => {this.onChangePermission.call(this, index, sel.value ); }}
+                            clearable={false}
+                            options={this.getAvailablePermissions()}
+                            value={group.permission}/>
+                    </td>
+                    {
+                        // <td><Button bsStyle="primary" className="square-button"><Glyphicon glyph="1-group-mod"/></Button></td> TODO: Add a Group Editor
+                    }
+                    <td style={{width: "50px"}}>{
+                        // <Button bsStyle="danger" className="square-button" onClick={this.onChangePermission.bind(this, index, "delete")} ><Glyphicon glyph="1-close"/></Button>
+                    }
+                        <Button
+                            key={"deleteButton" + index}
+                            ref="deleteButton"
+                            bsStyle="danger"
+                            onClick={this.onChangePermission.bind(this, index, "delete")}><Glyphicon glyph="1-close"/></Button>
+                    </td>
+                </tr>
+            );
+        });
+    },
     render() {
         // Hack to convert map permissions to a simpler format, TODO: remove this
         if (this.props.map && this.props.map.permissions && this.props.map.permissions.SecurityRuleList && this.props.map.permissions.SecurityRuleList.SecurityRule) {
@@ -134,71 +188,54 @@ const PermissionEditor = React.createClass({
         return (
             <div>
                 <b style={{cursor: "default"}} ><Message msgId="groups" /> <Message msgId="permissions" /></b>
-                <Table className="permissions-table" bordered condensed hover>
+                <Table className="permissions-table" stripped condensed hover>
                     <thead>
                         <tr>
-                            <th><Message msgId="group" /></th>
-                            <th><Message msgId="permission" /></th>
-                            {
-                                // <th><Message msgId="groupEdit" /></th> TODO: Add a Group Editor
-                            }
-                            <th><Message msgId="permissionDelete" /></th>
+                            <th colSpan="3">Permissions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {this.localGroups.map((group, index) => {
-                            return (
-                                <tr key={index} className={index / 2 === 0 ? "even" : "odd"}>
-                                    <td>{group.name}</td>
-                                    <td>
-                                        <Choice
-                                            ref="permChoice"
-                                            onChange={this.onChangePermission.bind(this, index)}
-                                            label=""
-                                            items={this.props.availablePermissions.map((perm) => ({name: perm, value: perm}))}
-                                            selected={group.permission}/>
-                                    </td>
-                                    {
-                                        // <td><Button bsStyle="primary" className="square-button"><Glyphicon glyph="1-group-mod"/></Button></td> TODO: Add a Group Editor
-                                    }
-                                    <td>{
-                                        // <Button bsStyle="danger" className="square-button" onClick={this.onChangePermission.bind(this, index, "delete")} ><Glyphicon glyph="1-close"/></Button>
-                                    }
-                                        <Button
-                                            key={"deleteButton" + index}
-                                            ref="deleteButton"
-                                            bsStyle="danger"
-                                            onClick={this.onChangePermission.bind(this, index, "delete")}><Glyphicon glyph="1-close"/></Button>
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                        <tr key="addRowKey">
-                            <td>
-                                <b>Select a group</b><br/>
-                                <Choice
+                        {this.props.map && this.props.map.permissionLoading ?
+                        <tr><td colSpan="3"><div><Spinner noFadeIn spinnerName="circle" /></div></td></tr>
+                        : this.renderPermissionRows()}
+                        <tr>
+                            <th colSpan="3">Add a rule...</th>
+                        </tr>
+                        <tr style={{display: "flex"}} key="addRowKey">
+                            <td style={{flex: 1}}>
+                                <Select
                                     ref="newGroup"
-                                    label=""
-                                    items={this.props.availableGroups.map((group) => ({name: group.groupName, value: group.id}))}
-                                    selected={this.props.newGroup && this.props.newGroup.id && this.props.newGroup.id.toString()}
+                                    isLoading={!(this.props.availableGroups && this.props.availableGroups.length > 0)}
+                                    clearable={false}
+                                    placeholder="Select a group..."
+                                    options={this.getSelectableGroups()}
+                                    value={this.props.newGroup && this.props.newGroup.id}
                                     onChange={this.onNewGroupChoose}/>
                             </td>
-                            <td>
-                            <Choice
+                            <td style={{width: "150px"}}>
+                            <Select
                                 ref="newChoice"
-                                label=""
-                                items={this.props.availablePermissions.map((perm) => ({name: perm, value: perm}))}
-                                selected={this.props.newPermission}
-                                onChange={this.props.onNewPermissionChoose}/>
+                                clearable={false}
+                                options={this.getAvailablePermissions()}
+                                value={this.props.newPermission || _.head(this.props.availablePermissions)}
+                                onChange={(sel) => {this.props.onNewPermissionChoose(sel && sel.value); }}/>
                             </td>
-                            <td>
-                                <Button disabled={!this.props.availableGroups || this.props.availableGroups.length === 0} bsStyle="success" onClick={this.onAddPermission} >Add Permission</Button>
+                            <td style={{width: "50px"}}>
+                                <Button
+                                    disabled={!(this.props.newGroup && this.props.newGroup.id && this.props.newGroup.id.toString())}
+                                    bsSize="small"
+                                    bsStyle="success"
+                                    onClick={this.onAddPermission} ><Glyphicon style={{fontSize: "22px"}} glyph="plus"/></Button>
                             </td>
                         </tr>
                     </tbody>
                 </Table>
             </div>
         );
+    },
+    isPermissionPresent(group) {
+        return this.props.map && this.props.map.permissions && this.props.map.permissions.SecurityRuleList && this.props.map.permissions.SecurityRuleList.SecurityRule &&
+            _.findIndex(this.props.map.permissions.SecurityRuleList.SecurityRule, (o) => o.group && o.group.groupName === group) >= 0;
     }
 });
 

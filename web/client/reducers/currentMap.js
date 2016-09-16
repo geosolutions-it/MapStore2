@@ -23,7 +23,9 @@ const {
     DISPLAY_METADATA_EDIT,
     RESET_UPDATING,
     MAP_ERROR,
-    MAP_CREATED
+    MAP_CREATED,
+    PERMISSIONS_LIST_LOADING,
+    PERMISSIONS_LIST_LOADED
 } = require('../actions/maps');
 
 const assign = require('object-assign');
@@ -90,6 +92,12 @@ function currentMap(state = {}, action) {
         }
         case MAP_CREATED: {
             return assign({}, state, {mapId: action.resourceId, newMapId: action.resourceId});
+        }
+        case PERMISSIONS_LIST_LOADING: {
+            return assign({}, state, {permissionLoading: true});
+        }
+        case PERMISSIONS_LIST_LOADED: {
+            return assign({}, state, {permissionLoading: false});
         }
         /*
         case RESET_CURRENT_MAP: {

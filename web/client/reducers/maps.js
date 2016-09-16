@@ -8,7 +8,7 @@
 
 const {
     MAPS_LIST_LOADED, MAPS_LIST_LOADING, MAPS_LIST_LOAD_ERROR, MAP_CREATED, MAP_UPDATING,
-    MAP_METADATA_UPDATED, MAP_DELETING, MAP_DELETED, ATTRIBUTE_UPDATED,
+    MAP_METADATA_UPDATED, MAP_DELETING, MAP_DELETED, ATTRIBUTE_UPDATED, PERMISSIONS_LIST_LOADING,
     PERMISSIONS_LIST_LOADED, SAVE_MAP, PERMISSIONS_UPDATED, THUMBNAIL_ERROR, RESET_UPDATING} = require('../actions/maps');
 const MAP_TYPE_CHANGED = "MAP_TYPE_CHANGED"; // NOTE: this is from home action in product. move to maps actions when finished;
 const assign = require('object-assign');
@@ -148,6 +148,20 @@ function maps(state = {
             }
             return assign({}, state, {results: newMaps});
         }
+        case PERMISSIONS_LIST_LOADING: {
+            let newMaps = (state.results === "" ? [] : [...state.results] );
+            // TODO: Add the fix for GeoStore single-item arrays
+            let newState = assign({}, state, {
+                results: newMaps.map(function(map) {
+                        if (map.id === action.mapId) {
+                            return assign({}, map, {permissionLoading: true});
+                        }
+                        return map;
+                    })
+                }
+            );
+            return newState;
+        }
         case PERMISSIONS_LIST_LOADED: {
             let newMaps = (state.results === "" ? [] : [...state.results] );
             // TODO: Add the fix for GeoStore single-item arrays
@@ -165,7 +179,9 @@ function maps(state = {
                                 }
                             }
 
-                            return assign({}, map, {permissions: {
+                            return assign({}, map, {
+                                permissionLoading: false,
+                                permissions: {
                                 SecurityRuleList: {
                                     SecurityRule: fixedSecurityRule
                                 }
