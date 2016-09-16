@@ -44,7 +44,7 @@ const UserDetails = React.createClass({
               name: "Guest"
           },
           displayAttributes: (attr) => {
-              return attr.name === "email";
+              return attr.name !== "UUID";
           },
           onClose: () => {},
           options: {},
