@@ -41,6 +41,7 @@
         "settings": "Impostazioni",
         "help": "Aiuto",
         "gohome": "Torna alla home",
+        "back": "Torna all'importer",
         "printbutton": "Stampa",
         "noresultfound": "Nessun Risultato Trovato",
         "save": "Salva",
@@ -107,6 +108,9 @@
             "maps_title": "Mappe",
             "locales_combo": "Lingua:"
         },
+		"maps": {
+			"search": "Cerca progetti..."
+		},
         "map": {
             "loading": "In caricamento...",
             "name": "Nome",
@@ -139,12 +143,11 @@
             "layout": "Layout",
             "sheetsize": "Dimensioni del foglio:",
             "legendoptions": "Opzioni legenda",
+            "submit": "Stampa",
             "title": "Titolo",
             "titleplaceholder": "Inserisci un titolo...",
             "description": "Descrizione",
             "descriptionplaceholder": "Inserisci una descrizione...",
-            "submit": "Stampa",
-            "submit": "Stampa",
             "resolution": "Risoluzione:",
             "defaultBackground": "Usa OSM come background",
             "printtooltip": "Stampa",
@@ -246,7 +249,7 @@
                         }
                     },
                     "polyline": {
-                        "error": "Errore: i bordi non si possono incrociare!",
+                        "error": "Errore: the edges can not cross!",
                         "tooltip": {
                             "start": "Click per iniziare a disegnare una linea.",
                             "cont": "Click per continuare a disegnare una linea.",
@@ -323,7 +326,6 @@
             "gohome": "Questo è il testo di aiuto per Home",
             "measureComponent": "Questo è il testo di aiuto per MeasureComponent",
             "backgroundSwitcher": "Questo è il testo di aiuto per BackgroundSwitcher",
-            "layerSwitcher": "Questo è il testo di aiuto per LayerSwitcher",
             "infoButton": "Questo è il testo di aiuto per InfoButton",
             "locateBtn": "Questo è il testo di aiuto per LocateBtn",
             "snapshot": "Questo è il testo di aiuto per Snapshot",
@@ -361,8 +363,8 @@
                     "none": "nessuna delle"
                 },
                 "numberfield": {
-                    "isRequired": "Field value required",
-                    "wrong_range": "Lower boundary must be lower upper boundary"
+                    "isRequired": "Campo richiesto",
+                    "wrong_range": "Il limite inferiore deve essere minore del limite superiore"
                 },
                 "datefield": {
                     "wrong_date_range": "La data di inizio deve essere inferiore a quella di fine"
@@ -456,6 +458,11 @@
             "error": "C'è stato un errore durante il caricamento del catalogo",
             "pageInfo": "Risultati {start}-{end} di {total}",
             "noRecordsMatched": "Nessun risultato trovato",
+            "wmsGetCapLink": "WMS",
+            "wfsGetCapLink": "WFS",
+            "share": "Condividi",
+            "copyToClipboard": "Copia negli appunti",
+            "copied": "Copiato!",
             "catalogUrlPlaceholder": "URL del catalogo...",
             "textSearchPlaceholder": "testo da cercare...",
             "search": "Cerca"
@@ -471,6 +478,7 @@
             "dropfileImport": "drop here files to add it to this process"
         },
         "importer": {
+            "title": "Importazione dati",
             "imports": "Processi di Importazione",
             "importN": "Processo {id}",
             "creatingImportProcess": "Creazione del processo di importazione... ",
@@ -486,18 +494,25 @@
                 "status": "Stato",
                 "archive": "Archivia",
                 "deleting": "Cancellazione in corso...",
+                "analyzing": "Analisi del package...",
                 "applyingPreset": "Applicazione dei preset..."
             },
             "task": {
                 "panelTitle": "Pacchetto {id}",
+                "general": "General Info",
                 "status": "Stato",
                 "updateMode": "Modalità di aggiornamento",
                 "originalData": "File Originale",
+                "file": "Nome del file",
                 "format": "Formato",
                 "targetStore": "Destinazione",
                 "storeType": "Tipo di Destinazione",
                 "storeName": "Nome Destinazione",
-                "transforms": "Catena di transformazioni"
+                "layer": "Layer",
+                "transforms": "Catena di transformazioni",
+                "update": "Aggiorna",
+                "run": "Importa questo package",
+                "delete": "Cancella questo package"
             },
             "transform": {
                 "panelTitle": "Trasformazione {id}",
@@ -508,8 +523,8 @@
             }
         },
         "rasterstyler": {
-            "paneltitle": "Raster Styler",
             "tooltip": "Crea e modifica lo stile dei layer raster",
+            "paneltitle": "Raster Styler",
             "layerlabel": "Layer",
             "typelabel": "Tipo",
             "opacitylabel": "Opacity",
@@ -527,6 +542,8 @@
             "enhancement": "Correzioni",
             "algorithmTitle": "Algoritmo Opzionale",
             "value": "Valore",
+            "min": "Min",
+            "max": "Max",
             "enha": {
                 "none": "Nessuno",
                 "Normalize": "Normalizza",
@@ -614,38 +631,38 @@
             "tooltip": "Crea e modifica lo stile dei layer",
             "paneltitle": "Styler",
             "layerlabel": "Layer"
-        },
-        "rulesmanager": {
-            "title": "Regole Di Accesso",
-            "role": "Ruolo",
-            "user": "Utente",
-            "service": "Servizio",
-            "request": "Richiesta",
-            "workspace": "Workspace",
-            "layer": "Layer",
-            "filters": "Filtri",
-            "rules": "Regole",
-            "access": "Accesso",
-            "newModal": "Nuova Regola",
-            "editModal": "Modifica Regola",
-            "newButton": "Crea",
-            "editButton": "Salva",
-            "close": "Chiudi",
-            "previous": "precedente",
-            "next": "prossima",
-            "errorLoadingRoles": "Errore durante il caricamento dei ruoli",
-            "errorLoadingUsers": "Errore durante il caricamento  degli utenti.",
-            "errorLoadingWorkspaces": "Errore durante il caricamento dei workspaces.",
-            "errorLoadingLayers": "Errore durante il caricamento dei layers.",
-            "errorLoadingRules": "Errore durante il caricamento delle regole.",
-            "errorMovingRules": "Errore durante il caricamento delle regole.",
-            "errorDeletingRules": "Errore durante la cancellazione della regola.",
-            "errorAddingRule": "Errore durante la creazione della regola.",
-            "errorUpdatingRule": "Errore durante l'aggiornamento della regola.",
-            "deleteModal": "Elimina Regola",
-            "selectedRulesDelete": "Vuoi eliminare le regole selezionate?",
-            "deleteButton": "Elimina",
-            "cancelButton": "Annulla"
-        }
+            },
+            "rulesmanager": {
+                "title": "Regole Di Accesso",
+                "role": "Ruolo",
+                "user": "Utente",
+                "service": "Servizio",
+                "request": "Richiesta",
+                "workspace": "Workspace",
+                "layer": "Layer",
+                "filters": "Filtri",
+                "rules": "Regole",
+                "access": "Accesso",
+                "newModal": "Nuova Regola",
+                "editModal": "Modifica Regola",
+                "newButton": "Crea",
+                "editButton": "Salva",
+                "close": "Chiudi",
+                "previous": "precedente",
+                "next": "prossima",
+                "errorLoadingRoles": "Errore durante il caricamento dei ruoli",
+                "errorLoadingUsers": "Errore durante il caricamento  degli utenti.",
+                "errorLoadingWorkspaces": "Errore durante il caricamento dei workspaces.",
+                "errorLoadingLayers": "Errore durante il caricamento dei layers.",
+                "errorLoadingRules": "Errore durante il caricamento delle regole.",
+                "errorMovingRules": "Errore durante il caricamento delle regole.",
+                "errorDeletingRules": "Errore durante la cancellazione della regola.",
+                "errorAddingRule": "Errore durante la creazione della regola.",
+                "errorUpdatingRule": "Errore durante l'aggiornamento della regola.",
+                "deleteModal": "Elimina Regola",
+                "selectedRulesDelete": "Vuoi eliminare le regole selezionate?",
+                "deleteButton": "Elimina",
+                "cancelButton": "Annulla"
+            }
     }
 }

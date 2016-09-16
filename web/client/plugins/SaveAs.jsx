@@ -15,7 +15,7 @@ const Message = require('../components/I18N/Message');
 // const {toggleControl} = require('../actions/controls');
 const {loadMapInfo} = require('../actions/config');
 const MetadataModal = require('../components/maps/modals/MetadataModal');
-const {createMap, createThumbnail, onDisplayMetadataEdit} = require('../actions/maps');
+const {createMap, createThumbnail, onDisplayMetadataEdit, resetCurrentMap} = require('../actions/maps');
 const {editMap, updateCurrentMap, errorCurrentMap} = require('../actions/currentMap');
 const {mapSelector} = require('../selectors/map');
 const stateSelector = state => state;
@@ -26,7 +26,7 @@ const selector = createSelector(mapSelector, stateSelector, layersSelector, (map
     currentZoomLvl: map && map.zoom,
     show: state.controls && state.controls.saveAs && state.controls.saveAs.enabled,
     mapType: state && state.home && state.home.mapType || "leaflet",
-    mapId: map && map.newMapId,
+    newMapId: state.currentMap && state.currentMap.newMapId,
     map,
     currentMap: state.currentMap,
     layers
@@ -35,7 +35,7 @@ const selector = createSelector(mapSelector, stateSelector, layersSelector, (map
 const SaveAs = React.createClass({
     propTypes: {
         show: React.PropTypes.bool,
-        mapId: React.PropTypes.number,
+        newMapId: React.PropTypes.number,
         map: React.PropTypes.object,
         mapType: React.PropTypes.string,
         layers: React.PropTypes.array,
@@ -48,6 +48,7 @@ const SaveAs = React.createClass({
         onErrorCurrentMap: React.PropTypes.func,
         onSave: React.PropTypes.func,
         editMap: React.PropTypes.func,
+        resetCurrentMap: React.PropTypes.func,
         onMapSave: React.PropTypes.func,
         loadMapInfo: React.PropTypes.func
     },
@@ -69,8 +70,9 @@ const SaveAs = React.createClass({
     },
     onMissingInfo(props) {
         let map = props.map;
-        if (map && props.mapId && !this.props.mapId) {
-            this.context.router.push("/viewer/" + props.mapType + "/" + props.mapId);
+        if (map && props.currentMap.mapId && !this.props.newMapId) {
+            this.context.router.push("/viewer/" + props.mapType + "/" + props.currentMap.mapId);
+            this.props.resetCurrentMap();
         }
     },
     getInitialState() {
@@ -98,6 +100,7 @@ const SaveAs = React.createClass({
         this.props.onErrorCurrentMap([], this.props.map && this.props.map.id);
         this.props.onClose();
     },
+    // this method creates the content for the Map Resource
     createV2Map() {
         let map =
             {
@@ -110,6 +113,7 @@ const SaveAs = React.createClass({
         let layers = this.props.layers.map((layer) => {
             return {
                 format: layer.format,
+                features: layer.features,
                 group: layer.group,
                 source: layer.source,
                 name: layer.name,
@@ -157,24 +161,17 @@ module.exports = {
         onMapSave: createMap,
         loadMapInfo,
         editMap,
+        resetCurrentMap,
         onDisplayMetadataEdit,
         onCreateThumbnail: createThumbnail
-
     })(assign(SaveAs, {
         BurgerMenu: {
             name: 'saveAs',
             position: 900,
             text: <Message msgId="saveAs"/>,
             icon: <Glyphicon glyph="floppy-open"/>,
-            action: editMap.bind(null, {}),
-            // display the BurgerMenu button only if the map can be edited
-            selector: (state) => {
-                let mapId = state.currentMap.mapId;
-                if (mapId === null) {
-                    return { };
-                }
-                return { style: {display: "none"} };
-            }
+            action: editMap.bind(null, {})
+            // here should be overrided the selector if you want to hide the save as plugin once a map is saved
         }
     }))
 };

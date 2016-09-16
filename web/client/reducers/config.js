@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var {MAP_CONFIG_LOADED, MAP_INFO_LOAD_START, MAP_INFO_LOADED, MAP_INFO_LOAD_ERROR, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
-const MAP_CREATED = 'MAP_CREATED'; // from maps.js actions
+const {MAP_CONFIG_LOADED, MAP_INFO_LOAD_START, MAP_INFO_LOADED, MAP_INFO_LOAD_ERROR, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
+const {MAP_CREATED} = require('../actions/maps');
 
 var assign = require('object-assign');
 var ConfigUtils = require('../utils/ConfigUtils');

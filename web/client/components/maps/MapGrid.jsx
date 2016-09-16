@@ -29,6 +29,7 @@ var MapGrid = React.createClass({
         saveMap: React.PropTypes.func,
         onDisplayMetadataEdit: React.PropTypes.func,
         removeThumbnail: React.PropTypes.func,
+        resetCurrentMap: React.PropTypes.func,
         errorCurrentMap: React.PropTypes.func,
         updateCurrentMap: React.PropTypes.func,
         createThumbnail: React.PropTypes.func,
@@ -55,6 +56,7 @@ var MapGrid = React.createClass({
             createThumbnail: () => {},
             deleteThumbnail: () => {},
             errorCurrentMap: () => {},
+            resetCurrentMap: () => {},
             saveAll: () => {},
             onDisplayMetadataEdit: () => {},
             updateCurrentMap: () => {},
@@ -101,8 +103,8 @@ var MapGrid = React.createClass({
                         {this.props.bottom}
                     </Row>
                     <MetadataModal ref="metadataModal" show={this.props.currentMap.displayMetadataEdit}
-                        onHide={() => {this.props.onDisplayMetadataEdit(false); }}
-                        onClose={() => {this.props.onDisplayMetadataEdit(false); }}
+                        onHide={() => {this.props.onDisplayMetadataEdit(false); this.props.resetCurrentMap(); }}
+                        onClose={() => {this.props.onDisplayMetadataEdit(false); this.props.resetCurrentMap(); }}
                         map={this.props.currentMap}
                         onSaveAll={this.props.saveAll}
                         onSave={this.props.saveMap}

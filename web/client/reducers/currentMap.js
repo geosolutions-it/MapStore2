@@ -11,9 +11,8 @@ const {
 } = require('../actions/currentMap');
 
 const {
-    THUMBNAIL_ERROR, MAP_UPDATING, SAVE_MAP, DISPLAY_METADATA_EDIT, RESET_UPDATING, MAP_ERROR, MAP_CREATED
+    THUMBNAIL_ERROR, MAP_UPDATING, SAVE_MAP, DISPLAY_METADATA_EDIT, RESET_UPDATING, MAP_ERROR, MAP_CREATED, RESET_CURRENT_MAP
 } = require('../actions/maps');
-
 
 const assign = require('object-assign');
 
@@ -56,7 +55,15 @@ function currentMap(state = initialState, action) {
             return assign({}, state, {updating: false});
         }
         case MAP_CREATED: {
-            return assign({}, state, {newMapId: action.resourceId, mapId: action.resourceId});
+            return assign({}, state, {mapId: action.resourceId, newMapId: action.resourceId});
+        }
+        case RESET_CURRENT_MAP: {
+            // resetting all the keys of the currentMap state
+            let newCurrentMap = Object.keys(state).reduce(function(previous, current) {
+                previous[current] = null;
+                return previous;
+            }, {});
+            return assign({}, newCurrentMap);
         }
         default:
             return state;
