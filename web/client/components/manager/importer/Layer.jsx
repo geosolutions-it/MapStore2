@@ -38,7 +38,7 @@ const Layer = React.createClass({
         let input;
         if (name !== "description") {
             input = (<input
-                disabled={!this.props.edit}
+                disabled={!this.props.edit || name === "name"}
                 name={name}
                 key={name}
                 type="text"

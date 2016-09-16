@@ -22,7 +22,13 @@ const {
     loadTransform, IMPORTS_TRANSFORM_LOAD,
     updateTransform, IMPORTS_TRANSFORM_UPDATED,
     deleteTransform, IMPORTS_TRANSFORM_DELETE,
-    loadStylerTool} = require('../importer');
+    loadStylerTool,
+    selectWorkSpace,
+    loadWorkspaces,
+    createWorkspace,
+    IMPORTER_WORKSPACE_LOADED,
+    IMPORTER_WORKSPACE_SELECTED,
+    IMPORTER_WORKSPACE_CREATED} = require('../importer');
 const {MAP_CONFIG_LOADED} = require('../config');
 
 /* This utility function runs a serie of test on an action creator
@@ -151,8 +157,21 @@ describe('Test correctness of the importer actions', () => {
             fun('base/web/client/test-resources/importer/task.json#', 1, 2);
         };
         let url = 'base/web/client/test-resources/importer/task.json#';
+        let state = {
+           importer: {
+              selectedImport: {
+                 id: 1,
+                 targetWorkspace: {
+                    workspace: {
+                       name: "TEST"
+                    }
+                 }
+              }
+           }
+       };
         let tests = [testLoading, testLoadTask, testLoadLayer, testUpdateUI];
-        runAsyncTest(url, updateTask, tests, done, [1, 2, {}]);
+        runAsyncTest(url, updateTask, tests, done, [1, 2, {}], state );
+
     });
 
     it('task element update', (done) => {
@@ -231,4 +250,34 @@ describe('Test correctness of the importer actions', () => {
         let tests = [testConfigureMap];
         runAsyncTest(url, loadStylerTool, tests, done, [], {importer: {selectedImport: {targetWorkspace: { workspace: {name: "TEST"}}}}});
     });
+    // select workspace
+    it('load styler tool', () => {
+        const wsName = "worskpace_name";
+        let res = selectWorkSpace(wsName);
+        expect(res).toExist();
+        expect(res.type).toBe(IMPORTER_WORKSPACE_SELECTED);
+        expect(res.workspace).toBe(wsName);
+    });
+
+    // load workspaces
+    it('load workspaces', (done) => {
+        const testWorkspaces = (actionResult) => {
+            expect(actionResult.type).toBe(IMPORTER_WORKSPACE_LOADED);
+            done();
+        };
+        let url = 'base/web/client/test-resources/geoserver/rest/workspaces.json#';
+        let tests = [testWorkspaces];
+        runAsyncTest(url, loadWorkspaces, tests, done, []);
+    });
+    // load workspaces
+    it('create workspace', (done) => {
+        const testWorkspaceCreated = (actionResult) => {
+            expect(actionResult.type).toBe(IMPORTER_WORKSPACE_CREATED);
+            done();
+        };
+        let url = 'base/web/client/test-resources/geoserver/rest/workspaces.json#';
+        let tests = [testLoading, testWorkspaceCreated];
+        runAsyncTest(url, createWorkspace, tests, done, []);
+    });
+
 });

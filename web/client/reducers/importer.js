@@ -26,7 +26,11 @@ const {
     IMPORTS_TRANSFORM_LOAD,
     IMPORTS_TRANSFORM_DELETE,
     IMPORTS_FILE_UPLOADED,
-    IMPORTS_UPLOAD_PROGRESS
+    IMPORTS_UPLOAD_PROGRESS,
+    IMPORTER_WORKSPACE_LOADED,
+    IMPORTER_WORKSPACE_SELECTED,
+    IMPORTER_WORKSPACE_CREATED,
+    IMPORTER_WORKSPACE_CREATION_ERROR
 } = require('../actions/importer');
 const assign = require('object-assign');
 
@@ -321,6 +325,31 @@ function importer(state = {}, action) {
                 uploading: {
                     progress: action.progress
                 }
+            });
+        }
+        case IMPORTER_WORKSPACE_LOADED: {
+            return assign({}, state, {
+                workspaces: action.workspaces
+            });
+        }
+        case IMPORTER_WORKSPACE_SELECTED: {
+            return assign({}, state, {
+                selectedWorkSpace: action.workspace
+            });
+        }
+        case IMPORTER_WORKSPACE_CREATED: {
+            let workspaces = state.workspaces.concat({
+                name: action.name,
+                href: action.href
+            });
+            return assign({}, state, {
+                workspaces,
+                workspaceError: null
+            });
+        }
+        case IMPORTER_WORKSPACE_CREATION_ERROR: {
+            return assign({}, state, {
+                workspaceError: action.error
             });
         }
         default:
