@@ -6,7 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 var API = require('../api/geoserver/Importer');
+const Workspaces = require('../api/geoserver/Workspaces');
 const {configureMap} = require('./config');
+const {isString} = require('lodash');
+
+const assign = require('object-assign');
 const IMPORTS_LOADING = 'IMPORTS_LOADING';
 const IMPORTS_CREATION_ERROR = 'IMPORTS_CREATION_ERROR';
 const IMPORT_CREATED = 'IMPORT_CREATED';
@@ -40,6 +44,11 @@ const IMPORT_RUN_SUCCESS = 'IMPORT_RUN_SUCCESS';
 const IMPORT_RUN_ERROR = 'IMPORT_RUN_ERROR';
 const IMPORT_DELETE = 'IMPORT_DELETE';
 const IMPORT_DELETE_ERROR = 'IMPORT_DELETE_ERROR';
+
+const IMPORTER_WORKSPACE_SELECTED = 'IMPORTER_WORKSPACE_SELECTED';
+const IMPORTER_WORKSPACE_LOADED = 'IMPORTER_WORKSPACE_LOADED';
+const IMPORTER_WORKSPACE_CREATED = 'IMPORTER_WORKSPACE_CREATED';
+const IMPORTER_WORKSPACE_CREATION_ERROR = 'IMPORTER_WORKSPACE_CREATION_ERROR';
 /*******************/
 /* UTILITY         */
 /*******************/
@@ -70,6 +79,28 @@ const matchPreset = function(preset, task) {
         }
     }
     return true;
+};
+// for the moment supports only dataStore.name with only one change
+const applyPlaceholders = function(preset, model) {
+
+    let replaceTargetWorkspace = function(el) {
+        if (isString(el)) {
+            return el.replace("{targetWorkspace}", model.targetWorkspace && model.targetWorkspace.workspace && model.targetWorkspace.workspace.name);
+        }
+    };
+    if (preset && preset.changes && preset.changes.target && preset.changes.target.dataStore && preset.changes.target.dataStore.name) {
+        return assign({}, preset, {
+            changes: assign({}, preset.changes, {
+                target: assign({}, preset.changes.target, {
+                    dataStore: assign(preset.changes.target.dataStore, {
+                        name: replaceTargetWorkspace(preset.changes.target.dataStore.name)
+                    })
+                })
+            })
+        });
+    }
+    return preset;
+
 };
 /*******************/
 /* ACTION CREATORS */
@@ -270,6 +301,34 @@ function uploadProgress(progress) {
     return {
         type: IMPORTS_UPLOAD_PROGRESS,
         progress: progress
+    };
+}
+
+/** WORKSPACES **/
+function selectWorkSpace(workspace) {
+    return {
+        type: IMPORTER_WORKSPACE_SELECTED,
+        workspace: workspace
+    };
+}
+function workspacesLoaded(workspaces) {
+    return {
+        type: IMPORTER_WORKSPACE_LOADED,
+        workspaces: workspaces
+    };
+}
+
+function workspaceCreated(name) {
+    return {
+        type: IMPORTER_WORKSPACE_CREATED,
+        name
+    };
+}
+function workspaceCreationError(name, error) {
+    return {
+        type: IMPORTER_WORKSPACE_CREATION_ERROR,
+        name,
+        error
     };
 }
 /*******************/
@@ -526,9 +585,51 @@ function applyPresets(geoserverRestURL, importId, tasks, presets) {
     };
 }
 
+function loadWorkspaces(geoserverRestURL) {
+    return (dispatch) => {
+        Workspaces.getWorkspaces(geoserverRestURL).then((result) => {
+            dispatch(workspacesLoaded(result.workspaces.workspace));
+        });
+    };
+}
+
+function createWorkspace(geoserverRestURL, name, datastores = []) {
+    return (dispatch) => {
+        dispatch(loading());
+        Workspaces.createWorkspace(geoserverRestURL, name).then(() => {
+            dispatch(workspaceCreated(name));
+
+            let count = datastores.length;
+            if (count === 0) {
+                dispatch(loading(null, false));
+            } else {
+                datastores.forEach((ds) => {
+                    // replace placeholder (this is required because in the importer the datastore name have to be unique, out of workspace)
+                    let datastore = ds;
+                    let dsname = ds.dataStore && ds.dataStore.name;
+                    let datastoreobj = assign({}, ds.dataStore, {name: dsname.replace("{workspace}", name)});
+                    datastore = assign({}, ds, {dataStore: datastoreobj});
+
+                    Workspaces.createDataStore(geoserverRestURL, name, datastore).then(() => {
+                        count--;
+                        if (count === 0) {
+                            dispatch(loading(null, false));
+                        }
+                    });
+                });
+            }
+        }).catch((error) => {
+            dispatch(workspaceCreationError(name, error));
+            dispatch(loading(null, false));
+
+        });
+    };
+}
+
 /** UPLOAD **/
 function uploadImportFiles(geoserverRestURL, importId, files, presets) {
     return (dispatch, getState) => {
+        let state = getState();
         dispatch(loading({importId: importId, uploadingFiles: files}));
         let progressOpts = {
             progress: (progressEvent) => {
@@ -544,7 +645,8 @@ function uploadImportFiles(geoserverRestURL, importId, files, presets) {
                 dispatch(loadImport(geoserverRestURL, importId));
             }
             if (presets) {
-                dispatch(applyPresets(geoserverRestURL, importId, tasks, presets));
+                let newPreset = presets.map((preset) => (applyPlaceholders(preset, state && state.importer && state.importer.selectedImport)));
+                dispatch(applyPresets(geoserverRestURL, importId, tasks, newPreset));
             }
             dispatch(loading({importId: importId}, false));
         }).catch((e) => {
@@ -607,6 +709,9 @@ module.exports = {
     loadLayer, updateLayer,
     loadTransform, updateTransform, deleteTransform,
     loadStylerTool,
+    loadWorkspaces,
+    createWorkspace,
+    selectWorkSpace,
     IMPORTS_LOADING,
     IMPORTS_LIST_LOADED,
     IMPORTS_LIST_LOAD_ERROR,
@@ -628,5 +733,9 @@ module.exports = {
     IMPORTS_TRANSFORM_LOAD_ERROR,
     IMPORTS_TASK_DELETE,
     IMPORTS_FILE_UPLOADED,
-    IMPORTS_UPLOAD_PROGRESS
+    IMPORTS_UPLOAD_PROGRESS,
+    IMPORTER_WORKSPACE_SELECTED,
+    IMPORTER_WORKSPACE_LOADED,
+    IMPORTER_WORKSPACE_CREATED,
+    IMPORTER_WORKSPACE_CREATION_ERROR
 };

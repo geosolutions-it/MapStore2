@@ -68,6 +68,7 @@ const Task = React.createClass({
 
     },
     renderGeneral(task) {
+        let modes = this.props.task.transformChain && this.props.task.transformChain.type === "vector" ? ["CREATE"] : ["CREATE", "REPLACE"];
         return (<Panel style={this.props.panStyle} bsStyle="info" header={<span><Message msgId="importer.task.general" /></span>}>
             <dl className="dl-horizontal">
               <dt><Message msgId="importer.task.status" /></dt>
@@ -75,7 +76,7 @@ const Task = React.createClass({
               <dt><Message msgId="importer.task.updateMode" /></dt>
               <dd>{
                       this.props.task.state === "READY" // force this to default because APPEND and REPLACE are not supported yet.
-                     /* this.props.task */? <DropdownList data={["APPEND", "CREATE", "REPLACE"]} value={task.updateMode} onChange={this.updateMode}/> :
+                     /* this.props.task */? <DropdownList data={modes} value={task.updateMode} onChange={this.updateMode}/> :
                       task.updateMode}</dd>
             </dl>
         </Panel>);

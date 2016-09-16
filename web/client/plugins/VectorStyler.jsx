@@ -122,20 +122,16 @@ const VectorStyler = React.createClass({
         switch (this.props.layer.describeLayer.geometryType) {
             case 'Polygon':
             case 'MultiPolygon':
-            case 'MultiSurfacePropertyType': { // TODO remove propertytype
+            case 'MultiSurface': {
                 return (<StylePolygon/>);
             }
-            case 'MultiLineString':
             case 'LineString':
-            case 'LineStringPropertyType':
-            case 'MultiLineStringPropertyType':
+            case 'MultiLineString':
             {
                 return (<StylePolyline/>);
             }
             case 'Point':
-            case 'PointPropertyType':
-            case 'MultiPoint':
-            case 'MultiPointPropertyType': {
+            case 'MultiPoint': {
                 return (<StylePoint showMarker={false} showMarkSelector={true}/>);
             }
             default: {

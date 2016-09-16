@@ -9,6 +9,7 @@ const React = require('react');
 const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message');
 const ImportsGrid = require('./ImportsGrid');
+const Workspace = require('./Workspace');
 const FileUploader = require('../../file/FileUploader');
 const Task = require('./Task');
 const Import = require('./Import');
@@ -27,6 +28,12 @@ const Importer = React.createClass({
         uploading: React.PropTypes.oneOfType([React.PropTypes.bool, React.PropTypes.object]),
         createImport: React.PropTypes.func,
         runImport: React.PropTypes.func,
+        loadWorkspaces: React.PropTypes.func,
+        workspaces: React.PropTypes.array,
+        selectedWorkSpace: React.PropTypes.object,
+        selectWorkSpace: React.PropTypes.func,
+        createWorkspace: React.PropTypes.func,
+        datastoreTemplates: React.PropTypes.array,
         deleteImport: React.PropTypes.func,
         updateTask: React.PropTypes.func,
         deleteTask: React.PropTypes.func,
@@ -58,6 +65,8 @@ const Importer = React.createClass({
             updateProgress: () => {},
             deleteTransform: () => {},
             uploadImportFiles: () => {},
+            loadWorkspaces: () => {},
+            createWorkspace: () => {},
             onMount: () => {},
             imports: []
         };
@@ -82,8 +91,29 @@ const Importer = React.createClass({
                     }
                 }
             };
+        } else if (this.props.selectedWorkSpace) {
+            return {
+                    "import": {
+                        "targetWorkspace": {
+                            "workspace": {
+                                "name": this.props.selectedWorkSpace.value
+                            }
+                        }
+                }
+            };
         }
         return presets.find((preset) => preset.import );
+    },
+    getTargetWorkspace(selectedImport) {
+        let targetWorkspace = selectedImport && selectedImport.targetWorkspace;
+        if (targetWorkspace) {
+            return targetWorkspace && targetWorkspace.workspace && targetWorkspace.workspace.name;
+        }
+        let creationDefaults = this.getImportCreationDefaults();
+        let importObj = (creationDefaults && creationDefaults.import) || (creationDefaults && creationDefaults.importCreationDefaults && creationDefaults.importCreationDefaults.import);
+        return importObj && importObj.targetWorkspace && importObj.targetWorkspace.workspace && importObj.targetWorkspace.workspace.name;
+
+
     },
     renderError() {
         if (this.props.error) {
@@ -179,6 +209,16 @@ const Importer = React.createClass({
                         onUpload={this.props.uploadImportFiles.bind(null, this.props.selectedImport && this.props.selectedImport.id)}
                         uploadAdditionalParams={this.getPresets()} />
                     </Col>
+                    <Col md={6}>
+                        <Workspace
+                            enabled={!!this.props.selectedImport}
+                            createWorkspace={this.props.createWorkspace}
+                            datastoreTemplates={this.props.datastoreTemplates}
+                            selectWorkSpace={this.props.selectWorkSpace}
+                            selectedWorkSpace={this.getTargetWorkspace()}
+                            workspaces={this.props.workspaces}
+                            loadWorkspaces={this.props.loadWorkspaces}/>
+                    </Col>
                 </Row>
                 <Row>
                     {this.renderLoading()}
@@ -186,6 +226,9 @@ const Importer = React.createClass({
                     {this.renderError()}
                 </Row>
             </Grid>);
+    },
+    createUpdateFunction() {
+        return;
     }
 });
 module.exports = Importer;
