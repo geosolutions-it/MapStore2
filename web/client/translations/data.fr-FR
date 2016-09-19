@@ -50,6 +50,10 @@
         "close": "Fermer",
         "cancel": "Annuler",
         "pageInfo": "{total, plural, =0 {aucun objet} =1 {{total} objet parmi {total}} other {objets {start}-{end} parmi {total}}}",
+        "group": "Group",
+        "groups": "Groups",
+        "permission": "Permission",
+        "permissions": "Permissions",
         "home":{
             "open": "Ouvrir",
             "description": "MapStore 2 est développé pour créer, sauvegarder et partager de façon simple et intuitive cartes et assemblages créés à partir du contenu de serveurs tel que OpenStreetMap, Google Maps, MapQuest ou tout autre serveur spécifique fourni par votre organisation ou une organisation tierce.<br/>Visitez notre <a href=\"http://geosolutions-it.github.io/MapStore2/\">page d'accueil</a> pour plus de détails.",

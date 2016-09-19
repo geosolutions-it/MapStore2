@@ -9,7 +9,7 @@
 const React = require('react');
 const {connect} = require('react-redux');
 const {loadMaps, updateMapMetadata, deleteMap, createThumbnail, deleteThumbnail, saveMap, thumbnailError, saveAll, onDisplayMetadataEdit, resetUpdating} = require('../actions/maps');
-const {editMap, updateCurrentMap, errorCurrentMap, removeThumbnail} = require('../actions/currentMap');
+const {editMap, updateCurrentMap, errorCurrentMap, removeThumbnail, resetCurrentMap} = require('../actions/currentMap');
 const ConfigUtils = require('../utils/ConfigUtils');
 const MapsGrid = connect((state) => {
     return {
@@ -33,8 +33,26 @@ const MapsGrid = connect((state) => {
     thumbnailError,
     createThumbnail,
     deleteThumbnail,
-    deleteMap
+    deleteMap,
+    resetCurrentMap
 })(require('../components/maps/MapGrid'));
+
+const {loadPermissions, updatePermissions, loadAvailableGroups} = require('../actions/maps');
+const {updateCurrentMapPermissions, addCurrentMapPermission} = require('../actions/currentMap');
+const {setControlProperty} = require('../actions/controls');
+
+const MetadataModal = connect(
+    (state = {}) => ({
+        availableGroups: state.currentMap && state.currentMap.availableGroups || [ ], // TODO: add message when array is empty
+        newGroup: state.controls && state.controls.permissionEditor && state.controls.permissionEditor.newGroup,
+        newPermission: state.controls && state.controls.permissionEditor && state.controls.permissionEditor.newPermission || "canRead",
+        user: state.security && state.security.user || {name: "Guest"}
+    }),
+    {
+        loadPermissions, loadAvailableGroups, updatePermissions, onGroupsChange: updateCurrentMapPermissions, onAddPermission: addCurrentMapPermission,
+        onNewGroupChoose: setControlProperty.bind(null, 'permissionEditor', 'newGroup'),
+        onNewPermissionChoose: setControlProperty.bind(null, 'permissionEditor', 'newPermission')
+    }, null, {withRef: true} )(require('../components/maps/modals/MetadataModal'));
 
 const PaginationToolbar = connect((state) => {
     if (!state.maps ) {
@@ -102,7 +120,12 @@ const Maps = React.createClass({
         };
     },
     render() {
-        return (<MapsGrid colProps={this.props.colProps} viewerUrl={(map) => {this.context.router.push("/viewer/" + this.props.mapType + "/" + map.id); }} bottom={<PaginationToolbar />}/>);
+        return (<MapsGrid
+            colProps={this.props.colProps}
+            viewerUrl={(map) => {this.context.router.push("/viewer/" + this.props.mapType + "/" + map.id); }}
+            bottom={<PaginationToolbar />}
+            metadataModal={MetadataModal}
+            />);
     }
 });
 
