@@ -14,7 +14,6 @@ const assign = require('object-assign');
 
 const ConfirmModal = require('./modals/ConfirmModal');
 
-
 require("./style/mapcard.css");
 
 const MapCard = React.createClass({
@@ -22,20 +21,10 @@ const MapCard = React.createClass({
         // props
         style: React.PropTypes.object,
         map: React.PropTypes.object,
-        currentMap: React.PropTypes.object,
         mapType: React.PropTypes.string,
         // CALLBACKS
         viewerUrl: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
         onEdit: React.PropTypes.func,
-        onSaveMap: React.PropTypes.func,
-        onSave: React.PropTypes.func,
-        onSaveAll: React.PropTypes.func,
-        onDisplayMetadataEdit: React.PropTypes.func,
-        onRemoveThumbnail: React.PropTypes.func,
-        onErrorCurrentMap: React.PropTypes.func,
-        onUpdateCurrentMap: React.PropTypes.func,
-        onCreateThumbnail: React.PropTypes.func,
-        onDeleteThumbnail: React.PropTypes.func,
         onMapDelete: React.PropTypes.func
     },
     getDefaultProps() {
@@ -48,21 +37,7 @@ const MapCard = React.createClass({
             },
             // CALLBACKS
             onMapDelete: ()=> {},
-            onCreateThumbnail: ()=> {},
-            onDeleteThumbnail: ()=> {},
-            onErrorCurrentMap: ()=> {},
-            onUpdateCurrentMap: ()=> {},
-            onEdit: ()=> {},
-            onDisplayMetadataEdit: ()=> {},
-            onSaveAll: () => {},
-            onRemoveThumbnail: ()=> {},
-            onSave: ()=> {},
-            onSaveMap: () => {}
-        };
-    },
-    getInitialState() {
-        return {
-            displayMetadataEdit: false
+            onEdit: ()=> {}
         };
     },
     onEdit: function(map) {
@@ -83,7 +58,6 @@ const MapCard = React.createClass({
     getCardStyle() {
         if (this.props.map.thumbnail) {
             return assign({}, this.props.style, {
-                // TODO check the following code added: this.props.map.thumbnail === null ||
                 backgroundImage: 'url(' + (this.props.map.thumbnail === null || this.props.map.thumbnail === "NODATA" ? thumbUrl : decodeURIComponent(this.props.map.thumbnail)) + ')'
             });
         }
@@ -116,7 +90,7 @@ const MapCard = React.createClass({
                 actions={availableAction} onClick={this.onClick}
                >
                <div className="map-thumb-description">{this.props.map.description}</div>
-               <ConfirmModal ref="deleteMapModal" show={this.state.displayDeleteDialog} onHide={this.close} onClose={this.close} onConfirm={this.onConfirmDelete} titleText={<Message msgId="manager.deleteMap" />} confirmText={<Message msgId="manager.deleteMap" />} cancelText={<Message msgId="cancel" />} body={<Message msgId="manager.deleteMapMessage" />} />
+               <ConfirmModal ref="deleteMapModal" show={this.state ? this.state.displayDeleteDialog : false} onHide={this.close} onClose={this.close} onConfirm={this.onConfirmDelete} titleText={<Message msgId="manager.deleteMap" />} confirmText={<Message msgId="manager.deleteMap" />} cancelText={<Message msgId="cancel" />} body={<Message msgId="manager.deleteMapMessage" />} />
            </GridCard>
         );
     },
@@ -129,19 +103,9 @@ const MapCard = React.createClass({
         }
     },
     close() {
-        // When the modal is closed the state of currentMap is restored to the initial situation
-        this.props.onUpdateCurrentMap([], this.props.map && this.props.map.thumbnail);
-        this.props.onErrorCurrentMap([], this.props.map && this.props.map.id);
         // TODO Launch an action in order to change the state
         this.setState({
-            displayMetadataEdit: false,
             displayDeleteDialog: false
-        });
-    },
-    open() {
-        this.props.onDisplayMetadataEdit(true);
-        this.setState({
-            displayMetadataEdit: true
         });
     },
     displayDeleteDialog() {
