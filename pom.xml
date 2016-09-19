@@ -27,6 +27,7 @@
 
       <modules>
         <module>geostore/src</module>
+        <module>web</module>
       </modules>
 
     </profile>
@@ -36,13 +37,24 @@
 
       <modules>
         <module>http-proxy</module>
+        <module>web</module>
+      </modules>
+
+    </profile>
+    <profile>
+      <id>default</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>web</module>
       </modules>
 
     </profile>
   </profiles>
 
-  <modules>
-    <module>web</module>
-  </modules>
+  
+  
+  
 
 </project>
