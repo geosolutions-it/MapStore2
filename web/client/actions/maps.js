@@ -7,6 +7,7 @@
  */
 
 const GeoStoreApi = require('../api/GeoStoreDAO');
+const {updateCurrentMapPermissions, updateCurrentMapGroups} = require('./currentMap');
 const ConfigUtils = require('../utils/ConfigUtils');
 const assign = require('object-assign');
 const {get, findIndex} = require('lodash');
@@ -15,6 +16,7 @@ const MAPS_LIST_LOADED = 'MAPS_LIST_LOADED';
 const MAPS_LIST_LOADING = 'MAPS_LIST_LOADING';
 const MAPS_LIST_LOAD_ERROR = 'MAPS_LIST_LOAD_ERROR';
 const MAP_UPDATING = 'MAP_UPDATING';
+const MAP_METADATA_UPDATED = 'MAP_METADATA_UPDATED';
 const MAP_UPDATED = 'MAP_UPDATED';
 const MAP_CREATED = 'MAP_CREATED';
 const MAP_DELETING = 'MAP_DELETING';
@@ -28,6 +30,8 @@ const SAVE_ALL = 'SAVE_ALL';
 const DISPLAY_METADATA_EDIT = 'DISPLAY_METADATA_EDIT';
 const RESET_UPDATING = 'RESET_UPDATING';
 const SAVE_MAP = 'SAVE_MAP';
+const PERMISSIONS_LIST_LOADING = 'PERMISSIONS_LIST_LOADING';
+const PERMISSIONS_LIST_LOADED = 'PERMISSIONS_LIST_LOADED';
 
 function mapsLoading(searchText, params) {
     return {
@@ -59,7 +63,6 @@ function mapCreated(resourceId, metadata, content, error) {
         metadata,
         content,
         error
-
     };
 }
 
@@ -70,9 +73,9 @@ function mapUpdating(resourceId) {
     };
 }
 
-function mapUpdated(resourceId, newName, newDescription, result, error) {
+function mapMetadataUpdated(resourceId, newName, newDescription, result, error) {
     return {
-        type: MAP_UPDATED,
+        type: MAP_METADATA_UPDATED,
         resourceId,
         newName,
         newDescription,
@@ -80,14 +83,10 @@ function mapUpdated(resourceId, newName, newDescription, result, error) {
         error
     };
 }
-function permissionsUpdated(resourceId, groupPermission, group, userPermission, user, error) {
+function permissionsUpdated(resourceId, error) {
     return {
         type: PERMISSIONS_UPDATED,
         resourceId,
-        groupPermission,
-        group,
-        userPermission,
-        user,
         error
     };
 }
@@ -157,12 +156,54 @@ function resetUpdating(resourceId) {
     };
 }
 
+function permissionsLoading(mapId) {
+    return {
+        type: PERMISSIONS_LIST_LOADING,
+        mapId
+    };
+}
+
+function permissionsLoaded(permissions, mapId) {
+    return {
+        type: PERMISSIONS_LIST_LOADED,
+        permissions,
+        mapId
+    };
+}
+
 function loadMaps(geoStoreUrl, searchText="*", params={start: 0, limit: 20}) {
     return (dispatch) => {
         let opts = assign({}, {params}, geoStoreUrl ? {baseURL: geoStoreUrl} : {});
         dispatch(mapsLoading(searchText, params));
         GeoStoreApi.getResourcesByCategory("MAP", searchText, opts).then((response) => {
             dispatch(mapsLoaded(response, params, searchText));
+        }).catch((e) => {
+            dispatch(loadError(e));
+        });
+    };
+}
+
+function loadPermissions(mapId) {
+    if (!mapId) {
+        return {
+            type: 'NONE'
+        };
+    }
+    return (dispatch) => {
+        dispatch(permissionsLoading(mapId));
+        GeoStoreApi.getPermissions(mapId, {}).then((response) => {
+            dispatch(permissionsLoaded(response, mapId));
+            dispatch(updateCurrentMapPermissions(response));
+        }).catch((e) => {
+            dispatch(loadError(e));
+        });
+    };
+}
+
+function loadAvailableGroups(user) {
+    return (dispatch) => {
+        GeoStoreApi.getAvailableGroups(user).then((response) => {
+            dispatch(updateCurrentMapGroups(response));
         }).catch((e) => {
             dispatch(loadError(e));
         });
@@ -183,7 +224,7 @@ function updateMap(resourceId, content, options) {
 function updateMapMetadata(resourceId, newName, newDescription, onReset, options) {
     return (dispatch) => {
         GeoStoreApi.putResourceMetadata(resourceId, newName, newDescription, options).then(() => {
-            dispatch(mapUpdated(resourceId, newName, newDescription, "success"));
+            dispatch(mapMetadataUpdated(resourceId, newName, newDescription, "success"));
             if (onReset) {
                 dispatch(onReset);
             }
@@ -195,10 +236,15 @@ function updateMapMetadata(resourceId, newName, newDescription, onReset, options
 }
 
 
-function updatePermissions(resourceId, groupPermission, group, userPermission, user, options) {
+function updatePermissions(resourceId, securityRules) {
+    if (!securityRules || !securityRules.SecurityRuleList || !securityRules.SecurityRuleList.SecurityRule) {
+        return {
+            type: "NONE"
+        };
+    }
     return (dispatch) => {
-        GeoStoreApi.addResourcePermissions(resourceId, groupPermission, group, userPermission, user, options).then(() => {
-            dispatch(permissionsUpdated(resourceId, groupPermission, group, userPermission, user, "success"));
+        GeoStoreApi.updateResourcePermissions(resourceId, securityRules).then(() => {
+            dispatch(permissionsUpdated(resourceId, "success"));
         }).catch((e) => {
             dispatch(thumbnailError(resourceId, e));
         });
@@ -260,6 +306,7 @@ function createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categor
 function saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, options) {
     return (dispatch) => {
         dispatch(mapUpdating(resourceIdMap));
+        dispatch(updatePermissions(resourceIdMap));
         if (dataThumbnail !== null && metadataMap !== null) {
             dispatch(createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap,
                 updateMapMetadata(resourceIdMap, metadataMap.name, metadataMap.description, onDisplayMetadataEdit(false), options), null, options));
@@ -333,13 +380,19 @@ module.exports = {
     MAPS_LIST_LOADED,
     MAPS_LIST_LOADING,
     MAPS_LIST_LOAD_ERROR,
-    MAP_CREATED, MAP_UPDATING,
-    MAP_UPDATED, MAP_DELETED,
-    MAP_DELETING, MAP_SAVED,
+    MAP_CREATED,
+    MAP_UPDATING,
+    MAP_METADATA_UPDATED,
+    MAP_UPDATED,
+    MAP_DELETED,
+    MAP_DELETING,
+    MAP_SAVED,
     ATTRIBUTE_UPDATED,
     PERMISSIONS_UPDATED,
     SAVE_MAP,
     THUMBNAIL_ERROR,
+    PERMISSIONS_LIST_LOADING,
+    PERMISSIONS_LIST_LOADED,
     SAVE_ALL,
     DISPLAY_METADATA_EDIT,
     RESET_UPDATING,
@@ -347,16 +400,20 @@ module.exports = {
     loadMaps,
     updateMap,
     updateMapMetadata,
+    mapMetadataUpdated,
     deleteMap,
     deleteThumbnail,
     createThumbnail,
-    createMap,
     mapUpdating,
     updatePermissions,
     permissionsUpdated,
     attributeUpdated,
     saveMap,
     thumbnailError,
+    createMap,
+    loadError,
+    loadPermissions,
+    loadAvailableGroups,
     saveAll,
     onDisplayMetadataEdit,
     resetUpdating,

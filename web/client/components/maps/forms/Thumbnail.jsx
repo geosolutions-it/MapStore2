@@ -119,18 +119,9 @@ const Thumbnail = React.createClass({
         });
         return uuid;
     },
-    /*getDataUri(callback) {
-        let filesSelected = this.props.map.files;
-        if (filesSelected.length > 0) {
-            let fileToLoad = filesSelected[0];
-            let fileReader = new FileReader();
-            fileReader.onload = (event) => (callback(event.target.result));
-            return fileReader.readAsDataURL(fileToLoad);
-        }
-        return callback(null);
-    },*/
+
     updateThumbnail(map, metadata) {
-        if (this.props.map.errors && this.props.map.errors.length === 0 ) {
+        if (!this.props.map.errors || !this.props.map.errors.length ) {
             this.getDataUri(this.files, (data) => {
                 const name = this.generateUUID(); // create new unique name
                 const category = "THUMBNAIL";

@@ -11,7 +11,19 @@ const assign = require('object-assign');
 
 const ConfigUtils = require('../utils/ConfigUtils');
 
-var parseOptions = (opts) => opts;
+let parseOptions = (opts) => opts;
+
+let parseAdminGroups = (groupsObj) => {
+    if (!groupsObj || !groupsObj.UserGroupList || !groupsObj.UserGroupList.UserGroup || !_.isArray(groupsObj.UserGroupList.UserGroup)) return [];
+    return groupsObj.UserGroupList.UserGroup.filter(obj => !!obj.id).map((obj) => _.pick(obj, ["id", "groupName", "description"]));
+};
+
+let parseUserGroups = (groupsObj) => {
+    if (!groupsObj || !groupsObj.User || !groupsObj.User.groups || !groupsObj.User.groups.group || !_.isArray(groupsObj.User.groups.group)) return [];
+    return groupsObj.User.groups.group.filter(obj => !!obj.id).map((obj) => _.pick(obj, ["id", "groupName", "description"]));
+};
+
+
 /**
  * API for local config
  */
@@ -88,21 +100,36 @@ var Api = {
                 }
             }, options)));
     },
-    addResourcePermissions: function(resourceId, groupPermission, group, userPermission, user, options) {
+    updateResourcePermissions: function(resourceId, securityRules) {
+        let payload = "<SecurityRuleList>";
+        for (let rule of securityRules.SecurityRuleList.SecurityRule) {
+            if (rule.canRead || rule.canWrite) {
+                if (rule.user) {
+                    payload = payload + "<SecurityRule>";
+                    payload = payload + "<canRead>" + ((rule.canRead || rule.canWrite) ? "true" : "false") + "</canRead>";
+                    payload = payload + "<canWrite>" + (rule.canWrite ? "true" : "false") + "</canWrite>";
+                    payload = payload + "<user><id>" + (rule.user.id || "") + "</id><name>" + (rule.user.name || "") + "</name></user>";
+                    payload = payload + "</SecurityRule>";
+                } else if (rule.group) {
+                    payload = payload + "<SecurityRule>";
+                    payload = payload + "<canRead>" + ((rule.canRead || rule.canWrite) ? "true" : "false") + "</canRead>";
+                    payload = payload + "<canWrite>" + (rule.canWrite ? "true" : "false") + "</canWrite>";
+                    payload = payload + "<group><id>" + (rule.group.id || "") + "</id><groupName>" + (rule.group.groupName || "") + "</groupName></group>";
+                    payload = payload + "</SecurityRule>";
+                }
+                // NOTE: if rule has no group or user, it is skipped
+                // NOTE: if rule is "no read and no write", it is skipped
+            }
+        }
+        payload = payload + "</SecurityRuleList>";
         return axios.post(
             "resources/resource/" + resourceId + "/permissions",
-            "<SecurityRuleList><SecurityRule>" +
-            "<canRead>" + (userPermission && userPermission.canRead || "") + "</canRead><canWrite>" + (userPermission && userPermission.canWrite || "") + "</canWrite>" +
-            "<user><id>" + (user && user.id || "") + "</id><name> " + (user && user.name || "") + "</name></user>" +
-            "</SecurityRule><SecurityRule>" +
-            "<canRead>" + (groupPermission && groupPermission.canRead || "") + "</canRead><canWrite>" + (groupPermission && groupPermission.canWrite || "") + "</canWrite>" +
-            "<group><groupName>" + (group && group.groupName || "") + "</groupName><id>" + (group && group.id || "") + "</id></group>" +
-            "</SecurityRule>" + "</SecurityRuleList>",
-            this.addBaseUrl(_.merge({
+            payload,
+            this.addBaseUrl({
                 headers: {
                     'Content-Type': "application/xml"
                 }
-            }, options)));
+            }));
     },
     createResource: function(metadata, data, category, options) {
         let name = metadata.name;
@@ -136,6 +163,38 @@ var Api = {
             "resources/resource/" + resourceId,
             this.addBaseUrl(_.merge({
             }, options)));
+    },
+    getUserGroups: function(options) {
+        let url = "usergroups/";
+        return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {
+            return response.data;
+        });
+    },
+    getPermissions: function(mapId, options) {
+        let url = "resources/resource/" + mapId + "/permissions";
+        return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
+    },
+    getAvailableGroups: function(user) {
+        if (user && user.role === "ADMIN") {
+            return axios.get(
+                "usergroups/?all=true",
+                this.addBaseUrl({
+                    headers: {
+                        'Accept': "application/json"
+                    }
+                })).then(function(response) {
+                    return parseAdminGroups(response.data);
+                });
+        }
+        return axios.get(
+            "users/user/details",
+            this.addBaseUrl({
+                headers: {
+                    'Accept': "application/json"
+                }
+            })).then(function(response) {
+                return parseUserGroups(response.data);
+            });
     }
 };
 
