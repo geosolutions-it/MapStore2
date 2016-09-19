@@ -36,7 +36,7 @@ const FilterUtils = {
         "ogc": {startTag: "<ogc:PropertyName>", endTag: "</ogc:PropertyName>"},
         "fes": {startTag: "<fes:ValueReference>", endTag: "</fes:ValueReference>"}
     },
-    toOGCFilter: function(ftName, json, version, sortOptions = null, hits = false) {
+    toOGCFilter: function(ftName, json, version, sortOptions = null, hits = false, format = null) {
         try {
             this.objFilter = (json instanceof Object) ? json : JSON.parse(json);
         } catch(e) {
@@ -48,7 +48,7 @@ const FilterUtils = {
 
         this.setOperatorsPlaceholders("{namespace}", this.nsplaceholder);
 
-        let ogcFilter = this.getGetFeatureBase(versionOGC, this.objFilter.pagination, hits);
+        let ogcFilter = this.getGetFeatureBase(versionOGC, this.objFilter.pagination, hits, format);
         let filters = [];
 
         let attributeFilter;
@@ -128,10 +128,11 @@ const FilterUtils = {
             }
         });
     },
-    getGetFeatureBase: function(version, pagination, hits) {
+    getGetFeatureBase: function(version, pagination, hits, format) {
         let ver = !version ? "2.0" : version;
 
         let getFeature = '<wfs:GetFeature ';
+        getFeature += format ? 'outputFormat="' + format + '" ' : '';
         getFeature += pagination && (pagination.startIndex || pagination.startIndex === 0) ? 'startIndex="' + pagination.startIndex + '" ' : "";
 
         switch (ver) {

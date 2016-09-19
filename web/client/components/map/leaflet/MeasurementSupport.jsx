@@ -15,6 +15,8 @@ require('leaflet-draw');
 const MeasurementSupport = React.createClass({
     propTypes: {
         map: React.PropTypes.object,
+        metric: React.PropTypes.bool,
+        feet: React.PropTypes.bool,
         projection: React.PropTypes.string,
         measurement: React.PropTypes.object,
         changeMeasurementState: React.PropTypes.func,
@@ -125,6 +127,8 @@ const MeasurementSupport = React.createClass({
                     color: '#ffcc33',
                     weight: 2
                 },
+                metric: this.props.metric,
+                feet: this.props.feet,
                 repeatMode: false
             });
         } else if (newProps.measurement.geomType === 'Polygon') {
