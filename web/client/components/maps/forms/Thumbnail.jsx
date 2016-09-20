@@ -65,7 +65,6 @@ const Thumbnail = React.createClass({
     },
     getThumbnailUrl() {
         return (this.props.map && this.props.map.newThumbnail && this.props.map.newThumbnail !== "NODATA") ? decodeURIComponent(this.props.map.newThumbnail) : null;
-        // return (this.props.map && this.props.map.thumbnail && this.props.map.thumbnail !== "NODATA" ) ? decodeURIComponent(this.props.map.thumbnail) : null;
     },
     isImage(images) {
         return images[0].type === "image/png" || images[0].type === "image/jpeg" || images[0].type === "image/jpg";
@@ -119,16 +118,6 @@ const Thumbnail = React.createClass({
         });
         return uuid;
     },
-    /*getDataUri(callback) {
-        let filesSelected = this.props.map.files;
-        if (filesSelected.length > 0) {
-            let fileToLoad = filesSelected[0];
-            let fileReader = new FileReader();
-            fileReader.onload = (event) => (callback(event.target.result));
-            return fileReader.readAsDataURL(fileToLoad);
-        }
-        return callback(null);
-    },*/
     updateThumbnail(map, metadata) {
         if (this.props.map.errors && this.props.map.errors.length === 0 ) {
             this.getDataUri(this.files, (data) => {
@@ -154,8 +143,9 @@ const Thumbnail = React.createClass({
                 if (this.props.map.newThumbnail && !data && this.refs.imgThumbnail) {
                     this.props.onSaveAll(map, metadata, name, data, category, this.props.map.id);
                 }
-                // this.props.onCreateThumbnail(map, metadata, name, data, category, this.props.map.id);
-
+                if (!this.props.map.newThumbnail && !data && !this.refs.imgThumbnail) {
+                    this.props.onSaveAll(map, metadata, name, data, category, this.props.map.id);
+                }
                 return data;
             });
         }

@@ -32,7 +32,6 @@
             "delete": "Effacer",
             "confirmDelete": "Êtes-vous sûr?"
         },
-        "enable": "Activer",
         "background": "Fond de plan",
         "language": "langue",
         "mousePositionCoordinates": "Coordonnées",
@@ -42,6 +41,7 @@
         "settings": "Réglages",
         "help": "Aide",
         "gohome": "Retour",
+        "back": "Back to the Importer",
         "printbutton": "Imprimer",
         "noresultfound": "Aucun résultat trouvé",
         "save": "Enregistrer",
@@ -108,6 +108,9 @@
             "maps_title": "Cartes",
             "locales_combo": "Langue:"
         },
+		"maps": {
+			"search": "search for projects..."
+		},
         "map": {
             "loading": "Chargement...",
             "name": "Nom",
@@ -140,11 +143,11 @@
             "layout": "Mise en page",
             "sheetsize": "Taille du papier:",
             "legendoptions": "Options de la légende",
+            "submit": "Imprimer",
             "title": "Titre",
             "titleplaceholder": "Entrer un titre...",
             "description": "Description",
             "descriptionplaceholder": "Entrer une description...",
-            "submit": "Imprimer",
             "resolution": "Résolution:",
             "defaultBackground": "Utiliser OSM comme fond de plan",
             "printtooltip": "Impression",
@@ -324,7 +327,6 @@
             "gohome": "This is the helptext for Home",
             "measureComponent": "This is the helptext for the MeasureComponent",
             "backgroundSwitcher": "This is the helptext for the BackgroundSwitcher",
-            "layerSwitcher": "This is the helptext for the LayerSwitcher",
             "infoButton": "This is the helptext for the InfoButton",
             "locateBtn": "This is the helptext for the LocateBtn",
             "snapshot": "This is the helptext for the Snapshot",
@@ -477,6 +479,7 @@
             "dropfileImport": "drop here files to add it to this process"
         },
         "importer": {
+            "title": "Import Data",
             "imports": "Processus d'importation",
             "importN": "Processus {id}",
             "creatingImportProcess": "Création d'importation ...",
@@ -492,18 +495,25 @@
                 "status": "Statut",
                 "archive": "Archives",
                 "deleting": "Clearing ...",
+                "analyzing": "Analyzing package...",
                 "applyingPreset": "Presets d'application ..."
             },
             "task": {
                 "panelTitle": "Paquet {id}",
+                "general": "General Info",
                 "status": "Statut",
                 "updateMode": "Mode refresh",
                 "originalData": "fichier original",
+                "file": "File Name",
                 "format": "Format",
                 "targetStore": "target store",
                 "storeType": "Type de store",
                 "storeName": "Le nom du store",
-                "transforms": "Chaîne de transformations"
+                "layer": "Layer",
+                "transforms": "Chaîne de transformations",
+                "update": "Update",
+                "run": "Import This Package",
+                "delete": "Delete This Package"
             },
             "transform": {
                 "panelTitle": "Transformation {id}",
@@ -514,8 +524,8 @@
             }
         },
         "rasterstyler": {
-            "paneltitle": "Editeur de style d'image",
             "tooltip": "Créer et éditer un style pour une couche image",
+            "paneltitle": "Editeur de style d'image",
             "layerlabel": "Couche",
             "typelabel": "Type de style",
             "opacitylabel": "Opacité",
@@ -529,10 +539,10 @@
             "applybtn": "Appliquer le style"
         },
         "bandselector": {
-            "band" : "Bande",
-            "enhancement" : "Amélioration",
-            "algorithmTitle" : "Algorithme optionnel",
-            "value" : "Valeur",
+            "band": "Bande",
+            "enhancement": "Amélioration",
+            "algorithmTitle": "Algorithme optionnel",
+            "value": "Valeur",
             "min": "Min",
             "max": "Max",
             "enha": {

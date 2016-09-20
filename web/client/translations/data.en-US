@@ -18,6 +18,7 @@
         "about_p5-1": "page.",
         "about_h21": "Credits",
         "about_p6": "MapStore2 is made by:",
+        "enable": "Enable",
         "layers": "Layers",
         "layerProperties": {
             "windowTitle": "Layer Properties",
@@ -31,7 +32,6 @@
             "delete": "Delete",
             "confirmDelete": "Are you sure?"
         },
-        "enable": "Enable",
         "background": "Background",
         "language": "Language",
         "mousePositionCoordinates": "Coordinates indicator",
@@ -41,6 +41,7 @@
         "settings": "Settings",
         "help": "Help",
         "gohome": "Go home",
+        "back": "Back to the Importer",
         "printbutton": "Print",
         "noresultfound": "No Result found",
         "save": "Save",
@@ -107,6 +108,9 @@
             "maps_title": "Maps",
             "locales_combo": "Language:"
         },
+		"maps": {
+			"search": "search for projects..."
+		},
         "map": {
             "loading": "Loading...",
             "name": "Name",
@@ -322,7 +326,6 @@
             "gohome": "This is the helptext for Home",
             "measureComponent": "This is the helptext for the MeasureComponent",
             "backgroundSwitcher": "This is the helptext for the BackgroundSwitcher",
-            "layerSwitcher": "This is the helptext for the LayerSwitcher",
             "infoButton": "This is the helptext for the InfoButton",
             "locateBtn": "This is the helptext for the LocateBtn",
             "snapshot": "This is the helptext for the Snapshot",
@@ -463,7 +466,8 @@
             "catalogUrlPlaceholder": "Enter catalog URL...",
             "textSearchPlaceholder": "text to search...",
             "search": "Search"
-        },"uploader": {
+        },
+        "uploader": {
             "filename": "File Name",
             "type": "Type",
             "lastModified": "Last Modified",
@@ -534,10 +538,10 @@
             "applybtn": "Apply Style"
         },
         "bandselector": {
-            "band" : "Band",
-            "enhancement" : "Enhancement",
-            "algorithmTitle" : "Optional Algorithm",
-            "value" : "Value",
+            "band": "Band",
+            "enhancement": "Enhancement",
+            "algorithmTitle": "Optional Algorithm",
+            "value": "Value",
             "min": "Min",
             "max": "Max",
             "enha": {
@@ -582,7 +586,6 @@
             "multi": "Multi Band",
             "single": "Single Band"
         },
-
         "featuregrid": {
             "header": "Search results list",
             "tools": "Tool Panel",

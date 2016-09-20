@@ -8,7 +8,7 @@
 
 const React = require('react');
 const {connect} = require('react-redux');
-const {loadMaps, updateMapMetadata, deleteMap, createThumbnail, deleteThumbnail, saveMap, thumbnailError, saveAll, onDisplayMetadataEdit, resetUpdating} = require('../actions/maps');
+const {loadMaps, updateMapMetadata, deleteMap, createThumbnail, deleteThumbnail, saveMap, thumbnailError, saveAll, onDisplayMetadataEdit, resetUpdating, resetCurrentMap} = require('../actions/maps');
 const {editMap, updateCurrentMap, errorCurrentMap, removeThumbnail} = require('../actions/currentMap');
 const ConfigUtils = require('../utils/ConfigUtils');
 const MapsGrid = connect((state) => {
@@ -28,6 +28,7 @@ const MapsGrid = connect((state) => {
     onDisplayMetadataEdit,
     resetUpdating,
     saveAll,
+    resetCurrentMap,
     updateCurrentMap,
     errorCurrentMap,
     thumbnailError,

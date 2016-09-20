@@ -28,6 +28,13 @@ const SAVE_ALL = 'SAVE_ALL';
 const DISPLAY_METADATA_EDIT = 'DISPLAY_METADATA_EDIT';
 const RESET_UPDATING = 'RESET_UPDATING';
 const SAVE_MAP = 'SAVE_MAP';
+const RESET_CURRENT_MAP = 'RESET_CURRENT_MAP';
+
+function resetCurrentMap() {
+    return {
+        type: RESET_CURRENT_MAP
+    };
+}
 
 function mapsLoading(searchText, params) {
     return {
@@ -186,9 +193,9 @@ function updateMapMetadata(resourceId, newName, newDescription, onReset, options
             dispatch(mapUpdated(resourceId, newName, newDescription, "success"));
             if (onReset) {
                 dispatch(onReset);
+                dispatch(resetCurrentMap());
             }
         }).catch((e) => {
-            // dispatch(mapUpdated(resourceId, newName, newDescription, "failure", e));
             dispatch(thumbnailError(resourceId, e));
         });
     };
@@ -248,6 +255,7 @@ function createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categor
             }
             if (onReset) {
                 dispatch(onReset);
+                dispatch(resetCurrentMap());
             }
             dispatch(saveMap(map, resourceIdMap));
             dispatch(thumbnailError(resourceIdMap, null));
@@ -271,7 +279,6 @@ function saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbna
             dispatch(resetUpdating(resourceIdMap));
             dispatch(onDisplayMetadataEdit(false));
         }
-
     };
 }
 
@@ -284,6 +291,7 @@ function deleteThumbnail(resourceId, resourceIdMap, options) {
                 dispatch(resetUpdating(resourceIdMap));
             }
             dispatch(onDisplayMetadataEdit(false));
+            dispatch(resetCurrentMap());
         }).catch((e) => {
             // Even if is not possible to delete the Thumbnail from geostore -> reset the attribute in order to display the default thumbnail
             if (e.status === 403) {
@@ -291,6 +299,7 @@ function deleteThumbnail(resourceId, resourceIdMap, options) {
                     dispatch(updateAttribute(resourceIdMap, "thumbnail", "NODATA", "STRING", options));
                 }
                 dispatch(onDisplayMetadataEdit(false));
+                dispatch(resetCurrentMap());
                 dispatch(thumbnailError(resourceIdMap, null));
             } else {
                 dispatch(onDisplayMetadataEdit(true));
@@ -302,7 +311,6 @@ function deleteThumbnail(resourceId, resourceIdMap, options) {
 
 function createMap(metadata, content, thumbnail, options) {
     return (dispatch) => {
-        dispatch(mapUpdating(null));
         GeoStoreApi.createResource(metadata, content, "MAP", options).then((response) => {
             let resourceId = response.data;
             if (thumbnail && thumbnail.data) {
@@ -310,9 +318,7 @@ function createMap(metadata, content, thumbnail, options) {
             }
             dispatch(mapCreated(response.data, assign({id: response.data, canDelete: true, canEdit: true, canCopy: true}, metadata), content));
             dispatch(onDisplayMetadataEdit(false));
-            // dispatch(thumbnailError(resourceId, null));
         }).catch((e) => {
-            // dispatch(loadError(e));
             dispatch(mapError(e));
         });
     };
@@ -344,6 +350,7 @@ module.exports = {
     DISPLAY_METADATA_EDIT,
     RESET_UPDATING,
     MAP_ERROR,
+    RESET_CURRENT_MAP,
     loadMaps,
     updateMap,
     updateMapMetadata,
@@ -360,5 +367,6 @@ module.exports = {
     saveAll,
     onDisplayMetadataEdit,
     resetUpdating,
+    resetCurrentMap,
     mapError
 };
