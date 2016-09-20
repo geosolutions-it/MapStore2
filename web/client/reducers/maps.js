@@ -16,7 +16,7 @@ function maps(state = {
     switch (action.type) {
         case MAP_TYPE_CHANGED: {
             return assign({}, state, {
-                mapType: action.type
+                mapType: action.mapType
             });
         }
         case MAPS_LIST_LOADING:
@@ -28,7 +28,7 @@ function maps(state = {
             });
         case MAPS_LIST_LOADED:
             if (action.maps && action.maps.results && Array.isArray(action.maps.results)) {
-                return assign({}, action.maps, {
+                return assign({}, state, action.maps, {
                     loading: false,
                     start: action.params && action.params.start,
                     limit: action.params && action.params.limit,
