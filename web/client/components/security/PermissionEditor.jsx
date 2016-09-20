@@ -151,7 +151,7 @@ const PermissionEditor = React.createClass({
                     <td style={{flex: 1}}>{group.name}</td>
                     <td style={{width: "150px"}}>
                         <Select
-                            ref="permChoice"
+                            ref={"permChoice" + index}
                             onChange={(sel) => {this.onChangePermission.call(this, index, sel.value ); }}
                             clearable={false}
                             options={this.getAvailablePermissions()}
@@ -222,6 +222,7 @@ const PermissionEditor = React.createClass({
                             </td>
                             <td style={{width: "50px"}}>
                                 <Button
+                                    ref="buttonAdd"
                                     disabled={!(this.props.newGroup && this.props.newGroup.id && this.props.newGroup.id.toString())}
                                     bsSize="small"
                                     bsStyle="success"

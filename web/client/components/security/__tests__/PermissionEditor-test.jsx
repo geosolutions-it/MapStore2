@@ -83,78 +83,42 @@ describe("Test the permission editor component", () => {
         const cmp = setupEditor(document.getElementById("container"), actions);
         expect(cmp).toExist();
 
-        const cmpDom = document.querySelector("tr.odd > td:nth-child(2) > div > select");
+        const cmpDom = cmp.refs.permChoice1;
         expect(cmpDom).toExist();
 
-        cmpDom.selectedIndex = 0;
-        let event = new Event('change', {bubbles: true});
-        cmpDom.dispatchEvent(event);
-
-        cmpDom.selectedIndex = 1;
-        cmpDom.dispatchEvent(event);
+        cmpDom.selectValue("canWrite");
+        cmpDom.selectValue("canRead");
 
         expect(groupChangeSpy.calls.length).toBe(2);
     });
 
-    it('changes groups rules clicking the Add permission button', () => {
+
+    it('adds a new groups rules clicking the Add permission button', () => {
         let actions = {
             onGroupsChange: (c) => {
                 return {c};
             },
-            onNewGroupChoose: () => {},
-            newGroup: { groupName: "everyone", id: 1234 }
-        };
-        let groupChangeSpy = expect.spyOn(actions, "onNewGroupChoose");
-        let groupChangeCallbackSpy = expect.spyOn(actions, "onGroupsChange");
-
-        const cmp = setupEditor(document.getElementById("container"), actions);
-        expect(cmp).toExist();
-
-        const cmpDom = document.querySelector("select[data-reactid*=addRowKey]");
-        expect(cmpDom).toExist();
-
-        cmpDom.selectedIndex = 0;
-        let event = new Event('change', {bubbles: true});
-        cmpDom.dispatchEvent(event);
-
-        expect(groupChangeSpy.calls.length).toBe(1);
-
-        const addBtnDom = document.querySelector("button[data-reactid*=addRowKey]");
-        expect(addBtnDom).toExist();
-        addBtnDom.click();
-
-        expect(groupChangeCallbackSpy.calls.length).toBe(1);
-    });
-
-
-    it('changes adds a new groups rules clicking the Add permission button', () => {
-        let actions = {
-            onGroupsChange: (c) => {
-                return {c};
-            },
-            onNewGroupChoose: () => {},
+            onNewPermissionChoose: () => {},
             onAddPermission: () => {},
             newGroup: { groupName: "g22", id: 22}
         };
-        let groupChangeSpy = expect.spyOn(actions, "onNewGroupChoose");
+        let newPermissionChangeSpy = expect.spyOn(actions, "onNewPermissionChoose");
         let groupChangeCallbackSpy = expect.spyOn(actions, "onGroupsChange");
         let groupAddCallbackSpy = expect.spyOn(actions, "onAddPermission");
 
         const cmp = setupEditor(document.getElementById("container"), actions);
         expect(cmp).toExist();
 
-        const cmpDom = document.querySelector("select[data-reactid*=addRowKey]");
+        const cmpDom = cmp.refs.newChoice;
         expect(cmpDom).toExist();
 
-        cmpDom.selectedIndex = 1;
-        let event = new Event('change', {bubbles: true});
-        cmpDom.dispatchEvent(event);
+        cmpDom.selectValue("canWrite");
 
-        expect(groupChangeSpy.calls.length).toBe(1);
+        expect(newPermissionChangeSpy.calls.length).toBe(1);
 
-        const addBtnDom = document.querySelector("button[data-reactid*=addRowKey]");
+        const addBtnDom = cmp.refs.buttonAdd;
         expect(addBtnDom).toExist();
-        addBtnDom.click();
+        ReactDOM.findDOMNode(addBtnDom).click();
 
         expect(groupChangeCallbackSpy.calls.length).toBe(0);
         expect(groupAddCallbackSpy.calls.length).toBe(1);

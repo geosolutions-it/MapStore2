@@ -330,6 +330,7 @@
             "gohome": "Questo è il testo di aiuto per Home",
             "measureComponent": "Questo è il testo di aiuto per MeasureComponent",
             "backgroundSwitcher": "Questo è il testo di aiuto per BackgroundSwitcher",
+            "layerSwitcher": "Questo è il testo di aiuto per LayerSwitcher",
             "infoButton": "Questo è il testo di aiuto per InfoButton",
             "locateBtn": "Questo è il testo di aiuto per LocateBtn",
             "snapshot": "Questo è il testo di aiuto per Snapshot",

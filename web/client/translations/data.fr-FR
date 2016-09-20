@@ -32,6 +32,7 @@
             "delete": "Effacer",
             "confirmDelete": "Êtes-vous sûr?"
         },
+        "enable": "Activer",
         "background": "Fond de plan",
         "language": "langue",
         "mousePositionCoordinates": "Coordonnées",
@@ -331,6 +332,7 @@
             "gohome": "This is the helptext for Home",
             "measureComponent": "This is the helptext for the MeasureComponent",
             "backgroundSwitcher": "This is the helptext for the BackgroundSwitcher",
+            "layerSwitcher": "This is the helptext for the LayerSwitcher",
             "infoButton": "This is the helptext for the InfoButton",
             "locateBtn": "This is the helptext for the LocateBtn",
             "snapshot": "This is the helptext for the Snapshot",
