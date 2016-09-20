@@ -21,7 +21,8 @@ const {
     loadStylerTool,
     loadWorkspaces,
     selectWorkSpace,
-    createWorkspace
+    createWorkspace,
+    dismissWorkspaceCreationStatus
 } = require('../../actions/importer');
 
 const assign = require('object-assign');
@@ -41,7 +42,8 @@ const ImporterPlugin = connect(
             selectedTransform: state.importer && state.importer.selectedTransform,
             error: state.importer && state.importer.loadingError,
             workspaces: state.importer && state.importer.workspaces,
-            selectedWorkSpace: state.importer && state.importer.selectedWorkSpace
+            selectedWorkSpace: state.importer && state.importer.selectedWorkSpace,
+            workspaceCreationStatus: state.importer && state.importer.workspaceCreationStatus
     }; },
     (dispatch, ownProps) => {
         return bindActionCreators({
@@ -61,6 +63,7 @@ const ImporterPlugin = connect(
             updateLayer: updateLayer.bind(null, getURL(ownProps)),
             loadStylerTool: loadStylerTool.bind(null, getURL(ownProps)),
             loadWorkspaces: loadWorkspaces.bind(null, getURL(ownProps)),
+            dismissWorkspaceCreationStatus: dismissWorkspaceCreationStatus,
             selectWorkSpace: selectWorkSpace.bind(null),
             createWorkspace: createWorkspace.bind(null, getURL(ownProps))
         }, dispatch);
