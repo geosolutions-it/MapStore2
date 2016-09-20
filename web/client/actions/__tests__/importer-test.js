@@ -28,7 +28,8 @@ const {
     createWorkspace,
     IMPORTER_WORKSPACE_LOADED,
     IMPORTER_WORKSPACE_SELECTED,
-    IMPORTER_WORKSPACE_CREATED} = require('../importer');
+    IMPORTER_WORKSPACE_CREATED,
+    dismissWorkspaceCreationStatus, IMPORTER_WORKSPACE_STATUS_CHANGE} = require('../importer');
 const {MAP_CONFIG_LOADED} = require('../config');
 
 /* This utility function runs a serie of test on an action creator
@@ -278,6 +279,12 @@ describe('Test correctness of the importer actions', () => {
         let url = 'base/web/client/test-resources/geoserver/rest/workspaces.json#';
         let tests = [testLoading, testWorkspaceCreated];
         runAsyncTest(url, createWorkspace, tests, done, []);
+    });
+    // load workspaces
+    it('update workspace creation status', () => {
+        let res = dismissWorkspaceCreationStatus();
+        expect(res).toExist();
+        expect(res.type).toBe(IMPORTER_WORKSPACE_STATUS_CHANGE);
     });
 
 });

@@ -32,6 +32,8 @@ const Importer = React.createClass({
         workspaces: React.PropTypes.array,
         selectedWorkSpace: React.PropTypes.object,
         selectWorkSpace: React.PropTypes.func,
+        workspaceCreationStatus: React.PropTypes.object,
+        dismissWorkspaceCreationStatus: React.PropTypes.func,
         createWorkspace: React.PropTypes.func,
         datastoreTemplates: React.PropTypes.array,
         deleteImport: React.PropTypes.func,
@@ -66,6 +68,7 @@ const Importer = React.createClass({
             deleteTransform: () => {},
             uploadImportFiles: () => {},
             loadWorkspaces: () => {},
+            dismissWorkspaceCreationStatus: () => {},
             createWorkspace: () => {},
             onMount: () => {},
             imports: []
@@ -211,6 +214,8 @@ const Importer = React.createClass({
                     </Col>
                     <Col md={6}>
                         <Workspace
+                            onStatusDismiss={this.props.dismissWorkspaceCreationStatus}
+                            status={this.props.workspaceCreationStatus}
                             enabled={!!this.props.selectedImport}
                             createWorkspace={this.props.createWorkspace}
                             datastoreTemplates={this.props.datastoreTemplates}

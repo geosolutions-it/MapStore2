@@ -49,6 +49,7 @@ const IMPORTER_WORKSPACE_SELECTED = 'IMPORTER_WORKSPACE_SELECTED';
 const IMPORTER_WORKSPACE_LOADED = 'IMPORTER_WORKSPACE_LOADED';
 const IMPORTER_WORKSPACE_CREATED = 'IMPORTER_WORKSPACE_CREATED';
 const IMPORTER_WORKSPACE_CREATION_ERROR = 'IMPORTER_WORKSPACE_CREATION_ERROR';
+const IMPORTER_WORKSPACE_STATUS_CHANGE = 'IMPORTER_WORKSPACE_STATUS_CHANGE';
 /*******************/
 /* UTILITY         */
 /*******************/
@@ -626,6 +627,13 @@ function createWorkspace(geoserverRestURL, name, datastores = []) {
     };
 }
 
+function dismissWorkspaceCreationStatus() {
+    return {
+        type: IMPORTER_WORKSPACE_STATUS_CHANGE,
+        state: null
+    };
+}
+
 /** UPLOAD **/
 function uploadImportFiles(geoserverRestURL, importId, files, presets) {
     return (dispatch, getState) => {
@@ -712,6 +720,7 @@ module.exports = {
     loadWorkspaces,
     createWorkspace,
     selectWorkSpace,
+    dismissWorkspaceCreationStatus,
     IMPORTS_LOADING,
     IMPORTS_LIST_LOADED,
     IMPORTS_LIST_LOAD_ERROR,
@@ -737,5 +746,6 @@ module.exports = {
     IMPORTER_WORKSPACE_SELECTED,
     IMPORTER_WORKSPACE_LOADED,
     IMPORTER_WORKSPACE_CREATED,
-    IMPORTER_WORKSPACE_CREATION_ERROR
+    IMPORTER_WORKSPACE_CREATION_ERROR,
+    IMPORTER_WORKSPACE_STATUS_CHANGE
 };

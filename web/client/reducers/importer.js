@@ -30,7 +30,8 @@ const {
     IMPORTER_WORKSPACE_LOADED,
     IMPORTER_WORKSPACE_SELECTED,
     IMPORTER_WORKSPACE_CREATED,
-    IMPORTER_WORKSPACE_CREATION_ERROR
+    IMPORTER_WORKSPACE_CREATION_ERROR,
+    IMPORTER_WORKSPACE_STATUS_CHANGE
 } = require('../actions/importer');
 const assign = require('object-assign');
 
@@ -344,12 +345,17 @@ function importer(state = {}, action) {
             });
             return assign({}, state, {
                 workspaces,
-                workspaceError: null
+                workspaceCreationStatus: {status: "success", workspace: action.name}
             });
         }
         case IMPORTER_WORKSPACE_CREATION_ERROR: {
             return assign({}, state, {
-                workspaceError: action.error
+                workspaceCreationStatus: {status: "error", error: action.error}
+            });
+        }
+        case IMPORTER_WORKSPACE_STATUS_CHANGE: {
+            return assign({}, state, {
+                workspaceCreationStatus: action.state
             });
         }
         default:

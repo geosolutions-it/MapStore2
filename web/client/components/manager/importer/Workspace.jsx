@@ -7,10 +7,12 @@
  */
 const React = require('react');
 const Select = require('react-select');
-const {Input, Button} = require('react-bootstrap');
+const {Input, Button, Alert} = require('react-bootstrap');
 module.exports = React.createClass({
     propTypes: {
         enabled: React.PropTypes.bool,
+        status: React.PropTypes.object,
+        onStatusDismiss: React.PropTypes.func,
         selectWorkSpace: React.PropTypes.func,
         selectedWorkSpace: React.PropTypes.string,
         workspaces: React.PropTypes.array,
@@ -23,6 +25,7 @@ module.exports = React.createClass({
             loadWorkspaces: () => {},
             createWorkspace: () => {},
             selectWorkSpace: () => {},
+            onStatusDismiss: () => {},
             datastoreTemplates: []
         };
     },
@@ -33,6 +36,13 @@ module.exports = React.createClass({
     },
     componentDidMount() {
         if (!this.props.workspaces) this.props.loadWorkspaces();
+    },
+    renderAlert() {
+        if (this.props.status && (this.props.status.status === "error")) {
+            return (<Alert onDismiss={this.props.onStatusDismiss} key="error" bsStyle="danger"> Error creating workspace: {this.props.status && this.props.status.error && this.props.status.error.data}</Alert>);
+        } else if (this.props.status && (this.props.status.status === "success")) {
+            return (<Alert onDismiss={this.props.onStatusDismiss} key="success">Workspace "{this.props.status.workspace}" successfully created</Alert>);
+        }
     },
     render() {
         return (<div>
@@ -62,6 +72,7 @@ module.exports = React.createClass({
                         type="text"
                         style={{width: "100%"}}
                     /> <Button disabled={!this.state.valid} bsStyle="primary" bsSize="small" onClick={this.createWorkspace}>Create</Button>
+                {this.renderAlert()}
                 </div>
         </div>);
     },
