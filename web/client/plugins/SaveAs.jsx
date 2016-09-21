@@ -170,8 +170,8 @@ module.exports = {
             position: 900,
             text: <Message msgId="saveAs"/>,
             icon: <Glyphicon glyph="floppy-open"/>,
-            action: editMap.bind(null, {})
-            // here should be overrided the selector if you want to hide the save as plugin once a map is saved
+            action: editMap.bind(null, {}),
+            selector: (state) => (state && state.security && state.security.user ? {} : { style: {display: "none"} })
         }
     }))
 };
