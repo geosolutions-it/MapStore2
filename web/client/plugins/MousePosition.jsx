@@ -58,8 +58,7 @@ const MousePositionButton = connect((state) => ({
     pressedStyle: "default",
     defaultStyle: "primary",
     btnConfig: {
-        bsSize: "small",
-        disabled: (!state.browser.touch) ? false : true}
+        bsSize: "small"}
 }), {
     onClick: changeMousePositionState
 })(require('../components/buttons/ToggleButton'));
