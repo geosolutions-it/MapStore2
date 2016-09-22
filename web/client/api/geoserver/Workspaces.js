@@ -11,7 +11,7 @@ const axios = require('../../libs/ajax');
 
 var Api = {
     getWorkspaces: function(geoserverRestURL) {
-        return axios.get(geoserverRestURL + 'workspaces', {
+        return axios.get(geoserverRestURL + 'workspaces.json', {
             'headers': {
                 'Accept': 'application/json'
             }
