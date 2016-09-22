@@ -129,7 +129,7 @@ module.exports = {
             // display the BurgerMenu button only if the map can be edited
             selector: (state) => {
                 let map = (state.map && state.map.present) || (state.map) || (state.config && state.config.map) || null;
-                if (map && map.mapId) {
+                if (map && map.mapId && state && state.security && state.security.user) {
                     if (state.maps && state.maps.results) {
                         let mapId = map.mapId;
                         let currentMap = state.maps.results.filter(item=> item && ('' + item.id) === mapId);
