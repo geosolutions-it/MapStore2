@@ -112,6 +112,7 @@
             "maps_title": "Maps",
             "locales_combo": "Language:"
         },
+        "newMap": "New Map",
 		"maps": {
 			"search": "search for projects..."
 		},

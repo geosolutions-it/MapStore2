@@ -53,7 +53,8 @@ module.exports = {
         ManagerMenuPlugin: require('../plugins/manager/ManagerMenu'),
         SharePlugin: require('../plugins/Share'),
         SavePlugin: require('../plugins/Save'),
-        SaveAsPlugin: require('../plugins/SaveAs')
+        SaveAsPlugin: require('../plugins/SaveAs'),
+        CreateNewMapPlugin: require('../plugins/CreateNewMap')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

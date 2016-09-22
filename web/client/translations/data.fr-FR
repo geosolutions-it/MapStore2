@@ -113,6 +113,7 @@
             "maps_title": "Cartes",
             "locales_combo": "Langue:"
         },
+        "newMap": "Nouvelle carte",
 		"maps": {
 			"search": "search for projects..."
 		},
