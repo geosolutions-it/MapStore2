@@ -509,6 +509,17 @@
 		},
 		"OmniBar",
 		{
+		    "name" : "Save",
+		    "cfg": {
+		        "closeGlyph" : "1-close"
+		     }
+		},{
+		    "name" : "SaveAs",
+		    "cfg": {
+		        "closeGlyph" : "1-close"
+		     }
+		},
+		{
 			"name": "BurgerMenu"
 		}, {
 			"name": "Expander",

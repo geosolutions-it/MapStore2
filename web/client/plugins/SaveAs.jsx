@@ -112,18 +112,18 @@ const SaveAs = React.createClass({
             };
         let layers = this.props.layers.map((layer) => {
             return {
-                format: layer.format,
                 features: layer.features,
+                format: layer.format,
                 group: layer.group,
                 source: layer.source,
                 name: layer.name,
                 opacity: layer.opacity,
+                provider: layer.provider,
                 styles: layer.styles,
                 title: layer.title,
                 transparent: layer.transparent,
                 type: layer.type,
                 url: layer.url,
-                provider: layer.provider,
                 visibility: layer.visibility
             };
         });
