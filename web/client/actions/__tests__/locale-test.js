@@ -21,8 +21,8 @@ describe('Test locale related actions', () => {
         });
     });
 
-    it('loads an existing translation file', (done) => {
-        loadLocale('../../translations', 'it-IT')((e) => {
+    it('loads an existing it-IT translation file', (done) => {
+        loadLocale('base/web/client/translations', 'it-IT')((e) => {
             try {
                 expect(e).toExist();
                 expect(e.type).toBe('CHANGE_LOCALE');
@@ -33,8 +33,8 @@ describe('Test locale related actions', () => {
         });
     });
 
-    it('loads an existing translation file', (done) => {
-        loadLocale('../../translations')((e) => {
+    it('loads an existing fr-FR translation file', (done) => {
+        loadLocale('base/web/client/translations', 'fr-FR')((e) => {
             try {
                 expect(e).toExist();
                 expect(e.type).toBe('CHANGE_LOCALE');
@@ -45,8 +45,8 @@ describe('Test locale related actions', () => {
         });
     });
 
-    it('loads an existing translation file', (done) => {
-        loadLocale('../../translations', 'fr-FR')((e) => {
+    it('loads an existing en-US translation file', (done) => {
+        loadLocale('base/web/client/translations', 'en-US')((e) => {
             try {
                 expect(e).toExist();
                 expect(e.type).toBe('CHANGE_LOCALE');
@@ -57,32 +57,8 @@ describe('Test locale related actions', () => {
         });
     });
 
-    it('loads an existing translation file', (done) => {
-        loadLocale('../../translations')((e) => {
-            try {
-                expect(e).toExist();
-                expect(e.type).toBe('CHANGE_LOCALE');
-                done();
-            } catch(ex) {
-                done(ex);
-            }
-        });
-    });
-
-    it('loads an existing translation file', (done) => {
-        loadLocale('../../translations', 'en-US')((e) => {
-            try {
-                expect(e).toExist();
-                expect(e.type).toBe('CHANGE_LOCALE');
-                done();
-            } catch(ex) {
-                done(ex);
-            }
-        });
-    });
-
-    it('loads an existing translation file', (done) => {
-        loadLocale('../../translations')((e) => {
+    it('loads an existing it-IT or en-US or fr-FR translation file', (done) => {
+        loadLocale('base/web/client/translations')((e) => {
             try {
                 expect(e).toExist();
                 expect(e.type).toBe('CHANGE_LOCALE');
