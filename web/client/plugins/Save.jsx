@@ -84,11 +84,13 @@ const Save = React.createClass({
                     };
                 let layers = this.props.layers.map((layer) => {
                     return {
+                        features: layer.features,
                         format: layer.format,
                         group: layer.group,
                         source: layer.source,
                         name: layer.name,
                         opacity: layer.opacity,
+                        provider: layer.provider,
                         styles: layer.styles,
                         title: layer.title,
                         transparent: layer.transparent,
