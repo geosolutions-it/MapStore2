@@ -57,7 +57,10 @@ const Thumbnail = React.createClass({
         return {};
     },
     onRemoveThumbnail(event) {
-        event.stopPropagation();
+        if (event !== null) {
+            event.stopPropagation();
+        }
+
         this.files = null;
         this.props.onUpdate(null, null);
         this.props.onRemoveThumbnail();
@@ -67,7 +70,7 @@ const Thumbnail = React.createClass({
         return (this.props.map && this.props.map.newThumbnail && this.props.map.newThumbnail !== "NODATA") ? decodeURIComponent(this.props.map.newThumbnail) : null;
     },
     isImage(images) {
-        return images[0].type === "image/png" || images[0].type === "image/jpeg" || images[0].type === "image/jpg";
+        return images && images[0].type === "image/png" || images && images[0].type === "image/jpeg" || images && images[0].type === "image/jpg";
     },
     getDataUri(images, callback) {
         let filesSelected = images;
@@ -89,7 +92,7 @@ const Thumbnail = React.createClass({
                 // without errors
                 this.props.onError([], this.props.map.id);
                 this.files = images;
-                this.props.onUpdate(null, images[0].preview);
+                this.props.onUpdate(null, images && images[0].preview);
             } else {
                 // with at least one error
                 if (!isAnImage) {
