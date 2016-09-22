@@ -18,6 +18,7 @@ var empty = require('./images/mapthumbs/none.jpg');
 var unknown = require('./images/mapthumbs/dafault.jpg');
 var Night2012 = require('./images/mapthumbs/NASA_NIGHT.jpg');
 var AerialWithLabels = require('./images/mapthumbs/AerialWithLabels.jpg');
+const OpenTopoMap = require('./images/mapthumbs/OpenTopoMap.jpg');
 require("./style.css");
 
 let thumbs = {
@@ -41,6 +42,9 @@ let thumbs = {
     },
     nasagibs: {
         Night2012
+    },
+    OpenTopoMap: {
+        OpenTopoMap
     },
     unknown
 };

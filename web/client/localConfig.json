@@ -730,6 +730,7 @@
 			{"name": "MapSearch"},
 			{"name": "HomeDescription"},
 			{"name": "MapType"},
+			{"name": "CreateNewMap"},
 			{"name": "Maps"},
 			{"name": "Examples"}
 		],

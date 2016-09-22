@@ -108,6 +108,7 @@
             "maps_title": "Mappe",
             "locales_combo": "Lingua:"
         },
+        "newmap": "Nuova Mappa",
 		"maps": {
 			"search": "Cerca progetti..."
 		},

@@ -15,7 +15,6 @@ const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 
 const ConfigUtils = require('../../utils/ConfigUtils');
-
 const {loadMapConfig} = require('../../actions/config');
 const {resetControls} = require('../../actions/controls');
 
@@ -44,8 +43,19 @@ const MapViewerPage = React.createClass({
             }
 
             // VMap = require('../components/viewer/Map')(this.props.params.mapType);
-            const mapId = (this.props.params.mapId === '0') ? null : this.props.params.mapId;
-            const config = urlQuery && urlQuery.config || null;
+            let mapId = (this.props.params.mapId === '0') ? null : this.props.params.mapId;
+            let config = urlQuery && urlQuery.config || null;
+            // if mapId is a string, is the name of the config to load
+            try {
+                let mapIdNumber = parseInt(mapId, 10);
+                if (isNaN(mapIdNumber)) {
+                    config = mapId;
+                    mapId = null;
+                }
+            } catch(e) {
+                config = mapId;
+                mapId = null;
+            }
             const {configUrl} = ConfigUtils.getConfigurationOptions({mapId, config});
             this.props.reset();
             this.props.loadMapConfig(configUrl, mapId);
