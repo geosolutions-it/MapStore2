@@ -131,16 +131,25 @@
             "errorSize": "taille maximum autorisée: 500kb",
             "error": "L'image fournie est pas valide",
             "thumbnailError": {
-                "error403" : "Une erreur est survenue lors de la suppression de la vignette",
-                "error404" : "Une erreur est survenue lors de la création de la vignette",
-                "error409" : "Nom de la vignette déjà choisie",
-                "errorDefault" : "Une erreur est survenue sur le serveur"
+                "error403": "Une erreur est survenue lors de la suppression de la vignette",
+                "error404": "Une erreur est survenue lors de la création de la vignette",
+                "error409": "Nom de la vignette déjà choisie",
+                "errorDefault": "Une erreur est survenue sur le serveur"
             },
             "mapError": {
-                "error403" : "Une erreur est survenue lors de la suppression de la carte",
-                "error404" : "Une erreur est survenue lors de la création de la carte",
-                "error409" : "Nom de la carte déjà choisie",
-                "errorDefault" : "Une erreur est survenue sur le serveur"
+                "error403": "Une erreur est survenue lors de la suppression de la carte",
+                "error404": "Une erreur est survenue lors de la création de la carte",
+                "error409": "Nom de la carte déjà choisie",
+                "errorDefault": "Une erreur est survenue sur le serveur"
+            },
+            "permissions": {
+                "noRules": "aucune règle",
+                "addRule": "ajouter une règle...",
+                "selectGroup": "sélectionner un groupe...",
+                "canView": "peut voir",
+                "canWrite": "peut éditer",
+                "noResult": "aucun résultat trouvé",
+                "title": "groupes autorisés"
             }
         },
         "print":{
@@ -455,7 +464,7 @@
             "error": {"select": "Sélectionner un ou plusieurs fichiers zip"},
             "add": "Ajouter",
             "cancel": "Annuler",
-            "success" : " Import correct"
+            "success": " Import correct"
         },
         "catalog": {
             "title": "Catalogue",
