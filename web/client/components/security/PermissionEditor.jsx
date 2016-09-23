@@ -13,6 +13,7 @@ const Select = require('react-select');
 const Spinner = require('react-spinkit');
 const {Table, Button, Glyphicon} = require('react-bootstrap');
 const Message = require('../I18N/Message');
+const LocaleUtils = require('../../utils/LocaleUtils');
 
 /**
 * Map permission editor
@@ -40,6 +41,9 @@ const PermissionEditor = React.createClass({
         groups: React.PropTypes.arrayOf(React.PropTypes.object),
         newGroup: React.PropTypes.object,
         newPermission: React.PropTypes.string
+    },
+    contextTypes: {
+        messages: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -122,17 +126,14 @@ const PermissionEditor = React.createClass({
     getSelectableGroups() {
         return this.props.availableGroups && this.props.availableGroups.filter( (group) => {
             return !this.isPermissionPresent(group.groupName);
-        }
-
-        ).map((group) => ({label: group.groupName, value: group.id}));
+        }).map((group) => ({label: group.groupName, value: group.id}));
     },
     getPermissonLabel(perm) {
-        // TODO support I18N
         switch (perm) {
             case "canRead":
-                return "Can view";
+                return LocaleUtils.getMessageById(this.context.messages, "map.permissions.canView");
             case "canWrite":
-                return "Can edit";
+                return LocaleUtils.getMessageById(this.context.messages, "map.permissions.canWrite");
             default:
                 return perm;
         }
@@ -142,8 +143,7 @@ const PermissionEditor = React.createClass({
     },
     renderPermissionRows() {
         if (this.localGroups.length === 0) {
-            return <tr><td colSpan="3">No rules</td></tr>;
-
+            return <tr><td colSpan="3"><Message msgId="map.permissions.noRules" /></td></tr>;
         }
         return this.localGroups.map((group, index) => {
             return (
@@ -191,23 +191,28 @@ const PermissionEditor = React.createClass({
                 <Table className="permissions-table" stripped condensed hover>
                     <thead>
                         <tr>
-                            <th colSpan="3">Permissions</th>
+                            <th colSpan="3"><Message msgId="map.permissions.title" /></th>
                         </tr>
                     </thead>
                     <tbody>
                         {this.props.map && this.props.map.permissionLoading ?
                         <tr><td colSpan="3"><div><Spinner noFadeIn spinnerName="circle" /></div></td></tr>
                         : this.renderPermissionRows()}
+
+
                         <tr>
-                            <th colSpan="3">Add a rule...</th>
+                            <th colSpan="3"><Message msgId="map.permissions.addRule" /></th>
                         </tr>
+
+
                         <tr style={{display: "flex"}} key="addRowKey">
                             <td style={{flex: 1}}>
                                 <Select
+                                    noResultsText={LocaleUtils.getMessageById(this.context.messages, "map.permissions.noResult")}
                                     ref="newGroup"
-                                    isLoading={!(this.props.availableGroups && this.props.availableGroups.length > 0)}
+                                    isLoading={!this.getSelectableGroups()}
                                     clearable={false}
-                                    placeholder="Select a group..."
+                                    placeholder={LocaleUtils.getMessageById(this.context.messages, "map.permissions.selectGroup")}
                                     options={this.getSelectableGroups()}
                                     value={this.props.newGroup && this.props.newGroup.id}
                                     onChange={this.onNewGroupChoose}/>

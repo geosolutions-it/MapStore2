@@ -123,7 +123,7 @@ const MetadataModal = React.createClass({
     },
     componentDidUpdate(prevProps) {
         if (this.props.show && !prevProps.show) {
-            if (this.props.displayPermissionEditor) {
+            if (this.props.displayPermissionEditor && (this.props.user.name === this.props.map.owner || this.props.user.role === "ADMIN" )) {
                 this.loadPermissions();
                 this.loadAvailableGroups();
             }
@@ -157,7 +157,7 @@ const MetadataModal = React.createClass({
         this.refs.thumbnail.updateThumbnail(this.props.map, metadata);
     },
     renderPermissionEditor() {
-        if (this.props.displayPermissionEditor) {
+        if (this.props.displayPermissionEditor && this.props.user.name === this.props.map.owner || this.props.user.role === "ADMIN" ) {
             // Hack to convert map permissions to a simpler format, TODO: remove this
             if (this.props.map && this.props.map.permissions && this.props.map.permissions.SecurityRuleList && this.props.map.permissions.SecurityRuleList.SecurityRule) {
                 this.localGroups = this.props.map.permissions.SecurityRuleList.SecurityRule.map(function(rule) {
