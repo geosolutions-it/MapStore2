@@ -92,26 +92,24 @@ const LoginForm = React.createClass({
     renderSubmit() {
         if (this.props.showSubmitButton) {
             return (<ButtonInput
-                type="submit"
                 value={LocaleUtils.getMessageById(this.context.messages, "user.signIn")}
                 bsStyle="primary"
-                key="submit"/>);
+                key="submit" onClick={this.handleSubmit}/>);
         }
     },
     render() {
         return (
-            <form ref="loginForm" onSubmit={this.handleSubmit}>
+            <form ref="loginForm">
                 <Input ref="username"
                     key="username"
                     type="text"
                     label={this.props.userNameText}
-                    onChange={this.handleUsernameChangethis}
                     placeholder={LocaleUtils.getMessageById(this.context.messages, "user.username")} />
                 <Input ref="password"
                     key="password"
                     type="password"
                     label={this.props.passwordText}
-                    onChange={this.handlePasswordChange}
+                    onKeyPress={this.handleKeyPress}
                     placeholder={LocaleUtils.getMessageById(this.context.messages, "user.password")} />
                 {this.renderSubmit()}
                 {this.renderError()}
@@ -122,6 +120,12 @@ const LoginForm = React.createClass({
     handleSubmit(e) {
         e.preventDefault();
         this.submit();
+    },
+    handleKeyPress(target) {
+        if (target.charCode === 13) {
+            this.submit();
+        }
+
     },
     submit() {
         let username = this.refs.username && this.refs.username.getValue();

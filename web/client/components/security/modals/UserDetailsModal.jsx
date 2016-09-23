@@ -66,7 +66,7 @@ const UserDetails = React.createClass({
       return <Table role="body" responsive striped condensed hover><tbody>{attrsRendered}</tbody></Table>;
   },
   render() {
-      const footer = this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} onClick={this.props.onClose}><Message msgId="messages.close"/></Button> : <span/>;
+      const footer = this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} bsSize="small" onClick={this.props.onClose}><Message msgId="close"/></Button> : <span/>;
       return this.props.useModal ? (
           <Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
               <Modal.Header key="details" closeButton>
