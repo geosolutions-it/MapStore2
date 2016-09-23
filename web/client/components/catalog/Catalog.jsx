@@ -65,6 +65,9 @@ const Catalog = React.createClass({
             catalogURL: null
         };
     },
+    componentDidMount() {
+        this.refs.searchText.getInputDOMNode().focus();
+    },
     componentWillReceiveProps(nextProps) {
         if (nextProps !== this.props) {
             this.setState({
