@@ -84,6 +84,7 @@ const SaveAs = React.createClass({
         let map = (this.state && this.state.loading) ? assign({updating: true}, this.props.currentMap) : this.props.currentMap;
         return (
             <MetadataModal ref="metadataModal"
+                displayPermissionEditor={false}
                 show={this.props.currentMap.displayMetadataEdit}
                 onEdit={this.props.editMap}
                 onUpdateCurrentMap={this.props.onUpdateCurrentMap}
