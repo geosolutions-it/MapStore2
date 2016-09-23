@@ -40,12 +40,16 @@ function getRecords(format, url, startPosition = 1, maxRecords, filter, options)
     return (dispatch /* , getState */) => {
         // TODO auth (like) let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
         API[format].getRecords(url, startPosition, maxRecords, filter, options).then((result) => {
-            dispatch(recordsLoaded({
-                url,
-                startPosition,
-                maxRecords,
-                filter
-            }, result));
+            if (result.error) {
+                dispatch(recordsLoadError(result));
+            } else {
+                dispatch(recordsLoaded({
+                    url,
+                    startPosition,
+                    maxRecords,
+                    filter
+                }, result));
+            }
         }).catch((e) => {
             dispatch(recordsLoadError(e));
         });
@@ -55,12 +59,16 @@ function textSearch(format, url, startPosition, maxRecords, text, options) {
     return (dispatch /* , getState */) => {
         // TODO auth (like) let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
         API[format].textSearch(url, startPosition, maxRecords, text, options).then((result) => {
-            dispatch(recordsLoaded({
-                url,
-                startPosition,
-                maxRecords,
-                text
-            }, result));
+            if (result.error) {
+                dispatch(recordsLoadError(result));
+            } else {
+                dispatch(recordsLoaded({
+                    url,
+                    startPosition,
+                    maxRecords,
+                    text
+                }, result));
+            }
         }).catch((e) => {
             dispatch(recordsLoadError(e));
         });

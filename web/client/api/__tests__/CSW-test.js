@@ -7,13 +7,12 @@
  */
 
 const expect = require('expect');
-const {getRecords} = require('../catalog');
-describe('Test correctness of the catalog actions', () => {
+const API = require('../CSW');
 
+describe('Test correctness of the CSW APIs', () => {
     it('getRecords ISO Metadata Profile', (done) => {
-        getRecords('csw', 'base/web/client/test-resources/csw/getRecordsResponseISO.xml', 1, 1)((actionResult) => {
+        API.getRecords('base/web/client/test-resources/csw/getRecordsResponseISO.xml', 1, 1).then((result) => {
             try {
-                let result = actionResult && actionResult.result;
                 expect(result).toExist();
                 expect(result.records).toExist();
                 expect(result.records.length).toBe(1);
@@ -24,7 +23,7 @@ describe('Test correctness of the catalog actions', () => {
         });
     });
     it('getRecords Error', (done) => {
-        getRecords('csw', 'base/web/client/test-resources/csw/getRecordsResponseException.xml', 1, 1)((result) => {
+        API.getRecords('base/web/client/test-resources/csw/getRecordsResponseException.xml', 1, 1).then((result) => {
             try {
                 expect(result).toExist();
                 expect(result.error).toExist();
@@ -35,9 +34,8 @@ describe('Test correctness of the catalog actions', () => {
         });
     });
     it('getRecords Dublin Core', (done) => {
-        getRecords('csw', 'base/web/client/test-resources/csw/getRecordsResponseDC.xml', 1, 2)((actionResult) => {
+        API.getRecords('base/web/client/test-resources/csw/getRecordsResponseDC.xml', 1, 2).then((result) => {
             try {
-                let result = actionResult && actionResult.result;
                 expect(result).toExist();
                 expect(result.records).toExist();
                 expect(result.records.length).toBe(2);
