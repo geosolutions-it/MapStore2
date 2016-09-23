@@ -22,7 +22,10 @@ const mapUtils = require('../utils/MapUtils');
 
 const selector = createSelector([mapSelector], (map) => ({
     currentZoomLvl: map && map.zoom,
-    scales: mapUtils.getScales(map && map.projection || 'EPSG:3857')
+    scales: mapUtils.getScales(
+        map && map.projection || 'EPSG:3857',
+        map && map.mapOptions && map.mapOptions.view && map.mapOptions.view.DPI || null
+     )
 }));
 
 require('./scalebox/scalebox.css');
