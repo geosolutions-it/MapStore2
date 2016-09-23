@@ -25,7 +25,7 @@ const {layersSelector} = require('../selectors/layers');
 const selector = createSelector(mapSelector, stateSelector, layersSelector, (map, state, layers) => ({
     currentZoomLvl: map && map.zoom,
     show: state.controls && state.controls.saveAs && state.controls.saveAs.enabled,
-    mapType: state && state.home && state.home.mapType || "leaflet",
+    mapType: (state && ((state.home && state.home.mapType) || (state.maps && state.maps.mapType))) || "leaflet",
     newMapId: state.currentMap && state.currentMap.newMapId,
     map,
     currentMap: state.currentMap,

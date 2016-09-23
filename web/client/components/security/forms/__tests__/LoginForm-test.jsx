@@ -59,8 +59,9 @@ describe("Test the login form component", () => {
         expect(password).toExist();
         password.value = "test";
 
-        let form = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "form")[0]);
-        ReactTestUtils.Simulate.submit(form);
+        let button = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "input")[2]);
+        ReactTestUtils.Simulate.click(button);
+
         expect(spy.calls.length).toEqual(1);
         ReactDOM.render(<LoginForm key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} user={{user: {name: "TEST"}}} />, document.getElementById("container"));
         // cmp.setProps({onSubmit: testHandlers.onSubmit, userDetails: }});
