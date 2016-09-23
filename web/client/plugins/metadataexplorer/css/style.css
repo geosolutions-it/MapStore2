@@ -36,3 +36,7 @@ div.record-grid .record-item .record-buttons {
     bottom: 30px;
     right: 30px;
 }
+
+#mapstore-catalog-panel button.search-button {
+    margin-bottom: 10px;
+}

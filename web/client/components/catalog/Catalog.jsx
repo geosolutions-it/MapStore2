@@ -35,7 +35,8 @@ const Catalog = React.createClass({
         records: React.PropTypes.array,
         gridOptions: React.PropTypes.object,
         includeSearchButton: React.PropTypes.bool,
-        buttonStyle: React.PropTypes.object
+        buttonStyle: React.PropTypes.object,
+        buttonClassName: React.PropTypes.string
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -51,10 +52,11 @@ const Catalog = React.createClass({
             records: [],
             formats: [{name: 'csw', label: 'CSW'}],
             format: 'csw',
-            includeSearchButton: false,
+            includeSearchButton: true,
             buttonStyle: {
                 marginBottom: "10px"
-            }
+            },
+            buttonClassName: "search-button"
         };
     },
     getInitialState() {
@@ -97,7 +99,7 @@ const Catalog = React.createClass({
           </Alert>);
     },
     renderLoading() {
-        return (<Spinner spinnerName="circle" noFadeIn/>);
+        return this.state.loading ? (<Spinner spinnerName="circle" noFadeIn/>) : null;
     },
     renderPagination() {
         let total = this.props.result.numberOfRecordsMatched;
@@ -116,7 +118,7 @@ const Catalog = React.createClass({
           onSelect={this.handlePage} />
         <div className="push-right">
             <Message msgId="catalog.pageInfo" msgParams={{start, end: start + returned - 1, total}} />
-            {this.state.loading ? this.renderLoading() : null}
+            {this.renderLoading()}
         </div>
   </div>);
     },
@@ -139,13 +141,15 @@ const Catalog = React.createClass({
                 ref="catalogURL"
                 type="text"
                 placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.catalogUrlPlaceholder")}
-                onChange={this.setCatalogUrl}/>);
+                onChange={this.setCatalogUrl}
+                onKeyDown={this.onKeyDown}/>);
         }
     },
     renderSearchButton() {
         if (this.props.includeSearchButton) {
-            return (<Button style={this.props.buttonStyle} onClick={this.search}>
-                        <Message msgId="catalog.search"/>
+            return (<Button bsStyle="primary" style={this.props.buttonStyle} onClick={this.search}
+                    className={this.props.buttonClassName}>
+                        {this.renderLoading()} <Message msgId="catalog.search"/>
                     </Button>);
         }
     },

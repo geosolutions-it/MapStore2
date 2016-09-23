@@ -67,7 +67,7 @@ const MetadataExplorerComponent = React.createClass({
             panelClassName: "toolbar-panel",
             toggleControl: () => {},
             closeGlyph: "",
-            buttonStyle: "default"
+            buttonStyle: {}
         };
     },
     render() {

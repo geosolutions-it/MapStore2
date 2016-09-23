@@ -9,6 +9,19 @@ const axios = require('../libs/ajax');
 
 const _ = require('lodash');
 
+const urlUtil = require('url');
+const assign = require('object-assign');
+
+const parseUrl = (url) => {
+    const parsed = urlUtil.parse(url, true);
+    return urlUtil.format(assign({}, parsed, {search: null}, {
+        query: assign({
+            service: "CSW",
+            version: "2.0.2"
+        }, parsed.query, {request: undefined})
+    }));
+};
+
 /**
  * API for local config
  */
@@ -22,7 +35,7 @@ var Api = {
                     name: "csw:GetRecords",
                     value: CSW.getRecords(startPosition, maxRecords, filter)
                 });
-                resolve(axios.post(url, body, { headers: {
+                resolve(axios.post(parseUrl(url), body, { headers: {
                     'Content-Type': 'application/xml'
                 }}).then(
                     (response) => {
@@ -112,6 +125,10 @@ var Api = {
                                 }
                                 result.records = records;
                                 return result;
+                            } else if (json && json.name && json.name.localPart === "ExceptionReport") {
+                                return {
+                                    error: json.value.exception && json.value.exception.length && json.value.exception[0].exceptionText || 'GenericError'
+                                };
                             }
                         }
                         return null;
