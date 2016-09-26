@@ -158,8 +158,8 @@ div.MapSearchBar input {
     }
 .search-result-list{
     z-index:2 !important;
-    left: 5px !important;
-    right:5px !important;
+    left: 5px;
+    right:5px;
 }
 #mapstore-getfeatureinfo {
     margin-bottom: 0;
