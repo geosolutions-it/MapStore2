@@ -54,7 +54,7 @@ const Toolbar = React.createClass({
                 zIndex: 100,
                 position: "absolute",
                 overflow: "auto",
-                maxWidth: "1400px"
+                left: "450px"
             },
             panelClassName: "toolbar-panel",
             items: [],
