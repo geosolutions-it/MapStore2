@@ -8,7 +8,7 @@
 
 const React = require('react');
 
-const {changeMapView, clickOnMap} = require('../../actions/map');
+const {clickOnMap} = require('../../actions/map');
 const {layerLoading, layerLoad, invalidLayer} = require('../../actions/layers');
 const {changeMousePosition} = require('../../actions/mousePosition');
 const {changeMeasurementState} = require('../../actions/measurement');
@@ -21,14 +21,14 @@ const assign = require('object-assign');
 
 const Empty = () => { return <span/>; };
 
-module.exports = (mapType) => {
+module.exports = (mapType, changeMapViewAction) => {
 
     const components = require('./' + mapType + '/index');
 
     const LMap = connect((state) => ({
         mousePosition: state.mousePosition || {enabled: false}
     }), {
-        onMapViewChanges: changeMapView,
+        onMapViewChanges: changeMapViewAction,
         onClick: clickOnMap,
         onMouseMove: changeMousePosition,
         onLayerLoading: layerLoading,

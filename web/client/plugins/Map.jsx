@@ -9,6 +9,7 @@
 const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
+const {changeMapView} = require('../actions/map');
 
 var Spinner = require('react-spinkit');
 
@@ -27,7 +28,8 @@ const MapPlugin = React.createClass({
         loadingSpinner: React.PropTypes.bool,
         tools: React.PropTypes.array,
         options: React.PropTypes.object,
-        toolsOptions: React.PropTypes.object
+        toolsOptions: React.PropTypes.object,
+        changeMapViewAction: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -51,7 +53,8 @@ const MapPlugin = React.createClass({
                     },
                     layers: [{type: "osm"}]
                 }
-            }
+            },
+            changeMapViewAction: changeMapView
         };
     },
     componentWillMount() {
@@ -119,7 +122,7 @@ const MapPlugin = React.createClass({
         </div>);
     },
     updatePlugins(props) {
-        plugins = require('./map/index')(props.mapType);
+        plugins = require('./map/index')(props.mapType, props.changeMapViewAction);
     }
 });
 const {mapSelector} = require('../selectors/map');
