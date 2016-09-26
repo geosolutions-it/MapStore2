@@ -63,3 +63,27 @@
     top: 2px;
     position: relative;
 }
+
+.print-layout .panel-title {
+    padding-left: 10px;
+}
+
+.print-layout .panel-title a{
+    text-decoration: none;
+}
+
+.print-layout .panel-title a:hover{
+    color: black;
+}
+
+.print-legend-options .panel-title {
+    padding-left: 10px;
+}
+
+.print-legend-options .panel-title a{
+    text-decoration: none;
+}
+
+.print-legend-options .panel-title a:hover{
+    color: black;
+}

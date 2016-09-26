@@ -45,7 +45,7 @@ const Sheet = connect((state) => ({
     onChange: setPrintParameter.bind(null, 'sheet')
 })(require('../../components/print/Sheet'));
 
-const {currentLayouts} = require('../../selectors/print');
+const {currentLayouts, twoPageEnabled} = require('../../selectors/print');
 
 const LegendOption = connect((state) => ({
     checked: state.print && state.print.spec && !!state.print.spec.includeLegend,
@@ -55,8 +55,9 @@ const LegendOption = connect((state) => ({
 })(require('../../components/print/PrintOption'));
 
 const MultiPageOption = connect((state) => ({
-    checked: state.print && state.print.spec && !!state.print.spec.twoPages,
-    layouts: currentLayouts(state)
+    checked: state.print && state.print.spec.includeLegend && state.print.spec && !!state.print.spec.twoPages,
+    layouts: currentLayouts(state),
+    isEnabled: () => twoPageEnabled(state)
 }), {
     onChange: setPrintParameter.bind(null, 'twoPages')
 })(require('../../components/print/PrintOption'));
