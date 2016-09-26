@@ -21,20 +21,20 @@ const assign = require('object-assign');
 
 const Empty = () => { return <span/>; };
 
-module.exports = (mapType) => {
+module.exports = (mapType, actions) => {
 
     const components = require('./' + mapType + '/index');
 
     const LMap = connect((state) => ({
         mousePosition: state.mousePosition || {enabled: false}
-    }), {
+    }), assign({}, {
         onMapViewChanges: changeMapView,
         onClick: clickOnMap,
         onMouseMove: changeMousePosition,
         onLayerLoading: layerLoading,
         onLayerLoad: layerLoad,
         onInvalidLayer: invalidLayer
-    }, (stateProps, dispatchProps, ownProps) => {
+    }, actions), (stateProps, dispatchProps, ownProps) => {
         return assign({}, ownProps, stateProps, assign({}, dispatchProps, {
             onMouseMove: stateProps.mousePosition.enabled ? dispatchProps.onMouseMove : () => {}
         }));
