@@ -195,6 +195,10 @@ var Api = {
             })).then(function(response) {
                 return parseUserGroups(response.data);
             });
+    },
+    getUsers: function(textSearch, options = {}) {
+        let url = "extjs/search/users" + (textSearch ? "/" + textSearch : "");
+        return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     }
 };
 
