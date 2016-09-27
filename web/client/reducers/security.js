@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, CHANGE_PASSWORD_SUCCESS } = require('../actions/security');
+const { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, CHANGE_PASSWORD_SUCCESS, RESET_ERROR } = require('../actions/security');
 const SecurityUtils = require('../utils/SecurityUtils');
 
 const assign = require('object-assign');
@@ -26,6 +26,10 @@ function security(state = {user: null, errorCause: null}, action) {
         case LOGIN_FAIL:
             return assign({}, state, {
                 loginError: action.error
+            });
+        case RESET_ERROR:
+            return assign({}, state, {
+                loginError: null
             });
         case LOGOUT:
             return assign({}, state, {

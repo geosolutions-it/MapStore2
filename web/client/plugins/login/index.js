@@ -7,9 +7,16 @@
 */
 const React = require('react');
 const {connect} = require('react-redux');
-const {geoStoreLoginSubmit, loginFail, logoutWithReload, geoStoreChangePassword} = require('../../actions/security');
+const {geoStoreLoginSubmit, loginFail, logoutWithReload, geoStoreChangePassword, resetError} = require('../../actions/security');
 const {setControlProperty} = require('../../actions/controls');
 const {Glyphicon} = require('react-bootstrap');
+
+const closeLogin = () => {
+    return (dispatch) => {
+        dispatch(setControlProperty('LoginForm', 'enabled', false));
+        dispatch(resetError());
+    };
+};
 
 const UserMenu = connect((state) => ({
     user: state.security && state.security.user
@@ -41,7 +48,7 @@ const Login = connect((state) => ({
     loginError: state.security && state.security.loginError
 }), {
     onLoginSuccess: setControlProperty.bind(null, 'LoginForm', 'enabled', false),
-    onClose: setControlProperty.bind(null, 'LoginForm', 'enabled', false),
+    onClose: closeLogin,
     onSubmit: geoStoreLoginSubmit,
     onError: loginFail
 })(require('../../components/security/modals/LoginModal'));
