@@ -87,7 +87,7 @@ let LeafletMap = React.createClass({
         }, this.props.mapOptions, this.crs ? {crs: this.crs} : {});
 
         const map = L.map(this.props.id, assign({zoomControl: this.props.zoomControl}, mapOptions) ).setView([this.props.center.y, this.props.center.x],
-          this.props.zoom);
+          Math.round(this.props.zoom));
 
         this.map = map;
 
@@ -149,7 +149,7 @@ let LeafletMap = React.createClass({
         }
         // update the position if the map is not the source of the state change
         if (this.map && newProps.mapStateSource !== this.props.id) {
-            this._updateMapPositionFromNewProps(newProps);
+            this._updateMapPositionFromNewProps(Math.round(newProps));
         }
         if (newProps.zoomControl !== this.props.zoomControl) {
             if (newProps.zoomControl) {
@@ -190,7 +190,6 @@ let LeafletMap = React.createClass({
         );
     },
     _updateMapPositionFromNewProps(newProps) {
-
         // current implementation will update the map only if the movement
         // between 12 decimals in the reference system to avoid rounded value
         // changes due to float mathematic operations.
