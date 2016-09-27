@@ -31,6 +31,7 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         browser: require('../reducers/browser'),
         controls: require('../reducers/controls'),
         help: require('../reducers/help'),
+        mousePosition: require('../reducers/mousePosition'),
         map: () => {return null; },
         mapInitialConfig: () => {return null; },
         layers: () => {return null; }
