@@ -6,9 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var ReactDOM = require('react-dom');
-var BootstrapReact = require('react-bootstrap');
-var {Input} = BootstrapReact;
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 
 let CRSSelector = React.createClass({
@@ -41,22 +38,19 @@ let CRSSelector = React.createClass({
             }
         }
         return (
-              (this.props.enabled) ? (<Input
+              (this.props.enabled) ? (<select
                     id={this.props.id}
                     value={this.props.crs}
-                    type="select"
                     onChange={this.launchNewCRSAction}
                     bsSize="small"
                     {...this.props.inputProps}>
                     {list}
-                </Input>) : null
+                </select>) : null
 
         );
     },
-    launchNewCRSAction() {
-        var element = ReactDOM.findDOMNode(this);
-        var selectNode = element.getElementsByTagName('select').item(0);
-        this.props.onCRSChange(selectNode.value);
+    launchNewCRSAction(ev) {
+        this.props.onCRSChange(ev.target.value);
     }
 });
 
