@@ -25,7 +25,7 @@ var ScaleBox = React.createClass({
     getDefaultProps() {
         return {
             id: 'mapstore-scalebox',
-            scales: mapUtils.getGoogleMercatorScales(0, 21),
+            scales: mapUtils.getGoogleMercatorScales(0, 28),
             currentZoomLvl: 0,
             onChange() {},
             readOnly: false,
