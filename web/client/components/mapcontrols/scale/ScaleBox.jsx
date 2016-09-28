@@ -7,7 +7,6 @@
  */
 
 const React = require('react');
-const {Input} = require('react-bootstrap');
 const mapUtils = require('../../../utils/MapUtils');
 const {isEqual} = require('lodash');
 
@@ -49,9 +48,9 @@ var ScaleBox = React.createClass({
     render() {
         let control = this.props.readOnly ?
             <label>{this.props.template(this.props.scales[this.props.currentZoomLvl], this.props.currentZoomLvl)}</label>
-        : <Input type="select" label={this.props.label} onChange={this.onComboChange} bsSize="small" value={this.props.currentZoomLvl}>
+        : <select label={this.props.label} onChange={this.onComboChange} bsSize="small" value={this.props.currentZoomLvl}>
             {this.getOptions()}
-        </Input>;
+        </select>;
         return (
 
             <div id={this.props.id} style={this.props.style}>
