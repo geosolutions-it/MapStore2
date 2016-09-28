@@ -219,6 +219,10 @@ var Api = {
             postUser.password = postUser.newPassword;
         }
         return axios.post(url, {User: postUser}, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
+    },
+    deleteUser: function(id, options = {}) {
+        let url = "users/user/" + id;
+        return axios.delete(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     }
 };
 

@@ -16,6 +16,7 @@ var UsersGrid = React.createClass({
         loadUsers: React.PropTypes.func,
         onEdit: React.PropTypes.func,
         onDelete: React.PropTypes.func,
+        myUserId: React.PropTypes.number,
         fluid: React.PropTypes.bool,
         users: React.PropTypes.array,
         loading: React.PropTypes.bool,
@@ -46,17 +47,24 @@ var UsersGrid = React.createClass({
         return (<div style={{width: "100px", overflow: "visible", margin: "auto"}}>Loading...<Spinner spinnerName="circle" noFadeIn/></div>);
     },
     renderUsers(users) {
-        return users.map((user) => (<Col {...this.props.colProps}><UserCard user={user} actions={[
-            {
-                 onClick: () => {this.props.onEdit(user); },
-                 glyph: "wrench",
-                 tooltip: <Message msgId="manager.users.editUser" />
-         }, {
-                 onClick: () => {this.props.onDelete(user); },
-                 glyph: "remove-circle",
-                 tooltip: <Message msgId="manager.users.deleteUser" />
-         }
-        ]}/></Col>));
+        return users.map((user) => {
+            let actions = [{
+                     onClick: () => {this.props.onEdit(user); },
+                     glyph: "wrench",
+                     tooltip: <Message msgId="manager.users.editUser" />
+            }];
+            if ( user && user.role === "GUEST") {
+                actions = [];
+            } else if (user.id !== this.props.myUserId) {
+                actions.push({
+                        onClick: () => {this.props.onDelete(user && user.id); },
+                        glyph: "remove-circle",
+                        tooltip: <Message msgId="manager.users.deleteUser" />
+                });
+            }
+
+            return <Col {...this.props.colProps}><UserCard user={user} actions={actions}/></Col>;
+        });
     },
     render: function() {
         return (

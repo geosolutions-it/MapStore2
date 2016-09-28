@@ -113,7 +113,7 @@ const UserDialog = React.createClass({
           type="password"
           autocomplete="new-password"
           style={this.props.inputStyle}
-          bsStyle={ (this.props.user && this.props.user.newPassword && (this.isValidPassword() ? "success" : "danger")) || ""}
+          bsStyle={ (this.props.user && this.props.user.newPassword && (this.isValidPassword() ? "success" : "error")) || ""}
           label={<Message msgId="user.retypePwd"/>}
           onChange={this.handleChange} />
       <select name="role" style={this.props.inputStyle} onChange={this.handleChange} value={this.props.user && this.props.user.role}>
@@ -175,7 +175,7 @@ const UserDialog = React.createClass({
       let error = this.props.user && this.props.user.status === "error";
       if ( error ) {
           let lastError = this.props.user && this.props.user.lastError;
-          return <Alert bsStyle="danger">There was an error saving the user: {lastError && lastError.statusText}</Alert>;
+          return <Alert bsStyle="error">There was an error saving the user: {lastError && lastError.statusText}</Alert>;
       }
 
   },

@@ -9,6 +9,10 @@
     min-height: 25px;
 }
 
+.user-thumb .gridcard-tools {
+    right: 0
+}
+
 .user-thumb-description {
     /* ellipsis for description */
     display: block; /* Fallback for non-webkit */

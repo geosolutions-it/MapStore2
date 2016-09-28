@@ -10,12 +10,27 @@ const USERMANAGER_GETUSERS = 'USERMANAGER_GETUSERS';
 const USERMANAGER_EDIT_USER = 'USERMANAGER_EDIT_USER';
 const USERMANAGER_EDIT_USER_DATA = 'USERMANAGER_EDIT_USER_DATA';
 const USERMANAGER_UPDATE_USER = 'USERMANAGER_UPDATE_USER';
+const USERMANAGER_DELETE_USER = 'USERMANAGER_DELETE_USER';
 const API = require('../api/GeoStoreDAO');
 const {get, assign} = require('lodash');
 
-function getUsers(text = "*", options) {
-    let {start, limit} = options && options.params;
-    return (dispatch) => {
+function getUsers(searchText, options) {
+    let params = options && options.params;
+    let start;
+    let limit;
+    if (params) {
+        start = params.start;
+        limit = params.limit;
+    }
+    return (dispatch, getState) => {
+        let text = searchText;
+        let state = getState && getState();
+        if (state) {
+            let oldText = get(state, "users.searchText");
+            text = searchText || oldText || "*";
+            start = ( (start !== null && start !== undefined) ? start : (get(state, "users.start") || 0));
+            limit = limit || get(state, "users.limit") || 12;
+        }
         dispatch({
             type: USERMANAGER_GETUSERS,
             status: "loading",
@@ -24,7 +39,7 @@ function getUsers(text = "*", options) {
             limit
         });
 
-        return API.getUsers(text, options).then((response) => {
+        return API.getUsers(text, {...options, params: {start, limit}}).then((response) => {
             let users = get(response, "ExtUserList.User");
             let totalCount = get(response, "ExtUserList.UserCount");
             users = Array.isArray(users) ? users : [users];
@@ -130,6 +145,7 @@ function saveUser(user, options = {}) {
                 status: "created",
                 user: { ...user, id}
             });
+            dispatch(getUsers());
         }).catch((error) => {
             dispatch({
                 type: USERMANAGER_UPDATE_USER,
@@ -147,9 +163,42 @@ function changeUserMetadata(key, newValue) {
         newValue
     };
 }
+function deleteUser(id, status = "confirm") {
+    if (status === "confirm" || status === "cancelled") {
+        return {
+            type: USERMANAGER_DELETE_USER,
+            status,
+            id
+        };
+    } else if ( status === "delete") {
+        return (dispatch) => {
+            dispatch({
+                type: USERMANAGER_DELETE_USER,
+                status: "deleting",
+                id
+            });
+            API.deleteUser(id).then(() => {
+                dispatch({
+                    type: USERMANAGER_DELETE_USER,
+                    status: "deleted",
+                    id
+                });
+                dispatch(getUsers());
+            }).catch((error) => {
+                dispatch({
+                    type: USERMANAGER_DELETE_USER,
+                    status: "error",
+                    id,
+                    error
+                });
+            });
+        };
+    }
+}
 module.exports = {
     getUsers, USERMANAGER_GETUSERS,
     editUser, USERMANAGER_EDIT_USER,
     changeUserMetadata, USERMANAGER_EDIT_USER_DATA,
-    saveUser, USERMANAGER_UPDATE_USER
+    saveUser, USERMANAGER_UPDATE_USER,
+    deleteUser, USERMANAGER_DELETE_USER
 };

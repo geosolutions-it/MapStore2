@@ -27,15 +27,13 @@ const UserCard = React.createClass({
     getDefaultProps() {
         return {
             style: {
-                // backgroundImage: 'url(' + thumbUrl + ')',
+                background: "#F7F4ED",
+                position: "relative",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "repeat-x"
             },
-            innerItemStyle: {"float": "left", margin: "10px"},
-            // CALLBACKS
-            onMapDelete: ()=> {},
-            onEdit: ()=> {}
+            innerItemStyle: {"float": "left", margin: "10px"}
         };
     },
     renderStatus() {
@@ -48,7 +46,7 @@ const UserCard = React.createClass({
     },
     renderGroups() {
         return (<div style={this.props.innerItemStyle}><div><strong>Group:</strong></div>
-         {this.props.user.group ? this.props.user.group.map((group)=> (<div>{group.groupName}</div>)) : null}
+         {this.props.user && this.props.user.groups ? this.props.user.groups.map((group)=> (<div>{group.groupName}</div>)) : null}
      </div>);
     },
     renderRole() {

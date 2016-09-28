@@ -9,12 +9,14 @@ const React = require('react');
 const UserGrid = require('./users/UserGrid');
 const UserDialog = require('./users/UserDialog');
 const TopButtons = require('./users/TopButtons');
+const UserDeleteConfirm = require('./users/UserDeleteConfirm');
 const UserManager = React.createClass({
     render() {
         return (<div>
             <TopButtons />
             <UserGrid />
             <UserDialog />
+            <UserDeleteConfirm />
     </div>);
     }
 });

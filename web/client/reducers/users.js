@@ -7,7 +7,7 @@
  */
 
 const {
-    USERMANAGER_GETUSERS, USERMANAGER_EDIT_USER, USERMANAGER_EDIT_USER_DATA, USERMANAGER_UPDATE_USER
+    USERMANAGER_GETUSERS, USERMANAGER_EDIT_USER, USERMANAGER_EDIT_USER_DATA, USERMANAGER_UPDATE_USER, USERMANAGER_DELETE_USER
 } = require('../actions/users');
 const assign = require('object-assign');
 function users(state = {
@@ -28,12 +28,21 @@ function users(state = {
                 status: action.status,
                 ...action.user
             } : action.user;
+            if (state.currentUser && action.user && (state.currentUser.id === action.user.id) ) {
+                return assign({}, state, {
+                    currentUser: assign({}, state.currentUser, {
+                        status: action.status,
+                        ...action.user
+                    })}
+                );
+            // this to catch user loaded but window already closed
+        } else if (state.currentUser || (action.status !== "success" && action.status !== "error")) {
             return assign({}, state, {
-                currentUser: state.currentUser && action.user && (state.currentUser.id === action.user.id) ? assign({}, state.currentUser, {
-                    status: action.status,
-                    ...action.user
-                }) : newUser}
-            );
+                    currentUser: newUser
+                });
+        }
+            return state;
+
         }
         case USERMANAGER_EDIT_USER_DATA: {
             let k = action.key;
@@ -69,6 +78,20 @@ function users(state = {
                    lastError: action.error
                })
            });
+        }
+        case USERMANAGER_DELETE_USER: {
+            if (action.status === "deleted" || action.status === "cancelled") {
+                return assign({}, state, {
+                    deletingUser: null
+                });
+            }
+            return assign({}, state, {
+                deletingUser: {
+                    id: action.id,
+                    status: action.status,
+                    error: action.error
+                }
+            });
         }
         default:
             return state;

@@ -41,22 +41,20 @@ describe('Test the users reducer', () => {
     it('edit user', () => {
         const state = users(undefined, {
             type: USERMANAGER_EDIT_USER,
-            status: 'success',
             user: {
-                id: 1,
                 name: "user",
                 attribute: [{ name: "attr1", value: "value1"}]
             },
             totalCount: 0
         });
         expect(state.currentUser).toExist();
-        expect(state.currentUser.status).toBe("success");
-        expect(state.currentUser.id).toBe(1);
+        expect(state.currentUser.name).toBe("user");
         const stateMerge = users({currentUser: {
             id: 1,
             groups: []
         }}, {
             type: USERMANAGER_EDIT_USER,
+            status: "success",
             user: {
                 id: 1,
                 name: "user",
