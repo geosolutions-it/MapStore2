@@ -11,7 +11,8 @@
 /* Medium devices (desktops, 992px and up) */
 @media (min-width: 992px) {
     .mapstore-home-description {
-        margin: -50px 100px 50px 100px;
+        margin-left: 100px;
+        margin-right: 100px;
     }
 }
 
