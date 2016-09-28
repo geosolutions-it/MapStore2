@@ -149,7 +149,7 @@ let LeafletMap = React.createClass({
         }
         // update the position if the map is not the source of the state change
         if (this.map && newProps.mapStateSource !== this.props.id) {
-            this._updateMapPositionFromNewProps(Math.round(newProps));
+            this._updateMapPositionFromNewProps(newProps);
         }
         if (newProps.zoomControl !== this.props.zoomControl) {
             if (newProps.zoomControl) {
