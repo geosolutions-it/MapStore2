@@ -77,7 +77,7 @@ const MeasureComponent = React.createClass({
             withReset: false,
             formatLength: (uom, value) => measureUtils.getFormattedLength(uom, value),
             formatArea: (uom, value) => measureUtils.getFormattedArea(uom, value),
-            formatBearing: (value) => measureUtils.getFormattedBearingValue(value)
+            formatBearing: (value) => measureUtils.getFormattedBearingValue(round(value || 0, 6))
         };
     },
     shouldComponentUpdate(nextProps) {
@@ -180,7 +180,7 @@ const MeasureComponent = React.createClass({
                     <p><span>{this.props.areaLabel}: </span><span id="measure-area-res">
                         <FormattedNumber key="area" {...decimalFormat} value={this.props.formatArea(this.props.uom.area.unit, this.props.measurement.area)} /> {this.props.uom.area.label}</span></p>
                     <p><span>{this.props.bearingLabel}: </span>
-                    <span id="measure-bearing-res">{this.props.formatBearing(round(this.props.measurement.bearing || 0, 6))}</span></p>
+                    <span id="measure-bearing-res">{this.props.formatBearing(this.props.measurement.bearing || 0)}</span></p>
                 </div>
             );
     },
