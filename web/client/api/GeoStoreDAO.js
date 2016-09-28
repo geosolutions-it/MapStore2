@@ -40,7 +40,7 @@ var Api = {
             this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
     getResourcesByCategory: function(category, query, options) {
-        let q = query || "*";
+        let q = query && "*";
         let url = "extjs/search/category/" + category + "/*" + q + "*/thumbnail"; // comma-separated list of wanted attributes
         return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
