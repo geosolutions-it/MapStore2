@@ -93,7 +93,7 @@ var OpenlayersMap = React.createClass({
           controls: controls,
           interactions: interactions,
           target: this.props.id,
-          view: this.createView(center, this.props.zoom, this.props.projection, this.props.mapOptions && this.props.mapOptions.view)
+          view: this.createView(center, Math.round(this.props.zoom), this.props.projection, this.props.mapOptions && this.props.mapOptions.view)
         });
         map.on('moveend', () => {
             let view = map.getView();

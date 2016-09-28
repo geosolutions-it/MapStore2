@@ -161,13 +161,13 @@ describe('OpenlayersMap', () => {
         const map = ReactDOM.render(
             <OpenlayersMap
                 center={{y: 43.9, x: 10.3}}
-                zoom={11}
+                zoom={11.6}
                 measurement={{}}
             />
         , document.getElementById("map"));
 
         const olMap = map.map;
-
+        expect(olMap.getView().getZoom()).toBe(12);
         map.setProps({zoom: 12, center: {y: 44, x: 10}});
         expect(olMap.getView().getZoom()).toBe(12);
         let center = map.normalizeCenter(olMap.getView().getCenter());
