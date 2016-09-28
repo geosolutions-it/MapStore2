@@ -162,13 +162,13 @@ describe('LeafletMap', () => {
         const map = ReactDOM.render(
             <LeafletMap
                 center={{y: 43.9, x: 10.3}}
-                zoom={11}
+                zoom={11.6}
                 measurement={{}}
             />
         , document.getElementById("container"));
 
         const leafletMap = map.map;
-
+        expect(leafletMap.getZoom()).toBe(12);
         map.setProps({zoom: 12, center: {y: 44, x: 10}});
         expect(leafletMap.getZoom()).toBe(12);
         expect(leafletMap.getCenter().lat).toBe(44);
