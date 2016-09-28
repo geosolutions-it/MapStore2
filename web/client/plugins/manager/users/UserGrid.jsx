@@ -9,7 +9,7 @@ const React = require('react');
 const {bindActionCreators} = require('redux');
 const {connect} = require('react-redux');
 const assign = require('object-assign');
-const {getUsers} = require('../../../actions/users');
+const {getUsers, editUser} = require('../../../actions/users');
 const PaginationToolbar = require('./PaginationToolbar');
 
 const mapStateToProps = (state) => {
@@ -24,7 +24,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
-        loadUsers: getUsers
+        loadUsers: getUsers,
+        onEdit: editUser
     }, dispatch);
 };
 const mergeProps = (stateProps, dispatchProps, ownProps) => {

@@ -48,7 +48,7 @@ const UserCard = React.createClass({
     },
     renderGroups() {
         return (<div style={this.props.innerItemStyle}><div><strong>Group:</strong></div>
-         {this.props.user.groups ? this.props.user.groups.map((group)=> (<div>{group.groupName}</div>)) : null}
+         {this.props.user.group ? this.props.user.group.map((group)=> (<div>{group.groupName}</div>)) : null}
      </div>);
     },
     renderRole() {

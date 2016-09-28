@@ -10,10 +10,12 @@ const React = require('react');
 const {Grid, Row, Col} = require('react-bootstrap');
 const UserCard = require('./UserCard');
 const Spinner = require('react-spinkit');
-
+const Message = require('../../I18N/Message');
 var UsersGrid = React.createClass({
     propTypes: {
         loadUsers: React.PropTypes.func,
+        onEdit: React.PropTypes.func,
+        onDelete: React.PropTypes.func,
         fluid: React.PropTypes.bool,
         users: React.PropTypes.array,
         loading: React.PropTypes.bool,
@@ -23,6 +25,8 @@ var UsersGrid = React.createClass({
     getDefaultProps() {
         return {
             loadUsers: () => {},
+            onEdit: () => {},
+            onDelete: () => {},
             fluid: true,
             colProps: {
                 xs: 12,
@@ -42,7 +46,17 @@ var UsersGrid = React.createClass({
         return (<div style={{width: "100px", overflow: "visible", margin: "auto"}}>Loading...<Spinner spinnerName="circle" noFadeIn/></div>);
     },
     renderUsers(users) {
-        return users.map((user) => (<Col {...this.props.colProps}><UserCard user={user}/></Col>));
+        return users.map((user) => (<Col {...this.props.colProps}><UserCard user={user} actions={[
+            {
+                 onClick: () => {this.props.onEdit(user); },
+                 glyph: "wrench",
+                 tooltip: <Message msgId="manager.users.editUser" />
+         }, {
+                 onClick: () => {this.props.onDelete(user); },
+                 glyph: "remove-circle",
+                 tooltip: <Message msgId="manager.users.deleteUser" />
+         }
+        ]}/></Col>));
     },
     render: function() {
         return (

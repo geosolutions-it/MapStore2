@@ -1,0 +1,12 @@
+.user-edit-dialog{
+    background: white;
+    z-index: 1000;
+}
+
+.user-edit-dialog {
+    max-width: 300px;
+}
+
+.user-edit-dialog .modal-body .nav-tabs li a {
+    padding: 0;
+}

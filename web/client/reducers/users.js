@@ -7,7 +7,7 @@
  */
 
 const {
-    USERMANAGER_GETUSERS
+    USERMANAGER_GETUSERS, USERMANAGER_EDIT_USER, USERMANAGER_EDIT_USER_DATA, USERMANAGER_UPDATE_USER
 } = require('../actions/users');
 const assign = require('object-assign');
 function users(state = {
@@ -23,7 +23,53 @@ function users(state = {
                 limit: action.limit,
                 totalCount: action.status === "loading" ? state.totalCount : action.totalCount
             });
+        case USERMANAGER_EDIT_USER: {
+            let newUser = action.status ? {
+                status: action.status,
+                ...action.user
+            } : action.user;
+            return assign({}, state, {
+                currentUser: state.currentUser && action.user && (state.currentUser.id === action.user.id) ? assign({}, state.currentUser, {
+                    status: action.status,
+                    ...action.user
+                }) : newUser}
+            );
+        }
+        case USERMANAGER_EDIT_USER_DATA: {
+            let k = action.key;
+            let currentUser = state.currentUser;
+            if ( k.indexOf("attribute") === 0) {
+                let attrs = [...(currentUser.attribute || [])];
+                let attrName = k.split(".")[1];
+                let attrIndex = attrs.findIndex((att) => att.name === attrName);
+                if (attrIndex >= 0) {
+                    attrs[attrIndex] = {name: attrName, value: action.newValue};
+                } else {
+                    attrs.push({name: attrName, value: action.newValue});
+                }
 
+                currentUser = assign({}, currentUser, {
+                    attribute: attrs
+                });
+            } else {
+                currentUser = assign({}, currentUser, {[k]: action.newValue} );
+            }
+            return assign({}, state, {
+                currentUser: assign({}, {...currentUser, status: "modified"})
+            });
+        }
+        case USERMANAGER_UPDATE_USER: {
+            let currentUser = state.currentUser;
+
+            return assign({}, state, {
+               currentUser: assign({}, {
+                   ...currentUser,
+                   ...action.user,
+                   status: action.status,
+                   lastError: action.error
+               })
+           });
+        }
         default:
             return state;
     }
