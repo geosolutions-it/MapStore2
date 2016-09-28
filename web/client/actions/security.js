@@ -13,6 +13,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const LOGIN_SUBMIT = 'LOGIN_SUBMIT';
 const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 const LOGIN_FAIL = 'LOGIN_FAIL';
+const RESET_ERROR = 'RESET_ERROR';
 const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 const CHANGE_PASSWORD_SUCCESS = 'CHANGE_PASSWORD_SUCCESS';
 const CHANGE_PASSWORD_FAIL = 'CHANGE_PASSWORD_FAIL';
@@ -38,6 +39,11 @@ function loginFail(e) {
     };
 }
 
+function resetError() {
+    return {
+        type: RESET_ERROR
+    };
+}
 function logout(redirectUrl) {
     return {
         type: LOGOUT,
@@ -94,11 +100,13 @@ module.exports = {
     CHANGE_PASSWORD_FAIL,
     LOGIN_SUCCESS,
     LOGIN_FAIL,
+    RESET_ERROR,
     LOGOUT,
     geoStoreLoginSubmit,
     loginSuccess,
     loginFail,
     logout,
     geoStoreChangePassword,
-    logoutWithReload
+    logoutWithReload,
+    resetError
 };
