@@ -18,7 +18,8 @@ let CRSSelector = React.createClass({
         availableCRS: React.PropTypes.object,
         crs: React.PropTypes.string,
         enabled: React.PropTypes.bool,
-        onCRSChange: React.PropTypes.func
+        onCRSChange: React.PropTypes.func,
+        useRawInput: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -26,7 +27,8 @@ let CRSSelector = React.createClass({
             availableCRS: CoordinatesUtils.getAvailableCRS(),
             crs: null,
             onCRSChange: function() {},
-            enabled: false
+            enabled: false,
+            useRawInput: false
         };
     },
     render() {
@@ -40,23 +42,38 @@ let CRSSelector = React.createClass({
                 list.push(<option value={val} key={val}>{label}</option>);
             }
         }
-        return (
-              (this.props.enabled) ? (<Input
+        if (this.props.enabled && this.props.useRawInput) {
+            return (
+                <select
                     id={this.props.id}
                     value={this.props.crs}
-                    type="select"
                     onChange={this.launchNewCRSAction}
                     bsSize="small"
                     {...this.props.inputProps}>
                     {list}
-                </Input>) : null
-
-        );
+                </select>);
+        } else if (this.props.enabled && !this.props.useRawInput) {
+            return (
+                <Input
+                  type="select"
+                  id={this.props.id}
+                  value={this.props.crs}
+                  onChange={this.launchNewCRSAction}
+                  bsSize="small"
+                  {...this.props.inputProps}>
+                  {list}
+              </Input>);
+        }
+        return null;
     },
-    launchNewCRSAction() {
-        var element = ReactDOM.findDOMNode(this);
-        var selectNode = element.getElementsByTagName('select').item(0);
-        this.props.onCRSChange(selectNode.value);
+    launchNewCRSAction(ev) {
+        if (this.props.useRawInput) {
+            this.props.onCRSChange(ev.target.value);
+        } else {
+            let element = ReactDOM.findDOMNode(this);
+            let selectNode = element.getElementsByTagName('select').item(0);
+            this.props.onCRSChange(selectNode.value);
+        }
     }
 });
 
