@@ -20,7 +20,7 @@ const Bar = React.createClass({
         };
     },
     render() {
-        return (<Grid fluid="true"><Button bsStyle="primary" onClick={this.props.onNewUser}>New User</Button></Grid>);
+        return (<Grid style={{marginBottom: "10px"}} fluid="true"><Button bsStyle="primary" onClick={this.props.onNewUser}>New User</Button></Grid>);
     }
 });
 const TopButtons = connect(() => ({}), {onNewUser: editUser.bind(null, {role: "USER", "enabled": true})} )(Bar);

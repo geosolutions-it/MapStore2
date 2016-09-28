@@ -180,7 +180,7 @@ const UserDialog = React.createClass({
 
   },
   render() {
-      return (<Dialog maskLoading={this.props.user && (this.props.user.status === "loading" || this.props.user.status === "saving")} id="mapstore-user-dialog" className="user-edit-dialog" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
+      return (<Dialog onClickOut={this.props.onClose} modal="true" maskLoading={this.props.user && (this.props.user.status === "loading" || this.props.user.status === "saving")} id="mapstore-user-dialog" className="user-edit-dialog" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
 
           <span role="header">
               <span className="user-panel-title">User</span>
