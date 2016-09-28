@@ -19,7 +19,7 @@ const bearingRuleIcon = require('./img/bearing-ruler.png');
 const measureUtils = require('../../../utils/MeasureUtils');
 const localeUtils = require('../../../utils/LocaleUtils');
 
-const {isEqual} = require('lodash');
+const {isEqual, round} = require('lodash');
 
 require('./measure.css');
 
@@ -51,7 +51,10 @@ const MeasureComponent = React.createClass({
         areaGlyph: React.PropTypes.string,
         bearingGlyph: React.PropTypes.string,
         useButtonGroup: React.PropTypes.bool,
-        withReset: React.PropTypes.bool
+        withReset: React.PropTypes.bool,
+        formatLength: React.PropTypes.func,
+        formatArea: React.PropTypes.func,
+        formatBearing: React.PropTypes.func
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -71,7 +74,10 @@ const MeasureComponent = React.createClass({
             },
             showResults: true,
             useButtonGroup: true,
-            withReset: false
+            withReset: false,
+            formatLength: (uom, value) => measureUtils.getFormattedLength(uom, value),
+            formatArea: (uom, value) => measureUtils.getFormattedArea(uom, value),
+            formatBearing: (value) => measureUtils.getFormattedBearingValue(round(value || 0, 6))
         };
     },
     shouldComponentUpdate(nextProps) {
@@ -169,9 +175,12 @@ const MeasureComponent = React.createClass({
         let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
         return (
                <div className="panel-body">
-                    <p><span>{this.props.lengthLabel}: </span><span id="measure-len-res"><FormattedNumber key="len" {...decimalFormat} value={measureUtils.getFormattedLength(this.props.uom.length.unit, this.props.measurement.len)} /> {this.props.uom.length.label}</span></p>
-                    <p><span>{this.props.areaLabel}: </span><span id="measure-area-res"><FormattedNumber key="area" {...decimalFormat} value={measureUtils.getFormattedArea(this.props.uom.area.unit, this.props.measurement.area)} /> {this.props.uom.area.label}</span></p>
-                    <p><span>{this.props.bearingLabel}: </span><span id="measure-bearing-res">{measureUtils.getFormattedBearingValue(this.props.measurement.bearing)}</span></p>
+                    <p><span>{this.props.lengthLabel}: </span><span id="measure-len-res">
+                        <FormattedNumber key="len" {...decimalFormat} value={this.props.formatLength(this.props.uom.length.unit, this.props.measurement.len)} /> {this.props.uom.length.label}</span></p>
+                    <p><span>{this.props.areaLabel}: </span><span id="measure-area-res">
+                        <FormattedNumber key="area" {...decimalFormat} value={this.props.formatArea(this.props.uom.area.unit, this.props.measurement.area)} /> {this.props.uom.area.label}</span></p>
+                    <p><span>{this.props.bearingLabel}: </span>
+                    <span id="measure-bearing-res">{this.props.formatBearing(this.props.measurement.bearing || 0)}</span></p>
                 </div>
             );
     },
