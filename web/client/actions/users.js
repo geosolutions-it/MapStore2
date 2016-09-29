@@ -87,7 +87,7 @@ function editUser(user, options ={params: {includeattributes: true}} ) {
                 if (attribute) {
                     userLoaded = {
                         ...userLoaded,
-                        attribute: Array.isArray() ? attribute : [attribute]
+                        attribute: Array.isArray(attribute) ? attribute : [attribute]
                     };
                 }
                 dispatch({

@@ -48,7 +48,7 @@ function users(state = {
             let k = action.key;
             let currentUser = state.currentUser;
             if ( k.indexOf("attribute") === 0) {
-                let attrs = [...(currentUser.attribute || [])];
+                let attrs = (currentUser.attribute || []).concat();
                 let attrName = k.split(".")[1];
                 let attrIndex = attrs.findIndex((att) => att.name === attrName);
                 if (attrIndex >= 0) {

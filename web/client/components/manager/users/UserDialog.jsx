@@ -175,7 +175,7 @@ const UserDialog = React.createClass({
       let error = this.props.user && this.props.user.status === "error";
       if ( error ) {
           let lastError = this.props.user && this.props.user.lastError;
-          return <Alert bsStyle="error">There was an error saving the user: {lastError && lastError.statusText}</Alert>;
+          return <Alert bsStyle="warning">There was an error saving the user: {lastError && lastError.statusText}</Alert>;
       }
 
   },

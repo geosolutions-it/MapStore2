@@ -37,7 +37,7 @@ const UserCard = React.createClass({
         };
     },
     renderStatus() {
-        return (<div className="user-status" style={{position: "absolute", bottom: 0, left: "10px", margin: "10px 10px 0 10px"}}>
+        return (<div key="status" className="user-status" style={{position: "absolute", bottom: 0, left: "10px", margin: "10px 10px 0 10px"}}>
            <div><strong>Status:</strong></div>
            {this.props.user.enabled ?
                <Glyphicon glyph="ok-sign" style={{fontSize: "32px", color: "#4E8C75"}} /> :
@@ -45,17 +45,17 @@ const UserCard = React.createClass({
        </div>);
     },
     renderGroups() {
-        return (<div style={this.props.innerItemStyle}><div><strong>Group:</strong></div>
+        return (<div key="groups" style={this.props.innerItemStyle}><div><strong>Group:</strong></div>
          {this.props.user && this.props.user.groups ? this.props.user.groups.map((group)=> (<div>{group.groupName}</div>)) : null}
      </div>);
     },
     renderRole() {
-        return (<div style={this.props.innerItemStyle}><div><strong>Role:</strong></div>
+        return (<div key="role" style={this.props.innerItemStyle}><div><strong>Role:</strong></div>
             {this.props.user.role}
         </div>);
     },
     renderAvatar() {
-        return (<div style={this.props.innerItemStyle} ><Button bsStyle="primary" type="button" className="square-button">
+        return (<div key="avatar" style={this.props.innerItemStyle} ><Button bsStyle="primary" type="button" className="square-button">
             <Glyphicon glyph="user" />
             </Button></div>);
     },

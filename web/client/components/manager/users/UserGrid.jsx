@@ -44,7 +44,25 @@ var UsersGrid = React.createClass({
         this.props.loadUsers();
     },
     renderLoading() {
-        return (<div style={{width: "100px", overflow: "visible", margin: "auto"}}>Loading...<Spinner spinnerName="circle" noFadeIn/></div>);
+        if (this.props.loading) {
+            return (<div style={{
+                width: "100%",
+                height: "100%",
+                position: "absolute",
+                overflow: "visible",
+                margin: "auto",
+                verticalAlign: "center",
+                left: "0",
+                background: "rgba(255, 255, 255, 0.5)",
+                zIndex: 2
+            }}><div style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -40%)"
+            }}>Loading...<Spinner spinnerName="circle" noFadeIn/></div></div>);
+        }
+
     },
     renderUsers(users) {
         return users.map((user) => {
@@ -63,16 +81,17 @@ var UsersGrid = React.createClass({
                 });
             }
 
-            return <Col {...this.props.colProps}><UserCard user={user} actions={actions}/></Col>;
+            return <Col key={"user-" + user.id} {...this.props.colProps}><UserCard user={user} actions={actions}/></Col>;
         });
     },
     render: function() {
         return (
-                <Grid fluid={this.props.fluid}>
-                    <Row>
-                        {this.props.loading ? this.renderLoading() : this.renderUsers(this.props.users || [])}
+                <Grid style={{position: "relative"}} fluid={this.props.fluid}>
+                    {this.renderLoading()}
+                    <Row key="users">
+                        {this.renderUsers(this.props.users || [])}
                     </Row>
-                    <Row>
+                    <Row key="bottom">
                         {this.props.bottom}
                     </Row>
                 </Grid>
