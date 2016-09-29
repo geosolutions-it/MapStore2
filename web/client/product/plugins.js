@@ -47,6 +47,7 @@ module.exports = {
         LanguagePlugin: require('../plugins/Language'),
         AttributionPlugin: require('./plugins/Attribution'),
         HeaderPlugin: require('./plugins/Header'),
+        ForkPlugin: require('./plugins/Fork'),
         FooterPlugin: require('./plugins/Footer'),
         ManagerPlugin: require('../plugins/manager/Manager'),
         RulesManagerPlugin: require('../plugins/manager/RulesManager'),
