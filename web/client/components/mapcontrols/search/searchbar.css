@@ -143,3 +143,23 @@
         width: 580px;
     }
 }
+
+/* User Search */
+.user-search.MapSearchBar{
+    width: 90%;
+    left: 0px;
+    position: relative;
+    right: 0px;
+    top: 0px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.user-search.MapSearchBar .input-group {
+    width: 100%;
+
+}
+@media (min-width: 768px) {
+    .user-search.MapSearchBar {
+        width: 580px;
+    }
+}

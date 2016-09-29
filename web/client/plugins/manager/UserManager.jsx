@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const SearchBar = require('./users/SearchBar');
 const UserGrid = require('./users/UserGrid');
 const UserDialog = require('./users/UserDialog');
 const TopButtons = require('./users/TopButtons');
@@ -13,6 +14,7 @@ const UserDeleteConfirm = require('./users/UserDeleteConfirm');
 const UserManager = React.createClass({
     render() {
         return (<div>
+            <SearchBar />
             <TopButtons />
             <UserGrid />
             <UserDialog />

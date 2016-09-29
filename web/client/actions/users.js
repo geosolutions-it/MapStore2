@@ -40,7 +40,14 @@ function getUsers(searchText, options) {
         });
 
         return API.getUsers(text, {...options, params: {start, limit}}).then((response) => {
-            let users = get(response, "ExtUserList.User");
+            let users;
+            // this because _.get returns an array with an undefined element isntead of null
+            if (!response || !response.ExtUserList || !response.ExtUserList.User) {
+                users = [];
+            } else {
+                users = get(response, "ExtUserList.User");
+            }
+
             let totalCount = get(response, "ExtUserList.UserCount");
             users = Array.isArray(users) ? users : [users];
             users = users.map((user) => {
