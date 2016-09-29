@@ -62,6 +62,9 @@ const ZoomButton = React.createClass({
         );
     },
     addTooltip(btn) {
+        if (!this.props.tooltip) {
+            return btn;
+        }
         let tooltip = <Tooltip id="locate-tooltip">{this.props.tooltip}</Tooltip>;
         return (
             <OverlayTrigger placement={this.props.tooltipPlace} key={"overlay-trigger." + this.props.id} overlay={tooltip}>
