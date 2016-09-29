@@ -140,6 +140,9 @@ const Print = React.createClass({
                     bsSize: "large"
                 },
                 glyph: "print"
+            },
+            style: {
+                width: "840px !important"
             }
         };
     },
