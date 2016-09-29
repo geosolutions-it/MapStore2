@@ -168,7 +168,7 @@ describe('OpenlayersMap', () => {
 
         const olMap = map.map;
         expect(olMap.getView().getZoom()).toBe(12);
-        map.setProps({zoom: 12, center: {y: 44, x: 10}});
+        map.setProps({zoom: 12.4, center: {y: 44, x: 10}});
         expect(olMap.getView().getZoom()).toBe(12);
         let center = map.normalizeCenter(olMap.getView().getCenter());
         expect(center[1].toFixed(1)).toBe('44.0');

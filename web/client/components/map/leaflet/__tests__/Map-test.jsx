@@ -169,7 +169,7 @@ describe('LeafletMap', () => {
 
         const leafletMap = map.map;
         expect(leafletMap.getZoom()).toBe(12);
-        map.setProps({zoom: 12, center: {y: 44, x: 10}});
+        map.setProps({zoom: 12.4, center: {y: 44, x: 10}});
         expect(leafletMap.getZoom()).toBe(12);
         expect(leafletMap.getCenter().lat).toBe(44);
         expect(leafletMap.getCenter().lng).toBe(10);
