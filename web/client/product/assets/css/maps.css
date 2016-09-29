@@ -8,8 +8,17 @@
     background-position: center;
     position: relative;
     top: -20px;
-
 }
+.page-maps .ms-fork-button {
+    position: absolute;
+    left: 0;
+    top: 52px;
+    border: 0;
+    -ms-transform: rotate(272deg);
+    -webkit-transform: rotate(272deg);
+    transform: rotate(272deg);
+}
+
 .page-maps .MapSearchBar.maps-search {
     top: -80px;
 }
@@ -57,6 +66,12 @@ div#mailinglists {
 
 }
 
+/* small devices (mobiles, 375px and down) */
+@media (max-width: 375px) {
+    .page-maps .ms-fork-button {
+        top: 85px;
+    }
+}
 
 div#mailinglists h1 {
     font-size: 26px;
