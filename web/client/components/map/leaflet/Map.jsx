@@ -225,7 +225,7 @@ let LeafletMap = React.createClass({
 
          // do the change at the same time, to avoid glitches
         if (!centerIsNotUpdated && !zoomIsNotUpdated) {
-            this.map.setView([newProps.center.y, newProps.center.x], newProps.zoom);
+            this.map.setView([newProps.center.y, newProps.center.x], Math.round(newProps.zoom));
         } else if (!zoomIsNotUpdated) {
             this.map.setZoom(newProps.zoom);
         } else if (!centerIsNotUpdated) {

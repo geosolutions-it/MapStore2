@@ -306,8 +306,8 @@ var OpenlayersMap = React.createClass({
             let center = ol.proj.transform([newProps.center.x, newProps.center.y], 'EPSG:4326', newProps.projection);
             view.setCenter(center);
         }
-        if (newProps.zoom !== this.props.zoom) {
-            view.setZoom(newProps.zoom);
+        if (Math.round(newProps.zoom) !== this.props.zoom) {
+            view.setZoom(Math.round(newProps.zoom));
         }
     },
     normalizeCenter: function(center) {
