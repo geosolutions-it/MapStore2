@@ -65,4 +65,21 @@ describe("Test UserDialog Component", () => {
             <UserDialog user={{...adminUser, status: "loading"}}/>, document.getElementById("container"));
         expect(comp).toExist();
     });
+    it('Test user error', () => {
+        let comp = ReactDOM.render(
+            <UserDialog user={{...enabledUser, lastError: {statusText: "ERROR"}}}/>, document.getElementById("container"));
+        expect(comp).toExist();
+    });
+    it('Test isValidPAssword', () => {
+        let comp = ReactDOM.render(
+            <UserDialog user={{...enabledUser, newPassword: {statusText: "ERROR"}}}/>, document.getElementById("container"));
+        expect(comp).toExist();
+        comp = ReactDOM.render(
+            <UserDialog user={{...enabledUser, newPassword: "aaa", confirmPassword: "bbb"}}/>, document.getElementById("container"));
+        expect(comp).toExist();
+        expect(comp.isValidPassword()).toBe(false);
+        comp = ReactDOM.render(
+            <UserDialog user={{name: "user", newPassword: "aaa", confirmPassword: "aaa"}}/>, document.getElementById("container"));
+        expect(comp.isValidPassword()).toBe(true);
+    });
 });

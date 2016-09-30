@@ -7,7 +7,8 @@
  */
 
 const {
-    USERMANAGER_GETUSERS, USERMANAGER_EDIT_USER, USERMANAGER_EDIT_USER_DATA, USERMANAGER_UPDATE_USER, USERMANAGER_DELETE_USER
+    USERMANAGER_GETUSERS, USERMANAGER_EDIT_USER, USERMANAGER_EDIT_USER_DATA, USERMANAGER_UPDATE_USER, USERMANAGER_DELETE_USER,
+    USERMANAGER_GETGROUPS
 } = require('../actions/users');
 const assign = require('object-assign');
 function users(state = {
@@ -91,6 +92,13 @@ function users(state = {
                     status: action.status,
                     error: action.error
                 }
+            });
+        }
+        case USERMANAGER_GETGROUPS: {
+            return assign({}, state, {
+                groups: action.groups,
+                groupsStatus: action.status,
+                groupsError: action.error
             });
         }
         default:

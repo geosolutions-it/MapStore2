@@ -18,6 +18,7 @@ const React = require('react');
 const {Alert, Tabs, Tab, Button, Glyphicon, Input} = require('react-bootstrap');
 
 const Dialog = require('../../../components/misc/Dialog');
+const UserGroups = require('./UserGroups');
 const assign = require('object-assign');
 const Message = require('../../../components/I18N/Message');
 const Spinner = require('react-spinkit');
@@ -29,6 +30,8 @@ const UserDialog = React.createClass({
   propTypes: {
       // props
       user: React.PropTypes.object,
+      groups: React.PropTypes.array,
+      groupsStatus: React.PropTypes.string,
       show: React.PropTypes.bool,
       onClose: React.PropTypes.func,
       onChange: React.PropTypes.func,
@@ -113,7 +116,7 @@ const UserDialog = React.createClass({
           type="password"
           autocomplete="new-password"
           style={this.props.inputStyle}
-          bsStyle={ (this.props.user && this.props.user.newPassword && (this.isValidPassword() ? "success" : "error")) || ""}
+          bsStyle={ (this.props.user && this.props.user.newPassword && (this.isValidPassword() ? "success" : "error")) || null}
           label={<Message msgId="user.retypePwd"/>}
           onChange={this.handleChange} />
       <select name="role" style={this.props.inputStyle} onChange={this.handleChange} value={this.props.user && this.props.user.role}>
@@ -159,31 +162,31 @@ const UserDialog = React.createClass({
   },
   renderButtons() {
       return [
-          <Button bsSize={this.props.buttonSize} bsSize="small"
+          <Button key="save" bsSize={this.props.buttonSize} bsSize="small"
               bsStyle={this.isSaved() ? "success" : "primary" }
               onClick={() => this.props.onSave(this.props.user)}
               disabled={!this.isValid() || this.isSaving()}>
               {this.renderSaveButtonContent()}</Button>,
-          <Button bsSize={this.props.buttonSize} bsSize="small" onClick={this.props.onClose}><Message msgId="close"/></Button>
+          <Button key="close" bsSize={this.props.buttonSize} bsSize="small" onClick={this.props.onClose}><Message msgId="close"/></Button>
 
       ];
   },
   renderGroups() {
-      return null;
+      return <UserGroups onUserGroupsChange={this.props.onChange} user={this.props.user} groups={this.props.groups} />;
   },
   renderError() {
       let error = this.props.user && this.props.user.status === "error";
       if ( error ) {
           let lastError = this.props.user && this.props.user.lastError;
-          return <Alert bsStyle="warning">There was an error saving the user: {lastError && lastError.statusText}</Alert>;
+          return <Alert key="error" bsStyle="warning">There was an error saving the user: {lastError && lastError.statusText}</Alert>;
       }
 
   },
   render() {
-      return (<Dialog onClickOut={this.props.onClose} modal="true" maskLoading={this.props.user && (this.props.user.status === "loading" || this.props.user.status === "saving")} id="mapstore-user-dialog" className="user-edit-dialog" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
+      return (<Dialog onClickOut={this.props.onClose} modal={true} maskLoading={this.props.user && (this.props.user.status === "loading" || this.props.user.status === "saving")} id="mapstore-user-dialog" className="user-edit-dialog" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
 
           <span role="header">
-              <span className="user-panel-title">User</span>
+              <span className="user-panel-title">{(this.props.user && this.props.user.name) || "New User"}</span>
               <button onClick={this.props.onClose} className="login-panel-close close">
                   {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}
               </button>

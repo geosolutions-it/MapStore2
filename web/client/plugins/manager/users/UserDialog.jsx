@@ -15,7 +15,8 @@ const mapStateToProps = (state) => {
     return {
         modal: true,
         show: users && !!users.currentUser,
-        user: users && users.currentUser
+        user: users && users.currentUser,
+        groups: users && users.groups
     };
 };
 const mapDispatchToProps = (dispatch) => {

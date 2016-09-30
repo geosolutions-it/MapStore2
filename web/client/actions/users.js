@@ -11,6 +11,7 @@ const USERMANAGER_EDIT_USER = 'USERMANAGER_EDIT_USER';
 const USERMANAGER_EDIT_USER_DATA = 'USERMANAGER_EDIT_USER_DATA';
 const USERMANAGER_UPDATE_USER = 'USERMANAGER_UPDATE_USER';
 const USERMANAGER_DELETE_USER = 'USERMANAGER_DELETE_USER';
+const USERMANAGER_GETGROUPS = 'USERMANAGER_GETGROUPS';
 const API = require('../api/GeoStoreDAO');
 const {get, assign} = require('lodash');
 
@@ -79,9 +80,40 @@ function getUsers(searchText, options) {
         });
     };
 }
+function getGroups(user) {
+    return (dispatch) => {
+        dispatch({
+            type: USERMANAGER_GETGROUPS,
+            status: "loading"
+        });
+        return API.getAvailableGroups(user).then((groups) => {
+            dispatch({
+                type: USERMANAGER_GETGROUPS,
+                status: "success",
+                groups
+            });
+        }).catch((error) => {
+            dispatch({
+                type: USERMANAGER_GETGROUPS,
+                status: "error",
+                error
+            });
+        });
+    };
+
+}
 
 function editUser(user, options ={params: {includeattributes: true}} ) {
-    return (dispatch) => {
+    return (dispatch, getState) => {
+        let state = getState && getState();
+        if (state) {
+            // check if available groups are present
+            if (!(state.users && state.users.groups)) {
+                // get the current user [it should work]
+                let currentUser = state.security && state.security.user;
+                dispatch(getGroups(currentUser || {role: "ADMIN"}));
+            }
+        }
         if (user && user.id) {
             dispatch({
                 type: USERMANAGER_EDIT_USER,
@@ -96,6 +128,10 @@ function editUser(user, options ={params: {includeattributes: true}} ) {
                         ...userLoaded,
                         attribute: Array.isArray(attribute) ? attribute : [attribute]
                     };
+                }
+                // the service returns groups = "", skip this to avoid overriding
+                if (userLoaded && userLoaded.groups === "") {
+                    userLoaded = {...userLoaded, groups: user.groups};
                 }
                 dispatch({
                     type: USERMANAGER_EDIT_USER,
@@ -125,7 +161,7 @@ function saveUser(user, options = {}) {
                 status: "saving",
                 user
             });
-            return API.updateUser(user.id, user, options).then((userDetails) => {
+            return API.updateUser(user.id, {...user, group: user.groups}, options).then((userDetails) => {
                 dispatch({
                     type: USERMANAGER_UPDATE_USER,
                     status: "saved",
@@ -202,10 +238,13 @@ function deleteUser(id, status = "confirm") {
         };
     }
 }
+
+
 module.exports = {
     getUsers, USERMANAGER_GETUSERS,
     editUser, USERMANAGER_EDIT_USER,
     changeUserMetadata, USERMANAGER_EDIT_USER_DATA,
     saveUser, USERMANAGER_UPDATE_USER,
-    deleteUser, USERMANAGER_DELETE_USER
+    deleteUser, USERMANAGER_DELETE_USER,
+    getGroups, USERMANAGER_GETGROUPS
 };

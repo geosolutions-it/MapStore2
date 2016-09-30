@@ -23,10 +23,15 @@ describe("ConfirmDialog component", () => {
     it('creates component with content', () => {
         const cmp = ReactDOM.render(<ConfirmDialog><div id="TEST">some content</div></ConfirmDialog>, document.getElementById("container"));
         expect(cmp).toExist();
+        let el = ReactDOM.findDOMNode(cmp);
+        el.click();
         let background = document.getElementsByClassName("modal").item(0);
+        let dialog = document.getElementsByClassName("modal-dialog").item(0);
         expect(background).toExist();
+        dialog.click();
+        // TODO spy onClose not called
         background.click();
-
+        // TODO spy onClose called
     });
 
 });
