@@ -178,7 +178,7 @@ function permissionsLoaded(permissions, mapId) {
     };
 }
 
-function loadMaps(geoStoreUrl, searchText="*", params={start: 0, limit: 20}) {
+function loadMaps(geoStoreUrl, searchText="*", params={start: 0, limit: 5}) {
     return (dispatch) => {
         let opts = assign({}, {params}, geoStoreUrl ? {baseURL: geoStoreUrl} : {});
         dispatch(mapsLoading(searchText, params));
@@ -372,10 +372,14 @@ function createMap(metadata, content, thumbnail, options) {
 }
 
 function deleteMap(resourceId, options) {
-    return (dispatch) => {
+    return (dispatch, getState) => {
         dispatch(mapDeleting(resourceId));
         GeoStoreApi.deleteResource(resourceId, options).then(() => {
             dispatch(mapDeleted(resourceId, "success"));
+            let state = getState && getState();
+            if ( state && state.maps && state.maps.totalCount === state.maps.start) {
+                dispatch(loadMaps(false, ConfigUtils.getDefaults().initialMapFilter || "*"));
+            }
         }).catch((e) => {
             dispatch(mapDeleted(resourceId, "failure", e));
         });

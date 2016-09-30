@@ -60,9 +60,9 @@ const PaginationToolbar = connect((state) => {
     }
     let {start, limit, results, loading, totalCount, searchText} = state.maps;
     let page = 0;
-    let total = totalCount || 0;
+    //    let total = totalCount || 0;
     if (results && totalCount) { // must be !==0 and exist to do the division
-        page = Math.ceil(start / total);
+        page = Math.ceil(start / limit);
     }
 
     return {
@@ -97,7 +97,7 @@ const Maps = React.createClass({
         router: React.PropTypes.object
     },
     componentDidMount() {
-        this.props.loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*", {start: 0, limit: 12});
+        this.props.loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*", {start: 0, limit: 20});
     },
     getDefaultProps() {
         return {
