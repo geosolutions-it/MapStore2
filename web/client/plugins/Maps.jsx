@@ -97,7 +97,7 @@ const Maps = React.createClass({
         router: React.PropTypes.object
     },
     componentDidMount() {
-        this.props.loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*", {start: 0, limit: 20});
+        this.props.loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*", {start: 0, limit: 12});
     },
     getDefaultProps() {
         return {
