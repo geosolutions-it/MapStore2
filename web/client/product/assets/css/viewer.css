@@ -551,9 +551,9 @@ html, body, #container, .fill {
     position: static;
 }
 #mapstore-mouseposition-mobile {
-        bottom: 0;
+        bottom: 25px;
         right: 30px;
-        z-index: 1;
+        z-index: 10;
         position: absolute;
         text-shadow: -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000, 1px 1px 1px #000;
     }
