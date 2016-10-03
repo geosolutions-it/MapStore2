@@ -7,7 +7,6 @@
  */
 
 const React = require('react');
-const {Input} = require('react-bootstrap');
 const mapUtils = require('../../../utils/MapUtils');
 const {isEqual} = require('lodash');
 
@@ -25,7 +24,7 @@ var ScaleBox = React.createClass({
     getDefaultProps() {
         return {
             id: 'mapstore-scalebox',
-            scales: mapUtils.getGoogleMercatorScales(0, 21),
+            scales: mapUtils.getGoogleMercatorScales(0, 28),
             currentZoomLvl: 0,
             onChange() {},
             readOnly: false,
@@ -37,7 +36,7 @@ var ScaleBox = React.createClass({
     },
     onComboChange(event) {
         var selectedZoomLvl = parseInt(event.nativeEvent.target.value, 10);
-        this.props.onChange(selectedZoomLvl, this.props.scales[selectedZoomLvl]);
+        this.props.onChange(selectedZoomLvl);
     },
     getOptions() {
         return this.props.scales.map((item, index) => {
@@ -49,9 +48,9 @@ var ScaleBox = React.createClass({
     render() {
         let control = this.props.readOnly ?
             <label>{this.props.template(this.props.scales[this.props.currentZoomLvl], this.props.currentZoomLvl)}</label>
-        : <Input type="select" label={this.props.label} onChange={this.onComboChange} bsSize="small" value={this.props.currentZoomLvl}>
+        : <select label={this.props.label} onChange={this.onComboChange} bsSize="small" value={this.props.currentZoomLvl}>
             {this.getOptions()}
-        </Input>;
+        </select>;
         return (
 
             <div id={this.props.id} style={this.props.style}>

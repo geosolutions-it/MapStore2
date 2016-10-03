@@ -24,7 +24,9 @@ function changeMeasurementState(measureState) {
         geomType: measureState.geomType,
         len: measureState.len,
         area: measureState.area,
-        bearing: measureState.bearing
+        bearing: measureState.bearing,
+        lenUnit: measureState.lenUnit,
+        areaUnit: measureState.areaUnit
     };
 }
 

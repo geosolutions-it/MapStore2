@@ -31,7 +31,7 @@ describe('ScaleBox', () => {
         expect(domNode.id).toBe('mapstore-scalebox');
 
         const comboItems = Array.prototype.slice.call(domNode.getElementsByTagName('option'), 0);
-        expect(comboItems.length).toBe(22);
+        expect(comboItems.length).toBe(29);
 
         expect(comboItems.reduce((pre, cur, i) => {
             const scale = parseInt(cur.innerHTML.replace(/1\s\:\s/i, ''), 10);
