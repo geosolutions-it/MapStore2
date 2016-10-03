@@ -96,7 +96,7 @@ module.exports = {
     }))(ManagerMenu), {
         OmniBar: {
             name: "managermenu",
-            position: 3,
+            position: 1,
             tool: true,
             priority: 1
         }

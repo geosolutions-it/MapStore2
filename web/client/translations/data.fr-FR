@@ -429,6 +429,7 @@
             }
         },
         "users": {
+            "title": "Gérer les comptes",
             "searchUsers": "rechercher des utilisateurs ...",
             "newUser": "Nouvel",
             "editUser": "Modifier",

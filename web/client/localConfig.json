@@ -717,6 +717,16 @@
 				"className": "navbar shadow navbar-home"
 			}
 		}, {
+			"name":"ManagerMenu",
+			"hide": true,
+			"cfg": {
+				"entries": [{
+						"msgId": "users.title",
+						"glyph": "1-group-mod",
+						"path": "/manager/usermanager"
+				}]
+			}
+		}, {
 			"name": "Login",
 			"hide": true,
       "cfg": {
@@ -725,7 +735,7 @@
               "noCaret": true
           }
       }
-		}, {
+		}, {"name": "Language"}, {
 			"name" : "Attribution",
 			"hide": true
 		}, {
@@ -737,7 +747,6 @@
 
 		"maps": [
 			{"name": "Header"},
-			{"name": "Language"},
 			{"name": "MapSearch"},
 			{"name": "HomeDescription"},
 			{"name": "MapType"},
@@ -745,9 +754,24 @@
 			{"name": "Maps"},
 			{"name": "Examples"}
 		],
-		"manager": ["Manager", {
+		"manager": [{
+			"name": "Header"
+			}, {
+			"name": "Manager",
+			"cfg": {
+				"navStyle": {
+					"flex": "inherit"
+				}
+			}
+			}, {
 			"name": "Home",
 			"hide": true
-			}]
+			}, {
+			"name": "UserManager",
+			"hide": true,
+			"cfg": {
+				"id": "usermanager"
+			}
+		}]
 	}
 }

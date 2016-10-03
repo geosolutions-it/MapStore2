@@ -427,6 +427,8 @@
             }
         },
         "users": {
+
+            "title": "Gestione utenti",
             "searchUsers": "Cerca utenti...",
             "newUser": "Nuovo utente",
             "editUser": "Modifica utente",

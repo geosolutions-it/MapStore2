@@ -16,7 +16,7 @@ const {resetControls} = require('../../actions/controls');
 const ConfigUtils = require('../../utils/ConfigUtils');
 
 
-// require('../../assets/css/home.css');
+require('../assets/css/manager.css');
 
 const Home = React.createClass({
     propTypes: {
@@ -54,7 +54,7 @@ const Home = React.createClass({
         };
 
         return (<Page
-            id="maps"
+            id="manager"
             pagePluginsConfig={pagePlugins}
             pluginsConfig={pluginsConfig}
             plugins={this.props.plugins}

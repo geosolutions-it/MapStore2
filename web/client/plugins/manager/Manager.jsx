@@ -14,6 +14,7 @@ require('./style/manager.css');
 
 const Manager = React.createClass({
     propTypes: {
+        navStyle: React.PropTypes.object,
         items: React.PropTypes.array,
         onItemSelected: React.PropTypes.func,
         selectedTool: React.PropTypes.string
@@ -41,7 +42,7 @@ const Manager = React.createClass({
                 href="#"
                 onClick={(event) => {event.preventDefault(); this.context.router.push("/manager/" + tool.id); }}>
                     {this.renderToolIcon(tool)}
-                    {tool.msgId ? <Message msgId={tool.msgId} /> : tool.title || tool.id}
+                    <span className="nav-msg">{tool.msgId ? <Message msgId={tool.msgId} /> : tool.title || tool.id}</span>
             </NavItem>));
     },
     renderPlugin() {
@@ -56,12 +57,12 @@ const Manager = React.createClass({
     },
     render() {
         return (<div className="Manager-Container">
-            <Nav className="Manager-Tools-Nav" bsStyle="pills" stacked activeKey={this.props.selectedTool}>
+            <Nav className="Manager-Tools-Nav" bsStyle="pills" stacked activeKey={this.props.selectedTool} style={this.props.navStyle}>
                 {this.renderNavItems()}
             </Nav>
             <div style={{
                 flex: 1,
-                margin: "20px"
+                margin: "5px"
             }}>{this.renderPlugin()} </div>
         </div>);
     }

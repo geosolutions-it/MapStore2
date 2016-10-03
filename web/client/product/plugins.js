@@ -49,6 +49,7 @@ module.exports = {
         HeaderPlugin: require('./plugins/Header'),
         FooterPlugin: require('./plugins/Footer'),
         ManagerPlugin: require('../plugins/manager/Manager'),
+        UserManagerPlugin: require('../plugins/manager/UserManager'),
         RulesManagerPlugin: require('../plugins/manager/RulesManager'),
         ManagerMenuPlugin: require('../plugins/manager/ManagerMenu'),
         SharePlugin: require('../plugins/Share'),

@@ -11,6 +11,9 @@ const UserGrid = require('./users/UserGrid');
 const UserDialog = require('./users/UserDialog');
 const TopButtons = require('./users/TopButtons');
 const UserDeleteConfirm = require('./users/UserDeleteConfirm');
+const Message = require('../../components/I18N/Message');
+const assign = require('object-assign');
+
 const UserManager = React.createClass({
     render() {
         return (<div>
@@ -23,7 +26,15 @@ const UserManager = React.createClass({
     }
 });
 module.exports = {
-    UserManagerPlugin: UserManager,
+    UserManagerPlugin: assign(UserManager, {
+    hide: true,
+    Manager: {
+        id: "usermanager",
+        name: 'usermanager',
+        position: 1,
+        title: <Message msgId="users.title" />,
+        glyph: "1-group-mod"
+    }}),
     reducers: {
         users: require('../../reducers/users')
     }

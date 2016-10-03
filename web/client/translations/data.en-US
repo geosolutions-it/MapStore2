@@ -427,6 +427,7 @@
             }
         },
         "users": {
+            "title": "Manage Accounts",
             "searchUsers": "search for users...",
             "newUser": "New User",
             "editUser": "Edit user",

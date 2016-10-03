@@ -158,6 +158,9 @@
     width: 100%;
 
 }
+.MapSearchBar.user-search input {
+    z-index: 0
+}
 @media (min-width: 768px) {
     .user-search.MapSearchBar {
         width: 580px;
