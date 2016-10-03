@@ -31,7 +31,9 @@ function measurement(state = {
                 geomType: action.geomType,
                 len: action.len,
                 area: action.area,
-                bearing: action.bearing
+                bearing: action.bearing,
+                lenUnit: action.lenUnit,
+                areaUnit: action.areaUnit
             });
         default:
             return state;
