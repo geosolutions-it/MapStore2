@@ -32,7 +32,7 @@ module.exports = React.createClass({
             [(<label key="format-label" className="control-label"><Message msgId="layerProperties.format" /></label>),
             (<DropdownList
                 key="format-dropdown"
-                data={this.props.formats || ["image/png", "image/png8", "image/jpeg", "image/gif"]}
+                data={this.props.formats || ["image/png", "image/png8", "image/jpeg", "image/vnd.jpeg-png", "image/gif"]}
                 value={this.props.element && this.props.element.format || "image/png"}
                 onChange={(value) => {
                     this.props.onChange("format", value);

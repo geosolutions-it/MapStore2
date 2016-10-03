@@ -27,11 +27,13 @@ const MapPlugin = React.createClass({
         loadingSpinner: React.PropTypes.bool,
         tools: React.PropTypes.array,
         options: React.PropTypes.object,
-        toolsOptions: React.PropTypes.object
+        toolsOptions: React.PropTypes.object,
+        actions: React.PropTypes.object
     },
     getDefaultProps() {
         return {
             mapType: 'leaflet',
+            actions: {},
             zoomControl: true,
             mapLoadingMessage: "map.loading",
             loadingSpinner: true,
@@ -58,7 +60,7 @@ const MapPlugin = React.createClass({
         this.updatePlugins(this.props);
     },
     componentWillReceiveProps(newProps) {
-        if (newProps.mapType !== this.props.mapType) {
+        if (newProps.mapType !== this.props.mapType || newProps.actions !== this.props.actions) {
             this.updatePlugins(newProps);
         }
     },
@@ -119,7 +121,7 @@ const MapPlugin = React.createClass({
         </div>);
     },
     updatePlugins(props) {
-        plugins = require('./map/index')(props.mapType);
+        plugins = require('./map/index')(props.mapType, props.actions);
     }
 });
 const {mapSelector} = require('../selectors/map');

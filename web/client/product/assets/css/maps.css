@@ -8,8 +8,8 @@
     background-position: center;
     position: relative;
     top: -20px;
-
 }
+
 .page-maps .MapSearchBar.maps-search {
     top: -80px;
 }
@@ -57,6 +57,12 @@ div#mailinglists {
 
 }
 
+/* small devices (mobiles, 375px and down) */
+@media (max-width: 375px) {
+    .page-maps .ms-fork-button {
+        top: 85px!important;
+    }
+}
 
 div#mailinglists h1 {
     font-size: 26px;

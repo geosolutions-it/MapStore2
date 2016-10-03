@@ -25,7 +25,7 @@ var ScaleBox = React.createClass({
     getDefaultProps() {
         return {
             id: 'mapstore-scalebox',
-            scales: mapUtils.getGoogleMercatorScales(0, 21),
+            scales: mapUtils.getGoogleMercatorScales(0, 28),
             currentZoomLvl: 0,
             onChange() {},
             readOnly: false,
@@ -37,7 +37,7 @@ var ScaleBox = React.createClass({
     },
     onComboChange(event) {
         var selectedZoomLvl = parseInt(event.nativeEvent.target.value, 10);
-        this.props.onChange(selectedZoomLvl, this.props.scales[selectedZoomLvl]);
+        this.props.onChange(selectedZoomLvl);
     },
     getOptions() {
         return this.props.scales.map((item, index) => {

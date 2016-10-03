@@ -103,7 +103,7 @@ describe('Test the layers reducer', () => {
         expect(state.flat.length).toBe(2);
     });
 
-    it('updateNode', () => {
+    it('updateNode changing Opacity', () => {
         let testAction = {
             type: 'UPDATE_NODE',
             node: 'sample',
@@ -113,6 +113,18 @@ describe('Test the layers reducer', () => {
         let state = layers({flat: [{id: 'sample'}, {id: 'other'}]}, testAction);
         expect(state.flat[0].opacity).toBe(0.5);
         expect(state.flat[1].opacity).toNotExist();
+    });
+
+    it('updateNode changing Format', () => {
+        let testAction = {
+            type: 'UPDATE_NODE',
+            node: 'sample',
+            nodeType: 'layers',
+            options: {format: "image/vnd.jpeg-png"}
+        };
+        let state = layers({flat: [{id: 'sample'}, {id: 'other'}]}, testAction);
+        expect(state.flat[0].format).toBe("image/vnd.jpeg-png");
+        expect(state.flat[1].format).toNotExist();
     });
 
     it('test layer visibility change for background', () => {

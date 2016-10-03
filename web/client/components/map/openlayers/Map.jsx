@@ -93,7 +93,7 @@ var OpenlayersMap = React.createClass({
           controls: controls,
           interactions: interactions,
           target: this.props.id,
-          view: this.createView(center, this.props.zoom, this.props.projection, this.props.mapOptions && this.props.mapOptions.view)
+          view: this.createView(center, Math.round(this.props.zoom), this.props.projection, this.props.mapOptions && this.props.mapOptions.view)
         });
         map.on('moveend', () => {
             let view = map.getView();
@@ -306,8 +306,8 @@ var OpenlayersMap = React.createClass({
             let center = ol.proj.transform([newProps.center.x, newProps.center.y], 'EPSG:4326', newProps.projection);
             view.setCenter(center);
         }
-        if (newProps.zoom !== this.props.zoom) {
-            view.setZoom(newProps.zoom);
+        if (Math.round(newProps.zoom) !== this.props.zoom) {
+            view.setZoom(Math.round(newProps.zoom));
         }
     },
     normalizeCenter: function(center) {

@@ -114,7 +114,7 @@
             "maps_title": "Mappe",
             "locales_combo": "Lingua:"
         },
-        "newmap": "Nuova Mappa",
+        "newMap": "Nuova Mappa",
 		"maps": {
 			"search": "Cerca mappe..."
 		},
