@@ -550,3 +550,26 @@ html, body, #container, .fill {
 #navigationBar #locate-btn {
     position: static;
 }
+#mapstore-mouseposition-mobile {
+        bottom: 0;
+        right: 30px;
+        z-index: 1;
+        position: absolute;
+        text-shadow: -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000, 1px 1px 1px #000;
+    }
+
+#mapstore-mouseposition-mobile .label {
+        display: inline-block;
+        max-width: 280px;
+        min-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        vertical-align: middle;
+}
+
+#mapstore-mouseposition-mobile .label-info {
+        background-color:rgba(91,192,222,0);
+        color: white;
+        font-size: 90%;
+}
