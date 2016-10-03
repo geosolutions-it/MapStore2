@@ -39,7 +39,7 @@ const UserCard = React.createClass({
             return index >= 0 ? this.props.groups[index] : null;
         }).filter(group => group));
     },
-    getEveryOneGroups() {
+    getDefaultGroups() {
         return this.props.groups.filter((group) => group.groupName === "everyone");
     },
     getOptions() {
@@ -55,7 +55,7 @@ const UserCard = React.createClass({
         isLoading={this.props.groups.length === 0 }
         name="user-groups-selector"
         multi={true}
-        value={ (this.props.user && this.props.user.groups ? this.props.user.groups : this.getEveryOneGroups() ).map(group => group.id) }
+        value={ (this.props.user && this.props.user.groups ? this.props.user.groups : this.getDefaultGroups() ).map(group => group.id) }
         options={this.getOptions()}
         onChange={this.onChange}
         />);

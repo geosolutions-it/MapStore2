@@ -59,8 +59,8 @@ describe("Test UserGroups Component", () => {
         expect(comp.getOptions()).toExist();
         expect(comp.getOptions().length).toBe(groups.length);
 
-        expect(comp.getEveryOneGroups()).toExist();
-        expect(comp.getEveryOneGroups().length).toBe(1);
-        expect(comp.getEveryOneGroups()[0].groupName).toBe("everyone");
+        expect(comp.getDefaultGroups()).toExist();
+        expect(comp.getDefaultGroups().length).toBe(1);
+        expect(comp.getDefaultGroups()[0].groupName).toBe("everyone");
     });
 });
