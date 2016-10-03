@@ -9,7 +9,8 @@ const expect = require('expect');
 
 const users = require('../users');
 const {
-    USERMANAGER_GETUSERS, USERMANAGER_EDIT_USER, USERMANAGER_EDIT_USER_DATA
+    USERMANAGER_GETUSERS, USERMANAGER_EDIT_USER, USERMANAGER_EDIT_USER_DATA,
+    USERMANAGER_UPDATE_USER, USERMANAGER_DELETE_USER, USERMANAGER_GETGROUPS
 } = require('../../actions/users');
 
 describe('Test the users reducer', () => {
@@ -67,6 +68,19 @@ describe('Test the users reducer', () => {
         expect(stateMerge.currentUser.name).toBe("user");
         expect(stateMerge.currentUser.groups).toExist();
 
+        // action for a user not related with current.
+        let newState = users(stateMerge, {
+            type: USERMANAGER_EDIT_USER,
+            status: "success",
+            user: {
+                id: 2,
+                name: "NOT_THE_CURRENT_USER",
+                attribute: [{ name: "attr1", value: "value1"}]
+            },
+            totalCount: 0
+        });
+        expect(newState).toBe(stateMerge);
+
     });
     it('edit user data', () => {
         const state = users({currentUser: {
@@ -95,6 +109,62 @@ describe('Test the users reducer', () => {
         expect(stateMerge.currentUser.attribute).toExist();
         expect(stateMerge.currentUser.attribute.length).toBe(1);
         expect(stateMerge.currentUser.attribute[0].value).toBe("value2");
+
+        // edit existing attribute
+        let stateMerge2 = users(stateMerge, {
+            type: USERMANAGER_EDIT_USER_DATA,
+            key: "attribute.attr1",
+            newValue: "NEW_VALUE"
+        });
+        expect(stateMerge2.currentUser).toExist();
+        expect(stateMerge2.currentUser.id).toBe(1);
+        expect(stateMerge2.currentUser.attribute).toExist();
+        expect(stateMerge2.currentUser.attribute.length).toBe(1);
+        expect(stateMerge2.currentUser.attribute[0].value).toBe("NEW_VALUE");
+    });
+    it('update user data', () => {
+        const state = users({currentUser: {
+            id: 1,
+            name: "userName",
+            groups: [{id: 10, groupName: "group"}]
+        }}, {
+            id: 1,
+            name: "userName",
+            groups: [{id: 10, groupName: "group"}],
+            type: USERMANAGER_UPDATE_USER,
+            status: "saved"
+        });
+        expect(state.currentUser).toExist();
+        expect(state.currentUser.id).toBe(1);
+    });
+
+    it('delete user', () => {
+        const state = users({users: [{
+            id: 1,
+            name: "userName",
+            groups: []
+        }]}, {
+            type: USERMANAGER_DELETE_USER,
+            id: 1,
+            status: "delete"
+        });
+        expect(state.deletingUser).toExist();
+        const cancelledState = users(state, {
+            type: USERMANAGER_DELETE_USER,
+            id: 1,
+            status: "cancelled"
+        });
+        expect(cancelledState.deletingUser).toBe(null);
+    });
+
+    it('getGroups', () => {
+        const state = users({}, {
+            type: USERMANAGER_GETGROUPS,
+            groups: [{groupName: "group1", id: 10, description: "test"}],
+            status: "success"
+        });
+        expect(state.groups).toExist();
+        expect(state.groupsStatus).toBe("success");
     });
 
 });

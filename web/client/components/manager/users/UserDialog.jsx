@@ -105,7 +105,7 @@ const UserDialog = React.createClass({
           key="newPassword"
           type="password"
           name="newPassword"
-          autocomplete="new-password"
+          autoComplete="new-password"
           style={this.props.inputStyle}
           bsStyle={this.getPwStyle()}
           label={<Message msgId="user.password"/>}
@@ -114,7 +114,7 @@ const UserDialog = React.createClass({
           key="confirmPassword"
           name="confirmPassword"
           type="password"
-          autocomplete="new-password"
+          autoComplete="new-password"
           style={this.props.inputStyle}
           bsStyle={ (this.props.user && this.props.user.newPassword && (this.isValidPassword() ? "success" : "error")) || null}
           label={<Message msgId="user.retypePwd"/>}

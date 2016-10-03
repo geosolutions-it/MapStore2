@@ -37,7 +37,7 @@ function users(state = {
                     })}
                 );
             // this to catch user loaded but window already closed
-        } else if (state.currentUser || (action.status !== "success" && action.status !== "error")) {
+        } else if (action.status === "loading" || action.status === "new" || !action.status) {
             return assign({}, state, {
                     currentUser: newUser
                 });
