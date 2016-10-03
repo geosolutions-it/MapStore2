@@ -14,7 +14,37 @@ const USERMANAGER_DELETE_USER = 'USERMANAGER_DELETE_USER';
 const USERMANAGER_GETGROUPS = 'USERMANAGER_GETGROUPS';
 const API = require('../api/GeoStoreDAO');
 const {get, assign} = require('lodash');
+function getUsersloading(text, start, limit) {
+    return {
+        type: USERMANAGER_GETUSERS,
+        status: "loading",
+        searchText: text,
+        start,
+        limit
+    };
+}
+function getUsersSuccess(text, start, limit, users, totalCount) {
+    return {
+        type: USERMANAGER_GETUSERS,
+        status: "success",
+        searchText: text,
+        start,
+        limit,
+        users,
+        totalCount
 
+    };
+}
+function getUsersError(text, start, limit, error) {
+    return {
+        type: USERMANAGER_GETUSERS,
+        status: "error",
+        searchText: text,
+        start,
+        limit,
+        error
+    };
+}
 function getUsers(searchText, options) {
     let params = options && options.params;
     let start;
@@ -32,13 +62,7 @@ function getUsers(searchText, options) {
             start = ( (start !== null && start !== undefined) ? start : (get(state, "users.start") || 0));
             limit = limit || get(state, "users.limit") || 12;
         }
-        dispatch({
-            type: USERMANAGER_GETUSERS,
-            status: "loading",
-            searchText: text,
-            start,
-            limit
-        });
+        dispatch(getUsersloading(text, start, limit));
 
         return API.getUsers(text, {...options, params: {start, limit}}).then((response) => {
             let users;
@@ -58,26 +82,26 @@ function getUsers(searchText, options) {
                     groups
                 });
             });
-            dispatch({
-                type: USERMANAGER_GETUSERS,
-                status: "success",
-                searchText: text,
-                start,
-                limit,
-                users,
-                totalCount
-
-            });
+            dispatch(getUsersSuccess(text, start, limit, users, totalCount));
         }).catch((error) => {
-            dispatch({
-                type: USERMANAGER_GETUSERS,
-                status: "error",
-                searchText: text,
-                start,
-                limit,
-                error
-            });
+            dispatch(getUsersError(text, start, limit, error));
         });
+    };
+}
+
+function getGroupsSuccess(groups) {
+    return {
+        type: USERMANAGER_GETGROUPS,
+        status: "success",
+        groups
+    };
+}
+
+function getGroupsError(error) {
+    return {
+        type: USERMANAGER_GETGROUPS,
+        status: "error",
+        error
     };
 }
 function getGroups(user) {
@@ -87,22 +111,45 @@ function getGroups(user) {
             status: "loading"
         });
         return API.getAvailableGroups(user).then((groups) => {
-            dispatch({
-                type: USERMANAGER_GETGROUPS,
-                status: "success",
-                groups
-            });
+            dispatch(getGroupsSuccess(groups));
         }).catch((error) => {
-            dispatch({
-                type: USERMANAGER_GETGROUPS,
-                status: "error",
-                error
-            });
+            dispatch(getGroupsError(error));
         });
     };
 
 }
 
+function editUserLoading(user) {
+    return {
+        type: USERMANAGER_EDIT_USER,
+        status: "loading",
+        user
+    };
+}
+
+function editUserSuccess(userLoaded) {
+    return {
+        type: USERMANAGER_EDIT_USER,
+        status: "success",
+        user: userLoaded
+    };
+}
+
+function editUserError(user, error) {
+    return {
+        type: USERMANAGER_EDIT_USER,
+        status: "error",
+        user,
+        error
+    };
+}
+
+function editNewUser(user) {
+    return {
+        type: USERMANAGER_EDIT_USER,
+        user: user
+    };
+}
 function editUser(user, options ={params: {includeattributes: true}} ) {
     return (dispatch, getState) => {
         let state = getState && getState();
@@ -115,11 +162,7 @@ function editUser(user, options ={params: {includeattributes: true}} ) {
             }
         }
         if (user && user.id) {
-            dispatch({
-                type: USERMANAGER_EDIT_USER,
-                status: "loading",
-                user
-            });
+            dispatch(editUserLoading(user));
             return API.getUser(user.id, options).then((userDetails) => {
                 let userLoaded = userDetails.User;
                 let attribute = userLoaded.attribute;
@@ -133,69 +176,82 @@ function editUser(user, options ={params: {includeattributes: true}} ) {
                 if (userLoaded && userLoaded.groups === "") {
                     userLoaded = {...userLoaded, groups: user.groups};
                 }
-                dispatch({
-                    type: USERMANAGER_EDIT_USER,
-                    status: "success",
-                    user: userLoaded
-                });
+                dispatch(editUserSuccess(userLoaded));
             }).catch((error) => {
-                dispatch({
-                    type: USERMANAGER_EDIT_USER,
-                    status: "error",
-                    user,
-                    error
-                });
+                dispatch(editUserError(user, error));
             });
         }
-        dispatch({
-            type: USERMANAGER_EDIT_USER,
-            user: user
-        });
+        dispatch(editNewUser(user));
     };
 }
+
+function savingUser(user) {
+    return {
+        type: USERMANAGER_UPDATE_USER,
+        status: "saving",
+        user
+    };
+}
+
+function savedUser(userDetails) {
+    return {
+        type: USERMANAGER_UPDATE_USER,
+        status: "saved",
+        user: userDetails && userDetails.User
+    };
+}
+
+function saveError(user, error) {
+    return {
+        type: USERMANAGER_UPDATE_USER,
+        status: "error",
+        user,
+        error
+    };
+}
+
+function creatingUser(user) {
+    return {
+        type: USERMANAGER_UPDATE_USER,
+        status: "creating",
+        user
+    };
+}
+
+function userCreated(id, user) {
+    return {
+        type: USERMANAGER_UPDATE_USER,
+        status: "created",
+        user: { ...user, id}
+    };
+}
+
+function createError(user, error) {
+    return {
+        type: USERMANAGER_UPDATE_USER,
+        status: "error",
+        user,
+        error
+    };
+}
+
 function saveUser(user, options = {}) {
     return (dispatch) => {
         if (user && user.id) {
-            dispatch({
-                type: USERMANAGER_UPDATE_USER,
-                status: "saving",
-                user
-            });
+            dispatch(savingUser(user));
             return API.updateUser(user.id, {...user, group: user.groups}, options).then((userDetails) => {
-                dispatch({
-                    type: USERMANAGER_UPDATE_USER,
-                    status: "saved",
-                    user: userDetails && userDetails.User
-                });
+                dispatch(savedUser(userDetails));
             }).catch((error) => {
-                dispatch({
-                    type: USERMANAGER_UPDATE_USER,
-                    status: "error",
-                    user,
-                    error
-                });
+                dispatch(saveError(user, error));
             });
         }
         // createUser
-        dispatch({
-            type: USERMANAGER_UPDATE_USER,
-            status: "creating",
-            user
-        });
+        dispatch(creatingUser(user));
         return API.createUser(user, options).then((id) => {
-            dispatch({
-                type: USERMANAGER_UPDATE_USER,
-                status: "created",
-                user: { ...user, id}
-            });
-            dispatch(getUsers());
+            dispatch(userCreated(id, user));
+            dispatch(getUsers(id, user));
         }).catch((error) => {
-            dispatch({
-                type: USERMANAGER_UPDATE_USER,
-                status: "error",
-                user,
-                error
-            });
+            dispatch(createError(user, error));
         });
     };
 }
@@ -206,34 +262,48 @@ function changeUserMetadata(key, newValue) {
         newValue
     };
 }
+
+function deletingUser(id) {
+    return {
+        type: USERMANAGER_DELETE_USER,
+        status: "deleting",
+        id
+    };
+}
+function deleteUserSuccess(id) {
+    return {
+        type: USERMANAGER_DELETE_USER,
+        status: "deleted",
+        id
+    };
+}
+function deleteUserError(id, error) {
+    return {
+        type: USERMANAGER_DELETE_USER,
+        status: "error",
+        id,
+        error
+    };
+}
+
+function closeDelete(status, id) {
+    return {
+        type: USERMANAGER_DELETE_USER,
+        status,
+        id
+    };
+}
 function deleteUser(id, status = "confirm") {
     if (status === "confirm" || status === "cancelled") {
-        return {
-            type: USERMANAGER_DELETE_USER,
-            status,
-            id
-        };
+        return closeDelete(status, id);
     } else if ( status === "delete") {
         return (dispatch) => {
-            dispatch({
-                type: USERMANAGER_DELETE_USER,
-                status: "deleting",
-                id
-            });
+            dispatch(deletingUser(id));
             API.deleteUser(id).then(() => {
-                dispatch({
-                    type: USERMANAGER_DELETE_USER,
-                    status: "deleted",
-                    id
-                });
+                dispatch(deleteUserSuccess(id));
                 dispatch(getUsers());
             }).catch((error) => {
-                dispatch({
-                    type: USERMANAGER_DELETE_USER,
-                    status: "error",
-                    id,
-                    error
-                });
+                dispatch(deleteUserError(id, error));
             });
         };
     }
