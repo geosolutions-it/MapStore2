@@ -46,7 +46,7 @@ const UserDialog = React.createClass({
           onClose: () => {},
           onChange: () => {},
           modal: true,
-          title: "Do you Confirm?",
+          title: <Message msgId="confirmTitle" />,
           closeGlyph: "",
           confirmButtonBSStyle: "danger",
           confirmButtonDisabled: false,

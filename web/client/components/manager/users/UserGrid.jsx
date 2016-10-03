@@ -69,7 +69,7 @@ var UsersGrid = React.createClass({
             let actions = [{
                      onClick: () => {this.props.onEdit(user); },
                      glyph: "wrench",
-                     tooltip: <Message msgId="manager.users.editUser" />
+                     tooltip: <Message msgId="users.editUser" />
             }];
             if ( user && user.role === "GUEST") {
                 actions = [];
@@ -77,7 +77,7 @@ var UsersGrid = React.createClass({
                 actions.push({
                         onClick: () => {this.props.onDelete(user && user.id); },
                         glyph: "remove-circle",
-                        tooltip: <Message msgId="manager.users.deleteUser" />
+                        tooltip: <Message msgId="users.deleteUser" />
                 });
             }
 

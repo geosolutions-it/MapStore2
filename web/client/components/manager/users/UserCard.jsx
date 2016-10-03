@@ -10,6 +10,7 @@ const React = require('react');
 // const Message = require('../I18N/Message');
 const GridCard = require('../../misc/GridCard');
 const {Button, Glyphicon} = require('react-bootstrap');
+const Message = require('../../../components/I18N/Message');
 
 
 // const ConfirmModal = require('./modals/ConfirmModal');
@@ -38,19 +39,19 @@ const UserCard = React.createClass({
     },
     renderStatus() {
         return (<div key="status" className="user-status" style={{position: "absolute", bottom: 0, left: "10px", margin: "10px 10px 0 10px"}}>
-           <div><strong>Status:</strong></div>
+           <div><strong><Message msgId="users.statusTitle"/></strong></div>
            {this.props.user.enabled ?
                <Glyphicon glyph="ok-sign" style={{fontSize: "32px", color: "#4E8C75"}} /> :
                <Glyphicon glyph="minus-sign" style={{fontSize: "32px", color: "#A23F37"}} />}
        </div>);
     },
     renderGroups() {
-        return (<div key="groups" style={this.props.innerItemStyle}><div><strong>Group:</strong></div>
-         {this.props.user && this.props.user.groups ? this.props.user.groups.map((group)=> (<div>{group.groupName}</div>)) : null}
+        return (<div key="groups" style={this.props.innerItemStyle}><div><strong><Message msgId="users.groupTitle"/></strong></div>
+    {this.props.user && this.props.user.groups ? this.props.user.groups.map((group)=> (<div key={"group-" + group.id}>{group.groupName}</div>)) : null}
      </div>);
     },
     renderRole() {
-        return (<div key="role" style={this.props.innerItemStyle}><div><strong>Role:</strong></div>
+        return (<div key="role" style={this.props.innerItemStyle}><div><strong><Message msgId="users.roleTitle"/></strong></div>
             {this.props.user.role}
         </div>);
     },

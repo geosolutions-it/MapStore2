@@ -3,7 +3,7 @@
     overflow: hidden;
     height: 180px;
     font-size: 12px;
-    cursor: pointer;
+    cursor: auto;
 }
 .user-thumb .gridcard-title {
     min-height: 25px;

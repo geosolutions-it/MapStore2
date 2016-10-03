@@ -9,6 +9,7 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {Button, Grid} = require('react-bootstrap');
 const {editUser} = require('../../../actions/users');
+const Message = require('../../../components/I18N/Message');
 
 const Bar = React.createClass({
     propTypes: {
@@ -20,7 +21,7 @@ const Bar = React.createClass({
         };
     },
     render() {
-        return (<Grid style={{marginBottom: "10px"}} fluid={true}><Button bsStyle="primary" onClick={this.props.onNewUser}>New User</Button></Grid>);
+        return (<Grid style={{marginBottom: "10px"}} fluid={true}><Button bsStyle="primary" onClick={this.props.onNewUser}><Message msgId="users.newUser" /></Button></Grid>);
     }
 });
 const TopButtons = connect(() => ({}), {onNewUser: editUser.bind(null, {role: "USER", "enabled": true})} )(Bar);

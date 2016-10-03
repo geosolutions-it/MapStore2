@@ -9,6 +9,7 @@
 const React = require('react');
 // const Message = require('../I18N/Message');
 const Select = require('react-select');
+const Message = require('../../I18N/Message');
 
 
 // const ConfirmModal = require('./modals/ConfirmModal');
@@ -17,7 +18,7 @@ const Select = require('react-select');
 const UserCard = React.createClass({
     propTypes: {
         // props
-        groups: React.PropTypes.object,
+        groups: React.PropTypes.array,
         onUserGroupsChange: React.PropTypes.func,
         user: React.PropTypes.object
     },
@@ -62,8 +63,8 @@ const UserCard = React.createClass({
     render: function() {
         return (
            <div key="groups-page">
-             <span>SELECTED GROUPS</span>
-
+             <span><Message msgId="users.selectedGroups" /></span>
+             {this.renderGroupsSelector()}
          </div>
         );
     }

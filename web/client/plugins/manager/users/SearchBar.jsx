@@ -13,7 +13,7 @@ const {getUsers} = require('../../../actions/users');
 const SearchBar = connect((state) => ({
     className: "user-search",
     hideOnBlur: false,
-    placeholderMsgId: "search.text",
+    placeholderMsgId: "users.searchUsers",
     typeAhead: false,
     start: state && state.users && state.users.start,
     limit: state && state.users && state.users.limit
@@ -24,7 +24,6 @@ const SearchBar = connect((state) => ({
     },
     onSearchReset: getUsers.bind(null, "*")
 }, (stateProps, dispatchProps) => {
-
     return {
         ...stateProps,
         onSearch: (text) => {

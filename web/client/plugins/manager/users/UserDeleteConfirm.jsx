@@ -11,6 +11,7 @@ const {deleteUser} = require('../../../actions/users');
 const {Alert} = require('react-bootstrap');
 const Confirm = require('../../../components/misc/ConfirmDialog');
 const UserCard = require('../../../components/manager/users/UserCard');
+const Message = require('../../../components/I18N/Message');
 
 const UserDeleteConfirm = React.createClass({
     propTypes: {
@@ -28,15 +29,15 @@ const UserDeleteConfirm = React.createClass({
     },
     renderError() {
         if (this.props.deleteError) {
-            return <Alert bsStyle="danger">{"Error deleting user: "}{this.props.deleteError.statusText}</Alert>;
+            return <Alert bsStyle="danger"><Message msgId="users.errorDelete" />{this.props.deleteError.statusText}</Alert>;
         }
     },
     renderConfirmButtonContent() {
         switch (this.props.deleteStatus) {
             case "deleting":
-                return "Deleting...";
+                return <Message msgId="users.deleting" />;
             default:
-                return "Delete";
+                return <Message msgId="users.delete" />;
         }
     },
     render() {
@@ -49,7 +50,7 @@ const UserDeleteConfirm = React.createClass({
             onConfirm={ () => { this.props.deleteUser(this.props.deleteId, "delete"); } }
             confirmButtonContent={this.renderConfirmButtonContent()}
             confirmButtonDisabled={this.props.deleteStatus === "deleting"}>
-            <div>Are you sure you want to delete this user:</div>
+            <div><Message msgId="user.confirmDeleteUser" /></div>
             <div style={{margin: "10px 0"}}><UserCard user={this.props.user} /></div>
             <div>{this.renderError()}</div>
         </Confirm>);

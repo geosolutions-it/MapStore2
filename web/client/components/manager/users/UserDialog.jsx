@@ -128,7 +128,7 @@ const UserDialog = React.createClass({
           type="checkbox"
           key="enabled"
           name="enabled"
-          label="enabled"
+          label={<Message msgId="users.enabled"/>}
           onChange={(evt) => {this.props.onChange("enabled", evt.target.checked ? true : false); }} />
       </div>);
   },
@@ -146,19 +146,19 @@ const UserDialog = React.createClass({
   },
   renderSaveButtonContent() {
       let status = this.props.user && this.props.user.status;
-      let defaultMessage = this.props.user && this.props.user.id ? <Message msgId="save"/> : "Create";
+      let defaultMessage = this.props.user && this.props.user.id ? <Message key="text" msgId="users.saveUser"/> : <Message key="text" msgId="users.createUser" />;
       let messages = {
           error: defaultMessage,
           success: defaultMessage,
           modified: defaultMessage,
-          save: <Message msgId="save"/>,
-          saving: "Saving...",
-          saved: "Saved",
-          creating: "Creating...",
-          created: "Created"
+          save: <Message key="text" msgId="users.saveUser"/>,
+          saving: <Message key="text" msgId="users.savingUser" />,
+          saved: <Message key="text" msgId="users.userSaved" />,
+          creating: <Message key="text" msgId="users.creatingUser" />,
+          created: <Message key="text" msgId="users.userCreated" />
       };
       let message = messages[status] || defaultMessage;
-      return [this.isSaving() ? <Spinner spinnerName="circle" noFadeIn/> : null, message];
+      return [this.isSaving() ? <Spinner key="saving-spinner" spinnerName="circle" noFadeIn/> : null, message];
   },
   renderButtons() {
       return [
@@ -178,7 +178,7 @@ const UserDialog = React.createClass({
       let error = this.props.user && this.props.user.status === "error";
       if ( error ) {
           let lastError = this.props.user && this.props.user.lastError;
-          return <Alert key="error" bsStyle="warning">There was an error saving the user: {lastError && lastError.statusText}</Alert>;
+          return <Alert key="error" bsStyle="warning"><Message msgId="users.errorSaving" />{lastError && lastError.statusText}</Alert>;
       }
 
   },
@@ -186,7 +186,7 @@ const UserDialog = React.createClass({
       return (<Dialog onClickOut={this.props.onClose} modal={true} maskLoading={this.props.user && (this.props.user.status === "loading" || this.props.user.status === "saving")} id="mapstore-user-dialog" className="user-edit-dialog" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
 
           <span role="header">
-              <span className="user-panel-title">{(this.props.user && this.props.user.name) || "New User"}</span>
+              <span className="user-panel-title">{(this.props.user && this.props.user.name) || <Message msgId="users.newUser" />}</span>
               <button onClick={this.props.onClose} className="login-panel-close close">
                   {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}
               </button>

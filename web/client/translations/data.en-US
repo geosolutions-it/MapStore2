@@ -49,6 +49,8 @@
         "opacity": "Opacity",
         "close": "Close",
         "cancel": "Cancel",
+        "confirm": "Confirm",
+        "confirmTitle": "Do you Confirm?",
         "pageInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {Items {start}-{end} of {total}}}",
         "group": "Group",
         "groups": "Groups",
@@ -114,7 +116,7 @@
         },
         "newMap": "New Map",
 		"maps": {
-			"search": "search for projects..."
+			"search": "search for maps..."
 		},
         "map": {
             "loading": "Loading...",
@@ -423,6 +425,28 @@
                 "usernamePwdInsert": "Please insert username and password",
                 "usernamePwdIncorrect":"Username or password incorrect"
             }
+        },
+        "users": {
+            "searchUsers": "search for users...",
+            "newUser": "New User",
+            "editUser": "Edit user",
+            "deleteUser": "Delete User",
+            "statusTitle": "status",
+            "enabled": "Enabled",
+            "groupTitle": "Groups:",
+            "roleTitle": "Role",
+            "saveUser": "Save",
+            "savingUser": "Saving...",
+            "userSaved": "Saved!",
+            "createUser": "Create",
+            "creatingUser": "Creating...",
+            "userCreated": "Created!",
+            "deleting": "Deleting...",
+            "delete": "Delete",
+            "confirmDeleteUser": "Are you sure you want to delete this user?",
+            "errorDelete": "There was an error deleting this user:",
+            "errorSaving": "There was an error saving the user:",
+            "selectedGroups": "SELECTED GROUPS"
         },
         "share":{
             "title": "Share",
