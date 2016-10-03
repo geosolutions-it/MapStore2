@@ -53,6 +53,7 @@
         "confirm": "Confirmer",
         "confirmTitle": "Confirmez-vous?",
         "pageInfo": "{total, plural, =0 {aucun objet} =1 {{total} objet parmi {total}} other {objets {start}-{end} parmi {total}}}",
+        "loading": "Chargement...",
         "group": "Group",
         "groups": "Groups",
         "permission": "Permission",

@@ -52,6 +52,7 @@
         "confirm": "Conferma",
         "confirmTitle": "Confermi?",
         "pageInfo": "{total, plural, =0 {Nessun Elemento} =1 {{total} Elemento di {total}} other {Elementi {start}-{end} di {total}}}",
+        "loading": "In caricamento...",
         "group": "Gruppo",
         "groups": "Gruppi",
         "permission": "Permesso",
