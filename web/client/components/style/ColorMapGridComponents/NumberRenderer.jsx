@@ -62,7 +62,7 @@ const NumberRenderer = React.createClass({
                         <NumberPicker ref="colorMapNumberPicker"
                         format="-#,###.##"
                         precision={3}
-                        value={this.state.value || this.props.params.value}
+                        value={this.state.value === undefined ? this.props.params.value : this.state.value}
                         onChange={this.changeNumber}
                         />
                     <Overlay
@@ -84,18 +84,20 @@ const NumberRenderer = React.createClass({
         }
     },
     stopEditing() {
-        this.setState({ displayNumberPicker: false, showError: false});
-        if (this.state.value !== this.props.params.value) {
-            this.props.onChangeValue(this.props.params.node, this.state.value || this.props.params.value);
-        }
-    },
-    changeNumber(value) {
         let range = this.getRange();
-        if (range.min < value && value < range.max) {
-            this.setState({value: value, showError: false});
+        let newValue = this.state.value === undefined ? this.props.params.value : this.state.value;
+        if (range.min < newValue && newValue < range.max) {
+            this.setState({ displayNumberPicker: false, showError: false});
+            if (newValue !== this.props.params.value) {
+                this.props.onChangeValue(this.props.params.node, newValue);
+            }
         } else {
             this.setState({showError: true});
         }
+
+    },
+    changeNumber(value) {
+        this.setState({value: value, showError: false});
     }
 });
 
