@@ -420,6 +420,8 @@
             "changePwd": "Changer le mot de passe",
             "newPwd": "Nouveau mot de passe",
             "retypePwd": "Confirmer le mot de passe",
+            "passwordMinlenght": "Votre mot de passe doit être d'au moins {minSize} caractères",
+            "passwordCheckFail": "Les deux mots de passe ne correspondent pas!",
             "username": "Nom d'utilisateur",
             "password": "Mot de passe",
             "signIn":"S'authentifier",

@@ -47,7 +47,7 @@ const PasswordResetModal = React.createClass({
             useModal: true,
             closeGlyph: "",
             style: {},
-            buttonSize: "large",
+            buttonSize: "small",
             includeCloseButton: true
         };
     },
@@ -91,7 +91,7 @@ const PasswordResetModal = React.createClass({
             key="closeButton"
             ref="closeButton"
             bsSize={this.props.buttonSize}
-            onClick={this.props.onClose}><Message msgId="messages.close"/></Button> : <span/>}
+            onClick={this.props.onClose}><Message msgId="close"/></Button> : <span/>}
         </span>);
         const body = (<PasswordReset role="body" ref="passwordResetForm"
             onChange={() => {
