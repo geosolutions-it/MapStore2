@@ -20,7 +20,8 @@ var ScaleBox = React.createClass({
         onChange: React.PropTypes.func,
         readOnly: React.PropTypes.bool,
         label: React.PropTypes.string,
-        template: React.PropTypes.func
+        template: React.PropTypes.func,
+        useRawInput: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -29,7 +30,8 @@ var ScaleBox = React.createClass({
             currentZoomLvl: 0,
             onChange() {},
             readOnly: false,
-            template: (scale) => ("1 : " + Math.round(scale))
+            template: (scale) => ("1 : " + Math.round(scale)),
+            useRawInput: false
         };
     },
     shouldComponentUpdate(nextProps) {
@@ -47,11 +49,24 @@ var ScaleBox = React.createClass({
         });
     },
     render() {
-        let control = this.props.readOnly ?
-            <label>{this.props.template(this.props.scales[this.props.currentZoomLvl], this.props.currentZoomLvl)}</label>
-        : <Input type="select" label={this.props.label} onChange={this.onComboChange} bsSize="small" value={this.props.currentZoomLvl}>
-            {this.getOptions()}
-        </Input>;
+        var control = null;
+        if (this.props.readOnly) {
+            control = (
+                <label>{this.props.template(this.props.scales[this.props.currentZoomLvl], this.props.currentZoomLvl)}</label>
+            );
+        } else if (this.props.useRawInput) {
+            control = (
+                <select label={this.props.label} onChange={this.onComboChange} bsSize="small" value={this.props.currentZoomLvl}>
+                    {this.getOptions()}
+                </select>
+            );
+        } else {
+            control = (
+                <Input type="select" label={this.props.label} onChange={this.onComboChange} bsSize="small" value={this.props.currentZoomLvl}>
+                    {this.getOptions()}
+                </Input>
+            );
+        }
         return (
 
             <div id={this.props.id} style={this.props.style}>
