@@ -12,6 +12,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+  
+  
   <dependencies>
 
 
@@ -22,25 +24,6 @@
   </build>
 
   <profiles>
-    <profile>
-      <id>geostore</id>
-
-      <modules>
-        <module>geostore/src</module>
-        <module>web</module>
-      </modules>
-
-    </profile>
-
-    <profile>
-      <id>proxy</id>
-
-      <modules>
-        <module>http-proxy</module>
-        <module>web</module>
-      </modules>
-
-    </profile>
     <profile>
       <id>default</id>
       <activation>
