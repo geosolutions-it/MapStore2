@@ -161,7 +161,8 @@ let SnapshotPanel = React.createClass({
             ];
     },
     renderSize() {
-        return this.props.map.size.width + " X " + this.props.map.size.height;
+        const size = this.props.map && this.props.map.size || {width: 100, height: 100};
+        return size.width + " X " + size.height;
     },
     renderSnapshotQueue() {
         if (this.props.snapshot.queue && this.props.snapshot.queue.length > 0) {
@@ -244,7 +245,7 @@ let SnapshotPanel = React.createClass({
         return <Message msgId={this.props.googleBingErrorMsg}/>;
     },
     isSnapshotReady() {
-        return this.props.snapshot.state === "READY" && !this.mapIsLoading(this.props.layers);
+        return this.props.snapshot.state === "READY" && !this.mapIsLoading(this.props.layers) && this.props.map && this.props.map.size;
     }
 });
 
