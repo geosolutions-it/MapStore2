@@ -15,7 +15,7 @@
 
 const React = require('react');
 
-const {Modal, Button, Table, Glyphicon} = require('react-bootstrap');
+const {Modal, Button, Table, Alert, Glyphicon} = require('react-bootstrap');
 const Dialog = require('../../../components/misc/Dialog');
 const assign = require('object-assign');
 const SecurityUtils = require('../../../utils/SecurityUtils');
@@ -56,14 +56,16 @@ const UserDetails = React.createClass({
       };
   },
   renderAttributes() {
-      if (!this.props.user || !this.props.user.attribute) {
-          return null;
+      if (this.props.user && this.props.user.attribute) {
+          let userAttributes = SecurityUtils.getUserAttributes(this.props.user);
+          let attrsRendered = userAttributes.filter(this.props.displayAttributes).map((attr) => {
+              return (<tr key={attr.name + "-row"}><th>{attr.name}</th><td> {attr.value}</td></tr>);
+          });
+          if (attrsRendered && attrsRendered.length > 0) {
+              return <Table role="body" responsive striped condensed hover><tbody>{attrsRendered}</tbody></Table>;
+          }
       }
-      let userAttributes = SecurityUtils.getUserAttributes(this.props.user);
-      let attrsRendered = userAttributes.filter(this.props.displayAttributes).map((attr) => {
-          return (<tr key={attr.name + "-row"}><th>{attr.name}</th><td> {attr.value}</td></tr>);
-      });
-      return <Table role="body" responsive striped condensed hover><tbody>{attrsRendered}</tbody></Table>;
+      return <Alert type="info"><Message msgId="user.noAttributesMessage" /></Alert>;
   },
   render() {
       const footer = this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} bsSize="small" onClick={this.props.onClose}><Message msgId="close"/></Button> : <span/>;
