@@ -146,7 +146,7 @@ function defaultGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, mapReso
     const resolutions = mapResolutions || getResolutionsFromScales(getGoogleMercatorScales(
         minZoom, maxZoom, (dpi || DEFAULT_SCREEN_DPI)));
 
-    const {...other, zoom} = resolutions.reduce((previous, resolution, index) => {
+    const {zoom, ...other} = resolutions.reduce((previous, resolution, index) => {
         const diff = Math.abs(resolution - extentResolution);
         return diff > previous.diff ? previous : {diff: diff, zoom: index};
     }, {diff: Number.POSITIVE_INFINITY, zoom: 0});
