@@ -1,6 +1,1 @@
-[submodule "geostore"]
-	path = geostore
-	url = https://github.com/geosolutions-it/geostore
-[submodule "http-proxy"]
-	path = http-proxy
-	url = https://github.com/geosolutions-it/http-proxy.git
+
