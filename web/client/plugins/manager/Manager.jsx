@@ -61,8 +61,7 @@ const Manager = React.createClass({
                 {this.renderNavItems()}
             </Nav>
             <div style={{
-                flex: 1,
-                margin: "5px"
+                flex: 1
             }}>{this.renderPlugin()} </div>
         </div>);
     }

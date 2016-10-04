@@ -12,6 +12,7 @@ const React = require('react');
 const Draggable = require('react-draggable');
 const Spinner = require('react-spinkit');
 const assign = require('object-assign');
+const Message = require('../I18N/Message');
 require('./style/dialog.css');
 
 const Dialog = React.createClass({
@@ -60,7 +61,7 @@ const Dialog = React.createClass({
                   top: "50%",
                   left: "50%",
                   transform: "translate(-50%, -40%)"
-            }}>Loading...<Spinner spinnerName="circle" noFadeIn/></div></div>);
+            }}><Message msgId="loading" /><Spinner spinnerName="circle" noFadeIn/></div></div>);
         }
     },
     renderRole(role) {
