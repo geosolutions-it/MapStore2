@@ -249,7 +249,7 @@ function saveUser(user, options = {}) {
         dispatch(creatingUser(user));
         return API.createUser(user, options).then((id) => {
             dispatch(userCreated(id, user));
-            dispatch(getUsers(id, user));
+            dispatch(getUsers());
         }).catch((error) => {
             dispatch(createError(user, error));
         });
