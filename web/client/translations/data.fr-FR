@@ -50,7 +50,10 @@
         "opacity": "Opacité",
         "close": "Fermer",
         "cancel": "Annuler",
+        "confirm": "Confirmer",
+        "confirmTitle": "Confirmez-vous?",
         "pageInfo": "{total, plural, =0 {aucun objet} =1 {{total} objet parmi {total}} other {objets {start}-{end} parmi {total}}}",
+        "loading": "Chargement...",
         "group": "Group",
         "groups": "Groups",
         "permission": "Permission",
@@ -115,7 +118,7 @@
         },
         "newMap": "Nouvelle carte",
 		"maps": {
-			"search": "search for projects..."
+			"search": "rechercher des cartes ..."
 		},
         "map": {
             "loading": "Chargement...",
@@ -425,6 +428,29 @@
                 "usernamePwdInsert": "Merci d'entrer vos nom d'utilisateur et mot de passe",
                 "usernamePwdIncorrect":"Nom d'utilisateur ou mot de passe incorrect"
             }
+        },
+        "users": {
+            "title": "Gérer les comptes",
+            "searchUsers": "rechercher des utilisateurs ...",
+            "newUser": "Nouvel",
+            "editUser": "Modifier",
+            "deleteUser": "Supprimer",
+            "statusTitle": "Statut",
+            "enabled": "Activée",
+            "groupTitle": "Groupes:",
+            "roleTitle": "Rôle",
+            "saveUser": "Sauver",
+            "savingUser": "sauvetage...",
+            "userSaved": "Sauvé!",
+            "createUser": "Créer",
+            "creatingUser": "Création...",
+            "userCreated": "Créé!",
+            "deleting": "Suppression...",
+            "delete": "Effacer",
+            "confirmDeleteUser": "Êtes-vous sûr de vouloir supprimer cet utilisateur?",
+            "errorDelete": "Il y avait une erreur de supprimer cet utilisateur:",
+            "errorSaving": "Il y avait une sauver l'erreur utilisateur:",
+            "selectedGroups": "CERTAINS GROUPES"
         },
         "share":{
             "title": "Partager",

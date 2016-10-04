@@ -9,6 +9,15 @@
     font-size: 25px;
     vertical-align: middle;
 }
+
+.Manager-Container .Manager-Tools-Nav  .nav-msg {
+    display: none;
+}
+@media (min-width: 1200px) {
+    .Manager-Container .Manager-Tools-Nav  .nav-msg {
+        display: inline-block;
+    }
+}
 .Manager-Container .Manager-Tools-Nav {
     order: -1;
     flex: 0 0 15em;

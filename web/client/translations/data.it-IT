@@ -49,7 +49,10 @@
         "opacity": "Opacità",
         "close": "Chiudi",
         "cancel": "Annulla",
+        "confirm": "Conferma",
+        "confirmTitle": "Confermi?",
         "pageInfo": "{total, plural, =0 {Nessun Elemento} =1 {{total} Elemento di {total}} other {Elementi {start}-{end} di {total}}}",
+        "loading": "In caricamento...",
         "group": "Gruppo",
         "groups": "Gruppi",
         "permission": "Permesso",
@@ -114,7 +117,7 @@
         },
         "newMap": "Nuova Mappa",
 		"maps": {
-			"search": "Cerca progetti..."
+			"search": "Cerca mappe..."
 		},
         "map": {
             "loading": "In caricamento...",
@@ -423,6 +426,30 @@
                 "usernamePwdInsert": "Per favore, Inserisci username e password",
                 "usernamePwdIncorrect":"Username o password non corretti"
             }
+        },
+        "users": {
+
+            "title": "Gestione utenti",
+            "searchUsers": "Cerca utenti...",
+            "newUser": "Nuovo utente",
+            "editUser": "Modifica utente",
+            "deleteUser": "Rimuovi utente",
+            "statusTitle": "Stato",
+            "enabled": "Abilitato",
+            "groupTitle": "Gruppi:",
+            "roleTitle": "Ruolo",
+            "saveUser": "Salva",
+            "savingUser": "Salvataggio...",
+            "userSaved": "Salvato!",
+            "createUser": "Crea",
+            "creatingUser": "Creazione...",
+            "userCreated": "Creato!",
+            "deleting": "Rimozione...",
+            "delete": "Rimuovi",
+            "confirmDeleteUser": "Sei sicuro di voler cancellare questo utente?",
+            "errorDelete": "Si è verificato un errore rimuovendo l'utente:",
+            "errorSaving": "Si è verificato un errore salvando questo utente:",
+            "selectedGroups": "GRUPPI SELEZIONATI"
         },
         "share":{
             "title": "Condividi",

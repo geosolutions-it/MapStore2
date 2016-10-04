@@ -195,6 +195,34 @@ var Api = {
             })).then(function(response) {
                 return parseUserGroups(response.data);
             });
+    },
+    getUsers: function(textSearch, options = {}) {
+        let url = "extjs/search/users" + (textSearch ? "/" + textSearch : "");
+        return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
+    },
+    getUser: function(id, options = {params: {includeattributes: true}}) {
+        let url = "users/user/" + id;
+        return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
+    },
+    updateUser: function(id, user, options) {
+        let url = "users/user/" + id;
+        let postUser = assign({}, user);
+        if (postUser.newPassword === "") {
+            delete postUser.newPassword;
+        }
+        return axios.put(url, {User: postUser}, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
+    },
+    createUser: function(user, options) {
+        let url = "users/";
+        let postUser = assign({}, user);
+        if (postUser.newPassword) {
+            postUser.password = postUser.newPassword;
+        }
+        return axios.post(url, {User: postUser}, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
+    },
+    deleteUser: function(id, options = {}) {
+        let url = "users/user/" + id;
+        return axios.delete(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     }
 };
 
