@@ -14,7 +14,7 @@
   */
 
 const React = require('react');
-const {Input} = require('react-bootstrap');
+const {Input, Alert} = require('react-bootstrap');
 const Message = require('../../../components/I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
   /**
@@ -60,8 +60,20 @@ const PasswordReset = React.createClass({
       if (pw.length === 0) {
           return null;
       }
-      return pw.length > this.props.minPasswordSize ? "success" : "warning";
+      return pw.length >= this.props.minPasswordSize ? "success" : "error";
 
+  },
+  renderWarning() {
+      if (!this.refs.password) {
+          return null;
+      }
+      let pw = this.refs.password.getValue();
+      if (pw !== null && pw.length < this.props.minPasswordSize) {
+          return <Alert bsStyle="danger"><Message msgId="user.passwordMinlenght" msgParams={{minSize: this.props.minPasswordSize}}/></Alert>;
+      } else if (pw !== null && pw !== this.refs.passwordcheck.getValue() ) {
+          return <Alert bsStyle="danger"><Message msgId="user.passwordCheckFail" /></Alert>;
+      }
+      return null;
   },
   render() {
       return (<form ref="loginForm" onSubmit={this.handleSubmit}>
@@ -81,6 +93,7 @@ const PasswordReset = React.createClass({
               label={this.props.passwordCheckText}
               onChange={this.props.onChange}
               placeholder={LocaleUtils.getMessageById(this.context.messages, "user.retypePwd")} />
+          {this.renderWarning()}
       </form>);
   },
   isValid() {
@@ -88,7 +101,7 @@ const PasswordReset = React.createClass({
           return false;
       }
       let pw = this.refs.password.getValue();
-      return pw !== null && pw.length > this.props.minPasswordSize && pw === this.refs.passwordcheck.getValue();
+      return pw !== null && pw.length >= this.props.minPasswordSize && pw === this.refs.passwordcheck.getValue();
   }
 });
 

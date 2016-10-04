@@ -418,6 +418,8 @@
             "changePwd": "Cambia Password",
             "newPwd": "Nuova Password",
             "retypePwd": "Conferma Password",
+            "passwordMinlenght": "La password deve essere lunga almeno {minSize} caratteri",
+            "passwordCheckFail": "Le due password non corrispondono",
             "username": "Username",
             "password": "Password",
             "signIn":"Accedi",

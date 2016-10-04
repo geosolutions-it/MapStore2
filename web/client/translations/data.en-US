@@ -418,6 +418,8 @@
             "changePwd": "Change Password",
             "newPwd": "New Password",
             "retypePwd": "Retype Password",
+            "passwordMinlenght": "Your password must be at least {minSize} character",
+            "passwordCheckFail": "Passwords do not match!",
             "username": "Username",
             "password": "Password",
             "signIn":"Sign-in",
