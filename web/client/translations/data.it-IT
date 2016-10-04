@@ -415,6 +415,7 @@
             "login": "Login",
             "logout": "Logout",
             "info": " Informazioni Account",
+            "noAttributesMessage": "Non ci sono informazioni sul tuo account",
             "changePwd": "Cambia Password",
             "newPwd": "Nuova Password",
             "retypePwd": "Conferma Password",
