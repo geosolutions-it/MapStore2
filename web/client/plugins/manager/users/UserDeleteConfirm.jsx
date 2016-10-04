@@ -50,7 +50,7 @@ const UserDeleteConfirm = React.createClass({
             onConfirm={ () => { this.props.deleteUser(this.props.deleteId, "delete"); } }
             confirmButtonContent={this.renderConfirmButtonContent()}
             confirmButtonDisabled={this.props.deleteStatus === "deleting"}>
-            <div><Message msgId="user.confirmDeleteUser" /></div>
+            <div><Message msgId="users.confirmDeleteUser" /></div>
             <div style={{margin: "10px 0"}}><UserCard user={this.props.user} /></div>
             <div>{this.renderError()}</div>
         </Confirm>);
