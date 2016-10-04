@@ -60,11 +60,16 @@ const PaginationToolbar = connect((state) => {
     }
     let {start, limit, results, loading, totalCount, searchText} = state.maps;
     let page = 0;
-    //    let total = totalCount || 0;
-    if (results && totalCount) { // must be !==0 and exist to do the division
-        page = Math.ceil(start / limit);
+    let total = totalCount || 0;
+    if (totalCount >= limit) {
+        if (results && totalCount) { // must be !==0 and exist to do the division
+            page = Math.ceil(start / limit);
+        }
+    }else {
+        if (results && totalCount) { // must be !==0 and exist to do the division
+            page = Math.ceil(start / total);
+        }
     }
-
     return {
         page: page,
         pageSize: limit,
