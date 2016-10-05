@@ -55,4 +55,21 @@ describe('CoordinatesUtils', () => {
 
         expect(azimuth.toFixed(2)).toBe('45.00');
     });
+    it('test normalizeSRS', () => {
+        expect(CoordinatesUtils.normalizeSRS('EPSG:900913')).toBe('EPSG:3857');
+    });
+
+    it('test normalizeSRS with allowedSRS', () => {
+        expect(CoordinatesUtils.normalizeSRS('EPSG:900913', {'EPSG:900913': true})).toBe('EPSG:900913');
+    });
+
+    it('test getCompatibleSRS', () => {
+        expect(CoordinatesUtils.getCompatibleSRS('EPSG:900913', {'EPSG:900913': true})).toBe('EPSG:900913');
+        expect(CoordinatesUtils.getCompatibleSRS('EPSG:900913', {'EPSG:900913': true, 'EPSG:3857': true})).toBe('EPSG:900913');
+        expect(CoordinatesUtils.getCompatibleSRS('EPSG:900913', {'EPSG:3857': true})).toBe('EPSG:3857');
+
+        expect(CoordinatesUtils.getCompatibleSRS('EPSG:3857', {'EPSG:900913': true})).toBe('EPSG:900913');
+        expect(CoordinatesUtils.getCompatibleSRS('EPSG:3857', {'EPSG:900913': true, 'EPSG:3857': true})).toBe('EPSG:3857');
+        expect(CoordinatesUtils.getCompatibleSRS('EPSG:3857', {'EPSG:3857': true})).toBe('EPSG:3857');
+    });
 });

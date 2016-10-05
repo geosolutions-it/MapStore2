@@ -30,6 +30,29 @@ const sampleRecord = {
     references: [{
         type: "OGC:WMS",
         url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
+        SRS: [],
+        params: {name: "workspace:layername"}
+    }]
+};
+
+const sampleRecord2 = {
+    identifier: "test-identifier",
+    title: "sample title",
+    tags: ["subject1", "subject2"],
+    description: "sample abstract",
+    thumbnail: "img.jpg",
+    boundingBox: {
+        extent: [10.686,
+                44.931,
+                46.693,
+                12.54],
+        crs: "EPSG:4326"
+
+    },
+    references: [{
+        type: "OGC:WMS",
+        url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
+        SRS: ['EPSG:4326'],
         params: {name: "workspace:layername"}
     }]
 };
@@ -145,5 +168,26 @@ describe('This test for RecordItem', () => {
         // we should have only one button
         const buttons = componentDom.getElementsByTagName('button');
         expect(buttons.length).toBe(1);
+    });
+
+    // test handlers
+    it('check add layer with unsupported crs', () => {
+        let actions = {
+            onError: () => {
+            }
+        };
+        let actionsSpy = expect.spyOn(actions, "onError");
+        const item = ReactDOM.render((<ReactItem
+            record={sampleRecord2}
+            onError={actions.onError}
+            crs="EPSG:3857"/>), document.getElementById("container"));
+        expect(item).toExist();
+
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+           item, 'button'
+        );
+        expect(button).toExist();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(1);
     });
 });

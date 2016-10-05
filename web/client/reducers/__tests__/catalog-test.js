@@ -8,7 +8,7 @@
 var expect = require('expect');
 
 var catalog = require('../catalog');
-var {RECORD_LIST_LOADED} = require('../../actions/catalog');
+var {RECORD_LIST_LOADED, ADD_LAYER_ERROR} = require('../../actions/catalog');
 const sampleRecord = {
     boundingBox: {
         extent: [10.686,
@@ -38,10 +38,14 @@ const sampleRecord = {
     }
 };
 describe('Test the catalog reducer', () => {
-    it('Get borwser properties', () => {
+    it('loads records from the catalog', () => {
         var state = catalog({}, {type: RECORD_LIST_LOADED, result: {records: [sampleRecord], searchOptions: {catalogURL: "test"}}});
         expect(state.hasOwnProperty('result')).toBe(true);
         expect(state.hasOwnProperty('searchOptions')).toBe(true);
     });
 
+    it('handles layers error', () => {
+        var state = catalog({}, {type: ADD_LAYER_ERROR, error: 'myerror'});
+        expect(state.layerError).toBe('myerror');
+    });
 });
