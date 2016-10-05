@@ -252,6 +252,7 @@ function updatePermissions(resourceId, securityRules) {
     return (dispatch) => {
         GeoStoreApi.updateResourcePermissions(resourceId, securityRules).then(() => {
             dispatch(permissionsUpdated(resourceId, "success"));
+            dispatch(loadMaps(false, ConfigUtils.getDefaults().initialMapFilter || "*"));
         }).catch((e) => {
             dispatch(thumbnailError(resourceId, e));
         });

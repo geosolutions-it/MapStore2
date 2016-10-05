@@ -134,16 +134,25 @@
             "errorSize": "Dimensione massima consentita: 500kb",
             "error": "L'immagine fornita non è valida",
             "thumbnailError": {
-                "error403" : "Non disponi dei permessi per aggiornare la thumbnail",
-                "error404" : "Non è stato possibile creare la thumbnail sul server",
-                "error409" : "Una thumbnail con questo nome esiste già",
-                "errorDefault" : "Errore di rete"
+                "error403": "Non disponi dei permessi per aggiornare la thumbnail",
+                "error404": "Non è stato possibile creare la thumbnail sul server",
+                "error409": "Una thumbnail con questo nome esiste già",
+                "errorDefault": "Errore di rete"
             },
             "mapError": {
-                "error403" : "Non disponi dei permessi per aggiornare la mappa",
-                "error404" : "Non è stato possibile creare la mappa sul server",
-                "error409" : "Una mappa con questo nome esiste già",
-                "errorDefault" : "Errore di rete"
+                "error403": "Non disponi dei permessi per aggiornare la mappa",
+                "error404": "Non è stato possibile creare la mappa sul server",
+                "error409": "Una mappa con questo nome esiste già",
+                "errorDefault": "Errore di rete"
+            },
+            "permissions": {
+                "noRules": "Nessuna regola",
+                "addRule": "Aggiungi una regola...",
+                "selectGroup": "Seleziona un gruppo...",
+                "canView": "Può visualizzare",
+                "canWrite": "Può modificare",
+                "noResult": "Nessun gruppo rimasto",
+                "title": "Permessi dei gruppi"
             }
         },
         "print":{
@@ -484,7 +493,7 @@
             "error": {"select": "Seleziona Shapefile compresso"},
             "add": "Importa",
             "cancel": "Annulla",
-            "success" : " correttamente importato"
+            "success": " correttamente importato"
         },
         "catalog": {
             "title": "Catalogo",
