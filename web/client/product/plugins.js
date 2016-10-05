@@ -53,6 +53,7 @@ module.exports = {
         UserManagerPlugin: require('../plugins/manager/UserManager'),
         RulesManagerPlugin: require('../plugins/manager/RulesManager'),
         ManagerMenuPlugin: require('../plugins/manager/ManagerMenu'),
+        RedirectPlugin: require('../plugins/Redirect'),
         SharePlugin: require('../plugins/Share'),
         SavePlugin: require('../plugins/Save'),
         SaveAsPlugin: require('../plugins/SaveAs'),
