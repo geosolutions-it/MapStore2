@@ -15,6 +15,7 @@ var {
     CHANGE_LAYER_PROPERTIES,
     LAYER_LOADING,
     LAYER_LOAD,
+    LAYER_ERROR,
     ADD_LAYER,
     SHOW_SETTINGS,
     HIDE_SETTINGS,
@@ -26,6 +27,7 @@ var {
     updateNode,
     layerLoading,
     layerLoad,
+    layerError,
     addLayer,
     showSettings,
     hideSettings,
@@ -104,6 +106,15 @@ describe('Test correctness of the layers actions', () => {
 
         expect(retval).toExist();
         expect(retval.type).toBe(LAYER_LOAD);
+        expect(retval.layerId).toBe(testVal);
+    });
+
+    it('a layer is not loaded with errors', () => {
+        const testVal = 'layer1';
+        const retval = layerError(testVal);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(LAYER_ERROR);
         expect(retval.layerId).toBe(testVal);
     });
 

@@ -146,6 +146,9 @@
                 "errorDefault" : "Errore di rete"
             }
         },
+        "toc": {
+            "loadingerror": "Il livello non è stato caricato correttamente"
+        },
         "print":{
             "paneltitle": "Stampa",
             "layout": "Layout",

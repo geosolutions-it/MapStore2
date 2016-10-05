@@ -130,7 +130,7 @@ describe('test DefaultLayer module component', () => {
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
-        const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "glyphicon")[0]);
+        const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "glyphicon")[1]);
         expect(tool).toExist();
         tool.click();
         expect(spy.calls.length).toBe(1);
@@ -155,7 +155,7 @@ describe('test DefaultLayer module component', () => {
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
-        const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "glyphicon")[0]);
+        const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "glyphicon")[1]);
         expect(tool).toExist();
         tool.click();
         expect(spy.calls.length).toBe(1);
@@ -235,7 +235,7 @@ describe('test DefaultLayer module component', () => {
         expect(component).toExist();
         // let's find the settings tool and click on it
         const tool = ReactDOM.findDOMNode(
-            TestUtils.scryRenderedDOMComponentsWithClass(component, "glyphicon")[0]);
+            TestUtils.scryRenderedDOMComponentsWithClass(component, "glyphicon")[1]);
         expect(tool).toExist();
         tool.click();
         // the onSettings method must have been invoked

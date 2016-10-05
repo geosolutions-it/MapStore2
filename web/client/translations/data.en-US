@@ -146,6 +146,9 @@
                 "errorDefault" : "Network error"
             }
         },
+        "toc": {
+            "loadingerror": "The layer has not been loaded correctly"
+        },
         "print":{
             "paneltitle": "Print",
             "layout": "Layout",

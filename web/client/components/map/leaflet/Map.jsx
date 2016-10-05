@@ -30,6 +30,7 @@ let LeafletMap = React.createClass({
         onMouseMove: React.PropTypes.func,
         onLayerLoading: React.PropTypes.func,
         onLayerLoad: React.PropTypes.func,
+        onLayerError: React.PropTypes.func,
         resize: React.PropTypes.number,
         measurement: React.PropTypes.object,
         changeMeasurementState: React.PropTypes.func,
@@ -53,6 +54,7 @@ let LeafletMap = React.createClass({
           projection: "EPSG:3857",
           onLayerLoading: () => {},
           onLayerLoad: () => {},
+          onLayerError: () => {},
           resize: 0,
           registerHooks: true,
           style: {},
@@ -133,6 +135,7 @@ let LeafletMap = React.createClass({
                 }
                 event.layer.on('loading', (loadingEvent) => { this.props.onLayerLoading(loadingEvent.target.layerId); });
                 event.layer.on('load', (loadEvent) => { this.props.onLayerLoad(loadEvent.target.layerId); });
+                event.layer.on('tileerror', (errorEvent) => { this.props.onLayerError(errorEvent.target.layerId); });
             }
         });
 

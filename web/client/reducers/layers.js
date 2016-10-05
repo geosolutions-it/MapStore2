@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var {LAYER_LOADING, LAYER_LOAD, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES,
+var {LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES,
     TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, ADD_LAYER,
     SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, INVALID_LAYER
     } = require('../actions/layers');
@@ -120,13 +120,19 @@ function layers(state = [], action) {
     switch (action.type) {
         case LAYER_LOADING: {
             const newLayers = (state.flat || []).map((layer) => {
-                return layer.id === action.layerId ? assign({}, layer, {loading: true}) : layer;
+                return layer.id === action.layerId ? assign({}, layer, {loading: true, loadingError: false}) : layer;
             });
             return assign({}, state, {flat: newLayers});
         }
         case LAYER_LOAD: {
             const newLayers = (state.flat || []).map((layer) => {
-                return layer.id === action.layerId ? assign({}, layer, {loading: false}) : layer;
+                return layer.id === action.layerId ? assign({}, layer, {loading: false, loadingError: false}) : layer;
+            });
+            return assign({}, state, {flat: newLayers});
+        }
+        case LAYER_ERROR: {
+            const newLayers = (state.flat || []).map((layer) => {
+                return layer.id === action.layerId ? assign({}, layer, {loading: false, loadingError: true}) : layer;
             });
             return assign({}, state, {flat: newLayers});
         }
