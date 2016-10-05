@@ -147,6 +147,9 @@
                 "errorDefault" : "Une erreur est survenue sur le serveur"
             }
         },
+        "toc": {
+            "loadingerror": "La couche n'a pas été chargée correctement"
+        },
         "print":{
             "paneltitle": "Impression",
             "layout": "Mise en page",
