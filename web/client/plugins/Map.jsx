@@ -25,6 +25,7 @@ const MapPlugin = React.createClass({
         zoomControl: React.PropTypes.bool,
         mapLoadingMessage: React.PropTypes.string,
         loadingSpinner: React.PropTypes.bool,
+        loadingError: React.PropTypes.string,
         tools: React.PropTypes.array,
         options: React.PropTypes.object,
         toolsOptions: React.PropTypes.object,
@@ -109,6 +110,18 @@ const MapPlugin = React.createClass({
                 </plugins.Map>
             );
         }
+        if (this.props.loadingError) {
+            return (<div style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center"
+            }} className="mapErrorMessage">
+                <Message msgId="map.loadingerror"/>:
+                    {this.props.loadingError}
+            </div>);
+        }
         return (<div style={{
             width: "100%",
             height: "100%",
@@ -128,9 +141,10 @@ const {mapSelector} = require('../selectors/map');
 const {layerSelectorWithMarkers} = require('../selectors/layers');
 
 const selector = createSelector(
-    [mapSelector, layerSelectorWithMarkers], (map, layers) => ({
+    [mapSelector, layerSelectorWithMarkers, (state) => state.mapInitialConfig && state.mapInitialConfig.loadingError && state.mapInitialConfig.loadingError.data], (map, layers, loadingError) => ({
         map,
-        layers
+        layers,
+        loadingError
     })
 );
 module.exports = {
