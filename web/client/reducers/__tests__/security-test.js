@@ -8,6 +8,7 @@
 var expect = require('expect');
 var security = require('../security');
 var {LOGIN_SUCCESS, LOGIN_FAIL, RESET_ERROR, LOGOUT} = require('../../actions/security');
+var {USERMANAGER_UPDATE_USER} = require('../../actions/users');
 
 describe('Test the security reducer', () => {
     let testToken = "260a670e-4dc0-4719-8bc9-85555d7dcbe1";
@@ -68,5 +69,22 @@ describe('Test the security reducer', () => {
         let state = security({}, {type: LOGOUT});
         expect(state).toExist();
         expect(!state.user).toBe(true);
+    });
+    it('update user', () => {
+        let state = security({user: testUser.User}, {type: USERMANAGER_UPDATE_USER, user: {
+            id: 6,
+            name: "changed"
+        }});
+        expect(state).toExist();
+        expect(state.user.name).toBe("changed");
+    });
+
+    it('do not update user', () => {
+        let state = security({user: testUser.User}, {type: USERMANAGER_UPDATE_USER, user: {
+            id: 7,
+            name: "changed"
+        }});
+        expect(state).toExist();
+        expect(state.user.name).toBe("user");
     });
 });
