@@ -37,6 +37,7 @@ module.exports = {
       extensions: ["", ".js", ".jsx"]
     },
     module: {
+        noParse: [/html2canvas/],
         loaders: [
             { test: /\.css$/, loader: 'style!css'},
             { test: /\.less$/, loader: "style!css!less-loader" },
