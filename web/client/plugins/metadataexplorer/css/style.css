@@ -16,7 +16,7 @@ div.record-grid:after {
 }
 
 div.record-grid .record-item{
-    height: 250px;
+    height: auto;
 }
 
 div.record-grid .record-item .record-item-description {

@@ -23,11 +23,13 @@ const Catalog = React.createClass({
         onChangeFormat: React.PropTypes.func,
         onLayerAdd: React.PropTypes.func,
         onZoomToExtent: React.PropTypes.func,
+        onError: React.PropTypes.func,
         pageSize: React.PropTypes.number,
         displayURL: React.PropTypes.bool,
         initialCatalogURL: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
         result: React.PropTypes.object,
         loadingError: React.PropTypes.object,
+        layerError: React.PropTypes.string,
         searchOptions: React.PropTypes.object,
         chooseCatalogUrl: React.PropTypes.bool,
         showGetCapLinks: React.PropTypes.bool,
@@ -48,6 +50,7 @@ const Catalog = React.createClass({
             onChangeFormat: () => {},
             onLayerAdd: () => {},
             onZoomToExtent: () => {},
+            onError: () => {},
             chooseCatalogUrl: true,
             records: [],
             formats: [{name: 'csw', label: 'CSW'}],
@@ -96,9 +99,9 @@ const Catalog = React.createClass({
             return this.renderError();
         }
     },
-    renderError() {
+    renderError(error) {
         return (<Alert bsStyle="danger">
-            <Message msgId="catalog.error" />
+            <Message msgId={error || 'catalog.error'} />
           </Alert>);
     },
     renderLoading() {
@@ -132,6 +135,7 @@ const Catalog = React.createClass({
                     catalogURL={this.getCatalogUrl() }
                     onLayerAdd={this.props.onLayerAdd}
                     onZoomToExtent={this.props.onZoomToExtent}
+                    onError={this.props.onError}
                     showGetCapLinks={this.props.showGetCapLinks}
                     addAuthentication={this.props.addAuthentication}
                 />
@@ -183,6 +187,7 @@ const Catalog = React.createClass({
                  </div>
                  <div>
                     {this.renderResult()}
+                    {this.props.layerError ? this.renderError(this.props.layerError) : null}
                  </div>
              </div>
         );

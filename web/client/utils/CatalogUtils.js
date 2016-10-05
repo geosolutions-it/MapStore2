@@ -12,10 +12,10 @@ const urlUtil = require('url');
 
 const getWMSBBox = (record) => {
     let layer = record;
-    let bbox = layer.EX_GeographicBoundingBox;
+    let bbox = (layer.EX_GeographicBoundingBox || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$));
     while (!bbox && layer.Layer && layer.Layer.length) {
         layer = layer.Layer[0];
-        bbox = layer.EX_GeographicBoundingBox;
+        bbox = (layer.EX_GeographicBoundingBox || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$));
     }
     if (!bbox) {
         bbox = {
@@ -91,6 +91,7 @@ const converters = {
                     let wmsReference = {
                         type: wms.protocol || wms.scheme,
                         url: wms.value,
+                        SRS: [],
                         params: {
                             name: wms.name
                         }
@@ -129,16 +130,17 @@ const converters = {
                 tags: "",
                 boundingBox: {
                     extent: [
-                            bbox.westBoundLongitude,
-                            bbox.southBoundLatitude,
-                            bbox.eastBoundLongitude,
-                            bbox.northBoundLatitude
+                            bbox.westBoundLongitude || bbox.minx,
+                            bbox.southBoundLatitude || bbox.miny,
+                            bbox.eastBoundLongitude || bbox.maxx,
+                            bbox.northBoundLatitude || bbox.maxy
                     ],
                     crs: "EPSG:4326"
                 },
                 references: [{
                     type: "OGC:WMS",
                     url: options.url,
+                    SRS: record.SRS || [],
                     params: {
                         name: record.Name
                     }

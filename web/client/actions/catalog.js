@@ -14,6 +14,7 @@ var API = {
 const RECORD_LIST_LOADED = 'RECORD_LIST_LOADED';
 const RECORD_LIST_LOAD_ERROR = 'RECORD_LIST_LOAD_ERROR';
 const CHANGE_CATALOG_FORMAT = 'CHANGE_CATALOG_FORMAT';
+const ADD_LAYER_ERROR = 'ADD_LAYER_ERROR';
 
 function recordsLoaded(options, result) {
     return {
@@ -75,11 +76,20 @@ function textSearch(format, url, startPosition, maxRecords, text, options) {
     };
 }
 
+function addLayerError(error) {
+    return {
+        type: ADD_LAYER_ERROR,
+        error
+    };
+}
+
 module.exports = {
     RECORD_LIST_LOADED,
     RECORD_LIST_LOAD_ERROR,
     CHANGE_CATALOG_FORMAT,
+    ADD_LAYER_ERROR,
     getRecords,
     textSearch,
-    changeCatalogFormat
+    changeCatalogFormat,
+    addLayerError
 };

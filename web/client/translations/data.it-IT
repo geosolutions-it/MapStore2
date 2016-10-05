@@ -501,7 +501,8 @@
             "copied": "Copiato!",
             "catalogUrlPlaceholder": "URL del catalogo...",
             "textSearchPlaceholder": "testo da cercare...",
-            "search": "Cerca"
+            "search": "Cerca",
+            "srs_not_allowed": "Il sistema di coordinate della mappa non è supportato da questo servizio"
         },
         "uploader": {
             "filename": "File Name",

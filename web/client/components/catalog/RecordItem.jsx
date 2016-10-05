@@ -10,31 +10,32 @@ const SharingLinks = require('./SharingLinks');
 const Message = require('../I18N/Message');
 const {Image, Panel, Button, Glyphicon} = require('react-bootstrap');
 const {head} = require('lodash');
+const assign = require('object-assign');
+const {memoize} = require('lodash');
+
+const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 
 const defaultThumb = require('./img/default.jpg');
-const removeURLParameter = function(url, parameter) {
-    // prefer to use l.search if you have a location/link object
-    if (!url) {
-        return url;
-    }
-    let urlparts = url.split('?');
+
+const buildSRSMap = memoize((srs) => {
+    return srs.reduce((previous, current) => {
+        return assign(previous, {[current]: true});
+    }, {});
+});
+
+const removeParameters = (url, skip) => {
+    const urlparts = url.split('?');
+    const params = {};
     if (urlparts.length >= 2) {
-
-        let prefix = encodeURIComponent(parameter) + '=';
-        let pars = urlparts[1].split(/[&;]/g);
-
-        // reverse iteration as may be destructive
-        for (let i = pars.length; i-- > 0; ) {
-            // idiom for string.startsWith
-            if (pars[i].lastIndexOf(prefix, 0) !== -1) {
-                pars.splice(i, 1);
+        const pars = urlparts[1].split(/[&;]/g);
+        pars.forEach((par) => {
+            const param = par.split('=');
+            if (skip.indexOf(param[0].toLowerCase()) === -1) {
+                params[param[0]] = param[1];
             }
-        }
-
-        return urlparts[0] + (pars.length > 0 ? '?' + pars.join('&') : "");
+        });
     }
-    return url;
-
+    return {url: urlparts[0], params};
 };
 
 require("./RecordItem.css");
@@ -47,17 +48,21 @@ const RecordItem = React.createClass({
         buttonSize: React.PropTypes.string,
         onCopy: React.PropTypes.func,
         showGetCapLinks: React.PropTypes.bool,
-        addAuthentication: React.PropTypes.bool
+        addAuthentication: React.PropTypes.bool,
+        crs: React.PropTypes.string,
+        onError: React.PropTypes.func
     },
     getDefaultProps() {
         return {
             mapType: "leaflet",
             onLayerAdd: () => {},
             onZoomToExtent: () => {},
+            onError: () => {},
             style: {},
             buttonSize: "small",
             onCopy: () => {},
-            showGetCapLinks: false
+            showGetCapLinks: false,
+            crs: "EPSG:3857"
         };
     },
     getInitialState() {
@@ -169,21 +174,27 @@ const RecordItem = React.createClass({
         this.setState({[key]: status});
     },
     addLayer(wms) {
-        let url = removeURLParameter(wms.url, "request");
-        url = removeURLParameter(url, "layer");
-        this.props.onLayerAdd({
-            type: "wms",
-            url: url,
-            visibility: true,
-            name: wms.params && wms.params.name,
-            title: this.props.record.title || (wms.params && wms.params.name),
-            boundingBox: this.props.record.boundingBox,
-            links: this.getLinks(this.props.record)
-        });
-        if (this.props.record.boundingBox) {
-            let extent = this.props.record.boundingBox.extent;
-            let crs = this.props.record.boundingBox.crs;
-            this.props.onZoomToExtent(extent, crs);
+        const {url, params} = removeParameters(wms.url, ["request", "layer", "service", "version"]);
+        const allowedSRS = buildSRSMap(wms.SRS);
+        if (wms.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
+            this.props.onError('catalog.srs_not_allowed');
+        } else {
+            this.props.onLayerAdd({
+                type: "wms",
+                url: url,
+                visibility: true,
+                name: wms.params && wms.params.name,
+                title: this.props.record.title || (wms.params && wms.params.name),
+                boundingBox: this.props.record.boundingBox,
+                links: this.getLinks(this.props.record),
+                params: params,
+                allowedSRS: allowedSRS
+            });
+            if (this.props.record.boundingBox) {
+                let extent = this.props.record.boundingBox.extent;
+                let crs = this.props.record.boundingBox.crs;
+                this.props.onZoomToExtent(extent, crs);
+            }
         }
     }
 });
