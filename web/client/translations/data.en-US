@@ -134,16 +134,25 @@
             "errorSize": "Max allowed size: 500kb",
             "error": "The provided image is not valid",
             "thumbnailError": {
-                "error403" : "You are not allowed to update the thumbnail",
-                "error404" : "An error occurred while creating the thumbnail",
-                "error409" : "A thumbnail with this name already exists",
-                "errorDefault" : "Network error"
+                "error403": "You are not allowed to update the thumbnail",
+                "error404": "An error occurred while creating the thumbnail",
+                "error409": "A thumbnail with this name already exists",
+                "errorDefault": "Network error"
             },
             "mapError": {
-                "error403" : "You are not allowed to update the map",
-                "error404" : "An error occurred while creating the map",
-                "error409" : "A map with this name already exists",
-                "errorDefault" : "Network error"
+                "error403": "You are not allowed to update the map",
+                "error404": "An error occurred while creating the map",
+                "error409": "A map with this name already exists",
+                "errorDefault": "Network error"
+            },
+            "permissions": {
+                "noRules": "No rules",
+                "addRule": "Add a rule...",
+                "selectGroup": "Select a group...",
+                "canView": "can view",
+                "canWrite": "can edit",
+                "noResult": "no results found",
+                "title": "Permissions Groups"
             }
         },
         "toc": {
@@ -486,7 +495,7 @@
             "error": {"select": "Select one or more zip file"},
             "add": "Add",
             "cancel": "Cancel",
-            "success" : " correctly imported"
+            "success": " correctly imported"
         },
         "catalog": {
             "title": "Catalog",

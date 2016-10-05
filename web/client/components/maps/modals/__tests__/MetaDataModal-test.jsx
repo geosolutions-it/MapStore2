@@ -30,18 +30,31 @@ describe('This test for MetadataModal', () => {
         expect(metadataModalItem).toExist();
 
         const metadataModalItemDom = ReactDOM.findDOMNode(metadataModalItem);
-        expect(metadataModalItemDom).toNotExist();
+        expect(metadataModalItemDom).toExist();
+
+        const getModals = function() {
+            return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
+        };
+        expect(getModals().length).toBe(0);
 
     });
 
     it('creates the component with defaults, show=true', () => {
-        const metadataModalItem = ReactDOM.render(<MetadataModal show={true} useModal={true} id="MetadataModal"/>, document.getElementById("container"));
+        let thumbnail = "myThumnbnailUrl";
+        let errors = ["FORMAT"];
+        let map = {
+            thumbnail: thumbnail,
+            id: 123,
+            canWrite: true,
+            errors: errors
+        };
+
+        const metadataModalItem = ReactDOM.render(<MetadataModal show={true} useModal={true} map={map} id="MetadataModal"/>, document.getElementById("container"));
         expect(metadataModalItem).toExist();
 
         const modalDivList = document.getElementsByClassName("modal-content");
         const closeBtnList = modalDivList.item(0).getElementsByTagName('button');
-        expect(closeBtnList.length).toBe(4);
-        // expect(metadataModalItemDom.id).toBe('MetadataModal');
+        expect(closeBtnList.length).toBe(3);
     });
 
     it('creates the component with a format error', () => {
@@ -65,7 +78,7 @@ describe('This test for MetadataModal', () => {
 
         const modalDivList = document.getElementsByClassName("modal-content");
         const closeBtnList = modalDivList.item(0).getElementsByTagName('button');
-        expect(closeBtnList.length).toBe(4);
+        expect(closeBtnList.length).toBe(3);
 
         const errorFORMAT = modalDivList.item(0).getElementsByTagName('errorFORMAT');
         expect(errorFORMAT).toExist();
@@ -92,7 +105,7 @@ describe('This test for MetadataModal', () => {
 
         const modalDivList = document.getElementsByClassName("modal-content");
         const closeBtnList = modalDivList.item(0).getElementsByTagName('button');
-        expect(closeBtnList.length).toBe(4);
+        expect(closeBtnList.length).toBe(3);
 
         const errorFORMAT = modalDivList.item(0).getElementsByTagName('errorSIZE');
         expect(errorFORMAT).toExist();
