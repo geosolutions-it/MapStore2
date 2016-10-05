@@ -121,6 +121,7 @@
 		},
         "map": {
             "loading": "Loading...",
+            "loadingerror": "Error in loading",
             "name": "Name",
             "description": "Description",
             "namePlaceholder": "Map Name",

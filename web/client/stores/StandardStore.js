@@ -43,7 +43,9 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         let newState = {
             ...allReducers(state, action),
             map: mapState && mapState.map ? map(mapState.map, action) : null,
-            mapInitialConfig: mapState ? mapState.mapInitialConfig : null,
+            mapInitialConfig: (mapState && mapState.mapInitialConfig) || (mapState && mapState.loadingError && {
+                loadingError: mapState.loadingError
+            }) || null,
             layers: mapState ? layers(mapState.layers, action) : null
         };
         if (action && action.type === CHANGE_BROWSER_PROPERTIES && newState.browser.mobile) {

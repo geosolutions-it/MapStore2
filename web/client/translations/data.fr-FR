@@ -122,6 +122,7 @@
 		},
         "map": {
             "loading": "Chargement...",
+            "loadingerror": "Erreur de chargement",
             "name": "Nom",
             "description": "Description",
             "namePlaceholder": "Nom de la carte",
