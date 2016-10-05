@@ -7,13 +7,22 @@
  */
 
 const { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, CHANGE_PASSWORD_SUCCESS, RESET_ERROR } = require('../actions/security');
+const { USERMANAGER_UPDATE_USER } = require('../actions/users');
+
 const SecurityUtils = require('../utils/SecurityUtils');
 
 const assign = require('object-assign');
+const {cloneDeep} = require('lodash');
 
 function security(state = {user: null, errorCause: null}, action) {
     switch (action.type) {
-
+        case USERMANAGER_UPDATE_USER:
+            if (state.user && action.user && state.user.id === action.user.id) {
+                return assign({}, state, {
+                    user: cloneDeep(action.user)
+                });
+            }
+            return state;
         case LOGIN_SUCCESS:
             const userAttributes = SecurityUtils.getUserAttributes(action.userDetails.User);
             const userUuid = userAttributes.find(attribute => attribute.name.toLowerCase() === 'uuid');
