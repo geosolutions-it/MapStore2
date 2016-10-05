@@ -225,6 +225,32 @@ describe('Test the layers reducer', () => {
         expect(state.flat.filter((layer) => layer.loading).length).toBe(0);
     });
 
+    it('a layer load ends with error, loadingError flag is updated', () => {
+        const action1 = {
+            type: 'LAYER_ERROR',
+            layerId: "layer1"
+        };
+
+        const action2 = {
+            type: 'LAYER_ERROR',
+            layerId: "layer2"
+        };
+
+        var originalLoadingLayers = {flat: [{id: "layer1", name: "layer1", loading: true}, {id: "layer2", name: "layer2", loading: true}]};
+        var state = layers(originalLoadingLayers, action1);
+
+        expect(state.flat.filter((layer) => layer.name === 'layer1')[0].loading).toBe(false);
+        expect(state.flat.filter((layer) => layer.name === 'layer2')[0].loading).toBe(true);
+        expect(state.flat.filter((layer) => layer.loading).length).toBe(1);
+        expect(state.flat.filter((layer) => layer.loadingError).length).toBe(1);
+
+        state = layers(state, action2);
+        expect(state.flat.filter((layer) => layer.name === 'layer1')[0].loading).toBe(false);
+        expect(state.flat.filter((layer) => layer.name === 'layer2')[0].loading).toBe(false);
+        expect(state.flat.filter((layer) => layer.loading).length).toBe(0);
+        expect(state.flat.filter((layer) => layer.loadingError).length).toBe(2);
+    });
+
     it('change group properties', () => {
         let testAction = {
             type: "CHANGE_GROUP_PROPERTIES",

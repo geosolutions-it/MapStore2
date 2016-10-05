@@ -7,14 +7,19 @@
  */
 
 const React = require('react');
-const {Glyphicon} = require('react-bootstrap');
+const {Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
+const Message = require('../../I18N/Message');
+
 require("./css/layertool.css");
+
+
 const LayersTool = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
         onClick: React.PropTypes.func,
         style: React.PropTypes.object,
-        glyph: React.PropTypes.string
+        glyph: React.PropTypes.string,
+        tooltip: React.PropTypes.tooltip
     },
     getDefaultProps() {
         return {
@@ -23,10 +28,14 @@ const LayersTool = React.createClass({
         };
     },
     render() {
-        return (
-            <Glyphicon className="toc-layer-tool" style={this.props.style}
-                       glyph={this.props.glyph}
-                       onClick={(options) => this.props.onClick(this.props.node, options || {})}/>);
+        const tool = (<Glyphicon className="toc-layer-tool" style={this.props.style}
+                   glyph={this.props.glyph}
+                   onClick={(options) => this.props.onClick(this.props.node, options || {})}/>);
+        return this.props.tooltip ? (
+           <OverlayTrigger placement="bottom" overlay={(<Tooltip><strong><Message msgId={this.props.tooltip}/></strong></Tooltip>)}>
+               {tool}
+           </OverlayTrigger>) : tool;
+
     }
 });
 

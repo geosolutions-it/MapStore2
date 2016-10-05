@@ -105,6 +105,11 @@ var DefaultLayer = React.createClass({
                 <VisibilityCheck checkType={this.props.visibilityCheckType} propertiesChangeHandler={this.props.propertiesChangeHandler}/>
                 <Title onClick={this.props.onToggle}/>
                 <InlineSpinner loading={this.props.node.loading}/>
+                <LayersTool key="loadingerror"
+                        style={{"display": this.props.node.loadingError ? "block" : "none", color: "red", cursor: "default"}}
+                        glyph="ban-circle"
+                        tooltip="toc.loadingerror"
+                        />
                 {this.renderCollapsible()}
                 {this.renderTools()}
             </Node>

@@ -156,6 +156,9 @@
                 "title": "groupes autorisés"
             }
         },
+        "toc": {
+            "loadingerror": "La couche n'a pas été chargée correctement"
+        },
         "print":{
             "paneltitle": "Impression",
             "layout": "Mise en page",
