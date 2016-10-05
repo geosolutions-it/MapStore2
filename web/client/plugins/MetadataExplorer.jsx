@@ -11,7 +11,7 @@ const {connect} = require('react-redux');
 const assign = require('object-assign');
 const {createSelector} = require("reselect");
 const {Glyphicon, Panel} = require('react-bootstrap');
-const {textSearch, changeCatalogFormat} = require("../actions/catalog");
+const {textSearch, changeCatalogFormat, addLayerError} = require("../actions/catalog");
 const {addLayer} = require("../actions/layers");
 const {zoomToExtent} = require("../actions/map");
 const {toggleControl} = require("../actions/controls");
@@ -94,12 +94,14 @@ const MetadataExplorerPlugin = connect((state) => ({
     formats: state.catalog && state.catalog.supportedFormats || [{name: 'csw', label: 'CSW'}, {name: 'wms', label: 'WMS'}],
     result: state.catalog && state.catalog.result,
     loadingError: state.catalog && state.catalog.loadingError,
+    layerError: state.catalog && state.catalog.layerError,
     active: state.controls && state.controls.toolbar && state.controls.toolbar.active === "metadataexplorer" || state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled
 }), {
     onSearch: textSearch,
     onLayerAdd: addLayer,
     toggleControl: toggleControl.bind(null, 'metadataexplorer', null),
-    onChangeFormat: changeCatalogFormat
+    onChangeFormat: changeCatalogFormat,
+    onError: addLayerError
 })(MetadataExplorerComponent);
 
 module.exports = {

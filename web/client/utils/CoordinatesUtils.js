@@ -71,8 +71,24 @@ var CoordinatesUtils = {
         }
         return projPoints;
     },
-    normalizeSRS: function(srs) {
-        return srs === 'EPSG:900913' ? 'EPSG:3857' : srs;
+    getCompatibleSRS(srs, allowedSRS) {
+        if (srs === 'EPSG:900913' && !allowedSRS['EPSG:900913'] && allowedSRS['EPSG:3857']) {
+            return 'EPSG:3857';
+        }
+        if (srs === 'EPSG:3857' && !allowedSRS['EPSG:3857'] && allowedSRS['EPSG:900913']) {
+            return 'EPSG:900913';
+        }
+        return srs;
+    },
+    normalizeSRS: function(srs, allowedSRS) {
+        const result = (srs === 'EPSG:900913' ? 'EPSG:3857' : srs);
+        if (allowedSRS && !allowedSRS[result]) {
+            return CoordinatesUtils.getCompatibleSRS(result, allowedSRS);
+        }
+        return result;
+    },
+    isAllowedSRS(srs, allowedSRS) {
+        return allowedSRS[CoordinatesUtils.getCompatibleSRS(srs, allowedSRS)];
     },
     getAvailableCRS: function() {
         let crsList = {};

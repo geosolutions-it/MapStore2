@@ -35,7 +35,9 @@ const flatLayers = (root) => {
 };
 
 const searchAndPaginate = (json, startPosition, maxRecords, text) => {
-    const layersObj = flatLayers(json.WMS_Capabilities.Capability);
+    const root = (json.WMS_Capabilities || json.WMT_MS_Capabilities).Capability;
+    const SRSList = (root.Layer && (root.Layer.SRS || root.Layer.CRS)) || [];
+    const layersObj = flatLayers(root);
     const layers = isArray(layersObj) ? layersObj : [layersObj];
     const filteredLayers = layers
         .filter((layer) => !text || layer.Name.toLowerCase().indexOf(text.toLowerCase()) !== -1 || (layer.Title && layer.Title.toLowerCase().indexOf(text.toLowerCase()) !== -1) || (layer.Abstract && layer.Abstract.toLowerCase().indexOf(text.toLowerCase()) !== -1));
@@ -45,6 +47,7 @@ const searchAndPaginate = (json, startPosition, maxRecords, text) => {
         nextRecord: startPosition + Math.min(maxRecords, filteredLayers.length) + 1,
         records: filteredLayers
             .filter((layer, index) => index >= (startPosition - 1) && index < (startPosition - 1) + maxRecords)
+            .map((layer) => assign({}, layer, {SRS: SRSList}))
     };
 };
 

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {RECORD_LIST_LOADED, RECORD_LIST_LOAD_ERROR, CHANGE_CATALOG_FORMAT} = require('../actions/catalog');
+const {RECORD_LIST_LOADED, RECORD_LIST_LOAD_ERROR, CHANGE_CATALOG_FORMAT, ADD_LAYER_ERROR} = require('../actions/catalog');
 const assign = require('object-assign');
 
 function catalog(state = null, action) {
@@ -15,20 +15,25 @@ function catalog(state = null, action) {
             return assign({}, state, {
                 result: action.result,
                 searchOptions: action.searchOptions,
-                loadingError: null
+                loadingError: null,
+                layerError: null
             });
         case RECORD_LIST_LOAD_ERROR:
             return assign({}, state, {
                 result: null,
                 searchOptions: null,
-                loadingError: action.error
+                loadingError: action.error,
+                layerError: null
             });
         case CHANGE_CATALOG_FORMAT:
             return {
                 result: null,
                 loadingError: null,
-                format: action.format
+                format: action.format,
+                layerError: null
             };
+        case ADD_LAYER_ERROR:
+            return assign({}, state, {layerError: action.error});
         default:
             return state;
     }

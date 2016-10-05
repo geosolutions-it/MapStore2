@@ -453,7 +453,7 @@
 }
 
 #mapstore-catalog-panel .record-item {
-    height: 150px;
+    min-height: 150px;
 }
 
 #mapstore-about {

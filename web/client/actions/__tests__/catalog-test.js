@@ -7,7 +7,7 @@
  */
 
 const expect = require('expect');
-const {getRecords} = require('../catalog');
+const {getRecords, addLayerError, ADD_LAYER_ERROR} = require('../catalog');
 describe('Test correctness of the catalog actions', () => {
 
     it('getRecords ISO Metadata Profile', (done) => {
@@ -54,5 +54,12 @@ describe('Test correctness of the catalog actions', () => {
                 done(ex);
             }
         });
+    });
+
+    it('sets an error on addLayerError action', () => {
+        const action = addLayerError('myerror');
+
+        expect(action.type).toBe(ADD_LAYER_ERROR);
+        expect(action.error).toBe('myerror');
     });
 });
