@@ -230,7 +230,7 @@ function layers(state = [], action) {
             }
             if (action.nodeType === 'layers') {
                 const newGroups = removeNode(state.groups, action.node);
-                const newLayers = state.flat.filter((layer) => layer.name !== action.node);
+                const newLayers = state.flat.filter((layer) => layer.id !== action.node);
                 return assign({}, state, {
                     flat: newLayers,
                     groups: newGroups
