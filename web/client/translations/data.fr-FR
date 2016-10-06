@@ -429,8 +429,8 @@
         "user":{
             "login": "Login",
             "logout": "Logout",
-            "info": " Informations du compte",
-            "details": " User Details",
+            "info": "Informations du compte",
+            "details": "Détails de l'utilisateur",
             "noAttributesMessage": "Il n'y a pas d'informations relatives à votre compte",
             "changePwd": "Changer le mot de passe",
             "newPwd": "Nouveau mot de passe",
