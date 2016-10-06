@@ -7,10 +7,12 @@
 }
 
 .rules-controls {
-    text-align: right;
+    width: auto;
     margin-bottom: 15px;
 }
-
+.rules-controls .btn {
+    border-left: 1px solid #5C9FB4;
+}
 .rules-pagination {
     text-align: right;
     margin-top: -22px;
