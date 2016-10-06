@@ -147,8 +147,8 @@ const PermissionEditor = React.createClass({
         }
         return this.localGroups.map((group, index) => {
             return (
-                <tr style={{display: "flex"}} key={index} className={index / 2 === 0 ? "even" : "odd"}>
-                    <td style={{flex: 1}}>{group.name}</td>
+                <tr key={index} className={index / 2 === 0 ? "even" : "odd"}>
+                    <td>{group.name}</td>
                     <td style={{width: "150px"}}>
                         <Select
                             ref={"permChoice" + index}
@@ -205,8 +205,8 @@ const PermissionEditor = React.createClass({
                         </tr>
 
 
-                        <tr style={{display: "flex"}} key="addRowKey">
-                            <td style={{flex: 1}}>
+                        <tr key="addRowKey">
+                            <td>
                                 <Select
                                     noResultsText={LocaleUtils.getMessageById(this.context.messages, "map.permissions.noResult")}
                                     ref="newGroup"
