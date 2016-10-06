@@ -20,5 +20,5 @@
 }
 .Manager-Container .Manager-Tools-Nav {
     order: -1;
-    flex: 0 0 15em;
+    max-width: 20%;
 }

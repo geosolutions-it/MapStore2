@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Button, Glyphicon, Modal} = require('react-bootstrap');
+const {ButtonGroup, Button, Glyphicon, Modal} = require('react-bootstrap');
 
 const Message = require('../../I18N/Message');
 
@@ -23,7 +23,6 @@ const RulesTableControls = React.createClass({
     },
     getDefaultProps() {
         return {
-            bsSize: "small",
             moveRulesToPage: () => {},
             updateActiveRule: () => {},
             deleteRules: () => {},
@@ -51,7 +50,7 @@ const RulesTableControls = React.createClass({
         const firstPage = this.props.rulesPage === 1 || !this.props.rulesPage;
         const lastPage = this.props.rulesPage === numberOfPages || !this.props.rulesPage;
         return (
-            <div className="rules-controls">
+            <ButtonGroup className="rules-controls">
                 <Button bsSize={bsSize} bsStyle="primary" onClick={this.getAddRuleHandler()}>
                     <Glyphicon glyph="plus"/>
                 </Button>
@@ -110,7 +109,7 @@ const RulesTableControls = React.createClass({
                         </Button>
                     </Modal.Footer>
                 </Modal>
-            </div>
+            </ButtonGroup>
         );
     }
 });
