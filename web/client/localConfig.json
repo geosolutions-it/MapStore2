@@ -13,15 +13,16 @@
 	    "method": "basic"
 	  }
 	],
-	"plugins": {
-		"mobile": [{
-			"name": "Map",
-			"cfg": {
-        "zoomControl": false,
-        "tools": ["locate"]
-			}
-		},
-		{
+  "plugins": {
+    "mobile": [
+      {
+        "name": "Map",
+        "cfg": {
+          "zoomControl": false,
+          "tools": ["locate"]
+        }
+      },
+      {
         "name": "DrawerMenu",
 				"cfg": {
 					"glyph": "1-stilo",
@@ -217,8 +218,9 @@
       "cfg":{
         "className": "square-button"
       }
-		}],
-		"desktop": [{
+		}
+  ],
+	"desktop": [{
 			"name": "Map",
 			"cfg": {
 				"toolsOptions": {
@@ -254,7 +256,7 @@
        "name": "Identify",
        "showIn": ["IdentifyBar", "Settings"],
 			 "cfg": {
-				 "panelClassName": "modal-dialog info-panel modal-content",
+         "panelClassName": "modal-dialog info-panel modal-content",
 				 "headerClassName": "modal-header",
 				 "bodyClassName": "modal-body info-wrap",
 				 "asPanel": false,
@@ -501,7 +503,9 @@
 					"alwaysVisible": true
 				}
 			}
-    }, {
+    },
+		"OmniBar",
+    {
 			"name": "Login",
       "cfg": {
           "nav": false,
@@ -526,7 +530,6 @@
 					}]
       }
 		},
-		"OmniBar",
 		{
 		    "name" : "Save",
 		    "cfg": {
@@ -563,7 +566,8 @@
           "className": "square-button"
         }
       }
-    }], "embedded": [
+    }],
+    "embedded": [
 			{
 				"name": "Map",
 				"cfg": {

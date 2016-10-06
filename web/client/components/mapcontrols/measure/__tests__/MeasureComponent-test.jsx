@@ -55,13 +55,7 @@ describe("test the MeasureComponent", () => {
     it('test line activation', () => {
         let newMeasureState;
         let measurement = {
-            lineMeasureEnabled: false,
-            areaMeasureEnabled: false,
-            bearingMeasureEnabled: false,
-            geomType: 'LineString',
-            len: 0,
-            area: 0,
-            bearing: 0
+            geomType: null
         };
         const cmp = ReactDOM.render(
             <MeasureComponent
@@ -83,19 +77,13 @@ describe("test the MeasureComponent", () => {
         lineBtn.click();
 
         expect(newMeasureState).toExist();
-        expect(newMeasureState.lineMeasureEnabled).toBe(true);
+        expect(newMeasureState.geomType).toBe('LineString');
     });
 
     it('test area activation', () => {
         let newMeasureState;
         let measurement = {
-            lineMeasureEnabled: false,
-            areaMeasureEnabled: false,
-            bearingMeasureEnabled: false,
-            geomType: 'LineString',
-            len: 0,
-            area: 0,
-            bearing: 0
+            geomType: null
         };
         const cmp = ReactDOM.render(
             <MeasureComponent
@@ -117,19 +105,13 @@ describe("test the MeasureComponent", () => {
         areaBtn.click();
 
         expect(newMeasureState).toExist();
-        expect(newMeasureState.areaMeasureEnabled).toBe(true);
+        expect(newMeasureState.geomType).toBe('Polygon');
     });
 
     it('test bearing activation', () => {
         let newMeasureState;
         let measurement = {
-            lineMeasureEnabled: false,
-            areaMeasureEnabled: false,
-            bearingMeasureEnabled: false,
-            geomType: 'LineString',
-            len: 0,
-            area: 0,
-            bearing: 0
+            geomType: null
         };
         const cmp = ReactDOM.render(
             <MeasureComponent
@@ -151,26 +133,22 @@ describe("test the MeasureComponent", () => {
         bearingBtn.click();
 
         expect(newMeasureState).toExist();
-        expect(newMeasureState.bearingMeasureEnabled).toBe(true);
+        expect(newMeasureState.geomType).toBe('Bearing');
     });
 
     it('test measurements resetting', () => {
         let newMeasureState;
         let measurement = {
-            lineMeasureEnabled: false,
-            areaMeasureEnabled: false,
-            bearingMeasureEnabled: false,
-            geomType: 'LineString',
-            len: 0,
-            area: 0,
-            bearing: 0
+            geomType: 'Bearing'
         };
         const cmp = ReactDOM.render(
             <MeasureComponent
                 measurement={measurement}
                 toggleMeasure={(data) => {
                     newMeasureState = data;
-                }} />, document.getElementById("container")
+                }}
+                withReset={true}
+            />, document.getElementById("container")
         );
         expect(cmp).toExist();
 
@@ -178,19 +156,15 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(3);
+        expect(buttons.length).toBe(4);
 
-        const bearingBtn = buttons.item(2);
-        // Activate
-        bearingBtn.click();
+        const resetBtn = buttons.item(3);
 
         // Dectivate
-        bearingBtn.click();
+        resetBtn.click();
 
         expect(newMeasureState).toExist();
-        expect(newMeasureState.lineMeasureEnabled).toBe(false);
-        expect(newMeasureState.areaMeasureEnabled).toBe(false);
-        expect(newMeasureState.bearingMeasureEnabled).toBe(false);
+        expect(newMeasureState.geomType).toBe(null);
     });
 
     it('test bearing format', () => {

@@ -28,11 +28,15 @@ const MeasureResults = React.createClass({
         areaLabel: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         bearingLabel: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         uom: React.PropTypes.shape({
-                    length: React.PropTypes.shape({ unit: React.PropTypes.string.isRequired,
-                              label: React.PropTypes.string.isRequired}),
-                    area: React.PropTypes.shape({ unit: React.PropTypes.string.isRequired,
-                            label: React.PropTypes.string.isRequired})
-                        }),
+            length: React.PropTypes.shape({
+                unit: React.PropTypes.string.isRequired,
+                label: React.PropTypes.string.isRequired
+            }),
+            area: React.PropTypes.shape({
+                unit: React.PropTypes.string.isRequired,
+                label: React.PropTypes.string.isRequired
+            })
+        }),
         toggleMeasure: React.PropTypes.func,
         measurement: React.PropTypes.object,
         lineMeasureEnabled: React.PropTypes.bool,

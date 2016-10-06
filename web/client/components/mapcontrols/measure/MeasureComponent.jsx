@@ -36,11 +36,15 @@ const MeasureComponent = React.createClass({
         areaLabel: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         bearingLabel: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         uom: React.PropTypes.shape({
-                    length: React.PropTypes.shape({ unit: React.PropTypes.string.isRequired,
-                              label: React.PropTypes.string.isRequired}),
-                    area: React.PropTypes.shape({ unit: React.PropTypes.string.isRequired,
-                            label: React.PropTypes.string.isRequired})
-                        }),
+            length: React.PropTypes.shape({
+                unit: React.PropTypes.string.isRequired,
+                label: React.PropTypes.string.isRequired
+            }),
+            area: React.PropTypes.shape({
+                unit: React.PropTypes.string.isRequired,
+                label: React.PropTypes.string.isRequired
+            })
+        }),
         toggleMeasure: React.PropTypes.func,
         measurement: React.PropTypes.object,
         lineMeasureEnabled: React.PropTypes.bool,
@@ -84,85 +88,24 @@ const MeasureComponent = React.createClass({
         return !isEqual(nextProps, this.props);
     },
     onLineClick: function() {
-        var newMeasureState;
-        if (this.props.lineMeasureEnabled === false) {
-            newMeasureState = {
-                lineMeasureEnabled: true,
-                areaMeasureEnabled: false,
-                bearingMeasureEnabled: false,
-                geomType: 'LineString',
-                // reset old measurements
-                len: 0,
-                area: 0,
-                bearing: 0
-            };
-            this.props.toggleMeasure(newMeasureState);
-        } else {
-            newMeasureState = {
-                lineMeasureEnabled: false,
-                areaMeasureEnabled: false,
-                bearingMeasureEnabled: false
-            };
-            this.props.toggleMeasure(newMeasureState);
-        }
+        this.props.toggleMeasure({
+            geomType: 'LineString'
+        });
     },
     onAreaClick: function() {
-        var newMeasureState;
-        if (this.props.areaMeasureEnabled === false) {
-            newMeasureState = {
-                lineMeasureEnabled: false,
-                areaMeasureEnabled: true,
-                bearingMeasureEnabled: false,
-                geomType: 'Polygon',
-                // reset old measurements
-                len: 0,
-                area: 0,
-                bearing: 0
-            };
-            this.props.toggleMeasure(newMeasureState);
-        } else {
-            newMeasureState = {
-                lineMeasureEnabled: false,
-                areaMeasureEnabled: false,
-                bearingMeasureEnabled: false
-            };
-            this.props.toggleMeasure(newMeasureState);
-        }
+        this.props.toggleMeasure({
+            geomType: 'Polygon'
+        });
     },
     onBearingClick: function() {
-        var newMeasureState;
-        if (this.props.bearingMeasureEnabled === false) {
-            newMeasureState = {
-                lineMeasureEnabled: false,
-                areaMeasureEnabled: false,
-                bearingMeasureEnabled: true,
-                geomType: 'Bearing',
-                // reset old measurements
-                len: 0,
-                area: 0,
-                bearing: 0
-            };
-            this.props.toggleMeasure(newMeasureState);
-        } else {
-            newMeasureState = {
-                lineMeasureEnabled: false,
-                areaMeasureEnabled: false,
-                bearingMeasureEnabled: false
-            };
-            this.props.toggleMeasure(newMeasureState);
-        }
+        this.props.toggleMeasure({
+            geomType: 'Bearing'
+        });
     },
     onResetClick: function() {
-        var resetMeasureState = {
-            lineMeasureEnabled: false,
-            areaMeasureEnabled: false,
-            bearingMeasureEnabled: false,
-            geomType: null,
-            len: 0,
-            area: 0,
-            bearing: 0
-        };
-        this.props.toggleMeasure(resetMeasureState);
+        this.props.toggleMeasure({
+            geomType: null
+        });
     },
     getToolTips() {
         return {
