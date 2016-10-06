@@ -430,6 +430,7 @@
             "login": "Login",
             "logout": "Logout",
             "info": " Informations du compte",
+            "details": " User Details",
             "noAttributesMessage": "Il n'y a pas d'informations relatives à votre compte",
             "changePwd": "Changer le mot de passe",
             "newPwd": "Nouveau mot de passe",

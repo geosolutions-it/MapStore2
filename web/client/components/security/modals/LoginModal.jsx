@@ -5,13 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
- /**
-  * Copyright 2016, GeoSolutions Sas.
-  * All rights reserved.
-  *
-  * This source code is licensed under the BSD-style license found in the
-  * LICENSE file in the root directory of this source tree.
-  */
 
 const React = require('react');
 const LoginForm = require('../forms/LoginForm');
@@ -87,7 +80,7 @@ const LoginModal = React.createClass({
             key="closeButton"
             ref="closeButton"
             bsSize={this.props.buttonSize}
-            onClick={this.props.onClose}>Close</Button> : <span/>}
+            onClick={this.props.onClose}><Message msgId="close"/></Button> : <span/>}
       </span>);
   },
   renderModal() {
@@ -104,7 +97,7 @@ const LoginModal = React.createClass({
       </Modal>);
   },
   renderDialog() {
-      return (this.props.show) ? (<Dialog modal id="mapstore-login-panel" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
+      return (this.props.show) ? (<Dialog modal id="mapstore-login-panel" style={assign({}, this.props.style, {display: "block" })}>
          <span role="header"><span className="login-panel-title"><Message msgId="user.login"/></span><button onClick={this.props.onClose} className="login-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
            {this.getForm()}
            {this.getFooter()}

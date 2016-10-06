@@ -733,8 +733,25 @@
           "nav": false,
           "menuProps": {
               "noCaret": true
-          }
-      }
+					},
+					"toolsCfg": [{
+								"buttonSize": "small",
+								"includeCloseButton": false,
+								"useModal": false,
+								"closeGlyph": "1-close"
+							}, {
+								"buttonSize": "small",
+								"includeCloseButton": false,
+								"useModal": false,
+								"closeGlyph": "1-close"
+							}, {
+								"buttonSize": "small",
+								"includeCloseButton": false,
+								"useModal": false,
+								"closeGlyph": "1-close"
+					 }]
+
+      	}
 		}, {"name": "Language"}, {
 			"name" : "Attribution",
 			"hide": true
