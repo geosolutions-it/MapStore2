@@ -61,8 +61,8 @@ const LoginModal = React.createClass({
           includeCloseButton: true
       };
   },
-  render() {
-      const form = (<LoginForm
+  getForm() {
+      return (<LoginForm
           role="body"
           ref="loginForm"
           showSubmitButton={false}
@@ -71,8 +71,10 @@ const LoginModal = React.createClass({
           onLoginSuccess={this.props.onLoginSuccess}
           onSubmit={this.props.onSubmit}
           onError={this.props.onError}
-          />);
-      const footer = (<span role="footer">
+    />);
+  },
+  getFooter() {
+      return (<span role="footer">
           <Button
               ref="submit"
               value={LocaleUtils.getMessageById(this.context.messages, "user.signIn")}
@@ -87,23 +89,29 @@ const LoginModal = React.createClass({
             bsSize={this.props.buttonSize}
             onClick={this.props.onClose}>Close</Button> : <span/>}
       </span>);
-      return this.props.useModal ? (<Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
+  },
+  renderModal() {
+      return (<Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
           <Modal.Header key="passwordChange" closeButton>
             <Modal.Title><Message msgId="user.login"/></Modal.Title>
           </Modal.Header>
           <Modal.Body>
-              {form}
+              {this.getForm()}
           </Modal.Body>
           <Modal.Footer>
-              {footer}
+              {this.getFooter()}
           </Modal.Footer>
-      </Modal>) : (
-          <Dialog modal id="mapstore-login-panel" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
-              <span role="header"><span className="login-panel-title"><Message msgId="user.login"/></span><button onClick={this.props.onClose} className="login-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
-              {form}
-              {footer}
-          </Dialog>
-      );
+      </Modal>);
+  },
+  renderDialog() {
+      return (this.props.show) ? (<Dialog modal id="mapstore-login-panel" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
+         <span role="header"><span className="login-panel-title"><Message msgId="user.login"/></span><button onClick={this.props.onClose} className="login-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
+           {this.getForm()}
+           {this.getFooter()}
+     </Dialog>) : null;
+  },
+  render() {
+      return this.props.useModal ? this.renderModal() : this.renderDialog();
   },
   loginSubmit() {
       this.refs.loginForm.submit();
