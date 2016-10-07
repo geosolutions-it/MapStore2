@@ -7,7 +7,7 @@
  */
 
 var {LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES,
-    TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, ADD_LAYER,
+    TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, ADD_LAYER, REMOVE_LAYER,
     SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, INVALID_LAYER
     } = require('../actions/layers');
 
@@ -261,6 +261,23 @@ function layers(state = [], action) {
             let orderedNewLayers = LayersUtils.sortLayers ? LayersUtils.sortLayers(newGroups, newLayers) : newLayers;
             return {
                     flat: orderedNewLayers,
+                    groups: newGroups
+            };
+        }
+        case REMOVE_LAYER: {
+            let layer = head((state.flat || []).filter(obj => obj.id === action.layerId));
+            let groupName = layer && layer.group ? layer.group : 'Default';
+            let newLayers = (state.flat || []).filter(lyr => lyr.id !== action.layerId);
+            let newGroups = (state.groups || []).concat();
+            let gidx = newGroups.findIndex(entry => entry.id === groupName);
+            if (gidx >= 0) {
+                let newGroup = assign({}, newGroups[gidx]);
+                let nidx = newGroup.nodes.indexOf(action.layerId);
+                newGroup.nodes = [...newGroup.nodes.slice(0, nidx), ...newGroup.nodes.slice(nidx + 1)];
+                newGroups[gidx] = newGroup;
+            }
+            return {
+                    flat: newLayers,
                     groups: newGroups
             };
         }
