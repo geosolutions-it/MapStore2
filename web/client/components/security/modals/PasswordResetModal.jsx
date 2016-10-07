@@ -11,7 +11,7 @@ const PasswordReset = require('../forms/PasswordReset');
 const Message = require('../../../components/I18N/Message');
 const {Modal, Button, Glyphicon} = require('react-bootstrap');
 
-const Dialog = require('../../../components/misc/Dialog');
+const Dialog = require('../../misc/Dialog');
 const assign = require('object-assign');
 
 const Spinner = require('react-spinkit');
@@ -26,6 +26,8 @@ const PasswordResetModal = React.createClass({
         authHeader: React.PropTypes.string,
         show: React.PropTypes.bool,
         options: React.PropTypes.object,
+
+
         onPasswordChange: React.PropTypes.func,
         onPasswordChanged: React.PropTypes.func,
         onClose: React.PropTypes.func,
@@ -75,8 +77,8 @@ const PasswordResetModal = React.createClass({
     renderLoading() {
         return this.state.loading ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn/> : null;
     },
-    render() {
-        const footer = (<span role="footer"><div style={{"float": "left"}}>{this.renderLoading()}</div>
+    getFooter() {
+        return (<span role="footer"><div style={{"float": "left"}}>{this.renderLoading()}</div>
         <Button
             ref="passwordChangeButton"
             key="passwordChangeButton"
@@ -93,28 +95,36 @@ const PasswordResetModal = React.createClass({
             bsSize={this.props.buttonSize}
             onClick={this.props.onClose}><Message msgId="close"/></Button> : <span/>}
         </span>);
-        const body = (<PasswordReset role="body" ref="passwordResetForm"
+    },
+    getBody() {
+        return (<PasswordReset role="body" ref="passwordResetForm"
             onChange={() => {
                 this.setState({passwordValid: this.refs.passwordResetForm.isValid()});
             }} />);
-        return this.props.useModal ? (
+    },
+    renderModal() {
+        return (
             <Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
                 <Modal.Header key="passwordChange" closeButton>
                   <Modal.Title><Message msgId="user.changePwd"/></Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {body}
+                    {this.getBody()}
                 </Modal.Body>
                 <Modal.Footer>
-                  {footer}
+                  {this.getFooter()}
                 </Modal.Footer>
-            </Modal>) : (
-            <Dialog id="mapstore-changepassword-panel" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
+            </Modal>);
+    },
+    renderDialog() {
+        return (this.props.show) ? (<Dialog modal id="mapstore-changepassword-panel" style={assign({}, this.props.style, {display: "block"})}>
                 <span role="header"><span className="changepassword-panel-title"><Message msgId="user.changePwd"/></span><button onClick={this.props.onClose} className="login-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
-                {body}
-                {footer}
-            </Dialog>
-        );
+                {this.getBody()}
+                {this.getFooter()}
+            </Dialog>) : null;
+    },
+    render() {
+        return this.props.useModal ? this.renderModal() : this.renderDialog();
     }
 });
 
