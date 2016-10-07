@@ -5,13 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
- /**
-  * Copyright 2016, GeoSolutions Sas.
-  * All rights reserved.
-  *
-  * This source code is licensed under the BSD-style license found in the
-  * LICENSE file in the root directory of this source tree.
-  */
 
 const React = require('react');
 const {Input, Alert} = require('react-bootstrap');
@@ -68,7 +61,7 @@ const PasswordReset = React.createClass({
           return null;
       }
       let pw = this.refs.password.getValue();
-      if (pw !== null && pw.length < this.props.minPasswordSize) {
+      if (pw !== null && pw.length < this.props.minPasswordSize && pw.length > 0) {
           return <Alert bsStyle="danger"><Message msgId="user.passwordMinlenght" msgParams={{minSize: this.props.minPasswordSize}}/></Alert>;
       } else if (pw !== null && pw !== this.refs.passwordcheck.getValue() ) {
           return <Alert bsStyle="danger"><Message msgId="user.passwordCheckFail" /></Alert>;

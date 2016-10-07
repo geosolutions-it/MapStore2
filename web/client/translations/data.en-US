@@ -428,6 +428,7 @@
             "login": "Login",
             "logout": "Logout",
             "info": " Account Info",
+            "details": " User Details",
             "noAttributesMessage": "There is no information related to your account",
             "changePwd": "Change Password",
             "newPwd": "New Password",

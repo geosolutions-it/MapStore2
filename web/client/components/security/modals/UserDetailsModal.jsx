@@ -5,14 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
- /**
-  * Copyright 2016, GeoSolutions Sas.
-  * All rights reserved.
-  *
-  * This source code is licensed under the BSD-style license found in the
-  * LICENSE file in the root directory of this source tree.
-  */
-
 const React = require('react');
 
 const {Modal, Button, Table, Alert, Glyphicon} = require('react-bootstrap');
@@ -67,26 +59,31 @@ const UserDetails = React.createClass({
       }
       return <Alert type="info"><Message msgId="user.noAttributesMessage" /></Alert>;
   },
-  render() {
-      const footer = this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} bsSize="small" onClick={this.props.onClose}><Message msgId="close"/></Button> : <span/>;
-      return this.props.useModal ? (
-          <Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
+  getFooter() {
+      return (this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} bsSize="small" onClick={this.props.onClose}><Message msgId="close"/></Button> : <span/>);
+  },
+  renderModal() {
+      return (<Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
               <Modal.Header key="details" closeButton>
-                <Modal.Title>User Details</Modal.Title>
+                <Modal.Title><Message msgId="user.details" /></Modal.Title>
               </Modal.Header>
               <Modal.Body>
                   {this.renderAttributes()}
               </Modal.Body>
               <Modal.Footer>
-                {footer}
+                {this.getFooter()}
               </Modal.Footer>
-          </Modal>) : (
-          <Dialog id="mapstore-user-panel" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
-              <span role="header"><span className="user-panel-title">Login</span><button onClick={this.props.onClose} className="login-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
-              {this.renderAttributes()}
-              {footer}
-          </Dialog>
-      );
+          </Modal>);
+  },
+  renderDialog() {
+      return (this.props.show) ? (<Dialog id="mapstore-user-panel" modal style={assign({}, this.props.style, {display: "block"})}>
+                  <span role="header"><span className="user-panel-title"><Message msgId="user.details" /></span><button onClick={this.props.onClose} className="login-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
+                  {this.renderAttributes()}
+                  {this.getFooter()}
+              </Dialog>) : null;
+  },
+  render() {
+      return this.props.useModal ? this.renderModal() : this.renderDialog();
   }
 
 });
