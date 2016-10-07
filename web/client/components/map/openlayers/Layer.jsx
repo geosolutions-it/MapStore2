@@ -30,6 +30,7 @@ const OpenlayersLayer = React.createClass({
             observables: [],
             onLayerLoading: () => {},
             onLayerLoad: () => {},
+            onLayerError: () => {},
             onInvalid: () => {}
         };
     },
