@@ -161,6 +161,7 @@ const RecordItem = React.createClass({
                 {this.renderThumb(record && record.thumbnail, record)}
                 <div>
                     <h4>{record && record.title}</h4>
+                    <h4><small>{record && record.identifier}</small></h4>
                     <p className="record-item-description">{this.renderDescription(record)}</p>
                 </div>
                   {this.renderButtons(record)}
