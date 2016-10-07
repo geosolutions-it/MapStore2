@@ -1,4 +1,4 @@
-{
+    {
     "locale": "it-IT",
     "messages": {
         "Language": "Lingua",
@@ -492,7 +492,7 @@
         "shapefile": {
             "title": "Carica Shapefile",
             "tooltip": "Aggiungi uno shapefile alla mappa.",
-            "placeholder": "Trascina qui il file o fai click per selezionare lo shapefile da importare.(gli shapefiles devono essere contenuti in archivi zip)",
+            "placeholder": "Trascina qui i file o fai click per selezionare gli shapefile da importare.(gli shapefiles devono essere contenuti in archivi zip)",
             "defaultStyle": "Stile di default",
             "zoom": "Zoom sugli shapefile",
             "error": {"select": "Seleziona Shapefile compresso"},
