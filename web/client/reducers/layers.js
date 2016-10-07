@@ -126,7 +126,7 @@ function layers(state = [], action) {
         }
         case LAYER_LOAD: {
             const newLayers = (state.flat || []).map((layer) => {
-                return layer.id === action.layerId ? assign({}, layer, {loading: false, loadingError: false}) : layer;
+                return layer.id === action.layerId ? assign({}, layer, {loading: false, loadingError: action.error}) : layer;
             });
             return assign({}, state, {flat: newLayers});
         }
