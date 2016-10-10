@@ -118,7 +118,9 @@ const OpenlayersLayer = React.createClass({
             this.props.type,
             this.layer,
             this.generateOpts(newProps.options, newProps.position, newProps.srs),
-            this.generateOpts(oldProps.options, oldProps.position, oldProps.srs));
+            this.generateOpts(oldProps.options, oldProps.position, oldProps.srs),
+            this.props.map,
+            this.props.mapId);
     },
     addLayer(options) {
         if (this.isValid()) {
