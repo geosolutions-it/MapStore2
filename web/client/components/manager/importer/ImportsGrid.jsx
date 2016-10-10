@@ -69,7 +69,7 @@ const ImportsGrid = React.createClass({
             <Table striped bordered condensed hover>
                 <thead>
                     <tr>
-                      <th>#</th>
+                      <th><Message msgId="importer.number"/></th>
                       <th><Message msgId="importer.import.status" /></th>
                       <th><Message msgId="importer.import.actions" /></th>
                     </tr>

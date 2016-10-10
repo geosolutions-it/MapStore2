@@ -45,9 +45,13 @@ module.exports = React.createClass({
     },
     renderAlert() {
         if (this.props.status && (this.props.status.status === "error")) {
-            return (<Alert onDismiss={this.props.onStatusDismiss} key="error" bsStyle="danger"> Error creating workspace: {this.props.status && this.props.status.error && this.props.status.error.data}</Alert>);
+            return (<Alert onDismiss={this.props.onStatusDismiss} key="error" bsStyle="danger">
+                        <Message msgId="importer.workspace.failure" msgParams={{statusWS: this.props.status && this.props.status.error && this.props.status.error.data}}/>
+                    </Alert>);
         } else if (this.props.status && (this.props.status.status === "success")) {
-            return (<Alert onDismiss={this.props.onStatusDismiss} key="success">Workspace "{this.props.status.workspace}" successfully created</Alert>);
+            return (<Alert onDismiss={this.props.onStatusDismiss} key="success">
+                        <Message msgId="importer.workspace.success" msgParams={{statusWS: this.props.status && this.props.status.workspace}}/>
+                    </Alert>);
         }
     },
     render() {
@@ -67,7 +71,7 @@ module.exports = React.createClass({
                 }))}
                 />)}
                 <div className="form-inline" style={{marginTop: "10px", display: this.props.enabled ? "none" : "block"}}>
-                    <strong><Message msgId="importer.workspace.create" /></strong>
+                    <strong><Message msgId="importer.workspace.createWS" /></strong>
                     <Input
                         onChange={this.validate}
                         ref="workspaceNewName"
@@ -76,8 +80,8 @@ module.exports = React.createClass({
                         name="workspace-name"
                         key="workspace-name"
                         type="text"
-                        style={{width: "100%"}}
-                    /> <Button disabled={!this.state.valid} bsStyle="primary" bsSize="small" onClick={this.createWorkspace}>Create</Button>
+                        style={{width: "100%"}}/>
+                    <Button disabled={!this.state.valid} bsStyle="primary" bsSize="small" onClick={this.createWorkspace}><Message msgId="importer.workspace.create"/></Button>
                 {this.renderAlert()}
                 </div>
         </div>);

@@ -220,7 +220,7 @@ const Importer = React.createClass({
                             createWorkspace={this.props.createWorkspace}
                             datastoreTemplates={this.props.datastoreTemplates}
                             selectWorkSpace={this.props.selectWorkSpace}
-                            selectedWorkSpace={this.getTargetWorkspace()}
+                            selectedWorkSpace={this.getTargetWorkspace(this.props.selectedImport)}
                             workspaces={this.props.workspaces}
                             loadWorkspaces={this.props.loadWorkspaces}/>
                     </Col>

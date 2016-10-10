@@ -539,8 +539,12 @@
             "process": "Processus",
             "number": "#",
             "workspace": {
-                "create": "créer un nouvel espace de travail: ",
+                "create": "Créer",
+                "createWS": "créer un nouvel espace de travail: ",
                 "target": "cible espace de travail: ",
+                "success": "Erreur de création espace de travail: {statusWS}",
+                "failure": "Espace de travail {statusWS} créé avec succès",
+                "select": "Sélectionnez l'espace de travail cible",
                 "new": "Nom..."
             },
             "import": {

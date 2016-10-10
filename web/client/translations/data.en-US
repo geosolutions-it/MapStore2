@@ -537,8 +537,12 @@
             "process": "Session",
             "number": "#",
             "workspace": {
-                "create": "create a new workspace: ",
+                "create": "Create",
+                "createWS": "create a new workspace: ",
                 "target": "target workspace: ",
+                "select": "Select TargetWorkspace",
+                "success": "Error creating workspace: {statusWS}",
+                "failure": "Workspace {statusWS} successfully created",
                 "new": "New workspace name..."
             },
             "import": {
