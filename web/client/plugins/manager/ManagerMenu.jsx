@@ -63,7 +63,7 @@ const ManagerMenu = React.createClass({
     getTools() {
         return [{element: <span key="burger-menu-title">{this.props.title}</span>}, ...this.props.entries.sort((a, b) => a.position - b.position).map((entry) => {
             return {
-                action: (context) => {context.router.push(entry.path); },
+                action: (context) => {context.router.push(entry.path); return {type: "MANAGER_MENU::SELECT_TOOL"}; },
                 text: entry.msgId ? <Message msgId={entry.msgId} /> : entry.text,
                 cfg: {...entry}
             };
