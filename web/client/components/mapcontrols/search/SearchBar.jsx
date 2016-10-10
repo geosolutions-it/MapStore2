@@ -57,14 +57,8 @@ let SearchBar = React.createClass({
             searchText: ""
         };
     },
-    getInitialState() {
-        return {
-            searchText: this.props.searchText || ""
-            };
-    },
     onChange() {
         var text = this.refs.input.getValue();
-        this.setState({searchText: text});
         this.props.onSearchTextChange(text);
         if (this.props.typeAhead) {
             delay(() => {this.search(); }, this.props.delay);
@@ -89,7 +83,7 @@ let SearchBar = React.createClass({
     render() {
         //  const innerGlyphicon = <Button onClick={this.search}></Button>;
         const remove = <Glyphicon className="searchclear" glyph="remove" onClick={this.clearSearch}/>;
-        var showRemove = this.state.searchText !== "";
+        var showRemove = this.props.searchText !== "";
         let placeholder;
         if (!this.props.placeholder && this.context.messages) {
             let placeholderLocMessage = LocaleUtils.getMessageById(this.context.messages, this.props.placeholderMsgId);
@@ -108,7 +102,7 @@ let SearchBar = React.createClass({
                     style={{
                         textOverflow: "ellipsis"
                     }}
-                    value={this.state.searchText}
+                    value={this.props.searchText}
                     ref="input"
                     addonAfter={showRemove ? remove : <Glyphicon glyph="search"/>}
                     onKeyDown={this.onKeyDown}
@@ -122,16 +116,13 @@ let SearchBar = React.createClass({
         var text = this.refs.input.getValue();
         if (text === undefined || text === "") {
             this.props.onSearchReset();
-            this.setState({searchText: text });
         } else {
             this.props.onSearch(text);
-            this.setState({searchText: text });
         }
 
     },
 
     clearSearch() {
-        this.setState({ searchText: ""});
         this.props.onSearchReset();
     }
 });
