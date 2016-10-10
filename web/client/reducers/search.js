@@ -15,7 +15,11 @@ function search(state = null, action) {
         case TEXT_SEARCH_TEXT_CHANGE:
             return assign({}, state, { searchText: action.searchText });
         case TEXT_SEARCH_RESULTS_LOADED:
-            return assign({}, state, { results: action.results });
+            let results = action.results;
+            if (action.append === true && state && state.results) {
+                results = [...state.results, ...action.results];
+            }
+            return assign({}, state, { results: results });
         case TEXT_SEARCH_RESULTS_PURGE:
             return assign({}, state, { results: null });
         case TEXT_SEARCH_ADD_MARKER:
