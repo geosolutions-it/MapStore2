@@ -65,7 +65,11 @@ Layers.registerType('wms', {
             zIndex: options.zIndex,
             source: new ol.source.TileWMS(objectAssign({
               urls: urls,
-              params: queryParameters
+              params: queryParameters,
+              tileGrid: options.tileSize ? ol.tilegrid.createXYZ({
+                  extent: ol.proj.get(CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS)).getExtent(),
+                  tileSize: options.tileSize
+              }) : undefined
             }, (options.forceProxy) ? {tileLoadFunction: proxyTileLoadFunction} : {}))
         });
     },
