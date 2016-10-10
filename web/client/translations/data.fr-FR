@@ -530,13 +530,19 @@
             "dropfileImport": "drop here files to add it to this process"
         },
         "importer": {
-            "title": "Import Data",
+            "title": "Importer des données",
             "imports": "Processus d'importation",
             "importN": "Processus {id}",
             "creatingImportProcess": "Création d'importation ...",
             "dropfile": "faire glisser des fichiers ici pour créer un nouveau processus d'importation",
             "dropfileImport": "faites glisser les fichiers ici pour ajouter à ce processus",
             "process": "Processus",
+            "number": "#",
+            "workspace": {
+                "create": "créer un nouvel espace de travail: ",
+                "target": "cible espace de travail: ",
+                "new": "Nom..."
+            },
             "import": {
                 "actions": "Actes",
                 "tasks": "paquet",
@@ -555,23 +561,25 @@
                 "status": "Statut",
                 "updateMode": "Mode refresh",
                 "originalData": "fichier original",
-                "file": "File Name",
+                "file": "Nom de fichier",
                 "format": "Format",
                 "targetStore": "target store",
                 "storeType": "Type de store",
                 "storeName": "Le nom du store",
                 "layer": "Layer",
                 "transforms": "Chaîne de transformations",
-                "update": "Update",
-                "run": "Import This Package",
-                "delete": "Delete This Package"
+                "update": "Mettre à jour",
+                "run": "Importez Ce forfait",
+                "edit": "Modifier le style par défaut",
+                "delete": "Supprimer Ce forfait"
             },
             "transform": {
                 "panelTitle": "Transformation {id}",
                 "type": "Type de transformation",
                 "actions": "Actes",
                 "options": "transformations des options",
-                "overviewlevels": "Vue d'ensemble des niveaux"
+                "overviewlevels": "Vue d'ensemble des niveaux",
+                "delete": "Supprimer cette transformation"
             }
         },
         "rasterstyler": {

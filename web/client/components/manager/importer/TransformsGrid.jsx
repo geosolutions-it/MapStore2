@@ -8,7 +8,7 @@
 const React = require('react');
 const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message');
-const {Panel, Table, Button, Glyphicon} = require('react-bootstrap');
+const {Panel, Table, Button, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
 
 const TransformsGrid = React.createClass({
     propTypes: {
@@ -17,20 +17,33 @@ const TransformsGrid = React.createClass({
         type: React.PropTypes.string,
         loadTransform: React.PropTypes.func,
         deleteTransform: React.PropTypes.func,
-        transforms: React.PropTypes.array
+        transforms: React.PropTypes.array,
+        deleteAction: React.PropTypes.object,
+        placement: React.PropTypes.string
+    },
+    contextTypes: {
+        messages: React.PropTypes.object
     },
     getDefaultProps() {
+        // TODO check translations
         return {
+            placement: "bottom",
+            deleteAction: <Message msgId="importer.transform.delete" />,
             transforms: [],
             loadTransform: () => {},
             deleteTransform: () => {}
         };
     },
     renderTransform(transform, index) {
+        let tooltip = <Tooltip id="transform-delete-action">{this.props.deleteAction}</Tooltip>;
         return (<tr key={index}>
                 <td key="id"><a onClick={(e) => {e.preventDefault(); this.props.loadTransform(index); }}>{index}</a></td>
                 <td key="type">{transform.type}</td>
-                <td key="actions"><Button bsSize="xsmall" onClick={(e) => {e.preventDefault(); this.props.deleteTransform(index); }}><Glyphicon glyph="remove"/></Button></td>
+                <td key="actions">
+                    <OverlayTrigger overlay={tooltip} placement={this.props.placement}>
+                        <Button bsSize="xsmall" onClick={(e) => {e.preventDefault(); this.props.deleteTransform(index); }}><Glyphicon glyph="remove"/></Button>
+                    </OverlayTrigger>
+                </td>
             </tr>);
     },
     render() {

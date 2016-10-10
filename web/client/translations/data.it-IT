@@ -536,6 +536,12 @@
             "dropfile": "trascina i file qui per creare un nuovo processo di importazione",
             "dropfileImport": "trascina i file qui per aggiungerli a questo processo",
             "process": "Processo",
+            "number": "#",
+            "workspace": {
+                "create": "Crea un nuovo workspace: ",
+                "target": "Workspace di destinazione: ",
+                "new": "Nome del workspace..."
+            },
             "import": {
                 "actions": "Azioni",
                 "tasks": "Pacchetti",
@@ -544,7 +550,7 @@
                 "deleteTask": "Elimina",
                 "status": "Stato",
                 "archive": "Archivia",
-                "deleting": "Cancellazione in corso...",
+                "deleting": "Eliminazione in corso...",
                 "analyzing": "Analisi del package...",
                 "applyingPreset": "Applicazione dei preset..."
             },
@@ -563,14 +569,16 @@
                 "transforms": "Catena di transformazioni",
                 "update": "Aggiorna",
                 "run": "Importa questo package",
-                "delete": "Cancella questo package"
+                "edit": "Modifica lo stile di default",
+                "delete": "Elimina questo package"
             },
             "transform": {
                 "panelTitle": "Trasformazione {id}",
                 "type": "Tipo di trasformazione",
                 "actions": "Azioni",
                 "options": "Opzioni trasformazioni",
-                "overviewlevels": "Livelli di overview"
+                "overviewlevels": "Livelli di overview",
+                "delete": "Elimina questa trasformazione"
             }
         },
         "rasterstyler": {
