@@ -17,11 +17,10 @@ var isTouchSupported = 'ontouchstart' in window;
 var startEvent = isTouchSupported ? 'touchstart' : 'mousedown';
 var moveEvent = isTouchSupported ? 'touchmove' : 'mousemove';
 var endEvent = isTouchSupported ? 'touchend' : 'mouseup';
-let google = window.google;
 
 Layers.registerType('google', {
     create: (options, map, mapId) => {
-
+        let google = window.google;
         if (!layersMap) {
             layersMap = {
                'HYBRID': google.maps.MapTypeId.HYBRID,
@@ -187,6 +186,7 @@ Layers.registerType('google', {
         return null;
     },
     update(layer, newOptions, oldOptions, map, mapId) {
+        let google = window.google;
         if (!oldOptions.visibility && newOptions.visibility) {
             let view = map.getView();
             const center = ol.proj.transform(view.getCenter(), 'EPSG:3857', 'EPSG:4326');
