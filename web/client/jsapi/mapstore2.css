@@ -446,10 +446,7 @@
 
 #mapstore-catalog-panel {
     width: auto;
-    position: absolute;
-    right: 200px;
-    margin-top: 100px;
-    display: inline-block;
+    margin: 100px;
 }
 
 #mapstore-catalog-panel .record-item {
