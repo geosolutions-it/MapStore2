@@ -8,6 +8,9 @@
 const React = require('react');
 const Select = require('react-select');
 const {Input, Button, Alert} = require('react-bootstrap');
+const Message = require('../../I18N/Message');
+const LocaleUtils = require('../../../utils/LocaleUtils');
+
 module.exports = React.createClass({
     propTypes: {
         enabled: React.PropTypes.bool,
@@ -19,6 +22,9 @@ module.exports = React.createClass({
         loadWorkspaces: React.PropTypes.func,
         datastoreTemplates: React.PropTypes.array,
         createWorkspace: React.PropTypes.func
+    },
+    contextTypes: {
+        messages: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -46,7 +52,7 @@ module.exports = React.createClass({
     },
     render() {
         return (<div>
-            <strong>target workspace: </strong>
+            <strong><Message msgId="importer.workspace.target" /></strong>
             {this.props.enabled ?
                 (<div>{this.props.selectedWorkSpace}</div>)
                 : (<Select
@@ -61,11 +67,11 @@ module.exports = React.createClass({
                 }))}
                 />)}
                 <div className="form-inline" style={{marginTop: "10px", display: this.props.enabled ? "none" : "block"}}>
-                    <strong>create a new workspace: </strong>
+                    <strong><Message msgId="importer.workspace.create" /></strong>
                     <Input
                         onChange={this.validate}
                         ref="workspaceNewName"
-                        placeholder="New workspace name..."
+                        placeholder={LocaleUtils.getMessageById(this.context.messages, "importer.workspace.new")}
                         bsSize="small"
                         name="workspace-name"
                         key="workspace-name"

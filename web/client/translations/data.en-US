@@ -535,6 +535,12 @@
             "dropfile": "drop files here to create a new importing session",
             "dropfileImport": "drop here files to add it to this session",
             "process": "Session",
+            "number": "#",
+            "workspace": {
+                "create": "create a new workspace: ",
+                "target": "target workspace: ",
+                "new": "New workspace name..."
+            },
             "import": {
                 "actions": "Actions",
                 "tasks": "Packages",
@@ -562,6 +568,7 @@
                 "transforms": "Trasformations Chain",
                 "update": "Update",
                 "run": "Import This Package",
+                "edit": "Edit Default Style",
                 "delete": "Delete This Package"
             },
             "transform": {
@@ -569,7 +576,8 @@
                 "type": "Transformation Type",
                 "actions": "Actions",
                 "options": "Transformation Options",
-                "overviewlevels": "Overview Levels"
+                "overviewlevels": "Overview Levels",
+                "delete": "Delete this transformation"
             }
         },
         "rasterstyler": {
