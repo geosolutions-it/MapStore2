@@ -130,12 +130,16 @@ let LeafletMap = React.createClass({
             if (event && event.layer && event.layer.on ) {
                 // TODO check event.layer.on is a function
                 // Needed to fix GeoJSON Layer neverending loading
+                let hadError = false;
                 if (!(event.layer.options && event.layer.options.hideLoading)) {
                     this.props.onLayerLoading(event.layer.layerId);
                 }
-                event.layer.on('loading', (loadingEvent) => { this.props.onLayerLoading(loadingEvent.target.layerId); });
-                event.layer.on('load', (loadEvent) => { this.props.onLayerLoad(loadEvent.target.layerId); });
-                event.layer.on('tileerror', (errorEvent) => { this.props.onLayerError(errorEvent.target.layerId); });
+                event.layer.on('loading', (loadingEvent) => {
+                    hadError = false;
+                    this.props.onLayerLoading(loadingEvent.target.layerId);
+                });
+                event.layer.on('load', (loadEvent) => { this.props.onLayerLoad(loadEvent.target.layerId, hadError); });
+                event.layer.on('tileerror', (errorEvent) => { hadError = true; this.props.onLayerError(errorEvent.target.layerId); });
             }
         });
 

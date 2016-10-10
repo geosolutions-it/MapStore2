@@ -110,10 +110,11 @@ function layerLoading(layerId) {
     };
 }
 
-function layerLoad(layerId) {
+function layerLoad(layerId, error) {
     return {
         type: LAYER_LOAD,
-        layerId: layerId
+        layerId,
+        error
     };
 }
 

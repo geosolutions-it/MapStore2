@@ -31,6 +31,7 @@ var OpenlayersMap = React.createClass({
         onMouseMove: React.PropTypes.func,
         onLayerLoading: React.PropTypes.func,
         onLayerLoad: React.PropTypes.func,
+        onLayerError: React.PropTypes.func,
         resize: React.PropTypes.number,
         measurement: React.PropTypes.object,
         changeMeasurementState: React.PropTypes.func,
@@ -49,6 +50,7 @@ var OpenlayersMap = React.createClass({
           projection: 'EPSG:3857',
           onLayerLoading: () => {},
           onLayerLoad: () => {},
+          onLayerError: () => {},
           resize: 0,
           registerHooks: true,
           interactive: true
@@ -269,6 +271,7 @@ var OpenlayersMap = React.createClass({
                 map: map,
                 mapId: this.props.id,
                 onLayerLoading: this.props.onLayerLoading,
+                onLayerError: this.props.onLayerError,
                 onLayerLoad: this.props.onLayerLoad,
                 projection: this.props.projection,
                 onInvalid: this.props.onInvalidLayer
