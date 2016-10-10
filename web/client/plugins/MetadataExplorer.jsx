@@ -11,7 +11,7 @@ const {connect} = require('react-redux');
 const assign = require('object-assign');
 const {createSelector} = require("reselect");
 const {Glyphicon, Panel} = require('react-bootstrap');
-const {textSearch, changeCatalogFormat, addLayerError} = require("../actions/catalog");
+const {textSearch, changeCatalogFormat, addLayerError, resetStatus} = require("../actions/catalog");
 const {addLayer} = require("../actions/layers");
 const {zoomToExtent} = require("../actions/map");
 const {toggleControl} = require("../actions/controls");
@@ -28,6 +28,14 @@ const catalogSelector = createSelector([
     format,
     records: CatalogUtils.getCatalogRecords(format, result, options)
 }));
+
+const catalogClose = () => {
+    return (dispatch) => {
+        dispatch(toggleControl('metadataexplorer'));
+        dispatch(resetStatus());
+    };
+};
+
 
 const Catalog = connect(catalogSelector, {
     // add layer action to pass to the layers
@@ -100,7 +108,7 @@ const MetadataExplorerPlugin = connect((state) => ({
 }), {
     onSearch: textSearch,
     onLayerAdd: addLayer,
-    toggleControl: toggleControl.bind(null, 'metadataexplorer', null),
+    toggleControl: catalogClose,
     onChangeFormat: changeCatalogFormat,
     onError: addLayerError
 })(MetadataExplorerComponent);
