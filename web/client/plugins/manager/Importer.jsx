@@ -41,6 +41,7 @@ const ImporterPlugin = connect(
             selectedTask: state.importer && state.importer.selectedTask,
             selectedTransform: state.importer && state.importer.selectedTransform,
             error: state.importer && state.importer.loadingError,
+            taskCreationError: state.importer && state.importer.taskCreationError,
             workspaces: state.importer && state.importer.workspaces,
             selectedWorkSpace: state.importer && state.importer.selectedWorkSpace,
             workspaceCreationStatus: state.importer && state.importer.workspaceCreationStatus

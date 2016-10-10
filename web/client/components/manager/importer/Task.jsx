@@ -41,9 +41,6 @@ const Task = React.createClass({
 
         };
     },
-    componentDidMount() {
-        // setTimeout(() => {this.props.loadLayer(); }, 500);
-    },
     getbsStyleForState(state) {
         return ImporterUtils.getbsStyleForState(state);
     },

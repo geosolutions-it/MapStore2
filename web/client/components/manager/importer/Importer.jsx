@@ -19,6 +19,7 @@ const BreadCrumb = require('./BreadCrumb');
 const Importer = React.createClass({
     propTypes: {
         loading: React.PropTypes.bool,
+        taskCreationError: React.PropTypes.object,
         error: React.PropTypes.object,
         defaultPresets: React.PropTypes.string,
         /**
@@ -179,6 +180,7 @@ const Importer = React.createClass({
         return (<div>
                 {breadcrumb}
                 <ImportsGrid
+                loadImports={this.props.loadImports}
                 deleteImport={this.props.deleteImport}
                 loadImport={this.props.loadImport}
                 imports={this.props.imports} />
@@ -204,6 +206,7 @@ const Importer = React.createClass({
                             boxShadow: "0px 0px 25px 14px #d9edf7"
 
                         }}
+                        error={this.props.taskCreationError}
                         beforeUploadMessage={<Message msgId="importer.creatingImportProcess" />}
                         dropMessage={<Message msgId={message} />}
                         uploading={this.props.uploading}

@@ -163,7 +163,7 @@ function importer(state = {}, action) {
                 let selectedImport = assign({}, state.selectedImport, {
                     tasks: [...(state.selectedImport.tasks || []), ...action.tasks]
                 });
-                return assign({}, state, {selectedImport});
+                return assign({}, state, {taskCreationError: null, selectedImport});
             }
             return state;
         case IMPORTS_TASK_UPDATED: {
@@ -187,7 +187,7 @@ function importer(state = {}, action) {
         case IMPORTS_TASK_CREATION_ERROR: {
             return assign({}, state, {
                 uploading: false,
-                error: action.error
+                taskCreationError: action.error
             });
         }
         case TASK_PROGRESS_UPDATED: {

@@ -14,6 +14,8 @@ const {Table, Glyphicon, Button, Label, OverlayTrigger, Tooltip} = require('reac
 const ImportsGrid = React.createClass({
     propTypes: {
         loading: React.PropTypes.bool,
+        timeout: React.PropTypes.number,
+        loadImports: React.PropTypes.func,
         loadImport: React.PropTypes.func,
         deleteImport: React.PropTypes.func,
         imports: React.PropTypes.array,
@@ -25,6 +27,8 @@ const ImportsGrid = React.createClass({
     },
     getDefaultProps() {
         return {
+             timeout: 5000,
+            loadImports: () => {},
             placement: "bottom",
             deleteAction: <Message msgId="importer.import.deleteImport" />,
             loadImport: () => {},

@@ -51,9 +51,7 @@ const Task = React.createClass({
     componentDidMount() {
         if (this.props.import.state === "RUNNING") {
             // Check if some task is running the update is not needed
-            if ( this.props.import.tasks && !(this.props.import.tasks.findIndex((task) => task.state === "RUNNING") >= 0)) {
-                this.interval = setInterval(this.props.loadImport.bind(null, this.props.import.id), this.props.timeout);
-            }
+            this.interval = setInterval(this.props.loadImport.bind(null, this.props.import.id), this.props.timeout);
 
         }
     },
