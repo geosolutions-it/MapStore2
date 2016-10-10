@@ -538,8 +538,12 @@
             "process": "Processo",
             "number": "#",
             "workspace": {
-                "create": "Crea un nuovo workspace: ",
+                "create": "Crea",
+                "createWS": "Crea un nuovo workspace: ",
                 "target": "Workspace di destinazione: ",
+                "success": "Errore durante la creazione del workspace: {statusWS}",
+                "failure": "Workspace {statusWS} creato correttamente",
+                "select": "Seleziona il workspace di destinazione",
                 "new": "Nome del workspace..."
             },
             "import": {

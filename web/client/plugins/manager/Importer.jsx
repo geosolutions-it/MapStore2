@@ -5,11 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-
+const React = require('react');
+const Message = require('../../components/I18N/Message');
 const {connect} = require('react-redux');
 const {bindActionCreators} = require('redux');
-
 
 const {
     loadImports,
@@ -44,7 +43,8 @@ const ImporterPlugin = connect(
             workspaces: state.importer && state.importer.workspaces,
             selectedWorkSpace: state.importer && state.importer.selectedWorkSpace,
             workspaceCreationStatus: state.importer && state.importer.workspaceCreationStatus
-    }; },
+        };
+    },
     (dispatch, ownProps) => {
         return bindActionCreators({
             loadImports: loadImports.bind(null, getURL(ownProps)),
@@ -84,7 +84,7 @@ module.exports = {
             id: "importer",
             name: 'importer',
             position: 1,
-            title: 'Import Data',
+            title: <Message msgId="importer.title"/>,
             glyph: "import"
         }
     }),
