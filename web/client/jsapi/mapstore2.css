@@ -444,11 +444,6 @@
     min-width: 725px;
 }
 
-#mapstore-catalog-panel {
-    width: 920px;
-    margin: 0px;
-}
-
 #mapstore-catalog-panel .record-item {
     min-height: 150px;
 }

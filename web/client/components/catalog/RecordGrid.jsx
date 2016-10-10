@@ -30,7 +30,7 @@ const RecordGrid = React.createClass({
             records: [],
             onLayerAdd: () => {},
             onError: () => {},
-            column: {xs: 12, sm: 12, md: 12, lg: 12}
+            column: {xs: 12, sm: 12, md: 6, lg: 6}
         };
     },
     renderRecordItem(record) {

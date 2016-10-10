@@ -58,12 +58,8 @@ const MetadataExplorerComponent = React.createClass({
             modal: true,
             wrapWithPanel: true,
             panelStyle: {
-                minWidth: "300px",
                 zIndex: 100,
-                position: "absolute",
-                overflow: "auto",
-                top: "100px",
-                right: "100px"
+                overflow: "auto"
             },
             panelClassName: "toolbar-panel",
             toggleControl: () => {},
@@ -72,7 +68,7 @@ const MetadataExplorerComponent = React.createClass({
         };
     },
     render() {
-        const panel = <div role="body"><Catalog {...this.props}/></div>;
+        const panel = <div role="body" className="modal_window"><Catalog {...this.props}/></div>;
         if (this.props.wrap) {
             if (this.props.active) {
                 if (this.props.wrapWithPanel) {
