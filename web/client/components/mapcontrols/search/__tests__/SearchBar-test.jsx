@@ -119,4 +119,25 @@ describe("test the SearchBar", () => {
             done();
         }, 50);
     });
+
+    it('test that options are passed to search action', () => {
+        var TestUtils = React.addons.TestUtils;
+        var tb;
+        const testHandlers = {
+            onSearchHandler: (text, options) => { return [text, options]; },
+            onSearchTextChangeHandler: (text) => { tb.setProps({searchText: text}); }
+        };
+
+        let searchOptions = {displaycrs: "EPSG:3857"};
+        const spy = expect.spyOn(testHandlers, 'onSearchHandler');
+        tb = ReactDOM.render(<SearchBar delay={0} typeAhead={false} onSearch={testHandlers.onSearchHandler} onSearchTextChange={testHandlers.onSearchTextChangeHandler} searchOptions={searchOptions}/>, document.getElementById("container"));
+        let input = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0]);
+
+        expect(input).toExist();
+        input.value = "test";
+        TestUtils.Simulate.change(input);
+        TestUtils.Simulate.keyDown(input, {key: "Enter", keyCode: 13, which: 13});
+        expect(spy.calls.length).toEqual(1);
+        expect(spy).toHaveBeenCalledWith('test', searchOptions);
+    });
 });
