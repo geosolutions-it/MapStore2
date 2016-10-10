@@ -445,8 +445,8 @@
 }
 
 #mapstore-catalog-panel {
-    width: auto;
-    margin: 100px;
+    width: 920px;
+    margin: 0px;
 }
 
 #mapstore-catalog-panel .record-item {

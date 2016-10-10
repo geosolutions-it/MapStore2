@@ -390,8 +390,8 @@ html, body, #container, .fill {
 }
 
 #mapstore-catalog-panel {
-    width: auto;
-    margin: 100PX;
+    width: 920px;
+    margin: 0px;
 }
 
 #mapstore-catalog-panel .record-item {
@@ -574,4 +574,25 @@ html, body, #container, .fill {
 .mapErrorMessage {
     font-size: 16px;
     color: red;
+}
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 280px ) {
+    #mapstore-catalog-panel {
+        width: 305px;
+    }
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    #mapstore-catalog-panel {
+        width: 500px;
+    }
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    #mapstore-catalog-panel {
+        width: 920px;
+    }
 }

@@ -80,7 +80,7 @@ const MetadataExplorerComponent = React.createClass({
                         {panel}
                     </Panel>);
                 }
-                return (<Dialog id="mapstore-catalog-panel" style={this.props.style}>
+                return (<Dialog modal id="mapstore-catalog-panel" style={assign({}, this.props.style, {display: "block" })}>
                     <span role="header"><span className="metadataexplorer-panel-title"><Message msgId="catalog.title"/></span><button onClick={this.props.toggleControl} className="print-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
                     {panel}
                 </Dialog>);

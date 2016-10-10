@@ -53,7 +53,7 @@ describe('This test for Record Grid', () => {
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
 
-        expect(itemDom.className).toBe("record-grid container");
+        expect(itemDom.className).toBe("record-grid container-fluid");
     });
     // test data
     it('creates the component with data', () => {
@@ -62,7 +62,7 @@ describe('This test for Record Grid', () => {
 
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
-        expect(itemDom.className).toBe("record-grid container");
+        expect(itemDom.className).toBe("record-grid container-fluid");
 
         // check the thumbnail as a to verify thtat the url is really loaded into the component
         let img = TestUtils.findRenderedDOMComponentWithTag(
