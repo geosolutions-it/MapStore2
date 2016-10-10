@@ -493,7 +493,7 @@
         "shapefile": {
             "title": "Ajouter un fichier Shape local",
             "tooltip": "Ajouter un fichier Shape local à la carte.",
-            "placeholder": "Déposer votre fichier ici ou cliquer pour choisir le fichier shape à importer.",
+            "placeholder": "Déposez vos fichiers ici ou cliquez sur pour sélectionner les shapefiles à importer. (Shapefiles doivent être contenus dans des archives zip)",
             "defaultStyle": "Style par défaut",
             "zoom": "Zoomer sur le fichier shape",
             "error": {"select": "Sélectionner un ou plusieurs fichiers zip"},
