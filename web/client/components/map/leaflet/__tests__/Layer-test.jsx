@@ -163,6 +163,31 @@ describe('Leaflet layer', () => {
         expect(urls.length).toBe(1);
     });
 
+    it('creates a wms layer for leaflet map with custom tileSize', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "tileSize": 512,
+            "url": "http://demo.geo-solutions.it/geoserver/wms"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <LeafLetLayer type="wms"
+                 options={options} map={map}/>, document.getElementById("container"));
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+        let width;
+        map.eachLayer((l) => width = l.wmsParams.width);
+        expect(width).toBe(512);
+    });
+
     it('creates a wms layer with multiple urls for leaflet map', () => {
         var options = {
             "type": "wms",
