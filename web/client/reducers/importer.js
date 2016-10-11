@@ -160,6 +160,7 @@ function importer(state = initialState, action) {
                     selectedTransform: null
                 });
             }
+            return state;
         }
         case IMPORTS_LIST_LOADED:
             return assign({}, state, {
