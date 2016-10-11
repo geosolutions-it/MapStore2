@@ -28,6 +28,7 @@ const selector = createSelector(mapSelector, stateSelector, layersSelector, (map
     mapType: (state && ((state.home && state.home.mapType) || (state.maps && state.maps.mapType))) || "leaflet",
     newMapId: state.currentMap && state.currentMap.newMapId,
     map,
+    user: state.security && state.security.user,
     currentMap: state.currentMap,
     layers
 }));
@@ -37,6 +38,7 @@ const SaveAs = React.createClass({
         show: React.PropTypes.bool,
         newMapId: React.PropTypes.number,
         map: React.PropTypes.object,
+        user: React.PropTypes.object,
         mapType: React.PropTypes.string,
         layers: React.PropTypes.array,
         params: React.PropTypes.object,
@@ -139,9 +141,11 @@ const SaveAs = React.createClass({
     saveMap(id, name, description) {
         this.props.editMap(this.props.map);
         let thumbComponent = this.refs.metadataModal.refs.thumbnail;
+        let attributes = {"owner": this.props.user && this.props.user.name || null};
         let metadata = {
             name,
-            description
+            description,
+            attributes
         };
         thumbComponent.getThumbnailDataUri( (data) => {
             this.props.onMapSave(metadata, JSON.stringify(this.createV2Map()), {
