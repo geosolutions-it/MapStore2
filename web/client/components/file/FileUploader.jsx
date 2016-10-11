@@ -9,7 +9,7 @@ const React = require('react');
 
 const {Message, DateFormat} = require('../I18N/I18N');
 const Spinner = require('react-spinkit');
-const {Glyphicon, ProgressBar, Table} = require('react-bootstrap');
+const {Glyphicon, ProgressBar, Table, Alert} = require('react-bootstrap');
 
 const Dropzone = require('react-dropzone');
 
@@ -25,7 +25,8 @@ const FileUploader = React.createClass({
         onUpload: React.PropTypes.func,
         uploadAdditionalParams: React.PropTypes.oneOfType([React.PropTypes.array, React.PropTypes.object]),
         // if exists do not run before upload and start directly the upload after drag
-        allowUpload: React.PropTypes.object
+        allowUpload: React.PropTypes.object,
+        error: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -82,6 +83,11 @@ const FileUploader = React.createClass({
                         </tr>) )
         }</tbody></Table>);
     },
+    renderError() {
+        if (this.props.error) {
+            return (<Alert bsStyle="danger">There was an error during the upload: {this.props.error.statusText}<div>{this.props.error.data}</div></Alert>);
+        }
+    },
     render() {
         if (this.state && this.state.files) {
             return (<div> <Spinner spinnerName="circle" />{this.props.beforeUploadMessage}{this.renderPreview()}</div>);
@@ -93,7 +99,8 @@ const FileUploader = React.createClass({
                 </div>);
         }
 
-        return (<Dropzone
+        return (<div><Dropzone
+            key="dropzone"
             rejectClassName="alert-danger"
             className="alert alert-info"
             onDrop={this.uploadFiles}
@@ -115,7 +122,7 @@ const FileUploader = React.createClass({
                     {this.props.dropMessage}
                 </span>
                 </div>
-        </Dropzone>);
+        </Dropzone>{this.renderError()}</div>);
 
     },
     humanFileSize(size) {

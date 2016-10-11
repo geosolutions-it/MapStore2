@@ -491,7 +491,7 @@
         "shapefile": {
             "title": "Add Local Shapefile",
             "tooltip": "Add a local shapefile to the map.",
-            "placeholder": "Drop your file here or click to select shapefile to import.",
+            "placeholder": "Drop your files here or click to select the shapefiles to import. (shapefiles must be contained in zip archives)",
             "defaultStyle": "Default style",
             "zoom": "Zoom on the shapefiles",
             "error": {"select": "Select one or more zip file"},
@@ -535,6 +535,16 @@
             "dropfile": "drop files here to create a new importing session",
             "dropfileImport": "drop here files to add it to this session",
             "process": "Session",
+            "number": "#",
+            "workspace": {
+                "create": "Create",
+                "createWS": "create a new workspace: ",
+                "target": "target workspace: ",
+                "select": "Select TargetWorkspace",
+                "success": "Error creating workspace: {statusWS}",
+                "failure": "Workspace {statusWS} successfully created",
+                "new": "New workspace name..."
+            },
             "import": {
                 "actions": "Actions",
                 "tasks": "Packages",
@@ -562,6 +572,7 @@
                 "transforms": "Trasformations Chain",
                 "update": "Update",
                 "run": "Import This Package",
+                "edit": "Edit Default Style",
                 "delete": "Delete This Package"
             },
             "transform": {
@@ -569,7 +580,8 @@
                 "type": "Transformation Type",
                 "actions": "Actions",
                 "options": "Transformation Options",
-                "overviewlevels": "Overview Levels"
+                "overviewlevels": "Overview Levels",
+                "delete": "Delete this transformation"
             }
         },
         "rasterstyler": {

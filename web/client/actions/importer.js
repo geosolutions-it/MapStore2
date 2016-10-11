@@ -27,6 +27,7 @@ const LAYER_UPDATED = 'LAYER_UPDATED';
 
 const IMPORTS_TRANSFORM_LOAD = 'IMPORTS_TRANSFORM_LOAD';
 const IMPORTS_TRANSFORM_LOAD_ERROR = 'IMPORTS_TRANSFORM_LOAD_ERROR';
+const IMPORTS_TRANSFORM_CHANGE = 'IMPORTS_TRANSFORM_CHANGE';
 
 const IMPORTS_TRANSFORM_DELETE = 'IMPORTS_TRANSFORM_DELETE';
 const IMPORTS_TRANSFORM_UPDATED = 'IMPORTS_TRANSFORM_UPDATED';
@@ -264,6 +265,14 @@ function transformLoaded(importId, taskId, transformId, transform) {
         transform
     };
 }
+
+function editTransform(transform) {
+    return {
+        type: IMPORTS_TRANSFORM_CHANGE,
+        transform
+    };
+}
+
 function transformLoadError(importId, taskId, transformId, error) {
     return {
         type: IMPORTS_TRANSFORM_LOAD_ERROR,
@@ -715,7 +724,7 @@ module.exports = {
     updateTask, deleteTask, loadTask,
     updateProgress,
     loadLayer, updateLayer,
-    loadTransform, updateTransform, deleteTransform,
+    loadTransform, updateTransform, deleteTransform, editTransform,
     loadStylerTool,
     loadWorkspaces,
     createWorkspace,
@@ -738,6 +747,7 @@ module.exports = {
     LAYER_UPDATED,
     IMPORTS_TRANSFORM_LOAD,
     IMPORTS_TRANSFORM_UPDATED,
+    IMPORTS_TRANSFORM_CHANGE,
     IMPORTS_TRANSFORM_DELETE,
     IMPORTS_TRANSFORM_LOAD_ERROR,
     IMPORTS_TASK_DELETE,

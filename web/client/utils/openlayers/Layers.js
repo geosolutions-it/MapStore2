@@ -21,10 +21,10 @@ var Layers = {
         }
         return null;
     },
-    updateLayer: function(type, layer, newOptions, oldOptions) {
+    updateLayer: function(type, layer, newOptions, oldOptions, map, mapId) {
         var layerCreator = layerTypes[type];
         if (layerCreator && layerCreator.update) {
-            return layerCreator.update(layer, newOptions, oldOptions);
+            return layerCreator.update(layer, newOptions, oldOptions, map, mapId);
         } else if (oldOptions && layer && layer.getSource() && layer.getSource().updateParams) {
             // old method, keept for compatibility.
             // TODO move it in specific layerCreator where possibile

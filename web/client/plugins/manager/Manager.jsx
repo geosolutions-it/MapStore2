@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-
+const { itemSelected } = require('../../actions/manager');
 const {Nav, NavItem, Glyphicon} = require('react-bootstrap');
 const {connect} = require('react-redux');
 const {Message} = require('../../components/I18N/I18N');
@@ -16,7 +16,7 @@ const Manager = React.createClass({
     propTypes: {
         navStyle: React.PropTypes.object,
         items: React.PropTypes.array,
-        onItemSelected: React.PropTypes.func,
+        itemSelected: React.PropTypes.func,
         selectedTool: React.PropTypes.string
     },
     contextTypes: {
@@ -26,7 +26,8 @@ const Manager = React.createClass({
         return {
             items: [],
             mapType: "openlayers",
-            selectedTool: "importer"
+            selectedTool: "importer",
+            itemSelected: () => {}
         };
     },
     renderToolIcon(tool) {
@@ -40,7 +41,11 @@ const Manager = React.createClass({
                 eventKey={tool.id}
                 key={tool.id}
                 href="#"
-                onClick={(event) => {event.preventDefault(); this.context.router.push("/manager/" + tool.id); }}>
+                onClick={(event) => {
+                    event.preventDefault();
+                    this.props.itemSelected(tool.id);
+                    this.context.router.push("/manager/" + tool.id);
+                }}>
                     {this.renderToolIcon(tool)}
                     <span className="nav-msg">{tool.msgId ? <Message msgId={tool.msgId} /> : tool.title || tool.id}</span>
             </NavItem>));
@@ -70,5 +75,8 @@ const Manager = React.createClass({
 module.exports = {
     ManagerPlugin: connect((state, ownProps) => ({
         selectedTool: ownProps.tool
-    }))(Manager)
+    }),
+    {
+        itemSelected
+    })(Manager)
 };

@@ -9,18 +9,28 @@ const React = require('react');
 const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message');
 const ImporterUtils = require('../../../utils/ImporterUtils');
-const {Table, Glyphicon, Button, Label} = require('react-bootstrap');
+const {Table, Glyphicon, Button, Label, OverlayTrigger, Tooltip} = require('react-bootstrap');
 
 const ImportsGrid = React.createClass({
     propTypes: {
         loading: React.PropTypes.bool,
+        timeout: React.PropTypes.number,
+        loadImports: React.PropTypes.func,
         loadImport: React.PropTypes.func,
         deleteImport: React.PropTypes.func,
-        imports: React.PropTypes.array
+        imports: React.PropTypes.array,
+        deleteAction: React.PropTypes.object,
+        placement: React.PropTypes.string
+    },
+    contextTypes: {
+        messages: React.PropTypes.object
     },
     getDefaultProps() {
         return {
-
+             timeout: 5000,
+            loadImports: () => {},
+            placement: "bottom",
+            deleteAction: <Message msgId="importer.import.deleteImport" />,
             loadImport: () => {},
             deleteImport: () => {},
             imports: []
@@ -32,7 +42,7 @@ const ImportsGrid = React.createClass({
     renderLoadingMessage(importObj) {
         switch (importObj.message) {
             case "deleting":
-                return <Message msg="importer.import.deleting" />;
+                return <Message msgId="importer.import.deleting" />;
             default:
                 return null;
         }
@@ -44,10 +54,15 @@ const ImportsGrid = React.createClass({
         return null;
     },
     renderImport(importObj) {
+        let tooltip = <Tooltip id="import-delete-action">{this.props.deleteAction}</Tooltip>;
         return (<tr key={importObj && importObj.id}>
                 <td key="id"><a onClick={(e) => {e.preventDefault(); this.props.loadImport(importObj.id); }} >{importObj.id}</a></td>
                 <td key="state"><Label bsStyle={this.getbsStyleForState(importObj.state)}>{importObj.state}</Label>{this.renderLoadingImport(importObj)}</td>
-                <td key="actions"><Button bsSize="xsmall" onClick={(e) => {e.preventDefault(); this.props.deleteImport(importObj.id); }}><Glyphicon glyph="remove"/></Button></td>
+                <td key="actions">
+                    <OverlayTrigger overlay={tooltip} placement={this.props.placement}>
+                        <Button bsSize="xsmall" onClick={(e) => {e.preventDefault(); this.props.deleteImport(importObj.id); }}><Glyphicon glyph="remove"/></Button>
+                    </OverlayTrigger>
+                </td>
             </tr>);
     },
     render() {
@@ -57,11 +72,11 @@ const ImportsGrid = React.createClass({
         return (
             <Table striped bordered condensed hover>
                 <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
+                    <tr>
+                      <th><Message msgId="importer.number"/></th>
+                      <th><Message msgId="importer.import.status" /></th>
+                      <th><Message msgId="importer.import.actions" /></th>
+                    </tr>
                 </thead>
                 <tbody>
                     {this.props.imports.map(this.renderImport)}

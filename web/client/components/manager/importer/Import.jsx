@@ -10,7 +10,7 @@ const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message');
 const TaskProgress = require('./TaskProgress');
 const ImporterUtils = require('../../../utils/ImporterUtils');
-const {Grid, Row, Panel, Label, Table, Button, Glyphicon} = require('react-bootstrap');
+const {Grid, Row, Panel, Label, Table, Button, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
 require("./style/importer.css");
 
 const Task = React.createClass({
@@ -23,13 +23,20 @@ const Task = React.createClass({
         runImport: React.PropTypes.func,
         updateProgress: React.PropTypes.func,
         deleteImport: React.PropTypes.func,
-        deleteTask: React.PropTypes.func
+        deleteTask: React.PropTypes.func,
+        deleteAction: React.PropTypes.node,
+        editAction: React.PropTypes.node,
+        placement: React.PropTypes.string
     },
     contextTypes: {
-        router: React.PropTypes.object
+        router: React.PropTypes.object,
+        messages: React.PropTypes.object
     },
     getDefaultProps() {
         return {
+            placement: "bottom",
+            deleteAction: <Message msgId="importer.task.delete"/>,
+            editAction: <Message msgId="importer.task.edit"/>,
             timeout: 10000,
             "import": {},
             loadTask: () => {},
@@ -44,9 +51,7 @@ const Task = React.createClass({
     componentDidMount() {
         if (this.props.import.state === "RUNNING") {
             // Check if some task is running the update is not needed
-            if ( this.props.import.tasks && !(this.props.import.tasks.findIndex((task) => task.state === "RUNNING") >= 0)) {
-                this.interval = setInterval(this.props.loadImport.bind(null, this.props.import.id), this.props.timeout);
-            }
+            this.interval = setInterval(this.props.loadImport.bind(null, this.props.import.id), this.props.timeout);
 
         }
     },
@@ -72,18 +77,24 @@ const Task = React.createClass({
         }
     },
     renderTask(task) {
-
+        let tooltipDelete = <Tooltip id="import-delete-action">{this.props.deleteAction}</Tooltip>;
+        let tooltipEdit = <Tooltip id="import-edit-action">{this.props.editAction}</Tooltip>;
         return (<tr key={task && task.id}>
             <td><a onClick={(e) => {e.preventDefault(); this.props.loadTask(task.id); }} >{task.id}</a></td>
             <td><Label bsStyle={this.getbsStyleForState(task.state)}>{task.state}</Label>{this.renderProgressTask(task)}{this.renderLoadingTask(task)}</td>
             <td key="actions">
-                <Button className="importer-button" bsSize="xsmall" onClick={(e) => {e.preventDefault(); this.props.deleteTask(this.props.import.id, task.id); }}>
-                    <Glyphicon glyph="remove-circle"/>
-                    <Message msgId="importer.import.delete" />
-                </Button>
+                <OverlayTrigger overlay={tooltipDelete} placement={this.props.placement}>
+                    <Button className="importer-button" bsSize="xsmall" onClick={(e) => {e.preventDefault(); this.props.deleteTask(this.props.import.id, task.id); }}>
+                        <Glyphicon glyph="remove"/>
+                    </Button>
+                </OverlayTrigger>
                 {task.state === "COMPLETE" ?
-                    <Button className="importer-button" bsSize="xsmall" onClick={this.editDefaultStyle.bind(null, task.id)}>
-                        <Glyphicon glyph="pencil"/>Edit Default Style</Button>
+                    <OverlayTrigger overlay={tooltipEdit} placement={this.props.placement}>
+                        <Button className="importer-button" bsSize="xsmall" onClick={this.editDefaultStyle.bind(null, task.id)}>
+                            <Glyphicon glyph="pencil"/>
+                            <Message msgId="importer.task.edit" />
+                        </Button>
+                    </OverlayTrigger>
                 : null}
             </td>
         </tr>);
@@ -125,7 +136,7 @@ const Task = React.createClass({
                     <Table striped bordered condensed hover>
                         <thead>
                           <tr>
-                            <th>#</th>
+                            <th><Message msgId="importer.number"/></th>
                             <th><Message msgId="importer.import.status" /></th>
                             <th><Message msgId="importer.import.actions" /></th>
                           </tr>

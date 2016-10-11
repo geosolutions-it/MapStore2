@@ -24,6 +24,7 @@ const {
     LAYER_LOADED,
     LAYER_UPDATED,
     IMPORTS_TRANSFORM_LOAD,
+    IMPORTS_TRANSFORM_CHANGE,
     IMPORTS_TRANSFORM_DELETE,
     IMPORTS_FILE_UPLOADED,
     IMPORTS_UPLOAD_PROGRESS,
@@ -33,6 +34,11 @@ const {
     IMPORTER_WORKSPACE_CREATION_ERROR,
     IMPORTER_WORKSPACE_STATUS_CHANGE
 } = require('../actions/importer');
+
+const {
+    MANAGER_ITEM_SELECTED
+} = require('../actions/manager');
+
 const assign = require('object-assign');
 
 /******************************************************************************/
@@ -125,7 +131,11 @@ function updateImportTaskLoadingStatus(state, action, loading = true) {
 /* REDUCER ********************************************************************/
 /******************************************************************************/
 
-function importer(state = {}, action) {
+const initialState = {
+    importerTool: "importer"
+};
+
+function importer(state = initialState, action) {
     switch (action.type) {
         case IMPORTS_LOADING: {
             if (!action.details) {
@@ -140,6 +150,19 @@ function importer(state = {}, action) {
             }
         }
         return state;
+        case MANAGER_ITEM_SELECTED: {
+            const toolId = action.toolId;
+            if (toolId === state.importerTool) {
+                return assign({}, state, {
+                    loadingError: null,
+                    imports: state.imports,
+                    selectedImport: null,
+                    selectedTask: null,
+                    selectedTransform: null
+                });
+            }
+            return state;
+        }
         case IMPORTS_LIST_LOADED:
             return assign({}, state, {
                 loadingError: null,
@@ -163,7 +186,7 @@ function importer(state = {}, action) {
                 let selectedImport = assign({}, state.selectedImport, {
                     tasks: [...(state.selectedImport.tasks || []), ...action.tasks]
                 });
-                return assign({}, state, {selectedImport});
+                return assign({}, state, {taskCreationError: null, selectedImport});
             }
             return state;
         case IMPORTS_TASK_UPDATED: {
@@ -187,7 +210,7 @@ function importer(state = {}, action) {
         case IMPORTS_TASK_CREATION_ERROR: {
             return assign({}, state, {
                 uploading: false,
-                error: action.error
+                taskCreationError: action.error
             });
         }
         case TASK_PROGRESS_UPDATED: {
@@ -243,7 +266,13 @@ function importer(state = {}, action) {
             let transform = assign({}, action.transform);
             transform.id = action.transformId;
             return assign({}, state, {
-                selectedTransform: action.transform
+                selectedTransform: transform
+            });
+        }
+        case IMPORTS_TRANSFORM_CHANGE: {
+            let transform = assign({}, state.selectedTransform || {}, action.transform, {status: "modified"});
+            return assign({}, state, {
+                selectedTransform: transform
             });
         }
         case IMPORTS_TRANSFORM_DELETE: {

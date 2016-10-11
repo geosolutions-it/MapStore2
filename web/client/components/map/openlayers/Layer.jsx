@@ -19,6 +19,7 @@ const OpenlayersLayer = React.createClass({
         type: React.PropTypes.string,
         options: React.PropTypes.object,
         onLayerLoading: React.PropTypes.func,
+        onLayerError: React.PropTypes.func,
         onLayerLoad: React.PropTypes.func,
         position: React.PropTypes.number,
         observables: React.PropTypes.array,
@@ -29,6 +30,7 @@ const OpenlayersLayer = React.createClass({
             observables: [],
             onLayerLoading: () => {},
             onLayerLoad: () => {},
+            onLayerError: () => {},
             onInvalid: () => {}
         };
     },
@@ -116,7 +118,9 @@ const OpenlayersLayer = React.createClass({
             this.props.type,
             this.layer,
             this.generateOpts(newProps.options, newProps.position, newProps.srs),
-            this.generateOpts(oldProps.options, oldProps.position, oldProps.srs));
+            this.generateOpts(oldProps.options, oldProps.position, oldProps.srs),
+            this.props.map,
+            this.props.mapId);
     },
     addLayer(options) {
         if (this.isValid()) {
@@ -135,10 +139,11 @@ const OpenlayersLayer = React.createClass({
                     this.props.onLayerLoad(options.id);
                 }
             });
-            this.layer.getSource().on('tileloaderror', () => {
+            this.layer.getSource().on('tileloaderror', (event) => {
                 this.tilestoload--;
+                this.props.onLayerError(options.id);
                 if (this.tilestoload === 0) {
-                    this.props.onLayerLoad(options.id);
+                    this.props.onLayerLoad(options.id, {error: event});
                 }
             });
         }

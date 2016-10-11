@@ -493,7 +493,7 @@
         "shapefile": {
             "title": "Ajouter un fichier Shape local",
             "tooltip": "Ajouter un fichier Shape local à la carte.",
-            "placeholder": "Déposer votre fichier ici ou cliquer pour choisir le fichier shape à importer.",
+            "placeholder": "Déposez vos fichiers ici ou cliquez sur pour sélectionner les shapefiles à importer. (Shapefiles doivent être contenus dans des archives zip)",
             "defaultStyle": "Style par défaut",
             "zoom": "Zoomer sur le fichier shape",
             "error": {"select": "Sélectionner un ou plusieurs fichiers zip"},
@@ -530,13 +530,23 @@
             "dropfileImport": "drop here files to add it to this process"
         },
         "importer": {
-            "title": "Import Data",
+            "title": "Importer des données",
             "imports": "Processus d'importation",
             "importN": "Processus {id}",
             "creatingImportProcess": "Création d'importation ...",
             "dropfile": "faire glisser des fichiers ici pour créer un nouveau processus d'importation",
             "dropfileImport": "faites glisser les fichiers ici pour ajouter à ce processus",
             "process": "Processus",
+            "number": "#",
+            "workspace": {
+                "create": "Créer",
+                "createWS": "créer un nouvel espace de travail: ",
+                "target": "cible espace de travail: ",
+                "success": "Erreur de création espace de travail: {statusWS}",
+                "failure": "Espace de travail {statusWS} créé avec succès",
+                "select": "Sélectionnez l'espace de travail cible",
+                "new": "Nom..."
+            },
             "import": {
                 "actions": "Actes",
                 "tasks": "paquet",
@@ -555,23 +565,25 @@
                 "status": "Statut",
                 "updateMode": "Mode refresh",
                 "originalData": "fichier original",
-                "file": "File Name",
+                "file": "Nom de fichier",
                 "format": "Format",
                 "targetStore": "target store",
                 "storeType": "Type de store",
                 "storeName": "Le nom du store",
                 "layer": "Layer",
                 "transforms": "Chaîne de transformations",
-                "update": "Update",
-                "run": "Import This Package",
-                "delete": "Delete This Package"
+                "update": "Mettre à jour",
+                "run": "Importez Ce forfait",
+                "edit": "Modifier le style par défaut",
+                "delete": "Supprimer Ce forfait"
             },
             "transform": {
                 "panelTitle": "Transformation {id}",
                 "type": "Type de transformation",
                 "actions": "Actes",
                 "options": "transformations des options",
-                "overviewlevels": "Vue d'ensemble des niveaux"
+                "overviewlevels": "Vue d'ensemble des niveaux",
+                "delete": "Supprimer cette transformation"
             }
         },
         "rasterstyler": {

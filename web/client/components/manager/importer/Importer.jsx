@@ -19,6 +19,7 @@ const BreadCrumb = require('./BreadCrumb');
 const Importer = React.createClass({
     propTypes: {
         loading: React.PropTypes.bool,
+        taskCreationError: React.PropTypes.object,
         error: React.PropTypes.object,
         defaultPresets: React.PropTypes.string,
         /**
@@ -47,7 +48,8 @@ const Importer = React.createClass({
         updateLayer: React.PropTypes.func,
         loadStylerTool: React.PropTypes.func,
         loadTransform: React.PropTypes.func,
-        updateTranform: React.PropTypes.func,
+        updateTransform: React.PropTypes.func,
+        editTransform: React.PropTypes.func,
         deleteTransform: React.PropTypes.func,
         uploadImportFiles: React.PropTypes.func,
         selectedImport: React.PropTypes.object,
@@ -63,6 +65,8 @@ const Importer = React.createClass({
             loadTask: () => {},
             loadLayer: () => {},
             loadTransform: () => {},
+            editTransform: () => {},
+            updateTransform: () => {},
             loadImports: () => {},
             updateProgress: () => {},
             deleteTransform: () => {},
@@ -143,7 +147,10 @@ const Importer = React.createClass({
             return (<div>
             {breadcrumb}
             <h2>Transform {this.props.selectedTransform.id}</h2>
-            <Transform transform={this.props.selectedTransform}/>
+            <Transform
+                transform={this.props.selectedTransform}
+                editTransform={this.props.editTransform}
+                updateTransform={this.props.updateTransform.bind(null, this.props.selectedImport.id, this.props.selectedTask.id, this.props.selectedTransform.id)}/>
             </div>);
         }
         if ( this.props.selectedImport && this.props.selectedTask) {
@@ -179,6 +186,7 @@ const Importer = React.createClass({
         return (<div>
                 {breadcrumb}
                 <ImportsGrid
+                loadImports={this.props.loadImports}
                 deleteImport={this.props.deleteImport}
                 loadImport={this.props.loadImport}
                 imports={this.props.imports} />
@@ -204,6 +212,7 @@ const Importer = React.createClass({
                             boxShadow: "0px 0px 25px 14px #d9edf7"
 
                         }}
+                        error={this.props.taskCreationError}
                         beforeUploadMessage={<Message msgId="importer.creatingImportProcess" />}
                         dropMessage={<Message msgId={message} />}
                         uploading={this.props.uploading}
@@ -220,7 +229,7 @@ const Importer = React.createClass({
                             createWorkspace={this.props.createWorkspace}
                             datastoreTemplates={this.props.datastoreTemplates}
                             selectWorkSpace={this.props.selectWorkSpace}
-                            selectedWorkSpace={this.getTargetWorkspace()}
+                            selectedWorkSpace={this.getTargetWorkspace(this.props.selectedImport)}
                             workspaces={this.props.workspaces}
                             loadWorkspaces={this.props.loadWorkspaces}/>
                     </Col>

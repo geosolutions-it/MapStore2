@@ -81,7 +81,8 @@ function wmsToLeafletOptions(options) {
         opacity: opacity,
         version: options.version || "1.3.0",
         SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
-        CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS)
+        CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
+        tileSize: options.tileSize || 256
     }, options.params || {});
 }
 
