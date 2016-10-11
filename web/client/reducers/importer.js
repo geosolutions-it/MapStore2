@@ -34,6 +34,11 @@ const {
     IMPORTER_WORKSPACE_CREATION_ERROR,
     IMPORTER_WORKSPACE_STATUS_CHANGE
 } = require('../actions/importer');
+
+const {
+    MANAGER_ITEM_SELECTED
+} = require('../actions/manager');
+
 const assign = require('object-assign');
 
 /******************************************************************************/
@@ -126,7 +131,11 @@ function updateImportTaskLoadingStatus(state, action, loading = true) {
 /* REDUCER ********************************************************************/
 /******************************************************************************/
 
-function importer(state = {}, action) {
+const initialState = {
+    importerTool: "importer"
+};
+
+function importer(state = initialState, action) {
     switch (action.type) {
         case IMPORTS_LOADING: {
             if (!action.details) {
@@ -141,6 +150,19 @@ function importer(state = {}, action) {
             }
         }
         return state;
+        case MANAGER_ITEM_SELECTED: {
+            const toolId = action.toolId;
+            if (toolId === state.importerTool) {
+                return assign({}, state, {
+                    loadingError: null,
+                    imports: state.imports,
+                    selectedImport: null,
+                    selectedTask: null,
+                    selectedTransform: null
+                });
+            }
+            return state;
+        }
         case IMPORTS_LIST_LOADED:
             return assign({}, state, {
                 loadingError: null,
