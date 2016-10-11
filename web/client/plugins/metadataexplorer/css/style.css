@@ -40,7 +40,7 @@ div.record-grid .record-item .record-buttons {
 #mapstore-catalog-panel button.search-button {
     margin-bottom: 10px;
 }
-#viewer .modal-dialog {
+.catalog_window .modal-dialog {
     width: 98%;
     margin-top: 10px;
 }
