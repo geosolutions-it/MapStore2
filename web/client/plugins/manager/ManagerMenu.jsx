@@ -8,7 +8,7 @@
 const React = require('react');
 const {connect} = require('react-redux');
 
-const { onStartUp } = require('../../actions/manager');
+const { itemSelected } = require('../../actions/manager');
 const assign = require('object-assign');
 
 const {DropdownButton, Glyphicon, MenuItem} = require('react-bootstrap');
@@ -33,7 +33,7 @@ const ManagerMenu = React.createClass({
         entries: React.PropTypes.array,
         title: React.PropTypes.node,
         onItemClick: React.PropTypes.func,
-        onStartUp: React.PropTypes.func,
+        itemSelected: React.PropTypes.func,
         controls: React.PropTypes.object,
         mapType: React.PropTypes.string,
         panelStyle: React.PropTypes.object,
@@ -49,7 +49,7 @@ const ManagerMenu = React.createClass({
             entries: [],
             role: "",
             onItemClick: () => {},
-            onStartUp: () => {},
+            itemSelected: () => {},
             title: <MenuItem header>Manager</MenuItem>,
             controls: [],
             mapType: "leaflet",
@@ -66,7 +66,7 @@ const ManagerMenu = React.createClass({
     getTools() {
         return [{element: <span key="burger-menu-title">{this.props.title}</span>}, ...this.props.entries.sort((a, b) => a.position - b.position).map((entry) => {
             return {
-                action: (context) => {context.router.push(entry.path); return this.props.onStartUp(entry.id); },
+                action: (context) => {context.router.push(entry.path); return this.props.itemSelected(entry.id); },
                 text: entry.msgId ? <Message msgId={entry.msgId} /> : entry.text,
                 cfg: {...entry}
             };
@@ -97,7 +97,7 @@ module.exports = {
         controls: state.controls,
         role: state.security && state.security.user && state.security.user.role
     }), {
-        onStartUp
+        itemSelected
     })(ManagerMenu), {
         OmniBar: {
             name: "managermenu",

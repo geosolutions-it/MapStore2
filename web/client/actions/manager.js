@@ -6,15 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const ON_STARTUP = 'ON_STARTUP';
+const MANAGER_ITEM_SELECTED = 'MANAGER_ITEM_SELECTED';
 
-function onStartUp(toolId) {
+function itemSelected(toolId) {
     return {
-        type: ON_STARTUP,
+        type: MANAGER_ITEM_SELECTED,
         toolId
     };
 }
 
 module.exports = {
-    ON_STARTUP, onStartUp
+    MANAGER_ITEM_SELECTED, itemSelected
  };
