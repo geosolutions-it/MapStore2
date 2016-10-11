@@ -15,7 +15,7 @@ const RECORD_LIST_LOADED = 'RECORD_LIST_LOADED';
 const RECORD_LIST_LOAD_ERROR = 'RECORD_LIST_LOAD_ERROR';
 const CHANGE_CATALOG_FORMAT = 'CHANGE_CATALOG_FORMAT';
 const ADD_LAYER_ERROR = 'ADD_LAYER_ERROR';
-const RESET_STATUS = 'RESET_STATUS';
+const CATALOG_RESET = 'CATALOG_RESET';
 
 function recordsLoaded(options, result) {
     return {
@@ -84,9 +84,9 @@ function addLayerError(error) {
     };
 }
 
-function resetStatus() {
+function catalogReset() {
     return {
-        type: RESET_STATUS
+        type: CATALOG_RESET
     };
 }
 
@@ -95,10 +95,10 @@ module.exports = {
     RECORD_LIST_LOAD_ERROR,
     CHANGE_CATALOG_FORMAT,
     ADD_LAYER_ERROR,
-    RESET_STATUS,
+    CATALOG_RESET,
     getRecords,
     textSearch,
     changeCatalogFormat,
     addLayerError,
-    resetStatus
+    catalogReset
 };

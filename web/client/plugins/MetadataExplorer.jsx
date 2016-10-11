@@ -11,7 +11,7 @@ const {connect} = require('react-redux');
 const assign = require('object-assign');
 const {createSelector} = require("reselect");
 const {Glyphicon, Panel} = require('react-bootstrap');
-const {textSearch, changeCatalogFormat, addLayerError, resetStatus} = require("../actions/catalog");
+const {textSearch, changeCatalogFormat, addLayerError, catalogReset} = require("../actions/catalog");
 const {addLayer} = require("../actions/layers");
 const {zoomToExtent} = require("../actions/map");
 const {toggleControl} = require("../actions/controls");
@@ -32,7 +32,7 @@ const catalogSelector = createSelector([
 const catalogClose = () => {
     return (dispatch) => {
         dispatch(toggleControl('metadataexplorer'));
-        dispatch(resetStatus());
+        dispatch(catalogReset());
     };
 };
 
