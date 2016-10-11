@@ -21,6 +21,7 @@ const {
     deleteTask, IMPORTS_TASK_DELETE,
     loadTransform, IMPORTS_TRANSFORM_LOAD,
     updateTransform, IMPORTS_TRANSFORM_UPDATED,
+    editTransform, IMPORTS_TRANSFORM_CHANGE,
     deleteTransform, IMPORTS_TRANSFORM_DELETE,
     loadStylerTool,
     selectWorkSpace,
@@ -236,6 +237,13 @@ describe('Test correctness of the importer actions', () => {
         let url = 'base/web/client/test-resources/importer/transform.json#';
         let tests = [testLoading, testdeleteTransform, testLoading ];
         runAsyncTest(url, deleteTransform, tests, done, [1, 2, 3]);
+    });
+
+    it('transform edit', () => {
+        let transform = {options: [1, 2, 3]};
+        const result = editTransform(transform);
+        expect(result.type).toBe(IMPORTS_TRANSFORM_CHANGE);
+        expect(result.transform).toBe(transform);
     });
     // load styler
     it('load styler tool', (done) => {

@@ -24,6 +24,7 @@ const {
     LAYER_LOADED,
     LAYER_UPDATED,
     IMPORTS_TRANSFORM_LOAD,
+    IMPORTS_TRANSFORM_CHANGE,
     IMPORTS_TRANSFORM_DELETE,
     IMPORTS_FILE_UPLOADED,
     IMPORTS_UPLOAD_PROGRESS,
@@ -243,7 +244,13 @@ function importer(state = {}, action) {
             let transform = assign({}, action.transform);
             transform.id = action.transformId;
             return assign({}, state, {
-                selectedTransform: action.transform
+                selectedTransform: transform
+            });
+        }
+        case IMPORTS_TRANSFORM_CHANGE: {
+            let transform = assign({}, state.selectedTransform || {}, action.transform, {status: "modified"});
+            return assign({}, state, {
+                selectedTransform: transform
             });
         }
         case IMPORTS_TRANSFORM_DELETE: {
