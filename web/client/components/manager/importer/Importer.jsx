@@ -47,7 +47,8 @@ const Importer = React.createClass({
         updateLayer: React.PropTypes.func,
         loadStylerTool: React.PropTypes.func,
         loadTransform: React.PropTypes.func,
-        updateTranform: React.PropTypes.func,
+        updateTransform: React.PropTypes.func,
+        editTransform: React.PropTypes.func,
         deleteTransform: React.PropTypes.func,
         uploadImportFiles: React.PropTypes.func,
         selectedImport: React.PropTypes.object,
@@ -63,6 +64,8 @@ const Importer = React.createClass({
             loadTask: () => {},
             loadLayer: () => {},
             loadTransform: () => {},
+            editTransform: () => {},
+            updateTransform: () => {},
             loadImports: () => {},
             updateProgress: () => {},
             deleteTransform: () => {},
@@ -143,7 +146,10 @@ const Importer = React.createClass({
             return (<div>
             {breadcrumb}
             <h2>Transform {this.props.selectedTransform.id}</h2>
-            <Transform transform={this.props.selectedTransform}/>
+            <Transform
+                transform={this.props.selectedTransform}
+                editTransform={this.props.editTransform}
+                updateTransform={this.props.updateTransform.bind(null, this.props.selectedImport.id, this.props.selectedTask.id, this.props.selectedTransform.id)}/>
             </div>);
         }
         if ( this.props.selectedImport && this.props.selectedTask) {
