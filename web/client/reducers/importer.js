@@ -35,7 +35,7 @@ const {
 } = require('../actions/importer');
 
 const {
-    ON_STARTUP
+    MANAGER_ITEM_SELECTED
 } = require('../actions/manager');
 
 const assign = require('object-assign');
@@ -149,7 +149,7 @@ function importer(state = initialState, action) {
             }
         }
         return state;
-        case ON_STARTUP: {
+        case MANAGER_ITEM_SELECTED: {
             const toolId = action.toolId;
             if (toolId === state.importerTool) {
                 return assign({}, state, {
