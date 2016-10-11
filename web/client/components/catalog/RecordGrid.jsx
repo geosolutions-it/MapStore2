@@ -30,7 +30,7 @@ const RecordGrid = React.createClass({
             records: [],
             onLayerAdd: () => {},
             onError: () => {},
-            column: {xs: 12, sm: 6, md: 6, lg: 6}
+            column: {xs: 12, sm: 12, md: 6, lg: 6}
         };
     },
     renderRecordItem(record) {
@@ -53,7 +53,7 @@ const RecordGrid = React.createClass({
         if (this.props.records) {
             let mapsList = this.props.records instanceof Array ? this.props.records : [this.props.records];
             return (
-                <Grid className="record-grid" style={this.props.style}>
+                <Grid className="record-grid" fluid={true} style={this.props.style}>
                     <Row>
 						{mapsList.map(this.renderRecordItem)}
 					</Row>

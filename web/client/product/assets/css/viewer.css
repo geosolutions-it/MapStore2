@@ -389,11 +389,6 @@ html, body, #container, .fill {
     min-width: 725px;
 }
 
-#mapstore-catalog-panel {
-    width: auto;
-    margin: 100px;
-}
-
 #mapstore-catalog-panel .record-item {
     min-height: 150px;
 }

@@ -66,12 +66,8 @@ const MetadataExplorerComponent = React.createClass({
             modal: true,
             wrapWithPanel: true,
             panelStyle: {
-                minWidth: "300px",
                 zIndex: 100,
-                position: "absolute",
-                overflow: "auto",
-                top: "100px",
-                right: "100px"
+                overflow: "auto"
             },
             panelClassName: "toolbar-panel",
             toggleControl: () => {},
@@ -80,7 +76,7 @@ const MetadataExplorerComponent = React.createClass({
         };
     },
     render() {
-        const panel = <div role="body"><Catalog {...this.props}/></div>;
+        const panel = <div role="body" className="modal_window"><Catalog {...this.props}/></div>;
         if (this.props.wrap) {
             if (this.props.active) {
                 if (this.props.wrapWithPanel) {
@@ -88,7 +84,7 @@ const MetadataExplorerComponent = React.createClass({
                         {panel}
                     </Panel>);
                 }
-                return (<Dialog id="mapstore-catalog-panel" style={this.props.style}>
+                return (<Dialog modal id="mapstore-catalog-panel" style={assign({}, this.props.style, {display: "block" })}>
                     <span role="header"><span className="metadataexplorer-panel-title"><Message msgId="catalog.title"/></span><button onClick={this.props.toggleControl} className="print-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
                     {panel}
                 </Dialog>);

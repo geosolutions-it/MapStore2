@@ -84,7 +84,7 @@ const Dialog = React.createClass({
         </Draggable>);
         let containerStyle = assign({}, this.props.style, this.props.backgroundStyle);
         return this.props.modal ?
-            (<div onClick={this.props.onClickOut} style={containerStyle} className="fade in modal" role="dialog">
+            (<div onClick={this.props.onClickOut} style={containerStyle} className="fade in modal catalog_window" role="dialog">
             <div onClick={(evt)=> {evt.preventDefault(); evt.stopPropagation(); }} className="modal-dialog" style={{background: "transparent"}}>
                 {dialog}
             </div></div>) :
