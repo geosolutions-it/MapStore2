@@ -42,4 +42,5 @@ div.record-grid .record-item .record-buttons {
 }
 #viewer .modal-dialog {
     width: 98%;
+    margin-top: 10px;
 }
