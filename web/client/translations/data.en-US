@@ -540,9 +540,9 @@
                 "create": "Create",
                 "createWS": "create a new workspace: ",
                 "target": "target workspace: ",
+                "failure": "Error creating workspace: {statusWS}",
+                "success": "Workspace {statusWS} successfully created",
                 "select": "Select TargetWorkspace",
-                "success": "Error creating workspace: {statusWS}",
-                "failure": "Workspace {statusWS} successfully created",
                 "new": "New workspace name..."
             },
             "import": {

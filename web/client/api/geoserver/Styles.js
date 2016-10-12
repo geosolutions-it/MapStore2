@@ -10,7 +10,7 @@ const assign = require('object-assign');
 
 var Api = {
     saveStyle: function(geoserverBaseUrl, styleName, body, options) {
-        let url = geoserverBaseUrl + "styles/" + styleName;
+        let url = geoserverBaseUrl + "styles/" + encodeURI(styleName);
         let opts = assign({}, options);
         opts.headers = assign({}, opts.headers, {"Content-Type": "application/vnd.ogc.sld+xml"});
         return axios.put(url, body, opts);

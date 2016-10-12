@@ -94,7 +94,7 @@ const applyPlaceholders = function(preset, model) {
         return assign({}, preset, {
             changes: assign({}, preset.changes, {
                 target: assign({}, preset.changes.target, {
-                    dataStore: assign(preset.changes.target.dataStore, {
+                    dataStore: assign({}, preset.changes.target.dataStore, {
                         name: replaceTargetWorkspace(preset.changes.target.dataStore.name)
                     })
                 })
@@ -646,7 +646,6 @@ function dismissWorkspaceCreationStatus() {
 /** UPLOAD **/
 function uploadImportFiles(geoserverRestURL, importId, files, presets) {
     return (dispatch, getState) => {
-        let state = getState();
         dispatch(loading({importId: importId, uploadingFiles: files}));
         let progressOpts = {
             progress: (progressEvent) => {
@@ -657,7 +656,8 @@ function uploadImportFiles(geoserverRestURL, importId, files, presets) {
             let tasks = response && response.data && response.data.tasks || response && response.data && [response.data.task];
             dispatch(fileUploaded(files));
             dispatch(importTaskCreated(importId, tasks));
-            let impState = getState().importer;
+            let state = getState();
+            let impState = state.importer;
             if (impState && impState.selectedImport && impState.selectedImport.id === importId && tasks && tasks.length > 1) {
                 dispatch(loadImport(geoserverRestURL, importId));
             }
