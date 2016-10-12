@@ -87,6 +87,14 @@ var DefaultLayer = React.createClass({
                 );
             }
         }
+        if (this.props.visibilityCheckType) {
+            tools.push(
+                <VisibilityCheck key="visibilitycheck"
+                   checkType={this.props.visibilityCheckType}
+                   propertiesChangeHandler={this.props.propertiesChangeHandler}
+                   style={{"float": "right", cursor: "pointer", marginLeft: 0, marginRight: 0}}/>
+            );
+        }
         if (this.props.activateLegendTool) {
             tools.push(
                 <LayersTool key="toollegend"
@@ -102,7 +110,6 @@ var DefaultLayer = React.createClass({
         let {children, propertiesChangeHandler, onToggle, ...other } = this.props;
         return (
             <Node className="toc-default-layer" sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
-                <VisibilityCheck checkType={this.props.visibilityCheckType} propertiesChangeHandler={this.props.propertiesChangeHandler}/>
                 <Title onClick={this.props.onToggle}/>
                 <InlineSpinner loading={this.props.node.loading}/>
                 <LayersTool key="loadingerror"
