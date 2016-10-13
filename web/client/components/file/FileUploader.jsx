@@ -74,8 +74,8 @@ const FileUploader = React.createClass({
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.fileList && this.state.fileList.map((file) =>
-                        (<tr key="row">
+                        {this.state.fileList && this.state.fileList.map((file, index) =>
+                        (<tr key={"row_" + index}>
                             <td key="name">{file.name}</td>
                             <td key="size">{this.humanFileSize(file.size)}</td>
                             <td key="type">{file.type}</td>
