@@ -173,7 +173,7 @@ function editUser(user, options ={params: {includeattributes: true}} ) {
                     };
                 }
                 // the service returns groups = "", skip this to avoid overriding
-                if (userLoaded && userLoaded.groups === "") {
+                if (userLoaded) {
                     userLoaded = {...userLoaded, groups: user.groups};
                 }
                 dispatch(editUserSuccess(userLoaded));
@@ -236,18 +236,23 @@ function createError(user, error) {
 }
 
 function saveUser(user, options = {}) {
-    return (dispatch) => {
+    return (dispatch, getState) => {
         if (user && user.id) {
             dispatch(savingUser(user));
-            return API.updateUser(user.id, {...user, group: user.groups}, options).then((userDetails) => {
+            return API.updateUser(user.id, {...user, groups: { group: user.groups}}, options).then((userDetails) => {
                 dispatch(savedUser(userDetails));
+                let state = getState && getState();
+                let oldText = get(state, "users.currentUser.name");
+                dispatch(getUsers(oldText));
             }).catch((error) => {
                 dispatch(saveError(user, error));
             });
         }
         // createUser
         dispatch(creatingUser(user));
-        return API.createUser(user, options).then((id) => {
+        return API.createUser( {...user, groups: { group: user.groups.filter((g) => {
+            return g.groupName !== "everyone";
+        })}}, options).then((id) => {
             dispatch(userCreated(id, user));
             dispatch(getUsers());
         }).catch((error) => {
