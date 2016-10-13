@@ -107,13 +107,17 @@ var styleFunction = function(feature) {
 Layers.registerType('vector', {
     create: (options) => {
         let features;
+        let featuresCrs = options.featuresCrs || 'EPSG:4326';
+        let layerCrs = options.crs || 'EPSG:3857';
         if (options.features) {
             let featureCollection = options.features;
             if (Array.isArray(options.features)) {
                 featureCollection = { "type": "FeatureCollection", features: featureCollection};
             }
             features = (new ol.format.GeoJSON()).readFeatures(featureCollection);
-            features.forEach((f) => f.getGeometry().transform('EPSG:4326', options.crs || 'EPSG:3857'));
+            if (featuresCrs !== layerCrs) {
+                features.forEach((f) => f.getGeometry().transform(featuresCrs, layerCrs));
+            }
         }
 
         const source = new ol.source.Vector({
