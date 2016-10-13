@@ -41,6 +41,10 @@ const {
 
 const assign = require('object-assign');
 
+// constant used to reset the state only if the importer tool is passed to the reducer
+// see case: MANAGER_ITEM_SELECTED
+const importerTool = "importer";
+
 /******************************************************************************/
 /* UTILITY FUNCTIONS **********************************************************/
 /******************************************************************************/
@@ -131,11 +135,7 @@ function updateImportTaskLoadingStatus(state, action, loading = true) {
 /* REDUCER ********************************************************************/
 /******************************************************************************/
 
-const initialState = {
-    importerTool: "importer"
-};
-
-function importer(state = initialState, action) {
+function importer(state = {}, action) {
     switch (action.type) {
         case IMPORTS_LOADING: {
             if (!action.details) {
@@ -152,7 +152,7 @@ function importer(state = initialState, action) {
         return state;
         case MANAGER_ITEM_SELECTED: {
             const toolId = action.toolId;
-            if (toolId === state.importerTool) {
+            if (toolId === importerTool) {
                 return assign({}, state, {
                     loadingError: null,
                     imports: state.imports,

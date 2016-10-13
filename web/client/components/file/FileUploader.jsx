@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-
+const {round} = require('lodash');
 const {Message, DateFormat} = require('../I18N/I18N');
 const Spinner = require('react-spinkit');
 const {Glyphicon, ProgressBar, Table, Alert} = require('react-bootstrap');
@@ -58,8 +58,8 @@ const FileUploader = React.createClass({
     },
     renderProgress(uploading) {
         if (uploading && uploading.progress) {
-            let precent = (uploading.progress * 100).toFixed(2);
-            return <ProgressBar key="progressbar" striped now={precent} label={`${precent}%`}/>;
+            let percent = round(uploading.progress * 100, 2);
+            return <ProgressBar key="progressbar" striped now={percent} label={`${percent}%`}/>;
         }
 
     },
@@ -74,8 +74,8 @@ const FileUploader = React.createClass({
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.fileList && this.state.fileList.map((file) =>
-                        (<tr>
+                        {this.state.fileList && this.state.fileList.map((file, index) =>
+                        (<tr key={"row_" + index}>
                             <td key="name">{file.name}</td>
                             <td key="size">{this.humanFileSize(file.size)}</td>
                             <td key="type">{file.type}</td>
