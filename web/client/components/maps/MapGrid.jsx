@@ -36,7 +36,7 @@ var MapGrid = React.createClass({
         deleteMap: React.PropTypes.func,
         resetCurrentMap: React.PropTypes.func,
         updatePermissions: React.PropTypes.func,
-        metadataModal: React.PropTypes.object
+        metadataModal: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -90,7 +90,7 @@ var MapGrid = React.createClass({
     renderMetadataModal() {
         if (this.props.metadataModal) {
             let MetadataModal = this.props.metadataModal;
-            return (<MetadataModal ref="metadataModal" show={this.props.currentMap && this.props.currentMap.displayMetadataEdit} onHide={this.props.resetCurrentMap}
+            return (<MetadataModal key="metadataModal" ref="metadataModal" show={this.props.currentMap && this.props.currentMap.displayMetadataEdit} onHide={this.props.resetCurrentMap}
                 onClose={this.props.resetCurrentMap}
                 map={this.props.currentMap}
                 onSaveAll={this.props.saveAll}
@@ -105,10 +105,10 @@ var MapGrid = React.createClass({
     render: function() {
         return (
                 <Grid fluid={this.props.fluid}>
-                    <Row>
+                    <Row key="maps">
                         {this.props.loading && this.props.maps.length === 0 ? this.renderLoading() : this.renderMaps(this.props.maps || [], this.props.mapType)}
                     </Row>
-                    <Row>
+                    <Row key="bottom">
                         {this.props.bottom}
                     </Row>
                     {this.renderMetadataModal()}

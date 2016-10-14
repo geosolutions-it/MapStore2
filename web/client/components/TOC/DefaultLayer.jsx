@@ -106,6 +106,7 @@ var DefaultLayer = React.createClass({
                 <Title onClick={this.props.onToggle}/>
                 <InlineSpinner loading={this.props.node.loading}/>
                 <LayersTool key="loadingerror"
+                        id={"loadingError" + this.props.node.id}
                         style={{"display": this.props.node.loadingError ? "block" : "none", color: "red", cursor: "default"}}
                         glyph="ban-circle"
                         tooltip="toc.loadingerror"

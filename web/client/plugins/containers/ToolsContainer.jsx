@@ -100,7 +100,7 @@ const ToolsContainer = React.createClass({
         })(this.props.tool);
     },
     renderTools() {
-        return this.props.tools.map((tool) => {
+        return this.props.tools.map((tool, i) => {
             if (tool.element) {
                 return tool.element;
             }
@@ -110,7 +110,7 @@ const ToolsContainer = React.createClass({
             const Tool = this.getTool(tool);
 
             return this.addTooltip(
-                <Tool tooltip={tooltip} btnSize={this.props.toolSize} bsStyle={this.props.toolStyle} help={help} key={tool.name} mapType={this.props.mapType}
+                <Tool tooltip={tooltip} btnSize={this.props.toolSize} bsStyle={this.props.toolStyle} help={help} key={tool.name || ("tool" + i)} mapType={this.props.mapType}
                     {...tool.cfg} items={tool.items || []}>
                     {(tool.cfg && tool.cfg.glyph) ? <Glyphicon glyph={tool.cfg.glyph}/> : tool.icon}{help} {tool.text}
                 </Tool>,
@@ -140,8 +140,8 @@ const ToolsContainer = React.createClass({
     render() {
         const Container = this.props.container;
         return (
-            <span id={this.props.id}>
-                <Container id={this.props.id + "-container"} style={this.props.style} className={this.props.className}>
+            <span key={this.props.id} id={this.props.id}>
+                <Container key={this.props.id + "-container"} id={this.props.id + "-container"} style={this.props.style} className={this.props.className}>
                     {this.renderTools()}
                 </Container>
                 {this.renderPanels()}
