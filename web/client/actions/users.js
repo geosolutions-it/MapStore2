@@ -250,14 +250,19 @@ function saveUser(user, options = {}) {
         }
         // createUser
         dispatch(creatingUser(user));
-        return API.createUser( {...user, groups: { group: user.groups.filter((g) => {
-            return g.groupName !== "everyone";
-        })}}, options).then((id) => {
+        let userToPost = {...user};
+        if (user && user.groups) {
+            userToPost = {...user, groups: { group: user.groups.filter((g) => {
+                return g.groupName !== "everyone";
+            })}};
+        }
+        return API.createUser(userToPost, options).then((id) => {
             dispatch(userCreated(id, user));
             dispatch(getUsers());
         }).catch((error) => {
             dispatch(createError(user, error));
         });
+
     };
 }
 function changeUserMetadata(key, newValue) {

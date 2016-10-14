@@ -195,6 +195,25 @@ describe('Test correctness of the users actions', () => {
             }
         });
     });
+    it('saveUser create with groups', (done) => {
+        GeoStoreDAO.addBaseUrl = (options) => {
+            return assign(options, {baseURL: 'base/web/client/test-resources/geostore/users/newUser.txt#'});
+        };
+        const retFun = saveUser({name: "test", groups: [{groupName: "everyone"}, {groupName: "testers"}], role: "USER", password: "password"});
+        expect(retFun).toExist();
+        let count = 0;
+        retFun((action) => {
+            expect(action.type).toBe(USERMANAGER_UPDATE_USER);
+            count++;
+            if (count === 2) {
+                expect(action.user).toExist();
+                expect(action.user.id).toExist();
+                expect(action.user.groups).toExist();
+                expect(action.user.groups.length).toBe(2);
+                done();
+            }
+        });
+    });
     it('saveUser error', (done) => {
         const retFun = saveUser({id: 3});
         expect(retFun).toExist();
