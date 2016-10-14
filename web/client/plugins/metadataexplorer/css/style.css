@@ -13,6 +13,10 @@ div.record-grid:after {
     width:100%;
     background: -webkit-linear-gradient(#fff, #fff);
     background: linear-gradient(rgba(0,0,0,0), #fff);
+    background: -moz-linear-gradient(rgba(0,0,0,0), #fff); /* FF3.6+ */
+    background: -webkit-gradient(rgba(0,0,0,0), #fff); /* Chrome,Safari4+ */
+    background: -o-linear-gradient(rgba(0,0,0,0), #fff); /* Opera 11.10+ */
+    background: -ms-linear-gradient(rgba(0,0,0,0), #fff); /* IE10+ */
 }
 
 div.record-grid .record-item{

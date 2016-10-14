@@ -48,6 +48,7 @@ img.mapstore-logo {
 }
 
 @keyframes spin {
+    from { transform:rotate(turn); }
     to { transform: rotate(1turn); }
 }
 

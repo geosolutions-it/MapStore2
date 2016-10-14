@@ -15,12 +15,12 @@
 
 #mapstore-settings .modal-body #mapstore-mousepositionsettings button {
     float: none;
-    margin-left: 40%;
+    margin: 0 0 0 40%;
 }
 
 #mapstore-settings .modal-body #mapstore-mousepositionsettings select {
     float: none;
-    margin-left: 40%;
+    margin: 0 0 0 40%;
 }
 
 #mapstore-settings .modal-body .form-group {
@@ -33,14 +33,8 @@
     margin-bottom: 0 !important;
 }
 
-#mapstore-mousepositionsettings select, #mapstore-mousepositionsettings button {
-    width: 60% !important;
-    float: right;
-    height: 35px;
-}
-
 #mapstore-mousepositionsettings label {
-    width: 100% !important;
+    width: 100%;
 }
 
 .swipe-header-left-button {
@@ -154,7 +148,7 @@
 
 #mapstore-scalebox-container {
     z-index: 10;
-    bottom: -16px !important;
+    bottom: -17px;
     right: 55px;
     left: auto !important;
     position: absolute;
@@ -228,13 +222,14 @@
 }
 
 #mapstore-mousepositionsettings select, #mapstore-mousepositionsettings button {
-    width: 60% !important;
+    width: 100%;
     float: right;
     height: 35px;
+    margin: 10px;
 }
 
 #mapstore-mousepositionsettings label {
-    width: 100% !important;
+    width: 100%;
 }
 
 #mapstore-globalspinner  {
@@ -342,12 +337,12 @@
 
 #mapstore-settings .modal-body #mapstore-mousepositionsettings button {
     float: none;
-    margin-left: 40%;
+    margin:0%;
 }
 
 #mapstore-settings .modal-body #mapstore-mousepositionsettings select {
     float: none;
-    margin-left: 40%;
+    margin: 0 0 0 40%;
 }
 
 #mapstore-settings .modal-body .form-group {
@@ -459,7 +454,7 @@
     width: 300px;
 }
 #mapstore-login-panel button {
-    float: right !important;
+    float: right;
 }
 
 .modal {

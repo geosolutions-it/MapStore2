@@ -71,10 +71,7 @@ div#mailinglists h1 {
 
 div#mapstore-maptype {
     width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 20px;
-    margin-top: -35px;
+    margin:-35px auto 20px auto;
 }
 .mapstore-home-examples .carousel-caption{
     background-color: rgba(0,0,0,0.4);
