@@ -22,6 +22,7 @@ const Dialog = React.createClass({
         backgroundStyle: React.PropTypes.object,
         className: React.PropTypes.string,
         maskLoading: React.PropTypes.bool,
+        containerClassName: React.PropTypes.string,
         headerClassName: React.PropTypes.string,
         bodyClassName: React.PropTypes.string,
         footerClassName: React.PropTypes.string,
@@ -38,6 +39,7 @@ const Dialog = React.createClass({
             start: {x: 0, y: 0},
             className: "modal-dialog modal-content",
             maskLoading: false,
+            containerClassName: "",
             headerClassName: "modal-header",
             bodyClassName: "modal-body",
             footerClassName: "modal-footer",
@@ -84,7 +86,7 @@ const Dialog = React.createClass({
         </Draggable>);
         let containerStyle = assign({}, this.props.style, this.props.backgroundStyle);
         return this.props.modal ?
-            (<div onClick={this.props.onClickOut} style={containerStyle} className="fade in modal catalog_window" role="dialog">
+            (<div onClick={this.props.onClickOut} style={containerStyle} className={"fade in modal " + this.props.containerClassName} role="dialog">
             <div onClick={(evt)=> {evt.preventDefault(); evt.stopPropagation(); }} className="modal-dialog" style={{background: "transparent"}}>
                 {dialog}
             </div></div>) :

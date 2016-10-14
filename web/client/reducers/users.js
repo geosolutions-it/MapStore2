@@ -18,6 +18,7 @@ function users(state = {
     switch (action.type) {
         case USERMANAGER_GETUSERS:
             return assign({}, state, {
+                searchText: action.searchText,
                 status: action.status,
                 users: action.status === "loading" ? state.users : action.users,
                 start: action.start,

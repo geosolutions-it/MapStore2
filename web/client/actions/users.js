@@ -173,7 +173,7 @@ function editUser(user, options ={params: {includeattributes: true}} ) {
                     };
                 }
                 // the service returns groups = "", skip this to avoid overriding
-                if (userLoaded && userLoaded.groups === "") {
+                if (userLoaded) {
                     userLoaded = {...userLoaded, groups: user.groups};
                 }
                 dispatch(editUserSuccess(userLoaded));
@@ -239,20 +239,28 @@ function saveUser(user, options = {}) {
     return (dispatch) => {
         if (user && user.id) {
             dispatch(savingUser(user));
-            return API.updateUser(user.id, {...user, group: user.groups}, options).then((userDetails) => {
+            return API.updateUser(user.id, {...user, groups: { group: user.groups}}, options).then((userDetails) => {
                 dispatch(savedUser(userDetails));
+                dispatch(getUsers());
             }).catch((error) => {
                 dispatch(saveError(user, error));
             });
         }
         // createUser
         dispatch(creatingUser(user));
-        return API.createUser(user, options).then((id) => {
+        let userToPost = {...user};
+        if (user && user.groups) {
+            userToPost = {...user, groups: { group: user.groups.filter((g) => {
+                return g.groupName !== "everyone"; // see:https://github.com/geosolutions-it/geostore/issues/149
+            })}};
+        }
+        return API.createUser(userToPost, options).then((id) => {
             dispatch(userCreated(id, user));
             dispatch(getUsers());
         }).catch((error) => {
             dispatch(createError(user, error));
         });
+
     };
 }
 function changeUserMetadata(key, newValue) {
