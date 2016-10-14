@@ -124,12 +124,12 @@ const UserDialog = React.createClass({
         <option value="USER">USER</option>
       </select>
       <Input
-          checked={this.props.user && this.props.user.enabled}
+          checked={this.props.user && (this.props.user.enabled === undefined ? false : this.props.user.enabled)}
           type="checkbox"
-          key="enabled"
+          key={"enabled" + (this.props.user ? this.props.user.enabled : "missing")}
           name="enabled"
           label={<Message msgId="users.enabled"/>}
-          onChange={(evt) => {this.props.onChange("enabled", evt.target.checked ? true : false); }} />
+          onClick={(evt) => {this.props.onChange("enabled", evt.target.checked ? true : false); }} />
       </div>);
   },
   renderAttributes() {
