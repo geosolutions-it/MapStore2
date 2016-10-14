@@ -20,6 +20,7 @@ const {editMap, updateCurrentMap, errorCurrentMap, resetCurrentMap} = require('.
 const {mapSelector} = require('../selectors/map');
 const stateSelector = state => state;
 const {layersSelector} = require('../selectors/layers');
+const {indexOf} = require('lodash');
 
 
 const selector = createSelector(mapSelector, stateSelector, layersSelector, (map, state, layers) => ({
@@ -157,6 +158,7 @@ const SaveAs = React.createClass({
     }
 });
 
+
 module.exports = {
     SaveAsPlugin: connect(selector,
     {
@@ -176,7 +178,12 @@ module.exports = {
             text: <Message msgId="saveAs"/>,
             icon: <Glyphicon glyph="floppy-open"/>,
             action: editMap.bind(null, {}),
-            selector: (state) => (state && state.security && state.security.user ? {} : { style: {display: "none"} })
+            selector: (state) => {
+                if (state && state.controls && state.controls.saveAs && state.controls.saveAs.allowedRoles) {
+                    return indexOf(state.controls.saveAs.allowedRoles, state && state.security && state.security.user && state.security.user.role) !== -1 ? {} : { style: {display: "none"} };
+                }
+                return state && state.security && state.security.user ? {} : { style: {display: "none"} };
+            }
         }
     }))
 };
