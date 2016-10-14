@@ -19,12 +19,12 @@ function catalog(state = null, action) {
                 layerError: null
             });
         case CATALOG_RESET: {
-            return {
+            return assign({}, state, {
                 result: null,
                 loadingError: null,
                 format: action.format,
                 layerError: null
-            };
+            });
         }
         case RECORD_LIST_LOAD_ERROR:
             return assign({}, state, {
