@@ -16,3 +16,7 @@
     margin: 0px;
     padding: 0px;
 }
+
+.link-button {
+    min-width: 70px;
+}
