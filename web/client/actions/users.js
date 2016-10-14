@@ -236,14 +236,12 @@ function createError(user, error) {
 }
 
 function saveUser(user, options = {}) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         if (user && user.id) {
             dispatch(savingUser(user));
             return API.updateUser(user.id, {...user, groups: { group: user.groups}}, options).then((userDetails) => {
                 dispatch(savedUser(userDetails));
-                let state = getState && getState();
-                let oldText = get(state, "users.currentUser.name");
-                dispatch(getUsers(oldText));
+                dispatch(getUsers());
             }).catch((error) => {
                 dispatch(saveError(user, error));
             });
@@ -253,7 +251,7 @@ function saveUser(user, options = {}) {
         let userToPost = {...user};
         if (user && user.groups) {
             userToPost = {...user, groups: { group: user.groups.filter((g) => {
-                return g.groupName !== "everyone";
+                return g.groupName !== "everyone"; // see:https://github.com/geosolutions-it/geostore/issues/149
             })}};
         }
         return API.createUser(userToPost, options).then((id) => {
