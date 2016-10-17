@@ -274,7 +274,25 @@
 						"continuous": false
 					},
 					"collapsible": false
-				}
+				},
+				"excludeOptions": [
+						"links",
+						"allowedSRS",
+						"title",
+						"type",
+						"visibility",
+						"params",
+						"legend",
+						"statistics",
+						"columnDefs",
+						"advancedFilter",
+						"boundingBox",
+						"capabilities",
+						"describeCoverage",
+						"describeLayer",
+						"loading"
+
+				]
 			 }
     },
     "MadeWithLove",
@@ -400,7 +418,7 @@
 					"showGetCapLinks": false,
 					"addAuthentication": false,
 					"wrap": true,
-					"searchOnStarup": true,
+					"searchOnStarup": false,
 					"wrapWithPanel": false,
 					"closeGlyph": "1-close",
 					"initialCatalogURL": {
@@ -584,6 +602,24 @@
 	             "maxHeight": "70%",
 	             "marginBottom": 0
 	         },
+					 "excludeOptions": [
+							"links",
+							"allowedSRS",
+							"title",
+							"type",
+							"visibility",
+							"params",
+							"legend",
+							"statistics",
+							"columnDefs",
+							"advancedFilter",
+							"boundingBox",
+							"capabilities",
+							"describeCoverage",
+							"describeLayer",
+							"loading"
+
+					],
 	         "draggable": false,
 	         "collapsible": true,
 	         "viewerOptions": {
