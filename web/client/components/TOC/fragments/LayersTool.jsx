@@ -19,7 +19,7 @@ const LayersTool = React.createClass({
         onClick: React.PropTypes.func,
         style: React.PropTypes.object,
         glyph: React.PropTypes.string,
-        tooltip: React.PropTypes.tooltip
+        tooltip: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -32,7 +32,7 @@ const LayersTool = React.createClass({
                    glyph={this.props.glyph}
                    onClick={(options) => this.props.onClick(this.props.node, options || {})}/>);
         return this.props.tooltip ? (
-           <OverlayTrigger placement="bottom" overlay={(<Tooltip><strong><Message msgId={this.props.tooltip}/></strong></Tooltip>)}>
+           <OverlayTrigger placement="bottom" overlay={(<Tooltip id={"Tooltip-" + this.props.tooltip}><strong><Message msgId={this.props.tooltip}/></strong></Tooltip>)}>
                {tool}
            </OverlayTrigger>) : tool;
 

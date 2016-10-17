@@ -118,7 +118,7 @@ const FileUploader = React.createClass({
                     height: "100px",
                     textAlign: "center"
                 }}>
-                    <Glyphicon glyph="open-file" />
+                    <Glyphicon glyph="upload" />
                     {this.props.dropMessage}
                 </span>
                 </div>

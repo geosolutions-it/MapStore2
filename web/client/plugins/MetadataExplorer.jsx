@@ -56,7 +56,7 @@ const MetadataExplorerComponent = React.createClass({
         panelClassName: React.PropTypes.string,
         toggleControl: React.PropTypes.func,
         closeGlyph: React.PropTypes.string,
-        buttonStyle: React.PropTypes.string,
+        buttonStyle: React.PropTypes.object,
         style: React.PropTypes.object
     },
     getDefaultProps() {
