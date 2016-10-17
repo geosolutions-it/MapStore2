@@ -23,10 +23,10 @@ var MousePositionLabelDMS = React.createClass({
         let [latM, lngM] = [(lat % 1) * 60, (lng % 1) * 60];
         let [latS, lngS] = [(latM % 1) * 60, (lngM % 1) * 60];
         return {
-            lat,
+            lat: Math.floor(lat),
             latM: Math.abs(latM),
             latS: Math.abs(latS),
-            lng,
+            lng: Math.floor(lng),
             lngM: Math.abs(lngM),
             lngS: Math.abs(lngS)
         };

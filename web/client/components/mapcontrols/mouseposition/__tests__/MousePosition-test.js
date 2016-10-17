@@ -137,4 +137,31 @@ describe('MousePosition', () => {
         expect(spy.calls.length).toBe(1);
     });
 
+    it('checks lat ang lag value', () => {
+
+        // creating a copy to clipboard callback to spy on
+        const actions = {
+            onCopy: () => {}
+        };
+        let spy = expect.spyOn(actions, "onCopy");
+
+        // instaciating mouse position plugin
+        const cmp = ReactDOM.render(<MousePosition
+                                        enabled={true}
+                                        mousePosition={{x: Math.floor(1.1), y: Math.floor(1.2), crs: "EPSG:4326"}}
+                                        copyToClipboardEnabled={true}
+                                        onCopy={actions.onCopy}
+                                    />, document.getElementById("container"));
+                                    // getting the copy to clipboard button
+        const cmpDom = ReactDOM.findDOMNode(cmp);
+        const button = cmpDom.getElementsByTagName('button')[0];
+
+        // if propmt for ctrl+c we accept
+        expect.spyOn(window, 'prompt').andReturn(true);
+
+        // checking copy to clipboard invocation
+        button.click();
+        expect(spy.calls.length).toBe(1);
+    });
+
 });
