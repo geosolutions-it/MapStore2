@@ -309,6 +309,50 @@ describe('Test the layers reducer', () => {
         expect(state.groups[0].nodes[0]).toBe("test_id");
     });
 
+    it('remove layer', () => {
+        let addAction = {
+            type: "ADD_LAYER",
+            layer: {group: "group1", id: "test_id1"}
+        };
+        let state = layers({}, addAction);
+
+        addAction = {
+            type: "ADD_LAYER",
+            layer: {group: "group1", id: "test_id2"}
+        };
+        state = layers(state, addAction);
+        addAction = {
+            type: "ADD_LAYER",
+            layer: {group: "group2", id: "test_id3"}
+        };
+        state = layers(state, addAction);
+
+        let removeAction = {
+            type: "REMOVE_LAYER",
+            layerId: "test_id1"
+        };
+        state = layers(state, removeAction);
+
+        /* bogous on purpose */
+        removeAction = {
+            type: "REMOVE_LAYER",
+            layerId: "test_id4"
+        };
+        state = layers(state, removeAction);
+
+        expect(state).toExist();
+        expect(state.flat).toExist();
+        expect(state.flat).toExclude({group: "group1", id: "test_id1"});
+        expect(state.flat).toInclude({group: "group1", id: "test_id2"});
+        expect(state.flat).toInclude({group: "group2", id: "test_id3"});
+        expect(state.groups).toExist();
+        expect(state.groups[1].nodes).toExclude('test_id1');
+        expect(state.groups[1].nodes).toInclude('test_id2');
+        expect(state.groups[1].name).toBe('group1');
+        expect(state.groups[0].nodes).toInclude('test_id3');
+        expect(state.groups[0].name).toBe('group2');
+    });
+
     it('show settings', () => {
         const action = {
             type: "SHOW_SETTINGS",
