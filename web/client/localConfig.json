@@ -418,6 +418,7 @@
 					"showGetCapLinks": false,
 					"addAuthentication": false,
 					"wrap": true,
+					"searchOnStarup": true,
 					"wrapWithPanel": false,
 					"closeGlyph": "1-close",
 					"initialCatalogURL": {
