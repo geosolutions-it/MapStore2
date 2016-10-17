@@ -17,8 +17,10 @@ const RecordGrid = require('./RecordGrid');
 
 const Catalog = React.createClass({
     propTypes: {
+        active: React.PropTypes.bool,
         formats: React.PropTypes.array,
         format: React.PropTypes.string,
+        searchOnStarup: React.PropTypes.bool,
         onSearch: React.PropTypes.func,
         onChangeFormat: React.PropTypes.func,
         onLayerAdd: React.PropTypes.func,
@@ -69,7 +71,9 @@ const Catalog = React.createClass({
         };
     },
     componentDidMount() {
-        this.refs.searchText.getInputDOMNode().focus();
+        if (this.props.searchOnStarup) {
+            this.props.onSearch(this.props.format, this.getCatalogUrl(), 1, this.props.pageSize, "");
+        }
     },
     componentWillReceiveProps(nextProps) {
         if (nextProps !== this.props) {
