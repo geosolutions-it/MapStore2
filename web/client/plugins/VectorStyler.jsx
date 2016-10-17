@@ -206,11 +206,11 @@ const VectorStyler = React.createClass({
         return (
             <Row>
             <Col sm={3} style={{padding: 0}}><Button onClick={this.props.addRule}>
-            <Message msgId="vectorstyler.addrulebtn"/></Button></Col>
+            <Glyphicon glyph="plus" /><Message msgId="vectorstyler.addrulebtn"/></Button></Col>
             <Col sm={3} style={{padding: 0}}>
             <Button disabled={disabled}
             onClick={() => this.props.removeRule(this.props.rule.id)}>
-            <Message msgId="vectorstyler.removerulebtn"/></Button></Col>
+            <Glyphicon glyph="minus" /><Message msgId="vectorstyler.removerulebtn"/></Button></Col>
             <Col sm={4} smOffset={2} style={{padding: 0}}>
             <Button style={{"float": "right"}} onClick={this.apply}
             disabled={disabled} ><Message msgId="vectorstyler.applybtn"/></Button>

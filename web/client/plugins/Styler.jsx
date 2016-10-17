@@ -192,7 +192,7 @@ const Styler = React.createClass({
 
         if (layer && layer.params && layer.params.SLD_BODY && this.props.layer && this.getRestURL(this.props.layer.url)) {
             return (
-                <Button style={{margin: "4px"}} onClick={this.saveStyle}>Save</Button>
+                <Button style={{marginRight: "4px"}} onClick={this.saveStyle}>Save</Button>
             );
         }
 
@@ -207,7 +207,9 @@ const Styler = React.createClass({
     renderZoom() {
         let originalLayer = this.findOriginalLayer(this.props, this.props);
         if (originalLayer && originalLayer.capabilities) {
-            return <Button key="zoom-btn" onClick={this.zoomToLayerExtent} ><Glyphicon glyph="search" />Zoom To Layer</Button>;
+            return (<Button key="zoom-btn" style={{
+                "float": "right"
+                }}onClick={this.zoomToLayerExtent} ><Glyphicon glyph="search" />Zoom To Layer</Button>);
         }
     },
     renderBody() {
@@ -215,12 +217,9 @@ const Styler = React.createClass({
         return (<Grid fluid>
                 {this.renderSelector()}
                 {this.props.layer ? this.renderStyler() : this.renderWaitOrError()}
-                <Row>
+                <Row style={{margin: "4px 0"}}>
                     {this.props.layer && this.props.canSave ? this.renderSave() : null}
-                    {this.renderReset()}
-                </Row>
-                <Row>
-                    {this.renderZoom()}
+                    {this.renderReset()}{this.renderZoom()}
                 </Row>
                 </Grid>);
     },

@@ -84,7 +84,7 @@ function vectorstyler(state = initialSpec, action) {
             const newRule = {
                 id: action.id,
                 symbol: getBaseSymbol(getType(state.layer)),
-                name: 'Test Name'
+                name: 'New Rule'
             };
 
             return assign({}, state, {rule: newRule.id, rules: (state.rules ? [...state.rules, newRule] : [newRule])});
