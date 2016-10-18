@@ -317,15 +317,22 @@ html, body, #container, .fill {
     opacity: 0.5;
     color: white;
 }
+
 @media (min-width: 992px) {
     #mapstore-print-panel {
-        width: 825px !important;
+        width: 825px;
     }
 }
 
 @media (max-width: 991px) {
     #mapstore-print-panel {
-        width: 500px !important;
+        width: 700px;
+    }
+}
+
+@media (max-width: 767px) {
+    #mapstore-print-panel {
+        width: 98%;
     }
 }
 
@@ -341,8 +348,10 @@ html, body, #container, .fill {
     float: right;
 }
 
-#mapstore-print-panel input[type=radio] {
-    margin-left: 20px;
+@media (min-width: 768px) {
+    #mapstore-print-panel input[type=radio] {
+        margin: 0 8px 0 20px;
+    }
 }
 
 #mapstore-print-panel .print-map-preview {
@@ -435,6 +444,8 @@ html, body, #container, .fill {
 
 .modal-body {
     background-color: white;
+    height: calc(100vh - 190px);
+    overflow-y: auto;
 }
 
 #mapstore-shapefile-upload {

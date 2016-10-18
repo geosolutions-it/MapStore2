@@ -141,9 +141,7 @@ const Print = React.createClass({
                 },
                 glyph: "print"
             },
-            style: {
-                width: "840px !important"
-            }
+            style: {}
         };
     },
     componentWillMount() {
