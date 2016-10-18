@@ -202,10 +202,11 @@ function importDeleted(id) {
     };
 }
 
-function importDeleteError(e) {
+function importDeleteError(id, e) {
     return {
         type: IMPORT_DELETE_ERROR,
-        "error": e
+        error: e,
+        id
     };
 }
 
@@ -395,7 +396,7 @@ function deleteImport(geoserverRestURL, importId) {
             dispatch(importDeleted(importId));
             dispatch(loading({importId: importId, message: "deleting"}, false));
         }).catch((e) => {
-            dispatch(importDeleteError(e));
+            dispatch(importDeleteError(importId, e));
             dispatch(loading({importId: importId, message: "deleting"}, false));
         });
     };
@@ -738,6 +739,7 @@ module.exports = {
     IMPORT_RUN_SUCCESS,
     IMPORT_RUN_ERROR,
     IMPORT_DELETE,
+    IMPORT_DELETE_ERROR,
     IMPORTS_TASK_CREATED,
     IMPORTS_TASK_CREATION_ERROR,
     IMPORTS_TASK_LOADED,
