@@ -387,6 +387,44 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().getLength()).toBe(1);
     });
 
+    it('creates a vector layer specifying the feature CRS for openlayers map', () => {
+        var options = {
+            crs: 'EPSG:4326',
+            features: {
+              'type': 'FeatureCollection',
+              'crs': {
+                'type': 'name',
+                'properties': {
+                  'name': 'EPSG:4326'
+                }
+              },
+              'featureCrs': 'EPSG:3857',
+              'features': [
+                  {
+                      'type': 'Feature',
+                      'geometry': {
+                          'type': 'Polygon',
+                          'coordinates': [[
+                              [1447153.3803125600, 5311971.8469454700],
+                              [1669792.3618991000, 5311971.8469454700],
+                              [1669792.3618991000, 5465442.1833227500],
+                              [1447153.3803125600, 5465442.1833227500]
+                          ]]
+                      }
+                  }
+              ]
+          }
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="vector"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+    });
+
     it('change layer visibility for Google Layer', () => {
         var google = {
             maps: {
