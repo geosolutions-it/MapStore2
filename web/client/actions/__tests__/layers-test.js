@@ -17,6 +17,7 @@ var {
     LAYER_LOAD,
     LAYER_ERROR,
     ADD_LAYER,
+    REMOVE_LAYER,
     SHOW_SETTINGS,
     HIDE_SETTINGS,
     UPDATE_SETTINGS,
@@ -29,6 +30,7 @@ var {
     layerLoad,
     layerError,
     addLayer,
+    removeLayer,
     showSettings,
     hideSettings,
     updateSettings
@@ -125,6 +127,15 @@ describe('Test correctness of the layers actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(ADD_LAYER);
         expect(retval.layer).toBe(testVal);
+    });
+
+    it('remove layer', () => {
+        const testVal = 'layerid1';
+        const retval = removeLayer(testVal);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(REMOVE_LAYER);
+        expect(retval.layerId).toBe(testVal);
     });
 
     it('show settings', () => {
