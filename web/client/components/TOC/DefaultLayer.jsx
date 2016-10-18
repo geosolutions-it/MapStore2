@@ -12,8 +12,10 @@ var VisibilityCheck = require('./fragments/VisibilityCheck');
 var Title = require('./fragments/Title');
 var InlineSpinner = require('../misc/spinners/InlineSpinner/InlineSpinner');
 var WMSLegend = require('./fragments/WMSLegend');
+const ConfirmButton = require('../buttons/ConfirmButton');
 const LayersTool = require('./fragments/LayersTool');
 const SettingsModal = require('./fragments/SettingsModal');
+const {Glyphicon} = require('react-bootstrap');
 
 var DefaultLayer = React.createClass({
     propTypes: {
@@ -29,6 +31,7 @@ var DefaultLayer = React.createClass({
         updateNode: React.PropTypes.func,
         removeNode: React.PropTypes.func,
         activateLegendTool: React.PropTypes.bool,
+        activateRemoveLayer: React.PropTypes.bool,
         activateSettingsTool: React.PropTypes.bool,
         settingsText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         opacityText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
@@ -46,6 +49,7 @@ var DefaultLayer = React.createClass({
             propertiesChangeHandler: () => {},
             onToggle: () => {},
             onSettings: () => {},
+            activateRemoveLayer: true,
             activateLegendTool: false,
             activateSettingsTool: false,
             modalOptions: {},
@@ -61,6 +65,18 @@ var DefaultLayer = React.createClass({
     },
     renderTools() {
         const tools = [];
+        if (this.props.activateRemoveLayer) {
+            tools.push(
+                <ConfirmButton key="removelayer" className="clayer_removal_button"
+                    text={(<Glyphicon glyph="1-close" />)}
+                    style={{"float": "right", cursor: "pointer", backgroundColor: "transparent", marginRight: 3, padding: 0, outline: "none"}}
+                    confirming={{text: "Sei sicuro",
+                        style: {"float": "right", cursor: "pointer", marginTop: -5}}}
+                        onConfirm={() => {
+                            this.props.removeNode(this.props.node.id, "layers");
+                        }}/>
+            );
+        }
         if (this.props.activateSettingsTool) {
             tools.push(
                 <LayersTool key="toolsettings"
