@@ -15,10 +15,11 @@ const TEXT_SEARCH_RESET = 'TEXT_SEARCH_RESET';
 const TEXT_SEARCH_ADD_MARKER = 'TEXT_SEARCH_ADD_MARKER';
 const TEXT_SEARCH_TEXT_CHANGE = 'TEXT_SEARCH_TEXT_CHANGE';
 
-function searchResultLoaded(results) {
+function searchResultLoaded(results, append=false) {
     return {
         type: TEXT_SEARCH_RESULTS_LOADED,
-        results: results.data
+        results: results.data,
+        append: append
     };
 }
 
@@ -66,6 +67,7 @@ module.exports = {
     TEXT_SEARCH_RESET,
     TEXT_SEARCH_ADD_MARKER,
     TEXT_SEARCH_TEXT_CHANGE,
+    searchResultLoaded,
     textSearch,
     resultsPurge,
     resetSearch,
