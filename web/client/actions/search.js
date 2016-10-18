@@ -67,6 +67,7 @@ module.exports = {
     TEXT_SEARCH_RESET,
     TEXT_SEARCH_ADD_MARKER,
     TEXT_SEARCH_TEXT_CHANGE,
+    searchResultLoaded,
     textSearch,
     resultsPurge,
     resetSearch,
