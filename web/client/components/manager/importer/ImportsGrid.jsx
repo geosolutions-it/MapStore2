@@ -36,6 +36,12 @@ const ImportsGrid = React.createClass({
             imports: []
         };
     },
+    componentDidMount() {
+        this.interval = setInterval(() => {this.update(); }, this.props.timeout);
+    },
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    },
     getbsStyleForState(state) {
         return ImporterUtils.getbsStyleForState(state);
     },
@@ -53,11 +59,19 @@ const ImportsGrid = React.createClass({
         }
         return null;
     },
+    renderImportErrorMessage(imp) {
+        if (imp && imp.error) {
+            return <Label bsStyle="danger">{"Could not delete import, please try to delete all its content first"}</Label>;
+        }
+    },
     renderImport(importObj) {
         let tooltip = <Tooltip id="import-delete-action">{this.props.deleteAction}</Tooltip>;
         return (<tr key={importObj && importObj.id}>
                 <td key="id"><a onClick={(e) => {e.preventDefault(); this.props.loadImport(importObj.id); }} >{importObj.id}</a></td>
-                <td key="state"><Label bsStyle={this.getbsStyleForState(importObj.state)}>{importObj.state}</Label>{this.renderLoadingImport(importObj)}</td>
+                <td key="state"><Label bsStyle={this.getbsStyleForState(importObj.state)}>{importObj.state}</Label>
+                {this.renderLoadingImport(importObj)}
+                {this.renderImportErrorMessage(importObj)}
+                </td>
                 <td key="actions">
                     <OverlayTrigger overlay={tooltip} placement={this.props.placement}>
                         <Button bsSize="xsmall" onClick={(e) => {e.preventDefault(); this.props.deleteImport(importObj.id); }}><Glyphicon glyph="remove"/></Button>
@@ -83,6 +97,14 @@ const ImportsGrid = React.createClass({
                 </tbody>
             </Table>
         );
+    },
+    update() {
+        if (this.props.imports) {
+            let i = this.props.imports.findIndex((importObj) => importObj.state === "RUNNING");
+            if ( i >= 0 ) {
+                this.props.loadImports();
+            }
+        }
     }
 });
 module.exports = ImportsGrid;

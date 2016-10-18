@@ -15,6 +15,7 @@ const {
     IMPORT_RUN_SUCCESS,
     IMPORT_RUN_ERROR,
     IMPORT_DELETE,
+    IMPORT_DELETE_ERROR,
     IMPORTS_TASK_CREATED,
     IMPORTS_TASK_CREATION_ERROR,
     IMPORTS_TASK_LOADED,
@@ -341,6 +342,18 @@ function importer(state = {}, action) {
                     selectedTransform: null
                 });
             }
+            return assign({}, state, {
+                imports
+            });
+        }
+        case IMPORT_DELETE_ERROR: {
+            let imports = state && state.imports;
+            imports = imports && imports.map((imp) => {
+                if (imp.id === action.id) {
+                    return {...imp, error: action.error};
+                }
+                return imp;
+            });
             return assign({}, state, {
                 imports
             });
