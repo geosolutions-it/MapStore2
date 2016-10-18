@@ -39,7 +39,7 @@ module.exports = {
         },
         OmniBar: {
             name: 'home',
-            position: 2,
+            position: 4,
             tool: true,
             action: (context) => goToPage('/', context.router),
             priority: 3

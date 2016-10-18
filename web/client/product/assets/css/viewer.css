@@ -14,7 +14,9 @@ html, body, #container, .fill {
     padding: 0;
     overflow: hidden;
 }
-
+#home-button {
+    float: right;
+}
 .hidden {
     display: none !important;
 }
