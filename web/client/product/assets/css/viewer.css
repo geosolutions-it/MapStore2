@@ -15,6 +15,9 @@ html, body, #container, .fill {
     overflow: hidden;
 }
 #home-button {
+    float: left;
+}
+#page-manager #home-button {
     float: right;
 }
 .hidden {
