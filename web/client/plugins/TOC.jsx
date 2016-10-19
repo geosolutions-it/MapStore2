@@ -52,6 +52,7 @@ const LayerTree = React.createClass({
         updateSettings: React.PropTypes.func,
         updateNode: React.PropTypes.func,
         removeNode: React.PropTypes.func,
+        activateRemoveLayer: React.PropTypes.bool,
         activateLegendTool: React.PropTypes.bool,
         activateSettingsTool: React.PropTypes.bool,
         visibilityCheckType: React.PropTypes.string,
@@ -68,6 +69,7 @@ const LayerTree = React.createClass({
             removeNode: () => {},
             activateLegendTool: true,
             activateSettingsTool: true,
+            activateRemoveLayer: true,
             visibilityCheckType: "checkbox",
             settingsOptions: {}
         };
@@ -102,6 +104,7 @@ const LayerTree = React.createClass({
                             updateNode={this.props.updateNode}
                             removeNode={this.props.removeNode}
                             visibilityCheckType={this.props.visibilityCheckType}
+                            activateRemoveLayer={this.props.activateRemoveLayer}
                             activateLegendTool={this.props.activateLegendTool}
                             activateSettingsTool={this.props.activateSettingsTool}
                             settingsText={<Message msgId="layerProperties.windowTitle"/>}

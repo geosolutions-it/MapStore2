@@ -9,7 +9,7 @@
 var React = require('react/addons');
 var ReactDOM = require('react-dom');
 var Layer = require('../DefaultLayer');
-
+// var ConfirmButton = require('../../buttons/ConfirmButton');
 var expect = require('expect');
 
 const TestUtils = React.addons.TestUtils;
@@ -133,6 +133,32 @@ describe('test DefaultLayer module component', () => {
         const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "glyphicon")[1]);
         expect(tool).toExist();
         tool.click();
+        expect(spy.calls.length).toBe(1);
+    });
+
+    it('tests removelayer tool', () => {
+        const l = {
+            name: 'layer000',
+            title: 'Layer001',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms'
+        };
+        const actions = {
+            removeNode: () => {}
+        };
+        let spy = expect.spyOn(actions, "removeNode");
+        const comp = ReactDOM.render(<Layer node={l} activateRemoveLayer={true} removeNode={actions.removeNode} />,
+            document.getElementById("container"));
+        expect(comp).toExist();
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "clayer_removal_button")[0]);
+        expect(tool).toExist();
+        tool.click();
+        const confirmButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "btn-warning")[0]);
+        expect(confirmButton).toExist();
+        confirmButton.click();
         expect(spy.calls.length).toBe(1);
     });
 
