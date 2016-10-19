@@ -9,6 +9,7 @@
 module.exports = {
     BingLayer: require('./BingLayer'),
     Commons: require('./Commons'),
+    GraticuleLayer: require('./GraticuleLayer'),
     GoogleLayer: require('./GoogleLayer'),
     MapQuest: require('./MapQuest'),
     OSMLayer: require('./OSMLayer'),

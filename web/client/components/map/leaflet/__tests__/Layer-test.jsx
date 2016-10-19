@@ -13,6 +13,7 @@ var expect = require('expect');
 
 require('../../../../utils/leaflet/Layers');
 require('../plugins/OSMLayer');
+require('../plugins/GraticuleLayer');
 require('../plugins/WMSLayer');
 require('../plugins/GoogleLayer');
 require('../plugins/BingLayer');
@@ -93,6 +94,19 @@ describe('Leaflet layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer type="osm"
+                 options={options} map={map}/>, document.getElementById("container"));
+        var lcount = 0;
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+    });
+
+    it('creates a graticule layer for leaflet map', () => {
+        var options = {};
+        // create layers
+        var layer = ReactDOM.render(
+            <LeafLetLayer type="graticule"
                  options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
         expect(layer).toExist();
