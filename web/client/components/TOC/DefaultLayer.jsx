@@ -15,6 +15,7 @@ var WMSLegend = require('./fragments/WMSLegend');
 const ConfirmButton = require('../buttons/ConfirmButton');
 const LayersTool = require('./fragments/LayersTool');
 const SettingsModal = require('./fragments/SettingsModal');
+const Message = require('../I18N/Message');
 const {Glyphicon} = require('react-bootstrap');
 
 var DefaultLayer = React.createClass({
@@ -37,6 +38,7 @@ var DefaultLayer = React.createClass({
         opacityText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         saveText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         closeText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
+        confirmDeleteText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         modalOptions: React.PropTypes.object,
         settingsOptions: React.PropTypes.object,
         visibilityCheckType: React.PropTypes.string,
@@ -49,11 +51,12 @@ var DefaultLayer = React.createClass({
             propertiesChangeHandler: () => {},
             onToggle: () => {},
             onSettings: () => {},
-            activateRemoveLayer: true,
+            activateRemoveLayer: false,
             activateLegendTool: false,
             activateSettingsTool: false,
             modalOptions: {},
             settingsOptions: {},
+            confirmDeleteText: <Message msgId="layerProperties.confirmDelete" />,
             visibilityCheckType: "glyph"
         };
     },
@@ -70,7 +73,7 @@ var DefaultLayer = React.createClass({
                 <ConfirmButton key="removelayer" className="clayer_removal_button"
                     text={(<Glyphicon glyph="1-close" />)}
                     style={{"float": "right", cursor: "pointer", backgroundColor: "transparent", marginRight: 3, padding: 0, outline: "none"}}
-                    confirming={{text: "Sei sicuro",
+                    confirming={{text: this.props.confirmDeleteText,
                         style: {"float": "right", cursor: "pointer", marginTop: -5}}}
                         onConfirm={() => {
                             this.props.removeNode(this.props.node.id, "layers");
