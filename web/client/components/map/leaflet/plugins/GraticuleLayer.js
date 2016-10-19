@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -16,13 +16,13 @@ Layers.registerType('graticule', {
     create: (options) => {
         const graticuleOptions = assign({
             interval: 20,
-            showshowOriginLabel: true,
+            showOriginLabel: true,
             redraw: 'move'
         }, options);
         if (SimpleGraticule) {
             return new SimpleGraticule(graticuleOptions);
         }
-        return false;
+        return null;
     },
     isValid: () => {
         return SimpleGraticule ? true : false;
