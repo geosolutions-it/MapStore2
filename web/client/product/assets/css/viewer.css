@@ -444,7 +444,7 @@ html, body, #container, .fill {
 
 .modal-body {
     background-color: white;
-    height: calc(100vh - 190px);
+    max-height: calc(100vh - 190px);
     overflow-y: auto;
 }
 
