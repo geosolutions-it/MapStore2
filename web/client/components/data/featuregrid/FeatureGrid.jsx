@@ -46,7 +46,9 @@ const FeatureGrid = React.createClass({
         maxZoom: React.PropTypes.number,
         zoom: React.PropTypes.number,
         toolbar: React.PropTypes.object,
-        dataSource: React.PropTypes.object
+        dataSource: React.PropTypes.object,
+        selectAll: React.PropTypes.func,
+        selectAllActive: React.PropTypes.bool
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -79,7 +81,8 @@ const FeatureGrid = React.createClass({
                 toolPanel: true,
                 selectAll: true
             },
-            dataSource: null
+            dataSource: null,
+            selectAllActive: false
         };
     },
     shouldComponentUpdate(nextProps) {
@@ -142,9 +145,24 @@ const FeatureGrid = React.createClass({
                 nOfFeatures = 0;
                 this.api.forEachNode(() => {nOfFeatures++; });
             }
-            tools.push(<button key="allrowsselection" onClick={() => { this.selectAllRows(this.props.select.length < nOfFeatures); }}>
+            let allSelected = false;
+            if (this.props.selectAll) {
+                allSelected = this.props.selectAllActive;
+            }else {
+                allSelected = !(this.props.select.length < nOfFeatures);
+            }
+            tools.push(<button key="allrowsselection" onClick={() => {
+                if (this.props.selectAll) {
+                    if (!allSelected && this.api) {
+                        this.api.deselectAll();
+                    }
+                    this.props.selectAll(!allSelected);
+                } else {
+                    this.selectAllRows(!allSelected);
+                }
+            }}>
                 {
-                    this.props.select.length < nOfFeatures ? (
+                    (!allSelected) ? (
                         <I18N.Message msgId={"featuregrid.selectall"}/>
                     ) : (
                         <I18N.Message msgId={"featuregrid.deselectall"}/>
