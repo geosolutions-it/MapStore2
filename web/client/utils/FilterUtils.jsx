@@ -70,7 +70,7 @@ const FilterUtils = {
         }
 
         let spatialFilter;
-        if (this.objFilter.spatialField && this.objFilter.spatialField.geometry && this.objFilter.spatialField.method) {
+        if (this.objFilter.spatialField && this.objFilter.spatialField.geometry && this.objFilter.spatialField.operation) {
             spatialFilter = this.processOGCSpatialFilter(versionOGC);
             filters.push(spatialFilter);
         }
@@ -390,7 +390,7 @@ const FilterUtils = {
                 switch (this.objFilter.spatialField.geometry.type) {
                     case "Point":
                         ogc += this.getGmlPointElement(this.objFilter.spatialField.geometry.coordinates,
-                            this.objFilter.spatialField.geometry.projection || "EPSG:4326");
+                            this.objFilter.spatialField.geometry.projection || "EPSG:4326", version);
                         break;
                     case "MultiPoint":
                         ogc += '<gml:MultiPoint srsName="' + (this.objFilter.spatialField.geometry.projection || "EPSG:4326") + '">';
@@ -402,7 +402,7 @@ const FilterUtils = {
                             let point = element;
                             if (point) {
                                 ogc += "<gml:pointMember>";
-                                ogc += this.getGmlPointElement(point);
+                                ogc += this.getGmlPointElement(point, version);
                                 ogc += "</gml:pointMember>";
                             }
                         });
@@ -411,7 +411,7 @@ const FilterUtils = {
                         break;
                     case "Polygon":
                         ogc += this.getGmlPolygonElement(this.objFilter.spatialField.geometry.coordinates,
-                            this.objFilter.spatialField.geometry.projection || "EPSG:4326");
+                            this.objFilter.spatialField.geometry.projection || "EPSG:4326", version);
                         break;
                     case "MultiPolygon":
                         const multyPolygonTagName = version === "2.0" ? "MultiSurface" : "MultiPolygon";
@@ -426,7 +426,7 @@ const FilterUtils = {
                             let polygon = element;
                             if (polygon) {
                                 ogc += "<gml:" + polygonMemberTagName + ">";
-                                ogc += this.getGmlPolygonElement(polygon);
+                                ogc += this.getGmlPolygonElement(polygon, version);
                                 ogc += "</gml:" + polygonMemberTagName + ">";
                             }
                         });
@@ -462,7 +462,7 @@ const FilterUtils = {
         ogc += this.ogcSpatialOperator[this.objFilter.spatialField.operation].endTag;
         return ogc;
     },
-    getGmlPointElement: function(coordinates, srsName) {
+    getGmlPointElement: function(coordinates, srsName, version) {
         let gmlPoint = '<gml:Point srsDimension="2"';
 
         gmlPoint += srsName ? ' srsName="' + srsName + '">' : '>';
@@ -475,14 +475,17 @@ const FilterUtils = {
             let coords = element.map((coordinate) => {
                 return coordinate[0] + " " + coordinate[1];
             });
-
-            gmlPoint += '<gml:pos>' + coords.join(" ") + '</gml:pos>';
+            if (version === "2.0") {
+                gmlPoint += '<gml:pos>' + coords.join(" ") + '</gml:pos>';
+            } else {
+                gmlPoint += '<gml:coord><X>' + element[0][0] + '</X><Y>' + element[0][1] + '</Y></gml:coord>';
+            }
         });
 
         gmlPoint += '</gml:Point>';
         return gmlPoint;
     },
-    getGmlPolygonElement: function(coordinates, srsName) {
+    getGmlPolygonElement: function(coordinates, srsName, version) {
         let gmlPolygon = '<gml:Polygon';
 
         gmlPolygon += srsName ? ' srsName="' + srsName + '">' : '>';
@@ -493,28 +496,18 @@ const FilterUtils = {
         // ///////////////////////////////////////////////////////////////////////////////////////////////////////
         coordinates.forEach((element, index) => {
             let coords = element.map((coordinate) => {
-                return coordinate[0] + " " + coordinate[1];
+                return coordinate[0] + (version === "2.0" ? " " : ",") + coordinate[1];
             });
-
-            if (index < 1) {
-                gmlPolygon +=
-                    '<gml:exterior>' +
+            const exterior = (version === "2.0" ? "exterior" : "outerBoundaryIs");
+            const interior = (version === "2.0" ? "exterior" : "innerBoundaryIs");
+            gmlPolygon +=
+                (index < 1 ? '<gml:' + exterior + '>' : '<gml:' + interior + '>') +
                         '<gml:LinearRing>' +
-                            '<gml:posList>' +
+                        (version === "2.0" ? '<gml:posList>' : '<gml:coordinates>') +
                                 coords.join(" ") +
-                            '</gml:posList>' +
+                        (version === "2.0" ? '</gml:posList>' : '</gml:coordinates>') +
                         '</gml:LinearRing>' +
-                    '</gml:exterior>';
-            } else {
-                gmlPolygon +=
-                    '<gml:interior>' +
-                        '<gml:LinearRing>' +
-                            '<gml:posList>' +
-                                coords.join(" ") +
-                            '</gml:posList>' +
-                        '</gml:LinearRing>' +
-                    '</gml:interior>';
-            }
+                (index < 1 ? '</gml:' + exterior + '>' : '</gml:' + interior + '>');
         });
 
         gmlPolygon += '</gml:Polygon>';
@@ -547,7 +540,7 @@ const FilterUtils = {
         }
 
         let spatialFilter;
-        if (this.objFilter.spatialField && this.objFilter.spatialField.geometry && this.objFilter.spatialField.method) {
+        if (this.objFilter.spatialField && this.objFilter.spatialField.geometry && this.objFilter.spatialField.operation) {
             spatialFilter = this.processCQLSpatialFilter();
             filters.push(spatialFilter);
         }
