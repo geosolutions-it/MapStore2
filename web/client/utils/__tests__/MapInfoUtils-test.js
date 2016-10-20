@@ -13,7 +13,8 @@ var {
     getAvailableInfoFormatValues,
     getDefaultInfoFormatValue,
     createBBox,
-    getProjectedBBox
+    getProjectedBBox,
+    buildIdentifyWMSRequest
 } = require('../MapInfoUtils');
 
 describe('MapInfoUtils', () => {
@@ -79,5 +80,48 @@ describe('MapInfoUtils', () => {
         expect(bbox).toExist();
         expect(bbox.maxx).toBeGreaterThan(bbox.minx);
         expect(bbox.maxy).toBeGreaterThan(bbox.miny);
+    });
+
+    it('buildIdentifyWMSRequest should honour queryLayers', () => {
+        let props = {
+            map: {
+                zoom: 0,
+                projection: 'EPSG:4326'
+            },
+            point: {
+                latlng: {
+                    lat: 0,
+                    lng: 0
+                }
+            }
+        };
+        let layer1 = {
+            type: "wms",
+            queryLayers: ["sublayer1", "sublayer2"],
+            name: "layer",
+            url: "http://localhost"
+        };
+        let req1 = buildIdentifyWMSRequest(layer1, props);
+        expect(req1.request).toExist();
+        expect(req1.request.query_layers).toEqual("sublayer1,sublayer2");
+
+        let layer2 = {
+            type: "wms",
+            name: "layer",
+            url: "http://localhost"
+        };
+        let req2 = buildIdentifyWMSRequest(layer2, props);
+        expect(req2.request).toExist();
+        expect(req2.request.query_layers).toEqual("layer");
+
+        let layer3 = {
+            type: "wms",
+            name: "layer",
+            queryLayers: [],
+            url: "http://localhost"
+        };
+        let req3 = buildIdentifyWMSRequest(layer3, props);
+        expect(req3.request).toExist();
+        expect(req3.request.query_layers).toEqual("");
     });
 });
