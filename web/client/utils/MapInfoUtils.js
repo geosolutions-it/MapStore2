@@ -152,12 +152,16 @@ const MapInfoUtils = {
         const center = {x: lngCorrected, y: props.point.latlng.lat};
         let centerProjected = CoordinatesUtils.reproject(center, 'EPSG:4326', props.map.projection);
         let bounds = MapInfoUtils.getProjectedBBox(centerProjected, resolution, rotation, size, null);
+        let queryLayers = layer.name;
+        if (layer.queryLayers) {
+            queryLayers = layer.queryLayers.join(",");
+        }
 
         return {
             request: {
                 id: layer.id,
                 layers: layer.name,
-                query_layers: layer.name,
+                query_layers: queryLayers,
                 styles: layer.style,
                 x: ((widthBBox % 2) === 1) ? Math.ceil(widthBBox / 2) : widthBBox / 2,
                 y: ((widthBBox % 2) === 1) ? Math.ceil(widthBBox / 2) : widthBBox / 2,
