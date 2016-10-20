@@ -308,7 +308,71 @@ describe('FilterUtils', () => {
         let filter = FilterUtils.toOGCFilter("ft_name_test", filterObj);
         expect(filter).toEqual(expected);
     });
-    it('Check SimpleFilterField cql', () => {
+    it('Check SpatialFilterField ogc 1.0 Polygon', () => {
+        let filterObj = {
+            spatialField: {
+                    "operation": "INTERSECTS",
+                    "attribute": "geometry",
+                    "geometry": {
+                        "type": "Polygon",
+                        "projection": "EPSG:4326",
+                        "coordinates": [[[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]]]
+                    }
+                }
+        };
+        let expected = '<wfs:GetFeature service="WFS" version="1.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd"><wfs:Query typeName="ft_name_test" srsName="EPSG:4326"><ogc:Filter><ogc:Intersects><ogc:PropertyName>geometry</ogc:PropertyName><gml:Polygon srsName="EPSG:4326"><gml:outerBoundaryIs><gml:LinearRing><gml:coordinates>1,1 1,2 2,2 2,1 1,1</gml:coordinates></gml:LinearRing></gml:outerBoundaryIs></gml:Polygon></ogc:Intersects></ogc:Filter></wfs:Query></wfs:GetFeature>';
+        let filter = FilterUtils.toOGCFilter("ft_name_test", filterObj, "1.0");
+        expect(filter).toEqual(expected);
+    });
+    it('Check SpatialFilterField ogc 1.0 Point', () => {
+        let filterObj = {
+            spatialField: {
+                    "operation": "INTERSECTS",
+                    "attribute": "geometry",
+                    "geometry": {
+                        "type": "Point",
+                        "projection": "EPSG:4326",
+                        "coordinates": [[[1, 1]]]
+                    }
+                }
+        };
+        let expected = '<wfs:GetFeature service="WFS" version="1.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd"><wfs:Query typeName="ft_name_test" srsName="EPSG:4326"><ogc:Filter><ogc:Intersects><ogc:PropertyName>geometry</ogc:PropertyName><gml:Point srsDimension="2" srsName="EPSG:4326"><gml:coord><X>1</X><Y>1</Y></gml:coord></gml:Point></ogc:Intersects></ogc:Filter></wfs:Query></wfs:GetFeature>';
+        let filter = FilterUtils.toOGCFilter("ft_name_test", filterObj, "1.0");
+        expect(filter).toEqual(expected);
+    });
+    it('Check SpatialFilterField ogc 2.0 Point', () => {
+        let filterObj = {
+            spatialField: {
+                    "operation": "INTERSECTS",
+                    "attribute": "geometry",
+                    "geometry": {
+                        "type": "Point",
+                        "projection": "EPSG:4326",
+                        "coordinates": [[[1, 1]]]
+                    }
+                }
+        };
+        let expected = '<wfs:GetFeature service="WFS" version="2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd"><wfs:Query typeNames="ft_name_test" srsName="EPSG:4326"><fes:Filter><fes:Intersects><fes:ValueReference>geometry</fes:ValueReference><gml:Point srsDimension="2" srsName="EPSG:4326"><gml:pos>1 1</gml:pos></gml:Point></fes:Intersects></fes:Filter></wfs:Query></wfs:GetFeature>';
+        let filter = FilterUtils.toOGCFilter("ft_name_test", filterObj);
+        expect(filter).toEqual(expected);
+    });
+    it('Check SpatialFilterField ogc 2.0 Polygon', () => {
+        let filterObj = {
+            spatialField: {
+                    "attribute": "geometry",
+                    "operation": "INTERSECTS",
+                    "geometry": {
+                        "type": "Polygon",
+                        "projection": "EPSG:4326",
+                        "coordinates": [[[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]]]
+                    }
+                }
+        };
+        let expected = '<wfs:GetFeature service="WFS" version="2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd"><wfs:Query typeNames="ft_name_test" srsName="EPSG:4326"><fes:Filter><fes:Intersects><fes:ValueReference>geometry</fes:ValueReference><gml:Polygon srsName="EPSG:4326"><gml:exterior><gml:LinearRing><gml:posList>1 1 1 2 2 2 2 1 1 1</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon></fes:Intersects></fes:Filter></wfs:Query></wfs:GetFeature>';
+        let filter = FilterUtils.toOGCFilter("ft_name_test", filterObj);
+        expect(filter).toEqual(expected);
+    });
+    it('Check SpatialFilterField cql', () => {
         let filterObj = {
             simpleFilterFields: [{
                     "fieldId": 1,
