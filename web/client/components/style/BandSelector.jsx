@@ -77,7 +77,7 @@ const BandSelector = React.createClass({
                         </Col>
                         { this.props.contrast === "GammaValue" ? (<Col xs={4}>
                             <NumberPicker
-                                format="#,###.##"
+                                format="-#,###.##"
                                 precision={3}
                                 step={0.1}
                                 min={0}
@@ -105,14 +105,20 @@ const BandSelector = React.createClass({
                     {this.props.contrast === "Normalize" && this.props.algorithm !== "none" ? (
                     <Row>
                         <Col xsOffset={2} xs={4}>
-                        <NumberPicker min={1} max={254}
-                        value={this.props.min}
-                        onChange={(v) => this.props.onChange("min", v)}
+                        <NumberPicker
+                            format="-#,###.##"
+                            precision={3}
+                            max={this.props.max - 1}
+                            value={this.props.min}
+                            onChange={(v) => this.props.onChange("min", v)}
                         /></Col>
                         <Col xs={4}>
-                        <NumberPicker min={this.props.min + 1} max={255}
-                        value={this.props.max}
-                        onChange={(v) => this.props.onChange("max", v)}
+                        <NumberPicker
+                            format="-#,###.##"
+                            precision={3}
+                            min={this.props.min + 1}
+                            value={this.props.max}
+                            onChange={(v) => this.props.onChange("max", v)}
                         /></Col>
                     </Row>) : null }
                 </Grid>);
