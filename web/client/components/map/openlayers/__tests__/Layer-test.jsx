@@ -163,7 +163,6 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms"
                  options={options} map={map}/>, document.getElementById("container"));
 
-
         expect(layer).toExist();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
@@ -184,11 +183,32 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms"
                  options={options} map={map}/>, document.getElementById("container"));
 
-
         expect(layer).toExist();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(2);
+    });
+
+    it('creates a wms layer with custom origin', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "origin": [0, 0],
+            "url": ["http://demo.geo-solutions.it/geoserver/wms"]
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(map.getLayers().item(0).getSource().getTileGrid().getOrigin()).toEqual([0, 0]);
     });
 
     it('creates a wms layer with proxy  for openlayers map', () => {

@@ -13,7 +13,7 @@ const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 const ProxyUtils = require('../../../../utils/ProxyUtils');
 const {isArray} = require('lodash');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
-
+const mapUtils = require('../../../../utils/MapUtils');
 
 function wmsToOpenlayersOptions(options) {
     // NOTE: can we use opacity to manage visibility?
@@ -44,7 +44,7 @@ function proxyTileLoadFunction(imageTile, src) {
 }
 
 Layers.registerType('wms', {
-    create: (options) => {
+    create: (options, map) => {
         const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
         const queryParameters = wmsToOpenlayersOptions(options) || {};
         urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
@@ -59,6 +59,8 @@ Layers.registerType('wms', {
                 })
             });
         }
+        const mapSrs = map && map.getView() && map.getView().getProjection() && map.getView().getProjection() && map.getView().getProjection().getCode() || 'EPSG:3857';
+        const extent = ol.proj.get(CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS)).getExtent();
         return new ol.layer.Tile({
             opacity: options.opacity !== undefined ? options.opacity : 1,
             visible: options.visibility !== false,
@@ -66,10 +68,12 @@ Layers.registerType('wms', {
             source: new ol.source.TileWMS(objectAssign({
               urls: urls,
               params: queryParameters,
-              tileGrid: options.tileSize ? ol.tilegrid.createXYZ({
-                  extent: ol.proj.get(CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS)).getExtent(),
-                  tileSize: options.tileSize
-              }) : undefined
+              tileGrid: new ol.tilegrid.TileGrid({
+                  extent: extent,
+                  resolutions: mapUtils.getResolutions(),
+                  tileSize: options.tileSize ? options.tileSize : 256,
+                  origin: options.origin ? options.origin : [extent[0], extent[1]]
+              })
             }, (options.forceProxy) ? {tileLoadFunction: proxyTileLoadFunction} : {}))
         });
     },
