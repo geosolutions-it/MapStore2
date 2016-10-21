@@ -12,6 +12,8 @@ const USERMANAGER_EDIT_USER_DATA = 'USERMANAGER_EDIT_USER_DATA';
 const USERMANAGER_UPDATE_USER = 'USERMANAGER_UPDATE_USER';
 const USERMANAGER_DELETE_USER = 'USERMANAGER_DELETE_USER';
 const USERMANAGER_GETGROUPS = 'USERMANAGER_GETGROUPS';
+const USERS_SEARCH_TEXT_CHANGED = 'USERS_SEARCH_TEXT_CHANGED';
+
 const API = require('../api/GeoStoreDAO');
 const {get, assign} = require('lodash');
 function getUsersloading(text, start, limit) {
@@ -317,6 +319,12 @@ function deleteUser(id, status = "confirm") {
     }
 }
 
+function usersSearchTextChanged(text) {
+    return {
+        type: USERS_SEARCH_TEXT_CHANGED,
+        text
+    };
+}
 
 module.exports = {
     getUsers, USERMANAGER_GETUSERS,
@@ -324,5 +332,6 @@ module.exports = {
     changeUserMetadata, USERMANAGER_EDIT_USER_DATA,
     saveUser, USERMANAGER_UPDATE_USER,
     deleteUser, USERMANAGER_DELETE_USER,
-    getGroups, USERMANAGER_GETGROUPS
+    getGroups, USERMANAGER_GETGROUPS,
+    usersSearchTextChanged, USERS_SEARCH_TEXT_CHANGED
 };

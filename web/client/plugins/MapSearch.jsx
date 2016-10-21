@@ -8,7 +8,7 @@
 const {connect} = require('react-redux');
 
 
-const {loadMaps} = require('../actions/maps');
+const {loadMaps, mapsSearchTextChanged} = require('../actions/maps');
 const ConfigUtils = require('../utils/ConfigUtils');
 
 const SearchBar = connect((state) => ({
@@ -17,8 +17,10 @@ const SearchBar = connect((state) => ({
     placeholderMsgId: "maps.search",
     typeAhead: false,
     start: state && state.maps && state.maps.start,
-    limit: state && state.maps && state.maps.limit
+    limit: state && state.maps && state.maps.limit,
+    searchText: (state.maps && state.maps.searchText !== '*' && state.maps.searchText) || ""
 }), {
+    onSearchTextChange: mapsSearchTextChanged,
     onSearch: (text, options) => {
         let searchText = (text && text !== "") ? (text) : ConfigUtils.getDefaults().initialMapFilter || "*";
         return loadMaps(ConfigUtils.getDefaults().geoStoreUrl, searchText, options);
@@ -34,7 +36,8 @@ const SearchBar = connect((state) => ({
         },
         onSearchReset: () => {
             dispatchProps.onSearchReset({start: 0, limit: stateProps.limit});
-        }
+        },
+        onSearchTextChange: dispatchProps.onSearchTextChange
     };
 })(require("../components/mapcontrols/search/SearchBar"));
 
