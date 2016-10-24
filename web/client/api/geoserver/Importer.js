@@ -30,7 +30,7 @@ var Api = {
     updateTask: function( geoserverBaseUrl, importId, taskId, element, body, options) {
         let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId;
         // element can be target, layer, transforms...
-        if (element) {
+        if (element && element !== "task") {
             url += "/" + element;
         }
         return axios.put(url, body, options);
