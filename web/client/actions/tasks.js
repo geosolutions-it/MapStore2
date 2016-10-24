@@ -25,11 +25,12 @@ function taskStarted(name) {
     };
 }
 
-function taskError(error, name) {
+function taskError(error, name, actionPayload) {
     return {
         type: TASK_ERROR,
         error,
-        name
+        name,
+        actionPayload
     };
 }
 
@@ -45,4 +46,4 @@ function startTask(task, taskPayload, name, actionPayload) {
 }
 
 
-module.exports = {TASK_STARTED, TASK_SUCCESS, TASK_ERROR, startTask};
+module.exports = {TASK_STARTED, TASK_SUCCESS, TASK_ERROR, startTask, taskSuccess, taskError, taskStarted};
