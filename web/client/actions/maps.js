@@ -33,6 +33,7 @@ const SAVE_MAP = 'SAVE_MAP';
 const PERMISSIONS_LIST_LOADING = 'PERMISSIONS_LIST_LOADING';
 const PERMISSIONS_LIST_LOADED = 'PERMISSIONS_LIST_LOADED';
 const RESET_CURRENT_MAP = 'RESET_CURRENT_MAP';
+const MAPS_SEARCH_TEXT_CHANGED = 'MAPS_SEARCH_TEXT_CHANGED';
 
 function resetCurrentMap() {
     return {
@@ -45,6 +46,13 @@ function mapsLoading(searchText, params) {
         type: MAPS_LIST_LOADING,
         searchText,
         params
+    };
+}
+
+function mapsSearchTextChanged(text) {
+    return {
+        type: MAPS_SEARCH_TEXT_CHANGED,
+        text
     };
 }
 
@@ -409,6 +417,7 @@ module.exports = {
     RESET_UPDATING,
     MAP_ERROR,
     RESET_CURRENT_MAP,
+    MAPS_SEARCH_TEXT_CHANGED,
     loadMaps,
     updateMap,
     updateMapMetadata,
@@ -430,5 +439,6 @@ module.exports = {
     onDisplayMetadataEdit,
     resetUpdating,
     resetCurrentMap,
-    mapError
+    mapError,
+    mapsSearchTextChanged
 };

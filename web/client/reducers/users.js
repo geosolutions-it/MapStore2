@@ -8,7 +8,7 @@
 
 const {
     USERMANAGER_GETUSERS, USERMANAGER_EDIT_USER, USERMANAGER_EDIT_USER_DATA, USERMANAGER_UPDATE_USER, USERMANAGER_DELETE_USER,
-    USERMANAGER_GETGROUPS
+    USERMANAGER_GETGROUPS, USERS_SEARCH_TEXT_CHANGED
 } = require('../actions/users');
 const assign = require('object-assign');
 function users(state = {
@@ -25,6 +25,11 @@ function users(state = {
                 limit: action.limit,
                 totalCount: action.status === "loading" ? state.totalCount : action.totalCount
             });
+        case USERS_SEARCH_TEXT_CHANGED: {
+            return assign({}, state, {
+                searchText: action.text
+            });
+        }
         case USERMANAGER_EDIT_USER: {
             let newUser = action.status ? {
                 status: action.status,
