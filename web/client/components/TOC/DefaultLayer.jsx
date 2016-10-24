@@ -42,6 +42,7 @@ var DefaultLayer = React.createClass({
         modalOptions: React.PropTypes.object,
         settingsOptions: React.PropTypes.object,
         visibilityCheckType: React.PropTypes.string,
+        includeDeleteButton: React.PropTypes.bool,
         groups: React.PropTypes.array
     },
     getDefaultProps() {
@@ -54,6 +55,7 @@ var DefaultLayer = React.createClass({
             activateRemoveLayer: false,
             activateLegendTool: false,
             activateSettingsTool: false,
+            includeDeleteButton: false,
             modalOptions: {},
             settingsOptions: {},
             confirmDeleteText: <Message msgId="layerProperties.confirmDelete" />,
@@ -94,6 +96,7 @@ var DefaultLayer = React.createClass({
                                {...this.props.settingsOptions}
                                hideSettings={this.props.hideSettings}
                                settings={this.props.settings}
+                               includeDeleteButton={this.props.includeDeleteButton}
                                element={this.props.node}
                                updateSettings={this.props.updateSettings}
                                updateNode={this.props.updateNode}
