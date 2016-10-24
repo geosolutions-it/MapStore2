@@ -67,7 +67,7 @@ const SettingsModal = React.createClass({
             },
             panelClassName: "toolbar-panel",
             includeCloseButton: true,
-            includeDeleteButton: false,
+            includeDeleteButton: true,
             realtimeUpdate: true,
             deleteText: <Message msgId="layerProperties.delete" />,
             confirmDeleteText: <Message msgId="layerProperties.confirmDelete" />
