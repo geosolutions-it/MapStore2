@@ -12,7 +12,6 @@ const {Modal, Button, Glyphicon, Tabs, Tab} = require('react-bootstrap');
 require("./settingsModal.css");
 
 const Dialog = require('../../misc/Dialog');
-const ConfirmButton = require('../../buttons/ConfirmButton');
 const General = require('./settings/General');
 const Display = require('./settings/Display');
 const {Portal} = require('react-overlays');
@@ -116,16 +115,6 @@ const SettingsModal = React.createClass({
             <Tab eventKey={3} title={<Message msgId="layerProperties.style" />} disabled>Tab 3 content</Tab>
           </Tabs>);
         const footer = (<span role="footer">
-            {this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} onClick={this.onClose}>{this.props.closeText}</Button> : <span/>}
-            {this.props.includeDeleteButton ?
-                <ConfirmButton
-                  onConfirm={this.onDelete}
-                  text={this.props.deleteText}
-                  confirming={{
-                      text: this.props.confirmDeleteText
-                  }}
-                />
-            : <span/>}
             <Button bsSize={this.props.buttonSize} bsStyle="primary" onClick={() => {
                 this.updateParams(this.props.settings.options.opacity, true);
                 this.props.hideSettings();
