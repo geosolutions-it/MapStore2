@@ -122,11 +122,19 @@ describe('Test correctness of the layers actions', () => {
 
     it('add layer', () => {
         const testVal = 'layer1';
-        const retval = addLayer(testVal);
+        const retval1 = addLayer(testVal);
 
-        expect(retval).toExist();
-        expect(retval.type).toBe(ADD_LAYER);
-        expect(retval.layer).toBe(testVal);
+        expect(retval1).toExist();
+        expect(retval1.type).toBe(ADD_LAYER);
+        expect(retval1.layer).toBe(testVal);
+        expect(retval1.foreground).toBe(false);
+
+        const retval2 = addLayer(testVal, true);
+
+        expect(retval2).toExist();
+        expect(retval2.type).toBe(ADD_LAYER);
+        expect(retval2.layer).toBe(testVal);
+        expect(retval2.foreground).toBe(true);
     });
 
     it('remove layer', () => {

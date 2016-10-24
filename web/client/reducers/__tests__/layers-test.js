@@ -293,20 +293,54 @@ describe('Test the layers reducer', () => {
     });
 
     it('add new layer', () => {
-        let testAction = {
+        let testAction1 = {
             type: "ADD_LAYER",
-            layer: {group: "test", id: "test_id"}
+            layer: {group: "test", id: "test_id1"},
+            foreground: false
         };
 
-        let state = layers({}, testAction);
+        let state = layers({}, testAction1);
         expect(state).toExist();
         expect(state.flat).toExist();
         expect(state.flat[0].group).toExist();
         expect(state.flat[0].id).toExist();
-        expect(state.flat[0].id).toBe("test_id");
+        expect(state.flat[0].id).toBe("test_id1");
         expect(state.groups).toExist();
         expect(state.groups[0].name).toBe("test");
-        expect(state.groups[0].nodes[0]).toBe("test_id");
+        expect(state.groups[0].nodes[0]).toBe("test_id1");
+
+        let testAction2 = {
+            type: "ADD_LAYER",
+            layer: {group: "test", id: "test_id2"},
+            foreground: false
+        };
+
+        state = layers(state, testAction2);
+        expect(state).toExist();
+        expect(state.flat).toExist();
+        expect(state.flat[0].group).toExist();
+        expect(state.flat[0].id).toExist();
+        expect(state.flat[0].id).toBe("test_id2");
+        expect(state.groups).toExist();
+        expect(state.groups[0].name).toBe("test");
+        expect(state.groups[0].nodes[1]).toBe("test_id2");
+
+        let testAction3 = {
+            type: "ADD_LAYER",
+            layer: {group: "test", id: "test_id3"},
+            foreground: true
+        };
+
+        state = layers(state, testAction3);
+        expect(state).toExist();
+        expect(state.flat).toExist();
+        expect(state.flat[2].group).toExist();
+        expect(state.flat[2].id).toExist();
+        expect(state.flat[2].id).toBe("test_id3");
+        expect(state.groups).toExist();
+        expect(state.groups[0].name).toBe("test");
+        expect(state.groups[0].nodes[0]).toBe("test_id3");
+        expect(state.groups[0].nodes[1]).toBe("test_id1");
     });
 
     it('remove layer', () => {
