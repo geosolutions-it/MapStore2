@@ -126,10 +126,11 @@ function layerError(layerId) {
     };
 }
 
-function addLayer(layer) {
+function addLayer(layer, foreground = false) {
     return {
         type: ADD_LAYER,
-        layer
+        layer,
+        foreground
     };
 }
 

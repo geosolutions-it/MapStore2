@@ -252,7 +252,8 @@ function layers(state = [], action) {
             if (groupName !== "background") {
                 let node = getNode(newGroups, groupName );
                 if (node) {
-                    newGroups = deepChange(state.groups, groupName, 'nodes', node.nodes.concat(newLayer.id));
+                    let newLayerIds = action.foreground ? [newLayer.id].concat(node.nodes) : node.nodes.concat([newLayer.id]);
+                    newGroups = deepChange(state.groups, groupName, 'nodes', newLayerIds);
                 } else {
                     const newGroup = LayersUtils.getLayersByGroup([newLayer]);
                     newGroups = newGroup.concat(newGroups);
