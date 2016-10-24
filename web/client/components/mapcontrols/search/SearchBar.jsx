@@ -38,7 +38,8 @@ let SearchBar = React.createClass({
         blurResetDelay: React.PropTypes.number,
         typeAhead: React.PropTypes.bool,
         searchText: React.PropTypes.string,
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        searchOptions: React.PropTypes.object
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -117,7 +118,7 @@ let SearchBar = React.createClass({
         if (text === undefined || text === "") {
             this.props.onSearchReset();
         } else {
-            this.props.onSearch(text);
+            this.props.onSearch(text, this.props.searchOptions);
         }
 
     },
