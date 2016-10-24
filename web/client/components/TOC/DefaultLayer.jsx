@@ -55,7 +55,7 @@ var DefaultLayer = React.createClass({
             activateRemoveLayer: false,
             activateLegendTool: false,
             activateSettingsTool: false,
-            includeDeleteButton: true,
+            includeDeleteButton: false,
             modalOptions: {},
             settingsOptions: {},
             confirmDeleteText: <Message msgId="layerProperties.confirmDelete" />,
