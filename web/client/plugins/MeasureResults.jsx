@@ -10,7 +10,7 @@ const {connect} = require('react-redux');
 
 const Message = require('./locale/Message');
 
-const {changeMeasurementState} = require('../actions/measurement');
+const {changeMeasurement} = require('../actions/measurement');
 
 const MeasureRes = require('../components/mapcontrols/measure/MeasureResults');
 
@@ -33,7 +33,7 @@ const MeasureResultsPlugin = connect((state) => {
         bearingMeasureEnabled: state.measurement && state.measurement.bearingMeasureEnabled || false
     };
 }, {
-    toggleMeasure: changeMeasurementState
+    toggleMeasure: changeMeasurement
 })(MeasureComponent);
 
 module.exports = {

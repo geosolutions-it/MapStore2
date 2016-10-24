@@ -14,7 +14,7 @@ const lineRuleIcon = require('./toolbar/assets/img/line-ruler.png');
 
 const assign = require('object-assign');
 
-const {changeMeasurementState} = require('../actions/measurement');
+const {changeMeasurement} = require('../actions/measurement');
 
 const Measure = require('../components/mapcontrols/measure/MeasureComponent');
 
@@ -40,7 +40,7 @@ const MeasurePlugin = connect((state) => {
         bearingMeasureEnabled: state.measurement && state.measurement.bearingMeasureEnabled || false
     };
 }, {
-    toggleMeasure: changeMeasurementState
+    toggleMeasure: changeMeasurement
 })(MeasureComponent);
 
 module.exports = {

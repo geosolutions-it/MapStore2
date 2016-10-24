@@ -7,7 +7,7 @@
  */
 
 var {
-    CHANGE_MEASUREMENT,
+    CHANGE_MEASUREMENT_TOOL,
     CHANGE_MEASUREMENT_STATE
 } = require('../actions/measurement');
 
@@ -19,9 +19,12 @@ function measurement(state = {
     bearingMeasureEnabled: false
 }, action) {
     switch (action.type) {
-        case CHANGE_MEASUREMENT:
+        case CHANGE_MEASUREMENT_TOOL:
             return assign({}, state, {
-                measurement: action.measurement
+                lineMeasureEnabled: ((action.geomType !== state.geomType) && (action.geomType === 'LineString')),
+                areaMeasureEnabled: ((action.geomType !== state.geomType) && (action.geomType === 'Polygon')),
+                bearingMeasureEnabled: ((action.geomType !== state.geomType) && (action.geomType === 'Bearing')),
+                geomType: (action.geomType === state.geomType) ? null : action.geomType
             });
         case CHANGE_MEASUREMENT_STATE:
             return assign({}, state, {

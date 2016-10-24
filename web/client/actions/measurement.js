@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const CHANGE_MEASUREMENT = 'CHANGE_MEASUREMENT';
+const CHANGE_MEASUREMENT_TOOL = 'CHANGE_MEASUREMENT_TOOL';
 const CHANGE_MEASUREMENT_STATE = 'CHANGE_MEASUREMENT_STATE';
 
 function changeMeasurement(measurement) {
     return {
-        type: CHANGE_MEASUREMENT,
-        measurement: measurement
+        type: CHANGE_MEASUREMENT_TOOL,
+        ...measurement
     };
 }
 
@@ -31,7 +31,7 @@ function changeMeasurementState(measureState) {
 }
 
 module.exports = {
-    CHANGE_MEASUREMENT,
+    CHANGE_MEASUREMENT_TOOL,
     CHANGE_MEASUREMENT_STATE,
     changeMeasurement,
     changeMeasurementState
