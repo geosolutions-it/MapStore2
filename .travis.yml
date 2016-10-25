@@ -7,8 +7,6 @@ before_install:
     - sh -e /etc/init.d/xvfb start
     - if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
     - npm -v
-before_script:
-    - npm install -g npm && npm install
 branches:
   only:
     - master
