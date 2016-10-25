@@ -312,13 +312,24 @@ function queryform(state = initialState, action) {
             })})});
         }*/
         case ZONE_SEARCH_ERROR: {
+            let error;
             return assign({}, state, {spatialField: assign({}, state.spatialField, {zoneFields: state.spatialField.zoneFields.map((field) => {
                 if (field.id === action.id) {
-                    let error = typeof action.error !== "object" ? action.error : {
-                        status: action.error.status,
-                        statusText: action.error.statusText,
-                        data: action.error.data
-                    };
+                    if (typeof action.error !== "object") {
+                        if (action.error.status && action.error.statusText && action.error.data) {
+                            error = {
+                                status: action.error.status,
+                                statusText: action.error.statusText,
+                                data: action.error.data
+                            };
+                        } else {
+                            error = {
+                                message: action.error.message || "unknown error"
+                            };
+                        }
+                    } else {
+                        error = action.error;
+                    }
                     return assign({}, field, {
                         error: error,
                         busy: false
