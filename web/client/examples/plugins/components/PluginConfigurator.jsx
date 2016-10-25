@@ -9,9 +9,9 @@ const React = require('react');
 const {Input, Button, Glyphicon} = require('react-bootstrap');
 
 const Codemirror = require('react-codemirror');
-require('react-codemirror/node_modules/codemirror/lib/codemirror.css');
+require('codemirror/lib/codemirror.css');
 
-require('react-codemirror/node_modules/codemirror/mode/javascript/javascript');
+require('codemirror/mode/javascript/javascript');
 
 
 const PluginConfigurator = React.createClass({
