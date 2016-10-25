@@ -156,7 +156,7 @@ describe('test DefaultLayer module component', () => {
         const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "clayer_removal_button")[0]);
         expect(tool).toExist();
         tool.click();
-        const confirmButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "btn-warning")[0]);
+        const confirmButton = document.getElementsByClassName("clayer_removal_confirm_button")[0];
         expect(confirmButton).toExist();
         confirmButton.click();
         expect(spy.calls.length).toBe(1);

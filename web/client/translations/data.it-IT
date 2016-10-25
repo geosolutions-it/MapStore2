@@ -30,6 +30,8 @@
             "style": "Stile",
             "format": "Formato",
             "delete": "Elimina",
+            "deleteLayer":"Elimina Livello",
+            "deleteLayerMessage": "Sei sicuro di voler eliminare questo livello?",
             "confirmDelete": "Sei sicuro?"
         },
         "background": "Sfondo",

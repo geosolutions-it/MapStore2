@@ -12,9 +12,6 @@ input[type="checkbox"].visibility-check,input[type="radio"].visibility-check {
     margin-right: 5px;
     margin-top: 5px;
 }
-button.confirm-button.clayer_removal_button {
-    border-color: transparent;
-}
-button.confirm-button.clayer_removal_button .glyphicon {
-    color: #a94442!important;
+button.clayer_removal_button.btn.btn-default {
+    border: transparent;
 }

@@ -30,6 +30,8 @@
             "style": "Style",
             "format": "Format",
             "delete": "Delete",
+            "deleteLayer":"Delete Layer",
+            "deleteLayerMessage": "Do you really want to delete this Layer?",
             "confirmDelete": "Are you sure?"
         },
         "background": "Background",
