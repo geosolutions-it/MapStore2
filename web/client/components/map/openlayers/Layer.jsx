@@ -34,6 +34,9 @@ const OpenlayersLayer = React.createClass({
             onInvalid: () => {}
         };
     },
+    getInitialState: function() {
+        return {layer: null};
+    },
     componentDidMount() {
         this.valid = true;
         this.tilestoload = 0;
@@ -46,25 +49,25 @@ const OpenlayersLayer = React.createClass({
         const newOpacity = (newProps.options && newProps.options.opacity !== undefined) ? newProps.options.opacity : 1.0;
         this.setLayerOpacity(newOpacity);
 
-        if (newProps.position !== this.props.position && this.layer.setZIndex) {
-            this.layer.setZIndex(newProps.position);
+        if (newProps.position !== this.props.position && this.state.layer.setZIndex) {
+            this.state.layer.setZIndex(newProps.position);
         }
         if (this.props.options) {
             this.updateLayer(newProps, this.props);
         }
     },
     componentWillUnmount() {
-        if (this.layer && this.props.map) {
-            if (this.layer.detached) {
-                this.layer.remove();
+        if (this.state.layer && this.props.map) {
+            if (this.state.layer.detached) {
+                this.state.layer.remove();
             } else {
-                this.props.map.removeLayer(this.layer);
+                this.props.map.removeLayer(this.state.layer);
             }
         }
     },
     render() {
         if (this.props.children) {
-            const layer = this.layer;
+            const layer = this.state.layer;
             const children = layer ? React.Children.map(this.props.children, child => {
                 return child ? React.cloneElement(child, {container: layer, styleName: this.props.options && this.props.options.styleName}) : null;
             }) : null;
@@ -75,18 +78,18 @@ const OpenlayersLayer = React.createClass({
             );
         }
 
-        return Layers.renderLayer(this.props.type, this.props.options, this.props.map, this.props.mapId, this.layer);
+        return Layers.renderLayer(this.props.type, this.props.options, this.props.map, this.props.mapId, this.state.layer);
     },
     setLayerVisibility(visibility) {
         var oldVisibility = this.props.options && this.props.options.visibility !== false;
-        if (visibility !== oldVisibility && this.layer && this.isValid()) {
-            this.layer.setVisible(visibility);
+        if (visibility !== oldVisibility && this.state.layer && this.isValid(this.state.layer)) {
+            this.state.layer.setVisible(visibility);
         }
     },
     setLayerOpacity(opacity) {
         var oldOpacity = (this.props.options && this.props.options.opacity !== undefined) ? this.props.options.opacity : 1.0;
-        if (opacity !== oldOpacity && this.layer) {
-            this.layer.setOpacity(opacity);
+        if (opacity !== oldOpacity && this.state.layer) {
+            this.state.layer.setOpacity(opacity);
         }
     },
     generateOpts(options, position, srs) {
@@ -99,10 +102,11 @@ const OpenlayersLayer = React.createClass({
     createLayer(type, options, position) {
         if (type) {
             const layerOptions = this.generateOpts(options, position, CoordinatesUtils.normalizeSRS(this.props.srs));
-            this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
-            if (this.layer && !this.layer.detached) {
-                this.addLayer(options);
+            let layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
+            if (layer && !layer.detached) {
+                this.addLayer(layer, options);
             }
+            this.setState({layer: layer});
         }
     },
     updateLayer(newProps, oldProps) {
@@ -116,16 +120,16 @@ const OpenlayersLayer = React.createClass({
         }
         Layers.updateLayer(
             this.props.type,
-            this.layer,
+            this.state.layer,
             this.generateOpts(newProps.options, newProps.position, newProps.srs),
             this.generateOpts(oldProps.options, oldProps.position, oldProps.srs),
             this.props.map,
             this.props.mapId);
     },
-    addLayer(options) {
-        if (this.isValid()) {
-            this.props.map.addLayer(this.layer);
-            this.layer.getSource().on('tileloadstart', () => {
+    addLayer(layer, options) {
+        if (this.isValid(layer)) {
+            this.props.map.addLayer(layer);
+            layer.getSource().on('tileloadstart', () => {
                 if (this.tilestoload === 0) {
                     this.props.onLayerLoading(options.id);
                     this.tilestoload++;
@@ -133,13 +137,13 @@ const OpenlayersLayer = React.createClass({
                     this.tilestoload++;
                 }
             });
-            this.layer.getSource().on('tileloadend', () => {
+            layer.getSource().on('tileloadend', () => {
                 this.tilestoload--;
                 if (this.tilestoload === 0) {
                     this.props.onLayerLoad(options.id);
                 }
             });
-            this.layer.getSource().on('tileloaderror', (event) => {
+            layer.getSource().on('tileloaderror', (event) => {
                 this.tilestoload--;
                 this.props.onLayerError(options.id);
                 if (this.tilestoload === 0) {
@@ -148,8 +152,8 @@ const OpenlayersLayer = React.createClass({
             });
         }
     },
-    isValid() {
-        const valid = Layers.isValid(this.props.type, this.layer);
+    isValid(layer) {
+        const valid = Layers.isValid(this.props.type, layer);
         if (this.valid && !valid) {
             this.props.onInvalid(this.props.type, this.props.options);
         }
