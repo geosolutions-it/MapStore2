@@ -6,6 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const normalizeVersion = (version) => {
+    if (!version) {
+        return "2.0";
+    }
+    if (version === "1.0") {
+        return "1.0.0";
+    }
+    if (version === "1.1") {
+        return "1.1.0";
+    }
+    return version;
+};
+
 const FilterUtils = {
     ogcVersion: "2.0",
     ogcLogicalOperator: {
@@ -43,7 +56,7 @@ const FilterUtils = {
             return e;
         }
 
-        const versionOGC = version || this.ogcVersion;
+        const versionOGC = normalizeVersion(version || this.ogcVersion);
         this.nsplaceholder = versionOGC === "2.0" ? "fes" : "ogc";
 
         this.setOperatorsPlaceholders("{namespace}", this.nsplaceholder);
@@ -129,7 +142,7 @@ const FilterUtils = {
         });
     },
     getGetFeatureBase: function(version, pagination, hits, format) {
-        let ver = !version ? "2.0" : version;
+        let ver = normalizeVersion(version);
 
         let getFeature = '<wfs:GetFeature ';
         getFeature += format ? 'outputFormat="' + format + '" ' : '';
@@ -475,10 +488,10 @@ const FilterUtils = {
             let coords = element.map((coordinate) => {
                 return coordinate[0] + " " + coordinate[1];
             });
-            if (version === "2.0") {
-                gmlPoint += '<gml:pos>' + coords.join(" ") + '</gml:pos>';
-            } else {
+            if (version === "1.0.0") {
                 gmlPoint += '<gml:coord><X>' + element[0][0] + '</X><Y>' + element[0][1] + '</Y></gml:coord>';
+            } else {
+                gmlPoint += '<gml:pos>' + coords.join(" ") + '</gml:pos>';
             }
         });
 
@@ -496,16 +509,16 @@ const FilterUtils = {
         // ///////////////////////////////////////////////////////////////////////////////////////////////////////
         coordinates.forEach((element, index) => {
             let coords = element.map((coordinate) => {
-                return coordinate[0] + (version === "2.0" ? " " : ",") + coordinate[1];
+                return coordinate[0] + (version === "1.0.0" ? "," : " ") + coordinate[1];
             });
-            const exterior = (version === "2.0" ? "exterior" : "outerBoundaryIs");
-            const interior = (version === "2.0" ? "exterior" : "innerBoundaryIs");
+            const exterior = (version === "1.0.0" ? "outerBoundaryIs" : "exterior");
+            const interior = (version === "1.0.0" ? "innerBoundaryIs" : "exterior");
             gmlPolygon +=
                 (index < 1 ? '<gml:' + exterior + '>' : '<gml:' + interior + '>') +
                         '<gml:LinearRing>' +
-                        (version === "2.0" ? '<gml:posList>' : '<gml:coordinates>') +
+                        (version === "1.0.0" ? '<gml:coordinates>' : '<gml:posList>') +
                                 coords.join(" ") +
-                        (version === "2.0" ? '</gml:posList>' : '</gml:coordinates>') +
+                        (version === "1.0.0" ? '</gml:coordinates>' : '</gml:posList>') +
                         '</gml:LinearRing>' +
                 (index < 1 ? '</gml:' + exterior + '>' : '</gml:' + interior + '>');
         });
