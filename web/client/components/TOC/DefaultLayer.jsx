@@ -66,7 +66,12 @@ var DefaultLayer = React.createClass({
     },
     onConfirmDelete() {
         this.props.removeNode(this.props.node.id, "layers");
-        this.close();
+        this.closeDeleteDialog();
+    },
+    getInitialState: function() {
+        return {
+          showDeleteDialog: false
+        };
     },
     renderCollapsible() {
         if (this.props.node && this.props.node.type === 'wms') {
@@ -79,9 +84,7 @@ var DefaultLayer = React.createClass({
         if (this.props.activateRemoveLayer) {
             tools.push(
                 <Button key="removelayer" className="clayer_removal_button"
-                    onClick={() => {
-                        this.displayDeleteDialog();
-                    }}
+                    onClick={this.displayDeleteDialog}
                     style={{"float": "right", cursor: "pointer", backgroundColor: "transparent", marginRight: 3, padding: 0, outline: "none"}}>
                     {(<Glyphicon glyph="1-close" />)}
                 </Button>
@@ -146,18 +149,18 @@ var DefaultLayer = React.createClass({
                         />
                 {this.renderCollapsible()}
                 {this.renderTools()}
-                <ConfirmModal ref="removelayer" className="clayer_removal_confirm_button" show={this.state ? this.state.displayDeleteDialog : false} onHide={this.close} onClose={this.close} onConfirm={this.onConfirmDelete} titleText={this.props.confirmDeleteText} confirmText={this.props.confirmDeleteText} cancelText={<Message msgId="cancel" />} body={this.props.confirmDeleteMessage} />
+                <ConfirmModal ref="removelayer" className="clayer_removal_confirm_button" show= {this.state.showDeleteDialog} onHide={this.closeDeleteDialog} onClose={this.closeDeleteDialog} onConfirm={this.onConfirmDelete} titleText={this.props.confirmDeleteText} confirmText={this.props.confirmDeleteText} cancelText={<Message msgId="cancel" />} body={this.props.confirmDeleteMessage} />
             </Node>
         );
     },
-    close() {
+    closeDeleteDialog() {
         this.setState({
-            displayDeleteDialog: false
+            showDeleteDialog: false
         });
     },
     displayDeleteDialog() {
         this.setState({
-            displayDeleteDialog: true
+            showDeleteDialog: true
         });
     }
 });
