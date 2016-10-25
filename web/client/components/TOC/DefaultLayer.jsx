@@ -12,11 +12,11 @@ var VisibilityCheck = require('./fragments/VisibilityCheck');
 var Title = require('./fragments/Title');
 var InlineSpinner = require('../misc/spinners/InlineSpinner/InlineSpinner');
 var WMSLegend = require('./fragments/WMSLegend');
-const ConfirmButton = require('../buttons/ConfirmButton');
+const ConfirmModal = require('../maps/modals/ConfirmModal');
 const LayersTool = require('./fragments/LayersTool');
 const SettingsModal = require('./fragments/SettingsModal');
 const Message = require('../I18N/Message');
-const {Glyphicon} = require('react-bootstrap');
+const {Glyphicon, Button} = require('react-bootstrap');
 
 var DefaultLayer = React.createClass({
     propTypes: {
@@ -39,6 +39,7 @@ var DefaultLayer = React.createClass({
         saveText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         closeText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         confirmDeleteText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
+        confirmDeleteMessage: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         modalOptions: React.PropTypes.object,
         settingsOptions: React.PropTypes.object,
         visibilityCheckType: React.PropTypes.string,
@@ -58,9 +59,14 @@ var DefaultLayer = React.createClass({
             includeDeleteButtonInSettings: false,
             modalOptions: {},
             settingsOptions: {},
-            confirmDeleteText: <Message msgId="layerProperties.confirmDelete" />,
+            confirmDeleteText: <Message msgId="layerProperties.deleteLayer" />,
+            confirmDeleteMessage: <Message msgId="layerProperties.deleteLayerMessage" />,
             visibilityCheckType: "glyph"
         };
+    },
+    onConfirmDelete() {
+        this.props.removeNode(this.props.node.id, "layers");
+        this.close();
     },
     renderCollapsible() {
         if (this.props.node && this.props.node.type === 'wms') {
@@ -72,14 +78,13 @@ var DefaultLayer = React.createClass({
         const tools = [];
         if (this.props.activateRemoveLayer) {
             tools.push(
-                <ConfirmButton key="removelayer" className="clayer_removal_button"
-                    text={(<Glyphicon glyph="1-close" />)}
-                    style={{"float": "right", cursor: "pointer", backgroundColor: "transparent", marginRight: 3, padding: 0, outline: "none"}}
-                    confirming={{text: this.props.confirmDeleteText,
-                        style: {"float": "right", cursor: "pointer", marginTop: -5}}}
-                        onConfirm={() => {
-                            this.props.removeNode(this.props.node.id, "layers");
-                        }}/>
+                <Button key="removelayer" className="clayer_removal_button"
+                    onClick={() => {
+                        this.displayDeleteDialog();
+                    }}
+                    style={{"float": "right", cursor: "pointer", backgroundColor: "transparent", marginRight: 3, padding: 0, outline: "none"}}>
+                    {(<Glyphicon glyph="1-close" />)}
+                </Button>
             );
         }
         if (this.props.activateSettingsTool) {
@@ -141,8 +146,19 @@ var DefaultLayer = React.createClass({
                         />
                 {this.renderCollapsible()}
                 {this.renderTools()}
+                <ConfirmModal ref="removelayer" className="clayer_removal_confirm_button" show={this.state ? this.state.displayDeleteDialog : false} onHide={this.close} onClose={this.close} onConfirm={this.onConfirmDelete} titleText={this.props.confirmDeleteText} confirmText={this.props.confirmDeleteText} cancelText={<Message msgId="cancel" />} body={this.props.confirmDeleteMessage} />
             </Node>
         );
+    },
+    close() {
+        this.setState({
+            displayDeleteDialog: false
+        });
+    },
+    displayDeleteDialog() {
+        this.setState({
+            displayDeleteDialog: true
+        });
     }
 });
 

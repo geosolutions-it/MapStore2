@@ -20,6 +20,7 @@ const assign = require('object-assign');
 const ConfirmModal = React.createClass({
     propTypes: {
         // props
+        className: React.PropTypes.string,
         show: React.PropTypes.bool,
         options: React.PropTypes.object,
         onConfirm: React.PropTypes.func,
@@ -39,6 +40,7 @@ const ConfirmModal = React.createClass({
             onConfirm: ()=> {},
             onClose: () => {},
             options: {},
+            className: "",
             useModal: true,
             closeGlyph: "",
             style: {},
@@ -56,6 +58,7 @@ const ConfirmModal = React.createClass({
         const footer = (<span role="footer"><div style={{"float": "left"}}></div>
         <Button
             ref="confirmButton"
+            className={this.props.className}
             key="confirmButton"
             bsStyle="primary"
             bsSize={this.props.buttonSize}

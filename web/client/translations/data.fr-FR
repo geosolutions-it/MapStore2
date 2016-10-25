@@ -30,6 +30,8 @@
             "style": "Style",
             "format": "Format",
             "delete": "Effacer",
+            "deleteLayer":"Supprimer le calque",
+            "deleteLayerMessage": "Voulez-vous vraiment supprimer cette couche?",
             "confirmDelete": "Êtes-vous sûr?"
         },
         "enable": "Activer",
