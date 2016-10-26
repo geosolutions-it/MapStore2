@@ -59,7 +59,7 @@ Layers.registerType('wms', {
                 })
             });
         }
-        const mapSrs = map && map.getView() && map.getView().getProjection() && map.getView().getProjection() && map.getView().getProjection().getCode() || 'EPSG:3857';
+        const mapSrs = map && map.getView() && map.getView().getProjection() && map.getView().getProjection().getCode() || 'EPSG:3857';
         const extent = ol.proj.get(CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS)).getExtent();
         return new ol.layer.Tile({
             opacity: options.opacity !== undefined ? options.opacity : 1,
