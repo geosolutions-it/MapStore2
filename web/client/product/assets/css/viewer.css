@@ -447,6 +447,8 @@ html, body, #container, .fill {
 
 .modal-body {
     background-color: white;
+}
+ #mapstore-print-panel .modal-body {
     max-height: calc(100vh - 190px);
     overflow-y: auto;
 }
