@@ -39,7 +39,9 @@ const ConfirmModal = React.createClass({
         return {
             onConfirm: ()=> {},
             onClose: () => {},
-            options: {},
+            options: {
+                animation: false
+            },
             className: "",
             useModal: true,
             closeGlyph: "",
