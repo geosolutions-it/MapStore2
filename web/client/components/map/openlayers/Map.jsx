@@ -151,7 +151,11 @@ var OpenlayersMap = React.createClass({
                 this.props.onMouseMove({
                     y: coords[1],
                     x: tLng,
-                    crs: "EPSG:4326"
+                    crs: "EPSG:4326",
+                    pixel: {
+                        x: event.pixel[0],
+                        y: event.pixel[1]
+                    }
                 });
             }
         });

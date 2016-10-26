@@ -268,7 +268,8 @@ let LeafletMap = React.createClass({
         this.props.onMouseMove({
             x: pos.lng,
             y: pos.lat,
-            crs: "EPSG:4326"
+            crs: "EPSG:4326",
+            pixel: event.containerPoint
         });
     },
     registerHooks() {
