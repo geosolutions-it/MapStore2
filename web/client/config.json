@@ -9,10 +9,6 @@
 			20037508.34, 20037508.34
 		],
 		"layers": [
-      {
-        "type": "graticule",
-				"visibility": true
-      },
 			{
 				"type": "osm",
 				"title": "Open Street Map",
