@@ -335,6 +335,7 @@ function saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbna
             dispatch(resetUpdating(resourceIdMap));
             dispatch(onDisplayMetadataEdit(false));
         }
+        dispatch(resetCurrentMap());
     };
 }
 
