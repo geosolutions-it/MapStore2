@@ -67,7 +67,7 @@ const ColorPickerRenderer = React.createClass({
                     }}/>
                         <SketchPicker
                             color={ (this.state.color) ? this.state.color.rgb : colorValue}
-                            onChange={ (color) => { this.setState({ color: color }); }} />
+                            onChangeComplete={ (color) => { this.setState({ color: color }); }} />
                     </div>)
                 : null }
             </div>

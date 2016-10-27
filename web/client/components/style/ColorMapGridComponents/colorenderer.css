@@ -23,6 +23,6 @@
   bottom: 0;
   left: 0;
 }
-.cpe-popover div div, .cp-popover div div {
+.cpe-popover > div > div {
     position: relative;
 }
