@@ -95,7 +95,11 @@
 				"title": "Weather data",
 				"name": "nurc:Arc_Sample",
 				"group": "Meteo",
-				"format": "image/png"
+				"format": "image/png",
+        "bbox": {
+          "bounds": {"minx": -25.6640625, "miny": 26.194876675795218, "maxx": 48.1640625, "maxy": 56.80087831233043},
+          "crs": "EPSG:4326"
+        }
 			},
       {
         "type": "tileprovider",

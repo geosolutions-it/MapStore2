@@ -186,7 +186,15 @@ const RecordItem = React.createClass({
                 visibility: true,
                 name: wms.params && wms.params.name,
                 title: this.props.record.title || (wms.params && wms.params.name),
-                boundingBox: this.props.record.boundingBox,
+                bbox: {
+                    crs: this.props.record.boundingBox.crs,
+                    bounds: {
+                        minx: this.props.record.boundingBox.extent[0],
+                        miny: this.props.record.boundingBox.extent[1],
+                        maxx: this.props.record.boundingBox.extent[2],
+                        maxy: this.props.record.boundingBox.extent[3]
+                    }
+                },
                 links: this.getLinks(this.props.record),
                 params: params,
                 allowedSRS: allowedSRS

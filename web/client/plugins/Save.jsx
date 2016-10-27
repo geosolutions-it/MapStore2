@@ -96,6 +96,7 @@ const Save = React.createClass({
                         transparent: layer.transparent,
                         type: layer.type,
                         url: layer.url,
+                        bbox: layer.bbox,
                         visibility: layer.visibility
                     };
                 });

@@ -190,4 +190,33 @@ describe('This test for RecordItem', () => {
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
     });
+    it('check add layer with bounding box', () => {
+        let actions = {
+            onLayerAdd: () => {
+
+            },
+            onZoomToExtent: () => {
+
+            }
+        };
+        let actionsSpy = expect.spyOn(actions, "onLayerAdd");
+        const item = ReactDOM.render((<ReactItem
+            record={sampleRecord}
+            onLayerAdd={actions.onLayerAdd}
+            />), document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        expect(itemDom.className).toBe('record-item panel panel-default');
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+           item, 'button'
+        );
+        expect(button).toExist();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments[0].bbox).toExist();
+        expect(actionsSpy.calls[0].arguments[0].bbox.crs).toExist();
+        expect(actionsSpy.calls[0].arguments[0].bbox.bounds).toExist();
+    });
 });
