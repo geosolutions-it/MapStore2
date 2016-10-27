@@ -136,6 +136,38 @@ describe('test DefaultLayer module component', () => {
         expect(spy.calls.length).toBe(1);
     });
 
+    it('tests zoom tool', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            bbox: {
+                crs: "EPSG:4326",
+                bounds: {
+                    minx: 11.0,
+                    maxx: 13.0,
+                    miny: 43.0,
+                    maxy: 44.0
+                }
+            }
+        };
+        const actions = {
+            onZoom: () => {}
+        };
+        let spy = expect.spyOn(actions, "onZoom");
+        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} activateZoomTool={true} onZoom={actions.onZoom}/>,
+            document.getElementById("container"));
+        expect(comp).toExist();
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "glyphicon")[1]);
+        expect(tool).toExist();
+        tool.click();
+        expect(spy.calls.length).toBe(1);
+    });
+
     it('tests removelayer tool', () => {
         const l = {
             name: 'layer000',

@@ -24,6 +24,7 @@ var DefaultLayer = React.createClass({
         settings: React.PropTypes.object,
         propertiesChangeHandler: React.PropTypes.func,
         onToggle: React.PropTypes.func,
+        onZoom: React.PropTypes.func,
         onSettings: React.PropTypes.func,
         style: React.PropTypes.object,
         sortableStyle: React.PropTypes.object,
@@ -34,6 +35,7 @@ var DefaultLayer = React.createClass({
         activateLegendTool: React.PropTypes.bool,
         activateRemoveLayer: React.PropTypes.bool,
         activateSettingsTool: React.PropTypes.bool,
+        activateZoomTool: React.PropTypes.bool,
         settingsText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         opacityText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         saveText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
@@ -52,10 +54,12 @@ var DefaultLayer = React.createClass({
             sortableStyle: {},
             propertiesChangeHandler: () => {},
             onToggle: () => {},
+            onZoom: () => {},
             onSettings: () => {},
             activateRemoveLayer: false,
             activateLegendTool: false,
             activateSettingsTool: false,
+            activateZoomTool: false,
             includeDeleteButtonInSettings: false,
             modalOptions: {},
             settingsOptions: {},
@@ -132,6 +136,15 @@ var DefaultLayer = React.createClass({
                         style={{"float": "right", cursor: "pointer"}}
                         glyph="list"
                         onClick={(node) => this.props.onToggle(node.id, node.expanded)}/>
+                );
+        }
+        if (this.props.activateZoomTool && this.props.node.bbox) {
+            tools.push(
+                <LayersTool key="toolzoom"
+                        ref="target"
+                        style={{"float": "right", cursor: "pointer"}}
+                        glyph="search"
+                        onClick={(node) => this.props.onZoom(node.bbox.bounds, node.bbox.crs)}/>
                 );
         }
         return tools;

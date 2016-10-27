@@ -10,6 +10,8 @@ const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {changeLayerProperties, changeGroupProperties, toggleNode,
        sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode} = require('../actions/layers');
+const {zoomToExtent} = require('../actions/map');
+
 const {groupsSelector} = require('../selectors/layers');
 
 const LayersUtils = require('../utils/LayersUtils');
@@ -46,6 +48,7 @@ const LayerTree = React.createClass({
         layerPropertiesChangeHandler: React.PropTypes.func,
         onToggleGroup: React.PropTypes.func,
         onToggleLayer: React.PropTypes.func,
+        onZoomToExtent: React.PropTypes.func,
         onSort: React.PropTypes.func,
         onSettings: React.PropTypes.func,
         hideSettings: React.PropTypes.func,
@@ -54,6 +57,7 @@ const LayerTree = React.createClass({
         removeNode: React.PropTypes.func,
         activateRemoveLayer: React.PropTypes.bool,
         activateLegendTool: React.PropTypes.bool,
+        activateZoomTool: React.PropTypes.bool,
         activateSettingsTool: React.PropTypes.bool,
         visibilityCheckType: React.PropTypes.string,
         settingsOptions: React.PropTypes.object
@@ -64,10 +68,12 @@ const LayerTree = React.createClass({
             layerPropertiesChangeHandler: () => {},
             onToggleGroup: () => {},
             onToggleLayer: () => {},
+            onZoomToExtent: () => {},
             onSettings: () => {},
             updateNode: () => {},
             removeNode: () => {},
             activateLegendTool: true,
+            activateZoomTool: true,
             activateSettingsTool: true,
             activateRemoveLayer: true,
             visibilityCheckType: "checkbox",
@@ -96,6 +102,7 @@ const LayerTree = React.createClass({
                     <DefaultLayer
                             settingsOptions={this.props.settingsOptions}
                             onToggle={this.props.onToggleLayer}
+                            onZoom={this.props.onZoomToExtent}
                             onSettings={this.props.onSettings}
                             propertiesChangeHandler={this.props.layerPropertiesChangeHandler}
                             hideSettings={this.props.hideSettings}
@@ -106,6 +113,7 @@ const LayerTree = React.createClass({
                             visibilityCheckType={this.props.visibilityCheckType}
                             activateRemoveLayer={this.props.activateRemoveLayer}
                             activateLegendTool={this.props.activateLegendTool}
+                            activateZoomTool={this.props.activateZoomTool}
                             activateSettingsTool={this.props.activateSettingsTool}
                             settingsText={<Message msgId="layerProperties.windowTitle"/>}
                             opacityText={<Message msgId="opacity"/>}
@@ -126,6 +134,7 @@ const TOCPlugin = connect(tocSelector, {
     onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
     onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
     onSettings: showSettings,
+    onZoomToExtent: zoomToExtent,
     hideSettings,
     updateSettings,
     updateNode,
