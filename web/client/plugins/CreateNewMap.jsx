@@ -17,7 +17,7 @@ const CreateNewMap = React.createClass({
         mapType: React.PropTypes.string,
         onGoToMap: React.PropTypes.func,
         colProps: React.PropTypes.object,
-        isLoggedIn: React.PropTypes.bool
+        isLoggedIn: React.PropTypes.object
     },
     contextTypes: {
         router: React.PropTypes.object
@@ -25,7 +25,7 @@ const CreateNewMap = React.createClass({
     getDefaultProps() {
         return {
             mapType: "leaflet",
-            isLoggedIn: false,
+            isLoggedIn: "",
             onGoToMap: () => {},
             colProps: {
                 xs: 12,
