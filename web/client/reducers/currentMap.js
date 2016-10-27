@@ -100,12 +100,7 @@ function currentMap(state = {}, action) {
             return assign({}, state, {permissionLoading: false});
         }
         case RESET_CURRENT_MAP: {
-            // resetting all the keys of the currentMap state
-            let newCurrentMap = Object.keys(state).reduce(function(previous, current) {
-                previous[current] = null;
-                return previous;
-            }, {});
-            return assign({}, newCurrentMap);
+            return {};
         }
         default:
             return state;
