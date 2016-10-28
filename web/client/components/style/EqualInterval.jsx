@@ -153,7 +153,7 @@ const EqualInterval = React.createClass({
         return (this.props.error && this.props.error.type) ? true : false;
     },
     generateEqualIntervalRamp() {
-        let ramp = colors[this.props.ramp][this.props.classes];
+        let ramp = colors[this.getRampValue()][this.props.classes];
         let min = this.props.min;
         let max = this.props.max;
         let step = (max - min) / this.props.classes;

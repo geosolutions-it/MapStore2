@@ -29,7 +29,7 @@ const ColorPickerRenderer = React.createClass({
     onChangeColor() {
         if ( this.state.color) {
             let opacity = (this.state.color.rgb.a !== 1) ? this.state.color.rgb.a : undefined;
-            let color = "#" + this.state.color.hex;
+            let color = this.state.color.hex.indexOf("#") === 0 ? this.state.color.hex : "#" + this.state.color.hex;
             this.props.onChangeColor( this.props.params.node, {color: color, opacity: opacity});
         }
     },
@@ -67,7 +67,7 @@ const ColorPickerRenderer = React.createClass({
                     }}/>
                         <SketchPicker
                             color={ (this.state.color) ? this.state.color.rgb : colorValue}
-                            onChange={ (color) => { this.setState({ color: color }); }} />
+                            onChangeComplete={ (color) => { this.setState({ color: color }); }} />
                     </div>)
                 : null }
             </div>
@@ -75,7 +75,7 @@ const ColorPickerRenderer = React.createClass({
     },
     calculateTop(y) {
         let h = getWindowSize().maxHeight;
-        return (y + 300 > h) ? h - 305 : y;
+        return ((y + 300 > h) ? h - 305 : y ) - 300;
     },
     hexToRgb(hex) {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
