@@ -75,7 +75,7 @@ const ColorPickerRenderer = React.createClass({
     },
     calculateTop(y) {
         let h = getWindowSize().maxHeight;
-        return (y + 300 > h) ? h - 305 : y;
+        return ((y + 300 > h) ? h - 305 : y ) - 300;
     },
     hexToRgb(hex) {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
