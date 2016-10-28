@@ -186,5 +186,8 @@ module.exports = {
                 return state && state.security && state.security.user ? {} : { style: {display: "none"} };
             }
         }
-    }))
+    })),
+    reducers: {
+        currentMap: require('../reducers/currentMap')
+    }
 };
