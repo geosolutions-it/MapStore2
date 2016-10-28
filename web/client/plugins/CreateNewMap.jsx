@@ -17,7 +17,7 @@ const CreateNewMap = React.createClass({
         mapType: React.PropTypes.string,
         onGoToMap: React.PropTypes.func,
         colProps: React.PropTypes.object,
-        isLoggedIn: React.PropTypes.object
+        isLoggedIn: React.PropTypes.bool
     },
     contextTypes: {
         router: React.PropTypes.object
@@ -25,7 +25,7 @@ const CreateNewMap = React.createClass({
     getDefaultProps() {
         return {
             mapType: "leaflet",
-            isLoggedIn: "",
+            isLoggedIn: false,
             onGoToMap: () => {},
             colProps: {
                 xs: 12,
@@ -51,6 +51,6 @@ const CreateNewMap = React.createClass({
 module.exports = {
     CreateNewMapPlugin: connect((state) => ({
         mapType: (state.maps && state.maps.mapType) || (state.home && state.home.mapType),
-        isLoggedIn: state && state.security && state.security.user
+        isLoggedIn: state && state.security && state.security.user && state.security.user.enabled
     }))(CreateNewMap)
 };
