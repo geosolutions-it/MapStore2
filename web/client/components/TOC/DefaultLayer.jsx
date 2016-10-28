@@ -143,7 +143,7 @@ var DefaultLayer = React.createClass({
                 <LayersTool key="toolzoom"
                         ref="target"
                         style={{"float": "right", cursor: "pointer"}}
-                        glyph="search"
+                        glyph="1-full-screen"
                         onClick={(node) => this.props.onZoom(node.bbox.bounds, node.bbox.crs)}/>
                 );
         }
@@ -154,7 +154,6 @@ var DefaultLayer = React.createClass({
         return (
             <Node className="toc-default-layer" sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
                 <Title onClick={this.props.onToggle}/>
-                <InlineSpinner loading={this.props.node.loading}/>
                 <LayersTool key="loadingerror"
                         style={{"display": this.props.node.loadingError ? "block" : "none", color: "red", cursor: "default"}}
                         glyph="ban-circle"
@@ -162,6 +161,7 @@ var DefaultLayer = React.createClass({
                         />
                 {this.renderCollapsible()}
                 {this.renderTools()}
+                <InlineSpinner loading={this.props.node.loading}/>
                 <ConfirmModal ref="removelayer" className="clayer_removal_confirm_button" show= {this.state.showDeleteDialog} onHide={this.closeDeleteDialog} onClose={this.closeDeleteDialog} onConfirm={this.onConfirmDelete} titleText={this.props.confirmDeleteText} confirmText={this.props.confirmDeleteText} cancelText={<Message msgId="cancel" />} body={this.props.confirmDeleteMessage} />
             </Node>
         );
