@@ -29,7 +29,7 @@ const ColorPickerRenderer = React.createClass({
     onChangeColor() {
         if ( this.state.color) {
             let opacity = (this.state.color.rgb.a !== 1) ? this.state.color.rgb.a : undefined;
-            let color = "#" + this.state.color.hex;
+            let color = this.state.color.hex.indexOf("#") === 0 ?  this.state.color.hex : "#" + this.state.color.hex;
             this.props.onChangeColor( this.props.params.node, {color: color, opacity: opacity});
         }
     },
