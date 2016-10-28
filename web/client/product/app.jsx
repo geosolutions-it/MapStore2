@@ -9,6 +9,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const {connect} = require('react-redux');
 const LocaleUtils = require('../utils/LocaleUtils');
+const {loadPlugins} = require('../actions/plugins');
 
 const startApp = () => {
     const ConfigUtils = require('../utils/ConfigUtils');
@@ -22,7 +23,9 @@ const startApp = () => {
     const StandardRouter = connect((state) => ({
         locale: state.locale || {},
         pages
-    }))(require('../components/app/StandardRouter'));
+    }), {
+        loadPlugins
+    })(require('../components/app/StandardRouter'));
 
     const appStore = require('../stores/StandardStore').bind(null, initialState, {
         home: require('./reducers/home'),

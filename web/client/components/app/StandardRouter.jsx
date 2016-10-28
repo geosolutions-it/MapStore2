@@ -13,28 +13,43 @@ const Debug = require('../development/Debug');
 const {Router, Route, hashHistory} = require('react-router');
 
 const Localized = require('../I18N/Localized');
+const assign = require('object-assign');
+const PluginsUtils = require('../../utils/PluginsUtils');
 
 const StandardRouter = React.createClass({
     propTypes: {
         plugins: React.PropTypes.object,
         locale: React.PropTypes.object,
-        pages: React.PropTypes.array
+        pages: React.PropTypes.array,
+        loadPlugins: React.PropTypes.func
     },
     getDefaultProps() {
         return {
             plugins: {},
             locale: {messages: {}, current: ''},
-            pages: []
+            pages: [],
+            loadPlugins: () => {}
         };
+    },
+    getInitialState() {
+        return {plugins: {}};
     },
     renderPages() {
         return this.props.pages.map((page) => {
             const pageConfig = page.pageConfig || {};
             const Component = connect(() => ({
-                plugins: this.props.plugins,
+                plugins: assign({}, this.props.plugins, this.state.plugins),
                 ...pageConfig
             }))(page.component);
-            return (<Route key={page.name || page.path} path={page.path} component={Component}/>);
+            return (<Route key={page.name || page.path} path={page.path} component={Component} onEnter={page.plugins ? (nextState, replace, callback) => {
+                page.plugins((newPlugins) => {
+                    this.setState({
+                        plugins: assign({}, this.state.plugins, PluginsUtils.getPlugins(newPlugins))
+                    });
+                    this.props.loadPlugins(newPlugins);
+                    callback();
+                });
+            } : null}/>);
         });
     },
     render() {
