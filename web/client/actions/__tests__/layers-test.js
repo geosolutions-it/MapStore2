@@ -127,7 +127,7 @@ describe('Test correctness of the layers actions', () => {
         expect(retval1).toExist();
         expect(retval1.type).toBe(ADD_LAYER);
         expect(retval1.layer).toBe(testVal);
-        expect(retval1.foreground).toBe(false);
+        expect(retval1.foreground).toBe(true);
 
         const retval2 = addLayer(testVal, true);
 
