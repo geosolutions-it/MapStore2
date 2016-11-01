@@ -43,7 +43,7 @@ const ShareLink = React.createClass({
                   <h4>
                      <Message msgId="share.directLinkTitle"/>
                   </h4>
-                  <Input ref="copytext" type="text" value={this.props.shareUrl} addonAfter={copyTo} readOnly/>
+                  <Input onFocus={ev => ev.target.select()} ref="copytext" type="text" value={this.props.shareUrl} addonAfter={copyTo} readOnly/>
             </div>
         );
     }
