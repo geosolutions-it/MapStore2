@@ -126,7 +126,7 @@ function layerError(layerId) {
     };
 }
 
-function addLayer(layer, foreground = false) {
+function addLayer(layer, foreground = true) {
     return {
         type: ADD_LAYER,
         layer,
