@@ -138,7 +138,7 @@ var DefaultLayer = React.createClass({
                         onClick={(node) => this.props.onToggle(node.id, node.expanded)}/>
                 );
         }
-        if (this.props.activateZoomTool && this.props.node.bbox) {
+        if (this.props.activateZoomTool && this.props.node.bbox && !this.props.node.loadingError) {
             tools.push(
                 <LayersTool key="toolzoom"
                         ref="target"
