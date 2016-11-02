@@ -246,8 +246,9 @@ const FeatureGrid = React.createClass({
     zoomToFeature(params) {
         let geometry = params.data.geometry;
         if (geometry.coordinates) {
+
             if (this.props.zoomToFeatureAction) {
-                this.props.zoomToFeatureAction(params.data, params.data.geometry);
+                this.props.zoomToFeatureAction(params.data);
             } else {
                 this.changeMapView([geometry], this.props.zoom);
             }

@@ -56,7 +56,27 @@ describe("Test FeatureGrid Component", () => {
         params = {selectedRows: []};
         comp.selectFeatures(params);
         expect(comp).toExist();
+    });
+    it('Test FeatureGrid custom zoomToFeatures', () => {
+        let map = {
+            size: {width: 1360, height: 685},
+            center: {x: -98, y: 26, crs: "EPSG:4326"},
+            projection: "EPSG:900913"
+        };
+        const testZoomTo = {
+            action: () => {
+                return true;
+            }
+        };
+        const spy = expect.spyOn(testZoomTo, 'action');
 
+        let comp = ReactDOM.render(
+            <FeatureGrid features={data.features} paging={true} map={map} zoomToFeatureAction={testZoomTo.action}/>, document.getElementById("container"));
+        expect(comp).toExist();
+        let params = {data: {geometry: {coordinates: []}}};
+        comp.zoomToFeature(params);
+        expect(spy).toHaveBeenCalled();
+        expect(spy).toHaveBeenCalledWith(params.data);
     });
 });
 
