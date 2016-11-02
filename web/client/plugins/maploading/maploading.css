@@ -29,3 +29,20 @@
     padding-top: 4px;
     box-shadow: none;
 }
+
+
+.ms2-loading {
+    background-color: #078aa3 !important;
+    border-bottom: 2px solid #5C9FB4 !important;
+}
+
+.ms2-loading .circle-wrapper {
+    width: 30px;
+    height: 30px;
+    margin-left: 10px !important;
+    margin-top: 10px !important;
+}
+
+.ms2-loading .circle-wrapper .circle:before {
+    background-color: white !important;
+}

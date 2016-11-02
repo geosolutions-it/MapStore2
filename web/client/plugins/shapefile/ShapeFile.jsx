@@ -16,6 +16,7 @@ const {Glyphicon, Panel} = require('react-bootstrap');
 
 const Dialog = require('../../components/misc/Dialog');
 
+require('./css/shapeFile.css');
 const ShapeFile = React.createClass({
     propTypes: {
         id: React.PropTypes.string,

@@ -9,7 +9,7 @@
 const React = require('react');
 const {Modal, Button, Glyphicon, Tabs, Tab} = require('react-bootstrap');
 
-require("./settingsModal.css");
+require("./css/settingsModal.css");
 
 const Dialog = require('../../misc/Dialog');
 const ConfirmButton = require('../../buttons/ConfirmButton');

@@ -22,3 +22,7 @@
 #page-manager .Manager-Container {
     margin: 0;
 }
+
+#page-manager #home-button {
+    float: right;
+}

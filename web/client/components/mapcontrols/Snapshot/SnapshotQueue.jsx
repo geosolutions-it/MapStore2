@@ -8,7 +8,7 @@
 
 const React = require('react');
 
-require("./style.css");
+require("./css/snapshot.css");
 
 
 let SnapshotSupport;

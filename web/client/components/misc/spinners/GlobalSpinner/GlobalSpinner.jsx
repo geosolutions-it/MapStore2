@@ -7,6 +7,7 @@
  */
 const React = require('react');
 const Spinner = require('react-spinkit');
+require('./css/GlobalSpinner.css');
 
 const GlobalSpinner = React.createClass({
     propTypes: {
