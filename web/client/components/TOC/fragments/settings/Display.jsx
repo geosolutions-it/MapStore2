@@ -45,7 +45,7 @@ module.exports = React.createClass({
             <Label key="opacity-percent" >{Math.round(this.props.settings.options.opacity * 100) + "%"}</Label>
             </div>
             {this.props.element.type === "wms" ?
-                [(<div><input type="checkbox" key="transparent" checked={this.props.element && (this.props.element.transparent === undefined ? true : this.props.element.transparent)}
+                [(<div key="transparent-check"><input type="checkbox" key="transparent" checked={this.props.element && (this.props.element.transparent === undefined ? true : this.props.element.transparent)}
                 onChange={(event) => {this.props.onChange("transparent", event.target.checked); }}/>
             <label key="transparent-label" className="control-label">Transparent</label></div>)] : null}
         </div>);
