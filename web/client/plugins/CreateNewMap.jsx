@@ -51,6 +51,6 @@ const CreateNewMap = React.createClass({
 module.exports = {
     CreateNewMapPlugin: connect((state) => ({
         mapType: (state.maps && state.maps.mapType) || (state.home && state.home.mapType),
-        isLoggedIn: state && state.security && state.security.user
+        isLoggedIn: state && state.security && state.security.user && state.security.user.enabled && true || false
     }))(CreateNewMap)
 };

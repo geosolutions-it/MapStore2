@@ -385,7 +385,7 @@
 					"closeGlyph": "1-close",
 					"submitConfig": {
 						"buttonConfig": {
-							"bsSize": "medium",
+							"bsSize": "small",
 							"bsStyle": "primary"
 						},
 						"glyph": ""
