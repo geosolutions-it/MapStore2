@@ -130,7 +130,7 @@ describe('test DefaultLayer module component', () => {
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
-        const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "glyphicon")[1]);
+        const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "toc-legendTool")[0]);
         expect(tool).toExist();
         tool.click();
         expect(spy.calls.length).toBe(1);
@@ -162,10 +162,40 @@ describe('test DefaultLayer module component', () => {
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
-        const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "glyphicon")[1]);
+        const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "toc-zoomTool")[0]);
         expect(tool).toExist();
         tool.click();
         expect(spy.calls.length).toBe(1);
+    });
+
+    it('hide zoom tool when error occours', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            loadingError: true,
+            bbox: {
+                crs: "EPSG:4326",
+                bounds: {
+                    minx: 11.0,
+                    maxx: 13.0,
+                    miny: 43.0,
+                    maxy: 44.0
+                }
+            }
+        };
+        const actions = {
+            onZoom: () => {}
+        };
+        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} activateZoomTool={true} onZoom={actions.onZoom}/>,
+            document.getElementById("container"));
+        expect(comp).toExist();
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "toc-zoomTool")[0]);
+        expect(tool).toNotExist();
     });
 
     it('tests removelayer tool', () => {

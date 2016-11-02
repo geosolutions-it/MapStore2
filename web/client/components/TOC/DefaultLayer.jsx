@@ -132,6 +132,7 @@ var DefaultLayer = React.createClass({
         if (this.props.activateLegendTool) {
             tools.push(
                 <LayersTool key="toollegend"
+                        className="toc-legendTool"
                         ref="target"
                         style={{"float": "right", cursor: "pointer"}}
                         glyph="list"
@@ -141,6 +142,7 @@ var DefaultLayer = React.createClass({
         if (this.props.activateZoomTool && this.props.node.bbox && !this.props.node.loadingError) {
             tools.push(
                 <LayersTool key="toolzoom"
+                        className="toc-zoomTool"
                         ref="target"
                         style={{"float": "right", cursor: "pointer"}}
                         glyph="1-full-screen"

@@ -19,7 +19,8 @@ const LayersTool = React.createClass({
         onClick: React.PropTypes.func,
         style: React.PropTypes.object,
         glyph: React.PropTypes.string,
-        tooltip: React.PropTypes.string
+        tooltip: React.PropTypes.string,
+        className: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -28,7 +29,8 @@ const LayersTool = React.createClass({
         };
     },
     render() {
-        const tool = (<Glyphicon className="toc-layer-tool" style={this.props.style}
+        const cn = this.props.className ? " " + this.props.className : "";
+        const tool = (<Glyphicon className={"toc-layer-tool" + cn} style={this.props.style}
                    glyph={this.props.glyph}
                    onClick={(options) => this.props.onClick(this.props.node, options || {})}/>);
         return this.props.tooltip ? (
