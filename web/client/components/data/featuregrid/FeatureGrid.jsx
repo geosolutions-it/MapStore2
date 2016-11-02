@@ -48,7 +48,8 @@ const FeatureGrid = React.createClass({
         toolbar: React.PropTypes.object,
         dataSource: React.PropTypes.object,
         selectAll: React.PropTypes.func,
-        selectAllActive: React.PropTypes.bool
+        selectAllActive: React.PropTypes.bool,
+        zoomToFeatureAction: React.PropTypes.func
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -245,7 +246,11 @@ const FeatureGrid = React.createClass({
     zoomToFeature(params) {
         let geometry = params.data.geometry;
         if (geometry.coordinates) {
-            this.changeMapView([geometry], this.props.zoom);
+            if (this.props.zoomToFeatureAction) {
+                this.props.zoomToFeatureAction(params.data, params.data.geometry);
+            } else {
+                this.changeMapView([geometry], this.props.zoom);
+            }
         }
     },
     zoomToFeatures() {
