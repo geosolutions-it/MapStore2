@@ -19,10 +19,6 @@ html, body, #container, .fill {
     float: left;
 }
 
-.react-draggable .draggable-header {
-    cursor: move;
-}
-
 .ol-attribution li:first-child, .leaflet-control-attribution a:first-child{
     display: none;
     visibility: hidden;
