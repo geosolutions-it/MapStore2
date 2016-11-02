@@ -7,7 +7,6 @@
  */
 const React = require('react');
 
-require('../assets/css/viewer.css');
 require("../assets/css/maps.css");
 
 const {connect} = require('react-redux');
