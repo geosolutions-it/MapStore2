@@ -116,7 +116,10 @@ div.nav-menu {
     padding: 5px;
 }
 
-
 .navButtons {
     float: right;
+}
+
+#drawer-menu-button {
+     position: absolute;
 }

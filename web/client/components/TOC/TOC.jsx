@@ -8,8 +8,8 @@
 
 var React = require('react');
 var Sortable = require('react-sortable-items');
-
-var TOC = React.createClass({
+require('./css/toc.css');
+const TOC = React.createClass({
     propTypes: {
         filter: React.PropTypes.func,
         nodes: React.PropTypes.array,

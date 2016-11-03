@@ -11,7 +11,7 @@ const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 
 var Spinner = require('react-spinkit');
-
+require('./map/css/map.css');
 
 const Message = require('../components/I18N/Message');
 

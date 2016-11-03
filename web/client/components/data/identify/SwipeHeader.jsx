@@ -9,6 +9,7 @@
 const React = require('react');
 
 const {Glyphicon, Button} = require('react-bootstrap');
+require('./css/swipeHeader.css');
 
 const SwipeHeader = React.createClass({
     propTypes: {

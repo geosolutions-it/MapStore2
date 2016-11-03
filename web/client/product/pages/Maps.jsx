@@ -7,7 +7,7 @@
  */
 const React = require('react');
 
-require('../assets/css/viewer.css');
+require("../assets/css/maps.css");
 
 const {connect} = require('react-redux');
 
@@ -20,7 +20,6 @@ const {loadMapConfig} = require('../../actions/config');
 const {resetControls} = require('../../actions/controls');
 
 const Page = require('../../containers/Page');
-require("../assets/css/maps.css");
 
 const MapsPage = React.createClass({
     propTypes: {

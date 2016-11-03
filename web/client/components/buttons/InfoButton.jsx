@@ -12,7 +12,7 @@ var Button = BootstrapReact.Button;
 var Glyphicon = BootstrapReact.Glyphicon;
 var ImageButton = require('./ImageButton');
 const Dialog = require('../misc/Dialog');
-
+require('./css/infoButton.css');
 const assign = require('object-assign');
 /**
  * A button to show a simple information window.
@@ -29,7 +29,7 @@ const assign = require('object-assign');
  *
  * Note: the button will not be never empty, it will show at least the text (default or custom)
  */
-var InfoButton = React.createClass({
+const InfoButton = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         image: React.PropTypes.string,

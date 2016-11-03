@@ -44,3 +44,7 @@ div.record-grid .record-item .record-buttons {
     width: 98%;
     margin-top: 10px;
 }
+
+#mapstore-catalog-panel .record-item {
+    min-height: 150px;
+}
