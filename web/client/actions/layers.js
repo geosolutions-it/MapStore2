@@ -185,7 +185,7 @@ function getDescribeLayer(url, layer, options) {
 }
 
 function getLayerCapabilities(layer, options) {
-    // geoserver's specific.
+    // geoserver's specific. TODO parse layer.capabilitiesURL.
     let reqUrl = layer.url;
     let urlParts = reqUrl.split("/geoserver/");
     if (urlParts.length === 2) {
@@ -193,7 +193,6 @@ function getLayerCapabilities(layer, options) {
         if (layerParts.length === 2) {
             reqUrl = urlParts[0] + "/geoserver/" + layerParts [0] + "/" + layerParts[1] + "/" + urlParts[1];
         }
-
     }
     return (dispatch) => {
         // TODO, look ad current cached capabilities;
@@ -202,9 +201,9 @@ function getLayerCapabilities(layer, options) {
             let layerCapability;
 
             layerCapability = _.head(layers.filter( ( capability ) => {
-                if (layer.name.split(":").length === 2 && capability.name.split(":").length === 2 ) {
+                if (layer.name.split(":").length === 2 && capability.name && capability.name.split(":").length === 2 ) {
                     return layer.name === capability.name;
-                } else if (capability.name.split(":").length === 2) {
+                } else if (capability.name && capability.name.split(":").length === 2) {
                     return (layer.name === capability.name.split(":")[1]);
                 } else if (layer.name.split(":").length === 2) {
                     return layer.name.split(":")[1] === capability.name;
@@ -212,7 +211,11 @@ function getLayerCapabilities(layer, options) {
                 return layer.name === capability.name;
             }));
             if (layerCapability) {
-                dispatch(updateNode(layer.id, "id", {capabilities: layerCapability, boundingBox: layerCapability.latLonBoundingBox}));
+                dispatch(updateNode(layer.id, "id", {
+                    capabilities: layerCapability,
+                    boundingBox: layerCapability.latLonBoundingBox,
+                    availableStyles: Array.isArray(layerCapability.style) ? layerCapability.style : [layerCapability.style]
+                }));
             }
             // return dispatch(updateNode(layer.id, "id", {capabilities: capabilities || {"error": "no describe Layer found"}}));
 
