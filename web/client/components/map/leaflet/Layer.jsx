@@ -104,6 +104,7 @@ const LeafletLayer = React.createClass({
             if (this.layer) {
                 this.layer.layerName = options.name;
                 this.layer.layerId = options.id;
+                this.setState({});
             }
         }
     },
