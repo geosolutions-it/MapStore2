@@ -61,6 +61,7 @@ const OpenlayersLayer = React.createClass({
                 this.props.map.removeLayer(this.layer);
             }
         }
+        Layers.removeLayer(this.props.type, this.props.options, this.props.map, this.props.mapId, this.layer);
     },
     render() {
         if (this.props.children) {

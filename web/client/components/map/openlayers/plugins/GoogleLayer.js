@@ -193,6 +193,11 @@ Layers.registerType('google', {
             gmaps[mapId].setCenter(new google.maps.LatLng(center[1], center[0]));
             gmaps[mapId].setZoom(view.getZoom());
         }
+    },
+    remove(options, map, mapId) {
+        if (rendererItem === options.name) {
+            rendererItem = undefined;
+            delete gmaps[mapId];
+        }
     }
-
 });
