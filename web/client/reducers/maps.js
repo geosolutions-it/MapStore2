@@ -16,7 +16,7 @@ const assign = require('object-assign');
 const _ = require('lodash');
 
 function maps(state = {
-    mapType: "openlayers",
+    mapType: "leaflet",
     enabled: false,
     errors: [],
     searchText: ""}, action) {
