@@ -30,7 +30,7 @@
             "style": "Style",
             "styleCustom": "Utilisez un style nommé \"{value} \"",
             "styleListLoadError": "Une erreur s'est produite lors du chargement de la liste de styles",
-            "stylesRefreshList": "Refresh Styles List",
+            "stylesRefreshList": "Actualiser la liste des styles",
             "format": "Format",
             "delete": "Effacer",
             "deleteLayer":"Supprimer le calque",

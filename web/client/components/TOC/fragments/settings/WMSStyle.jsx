@@ -69,7 +69,7 @@ const WMSStyle = React.createClass({
                 <br />
                 {this.renderLegend()}
                 {this.renderError()}
-                <Button bsStyle="primary" style={{"float": "right"}} onClick={() => this.props.retrieveLayerData(this.props.element)}><Glyphicon glyph="refresh" />Refresh Styles List</Button>
+                <Button bsStyle="primary" style={{"float": "right"}} onClick={() => this.props.retrieveLayerData(this.props.element)}><Glyphicon glyph="refresh" /><Message msgId="layerProperties.stylesRefreshList" /></Button>
                 <br />
             </form>);
     },
