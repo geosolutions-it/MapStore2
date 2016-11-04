@@ -33,7 +33,7 @@ const mycomponent = React.createClass({
     }
 });
 
-describe('StandardRouter', () => {
+describe('StandardApp', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         ConfigUtils.setLocalConfigurationFile('base/web/client/test-resources/localConfig.json');
@@ -92,35 +92,5 @@ describe('StandardRouter', () => {
         const dom = ReactDOM.findDOMNode(app);
 
         expect(dom.getElementsByClassName('MyPlugin').length).toBe(1);
-    });
-
-    it('creates a default router app with pages and on page plugins', () => {
-        const handlers = {
-            loadPlugins: () => {}
-        };
-        const plugins = {
-            MyPlugin: {}
-        };
-        const spy = expect.spyOn(handlers, "loadPlugins");
-        const pluginsFunc = (callback) => {
-            callback(plugins);
-        };
-
-        const store = {
-            dispatch: () => {},
-            subscribe: () => {},
-            getState: () => ({})
-        };
-        const pages = [{
-            name: 'mypage',
-            path: '/',
-            component: mycomponent,
-            plugins: pluginsFunc
-        }];
-        const app = ReactDOM.render(<Provider store={store}><StandardRouter loadPlugins={handlers.loadPlugins} pages={pages}/></Provider>, document.getElementById("container"));
-        expect(app).toExist();
-
-        expect(spy.calls.length).toBe(1);
-        expect(spy.calls[0].arguments[0]).toBe(plugins);
     });
 });

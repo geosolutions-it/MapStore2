@@ -31,7 +31,6 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         browser: require('../reducers/browser'),
         controls: require('../reducers/controls'),
         help: require('../reducers/help'),
-        plugins: require('../reducers/plugins'),
         map: () => {return null; },
         mapInitialConfig: () => {return null; },
         layers: () => {return null; }
@@ -52,24 +51,15 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         if (action && action.type === CHANGE_BROWSER_PROPERTIES && newState.browser.mobile) {
             newState = assign(newState, mobileOverride);
         }
-        if (action.type === '@@redux/INIT') {
-            Object.keys(newState).forEach((key) => {
-                if (defaultState[key]) {
-                    newState[key] = assign(newState[key], defaultState[key]);
-                }
-            });
-        }
+
         return newState;
     };
-    if (storeOpts.updateReducers) {
-        return rootReducer;
-    }
     let store;
     if (storeOpts && storeOpts.persist) {
-        store = DebugUtils.createDebugStore(rootReducer, {}, [], autoRehydrate());
+        store = DebugUtils.createDebugStore(rootReducer, defaultState, [], autoRehydrate());
         persistStore(store, storeOpts.persist, storeOpts.onPersist);
     } else {
-        store = DebugUtils.createDebugStore(rootReducer, {});
+        store = DebugUtils.createDebugStore(rootReducer, defaultState);
     }
     SecurityUtils.setStore(store);
     return store;

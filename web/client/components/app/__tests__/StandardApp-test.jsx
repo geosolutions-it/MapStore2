@@ -56,8 +56,7 @@ describe('StandardApp', () => {
         const store = () => ({
             dispatch() {
                 dispatched++;
-            },
-            subscribe() {}
+            }
         });
 
 
@@ -76,8 +75,7 @@ describe('StandardApp', () => {
                 if (value === 10) {
                     done();
                 }
-            },
-            subscribe() {}
+            }
         });
 
 
