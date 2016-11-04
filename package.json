@@ -50,7 +50,7 @@
     "react-motion": "0.4.4",
     "react-router": "2.4.0",
     "react-router-redux": "2.1.0",
-    "react-select": "1.0.0-beta14",
+    "react-select": "1.0.0-rc.1",
     "react-transform-catch-errors": "1.0.2",
     "redbox-react": "1.2.4",
     "redux-devtools": "3.1.1",

@@ -7,7 +7,7 @@
  */
 
 var React = require('react');
-// const Message = require('../../../I18N/Message');
+const Message = require('../../../I18N/Message');
 const Select = require('react-select');
 const {Button, Glyphicon, Alert} = require('react-bootstrap');
 
@@ -29,28 +29,39 @@ const WMSStyle = React.createClass({
         };
     },
     renderLegend() {
-        if (this.props.element && this.props.element.availableStyles) {
-            let i = this.props.element.availableStyles.findIndex((item) => item.name === this.props.element.style);
-            if (i >= 0) {
-                let style = this.props.element.availableStyles[i];
-                let legendUrl = style.legendURL && style.legendURL[0];
-            }
-        }
+        // legend can not added because of this issue
+        // https://github.com/highsource/ogc-schemas/issues/183
+        return null;
     },
     renderError() {
         if (this.props.element && this.props.element.capabilities && this.props.element && this.props.element.capabilities.error) {
-            return <Alert bsStyle="danger">There was an error getting layer's style list</Alert>;
+            return <Alert bsStyle="danger"><Message msgId="layerProperties.styleListLoadError" /></Alert>;
         }
     },
     render() {
+        let options = [{label: "Default Style", value: ""}].concat((this.props.element.availableStyles || []).map((item) => {
+            return {label: item.title || item.name, value: item.name};
+        }));
+        let currentStyleIndex = this.props.element.style && this.props.element.availableStyles && this.props.element.availableStyles.findIndex( el => el.name === this.props.element.style);
+        if (!(currentStyleIndex >= 0) && this.props.element.style) {
+            options.push({label: this.props.element.style, value: this.props.element.style });
+        }
         return (<form ref="style">
-            <Select
-                    allowCreate={true}
+            <Select.Creatable
                     key="styles-dropdown"
-                    options={[{label: "Default Style", value: ""}].concat((this.props.element.availableStyles && this.props.element.availableStyles || []).map((item) => {
-                        return {label: item.title || item.name, value: item.name};
-                    }))}
+                    options={options}
+                    isLoading={this.props.element && this.props.element.capabilitiesLoading}
                     value={this.props.element.style || ""}
+                    onOpen={() => {
+                        // automatic retrieve if availableStyles are not available or capabilities is not present
+                        // that means you don't have a list and you didn't try to load it.
+                        if (this.props.element && !(this.props.element.capabilities && this.props.element.availableStyles)) {
+                            this.props.retrieveLayerData(this.props.element);
+                        }
+                    }}
+                    promptTextCreator={(value) => {
+                        return <Message msgId="layerProperties.styleCustom" msgParams={{value}} />;
+                    }}
                     onChange={(selected) => {
                         this.updateEntry("style", {target: {value: (selected && selected.value) || ""}});
                     }}

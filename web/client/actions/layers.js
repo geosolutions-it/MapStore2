@@ -196,6 +196,9 @@ function getLayerCapabilities(layer, options) {
     }
     return (dispatch) => {
         // TODO, look ad current cached capabilities;
+        dispatch(updateNode(layer.id, "id", {
+            capabilitiesLoading: true
+        }));
         return WMS.getCapabilities(reqUrl, options).then((capabilities) => {
             let layers = _.get(capabilities, "capability.layer.layer");
             let layerCapability;
@@ -213,6 +216,7 @@ function getLayerCapabilities(layer, options) {
             if (layerCapability) {
                 dispatch(updateNode(layer.id, "id", {
                     capabilities: layerCapability,
+                    capabilitiesLoading: null,
                     boundingBox: layerCapability.latLonBoundingBox,
                     availableStyles: layerCapability.style && (Array.isArray(layerCapability.style) ? layerCapability.style : [layerCapability.style])
                 }));
@@ -220,7 +224,7 @@ function getLayerCapabilities(layer, options) {
             // return dispatch(updateNode(layer.id, "id", {capabilities: capabilities || {"error": "no describe Layer found"}}));
 
         }).catch((error) => {
-            dispatch(updateNode(layer.id, "id", {capabilities: {error: "error getting capabilities", details: error}} ));
+            dispatch(updateNode(layer.id, "id", {capabilitiesLoading: null, capabilities: {error: "error getting capabilities", details: error}} ));
 
             // return dispatch(updateNode(layer.id, "id", {capabilities: capabilities || {"error": "no describe Layer found"}}));
 
