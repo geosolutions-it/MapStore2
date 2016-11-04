@@ -22,7 +22,7 @@ const {resetControls} = require('../../../actions/controls');
 const urlQuery = url.parse(window.location.href, true).query;
 
 const PluginsContainer = connect((state) => ({
-    pluginsConfig: ConfigUtils.getConfigProp('plugins') || null,
+    pluginsConfig: state.plugins || ConfigUtils.getConfigProp('plugins') || null,
     mode: (urlQuery.mobile || (state.browser && state.browser.touch)) ? 'mobile' : 'desktop'
 }))(require('../../../components/plugins/PluginsContainer'));
 
@@ -65,3 +65,4 @@ module.exports = connect((state) => ({
     loadMapConfig,
     reset: resetControls
 })(MapViewer);
+

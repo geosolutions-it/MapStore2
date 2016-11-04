@@ -101,11 +101,8 @@ const OpenlayersLayer = React.createClass({
         if (type) {
             const layerOptions = this.generateOpts(options, position, CoordinatesUtils.normalizeSRS(this.props.srs));
             this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
-            if (this.layer) {
-                this.setState({});
-                if (!this.layer.detached) {
-                    this.addLayer(options);
-                }
+            if (this.layer && !this.layer.detached) {
+                this.addLayer(options);
             }
         }
     },
