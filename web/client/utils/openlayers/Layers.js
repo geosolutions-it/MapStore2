@@ -45,6 +45,13 @@ var Layers = {
             }
         }
     },
+    removeLayer: function(type, options, map, mapId, layer) {
+        var layerCreator = layerTypes[type];
+        if (layerCreator && layerCreator.remove) {
+            return layerCreator.remove(options, map, mapId, layer);
+        }
+        return null;
+    },
     renderLayer: function(type, options, map, mapId, layer) {
         var layerCreator = layerTypes[type];
         if (layerCreator && layerCreator.render) {

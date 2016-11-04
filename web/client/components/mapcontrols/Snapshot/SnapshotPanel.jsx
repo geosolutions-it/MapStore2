@@ -9,7 +9,8 @@
 const React = require('react');
 const {Button, Col, Grid, Row, Image, Glyphicon, Table, Panel} = require('react-bootstrap');
 const {DateFormat} = require('../../I18N/I18N');
-require("./style.css");
+require("./css/snapshot.css");
+
 const ConfigUtils = require('../../../utils/ConfigUtils');
 const shotingImg = require('./shoting.gif');
 const notAvailable = require('./not-available.png');

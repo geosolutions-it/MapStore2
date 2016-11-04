@@ -62,7 +62,7 @@ let SharePanel = React.createClass({
                     <span className="share-panel-title">
                         <Message msgId="share.title"/>
                     </span>
-                    <button onClick={this.props.onClose} className="print-panel-close close">
+                    <button onClick={this.props.onClose} className="share-panel-close close">
                         {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}
                     </button>
                 </span>

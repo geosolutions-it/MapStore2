@@ -13,6 +13,7 @@ const Message = require('../../../components/I18N/Message');
 const Dialog = require('../../misc/Dialog');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
+require('../css/security.css');
 const assign = require('object-assign');
 
   /**

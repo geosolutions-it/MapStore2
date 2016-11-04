@@ -9,11 +9,11 @@
 var React = require('react');
 var {Button, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
 const defaultIcon = require('../../misc/spinners/InlineSpinner/img/spinner.gif');
-
+require('./css/locate.css');
 let checkingGeoLocation = false;
 let geoLocationAllowed = false;
 
-var LocateBtn = React.createClass({
+const LocateBtn = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         btnConfig: React.PropTypes.object,

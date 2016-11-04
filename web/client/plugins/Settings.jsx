@@ -18,6 +18,7 @@ const LangBar = connect((state) => ({
     onLanguageChange: loadLocale.bind(null, null)
 })(require('../components/I18N/LangBar'));
 
+require('./settings/css/settings.css');
 
 const HistoryBar = require('../components/mapcontrols/navigationhistory/HistoryBar');
 const { ActionCreators } = require('redux-undo');

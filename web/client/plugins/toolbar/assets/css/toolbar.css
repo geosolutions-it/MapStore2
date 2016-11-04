@@ -22,3 +22,19 @@
   opacity: 0.01;
   transition: opacity 300ms ease-in;
 }
+
+#navigationBar .mapToolbar {
+    top: auto !important;
+    bottom: 5px;
+    right: 0 !important;
+}
+
+#navigationBar .toolbar-panel {
+    bottom: 80px !important;
+}
+
+#identifyBar .mapToolbar {
+    top: auto !important;
+    bottom: 5px;
+    right: 212px !important;
+}

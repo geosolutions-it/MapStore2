@@ -9,6 +9,8 @@
 const React = require('react');
 const {Panel, Glyphicon} = require('react-bootstrap');
 
+require('./css/identify.css');
+
 const Draggable = require('react-draggable');
 
 const MapInfoUtils = require('../../../utils/MapInfoUtils');

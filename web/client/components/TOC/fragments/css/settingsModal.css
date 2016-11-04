@@ -274,3 +274,71 @@
 .noUi-marker-vertical.noUi-marker-large {
   width: 15px;
 }
+
+
+
+#mapstore-layer-settings {
+    min-width: 400px;
+}
+
+#mapstore-layer-settings .noUi-background {
+    background:#CCC;
+}
+
+#mapstore-layer-settings .noUi-horizontal {
+    height: 2px;
+	width: 260px;
+	margin:auto;
+}
+#mapstore-layer-settings .noUi-target {
+    position: relative;
+    direction: ltr;
+}
+
+#mapstore-layer-settings .noUi-base {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+#mapstore-layer-settings .noUi-horizontal .noUi-handle {
+    width: 23px;
+    height: 23px;
+    top: -10px;
+}
+
+#mapstore-layer-settings .noUi-handle {
+    background: #078AA3;
+    cursor: default;
+	border-radius:50px;
+}
+
+#mapstore-layer-settings .noUi-handle {
+    position: relative;
+    z-index: 1;
+}
+#mapstore-layer-settings .noUi-target, .noUi-target * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -ms-touch-action: none;
+    touch-action: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#mapstore-layer-settings .noUi-target {
+    position: relative;
+    direction: ltr;
+}
+
+#mapstore-layer-settings .noUi-target {
+    width: 94%;
+    margin-bottom: 10px;
+}
+
+#mapstore-layer-settings .noUi-handle:before, #mapstore-layer-settings .noUi-handle:after {
+    background: none;
+}

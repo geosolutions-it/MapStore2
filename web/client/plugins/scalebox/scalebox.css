@@ -4,4 +4,15 @@
     left: -2px;
     position: absolute;
     margin: 8px;
+    width: 148px;
+}
+
+#mapstore-scalebox-container {
+    z-index: 10;
+    bottom: -16px !important;
+    right: 55px;
+    left: auto !important;
+    position: absolute;
+    margin: 8px;
+    width: 148px;
 }
