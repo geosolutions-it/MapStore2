@@ -9,7 +9,7 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {changeLayerProperties, changeGroupProperties, toggleNode,
-       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode} = require('../actions/layers');
+       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode, getLayerCapabilities} = require('../actions/layers');
 const {zoomToExtent} = require('../actions/map');
 
 const {groupsSelector} = require('../selectors/layers');
@@ -49,6 +49,7 @@ const LayerTree = React.createClass({
         onToggleGroup: React.PropTypes.func,
         onToggleLayer: React.PropTypes.func,
         onZoomToExtent: React.PropTypes.func,
+        retrieveLayerData: React.PropTypes.func,
         onSort: React.PropTypes.func,
         onSettings: React.PropTypes.func,
         hideSettings: React.PropTypes.func,
@@ -66,6 +67,7 @@ const LayerTree = React.createClass({
         return {
             groupPropertiesChangeHandler: () => {},
             layerPropertiesChangeHandler: () => {},
+            retrieveLayerData: () => {},
             onToggleGroup: () => {},
             onToggleLayer: () => {},
             onZoomToExtent: () => {},
@@ -115,6 +117,7 @@ const LayerTree = React.createClass({
                             activateLegendTool={this.props.activateLegendTool}
                             activateZoomTool={this.props.activateZoomTool}
                             activateSettingsTool={this.props.activateSettingsTool}
+                            retrieveLayerData={this.props.retrieveLayerData}
                             settingsText={<Message msgId="layerProperties.windowTitle"/>}
                             opacityText={<Message msgId="opacity"/>}
                             saveText={<Message msgId="save"/>}
@@ -130,6 +133,7 @@ const LayerTree = React.createClass({
 const TOCPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,
     layerPropertiesChangeHandler: changeLayerProperties,
+    retrieveLayerData: getLayerCapabilities,
     onToggleGroup: LayersUtils.toggleByType('groups', toggleNode),
     onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
     onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),

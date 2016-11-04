@@ -33,7 +33,8 @@ var {
     removeLayer,
     showSettings,
     hideSettings,
-    updateSettings
+    updateSettings,
+    getLayerCapabilities
 } = require('../layers');
 
 describe('Test correctness of the layers actions', () => {
@@ -166,5 +167,26 @@ describe('Test correctness of the layers actions', () => {
         expect(action).toExist();
         expect(action.type).toBe(UPDATE_SETTINGS);
         expect(action.options).toEqual({opacity: 0.5, size: 500});
+    });
+    it('get layer capabilities', (done) => {
+        const layer = {
+            id: "TEST_ID",
+            name: 'testworkspace:testlayer',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'shapefile',
+            url: 'base/web/client/test-resources/geoserver/wms'
+        };
+        const actionCall = getLayerCapabilities(layer);
+        expect(actionCall).toExist();
+        actionCall((action)=> {
+            expect(action).toExist();
+            expect(action.options).toExist();
+            expect(action.type === UPDATE_NODE);
+            if (action.options.capabilities) {
+                done();
+            }
+        });
     });
 });

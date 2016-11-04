@@ -15,6 +15,7 @@ const Dialog = require('../../misc/Dialog');
 const ConfirmButton = require('../../buttons/ConfirmButton');
 const General = require('./settings/General');
 const Display = require('./settings/Display');
+const WMSStyle = require('./settings/WMSStyle');
 const {Portal} = require('react-overlays');
 const assign = require('object-assign');
 const Message = require('../../I18N/Message');
@@ -28,6 +29,7 @@ const SettingsModal = React.createClass({
         hideSettings: React.PropTypes.func,
         updateNode: React.PropTypes.func,
         removeNode: React.PropTypes.func,
+        retrieveLayerData: React.PropTypes.func,
         titleText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         opacityText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         saveText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
@@ -54,12 +56,13 @@ const SettingsModal = React.createClass({
             hideSettings: () => {},
             updateNode: () => {},
             removeNode: () => {},
+            retrieveLayerData: () => {},
             asModal: true,
             buttonSize: "large",
             closeGlyph: "",
             panelStyle: {
                 minWidth: "300px",
-                zIndex: 100,
+                zIndex: 2000,
                 position: "absolute",
                 // overflow: "auto",
                 top: "100px",
@@ -98,22 +101,39 @@ const SettingsModal = React.createClass({
         );
         this.props.hideSettings();
     },
-    render() {
-        const general = (<General
+    renderGeneral() {
+        return (<General
             updateSettings={this.updateParams}
             element={this.props.element}
             groups={this.props.groups}
             key="general"
             on/>);
-        const display = (<Display
-            opacityText={this.props.opacityText}
-            element={this.props.element}
-            settings={this.props.settings}
-            onChange={(key, value) => this.updateParams({[key]: value}, this.props.realtimeUpdate)} />);
+    },
+    renderDisplay() {
+        return (<Display
+           opacityText={this.props.opacityText}
+           element={this.props.element}
+           settings={this.props.settings}
+           onChange={(key, value) => this.updateParams({[key]: value}, this.props.realtimeUpdate)} />);
+    },
+    renderStyleTab() {
+        if (this.props.element.type === "wms") {
+            return (<WMSStyle
+                    retrieveLayerData={this.props.retrieveLayerData}
+                    updateSettings={this.updateParams}
+                    element={this.props.element}
+                    key="style"
+                    o/>);
+        }
+    },
+    render() {
+        const general = this.renderGeneral();
+        const display = this.renderDisplay();
+        const style = this.renderStyleTab();
         const tabs = (<Tabs defaultActiveKey={1} id="layerProperties-tabs">
             <Tab eventKey={1} title={<Message msgId="layerProperties.general" />}>{general}</Tab>
             <Tab eventKey={2} title={<Message msgId="layerProperties.display" />}>{display}</Tab>
-            <Tab eventKey={3} title={<Message msgId="layerProperties.style" />} disabled>Tab 3 content</Tab>
+            <Tab eventKey={3} title={<Message msgId="layerProperties.style" />} disabled={!style} >{style}</Tab>
           </Tabs>);
         const footer = (<span role="footer">
             {this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} onClick={this.onClose}>{this.props.closeText}</Button> : <span/>}

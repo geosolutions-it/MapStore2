@@ -67,7 +67,6 @@ const Api = {
                 resolve(axios.get(parseUrl(getCapabilitiesUrl)).then((response) => {
                     let json = unmarshaller.unmarshalString(response.data);
                     return json && json.value;
-
                 }));
             });
         });

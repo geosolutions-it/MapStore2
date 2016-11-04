@@ -23,6 +23,7 @@ var DefaultLayer = React.createClass({
         node: React.PropTypes.object,
         settings: React.PropTypes.object,
         propertiesChangeHandler: React.PropTypes.func,
+        retrieveLayerData: React.PropTypes.func,
         onToggle: React.PropTypes.func,
         onZoom: React.PropTypes.func,
         onSettings: React.PropTypes.func,
@@ -56,6 +57,7 @@ var DefaultLayer = React.createClass({
             onToggle: () => {},
             onZoom: () => {},
             onSettings: () => {},
+            retrieveLayerData: () => {},
             activateRemoveLayer: false,
             activateLegendTool: false,
             activateSettingsTool: false,
@@ -106,6 +108,7 @@ var DefaultLayer = React.createClass({
                 tools.push(
                     <SettingsModal key="toolsettingsmodal" options={this.props.modalOptions}
                                {...this.props.settingsOptions}
+                               retrieveLayerData={this.props.retrieveLayerData}
                                hideSettings={this.props.hideSettings}
                                settings={this.props.settings}
                                element={this.props.node}

@@ -83,12 +83,14 @@ const RecordItem = React.createClass({
         let links = [];
         if (wmsGetCap) {
             links.push({
+                type: "WMS_GET_CAPABILITIES",
                 url: wmsGetCap.url,
                 labelId: 'catalog.wmsGetCapLink'
             });
         }
         if (wfsGetCap) {
             links.push({
+                type: "WFS_GET_CAPABILITIES",
                 url: wfsGetCap.url,
                 labelId: 'catalog.wfsGetCapLink'
             });
