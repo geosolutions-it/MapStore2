@@ -41,6 +41,14 @@
 #mapstore-print-panel{
     margin-top: 100px !important;
 }
+#mapstore-print-panel.modal-dialog {
+    z-index: 2000;
+}
+
+#mapstore-print-panel .modal-body {
+    max-height: calc(100vh - 190px);
+    overflow-y: auto;
+}
 
 .mapstore-print-panel {
     width: 850px;
