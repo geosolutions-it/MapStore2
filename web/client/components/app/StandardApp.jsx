@@ -36,7 +36,7 @@ const StandardApp = React.createClass({
             pluginsDef: {plugins: {}, requires: {}},
             initialActions: [],
             printingEnabled: false,
-            appStore: () => ({dispatch: () => {}, subscribe: () => {}}),
+            appStore: () => ({dispatch: () => {}}),
             appComponent: () => <span/>
         };
     },
@@ -57,16 +57,6 @@ const StandardApp = React.createClass({
             onPersist: onInit
         });
         this.store = this.props.appStore(this.props.pluginsDef.plugins, opts);
-        let newPlugins;
-        this.store.subscribe(() => {
-            const state = this.store.getState();
-            if (state.plugins && Object.keys(state.plugins).length > 0) {
-                if (state.plugins !== newPlugins) {
-                    newPlugins = state.plugins;
-                    this.store.replaceReducer(this.props.appStore(assign({}, this.props.pluginsDef.plugins, newPlugins), {updateReducers: true}));
-                }
-            }
-        });
         if (!opts.persist) {
             onInit();
         }
