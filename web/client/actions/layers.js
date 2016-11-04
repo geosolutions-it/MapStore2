@@ -214,7 +214,7 @@ function getLayerCapabilities(layer, options) {
                 dispatch(updateNode(layer.id, "id", {
                     capabilities: layerCapability,
                     boundingBox: layerCapability.latLonBoundingBox,
-                    availableStyles: Array.isArray(layerCapability.style) ? layerCapability.style : [layerCapability.style]
+                    availableStyles: layerCapability.style && (Array.isArray(layerCapability.style) ? layerCapability.style : [layerCapability.style])
                 }));
             }
             // return dispatch(updateNode(layer.id, "id", {capabilities: capabilities || {"error": "no describe Layer found"}}));

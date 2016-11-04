@@ -62,7 +62,7 @@ const SettingsModal = React.createClass({
             closeGlyph: "",
             panelStyle: {
                 minWidth: "300px",
-                zIndex: 100,
+                zIndex: 2000,
                 position: "absolute",
                 // overflow: "auto",
                 top: "100px",
