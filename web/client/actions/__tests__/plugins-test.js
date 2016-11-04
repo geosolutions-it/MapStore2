@@ -1,13 +1,13 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var {loadPlugins, LOAD_PLUGINS} = require('../plugins');
+const expect = require('expect');
+const {loadPlugins, LOAD_PLUGINS} = require('../plugins');
 
 describe('Test plugins related actions', () => {
     it('test load plugins action', () => {
