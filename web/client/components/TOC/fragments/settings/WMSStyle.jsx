@@ -33,6 +33,12 @@ const WMSStyle = React.createClass({
         // https://github.com/highsource/ogc-schemas/issues/183
         return null;
     },
+    renderItemLabel(item) {
+        return (<div>
+            <div key="item-title">{item.title || item.name}</div>
+            <div><small className="text-muted"key="item-key-description">{item.name}</small></div>
+        </div>);
+    },
     renderError() {
         if (this.props.element && this.props.element.capabilities && this.props.element && this.props.element.capabilities.error) {
             return <Alert bsStyle="danger"><Message msgId="layerProperties.styleListLoadError" /></Alert>;
@@ -40,7 +46,7 @@ const WMSStyle = React.createClass({
     },
     render() {
         let options = [{label: "Default Style", value: ""}].concat((this.props.element.availableStyles || []).map((item) => {
-            return {label: item.title || item.name, value: item.name};
+            return {label: this.renderItemLabel(item), value: item.name};
         }));
         let currentStyleIndex = this.props.element.style && this.props.element.availableStyles && this.props.element.availableStyles.findIndex( el => el.name === this.props.element.style);
         if (!(currentStyleIndex >= 0) && this.props.element.style) {
