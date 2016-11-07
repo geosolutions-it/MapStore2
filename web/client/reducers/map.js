@@ -34,25 +34,27 @@ function mapConfig(state = null, action) {
             });
         case ZOOM_TO_EXTENT: {
             let zoom = 0;
-            let bbox = CoordinatesUtils.reprojectBbox(action.extent, action.crs, state.bbox && state.bbox.crs || "EPSG:4326");
-            let wgs84BBox = CoordinatesUtils.reprojectBbox(action.extent, action.crs, "EPSG:4326");
-            if (bbox && wgs84BBox) {
+            let bounds = CoordinatesUtils.reprojectBbox(action.extent, action.crs, state.bbox && state.bbox.crs || "EPSG:4326");
+            let wgs84BBounds = CoordinatesUtils.reprojectBbox(action.extent, action.crs, "EPSG:4326");
+            if (bounds && wgs84BBounds) {
                 // center by the max. extent defined in the map's config
-                let center = MapUtils.getCenterForExtent(wgs84BBox, "EPSG:4326");
+                let center = MapUtils.getCenterForExtent(wgs84BBounds, "EPSG:4326");
                 // workaround to get zoom 0 for -180 -90... - TODO do it better
                 let full = action.crs === "EPSG:4326" && action.extent && action.extent[0] <= -180 && action.extent[1] <= -90 && action.extent[2] >= 180 && action.extent[3] >= 90;
                 if ( full ) {
                     zoom = 2;
                 } else {
-                    let mapBBox = CoordinatesUtils.reprojectBbox(action.extent, action.crs, state.projection || "EPSG:4326");
+                    let mapBBounds = CoordinatesUtils.reprojectBbox(action.extent, action.crs, state.projection || "EPSG:4326");
                     // NOTE: STATE should contain size !!!
-                    zoom = MapUtils.getZoomForExtent(mapBBox, state.size, 0, 21, null);
+                    zoom = MapUtils.getZoomForExtent(mapBBounds, state.size, 0, 21, null);
                 }
+                let newbounds = {minx: bounds[0], miny: bounds[1], maxx: bounds[2], maxy: bounds[3]};
+                let newbbox = assign({}, state.bbox, {bounds: newbounds});
                 return assign({}, state, {
                     center,
                     zoom,
                     mapStateSource: action.mapStateSource,
-                    bbox: bbox
+                    bbox: newbbox
                 });
             }
             return state;

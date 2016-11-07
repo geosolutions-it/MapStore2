@@ -98,8 +98,20 @@ describe('Test the map reducer', () => {
         expect(state.mapStateSource).toBe(undefined);
         expect(state.center.x).toBe(11);
         expect(state.center.y).toBe(45);
+        expect(state.bbox).toExist();
+        expect(state.bbox.bounds).toExist();
+        expect(state.bbox.bounds.minx).toExist();
+        expect(state.bbox.bounds.miny).toExist();
+        expect(state.bbox.bounds.maxx).toExist();
+        expect(state.bbox.bounds.maxy).toExist();
         state = mapConfig({projection: "EPSG:900913"}, action2);
         expect(state.zoom).toBe(2);
+        expect(state.bbox).toExist();
+        expect(state.bbox.bounds).toExist();
+        expect(state.bbox.bounds.minx).toExist();
+        expect(state.bbox.bounds.miny).toExist();
+        expect(state.bbox.bounds.maxx).toExist();
+        expect(state.bbox.bounds.maxy).toExist();
 
     });
     it('change map style', () => {
