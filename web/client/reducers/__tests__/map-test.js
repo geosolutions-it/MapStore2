@@ -112,4 +112,15 @@ describe('Test the map reducer', () => {
         expect(state.mapStateSource).toBe("test");
         expect(state.style.width).toBe(100);
     });
+    it('change map rotation', () => {
+        let rotation = 0.5235987755982989;
+        const action = {
+            type: 'CHANGE_ROTATION',
+            rotation: rotation,
+            mapStateSource: "test"
+        };
+        let state = mapConfig({}, action);
+        expect(state.bbox.rotation).toEqual(rotation);
+        expect(state.mapStateSource).toBe("test");
+    });
 });

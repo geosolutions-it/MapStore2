@@ -37,7 +37,8 @@ var OpenlayersMap = React.createClass({
         changeMeasurementState: React.PropTypes.func,
         registerHooks: React.PropTypes.bool,
         interactive: React.PropTypes.bool,
-        onInvalidLayer: React.PropTypes.func
+        onInvalidLayer: React.PropTypes.func,
+        bbox: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -311,6 +312,9 @@ var OpenlayersMap = React.createClass({
         }
         if (Math.round(newProps.zoom) !== this.props.zoom) {
             view.setZoom(Math.round(newProps.zoom));
+        }
+        if (newProps.bbox && newProps.bbox.rotation !== undefined && newProps.bbox.rotation !== this.props.bbox.rotation) {
+            view.setRotation(newProps.bbox.rotation);
         }
     },
     normalizeCenter: function(center) {

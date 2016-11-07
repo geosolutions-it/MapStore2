@@ -7,7 +7,8 @@
  */
 
 var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER,
-    CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, ZOOM_TO_EXTENT, PAN_TO, CHANGE_MAP_STYLE} = require('../actions/map');
+    CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, ZOOM_TO_EXTENT, PAN_TO, CHANGE_MAP_STYLE,
+    CHANGE_ROTATION} = require('../actions/map');
 
 
 var assign = require('object-assign');
@@ -68,6 +69,10 @@ function mapConfig(state = null, action) {
         }
         case CHANGE_MAP_STYLE: {
             return assign({}, state, {mapStateSource: action.mapStateSource, style: action.style, resize: state.resize ? state.resize + 1 : 1});
+        }
+        case CHANGE_ROTATION: {
+            let newBbox = assign({}, state.bbox, {rotation: action.rotation});
+            return assign({}, state, {bbox: newBbox, mapStateSource: action.mapStateSource});
         }
         default:
             return state;
