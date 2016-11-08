@@ -152,7 +152,7 @@ const HighlightFeatureSupport = React.createClass({
         if (layer) {
             let ft = layer.getSource().getFeatures();
             ft.map((f)=> {
-                if (features.includes(f.getId())) {
+                if (features.indexOf(f.getId()) !== -1) {
                     ftColl.push(f);
                 }
             }, this);
