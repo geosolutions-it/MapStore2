@@ -89,3 +89,6 @@ html, body, #container, .fill {
     left: auto;
     bottom: 3px;
 }
+.modal-dialog-container {
+    z-index: 2000!important;
+}
