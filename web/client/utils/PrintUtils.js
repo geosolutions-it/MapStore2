@@ -110,7 +110,7 @@ const PrintUtils = {
                    "TILED": true,
                    "EXCEPTIONS": "application/vnd.ogc.se_inimage",
                    "scaleMethod": "accurate"
-               }, layer.baseParams || {})
+               }, layer.baseParams || {}, layer.params || {})
             }),
             legend: (layer, spec) => ({
                 "name": layer.title || layer.name,
