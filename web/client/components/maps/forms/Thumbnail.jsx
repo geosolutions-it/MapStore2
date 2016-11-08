@@ -158,7 +158,7 @@ const Thumbnail = React.createClass({
         this.getDataUri(this.files, callback);
     },
     deleteThumbnail(thumbnail, mapId) {
-        if (thumbnail && thumbnail.includes("geostore")) {
+        if (thumbnail && thumbnail.indexOf("geostore") !== -1) {
             // this doesn't work if the URL is not encoded (because of GeoStore / Tomcat parameter encoding issues)
             let start = (thumbnail).indexOf("data%2F") + 7;
             let end = (thumbnail).indexOf("%2Fraw");

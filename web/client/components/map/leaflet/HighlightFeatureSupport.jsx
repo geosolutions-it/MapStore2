@@ -125,7 +125,7 @@ const HighlightFeatureSupport = React.createClass({
         this._selectedFeatures.map((f) => {this._layer.resetStyle(f); });
         this._selectedFeatures = [];
         this._layer.eachLayer((l)=> {
-            if (features.includes(l.msId)) {
+            if (features.indexOf(l.msId) !== -1) {
                 this._selectedFeatures.push(l);
                 l.bringToFront();
                 l.setStyle(this.props.selectedStyle);

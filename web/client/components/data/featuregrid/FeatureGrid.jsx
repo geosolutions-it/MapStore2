@@ -362,7 +362,7 @@ const FeatureGrid = React.createClass({
         let selectedId = this.props.highlightedFeatures;
         let me = this;
         this.api.forEachNode((n) => {
-            if (selectedId.includes(n.data.id)) {
+            if (selectedId.indexOf(n.data.id) !== -1) {
                 me.api.selectNode(n, true, true);
             }else if (me.api.isNodeSelected(n)) {
                 me.suppresSelectionEvent = true;
