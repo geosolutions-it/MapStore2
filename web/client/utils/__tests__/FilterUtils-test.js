@@ -461,4 +461,32 @@ describe('FilterUtils', () => {
         let filter = FilterUtils.toCQLFilter(filterObj);
         expect(filter).toEqual(expected);
     });
+    it('Check CrossLayerFilter segment generation', () => {
+        let crossLayerFilterObj = {
+           operation: "INTERSECTS",
+           attribute: "roads_geom",
+           collectGeometries: {queryCollection: {
+               typeName: "regions",
+               geometryName: "regions_geom",
+               cqlFilter: "area > 10"
+           }}
+        };
+        let expected = "<ogc:Intersects>"
+         + '<ogc:PropertyName>roads_geom</ogc:PropertyName>'
+         + '<ogc:Function name="collectGeometries">'
+         + '<ogc:Function name="queryCollection">'
+         + '<ogc:Literal>regions</ogc:Literal>'
+         + '<ogc:Literal>regions_geom</ogc:Literal>'
+         + '<ogc:Literal>area > 10</ogc:Literal>'
+         + '</ogc:Function></ogc:Function>'
+         + "</ogc:Intersects>";
+
+        // this is a workarround for this issue : https://github.com/geosolutions-it/MapStore2/issues/1263
+        // please remove when fixed
+        FilterUtils.nsplaceholder = "ogc";
+        FilterUtils.setOperatorsPlaceholders("{namespace}", "ogc");
+
+        let filter = FilterUtils.processOGCCrossLayerFilter(crossLayerFilterObj);
+        expect(filter).toEqual(expected);
+    });
 });
