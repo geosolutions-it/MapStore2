@@ -7,6 +7,7 @@
  */
 
 var axios = require('../libs/ajax');
+var ConfigUtils = require('../utils/ConfigUtils');
 
 const MAP_CONFIG_LOADED = 'MAP_CONFIG_LOADED';
 const MAP_CONFIG_LOAD_ERROR = 'MAP_CONFIG_LOAD_ERROR';
@@ -31,10 +32,14 @@ function configureError(e) {
     };
 }
 
-function loadMapConfig(configName, mapId) {
+function loadMapConfig(configName, mapId, permalinkObj) {
     return (dispatch) => {
         return axios.get(configName).then((response) => {
             if (typeof response.data === 'object') {
+                if (permalinkObj) {
+                    ConfigUtils.setPermalinkLayersVisibility(response.data.map.layers, permalinkObj.permalinkLayers.layers);
+                    assign(response.data.map, permalinkObj.permalinkExtent);
+                }
                 dispatch(configureMap(response.data, mapId));
             } else {
                 try {
