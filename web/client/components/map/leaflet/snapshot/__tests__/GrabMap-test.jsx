@@ -17,7 +17,9 @@ describe("test the Leaflet GrabMap component", () => {
         // emulate empty map
         document.body.innerHTML = '<div><div id="snap"></div>' +
             '<div id="map" style="width:100%; height:100%"><canvas></canvas>' +
-                '<div class="leaflet-tile-pane"><div class="leaflet-layer"></div></div>' +
+                '<div class="leaflet-map-pane">' +
+                    '<div class="leaflet-tile-pane"><div class="leaflet-layer"></div></div>' +
+                '</div>' +
             '</div></div>';
         setTimeout(done);
     });

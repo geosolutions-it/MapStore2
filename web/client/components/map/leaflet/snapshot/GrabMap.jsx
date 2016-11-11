@@ -46,7 +46,7 @@ let GrabLMap = React.createClass({
             canvas: <canvas></canvas>,
             drawCanvas: true,
             mapId: "map",
-            timeout: 1000
+            timeout: 2000
         };
     },
     componentDidMount() {
@@ -64,7 +64,7 @@ let GrabLMap = React.createClass({
         if (!mapIsLoading && this.props.active) {
             this.props.onStatusChange("SHOTING");
             this.previousTimeout = setTimeout(() => {
-                this.doSnapshot();
+                this.doSnapshot(this.props);
             },
             this.props.timeout);
         }
@@ -77,10 +77,6 @@ let GrabLMap = React.createClass({
         }
         if ( nextProps.active && !mapIsLoading && mapChanged ) {
             this.props.onStatusChange("SHOTING");
-            this.previousTimeout = setTimeout(() => {
-                this.doSnapshot();
-            },
-            nextProps.timeout);
         } else {
             if (!nextProps.active) {
                 this.props.onStatusChange("DISABLED");
@@ -89,12 +85,23 @@ let GrabLMap = React.createClass({
                 }
             }
         }
-        if (!mapIsLoading && nextProps.active && (mapChanged || nextProps.snapstate.state === "SHOTING") ) {
-            this.triggerShooting(nextProps.timeout);
-        }
     },
     shouldComponentUpdate(nextProps) {
-        return this.mapChanged(nextProps) && this.props.snapstate !== nextProps.snapstate;
+        return this.mapChanged(nextProps) || this.props.snapstate !== nextProps.snapstate;
+    },
+    componentDidUpdate(prevProps) {
+        let mapIsLoading = this.mapIsLoading(this.props.layers);
+        let mapChanged = this.mapChanged(prevProps);
+        if ( this.props.active && !mapIsLoading && mapChanged ) {
+            this.previousTimeout = setTimeout(() => {
+                this.doSnapshot(this.props);
+            },
+            this.props.timeout);
+        }
+        if (!mapIsLoading && this.props.active && (mapChanged || this.props.snapstate.state === "SHOTING") ) {
+            this.triggerShooting(this.props.timeout);
+        }
+
     },
     componentWillUnmount() {
         if (this.previousTimeout) {
@@ -124,11 +131,11 @@ let GrabLMap = React.createClass({
     },
     triggerShooting(delay) {
         this.previousTimeout = setTimeout(() => {
-            this.doSnapshot();
+            this.doSnapshot(this.props);
         },
         delay);
     },
-    doSnapshot() {
+    doSnapshot(props) {
         const tilePane = this.mapDiv.getElementsByClassName("leaflet-tile-pane");
         if (tilePane && tilePane.length > 0) {
             let layers = [].slice.call(tilePane[0].getElementsByClassName("leaflet-layer"), 0);
@@ -138,15 +145,15 @@ let GrabLMap = React.createClass({
             let canvas = this.refs.canvas;
             let context = canvas.getContext("2d");
             context.clearRect(0, 0, canvas.width, canvas.height);
-            let queue = layers.map(function(l) {
+            let queue = layers.map((l) => {
                 return html2canvas(l, {
+                        // you have to provide a canvas to avoid html2canvas to crop the image
+                        canvas: this.refs.canvas.cloneNode(),
                         logging: false,
                         proxy: this.proxy,
-                        allowTaint: this.props.allowTaint,
+                        allowTaint: props.allowTaint,
                         // TODO: improve to useCORS if every source has CORS enabled
-                        useCORS: this.props.allowTaint,
-                    width: canvas.width,
-                    height: canvas.height
+                        useCORS: props.allowTaint
                 });
             }, this);
             queue = [this.refs.canvas, ...queue];
@@ -166,7 +173,6 @@ let GrabLMap = React.createClass({
                         cx.globalAlpha = 1;
                     }
                     cx.drawImage(canv, 0, 0);
-
                     return pCanv;
 
                 });
