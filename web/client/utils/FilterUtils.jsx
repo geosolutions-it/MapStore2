@@ -488,39 +488,52 @@ const FilterUtils = {
         ogc += this.ogcSpatialOperator[this.objFilter.spatialField.operation].endTag;
         return ogc;
     },
+    /**
+    *  processOGCCrossLayerFilter(object)
+    *  object should be in this form :
+    *    {
+    *    operation: "FILTER_OPERATION_TO_DO_WITH_GEOMETRY",
+    *       attribute: "GEOMETRY_NAME_OF_THE_FEATURE_TYPE_TO_FILTER",
+    *       collectGeometries: {queryCollection: {
+    *           typeName: "TYPE_NAME_TO_QUERY",
+    *           geometryName: "GEOMETRY_NAME_OF_THE_FEATURE_TYPE_TO_QUERY",
+    *           cqlFilter: "CQL_FITER_TO_APPLY_TO_THE_FEATURE_TYPE"
+    *       }
+    * }}
+    * Example: if I want to filter the featureType "roads", with the geometryName = "roads_geom"
+    * that intersect the polygons from the featureType "regions, with geometryName "regions_geom"
+    * where the attribute "area" of the region is >= 10 You will have the following
+    *    {
+    *   operation: "INTERSECTS"
+    *   attribute: "roads_geom",
+    *    collectGeometries: {queryCollection: {
+    *       typeName: "regions",
+    *       geometryName: "regions_geom",
+    *       cqlFilter: "area > 10"
+    *   }}
+    *   }
+    */
     processOGCCrossLayerFilter: function(crossLayerFilter) {
         let ogc = this.ogcSpatialOperator[crossLayerFilter.operation].startTag;
         ogc +=
             this.propertyTagReference[this.nsplaceholder].startTag +
                 crossLayerFilter.attribute +
             this.propertyTagReference[this.nsplaceholder].endTag;
-
-        switch (crossLayerFilter.operation) {
-            case "INTERSECTS":
-            case "DWITHIN":
-            case "WITHIN":
-            case "CONTAINS": {
-                if (crossLayerFilter.collectGeometries) {
-                    ogc += `<ogc:Function name="collectGeometries">
-                     <ogc:Function name="queryCollection">
-                       <ogc:Literal>${crossLayerFilter.collectGeometries.queryCollection.typeName}</ogc:Literal>
-                       <ogc:Literal>${crossLayerFilter.collectGeometries.queryCollection.geometryName}</ogc:Literal>
-                       <ogc:Literal>${crossLayerFilter.collectGeometries.queryCollection.cqlFilter}</ogc:Literal>
-                     </ogc:Function>
-                 </ogc:Function>`;
-                }
-
-                if (crossLayerFilter.operation === "DWITHIN") {
-                    ogc += '<' + this.nsplaceholder + ':Distance units="m">' + (crossLayerFilter.distance || 0) + '</' + this.nsplaceholder + ':Distance>';
-                }
-
-                break;
-            }
-            default:
-                break;
+        // only collectGeometries is supported now
+        if (crossLayerFilter.collectGeometries) {
+            ogc += `<ogc:Function name="collectGeometries">` +
+             `<ogc:Function name="queryCollection">` +
+               `<ogc:Literal>${crossLayerFilter.collectGeometries.queryCollection.typeName}</ogc:Literal>` +
+               `<ogc:Literal>${crossLayerFilter.collectGeometries.queryCollection.geometryName}</ogc:Literal>` +
+               `<ogc:Literal>${crossLayerFilter.collectGeometries.queryCollection.cqlFilter}</ogc:Literal>` +
+             `</ogc:Function>` +
+         `</ogc:Function>`;
+        }
+        if (crossLayerFilter.operation === "DWITHIN") {
+            ogc += '<' + this.nsplaceholder + ':Distance units="m">' + (crossLayerFilter.distance || 0) + '</' + this.nsplaceholder + ':Distance>';
         }
 
-        ogc += this.ogcSpatialOperator[this.objFilter.spatialField.operation].endTag;
+        ogc += this.ogcSpatialOperator[crossLayerFilter.operation].endTag;
         return ogc;
     },
     getGmlPointElement: function(coordinates, srsName, version) {
