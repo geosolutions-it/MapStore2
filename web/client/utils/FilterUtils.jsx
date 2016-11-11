@@ -49,7 +49,7 @@ const FilterUtils = {
         "ogc": {startTag: "<ogc:PropertyName>", endTag: "</ogc:PropertyName>"},
         "fes": {startTag: "<fes:ValueReference>", endTag: "</fes:ValueReference>"}
     },
-    toOGCFilter: function(ftName, json, version, sortOptions = null, hits = false, format = null) {
+    toOGCFilter: function(ftName, json, version, sortOptions = null, hits = false, format = null, propertyNames = null) {
         try {
             this.objFilter = (json instanceof Object) ? json : JSON.parse(json);
         } catch(e) {
@@ -87,6 +87,14 @@ const FilterUtils = {
             spatialFilter = this.processOGCSpatialFilter(versionOGC);
             filters.push(spatialFilter);
         }
+        if (this.objFilter.crossLayerFilter) {
+            let crossLayerFilter = this.objFilter.crossLayerFilter;
+            if (Array.isArray()) {
+                crossLayerFilter.forEach( f => filters.push(this.processOGCCrossLayerFilter(f)));
+            } else {
+                filters.push(this.processOGCCrossLayerFilter(crossLayerFilter));
+            }
+        }
 
         let filter = "<" + this.nsplaceholder + ":Filter>";
 
@@ -104,7 +112,12 @@ const FilterUtils = {
 
         ogcFilter += '<wfs:Query ' + (versionOGC === "2.0" ? "typeNames" : "typeName") + '="' + ftName + '" srsName="EPSG:4326">';
         ogcFilter += filter;
-
+        if (propertyNames) {
+            ogcFilter += propertyNames.map( name => (
+                this.propertyTagReference[this.nsplaceholder].startTag +
+                name +
+                this.propertyTagReference[this.nsplaceholder].endTag )).join("");
+        }
         if (sortOptions && sortOptions.sortBy && sortOptions.sortOrder) {
             ogcFilter +=
                 "<" + this.nsplaceholder + ":SortBy>" +
@@ -465,6 +478,41 @@ const FilterUtils = {
                         '<gml:lowerCorner>' + lowerCorner + '</gml:lowerCorner>' +
                         '<gml:upperCorner>' + upperCorner + '</gml:upperCorner>' +
                     '</gml:Envelope>';
+
+                break;
+            }
+            default:
+                break;
+        }
+
+        ogc += this.ogcSpatialOperator[this.objFilter.spatialField.operation].endTag;
+        return ogc;
+    },
+    processOGCCrossLayerFilter: function(crossLayerFilter) {
+        let ogc = this.ogcSpatialOperator[crossLayerFilter.operation].startTag;
+        ogc +=
+            this.propertyTagReference[this.nsplaceholder].startTag +
+                crossLayerFilter.attribute +
+            this.propertyTagReference[this.nsplaceholder].endTag;
+
+        switch (crossLayerFilter.operation) {
+            case "INTERSECTS":
+            case "DWITHIN":
+            case "WITHIN":
+            case "CONTAINS": {
+                if (crossLayerFilter.collectGeometries) {
+                    ogc += `<ogc:Function name="collectGeometries">
+                     <ogc:Function name="queryCollection">
+                       <ogc:Literal>${crossLayerFilter.collectGeometries.queryCollection.typeName}</ogc:Literal>
+                       <ogc:Literal>${crossLayerFilter.collectGeometries.queryCollection.geometryName}</ogc:Literal>
+                       <ogc:Literal>${crossLayerFilter.collectGeometries.queryCollection.cqlFilter}</ogc:Literal>
+                     </ogc:Function>
+                 </ogc:Function>`;
+                }
+
+                if (crossLayerFilter.operation === "DWITHIN") {
+                    ogc += '<' + this.nsplaceholder + ':Distance units="m">' + (crossLayerFilter.distance || 0) + '</' + this.nsplaceholder + ':Distance>';
+                }
 
                 break;
             }
