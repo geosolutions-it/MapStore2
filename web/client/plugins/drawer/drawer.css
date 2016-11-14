@@ -19,16 +19,6 @@
     box-shadow: none;
 }
 
-.nav-menu {
-
-    max-width:300px;
-
-}
-div.nav-menu{
-    background: rgba(255,255,255,1);
-    left:-300px;
-}
-
 #mapstore-drawermenu > div > div:nth-child(2) {
     display: none;
 }

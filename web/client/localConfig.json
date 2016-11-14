@@ -1,18 +1,18 @@
 {
-	"proxyUrl": "/mapstore/proxy/?url=",
-	"geoStoreUrl": "/mapstore/rest/geostore/",
+  "proxyUrl": "/mapstore/proxy/?url=",
+  "geoStoreUrl": "/mapstore/rest/geostore/",
   "printUrl": "http://demo.geo-solutions.it/geoserver/pdf/info.json",
   "bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
   "mapquestApiKey": "__API_KEY_MAPQUEST__",
-	"initialMapFilter": "",
+  "initialMapFilter": "",
   "ignoreMobileCss" : true,
   "useAuthenticationRules": true,
-	"authenticationRules": [
-	  {
-	    "urlPattern": ".*geostore.*",
-	    "method": "basic"
-	  }
-	],
+  "authenticationRules": [
+    {
+      "urlPattern": ".*geostore.*",
+      "method": "basic"
+    }
+  ],
   "plugins": {
     "mobile": [
       {
@@ -24,141 +24,141 @@
       },
       {
         "name": "DrawerMenu",
-				"cfg": {
-					"glyph": "1-stilo",
-					"buttonStyle": "primary",
-					"buttonClassName": "square-button",
-					"singleSection": true
-				}
-    },
+        "cfg": {
+          "glyph": "1-stilo",
+          "buttonStyle": "primary",
+          "buttonClassName": "square-button",
+          "singleSection": true
+        }
+      },
+      {
+        "name": "Identify",
+        "showIn": ["Settings"],
+        "cfg": {
+          "enableRevGeocode": true,
+          "wrapRevGeocode": false,
+          "panelClassName": "modal-dialog info-panel modal-content",
+          "headerClassName": "modal-header",
+          "bodyClassName": "modal-body info-wrap",
+          "headerGlyph": "",
+          "glyph": "map-marker",
+          "className": "square-button",
+          "closeGlyph": "1-close",
+          "style": {
+            "position": "absolute",
+            "width": "100%",
+            "bottom": "0px",
+            "zIndex": 1023,
+            "maxHeight": "70%",
+            "marginBottom": 0
+          },
+          "draggable": false,
+          "collapsible": true,
+          "viewerOptions": {
+            "container": "{context.ReactSwipe}",
+            "header": "{context.SwipeHeader}",
+            "collapsible": false
+          },
+          "bodyClass": "mobile-feature-info"
+        }
+      },
     {
-       "name": "Identify",
-       "showIn": ["Settings"],
-			 "cfg": {
-         "enableRevGeocode": true,
-         "wrapRevGeocode": false,
-				 "panelClassName": "modal-dialog info-panel modal-content",
-				 "headerClassName": "modal-header",
-				 "bodyClassName": "modal-body info-wrap",
-				 "headerGlyph": "",
-         "glyph": "map-marker",
-				 "className": "square-button",
-         "closeGlyph": "1-close",
-				 "style": {
-             "position": "absolute",
-             "width": "100%",
-             "bottom": "0px",
-             "zIndex": 1023,
-             "maxHeight": "70%",
-             "marginBottom": 0
-         },
-         "draggable": false,
-         "collapsible": true,
-         "viewerOptions": {
-           "container": "{context.ReactSwipe}",
-           "header": "{context.SwipeHeader}",
-           "collapsible": false
-         },
-         "bodyClass": "mobile-feature-info"
-      }
-    },
-    {
-			  "name": "Locate",
-				"cfg": {
-					"glyph": "1-position-1",
+      "name": "Locate",
+      "cfg": {
+        "glyph": "1-position-1",
           "btnConfig": {
             "className": "square-button"
           }
-				},
-				"override": {
-					"Toolbar": {
-						"alwaysVisible": true
-					}
-				}
-		}, {
-			  "name": "Home"
-		}, {
-				"name": "TOC",
-				"cfg": {
-					"visibilityCheckType": "glyph",
-					"settingsOptions": {
-						"includeCloseButton": false,
-						"closeGlyph": "1-close",
-						"asModal": false,
-						"buttonSize": "small"
-					}
-				},
-				"override": {
-					"DrawerMenu": {
-						"glyph": "1-layer",
+      },
+      "override": {
+        "Toolbar": {
+          "alwaysVisible": true
+        }
+      }
+    }, {
+        "name": "Home"
+    }, {
+        "name": "TOC",
+        "cfg": {
+          "visibilityCheckType": "glyph",
+          "settingsOptions": {
+            "includeCloseButton": false,
+            "closeGlyph": "1-close",
+            "asModal": false,
+            "buttonSize": "small"
+          }
+        },
+        "override": {
+          "DrawerMenu": {
+            "glyph": "1-layer",
             "buttonConfig": {
               "buttonClassName": "square-button no-border"
             }
-					}
-				}
-		}, {
-				"name": "BackgroundSwitcher",
-				"cfg": {
-					"fluid": true,
-		      "columnProperties": {
+          }
+        }
+    }, {
+        "name": "BackgroundSwitcher",
+        "cfg": {
+          "fluid": true,
+          "columnProperties": {
               "xs": 12,
               "sm": 12,
               "md": 12
           }
-				},
-				"override": {
-					"DrawerMenu": {
-							"glyph": "1-map",
+        },
+        "override": {
+          "DrawerMenu": {
+              "glyph": "1-map",
               "buttonConfig": {
                 "buttonClassName": "square-button no-border"
               }
-						}
-				}
-		}, {
-				"name": "Settings",
-				"cfg": {
-					"wrapWithPanel": false,
-					"closeGlyph": "1-close",
+            }
+        }
+    }, {
+        "name": "Settings",
+        "cfg": {
+          "wrapWithPanel": false,
+          "closeGlyph": "1-close",
           "overrideSettings": {
             "history": false
           },
-					"wrap": true
-				}
-		}, {
-			"name": "About",
-			"hideFrom": "DrawerMenu",
-			"cfg": {
-				"modalConfig": {
-						"useModal": false,
-			      "closeGlyph": "1-close"
-				}
-			}
-		},
-    {
-       "name": "MousePosition",
-       "cfg": {
-         "id": "mapstore-mouseposition-mobile"
-       }
+          "wrap": true
+        }
+    }, {
+        "name": "About",
+        "hideFrom": "DrawerMenu",
+        "cfg": {
+          "modalConfig": {
+              "useModal": false,
+              "closeGlyph": "1-close"
+        }
+      }
     },
-     {
-				"name": "Search",
-				"cfg": {
-					"withToggle": ["max-width: 768px", "min-width: 768px"]
-				}
-		}, {
+    {
+      "name": "MousePosition",
+      "cfg": {
+        "id": "mapstore-mouseposition-mobile"
+      }
+    },
+    {
+      "name": "Search",
+      "cfg": {
+        "withToggle": ["max-width: 768px", "min-width: 768px"]
+      }
+    }, {
       "name": "Toolbar",
       "id": "NavigationBar",
       "stateSelector": "toolbar",
       "cfg": {
-				"buttonStyle": "primary",
+        "buttonStyle": "primary",
         "id": "navigationBar"
       }
     }, {
       "name": "Toolbar",
       "id": "IdentifyBar",
-			"stateSelector": "identify",
+      "stateSelector": "identify",
       "cfg": {
-				"buttonStyle": "primary",
+        "buttonStyle": "primary",
         "pressedButtonStyle": "success",
         "id": "identifyBar"
       },
@@ -172,186 +172,185 @@
       }
     },
     {
-			"name": "MapLoading",
-			"hide": true,
-			"cfg": {
-				"className": "ms2-loading"
-			},
-			"override": {
-				"Toolbar": {
-					"alwaysVisible": true
-				}
-			}
-		}, {
-			"name": "Login",
-			"hide": true,
+      "name": "MapLoading",
+      "hide": true,
+      "cfg": {
+        "className": "ms2-loading"
+      },
+      "override": {
+        "Toolbar": {
+          "alwaysVisible": true
+        }
+      }
+    }, {
+      "name": "Login",
+      "hide": true,
       "cfg": {
           "nav": false,
           "menuProps": {
               "noCaret": true
           },
-					"toolsCfg": [{
-						"buttonSize": "small",
-						"includeCloseButton": false,
-						"useModal": false,
-						"closeGlyph": "1-close"
-					}, {
-						"buttonSize": "small",
-						"includeCloseButton": false,
-						"useModal": false,
-						"closeGlyph": "1-close"
-					}, {
-						"buttonSize": "small",
-						"includeCloseButton": false,
-						"useModal": false,
-						"closeGlyph": "1-close"
-					}]
+          "toolsCfg": [{
+            "buttonSize": "small",
+            "includeCloseButton": false,
+            "useModal": false,
+            "closeGlyph": "1-close"
+          }, {
+            "buttonSize": "small",
+            "includeCloseButton": false,
+            "useModal": false,
+            "closeGlyph": "1-close"
+          }, {
+            "buttonSize": "small",
+            "includeCloseButton": false,
+            "useModal": false,
+            "closeGlyph": "1-close"
+          }]
       }
-		},
-		"OmniBar",
-		{
-			"name": "BurgerMenu",
-			"hide": true
-		}, {
-			"name": "Expander",
-			"hide": true,
+    },
+    "OmniBar",
+    {
+      "name": "BurgerMenu",
+      "hide": true
+    }, {
+      "name": "Expander",
+      "hide": true,
       "cfg":{
         "className": "square-button"
       }
-		}
+    }
   ],
-	"desktop": [{
-			"name": "Map",
-			"cfg": {
-				"toolsOptions": {
-					"scalebar": {
-						"leaflet": {
-							"position": "bottomright"
-						}
-					}
-				},
+  "desktop": [{
+      "name": "Map",
+      "cfg": {
+        "toolsOptions": {
+          "scalebar": {
+            "leaflet": {
+              "position": "bottomright"
+            }
+          }
+        },
         "zoomControl": false
-			}
-		}, {
-			"name": "Help",
-			"cfg": {
-				"asPanel": false,
-				"closeGlyph": "1-close"
-			}
-		}, {
-			"name" : "Share",
-			"cfg": {
-				"closeGlyph" : "1-close"
-			}
-		}, {
+      }
+    }, {
+      "name": "Help",
+      "cfg": {
+        "asPanel": false,
+        "closeGlyph": "1-close"
+      }
+    }, {
+      "name" : "Share",
+      "cfg": {
+        "closeGlyph" : "1-close"
+      }
+    }, {
         "name": "DrawerMenu",
-				"cfg": {
-					"glyph": "1-stilo",
-					"buttonStyle": "primary",
-					"buttonClassName": "square-button",
-					"singleSection": true
-				}
+        "cfg": {
+          "glyph": "1-stilo",
+          "buttonStyle": "primary",
+          "buttonClassName": "square-button",
+          "singleSection": true
+        }
     },
     {
        "name": "Identify",
        "showIn": ["IdentifyBar", "Settings"],
-			 "cfg": {
+       "cfg": {
          "panelClassName": "modal-dialog info-panel modal-content",
-				 "headerClassName": "modal-header",
-				 "bodyClassName": "modal-body info-wrap",
-				 "asPanel": false,
-				 "headerGlyph": "",
+         "headerClassName": "modal-header",
+         "bodyClassName": "modal-body info-wrap",
+         "asPanel": false,
+         "headerGlyph": "",
          "glyph": "map-marker",
-				 "className": "square-button",
+         "className": "square-button",
          "closeGlyph": "1-close",
-				 "wrapRevGeocode": false,
-				 "enableRevGeocode": true,
-				 "viewerOptions": {
-					"container": "{context.ReactSwipe}",
-					"header": "{context.SwipeHeader}",
-					"headerOptions": {
-						"useButtons": true
-					},
-					"containerProps": {
-						"continuous": false
-					},
-					"collapsible": false
-				},
-				"excludeOptions": [
-						"links",
-						"allowedSRS",
-						"title",
-						"type",
-						"visibility",
-						"params",
-						"legend",
-						"statistics",
-						"columnDefs",
-						"advancedFilter",
-						"boundingBox",
-						"capabilities",
-						"describeCoverage",
-						"describeLayer",
-						"loading"
-
-				]
-			 }
+         "wrapRevGeocode": false,
+         "enableRevGeocode": true,
+         "viewerOptions": {
+          "container": "{context.ReactSwipe}",
+          "header": "{context.SwipeHeader}",
+          "headerOptions": {
+            "useButtons": true
+          },
+          "containerProps": {
+            "continuous": false
+          },
+          "collapsible": false
+        },
+        "excludeOptions": [
+            "links",
+            "allowedSRS",
+            "title",
+            "type",
+            "visibility",
+            "params",
+            "legend",
+            "statistics",
+            "columnDefs",
+            "advancedFilter",
+            "boundingBox",
+            "capabilities",
+            "describeCoverage",
+            "describeLayer",
+            "loading"
+        ]
+       }
     },
     "MadeWithLove",
     {
-			  "name": "Locate",
-				"cfg": {
-					"glyph": "1-position-1",
+        "name": "Locate",
+        "cfg": {
+          "glyph": "1-position-1",
           "btnConfig": {
             "className": "square-button"
           }
-				},
-				"override": {
-					"Toolbar": {
-						"alwaysVisible": true
-					}
-				}
-		}, {
-			  "name": "Home"
-		}, {
-				"name": "TOC",
-				"cfg": {
-					"visibilityCheckType": "glyph",
-					"settingsOptions": {
-						"includeCloseButton": false,
-						"closeGlyph": "1-close",
-						"asModal": false,
-						"buttonSize": "small"
-					}
-				},
-				"override": {
-					"DrawerMenu": {
-						"glyph": "1-layer",
+        },
+        "override": {
+          "Toolbar": {
+            "alwaysVisible": true
+          }
+        }
+    }, {
+        "name": "Home"
+    }, {
+        "name": "TOC",
+        "cfg": {
+          "visibilityCheckType": "glyph",
+          "settingsOptions": {
+            "includeCloseButton": false,
+            "closeGlyph": "1-close",
+            "asModal": false,
+            "buttonSize": "small"
+          }
+        },
+        "override": {
+          "DrawerMenu": {
+            "glyph": "1-layer",
             "buttonConfig": {
               "buttonClassName": "square-button no-border"
             }
-					}
-				}
-		}, {
-				"name": "BackgroundSwitcher",
-				"cfg": {
-					"fluid": true,
-		      "columnProperties": {
+          }
+        }
+    }, {
+        "name": "BackgroundSwitcher",
+        "cfg": {
+          "fluid": true,
+          "columnProperties": {
               "xs": 12,
               "sm": 12,
               "md": 12
           }
-				},
-				"override": {
-					"DrawerMenu": {
-							"glyph": "1-map",
+        },
+        "override": {
+          "DrawerMenu": {
+              "glyph": "1-map",
               "buttonConfig": {
                 "buttonClassName": "square-button no-border"
               }
-						}
-				}
-		}, {
-				"name": "Measure",
+            }
+        }
+    }, {
+        "name": "Measure",
         "cfg":{
           "showResults": false,
           "lineGlyph": "1-measure-lenght",
@@ -359,103 +358,103 @@
           "bearingGlyph": "1-bearing",
           "useButtonGroup": false
         },
-				"override": {
-					"DrawerMenu": {
-						"glyph": "1-stilo",
+        "override": {
+          "DrawerMenu": {
+            "glyph": "1-stilo",
             "buttonConfig": {
               "buttonClassName": "square-button no-border"
             }
-					}
-				}
-		}, {
-				"name": "MeasureResults",
+          }
+        }
+    }, {
+        "name": "MeasureResults",
         "cfg":{
           "closeGlyph": "1-close",
           "withPanelAsContainer": false
         }
-		}, {
-				"name": "Print",
-				"cfg": {
-					"useFixedScales": false,
-					"syncMapPreview": true,
-					"mapPreviewOptions": {
-						"enableScalebox": false,
-						"enableRefresh": false
-					},
-					"closeGlyph": "1-close",
-					"submitConfig": {
-						"buttonConfig": {
-							"bsSize": "small",
-							"bsStyle": "primary"
-						},
-						"glyph": ""
-					},
-					"previewOptions": {
-						"buttonStyle": "primary"
-					},
-					"withPanelAsContainer": false
-				}
-		}, {
-				"name": "ShapeFile",
-				"cfg": {
-					"wrap": true,
-					"wrapWithPanel": false,
-					"closeGlyph": "1-close",
-					"buttonSize": "small"
-				}
-		}, {
-				"name": "Settings",
-				"hideFrom": ["Toolbar", "DrawerMenu"],
-				"cfg": {
-					"wrapWithPanel": false,
-					"closeGlyph": "1-close",
+    }, {
+        "name": "Print",
+        "cfg": {
+          "useFixedScales": false,
+          "syncMapPreview": true,
+          "mapPreviewOptions": {
+            "enableScalebox": false,
+            "enableRefresh": false
+          },
+          "closeGlyph": "1-close",
+          "submitConfig": {
+            "buttonConfig": {
+              "bsSize": "small",
+              "bsStyle": "primary"
+            },
+            "glyph": ""
+          },
+          "previewOptions": {
+            "buttonStyle": "primary"
+          },
+          "withPanelAsContainer": false
+        }
+    }, {
+        "name": "ShapeFile",
+        "cfg": {
+          "wrap": true,
+          "wrapWithPanel": false,
+          "closeGlyph": "1-close",
+          "buttonSize": "small"
+        }
+    }, {
+        "name": "Settings",
+        "hideFrom": ["Toolbar", "DrawerMenu"],
+        "cfg": {
+          "wrapWithPanel": false,
+          "closeGlyph": "1-close",
           "overrideSettings": {
             "history": false
           },
-					"wrap": true
-				}
-		}, {
-				"name": "MetadataExplorer",
-				"cfg": {
-					"showGetCapLinks": false,
-					"addAuthentication": false,
-					"wrap": true,
-					"searchOnStarup": false,
-					"wrapWithPanel": false,
-					"closeGlyph": "1-close",
-					"initialCatalogURL": {
-						"csw": "http://demo.geo-solutions.it/geoserver/csw",
-						"wms": "http://demo.geo-solutions.it/geoserver/wms"
-					}
-				}
-		}, {
-			"name": "About",
-			"hideFrom": ["DrawerMenu"],
-			"cfg": {
-				"modalConfig": {
-						"useModal": false,
-			      "closeGlyph": "1-close"
-				}
-			}
-		}, "MousePosition", {
-				"name": "Search",
-				"cfg": {
-					"withToggle": ["max-width: 768px", "min-width: 768px"]
-				}
-		}, {
+          "wrap": true
+        }
+    }, {
+        "name": "MetadataExplorer",
+        "cfg": {
+          "showGetCapLinks": false,
+          "addAuthentication": false,
+          "wrap": true,
+          "searchOnStarup": false,
+          "wrapWithPanel": false,
+          "closeGlyph": "1-close",
+          "initialCatalogURL": {
+            "csw": "http://demo.geo-solutions.it/geoserver/csw",
+            "wms": "http://demo.geo-solutions.it/geoserver/wms"
+          }
+        }
+    }, {
+      "name": "About",
+      "hideFrom": ["DrawerMenu"],
+      "cfg": {
+        "modalConfig": {
+            "useModal": false,
+            "closeGlyph": "1-close"
+        }
+      }
+    }, "MousePosition", {
+        "name": "Search",
+        "cfg": {
+          "withToggle": ["max-width: 768px", "min-width: 768px"]
+        }
+    }, {
       "name": "Toolbar",
       "id": "NavigationBar",
       "stateSelector": "toolbar",
       "cfg": {
-				"buttonStyle": "primary",
+        "buttonStyle": "primary",
         "id": "navigationBar"
       }
     }, {
       "name": "Toolbar",
       "id": "IdentifyBar",
-			"stateSelector": "identify",
+      "stateSelector": "identify",
       "cfg": {
-				"buttonStyle": "primary",
+        "buttonStyle": "primary",
         "pressedButtonStyle": "success",
         "id": "identifyBar"
       },
@@ -469,86 +468,86 @@
       }
     },
     {
-			"name": "MapLoading",
-			"cfg": {
-				"className": "ms2-loading"
-			},
-			"override": {
-				"Toolbar": {
-					"alwaysVisible": true
-				}
-			}
-		},
+      "name": "MapLoading",
+      "cfg": {
+        "className": "ms2-loading"
+      },
+      "override": {
+        "Toolbar": {
+          "alwaysVisible": true
+        }
+      }
+    },
     {
-				"name": "Snapshot",
-				"cfg": {
-					"wrap": true,
-					"wrapWithPanel": false,
-					"closeGlyph": "1-close",
-					"buttonStyle": "primary"
-				}
-		},
+        "name": "Snapshot",
+        "cfg": {
+          "wrap": true,
+          "wrapWithPanel": false,
+          "closeGlyph": "1-close",
+          "buttonStyle": "primary"
+        }
+    },
     {
       "name":"ZoomIn",
-			"override": {
-				"Toolbar": {
-					"alwaysVisible": true
-				}
-			}
+      "override": {
+        "Toolbar": {
+          "alwaysVisible": true
+        }
+      }
     },
     {
       "name":"ZoomOut",
-			"override": {
-				"Toolbar": {
-					"alwaysVisible": true
-				}
-			}
+      "override": {
+        "Toolbar": {
+          "alwaysVisible": true
+        }
+      }
     },
-		"OmniBar",
+    "OmniBar",
     {
-			"name": "Login",
+      "name": "Login",
       "cfg": {
           "nav": false,
           "menuProps": {
               "noCaret": true
           },
-					"toolsCfg": [{
-						"buttonSize": "small",
-						"includeCloseButton": false,
-						"useModal": false,
-						"closeGlyph": "1-close"
-					}, {
-						"buttonSize": "small",
-						"includeCloseButton": false,
-						"useModal": false,
-						"closeGlyph": "1-close"
-					}, {
-						"buttonSize": "small",
-						"includeCloseButton": false,
-						"useModal": false,
-						"closeGlyph": "1-close"
-					}]
+          "toolsCfg": [{
+            "buttonSize": "small",
+            "includeCloseButton": false,
+            "useModal": false,
+            "closeGlyph": "1-close"
+          }, {
+            "buttonSize": "small",
+            "includeCloseButton": false,
+            "useModal": false,
+            "closeGlyph": "1-close"
+          }, {
+            "buttonSize": "small",
+            "includeCloseButton": false,
+            "useModal": false,
+            "closeGlyph": "1-close"
+          }]
       }
-		},
-		{
-		    "name" : "Save",
-		    "cfg": {
-		        "closeGlyph" : "1-close"
-		     }
-		},{
-		    "name" : "SaveAs",
-		    "cfg": {
-		        "closeGlyph" : "1-close"
-		     }
-		},
-		{
-			"name": "BurgerMenu"
-		}, {
-			"name": "Expander",
+    },
+    {
+        "name" : "Save",
+        "cfg": {
+            "closeGlyph" : "1-close"
+         }
+    },{
+        "name" : "SaveAs",
+        "cfg": {
+            "closeGlyph" : "1-close"
+         }
+    },
+    {
+      "name": "BurgerMenu"
+    }, {
+      "name": "Expander",
       "cfg":{
         "className": "square-button"
       }
-		}, {
+    }, {
       "name": "Undo",
       "cfg": {
         "glyph": "1-screen-backward",
@@ -568,269 +567,269 @@
       }
     }],
     "embedded": [
-			{
-				"name": "Map",
-				"cfg": {
-	        "zoomControl": false,
-	        "tools": ["locate"]
-				}
-			}, {
-				"name": "Help"
-			}, {
-	        "name": "DrawerMenu",
-					"cfg": {
-						"glyph": "1-stilo",
-						"buttonStyle": "primary",
-						"buttonClassName": "square-button",
-						"singleSection": true
-					}
-	    },
-	    {
-	       "name": "Identify",
-	       "showIn": ["Settings"],
-				 "cfg": {
-	         "enableRevGeocode": true,
-	         "wrapRevGeocode": false,
-					 "panelClassName": "modal-dialog info-panel modal-content",
-					 "headerClassName": "modal-header",
-					 "bodyClassName": "modal-body info-wrap",
-					 "headerGlyph": "",
-	         "glyph": "map-marker",
-					 "className": "square-button",
-	         "closeGlyph": "1-close",
-					 "style": {
-	             "position": "absolute",
-	             "width": "100%",
-	             "bottom": "0px",
-	             "zIndex": 1010,
-	             "maxHeight": "70%",
-	             "marginBottom": 0
-	         },
-					 "excludeOptions": [
-							"links",
-							"allowedSRS",
-							"title",
-							"type",
-							"visibility",
-							"params",
-							"legend",
-							"statistics",
-							"columnDefs",
-							"advancedFilter",
-							"boundingBox",
-							"capabilities",
-							"describeCoverage",
-							"describeLayer",
-							"loading"
+      {
+        "name": "Map",
+        "cfg": {
+          "zoomControl": false,
+          "tools": ["locate"]
+        }
+      }, {
+        "name": "Help"
+      }, {
+          "name": "DrawerMenu",
+          "cfg": {
+            "glyph": "1-stilo",
+            "buttonStyle": "primary",
+            "buttonClassName": "square-button",
+            "singleSection": true
+          }
+      },
+      {
+         "name": "Identify",
+         "showIn": ["Settings"],
+         "cfg": {
+           "enableRevGeocode": true,
+           "wrapRevGeocode": false,
+           "panelClassName": "modal-dialog info-panel modal-content",
+           "headerClassName": "modal-header",
+           "bodyClassName": "modal-body info-wrap",
+           "headerGlyph": "",
+           "glyph": "map-marker",
+           "className": "square-button",
+           "closeGlyph": "1-close",
+           "style": {
+               "position": "absolute",
+               "width": "100%",
+               "bottom": "0px",
+               "zIndex": 1010,
+               "maxHeight": "70%",
+               "marginBottom": 0
+           },
+           "excludeOptions": [
+              "links",
+              "allowedSRS",
+              "title",
+              "type",
+              "visibility",
+              "params",
+              "legend",
+              "statistics",
+              "columnDefs",
+              "advancedFilter",
+              "boundingBox",
+              "capabilities",
+              "describeCoverage",
+              "describeLayer",
+              "loading"
 
-					],
-	         "draggable": false,
-	         "collapsible": true,
-	         "viewerOptions": {
-	           "container": "{context.ReactSwipe}",
-	           "header": "{context.SwipeHeader}",
-	           "collapsible": false
-	         },
-	         "bodyClass": "mobile-feature-info"
-	      }
-	    },
-	    {
-				  "name": "Locate",
-					"cfg": {
-						"glyph": "1-position-1",
-	          "btnConfig": {
-	            "className": "square-button"
-	          }
-					},
-					"override": {
-						"Toolbar": {
-							"alwaysVisible": true
-						}
-					}
-			}, {
-					"name": "TOC",
-					"cfg": {
-						"visibilityCheckType": "glyph",
-						"settingsOptions": {
-							"includeCloseButton": false,
-							"closeGlyph": "1-close",
-							"asModal": false,
-							"buttonSize": "small"
-						}
-					},
-					"override": {
-						"DrawerMenu": {
-							"glyph": "1-layer",
-	            "buttonConfig": {
-	              "buttonClassName": "square-button no-border"
-	            }
-						}
-					}
-			}, {
-					"name": "BackgroundSwitcher",
-					"cfg": {
-						"fluid": true,
-			      "columnProperties": {
-	              "xs": 12,
-	              "sm": 12,
-	              "md": 12
-	          }
-					},
-					"override": {
-						"DrawerMenu": {
-								"glyph": "1-map",
-	              "buttonConfig": {
-	                "buttonClassName": "square-button no-border"
-	              }
-							}
-					}
-			}, {
-					"name": "Settings",
-					"cfg": {
-						"wrapWithPanel": false,
-						"closeGlyph": "1-close",
-	          "overrideSettings": {
-	            "history": false
-	          },
-						"wrap": true
-					}
-			}, {
-				"name": "About",
-				"hideFrom": "DrawerMenu",
-				"cfg": {
-					"modalConfig": {
-							"useModal": false,
-				      "closeGlyph": "1-close"
-					}
-				}
-			},
-	    {
-	       "name": "MousePosition",
-	       "cfg": {
-	         "id": "mapstore-mouseposition-mobile"
-	       }
-	    },
-	     {
-					"name": "Search",
-					"cfg": {
-						"withToggle": ["max-width: 768px", "min-width: 768px"]
-					}
-			}, {
-	      "name": "Toolbar",
-	      "id": "NavigationBar",
-	      "stateSelector": "toolbar",
-	      "cfg": {
-					"buttonStyle": "primary",
-	        "id": "navigationBar"
-	      }
-	    }, {
-	      "name": "Toolbar",
-	      "id": "IdentifyBar",
-				"stateSelector": "identify",
-	      "cfg": {
-					"buttonStyle": "primary",
-	        "pressedButtonStyle": "success",
-	        "id": "identifyBar"
-	      },
-	      "isDefault": false
-	    },
-	    {
-				"name": "MapLoading",
-				"hide": true,
-				"cfg": {
-					"className": "ms2-loading"
-				},
-				"override": {
-					"Toolbar": {
-						"alwaysVisible": true
-					}
-				}
-			},
-			"OmniBar",
-			{
-				"name": "BurgerMenu",
-				"hide": true
-			}
-		],
-		"page": [{
-			"name": "OmniBar",
-			"cfg": {
-				"className": "navbar shadow navbar-home"
-			}
-		}, {
-			"name":"ManagerMenu",
-			"hide": true,
-			"cfg": {
-				"entries": [{
-						"msgId": "users.title",
-						"glyph": "1-group-mod",
-						"path": "/manager/usermanager"
-				}]
-			}
-		}, {
-			"name": "Login",
-			"hide": true,
+          ],
+           "draggable": false,
+           "collapsible": true,
+           "viewerOptions": {
+             "container": "{context.ReactSwipe}",
+             "header": "{context.SwipeHeader}",
+             "collapsible": false
+           },
+           "bodyClass": "mobile-feature-info"
+        }
+      },
+      {
+          "name": "Locate",
+          "cfg": {
+            "glyph": "1-position-1",
+            "btnConfig": {
+              "className": "square-button"
+            }
+          },
+          "override": {
+            "Toolbar": {
+              "alwaysVisible": true
+            }
+          }
+      }, {
+          "name": "TOC",
+          "cfg": {
+            "visibilityCheckType": "glyph",
+            "settingsOptions": {
+              "includeCloseButton": false,
+              "closeGlyph": "1-close",
+              "asModal": false,
+              "buttonSize": "small"
+            }
+          },
+          "override": {
+            "DrawerMenu": {
+              "glyph": "1-layer",
+              "buttonConfig": {
+                "buttonClassName": "square-button no-border"
+              }
+            }
+          }
+      }, {
+          "name": "BackgroundSwitcher",
+          "cfg": {
+            "fluid": true,
+            "columnProperties": {
+                "xs": 12,
+                "sm": 12,
+                "md": 12
+            }
+          },
+          "override": {
+            "DrawerMenu": {
+                "glyph": "1-map",
+                "buttonConfig": {
+                  "buttonClassName": "square-button no-border"
+                }
+              }
+          }
+      }, {
+          "name": "Settings",
+          "cfg": {
+            "wrapWithPanel": false,
+            "closeGlyph": "1-close",
+            "overrideSettings": {
+              "history": false
+            },
+            "wrap": true
+          }
+      }, {
+        "name": "About",
+        "hideFrom": "DrawerMenu",
+        "cfg": {
+          "modalConfig": {
+              "useModal": false,
+              "closeGlyph": "1-close"
+          }
+        }
+      },
+      {
+         "name": "MousePosition",
+         "cfg": {
+           "id": "mapstore-mouseposition-mobile"
+         }
+      },
+       {
+          "name": "Search",
+          "cfg": {
+            "withToggle": ["max-width: 768px", "min-width: 768px"]
+          }
+      }, {
+        "name": "Toolbar",
+        "id": "NavigationBar",
+        "stateSelector": "toolbar",
+        "cfg": {
+          "buttonStyle": "primary",
+          "id": "navigationBar"
+        }
+      }, {
+        "name": "Toolbar",
+        "id": "IdentifyBar",
+        "stateSelector": "identify",
+        "cfg": {
+          "buttonStyle": "primary",
+          "pressedButtonStyle": "success",
+          "id": "identifyBar"
+        },
+        "isDefault": false
+      },
+      {
+        "name": "MapLoading",
+        "hide": true,
+        "cfg": {
+          "className": "ms2-loading"
+        },
+        "override": {
+          "Toolbar": {
+            "alwaysVisible": true
+          }
+        }
+      },
+      "OmniBar",
+      {
+        "name": "BurgerMenu",
+        "hide": true
+      }
+    ],
+    "page": [{
+      "name": "OmniBar",
+      "cfg": {
+        "className": "navbar shadow navbar-home"
+      }
+    }, {
+      "name":"ManagerMenu",
+      "hide": true,
+      "cfg": {
+        "entries": [{
+            "msgId": "users.title",
+            "glyph": "1-group-mod",
+            "path": "/manager/usermanager"
+        }]
+      }
+    }, {
+      "name": "Login",
+      "hide": true,
       "cfg": {
           "nav": false,
           "menuProps": {
               "noCaret": true
-					},
-					"toolsCfg": [{
-								"buttonSize": "small",
-								"includeCloseButton": false,
-								"useModal": false,
-								"closeGlyph": "1-close"
-							}, {
-								"buttonSize": "small",
-								"includeCloseButton": false,
-								"useModal": false,
-								"closeGlyph": "1-close"
-							}, {
-								"buttonSize": "small",
-								"includeCloseButton": false,
-								"useModal": false,
-								"closeGlyph": "1-close"
-					 }]
+          },
+          "toolsCfg": [{
+                "buttonSize": "small",
+                "includeCloseButton": false,
+                "useModal": false,
+                "closeGlyph": "1-close"
+              }, {
+                "buttonSize": "small",
+                "includeCloseButton": false,
+                "useModal": false,
+                "closeGlyph": "1-close"
+              }, {
+                "buttonSize": "small",
+                "includeCloseButton": false,
+                "useModal": false,
+                "closeGlyph": "1-close"
+           }]
 
-      	}
-		}, {"name": "Language"}, {
-			"name" : "Attribution",
-			"hide": true
-		}, {
-			"name": "Footer",
-			"cfg": {
-				"bottom": true
-			}
-			}],
+        }
+    }, {"name": "Language"}, {
+      "name" : "Attribution",
+      "hide": true
+    }, {
+      "name": "Footer",
+      "cfg": {
+        "bottom": true
+      }
+      }],
 
-		"maps": [
-			{"name": "Header"},
-			{"name": "Fork"},
-			{"name": "MapSearch"},
-			{"name": "HomeDescription"},
-			{"name": "MapType"},
-			{"name": "CreateNewMap"},
-			{"name": "Maps"},
-			{"name": "Examples"}
-		],
-		"manager": [{
-			"name": "Header"
-			}, "Redirect",{
-			"name": "Manager",
-			"cfg": {
-				"navStyle": {
-					"flex": "inherit"
-				}
-			}
-			}, {
-			"name": "Home",
-			"hide": true
-			}, {
-			"name": "UserManager",
-			"hide": true,
-			"cfg": {
-				"id": "usermanager"
-			}
-		}]
-	}
+    "maps": [
+      {"name": "Header"},
+      {"name": "Fork"},
+      {"name": "MapSearch"},
+      {"name": "HomeDescription"},
+      {"name": "MapType"},
+      {"name": "CreateNewMap"},
+      {"name": "Maps"},
+      {"name": "Examples"}
+    ],
+    "manager": [{
+      "name": "Header"
+      }, "Redirect",{
+      "name": "Manager",
+      "cfg": {
+        "navStyle": {
+          "flex": "inherit"
+        }
+      }
+      }, {
+      "name": "Home",
+      "hide": true
+      }, {
+      "name": "UserManager",
+      "hide": true,
+      "cfg": {
+        "id": "usermanager"
+      }
+    }]
+  }
 }

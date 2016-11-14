@@ -23,7 +23,8 @@ const {partialRight} = require('lodash');
 
 const Menu = connect((state) => ({
     show: state.controls.drawer && state.controls.drawer.enabled,
-    activeKey: state.controls.drawer && state.controls.drawer.menu
+    activeKey: state.controls.drawer && state.controls.drawer.menu,
+    width: (state.controls.queryPanel && state.controls.queryPanel.enabled) ? 500 : 300
 }), {
     onToggle: toggleControl.bind(null, 'drawer', null),
     onChoose: partialRight(setControlProperty.bind(null, 'drawer', 'menu'), true),
