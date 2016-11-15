@@ -492,7 +492,8 @@
             "date": "Data",
             "layers": "Livelli",
             "size": "Dimensione",
-            "notsupported": "Snapshot non supportato"
+            "notsupported": "Snapshot non supportato",
+            "taintedMessage": "La funzionalità di salvataggio dell'istantanea è limitata a causa di alcune regole di sicurezza. Per un risultato migliore cliccare con il tasto destro sull'anteprima e selezionare  'Salva immagine con nome' (supportato solo da Mozilla Firefox e Google Chrome)"
         },
         "shapefile": {
             "title": "Carica Shapefile",

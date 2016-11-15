@@ -14,7 +14,8 @@ function snapshot(state = null, action) {
     switch (action.type) {
         case CHANGE_SNAPSHOT_STATE:
             return assign({}, state, {
-                state: action.state
+                state: action.state,
+                tainted: action.tainted
             });
         case SNAPSHOT_READY:
             return assign({}, state, {

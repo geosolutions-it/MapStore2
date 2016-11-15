@@ -21,6 +21,7 @@ let SnapshotQueue = React.createClass({
         queue: React.PropTypes.array,
         browser: React.PropTypes.string,
         onRemoveSnapshot: React.PropTypes.func,
+        onSnapshotError: React.PropTypes.func,
         downloadImg: React.PropTypes.func,
         mapType: React.PropTypes.string
 
@@ -39,6 +40,7 @@ let SnapshotQueue = React.createClass({
     getDefaultProps() {
         return {
             onRemoveSnapshot: () => {},
+            onSnapshotError: () => {},
             mapType: 'leaflet'
         };
     },
@@ -68,12 +70,17 @@ let SnapshotQueue = React.createClass({
         return <noscript />;
     },
     saveImage(canvas, config) {
-        let dataURL = canvas.toDataURL();
-        this.props.onRemoveSnapshot(config);
-        setTimeout(() => {
-            this.props.downloadImg(dataURL);
-        }, 0);
-
+        try {
+            this.props.onSnapshotError();
+            let dataURL = canvas.toDataURL();
+            this.props.onRemoveSnapshot(config);
+            setTimeout(() => {
+                this.props.downloadImg(dataURL);
+            }, 0);
+        } catch(e) {
+            this.props.onSnapshotError("Error saving snapshot");
+            this.props.onRemoveSnapshot(config);
+        }
     }
 
 });

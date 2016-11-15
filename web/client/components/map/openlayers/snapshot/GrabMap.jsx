@@ -104,7 +104,13 @@ let GrabOlMap = React.createClass({
         if (this.toLoad === 0) {
             let map = (this.refs.snapMap) ? this.refs.snapMap.map : null;
             if (map) {
-                map.once('postcompose', (e) => this.createSnapshot(e.context.canvas));
+                map.once('postrender', (e) => setTimeout( () => {
+                    let canvas = e.map && e.map.getTargetElement() && e.map.getTargetElement().getElementsByTagName("canvas")[0];
+                    if (canvas) {
+                        this.createSnapshot(canvas);
+                    }
+                }, 500));
+                // map.once('postcompose', (e) => setTimeout( () => this.createSnapshot(e.context.canvas), 100));
             }
         }
     },
@@ -117,7 +123,25 @@ let GrabOlMap = React.createClass({
         this.toLoad++;
     },
     createSnapshot(canvas) {
-        this.props.onSnapshotReady(canvas);
+        this.props.onSnapshotReady(canvas, null, null, null, this.isTainted(canvas));
+    },
+    /**
+     * Check if the canvas is tainted, so if it is allowed to export images
+     * from it.
+     */
+    isTainted(canvas) {
+        if (canvas) {
+            let ctx = canvas.getContext("2d");
+            try {
+                // try to generate a small image
+                ctx.getImageData(0, 0, 1, 1);
+                return false;
+            } catch(err) {
+                // check the error code for tainted resources
+                return (err.code === 18);
+            }
+        }
+
     }
 });
 

@@ -493,7 +493,8 @@
             "date": "Date",
             "layers": "Couches",
             "size": "Taille",
-            "notsupported": "Capture d'image non supportée"
+            "notsupported": "Capture d'image non supportée",
+            "taintedMessage": "La fonctionnalité de sauvegarde est limitée pour les limitations de sécurité du navigateur. Pour un meilleur résultat, cliquez avec le bouton droit de la souris sur l'aperçu et sélectionnez 'Enregistrer l'image sous...' (prise en charge par Firefox et Chrome)"
         },
         "shapefile": {
             "title": "Ajouter un fichier Shape local",

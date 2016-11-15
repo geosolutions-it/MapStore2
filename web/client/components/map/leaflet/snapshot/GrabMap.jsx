@@ -10,7 +10,7 @@ const ConfigUtils = require('../../../../utils/ConfigUtils');
 const ProxyUtils = require('../../../../utils/ProxyUtils');
 const {isEqual} = require('lodash');
 const html2canvas = require('html2canvas');
-
+require("./snapshotMapStyle.css");
 /**
  * GrabMap for Leaflet uses HTML2CANVAS to generate the image for the existing
  * leaflet map.
@@ -63,10 +63,7 @@ let GrabLMap = React.createClass({
         let mapIsLoading = this.mapIsLoading(this.props.layers);
         if (!mapIsLoading && this.props.active) {
             this.props.onStatusChange("SHOTING");
-            this.previousTimeout = setTimeout(() => {
-                this.doSnapshot(this.props);
-            },
-            this.props.timeout);
+            this.triggerShooting(this.props.timeout);
         }
     },
     componentWillReceiveProps(nextProps) {
@@ -92,13 +89,7 @@ let GrabLMap = React.createClass({
     componentDidUpdate(prevProps) {
         let mapIsLoading = this.mapIsLoading(this.props.layers);
         let mapChanged = this.mapChanged(prevProps);
-        if ( this.props.active && !mapIsLoading && mapChanged ) {
-            this.previousTimeout = setTimeout(() => {
-                this.doSnapshot(this.props);
-            },
-            this.props.timeout);
-        }
-        if (!mapIsLoading && this.props.active && (mapChanged || this.props.snapstate.state === "SHOTING") ) {
+        if ( this.props.active && !mapIsLoading && (mapChanged || this.props.snapstate.state === "SHOTING") ) {
             this.triggerShooting(this.props.timeout);
         }
 
@@ -130,30 +121,45 @@ let GrabLMap = React.createClass({
         return layers.some((layer) => { return layer.visibility && layer.loading; });
     },
     triggerShooting(delay) {
+        if (this.previousTimeout) {
+            clearTimeout(this.previousTimeout);
+        }
         this.previousTimeout = setTimeout(() => {
             this.doSnapshot(this.props);
         },
         delay);
     },
     doSnapshot(props) {
+        // get map style shifted
+        var leftString = window.getComputedStyle(this.mapDiv).getPropertyValue("left");
+        var left = 0;
+        if (leftString) {
+            left = parseInt( leftString.replace('px', ''), 10);
+        }
+
         const tilePane = this.mapDiv.getElementsByClassName("leaflet-tile-pane");
         if (tilePane && tilePane.length > 0) {
             let layers = [].slice.call(tilePane[0].getElementsByClassName("leaflet-layer"), 0);
             layers.sort(function compare(a, b) {
                 return Number.parseFloat(a.style.zIndex) - Number.parseFloat(b.style.zIndex);
             });
-            let canvas = this.refs.canvas;
-            let context = canvas.getContext("2d");
+            let canvas = this.getCanvas();
+            let context = canvas && canvas.getContext("2d");
+            if (!context) {
+                return;
+            }
             context.clearRect(0, 0, canvas.width, canvas.height);
             let queue = layers.map((l) => {
+                let newCanvas = this.refs.canvas.cloneNode();
+                newCanvas.width = newCanvas.width + left;
                 return html2canvas(l, {
                         // you have to provide a canvas to avoid html2canvas to crop the image
-                        canvas: this.refs.canvas.cloneNode(),
+                        canvas: newCanvas,
                         logging: false,
                         proxy: this.proxy,
-                        allowTaint: props.allowTaint,
+                        allowTaint: props && props.allowTaint,
                         // TODO: improve to useCORS if every source has CORS enabled
-                        useCORS: props.allowTaint
+                        useCORS: props && props.allowTaint
                 });
             }, this);
             queue = [this.refs.canvas, ...queue];
@@ -172,12 +178,12 @@ let GrabLMap = React.createClass({
                     }else {
                         cx.globalAlpha = 1;
                     }
-                    cx.drawImage(canv, 0, 0);
+                    cx.drawImage(canv, -1 * left, 0);
                     return pCanv;
 
                 });
-                this.props.onStatusChange("READY");
-                this.props.onSnapshotReady(canvas);
+                this.props.onStatusChange("READY", this.isTainted(canvas));
+                this.props.onSnapshotReady(canvas, null, null, null, this.isTainted(canvas));
             });
         }
 
@@ -186,8 +192,8 @@ let GrabLMap = React.createClass({
      * Check if the canvas is tainted, so if it is allowed to export images
      * from it.
      */
-    isTainted() {
-        let canvas = this.refs.canvas;
+    isTainted(can) {
+        let canvas = can || this.refs.canvas;
         let ctx = canvas.getContext("2d");
         try {
             // try to generate a small image

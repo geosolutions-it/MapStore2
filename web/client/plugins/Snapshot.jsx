@@ -10,7 +10,7 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 
-const {onCreateSnapshot, changeSnapshotState, saveImage, onRemoveSnapshot} = require('../actions/snapshot');
+const {onCreateSnapshot, changeSnapshotState, saveImage, onRemoveSnapshot, onSnapshotError} = require('../actions/snapshot');
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
@@ -46,6 +46,7 @@ const SnapshotPlugin = connect((state) => ({
     queue: state.snapshot && state.snapshot.queue || []
 }), {
     downloadImg: saveImage,
+    onSnapshotError,
     onRemoveSnapshot
 })(require("../components/mapcontrols/Snapshot/SnapshotQueue"));
 

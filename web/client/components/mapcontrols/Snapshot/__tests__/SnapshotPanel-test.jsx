@@ -40,7 +40,8 @@ describe("test the SnapshotPanel", () => {
         tb.setProps({active: false, snapshot: {state: "DISABLED"}, layers: []});
     });
 
-    it('component error', () => {
+
+    it('component disabled', () => {
         let layers = [{loading: false, type: "google", visibility: true}, {loading: true}];
         let map = {size: {width: 20, height: 20}, zoom: 10};
         const tb = ReactDOM.render(<SnapshotPanel map={map} layers={layers} timeout={0} snapshot={{state: "DISABLED"}} active={true}/>, document.getElementById("container"));
@@ -48,10 +49,23 @@ describe("test the SnapshotPanel", () => {
         expect(document.getElementsByTagName('h4').length).toBe(1);
     });
 
+    it('component error', () => {
+        let layers = [{loading: false, type: "google", visibility: true}, {loading: true}];
+        let map = {size: {width: 20, height: 20}, zoom: 10};
+        const tb = ReactDOM.render(<SnapshotPanel map={map} snapshot={{error: "ERROR"}} layers={layers} timeout={0} snapshot={{state: "DISABLED"}} active={true}/>, document.getElementById("container"));
+        expect(tb).toExist();
+        expect(document.getElementsByTagName('h4').length).toBe(1);
+    });
+
+    it('component tainted', () => {
+        const tb = ReactDOM.render(<SnapshotPanel snapshot={{tainted: true}} timeout={0} snapshot={{state: "DISABLED"}} active={false}/>, document.getElementById("container"));
+        expect(tb).toExist();
+    });
+
     it('loading queue display', () => {
         let layers = [{loading: false, type: "google", visibility: true}, {loading: true}];
         let map = {size: {width: 20, height: 20}, zoom: 10};
-        const tb = ReactDOM.render(<SnapshotPanel map={map} layers={layers} timeout={0} snapshot={{state: "DISABLED", queue: [{key: 1}]}} active={true}/>, document.getElementById("container"));
+        const tb = ReactDOM.render(<SnapshotPanel map={map} layers={layers} wrap={true} snapshot={{tainted: true}} timeout={0} snapshot={{state: "DISABLED", queue: [{key: 1}]}} active={true}/>, document.getElementById("container"));
         expect(tb).toExist();
         ReactTestUtils.scryRenderedDOMComponentsWithClass(tb, "label-danger");
     });
