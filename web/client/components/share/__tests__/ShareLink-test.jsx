@@ -38,7 +38,18 @@ describe("The ShareLink component", () => {
         const inputDirectLink = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpShareLink, "input")[0]);
         expect(inputDirectLink).toExist();
         expect(inputDirectLink.value).toEqual(url);
+    });
 
+    it('should be selected when clicked', () => {
+        const cmpShareLink = ReactDOM.render(<ShareLink shareUrl={url}/>, document.getElementById("container"));
+        expect(cmpShareLink).toExist();
+
+        const inputDirectLink = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpShareLink, "input")[0]);
+        expect(inputDirectLink).toExist();
+
+        ReactTestUtils.Simulate.focus(inputDirectLink);
+        let selection = inputDirectLink.value.substring(inputDirectLink.selectionStart, inputDirectLink.selectionEnd);
+        expect(selection).toEqual(url);
     });
 
 
