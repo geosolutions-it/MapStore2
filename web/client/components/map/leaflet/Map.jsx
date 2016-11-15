@@ -12,7 +12,6 @@ var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var assign = require('object-assign');
 var mapUtils = require('../../../utils/MapUtils');
 
-require('./SingleClick');
 let LeafletMap = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
@@ -95,8 +94,7 @@ let LeafletMap = React.createClass({
 
 
         this.map.on('moveend', this.updateMapInfoState);
-        // this uses the hook defined in ./SingleClick.js for leaflet 0.7.*
-        this.map.on('singleclick', (event) => {
+        this.map.on('click', (event) => {
             if (this.props.onClick) {
                 this.props.onClick({
                     pixel: event.containerPoint,
@@ -283,7 +281,8 @@ let LeafletMap = React.createClass({
         mapUtils.registerHook(mapUtils.COMPUTE_BBOX_HOOK, (center, zoom) => {
             let latLngCenter = L.latLng([center.y, center.x]);
             // this call will use map internal size
-            let topLeftPoint = this.map._getNewTopLeftPoint(latLngCenter, zoom);
+            // let topLeftPoint = this.map._getNewTopLeftPoint(latLngCenter, zoom);
+            let topLeftPoint = this.map.project(latLngCenter, zoom).divideBy(256).floor();
             let pixelBounds = new L.Bounds(topLeftPoint, topLeftPoint.add(this.map.getSize()));
             let southWest = this.map.unproject(pixelBounds.getBottomLeft(), zoom);
             let northEast = this.map.unproject(pixelBounds.getTopRight(), zoom);
