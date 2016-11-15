@@ -223,4 +223,23 @@ describe('OpenlayersMap', () => {
         expect(bbox.crs).toBe("EPSG:3857");
         expect(bbox.rotation).toBe(0);
     });
+
+    it('test GET_PIXEL_FROM_COORDINATES_HOOK/GET_COORDINATES_FROM_PIXEL_HOOK hook registration', () => {
+        mapUtils.registerHook(mapUtils.GET_PIXEL_FROM_COORDINATES_HOOK, undefined);
+        mapUtils.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
+        let getPixelFromCoordinates = mapUtils.getHook(mapUtils.GET_PIXEL_FROM_COORDINATES_HOOK);
+        let getCoordinatesFromPixel = mapUtils.getHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
+        expect(getPixelFromCoordinates).toNotExist();
+        expect(getCoordinatesFromPixel).toNotExist();
+
+        const map = ReactDOM.render(<OpenlayersMap id="mymap" center={{y: 0, x: 0}} zoom={11} registerHooks={true}/>,
+                                    document.getElementById("map"));
+        expect(map).toExist();
+
+        getPixelFromCoordinates = mapUtils.getHook(mapUtils.GET_PIXEL_FROM_COORDINATES_HOOK);
+        getCoordinatesFromPixel = mapUtils.getHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
+        expect(getPixelFromCoordinates).toExist();
+        expect(getCoordinatesFromPixel).toExist();
+    });
+
 });

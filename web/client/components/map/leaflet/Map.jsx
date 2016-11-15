@@ -299,6 +299,15 @@ let LeafletMap = React.createClass({
                 rotation: 0
             };
         });
+        mapUtils.registerHook(mapUtils.GET_PIXEL_FROM_COORDINATES_HOOK, (pos) => {
+            let latLng = CoordinatesUtils.reproject(pos, this.props.projection, 'EPSG:4326');
+            let pixel = this.map.latLngToContainerPoint([latLng.x, latLng.y]);
+            return [pixel.x, pixel.y];
+        });
+        mapUtils.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
+            let pos = CoordinatesUtils.reproject(this.map.containerPointToLatLng(pixel), 'EPSG:4326', this.props.projection);
+            return [pos.x, pos.y];
+        });
     }
 });
 
