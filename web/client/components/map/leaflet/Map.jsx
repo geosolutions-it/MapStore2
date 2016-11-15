@@ -99,8 +99,14 @@ let LeafletMap = React.createClass({
         this.map.on('singleclick', (event) => {
             if (this.props.onClick) {
                 this.props.onClick({
-                    pixel: event.containerPoint,
-                    latlng: event.latlng
+                    pixel: {
+                        x: event.containerPoint.x,
+                        y: event.containerPoint.y
+                    },
+                    latlng: {
+                        lat: event.latlng.lat,
+                        lng: event.latlng.lng
+                    }
                 });
             }
         });
@@ -268,7 +274,11 @@ let LeafletMap = React.createClass({
         this.props.onMouseMove({
             x: pos.lng,
             y: pos.lat,
-            crs: "EPSG:4326"
+            crs: "EPSG:4326",
+            pixel: {
+                x: event.containerPoint.x,
+                y: event.containerPoint.x
+            }
         });
     },
     registerHooks() {
