@@ -14,12 +14,14 @@ var {
     CHANGE_ZOOM_LVL,
     CHANGE_MAP_CRS,
     CHANGE_MAP_STYLE,
+    CHANGE_ROTATION,
     changeMapView,
     clickOnMap,
     changeMousePointer,
     changeZoomLevel,
     changeMapCrs,
-    changeMapStyle
+    changeMapStyle,
+    changeRotation
 } = require('../map');
 
 describe('Test correctness of the map actions', () => {
@@ -86,5 +88,15 @@ describe('Test correctness of the map actions', () => {
         expect(retval.type).toBe(CHANGE_MAP_STYLE);
         expect(retval.style).toBe(style);
         expect(retval.mapStateSource).toBe(mapStateSource);
+    });
+
+    it('changeRotation', () => {
+        let angle = 0.5235987755982989;
+        let mapStateSource = "test";
+        let retval = changeRotation(angle, mapStateSource);
+        expect(retval).toExist();
+        expect(retval.type).toEqual(CHANGE_ROTATION);
+        expect(retval.rotation).toEqual(angle);
+        expect(retval.mapStateSource).toEqual(mapStateSource);
     });
 });
