@@ -85,7 +85,7 @@
     "json-loader": "0.5.4",
     "jsonix": "2.4.1",
     "keymirror": "0.1.1",
-    "leaflet": "0.7.7",
+    "leaflet": "^1.0.1",
     "leaflet-draw": "0.2.4",
     "leaflet-minimap": "3.3.1",
     "leaflet-plugins": "https://github.com/Polyconseil/leaflet-plugins/tarball/master",
