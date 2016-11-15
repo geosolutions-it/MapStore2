@@ -491,7 +491,8 @@
             "date": "Date",
             "layers": "Layers",
             "size": "Size",
-            "notsupported": "Snapshot not supported"
+            "notsupported": "Snapshot not supported",
+            "taintedMessage": "Save snapshot functionality is limited by some browser security rules. For better result right-click on the preview and select 'Save image as' (supported by Firefox and Chrome)"
         },
         "shapefile": {
             "title": "Add Local Shapefile",

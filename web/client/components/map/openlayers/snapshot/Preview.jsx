@@ -44,7 +44,7 @@ let GrabLMap = React.createClass({
             canvas: <canvas></canvas>,
             drawCanvas: true,
             mapId: "map",
-            timeout: 1000
+            timeout: 0
         };
     },
     componentDidMount() {
@@ -61,38 +61,33 @@ let GrabLMap = React.createClass({
         let mapIsLoading = this.mapIsLoading(this.props.layers);
         if (!mapIsLoading && this.props.active) {
             this.props.onStatusChange("SHOTING");
-            this.previousTimeout = setTimeout(() => {
-                this.doSnapshot();
-            },
-            this.props.timeout);
+            this.triggerShooting(this.props.timeout);
         }
     },
     componentWillReceiveProps(nextProps) {
-        let mapIsLoading = this.mapIsLoading(nextProps.layers);
-        let mapChanged = this.mapChanged(nextProps);
         if (this.previousTimeout) {
             clearTimeout(this.previousTimeout);
         }
-        if ( nextProps.active && !mapIsLoading && mapChanged ) {
-            this.props.onStatusChange("SHOTING");
-            this.previousTimeout = setTimeout(() => {
-                this.doSnapshot();
-            },
-            nextProps.timeout);
-        } else {
-            if (!nextProps.active) {
-                this.props.onStatusChange("DISABLED");
-                if (this.props.snapstate.error) {
-                    this.props.onSnapshotError(null);
-                }
+        if (!nextProps.active) {
+            this.props.onStatusChange("DISABLED");
+            if (this.props.snapstate.error) {
+                this.props.onSnapshotError(null);
             }
-        }
-        if (!mapIsLoading && nextProps.active && (mapChanged || nextProps.snapstate.state === "SHOTING") ) {
-            this.triggerShooting(nextProps.timeout);
         }
     },
     shouldComponentUpdate(nextProps) {
-        return this.mapChanged(nextProps) && this.props.snapstate !== nextProps.snapstate;
+        return this.mapChanged(nextProps) || this.props.snapstate !== nextProps.snapstate;
+    },
+    componentDidUpdate(prevProps) {
+        let mapIsLoading = this.mapIsLoading(this.props.layers);
+        let mapChanged = this.mapChanged(prevProps);
+        if (!mapIsLoading && this.props.active && (mapChanged || this.props.snapstate.state === "SHOTING") ) {
+            if (this.props.snapstate.state !== "SHOTING") {
+                this.props.onStatusChange("SHOTING");
+            }
+            this.triggerShooting(this.props.timeout);
+        }
+
     },
     componentWillUnmount() {
         if (this.previousTimeout) {
@@ -109,7 +104,8 @@ let GrabLMap = React.createClass({
                 height={this.props.config && this.props.config.size ? this.props.config.size.height : "100%"}
                 style={{
                     maxWidth: "400px",
-                    maxHeight: "400px"
+                    maxHeight: "400px",
+                    visibility: this.props.active ? "block" : "none"
                 }}
                 ref="canvas" />
         );
@@ -121,6 +117,9 @@ let GrabLMap = React.createClass({
         return layers.some((layer) => { return layer.visibility && layer.loading; });
     },
     triggerShooting(delay) {
+        if (this.previousTimeout) {
+            clearTimeout(this.previousTimeout);
+        }
         this.previousTimeout = setTimeout(() => {
             this.doSnapshot();
         },
@@ -128,18 +127,19 @@ let GrabLMap = React.createClass({
     },
     doSnapshot() {
         var div = document.getElementById(this.props.mapId);
-        let sourceCanvas = div.getElementsByTagName("canvas")[0];
-        if (sourceCanvas) {
-            let canvas = this.refs.canvas;
+        let sourceCanvas = div && div.getElementsByTagName("canvas")[0];
+        if (sourceCanvas && this.getCanvas()) {
+            let canvas = this.getCanvas();
             let context = canvas.getContext("2d");
             context.clearRect(0, 0, canvas.width, canvas.height);
             context.drawImage(sourceCanvas, 0, 0);
-            this.props.onStatusChange("READY");
             this.props.onSnapshotReady(sourceCanvas);
+            this.props.onStatusChange("READY", this.isTainted(sourceCanvas));
+
         }
     },
-    isTainted() {
-        let canvas = this.refs.canvas;
+    isTainted(canv) {
+        let canvas = canv || this.refs.canvas;
         let ctx = canvas.getContext("2d");
         try {
             ctx.getImageData(0, 0, 1, 1);

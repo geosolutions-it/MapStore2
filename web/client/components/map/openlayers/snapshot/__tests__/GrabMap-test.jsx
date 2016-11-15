@@ -56,6 +56,9 @@ describe("the OL GrabMap component", () => {
         const tb = ReactDOM.render(<GrabMap config={map} layers={layers} snapstate={{state: "DISABLED"}} active={false} timeout={0} onSnapshotReady={() => { done(); }}/>, document.getElementById("snap"));
         expect(tb).toExist();
         tb.setProps({active: true});
+        // emulate map load
+        tb.layerLoading();
+        tb.layerLoad();
         // force snapshot creation
         tb.createSnapshot();
     });

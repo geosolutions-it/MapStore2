@@ -14,10 +14,11 @@ const SNAPSHOT_ADD_QUEUE = 'SNAPSHOT_ADD_QUEUE';
 const SNAPSHOT_REMOVE_QUEUE = 'SNAPSHOT_REMOVE_QUEUE';
 const SAVE_IMAGE = 'SAVE_IMAGE';
 
-function changeSnapshotState(state) {
+function changeSnapshotState(state, tainted) {
     return {
         type: CHANGE_SNAPSHOT_STATE,
-        state: state
+        state: state,
+        tainted
     };
 }
 function onSnapshotError(error) {

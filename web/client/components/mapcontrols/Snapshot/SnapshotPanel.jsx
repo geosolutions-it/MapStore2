@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Button, Col, Grid, Row, Image, Glyphicon, Table, Panel} = require('react-bootstrap');
+const {Button, Col, Grid, Row, Image, Glyphicon, Table, Panel, Alert} = require('react-bootstrap');
 const {DateFormat} = require('../../I18N/I18N');
 require("./css/snapshot.css");
 
@@ -187,6 +187,11 @@ let SnapshotPanel = React.createClass({
         }
         return panel;
     },
+    renderTaintedMessage() {
+        if (this.props.snapshot && this.props.snapshot && this.props.snapshot.tainted) {
+            return <Alert bsStyle="warning"><Message msgId="snapshot.taintedMessage" /></Alert>;
+        }
+    },
     render() {
         let bingOrGoogle = this.isBingOrGoogle();
         let snapshotReady = this.isSnapshotReady();
@@ -211,6 +216,7 @@ let SnapshotPanel = React.createClass({
 
                 <Row key="buttons" htopclassName="pull-right" style={{marginTop: "5px"}}>
                     { this.renderButton(!bingOrGoogle && snapshotReady)}
+                    { this.renderTaintedMessage()}
                     {this.renderSnapshotQueue()}
                 </Row>
 
