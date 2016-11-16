@@ -353,6 +353,12 @@ var OpenlayersMap = React.createClass({
                 rotation: this.map.getView().getRotation()
             };
         });
+        mapUtils.registerHook(mapUtils.GET_PIXEL_FROM_COORDINATES_HOOK, (pos) => {
+            return this.map.getPixelFromCoordinate(pos);
+        });
+        mapUtils.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
+            return this.map.getCoordinateFromPixel(pixel);
+        });
     }
 });
 // add overrides for css
