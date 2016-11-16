@@ -13,6 +13,7 @@ require('codemirror/lib/codemirror.css');
 
 require('codemirror/mode/javascript/javascript');
 
+const assign = require('object-assign');
 
 const PluginConfigurator = React.createClass({
     propTypes: {
@@ -20,7 +21,8 @@ const PluginConfigurator = React.createClass({
         pluginsCfg: React.PropTypes.array,
         onToggle: React.PropTypes.func,
         onApplyCfg: React.PropTypes.func,
-        pluginConfig: React.PropTypes.string
+        pluginConfig: React.PropTypes.string,
+        pluginImpl: React.PropTypes.object
     },
     getInitialState() {
         return {
@@ -40,6 +42,24 @@ const PluginConfigurator = React.createClass({
             });
         }
     },
+    getPropValue(type) {
+        if (type === React.PropTypes.string || type === React.PropTypes.string.isRequired) {
+            return '';
+        }
+        if (type === React.PropTypes.number || type === React.PropTypes.number.isRequired) {
+            return 0;
+        }
+        if (type === React.PropTypes.bool || type === React.PropTypes.bool.isRequired) {
+            return false;
+        }
+        if (type === React.PropTypes.object || type === React.PropTypes.object.isRequired) {
+            return {};
+        }
+        if (type === React.PropTypes.array || type === React.PropTypes.array.isRequired) {
+            return [];
+        }
+        return null;
+    },
     renderCfg() {
         return this.state.configVisible ? [
             <label key="config-label">Enter a JSON object to configure plugin properties</label>,
@@ -47,7 +67,8 @@ const PluginConfigurator = React.createClass({
                     mode: {name: "javascript", json: true},
                     lineNumbers: true
                 }}/>,
-            <Button key="apply-cfg" onClick={this.applyCfg}>Apply</Button>
+            <Button key="apply-cfg" onClick={this.applyCfg}>Apply</Button>,
+            <Button key="help-cfg" onClick={this.showProps}><Glyphicon glyph="question-sign"/></Button>
         ] : null;
     },
     render() {
@@ -58,11 +79,26 @@ const PluginConfigurator = React.createClass({
                 checked={this.props.pluginsCfg.indexOf(this.props.pluginName) !== -1}
                 label={this.props.pluginName}
                 onChange={this.props.onToggle}/>
-
             {this.renderCfg()}
         </li>);
     },
-    updateCode: function(newCode) {
+    showProps() {
+        if (this.props.pluginImpl) {
+            const plugin = this.props.pluginImpl;
+            const pluginProps = plugin.WrappedComponent && plugin.WrappedComponent.propTypes || plugin.propTypes;
+
+            const propsValues = (plugin.WrappedComponent && plugin.WrappedComponent.getDefaultProps && plugin.WrappedComponent.getDefaultProps()) ||
+                (plugin.getDefaultProps && plugin.getDefaultProps()) || {};
+
+            const props = Object.keys(pluginProps || {}).reduce((previous, current) => {
+                return assign(previous, {[current]: this.getPropValue(pluginProps[current])}, propsValues);
+            }, {});
+            this.setState({
+                code: JSON.stringify(props, null, 4)
+            });
+        }
+    },
+    updateCode(newCode) {
         this.setState({
             code: newCode
         });
