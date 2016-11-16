@@ -11,6 +11,8 @@ const {Input, Button, Alert} = require('react-bootstrap');
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
+require('react-select/dist/react-select.css');
+
 module.exports = React.createClass({
     propTypes: {
         enabled: React.PropTypes.bool,

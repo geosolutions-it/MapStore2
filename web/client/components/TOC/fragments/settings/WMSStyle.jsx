@@ -11,6 +11,8 @@ const Message = require('../../../I18N/Message');
 const Select = require('react-select');
 const {Button, Glyphicon, Alert} = require('react-bootstrap');
 
+require('react-select/dist/react-select.css');
+
 /**
  * General Settings form for layer
  */

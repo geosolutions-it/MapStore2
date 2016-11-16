@@ -11,6 +11,7 @@ const React = require('react');
 const Select = require('react-select');
 const Message = require('../../I18N/Message');
 
+require('react-select/dist/react-select.css');
 
 // const ConfirmModal = require('./modals/ConfirmModal');
 // const GroupManager = require('./GroupManager');
