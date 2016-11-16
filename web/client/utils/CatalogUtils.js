@@ -140,7 +140,7 @@ const converters = {
                 references: [{
                     type: "OGC:WMS",
                     url: options.url,
-                    SRS: record.SRS || [],
+                    SRS: (record.SRS && (isArray(record.SRS) ? record.SRS : [record.SRS])) || [],
                     params: {
                         name: record.Name
                     }
