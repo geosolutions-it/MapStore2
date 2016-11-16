@@ -123,6 +123,9 @@ var LayersUtils = {
                 if (!feature.id) {
                     feature.id = idx;
                 }
+                if (feature.geometry && feature.geometry.bbox && isNaN(feature.geometry.bbox[0])) {
+                    feature.geometry.bbox = [null, null, null, null];
+                }
                 return feature;
             })
         };
