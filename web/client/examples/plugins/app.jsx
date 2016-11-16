@@ -77,6 +77,7 @@ const startApp = () => {
         return Object.keys(plugins).map((plugin) => {
             const pluginName = plugin.substring(0, plugin.length - 6);
             return (<PluginConfigurator key={pluginName} pluginName={pluginName} pluginsCfg={pluginsCfg.standard}
+                pluginImpl={plugins[plugin][plugin]}
                 onToggle={togglePlugin.bind(null, pluginName, callback)}
                 onApplyCfg={configurePlugin.bind(null, plugin, callback)}
                 pluginConfig={userCfg[pluginName + 'Plugin'] && JSON.stringify(userCfg[pluginName + 'Plugin'], null, 2) || "{}"}
