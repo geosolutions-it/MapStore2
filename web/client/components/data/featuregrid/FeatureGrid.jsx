@@ -84,7 +84,12 @@ const FeatureGrid = React.createClass({
                 selectAll: true
             },
             dataSource: null,
-            selectAllActive: false
+            selectAllActive: false,
+            exportAction: (api) => {
+                if ( api) {
+                    api.exportDataAsCsv();
+                }
+            }
         };
     },
     shouldComponentUpdate(nextProps) {
@@ -130,12 +135,7 @@ const FeatureGrid = React.createClass({
         }
 
         if (this.props.toolbar.exporter) {
-            tools.push(<button key="exporter" onClick={() => {
-                if (this.props.exportAction) {
-                    this.props.exportAction();
-                } else {
-                    this.api.exportDataAsCsv();
-                }}}>
+            tools.push(<button key="exporter" onClick={() => this.props.exportAction(this.api)}>
                 <I18N.Message msgId={"featuregrid.export"}/>
             </button>);
         }
