@@ -486,7 +486,7 @@ describe('FilterUtils', () => {
         FilterUtils.nsplaceholder = "ogc";
         FilterUtils.setOperatorsPlaceholders("{namespace}", "ogc");
 
-        let filter = FilterUtils.processOGCCrossLayerFilter(crossLayerFilterObj);
+        let filter = FilterUtils.processOGCCrossLayerFilter(crossLayerFilterObj, "ogc");
         expect(filter).toEqual(expected);
     });
 });
