@@ -99,11 +99,11 @@ var getCQLGeometryElement = function(coordinates, type) {
     geometry += ")";
     return geometry;
 };
-var processCQLSpatialFilter = function(json) {
-    let cql = json.spatialField.operation + "(" +
-        json.spatialField.attribute + ", ";
+var processCQLSpatialFilter = function(objFilter) {
+    let cql = objFilter.spatialField.operation + "(" +
+        objFilter.spatialField.attribute + ", ";
 
-    cql += getCQLGeometryElement(json.spatialField.geometry.coordinates, json.spatialField.geometry.type);
+    cql += getCQLGeometryElement(objFilter.spatialField.geometry.coordinates, objFilter.spatialField.geometry.type);
 
     return cql + ")";
 };
@@ -201,8 +201,8 @@ var processCQLSimpleFilterField = function(field) {
 
     return (strFilter && strFilter.length > 0) ? strFilter : false;
 };
-var processCQLFilterFields = function(group, json) {
-    let fields = json.filterFields.filter((field) => field.groupId === group.id);
+var processCQLFilterFields = function(group, objFilter) {
+    let fields = objFilter.filterFields.filter((field) => field.groupId === group.id);
 
     let filter = [];
     if (fields) {
@@ -263,29 +263,7 @@ var getGmlPolygonElement = function(coordinates, srsName, version) {
     gmlPolygon += '</gml:Polygon>';
     return gmlPolygon;
 };
-var getGmlPointElement = function(coordinates, srsName, version) {
-    let gmlPoint = '<gml:Point srsDimension="2"';
 
-    gmlPoint += srsName ? ' srsName="' + srsName + '">' : '>';
-
-    // ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Array of LinearRing coordinate array. The first element in the array represents the exterior ring.
-    // Any subsequent elements represent interior rings (or holes).
-    // ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    coordinates.forEach((element) => {
-        let coords = element.map((coordinate) => {
-            return coordinate[0] + " " + coordinate[1];
-        });
-        if (version === "1.0.0") {
-            gmlPoint += '<gml:coord><X>' + element[0][0] + '</X><Y>' + element[0][1] + '</Y></gml:coord>';
-        } else {
-            gmlPoint += '<gml:pos>' + coords.join(" ") + '</gml:pos>';
-        }
-    });
-
-    gmlPoint += '</gml:Point>';
-    return gmlPoint;
-};
 var getGetFeatureBase = function(version, pagination, hits, format) {
     let ver = normalizeVersion(version);
 
@@ -340,10 +318,10 @@ var getGetFeatureBase = function(version, pagination, hits, format) {
     return getFeature;
 };
 
-var processCQLFilterGroup = function(root, json) {
-    let cql = processCQLFilterFields(root, json);
+var processCQLFilterGroup = function(root, objFilter) {
+    let cql = processCQLFilterFields(root, objFilter);
 
-    let subGroups = findSubGroups(root, json.groupFields);
+    let subGroups = findSubGroups(root, objFilter.groupFields);
     if (subGroups.length > 0) {
         subGroups.forEach((subGroup) => {
             cql += " " + root.logic + " (" + this.processFilterGroup(subGroup) + ")";
@@ -475,8 +453,8 @@ var ogcNumberField = function(attribute, operator, value, nsplaceholder) {
 };
 
 
-var processOGCFilterFields = function(group, json, nsplaceholder) {
-    let fields = group ? json.filterFields.filter((field) => field.groupId === group.id) : json.filterFields;
+var processOGCFilterFields = function(group, objFilter, nsplaceholder) {
+    let fields = group ? objFilter.filterFields.filter((field) => field.groupId === group.id) : objFilter.filterFields;
     let filter = [];
 
     if (fields) {
@@ -538,12 +516,12 @@ var processOGCSimpleFilterField = function(field, nsplaceholder) {
     return filter;
 };
 
-var processOGCFilterGroup = function(root, json, nsplaceholder) {
+var processOGCFilterGroup = function(root, objFilter, nsplaceholder) {
     let ogc =
         ogcLogicalOperator[root.logic].startTag +
-        processOGCFilterFields(root, json, nsplaceholder);
+        processOGCFilterFields(root, objFilter, nsplaceholder);
 
-    let subGroups = findSubGroups(root, json.groupFields);
+    let subGroups = findSubGroups(root, objFilter.groupFields);
     if (subGroups.length > 0) {
         subGroups.forEach((subGroup) => {
             ogc += processOGCFilterGroup(subGroup, nsplaceholder);
@@ -555,118 +533,35 @@ var processOGCFilterGroup = function(root, json, nsplaceholder) {
     return ogc;
 };
 
-var processOGCSpatialFilter = function(version, json, nsplaceholder) {
-    let ogc = ogcSpatialOperator[json.spatialField.operation].startTag;
-    ogc +=
-        propertyTagReference[nsplaceholder].startTag +
-            json.spatialField.attribute +
-        propertyTagReference[nsplaceholder].endTag;
-
-    switch (json.spatialField.operation) {
-        case "INTERSECTS":
-        case "DWITHIN":
-        case "WITHIN":
-        case "CONTAINS": {
-            switch (json.spatialField.geometry.type) {
-                case "Point":
-                    ogc += getGmlPointElement(json.spatialField.geometry.coordinates,
-                        json.spatialField.geometry.projection || "EPSG:4326", version);
-                    break;
-                case "MultiPoint":
-                    ogc += '<gml:MultiPoint srsName="' + (json.spatialField.geometry.projection || "EPSG:4326") + '">';
-
-                    // //////////////////////////////////////////////////////////////////////////
-                    // Coordinates of a MultiPoint are an array of positions
-                    // //////////////////////////////////////////////////////////////////////////
-                    json.spatialField.geometry.coordinates.forEach((element) => {
-                        let point = element;
-                        if (point) {
-                            ogc += "<gml:pointMember>";
-                            ogc += getGmlPointElement(point, version);
-                            ogc += "</gml:pointMember>";
-                        }
-                    });
-
-                    ogc += '</gml:MultiPoint>';
-                    break;
-                case "Polygon":
-                    ogc += getGmlPolygonElement(json.spatialField.geometry.coordinates,
-                        json.spatialField.geometry.projection || "EPSG:4326", version);
-                    break;
-                case "MultiPolygon":
-                    const multyPolygonTagName = version === "2.0" ? "MultiSurface" : "MultiPolygon";
-                    const polygonMemberTagName = version === "2.0" ? "surfaceMembers" : "polygonMember";
-
-                    ogc += '<gml:' + multyPolygonTagName + ' srsName="' + (json.spatialField.geometry.projection || "EPSG:4326") + '">';
-
-                    // //////////////////////////////////////////////////////////////////////////
-                    // Coordinates of a MultiPolygon are an array of Polygon coordinate arrays
-                    // //////////////////////////////////////////////////////////////////////////
-                    json.spatialField.geometry.coordinates.forEach((element) => {
-                        let polygon = element;
-                        if (polygon) {
-                            ogc += "<gml:" + polygonMemberTagName + ">";
-                            ogc += getGmlPolygonElement(polygon, version);
-                            ogc += "</gml:" + polygonMemberTagName + ">";
-                        }
-                    });
-
-                    ogc += '</gml:' + multyPolygonTagName + '>';
-                    break;
-                default:
-                    break;
-            }
-
-            if (json.spatialField.operation === "DWITHIN") {
-                ogc += '<' + nsplaceholder + ':Distance units="m">' + (json.spatialField.geometry.distance || 0) + '</' + nsplaceholder + ':Distance>';
-            }
-
-            break;
-        }
-        case "BBOX": {
-            let lowerCorner = json.spatialField.geometry.extent[0] + " " + json.spatialField.geometry.extent[1];
-            let upperCorner = json.spatialField.geometry.extent[2] + " " + json.spatialField.geometry.extent[3];
-
-            ogc +=
-                '<gml:Envelope' + ' srsName="' + json.spatialField.geometry.projection + '">' +
-                    '<gml:lowerCorner>' + lowerCorner + '</gml:lowerCorner>' +
-                    '<gml:upperCorner>' + upperCorner + '</gml:upperCorner>' +
-                '</gml:Envelope>';
-
-            break;
-        }
-        default:
-            break;
-    }
-
-    ogc += ogcSpatialOperator[json.spatialField.operation].endTag;
-    return ogc;
-};
-
 const FilterUtils = {
 
     toOGCFilter: function(ftName, json, version, sortOptions = null, hits = false, format = null, propertyNames = null) {
-
+        let objFilter;
+        try {
+            objFilter = (json instanceof Object) ? json : JSON.parse(json);
+        } catch (e) {
+            return e;
+        }
         const versionOGC = normalizeVersion(version || ogcVersion);
         const nsplaceholder = versionOGC === "2.0" ? "fes" : "ogc";
 
         this.setOperatorsPlaceholders("{namespace}", nsplaceholder);
 
-        let ogcFilter = getGetFeatureBase(versionOGC, json.pagination, hits, format);
+        let ogcFilter = getGetFeatureBase(versionOGC, objFilter.pagination, hits, format);
         let filters = [];
 
         let attributeFilter;
-        if (json.filterFields && json.filterFields.length > 0) {
-            if (json.groupFields && json.groupFields.length > 0) {
-                attributeFilter = processOGCFilterGroup(json.groupFields[0], json, nsplaceholder);
+        if (objFilter.filterFields && objFilter.filterFields.length > 0) {
+            if (objFilter.groupFields && objFilter.groupFields.length > 0) {
+                attributeFilter = processOGCFilterGroup(objFilter.groupFields[0], objFilter, nsplaceholder);
             } else {
-                attributeFilter = processOGCFilterFields(json, nsplaceholder);
+                attributeFilter = processOGCFilterFields(objFilter, nsplaceholder);
             }
             filters.push(attributeFilter);
-        }else if (json.simpleFilterFields && json.simpleFilterFields.length > 0) {
+        }else if (objFilter.simpleFilterFields && objFilter.simpleFilterFields.length > 0) {
             let ogc = "";
             ogc += ogcLogicalOperator.AND.startTag;
-            json.simpleFilterFields.forEach((filter) => {
+            objFilter.simpleFilterFields.forEach((filter) => {
                 ogc += processOGCSimpleFilterField(filter, nsplaceholder);
             }, this);
             ogc += ogcLogicalOperator.AND.endTag;
@@ -674,12 +569,12 @@ const FilterUtils = {
         }
 
         let spatialFilter;
-        if (json.spatialField && json.spatialField.geometry && json.spatialField.operation) {
-            spatialFilter = processOGCSpatialFilter(versionOGC, json, nsplaceholder);
+        if (objFilter.spatialField && objFilter.spatialField.geometry && objFilter.spatialField.operation) {
+            spatialFilter = this.processOGCSpatialFilter(versionOGC, objFilter, nsplaceholder);
             filters.push(spatialFilter);
         }
-        if (json.crossLayerFilter) {
-            let crossLayerFilter = json.crossLayerFilter;
+        if (objFilter.crossLayerFilter) {
+            let crossLayerFilter = objFilter.crossLayerFilter;
             if (Array.isArray()) {
                 crossLayerFilter.forEach( f => filters.push(this.processOGCCrossLayerFilter(f, nsplaceholder)));
             } else {
@@ -746,6 +641,93 @@ const FilterUtils = {
             }
         });
     },
+    processOGCSpatialFilter: function(version, objFilter, nsplaceholder) {
+        let ogc = ogcSpatialOperator[objFilter.spatialField.operation].startTag;
+        ogc +=
+            propertyTagReference[nsplaceholder].startTag +
+                objFilter.spatialField.attribute +
+            propertyTagReference[nsplaceholder].endTag;
+
+        switch (objFilter.spatialField.operation) {
+            case "INTERSECTS":
+            case "DWITHIN":
+            case "WITHIN":
+            case "CONTAINS": {
+                switch (objFilter.spatialField.geometry.type) {
+                    case "Point":
+                        ogc += this.getGmlPointElement(objFilter.spatialField.geometry.coordinates,
+                            objFilter.spatialField.geometry.projection || "EPSG:4326", version);
+                        break;
+                    case "MultiPoint":
+                        ogc += '<gml:MultiPoint srsName="' + (objFilter.spatialField.geometry.projection || "EPSG:4326") + '">';
+
+                        // //////////////////////////////////////////////////////////////////////////
+                        // Coordinates of a MultiPoint are an array of positions
+                        // //////////////////////////////////////////////////////////////////////////
+                        objFilter.spatialField.geometry.coordinates.forEach((element) => {
+                            let point = element;
+                            if (point) {
+                                ogc += "<gml:pointMember>";
+                                ogc += this.getGmlPointElement(point, version);
+                                ogc += "</gml:pointMember>";
+                            }
+                        });
+
+                        ogc += '</gml:MultiPoint>';
+                        break;
+                    case "Polygon":
+                        ogc += getGmlPolygonElement(objFilter.spatialField.geometry.coordinates,
+                            objFilter.spatialField.geometry.projection || "EPSG:4326", version);
+                        break;
+                    case "MultiPolygon":
+                        const multyPolygonTagName = version === "2.0" ? "MultiSurface" : "MultiPolygon";
+                        const polygonMemberTagName = version === "2.0" ? "surfaceMembers" : "polygonMember";
+
+                        ogc += '<gml:' + multyPolygonTagName + ' srsName="' + (objFilter.spatialField.geometry.projection || "EPSG:4326") + '">';
+
+                        // //////////////////////////////////////////////////////////////////////////
+                        // Coordinates of a MultiPolygon are an array of Polygon coordinate arrays
+                        // //////////////////////////////////////////////////////////////////////////
+                        objFilter.spatialField.geometry.coordinates.forEach((element) => {
+                            let polygon = element;
+                            if (polygon) {
+                                ogc += "<gml:" + polygonMemberTagName + ">";
+                                ogc += getGmlPolygonElement(polygon, version);
+                                ogc += "</gml:" + polygonMemberTagName + ">";
+                            }
+                        });
+
+                        ogc += '</gml:' + multyPolygonTagName + '>';
+                        break;
+                    default:
+                        break;
+                }
+
+                if (objFilter.spatialField.operation === "DWITHIN") {
+                    ogc += '<' + nsplaceholder + ':Distance units="m">' + (objFilter.spatialField.geometry.distance || 0) + '</' + nsplaceholder + ':Distance>';
+                }
+
+                break;
+            }
+            case "BBOX": {
+                let lowerCorner = objFilter.spatialField.geometry.extent[0] + " " + objFilter.spatialField.geometry.extent[1];
+                let upperCorner = objFilter.spatialField.geometry.extent[2] + " " + objFilter.spatialField.geometry.extent[3];
+
+                ogc +=
+                    '<gml:Envelope' + ' srsName="' + objFilter.spatialField.geometry.projection + '">' +
+                        '<gml:lowerCorner>' + lowerCorner + '</gml:lowerCorner>' +
+                        '<gml:upperCorner>' + upperCorner + '</gml:upperCorner>' +
+                    '</gml:Envelope>';
+
+                break;
+            }
+            default:
+                break;
+        }
+
+        ogc += ogcSpatialOperator[objFilter.spatialField.operation].endTag;
+        return ogc;
+    },
     /**
     *  processOGCCrossLayerFilter(object)
     *  object should be in this form :
@@ -771,8 +753,32 @@ const FilterUtils = {
     *   }}
     *   }
     */
-    processOGCCrossLayerFilter: function(crossLayerFilter, nsplaceholder) {
+    getGmlPointElement: function(coordinates, srsName, version) {
+        let gmlPoint = '<gml:Point srsDimension="2"';
+
+        gmlPoint += srsName ? ' srsName="' + srsName + '">' : '>';
+
+        // ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Array of LinearRing coordinate array. The first element in the array represents the exterior ring.
+        // Any subsequent elements represent interior rings (or holes).
+        // ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        coordinates.forEach((element) => {
+            let coords = element.map((coordinate) => {
+                return coordinate[0] + " " + coordinate[1];
+            });
+            if (version === "1.0.0") {
+                gmlPoint += '<gml:coord><X>' + element[0][0] + '</X><Y>' + element[0][1] + '</Y></gml:coord>';
+            } else {
+                gmlPoint += '<gml:pos>' + coords.join(" ") + '</gml:pos>';
+            }
+        });
+
+        gmlPoint += '</gml:Point>';
+        return gmlPoint;
+    },
+    processOGCCrossLayerFilter: function(crossLayerFilter, nsplaceholderparams) {
         let ogc = ogcSpatialOperator[crossLayerFilter.operation].startTag;
+        let nsplaceholder = nsplaceholderparams || "ogc";
         ogc +=
             propertyTagReference[nsplaceholder].startTag +
                 crossLayerFilter.attribute +
@@ -795,15 +801,21 @@ const FilterUtils = {
         return ogc;
     },
     toCQLFilter: function(json) {
+        let objFilter;
+        try {
+            objFilter = (json instanceof Object) ? json : JSON.parse(json);
+        } catch (e) {
+            return e;
+        }
 
         let filters = [];
 
         let attributeFilter;
-        if (json.filterFields && json.filterFields.length > 0) {
-            attributeFilter = processCQLFilterGroup(json.groupFields[0], json);
+        if (objFilter.filterFields && objFilter.filterFields.length > 0) {
+            attributeFilter = processCQLFilterGroup(objFilter.groupFields[0], objFilter);
             filters.push(attributeFilter);
-        }else if (json.simpleFilterFields && json.simpleFilterFields.length > 0) {
-            let simpleFilter = json.simpleFilterFields.reduce((cql, field) => {
+        }else if (objFilter.simpleFilterFields && objFilter.simpleFilterFields.length > 0) {
+            let simpleFilter = objFilter.simpleFilterFields.reduce((cql, field) => {
                 let tmp = cql;
                 let strFilter = processCQLSimpleFilterField(field);
                 if (strFilter !== false) {
@@ -816,8 +828,8 @@ const FilterUtils = {
         }
 
         let spatialFilter;
-        if (json.spatialField && json.spatialField.geometry && json.spatialField.operation) {
-            spatialFilter = processCQLSpatialFilter(json);
+        if (objFilter.spatialField && objFilter.spatialField.geometry && objFilter.spatialField.operation) {
+            spatialFilter = processCQLSpatialFilter(objFilter);
             filters.push(spatialFilter);
         }
 
