@@ -32,7 +32,7 @@ var Menu = React.createClass({
         };
     },
     componentDidMount() {
-        if (!this.overlapMap && this.props.show) {
+        if (!this.props.overlapMap && this.props.show) {
             let style = {left: this.props.width, width: `calc(100% - ${this.props.width}px)`};
             this.props.changeMapStyle(style, "drawerMenu");
         }
