@@ -48,490 +48,6 @@ var propertyTagReference = {
     "ogc": {startTag: "<ogc:PropertyName>", endTag: "</ogc:PropertyName>"},
     "fes": {startTag: "<fes:ValueReference>", endTag: "</fes:ValueReference>"}
 };
-var getCQLGeometryElement = function(coordinates, type) {
-    let geometry = type + "(";
-
-    switch (type) {
-        case "Point":
-            geometry += coordinates.join(" ");
-            break;
-        case "MultiPoint":
-            coordinates.forEach((position, index) => {
-                geometry += position.join(" ");
-                geometry += index < coordinates.length - 1 ? ", " : "";
-            });
-            break;
-        case "Polygon":
-            coordinates.forEach((element, index) => {
-                geometry += "(";
-                let coords = element.map((coordinate) => {
-                    return coordinate[0] + " " + coordinate[1];
-                });
-
-                geometry += coords.join(", ");
-                geometry += ")";
-
-                geometry += index < coordinates.length - 1 ? ", " : "";
-            });
-            break;
-        case "MultiPolygon":
-            coordinates.forEach((polygon, idx) => {
-                geometry += "(";
-                polygon.forEach((element, index) => {
-                    geometry += "(";
-                    let coords = element.map((coordinate) => {
-                        return coordinate[0] + " " + coordinate[1];
-                    });
-
-                    geometry += coords.join(", ");
-                    geometry += ")";
-
-                    geometry += index < polygon.length - 1 ? ", " : "";
-                });
-                geometry += ")";
-                geometry += idx < coordinates.length - 1 ? ", " : "";
-            });
-            break;
-        default:
-            break;
-    }
-
-    geometry += ")";
-    return geometry;
-};
-var processCQLSpatialFilter = function(objFilter) {
-    let cql = objFilter.spatialField.operation + "(" +
-        objFilter.spatialField.attribute + ", ";
-
-    cql += getCQLGeometryElement(objFilter.spatialField.geometry.coordinates, objFilter.spatialField.geometry.type);
-
-    return cql + ")";
-};
-var cqlDateField = function(attribute, operator, value) {
-    let fieldFilter;
-    if (operator === "><") {
-        if (value.startDate && value.endDate) {
-            fieldFilter = "(" + attribute + ">='" + value.startDate.toISOString() +
-                "' AND " + attribute + "<='" + value.endDate.toISOString() + "')";
-        }
-    } else {
-        if (value.startDate) {
-            fieldFilter = attribute + operator + "'" + value.startDate.toISOString() + "'";
-        }
-    }
-    return fieldFilter;
-};
-var cqlStringField = function(attribute, operator, value) {
-    let fieldFilter;
-    if (value) {
-        if (operator === "isNull") {
-            fieldFilter = "isNull(" + attribute + ")=true";
-        } else if (operator === "=") {
-            let val = "'" + value + "'";
-            fieldFilter = attribute + operator + val;
-        } else if (operator === "ilike") {
-            let val = "'%" + value.toLowerCase() + "%'";
-            fieldFilter = "strToLowerCase(" + attribute + ") LIKE " + val;
-        } else {
-            let val = "'%" + value + "%'";
-            fieldFilter = attribute + "LIKE " + val;
-        }
-    }
-    return fieldFilter;
-};
-var cqlNumberField = function(attribute, operator, value) {
-    let fieldFilter;
-    if (operator === "><") {
-        if (value && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
-            fieldFilter = "(" + attribute + ">='" + value.lowBound + "')";
-        }else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
-            fieldFilter = "(" + attribute + "<='" + value.upBound + "')";
-        } else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
-            fieldFilter = "(" + attribute + ">='" + value.lowBound +
-                "' AND " + attribute + "<='" + value.upBound + "')";
-        }
-    } else {
-        let val = value && (value.lowBound !== null && value.lowBound !== undefined) ? value.lowBound : value;
-        if (val ) {
-            fieldFilter = attribute + operator + "'" + val + "'";
-        }
-    }
-    return fieldFilter;
-};
-var findSubGroups = function(root, groups) {
-    let subGroups = groups.filter((g) => g.groupId === root.id);
-    return subGroups;
-};
-var cqlListField = function(attribute, operator, value) {
-    return cqlStringField(attribute, operator, value);
-};
-var processCQLSimpleFilterField = function(field) {
-    let strFilter = false;
-    switch (field.type) {
-        case "date":
-            strFilter = cqlDateField(field.attribute, field.operator, field.values);
-            break;
-        case "number":
-            strFilter = cqlNumberField(field.attribute, field.operator, field.values);
-            break;
-        case "string":
-            strFilter = cqlStringField(field.attribute, field.operator, field.values);
-            break;
-        case "list": {
-            if (field.values.length !== field.optionsValues.length) {
-                let addNull = false;
-                let filter = field.values.reduce((arr, value) => {
-                    if (value === null || value === "null") {
-                        addNull = true;
-                    } else {
-                        arr.push( "'" + value + "'");
-                    }
-                    return arr;
-                }, []);
-                strFilter = filter.length > 0 ? field.attribute + " IN(" + filter.join(",") + ")" : strFilter;
-                if (addNull) {
-                    strFilter = (strFilter) ? strFilter + " OR isNull(" + field.attribute + ")=true" : "isNull(" + field.attribute + ")=true";
-                }
-            }
-            break;
-        }
-        default:
-            break;
-    }
-
-    return (strFilter && strFilter.length > 0) ? strFilter : false;
-};
-var processCQLFilterFields = function(group, objFilter) {
-    let fields = objFilter.filterFields.filter((field) => field.groupId === group.id);
-
-    let filter = [];
-    if (fields) {
-        fields.forEach((field) => {
-            let fieldFilter;
-
-            switch (field.type) {
-                case "date":
-                    fieldFilter = cqlDateField(field.attribute, field.operator, field.value);
-                    break;
-                case "number":
-                    fieldFilter = cqlNumberField(field.attribute, field.operator, field.value);
-                    break;
-                case "string":
-                    fieldFilter = cqlStringField(field.attribute, field.operator, field.value);
-                    break;
-                case "list":
-                    fieldFilter = cqlListField(field.attribute, field.operator, field.value);
-                    break;
-                default:
-                    break;
-            }
-            if (fieldFilter) {
-                filter.push(fieldFilter);
-            }
-        });
-
-        filter = filter.join(" " + group.logic + " ");
-    }
-
-    return filter;
-};
-var getGmlPolygonElement = function(coordinates, srsName, version) {
-    let gmlPolygon = '<gml:Polygon';
-
-    gmlPolygon += srsName ? ' srsName="' + srsName + '">' : '>';
-
-    // ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Array of LinearRing coordinate array. The first element in the array represents the exterior ring.
-    // Any subsequent elements represent interior rings (or holes).
-    // ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    coordinates.forEach((element, index) => {
-        let coords = element.map((coordinate) => {
-            return coordinate[0] + (version === "1.0.0" ? "," : " ") + coordinate[1];
-        });
-        const exterior = (version === "1.0.0" ? "outerBoundaryIs" : "exterior");
-        const interior = (version === "1.0.0" ? "innerBoundaryIs" : "exterior");
-        gmlPolygon +=
-            (index < 1 ? '<gml:' + exterior + '>' : '<gml:' + interior + '>') +
-                    '<gml:LinearRing>' +
-                    (version === "1.0.0" ? '<gml:coordinates>' : '<gml:posList>') +
-                            coords.join(" ") +
-                    (version === "1.0.0" ? '</gml:coordinates>' : '</gml:posList>') +
-                    '</gml:LinearRing>' +
-            (index < 1 ? '</gml:' + exterior + '>' : '</gml:' + interior + '>');
-    });
-
-    gmlPolygon += '</gml:Polygon>';
-    return gmlPolygon;
-};
-
-var getGetFeatureBase = function(version, pagination, hits, format) {
-    let ver = normalizeVersion(version);
-
-    let getFeature = '<wfs:GetFeature ';
-    getFeature += format ? 'outputFormat="' + format + '" ' : '';
-    getFeature += pagination && (pagination.startIndex || pagination.startIndex === 0) ? 'startIndex="' + pagination.startIndex + '" ' : "";
-
-    switch (ver) {
-        case "1.0.0":
-            getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
-
-            getFeature = hits ? getFeature + ' resultType="hits"' : getFeature;
-
-            getFeature += 'service="WFS" version="' + ver + '" ' +
-                'outputFormat="GML2" ' +
-                'xmlns:gml="http://www.opengis.net/gml" ' +
-                'xmlns:wfs="http://www.opengis.net/wfs" ' +
-                'xmlns:ogc="http://www.opengis.net/ogc" ' +
-                'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
-                'xsi:schemaLocation="http://www.opengis.net/wfs ' +
-                    'http://schemas.opengis.net/wfs/1.0.0/WFS-basic.xsd">';
-            break;
-        case "1.1.0":
-            getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
-
-            getFeature = hits ? getFeature + ' resultType="hits"' : getFeature;
-
-            getFeature += 'service="WFS" version="' + ver + '" ' +
-                'xmlns:gml="http://www.opengis.net/gml" ' +
-                'xmlns:wfs="http://www.opengis.net/wfs" ' +
-                'xmlns:ogc="http://www.opengis.net/ogc" ' +
-                'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
-                'xsi:schemaLocation="http://www.opengis.net/wfs ' +
-                    'http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">';
-            break;
-        default: // default is wfs 2.0
-            getFeature += pagination && pagination.maxFeatures ? 'count="' + pagination.maxFeatures + '" ' : "";
-
-            getFeature = hits && !pagination ? getFeature + ' resultType="hits"' : getFeature;
-
-            getFeature += 'service="WFS" version="' + ver + '" ' +
-                'xmlns:wfs="http://www.opengis.net/wfs/2.0" ' +
-                'xmlns:fes="http://www.opengis.net/fes/2.0" ' +
-                'xmlns:gml="http://www.opengis.net/gml/3.2" ' +
-                'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
-                'xsi:schemaLocation="http://www.opengis.net/wfs/2.0 ' +
-                    'http://schemas.opengis.net/wfs/2.0/wfs.xsd ' +
-                    'http://www.opengis.net/gml/3.2 ' +
-                    'http://schemas.opengis.net/gml/3.2.1/gml.xsd">';
-    }
-
-    return getFeature;
-};
-
-var processCQLFilterGroup = function(root, objFilter) {
-    let cql = processCQLFilterFields(root, objFilter);
-
-    let subGroups = findSubGroups(root, objFilter.groupFields);
-    if (subGroups.length > 0) {
-        subGroups.forEach((subGroup) => {
-            cql += " " + root.logic + " (" + this.processFilterGroup(subGroup) + ")";
-        });
-    }
-
-    return cql;
-};
-
-var ogcDateField = function(attribute, operator, value, nsplaceholder) {
-    let fieldFilter;
-    if (operator === "><") {
-        if (value.startDate && value.endDate) {
-            fieldFilter =
-                        ogcComparisonOperators[operator].startTag +
-                            propertyTagReference[nsplaceholder].startTag +
-                                attribute +
-                            propertyTagReference[nsplaceholder].endTag +
-                            "<" + nsplaceholder + ":LowerBoundary>" +
-                                "<" + nsplaceholder + ":Literal>" + value.startDate.toISOString() + "</" + nsplaceholder + ":Literal>" +
-                            "</" + nsplaceholder + ":LowerBoundary>" +
-                            "<" + nsplaceholder + ":UpperBoundary>" +
-                                "<" + nsplaceholder + ":Literal>" + value.endDate.toISOString() + "</" + nsplaceholder + ":Literal>" +
-                            "</" + nsplaceholder + ":UpperBoundary>" +
-                        ogcComparisonOperators[operator].endTag;
-        }
-    } else {
-        if (value.startDate) {
-            fieldFilter =
-                        ogcComparisonOperators[operator].startTag +
-                            propertyTagReference[nsplaceholder].startTag +
-                                attribute +
-                            propertyTagReference[nsplaceholder].endTag +
-                            "<" + nsplaceholder + ":Literal>" + value.startDate.toISOString() + "</" + nsplaceholder + ":Literal>" +
-                        ogcComparisonOperators[operator].endTag;
-        }
-    }
-    return fieldFilter;
-};
-
-var ogcListField = function(attribute, operator, value, nsplaceholder) {
-    let fieldFilter;
-    if (value) {
-        fieldFilter =
-            ogcComparisonOperators[operator].startTag +
-                propertyTagReference[nsplaceholder].startTag +
-                    attribute +
-                propertyTagReference[nsplaceholder].endTag +
-                "<" + nsplaceholder + ":Literal>" + value + "</" + nsplaceholder + ":Literal>" +
-            ogcComparisonOperators[operator].endTag;
-    }
-    return fieldFilter;
-};
-
-var ogcStringField = function(attribute, operator, value, nsplaceholder) {
-    let fieldFilter;
-    if (value) {
-        if (operator === "isNull") {
-            fieldFilter =
-                ogcComparisonOperators[operator].startTag +
-                    propertyTagReference[nsplaceholder].startTag +
-                        attribute +
-                    propertyTagReference[nsplaceholder].endTag +
-                ogcComparisonOperators[operator].endTag;
-        }else if (operator === "=") {
-            fieldFilter =
-                ogcComparisonOperators[operator].startTag +
-                    propertyTagReference[nsplaceholder].startTag +
-                        attribute +
-                    propertyTagReference[nsplaceholder].endTag +
-                    "<" + nsplaceholder + ":Literal>" + value + "</" + nsplaceholder + ":Literal>" +
-                ogcComparisonOperators[operator].endTag;
-        }else {
-            fieldFilter =
-                ogcComparisonOperators[operator].startTag +
-                    propertyTagReference[nsplaceholder].startTag +
-                        attribute +
-                    propertyTagReference[nsplaceholder].endTag +
-                    "<" + nsplaceholder + ":Literal>*" + value + "*</" + nsplaceholder + ":Literal>" +
-                ogcComparisonOperators[operator].endTag;
-        }
-    }
-    return fieldFilter;
-};
-
-var ogcNumberField = function(attribute, operator, value, nsplaceholder) {
-    let fieldFilter;
-    if (operator === "><") {
-        if (value && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
-            fieldFilter = ogcComparisonOperators[">="].startTag +
-                            propertyTagReference[nsplaceholder].startTag +
-                                attribute +
-                            propertyTagReference[nsplaceholder].endTag +
-                         "<" + nsplaceholder + ":Literal>" + value.lowBound + "</" + nsplaceholder + ":Literal>" +
-                                    ogcComparisonOperators[">="].endTag;
-        }else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
-            fieldFilter = ogcComparisonOperators["<="].startTag +
-                            propertyTagReference[nsplaceholder].startTag +
-                                attribute +
-                            propertyTagReference[nsplaceholder].endTag +
-                         "<" + nsplaceholder + ":Literal>" + value.upBound + "</" + nsplaceholder + ":Literal>" +
-                                    ogcComparisonOperators["<="].endTag;
-        }else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
-            fieldFilter =
-                        ogcComparisonOperators[operator].startTag +
-                            propertyTagReference[nsplaceholder].startTag +
-                                attribute +
-                            propertyTagReference[nsplaceholder].endTag +
-                            "<" + nsplaceholder + ":LowerBoundary>" +
-                                "<" + nsplaceholder + ":Literal>" + value.lowBound + "</" + nsplaceholder + ":Literal>" +
-                            "</" + nsplaceholder + ":LowerBoundary>" +
-                            "<" + nsplaceholder + ":UpperBoundary>" +
-                                "<" + nsplaceholder + ":Literal>" + value.upBound + "</" + nsplaceholder + ":Literal>" +
-                            "</" + nsplaceholder + ":UpperBoundary>" +
-                        ogcComparisonOperators[operator].endTag;
-        }
-    } else {
-        let val = value && (value.lowBound !== null && value.lowBound !== undefined) ? value.lowBound : value;
-        if (val) {
-            fieldFilter = ogcComparisonOperators[operator].startTag +
-                            propertyTagReference[nsplaceholder].startTag +
-                                attribute +
-                            propertyTagReference[nsplaceholder].endTag +
-                         "<" + nsplaceholder + ":Literal>" + val + "</" + nsplaceholder + ":Literal>" +
-                                    ogcComparisonOperators[operator].endTag;
-        }
-    }
-    return fieldFilter;
-};
-
-
-var processOGCFilterFields = function(group, objFilter, nsplaceholder) {
-    let fields = group ? objFilter.filterFields.filter((field) => field.groupId === group.id) : objFilter.filterFields;
-    let filter = [];
-
-    if (fields) {
-        filter = fields.reduce((arr, field) => {
-            let fieldFilter;
-            switch (field.type) {
-                case "date":
-                    fieldFilter = ogcDateField(field.attribute, field.operator, field.value, nsplaceholder);
-                    break;
-                case "number":
-                    fieldFilter = ogcNumberField(field.attribute, field.operator, field.value, nsplaceholder);
-                    break;
-                case "string":
-                    fieldFilter = ogcStringField(field.attribute, field.operator, field.value, nsplaceholder);
-                    break;
-                case "list":
-                    fieldFilter = ogcListField(field.attribute, field.operator, field.value, nsplaceholder);
-                    break;
-                default:
-                    break;
-            }
-            if (fieldFilter) {
-                arr.push(fieldFilter);
-            }
-            return arr;
-        }, []);
-
-        filter = filter.join("");
-    }
-
-    return filter;
-};
-
-var processOGCSimpleFilterField = function(field, nsplaceholder) {
-    let filter = "";
-    switch (field.type) {
-        case "date":
-            filter = ogcDateField(field.attribute, field.operator, field.values, nsplaceholder);
-            break;
-        case "number":
-            filter = ogcNumberField(field.attribute, field.operator, field.values, nsplaceholder);
-            break;
-        case "string":
-            filter = ogcStringField(field.attribute, field.operator, field.values, nsplaceholder);
-            break;
-        case "list": {
-            if (field.values && field.values.length > 0 ) {
-                filter = field.values.reduce((ogc, val) => {
-                    let op = (val === null || val === "null") ? "isNull" : "=";
-                    return ogc + ogcStringField(field.attribute, op, val, nsplaceholder);
-                }, ogcLogicalOperator.OR.startTag);
-                filter += ogcLogicalOperator.OR.endTag;
-            }
-            break;
-        }
-        default:
-            break;
-    }
-    return filter;
-};
-
-var processOGCFilterGroup = function(root, objFilter, nsplaceholder) {
-    let ogc =
-        ogcLogicalOperator[root.logic].startTag +
-        processOGCFilterFields(root, objFilter, nsplaceholder);
-
-    let subGroups = findSubGroups(root, objFilter.groupFields);
-    if (subGroups.length > 0) {
-        subGroups.forEach((subGroup) => {
-            ogc += processOGCFilterGroup(subGroup, nsplaceholder);
-        });
-    }
-
-    ogc += ogcLogicalOperator[root.logic].endTag;
-
-    return ogc;
-};
 
 const FilterUtils = {
 
@@ -547,22 +63,22 @@ const FilterUtils = {
 
         this.setOperatorsPlaceholders("{namespace}", nsplaceholder);
 
-        let ogcFilter = getGetFeatureBase(versionOGC, objFilter.pagination, hits, format);
+        let ogcFilter = this.getGetFeatureBase(versionOGC, objFilter.pagination, hits, format);
         let filters = [];
 
         let attributeFilter;
         if (objFilter.filterFields && objFilter.filterFields.length > 0) {
             if (objFilter.groupFields && objFilter.groupFields.length > 0) {
-                attributeFilter = processOGCFilterGroup(objFilter.groupFields[0], objFilter, nsplaceholder);
+                attributeFilter = this.processOGCFilterGroup(objFilter.groupFields[0], objFilter, nsplaceholder);
             } else {
-                attributeFilter = processOGCFilterFields(objFilter, nsplaceholder);
+                attributeFilter = this.processOGCFilterFields(objFilter, nsplaceholder);
             }
             filters.push(attributeFilter);
         }else if (objFilter.simpleFilterFields && objFilter.simpleFilterFields.length > 0) {
             let ogc = "";
             ogc += ogcLogicalOperator.AND.startTag;
             objFilter.simpleFilterFields.forEach((filter) => {
-                ogc += processOGCSimpleFilterField(filter, nsplaceholder);
+                ogc += this.processOGCSimpleFilterField(filter, nsplaceholder);
             }, this);
             ogc += ogcLogicalOperator.AND.endTag;
             filters.push(ogc);
@@ -627,7 +143,7 @@ const FilterUtils = {
         return ogcFilter;
     },
 
-    setOperatorsPlaceholders: function(placeholder, replacement) {
+    setOperatorsPlaceholders: function(placeholder, replacement= "ogc") {
         [
             ogcLogicalOperator,
             ogcComparisonOperators,
@@ -641,6 +157,235 @@ const FilterUtils = {
             }
         });
     },
+    processOGCFilterGroup: function(root, objFilter, nsplaceholder) {
+        let ogc =
+            ogcLogicalOperator[root.logic].startTag +
+            this.processOGCFilterFields(root, objFilter, nsplaceholder);
+
+        let subGroups = this.findSubGroups(root, objFilter.groupFields);
+        if (subGroups.length > 0) {
+            subGroups.forEach((subGroup) => {
+                ogc += this.processOGCFilterGroup(subGroup, nsplaceholder);
+            });
+        }
+
+        ogc += ogcLogicalOperator[root.logic].endTag;
+
+        return ogc;
+    },
+
+    ogcDateField: function(attribute, operator, value, nsplaceholder) {
+        let fieldFilter;
+        if (operator === "><") {
+            if (value.startDate && value.endDate) {
+                fieldFilter =
+                            ogcComparisonOperators[operator].startTag +
+                                propertyTagReference[nsplaceholder].startTag +
+                                    attribute +
+                                propertyTagReference[nsplaceholder].endTag +
+                                "<" + nsplaceholder + ":LowerBoundary>" +
+                                    "<" + nsplaceholder + ":Literal>" + value.startDate.toISOString() + "</" + nsplaceholder + ":Literal>" +
+                                "</" + nsplaceholder + ":LowerBoundary>" +
+                                "<" + nsplaceholder + ":UpperBoundary>" +
+                                    "<" + nsplaceholder + ":Literal>" + value.endDate.toISOString() + "</" + nsplaceholder + ":Literal>" +
+                                "</" + nsplaceholder + ":UpperBoundary>" +
+                            ogcComparisonOperators[operator].endTag;
+            }
+        } else {
+            if (value.startDate) {
+                fieldFilter =
+                            ogcComparisonOperators[operator].startTag +
+                                propertyTagReference[nsplaceholder].startTag +
+                                    attribute +
+                                propertyTagReference[nsplaceholder].endTag +
+                                "<" + nsplaceholder + ":Literal>" + value.startDate.toISOString() + "</" + nsplaceholder + ":Literal>" +
+                            ogcComparisonOperators[operator].endTag;
+            }
+        }
+        return fieldFilter;
+    },
+
+    ogcListField: function(attribute, operator, value, nsplaceholder) {
+        let fieldFilter;
+        if (value) {
+            fieldFilter =
+                ogcComparisonOperators[operator].startTag +
+                    propertyTagReference[nsplaceholder].startTag +
+                        attribute +
+                    propertyTagReference[nsplaceholder].endTag +
+                    "<" + nsplaceholder + ":Literal>" + value + "</" + nsplaceholder + ":Literal>" +
+                ogcComparisonOperators[operator].endTag;
+        }
+        return fieldFilter;
+    },
+
+    ogcStringField: function(attribute, operator, value, nsplaceholder) {
+        let fieldFilter;
+        if (value) {
+            if (operator === "isNull") {
+                fieldFilter =
+                    ogcComparisonOperators[operator].startTag +
+                        propertyTagReference[nsplaceholder].startTag +
+                            attribute +
+                        propertyTagReference[nsplaceholder].endTag +
+                    ogcComparisonOperators[operator].endTag;
+            }else if (operator === "=") {
+                fieldFilter =
+                    ogcComparisonOperators[operator].startTag +
+                        propertyTagReference[nsplaceholder].startTag +
+                            attribute +
+                        propertyTagReference[nsplaceholder].endTag +
+                        "<" + nsplaceholder + ":Literal>" + value + "</" + nsplaceholder + ":Literal>" +
+                    ogcComparisonOperators[operator].endTag;
+            }else {
+                fieldFilter =
+                    ogcComparisonOperators[operator].startTag +
+                        propertyTagReference[nsplaceholder].startTag +
+                            attribute +
+                        propertyTagReference[nsplaceholder].endTag +
+                        "<" + nsplaceholder + ":Literal>*" + value + "*</" + nsplaceholder + ":Literal>" +
+                    ogcComparisonOperators[operator].endTag;
+            }
+        }
+        return fieldFilter;
+    },
+
+    ogcNumberField: function(attribute, operator, value, nsplaceholder) {
+        let fieldFilter;
+        if (operator === "><") {
+            if (value && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
+                fieldFilter = ogcComparisonOperators[">="].startTag +
+                                propertyTagReference[nsplaceholder].startTag +
+                                    attribute +
+                                propertyTagReference[nsplaceholder].endTag +
+                             "<" + nsplaceholder + ":Literal>" + value.lowBound + "</" + nsplaceholder + ":Literal>" +
+                                        ogcComparisonOperators[">="].endTag;
+            }else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
+                fieldFilter = ogcComparisonOperators["<="].startTag +
+                                propertyTagReference[nsplaceholder].startTag +
+                                    attribute +
+                                propertyTagReference[nsplaceholder].endTag +
+                             "<" + nsplaceholder + ":Literal>" + value.upBound + "</" + nsplaceholder + ":Literal>" +
+                                        ogcComparisonOperators["<="].endTag;
+            }else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
+                fieldFilter =
+                            ogcComparisonOperators[operator].startTag +
+                                propertyTagReference[nsplaceholder].startTag +
+                                    attribute +
+                                propertyTagReference[nsplaceholder].endTag +
+                                "<" + nsplaceholder + ":LowerBoundary>" +
+                                    "<" + nsplaceholder + ":Literal>" + value.lowBound + "</" + nsplaceholder + ":Literal>" +
+                                "</" + nsplaceholder + ":LowerBoundary>" +
+                                "<" + nsplaceholder + ":UpperBoundary>" +
+                                    "<" + nsplaceholder + ":Literal>" + value.upBound + "</" + nsplaceholder + ":Literal>" +
+                                "</" + nsplaceholder + ":UpperBoundary>" +
+                            ogcComparisonOperators[operator].endTag;
+            }
+        } else {
+            let val = value && (value.lowBound !== null && value.lowBound !== undefined) ? value.lowBound : value;
+            if (val) {
+                fieldFilter = ogcComparisonOperators[operator].startTag +
+                                propertyTagReference[nsplaceholder].startTag +
+                                    attribute +
+                                propertyTagReference[nsplaceholder].endTag +
+                             "<" + nsplaceholder + ":Literal>" + val + "</" + nsplaceholder + ":Literal>" +
+                                        ogcComparisonOperators[operator].endTag;
+            }
+        }
+        return fieldFilter;
+    },
+
+    processOGCFilterFields: function(group, objFilter, nsplaceholder) {
+        let fields = group ? objFilter.filterFields.filter((field) => field.groupId === group.id) : objFilter.filterFields;
+        let filter = [];
+
+        if (fields) {
+            filter = fields.reduce((arr, field) => {
+                let fieldFilter;
+                switch (field.type) {
+                    case "date":
+                        fieldFilter = this.ogcDateField(field.attribute, field.operator, field.value, nsplaceholder);
+                        break;
+                    case "number":
+                        fieldFilter = this.ogcNumberField(field.attribute, field.operator, field.value, nsplaceholder);
+                        break;
+                    case "string":
+                        fieldFilter = this.ogcStringField(field.attribute, field.operator, field.value, nsplaceholder);
+                        break;
+                    case "list":
+                        fieldFilter = this.ogcListField(field.attribute, field.operator, field.value, nsplaceholder);
+                        break;
+                    default:
+                        break;
+                }
+                if (fieldFilter) {
+                    arr.push(fieldFilter);
+                }
+                return arr;
+            }, []);
+
+            filter = filter.join("");
+        }
+
+        return filter;
+    },
+
+    processOGCSimpleFilterField: function(field, nsplaceholder) {
+        let filter = "";
+        switch (field.type) {
+            case "date":
+                filter = this.ogcDateField(field.attribute, field.operator, field.values, nsplaceholder);
+                break;
+            case "number":
+                filter = this.ogcNumberField(field.attribute, field.operator, field.values, nsplaceholder);
+                break;
+            case "string":
+                filter = this.ogcStringField(field.attribute, field.operator, field.values, nsplaceholder);
+                break;
+            case "list": {
+                if (field.values && field.values.length > 0 ) {
+                    filter = field.values.reduce((ogc, val) => {
+                        let op = (val === null || val === "null") ? "isNull" : "=";
+                        return ogc + this.ogcStringField(field.attribute, op, val, nsplaceholder);
+                    }, ogcLogicalOperator.OR.startTag);
+                    filter += ogcLogicalOperator.OR.endTag;
+                }
+                break;
+            }
+            default:
+                break;
+        }
+        return filter;
+    },
+    getGmlPolygonElement: function(coordinates, srsName, version) {
+        let gmlPolygon = '<gml:Polygon';
+
+        gmlPolygon += srsName ? ' srsName="' + srsName + '">' : '>';
+
+        // ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Array of LinearRing coordinate array. The first element in the array represents the exterior ring.
+        // Any subsequent elements represent interior rings (or holes).
+        // ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        coordinates.forEach((element, index) => {
+            let coords = element.map((coordinate) => {
+                return coordinate[0] + (version === "1.0.0" ? "," : " ") + coordinate[1];
+            });
+            const exterior = (version === "1.0.0" ? "outerBoundaryIs" : "exterior");
+            const interior = (version === "1.0.0" ? "innerBoundaryIs" : "exterior");
+            gmlPolygon +=
+                (index < 1 ? '<gml:' + exterior + '>' : '<gml:' + interior + '>') +
+                        '<gml:LinearRing>' +
+                        (version === "1.0.0" ? '<gml:coordinates>' : '<gml:posList>') +
+                                coords.join(" ") +
+                        (version === "1.0.0" ? '</gml:coordinates>' : '</gml:posList>') +
+                        '</gml:LinearRing>' +
+                (index < 1 ? '</gml:' + exterior + '>' : '</gml:' + interior + '>');
+        });
+
+        gmlPolygon += '</gml:Polygon>';
+        return gmlPolygon;
+    },
+
     processOGCSpatialFilter: function(version, objFilter, nsplaceholder) {
         let ogc = ogcSpatialOperator[objFilter.spatialField.operation].startTag;
         ogc +=
@@ -676,7 +421,7 @@ const FilterUtils = {
                         ogc += '</gml:MultiPoint>';
                         break;
                     case "Polygon":
-                        ogc += getGmlPolygonElement(objFilter.spatialField.geometry.coordinates,
+                        ogc += this.getGmlPolygonElement(objFilter.spatialField.geometry.coordinates,
                             objFilter.spatialField.geometry.projection || "EPSG:4326", version);
                         break;
                     case "MultiPolygon":
@@ -692,7 +437,7 @@ const FilterUtils = {
                             let polygon = element;
                             if (polygon) {
                                 ogc += "<gml:" + polygonMemberTagName + ">";
-                                ogc += getGmlPolygonElement(polygon, version);
+                                ogc += this.getGmlPolygonElement(polygon, version);
                                 ogc += "</gml:" + polygonMemberTagName + ">";
                             }
                         });
@@ -727,6 +472,59 @@ const FilterUtils = {
 
         ogc += ogcSpatialOperator[objFilter.spatialField.operation].endTag;
         return ogc;
+    },
+    getGetFeatureBase: function(version, pagination, hits, format) {
+        let ver = normalizeVersion(version);
+
+        let getFeature = '<wfs:GetFeature ';
+        getFeature += format ? 'outputFormat="' + format + '" ' : '';
+        getFeature += pagination && (pagination.startIndex || pagination.startIndex === 0) ? 'startIndex="' + pagination.startIndex + '" ' : "";
+
+        switch (ver) {
+            case "1.0.0":
+                getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
+
+                getFeature = hits ? getFeature + ' resultType="hits"' : getFeature;
+
+                getFeature += 'service="WFS" version="' + ver + '" ' +
+                    'outputFormat="GML2" ' +
+                    'xmlns:gml="http://www.opengis.net/gml" ' +
+                    'xmlns:wfs="http://www.opengis.net/wfs" ' +
+                    'xmlns:ogc="http://www.opengis.net/ogc" ' +
+                    'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+                    'xsi:schemaLocation="http://www.opengis.net/wfs ' +
+                        'http://schemas.opengis.net/wfs/1.0.0/WFS-basic.xsd">';
+                break;
+            case "1.1.0":
+                getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
+
+                getFeature = hits ? getFeature + ' resultType="hits"' : getFeature;
+
+                getFeature += 'service="WFS" version="' + ver + '" ' +
+                    'xmlns:gml="http://www.opengis.net/gml" ' +
+                    'xmlns:wfs="http://www.opengis.net/wfs" ' +
+                    'xmlns:ogc="http://www.opengis.net/ogc" ' +
+                    'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+                    'xsi:schemaLocation="http://www.opengis.net/wfs ' +
+                        'http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">';
+                break;
+            default: // default is wfs 2.0
+                getFeature += pagination && pagination.maxFeatures ? 'count="' + pagination.maxFeatures + '" ' : "";
+
+                getFeature = hits && !pagination ? getFeature + ' resultType="hits"' : getFeature;
+
+                getFeature += 'service="WFS" version="' + ver + '" ' +
+                    'xmlns:wfs="http://www.opengis.net/wfs/2.0" ' +
+                    'xmlns:fes="http://www.opengis.net/fes/2.0" ' +
+                    'xmlns:gml="http://www.opengis.net/gml/3.2" ' +
+                    'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+                    'xsi:schemaLocation="http://www.opengis.net/wfs/2.0 ' +
+                        'http://schemas.opengis.net/wfs/2.0/wfs.xsd ' +
+                        'http://www.opengis.net/gml/3.2 ' +
+                        'http://schemas.opengis.net/gml/3.2.1/gml.xsd">';
+        }
+
+        return getFeature;
     },
     /**
     *  processOGCCrossLayerFilter(object)
@@ -812,12 +610,12 @@ const FilterUtils = {
 
         let attributeFilter;
         if (objFilter.filterFields && objFilter.filterFields.length > 0) {
-            attributeFilter = processCQLFilterGroup(objFilter.groupFields[0], objFilter);
+            attributeFilter = this.processCQLFilterGroup(objFilter.groupFields[0], objFilter);
             filters.push(attributeFilter);
         }else if (objFilter.simpleFilterFields && objFilter.simpleFilterFields.length > 0) {
             let simpleFilter = objFilter.simpleFilterFields.reduce((cql, field) => {
                 let tmp = cql;
-                let strFilter = processCQLSimpleFilterField(field);
+                let strFilter = this.processCQLSimpleFilterField(field);
                 if (strFilter !== false) {
                     tmp = cql.length > 0 ? cql + " AND (" + strFilter + ")" : "(" + strFilter + ")";
                 }
@@ -829,11 +627,218 @@ const FilterUtils = {
 
         let spatialFilter;
         if (objFilter.spatialField && objFilter.spatialField.geometry && objFilter.spatialField.operation) {
-            spatialFilter = processCQLSpatialFilter(objFilter);
+            spatialFilter = this.processCQLSpatialFilter(objFilter);
             filters.push(spatialFilter);
         }
 
         return "(" + (filters.length > 1 ? filters.join(") AND (") : filters[0]) + ")";
+    },
+    processCQLFilterGroup: function(root, objFilter) {
+        let cql = this.processCQLFilterFields(root, objFilter);
+
+        let subGroups = this.findSubGroups(root, objFilter.groupFields);
+        if (subGroups.length > 0) {
+            subGroups.forEach((subGroup) => {
+                cql += " " + root.logic + " (" + this.processFilterGroup(subGroup) + ")";
+            });
+        }
+
+        return cql;
+    },
+
+    getCQLGeometryElement: function(coordinates, type) {
+        let geometry = type + "(";
+
+        switch (type) {
+            case "Point":
+                geometry += coordinates.join(" ");
+                break;
+            case "MultiPoint":
+                coordinates.forEach((position, index) => {
+                    geometry += position.join(" ");
+                    geometry += index < coordinates.length - 1 ? ", " : "";
+                });
+                break;
+            case "Polygon":
+                coordinates.forEach((element, index) => {
+                    geometry += "(";
+                    let coords = element.map((coordinate) => {
+                        return coordinate[0] + " " + coordinate[1];
+                    });
+
+                    geometry += coords.join(", ");
+                    geometry += ")";
+
+                    geometry += index < coordinates.length - 1 ? ", " : "";
+                });
+                break;
+            case "MultiPolygon":
+                coordinates.forEach((polygon, idx) => {
+                    geometry += "(";
+                    polygon.forEach((element, index) => {
+                        geometry += "(";
+                        let coords = element.map((coordinate) => {
+                            return coordinate[0] + " " + coordinate[1];
+                        });
+
+                        geometry += coords.join(", ");
+                        geometry += ")";
+
+                        geometry += index < polygon.length - 1 ? ", " : "";
+                    });
+                    geometry += ")";
+                    geometry += idx < coordinates.length - 1 ? ", " : "";
+                });
+                break;
+            default:
+                break;
+        }
+
+        geometry += ")";
+        return geometry;
+    },
+
+    processCQLSpatialFilter: function(objFilter) {
+        let cql = objFilter.spatialField.operation + "(" +
+            objFilter.spatialField.attribute + ", ";
+
+        cql += this.getCQLGeometryElement(objFilter.spatialField.geometry.coordinates, objFilter.spatialField.geometry.type);
+
+        return cql + ")";
+    },
+
+    cqlDateField: function(attribute, operator, value) {
+        let fieldFilter;
+        if (operator === "><") {
+            if (value.startDate && value.endDate) {
+                fieldFilter = "(" + attribute + ">='" + value.startDate.toISOString() +
+                    "' AND " + attribute + "<='" + value.endDate.toISOString() + "')";
+            }
+        } else {
+            if (value.startDate) {
+                fieldFilter = attribute + operator + "'" + value.startDate.toISOString() + "'";
+            }
+        }
+        return fieldFilter;
+    },
+
+    cqlStringField: function(attribute, operator, value) {
+        let fieldFilter;
+        if (value) {
+            if (operator === "isNull") {
+                fieldFilter = "isNull(" + attribute + ")=true";
+            } else if (operator === "=") {
+                let val = "'" + value + "'";
+                fieldFilter = attribute + operator + val;
+            } else if (operator === "ilike") {
+                let val = "'%" + value.toLowerCase() + "%'";
+                fieldFilter = "strToLowerCase(" + attribute + ") LIKE " + val;
+            } else {
+                let val = "'%" + value + "%'";
+                fieldFilter = attribute + "LIKE " + val;
+            }
+        }
+        return fieldFilter;
+    },
+
+    cqlNumberField: function(attribute, operator, value) {
+        let fieldFilter;
+        if (operator === "><") {
+            if (value && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
+                fieldFilter = "(" + attribute + ">='" + value.lowBound + "')";
+            }else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
+                fieldFilter = "(" + attribute + "<='" + value.upBound + "')";
+            } else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
+                fieldFilter = "(" + attribute + ">='" + value.lowBound +
+                    "' AND " + attribute + "<='" + value.upBound + "')";
+            }
+        } else {
+            let val = value && (value.lowBound !== null && value.lowBound !== undefined) ? value.lowBound : value;
+            if (val ) {
+                fieldFilter = attribute + operator + "'" + val + "'";
+            }
+        }
+        return fieldFilter;
+    },
+
+    findSubGroups: function(root, groups) {
+        let subGroups = groups.filter((g) => g.groupId === root.id);
+        return subGroups;
+    },
+    cqlListField: function(attribute, operator, value) {
+        return this.cqlStringField(attribute, operator, value);
+    },
+
+    processCQLFilterFields: function(group, objFilter) {
+        let fields = objFilter.filterFields.filter((field) => field.groupId === group.id);
+
+        let filter = [];
+        if (fields) {
+            fields.forEach((field) => {
+                let fieldFilter;
+
+                switch (field.type) {
+                    case "date":
+                        fieldFilter = this.cqlDateField(field.attribute, field.operator, field.value);
+                        break;
+                    case "number":
+                        fieldFilter = this.cqlNumberField(field.attribute, field.operator, field.value);
+                        break;
+                    case "string":
+                        fieldFilter = this.cqlStringField(field.attribute, field.operator, field.value);
+                        break;
+                    case "list":
+                        fieldFilter = this.cqlListField(field.attribute, field.operator, field.value);
+                        break;
+                    default:
+                        break;
+                }
+                if (fieldFilter) {
+                    filter.push(fieldFilter);
+                }
+            });
+
+            filter = filter.join(" " + group.logic + " ");
+        }
+
+        return filter;
+    },
+
+    processCQLSimpleFilterField: function(field) {
+        let strFilter = false;
+        switch (field.type) {
+            case "date":
+                strFilter = this.cqlDateField(field.attribute, field.operator, field.values);
+                break;
+            case "number":
+                strFilter = this.cqlNumberField(field.attribute, field.operator, field.values);
+                break;
+            case "string":
+                strFilter = this.cqlStringField(field.attribute, field.operator, field.values);
+                break;
+            case "list": {
+                if (field.values.length !== field.optionsValues.length) {
+                    let addNull = false;
+                    let filter = field.values.reduce((arr, value) => {
+                        if (value === null || value === "null") {
+                            addNull = true;
+                        } else {
+                            arr.push( "'" + value + "'");
+                        }
+                        return arr;
+                    }, []);
+                    strFilter = filter.length > 0 ? field.attribute + " IN(" + filter.join(",") + ")" : strFilter;
+                    if (addNull) {
+                        strFilter = (strFilter) ? strFilter + " OR isNull(" + field.attribute + ")=true" : "isNull(" + field.attribute + ")=true";
+                    }
+                }
+                break;
+            }
+            default:
+                break;
+        }
+
+        return (strFilter && strFilter.length > 0) ? strFilter : false;
     }
 };
 
