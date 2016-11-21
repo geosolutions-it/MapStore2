@@ -135,6 +135,11 @@ var OpenlayersMap = React.createClass({
                     latlng: {
                         lat: coords[1],
                         lng: tLng
+                    },
+                    modifiers: {
+                        alt: event.originalEvent.altKey,
+                        ctrl: event.originalEvent.ctrlKey,
+                        shift: event.originalEvent.shiftKey
                     }
                 });
             }

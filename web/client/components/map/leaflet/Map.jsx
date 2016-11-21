@@ -106,6 +106,11 @@ let LeafletMap = React.createClass({
                     latlng: {
                         lat: event.latlng.lat,
                         lng: event.latlng.lng
+                    },
+                    modifiers: {
+                        alt: event.originalEvent.altKey,
+                        ctrl: event.originalEvent.ctrlKey,
+                        shift: event.originalEvent.shiftKey
                     }
                 });
             }

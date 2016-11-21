@@ -152,10 +152,12 @@ describe('LeafletMap', () => {
             expect(spy.calls[0].arguments.length).toEqual(1);
             expect(spy.calls[0].arguments[0].pixel).toExist();
             expect(spy.calls[0].arguments[0].latlng).toExist();
+            expect(spy.calls[0].arguments[0].modifiers).toExist();
+            expect(spy.calls[0].arguments[0].modifiers.alt).toEqual(false);
+            expect(spy.calls[0].arguments[0].modifiers.ctrl).toEqual(false);
+            expect(spy.calls[0].arguments[0].modifiers.shift).toEqual(false);
             done();
         }, 600);
-
-
     });
 
     it('check if the map changes when receive new props', () => {
