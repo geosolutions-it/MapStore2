@@ -52,7 +52,7 @@ const Bar = React.createClass({
     },
     render() {
         return (<Grid style={{marginBottom: "10px"}} fluid={true}>
-            <Button style={{marginRight: "10px"}} bsStyle="primary" onClick={this.onNew}>{this.renderNewButton()}</Button>
+            <Button style={{marginRight: "10px"}} bsStyle="success" onClick={this.onNew}>{this.renderNewButton()}</Button>
             <Button bsStyle="primary" onClick={this.toogleTools}>{this.renderToggle()}</Button>
         </Grid>);
     },
