@@ -17,7 +17,7 @@ const Message = require('../../../components/I18N/Message');
 
 require('./style/usercard.css');
 
-const UserCard = React.createClass({
+const GroupCard = React.createClass({
     propTypes: {
         // props
         style: React.PropTypes.object,
@@ -69,4 +69,4 @@ const UserCard = React.createClass({
     }
 });
 
-module.exports = UserCard;
+module.exports = GroupCard;

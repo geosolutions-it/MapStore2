@@ -9,7 +9,7 @@
 const React = require('react');
 const {Button, Glyphicon, Table, OverlayTrigger, Tooltip} = require('react-bootstrap');
 const Message = require('../../I18N/Message');
-var UsersGrid = React.createClass({
+var UsersTable = React.createClass({
     propTypes: {
         users: React.PropTypes.array,
         deleteToolTip: React.PropTypes.string,
@@ -42,4 +42,4 @@ var UsersGrid = React.createClass({
     }
 });
 
-module.exports = UsersGrid;
+module.exports = UsersTable;

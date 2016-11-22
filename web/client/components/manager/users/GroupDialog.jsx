@@ -137,7 +137,7 @@ const GroupDialog = React.createClass({
               }}><Message msgId="usergroups.noUsers"/></div>);
       }
       // NOTE: faking group Id
-      return (<UsersTable users={members.sort((u1, u2) => u1.name > u2.name)} onRemove={(user) => {
+      return (<UsersTable users={[...members].sort((u1, u2) => u1.name > u2.name)} onRemove={(user) => {
           let id = user.id;
           let newUsers = this.getCurrentGroupMembers().filter(u => u.id !== id);
           this.props.onChange("newUsers", newUsers);
