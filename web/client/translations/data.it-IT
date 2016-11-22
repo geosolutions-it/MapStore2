@@ -473,6 +473,20 @@
             "errorSaving": "Si è verificato un errore salvando questo utente:",
             "selectedGroups": "GRUPPI SELEZIONATI"
         },
+        "usergroups": {
+          "newGroup": "Nuovo Gruppo",
+          "manageGroups": "Gestisci Gruppi",
+          "description": "Descrizione:",
+          "groupName": "Nome del Gruppo",
+          "groupDescription": "Descrizione",
+          "saveGroup": "Salva",
+          "createGroup": "Crea",
+          "creatingGroup": "Creazione...",
+          "noUsers": "Nessun utente membro di questo gruppo",
+          "errorSaving": "Si è verificato un errore salvando questo gruppo:",
+          "errorDelete": "Si è verificato un errore rimuovendo questo utente:",
+          "confirmDeleteGroup": "Sei sicuro di voler cancellare questo gruppo?"
+        },
         "share":{
             "title": "Condividi",
             "titlePanel": "Condividi la mappa",

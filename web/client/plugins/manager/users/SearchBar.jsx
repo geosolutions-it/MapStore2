@@ -1,3 +1,4 @@
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -9,35 +10,60 @@ const {connect} = require('react-redux');
 
 
 const {getUsers, usersSearchTextChanged} = require('../../../actions/users');
+const {getUserGroups, groupSearchTextChanged} = require('../../../actions/usergroups');
 
 const {trim} = require('lodash');
-
-const SearchBar = connect((state) => ({
-    className: "user-search",
-    hideOnBlur: false,
-    placeholderMsgId: "users.searchUsers",
-    typeAhead: false,
-    start: state && state.users && state.users.start,
-    limit: state && state.users && state.users.limit,
-    searchText: (state.users && state.users.searchText && trim(state.users.searchText, '*')) || ""
-}), {
-    onSearchTextChange: usersSearchTextChanged,
-    onSearch: (text, options) => {
+const USERS = "users";
+// const GROUPS = "groups";
+const SearchBar = connect((state) => {
+    let tool = state && state.controls && state.controls.usermanager && state.controls.usermanager && state.controls.usermanager.selectedTool;
+    let searchState = tool === USERS ? (state && state.users) : (state && state.usergroups);
+    return {
+        tool,
+        className: "user-search",
+        hideOnBlur: false,
+        placeholderMsgId: tool === USERS ? "users.searchUsers" : "usergroups.searchGroups",
+        typeAhead: false,
+        start: searchState && searchState.start,
+        limit: searchState && searchState.limit,
+        searchText: (searchState && searchState.searchText && trim(searchState.searchText, '*')) || ""
+    };
+}, {
+    usersSearchTextChanged, groupSearchTextChanged,
+    onSearchUser: (text, options) => {
         let searchText = (text && text !== "") ? ("*" + text + "*") : "*";
         return getUsers(searchText, options);
     },
-    onSearchReset: getUsers.bind(null, "*")
+    onSearchGroup: (text, options) => {
+        let searchText = (text && text !== "") ? ("*" + text + "*") : "*";
+        return getUserGroups(searchText, options);
+    }
 }, (stateProps, dispatchProps) => {
     return {
         ...stateProps,
         onSearch: (text) => {
             let limit = stateProps.limit;
-            dispatchProps.onSearch(text, {params: {start: 0, limit}});
+            if (stateProps.tool === "USER") {
+                dispatchProps.onSearchUser(text, {params: {start: 0, limit}});
+            } else {
+                dispatchProps.onSearchGroup(text, {params: {start: 0, limit}});
+            }
         },
         onSearchReset: () => {
+            if (stateProps.tool === "USER") {
+                dispatchProps.onSearchUser();
+            } else {
+                dispatchProps.onSearchGroup();
+            }
             dispatchProps.onSearchReset({params: {start: 0, limit: stateProps.limit}});
         },
-        onSearchTextChange: dispatchProps.onSearchTextChange
+        onSearchTextChange: (text) => {
+            if (stateProps.tool === "USER") {
+                dispatchProps.usersSearchTextChanged(text);
+            } else {
+                dispatchProps.groupSearchTextChanged(text);
+            }
+        }
     };
 })(require("../../../components/mapcontrols/search/SearchBar"));
 

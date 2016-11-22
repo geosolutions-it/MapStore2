@@ -472,6 +472,24 @@
             "errorSaving": "There was an error saving the user:",
             "selectedGroups": "SELECTED GROUPS"
         },
+        "usergroups": {
+          "searchGroups": "Search Groups...",
+          "removeUser": "Remove User",
+          "newGroup": "New Group",
+          "manageGroups": "Manage Groups",
+          "description": "Description:",
+          "groupName": "Group Name",
+          "groupDescription": "Description",
+          "saveGroup": "Save",
+          "createGroup": "Create",
+          "creatingGroup": "Creating...",
+          "groupMembers": "Members:",
+          "addMember": "Add Member:",
+          "noUsers": "No users for this group",
+          "errorSaving": "There was an error saving this group",
+          "errorDelete": "There was an error deleting this group",
+          "confirmDeleteGroup": "Are you sure you want to delete this group?"
+        },
         "share":{
             "title": "Share",
             "titlePanel": "Share the map",

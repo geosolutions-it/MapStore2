@@ -9,32 +9,32 @@ const React = require('react');
 const {bindActionCreators} = require('redux');
 const {connect} = require('react-redux');
 const assign = require('object-assign');
-const {getUsers, editUser, deleteUser} = require('../../../actions/users');
-const PaginationToolbar = require('./UsersPaginationToolbar');
+const {getUserGroups, editGroup, deleteGroup} = require('../../../actions/usergroups');
+const PaginationToolbar = require('./GroupsPaginationToolbar');
 
 const mapStateToProps = (state) => {
-    const users = state && state.users;
+    const usergroups = state && state.usergroups;
     return {
-        users: users && state.users.users,
-        loading: users && (users.status === "loading"),
-        stateProps: users && users.stateProps,
-        start: users && users.start,
-        limit: users && users.limit,
+        groups: usergroups && state.usergroups.groups,
+        loading: usergroups && (usergroups.status === "loading"),
+        stateProps: usergroups && usergroups.stateProps,
+        start: usergroups && usergroups.start,
+        limit: usergroups && usergroups.limit,
         myUserId: state && state.security && state.security.user && state.security.user.id
     };
 };
 const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
-        loadUsers: getUsers,
-        onEdit: editUser,
-        onDelete: deleteUser
+        loadGroups: getUserGroups,
+        onEdit: editGroup,
+        onDelete: deleteGroup
     }, dispatch);
 };
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
     return assign({}, stateProps, dispatchProps, ownProps, {
         bottom: <PaginationToolbar />,
-        loadUsers: () => {
-            dispatchProps.loadUsers(stateProps && stateProps.searchText, {
+        loadGroups: () => {
+            dispatchProps.loadGroups(stateProps && stateProps.searchText, {
                 params: {
                     start: stateProps && stateProps.start || 0,
                     limit: stateProps && stateProps.limit || 12
@@ -43,4 +43,4 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         }
     });
 };
-module.exports = connect(mapStateToProps, mapDispatchToProps, mergeProps)(require('../../../components/manager/users/UserGrid'));
+module.exports = connect(mapStateToProps, mapDispatchToProps, mergeProps)(require('../../../components/manager/users/GroupGrid'));
