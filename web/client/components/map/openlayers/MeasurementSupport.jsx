@@ -7,6 +7,7 @@
  */
 
 const React = require('react');
+const assign = require('object-assign');
 var ol = require('openlayers');
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var wgs84Sphere = new ol.Sphere(6378137);
@@ -99,7 +100,7 @@ const MeasurementSupport = React.createClass({
             })
         });
 
-        // update measurement results for every new vertex drawn
+        this.props.map.on('pointermove', this.updateMeasurementResults, this);
         this.props.map.on('click', this.updateMeasurementResults, this);
 
         draw.on('drawstart', function(evt) {
@@ -121,36 +122,37 @@ const MeasurementSupport = React.createClass({
             this.props.map.removeLayer(this.measureLayer);
             this.sketchFeature = null;
             this.props.map.un('click', this.updateMeasurementResults, this);
+            this.props.map.un('pointermove', this.updateMeasurementResults, this);
         }
     },
     updateMeasurementResults() {
-        var bearing = 0;
-        var sketchCoords = this.sketchFeature.getGeometry().getCoordinates();
-        var newMeasureState;
+        if (!this.sketchFeature) {
+            return;
+        }
+        let bearing = 0;
+        let sketchCoords = this.sketchFeature.getGeometry().getCoordinates();
 
         if (this.props.measurement.geomType === 'Bearing' &&
-                sketchCoords.length > 2) {
-            this.drawInteraction.finishDrawing();
+                sketchCoords.length > 1) {
             // calculate the azimuth as base for bearing information
             bearing = CoordinatesUtils.calculateAzimuth(
                 sketchCoords[0], sketchCoords[1], this.props.projection);
+            if (sketchCoords.length > 2) {
+                this.drawInteraction.finishDrawing();
+            }
         }
 
-        newMeasureState = {
-            pointMeasureEnabled: this.props.measurement.pointMeasureEnabled,
-            lineMeasureEnabled: this.props.measurement.lineMeasureEnabled,
-            areaMeasureEnabled: this.props.measurement.areaMeasureEnabled,
-            bearingMeasureEnabled: this.props.measurement.bearingMeasureEnabled,
-            geomType: this.props.measurement.geomType,
-            point: this.props.measurement.geomType === 'Point' ?
-                this.getPointCoordinate(sketchCoords) : null,
-            len: this.props.measurement.geomType === 'LineString' ?
-                this.calculateGeodesicDistance(sketchCoords) : 0,
-            area: this.props.measurement.geomType === 'Polygon' ?
-                this.calculateGeodesicArea(this.sketchFeature.getGeometry().getLinearRing(0).getCoordinates()) : 0,
-            bearing: this.props.measurement.geomType === 'Bearing' ? bearing : 0
-        };
-
+        let newMeasureState = assign({}, this.props.measurement,
+            {
+                point: this.props.measurement.geomType === 'Point' ?
+                    this.getPointCoordinate(sketchCoords) : null,
+                len: this.props.measurement.geomType === 'LineString' ?
+                    this.calculateGeodesicDistance(sketchCoords) : 0,
+                area: this.props.measurement.geomType === 'Polygon' ?
+                    this.calculateGeodesicArea(this.sketchFeature.getGeometry().getLinearRing(0).getCoordinates()) : 0,
+                bearing: this.props.measurement.geomType === 'Bearing' ? bearing : 0
+            }
+        );
         this.props.changeMeasurementState(newMeasureState);
     },
     reprojectedCoordinates: function(coordinates) {
