@@ -453,6 +453,7 @@
         },
         "users": {
             "title": "Gérer les comptes",
+            "users": "utilisateurs",
             "searchUsers": "rechercher des utilisateurs ...",
             "newUser": "Nouvel",
             "editUser": "Modifier",
@@ -473,6 +474,25 @@
             "errorDelete": "Il y avait une erreur de supprimer cet utilisateur:",
             "errorSaving": "Il y avait une sauver l'erreur utilisateur:",
             "selectedGroups": "CERTAINS GROUPES"
+        },
+        "usergroups": {
+          "searchGroups": "rechercher des groupes...",
+          "groups": "Groupes",
+          "removeUser": "supprimer l'utilisateur",
+          "newGroup": "Nouveau groupe",
+          "manageGroups": "Gérer les groupes",
+          "description": "Description:",
+          "groupName": "Nom de groupe",
+          "groupDescription": "Description",
+          "saveGroup": "Sauver",
+          "createGroup": "Créer",
+          "creatingGroup": "Création...",
+          "groupMembers": "Membres:",
+          "addMember": "Ajouter un membre:",
+          "noUsers": "Aucun utilisateur pour ce groupe",
+          "errorSaving": "Une erreur s'est produite lors de l'enregistrement de ce groupe",
+          "errorDelete": "Une erreur s'est produite lors de la suppression de ce groupe",
+          "confirmDeleteGroup": "Voulez-vous vraiment supprimer ce groupe?"
         },
         "share":{
             "title": "Partager",

@@ -50,8 +50,12 @@ const Bar = React.createClass({
             return <span><Glyphicon glyph="user" /><Message msgId="users.title" /></span>;
         }
     },
+    renderTitle() {
+        return <h1 className="usermanager-title"><Message msgId={this.props.selectedTool === "users" ? "users.users" : "usergroups.groups"}/></h1>;
+    },
     render() {
         return (<Grid style={{marginBottom: "10px"}} fluid={true}>
+            {this.renderTitle()}
             <Button style={{marginRight: "10px"}} bsStyle="success" onClick={this.onNew}>{this.renderNewButton()}</Button>
             <Button bsStyle="primary" onClick={this.toogleTools}>{this.renderToggle()}</Button>
         </Grid>);
