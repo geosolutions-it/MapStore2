@@ -1,3 +1,4 @@
+var DefinePlugin = require("webpack/lib/DefinePlugin");
 var path = require("path");
 module.exports = function karmaConfig(config) {
     config.set({
@@ -14,9 +15,8 @@ module.exports = function karmaConfig(config) {
             { pattern: './web/client/test-resources/**/*', included: false },
             { pattern: './web/client/translations/**/*', included: false }
         ],
-
         preprocessors: {
-            'tests-travis.webpack.js': [ 'webpack', 'sourcemap' ]
+            'tests-travis.webpack.js': [ 'webpack' ]
         },
 
         reporters: [ 'mocha', 'coverage', 'coveralls' ],
@@ -39,7 +39,14 @@ module.exports = function karmaConfig(config) {
         },
 
         webpack: {
-            devtool: 'eval',
+            devtool: 'inline-source-map',
+            plugins: [
+              new DefinePlugin({
+                'process.env': {
+                  'NODE_ENV': '"test"'
+                }
+              })
+            ],
             module: {
                 loaders: [
                     { test: /\.jsx?$/, exclude: /(ol\.js$|node_modules)/, loader: 'babel-loader', include: path.join(__dirname, "web", "client") },
