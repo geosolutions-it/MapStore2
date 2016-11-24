@@ -452,6 +452,7 @@
         "users": {
 
             "title": "Gestione utenti",
+            "users": "Utenti",
             "searchUsers": "Cerca utenti...",
             "newUser": "Nuovo utente",
             "editUser": "Modifica utente",
@@ -472,6 +473,25 @@
             "errorDelete": "Si è verificato un errore rimuovendo l'utente:",
             "errorSaving": "Si è verificato un errore salvando questo utente:",
             "selectedGroups": "GRUPPI SELEZIONATI"
+        },
+        "usergroups": {
+          "searchGroups": "Cerca Gruppi...",
+          "groups": "Gruppi",
+          "removeUser": "Rimuovi Utente",
+          "newGroup": "Nuovo Gruppo",
+          "manageGroups": "Gestisci Gruppi",
+          "description": "Descrizione:",
+          "groupName": "Nome del Gruppo",
+          "groupDescription": "Descrizione",
+          "saveGroup": "Salva",
+          "createGroup": "Crea",
+          "creatingGroup": "Creazione...",
+          "groupMembers": "Membri:",
+          "addMember": "Aggiungi Membro:",
+          "noUsers": "Nessun utente membro di questo gruppo",
+          "errorSaving": "Si è verificato un errore salvando questo gruppo:",
+          "errorDelete": "Si è verificato un errore rimuovendo questo utente:",
+          "confirmDeleteGroup": "Sei sicuro di voler cancellare questo gruppo?"
         },
         "share":{
             "title": "Condividi",

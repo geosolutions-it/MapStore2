@@ -223,7 +223,70 @@ var Api = {
     deleteUser: function(id, options = {}) {
         let url = "users/user/" + id;
         return axios.delete(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
+    },
+    getGroups: function(textSearch, options = {}) {
+        let url = "extjs/search/groups" + (textSearch ? "/" + textSearch : "");
+        return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
+    },
+    getGroup: function(id, options = {}) {
+        let url = "usergroups/group/" + id;
+        return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {
+            let groupLoaded = response.data.UserGroup;
+            let users = groupLoaded && groupLoaded.restUsers && groupLoaded.restUsers.User;
+            return {...groupLoaded, users: users && (Array.isArray(users) ? users : [users]) || []};
+        });
+    },
+    createGroup: function(group, options) {
+        let url = "usergroups/";
+        let groupId;
+        return axios.post(url, {UserGroup: {...group}}, this.addBaseUrl(parseOptions(options)))
+            .then(function(response) {
+                groupId = response.data;
+                return Api.updateGroupMembers({...group, id: groupId}, options);
+            }).then(() => groupId);
+    },
+    updateGroupMembers: function(group, options) {
+        // No GeoStore API to update group name and description. only update new users
+        if (group.newUsers) {
+            let restUsers = group.users || (group.restUsers && group.restUsers.User) || [];
+            restUsers = Array.isArray(restUsers) ? restUsers : [restUsers];
+            // old users not present in the new users list
+            let toRemove = restUsers.filter( (user) => group.newUsers.findIndex( u => u.id === user.id) < 0);
+            // new users not present in the old users list
+            let toAdd = group.newUsers.filter( (user) => restUsers.findIndex( u => u.id === user.id) < 0);
+
+            // create callbacks
+            let removeCallbacks = toRemove.map( (user) => () => this.removeUserFromGroup(user.id, group.id, options) );
+            let addCallbacks = toAdd.map( (user) => () => this.addUserToGroup(user.id, group.id), options );
+            let requests = [...(removeCallbacks.map( call => call.call(this))), ...(addCallbacks.map(call => call()))];
+            return axios.all(requests).then(() => {
+                return {
+                    ...group,
+                    newUsers: null,
+                    restUsers: { User: group.newUsers},
+                    users: group.newUsers
+                };
+            });
+        }
+        return new Promise( (resolve) => {
+            resolve({
+                ...group
+            });
+        });
+    },
+    deleteGroup: function(id, options={}) {
+        let url = "usergroups/group/" + id;
+        return axios.delete(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
+    },
+    addUserToGroup(userId, groupId, options = {}) {
+        let url = "/usergroups/group/" + userId + "/" + groupId + "/";
+        return axios.post(url, null, this.addBaseUrl(parseOptions(options)));
+    },
+    removeUserFromGroup(userId, groupId, options = {}) {
+        let url = "/usergroups/group/" + userId + "/" + groupId + "/";
+        return axios.delete(url, this.addBaseUrl(parseOptions(options)));
     }
+
 };
 
 module.exports = Api;
