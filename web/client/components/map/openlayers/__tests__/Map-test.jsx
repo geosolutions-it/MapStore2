@@ -10,6 +10,7 @@ var ReactDOM = require('react-dom');
 var OpenlayersMap = require('../Map.jsx');
 var OpenlayersLayer = require('../Layer.jsx');
 var expect = require('expect');
+var assign = require('object-assign');
 var ol = require('openlayers');
 var mapUtils = require('../../../../utils/MapUtils');
 
@@ -173,6 +174,54 @@ describe('OpenlayersMap', () => {
         let center = map.normalizeCenter(olMap.getView().getCenter());
         expect(center[1].toFixed(1)).toBe('44.0');
         expect(center[0].toFixed(1)).toBe('10.0');
+    });
+
+    it('check result of "haveResolutionsChanged()" when receiving new props', () => {
+        const map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11.6}
+                measurement={{}}
+            />
+        , document.getElementById("map"));
+
+        let origProps = assign({}, map.props);
+        function testProps(newProps) {
+            // update original props with newProps
+            return assign({}, origProps, newProps);
+        }
+
+        map.setProps(testProps({mapOptions: undefined}));
+        expect( map.haveResolutionsChanged(testProps({mapOptions: undefined})) ).toBe(false);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {}})) ).toBe(false);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {}}})) ).toBe(false);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: []}}})) ).toBe(true);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: [10, 5, 2, 1]}}})) ).toBe(true);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: [100, 50, 25]}}})) ).toBe(true);
+
+        map.setProps(testProps({mapOptions: {}}));
+        expect( map.haveResolutionsChanged(testProps({mapOptions: undefined})) ).toBe(false);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {}})) ).toBe(false);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {}}})) ).toBe(false);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: []}}})) ).toBe(true);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: [10, 5, 2, 1]}}})) ).toBe(true);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: [100, 50, 25]}}})) ).toBe(true);
+
+        map.setProps(testProps({mapOptions: {view: {}}}));
+        expect( map.haveResolutionsChanged(testProps({mapOptions: undefined})) ).toBe(false);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {}})) ).toBe(false);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {}}})) ).toBe(false);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: []}}})) ).toBe(true);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: [10, 5, 2, 1]}}})) ).toBe(true);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: [100, 50, 25]}}})) ).toBe(true);
+
+        map.setProps(testProps({mapOptions: {view: {resolutions: [10, 5, 2, 1]}}}));
+        expect( map.haveResolutionsChanged(testProps({mapOptions: undefined})) ).toBe(true);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {}})) ).toBe(true);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {}}})) ).toBe(true);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: []}}})) ).toBe(true);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: [10, 5, 2, 1]}}})) ).toBe(false);
+        expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: [100, 50, 25]}}})) ).toBe(true);
     });
 
     it('check if the map has "auto" cursor as default', () => {
