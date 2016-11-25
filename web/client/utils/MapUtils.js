@@ -8,6 +8,13 @@
 
 const DEFAULT_SCREEN_DPI = 96;
 
+const METERS_PER_UNIT = {
+    'm': 1,
+    'degrees': 111194.87428468118,
+    'ft': 0.3048,
+    'us-ft': 1200 / 3937
+};
+
 const GOOGLE_MERCATOR = {
     RADIUS: 6378137,
     TILE_WIDTH: 256,
@@ -49,6 +56,16 @@ function executeHook(hookName, existCallback, dontExistCallback) {
  */
 function dpi2dpm(dpi) {
     return dpi * (100 / 2.54);
+}
+
+/**
+ * @param dpi {number} screen resolution in dots per inch.
+ * @param projection {string} map projection.
+ * @return {number} dots per map unit.
+ */
+function dpi2dpu(dpi, projection) {
+    const units = CoordinatesUtils.getUnits(projection || "EPSG:3857");
+    return METERS_PER_UNIT[units] * dpi2dpm(dpi || DEFAULT_SCREEN_DPI);
 }
 
 /**
@@ -114,14 +131,22 @@ function getGoogleMercatorScales(minZoom, maxZoom, dpi) {
     );
 }
 
-function getResolutionsFromScales(scales, dpi) {
-    const dpm = dpi2dpm((dpi || DEFAULT_SCREEN_DPI));
-
-    return scales.map((scale) => scale / dpm);
+/**
+ * @param scales {array} list of scales.
+ * @param projection {string} map projection.
+ * @param dpi {number} screen resolution in dots per inch.
+ * @return {array} a list of resolutions corresponding to the given scales, projection and dpi.
+ */
+function getResolutionsForScales(scales, projection, dpi) {
+    const dpu = dpi2dpu(dpi, projection);
+    const resolutions = scales.map((scale) => {
+        return scale / dpu;
+    });
+    return resolutions;
 }
 
 function getGoogleMercatorResolutions(minZoom, maxZoom, dpi) {
-    return getResolutionsFromScales(getGoogleMercatorScales(minZoom, maxZoom, dpi), dpi);
+    return getResolutionsForScales(getGoogleMercatorScales(minZoom, maxZoom, dpi), "EPSG:3857", dpi);
 }
 
 function getResolutions() {
@@ -132,9 +157,8 @@ function getResolutions() {
 }
 
 function getScales(projection, dpi) {
-    const units = CoordinatesUtils.getUnits(projection);
-    const dpm = dpi2dpm((dpi || DEFAULT_SCREEN_DPI));
-    return getResolutions().map((resolution) => resolution * dpm * (units === 'degrees' ? 111194.87428468118 : 1));
+    const dpu = dpi2dpu(dpi, projection);
+    return getResolutions().map((resolution) => resolution * dpu);
 }
 
 function defaultGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, mapResolutions) {
@@ -145,8 +169,8 @@ function defaultGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, mapReso
     const yResolution = Math.abs(hExtent / mapSize.height);
     const extentResolution = Math.max(xResolution, yResolution);
 
-    const resolutions = mapResolutions || getResolutionsFromScales(getGoogleMercatorScales(
-        minZoom, maxZoom, (dpi || DEFAULT_SCREEN_DPI)));
+    const resolutions = mapResolutions || getResolutionsForScales(getGoogleMercatorScales(
+        minZoom, maxZoom, (dpi || DEFAULT_SCREEN_DPI)), "EPSG:3857", dpi);
 
     const {zoom, ...other} = resolutions.reduce((previous, resolution, index) => {
         const diff = Math.abs(resolution - extentResolution);
@@ -258,6 +282,7 @@ module.exports = {
     getGoogleMercatorScales,
     getGoogleMercatorResolutions,
     getGoogleMercatorScale,
+    getResolutionsForScales,
     getZoomForExtent,
     defaultGetZoomForExtent,
     getCenterForExtent,
