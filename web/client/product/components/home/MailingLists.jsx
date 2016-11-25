@@ -10,7 +10,7 @@ var {Col, Row} = require('react-bootstrap');
 var I18N = require('../../../components/I18N/I18N');
 
 const googleGroups = require('../../assets/img/groups_logo_sm.gif');
-const LinkedinGroup = require('../../assets/img/linked_in.png');
+const LinkedinGroup = require('../../assets/img/linkedin_group.png');
 
 
 var MailingLists = React.createClass({
