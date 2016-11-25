@@ -69,11 +69,11 @@ var GroupsGrid = React.createClass({
             let actions = [{
                      onClick: () => {this.props.onEdit(group); },
                      glyph: "wrench",
-                     tooltip: <Message msgId="users.editUser" />
+                     tooltip: <Message msgId="usergroups.editGroup" />
              }, {
                      onClick: () => {this.props.onDelete(group && group.id); },
                      glyph: "remove-circle",
-                     tooltip: <Message msgId="users.deleteUser" />
+                     tooltip: <Message msgId="usergroups.deleteGroup" />
              }];
             if ( group && group.groupName === "everyone") {
                 actions = [];

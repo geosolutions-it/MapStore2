@@ -454,6 +454,7 @@
         "users": {
             "title": "Gérer les comptes",
             "users": "Utilisateurs",
+            "manageUsers": "Gérer les utilisateurs",
             "searchUsers": "rechercher des utilisateurs ...",
             "newUser": "Nouvel",
             "editUser": "Modifier",
@@ -478,6 +479,8 @@
         "usergroups": {
           "searchGroups": "rechercher des groupes...",
           "groups": "Groupes",
+          "editGroup": "Modifier",
+          "deleteGroup": "Supprimer",
           "removeUser": "supprimer l'utilisateur",
           "newGroup": "Nouveau groupe",
           "manageGroups": "Gérer les groupes",
