@@ -95,7 +95,7 @@ const Identify = React.createClass({
             layers: [],
             maxItems: 10,
             excludeParams: ["SLD_BODY"],
-            excludeOptions: [],
+            excludeOptions: ["origin"],
             panelClassName: "panel default-panel",
             headerClassName: "panel-heading",
             bodyClassName: "panel-body",
