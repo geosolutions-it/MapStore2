@@ -452,6 +452,7 @@
         "users": {
             "title": "Manage Accounts",
             "users": "Users",
+            "manageUsers": "Manage Users",
             "searchUsers": "search for users...",
             "newUser": "New User",
             "editUser": "Edit user",
@@ -476,6 +477,8 @@
         "usergroups": {
           "searchGroups": "Search Groups...",
           "groups": "Groups",
+          "editGroup": "Edit Group",
+          "deleteGroup": "Delete Group",
           "removeUser": "Remove User",
           "newGroup": "New Group",
           "manageGroups": "Manage Groups",

@@ -450,9 +450,9 @@
             }
         },
         "users": {
-
-            "title": "Gestione utenti",
+            "title": "Gestione Account",
             "users": "Utenti",
+            "manageUsers": "Gestisci utenti",
             "searchUsers": "Cerca utenti...",
             "newUser": "Nuovo utente",
             "editUser": "Modifica utente",
@@ -475,8 +475,10 @@
             "selectedGroups": "GRUPPI SELEZIONATI"
         },
         "usergroups": {
-          "searchGroups": "Cerca Gruppi...",
+          "searchGroups": "Cerca gruppi...",
           "groups": "Gruppi",
+          "editGroup": "Modifica Gruppo",
+          "deleteGroup": "Rimuovi Gruppo",
           "removeUser": "Rimuovi Utente",
           "newGroup": "Nuovo Gruppo",
           "manageGroups": "Gestisci Gruppi",

@@ -47,7 +47,7 @@ const Bar = React.createClass({
         if (this.props.selectedTool === (USERS)) {
             return <span><Glyphicon glyph="1-group" /><Message msgId="usergroups.manageGroups" /></span>;
         } else if (this.props.selectedTool === GROUPS) {
-            return <span><Glyphicon glyph="user" /><Message msgId="users.title" /></span>;
+            return <span><Glyphicon glyph="user" /><Message msgId="users.manageUsers" /></span>;
         }
     },
     renderTitle() {
