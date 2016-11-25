@@ -7,7 +7,7 @@
  */
 
 const assign = require('object-assign');
-const {head, isArray} = require('lodash');
+const {head, isArray, isString} = require('lodash');
 const urlUtil = require('url');
 
 const getWMSBBox = (record) => {
@@ -83,7 +83,7 @@ const converters = {
                     });
                 }
 
-                if (wms) {
+                if (wms && wms.name) {
                     let absolute = (wms.value.indexOf("http") === 0);
                     if (!absolute) {
                         assign({}, wms, {value: options.catalogURL + "/" + wms.value} );
@@ -108,11 +108,11 @@ const converters = {
 
                 // setup the final record object
                 return {
-                    title: dc.title,
-                    description: dc.abstract,
-                    identifier: dc.identifier,
+                    title: isString(dc.title) && dc.title || '',
+                    description: isString(dc.abstract) && dc.abstract || '',
+                    identifier: isString(dc.identifier) && dc.identifier || '',
                     thumbnail: thumbURL,
-                    tags: dc.subject,
+                    tags: isString(dc.subject) && dc.subject || '',
                     boundingBox: record.boundingBox,
                     references: references
                 };
