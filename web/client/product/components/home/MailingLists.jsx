@@ -10,6 +10,8 @@ var {Col, Row} = require('react-bootstrap');
 var I18N = require('../../../components/I18N/I18N');
 
 const googleGroups = require('../../assets/img/groups_logo_sm.gif');
+const LinkedinGroup = require('../../assets/img/linkedin_group.png');
+
 
 var MailingLists = React.createClass({
     contextTypes: {
@@ -77,6 +79,27 @@ var MailingLists = React.createClass({
                             <tr>
                                 <td align="right">
                                     <a className="link-white-bg" href="http://groups.google.com/group/mapstore-developers"><I18N.Message msgId="home.ml.visit_group"/></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </Col>
+                    <Col sm={12} md={12}>
+                        <table border="0" style={{backgroundColor: "#fff", padding: "5px", margin: "auto"}} cellSpacing="0">
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <img src={LinkedinGroup} height="50" width="100" alt="Linkedin Groups" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style={{paddingLeft: "10px", paddingRight: "10px"}}>
+                                    <b><I18N.Message msgId="home.LinkedinGroup"/></b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style={{padding: "10px"}}>
+                                    <a className="link-white-bg" href="https://www.linkedin.com/groups/7444734/profile"><I18N.Message msgId="home.ml.visit_group"/></a>
                                 </td>
                             </tr>
                             </tbody>

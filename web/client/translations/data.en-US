@@ -67,6 +67,7 @@
             "description": "MapStore 2 has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on.<br/>Visit the <a href=\"http://geosolutions-it.github.io/MapStore2/\">home page</a> for more details.",
             "Applications": "Applications",
             "Examples": "Examples",
+            "LinkedinGroup": "Mapstore Linkedin Group",
             "ml": {
                 "title": "Keep in touch and stay up-to-date with the mailing lists",
                 "subscribe_users": "Subscribe Users Mailing List",
