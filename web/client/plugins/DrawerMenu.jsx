@@ -22,10 +22,10 @@ const Section = require('./drawer/Section');
 const {partialRight} = require('lodash');
 
 const Menu = connect((state) => ({
-    show: state.controls.drawer && state.controls.drawer.enabled,
+    show: state.controls && state.controls.drawer && state.controls.drawer.active,
     activeKey: state.controls.drawer && state.controls.drawer.menu
 }), {
-    onToggle: toggleControl.bind(null, 'drawer', null),
+    onToggle: toggleControl.bind(null, 'drawer', 'active'),
     onChoose: partialRight(setControlProperty.bind(null, 'drawer', 'menu'), true),
     changeMapStyle: changeMapStyle
 })(require('./drawer/Menu'));
@@ -98,7 +98,7 @@ module.exports = {
     DrawerMenuPlugin: connect((state) => ({
         active: state.controls && state.controls.drawer && state.controls.drawer.active
     }), {
-        toggleMenu: toggleControl.bind(null, 'drawer', null)
+        toggleMenu: toggleControl.bind(null, 'drawer', 'active')
     })(DrawerMenu),
     reducers: {}
 };
