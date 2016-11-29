@@ -6,6 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+if (!global.Intl) {
+    require('intl');
+}
 const ReactIntl = require('react-intl');
 
 const FormattedMessage = ReactIntl.FormattedMessage;
