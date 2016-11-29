@@ -15,7 +15,7 @@ var assign = require('object-assign');
 var MapUtils = require('../utils/MapUtils');
 var CoordinatesUtils = require('../utils/CoordinatesUtils');
 
-function mapConfig(state = null, action) {
+function mapConfig(state = {}, action) {
     switch (action.type) {
         case CHANGE_MAP_VIEW:
             const {type, ...params} = action;
