@@ -7,8 +7,8 @@
  */
 
 var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER,
-    CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, ZOOM_TO_EXTENT, PAN_TO, CHANGE_MAP_STYLE,
-    CHANGE_ROTATION} = require('../actions/map');
+    CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, CHANGE_MAP_SCALES, ZOOM_TO_EXTENT, PAN_TO,
+    CHANGE_MAP_STYLE, CHANGE_ROTATION} = require('../actions/map');
 
 
 var assign = require('object-assign');
@@ -33,6 +33,35 @@ function mapConfig(state = null, action) {
             return assign({}, state, {
                 projection: action.crs
             });
+        case CHANGE_MAP_SCALES:
+            if (action.scales) {
+                const dpi = state.mapOptions && state.mapOptions.view && state.mapOptions.view.DPI || null;
+                const resolutions = MapUtils.getResolutionsForScales(action.scales, state.projection || "EPSG:4326", dpi);
+                // add or update mapOptions.view.resolutions
+                let mapOptions = assign({}, state.mapOptions);
+                mapOptions.view = assign({}, mapOptions.view, {
+                    resolutions: resolutions
+                });
+                return assign({}, state, {
+                    mapOptions: mapOptions
+                });
+            } else if (state.mapOptions && state.mapOptions.view && state.mapOptions.view && state.mapOptions.view.resolutions) {
+                // deeper clone
+                let newState = assign({}, state);
+                newState.mapOptions = assign({}, newState.mapOptions);
+                newState.mapOptions.view = assign({}, newState.mapOptions.view);
+                // remove resolutions
+                delete newState.mapOptions.view.resolutions;
+                // cleanup state
+                if (Object.keys(newState.mapOptions.view).length === 0) {
+                    delete newState.mapOptions.view;
+                }
+                if (Object.keys(newState.mapOptions).length === 0) {
+                    delete newState.mapOptions;
+                }
+                return newState;
+            }
+            return state;
         case ZOOM_TO_EXTENT: {
             let zoom = 0;
             let bounds = CoordinatesUtils.reprojectBbox(action.extent, action.crs, state.bbox && state.bbox.crs || "EPSG:4326");
