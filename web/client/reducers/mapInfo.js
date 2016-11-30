@@ -133,12 +133,13 @@ function mapInfo(state = {}, action) {
                 default:
                     unit = "meters";
             }
-            let resolution = action.metadata && action.metadata.resolution;
-            let bufferedPoint = buffer(point, action.metadata.buffer * resolution, unit);
+            let resolution = action.metadata && action.metadata.resolution || 1;
+            let bufferedPoint = buffer(point, (action.metadata.buffer || 1) * resolution, unit);
             const intersected = action.layer.features.filter(
                     (feature) => {
                         try {
-                            return intersect(bufferedPoint, (resolution && action.metadata.buffer && unit) ? buffer(feature, 1, unit) : feature);
+                            // TODO: instead of create a fixed buffer, we should check the feature style to create the proper buffer.
+                            return intersect(bufferedPoint, (resolution && action.metadata.buffer && unit) ? buffer(feature, 1, "meters") : feature);
                         }catch(e) {
                             return false;
                         }
