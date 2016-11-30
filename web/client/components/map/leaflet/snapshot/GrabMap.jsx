@@ -10,6 +10,7 @@ const ConfigUtils = require('../../../../utils/ConfigUtils');
 const ProxyUtils = require('../../../../utils/ProxyUtils');
 const {isEqual} = require('lodash');
 const html2canvas = require('html2canvas');
+const canvg = require('canvg-browser');
 require("./snapshotMapStyle.css");
 /**
  * GrabMap for Leaflet uses HTML2CANVAS to generate the image for the existing
@@ -132,7 +133,19 @@ let GrabLMap = React.createClass({
     doSnapshot(props) {
         // get map style shifted
         var leftString = window.getComputedStyle(this.mapDiv).getPropertyValue("left");
-        var left = 0;
+
+        // get all the informations needed to snap svg before
+        let svgs = this.mapDiv.getElementsByTagName("svg");
+        let svg = svgs && svgs[0];
+        let svgH;
+        let svgW;
+        let svgString;
+        if (svg && svg.outerHTML) {
+            svgString = svgs[0].outerHTML;
+            svgW = svg.getAttribute("width");
+            svgH = svg.getAttribute("height");
+        }
+        let left = 0;
         if (leftString) {
             left = parseInt( leftString.replace('px', ''), 10);
         }
@@ -167,7 +180,7 @@ let GrabLMap = React.createClass({
             // this is a workaround that apply the opacity on each layer snapshot,
             // then merges all the snapshots.
             Promise.all(queue).then((canvases) => {
-                canvases.reduce((pCanv, canv, idx) => {
+                let finalCanvas = canvases.reduce((pCanv, canv, idx) => {
                     let l = layers[idx - 1];
                     if (l === undefined) {
                         return pCanv;
@@ -182,8 +195,26 @@ let GrabLMap = React.createClass({
                     return pCanv;
 
                 });
-                this.props.onStatusChange("READY", this.isTainted(canvas));
-                this.props.onSnapshotReady(canvas, null, null, null, this.isTainted(canvas));
+                let finialize = () => {
+                    this.props.onStatusChange("READY", this.isTainted(finalCanvas));
+                    this.props.onSnapshotReady(canvas, null, null, null, this.isTainted(finalCanvas));
+                };
+
+                if (svg) {
+                    let svgCanv = document.createElement('canvas');
+                    svgCanv.setAttribute("width", svgW);
+                    svgCanv.setAttribute("height", svgH);
+                    canvg(svgCanv, svgString, {
+                        ignoreClear: true,
+                        renderCallback: () => {
+                            let ctx = finalCanvas.getContext('2d');
+                            ctx.drawImage(svgCanv, -1 * (svgW - finalCanvas.width) / 2, -1 * (svgH - finalCanvas.height) / 2);
+                            finialize();
+                        }
+                    });
+                } else {
+                    finialize();
+                }
             });
         }
 
