@@ -19,7 +19,7 @@ var JSONViewer = React.createClass({
     },
     render() {
         const RowViewer = this.props.rowViewer || PropertiesViewer;
-        return (<div>
+        return (<div style={{maxHeight: "250px"}}>
                 {(this.props.response.features || []).map((feature, i) => {
                     return <RowViewer key={i} title={feature.id} exclude={["bbox"]} {...feature.properties}/>;
                 })}
