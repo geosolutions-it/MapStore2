@@ -7,7 +7,6 @@
  */
 const expect = require('expect');
 const PrintUtils = require('../PrintUtils');
-const {isEqual} = require('lodash');
 
 const layer = {
     url: "http://mygeoserver",
@@ -95,15 +94,20 @@ describe('PrintUtils', () => {
         expect(specs[0].customParams.myparam).toBe("myvalue");
     });
     it('vector layer generation for print', () => {
-        const specs = PrintUtils.getMapfishLayersSpecification([vectorLayer], {projection: "EPSG:900913"}, 'map');
+        const specs = PrintUtils.getMapfishLayersSpecification([vectorLayer], {projection: "EPSG:3857"}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
-        expect(isEqual(specs[0], mapFishVectorLayer)).toBe(true);
+        expect(specs[0].geoJson.features[0].geometry.coordinates[0], mapFishVectorLayer).toBe(mapFishVectorLayer.geoJson.features[0].geometry.coordinates[0]);
     });
     it('vector layer default point style', () => {
         const style = PrintUtils.getOlDefaultStyle({features: [{geometry: {type: "Point"}}]});
         expect(style).toExist();
         expect(style.pointRadius).toBe(5);
+    });
+    it('vector layer default marker style', () => {
+        const style = PrintUtils.getOlDefaultStyle({styleName: "marker", features: [{geometry: {type: "Point"}}]});
+        expect(style).toExist();
+        expect(style.externalGraphic).toExist();
     });
     it('vector layer default polygon style', () => {
         const style = PrintUtils.getOlDefaultStyle({features: [{geometry: {type: "Polygon"}}]});

@@ -255,6 +255,7 @@ const PrintUtils = {
              "fillColor": style.fillColor,
              "fillOpacity": style.fillOpacity,
              // "rotation": "30",
+             "externalGraphic": style.iconUrl,
              // "graphicName": "circle",
              // "graphicOpacity": 0.4,
              "pointRadius": style.radius,
@@ -303,7 +304,13 @@ const PrintUtils = {
                 };
             case 'Point':
             case 'MultiPoint': {
-                return {
+                return layer.styleName === "marker" ? {
+                    "externalGraphic": "http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images/marker-icon.png",
+                    "graphicWidth": 25,
+                    "graphicHeight": 41,
+                    "graphicXOffset": -12, // different offset
+                    "graphicYOffset": -41
+                } : {
                     "fillColor": "#FF0000",
                     "fillOpacity": 0,
                     "strokeColor": "#FF0000",

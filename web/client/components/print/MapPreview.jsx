@@ -14,6 +14,7 @@ const {Button, Glyphicon} = require('react-bootstrap');
 
 let PMap;
 let Layer;
+let Feature;
 
 const MapPreview = React.createClass({
     propTypes: {
@@ -54,6 +55,7 @@ const MapPreview = React.createClass({
         PMap = require('../map/' + this.props.mapType + '/Map');
         Layer = require('../map/' + this.props.mapType + '/Layer');
         require('../map/' + this.props.mapType + '/plugins/index');
+        Feature = require('../map/' + this.props.mapType + '/index').Feature;
     },
     getRatio() {
         if (this.props.width && this.props.layoutSize && this.props.resolutions) {
@@ -76,6 +78,23 @@ const MapPreview = React.createClass({
                 "MAP.RESOLUTION": dpi
             })
         });
+    },
+    renderLayerContent(layer) {
+        if (layer.features && layer.type === "vector") {
+            return layer.features.map( (feature) => {
+                return (
+                    <Feature
+                        key={feature.id}
+                        type={feature.type}
+                        geometry={feature.geometry}
+                        msId={feature.id}
+                        featuresCrs={ layer.featuresCrs || 'EPSG:4326' }
+                        // FEATURE STYLE OVERWRITE LAYER STYLE
+                        style={ feature.style || layer.style || null }/>
+                );
+            });
+        }
+        return null;
     },
     render() {
         const style = assign({}, this.props.style, {
@@ -103,7 +122,10 @@ const MapPreview = React.createClass({
                 >
                 {this.props.layers.map((layer, index) =>
                     <Layer key={layer.name} position={index} type={layer.type}
-                        options={assign({}, this.adjustResolution(layer), {srs: projection})}/>
+                        options={assign({}, this.adjustResolution(layer), {srs: projection})}>
+                        {this.renderLayerContent(layer)}
+                    </Layer>
+
                 )}
                 </PMap>
                 {this.props.enableScalebox ? <ScaleBox id="mappreview-scalebox"
