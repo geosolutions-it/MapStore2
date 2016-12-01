@@ -9,6 +9,7 @@
 const CoordinatesUtils = require('./CoordinatesUtils');
 const MapUtils = require('./MapUtils');
 
+
 const {isArray} = require('lodash');
 
 const url = require('url');
@@ -16,6 +17,10 @@ const url = require('url');
 const defaultScales = MapUtils.getGoogleMercatorScales(0, 21);
 
 const assign = require('object-assign');
+
+const getGeomType = function(layer) {
+    return (layer.features && layer.features[0]) ? layer.features[0].geometry.type : undefined;
+};
 
 const PrintUtils = {
     normalizeUrl: (input) => {
@@ -140,6 +145,23 @@ const PrintUtils = {
                 ]
             })
         },
+        vector: {
+            map: (layer, spec) => ({
+                type: 'Vector',
+                name: layer.name,
+                "opacity": layer.opacity || 1.0,
+                styleProperty: "ms_style",
+                styles: {
+                    1: PrintUtils.toOpenLayers2Style(layer, layer.style)
+                },
+                geoJson: CoordinatesUtils.reprojectGeoJson({
+                    type: "FeatureCollection",
+                    features: layer.features.map( f => ({...f, properties: {...f.properties, ms_style: 1}}))
+                },
+                "EPSG:4326",
+                spec.projection)
+            })
+        },
         osm: {
             map: () => ({
                 "baseURL": "http://a.tile.openstreetmap.org/",
@@ -219,6 +241,87 @@ const PrintUtils = {
                     0.5971642833948135
                  ]
             })
+        }
+    },
+    /**
+     * Useful for print (Or generic Openlayers 2 conversion style)
+     */
+    toOpenLayers2Style: function(layer, style) {
+        if (!style) {
+            return PrintUtils.getOlDefaultStyle(layer);
+        }
+        // commented the available options.
+        return {
+             "fillColor": style.fillColor,
+             "fillOpacity": style.fillOpacity,
+             // "rotation": "30",
+             // "graphicName": "circle",
+             // "graphicOpacity": 0.4,
+             "pointRadius": style.radius,
+             "strokeColor": style.color,
+             "strokeOpacity": style.opacity,
+             "strokeWidth": style.weight
+             // "strokeLinecap": "round",
+             // "strokeDashstyle": "dot",
+             // "fontColor": "#000000",
+             // "fontFamily": "sans-serif",
+             // "fontSize": "12px",
+             // "fontStyle": "normal",
+             // "fontWeight": "bold",
+             // "haloColor": "#123456",
+             // "haloOpacity": "0.7",
+             // "haloRadius": "3.0",
+             // "label": "${name}",
+             // "labelAlign": "cm",
+             // "labelRotation": "45",
+             // "labelXOffset": "-25.0",
+             // "labelYOffset": "-35.0"
+         };
+    },
+    /**
+     * Provides the default style for
+     * each vector type.
+     */
+    getOlDefaultStyle(layer) {
+        switch (getGeomType(layer)) {
+            case 'Polygon':
+            case 'MultiPolygon': {
+                return {
+                    "fillColor": "#0000FF",
+                    "fillOpacity": 0.1,
+                    "strokeColor": "#0000FF",
+                    "strokeOpacity": 1,
+                    "strokeWidth": 3
+                };
+            }
+            case 'MultiLineString':
+            case 'LineString':
+                return {
+                    "strokeColor": "#0000FF",
+                    "strokeOpacity": 1,
+                    "strokeWidth": 3
+                };
+            case 'Point':
+            case 'MultiPoint': {
+                return {
+                    "fillColor": "#FF0000",
+                    "fillOpacity": 0,
+                    "strokeColor": "#FF0000",
+                    "pointRadius": 5,
+                    "strokeOpacity": 1,
+                    "strokeWidth": 1
+                };
+            }
+            default: {
+                return {
+                    "fillColor": "#0000FF",
+                    "fillOpacity": 0.1,
+                    "strokeColor": "#0000FF",
+                    "pointRadius": 5,
+                    "strokeOpacity": 1,
+                    "strokeWidth": 1
+                };
+            }
         }
     }
 };
