@@ -89,7 +89,6 @@ const MapPreview = React.createClass({
                         geometry={feature.geometry}
                         msId={feature.id}
                         featuresCrs={ layer.featuresCrs || 'EPSG:4326' }
-                        // FEATURE STYLE OVERWRITE LAYER STYLE
                         style={ feature.style || layer.style || null }/>
                 );
             });
@@ -121,7 +120,7 @@ const MapPreview = React.createClass({
                 mapOptions={mapOptions}
                 >
                 {this.props.layers.map((layer, index) =>
-                    <Layer key={layer.name} position={index} type={layer.type}
+                    <Layer key={layer.id || layer.name} position={index} type={layer.type}
                         options={assign({}, this.adjustResolution(layer), {srs: projection})}>
                         {this.renderLayerContent(layer)}
                     </Layer>
