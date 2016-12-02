@@ -9,6 +9,7 @@ var React = require('react/addons');
 var ReactDOM = require('react-dom');
 var L = require('leaflet');
 var LeafLetLayer = require('../Layer.jsx');
+var Feature = require('../Feature.jsx');
 var expect = require('expect');
 
 require('../../../../utils/leaflet/Layers');
@@ -18,6 +19,7 @@ require('../plugins/WMSLayer');
 require('../plugins/GoogleLayer');
 require('../plugins/BingLayer');
 require('../plugins/MapQuest');
+require('../plugins/VectorLayer');
 
 describe('Leaflet layer', () => {
     let map;
@@ -175,6 +177,119 @@ describe('Leaflet layer', () => {
         let urls;
         map.eachLayer((l) => urls = l._urls);
         expect(urls.length).toBe(1);
+    });
+
+    it('creates a vector layer for leaflet map', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "vector_sample",
+            "group": "sample",
+            "features": [
+                  { "type": "Feature",
+                    "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
+                    "properties": {"prop0": "value0"}
+                    },
+                  { "type": "Feature",
+                    "geometry": {
+                      "type": "LineString",
+                      "coordinates": [
+                        [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
+                        ]
+                      },
+                    "properties": {
+                      "prop0": "value0",
+                      "prop1": 0.0
+                      }
+                    },
+                  { "type": "Feature",
+                     "geometry": {
+                       "type": "Polygon",
+                       "coordinates": [
+                         [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+                           [100.0, 1.0], [100.0, 0.0] ]
+                         ]
+                     },
+                     "properties": {
+                       "prop0": "value0",
+                       "prop1": {"this": "that"}
+                       }
+                   },
+                   { "type": "Feature",
+                      "geometry": { "type": "MultiPoint",
+                        "coordinates": [ [100.0, 0.0], [101.0, 1.0] ]
+                      },
+                      "properties": {
+                        "prop0": "value0",
+                        "prop1": {"this": "that"}
+                        }
+                   },
+                   { "type": "Feature",
+                      "geometry": { "type": "MultiLineString",
+                        "coordinates": [
+                            [ [100.0, 0.0], [101.0, 1.0] ],
+                            [ [102.0, 2.0], [103.0, 3.0] ]
+                          ]
+                      },
+                      "properties": {
+                        "prop0": "value0",
+                        "prop1": {"this": "that"}
+                        }
+                    },
+                    { "type": "Feature",
+                       "geometry": { "type": "MultiPolygon",
+                        "coordinates": [
+                          [[[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0]]],
+                          [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]],
+                           [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]
+                          ]
+                      },
+                       "properties": {
+                         "prop0": "value0",
+                         "prop1": {"this": "that"}
+                         }
+                     },
+                     { "type": "Feature",
+                        "geometry": { "type": "GeometryCollection",
+                            "geometries": [
+                              { "type": "Point",
+                                "coordinates": [100.0, 0.0]
+                                },
+                              { "type": "LineString",
+                                "coordinates": [ [101.0, 0.0], [102.0, 1.0] ]
+                                }
+                            ]
+                        },
+                        "properties": {
+                          "prop0": "value0",
+                          "prop1": {"this": "that"}
+                          }
+                      }
+               ]
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            (<LeafLetLayer type="vector"
+                 options={options} map={map}>
+                {options.features.map((feature) => (<Feature
+                    key={feature.id}
+                    type={feature.type}
+                    geometry={feature.geometry}
+                    msId={feature.id}
+                    featuresCrs={ 'EPSG:4326' }
+                        />))}</LeafLetLayer>), document.getElementById("container"));
+        expect(layer).toExist();
+        let l2 = ReactDOM.render(
+            (<LeafLetLayer type="vector"
+                 options={options} map={map}>
+                {options.features.map((feature) => (<Feature
+                    key={feature.id}
+                    type={feature.type}
+                    geometry={feature.geometry}
+                    msId={feature.id}
+                    featuresCrs={ 'EPSG:4326' }
+                        />))}</LeafLetLayer>), document.getElementById("container"));
+        expect(l2).toExist();
     });
 
     it('creates a wms layer for leaflet map with custom tileSize', () => {
