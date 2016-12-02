@@ -98,7 +98,8 @@ describe('CoordinatesUtils', () => {
         expect(reprojectedTestPoint.features[0]).toExist();
         expect(reprojectedTestPoint.features[0].type).toBe("Feature");
         expect(reprojectedTestPoint.features[0].geometry.type).toBe("Point");
-        expect(reprojectedTestPoint.features[0].geometry.coordinates[0]).toBe(-12523490.492568726);
-        expect(reprojectedTestPoint.features[0].geometry.coordinates[1]).toBe(5195238.005360028);
+        // approximate values should be the same
+        expect(reprojectedTestPoint.features[0].geometry.coordinates[0].toFixed(4)).toBe((-12523490.492568726).toFixed(4));
+        expect(reprojectedTestPoint.features[0].geometry.coordinates[1].toFixed(4)).toBe((5195238.005360028).toFixed(4));
     });
 });
