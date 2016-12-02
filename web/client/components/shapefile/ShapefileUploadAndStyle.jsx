@@ -163,12 +163,21 @@ const ShapeFileUploadAndStyle = React.createClass({
 
             // calculates the bbox that contains all shapefiles added
             const bbox = this.props.layers[0].features.reduce((bboxtotal, feature) => {
-                return (feature.geometry.bbox[0] && feature.geometry.bbox[1] && feature.geometry.bbox[2] && feature.geometry.bbox[3] ) && [
-                    Math.min(bboxtotal[0], feature.geometry.bbox[0]),
-                    Math.min(bboxtotal[1], feature.geometry.bbox[1]),
-                    Math.max(bboxtotal[2], feature.geometry.bbox[2]),
-                    Math.max(bboxtotal[3], feature.geometry.bbox[3])
-                ] || bboxtotal;
+                if (feature.geometry.bbox && feature.geometry.bbox[0] && feature.geometry.bbox[1] && feature.geometry.bbox[2] && feature.geometry.bbox[3] ) {
+                    return [
+                        Math.min(bboxtotal[0], feature.geometry.bbox[0]),
+                        Math.min(bboxtotal[1], feature.geometry.bbox[1]),
+                        Math.max(bboxtotal[2], feature.geometry.bbox[2]),
+                        Math.max(bboxtotal[3], feature.geometry.bbox[3])
+                    ] || bboxtotal;
+                } else if (feature.geometry && feature.geometry.type === "Point" && feature.geometry.coordinates && feature.geometry.coordinates.length >= 2) {
+                    return [Math.min(bboxtotal[0], feature.geometry.coordinates[0]),
+                        Math.min(bboxtotal[1], feature.geometry.coordinates[1]),
+                        Math.max(bboxtotal[2], feature.geometry.coordinates[0]),
+                        Math.max(bboxtotal[3], feature.geometry.coordinates[1])
+                    ];
+                }
+                return bboxtotal;
             }, this.props.bbox);
             if (this.state.zoomOnShapefiles) {
                 this.props.updateShapeBBox(bbox);
