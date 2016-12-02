@@ -209,6 +209,7 @@
       }
     },
     "OmniBar",
+     "FeatureGrid",
     {
       "name": "BurgerMenu",
       "hide": true
@@ -504,6 +505,7 @@
       }
     },
     "OmniBar",
+    "FeatureGrid",
     {
       "name": "Login",
       "cfg": {
@@ -646,7 +648,7 @@
               "alwaysVisible": true
             }
           }
-      }, {
+      }, "FeatureGrid", {
           "name": "TOC",
           "cfg": {
             "visibilityCheckType": "glyph",

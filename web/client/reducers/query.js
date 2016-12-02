@@ -7,6 +7,7 @@
  */
 
 const {
+    FEATURE_TYPE_SELECTED,
     FEATURE_TYPE_LOADED,
     FEATURE_TYPE_ERROR,
     FEATURE_LOADED,
@@ -19,7 +20,7 @@ const {
 const assign = require('object-assign');
 
 const types = {
-    'xsd:string': 'list',
+    'xsd:string': 'string',
     'xsd:dateTime': 'date',
     'xsd:number': 'number'
 };
@@ -71,6 +72,12 @@ const initialState = {
 
 function query(state = initialState, action) {
     switch (action.type) {
+        case FEATURE_TYPE_SELECTED: {
+            return assign({}, state, {
+                typeName: action.typeName,
+                url: action.url
+            });
+        }
         case FEATURE_TYPE_LOADED: {
             return assign({}, state, {
                 featureTypes: assign({}, state.featureTypes, {[action.typeName]: extractInfo(action.featureType)})

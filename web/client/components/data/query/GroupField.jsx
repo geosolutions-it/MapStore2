@@ -103,7 +103,7 @@ const GroupField = React.createClass({
         let comboValues = this.getComboValues(selectedAttribute, this.props.attributes);
 
         return (
-            <Row key={filterField.rowId} fluid={true}>
+            <Row key={filterField.rowId}>
                 <Col xs={10}>
                     <FilterField
                         attributes={this.props.attributes}

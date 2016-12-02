@@ -37,13 +37,12 @@ const DockedFeatureGrid = React.createClass({
             React.PropTypes.string,
             React.PropTypes.object
         ]),
-        initWidth: React.PropTypes.number,
+        initWidth: React.PropTypes.oneOfType([ React.PropTypes.number, React.PropTypes.string ]),
         params: React.PropTypes.object,
         // featureGrigConfigUrl: React.PropTypes.string,
         profile: React.PropTypes.string,
         onDetail: React.PropTypes.func,
         onShowDetail: React.PropTypes.func,
-        toggleSiraControl: React.PropTypes.func,
         changeMapView: React.PropTypes.func,
         // loadFeatureGridConfig: React.PropTypes.func,
         onExpandFilterPanel: React.PropTypes.func,
@@ -102,7 +101,6 @@ const DockedFeatureGrid = React.createClass({
             templateProfile: 'default',
             onDetail: () => {},
             onShowDetail: () => {},
-            toggleSiraControl: () => {},
             changeMapView: () => {},
             // loadFeatureGridConfig: () => {},
             onExpandFilterPanel: () => {},
@@ -115,7 +113,7 @@ const DockedFeatureGrid = React.createClass({
     },
     componentWillMount() {
         let height = getWindowSize().maxHeight - 108;
-        this.setState({width: this.props.initWidth - 30, height});
+        this.setState({width: `calc( ${this.props.initWidth} - 30px)`, height});
         if (this.props.pagination && this.props.dataSourceOptions.pageSize) {
             this.dataSource = this.getDataSource(this.props.dataSourceOptions);
         }else if ( this.props.pagination && !this.props.dataSourceOptions.pageSize) {
@@ -137,7 +135,7 @@ const DockedFeatureGrid = React.createClass({
     componentWillUpdate(nextProps) {
         if (nextProps.initWidth !== this.props.initWidth) {
             let height = getWindowSize().maxHeight - 108;
-            this.setState({width: nextProps.initWidth - 30, height});
+            this.setState({width: `calc( ${this.props.initWidth} - 30px)`, height});
         }
         if (!nextProps.loadingGrid && nextProps.pagination && (nextProps.dataSourceOptions !== this.props.dataSourceOptions)) {
             this.dataSource = this.getDataSource(nextProps.dataSourceOptions);
@@ -151,7 +149,7 @@ const DockedFeatureGrid = React.createClass({
     onGridClose(filter) {
         this.props.selectFeatures([]);
         this.props.selectAllToggle();
-        this.props.toggleSiraControl();
+        // TODO close
         if (filter) {
             this.props.onExpandFilterPanel(true);
         }
@@ -252,25 +250,29 @@ const DockedFeatureGrid = React.createClass({
             );
         }
 
-        const cols = this.props.columnsDef.map((column) => {
+        let cols = this.props.columnsDef.map((column) => {
             if (!column.profiles || (column.profiles && column.profiles.indexOf(this.props.profile) !== -1)) {
                 return assign({}, column, {field: "properties." + column.field});
             }
         }).filter((c) => c);
-        const vCols = cols.filter((c) => !c.hide).length;
-        const defWidth = (this.state.width - 50) / vCols;
-        let columns = [{
-            onCellClicked: this.goToDetail,
-            headerName: "",
-            cellRenderer: reactCellRendererFactory(GoToDetail),
-            suppressSorting: true,
-            suppressMenu: true,
-            pinned: true,
-            width: 25,
-            suppressResize: true
-        }, ...(cols.map((c) => assign({}, {width: defWidth}, c)))];
+
+        if (this.goToDetail) {
+            const vCols = cols.filter((c) => !c.hide).length;
+            const defWidth = (this.state.width - 50) / vCols;
+            cols = [{
+                onCellClicked: this.goToDetail,
+                headerName: "",
+                cellRenderer: reactCellRendererFactory(GoToDetail),
+                suppressSorting: true,
+                suppressMenu: true,
+                pinned: true,
+                width: 25,
+                suppressResize: true
+            }, ...(cols.map((c) => assign({}, {width: defWidth}, c)))];
+        }
+
         if (this.sortModel && this.sortModel.length > 0) {
-            columns = columns.map((c) => {
+            cols = cols.map((c) => {
                 let model = this.sortModel.find((m) => m.colId === c.field);
                 if ( model ) {
                     c.sort = model.sort;
@@ -291,11 +293,11 @@ const DockedFeatureGrid = React.createClass({
                     onVisibleChange={this.handleVisibleChange}
                     onSizeChange={this.handleSizeChange}
                     fluid={true}
-                    dimStyle={{ background: 'rgba(0, 0, 100, 0.2)' }}
+                    dimStyle={{ background: 'rgba(0, 0, 100, 0.2)', position: "relative" }}
                     dockStyle={null}
                     dockHiddenStyle={null} >
                     <Panel className="featuregrid-container sidepanel-featuregrid" collapsible expanded={this.props.expanded} header={this.renderHeader()} bsStyle="primary">
-                            <div style={this.props.loadingGrid ? {display: "none"} : {height: this.state.height, width: this.state.width}}>
+                            <div style={this.props.loadingGrid ? {display: "none"} : {}}>
                                 <Button
                                     style={{marginBottom: "12px"}}
                                     onClick={() => this.onGridClose(true)}><span>Torna al pannello di ricerca</span>
@@ -306,8 +308,8 @@ const DockedFeatureGrid = React.createClass({
                                     changeMapView={this.props.changeMapView}
                                     srs="EPSG:4326"
                                     map={this.props.map}
-                                    columnDefs={columns}
-                                    style={{height: this.state.height - 120, width: this.state.width}}
+                                    columnDefs={cols}
+                                    style={{ minHeight: "100px", width: "100%"}}
                                     maxZoom={16}
                                     selectFeatures={this.selectFeatures}
                                     selectAll={this.selectAll}

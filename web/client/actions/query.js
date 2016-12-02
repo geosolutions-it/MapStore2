@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+const FEATURE_TYPE_SELECTED = 'FEATURE_TYPE_SELECTED';
 const FEATURE_TYPE_LOADED = 'FEATURE_TYPE_LOADED';
 const FEATURE_LOADED = 'FEATURE_LOADED';
 const FEATURE_TYPE_ERROR = 'FEATURE_TYPE_ERROR';
@@ -14,7 +15,13 @@ const QUERY_ERROR = 'QUERY_ERROR';
 const RESET_QUERY = 'RESET_QUERY';
 
 const axios = require('../libs/ajax');
-
+function featureTypeSelected(url, typeName) {
+    return {
+        type: FEATURE_TYPE_SELECTED,
+        url,
+        typeName
+    };
+}
 function featureTypeLoaded(typeName, featureType) {
     return {
         type: FEATURE_TYPE_LOADED,
@@ -103,7 +110,7 @@ function loadFeature(baseUrl, typeName) {
 
 function query(seachURL, data) {
     return (dispatch) => {
-        return axios.post(seachURL + '&outputFormat=json', data, {
+        return axios.post(seachURL + '?service=WFS&&outputFormat=json', data, {
           timeout: 60000,
           headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
         }).then((response) => {
@@ -121,6 +128,7 @@ function resetQuery() {
 }
 
 module.exports = {
+    FEATURE_TYPE_SELECTED,
     FEATURE_TYPE_LOADED,
     FEATURE_LOADED,
     FEATURE_TYPE_ERROR,
@@ -128,6 +136,7 @@ module.exports = {
     QUERY_RESULT,
     QUERY_ERROR,
     RESET_QUERY,
+    featureTypeSelected,
     describeFeatureType,
     loadFeature,
     query,

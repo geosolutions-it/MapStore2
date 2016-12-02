@@ -51,149 +51,12 @@ const {
     zoneChange
 } = require('../actions/queryform');
 
-const {query} = require('../actions/query');
+const {query, featureTypeSelected, describeFeatureType} = require('../actions/query');
 
 const {
     changeDrawingStatus,
     endDrawing
 } = require('../actions/draw');
-
-
-let attrTest = [{
-			"name": "the_geom",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "gml:MultiPolygon",
-			"localType": "MultiPolygon"
-		},
-		{
-			"name": "STATE_NAME",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:string",
-			"localType": "string"
-		},
-		{
-			"name": "STATE_FIPS",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:string",
-			"localType": "string"
-		},
-		{
-			"name": "SUB_REGION",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:string",
-			"localType": "string"
-		},
-		{
-			"name": "STATE_ABBR",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:string",
-			"localType": "string"
-		},
-		{
-			"name": "LAND_KM",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "WATER_KM",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "PERSONS",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "FAMILIES",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "HOUSHOLD",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "MALE",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "FEMALE",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "WORKERS",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "DRVALONE",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "EMPLOYED",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "UNEMPLOY",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		}];
-
-
-const attributesSelector = () => (
-        attrTest.map((attribute) => {
-            return assign({}, attribute, {values: [attribute.name]});
-        })
-    ) || [];  //   &&
 
 // connecting a Dumb component to the store
 // makes it a smart component
@@ -206,21 +69,27 @@ const SmartQueryForm = connect((state) => {
         groupLevels: state.queryform.groupLevels,
         groupFields: state.queryform.groupFields,
         filterFields: state.queryform.filterFields,
-        attributes: attributesSelector(state),
+        attributes: state.query && state.query.typeName && state.query.featureTypes && state.query.featureTypes[state.query.typeName] && state.query.featureTypes[state.query.typeName].attributes,
         spatialField: state.queryform.spatialField,
         showDetailsPanel: state.queryform.showDetailsPanel,
         toolbarEnabled: state.queryform.toolbarEnabled,
         attributePanelExpanded: state.queryform.attributePanelExpanded,
         spatialPanelExpanded: state.queryform.spatialPanelExpanded,
-        searchUrl: "http://demo.geo-solutions.it/geoserver/ows?service=WFS",
-        featureTypeName: "topp:states",
+        featureTypeConfigUrl: state.query && state.query.url,
+        searchUrl: state.query && state.query.url,
+        featureTypeName: state.query && state.query.typeName,
         ogcVersion: "1.1.0",
+        params: {typeName: state.query && state.query.typeName},
         resultTitle: "Query Result",
         showGeneratedFilter: false
     };
 }, dispatch => {
     return {
+
         attributeFilterActions: bindActionCreators({
+            onLoadFeatureTypeConfig: (url, params) => {
+                return describeFeatureType(url, params.typeName);
+            },
             onAddGroupField: addGroupField,
             onAddFilterField: addFilterField,
             onRemoveFilterField: removeFilterField,
@@ -386,7 +255,12 @@ const TOCPlugin = connect(tocSelector, {
     retrieveLayerData: getLayerCapabilities,
     onToggleGroup: LayersUtils.toggleByType('groups', toggleNode),
     onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
-    onToggleQuery: toggleControl.bind(null, 'queryPanel', null),
+    onToggleQuery: (url, name) => {
+        return (dispatch) => {
+            dispatch(featureTypeSelected(url, name));
+            dispatch(toggleControl('queryPanel', null));
+        };
+    },
     onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
     onSettings: showSettings,
     onZoomToExtent: zoomToExtent,

@@ -153,7 +153,7 @@ var DefaultLayer = React.createClass({
                         ref="target"
                         style={{"float": "right", cursor: "pointer"}}
                         glyph="search"
-                        onClick={() => this.props.onToggleQuerypanel()}/>
+                        onClick={(node) => this.props.onToggleQuerypanel(node.url, node.name)}/>
                 );
         }
         if (this.props.activateZoomTool && this.props.node.bbox && !this.props.node.loadingError) {
