@@ -505,7 +505,6 @@
       }
     },
     "OmniBar",
-    "FeatureGrid",
     {
       "name": "Login",
       "cfg": {

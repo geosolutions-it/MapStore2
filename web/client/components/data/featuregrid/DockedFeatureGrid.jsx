@@ -43,7 +43,6 @@ const DockedFeatureGrid = React.createClass({
         profile: React.PropTypes.string,
         onDetail: React.PropTypes.func,
         onShowDetail: React.PropTypes.func,
-        toggleSiraControl: React.PropTypes.func,
         changeMapView: React.PropTypes.func,
         // loadFeatureGridConfig: React.PropTypes.func,
         onExpandFilterPanel: React.PropTypes.func,
@@ -150,7 +149,6 @@ const DockedFeatureGrid = React.createClass({
     onGridClose(filter) {
         this.props.selectFeatures([]);
         this.props.selectAllToggle();
-        this.props.toggleSiraControl();
         if (filter) {
             this.props.onExpandFilterPanel(true);
         }

@@ -163,6 +163,7 @@ const LayerTree = React.createClass({
         activateRemoveLayer: React.PropTypes.bool,
         activateLegendTool: React.PropTypes.bool,
         activateZoomTool: React.PropTypes.bool,
+        activateQueryTool: React.PropTypes.bool,
         activateSettingsTool: React.PropTypes.bool,
         visibilityCheckType: React.PropTypes.string,
         settingsOptions: React.PropTypes.object
@@ -220,6 +221,7 @@ const LayerTree = React.createClass({
                             activateRemoveLayer={this.props.activateRemoveLayer}
                             activateLegendTool={this.props.activateLegendTool}
                             activateZoomTool={this.props.activateZoomTool}
+                            activateQueryTool={this.props.activateQueryTool}
                             activateSettingsTool={this.props.activateSettingsTool}
                             retrieveLayerData={this.props.retrieveLayerData}
                             settingsText={<Message msgId="layerProperties.windowTitle"/>}

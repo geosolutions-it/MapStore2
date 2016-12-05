@@ -18,8 +18,6 @@ const {groupsSelector} = require('../selectors/layers');
 
 const LayersUtils = require('../utils/LayersUtils');
 
-const assign = require('object-assign');
-
 // include application component
 const QueryBuilder = require('../components/data/query/QueryBuilder');
 
@@ -54,143 +52,6 @@ const {
     endDrawing
 } = require('../actions/draw');
 
-
-let attrTest = [{
-			"name": "the_geom",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "gml:MultiPolygon",
-			"localType": "MultiPolygon"
-		},
-		{
-			"name": "STATE_NAME",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:string",
-			"localType": "string"
-		},
-		{
-			"name": "STATE_FIPS",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:string",
-			"localType": "string"
-		},
-		{
-			"name": "SUB_REGION",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:string",
-			"localType": "string"
-		},
-		{
-			"name": "STATE_ABBR",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:string",
-			"localType": "string"
-		},
-		{
-			"name": "LAND_KM",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "WATER_KM",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "PERSONS",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "FAMILIES",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "HOUSHOLD",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "MALE",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "FEMALE",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "WORKERS",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "DRVALONE",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "EMPLOYED",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		},
-		{
-			"name": "UNEMPLOY",
-			"maxOccurs": 1,
-			"minOccurs": 0,
-			"nillable": true,
-			"type": "xsd:number",
-			"localType": "number"
-		}];
-
-
-const attributesSelector = () => (
-        attrTest.map((attribute) => {
-            return assign({}, attribute, {values: [attribute.name]});
-        })
-    ) || [];  //   &&
-
 // connecting a Dumb component to the store
 // makes it a smart component
 // we both connect state => props
@@ -202,7 +63,6 @@ const SmartQueryForm = connect((state) => {
         groupLevels: state.queryform.groupLevels,
         groupFields: state.queryform.groupFields,
         filterFields: state.queryform.filterFields,
-        attributes: attributesSelector(state),
         spatialField: state.queryform.spatialField,
         showDetailsPanel: state.queryform.showDetailsPanel,
         toolbarEnabled: state.queryform.toolbarEnabled,

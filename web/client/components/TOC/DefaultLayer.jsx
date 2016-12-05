@@ -64,7 +64,7 @@ var DefaultLayer = React.createClass({
             activateRemoveLayer: false,
             activateLegendTool: false,
             activateSettingsTool: false,
-            activateQueryTool: true,
+            activateQueryTool: false,
             activateZoomTool: false,
             includeDeleteButtonInSettings: false,
             modalOptions: {},
