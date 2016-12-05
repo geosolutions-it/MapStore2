@@ -43,6 +43,7 @@ const DockedFeatureGrid = React.createClass({
         profile: React.PropTypes.string,
         onDetail: React.PropTypes.func,
         onShowDetail: React.PropTypes.func,
+        toggleSiraControl: React.PropTypes.func,
         changeMapView: React.PropTypes.func,
         // loadFeatureGridConfig: React.PropTypes.func,
         onExpandFilterPanel: React.PropTypes.func,
@@ -149,7 +150,7 @@ const DockedFeatureGrid = React.createClass({
     onGridClose(filter) {
         this.props.selectFeatures([]);
         this.props.selectAllToggle();
-        // TODO close
+        this.props.toggleSiraControl();
         if (filter) {
             this.props.onExpandFilterPanel(true);
         }
@@ -293,11 +294,11 @@ const DockedFeatureGrid = React.createClass({
                     onVisibleChange={this.handleVisibleChange}
                     onSizeChange={this.handleSizeChange}
                     fluid={true}
-                    dimStyle={{ background: 'rgba(0, 0, 100, 0.2)', position: "relative" }}
+                    dimStyle={{ background: 'rgba(0, 0, 100, 0.2)' }}
                     dockStyle={null}
                     dockHiddenStyle={null} >
                     <Panel className="featuregrid-container sidepanel-featuregrid" collapsible expanded={this.props.expanded} header={this.renderHeader()} bsStyle="primary">
-                            <div style={this.props.loadingGrid ? {display: "none"} : {}}>
+                            <div style={this.props.loadingGrid ? {display: "none"} : {height: this.state.height, width: this.state.width}}>
                                 <Button
                                     style={{marginBottom: "12px"}}
                                     onClick={() => this.onGridClose(true)}><span>Torna al pannello di ricerca</span>
@@ -309,7 +310,7 @@ const DockedFeatureGrid = React.createClass({
                                     srs="EPSG:4326"
                                     map={this.props.map}
                                     columnDefs={cols}
-                                    style={{ minHeight: "100px", width: "100%"}}
+                                    style={{height: this.state.height - 120, width: this.state.width}}
                                     maxZoom={16}
                                     selectFeatures={this.selectFeatures}
                                     selectAll={this.selectAll}
