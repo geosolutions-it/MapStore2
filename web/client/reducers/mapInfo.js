@@ -27,7 +27,8 @@ const {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
 const {head} = require('lodash');
-const {intersect, buffer} = require('turf');
+const {buffer} = require('turf-buffer');
+const {intersect} = require('turf-intersect');
 
 function receiveResponse(state, action, type) {
     const request = head((state.requests || []).filter((req) => req.reqId === action.reqId));
