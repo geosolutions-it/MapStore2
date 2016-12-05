@@ -17,6 +17,6 @@ MapStore 2 is based on OpenLayers 3, Leaflet and ReactJS, and is licensed under 
 TBD (put download links here)
 
 # Documentation
- * [Developers Guide](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/wiki/Developers-Guide)
+ * [Developers Guide](https://github.com/geosolutions-it/MapStore2/blob/master/docs/developer-guide/Developers-Guide)
  * [Users Guide] TBD
  * [Release Checklist](https://github.com/geosolutions-it/MapStore2/wiki/Release-Checklist)

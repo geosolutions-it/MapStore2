@@ -56,8 +56,8 @@ This is the overall framework folder structure:
              +-- ...
 ```
 
-If you want to create an application based on MapStore2 you can use the [Project Creation Script](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/wiki/Project-Creation-Script).
+If you want to create an application based on MapStore2 you can use the [Project Creation Script](https://github.com/geosolutions-it/MapStore2/blob/master/docs/developer-guide/Project-Creation-Script).
 
-If you want to learn how to develop a simple MapStore2 based application you can follow the [tutorial](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/wiki/Application-Tutorial)
+If you want to learn how to develop a simple MapStore2 based application you can follow the [tutorial](https://github.com/geosolutions-it/MapStore2/blob/master/docs/developer-guide/Application-Tutorial)
 
-If you want to learn how to develop a plugins based MapStore2 based application you can follow the [plugins tutorial](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/wiki/Plugins-architecture#building-an-application-using-plugins)
+If you want to learn how to develop a plugins based MapStore2 based application you can follow the [plugins tutorial](https://github.com/geosolutions-it/MapStore2/blob/master/docs/developer-guide/Plugins-architecture#building-an-application-using-plugins)
