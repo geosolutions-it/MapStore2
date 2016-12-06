@@ -131,7 +131,10 @@ const MapInfoUtils = {
             },
             metadata: {
                 fields: Object.keys(layer.features[0].properties),
-                title: layer.name
+                title: layer.name,
+                resolution: props.map && props.map && props.map.zoom && MapUtils.getCurrentResolution(props.map.zoom, 0, 21, 96),
+                buffer: props.buffer,
+                units: props.map && props.map.units
             },
             url: ""
         };
