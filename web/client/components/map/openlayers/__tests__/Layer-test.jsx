@@ -244,11 +244,11 @@ describe('Openlayers layer', () => {
 
 
         expect(layer).toExist();
-        expect(layer.layer).toExist();
+        expect(layer.state.layer).toExist();
 
-        expect(layer.layer.detached).toBe(true);
+        expect(layer.state.layer.detached).toBe(true);
 
-        layer.layer.remove();
+        layer.state.layer.remove();
     });
 
     it('creates a google layer for openlayers map', () => {
@@ -564,10 +564,10 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
-        expect(layer.layer).toExist();
+        expect(layer.state.layer).toExist();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
-        expect(layer.layer.getVisible()).toBe(true);
+        expect(layer.state.layer.getVisible()).toBe(true);
         layer.setProps({options: assign({}, {
             "type": "bing",
             "title": "Bing Aerial",
@@ -577,7 +577,7 @@ describe('Openlayers layer', () => {
             "visibility": true
         })});
         expect(map.getLayers().getLength()).toBe(1);
-        expect(layer.layer.getVisible()).toBe(true);
+        expect(layer.state.layer.getVisible()).toBe(true);
         layer.setProps({options: assign({}, {
             "type": "bing",
             "title": "Bing Aerial",
@@ -587,7 +587,7 @@ describe('Openlayers layer', () => {
             "visibility": false
         })});
         expect(map.getLayers().getLength()).toBe(1);
-        expect(layer.layer.getVisible()).toBe(false);
+        expect(layer.state.layer.getVisible()).toBe(false);
 
     });
 
@@ -627,10 +627,10 @@ describe('Openlayers layer', () => {
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
-        expect(layer.layer.getOpacity()).toBe(1.0);
+        expect(layer.state.layer.getOpacity()).toBe(1.0);
 
         layer.setProps({options: {opacity: 0.5}, position: 0});
-        expect(layer.layer.getOpacity()).toBe(0.5);
+        expect(layer.state.layer.getOpacity()).toBe(0.5);
     });
 
     it('respects layer ordering', () => {
@@ -652,10 +652,10 @@ describe('Openlayers layer', () => {
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
-        expect(layer.layer.getZIndex()).toBe(10);
+        expect(layer.state.layer.getZIndex()).toBe(10);
 
         layer.setProps({position: 2});
-        expect(layer.layer.getZIndex()).toBe(2);
+        expect(layer.state.layer.getZIndex()).toBe(2);
     });
 
     it('changes wms params', () => {
@@ -680,11 +680,11 @@ describe('Openlayers layer', () => {
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
-        expect(layer.layer.getSource()).toExist();
-        expect(layer.layer.getSource().getParams()).toExist();
-        expect(layer.layer.getSource().getParams().cql_filter).toBe("INCLUDE");
+        expect(layer.state.layer.getSource()).toExist();
+        expect(layer.state.layer.getSource().getParams()).toExist();
+        expect(layer.state.layer.getSource().getParams().cql_filter).toBe("INCLUDE");
 
         layer.setProps({options: {params: {cql_filter: "EXCLUDE"}}});
-        expect(layer.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
+        expect(layer.state.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
     });
 });
