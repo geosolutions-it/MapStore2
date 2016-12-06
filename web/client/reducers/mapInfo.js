@@ -27,7 +27,8 @@ const {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
 const {head} = require('lodash');
-const {inside} = require('turf');
+const buffer = require('turf-buffer');
+const intersect = require('turf-intersect');
 
 function receiveResponse(state, action, type) {
     const request = head((state.requests || []).filter((req) => req.reqId === action.reqId));
@@ -119,7 +120,33 @@ function mapInfo(state = {}, action) {
                 "coordinates": [action.request.lng, action.request.lat]
               }
             };
-            const intersected = action.layer.features.filter((feature) => inside(point, feature));
+            let unit = action.metadata && action.metadata.units;
+            switch (unit) {
+                case "m":
+                    unit = "meters";
+                    break;
+                case "deg":
+                    unit = "degrees";
+                    break;
+                case "mi":
+                    unit = "miles";
+                    break;
+                default:
+                    unit = "meters";
+            }
+            let resolution = action.metadata && action.metadata.resolution || 1;
+            let bufferedPoint = buffer(point, (action.metadata.buffer || 1) * resolution, unit);
+            const intersected = action.layer.features.filter(
+                    (feature) => {
+                        try {
+                            // TODO: instead of create a fixed buffer, we should check the feature style to create the proper buffer.
+                            return intersect(bufferedPoint, (resolution && action.metadata.buffer && unit) ? buffer(feature, 1, "meters") : feature);
+                        }catch(e) {
+                            return false;
+                        }
+                    }
+
+            );
             const responses = state.responses || [];
             return assign({}, state, {
                 requests: [...state.requests, {}],
