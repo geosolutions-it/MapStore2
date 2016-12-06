@@ -135,7 +135,11 @@ let GrabLMap = React.createClass({
         var leftString = window.getComputedStyle(this.mapDiv).getPropertyValue("left");
 
         // get all the informations needed to snap svg before
-        let svgs = this.mapDiv.getElementsByTagName("svg");
+        let mapPanes = this.mapDiv.getElementsByClassName("leaflet-map-pane");
+        let mapPane = mapPanes && mapPanes[0];
+        let objectPanes = mapPane && mapPane.getElementsByClassName("leaflet-objects-pane");
+        let objectDiv = objectPanes && objectPanes[0];
+        let svgs = objectDiv && objectDiv.getElementsByTagName("svg");
         let svg = svgs && svgs[0];
         let svgH;
         let svgW;
