@@ -20,6 +20,14 @@ const toVectorStyle = function(layer, style) {
         if (style.marker && (geomT === 'Point' || geomT === 'MultiPoint')) {
             newLayer.styleName = "marker";
         }else {
+            newLayer.style = {
+                weight: style.width,
+                radius: style.radius,
+                opacity: style.color.a,
+                fillOpacity: style.fill.a,
+                color: getColor(style.color),
+                fillColor: getColor(style.fill)
+            };
             let stroke = new ol.style.Stroke({
                             color: getColor(style.color),
                             width: style.width

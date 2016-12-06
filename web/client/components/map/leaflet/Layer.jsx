@@ -8,6 +8,7 @@
 var React = require('react');
 var Layers = require('../../../utils/leaflet/Layers');
 var assign = require('object-assign');
+var {isEqual} = require('lodash');
 
 const LeafletLayer = React.createClass({
     propTypes: {
@@ -44,6 +45,26 @@ const LeafletLayer = React.createClass({
             this.updateZIndex(newProps.position);
         }
         this.updateLayer(newProps, this.props);
+    },
+    shouldComponentUpdate(newProps) {
+        // the reduce returns true when a prop is changed
+        // optimizing when options are equal ignorning loading key
+        return !(["map", "type", "srs", "position", "zoomOffset", "onInvalid", "onClick", "options"].reduce( (prev, p) => {
+            switch (p) {
+                case "map":
+                case "type":
+                case "srs":
+                case "position":
+                case "zoomOffset":
+                case "onInvalid":
+                case "onClick":
+                    return prev && this.props[p] === newProps[p];
+                case "options":
+                    return prev && (this.props[p] === newProps[p] || isEqual({...this.props[p], loading: false}, {...newProps[p], loading: false}));
+                default:
+                    return prev;
+            }
+        }, true));
     },
     componentWillUnmount() {
         if (this.layer && this.props.map) {
@@ -105,6 +126,7 @@ const LeafletLayer = React.createClass({
                 this.layer.layerName = options.name;
                 this.layer.layerId = options.id;
             }
+            this.forceUpdate();
         }
     },
     updateLayer(newProps, oldProps) {
