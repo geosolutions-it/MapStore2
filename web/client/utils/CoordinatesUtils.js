@@ -5,11 +5,49 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var Proj4js = require('proj4');
-var assign = require('object-assign');
-var {isArray, flattenDeep, chunk} = require('lodash');
+const Proj4js = require('proj4');
+const proj4 = Proj4js;
+const assign = require('object-assign');
+const {isArray, flattenDeep, chunk, cloneDeep} = require('lodash');
+// Checks if `list` looks like a `[x, y]`.
+function isXY(list) {
+    return list.length >= 2 &&
+        typeof list[0] === 'number' &&
+        typeof list[1] === 'number';
+}
+function traverseCoords(coordinates, callback) {
+    if (isXY(coordinates)) return callback(coordinates);
+    return coordinates.map(function(coord) { return traverseCoords(coord, callback); });
+}
 
-var CoordinatesUtils = {
+function traverseGeoJson(geojson, leafCallback, nodeCallback) {
+    if (geojson === null) return geojson;
+
+    let r = cloneDeep(geojson);
+
+    if (geojson.type === 'Feature') {
+        r.geometry = traverseGeoJson(geojson.geometry, leafCallback, nodeCallback);
+    } else if (geojson.type === 'FeatureCollection') {
+        r.features = r.features.map(function(gj) { return traverseGeoJson(gj, leafCallback, nodeCallback); });
+    } else if (geojson.type === 'GeometryCollection') {
+        r.geometries = r.geometries.map(function(gj) { return traverseGeoJson(gj, leafCallback, nodeCallback); });
+    } else {
+        if (leafCallback) leafCallback(r);
+    }
+
+    if (nodeCallback) nodeCallback(r);
+
+    return r;
+}
+
+function determineCrs(crs) {
+    if (typeof crs === 'string' || crs instanceof String) {
+        return Proj4js.defs(crs) ? new Proj4js.Proj(crs) : null;
+    }
+    return crs;
+}
+
+const CoordinatesUtils = {
     getUnits: function(projection) {
         const proj = new Proj4js.Proj(projection);
         return proj.units || 'degrees';
@@ -26,6 +64,52 @@ var CoordinatesUtils = {
             return transformed;
         }
         return null;
+    },
+    /**
+     * Reprojects a geojson from a crs into another
+     */
+    reprojectGeoJson: function(geojson, fromParam = "EPSG:4326", toParam = "EPSG:4326") {
+        let from = fromParam;
+        let to = toParam;
+        if (typeof from === 'string') {
+            from = determineCrs(from);
+        }
+        if (typeof to === 'string') {
+            to = determineCrs(to);
+        }
+        let transform = proj4(from, to);
+
+        return traverseGeoJson(geojson, (gj) => {
+            // No easy way to put correct CRS info into the GeoJSON,
+            // and definitely wrong to keep the old, so delete it.
+            if (gj.crs) {
+                delete gj.crs;
+            }
+            gj.coordinates = traverseCoords(gj.coordinates, (xy) => {
+                return transform.forward(xy);
+            });
+        }, (gj) => {
+            if (gj.bbox) {
+                // A bbox can't easily be reprojected, just reprojecting
+                // the min/max coords definitely will not work since
+                // the transform is not linear (in the general case).
+                // Workaround is to just re-compute the bbox after the
+                // transform.
+                gj.bbox = (() => {
+                    let min = [Number.MAX_VALUE, Number.MAX_VALUE];
+                    let max = [-Number.MAX_VALUE, -Number.MAX_VALUE];
+                    traverseGeoJson(gj, function(_gj) {
+                        traverseCoords(_gj.coordinates, function(xy) {
+                            min[0] = Math.min(min[0], xy[0]);
+                            min[1] = Math.min(min[1], xy[1]);
+                            max[0] = Math.max(max[0], xy[0]);
+                            max[1] = Math.max(max[1], xy[1]);
+                        });
+                    });
+                    return [min[0], min[1], max[0], max[1]];
+                })();
+            }
+        });
     },
     normalizePoint: function(point) {
         return {

@@ -72,4 +72,34 @@ describe('CoordinatesUtils', () => {
         expect(CoordinatesUtils.getCompatibleSRS('EPSG:3857', {'EPSG:900913': true, 'EPSG:3857': true})).toBe('EPSG:3857');
         expect(CoordinatesUtils.getCompatibleSRS('EPSG:3857', {'EPSG:3857': true})).toBe('EPSG:3857');
     });
+    it('test reprojectGeoJson', () => {
+        const testPoint = {
+            type: "FeatureCollection",
+            features: [
+               {
+                  type: "Feature",
+                  geometry: {
+                     type: "Point",
+                     coordinates: [
+                        -112.50042920000001,
+                        42.22829164089942
+                     ]
+                  },
+                  properties: {
+                     "serial_num": "12C324776"
+                  },
+                  id: 0
+               }
+            ]
+        };
+        const reprojectedTestPoint = CoordinatesUtils.reprojectGeoJson(testPoint, "EPSG:4326", "EPSG:900913");
+        expect(reprojectedTestPoint).toExist();
+        expect(reprojectedTestPoint.features).toExist();
+        expect(reprojectedTestPoint.features[0]).toExist();
+        expect(reprojectedTestPoint.features[0].type).toBe("Feature");
+        expect(reprojectedTestPoint.features[0].geometry.type).toBe("Point");
+        // approximate values should be the same
+        expect(reprojectedTestPoint.features[0].geometry.coordinates[0].toFixed(4)).toBe((-12523490.492568726).toFixed(4));
+        expect(reprojectedTestPoint.features[0].geometry.coordinates[1].toFixed(4)).toBe((5195238.005360028).toFixed(4));
+    });
 });
