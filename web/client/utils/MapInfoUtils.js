@@ -177,7 +177,7 @@ const MapInfoUtils = {
                       bounds.maxy,
                 feature_count: props.maxItems,
                 info_format: props.format,
-                ...assign({}, layer.baseParams, props.params)
+                ...assign({}, layer.baseParams, layer.params, props.params)
             },
             metadata: {
                 title: layer.title,
