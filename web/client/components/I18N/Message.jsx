@@ -15,7 +15,7 @@ const FormattedMessage = ReactIntl.FormattedMessage;
 
 const LocaleUtils = require('../../utils/LocaleUtils');
 
-var Message = React.createClass({
+const Message = React.createClass({
     propTypes: {
         locale: React.PropTypes.string,
         messages: React.PropTypes.object,
