@@ -229,11 +229,10 @@ const Identify = React.createClass({
                 op[next] = layer[next];
             }else if (next === "params" && excludeList.length > 0) {
                 let params = layer[next];
-                op[next] = Object.keys(params).reduce((pr, n) => {
+                Object.keys(params).forEach((n) => {
                     if (excludeList.findIndex((el) => {return (el === n); }) === -1) {
-                        pr[n] = params[n];
+                        op[n] = params[n];
                     }
-                    return pr;
                 }, {});
             }
             return op;
