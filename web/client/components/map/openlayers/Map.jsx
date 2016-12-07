@@ -290,11 +290,9 @@ var OpenlayersMap = React.createClass({
         );
     },
     haveResolutionsChanged(newProps) {
-        if (this.props.mapOptions && this.props.mapOptions.view && this.props.mapOptions.view.resolutions &&
-            newProps.mapOptions && newProps.mapOptions.view && newProps.mapOptions.view.resolutions) {
-            return !isEqual(newProps.mapOptions.view.resolutions, this.props.mapOptions.view.resolutions);
-        }
-        return false;
+        const resolutions = this.props.mapOptions && this.props.mapOptions.view ? this.props.mapOptions.view.resolutions : undefined;
+        const newResolutions = newProps.mapOptions && newProps.mapOptions.view ? newProps.mapOptions.view.resolutions : undefined;
+        return !isEqual(resolutions, newResolutions);
     },
     createView(center, zoom, projection, options) {
         const viewOptions = assign({}, {
