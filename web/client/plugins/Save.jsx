@@ -148,5 +148,8 @@ module.exports = {
                 return { style: {display: "none"} };
             }
         }
-    }))
+    })),
+    reducers: {
+        currentMap: require('../reducers/currentMap')
+    }
 };
