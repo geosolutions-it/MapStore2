@@ -14,7 +14,6 @@ const objectAssign = require('object-assign');
 const {isArray, isEqual} = require('lodash');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 
-
 L.TileLayer.MultipleUrlWMS = L.TileLayer.WMS.extend({
     initialize: function(urls, options) {
         this._url = urls[0];
@@ -52,6 +51,8 @@ L.TileLayer.MultipleUrlWMS = L.TileLayer.WMS.extend({
 
         let nw = this._crs.project(map.unproject(nwPoint, tilePoint.z));
         let se = this._crs.project(map.unproject(sePoint, tilePoint.z));
+
+
         let bbox = this._wmsVersion >= 1.3 && this._crs === L.CRS.EPSG4326 ?
             [se.y, nw.x, nw.y, se.x].join(',') :
             [nw.x, se.y, se.x, nw.y].join(',');

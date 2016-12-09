@@ -5,7 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 module.exports = {
     BingLayer: require('./BingLayer'),
     Commons: require('./Commons'),
@@ -15,5 +14,6 @@ module.exports = {
     OSMLayer: require('./OSMLayer'),
     TileProviderLayer: require('./TileProviderLayer'),
     WMSLayer: require('./WMSLayer'),
-    VectorLayer: require('./VectorLayer')
+    VectorLayer: require('./VectorLayer'),
+    WMTS: require('./WMTSLayer')
 };
