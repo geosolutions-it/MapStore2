@@ -102,6 +102,25 @@
         }
 			},
       {
+        "type": "wmts",
+        "url":"http://demo.geo-solutions.it/geoserver/gwc/service/wmts?",
+        "visibility": true,
+        "opacity": 1,
+        "title": "WMTS sample",
+        "name": "sf:archsites_hidden",
+        "group": "Meteo",
+        "tileSize":"",
+        "matrixIds": "EPSG:900913:",
+        "tileMatrixPrefix": "EPSG:900913:",
+        "tileMatrixSet": "EPSG:900913",
+        "minx":20037508.3428,
+        "maxx":-20037508.3428,
+        "bbox": {
+          "bounds": {"minx": -25.6640625, "miny": 26.194876675795218, "maxx": 48.1640625, "maxy": 56.80087831233043},
+          "crs": "EPSG:4326"
+        }
+      },
+      {
         "type": "tileprovider",
         "title": "OpenTopoMap",
         "provider": "OpenTopoMap",
