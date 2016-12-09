@@ -60,13 +60,13 @@ var WMTS = L.TileLayer.extend({
     getDefaultMatrix: function(options) {
         var e = new Array(22);
         // Lint gives an error here: All "var" declarations must be at the top of the function scope
-        for (var t = 0; t < 22; t++) {
+        for (let t = 0; t < 22; t++) {
             e[t] = {
                 identifier: options.tileMatrixPrefix + t,
                 topLeftCorner: new L.LatLng(options.minx, options.maxx)
-            }
+            };
         }
-        return e
+        return e;
     }
 });
 module.exports = WMTS;
