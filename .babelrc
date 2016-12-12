@@ -10,6 +10,16 @@
           }]
           }]
       ]
+    },
+    "test": {
+        "sourceMaps": "inline",
+        "plugins": [ ["istanbul", {
+          "exclude": [
+            "**/*-test.js*",
+            "**/*-test-chrome.js*"
+          ]
+        }]
+     ]
     }
   }
 }

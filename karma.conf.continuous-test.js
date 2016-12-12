@@ -1,3 +1,4 @@
+var DefinePlugin = require("webpack/lib/DefinePlugin");
 var path = require("path");
 module.exports = function karmaConfig(config) {
     config.set({
@@ -29,9 +30,9 @@ module.exports = function karmaConfig(config) {
         coverageReporter: {
             dir: './coverage/',
             reporters: [
+                { type: 'lcovonly', subdir: '.' },
                 { type: 'html', subdir: 'report-html' },
-                { type: 'cobertura', subdir: '.', file: 'cobertura.txt' },
-                { type: 'lcovonly', subdir: '.' }
+                { type: 'cobertura', subdir: '.', file: 'cobertura.txt' }
             ],
             instrumenterOptions: {
                 istanbul: { noCompact: true }
@@ -39,7 +40,14 @@ module.exports = function karmaConfig(config) {
         },
 
         webpack: {
-            devtool: 'eval',
+            plugins: [
+              new DefinePlugin({
+                'process.env': {
+                  'NODE_ENV': '"test"'
+                }
+              })
+            ],
+            devtool: 'inline-source-map',
             module: {
                 loaders: [
                     { test: /\.jsx?$/, exclude: /(ol\.js$|node_modules)/, loader: 'babel-loader', include: path.join(__dirname, "web", "client") },
