@@ -13,6 +13,7 @@ const CHANGE_ZOOM_LVL = 'CHANGE_ZOOM_LVL';
 const PAN_TO = 'PAN_TO';
 const ZOOM_TO_EXTENT = 'ZOOM_TO_EXTENT';
 const CHANGE_MAP_CRS = 'CHANGE_MAP_CRS';
+const CHANGE_MAP_SCALES = 'CHANGE_MAP_SCALES';
 const CHANGE_MAP_STYLE = 'CHANGE_MAP_STYLE';
 const CHANGE_ROTATION = 'CHANGE_ROTATION';
 
@@ -36,6 +37,12 @@ function changeMapCrs(crs) {
     };
 }
 
+function changeMapScales(scales) {
+    return {
+        type: CHANGE_MAP_SCALES,
+        scales: scales
+    };
+}
 
 function clickOnMap(point) {
     return {
@@ -97,6 +104,7 @@ module.exports = {
     PAN_TO,
     ZOOM_TO_EXTENT,
     CHANGE_MAP_CRS,
+    CHANGE_MAP_SCALES,
     CHANGE_MAP_STYLE,
     CHANGE_ROTATION,
     changeMapView,
@@ -104,6 +112,7 @@ module.exports = {
     changeMousePointer,
     changeZoomLevel,
     changeMapCrs,
+    changeMapScales,
     zoomToExtent,
     panTo,
     changeMapStyle,
