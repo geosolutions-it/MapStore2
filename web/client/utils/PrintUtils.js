@@ -106,7 +106,7 @@ const PrintUtils = {
                 "layers": [
                    layer.name
                 ],
-                "format": layer.format || "image/jpeg",
+                "format": layer.format || "image/png",
                 "styles": [
                    layer.style || ''
                 ],
@@ -123,7 +123,7 @@ const PrintUtils = {
                    {
                       "name": "",
                       "icons": [
-                         (isArray(layer.url) ? layer.url[0] : layer.url) + url.format({
+                         PrintUtils.normalizeUrl(layer.url) + url.format({
                              query: {
                                  TRANSPARENT: true,
                                  EXCEPTIONS: "application/vnd.ogc.se_xml",
@@ -137,7 +137,8 @@ const PrintUtils = {
                                  minSymbolSize: spec.iconSize,
                                  fontFamily: spec.fontFamily,
                                  LEGEND_OPTIONS: "forceLabels:" + (spec.forceLabels ? "on" : "") + ";fontAntialiasing:" + spec.antiAliasing + ";dpi:" + spec.legendDpi + ";fontStyle:" + (spec.bold && "bold" || (spec.italic && "italic") || ''),
-                                 format: "image/png"
+                                 format: "image/png",
+                                 ...assign({}, layer.params)
                              }
                          })
                       ]
