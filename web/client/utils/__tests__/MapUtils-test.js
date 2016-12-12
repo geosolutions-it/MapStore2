@@ -19,6 +19,7 @@ var {
     getGoogleMercatorScales,
     getGoogleMercatorResolutions,
     getGoogleMercatorScale,
+    getResolutionsForScales,
     getZoomForExtent,
     getCenterForExtent,
     getBbox,
@@ -45,6 +46,41 @@ describe('Test the MapUtils', () => {
     });
     it('getGoogleMercatorScales', () => {
         expect(getGoogleMercatorScales(1, 1, 1).length).toBe(1);
+    });
+    it('getResolutionsForScales', () => {
+        // generate test scales for resolutions
+        function testScales(resolutions, dpu) {
+            return resolutions.map((res) => {
+                return res * dpu;
+            });
+        }
+
+        function dotsPerUnit(dpi, metersPerUnit) {
+            return metersPerUnit * dpi * 100 / 2.54;
+        }
+
+        function resolutionsEqual(arrayA, arrayB) {
+            if (arrayA.length === arrayB.length) {
+                for (let i in arrayA) {
+                    // check if absolute difference is within epsilon
+                    if (Math.abs(arrayA[i] - arrayB[i]) > 1E-6) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+        const mPerDegree = 111194.87428468118;
+        let resolutions = [10000, 1000, 100, 10, 1];
+        expect(resolutionsEqual(getResolutionsForScales(testScales(resolutions, dotsPerUnit(96, 1)), "EPSG:3857", 96), resolutions)).toBe(true);
+        expect(resolutionsEqual(getResolutionsForScales(testScales(resolutions, dotsPerUnit(96, mPerDegree)), "EPSG:4326", 96), resolutions)).toBe(true);
+        resolutions = [32000, 16000, 8000, 4000, 2000, 1000, 500, 250];
+        expect(resolutionsEqual(getResolutionsForScales(testScales(resolutions, dotsPerUnit(96, 1)), "EPSG:3857", 96), resolutions)).toBe(true);
+        expect(resolutionsEqual(getResolutionsForScales(testScales(resolutions, dotsPerUnit(96, mPerDegree)), "EPSG:4326", 96), resolutions)).toBe(true);
+        expect(resolutionsEqual(getResolutionsForScales(testScales(resolutions, dotsPerUnit(120, 1)), "EPSG:3857", 120), resolutions)).toBe(true);
+        expect(resolutionsEqual(getResolutionsForScales(testScales(resolutions, dotsPerUnit(120, mPerDegree)), "EPSG:4326", 120), resolutions)).toBe(true);
     });
     it('getZoomForExtent without hook', () => {
         var extent = [1880758.3574092742, 6084533.340409827, 1291887.4915002766, 5606954.787684047];

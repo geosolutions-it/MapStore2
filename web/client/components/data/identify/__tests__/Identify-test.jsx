@@ -199,6 +199,27 @@ describe('Identify', () => {
         expect(spyPurgeResults.calls.length).toEqual(2);
     });
 
+    it('creates the Identify component does not purge if multiselection enabled', () => {
+        const testHandlers = {
+            purgeResults: () => {}
+        };
+
+        const spyPurgeResults = expect.spyOn(testHandlers, 'purgeResults');
+
+        const identify = ReactDOM.render(
+            <Identify
+                queryableLayersFilter={() => true}
+                enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                multiSelection={true}
+                />,
+            document.getElementById("container")
+        );
+        identify.setProps({point: {pixel: {x: 1, y: 1}, modifiers: {ctrl: false}}});
+        expect(spyPurgeResults.calls.length).toEqual(1);
+        identify.setProps({point: {pixel: {x: 1, y: 1}, modifiers: {ctrl: true}}});
+        expect(spyPurgeResults.calls.length).toEqual(1);
+    });
+
     it('creates the Identify component uses custom viewer', () => {
         const Viewer = (props) => <span className="myviewer">{props.responses.length}</span>;
         const identify = ReactDOM.render(

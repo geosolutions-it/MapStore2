@@ -57,7 +57,8 @@ const Identify = React.createClass({
         bodyClassName: React.PropTypes.string,
         asPanel: React.PropTypes.bool,
         headerGlyph: React.PropTypes.string,
-        closeGlyph: React.PropTypes.string
+        closeGlyph: React.PropTypes.string,
+        allowMultiselection: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -103,12 +104,15 @@ const Identify = React.createClass({
             bodyClassName: "panel-body",
             asPanel: true,
             headerGlyph: "info-sign",
-            closeGlyph: ""
+            closeGlyph: "",
+            allowMultiselection: false
         };
     },
     componentWillReceiveProps(newProps) {
         if (this.needsRefresh(newProps)) {
-            this.props.purgeResults();
+            if (!newProps.point.modifiers || newProps.point.modifiers.ctrl !== true || !newProps.allowMultiselection) {
+                this.props.purgeResults();
+            }
             const queryableLayers = newProps.layers.filter(newProps.queryableLayersFilter);
             queryableLayers.forEach((layer) => {
                 const {url, request, metadata} = this.props.buildRequest(layer, newProps);

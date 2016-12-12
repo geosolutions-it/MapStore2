@@ -33,9 +33,9 @@ var {
     removeLayer,
     showSettings,
     hideSettings,
-    updateSettings,
-    getLayerCapabilities
+    updateSettings
 } = require('../layers');
+var {getLayerCapabilities} = require('../layerCapabilities');
 
 describe('Test correctness of the layers actions', () => {
     it('test layer properties change action', (done) => {
