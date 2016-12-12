@@ -7,12 +7,11 @@
  */
 var Proj4js = require('proj4');
 var React = require('react');
-
 var url = require('url');
 
 var axios = require('axios');
 
-const {isArray} = require('lodash');
+const {isArray, isArguments} = require('lodash');
 const assign = require('object-assign');
 
 const epsg4326 = Proj4js ? new Proj4js.Proj('EPSG:4326') : null;
@@ -25,6 +24,8 @@ const centerPropType = React.PropTypes.shape({
 const urlQuery = url.parse(window.location.href, true).query;
 
 const isMobile = require('ismobilejs');
+
+const {isObject, isDate} = require('lodash');
 
 let localConfigFile = 'localConfig.json';
 
@@ -226,6 +227,105 @@ var ConfigUtils = {
     },
     getProxyUrl: function(config) {
         return config.proxyUrl ? config.proxyUrl : defaultConfig.proxyUrl;
+    },
+    forEach: function(arg, fn) {
+        var obj;
+
+        // Check if arg is array-like
+        const isArrayLike = isArray(arg) || isArguments(arg);
+
+        // Force an array if not already something iterable
+        if (typeof arg !== 'object' && !isArrayLike) {
+            obj = [arg];
+        } else {
+            obj = arg;
+        }
+
+        // Iterate over array values
+        if (isArrayLike) {
+            for (let i = 0, l = obj.length; i < l; i++) {
+                fn.call(null, obj[i], i, obj);
+            }
+        } else { // Iterate over object keys
+            for (let key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    fn.call(null, obj[key], key, obj);
+                }
+            }
+        }
+    },
+    buildUrl: function(argUrl, params) {
+        var aurl = argUrl;
+        var parts = [];
+
+        if (!params) {
+            return aurl;
+        }
+        ConfigUtils.forEach(params, function(argVal, argKey) {
+            var val = argVal;
+            var key = argKey;
+            if (val === null || typeof val === 'undefined') {
+                return;
+            }
+
+            if (isArray(val)) {
+                key = key + '[]';
+            }
+
+            if (!isArray(val)) {
+                val = [val];
+            }
+
+            ConfigUtils.forEach(val, function(argV) {
+                var v = argV;
+                if (isDate(v)) {
+                    v = v.toISOString();
+                } else if (isObject(v)) {
+                    v = JSON.stringify(v);
+                }
+                parts.push(encodeURI(key) + '=' + encodeURIComponent(v));
+            });
+        });
+
+        if (parts.length > 0) {
+            url += (url.indexOf('?') === -1 ? '?' : '&') + parts.join('&');
+        }
+        return url;
+    },
+
+    getPrintUrl: function(config) {
+        var uri = config.url || '';
+        var sameOrigin = !(uri.indexOf("http") === 0);
+        var urlParts = !sameOrigin && uri.match(/([^:]*:)\/\/([^:]*:?[^@]*@)?([^:\/\?]*):?([^\/\?]*)/);
+        // ajax.addAuthenticationToAxios(config);
+        if (urlParts) {
+            let location = window.location;
+            sameOrigin =
+                urlParts[1] === location.protocol &&
+                urlParts[3] === location.hostname;
+            let uPort = urlParts[4];
+            let lPort = location.port;
+            let defaultPort = location.protocol.indexOf("https") === 0 ? 443 : 80;
+            uPort = uPort === "" ? defaultPort + "" : uPort + "";
+            lPort = lPort === "" ? defaultPort + "" : lPort + "";
+            sameOrigin = sameOrigin && uPort === lPort;
+        }
+        if (!sameOrigin) {
+            let proxyUrl = ConfigUtils.getProxyUrl(config);
+            if (proxyUrl) {
+                let useCORS = [];
+                if (isObject(proxyUrl)) {
+                    useCORS = proxyUrl.useCORS || [];
+                    proxyUrl = proxyUrl.url;
+                }
+                const isCORS = useCORS.reduce((found, current) => found || uri.indexOf(current) === 0, false);
+                if (!isCORS) {
+                    config.url = proxyUrl + encodeURIComponent(ConfigUtils.buildUrl(uri, config.params));
+                    config.params = undefined;
+                }
+            }
+        }
+        return config;
     },
     /**
     * Utility to detect browser properties.
