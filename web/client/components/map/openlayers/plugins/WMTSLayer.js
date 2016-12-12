@@ -36,9 +36,7 @@ Layers.registerType('wmts', {
     create: (options) => {
         const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
         const queryParameters = wmtsToOpenlayersOptions(options) || {};
-        var projection = ol.proj.get('EPSG:900913');
         urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
-        let projectionExtent = projection.getExtent();
         let matrixIds = new Array(22);
         for (let z = 0; z < 22; ++z) {
         // generate matrixIds arrays for this WMTS
@@ -52,7 +50,7 @@ Layers.registerType('wmts', {
               matrixSet: options.tileMatrixSet,
               format: 'image/png',
               tileGrid: new ol.tilegrid.WMTS({
-                origin: ol.extent.getTopLeft(projectionExtent),
+                origin: [options.originY, options.originX],
                 resolutions: mapUtils.getResolutions(),
                 matrixIds: matrixIds
               }),
