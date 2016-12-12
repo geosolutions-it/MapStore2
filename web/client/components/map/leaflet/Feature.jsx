@@ -107,7 +107,7 @@ var geometryToLayer = function(geojson, options) {
         return new L.FeatureGroup(layers);
     case 'GeometryCollection':
         for (i = 0, len = geometry.geometries.length; i < len; i++) {
-            layer = this.geometryToLayer({
+            layer = geometryToLayer({
                 geometry: geometry.geometries[i],
                 type: 'Feature',
                 properties: geojson.properties

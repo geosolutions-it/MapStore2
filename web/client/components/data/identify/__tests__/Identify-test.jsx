@@ -199,6 +199,27 @@ describe('Identify', () => {
         expect(spyPurgeResults.calls.length).toEqual(2);
     });
 
+    it('creates the Identify component does not purge if multiselection enabled', () => {
+        const testHandlers = {
+            purgeResults: () => {}
+        };
+
+        const spyPurgeResults = expect.spyOn(testHandlers, 'purgeResults');
+
+        const identify = ReactDOM.render(
+            <Identify
+                queryableLayersFilter={() => true}
+                enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                multiSelection={true}
+                />,
+            document.getElementById("container")
+        );
+        identify.setProps({point: {pixel: {x: 1, y: 1}, modifiers: {ctrl: false}}});
+        expect(spyPurgeResults.calls.length).toEqual(1);
+        identify.setProps({point: {pixel: {x: 1, y: 1}, modifiers: {ctrl: true}}});
+        expect(spyPurgeResults.calls.length).toEqual(1);
+    });
+
     it('creates the Identify component uses custom viewer', () => {
         const Viewer = (props) => <span className="myviewer">{props.responses.length}</span>;
         const identify = ReactDOM.render(
@@ -236,5 +257,39 @@ describe('Identify', () => {
         const dom = ReactDOM.findDOMNode(identify);
         expect(dom.innerHTML.indexOf('Lat:') !== -1).toBe(true);
         expect(dom.innerHTML.indexOf('Long:') !== -1).toBe(true);
+    });
+    it('test options and parameters filtering', () => {
+        const Viewer = (props) => <span className="myviewer">{props.responses.length}</span>;
+        const layer = {
+            INTERNAL_OPTION: true,
+            WMS_OPTION: true,
+            params: {
+            ONLY_GETMAP: true,
+            WMS_PARAMETER_TO_SHARE: true
+        }};
+        const identify = ReactDOM.render(
+            <Identify
+                excludeParams={["ONLY_GETMAP"]}
+                excludeOptions={["INTERNAL_OPTION"]}
+                enableRevGeocode={true}
+                queryableLayersFilter={() => true}
+                point={{latlng: {lat: 40, lng: 10}}}
+                viewer={Viewer}
+                enabled={true}
+                layers={[layer]}
+                sendRequest={[{}, {}]}
+                buildRequest={() => ({})}
+                requests={[{}]}
+                reverseGeocodeData={{display_name: "test"}} />,
+            document.getElementById("container")
+        );
+        expect(identify).toExist();
+        let params = identify.filterRequestParams(layer);
+        expect(params).toExist();
+        expect(params.ONLY_GETMAP).toNotExist();
+        expect(params.INTERNAL_OPTION).toNotExist();
+        expect(params.WMS_PARAMETER_TO_SHARE).toBe(true);
+        expect(params.WMS_OPTION).toBe(true);
+
     });
 });

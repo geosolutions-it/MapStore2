@@ -13,7 +13,7 @@ const JSONViewer = require('../../../components/data/identify/viewers/JSONViewer
 const {Panel} = require('react-bootstrap');
 const Draggable = require('react-draggable');
 
-const {resetQuery} = require('../actions/query');
+const {resetQuery} = require('../actions/wfsquery');
 
 const Results = React.createClass({
     propTypes: {

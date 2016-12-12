@@ -7,9 +7,8 @@
  */
 const React = require('react');
 const {connect} = require('react-redux');
+const Sidebar = require('react-sidebar').default;
 const {createSelector} = require('reselect');
-const {Button, Glyphicon} = require('react-bootstrap');
-
 const {changeLayerProperties, changeGroupProperties, toggleNode,
        sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode, getLayerCapabilities} = require('../actions/layers');
 const {zoomToExtent} = require('../actions/map');
@@ -18,11 +17,6 @@ const {toggleControl} = require('../actions/controls');
 const {groupsSelector} = require('../selectors/layers');
 
 const LayersUtils = require('../utils/LayersUtils');
-
-const Message = require('./locale/Message');
-const assign = require('object-assign');
-
-const layersIcon = require('./toolbar/assets/img/layers.png');
 
 // include application component
 const QueryBuilder = require('../components/data/query/QueryBuilder');
@@ -51,7 +45,7 @@ const {
     zoneChange
 } = require('../actions/queryform');
 
-const {query, featureTypeSelected, describeFeatureType} = require('../actions/wfsquery');
+const {query} = require('../actions/wfsquery');
 
 const {
     changeDrawingStatus,
@@ -69,27 +63,20 @@ const SmartQueryForm = connect((state) => {
         groupLevels: state.queryform.groupLevels,
         groupFields: state.queryform.groupFields,
         filterFields: state.queryform.filterFields,
-        attributes: state.query && state.query.typeName && state.query.featureTypes && state.query.featureTypes[state.query.typeName] && state.query.featureTypes[state.query.typeName].attributes,
         spatialField: state.queryform.spatialField,
         showDetailsPanel: state.queryform.showDetailsPanel,
         toolbarEnabled: state.queryform.toolbarEnabled,
         attributePanelExpanded: state.queryform.attributePanelExpanded,
         spatialPanelExpanded: state.queryform.spatialPanelExpanded,
-        featureTypeConfigUrl: state.query && state.query.url,
-        searchUrl: state.query && state.query.url,
-        featureTypeName: state.query && state.query.typeName,
+        searchUrl: "http://demo.geo-solutions.it/geoserver/ows?service=WFS",
+        featureTypeName: "topp:states",
         ogcVersion: "1.1.0",
-        params: {typeName: state.query && state.query.typeName},
         resultTitle: "Query Result",
         showGeneratedFilter: false
     };
 }, dispatch => {
     return {
-
         attributeFilterActions: bindActionCreators({
-            onLoadFeatureTypeConfig: (url, params) => {
-                return describeFeatureType(url, params.typeName);
-            },
             onAddGroupField: addGroupField,
             onAddFilterField: addFilterField,
             onRemoveFilterField: removeFilterField,
@@ -135,10 +122,6 @@ const tocSelector = createSelector(
     })
 );
 
-const TOC = require('../components/TOC/TOC');
-const DefaultGroup = require('../components/TOC/DefaultGroup');
-const DefaultLayer = require('../components/TOC/DefaultLayer');
-
 const LayerTree = React.createClass({
     propTypes: {
         id: React.PropTypes.number,
@@ -163,7 +146,6 @@ const LayerTree = React.createClass({
         activateRemoveLayer: React.PropTypes.bool,
         activateLegendTool: React.PropTypes.bool,
         activateZoomTool: React.PropTypes.bool,
-        activateQueryTool: React.PropTypes.bool,
         activateSettingsTool: React.PropTypes.bool,
         visibilityCheckType: React.PropTypes.string,
         settingsOptions: React.PropTypes.object
@@ -192,77 +174,49 @@ const LayerTree = React.createClass({
     getNoBackgroundLayers(group) {
         return group.name !== 'background';
     },
-    renderTOC() {
-
+    renderSidebar() {
         return (
-            <div>
-                <TOC onSort={this.props.onSort} filter={this.getNoBackgroundLayers}
-                    nodes={this.props.groups}>
-                    <DefaultGroup onSort={this.props.onSort}
-                                  propertiesChangeHandler={this.props.groupPropertiesChangeHandler}
-                                  onToggle={this.props.onToggleGroup}
-                                  style={this.props.groupStyle}
-                                  groupVisibilityCheckbox={true}
-                                  visibilityCheckType={this.props.visibilityCheckType}
-                                  >
-                    <DefaultLayer
-                            settingsOptions={this.props.settingsOptions}
-                            onToggle={this.props.onToggleLayer}
-                            onToggleQuerypanel={this.props.onToggleQuery}
-                            onZoom={this.props.onZoomToExtent}
-                            onSettings={this.props.onSettings}
-                            propertiesChangeHandler={this.props.layerPropertiesChangeHandler}
-                            hideSettings={this.props.hideSettings}
-                            settings={this.props.settings}
-                            updateSettings={this.props.updateSettings}
-                            updateNode={this.props.updateNode}
-                            removeNode={this.props.removeNode}
-                            visibilityCheckType={this.props.visibilityCheckType}
-                            activateRemoveLayer={this.props.activateRemoveLayer}
-                            activateLegendTool={this.props.activateLegendTool}
-                            activateZoomTool={this.props.activateZoomTool}
-                            activateQueryTool={this.props.activateQueryTool}
-                            activateSettingsTool={this.props.activateSettingsTool}
-                            retrieveLayerData={this.props.retrieveLayerData}
-                            settingsText={<Message msgId="layerProperties.windowTitle"/>}
-                            opacityText={<Message msgId="opacity"/>}
-                            saveText={<Message msgId="save"/>}
-                            closeText={<Message msgId="close"/>}
-                            groups={this.props.groups}/>
-                    </DefaultGroup>
-                </TOC>
-            </div>
+            <Sidebar
+                open={this.props.querypanelEnabled}
+                sidebar={this.renderQueryPanel()}
+                styles={{
+                        sidebar: {
+                            backgroundColor: 'white',
+                            zIndex: 1024,
+                            width: 600
+                        },
+                        overlay: {
+                            zIndex: 1023,
+                            width: 0
+                        },
+                         root: {
+                             right: this.props.querypanelEnabled ? 0 : 'auto',
+                             width: '0',
+                             overflow: 'visible'
+                         }
+                    }}
+                >
+                <div/>
+            </Sidebar>
         );
     },
     renderQueryPanel() {
         return (<div>
-            <Button id="query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={this.props.onToggleQuery}><Glyphicon glyph="arrow-left"/></Button>
             <SmartQueryForm/>
         </div>);
     },
     render() {
-        if (!this.props.groups) {
-            return <div></div>;
-        }
-        if (this.props.querypanelEnabled) {
-            return this.renderQueryPanel();
-        }
-        return this.renderTOC();
+        return this.renderSidebar();
     }
 });
 
-const TOCPlugin = connect(tocSelector, {
+const QueryPanelPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,
     layerPropertiesChangeHandler: changeLayerProperties,
     retrieveLayerData: getLayerCapabilities,
     onToggleGroup: LayersUtils.toggleByType('groups', toggleNode),
     onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
-    onToggleQuery: (url, name) => {
-        return (dispatch) => {
-            dispatch(featureTypeSelected(url, name));
-            dispatch(toggleControl('queryPanel', null));
-        };
-    },
+    onToggleQuery: toggleControl.bind(null, 'queryPanel', null),
     onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
     onSettings: showSettings,
     onZoomToExtent: zoomToExtent,
@@ -273,27 +227,7 @@ const TOCPlugin = connect(tocSelector, {
 })(LayerTree);
 
 module.exports = {
-    TOCPlugin: assign(TOCPlugin, {
-        Toolbar: {
-            name: 'toc',
-            position: 7,
-            exclusive: true,
-            panel: true,
-            help: <Message msgId="helptexts.layerSwitcher"/>,
-            tooltip: "layers",
-            wrap: true,
-            title: 'layers',
-            icon: <img src={layersIcon}/>,
-            priority: 1
-        },
-        DrawerMenu: {
-            name: 'toc',
-            position: 1,
-            icon: <img src={layersIcon}/>,
-            title: 'layers',
-            priority: 2
-        }
-    }),
+    QueryPanelPlugin,
     reducers: {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
