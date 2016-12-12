@@ -101,11 +101,16 @@ describe('GroupField', () => {
 
         let groupPanel = containerGroupPanel.getElementsByClassName('panel-body')[0];
         childNodes = groupPanel.childNodes;
-        expect(childNodes.length).toBe(4);
+        expect(childNodes.length).toBe(3);
 
         for (let i = 0; i < childNodes.length; i++) {
             let child = childNodes[i];
-            expect(child.className === "logicHeader row" || child.className === "row").toBe(true);
+            expect(
+                child.className === "logicHeader row"
+                || child.className === "row"
+                || child.className === "query-content"
+                || child.className === "query-buttons"
+            ).toBe(true);
         }
 
         const buttons = document.getElementsByClassName('btn btn-default');

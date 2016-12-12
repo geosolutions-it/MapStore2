@@ -25,6 +25,7 @@ var DefaultLayer = React.createClass({
         propertiesChangeHandler: React.PropTypes.func,
         retrieveLayerData: React.PropTypes.func,
         onToggle: React.PropTypes.func,
+        onToggleQuerypanel: React.PropTypes.func,
         onZoom: React.PropTypes.func,
         onSettings: React.PropTypes.func,
         style: React.PropTypes.object,
@@ -36,6 +37,7 @@ var DefaultLayer = React.createClass({
         activateLegendTool: React.PropTypes.bool,
         activateRemoveLayer: React.PropTypes.bool,
         activateSettingsTool: React.PropTypes.bool,
+        activateQueryTool: React.PropTypes.bool,
         activateZoomTool: React.PropTypes.bool,
         settingsText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         opacityText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
@@ -58,9 +60,11 @@ var DefaultLayer = React.createClass({
             onZoom: () => {},
             onSettings: () => {},
             retrieveLayerData: () => {},
+            onToggleQuerypanel: () => {},
             activateRemoveLayer: false,
             activateLegendTool: false,
             activateSettingsTool: false,
+            activateQueryTool: false,
             activateZoomTool: false,
             includeDeleteButtonInSettings: false,
             modalOptions: {},
@@ -140,6 +144,16 @@ var DefaultLayer = React.createClass({
                         style={{"float": "right", cursor: "pointer"}}
                         glyph="list"
                         onClick={(node) => this.props.onToggle(node.id, node.expanded)}/>
+                );
+        }
+        if (this.props.activateQueryTool) {
+            tools.push(
+                <LayersTool key="toolquery"
+                        className="toc-queryTool"
+                        ref="target"
+                        style={{"float": "right", cursor: "pointer"}}
+                        glyph="search"
+                        onClick={(node) => this.props.onToggleQuerypanel(node.url, node.name)}/>
                 );
         }
         if (this.props.activateZoomTool && this.props.node.bbox && !this.props.node.loadingError) {

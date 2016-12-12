@@ -57,7 +57,9 @@ module.exports = {
         SharePlugin: require('../plugins/Share'),
         SavePlugin: require('../plugins/Save'),
         SaveAsPlugin: require('../plugins/SaveAs'),
-        CreateNewMapPlugin: require('../plugins/CreateNewMap')
+        CreateNewMapPlugin: require('../plugins/CreateNewMap'),
+        QueryPanelPlugin: require('../plugins/QueryPanel'),
+        FeatureGridPlugin: require('../plugins/FeatureGrid')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

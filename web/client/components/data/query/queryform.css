@@ -13,6 +13,11 @@
     margin-left: 1px;
     margin-right: 1px;
 }
+.logicHeader .query-remove{
+    float: right;
+    margin-right: 10px;
+    padding-top: 10px;
+}
 
 #queryFormPanel .panel-title{
     font-size: 16px;
@@ -22,6 +27,54 @@
     cursor: text;
     text-decoration:none;
 }
+
+/*****************************/
+/* DRAWER MENU ***************/
+/*****************************/
+#mapstore-drawermenu #queryFormPanel .querypanel {
+    height: 100%;
+    max-height: 100%;
+}
+#mapstore-drawermenu #queryFormPanel .queryFormToolbar button:disabled{
+    color: gray;
+}
+#mapstore-drawermenu #queryFormPanel .logicHeader {
+    margin: 0;
+    background-color: #078aa3;
+    color: white;
+}
+#mapstore-drawermenu #queryFormPanel .logicHeader .query-remove {
+    float: right;
+    padding-top: 0px;
+    top: 10px;
+    margin-right: 10px;
+}
+
+#mapstore-drawermenu #queryFormPanel .btn.remove-filter-button {
+    padding: 3px 6px;
+}
+
+#mapstore-drawermenu #queryFormPanel .logicHeader .group_label_a,#mapstore-drawermenu #queryFormPanel .logicHeader .group_label_b {
+    margin: auto 5px;
+}
+
+/* nested groups */
+#mapstore-drawermenu #queryFormPanel .panel .panel .panel{
+    margin-left: 10px;
+}
+#mapstore-drawermenu #queryFormPanel .panel .panel .panel > .panel-body{
+    border: thin solid #078aa3;
+    margin-top: 1px;
+}
+#mapstore-drawermenu #queryFormPanel .query-content,
+#mapstore-drawermenu #queryFormPanel .query-buttons
+{
+    margin-left: 3px;
+    margin-bottom: 3px;
+}
+/*****************************/
+/* DRAWER MENU END ***********/
+/*****************************/
 
 .detail_geom_button{
     text-align: right;

@@ -62,4 +62,30 @@ describe('ComboField', () => {
         let rwPopup = comboFieldDOMNode.actual.getElementsByClassName('rw-popup-container rw-popup-animating')[0];
         expect(rwPopup).toExist();
     });
+
+    it('creates the ComboField with an exception message', () => {
+        let fieldOptions = [
+            "attribute1",
+            "attribute2"
+        ];
+        let fieldValue = "attribute2";
+        let fieldRowId = 200;
+
+        const combofield = ReactDOM.render(
+            <ComboField
+                fieldOptions={fieldOptions}
+                fieldName="attribute"
+                fieldRowId={fieldRowId}
+                fieldValue={fieldValue}
+                fieldException="testing exception"
+            />,
+            document.getElementById("container")
+        );
+
+        expect(combofield).toExist();
+
+        const comboFieldDOMNode = expect(ReactDOM.findDOMNode(combofield));
+        expect(comboFieldDOMNode).toExist();
+
+    });
 });
