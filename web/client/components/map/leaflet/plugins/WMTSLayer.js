@@ -33,8 +33,8 @@ function wmtsToLeafletOptions(options) {
         tileMatrixSet: options.tileMatrixSet || CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         version: options.version || "1.0.0",
         tileSize: options.tileSize || 256,
-        minx: options.minx || -25.6640625,
-        maxx: options.maxx || 48.1640625,
+        originY: options.originY || 20037508.3428,
+        originX: options.originX || -20037508.3428,
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS)
     }, options.params || {});
 }

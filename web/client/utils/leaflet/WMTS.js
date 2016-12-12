@@ -63,7 +63,7 @@ var WMTS = L.TileLayer.extend({
         for (let t = 0; t < 22; t++) {
             e[t] = {
                 identifier: options.tileMatrixPrefix + t,
-                topLeftCorner: new L.LatLng(options.minx, options.maxx)
+                topLeftCorner: new L.LatLng(options.originY, options.originX)
             };
         }
         return e;
