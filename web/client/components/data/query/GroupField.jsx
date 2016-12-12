@@ -134,12 +134,12 @@ const GroupField = React.createClass({
                     {
                         filterField.exception ? (
                             <OverlayTrigger placement="bottom" overlay={(<Tooltip id={filterField.rowId + "tooltip"}><strong><I18N.Message msgId={filterField.exception || ""}/></strong></Tooltip>)}>
-                                <Button id="remove-filter-field" style={{backgroundColor: "red"}} onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
+                                <Button id="remove-filter-field" className="remove-filter-button" style={{backgroundColor: "red"}} onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
                                     <Glyphicon style={{color: "white"}} glyph="glyphicon glyphicon-warning-sign"/>
                                 </Button>
                             </OverlayTrigger>
                         ) : (
-                            <Button id="remove-filter-field" onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
+                            <Button id="remove-filter-field" className="remove-filter-button" onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
                                 <Glyphicon glyph={this.props.removeButtonIcon}/>
                             </Button>
                         )
@@ -151,11 +151,9 @@ const GroupField = React.createClass({
     renderGroupHeader(groupField) {
         const removeButton = groupField.groupId ?
             (
-                <Col xs={1}>
-                    <Button style={{"marginTop": "2px"}} onClick={() => this.props.actions.onRemoveGroupField(groupField.id)}>
+                    <Button bsSize="xs" className="remove-filter-button" onClick={() => this.props.actions.onRemoveGroupField(groupField.id)}>
                         <Glyphicon glyph={this.props.removeButtonIcon}/>
                     </Button>
-                </Col>
             ) : (
                 <Col xs={0} lgHidden={true}>
                     <span/>
@@ -164,10 +162,12 @@ const GroupField = React.createClass({
 
         return (
             <Row className="logicHeader">
-                {removeButton}
-                <Col xs={5}>
-                    <div style={{"paddingTop": "9px", "float": "left"}}><I18N.Message msgId={"queryform.attributefilter.group_label_a"}/></div>
-                    <div style={{"float": "right"}}>
+                <Col>
+                    <div className="query-remove">
+                        {removeButton}
+                    </div>
+                    <div style={{display: "inline"}}>
+                        <span className="group_label_a"><I18N.Message msgId={"queryform.attributefilter.group_label_a"}/></span>
                         <ComboField
                             fieldOptions={
                                 this.props.logicComboOptions.map((opt) => {
@@ -175,17 +175,14 @@ const GroupField = React.createClass({
                                 })
                             }
                             fieldName="logic"
-                            style={{width: "140px", marginTop: "3px"}}
+                            style={{minWidth: "80px", display: "inline-block", position: "relative", top: "10px"}}
                             fieldRowId={groupField.id}
                             fieldValue={
                                 LocaleUtils.getMessageById(this.context.messages,
                                     this.props.logicComboOptions.filter((opt) => groupField.logic === opt.logic)[0].name)
                             }
                             onUpdateField={this.updateLogicCombo}/>
-                    </div>
-                </Col>
-                <Col xs={6}>
-                    <div style={{"paddingTop": "9px"}}><span><I18N.Message msgId={"queryform.attributefilter.group_label_b"}/></span></div>
+                        <span className="group_label_b"><I18N.Message msgId={"queryform.attributefilter.group_label_b"}/></span></div>
                 </Col>
             </Row>
         );
@@ -207,7 +204,7 @@ const GroupField = React.createClass({
             return element;
         });
 
-        const removeButton = groupField.index <= this.props.groupLevels ?
+        const addButton = groupField.index <= this.props.groupLevels ?
             (
                 <Button id="add-condition-group" onClick={() => this.props.actions.onAddGroupField(groupField.id, groupField.index)}>
                     <Glyphicon glyph={this.props.addButtonIcon}/><I18N.Message msgId={"queryform.attributefilter.add_group"}/></Button>
@@ -218,18 +215,14 @@ const GroupField = React.createClass({
         return (
             <Panel key={groupField.id}>
                 {this.renderGroupHeader(groupField)}
-                {container}
-                <Row>
-                    <Col xs={3}>
-                        <Button id="add-filter-field" onClick={() => this.props.actions.onAddFilterField(groupField.id)}>
-                            <Glyphicon glyph={this.props.addButtonIcon}/>
-                            <I18N.Message msgId={"queryform.attributefilter.add_condition"}/>
-                        </Button>
-                    </Col>
-                    <Col xs={9}>
-                        {removeButton}
-                    </Col>
-                </Row>
+                <div className="query-content">{container}</div>
+                <div className="query-buttons">
+                <Button id="add-filter-field" onClick={() => this.props.actions.onAddFilterField(groupField.id)}>
+                    <Glyphicon glyph={this.props.addButtonIcon}/>
+                    <I18N.Message msgId={"queryform.attributefilter.add_condition"}/>
+                </Button>
+                {addButton}
+                </div>
             </Panel>
         );
     },

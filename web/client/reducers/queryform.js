@@ -43,7 +43,8 @@ const {
 
 const assign = require('object-assign');
 
-const {union, bbox} = require('turf');
+const union = require('turf-union');
+const bbox = require('turf-bbox');
 
 const initialState = {
     searchUrl: null,
