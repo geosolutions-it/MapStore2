@@ -163,6 +163,12 @@
             }
         },
         "toc": {
+            "toggleLayerVisibility": "Toggle layer visibility",
+            "displayLegendAndTools": "Display legend and tools",
+            "zoomToLayerExtent": "Zoom to layer extent",
+            "editLayerProperties": "Edit layer properties",
+            "searchFeatures": "Search on this layer...",
+            "removeLayer": "Remove layer",
             "loadingerror": "The layer has not been loaded correctly"
         },
         "print":{

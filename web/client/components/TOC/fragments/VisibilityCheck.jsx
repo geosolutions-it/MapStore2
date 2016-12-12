@@ -8,12 +8,13 @@
 
 const React = require('react');
 const {isFunction} = require('lodash');
-const {Glyphicon} = require('react-bootstrap');
+const LayersTool = require('./LayersTool');
 require("./css/visibilitycheck.css");
 
 const VisibilityCheck = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
+        tooltip: React.PropTypes.string,
         propertiesChangeHandler: React.PropTypes.func,
         style: React.PropTypes.object,
         checkType: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
@@ -22,15 +23,17 @@ const VisibilityCheck = React.createClass({
     },
     getDefaultProps() {
         return {
-            style: {marginRight: "2px"},
+            style: {left: "-3px"},
             checkType: "glyph",
             glyphChecked: "eye-open",
+            tooltip: "toc.toggleLayerVisibility",
             glyphUnchecked: "eye-close"
         };
     },
     render() {
         if (this.props.checkType === "glyph") {
-            return (<Glyphicon
+            return (<LayersTool
+                tooltip={this.props.tooltip}
                 style={this.props.style}
                 className={"visibility-check" + (this.props.node.visibility ? " checked" : "")}
                 data-position={this.props.node.storeIndex}

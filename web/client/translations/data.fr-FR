@@ -164,6 +164,12 @@
             }
         },
         "toc": {
+            "toggleLayerVisibility": "Activer / désactiver la visibilité du calque",
+            "displayLegendAndTools": "Afficher la légende et les outils",
+            "zoomToLayerExtent": "Zoomer sur l'étendue du calque",
+            "editLayerProperties": "Modifier les propriétés de la couche",
+            "searchFeatures": "Recherche sur ce calque ...",
+            "removeLayer": "Supprimer la couche",
             "loadingerror": "La couche n'a pas été chargée correctement"
         },
         "print":{
