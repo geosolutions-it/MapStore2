@@ -425,7 +425,8 @@
 					"closeGlyph": "1-close",
 					"initialCatalogURL": {
 						"csw": "http://demo.geo-solutions.it/geoserver/csw",
-						"wms": "http://demo.geo-solutions.it/geoserver/wms"
+						"wms": "http://demo.geo-solutions.it/geoserver/wms",
+						"wmts": "http://demo.geo-solutions.it/geoserver/gwc/service/wmts"
 					}
 				}
 		}, {

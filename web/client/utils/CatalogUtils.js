@@ -28,6 +28,20 @@ const getWMSBBox = (record) => {
     return bbox;
 };
 
+const getWMTSBBox = (record) => {
+    let layer = record;
+    let bbox = (layer["ows:WGS84BoundingBox"]);
+    if (!bbox) {
+        bbox = {
+            westBoundLongitude: -180.0,
+            southBoundLatitude: -90.0,
+            eastBoundLongitude: 180.0,
+            northBoundLatitude: 90.0
+        };
+    }
+    return bbox;
+};
+
 const converters = {
     csw: (records, options) => {
         let result = records;
@@ -143,6 +157,37 @@ const converters = {
                     SRS: (record.SRS && (isArray(record.SRS) ? record.SRS : [record.SRS])) || [],
                     params: {
                         name: record.Name
+                    }
+                }]
+                };
+            });
+        }
+    },
+    wmts: (records, options) => {
+        if (records && records.records) {
+            return records.records.map((record) => {
+                const bbox = getWMTSBBox(record);
+                return {
+                title: record["ows:Title"] || record["ows:Identifier"],
+                description: record["ows:Abstract"] || record["ows:Title"] || record["ows:Identifier"],
+                identifier: record["ows:Identifier"],
+                tags: "",
+                TileMatrixSetLink: record.TileMatrixSetLink || [],
+                boundingBox: {
+                    extent: [
+                            bbox["ows:LowerCorner"].split(" ")[0],
+                            bbox["ows:LowerCorner"].split(" ")[1],
+                            bbox["ows:UpperCorner"].split(" ")[0],
+                            bbox["ows:UpperCorner"].split(" ")[1]
+                    ],
+                    crs: "EPSG:4326"
+                },
+                references: [{
+                    type: "OGC:WMTS",
+                    url: options.url,
+                    SRS: record.SRS || [],
+                    params: {
+                        name: record["ows:Identifier"]
                     }
                 }]
                 };
