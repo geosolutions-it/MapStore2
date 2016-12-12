@@ -100,7 +100,9 @@ const Save = React.createClass({
                         type: layer.type,
                         url: layer.url,
                         bbox: layer.bbox,
-                        visibility: layer.visibility
+                        visibility: layer.visibility,
+                        singleTile: layer.singleTile || false,
+                        ...assign({}, layer.params ? {params: layer.params} : {})
                     };
                 });
                 // Groups are ignored, as they already are defined in the layers
