@@ -10,7 +10,7 @@
 var React = require('react');
 var L = require('leaflet');
 var assign = require('object-assign');
-require('leaflet.locatecontrol')();
+require('leaflet.locatecontrol');
 require('leaflet.locatecontrol/dist/L.Control.Locate.css');
 
 L.Control.MSLocate = L.Control.Locate.extend({
