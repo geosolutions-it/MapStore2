@@ -128,7 +128,7 @@ const PrintSubmit = connect((state) => ({
 }))(require('../../components/print/PrintSubmit'));
 
 const PrintPreview = connect((state) => ({
-    url: state.print && ConfigUtils.getPrintUrl(state.print.pdfUrl),
+    url: state.print && ConfigUtils.getProxiedUrl(state.print.pdfUrl),
     scale: state.controls && state.controls.print && state.controls.print.viewScale || 0.5,
     currentPage: state.controls && state.controls.print && state.controls.print.currentPage || 1,
     pages: state.controls && state.controls.print && state.controls.print.pages || 1
