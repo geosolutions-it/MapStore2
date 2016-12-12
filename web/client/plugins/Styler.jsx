@@ -20,7 +20,8 @@ const {getWindowSize} = require('../utils/AgentUtils');
 const {setVectorLayer} = require('../actions/vectorstyler');
 const {setRasterLayer} = require('../actions/rasterstyler');
 const {toggleControl} = require('../actions/controls');
-const {getDescribeLayer, getLayerCapabilities, changeLayerProperties} = require('../actions/layers');
+const {changeLayerProperties} = require('../actions/layers');
+const {getDescribeLayer, getLayerCapabilities} = require('../actions/layerCapabilities');
 const {saveLayerDefaultStyle, reset} = require('../actions/styler');
 
 const {layersSelector} = require('../selectors/layers');
