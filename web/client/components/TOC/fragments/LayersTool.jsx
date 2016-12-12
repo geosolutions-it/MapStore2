@@ -24,7 +24,6 @@ const LayersTool = React.createClass({
     },
     getDefaultProps() {
         return {
-            style: {marginRight: "2px"},
             onClick: () => {}
         };
     },

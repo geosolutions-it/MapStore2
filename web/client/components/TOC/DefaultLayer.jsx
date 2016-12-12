@@ -16,7 +16,6 @@ const ConfirmModal = require('../maps/modals/ConfirmModal');
 const LayersTool = require('./fragments/LayersTool');
 const SettingsModal = require('./fragments/SettingsModal');
 const Message = require('../I18N/Message');
-const {Glyphicon, Button} = require('react-bootstrap');
 
 var DefaultLayer = React.createClass({
     propTypes: {
@@ -84,71 +83,48 @@ var DefaultLayer = React.createClass({
         };
     },
     renderCollapsible() {
-        if (this.props.node && this.props.node.type === 'wms') {
-            return <WMSLegend position="collapsible"/>;
-        }
-        return [];
-    },
-    renderTools() {
-        const tools = [];
+        let tools = [];
         if (this.props.activateRemoveLayer) {
-            tools.push(
-                <Button key="removelayer" className="clayer_removal_button"
-                    onClick={this.displayDeleteDialog}
-                    style={{"float": "right", cursor: "pointer", backgroundColor: "transparent", marginRight: 3, padding: 0, outline: "none"}}>
-                    {(<Glyphicon glyph="1-close" />)}
-                </Button>
-            );
+            tools.push((<LayersTool
+                        node={this.props.node}
+                        key="removelayer"
+                        className="clayer_removal_button"
+                        onClick={this.displayDeleteDialog}
+                        tooltip="toc.removeLayer"
+                        glyph="1-close"
+                        />));
         }
-        if (this.props.activateSettingsTool) {
-            tools.push(
-                <LayersTool key="toolsettings"
-                        style={{"float": "right", cursor: "pointer"}}
-                        glyph="cog"
-                        onClick={(node) => this.props.onSettings(node.id, "layers",
-                            {opacity: parseFloat(node.opacity !== undefined ? node.opacity : 1)})}/>
-            );
-            if (this.props.settings && this.props.settings.node === this.props.node.id) {
-                tools.push(
-                    <SettingsModal key="toolsettingsmodal" options={this.props.modalOptions}
-                               {...this.props.settingsOptions}
-                               retrieveLayerData={this.props.retrieveLayerData}
-                               hideSettings={this.props.hideSettings}
-                               settings={this.props.settings}
-                               element={this.props.node}
-                               updateSettings={this.props.updateSettings}
-                               updateNode={this.props.updateNode}
-                               removeNode={this.props.removeNode}
-                               includeDeleteButton={this.props.includeDeleteButtonInSettings}
-                               titleText={this.props.settingsText}
-                               opacityText={this.props.opacityText}
-                               saveText={this.props.saveText}
-                               closeText={this.props.closeText}
-                               groups={this.props.groups}/>
-                );
-            }
-        }
-        if (this.props.visibilityCheckType) {
-            tools.push(
-                <VisibilityCheck key="visibilitycheck"
-                   checkType={this.props.visibilityCheckType}
-                   propertiesChangeHandler={this.props.propertiesChangeHandler}
-                   style={{"float": "right", cursor: "pointer", marginLeft: 0, marginRight: 0}}/>
-            );
-        }
-        if (this.props.activateLegendTool) {
-            tools.push(
-                <LayersTool key="toollegend"
-                        className="toc-legendTool"
-                        ref="target"
-                        style={{"float": "right", cursor: "pointer"}}
-                        glyph="list"
-                        onClick={(node) => this.props.onToggle(node.id, node.expanded)}/>
-                );
+        tools.push(
+            <LayersTool node={this.props.node} key="toolsettings"
+                    tooltip="toc.editLayerProperties"
+                    glyph="cog"
+                    onClick={(node) => this.props.onSettings(node.id, "layers",
+                        {opacity: parseFloat(node.opacity !== undefined ? node.opacity : 1)})}/>
+        );
+        if (this.props.settings && this.props.settings.node === this.props.node.id) {
+            tools.push(<SettingsModal
+                            node={this.props.node}
+                            key="toolsettingsmodal" options={this.props.modalOptions}
+                           {...this.props.settingsOptions}
+                           retrieveLayerData={this.props.retrieveLayerData}
+                           hideSettings={this.props.hideSettings}
+                           settings={this.props.settings}
+                           element={this.props.node}
+                           updateSettings={this.props.updateSettings}
+                           updateNode={this.props.updateNode}
+                           removeNode={this.props.removeNode}
+                           includeDeleteButton={this.props.includeDeleteButtonInSettings}
+                           titleText={this.props.settingsText}
+                           opacityText={this.props.opacityText}
+                           saveText={this.props.saveText}
+                           closeText={this.props.closeText}
+                           groups={this.props.groups}/>
+               );
         }
         if (this.props.activateQueryTool) {
             tools.push(
                 <LayersTool key="toolquery"
+                        tooltip="toc.searchFeatures"
                         className="toc-queryTool"
                         ref="target"
                         style={{"float": "right", cursor: "pointer"}}
@@ -156,9 +132,37 @@ var DefaultLayer = React.createClass({
                         onClick={(node) => this.props.onToggleQuerypanel(node.url, node.name)}/>
                 );
         }
+        return (<div position="collapsible" className="collapsible-toc">
+             <div style={{minHeight: "35px"}}>{tools}</div>
+             <div><WMSLegend node={this.props.node}/></div>
+        </div>);
+    },
+    renderTools() {
+        const tools = [];
+        if (this.props.visibilityCheckType) {
+            tools.push(
+                <VisibilityCheck key="visibilitycheck"
+                   checkType={this.props.visibilityCheckType}
+                   propertiesChangeHandler={this.props.propertiesChangeHandler}
+                   style={{"float": "right", cursor: "pointer", marginLeft: 0, marginRight: 0, left: "-3px", fontSize: "29px"}}/>
+            );
+        }
+        if (this.props.activateLegendTool) {
+            tools.push(
+                <LayersTool
+                        tooltip="toc.displayLegendAndTools"
+                        key="toollegend"
+                        className="toc-legendTool"
+                        ref="target"
+                        style={{"float": "right", cursor: "pointer"}}
+                        glyph="1-menu-manage"
+                        onClick={(node) => this.props.onToggle(node.id, node.expanded)}/>
+                );
+        }
         if (this.props.activateZoomTool && this.props.node.bbox && !this.props.node.loadingError) {
             tools.push(
                 <LayersTool key="toolzoom"
+                        tooltip="toc.zoomToLayerExtent"
                         className="toc-zoomTool"
                         ref="target"
                         style={{"float": "right", cursor: "pointer"}}
