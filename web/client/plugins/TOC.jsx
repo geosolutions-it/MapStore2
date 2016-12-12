@@ -51,7 +51,7 @@ const {
     zoneChange
 } = require('../actions/queryform');
 
-const {query, featureTypeSelected, describeFeatureType} = require('../actions/query');
+const {query, featureTypeSelected, describeFeatureType} = require('../actions/wfsquery');
 
 const {
     changeDrawingStatus,

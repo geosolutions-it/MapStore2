@@ -15,7 +15,7 @@ const {
     QUERY_RESULT,
     QUERY_ERROR,
     RESET_QUERY
-} = require('../actions/query');
+} = require('../actions/wfsquery');
 
 const assign = require('object-assign');
 

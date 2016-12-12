@@ -17,8 +17,6 @@ const FeatureGrid = connect((state) => {
 
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const I18N = require('../../../components/I18N/I18N');
-const {reactCellRendererFactory} = require('ag-grid-react');
-const GoToDetail = require('./ZoomToFeatureRenderer');
 const Spinner = require('react-spinkit');
 const assign = require('object-assign');
 
@@ -29,7 +27,6 @@ const DockedFeatureGrid = React.createClass({
         expanded: React.PropTypes.bool,
         header: React.PropTypes.string,
         features: React.PropTypes.oneOfType([ React.PropTypes.array, React.PropTypes.object]),
-        detailsConfig: React.PropTypes.object,
         columnsDef: React.PropTypes.array,
         map: React.PropTypes.object,
         loadingGrid: React.PropTypes.bool,
@@ -84,7 +81,6 @@ const DockedFeatureGrid = React.createClass({
             features: [],
             featureTypeName: null,
             ogcVersion: "2.0",
-            detailsConfig: {},
             columnsDef: [],
             pagination: false,
             params: {},
@@ -255,21 +251,6 @@ const DockedFeatureGrid = React.createClass({
             }
         }).filter((c) => c);
 
-        if (this.goToDetail) {
-            const vCols = cols.filter((c) => !c.hide).length;
-            const defWidth = (this.state.width - 50) / vCols;
-            cols = [{
-                onCellClicked: this.goToDetail,
-                headerName: "",
-                cellRenderer: reactCellRendererFactory(GoToDetail),
-                suppressSorting: true,
-                suppressMenu: true,
-                pinned: true,
-                width: 25,
-                suppressResize: true
-            }, ...(cols.map((c) => assign({}, {width: defWidth}, c)))];
-        }
-
         if (this.sortModel && this.sortModel.length > 0) {
             cols = cols.map((c) => {
                 let model = this.sortModel.find((m) => m.colId === c.field);
@@ -358,26 +339,6 @@ const DockedFeatureGrid = React.createClass({
     selectFeatures(features) {
         this.props.selectAllToggle();
         this.props.selectFeatures(features);
-    },
-    goToDetail(params) {
-        let url = this.props.detailsConfig.service.url;
-        let urlParams = this.props.detailsConfig.service.params;
-        for (let param in urlParams) {
-            if (urlParams.hasOwnProperty(param)) {
-                url += "&" + param + "=" + urlParams[param];
-            }
-        }
-
-        let templateUrl = typeof this.props.detailsConfig.template === "string" ? this.props.detailsConfig.template : this.props.detailsConfig.template[this.props.templateProfile];
-        this.props.onDetail(
-             templateUrl,
-            // this.props.detailsConfig.cardModelConfigUrl,
-            url + "&FEATUREID=" + params.data.id + (this.props.params.authkey ? "&authkey=" + this.props.params.authkey : "")
-        );
-
-        if (!this.props.detailOpen) {
-            this.props.onShowDetail();
-        }
     }
 });
 
