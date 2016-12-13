@@ -149,6 +149,13 @@ describe('Test the map reducer', () => {
         expect(state.mapOptions.view).toExist();
         expect(state.mapOptions.view.resolutions).toNotExist();
         expect(state.mapOptions.view.prop).toBe('prop');
+
+        // add map scales with no initial state
+        state = mapConfig(undefined, action);
+        expect(state).toExist();
+        expect(state.mapOptions).toExist();
+        expect(state.mapOptions.view).toExist();
+        expect(state.mapOptions.view.resolutions).toExist();
     });
 
     it('zoom to extent', () => {
