@@ -200,8 +200,30 @@ let GrabLMap = React.createClass({
 
                 });
                 let finialize = () => {
-                    this.props.onStatusChange("READY", this.isTainted(finalCanvas));
-                    this.props.onSnapshotReady(canvas, null, null, null, this.isTainted(finalCanvas));
+                    // TODO parse map-div transform to shift all markers toghether properly
+                    let markers = this.mapDiv.getElementsByClassName("leaflet-marker-pane");
+                    if ( markers && markers.length > 0) {
+                        let newCanvas = this.refs.canvas.cloneNode();
+                        newCanvas.width = newCanvas.width + left;
+                        html2canvas(markers, {
+                                // you have to provide a canvas to avoid html2canvas to crop the image
+                                canvas: newCanvas,
+                                logging: false,
+                                proxy: this.proxy,
+                                allowTaint: props && props.allowTaint,
+                                // TODO: improve to useCORS if every source has CORS enabled
+                                useCORS: props && props.allowTaint
+                        }).then( (c) => {
+                            let cx = finalCanvas.getContext("2d");
+                            cx.globalAlpha = 1;
+                            cx.drawImage(c, -1 * left, 0);
+                            this.props.onStatusChange("READY", this.isTainted(finalCanvas));
+                            this.props.onSnapshotReady(canvas, null, null, null, this.isTainted(finalCanvas));
+                        });
+                    } else {
+                        this.props.onStatusChange("READY", this.isTainted(finalCanvas));
+                        this.props.onSnapshotReady(canvas, null, null, null, this.isTainted(finalCanvas));
+                    }
                 };
 
                 if (svg) {
