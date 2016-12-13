@@ -32,16 +32,20 @@ function getWMSURLs( urls ) {
     return urls.map((url) => url.split("\?")[0]);
 }
 
+function getMatrixId(options) {
+    let matrixIds = new Array(22);
+    for (let z = 0; z < 22; ++z) {
+    // generate matrixIds arrays for this WMTS
+        matrixIds[z] = options.tileMatrixPrefix + z;
+    }
+    return matrixIds;
+}
+
 Layers.registerType('wmts', {
     create: (options) => {
         const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
         const queryParameters = wmtsToOpenlayersOptions(options) || {};
         urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
-        let matrixIds = new Array(22);
-        for (let z = 0; z < 22; ++z) {
-        // generate matrixIds arrays for this WMTS
-            matrixIds[z] = options.tileMatrixPrefix + z;
-        }
         return new ol.layer.Tile({
             opacity: options.opacity !== undefined ? options.opacity : 1,
             source: new ol.source.WMTS(objectAssign({
@@ -51,8 +55,8 @@ Layers.registerType('wmts', {
               format: 'image/png',
               tileGrid: new ol.tilegrid.WMTS({
                 origin: [options.originY, options.originX],
-                resolutions: mapUtils.getResolutions(),
-                matrixIds: matrixIds
+                resolutions: options.resolutions || mapUtils.getResolutions(),
+                matrixIds: options.matrixIds || getMatrixId(options)
               }),
               style: '',
               wrapX: true
