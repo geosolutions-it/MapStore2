@@ -51,8 +51,8 @@
 }
 
 #mapstore-drawermenu .panel {
-    border: none !important;
-    box-shadow: none !important;
+    border: none;
+    box-shadow: none;
 }
 
 div.nav-menu {

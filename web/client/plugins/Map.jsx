@@ -150,5 +150,5 @@ const selector = createSelector(
 );
 module.exports = {
     MapPlugin: connect(selector)(MapPlugin),
-    reducers: {}
+    reducers: { draw: require('../reducers/draw') }
 };

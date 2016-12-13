@@ -31,10 +31,6 @@
 /*****************************/
 /* DRAWER MENU ***************/
 /*****************************/
-#mapstore-drawermenu #queryFormPanel .querypanel {
-    height: 100%;
-    max-height: 100%;
-}
 #mapstore-drawermenu #queryFormPanel .queryFormToolbar button:disabled{
     color: gray;
 }
@@ -72,6 +68,25 @@
     margin-left: 3px;
     margin-bottom: 3px;
 }
+
+/* Spatial Selector */
+#mapstore-drawermenu #queryFormPanel .panel.details-panel {
+    width: auto;
+    height: auto;
+}
+#mapstore-drawermenu #queryFormPanel .details-panel .panel-body {
+    padding: 15px;
+}
+#mapstore-drawermenu #queryFormPanel .details-panel.panel{
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+}
+#mapstore-drawermenu #queryFormPanel .details-panel.panel-primary {
+    border-color: #078aa3;
+}
+
 /*****************************/
 /* DRAWER MENU END ***********/
 /*****************************/

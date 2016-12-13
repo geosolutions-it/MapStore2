@@ -126,6 +126,7 @@ var DefaultLayer = React.createClass({
                 <LayersTool key="toolquery"
                         tooltip="toc.searchFeatures"
                         className="toc-queryTool"
+                        node={this.props.node}
                         ref="target"
                         style={{"float": "right", cursor: "pointer"}}
                         glyph="search"
