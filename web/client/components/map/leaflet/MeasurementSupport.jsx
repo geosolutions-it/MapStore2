@@ -21,10 +21,16 @@ const MeasurementSupport = React.createClass({
         projection: React.PropTypes.string,
         measurement: React.PropTypes.object,
         changeMeasurementState: React.PropTypes.func,
-        messages: React.PropTypes.object
+        messages: React.PropTypes.object,
+        updateOnMouseMove: React.PropTypes.bool
     },
     contextTypes: {
         messages: React.PropTypes.object
+    },
+    getDefaultProps() {
+        return {
+            updateOnMouseMove: false
+        };
     },
     componentWillReceiveProps(newProps) {
         var drawingStrings = this.props.messages || (this.context.messages) ? this.context.messages.drawLocal : false;
@@ -62,16 +68,52 @@ const MeasurementSupport = React.createClass({
     render() {
         return null;
     },
-    mapClickHandler: function() {
-        var area;
-        var newMeasureState;
-        var bearingMarkers;
-        var bearingLatLng1;
-        var bearingLatLng2;
-        var coords1;
-        var coords2;
-        var bearing = 0;
+    updateMeasurementResults() {
+        if (!this.drawing || !this.drawControl) {
+            return;
+        }
+        let distance = 0;
+        let area = 0;
+        let bearing = 0;
 
+        let currentLatLng = this.drawControl._currentLatLng;
+        if (this.props.measurement.geomType === 'LineString' && this.drawControl._markers && this.drawControl._markers.length > 0) {
+            // calculate length
+            let previousLatLng = this.drawControl._markers[this.drawControl._markers.length - 1].getLatLng();
+            distance = this.drawControl._measurementRunningTotal + currentLatLng.distanceTo(previousLatLng);
+        } else if (this.props.measurement.geomType === 'Polygon' && this.drawControl._poly) {
+            // calculate area
+            let latLngs = [...this.drawControl._poly.getLatLngs(), currentLatLng];
+            area = L.GeometryUtil.geodesicArea(latLngs);
+        } else if (this.props.measurement.geomType === 'Bearing' && this.drawControl._markers && this.drawControl._markers.length > 0) {
+            // calculate bearing
+            let bearingMarkers = this.drawControl._markers;
+            let coords1 = [bearingMarkers[0].getLatLng().lng, bearingMarkers[0].getLatLng().lat];
+            let coords2;
+            if (bearingMarkers.length === 1) {
+                coords2 = [currentLatLng.lng, currentLatLng.lat];
+            } else if (bearingMarkers.length === 2) {
+                coords2 = [bearingMarkers[1].getLatLng().lng, bearingMarkers[1].getLatLng().lat];
+                // restrict line drawing to 2 vertices
+                this.drawControl._finishShape();
+                this.drawControl.disable();
+                this.drawing = false;
+            }
+            // calculate the azimuth as base for bearing information
+            bearing = CoordinatesUtils.calculateAzimuth(coords1, coords2, this.props.projection);
+        }
+
+        let newMeasureState = assign({}, this.props.measurement,
+            {
+                point: null, // Point is set in onDraw.created
+                len: distance,
+                area: area,
+                bearing: bearing
+            }
+        );
+        this.props.changeMeasurementState(newMeasureState);
+    },
+    mapClickHandler: function() {
         if (!this.drawing && this.drawControl !== null) {
             // re-enable draw control, since it is stopped after
             // every finished sketch
@@ -80,47 +122,7 @@ const MeasurementSupport = React.createClass({
             this.drawing = true;
 
         } else {
-            // update measurement results for every new vertex drawn
-
-            // calculate  area
-            if (this.props.measurement.geomType === 'Polygon') {
-                let latLngs = this.drawControl._poly.getLatLngs();
-                area = L.GeometryUtil.geodesicArea(latLngs);
-            }
-
-            // calculate bearing
-            if (this.props.measurement.geomType === 'Bearing') {
-                bearingMarkers = this.drawControl._markers;
-
-                if (bearingMarkers.length > 1) {
-                    // restrict line drawing to 2 vertices
-                    this.drawControl._finishShape();
-                    this.drawControl.disable();
-                    this.drawing = false;
-
-                    bearingLatLng1 = bearingMarkers[0].getLatLng();
-                    bearingLatLng2 = bearingMarkers[1].getLatLng();
-                    coords1 = [bearingLatLng1.lng, bearingLatLng1.lat];
-                    coords2 = [bearingLatLng2.lng, bearingLatLng2.lat];
-
-                    // calculate the azimuth as base for bearing information
-                    bearing = CoordinatesUtils.calculateAzimuth(
-                        coords1, coords2, this.props.projection);
-                }
-            }
-
-            newMeasureState = {
-                pointMeasureEnabled: this.props.measurement.pointMeasureEnabled,
-                lineMeasureEnabled: this.props.measurement.lineMeasureEnabled,
-                areaMeasureEnabled: this.props.measurement.areaMeasureEnabled,
-                bearingMeasureEnabled: this.props.measurement.bearingMeasureEnabled,
-                geomType: this.props.measurement.geomType,
-                point: null, // handled in onDraw.created
-                len: this.props.measurement.geomType === 'LineString' ? this.drawControl._measurementRunningTotal : 0,
-                area: this.props.measurement.geomType === 'Polygon' ? area : 0,
-                bearing: bearing
-            };
-            this.props.changeMeasurementState(newMeasureState);
+            this.updateMeasurementResults();
         }
     },
     addDrawInteraction: function(newProps) {
@@ -130,6 +132,9 @@ const MeasurementSupport = React.createClass({
         this.props.map.on('draw:created', this.onDraw.created, this);
         this.props.map.on('draw:drawstart', this.onDraw.drawStart, this);
         this.props.map.on('click', this.mapClickHandler, this);
+        if (this.props.updateOnMouseMove) {
+            this.props.map.on('mousemove', this.updateMeasurementResults, this);
+        }
 
         if (newProps.measurement.geomType === 'Point') {
             this.drawControl = new L.Draw.Marker(this.props.map, {
@@ -170,6 +175,9 @@ const MeasurementSupport = React.createClass({
             this.props.map.off('draw:created', this.onDraw.created, this);
             this.props.map.off('draw:drawstart', this.onDraw.drawStart, this);
             this.props.map.off('click', this.mapClickHandler, this);
+            if (this.props.updateOnMouseMove) {
+                this.props.map.off('mousemove', this.updateMeasurementResults, this);
+            }
         }
     }
 });
