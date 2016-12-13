@@ -113,6 +113,38 @@ describe('Leaflet MeasurementSupport', () => {
         });
     });
 
+    it('test map onClick handler for POINT tool', () => {
+        let newMeasureState;
+        let map = L.map("map", {
+            center: [51.505, -0.09],
+            zoom: 13
+        });
+        let proj = "EPSG:3857";
+        let measurement = {
+            geomType: null
+        };
+        const cmp = ReactDOM.render(
+            <MeasurementSupport
+                map={map}
+                projection={proj}
+                measurement={measurement}
+                changeMeasurementState={(data) => {newMeasureState = data; }}
+            />
+        , msNode);
+        expect(cmp).toExist();
+
+        cmp.setProps({
+            measurement: {
+                geomType: "Point"
+            }
+        }, () => {
+            document.getElementById('map').addEventListener('click', () => {
+                expect(newMeasureState).toExist();
+            });
+            document.getElementById('map').click();
+        });
+    });
+
     it('test map onClick handler for LINE tool', () => {
         let newMeasureState;
         let map = L.map("map", {

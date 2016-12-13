@@ -28,6 +28,9 @@ const MeasurementSupport = React.createClass({
             this.removeDrawInteraction();
         }
     },
+    getPointCoordinate: function(coordinate) {
+        return CoordinatesUtils.reproject(coordinate, this.props.projection, 'EPSG:4326');
+    },
     render() {
         return null;
     },
@@ -134,10 +137,13 @@ const MeasurementSupport = React.createClass({
         }
 
         newMeasureState = {
+            pointMeasureEnabled: this.props.measurement.pointMeasureEnabled,
             lineMeasureEnabled: this.props.measurement.lineMeasureEnabled,
             areaMeasureEnabled: this.props.measurement.areaMeasureEnabled,
             bearingMeasureEnabled: this.props.measurement.bearingMeasureEnabled,
             geomType: this.props.measurement.geomType,
+            point: this.props.measurement.geomType === 'Point' ?
+                this.getPointCoordinate(sketchCoords) : null,
             len: this.props.measurement.geomType === 'LineString' ?
                 this.calculateGeodesicDistance(sketchCoords) : 0,
             area: this.props.measurement.geomType === 'Polygon' ?

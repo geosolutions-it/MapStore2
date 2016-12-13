@@ -21,6 +21,7 @@ function measurement(state = {
     switch (action.type) {
         case CHANGE_MEASUREMENT_TOOL:
             return assign({}, state, {
+                pointMeasureEnabled: ((action.geomType !== state.geomType) && (action.geomType === 'Point')),
                 lineMeasureEnabled: ((action.geomType !== state.geomType) && (action.geomType === 'LineString')),
                 areaMeasureEnabled: ((action.geomType !== state.geomType) && (action.geomType === 'Polygon')),
                 bearingMeasureEnabled: ((action.geomType !== state.geomType) && (action.geomType === 'Bearing')),
@@ -28,10 +29,12 @@ function measurement(state = {
             });
         case CHANGE_MEASUREMENT_STATE:
             return assign({}, state, {
+                pointMeasureEnabled: action.pointMeasureEnabled,
                 lineMeasureEnabled: action.lineMeasureEnabled,
                 areaMeasureEnabled: action.areaMeasureEnabled,
                 bearingMeasureEnabled: action.bearingMeasureEnabled,
                 geomType: action.geomType,
+                point: action.point,
                 len: action.len,
                 area: action.area,
                 bearing: action.bearing,
