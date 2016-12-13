@@ -98,25 +98,10 @@ var OpenlayersMap = React.createClass({
           target: this.props.id,
           view: this.createView(center, Math.round(this.props.zoom), this.props.projection, this.props.mapOptions && this.props.mapOptions.view)
         });
-        map.on('moveend', () => {
-            let view = map.getView();
-            let c = this.normalizeCenter(view.getCenter());
-            let bbox = view.calculateExtent(map.getSize());
-            let size = {
-                width: map.getSize()[0],
-                height: map.getSize()[1]
-            };
-            this.props.onMapViewChanges({x: c[0] || 0.0, y: c[1] || 0.0, crs: 'EPSG:4326'}, view.getZoom(), {
-                bounds: {
-                    minx: bbox[0],
-                    miny: bbox[1],
-                    maxx: bbox[2],
-                    maxy: bbox[3]
-                },
-                crs: view.getProjection().getCode(),
-                rotation: view.getRotation()
-            }, size, this.props.id, this.props.projection);
-        });
+
+        this.map = map;
+
+        map.on('moveend', this.updateMapInfoState);
         map.on('singleclick', (event) => {
             if (this.props.onClick) {
                 let pos = event.coordinate.slice();
@@ -166,7 +151,7 @@ var OpenlayersMap = React.createClass({
             }
         });
 
-        this.map = map;
+        this.updateMapInfoState();
         this.setMousePointer(this.props.mousePointer);
         // NOTE: this re-call render function after div creation to have the map initialized.
         this.forceUpdate();
@@ -293,6 +278,25 @@ var OpenlayersMap = React.createClass({
                 {children}
             </div>
         );
+    },
+    updateMapInfoState() {
+        let view = this.map.getView();
+        let c = this.normalizeCenter(view.getCenter());
+        let bbox = view.calculateExtent(this.map.getSize());
+        let size = {
+            width: this.map.getSize()[0],
+            height: this.map.getSize()[1]
+        };
+        this.props.onMapViewChanges({x: c[0] || 0.0, y: c[1] || 0.0, crs: 'EPSG:4326'}, view.getZoom(), {
+            bounds: {
+                minx: bbox[0],
+                miny: bbox[1],
+                maxx: bbox[2],
+                maxy: bbox[3]
+            },
+            crs: view.getProjection().getCode(),
+            rotation: view.getRotation()
+        }, size, this.props.id, this.props.projection);
     },
     haveResolutionsChanged(newProps) {
         const resolutions = this.props.mapOptions && this.props.mapOptions.view ? this.props.mapOptions.view.resolutions : undefined;
