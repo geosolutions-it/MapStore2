@@ -7,7 +7,6 @@
  */
 var Proj4js = require('proj4');
 var React = require('react');
-
 var url = require('url');
 
 var axios = require('axios');
@@ -21,6 +20,8 @@ const centerPropType = React.PropTypes.shape({
     y: React.PropTypes.number.isRequired,
     crs: React.PropTypes.string
 });
+
+const {isObject} = require('lodash');
 
 const urlQuery = url.parse(window.location.href, true).query;
 
@@ -226,6 +227,38 @@ var ConfigUtils = {
     },
     getProxyUrl: function(config) {
         return config.proxyUrl ? config.proxyUrl : defaultConfig.proxyUrl;
+    },
+    getProxiedUrl: function(uri, config = {}) {
+        let sameOrigin = !(uri.indexOf("http") === 0);
+        let urlParts = !sameOrigin && uri.match(/([^:]*:)\/\/([^:]*:?[^@]*@)?([^:\/\?]*):?([^\/\?]*)/);
+        // ajax.addAuthenticationToAxios(config);
+        if (urlParts) {
+            let location = window.location;
+            sameOrigin =
+                urlParts[1] === location.protocol &&
+                urlParts[3] === location.hostname;
+            let uPort = urlParts[4];
+            let lPort = location.port;
+            let defaultPort = location.protocol.indexOf("https") === 0 ? 443 : 80;
+            uPort = uPort === "" ? defaultPort + "" : uPort + "";
+            lPort = lPort === "" ? defaultPort + "" : lPort + "";
+            sameOrigin = sameOrigin && uPort === lPort;
+        }
+        if (!sameOrigin) {
+            let proxyUrl = ConfigUtils.getProxyUrl(config);
+            if (proxyUrl) {
+                let useCORS = [];
+                if (isObject(proxyUrl)) {
+                    useCORS = proxyUrl.useCORS || [];
+                    proxyUrl = proxyUrl.url;
+                }
+                const isCORS = useCORS.reduce((found, current) => found || uri.indexOf(current) === 0, false);
+                if (!isCORS) {
+                    return proxyUrl + encodeURIComponent(uri);
+                }
+            }
+        }
+        return uri;
     },
     /**
     * Utility to detect browser properties.
