@@ -17,7 +17,13 @@ const MeasurementSupport = React.createClass({
         map: React.PropTypes.object,
         projection: React.PropTypes.string,
         measurement: React.PropTypes.object,
-        changeMeasurementState: React.PropTypes.func
+        changeMeasurementState: React.PropTypes.func,
+        updateOnMouseMove: React.PropTypes.bool
+    },
+    getDefaultProps() {
+        return {
+            updateOnMouseMove: false
+        };
     },
     componentWillReceiveProps(newProps) {
 
@@ -100,8 +106,10 @@ const MeasurementSupport = React.createClass({
             })
         });
 
-        this.props.map.on('pointermove', this.updateMeasurementResults, this);
         this.props.map.on('click', this.updateMeasurementResults, this);
+        if (this.props.updateOnMouseMove) {
+            this.props.map.on('pointermove', this.updateMeasurementResults, this);
+        }
 
         draw.on('drawstart', function(evt) {
             // preserv the sketch feature of the draw controller
@@ -122,7 +130,9 @@ const MeasurementSupport = React.createClass({
             this.props.map.removeLayer(this.measureLayer);
             this.sketchFeature = null;
             this.props.map.un('click', this.updateMeasurementResults, this);
-            this.props.map.un('pointermove', this.updateMeasurementResults, this);
+            if (this.props.updateOnMouseMove) {
+                this.props.map.un('pointermove', this.updateMeasurementResults, this);
+            }
         }
     },
     updateMeasurementResults() {

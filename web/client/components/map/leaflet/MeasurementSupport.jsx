@@ -21,10 +21,16 @@ const MeasurementSupport = React.createClass({
         projection: React.PropTypes.string,
         measurement: React.PropTypes.object,
         changeMeasurementState: React.PropTypes.func,
-        messages: React.PropTypes.object
+        messages: React.PropTypes.object,
+        updateOnMouseMove: React.PropTypes.bool
     },
     contextTypes: {
         messages: React.PropTypes.object
+    },
+    getDefaultProps() {
+        return {
+            updateOnMouseMove: false
+        };
     },
     componentWillReceiveProps(newProps) {
         var drawingStrings = this.props.messages || (this.context.messages) ? this.context.messages.drawLocal : false;
@@ -126,7 +132,9 @@ const MeasurementSupport = React.createClass({
         this.props.map.on('draw:created', this.onDraw.created, this);
         this.props.map.on('draw:drawstart', this.onDraw.drawStart, this);
         this.props.map.on('click', this.mapClickHandler, this);
-        this.props.map.on('mousemove', this.updateMeasurementResults, this);
+        if (this.props.updateOnMouseMove) {
+            this.props.map.on('mousemove', this.updateMeasurementResults, this);
+        }
 
         if (newProps.measurement.geomType === 'Point') {
             this.drawControl = new L.Draw.Marker(this.props.map, {
@@ -167,7 +175,9 @@ const MeasurementSupport = React.createClass({
             this.props.map.off('draw:created', this.onDraw.created, this);
             this.props.map.off('draw:drawstart', this.onDraw.drawStart, this);
             this.props.map.off('click', this.mapClickHandler, this);
-            this.props.map.off('mousemove', this.updateMeasurementResults, this);
+            if (this.props.updateOnMouseMove) {
+                this.props.map.off('mousemove', this.updateMeasurementResults, this);
+            }
         }
     }
 });
