@@ -224,6 +224,7 @@
   "desktop": [{
       "name": "Map",
       "cfg": {
+        "tools": ["measurement", "locate", "overview", "scalebar", "draw", "highlight"],
         "toolsOptions": {
           "scalebar": {
             "leaflet": {
