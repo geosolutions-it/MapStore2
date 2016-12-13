@@ -114,15 +114,16 @@ describe('OpenlayersMap', () => {
         olMap.getView().setZoom(12);
 
         olMap.on('moveend', () => {
-            expect(spy.calls.length).toEqual(1);
-            expect(spy.calls[0].arguments.length).toEqual(6);
-            expect(normalizeFloat(spy.calls[0].arguments[0].y, 1)).toBe(43.9);
-            expect(normalizeFloat(spy.calls[0].arguments[0].x, 1)).toBe(10.3);
-            expect(spy.calls[0].arguments[1]).toBe(12);
-            expect(spy.calls[0].arguments[2].bounds).toExist();
-            expect(spy.calls[0].arguments[2].crs).toExist();
-            expect(spy.calls[0].arguments[3].height).toExist();
-            expect(spy.calls[0].arguments[3].width).toExist();
+            // The first call is triggered as soon as the map component is mounted, the second one is as a result of setZoom
+            expect(spy.calls.length).toEqual(2);
+            expect(spy.calls[1].arguments.length).toEqual(6);
+            expect(normalizeFloat(spy.calls[1].arguments[0].y, 1)).toBe(43.9);
+            expect(normalizeFloat(spy.calls[1].arguments[0].x, 1)).toBe(10.3);
+            expect(spy.calls[1].arguments[1]).toBe(12);
+            expect(spy.calls[1].arguments[2].bounds).toExist();
+            expect(spy.calls[1].arguments[2].crs).toExist();
+            expect(spy.calls[1].arguments[3].height).toExist();
+            expect(spy.calls[1].arguments[3].width).toExist();
             done();
         });
     });
@@ -145,15 +146,16 @@ describe('OpenlayersMap', () => {
         olMap.getView().setCenter(ol.proj.transform([10, 44], 'EPSG:4326', 'EPSG:3857'));
 
         olMap.on('moveend', () => {
-            expect(spy.calls.length).toEqual(1);
-            expect(spy.calls[0].arguments.length).toEqual(6);
-            expect(normalizeFloat(spy.calls[0].arguments[0].y, 1)).toBe(44);
-            expect(normalizeFloat(spy.calls[0].arguments[0].x, 1)).toBe(10);
-            expect(spy.calls[0].arguments[1]).toBe(11);
-            expect(spy.calls[0].arguments[2].bounds).toExist();
-            expect(spy.calls[0].arguments[2].crs).toExist();
-            expect(spy.calls[0].arguments[3].height).toExist();
-            expect(spy.calls[0].arguments[3].width).toExist();
+            // The first call is triggered as soon as the map component is mounted, the second one is as a result of setCenter
+            expect(spy.calls.length).toEqual(2);
+            expect(spy.calls[1].arguments.length).toEqual(6);
+            expect(normalizeFloat(spy.calls[1].arguments[0].y, 1)).toBe(44);
+            expect(normalizeFloat(spy.calls[1].arguments[0].x, 1)).toBe(10);
+            expect(spy.calls[1].arguments[1]).toBe(11);
+            expect(spy.calls[1].arguments[2].bounds).toExist();
+            expect(spy.calls[1].arguments[2].crs).toExist();
+            expect(spy.calls[1].arguments[3].height).toExist();
+            expect(spy.calls[1].arguments[3].width).toExist();
             done();
         });
     });
