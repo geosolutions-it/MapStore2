@@ -8,10 +8,12 @@
 const assign = require("object-assign");
 const {SELECT_FEATURES, SET_FEATURES} = require('../actions/featuregrid');
 
-function featuregrid(state = {
+const emptyResultsState = {
     select: [],
     features: []
-}, action) {
+};
+
+function featuregrid(state = emptyResultsState, action) {
     switch (action.type) {
         case SELECT_FEATURES:
             return assign({}, state, {select: action.features});

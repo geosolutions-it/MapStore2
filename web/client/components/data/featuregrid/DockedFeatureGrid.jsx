@@ -263,7 +263,7 @@ const DockedFeatureGrid = React.createClass({
 
         let gridConf = this.props.pagination ? {dataSource: this.dataSource, features: []} : {features: this.props.features};
 
-        if (this.props.open || true) {
+        if (this.props.features && this.props.features.length > 0) {
             return (
                 <Dock
                     position={"bottom" /* 'left', 'top', 'right', 'bottom' */}
