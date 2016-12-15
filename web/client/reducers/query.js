@@ -17,6 +17,8 @@ const {
     RESET_QUERY
 } = require('../actions/wfsquery');
 
+const {QUERY_FORM_RESET} = require('../actions/queryform');
+
 const assign = require('object-assign');
 
 const types = {
@@ -110,6 +112,7 @@ function query(state = initialState, action) {
                 resultError: action.error
             });
         }
+        case QUERY_FORM_RESET:
         case RESET_QUERY: {
             return assign({}, state, {
                 result: '',
