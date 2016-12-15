@@ -835,6 +835,12 @@
       "cfg": {
         "id": "usermanager"
       }
-    }]
+    },{
+    "name": "GroupManager",
+    "hide": true,
+    "cfg": {
+      "id": "GroupManager"
+    }
+  }]
   }
 }

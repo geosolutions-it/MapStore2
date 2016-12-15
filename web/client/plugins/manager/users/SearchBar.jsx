@@ -16,7 +16,7 @@ const {trim} = require('lodash');
 const USERS = "users";
 // const GROUPS = "groups";
 const SearchBar = connect((state) => {
-    let tool = state && state.controls && state.controls.usermanager && state.controls.usermanager && state.controls.usermanager.selectedTool;
+    let tool = state && state.controls && state.controls.managerchoice && state.controls.managerchoice.selectedTool;
     let searchState = tool === USERS ? (state && state.users) : (state && state.usergroups);
     return {
         tool,
@@ -43,22 +43,21 @@ const SearchBar = connect((state) => {
         ...stateProps,
         onSearch: (text) => {
             let limit = stateProps.limit;
-            if (stateProps.tool === "USER") {
+            if (stateProps.tool === USERS) {
                 dispatchProps.onSearchUser(text, {params: {start: 0, limit}});
             } else {
                 dispatchProps.onSearchGroup(text, {params: {start: 0, limit}});
             }
         },
         onSearchReset: () => {
-            if (stateProps.tool === "USER") {
+            if (stateProps.tool === USERS) {
                 dispatchProps.onSearchUser();
             } else {
                 dispatchProps.onSearchGroup();
             }
-            dispatchProps.onSearchReset({params: {start: 0, limit: stateProps.limit}});
         },
         onSearchTextChange: (text) => {
-            if (stateProps.tool === "USER") {
+            if (stateProps.tool === USERS) {
                 dispatchProps.usersSearchTextChanged(text);
             } else {
                 dispatchProps.groupSearchTextChanged(text);
