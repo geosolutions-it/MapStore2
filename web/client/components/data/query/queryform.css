@@ -114,6 +114,7 @@
     overflow-x: hidden;
     overflow-y: auto;
     border: none;
+    min-width: 700px;
 }
 
 .queryFormToolbar{

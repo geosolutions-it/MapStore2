@@ -13,7 +13,7 @@ const ZoomToFeatureRenderer = React.createClass({
         params: React.PropTypes.object
     },
     render() {
-        const geometry = this.props.params.data.geometry;
+        const geometry = this.props.params && this.props.params.data && this.props.params.data.geometry;
         return geometry && geometry.coordinates ? (
             <img src={img} width={16}/>
         ) : null;

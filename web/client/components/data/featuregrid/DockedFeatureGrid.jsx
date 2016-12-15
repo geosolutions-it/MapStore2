@@ -3,7 +3,7 @@ const {connect} = require('react-redux');
 const {isObject} = require('lodash');
 const Dock = require('react-dock');
 
-const {Modal, Panel, Grid, Row, Col, Button} = require('react-bootstrap');
+const {Modal} = require('react-bootstrap');
 
 const FilterUtils = require('../../../utils/FilterUtils');
 
@@ -15,10 +15,11 @@ const FeatureGrid = connect((state) => {
     };
 }, {})(require('./FeatureGrid'));
 
-const LocaleUtils = require('../../../utils/LocaleUtils');
 const I18N = require('../../../components/I18N/I18N');
 const Spinner = require('react-spinkit');
 const assign = require('object-assign');
+
+require("./featuregrid.css");
 
 const DockedFeatureGrid = React.createClass({
     propTypes: {
@@ -60,7 +61,8 @@ const DockedFeatureGrid = React.createClass({
         cleanError: React.PropTypes.func,
         selectAllToggle: React.PropTypes.func,
         templateProfile: React.PropTypes.string,
-        zoomToFeatureAction: React.PropTypes.func
+        zoomToFeatureAction: React.PropTypes.func,
+        style: React.PropTypes.object
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -129,10 +131,6 @@ const DockedFeatureGrid = React.createClass({
         }, false);
     },
     componentWillUpdate(nextProps) {
-        if (nextProps.initWidth !== this.props.initWidth) {
-            let height = getWindowSize().maxHeight - 108;
-            this.setState({width: `calc( ${this.props.initWidth} - 30px)`, height});
-        }
         if (!nextProps.loadingGrid && nextProps.pagination && (nextProps.dataSourceOptions !== this.props.dataSourceOptions)) {
             this.dataSource = this.getDataSource(nextProps.dataSourceOptions);
         }
@@ -193,24 +191,6 @@ const DockedFeatureGrid = React.createClass({
             overflowSize: 20
         };
     },
-    renderHeader() {
-        const header = LocaleUtils.getMessageById(this.context.messages, this.props.header);
-
-        return (
-            <div className="handle_featuregrid">
-                <Grid className="featuregrid-title" fluid={true}>
-                    <Row>
-                        <Col xs={11} sm={11} md={11} lg={11}>
-                            <span>{header}</span>
-                        </Col>
-                        <Col xs={1} sm={1} md={1} lg={1}>
-                            <button onClick={() => this.onGridClose(false)} className="close grid-close"><span>X</span></button>
-                        </Col>
-                    </Row>
-                </Grid>
-            </div>
-        );
-    },
     renderLoadingException(loadingError, msg) {
         let exception;
         if (isObject(loadingError)) {
@@ -269,54 +249,53 @@ const DockedFeatureGrid = React.createClass({
                     position={"bottom" /* 'left', 'top', 'right', 'bottom' */}
                     size={this.state.size}
                     dimMode={"none" /*'transparent', 'none', 'opaque'*/}
-                    isVisible={this.state.isVisible || true}
+                    isVisible={true}
                     onVisibleChange={this.handleVisibleChange}
-                    onSizeChange={this.handleSizeChange}
                     fluid={true}
                     dimStyle={{ background: 'rgba(0, 0, 100, 0.2)' }}
                     dockStyle={null}
                     dockHiddenStyle={null} >
-                    <Panel className="featuregrid-container sidepanel-featuregrid" collapsible expanded={this.props.expanded} header={this.renderHeader()} bsStyle="primary">
-                            <div style={this.props.loadingGrid ? {display: "none"} : {height: this.state.height, width: this.state.width}}>
-                                <Button
-                                    style={{marginBottom: "12px"}}
-                                    onClick={() => this.onGridClose(true)}><span>Torna al pannello di ricerca</span>
-                                </Button>
-                                <h5>Risultati - {this.props.totalFeatures !== -1 ? this.props.totalFeatures : (<I18N.Message msgId={"sira.noQueryResult"}/>)}</h5>
-
-                                <FeatureGrid
-                                    changeMapView={this.props.changeMapView}
-                                    srs="EPSG:4326"
-                                    map={this.props.map}
-                                    columnDefs={cols}
-                                    style={{height: this.state.height - 120, width: this.state.width}}
-                                    maxZoom={16}
-                                    selectFeatures={this.selectFeatures}
-                                    selectAll={this.selectAll}
-                                    paging={this.props.pagination}
-                                    zoom={15}
-                                    enableZoomToFeature={this.props.withMap}
-                                    agGridOptions={{enableServerSideSorting: true, suppressMultiSort: true}}
-                                    zoomToFeatureAction={this.props.zoomToFeatureAction}
-                                    toolbar={{
-                                        zoom: this.props.withMap,
-                                        exporter: true,
-                                        toolPanel: true,
-                                        selectAll: true
-                                    }}
-                                    {...gridConf}
-                                    />
+                    {this.props.loadingGrid ?
+                        <div style={{height: "300px", width: this.state.width}}>
+                            <div style={{
+                                position: "relative",
+                                width: "60px",
+                                top: "50%",
+                                left: "45%"}}>
+                                <Spinner style={{width: "60px"}} spinnerName="three-bounce" noFadeIn/>
                             </div>
-                            {this.props.loadingGrid ? (<div style={{height: "300px", width: this.state.width}}>
-                                <div style={{
-                                    position: "relative",
-                                    width: "60px",
-                                    top: "50%",
-                                    left: "45%"}}>
-                                    <Spinner style={{width: "60px"}} spinnerName="three-bounce" noFadeIn/>
-                                </div>
-                            </div>) : null}
-                    </Panel>
+                        </div> :
+                        <div style={{
+                                height: "100%"
+                                }}>
+                            <FeatureGrid
+                                className="featureGrid"
+                                changeMapView={this.props.changeMapView}
+                                srs="EPSG:4326"
+                                map={this.props.map}
+                                columnDefs={cols}
+                                style={{
+                                    flex: "1 0 auto",
+                                    width: "100%",
+                                    height: "calc(100% - 32px )"
+                                }}
+                                maxZoom={16}
+                                selectFeatures={this.selectFeatures}
+                                selectAll={this.selectAll}
+                                paging={this.props.pagination}
+                                zoom={15}
+                                enableZoomToFeature={this.props.withMap}
+                                agGridOptions={{enableServerSideSorting: true, suppressMultiSort: true}}
+                                zoomToFeatureAction={this.props.zoomToFeatureAction}
+                                toolbar={{
+                                    zoom: this.props.withMap,
+                                    exporter: true,
+                                    toolPanel: true,
+                                    selectAll: true
+                                }}
+                                {...gridConf}
+                                />
+                        </div>}
                 </Dock>
             );
         }
