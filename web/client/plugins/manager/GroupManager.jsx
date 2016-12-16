@@ -8,18 +8,18 @@
 const React = require('react');
 const {connect} = require('react-redux');
 const {Button, Grid, Glyphicon} = require('react-bootstrap');
-const {editUser} = require('../../actions/users');
-const {getUsers, usersSearchTextChanged} = require('../../actions/users');
+const {editGroup} = require('../../actions/usergroups');
+const {getUserGroups, groupSearchTextChanged} = require('../../actions/usergroups');
 const SearchBar = require("../../components/mapcontrols/search/SearchBar");
-const UserGrid = require('./users/UserGrid');
-const UserDialog = require('./users/UserDialog');
-const UserDeleteConfirm = require('./users/UserDeleteConfirm');
+const GroupsGrid = require('./users/GroupGrid');
+const GroupDialog = require('./users/GroupDialog');
+const GroupDeleteConfirm = require('./users/GroupDeleteConfirm');
 const Message = require('../../components/I18N/Message');
 const assign = require('object-assign');
 const {trim} = require('lodash');
-const UserManager = React.createClass({
+const GroupManager = React.createClass({
     propTypes: {
-        onNewUser: React.PropTypes.func,
+        onNewGroup: React.PropTypes.func,
         className: React.PropTypes.string,
         hideOnBlur: React.PropTypes.bool,
         placeholderMsgId: React.PropTypes.string,
@@ -35,57 +35,58 @@ const UserManager = React.createClass({
         return {
             className: "user-search",
             hideOnBlur: false,
-            placeholderMsgId: "users.searchUsers",
+            placeholderMsgId: "usergroups.searchGroups",
             typeAhead: false,
             searchText: "",
             start: 0,
             limit: 20,
+            onNewGroup: () => {},
             onSearch: () => {},
             onSearchReset: () => {},
-            onSearchTextChange: () => {},
-            onNewUser: () => {}
+            onSearchTextChange: () => {}
         };
     },
     onNew() {
-        this.props.onNewUser();
+        this.props.onNewGroup();
     },
     render() {
         return (<div>
-                <SearchBar
-                    className={this.props.className}
-                    hideOnBlur={this.props.hideOnBlur}
-                    placeholderMsgId ={this.props.placeholderMsgId}
-                    onSearch={this.props.onSearch}
-                    onSearchReset={this.props.onSearchReset}
-                    onSearchTextChange={this.props.onSearchTextChange}
-                    typeAhead={this.props.typeAhead}
-                    searchText={this.props.searchText}
-                    start={this.props.start}
-                    limit={this.props.limit} />
-                <Grid style={{marginBottom: "10px"}} fluid={true}>
-                    <h1 className="usermanager-title"><Message msgId={"users.users"}/></h1>
-                    <Button style={{marginRight: "10px"}} bsStyle="success" onClick={this.onNew}><span><Glyphicon glyph="1-user-add" /><Message msgId="users.newUser" /></span></Button>
-                </Grid>
-                <UserGrid />
-                <UserDialog />
-                <UserDeleteConfirm />
+            <SearchBar
+                className={this.props.className}
+                hideOnBlur={this.props.hideOnBlur}
+                placeholderMsgId ={this.props.placeholderMsgId}
+                onSearch={this.props.onSearch}
+                onSearchReset={this.props.onSearchReset}
+                onSearchTextChange={this.props.onSearchTextChange}
+                typeAhead={this.props.typeAhead}
+                searchText={this.props.searchText}
+                start={this.props.start}
+                limit={this.props.limit} />
+            <Grid style={{marginBottom: "10px"}} fluid={true}>
+                <h1 className="usermanager-title"><Message msgId={"usergroups.groups"}/></h1>
+                <Button style={{marginRight: "10px"}} bsStyle="success" onClick={this.onNew}>
+                    <span><Glyphicon glyph="1-group-add" /><Message msgId="usergroups.newGroup" /></span>
+                </Button>
+            </Grid>
+            <GroupsGrid />
+            <GroupDialog />
+            <GroupDeleteConfirm />
         </div>);
     }
 });
 module.exports = {
-    UserManagerPlugin: assign(
+    GroupManagerPlugin: assign(
         connect((state) => {
-            let searchState = state && state.users;
+            let searchState = state && state.usergroups;
             return {
                 start: searchState && searchState.start,
                 limit: searchState && searchState.limit,
                 searchText: (searchState && searchState.searchText && trim(searchState.searchText, '*')) || ""
             };
-        },
-        {
-            onNewUser: editUser.bind(null, {role: "USER", "enabled": true}),
-            onSearchTextChange: usersSearchTextChanged,
-            onSearch: getUsers
+        }, {
+            onNewGroup: editGroup.bind(null, {}),
+            onSearchTextChange: groupSearchTextChanged,
+            onSearch: getUserGroups
         }, (stateProps, dispatchProps) => {
             return {
                 ...stateProps,
@@ -101,16 +102,16 @@ module.exports = {
                     dispatchProps.onSearch(searchText, {params: {start: 0, limit}});
                 }
             };
-        })(UserManager), {
+        })(GroupManager), {
     hide: true,
     Manager: {
-        id: "usermanager",
-        name: 'usermanager',
+        id: "groupmanager",
+        name: 'groupmanager',
         position: 1,
-        title: <Message msgId="users.manageUsers" />,
-        glyph: "1-user-mod"
+        title: <Message msgId="usergroups.manageGroups" />,
+        glyph: "1-group-mod"
     }}),
     reducers: {
-        users: require('../../reducers/users')
+        usergroups: require('../../reducers/usergroups')
     }
 };
