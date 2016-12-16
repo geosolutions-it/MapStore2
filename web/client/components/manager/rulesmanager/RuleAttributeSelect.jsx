@@ -43,7 +43,7 @@ const RuleAttributeSelect = React.createClass({
         return {
             loadOptions: () => [],
             onInputChange: () => {},
-            onValueUpdated: () => [],
+            onValueUpdated: () => {},
             options: [],
             disabled: false,
             paginated: false,
@@ -114,9 +114,12 @@ const RuleAttributeSelect = React.createClass({
                     }
                     this.props.loadOptions();
                 }}
+                searchable={true}
+                matchPos="any"
+                matchProp="any"
                 clearable={this.props.clearable}
                 onInputChange={(input) => {
-                    if (!this.props.staticValues) {
+                    if (!this.props.staticValues && (!options && !this.props.paginated)) {
                         this.setState({loading: true});
                     }
                     this.props.onInputChange(input);
