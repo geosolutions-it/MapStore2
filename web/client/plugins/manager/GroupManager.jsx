@@ -9,26 +9,41 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {Button, Grid, Glyphicon} = require('react-bootstrap');
 const {editGroup} = require('../../actions/usergroups');
-const {setControlProperty} = require('../../actions/controls');
-const SearchBar = require('./users/SearchBar');
+const {getUserGroups, groupSearchTextChanged} = require('../../actions/usergroups');
+const SearchBar = require("../../components/mapcontrols/search/SearchBar");
 const GroupsGrid = require('./users/GroupGrid');
 const GroupDialog = require('./users/GroupDialog');
 const GroupDeleteConfirm = require('./users/GroupDeleteConfirm');
 const Message = require('../../components/I18N/Message');
 const assign = require('object-assign');
-
+const {trim} = require('lodash');
 const GroupManager = React.createClass({
     propTypes: {
-        selectedTool: React.PropTypes.string,
-        selectedGroup: React.PropTypes.string,
         onNewGroup: React.PropTypes.func,
-        onToggleUsersGroups: React.PropTypes.func
+        className: React.PropTypes.string,
+        hideOnBlur: React.PropTypes.bool,
+        placeholderMsgId: React.PropTypes.string,
+        typeAhead: React.PropTypes.bool,
+        searchText: React.PropTypes.string,
+        onSearch: React.PropTypes.func,
+        onSearchReset: React.PropTypes.func,
+        onSearchTextChange: React.PropTypes.func,
+        start: React.PropTypes.number,
+        limit: React.PropTypes.number
     },
     getDefaultProps() {
         return {
-            selectedGroup: "groups",
+            className: "user-search",
+            hideOnBlur: false,
+            placeholderMsgId: "usergroups.searchGroups",
+            typeAhead: false,
+            searchText: "",
+            start: 0,
+            limit: 20,
             onNewGroup: () => {},
-            onToggleUsersGroups: () => {}
+            onSearch: () => {},
+            onSearchReset: () => {},
+            onSearchTextChange: () => {}
         };
     },
     onNew() {
@@ -36,8 +51,17 @@ const GroupManager = React.createClass({
     },
     render() {
         return (<div>
-            <SearchBar />
-            {this.toogleTools()}
+            <SearchBar
+                className={this.props.className}
+                hideOnBlur={this.props.hideOnBlur}
+                placeholderMsgId ={this.props.placeholderMsgId}
+                onSearch={this.props.onSearch}
+                onSearchReset={this.props.onSearchReset}
+                onSearchTextChange={this.props.onSearchTextChange}
+                typeAhead={this.props.typeAhead}
+                searchText={this.props.searchText}
+                start={this.props.start}
+                limit={this.props.limit} />
             <Grid style={{marginBottom: "10px"}} fluid={true}>
                 <h1 className="usermanager-title"><Message msgId={"usergroups.groups"}/></h1>
                 <Button style={{marginRight: "10px"}} bsStyle="success" onClick={this.onNew}>
@@ -48,18 +72,36 @@ const GroupManager = React.createClass({
             <GroupDialog />
             <GroupDeleteConfirm />
         </div>);
-    },
-    toogleTools() {
-        this.props.onToggleUsersGroups(this.props.selectedGroup);
     }
 });
 module.exports = {
     GroupManagerPlugin: assign(
-        connect((state) => ({
-            selectedTool: state && state.controls && state.controls.managerchoice && state.controls.managerchoice.selectedTool
-        }), {
+        connect((state) => {
+            let searchState = state && state.usergroups;
+            return {
+                start: searchState && searchState.start,
+                limit: searchState && searchState.limit,
+                searchText: (searchState && searchState.searchText && trim(searchState.searchText, '*')) || ""
+            };
+        }, {
             onNewGroup: editGroup.bind(null, {}),
-            onToggleUsersGroups: setControlProperty.bind(null, "managerchoice", "selectedTool")
+            onSearchTextChange: groupSearchTextChanged,
+            onSearch: getUserGroups
+        }, (stateProps, dispatchProps) => {
+            return {
+                ...stateProps,
+                ...dispatchProps,
+                onSearchReset: (text) => {
+                    let limit = stateProps.limit;
+                    let searchText = (text && text !== "") ? ("*" + text + "*") : "*";
+                    dispatchProps.onSearch(searchText, {params: {start: 0, limit}});
+                },
+                onSearch: (text) => {
+                    let limit = stateProps.limit;
+                    let searchText = (text && text !== "") ? ("*" + text + "*") : "*";
+                    dispatchProps.onSearch(searchText, {params: {start: 0, limit}});
+                }
+            };
         })(GroupManager), {
     hide: true,
     Manager: {
@@ -70,8 +112,6 @@ module.exports = {
         glyph: "1-group-mod"
     }}),
     reducers: {
-        users: require('../../reducers/users'),
-        usergroups: require('../../reducers/usergroups'),
-        controls: require('../../reducers/controls')
+        usergroups: require('../../reducers/usergroups')
     }
 };

@@ -9,26 +9,41 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {Button, Grid, Glyphicon} = require('react-bootstrap');
 const {editUser} = require('../../actions/users');
-const {setControlProperty} = require('../../actions/controls');
-const SearchBar = require('./users/SearchBar');
+const {getUsers, usersSearchTextChanged} = require('../../actions/users');
+const SearchBar = require("../../components/mapcontrols/search/SearchBar");
 const UserGrid = require('./users/UserGrid');
 const UserDialog = require('./users/UserDialog');
 const UserDeleteConfirm = require('./users/UserDeleteConfirm');
 const Message = require('../../components/I18N/Message');
 const assign = require('object-assign');
-
+const {trim} = require('lodash');
 const UserManager = React.createClass({
     propTypes: {
-        selectedTool: React.PropTypes.string,
-        selectedGroup: React.PropTypes.string,
         onNewUser: React.PropTypes.func,
-        onToggleUsersGroups: React.PropTypes.func
+        className: React.PropTypes.string,
+        hideOnBlur: React.PropTypes.bool,
+        placeholderMsgId: React.PropTypes.string,
+        typeAhead: React.PropTypes.bool,
+        searchText: React.PropTypes.string,
+        onSearch: React.PropTypes.func,
+        onSearchReset: React.PropTypes.func,
+        onSearchTextChange: React.PropTypes.func,
+        start: React.PropTypes.number,
+        limit: React.PropTypes.number
     },
     getDefaultProps() {
         return {
-            selectedGroup: "users",
-            onNewUser: () => {},
-            onToggleUsersGroups: () => {}
+            className: "user-search",
+            hideOnBlur: false,
+            placeholderMsgId: "users.searchUsers",
+            typeAhead: false,
+            searchText: "",
+            start: 0,
+            limit: 20,
+            onSearch: () => {},
+            onSearchReset: () => {},
+            onSearchTextChange: () => {},
+            onNewUser: () => {}
         };
     },
     onNew() {
@@ -36,8 +51,17 @@ const UserManager = React.createClass({
     },
     render() {
         return (<div>
-                <SearchBar />
-                {this.toogleTools()}
+                <SearchBar
+                    className={this.props.className}
+                    hideOnBlur={this.props.hideOnBlur}
+                    placeholderMsgId ={this.props.placeholderMsgId}
+                    onSearch={this.props.onSearch}
+                    onSearchReset={this.props.onSearchReset}
+                    onSearchTextChange={this.props.onSearchTextChange}
+                    typeAhead={this.props.typeAhead}
+                    searchText={this.props.searchText}
+                    start={this.props.start}
+                    limit={this.props.limit} />
                 <Grid style={{marginBottom: "10px"}} fluid={true}>
                     <h1 className="usermanager-title"><Message msgId={"users.users"}/></h1>
                     <Button style={{marginRight: "10px"}} bsStyle="success" onClick={this.onNew}><span><Glyphicon glyph="1-user-add" /><Message msgId="users.newUser" /></span></Button>
@@ -46,18 +70,37 @@ const UserManager = React.createClass({
                 <UserDialog />
                 <UserDeleteConfirm />
         </div>);
-    },
-    toogleTools() {
-        this.props.onToggleUsersGroups(this.props.selectedGroup);
     }
 });
 module.exports = {
     UserManagerPlugin: assign(
-        connect((state) => ({
-            selectedTool: state && state.controls && state.controls.managerchoice && state.controls.managerchoice.selectedTool
-        }), {
+        connect((state) => {
+            let searchState = state && state.users;
+            return {
+                start: searchState && searchState.start,
+                limit: searchState && searchState.limit,
+                searchText: (searchState && searchState.searchText && trim(searchState.searchText, '*')) || ""
+            };
+        },
+        {
             onNewUser: editUser.bind(null, {role: "USER", "enabled": true}),
-            onToggleUsersGroups: setControlProperty.bind(null, "managerchoice", "selectedTool")
+            onSearchTextChange: usersSearchTextChanged,
+            onSearch: getUsers
+        }, (stateProps, dispatchProps) => {
+            return {
+                ...stateProps,
+                ...dispatchProps,
+                onSearchReset: (text) => {
+                    let limit = stateProps.limit;
+                    let searchText = (text && text !== "") ? ("*" + text + "*") : "*";
+                    dispatchProps.onSearch(searchText, {params: {start: 0, limit}});
+                },
+                onSearch: (text) => {
+                    let limit = stateProps.limit;
+                    let searchText = (text && text !== "") ? ("*" + text + "*") : "*";
+                    dispatchProps.onSearch(searchText, {params: {start: 0, limit}});
+                }
+            };
         })(UserManager), {
     hide: true,
     Manager: {
@@ -68,8 +111,6 @@ module.exports = {
         glyph: "1-user-mod"
     }}),
     reducers: {
-        users: require('../../reducers/users'),
-        usergroups: require('../../reducers/usergroups'),
-        controls: require('../../reducers/controls')
+        users: require('../../reducers/users')
     }
 };
