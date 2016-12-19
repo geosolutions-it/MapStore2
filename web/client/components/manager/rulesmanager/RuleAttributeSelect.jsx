@@ -41,7 +41,7 @@ const RuleAttributeSelect = React.createClass({
     },
     getDefaultProps() {
         return {
-            loadOptions: () => [],
+            loadOptions: () => {},
             onInputChange: () => {},
             onValueUpdated: () => {},
             options: [],
@@ -119,9 +119,6 @@ const RuleAttributeSelect = React.createClass({
                 matchProp="any"
                 clearable={this.props.clearable}
                 onInputChange={(input) => {
-                    if (!this.props.staticValues && (!options && !this.props.paginated)) {
-                        this.setState({loading: true});
-                    }
                     this.props.onInputChange(input);
                 }}
                 options={this.state.loading ? [] : options}
