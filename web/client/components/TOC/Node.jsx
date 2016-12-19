@@ -39,7 +39,8 @@ var Node = React.createClass({
         className: React.PropTypes.string,
         type: React.PropTypes.string,
         onSort: React.PropTypes.func,
-        isDraggable: React.PropTypes.bool
+        isDraggable: React.PropTypes.bool,
+        animateCollapse: React.PropTypes.bool
     },
     mixins: [SortableMixin],
     getDefaultProps() {
@@ -49,7 +50,8 @@ var Node = React.createClass({
             styler: () => {},
             className: "",
             type: 'node',
-            onSort: null
+            onSort: null,
+            animateCollapse: true
         };
     },
     renderChildren(filter = () => true) {
@@ -66,9 +68,13 @@ var Node = React.createClass({
         let expanded = (this.props.node.expanded !== undefined) ? this.props.node.expanded : true;
         let prefix = this.props.type;
         const nodeStyle = assign({}, this.props.style, this.props.styler(this.props.node));
+        let collapsible = expanded ? this.renderChildren((child) => child && child.props.position === 'collapsible') : [];
+        if (this.props.animateCollapse) {
+            collapsible = <ReactCSSTransitionGroup transitionName="TOC-Node" transitionEnterTimeout={250} transitionLeaveTimeout={250}>{collapsible}</ReactCSSTransitionGroup>;
+        }
         let content = (<div key={this.props.node.name} className={(expanded ? prefix + "-expanded" : prefix + "-collapsed") + " " + this.props.className} style={nodeStyle} >
             {this.renderChildren((child) => child && child.props.position !== 'collapsible')}
-            <ReactCSSTransitionGroup transitionName="TOC-Node" transitionEnterTimeout={250} transitionLeaveTimeout={250}>{expanded ? this.renderChildren((child) => child && child.props.position === 'collapsible') : []}</ReactCSSTransitionGroup>
+            {collapsible}
         </div>);
         return this.props.isDraggable ? this.renderWithSortable(content) : content;
     }
