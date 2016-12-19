@@ -9,6 +9,7 @@ const React = require('react');
 const {Row, Col} = require('react-bootstrap');
 
 const ComboField = require('./ComboField');
+const assign = require('object-assign');
 
 const FilterField = React.createClass({
     propTypes: {
@@ -42,14 +43,14 @@ const FilterField = React.createClass({
     renderValueField(selectedAttribute) {
         const valueElement = React.cloneElement(
             React.Children.toArray(this.props.children).filter((node) => node.props.attType === selectedAttribute.type)[0],
-            {
+            assign({
                 fieldName: "value",
                 fieldRowId: this.props.filterField.rowId,
                 fieldValue: this.props.filterField.value,
                 fieldException: this.props.filterField.exception,
                 onUpdateField: this.updateFieldElement,
                 onUpdateExceptionField: this.updateExceptionFieldElement
-            }
+            }, selectedAttribute.fieldOptions || {})
         );
 
         return (

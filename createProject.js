@@ -39,7 +39,7 @@ function copyStaticFiles() {
     }).forEach(function(stream) {
         stream.on('finish', function() {
             copied++;
-            if(copied == 4) {
+            if(copied === 4) {
                 ncp('./project/static', outFolder, function(err) {
                     if (err) {
                         return console.log(err);
