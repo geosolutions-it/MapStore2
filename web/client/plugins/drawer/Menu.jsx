@@ -20,6 +20,7 @@ var Menu = React.createClass({
         onChoose: React.PropTypes.func,
         single: React.PropTypes.bool,
         width: React.PropTypes.number,
+        dynamicWidth: React.PropTypes.number,
         overlapMap: React.PropTypes.bool,
         changeMapStyle: React.PropTypes.func
     },
@@ -87,7 +88,7 @@ var Menu = React.createClass({
             <Sidebar styles={{
                     sidebar: {
                         zIndex: 1022,
-                        width: this.props.width
+                        width: this.props.dynamicWidth || this.props.width
                     },
                     overlay: {
                         zIndex: 1021

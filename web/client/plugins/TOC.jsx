@@ -13,7 +13,6 @@ const {Button, Glyphicon} = require('react-bootstrap');
 const {changeLayerProperties, changeGroupProperties, toggleNode,
        sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode, getLayerCapabilities} = require('../actions/layers');
 const {zoomToExtent} = require('../actions/map');
-const {toggleControl} = require('../actions/controls');
 
 const {groupsSelector} = require('../selectors/layers');
 
@@ -51,7 +50,7 @@ const {
     zoneChange
 } = require('../actions/queryform');
 
-const {query, featureTypeSelected, describeFeatureType} = require('../actions/wfsquery');
+const {query, toggleQueryPanel, describeFeatureType} = require('../actions/wfsquery');
 
 const {
     changeDrawingStatus,
@@ -184,6 +183,7 @@ const LayerTree = React.createClass({
             activateZoomTool: true,
             activateSettingsTool: true,
             activateRemoveLayer: true,
+            activateQueryTool: true,
             visibilityCheckType: "checkbox",
             settingsOptions: {},
             querypanelEnabled: false
@@ -257,12 +257,7 @@ const TOCPlugin = connect(tocSelector, {
     retrieveLayerData: getLayerCapabilities,
     onToggleGroup: LayersUtils.toggleByType('groups', toggleNode),
     onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
-    onToggleQuery: (url, name) => {
-        return (dispatch) => {
-            dispatch(featureTypeSelected(url, name));
-            dispatch(toggleControl('queryPanel', null));
-        };
-    },
+    onToggleQuery: toggleQueryPanel,
     onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
     onSettings: showSettings,
     onZoomToExtent: zoomToExtent,

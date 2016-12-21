@@ -15,6 +15,9 @@ const QUERY_ERROR = 'QUERY_ERROR';
 const RESET_QUERY = 'RESET_QUERY';
 
 const axios = require('../libs/ajax');
+
+const {toggleControl, setControlProperty} = require('./controls');
+
 function featureTypeSelected(url, typeName) {
     return {
         type: FEATURE_TYPE_SELECTED,
@@ -127,6 +130,15 @@ function resetQuery() {
     };
 }
 
+
+function toggleQueryPanel(url, name) {
+    return (dispatch, getState) => {
+        dispatch(featureTypeSelected(url, name));
+        dispatch(toggleControl('queryPanel', null));
+        dispatch(setControlProperty('drawer', 'width', getState().controls.queryPanel.enabled ? 700 : 300));
+    };
+}
+
 module.exports = {
     FEATURE_TYPE_SELECTED,
     FEATURE_TYPE_LOADED,
@@ -140,5 +152,6 @@ module.exports = {
     describeFeatureType,
     loadFeature,
     query,
-    resetQuery
+    resetQuery,
+    toggleQueryPanel
 };
