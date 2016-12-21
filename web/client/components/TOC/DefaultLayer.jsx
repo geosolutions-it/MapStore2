@@ -121,7 +121,7 @@ var DefaultLayer = React.createClass({
                            groups={this.props.groups}/>
                );
         }
-        if (this.props.activateQueryTool) {
+        if (this.props.activateQueryTool && this.props.node.search) {
             tools.push(
                 <LayersTool key="toolquery"
                         tooltip="toc.searchFeatures"
@@ -130,7 +130,7 @@ var DefaultLayer = React.createClass({
                         ref="target"
                         style={{"float": "right", cursor: "pointer"}}
                         glyph="search"
-                        onClick={(node) => this.props.onToggleQuerypanel(node.url, node.name)}/>
+                        onClick={(node) => this.props.onToggleQuerypanel(node.search.url || node.url, node.name)}/>
                 );
         }
         return (<div position="collapsible" className="collapsible-toc">
