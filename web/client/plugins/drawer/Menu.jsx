@@ -5,6 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+ /**
+  *
+  * @class
+  * @ignore
+  */
 var React = require('react');
 var {Glyphicon, Button} = require('react-bootstrap');
 var Sidebar = require('react-sidebar').default;

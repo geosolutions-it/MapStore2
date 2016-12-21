@@ -8,6 +8,11 @@
  /**
  * Plugin for Zoom in
  */
+ /**
+  *
+  * @class
+  * @ignore
+  */
 const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');

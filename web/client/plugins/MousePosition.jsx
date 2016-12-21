@@ -5,6 +5,45 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+ /**
+  * For detecting MousePosition On Map and display its x and y coordinates
+  *
+  * @param {string}  cfg.id
+  * unique id
+  *
+  * @param {string}  [cfg.crs="EPSG:4326"]
+  * current CRS.
+  *
+  * @param {object | func} cfg.degreesTemplate
+  * position object
+  *
+  * @param {object | func} cfg.projectedTemplate
+  * x and y of mapposition
+  *
+  * @param {object}  cfg.style
+  * default or dynamic style
+  *
+  * @param {bool} [cfg.copyToClipboardEnabled=false]
+  * copying value to clipboard status
+  *
+  * @param {string}  [cfg.glyphicon="paste"]
+  * icon text
+  *
+  * @param {large | medium | small | xsmall}  cfg.btnSize
+  * button sizes
+  *
+  * @param {func}  [cfg.onCopy= () => {}]
+  * onecopying to clipboard
+  *
+  * @example
+  * with local configuration you can pass above Arguments like below
+  * "cfg": { "id": "mapstore-mouseposition", "btnSize": "small" }
+  *
+  * @see {@link module:components.MousePosition} for further options
+  * @name MousePosition
+  * @class
+  * @memberof module:plugins
+  */
 const React = require('react');
 
 const {connect} = require('react-redux');

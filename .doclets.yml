@@ -1,3 +1,3 @@
-dir: web/client/components/
+dir: web/client/plugins
 articles:
   - Mapstore2: README.md
