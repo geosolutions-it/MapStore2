@@ -165,7 +165,7 @@ const FilterUtils = {
         let subGroups = this.findSubGroups(root, objFilter.groupFields);
         if (subGroups.length > 0) {
             subGroups.forEach((subGroup) => {
-                ogc += this.processOGCFilterGroup(subGroup, nsplaceholder);
+                ogc += this.processOGCFilterGroup(subGroup, objFilter, nsplaceholder);
             });
         }
 
