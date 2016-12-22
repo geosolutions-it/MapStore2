@@ -10,7 +10,6 @@ const React = require('react');
 const {Button, Glyphicon, ButtonToolbar, Modal} = require('react-bootstrap');
 
 const I18N = require('../../I18N/I18N');
-const FilterUtils = require('../../../utils/FilterUtils');
 
 const QueryToolbar = React.createClass({
     propTypes: {
@@ -94,17 +93,17 @@ const QueryToolbar = React.createClass({
     },
     search() {
         let filterObj = {
+            featureTypeName: this.props.featureTypeName,
             groupFields: this.props.groupFields,
             filterFields: this.props.filterFields.filter((field) => field.value),
             spatialField: this.props.spatialField,
-            pagination: this.props.pagination
+            pagination: this.props.pagination,
+            filterType: this.props.filterType,
+            ogcVersion: this.props.ogcVersion,
+            sortOptions: this.props.sortOptions,
+            hits: this.props.hits
         };
-
-        let filter = this.props.filterType === "OGC" ?
-            FilterUtils.toOGCFilter(this.props.featureTypeName, filterObj, this.props.ogcVersion, this.props.sortOptions, this.props.hits) :
-            FilterUtils.toCQLFilter(filterObj);
-
-        this.props.actions.onQuery(this.props.searchUrl, filter, this.props.params);
+        this.props.actions.onQuery(this.props.searchUrl, filterObj, this.props.params);
     },
     reset() {
         this.props.actions.onChangeDrawingStatus('clean', null, "queryform", []);

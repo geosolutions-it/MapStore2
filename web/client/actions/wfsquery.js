@@ -10,14 +10,14 @@ const FEATURE_TYPE_LOADED = 'FEATURE_TYPE_LOADED';
 const FEATURE_LOADED = 'FEATURE_LOADED';
 const FEATURE_TYPE_ERROR = 'FEATURE_TYPE_ERROR';
 const FEATURE_ERROR = 'FEATURE_ERROR';
+const QUERY_CREATE = 'QUERY_CREATE';
 const QUERY_RESULT = 'QUERY_RESULT';
 const QUERY_ERROR = 'QUERY_ERROR';
 const RESET_QUERY = 'RESET_QUERY';
 
 const axios = require('../libs/ajax');
-
 const {toggleControl, setControlProperty} = require('./controls');
-
+const FilterUtils = require('../utils/FilterUtils');
 function featureTypeSelected(url, typeName) {
     return {
         type: FEATURE_TYPE_SELECTED,
@@ -57,9 +57,11 @@ function featureError(typeName, error) {
     };
 }
 
-function querySearchResponse(result) {
+function querySearchResponse(result, searchURL, filterObj) {
     return {
         type: QUERY_RESULT,
+        searchURL,
+        filterObj,
         result
     };
 }
@@ -110,14 +112,30 @@ function loadFeature(baseUrl, typeName) {
         });
     };
 }
+function createQuery(seachURL, filterObj) {
+    return {
+        type: QUERY_CREATE,
+        seachURL,
+        filterObj
+    };
+}
 
-function query(seachURL, data) {
+function query(seachURL, filterObj) {
+    createQuery(seachURL, filterObj);
+    let data;
+    if (typeof filterObj === 'string') {
+        data = filterObj;
+    } else {
+        data = filterObj.filterType === "OGC" ?
+            FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits) :
+            FilterUtils.toCQLFilter(filterObj);
+    }
     return (dispatch) => {
         return axios.post(seachURL + '?service=WFS&&outputFormat=json', data, {
           timeout: 60000,
           headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
         }).then((response) => {
-            dispatch(querySearchResponse(response.data));
+            dispatch(querySearchResponse(response.data, seachURL, filterObj));
         }).catch((e) => {
             dispatch(queryError(e));
         });
@@ -145,12 +163,14 @@ module.exports = {
     FEATURE_LOADED,
     FEATURE_TYPE_ERROR,
     FEATURE_ERROR,
+    QUERY_CREATE,
     QUERY_RESULT,
     QUERY_ERROR,
     RESET_QUERY,
     featureTypeSelected,
     describeFeatureType,
     loadFeature,
+    createQuery,
     query,
     resetQuery,
     toggleQueryPanel
