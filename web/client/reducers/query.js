@@ -68,7 +68,7 @@ const extractData = (feature) => {
 const initialState = {
     featureTypes: {},
     data: {},
-    result: '',
+    result: null,
     resultError: null
 };
 
@@ -108,14 +108,14 @@ function query(state = initialState, action) {
         }
         case QUERY_ERROR: {
             return assign({}, state, {
-                result: '',
+                result: null,
                 resultError: action.error
             });
         }
         case QUERY_FORM_RESET:
         case RESET_QUERY: {
             return assign({}, state, {
-                result: '',
+                result: null,
                 resultError: null
             });
         }

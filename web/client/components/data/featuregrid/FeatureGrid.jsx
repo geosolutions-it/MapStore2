@@ -63,7 +63,10 @@ const FeatureGrid = React.createClass({
             columnDefs: null,
             changeMapView: () => {},
             selectFeatures: () => {},
-            style: {height: "400px", width: "800px"},
+            style: {
+                height: "400px",
+                width: "800px"
+            },
             virtualPaging: false,
             paging: false,
             overflowSize: 10,
@@ -179,40 +182,44 @@ const FeatureGrid = React.createClass({
         }
 
         return (
-            <div>
-            <div fluid={false} style={this.props.style} className="ag-fresh">
-                <AgGridReact
-                    virtualPaging={this.props.virtualPaging}
-                    columnDefs={this.setColumnDefs()}
-                    rowData={(!isPagingOrVirtual) ? this.props.features : null}
-                    datasource={(isPagingOrVirtual) ? this.setDataSource() : null}
-                    enableServerSideSorting={(isPagingOrVirtual)}
-                    // or provide props the old way with no binding
-                    onSelectionChanged={this.selectFeatures}
-                    rowSelection="multiple"
-                    enableColResize={true}
-                    enableSorting={(!isPagingOrVirtual)}
-                    toolPanelSuppressValues={true}
-                    toolPanelSuppressGroups={true}
-                    showToolPanel={false}
-                    rowDeselection={true}
-                    localeText={{
-                        page: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.page") || 'Page',
-                        of: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.of") || 'of',
-                        to: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.to") || 'to',
-                        more: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.more") || 'more',
-                        next: '>',
-                        last: '>|',
-                        first: '|<',
-                        previous: '<'}}
-                    onGridReady={this.onGridReady}
-                    {...this.props.agGridOptions}
-                />
-            </div>
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100%"
+            }}>
+                <div fluid={false} style={this.props.style} className="ag-fresh">
+                    <AgGridReact
+                        virtualPaging={this.props.virtualPaging}
+                        columnDefs={this.setColumnDefs()}
+                        rowData={(!isPagingOrVirtual) ? this.props.features : null}
+                        datasource={(isPagingOrVirtual) ? this.setDataSource() : null}
+                        enableServerSideSorting={(isPagingOrVirtual)}
+                        // or provide props the old way with no binding
+                        onSelectionChanged={this.selectFeatures}
+                        rowSelection="multiple"
+                        enableColResize={true}
+                        enableSorting={(!isPagingOrVirtual)}
+                        toolPanelSuppressValues={true}
+                        toolPanelSuppressGroups={true}
+                        showToolPanel={false}
+                        rowDeselection={true}
+                        localeText={{
+                            page: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.page") || 'Page',
+                            of: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.of") || 'of',
+                            to: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.to") || 'to',
+                            more: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.more") || 'more',
+                            next: '>',
+                            last: '>|',
+                            first: '|<',
+                            previous: '<'}}
+                        onGridReady={this.onGridReady}
+                        {...this.props.agGridOptions}
+                    />
+                </div>
 
-            <ButtonToolbar style={{marginTop: "5px", marginLeft: "0px"}}bsSize="sm">
-                {tools.map((tool) => tool)}
-            </ButtonToolbar>
+                <ButtonToolbar style={{marginTop: "5px", marginLeft: "0px", flex: "none"}} bsSize="sm">
+                    {tools.map((tool) => tool)}
+                </ButtonToolbar>
             </div>);
     },
     // If props.columnDefs is missing try to generate from features, add zoomTo as first column

@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const {connect} = require('react-redux');
+const {updateHighlighted} = require('../actions/highlight');
 
 module.exports = {
     FeatureGridPlugin: connect((state) => ({
@@ -21,5 +22,8 @@ module.exports = {
                 field: attr.attribute
             })),
         totalFeatures: state.query && state.query.result && state.query.result.totalFeatures
-    }))(require('../components/data/featuregrid/DockedFeatureGrid'))
+    }),
+    {
+        selectFeatures: updateHighlighted
+    })(require('../components/data/featuregrid/DockedFeatureGrid'))
 };
