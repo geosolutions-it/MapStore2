@@ -8,6 +8,7 @@
   "undocumentIdentifier": true,
   "builtinExternal": true,
   "index": "./README.md",
+  "scripts": ["./package.json"],
   "package": "./package.json",
   "coverage": true,
   "includeSource": true,
