@@ -11,6 +11,9 @@ const {
     USERMANAGER_GETGROUPS, USERS_SEARCH_TEXT_CHANGED
 } = require('../actions/users');
 const assign = require('object-assign');
+
+const {findIndex} = require('lodash');
+
 function users(state = {
     start: 0,
     limit: 12
@@ -57,7 +60,7 @@ function users(state = {
             if ( k.indexOf("attribute") === 0) {
                 let attrs = (currentUser.attribute || []).concat();
                 let attrName = k.split(".")[1];
-                let attrIndex = attrs.findIndex((att) => att.name === attrName);
+                let attrIndex = findIndex(attrs, (att) => att.name === attrName);
                 if (attrIndex >= 0) {
                     attrs[attrIndex] = {name: attrName, value: action.newValue};
                 } else {

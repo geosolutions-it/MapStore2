@@ -8,6 +8,7 @@
 
 const React = require('react');
 const {Panel, Glyphicon} = require('react-bootstrap');
+const {findIndex} = require('lodash');
 
 require('./css/identify.css');
 
@@ -234,7 +235,7 @@ const Identify = React.createClass({
             }else if (next === "params" && excludeList.length > 0) {
                 let params = layer[next];
                 Object.keys(params).forEach((n) => {
-                    if (excludeList.findIndex((el) => {return (el === n); }) === -1) {
+                    if (findIndex(excludeList, (el) => {return (el === n); }) === -1) {
                         op[n] = params[n];
                     }
                 }, {});

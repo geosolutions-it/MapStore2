@@ -22,6 +22,8 @@ const UserGroups = require('./UserGroups');
 const assign = require('object-assign');
 const Message = require('../../../components/I18N/Message');
 const Spinner = require('react-spinkit');
+const {findIndex} = require('lodash');
+
 require('./style/userdialog.css');
   /**
    * A Modal window to show password reset form
@@ -75,7 +77,7 @@ const UserDialog = React.createClass({
   getAttributeValue(name) {
       let attrs = this.props.user && this.props.user.attribute;
       if (attrs) {
-          let index = attrs.findIndex( a => a.name === name);
+          let index = findIndex(attrs, a => a.name === name);
           return attrs[index] && attrs[index].value;
       }
   },

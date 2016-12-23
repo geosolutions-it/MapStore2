@@ -10,6 +10,7 @@ var React = require('react');
 const Message = require('../../../I18N/Message');
 const Select = require('react-select');
 const {Button, Glyphicon, Alert} = require('react-bootstrap');
+const {findIndex} = require('lodash');
 
 require('react-select/dist/react-select.css');
 
@@ -50,7 +51,7 @@ const WMSStyle = React.createClass({
         let options = [{label: "Default Style", value: ""}].concat((this.props.element.availableStyles || []).map((item) => {
             return {label: this.renderItemLabel(item), value: item.name};
         }));
-        let currentStyleIndex = this.props.element.style && this.props.element.availableStyles && this.props.element.availableStyles.findIndex( el => el.name === this.props.element.style);
+        let currentStyleIndex = this.props.element.style && this.props.element.availableStyles && findIndex(this.props.element.availableStyles, el => el.name === this.props.element.style);
         if (!(currentStyleIndex >= 0) && this.props.element.style) {
             options.push({label: this.props.element.style, value: this.props.element.style });
         }

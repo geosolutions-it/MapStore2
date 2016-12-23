@@ -22,6 +22,8 @@ const assign = require('object-assign');
 const Message = require('../../../components/I18N/Message');
 const Spinner = require('react-spinkit');
 const Select = require("react-select");
+const {findIndex} = require('lodash');
+
 require('./style/userdialog.css');
   /**
    * A Modal window to show password reset form
@@ -144,7 +146,7 @@ const GroupDialog = React.createClass({
       }}/>);
   },
   renderMembersTab() {
-      let availableUsers = this.props.availableUsers.filter((user) => this.getCurrentGroupMembers().findIndex( member => member.id === user.id) < 0).map(u => ({value: u.id, label: u.name}));
+      let availableUsers = this.props.availableUsers.filter((user) => findIndex(this.getCurrentGroupMembers(), member => member.id === user.id) < 0).map(u => ({value: u.id, label: u.name}));
       return (<div>
           <label key="member-label" className="control-label"><Message msgId="usergroups.groupMembers" /></label>
           <div key="member-list" style={
@@ -163,7 +165,7 @@ const GroupDialog = React.createClass({
                   onInputChange={this.props.searchUsers}
                   onChange={(selected) => {
                       let value = selected.value;
-                      let newMemberIndex = this.props.availableUsers.findIndex(u => u.id === value);
+                      let newMemberIndex = findIndex(this.props.availableUsers, u => u.id === value);
                       if (newMemberIndex >= 0) {
                           let newMember = this.props.availableUsers[newMemberIndex];
                           let newUsers = this.getCurrentGroupMembers();

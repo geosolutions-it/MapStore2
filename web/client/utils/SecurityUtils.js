@@ -9,6 +9,7 @@
 const ConfigUtils = require('./ConfigUtils');
 const URL = require('url');
 const assign = require('object-assign');
+const {head} = require('lodash');
 
 /**
  * This utility class will get information about the current logged user directly from the store.
@@ -80,8 +81,8 @@ const SecurityUtils = {
             // the user as no attributes or the provided attribute name is undefined
             return undefined;
         }
-        return userAttributes.find(attribute => attribute.name
-            && attribute.name.toLowerCase() === attributeName.toLowerCase());
+        return head(userAttributes.filter(attribute => attribute.name
+            && attribute.name.toLowerCase() === attributeName.toLowerCase()));
     },
 
     /**
@@ -116,8 +117,8 @@ const SecurityUtils = {
      * the provided URL, if no rule matchs the provided URL undefined is returned.
      */
     getAuthenticationMethod: function(url) {
-        const foundRule = this.getAuthenticationRules().find(
-            rule => rule && rule.urlPattern && url.match(new RegExp(rule.urlPattern, "i")));
+        const foundRule = head(this.getAuthenticationRules().filter(
+            rule => rule && rule.urlPattern && url.match(new RegExp(rule.urlPattern, "i"))));
         return foundRule ? foundRule.method : undefined;
     },
 

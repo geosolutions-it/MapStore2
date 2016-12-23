@@ -12,7 +12,7 @@ var {LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, CHANGE_LAYER_PROPERTIES, CHANGE_GRO
     } = require('../actions/layers');
 
 var assign = require('object-assign');
-var {isObject, isArray, head} = require('lodash');
+var {isObject, isArray, head, findIndex} = require('lodash');
 
 const LayersUtils = require('../utils/LayersUtils');
 
@@ -59,9 +59,9 @@ const removeNode = (groups, nodeId) => {
 
 // add the newGroup to the list if it does not already exists
 const addGroup = (groups, newGroup) => {
-    return groups.find(
+    return head(groups.filter(
         (group) => group.id === newGroup
-    ) ?
+    )) ?
     groups :
     groups.concat({
             id: newGroup,
@@ -270,7 +270,7 @@ function layers(state = [], action) {
             let groupName = layer && layer.group ? layer.group : 'Default';
             let newLayers = (state.flat || []).filter(lyr => lyr.id !== action.layerId);
             let newGroups = (state.groups || []).concat();
-            let gidx = newGroups.findIndex(entry => entry.id === groupName);
+            let gidx = findIndex(newGroups, entry => entry.id === groupName);
             if (gidx >= 0) {
                 let newGroup = assign({}, newGroups[gidx]);
                 let nidx = newGroup.nodes.indexOf(action.layerId);

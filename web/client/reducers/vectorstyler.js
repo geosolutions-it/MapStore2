@@ -16,7 +16,7 @@ const {
 } = require('../actions/vectorstyler');
 const { STYLER_RESET } = require('../actions/styler');
 const assign = require('object-assign');
-const {isObject} = require('lodash');
+const {isObject, findIndex} = require('lodash');
 const baseStyle = {
     Point: {
             type: "Point",
@@ -75,7 +75,7 @@ function getBaseSymbol(type = "Polygon") {
 }
 
 function getRuleIdx(rules, id) {
-    return rules.findIndex((r) => {return r.id === id; });
+    return findIndex(rules, (r) => {return r.id === id; });
 }
 
 function vectorstyler(state = initialSpec, action) {

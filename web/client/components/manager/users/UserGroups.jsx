@@ -10,6 +10,7 @@ const React = require('react');
 // const Message = require('../I18N/Message');
 const Select = require('react-select');
 const Message = require('../../I18N/Message');
+const {findIndex} = require('lodash');
 
 require('react-select/dist/react-select.css');
 
@@ -36,7 +37,7 @@ const UserCard = React.createClass({
             return;
         }
         this.props.onUserGroupsChange("groups", values.map((group) => {
-            let index = this.props.groups.findIndex((availableGroup)=>availableGroup.id === group.value);
+            let index = findIndex(this.props.groups, (availableGroup)=>availableGroup.id === group.value);
             return index >= 0 ? this.props.groups[index] : null;
         }).filter(group => group));
     },
