@@ -10,6 +10,7 @@ const {Input, Alert} = require('react-bootstrap');
 const assign = require('object-assign');
 
 const {Message} = require('../../../I18N/I18N');
+const {findIndex} = require('lodash');
 
 const GdalTranslateTransform = React.createClass({
     propTypes: {
@@ -42,7 +43,7 @@ const GdalTranslateTransform = React.createClass({
         </div>);
     },
     isValid(t) {
-        return t && t.options && t.options.findIndex((e) => e === "") < 0;
+        return t && t.options && findIndex(t.options, (e) => e === "") < 0;
     }
 });
 module.exports = GdalTranslateTransform;

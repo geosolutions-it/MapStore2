@@ -8,7 +8,7 @@
 const React = require('react');
 const {Input} = require('react-bootstrap');
 const assign = require('object-assign');
-
+const {findIndex} = require('lodash');
 
 const {Message, Alert} = require('../../../I18N/I18N');
 
@@ -44,8 +44,8 @@ const GdalTranslateTransform = React.createClass({
         </form>);
     },
     isValid(t) {
-        return t && t.options && t.options.findIndex((e) => e === "") < 0 &&
-            t.levels && t.levels.findIndex((e) => e === "") < 0;
+        return t && t.options && findIndex(t.options, (e) => e === "") < 0 &&
+            t.levels && findIndex(t.levels, (e) => e === "") < 0;
     }
 });
 module.exports = GdalTranslateTransform;

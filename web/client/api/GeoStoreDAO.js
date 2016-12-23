@@ -10,6 +10,7 @@ const _ = require('lodash');
 const assign = require('object-assign');
 
 const ConfigUtils = require('../utils/ConfigUtils');
+const {findIndex} = require('lodash');
 
 let parseOptions = (opts) => opts;
 
@@ -251,9 +252,9 @@ var Api = {
             let restUsers = group.users || (group.restUsers && group.restUsers.User) || [];
             restUsers = Array.isArray(restUsers) ? restUsers : [restUsers];
             // old users not present in the new users list
-            let toRemove = restUsers.filter( (user) => group.newUsers.findIndex( u => u.id === user.id) < 0);
+            let toRemove = restUsers.filter( (user) => findIndex(group.newUsers, u => u.id === user.id) < 0);
             // new users not present in the old users list
-            let toAdd = group.newUsers.filter( (user) => restUsers.findIndex( u => u.id === user.id) < 0);
+            let toAdd = group.newUsers.filter( (user) => findIndex(restUsers, u => u.id === user.id) < 0);
 
             // create callbacks
             let removeCallbacks = toRemove.map( (user) => () => this.removeUserFromGroup(user.id, group.id, options) );

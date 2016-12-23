@@ -10,6 +10,7 @@ const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message');
 const ImporterUtils = require('../../../utils/ImporterUtils');
 const {Table, Glyphicon, Button, Label, OverlayTrigger, Tooltip} = require('react-bootstrap');
+const {findIndex} = require('lodash');
 
 const ImportsGrid = React.createClass({
     propTypes: {
@@ -100,7 +101,7 @@ const ImportsGrid = React.createClass({
     },
     update() {
         if (this.props.imports) {
-            let i = this.props.imports.findIndex((importObj) => importObj.state === "RUNNING");
+            let i = findIndex(this.props.imports, (importObj) => importObj.state === "RUNNING");
             if ( i >= 0 ) {
                 this.props.loadImports();
             }

@@ -10,7 +10,10 @@ const {connect} = require('react-redux');
 const Sidebar = require('react-sidebar').default;
 const {createSelector} = require('reselect');
 const {changeLayerProperties, changeGroupProperties, toggleNode,
-       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode, getLayerCapabilities} = require('../actions/layers');
+       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode} = require('../actions/layers');
+
+const {getLayerCapabilities} = require('../actions/layerCapabilities');
+
 const {zoomToExtent} = require('../actions/map');
 const {toggleControl} = require('../actions/controls');
 

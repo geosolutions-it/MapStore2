@@ -12,6 +12,7 @@ const {Alert} = require('react-bootstrap');
 const Confirm = require('../../../components/misc/ConfirmDialog');
 const GroupCard = require('../../../components/manager/users/GroupCard');
 const Message = require('../../../components/I18N/Message');
+const {findIndex} = require('lodash');
 
 const GroupDeleteConfirm = React.createClass({
     propTypes: {
@@ -62,7 +63,7 @@ module.exports = connect((state) => {
     let groups = groupsstate && groupsstate.groups;
     let deleteId = groupsstate.deletingGroup && groupsstate.deletingGroup.id;
     if (groups && deleteId) {
-        let index = groups.findIndex((user) => user.id === deleteId);
+        let index = findIndex(groups, (user) => user.id === deleteId);
         let group = groups[index];
         return {
             group,
