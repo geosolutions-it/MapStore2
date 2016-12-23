@@ -15,7 +15,7 @@ var assign = require('object-assign');
 var MapUtils = require('../utils/MapUtils');
 var CoordinatesUtils = require('../utils/CoordinatesUtils');
 
-function mapConfig(state = {}, action) {
+function mapConfig(state = null, action) {
     switch (action.type) {
         case CHANGE_MAP_VIEW:
             const {type, ...params} = action;
@@ -35,17 +35,19 @@ function mapConfig(state = {}, action) {
             });
         case CHANGE_MAP_SCALES:
             if (action.scales) {
-                const dpi = state.mapOptions && state.mapOptions.view && state.mapOptions.view.DPI || null;
-                const resolutions = MapUtils.getResolutionsForScales(action.scales, state.projection || "EPSG:4326", dpi);
+                const dpi = state && state.mapOptions && state.mapOptions.view && state.mapOptions.view.DPI || null;
+                const resolutions = MapUtils.getResolutionsForScales(action.scales, (state && state.projection) || "EPSG:4326", dpi);
                 // add or update mapOptions.view.resolutions
-                let mapOptions = assign({}, state.mapOptions);
-                mapOptions.view = assign({}, mapOptions.view, {
-                    resolutions: resolutions
-                });
                 return assign({}, state, {
-                    mapOptions: mapOptions
+                    mapOptions: assign({}, state && state.mapOptions,
+                        {
+                            view: assign({}, state && state.mapOptions && state.mapOptions.view, {
+                                resolutions: resolutions
+                            })
+                        })
                 });
-            } else if (state.mapOptions && state.mapOptions.view && state.mapOptions.view && state.mapOptions.view.resolutions) {
+            } else if (state && state.mapOptions && state.mapOptions.view && state.mapOptions.view && state.mapOptions.view.resolutions) {
+                // TODO: this block is removing empty objects from the state, check if it really needed
                 // deeper clone
                 let newState = assign({}, state);
                 newState.mapOptions = assign({}, newState.mapOptions);

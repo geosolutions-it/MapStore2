@@ -57,7 +57,7 @@ FeatureGridMap.defaultProps = {
 
 module.exports = connect((state) => {
     return {
-        map: (state.map && state.map) || (state.config && state.config.map),
+        map: state.map || (state.config && state.config.map),
         layers: state.config && state.config.layers || [],
         features: state.featuregrid.jsonlayer.features || [],
         selFeatures: state.featuregrid.select || null
