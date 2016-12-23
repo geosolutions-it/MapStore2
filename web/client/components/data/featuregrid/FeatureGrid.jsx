@@ -70,7 +70,7 @@ const FeatureGrid = React.createClass({
             virtualPaging: false,
             paging: false,
             overflowSize: 10,
-            pageSize: 15,
+            pageSize: 10,
             agGridOptions: {},
             columnDefaultOptions: {
                 width: 125

@@ -57,10 +57,10 @@ function featureError(typeName, error) {
     };
 }
 
-function querySearchResponse(result, searchURL, filterObj) {
+function querySearchResponse(result, searchUrl, filterObj) {
     return {
         type: QUERY_RESULT,
-        searchURL,
+        searchUrl,
         filterObj,
         result
     };
@@ -120,8 +120,8 @@ function createQuery(seachURL, filterObj) {
     };
 }
 
-function query(seachURL, filterObj) {
-    createQuery(seachURL, filterObj);
+function query(searchUrl, filterObj) {
+    createQuery(searchUrl, filterObj);
     let data;
     if (typeof filterObj === 'string') {
         data = filterObj;
@@ -131,11 +131,11 @@ function query(seachURL, filterObj) {
             FilterUtils.toCQLFilter(filterObj);
     }
     return (dispatch) => {
-        return axios.post(seachURL + '?service=WFS&&outputFormat=json', data, {
+        return axios.post(searchUrl + '?service=WFS&&outputFormat=json', data, {
           timeout: 60000,
           headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
         }).then((response) => {
-            dispatch(querySearchResponse(response.data, seachURL, filterObj));
+            dispatch(querySearchResponse(response.data, searchUrl, filterObj));
         }).catch((e) => {
             dispatch(queryError(e));
         });

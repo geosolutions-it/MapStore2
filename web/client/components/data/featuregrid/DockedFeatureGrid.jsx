@@ -90,7 +90,7 @@ const DockedFeatureGrid = React.createClass({
             searchUrl: null,
             dataSourceOptions: {
                 rowCount: -1,
-                pageSize: 10
+                pageSize: 20
             },
             initWidth: 600,
             withMap: true,
@@ -119,6 +119,18 @@ const DockedFeatureGrid = React.createClass({
             return prev;
         }, false);
     },
+    componentWillUpdate(nextProps) {
+        if (!nextProps.loadingGrid && nextProps.pagination && (nextProps.dataSourceOptions !== this.props.dataSourceOptions)) {
+            this.dataSource = this.getDataSource(nextProps.dataSourceOptions);
+        }
+        if (!nextProps.loadingGrid && this.featureLoaded && nextProps.features !== this.props.features) {
+            let rowsThisPage = nextProps.features || [];
+            if (rowsThisPage) {
+                this.featureLoaded.successCallback(rowsThisPage, nextProps.totalFeatures);
+            }
+
+        }
+    },
     onGridClose(filter) {
         this.props.selectFeatures([]);
         this.props.selectAllToggle();
@@ -142,9 +154,9 @@ const DockedFeatureGrid = React.createClass({
         return params.sortModel.reduce((o, m) => ({sortBy: this.getSortAttribute(m.colId), sortOrder: m.sort}), {});
     },
     getFeatures(params) {
-        if (!this.props.loadingGrid) {
+        if (!this.props.loadingGrid && this.props.searchUrl) {
             let reqId = this.getRequestId(params);
-            let rowsThisPage = this.props.features[reqId];
+            let rowsThisPage = this.props.features && this.props.features[reqId];
             if (rowsThisPage) {
                 params.successCallback(rowsThisPage, this.props.totalFeatures);
             }else {
@@ -218,7 +230,7 @@ const DockedFeatureGrid = React.createClass({
             });
         }
 
-        let gridConf = {features: this.props.features};
+        let gridConf = this.props.pagination ? {dataSource: this.getDataSource(this.props.dataSourceOptions), features: []} : {features: this.props.features};
 
         if (this.props.filterObj) {
             return (

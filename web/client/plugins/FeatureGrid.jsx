@@ -7,6 +7,7 @@
  */
 const {connect} = require('react-redux');
 const {updateHighlighted} = require('../actions/highlight');
+const {query} = require('../actions/wfsquery');
 
 module.exports = {
     FeatureGridPlugin: connect((state) => ({
@@ -28,6 +29,7 @@ module.exports = {
         totalFeatures: state.query && state.query.result && state.query.result.totalFeatures
     }),
     {
-        selectFeatures: updateHighlighted
+        selectFeatures: updateHighlighted,
+        onQuery: query
     })(require('../components/data/featuregrid/DockedFeatureGrid'))
 };

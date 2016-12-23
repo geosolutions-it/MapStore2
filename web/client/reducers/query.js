@@ -103,14 +103,14 @@ function query(state = initialState, action) {
         }
         case QUERY_CREATE: {
             return assign({}, state, {
-                searchURL: action.searchURL,
+                searchUrl: action.searchUrl,
                 filterObj: action.filterObj
             });
         }
         case QUERY_RESULT: {
             return assign({}, state, {
                 result: action.result,
-                searchURL: action.searchURL,
+                searchUrl: action.searchUrl,
                 filterObj: action.filterObj,
                 resultError: null
             });
@@ -125,7 +125,7 @@ function query(state = initialState, action) {
             return assign({}, state, {
                 result: null,
                 filterObj: null,
-                searchURL: null
+                searchUrl: null
             });
         case RESET_QUERY: {
             return assign({}, state, {
