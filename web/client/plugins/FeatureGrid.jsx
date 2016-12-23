@@ -14,7 +14,6 @@ module.exports = {
         features: state.query && state.query.result && state.query.result.features,
         filterObj: state.query && state.query.filterObj,
         searchUrl: state.query && state.query.searchUrl,
-        pagination: true,
         initWidth: "100%",
         columnsDef: state.query && state.query.typeName && state.query.featureTypes
             && state.query.featureTypes[state.query.typeName]

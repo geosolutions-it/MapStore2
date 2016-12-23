@@ -112,10 +112,10 @@ function loadFeature(baseUrl, typeName) {
         });
     };
 }
-function createQuery(seachURL, filterObj) {
+function createQuery(searchUrl, filterObj) {
     return {
         type: QUERY_CREATE,
-        seachURL,
+        searchUrl,
         filterObj
     };
 }

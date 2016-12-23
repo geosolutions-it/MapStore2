@@ -50,7 +50,7 @@ const {
     zoneChange
 } = require('../actions/queryform');
 
-const {query, toggleQueryPanel, describeFeatureType} = require('../actions/wfsquery');
+const {createQuery, toggleQueryPanel, describeFeatureType} = require('../actions/wfsquery');
 
 const {
     changeDrawingStatus,
@@ -77,10 +77,6 @@ const SmartQueryForm = connect((state) => {
         featureTypeConfigUrl: state.query && state.query.url,
         searchUrl: state.query && state.query.url,
         featureTypeName: state.query && state.query.typeName,
-        pagination: {
-            maxFeatures: state.query && state.query.filterObj && state.query.filterObj.maxFeatures || 20,
-            startIndex: state.query && state.query.filterObj && state.query.filterObj.startIndex || 0
-        },
         ogcVersion: "1.1.0",
         params: {typeName: state.query && state.query.typeName},
         resultTitle: "Query Result",
@@ -117,7 +113,7 @@ const SmartQueryForm = connect((state) => {
             zoneChange
         }, dispatch),
         queryToolbarActions: bindActionCreators({
-            onQuery: query,
+            onQuery: createQuery,
             onReset: reset,
             onChangeDrawingStatus: changeDrawingStatus
         }, dispatch)

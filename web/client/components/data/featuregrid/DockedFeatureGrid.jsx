@@ -18,6 +18,7 @@ const FeatureGrid = connect((state) => {
 const I18N = require('../../../components/I18N/I18N');
 const Spinner = require('react-spinkit');
 const assign = require('object-assign');
+const {isEqual} = require('lodash');
 
 require("./featuregrid.css");
 
@@ -82,7 +83,7 @@ const DockedFeatureGrid = React.createClass({
             featureTypeName: null,
             ogcVersion: "2.0",
             columnsDef: [],
-            pagination: false,
+            pagination: true,
             params: {},
             groupFields: [],
             filterFields: [],
@@ -128,7 +129,13 @@ const DockedFeatureGrid = React.createClass({
             if (rowsThisPage) {
                 this.featureLoaded.successCallback(rowsThisPage, nextProps.totalFeatures);
             }
-
+        }
+    },
+    componentDidUpdate(prevProps) {
+        if (!this.props.loadingGrid && !this.featureLoaded && !this.props.pagination && this.props.searchUrl) {
+            if (this.props.filterObj && !isEqual(prevProps.filterObj, this.props.filterObj)) {
+                this.getFeatures();
+            }
         }
     },
     onGridClose(filter) {
@@ -148,35 +155,30 @@ const DockedFeatureGrid = React.createClass({
     },
     getSortAttribute(colId) {
         let col = this.props.columnsDef.find((c) => colId === `properties.${c.field}`);
-        return col && col.sortAttribute ? col.sortAttribute : '';
+        return col && col.sortAttribute ? col.sortAttribute : (col && col.field || '');
     },
     getSortOptions(params) {
         return params.sortModel.reduce((o, m) => ({sortBy: this.getSortAttribute(m.colId), sortOrder: m.sort}), {});
     },
     getFeatures(params) {
         if (!this.props.loadingGrid && this.props.searchUrl) {
-            let reqId = this.getRequestId(params);
-            let rowsThisPage = this.props.features && this.props.features[reqId];
-            if (rowsThisPage) {
-                params.successCallback(rowsThisPage, this.props.totalFeatures);
-            }else {
-                let pagination = {startIndex: params.startRow, maxFeatures: params.endRow - params.startRow};
-                let filterObj = {
-                    ...this.props.filterObj,
-                    pagination
-                };
-                // TODO sort options : let filter = FilterUtils.toOGCFilter(this.props.featureTypeName, filterObj, this.props.ogcVersion, this.getSortOptions(params));
-                this.featureLoaded = params;
-                this.sortModel = params.sortModel;
-                this.props.onQuery(this.props.searchUrl, filterObj, this.props.params, reqId);
-            }
+            let pagination = this.props.pagination ? {startIndex: params.startRow, maxFeatures: params.endRow - params.startRow} : null;
+            let filterObj = {
+                ...this.props.filterObj,
+                sortOptions: params && params.sortModel && this.getSortOptions(params) || null,
+                pagination
+            };
+            this.featureLoaded = params;
+            this.sortModel = params && params.sortModel;
+            this.props.onQuery(this.props.searchUrl, filterObj, this.props.params);
+
         }
     },
     getDataSource(dataSourceOptions) {
         return {
             rowCount: dataSourceOptions.rowCount,
             getRows: this.getFeatures,
-            pageSize: dataSourceOptions.pageSize,
+            pageSize: this.props.pagination ? dataSourceOptions.pageSize : 10000000,
             overflowSize: 20
         };
     },
