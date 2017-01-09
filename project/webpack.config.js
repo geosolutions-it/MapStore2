@@ -28,6 +28,7 @@ module.exports = {
         }),
         new NormalModuleReplacementPlugin(/leaflet$/, path.join(__dirname, "MapStore2", "web", "client", "libs", "leaflet")),
         new NormalModuleReplacementPlugin(/openlayers$/, path.join(__dirname, "MapStore2", "web", "client", "libs", "openlayers")),
+        new NormalModuleReplacementPlugin(/cesium$/, path.join(__dirname, "MapStore2", "web", "client", "libs", "cesium")),
         new NormalModuleReplacementPlugin(/proj4$/, path.join(__dirname, "MapStore2", "web", "client", "libs", "proj4")),
         new NoErrorsPlugin()
     ],
@@ -43,12 +44,12 @@ module.exports = {
             { test: /\.(png|jpg|gif)$/, loader: 'url-loader?name=[path][name].[ext]&limit=8192'}, // inline base64 URLs for <=8k images, direct URLs for the rest
             {
                 test: /\.jsx?$/,
-                exclude: /ol\.js$/,
+                exclude: /(ol\.js)$|(Cesium\.js)$|(cesium\.js)$/,
                 loader: "react-hot",
                 include: [path.join(__dirname, "js"), path.join(__dirname, "MapStore2", "web", "client")]
             }, {
                 test: /\.jsx?$/,
-                exclude: /ol\.js$/,
+                exclude: /(ol\.js)$|(Cesium\.js)$/,
                 loader: "babel-loader",
                 include: [path.join(__dirname, "js"), path.join(__dirname, "MapStore2", "web", "client")]
             }
