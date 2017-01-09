@@ -16,6 +16,8 @@ const Import = require('./Import');
 const Transform = require('./Transform');
 const {Grid, Col, Row, Alert} = require('react-bootstrap');
 const BreadCrumb = require('./BreadCrumb');
+const {head} = require('lodash');
+
 const Importer = React.createClass({
     propTypes: {
         loading: React.PropTypes.bool,
@@ -109,7 +111,7 @@ const Importer = React.createClass({
                 }
             };
         }
-        return presets.find((preset) => preset.import );
+        return head(presets.filter((preset) => preset.import ));
     },
     getTargetWorkspace(selectedImport) {
         let targetWorkspace = selectedImport && selectedImport.targetWorkspace;

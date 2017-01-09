@@ -11,6 +11,9 @@ const ProxyUtils = require('../../../../utils/ProxyUtils');
 const {isEqual} = require('lodash');
 const html2canvas = require('html2canvas');
 const canvg = require('canvg-browser');
+
+const {Promise} = require('es6-promise');
+
 require("./snapshotMapStyle.css");
 /**
  * GrabMap for Leaflet uses HTML2CANVAS to generate the image for the existing

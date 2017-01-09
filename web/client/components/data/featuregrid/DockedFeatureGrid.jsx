@@ -15,6 +15,7 @@ const FeatureGrid = connect((state) => {
     };
 }, {})(require('./FeatureGrid'));
 
+const {head} = require('lodash');
 const I18N = require('../../../components/I18N/I18N');
 const Spinner = require('react-spinkit');
 const assign = require('object-assign');
@@ -154,8 +155,8 @@ const DockedFeatureGrid = React.createClass({
         return `${params.startRow}_${params.endRow}_${params.sortModel.map((m) => `${m.colId}_${m.sort}` ).join('_')}`;
     },
     getSortAttribute(colId) {
-        let col = this.props.columnsDef.find((c) => colId === `properties.${c.field}`);
-        return col && col.sortAttribute ? col.sortAttribute : (col && col.field || '');
+        let col = head(this.props.columnsDef.filter((c) => colId === `properties.${c.field}`));
+        return col && col.sortAttribute ? col.sortAttribute : '';
     },
     getSortOptions(params) {
         return params.sortModel.reduce((o, m) => ({sortBy: this.getSortAttribute(m.colId), sortOrder: m.sort}), {});
@@ -224,7 +225,7 @@ const DockedFeatureGrid = React.createClass({
 
         if (this.sortModel && this.sortModel.length > 0) {
             cols = cols.map((c) => {
-                let model = this.sortModel.find((m) => m.colId === c.field);
+                let model = head(this.sortModel.filter((m) => m.colId === c.field));
                 if ( model ) {
                     c.sort = model.sort;
                 }

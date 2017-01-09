@@ -12,7 +12,7 @@ const { USERMANAGER_UPDATE_USER } = require('../actions/users');
 const SecurityUtils = require('../utils/SecurityUtils');
 
 const assign = require('object-assign');
-const {cloneDeep} = require('lodash');
+const {cloneDeep, head} = require('lodash');
 
 function security(state = {user: null, errorCause: null}, action) {
     switch (action.type) {
@@ -25,7 +25,7 @@ function security(state = {user: null, errorCause: null}, action) {
             return state;
         case LOGIN_SUCCESS:
             const userAttributes = SecurityUtils.getUserAttributes(action.userDetails.User);
-            const userUuid = userAttributes.find(attribute => attribute.name.toLowerCase() === 'uuid');
+            const userUuid = head(userAttributes.filter(attribute => attribute.name.toLowerCase() === 'uuid'));
             return assign({}, state, {
                 user: action.userDetails.User,
                 token: userUuid && userUuid.value || '',

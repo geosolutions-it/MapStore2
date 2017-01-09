@@ -19,6 +19,8 @@ const Combobox = require('react-widgets').DropdownList;
 
 const SelectShape = require('./SelectShape');
 
+const {Promise} = require('es6-promise');
+
 const ShapeFileUploadAndStyle = React.createClass({
     propTypes: {
         bbox: React.PropTypes.array,

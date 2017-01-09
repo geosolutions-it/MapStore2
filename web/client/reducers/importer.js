@@ -41,6 +41,7 @@ const {
 } = require('../actions/manager');
 
 const assign = require('object-assign');
+const {head, findIndex} = require('lodash');
 
 // constant used to reset the state only if the importer tool is passed to the reducer
 // see case: MANAGER_ITEM_SELECTED
@@ -54,7 +55,7 @@ function updateArray(tasks, newTask) {
     if (!newTask || !tasks) {
         return tasks;
     }
-    let taskIndex = tasks.findIndex( (task) => task.id === newTask.id );
+    let taskIndex = findIndex(tasks, (task) => task.id === newTask.id );
     if (taskIndex >= 0 && newTask !== tasks[taskIndex]) {
         let newTasks = tasks.slice();
         newTasks[taskIndex] = newTask;
@@ -72,7 +73,7 @@ function updateImportLoadingStatus(state, action, loading = true) {
         selectedImport = assign({}, selectedImport, {loading: loading});
     }
     // update imports list
-    imports = updateArray(imports, assign({}, imports.find((imp) => imp.id === importId), {loading: loading}));
+    imports = updateArray(imports, assign({}, head(imports.filter((imp) => imp.id === importId), {loading: loading})));
     return assign({}, state, {
         uploading: action.details && action.details.uploadingFiles !== undefined || state.uploading,
         loading: loading,
@@ -96,7 +97,7 @@ function updateImportTaskLoadingStatus(state, action, loading = true) {
                 element: action.details && action.details.element
             });
         }
-        let newTask = assign({}, selectedImport.tasks.find((task) => task.id === taskId), {
+        let newTask = assign({}, head(selectedImport.tasks.filter((task) => task.id === taskId)), {
             loading: loading,
             message: action.details && action.details.message,
             element: action.details && action.details.element
@@ -108,11 +109,11 @@ function updateImportTaskLoadingStatus(state, action, loading = true) {
         }
     }
     // update imports list's task
-    let impIndex = imports && imports.findIndex((imp) => imp.id === importId);
+    let impIndex = imports && findIndex(imports, (imp) => imp.id === importId);
     if ( imports && impIndex >= 0 ) {
         imports = imports.concat();
         let imp = imports[impIndex];
-        let taskIndex = imp && imp.tasks && imp.tasks.findIndex((task) => task.id === taskId);
+        let taskIndex = imp && imp.tasks && findIndex(imp.tasks, (task) => task.id === taskId);
         if ( imp && imp.tasks && taskIndex >= 0 ) {
             let task = assign({}, task, {
                 loading: loading,
@@ -197,7 +198,7 @@ function importer(state = {}, action) {
             }
             let tasks = state.tasks;
             if (tasks && action.task) {
-                let index = tasks.findIndex((task) => task.id === action.task.id);
+                let index = findIndex(tasks, (task) => task.id === action.task.id);
                 if (index >= 0) {
                     tasks = tasks.concat();
                     tasks[index] = action.task;
@@ -223,7 +224,7 @@ function importer(state = {}, action) {
             }
             if (selectedImport && (selectedImport.id === action.importId)) {
 
-                let index = tasks.findIndex((task) => task.id === action.taskId);
+                let index = findIndex(tasks, (task) => task.id === action.taskId);
                 if (index >= 0) {
                     tasks = tasks.concat();
                     tasks[index] = assign({}, tasks[index], action.info);
@@ -330,7 +331,7 @@ function importer(state = {}, action) {
         }
         case IMPORT_DELETE: {
             let imports = state && state.imports;
-            let importIndex = imports && imports.findIndex((imp) => imp.id === action.id);
+            let importIndex = imports && findIndex(imports, (imp) => imp.id === action.id);
             if (importIndex >= 0) {
                 imports = state.imports.filter((imp) => imp.id !== action.id);
             }

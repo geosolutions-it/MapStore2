@@ -25,7 +25,7 @@ function rulesmanager(state = {}, action) {
             if (action.unselect) {
                 return assign({}, state, {
                     selectedRules: _(existingRules).filter(
-                        rule => !newRules.find(unselected => unselected.id === rule.id)).value()
+                        rule => !_.head(newRules.filter(unselected => unselected.id === rule.id))).value()
                 });
             }
             return assign({}, state, {

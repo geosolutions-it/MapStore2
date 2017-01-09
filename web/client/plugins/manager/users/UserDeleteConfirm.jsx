@@ -12,6 +12,7 @@ const {Alert} = require('react-bootstrap');
 const Confirm = require('../../../components/misc/ConfirmDialog');
 const UserCard = require('../../../components/manager/users/UserCard');
 const Message = require('../../../components/I18N/Message');
+const {findIndex} = require('lodash');
 
 const UserDeleteConfirm = React.createClass({
     propTypes: {
@@ -62,7 +63,7 @@ module.exports = connect((state) => {
     let users = usersState && usersState.users;
     let deleteId = usersState.deletingUser && usersState.deletingUser.id;
     if (users && deleteId) {
-        let index = users.findIndex((user) => user.id === deleteId);
+        let index = findIndex(users, (user) => user.id === deleteId);
         let user = users[index];
         return {
             user,

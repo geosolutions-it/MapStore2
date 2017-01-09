@@ -11,7 +11,7 @@ const {Panel, ButtonToolbar, Button, OverlayTrigger, Tooltip} = require('react-b
 const ComboField = require('./ComboField');
 const NumberField = require('./NumberField');
 const TextField = require('./TextField');
-const {isEqual} = require('lodash');
+const {isEqual, head, findIndex} = require('lodash');
 
 const SimpleFilterField = React.createClass({
     propTypes: {
@@ -122,9 +122,9 @@ const SimpleFilterField = React.createClass({
         }, this);
         if ( this.props.defaultOptions.length > 0) {
             optionsValues = this.props.defaultOptions.reduce((opts, opt) => {
-                let nOpt = optionsValues.find((v) => {
+                let nOpt = head(optionsValues.filter((v) => {
                     return v === opt;
-                });
+                }));
                 if (nOpt) {
                     opts.push(nOpt);
                 }
@@ -156,7 +156,7 @@ const SimpleFilterField = React.createClass({
                         type="radio"
                         value={opt}
                         name={this.props.attribute}
-                        checked={this.props.values.findIndex((val) => { return val === opt; }) !== -1}/>
+                        checked={findIndex(this.props.values, (val) => { return val === opt; }) !== -1}/>
                         {this.renderLabel(opt)}
                 </label>);
         }, this);
@@ -176,7 +176,7 @@ const SimpleFilterField = React.createClass({
                             value={opt}
                             type="checkbox"
                             onChange={this.onCheckChange}
-                            checked={this.props.values.findIndex((val) => { return val === opt; }) !== -1}/>
+                            checked={findIndex(this.props.values, (val) => { return val === opt; }) !== -1}/>
                         {this.renderLabel(opt)}
                 </label>
                 );
