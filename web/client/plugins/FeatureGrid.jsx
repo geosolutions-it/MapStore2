@@ -7,10 +7,13 @@
  */
 const {connect} = require('react-redux');
 const {updateHighlighted} = require('../actions/highlight');
+const {query} = require('../actions/wfsquery');
 
 module.exports = {
     FeatureGridPlugin: connect((state) => ({
         features: state.query && state.query.result && state.query.result.features,
+        filterObj: state.query && state.query.filterObj,
+        searchUrl: state.query && state.query.searchUrl,
         initWidth: "100%",
         columnsDef: state.query && state.query.typeName && state.query.featureTypes
             && state.query.featureTypes[state.query.typeName]
@@ -21,9 +24,11 @@ module.exports = {
                 headerName: attr.label,
                 field: attr.attribute
             })),
+        query: state.query && state.query.queryObj,
         totalFeatures: state.query && state.query.result && state.query.result.totalFeatures
     }),
     {
-        selectFeatures: updateHighlighted
+        selectFeatures: updateHighlighted,
+        onQuery: query
     })(require('../components/data/featuregrid/DockedFeatureGrid'))
 };

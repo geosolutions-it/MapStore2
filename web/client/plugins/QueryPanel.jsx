@@ -48,7 +48,7 @@ const {
     zoneChange
 } = require('../actions/queryform');
 
-const {query} = require('../actions/wfsquery');
+const {createQuery} = require('../actions/wfsquery');
 
 const {
     changeDrawingStatus,
@@ -104,7 +104,7 @@ const SmartQueryForm = connect((state) => {
             zoneChange
         }, dispatch),
         queryToolbarActions: bindActionCreators({
-            onQuery: query,
+            onQuery: createQuery,
             onReset: reset,
             onChangeDrawingStatus: changeDrawingStatus
         }, dispatch)

@@ -70,7 +70,7 @@ const FeatureGrid = React.createClass({
             virtualPaging: false,
             paging: false,
             overflowSize: 10,
-            pageSize: 15,
+            pageSize: 10,
             agGridOptions: {},
             columnDefaultOptions: {
                 width: 125
@@ -150,7 +150,7 @@ const FeatureGrid = React.createClass({
         }
 
         if (this.props.toolbar.selectAll) {
-            let nOfFeatures = this.props.features.length;
+            let nOfFeatures = this.props.features && this.props.features.length;
             if (this.props.paging && this.api) {
                 nOfFeatures = 0;
                 this.api.forEachNode(() => {nOfFeatures++; });

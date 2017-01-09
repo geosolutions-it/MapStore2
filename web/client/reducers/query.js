@@ -12,6 +12,7 @@ const {
     FEATURE_TYPE_ERROR,
     FEATURE_LOADED,
     FEATURE_ERROR,
+    QUERY_CREATE,
     QUERY_RESULT,
     QUERY_ERROR,
     RESET_QUERY
@@ -100,9 +101,17 @@ function query(state = initialState, action) {
                 featureTypes: assign({}, state.data, {[action.typeName]: {error: action.error}})
             });
         }
+        case QUERY_CREATE: {
+            return assign({}, state, {
+                searchUrl: action.searchUrl,
+                filterObj: action.filterObj
+            });
+        }
         case QUERY_RESULT: {
             return assign({}, state, {
                 result: action.result,
+                searchUrl: action.searchUrl,
+                filterObj: action.filterObj,
                 resultError: null
             });
         }
@@ -113,6 +122,11 @@ function query(state = initialState, action) {
             });
         }
         case QUERY_FORM_RESET:
+            return assign({}, state, {
+                result: null,
+                filterObj: null,
+                searchUrl: null
+            });
         case RESET_QUERY: {
             return assign({}, state, {
                 result: null,

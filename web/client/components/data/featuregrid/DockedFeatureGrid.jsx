@@ -19,6 +19,7 @@ const {head} = require('lodash');
 const I18N = require('../../../components/I18N/I18N');
 const Spinner = require('react-spinkit');
 const assign = require('object-assign');
+const {isEqual} = require('lodash');
 
 require("./featuregrid.css");
 
@@ -48,13 +49,11 @@ const DockedFeatureGrid = React.createClass({
         selectFeatures: React.PropTypes.func,
         totalFeatures: React.PropTypes.number,
         pagination: React.PropTypes.bool,
-        filterFields: React.PropTypes.array,
-        groupFields: React.PropTypes.array,
-        spatialField: React.PropTypes.object,
         featureTypeName: React.PropTypes.string,
         ogcVersion: React.PropTypes.string,
         onQuery: React.PropTypes.func,
         searchUrl: React.PropTypes.string,
+        filterObj: React.PropTypes.object,
         dataSourceOptions: React.PropTypes.object,
         withMap: React.PropTypes.bool.isRequired,
         onConfigureQuery: React.PropTypes.func,
@@ -85,7 +84,7 @@ const DockedFeatureGrid = React.createClass({
             featureTypeName: null,
             ogcVersion: "2.0",
             columnsDef: [],
-            pagination: false,
+            pagination: true,
             params: {},
             groupFields: [],
             filterFields: [],
@@ -93,7 +92,7 @@ const DockedFeatureGrid = React.createClass({
             searchUrl: null,
             dataSourceOptions: {
                 rowCount: -1,
-                pageSize: 10
+                pageSize: 20
             },
             initWidth: 600,
             withMap: true,
@@ -113,15 +112,6 @@ const DockedFeatureGrid = React.createClass({
     componentWillMount() {
         let height = getWindowSize().maxHeight - 108;
         this.setState({width: `calc( ${this.props.initWidth} - 30px)`, height});
-        if (this.props.pagination && this.props.dataSourceOptions.pageSize) {
-            this.dataSource = this.getDataSource(this.props.dataSourceOptions);
-        }else if ( this.props.pagination && !this.props.dataSourceOptions.pageSize) {
-            let newFilter = FilterUtils.getOgcAllPropertyValue(this.props.featureTypeName, this.props.attributes[0].attribute);
-            this.props.onConfigureQuery(this.props.searchUrl, newFilter, this.props.params, {
-                "maxFeatures": 15,
-                "startIndex": 0
-                });
-        }
     },
     shouldComponentUpdate(nextProps) {
         return Object.keys(this.props).reduce((prev, prop) => {
@@ -135,10 +125,18 @@ const DockedFeatureGrid = React.createClass({
         if (!nextProps.loadingGrid && nextProps.pagination && (nextProps.dataSourceOptions !== this.props.dataSourceOptions)) {
             this.dataSource = this.getDataSource(nextProps.dataSourceOptions);
         }
-        if (!nextProps.loadingGrid && this.featureLoaded && nextProps.features !== this.props.features && Object.keys(nextProps.features).length > 0) {
-            let rowsThisPage = nextProps.features[this.getRequestId(this.featureLoaded)] || [];
-            this.featureLoaded.successCallback(rowsThisPage, nextProps.totalFeatures);
-            this.featureLoaded = null;
+        if (!nextProps.loadingGrid && this.featureLoaded && nextProps.features !== this.props.features) {
+            let rowsThisPage = nextProps.features || [];
+            if (rowsThisPage) {
+                this.featureLoaded.successCallback(rowsThisPage, nextProps.totalFeatures);
+            }
+        }
+    },
+    componentDidUpdate(prevProps) {
+        if (!this.props.loadingGrid && !this.featureLoaded && !this.props.pagination && this.props.searchUrl) {
+            if (this.props.filterObj && !isEqual(prevProps.filterObj, this.props.filterObj)) {
+                this.getFeatures();
+            }
         }
     },
     onGridClose(filter) {
@@ -164,31 +162,24 @@ const DockedFeatureGrid = React.createClass({
         return params.sortModel.reduce((o, m) => ({sortBy: this.getSortAttribute(m.colId), sortOrder: m.sort}), {});
     },
     getFeatures(params) {
-        if (!this.props.loadingGrid) {
-            let reqId = this.getRequestId(params);
-            let rowsThisPage = this.props.features[reqId];
-            if (rowsThisPage) {
-                params.successCallback(rowsThisPage, this.props.totalFeatures);
-            }else {
-                let pagination = {startIndex: params.startRow, maxFeatures: params.endRow - params.startRow};
-                let filterObj = {
-                groupFields: this.props.groupFields,
-                filterFields: this.props.filterFields.filter((field) => field.value),
-                spatialField: this.props.spatialField,
+        if (!this.props.loadingGrid && this.props.searchUrl) {
+            let pagination = this.props.pagination ? {startIndex: params.startRow, maxFeatures: params.endRow - params.startRow} : null;
+            let filterObj = {
+                ...this.props.filterObj,
+                sortOptions: params && params.sortModel && this.getSortOptions(params) || null,
                 pagination
-                };
-                let filter = FilterUtils.toOGCFilter(this.props.featureTypeName, filterObj, this.props.ogcVersion, this.getSortOptions(params));
-                this.featureLoaded = params;
-                this.sortModel = params.sortModel;
-                this.props.onQuery(this.props.searchUrl, filter, this.props.params, reqId);
-            }
+            };
+            this.featureLoaded = params;
+            this.sortModel = params && params.sortModel;
+            this.props.onQuery(this.props.searchUrl, filterObj, this.props.params);
+
         }
     },
     getDataSource(dataSourceOptions) {
         return {
             rowCount: dataSourceOptions.rowCount,
             getRows: this.getFeatures,
-            pageSize: dataSourceOptions.pageSize,
+            pageSize: this.props.pagination ? dataSourceOptions.pageSize : 10000000,
             overflowSize: 20
         };
     },
@@ -242,9 +233,9 @@ const DockedFeatureGrid = React.createClass({
             });
         }
 
-        let gridConf = this.props.pagination ? {dataSource: this.dataSource, features: []} : {features: this.props.features};
+        let gridConf = this.props.pagination ? {dataSource: this.getDataSource(this.props.dataSourceOptions), features: []} : {features: this.props.features};
 
-        if (this.props.features && this.props.features.length > 0) {
+        if (this.props.filterObj) {
             return (
                 <Dock
                     position={"bottom" /* 'left', 'top', 'right', 'bottom' */}
@@ -306,9 +297,7 @@ const DockedFeatureGrid = React.createClass({
     selectAll(select) {
         if (select) {
             let filterObj = {
-                groupFields: this.props.groupFields,
-                filterFields: this.props.filterFields.filter((field) => field.value),
-                spatialField: this.props.spatialField
+                ...this.props.filterObj
             };
             let SLD_BODY = FilterUtils.getSLD(this.props.featureTypeName, filterObj, '1.0');
             this.props.selectAllToggle(this.props.featureTypeName, SLD_BODY);
