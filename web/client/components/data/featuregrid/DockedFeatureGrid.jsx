@@ -217,13 +217,13 @@ const DockedFeatureGrid = React.createClass({
             );
         }
 
-        let cols = this.props.columnsDef.map((column) => {
+        let cols = this.props.columnsDef && this.props.columnsDef.map((column) => {
             if (!column.profiles || (column.profiles && column.profiles.indexOf(this.props.profile) !== -1)) {
                 return assign({}, column, {field: "properties." + column.field});
             }
         }).filter((c) => c);
 
-        if (this.sortModel && this.sortModel.length > 0) {
+        if (cols && this.sortModel && this.sortModel.length > 0) {
             cols = cols.map((c) => {
                 let model = head(this.sortModel.filter((m) => m.colId === c.field));
                 if ( model ) {
@@ -235,7 +235,7 @@ const DockedFeatureGrid = React.createClass({
 
         let gridConf = this.props.pagination ? {dataSource: this.getDataSource(this.props.dataSourceOptions), features: []} : {features: this.props.features};
 
-        if (this.props.filterObj) {
+        if (this.props.filterObj && cols) {
             return (
                 <Dock
                     position={"bottom" /* 'left', 'top', 'right', 'bottom' */}
