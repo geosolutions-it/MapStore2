@@ -33,7 +33,7 @@ const MapPlugin = React.createClass({
     },
     getDefaultProps() {
         return {
-            mapType: 'leaflet',
+            mapType: 'cesium',
             actions: {},
             zoomControl: true,
             mapLoadingMessage: "map.loading",

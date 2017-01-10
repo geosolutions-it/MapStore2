@@ -209,7 +209,7 @@ const LayerTree = React.createClass({
                     <DefaultLayer
                             settingsOptions={this.props.settingsOptions}
                             onToggle={this.props.onToggleLayer}
-                            onToggleQuerypanel={this.props.onToggleQuery}
+                            onToggleQuerypanel={this.props.onToggleQuery }
                             onZoom={this.props.onZoomToExtent}
                             onSettings={this.props.onSettings}
                             propertiesChangeHandler={this.props.layerPropertiesChangeHandler}
@@ -237,7 +237,7 @@ const LayerTree = React.createClass({
     },
     renderQueryPanel() {
         return (<div>
-            <Button id="query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={this.props.onToggleQuery}><Glyphicon glyph="arrow-left"/></Button>
+            <Button id="query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={this.props.onToggleQuery.bind(this, null, null)}><Glyphicon glyph="arrow-left"/></Button>
             <SmartQueryForm/>
         </div>);
     },
