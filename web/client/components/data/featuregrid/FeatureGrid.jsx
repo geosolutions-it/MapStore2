@@ -131,7 +131,7 @@ const FeatureGrid = React.createClass({
     render() {
         let isPagingOrVirtual = (this.props.virtualPaging || this.props.paging);
 
-        let tools = this.props.tools;
+        let tools = [];
         if (this.props.toolbar.zoom) {
             tools.push(<Button key="zoom" onClick={this.zoomToFeatures}><Glyphicon glyph="search"/></Button>);
         }
