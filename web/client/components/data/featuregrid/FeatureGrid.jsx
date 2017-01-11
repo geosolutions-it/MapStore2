@@ -179,7 +179,7 @@ const FeatureGrid = React.createClass({
                 }
             </Button>);
         }
-
+        tools = [...tools, this.props.tools];
         return (
             <div style={{
                 display: "flex",

@@ -116,7 +116,7 @@ const DockedFeatureGrid = React.createClass({
     },
     shouldComponentUpdate(nextProps) {
         return Object.keys(this.props).reduce((prev, prop) => {
-            if ( !prev && (prop !== 'map' && !isEqual(this.props[prop], nextProps[prop]))) {
+            if ( !prev && (prop !== 'map' && this.props[prop] === nextProps[prop])) {
                 return true;
             }
             return prev;
@@ -164,10 +164,10 @@ const DockedFeatureGrid = React.createClass({
     },
     getSortAttribute(colId) {
         let col = head(this.props.columnsDef.filter((c) => colId === `properties.${c.field}`));
-        return col && col.sortAttribute ? col.sortAttribute : '';
+        return col && col.sortAttribute ? col.sortAttribute : (col && col.field || '');
     },
     getSortOptions(params) {
-        return params.sortModel.reduce((o, m) => ({sortBy: this.getSortAttribute(m.colId), sortOrder: m.sort}), {});
+        return params.sortModel.reduce((o, m) => ({sortBy: this.getSortAttribute(m.colId), sortOrder: m.sort.toUpperCase()}), {});
     },
     getFeatures(params) {
         if (!this.props.loadingGrid && this.props.searchUrl) {
