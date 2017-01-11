@@ -29,7 +29,8 @@ const MapPlugin = React.createClass({
         tools: React.PropTypes.array,
         options: React.PropTypes.object,
         toolsOptions: React.PropTypes.object,
-        actions: React.PropTypes.object
+        actions: React.PropTypes.object,
+        features: React.PropTypes.array
     },
     getDefaultProps() {
         return {
@@ -65,6 +66,16 @@ const MapPlugin = React.createClass({
             this.updatePlugins(newProps);
         }
     },
+    getHighlightLayer(projection, index) {
+        return (<plugins.Layer type="vector" srs={projection} position={index} key="highlight" options={{name: "highlight"}}>
+                    {this.props.features.map( (feature) => {
+                        return (<plugins.Feature
+                            key={feature.id}
+                            type={feature.type}
+                            geometry={feature.geometry}/>);
+                    })}
+                </plugins.Layer>);
+    },
     renderLayerContent(layer) {
         if (layer.features && layer.type === "vector") {
             return layer.features.map( (feature) => {
@@ -90,7 +101,7 @@ const MapPlugin = React.createClass({
                     {this.renderLayerContent(layer)}
                 </plugins.Layer>
             );
-        });
+        }).concat(this.props.features && this.props.features.length && this.getHighlightLayer(projection, this.props.layers.length) || []);
     },
     renderSupportTools() {
         return this.props.tools.map((tool) => {
@@ -141,10 +152,18 @@ const MapPlugin = React.createClass({
 const {mapSelector} = require('../selectors/map');
 const {layerSelectorWithMarkers} = require('../selectors/layers');
 
+const highlightSelector = (state) => state.highlight && state.highlight.select;
+
 const selector = createSelector(
-    [mapSelector, layerSelectorWithMarkers, (state) => state.mapInitialConfig && state.mapInitialConfig.loadingError && state.mapInitialConfig.loadingError.data], (map, layers, loadingError) => ({
+    [
+        mapSelector,
+        layerSelectorWithMarkers,
+        highlightSelector,
+        (state) => state.mapInitialConfig && state.mapInitialConfig.loadingError && state.mapInitialConfig.loadingError.data
+    ], (map, layers, features, loadingError) => ({
         map,
         layers,
+        features,
         loadingError
     })
 );

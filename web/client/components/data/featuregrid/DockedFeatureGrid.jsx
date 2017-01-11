@@ -115,7 +115,7 @@ const DockedFeatureGrid = React.createClass({
     },
     shouldComponentUpdate(nextProps) {
         return Object.keys(this.props).reduce((prev, prop) => {
-            if ( !prev && (prop !== 'map' && this.props[prop] !== nextProps[prop])) {
+            if ( !prev && (prop !== 'map' && !isEqual(this.props[prop], nextProps[prop]))) {
                 return true;
             }
             return prev;
@@ -130,6 +130,10 @@ const DockedFeatureGrid = React.createClass({
             if (rowsThisPage) {
                 this.featureLoaded.successCallback(rowsThisPage, nextProps.totalFeatures);
             }
+        }
+        if ((this.props.columnsDef && !nextProps.columnsDef) || (this.props.filterObj && !nextProps.filterObj)) {
+            this.props.selectFeatures([]);
+            this.props.selectAllToggle();
         }
     },
     componentDidUpdate(prevProps) {
@@ -275,7 +279,6 @@ const DockedFeatureGrid = React.createClass({
                                 selectFeatures={this.selectFeatures}
                                 selectAll={this.selectAll}
                                 paging={this.props.pagination}
-                                zoom={15}
                                 enableZoomToFeature={this.props.withMap}
                                 agGridOptions={{enableServerSideSorting: true, suppressMultiSort: true}}
                                 zoomToFeatureAction={this.props.zoomToFeatureAction}
