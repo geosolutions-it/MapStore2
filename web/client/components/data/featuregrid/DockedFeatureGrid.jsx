@@ -131,6 +131,10 @@ const DockedFeatureGrid = React.createClass({
                 this.featureLoaded.successCallback(rowsThisPage, nextProps.totalFeatures);
             }
         }
+        if ((this.props.columnsDef && !nextProps.columnsDef) || (this.props.filterObj && !nextProps.filterObj)) {
+            this.props.selectFeatures([]);
+            this.props.selectAllToggle();
+        }
     },
     componentDidUpdate(prevProps) {
         if (!this.props.loadingGrid && !this.featureLoaded && !this.props.pagination && this.props.searchUrl) {
