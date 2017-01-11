@@ -25,6 +25,7 @@ module.exports = {
                 field: attr.attribute
             })),
         query: state.query && state.query.queryObj,
+        isNew: state.query && state.query.isNew,
         totalFeatures: state.query && state.query.result && state.query.result.totalFeatures
     }),
     {

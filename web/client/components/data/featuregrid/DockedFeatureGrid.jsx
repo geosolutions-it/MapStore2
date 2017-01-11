@@ -25,6 +25,7 @@ require("./featuregrid.css");
 
 const DockedFeatureGrid = React.createClass({
     propTypes: {
+        isNew: React.PropTypes.bool,
         open: React.PropTypes.bool,
         detailOpen: React.PropTypes.bool,
         expanded: React.PropTypes.bool,
@@ -68,7 +69,7 @@ const DockedFeatureGrid = React.createClass({
         messages: React.PropTypes.object
     },
     getInitialState() {
-        return {};
+        return {searchN: 0};
     },
     getDefaultProps() {
         return {
@@ -122,10 +123,13 @@ const DockedFeatureGrid = React.createClass({
         }, false);
     },
     componentWillUpdate(nextProps) {
+        if (!nextProps.loadingGrid && !this.props.isNew && nextProps.isNew) {
+            this.setState({searchN: this.state.searchN + 1});
+        }
         if (!nextProps.loadingGrid && nextProps.pagination && (nextProps.dataSourceOptions !== this.props.dataSourceOptions)) {
             this.dataSource = this.getDataSource(nextProps.dataSourceOptions);
         }
-        if (!nextProps.loadingGrid && this.featureLoaded && nextProps.features !== this.props.features) {
+        if (!nextProps.loadingGrid && (this.featureLoaded && nextProps.features !== this.props.features)) {
             let rowsThisPage = nextProps.features || [];
             if (rowsThisPage) {
                 this.featureLoaded.successCallback(rowsThisPage, nextProps.totalFeatures);
@@ -261,6 +265,7 @@ const DockedFeatureGrid = React.createClass({
                                 height: "100%"
                                 }}>
                             <FeatureGrid
+                                key={"search-results-" + (this.state && this.state.searchN)}
                                 className="featureGrid"
                                 changeMapView={this.props.changeMapView}
                                 srs="EPSG:4326"
@@ -269,7 +274,7 @@ const DockedFeatureGrid = React.createClass({
                                 style={{
                                     flex: "1 0 auto",
                                     width: "100%",
-                                    height: "calc(100% - 32px )"
+                                    height: "calc(100% - 300px )"
                                 }}
                                 maxZoom={16}
                                 selectFeatures={this.selectFeatures}

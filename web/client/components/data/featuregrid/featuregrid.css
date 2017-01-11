@@ -3,3 +3,17 @@
     color: white;
     font-family: Raleway;
 }
+.ag-fresh .ag-paging-button {
+    color: #078aa3;
+    background-color: #ffffff;
+    border: #078aa3 1px solid;
+    padding: 5px;
+}
+.ag-fresh .ag-paging-page-summary-panel {
+    color: #078aa3;
+}
+.featuregrid-tools {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
