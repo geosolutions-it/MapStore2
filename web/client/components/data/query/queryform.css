@@ -46,8 +46,13 @@
     margin-right: 10px;
 }
 
-#mapstore-drawermenu #queryFormPanel .btn.remove-filter-button {
-    padding: 3px 6px;
+#mapstore-drawermenu #queryFormPanel .remove-filter-button {
+    height: 32px;
+    width: 32px;
+    padding: 0;
+}
+#mapstore-drawermenu #queryFormPanel input.form-control {
+    height: 32px;
 }
 
 #mapstore-drawermenu #queryFormPanel .logicHeader .group_label_a,#mapstore-drawermenu #queryFormPanel .logicHeader .group_label_b {
