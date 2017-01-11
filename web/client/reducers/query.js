@@ -103,12 +103,14 @@ function query(state = initialState, action) {
         }
         case QUERY_CREATE: {
             return assign({}, state, {
+                isNew: true,
                 searchUrl: action.searchUrl,
                 filterObj: action.filterObj
             });
         }
         case QUERY_RESULT: {
             return assign({}, state, {
+                isNew: false,
                 result: action.result,
                 searchUrl: action.searchUrl,
                 filterObj: action.filterObj,
@@ -117,12 +119,14 @@ function query(state = initialState, action) {
         }
         case QUERY_ERROR: {
             return assign({}, state, {
+                isNew: false,
                 result: null,
                 resultError: action.error
             });
         }
         case QUERY_FORM_RESET:
             return assign({}, state, {
+                isNew: false,
                 result: null,
                 filterObj: null,
                 searchUrl: null
