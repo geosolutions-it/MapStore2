@@ -49,7 +49,7 @@ const LeafletLayer = React.createClass({
     shouldComponentUpdate(newProps) {
         // the reduce returns true when a prop is changed
         // optimizing when options are equal ignorning loading key
-        return !(["map", "type", "srs", "position", "zoomOffset", "onInvalid", "onClick", "options"].reduce( (prev, p) => {
+        return !(["map", "type", "srs", "position", "zoomOffset", "onInvalid", "onClick", "options", "children"].reduce( (prev, p) => {
             switch (p) {
                 case "map":
                 case "type":
@@ -58,6 +58,7 @@ const LeafletLayer = React.createClass({
                 case "zoomOffset":
                 case "onInvalid":
                 case "onClick":
+                case "children":
                     return prev && this.props[p] === newProps[p];
                 case "options":
                     return prev && (this.props[p] === newProps[p] || isEqual({...this.props[p], loading: false}, {...newProps[p], loading: false}));

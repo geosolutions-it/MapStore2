@@ -125,7 +125,7 @@ const HighlightFeatureSupport = React.createClass({
 
     },
     layersFilter(l) {
-        return l.get('msId') === this.props.layer;
+        return this.props.layer && l.get('msId') === this.props.layer;
     },
     createStyle() {
         let sty = this.props.selectedStyle;

@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 const {connect} = require('react-redux');
-const {updateHighlighted} = require('../actions/highlight');
+const {selectFeatures} = require('../actions/featuregrid');
 const {query} = require('../actions/wfsquery');
+const {changeMapView} = require('../actions/map');
 
 module.exports = {
     FeatureGridPlugin: connect((state) => ({
@@ -15,6 +16,7 @@ module.exports = {
         filterObj: state.query && state.query.filterObj,
         searchUrl: state.query && state.query.searchUrl,
         initWidth: "100%",
+        map: (state.map && state.map.present) || (state.map) || (state.config && state.config.map) || null,
         columnsDef: state.query && state.query.typeName && state.query.featureTypes
             && state.query.featureTypes[state.query.typeName]
             && state.query.featureTypes[state.query.typeName]
@@ -28,7 +30,9 @@ module.exports = {
         totalFeatures: state.query && state.query.result && state.query.result.totalFeatures
     }),
     {
-        selectFeatures: updateHighlighted,
+        selectFeatures,
+        changeMapView,
         onQuery: query
-    })(require('../components/data/featuregrid/DockedFeatureGrid'))
+    })(require('../components/data/featuregrid/DockedFeatureGrid')),
+    reducers: {highlight: require('../reducers/featuregrid')}
 };
