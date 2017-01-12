@@ -116,7 +116,7 @@ const DockedFeatureGrid = React.createClass({
     },
     shouldComponentUpdate(nextProps) {
         return Object.keys(this.props).reduce((prev, prop) => {
-            if ( !prev && prop !== 'map' && prop !== 'columnsDef' && this.props[prop] !== nextProps[prop])) {
+            if ( !prev && prop !== 'map' && prop !== 'columnsDef' && this.props[prop] !== nextProps[prop]) {
                 return true;
             }
             return prev;
