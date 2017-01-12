@@ -116,14 +116,14 @@ const DockedFeatureGrid = React.createClass({
     },
     shouldComponentUpdate(nextProps) {
         return Object.keys(this.props).reduce((prev, prop) => {
-            if ( !prev && (prop !== 'map' && this.props[prop] === nextProps[prop])) {
+            if ( !prev && prop !== 'map' && prop !== 'columnsDef' && this.props[prop] !== nextProps[prop])) {
                 return true;
             }
             return prev;
         }, false);
     },
     componentWillUpdate(nextProps) {
-        if (!nextProps.loadingGrid && !this.props.isNew && nextProps.isNew) {
+        if (!nextProps.loadingGrid && this.props.isNew && !nextProps.isNew) {
             this.setState({searchN: this.state.searchN + 1});
         }
         if (!nextProps.loadingGrid && nextProps.pagination && (nextProps.dataSourceOptions !== this.props.dataSourceOptions)) {
