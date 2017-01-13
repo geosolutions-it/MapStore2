@@ -15,7 +15,8 @@ const {
     QUERY_CREATE,
     QUERY_RESULT,
     QUERY_ERROR,
-    RESET_QUERY
+    RESET_QUERY,
+    FEATURE_CLOSE
 } = require('../actions/wfsquery');
 
 const {QUERY_FORM_RESET} = require('../actions/queryform');
@@ -103,6 +104,7 @@ function query(state = initialState, action) {
         }
         case QUERY_CREATE: {
             return assign({}, state, {
+                open: true,
                 isNew: true,
                 searchUrl: action.searchUrl,
                 filterObj: action.filterObj
@@ -126,6 +128,7 @@ function query(state = initialState, action) {
         }
         case QUERY_FORM_RESET:
             return assign({}, state, {
+                open: false,
                 isNew: false,
                 result: null,
                 filterObj: null,
@@ -135,6 +138,11 @@ function query(state = initialState, action) {
             return assign({}, state, {
                 result: null,
                 resultError: null
+            });
+        }
+        case FEATURE_CLOSE: {
+            return assign({}, state, {
+                open: false
             });
         }
         default:

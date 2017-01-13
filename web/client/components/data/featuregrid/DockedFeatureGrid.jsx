@@ -3,7 +3,7 @@ const {connect} = require('react-redux');
 const {isObject} = require('lodash');
 const Dock = require('react-dock');
 
-const {Modal} = require('react-bootstrap');
+const {Modal, Button, Glyphicon} = require('react-bootstrap');
 
 const FilterUtils = require('../../../utils/FilterUtils');
 
@@ -63,6 +63,7 @@ const DockedFeatureGrid = React.createClass({
         selectAllToggle: React.PropTypes.func,
         templateProfile: React.PropTypes.string,
         zoomToFeatureAction: React.PropTypes.func,
+        onClose: React.PropTypes.func,
         style: React.PropTypes.object
     },
     contextTypes: {
@@ -73,7 +74,7 @@ const DockedFeatureGrid = React.createClass({
     },
     getDefaultProps() {
         return {
-            open: true,
+            open: false,
             detailOpen: true,
             loadingGrid: false,
             loadingGridError: null,
@@ -99,6 +100,7 @@ const DockedFeatureGrid = React.createClass({
             withMap: true,
             templateProfile: 'default',
             onDetail: () => {},
+            onClose: () => {},
             onShowDetail: () => {},
             changeMapView: () => {},
             // loadFeatureGridConfig: () => {},
@@ -115,6 +117,7 @@ const DockedFeatureGrid = React.createClass({
         this.setState({width: `calc( ${this.props.initWidth} - 30px)`, height});
     },
     shouldComponentUpdate(nextProps) {
+        // this is mandatory to avoid infinite looping. TODO externalize pagination
         return Object.keys(this.props).reduce((prev, prop) => {
             if ( !prev && prop !== 'map' && prop !== 'columnsDef' && this.props[prop] !== nextProps[prop]) {
                 return true;
@@ -123,7 +126,7 @@ const DockedFeatureGrid = React.createClass({
         }, false);
     },
     componentWillUpdate(nextProps) {
-        if (!nextProps.loadingGrid && this.props.isNew && !nextProps.isNew) {
+        if (!nextProps.loadingGrid && !this.props.isNew && nextProps.isNew) {
             this.setState({searchN: this.state.searchN + 1});
         }
         if (!nextProps.loadingGrid && nextProps.pagination && (nextProps.dataSourceOptions !== this.props.dataSourceOptions)) {
@@ -135,7 +138,7 @@ const DockedFeatureGrid = React.createClass({
                 this.featureLoaded.successCallback(rowsThisPage, nextProps.totalFeatures);
             }
         }
-        if ((this.props.columnsDef && !nextProps.columnsDef) || (this.props.filterObj && !nextProps.filterObj)) {
+        if ((this.props.open && !nextProps.open) || (this.props.columnsDef && !nextProps.columnsDef) || (this.props.filterObj && !nextProps.filterObj)) {
             this.props.selectFeatures([]);
             this.props.selectAllToggle();
         }
@@ -243,7 +246,7 @@ const DockedFeatureGrid = React.createClass({
 
         let gridConf = this.props.pagination ? {dataSource: this.getDataSource(this.props.dataSourceOptions), features: []} : {features: this.props.features};
 
-        if (this.props.filterObj && cols) {
+        if (this.props.open && this.props.filterObj && cols) {
             return (
                 <Dock
                     position={"bottom" /* 'left', 'top', 'right', 'bottom' */}
@@ -269,6 +272,7 @@ const DockedFeatureGrid = React.createClass({
                                 height: "100%"
                                 }}>
                             <FeatureGrid
+                                tools={<Button onClick={this.props.onClose} ><Glyphicon glyph="1-close" /><I18N.Message msgId="close"/></Button>}
                                 key={"search-results-" + (this.state && this.state.searchN)}
                                 className="featureGrid"
                                 changeMapView={this.props.changeMapView}
@@ -291,7 +295,7 @@ const DockedFeatureGrid = React.createClass({
                                     zoom: this.props.withMap,
                                     exporter: true,
                                     toolPanel: true,
-                                    selectAll: true
+                                    selectAll: false
                                 }}
                                 {...gridConf}
                                 />

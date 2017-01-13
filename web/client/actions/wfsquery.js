@@ -10,6 +10,7 @@ const FEATURE_TYPE_LOADED = 'FEATURE_TYPE_LOADED';
 const FEATURE_LOADED = 'FEATURE_LOADED';
 const FEATURE_TYPE_ERROR = 'FEATURE_TYPE_ERROR';
 const FEATURE_ERROR = 'FEATURE_ERROR';
+const FEATURE_CLOSE = 'FEATURE_CLOSE';
 const QUERY_CREATE = 'QUERY_CREATE';
 const QUERY_RESULT = 'QUERY_RESULT';
 const QUERY_ERROR = 'QUERY_ERROR';
@@ -156,6 +157,11 @@ function toggleQueryPanel(url, name) {
         dispatch(setControlProperty('drawer', 'width', getState().controls.queryPanel.enabled ? 700 : 300));
     };
 }
+function featureClose() {
+    return {
+        type: FEATURE_CLOSE
+    };
+}
 
 module.exports = {
     FEATURE_TYPE_SELECTED,
@@ -163,6 +169,7 @@ module.exports = {
     FEATURE_LOADED,
     FEATURE_TYPE_ERROR,
     FEATURE_ERROR,
+    FEATURE_CLOSE,
     QUERY_CREATE,
     QUERY_RESULT,
     QUERY_ERROR,
@@ -172,6 +179,7 @@ module.exports = {
     loadFeature,
     createQuery,
     query,
+    featureClose,
     resetQuery,
     toggleQueryPanel
 };
