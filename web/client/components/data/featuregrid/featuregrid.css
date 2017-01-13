@@ -1,7 +1,10 @@
-.ag-fresh .ag-header{
+.ag-fresh .ag-header, .ag-fresh .ag-tool-panel-container {
     background: #078AA3;
     color: white;
     font-family: Raleway;
+}
+.ag-fresh .ag-tool-panel-container .ag-list-selection{
+    color: black;
 }
 .ag-fresh .ag-paging-button {
     color: #078aa3;
