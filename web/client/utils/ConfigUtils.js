@@ -363,6 +363,12 @@ var ConfigUtils = {
     },
     getConfigProp: function(prop) {
         return defaultConfig[prop];
+    },
+    setConfigProp: function(prop, value) {
+        defaultConfig[prop] = value;
+    },
+    removeConfigProp: function(prop) {
+        delete defaultConfig[prop];
     }
 };
 
