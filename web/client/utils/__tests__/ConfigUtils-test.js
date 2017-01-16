@@ -278,4 +278,16 @@ describe('ConfigUtils', () => {
             }
         })).toBe('http://remote.cors');
     });
+
+    it('config prop', () => {
+        ConfigUtils.setConfigProp('testProperty', 'testValue');
+        expect(ConfigUtils.getConfigProp('testProperty')).toBe('testValue');
+    });
+
+    it('remove config prop', () => {
+        ConfigUtils.setConfigProp('testProperty', 'testValue');
+        expect(ConfigUtils.getConfigProp('testProperty')).toBe('testValue');
+        ConfigUtils.removeConfigProp('testProperty');
+        expect(ConfigUtils.getConfigProp('testProperty')).toNotExist();
+    });
 });
