@@ -26,7 +26,8 @@ const assign = require('object-assign');
 const types = {
     'xsd:string': 'string',
     'xsd:dateTime': 'date',
-    'xsd:number': 'number'
+    'xsd:number': 'number',
+    'xsd:int': 'number'
 };
 const fieldConfig = {};
 const extractInfo = (featureType) => {

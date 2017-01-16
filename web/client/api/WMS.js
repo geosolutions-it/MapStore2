@@ -111,6 +111,32 @@ const Api = {
             return searchAndPaginate(json, startPosition, maxRecords, text);
         });
     },
+    describeLayers: function(url, layers) {
+        const parsed = urlUtil.parse(url, true);
+        const describeLayerUrl = urlUtil.format(assign({}, parsed, {
+            query: assign({
+                service: "WMS",
+                version: "1.1.1",
+                layers: layers,
+                request: "DescribeLayer"
+            }, parsed.query)
+        }));
+        return axios.get(parseUrl(describeLayerUrl)).then((response) => {
+            let decriptions;
+            xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
+                decriptions = result && result.WMS_DescribeLayerResponse && result.WMS_DescribeLayerResponse.LayerDescription;
+            });
+            decriptions = Array.isArray(decriptions) ? decriptions : [decriptions];
+            // make it compatible with json format of describe layer
+            return decriptions.map(desc => ({
+                ...(desc && desc.$ || {}),
+                layerName: desc.$ && desc.$.name,
+                query: {
+                    ...(desc && desc.query && desc.query.$ || {})
+                }
+            }));
+        });
+    },
     textSearch: function(url, startPosition, maxRecords, text) {
         return Api.getRecords(url, startPosition, maxRecords, text);
     }

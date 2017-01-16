@@ -87,6 +87,7 @@ const Save = React.createClass({
                         features: layer.features,
                         format: layer.format,
                         group: layer.group,
+                        search: layer.search,
                         source: layer.source,
                         name: layer.name,
                         opacity: layer.opacity,

@@ -25,6 +25,9 @@ const reorderLayers = (groups, allLayers) => {
 };
 
 var LayersUtils = {
+    getLayerId: (layerObj, layers) => {
+        return layerObj && layerObj.id || (layerObj.name + "__" + layers.length);
+    },
     getLayersByGroup: (configLayers) => {
         let i = 0;
         let mapLayers = configLayers.map((layer) => assign({}, layer, {storeIndex: i++}));

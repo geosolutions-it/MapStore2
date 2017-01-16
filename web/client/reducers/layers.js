@@ -246,7 +246,7 @@ function layers(state = [], action) {
         case ADD_LAYER: {
             let newLayers = (state.flat || []).concat();
             let newGroups = (state.groups || []).concat();
-            const newLayer = (action.layer.id) ? action.layer : assign({}, action.layer, {id: action.layer.name + "__" + newLayers.length});
+            const newLayer = (action.layer.id) ? action.layer : assign({}, action.layer, {id: LayersUtils.getLayerId(action.layer, newLayers)});
             newLayers.push(newLayer);
             const groupName = newLayer.group || 'Default';
             if (groupName !== "background") {
