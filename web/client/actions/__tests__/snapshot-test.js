@@ -16,7 +16,7 @@ var {
     onSnapshotReady,
     saveImage
 } = require('../snapshot');
-var FileSaver = require('browser-filesaver');
+var FileSaver = require('file-saver');
 var originalSaveAs = FileSaver.saveAs;
 var testImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AMLEC8BMwzneAAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAMSURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=";
 describe('Test correctness of the snapshot actions', () => {

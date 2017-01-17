@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const FileSaver = require('browser-filesaver');
+const FileSaver = require('file-saver');
 const toBlob = require('canvas-to-blob');
 const shp = require('shpjs');
 
