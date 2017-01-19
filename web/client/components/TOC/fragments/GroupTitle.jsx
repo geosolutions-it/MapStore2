@@ -31,7 +31,7 @@ const GroupTitle = React.createClass({
         let expanded = (this.props.node.expanded !== undefined) ? this.props.node.expanded : true;
         let groupTitle = this.props.node && this.props.node.title || 'Default';
         return (
-            <div className="toc-group-title" onClick={() => this.props.onClick(this.props.node.name, expanded)} style={this.props.style}>
+            <div className="toc-group-title" onClick={() => this.props.onClick(this.props.node.id, expanded)} style={this.props.style}>
                 <StatusIcon expanded={expanded} node={this.props.node}/>{groupTitle}
             </div>
         );

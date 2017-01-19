@@ -10,6 +10,8 @@ var React = require('react');
 const {Input} = require('react-bootstrap');
 const Message = require('../../../I18N/Message');
 const {SimpleSelect} = require('react-selectize');
+const {isObject} = require('lodash');
+
 require('react-selectize/themes/index.css');
 
 /**
@@ -26,6 +28,18 @@ const General = React.createClass({
             element: {},
             updateSettings: () => {}
         };
+    },
+    getGroups(groups, idx = 0) {
+        return groups.filter((group) => group.nodes).reduce((acc, g) => {
+            acc.push({label: "- ".repeat(idx).concat(g.title), value: g.id});
+            if (g.nodes.length > 0) {
+                return acc.concat(this.getGroups(g.nodes, idx + 1));
+            }
+            return acc;
+        }, []);
+    },
+    getLabelName(groupLable = "") {
+        return groupLable.replace(/_/g, ' ').split('.').pop();
     },
     render() {
         return (<form ref="settings">
@@ -46,12 +60,15 @@ const General = React.createClass({
             <SimpleSelect
                     key="group-dropdown"
                     options={
-                        ((this.props.groups && this.props.groups.map((g) => g.name)) || (this.props.element && this.props.element.group) || []).map(function(item) {
-                            return {label: item, value: item};
+                        ((this.props.groups && this.getGroups(this.props.groups)) || (this.props.element && this.props.element.group) || []).map(function(item) {
+                            if (isObject(item)) {
+                                return item;
+                            }
+                            return {label: this.getLabelName(item), value: item};
                         })
                     }
-                    defaultValue={{label: this.props.element && this.props.element.group || "Default", value: this.props.element && this.props.element.group || "Default" }}
-                    placeholder={this.props.element && this.props.element.group || "Default"}
+                    defaultValue={{label: this.getLabelName((this.props.element && this.props.element.group || "Default")), value: this.props.element && this.props.element.group || "Default" }}
+                    placeholder={this.getLabelName((this.props.element && this.props.element.group || "Default"))}
                     onChange={(value) => {
                         this.updateEntry("group", {target: {value: value || "Default"}});
                     }}

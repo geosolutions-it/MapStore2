@@ -79,7 +79,7 @@ describe('Test the layers reducer', () => {
             nodeType: 'groups'
         };
         let initialState = {
-            groups: [{name: 'sample1'}, {name: 'sample2'}],
+            groups: [{name: 'sample1', id: 'sample1'}, {name: 'sample2', id: 'sample2'}],
             flat: [{id: 'layer1', group: 'sample1'}, {id: 'layer2', group: 'sample2'}]
         };
         let state = layers(initialState, testAction);
@@ -94,7 +94,7 @@ describe('Test the layers reducer', () => {
             nodeType: 'layers'
         };
         let initialState = {
-            groups: [{name: 'sample1'}, {name: 'sample2'}],
+            groups: [{name: 'sample1', id: 'sample1'}, {name: 'sample2', id: 'sample2'}],
             flat: [{id: 'layer1', group: 'sample1'}, {id: 'layer2', group: 'sample2'}]
         };
         let state = layers(initialState, testAction);
@@ -109,7 +109,7 @@ describe('Test the layers reducer', () => {
             nodeType: 'groups'
         };
         let initialState = {
-            groups: [{name: 'sample1', nodes: [{name: 'sample1.nested'}]}, {name: 'sample2'}],
+            groups: [{name: 'sample1', id: 'sample1', nodes: [{name: 'nested', id: 'sample1.nested'}]}, {name: 'sample2', id: 'sample2'}],
             flat: [{id: 'layer1', group: 'sample1'}, {id: 'layer2', group: 'sample2'}, {id: 'layer3', group: 'sample1.nested'}]
         };
         let state = layers(initialState, testAction);

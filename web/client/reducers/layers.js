@@ -12,7 +12,7 @@ var {LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, CHANGE_LAYER_PROPERTIES, CHANGE_GRO
     } = require('../actions/layers');
 
 var assign = require('object-assign');
-var {isObject, isArray, head, findIndex} = require('lodash');
+var {isObject, isArray, head, findIndex, isString} = require('lodash');
 
 const LayersUtils = require('../utils/LayersUtils');
 
@@ -20,9 +20,11 @@ const deepChange = (nodes, findValue, propName, propValue) => {
     if (nodes && isArray(nodes) && nodes.length > 0) {
         return nodes.map((node) => {
             if (isObject(node)) {
-                return node.id === findValue ?
-                    assign({}, node, {[propName]: propValue}) :
-                    assign({}, node, {nodes: deepChange(node.nodes, findValue, propName, propValue)});
+                if (node.id === findValue) {
+                    return assign({}, node, {[propName]: propValue});
+                }else if (node.nodes) {
+                    return assign({}, node, {nodes: deepChange(node.nodes, findValue, propName, propValue)});
+                }
             }
             return node;
         });
@@ -32,70 +34,15 @@ const deepChange = (nodes, findValue, propName, propValue) => {
 
 /**
 Removes a group even if it is nested
-Cannot be used to remove layers as well
+It works for layers too
 **/
 const deepRemove = (nodes, findValue) => {
     if (nodes && isArray(nodes) && nodes.length > 0) {
-        return nodes.filter((node) => node.name !== findValue).map((node) => isObject(node) ? assign({}, node, node.nodes ? {
-            nodes: deepRemove(node.nodes, findValue, node.name + '.')
+        return nodes.filter((node) => (node.id && node.id !== findValue) || (isString(node) && node !== findValue )).map((node) => isObject(node) ? assign({}, node, node.nodes ? {
+            nodes: deepRemove(node.nodes, findValue)
         } : {}) : node);
     }
     return nodes;
-};
-
-/*
-Removes a Layer from the TOC
-Currently supports only one level of depth
-*/
-const removeNode = (groups, nodeId) => {
-    if (groups && isArray(groups) && groups.length > 0) {
-        return groups.map((group) => group.nodes && group.nodes.length ?
-            assign({}, group, {nodes: group.nodes.filter((layerId) => layerId !== nodeId)}
-            )
-         : group);
-    }
-    return groups;
-};
-
-// add the newGroup to the list if it does not already exists
-const addGroup = (groups, newGroup) => {
-    return head(groups.filter(
-        (group) => group.id === newGroup
-    )) ?
-    groups :
-    groups.concat({
-            id: newGroup,
-            name: newGroup,
-            title: newGroup,
-            nodes: [],
-            expanded: true
-        });
-};
-
-/*
-Moves a Layer to a new group
-*/
-const moveNode = (groups, nodeId, newGroup) => {
-    if (groups && isArray(groups) && groups.length > 0) {
-        return removeNode(addGroup(groups, newGroup), nodeId)
-        // Add the layer to the new group
-        .map((group) => {
-            if (isObject(group)) {
-                return group.id === newGroup ?
-                    assign({}, group, {nodes: (group.nodes || []).concat(nodeId)}) :
-                    group;
-            }
-            return group;
-        })
-        // Remove empty groups
-        .filter((group) => group &&
-            (
-                group.name === 'Default' ||
-                group.nodes && isArray(group.nodes) && group.nodes.length > 0
-            )
-        );
-    }
-    return groups;
 };
 
 const getNode = (nodes, name) => {
@@ -104,7 +51,7 @@ const getNode = (nodes, name) => {
             if (previous) {
                 return previous;
             }
-            if (node && node.name === name) {
+            if (node && (node.name === name || node.id === name)) {
                 return node;
             }
             if (node && node.nodes && node.nodes.length > 0) {
@@ -115,7 +62,6 @@ const getNode = (nodes, name) => {
     }
     return null;
 };
-
 function layers(state = [], action) {
     switch (action.type) {
         case LAYER_LOADING: {
@@ -155,8 +101,7 @@ function layers(state = [], action) {
         case CHANGE_GROUP_PROPERTIES: {
             let newLayers = state.flat.map((layer) => {
                 const layerGroup = layer.group || 'Default';
-                if (layerGroup === action.group || layerGroup.indexOf(action.group + ".") === 0) {
-
+                if (layerGroup === action.group || layerGroup.indexOf(`${action.group}.`) === 0) {
                     return assign({}, layer, action.newProperties);
                 }
                 return assign({}, layer);
@@ -192,7 +137,7 @@ function layers(state = [], action) {
             let sameGroup = false;
 
             const newLayers = flatLayers.map((layer) => {
-                if (layer[selector] === action.node || layer[selector].indexOf(action.node + '.') === 0) {
+                if (layer[selector] === action.node || layer[selector].indexOf(`{action.node}.`) === 0) {
                     if (!action.options.hasOwnProperty("group") || layer.group === (action.options.group || 'Default')) {
                         // If the layer didn't change group, raise a flag to prevent groups update
                         sameGroup = true;
@@ -204,7 +149,29 @@ function layers(state = [], action) {
             });
             let originalNode = head(flatLayers.filter((layer) => { return (layer[selector] === action.node || layer[selector].indexOf(action.node + '.') === 0); }));
             if (!sameGroup && originalNode ) {
-                let newGroups = moveNode(state.groups, action.node, (action.options.group || 'Default'));
+                // Remove layers from old group
+                const groupId = (action.options.group || 'Default');
+                let newGroups = deepRemove(state.groups, action.node);
+                // Check if new group exist
+                let group = getNode(state.groups, groupId);
+                if (!group) {
+                // create missing group
+                    const groups = LayersUtils.getLayersByGroup([getNode(newLayers, action.node)]);
+                // check for parent group if exist
+                    const parentGroup = groupId.split('.').reduce((tree, gName, idx) => {
+                        const gId = groupId.split(".", idx + 1).join('.');
+                        const parent = getNode(state.groups, gId);
+                        return parent ? tree.concat(parent) : tree;
+                    }, []).pop();
+                    if (parentGroup) {
+                        group = getNode(groups, groupId);
+                        newGroups = deepChange(newGroups, parentGroup.id, 'nodes', parentGroup.nodes.concat(group));
+                    }else {
+                        newGroups.push(groups.pop());
+                    }
+                }else {
+                    newGroups = deepChange(newGroups, group.id, 'nodes', group.nodes.concat(action.node));
+                }
                 let orderedNewLayers = LayersUtils.sortLayers ? LayersUtils.sortLayers(newGroups, newLayers) : newLayers;
                 return assign({}, state, {
                     flat: orderedNewLayers,
@@ -235,7 +202,7 @@ function layers(state = [], action) {
                 };
             }
             if (action.nodeType === 'layers') {
-                const newGroups = removeNode(state.groups, action.node);
+                const newGroups = deepRemove(state.groups, action.node);
                 const newLayers = state.flat.filter((layer) => layer.id !== action.node);
                 return assign({}, state, {
                     flat: newLayers,
