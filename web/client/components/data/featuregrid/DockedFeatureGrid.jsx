@@ -222,6 +222,7 @@ const DockedFeatureGrid = React.createClass({
         if (this.props.open && this.props.filterObj && cols) {
             return (
                 <Dock
+                    zIndex={1030 /*below dialogs, above left menu*/}
                     position={"bottom" /* 'left', 'top', 'right', 'bottom' */}
                     size={this.state.size}
                     dimMode={"none" /*'transparent', 'none', 'opaque'*/}
