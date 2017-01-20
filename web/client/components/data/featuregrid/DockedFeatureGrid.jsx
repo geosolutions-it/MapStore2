@@ -27,9 +27,6 @@ const DockedFeatureGrid = React.createClass({
     propTypes: {
         isNew: React.PropTypes.bool,
         open: React.PropTypes.bool,
-        detailOpen: React.PropTypes.bool,
-        expanded: React.PropTypes.bool,
-        header: React.PropTypes.string,
         features: React.PropTypes.oneOfType([ React.PropTypes.array, React.PropTypes.object]),
         columnsDef: React.PropTypes.array,
         map: React.PropTypes.object,
@@ -42,8 +39,6 @@ const DockedFeatureGrid = React.createClass({
         params: React.PropTypes.object,
         // featureGrigConfigUrl: React.PropTypes.string,
         profile: React.PropTypes.string,
-        onDetail: React.PropTypes.func,
-        onShowDetail: React.PropTypes.func,
         changeMapView: React.PropTypes.func,
         // loadFeatureGridConfig: React.PropTypes.func,
         onExpandFilterPanel: React.PropTypes.func,
@@ -51,20 +46,15 @@ const DockedFeatureGrid = React.createClass({
         totalFeatures: React.PropTypes.number,
         pagination: React.PropTypes.bool,
         featureTypeName: React.PropTypes.string,
-        ogcVersion: React.PropTypes.string,
         onQuery: React.PropTypes.func,
         searchUrl: React.PropTypes.string,
         filterObj: React.PropTypes.object,
         dataSourceOptions: React.PropTypes.object,
         withMap: React.PropTypes.bool.isRequired,
-        onConfigureQuery: React.PropTypes.func,
-        attributes: React.PropTypes.array,
         cleanError: React.PropTypes.func,
         selectAllToggle: React.PropTypes.func,
-        templateProfile: React.PropTypes.string,
         zoomToFeatureAction: React.PropTypes.func,
-        onClose: React.PropTypes.func,
-        style: React.PropTypes.object
+        onClose: React.PropTypes.func
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -75,16 +65,11 @@ const DockedFeatureGrid = React.createClass({
     getDefaultProps() {
         return {
             open: false,
-            detailOpen: true,
             loadingGrid: false,
             loadingGridError: null,
-            attributes: [],
             profile: null,
-            expanded: true,
-            header: "featuregrid.header",
             features: [],
             featureTypeName: null,
-            ogcVersion: "2.0",
             columnsDef: [],
             pagination: true,
             params: {},
@@ -98,16 +83,12 @@ const DockedFeatureGrid = React.createClass({
             },
             initWidth: 600,
             withMap: true,
-            templateProfile: 'default',
-            onDetail: () => {},
             onClose: () => {},
-            onShowDetail: () => {},
             changeMapView: () => {},
             // loadFeatureGridConfig: () => {},
             onExpandFilterPanel: () => {},
             selectFeatures: () => {},
             onQuery: () => {},
-            onConfigureQuery: () => {},
             cleanError: () => {},
             selectAllToggle: () => {}
         };
@@ -156,14 +137,6 @@ const DockedFeatureGrid = React.createClass({
         if (filter) {
             this.props.onExpandFilterPanel(true);
         }
-    },
-    onResize(event, resize) {
-        let size = resize.size;
-        this.setState({width: size.width, height: size.height});
-
-    },
-    getRequestId(params) {
-        return `${params.startRow}_${params.endRow}_${params.sortModel.map((m) => `${m.colId}_${m.sort}` ).join('_')}`;
     },
     getSortAttribute(colId) {
         let col = head(this.props.columnsDef.filter((c) => colId === `properties.${c.field}`));
@@ -272,7 +245,8 @@ const DockedFeatureGrid = React.createClass({
                                 height: "100%"
                                 }}>
                             <FeatureGrid
-                                tools={<Button onClick={this.props.onClose} ><Glyphicon glyph="1-close" /><I18N.Message msgId="close"/></Button>}
+                                useIcons={true}
+                                tools={[<Button onClick={this.props.onClose} ><Glyphicon glyph="1-close" /><I18N.Message msgId="close"/></Button>]}
                                 key={"search-results-" + (this.state && this.state.searchN)}
                                 className="featureGrid"
                                 changeMapView={this.props.changeMapView}
