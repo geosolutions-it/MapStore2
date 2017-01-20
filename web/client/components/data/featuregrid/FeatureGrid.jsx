@@ -8,7 +8,8 @@
 const React = require('react');
 const {AgGridReact, reactCellRendererFactory} = require('ag-grid-react');
 const {keys, isEqual, isFunction} = require('lodash');
-const ZoomToRenderer = require("./ZoomToFeatureRenderer");
+const ZoomToFeatureIcon = require("./ZoomToFeatureIcon");
+const ZoomToFeatureRenderer = require('./ZoomToFeatureRenderer');
 const {ButtonToolbar, Button, Glyphicon} = require('react-bootstrap');
 const assign = require("object-assign");
 
@@ -49,7 +50,8 @@ const FeatureGrid = React.createClass({
         selectAllActive: React.PropTypes.bool,
         zoomToFeatureAction: React.PropTypes.func,
         exportAction: React.PropTypes.func,
-        tools: React.PropTypes.array
+        tools: React.PropTypes.array,
+        useIcons: React.PropTypes.bool
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -236,7 +238,7 @@ const FeatureGrid = React.createClass({
         {
             onCellClicked: this.zoomToFeature,
             headerName: '',
-            cellRenderer: reactCellRendererFactory(ZoomToRenderer),
+            cellRenderer: reactCellRendererFactory(this.props.useIcons ? ZoomToFeatureIcon : ZoomToFeatureRenderer),
             suppressSorting: true,
             suppressMenu: true,
             pinned: true,
