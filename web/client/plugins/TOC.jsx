@@ -184,7 +184,7 @@ const LayerTree = React.createClass({
             activateZoomTool: true,
             activateSettingsTool: true,
             activateRemoveLayer: true,
-            activateQueryTool: true,
+            activateQueryTool: false,
             visibilityCheckType: "checkbox",
             settingsOptions: {},
             querypanelEnabled: false
