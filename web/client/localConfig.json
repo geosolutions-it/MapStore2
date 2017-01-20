@@ -283,6 +283,7 @@
           "collapsible": false
         },
         "excludeOptions": [
+            "search",
             "links",
             "allowedSRS",
             "title",
@@ -317,9 +318,15 @@
         }
     }, {
         "name": "Home"
+    },{
+      "name": "FeatureGrid",
+      "cfg": {
+        "pagination": true
+      }
     }, {
         "name": "TOC",
         "cfg": {
+          "activateQueryTool": true,
           "visibilityCheckType": "glyph",
           "settingsOptions": {
             "includeCloseButton": false,
@@ -611,6 +618,7 @@
                "marginBottom": 0
            },
            "excludeOptions": [
+              "search",
               "links",
               "allowedSRS",
               "title",
@@ -651,7 +659,7 @@
               "alwaysVisible": true
             }
           }
-      }, "FeatureGrid", {
+      }, {
           "name": "TOC",
           "cfg": {
             "visibilityCheckType": "glyph",
