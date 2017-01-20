@@ -44,7 +44,6 @@ const deepRemove = (nodes, findValue) => {
     }
     return nodes;
 };
-
 const getNode = (nodes, name) => {
     if (nodes && isArray(nodes)) {
         return nodes.reduce((previous, node) => {
@@ -62,6 +61,33 @@ const getNode = (nodes, name) => {
     }
     return null;
 };
+
+const moveNode = (groups, node, groupId, newLayers) => {
+    // Remove node from old group
+    let newGroups = deepRemove(groups, node);
+    // Check if group to move to exists
+    let group = getNode(newGroups, groupId);
+    if (!group) {
+        // Create missing group
+        group = head(LayersUtils.getLayersByGroup([getNode(newLayers, node)]));
+        // check for parent group if exist
+        const parentGroup = groupId.split('.').reduce((tree, gName, idx) => {
+            const gId = groupId.split(".", idx + 1).join('.');
+            const parent = getNode(newGroups, gId);
+            return parent ? tree.concat(parent) : tree;
+        }, []).pop();
+        if (parentGroup) {
+            group = getNode([group], parentGroup.id).nodes[0];
+            newGroups = deepChange(newGroups, parentGroup.id, 'nodes', parentGroup.nodes.concat(group));
+        }else {
+            newGroups.push(group);
+        }
+    }else {
+        newGroups = deepChange(newGroups, group.id, 'nodes', group.nodes.concat(node));
+    }
+    return LayersUtils.removeEmptyGroups(newGroups);
+};
+
 function layers(state = [], action) {
     switch (action.type) {
         case LAYER_LOADING: {
@@ -151,27 +177,8 @@ function layers(state = [], action) {
             if (!sameGroup && originalNode ) {
                 // Remove layers from old group
                 const groupId = (action.options.group || 'Default');
-                let newGroups = deepRemove(state.groups, action.node);
-                // Check if new group exist
-                let group = getNode(state.groups, groupId);
-                if (!group) {
-                // create missing group
-                    const groups = LayersUtils.getLayersByGroup([getNode(newLayers, action.node)]);
-                // check for parent group if exist
-                    const parentGroup = groupId.split('.').reduce((tree, gName, idx) => {
-                        const gId = groupId.split(".", idx + 1).join('.');
-                        const parent = getNode(state.groups, gId);
-                        return parent ? tree.concat(parent) : tree;
-                    }, []).pop();
-                    if (parentGroup) {
-                        group = getNode(groups, groupId);
-                        newGroups = deepChange(newGroups, parentGroup.id, 'nodes', parentGroup.nodes.concat(group));
-                    }else {
-                        newGroups.push(groups.pop());
-                    }
-                }else {
-                    newGroups = deepChange(newGroups, group.id, 'nodes', group.nodes.concat(action.node));
-                }
+                const newGroups = moveNode(state.groups, action.node, groupId, newLayers);
+
                 let orderedNewLayers = LayersUtils.sortLayers ? LayersUtils.sortLayers(newGroups, newLayers) : newLayers;
                 return assign({}, state, {
                     flat: orderedNewLayers,

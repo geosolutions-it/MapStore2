@@ -7,13 +7,13 @@
  */
 
 const assign = require('object-assign');
-const {isObject, isArray} = require('lodash');
+const {isObject, isArray, head} = require('lodash');
 
 const getGroup = (groupId, groups) => {
-    return groups.filter((subGroup) => isObject(subGroup) && subGroup.id === groupId).pop();
+    return head(groups.filter((subGroup) => isObject(subGroup) && subGroup.id === groupId));
 };
 const getLayer = (layerName, allLayers) => {
-    return allLayers.filter((layer) => layer.id === layerName).pop();
+    return head(allLayers.filter((layer) => layer.id === layerName));
 };
 const getLayersId = (groupId, allLayers) => {
     return allLayers.filter((layer) => (layer.group || 'Default') === groupId).map((layer) => layer.id).reverse();
@@ -33,7 +33,6 @@ const initialReorderLayers = (groups, allLayers) => {
 const reorderLayers = (groups, allLayers) => {
     return initialReorderLayers(groups, allLayers);
 };
-
 const createGroup = (groupId, groupName, layers, addLayers) => {
     const title = groupName.replace(/_/g, ' ');
     return assign({}, {
@@ -44,6 +43,7 @@ const createGroup = (groupId, groupName, layers, addLayers) => {
             expanded: true
         });
 };
+
 var LayersUtils = {
     getLayerId: (layerObj, layers) => {
         return layerObj && layerObj.id || (layerObj.name + "__" + layers.length);
@@ -72,17 +72,27 @@ var LayersUtils = {
             return groups;
         }, []);
     },
-
+    removeEmptyGroups: (groups) => {
+        return groups.reduce((acc, group) => {
+            return acc.concat(LayersUtils.getNotEmptyGroup(group));
+        }, []);
+    },
+    getNotEmptyGroup: (group) => {
+        const nodes = group.nodes.reduce((gNodes, node) => {
+            return node.nodes ? gNodes.concat(LayersUtils.getNotEmptyGroup(node)) : gNodes.concat(node);
+        }, []);
+        return nodes.length > 0 ? assign({}, group, {nodes: nodes}) : [];
+    },
     reorder: (groups, allLayers) => {
         return allLayers.filter((layer) => layer.group === 'background')
             .concat(reorderLayers(groups, allLayers));
     },
     denormalizeGroups: (allLayers, groups) => {
         let getGroupVisibility = (nodes) => {
-            let visibility = false;
+            let visibility = true;
             nodes.forEach((node) => {
-                if (node && node.visibility) {
-                    visibility = true;
+                if (!node.visibility) {
+                    visibility = false;
                 }
             });
             return visibility;

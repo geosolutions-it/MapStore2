@@ -10,7 +10,7 @@ var React = require('react');
 const {Input} = require('react-bootstrap');
 const Message = require('../../../I18N/Message');
 const {SimpleSelect} = require('react-selectize');
-const {isObject} = require('lodash');
+const {isObject, head} = require('lodash');
 
 require('react-selectize/themes/index.css');
 
@@ -39,7 +39,7 @@ const General = React.createClass({
         }, []);
     },
     getLabelName(groupLable = "") {
-        return groupLable.replace(/_/g, ' ').split('.').pop();
+        return head(groupLable.replace(/_/g, ' ').split('.'));
     },
     render() {
         return (<form ref="settings">
