@@ -12,7 +12,7 @@ var {LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, CHANGE_LAYER_PROPERTIES, CHANGE_GRO
     } = require('../actions/layers');
 
 var assign = require('object-assign');
-var {isObject, isArray, head, findIndex, isString} = require('lodash');
+var {isObject, isArray, head, isString} = require('lodash');
 
 const LayersUtils = require('../utils/LayersUtils');
 
@@ -62,7 +62,7 @@ const getNode = (nodes, id) => {
     return null;
 };
 
-const moveNode = (groups, node, groupId, newLayers) => {
+const moveNode = (groups, node, groupId, newLayers, foreground = true) => {
     // Remove node from old group
     let newGroups = deepRemove(groups, node);
     // Check if group to move to exists
@@ -78,12 +78,12 @@ const moveNode = (groups, node, groupId, newLayers) => {
         }, []).pop();
         if (parentGroup) {
             group = getNode([group], parentGroup.id).nodes[0];
-            newGroups = deepChange(newGroups, parentGroup.id, 'nodes', parentGroup.nodes.concat(group));
+            newGroups = deepChange(newGroups, parentGroup.id, 'nodes', foreground ? [group].concat(parentGroup.nodes) : parentGroup.nodes.concat(group));
         }else {
-            newGroups.push(group);
+            newGroups = [group].concat(newGroups);
         }
     }else {
-        newGroups = deepChange(newGroups, group.id, 'nodes', group.nodes.concat(node));
+        newGroups = deepChange(newGroups, group.id, 'nodes', foreground ? [node].concat(group.nodes.slice(0)) : group.nodes.concat(node));
     }
     return LayersUtils.removeEmptyGroups(newGroups);
 };
@@ -222,16 +222,9 @@ function layers(state = [], action) {
             let newGroups = (state.groups || []).concat();
             const newLayer = (action.layer.id) ? action.layer : assign({}, action.layer, {id: LayersUtils.getLayerId(action.layer, newLayers)});
             newLayers.push(newLayer);
-            const groupName = newLayer.group || 'Default';
-            if (groupName !== "background") {
-                let node = getNode(newGroups, groupName );
-                if (node) {
-                    let newLayerIds = action.foreground ? [newLayer.id].concat(node.nodes) : node.nodes.concat([newLayer.id]);
-                    newGroups = deepChange(state.groups, groupName, 'nodes', newLayerIds);
-                } else {
-                    const newGroup = LayersUtils.getLayersByGroup([newLayer]);
-                    newGroups = newGroup.concat(newGroups);
-                }
+            const groupId = newLayer.group || 'Default';
+            if (groupId !== "background") {
+                newGroups = moveNode(newGroups, newLayer.id, groupId, newLayers, action.foreground);
             }
             let orderedNewLayers = LayersUtils.sortLayers ? LayersUtils.sortLayers(newGroups, newLayers) : newLayers;
             return {
@@ -240,21 +233,12 @@ function layers(state = [], action) {
             };
         }
         case REMOVE_LAYER: {
-            let layer = head((state.flat || []).filter(obj => obj.id === action.layerId));
-            let groupName = layer && layer.group ? layer.group : 'Default';
-            let newLayers = (state.flat || []).filter(lyr => lyr.id !== action.layerId);
-            let newGroups = (state.groups || []).concat();
-            let gidx = findIndex(newGroups, entry => entry.id === groupName);
-            if (gidx >= 0) {
-                let newGroup = assign({}, newGroups[gidx]);
-                let nidx = newGroup.nodes.indexOf(action.layerId);
-                newGroup.nodes = [...newGroup.nodes.slice(0, nidx), ...newGroup.nodes.slice(nidx + 1)];
-                newGroups[gidx] = newGroup;
-            }
-            return {
-                    flat: newLayers,
-                    groups: newGroups
-            };
+            const newGroups = deepRemove(state.groups, action.layerId);
+            const newLayers = state.flat.filter((layer) => layer.id !== action.layerId);
+            return assign({}, state, {
+                flat: newLayers,
+                groups: newGroups
+            });
         }
         case SHOW_SETTINGS: {
             let settings = assign({}, state.settings, {

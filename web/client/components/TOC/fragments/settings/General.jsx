@@ -31,7 +31,7 @@ const General = React.createClass({
     },
     getGroups(groups, idx = 0) {
         return groups.filter((group) => group.nodes).reduce((acc, g) => {
-            acc.push({label: "- ".repeat(idx).concat(g.title), value: g.id});
+            acc.push({label: "/ ".repeat(idx).concat(g.title), value: g.id});
             if (g.nodes.length > 0) {
                 return acc.concat(this.getGroups(g.nodes, idx + 1));
             }
@@ -39,7 +39,7 @@ const General = React.createClass({
         }, []);
     },
     getLabelName(groupLable = "") {
-        return head(groupLable.replace(/_/g, ' ').split('.'));
+        return head(groupLable.split('.'));
     },
     render() {
         return (<form ref="settings">

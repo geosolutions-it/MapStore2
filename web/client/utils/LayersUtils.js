@@ -34,11 +34,10 @@ const reorderLayers = (groups, allLayers) => {
     return initialReorderLayers(groups, allLayers);
 };
 const createGroup = (groupId, groupName, layers, addLayers) => {
-    const title = groupName.replace(/_/g, ' ');
     return assign({}, {
             id: groupId,
             name: groupName,
-            title: title,
+            title: groupName,
             nodes: addLayers ? getLayersId(groupId, layers) : [],
             expanded: true
         });
