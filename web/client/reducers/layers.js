@@ -44,17 +44,17 @@ const deepRemove = (nodes, findValue) => {
     }
     return nodes;
 };
-const getNode = (nodes, name) => {
+const getNode = (nodes, id) => {
     if (nodes && isArray(nodes)) {
         return nodes.reduce((previous, node) => {
             if (previous) {
                 return previous;
             }
-            if (node && (node.name === name || node.id === name)) {
+            if (node && (node.name === id || node.id === id)) {
                 return node;
             }
             if (node && node.nodes && node.nodes.length > 0) {
-                return getNode(node.nodes, name);
+                return getNode(node.nodes, id);
             }
             return previous;
         }, null);

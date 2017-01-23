@@ -19,15 +19,15 @@ const getLayersId = (groupId, allLayers) => {
     return allLayers.filter((layer) => (layer.group || 'Default') === groupId).map((layer) => layer.id).reverse();
 };
 const initialReorderLayers = (groups, allLayers) => {
-    return groups.slice(0).reduce((previous, group) => {
+    return groups.slice(0).reverse().reduce((previous, group) => {
         return previous.concat(
-            group.nodes.reduce((layers, node) => {
+            group.nodes.slice(0).reverse().reduce((layers, node) => {
                 if (isObject(node)) {
-                    return layers.concat(initialReorderLayers([node], allLayers).reverse());
+                    return layers.concat(initialReorderLayers([node], allLayers));
                 }
                 return layers.concat(getLayer(node, allLayers));
             }, [])
-            ).reverse();
+            );
     }, []);
 };
 const reorderLayers = (groups, allLayers) => {
