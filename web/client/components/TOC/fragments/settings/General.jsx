@@ -10,7 +10,7 @@ var React = require('react');
 const {Input} = require('react-bootstrap');
 const Message = require('../../../I18N/Message');
 const {SimpleSelect} = require('react-selectize');
-const {isObject, head} = require('lodash');
+const {isObject} = require('lodash');
 
 require('react-selectize/themes/index.css');
 
@@ -31,7 +31,7 @@ const General = React.createClass({
     },
     getGroups(groups, idx = 0) {
         return groups.filter((group) => group.nodes).reduce((acc, g) => {
-            acc.push({label: "/ ".repeat(idx).concat(g.title), value: g.id});
+            acc.push({label: g.id.replace(/\./g, '/'), value: g.id});
             if (g.nodes.length > 0) {
                 return acc.concat(this.getGroups(g.nodes, idx + 1));
             }
@@ -39,7 +39,7 @@ const General = React.createClass({
         }, []);
     },
     getLabelName(groupLable = "") {
-        return head(groupLable.split('.'));
+        return groupLable.replace(/\./g, '/');
     },
     render() {
         return (<form ref="settings">
@@ -81,7 +81,8 @@ const General = React.createClass({
                         })).indexOf(search) > -1) {
                             return null;
                         }
-                        return {label: search, value: search};
+                        const val = search.replace(/\//g, '.');
+                        return {label: val, value: val};
                     }}
 
                     onValueChange={function(item) {
