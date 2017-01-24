@@ -20,6 +20,7 @@ const {
 } = require('../actions/wfsquery');
 
 const {QUERY_FORM_RESET} = require('../actions/queryform');
+const {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
 
@@ -127,6 +128,7 @@ function query(state = initialState, action) {
                 resultError: action.error
             });
         }
+        case RESET_CONTROLS:
         case QUERY_FORM_RESET:
             return assign({}, state, {
                 open: false,

@@ -212,7 +212,7 @@
       }
     },
     "OmniBar",
-     "FeatureGrid",
+    "FeatureGrid",
     {
       "name": "BurgerMenu",
       "hide": true
