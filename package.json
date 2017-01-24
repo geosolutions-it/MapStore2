@@ -64,7 +64,7 @@
     "url-loader": "0.5.7",
     "webpack": "1.12.15",
     "webpack-bundle-size-analyzer": "2.0.2",
-    "webpack-dev-server": "1.14.1"
+    "webpack-dev-server": "^1.16.2"
   },
   "//": "replace react-sortable-items with official on npm when 0.0.10 with remove_deprecated PR in included",
   "dependencies": {
