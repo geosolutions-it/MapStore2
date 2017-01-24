@@ -44,6 +44,7 @@ const GroupDialog = React.createClass({
       closeGlyph: React.PropTypes.string,
       style: React.PropTypes.object,
       buttonSize: React.PropTypes.string,
+      descLimit: React.PropTypes.number,
       inputStyle: React.PropTypes.object
   },
   getDefaultProps() {
@@ -56,6 +57,7 @@ const GroupDialog = React.createClass({
           options: {},
           useModal: true,
           closeGlyph: "",
+          descLimit: 255,
           style: {},
           buttonSize: "large",
           includeCloseButton: true,
@@ -82,11 +84,13 @@ const GroupDialog = React.createClass({
           style={this.props.inputStyle}
           label={<Message msgId="usergroups.groupName"/> }
           onChange={this.handleChange}
+          maxLength={255}
           value={this.props.group && this.props.group.groupName}/>
       <Input type="textarea"
           ref="description"
           key="description"
           name="description"
+          maxLength={255}
           readOnly={this.props.group && this.props.group.id}
           style={this.props.inputStyle}
           label={<Message msgId="usergroups.groupDescription"/>}
@@ -187,15 +191,17 @@ const GroupDialog = React.createClass({
             style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}
             >
           <span role="header">
-              <span className="user-panel-title">{(this.props.group && this.props.group.groupName) || <Message msgId="usergroups.newGroup" />}</span>
               <button onClick={this.props.onClose} className="login-panel-close close">
                   {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}
               </button>
+              <span className="user-panel-title">{(this.props.group && this.props.group.groupName) || <Message msgId="usergroups.newGroup" />}</span>
           </span>
           <div role="body">
           <Tabs defaultActiveKey={1} key="tab-panel">
               <Tab eventKey={1} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle="primary"><Glyphicon glyph="1-group"/></Button>} >
                   {this.renderGeneral()}
+                  {this.checkNameLenght()}
+                  {this.checkDescLenght()}
               </Tab>
               <Tab eventKey={2} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle="primary"><Glyphicon glyph="1-group-add"/></Button>} >
                   {this.renderMembersTab()}
@@ -207,6 +213,16 @@ const GroupDialog = React.createClass({
               {this.renderButtons()}
           </div>
       </Dialog>);
+  },
+  checkNameLenght() {
+      return this.props.group && this.props.group.groupName && this.props.group.groupName.length === 255 ? (<div className="alert alert-warning">
+            <Message msgId="usergroups.nameLimit"/>
+        </div>) : null;
+  },
+  checkDescLenght() {
+      return this.props.group && this.props.group.description && this.props.group.description.length === 255 ? (<div className="alert alert-warning">
+            <Message msgId="usergroups.descLimit"/>
+        </div>) : null;
   },
   isSaving() {
       return this.props.group && this.props.group.status === "saving";

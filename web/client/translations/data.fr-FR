@@ -486,6 +486,8 @@
         "usergroups": {
           "searchGroups": "rechercher des groupes...",
           "groups": "Groupes",
+          "nameLimit": "Le nom est limité à 255 caractères.",
+          "descLimit": "La description est limité à 255 caractères.",
           "editGroup": "Modifier",
           "deleteGroup": "Supprimer",
           "removeUser": "supprimer l'utilisateur",
