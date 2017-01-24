@@ -138,6 +138,7 @@ const tocSelector = createSelector(
 const TOC = require('../components/TOC/TOC');
 const DefaultGroup = require('../components/TOC/DefaultGroup');
 const DefaultLayer = require('../components/TOC/DefaultLayer');
+const DefaultLayerOrGroup = require('../components/TOC/DefaultLayerOrGroup');
 
 const LayerTree = React.createClass({
     propTypes: {
@@ -194,19 +195,14 @@ const LayerTree = React.createClass({
         return group.name !== 'background';
     },
     renderTOC() {
-
-        return (
-            <div>
-                <TOC onSort={this.props.onSort} filter={this.getNoBackgroundLayers}
-                    nodes={this.props.groups}>
-                    <DefaultGroup onSort={this.props.onSort}
+        const Group = (<DefaultGroup onSort={this.props.onSort}
                                   propertiesChangeHandler={this.props.groupPropertiesChangeHandler}
                                   onToggle={this.props.onToggleGroup}
                                   style={this.props.groupStyle}
                                   groupVisibilityCheckbox={true}
                                   visibilityCheckType={this.props.visibilityCheckType}
-                                  >
-                    <DefaultLayer
+                                  />);
+        const Layer = (<DefaultLayer
                             settingsOptions={this.props.settingsOptions}
                             onToggle={this.props.onToggleLayer}
                             onToggleQuerypanel={this.props.onToggleQuery }
@@ -229,8 +225,12 @@ const LayerTree = React.createClass({
                             opacityText={<Message msgId="opacity"/>}
                             saveText={<Message msgId="save"/>}
                             closeText={<Message msgId="close"/>}
-                            groups={this.props.groups}/>
-                    </DefaultGroup>
+                            groups={this.props.groups}/>);
+        return (
+            <div>
+                <TOC onSort={this.props.onSort} filter={this.getNoBackgroundLayers}
+                    nodes={this.props.groups}>
+                    <DefaultLayerOrGroup groupElement={Group} layerElement={Layer}/>
                 </TOC>
             </div>
         );
