@@ -14,6 +14,7 @@ var assign = require('object-assign');
 require('../../../../utils/openlayers/Layers');
 require('../plugins/OSMLayer');
 require('../plugins/WMSLayer');
+require('../plugins/WMTSLayer');
 require('../plugins/GoogleLayer');
 require('../plugins/BingLayer');
 require('../plugins/MapQuest');
@@ -146,6 +147,50 @@ describe('Openlayers layer', () => {
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
+    });
+
+    it('creates a wmts layer for openlayers map', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "tileMatrixSet": "EPSG:900913",
+            "url": "http://demo.geo-solutions.it/geoserver/gwc/service/wmts"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wmts"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
+    });
+
+    it('creates a wmts layer with multiple urls for openlayers map', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "tileMatrixSet": "EPSG:900913",
+            "url": ["http://demo.geo-solutions.it/geoserver/gwc/service/wmts", "http://demo.geo-solutions.it/geoserver/gwc/service/wmts"]
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wmts"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(map.getLayers().item(0).getSource().urls.length).toBe(2);
     });
 
     it('creates a wms layer for openlayers map with custom tileSize', () => {

@@ -164,6 +164,18 @@ const CoordinatesUtils = {
         }
         return srs;
     },
+    getEquivalentSRS(srs) {
+        if (srs === 'EPSG:900913' || srs === 'EPSG:3857') {
+            return ['EPSG:3857', 'EPSG:900913'];
+        }
+        return [srs];
+    },
+    getEPSGCode(code) {
+        if (code.indexOf(':') !== -1) {
+            return 'EPSG:' + code.substring(code.lastIndexOf(':') + 1);
+        }
+        return code;
+    },
     normalizeSRS: function(srs, allowedSRS) {
         const result = (srs === 'EPSG:900913' ? 'EPSG:3857' : srs);
         if (allowedSRS && !allowedSRS[result]) {

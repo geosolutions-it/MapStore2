@@ -57,6 +57,28 @@ const sampleRecord2 = {
     }]
 };
 
+const sampleRecord3 = {
+    identifier: "test-identifier",
+    title: "sample title",
+    tags: ["subject1", "subject2"],
+    description: "sample abstract",
+    thumbnail: "img.jpg",
+    boundingBox: {
+        extent: [10.686,
+                44.931,
+                46.693,
+                12.54],
+        crs: "EPSG:4326"
+
+    },
+    references: [{
+        type: "OGC:WMTS",
+        url: "http://wms.sample.service:80/geoserver/gwc/service/wmts",
+        SRS: ['EPSG:4326', 'EPSG:3857'],
+        params: {name: "workspace:layername"}
+    }]
+};
+
 const getCapRecord = assign({}, sampleRecord, {references: [{
         type: "OGC:WMS",
         url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
@@ -100,6 +122,34 @@ describe('This test for RecordItem', () => {
         const itemDom = ReactDOM.findDOMNode(item);
         expect(itemDom).toExist();
         expect(itemDom.className).toBe('record-item panel panel-default');
+    });
+    it('check WMTS resource', () => {
+        let actions = {
+            onLayerAdd: () => {
+
+            },
+            onZoomToExtent: () => {
+
+            }
+        };
+        let actionsSpy = expect.spyOn(actions, "onLayerAdd");
+        let actionsSpy2 = expect.spyOn(actions, "onZoomToExtent");
+        const item = ReactDOM.render((<ReactItem
+            record={sampleRecord3}
+            onLayerAdd={actions.onLayerAdd}
+            onZoomToExtent={actions.onZoomToExtent}/>), document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        expect(itemDom.className).toBe('record-item panel panel-default');
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+           item, 'button'
+        );
+        expect(button).toExist();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(1);
+        expect(actionsSpy2.calls.length).toBe(1);
     });
     // test handlers
     it('check event handlers', () => {

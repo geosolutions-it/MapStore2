@@ -26,7 +26,7 @@ const buildSRSMap = memoize((srs) => {
 const removeParameters = (url, skip) => {
     const urlparts = url.split('?');
     const params = {};
-    if (urlparts.length >= 2) {
+    if (urlparts.length >= 2 && urlparts[1]) {
         const pars = urlparts[1].split(/[&;]/g);
         pars.forEach((par) => {
             const param = par.split('=');
@@ -80,12 +80,21 @@ const RecordItem = React.createClass({
             reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
         let wfsGetCap = head(record.references.filter(reference => reference.type &&
             reference.type.indexOf("OGC:WFS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
+        let wmtsGetCap = head(record.references.filter(reference => reference.type &&
+            reference.type.indexOf("OGC:WMTS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
         let links = [];
         if (wmsGetCap) {
             links.push({
                 type: "WMS_GET_CAPABILITIES",
                 url: wmsGetCap.url,
                 labelId: 'catalog.wmsGetCapLink'
+            });
+        }
+        if (wmtsGetCap) {
+            links.push({
+                type: "WMTS_GET_CAPABILITIES",
+                url: wmtsGetCap.url,
+                labelId: 'catalog.wmtsGetCapLink'
             });
         }
         if (wfsGetCap) {
@@ -116,6 +125,8 @@ const RecordItem = React.createClass({
         // let's extract the references we need
         let wms = head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMS"
             || ((reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-map") > -1)))));
+        let wmts = head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMTS"
+            || ((reference.type.indexOf("OGC:WMTS") > -1 && reference.type.indexOf("http-get-map") > -1)))));
         // let's create the buttons
         let buttons = [];
         if (wms) {
@@ -127,6 +138,19 @@ const RecordItem = React.createClass({
                     bsSize={this.props.buttonSize}
                     onClick={() => { this.addLayer(wms); }}
                     key="addlayer">
+                        <Glyphicon glyph="plus" />&nbsp;<Message msgId="catalog.addToMap"/>
+                </Button>
+            );
+        }
+        if (wmts) {
+            buttons.push(
+                <Button
+                    key="wmts-button"
+                    className="record-button"
+                    bsStyle="success"
+                    bsSize={this.props.buttonSize}
+                    onClick={() => { this.addwmtsLayer(wmts); }}
+                    key="addwmtsLayer">
                         <Glyphicon glyph="plus" />&nbsp;<Message msgId="catalog.addToMap"/>
                 </Button>
             );
@@ -188,6 +212,40 @@ const RecordItem = React.createClass({
                 visibility: true,
                 name: wms.params && wms.params.name,
                 title: this.props.record.title || (wms.params && wms.params.name),
+                bbox: {
+                    crs: this.props.record.boundingBox.crs,
+                    bounds: {
+                        minx: this.props.record.boundingBox.extent[0],
+                        miny: this.props.record.boundingBox.extent[1],
+                        maxx: this.props.record.boundingBox.extent[2],
+                        maxy: this.props.record.boundingBox.extent[3]
+                    }
+                },
+                links: this.getLinks(this.props.record),
+                params: params,
+                allowedSRS: allowedSRS
+            });
+            if (this.props.record.boundingBox) {
+                let extent = this.props.record.boundingBox.extent;
+                let crs = this.props.record.boundingBox.crs;
+                this.props.onZoomToExtent(extent, crs);
+            }
+        }
+    },
+    addwmtsLayer(wmts) {
+        const {url, params} = removeParameters(wmts.url, ["request", "layer"]);
+        const allowedSRS = buildSRSMap(wmts.SRS);
+        if (wmts.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
+            this.props.onError('catalog.srs_not_allowed');
+        } else {
+            this.props.onLayerAdd({
+                type: "wmts",
+                url: url,
+                visibility: true,
+                name: wmts.params && wmts.params.name,
+                title: this.props.record.title || (wmts.params && wmts.params.name),
+                matrixIds: this.props.record.matrixIds || [],
+                tileMatrixSet: this.props.record.tileMatrixSet || [],
                 bbox: {
                     crs: this.props.record.boundingBox.crs,
                     bounds: {
