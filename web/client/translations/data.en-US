@@ -10,7 +10,7 @@
         "about_p0-1": "and",
         "about_p1": "MapStore 2 has several example applications:",
         "about_ul0_li0": "MapViewer is a simple viewer of preconfigured maps (optionally stored in a database using GeoStore)",
-        "about_ul0_li1": "MapPublisher has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on.. For more information check the",
+        "about_ul0_li1": "MapPublisher has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on. For more information check the",
         "about_h20": "License",
         "about_p3": "MapStore 2 is Free and Open Source software, it is based on OpenLayers 3, Leaflet and ReactJS, and is licensed under the Simplified BSD License.",
         "about_p5-0": "For more information check",
@@ -55,7 +55,7 @@
         "close": "Close",
         "cancel": "Cancel",
         "confirm": "Confirm",
-        "confirmTitle": "Do you Confirm?",
+        "confirmTitle": "Do you confirm?",
         "pageInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {Items {start}-{end} of {total}}}",
         "loading": "Loading...",
         "group": "Group",
@@ -127,7 +127,7 @@
 		},
         "map": {
             "loading": "Loading...",
-            "loadingerror": "Error in loading",
+            "loadingerror": "Error during loading",
             "name": "Name",
             "description": "Description",
             "namePlaceholder": "Map Name",
@@ -139,7 +139,7 @@
             "suggestion": "(best 300px X 180px, max 500kb)",
             "errorFormat": "Supported formats: png/jpg",
             "errorSize": "Max allowed size: 500kb",
-            "error": "The provided image is not valid",
+            "error": "The provided image is invalid",
             "thumbnailError": {
                 "error403": "You are not allowed to update the thumbnail",
                 "error404": "An error occurred while creating the thumbnail",
@@ -182,7 +182,7 @@
             "description": "Description",
             "descriptionplaceholder": "Enter a description...",
             "resolution": "Resolution:",
-            "defaultBackground": "Use OSM as a background",
+            "defaultBackground": "Use OSM as background",
             "printtooltip": "Print",
             "alternatives": {
                 "legend": "Include legend",
@@ -224,7 +224,7 @@
         "history":{
             "barLabel": "Map history",
             "undoBtnTooltip": "Go back",
-            "redoBtnTooltip": "Go  forward"
+            "redoBtnTooltip": "Go forward"
         },
         "infoFormatLbl": "Identify response format",
         "measureComponent": {
@@ -266,37 +266,37 @@
                 "handlers": {
                     "circle": {
                         "tooltip": {
-                            "start": "Click and drag to draw circle."
+                            "start": "Click and drag to draw a circle."
                         }
                     },
                     "marker": {
                         "tooltip": {
-                            "start": "Click map to place marker."
+                            "start": "Click map to place a marker."
                         }
                     },
                     "polygon": {
                         "tooltip": {
-                            "start": "Click to start drawing shape.",
-                            "cont": "Click to continue drawing shape.",
+                            "start": "Click to start drawing a shape.",
+                            "cont": "Click to continue drawing a shape.",
                             "end": "Click first point to close this shape."
                         }
                     },
                     "polyline": {
-                        "error": "Error: shape edges cannot cross!",
+                        "error": "Error: shape edges must not cross!",
                         "tooltip": {
-                            "start": "Click to start drawing line.",
-                            "cont": "Click to continue drawing line.",
-                            "end": "Click last point to finish line."
+                            "start": "Click to start drawing a line.",
+                            "cont": "Click to continue drawing the line.",
+                            "end": "Click last point to finish the line."
                         }
                     },
                     "rectangle": {
                         "tooltip": {
-                            "start": "Click and drag to draw rectangle."
+                            "start": "Click and drag to draw a rectangle."
                         }
                     },
                     "simpleshape": {
                         "tooltip": {
-                            "end": "Release mouse to finish drawing."
+                            "end": "Release the mouse to finish drawing."
                         }
                     }
                 }
@@ -323,13 +323,13 @@
                 "handlers": {
                     "edit": {
                         "tooltip": {
-                            "text": "Drag handles, or marker to edit feature.",
+                            "text": "Drag handles or marker to edit feature.",
                             "subtext": "Click cancel to undo changes."
                         }
                     },
                     "remove": {
                         "tooltip": {
-                            "text": "Click on a feature to remove"
+                            "text": "Click on a feature to remove it"
                         }
                     }
                 }
@@ -365,12 +365,12 @@
             "snapshot": "This is the helptext for the Snapshot",
             "print": "This is the helptext for Print",
             "shapefile": "This is the helptext for the Shapefile",
-            "rasterstyler": "Define min value, max value, number of classes and color ramp and generate new classified raster layer",
+            "rasterstyler": "Define min value, max value, number of classes and color ramp to generate a new classification for the selected raster layer",
             "expandToolbar": "This is the helptext for Expand / Collapse",
             "historyundo": "Use this button to go to the previous map zoom and location",
             "historyredo": "Use this button to go to the next map zoom and location",
-            "vectorstyler": "Add rule, and generate new styled vector layer",
-            "styler": "Add rule, and generate new styled layer"
+            "vectorstyler": "Add rule and generate a new styled vector layer",
+            "styler": "Add rule and generate a new styled layer"
         },
         "queryform": {
             "query": "Search",
@@ -398,17 +398,17 @@
                 },
                 "numberfield": {
                     "isRequired": "Field value required",
-                    "wrong_range": "Lower boundary must be lower upper boundary"
+                    "wrong_range": "Lower boundary must be lower than the upper boundary"
                 },
                 "datefield": {
-                    "wrong_date_range": "Start date must be lower than end date"
+                    "wrong_date_range": "Start date must be earlier than end date"
                 }
             },
             "spatialfilter": {
                 "selection_method": "Selection Method",
                 "geometric_operation": "Geometric Operation",
                 "spatial_filter_header": "Spatial Filter",
-                "draw_start_label": "Draw the region on interest in the map",
+                "draw_start_label": "Draw the region of interest on the map",
                 "dwithin_label": "meters",
                 "details": {
                     "detail_button_label": "Details",
@@ -522,7 +522,7 @@
             "layers": "Layers",
             "size": "Size",
             "notsupported": "Snapshot not supported",
-            "taintedMessage": "Save snapshot functionality is limited by some browser security rules. For better result right-click on the preview and select 'Save image as' (supported by Firefox and Chrome)"
+            "taintedMessage": "Save snapshot functionality is limited due to some browser security rules. For better results right-click on the preview and select 'Save image as' (supported by Firefox and Chrome)."
         },
         "shapefile": {
             "title": "Add Local Shapefile",
@@ -530,7 +530,7 @@
             "placeholder": "Drop your files here or click to select the shapefiles to import. (shapefiles must be contained in zip archives)",
             "defaultStyle": "Default style",
             "zoom": "Zoom on the shapefiles",
-            "error": {"select": "Select one or more zip file"},
+            "error": {"select": "Select one or more zip files"},
             "add": "Add",
             "cancel": "Cancel",
             "success": " correctly imported"
@@ -561,7 +561,7 @@
             "beforeUpload": " Doing pre-upload operations... ",
             "uploadingFiles": "Uploading Files...",
             "dropfile": "drop files here to upload",
-            "dropfileImport": "drop here files to add it to this process"
+            "dropfileImport": "drop files here to add them to this process"
         },
         "importer": {
             "title": "Import Data",
@@ -569,7 +569,7 @@
             "importN": "Session {id}",
             "creatingImportProcess": " Creating Import Session... ",
             "dropfile": "drop files here to create a new importing session",
-            "dropfileImport": "drop here files to add it to this session",
+            "dropfileImport": "drop files here to add them to this session",
             "process": "Session",
             "number": "#",
             "workspace": {
@@ -578,7 +578,7 @@
                 "target": "target workspace: ",
                 "failure": "Error creating workspace: {statusWS}",
                 "success": "Workspace {statusWS} successfully created",
-                "select": "Select TargetWorkspace",
+                "select": "Select Target Workspace",
                 "new": "New workspace name..."
             },
             "import": {
@@ -605,7 +605,7 @@
                 "storeType": "Store Type",
                 "storeName": "Store Name",
                 "layer": "Layer",
-                "transforms": "Trasformations Chain",
+                "transforms": "Transformations Chain",
                 "update": "Update",
                 "run": "Import This Package",
                 "edit": "Edit Default Style",
@@ -661,8 +661,8 @@
             "classes": "Classes",
             "ramp": "Color Ramp",
             "classify": "Classify",
-            "maxerror": "Max value should be greater then min value",
-            "minerror": "Min value should be less then max value"
+            "maxerror": "Max value must be greater than min value",
+            "minerror": "Min value must be less than max value"
         },
         "colormapgrid": {
             "color": "Color",
@@ -713,8 +713,8 @@
         "scaledenominator": {
             "minlabel": "Min Scale Denominator",
             "maxlabel": "Max Scale Denominator",
-            "maxerror": "Max value should be greater then min value",
-            "minerror": "Min value should be less then max value",
+            "maxerror": "Max value must be greater than min value",
+            "minerror": "Min value must be less than max value",
             "none": "None"
         },
         "markNameSelector": {
