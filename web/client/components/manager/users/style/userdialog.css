@@ -17,3 +17,8 @@
 .group-edit-dialog .user-thumb .user-status {
     display: none;
 }
+
+.user-edit-dialog .modal-header, .group-edit-dialog .modal-header {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

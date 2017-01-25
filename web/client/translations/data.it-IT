@@ -483,6 +483,8 @@
         },
         "usergroups": {
           "searchGroups": "Cerca gruppi...",
+          "nameLimit": "La massima lunghezza del nome del gruppo è prevista in 255 caratteri.",
+          "descLimit": "La massima lunghezza della descrizione del gruppo è prevista in 255 caratteri.",
           "groups": "Gruppi",
           "editGroup": "Modifica Gruppo",
           "deleteGroup": "Rimuovi Gruppo",
