@@ -8,7 +8,8 @@
 
 var API = {
     csw: require('../api/CSW'),
-    wms: require('../api/WMS')
+    wms: require('../api/WMS'),
+    wmts: require('../api/WMTS')
 };
 
 const {addLayer, changeLayerProperties} = require('./layers');

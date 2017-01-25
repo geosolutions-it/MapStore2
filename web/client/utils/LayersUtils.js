@@ -156,6 +156,33 @@ var LayersUtils = {
                 return feature;
             })
         };
+    },
+    saveLayer: (layer) => {
+        return {
+            features: layer.features,
+            format: layer.format,
+            group: layer.group,
+            search: layer.search,
+            source: layer.source,
+            name: layer.name,
+            opacity: layer.opacity,
+            provider: layer.provider,
+            styles: layer.styles,
+            style: layer.style,
+            availableStyles: layer.availableStyles,
+            capabilitiesURL: layer.capabilitiesURL,
+            title: layer.title,
+            transparent: layer.transparent,
+            type: layer.type,
+            url: layer.url,
+            bbox: layer.bbox,
+            visibility: layer.visibility,
+            singleTile: layer.singleTile || false,
+            allowedSRS: layer.allowedSRS,
+            matrixIds: layer.matrixIds,
+            tileMatrixSet: layer.tileMatrixSet,
+            ...assign({}, layer.params ? {params: layer.params} : {})
+        };
     }
 
 };

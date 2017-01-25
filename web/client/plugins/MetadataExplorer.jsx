@@ -95,7 +95,7 @@ const MetadataExplorerComponent = React.createClass({
 });
 const MetadataExplorerPlugin = connect((state) => ({
     searchOptions: state.catalog && state.catalog.searchOptions,
-    formats: state.catalog && state.catalog.supportedFormats || [{name: 'csw', label: 'CSW'}, {name: 'wms', label: 'WMS'}],
+    formats: state.catalog && state.catalog.supportedFormats || [{name: 'csw', label: 'CSW'}, {name: 'wms', label: 'WMS'}, {name: "wmts", label: "WMTS"}],
     result: state.catalog && state.catalog.result,
     loadingError: state.catalog && state.catalog.loadingError,
     layerError: state.catalog && state.catalog.layerError,

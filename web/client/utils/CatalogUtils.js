@@ -9,6 +9,8 @@
 const assign = require('object-assign');
 const {head, isArray, isString} = require('lodash');
 const urlUtil = require('url');
+const CoordinatesUtils = require('./CoordinatesUtils');
+const castArray = require('lodash.castarray');
 
 const getWMSBBox = (record) => {
     let layer = record;
@@ -23,6 +25,18 @@ const getWMSBBox = (record) => {
             southBoundLatitude: -90.0,
             eastBoundLongitude: 180.0,
             northBoundLatitude: 90.0
+        };
+    }
+    return bbox;
+};
+
+const getWMTSBBox = (record) => {
+    let layer = record;
+    let bbox = (layer["ows:WGS84BoundingBox"]);
+    if (!bbox) {
+        bbox = {
+            "ows:LowerCorner": "-180.0 -90.0",
+            "ows:UpperCorner": "180.0 90.0"
         };
     }
     return bbox;
@@ -143,6 +157,62 @@ const converters = {
                     SRS: (record.SRS && (isArray(record.SRS) ? record.SRS : [record.SRS])) || [],
                     params: {
                         name: record.Name
+                    }
+                }]
+                };
+            });
+        }
+    },
+    wmts: (records, options) => {
+        if (records && records.records) {
+            return records.records.map((record) => {
+                const bbox = getWMTSBBox(record);
+                return {
+                title: record["ows:Title"] || record["ows:Identifier"],
+                description: record["ows:Abstract"] || record["ows:Title"] || record["ows:Identifier"],
+                identifier: record["ows:Identifier"],
+                tags: "",
+                tileMatrixSet: record.TileMatrixSet,
+                matrixIds: castArray(record.TileMatrixSetLink).reduce((previous, current) => {
+                    const tileMatrix = head(record.TileMatrixSet.filter((matrix) => matrix["ows:Identifier"] === current.TileMatrixSet));
+                    const tileMatrixSRS = CoordinatesUtils.getEPSGCode(tileMatrix["ows:SupportedCRS"]);
+                    const levels = current.TileMatrixSetLimits && current.TileMatrixSetLimits.TileMatrixLimits.map((limit) => ({
+                        identifier: limit.TileMatrix,
+                        ranges: {
+                            cols: {
+                                min: limit.MinTileCol,
+                                max: limit.MaxTileCol
+                            },
+                            rows: {
+                                min: limit.MinTileRow,
+                                max: limit.MaxTileRow
+                            }
+                        }
+                    })) || tileMatrix.TileMatrix.map((matrix) => ({
+                        identifier: matrix["ows:Identifier"]
+                    }));
+
+                    return assign(previous, {
+                        [tileMatrix["ows:Identifier"]]: levels,
+                        [tileMatrixSRS]: levels
+                    });
+                }, {}),
+                TileMatrixSetLink: castArray(record.TileMatrixSetLink),
+                boundingBox: {
+                    extent: [
+                            bbox["ows:LowerCorner"].split(" ")[0],
+                            bbox["ows:LowerCorner"].split(" ")[1],
+                            bbox["ows:UpperCorner"].split(" ")[0],
+                            bbox["ows:UpperCorner"].split(" ")[1]
+                    ],
+                    crs: "EPSG:4326"
+                },
+                references: [{
+                    type: "OGC:WMTS",
+                    url: record.GetTileUrl || options.url,
+                    SRS: record.SRS || [],
+                    params: {
+                        name: record["ows:Identifier"]
                     }
                 }]
                 };

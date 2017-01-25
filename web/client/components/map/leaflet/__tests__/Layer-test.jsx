@@ -16,6 +16,7 @@ require('../../../../utils/leaflet/Layers');
 require('../plugins/OSMLayer');
 require('../plugins/GraticuleLayer');
 require('../plugins/WMSLayer');
+require('../plugins/WMTSLayer');
 require('../plugins/GoogleLayer');
 require('../plugins/BingLayer');
 require('../plugins/MapQuest');
@@ -59,7 +60,7 @@ describe('Leaflet layer', () => {
         };
         var source = {
             "ptype": "FAKE",
-            "url": "http://demo.geo-solutions.it/geoserver/wms"
+            "url": "http://sample.server/geoserver/wms"
         };
         // create layers
         var layer = ReactDOM.render(
@@ -162,7 +163,7 @@ describe('Leaflet layer', () => {
             "name": "nurc:Arc_Sample",
             "group": "Meteo",
             "format": "image/png",
-            "url": "http://demo.geo-solutions.it/geoserver/wms"
+            "url": "http://sample.server/geoserver/wms"
         };
         // create layers
         var layer = ReactDOM.render(
@@ -177,6 +178,56 @@ describe('Leaflet layer', () => {
         let urls;
         map.eachLayer((l) => urls = l._urls);
         expect(urls.length).toBe(1);
+    });
+
+    it('creates a wmts layer for leaflet map', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "tileMatrixSet": "EPSG:900913",
+            "url": "http://sample.server/geoserver/gwc/service/wmts"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <LeafLetLayer type="wmts"
+                 options={options} map={map}/>, document.getElementById("container"));
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+        let urls;
+        map.eachLayer((l) => urls = l._urls);
+        expect(urls.length).toBe(1);
+    });
+
+    it('creates a wmts layer with multiple urls for leaflet map', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "tileMatrixSet": "EPSG:900913",
+            "url": ["http://sample.server/geoserver/gwc/service/wmts", "http://sample.server/geoserver/gwc/service/wmts"]
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <LeafLetLayer type="wmts"
+                 options={options} map={map}/>, document.getElementById("container"));
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+        let urls;
+        map.eachLayer((l) => urls = l._urls);
+        expect(urls.length).toBe(2);
     });
 
     it('creates a vector layer for leaflet map', () => {
@@ -300,7 +351,7 @@ describe('Leaflet layer', () => {
             "group": "Meteo",
             "format": "image/png",
             "tileSize": 512,
-            "url": "http://demo.geo-solutions.it/geoserver/wms"
+            "url": "http://sample.server/geoserver/wms"
         };
         // create layers
         var layer = ReactDOM.render(
@@ -324,7 +375,7 @@ describe('Leaflet layer', () => {
             "name": "nurc:Arc_Sample",
             "group": "Meteo",
             "format": "image/png",
-            "url": ["http://demo.geo-solutions.it/geoserver/wms", "http://demo.geo-solutions.it/geoserver/wms"]
+            "url": ["http://sample.server/geoserver/wms", "http://sample.server/geoserver/wms"]
         };
         // create layers
         var layer = ReactDOM.render(
@@ -422,7 +473,7 @@ describe('Leaflet layer', () => {
             "group": "Meteo",
             "format": "image/png",
             "opacity": 1.0,
-            "url": "http://demo.geo-solutions.it/geoserver/wms"
+            "url": "http://sample.server/geoserver/wms"
         };
         // create layers
         var layer = ReactDOM.render(
@@ -449,7 +500,7 @@ describe('Leaflet layer', () => {
             "group": "Meteo",
             "format": "image/png",
             "opacity": 1.0,
-            "url": "http://demo.geo-solutions.it/geoserver/wms"
+            "url": "http://sample.server/geoserver/wms"
         };
         // create layers
         var layer = ReactDOM.render(

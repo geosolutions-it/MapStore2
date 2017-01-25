@@ -111,7 +111,7 @@ const HighlightFeatureSupport = React.createClass({
         this.props.updateHighlighted(this._selectedFeatures.map((f) => {return f.msId; }), "");
     },
     cleanSupport() {
-        if (this._layer !== null) {
+        if (this._layer) {
             this._selectedFeatures.map((f) => {this._layer.resetStyle(f); });
             this._layer.off("click", this.featureClicked, this);
         }

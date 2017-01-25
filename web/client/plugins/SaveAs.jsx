@@ -22,6 +22,7 @@ const stateSelector = state => state;
 const {layersSelector} = require('../selectors/layers');
 const {indexOf} = require('lodash');
 
+const LayersUtils = require('../utils/LayersUtils');
 
 const selector = createSelector(mapSelector, stateSelector, layersSelector, (map, state, layers) => ({
     currentZoomLvl: map && map.zoom,
@@ -115,28 +116,7 @@ const SaveAs = React.createClass({
                 zoom: this.props.map.zoom
             };
         let layers = this.props.layers.map((layer) => {
-            return {
-                features: layer.features,
-                format: layer.format,
-                group: layer.group,
-                search: layer.search,
-                source: layer.source,
-                name: layer.name,
-                opacity: layer.opacity,
-                provider: layer.provider,
-                styles: layer.styles,
-                style: layer.style,
-                availableStyles: layer.availableStyles,
-                capabilitiesURL: layer.capabilitiesURL,
-                title: layer.title,
-                transparent: layer.transparent,
-                type: layer.type,
-                url: layer.url,
-                bbox: layer.bbox,
-                visibility: layer.visibility,
-                singleTile: layer.singleTile || false,
-                ...assign({}, layer.params ? {params: layer.params} : {})
-            };
+            return LayersUtils.saveLayer(layer);
         });
         // Groups are ignored, as they already are defined in the layers
         let resultingmap = {

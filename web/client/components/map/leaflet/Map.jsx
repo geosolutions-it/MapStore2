@@ -150,7 +150,13 @@ let LeafletMap = React.createClass({
                     this.props.onLayerLoading(loadingEvent.target.layerId);
                 });
                 event.layer.on('load', (loadEvent) => { this.props.onLayerLoad(loadEvent.target.layerId, hadError); });
-                event.layer.on('tileerror', (errorEvent) => { hadError = true; this.props.onLayerError(errorEvent.target.layerId); });
+                event.layer.on('tileerror', (errorEvent) => {
+                    const isError = errorEvent.target.onError ? (errorEvent.target.onError(errorEvent)) : true;
+                    if (isError) {
+                        hadError = true;
+                        this.props.onLayerError(errorEvent.target.layerId);
+                    }
+                });
             }
         });
 
