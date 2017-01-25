@@ -44,7 +44,6 @@ const GroupDialog = React.createClass({
       closeGlyph: React.PropTypes.string,
       style: React.PropTypes.object,
       buttonSize: React.PropTypes.string,
-      descLimit: React.PropTypes.number,
       inputStyle: React.PropTypes.object
   },
   getDefaultProps() {
@@ -57,7 +56,6 @@ const GroupDialog = React.createClass({
           options: {},
           useModal: true,
           closeGlyph: "",
-          descLimit: 255,
           style: {},
           buttonSize: "large",
           includeCloseButton: true,
