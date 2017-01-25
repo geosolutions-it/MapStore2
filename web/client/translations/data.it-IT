@@ -323,8 +323,8 @@
                 "handlers": {
                     "edit": {
                         "tooltip": {
-                            "text": "Trascina o selezione per modificare una feature.",
-                            "subtext": "Click annulla per scartare le modifiche to undo changes."
+                            "text": "Trascina o seleziona per modificare una feature.",
+                            "subtext": "Click annulla per scartare le modifiche."
                         }
                     },
                     "remove": {
@@ -352,7 +352,7 @@
             "zoomToMaxExtentButton": "Questo è il testo di aiuto per ZoomToMaxExtentButton",
             "zoomIn": "Questo è il testo di aiuto per ZoomIn",
             "zoomOut": "Questo è il testo di aiuto per ZoomOut",
-            "searchBar": "Scrivi un indirizzo di un luogo oer trovarlo. esempio:  '1st avenue, new york'. Puoi anche digitare le coordinate in questo formato: 43.87,10.20",
+            "searchBar": "Scrivi un indirizzo di un luogo per trovarlo. esempio:  '1st avenue, new york'. Puoi anche digitare le coordinate in questo formato: 43.87,10.20",
             "layerSwitcher": "Questo è il testo di aiuto per LayerSwitcher",
             "metadataExplorer": "Questo è il testo di aiuto per MetadataExplorer",
             "settingsPanel": "Questo è il testo di aiuto per SettingsPanel",
