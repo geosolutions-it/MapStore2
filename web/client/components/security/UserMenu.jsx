@@ -18,6 +18,9 @@ const UserMenu = React.createClass({
       // PROPS
       user: React.PropTypes.object,
       displayName: React.PropTypes.string,
+      showAccountInfo: React.PropTypes.bool,
+      showPasswordChange: React.PropTypes.bool,
+      showLogout: React.PropTypes.bool,
       /**
        * displayAttributes function to filter attributes to show
        */
@@ -40,6 +43,9 @@ const UserMenu = React.createClass({
       return {
           user: {
           },
+          showAccountInfo: true,
+          showPasswordChange: true,
+          showLogout: true,
           onLogout: () => {},
           onPasswordChange: () => {},
           displayName: "name",
@@ -58,13 +64,23 @@ const UserMenu = React.createClass({
   },
   renderLoggedTools() {
       let DropDown = this.props.nav ? NavDropdown : DropdownButton;
+      let itemArray = [];
+      if (this.props.showAccountInfo) {
+          itemArray.push(<MenuItem key="accountInfo" onClick={this.props.onShowAccountInfo}> <Glyphicon glyph="user" /><Message msgId="user.info"/></MenuItem>);
+      }
+      if (this.props.showPasswordChange) {
+          itemArray.push(<MenuItem key="passwordChange" onClick={this.props.onShowChangePassword}> <Glyphicon glyph="asterisk" /> <Message msgId="user.changePwd"/></MenuItem>);
+      }
+      if (this.props.showLogout) {
+          if (itemArray.length > 0) {
+              itemArray.push(<MenuItem key="divider" divider />);
+          }
+          itemArray.push(<MenuItem key="logout" onClick={this.props.onLogout}><Glyphicon glyph="log-out" /> <Message msgId="user.logout"/></MenuItem>);
+      }
       return (
       <DropDown id="loginButton" className={this.props.className} pullRight bsStyle="success" title={this.renderButtonText()} {...this.props.menuProps} >
           <span key="logged-user"><MenuItem header>{this.props.user.name}</MenuItem></span>
-          <MenuItem key="accountInfo" onClick={this.props.onShowAccountInfo}> <Glyphicon glyph="user" /><Message msgId="user.info"/></MenuItem>
-          <MenuItem key="passwordChange" onClick={this.props.onShowChangePassword}> <Glyphicon glyph="asterisk" /> <Message msgId="user.changePwd"/></MenuItem>
-          <MenuItem key="divider" divider />
-          <MenuItem key="logout" onClick={this.props.onLogout}><Glyphicon glyph="log-out" /> <Message msgId="user.logout"/></MenuItem>
+          {itemArray}
       </DropDown>);
   },
   renderButtonText() {
