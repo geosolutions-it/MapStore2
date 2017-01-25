@@ -60,7 +60,7 @@ describe('Leaflet layer', () => {
         };
         var source = {
             "ptype": "FAKE",
-            "url": "http://demo.geo-solutions.it/geoserver/wms"
+            "url": "http://sample.server/geoserver/wms"
         };
         // create layers
         var layer = ReactDOM.render(
@@ -163,7 +163,7 @@ describe('Leaflet layer', () => {
             "name": "nurc:Arc_Sample",
             "group": "Meteo",
             "format": "image/png",
-            "url": "http://demo.geo-solutions.it/geoserver/wms"
+            "url": "http://sample.server/geoserver/wms"
         };
         // create layers
         var layer = ReactDOM.render(
@@ -188,7 +188,7 @@ describe('Leaflet layer', () => {
             "group": "Meteo",
             "format": "image/png",
             "tileMatrixSet": "EPSG:900913",
-            "url": "http://demo.geo-solutions.it/geoserver/gwc/service/wmts"
+            "url": "http://sample.server/geoserver/gwc/service/wmts"
         };
         // create layers
         var layer = ReactDOM.render(
@@ -213,7 +213,7 @@ describe('Leaflet layer', () => {
             "group": "Meteo",
             "format": "image/png",
             "tileMatrixSet": "EPSG:900913",
-            "url": ["http://demo.geo-solutions.it/geoserver/gwc/service/wmts", "http://demo.geo-solutions.it/geoserver/gwc/service/wmts"]
+            "url": ["http://sample.server/geoserver/gwc/service/wmts", "http://sample.server/geoserver/gwc/service/wmts"]
         };
         // create layers
         var layer = ReactDOM.render(
@@ -351,7 +351,7 @@ describe('Leaflet layer', () => {
             "group": "Meteo",
             "format": "image/png",
             "tileSize": 512,
-            "url": "http://demo.geo-solutions.it/geoserver/wms"
+            "url": "http://sample.server/geoserver/wms"
         };
         // create layers
         var layer = ReactDOM.render(
@@ -375,7 +375,7 @@ describe('Leaflet layer', () => {
             "name": "nurc:Arc_Sample",
             "group": "Meteo",
             "format": "image/png",
-            "url": ["http://demo.geo-solutions.it/geoserver/wms", "http://demo.geo-solutions.it/geoserver/wms"]
+            "url": ["http://sample.server/geoserver/wms", "http://sample.server/geoserver/wms"]
         };
         // create layers
         var layer = ReactDOM.render(
@@ -473,7 +473,7 @@ describe('Leaflet layer', () => {
             "group": "Meteo",
             "format": "image/png",
             "opacity": 1.0,
-            "url": "http://demo.geo-solutions.it/geoserver/wms"
+            "url": "http://sample.server/geoserver/wms"
         };
         // create layers
         var layer = ReactDOM.render(
@@ -500,7 +500,7 @@ describe('Leaflet layer', () => {
             "group": "Meteo",
             "format": "image/png",
             "opacity": 1.0,
-            "url": "http://demo.geo-solutions.it/geoserver/wms"
+            "url": "http://sample.server/geoserver/wms"
         };
         // create layers
         var layer = ReactDOM.render(
