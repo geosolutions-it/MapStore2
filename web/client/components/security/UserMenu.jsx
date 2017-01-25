@@ -72,7 +72,9 @@ const UserMenu = React.createClass({
           itemArray.push(<MenuItem key="passwordChange" onClick={this.props.onShowChangePassword}> <Glyphicon glyph="asterisk" /> <Message msgId="user.changePwd"/></MenuItem>);
       }
       if (this.props.showLogout) {
-          itemArray.push(<MenuItem key="divider" divider />);
+          if (itemArray.length > 0) {
+              itemArray.push(<MenuItem key="divider" divider />);
+          }
           itemArray.push(<MenuItem key="logout" onClick={this.props.onLogout}><Glyphicon glyph="log-out" /> <Message msgId="user.logout"/></MenuItem>);
       }
       return (
