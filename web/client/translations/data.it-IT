@@ -116,7 +116,7 @@
             "openInANewTab":"Apri mappa",
             "deleteMap":"Elimina Mappa",
             "deleteMapMessage": "Vuoi eliminare questa mappa?",
-            "editMapMetadata":"Modifica Metadati",
+            "editMapMetadata":"Modifica Proprietà",
             "mapTypes_combo": "Seleziona il visualizzatore di mappa:",
             "maps_title": "Mappe",
             "locales_combo": "Lingua:"
