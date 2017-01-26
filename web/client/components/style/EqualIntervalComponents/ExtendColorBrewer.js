@@ -56,12 +56,14 @@ const extendColorBrewer = {
     12: ["#18c6ca", "#97fe96", "#c5fea5", "#f0feb8", "#fef9bc", "#feee9b", "#f7d580", "#e7cf96", "#d8c9a8", "#c4c1b9", "#e1dfdb", "#ffffff"]
     },
     Simple: {
-    3: ["#000000", "#ffd400", "#000000"],
-    4: ["#000000", "#38ff00", "#e27f1b", "#000000"],
-    5: ["#000000", "#38ff38", "#ffd400", "#bf7f3f", "#000000"],
-    6: ["#000000", "#71ff71", "#aaff00", "#ff7f00", "#986532", "#000000"],
-    7: ["#000000", "#AAFFAA", "#00FF00", "#FFFF00", "#FF7F00", "#BF7F3F", "#000000"]
+    3: ["#000000", "#7fff00", "#bf7f3f"],
+    4: ["#000000", "#38ff38", "#ffd400", "#bf7f3f"],
+    5: ["#000000", "#7fff7f", "#7fff00", "#ff9f00", "#bf7f3f"],
+    6: ["#000000", "#aaffaa", "#00ff00", "#ffff00", "#ff7f00", "#bf7f3f"],
+    7: ["#000000", "#8dd48d", "#38ff38", "#7fff00", "#ffd400", "#f47f0a", "#bf7f3f"]
     }
 };
 
-module.exports = extendColorBrewer;
+const assign = require('object-assign');
+
+module.exports = assign({}, require("colorbrewer"), extendColorBrewer);
