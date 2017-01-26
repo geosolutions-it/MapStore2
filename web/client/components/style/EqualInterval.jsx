@@ -19,6 +19,9 @@ const {NumberPicker} = require('react-widgets');
 const ColorRampItem = require('./EqualIntervalComponents/ColorRampItem');
 const colorsSchema = require("./EqualIntervalComponents/ColorRamp");
 const colors = require("colorbrewer");
+const extendColorBrewer = require("./EqualIntervalComponents/ExtendColorBrewer");
+const assign = require('object-assign');
+assign(colors, extendColorBrewer);
 
 const Message = require('../I18N/Message');
 

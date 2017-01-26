@@ -10,6 +10,8 @@ const colorsSchema = [
      {name: "RdYlBu", schema: "Diverging", max: 11}, {name: "RdYlGn", schema: "Diverging", max: 11}, {name: "Spectral", schema: "Diverging", max: 11},
      {name: "Accent", schema: "Qualitative", max: 8}, {name: "Dark2", schema: "Qualitative", max: 8}, {name: "Paired", schema: "Qualitative", max: 12},
      {name: "Pastel1", schema: "Qualitative", max: 9}, {name: "Pastel2", schema: "Qualitative", max: 8}, {name: "Set1", schema: "Qualitative", max: 9},
-     {name: "Set2", schema: "Qualitative", max: 8}, {name: "Set3", schema: "Qualitative", max: 12}];
+     {name: "Set2", schema: "Qualitative", max: 8}, {name: "Set3", schema: "Qualitative", max: 12}, {name: "Earth", schema: "Dem", max: 12},
+     {name: "Land", schema: "Dem", max: 12}, {name: "Water", schema: "Dem", max: 12}, {name: "CDA", schema: "Dem", max: 12},
+     {name: "Simple", schema: "Dem", max: 7}];
 
 module.exports = colorsSchema;
