@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var {
+const {
     CHANGE_MEASUREMENT_TOOL,
     CHANGE_MEASUREMENT_STATE
 } = require('../actions/measurement');
 
+const {TOGGLE_CONTROL} = require('../actions/controls');
 const assign = require('object-assign');
 
 function measurement(state = {
@@ -41,6 +42,17 @@ function measurement(state = {
                 lenUnit: action.lenUnit,
                 areaUnit: action.areaUnit
             });
+        case TOGGLE_CONTROL:
+        {
+            // TODO: remove this when the controls will be able to be mutually exclusive
+            if (action.control === 'info') {
+                return {
+                    lineMeasureEnabled: false,
+                    areaMeasureEnabled: false,
+                    bearingMeasureEnabled: false
+                };
+            }
+        }
         default:
             return state;
     }
