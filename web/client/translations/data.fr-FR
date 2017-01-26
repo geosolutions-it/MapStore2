@@ -117,7 +117,7 @@
             "openInANewTab":"Ouvrir la carte",
             "deleteMap":"Supprimer la carte",
             "deleteMapMessage": "Voulez-vous supprimer cette carte?",
-            "editMapMetadata":"Modifier les metadonnées de la carte",
+            "editMapMetadata":"Modifier les propriétés de la carte",
             "mapTypes_combo": "Selectionner le viewer de carte: ",
             "maps_title": "Cartes",
             "locales_combo": "Langue:"
@@ -355,7 +355,6 @@
             "zoomIn": "This is the helptext for the ZoomIn",
             "zoomOut": "This is the helptext for the ZoomOut",
             "searchBar": "Tapez l'adresse à rechercher. p. ex.  '1st avenue, new york'. Vous pouvez aussi entrer des coordonnées au format suivant: 43.87,10.20",
-            "layerSwitcher": "This is the helptext for the LayerSwitcher",
             "metadataExplorer": "This is the helptext for the MetadataExplorer",
             "settingsPanel": "This is the helptext for the SettingsPanel",
             "gohome": "This is the helptext for Home",

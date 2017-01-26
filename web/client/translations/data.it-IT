@@ -116,7 +116,7 @@
             "openInANewTab":"Apri mappa",
             "deleteMap":"Elimina Mappa",
             "deleteMapMessage": "Vuoi eliminare questa mappa?",
-            "editMapMetadata":"Modifica Metadati",
+            "editMapMetadata":"Modifica Proprietà",
             "mapTypes_combo": "Seleziona il visualizzatore di mappa:",
             "maps_title": "Mappe",
             "locales_combo": "Lingua:"
@@ -353,7 +353,6 @@
             "zoomIn": "Questo è il testo di aiuto per ZoomIn",
             "zoomOut": "Questo è il testo di aiuto per ZoomOut",
             "searchBar": "Scrivi un indirizzo di un luogo per trovarlo. esempio:  '1st avenue, new york'. Puoi anche digitare le coordinate in questo formato: 43.87,10.20",
-            "layerSwitcher": "Questo è il testo di aiuto per LayerSwitcher",
             "metadataExplorer": "Questo è il testo di aiuto per MetadataExplorer",
             "settingsPanel": "Questo è il testo di aiuto per SettingsPanel",
             "gohome": "Questo è il testo di aiuto per Home",

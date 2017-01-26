@@ -116,7 +116,7 @@
             "openInANewTab":"Karte öffnen",
             "deleteMap":"Karte löschen",
             "deleteMapMessage": "Möchtest du wirklich diese Karte löschen?",
-            "editMapMetadata":"Karten Metadaten bearbeiten",
+            "editMapMetadata":"Bearbeite die Eigenschaften der Karte",
             "mapTypes_combo": "Wähle einen Karten-Viewer: ",
             "maps_title": "Karten",
             "locales_combo": "Sprache:"
@@ -353,7 +353,6 @@
             "zoomIn": "Das ist die Hilfe für ZoomIn",
             "zoomOut": "Das ist die Hilfe für ZoomOut",
             "searchBar": "Gib eine Adresse eines Ortes ein bspw. 'Brandenburger Tor, Berlin'. Du kannst auch Koordinaten im folgenden Format eingeben: 43.87, 10.20",
-            "layerSwitcher": "Das ist die Hilfe für den LayerSwitcher",
             "metadataExplorer": "Das ist die Hilfe für den MetadataExplorer",
             "settingsPanel": "Das ist die Hilfe für das SettingsPanel",
             "gohome": "Das ist die Hilfe für Home",
@@ -484,6 +483,8 @@
         "usergroups": {
           "searchGroups": "Suche Gruppen...",
           "groups": "Gruppen",
+          "nameLimit": "Der Name ist auf 255 Zeichen limitiert.",
+          "descLimit": "Die Beschreibung ist auf 255 Zeichen limitiert.",
           "editGroup": "Gruppe bearbeiten",
           "deleteGroup": "Gruppe löschen",
           "removeUser": "Benutzer löschen",
