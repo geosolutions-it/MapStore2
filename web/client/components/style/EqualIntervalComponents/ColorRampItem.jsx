@@ -1,5 +1,5 @@
 const React = require('react');
-const colors = require("colorbrewer");
+const colors = require("./ExtendColorBrewer");
 
 const ColorRampItem = React.createClass({
      propTypes: {
