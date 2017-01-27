@@ -99,7 +99,12 @@ const Identify = React.createClass({
             layers: [],
             maxItems: 10,
             excludeParams: ["SLD_BODY"],
-            includeOptions: [],
+            includeOptions: [
+                "buffer",
+                "cql_filter",
+                "filter",
+                "propertyName"
+            ],
             panelClassName: "panel default-panel",
             headerClassName: "panel-heading",
             bodyClassName: "panel-body",

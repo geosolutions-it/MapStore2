@@ -10,12 +10,6 @@
                     "className": "square-button",
                     "closeGlyph": "1-close",
                     "enableRevGeocode": true,
-                    "excludeOptions": [
-                        "legend",
-                        "statistics",
-                        "columnDefs",
-                        "advancedFilter"
-                    ],
                     "glyph": "map-marker",
                     "headerClassName": "modal-header",
                     "headerGlyph": "",

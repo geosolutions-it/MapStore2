@@ -281,13 +281,7 @@
             "continuous": false
           },
           "collapsible": false
-        },
-        "includeOptions": [
-            "buffer",
-            "cql_filter",
-            "filter",
-            "propertyName"
-        ]
+        }
        }
     },
     "MadeWithLove",
@@ -606,12 +600,6 @@
                "maxHeight": "70%",
                "marginBottom": 0
            },
-           "includeOptions": [
-               "buffer",
-               "cql_filter",
-               "filter",
-               "propertyName"
-           ],
            "draggable": false,
            "collapsible": true,
            "viewerOptions": {
