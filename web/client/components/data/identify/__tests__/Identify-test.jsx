@@ -270,7 +270,7 @@ describe('Identify', () => {
         const identify = ReactDOM.render(
             <Identify
                 excludeParams={["ONLY_GETMAP"]}
-                excludeOptions={["INTERNAL_OPTION"]}
+                includeOptions={["WMS_PARAMETER_TO_SHARE", "WMS_OPTION"]}
                 enableRevGeocode={true}
                 queryableLayersFilter={() => true}
                 point={{latlng: {lat: 40, lng: 10}}}
