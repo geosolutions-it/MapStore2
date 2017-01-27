@@ -13,6 +13,24 @@ MapStore 2 has several example applications:
  
 For more information check the [MapStore wiki](https://github.com/geosolutions-it/MapStore2/wiki).
 
+Download
+------------
+Download the latest release (2016.04.00) from [here](https://github.com/geosolutions-it/MapStore2/releases/download/2016.04.00/mapstore.war).
+
+[All the releases](https://github.com/geosolutions-it/MapStore2/releases)
+
+Quick Start
+------------
+After downloading the MapStore2 war file, install it in your java web container (e.g. Tomcat), with usual procedures for the container (normally you only need to copy the war file in the webapps subfolder).
+
+If you don't have a java web container you can download Apache Tomcat from [here](https://tomcat.apache.org/download-70.cgi) and install it. You will also need a Java7 [JRE](http://www.oracle.com/technetwork/java/javase/downloads/jre7-downloads-1880261.html)
+
+Then you can access MapStore2 using the following URL (assuming the web container is on the standard 8080 port):
+
+[http://localhost:8080/mapstore](http://localhost:8080/mapstore)
+
+Use the default credentials (admin / admin) to login and start creating your maps!
+
 License
 ------------
 MapStore 2 is Free and Open Source software, it is based on OpenLayers 3, Leaflet and [ReactJS](https://facebook.github.io/react/), and is licensed under the Simplified BSD License.
@@ -29,7 +47,7 @@ We have the following instances:
 As a user you need to be aware of STABLE and DEV, QA is used internally before a release; for 1 Week it will diverge from STABLE as it is actually anticipating the next stable.
 So, if you want to test latest features use DEV, if you are not that brave use STABLE. You might forget that QA exists unless you are parte of the developers team.
 
-Quick Start
+Start developing your custom app
 ------------
 
 Clone the repository with the --recursive option to automatically clone submodules:
