@@ -15,7 +15,7 @@ For more information check the [MapStore wiki](https://github.com/geosolutions-i
 
 Download
 ------------
-Download the latest release (2016.04.00) from [here](https://github.com/geosolutions-it/MapStore2/releases/download/2016.04.00/mapstore.war).
+You can download the WAR file from the the latest release [here](https://github.com/geosolutions-it/MapStore2/releases/latest).
 
 [All the releases](https://github.com/geosolutions-it/MapStore2/releases)
 
