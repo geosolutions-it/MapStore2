@@ -281,25 +281,7 @@
             "continuous": false
           },
           "collapsible": false
-        },
-        "excludeOptions": [
-            "search",
-            "links",
-            "allowedSRS",
-            "title",
-            "type",
-            "visibility",
-            "params",
-            "legend",
-            "statistics",
-            "columnDefs",
-            "advancedFilter",
-            "boundingBox",
-            "capabilities",
-            "describeCoverage",
-            "describeLayer",
-            "loading"
-        ]
+        }
        }
     },
     "MadeWithLove",
@@ -618,25 +600,6 @@
                "maxHeight": "70%",
                "marginBottom": 0
            },
-           "excludeOptions": [
-              "search",
-              "links",
-              "allowedSRS",
-              "title",
-              "type",
-              "visibility",
-              "params",
-              "legend",
-              "statistics",
-              "columnDefs",
-              "advancedFilter",
-              "boundingBox",
-              "capabilities",
-              "describeCoverage",
-              "describeLayer",
-              "loading"
-
-          ],
            "draggable": false,
            "collapsible": true,
            "viewerOptions": {
