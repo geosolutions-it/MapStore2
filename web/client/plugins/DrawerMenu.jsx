@@ -15,8 +15,6 @@ const {toggleControl, setControlProperty} = require('../actions/controls');
 
 const {changeMapStyle} = require('../actions/map');
 
-const {featureClose} = require('../actions/wfsquery');
-
 const {Button, Glyphicon, Panel} = require('react-bootstrap');
 
 const Section = require('./drawer/Section');
@@ -47,8 +45,7 @@ const DrawerMenu = React.createClass({
         singleSection: React.PropTypes.bool,
         buttonClassName: React.PropTypes.string,
         menuButtonStyle: React.PropTypes.object,
-        featureClose: React.PropTypes.func,
-        queryIsOpen: React.PropTypes.bool
+        disabled: React.PropTypes.bool
     },
     contextTypes: {
         messages: React.PropTypes.object,
@@ -64,8 +61,7 @@ const DrawerMenu = React.createClass({
             menuOptions: {},
             singleSection: false,
             buttonClassName: "drawer-menu-button",
-            featureClose: () => {},
-            queryIsOpen: false
+            disabled: false
         };
     },
     renderItems() {
@@ -92,28 +88,21 @@ const DrawerMenu = React.createClass({
     render() {
         return (
             <div id={this.props.id}>
-                <Button id="drawer-menu-button" style={this.props.menuButtonStyle} bsStyle={this.props.buttonStyle} key="menu-button" className={this.props.buttonClassName} onClick={this.closeAll}><Glyphicon glyph={this.props.glyph}/></Button>
+                <Button id="drawer-menu-button" style={this.props.menuButtonStyle} bsStyle={this.props.buttonStyle} key="menu-button" className={this.props.buttonClassName} onClick={this.props.toggleMenu} disabled={this.props.disabled}><Glyphicon glyph={this.props.glyph}/></Button>
                 <Menu single={this.props.singleSection} {...this.props.menuOptions} title={<Message msgId="menu" />} alignment="left">
                     {this.renderItems()}
                 </Menu>
             </div>
         );
-    },
-    closeAll() {
-        this.props.toggleMenu();
-        if (this.props.queryIsOpen) {
-            this.props.featureClose();
-        }
     }
 });
 
 module.exports = {
     DrawerMenuPlugin: connect((state) => ({
         active: state.controls && state.controls.drawer && state.controls.drawer.active,
-        queryIsOpen: state.query.open
+        disabled: state.controls && state.controls.drawer && state.controls.drawer.disabled
     }), {
-        toggleMenu: toggleControl.bind(null, 'drawer', null),
-        featureClose
+        toggleMenu: toggleControl.bind(null, 'drawer', null)
     })(DrawerMenu),
     reducers: {}
 };

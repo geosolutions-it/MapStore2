@@ -51,7 +51,8 @@ const QueryToolbar = React.createClass({
                 onQuery: () => {},
                 onReset: () => {},
                 onChangeDrawingStatus: () => {},
-                onToggleDrawer: () => {}
+                closeDrawer: () => {},
+                disableDrawer: () => {}
             }
         };
     },
@@ -104,7 +105,8 @@ const QueryToolbar = React.createClass({
             sortOptions: this.props.sortOptions,
             hits: this.props.hits
         };
-        this.props.actions.onToggleDrawer();
+        this.props.actions.closeDrawer();
+        this.props.actions.disableDrawer();
         this.props.actions.onQuery(this.props.searchUrl, filterObj, this.props.params);
     },
     reset() {

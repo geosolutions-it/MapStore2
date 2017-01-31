@@ -54,8 +54,11 @@ const DockedFeatureGrid = React.createClass({
         selectAllToggle: React.PropTypes.func,
         zoomToFeatureAction: React.PropTypes.func,
         onClose: React.PropTypes.func,
-        onToggleDrawer: React.PropTypes.func,
+        openDrawer: React.PropTypes.func,
+        enableDrawer: React.PropTypes.func,
         dockSize: React.PropTypes.number,
+        minDockSize: React.PropTypes.number,
+        maxDockSize: React.PropTypes.number,
         setDockSize: React.PropTypes.func
     },
     contextTypes: {
@@ -93,8 +96,11 @@ const DockedFeatureGrid = React.createClass({
             onQuery: () => {},
             cleanError: () => {},
             selectAllToggle: () => {},
-            onToggleDrawer: () => {},
+            openDrawer: () => {},
+            enableDrawer: () => {},
             dockSize: 0.35,
+            minDockSize: 0.1,
+            maxDockSize: 1.0,
             setDockSize: () => {}
         };
     },
@@ -299,16 +305,15 @@ const DockedFeatureGrid = React.createClass({
         this.props.selectFeatures(features);
     },
     backToSearch() {
-        this.props.onToggleDrawer();
+        this.props.openDrawer();
+        this.props.enableDrawer();
         this.props.onClose();
     },
     limitDockHeight(size) {
-        const minSize = 0.25;
-        const maxSize = 0.85;
-        if (size >= maxSize) {
-            this.props.setDockSize(maxSize);
-        } else if (size <= minSize) {
-            this.props.setDockSize(minSize);
+        if (size >= this.props.maxDockSize) {
+            this.props.setDockSize(this.props.maxDockSize);
+        } else if (size <= this.props.minDockSize) {
+            this.props.setDockSize(this.props.minDockSize);
         } else {
             this.props.setDockSize(size);
         }

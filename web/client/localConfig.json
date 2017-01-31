@@ -321,7 +321,9 @@
     },{
       "name": "FeatureGrid",
       "cfg": {
-        "pagination": true
+        "pagination": true,
+        "minDockSize": 0.1,
+        "maxDockSize":1.0
       }
     }, {
         "name": "TOC",

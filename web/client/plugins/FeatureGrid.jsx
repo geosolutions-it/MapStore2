@@ -9,7 +9,7 @@ const {connect} = require('react-redux');
 const {selectFeatures} = require('../actions/featuregrid');
 const {query, featureClose, queryDockSize} = require('../actions/wfsquery');
 const {changeMapView} = require('../actions/map');
-const {toggleControl} = require('../actions/controls');
+const {setControlProperty} = require('../actions/controls');
 
 module.exports = {
     FeatureGridPlugin: connect((state) => ({
@@ -31,14 +31,15 @@ module.exports = {
         query: state.query && state.query.queryObj,
         isNew: state.query && state.query.isNew,
         totalFeatures: state.query && state.query.result && state.query.result.totalFeatures,
-        dockSize: state.query.dockSize
+        dockSize: state.query && state.query.dockSize
     }),
     {
         selectFeatures,
         changeMapView,
         onQuery: query,
         onClose: featureClose,
-        onToggleDrawer: toggleControl.bind(null, 'drawer', null),
+        openDrawer: setControlProperty.bind(null, 'drawer', 'enabled', true),
+        enableDrawer: setControlProperty.bind(null, 'drawer', 'disabled', false),
         setDockSize: queryDockSize
     })(require('../components/data/featuregrid/DockedFeatureGrid')),
     reducers: {highlight: require('../reducers/featuregrid')}
