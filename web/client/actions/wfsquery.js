@@ -15,6 +15,7 @@ const QUERY_CREATE = 'QUERY_CREATE';
 const QUERY_RESULT = 'QUERY_RESULT';
 const QUERY_ERROR = 'QUERY_ERROR';
 const RESET_QUERY = 'RESET_QUERY';
+const QUERY_DOCK_SIZE = 'QUERY_DOCK_SIZE';
 
 const axios = require('../libs/ajax');
 const {toggleControl, setControlProperty} = require('./controls');
@@ -71,6 +72,13 @@ function queryError(error) {
     return {
         type: QUERY_ERROR,
         error
+    };
+}
+
+function queryDockSize(dockSize) {
+    return {
+        type: QUERY_DOCK_SIZE,
+        dockSize: dockSize
     };
 }
 
@@ -174,6 +182,7 @@ module.exports = {
     QUERY_RESULT,
     QUERY_ERROR,
     RESET_QUERY,
+    QUERY_DOCK_SIZE,
     featureTypeSelected,
     describeFeatureType,
     loadFeature,
@@ -181,5 +190,6 @@ module.exports = {
     query,
     featureClose,
     resetQuery,
-    toggleQueryPanel
+    toggleQueryPanel,
+    queryDockSize
 };

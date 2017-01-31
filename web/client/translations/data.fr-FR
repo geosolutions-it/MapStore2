@@ -693,6 +693,7 @@
             "export": "Exporter",
             "selectall": "Tout sélectionner",
             "deselectall": "Tout désélectionner",
+            "backtosearch": "Back to search",
             "pagination": {
                 "page": "Page",
                 "of":   "de",

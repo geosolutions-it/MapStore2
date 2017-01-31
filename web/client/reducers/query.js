@@ -16,7 +16,8 @@ const {
     QUERY_RESULT,
     QUERY_ERROR,
     RESET_QUERY,
-    FEATURE_CLOSE
+    FEATURE_CLOSE,
+    QUERY_DOCK_SIZE
 } = require('../actions/wfsquery');
 
 const {QUERY_FORM_RESET} = require('../actions/queryform');
@@ -73,7 +74,8 @@ const initialState = {
     featureTypes: {},
     data: {},
     result: null,
-    resultError: null
+    resultError: null,
+    dockSize: 0.35
 };
 
 function query(state = initialState, action) {
@@ -146,6 +148,11 @@ function query(state = initialState, action) {
         case FEATURE_CLOSE: {
             return assign({}, state, {
                 open: false
+            });
+        }
+        case QUERY_DOCK_SIZE: {
+            return assign({}, state, {
+                dockSize: action.dockSize
             });
         }
         default:

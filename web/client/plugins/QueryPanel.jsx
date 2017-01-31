@@ -106,7 +106,8 @@ const SmartQueryForm = connect((state) => {
         queryToolbarActions: bindActionCreators({
             onQuery: createQuery,
             onReset: reset,
-            onChangeDrawingStatus: changeDrawingStatus
+            onChangeDrawingStatus: changeDrawingStatus,
+            onToggleDrawer: toggleControl.bind(null, 'drawer', null)
         }, dispatch)
     };
 })(QueryBuilder);

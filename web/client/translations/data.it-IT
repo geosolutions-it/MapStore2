@@ -691,6 +691,7 @@
             "export": "Esporta risultati",
             "selectall": "Seleziona tutti",
             "deselectall": "Deseleziona tutti",
+            "backtosearch": "Ritorna alla ricerca",
             "pagination": {
                 "page": "Pagina",
                 "of":   "di",

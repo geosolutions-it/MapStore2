@@ -14,7 +14,7 @@ const {changeLayerProperties, changeGroupProperties, toggleNode,
        sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode} = require('../actions/layers');
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
-
+const {toggleControl} = require('../actions/controls');
 const {groupsSelector} = require('../selectors/layers');
 
 const LayersUtils = require('../utils/LayersUtils');
@@ -116,7 +116,8 @@ const SmartQueryForm = connect((state) => {
         queryToolbarActions: bindActionCreators({
             onQuery: createQuery,
             onReset: reset,
-            onChangeDrawingStatus: changeDrawingStatus
+            onChangeDrawingStatus: changeDrawingStatus,
+            onToggleDrawer: toggleControl.bind(null, 'drawer', null)
         }, dispatch)
     };
 })(QueryBuilder);

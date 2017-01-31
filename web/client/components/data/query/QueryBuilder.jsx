@@ -94,7 +94,8 @@ const QueryBuilder = React.createClass({
             queryToolbarActions: {
                 onQuery: () => {},
                 onReset: () => {},
-                onChangeDrawingStatus: () => {}
+                onChangeDrawingStatus: () => {},
+                onToggleDrawer: () => {}
             }
         };
     },

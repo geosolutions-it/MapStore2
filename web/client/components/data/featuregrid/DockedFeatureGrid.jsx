@@ -7,7 +7,6 @@ const {Modal, Button, Glyphicon} = require('react-bootstrap');
 
 const FilterUtils = require('../../../utils/FilterUtils');
 
-const {getWindowSize} = require('../../../utils/AgentUtils');
 const FeatureGrid = connect((state) => {
     return {
         select: state.featuregrid && state.featuregrid.select || [],
@@ -54,7 +53,10 @@ const DockedFeatureGrid = React.createClass({
         cleanError: React.PropTypes.func,
         selectAllToggle: React.PropTypes.func,
         zoomToFeatureAction: React.PropTypes.func,
-        onClose: React.PropTypes.func
+        onClose: React.PropTypes.func,
+        onToggleDrawer: React.PropTypes.func,
+        dockSize: React.PropTypes.number,
+        setDockSize: React.PropTypes.func
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -90,12 +92,11 @@ const DockedFeatureGrid = React.createClass({
             selectFeatures: () => {},
             onQuery: () => {},
             cleanError: () => {},
-            selectAllToggle: () => {}
+            selectAllToggle: () => {},
+            onToggleDrawer: () => {},
+            dockSize: 0.35,
+            setDockSize: () => {}
         };
-    },
-    componentWillMount() {
-        let height = getWindowSize().maxHeight - 108;
-        this.setState({width: `calc( ${this.props.initWidth} - 30px)`, height});
     },
     shouldComponentUpdate(nextProps) {
         // this is mandatory to avoid infinite looping. TODO externalize pagination
@@ -224,10 +225,11 @@ const DockedFeatureGrid = React.createClass({
                 <Dock
                     zIndex={1030 /*below dialogs, above left menu*/}
                     position={"bottom" /* 'left', 'top', 'right', 'bottom' */}
-                    size={this.state.size}
+                    size={this.props.dockSize}
                     dimMode={"none" /*'transparent', 'none', 'opaque'*/}
                     isVisible={true}
                     onVisibleChange={this.handleVisibleChange}
+                    onSizeChange={(this.limitDockHeight)}
                     fluid={true}
                     dimStyle={{ background: 'rgba(0, 0, 100, 0.2)' }}
                     dockStyle={null}
@@ -247,7 +249,7 @@ const DockedFeatureGrid = React.createClass({
                                 }}>
                             <FeatureGrid
                                 useIcons={true}
-                                tools={[<Button onClick={this.props.onClose} ><Glyphicon glyph="1-close" /><I18N.Message msgId="close"/></Button>]}
+                                tools={[<Button onClick={this.backToSearch} ><Glyphicon glyph="arrow-left" /><I18N.Message msgId="featuregrid.backtosearch"/></Button>]}
                                 key={"search-results-" + (this.state && this.state.searchN)}
                                 className="featureGrid"
                                 changeMapView={this.props.changeMapView}
@@ -295,6 +297,21 @@ const DockedFeatureGrid = React.createClass({
     selectFeatures(features) {
         this.props.selectAllToggle();
         this.props.selectFeatures(features);
+    },
+    backToSearch() {
+        this.props.onToggleDrawer();
+        this.props.onClose();
+    },
+    limitDockHeight(size) {
+        const minSize = 0.25;
+        const maxSize = 0.85;
+        if (size >= maxSize) {
+            this.props.setDockSize(maxSize);
+        } else if (size <= minSize) {
+            this.props.setDockSize(minSize);
+        } else {
+            this.props.setDockSize(size);
+        }
     }
 });
 
