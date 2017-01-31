@@ -41,6 +41,13 @@ module.exports = function karmaConfig(config) {
         webpack: {
             devtool: 'eval',
             module: {
+                preLoaders: [
+                    {
+                        test: /\.jsx?$/,
+                        exclude: /(__tests__|node_modules|legacy|libs\\Cesium|libs\\html2canvas)\\|(__tests__|node_modules|legacy|libs\/Cesium|libs\/html2canvas)\/|webpack\.js|utils\/(openlayers|leaflet)/,
+                        loader: 'babel-istanbul'
+                    }
+                ],
                 loaders: [
                     { test: /\.jsx?$/, exclude: /(ol\.js$|node_modules)/, loader: 'babel-loader', include: path.join(__dirname, "web", "client") },
                     { test: /\.css$/, loader: 'style!css'},
@@ -48,13 +55,6 @@ module.exports = function karmaConfig(config) {
                     { test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/, loader: "url-loader?mimetype=application/font-woff" },
                     { test: /\.(ttf|eot|svg)(\?v=[0-9].[0-9].[0-9])?$/, loader: "file-loader?name=[name].[ext]" },
                     { test: /\.(png|jpg|gif|svg)$/, loader: 'url-loader?name=[path][name].[ext]&limit=8192'} // inline base64 URLs for <=8k images, direct URLs for the rest
-                ],
-                postLoaders: [
-                    {
-                        test: /\.jsx?$/,
-                        exclude: /(__tests__|node_modules|legacy|libs\\Cesium|libs\\html2canvas)\\|(__tests__|node_modules|legacy|libs\/Cesium|libs\/html2canvas)\/|webpack\.js|utils\/(openlayers|leaflet)/,
-                        loader: 'istanbul-instrumenter'
-                    }
                 ]
             },
             resolve: {
