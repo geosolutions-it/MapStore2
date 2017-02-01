@@ -53,9 +53,7 @@ const DockedFeatureGrid = React.createClass({
         cleanError: React.PropTypes.func,
         selectAllToggle: React.PropTypes.func,
         zoomToFeatureAction: React.PropTypes.func,
-        onClose: React.PropTypes.func,
-        openDrawer: React.PropTypes.func,
-        enableDrawer: React.PropTypes.func,
+        onBackToSearch: React.PropTypes.func,
         dockSize: React.PropTypes.number,
         minDockSize: React.PropTypes.number,
         maxDockSize: React.PropTypes.number,
@@ -88,7 +86,7 @@ const DockedFeatureGrid = React.createClass({
             },
             initWidth: 600,
             withMap: true,
-            onClose: () => {},
+            onBackToSearch: () => {},
             changeMapView: () => {},
             // loadFeatureGridConfig: () => {},
             onExpandFilterPanel: () => {},
@@ -96,8 +94,6 @@ const DockedFeatureGrid = React.createClass({
             onQuery: () => {},
             cleanError: () => {},
             selectAllToggle: () => {},
-            openDrawer: () => {},
-            enableDrawer: () => {},
             dockSize: 0.35,
             minDockSize: 0.1,
             maxDockSize: 1.0,
@@ -255,7 +251,7 @@ const DockedFeatureGrid = React.createClass({
                                 }}>
                             <FeatureGrid
                                 useIcons={true}
-                                tools={[<Button onClick={this.backToSearch} ><Glyphicon glyph="arrow-left" /><I18N.Message msgId="featuregrid.backtosearch"/></Button>]}
+                                tools={[<Button onClick={this.props.onBackToSearch} ><Glyphicon glyph="arrow-left" /><I18N.Message msgId="featuregrid.backtosearch"/></Button>]}
                                 key={"search-results-" + (this.state && this.state.searchN)}
                                 className="featureGrid"
                                 changeMapView={this.props.changeMapView}
@@ -303,11 +299,6 @@ const DockedFeatureGrid = React.createClass({
     selectFeatures(features) {
         this.props.selectAllToggle();
         this.props.selectFeatures(features);
-    },
-    backToSearch() {
-        this.props.openDrawer();
-        this.props.enableDrawer();
-        this.props.onClose();
     },
     limitDockHeight(size) {
         if (size >= this.props.maxDockSize) {

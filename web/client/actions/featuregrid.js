@@ -8,6 +8,7 @@
 
 const SELECT_FEATURES = 'SELECT_FEATURES';
 const SET_FEATURES = 'SET_FEATURES';
+const DOCK_SIZE_FEATURES = 'DOCK_SIZE_FEATURES';
 
 function selectFeatures(features) {
     return {
@@ -23,9 +24,18 @@ function setFeatures(features) {
     };
 }
 
+function dockSizeFeatures(dockSize) {
+    return {
+        type: DOCK_SIZE_FEATURES,
+        dockSize: dockSize
+    };
+}
+
 module.exports = {
     SELECT_FEATURES,
     SET_FEATURES,
+    DOCK_SIZE_FEATURES,
     selectFeatures,
-    setFeatures
+    setFeatures,
+    dockSizeFeatures
 };

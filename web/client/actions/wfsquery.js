@@ -15,7 +15,6 @@ const QUERY_CREATE = 'QUERY_CREATE';
 const QUERY_RESULT = 'QUERY_RESULT';
 const QUERY_ERROR = 'QUERY_ERROR';
 const RESET_QUERY = 'RESET_QUERY';
-const QUERY_DOCK_SIZE = 'QUERY_DOCK_SIZE';
 
 const axios = require('../libs/ajax');
 const {toggleControl, setControlProperty} = require('./controls');
@@ -72,13 +71,6 @@ function queryError(error) {
     return {
         type: QUERY_ERROR,
         error
-    };
-}
-
-function queryDockSize(dockSize) {
-    return {
-        type: QUERY_DOCK_SIZE,
-        dockSize: dockSize
     };
 }
 
@@ -139,7 +131,12 @@ function query(searchUrl, filterObj) {
             FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits) :
             FilterUtils.toCQLFilter(filterObj);
     }
-    return (dispatch) => {
+    return (dispatch, getState) => {
+        let state = getState();
+        if (state.controls && state.controls.queryPanel && state.controls.drawer && state.controls.drawer.enabled && state.query && state.query.open) {
+            dispatch(setControlProperty('drawer', 'enabled', false));
+            dispatch(setControlProperty('drawer', 'disabled', true));
+        }
         return axios.post(searchUrl + '?service=WFS&&outputFormat=json', data, {
           timeout: 60000,
           headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
@@ -171,6 +168,17 @@ function featureClose() {
     };
 }
 
+function closeResponse() {
+    return (dispatch, getState) => {
+        dispatch(featureClose());
+        let state = getState();
+        if (state.controls && state.controls.queryPanel && state.controls.drawer && !state.controls.drawer.enabled) {
+            dispatch(setControlProperty('drawer', 'enabled', true));
+            dispatch(setControlProperty('drawer', 'disabled', false));
+        }
+    };
+}
+
 module.exports = {
     FEATURE_TYPE_SELECTED,
     FEATURE_TYPE_LOADED,
@@ -182,7 +190,6 @@ module.exports = {
     QUERY_RESULT,
     QUERY_ERROR,
     RESET_QUERY,
-    QUERY_DOCK_SIZE,
     featureTypeSelected,
     describeFeatureType,
     loadFeature,
@@ -191,5 +198,5 @@ module.exports = {
     featureClose,
     resetQuery,
     toggleQueryPanel,
-    queryDockSize
+    closeResponse
 };
