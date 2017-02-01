@@ -15,11 +15,12 @@ const layers = require('../reducers/layers');
 const mapConfig = require('../reducers/config');
 
 const DebugUtils = require('../utils/DebugUtils');
-const {combineReducers} = require('../utils/PluginsUtils');
+const {combineReducers, combineEpics} = require('../utils/PluginsUtils');
 
 const LayersUtils = require('../utils/LayersUtils');
 const {CHANGE_BROWSER_PROPERTIES} = require('../actions/browser');
 const {persistStore, autoRehydrate} = require('redux-persist');
+const {createEpicMiddleware} = require('redux-observable');
 
 const SecurityUtils = require('../utils/SecurityUtils');
 
@@ -35,9 +36,10 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         mapInitialConfig: () => {return null; },
         layers: () => {return null; }
     });
+    const rootEpic = combineEpics(plugins);
     const defaultState = initialState.defaultState;
     const mobileOverride = initialState.mobile;
-
+    const epicMiddleware = createEpicMiddleware(rootEpic);
     const rootReducer = (state, action) => {
         let mapState = createHistory(LayersUtils.splitMapAndLayers(mapConfig(state, action)));
         let newState = {
@@ -56,10 +58,10 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
     };
     let store;
     if (storeOpts && storeOpts.persist) {
-        store = DebugUtils.createDebugStore(rootReducer, defaultState, [], autoRehydrate());
+        store = DebugUtils.createDebugStore(rootReducer, defaultState, [epicMiddleware], autoRehydrate());
         persistStore(store, storeOpts.persist, storeOpts.onPersist);
     } else {
-        store = DebugUtils.createDebugStore(rootReducer, defaultState);
+        store = DebugUtils.createDebugStore(rootReducer, defaultState, [epicMiddleware]);
     }
     SecurityUtils.setStore(store);
     return store;
