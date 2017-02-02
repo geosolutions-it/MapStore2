@@ -60,7 +60,7 @@ const UserCard = React.createClass({
             <Glyphicon glyph="user" />
             </Button></div>);
     },
-    render: function() {
+    render() {
         return (
            <GridCard className="user-thumb" style={this.props.style} header={this.props.user.name}
                 actions={this.props.actions}
