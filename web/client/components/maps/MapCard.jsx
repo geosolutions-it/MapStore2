@@ -13,6 +13,7 @@ const thumbUrl = require('./style/default.png');
 const assign = require('object-assign');
 
 const ConfirmModal = require('./modals/ConfirmModal');
+const LocaleUtils = require('../../utils/LocaleUtils');
 
 require("./style/mapcard.css");
 
@@ -26,6 +27,9 @@ const MapCard = React.createClass({
         viewerUrl: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
         onEdit: React.PropTypes.func,
         onMapDelete: React.PropTypes.func
+    },
+    contextTypes: {
+        messages: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -67,7 +71,7 @@ const MapCard = React.createClass({
         var availableAction = [{
             onClick: (evt) => {this.stopPropagate(evt); this.props.viewerUrl(this.props.map); },
             glyph: "chevron-right",
-            tooltip: <Message msgId="manager.openInANewTab" />
+            tooltip: LocaleUtils.getMessageById(this.context.messages, "manager.openInANewTab")
         }];
 
         if (this.props.map.canEdit === true) {
@@ -76,13 +80,13 @@ const MapCard = React.createClass({
                  glyph: "wrench",
                  disabled: this.props.map.updating,
                  loading: this.props.map.updating,
-                 tooltip: <Message msgId="manager.editMapMetadata" />
+                 tooltip: LocaleUtils.getMessageById(this.context.messages, "manager.editMapMetadata")
          }, {
                  onClick: (evt) => {this.stopPropagate(evt); this.displayDeleteDialog(); },
                  glyph: "remove-circle",
                  disabled: this.props.map.deleting,
                  loading: this.props.map.deleting,
-                 tooltip: <Message msgId="manager.deleteMap" />
+                 tooltip: LocaleUtils.getMessageById(this.context.messages, "manager.deleteMap")
          });
         }
         return (

@@ -15,7 +15,7 @@ const PaginationToolbar = require('./UsersPaginationToolbar');
 const mapStateToProps = (state) => {
     const users = state && state.users;
     return {
-        users: users && state.users.users,
+        users: users && users.users,
         loading: users && (users.status === "loading"),
         stateProps: users && users.stateProps,
         start: users && users.start,
@@ -43,4 +43,4 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         }
     });
 };
-module.exports = connect(mapStateToProps, mapDispatchToProps, mergeProps)(require('../../../components/manager/users/UserGrid'));
+module.exports = connect(mapStateToProps, mapDispatchToProps, mergeProps, {pure: false})(require('../../../components/manager/users/UserGrid'));

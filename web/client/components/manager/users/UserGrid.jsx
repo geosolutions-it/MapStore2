@@ -11,6 +11,8 @@ const {Grid, Row, Col} = require('react-bootstrap');
 const UserCard = require('./UserCard');
 const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message');
+
+const LocaleUtils = require('../../../utils/LocaleUtils');
 var UsersGrid = React.createClass({
     propTypes: {
         loadUsers: React.PropTypes.func,
@@ -22,6 +24,9 @@ var UsersGrid = React.createClass({
         loading: React.PropTypes.bool,
         bottom: React.PropTypes.node,
         colProps: React.PropTypes.object
+    },
+    contextTypes: {
+        messages: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -69,7 +74,7 @@ var UsersGrid = React.createClass({
             let actions = [{
                      onClick: () => {this.props.onEdit(user); },
                      glyph: "wrench",
-                     tooltip: <Message msgId="users.editUser" />
+                     tooltip: LocaleUtils.getMessageById(this.context.messages, "users.editUser")
             }];
             if ( user && user.role === "GUEST") {
                 actions = [];
@@ -77,14 +82,14 @@ var UsersGrid = React.createClass({
                 actions.push({
                         onClick: () => {this.props.onDelete(user && user.id); },
                         glyph: "remove-circle",
-                        tooltip: <Message msgId="users.deleteUser" />
+                        tooltip: LocaleUtils.getMessageById(this.context.messages, "users.deleteUser")
                 });
             }
 
             return <Col key={"user-" + user.id} {...this.props.colProps}><UserCard user={user} actions={actions}/></Col>;
         });
     },
-    render: function() {
+    render() {
         return (
                 <Grid style={{position: "relative"}} fluid={this.props.fluid}>
                     {this.renderLoading()}

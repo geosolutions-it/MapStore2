@@ -11,6 +11,8 @@ const {Grid, Row, Col} = require('react-bootstrap');
 const GroupCard = require('./GroupCard');
 const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message');
+const LocaleUtils = require('../../../utils/LocaleUtils');
+
 var GroupsGrid = React.createClass({
     propTypes: {
         loadGroups: React.PropTypes.func,
@@ -22,6 +24,9 @@ var GroupsGrid = React.createClass({
         loading: React.PropTypes.bool,
         bottom: React.PropTypes.node,
         colProps: React.PropTypes.object
+    },
+    contextTypes: {
+        messages: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -69,11 +74,11 @@ var GroupsGrid = React.createClass({
             let actions = [{
                      onClick: () => {this.props.onEdit(group); },
                      glyph: "wrench",
-                     tooltip: <Message msgId="usergroups.editGroup" />
+                     tooltip: LocaleUtils.getMessageById(this.context.messages, "usergroups.editGroup")
              }, {
                      onClick: () => {this.props.onDelete(group && group.id); },
                      glyph: "remove-circle",
-                     tooltip: <Message msgId="usergroups.deleteGroup" />
+                     tooltip: LocaleUtils.getMessageById(this.context.messages, "usergroups.deleteGroup")
              }];
             if ( group && group.groupName === "everyone") {
                 actions = [];
@@ -82,7 +87,7 @@ var GroupsGrid = React.createClass({
             return <Col key={"user-" + group.id} {...this.props.colProps}><GroupCard group={group} actions={actions}/></Col>;
         });
     },
-    render: function() {
+    render() {
         return (
                 <Grid style={{position: "relative"}} fluid={this.props.fluid}>
                     {this.renderLoading()}
