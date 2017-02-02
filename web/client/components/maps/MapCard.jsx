@@ -13,7 +13,7 @@ const thumbUrl = require('./style/default.png');
 const assign = require('object-assign');
 
 const ConfirmModal = require('./modals/ConfirmModal');
-const LocaleUtils = require('../../Utils/LocaleUtils');
+const LocaleUtils = require('../../utils/LocaleUtils');
 
 require("./style/mapcard.css");
 

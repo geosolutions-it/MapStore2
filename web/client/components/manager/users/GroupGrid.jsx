@@ -11,7 +11,7 @@ const {Grid, Row, Col} = require('react-bootstrap');
 const GroupCard = require('./GroupCard');
 const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message');
-const LocaleUtils = require('../../../Utils/LocaleUtils');
+const LocaleUtils = require('../../../utils/LocaleUtils');
 
 var GroupsGrid = React.createClass({
     propTypes: {

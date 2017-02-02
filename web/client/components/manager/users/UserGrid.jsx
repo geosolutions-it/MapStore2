@@ -12,7 +12,7 @@ const UserCard = require('./UserCard');
 const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message');
 
-const LocaleUtils = require('../../../Utils/LocaleUtils');
+const LocaleUtils = require('../../../utils/LocaleUtils');
 var UsersGrid = React.createClass({
     propTypes: {
         loadUsers: React.PropTypes.func,
