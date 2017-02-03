@@ -108,12 +108,14 @@
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
-            <id>untar-jre-copy-db</id>
+            <id>get-untar-jre-copy-db</id>
             <phase>package</phase>
             <configuration>
               <tasks>
+                <echo message="Downloading JRE..." />
+                <get src="http://demo.geo-solutions.it/mapstore/jre.tar.gz" dest="${project.build.directory}/jre.tar.gz" />
                 <echo message="Untar JRE..." />
-                <gunzip src="jre/jre.tar.gz" dest="${project.build.directory}/jre.tar" />
+                <gunzip src="${project.build.directory}/jre.tar.gz" dest="${project.build.directory}/jre.tar" />
                 <untar src="${project.build.directory}/jre.tar" dest="${project.build.directory}/jre" />
                 <echo message="Copy Database..." />
                 <copyfile src="data/geostore.h2.db" dest="${project.build.directory}/geostore.h2.db" />
