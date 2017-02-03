@@ -22,7 +22,6 @@
 # -----------------------------------------------------------------------------
 
 # Make sure prerequisite environment variables are set
-JAVA_HOME="/opt/Softw/JAVA/jdk1.8.0_102"
 
 if [ -z "$JAVA_HOME" -a -z "$JRE_HOME" ]; then
   if $darwin; then

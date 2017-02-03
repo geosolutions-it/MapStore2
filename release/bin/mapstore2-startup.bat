@@ -16,19 +16,20 @@ set CMD_LINE_ARGS=
 set CMD_LINE_ARGS=%CMD_LINE_ARGS% %1
 
 rem JAVA_HOME not defined
-if "%JAVA_HOME%" == "" goto noJava
-
-rem JAVA_HOME defined incorrectly
-if not exist "%JAVA_HOME%\bin\java.exe" goto badJava
+if "%JAVA_HOME%" == "" goto nativeJava
 
 echo JAVA_HOME: %JAVA_HOME%
 echo.
 
+rem No errors
 goto run
 
-:noJava
-  echo The JAVA_HOME environment variable is not defined.
-goto JavaFail
+:nativeJava
+  set "JAVA_HOME=%CURRENT_DIR%\jre\win"
+
+rem JAVA_HOME defined incorrectly
+:checkJava
+  if not exist "%JAVA_HOME%\bin\java.exe" goto badJava
 
 :badJava
   echo The JAVA_HOME environment variable is not defined correctly.
@@ -45,15 +46,16 @@ goto end
 
 
 :run
-  if "%JAVA_OPTS%" == "" (set JAVA_OPTS="-XX:MaxPermSize=128m")
   echo Please wait while loading MapStore2...
   echo.
   call "%EXECUTABLE%" start %CMD_LINE_ARGS%
+  echo Point you browser to: http://localhost:8800/mapstore
+  echo.
   echo Enjoy MapStore2!
 goto end
 
 
 :end
-  if %error% == 1 echo Startup of MapStore2 was unsuccessful. 
+  if %error% == 1 echo Startup of MapStore2 was unsuccessful.
   echo.
   pause

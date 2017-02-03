@@ -8,14 +8,21 @@
 # Make sure catalina scripts are executable
 chmod +x bin/*.sh
 
-echo "Welcome to MapStore2 demo package!"
+# Set local JAVA_HOME
+PRGDIR=`pwd`
+if [ -z "$JAVA_HOME" ]; then
+    export JAVA_HOME="$PRGDIR/jre/linux"
+    export JRE_HOME="$PRGDIR/jre/linux"
+    chmod +x jre/linux/bin/*
+fi
+
+echo "Welcome to MapStore2!"
 
 # if not told otherwise pump up the permgen
 if [ -z "$JAVA_OPTS" ]; then
   export JAVA_OPTS="-XX:MaxPermSize=128m"
 fi 
 
-PRGDIR=`pwd`
 EXECUTABLE=startup.sh
 CATALINA_HOME="$PRGDIR"
 

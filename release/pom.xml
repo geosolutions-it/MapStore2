@@ -108,6 +108,20 @@
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
+            <id>untar-jre</id>
+            <phase>package</phase>
+            <configuration>
+              <tasks>
+                <echo message="Untar JRE" />
+                <gunzip src="jre/jre.tar.gz" dest="${project.build.directory}/jre.tar" />
+                <untar src="${project.build.directory}/jre.tar" dest="${project.build.directory}/jre" />
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
             <phase>package</phase>
             <configuration>
               <!-- remove some unwanted dependencies that get pulled over -->

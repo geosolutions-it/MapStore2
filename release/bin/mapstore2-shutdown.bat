@@ -17,17 +17,20 @@ set CMD_LINE_ARGS=
 set CMD_LINE_ARGS=%CMD_LINE_ARGS% %1
 
 rem JAVA_HOME not defined
-if "%JAVA_HOME%" == "" goto noJava
+if "%JAVA_HOME%" == "" goto nativeJava
 
-rem JAVA_HOME defined incorrectly
-if not exist "%JAVA_HOME%\bin\java.exe" goto badJava
+echo JAVA_HOME: %JAVA_HOME%
+echo.
 
 rem No errors
 goto shutdown
 
-:noJava
-  echo The JAVA_HOME environment variable is not defined.
-goto JavaFail
+:nativeJava
+  set "JAVA_HOME=%CURRENT_DIR%\jre\win"
+
+rem JAVA_HOME defined incorrectly
+:checkJava
+  if not exist "%JAVA_HOME%\bin\java.exe" goto badJava
 
 :badJava
   echo The JAVA_HOME environment variable is not defined correctly.
@@ -44,35 +47,13 @@ goto end
 
 :shutdown
   echo Shutting down MapStore2...
+  echo.
   call "%EXECUTABLE%" stop %CMD_LINE_ARGS%
+  echo.
   echo Thank you for using MapStore2!
 goto end
 
 :end
-  if %error% == 1 echo Shutting down MapStore2 was unsuccessful. 
+  if %error% == 1 echo Shutting down MapStore2 was unsuccessful.
   echo.
   pause
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

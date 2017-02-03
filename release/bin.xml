@@ -14,6 +14,14 @@
       </includes>
     </fileSet>
     <fileSet>
+      <!-- JRE's -->
+      <directory>target/jre</directory>
+      <outputDirectory>mapstore2/jre</outputDirectory>
+      <includes>
+        <include>**/*</include>
+      </includes>
+    </fileSet>
+    <fileSet>
       <!-- the libs needed to run tomcat -->
       <directory>target/dependency</directory>
       <outputDirectory>mapstore2/lib</outputDirectory>
