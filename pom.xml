@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>it.geosolutions.mapstore</groupId>
   <artifactId>mapstore-root</artifactId>
@@ -7,22 +7,20 @@
   <version>1.0-SNAPSHOT</version>
   <name>MapStore 2</name>
   <url>http://www.geo-solutions.it</url>
-
+  
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
   
   
   <dependencies>
-
-
+  
+  
   </dependencies>
-
+  
   <build>
-    
   </build>
-
+  
   <profiles>
     <profile>
       <id>default</id>
@@ -32,12 +30,20 @@
       <modules>
         <module>web</module>
       </modules>
-
+    
+    </profile>
+    <profile>
+      <id>release</id>
+      <activation>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <modules>
+        <module>release</module>
+      </modules>
     </profile>
   </profiles>
 
-  
-  
-  
 
 </project>
