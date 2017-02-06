@@ -31,6 +31,7 @@ goto shutdown
 rem JAVA_HOME defined incorrectly
 :checkJava
   if not exist "%JAVA_HOME%\bin\java.exe" goto badJava
+goto shutdown
 
 :badJava
   echo The JAVA_HOME environment variable is not defined correctly.
