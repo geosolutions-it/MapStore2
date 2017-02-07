@@ -36,8 +36,8 @@ const reorderLayers = (groups, allLayers) => {
 const createGroup = (groupId, groupName, layers, addLayers) => {
     return assign({}, {
             id: groupId,
+            title: (groupName || "").replace(/\${dot}/g, "."),
             name: groupName,
-            title: groupName,
             nodes: addLayers ? getLayersId(groupId, layers) : [],
             expanded: true
         });

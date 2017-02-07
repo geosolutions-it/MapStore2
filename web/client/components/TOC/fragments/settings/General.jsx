@@ -31,7 +31,7 @@ const General = React.createClass({
     },
     getGroups(groups, idx = 0) {
         return groups.filter((group) => group.nodes).reduce((acc, g) => {
-            acc.push({label: g.id.replace(/\./g, '/'), value: g.id});
+            acc.push({label: g.id.replace(/\./g, '/').replace(/\${dot}/g, '.'), value: g.id});
             if (g.nodes.length > 0) {
                 return acc.concat(this.getGroups(g.nodes, idx + 1));
             }
@@ -39,7 +39,7 @@ const General = React.createClass({
         }, []);
     },
     getLabelName(groupLable = "") {
-        return groupLable.replace(/\./g, '/');
+        return groupLable.replace(/\./g, '/').replace(/\${dot}/g, '.');
     },
     render() {
         return (<form ref="settings">
@@ -81,8 +81,8 @@ const General = React.createClass({
                         })).indexOf(search) > -1) {
                             return null;
                         }
-                        const val = search.replace(/\//g, '.');
-                        return {label: val, value: val};
+                        const val = search.replace(/\./g, '${dot}').replace(/\//g, '.');
+                        return {label: search, value: val};
                     }}
 
                     onValueChange={function(item) {
