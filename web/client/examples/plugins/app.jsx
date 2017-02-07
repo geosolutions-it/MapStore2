@@ -25,6 +25,9 @@ const startApp = () => {
 
     const {plugins} = require('./plugins');
 
+    let userPlugin;
+    const Template = require('../../components/data/template/jsx/Template');
+
     let pluginsCfg = {
         standard: ['Map', 'Toolbar']
     };
@@ -38,11 +41,32 @@ const startApp = () => {
     const SaveAndLoad = require('./components/SaveAndLoad');
 
     const Debug = require('../../components/development/Debug');
-    const store = require('./store')(plugins);
 
-    const {savePluginConfig} = require('./actions/config');
+    const assign = require('object-assign');
+    const codeSample = require("raw!./sample.js.raw");
+
+    let customReducers;
+
+    const context = require('./context');
+
+    const customReducer = (state={}, action) => {
+        if (customReducers) {
+            const newState = assign({}, state);
+            Object.keys(customReducers).forEach((stateKey) => {
+                assign(newState, {[stateKey]: customReducers[stateKey](state[stateKey], action)});
+            });
+            return newState;
+        }
+        return state;
+    };
+
+    const store = require('./store')(plugins, customReducer);
+
+    const {savePluginConfig, compileError, resetError} = require('./actions/config');
 
     require('./assets/css/plugins.css');
+
+    const Babel = require('babel-standalone');
 
     let mapType = 'leaflet';
 
@@ -71,7 +95,38 @@ const startApp = () => {
         callback();
     };
 
+    const customPlugin = (callback, code) => {
+        /*eslint-disable */
+        const require = context;
+        try {
+            customReducers = eval(Babel.transform(code, { presets: ['es2015', 'react', 'stage-0'] }).code).reducers || null;
+
+            /*eslint-enable */
+            userPlugin = connect(() => ({
+                template: code,
+                renderContent: (comp) => {
+                    /*eslint-disable */
+                    return eval(comp).Plugin;
+                    /*eslint-enable */
+                },
+                getReducers() {
+                    return this.comp;
+                }
+            }), {
+                onError: compileError
+            })(Template);
+            store.dispatch(resetError());
+            callback();
+        } catch(e) {
+            store.dispatch(compileError(e.message));
+        }
+    };
+
     const PluginConfigurator = require('./components/PluginConfigurator');
+
+    const PluginCreator = connect((state) => ({
+        error: state.pluginsConfig && state.pluginsConfig.error
+    }))(require('./components/PluginCreator'));
 
     const renderPlugins = (callback) => {
         return Object.keys(plugins).map((plugin) => {
@@ -93,11 +148,9 @@ const startApp = () => {
                 name: plugin,
                 hide: isHidden(plugin),
                 cfg: userCfg[plugin + 'Plugin'] || {}
-            }))
+            })).concat(userPlugin ? ['My'] : [])
         };
     };
-
-    const assign = require('object-assign');
 
     const changeMapType = (callback, e) => {
         mapType = e.target.options[e.target.selectedIndex].value;
@@ -131,6 +184,10 @@ const startApp = () => {
         }
     };
 
+    const getPlugins = () => {
+        return assign({}, plugins, userPlugin ? {MyPlugin: {MyPlugin: userPlugin}} : {});
+    };
+
     const renderPage = () => {
         ReactDOM.render(
             (
@@ -146,11 +203,12 @@ const startApp = () => {
                                 </Input>
                                 <SaveAndLoad onSave={save.bind(null, renderPage)} onLoad={load.bind(null, renderPage)}/>
                                 <ul>
+                                    <PluginCreator pluginCode={codeSample} onApplyCode={customPlugin.bind(null, renderPage)}/>
                                     {renderPlugins(renderPage)}
                                 </ul>
                             </div>
                             <div style={{position: "absolute", right: 0, left: "300px", height: "100%"}}>
-                                <PluginsContainer params={{mapType}} plugins={PluginsUtils.getPlugins(plugins)} pluginsConfig={getPluginsConfiguration()} mode="standard"/>
+                                <PluginsContainer params={{mapType}} plugins={PluginsUtils.getPlugins(getPlugins())} pluginsConfig={getPluginsConfiguration()} mode="standard"/>
                             </div>
                             <Debug/>
                         </div>
