@@ -14,14 +14,15 @@ const map = require('../../reducers/map');
 const layers = require('../../reducers/layers');
 const mapConfig = require('../../reducers/config');
 
-module.exports = (plugins) => {
+module.exports = (plugins, custom) => {
     const allReducers = combineReducers(plugins, {
         locale: require('../../reducers/locale'),
         browser: require('../../reducers/browser'),
         map: () => {return null; },
         mapInitialConfig: () => {return null; },
         layers: () => {return null; },
-        pluginsConfig: require('./reducers/config')
+        pluginsConfig: require('./reducers/config'),
+        custom
     });
 
     const rootReducer = (state, action) => {

@@ -13,12 +13,14 @@ const Template = React.createClass({
     propTypes: {
         template: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
         model: React.PropTypes.object,
-        renderContent: React.PropTypes.func
+        renderContent: React.PropTypes.func,
+        onError: React.PropTypes.func
     },
     getDefaultProps() {
         return {
             template: "",
-            model: {}
+            model: {},
+            onError: () => {}
         };
     },
     componentWillMount() {
@@ -45,7 +47,11 @@ const Template = React.createClass({
     },
     parseTemplate(temp) {
         let template = (typeof temp === 'function') ? temp() : temp;
-        this.comp = Babel.transform(template, { presets: ['es2015', 'react', 'stage-0'] }).code;
+        try {
+            this.comp = Babel.transform(template, { presets: ['es2015', 'react', 'stage-0'] }).code;
+        } catch(e) {
+            this.props.onError(e.message);
+        }
     }
 });
 
