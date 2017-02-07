@@ -691,6 +691,7 @@
             "export": "Export",
             "selectall": "Select All",
             "deselectall": "Clear Selection",
+            "backtosearch": "Back to search",
             "pagination": {
                 "page": "Page",
                 "of":   "of",

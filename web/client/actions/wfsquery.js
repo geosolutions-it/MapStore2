@@ -131,7 +131,12 @@ function query(searchUrl, filterObj) {
             FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits) :
             FilterUtils.toCQLFilter(filterObj);
     }
-    return (dispatch) => {
+    return (dispatch, getState) => {
+        let state = getState();
+        if (state.controls && state.controls.queryPanel && state.controls.drawer && state.controls.drawer.enabled && state.query && state.query.open) {
+            dispatch(setControlProperty('drawer', 'enabled', false));
+            dispatch(setControlProperty('drawer', 'disabled', true));
+        }
         return axios.post(searchUrl + '?service=WFS&&outputFormat=json', data, {
           timeout: 60000,
           headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
@@ -163,6 +168,17 @@ function featureClose() {
     };
 }
 
+function closeResponse() {
+    return (dispatch, getState) => {
+        dispatch(featureClose());
+        let state = getState();
+        if (state.controls && state.controls.queryPanel && state.controls.drawer && !state.controls.drawer.enabled) {
+            dispatch(setControlProperty('drawer', 'enabled', true));
+            dispatch(setControlProperty('drawer', 'disabled', false));
+        }
+    };
+}
+
 module.exports = {
     FEATURE_TYPE_SELECTED,
     FEATURE_TYPE_LOADED,
@@ -181,5 +197,6 @@ module.exports = {
     query,
     featureClose,
     resetQuery,
-    toggleQueryPanel
+    toggleQueryPanel,
+    closeResponse
 };

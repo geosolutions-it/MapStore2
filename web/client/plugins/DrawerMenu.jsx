@@ -44,7 +44,8 @@ const DrawerMenu = React.createClass({
         menuOptions: React.PropTypes.object,
         singleSection: React.PropTypes.bool,
         buttonClassName: React.PropTypes.string,
-        menuButtonStyle: React.PropTypes.object
+        menuButtonStyle: React.PropTypes.object,
+        disabled: React.PropTypes.bool
     },
     contextTypes: {
         messages: React.PropTypes.object,
@@ -59,7 +60,8 @@ const DrawerMenu = React.createClass({
             buttonStyle: "default",
             menuOptions: {},
             singleSection: false,
-            buttonClassName: "drawer-menu-button"
+            buttonClassName: "drawer-menu-button",
+            disabled: false
         };
     },
     renderItems() {
@@ -86,7 +88,7 @@ const DrawerMenu = React.createClass({
     render() {
         return (
             <div id={this.props.id}>
-                <Button id="drawer-menu-button" style={this.props.menuButtonStyle} bsStyle={this.props.buttonStyle} key="menu-button" className={this.props.buttonClassName} onClick={this.props.toggleMenu}><Glyphicon glyph={this.props.glyph}/></Button>
+                <Button id="drawer-menu-button" style={this.props.menuButtonStyle} bsStyle={this.props.buttonStyle} key="menu-button" className={this.props.buttonClassName} onClick={this.props.toggleMenu} disabled={this.props.disabled}><Glyphicon glyph={this.props.glyph}/></Button>
                 <Menu single={this.props.singleSection} {...this.props.menuOptions} title={<Message msgId="menu" />} alignment="left">
                     {this.renderItems()}
                 </Menu>
@@ -97,7 +99,8 @@ const DrawerMenu = React.createClass({
 
 module.exports = {
     DrawerMenuPlugin: connect((state) => ({
-        active: state.controls && state.controls.drawer && state.controls.drawer.active
+        active: state.controls && state.controls.drawer && state.controls.drawer.active,
+        disabled: state.controls && state.controls.drawer && state.controls.drawer.disabled
     }), {
         toggleMenu: toggleControl.bind(null, 'drawer', null)
     })(DrawerMenu),

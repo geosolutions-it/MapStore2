@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 const {connect} = require('react-redux');
-const {selectFeatures} = require('../actions/featuregrid');
-const {query, featureClose} = require('../actions/wfsquery');
+const {selectFeatures, dockSizeFeatures} = require('../actions/featuregrid');
+const {query, closeResponse} = require('../actions/wfsquery');
 const {changeMapView} = require('../actions/map');
 
 module.exports = {
@@ -29,13 +29,15 @@ module.exports = {
             })),
         query: state.query && state.query.queryObj,
         isNew: state.query && state.query.isNew,
-        totalFeatures: state.query && state.query.result && state.query.result.totalFeatures
+        totalFeatures: state.query && state.query.result && state.query.result.totalFeatures,
+        dockSize: state.highlight && state.highlight.dockSize
     }),
     {
         selectFeatures,
         changeMapView,
         onQuery: query,
-        onClose: featureClose
+        onBackToSearch: closeResponse,
+        setDockSize: dockSizeFeatures
     })(require('../components/data/featuregrid/DockedFeatureGrid')),
     reducers: {highlight: require('../reducers/featuregrid')}
 };
