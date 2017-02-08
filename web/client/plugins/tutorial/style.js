@@ -61,8 +61,6 @@ const defaultStyle = {
 {
     title: 'Welcome in MapStore2',
     text: 'click next to start the tour',
-    // add custom
-    // texts: {deDE:'Hallo', enUS:'Hello', frFR:'Bonjour', itIT:'Ciao'}
     selector: '#selector',
     position: 'top', // top, top-left, top-right, bottom, bottom-left, bottom-right, right and left
     type: 'click', // hover
@@ -84,66 +82,31 @@ const defaultStyle = {
     textAlign: 'left',
     width: 10,
     header: {
-        backgroundColor: '#333',
-        borderRadius: 10,
-        color: '#333',
-        mainColor: '#333',
-        textAlign: 'left',
-        width: 10
+
     },
     main: {
-        backgroundColor: '#333',
-        borderRadius: 10,
-        color: '#333',
-        mainColor: '#333',
-        textAlign: 'left',
-        width: 10
+
+    },
+    footer: {
+
     },
     button: {
-        backgroundColor: '#333',
-        borderRadius: 10,
-        color: '#333',
-        mainColor: '#333',
-        textAlign: 'left',
-        width: 10
+
     },
     skip: {
-        backgroundColor: '#333',
-        borderRadius: 10,
-        color: '#333',
-        mainColor: '#333',
-        textAlign: 'left',
-        width: 10
+
     },
     back: {
-        backgroundColor: '#333',
-        borderRadius: 10,
-        color: '#333',
-        mainColor: '#333',
-        textAlign: 'left',
-        width: 10
+
     },
     close: {
-        backgroundColor: '#333',
-        borderRadius: 10,
-        color: '#333',
-        mainColor: '#333',
-        textAlign: 'left',
-        width: 10
+
     },
     hole: {
-        backgroundColor: '#333',
-        borderRadius: 10,
-        color: '#333',
-        mainColor: '#333',
-        textAlign: 'left',
-        width: 10
+
     },
     beacon: {
-        offsetX: 10,
-        offsetY: 10,
-        inner: '#333',
-        outer: '#333'
+
     }
 }
 */
