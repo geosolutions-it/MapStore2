@@ -1,4 +1,4 @@
-# Folders structure
+## Folders structure
 
 This is the overall framework folder structure:
 
@@ -27,14 +27,14 @@ This is the overall framework folder structure:
     |        +-- java
     |        +-- resources   
     +-- client
-    |   +-- index.html (demo application home page)
+    |   +-- index.html (demo application home page) 
         +-- plugins (ReactJS smart components with required reducers)
         +-- components (ReactJS dumb components)
         |   +-- category
         |   |   +-- <component>.jsx (ReactJS component)
         |   |   +-- ...
         |   |   +-- __tests__       (unit tests folder)
-        |   |       +-- <component>-test.jsx
+        |   |       +-- <component>-test.jsx 
         |   +-- ...
         +-- actions    (Redux actions)
         +-- reducers   (Redux reducers)
@@ -55,9 +55,14 @@ This is the overall framework folder structure:
              |   +-- ...
              +-- ...
 ```
+## Code conventions
 
-If you want to create an application based on MapStore2 you can use the [Project Creation Script](https://github.com/geosolutions-it/MapStore2/blob/master/docs/developer-guide/Project-Creation-Script).
+* An empty React state has to be set as NULL (null), empty objects ({}) are not valid empty states.
 
-If you want to learn how to develop a simple MapStore2 based application you can follow the [tutorial](https://github.com/geosolutions-it/MapStore2/blob/master/docs/developer-guide/Application-Tutorial)
+## Usefull references
 
-If you want to learn how to develop a plugins based MapStore2 based application you can follow the [plugins tutorial](https://github.com/geosolutions-it/MapStore2/blob/master/docs/developer-guide/Plugins-architecture#building-an-application-using-plugins)
+If you want to create an application based on MapStore2 you can use the [Project Creation Script](project-creation-script).
+
+If you want to learn how to develop a simple MapStore2 based application you can follow the [tutorial](application-tutorial)
+
+If you want to learn how to develop a plugins based MapStore2 based application you can follow the [plugins tutorial](plugins-architecture#building-an-application-using-plugins)
