@@ -1,0 +1,32 @@
+/**
+ * Copyright 2017, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+.joyride-hole {
+    box-shadow: 0 0 0 9999px rgba(0,0,0,.75), 0 0 15px rgba(0,0,0,.75);
+}
+
+#intro-tutorial {
+    position: fixed;
+    width: 100%;
+    left: 0;
+}
+
+#tutorial-intro-checkbox-container {
+    overflow: hidden;
+    margin: 5px 0 5px 0;
+    border-top: 1px dashed #777;
+    font-size: 0.8em;
+    font-style: italic;
+}
+
+#tutorial-intro-checkbox {
+    margin: 5px 10px 0 0;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+}
