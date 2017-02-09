@@ -67,14 +67,13 @@ function mapConfig(state = null, action) {
         case ZOOM_TO_EXTENT: {
             let zoom = 0;
             let bounds = CoordinatesUtils.reprojectBbox(action.extent, action.crs, state.bbox && state.bbox.crs || "EPSG:4326");
-            let wgs84BBounds = CoordinatesUtils.reprojectBbox(action.extent, action.crs, "EPSG:4326");
-            if (bounds && wgs84BBounds) {
+            if (bounds) {
                 // center by the max. extent defined in the map's config
-                let center = MapUtils.getCenterForExtent(wgs84BBounds, "EPSG:4326");
+                let center = CoordinatesUtils.reproject(MapUtils.getCenterForExtent(action.extent, action.crs), action.crs, 'EPSG:4326');
                 // workaround to get zoom 0 for -180 -90... - TODO do it better
                 let full = action.crs === "EPSG:4326" && action.extent && action.extent[0] <= -180 && action.extent[1] <= -90 && action.extent[2] >= 180 && action.extent[3] >= 90;
                 if ( full ) {
-                    zoom = 2;
+                    zoom = 1;
                 } else {
                     let mapBBounds = CoordinatesUtils.reprojectBbox(action.extent, action.crs, state.projection || "EPSG:4326");
                     // NOTE: STATE should contain size !!!

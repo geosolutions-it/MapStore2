@@ -57,7 +57,7 @@ const CoordinatesUtils = {
         const destProj = Proj4js.defs(dest) ? new Proj4js.Proj(dest) : null;
         if (sourceProj && destProj) {
             let p = isArray(point) ? Proj4js.toPoint(point) : Proj4js.toPoint([point.x, point.y]);
-            const transformed = assign({}, Proj4js.transform(sourceProj, destProj, p), {srs: dest});
+            const transformed = assign({}, source === dest ? p : Proj4js.transform(sourceProj, destProj, p), {srs: dest});
             if (normalize) {
                 return CoordinatesUtils.normalizePoint(transformed);
             }

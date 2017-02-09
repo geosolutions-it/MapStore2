@@ -552,6 +552,8 @@
             "catalogUrlPlaceholder": "Enter catalog URL...",
             "textSearchPlaceholder": "text to search...",
             "search": "Search",
+            "reset": "Clear",
+            "options": "Options",
             "srs_not_allowed": "The map coordinate system is not supported by this service"
         },
         "uploader": {
