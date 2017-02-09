@@ -364,11 +364,6 @@ var ConfigUtils = {
     getConfigProp: function(prop) {
         return defaultConfig[prop];
     },
-    setPermalinkLayersVisibility: function(originalLayers, newLayers) {
-        return originalLayers.map((originalLayer) => {
-            return assign({}, originalLayer, {visibility: newLayers.filter((layer) => originalLayer.internalId === layer).length > 0 ? true : false});
-        });
-    },
     setConfigProp: function(prop, value) {
         defaultConfig[prop] = value;
     },
