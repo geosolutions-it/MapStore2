@@ -554,6 +554,8 @@
             "catalogUrlPlaceholder": "Entrez catalogue URL...",
             "textSearchPlaceholder": "texte à rechercher...",
             "search": "Chercher",
+            "reset": "Effacer",
+            "options": "Options",
             "srs_not_allowed": "Ce service ne supporte pas le systéme de coordonnées géographique de la carte"
         },
         "uploader": {
