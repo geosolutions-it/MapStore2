@@ -102,25 +102,7 @@
     }, {
         "name": "Tutorial",
         "cfg": {
-          "rawSteps": [
-            {
-              "translation": "intro",
-              "selector": "intro"
-            },
-            {
-              "translation": "lorem",
-              "selector": "topNavigatorBar"
-            },
-            {
-              "translation": "lorem",
-              "selector": "drawerMenu"
-            },
-            {
-              "translation": "lorem",
-              "selector": "navigatorBar",
-              "position": "top"
-            }
-          ]
+          "preset": "mapMobile"
         }
     }, {
         "name": "BackgroundSwitcher",
@@ -349,32 +331,7 @@
           }
         }
     }, {
-        "name": "Tutorial",
-        "cfg": {
-          "rawSteps": [
-            {
-              "translation": "intro",
-              "selector": "intro"
-            },
-            {
-              "translation": "lorem",
-              "selector": "topNavigatorBar"
-            },
-            {
-              "translation": "lorem",
-              "selector": "searchBar"
-            },
-            {
-              "translation": "lorem",
-              "selector": "navigatorBar"
-            },
-            {
-              "translation": "lorem",
-              "selector": "identifyButton",
-              "position": "top"
-            }
-          ]
-        }
+        "name": "Tutorial"
     }, {
         "name": "BackgroundSwitcher",
         "cfg": {
@@ -838,36 +795,10 @@
       {"name": "CreateNewMap"},
       {"name": "Maps"},
       {"name": "Examples"},
-      {
-          "name": "Tutorial",
-          "cfg": {
-            "showCheckbox": false,
-            "rawSteps": [
-              {
-                "translation": "intro",
-                "selector": "intro"
-              },
-              {
-                "translation": "lorem",
-                "selector": "mapType",
-                "position": "top"
-              },
-              {
-                "translation": "lorem",
-                "selector": "searchBar"
-              },
-              {
-                "translation": "lorem",
-                "selector": "mapsGrid",
-                "position": "top"
-              },
-              {
-                "translation": "lorem",
-                "selector": "examples",
-                "position": "top"
-              }
-            ]
-          }
+      {"name": "Tutorial",
+        "cfg": {
+          "preset": "home"
+        }
       }
     ],
     "manager": [{

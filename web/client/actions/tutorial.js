@@ -64,13 +64,13 @@ function setupTutorial(introSteps) {
             dispatch(setControlProperty('tutorial', 'enabled', false));
         }
         steps.map((step) => {
-            if (step.selector === '#intro-tutorial' || step.selector === 'intro') {
+            if (step.selector === '#intro-tutorial') {
                 hasIntro = true;
             }
         });
         if (disabled === 'true' || !hasIntro) {
             steps = steps.filter((step) => {
-                return step.selector !== '#intro-tutorial' && step.selector !== 'intro';
+                return step.selector !== '#intro-tutorial';
             });
             dispatch(removeIntroTutorial(true));
             dispatch(setStepsTutorial(steps));
@@ -84,31 +84,52 @@ function setupTutorial(introSteps) {
     };
 }
 
-function updateTutorial(tour, updateSteps) {
-    return (dispatch, getState) => {
-        var state = getState();
-        if (tour.action !== 'start' && state.tutorial.intro) {
-            dispatch(removeIntroTutorial(true));
-            let steps = assign([], updateSteps);
-            steps = steps.filter((step) => {
-                return step.selector !== '#intro-tutorial' && step.selector !== 'intro';
-            });
-            dispatch(setStepsTutorial(steps));
-            if (tour.action !== 'next') {
-                dispatch(closeTutorial());
-            }
-        }else if (tour.action === 'skip' || tour.action === 'close' || tour.type === 'finished') {
-            dispatch(closeTutorial());
-            if (state.controls && state.controls.tutorial) {
-                dispatch(setControlProperty('tutorial', 'enabled', false));
-            }
-        }else if (tour.type === 'error:target_not_found') {
-            let steps = assign([], updateSteps);
-            steps.splice(tour.index, 1);
-            dispatch(setStepsTutorial(steps));
-        }
+function removeIntro(dispatch, oldSteps, tour) {
+    let steps = oldSteps.filter((step) => {
+        return step.selector !== '#intro-tutorial';
+    });
+    dispatch(setStepsTutorial(steps));
+    if (tour.action !== 'next') {
+        dispatch(closeTutorial());
+    }
+}
 
-        dispatch(changeStatusTutorial(tour.type));
+function updateTutorial(tour, updateSteps, error) {
+    return (dispatch, getState) => {
+        var state;
+        var steps;
+        if (tour && updateSteps) {
+            state = getState();
+            steps = assign([], updateSteps);
+            if (tour.action !== 'start' && state.tutorial.intro) {
+                dispatch(removeIntroTutorial(true));
+                removeIntro(dispatch, steps, tour);
+            }else if (tour.action === 'skip' || tour.action === 'close' || tour.type === 'finished') {
+                steps = steps.filter((step) => {
+                    return step.selector !== '#error-tutorial';
+                });
+                dispatch(setStepsTutorial(steps));
+                dispatch(closeTutorial());
+                if (state.controls && state.controls.tutorial) {
+                    dispatch(setControlProperty('tutorial', 'enabled', false));
+                }
+            }else if (tour.type === 'error:target_not_found') {
+                let errorStep = steps[tour.index];
+                let text = error && error.text || '';
+                let style = error && error.style || {};
+                steps = steps.filter((step) => {
+                    return step.selector !== '#error-tutorial';
+                });
+                assign(errorStep, {
+                    selector: '#error-tutorial',
+                    text: text,
+                    position: 'top',
+                    style: style
+                });
+                removeIntro(dispatch, steps, tour);
+            }
+            dispatch(changeStatusTutorial(tour.type));
+        }
     };
 }
 

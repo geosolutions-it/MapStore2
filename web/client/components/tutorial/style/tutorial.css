@@ -10,7 +10,7 @@
     box-shadow: 0 0 0 9999px rgba(0,0,0,.75), 0 0 15px rgba(0,0,0,.75);
 }
 
-#intro-tutorial {
+.tutorial-presentation-position{
     position: fixed;
     width: 100%;
     left: 0;

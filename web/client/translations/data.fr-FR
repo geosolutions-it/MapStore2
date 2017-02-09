@@ -773,14 +773,55 @@
             "skip": "Skip",
             "last": "Finish",
             "start": "Start",
-            "checkbox": "don't show me again",
+            "checkbox": "don't show this message again",
+            "error": "Error: target not found",
             "intro": {
-                "title": "Welcome to MapStore2",
+                "title": "Welcome on MapStore2",
                 "text": "framework to build web mapping applications using standard mapping libraries, such as OpenLayers 3 and Leaflet."
             },
-            "lorem": {
-                "title": "Titre",
-                "text": "Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
+            "drawerMenu": {
+                "title": "Main menu",
+                "text": "You can find information and tools to manage layer"
+            },
+            "searchBar": {
+                "title": "Search Bar",
+                "text": "Write the address of a place to find. e.g. '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20"
+            },
+            "home": {
+                "title": "Home",
+                "text": "Go to homepage"
+            },
+            "searchButton": {
+                "title": "Search",
+                "text": "Click to open the search bar, then write the address of a place to find. e.g. '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20"
+            },
+            "burgerMenu": {
+                "title": "Option Menu",
+                "text": "You can find options, settings and help"
+            },
+            "zoomInButton": {
+                "title": "Zoom In",
+                "text": "Click to enlarge the map"
+            },
+            "zoomOutButton": {
+                "title": "Zoom Out",
+                "text": "Click to reduce the map"
+            },
+            "identifyButton": {
+                "title": "Info",
+                "text": "Press the button to activate the tool, then click on the map to retrieve information from layers"
+            },
+            "mapType": {
+                "title": "Library",
+                "text": "You can choose Leaflet or OpenLayers to render your maps"
+            },
+            "mapsGrid": {
+                "title": "Maps",
+                "text": "Here some examples of MapStore2. Click on an image to try the demo."
+            },
+            "examples": {
+                "title": "Custom Application",
+                "text": "You can use components and plugins of MapStore2 to build custom applications"
             }
         }
     }

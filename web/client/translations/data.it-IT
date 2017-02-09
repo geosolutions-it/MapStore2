@@ -771,14 +771,55 @@
                 "skip": "Salta",
                 "last": "Fine",
                 "start": "Inizia",
-                "checkbox": "non mostrare più alla prossima visita",
+                "checkbox": "non mostrare più questo messaggio",
+                "error": "Errore: oggetto non trovato",
                 "intro": {
                     "title": "Benvenuto su MapStore2",
-                    "text": "framework to build web mapping applications using standard mapping libraries, such as OpenLayers 3 and Leaflet."
+                    "text": "framework per costruire applicazioni di web mapping usando librerie standard di mappatura, come OpenLayers 3 e Leaflet."
                 },
-                "lorem": {
-                    "title": "Titolo",
-                    "text": "Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
+                "drawerMenu": {
+                    "title": "Menu princile",
+                    "text": "Puoi trovare informazioni e strumenti per controllare i layer"
+                },
+                "searchBar": {
+                    "title": "Barra di ricerca",
+                    "text": "Scrivi un indirizzo di un luogo per trovarlo. esempio:  '1st avenue, new york'. Puoi anche digitare le coordinate in questo formato: 43.87,10.20"
+                },
+                "home": {
+                    "title": "Home",
+                    "text": "Vai alla homepage"
+                },
+                "searchButton": {
+                    "title": "Ricerca",
+                    "text": "Premi il pulsante per aprire la barra di ricerca, poi scrivi un indirizzo di un luogo per trovarlo. esempio:  '1st avenue, new york'. Puoi anche digitare le coordinate in questo formato: 43.87,10.20"
+                },
+                "burgerMenu": {
+                    "title": "Menu delle opzioni",
+                    "text": "Puoi trovare opzioni, impostazioni e aiuti"
+                },
+                "zoomInButton": {
+                    "title": "Zoom In",
+                    "text": "Premi per allargare la mappa"
+                },
+                "zoomOutButton": {
+                    "title": "Zoom Out",
+                    "text": "Premi per ridurre la mappa"
+                },
+                "identifyButton": {
+                    "title": "Info",
+                    "text": "Premi il pulsante per attivare lo strumento, poi fai click sulla mappa per ottenere informazioni dal layer"
+                },
+                "mapType": {
+                    "title": "Libreria",
+                    "text": "Puoi scegliere tra Leaflet o OpenLayers per visualizzare le mappe"
+                },
+                "mapsGrid": {
+                    "title": "Mappe",
+                    "text": "Qui alcuni esempi di MapStore2. Fai click su un'immagine per provare la demo"
+                },
+                "examples": {
+                    "title": "Applicazioni personalizzate",
+                    "text": "Puoi utilizzare componenti e plugins di MapStore2 per costruire applicazioni personalizzate"
                 }
             }
     }

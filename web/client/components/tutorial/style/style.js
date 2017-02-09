@@ -54,13 +54,44 @@ const defaultStyle = {
     }
 };
 
+const errorStyle = {
+    mainColor: '#888',
+    backgroundColor: 'transparent',
+    header: {
+        fontFamily: 'Georgia, serif',
+        fontSize: '1.5em',
+        borderBottom: '1px solid #dd0733',
+        backgroundColor: '#fff',
+        padding: 10
+    },
+    main: {
+        fontSize: '0.9em',
+        backgroundColor: '#fff',
+        padding: 10
+    },
+    footer: {
+        backgroundColor: '#fff',
+        padding: 10
+    },
+    button: {
+        color: '#fff',
+        backgroundColor: '#dd0733'
+    },
+    skip: {
+        color: '#AAA'
+    },
+    close: {
+        margin: 10
+    }
+};
+
 /*
 
 // step example
 
 {
-    title: 'Welcome in MapStore2',
-    text: 'click next to start the tour',
+    title: 'Welcome on MapStore2',
+    text: 'description',
     selector: '#selector',
     position: 'top', // top, top-left, top-right, bottom, bottom-left, bottom-right, right and left
     type: 'click', // hover
@@ -113,5 +144,6 @@ const defaultStyle = {
 
 module.exports = {
     introStyle,
-    defaultStyle
+    defaultStyle,
+    errorStyle
 };
