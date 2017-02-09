@@ -68,3 +68,7 @@ html, body, #container, #map {
     padding: 10px;
     border-radius: 10px;
 }
+
+.fade.in.modal {
+    z-index: 10000;
+}
