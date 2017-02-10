@@ -11,6 +11,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tomcat.version>7.0.75</tomcat.version>
+    <release.number>${project.version}</release.number>
   </properties>
   
   <dependencies>
@@ -149,7 +150,7 @@
           <descriptors>
             <descriptor>bin.xml</descriptor>
           </descriptors>
-          <finalName>mapstore2-${project.version}</finalName>
+          <finalName>mapstore2-${release.number}</finalName>
           <outputDirectory>${project.build.directory}</outputDirectory>
         </configuration>
         <executions>
