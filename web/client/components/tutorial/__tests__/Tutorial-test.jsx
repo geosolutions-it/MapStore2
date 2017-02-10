@@ -49,6 +49,18 @@ const presetList = {
             translation: 'test',
             selector: 'test'
         }
+    ],
+    noT: [
+        {
+            selector: '#intro-tutorial',
+            isFixed: true
+        },
+        {
+            title: 'test',
+            text: 'test',
+            selector: '#test',
+            isFixed: false
+        }
     ]
 };
 
@@ -68,6 +80,84 @@ describe("Test the Tutorial component", () => {
         const cmp = ReactDOM.render(
             <Tutorial/>, document.getElementById("container"));
         expect(cmp).toExist();
+
+    });
+
+    it('test component on update toggle true', () => {
+
+        const actions = {
+            onSetup: () => {
+                return true;
+            },
+            onStart: () => {
+                return true;
+            },
+            onUpdate: () => {
+                return true;
+            },
+            onReset: () => {
+                return true;
+            }
+        };
+        const spyStart = expect.spyOn(actions, 'onStart');
+
+        const cmp = ReactDOM.render(
+            <Tutorial actions={actions}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        cmp.componentWillUpdate({toggle: true});
+        expect(spyStart).toHaveBeenCalled();
+
+    });
+
+    it('test component on update toggle false', () => {
+
+        const actions = {
+            onSetup: () => {
+                return true;
+            },
+            onStart: () => {
+                return true;
+            },
+            onUpdate: () => {
+                return true;
+            },
+            onReset: () => {
+                return true;
+            }
+        };
+        const spyStart = expect.spyOn(actions, 'onStart');
+
+        const cmp = ReactDOM.render(
+            <Tutorial actions={actions}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        cmp.componentWillUpdate({toggle: false});
+        expect(spyStart).toNotHaveBeenCalled();
+
+    });
+
+    it('test component on unmounth', () => {
+
+        const actions = {
+            onSetup: () => {
+                return true;
+            },
+            onStart: () => {
+                return true;
+            },
+            onUpdate: () => {
+                return true;
+            },
+            onReset: () => {
+                return true;
+            }
+        };
+        const spyReset = expect.spyOn(actions, 'onReset');
+
+        const cmp = ReactDOM.render(
+            <Tutorial actions={actions}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        cmp.componentWillUnmount();
+        expect(spyReset).toHaveBeenCalled();
 
     });
 
@@ -214,8 +304,36 @@ describe("Test the Tutorial component", () => {
             <Tutorial rawSteps={rawSteps} showCheckbox={false} preset={'test'} presetList={presetList} actions={actions}/>, document.getElementById("container"));
         expect(cmp).toExist();
         expect(spySetup).toHaveBeenCalled();
+        expect(spySetup).toHaveBeenCalledWith([assign({}, cmp.props.defaultStep, rawSteps[0], {style: defaultStyle})]);
+
+    });
+
+    it('test component with preset, no title and no text', () => {
+        const actions = {
+            onSetup: () => {
+                return true;
+            },
+            onStart: () => {
+                return true;
+            },
+            onUpdate: () => {
+                return true;
+            },
+            onReset: () => {
+                return true;
+            }
+        };
+
+        const spySetup = expect.spyOn(actions, 'onSetup');
+
+        const cmp = ReactDOM.render(
+            <Tutorial showCheckbox={false} preset={'noT'} presetList={presetList} actions={actions}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        expect(spySetup).toHaveBeenCalled();
+        let introText = <div><div>{''}</div><div id="tutorial-intro-checkbox-container"/></div>;
         expect(spySetup).toHaveBeenCalledWith([
-            assign({}, cmp.props.defaultStep, rawSteps[0], {style: defaultStyle})
+            assign({}, cmp.props.defaultStep, presetList.test[0], {title: '', text: introText, style: introStyle}),
+            assign({}, cmp.props.defaultStep, presetList.test[1], {style: defaultStyle})
         ]);
 
     });

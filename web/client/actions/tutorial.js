@@ -136,7 +136,9 @@ function updateTutorial(tour, updateSteps, error) {
 function disableTutorial() {
     return (dispatch, getState) => {
         dispatch(toggleTutorial());
-        localStorage.setItem('mapstore.plugin.tutorial.disabled', getState().tutorial.disabled);
+        let state = getState();
+        let disabled = state && state.tutorial && state.tutorial.disabled;
+        localStorage.setItem('mapstore.plugin.tutorial.disabled', disabled);
     };
 }
 
@@ -166,6 +168,7 @@ module.exports = {
     toggleTutorial,
     changeStatusTutorial,
     setupTutorial,
+    removeIntro,
     updateTutorial,
     disableTutorial,
     resetTutorial
