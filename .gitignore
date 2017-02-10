@@ -11,3 +11,7 @@ web/.classpath
 web/.project
 .idea
 *.iml
+_site
+.sass-cache
+.jekyll-metadata
+*.lock
