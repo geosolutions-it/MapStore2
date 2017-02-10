@@ -182,7 +182,7 @@ describe('Test the map reducer', () => {
         expect(state.bbox.bounds.maxx).toExist();
         expect(state.bbox.bounds.maxy).toExist();
         state = mapConfig({projection: "EPSG:900913"}, action2);
-        expect(state.zoom).toBe(2);
+        expect(state.zoom).toBe(1);
         expect(state.bbox).toExist();
         expect(state.bbox.bounds).toExist();
         expect(state.bbox.bounds.minx).toExist();

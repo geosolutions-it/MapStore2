@@ -552,6 +552,8 @@
             "catalogUrlPlaceholder": "Enter catalog URL...",
             "textSearchPlaceholder": "text to search...",
             "search": "Search",
+            "reset": "Clear",
+            "options": "Options",
             "srs_not_allowed": "The map coordinate system is not supported by this service"
         },
         "uploader": {
@@ -559,7 +561,7 @@
             "type": "Type",
             "lastModified": "Last Modified",
             "filesize": "Size",
-            "beforeUpload": " Doing pre-upload operations... ",
+            "beforeUpload": "Doing pre-upload operations... ",
             "uploadingFiles": "Uploading Files...",
             "dropfile": "drop files here to upload",
             "dropfileImport": "drop files here to add them to this process"

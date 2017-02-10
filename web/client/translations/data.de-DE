@@ -552,6 +552,8 @@
             "catalogUrlPlaceholder": "Gib eine Katalog URL ein...",
             "textSearchPlaceholder": "Zu suchender Text...",
             "search": "Suche",
+            "reset": "Zurücksetzen",
+            "options": "Optionen",
             "srs_not_allowed": "Das Koordinatensystem der Karte wird von dieser Anwendung nicht unterstützt"
         },
         "uploader": {
@@ -559,7 +561,7 @@
             "type": "Dateiart",
             "lastModified": "Zuletzt geändert",
             "filesize": "Größe",
-            "beforeUpload": " Bereite Upload vor... ",
+            "beforeUpload": "Bereite Upload vor... ",
             "uploadingFiles": "Lade Dateien hoch...",
             "dropfile": "Ziehe Dateien für den Upload hierhier",
             "dropfileImport": "Ziehe Dateien hierher um Sie dem Import hinzuzufügen"

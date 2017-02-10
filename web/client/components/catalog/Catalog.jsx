@@ -1,5 +1,5 @@
 /**
- * Copyright 2016, GeoSolutions Sas.
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -10,7 +10,7 @@ const React = require('react');
 const Message = require('../I18N/Message');
 const LocaleUtils = require('../../utils/LocaleUtils');
 
-const {Input, Alert, Pagination, Button} = require('react-bootstrap');
+const {Input, Alert, Pagination, Button, Panel} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 
 const RecordGrid = require('./RecordGrid');
@@ -22,6 +22,7 @@ const Catalog = React.createClass({
         format: React.PropTypes.string,
         searchOnStarup: React.PropTypes.bool,
         onSearch: React.PropTypes.func,
+        onReset: React.PropTypes.func,
         onChangeFormat: React.PropTypes.func,
         onLayerAdd: React.PropTypes.func,
         onZoomToExtent: React.PropTypes.func,
@@ -39,6 +40,8 @@ const Catalog = React.createClass({
         records: React.PropTypes.array,
         gridOptions: React.PropTypes.object,
         includeSearchButton: React.PropTypes.bool,
+        includeResetButton: React.PropTypes.bool,
+        wrapOptions: React.PropTypes.bool,
         buttonStyle: React.PropTypes.object,
         buttonClassName: React.PropTypes.string
     },
@@ -49,6 +52,7 @@ const Catalog = React.createClass({
         return {
             pageSize: 6,
             onSearch: () => {},
+            onReset: () => {},
             onChangeFormat: () => {},
             onLayerAdd: () => {},
             onZoomToExtent: () => {},
@@ -58,6 +62,8 @@ const Catalog = React.createClass({
             formats: [{name: 'csw', label: 'CSW'}],
             format: 'csw',
             includeSearchButton: true,
+            includeResetButton: false,
+            wrapOptions: false,
             buttonStyle: {
                 marginBottom: "10px"
             },
@@ -156,13 +162,21 @@ const Catalog = React.createClass({
                 onKeyDown={this.onKeyDown}/>);
         }
     },
-    renderSearchButton() {
+    renderButtons() {
+        // TODO check this part in ms2, customize for webmapper
+        const buttons = [];
         if (this.props.includeSearchButton) {
-            return (<Button bsStyle="primary" style={this.props.buttonStyle} onClick={this.search}
-                    className={this.props.buttonClassName}>
+            buttons.push(<Button bsStyle="primary" style={this.props.buttonStyle} onClick={this.search}
+                        className={this.props.buttonClassName}>
                         {this.renderLoading()} <Message msgId="catalog.search"/>
                     </Button>);
         }
+        if (this.props.includeResetButton) {
+            buttons.push(<Button style={this.props.buttonStyle} onClick={this.reset}>
+                        <Message msgId="catalog.reset"/>
+                    </Button>);
+        }
+        return buttons;
     },
     renderFormatChoice() {
         if (this.props.formats.length > 1) {
@@ -174,20 +188,24 @@ const Catalog = React.createClass({
         return this.props.formats.map((format) => <option value={format.name}>{format.label}</option>);
     },
     render() {
+        const textSearch = (<Input
+            ref="searchText"
+            type="text"
+            style={{
+                textOverflow: "ellipsis"
+            }}
+            placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.textSearchPlaceholder")}
+            onKeyDown={this.onKeyDown}/>);
         return (
              <div>
                  <div>
                      {this.renderFormatChoice()}
                      {this.renderURLInput()}
-                     <Input
-                         ref="searchText"
-                         type="text"
-                         style={{
-                             textOverflow: "ellipsis"
-                         }}
-                         placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.textSearchPlaceholder")}
-                         onKeyDown={this.onKeyDown}/>
-                     {this.renderSearchButton()}
+
+                     {this.props.wrapOptions ? (<Panel collapsible defaultExpanded={false} header={LocaleUtils.getMessageById(this.context.messages, "catalog.options")}>
+                         {textSearch}
+                     </Panel>) : textSearch}
+                     {this.renderButtons()}
                  </div>
                  <div>
                     {this.renderResult()}
@@ -201,6 +219,15 @@ const Catalog = React.createClass({
         this.setState({
             loading: true
         });
+    },
+    reset() {
+        if (this.refs.catalogURL) {
+            this.refs.catalogURL.refs.input.value = '';
+        }
+        if (this.refs.searchText) {
+            this.refs.searchText.refs.input.value = '';
+        }
+        this.props.onReset();
     },
     setCatalogUrl(e) {
         this.setState({catalogURL: e.target.value});

@@ -115,7 +115,7 @@ const ShapeFileUploadAndStyle = React.createClass({
                 {
             (this.props.selected) ?
                 <Combobox data={this.props.layers} value={this.props.selected} onSelect={(value)=> this.props.onSelectLayer(value)} valueField={"id"} textField={"name"} /> :
-                <SelectShape {...this.props.uploadOptions} errorMessage="shapefile.error.select" text={this.props.uploadMessage} onShapeChoosen={this.addShape}/>
+                <SelectShape {...this.props.uploadOptions} errorMessage="shapefile.error.select" text={this.props.uploadMessage} onShapeChoosen={this.addShape} onShapeError={this.props.onShapeError}/>
             }
             </Row>
             <Row style={{marginBottom: 10}}>

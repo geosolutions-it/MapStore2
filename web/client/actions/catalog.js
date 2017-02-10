@@ -1,5 +1,5 @@
 /**
- * Copyright 2016, GeoSolutions Sas.
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -18,10 +18,10 @@ const LayersUtils = require('../utils/LayersUtils');
 const {find} = require('lodash');
 
 const RECORD_LIST_LOADED = 'RECORD_LIST_LOADED';
+const RESET_CATALOG = 'RESET_CATALOG';
 const RECORD_LIST_LOAD_ERROR = 'RECORD_LIST_LOAD_ERROR';
 const CHANGE_CATALOG_FORMAT = 'CHANGE_CATALOG_FORMAT';
 const ADD_LAYER_ERROR = 'ADD_LAYER_ERROR';
-const CATALOG_RESET = 'CATALOG_RESET';
 function recordsLoaded(options, result) {
     return {
         type: RECORD_LIST_LOADED,
@@ -34,6 +34,12 @@ function changeCatalogFormat(format) {
     return {
         type: CHANGE_CATALOG_FORMAT,
         format
+    };
+}
+
+function resetCatalog() {
+    return {
+        type: RESET_CATALOG
     };
 }
 
@@ -114,22 +120,14 @@ function addLayerError(error) {
     };
 }
 
-function catalogReset() {
-    return {
-        type: CATALOG_RESET
-    };
-}
-
 module.exports = {
     RECORD_LIST_LOADED,
     RECORD_LIST_LOAD_ERROR,
     CHANGE_CATALOG_FORMAT,
-    ADD_LAYER_ERROR,
-    CATALOG_RESET,
+    ADD_LAYER_ERROR, addLayerError,
+    RESET_CATALOG, resetCatalog,
     getRecords,
     textSearch,
     changeCatalogFormat,
-    addLayer: addLayerAndDescribe,
-    addLayerError,
-    catalogReset
+    addLayer: addLayerAndDescribe
 };

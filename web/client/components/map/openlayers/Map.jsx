@@ -140,8 +140,8 @@ var OpenlayersMap = React.createClass({
                     tLng = tLng - 360;
                 }
                 this.props.onMouseMove({
-                    y: coords[1],
-                    x: tLng,
+                    y: coords[1] || 0.0,
+                    x: tLng || 0.0,
                     crs: "EPSG:4326",
                     pixel: {
                         x: event.pixel[0],

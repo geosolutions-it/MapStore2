@@ -142,6 +142,8 @@ const converters = {
                 description: record.Abstract || record.Title || record.Name,
                 identifier: record.Name,
                 tags: "",
+                capabilities: record,
+                service: records.service,
                 boundingBox: {
                     extent: [
                             bbox.westBoundLongitude || bbox.minx,

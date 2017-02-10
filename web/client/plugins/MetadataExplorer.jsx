@@ -1,5 +1,5 @@
 /**
- * Copyright 2016, GeoSolutions Sas.
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -11,7 +11,7 @@ const {connect} = require('react-redux');
 const assign = require('object-assign');
 const {createSelector} = require("reselect");
 const {Glyphicon, Panel} = require('react-bootstrap');
-const {textSearch, changeCatalogFormat, addLayer, addLayerError, catalogReset} = require("../actions/catalog");
+const {textSearch, changeCatalogFormat, addLayer, addLayerError, resetCatalog} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
 const {toggleControl} = require("../actions/controls");
 const Message = require("../components/I18N/Message");
@@ -31,7 +31,7 @@ const catalogSelector = createSelector([
 const catalogClose = () => {
     return (dispatch) => {
         dispatch(toggleControl('metadataexplorer'));
-        dispatch(catalogReset());
+        dispatch(resetCatalog());
     };
 };
 
