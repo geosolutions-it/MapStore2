@@ -177,13 +177,9 @@ const Tutorial = React.createClass({
                     callback={this.onTour}
                 />
 
-                <div id="intro-tutorial" className="tutorial-presentation-position" style={{
-                    top: this.props.introPosition
-                }}/>
+                <div id="intro-tutorial" className="tutorial-presentation-position" style={{top: this.props.introPosition}}></div>
 
-                <div id="error-tutorial" className="tutorial-presentation-position" style={{
-                    top: this.props.introPosition + 200
-                }}/>
+                <div id="error-tutorial" className="tutorial-presentation-position" style={{top: this.props.introPosition + 200}}></div>
 
             </div>
 
