@@ -14,15 +14,10 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 const ConfigUtils = require('../utils/ConfigUtils');
 
-const {get} = require('lodash');
-
 const PluginsContainer = connect((state) => ({
     pluginsConfig: state.plugins || ConfigUtils.getConfigProp('plugins') || null,
     mode: (urlQuery.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop')),
-    pluginsState: state && state.controls || {},
-    stateSelector: (path) => {
-        return get(state, path);
-    }
+    pluginsState: state && state.controls || {}
 }))(require('../components/plugins/PluginsContainer'));
 
 const MapViewer = React.createClass({
