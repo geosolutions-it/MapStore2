@@ -33,9 +33,12 @@ const flatLayers = (root) => {
         return previous.concat(flatLayers(current)).concat((current.Layer && current.Name) ? [current] : []);
     }, []) : (root.Name && [root] || []);
 };
-
+const getOnlineResource = (c) => {
+    return c.Request && c.Request.GetMap && c.Request.GetMap.DCPType && c.Request.GetMap.DCPType.HTTP && c.Request.GetMap.DCPType.HTTP.Get && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource.$ || undefined;
+};
 const searchAndPaginate = (json, startPosition, maxRecords, text) => {
     const root = (json.WMS_Capabilities || json.WMT_MS_Capabilities).Capability;
+    const onlineResource = getOnlineResource(root);
     const SRSList = (root.Layer && (root.Layer.SRS || root.Layer.CRS)) || [];
     const layersObj = flatLayers(root);
     const layers = isArray(layersObj) ? layersObj : [layersObj];
@@ -48,7 +51,7 @@ const searchAndPaginate = (json, startPosition, maxRecords, text) => {
         service: json.WMS_Capabilities.Service,
         records: filteredLayers
             .filter((layer, index) => index >= (startPosition - 1) && index < (startPosition - 1) + maxRecords)
-            .map((layer) => assign({}, layer, {SRS: SRSList}))
+            .map((layer) => assign({}, layer, {onlineResource, SRS: SRSList}))
     };
 };
 
