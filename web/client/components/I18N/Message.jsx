@@ -6,13 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+if (!global.Intl) {
+    require('intl');
+}
 const ReactIntl = require('react-intl');
 
 const FormattedMessage = ReactIntl.FormattedMessage;
 
 const LocaleUtils = require('../../utils/LocaleUtils');
 
-var Message = React.createClass({
+const Message = React.createClass({
     propTypes: {
         locale: React.PropTypes.string,
         messages: React.PropTypes.object,
