@@ -66,8 +66,8 @@ const QueryToolbar = React.createClass({
             (!fieldsWithValues && !this.props.spatialField.geometry);
 
         return (
-            <div>
-                <ButtonToolbar className="queryFormToolbar">
+            <div className="container-fluid">
+                <ButtonToolbar className="queryFormToolbar row-fluid pull-right">
                     <Button disabled={queryDisabled} id="query" onClick={this.search}>
                         <Glyphicon glyph="glyphicon glyphicon-search"/>
                         <span style={{paddingLeft: "2px"}}><strong><I18N.Message msgId={"queryform.query"}/></strong></span>
