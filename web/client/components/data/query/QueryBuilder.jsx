@@ -114,23 +114,6 @@ const QueryBuilder = React.createClass({
     render() {
         return this.props.attributes.length > 0 ? (
             <div id="queryFormPanel">
-                <div className="querypanel">
-                    <GroupField
-                        attributes={this.props.attributes}
-                        groupLevels={this.props.groupLevels}
-                        filterFields={this.props.filterFields}
-                        groupFields={this.props.groupFields}
-                        removeButtonIcon={this.props.removeButtonIcon}
-                        addButtonIcon={this.props.addButtonIcon}
-                        attributePanelExpanded={this.props.attributePanelExpanded}
-                        actions={this.props.attributeFilterActions}/>
-                    <SpatialFilter
-                        useMapProjection={this.props.useMapProjection}
-                        spatialField={this.props.spatialField}
-                        spatialPanelExpanded={this.props.spatialPanelExpanded}
-                        showDetailsPanel={this.props.showDetailsPanel}
-                        actions={this.props.spatialFilterActions}/>
-                </div>
                 <QueryToolbar
                     params={this.props.params}
                     filterFields={this.props.filterFields}
@@ -148,6 +131,23 @@ const QueryBuilder = React.createClass({
                     sortOptions={this.props.sortOptions}
                     hits={this.props.hits}
                     />
+                <div className="querypanel">
+                    <GroupField
+                        attributes={this.props.attributes}
+                        groupLevels={this.props.groupLevels}
+                        filterFields={this.props.filterFields}
+                        groupFields={this.props.groupFields}
+                        removeButtonIcon={this.props.removeButtonIcon}
+                        addButtonIcon={this.props.addButtonIcon}
+                        attributePanelExpanded={this.props.attributePanelExpanded}
+                        actions={this.props.attributeFilterActions}/>
+                    <SpatialFilter
+                        useMapProjection={this.props.useMapProjection}
+                        spatialField={this.props.spatialField}
+                        spatialPanelExpanded={this.props.spatialPanelExpanded}
+                        showDetailsPanel={this.props.showDetailsPanel}
+                        actions={this.props.spatialFilterActions}/>
+                </div>
             </div>
         ) : (<div style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce"/></div>);
     }
