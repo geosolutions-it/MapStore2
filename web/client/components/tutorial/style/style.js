@@ -35,25 +35,6 @@ const introStyle = {
     }
 };
 
-const defaultStyle = {
-    mainColor: '#888',
-    header: {
-        fontFamily: 'Georgia, serif',
-        fontSize: '1.5em',
-        borderBottom: '1px solid #ddd'
-    },
-    main: {
-        fontSize: '0.9em'
-    },
-    button: {
-        color: '#fff',
-        backgroundColor: '#078aa3'
-    },
-    skip: {
-        color: '#AAA'
-    }
-};
-
 const errorStyle = {
     mainColor: '#888',
     backgroundColor: 'transparent',
@@ -85,65 +66,7 @@ const errorStyle = {
     }
 };
 
-/*
-
-// step example
-
-{
-    title: 'Welcome on MapStore2',
-    text: 'description',
-    selector: '#selector',
-    position: 'top', // top, top-left, top-right, bottom, bottom-left, bottom-right, right and left
-    type: 'click', // hover
-    isFixed: false,
-    allowClicksThruHole: false,
-    style: {
-        ... -> style
-    }
-    // trigger: The DOM element that will trigger the tooltip
-};
-
-// style example
-
-{
-    backgroundColor: '#333',
-    borderRadius: 10,
-    color: '#333',
-    mainColor: '#333',
-    textAlign: 'left',
-    width: 10,
-    header: {
-
-    },
-    main: {
-
-    },
-    footer: {
-
-    },
-    button: {
-
-    },
-    skip: {
-
-    },
-    back: {
-
-    },
-    close: {
-
-    },
-    hole: {
-
-    },
-    beacon: {
-
-    }
-}
-*/
-
 module.exports = {
     introStyle,
-    defaultStyle,
     errorStyle
 };

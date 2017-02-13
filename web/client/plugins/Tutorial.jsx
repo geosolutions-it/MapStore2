@@ -10,7 +10,7 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {bindActionCreators} = require('redux');
 const {setupTutorial, startTutorial, updateTutorial, disableTutorial, resetTutorial} = require('../actions/tutorial');
-const {toggleControl} = require('../actions/controls');
+const {toggleControl, setControlProperty} = require('../actions/controls');
 const presetList = require('./tutorial/preset');
 const assign = require('object-assign');
 const I18N = require('../components/I18N/I18N');
@@ -26,6 +26,7 @@ const Tutorial = connect((state) => {
         showStepsProgress: state.tutorial && state.tutorial.progress,
         showSkipButton: state.tutorial && state.tutorial.skip,
         nextLabel: state.tutorial && state.tutorial.nextLabel,
+        status: state.tutorial && state.tutorial.status,
         presetList
     };
 }, (dispatch) => {
@@ -34,8 +35,9 @@ const Tutorial = connect((state) => {
             onSetup: setupTutorial,
             onStart: startTutorial,
             onUpdate: updateTutorial,
-            onToggle: disableTutorial,
-            onReset: resetTutorial
+            onDisable: disableTutorial,
+            onReset: resetTutorial,
+            onClose: setControlProperty.bind(null, 'tutorial', 'enabled', false)
         }, dispatch)
     };
 })(require('../components/tutorial/Tutorial'));

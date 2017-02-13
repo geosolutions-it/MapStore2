@@ -8,9 +8,8 @@
 
 const React = require('react');
 const Joyride = require('react-joyride').default;
-const {defaultStyle, introStyle, errorStyle} = require('./style/style');
-const assign = require('object-assign');
 const I18N = require('../I18N/I18N');
+const {introStyle, errorStyle} = require('./style/style');
 
 require('react-joyride/lib/react-joyride-compiled.css');
 require('./style/tutorial.css');
@@ -18,6 +17,7 @@ require('./style/tutorial.css');
 const Tutorial = React.createClass({
     propTypes: {
         toggle: React.PropTypes.bool,
+        status: React.PropTypes.string,
         preset: React.PropTypes.string,
         presetList: React.PropTypes.object,
         intro: React.PropTypes.bool,
@@ -54,6 +54,7 @@ const Tutorial = React.createClass({
     getDefaultProps() {
         return {
             toggle: false,
+            status: 'run',
             preset: 'map',
             presetList: {},
             intro: true,
@@ -98,53 +99,43 @@ const Tutorial = React.createClass({
                 onSetup: () => {},
                 onStart: () => {},
                 onUpdate: () => {},
-                onToggle: () => {},
-                onReset: () => {}
+                onDisable: () => {},
+                onReset: () => {},
+                onClose: () => {}
             }
         };
     },
     componentWillMount() {
         let rawSteps = this.props.rawSteps.length > 0 ? this.props.rawSteps : this.props.presetList[this.props.preset] || [];
-        var steps = rawSteps.filter((step) => {
-            return step.selector && step.selector.substring(0, 1) === '#';
-        }).map((step) => {
-            let title = step.title || step.translation ? step.title || <I18N.Message msgId={"tutorial." + step.translation + ".title"}/> : '';
-            let text = step.text || step.translation ? step.text || <I18N.Message msgId={"tutorial." + step.translation + ".text"}/> : '';
-            let checkbox = this.props.showCheckbox ? <div id="tutorial-intro-checkbox-container"><input type="checkbox" id="tutorial-intro-checkbox" onChange={this.props.actions.onToggle}/><span><I18N.Message msgId={"tutorial.checkbox"}/></span></div> : <div id="tutorial-intro-checkbox-container"/>;
-            text = (step.selector === '#intro-tutorial') ? <div><div>{text}</div>{checkbox}</div> : text;
-            let style = (step.selector === '#intro-tutorial') ? introStyle : defaultStyle;
-            let isFixed = (step.selector === '#intro-tutorial') ? true : step.isFixed || false;
-            assign(style, step.style);
-            let newStep = assign({}, this.props.defaultStep, step, {
-                title,
-                text,
-                style,
-                isFixed
-            });
-            return newStep;
-        });
-        this.props.actions.onSetup(steps);
+        let checkbox = this.props.showCheckbox ? <div id="tutorial-intro-checkbox-container"><input type="checkbox" id="tutorial-intro-checkbox" className="tutorial-tooltip-intro-checkbox" onChange={this.props.actions.onDisable}/><span><I18N.Message msgId={"tutorial.checkbox"}/></span></div> : <div id="tutorial-intro-checkbox-container"/>;
+        this.props.actions.onSetup(rawSteps, introStyle, checkbox, this.props.defaultStep);
     },
     componentWillUpdate(newProps) {
-        if (!this.props.toggle && newProps.toggle) {
-            this.props.actions.onStart();
-            this.joyride.reset(true);
+        if (this.props.steps.length > 0) {
+            if (!this.props.toggle && newProps.toggle
+            || this.props.intro && !newProps.intro && newProps.status === 'run'
+            || this.props.status === 'run' && newProps.status === 'error'
+            || this.props.status === 'error' && newProps.status === 'error') {
+                this.props.actions.onStart();
+                this.joyride.reset(true);
+            } else if (this.props.status === 'run' && newProps.status === 'close') {
+                this.props.actions.onClose();
+            }
         }
     },
     componentWillUnmount() {
+        this.props.actions.onClose();
         this.props.actions.onReset();
     },
     onTour(tour) {
-        if (tour && tour.type && tour.type.split(':')[1] !== 'before') {
-            if (tour.type === 'error:target_not_found' || tour.action === 'next' && this.props.intro) {
-                this.joyride.reset(true);
-            }
+        if (this.props.steps.length > 0 && tour && tour.type && tour.type.split(':')[1] !== 'before') {
             this.props.actions.onUpdate(tour, this.props.steps, this.props.error);
         }
     },
     render() {
-        return (
-            <div>
+        let joy;
+        if (this.props.steps.length > 0) {
+            joy = (
                 <Joyride
                     ref={c => (this.joyride = c)}
                     steps={this.props.steps}
@@ -176,11 +167,15 @@ const Tutorial = React.createClass({
                     debug={this.props.debug}
                     callback={this.onTour}
                 />
-
+            );
+        } else {
+            joy = (<div className="tutorial-joyride-placeholder"></div>);
+        }
+        return (
+            <div>
+                {joy}
                 <div id="intro-tutorial" className="tutorial-presentation-position" style={{top: this.props.introPosition}}></div>
-
                 <div id="error-tutorial" className="tutorial-presentation-position" style={{top: this.props.introPosition + 200}}></div>
-
             </div>
 
         );

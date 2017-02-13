@@ -10,6 +10,28 @@
     box-shadow: 0 0 0 9999px rgba(0,0,0,.75), 0 0 15px rgba(0,0,0,.75);
 }
 
+.joyride-tooltip__button--primary {
+    background-color: #078aa3;
+}
+
+.joyride-tooltip__button--primary:active, .joyride-tooltip__button--primary:focus, .joyride-tooltip__button--primary:hover {
+    background-color: #078aa3;
+}
+
+.joyride-tooltip__button--secondary{
+    color: #888;
+}
+
+.joyride-tooltip__header {
+    font-family: Georgia, serif;
+    font-size: 1.5em;
+    border-bottom: 1px solid #ddd;
+}
+
+.joyride-tooltip__main {
+    font-size: 0.9em;
+}
+
 .tutorial-presentation-position{
     position: fixed;
     width: 100%;
