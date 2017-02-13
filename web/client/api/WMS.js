@@ -34,7 +34,7 @@ const flatLayers = (root) => {
     }, []) : (root.Name && [root] || []);
 };
 const getOnlineResource = (c) => {
-    return c.Request && c.Request && c.Request.GetMap && c.Request.GetMap.DCPType && c.Request.GetMap.DCPType.HTTP && c.Request.GetMap.DCPType.HTTP.Get && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource.$ || undefined;
+    return c.Request && c.Request.GetMap && c.Request.GetMap.DCPType && c.Request.GetMap.DCPType.HTTP && c.Request.GetMap.DCPType.HTTP.Get && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource.$ || undefined;
 };
 const searchAndPaginate = (json, startPosition, maxRecords, text) => {
     const root = (json.WMS_Capabilities || json.WMT_MS_Capabilities).Capability;
