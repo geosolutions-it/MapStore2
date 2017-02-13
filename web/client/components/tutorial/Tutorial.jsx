@@ -9,10 +9,69 @@
 const React = require('react');
 const Joyride = require('react-joyride').default;
 const I18N = require('../I18N/I18N');
-const {introStyle, errorStyle} = require('./style/style');
 
 require('react-joyride/lib/react-joyride-compiled.css');
 require('./style/tutorial.css');
+
+const introStyle = {
+    backgroundColor: 'transparent',
+    color: '#fff',
+    mainColor: '#fff',
+    textAlign: 'center',
+    header: {
+        padding: 5,
+        fontFamily: 'Georgia, serif',
+        fontSize: '2.8em'
+    },
+    main: {
+        fontSize: '1.0em',
+        padding: 5
+    },
+    footer: {
+        padding: 10
+    },
+    button: {
+        color: '#fff',
+        backgroundColor: '#078aa3'
+    },
+    close: {
+        display: 'none'
+    },
+    skip: {
+        color: '#fff'
+    }
+};
+
+const errorStyle = {
+    mainColor: '#888',
+    backgroundColor: 'transparent',
+    header: {
+        fontFamily: 'Georgia, serif',
+        fontSize: '1.5em',
+        borderBottom: '1px solid #dd0733',
+        backgroundColor: '#fff',
+        padding: 10
+    },
+    main: {
+        fontSize: '0.9em',
+        backgroundColor: '#fff',
+        padding: 10
+    },
+    footer: {
+        backgroundColor: '#fff',
+        padding: 10
+    },
+    button: {
+        color: '#fff',
+        backgroundColor: '#dd0733'
+    },
+    skip: {
+        color: '#AAA'
+    },
+    close: {
+        margin: 10
+    }
+};
 
 const Tutorial = React.createClass({
     propTypes: {
@@ -26,6 +85,7 @@ const Tutorial = React.createClass({
         nextLabel: React.PropTypes.string,
         showCheckbox: React.PropTypes.bool,
         defaultStep: React.PropTypes.object,
+        introStyle: React.PropTypes.object,
         error: React.PropTypes.object,
 
         steps: React.PropTypes.array,
@@ -69,6 +129,7 @@ const Tutorial = React.createClass({
                 type: 'click',
                 allowClicksThruHole: true
             },
+            introStyle: introStyle,
             error: {
                 style: errorStyle,
                 text: <I18N.Message msgId="tutorial.error"/>
@@ -108,7 +169,7 @@ const Tutorial = React.createClass({
     componentWillMount() {
         let rawSteps = this.props.rawSteps.length > 0 ? this.props.rawSteps : this.props.presetList[this.props.preset] || [];
         let checkbox = this.props.showCheckbox ? <div id="tutorial-intro-checkbox-container"><input type="checkbox" id="tutorial-intro-checkbox" className="tutorial-tooltip-intro-checkbox" onChange={this.props.actions.onDisable}/><span><I18N.Message msgId={"tutorial.checkbox"}/></span></div> : <div id="tutorial-intro-checkbox-container"/>;
-        this.props.actions.onSetup(rawSteps, introStyle, checkbox, this.props.defaultStep);
+        this.props.actions.onSetup(rawSteps, this.props.introStyle, checkbox, this.props.defaultStep);
     },
     componentWillUpdate(newProps) {
         if (this.props.steps.length > 0) {

@@ -10,7 +10,6 @@ const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const Tutorial = require('../Tutorial');
-const {introStyle} = require('../style/style');
 const I18N = require('../../I18N/I18N');
 
 const rawSteps = [
@@ -84,11 +83,11 @@ describe("Test the Tutorial component", () => {
         const spyStart = expect.spyOn(actions, 'onStart');
         const spyUpdate = expect.spyOn(actions, 'onUpdate');
 
-        const cmp = ReactDOM.render(<Tutorial defaultStep={{}} showCheckbox={false} actions={actions}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<Tutorial introStyle={{}} defaultStep={{}} showCheckbox={false} actions={actions}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
         expect(spySetup).toHaveBeenCalled();
-        expect(spySetup).toHaveBeenCalledWith([], introStyle, <div id="tutorial-intro-checkbox-container"/>, {});
+        expect(spySetup).toHaveBeenCalledWith([], {}, <div id="tutorial-intro-checkbox-container"/>, {});
 
         const domNode = ReactDOM.findDOMNode(cmp);
         expect(domNode).toExist();
@@ -117,11 +116,11 @@ describe("Test the Tutorial component", () => {
         const spyUpdate = expect.spyOn(actions, 'onUpdate');
         const spyReset = expect.spyOn(actions, 'onReset');
 
-        const cmp = ReactDOM.render(<Tutorial error={{}} steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox={true} actions={actions}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<Tutorial introStyle={{}} error={{}} steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox={true} actions={actions}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
         expect(spySetup).toHaveBeenCalled();
-        expect(spySetup).toHaveBeenCalledWith(presetList.test, introStyle, <div id="tutorial-intro-checkbox-container"><input type="checkbox" id="tutorial-intro-checkbox" className="tutorial-tooltip-intro-checkbox" onChange={cmp.props.actions.onDisable}/><span><I18N.Message msgId={"tutorial.checkbox"}/></span></div>, {});
+        expect(spySetup).toHaveBeenCalledWith(presetList.test, {}, <div id="tutorial-intro-checkbox-container"><input type="checkbox" id="tutorial-intro-checkbox" className="tutorial-tooltip-intro-checkbox" onChange={cmp.props.actions.onDisable}/><span><I18N.Message msgId={"tutorial.checkbox"}/></span></div>, {});
 
         const domNode = ReactDOM.findDOMNode(cmp);
         expect(domNode).toExist();
@@ -155,11 +154,11 @@ describe("Test the Tutorial component", () => {
         const spyStart = expect.spyOn(actions, 'onStart');
         const spyUpdate = expect.spyOn(actions, 'onUpdate');
 
-        const cmp = ReactDOM.render(<Tutorial rawSteps={rawSteps} error={{}} steps={rawSteps} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox={false} actions={actions}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<Tutorial introStyle={{}} rawSteps={rawSteps} error={{}} steps={rawSteps} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox={false} actions={actions}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
         expect(spySetup).toHaveBeenCalled();
-        expect(spySetup).toHaveBeenCalledWith(rawSteps, introStyle, <div id="tutorial-intro-checkbox-container"/>, {});
+        expect(spySetup).toHaveBeenCalledWith(rawSteps, {}, <div id="tutorial-intro-checkbox-container"/>, {});
 
         const domNode = ReactDOM.findDOMNode(cmp);
         expect(domNode).toExist();
