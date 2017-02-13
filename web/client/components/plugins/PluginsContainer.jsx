@@ -11,8 +11,6 @@ const PluginsUtils = require('../../utils/PluginsUtils');
 
 const assign = require('object-assign');
 
-const {get} = require('lodash');
-
 const PluginsContainer = React.createClass({
     propTypes: {
         mode: React.PropTypes.string,
@@ -23,8 +21,7 @@ const PluginsContainer = React.createClass({
         className: React.PropTypes.string,
         style: React.PropTypes.object,
         pluginsState: React.PropTypes.object,
-        defaultMode: React.PropTypes.string,
-        stateSelector: React.PropTypes.func
+        defaultMode: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -36,8 +33,7 @@ const PluginsContainer = React.createClass({
             id: "plugins-container",
             className: "plugins-container",
             style: {},
-            pluginsState: {},
-            stateSelector: () => ({})
+            pluginsState: {}
         };
     },
     getInitialState() {
@@ -51,11 +47,8 @@ const PluginsContainer = React.createClass({
     componentWillReceiveProps(newProps) {
         this.loadPlugins(newProps.pluginsState);
     },
-    getState(path) {
-        return this.props.stateSelector(path) || get(this.props.params, path);
-    },
     getPluginDescriptor(plugin) {
-        return PluginsUtils.getPluginDescriptor(this.getState, this.props.plugins,
+        return PluginsUtils.getPluginDescriptor(this.props.plugins,
                     this.props.pluginsConfig[this.props.mode], plugin, this.state.loadedPlugins);
     },
     renderPlugins(plugins) {
@@ -85,7 +78,7 @@ const PluginsContainer = React.createClass({
     },
     loadPlugins(state) {
         (this.props.pluginsConfig && this.props.pluginsConfig[this.props.mode] || [])
-            .map((plugin) => PluginsUtils.getPluginDescriptor(this.getState, this.props.plugins,
+            .map((plugin) => PluginsUtils.getPluginDescriptor(this.props.plugins,
                 this.props.pluginsConfig[this.props.mode], plugin, this.state.loadedPlugins))
             .filter((plugin) => plugin.impl.loadPlugin).forEach((plugin) => {
                 if (!this.state.loadedPlugins[plugin.name]) {

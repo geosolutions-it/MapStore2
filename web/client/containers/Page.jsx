@@ -11,13 +11,9 @@ const {connect} = require('react-redux');
 
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
-const {get} = require('lodash');
 
 const PluginsContainer = connect((state) => ({
-    mode: urlQuery.mode || ((urlQuery.mobile || (state.browser && state.browser.mobile)) ? 'mobile' : 'desktop'),
-    stateSelector: (path) => {
-        return get(state, path);
-    }
+    mode: urlQuery.mode || ((urlQuery.mobile || (state.browser && state.browser.mobile)) ? 'mobile' : 'desktop')
 }))(require('../components/plugins/PluginsContainer'));
 
 const Page = React.createClass({
