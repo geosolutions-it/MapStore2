@@ -794,12 +794,7 @@
       {"name": "MapType"},
       {"name": "CreateNewMap"},
       {"name": "Maps"},
-      {"name": "Examples"},
-      {"name": "Tutorial",
-        "cfg": {
-          "preset": "home"
-        }
-      }
+      {"name": "Examples"}
     ],
     "manager": [{
       "name": "Header"
