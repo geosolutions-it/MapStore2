@@ -168,7 +168,8 @@ const Identify = React.createClass({
                 revGeocodeDisplayName={reverseGeocodeData.error ? <Message msgId="identifyRevGeocodeError" /> : this.props.reverseGeocodeData.display_name}
                 hideRevGeocode={this.props.hideRevGeocode}
                 identifyRevGeocodeSubmitText={<Message msgId="identifyRevGeocodeSubmitText" />}
-                identifyRevGeocodeCloseText={<Message msgId="identifyRevGeocodeCloseText" />} />);
+                identifyRevGeocodeCloseText={<Message msgId="identifyRevGeocodeCloseText" />}
+                modalOptions={{bsClass: 'mapstore-identify-modal modal'}} />);
             return this.props.wrapRevGeocode ? (
                 <Panel
                     header={<span><Glyphicon glyph="globe" />&nbsp;<Message msgId="identifyRevGeocodeHeader" /></span>}>

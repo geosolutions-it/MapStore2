@@ -43,3 +43,7 @@
 #mapstore-getfeatureinfo .swipeable-view .panel-title {
     font-weight: bold;
 }
+
+.mapstore-identify-modal {
+    z-index: 2001;
+}
