@@ -21,6 +21,8 @@ const QueryBuilder = React.createClass({
         featureTypeConfigUrl: React.PropTypes.string,
         useMapProjection: React.PropTypes.bool,
         attributes: React.PropTypes.array,
+        featureTypeError: React.PropTypes.string,
+        featureTypeErrorText: React.PropTypes.node,
         groupLevels: React.PropTypes.number,
         filterFields: React.PropTypes.array,
         groupFields: React.PropTypes.array,
@@ -56,6 +58,7 @@ const QueryBuilder = React.createClass({
             groupFields: [],
             filterFields: [],
             attributes: [],
+            featureTypeError: "",
             spatialField: {},
             removeButtonIcon: "glyphicon glyphicon-minus",
             addButtonIcon: "glyphicon glyphicon-plus",
@@ -98,6 +101,12 @@ const QueryBuilder = React.createClass({
             }
         };
     },
+    componentDidMount() {
+        if (this.props.featureTypeConfigUrl && this.props.attributes.length < 1) {
+            this.props.attributeFilterActions.onLoadFeatureTypeConfig(
+                this.props.featureTypeConfigUrl, this.props.params);
+        }
+    },
     componentWillReceiveProps(props) {
         let url = props.featureTypeConfigUrl;
         let params = props.params !== this.props.params ? props.params : this.props.params;
@@ -105,13 +114,10 @@ const QueryBuilder = React.createClass({
             this.props.attributeFilterActions.onLoadFeatureTypeConfig(url, params);
         }
     },
-    componentDidMount() {
-        if (this.props.featureTypeConfigUrl && this.props.attributes.length < 1) {
-            this.props.attributeFilterActions.onLoadFeatureTypeConfig(
-                this.props.featureTypeConfigUrl, this.props.params);
-        }
-    },
     render() {
+        if (this.props.featureTypeError !== "") {
+            return (<div style={{margin: "0 auto", "text-align": "center"}}>{this.props.featureTypeErrorText}</div>);
+        }
         return this.props.attributes.length > 0 ? (
             <div id="queryFormPanel">
                 <QueryToolbar

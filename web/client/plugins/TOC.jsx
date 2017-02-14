@@ -69,6 +69,7 @@ const SmartQueryForm = connect((state) => {
         groupFields: state.queryform.groupFields,
         filterFields: state.queryform.filterFields,
         attributes: state.query && state.query.typeName && state.query.featureTypes && state.query.featureTypes[state.query.typeName] && state.query.featureTypes[state.query.typeName].attributes,
+        featureTypeError: state.query && state.query.typeName && state.query.featureTypes && state.query.featureTypes[state.query.typeName] && state.query.featureTypes[state.query.typeName].error,
         spatialField: state.queryform.spatialField,
         showDetailsPanel: state.queryform.showDetailsPanel,
         toolbarEnabled: state.queryform.toolbarEnabled,
@@ -237,7 +238,9 @@ const LayerTree = React.createClass({
     renderQueryPanel() {
         return (<div>
             <Button id="query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={this.props.onToggleQuery.bind(this, null, null)}><Glyphicon glyph="arrow-left"/></Button>
-            <SmartQueryForm/>
+            <SmartQueryForm
+                featureTypeErrorText={<Message msgId="layerProperties.featureTypeError"/>}
+                />
         </div>);
     },
     render() {

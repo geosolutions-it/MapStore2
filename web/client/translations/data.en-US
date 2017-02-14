@@ -35,7 +35,8 @@
             "delete": "Delete",
             "deleteLayer":"Delete Layer",
             "deleteLayerMessage": "Do you really want to delete this Layer?",
-            "confirmDelete": "Are you sure?"
+            "confirmDelete": "Are you sure?",
+            "featureTypeError": "Cannot load layer attributes"
         },
         "background": "Background",
         "language": "Language",

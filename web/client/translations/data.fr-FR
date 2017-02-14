@@ -35,7 +35,8 @@
             "delete": "Effacer",
             "deleteLayer":"Supprimer le calque",
             "deleteLayerMessage": "Voulez-vous vraiment supprimer cette couche?",
-            "confirmDelete": "Êtes-vous sûr?"
+            "confirmDelete": "Êtes-vous sûr?",
+            "featureTypeError": "Impossible de charger les attributs de calque"
         },
         "enable": "Activer",
         "background": "Fond de plan",
