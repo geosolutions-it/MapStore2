@@ -145,7 +145,7 @@ const Tutorial = React.createClass({
             holePadding: 0,
             scrollOffset: 20,
             scrollToSteps: true,
-            scrollToFirstStep: false,
+            scrollToFirstStep: true,
             showBackButton: true,
             showOverlay: true,
             allowClicksThruHole: false,
