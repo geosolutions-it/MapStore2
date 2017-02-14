@@ -50,7 +50,7 @@ goto end
   echo Please wait while loading MapStore2...
   echo.
   call "%EXECUTABLE%" start %CMD_LINE_ARGS%
-  echo Point you browser to: http://localhost:8800/mapstore
+  echo Point you browser to: http://localhost:8082/mapstore
   echo.
   echo Enjoy MapStore2!
 goto end

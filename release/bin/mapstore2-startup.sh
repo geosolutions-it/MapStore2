@@ -36,6 +36,6 @@ fi
 sh "$CATALINA_HOME"/bin/"$EXECUTABLE" start "$@"
 echo "Waiting for Tomcat start and MapStore2 deploy..."
 sleep 4
-echo "Point you browser to: http://localhost:8800/mapstore"
+echo "Point you browser to: http://localhost:8082/mapstore"
 sleep 1
 echo "Enjoy MapStore2!"
