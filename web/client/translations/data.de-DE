@@ -35,7 +35,8 @@
             "delete": "Löschen",
             "deleteLayer":"Ebene löschen",
             "deleteLayerMessage": "Möchtest du wirklich diese Ebene löschen?",
-            "confirmDelete": "Bist du sicher?"
+            "confirmDelete": "Bist du sicher?",
+            "featureTypeError": "Layerattribute können nicht geladen werden"
         },
         "background": "Hintergrund",
         "language": "Sprache",

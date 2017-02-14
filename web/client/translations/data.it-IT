@@ -35,7 +35,8 @@
             "delete": "Elimina",
             "deleteLayer":"Elimina Livello",
             "deleteLayerMessage": "Sei sicuro di voler eliminare questo livello?",
-            "confirmDelete": "Sei sicuro?"
+            "confirmDelete": "Sei sicuro?",
+            "featureTypeError": "Impossibile caricare gli attributi del layer"
         },
         "background": "Sfondo",
         "language": "Lingua",
