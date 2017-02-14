@@ -134,7 +134,7 @@ function tutorial(state = initialState, action) {
                         return step.selector !== '#error-tutorial' && step.selector !== '#intro-tutorial';
                     });
 
-                    assign(errorStep, {
+                    let newErrorStep = assign({}, errorStep, {
                         selector: '#error-tutorial',
                         text: text,
                         position: 'top',
@@ -143,7 +143,9 @@ function tutorial(state = initialState, action) {
                     let index = update.steps.indexOf(errorStep);
                     if (index > 0) {
                         update.steps.splice(index, 1);
-                        update.steps.unshift(errorStep);
+                        update.steps.unshift(newErrorStep);
+                    } else {
+                        update.steps[0] = newErrorStep;
                     }
                     update.status = 'error';
                 }
