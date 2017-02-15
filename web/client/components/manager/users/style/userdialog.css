@@ -22,3 +22,12 @@
     text-overflow: ellipsis;
     overflow: hidden;
 }
+.user-edit-dialog  .Select--multi .Select-value-label{
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.user-edit-dialog  .Select-multi-value-wrapper {
+    max-height: 300px;
+    overflow: auto;
+}

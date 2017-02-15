@@ -34,7 +34,9 @@ const UserCard = React.createClass({
                 backgroundPosition: "center",
                 backgroundRepeat: "repeat-x"
             },
-            innerItemStyle: {"float": "left", margin: "10px"}
+            innerItemStyle: {"float": "left",
+                margin: "10px"
+            }
         };
     },
     renderStatus() {
@@ -47,7 +49,17 @@ const UserCard = React.createClass({
     },
     renderGroups() {
         return (<div key="groups" style={this.props.innerItemStyle}><div><strong><Message msgId="users.groupTitle"/></strong></div>
-    {this.props.user && this.props.user.groups ? this.props.user.groups.map((group)=> (<div key={"group-" + group.id}>{group.groupName}</div>)) : null}
+        <div style={{
+            width: "260px",
+            maxHeight: "100px",
+            overflowY: "auto",
+            overflowX: "visible"
+        }}>{this.props.user && this.props.user.groups ? this.props.user.groups.map((group) => (<div style={{
+            maxWidth: "240px",
+            overflowX: "hidden",
+            textOverflow: "ellipsis"
+          }}key={"group-" + group.id}>{group.groupName}</div>)) : null}</div>
+
      </div>);
     },
     renderRole() {
