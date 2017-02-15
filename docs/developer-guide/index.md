@@ -4,7 +4,11 @@ Clone the repository with the --recursive option to automatically clone submodul
 
 `git clone --recursive https://github.com/geosolutions-it/MapStore2.git`
 
-Install NodeJS 0.12 , if needed, from [here](https://nodejs.org/en/download/releases/).
+Install NodeJS >= 4.6.1 , if needed, from [here](https://nodejs.org/en/download/releases/).
+
+Update npm to 3.x, using: 
+
+`npm install -g npm@3`
 
 Start the demo locally:
 
@@ -26,12 +30,6 @@ Deploy the generated mapstore.war file (in web/target) to your favourite J2EE co
 
 # Developers documentation
  * [Infrastructure](infrastructure-and-general-architecture)
- * [Building and developing](building-and-developing)
- * [Frontend building tools and configuration](frontend-building-tools-and-configuration)
- * [Developing with MapStore 2](developing-with-mapstore-2)
- * [ReactJS and Redux introduction](reactjs-and-redux-introduction)
- * [ReactJS 0.14.x](react-0.14.x-migration-guide)
- * [Maps configuration](maps-configuration)
- * [Plugins architecture](plugins-architecture)
- * [Plugins documentation](plugins-documentation)
- * [How to use a CDN](how-to-use-a-cdn)
+ * [Building and deploying](building-and-developing)
+ * [Developing with MapStore 2](developing-with-mapstore-2-intro)
+ * [Configuration](configuration-files)

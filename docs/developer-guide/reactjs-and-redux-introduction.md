@@ -1,5 +1,5 @@
 # ReactJS
-[ReactJS](https://facebook.github.io/react/index.html) 0.14.8 is used to develop MapStore2. The main purpose of ReactJS is to allow writing the **View** of the application, through the composition of _small components_, in a _declarative way_.
+[ReactJS](https://facebook.github.io/react/index.html) 0.14.x is used to develop MapStore2. The main purpose of ReactJS is to allow writing the **View** of the application, through the composition of _small components_, in a _declarative way_.
 
 Components are written using a "templating" language, called [**JSX**](https://react-bootstrap.github.io/introduction.html), that is a sort of composition of HTML and Javascript code. The difference between JSX and older approaches like _JSP_ is that JSX templates are mixed with Javascript code inside javascript files.
 
@@ -7,7 +7,7 @@ Components are written using a "templating" language, called [**JSX**](https://r
 Component definition:
 
 ```javascript
-var MyComponent = React.createClass({
+const MyComponent = React.createClass({
    render: function() {
        return <h1>{this.props.title}</h1>;
    }
@@ -24,7 +24,7 @@ Components can define and use **properties**, like the title one used in the exa
 Components can also use **state** that can change. When the state changes, the component is updated (re-rendered) automatically.
 
 ```javascript
-var MyComponent = React.createClass({
+const MyComponent = React.createClass({
    getInitialState: function() {
       return {
          title: 'CHANGE_ME'
@@ -50,13 +50,13 @@ The HTML page is automatically updated by ReactJS, each time the state changes (
 Components can re-define some [lifecycle methods](https://facebook.github.io/react/docs/component-specs.html), to execute actions in certain moments of the component life.
 
 ```javascript
-var MyComponent = React.createClass({
+const MyComponent = React.createClass({
    ...
    componentWillMount: function() {
        console.log('not mounted yet');
    },
    componentDidMount: function() {
-       var domElement = React.findDOMNode(this);
+       const domElement = React.findDOMNode(this);
        console.log('DOM mounted');
    },
    ...

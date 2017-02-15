@@ -28,16 +28,17 @@ The development instance uses file watching and live reload, so each time a MapS
 Use your favourite editor / IDE to develop and debug on the browser as needed.
 
 We suggest to use one of the following:
+
  * [Atom](https://atom.io/) with the following plugins:
-  * editorconfig
-  * linter
-  * linter-eslint
-  * react
-  * lcovinfo
+   - editorconfig
+   - linter
+   - linter-eslint
+   - react
+   - lcovinfo
  * [Sublime Text Editor](http://www.sublimetext.com/) with the following plugins:
-  * Babel
-  * Babel snippets
-  * Emmet
+   - Babel
+   - Babel snippets
+   - Emmet
 
 ## Backend services debugging
 TBD
@@ -58,6 +59,8 @@ To run ESLint checks launch:
 To run the same tests Travis will check (before a pull request):
 `npm run travis`
 
+More information on frontend building tools and configuration is available [here](frontend-building-tools-and-configuration)
+
 # General building and deploying
 Maven is the main tool for building and deploying a complete application. It takes care of:
  * building the java libraries and webapp(s)
@@ -66,15 +69,11 @@ Maven is the main tool for building and deploying a complete application. It tak
  * creating the final war for deploy into a J2EE container (e.g. Tomcat)
 
 To create the final war, you have several options:
- * full build, including submodules (e.g. GeoStore)
+ * full build, including submodules and frontend (e.g. GeoStore)
 
 `./build.sh`
 
-or
-
-`mvn clean install -Pgeostore,proxy, extjs,postgres,h2_disk`
-
- * fast build (will use the last compiled version of submodules)
+ * fast build (will use the last compiled version of submodules and compiled frontend)
 
 `mvn clean install`
 

@@ -1,15 +1,18 @@
 MapStore2 fully embraces both ReactJS and Redux concepts, enhancing them with the **plugin** concept.
 
 A plugin in MapStore2 is a smart ReactJS component that is:
+
  * **connected** to a Redux store, so that some properties are automatically wired to the standard MapStore2 state
  * **wired** to standard actions for common events
 
 In addition a plugin: 
+
  * declares one or more **reducers** that need to be added to the Redux store
  * is fully **configurable** to be easily customized to a certain level
 
 ## Building an application using plugins
 To use plugins you need to:
+
  * declare available (required) plugins, properly requiring them from the root application component
  * load / declare plugins configuration
  * create a store that dynamically includes plugins required reducers
@@ -19,6 +22,7 @@ To use plugins you need to:
 Create a plugins.js file where you declare all the needed plugins:
 
 plugins.js:
+
 ```javascript
 module.exports = {
     plugins: {
@@ -27,15 +31,26 @@ module.exports = {
     requires: {}
 };
 ```
-### Load / Create plugins configuration object
-Create a pluginsConfig.js file where you configure your plugins (see [our plugins.jg](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/product/plugins.js)):
 
-pluginsConfig.js:
+### Load / Create plugins configuration object
+Use pluginsConfig.json to configure your plugins.
+
+pluginsConfig.json:
+
 ```javascript
-module.exports = {
-   standard: {
-      PluginName: require('../path/to/plugin')
-   }
+{
+    ...
+    "standard": [
+        {
+            "name": "Map",
+            "cfg": {
+                "zoomControl": false,
+                "tools": ["locate"]
+            }
+        },
+        ...
+    ],
+    ...
 }
 ```
 
@@ -43,6 +58,7 @@ module.exports = {
 Create a store that properly initializes plugins reducers (see [standardStore.js](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/stores/StandardStore.js)) :
 
 store.js:
+
 ```javascript
 const {combineReducers} = require('../utils/PluginsUtils');
 const {createDebugStore} = require('../utils/DebugUtils');
@@ -59,6 +75,7 @@ module.exports = (plugins) => {
 In the root application component require plugins declaration and configuration  and use them to initialize both the store and a PluginsContainer (see our [PluginContainer.jsx](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/components/plugins/PluginsContainer.jsx)):
 
 App.jsx:
+
 ```javascript
 const {pluginsDef} = require('./plugins.js');
 const pluginsCfg = require('./pluginsConfig.json');
@@ -74,6 +91,7 @@ ReactDOM.render(<PluginsContainer plugins={plugins} mode="standard" pluginsConfi
 An example is better than a thousand words:
 
 My.jsx:
+
 ```javascript
 
 // this is a dumb component
@@ -96,6 +114,6 @@ module.exports = {
 ```
 
 ## The Plugins Example Application
-The [example](http://qa.mapstore2.geo-solutions.it/mapstore/examples/plugins/) shows the plugins infrastructure power in an interactive way.
+The [example](http://dev.mapstore2.geo-solutions.it/mapstore/examples/plugins/) shows the plugins infrastructure power in an interactive way.
 
 The UI allows to add / remove plugins from the base applications, and to configure them using a JSON object with plugins configuration properties.
