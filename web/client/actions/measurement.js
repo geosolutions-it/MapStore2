@@ -27,7 +27,6 @@ function changeMeasurement(measurement) {
 function changeMeasurementState(measureState) {
     return {
         type: CHANGE_MEASUREMENT_STATE,
-        pointMeasureEnabled: measureState.pointMeasureEnabled,
         lineMeasureEnabled: measureState.lineMeasureEnabled,
         areaMeasureEnabled: measureState.areaMeasureEnabled,
         bearingMeasureEnabled: measureState.bearingMeasureEnabled,

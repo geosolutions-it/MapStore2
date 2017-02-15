@@ -11,7 +11,8 @@ const {
     CHANGE_MEASUREMENT_STATE
 } = require('../actions/measurement');
 
-const {TOGGLE_CONTROL} = require('../actions/controls');
+const {TOGGLE_CONTROL, RESET_CONTROLS} = require('../actions/controls');
+
 const assign = require('object-assign');
 
 function measurement(state = {
@@ -22,7 +23,6 @@ function measurement(state = {
     switch (action.type) {
         case CHANGE_MEASUREMENT_TOOL:
             return assign({}, state, {
-                pointMeasureEnabled: ((action.geomType !== state.geomType) && (action.geomType === 'Point')),
                 lineMeasureEnabled: ((action.geomType !== state.geomType) && (action.geomType === 'LineString')),
                 areaMeasureEnabled: ((action.geomType !== state.geomType) && (action.geomType === 'Polygon')),
                 bearingMeasureEnabled: ((action.geomType !== state.geomType) && (action.geomType === 'Bearing')),
@@ -30,7 +30,6 @@ function measurement(state = {
             });
         case CHANGE_MEASUREMENT_STATE:
             return assign({}, state, {
-                pointMeasureEnabled: action.pointMeasureEnabled,
                 lineMeasureEnabled: action.lineMeasureEnabled,
                 areaMeasureEnabled: action.areaMeasureEnabled,
                 bearingMeasureEnabled: action.bearingMeasureEnabled,
@@ -53,6 +52,12 @@ function measurement(state = {
                 };
             }
         }
+        case RESET_CONTROLS:
+            return {
+                lineMeasureEnabled: false,
+                areaMeasureEnabled: false,
+                bearingMeasureEnabled: false
+            };
         default:
             return state;
     }
