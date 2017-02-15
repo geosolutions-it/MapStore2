@@ -13,26 +13,13 @@ const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 
 const ConfigUtils = require('../utils/ConfigUtils');
-const assign = require('object-assign');
-const {memoize, get} = require('lodash');
-
-const filterState = memoize((state, monitor) => {
-    return monitor.reduce((previous, current) => {
-        return assign(previous, {
-            [current.name]: get(state, current.path)
-        });
-    }, {});
-}, (state, monitor) => {
-    return monitor.reduce((previous, current) => {
-        return previous + JSON.stringify(get(state, current.path));
-    }, '');
-});
+const PluginsUtils = require('../utils/PluginsUtils');
 
 const PluginsContainer = connect((state) => ({
     pluginsConfig: state.plugins || ConfigUtils.getConfigProp('plugins') || null,
     mode: (urlQuery.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop')),
     pluginsState: state && state.controls || {},
-    monitoredState: filterState(state, ConfigUtils.getConfigProp('monitorState') || [])
+    monitoredState: PluginsUtils.filterState(state, ConfigUtils.getConfigProp('monitorState') || [])
 }))(require('../components/plugins/PluginsContainer'));
 
 const MapViewer = React.createClass({

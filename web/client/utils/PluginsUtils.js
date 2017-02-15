@@ -10,6 +10,20 @@ const assign = require('object-assign');
 const {omit, isObject, head, isArray} = require('lodash');
 const {combineReducers} = require('redux');
 
+const {memoize, get} = require('lodash');
+
+const filterState = memoize((state, monitor) => {
+    return monitor.reduce((previous, current) => {
+        return assign(previous, {
+            [current.name]: get(state, current.path)
+        });
+    }, {});
+}, (state, monitor) => {
+    return monitor.reduce((previous, current) => {
+        return previous + JSON.stringify(get(state, current.path));
+    }, '');
+});
+
 const isPluginConfigured = (pluginsConfig, plugin) => {
     const cfg = pluginsConfig;
     const pluginName = plugin.substring(0, plugin.length - 6);
@@ -104,6 +118,7 @@ const PluginsUtils = {
         return combineReducers(assign({}, reducers, pluginsReducers));
     },
     getReducers,
+    filterState,
     getPlugins: (plugins) => Object.keys(plugins).map((name) => plugins[name])
                                 .reduce((previous, current) => assign({}, previous, omit(current, 'reducers')), {}),
     getPluginDescriptor: (state, plugins, pluginsConfig, pluginDef, loadedPlugins = {}) => {
