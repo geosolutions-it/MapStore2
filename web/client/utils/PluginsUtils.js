@@ -7,7 +7,7 @@
  */
 
 const assign = require('object-assign');
-const {omit, isObject, head, isArray} = require('lodash');
+const {omit, isObject, head, isArray, isString} = require('lodash');
 const {combineReducers} = require('redux');
 
 const {memoize, get} = require('lodash');
@@ -30,11 +30,30 @@ const isPluginConfigured = (pluginsConfig, plugin) => {
     return head(cfg.filter((cfgObj) => cfgObj.name === pluginName || cfgObj === pluginName));
 };
 
-const showIn = (cfg, name, id, isDefault) => {
-    return ((id && cfg.showIn && cfg.showIn.indexOf(id) !== -1) ||
-            (cfg.showIn && cfg.showIn.indexOf(name) !== -1) ||
+/*eslint-disable */
+const parseExpression = (state, requires, value) => {
+    const searchExpression = /^\{(.*?)\}$/;
+    const context = requires || {};
+    const expression = searchExpression.exec(value);
+    if (expression !== null) {
+        return eval(expression[1]);
+    }
+    return value;
+};
+/*eslint-enable */
+
+const handleExpression = (state, requires, expression) => {
+    if (isString(expression) && expression.indexOf('{') === 0) {
+        return parseExpression(state, requires, expression);
+    }
+    return expression;
+};
+
+const showIn = (state, requires, cfg, name, id, isDefault) => {
+    return ((id && cfg.showIn && handleExpression(state, requires, cfg.showIn).indexOf(id) !== -1) ||
+            (cfg.showIn && handleExpression(state, requires, cfg.showIn).indexOf(name) !== -1) ||
             (!cfg.showIn && isDefault)) &&
-            !((cfg.hideFrom && cfg.hideFrom.indexOf(name) !== -1) || (id && cfg.hideFrom && cfg.hideFrom.indexOf(id) !== -1));
+            !((cfg.hideFrom && handleExpression(state, requires, cfg.hideFrom).indexOf(name) !== -1) || (id && cfg.hideFrom && handleExpression(state, requires, cfg.hideFrom).indexOf(id) !== -1));
 };
 
 const includeLoaded = (name, loadedPlugins, plugin) => {
@@ -58,18 +77,6 @@ const getMorePrioritizedContainer = (pluginImpl, plugins, priority) => {
     }, {plugin: null, priority: priority});
 };
 
-/*eslint-disable */
-const parseExpression = (state, requires, value) => {
-    const searchExpression = /^\{(.*?)\}$/;
-    const context = requires || {};
-    const expression = searchExpression.exec(value);
-    if (expression !== null) {
-        return eval(expression[1]);
-    }
-    return value;
-};
-/*eslint-enable */
-
 const parsePluginConfig = (state, requires, cfg) => {
     if (isArray(cfg)) {
         return cfg.map((value) => parsePluginConfig(state, requires, value));
@@ -88,7 +95,7 @@ const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, load
             .filter((plugin) => plugins[plugin][name])
             .filter((plugin) => {
                 const cfgObj = isPluginConfigured(pluginsConfig, plugin);
-                return cfgObj && showIn(cfgObj, name, id, isDefault);
+                return cfgObj && showIn(state, plugins.requires, cfgObj, name, id, isDefault);
             })
             .filter((plugin) => getMorePrioritizedContainer(plugins[plugin], pluginsConfig, plugins[plugin][name].priority || 0).plugin === null)
             .map((plugin) => {
