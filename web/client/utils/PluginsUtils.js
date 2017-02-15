@@ -44,7 +44,32 @@ const getMorePrioritizedContainer = (pluginImpl, plugins, priority) => {
     }, {plugin: null, priority: priority});
 };
 
-const getPluginItems = (plugins, pluginsConfig, name, id, isDefault, loadedPlugins) => {
+/*eslint-disable */
+const parseExpression = (state, requires, value) => {
+    const searchExpression = /^\{(.*?)\}$/;
+    const context = requires || {};
+    const expression = searchExpression.exec(value);
+    if (expression !== null) {
+        return eval(expression[1]);
+    }
+    return value;
+};
+/*eslint-enable */
+
+const parsePluginConfig = (state, requires, cfg) => {
+    if (isArray(cfg)) {
+        return cfg.map((value) => parsePluginConfig(state, requires, value));
+    }
+    if (isObject(cfg)) {
+        return Object.keys(cfg).reduce((previous, current) => {
+            const value = cfg[current];
+            return assign(previous, {[current]: parsePluginConfig(state, requires, value)});
+        }, {});
+    }
+    return parseExpression(state, requires, cfg);
+};
+
+const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins) => {
     return Object.keys(plugins)
             .filter((plugin) => plugins[plugin][name])
             .filter((plugin) => {
@@ -61,40 +86,15 @@ const getPluginItems = (plugins, pluginsConfig, name, id, isDefault, loadedPlugi
                     item,
                     pluginCfg.override && pluginCfg.override[name] || {},
                     {
-                        cfg: pluginCfg && pluginCfg.cfg || undefined
+                        cfg: pluginCfg && parsePluginConfig(state, plugins.requires, pluginCfg.cfg || {}) || undefined
                     },
                     {
                         plugin: pluginImpl,
-                        items: getPluginItems(plugins, pluginsConfig, pluginName, null, true, loadedPlugins)
+                        items: getPluginItems(state, plugins, pluginsConfig, pluginName, null, true, loadedPlugins)
                     });
             });
 };
 
-/*eslint-disable */
-const parseExpression = (requires, value) => {
-    const searchExpression = /^\{(.*?)\}$/;
-    const context = requires || {};
-    const expression = searchExpression.exec(value);
-    if (expression !== null) {
-        return eval(expression[1]);
-    }
-    return value;
-};
-/*eslint-enable */
-
-
-const parsePluginConfig = (requires, cfg) => {
-    if (isArray(cfg)) {
-        return cfg.map((value) => parsePluginConfig(requires, value));
-    }
-    if (isObject(cfg)) {
-        return Object.keys(cfg).reduce((previous, current) => {
-            const value = cfg[current];
-            return assign(previous, {[current]: parsePluginConfig(requires, value)});
-        }, {});
-    }
-    return parseExpression(requires, cfg);
-};
 const getReducers = (plugins) => Object.keys(plugins).map((name) => plugins[name].reducers)
                             .reduce((previous, current) => assign({}, previous, current), {});
 
@@ -106,7 +106,7 @@ const PluginsUtils = {
     getReducers,
     getPlugins: (plugins) => Object.keys(plugins).map((name) => plugins[name])
                                 .reduce((previous, current) => assign({}, previous, omit(current, 'reducers')), {}),
-    getPluginDescriptor: (plugins, pluginsConfig, pluginDef, loadedPlugins = {}) => {
+    getPluginDescriptor: (state, plugins, pluginsConfig, pluginDef, loadedPlugins = {}) => {
         const name = isObject(pluginDef) ? pluginDef.name : pluginDef;
         const id = isObject(pluginDef) ? pluginDef.id : null;
         const stateSelector = isObject(pluginDef) ? pluginDef.stateSelector : id || undefined;
@@ -120,8 +120,8 @@ const PluginsUtils = {
             id: id || name,
             name,
             impl: includeLoaded(name, loadedPlugins, (impl.loadPlugin || impl.displayName) ? impl : impl(stateSelector)),
-            cfg: isObject(pluginDef) ? parsePluginConfig(plugins.requires, pluginDef.cfg) : {},
-            items: getPluginItems(plugins, pluginsConfig, name, id, isDefault, loadedPlugins)
+            cfg: isObject(pluginDef) ? parsePluginConfig(state, plugins.requires, pluginDef.cfg) : {},
+            items: getPluginItems(state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins)
         };
     },
     getMorePrioritizedContainer

@@ -12,7 +12,6 @@ const {connect} = require('react-redux');
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 
-
 const PluginsContainer = connect((state) => ({
     mode: (urlQuery.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop')),
     pluginsState: state && state.controls || {}
