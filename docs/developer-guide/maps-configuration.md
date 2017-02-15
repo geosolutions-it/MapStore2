@@ -6,12 +6,12 @@
 
 ## Layer types
 
-* WMS
-* Bing
-* Google
-* MapQuest
-* OSM
-* [[TileProvider|Maps-configuration#tileprovider]]
+ * WMS
+ * Bing
+ * Google
+ * MapQuest
+ * OSM
+ * TileProvider
 
 ### WMS
 

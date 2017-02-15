@@ -1,6 +1,7 @@
 Frontend building is delegated to [NPM](https://www.npmjs.com/) and so leverages the NodeJS ecosystem.
 
 In particular:
+
  * a **[package.json](https://github.com/geosolutions-it/MapStore2/blob/master/package.json)** file is used to configure frontend dependencies, needed tools and building scripts
  * **[babel](https://babeljs.io/)** is used for ES6/7 and JSX transpiling integrated with the other tools (e.g. webpack)
  * **[webpack-dev-server](http://webpack.github.io/docs/webpack-dev-server.html)** is used to host the development application instance
