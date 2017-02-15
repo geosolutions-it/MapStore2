@@ -19,6 +19,8 @@ const RESET_QUERY = 'RESET_QUERY';
 const axios = require('../libs/ajax');
 const {toggleControl, setControlProperty} = require('./controls');
 const FilterUtils = require('../utils/FilterUtils');
+const {reset} = require('./queryform');
+
 function featureTypeSelected(url, typeName) {
     return {
         type: FEATURE_TYPE_SELECTED,
@@ -157,6 +159,9 @@ function resetQuery() {
 
 function toggleQueryPanel(url, name) {
     return (dispatch, getState) => {
+        if (getState().query.typeName !== name) {
+            dispatch(reset());
+        }
         dispatch(featureTypeSelected(url, name));
         dispatch(toggleControl('queryPanel', null));
         dispatch(setControlProperty('drawer', 'width', getState().controls.queryPanel.enabled ? 700 : 300));
