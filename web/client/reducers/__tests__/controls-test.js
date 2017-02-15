@@ -8,7 +8,7 @@
 const expect = require('expect');
 
 const controls = require('../controls');
-const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY} = require('../../actions/controls');
+const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY, RESET_CONTROLS} = require('../../actions/controls');
 
 describe('Test the constrols reducer', () => {
     it('toggles a control the first time', () => {
@@ -56,5 +56,23 @@ describe('Test the constrols reducer', () => {
         });
         expect(state.mycontrol).toExist();
         expect(state.mycontrol.prop).toBe('val');
+    });
+
+
+    it('reset the controls', () => {
+        const state = controls(
+            {
+                c1: { enabled: true},
+                c2: { enabled: false},
+                c3: { idonthaveenabledfield: "whatever"}
+            }, {
+            type: RESET_CONTROLS
+        });
+        expect(state.c1).toExist();
+        expect(state.c2).toExist();
+        expect(state.c3).toExist();
+        expect(state.c1.enabled).toBe(false);
+        expect(state.c2.enabled).toBe(false);
+        expect(state.c3.enabled).toNotExist();
     });
 });
