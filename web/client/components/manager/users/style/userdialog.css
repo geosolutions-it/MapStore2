@@ -30,4 +30,5 @@
 .user-edit-dialog  .Select-multi-value-wrapper {
     max-height: 300px;
     overflow: auto;
+    min-height: 36px;
 }
