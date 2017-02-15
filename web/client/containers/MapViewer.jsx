@@ -13,11 +13,13 @@ const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 
 const ConfigUtils = require('../utils/ConfigUtils');
+const PluginsUtils = require('../utils/PluginsUtils');
 
 const PluginsContainer = connect((state) => ({
     pluginsConfig: state.plugins || ConfigUtils.getConfigProp('plugins') || null,
     mode: (urlQuery.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop')),
-    pluginsState: state && state.controls || {}
+    pluginsState: state && state.controls || {},
+    monitoredState: PluginsUtils.filterState(state, ConfigUtils.getConfigProp('monitorState') || [])
 }))(require('../components/plugins/PluginsContainer'));
 
 const MapViewer = React.createClass({
