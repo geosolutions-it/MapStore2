@@ -91,6 +91,11 @@
 #mapstore-drawermenu #queryFormPanel .details-panel.panel-primary {
     border-color: #078aa3;
 }
+#mapstore-drawermenu #queryFormPanel .query-toolbar{
+    position: absolute;
+    right: 0;
+    top: 42px;
+}
 
 /*****************************/
 /* DRAWER MENU END ***********/
