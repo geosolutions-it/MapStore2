@@ -62,7 +62,7 @@ const MeasurementSupport = React.createClass({
     },
     render() {
         // moved here the translations because when language changes it is forced a render of this component. (see connect of measure plugin)
-        var drawingStrings = this.props.messages || (this.context.messages) ? this.context.messages.drawLocal : false;
+        var drawingStrings = this.props.messages || (this.context.messages ? this.context.messages.drawLocal : false);
         if (drawingStrings) {
             L.drawLocal = drawingStrings;
         }
