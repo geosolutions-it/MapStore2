@@ -7,8 +7,10 @@
  */
 
 var React = require('react');
-var {Input, Glyphicon} = require('react-bootstrap');
+var {Input, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
 var LocaleUtils = require('../../../utils/LocaleUtils');
+var Spinner = require('react-spinkit');
+
 
 var delay = (
     function() {
@@ -38,6 +40,8 @@ let SearchBar = React.createClass({
         blurResetDelay: React.PropTypes.number,
         typeAhead: React.PropTypes.bool,
         searchText: React.PropTypes.string,
+        loading: React.PropTypes.bool,
+        error: React.PropTypes.object,
         style: React.PropTypes.object,
         searchOptions: React.PropTypes.object
     },
@@ -81,10 +85,25 @@ let SearchBar = React.createClass({
             delay(() => {this.props.onPurgeResults(); }, this.props.blurResetDelay);
         }
     },
-    render() {
-        //  const innerGlyphicon = <Button onClick={this.search}></Button>;
+    renderAddonAfter() {
         const remove = <Glyphicon className="searchclear" glyph="remove" onClick={this.clearSearch}/>;
         var showRemove = this.props.searchText !== "";
+        let addonAfter = showRemove ? [remove] : [<Glyphicon glyph="search"/>];
+        if (this.props.loading) {
+            addonAfter = [<Spinner style={{
+                position: "absolute",
+                right: "14px",
+                top: "8px"
+                }} spinnerName="pulse" noFadeIn/>, addonAfter];
+        }
+        if (this.props.error) {
+            let tooltip = <Tooltip id="tooltip">{this.props.error && this.props.error.message || null}</Tooltip>;
+            addonAfter.push(<OverlayTrigger placement="bottom" overlay={tooltip}><Glyphicon style={{color: "#b94a48"}} className="searcherror" glyph="warning-sign" onClick={this.clearSearch}/></OverlayTrigger>);
+        }
+        return addonAfter;
+    },
+    render() {
+        //  const innerGlyphicon = <Button onClick={this.search}></Button>;
         let placeholder;
         if (!this.props.placeholder && this.context.messages) {
             let placeholderLocMessage = LocaleUtils.getMessageById(this.context.messages, this.props.placeholderMsgId);
@@ -94,6 +113,7 @@ let SearchBar = React.createClass({
         } else {
             placeholder = this.props.placeholder;
         }
+
         return (
             <div id="map-search-bar" style={this.props.style} className={"MapSearchBar" + (this.props.className ? " " + this.props.className : "")}>
                 <Input
@@ -105,7 +125,7 @@ let SearchBar = React.createClass({
                     }}
                     value={this.props.searchText}
                     ref="input"
-                    addonAfter={showRemove ? remove : <Glyphicon glyph="search"/>}
+                    addonAfter={this.renderAddonAfter()}
                     onKeyDown={this.onKeyDown}
                     onBlur={this.onBlur}
                     onFocus={this.onFocus}

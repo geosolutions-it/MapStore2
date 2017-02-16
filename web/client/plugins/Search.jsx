@@ -15,17 +15,20 @@ const assign = require('object-assign');
 const HelpWrapper = require('./help/HelpWrapper');
 const Message = require('./locale/Message');
 
-const {textSearch, resultsPurge, resetSearch, addMarker, searchTextChanged} = require("../actions/search");
+const {resultsPurge, resetSearch, addMarker, searchTextChanged, searchTextStarted} = require("../actions/search");
 const {changeMapView} = require('../actions/map');
 
 const searchSelector = createSelector([
     state => state.search || null
 ], (searchState) => ({
+    error: searchState && searchState.error,
+    loading: searchState && searchState.loading,
     searchText: searchState ? searchState.searchText : ""
 }));
 
 const SearchBar = connect(searchSelector, {
-    onSearch: textSearch,
+    // ONLY FOR SAMPLE - The final one will get from state and simply call searchTextStarted
+    onSearch: searchTextStarted,
     onPurgeResults: resultsPurge,
     onSearchReset: resetSearch,
     onSearchTextChange: searchTextChanged
@@ -97,7 +100,7 @@ const SearchPlugin = connect((state) => ({
         );
     }
 }));
-
+const {searchEpic} = require('../epics/search');
 module.exports = {
     SearchPlugin: assign(SearchPlugin, {
         OmniBar: {
@@ -107,6 +110,7 @@ module.exports = {
             priority: 1
         }
     }),
+    epics: [searchEpic],
     reducers: {
         search: require('../reducers/search'),
         mapInfo: require('../reducers/mapInfo')
