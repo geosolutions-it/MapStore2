@@ -41,7 +41,7 @@ const MeasurePlugin = connect((state) => {
     };
 }, {
     toggleMeasure: changeMeasurement
-})(MeasureComponent);
+}, null, {pure: false})(MeasureComponent);
 
 module.exports = {
     MeasurePlugin: assign(MeasurePlugin, {
