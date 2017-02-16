@@ -104,7 +104,7 @@ var MapGrid = React.createClass({
     },
     render: function() {
         return (
-                <Grid fluid={this.props.fluid}>
+                <Grid id="mapstore-maps-grid" fluid={this.props.fluid}>
                     <Row>
                         {this.props.loading && this.props.maps.length === 0 ? this.renderLoading() : this.renderMaps(this.props.maps || [], this.props.mapType)}
                     </Row>

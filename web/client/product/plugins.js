@@ -60,7 +60,8 @@ module.exports = {
         SaveAsPlugin: require('../plugins/SaveAs'),
         CreateNewMapPlugin: require('../plugins/CreateNewMap'),
         QueryPanelPlugin: require('../plugins/QueryPanel'),
-        FeatureGridPlugin: require('../plugins/FeatureGrid')
+        FeatureGridPlugin: require('../plugins/FeatureGrid'),
+        TutorialPlugin: require('../plugins/Tutorial')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

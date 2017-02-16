@@ -100,6 +100,11 @@
           }
         }
     }, {
+        "name": "Tutorial",
+        "cfg": {
+          "preset": "mapMobile"
+        }
+    }, {
         "name": "BackgroundSwitcher",
         "cfg": {
           "fluid": true,
@@ -327,6 +332,8 @@
             }
           }
         }
+    }, {
+        "name": "Tutorial"
     }, {
         "name": "BackgroundSwitcher",
         "cfg": {

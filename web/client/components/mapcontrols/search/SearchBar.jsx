@@ -95,7 +95,7 @@ let SearchBar = React.createClass({
             placeholder = this.props.placeholder;
         }
         return (
-            <div style={this.props.style} className={"MapSearchBar" + (this.props.className ? " " + this.props.className : "")}>
+            <div id="map-search-bar" style={this.props.style} className={"MapSearchBar" + (this.props.className ? " " + this.props.className : "")}>
                 <Input
                     key="search-input"
                     placeholder={placeholder}
