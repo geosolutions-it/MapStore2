@@ -12,7 +12,31 @@
 .user-thumb .gridcard-tools,.group-thumb .gridcard-tools {
     right: 0
 }
+.user-data-container {
+    display: flex;
+    width: 100%;
+}
+.user-thumb .role-containter{
+    width: 50px;
+}
+.user-thumb .avatar-containter{
+    width: 50px;
+}
+.user-thumb  .groups-container {
+    white-space: nowrap;
+    overflow: hidden;
+}
+.user-thumb  .groups-container .groups-list{
+    width: 100%;
+    max-height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 
+.user-thumb .groups-container .groups-list .group-item {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
 .group-thumb .group-thumb-description {
     /* ellipsis for description */
     margin: 10px;

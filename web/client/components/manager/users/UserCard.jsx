@@ -34,7 +34,9 @@ const UserCard = React.createClass({
                 backgroundPosition: "center",
                 backgroundRepeat: "repeat-x"
             },
-            innerItemStyle: {"float": "left", margin: "10px"}
+            innerItemStyle: {"float": "left",
+                margin: "10px"
+            }
         };
     },
     renderStatus() {
@@ -46,17 +48,18 @@ const UserCard = React.createClass({
        </div>);
     },
     renderGroups() {
-        return (<div key="groups" style={this.props.innerItemStyle}><div><strong><Message msgId="users.groupTitle"/></strong></div>
-    {this.props.user && this.props.user.groups ? this.props.user.groups.map((group)=> (<div key={"group-" + group.id}>{group.groupName}</div>)) : null}
+        return (<div key="groups" className="groups-container" style={this.props.innerItemStyle}><div><strong><Message msgId="users.groupTitle"/></strong></div>
+    <div className="groups-list">{this.props.user && this.props.user.groups ? this.props.user.groups.map((group) => (<div className="group-item" key={"group-" + group.id}>{group.groupName}</div>)) : null}</div>
+
      </div>);
     },
     renderRole() {
-        return (<div key="role" style={this.props.innerItemStyle}><div><strong><Message msgId="users.roleTitle"/></strong></div>
+        return (<div key="role" className="role-containter" style={this.props.innerItemStyle}><div><strong><Message msgId="users.roleTitle"/></strong></div>
             {this.props.user.role}
         </div>);
     },
     renderAvatar() {
-        return (<div key="avatar" style={this.props.innerItemStyle} ><Button bsStyle="primary" type="button" className="square-button">
+        return (<div key="avatar" className="avatar-containter" style={this.props.innerItemStyle} ><Button bsStyle="primary" type="button" className="square-button">
             <Glyphicon glyph="user" />
             </Button></div>);
     },
@@ -65,9 +68,11 @@ const UserCard = React.createClass({
            <GridCard className="user-thumb" style={this.props.style} header={this.props.user.name}
                 actions={this.props.actions}
                >
-            {this.renderAvatar()}
-            {this.renderRole()}
-             {this.renderGroups()}
+            <div className="user-data-container">
+                {this.renderAvatar()}
+                {this.renderRole()}
+                {this.renderGroups()}
+            </div>
              {this.renderStatus()}
            </GridCard>
         );
