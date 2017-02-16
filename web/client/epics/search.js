@@ -20,7 +20,7 @@ const searchEpic = action$ =>
             Rx.Observable.forkJoin(
                 (action.services || [ {type: "nominatim"} ])
                     .map( service => services[service.type](action.searchText, service.options)
-                    .then( (response= []) => response.map(result => ({...result, __SERVICE__: service})).slice(0, service.max || 10 / services.length) )
+                    .then( (response= []) => response.map(result => ({...result, __SERVICE__: service})) )
                 )
             ).concatAll()
             // ----[a]------------------
