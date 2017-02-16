@@ -59,7 +59,8 @@ describe('Leaflet MeasurementSupport', () => {
         , msNode);
         expect(cmp).toExist();
         expect(L.drawLocal).toEqual(myMessages);
-        // restoring old value of drawLocal becasue other test would fail otherwise
+        // restoring old value of drawLocal because other test would fail otherwise.
+        // L is global so drawLocal need to be restore to default value
         L.drawLocal = drawLocal;
     });
 
@@ -78,7 +79,6 @@ describe('Leaflet MeasurementSupport', () => {
                 map={map}
                 projection={proj}
                 measurement={measurement}
-                messages={null}
                 changeMeasurementState={() => {}}
             />
         , msNode);
