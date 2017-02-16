@@ -9,6 +9,7 @@
 const assign = require('object-assign');
 const {omit, isObject, head, isArray, isString} = require('lodash');
 const {combineReducers} = require('redux');
+const {combineEpics} = require('redux-observable');
 
 const {memoize, get} = require('lodash');
 
@@ -118,11 +119,16 @@ const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, load
 
 const getReducers = (plugins) => Object.keys(plugins).map((name) => plugins[name].reducers)
                             .reduce((previous, current) => assign({}, previous, current), {});
-
+const getEpics = (plugins) => Object.keys(plugins).map((name) => plugins[name].epics)
+                            .reduce((previous = [], current = []) => [ ...previous, ...current], []);
 const PluginsUtils = {
     combineReducers: (plugins, reducers) => {
         const pluginsReducers = getReducers(plugins);
         return combineReducers(assign({}, reducers, pluginsReducers));
+    },
+    combineEpics: (plugins, epics = []) => {
+        const pluginEpics = getEpics(plugins);
+        return combineEpics(...[ ...pluginEpics, ...epics]);
     },
     getReducers,
     filterState,
