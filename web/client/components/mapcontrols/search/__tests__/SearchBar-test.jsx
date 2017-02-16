@@ -140,4 +140,11 @@ describe("test the SearchBar", () => {
         expect(spy.calls.length).toEqual(1);
         expect(spy).toHaveBeenCalledWith('test', searchOptions);
     });
+    it('test error and loading status', () => {
+        var TestUtils = React.addons.TestUtils;
+        const tb = ReactDOM.render(<SearchBar loading={true} error={{message: "TEST_ERROR"}}/>, document.getElementById("container"));
+        expect(tb).toExist();
+        let error = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(tb, "searcherror")[0]);
+        expect(error).toExist();
+    });
 });

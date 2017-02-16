@@ -11,6 +11,24 @@ const urlUtil = require('url');
 const assign = require('object-assign');
 
 const Api = {
+    /**
+     * Simple getFeature using http GET method with json format
+     */
+    getFeatureSimple: function(baseUrl, params) {
+        return axios.get(baseUrl + '?service=WFS&version=1.1.0&request=GetFeature', {
+            params: assign({
+                    service: "WFS",
+                    version: "1.1.0",
+                    request: "GetFeature",
+                    format: "application/json"
+                }, params)
+        }).then((response) => {
+            if (typeof response.data !== 'object') {
+                return JSON.parse(response.data);
+            }
+            return response.data;
+        });
+    },
     describeFeatureType: function(url, typeName) {
         const parsed = urlUtil.parse(url, true);
         const describeLayerUrl = urlUtil.format(assign({}, parsed, {
