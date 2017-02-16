@@ -13,7 +13,11 @@
  3. Copy a code to embed the map in your site (using an iframe).
  4. Using QR-Code for mobile devices.
 */
-
+/**
+ *
+ * @class
+ * @ignore
+ */
 const React = require('react');
 
 const {connect} = require('react-redux');
