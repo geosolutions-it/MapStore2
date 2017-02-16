@@ -31,6 +31,10 @@ Then you can access MapStore2 using the following URL (assuming the web containe
 
 Use the default credentials (admin / admin) to login and start creating your maps!
 
+Documentation
+-------------
+You can find more documentaion about how to build, install or develop with MapStore 2 on the [documentation site](https://geosolutions-it.github.io/MapStore2/).
+
 License
 ------------
 MapStore 2 is Free and Open Source software, it is based on OpenLayers 3, Leaflet and [ReactJS](https://facebook.github.io/react/), and is licensed under the Simplified BSD License.
@@ -78,7 +82,7 @@ Build the deployable war:
 
 Deploy the generated mapstore.war file (in web/target) to your favourite J2EE container (e.g. Tomcat).
 
-Read more on the [wiki](https://github.com/geosolutions-it/MapStore2/wiki).
+Read more on the [documentation site](https://geosolutions-it.github.io/MapStore2/).
 
 Professional Support
 ---------------------
