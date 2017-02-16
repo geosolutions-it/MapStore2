@@ -37,6 +37,7 @@ const OpenlayersLayer = React.createClass({
     componentDidMount() {
         this.valid = true;
         this.tilestoload = 0;
+        this.imagestoload = 0;
         this.createLayer(this.props.type, this.props.options, this.props.position);
     },
     componentWillReceiveProps(newProps) {
@@ -145,6 +146,27 @@ const OpenlayersLayer = React.createClass({
                 this.tilestoload--;
                 this.props.onLayerError(options.id);
                 if (this.tilestoload === 0) {
+                    this.props.onLayerLoad(options.id, {error: event});
+                }
+            });
+            this.layer.getSource().on('imageloadstart', () => {
+                if (this.imagestoload === 0) {
+                    this.props.onLayerLoading(options.id);
+                    this.imagestoload++;
+                } else {
+                    this.imagestoload++;
+                }
+            });
+            this.layer.getSource().on('imageloadend', () => {
+                this.imagestoload--;
+                if (this.imagestoload === 0) {
+                    this.props.onLayerLoad(options.id);
+                }
+            });
+            this.layer.getSource().on('imageloaderror', (event) => {
+                this.imagestoload--;
+                this.props.onLayerError(options.id);
+                if (this.imagestoload === 0) {
                     this.props.onLayerLoad(options.id, {error: event});
                 }
             });
