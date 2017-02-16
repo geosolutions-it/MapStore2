@@ -48,6 +48,22 @@ describe('Leaflet MeasurementSupport', () => {
         expect(cmp).toExist();
     });
 
+    it('test rendering', () => {
+        let myMessages = {message: "message"};
+        let drawLocal = L.drawLocal;
+        L.drawLocal = null;
+        const cmp = ReactDOM.render(
+            <MeasurementSupport
+                messages={myMessages}
+            />
+        , msNode);
+        expect(cmp).toExist();
+        expect(L.drawLocal).toEqual(myMessages);
+        // restoring old value of drawLocal because other test would fail otherwise.
+        // L is global so drawLocal need to be restore to default value
+        L.drawLocal = drawLocal;
+    });
+
     it('test if a new layer is added to the map in order to allow drawing.', () => {
         let map = L.map("map", {
             center: [51.505, -0.09],
