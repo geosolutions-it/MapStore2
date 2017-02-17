@@ -15,7 +15,7 @@ const assign = require('object-assign');
 const HelpWrapper = require('./help/HelpWrapper');
 const Message = require('./locale/Message');
 
-const {resultsPurge, resetSearch, addMarker, searchTextChanged, searchTextStarted} = require("../actions/search");
+const {resultsPurge, resetSearch, addMarker, searchTextChanged, textSearch} = require("../actions/search");
 const {changeMapView} = require('../actions/map');
 
 const searchSelector = createSelector([
@@ -27,8 +27,8 @@ const searchSelector = createSelector([
 }));
 
 const SearchBar = connect(searchSelector, {
-    // ONLY FOR SAMPLE - The final one will get from state and simply call searchTextStarted
-    onSearch: searchTextStarted,
+    // ONLY FOR SAMPLE - The final one will get from state and simply call textSearch
+    onSearch: textSearch,
     onPurgeResults: resultsPurge,
     onSearchReset: resetSearch,
     onSearchTextChange: searchTextChanged

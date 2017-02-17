@@ -15,13 +15,13 @@ var {
     searchResultLoaded,
     searchTextLoading,
     searchResultError,
-    searchTextStarted
+    textSearch
 } = require('../search');
 
 describe('Test correctness of the search actions', () => {
 
     it('text search started', () => {
-        const action = searchTextStarted(true);
+        const action = textSearch(true);
         expect(action.type).toBe(TEXT_SEARCH_STARTED);
     });
     it('text search loading', () => {

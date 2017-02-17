@@ -8,6 +8,13 @@ var controls = require('../reducers/controls');
 var mousePosition = require('../../../reducers/mousePosition');
 var searchResults = require('../../../reducers/search');
 
+const {createEpicMiddleware, combineEpics } = require('redux-observable');
+
+const {searchEpic} = require('../../../epics/search');
+
+const rootEpic = combineEpics(searchEpic);
+const epicMiddleware = createEpicMiddleware(rootEpic);
+
  // reducers
 const reducers = combineReducers({
     mapConfig,
@@ -19,7 +26,7 @@ const reducers = combineReducers({
 });
 
 // compose middleware(s) to createStore
-let finalCreateStore = applyMiddleware(thunkMiddleware)(createStore);
+let finalCreateStore = applyMiddleware(thunkMiddleware, epicMiddleware)(createStore);
 
 // export the store with the given reducers (and middleware applied)
 module.exports = finalCreateStore(reducers, {});
