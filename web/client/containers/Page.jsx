@@ -47,20 +47,14 @@ const Page = React.createClass({
     },
     render() {
         let pluginsConfig = {
-            desktop: [...(this.props.pagePluginsConfig.desktop).filter((tool) => !this.isBottom(tool)), ...this.props.pluginsConfig.desktop, ...(this.props.pagePluginsConfig.desktop).filter(this.isBottom)],
-            mobile: [...(this.props.pagePluginsConfig.mobile).filter((tool) => !this.isBottom(tool)), ...this.props.pluginsConfig.mobile, ...(this.props.pagePluginsConfig.desktop).filter(this.isBottom)]
+            desktop: [...this.props.pagePluginsConfig.desktop, ...this.props.pluginsConfig.desktop],
+            mobile: [...this.props.pagePluginsConfig.mobile, ...this.props.pluginsConfig.mobile]
         };
         return (<PluginsContainer key="{this.props.id}" id={"page-" + this.props.id} className={"page page-" + this.props.id}
             pluginsConfig={pluginsConfig}
             plugins={this.props.plugins}
             params={this.props.params}
             />);
-    },
-    isBottom(tool) {
-        if ( tool.cfg ) {
-            return tool.cfg.bottom;
-        }
-        return false;
     }
 });
 

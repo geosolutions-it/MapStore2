@@ -108,6 +108,7 @@ module.exports = {
         id: "groupmanager",
         name: 'groupmanager',
         position: 1,
+        priority: 1,
         title: <Message msgId="usergroups.manageGroups" />,
         glyph: "1-group-mod"
     }}),

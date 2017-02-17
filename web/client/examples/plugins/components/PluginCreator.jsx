@@ -48,7 +48,7 @@ const PluginCreator = React.createClass({
     },
     render() {
         return (<li style={{border: "solid 1px lightgrey", borderRadius: "3px", paddingLeft: "10px", paddingRight: "10px", marginBottom: "3px", marginRight: "10px"}} key="plugin-creator">
-        <Button bsSize="small" onClick={this.toggleCfg}><Glyphicon glyph={this.state.configVisible ? "minus" : "plus"}/></Button>
+        <Button bsSize="small" bsStyle="primary" onClick={this.toggleCfg}><Glyphicon glyph={this.state.configVisible ? "minus" : "plus"}/></Button>
           <Input className="pluginEnable" type="checkbox" name="toolscontainer"
               disabled={true}
               checked={true}
@@ -67,7 +67,7 @@ const PluginCreator = React.createClass({
                           mode: {name: "javascript"},
                           lineNumbers: true
                       }}/>
-                  <Button key="apply-cfg" onClick={this.applyCode}>Apply</Button>
+                  <Button key="apply-cfg" bsStyle="primary" onClick={this.applyCode}>Apply</Button>
                   <div className="error">{this.props.error}</div>
                 </Modal.Body>
             </Modal>

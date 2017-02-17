@@ -46,7 +46,11 @@ const ManagerMenu = React.createClass({
     getDefaultProps() {
         return {
             id: "mapstore-burger-menu",
-            entries: [],
+            entries: [{
+                "msgId": "users.title",
+                "glyph": "1-group-mod",
+                "path": "/manager/usermanager"
+            }],
             role: "",
             onItemClick: () => {},
             itemSelected: () => {},

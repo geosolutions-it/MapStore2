@@ -25,7 +25,10 @@ var About = React.createClass({
                 right: "0px",
                 margin: "8px"
             },
-            modalConfig: {}
+            modalConfig: {
+                useModal: false,
+                closeGlyph: "1-close"
+            }
         };
     },
     render() {

@@ -20,7 +20,7 @@ const Catalog = React.createClass({
         active: React.PropTypes.bool,
         formats: React.PropTypes.array,
         format: React.PropTypes.string,
-        searchOnStarup: React.PropTypes.bool,
+        searchOnStartup: React.PropTypes.bool,
         onSearch: React.PropTypes.func,
         onReset: React.PropTypes.func,
         onChangeFormat: React.PropTypes.func,
@@ -77,7 +77,7 @@ const Catalog = React.createClass({
         };
     },
     componentDidMount() {
-        if (this.props.searchOnStarup) {
+        if (this.props.searchOnStartup) {
             this.props.onSearch(this.props.format, this.getCatalogUrl(), 1, this.props.pageSize, "");
         }
     },

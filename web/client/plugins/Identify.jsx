@@ -63,7 +63,7 @@ module.exports = {
             name: 'info',
             position: 6,
             tooltip: "info.tooltip",
-            icon: <Glyphicon glyph="info-sign"/>,
+            icon: <Glyphicon glyph="map-marker"/>,
             help: <Message msgId="helptexts.infoButton"/>,
             toggle: true
         },

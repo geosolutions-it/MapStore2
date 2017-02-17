@@ -51,7 +51,8 @@ var ZoomToMaxExtentButton = React.createClass({
             btnType: 'normal',
             useInitialExtent: false,
             tooltipPlace: "left",
-            bsStyle: "default"
+            bsStyle: "default",
+            className: "square-button"
         };
     },
     render() {

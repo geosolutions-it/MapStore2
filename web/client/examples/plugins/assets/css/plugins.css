@@ -72,3 +72,7 @@ html, body, #container, #map {
 .fade.in.modal {
     z-index: 10000;
 }
+
+.checkbox {
+    padding-left: 5px;
+}

@@ -39,9 +39,9 @@ const SaveButton = React.createClass({
     },
     render() {
         return (<div className="save">
-            <Button onClick={this.save} disabled={this.state.savename === ''}>Save</Button>
+            <Button onClick={this.save} bsStyle="primary" disabled={this.state.savename === ''}>Save</Button>
             <Input ref="savename" onChange={this.onChangeSaveName} type="text"/>
-            <Button onClick={this.load} disabled={this.state.loadname === ''}>Load</Button>
+            <Button onClick={this.load} bsStyle="primary" disabled={this.state.loadname === ''}>Load</Button>
             <Input ref="loadname" onChange={this.onChangeLoadName} type="select">
                 {this.renderSaved()}
             </Input>

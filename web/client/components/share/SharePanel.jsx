@@ -37,7 +37,8 @@ let SharePanel = React.createClass({
     getDefaultProps() {
         return {
             title: <Message msgId="share.titlePanel"/>,
-            onClose: () => {}
+            onClose: () => {},
+            closeGlyph: "1-close"
         };
     },
     render() {

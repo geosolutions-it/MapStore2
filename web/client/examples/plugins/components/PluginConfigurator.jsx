@@ -67,13 +67,13 @@ const PluginConfigurator = React.createClass({
                     mode: {name: "javascript", json: true},
                     lineNumbers: true
                 }}/>,
-            <Button key="apply-cfg" onClick={this.applyCfg}>Apply</Button>,
-            <Button key="help-cfg" onClick={this.showProps}><Glyphicon glyph="question-sign"/></Button>
+            <Button key="apply-cfg" bsStyle="primary" onClick={this.applyCfg}>Apply</Button>,
+            <Button key="help-cfg" bsStyle="primary" onClick={this.showProps}><Glyphicon glyph="question-sign"/></Button>
         ] : null;
     },
     render() {
         return (<li style={{border: "solid 1px lightgrey", borderRadius: "3px", paddingLeft: "10px", paddingRight: "10px", marginBottom: "3px", marginRight: "10px"}} key={this.props.pluginName + "enable"}>
-            <Button bsSize="small" onClick={this.toggleCfg}><Glyphicon glyph={this.state.configVisible ? "minus" : "plus"}/></Button>
+            <Button bsSize="small" bsStyle="primary" onClick={this.toggleCfg}><Glyphicon glyph={this.state.configVisible ? "minus" : "plus"}/></Button>
             <Input className="pluginEnable" type="checkbox" name="toolscontainer"
                 disabled={this.props.pluginName === 'Map'}
                 checked={this.props.pluginsCfg.indexOf(this.props.pluginName) !== -1}

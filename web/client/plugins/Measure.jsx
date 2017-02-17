@@ -60,9 +60,13 @@ module.exports = {
         DrawerMenu: {
             name: 'measurement',
             position: 3,
+            glyph: "1-stilo",
             icon: <img src={lineRuleIcon} />,
             title: 'measureComponent.title',
             showPanel: false,
+            buttonConfig: {
+                buttonClassName: "square-button no-border"
+            },
             priority: 2
         }
     }),

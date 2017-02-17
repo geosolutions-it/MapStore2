@@ -72,8 +72,8 @@ const MeasureResults = React.createClass({
                 overflow: "auto"
             },
             panelClassName: "drawer-menu-panel",
-            withPanelAsContainer: true,
-            closeGlyph: ""
+            withPanelAsContainer: false,
+            closeGlyph: "1-close"
         };
     },
     shouldComponentUpdate(nextProps) {

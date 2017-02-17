@@ -44,8 +44,8 @@ const ShapeFile = React.createClass({
     getDefaultProps() {
         return {
             id: "mapstore-shapefile-upload",
-            wrap: false,
-            wrapWithPanel: true,
+            wrap: true,
+            wrapWithPanel: false,
             panelStyle: {
                 minWidth: "360px",
                 zIndex: 100,
@@ -57,7 +57,7 @@ const ShapeFile = React.createClass({
             panelClassName: "toolbar-panel",
             visible: false,
             toggleControl: () => {},
-            closeGlyph: "",
+            closeGlyph: "1-close",
             buttonSize: "small"
         };
     },

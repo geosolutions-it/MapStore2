@@ -81,10 +81,13 @@ const Identify = React.createClass({
             changeMousePointer: () => {},
             showRevGeocode: () => {},
             hideRevGeocode: () => {},
+            containerProps: {
+                continuous: false
+            },
             showModalReverse: false,
             reverseGeocodeData: {},
-            enableRevGeocode: false,
-            wrapRevGeocode: true,
+            enableRevGeocode: true,
+            wrapRevGeocode: false,
             queryableLayersFilter: MapInfoUtils.defaultQueryableFilter,
             style: {
                 position: "absolute",
@@ -105,12 +108,13 @@ const Identify = React.createClass({
                 "filter",
                 "propertyName"
             ],
-            panelClassName: "panel default-panel",
-            headerClassName: "panel-heading",
-            bodyClassName: "panel-body",
-            asPanel: true,
-            headerGlyph: "info-sign",
-            closeGlyph: "",
+            panelClassName: "modal-dialog info-panel modal-content",
+            headerClassName: "modal-header",
+            bodyClassName: "modal-body info-wrap",
+            asPanel: false,
+            headerGlyph: "",
+            closeGlyph: "1-close",
+            className: "square-button",
             allowMultiselection: false
         };
     },

@@ -59,12 +59,15 @@ const SettingsButton = React.createClass({
                 language: true,
                 history: true
             },
+            overrideSettings: {
+                history: false
+            },
             items: [],
             style: {
                 width: "300px"
             },
             wrap: false,
-            wrapWithPanel: true,
+            wrapWithPanel: false,
             panelStyle: {
                 minWidth: "300px",
                 zIndex: 100,
@@ -77,7 +80,7 @@ const SettingsButton = React.createClass({
             panelClassName: "toolbar-panel",
             visible: false,
             toggleControl: () => {},
-            closeGlyph: ""
+            closeGlyph: "1-close"
         };
     },
     renderSettings() {

@@ -20,7 +20,7 @@ const GlobalSpinner = React.createClass({
         return {
             id: "mapstore-globalspinner",
             loading: false,
-            className: "mapstore-globalspinner",
+            className: "ms2-loading",
             spinner: "circle"
         };
     },

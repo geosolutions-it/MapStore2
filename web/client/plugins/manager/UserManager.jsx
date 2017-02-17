@@ -107,6 +107,7 @@ module.exports = {
         id: "usermanager",
         name: 'usermanager',
         position: 1,
+        priority: 1,
         title: <Message msgId="users.manageUsers" />,
         glyph: "1-user-mod"
     }}),

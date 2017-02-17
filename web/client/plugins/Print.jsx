@@ -96,9 +96,10 @@ const Print = React.createClass({
         messages: React.PropTypes.object
     },
     getDefaultProps() {
+
         return {
             withContainer: true,
-            withPanelAsContainer: true,
+            withPanelAsContainer: false,
             title: 'print.paneltitle',
             toggleControl: () => {},
             onBeforePrint: () => {},
@@ -128,18 +129,25 @@ const Print = React.createClass({
                 regex: /landscape/
             }],
             usePreview: true,
-            mapPreviewOptions: {},
-            syncMapPreview: false,
-            useFixedScales: true,
+            mapPreviewOptions: {
+                enableScalebox: false,
+                enableRefresh: false
+            },
+            syncMapPreview: true,
+            useFixedScales: false,
             scales: [],
             ignoreLayers: ["google", "bing"],
             defaultBackground: "osm",
-            closeGlyph: "",
+            closeGlyph: "1-close",
             submitConfig: {
                 buttonConfig: {
-                    bsSize: "large"
+                  bsSize: "small",
+                  bsStyle: "primary"
                 },
-                glyph: "print"
+                glyph: ""
+            },
+            previewOptions: {
+                buttonStyle: "primary"
             },
             style: {}
         };

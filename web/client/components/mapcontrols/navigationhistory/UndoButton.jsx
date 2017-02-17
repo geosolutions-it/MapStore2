@@ -28,8 +28,11 @@ var UndoBtn = React.createClass({
             id: "undo-btn",
             onClick: () => {},
             tooltipPlace: "left",
-            glyph: "step-backward",
-            buttonStyle: "default"
+            glyph: "1-screen-backward",
+            buttonStyle: "primary",
+            btnConfig: {
+                className: "square-button"
+            }
         };
     },
     onClick() {

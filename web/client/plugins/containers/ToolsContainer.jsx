@@ -45,7 +45,8 @@ const ToolsContainer = React.createClass({
         eventSelector: React.PropTypes.string,
         panelStyle: React.PropTypes.object,
         panelClassName: React.PropTypes.string,
-        activePanel: React.PropTypes.string
+        activePanel: React.PropTypes.string,
+        toolCfg: React.PropTypes.object
     },
     contextTypes: {
         messages: React.PropTypes.object,
@@ -65,8 +66,15 @@ const ToolsContainer = React.createClass({
             eventSelector: "onClick",
             panelStyle: {},
             panelClassName: "tools-container-panel",
-            toolSize: null
+            toolSize: null,
+            toolCfg: {}
         };
+    },
+    getToolConfig(tool) {
+        if (tool.tool) {
+            return {};
+        }
+        return this.props.toolCfg;
     },
     getTool(tool) {
         // tool attribute, if boolean, tells to render directly the plugin
@@ -108,9 +116,10 @@ const ToolsContainer = React.createClass({
             const tooltip = tool.tooltip ? <Message msgId={tool.tooltip}/> : null;
 
             const Tool = this.getTool(tool);
+            const toolCfg = this.getToolConfig(tool);
 
             return this.addTooltip(
-                <Tool tooltip={tooltip} btnSize={this.props.toolSize} bsStyle={this.props.toolStyle} help={help} key={tool.name || ("tool" + i)} mapType={this.props.mapType}
+                <Tool {...toolCfg} tooltip={tooltip} btnSize={this.props.toolSize} bsStyle={this.props.toolStyle} help={help} key={tool.name || ("tool" + i)} mapType={this.props.mapType}
                     {...tool.cfg} items={tool.items || []}>
                     {(tool.cfg && tool.cfg.glyph) ? <Glyphicon glyph={tool.cfg.glyph}/> : tool.icon}{help} {tool.text}
                 </Tool>,
