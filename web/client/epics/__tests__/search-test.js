@@ -11,7 +11,7 @@ var expect = require('expect');
 
 const configureMockStore = require('redux-mock-store').default;
 const { createEpicMiddleware } = require('redux-observable');
-const { searchTextStarted, TEXT_SEARCH_RESULTS_LOADED, TEXT_SEARCH_LOADING } = require('../../actions/search');
+const { textSearch, TEXT_SEARCH_RESULTS_LOADED, TEXT_SEARCH_LOADING } = require('../../actions/search');
 const {searchEpic} = require('../search');
 const epicMiddleware = createEpicMiddleware(searchEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -29,7 +29,7 @@ describe('searchEpic', () => {
 
     it('produces the search epic', (done) => {
         let action = {
-            ...searchTextStarted("TEST"),
+            ...textSearch("TEST"),
             services: [{
                 type: 'wfs',
                 options: {
