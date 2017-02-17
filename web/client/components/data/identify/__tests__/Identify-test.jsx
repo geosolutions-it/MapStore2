@@ -42,7 +42,7 @@ describe('Identify', () => {
 
         expect(identify).toExist();
         const dom = ReactDOM.findDOMNode(identify);
-        expect(dom.parentNode.getElementsByClassName('panel').length).toBe(1);
+        expect(dom.parentNode.getElementsByClassName('info-panel').length).toBe(1);
     });
 
     it('creates the Identify component with missing responses', () => {

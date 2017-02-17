@@ -11,35 +11,38 @@ const PropTypes = React.PropTypes;
 const {Modal, Button} = require('react-bootstrap');
 
 const GeocodeViewer = (props) => {
-    /* lngCorrected is the converted longitude in order to have the value between
-       the range (-180 / +180).
-    */
-    let lngCorrected = Math.round(props.latlng.lng * 100000) / 100000;
-    /* the following formula apply the converion */
-    lngCorrected = lngCorrected - (360) * Math.floor(lngCorrected / (360) + 0.5);
-    return (
-        <div>
-            <span>Lat: {Math.round(props.latlng.lat * 100000) / 100000 } - Long: { lngCorrected }</span>
-            <Button
-                style={{"float": "right"}}
-                bsStyle="primary"
-                bsSize="small"
-                onClick={() => props.showRevGeocode({lat: props.latlng.lat, lng: lngCorrected})} >
-                {props.identifyRevGeocodeSubmitText}
-            </Button>
-            <Modal {...props.modalOptions} show={props.showModalReverse} bsSize="large" container={document.getElementById("body")}>
-                <Modal.Header>
-                    <Modal.Title>{props.identifyRevGeocodeModalTitle}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body >
-                    <p>{props.revGeocodeDisplayName}</p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button bsSize="small" style={{"float": "right"}} bsStyle="primary" onClick={props.hideRevGeocode}>{props.identifyRevGeocodeCloseText}</Button>
-                </Modal.Footer>
-            </Modal>
-        </div>
-    );
+    if (props.latlng) {
+        /* lngCorrected is the converted longitude in order to have the value between
+           the range (-180 / +180).
+        */
+        let lngCorrected = Math.round(props.latlng.lng * 100000) / 100000;
+        /* the following formula apply the converion */
+        lngCorrected = lngCorrected - (360) * Math.floor(lngCorrected / (360) + 0.5);
+        return (
+            <div>
+                <span>Lat: {Math.round(props.latlng.lat * 100000) / 100000 } - Long: { lngCorrected }</span>
+                <Button
+                    style={{"float": "right"}}
+                    bsStyle="primary"
+                    bsSize="small"
+                    onClick={() => props.showRevGeocode({lat: props.latlng.lat, lng: lngCorrected})} >
+                    {props.identifyRevGeocodeSubmitText}
+                </Button>
+                <Modal {...props.modalOptions} show={props.showModalReverse} bsSize="large" container={document.getElementById("body")}>
+                    <Modal.Header>
+                        <Modal.Title>{props.identifyRevGeocodeModalTitle}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body >
+                        <p>{props.revGeocodeDisplayName}</p>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button bsSize="small" style={{"float": "right"}} bsStyle="primary" onClick={props.hideRevGeocode}>{props.identifyRevGeocodeCloseText}</Button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
+        );
+    }
+    return <span/>;
 };
 
 GeocodeViewer.propTypes = {
