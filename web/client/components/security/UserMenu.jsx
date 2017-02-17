@@ -53,9 +53,29 @@ const UserMenu = React.createClass({
           displayAttributes: (attr) => {
               return attr.name === "email";
           },
-          className: "user-menu"
+          className: "user-menu",
+          menuProps: {
+              noCaret: true
+          },
+          toolsCfg: [{
+              buttonSize: "small",
+              includeCloseButton: false,
+              useModal: false,
+              closeGlyph: "1-close"
+          }, {
+              buttonSize: "small",
+              includeCloseButton: false,
+              useModal: false,
+              closeGlyph: "1-close"
+          }, {
+              buttonSize: "small",
+              includeCloseButton: false,
+              useModal: false,
+              closeGlyph: "1-close"
+          }]
       };
   },
+
   renderGuestTools() {
       let DropDown = this.props.nav ? NavDropdown : DropdownButton;
       return (<DropDown id="loginButton" className={this.props.className} pullRight bsStyle={this.props.bsStyle} title={this.renderButtonText()} id="dropdown-basic-primary" {...this.props.menuProps}>

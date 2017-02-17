@@ -14,6 +14,7 @@ const QUERY_ERROR = 'QUERY_ERROR';
 const RESET_QUERY = 'RESET_QUERY';
 
 const axios = require('../../../libs/ajax');
+const FilterUtils = require('../../../utils/FilterUtils');
 
 function featureTypeLoaded(typeName, featureType) {
     return {
@@ -102,8 +103,9 @@ function loadFeature(baseUrl, typeName) {
 }
 
 function query(seachURL, data) {
+    const ogcQuery = FilterUtils.toOGCFilter(data.featureTypeName, data, data.ogcVersion, data.sortOptions, data.hits);
     return (dispatch) => {
-        return axios.post(seachURL + '&outputFormat=json', data, {
+        return axios.post(seachURL + '&outputFormat=json', ogcQuery, {
           timeout: 60000,
           headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
         }).then((response) => {

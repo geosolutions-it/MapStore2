@@ -39,8 +39,11 @@ module.exports = {
         DrawerMenu: {
             name: 'backgroundswitcher',
             position: 2,
-            icon: <Glyphicon glyph="globe"/>,
+            icon: <Glyphicon glyph="1-map"/>,
             title: 'background',
+            buttonConfig: {
+                buttonClassName: "square-button no-border"
+            },
             priority: 2
         }
     }),

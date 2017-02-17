@@ -38,7 +38,8 @@ module.exports = {
     AttributionPlugin: assign(Attribution, {
         OmniBar: {
             position: 1,
-            tool: () => <div className="navbar-header"><img className="customer-logo" src={src} height="36" /></div>
+            tool: () => <div className="navbar-header"><img className="customer-logo" src={src} height="36" /></div>,
+            priority: 1
         }
     })
 };

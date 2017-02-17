@@ -28,8 +28,11 @@ var RedoBtn = React.createClass({
             id: "redo-btn",
             onClick: () => {},
             tooltipPlace: "left",
-            glyph: "step-forward",
-            buttonStyle: "default"
+            glyph: "1-screen-forward",
+            buttonStyle: "primary",
+            btnConfig: {
+                className: "square-button"
+            }
         };
     },
     onClick() {

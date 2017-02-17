@@ -47,7 +47,7 @@ const MetadataExplorerComponent = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         active: React.PropTypes.bool,
-        searchOnStarup: React.PropTypes.bool,
+        searchOnStartup: React.PropTypes.bool,
         formats: React.PropTypes.array,
         wrap: React.PropTypes.bool,
         wrapWithPanel: React.PropTypes.bool,
@@ -64,18 +64,18 @@ const MetadataExplorerComponent = React.createClass({
             active: false,
             wrap: false,
             modal: true,
-            wrapWithPanel: true,
+            wrapWithPanel: false,
             panelStyle: {
                 zIndex: 100,
                 overflow: "auto"
             },
             panelClassName: "toolbar-panel",
             toggleControl: () => {},
-            closeGlyph: ""
+            closeGlyph: "1-close"
         };
     },
     render() {
-        const panel = <div role="body" className="modal_window"><Catalog searchOnStarup={this.props.searchOnStarup} active={this.props.active} {...this.props}/></div>;
+        const panel = <div role="body" className="modal_window"><Catalog searchOnStartup={this.props.searchOnStartup} active={this.props.active} {...this.props}/></div>;
         if (this.props.wrap) {
             if (this.props.active) {
                 if (this.props.wrapWithPanel) {

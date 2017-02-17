@@ -9,7 +9,7 @@ const MousePosition = require("../../../components/mapcontrols/mouseposition/Mou
 
 const {changeMapView} = require('../../../actions/map');
 const {changeMousePosition} = require('../../../actions/mousePosition');
-const {textSearch, resultsPurge} = require("../../../actions/search");
+const {textSearch, resultsPurge, searchTextChanged} = require("../../../actions/search");
 const {toggleGraticule, updateMarker} = require('../actions/controls');
 
 const Localized = require('../../../components/I18N/Localized');
@@ -22,6 +22,7 @@ const Viewer = React.createClass({
         // redux store dispatch func
         dispatch: React.PropTypes.func,
         textSearch: React.PropTypes.func,
+        searchTextChanged: React.PropTypes.func,
         resultsPurge: React.PropTypes.func,
         changeMapView: React.PropTypes.func,
         changeMousePosition: React.PropTypes.func,
@@ -34,7 +35,8 @@ const Viewer = React.createClass({
         searchResults: React.PropTypes.array,
         mapStateSource: React.PropTypes.string,
         showGraticule: React.PropTypes.bool,
-        marker: React.PropTypes.object
+        marker: React.PropTypes.object,
+        searchText: React.PropTypes.string
     },
     onSearchClick: function(center) {
         this.props.updateMarker({lng: center.x, lat: center.y});
@@ -79,7 +81,7 @@ const Viewer = React.createClass({
                             }}>
                             <label>Graticule:&nbsp;&nbsp;<input type="checkbox" checked={this.props.showGraticule} onChange={this.props.toggleGraticule}/></label>
                         </div>
-                        <SearchBar key="seachBar" onSearch={this.props.textSearch} onSearchReset={this.props.resultsPurge} />
+                        <SearchBar key="seachBar" searchText={this.props.searchText} onSearchTextChange={this.props.searchTextChanged} onSearch={this.props.textSearch} onSearchReset={this.props.resultsPurge} />
                         <NominatimResultList key="nominatimresults"
                             results={this.props.searchResults}
                             onItemClick={this.onSearchClick}
@@ -111,12 +113,14 @@ module.exports = connect((state) => {
         locale: state.locale ? state.locale.current : null,
         localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined,
         searchResults: state.searchResults && state.searchResults.results ? state.searchResults.results : null,
+        searchText: state.searchResults && state.searchResults.searchText,
         mousePosition: state.mousePosition && state.mousePosition.position || null,
         showGraticule: state.controls && state.controls.graticule || false,
         marker: state.controls && state.controls.marker || null
     };
 }, {
     textSearch,
+    searchTextChanged,
     resultsPurge,
     changeMapView,
     changeMousePosition,

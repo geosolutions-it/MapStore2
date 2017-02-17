@@ -56,11 +56,11 @@ const DrawerMenu = React.createClass({
             id: "mapstore-drawermenu",
             items: [],
             toggleMenu: () => {},
-            glyph: "menu-hamburger",
-            buttonStyle: "default",
+            glyph: "1-stilo",
+            buttonStyle: "primary",
             menuOptions: {},
-            singleSection: false,
-            buttonClassName: "drawer-menu-button",
+            singleSection: true,
+            buttonClassName: "square-button",
             disabled: false
         };
     },

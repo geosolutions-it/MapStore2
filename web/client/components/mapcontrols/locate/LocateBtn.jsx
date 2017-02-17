@@ -34,7 +34,10 @@ const LocateBtn = React.createClass({
             locate: "DISABLED",
             tooltipPlace: "left",
             bsStyle: "default",
-            glyph: "screenshot"
+            glyph: "1-position-1",
+            btnConfig: {
+                className: "square-button"
+            }
         };
     },
     onClick() {

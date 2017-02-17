@@ -83,7 +83,7 @@ let SnapshotPanel = React.createClass({
             timeout: 1000,
             mapType: 'leaflet',
             wrap: false,
-            wrapWithPanel: true,
+            wrapWithPanel: false,
             panelStyle: {
                 minWidth: "720px",
                 zIndex: 100,
@@ -93,8 +93,8 @@ let SnapshotPanel = React.createClass({
                 right: "100px"
             },
             panelClassName: "snapshot-panel",
-            closeGlyph: "",
-            buttonStyle: "default"
+            closeGlyph: "1-close",
+            buttonStyle: "primary"
         };
     },
     shouldComponentUpdate(nextProps) {

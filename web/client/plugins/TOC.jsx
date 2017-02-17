@@ -186,8 +186,13 @@ const LayerTree = React.createClass({
             activateSettingsTool: true,
             activateRemoveLayer: true,
             activateQueryTool: false,
-            visibilityCheckType: "checkbox",
-            settingsOptions: {},
+            visibilityCheckType: "glyph",
+            settingsOptions: {
+                includeCloseButton: false,
+                closeGlyph: "1-close",
+                asModal: false,
+                buttonSize: "small"
+            },
             querypanelEnabled: false
         };
     },
@@ -287,8 +292,12 @@ module.exports = {
         DrawerMenu: {
             name: 'toc',
             position: 1,
+            glyph: "1-layer",
             icon: <img src={layersIcon}/>,
             title: 'layers',
+            buttonConfig: {
+                buttonClassName: "square-button no-border"
+            },
             priority: 2
         }
     }),

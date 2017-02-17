@@ -27,7 +27,10 @@ const Manager = React.createClass({
             items: [],
             mapType: "openlayers",
             selectedTool: "importer",
-            itemSelected: () => {}
+            itemSelected: () => {},
+            navStyle: {
+              flex: "inherit"
+            }
         };
     },
     renderToolIcon(tool) {

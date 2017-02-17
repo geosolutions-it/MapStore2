@@ -36,15 +36,19 @@ const MapPlugin = React.createClass({
         return {
             mapType: 'leaflet',
             actions: {},
-            zoomControl: true,
+            zoomControl: false,
             mapLoadingMessage: "map.loading",
             loadingSpinner: true,
-            tools: ['measurement', 'locate', 'overview', 'scalebar'],
+            tools: ["measurement", "locate", "overview", "scalebar", "draw", "highlight"],
             options: {},
             toolsOptions: {
                 measurement: {},
                 locate: {},
-                scalebar: {},
+                scalebar: {
+                    leaflet: {
+                      position: "bottomright"
+                    }
+                },
                 overview: {
                     overviewOpt: {
                         position: 'bottomright',

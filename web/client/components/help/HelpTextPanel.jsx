@@ -39,8 +39,8 @@ const HelpTextPanel = React.createClass({
             isVisible: false,
             title: 'HELP',
             onClose: () => {},
-            asPanel: true,
-            closeGlyph: ""
+            asPanel: false,
+            closeGlyph: "1-close"
         };
     },
     render() {

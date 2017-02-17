@@ -45,8 +45,8 @@ const Home = React.createClass({
     render() {
         let plugins = ConfigUtils.getConfigProp("plugins") || {};
         let pagePlugins = {
-            "desktop": plugins.page || [],// TODO mesh page plugins with other plugins
-            "mobile": plugins.page || []
+            "desktop": plugins.common || [],// TODO mesh page plugins with other plugins
+            "mobile": plugins.common || []
         };
         let pluginsConfig = {
             "desktop": plugins[this.props.name] || [],// TODO mesh page plugins with other plugins

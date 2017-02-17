@@ -77,8 +77,11 @@ const MeasureComponent = React.createClass({
                 area: {unit: 'sqm', label: 'm²'}
             },
             showResults: true,
-            useButtonGroup: true,
+            useButtonGroup: false,
             withReset: false,
+            lineGlyph: "1-measure-lenght",
+            areaGlyph: "1-measure-area",
+            bearingGlyph: "1-bearing",
             formatLength: (uom, value) => measureUtils.getFormattedLength(uom, value),
             formatArea: (uom, value) => measureUtils.getFormattedArea(uom, value),
             formatBearing: (value) => measureUtils.getFormattedBearingValue(round(value || 0, 6))

@@ -38,7 +38,8 @@ const Toolbar = React.createClass({
         stateSelector: React.PropTypes.string,
         buttonStyle: React.PropTypes.string,
         buttonSize: React.PropTypes.string,
-        pressedButtonStyle: React.PropTypes.string
+        pressedButtonStyle: React.PropTypes.string,
+        btnConfig: React.PropTypes.object
     },
     contextTypes: {
         messages: React.PropTypes.object,
@@ -61,9 +62,12 @@ const Toolbar = React.createClass({
             allVisible: true,
             layout: "vertical",
             stateSelector: "toolbar",
-            buttonStyle: 'default',
+            buttonStyle: 'primary',
             buttonSize: null,
-            pressedButtonStyle: 'primary'
+            pressedButtonStyle: 'success',
+            btnConfig: {
+                className: "square-button"
+            }
         };
     },
     getPanel(tool) {
@@ -85,6 +89,7 @@ const Toolbar = React.createClass({
     },
     render() {
         return (<ToolsContainer id={this.props.id} className={"mapToolbar btn-group-" + this.props.layout}
+            toolCfg={this.props.btnConfig}
             container={AnimatedContainer}
             mapType={this.props.mapType}
             toolStyle={this.props.buttonStyle}

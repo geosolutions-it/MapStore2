@@ -62,11 +62,11 @@ let BackgroundSwitcher = React.createClass({
         return {
             id: "background-switcher",
             icon: <Glyphicon glyph="globe"/>,
-            fluid: false,
+            fluid: true,
             columnProperties: {
-                xs: 6,
-                sm: 4,
-                md: 2
+                xs: 12,
+                sm: 12,
+                md: 12
              }
         };
     },
