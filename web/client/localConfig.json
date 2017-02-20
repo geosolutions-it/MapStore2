@@ -1,10 +1,10 @@
 {
   "proxyUrl": {
     "url": "/mapstore/proxy/?url=",
-    "useCORS": ["http://demo.geo-solutions.it/geoserver"]
+    "useCORS": ["https://demo.geo-solutions.it/geoserver"]
   },
   "geoStoreUrl": "/mapstore/rest/geostore/",
-  "printUrl": "http://demo.geo-solutions.it/geoserver/pdf/info.json",
+  "printUrl": "https://demo.geo-solutions.it/geoserver/pdf/info.json",
   "bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
   "mapquestApiKey": "__API_KEY_MAPQUEST__",
   "initialMapFilter": "",
