@@ -55,6 +55,12 @@ module.exports = {
                 loader: "babel-loader",
                 include: path.join(__dirname, "web", "client")
             }
+        ],
+        rules: [
+            {
+                test: /\.jsx$/,
+                use: 'raw-loader'
+            }
         ]
     },
     devServer: {

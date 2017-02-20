@@ -1,0 +1,66 @@
+#!/usr/bin/env node
+
+/**
+ * This example script expects a path do components/plugins as input,
+ * generating MD documentation files to docs/developer-guide/reference
+ * e.g. node genDocs web/client/components
+ */
+
+var fs = require('fs');
+var path = require('path');
+var docsToMarkdown = require('react-docs-markdown');
+var reactDocs = require('react-docgen');
+var rawLoader = require('raw-loader');
+
+var dir = process.argv[2]
+filelist = []
+
+
+var walkSync = function(dir, filelist) {
+  files = fs.readdirSync(dir);
+  files.forEach(function(file) {
+      if (fs.statSync(path.join(dir, file)).isDirectory()) {
+          filelist = walkSync(path.join(dir, file), filelist);
+      }
+      else {
+          // FIXME: check only jsx files?
+          checkExt(path.join(dir, file), '.jsx')
+      }
+  });
+  return filelist;
+}
+
+function checkExt(file, ext) {
+    if (path.extname(file) == ext) {
+        filelist.concat(file);
+        process.stdout.write(file + '\n');
+        var fileContent = require("raw-loader!./" + file);
+        var componentInfo = reactDocs.parse(fileContent);
+        buildDocs(JSON.parse(componentInfo));
+    }
+}
+
+function buildDocs(api) {
+  // api is an object keyed by filepath. We use the file name as component name.
+  for (var filepath in api) {
+    var name = getComponentName(filepath);
+    // Use fs to write the markdown to dist
+    var md = docsToMarkdown(api[filepath], name);
+    // FIXME: static output folder?
+    fs.writeFile('docs/developer-guide/reference/' + name +'.md', md, (err) => {
+      if (err) throw err;
+    });
+    process.stdout.write(filepath + ' -> ' + name + '.md\n');
+  }
+}
+
+function getComponentName(filepath) {
+  var name = path.basename(filepath);
+  var ext;
+  while ((ext = path.extname(name))) {
+    name = name.substring(0, name.length - ext.length);
+  }
+  return name;
+}
+
+walkSync(dir, filelist)
