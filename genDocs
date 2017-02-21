@@ -10,11 +10,13 @@ var fs = require('fs');
 var path = require('path');
 var docsToMarkdown = require('react-docs-markdown');
 var reactDocs = require('react-docgen');
-var rawLoader = require('raw-loader');
-
-var dir = process.argv[2]
-filelist = []
-
+var spawn = require('child_process').spawn;
+var toc = require('markdown-toc');
+var tocString = "";
+var dir = process.argv[2];
+filelist = [];
+docFileList = [];
+var fileContent = "";
 
 var walkSync = function(dir, filelist) {
   files = fs.readdirSync(dir);
@@ -27,31 +29,44 @@ var walkSync = function(dir, filelist) {
           checkExt(path.join(dir, file), '.jsx')
       }
   });
-  return filelist;
+  // Create TOC at end
+  tocContent = "TOC\n---\n\n"
+  docFileList.forEach(function(file) {
+    var name = getComponentName(file);
+    tocString += toc('# ' + name + '\n\n').content + '\n';
+  });
+  tocContent += tocString;
+  // FIXME: static output folder?
+  fs.writeFile('docs/developer-guide/reference/index.md', tocContent, (err) => {
+      if (err) throw err;
+    });
 }
 
 function checkExt(file, ext) {
     if (path.extname(file) == ext) {
-        filelist.concat(file);
-        process.stdout.write(file + '\n');
-        var fileContent = require("raw-loader!./" + file);
-        var componentInfo = reactDocs.parse(fileContent);
-        buildDocs(JSON.parse(componentInfo));
+        //filelist.concat(file);
+        const docgen = spawn('react-docgen', [ file ]);
+        docgen.stdout.on('data', (data) => {
+          componentInfo = `${data}`;
+          //console.log(componentInfo);
+          if (componentInfo.length > 1) {
+              buildDocs(JSON.parse(data), file);
+          }
+        });
+        docFileList.push(file);
     }
 }
 
-function buildDocs(api) {
-  // api is an object keyed by filepath. We use the file name as component name.
-  for (var filepath in api) {
-    var name = getComponentName(filepath);
-    // Use fs to write the markdown to dist
-    var md = docsToMarkdown(api[filepath], name);
-    // FIXME: static output folder?
-    fs.writeFile('docs/developer-guide/reference/' + name +'.md', md, (err) => {
-      if (err) throw err;
-    });
-    process.stdout.write(filepath + ' -> ' + name + '.md\n');
-  }
+function buildDocs(doc, file) {
+  // Extract filename as component name
+  var name = getComponentName(file);
+  // Use fs to write the markdown to dist
+  var md = docsToMarkdown(doc, name);
+  // FIXME: static output folder?
+  fs.writeFile('docs/developer-guide/reference/' + name +'.md', md, (err) => {
+    if (err) throw err;
+  });
+  console.log(file + ' -> ' + name + '.md');
 }
 
 function getComponentName(filepath) {
