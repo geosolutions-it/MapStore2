@@ -1,15 +1,8 @@
 var path = require("path");
 var DefinePlugin = require("webpack/lib/DefinePlugin");
+var LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 var NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
-var NoErrorsPlugin = require("webpack/lib/NoErrorsPlugin");
-
-var rewriteUrl = function(replacePath) {
-    return function(req, opt) {  // gets called with request and proxy object
-        var queryIndex = req.url.indexOf('?');
-        var query = queryIndex >= 0 ? req.url.substr(queryIndex) : "";
-        req.url = req.path.replace(opt.path, replacePath) + query;
-    };
-};
+var NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
 
 module.exports = {
     entry: {
@@ -23,6 +16,9 @@ module.exports = {
         filename: "[name].js"
     },
     plugins: [
+        new LoaderOptionsPlugin({
+            debug: true
+        }),
         new DefinePlugin({
             "__DEVTOOLS__": true
         }),
@@ -30,22 +26,22 @@ module.exports = {
         new NormalModuleReplacementPlugin(/openlayers$/, path.join(__dirname, "MapStore2", "web", "client", "libs", "openlayers")),
         new NormalModuleReplacementPlugin(/cesium$/, path.join(__dirname, "MapStore2", "web", "client", "libs", "cesium")),
         new NormalModuleReplacementPlugin(/proj4$/, path.join(__dirname, "MapStore2", "web", "client", "libs", "proj4")),
-        new NoErrorsPlugin()
+        new NoEmitOnErrorsPlugin()
     ],
     resolve: {
-      extensions: ["", ".js", ".jsx"]
+      extensions: [".js", ".jsx"]
     },
     module: {
         loaders: [
-            { test: /\.css$/, loader: 'style!css'},
-            { test: /\.less$/, loader: "style!css!less-loader" },
+            { test: /\.css$/, loader: 'style-loader!css-loader'},
+            { test: /\.less$/, loader: "style-loader!css-loader!less-loader" },
             { test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/, loader: "url-loader?mimetype=application/font-woff" },
             { test: /\.(ttf|eot|svg)(\?v=[0-9].[0-9].[0-9])?$/, loader: "file-loader?name=[name].[ext]" },
             { test: /\.(png|jpg|gif)$/, loader: 'url-loader?name=[path][name].[ext]&limit=8192'}, // inline base64 URLs for <=8k images, direct URLs for the rest
             {
                 test: /\.jsx?$/,
                 exclude: /(ol\.js)$|(Cesium\.js)$|(cesium\.js)$/,
-                loader: "react-hot",
+                loader: "react-hot-loader",
                 include: [path.join(__dirname, "js"), path.join(__dirname, "MapStore2", "web", "client")]
             }, {
                 test: /\.jsx?$/,
@@ -56,19 +52,15 @@ module.exports = {
         ]
     },
     devServer: {
-        proxy: [{
-            path: new RegExp("/mapstore/rest/geostore/(.*)"),
-            rewrite: rewriteUrl("/geostore/rest/$1"),
-            host: "mapstore.geo-solutions.it",
-            target: "http://mapstore.geo-solutions.it"
-        }, {
-            path: new RegExp("/mapstore/proxy(.*)"),
-            rewrite: rewriteUrl("/http_proxy/proxy$1"),
-            host: "localhost",
-            target: "http://localhost:8080"
-        }]
+        proxy: {
+            '/mapstore/rest/geostore': {
+                target: "http://dev.mapstore2.geo-solutions.it"
+            },
+            '/mapstore/proxy': {
+                target: "http://dev.mapstore2.geo-solutions.it"
+            }
+        }
     },
 
-    devtool: 'inline-source-map',
-    debug: true
+    devtool: 'eval'
 };
