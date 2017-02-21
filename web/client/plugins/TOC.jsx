@@ -236,12 +236,13 @@ const LayerTree = React.createClass({
         );
     },
     renderQueryPanel() {
-        return (<div>
-            <Button id="query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={this.props.onToggleQuery.bind(this, null, null)}><Glyphicon glyph="arrow-left"/></Button>
-            <SmartQueryForm
-                featureTypeErrorText={<Message msgId="layerProperties.featureTypeError"/>}
-                />
-        </div>);
+        return (
+            <div id="toc-query-container">
+                <Button id="toc-query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={this.props.onToggleQuery.bind(this, null, null)}><Glyphicon glyph="arrow-left"/></Button>
+                <SmartQueryForm
+                    featureTypeErrorText={<Message msgId="layerProperties.featureTypeError"/>}/>
+            </div>
+        );
     },
     render() {
         if (!this.props.groups) {

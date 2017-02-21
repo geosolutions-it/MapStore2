@@ -373,6 +373,7 @@
             "styler": "Erstelle den Stil für die gewählte Ebene"
         },
         "queryform": {
+            "title": "Query Builder",
             "query": "Suche",
             "reset": "Zurücksetzen",
             "query_request_exception": "Abfrage Fehler",

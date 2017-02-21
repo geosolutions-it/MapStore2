@@ -97,7 +97,7 @@ describe('FilterField', () => {
 
         let childNodes = filterFieldDOMNode.actual.childNodes;
 
-        expect(childNodes.length).toBe(3);
+        expect(childNodes.length).toBe(1);
 
         const inputFields = filterFieldDOMNode.actual.getElementsByClassName('rw-input');
         expect(inputFields.length).toBe(4);
@@ -170,7 +170,7 @@ describe('FilterField', () => {
 
         let childNodes = filterFieldDOMNode.actual.childNodes;
 
-        expect(childNodes.length).toBe(3);
+        expect(childNodes.length).toBe(1);
 
         const inputFields = filterFieldDOMNode.actual.getElementsByClassName('rw-input');
         expect(inputFields.length).toBe(4);
@@ -181,7 +181,7 @@ describe('FilterField', () => {
         const operatorSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[2];
         expect(operatorSelect.childNodes[0].nodeValue).toBe("=");
 
-        const valueSelectContainer = filterFieldDOMNode.actual.getElementsByClassName('col-xs-6')[0].childNodes[0];
+        const valueSelectContainer = filterFieldDOMNode.actual.getElementsByClassName('col-xs-5')[0].childNodes[0];
         expect(valueSelectContainer.style.display).toBe('none');
 
     });

@@ -60,7 +60,7 @@ const QueryBuilder = React.createClass({
             attributes: [],
             featureTypeError: "",
             spatialField: {},
-            removeButtonIcon: "glyphicon glyphicon-minus",
+            removeButtonIcon: "glyphicon glyphicon-remove",
             addButtonIcon: "glyphicon glyphicon-plus",
             attributePanelExpanded: true,
             spatialPanelExpanded: true,
@@ -119,7 +119,7 @@ const QueryBuilder = React.createClass({
             return (<div style={{margin: "0 auto", "text-align": "center"}}>{this.props.featureTypeErrorText}</div>);
         }
         return this.props.attributes.length > 0 ? (
-            <div id="queryFormPanel">
+            <div id="query-form-panel">
                 <QueryToolbar
                     params={this.props.params}
                     filterFields={this.props.filterFields}

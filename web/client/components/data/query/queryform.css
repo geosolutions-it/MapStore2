@@ -6,121 +6,348 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-.logicHeader{
-    background-color: #F5F5F5;
-    margin-bottom: 10px;
-    padding-top: 10px;
-    margin-left: 1px;
-    margin-right: 1px;
-}
-.logicHeader .query-remove{
-    float: right;
-    margin-right: 10px;
-    padding-top: 10px;
+/*****************************/
+/* TOC ***********************/
+/*****************************/
+
+#mapstore-drawermenu #toc-query-close-button {
+    float: left;
 }
 
-#queryFormPanel .panel-title{
-    font-size: 16px;
-}
-
-#queryFormPanel .panel-title a{
-    cursor: text;
-    text-decoration:none;
+#mapstore-drawermenu #toc-query-container {
+    background-color: #f7f7f7;
 }
 
 /*****************************/
-/* DRAWER MENU ***************/
+/* END - TOC *****************/
 /*****************************/
-#mapstore-drawermenu #queryFormPanel .queryFormToolbar button:disabled{
-    color: gray;
-}
-#mapstore-drawermenu #queryFormPanel .logicHeader {
+
+/*****************************/
+/* GENERAL SETTINGS **********/
+/*****************************/
+
+#query-form-panel .panel {
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
     margin: 0;
-    background-color: #078aa3;
-    color: white;
-}
-#mapstore-drawermenu #queryFormPanel .logicHeader .query-remove {
-    float: right;
-    padding-top: 0px;
-    top: 10px;
-    margin-right: 10px;
 }
 
-#mapstore-drawermenu #queryFormPanel .remove-filter-button {
+#query-form-panel .panel-body {
+    padding: 0;
+    border: none;
+}
+
+#mapstore-drawermenu #query-form-panel .glyphicon {
+    font-size: 22px;
+}
+
+#query-form-panel .btn-default {
+    background-color: transparent;
+    border-radius: 0;
+    color: #078aa3;
+    border-color: #078aa3;
+}
+
+#query-form-panel .btn-default:hover {
+    background-color: #dedede;
+}
+
+#query-form-panel input.form-control {
+    height: 32px;
+    border: 1px solid #dedede;
+}
+
+#query-form-panel button:disabled {
+    color: #ffffff;
+    background-color: #abc8cd;
+    border-color: transparent;
+}
+
+#query-form-panel button:disabled {
+    color: #ffffff;
+    background-color: #abc8cd;
+    border-color: transparent;
+}
+
+#query-form-panel button span {
+    line-height: 22px;
+    padding: 0 2px 0 2px;
+}
+
+#query-form-panel button .glyphicon {
+    padding: 0;
+}
+
+#query-form-panel .query-buttons {
+    float: right;
+    margin: 4px;
+}
+
+#query-form-panel .filter-buttons {
+    background-color: #f7f7f7;
+    border: none;
+    margin-left: 4px;
+}
+
+#query-form-panel .filter-buttons:hover {
+    background-color: #dedede;
+}
+
+#query-form-panel .remove-filter-button {
     height: 32px;
     width: 32px;
     padding: 0;
-}
-#mapstore-drawermenu #queryFormPanel input.form-control {
-    height: 32px;
+    margin: 2px;
+    border: none;
+    float: right;
 }
 
-#mapstore-drawermenu #queryFormPanel .logicHeader .group_label_a,#mapstore-drawermenu #queryFormPanel .logicHeader .group_label_b {
-    margin: auto 5px;
+#mapstore-drawermenu #query-form-panel .remove-filter-button .glyphicon {
+    font-size: 32px;
+}
+
+#mapstore-drawermenu #query-form-panel .remove-filter-button span {
+    line-height: 32px;
+}
+
+#query-form-panel .close {
+    display: none;
+}
+
+#query-form-panel .form-group {
+    margin-bottom: 0;
+}
+
+#query-form-panel input {
+    border: 1px solid #dedede;
+    border-radius: 4px;
+    padding: 0 4px 0 8px;
+}
+
+/*****************************/
+/* END - GENERAL SETTINGS ****/
+/*****************************/
+
+
+/*****************************/
+/* HEAD QUERY ****************/
+/*****************************/
+
+#query-form-panel {
+    overflow: hidden;
+}
+
+#query-form-panel .query-toolbar {
+    padding: 0;
+    height: 50px;
+    /*border-bottom: 2px dotted #dedede;*/
+    overflow: hidden;
+    background-color: #ffffff;
+    margin-bottom: 20px;
+}
+
+#query-form-panel #query-toolbar-title {
+    float: left;
+    font-size: 20px;
+    margin: 11px 11px 11px 20px;
+    color: #078aa3;
+}
+
+#query-form-panel .queryFormToolbar {
+    margin: 8px;
+}
+
+
+/*****************************/
+/* END - HEAD QUERY **********/
+/*****************************/
+
+
+/*****************************/
+/* BODY QUERY ****************/
+/*****************************/
+
+#query-form-panel .querypanel {
+    background-color: #f7f7f7;
+}
+
+#query-form-panel .querypanel .panel-heading {
+    border: none;
+    color: #333333;
+    text-decoration: underline;
+    padding-left: 11px;
+    background-color: transparent;
+    font-weight: bold;
+}
+
+#query-form-panel .querypanel .panel-heading span {
+    font-size: 14px;
+}
+
+#query-form-panel .querypanel .panel-heading .panel-title:hover {
+    color: #777777;
+}
+
+#query-form-panel .query-content > .container-fluid {
+    margin: 4px 0 4px 0;
+    border-top: 1px dashed #dedede;
+}
+
+#query-form-panel .filter-field-row > div {
+    margin: 0;
+    padding: 4px;
+}
+
+#query-form-panel .filter-field-row .filter-field-row div {
+    margin: 0;
+}
+
+#query-form-panel .filter-logig-header-text {
+    float: left;
+}
+
+#query-form-panel .filter-logig-header-text > span {
+    float: left;
+    margin-top: 7px;
+}
+
+#query-form-panel #spatialFilterPanel .panel {
+    margin: 0;
+}
+
+#query-form-panel #spatialFilterPanel .filter-field-row div > span{
+    line-height: 32px;
+}
+
+#query-form-panel .querypanel > .query-filter-container {
+    margin: 0 30px 20px 20px;
+    background-color: transparent;
+    border-bottom: 1px solid #dedede;
+    padding-bottom: 10px;
+}
+
+#mapstore-drawermenu #query-form-panel .querypanel > .query-filter-container {
+    margin-right: 60px;
+    margin-left: 10px;
 }
 
 /* nested groups */
-#mapstore-drawermenu #queryFormPanel .panel .panel .panel{
+#query-form-panel .panel .panel .panel {
     margin-left: 10px;
 }
-#mapstore-drawermenu #queryFormPanel .panel .panel .panel > .panel-body{
-    border: thin solid #078aa3;
-    margin-top: 1px;
-}
-#mapstore-drawermenu #queryFormPanel .query-content,
-#mapstore-drawermenu #queryFormPanel .query-buttons
-{
-    margin-left: 3px;
-    margin-bottom: 3px;
+
+#query-form-panel .panel  .panel .filter-group-panel {
+    -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    -moz-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    background-color: #ffffff;
+    margin-bottom: 20px;
 }
 
-/* Spatial Selector */
-#mapstore-drawermenu #queryFormPanel .panel.details-panel {
-    width: auto;
-    height: auto;
-}
-#mapstore-drawermenu #queryFormPanel .details-panel .panel-body {
-    padding: 15px;
-}
-#mapstore-drawermenu #queryFormPanel .details-panel.panel{
-    border: 1px solid transparent;
-    border-radius: 4px;
-    -webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
-    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
-}
-#mapstore-drawermenu #queryFormPanel .details-panel.panel-primary {
-    border-color: #078aa3;
-}
-#mapstore-drawermenu #queryFormPanel .query-toolbar{
-    position: absolute;
-    right: 0;
-    top: 42px;
+#query-form-panel .panel  .panel .filter-group-panel button {
+    background-color: #ffffff;
 }
 
-/*****************************/
-/* DRAWER MENU END ***********/
-/*****************************/
+#query-form-panel .panel  .panel .filter-group-panel button:hover {
+    background-color: #dedede;
+}
+/* end - nested groups */
 
-.detail_geom_button{
-    text-align: right;
-    margin-top: 3px;
+#query-form-panel hr {
+    border-top: 1px dashed #dedede;
 }
 
-.detail_geom_label{
-    text-align: left;
+#query-form-panel h5 {
+    font-family: Georgia, serif;
+    font-style: italic;
+    text-align: center;
 }
 
-.details-panel{
-    width: 400px;
-    height: 400px;
-    position: absolute;
-    top: 10px;
-    left: 10px;
+#query-form-panel .filter-text-desc {
+    text-align: center;
 }
 
-.querypanel{
+.querypanel {
     max-height: 660px;
     overflow-x: hidden;
     overflow-y: auto;
     border: none;
 }
+
+/*****************************/
+/* END - BODY QUERY ********/
+/*****************************/
+
+/*****************************/
+/** DETAIL PANEL *************/
+/*****************************/
+
+#query-form-panel div.details-panel {
+    background-color: #ffffff;
+    -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    -moz-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    min-width: 565px;
+}
+
+#query-form-panel .details-panel .detail-header {
+    overflow: hidden;
+    background-color: transparent;
+    text-decoration: none;
+    padding: 4px 4px 8px 8px;
+}
+
+#query-form-panel .details-panel .detail-title span {
+    text-decoration: none;
+    line-height: 32px;
+    font-weight: normal;
+}
+
+#query-form-panel .details-panel button {
+    float: right;
+    border: none;
+    margin-top: 8px;
+    background-color: #ffffff;
+}
+
+#query-form-panel .details-panel button.remove-filter-button {
+    margin-top: 0;
+}
+
+#query-form-panel .details-panel button.remove-filter-button:hover {
+    background-color: #dedede;
+}
+
+#query-form-panel .details-panel button.remove-filter-button span {
+    cursor: pointer;
+}
+
+#query-form-panel .details-panel .container-fluid > .row {
+    margin: 4px 0 4px 0;
+}
+
+#query-form-panel .details-panel .details-circle-attribute-name {
+    padding-top: 6px;
+    float: right;
+    text-transform: lowercase;
+}
+
+#query-form-panel .details-panel .detail-field > div {
+    width: 105px;
+    margin: auto;
+    text-align: center;
+}
+
+#query-form-panel .details-panel .detail-field-title {
+    min-width: 105px;
+    margin: auto;
+    text-align: center;
+}
+
+/*****************************/
+/** END -DETAIL PANEL ********/
+/*****************************/

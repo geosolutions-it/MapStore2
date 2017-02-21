@@ -47,7 +47,7 @@ const NumberField = React.createClass({
     },
     getDefaultProps() {
         return {
-            style: {marginBottom: "15px", borderColor: "#dedede"},
+            style: { borderColor: "#dedede"},
             operator: "=",
             fieldName: null,
             fieldRowId: null,
