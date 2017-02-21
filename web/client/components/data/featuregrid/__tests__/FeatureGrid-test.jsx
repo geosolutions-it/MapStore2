@@ -9,7 +9,7 @@ const React = require("react");
 const expect = require('expect');
 const ReactDOM = require('react-dom');
 const FeatureGrid = require('../FeatureGrid');
-const data = require("json!../../../../test-resources/featureGrid-test-data.json");
+const data = require("json-loader!../../../../test-resources/featureGrid-test-data.json");
 
 const columnDef = [
     {headerName: "Name", field: "properties.NAME_STATE", width: 150, pinned: true}
@@ -79,4 +79,3 @@ describe("Test FeatureGrid Component", () => {
         expect(spy).toHaveBeenCalledWith(params.data);
     });
 });
-

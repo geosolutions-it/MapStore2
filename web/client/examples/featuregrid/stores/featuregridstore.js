@@ -9,7 +9,7 @@
 var DebugUtils = require('../../../utils/DebugUtils');
 
 const {combineReducers} = require('redux');
-const exampleData = require('json!../../../test-resources/featureGrid-test-data.json');
+const exampleData = require('json-loader!../../../test-resources/featureGrid-test-data.json');
 
  // reducers
 const reducers = combineReducers({
