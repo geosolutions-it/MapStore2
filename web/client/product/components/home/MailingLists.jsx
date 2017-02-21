@@ -41,7 +41,7 @@ var MailingLists = React.createClass({
                             </tr>
                             <tr>
                                 <td style={{paddingLeft: "10px", paddingRight: "10px"}}>
-                                    <form action="http://groups.google.com/group/mapstore-users/boxsubscribe">
+                                    <form action="https://groups.google.com/group/mapstore-users/boxsubscribe">
                                         <I18N.Message msgId="home.ml.email"/> <input type="text" name="email" />
                                         <input type="submit" name="sub" value={this.context.messages.home.ml.subscribe} />
                                     </form>
@@ -49,7 +49,7 @@ var MailingLists = React.createClass({
                             </tr>
                             <tr>
                                 <td align="right">
-                                    <a className="link-white-bg" href="http://groups.google.com/group/mapstore-users"><I18N.Message msgId="home.ml.visit_group"/></a>
+                                    <a className="link-white-bg" href="https://groups.google.com/group/mapstore-users"><I18N.Message msgId="home.ml.visit_group"/></a>
                                 </td>
                             </tr>
                             </tbody>
@@ -70,7 +70,7 @@ var MailingLists = React.createClass({
                             </tr>
                             <tr>
                                 <td style={{paddingLeft: "10px", paddingRight: "10px"}}>
-                                    <form action="http://groups.google.com/group/mapstore-developers/boxsubscribe">
+                                    <form action="https://groups.google.com/group/mapstore-developers/boxsubscribe">
                                         <I18N.Message msgId="home.ml.email"/> <input type="text" name="email" />
                                         <input type="submit" name="sub" value={this.context.messages.home.ml.subscribe} />
                                     </form>
@@ -78,7 +78,7 @@ var MailingLists = React.createClass({
                             </tr>
                             <tr>
                                 <td align="right">
-                                    <a className="link-white-bg" href="http://groups.google.com/group/mapstore-developers"><I18N.Message msgId="home.ml.visit_group"/></a>
+                                    <a className="link-white-bg" href="https://groups.google.com/group/mapstore-developers"><I18N.Message msgId="home.ml.visit_group"/></a>
                                 </td>
                             </tr>
                             </tbody>
