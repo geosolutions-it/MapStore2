@@ -106,7 +106,7 @@ describe('GroupField', () => {
         for (let i = 0; i < childNodes.length; i++) {
             let child = childNodes[i];
             expect(
-                child.className === "logicHeader row"
+                child.className === "container-fluid"
                 || child.className === "row"
                 || child.className === "query-content"
                 || child.className === "query-buttons"

@@ -59,9 +59,13 @@ describe('SpatialFilter', () => {
         let combosPanel = spatialFilterDOMNode.actual.getElementsByClassName('panel-body');
         expect(combosPanel).toExist();
 
-        let logicHeader = combosPanel[1].childNodes[0];
+        let containerFluid = combosPanel[1].childNodes[0];
+        expect(containerFluid).toExist();
+        expect(containerFluid.className).toBe("container-fluid");
+
+        let logicHeader = containerFluid.childNodes[0];
         expect(logicHeader).toExist();
-        expect(logicHeader.className).toBe("logicHeader row");
+        expect(logicHeader.className).toBe("logicHeader filter-field-row row");
 
         let operationPanelRows = combosPanel[2].getElementsByClassName('row');
         expect(operationPanelRows.length).toBe(2);

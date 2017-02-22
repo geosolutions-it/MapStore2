@@ -67,14 +67,15 @@ const QueryToolbar = React.createClass({
 
         return (
             <div className="container-fluid query-toolbar">
+                <div id="query-toolbar-title"><I18N.Message msgId={"queryform.title"}/></div>
                 <ButtonToolbar className="queryFormToolbar row-fluid pull-right">
-                    <Button disabled={queryDisabled} id="query" onClick={this.search}>
-                        <Glyphicon glyph="glyphicon glyphicon-search"/>
-                        <span style={{paddingLeft: "2px"}}><strong><I18N.Message msgId={"queryform.query"}/></strong></span>
+                    <Button disabled={!this.props.toolbarEnabled} bsSize="xs" id="reset" onClick={this.reset}>
+                        <Glyphicon glyph="glyphicon glyphicon-refresh"/>
+                        <span><strong><I18N.Message msgId={"queryform.reset"}/></strong></span>
                     </Button>
-                    <Button disabled={!this.props.toolbarEnabled} id="reset" onClick={this.reset}>
-                        <Glyphicon glyph="glyphicon glyphicon-remove"/>
-                        <span style={{paddingLeft: "2px"}}><strong><I18N.Message msgId={"queryform.reset"}/></strong></span>
+                    <Button disabled={queryDisabled} bsSize="xs" id="query" onClick={this.search}>
+                        <Glyphicon glyph="glyphicon glyphicon-search"/>
+                        <span><strong><I18N.Message msgId={"queryform.query"}/></strong></span>
                     </Button>
                 </ButtonToolbar>
                 <Modal show={this.props.showGeneratedFilter ? true : false} bsSize="large">

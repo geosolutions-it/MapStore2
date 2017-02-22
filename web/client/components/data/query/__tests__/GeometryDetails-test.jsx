@@ -56,13 +56,12 @@ describe('GeometryDetails', () => {
         expect(geometryDetailsDOMNode).toExist();
 
         let childNodes = geometryDetailsDOMNode.actual.childNodes;
-        expect(childNodes.length).toBe(2);
-        expect(childNodes[0].className).toBe("panel-heading");
-        expect(childNodes[1].className).toBe("panel-body");
+        expect(childNodes.length).toBe(1);
+        expect(childNodes[0].className).toBe("panel-body");
 
-        let panelBodyRows = childNodes[1].getElementsByClassName('row');
+        let panelBodyRows = childNodes[0].getElementsByClassName('row');
         expect(panelBodyRows).toExist();
-        expect(panelBodyRows.length).toBe(2);
+        expect(panelBodyRows.length).toBe(4);
 
         expect(panelBodyRows[0].childNodes.length).toBe(4);
     });
@@ -98,12 +97,11 @@ describe('GeometryDetails', () => {
         expect(geometryDetailsDOMNode).toExist();
 
         let childNodes = geometryDetailsDOMNode.actual.childNodes;
-        expect(childNodes.length).toBe(2);
-        expect(childNodes[0].className).toBe("panel-heading");
-        expect(childNodes[1].className).toBe("panel-body");
+        expect(childNodes.length).toBe(1);
+        expect(childNodes[0].className).toBe("panel-body");
 
-        let panelBodyRows = childNodes[1].getElementsByClassName('row');
+        let panelBodyRows = childNodes[0].getElementsByClassName('row');
         expect(panelBodyRows).toExist();
-        expect(panelBodyRows.length).toBe(5);
+        expect(panelBodyRows.length).toBe(4);
     });
 });

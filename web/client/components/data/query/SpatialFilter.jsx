@@ -91,7 +91,7 @@ const SpatialFilter = React.createClass({
                     })
                 }
                 fieldName="method"
-                style={{width: "140px", marginTop: "3px"}}
+                style={{width: "140px"}}
                 fieldRowId={new Date().getUTCMilliseconds()}
                 fieldValue={
                     LocaleUtils.getMessageById(this.context.messages, selectedMethod ? selectedMethod.name : "")
@@ -100,30 +100,30 @@ const SpatialFilter = React.createClass({
         );
 
         const detailsButton = this.props.spatialField.geometry && (this.props.spatialField.method === "BBOX" || this.props.spatialField.method === "Circle") ? (
-            <Button id="remove-filter-field" onClick={() => this.props.actions.onShowSpatialSelectionDetails(true)}>
-                <I18N.Message msgId={"queryform.spatialfilter.details.detail_button_label"}/>
+            <Button id="remove-filter-field" className="filter-buttons" bsSize="xs" style={{border: 'none'}} onClick={() => this.props.actions.onShowSpatialSelectionDetails(true)}>
+                <Glyphicon glyph={'glyphicon glyphicon-plus'}/><I18N.Message msgId={"queryform.spatialfilter.details.detail_button_label"}/>
             </Button>
         ) : (
             <span/>
         );
 
         const resetButton = this.props.spatialField.geometry && this.props.spatialField.geometry.coordinates ? (
-            <Button id="remove-filter-field" onClick={() => this.resetSpatialFilter()}>
-                <Glyphicon glyph="glyphicon glyphicon-minus-sign"/>
+            <Button className="remove-filter-button" onClick={() => this.resetSpatialFilter()}>
+                <Glyphicon glyph="glyphicon glyphicon-remove"/>
             </Button>
         ) : (
             <span/>
         );
 
         const methodSelector = this.props.spatialField.geometry ? (
-            <Row className="logicHeader">
+            <Row className="logicHeader filter-field-row">
                 <Col xs={5}>
-                    <div style={{"paddingTop": "9px"}}><I18N.Message msgId={"queryform.spatialfilter.selection_method"}/></div>
+                    <div><I18N.Message msgId={"queryform.spatialfilter.selection_method"}/></div>
                 </Col>
                 <Col xs={3}>
                     {methodCombo}
                 </Col>
-                <Col xs={2} className="detail_geom_button">
+                <Col xs={2} className="detail_geom_button filter-text-desc">
                     {detailsButton}
                 </Col>
                 <Col xs={2} className="detail_geom_button">
@@ -131,9 +131,9 @@ const SpatialFilter = React.createClass({
                 </Col>
             </Row>
         ) : (
-            <Row className="logicHeader">
+            <Row className="logicHeader filter-field-row">
                 <Col xs={5}>
-                    <div style={{"paddingTop": "9px"}}><I18N.Message msgId={"queryform.spatialfilter.selection_method"}/></div>
+                    <div><I18N.Message msgId={"queryform.spatialfilter.selection_method"}/></div>
                 </Col>
                 <Col xs={7}>
                     {methodCombo}
@@ -142,7 +142,9 @@ const SpatialFilter = React.createClass({
         );
 
         return (
-            methodSelector
+            <div className="container-fluid">
+                {methodSelector}
+            </div>
         );
     },
     renderZoneFields() {
@@ -189,7 +191,9 @@ const SpatialFilter = React.createClass({
                 {this.renderZoneFields()}
                 {this.props.spatialOperations.length > 1 ? (
                     <Panel>
-                        {operationRow}
+                        <div className="container-fluid">
+                            {operationRow}
+                        </div>
                         <Row>
                             <Col xs={12}>
                                 {drawLabel}
@@ -209,8 +213,8 @@ const SpatialFilter = React.createClass({
         if (this.props.spatialField.method && this.props.spatialField.method !== "ZONE") {
             drawLabel = !this.props.spatialField.geometry ? (
                 <span>
-                    <hr width="100%" style={{"borderTop": "1px solid #337AB7"}}/>
-                    <div style={{"textAlign": "center"}}><h4><I18N.Message msgId={"queryform.spatialfilter.draw_start_label"}/></h4></div>
+                    <hr width="100%"/>
+                    <div><h5><I18N.Message msgId={"queryform.spatialfilter.draw_start_label"}/></h5></div>
                 </span>
             ) : (
                 <span/>
@@ -230,11 +234,11 @@ const SpatialFilter = React.createClass({
         );
 
         const operationRow = selectedOperation && selectedOperation.id === "DWITHIN" ? (
-            <Row>
+            <Row className="filter-field-row">
                 <Col xs={5}>
-                    <div style={{"paddingTop": "9px"}}><I18N.Message msgId={"queryform.spatialfilter.geometric_operation"}/></div>
+                    <I18N.Message msgId={"queryform.spatialfilter.geometric_operation"}/>
                 </Col>
-                <Col xs={4}>
+                <Col xs={3}>
                     <ComboField
                         fieldOptions={
                             this.props.spatialOperations.map((opt) => {
@@ -242,18 +246,17 @@ const SpatialFilter = React.createClass({
                             })
                         }
                         fieldName="operation"
-                        style={{width: "140px", marginTop: "3px"}}
+                        style={{width: "140px"}}
                         fieldRowId={new Date().getUTCMilliseconds()}
                         fieldValue={
                             LocaleUtils.getMessageById(this.context.messages, selectedOperation ? selectedOperation.name : "")
                         }
                         onUpdateField={this.updateSpatialOperation}/>
                 </Col>
-                <Col xs={1}>
-                    <div style={{"paddingTop": "9px"}}><I18N.Message msgId={"queryform.spatialfilter.dwithin_label"}/></div>
+                <Col xs={2} className="filter-text-desc">
+                    <I18N.Message msgId={"queryform.spatialfilter.dwithin_label"}/>{':'}
                 </Col>
                 <Col xs={2}>
-                    <div style={{"paddingTop": "4px"}}>
                         <Input
                             type="number"
                             min="0"
@@ -261,13 +264,12 @@ const SpatialFilter = React.createClass({
                             disabled={!this.props.spatialField.geometry}
                             id={"queryform_dwithin_field"}
                             onChange={(evt) => this.props.actions.onChangeDwithinValue(evt.target.value, name)}/>
-                    </div>
                 </Col>
             </Row>
         ) : (
-            <Row>
+            <Row className="filter-field-row">
                 <Col xs={5}>
-                    <div style={{"paddingTop": "9px"}}><I18N.Message msgId={"queryform.spatialfilter.geometric_operation"}/></div>
+                    <I18N.Message msgId={"queryform.spatialfilter.geometric_operation"}/>
                 </Col>
                 <Col xs={7}>
                     <ComboField
@@ -277,7 +279,7 @@ const SpatialFilter = React.createClass({
                             })
                         }
                         fieldName="operation"
-                        style={{width: "140px", marginTop: "3px"}}
+                        style={{width: "140px"}}
                         fieldRowId={new Date().getUTCMilliseconds()}
                         fieldValue={
                             LocaleUtils.getMessageById(this.context.messages, selectedOperation ? selectedOperation.name : "")
@@ -288,7 +290,7 @@ const SpatialFilter = React.createClass({
         );
 
         return (
-            <div>
+            <div className="query-filter-container">
                 {
                     this.props.withContainer ? (
                         <Panel id="spatialFilterPanel" collapsible expanded={this.props.spatialPanelExpanded} header={this.renderHeader()}>

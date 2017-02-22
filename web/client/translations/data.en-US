@@ -373,6 +373,7 @@
             "styler": "Add rule and generate a new styled layer"
         },
         "queryform": {
+            "title": "Advanced Search",
             "query": "Search",
             "reset": "Reset",
             "query_request_exception": "Request Error",

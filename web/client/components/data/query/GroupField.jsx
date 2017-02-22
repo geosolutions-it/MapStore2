@@ -103,49 +103,50 @@ const GroupField = React.createClass({
         let comboValues = this.getComboValues(selectedAttribute, this.props.attributes);
 
         return (
-            <Row key={filterField.rowId}>
-                <Col xs={10}>
-                    <FilterField
-                        attributes={this.props.attributes}
-                        filterField={filterField}
-                        operatorOptions={this.getOperator(selectedAttribute)}
-                        onUpdateField={this.props.actions.onUpdateFilterField}
-                        onUpdateExceptionField={this.props.actions.onUpdateExceptionField}
-                        onChangeCascadingValue={this.props.actions.onChangeCascadingValue}>
-                        <ComboField
-                            attType="list"
-                            valueField={'id'}
-                            textField={'name'}
-                            fieldOptions={comboValues ? comboValues : []}
-                            comboFilter={"contains"}/>
-                        <DateField
-                            attType="date"
-                            operator={filterField.operator}/>
-                        <NumberField
-                            operator={filterField.operator}
-                            attType="number"
-                        />
-                        <TextField
-                            operator={filterField.operator}
-                            attType="string"/>
-                    </FilterField>
-                </Col>
-                <Col xs={2}>
-                    {
-                        filterField.exception ? (
-                            <OverlayTrigger placement="bottom" overlay={(<Tooltip id={filterField.rowId + "tooltip"}><strong><I18N.Message msgId={filterField.exception || ""}/></strong></Tooltip>)}>
-                                <Button id="remove-filter-field" className="remove-filter-button" style={{backgroundColor: "red"}} onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
-                                    <Glyphicon style={{color: "white"}} glyph="glyphicon glyphicon-warning-sign"/>
+            <div className="container-fluid" key={filterField.rowId}>
+                <Row className="filter-field-row">
+                    <Col xs={10}>
+                        <FilterField
+                            attributes={this.props.attributes}
+                            filterField={filterField}
+                            operatorOptions={this.getOperator(selectedAttribute)}
+                            onUpdateField={this.props.actions.onUpdateFilterField}
+                            onUpdateExceptionField={this.props.actions.onUpdateExceptionField}
+                            onChangeCascadingValue={this.props.actions.onChangeCascadingValue}>
+                            <ComboField
+                                attType="list"
+                                valueField={'id'}
+                                textField={'name'}
+                                fieldOptions={comboValues ? comboValues : []}
+                                comboFilter={"contains"}/>
+                            <DateField
+                                attType="date"
+                                operator={filterField.operator}/>
+                            <NumberField
+                                operator={filterField.operator}
+                                attType="number"/>
+                            <TextField
+                                operator={filterField.operator}
+                                attType="string"/>
+                        </FilterField>
+                    </Col>
+                    <Col xs={2}>
+                        {
+                            filterField.exception ? (
+                                <OverlayTrigger placement="bottom" overlay={(<Tooltip id={filterField.rowId + "tooltip"}><strong><I18N.Message msgId={filterField.exception || ""}/></strong></Tooltip>)}>
+                                    <Button id="remove-filter-field" className="remove-filter-button" style={{backgroundColor: "red"}} onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
+                                        <Glyphicon style={{color: "white"}} glyph="glyphicon glyphicon-warning-sign"/>
+                                    </Button>
+                                </OverlayTrigger>
+                            ) : (
+                                <Button id="remove-filter-field" className="remove-filter-button" onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
+                                    <Glyphicon glyph={this.props.removeButtonIcon}/>
                                 </Button>
-                            </OverlayTrigger>
-                        ) : (
-                            <Button id="remove-filter-field" className="remove-filter-button" onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
-                                <Glyphicon glyph={this.props.removeButtonIcon}/>
-                            </Button>
-                        )
-                    }
-                </Col>
-            </Row>
+                            )
+                        }
+                    </Col>
+                </Row>
+            </div>
         );
     },
     renderGroupHeader(groupField) {
@@ -161,30 +162,43 @@ const GroupField = React.createClass({
             );
 
         return (
-            <Row className="logicHeader">
-                <Col>
-                    <div className="query-remove">
-                        {removeButton}
-                    </div>
-                    <div style={{display: "inline"}}>
-                        <span className="group_label_a"><I18N.Message msgId={"queryform.attributefilter.group_label_a"}/></span>
-                        <ComboField
-                            fieldOptions={
-                                this.props.logicComboOptions.map((opt) => {
-                                    return LocaleUtils.getMessageById(this.context.messages, opt.name);
-                                })
-                            }
-                            fieldName="logic"
-                            style={{minWidth: "80px", display: "inline-block", position: "relative", top: "10px"}}
-                            fieldRowId={groupField.id}
-                            fieldValue={
-                                LocaleUtils.getMessageById(this.context.messages,
-                                    this.props.logicComboOptions.filter((opt) => groupField.logic === opt.logic)[0].name)
-                            }
-                            onUpdateField={this.updateLogicCombo}/>
-                        <span className="group_label_b"><I18N.Message msgId={"queryform.attributefilter.group_label_b"}/></span></div>
-                </Col>
-            </Row>
+            <div className="container-fluid">
+                <Row className="logicHeader filter-field-row">
+                    <Col xs={10}>
+                        <div className="container-fluid">
+                            <Row className="filter-field-row">
+                                <div className="filter-logig-header-text">
+                                    <span className="group_label_a"><I18N.Message msgId={"queryform.attributefilter.group_label_a"}/></span>
+                                </div>
+                                <div className="filter-logig-header-text">
+                                    <ComboField
+                                        fieldOptions={
+                                            this.props.logicComboOptions.map((opt) => {
+                                                return LocaleUtils.getMessageById(this.context.messages, opt.name);
+                                            })
+                                        }
+                                        fieldName="logic"
+                                        style={{minWidth: "80px"}}
+                                        fieldRowId={groupField.id}
+                                        fieldValue={
+                                            LocaleUtils.getMessageById(this.context.messages,
+                                                this.props.logicComboOptions.filter((opt) => groupField.logic === opt.logic)[0].name)
+                                        }
+                                        onUpdateField={this.updateLogicCombo}/>
+                                </div>
+                                <div className="filter-logig-header-text">
+                                    <span className="group_label_b"><I18N.Message msgId={"queryform.attributefilter.group_label_b"}/></span>
+                                </div>
+                            </Row>
+                        </div>
+                    </Col>
+                    <Col xs={2}>
+                        <div className="query-remove">
+                            {removeButton}
+                        </div>
+                    </Col>
+                </Row>
+            </div>
         );
     },
     renderGroupField(groupField) {
@@ -206,22 +220,22 @@ const GroupField = React.createClass({
 
         const addButton = groupField.index <= this.props.groupLevels ?
             (
-                <Button id="add-condition-group" onClick={() => this.props.actions.onAddGroupField(groupField.id, groupField.index)}>
+                <Button id="add-condition-group" className="filter-buttons" bsSize="xs" onClick={() => this.props.actions.onAddGroupField(groupField.id, groupField.index)}>
                     <Glyphicon glyph={this.props.addButtonIcon}/><I18N.Message msgId={"queryform.attributefilter.add_group"}/></Button>
             ) : (
                 <span/>
             );
 
         return (
-            <Panel key={groupField.id}>
+            <Panel className="filter-group-panel" key={groupField.id}>
                 {this.renderGroupHeader(groupField)}
                 <div className="query-content">{container}</div>
                 <div className="query-buttons">
-                <Button id="add-filter-field" onClick={() => this.props.actions.onAddFilterField(groupField.id)}>
+                {addButton}
+                <Button id="add-filter-field" className="filter-buttons" bsSize="xs" onClick={() => this.props.actions.onAddFilterField(groupField.id)}>
                     <Glyphicon glyph={this.props.addButtonIcon}/>
                     <I18N.Message msgId={"queryform.attributefilter.add_condition"}/>
                 </Button>
-                {addButton}
                 </div>
             </Panel>
         );
@@ -242,7 +256,7 @@ const GroupField = React.createClass({
     },
     render() {
         return (
-            <Panel id="attributeFilterPanel" collapsible
+            <Panel id="attributeFilterPanel" className="query-filter-container" collapsible
                 expanded={this.props.attributePanelExpanded}
                 header={this.renderHeader()}>
                 {this.props.groupFields.filter(g => !g.groupId).map(this.renderGroupField)}
