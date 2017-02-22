@@ -8,8 +8,7 @@
 var React = require('react');
 var BootstrapReact = require('react-bootstrap');
 var Label = BootstrapReact.Label;
-var ReactIntl = require('react-intl');
-var FormattedNumber = ReactIntl.FormattedNumber;
+var NumberFormat = require('../../I18N/Number');
 
 var MousePositionLabelDD = React.createClass({
     propTypes: {
@@ -24,9 +23,9 @@ var MousePositionLabelDD = React.createClass({
         return (
                 <h5>
                 <Label bsSize="lg" bsStyle="info">
-                    <span>Lat: </span><FormattedNumber key="latD" {...integerFormat} value={this.props.position.lat} />
+                    <span>Lat: </span><NumberFormat key="latD" numberParams={integerFormat} value={this.props.position.lat} />
                     <span>° Lng: </span>
-                    <FormattedNumber key="lngD" {...lngDFormat} value={this.props.position.lng} />
+                    <NumberFormat key="lngD" numberParams={lngDFormat} value={this.props.position.lng} />
                     <span>° </span>
                 </Label>
                 </h5>);

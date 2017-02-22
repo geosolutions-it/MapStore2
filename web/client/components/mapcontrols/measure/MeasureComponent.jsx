@@ -9,8 +9,7 @@
 const React = require('react');
 const {Panel, ButtonGroup, Tooltip, Glyphicon, Button} = require('react-bootstrap');
 const ToggleButton = require('../../buttons/ToggleButton');
-const ReactIntl = require('react-intl');
-const FormattedNumber = ReactIntl.FormattedNumber;
+var NumberFormat = require('../../I18N/Number');
 
 const lineRuleIcon = require('./img/line-ruler.png');
 const areaRuleIcon = require('./img/area-ruler.png');
@@ -122,9 +121,9 @@ const MeasureComponent = React.createClass({
         return (
                <div className="panel-body">
                     <p><span>{this.props.lengthLabel}: </span><span id="measure-len-res">
-                        <FormattedNumber key="len" {...decimalFormat} value={this.props.formatLength(this.props.uom.length.unit, this.props.measurement.len)} /> {this.props.uom.length.label}</span></p>
+                        <NumberFormat key="len" numberParams={decimalFormat} value={this.props.formatLength(this.props.uom.length.unit, this.props.measurement.len)} /> {this.props.uom.length.label}</span></p>
                     <p><span>{this.props.areaLabel}: </span><span id="measure-area-res">
-                        <FormattedNumber key="area" {...decimalFormat} value={this.props.formatArea(this.props.uom.area.unit, this.props.measurement.area)} /> {this.props.uom.area.label}</span></p>
+                        <NumberFormat key="area" numberParams={decimalFormat} value={this.props.formatArea(this.props.uom.area.unit, this.props.measurement.area)} /> {this.props.uom.area.label}</span></p>
                     <p><span>{this.props.bearingLabel}: </span>
                     <span id="measure-bearing-res">{this.props.formatBearing(this.props.measurement.bearing || 0)}</span></p>
                 </div>

@@ -7,7 +7,8 @@
  */
 const React = require('react');
 const ReactDOM = require('react-dom');
-const SharingLink = require('../SharingLink.jsx');
+const SharingLink = require('../SharingLink');
+const Localized = require('../../I18N/Localized');
 const expect = require('expect');
 
 const TestUtils = require('react-addons-test-utils');
@@ -51,7 +52,7 @@ describe('Tests for SharingLink', () => {
         // creating the messages object
         const messages = {'link': 'Link'};
         // intanciating the component
-        const component = ReactDOM.render(<SharingLink url="url" labelId="link" messages={messages}/>,
+        const component = ReactDOM.render(<Localized locale="en-US" messages={messages}><SharingLink url="url" labelId="link"/></Localized>,
             document.getElementById('container'));
         expect(component).toExist();
         // expecting a dom node to be available
