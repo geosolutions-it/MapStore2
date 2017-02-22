@@ -373,7 +373,7 @@
             "styler": "Crea lo style per il layer selezionato"
         },
         "queryform": {
-            "title": "Query Builder",
+            "title": "Ricerca Avanzata",
             "query": "Ricerca",
             "reset": "Reimposta",
             "query_request_exception": "Errore nella richiesta",
