@@ -20,13 +20,16 @@ const {resetControls} = require('../../actions/controls');
 
 const MapViewer = require('../../containers/MapViewer');
 
+let oldLocation;
+
 const MapViewerPage = React.createClass({
     propTypes: {
         mode: React.PropTypes.string,
         params: React.PropTypes.object,
         loadMapConfig: React.PropTypes.func,
         reset: React.PropTypes.func,
-        plugins: React.PropTypes.object
+        plugins: React.PropTypes.object,
+        location: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -34,8 +37,8 @@ const MapViewerPage = React.createClass({
         };
     },
     componentWillMount() {
-        if (this.props.params.mapType && this.props.params.mapId) {
-
+        if (this.props.params.mapType && this.props.params.mapId && oldLocation !== this.props.location) {
+            oldLocation = this.props.location;
             if (!ConfigUtils.getDefaults().ignoreMobileCss) {
                 if (this.props.mode === 'mobile') {
                     require('../assets/css/mobile.css');

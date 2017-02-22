@@ -10,8 +10,7 @@ var expect = require('expect');
 var React = require('react/addons');
 var ReactDOM = require('react-dom');
 var MeasureComponent = require('../MeasureComponent');
-var ReactIntl = require('react-intl');
-var FormattedNumber = ReactIntl.FormattedNumber;
+var NumberFormat = require('../../../I18N/Number');
 
 describe("test the MeasureComponent", () => {
     beforeEach((done) => {
@@ -233,7 +232,7 @@ describe("test the MeasureComponent", () => {
 
         let testDiv = document.createElement("div");
         document.body.appendChild(testDiv);
-        let val = ReactDOM.findDOMNode(ReactDOM.render((<span><FormattedNumber key="len" {...decimalFormat} value={10} />km</span>), testDiv));
+        let val = ReactDOM.findDOMNode(ReactDOM.render((<span><NumberFormat key="len" numberParams={decimalFormat} value={10} />km</span>), testDiv));
         cmp.setProps({
             measurement: {len: 10000}
         }, () => {
@@ -243,7 +242,7 @@ describe("test the MeasureComponent", () => {
 
         const areaSpan = document.getElementById('measure-area-res');
         expect(areaSpan).toExist();
-        val = ReactDOM.findDOMNode(ReactDOM.render((<span><FormattedNumber key="len" {...decimalFormat} value={1} />km²</span>), testDiv));
+        val = ReactDOM.findDOMNode(ReactDOM.render((<span><NumberFormat key="len" numberParams={decimalFormat} value={1} />km²</span>), testDiv));
         cmp.setProps({
             measurement: {geomType: 'Polygon', area: 1000000}
         }, () => {

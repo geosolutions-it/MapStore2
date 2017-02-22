@@ -12,8 +12,7 @@ const Draggable = require('react-draggable');
 const Dialog = require('../../misc/Dialog');
 
 const Message = require('../../../plugins/locale/Message');
-const ReactIntl = require('react-intl');
-const FormattedNumber = ReactIntl.FormattedNumber;
+const NumberFormat = require('../../I18N/Number');
 const measureUtils = require('../../../utils/MeasureUtils');
 
 const {isEqual} = require('lodash');
@@ -104,8 +103,8 @@ const MeasureResults = React.createClass({
         let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
         return (
             <div className="panel-body" role="body">
-                <p><span>{this.props.lengthLabel}: </span><span id="measure-len-res"><FormattedNumber key="len" {...decimalFormat} value={measureUtils.getFormattedLength(this.props.uom.length.unit, this.props.measurement.len)} /> {this.props.uom.length.label}</span></p>
-                <p><span>{this.props.areaLabel}: </span><span id="measure-area-res"><FormattedNumber key="area" {...decimalFormat} value={measureUtils.getFormattedArea(this.props.uom.area.unit, this.props.measurement.area)} /> {this.props.uom.area.label}</span></p>
+                <p><span>{this.props.lengthLabel}: </span><span id="measure-len-res"><NumberFormat key="len" numberParams={decimalFormat} value={measureUtils.getFormattedLength(this.props.uom.length.unit, this.props.measurement.len)} /> {this.props.uom.length.label}</span></p>
+                <p><span>{this.props.areaLabel}: </span><span id="measure-area-res"><NumberFormat key="area" numberParams={decimalFormat} value={measureUtils.getFormattedArea(this.props.uom.area.unit, this.props.measurement.area)} /> {this.props.uom.area.label}</span></p>
                 <p><span>{this.props.bearingLabel}: </span><span id="measure-bearing-res">{measureUtils.getFormattedBearingValue(this.props.measurement.bearing)}</span></p>
             </div>
         );

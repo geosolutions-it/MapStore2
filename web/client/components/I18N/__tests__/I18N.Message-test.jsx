@@ -10,6 +10,7 @@ var expect = require('expect');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var I18N = require('../I18N');
+var Localized = require('../Localized');
 
 var ita = {
     "locale": "it-IT",
@@ -45,7 +46,7 @@ describe('This test for I18N.Message', () => {
         var currentData = data["en-US"];
         var testMsg = currentData.messages[msgId];
 
-        const cmp = ReactDOM.render(<I18N.Message msgId={msgId} messages={eng.messages} locale="en-US"/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<Localized messages={eng.messages} locale="en-US"><I18N.Message msgId={msgId}/></Localized>, document.getElementById("container"));
         expect(cmp).toExist();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
@@ -57,7 +58,7 @@ describe('This test for I18N.Message', () => {
         var currentData = data["it-IT"];
         var testMsg = currentData.messages[msgId];
 
-        const cmp = ReactDOM.render(<I18N.Message msgId={msgId} messages={ita.messages} locale="it-IT"/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<Localized messages={ita.messages} locale="it-IT"><I18N.Message msgId={msgId}/></Localized>, document.getElementById("container"));
         expect(cmp).toExist();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
