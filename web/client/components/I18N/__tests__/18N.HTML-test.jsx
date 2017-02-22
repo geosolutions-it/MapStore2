@@ -58,7 +58,7 @@ describe('This test for I18N.HTML', () => {
         var currentData = data["it-IT"];
         var testMsg = currentData.messages[msgId];
 
-        const cmp = ReactDOM.render(<Localized messages={ita.messages} locale="it-ITE"><I18N.HTML msgId={msgId}/></Localized>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<Localized messages={ita.messages} locale="it-IT"><I18N.HTML msgId={msgId}/></Localized>, document.getElementById("container"));
         expect(cmp).toExist();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
