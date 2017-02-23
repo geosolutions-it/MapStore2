@@ -1,69 +1,72 @@
 #!/usr/bin/env node
 
 /**
- * This example script expects a path do components/plugins as input,
- * generating MD documentation files to docs/developer-guide/reference
- * e.g. node genDocs web/client/components
+ * This example script expects 2 paths as arguments:
+ * - First path to components/plugins root folder
+ * - Second path to reference documentiation MD files output folder
+ * e.g. node genDocs web/client/components docs/developer-guide/reference
  */
 
 var fs = require('fs');
 var path = require('path');
 var docsToMarkdown = require('react-docs-markdown');
 var reactDocs = require('react-docgen');
-var spawn = require('child_process').spawn;
 var toc = require('markdown-toc');
-var tocString = "";
-var dir = process.argv[2];
-filelist = [];
-docFileList = [];
-var fileContent = "";
+var filelist = [];
 
-var walkSync = function(dir, filelist) {
+var walkSync = function(dir, outdir, filelist) {
   files = fs.readdirSync(dir);
   files.forEach(function(file) {
-      if (fs.statSync(path.join(dir, file)).isDirectory()) {
-          filelist = walkSync(path.join(dir, file), filelist);
-      }
-      else {
-          // FIXME: check only jsx files?
-          checkExt(path.join(dir, file), '.jsx')
-      }
-  });
-  // Create TOC at end
-  tocContent = "TOC\n---\n\n"
-  docFileList.forEach(function(file) {
-    var name = getComponentName(file);
-    tocString += toc('# ' + name + '\n\n').content + '\n';
-  });
-  tocContent += tocString;
-  // FIXME: static output folder?
-  fs.writeFile('docs/developer-guide/reference/index.md', tocContent, (err) => {
-      if (err) throw err;
-    });
-}
-
-function checkExt(file, ext) {
-    if (path.extname(file) == ext) {
-        //filelist.concat(file);
-        const docgen = spawn('react-docgen', [ file ]);
-        docgen.stdout.on('data', (data) => {
-          componentInfo = `${data}`;
-          //console.log(componentInfo);
-          if (componentInfo.length > 1) {
-              buildDocs(JSON.parse(data), file);
-          }
-        });
-        docFileList.push(file);
+    if (fs.statSync(path.join(dir, file)).isDirectory()) {
+      walkSync(path.join(dir, file), outdir, filelist);
+    } else {
+      filelist.push(path.join(dir, file));
     }
+  });
 }
 
-function buildDocs(doc, file) {
+function generateDocs(outdir) {
+  // Check if output folder exists
+  var docList = [];
+  if (!fs.existsSync(outdir)) {
+    fs.mkdirSync(outdir);
+  }
+  // Create TOC Header
+  fs.writeFile(path.join(outdir, 'index.md'), "TOC\n---\n\n", (err) => {
+    if (err) throw err;
+  });
+  // Build Docs and append TOC
+  filelist.forEach(function(file) {
+    // FIXME: check only jsx files?
+    checkExt(file, '.jsx', outdir, docList);
+  });
+}
+
+function checkExt(file, ext, outdir, docList) {
+  if (path.extname(file) == ext) {
+    fs.readFile(file, 'utf8', function(err, data) {
+      if (err) {
+        return console.log(err);
+      }
+      buildDocs(reactDocs.parse(data), file, outdir);
+      // Build TOC entry
+      var name = getComponentName(file);
+      var tocString = toc('# ' + name + '\n\n').content + '\n';
+      fs.appendFile(path.join(outdir, 'index.md'), tocString, function(err) {
+        if (err) {
+          return console.log(err);
+        }
+      });
+    });
+  }
+}
+
+function buildDocs(doc, file, outdir) {
   // Extract filename as component name
   var name = getComponentName(file);
   // Use fs to write the markdown to dist
   var md = docsToMarkdown(doc, name);
-  // FIXME: static output folder?
-  fs.writeFile('docs/developer-guide/reference/' + name +'.md', md, (err) => {
+  fs.writeFile(path.join(outdir, name + '.md'), md, (err) => {
     if (err) throw err;
   });
   console.log(file + ' -> ' + name + '.md');
@@ -78,4 +81,16 @@ function getComponentName(filepath) {
   return name;
 }
 
-walkSync(dir, filelist)
+var args = process.argv;
+var componentsDir = args[2];
+var docsDir = args[3];
+
+// Minimal script check
+if (componentsDir == null || docsDir == null) {
+  console.log('You must define an input reactor components/plugins to scan as first argument and an ' +
+    'output documentation folder as second argument\neg: genDocs /path/to/components /path/to/docs');
+  return;
+}
+
+walkSync(componentsDir, docsDir, filelist);
+generateDocs(docsDir);
