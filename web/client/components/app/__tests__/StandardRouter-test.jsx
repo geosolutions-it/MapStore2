@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const expect = require('expect');
-const React = require('react/addons');
+const React = require('react');
 const ReactDOM = require('react-dom');
 const {Provider} = require('react-redux');
 
@@ -65,7 +65,6 @@ describe('StandardApp', () => {
         }];
         const app = ReactDOM.render(<Provider store={store}><StandardRouter pages={pages}/></Provider>, document.getElementById("container"));
         expect(app).toExist();
-
         const dom = ReactDOM.findDOMNode(app);
 
         expect(dom.getElementsByClassName('mycomponent').length).toBe(1);

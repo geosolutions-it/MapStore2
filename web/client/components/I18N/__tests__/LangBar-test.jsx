@@ -7,10 +7,11 @@
  */
 var expect = require('expect');
 
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var LangBar = require('../LangBar');
 var LocaleUtils = require('../../../utils/LocaleUtils');
+const TestUtils = require('react-addons-test-utils');
 
 describe('LangBar', () => {
     beforeEach((done) => {
@@ -45,7 +46,7 @@ describe('LangBar', () => {
         const select = cmpDom.getElementsByTagName("button").item(0);
 
         select.value = "it-IT";
-        React.addons.TestUtils.Simulate.click(select, {target: {value: 'it-IT'}});
+        TestUtils.Simulate.click(select, {target: {value: 'it-IT'}});
         // select.children[1].click();
 
         expect(newLang).toBe('it-IT');

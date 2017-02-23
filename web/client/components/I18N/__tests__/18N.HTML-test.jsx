@@ -7,7 +7,7 @@
  */
 var expect = require('expect');
 
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var I18N = require('../I18N');
 var Localized = require('../Localized');

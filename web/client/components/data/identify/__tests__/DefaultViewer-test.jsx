@@ -42,7 +42,7 @@ describe('DefaultViewer', () => {
         );
 
         expect(viewer).toExist();
-        const dom = React.findDOMNode(viewer);
+        const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("mycontainer").length).toBe(1);
     });
 
@@ -60,7 +60,7 @@ describe('DefaultViewer', () => {
         );
 
         expect(viewer).toExist();
-        const dom = React.findDOMNode(viewer);
+        const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("mycontainer").length).toBe(1);
     });
 
@@ -90,7 +90,7 @@ describe('DefaultViewer', () => {
         );
 
         expect(viewer).toExist();
-        const dom = React.findDOMNode(viewer);
+        const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("panel").length).toBe(2);
         expect(dom.getElementsByClassName("alert").length).toBe(1);
     });
@@ -102,7 +102,7 @@ describe('DefaultViewer', () => {
         );
 
         expect(viewer).toExist();
-        const dom = React.findDOMNode(viewer);
+        const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("alert").length).toBe(1);
     });
 
@@ -124,7 +124,7 @@ describe('DefaultViewer', () => {
         );
 
         expect(viewer).toExist();
-        const dom = React.findDOMNode(viewer);
+        const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("alert").length).toBe(0);
     });
 
@@ -135,7 +135,7 @@ describe('DefaultViewer', () => {
         );
 
         expect(viewer).toExist();
-        const dom = React.findDOMNode(viewer);
+        const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("alert").length).toBe(0);
     });
 
@@ -155,7 +155,7 @@ describe('DefaultViewer', () => {
         );
 
         expect(viewer).toExist();
-        const dom = React.findDOMNode(viewer);
+        const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("custom").length).toBe(1);
         expect(dom.innerHTML.indexOf('myresponse') !== -1).toBe(true);
     });

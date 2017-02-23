@@ -33,7 +33,7 @@ describe("Test FeatureGrid Component", () => {
         expect(comp).toExist();
         let btns = document.getElementsByTagName("button");
         btns[btns.length - 1].click();
-        comp.setProps({paging: true, features: function() { return data.features; }, columnDefs: columnDef});
+        // comp.setProps({paging: true, features: function() { return data.features; }, columnDefs: columnDef});
     });
     it('Test FeatureGrid rendering with column def', () => {
         let comp = ReactDOM.render(

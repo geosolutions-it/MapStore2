@@ -7,10 +7,12 @@
  */
 
 var expect = require('expect');
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var ScaleBox = require('../ScaleBox');
 var mapUtils = require('../../../../utils/MapUtils');
+
+const TestUtils = require('react-addons-test-utils');
 
 describe('ScaleBox', () => {
     beforeEach((done) => {
@@ -54,7 +56,7 @@ describe('ScaleBox', () => {
         expect(domSelect).toExist();
 
         domSelect.value = 5;
-        React.addons.TestUtils.Simulate.change(domSelect, {target: {value: 5}});
+        TestUtils.Simulate.change(domSelect, {target: {value: 5}});
         expect(newZoom).toBe(5);
     });
 

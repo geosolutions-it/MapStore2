@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var InfoButton = require('../InfoButton');
 var expect = require('expect');
@@ -36,12 +36,7 @@ describe('This test for InfoButton', () => {
 
         const btn = btnList.item(0);
         expect(btn.className).toBe("btn btn-md btn-info");
-
-        const btnItems = btn.getElementsByTagName("span");
-        expect(btnItems.length).toBe(3);
-        expect(btnItems.item(0).innerHTML).toBe("");
-        expect(btnItems.item(1).innerHTML).toBe("");
-        expect(btnItems.item(2).innerHTML).toBe("Info");
+        expect(btn.innerText).toBe("Info");
     });
 
     it('checks if a click on button shows a modal window', () => {
@@ -106,11 +101,7 @@ describe('This test for InfoButton', () => {
         const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
 
-        const btnItems = btn.getElementsByTagName("span");
-        expect(btnItems.length).toBe(3);
-        expect(btnItems.item(0).innerHTML).toBe("");
-        expect(btnItems.item(1).innerHTML).toBe("");
-        expect(btnItems.item(2).innerHTML).toBe(customText);
+        expect(btn.innerText).toBe(customText);
     });
 
     it('checks the button icon', () => {
@@ -118,12 +109,10 @@ describe('This test for InfoButton', () => {
         const about = ReactDOM.render(<InfoButton glyphicon={icon}/>, document.getElementById("container"));
         const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
-
         const btnItems = btn.getElementsByTagName("span");
-        expect(btnItems.length).toBe(3);
+        expect(btnItems.length).toBe(1);
         expect(btnItems.item(0).className).toBe("glyphicon glyphicon-" + icon);
-        expect(btnItems.item(1).innerHTML).toBe("&nbsp;");
-        expect(btnItems.item(2).innerHTML).toBe("Info");
+        expect(btn.innerText.indexOf("Info") !== -1).toBe(true);
     });
 
     it('checks if the button contains only icon', () => {
@@ -131,12 +120,10 @@ describe('This test for InfoButton', () => {
         const about = ReactDOM.render(<InfoButton glyphicon={icon} hiddenText/>, document.getElementById("container"));
         const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
-
         const btnItems = btn.getElementsByTagName("span");
-        expect(btnItems.length).toBe(3);
+        expect(btnItems.length).toBe(1);
         expect(btnItems.item(0).className).toBe("glyphicon glyphicon-" + icon);
-        expect(btnItems.item(1).innerHTML).toBe("");
-        expect(btnItems.item(2).innerHTML).toBe("");
+        expect(btn.innerText).toBe("");
     });
 
     it('checks if the button contains at least the default text', () => {
@@ -144,11 +131,7 @@ describe('This test for InfoButton', () => {
         const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
 
-        const btnItems = btn.getElementsByTagName("span");
-        expect(btnItems.length).toBe(3);
-        expect(btnItems.item(0).innerHTML).toBe("");
-        expect(btnItems.item(1).innerHTML).toBe("");
-        expect(btnItems.item(2).innerHTML).toBe("Info");
+        expect(btn.innerText).toBe("Info");
     });
 
     it('checks if the button contains at least the custom text', () => {
@@ -157,11 +140,7 @@ describe('This test for InfoButton', () => {
         const aboutDom = ReactDOM.findDOMNode(about);
         const btn = aboutDom.getElementsByTagName('button').item(0);
 
-        const btnItems = btn.getElementsByTagName("span");
-        expect(btnItems.length).toBe(3);
-        expect(btnItems.item(0).innerHTML).toBe("");
-        expect(btnItems.item(1).innerHTML).toBe("");
-        expect(btnItems.item(2).innerHTML).toBe(customText);
+        expect(btn.innerText).toBe(customText);
     });
 
     it('checks the custom title for the window', () => {

@@ -46,7 +46,7 @@ describe('DateField', () => {
         expect(dateFieldDOMNode).toExist();
 
         let childNodes = dateFieldDOMNode.actual.getElementsByTagName('DIV');
-        expect(childNodes.length).toBe(5);
+        expect(childNodes.length).toBe(2);
 
         let dateRow = childNodes[0];
         expect(dateRow).toExist();
@@ -75,7 +75,7 @@ describe('DateField', () => {
         expect(dateFieldDOMNode).toExist();
 
         let childNodes = dateFieldDOMNode.actual.getElementsByTagName('DIV');
-        expect(childNodes.length).toBe(11);
+        expect(childNodes.length).toBe(5);
 
         let dateRow = childNodes[0];
         expect(dateRow).toExist();

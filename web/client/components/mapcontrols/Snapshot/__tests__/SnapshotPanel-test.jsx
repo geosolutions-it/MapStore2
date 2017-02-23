@@ -7,7 +7,7 @@
  */
 var expect = require('expect');
 
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var ReactTestUtils = require('react-addons-test-utils');
 var SnapshotPanel = require('../SnapshotPanel');
@@ -35,9 +35,9 @@ describe("test the SnapshotPanel", () => {
     });
 
     it('component update', () => {
-        const tb = ReactDOM.render(<SnapshotPanel timeout={0} snapshot={{state: "DISABLED"}} active={false}/>, document.getElementById("container"));
+        let tb = ReactDOM.render(<SnapshotPanel timeout={0} snapshot={{state: "DISABLED"}} active={false}/>, document.getElementById("container"));
         expect(tb).toExist();
-        tb.setProps({active: false, snapshot: {state: "DISABLED"}, layers: []});
+        tb = ReactDOM.render(<SnapshotPanel timeout={0} snapshot={{state: "DISABLED"}} active={false} layers={[]}/>, document.getElementById("container"));
     });
 
 

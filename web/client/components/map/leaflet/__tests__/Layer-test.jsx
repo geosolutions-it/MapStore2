@@ -5,12 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var L = require('leaflet');
 var LeafLetLayer = require('../Layer.jsx');
 var Feature = require('../Feature.jsx');
 var expect = require('expect');
+
+const assign = require('object-assign');
 
 require('../../../../utils/leaflet/Layers');
 require('../plugins/OSMLayer');
@@ -448,20 +450,23 @@ describe('Leaflet layer', () => {
     });
 
     it('switch osm layer visibility', () => {
-        var options = {};
         // create layers
         var layer = ReactDOM.render(
             <LeafLetLayer type="osm"
-                 options={{options}} position={0} map={map}/>, document.getElementById("container"));
+                 options={{}} position={0} map={map}/>, document.getElementById("container"));
         var lcount = 0;
         expect(layer).toExist();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
         // not visibile layers are removed from the leaflet maps
-        layer.setProps({options: {visibility: false}, position: 0});
+        layer = ReactDOM.render(
+            <LeafLetLayer type="osm"
+                 options={{visibility: false}} position={0} map={map}/>, document.getElementById("container"));
         expect(map.hasLayer(layer.layer)).toBe(false);
-        layer.setProps({options: {visibility: true}, position: 0});
+        layer = ReactDOM.render(
+            <LeafLetLayer type="osm"
+                 options={{visibility: true}} position={0} map={map}/>, document.getElementById("container"));
         expect(map.hasLayer(layer.layer)).toBe(true);
     });
 
@@ -488,7 +493,9 @@ describe('Leaflet layer', () => {
 
         expect(layer.layer.options.opacity).toBe(1.0);
 
-        layer.setProps({options: {opacity: 0.5}, position: 0});
+        layer = ReactDOM.render(
+            <LeafLetLayer type="wms"
+                 options={assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
         expect(layer.layer.options.opacity).toBe(0.5);
     });
 
@@ -514,8 +521,9 @@ describe('Leaflet layer', () => {
         expect(lcount).toBe(1);
 
         expect(layer.layer.options.zIndex).toBe(10);
-
-        layer.setProps({position: 2});
+        layer = ReactDOM.render(
+            <LeafLetLayer type="wms"
+                 options={options} map={map} position={2}/>, document.getElementById("container"));
         expect(layer.layer.options.zIndex).toBe(2);
     });
 });
