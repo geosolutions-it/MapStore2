@@ -375,6 +375,7 @@
             "styler": "Créer un style pour la couche sélectionnée"
         },
         "queryform": {
+            "title": "Recherche Avancée",
             "query": "Recherche",
             "reset": "Recommencer",
             "query_request_exception": "Erreur de requête",

@@ -7,7 +7,7 @@
  */
 
 var expect = require('expect');
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var L = require('leaflet');
 var DrawSupport = require('../DrawSupport');
@@ -47,7 +47,7 @@ describe('Leaflet DrawSupport', () => {
             zoom: 13
         });
 
-        const cmp = ReactDOM.render(
+        let cmp = ReactDOM.render(
             <DrawSupport
                 map={map}
                 drawOwner="me"
@@ -55,12 +55,16 @@ describe('Leaflet DrawSupport', () => {
         , msNode);
         expect(cmp).toExist();
 
-        cmp.setProps({
-            drawStatus: "start",
-            drawMethod: "Circle"
-        }, () => {
-            expect(map._layers).toExist();
-        });
+        cmp = ReactDOM.render(
+            <DrawSupport
+                map={map}
+                drawStatus="start"
+                drawMethod="Circle"
+                drawOwner="me"
+            />
+        , msNode);
+
+        expect(map._layers).toExist();
     });
 
     it('test if drawing layers will be removed', () => {
@@ -68,7 +72,7 @@ describe('Leaflet DrawSupport', () => {
             center: [51.505, -0.09],
             zoom: 13
         });
-        const cmp = ReactDOM.render(
+        let cmp = ReactDOM.render(
             <DrawSupport
                 map={map}
                 drawOwner="me"
@@ -78,11 +82,15 @@ describe('Leaflet DrawSupport', () => {
         , msNode);
         expect(cmp).toExist();
 
-        cmp.setProps({
-            drawStatus: "clean"
-        }, () => {
-            expect(Object.keys(map._layers).length).toBe(0);
-        });
+        cmp = ReactDOM.render(
+            <DrawSupport
+                map={map}
+                drawOwner="me"
+                drawStatus="clean"
+                drawMethod="BBOX"
+            />
+        , msNode);
+        expect(Object.keys(map._layers).length).toBe(0);
     });
 
     it('test map onClick handler created circle', () => {
@@ -112,7 +120,7 @@ describe('Leaflet DrawSupport', () => {
             center: [51.505, -0.09],
             zoom: 13
         });
-        const cmp = ReactDOM.render(
+        let cmp = ReactDOM.render(
             <DrawSupport
                 map={map}
                 drawOwner="me"
@@ -121,15 +129,20 @@ describe('Leaflet DrawSupport', () => {
             />
         , msNode);
         expect(cmp).toExist();
-        cmp.setProps({
-            drawStatus: "replace",
-            drawMethod: "Circle",
-            features: [{
-                projection: "EPSG:4326",
-                coordinates: [ -21150.703250721977, 5855989.620460],
-                radius: 122631.43,
-                type: "Polygon"}
-                ]});
+        cmp = ReactDOM.render(
+            <DrawSupport
+                map={map}
+                drawOwner="me"
+                drawStatus="replace"
+                drawMethod="Circle"
+                features={[{
+                    projection: "EPSG:4326",
+                    coordinates: [ -21150.703250721977, 5855989.620460],
+                    radius: 122631.43,
+                    type: "Polygon"}
+                ]}
+            />
+        , msNode);
     });
 
 });

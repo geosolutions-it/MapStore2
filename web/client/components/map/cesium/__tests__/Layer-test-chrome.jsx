@@ -5,11 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var CesiumLayer = require('../Layer.jsx');
 var expect = require('expect');
 var Cesium = require('../../../../libs/cesium');
+
+const assign = require('object-assign');
 
 require('../../../../utils/cesium/Layers');
 require('../plugins/OSMLayer');
@@ -192,18 +194,21 @@ describe('Cesium layer', () => {
     });
 
     it('switch osm layer visibility', () => {
-        var options = {};
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="osm"
-                 options={{options}} position={0} map={map}/>, document.getElementById("container"));
+                 options={{}} position={0} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
         // not visibile layers are removed from the leaflet maps
-        layer.setProps({options: {visibility: false}, position: 0});
+        layer = ReactDOM.render(
+            <CesiumLayer type="osm"
+                 options={{visibility: false}} position={0} map={map}/>, document.getElementById("container"));
         expect(map.imageryLayers.length).toBe(0);
-        layer.setProps({options: {visibility: true}, position: 0});
+        layer = ReactDOM.render(
+            <CesiumLayer type="osm"
+                 options={{visibility: true}} position={0} map={map}/>, document.getElementById("container"));
         expect(map.imageryLayers.length).toBe(1);
     });
 
@@ -220,14 +225,15 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="wms"
-                 options={options} map={map}/>, document.getElementById("container"));
+                 options={options} position={0} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
 
         expect(layer.provider.alpha).toBe(1.0);
-
-        layer.setProps({options: {opacity: 0.5}, position: 0});
+        layer = ReactDOM.render(
+            <CesiumLayer type="wms"
+                 options={assign({}, options, {opacity: 0.5})} position={0} map={map}/>, document.getElementById("container"));
         expect(layer.provider.alpha).toBe(0.5);
     });
 
@@ -251,7 +257,7 @@ describe('Cesium layer', () => {
             "url": "http://demo.geo-solutions.it/geoserver/wms"
         };
         // create layers
-        const layer1 = ReactDOM.render(
+        let layer1 = ReactDOM.render(
             <CesiumLayer type="wms"
              options={options1} map={map} position={1}/>
                 , document.getElementById("container"));
@@ -259,7 +265,7 @@ describe('Cesium layer', () => {
         expect(layer1).toExist();
         expect(map.imageryLayers.length).toBe(1);
 
-        const layer2 = ReactDOM.render(
+        let layer2 = ReactDOM.render(
             <CesiumLayer type="wms"
              options={options2} map={map} position={2}/>
          , document.getElementById("container2"));
@@ -267,9 +273,15 @@ describe('Cesium layer', () => {
         expect(layer2).toExist();
         expect(map.imageryLayers.length).toBe(2);
 
+        layer1 = ReactDOM.render(
+            <CesiumLayer type="wms"
+             options={options1} map={map} position={2}/>
+                , document.getElementById("container"));
 
-        layer1.setProps({position: 2});
-        layer2.setProps({position: 1});
+        layer2 = ReactDOM.render(
+            <CesiumLayer type="wms"
+             options={options2} map={map} position={1}/>
+         , document.getElementById("container2"));
 
         expect(map.imageryLayers.get(0)).toBe(layer2.provider);
         expect(map.imageryLayers.get(1)).toBe(layer1.provider);

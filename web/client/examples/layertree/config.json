@@ -1,5 +1,5 @@
-module.exports = {
-  sources: {
+{
+  "sources": {
       "google": {
           "projection": "EPSG:900913",
           "ptype": "gxp_googlesource"
@@ -26,7 +26,7 @@ module.exports = {
           "url": "http://tms.comune.fi.it/tiles/service/wms?SERVICE=WMS&REQUEST=GetCapabilities"
       }
   },
-  layers: [
+  "layers": [
   {
       "selected": false,
       "title": "Open Street Map",

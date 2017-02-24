@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react/addons');
+var React = require('react');
 var expect = require('expect');
 var ReactDOM = require('react-dom');
 var Template = require('../Template');
@@ -60,7 +60,9 @@ describe("Test JSX Template", () => {
         expect(cmpDom).toExist();
         expect(cmpDom.id).toExist();
         expect(cmpDom.id).toBe("template");
-        comp.setProps({model: {id: "template-update" }});
+        comp = ReactDOM.render(
+            <Template template="<div id={model.id}/>" model={{id: "template-update"}} />
+            , document.getElementById("container"));
         cmpDom = document.getElementById("template-update");
         expect(cmpDom).toExist();
         expect(cmpDom.id).toExist();
@@ -73,7 +75,9 @@ describe("Test JSX Template", () => {
         expect(comp).toExist();
         let cmpDom = document.getElementById("temp");
         expect(cmpDom).toExist();
-        comp.setProps({template: "<div id='template'/>"});
+        comp = ReactDOM.render(
+            <Template template="<div id='template'/>" model={{id: "temp"}} />
+            , document.getElementById("container"));
         cmpDom = document.getElementById("template");
         expect(cmpDom).toExist();
     });

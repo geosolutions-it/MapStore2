@@ -14,7 +14,7 @@ const QueryFormMap = require('../components/QueryFormMap');
 const SmartQueryForm = require('../components/SmartQueryForm');
 const Results = require('../components/Results');
 
-const {Panel} = require('react-bootstrap');
+const {Panel, Glyphicon} = require('react-bootstrap');
 const Draggable = require('react-draggable');
 
 require('./queryform.css');
@@ -28,7 +28,7 @@ const QueryForm = React.createClass({
         return (
             <div className="handle_querypanel">
                 <span>
-                    <span>Query Panel</span>
+                    <span><Glyphicon glyph="glyphicon glyphicon-move"/></span>
                 </span>
             </div>
         );

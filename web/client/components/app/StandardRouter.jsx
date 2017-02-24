@@ -23,7 +23,7 @@ const StandardRouter = React.createClass({
     getDefaultProps() {
         return {
             plugins: {},
-            locale: {messages: {}, current: ''},
+            locale: {messages: {}, current: 'en-US'},
             pages: []
         };
     },

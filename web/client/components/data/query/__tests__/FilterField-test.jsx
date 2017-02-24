@@ -97,18 +97,18 @@ describe('FilterField', () => {
 
         let childNodes = filterFieldDOMNode.actual.childNodes;
 
-        expect(childNodes.length).toBe(3);
+        expect(childNodes.length).toBe(1);
 
         const inputFields = filterFieldDOMNode.actual.getElementsByClassName('rw-input');
-        expect(inputFields.length).toBe(4);
+        expect(inputFields.length).toBe(3);
 
         const attributeSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[0];
         expect(attributeSelect.childNodes[0].nodeValue).toBe("Attribute1");
 
-        const operatorSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[2];
+        const operatorSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[1];
         expect(operatorSelect.childNodes[0].nodeValue).toBe("=");
 
-        const valueSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[3];
+        const valueSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[2];
         expect(valueSelect.childNodes[0].nodeValue).toBe("attribute1");
     });
 
@@ -170,18 +170,18 @@ describe('FilterField', () => {
 
         let childNodes = filterFieldDOMNode.actual.childNodes;
 
-        expect(childNodes.length).toBe(3);
+        expect(childNodes.length).toBe(1);
 
         const inputFields = filterFieldDOMNode.actual.getElementsByClassName('rw-input');
-        expect(inputFields.length).toBe(4);
+        expect(inputFields.length).toBe(3);
 
         const attributeSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[0];
         expect(attributeSelect.childNodes[0].nodeValue).toBe("Attribute1");
 
-        const operatorSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[2];
+        const operatorSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[1];
         expect(operatorSelect.childNodes[0].nodeValue).toBe("=");
 
-        const valueSelectContainer = filterFieldDOMNode.actual.getElementsByClassName('col-xs-6')[0].childNodes[0];
+        const valueSelectContainer = filterFieldDOMNode.actual.getElementsByClassName('col-xs-5')[0].childNodes[0];
         expect(valueSelectContainer.style.display).toBe('none');
 
     });

@@ -9,7 +9,7 @@ const React = require("react");
 const expect = require('expect');
 const ReactDOM = require('react-dom');
 const FeatureGrid = require('../FeatureGrid');
-const data = require("json!../../../../test-resources/featureGrid-test-data.json");
+const data = require("json-loader!../../../../test-resources/featureGrid-test-data.json");
 
 const columnDef = [
     {headerName: "Name", field: "properties.NAME_STATE", width: 150, pinned: true}
@@ -33,7 +33,7 @@ describe("Test FeatureGrid Component", () => {
         expect(comp).toExist();
         let btns = document.getElementsByTagName("button");
         btns[btns.length - 1].click();
-        comp.setProps({paging: true, features: function() { return data.features; }, columnDefs: columnDef});
+        // comp.setProps({paging: true, features: function() { return data.features; }, columnDefs: columnDef});
     });
     it('Test FeatureGrid rendering with column def', () => {
         let comp = ReactDOM.render(
@@ -79,4 +79,3 @@ describe("Test FeatureGrid Component", () => {
         expect(spy).toHaveBeenCalledWith(params.data);
     });
 });
-

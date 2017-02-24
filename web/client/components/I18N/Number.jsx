@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var {FormattedDate} = require('react-intl');
+var {FormattedNumber} = require('react-intl');
 
-var DateFormat = React.createClass({
+var NumberFormat = React.createClass({
     propTypes: {
         value: React.PropTypes.object,
-        dateParams: React.PropTypes.object
+        numberParams: React.PropTypes.object
     },
     contextTypes: {
       intl: React.PropTypes.object
@@ -22,8 +22,8 @@ var DateFormat = React.createClass({
         };
     },
     render() {
-        return this.context.intl ? <FormattedDate value={this.props.value} {...this.props.dateParams}/> : <span>{this.props.value && this.props.value.toString() || ''}</span>;
+        return this.context.intl ? <FormattedNumber value={this.props.value} {...this.props.numberParams}/> : <span>{this.props.value && this.props.value.toString() || ''}</span>;
     }
 });
 
-module.exports = DateFormat;
+module.exports = NumberFormat;

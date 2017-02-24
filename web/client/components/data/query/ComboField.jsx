@@ -81,7 +81,7 @@ const ComboField = React.createClass({
         };
     },
     render() {
-        let style = assign({}, {marginBottom: "15px", borderColor: "#dedede"}, this.props.style);
+        let style = assign({}, {borderColor: "#dedede"}, this.props.style);
 
         if (this.props.fieldException) {
             style = assign({}, style, {borderColor: "#FF0000"});

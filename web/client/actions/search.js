@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var GeoCodingApi = require('../api/Nominatim');
 const TEXT_SEARCH_STARTED = 'TEXT_SEARCH_STARTED';
 const TEXT_SEARCH_RESULTS_LOADED = 'TEXT_SEARCH_RESULTS_LOADED';
 const TEXT_SEARCH_PERFORMED = 'TEXT_SEARCH_PERFORMED';
@@ -32,12 +31,6 @@ function searchTextChanged(text) {
     };
 }
 
-function searchTextStarted(searchText) {
-    return {
-        type: TEXT_SEARCH_STARTED,
-        searchText
-    };
-}
 function searchTextLoading(loading) {
     return {
         type: TEXT_SEARCH_LOADING,
@@ -71,14 +64,10 @@ function addMarker(itemPosition) {
     };
 }
 
-function textSearch(text) {
-    return (dispatch) => {
-        dispatch(searchTextStarted(text));
-        GeoCodingApi.geocode(text).then((response) => {
-            dispatch(searchResultLoaded(response));
-        }).catch((e) => {
-            dispatch(searchResultLoaded(e));
-        });
+function textSearch(searchText) {
+    return {
+        type: TEXT_SEARCH_STARTED,
+        searchText
     };
 }
 
@@ -93,7 +82,6 @@ module.exports = {
     TEXT_SEARCH_RESET,
     TEXT_SEARCH_ADD_MARKER,
     TEXT_SEARCH_TEXT_CHANGE,
-    searchTextStarted,
     searchTextLoading,
     searchResultError,
     searchResultLoaded,

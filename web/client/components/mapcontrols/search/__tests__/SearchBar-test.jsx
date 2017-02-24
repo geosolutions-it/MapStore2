@@ -7,9 +7,11 @@
  */
 var expect = require('expect');
 
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var SearchBar = require('../SearchBar');
+
+const TestUtils = require('react-addons-test-utils');
 
 describe("test the SearchBar", () => {
     beforeEach((done) => {
@@ -29,17 +31,20 @@ describe("test the SearchBar", () => {
     });
 
     it('test search and reset on enter', () => {
-        var TestUtils = React.addons.TestUtils;
+        const renderSearchBar = (testHandlers, text) => {
+            return ReactDOM.render(<SearchBar searchText={text} delay={0} typeAhead={false} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler} onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
+        };
+
         var tb;
         const testHandlers = {
             onSearchHandler: (text) => { return text; },
-            onSearchResetHandler: () => {},
-            onSearchTextChangeHandler: (text) => { tb.setProps({searchText: text}); }
+            onSearchResetHandler: () => {}
         };
+        testHandlers.onSearchTextChangeHandler = renderSearchBar.bind(null, testHandlers);
 
         const spy = expect.spyOn(testHandlers, 'onSearchHandler');
         const spyReset = expect.spyOn(testHandlers, 'onSearchResetHandler');
-        tb = ReactDOM.render(<SearchBar delay={0} typeAhead={false} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler} onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
+        tb = renderSearchBar(testHandlers);
         let input = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0]);
 
         expect(input).toExist();
@@ -54,17 +59,21 @@ describe("test the SearchBar", () => {
     });
 
     it('test search and reset buttons', () => {
-        var TestUtils = React.addons.TestUtils;
         var tb;
-        const testHandlers = {
-            onSearchHandler: (text) => { return text; },
-            onSearchResetHandler: () => { tb.setProps({searchText: ""}); },
-            onSearchTextChangeHandler: (text) => { tb.setProps({searchText: text}); }
+
+        const renderSearchBar = (testHandlers, text) => {
+            return ReactDOM.render(<SearchBar searchText={text} delay={0} typeAhead={false} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler} onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
         };
+
+        const testHandlers = {
+            onSearchHandler: (text) => { return text; }
+        };
+        testHandlers.onSearchResetHandler = renderSearchBar.bind(null, testHandlers, '');
+        testHandlers.onSearchTextChangeHandler = renderSearchBar.bind(null, testHandlers);
 
         const spyReset = expect.spyOn(testHandlers, 'onSearchResetHandler');
         spyReset.andCallThrough();
-        tb = ReactDOM.render(<SearchBar delay={0} typeAhead={false} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler} onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
+        tb = renderSearchBar(testHandlers);
         let input = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0]);
         // test reset button
         expect(input).toExist();
@@ -79,14 +88,19 @@ describe("test the SearchBar", () => {
     });
 
     it('test typeahead', (done) => {
-        var TestUtils = React.addons.TestUtils;
         var tb;
-        const testHandlers = {
-            onSearchHandler: (text) => {return text; },
-            onSearchTextChangeHandler: (text) => { tb.setProps({searchText: text}); }
+
+        const renderSearchBar = (testHandlers, text) => {
+            return ReactDOM.render(<SearchBar searchText={text} delay={0} typeAhead={true} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler} onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
         };
+
+        const testHandlers = {
+            onSearchHandler: (text) => { return text; }
+        };
+        testHandlers.onSearchTextChangeHandler = renderSearchBar.bind(null, testHandlers);
+
         const spy = expect.spyOn(testHandlers, 'onSearchHandler');
-        tb = ReactDOM.render(<SearchBar delay={0} typeAhead={true} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler} onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
+        tb = renderSearchBar(testHandlers);
         let input = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0]);
 
         expect(input).toExist();
@@ -96,7 +110,6 @@ describe("test the SearchBar", () => {
     });
 
     it('test focus and blur events', (done) => {
-        var TestUtils = React.addons.TestUtils;
         const testHandlers = {
             onSearchHandler: (text) => {return text; },
             onPurgeResultsHandler: () => {}
@@ -121,16 +134,20 @@ describe("test the SearchBar", () => {
     });
 
     it('test that options are passed to search action', () => {
-        var TestUtils = React.addons.TestUtils;
         var tb;
-        const testHandlers = {
-            onSearchHandler: (text, options) => { return [text, options]; },
-            onSearchTextChangeHandler: (text) => { tb.setProps({searchText: text}); }
+        let searchOptions = {displaycrs: "EPSG:3857"};
+
+        const renderSearchBar = (testHandlers, text) => {
+            return ReactDOM.render(<SearchBar searchOptions={searchOptions} searchText={text} delay={0} typeAhead={false} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler} onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
         };
 
-        let searchOptions = {displaycrs: "EPSG:3857"};
+        const testHandlers = {
+            onSearchHandler: (text, options) => { return [text, options]; }
+        };
+        testHandlers.onSearchTextChangeHandler = renderSearchBar.bind(null, testHandlers);
+
         const spy = expect.spyOn(testHandlers, 'onSearchHandler');
-        tb = ReactDOM.render(<SearchBar delay={0} typeAhead={false} onSearch={testHandlers.onSearchHandler} onSearchTextChange={testHandlers.onSearchTextChangeHandler} searchOptions={searchOptions}/>, document.getElementById("container"));
+        tb = renderSearchBar(testHandlers);
         let input = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0]);
 
         expect(input).toExist();
@@ -141,7 +158,6 @@ describe("test the SearchBar", () => {
         expect(spy).toHaveBeenCalledWith('test', searchOptions);
     });
     it('test error and loading status', () => {
-        var TestUtils = React.addons.TestUtils;
         const tb = ReactDOM.render(<SearchBar loading={true} error={{message: "TEST_ERROR"}}/>, document.getElementById("container"));
         expect(tb).toExist();
         let error = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(tb, "searcherror")[0]);

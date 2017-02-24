@@ -43,7 +43,7 @@ const startApp = () => {
     const Debug = require('../../components/development/Debug');
 
     const assign = require('object-assign');
-    const codeSample = require("raw!./sample.js.raw");
+    const codeSample = require("raw-loader!./sample.js.raw");
 
     let customReducers;
 

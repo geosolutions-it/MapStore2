@@ -10,7 +10,7 @@ var Layers = require('../../../../utils/leaflet/Layers');
 var L = require('leaflet');
 
 Layers.registerType('osm', (options) => {
-    return L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
           zoomOffset: options.zoomOffset || 0
     });

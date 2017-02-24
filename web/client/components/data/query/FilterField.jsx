@@ -61,21 +61,23 @@ const FilterField = React.createClass({
         let selectedAttribute = this.props.attributes.filter((attribute) => attribute.attribute === this.props.filterField.attribute)[0];
 
         return (
-            <Row>
-                <Col xs={4}>
-                    <ComboField
-                        valueField={'id'}
-                        textField={'name'}
-                        fieldOptions={this.props.attributes.map((attribute) => { return {id: attribute.attribute, name: attribute.label}; })}
-                        fieldValue={this.props.filterField.attribute}
-                        fieldName="attribute"
-                        fieldRowId={this.props.filterField.rowId}
-                        onUpdateField={this.updateFieldElement}
-                        comboFilter={"contains"}/>
-                </Col>
-                <Col xs={2}>{selectedAttribute ? this.renderOperatorField() : null}</Col>
-                <Col xs={6}>{selectedAttribute && this.props.filterField.operator ? this.renderValueField(selectedAttribute) : null}</Col>
-            </Row>
+            <div className="container-fluid">
+                <Row className="filter-field-row">
+                    <Col xs={4}>
+                        <ComboField
+                            valueField={'id'}
+                            textField={'name'}
+                            fieldOptions={this.props.attributes.map((attribute) => { return {id: attribute.attribute, name: attribute.label}; })}
+                            fieldValue={this.props.filterField.attribute}
+                            fieldName="attribute"
+                            fieldRowId={this.props.filterField.rowId}
+                            onUpdateField={this.updateFieldElement}
+                            comboFilter={"contains"}/>
+                    </Col>
+                    <Col xs={3}>{selectedAttribute ? this.renderOperatorField() : null}</Col>
+                    <Col xs={5}>{selectedAttribute && this.props.filterField.operator ? this.renderValueField(selectedAttribute) : null}</Col>
+                </Row>
+            </div>
         );
     },
     updateExceptionFieldElement(rowId, message) {
