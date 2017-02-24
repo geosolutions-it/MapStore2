@@ -5,12 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var MapItem = require('../MapItem.jsx');
 var expect = require('expect');
 
-var TestUtils = require('react/addons').addons.TestUtils;
+const TestUtils = require('react-addons-test-utils');
 
 describe('This test for MapItem', () => {
     beforeEach((done) => {

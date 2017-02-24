@@ -7,9 +7,11 @@
  */
 var expect = require('expect');
 
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var CRSSelector = require('../CRSSelector');
+
+const TestUtils = require('react-addons-test-utils');
 
 describe('CRSSelector', () => {
     beforeEach((done) => {
@@ -44,7 +46,7 @@ describe('CRSSelector', () => {
         const select = cmpDom.getElementsByTagName("select").item(0);
 
         select.value = "EPSG:4326";
-        React.addons.TestUtils.Simulate.change(select, {target: {value: 'EPSG:4326'}});
+        TestUtils.Simulate.change(select, {target: {value: 'EPSG:4326'}});
 
         expect(newCRS).toBe('EPSG:4326');
     });

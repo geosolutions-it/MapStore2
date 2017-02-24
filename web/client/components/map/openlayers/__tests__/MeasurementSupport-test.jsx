@@ -7,7 +7,7 @@
  */
 
 var expect = require('expect');
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var ol = require('openlayers');
 var MeasurementSupport = require('../MeasurementSupport');
@@ -64,7 +64,7 @@ describe('Openlayers MeasurementSupport', () => {
           view: new ol.View(viewOptions)
         });
 
-        const cmp = ReactDOM.render(
+        let cmp = ReactDOM.render(
             <MeasurementSupport
                 map={map}
                 measurement={{
@@ -75,13 +75,15 @@ describe('Openlayers MeasurementSupport', () => {
         expect(cmp).toExist();
 
         let initialLayersNum = getMapLayersNum(map);
-        cmp.setProps({
-            measurement: {
-                geomType: "LineString"
-            }
-        }, () => {
-            expect(getMapLayersNum(map)).toBeGreaterThan(initialLayersNum);
-        });
+        cmp = ReactDOM.render(
+            <MeasurementSupport
+                map={map}
+                measurement={{
+                    geomType: "LineString"
+                }}
+            />
+        , msNode);
+        expect(getMapLayersNum(map)).toBeGreaterThan(initialLayersNum);
     });
 
     it('test if drawing layers will be removed', () => {
@@ -95,7 +97,7 @@ describe('Openlayers MeasurementSupport', () => {
           view: new ol.View(viewOptions)
         });
 
-        const cmp = ReactDOM.render(
+        let cmp = ReactDOM.render(
             <MeasurementSupport
                 map={map}
                 measurement={{
@@ -106,19 +108,23 @@ describe('Openlayers MeasurementSupport', () => {
         expect(cmp).toExist();
 
         let initialLayersNum = getMapLayersNum(map);
-        cmp.setProps({
-            measurement: {
-                geomType: "Polygon"
-            }
-        }, () => {
-            expect(getMapLayersNum(map)).toBeGreaterThan(initialLayersNum);
-            cmp.setProps({
-                measurement: {
+        cmp = ReactDOM.render(
+            <MeasurementSupport
+                map={map}
+                measurement={{
+                    geomType: "Polygon"
+                }}
+            />
+        , msNode);
+        expect(getMapLayersNum(map)).toBeGreaterThan(initialLayersNum);
+        cmp = ReactDOM.render(
+            <MeasurementSupport
+                map={map}
+                measurement={{
                     geomType: null
-                }
-            }, () => {
-                expect(getMapLayersNum(map)).toBe(initialLayersNum);
-            });
-        });
+                }}
+            />
+        , msNode);
+        expect(getMapLayersNum(map)).toBe(initialLayersNum);
     });
 });

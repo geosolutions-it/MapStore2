@@ -7,7 +7,7 @@
  */
 var expect = require('expect');
 
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var GrabMap = require('../GrabMap');
 
@@ -27,11 +27,11 @@ describe("the OL GrabMap component", () => {
         const tb = ReactDOM.render(<GrabMap active={false}/>, document.getElementById("snap"));
         expect(tb).toExist();
     });
-    it('component update', () => {
-        const tb = ReactDOM.render(<GrabMap active={false}/>, document.getElementById("snap"));
+    /*it('component update', () => {
+        let tb = ReactDOM.render(<GrabMap active={false}/>, document.getElementById("snap"));
         expect(tb).toExist();
-        tb.setProps({active: false});
-    });
+        tb = ReactDOM.render(<GrabMap active={false}/>, document.getElementById("snap"));
+    });*/
     it('component snapshot img creation', (done) => {
         let layers = [{
             "source": "mapquest",
@@ -53,9 +53,9 @@ describe("the OL GrabMap component", () => {
                     zoom: 5, maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                     bbox: {bounds: {minx: -18.6328125, miny: 31.728167146023935, maxx: 41.1328125, maxy: 53.199451902831555 },
                      crs: "EPSG:4326", rotation: 0}, size: {height: 512, width: 512}, mapStateSource: "map"};
-        const tb = ReactDOM.render(<GrabMap config={map} layers={layers} snapstate={{state: "DISABLED"}} active={false} timeout={0} onSnapshotReady={() => { done(); }}/>, document.getElementById("snap"));
+        let tb = ReactDOM.render(<GrabMap config={map} layers={layers} snapstate={{state: "DISABLED"}} active={false} timeout={0} onSnapshotReady={() => { done(); }}/>, document.getElementById("snap"));
         expect(tb).toExist();
-        tb.setProps({active: true});
+        tb = ReactDOM.render(<GrabMap config={map} layers={layers} snapstate={{state: "DISABLED"}} active={true} timeout={0} onSnapshotReady={() => { done(); }}/>, document.getElementById("snap"));
         // emulate map load
         tb.layerLoading();
         tb.layerLoad();

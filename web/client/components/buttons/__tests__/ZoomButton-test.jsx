@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var ZoomButton = require('../ZoomButton');
 var expect = require('expect');
@@ -72,11 +72,9 @@ describe('This test for ZoomButton', () => {
         expect(zmeBtnNode).toExist();
 
         const btnItems = zmeBtnNode.getElementsByTagName('span');
-        expect(btnItems.length).toBe(3);
+        expect(btnItems.length).toBe(1);
 
-        expect(btnItems[0].innerHTML).toBe("");
-        expect(btnItems[1].innerHTML).toBe("&nbsp;");
-        expect(btnItems[2].innerHTML).toBe("button");
+        expect(zmeBtnNode.innerText.indexOf("button") !== -1).toBe(true);
     });
 
     it('test if click on button launches the proper action', () => {

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var expect = require('expect');
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var ScaleDenominator = require('../ScaleDenominator');
 

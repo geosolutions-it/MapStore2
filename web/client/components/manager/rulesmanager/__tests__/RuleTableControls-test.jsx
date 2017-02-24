@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react/addons');
+const React = require('react');
 const ReactDOM = require('react-dom');
 const RulesTableControls = require('../RulesTableControls.jsx');
 const expect = require('expect');

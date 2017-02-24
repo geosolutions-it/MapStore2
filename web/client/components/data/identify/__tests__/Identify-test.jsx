@@ -75,13 +75,19 @@ describe('Identify', () => {
 
         const spyMousePointer = expect.spyOn(testHandlers, 'changeMousePointer');
 
-        const identify = ReactDOM.render(
+        ReactDOM.render(
             <Identify changeMousePointer={testHandlers.changeMousePointer}/>,
             document.getElementById("container")
         );
-        identify.setProps({enabled: true});
+        ReactDOM.render(
+            <Identify changeMousePointer={testHandlers.changeMousePointer} enabled={true}/>,
+            document.getElementById("container")
+        );
         expect(spyMousePointer.calls.length).toEqual(1);
-        identify.setProps({enabled: false});
+        ReactDOM.render(
+            <Identify changeMousePointer={testHandlers.changeMousePointer} enabled={false}/>,
+            document.getElementById("container")
+        );
         expect(spyMousePointer.calls.length).toEqual(2);
     });
 
@@ -92,14 +98,21 @@ describe('Identify', () => {
 
         const spySendRequest = expect.spyOn(testHandlers, 'sendRequest');
 
-        const identify = ReactDOM.render(
+        ReactDOM.render(
             <Identify
                 queryableLayersFilter={() => true}
                 enabled={true} layers={[{}, {}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
                 />,
             document.getElementById("container")
         );
-        identify.setProps({point: {pixel: {x: 1, y: 1}}});
+        ReactDOM.render(
+            <Identify
+                queryableLayersFilter={() => true}
+                point={{pixel: {x: 1, y: 1}}}
+                enabled={true} layers={[{}, {}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
+                />,
+            document.getElementById("container")
+        );
         expect(spySendRequest.calls.length).toEqual(2);
     });
 
@@ -110,14 +123,21 @@ describe('Identify', () => {
 
         const spySendRequest = expect.spyOn(testHandlers, 'sendRequest');
 
-        const identify = ReactDOM.render(
+        ReactDOM.render(
             <Identify
                 queryableLayersFilter={() => true}
                 enabled={true} layers={[{}, {}]} localRequest={testHandlers.sendRequest} buildRequest={() => ({url: ""})}
                 />,
             document.getElementById("container")
         );
-        identify.setProps({point: {pixel: {x: 1, y: 1}}});
+        ReactDOM.render(
+            <Identify
+                queryableLayersFilter={() => true}
+                point={{pixel: {x: 1, y: 1}}}
+                enabled={true} layers={[{}, {}]} localRequest={testHandlers.sendRequest} buildRequest={() => ({url: ""})}
+                />,
+            document.getElementById("container")
+        );
         expect(spySendRequest.calls.length).toEqual(2);
     });
 
@@ -128,14 +148,21 @@ describe('Identify', () => {
 
         const spySendRequest = expect.spyOn(testHandlers, 'sendRequest');
 
-        const identify = ReactDOM.render(
+        ReactDOM.render(
             <Identify
                 queryableLayersFilter={() => true}
                 enabled={false} layers={[{}, {}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({})}
                 />,
             document.getElementById("container")
         );
-        identify.setProps({point: {pixel: {x: 1, y: 1}}});
+        ReactDOM.render(
+            <Identify
+                queryableLayersFilter={() => true}
+                point={{pixel: {x: 1, y: 1}}}
+                enabled={false} layers={[{}, {}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({})}
+                />,
+            document.getElementById("container")
+        );
         expect(spySendRequest.calls.length).toEqual(0);
     });
 
@@ -146,14 +173,21 @@ describe('Identify', () => {
 
         const spySendRequest = expect.spyOn(testHandlers, 'sendRequest');
 
-        const identify = ReactDOM.render(
+        ReactDOM.render(
             <Identify
                 queryableLayersFilter={(layer) => layer.type === "wms"}
                 enabled={true} layers={[{type: "wms"}, {type: "osm"}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
                 />,
             document.getElementById("container")
         );
-        identify.setProps({point: {pixel: {x: 1, y: 1}}});
+        ReactDOM.render(
+            <Identify
+                queryableLayersFilter={(layer) => layer.type === "wms"}
+                point={{pixel: {x: 1, y: 1}}}
+                enabled={true} layers={[{type: "wms"}, {type: "osm"}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
+                />,
+            document.getElementById("container")
+        );
         expect(spySendRequest.calls.length).toEqual(1);
     });
 
@@ -166,16 +200,30 @@ describe('Identify', () => {
         const spyShowMarker = expect.spyOn(testHandlers, 'showMarker');
         const spyHideMarker = expect.spyOn(testHandlers, 'hideMarker');
 
-        const identify = ReactDOM.render(
+        ReactDOM.render(
             <Identify
                 queryableLayersFilter={() => true}
                 enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
                 />,
             document.getElementById("container")
         );
-        identify.setProps({point: {pixel: {x: 1, y: 1}}});
+        ReactDOM.render(
+            <Identify
+                queryableLayersFilter={() => true}
+                point={{pixel: {x: 1, y: 1}}}
+                enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                />,
+            document.getElementById("container")
+        );
         expect(spyShowMarker.calls.length).toEqual(1);
-        identify.setProps({enabled: false});
+        ReactDOM.render(
+            <Identify
+                queryableLayersFilter={() => true}
+                point={{pixel: {x: 1, y: 1}}}
+                enabled={false} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                />,
+            document.getElementById("container")
+        );
         expect(spyHideMarker.calls.length).toEqual(1);
     });
 
@@ -186,16 +234,30 @@ describe('Identify', () => {
 
         const spyPurgeResults = expect.spyOn(testHandlers, 'purgeResults');
 
-        const identify = ReactDOM.render(
+        ReactDOM.render(
             <Identify
                 queryableLayersFilter={() => true}
                 enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
                 />,
             document.getElementById("container")
         );
-        identify.setProps({point: {pixel: {x: 1, y: 1}}});
+        ReactDOM.render(
+            <Identify
+                queryableLayersFilter={() => true}
+                point={{pixel: {x: 1, y: 1}}}
+                enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                />,
+            document.getElementById("container")
+        );
         expect(spyPurgeResults.calls.length).toEqual(1);
-        identify.setProps({enabled: false});
+        ReactDOM.render(
+            <Identify
+                queryableLayersFilter={() => true}
+                point={{pixel: {x: 1, y: 1}}}
+                enabled={false} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                />,
+            document.getElementById("container")
+        );
         expect(spyPurgeResults.calls.length).toEqual(2);
     });
 
@@ -206,7 +268,7 @@ describe('Identify', () => {
 
         const spyPurgeResults = expect.spyOn(testHandlers, 'purgeResults');
 
-        const identify = ReactDOM.render(
+        ReactDOM.render(
             <Identify
                 queryableLayersFilter={() => true}
                 enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
@@ -214,9 +276,27 @@ describe('Identify', () => {
                 />,
             document.getElementById("container")
         );
-        identify.setProps({point: {pixel: {x: 1, y: 1}, modifiers: {ctrl: false}}});
+        ReactDOM.render(
+            <Identify
+                queryableLayersFilter={() => true}
+                point={{pixel: {x: 1, y: 1}}}
+                modifiers={{ctrl: false}}
+                enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                multiSelection={true}
+                />,
+            document.getElementById("container")
+        );
         expect(spyPurgeResults.calls.length).toEqual(1);
-        identify.setProps({point: {pixel: {x: 1, y: 1}, modifiers: {ctrl: true}}});
+        ReactDOM.render(
+            <Identify
+                queryableLayersFilter={() => true}
+                point={{pixel: {x: 1, y: 1}}}
+                modifiers={{ctrl: true}}
+                enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                multiSelection={true}
+                />,
+            document.getElementById("container")
+        );
         expect(spyPurgeResults.calls.length).toEqual(1);
     });
 

@@ -7,7 +7,7 @@
  */
 
 const expect = require('expect');
-const React = require('react/addons');
+const React = require('react');
 const ReactDOM = require('react-dom');
 let ol = require('openlayers');
 const HighlightFeatureSupport = require('../HighlightFeatureSupport');
@@ -78,10 +78,10 @@ describe('HighlightFeatureSupport Ol', () => {
         });
         let vector = createVectorLayer(layer);
         map.addLayer(vector);
-        const cmp = ReactDOM.render(<HighlightFeatureSupport map={map}/>, msNode);
+        let cmp = ReactDOM.render(<HighlightFeatureSupport map={map}/>, msNode);
         expect(cmp).toExist();
-        cmp.setProps({status: 'enabled'});
+        cmp = ReactDOM.render(<HighlightFeatureSupport map={map} status="enabled"/>, msNode);
         cmp.selectionChange();
-        cmp.setProps({status: 'disabled'});
+        cmp = ReactDOM.render(<HighlightFeatureSupport map={map} status="disabled"/>, msNode);
     });
 });

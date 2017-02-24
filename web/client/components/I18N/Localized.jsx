@@ -28,7 +28,7 @@ const Localized = React.createClass({
     render() {
         let { children } = this.props;
 
-        if (this.props.messages) {
+        if (this.props.messages && this.props.locale) {
             if (typeof children === 'function') {
                 children = children();
             }

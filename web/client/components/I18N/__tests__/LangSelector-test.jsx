@@ -7,9 +7,10 @@
  */
 var expect = require('expect');
 
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var LangSelector = require('../LangSelector');
+const TestUtils = require('react-addons-test-utils');
 
 describe('LangSelector', () => {
     beforeEach((done) => {
@@ -53,7 +54,7 @@ describe('LangSelector', () => {
         const select = cmpDom.getElementsByTagName("select").item(0);
 
         select.value = "it-IT";
-        React.addons.TestUtils.Simulate.change(select, {target: {value: 'it-IT'}});
+        TestUtils.Simulate.change(select, {target: {value: 'it-IT'}});
         // select.children[1].click();
 
         expect(newLang).toBe('it-IT');

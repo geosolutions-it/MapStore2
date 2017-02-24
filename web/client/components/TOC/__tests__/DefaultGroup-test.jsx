@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var Group = require('../DefaultGroup');
 
@@ -51,12 +51,11 @@ describe('test Group module component', () => {
 
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
-
         const children = domNode.children;
         expect(children.length).toBe(2);
 
         const container = children.item(0);
-        expect(container.children.length).toBe(2);
+        expect(container.children.length).toBe(1);
     });
 
     it('test Group creation with filter', () => {

@@ -6,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var Layer = require('../DefaultLayer');
 // var ConfirmButton = require('../../buttons/ConfirmButton');
 var expect = require('expect');
 
-const TestUtils = React.addons.TestUtils;
+const TestUtils = require('react-addons-test-utils');
 
 describe('test DefaultLayer module component', () => {
     beforeEach((done) => {
@@ -104,7 +104,7 @@ describe('test DefaultLayer module component', () => {
         expect(checkbox).toExist();
 
         checkbox.checked = !l.visibility;
-        React.addons.TestUtils.Simulate.change(checkbox, {
+        TestUtils.Simulate.change(checkbox, {
             target: {
                 checked: !l.visibility
             }

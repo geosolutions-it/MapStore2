@@ -7,7 +7,7 @@
  */
 var expect = require('expect');
 
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var ToggleButton = require('../ToggleButton');
 
@@ -56,11 +56,8 @@ describe("test the ToggleButton", () => {
         expect(tbNode).toExist();
 
         const btnItems = tbNode.getElementsByTagName('span');
-        expect(btnItems.length).toBe(3);
-
-        expect(btnItems[0].innerHTML).toBe("");
-        expect(btnItems[1].innerHTML).toBe("&nbsp;");
-        expect(btnItems[2].innerHTML).toBe("button");
+        expect(btnItems.length).toBe(1);
+        expect(tbNode.innerText.indexOf("button") !== -1).toBe(true);
     });
 
     it('test button state', () => {

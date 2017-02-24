@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react/addons');
+const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactItem = require('../RecordItem.jsx');
 const expect = require('expect');
 const assign = require('object-assign');
 
-const TestUtils = require('react/addons').addons.TestUtils;
+const TestUtils = require('react-addons-test-utils');
 
 const sampleRecord = {
     identifier: "test-identifier",

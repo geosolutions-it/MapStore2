@@ -7,10 +7,10 @@
  */
 var expect = require('expect');
 
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var NominatimResult = require('../NominatimResult');
-
+const TestUtils = require('react-addons-test-utils');
 
 describe("test the NominatimResult", () => {
     beforeEach((done) => {
@@ -41,7 +41,6 @@ describe("test the NominatimResult", () => {
     });
 
     it('test click handler', () => {
-        var TestUtils = React.addons.TestUtils;
         const testHandlers = {
             clickHandler: (pressed) => {return pressed; }
         };

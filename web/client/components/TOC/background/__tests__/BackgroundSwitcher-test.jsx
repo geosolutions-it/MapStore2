@@ -7,10 +7,12 @@
  */
 var expect = require('expect');
 
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var BackgroundSwitcher = require('../BackgroundSwitcher');
 var {Thumbnail} = require('react-bootstrap');
+
+const TestUtils = require('react-addons-test-utils');
 
 describe("test the BakckgroundSwitcher", () => {
     beforeEach((done) => {
@@ -53,7 +55,6 @@ describe("test the BakckgroundSwitcher", () => {
     });
 
     it('test select handler', () => {
-        var TestUtils = React.addons.TestUtils;
         const testHandlers = {
             propertiesChangeHandler: (pressed) => {return pressed; }
         };

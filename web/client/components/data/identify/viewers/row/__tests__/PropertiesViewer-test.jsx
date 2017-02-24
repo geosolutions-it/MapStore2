@@ -7,7 +7,7 @@
  */
 
 var expect = require('expect');
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var PropertiesViewer = require('../PropertiesViewer');
 
@@ -63,10 +63,7 @@ describe('PropertiesViewer', () => {
             let testKey = testKeys[i];
             let testVal = testProps[testKey];
             return prev
-                && child.childNodes.length === 3
-                && child.childNodes.item(0).innerHTML === testKey
-                && child.childNodes.item(1).innerHTML === " "
-                && child.childNodes.item(2).innerHTML === testVal;
+                && child.innerText === testKey + " " + testVal;
         }, true)).toBe(true);
     });
 

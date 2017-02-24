@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var ol = require('openlayers');
 var OpenlayersLayer = require('../Layer.jsx');
@@ -530,7 +530,8 @@ describe('Openlayers layer', () => {
 
         // if only one layer for google exists, the div will be hidden
         let newOpts = assign({}, options, {visibility: false});
-        layer.setProps({options: newOpts});
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="google" options={newOpts} map={map} mapId="map"/>, document.getElementById("container"));
         expect(div.style.visibility).toBe('hidden');
     });
 
@@ -613,24 +614,24 @@ describe('Openlayers layer', () => {
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getVisible()).toBe(true);
-        layer.setProps({options: assign({}, {
-            "type": "bing",
-            "title": "Bing Aerial",
-            "name": "Aerial",
-            "group": "background"
-        }, {
-            "visibility": true
-        })});
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="bing" options={{
+                "type": "bing",
+                "title": "Bing Aerial",
+                "name": "Aerial",
+                "group": "background",
+                "visibility": true
+            }} map={map}/>, document.getElementById("container"));
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getVisible()).toBe(true);
-        layer.setProps({options: assign({}, {
-            "type": "bing",
-            "title": "Bing Aerial",
-            "name": "Aerial",
-            "group": "background"
-        }, {
-            "visibility": false
-        })});
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="bing" options={{
+                "type": "bing",
+                "title": "Bing Aerial",
+                "name": "Aerial",
+                "group": "background",
+                "visibility": false
+            }} map={map}/>, document.getElementById("container"));
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getVisible()).toBe(false);
 
@@ -674,7 +675,10 @@ describe('Openlayers layer', () => {
 
         expect(layer.layer.getOpacity()).toBe(1.0);
 
-        layer.setProps({options: {opacity: 0.5}, position: 0});
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                 options={assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
+
         expect(layer.layer.getOpacity()).toBe(0.5);
     });
 
@@ -699,7 +703,9 @@ describe('Openlayers layer', () => {
 
         expect(layer.layer.getZIndex()).toBe(10);
 
-        layer.setProps({position: 2});
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" position={2}
+                 options={options} map={map}/>, document.getElementById("container"));
         expect(layer.layer.getZIndex()).toBe(2);
     });
 
@@ -729,7 +735,9 @@ describe('Openlayers layer', () => {
         expect(layer.layer.getSource().getParams()).toExist();
         expect(layer.layer.getSource().getParams().cql_filter).toBe("INCLUDE");
 
-        layer.setProps({options: {params: {cql_filter: "EXCLUDE"}}});
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" observables={["cql_filter"]}
+                 options={assign({}, options, {params: {cql_filter: "EXCLUDE"}})} map={map}/>, document.getElementById("container"));
         expect(layer.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
     });
 });

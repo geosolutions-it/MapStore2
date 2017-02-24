@@ -7,9 +7,11 @@
  */
 
 var expect = require('expect');
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var FeatureInfoFormatSelector = require('../FeatureInfoFormatSelector');
+
+const TestUtils = require('react-addons-test-utils');
 
 describe('FeatureInfoFormatSelector', () => {
     const data = {
@@ -73,7 +75,7 @@ describe('FeatureInfoFormatSelector', () => {
         const select = cmpDom.getElementsByTagName("select").item(0);
 
         select.value = "v2";
-        React.addons.TestUtils.Simulate.change(select, {target: {value: 'v2'}});
+        TestUtils.Simulate.change(select, {target: {value: 'v2'}});
 
         expect(newFormat).toBe('v2');
     });
