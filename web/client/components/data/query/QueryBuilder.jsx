@@ -137,7 +137,7 @@ const QueryBuilder = React.createClass({
                     sortOptions={this.props.sortOptions}
                     hits={this.props.hits}
                     />
-                <div className="querypanel">
+                <div className="querypanel" style={{maxHeight: window.innerHeight - 170}}>
                     <GroupField
                         attributes={this.props.attributes}
                         groupLevels={this.props.groupLevels}
