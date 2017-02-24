@@ -10,21 +10,22 @@
 var expect = require('expect');
 
 const configureMockStore = require('redux-mock-store').default;
-const { createEpicMiddleware } = require('redux-observable');
-const { textSearch, TEXT_SEARCH_RESULTS_LOADED, TEXT_SEARCH_LOADING } = require('../../actions/search');
-const {searchEpic} = require('../search');
-const epicMiddleware = createEpicMiddleware(searchEpic);
+const { createEpicMiddleware, combineEpics } = require('redux-observable');
+const { textSearch, selectSearchItem, TEXT_SEARCH_RESULTS_LOADED, TEXT_SEARCH_LOADING, TEXT_SEARCH_ADD_MARKER, TEXT_SEARCH_RESULTS_PURGE } = require('../../actions/search');
+const {CHANGE_MAP_VIEW} = require('../../actions/map');
+const {searchEpic, searchItemSelected } = require('../search');
+const rootEpic = combineEpics(searchEpic, searchItemSelected);
+const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
-describe('searchEpic', () => {
+describe('search Epics', () => {
     let store;
     beforeEach(() => {
         store = mockStore();
     });
 
     afterEach(() => {
-        // nock.cleanAll();
-        epicMiddleware.replaceEpic(searchEpic);
+        epicMiddleware.replaceEpic(rootEpic);
     });
 
     it('produces the search epic', (done) => {
@@ -48,6 +49,35 @@ describe('searchEpic', () => {
             expect(actions[1].type).toBe(TEXT_SEARCH_LOADING);
             expect(actions[2].type).toBe(TEXT_SEARCH_RESULTS_LOADED);
             expect(actions[3].type).toBe(TEXT_SEARCH_LOADING);
+            done();
+        }, 1000);
+    });
+    it('produces the selectSearchItem epic', (done) => {
+        let action = selectSearchItem({
+          "type": "Feature",
+          "bbox": [125, 10, 126, 11],
+          "geometry": {
+            "type": "Point",
+            "coordinates": [125.6, 10.1]
+          },
+          "properties": {
+            "name": "Dinagat Islands"
+          }
+        }, {
+            size: {
+                width: 200,
+                height: 200
+            },
+            projection: "EPSG:4326"
+        });
+
+        store.dispatch( action );
+        setTimeout(() => {
+            let actions = store.getActions();
+            expect(actions.length).toBe(4);
+            expect(actions[1].type).toBe(CHANGE_MAP_VIEW);
+            expect(actions[2].type).toBe(TEXT_SEARCH_ADD_MARKER);
+            expect(actions[3].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
             done();
         }, 1000);
     });

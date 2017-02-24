@@ -11,22 +11,38 @@ const {createSelector} = require('reselect');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const LayersUtils = require('../utils/LayersUtils');
 
-const layersSelector = (state) => (state.layers && state.layers.flat) || (state.layers) || (state.config && state.config.layers) || [];
-const markerSelector = (state) => (state.mapInfo && state.mapInfo.showMarker && [MapInfoUtils.getMarkerLayer("GetFeatureInfo", state.mapInfo.clickPoint.latlng)] || []).concat(
-    state.search && state.search.markerPosition &&
-    [MapInfoUtils.getMarkerLayer("GeoCoder", state.search.markerPosition, "marker", {overrideOLStyle: true, style: {iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png"}} /*, "altro", {
-        radius: 5,
-        color: "red",
-        weight: 5,
-        opacity: 1,
-        fillOpacity: 0
-    }*/
-)] || []
-);
+const layersSelector = state => (state.layers && state.layers.flat) || (state.layers) || (state.config && state.config.layers);
+const markerSelector = state => (state.mapInfo && state.mapInfo.showMarker && state.mapInfo.clickPoint);
+const geoColderSelector = state => (state.search && state.search.markerPosition);
+
+// TODO currently loading flag causes a re-creation of the selector on any pan
+// to avoid this separate loading from the layer object
 
 const layerSelectorWithMarkers = createSelector(
-    [layersSelector, markerSelector],
-    (layers, marker) => ([...layers, ...marker])
+    [layersSelector, markerSelector, geoColderSelector],
+    (layers = [], markerPosition, geocoderPosition) => {
+        let newLayers = [...layers];
+        if ( markerPosition ) {
+            newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", markerPosition.latlng));
+        }
+        if (geocoderPosition) {
+            newLayers.push(MapInfoUtils.getMarkerLayer("GeoCoder", geocoderPosition, "marker",
+                {
+                    overrideOLStyle: true,
+                    style: {
+                        iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+                        shadowUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/leaf-shadow.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowSize: [41, 41]
+                    }
+                }
+            ));
+        }
+
+        return newLayers;
+    }
 );
 
 const groupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups && LayersUtils.denormalizeGroups(state.layers.flat, state.layers.groups).groups || [];

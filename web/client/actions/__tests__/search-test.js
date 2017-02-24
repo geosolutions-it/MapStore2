@@ -12,10 +12,12 @@ var {
     TEXT_SEARCH_LOADING,
     TEXT_SEARCH_ERROR,
     TEXT_SEARCH_STARTED,
+    TEXT_SEARCH_ITEM_SELECTED,
     searchResultLoaded,
     searchTextLoading,
     searchResultError,
-    textSearch
+    textSearch,
+    selectSearchItem
 } = require('../search');
 
 describe('Test correctness of the search actions', () => {
@@ -48,6 +50,13 @@ describe('Test correctness of the search actions', () => {
         expect(retval2.type).toBe(TEXT_SEARCH_RESULTS_LOADED);
         expect(retval2.results).toEqual(testVal);
         expect(retval2.append).toBe(true);
+    });
+    it('serch item selected', () => {
+        const retval = selectSearchItem("A", "B");
+        expect(retval).toExist();
+        expect(retval.type).toBe(TEXT_SEARCH_ITEM_SELECTED);
+        expect(retval.item).toEqual("A");
+        expect(retval.mapConfig).toBe("B");
     });
 
 });

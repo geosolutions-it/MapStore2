@@ -7,8 +7,8 @@
  */
 const WFS = require('./WFS');
 const assign = require('object-assign');
-
-
+const GeoCodeUtils = require('../utils/GeoCodeUtils');
+/*
 const toNominatim = (fc) =>
     fc.features && fc.features.map( (f) => ({
         boundingbox: f.properties.bbox,
@@ -17,18 +17,22 @@ const toNominatim = (fc) =>
         display_name: `${f.properties.STATE_NAME} (${f.properties.STATE_ABBR})`
 
     }));
-
+*/
 
 module.exports = {
-    nominatim: (searchText) => require('./Nominatim').geocode(searchText).then( res => res.data),
+    nominatim: (searchText, {options = null} = {}) =>
+        require('./Nominatim')
+        .geocode(searchText, options)
+        .then( res => GeoCodeUtils.nominatimToGeoJson(res.data)),
     wfs: (searchText, {url, typeName, queriableAttributes, outputFormat="application/json", predicate ="ILIKE", ...params }) => {
-        return WFS.getFeatureSimple(url,
-            assign({
-                maxFeatures: 10,
-                startIndex: 0,
-                typeName,
-                outputFormat,
-                cql_filter: queriableAttributes.map( attr => `${attr} ${predicate} '%${searchText}%'`).join(' OR ')
-            }, params)).then( response => toNominatim(response ));
+        return WFS
+            .getFeatureSimple(url, assign({
+                    maxFeatures: 10,
+                    startIndex: 0,
+                    typeName,
+                    outputFormat,
+                    cql_filter: queriableAttributes.map( attr => `${attr} ${predicate} '%${searchText}%'`).join(' OR ')
+                }, params))
+            .then( response => response.features );
     }
 };

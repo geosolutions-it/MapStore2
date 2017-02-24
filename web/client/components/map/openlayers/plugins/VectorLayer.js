@@ -142,25 +142,57 @@ Layers.registerType('vector', {
                 };
             }
 
-            if (options.style.iconUrl) {
-                style = {
-                    image: new ol.style.Icon(({
-                      anchor: [0.5, 1],
-                      anchorXUnits: 'fraction',
-                      anchorYUnits: 'fraction',
-                      src: options.style.iconUrl
-                    }))
+            if (options.style.iconUrl ) {
+                let markerStyle = [new ol.style.Style({
+                      image: new ol.style.Icon(({
+                        anchor: options.iconAnchor || [0.5, 1],
+                        anchorXUnits: options.iconAnchor ? 'pixels' : 'fraction',
+                        anchorYUnits: options.iconAnchor ? 'pixels' : 'fraction',
+                        src: options.style.iconUrl
+                      }))
+                })];
+                if (options.shadowUrl) {
+                    markerStyle = [new ol.style.Style({
+                          image: new ol.style.Icon(({
+                            anchor: [12, 41],
+                            anchorXUnits: 'pixels',
+                            anchorYUnits: 'pixels',
+                            src: options.style.shadowUrl || markerShadow
+                          }))
+                      }), markerStyle];
+                }
+                style = (feature) => {
+                    const type = feature.getGeometry().getType();
+                    switch (type) {
+                        case "Point":
+                        case "MultiPoint":
+                            return markerStyle;
+                        default:
+                            return styleFunction(feature);
+                    }
                 };
+            } else {
+                style = new ol.style.Style(style);
             }
-
-            style = new ol.style.Style(style);
         }
 
         return new ol.layer.Vector({
             msId: options.id,
             source: source,
             zIndex: options.zIndex,
-            style: (options.styleName && !options.overrideOLStyle) ? () => {return defaultStyles[options.styleName]; } : style || styleFunction
+            style: (options.styleName && !options.overrideOLStyle) ? (feature) => {
+                if (options.styleName === "marker") {
+                    const type = feature.getGeometry().getType();
+                    switch (type) {
+                        case "Point":
+                        case "MultiPoint":
+                            return defaultStyles.marker;
+                        default:
+                            break;
+                    }
+                }
+                return defaultStyles[options.styleName];
+            } : style || styleFunction
         });
     },
     update: (layer, newOptions, oldOptions) => {
