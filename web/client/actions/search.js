@@ -16,11 +16,14 @@ const TEXT_SEARCH_TEXT_CHANGE = 'TEXT_SEARCH_TEXT_CHANGE';
 const TEXT_SEARCH_LOADING = 'TEXT_SEARCH_LOADING';
 const TEXT_SEARCH_ERROR = 'TEXT_SEARCH_ERROR';
 
-function searchResultLoaded(results, append=false) {
+const TEXT_SEARCH_ITEM_SELECTED = 'TEXT_SEARCH_ITEM_SELECTED';
+
+function searchResultLoaded(results, append=false, services) {
     return {
         type: TEXT_SEARCH_RESULTS_LOADED,
         results: results,
-        append: append
+        append: append,
+        services
     };
 }
 
@@ -64,11 +67,21 @@ function addMarker(itemPosition) {
     };
 }
 
-function textSearch(searchText) {
+function textSearch(searchText, {services = null} = {}) {
     return {
         type: TEXT_SEARCH_STARTED,
-        searchText
+        searchText,
+        services
     };
+}
+
+function selectSearchItem(item, mapConfig) {
+    return {
+        type: TEXT_SEARCH_ITEM_SELECTED,
+        item,
+        mapConfig
+    };
+
 }
 
 
@@ -82,6 +95,7 @@ module.exports = {
     TEXT_SEARCH_RESET,
     TEXT_SEARCH_ADD_MARKER,
     TEXT_SEARCH_TEXT_CHANGE,
+    TEXT_SEARCH_ITEM_SELECTED,
     searchTextLoading,
     searchResultError,
     searchResultLoaded,
@@ -89,5 +103,6 @@ module.exports = {
     resultsPurge,
     resetSearch,
     addMarker,
-    searchTextChanged
+    searchTextChanged,
+    selectSearchItem
 };

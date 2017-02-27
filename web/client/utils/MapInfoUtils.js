@@ -12,6 +12,7 @@ const INFO_FORMATS_BY_MIME_TYPE = FeatureInfoUtils.INFO_FORMATS_BY_MIME_TYPE;
 
 const {isArray} = require('lodash');
 const assign = require('object-assign');
+const pointOnSurface = require('turf-point-on-surface');
 const CoordinatesUtils = require('./CoordinatesUtils');
 const MapUtils = require('./MapUtils');
 
@@ -56,6 +57,17 @@ const MapInfoUtils = {
     },
     clickedPointToGeoJson(clickedPoint) {
         if (!clickedPoint) {
+            return [];
+        }
+        if (clickedPoint.type === "Feature") {
+            let features = [pointOnSurface(clickedPoint)];
+            if (clickedPoint && clickedPoint.geometry && clickedPoint.geometry.type !== "Point") {
+                features.push(clickedPoint);
+            }
+            return features;
+        }
+
+        if (clickedPoint.lng === undefined || clickedPoint.lat === undefined) {
             return [];
         }
         return [

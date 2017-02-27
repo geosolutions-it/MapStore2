@@ -15,8 +15,7 @@ const assign = require('object-assign');
 const HelpWrapper = require('./help/HelpWrapper');
 const Message = require('./locale/Message');
 
-const {resultsPurge, resetSearch, addMarker, searchTextChanged, textSearch} = require("../actions/search");
-const {changeMapView} = require('../actions/map');
+const {resultsPurge, resetSearch, addMarker, searchTextChanged, textSearch, selectSearchItem} = require("../actions/search");
 
 const searchSelector = createSelector([
     state => state.search || null
@@ -47,11 +46,10 @@ const selector = createSelector([
     results: searchState ? searchState.results : null
 }));
 
-const NominatimResultList = connect(selector, {
-    onItemClick: changeMapView,
-    addMarker: addMarker,
-    afterItemClick: resultsPurge
-})(require('../components/mapcontrols/search/geocoding/NominatimResultList'));
+const SearchResultList = connect(selector, {
+    onItemClick: selectSearchItem,
+    addMarker: addMarker
+})(require('../components/mapcontrols/search/SearchResultList'));
 
 const ToggleButton = require('./searchbar/ToggleButton');
 
@@ -59,11 +57,15 @@ const SearchPlugin = connect((state) => ({
     enabled: state.controls && state.controls.search && state.controls.search.enabled || false
 }))(React.createClass({
     propTypes: {
+        searchOptions: React.PropTypes.object,
         withToggle: React.PropTypes.oneOfType([React.PropTypes.bool, React.PropTypes.array]),
         enabled: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
+            searchOptions: {
+                services: [{type: "nominatim"}]
+            },
             withToggle: false,
             enabled: true
         };
@@ -95,12 +97,12 @@ const SearchPlugin = connect((state) => ({
                     helpText={<Message msgId="helptexts.searchBar"/>}>
                     {this.getSearchAndToggleButton()}
                 </HelpWrapper>
-                <NominatimResultList key="nominatimresults"/>
+                <SearchResultList searchOptions={this.props.searchOptions} key="nominatimresults"/>
             </span>
         );
     }
 }));
-const {searchEpic} = require('../epics/search');
+const {searchEpic, searchItemSelected} = require('../epics/search');
 module.exports = {
     SearchPlugin: assign(SearchPlugin, {
         OmniBar: {
@@ -110,7 +112,7 @@ module.exports = {
             priority: 1
         }
     }),
-    epics: [searchEpic],
+    epics: [searchEpic, searchItemSelected],
     reducers: {
         search: require('../reducers/search'),
         mapInfo: require('../reducers/mapInfo')

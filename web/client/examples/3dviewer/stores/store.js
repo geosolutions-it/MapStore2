@@ -10,9 +10,9 @@ var searchResults = require('../../../reducers/search');
 
 const {createEpicMiddleware, combineEpics } = require('redux-observable');
 
-const {searchEpic} = require('../../../epics/search');
+const {searchEpic, searchItemSelected} = require('../../../epics/search');
 
-const rootEpic = combineEpics(searchEpic);
+const rootEpic = combineEpics(searchEpic, searchItemSelected);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 
  // reducers

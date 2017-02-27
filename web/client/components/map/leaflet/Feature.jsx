@@ -37,11 +37,17 @@ var getPointLayer = function(pointToLayer, geojson, latlng, options) {
             latlng,
             {
                 icon: L.icon({
-                        iconUrl: options.style.iconUrl
+                    iconUrl: options.style.iconUrl,
+                    shadowUrl: options.style.shadowUrl,
+                    iconSize: options.style.iconSize,
+                    shadowSize: options.style.shadowSize,
+                    iconAnchor: options.style.iconAnchor,
+                    shadowAnchor: options.style.shadowAnchor,
+                    popupAnchor: options.style.popupAnchor
                 })
             });
     }
-    return new L.Marker(latlng);
+    return L.marker(latlng);
 };
 
 var geometryToLayer = function(geojson, options) {

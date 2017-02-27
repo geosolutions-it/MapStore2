@@ -49,6 +49,48 @@ describe('Test layers selectors', () => {
         expect(props.length).toBe(2);
         expect(props[1].type).toBe("vector");
     });
+    it('test layerSelectorWithMarkers with geocoder marker as lat lon', () => {
+        const props = layerSelectorWithMarkers({config: {layers: [{type: "osm"}]}, search: {
+            markerPosition: {
+                lat: 0,
+                lng: 0
+            }
+        }});
+        expect(props.length).toBe(2);
+        expect(props[1].type).toBe("vector");
+    });
+    it('test layerSelectorWithMarkers with geocoder marker as Point', () => {
+        const props = layerSelectorWithMarkers({config: {layers: [{type: "osm"}]}, search: {
+            markerPosition: {
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: [0, 0]
+                }
+            }
+        }});
+        expect(props.length).toBe(2);
+        expect(props[1].type).toBe("vector");
+    });
+    it('test layerSelectorWithMarkers with geocoder marker as Polygon', () => {
+        const props = layerSelectorWithMarkers({config: {layers: [{type: "osm"}]}, search: {
+            markerPosition: {
+                "type": "Feature",
+                 "geometry": {
+                   "type": "Polygon",
+                   "coordinates": [
+                     [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+                       [100.0, 1.0], [100.0, 0.0] ]
+                     ]
+                 },
+                 "properties": {
+                   "prop0": "value0"
+                 }
+            }
+        }});
+        expect(props.length).toBe(2);
+        expect(props[1].type).toBe("vector");
+    });
 
     it('test groupsSelector from layers flat one group', () => {
         const props = groupsSelector({layers: {

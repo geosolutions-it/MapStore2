@@ -238,6 +238,7 @@ describe('Leaflet layer', () => {
             "visibility": true,
             "name": "vector_sample",
             "group": "sample",
+            "styleName": "marker",
             "features": [
                   { "type": "Feature",
                     "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},

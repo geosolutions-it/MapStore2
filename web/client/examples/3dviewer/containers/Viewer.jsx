@@ -4,13 +4,14 @@ const LMap = require('../../../components/map/cesium/Map');
 const LLayer = require('../../../components/map/cesium/Layer');
 
 const SearchBar = require("../../../components/mapcontrols/search/SearchBar");
-const NominatimResultList = require("../../../components/mapcontrols/search/geocoding/NominatimResultList");
+const SearchResultList = require("../../../components/mapcontrols/search/SearchResultList");
 const MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
+const pointOnSurface = require('turf-point-on-surface');
 
 const {changeMapView} = require('../../../actions/map');
 const {changeMousePosition} = require('../../../actions/mousePosition');
-const {textSearch, resultsPurge, searchTextChanged} = require("../../../actions/search");
-const {toggleGraticule, updateMarker} = require('../actions/controls');
+const {textSearch, resultsPurge, searchTextChanged, selectSearchItem} = require("../../../actions/search");
+const {toggleGraticule} = require('../actions/controls');
 
 const Localized = require('../../../components/I18N/Localized');
 
@@ -38,12 +39,25 @@ const Viewer = React.createClass({
         marker: React.PropTypes.object,
         searchText: React.PropTypes.string
     },
-    onSearchClick: function(center) {
-        this.props.updateMarker({lng: center.x, lat: center.y});
-        this.props.changeMapView.apply(null, arguments);
+    onSearchClick: function(center, option) {
+        this.props.updateMarker(center, option);
+    },
+    getMarkerPoint() {
+        let feature = this.props.marker;
+        if (feature.type === "Feature") {
+            feature = pointOnSurface(feature);
+        } else if (feature.lng !== undefined && feature.lat !== undefined) {
+            return feature;
+        }
+        return {
+            lat: feature.geometry && feature.geometry.coordinates[1],
+            lng: feature.geometry && feature.geometry.coordinates[0]
+        };
+
     },
     renderLayers(layers) {
         if (layers) {
+
             return layers.map(function(layer) {
                 return <LLayer type={layer.type} key={layer.name} options={layer} />;
             }).concat(this.props.showGraticule ? [<LLayer type="graticule" key="graticule" options={{
@@ -53,7 +67,7 @@ const Viewer = React.createClass({
             }}/>] : []).concat(this.props.marker ? [<LLayer type="marker" key="marker" options={{
                 name: "marker",
                 visibility: true,
-                point: this.props.marker
+                point: this.getMarkerPoint()
             }}/>] : []);
         }
         return null;
@@ -82,7 +96,7 @@ const Viewer = React.createClass({
                             <label>Graticule:&nbsp;&nbsp;<input type="checkbox" checked={this.props.showGraticule} onChange={this.props.toggleGraticule}/></label>
                         </div>
                         <SearchBar key="seachBar" searchText={this.props.searchText} onSearchTextChange={this.props.searchTextChanged} onSearch={this.props.textSearch} onSearchReset={this.props.resultsPurge} />
-                        <NominatimResultList key="nominatimresults"
+                        <SearchResultList key="nominatimresults"
                             results={this.props.searchResults}
                             onItemClick={this.onSearchClick}
                             afterItemClick={this.props.resultsPurge}
@@ -116,7 +130,7 @@ module.exports = connect((state) => {
         searchText: state.searchResults && state.searchResults.searchText,
         mousePosition: state.mousePosition && state.mousePosition.position || null,
         showGraticule: state.controls && state.controls.graticule || false,
-        marker: state.controls && state.controls.marker || null
+        marker: state.searchResults && state.searchResults.markerPosition || null
     };
 }, {
     textSearch,
@@ -125,5 +139,5 @@ module.exports = connect((state) => {
     changeMapView,
     changeMousePosition,
     toggleGraticule,
-    updateMarker
+    updateMarker: selectSearchItem
 })(Viewer);
