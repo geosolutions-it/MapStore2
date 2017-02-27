@@ -92,13 +92,13 @@ module.exports = React.createClass({
         // should not contain spaces
         return name.indexOf(" ") < 0 && name.length > 0;
     },
-    validate() {
-        let name = this.refs.workspaceNewName.getValue();
+    validate(e) {
+        let name = e.target.value;
         let valid = this.isValid(name);
-        this.setState({valid});
+        this.setState({valid, name});
     },
     createWorkspace() {
-        let name = this.refs.workspaceNewName.getValue();
+        let name = this.state && this.state.name;
         let valid = this.isValid(name);
         if (name && valid) {
             this.props.createWorkspace(name, this.props.datastoreTemplates);
