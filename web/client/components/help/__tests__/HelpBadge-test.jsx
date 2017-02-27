@@ -5,11 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var HelpBadge = require('../HelpBadge');
 var expect = require('expect');
-var ReactTestUtils = React.addons.TestUtils;
+const TestUtils = require('react-addons-test-utils');
 
 describe('Test for HelpBadge', () => {
     beforeEach((done) => {
@@ -63,7 +63,7 @@ describe('Test for HelpBadge', () => {
         const helpBadgeDom = ReactDOM.findDOMNode(helpBadge);
         expect(helpBadgeDom).toExist();
 
-        ReactTestUtils.Simulate.mouseOver(helpBadgeDom);
+        TestUtils.Simulate.mouseOver(helpBadgeDom);
 
         expect(triggered).toBe(2);
     });

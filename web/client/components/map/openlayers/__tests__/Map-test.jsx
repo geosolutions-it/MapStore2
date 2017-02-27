@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var OpenlayersMap = require('../Map.jsx');
 var OpenlayersLayer = require('../Layer.jsx');
@@ -161,7 +161,7 @@ describe('OpenlayersMap', () => {
     });
 
     it('check if the map changes when receive new props', () => {
-        const map = ReactDOM.render(
+        let map = ReactDOM.render(
             <OpenlayersMap
                 center={{y: 43.9, x: 10.3}}
                 zoom={11.6}
@@ -171,7 +171,13 @@ describe('OpenlayersMap', () => {
 
         const olMap = map.map;
         expect(olMap.getView().getZoom()).toBe(12);
-        map.setProps({zoom: 9.4, center: {y: 44, x: 10}});
+        map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 44, x: 10}}
+                zoom={9.4}
+                measurement={{}}
+            />
+        , document.getElementById("map"));
         expect(olMap.getView().getZoom()).toBe(9);
         let center = map.normalizeCenter(olMap.getView().getCenter());
         expect(center[1].toFixed(1)).toBe('44.0');
@@ -179,7 +185,7 @@ describe('OpenlayersMap', () => {
     });
 
     it('check result of "haveResolutionsChanged()" when receiving new props', () => {
-        const map = ReactDOM.render(
+        let map = ReactDOM.render(
             <OpenlayersMap
                 center={{y: 43.9, x: 10.3}}
                 zoom={11.6}
@@ -193,7 +199,15 @@ describe('OpenlayersMap', () => {
             return assign({}, origProps, newProps);
         }
 
-        map.setProps(testProps({mapOptions: undefined}));
+        map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11.6}
+                measurement={{}}
+                mapOptions={undefined}
+            />
+        , document.getElementById("map"));
+
         expect( map.haveResolutionsChanged(testProps({mapOptions: undefined})) ).toBe(false);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {}})) ).toBe(false);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {}}})) ).toBe(false);
@@ -201,7 +215,14 @@ describe('OpenlayersMap', () => {
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: [10, 5, 2, 1]}}})) ).toBe(true);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: [100, 50, 25]}}})) ).toBe(true);
 
-        map.setProps(testProps({mapOptions: {}}));
+        map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11.6}
+                measurement={{}}
+                mapOptions={{}}
+            />
+        , document.getElementById("map"));
         expect( map.haveResolutionsChanged(testProps({mapOptions: undefined})) ).toBe(false);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {}})) ).toBe(false);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {}}})) ).toBe(false);
@@ -209,15 +230,28 @@ describe('OpenlayersMap', () => {
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: [10, 5, 2, 1]}}})) ).toBe(true);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: [100, 50, 25]}}})) ).toBe(true);
 
-        map.setProps(testProps({mapOptions: {view: {}}}));
+        map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11.6}
+                measurement={{}}
+                mapOptions={{view: {}}}
+            />
+        , document.getElementById("map"));
         expect( map.haveResolutionsChanged(testProps({mapOptions: undefined})) ).toBe(false);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {}})) ).toBe(false);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {}}})) ).toBe(false);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: []}}})) ).toBe(true);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: [10, 5, 2, 1]}}})) ).toBe(true);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: [100, 50, 25]}}})) ).toBe(true);
-
-        map.setProps(testProps({mapOptions: {view: {resolutions: [10, 5, 2, 1]}}}));
+        map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11.6}
+                measurement={{}}
+                mapOptions={{view: {resolutions: [10, 5, 2, 1]}}}
+            />
+        , document.getElementById("map"));
         expect( map.haveResolutionsChanged(testProps({mapOptions: undefined})) ).toBe(true);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {}})) ).toBe(true);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {}}})) ).toBe(true);
@@ -255,11 +289,11 @@ describe('OpenlayersMap', () => {
 
     it('test COMPUTE_BBOX_HOOK hook execution', () => {
         // instanciating the map that will be used to compute the bounfing box
-        const map = ReactDOM.render(<OpenlayersMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("map"));
+        let map = ReactDOM.render(<OpenlayersMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("map"));
         // computing the bounding box for the new center and the new zoom
         const bbox = mapUtils.getBbox({y: 44, x: 10}, 5);
         // update the map with the new center and the new zoom so we can check our computed bouding box
-        map.setProps({zoom: 5, center: {y: 44, x: 10}});
+        map = ReactDOM.render(<OpenlayersMap id="mymap" center={{y: 44, x: 10}} zoom={5}/>, document.getElementById("map"));
         const mapBbox = map.map.getView().calculateExtent(map.map.getSize());
         // check our computed bounding box agains the map computed one
         expect(bbox).toExist();

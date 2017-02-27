@@ -7,9 +7,11 @@
  */
 var expect = require('expect');
 
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var Legend = require('../Legend');
+
+const TestUtils = require('react-addons-test-utils');
 
 describe("test the Layer legend", () => {
     beforeEach((done) => {
@@ -44,7 +46,6 @@ describe("test the Layer legend", () => {
     });
 
     it('test legend content', () => {
-        var TestUtils = React.addons.TestUtils;
         let layer = {
             "type": "wms",
             "url": "http://test2/reflector/open/service",

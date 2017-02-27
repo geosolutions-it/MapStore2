@@ -5,9 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
+const React = require('react');
 
-var Localized = React.createClass({
+const {IntlProvider} = require('react-intl');
+
+const Localized = React.createClass({
     propTypes: {
         locale: React.PropTypes.string,
         messages: React.PropTypes.object,
@@ -26,16 +28,32 @@ var Localized = React.createClass({
     render() {
         let { children } = this.props;
 
-        if (this.props.messages) {
+        if (this.props.messages && this.props.locale) {
             if (typeof children === 'function') {
                 children = children();
             }
 
-            return React.Children.only(children);
+            return (<IntlProvider key={this.props.locale} locale={this.props.locale}
+                 messages={this.flattenMessages(this.props.messages)}
+                >
+                {children}
+            </IntlProvider>);
+            // return React.Children.only(children);
         } else if (this.props.loadingError) {
             return <div className="loading-locale-error">{this.props.loadingError}</div>;
         }
         return null;
+    },
+    flattenMessages(messages, prefix = '') {
+        return Object.keys(messages).reduce((previous, current) => {
+            return (typeof messages[current] === 'string') ? {
+                 [prefix + current]: messages[current],
+                ...previous
+            } : {
+                ...this.flattenMessages(messages[current], prefix + current + '.'),
+                ...previous
+            };
+        }, {});
     }
  });
 

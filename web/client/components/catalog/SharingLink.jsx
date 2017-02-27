@@ -16,8 +16,6 @@ const SharingLink = React.createClass({
         url: React.PropTypes.string.isRequired,
         labelId: React.PropTypes.string,
         onCopy: React.PropTypes.func,
-        messages: React.PropTypes.object,
-        locale: React.PropTypes.string,
         bsSize: React.PropTypes.string,
         addAuthentication: React.PropTypes.bool
     },
@@ -48,7 +46,7 @@ const SharingLink = React.createClass({
                 <OverlayTrigger placement="right" overlay={tooltip} onExited={() => this.setState({showCopiedToolTip: false})}>
                     <Button bsSize={this.props.bsSize} bsStyle="primary" className="link-button" onClick={() => this.setState({showCopiedToolTip: true})}>
                         <Glyphicon glyph="paperclip"/>&nbsp;{this.props.labelId
-                                && <Message msgId={this.props.labelId} messages={this.props.messages} locale={this.props.locale}/>}
+                                && <Message msgId={this.props.labelId}/>}
                     </Button>
                 </OverlayTrigger>
             </CopyToClipboard>

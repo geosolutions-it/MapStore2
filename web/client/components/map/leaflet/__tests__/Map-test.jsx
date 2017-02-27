@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var LeafletMap = require('../Map.jsx');
 var LeafLetLayer = require('../Layer.jsx');
@@ -161,7 +161,7 @@ describe('LeafletMap', () => {
     });
 
     it('check if the map changes when receive new props', () => {
-        const map = ReactDOM.render(
+        let map = ReactDOM.render(
             <LeafletMap
                 center={{y: 43.9, x: 10.3}}
                 zoom={11.6}
@@ -171,7 +171,13 @@ describe('LeafletMap', () => {
 
         const leafletMap = map.map;
         expect(leafletMap.getZoom()).toBe(12);
-        map.setProps({zoom: 10.4, center: {y: 44, x: 10}});
+        map = ReactDOM.render(
+            <LeafletMap
+                center={{y: 44, x: 10}}
+                zoom={10.4}
+                measurement={{}}
+            />
+        , document.getElementById("container"));
         expect(leafletMap.getZoom()).toBe(10);
         expect(leafletMap.getCenter().lat).toBe(44);
         expect(leafletMap.getCenter().lng).toBe(10);
@@ -206,11 +212,11 @@ describe('LeafletMap', () => {
 
     it('test COMPUTE_BBOX_HOOK hook execution', () => {
         // instanciating the map that will be used to compute the bounfing box
-        const map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
+        let map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
         // computing the bounding box for the new center and the new zoom
         const bbox = mapUtils.getBbox({y: 44, x: 10}, 5);
         // update the map with the new center and the new zoom so we can check our computed bouding box
-        map.setProps({zoom: 5, center: {y: 44, x: 10}});
+        map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 44, x: 10}} zoom={5}/>, document.getElementById("container"));
         const mapBbox = map.map.getBounds().toBBoxString().split(',');
         // check our computed bounding box agains the map computed one
         expect(bbox).toExist();
@@ -229,7 +235,7 @@ describe('LeafletMap', () => {
     it('check that new props, current props and map state values are used', () => {
 
         // instanciate the leaflet map
-        const map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 40.0, x: 10.0}} zoom={10}/>,
+        let map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 40.0, x: 10.0}} zoom={10}/>,
                         document.getElementById("container"));
 
         // updating leaflet map view without updating the props
@@ -242,15 +248,18 @@ describe('LeafletMap', () => {
         const setViewSpy = expect.spyOn(map.map, "setView").andCallThrough();
 
         // since the props are the same no view changes should happend
-        map.setProps({zoom: 10, center: {y: 40.0, x: 10.0}});
+        map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 40.0, x: 10.0}} zoom={10}/>,
+                        document.getElementById("container"));
         expect(setViewSpy.calls.length).toBe(0);
 
         // the view view should not be updated since new props are equal to map values
-        map.setProps({zoom: 15, center: {y: 50.0, x: 20.0}});
+        map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 50.0, x: 20.0}} zoom={15}/>,
+                        document.getElementById("container"));
         expect(setViewSpy.calls.length).toBe(0);
 
         // the zoom and center values should be udpated
-        map.setProps({zoom: 10, center: {y: 40.0, x: 10.0}});
+        map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 40.0, x: 10.0}} zoom={10}/>,
+                        document.getElementById("container"));
         expect(setViewSpy.calls.length).toBe(1);
         expect(map.map.getZoom()).toBe(10);
         expect(map.map.getCenter().lng).toBe(10.0);

@@ -5,12 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react/addons');
+const React = require('react');
 const ReactDOM = require('react-dom');
 const RecordGrid = require('../RecordGrid.jsx');
 const expect = require('expect');
 
-const TestUtils = require('react/addons').addons.TestUtils;
+const TestUtils = require('react-addons-test-utils');
 const sampleCatalogURL = "http://test.com/catalog";
 const sampleRecord = {
     identifier: "test-identifier",

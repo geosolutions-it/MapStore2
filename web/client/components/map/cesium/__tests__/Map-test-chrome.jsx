@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var CesiumMap = require('../Map.jsx');
 var CesiumLayer = require('../Layer.jsx');
@@ -123,7 +123,7 @@ describe('CesiumMap', () => {
     });
 
     it('check if the map changes when receive new props', () => {
-        const map = ReactDOM.render(
+        let map = ReactDOM.render(
             <CesiumMap
                 center={{y: 43.9, x: 10.3}}
                 zoom={10}
@@ -132,14 +132,20 @@ describe('CesiumMap', () => {
 
         const cesiumMap = map.map;
 
-        map.setProps({zoom: 12, center: {y: 44, x: 10}});
+        map = ReactDOM.render(
+            <CesiumMap
+                center={{y: 44, x: 10}}
+                zoom={12}
+            />
+        , document.getElementById("container"));
+
         expect(Math.round(cesiumMap.camera.positionCartographic.height - map.getHeightFromZoom(12))).toBe(0);
         expect(Math.round(cesiumMap.camera.positionCartographic.latitude * 180.0 / Math.PI)).toBe(44);
         expect(Math.round(cesiumMap.camera.positionCartographic.longitude * 180.0 / Math.PI)).toBe(10);
     });
 
     it('check that the map orientation does not change on pan / zoom', () => {
-        const map = ReactDOM.render(
+        let map = ReactDOM.render(
             <CesiumMap
                 center={{y: 43.9, x: 10.3}}
                 zoom={10}
@@ -154,7 +160,13 @@ describe('CesiumMap', () => {
         const pitch = Math.round(cesiumMap.camera.pitch * precision) / precision;
         const roll = Math.round(cesiumMap.camera.roll * precision) / precision;
 
-        map.setProps({zoom: 12, center: {y: 44, x: 10}});
+        map = ReactDOM.render(
+            <CesiumMap
+                center={{y: 44, x: 10}}
+                zoom={12}
+            />
+        , document.getElementById("container"));
+
         expect(Math.round(cesiumMap.camera.heading * precision) / precision).toBe(heading);
         expect(Math.round(cesiumMap.camera.pitch * precision) / precision).toBe(pitch);
         expect(Math.round(cesiumMap.camera.roll * precision) / precision).toBe(roll);

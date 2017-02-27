@@ -8,8 +8,7 @@
 var React = require('react');
 var BootstrapReact = require('react-bootstrap');
 var Label = BootstrapReact.Label;
-var ReactIntl = require('react-intl');
-var FormattedNumber = ReactIntl.FormattedNumber;
+var NumberFormat = require('../../I18N/Number');
 
 var MousePositionLabelDMS = React.createClass({
     propTypes: {
@@ -40,12 +39,12 @@ var MousePositionLabelDMS = React.createClass({
                 <h5>
 
                 <Label bsSize="lg" bsStyle="info">
-                    <FormattedNumber key="latD" {...integerFormat} value={Math.abs(pos.lat)} />
-                    <span>° </span><FormattedNumber key="latM" {...integerFormat} value={pos.latM} />
-                    <span>' </span><FormattedNumber key="latS" {...decimalFormat} value={pos.latS} />
-                    <span>'' {pos.lat > 0 ? "N" : "S"} </span><FormattedNumber key="lngD" {...lngDFormat} value={Math.abs(pos.lng)} />
-                    <span>° </span><FormattedNumber key="lngM" {...integerFormat} value={pos.lngM} />
-                    <span>' </span><FormattedNumber key="lngS" {...decimalFormat} value={pos.lngS} /><span>'' {pos.lng > 0 ? "E" : "W"}</span>
+                    <NumberFormat key="latD" numberParams={integerFormat} value={Math.abs(pos.lat)} />
+                    <span>° </span><NumberFormat key="latM" numberParams={integerFormat} value={pos.latM} />
+                    <span>&apos; </span><NumberFormat key="latS" numberParams={decimalFormat} value={pos.latS} />
+                    <span>&apos;&apos; {pos.lat > 0 ? "N" : "S"} </span><NumberFormat key="lngD" numberParams={lngDFormat} value={Math.abs(pos.lng)} />
+                    <span>° </span><NumberFormat key="lngM" numberParams={integerFormat} value={pos.lngM} />
+                    <span>&apos; </span><NumberFormat key="lngS" numberParams={decimalFormat} value={pos.lngS} /><span>'' {pos.lng > 0 ? "E" : "W"}</span>
                 </Label>
                 </h5>);
     }

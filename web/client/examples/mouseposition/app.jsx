@@ -10,6 +10,7 @@ var ReactDOM = require('react-dom');
 var { createStore, combineReducers } = require('redux');
 var { changeBrowserProperties} = require('../../actions/browser');
 var ConfigUtils = require('../../utils/ConfigUtils');
+var Localized = require('../../components/I18N/Localized');
 var browser = require('../../reducers/browser');
 var {Modal, Grid, Row, Col, Button} = require('react-bootstrap');
 var LMap = require('../../components/map/leaflet/Map');
@@ -55,7 +56,8 @@ function startApp() {
             if (this.props.browser.touch) {
                 return <div className="error">This example does not work on mobile</div>;
             }
-            return (<div id="viewer" >
+            return (<Localized locale="it-IT" messages={{}}>
+            <div id="viewer" >
             <Modal show={this.state.showAlert} onHide={this.closeAlert}>
               <Modal.Header closeButton>
                 <Modal.Title>Clipboard</Modal.Title>
@@ -111,6 +113,7 @@ function startApp() {
                         <LLayer type="osm" position={0} key="osm" options={{name: "osm"}} />
                     </LMap>
               </div>
+              </Localized>
                );
         },
         closeAlert() {

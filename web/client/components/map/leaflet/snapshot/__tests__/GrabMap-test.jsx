@@ -7,7 +7,7 @@
  */
 var expect = require('expect');
 
-var React = require('react/addons');
+var React = require('react');
 var ReactDOM = require('react-dom');
 var GrabMap = require('../GrabMap');
 
@@ -32,9 +32,9 @@ describe("test the Leaflet GrabMap component", () => {
     it('component creation', () => {
         let status;
         const onStatusChange = (val) => {status = val; };
-        const tb = ReactDOM.render(<GrabMap active={false} onStatusChange={onStatusChange} timeout={0} />, document.getElementById("snap"));
+        let tb = ReactDOM.render(<GrabMap active={false} onStatusChange={onStatusChange} timeout={0} />, document.getElementById("snap"));
         expect(tb).toExist();
-        tb.setProps({active: false, snapstate: {error: "Test"}});
+        tb = ReactDOM.render(<GrabMap active={false} onStatusChange={onStatusChange} timeout={0} snapstate={{error: "Test"}}/>, document.getElementById("snap"));
         expect(status).toEqual("DISABLED");
     });
 

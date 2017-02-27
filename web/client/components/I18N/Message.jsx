@@ -10,25 +10,16 @@ const ReactIntl = require('react-intl');
 
 const FormattedMessage = ReactIntl.FormattedMessage;
 
-const LocaleUtils = require('../../utils/LocaleUtils');
-
-var Message = React.createClass({
+const Message = React.createClass({
     propTypes: {
-        locale: React.PropTypes.string,
-        messages: React.PropTypes.object,
         msgId: React.PropTypes.string.isRequired,
         msgParams: React.PropTypes.object
     },
     contextTypes: {
-        locale: React.PropTypes.string,
-        messages: React.PropTypes.object
+        intl: React.PropTypes.object
     },
     render() {
-        var locale = this.props.locale || this.context.locale;
-        var messages = this.props.messages || this.context.messages;
-        let message = LocaleUtils.getMessageById(messages, this.props.msgId);
-
-        return message ? <FormattedMessage locales={locale} message={message} {...this.props.msgParams}/> : <span/>;
+        return this.context.intl ? <FormattedMessage id={this.props.msgId} values={this.props.msgParams}/> : <span>{this.props.msgId || ""}</span>;
     }
 });
 
