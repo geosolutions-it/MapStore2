@@ -36,20 +36,23 @@ describe("Test the password reset form component", () => {
         let password = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "input")[0]);
         expect(password).toExist();
         password.value = "test";
+        ReactTestUtils.Simulate.change(password);
         expect(cmp.isValid()).toEqual(false);
         let password2 = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "input")[1]);
         expect(password2).toExist();
         password2.value = "test2";
+        ReactTestUtils.Simulate.change(password2);
         expect(cmp.isValid()).toEqual(false);
         password2.value = "test";
+        ReactTestUtils.Simulate.change(password2);
         // size is < then 6
         expect(cmp.isValid()).toEqual(false);
-        expect(!cmp.getPassword()).toEqual(true);
 
         // test valid
         password.value = "password";
         password2.value = "password";
+        ReactTestUtils.Simulate.change(password);
+        ReactTestUtils.Simulate.change(password2);
         expect(cmp.isValid()).toEqual(true);
-        expect(cmp.getPassword()).toEqual("password");
     });
 });

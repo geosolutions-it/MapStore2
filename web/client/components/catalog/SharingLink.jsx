@@ -7,7 +7,7 @@
  */
 const React = require('react');
 const Message = require('../I18N/Message');
-const {Input, Button, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
+const {FormControl, FormGroup, Button, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
 const CopyToClipboard = require('react-copy-to-clipboard');
 const SecurityUtils = require('../../utils/SecurityUtils');
 
@@ -53,8 +53,11 @@ const SharingLink = React.createClass({
         );
         return (
             <div className="link-sharing">
-                <Input bsSize={this.props.bsSize} className="link-input"
-                    type="text" value={url} onChange={() => {}} buttonAfter={copyButton}/>
+                <FormGroup bsSize={this.props.bsSize} >
+                  <FormControl className="link-input"
+                    type="text" value={url} onChange={() => {}}/>
+                  {copyButton}
+                </FormGroup>
             </div>
         );
     }

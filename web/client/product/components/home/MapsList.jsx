@@ -8,7 +8,7 @@
 var React = require('react');
 
 var I18N = require('../../../components/I18N/I18N');
-var {Label, Input} = require('react-bootstrap');
+var {Label, FormControl, FormGroup} = require('react-bootstrap');
 const {connect} = require('react-redux');
 const {updateMapMetadata, deleteMap, createThumbnail} = require('../../../actions/maps');
 const MapGrid = connect(() => ({}), {updateMapMetadata, deleteMap, createThumbnail})(require('../../../components/maps/MapGrid'));
@@ -26,10 +26,12 @@ var MapsList = React.createClass({
             return (
                 <div>
                 <Label><I18N.Message msgId="manager.mapTypes_combo"/></Label>
-                <Input value={this.props.mapType} type="select" bsSize="small" ref="mapType" onChange={this.props.onChangeMapType}>
-                    <option value="leaflet" key="leaflet">Leaflet</option>
-                    <option value="openlayers" key="openlayer">OpenLayers</option>
-                </Input>
+                <FormGroup bsSize="small">
+                    <FormControl value={this.props.mapType} componentClass="select" ref="mapType" onChange={this.props.onChangeMapType}>
+                        <option value="leaflet" key="leaflet">Leaflet</option>
+                        <option value="openlayers" key="openlayer">OpenLayers</option>
+                    </FormControl>
+                </FormGroup>
                 <h3>{this.props.title}</h3>
                 <MapGrid mapType={this.props.mapType}
                     viewerUrl={this.props.onGoToMap}

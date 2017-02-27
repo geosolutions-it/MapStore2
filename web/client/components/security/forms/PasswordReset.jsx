@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Input, Alert} = require('react-bootstrap');
+const {FormControl, FormGroup, ControlLabel, Alert} = require('react-bootstrap');
 const Message = require('../../../components/I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
   /**
@@ -27,6 +27,12 @@ const PasswordReset = React.createClass({
   contextTypes: {
       messages: React.PropTypes.object
   },
+  getInitialState() {
+      return {
+          password: '',
+          passwordcheck: ''
+      };
+  },
   getDefaultProps() {
       return {
           // config
@@ -40,16 +46,11 @@ const PasswordReset = React.createClass({
           passwordCheckText: <Message msgId="user.retypePwd"/>
       };
   },
-  getPassword() {
-      if (this.isValid()) {
-          return this.refs.password.getValue();
-      }
-  },
   getPwStyle() {
-      if (!this.refs.password) {
+      if (!this.state.password) {
           return null;
       }
-      let pw = this.refs.password.getValue();
+      let pw = this.state.password;
       if (pw.length === 0) {
           return null;
       }
@@ -57,44 +58,60 @@ const PasswordReset = React.createClass({
 
   },
   renderWarning() {
-      if (!this.refs.password) {
+      if (!this.state.password) {
           return null;
       }
-      let pw = this.refs.password.getValue();
+      let pw = this.state.password;
       if (pw !== null && pw.length < this.props.minPasswordSize && pw.length > 0) {
           return <Alert bsStyle="danger"><Message msgId="user.passwordMinlenght" msgParams={{minSize: this.props.minPasswordSize}}/></Alert>;
-      } else if (pw !== null && pw !== this.refs.passwordcheck.getValue() ) {
+      } else if (pw !== null && pw !== this.state.passwordcheck ) {
           return <Alert bsStyle="danger"><Message msgId="user.passwordCheckFail" /></Alert>;
       }
       return null;
   },
   render() {
       return (<form ref="loginForm" onSubmit={this.handleSubmit}>
-          <Input ref="password"
+        <FormGroup validationState={this.getPwStyle()}>
+            <ControlLabel>{this.props.newPasswordText}</ControlLabel>
+            <FormControl ref="password"
               key="password"
               type="password"
               hasFeedback
-              label={this.props.newPasswordText}
-              bsStyle={this.getPwStyle()}
-              onChange={this.props.onChange}
+              onChange={this.changePassword}
               placeholder={LocaleUtils.getMessageById(this.context.messages, "user.newPwd")} />
-          <Input ref="passwordcheck"
-              key="passwordcheck"
-              bsStyle={this.isValid() && this.getPwStyle() ? "success" : "error"}
-              hasFeedback
-              type="password"
-              label={this.props.passwordCheckText}
-              onChange={this.props.onChange}
-              placeholder={LocaleUtils.getMessageById(this.context.messages, "user.retypePwd")} />
+          </FormGroup>
+          <FormGroup validationState={this.isValid(this.state.password, this.state.passwordcheck) && this.getPwStyle() ? "success" : "error"}>
+              <ControlLabel>{this.props.passwordCheckText}</ControlLabel>
+              <FormControl ref="passwordcheck"
+                  key="passwordcheck"
+                  hasFeedback
+                  type="password"
+                  label={this.props.passwordCheckText}
+                  onChange={this.changePasswordCheck}
+                  placeholder={LocaleUtils.getMessageById(this.context.messages, "user.retypePwd")} />
+          </FormGroup>
           {this.renderWarning()}
       </form>);
   },
-  isValid() {
-      if (!this.refs.password) {
+  isValid(password, passwordcheck) {
+      let p = password || this.state.password;
+      let p2 = passwordcheck || this.state.passwordcheck;
+      if (!p) {
           return false;
       }
-      let pw = this.refs.password.getValue();
-      return pw !== null && pw.length >= this.props.minPasswordSize && pw === this.refs.passwordcheck.getValue();
+      return p !== null && p.length >= this.props.minPasswordSize && p === p2;
+  },
+  changePassword(e) {
+      this.setState({
+          password: e.target.value
+      });
+      this.props.onChange(e.target.value, this.isValid(e.target.value, this.state.passwordcheck));
+  },
+  changePasswordCheck(e) {
+      this.setState({
+          passwordcheck: e.target.value
+      });
+      this.props.onChange(this.state.password, this.isValid(this.state.password, e.target.value));
   }
 });
 

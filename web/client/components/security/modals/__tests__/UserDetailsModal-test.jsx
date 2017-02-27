@@ -9,9 +9,7 @@
 const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-addons-test-utils');
 const UDModal = require('../UserDetailsModal');
-const {Modal} = require('react-bootstrap');
 
 describe("Test user details modal", () => {
     beforeEach((done) => {
@@ -72,7 +70,8 @@ describe("Test user details modal", () => {
         };
         const cmp = ReactDOM.render(<UDModal options={{animation: false}} show={true} displayAttributes={displayAttributes} user={testUser}/>, document.getElementById("container"));
         expect(cmp).toExist();
-        let modalInstance = ReactTestUtils.findRenderedComponentWithType(cmp, Modal);
-        expect(ReactTestUtils.scryRenderedDOMComponentsWithTag(modalInstance._modal, "th").length).toEqual(2);
+        const modalDOM = document.getElementsByClassName('modal')[0];
+
+        expect(modalDOM.getElementsByTagName('th').length).toEqual(2);
     });
 });

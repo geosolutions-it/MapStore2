@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Input, ButtonInput, Alert} = require('react-bootstrap');
+const {FormControl, FormGroup, ControlLabel, Button, Alert} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 const Message = require('../../../components/I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
@@ -63,7 +63,11 @@ const LoginForm = React.createClass({
         } );
     },
     getInitialState() {
-        return {loading: false};
+        return {
+            loading: false,
+            username: '',
+            password: ''
+        };
     },
     renderError() {
         let error = this.props.loginError;
@@ -84,7 +88,8 @@ const LoginForm = React.createClass({
     },
     renderSubmit() {
         if (this.props.showSubmitButton) {
-            return (<ButtonInput
+            return (<Button
+                type="submit"
                 value={LocaleUtils.getMessageById(this.context.messages, "user.signIn")}
                 bsStyle="primary"
                 key="submit" onClick={this.handleSubmit}/>);
@@ -93,22 +98,40 @@ const LoginForm = React.createClass({
     render() {
         return (
             <form ref="loginForm">
-                <Input ref="username"
-                    key="username"
-                    type="text"
-                    label={this.props.userNameText}
-                    placeholder={LocaleUtils.getMessageById(this.context.messages, "user.username")} />
-                <Input ref="password"
-                    key="password"
-                    type="password"
-                    label={this.props.passwordText}
-                    onKeyPress={this.handleKeyPress}
-                    placeholder={LocaleUtils.getMessageById(this.context.messages, "user.password")} />
+                <FormGroup>
+                    <ControlLabel>{this.props.userNameText}</ControlLabel>
+                    <FormControl ref="username"
+                        key="username"
+                        type="text"
+                        value={this.state.username}
+                        placeholder={LocaleUtils.getMessageById(this.context.messages, "user.username")}
+                        onChange={this.setUser} />
+                </FormGroup>
+                <FormGroup>
+                    <ControlLabel>{this.props.passwordText}</ControlLabel>
+                    <FormControl ref="password"
+                        key="password"
+                        type="password"
+                        value={this.state.password}
+                        onKeyPress={this.handleKeyPress}
+                        placeholder={LocaleUtils.getMessageById(this.context.messages, "user.password")}
+                        onChange={this.setPassword} />
+                </FormGroup>
                 {this.renderSubmit()}
                 {this.renderError()}
                 <div style={{"float": "right"}}>{this.renderLoading()}</div>
             </form>
         );
+    },
+    setUser(e) {
+        this.setState({
+            username: e.target.value
+        });
+    },
+    setPassword(e) {
+        this.setState({
+            password: e.target.value
+        });
     },
     handleSubmit(e) {
         e.preventDefault();
@@ -121,8 +144,8 @@ const LoginForm = React.createClass({
 
     },
     submit() {
-        let username = this.refs.username && this.refs.username.getValue();
-        let password = this.refs.password && this.refs.password.getValue();
+        let username = this.state.username;
+        let password = this.state.password;
         if (!username || !password) {
             this.props.onError({status: 0});
         }

@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Input} = require('react-bootstrap');
+const {Checkbox} = require('react-bootstrap');
 
 const PrintOption = React.createClass({
     propTypes: {
@@ -32,9 +32,9 @@ const PrintOption = React.createClass({
     },
     render() {
         return (
-            <Input disabled={!this.isEnabled()} ref="input" checked={this.props.checked}
-                type="checkbox" label={this.props.label} onChange={this.onChange}
-            />
+            <Checkbox disabled={!this.isEnabled()} ref="input" checked={this.props.checked}
+                onChange={this.onChange}
+            >{this.props.label}</Checkbox>
         );
     },
     isEnabled() {

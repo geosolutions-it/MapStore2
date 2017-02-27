@@ -36,7 +36,7 @@ const startApp = () => {
 
     const {Provider} = require('react-redux');
 
-    const {Input} = require('react-bootstrap');
+    const {FormControl, FormGroup} = require('react-bootstrap');
 
     const SaveAndLoad = require('./components/SaveAndLoad');
 
@@ -196,11 +196,13 @@ const startApp = () => {
                         <div style={{width: "100%", height: "100%"}}>
                             <div id="plugins-list" style={{position: "absolute", zIndex: "10000", backgroundColor: "white", width: "300px", left: 0, height: "100%", overflow: "auto"}}>
                                 <h5>Configure application plugins</h5>
-                                <Input value={mapType} type="select" bsSize="small" onChange={changeMapType.bind(null, renderPage)}>
-                                    <option value="leaflet" key="leaflet">Leaflet</option>
-                                    <option value="openlayers" key="openlayer">OpenLayers</option>
-                                    <option value="cesium" key="cesium">CesiumJS</option>
-                                </Input>
+                                <FormGroup bsSize="small">
+                                  <FormControl value={mapType} componentClass="select" onChange={changeMapType.bind(null, renderPage)}>
+                                      <option value="leaflet" key="leaflet">Leaflet</option>
+                                      <option value="openlayers" key="openlayer">OpenLayers</option>
+                                      <option value="cesium" key="cesium">CesiumJS</option>
+                                  </FormControl>
+                                </FormGroup>
                                 <SaveAndLoad onSave={save.bind(null, renderPage)} onLoad={load.bind(null, renderPage)}/>
                                 <ul>
                                     <PluginCreator pluginCode={codeSample} onApplyCode={customPlugin.bind(null, renderPage)}/>

@@ -34,9 +34,7 @@ describe('LangSelector', () => {
         const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
-
-        const select = cmpDom.getElementsByTagName("select").item(0);
-        const opts = select.childNodes;
+        const opts = cmpDom.childNodes;
         const langs = {'Italiano': 'it-IT', 'English': 'en-US', 'Français': 'fr-FR', 'Deutsch': 'de-DE'};
 
         for (let i = 0; i < opts.length; i++) {
@@ -51,10 +49,9 @@ describe('LangSelector', () => {
         let newLang;
         const cmp = ReactDOM.render(<LangSelector onLanguageChange={ (lang) => {newLang = lang; }}/>, document.getElementById("container"));
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        const select = cmpDom.getElementsByTagName("select").item(0);
 
-        select.value = "it-IT";
-        TestUtils.Simulate.change(select, {target: {value: 'it-IT'}});
+        cmpDom.value = "it-IT";
+        TestUtils.Simulate.change(cmpDom, {target: {value: 'it-IT'}});
         // select.children[1].click();
 
         expect(newLang).toBe('it-IT');

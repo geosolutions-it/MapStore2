@@ -69,6 +69,12 @@ const MetadataModal = React.createClass({
     contextTypes: {
         messages: React.PropTypes.object
     },
+    getInitialState() {
+        return {
+            name: this.props.map && this.props.map.name || '',
+            description: this.props.map && this.props.map.description || ''
+        };
+    },
     getDefaultProps() {
         return {
             id: "MetadataModal",
@@ -108,9 +114,12 @@ const MetadataModal = React.createClass({
             groups: []
         };
     },
-    setMapNameValue(newName) {
-        if (this.refs.mapMetadataForm) {
-            this.refs.mapMetadataForm.setMapNameValue(newName);
+    componentWillMount() {
+        if (this.props.map && this.props.map.name) {
+            this.setState({
+                name: this.props.map.name,
+                description: this.props.map.description || ''
+            });
         }
     },
     componentWillReceiveProps(nextProps) {
@@ -119,6 +128,12 @@ const MetadataModal = React.createClass({
               saving: false
             });
             this.props.onClose();
+        }
+        if (nextProps.map && nextProps.map.name) {
+            this.setState({
+                name: nextProps.map.name,
+                description: nextProps.map.description || ''
+            });
         }
     },
     componentDidUpdate(prevProps) {
@@ -145,8 +160,8 @@ const MetadataModal = React.createClass({
         let metadata = null;
 
         if ( this.isMetadataChanged() ) {
-            let name = this.refs.mapMetadataForm.refs.mapName.getValue();
-            let description = this.refs.mapMetadataForm.refs.mapDescription.getValue();
+            let name = this.state.name;
+            let description = this.state.description;
             metadata = {
                 name: name,
                 description: description
@@ -207,8 +222,10 @@ const MetadataModal = React.createClass({
             </span>);
         const body = (
             <Metadata role="body" ref="mapMetadataForm"
-                onChange={() => {
-                    this.setState({metadataValid: this.refs.mapMetadataForm.isValid()});
+                onChange={(prop, value ) => {
+                    this.setState({
+                        [prop]: value
+                    });
                 }}
                 map={this.props.map}
                 nameFieldText={<Message msgId="map.name" />}
@@ -296,8 +313,8 @@ const MetadataModal = React.createClass({
     },
     isMetadataChanged() {
         return this.props.map && (
-            this.refs.mapMetadataForm.refs.mapDescription.getValue() !== this.props.map.description ||
-            this.refs.mapMetadataForm.refs.mapName.getValue() !== this.props.map.name
+            this.state.description !== this.props.map.description ||
+            this.state.name !== this.props.map.name
         );
     },
     isThumbnailChanged() {

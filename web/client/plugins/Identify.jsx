@@ -70,9 +70,8 @@ module.exports = {
         Settings: {
             tool: <FeatureInfoFormatSelector
                 key="featureinfoformat"
-                inputProps={{
-                    label: <Message msgId="infoFormatLbl" />
-            }}/>,
+                label={<Message msgId="infoFormatLbl" />
+            }/>,
             position: 3
         }
     }),

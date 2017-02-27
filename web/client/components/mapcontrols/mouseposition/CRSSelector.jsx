@@ -7,14 +7,13 @@
  */
 var React = require('react');
 var ReactDOM = require('react-dom');
-var BootstrapReact = require('react-bootstrap');
-var {Input} = BootstrapReact;
+var {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 
 let CRSSelector = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
-        inputProps: React.PropTypes.object,
+        label: React.PropTypes.oneOfType([React.PropTypes.func, React.PropTypes.string, React.PropTypes.object]),
         availableCRS: React.PropTypes.object,
         crs: React.PropTypes.string,
         enabled: React.PropTypes.bool,
@@ -49,20 +48,23 @@ let CRSSelector = React.createClass({
                     value={this.props.crs}
                     onChange={this.launchNewCRSAction}
                     bsSize="small"
-                    {...this.props.inputProps}>
+                    >
                     {list}
                 </select>);
         } else if (this.props.enabled && !this.props.useRawInput) {
             return (
-                <Input
-                  type="select"
-                  id={this.props.id}
-                  value={this.props.crs}
-                  onChange={this.launchNewCRSAction}
-                  bsSize="small"
-                  {...this.props.inputProps}>
-                  {list}
-              </Input>);
+                <FormGroup>
+                    <ControlLabel>{this.props.label}</ControlLabel>
+                    <FormControl
+                      componentClass="select"
+                      id={this.props.id}
+                      value={this.props.crs}
+                      onChange={this.launchNewCRSAction}
+                      bsSize="small"
+                      >
+                      {list}
+              </FormControl>
+          </FormGroup>);
         }
         return null;
     },

@@ -117,7 +117,7 @@ describe("test the SearchBar", () => {
 
         const spy = expect.spyOn(testHandlers, 'onSearchHandler');
         const spyReset = expect.spyOn(testHandlers, 'onPurgeResultsHandler');
-        var tb = ReactDOM.render(<SearchBar delay={0} typeAhead={true} blurResetDelay={0} onSearch={testHandlers.onSearchHandler} onPurgeResults={testHandlers.onPurgeResultsHandler}/>, document.getElementById("container"));
+        let tb = ReactDOM.render(<SearchBar searchText="test" delay={0} typeAhead={true} blurResetDelay={0} onSearch={testHandlers.onSearchHandler} onPurgeResults={testHandlers.onPurgeResultsHandler}/>, document.getElementById("container"));
         let input = TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0];
         expect(input).toExist();
         input = ReactDOM.findDOMNode(input);

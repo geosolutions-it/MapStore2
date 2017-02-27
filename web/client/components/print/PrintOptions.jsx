@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Input} = require('react-bootstrap');
+const {Radio} = require('react-bootstrap');
 const LocaleUtils = require('../../utils/LocaleUtils');
 
 const PrintOptions = React.createClass({
@@ -35,14 +35,13 @@ const PrintOptions = React.createClass({
         this.props.onChange(e.target.value);
     },
     renderOptions() {
-        return this.props.options.map((option) => <Input
+        return this.props.options.map((option) => <Radio
             key={option.label}
             disabled={!this.isEnabled()} ref={"input" + option.value}
             checked={this.props.selected === option.value}
-            type="radio" label={LocaleUtils.getMessageById(this.context.messages, option.label)}
             onChange={this.onChange}
             value={option.value}
-        />);
+        >{LocaleUtils.getMessageById(this.context.messages, option.label)}</Radio>);
     },
     render() {
         return (

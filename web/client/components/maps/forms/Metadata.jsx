@@ -14,7 +14,7 @@
   */
 
 const React = require('react');
-const {Input} = require('react-bootstrap');
+const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 
   /**
    * A DropDown menu for user details:
@@ -45,33 +45,33 @@ const Metadata = React.createClass({
   },
   render() {
       return (<form ref="metadataForm" onSubmit={this.handleSubmit}>
-          <Input ref="mapName"
-              key="mapName"
-              hasFeedback
-              type="text"
-              label={this.props.nameFieldText}
-              onChange={this.props.onChange}
-              placeholder={this.props.namePlaceholderText}
-              defaultValue={this.props.map ? this.props.map.name : ""} />
-          <Input ref="mapDescription"
-              key="mapDescription"
-              hasFeedback
-              type="text"
-              label={this.props.descriptionFieldText}
-              onChange={this.props.onChange}
-              placeholder={this.props.descriptionPlaceholderText}
-              defaultValue={this.props.map ? this.props.map.description : ""} />
+          <FormGroup>
+              <ControlLabel>{this.props.nameFieldText}</ControlLabel>
+              <FormControl ref="mapName"
+                  key="mapName"
+                  hasFeedback
+                  type="text"
+                  onChange={this.changeName}
+                  placeholder={this.props.namePlaceholderText}
+                  defaultValue={this.props.map ? this.props.map.name : ""} />
+          </FormGroup>
+          <FormGroup>
+              <ControlLabel>{this.props.descriptionFieldText}</ControlLabel>
+              <FormControl ref="mapDescription"
+                  key="mapDescription"
+                  hasFeedback
+                  type="text"
+                  onChange={this.changeDescription}
+                  placeholder={this.props.descriptionPlaceholderText}
+                  defaultValue={this.props.map ? this.props.map.description : ""} />
+          </FormGroup>
       </form>);
   },
-  setMapNameValue(newName) {
-      this.refs.mapName.setValue(newName || "");
+  changeName(e) {
+      this.props.onChange('name', e.target.value);
   },
-  isValid() {
-      if (!this.refs.mapName) {
-          return false;
-      }
-      let pw = this.refs.mapName.getValue();
-      return pw !== null;
+  changeDescription(e) {
+      this.props.onChange('description', e.target.value);
   }
 });
 

@@ -68,11 +68,12 @@ const PasswordResetModal = React.createClass({
     getInitialState() {
         return {
             passwordValid: false,
-            loading: false
+            loading: false,
+            password: ''
         };
     },
     onPasswordChange() {
-        this.props.onPasswordChange(this.props.user, this.refs.passwordResetForm.getPassword());
+        this.props.onPasswordChange(this.props.user, this.state.password);
     },
     renderLoading() {
         return this.state.loading ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn/> : null;
@@ -98,8 +99,8 @@ const PasswordResetModal = React.createClass({
     },
     getBody() {
         return (<PasswordReset role="body" ref="passwordResetForm"
-            onChange={() => {
-                this.setState({passwordValid: this.refs.passwordResetForm.isValid()});
+            onChange={(password, valid) => {
+                this.setState({passwordValid: valid, password});
             }} />);
     },
     renderModal() {

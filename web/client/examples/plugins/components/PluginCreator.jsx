@@ -7,7 +7,7 @@
  */
 const React = require('react');
 
-const {Button, Glyphicon, Modal, Input} = require('react-bootstrap');
+const {Button, Glyphicon, Modal, Checkbox, FormGroup} = require('react-bootstrap');
 
 const Codemirror = require('react-codemirror');
 
@@ -49,11 +49,14 @@ const PluginCreator = React.createClass({
     render() {
         return (<li style={{border: "solid 1px lightgrey", borderRadius: "3px", paddingLeft: "10px", paddingRight: "10px", marginBottom: "3px", marginRight: "10px"}} key="plugin-creator">
         <Button bsSize="small" bsStyle="primary" onClick={this.toggleCfg}><Glyphicon glyph={this.state.configVisible ? "minus" : "plus"}/></Button>
-          <Input className="pluginEnable" type="checkbox" name="toolscontainer"
-              disabled={true}
-              checked={true}
-              label="Live edit your own plugin"/>
-
+            <FormGroup>
+              <Checkbox className="pluginEnable" name="toolscontainer"
+                  disabled={true}
+                  checked={true}
+                  >
+                  Live edit your own plugin
+              </Checkbox>
+          </FormGroup>
             <Modal show={this.state.configVisible} bsSize="large" backdrop={false} onHide={() => {
                 this.setState({
                   configVisible: false

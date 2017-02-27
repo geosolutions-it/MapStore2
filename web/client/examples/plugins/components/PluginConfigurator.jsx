@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {Input, Button, Glyphicon} = require('react-bootstrap');
+const {Checkbox, FormGroup, Button, Glyphicon} = require('react-bootstrap');
 
 const Codemirror = require('react-codemirror');
 require('codemirror/lib/codemirror.css');
@@ -74,11 +74,14 @@ const PluginConfigurator = React.createClass({
     render() {
         return (<li style={{border: "solid 1px lightgrey", borderRadius: "3px", paddingLeft: "10px", paddingRight: "10px", marginBottom: "3px", marginRight: "10px"}} key={this.props.pluginName + "enable"}>
             <Button bsSize="small" bsStyle="primary" onClick={this.toggleCfg}><Glyphicon glyph={this.state.configVisible ? "minus" : "plus"}/></Button>
-            <Input className="pluginEnable" type="checkbox" name="toolscontainer"
-                disabled={this.props.pluginName === 'Map'}
-                checked={this.props.pluginsCfg.indexOf(this.props.pluginName) !== -1}
-                label={this.props.pluginName}
-                onChange={this.props.onToggle}/>
+            <FormGroup>
+                <Checkbox className="pluginEnable" name="toolscontainer"
+                    disabled={this.props.pluginName === 'Map'}
+                    checked={this.props.pluginsCfg.indexOf(this.props.pluginName) !== -1}
+                    onChange={this.props.onToggle}>
+                    {this.props.pluginName}
+                </Checkbox>
+            </FormGroup>
             {this.renderCfg()}
         </li>);
     },

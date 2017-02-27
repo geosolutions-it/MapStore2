@@ -15,7 +15,7 @@
 
 const React = require('react');
 const UsersTable = require('./UsersTable');
-const {Alert, Tabs, Tab, Button, Glyphicon, Input} = require('react-bootstrap');
+const {Alert, Tabs, Tab, Button, Glyphicon, FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 
 const Dialog = require('../../../components/misc/Dialog');
 const assign = require('object-assign');
@@ -78,26 +78,30 @@ const GroupDialog = React.createClass({
   },
   renderGeneral() {
       return (<div style={{clear: "both"}}>
-      <Input ref="groupName"
-          key="groupName"
-          type="text"
-          name="groupName"
-          readOnly={this.props.group && this.props.group.id}
-          style={this.props.inputStyle}
-          label={<Message msgId="usergroups.groupName"/> }
-          onChange={this.handleChange}
-          maxLength={this.props.nameLimit}
-          value={this.props.group && this.props.group.groupName}/>
-      <Input type="textarea"
-          ref="description"
-          key="description"
-          name="description"
-          maxLength={this.props.descLimit}
-          readOnly={this.props.group && this.props.group.id}
-          style={this.props.inputStyle}
-          label={<Message msgId="usergroups.groupDescription"/>}
-          onChange={this.handleChange}
-          value={this.props.group && this.props.group.description || ""}/>
+      <FormGroup>
+          <ControlLabel><Message msgId="usergroups.groupName"/></ControlLabel>
+          <FormControl ref="groupName"
+              key="groupName"
+              type="text"
+              name="groupName"
+              readOnly={this.props.group && this.props.group.id}
+              style={this.props.inputStyle}
+              onChange={this.handleChange}
+              maxLength={this.props.nameLimit}
+              value={this.props.group && this.props.group.groupName}/>
+      </FormGroup>
+      <FormGroup>
+          <ControlLabel><Message msgId="usergroups.groupDescription"/></ControlLabel>
+          <FormControl componentClass="textarea"
+              ref="description"
+              key="description"
+              name="description"
+              maxLength={this.props.descLimit}
+              readOnly={this.props.group && this.props.group.id}
+              style={this.props.inputStyle}
+              onChange={this.handleChange}
+              value={this.props.group && this.props.group.description || ""}/>
+      </FormGroup>
       </div>);
   },
 

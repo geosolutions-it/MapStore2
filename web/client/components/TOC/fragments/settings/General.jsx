@@ -7,7 +7,7 @@
  */
 
 var React = require('react');
-const {Input} = require('react-bootstrap');
+const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 const Message = require('../../../I18N/Message');
 const {SimpleSelect} = require('react-selectize');
 const {isObject} = require('lodash');
@@ -43,19 +43,25 @@ const General = React.createClass({
     },
     render() {
         return (<form ref="settings">
-                <Input label={<Message msgId="layerProperties.title" />}
+                <FormGroup>
+                    <ControlLabel><Message msgId="layerProperties.title" /></ControlLabel>
+                    <FormControl
                     value={this.props.element.title}
                     key="title"
                     type="text"
                     onChange={this.updateEntry.bind(null, "title")}
                 />
-            <Input label={<Message msgId="layerProperties.name" />}
-                    value={this.props.element.name}
-                    key="name"
-                    type="text"
-                    disabled
-                    onChange={this.updateEntry.bind(null, "name")}
-                />
+            </FormGroup>
+            <FormGroup>
+                <ControlLabel><Message msgId="layerProperties.name" /></ControlLabel>
+                <FormControl
+                        value={this.props.element.name}
+                        key="name"
+                        type="text"
+                        disabled
+                        onChange={this.updateEntry.bind(null, "name")}
+                    />
+            </FormGroup>
             <label key="group-label" className="control-label"><Message msgId="layerProperties.group" /></label>
             <SimpleSelect
                     key="group-dropdown"

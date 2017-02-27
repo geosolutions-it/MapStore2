@@ -72,9 +72,7 @@ module.exports = {
             <CRSSelector
                 key="crsSelector"
                 enabled={true}
-                inputProps={{
-                    label: <Message msgId="mousePositionCoordinates" />
-                }}
+                label={<Message msgId="mousePositionCoordinates" />}
             />
             <MousePositionButton
                 key="mousepositionbutton"

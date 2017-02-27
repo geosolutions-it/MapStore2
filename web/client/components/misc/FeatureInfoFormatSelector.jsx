@@ -10,12 +10,12 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const MapInfoUtils = require('../../utils/MapInfoUtils');
 
-const {Input} = require('react-bootstrap');
+const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 
 var FeatureInfoFormatSelector = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
-        inputProps: React.PropTypes.object,
+        label: React.PropTypes.oneOfType([React.PropTypes.func, React.PropTypes.string, React.PropTypes.object]),
         availableInfoFormat: React.PropTypes.object,
         infoFormat: React.PropTypes.string,
         onInfoFormatChange: React.PropTypes.func
@@ -36,15 +36,16 @@ var FeatureInfoFormatSelector = React.createClass({
         });
 
         return (
-            <Input
-                id={this.props.id}
-                value={this.props.infoFormat}
-                type="select"
-                onChange={this.launchChangeInfoFormatAction}
-                bsSize="small"
-                {...this.props.inputProps}>
-                {list}
-            </Input>
+            <FormGroup bsSize="small">
+                <ControlLabel>{this.props.label}</ControlLabel>
+                <FormControl
+                    id={this.props.id}
+                    value={this.props.infoFormat}
+                    componentClass="select"
+                    onChange={this.launchChangeInfoFormatAction}>
+                    {list}
+                </FormControl>
+            </FormGroup>
         );
     },
     launchChangeInfoFormatAction() {

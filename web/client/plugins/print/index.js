@@ -5,29 +5,39 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
+const React = require('react');
 const {connect} = require('react-redux');
 const {compose} = require('redux');
 const ConfigUtils = require('../../utils/ConfigUtils');
-const {Input} = require('react-bootstrap');
+const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 
 const {setPrintParameter, changePrintZoomLevel, changeMapPrintPreview, printCancel} =
     require('../../actions/print');
 
 const {setControlProperty} = require('../../actions/controls');
 
+const TextWithLabel = (props) => {
+    return (
+      <FormGroup>
+        {props.label && <ControlLabel>{props.label}</ControlLabel> || null}
+        <FormControl {...props}/>
+      </FormGroup>
+    );
+};
+
 const Name = connect((state) => ({
     value: state.print && state.print.spec && state.print.spec.name || '',
     type: "text"
 }), {
     onChange: compose(setPrintParameter.bind(null, 'name'), (e) => e.target.value)
-})(Input);
+})(TextWithLabel);
 
 const Description = connect((state) => ({
     value: state.print && state.print.spec && state.print.spec.description || '',
-    type: "textarea"
+    componentClass: "textarea"
 }), {
     onChange: compose(setPrintParameter.bind(null, 'description'), (e) => e.target.value)
-})(Input);
+})(TextWithLabel);
 
 const Resolution = connect((state) => ({
     selected: state.print && state.print.spec && state.print.spec.resolution || '',
@@ -87,14 +97,14 @@ const IconSizeOption = connect((state) => ({
     type: "number"
 }), {
     onChange: compose(setPrintParameter.bind(null, 'iconSize'), (e) => parseInt(e.target.value, 10))
-})(Input);
+})(TextWithLabel);
 
 const LegendDpiOption = connect((state) => ({
     value: state.print && state.print.spec && state.print.spec.legendDpi,
     type: "number"
 }), {
     onChange: compose(setPrintParameter.bind(null, 'legendDpi'), (e) => parseInt(e.target.value, 10))
-})(Input);
+})(TextWithLabel);
 
 const DefaultBackgroundOption = connect((state) => ({
     checked: state.print && state.print.spec && !!state.print.spec.defaultBackground

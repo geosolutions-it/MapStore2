@@ -15,7 +15,7 @@
 const React = require('react');
 const CopyToClipboard = require('react-copy-to-clipboard');
 const Message = require('../../components/I18N/Message');
-const {Glyphicon, Input, Tooltip, OverlayTrigger, Button} = require('react-bootstrap');
+const {Glyphicon, FormControl, FormGroup, Tooltip, OverlayTrigger, Button} = require('react-bootstrap');
 
 // css required
 require('./share.css');
@@ -43,7 +43,12 @@ const ShareLink = React.createClass({
                   <h4>
                      <Message msgId="share.directLinkTitle"/>
                   </h4>
-                  <Input onFocus={ev => ev.target.select()} ref="copytext" type="text" value={this.props.shareUrl} addonAfter={copyTo} readOnly/>
+                  <FormGroup>
+                      <div className="input-group">
+                          <FormControl onFocus={ev => ev.target.select()} ref="copytext" type="text" value={this.props.shareUrl} readOnly/>
+                          <span className="input-group-addon">{copyTo}</span>
+                      </div>
+                  </FormGroup>
             </div>
         );
     }

@@ -141,7 +141,6 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             vertical-align: middle;
-            height: 20px;
             font-size: 1.2em;
         }
         #google .label-info {

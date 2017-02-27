@@ -7,7 +7,7 @@
  */
 
 var React = require('react');
-var {Input, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
+var {FormControl, FormGroup, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
 var LocaleUtils = require('../../../utils/LocaleUtils');
 var Spinner = require('react-spinkit');
 
@@ -62,8 +62,8 @@ let SearchBar = React.createClass({
             searchText: ""
         };
     },
-    onChange() {
-        var text = this.refs.input.getValue();
+    onChange(e) {
+        var text = e.target.value;
         this.props.onSearchTextChange(text);
         if (this.props.typeAhead) {
             delay(() => {this.search(); }, this.props.delay);
@@ -100,7 +100,7 @@ let SearchBar = React.createClass({
             let tooltip = <Tooltip id="tooltip">{this.props.error && this.props.error.message || null}</Tooltip>;
             addonAfter.push(<OverlayTrigger placement="bottom" overlay={tooltip}><Glyphicon style={{color: "#b94a48"}} className="searcherror" glyph="warning-sign" onClick={this.clearSearch}/></OverlayTrigger>);
         }
-        return addonAfter;
+        return <span className="input-group-addon">{addonAfter}</span>;
     },
     render() {
         //  const innerGlyphicon = <Button onClick={this.search}></Button>;
@@ -116,25 +116,28 @@ let SearchBar = React.createClass({
 
         return (
             <div id="map-search-bar" style={this.props.style} className={"MapSearchBar" + (this.props.className ? " " + this.props.className : "")}>
-                <Input
-                    key="search-input"
-                    placeholder={placeholder}
-                    type="text"
-                    style={{
-                        textOverflow: "ellipsis"
-                    }}
-                    value={this.props.searchText}
-                    ref="input"
-                    addonAfter={this.renderAddonAfter()}
-                    onKeyDown={this.onKeyDown}
-                    onBlur={this.onBlur}
-                    onFocus={this.onFocus}
-                    onChange={this.onChange} />
+                <FormGroup>
+                    <div className="input-group"><FormControl
+                        key="search-input"
+                        placeholder={placeholder}
+                        type="text"
+                        style={{
+                            textOverflow: "ellipsis"
+                        }}
+                        value={this.props.searchText}
+                        ref="input"
+                        onKeyDown={this.onKeyDown}
+                        onBlur={this.onBlur}
+                        onFocus={this.onFocus}
+                        onChange={this.onChange} />
+                        {this.renderAddonAfter()}
+                        </div>
+                </FormGroup>
             </div>
         );
     },
     search() {
-        var text = this.refs.input.getValue();
+        var text = this.props.searchText;
         if (text === undefined || text === "") {
             this.props.onSearchReset();
         } else {

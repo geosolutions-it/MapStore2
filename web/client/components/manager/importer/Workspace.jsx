@@ -7,7 +7,7 @@
  */
 const React = require('react');
 const Select = require('react-select');
-const {Input, Button, Alert} = require('react-bootstrap');
+const {FormControl, Button, Alert} = require('react-bootstrap');
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
@@ -74,7 +74,7 @@ module.exports = React.createClass({
                 />)}
                 <div className="form-inline" style={{marginTop: "10px", display: this.props.enabled ? "none" : "block"}}>
                     <strong><Message msgId="importer.workspace.createWS" /></strong>
-                    <Input
+                    <FormControl
                         onChange={this.validate}
                         ref="workspaceNewName"
                         placeholder={LocaleUtils.getMessageById(this.context.messages, "importer.workspace.new")}
@@ -92,13 +92,13 @@ module.exports = React.createClass({
         // should not contain spaces
         return name.indexOf(" ") < 0 && name.length > 0;
     },
-    validate() {
-        let name = this.refs.workspaceNewName.getValue();
+    validate(e) {
+        let name = e.target.value;
         let valid = this.isValid(name);
-        this.setState({valid});
+        this.setState({valid, name});
     },
     createWorkspace() {
-        let name = this.refs.workspaceNewName.getValue();
+        let name = this.state && this.state.name;
         let valid = this.isValid(name);
         if (name && valid) {
             this.props.createWorkspace(name, this.props.datastoreTemplates);
