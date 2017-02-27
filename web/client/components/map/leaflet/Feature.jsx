@@ -38,6 +38,7 @@ var getPointLayer = function(pointToLayer, geojson, latlng, options) {
             {
                 icon: L.icon({
                     iconUrl: options.style.iconUrl,
+                    shadowUrl: options.style.shadowUrl,
                     iconSize: options.style.iconSize,
                     shadowSize: options.style.shadowSize,
                     iconAnchor: options.style.iconAnchor,

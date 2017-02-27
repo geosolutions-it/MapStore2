@@ -146,12 +146,12 @@ Layers.registerType('vector', {
                 let markerStyle = [new ol.style.Style({
                       image: new ol.style.Icon(({
                         anchor: options.iconAnchor || [0.5, 1],
-                        anchorXUnits: options.iconAnchor ? 'pixels' : 'fraction',
-                        anchorYUnits: options.iconAnchor ? 'pixels' : 'fraction',
+                        anchorXUnits: ( options.iconAnchor || options.iconAnchor === 0) ? 'pixels' : 'fraction',
+                        anchorYUnits: ( options.iconAnchor || options.iconAnchor === 0) ? 'pixels' : 'fraction',
                         src: options.style.iconUrl
-                      }))
+                    }))
                 })];
-                if (options.shadowUrl) {
+                if (options.style.shadowUrl) {
                     markerStyle = [new ol.style.Style({
                           image: new ol.style.Icon(({
                             anchor: [12, 41],
@@ -159,7 +159,7 @@ Layers.registerType('vector', {
                             anchorYUnits: 'pixels',
                             src: options.style.shadowUrl || markerShadow
                           }))
-                      }), markerStyle];
+                      }), markerStyle [0]];
                 }
                 style = (feature) => {
                     const type = feature.getGeometry().getType();
