@@ -168,7 +168,7 @@ describe('Test correctness of the layers actions', () => {
         expect(action.type).toBe(UPDATE_SETTINGS);
         expect(action.options).toEqual({opacity: 0.5, size: 500});
     });
-    it('get layer capabilities', () => {
+    it('get layer capabilities', (done) => {
         const layer = {
             id: "TEST_ID",
             name: 'testworkspace:testlayer',
@@ -180,5 +180,13 @@ describe('Test correctness of the layers actions', () => {
         };
         const actionCall = getLayerCapabilities(layer);
         expect(actionCall).toExist();
+        actionCall((action)=> {
+            expect(action).toExist();
+            expect(action.options).toExist();
+            expect(action.type === UPDATE_NODE);
+            if (action.options.capabilities) {
+                done();
+            }
+        });
     });
 });
