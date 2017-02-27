@@ -42,7 +42,6 @@
     "karma-webpack": "2.0.2",
     "less": "2.7.1",
     "less-loader": "2.2.3",
-    "markdown-toc": "1.1.0",
     "mkdirp": "0.5.1",
     "mocha": "2.4.5",
     "ncp": "2.0.0",

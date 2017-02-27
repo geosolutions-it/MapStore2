@@ -11,7 +11,6 @@ var fs = require('fs');
 var path = require('path');
 var docsToMarkdown = require('react-docs-markdown');
 var reactDocs = require('react-docgen');
-var toc = require('markdown-toc');
 var filelist = [];
 
 var walkSync = function(dir, outdir, filelist) {
@@ -51,7 +50,7 @@ function checkExt(file, ext, outdir, docList) {
       buildDocs(reactDocs.parse(data), file, outdir);
       // Build TOC entry
       var name = getComponentName(file);
-      var tocString = toc('# ' + name + '\n\n').content + '\n';
+      var tocString = '- ['+ name + '](' + name + ')\n';
       fs.appendFile(path.join(outdir, 'index.md'), tocString, function(err) {
         if (err) {
           return console.log(err);
