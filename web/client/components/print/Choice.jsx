@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Input} = require('react-bootstrap');
+const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 
 const Choice = React.createClass({
     propTypes: {
@@ -24,19 +24,19 @@ const Choice = React.createClass({
             selected: ''
         };
     },
-    onChange() {
-        this.props.onChange(this.refs.input.getValue());
-    },
-    getValue() {
-        return this.refs.input.getValue();
+    onChange(e) {
+        this.props.onChange(e.target.value);
     },
     render() {
         const options = this.props.items
             .map((item) => <option key={item.value} value={item.value}>{item.name}</option>);
         return (
-            <Input ref="input" value={this.props.selected} type="select" label={this.props.label} onChange={this.onChange}>
-                {options}
-            </Input>
+            <FormGroup>
+                {this.props.label ? <ControlLabel>{this.props.label}</ControlLabel> : null}
+                <FormControl ref="input" value={this.props.selected} componentClass="select" onChange={this.onChange}>
+                    {options}
+                </FormControl>
+            </FormGroup>
         );
     }
 });

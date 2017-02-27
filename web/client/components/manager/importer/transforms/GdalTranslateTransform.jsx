@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {Input, Alert} = require('react-bootstrap');
+const {FormControl, Alert} = require('react-bootstrap');
 const assign = require('object-assign');
 
 const {Message} = require('../../../I18N/I18N');
@@ -38,7 +38,7 @@ const GdalTranslateTransform = React.createClass({
     },
     render() {
         return (<div>
-            <Message msgId="importer.transform.options" key="opt-label"/><Input key="options" name="options" onChange={this.onChange} type="text" value={(this.props.transform.options || []).join(" ")} />
+            <Message msgId="importer.transform.options" key="opt-label"/><FormControl key="options" name="options" onChange={this.onChange} type="text" value={(this.props.transform.options || []).join(" ")} />
             {this.renderInvalid()}
         </div>);
     },

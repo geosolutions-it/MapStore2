@@ -7,7 +7,7 @@
  */
 const React = require('react');
 
-const {Row, Col, Panel, Input, Button, Glyphicon} = require('react-bootstrap');
+const {Row, Col, Panel, FormControl, Button, Glyphicon} = require('react-bootstrap');
 
 const I18N = require('../../I18N/I18N');
 
@@ -161,7 +161,7 @@ const GeometryDetails = React.createClass({
         return (
             <div>
                 <div className="detail-field-title">{name}</div>
-                <Input
+                <FormControl
                     style={{minWidth: '105px', margin: 'auto'}}
                     type="number"
                     id={"queryform_bbox_" + name}
@@ -172,7 +172,7 @@ const GeometryDetails = React.createClass({
     },
     renderCircleField(value, name) {
         return (
-            <Input
+            <FormControl
                 type="number"
                 id={"queryform_circle_" + name}
                 defaultValue={value}

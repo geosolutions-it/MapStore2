@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Input} = require('react-bootstrap');
+const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 const mapUtils = require('../../../utils/MapUtils');
 const {isEqual} = require('lodash');
 
@@ -62,9 +62,12 @@ var ScaleBox = React.createClass({
             );
         } else {
             control = (
-                <Input type="select" label={this.props.label} onChange={this.onComboChange} bsSize="small" value={this.props.currentZoomLvl}>
-                    {this.getOptions()}
-                </Input>
+                <FormGroup bsSize="small">
+                    <ControlLabel>{this.props.label}</ControlLabel>
+                    <FormControl componentClass="select" onChange={this.onComboChange} value={this.props.currentZoomLvl}>
+                        {this.getOptions()}
+                    </FormControl>
+                </FormGroup>
             );
         }
         return (

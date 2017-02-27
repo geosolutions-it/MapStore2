@@ -54,12 +54,14 @@ describe("Test the login form component", () => {
         let username = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "input")[0]);
         expect(username).toExist();
         username.value = "test";
+        ReactTestUtils.Simulate.change(username);
 
         let password = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "input")[1]);
         expect(password).toExist();
         password.value = "test";
+        ReactTestUtils.Simulate.change(password);
 
-        let button = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "input")[2]);
+        let button = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "button")[0]);
         ReactTestUtils.Simulate.click(button);
 
         expect(spy.calls.length).toEqual(1);

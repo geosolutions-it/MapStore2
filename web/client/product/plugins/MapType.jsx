@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {Label, Input} = require('react-bootstrap');
+const {Label, FormControl, FormGroup} = require('react-bootstrap');
 const Message = require('../../components/I18N/Message');
 const {compose} = require('redux');
 const {changeMapType} = require('../actions/home');
@@ -29,10 +29,12 @@ const MapType = React.createClass({
         return (
             <div id="mapstore-maptype">
                 <Label><Message msgId="manager.mapTypes_combo"/></Label>
-                <Input value={this.props.mapType} type="select" bsSize="small" ref="mapType" onChange={this.props.onChangeMapType}>
-                    <option value="leaflet" key="leaflet">Leaflet</option>
-                    <option value="openlayers" key="openlayer">OpenLayers</option>
-                </Input>
+                <FormGroup bsSize="small">
+                    <FormControl value={this.props.mapType} componentClass="select" ref="mapType" onChange={this.props.onChangeMapType}>
+                        <option value="leaflet" key="leaflet">Leaflet</option>
+                        <option value="openlayers" key="openlayer">OpenLayers</option>
+                    </FormControl>
+                </FormGroup>
         </div>
         );
     }

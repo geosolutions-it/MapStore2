@@ -8,7 +8,7 @@
 
 const React = require('react');
 const Choice = require('./Choice');
-const {Grid, Row, Col, Input, Button, Glyphicon} = require('react-bootstrap');
+const {Grid, Row, Col, FormControl, Button, Glyphicon} = require('react-bootstrap');
 
 const Font = React.createClass({
     propTypes: {
@@ -35,11 +35,11 @@ const Font = React.createClass({
             italic: false
         };
     },
-    onChangeFamily() {
-        this.props.onChangeFamily(this.refs.family.getValue());
+    onChangeFamily(family) {
+        this.props.onChangeFamily(family);
     },
-    onChangeSize() {
-        this.props.onChangeSize(this.refs.size.getValue());
+    onChangeSize(size) {
+        this.props.onChangeSize(size);
     },
     render() {
         return (
@@ -55,7 +55,7 @@ const Font = React.createClass({
                             selected={this.props.family}/>
                     </Col>
                     <Col xs={3}>
-                        <Input ref="size" type="number" value={this.props.size} onChange={this.onChangeSize}/>
+                        <FormControl ref="size" type="number" value={this.props.size} onChange={this.onChangeSize}/>
                     </Col>
                     <Col xs={2}>
                         <Button bsStyle="primary" bsSize="small" active={this.props.bold} onClick={this.toggleBold}><Glyphicon glyph="bold"/></Button>

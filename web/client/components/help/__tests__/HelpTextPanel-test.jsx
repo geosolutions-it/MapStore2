@@ -36,11 +36,6 @@ describe('Test for HelpTextPanel', () => {
         const panelHeader = helpPanelDom.getElementsByClassName('panel-heading').item(0);
         expect(panelHeader).toExist();
         expect(panelHeader.innerHTML.indexOf("HELP") !== -1).toBe(true);
-
-        // text in body
-        const panelBody = helpPanelDom.getElementsByClassName('panel-body').item(0);
-        expect(panelBody).toExist();
-        expect(panelBody.innerHTML).toBe("");
     });
 
     it('creates the component with custom props', () => {

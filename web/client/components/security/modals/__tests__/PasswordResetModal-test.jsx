@@ -11,7 +11,6 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactTestUtils = require('react-addons-test-utils');
 const PRModal = require('../PasswordResetModal');
-const {Modal} = require('react-bootstrap');
 
 describe("Test password reset modal", () => {
     beforeEach((done) => {
@@ -45,16 +44,13 @@ describe("Test password reset modal", () => {
         let spy = expect.spyOn(callbacks, 'onPasswordChange');
         const cmp = ReactDOM.render(<PRModal options={{animation: false}} show={true} user={{name: "test"}} onPasswordChange={callbacks.onPasswordChange}/>, document.getElementById("container"));
         expect(cmp).toExist();
-        let modalInstance = ReactTestUtils.findRenderedComponentWithType(cmp, Modal);
-        let inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag(modalInstance._modal, "input");
-        inputs.forEach((i) => {
+        let inputs = document.getElementsByTagName("input");
+        Array.prototype.forEach.call(inputs, (i) => {
             i.value = "password";
-
+            ReactTestUtils.Simulate.change(i);
         });
-        // force onChange event to enable form button
-        cmp.refs.passwordResetForm.refs.password.props.onChange();
-        let button = cmp.refs.passwordChangeButton;
-        button.props.onClick();
+        let button = document.getElementsByTagName("button")[1];
+        ReactTestUtils.Simulate.click(button);
         expect(spy.calls.length).toEqual(1);
     });
 });

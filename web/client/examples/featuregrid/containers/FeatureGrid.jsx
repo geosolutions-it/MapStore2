@@ -61,7 +61,7 @@ FeatureGrid.propTypes = {
 
 module.exports = connect((state) => {
     return {
-        locale: state.locale && state.locale.locale,
+        locale: state.locale && state.locale.current,
         messages: state.locale && state.locale.messages || {}
     };
 })(FeatureGrid);

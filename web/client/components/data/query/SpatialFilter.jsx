@@ -7,7 +7,7 @@
  */
 const React = require('react');
 
-const {Row, Col, Panel, Button, Glyphicon, Input} = require('react-bootstrap');
+const {Row, Col, Panel, Button, Glyphicon, FormControl} = require('react-bootstrap');
 const ComboField = require('./ComboField');
 const GeometryDetails = require('./GeometryDetails');
 
@@ -257,7 +257,7 @@ const SpatialFilter = React.createClass({
                     <I18N.Message msgId={"queryform.spatialfilter.dwithin_label"}/>{':'}
                 </Col>
                 <Col xs={2}>
-                        <Input
+                        <FormControl
                             type="number"
                             min="0"
                             defaultValue="0"

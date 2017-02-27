@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {Input, Button} = require('react-bootstrap');
+const {FormControl, Button} = require('react-bootstrap');
 
 
 const SaveButton = React.createClass({
@@ -40,11 +40,11 @@ const SaveButton = React.createClass({
     render() {
         return (<div className="save">
             <Button onClick={this.save} bsStyle="primary" disabled={this.state.savename === ''}>Save</Button>
-            <Input ref="savename" onChange={this.onChangeSaveName} type="text"/>
+            <FormControl ref="savename" onChange={this.onChangeSaveName} type="text"/>
             <Button onClick={this.load} bsStyle="primary" disabled={this.state.loadname === ''}>Load</Button>
-            <Input ref="loadname" onChange={this.onChangeLoadName} type="select">
+            <FormControl ref="loadname" onChange={this.onChangeLoadName} componentClass="select">
                 {this.renderSaved()}
-            </Input>
+            </FormControl>
             </div>);
     },
     load() {

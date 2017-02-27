@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Input} = require('react-bootstrap');
+const {FormControl} = require('react-bootstrap');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
 const TextField = React.createClass({
@@ -59,7 +59,7 @@ const TextField = React.createClass({
         return (
             <div className="textField">
                 {label}
-                <Input
+                <FormControl
                     disabled={this.props.operator === "isNull"}
                     placeholder={placeholder}
                     onChange={this.changeText}

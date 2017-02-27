@@ -9,7 +9,7 @@
 const React = require('react');
 const {connect} = require('react-redux');
 
-const {Grid, Row, Col, Panel, PanelGroup, Button, Glyphicon, Input} = require('react-bootstrap');
+const {Grid, Row, Col, Panel, PanelGroup, Button, Glyphicon, FormControl} = require('react-bootstrap');
 
 const Combobox = require('react-widgets').Combobox;
 
@@ -187,7 +187,7 @@ const VectorStyler = React.createClass({
                         {this.props.rule ? (
                             <Col sm={4}>
                             <label><Message msgId="vectorstyler.namelabel"/></label>
-                            <Input type="text" onChange={(ev) => this.props.setRuleParameter('name', ev.target.value)} value={this.props.rule.name}/>
+                            <FormControl type="text" onChange={(ev) => this.props.setRuleParameter('name', ev.target.value)} value={this.props.rule.name}/>
                             </Col>) : null}
                     </Row>
                 </Row>);

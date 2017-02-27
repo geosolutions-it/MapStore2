@@ -7,9 +7,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var ReactDOM = require('react-dom');
-var BootstrapReact = require('react-bootstrap');
-var Input = BootstrapReact.Input;
+var {FormControl} = require('react-bootstrap');
 var LocaleUtils = require('../../utils/LocaleUtils');
 
 var LangSelector = React.createClass({
@@ -39,15 +37,13 @@ var LangSelector = React.createClass({
             }
         }
         return (
-                <Input id={this.props.id} value={this.props.currentLocale} type="select" bsSize="small" onChange={this.launchNewLangAction}>
+                <FormControl id={this.props.id} value={this.props.currentLocale} componentClass="select" bsSize="small" onChange={this.launchNewLangAction}>
                     {list}
-                </Input>
+                </FormControl>
         );
     },
-    launchNewLangAction() {
-        var element = ReactDOM.findDOMNode(this);
-        var selectNode = element.getElementsByTagName('select').item(0);
-        this.props.onLanguageChange(selectNode.value);
+    launchNewLangAction(e) {
+        this.props.onLanguageChange(e.target.value);
     }
 });
 

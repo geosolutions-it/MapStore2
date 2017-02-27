@@ -10,7 +10,7 @@ const React = require('react');
 const Message = require('../I18N/Message');
 const LocaleUtils = require('../../utils/LocaleUtils');
 
-const {Input, Alert, Pagination, Button, Panel} = require('react-bootstrap');
+const {FormControl, FormGroup, Alert, Pagination, Button, Panel} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 
 const RecordGrid = require('./RecordGrid');
@@ -154,12 +154,12 @@ const Catalog = React.createClass({
     },
     renderURLInput() {
         if (!this.getCatalogUrl() || this.props.chooseCatalogUrl) {
-            return (<Input
+            return (<FormGroup><FormControl
                 ref="catalogURL"
                 type="text"
                 placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.catalogUrlPlaceholder")}
                 onChange={this.setCatalogUrl}
-                onKeyDown={this.onKeyDown}/>);
+                onKeyDown={this.onKeyDown}/></FormGroup>);
         }
     },
     renderButtons() {
@@ -180,7 +180,7 @@ const Catalog = React.createClass({
     },
     renderFormatChoice() {
         if (this.props.formats.length > 1) {
-            return <Input onChange={(e) => this.props.onChangeFormat(e.target.value)} value={this.props.format} type="select">{this.renderFormats()}</Input>;
+            return <FormGroup><FormControl onChange={(e) => this.props.onChangeFormat(e.target.value)} value={this.props.format} componentClass="select">{this.renderFormats()}</FormControl></FormGroup>;
         }
         return null;
     },
@@ -188,14 +188,14 @@ const Catalog = React.createClass({
         return this.props.formats.map((format) => <option value={format.name}>{format.label}</option>);
     },
     render() {
-        const textSearch = (<Input
+        const textSearch = (<FormGroup><FormControl
             ref="searchText"
             type="text"
             style={{
                 textOverflow: "ellipsis"
             }}
             placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.textSearchPlaceholder")}
-            onKeyDown={this.onKeyDown}/>);
+            onKeyDown={this.onKeyDown}/></FormGroup>);
         return (
              <div>
                  <div>
