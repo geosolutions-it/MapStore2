@@ -88,6 +88,9 @@ const Catalog = React.createClass({
             });
         }
     },
+    onSearchTextChange(event) {
+        this.setState({searchText: event.target.value});
+    },
     onKeyDown(event) {
         if (event.keyCode === 13) {
             this.search();
@@ -195,6 +198,7 @@ const Catalog = React.createClass({
                 textOverflow: "ellipsis"
             }}
             placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.textSearchPlaceholder")}
+            onChange={this.onSearchTextChange}
             onKeyDown={this.onKeyDown}/></FormGroup>);
         return (
              <div>
@@ -215,7 +219,7 @@ const Catalog = React.createClass({
         );
     },
     search() {
-        this.props.onSearch(this.props.format, this.getCatalogUrl(), 1, this.props.pageSize, this.refs.searchText.getValue());
+        this.props.onSearch(this.props.format, this.getCatalogUrl(), 1, this.props.pageSize, this.state && this.state.searchText);
         this.setState({
             loading: true
         });
