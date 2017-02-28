@@ -1,0 +1,21 @@
+{
+  "source": "./web/client/plugins",
+  "destination": "./esdoc",
+  "includes": ["\\.jsx?$"],
+  "access": ["public", "protected"],
+  "autoPrivate": true,
+  "unexportIdentifier": false,
+  "undocumentIdentifier": true,
+  "builtinExternal": true,
+  "index": "./README.md",
+  "scripts": ["./package.json"],
+  "package": "./package.json",
+  "coverage": true,
+  "includeSource": true,
+  "title": "Mapstore2",
+  "plugins": [
+    {"name": "esdoc-es7-plugin"},
+    {"name": "esdoc-node"}
+  ],
+  "lint": true
+}
