@@ -15,16 +15,22 @@ const xml2js = require('xml2js');
 
 const capabilitiesCache = {};
 
-const {isArray} = require('lodash');
+const {isArray, difference} = require('lodash');
 
 const parseUrl = (url) => {
     const parsed = urlUtil.parse(url, true);
+    let parsedQuery = Object.keys(parsed.query).reduce((previous, current) => {
+        return current && assign(previous, {
+            [current.toLowerCase()]: parsed.query[current]
+        }) || previous;
+    }, {});
+
     return urlUtil.format(assign({}, parsed, {search: null}, {
         query: assign({
             service: "WMS",
             version: "1.3.0",
             request: "GetCapabilities"
-        }, parsed.query)
+        }, parsedQuery)
     }));
 };
 
@@ -36,7 +42,7 @@ const flatLayers = (root) => {
 const getOnlineResource = (c) => {
     return c.Request && c.Request.GetMap && c.Request.GetMap.DCPType && c.Request.GetMap.DCPType.HTTP && c.Request.GetMap.DCPType.HTTP.Get && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource.$ || undefined;
 };
-const searchAndPaginate = (json, startPosition, maxRecords, text) => {
+const searchAndPaginate = (json, startPosition, maxRecords, text, customParams) => {
     const root = (json.WMS_Capabilities || json.WMT_MS_Capabilities).Capability;
     const onlineResource = getOnlineResource(root);
     const SRSList = (root.Layer && (root.Layer.SRS || root.Layer.CRS)) || [];
@@ -51,11 +57,21 @@ const searchAndPaginate = (json, startPosition, maxRecords, text) => {
         service: json.WMS_Capabilities.Service,
         records: filteredLayers
             .filter((layer, index) => index >= (startPosition - 1) && index < (startPosition - 1) + maxRecords)
-            .map((layer) => assign({}, layer, {onlineResource, SRS: SRSList}))
+            .map((layer) => assign({}, layer, {onlineResource, SRS: SRSList, customParams}))
     };
 };
 
 const Api = {
+    getCustomParams: function(url) {
+        const parsed = urlUtil.parse(url, true);
+        const toExclude = ["service", "request", "", "layers"];
+        let parsedQuery = difference(Object.keys(parsed.query).map(t => t.toLowerCase()), toExclude).reduce((previous, current) => {
+            return current && assign(previous, {
+                [current]: parsed.query[current] || parsed.query[current.toUpperCase()]
+            }) || previous;
+        }, {});
+        return parsedQuery;
+    },
     getCapabilities: function(url) {
         const parsed = urlUtil.parse(url, true);
         const getCapabilitiesUrl = urlUtil.format(assign({}, parsed, {
@@ -103,6 +119,8 @@ const Api = {
                 resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text));
             });
         }
+        const customParams = this.getCustomParams(url);
+
         return axios.get(parseUrl(url)).then((response) => {
             let json;
             xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
@@ -112,7 +130,7 @@ const Api = {
                 timestamp: new Date().getTime(),
                 data: json
             };
-            return searchAndPaginate(json, startPosition, maxRecords, text);
+            return searchAndPaginate(json, startPosition, maxRecords, text, customParams );
         });
     },
     describeLayers: function(url, layers) {

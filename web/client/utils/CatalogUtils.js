@@ -138,29 +138,30 @@ const converters = {
             return records.records.map((record) => {
                 const bbox = getWMSBBox(record);
                 return {
-                title: record.Title || record.Name,
-                description: record.Abstract || record.Title || record.Name,
-                identifier: record.Name,
-                tags: "",
-                capabilities: record,
-                service: records.service,
-                boundingBox: {
-                    extent: [
-                            bbox.westBoundLongitude || bbox.minx,
-                            bbox.southBoundLatitude || bbox.miny,
-                            bbox.eastBoundLongitude || bbox.maxx,
-                            bbox.northBoundLatitude || bbox.maxy
-                    ],
-                    crs: "EPSG:4326"
-                },
-                references: [{
-                    type: "OGC:WMS",
-                    url: options.url,
-                    SRS: (record.SRS && (isArray(record.SRS) ? record.SRS : [record.SRS])) || [],
-                    params: {
-                        name: record.Name
-                    }
-                }]
+                    title: record.Title || record.Name,
+                    description: record.Abstract || record.Title || record.Name,
+                    identifier: record.Name,
+                    tags: "",
+                    capabilities: record,
+                    service: records.service,
+                    boundingBox: {
+                        extent: [
+                                bbox.westBoundLongitude || bbox.minx,
+                                bbox.southBoundLatitude || bbox.miny,
+                                bbox.eastBoundLongitude || bbox.maxx,
+                                bbox.northBoundLatitude || bbox.maxy
+                        ],
+                        crs: "EPSG:4326"
+                    },
+                    references: [{
+                        type: "OGC:WMS",
+                        url: options.url,
+                        SRS: (record.SRS && (isArray(record.SRS) ? record.SRS : [record.SRS])) || [],
+                        params: {
+                            name: record.Name
+                        },
+                        customParams: record.customParams || {}
+                    }]
                 };
             });
         }
