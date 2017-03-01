@@ -102,7 +102,7 @@
     "node-uuid": "1.4.3",
     "object-assign": "4.1.1",
     "ogc-schemas": "2.6.1",
-    "openlayers": "3.15.1",
+    "openlayers": "4.0.1",
     "pdfviewer": "0.3.2",
     "proj4": "2.3.14",
     "qrcode.react": "0.6.1",

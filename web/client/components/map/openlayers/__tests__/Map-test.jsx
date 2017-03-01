@@ -68,21 +68,24 @@ describe('OpenlayersMap', () => {
         expect(document.getElementsByTagName('canvas').length).toBe(1);
     });
 
-    it('enables openlayers controls', () => {
+    it('enables openlayers controls', (done) => {
         const map = ReactDOM.render(<OpenlayersMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("map"));
         expect(map).toExist();
         expect(document.getElementsByClassName('ol-zoom-in').length).toBe(1);
 
         const olMap = map.map;
         expect(olMap).toExist();
-
         const zoomIn = document.getElementsByClassName('ol-zoom-in')[0];
         zoomIn.click();
-        expect(olMap.getView().getZoom()).toBe(12);
-
-        const zoomOut = document.getElementsByClassName('ol-zoom-out')[0];
-        zoomOut.click();
-        expect(olMap.getView().getZoom()).toBe(11);
+        setTimeout(() => {
+            expect(olMap.getView().getZoom()).toBe(12);
+            const zoomOut = document.getElementsByClassName('ol-zoom-out')[0];
+            zoomOut.click();
+            setTimeout(() => {
+                expect(olMap.getView().getZoom()).toBe(11);
+                done();
+            }, 500);
+        }, 500);
     });
 
     it('check layers init', () => {
