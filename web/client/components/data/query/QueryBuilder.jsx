@@ -47,7 +47,8 @@ const QueryBuilder = React.createClass({
         resultTitle: React.PropTypes.string,
         pagination: React.PropTypes.object,
         sortOptions: React.PropTypes.object,
-        hits: React.PropTypes.bool
+        hits: React.PropTypes.bool,
+        maxHeight: React.PropTypes.number
     },
     getDefaultProps() {
         return {
@@ -72,6 +73,7 @@ const QueryBuilder = React.createClass({
             pagination: null,
             sortOptions: null,
             hits: false,
+            maxHeight: 830,
             attributeFilterActions: {
                 onAddGroupField: () => {},
                 onAddFilterField: () => {},
@@ -137,7 +139,7 @@ const QueryBuilder = React.createClass({
                     sortOptions={this.props.sortOptions}
                     hits={this.props.hits}
                     />
-                <div className="querypanel" style={{maxHeight: window.innerHeight - 170}}>
+                <div className="querypanel" style={{maxHeight: this.props.maxHeight - 170}}>
                     <GroupField
                         attributes={this.props.attributes}
                         groupLevels={this.props.groupLevels}
