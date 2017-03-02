@@ -14,11 +14,6 @@
 .mapstore-styler-panel button:disabled{
     color:white;
 }
-.mapstore-styler-panel .panel-heading{
-    background-color: #078AA3 !important;
-    color:white !important;
-}
-
 .mapstore-styler-panel .form-control{
     height: 32px !important;
 

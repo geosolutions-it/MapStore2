@@ -28,7 +28,6 @@ const UserCard = React.createClass({
     getDefaultProps() {
         return {
             style: {
-                background: "#F7F4ED",
                 position: "relative",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
