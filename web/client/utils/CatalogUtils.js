@@ -10,7 +10,7 @@ const assign = require('object-assign');
 const {head, isArray, isString} = require('lodash');
 const urlUtil = require('url');
 const CoordinatesUtils = require('./CoordinatesUtils');
-const castArray = require('lodash.castarray');
+const {castArray} = require('lodash');
 
 const getWMSBBox = (record) => {
     let layer = record;

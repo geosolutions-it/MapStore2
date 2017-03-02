@@ -17,7 +17,7 @@ const capabilitiesCache = {};
 
 const {isArray, head} = require('lodash');
 
-const castArray = require('lodash.castarray');
+const {castArray} = require('lodash');
 
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
 
