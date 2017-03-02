@@ -29,6 +29,9 @@ const getWMSBBox = (record) => {
     }
     return bbox;
 };
+const getBaseCatalogUrl = (url) => {
+    return url && url.replace(/\/csw$/, "/");
+};
 
 const getWMTSBBox = (record) => {
     let layer = record;
@@ -115,7 +118,7 @@ const converters = {
                 if (thumbURL) {
                     let absolute = (thumbURL.indexOf("http") === 0);
                     if (!absolute) {
-                        thumbURL = options.catalogURL + "/" + thumbURL;
+                        thumbURL = (getBaseCatalogUrl(options.url) || "") + thumbURL;
                     }
                 }
                 // create the references array (now only wms is supported)
