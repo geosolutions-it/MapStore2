@@ -81,7 +81,8 @@ const SmartQueryForm = connect((state) => {
         ogcVersion: "1.1.0",
         params: {typeName: state.query && state.query.typeName},
         resultTitle: "Query Result",
-        showGeneratedFilter: false
+        showGeneratedFilter: false,
+        maxHeight: state.map && state.map.present && state.map.present.size && state.map.present.size.height
     };
 }, dispatch => {
     return {

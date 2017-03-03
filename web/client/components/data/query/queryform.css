@@ -105,7 +105,6 @@
 #query-form-panel .query-toolbar {
     padding: 0;
     overflow: hidden;
-    margin-bottom: 20px;
 }
 
 #query-form-panel #query-toolbar-title {
@@ -194,10 +193,10 @@
 }
 
 .querypanel {
-    max-height: 660px;
     overflow-x: hidden;
     overflow-y: auto;
     border: none;
+    padding-bottom: 150px;
 }
 
 /*****************************/
