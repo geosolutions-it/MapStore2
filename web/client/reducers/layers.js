@@ -182,11 +182,11 @@ function layers(state = [], action) {
             const selector = action.nodeType === 'groups' ? 'group' : 'id';
 
             // const newGroups = action.options && action.options.group && action.options.group !== layer;
-            let sameGroup = false;
+            let sameGroup = action.options.hasOwnProperty("group") ? false : true;
 
             const newLayers = flatLayers.map((layer) => {
-                if (layer[selector] === action.node || layer[selector].indexOf(`{action.node}.`) === 0) {
-                    if (!action.options.hasOwnProperty("group") || layer.group === (action.options.group || 'Default')) {
+                if (layer[selector] === action.node || layer[selector].indexOf(action.node + '.') === 0) {
+                    if (layer.group === (action.options.group || 'Default')) {
                         // If the layer didn't change group, raise a flag to prevent groups update
                         sameGroup = true;
                     }
