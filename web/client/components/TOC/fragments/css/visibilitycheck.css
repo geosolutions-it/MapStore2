@@ -8,9 +8,6 @@ input[type="checkbox"].visibility-check,input[type="radio"].visibility-check {
 .visibility-check.glyphicon {
     float: left;
     overflow: hidden;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-top: 5px;
 }
 button.clayer_removal_button.btn.btn-default {
     border: transparent;

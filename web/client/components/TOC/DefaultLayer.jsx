@@ -145,7 +145,7 @@ var DefaultLayer = React.createClass({
                 <VisibilityCheck key="visibilitycheck"
                    checkType={this.props.visibilityCheckType}
                    propertiesChangeHandler={this.props.propertiesChangeHandler}
-                   style={{"float": "right", cursor: "pointer", marginLeft: 0, marginRight: 0, left: "-3px", fontSize: "29px"}}/>
+                   style={{"float": "right", cursor: "pointer"}}/>
             );
         }
         if (this.props.activateLegendTool) {

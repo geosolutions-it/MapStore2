@@ -27,13 +27,3 @@
 .gridcard-tools .spinner div:before{
     background-color: white
 }
-
-.gridcard-button {
-    height: 30px;
-    width: 30px;
-}
-.gridcard-button span.glyphicon {
-    font-size: 30px;
-    margin-top: -6px;
-    margin-left: -12px;
-}

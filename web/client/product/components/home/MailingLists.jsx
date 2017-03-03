@@ -27,7 +27,7 @@ var MailingLists = React.createClass({
                 </Row>
                 <Row>
                         <Col sm={12} md={6}>
-                        <table border="0" style={{backgroundColor: "#fff", padding: "5px", margin: "auto"}} cellSpacing="0">
+                        <table border="0" style={{padding: "5px", margin: "auto"}} cellSpacing="0">
                             <tbody>
                             <tr>
                                 <td>
@@ -56,7 +56,7 @@ var MailingLists = React.createClass({
                         </table>
                     </Col>
                     <Col sm={12} md={6}>
-                        <table border="0" style={{backgroundColor: "#fff", padding: "5px", margin: "auto"}} cellSpacing="0">
+                        <table border="0" style={{padding: "5px", margin: "auto"}} cellSpacing="0">
                             <tbody>
                             <tr>
                                 <td>
@@ -85,7 +85,7 @@ var MailingLists = React.createClass({
                         </table>
                     </Col>
                     <Col sm={12} md={12}>
-                        <table border="0" style={{backgroundColor: "#fff", padding: "5px", margin: "auto"}} cellSpacing="0">
+                        <table border="0" style={{padding: "5px", margin: "auto"}} cellSpacing="0">
                             <tbody>
                             <tr>
                                 <td>

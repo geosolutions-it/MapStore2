@@ -39,12 +39,6 @@
 	padding-top: 0;
 }
 
-.navbar-dx .dropdown-header {
-	background-color: #286090;
-	color: white;
-}
-
-
 @media (min-width: 1200px) {
     .navbar-dx .search-wrap {
        width: 500px;

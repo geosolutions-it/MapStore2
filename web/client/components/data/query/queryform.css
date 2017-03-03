@@ -14,10 +14,6 @@
     float: left;
 }
 
-#mapstore-drawermenu #toc-query-container {
-    background-color: #f7f7f7;
-}
-
 /*****************************/
 /* END - TOC *****************/
 /*****************************/
@@ -41,35 +37,16 @@
     border: none;
 }
 
-#mapstore-drawermenu #query-form-panel .glyphicon {
-    font-size: 22px;
-}
-
 #query-form-panel .btn-default {
     background-color: transparent;
     border-radius: 0;
-    color: #078aa3;
-    border-color: #078aa3;
-}
-
-#query-form-panel .btn-default:hover {
-    background-color: #dedede;
 }
 
 #query-form-panel input.form-control {
     height: 32px;
-    border: 1px solid #dedede;
 }
 
 #query-form-panel button:disabled {
-    color: #ffffff;
-    background-color: #abc8cd;
-    border-color: transparent;
-}
-
-#query-form-panel button:disabled {
-    color: #ffffff;
-    background-color: #abc8cd;
     border-color: transparent;
 }
 
@@ -88,30 +65,15 @@
 }
 
 #query-form-panel .filter-buttons {
-    background-color: #f7f7f7;
     border: none;
     margin-left: 4px;
 }
 
-#query-form-panel .filter-buttons:hover {
-    background-color: #dedede;
-}
-
 #query-form-panel .remove-filter-button {
-    height: 32px;
-    width: 32px;
     padding: 0;
     margin: 2px;
     border: none;
     float: right;
-}
-
-#mapstore-drawermenu #query-form-panel .remove-filter-button .glyphicon {
-    font-size: 32px;
-}
-
-#mapstore-drawermenu #query-form-panel .remove-filter-button span {
-    line-height: 32px;
 }
 
 #query-form-panel .close {
@@ -123,7 +85,6 @@
 }
 
 #query-form-panel input {
-    border: 1px solid #dedede;
     border-radius: 4px;
     padding: 0 4px 0 8px;
 }
@@ -143,10 +104,7 @@
 
 #query-form-panel .query-toolbar {
     padding: 0;
-    height: 50px;
-    /*border-bottom: 2px dotted #dedede;*/
     overflow: hidden;
-    background-color: #ffffff;
     margin-bottom: 20px;
 }
 
@@ -154,7 +112,6 @@
     float: left;
     font-size: 20px;
     margin: 11px 11px 11px 20px;
-    color: #078aa3;
 }
 
 #query-form-panel .queryFormToolbar {
@@ -171,30 +128,16 @@
 /* BODY QUERY ****************/
 /*****************************/
 
-#query-form-panel .querypanel {
-    background-color: #f7f7f7;
-}
-
 #query-form-panel .querypanel .panel-heading {
     border: none;
-    color: #333333;
     text-decoration: underline;
     padding-left: 11px;
     background-color: transparent;
     font-weight: bold;
 }
 
-#query-form-panel .querypanel .panel-heading span {
-    font-size: 14px;
-}
-
-#query-form-panel .querypanel .panel-heading .panel-title:hover {
-    color: #777777;
-}
-
 #query-form-panel .query-content > .container-fluid {
     margin: 4px 0 4px 0;
-    border-top: 1px dashed #dedede;
 }
 
 #query-form-panel .filter-field-row > div {
@@ -226,16 +169,9 @@
 #query-form-panel .querypanel > .query-filter-container {
     margin: 0 30px 20px 20px;
     background-color: transparent;
-    border-bottom: 1px solid #dedede;
     padding-bottom: 10px;
 }
 
-#mapstore-drawermenu #query-form-panel .querypanel > .query-filter-container {
-    margin-right: 60px;
-    margin-left: 10px;
-}
-
-/* nested groups */
 #query-form-panel .panel .panel .panel {
     margin-left: 10px;
 }
@@ -244,21 +180,7 @@
     -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     -moz-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    background-color: #ffffff;
     margin-bottom: 20px;
-}
-
-#query-form-panel .panel  .panel .filter-group-panel button {
-    background-color: #ffffff;
-}
-
-#query-form-panel .panel  .panel .filter-group-panel button:hover {
-    background-color: #dedede;
-}
-/* end - nested groups */
-
-#query-form-panel hr {
-    border-top: 1px dashed #dedede;
 }
 
 #query-form-panel h5 {
@@ -287,7 +209,6 @@
 /*****************************/
 
 #query-form-panel div.details-panel {
-    background-color: #ffffff;
     -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     -moz-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
@@ -303,7 +224,6 @@
 
 #query-form-panel .details-panel .detail-title span {
     text-decoration: none;
-    line-height: 32px;
     font-weight: normal;
 }
 
@@ -311,15 +231,10 @@
     float: right;
     border: none;
     margin-top: 8px;
-    background-color: #ffffff;
 }
 
 #query-form-panel .details-panel button.remove-filter-button {
     margin-top: 0;
-}
-
-#query-form-panel .details-panel button.remove-filter-button:hover {
-    background-color: #dedede;
 }
 
 #query-form-panel .details-panel button.remove-filter-button span {
