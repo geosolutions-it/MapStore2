@@ -160,7 +160,9 @@ const converters = {
                         params: {
                             name: record.Name
                         },
-                        customParams: record.customParams || {}
+                        customParams: record.customParams || {},
+                        infoFormat: record.infoFormat,
+                        exceptions: record.exceptions
                     }]
                 };
             });

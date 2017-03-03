@@ -42,7 +42,7 @@ const flatLayers = (root) => {
 const getOnlineResource = (c) => {
     return c.Request && c.Request.GetMap && c.Request.GetMap.DCPType && c.Request.GetMap.DCPType.HTTP && c.Request.GetMap.DCPType.HTTP.Get && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource.$ || undefined;
 };
-const searchAndPaginate = (json, startPosition, maxRecords, text, customParams) => {
+const searchAndPaginate = (json, startPosition, maxRecords, text, customParams, options) => {
     const root = (json.WMS_Capabilities || json.WMT_MS_Capabilities).Capability;
     const onlineResource = getOnlineResource(root);
     const SRSList = (root.Layer && (root.Layer.SRS || root.Layer.CRS)) || [];
@@ -57,7 +57,7 @@ const searchAndPaginate = (json, startPosition, maxRecords, text, customParams) 
         service: json.WMS_Capabilities.Service,
         records: filteredLayers
             .filter((layer, index) => index >= (startPosition - 1) && index < (startPosition - 1) + maxRecords)
-            .map((layer) => assign({}, layer, {onlineResource, SRS: SRSList, customParams}))
+            .map((layer) => assign({}, layer, {onlineResource, SRS: SRSList, customParams, infoFormat: options && options.infoFormat || "application/json", exceptions: options && options.exceptions}))
     };
 };
 
@@ -112,11 +112,11 @@ const Api = {
             });
         });
     },
-    getRecords: function(url, startPosition, maxRecords, text) {
+    getRecords: function(url, startPosition, maxRecords, text, options) {
         const cached = capabilitiesCache[url];
         if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
             return new Promise((resolve) => {
-                resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text));
+                resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text, null, options));
             });
         }
         const customParams = this.getCustomParams(url);
@@ -130,7 +130,7 @@ const Api = {
                 timestamp: new Date().getTime(),
                 data: json
             };
-            return searchAndPaginate(json, startPosition, maxRecords, text, customParams );
+            return searchAndPaginate(json, startPosition, maxRecords, text, customParams, options );
         });
     },
     describeLayers: function(url, layers) {
@@ -159,8 +159,8 @@ const Api = {
             }));
         });
     },
-    textSearch: function(url, startPosition, maxRecords, text) {
-        return Api.getRecords(url, startPosition, maxRecords, text);
+    textSearch: function(url, startPosition, maxRecords, text, options) {
+        return Api.getRecords(url, startPosition, maxRecords, text, options);
     }
 };
 
