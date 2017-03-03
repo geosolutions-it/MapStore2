@@ -147,7 +147,6 @@
     /*border-bottom: 2px dotted #dedede;*/
     overflow: hidden;
     background-color: #ffffff;
-    margin-bottom: 20px;
 }
 
 #query-form-panel #query-toolbar-title {
@@ -272,10 +271,10 @@
 }
 
 .querypanel {
-    max-height: 660px;
     overflow-x: hidden;
     overflow-y: auto;
     border: none;
+    padding-bottom: 150px;
 }
 
 /*****************************/
