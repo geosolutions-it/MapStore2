@@ -45,11 +45,6 @@
     margin-top: 10px;
 }
 
-
-#mapstore-drawermenu .nav-menu {
-    background: rgba(255,255,255,1);
-}
-
 #mapstore-drawermenu .panel {
     border: none;
     box-shadow: none;
@@ -65,7 +60,6 @@ div.nav-menu {
 
 .nav-menu  .navHeader {
     height: 50px;
-    background-color: rgba(255, 255, 255, 0.75);
 }
 .nav-menu > .nav-content .navHeader .title{
     font-size: 16px;
@@ -75,7 +69,6 @@ div.nav-menu {
 }
 .nav-content  .section {
     margin-bottom: 2px;
-    background-color: rgba(255, 255, 255, 0.5);
 }
 .nav-content  .section .sectionHeader{
     padding: 5px;
@@ -102,7 +95,6 @@ div.nav-menu {
     transition: max-height .3s ease;
 
     box-shadow: inset 0px 0px 10px rgba(0,0,0,.5);
-    background: rgba(255,255,255,.4);
     padding: 5px;
 }
 

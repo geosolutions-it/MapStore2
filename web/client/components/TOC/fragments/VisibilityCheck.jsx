@@ -23,7 +23,7 @@ const VisibilityCheck = React.createClass({
     },
     getDefaultProps() {
         return {
-            style: {left: "-3px"},
+            style: {},
             checkType: "glyph",
             glyphChecked: "eye-open",
             tooltip: "toc.toggleLayerVisibility",

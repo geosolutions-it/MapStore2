@@ -32,12 +32,6 @@ var ScaleBar = React.createClass({
         this.scalebar = L.control.scale(this.props);
         if (this.props.map) {
             this.scalebar.addTo(this.props.map);
-            let scaleDom = document.getElementsByClassName('leaflet-control-scale-line').item(0);
-            if (scaleDom) {
-                scaleDom.style.backgroundColor = 'rgba(7, 138, 163, 1)';
-                scaleDom.style.color = 'white';
-                scaleDom.style.borderColor = 'black';
-            }
         }
     },
     render() {
