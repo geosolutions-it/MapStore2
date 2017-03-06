@@ -1,0 +1,110 @@
+{
+    "debug": 1,
+    "jsdoc": {
+        "encoding": "utf8",
+        "recurse": false,
+        "pedantic": false,
+        "access": null,
+        "package": null,
+        "module": true,
+        "undocumented": false,
+        "undescribed": false,
+        "hierarchy": true,
+        "sort": "alphabetic",
+        "relativePath": null,
+        "filter": null
+    },
+    "markdown": {
+        "gfm": true,
+        "tables": true,
+        "breaks": false,
+        "pedantic": false,
+        "sanitize": false,
+        "smartLists": true,
+        "smartypants": false,
+        "tasks": true,
+        "emoji": true
+    },
+    "app": {
+        "title": "MapStore 2 documentation",
+        "base": "/docma",
+        "entrance": "content:readme",
+        "routing": { "type": "path", "caseSensitive": true }
+    },
+    "template": {
+        "path": "default",
+        "options": {
+            "title": "MapStore 2",
+            "sidebar": true,
+            "collapsed": false,
+            "badges": true,
+            "search": true,
+            "navbar": true,
+            "navItems": [
+                {
+                    "iconClass": "ico-book",
+                    "label": "Building Docs",
+                    "items": [
+                        { "label": "Guide", "href": "./" },
+                        { "separator": true },
+                        { "label": "Developer Guide", "href": "?content=developer-guide" },
+                        { "label": "User Guide", "href": "?content=user-guide" }
+                    ]
+                },
+                {
+                    "iconClass": "ico-mouse-pointer",
+                    "label": "Reference",
+                    "items": [
+                        { "label": "Actions", "href": "?api=actions" },
+                        { "label": "Reducers", "href": "?api=reducers" },
+                          { "label": "Epics", "href": "?api=epics" },
+                        { "separator": true },
+                        { "label": "MapStore2 Components", "href": "?api=plugins" }
+
+                    ]
+                },
+                {
+                    "iconClass": "ico-md ico-download",
+                    "label": "Download",
+                    "href": "index.html",
+                    "items": [
+                        { "label": "<code>mvn clean install</code>" },
+                        {
+                            "label": "MapStore 2 Releases",
+                            "href": "https://github.com/geosolutions-it/MapStore2/releases",
+                            "target": "_blank"
+                        },
+                        { "separator": true },
+                        { "label": "Change Log", "href": "?content=changelog" }
+                    ]
+                },
+                {
+                    "iconClass": "ico-md ico-github",
+                    "label": "GitHub",
+                    "href": "https://github.com/geosolutions-it/MapStore2",
+                    "target": "_blank"
+                }
+            ]
+        }
+    },
+    "src": [
+        {
+            "actions": "web/client/actions/*.js",
+            "reducers": "web/client/reducers/*.js",
+            "epics": "web/client/reducers/*.js",
+            "plugins": [
+                "web/client/product/plugins.js",
+                "/web/client/plugins/**.jsx"
+            ]
+        },
+
+        "./docs/**/*.md",
+        {
+            "readme": "./README.md",
+            "site": "./docs/index.md",
+            "user-guide": "./docs/user-guide/binary-demo-package.md",
+            "developer-guide": "./docs/developer-guide/index.md"
+        }
+    ],
+    "dest": "web/client/docma"
+}
