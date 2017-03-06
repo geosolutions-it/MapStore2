@@ -21,7 +21,7 @@ var {
     textSearch,
     selectSearchItem,
     selectNestedService,
-    cancelSelectedItem,
+    cancelSelectedItem
 } = require('../search');
 
 describe('Test correctness of the search actions', () => {
