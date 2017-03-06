@@ -9,10 +9,20 @@
 const React = require('react');
 const {get} = require('lodash');
 
+const {generateTemplateString} = require('../../../utils/TemplateUtils');
 
 let SearchResult = React.createClass({
     propTypes: {
+        /* field name or template.
+         * e.g. "properties.subTitle"
+         * e.g. "This is a subtitle for ${properties.subTitle}"
+         */
+        subTitle: React.PropTypes.string,
         item: React.PropTypes.object,
+        /* field name or template.
+         * e.g. "properties.displayName"
+         * e.g. "This is a title for ${properties.title}"
+         */
         displayName: React.PropTypes.string,
         idField: React.PropTypes.string,
         icon: React.PropTypes.string,
@@ -35,9 +45,10 @@ let SearchResult = React.createClass({
         }
         let item = this.props.item;
         return (
-            <div key={item.osm_id} className="search-result NominatimResult" onClick={this.onClick}>
+            <div key={item.osm_id} className="search-result" onClick={this.onClick}>
                 <div className="icon"> <img src={item.icon} /></div>
-                {get(item, this.props.displayName) }
+                <div className="text-result-title">{get(item, this.props.displayName) || generateTemplateString(this.props.displayName || "")(item) }</div>
+                <small className="text-info">{this.props.subTitle && get(item, this.props.subTitle) || generateTemplateString(this.props.subTitle || "")(item) }</small>
             </div>
         );
     }

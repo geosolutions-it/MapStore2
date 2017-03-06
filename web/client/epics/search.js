@@ -16,6 +16,8 @@ const {TEXT_SEARCH_STARTED,
     searchResultLoaded,
     searchResultError,
     addMarker,
+    selectNestedService,
+    searchTextChanged,
     resultsPurge
     } = require('../actions/search');
 const mapUtils = require('../utils/MapUtils');
@@ -24,26 +26,26 @@ const Rx = require('rxjs');
 const services = require('../api/searchText');
 const {changeMapView} = require('../actions/map');
 const pointOnSurface = require('turf-point-on-surface');
+const toBbox = require('turf-bbox');
+const {generateTemplateString} = require('../utils/TemplateUtils');
 
-
-const get = require('lodash');
+const {get} = require('lodash');
 const searchEpic = action$ =>
   action$.ofType(TEXT_SEARCH_STARTED)
     .debounceTime(250)
     .switchMap( action =>
-            Rx.Observable.forkJoin(
-                (action.services || [ {type: "nominatim"} ])
-                    .map( (service, index) => services[service.type](action.searchText, service.options)
-                    .then( (response= []) => response.map(result => ({...result, __SERVICE__: service.id || index, __PRIORITY__: service.priority})) )
-                )
-            ).concatAll()
-            // ----[a]------------------
-            // --------[c]--------------
-            // -------------[b]---------
-            .scan( (oldRes, newRes) => [...oldRes, ...newRes].sort( (a, b) => get(a, "__PRIORITY__") > get(b, "__PRIORITY__") ))
-            // ----[a]-[a,c]-[a,b,c]-----
+             // create a stream of streams from array
+             Rx.Observable.from((action.services || [ {type: "nominatim"} ])
+             // Create an stream for each Promise
+            .map( (service) => Rx.Observable.fromPromise(services[service.type](action.searchText, service.options)
+                .then( (response= []) => response.map(result => ({...result, __SERVICE__: service, __PRIORITY__: service.priority || 0})) ))
+                .retry(3)
+            ))
+            // merge all results from the streams
+            .mergeAll()
+            .scan( (oldRes, newRes) => [...oldRes, ...newRes].sort( (a, b) => get(b, "__PRIORITY__") - get(a, "__PRIORITY__") ) .slice(0, 15))
             .map((results) => searchResultLoaded(results, false, services))
-            .takeUntil(action$.ofType([ TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET]))
+            .takeUntil(action$.ofType([ TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ITEM_SELECTED]))
             .startWith(searchTextLoading(true))
             .concat([searchTextLoading(false)])
             .catch(e => Rx.Observable.from([searchResultError(e), searchTextLoading(false)]))
@@ -57,7 +59,7 @@ const searchItemSelected = action$ =>
 
         let mapSize = action.mapConfig.size;
         // zoom by the max. extent defined in the map's config
-        let bbox = item.bbox || item.properties.bbox;
+        let bbox = item.bbox || item.properties.bbox || toBbox(item);
         var newZoom = mapUtils.getZoomForExtent(CoordinatesUtils.reprojectBbox(bbox, "EPSG:4326", action.mapConfig.projection), mapSize, 0, 21, null);
 
         // center by the max. extent defined in the map's config
@@ -80,6 +82,30 @@ const searchItemSelected = action$ =>
             }, action.mapConfig.size, null, action.mapConfig.projection),
             addMarker(item),
             resultsPurge()];
+        let nestedServices = item && item.__SERVICE__ && item.__SERVICE__.then;
+
+        // if a nested service is present, select the item and the nested service
+        if (nestedServices) {
+            actions.push(selectNestedService(
+                nestedServices.map((nestedService) => ({
+                    ...nestedService,
+                    options: {
+                        ...nestedService.options,
+                        staticFilter: generateTemplateString(nestedService.filterTemplate || "")(item)
+                    }
+                })), {
+                    text: generateTemplateString(item.__SERVICE__.displayName || "")(item),
+                    placeholder: item.__SERVICE__.nestedPlaceholder && generateTemplateString(item.__SERVICE__.nestedPlaceholder || "")(item)
+                },
+                    generateTemplateString(item.__SERVICE__.searchTextTemplate || "")(item)
+            ));
+        }
+
+        // if the service has a searchTextTemplate, use it to modify the search text to display
+        let searchTextTemplate = item.__SERVICE__ && item.__SERVICE__.searchTextTemplate;
+        if ( searchTextTemplate ) {
+            actions.push(searchTextChanged(generateTemplateString(searchTextTemplate)(item)));
+        }
         return Rx.Observable.from(actions);
     });
 
