@@ -14,8 +14,9 @@ const TEXT_SEARCH_RESET = 'TEXT_SEARCH_RESET';
 const TEXT_SEARCH_ADD_MARKER = 'TEXT_SEARCH_ADD_MARKER';
 const TEXT_SEARCH_TEXT_CHANGE = 'TEXT_SEARCH_TEXT_CHANGE';
 const TEXT_SEARCH_LOADING = 'TEXT_SEARCH_LOADING';
+const TEXT_SEARCH_NESTED_SERVICES_SELECTED = 'TEXT_SEARCH_NESTED_SERVICE_SELECTED';
 const TEXT_SEARCH_ERROR = 'TEXT_SEARCH_ERROR';
-
+const TEXT_SEARCH_CANCEL_ITEM = 'TEXT_SEARCH_CANCEL_ITEM';
 const TEXT_SEARCH_ITEM_SELECTED = 'TEXT_SEARCH_ITEM_SELECTED';
 
 function searchResultLoaded(results, append=false, services) {
@@ -83,7 +84,21 @@ function selectSearchItem(item, mapConfig) {
     };
 
 }
+function selectNestedService(services, items, searchText) {
+    return {
+        type: TEXT_SEARCH_NESTED_SERVICES_SELECTED,
+        searchText,
+        services,
+        items
+    };
+}
 
+function cancelSelectedItem(item) {
+    return {
+        type: TEXT_SEARCH_CANCEL_ITEM,
+        item
+    };
+}
 
 module.exports = {
     TEXT_SEARCH_STARTED,
@@ -96,6 +111,8 @@ module.exports = {
     TEXT_SEARCH_ADD_MARKER,
     TEXT_SEARCH_TEXT_CHANGE,
     TEXT_SEARCH_ITEM_SELECTED,
+    TEXT_SEARCH_NESTED_SERVICES_SELECTED,
+    TEXT_SEARCH_CANCEL_ITEM,
     searchTextLoading,
     searchResultError,
     searchResultLoaded,
@@ -104,5 +121,7 @@ module.exports = {
     resetSearch,
     addMarker,
     searchTextChanged,
-    selectSearchItem
+    selectNestedService,
+    selectSearchItem,
+    cancelSelectedItem
 };

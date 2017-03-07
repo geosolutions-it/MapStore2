@@ -7,7 +7,7 @@
  */
 var expect = require('expect');
 var search = require('../search');
-const {TEXT_SEARCH_RESULTS_LOADED, TEXT_SEARCH_LOADING, TEXT_SEARCH_ERROR, TEXT_SEARCH_RESULTS_PURGE} = require('../../actions/search');
+const {TEXT_SEARCH_RESULTS_LOADED, TEXT_SEARCH_LOADING, TEXT_SEARCH_ERROR, TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_CANCEL_ITEM} = require('../../actions/search');
 
 describe('Test the search reducer', () => {
     it('search results loading', () => {
@@ -68,5 +68,47 @@ describe('Test the search reducer', () => {
         });
         expect(state.results).toBe(null);
     });
+    it('nested search service selected', () => {
+        let state = search({
+                results: ["result1", "result2"]
+            }, {
+                type: TEXT_SEARCH_NESTED_SERVICES_SELECTED,
+                services: [{
 
+                }],
+                searchText: "TEST",
+                selectedItems: [{
+                    text: "text"
+                }]
+
+        });
+        expect(state.selectedItems.length).toBe(1);
+        expect(state.selectedServices.length).toBe(1);
+        state = search(state, {
+                type: TEXT_SEARCH_NESTED_SERVICES_SELECTED,
+                services: [{
+
+                }],
+                searchText: "TEST",
+                selectedItems: [{
+                    text: "text"
+                }]
+
+        });
+        expect(state.selectedItems.length).toBe(2);
+        expect(state.selectedServices.length).toBe(1);
+    });
+    it('nested search cancel item', () => {
+        let itemToCacel = {text: "text2"};
+        let state = search({
+                searchText: "",
+                selectedItems: [{text: "text1"}, itemToCacel]
+            }, {
+                type: TEXT_SEARCH_CANCEL_ITEM,
+                item: itemToCacel
+
+        });
+        expect(state.searchText).toBe("text2");
+        expect(state.selectedItems.length).toBe(1);
+    });
 });
