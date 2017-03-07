@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var {Glyphicon, Button} = require('react-bootstrap');
+var {Glyphicon, Button, OverlayTrigger, Tooltip} = require('react-bootstrap');
 var Sidebar = require('react-sidebar').default;
 
 var Menu = React.createClass({
