@@ -132,6 +132,20 @@ describe("test the SearchBar", () => {
             done();
         }, 50);
     });
+    it('test autofocus on selected items', (done) => {
+        let tb = ReactDOM.render(<SearchBar searchText="test" delay={0} typeAhead={true} blurResetDelay={0} />, document.getElementById("container"));
+        let input = TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0];
+        expect(input).toExist();
+        let spyOnFocus = expect.spyOn(input, 'focus');
+        input = ReactDOM.findDOMNode(input);
+        input.value = "test";
+        TestUtils.Simulate.blur(input);
+        ReactDOM.render(<SearchBar searchText="test" delay={0} typeAhead={true} blurResetDelay={0} selectedItems={[{text: "TEST"}]}/>, document.getElementById("container"));
+        setTimeout(() => {
+            expect(spyOnFocus.calls.length).toEqual(1);
+            done();
+        }, 210);
+    });
 
     it('test that options are passed to search action', () => {
         var tb;
@@ -162,5 +176,25 @@ describe("test the SearchBar", () => {
         expect(tb).toExist();
         let error = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(tb, "searcherror")[0]);
         expect(error).toExist();
+    });
+
+    it('test cancel items', (done) => {
+        const testHandlers = {
+            onCancelSelectedItem: () => {}
+        };
+
+        const spy = expect.spyOn(testHandlers, 'onCancelSelectedItem');
+        let tb = ReactDOM.render(<SearchBar searchText="test" delay={0} typeAhead={true} blurResetDelay={0} onCancelSelectedItem={testHandlers.onCancelSelectedItem} />, document.getElementById("container"));
+        let input = TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0];
+        expect(input).toExist();
+        input = ReactDOM.findDOMNode(input);
+
+        // backspace with empty searchText causes trigger of onCancelSelectedItem
+        ReactDOM.render(<SearchBar searchText="" delay={0} typeAhead={true} blurResetDelay={0} onCancelSelectedItem={testHandlers.onCancelSelectedItem} selectedItems={[{text: "TEST"}]}/>, document.getElementById("container"));
+        TestUtils.Simulate.keyDown(input, {key: "Backspace", keyCode: 8, which: 8});
+        setTimeout(() => {
+            expect(spy.calls.length).toEqual(1);
+            done();
+        }, 10);
     });
 });

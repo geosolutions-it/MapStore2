@@ -3,13 +3,20 @@ var DefinePlugin = require("webpack/lib/DefinePlugin");
 var LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 var NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
 var NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
-
+const assign = require('object-assign');
+const themeEntries = require('./themes.js').themeEntries;
+const extractThemesPlugin = require('./themes.js').extractThemesPlugin;
 module.exports = {
-    entry: {
+    entry: assign({
         'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:8081', // WebpackDevServer host and port
         'webpack': 'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
         "mapstore2": path.join(__dirname, "web", "client", "product", "app")
-    },
+    }, themeEntries
+     /* {
+         "themes/default": path.join(__dirname, "web", "client", "themes", "default", "theme.less"),
+         "themes/dark": path.join(__dirname, "web", "client", "themes", "dark", "theme.less")
+     }*/
+    ),
     output: {
       path: path.join(__dirname, "web", "client", "dist"),
         publicPath: "/dist/",
@@ -27,7 +34,8 @@ module.exports = {
         new NormalModuleReplacementPlugin(/cesium$/, path.join(__dirname, "web", "client", "libs", "cesium")),
         new NormalModuleReplacementPlugin(/openlayers$/, path.join(__dirname, "web", "client", "libs", "openlayers")),
         new NormalModuleReplacementPlugin(/proj4$/, path.join(__dirname, "web", "client", "libs", "proj4")),
-        new NoEmitOnErrorsPlugin()
+        new NoEmitOnErrorsPlugin(),
+        extractThemesPlugin
     ],
     resolve: {
       extensions: [".js", ".jsx"]
@@ -45,6 +53,7 @@ module.exports = {
             },
             {
                 test: /\.less$/,
+                exclude: /themes\/.+\.less$/,
                 use: [{
                     loader: 'style-loader'
                 }, {
@@ -52,6 +61,13 @@ module.exports = {
                 }, {
                     loader: 'less-loader'
                 }]
+            },
+            {
+                test: /themes\/.+\.less$/,
+                use: extractThemesPlugin.extract({
+                        fallback: 'style-loader',
+                        use: ['css-loader', 'less-loader']
+                    })
             },
             {
                 test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,

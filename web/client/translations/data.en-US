@@ -108,6 +108,9 @@
                 "plugins":{
                     "html":"<h3>Plugins</h3><p>Build your own application</p>"
                 },
+                "api":{
+                    "html":"<h3>API</h3><p>Use APIs to include a MapStore2 map in your application</p>"
+                },
                 "rasterstyler":{
                     "html":"<h3>Raster Styler</h3><p>Style your raster layer</p>"
                 }
@@ -119,6 +122,7 @@
             "deleteMapMessage": "Do you really want to delete this map?",
             "editMapMetadata":"Edit Map Properties",
             "mapTypes_combo": "Select Map Viewer: ",
+            "theme_combo": "Select Theme:",
             "maps_title": "Maps",
             "locales_combo": "Language:"
         },

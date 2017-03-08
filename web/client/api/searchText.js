@@ -20,18 +20,18 @@ const toNominatim = (fc) =>
 */
 
 module.exports = {
-    nominatim: (searchText, {options = null} = {}) =>
+    nominatim: (searchText, options = {}) =>
         require('./Nominatim')
         .geocode(searchText, options)
         .then( res => GeoCodeUtils.nominatimToGeoJson(res.data)),
-    wfs: (searchText, {url, typeName, queriableAttributes, outputFormat="application/json", predicate ="ILIKE", ...params }) => {
+    wfs: (searchText, {url, typeName, queriableAttributes, outputFormat="application/json", predicate ="ILIKE", staticFilter="", ...params }) => {
         return WFS
             .getFeatureSimple(url, assign({
                     maxFeatures: 10,
                     startIndex: 0,
                     typeName,
                     outputFormat,
-                    cql_filter: queriableAttributes.map( attr => `${attr} ${predicate} '%${searchText}%'`).join(' OR ')
+                    cql_filter: queriableAttributes.map( attr => `${attr} ${predicate} '%${searchText}%'`).join(' OR ').concat(staticFilter)
                 }, params))
             .then( response => response.features );
     }

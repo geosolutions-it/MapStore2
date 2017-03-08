@@ -4,7 +4,7 @@ var LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 var ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
 var DefinePlugin = require("webpack/lib/DefinePlugin");
 var NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
-
+const extractThemesPlugin = require('./themes.js').extractThemesPlugin;
 var assign = require('object-assign');
 
 assign(webpackConfig.entry, require('./examples.js'));
@@ -30,7 +30,8 @@ webpackConfig.plugins = [
             compress: {warnings: false},
             mangle: true
         }
-    })
+    }),
+    extractThemesPlugin
 ];
 webpackConfig.devtool = undefined;
 

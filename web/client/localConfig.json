@@ -284,7 +284,7 @@
         "className": "navbar shadow navbar-home"
       }
     }, "ManagerMenu", "Login", "Language", "Attribution"],
-    "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "MapType", "CreateNewMap", "Maps", "Examples", "Footer"],
+    "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "MapType", "ThemeSwitcher", "CreateNewMap", "Maps", "Examples", "Footer"],
     "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
   }
 }

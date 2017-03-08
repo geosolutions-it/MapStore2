@@ -108,6 +108,9 @@
                 "plugins":{
                     "html":"<h3>Plugins</h3><p>Costruisci la tua applicazione</p>"
                 },
+                "api":{
+                    "html":"<h3>API</h3><p>Usa le API per includere una mappa MapStore2 nella tua applicazione</p>"
+                },
                 "rasterstyler":{
                     "html":"<h3>Raster Styler</h3><p>Crea stile per dati raster</p>"
                 }
@@ -119,6 +122,7 @@
             "deleteMapMessage": "Vuoi eliminare questa mappa?",
             "editMapMetadata":"Modifica Proprietà",
             "mapTypes_combo": "Seleziona il visualizzatore di mappa:",
+            "theme_combo": "Seleziona Tema:",
             "maps_title": "Mappe",
             "locales_combo": "Lingua:"
         },
