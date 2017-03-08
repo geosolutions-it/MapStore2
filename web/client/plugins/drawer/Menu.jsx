@@ -58,29 +58,18 @@ var Menu = React.createClass({
         );
     },
     renderButtons() {
-        let toReturn = [];
-        this.props.children.map((child) => {
-            if (child && child.props.buttonConfig && child.props.buttonConfig.tooltip) {
-                let myTooltip = (<Tooltip key={"tooltip." + child.props.eventKey} id={"tooltip." + child.props.eventKey} >{child.props.buttonConfig.tooltip}</Tooltip>);
-                toReturn.push(myTooltip);
-                toReturn.push(
-                    <OverlayTrigger placement={"top"} key={"overlay-trigger." + child.props.eventKey} overlay={myTooltip}>
-                    <Button key={child.props.eventKey} bsSize="large" className={(child.props.buttonConfig && child.props.buttonConfig.buttonClassName) ? child.props.buttonConfig.buttonClassName : "square-button"} onClick={this.props.onChoose.bind(null, child.props.eventKey)} bsStyle={this.props.activeKey === child.props.eventKey ? 'default' : 'primary'}>
+        return this.props.children.map((child) => {
+            const button = (<Button key={child.props.eventKey} bsSize="large" className={(child.props.buttonConfig && child.props.buttonConfig.buttonClassName) ? child.props.buttonConfig.buttonClassName : "square-button"} onClick={this.props.onChoose.bind(null, child.props.eventKey)} bsStyle={this.props.activeKey === child.props.eventKey ? 'default' : 'primary'}>
                         {child.props.glyph ? <Glyphicon glyph={child.props.glyph} /> : child.props.icon}
-                    </Button>
+                    </Button>);
+            const tooltip = <Tooltip key={"tooltip." + child.props.eventKey} id={"tooltip." + child.props.eventKey}>{child.props.buttonConfig.tooltip || ''}</Tooltip>;
+            return child.props.buttonConfig.tooltip ? (
+                <OverlayTrigger placement={"top"} key={"overlay-trigger." + child.props.eventKey}
+                    overlay={tooltip}>
+                    {button}
                 </OverlayTrigger>
-                );
-            } else {
-                toReturn.push(
-                    <Button key={child.props.eventKey} bsSize="large" className={(child.props.buttonConfig && child.props.buttonConfig.buttonClassName) ? child.props.buttonConfig.buttonClassName : "square-button"} onClick={this.props.onChoose.bind(null, child.props.eventKey)} bsStyle={this.props.activeKey === child.props.eventKey ? 'default' : 'primary'}>
-                        {child.props.glyph ? <Glyphicon glyph={child.props.glyph} /> : child.props.icon}
-                    </Button>
-                );
-            }
-        }
-    );
-        return toReturn;
-    },
+            ) : button;
+    });
     renderContent() {
         const header = this.props.single ? (
             <div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
