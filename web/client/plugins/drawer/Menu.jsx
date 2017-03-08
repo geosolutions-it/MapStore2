@@ -69,7 +69,8 @@ var Menu = React.createClass({
                     {button}
                 </OverlayTrigger>
             ) : button;
-    });
+          });
+    },
     renderContent() {
         const header = this.props.single ? (
             <div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
