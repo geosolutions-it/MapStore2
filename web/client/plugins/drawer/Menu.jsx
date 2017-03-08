@@ -69,7 +69,7 @@ var Menu = React.createClass({
                     {button}
                 </OverlayTrigger>
             ) : button;
-          });
+        });
     },
     renderContent() {
         const header = this.props.single ? (
