@@ -14,6 +14,8 @@ const {connect} = require('react-redux');
 
 const {configureMap} = require('../actions/config');
 
+const url = require('url');
+
 require('./mapstore2.css');
 
 const defaultConfig = {
@@ -102,15 +104,93 @@ const defaultConfig = {
 };
 
 const defaultPlugins = {
-    "mobile": [{
-        "name": "Map",
-        "cfg": {
-            "zoomControl": false,
-            "tools": ["locate"]
-        }
-    }],
-    "desktop": ["Map"]
+    "mobile": ["Map"],
+    "desktop": [
+          "Map",
+          "Help",
+          "Share",
+          "DrawerMenu",
+          "Identify",
+          "Locate",
+          "TOC",
+          "BackgroundSwitcher",
+          "Measure",
+          "MeasureResults",
+          "Print",
+          "ShapeFile",
+          "Settings",
+          "MetadataExplorer",
+          "MousePosition",
+          "Toolbar",
+          "ScaleBox",
+          "ZoomAll",
+          "MapLoading",
+          "Snapshot",
+          "ZoomIn",
+          "ZoomOut",
+          "Login",
+          "OmniBar",
+          "BurgerMenu",
+          "Expander",
+          "Undo",
+          "Redo"
+    ]
 };
+
+function mergeDefaultConfig(pluginName, cfg) {
+    var propertyName;
+    var i;
+    var result;
+    for (i = 0; i < defaultPlugins.desktop.length; i++) {
+        if (defaultPlugins.desktop[i].name === pluginName) {
+            result = defaultPlugins.desktop[i].cfg;
+            for (propertyName in cfg) {
+                if (cfg.hasOwnProperty(propertyName)) {
+                    result[propertyName] = cfg[propertyName];
+                }
+            }
+            return result;
+        }
+    }
+    return cfg;
+}
+
+function loadConfigFromStorage(name = 'mapstore.embedded') {
+    if (name) {
+        const loaded = localStorage.getItem(name);
+        if (loaded) {
+            return JSON.parse(loaded);
+        }
+    }
+    return null;
+}
+
+function getMapNameFromRequest(paramName = 'map') {
+    const urlQuery = url.parse(window.location.href, true).query;
+    return urlQuery[paramName] || null;
+}
+
+function buildPluginsCfg(plugins, cfg) {
+    var pluginsCfg = [];
+    var i;
+    for (i = 0; i < plugins.length; i++) {
+        if (cfg[plugins[i] + "Plugin"]) {
+            pluginsCfg.push({
+                name: plugins[i],
+                cfg: mergeDefaultConfig(plugins[i], cfg[plugins[i] + "Plugin"])
+            });
+        } else {
+            pluginsCfg.push({
+                name: plugins[i],
+                cfg: mergeDefaultConfig(plugins[i], {})
+            });
+        }
+    }
+    return {
+        mobile: pluginsCfg,
+        desktop: pluginsCfg
+    };
+}
 
 const MapStore2 = {
     create(container, options) {
@@ -132,19 +212,22 @@ const MapStore2 = {
             pages
         }))(require('../components/app/StandardRouter'));
 
-        const appStore = require('../stores/StandardStore').bind(null, initialState, {});
-
+        const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {});
+        const initialActions = options.initialState ? [] : [configureMap.bind(null, options.config || defaultConfig)];
         const appConfig = {
             storeOpts,
             appStore,
             pluginsDef,
-            initialActions: [configureMap.bind(null, options.config || defaultConfig)],
+            initialActions,
             appComponent: StandardRouter,
             printingEnabled: false
         };
 
         ReactDOM.render(<StandardApp {...appConfig}/>, document.getElementById(container));
-    }
+    },
+    buildPluginsCfg,
+    getMapNameFromRequest,
+    loadConfigFromStorage
 };
 
 if (!global.Intl ) {
