@@ -109,6 +109,9 @@
                 "plugins":{
                     "html":"<h3>Plugins</h3><p>Contruire sa propre application</p>"
                 },
+                "api":{
+                    "html":"<h3>API</h3><p>Utilisez les API pour inclure une carte MapStore2 dans votre application</p>"
+                },
                 "rasterstyler":{
                     "html":"<h3>Représentation d'image</h3><p>Représenter votre couche image</p>"
                 }

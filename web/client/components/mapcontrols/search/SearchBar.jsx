@@ -33,6 +33,7 @@ let SearchBar = React.createClass({
         onSearchReset: React.PropTypes.func,
         onPurgeResults: React.PropTypes.func,
         onSearchTextChange: React.PropTypes.func,
+        onCancelSelectedItem: React.PropTypes.func,
         placeholder: React.PropTypes.string,
         placeholderMsgId: React.PropTypes.string,
         delay: React.PropTypes.number,
@@ -40,6 +41,8 @@ let SearchBar = React.createClass({
         blurResetDelay: React.PropTypes.number,
         typeAhead: React.PropTypes.bool,
         searchText: React.PropTypes.string,
+        selectedItems: React.PropTypes.array,
+        autoFocusOnSelect: React.PropTypes.bool,
         loading: React.PropTypes.bool,
         error: React.PropTypes.object,
         style: React.PropTypes.object,
@@ -54,13 +57,26 @@ let SearchBar = React.createClass({
             onSearchReset: () => {},
             onPurgeResults: () => {},
             onSearchTextChange: () => {},
+            onCancelSelectedItem: () => {},
+            selectedItems: [],
             placeholderMsgId: "search.placeholder",
             delay: 1000,
             blurResetDelay: 300,
+            autoFocusOnSelect: true,
             hideOnBlur: true,
             typeAhead: true,
             searchText: ""
         };
+    },
+    componentDidUpdate(prevProps) {
+        let shouldFocus = this.props.autoFocusOnSelect && this.props.selectedItems &&
+            (
+                (prevProps.selectedItems && prevProps.selectedItems.length < this.props.selectedItems.length)
+                || (!prevProps.selectedItems && this.props.selectedItems.length === 1)
+            );
+        if (shouldFocus) {
+            this.focusToInput();
+        }
     },
     onChange(e) {
         var text = e.target.value;
@@ -70,8 +86,16 @@ let SearchBar = React.createClass({
         }
     },
     onKeyDown(event) {
-        if (event.keyCode === 13) {
-            this.search();
+        switch (event.keyCode) {
+            case 13:
+                this.search();
+                break;
+            case 8:
+                if (!this.props.searchText && this.props.selectedItems && this.props.selectedItems.length > 0) {
+                    this.props.onCancelSelectedItem(this.props.selectedItems[this.props.selectedItems.length - 1]);
+                }
+                break;
+            default:
         }
     },
     onFocus() {
@@ -85,9 +109,14 @@ let SearchBar = React.createClass({
             delay(() => {this.props.onPurgeResults(); }, this.props.blurResetDelay);
         }
     },
+    renderAddonBefore() {
+        return this.props.selectedItems && this.props.selectedItems.map((item, index) =>
+            <span key={"selected-item" + index} className="input-group-addon"><div className="selectedItem-text">{item.text}</div></span>
+        );
+    },
     renderAddonAfter() {
         const remove = <Glyphicon className="searchclear" glyph="remove" onClick={this.clearSearch}/>;
-        var showRemove = this.props.searchText !== "";
+        var showRemove = this.props.searchText !== "" || (this.props.selectedItems && this.props.selectedItems.length > 0);
         let addonAfter = showRemove ? [remove] : [<Glyphicon glyph="search"/>];
         if (this.props.loading) {
             addonAfter = [<Spinner style={{
@@ -117,10 +146,13 @@ let SearchBar = React.createClass({
         return (
             <div id="map-search-bar" style={this.props.style} className={"MapSearchBar" + (this.props.className ? " " + this.props.className : "")}>
                 <FormGroup>
-                    <div className="input-group"><FormControl
+                    <div className="input-group">
+                        {this.renderAddonBefore()}
+                        <FormControl
                         key="search-input"
                         placeholder={placeholder}
                         type="text"
+                        inputRef={ref => { this.input = ref; }}
                         style={{
                             textOverflow: "ellipsis"
                         }}
@@ -138,14 +170,19 @@ let SearchBar = React.createClass({
     },
     search() {
         var text = this.props.searchText;
-        if (text === undefined || text === "") {
+        if ((text === undefined || text === "") && (!this.props.selectedItems || this.props.selectedItems.length === 0)) {
             this.props.onSearchReset();
         } else {
             this.props.onSearch(text, this.props.searchOptions);
         }
 
     },
-
+    focusToInput() {
+        let node = this.input;
+        if (node && node.focus instanceof Function) {
+            setTimeout( () => node.focus(), 200);
+        }
+    },
     clearSearch() {
         this.props.onSearchReset();
     }

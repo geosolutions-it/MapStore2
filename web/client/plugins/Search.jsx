@@ -15,14 +15,18 @@ const assign = require('object-assign');
 const HelpWrapper = require('./help/HelpWrapper');
 const Message = require('./locale/Message');
 
-const {resultsPurge, resetSearch, addMarker, searchTextChanged, textSearch, selectSearchItem} = require("../actions/search");
+const {get} = require('lodash');
+
+const {resultsPurge, resetSearch, addMarker, searchTextChanged, textSearch, selectSearchItem, cancelSelectedItem} = require("../actions/search");
 
 const searchSelector = createSelector([
     state => state.search || null
 ], (searchState) => ({
     error: searchState && searchState.error,
     loading: searchState && searchState.loading,
-    searchText: searchState ? searchState.searchText : ""
+    searchText: searchState ? searchState.searchText : "",
+    selectedItems: searchState && searchState.selectedItems,
+    selectedServices: searchState && searchState.selectedServices
 }));
 
 const SearchBar = connect(searchSelector, {
@@ -30,7 +34,8 @@ const SearchBar = connect(searchSelector, {
     onSearch: textSearch,
     onPurgeResults: resultsPurge,
     onSearchReset: resetSearch,
-    onSearchTextChange: searchTextChanged
+    onSearchTextChange: searchTextChanged,
+    onCancelSelectedItem: cancelSelectedItem
 })(require("../components/mapcontrols/search/SearchBar"));
 
 const {mapSelector} = require('../selectors/map');
@@ -54,10 +59,14 @@ const SearchResultList = connect(selector, {
 const ToggleButton = require('./searchbar/ToggleButton');
 
 const SearchPlugin = connect((state) => ({
-    enabled: state.controls && state.controls.search && state.controls.search.enabled || false
+    enabled: state.controls && state.controls.search && state.controls.search.enabled || false,
+    selectedServices: state && state.search && state.search.selectedServices,
+    selectedItems: state && state.search && state.search.selectedItems
 }))(React.createClass({
     propTypes: {
         searchOptions: React.PropTypes.object,
+        selectedItems: React.PropTypes.array,
+        selectedServices: React.PropTypes.array,
         withToggle: React.PropTypes.oneOfType([React.PropTypes.bool, React.PropTypes.array]),
         enabled: React.PropTypes.bool
     },
@@ -70,8 +79,19 @@ const SearchPlugin = connect((state) => ({
             enabled: true
         };
     },
+    getServiceOverrides( propSelector ) {
+        return this.props.selectedItems && this.props.selectedItems[this.props.selectedItems.length - 1] && get(this.props.selectedItems[this.props.selectedItems.length - 1], propSelector);
+    },
+    getCurrentServices() {
+        return this.props.selectedServices && this.props.selectedServices.length > 0 ? assign({}, this.props.searchOptions, {services: this.props.selectedServices}) : this.props.searchOptions;
+    },
     getSearchAndToggleButton() {
-        const search = <SearchBar key="seachBar" {...this.props}/>;
+        const search = (<SearchBar
+            key="seachBar"
+            {...this.props}
+            searchOptions={this.getCurrentServices()}
+            placeholder={this.getServiceOverrides("placeholder")}
+            />);
         if (this.props.withToggle === true) {
             return [<ToggleButton/>].concat(this.props.enabled ? [search] : null);
         }

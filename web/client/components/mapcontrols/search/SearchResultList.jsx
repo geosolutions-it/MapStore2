@@ -36,6 +36,7 @@ let SearchResultList = React.createClass({
         return this.props.results.map((item, idx)=> {
             const service = this.findService(item) || {};
             return (<SearchResult
+                subTitle={service.subTitle}
                 idField={service.idField}
                 displayName={service.displayName}
                 key={item.osm_id || "res_" + idx} item={item} onItemClick={this.onItemClick}/>);
@@ -59,8 +60,8 @@ let SearchResultList = React.createClass({
     },
     findService(item) {
         const services = this.props.searchOptions && this.props.searchOptions.services;
-        if (services && item.__SERVICE__ !== null) {
-            if ( typeof item.__SERVICE__ === "string" ) {
+        if (item.__SERVICE__ !== null) {
+            if (services && typeof item.__SERVICE__ === "string" ) {
                 for (let i = 0; i < services.length; i++) {
                     if (services[i] && services[i].id === item.__SERVICE__) {
                         return services[i];
@@ -72,8 +73,8 @@ let SearchResultList = React.createClass({
                     }
                 }
 
-            } else {
-                return services[item.__SERVICE__];
+            } else if (typeof item.__SERVICE__ === "object") {
+                return item.__SERVICE__;
             }
         }
     }

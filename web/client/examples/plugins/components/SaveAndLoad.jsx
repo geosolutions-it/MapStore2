@@ -38,10 +38,12 @@ const SaveButton = React.createClass({
             .map((name) => <option key={name} value={name}>{name}</option>)];
     },
     render() {
+        const embedded = (<a href={'../api/?map=' + this.state.loadname} target="_blank">Load in embedded version!</a>);
         return (<div className="save">
             <Button onClick={this.save} bsStyle="primary" disabled={this.state.savename === ''}>Save</Button>
             <FormControl ref="savename" onChange={this.onChangeSaveName} type="text"/>
             <Button onClick={this.load} bsStyle="primary" disabled={this.state.loadname === ''}>Load</Button>
+            {(this.state.loadname !== '') ? embedded : <span/>}
             <FormControl ref="loadname" onChange={this.onChangeLoadName} componentClass="select">
                 {this.renderSaved()}
             </FormControl>

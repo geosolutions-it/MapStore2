@@ -108,6 +108,9 @@
                 "plugins":{
                     "html":"<h3>Plugins</h3><p>Costruisci la tua applicazione</p>"
                 },
+                "api":{
+                    "html":"<h3>API</h3><p>Usa le API per includere una mappa MapStore2 nella tua applicazione</p>"
+                },
                 "rasterstyler":{
                     "html":"<h3>Raster Styler</h3><p>Crea stile per dati raster</p>"
                 }
