@@ -61,7 +61,8 @@ module.exports = {
         CreateNewMapPlugin: require('../plugins/CreateNewMap'),
         QueryPanelPlugin: require('../plugins/QueryPanel'),
         FeatureGridPlugin: require('../plugins/FeatureGrid'),
-        TutorialPlugin: require('../plugins/Tutorial')
+        TutorialPlugin: require('../plugins/Tutorial'),
+        ThemeSwitchePluginr: require('../plugins/ThemeSwitcher')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

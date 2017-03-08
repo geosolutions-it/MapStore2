@@ -122,6 +122,7 @@
             "deleteMapMessage": "Vuoi eliminare questa mappa?",
             "editMapMetadata":"Modifica Proprietà",
             "mapTypes_combo": "Seleziona il visualizzatore di mappa:",
+            "theme_combo": "Seleziona Tema:",
             "maps_title": "Mappe",
             "locales_combo": "Lingua:"
         },

@@ -122,6 +122,7 @@
             "deleteMapMessage": "Do you really want to delete this map?",
             "editMapMetadata":"Edit Map Properties",
             "mapTypes_combo": "Select Map Viewer: ",
+            "theme_combo": "Select Theme:",
             "maps_title": "Maps",
             "locales_combo": "Language:"
         },
