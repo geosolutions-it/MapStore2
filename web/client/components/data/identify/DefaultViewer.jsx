@@ -41,7 +41,7 @@ const DefaultViewer = React.createClass({
             format: MapInfoUtils.getDefaultInfoFormatValue(),
             responses: [],
             missingResponses: 0,
-            collapsible: true,
+            collapsible: false,
             header: DefaultHeader,
             headerOptions: {},
             container: Accordion,
@@ -104,7 +104,6 @@ const DefaultViewer = React.createClass({
             const PageHeader = this.props.header;
             return (
                 <Panel
-
                     eventKey={i}
                     key={i}
                     collapsible={this.props.collapsible}

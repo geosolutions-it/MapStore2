@@ -54,7 +54,7 @@ const PluginCreator = React.createClass({
                   disabled={true}
                   checked={true}
                   >
-                  Live edit your own plugin
+                  Live edit your plugin
               </Checkbox>
           </FormGroup>
             <Modal show={this.state.configVisible} bsSize="large" backdrop={false} onHide={() => {

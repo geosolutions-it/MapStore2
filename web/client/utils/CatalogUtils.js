@@ -10,7 +10,7 @@ const assign = require('object-assign');
 const {head, isArray, isString} = require('lodash');
 const urlUtil = require('url');
 const CoordinatesUtils = require('./CoordinatesUtils');
-const castArray = require('lodash.castarray');
+const {castArray} = require('lodash');
 
 const getWMSBBox = (record) => {
     let layer = record;
@@ -28,6 +28,9 @@ const getWMSBBox = (record) => {
         };
     }
     return bbox;
+};
+const getBaseCatalogUrl = (url) => {
+    return url && url.replace(/\/csw$/, "/");
 };
 
 const getWMTSBBox = (record) => {
@@ -115,7 +118,7 @@ const converters = {
                 if (thumbURL) {
                     let absolute = (thumbURL.indexOf("http") === 0);
                     if (!absolute) {
-                        thumbURL = options.catalogURL + "/" + thumbURL;
+                        thumbURL = (getBaseCatalogUrl(options.url) || "") + thumbURL;
                     }
                 }
                 // create the references array (now only wms is supported)

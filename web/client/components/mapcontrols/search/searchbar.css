@@ -166,3 +166,10 @@
         width: 580px;
     }
 }
+
+.input-group-addon .selectedItem-text {
+    font-size: 14px;
+    overflow: hidden;
+    max-width: 400px;
+    text-overflow: ellipsis;
+}

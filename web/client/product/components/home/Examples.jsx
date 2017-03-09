@@ -20,6 +20,7 @@ const carouselImages = {
     featuregrid: require('../../assets/img/FeatureGrid.png'),
     print: require('../../assets/img/Print.png'),
     plugins: require('../../assets/img/Plugins.png'),
+    api: require('../../assets/img/Api.png'),
     rasterstyler: require('../../assets/img/rasterstyler.png')
 };
 
@@ -89,6 +90,13 @@ var Examples = React.createClass({
                   <div className="carousel-caption">
                       <I18N.HTML msgId="home.examples.plugins.html" />
                     <Button href="examples/plugins" bsStyle="info" bsSize="large" target="_blank"><I18N.Message msgId="home.open" /></Button>
+                  </div>
+                </CarouselItem>
+                <CarouselItem>
+                  <img width={900} height={500} alt="900x500" src={carouselImages.api}/>
+                  <div className="carousel-caption">
+                      <I18N.HTML msgId="home.examples.api.html" />
+                    <Button href="examples/api" bsStyle="info" bsSize="large" target="_blank"><I18N.Message msgId="home.open" /></Button>
                   </div>
                 </CarouselItem>
                 <CarouselItem>
