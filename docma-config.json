@@ -12,7 +12,9 @@
         "hierarchy": true,
         "sort": "alphabetic",
         "relativePath": null,
-        "filter": null
+        "filter": null,
+        "allowUnknownTags": true,
+        "plugins": ["plugins/markdown"]
     },
     "markdown": {
         "gfm": true,
@@ -27,9 +29,9 @@
     },
     "app": {
         "title": "MapStore 2 documentation",
-        "base": "/docma",
+        "base": "/MapStore2/docs",
         "entrance": "content:readme",
-        "routing": { "type": "path", "caseSensitive": true }
+        "routing": { "method": "path", "caseSensitive": true }
     },
     "template": {
         "path": "default",
@@ -43,23 +45,28 @@
             "navItems": [
                 {
                     "iconClass": "ico-book",
-                    "label": "Building Docs",
+                    "label": "Guides",
                     "items": [
-                        { "label": "Guide", "href": "./" },
+                        { "label": "Home", "href": "./" },
                         { "separator": true },
-                        { "label": "Developer Guide", "href": "?content=developer-guide" },
-                        { "label": "User Guide", "href": "?content=user-guide" }
+                        { "label": "Developer's guide", "href": "developer-guide" },
+                        { "separator": true },
+                        { "label": "Plugins Architecture", "href": "plugins-architecture" },
+                        { "label": "Configuring Plugins", "href": "plugins-documentation" },
+                        { "separator": true },
+                        { "label": "Project Creation Script", "href": "project-creation-script" }
                     ]
                 },
                 {
                     "iconClass": "ico-mouse-pointer",
                     "label": "Reference",
                     "items": [
-                        { "label": "Actions", "href": "?api=actions" },
-                        { "label": "Reducers", "href": "?api=reducers" },
-                          { "label": "Epics", "href": "?api=epics" },
+                        { "label": "Components", "href": "api/components"},
+                        { "label": "Actions", "href": "api/actions" },
+                        { "label": "Reducers", "href": "api/reducers" },
+                        { "label": "Epics", "href": "api/epics" },
                         { "separator": true },
-                        { "label": "MapStore2 Components", "href": "?api=plugins" }
+                        { "label": "Plugins", "href": "api/plugins" }
 
                     ]
                 },
@@ -74,8 +81,17 @@
                             "href": "https://github.com/geosolutions-it/MapStore2/releases",
                             "target": "_blank"
                         },
-                        { "separator": true },
-                        { "label": "Change Log", "href": "?content=changelog" }
+                        {
+                            "label": "MapStore 2 tar.gz",
+                            "href": "https://github.com/geosolutions-it/MapStore2/tarball/master",
+                            "target": "_blank"
+                        },
+                        {
+                            "label": "MapStore 2 .zip",
+                            "href": "https://github.com/geosolutions-it/MapStore2/zipball/master",
+                            "target": "_blank"
+                        }
+
                     ]
                 },
                 {
@@ -89,22 +105,26 @@
     },
     "src": [
         {
-            "actions": "web/client/actions/*.js",
-            "reducers": "web/client/reducers/*.js",
-            "epics": "web/client/reducers/*.js",
+          "components" : ["web/client/components/mapcontrols/search/SearchBar.jsx"],
+           "actions" : ["web/client/actions/search.js"],
+           "reducers" : ["web/client/reducers/search.js"],
+            "epics": "web/client/epics/search.js",
             "plugins": [
-                "web/client/product/plugins.js",
-                "/web/client/plugins/**.jsx"
+                "web/client/plugins/Search.jsx",
+                "web/client/plugins/BackgroundSwitcher.jsx",
+                "web/client/plugins/Map.jsx",
+                "web/client/plugins/Identify.jsx"
             ]
         },
-
-        "./docs/**/*.md",
+        "./docs/**/*md",
         {
             "readme": "./README.md",
             "site": "./docs/index.md",
-            "user-guide": "./docs/user-guide/binary-demo-package.md",
-            "developer-guide": "./docs/developer-guide/index.md"
+            "developer-guide": "./docs/developer-guide/index.md",
+            "plugins-architecture": "./docs/developer-guide/plugins-architecture.md",
+            "building-and-developing": "./docs/developer-guide/plugins-architecture.md",
+            "plugins-documentation": "./docs/developer-guide/plugins-documentation.md",
+            "project-creation-script": "./docs/developer-guide/project-creation-script.md"
         }
-    ],
-    "dest": "web/client/docma"
+    ]
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -24,7 +24,28 @@ var delay = (
 require('./searchbar.css');
 
 /**
- * Search Bar component. With AutoComplete
+ * Search Bar component. With typeAhead events
+ * @memberof components.mapControls.search
+ * @class
+ * @prop {string} className the class to assign to the components
+ * @prop {function} onSearch callback on search event
+ * @prop {function} onPurgeResults triggered when the user clear
+ * @prop {function} onSearchTextChange triggered when the text changes
+ * @prop {function} onCancelSelectedItem triggered when the user deletes the selected item (by hitting backspace) when text is empty
+ * @prop {string} placeholder string to use as placeholder when text is empty
+ * @prop {string} placeholderMsgId msgId for the placeholder. Used if placeholder is not defined
+ * @prop {number} delay milliseconds after trigger onSearch if typeAhead is true
+ * @prop {boolean} hideOnBlur if true, it triggers onPurgeResults on blur
+ * @prop {boolean} typeAhead if true, onSearch is triggered when users change the search text, after `delay` milliseconds
+ * @prop {number} blurResetDelay time to wait before to trigger onPurgeResults after blur event, if `hideOnBlur` is true
+ * @prop {searchText} the text to display in the component
+ * @prop {object[]} selectedItems the items selected. Must have `text` property to display
+ * @prop {boolean} autoFocusOnSelect if true, the comonent gets focus when items are added, or deleted but some item is still selected. Useful for continue writing after selecting an item (with nested services for instance)
+ * @prop {boolean} loading if true, shows the loading tool
+ * @prop {object} error if not null, an error icon will be display
+ * @prop {object} style css style to apply to the component
+ * @prop {object} options to pass to the search event
+ *
  */
 let SearchBar = React.createClass({
     propTypes: {

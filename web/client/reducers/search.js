@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -10,7 +10,66 @@ var {TEXT_SEARCH_RESULTS_LOADED, TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, T
     TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_CANCEL_ITEM} = require('../actions/search');
 
 const assign = require('object-assign');
-
+/**
+ * Manages the state of the map search with it's results
+ * The properties represent the shape of the state
+ * @prop {boolan} loading loading state
+ * @prop {object} error the last error, if any
+ * @prop {string} searchText the search text
+ * @prop {array}  results the results
+ * @prop {object} markerPosition  the markerPosition
+ * @prop {object} selectedServicess tores the services currently selected by the user
+ * @prop {object} selectedItems the selected items
+ *
+ * @example
+ *{
+ *  search: {
+ *    searchText: 'test',
+ *    error: null,
+ *    loading: false,
+ *    results: [
+ *      {
+ *        properties: {
+ *          place_id: '130504451',
+ *          licence: 'Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright',
+ *          osm_type: 'way',
+ *          osm_id: '294145572',
+ *          lat: '6.82439805',
+ *          lon: '81.0004103985287',
+ *          display_name: 'test, Bandarawela, Badulla District, Uva, Sri Lanka',
+ *          'class': 'landuse',
+ *          type: 'forest',
+ *          importance: 0.31,
+ *        },
+ *        id: '294145572',
+ *        type: 'Feature',
+ *        bbox: [
+ *          81.0001165,
+ *          6.8238999,
+ *          81.0008042,
+ *          6.8248084
+ *        ],
+ *        geometry: {
+ *          type: 'Polygon',
+ *          coordinates: [
+ *              [[ 81.0001165, 6.8242576],
+ *              [81.0001892, 6.8245385],
+ *              [81.0003879, 6.8248084],
+ *              [81.0008042, 6.8241984],
+ *              [81.0003606, 6.8238999],
+ *              [81.0001165, 6.8242576]
+ *            ]]
+ *        },
+ *        __SERVICE__: {
+ *          type: 'nominatim'
+ *        },
+ *        __PRIORITY__: 0
+ *      },
+ *    ]
+ *  }
+ *}
+ * @memberof reducers
+ */
 function search(state = null, action) {
     switch (action.type) {
         case TEXT_SEARCH_LOADING: {

@@ -82,7 +82,7 @@
                 </execution>
             </executions>
         </plugin>
-        
+
 
         <plugin>
             <artifactId>maven-resources-plugin</artifactId>
@@ -178,6 +178,22 @@
                                 <includes>
                                     <include>translations/*</include>
                                 </includes>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>docs</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/mapstore/docs</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/docs</directory>
                             </resource>
                         </resources>
                     </configuration>
