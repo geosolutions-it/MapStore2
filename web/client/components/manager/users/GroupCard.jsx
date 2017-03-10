@@ -40,8 +40,8 @@ const GroupCard = React.createClass({
         return (<div key="status" className="user-status" style={{position: "absolute", bottom: 0, left: "10px", margin: "10px 10px 0 10px"}}>
            <div><strong><Message msgId="users.statusTitle"/></strong></div>
            {this.props.group.enabled ?
-               <Glyphicon glyph="ok-sign" style={{fontSize: "32px", color: "#4E8C75"}} /> :
-               <Glyphicon glyph="minus-sign" style={{fontSize: "32px", color: "#A23F37"}} />}
+               <Glyphicon glyph="ok-sign"/> :
+               <Glyphicon glyph="minus-sign"/>}
        </div>);
     },
     renderAvatar() {

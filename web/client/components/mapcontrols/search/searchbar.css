@@ -13,14 +13,14 @@
     box-shadow: 2px 2px 4px #A7A7A7;
     border-radius: 4px;
 }
-.searchclear {
+/*.searchclear {
     top:0;
     bottom:0;
     height:14px;
     margin:auto;
     font-size:14px;
     cursor:pointer;
-}
+}*/
 .search-result-list{
     position: absolute;
     top: 50px;

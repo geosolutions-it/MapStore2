@@ -121,13 +121,13 @@ let SearchBar = React.createClass({
         if (this.props.loading) {
             addonAfter = [<Spinner style={{
                 position: "absolute",
-                right: "14px",
-                top: "8px"
+                right: "16px",
+                top: "12px"
                 }} spinnerName="pulse" noFadeIn/>, addonAfter];
         }
         if (this.props.error) {
             let tooltip = <Tooltip id="tooltip">{this.props.error && this.props.error.message || null}</Tooltip>;
-            addonAfter.push(<OverlayTrigger placement="bottom" overlay={tooltip}><Glyphicon style={{color: "#b94a48"}} className="searcherror" glyph="warning-sign" onClick={this.clearSearch}/></OverlayTrigger>);
+            addonAfter.push(<OverlayTrigger placement="bottom" overlay={tooltip}><Glyphicon className="searcherror" glyph="warning-sign" onClick={this.clearSearch}/></OverlayTrigger>);
         }
         return <span className="input-group-addon">{addonAfter}</span>;
     },

@@ -2344,7 +2344,6 @@ fieldset[disabled] .btn-link:focus {
 .btn-group-sm > .btn {
   padding: 6px 12px;
   font-size: @font-size-small;
-
 }
 .btn-xs,
 .btn-group-xs > .btn {
@@ -2392,15 +2391,14 @@ input[type="button"].btn-block {
   display: inline-block;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  top: 0;
 }
 
 /* btn with icon */
 .btn .glyphicon{
-    float: left;
-	margin-top: 0;
-	font-size: @font-size-base;
-	/*margin-right: 5px;*/
-
+  float: left;
+  margin-top: 0;
+  font-size: @font-size-base;
 }
 
 .btn-lg .glyphicon{
@@ -2415,12 +2413,11 @@ input[type="button"].btn-block {
 
 .btn-sm .glyphicon{
 	font-size: ceil(@font-size-small * 1);
-	margin-right: 5px;
+	/*margin-right: 5px;*/
 }
 
 .btn-xs .glyphicon{
 	font-size: ceil(@font-size-small * 1);
-	/*margin-right: 5px;*/
 }
 
 .caret {
@@ -3009,7 +3006,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav-pills > li.active > a,
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
-  color: @ms2-color-text;
+  color: @ms2-color-background;
   background-color: @ms2-color-primary;
 }
 .nav-stacked > li {
@@ -4257,7 +4254,7 @@ a.list-group-item-danger.active:focus {
   color: inherit;
 }
 .panel-title > a {
-  color: inherit;
+  color: @ms2-color-text;
 }
 .panel-footer {
   padding: 10px 15px;

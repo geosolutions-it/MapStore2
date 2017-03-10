@@ -94,8 +94,14 @@ div.MapSearchBar .input-group-addon {
 	font-size: @icon-size;
 }
 
-#mapstore-navbar .navbar-dx .MapSearchBar .input-group-addon .searchclear {
-	font-size: @icon-size;
+.MapSearchBar .input-group-addon .searchclear,
+.MapSearchBar .input-group-addon .searcherror {
+	font-size: @icon-size-md;
+    margin-right: 4px;
+}
+
+.MapSearchBar .input-group-addon .searcherror {
+	color: @ms2-color-danger;
 }
 
 #mapstore-navbar .navbar-dx .search-result-list {
@@ -530,8 +536,21 @@ div.ol-scale-line-inner {
 }
 
 .modal-header button.close {
-	margin-top: -7px;
+	margin-top: -2px;
 	opacity: 1;
+    font-size: @font-size-base * 2;
+}
+
+.draggable-header button.close {
+	margin-top: 0;
+	opacity: 1;
+    font-size: @font-size-base;
+}
+
+.modal-header .login-panel-close {
+	margin-top: -2px !important;
+	opacity: 1 !important;
+    font-size: @font-size-base * 2 !important;
 }
 
 .modal-header button.close:hover {
@@ -697,14 +716,19 @@ div.ol-scale-line-inner {
 	display: block;
 }
 
-.gridcard-button {
-	height: 30px;
-	width: 30px;
-	padding: floor((30 - @icon-size-sm)/2);
+.gridcard-tools {
+    height: @grid-btn-size !important;
 }
 
-.gridcard-button span.glyphicon {
-	font-size: @icon-size-sm;
+.gridcard-button {
+	height: @grid-btn-size;
+	width: @grid-btn-size;
+    padding: 0 0 0 @grid-btn-padding-left;
+}
+
+.gridcard-button .glyphicon {
+    font-size: @grid-icon-size;
+    margin-top: -2px; /* remove after new icons */
 }
 
 #mapstore-layer-settings {
@@ -714,6 +738,24 @@ div.ol-scale-line-inner {
 .group-edit-dialog,
 .user-edit-dialog {
 	background: @ms2-color-background;
+}
+
+.user-status {
+    width: @grid-btn-size + @grid-btn-padding-left * 2;
+    text-align: center;
+}
+
+.user-status .glyphicon {
+    font-size: @grid-icon-size;
+    padding: 0 0 @grid-btn-padding-left 0;
+}
+
+.user-status .glyphicon-ok-sign {
+    color: @ms2-color-success;
+}
+
+.user-status .glyphicon-minus-sign {
+    color: @ms2-color-danger;
 }
 /* query panel */
 #mapstore-drawermenu #toc-query-container {
@@ -814,6 +856,56 @@ div.ol-scale-line-inner {
 .rw-select {
 	border-left: 1px solid @ms2-color-shade-lighter !important;
 }
+
+.Select-placeholder {
+    background-color: @ms2-color-background;
+    border: 1px solid @ms2-color-shade-lighter;
+    color: @ms2-color-text-placeholder !important;
+}
+
+.Select-control {
+    border: none !important;
+}
+
+.Select-arrow {
+    border-color: @ms2-color-primary transparent transparent !important;
+}
+
+.Select-menu-outer {
+    background-color: @ms2-color-background !important;
+    border: 1px solid @ms2-color-shade-lighter !important;
+}
+
+.Select-option {
+    background-color: @ms2-color-background !important;
+    color: @ms2-color-text-placeholder !important;
+}
+
+.Select-option:hover {
+    background-color: @ms2-color-primary !important;
+    color: @ms2-color-background !important;
+}
+
+select.form-control {
+    border: 1px solid @ms2-color-shade-lighter;
+}
+
+select.form-control option {
+    color: @ms2-color-text;
+    background-color: darken(@ms2-color-background, 5%);
+}
+
+#mapstore-scalebox select {
+    background-color: #fff;
+    color: #222;
+    border: none;
+}
+
+#mapstore-scalebox option {
+    background-color: #fff;
+    color: #222;
+}
+
 /* help badge */
 #helpbadge-scaleBox {
 	background-color: @ms2-color-text-primary;
@@ -827,7 +919,7 @@ div.ol-scale-line-inner {
 /* tutorial */
 .group-thumb,
 .user-thumb {
-	background-color: lighten(@ms2-color-background, 2%);
+	background-color: darken(@ms2-color-background, 4%);
 }
 /* tutorial */
 .joyride-tooltip__button--primary {
@@ -898,4 +990,17 @@ div.ol-scale-line-inner {
 /* card home */
 .map-thumb-description {
 	color: #000000;
+}
+
+#mapstore-langselector button{
+	padding: 6px 12px;
+}
+
+#mapstore-print-panel .panel-body {
+    border: solid 1px @ms2-color-primary;
+}
+
+.ms-footer {
+    border-top: solid 1px @ms2-color-primary !important;
+    color: @ms2-color-primary !important;
 }
