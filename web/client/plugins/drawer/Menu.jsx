@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var {Glyphicon, Button} = require('react-bootstrap');
+var {Glyphicon, Button, OverlayTrigger, Tooltip} = require('react-bootstrap');
 var Sidebar = require('react-sidebar').default;
+var Message = require('../../components/I18N/Message');
 
 var Menu = React.createClass({
     propTypes: {
@@ -58,11 +59,18 @@ var Menu = React.createClass({
         );
     },
     renderButtons() {
-        return this.props.children.map((child) => (
-            <Button key={child.props.eventKey} bsSize="large" className={(child.props.buttonConfig && child.props.buttonConfig.buttonClassName) ? child.props.buttonConfig.buttonClassName : "square-button"} onClick={this.props.onChoose.bind(null, child.props.eventKey)} bsStyle={this.props.activeKey === child.props.eventKey ? 'default' : 'primary'}>
-                {child.props.glyph ? <Glyphicon glyph={child.props.glyph} /> : child.props.icon}
-            </Button>
-        ));
+        return this.props.children.map((child) => {
+            const button = (<Button key={child.props.eventKey} bsSize="large" className={(child.props.buttonConfig && child.props.buttonConfig.buttonClassName) ? child.props.buttonConfig.buttonClassName : "square-button"} onClick={this.props.onChoose.bind(null, child.props.eventKey)} bsStyle={this.props.activeKey === child.props.eventKey ? 'default' : 'primary'}>
+                        {child.props.glyph ? <Glyphicon glyph={child.props.glyph} /> : child.props.icon}
+                    </Button>);
+            const tooltip = <Tooltip key={"tooltip." + child.props.eventKey} id={"tooltip." + child.props.eventKey}><Message msgId={child.props.buttonConfig.tooltip}/></Tooltip>;
+            return child.props.buttonConfig.tooltip ? (
+                <OverlayTrigger placement={"bottom"} key={"overlay-trigger." + child.props.eventKey}
+                    overlay={tooltip}>
+                    {button}
+                </OverlayTrigger>
+            ) : button;
+        });
     },
     renderContent() {
         const header = this.props.single ? (
