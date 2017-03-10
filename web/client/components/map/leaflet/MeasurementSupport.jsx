@@ -54,7 +54,7 @@ const MeasurementSupport = React.createClass({
             this.lastLayer = evt.layer;
 
             if (this.props.measurement.geomType === 'Point') {
-                let pos = this.drawControl._marker.getLatLng();
+                let pos = this.drawControl._markers.getLatLng();
                 let point = {x: pos.lng, y: pos.lat, srs: 'EPSG:4326'};
                 let newMeasureState = assign({}, this.props.measurement, {point: point});
                 this.props.changeMeasurementState(newMeasureState);
@@ -119,7 +119,7 @@ const MeasurementSupport = React.createClass({
             this.drawControl.enable();
             this.drawing = true;
         } else {
-            let bearingMarkers = this.drawControl._markers;
+            let bearingMarkers = this.drawControl._markers || [];
 
             if (bearingMarkers.length <= 2 ) {
                 this.updateMeasurementResults();
