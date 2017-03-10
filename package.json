@@ -156,7 +156,7 @@
   "scripts": {
     "doc": "docma -c docma-config.json --dest web/docs",
     "cleandoc": "rimraf web/docs",
-    "doctest": "docma -c docma-config.json --dest web/client/MapStore2/docs && echo documentation is accessible from the MapStore2/docs running start sript",
+    "doctest": "docma -c docma-config.json --dest web/client/mapstore/docs && echo documentation is accessible from the mapstore/docs path when running start sript",
     "postinstall": "node checkCesium.js && mkdirp ./web/client/libs/Cesium && download --extract --out ./web/client/libs/Cesium https://cesiumjs.org/releases/Cesium-1.17.zip || echo Cesium already installed",
     "clean": "rimraf ./web/client/dist",
     "compile": "npm run clean && mkdirp ./web/client/dist && webpack --progress --config prod-webpack.config.js",
