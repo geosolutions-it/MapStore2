@@ -9,6 +9,7 @@
 const React = require('react');
 const assign = require('object-assign');
 var L = require('leaflet');
+const {slice} = require('lodash');
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 
 require('leaflet-draw');
@@ -95,10 +96,6 @@ const MeasurementSupport = React.createClass({
                 coords2 = [currentLatLng.lng, currentLatLng.lat];
             } else if (bearingMarkers.length === 2) {
                 coords2 = [bearingMarkers[1].getLatLng().lng, bearingMarkers[1].getLatLng().lat];
-                // restrict line drawing to 2 vertices
-                this.drawControl._finishShape();
-                this.drawControl.disable();
-                this.drawing = false;
             }
             // calculate the azimuth as base for bearing information
             bearing = CoordinatesUtils.calculateAzimuth(coords1, coords2, this.props.projection);
@@ -121,9 +118,30 @@ const MeasurementSupport = React.createClass({
             this.props.map.removeLayer(this.lastLayer);
             this.drawControl.enable();
             this.drawing = true;
-
         } else {
-            this.updateMeasurementResults();
+            let bearingMarkers = this.drawControl._markers;
+
+            if (bearingMarkers.length <= 2 ) {
+                this.updateMeasurementResults();
+            }
+            if (bearingMarkers.length === 2 && this.props.measurement.geomType === 'Bearing') {
+                this.drawControl._finishShape();
+                this.drawControl.disable();
+                this.drawing = false;
+            }
+            if (bearingMarkers.length > 2) {
+                if (this.props.measurement.geomType === 'Bearing') {
+                    this.drawControl._markers = slice(this.drawControl._markers, 0, 2);
+                    this.drawControl._poly._latlngs = slice(this.drawControl._poly._latlngs, 0, 2);
+                    this.drawControl._poly._originalPoints = slice(this.drawControl._poly._originalPoints, 0, 2);
+                    this.updateMeasurementResults();
+                    this.drawControl._finishShape();
+                    this.drawControl.disable();
+                    this.drawing = false;
+                } else {
+                    this.updateMeasurementResults();
+                }
+            }
         }
     },
     addDrawInteraction: function(newProps) {
