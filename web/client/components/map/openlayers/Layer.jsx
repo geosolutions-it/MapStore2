@@ -92,7 +92,8 @@ const OpenlayersLayer = React.createClass({
         }
     },
     generateOpts(options, position, srs) {
-        return assign({}, options, position ? {zIndex: position, srs} : null, {
+        return assign({}, options, _.isNumber(position) ? {zIndex: position} : null, {
+            srs,
             onError: () => {
                 this.props.onInvalid(this.props.type, options);
             }
@@ -120,8 +121,8 @@ const OpenlayersLayer = React.createClass({
         Layers.updateLayer(
             this.props.type,
             this.layer,
-            this.generateOpts(newProps.options, newProps.position, newProps.srs),
-            this.generateOpts(oldProps.options, oldProps.position, oldProps.srs),
+            this.generateOpts(newProps.options, newProps.position, newProps.projection),
+            this.generateOpts(oldProps.options, oldProps.position, oldProps.projection),
             this.props.map,
             this.props.mapId);
     },
