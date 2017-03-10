@@ -65,7 +65,7 @@ var UsersGrid = React.createClass({
                   top: "50%",
                   left: "50%",
                   transform: "translate(-50%, -40%)"
-            }}><Message msgId="loading" /><Spinner spinnerName="circle" noFadeIn/></div></div>);
+            }}><Message msgId="loading" /><Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/></div></div>);
         }
 
     },

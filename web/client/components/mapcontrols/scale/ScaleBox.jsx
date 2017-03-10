@@ -56,7 +56,7 @@ var ScaleBox = React.createClass({
             );
         } else if (this.props.useRawInput) {
             control = (
-                <select label={this.props.label} onChange={this.onComboChange} bsSize="small" value={this.props.currentZoomLvl}>
+                <select label={this.props.label} onChange={this.onComboChange} bsSize="small" value={this.props.currentZoomLvl || ""}>
                     {this.getOptions()}
                 </select>
             );
@@ -64,7 +64,7 @@ var ScaleBox = React.createClass({
             control = (
                 <FormGroup bsSize="small">
                     <ControlLabel>{this.props.label}</ControlLabel>
-                    <FormControl componentClass="select" onChange={this.onComboChange} value={this.props.currentZoomLvl}>
+                    <FormControl componentClass="select" onChange={this.onComboChange} value={this.props.currentZoomLvl || ""}>
                         {this.getOptions()}
                     </FormControl>
                 </FormGroup>

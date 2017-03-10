@@ -162,7 +162,7 @@ const Styler = React.createClass({
     },
     renderWait() {
         if (this.state.layer) {
-            return <Spinner spinnerName="circle" noFadeIn/>;
+            return <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/>;
         }
         return null;
     },

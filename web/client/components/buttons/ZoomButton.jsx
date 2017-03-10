@@ -49,8 +49,6 @@ const ZoomButton = React.createClass({
                 style={this.props.style}
                 onClick={() => this.props.onZoom(this.props.currentZoom + this.props.step)}
                 className={this.props.className}
-                tooltip={this.props.tooltip}
-                tooltipPlace="left"
                 disabled={(this.props.currentZoom + this.props.step > this.props.maxZoom) || (this.props.currentZoom + this.props.step < this.props.minZoom)}
                 bsStyle={this.props.bsStyle}
                 >

@@ -39,7 +39,7 @@ const TaskProgress = React.createClass({
                 <ProgressBar bsStyle="warning" key="progressbar" striped now={percent} label={`${percent}%`}/>
             );
         }
-        return <Spinner noFadeIn spinnerName="circle"/>;
+        return <Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle"/>;
     },
     update() {
         if (this.props.state === "RUNNING") {

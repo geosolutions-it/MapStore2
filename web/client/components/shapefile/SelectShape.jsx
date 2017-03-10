@@ -34,7 +34,7 @@ const SelectShape = React.createClass({
     },
     render() {
         return (
-            (this.props.loading) ? (<div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle"/></div>) :
+            (this.props.loading) ? (<div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/></div>) :
             (<Dropzone rejectClassName="alert-danger" className="alert alert-info" onDrop={this.checkfile}>
               <div className="dropzone-content" style={{textAlign: "center"}}>{this.props.text}</div>
             </Dropzone>)

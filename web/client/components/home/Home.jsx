@@ -34,7 +34,6 @@ const Home = React.createClass({
                 bsStyle="primary"
                 onClick={this.goHome}
                 tooltip={tooltip}
-                tooltipPlace="left"
                 >{this.props.icon}</Button>
         </OverlayTrigger>
         );

@@ -475,14 +475,14 @@
     border-bottom: 2px solid #5C9FB4 !important;
 }
 
-.ms2-loading .circle-wrapper {
+.ms2-loading .sk-circle-wrapper {
     width: 30px;
     height: 30px;
     margin-left: 10px !important;
     margin-top: 10px !important;
 }
 
-.ms2-loading .circle-wrapper .circle:before {
+.ms2-loading .sk-circle-wrapper .sk-circle:before {
     background-color: white !important;
 }
 
