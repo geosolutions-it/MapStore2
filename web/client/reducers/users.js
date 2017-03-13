@@ -13,7 +13,21 @@ const {
 const assign = require('object-assign');
 
 const {findIndex} = require('lodash');
+/**
+ * Reducer for a user
+ * * It contains the following parts:
+ *
+ * {
+ *    searchText: {string} The text string
+ *    status: {string} one of "loading", "new", "saving", "error", "modified", "cancelled"
+ * }
+ *
+ * @param {object} state - The current state
+ * @param {object} action - The performed action
+ *
 
+ *
+ */
 function users(state = {
     start: 0,
     limit: 12

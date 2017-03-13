@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -16,7 +16,101 @@ require('./map/css/map.css');
 const Message = require('../components/I18N/Message');
 const {isString} = require('lodash');
 let plugins;
-
+/**
+ * The Map plugin allows adding mapping library dependent functionality using support tools.
+ * Some are already available for the supported mapping libraries (openlayers, leaflet, cesium), but it's possible to develop new ones.
+ * An example is the MeasurementSupport tool that allows implementing measurement on a map.
+ * The list of enabled tools can be configured using the tools property, as in the following example:
+ *
+ * ```
+ * {
+ * "name": "Map",
+ * "cfg": {
+ *     "tools": ["measurement", "locate", "overview", "scalebar", "draw", "highlight"]
+ *   ...
+ *  }
+ * }
+ * ```
+ * // Each tool can be configured using the toolsOptions. Tool configuration can be mapping library dependent:
+ * ```
+ * "toolsOptions": {
+ *        "scalebar": {
+ *            "leaflet": {
+ *                "position": "bottomright"
+ *            }
+ *            ...
+ *        }
+ *        ...
+ *    }
+ *
+ * ```
+ * or not
+ * ```
+ * "toolsOptions": {
+ * "scalebar": {
+ *        "position": "bottomright"
+ *        ...
+ *    }
+ *    ...
+ * ```
+ * }
+ * In addition to standard tools, you can also develop your own, ad configure them to be used.
+ *
+ * To do that you need to:
+ *  - develop a tool Component, in JSX (e.g. TestSupport), for each supported mapping library
+ * ```
+ * const React = require('react');
+ *    const TestSupport = React.createClass({
+ *     propTypes: {
+ *            label: React.PropTypes.string
+ *        },
+ *        render() {
+ *            alert(this.props.label);
+ *            return null;
+ *        }
+ *    });
+ *    module.exports = TestSupport;
+ * ```
+ *  - include the tool(s) in the requires section of plugins.js amd give it a name:
+ * ```
+ *    module.exports = {
+ *        plugins: {
+ *            MapPlugin: require('../plugins/Map'),
+ *            ...
+ *        },
+ *        requires: {
+ *            ...
+ *            TestSupportLeaflet: require('../components/map/leaflet/TestSupport')
+ *        }
+ *    };
+ * ```
+ *  - configure the Map plugin including the new tool and related options. You can configure the tool to be used for each mapping library, giving it a name and impl attributes, where:
+ * ```
+ *    {
+ *      "name": "Map",
+ *      "cfg": {
+ *        "tools": ["measurement", "locate", "overview", "scalebar", "draw", {
+ *          "leaflet": {
+ *            "name": "test",
+ *            "impl": "{context.TestSupportLeaflet}"
+ *          }
+ *          }],
+ *        "toolsOptions": {
+ *          "test": {
+ *            "label": "ciao"
+ *          }
+ *          ...
+ *        }
+ *      }
+ *    }
+ * ```
+ *  - name is a unique name for the tool
+ *  - impl is a placeholder (“{context.ToolName}”) where ToolName is the name you gave the tool in plugins.js (TestSupportLeaflet in our example)
+ * @memberof plugins
+ * @class Map
+ * @static
+ *
+ */
 const MapPlugin = React.createClass({
     propTypes: {
         mapType: React.PropTypes.string,
@@ -116,6 +210,7 @@ const MapPlugin = React.createClass({
         }
         return null;
     },
+
     renderSupportTools() {
         return this.props.tools.map((tool) => {
             const Tool = this.getTool(tool);

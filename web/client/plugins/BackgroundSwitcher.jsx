@@ -1,10 +1,12 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
+
 const React = require('react');
 const {connect} = require('react-redux');
 const Message = require('./locale/Message');
@@ -21,7 +23,16 @@ const BackgroundSwitcherPlugin = connect((state) => ({
 })(require('../components/TOC/background/BackgroundSwitcher'));
 
 require('./background/background.css');
-
+/**
+  * BackgroundSwitcher Plugin
+  * @class BackgroundSwitcher
+  * @memberof plugins
+  * @static
+  *
+  * @prop {string} cfg.id identifier of the Plugin
+  * @prop {boolean} cfg.fluid container should be fluid, see {@link http://getbootstrap.com/css/#grid}
+  *
+  */
 module.exports = {
     BackgroundSwitcherPlugin: assign(BackgroundSwitcherPlugin, {
         Toolbar: {

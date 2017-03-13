@@ -1,13 +1,11 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
- /**
- * Plugin for Zoom in
- */
+
 const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
@@ -26,6 +24,7 @@ const ZoomInButton = connect(selector, {
 require('./zoom/zoom.css');
 
 const assign = require('object-assign');
+
 
 module.exports = {
     ZoomInPlugin: assign(ZoomInButton, {
