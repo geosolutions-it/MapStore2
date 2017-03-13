@@ -39,6 +39,7 @@
             "title": "MapStore 2",
             "sidebar": true,
             "collapsed": false,
+            "outline": "tree",
             "badges": true,
             "search": true,
             "navbar": true,
