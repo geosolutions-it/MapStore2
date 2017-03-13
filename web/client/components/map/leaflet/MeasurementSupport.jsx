@@ -121,26 +121,16 @@ const MeasurementSupport = React.createClass({
         } else {
             let bearingMarkers = this.drawControl._markers || [];
 
-            if (bearingMarkers.length <= 2 ) {
+            if (this.props.measurement.geomType === 'Bearing' && bearingMarkers.length >= 2) {
+                this.drawControl._markers = slice(this.drawControl._markers, 0, 2);
+                this.drawControl._poly._latlngs = slice(this.drawControl._poly._latlngs, 0, 2);
+                this.drawControl._poly._originalPoints = slice(this.drawControl._poly._originalPoints, 0, 2);
                 this.updateMeasurementResults();
-            }
-            if (bearingMarkers.length === 2 && this.props.measurement.geomType === 'Bearing') {
                 this.drawControl._finishShape();
                 this.drawControl.disable();
                 this.drawing = false;
-            }
-            if (bearingMarkers.length > 2) {
-                if (this.props.measurement.geomType === 'Bearing') {
-                    this.drawControl._markers = slice(this.drawControl._markers, 0, 2);
-                    this.drawControl._poly._latlngs = slice(this.drawControl._poly._latlngs, 0, 2);
-                    this.drawControl._poly._originalPoints = slice(this.drawControl._poly._originalPoints, 0, 2);
-                    this.updateMeasurementResults();
-                    this.drawControl._finishShape();
-                    this.drawControl.disable();
-                    this.drawing = false;
-                } else {
-                    this.updateMeasurementResults();
-                }
+            } else {
+                this.updateMeasurementResults();
             }
         }
     },
