@@ -1,0 +1,82 @@
+
+/* rw select input */
+.rw-widget {
+	color: @ms2-text-color !important;
+	background-color: @ms2-body-bg !important;
+	border: 1px solid darken(@ms2-body-bg, 5%) !important;
+}
+
+.rw-widget.rw-state-focus,
+.rw-widget.rw-state-focus:hover {
+	color: @ms2-primary-bg !important;
+	background-color: transparent !important;
+	border-color: lighten(@ms2-primary-bg, 18%) !important;
+    box-shadow: 0 0 8px fade(lighten(@ms2-primary-bg, 18%),30%) !important;
+    -webkit-box-shadow: 0 0 8px fade(lighten(@ms2-primary-bg, 18%), 30%) !important;
+}
+
+.rw-list-option.rw-state-focus {
+    color: @ms2-body-bg !important;
+	background-color: @ms2-primary-bg !important;
+	border: none !important;
+}
+
+.rw-input,
+.rw-placeholder {
+	color: lighten(@ms2-text-color, 2%) !important;
+	background-color: @ms2-body-bg !important;
+}
+
+.rw-filter-input {
+    border-color: @ms2-primary-bg !important;
+}
+
+.rw-list-option:hover {
+	color: @ms2-body-bg !important;
+	background-color: @ms2-primary-bg !important;
+	border: none !important;
+}
+
+.rw-i {
+	color: @ms2-text-color !important;
+}
+
+.rw-select {
+	border: none !important;
+}
+
+/* Select select input */
+.Select-placeholder {
+    background-color: @ms2-body-bg;
+    border: 1px solid darken(@ms2-body-bg, 5%);
+    color: lighten(@ms2-text-color, 2%) !important;
+}
+
+.Select-control {
+    border: none !important;
+}
+
+.Select-arrow {
+    border-color: lighten(@ms2-text-color, 2%) transparent transparent !important;
+}
+
+.Select-option {
+    background-color: @ms2-body-bg !important;
+    color: @ms2-text-color !important;
+}
+
+.Select-option:hover {
+    background-color: @ms2-primary-bg !important;
+    color: @ms2-body-bg !important;
+}
+
+.Select-menu-outer {
+    background-color: @ms2-body-bg !important;
+    border: 1px solid darken(@ms2-body-bg, 5%) !important;
+}
+
+.is-focused:not(.is-open) > .Select-control {
+    border-color: lighten(@ms2-primary-bg, 18%) !important;
+    box-shadow: 0 0 8px fade(lighten(@ms2-primary-bg, 18%),30%) !important;
+    -webkit-box-shadow: 0 0 8px fade(lighten(@ms2-primary-bg, 18%), 30%) !important;
+}
