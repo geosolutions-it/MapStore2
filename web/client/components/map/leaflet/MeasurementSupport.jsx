@@ -128,7 +128,6 @@ const MeasurementSupport = React.createClass({
                 this.updateMeasurementResults();
                 this.drawControl._finishShape();
                 this.drawControl.disable();
-                this.drawing = false;
             } else {
                 this.updateMeasurementResults();
             }
