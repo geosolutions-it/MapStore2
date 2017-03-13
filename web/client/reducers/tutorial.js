@@ -44,8 +44,12 @@ function tutorial(state = initialState, action) {
             setup.steps = setup.steps.filter((step) => {
                 return step.selector && step.selector.substring(0, 1) === '#';
             }).map((step) => {
-                let title = step.title || step.translation ? step.title || < I18N.Message msgId = {"tutorial." + step.translation + ".title"}/> : '';
-                let text = step.text || step.translation ? step.text || < I18N.Message msgId = {"tutorial." + step.translation + ".text"}/> : '';
+                let title = step.title ? step.title : '';
+                title = step.translation ? <I18N.Message msgId = {"tutorial." + step.translation + ".title"}/> : title;
+                title = step.translationHTML ? <I18N.HTML msgId = {"tutorial." + step.translationHTML + ".title"}/> : title;
+                let text = step.text ? step.text : '';
+                text = step.translation ? <I18N.Message msgId = {"tutorial." + step.translation + ".text"}/> : text;
+                text = step.translationHTML ? <I18N.HTML msgId = {"tutorial." + step.translationHTML + ".text"}/> : text;
                 text = (step.selector === '#intro-tutorial') ? <div><div>{text}</div>{action.checkbox}</div> : text;
                 let style = (step.selector === '#intro-tutorial') ? action.style : {};
                 let isFixed = (step.selector === '#intro-tutorial') ? true : step.isFixed || false;
