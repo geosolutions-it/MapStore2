@@ -1,0 +1,87 @@
+/* minimap style */
+.leaflet-control-minimap {
+	border: solid @ms2-primary-bg 4px !important;
+}
+
+.leaflet-control-minimap a {
+	background-color: @ms2-primary-bg !important;
+}
+
+.leaflet-control-minimap-toggle-display {
+	background-image: url("../img/toggle.svg") !important;
+}
+
+.leaflet-oldie .leaflet-control-minimap-toggle-display {
+	background-image: url("../img/toggle.png") !important;
+}
+
+.ol-custom-overviewmap button {
+	background-color: @ms2-primary-bg !important;
+}
+
+.ol-custom-overviewmap .ol-control button:focus,
+.ol-custom-overviewmap button:hover {
+	background-color: @ms2-primary-bg !important;
+}
+
+.ol-custom-overviewmap:not(.ol-collapsed) {
+	background: @ms2-primary-bg !important;
+	border-radius: 3px !important;
+}
+
+.ol-custom-overviewmap .ol-overviewmap-map {
+	height: 133px !important;
+}
+
+.ol-custom-overviewmap {
+	margin-bottom: 3px;
+}
+
+/* scale box */
+#mapstore-scalebox select {
+    background-color: #fff;
+    color: #222;
+    border: none;
+}
+
+#mapstore-scalebox option {
+    background-color: #fff;
+    color: #222;
+}
+
+/* scale bar */
+.leaflet-control-scale-line {
+	background-color: @ms2-primary-bg;
+	color: @ms2-primary-color;
+    border: 2px solid #000;
+    border-top: 0;
+}
+
+.ol-scale-line {
+	background-color: @ms2-primary-bg !important;
+	color: @ms2-primary-color !important;
+}
+
+div.ol-scale-line.ol-unselectable {
+	border: 2px solid #000;
+	border-top: none;
+	line-height: 1.0;
+	border-radius: 0;
+	bottom: 5px;
+	left: auto;
+	right: 57px;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	overflow: hidden;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+div.ol-scale-line-inner {
+	border: 0;
+	border-top: 0;
+	font-size: 11px;
+	text-align: left;
+	margin: 0;
+}

@@ -1,0 +1,70 @@
+// Button variants
+//
+// Easily pump out default styles, as well as :hover, :focus, :active,
+// and disabled options for all buttons
+
+.button-variant(@color; @background; @border) {
+  color: @color;
+  background-color: @background;
+  border-color: @border;
+
+  &:focus,
+  &.focus {
+    color: @color;
+    background-color: lighten(@background, 10%); /* new ms2 */
+        border-color: lighten(@border, 25%); /* new ms2 */
+  }
+  &:hover {
+    color: @color;
+    background-color: lighten(@background, 10%); /* new ms2 */
+        border-color: lighten(@border, 12%); /* new ms2 */
+  }
+  &:active,
+  &.active,
+  .open > .dropdown-toggle& {
+    &:hover,
+    &:focus,
+    &.focus {
+      color: @color;
+      background-color: lighten(@background, 10%); /* new ms2 */
+          border-color: lighten(@border, 25%); /* new ms2 */
+    }
+    color: @color;
+    background-color: darken(@background, 5%); /* new ms2 */
+        border-color: darken(@border, 12%); /* new ms2 */
+  }
+  &:active,
+  &.active,
+  .open > .dropdown-toggle& {
+    background-image: none;
+  }
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &:hover,
+    &:focus,
+    &.focus {
+      // background-color: @background; /* new ms2 */
+          // border-color: @border;
+          color: @btn-disabled-color; /* new ms2 */
+          background-color: @btn-disabled-bg; /* new ms2 */
+          border: none; /* new ms2 */
+    }
+    color: @btn-disabled-color; /* new ms2 */
+    background-color: @btn-disabled-bg; /* new ms2 */
+    border: none; /* new ms2 */
+  }
+
+  .badge {
+    color: @background;
+    background-color: @color;
+  }
+}
+
+// Button sizes
+.button-size(@padding-vertical; @padding-horizontal; @font-size; @line-height; @border-radius) {
+  padding: @padding-vertical @padding-horizontal;
+  font-size: @font-size;
+  line-height: @line-height;
+  border-radius: @border-radius;
+}
