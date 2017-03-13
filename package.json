@@ -155,7 +155,7 @@
   },
   "scripts": {
     "doc": "docma -c docma-config.json --dest web/docs",
-    "cleandoc": "rimraf web/docs",
+    "cleandoc": "rimraf web/docs && rimraf web/client/mapstore/docs",
     "doctest": "docma -c docma-config.json --dest web/client/mapstore/docs && echo documentation is accessible from the mapstore/docs path when running start sript",
     "postinstall": "node checkCesium.js && mkdirp ./web/client/libs/Cesium && download --extract --out ./web/client/libs/Cesium https://cesiumjs.org/releases/Cesium-1.17.zip || echo Cesium already installed",
     "clean": "rimraf ./web/client/dist",
@@ -164,7 +164,7 @@
     "start": "webpack-dev-server --progress --colors --port 8081 --hot --inline --content-base web/client",
     "examples": "webpack-dev-server --progress --colors --port 8081 --hot --inline --content-base web/client --config examples-webpack.config.js",
     "test": "karma start ./karma.conf.single-run.js",
-    "pretest": "npm run lint",
+    "pretest": "npm run cleandoc && npm run lint",
     "continuoustest": "karma start ./karma.conf.continuous-test.js",
     "mvntest": "karma start ./karma.conf.single-run.js --reporters junit,dots,coverage",
     "lint": "eslint web/client --ext .jsx,.js",
