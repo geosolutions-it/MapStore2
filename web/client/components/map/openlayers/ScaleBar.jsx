@@ -28,12 +28,6 @@ var ScaleBar = React.createClass({
         this.scalebar = new ol.control.ScaleLine(this.props);
         if (this.props.map) {
             this.props.map.addControl(this.scalebar);
-            let scaleDom = document.getElementsByClassName('ol-scale-line').item(0);
-            if (scaleDom) {
-                scaleDom.style.backgroundColor = 'rgba(7, 138, 163, 1)';
-                scaleDom.style.color = 'white';
-                scaleDom.style.borderColor = 'black';
-            }
         }
     },
     render() {

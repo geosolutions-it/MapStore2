@@ -66,8 +66,7 @@ const SettingsModal = React.createClass({
                 position: "absolute",
                 // overflow: "auto",
                 top: "100px",
-                left: "calc(50% - 150px)",
-                backgroundColor: "white"
+                left: "calc(50% - 150px)"
             },
             panelClassName: "toolbar-panel",
             includeCloseButton: true,

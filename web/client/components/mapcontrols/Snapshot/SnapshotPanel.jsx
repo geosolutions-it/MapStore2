@@ -111,7 +111,7 @@ let SnapshotPanel = React.createClass({
     renderButton(enabled) {
         return (<Button bsStyle={this.props.buttonStyle} bsSize="xs" disabled={!enabled}
                 onClick={this.onClick}>
-                <Glyphicon glyph="floppy-save" disabled={{}}/><Message msgId={this.props.saveBtnText}/>
+                <Glyphicon glyph="floppy-save" disabled={{}}/>&nbsp;<Message msgId={this.props.saveBtnText}/>
                 </Button>);
     },
     renderError() {

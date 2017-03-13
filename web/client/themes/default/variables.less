@@ -1,0 +1,71 @@
+
+/* base color */
+@ms2-text-color: #333333;
+@ms2-code-color: #c7254e;
+@ms2-placeholder-color: #999999;
+@ms2-body-bg: #ffffff;
+
+/* disabled color */
+@ms2-disabled-color: #333333;
+@ms2-disabled-bg: #eeeeee;
+
+/* brand color */
+@ms2-primary-color: #ffffff;
+@ms2-primary-bg: #078aa3;
+@ms2-default-bg: @ms2-primary-bg;
+@ms2-info-bg: #5a9aab;
+@ms2-success-bg: #398439;
+@ms2-warning-bg: #ebbc35;
+@ms2-danger-bg: #bb4940;
+
+/* border btn */
+@ms2-primary-border: darken(@ms2-primary-bg, 5%);
+@ms2-default-border: @ms2-default-bg;
+@ms2-info-border: darken(@ms2-info-bg, 5%);
+@ms2-success-border: darken(@ms2-success-bg, 5%);
+@ms2-warning-border: darken(@ms2-warning-bg, 5%);
+@ms2-danger-border: darken(@ms2-danger-bg, 5%);
+
+/* btn disabled */
+@ms2-btn-disabled-color: #ffffff;
+@ms2-btn-disabled-bg: #5C9FB4;
+
+/* tooltip */
+@ms2-tooltip-color: #ffffff;
+@ms2-tooltip-bg: #444444;
+
+/* font */
+@ms2-font-size-base: 14px;
+@ms2-font-family-sans-serif: 'Raleway', sans-serif;
+@ms2-font-family-serif: Georgia, "Times New Roman", Times, serif;
+@ms2-font-family-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
+
+/* radius */
+@ms2-radius-base: 0; // 4px;
+@ms2-radius-large: @ms2-radius-base; // 6px;
+@ms2-radius-small: @ms2-radius-base; // 3px;
+
+/* grid btn */
+@ms2-grid-btn-icon-size: 18px;
+@ms2-grid-btn-padding: 6px;
+@ms2-grid-btn-side: @ms2-grid-btn-padding * 2 + @ms2-grid-btn-icon-size;
+
+/* square btn */
+@ms2-square-btn-margin-ratio: 2;
+@ms2-square-btn-resize-ratio: 1.5;
+@ms2-square-btn-icon-size: 26px;
+@ms2-square-btn-padding: floor(@ms2-square-btn-icon-size / @ms2-square-btn-margin-ratio);
+@ms2-square-btn-side: @ms2-square-btn-padding * 2 + @ms2-square-btn-icon-size;
+
+@ms2-square-btn-icon-size-md: floor(@ms2-square-btn-icon-size / @ms2-square-btn-resize-ratio);
+
+@ms2-square-btn-icon-size-sm: floor(@ms2-square-btn-icon-size-md / @ms2-square-btn-resize-ratio);
+/*
+@icon-size-md: floor(@icon-size / @icon-resize-ratio);
+@padding-left-square-md: floor(@icon-size-md / @icon-margin-ratio);
+@square-btn-medium-size: @padding-left-square-md * 2 + @icon-size-md;
+
+@icon-size-sm: floor(@icon-size-md / @icon-resize-ratio);
+@padding-left-square-sm: floor(@icon-size-sm / @icon-margin-ratio);
+@square-btn-small-size: @padding-left-square-sm * 2 + @icon-size-sm;
+*/

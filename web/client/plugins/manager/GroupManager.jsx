@@ -65,7 +65,7 @@ const GroupManager = React.createClass({
             <Grid style={{marginBottom: "10px"}} fluid={true}>
                 <h1 className="usermanager-title"><Message msgId={"usergroups.groups"}/></h1>
                 <Button style={{marginRight: "10px"}} bsStyle="success" onClick={this.onNew}>
-                    <span><Glyphicon glyph="1-group-add" /><Message msgId="usergroups.newGroup" /></span>
+                    <span><Glyphicon glyph="1-group-add" />&nbsp;<Message msgId="usergroups.newGroup" /></span>
                 </Button>
             </Grid>
             <GroupsGrid />

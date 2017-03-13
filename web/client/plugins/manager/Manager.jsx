@@ -50,7 +50,7 @@ const Manager = React.createClass({
                     this.context.router.push("/manager/" + tool.id);
                 }}>
                     {this.renderToolIcon(tool)}
-                    <span className="nav-msg">{tool.msgId ? <Message msgId={tool.msgId} /> : tool.title || tool.id}</span>
+                    <span className="nav-msg">&nbsp;{tool.msgId ? <Message msgId={tool.msgId} /> : tool.title || tool.id}</span>
             </NavItem>));
     },
     renderPlugin() {

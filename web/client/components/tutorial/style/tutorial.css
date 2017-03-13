@@ -10,14 +10,6 @@
     box-shadow: 0 0 0 9999px rgba(0,0,0,.75), 0 0 15px rgba(0,0,0,.75);
 }
 
-.joyride-tooltip__button--primary {
-    background-color: #078aa3;
-}
-
-.joyride-tooltip__button--primary:active, .joyride-tooltip__button--primary:focus, .joyride-tooltip__button--primary:hover {
-    background-color: #078aa3;
-}
-
 .joyride-tooltip__button--secondary{
     color: #888;
 }
