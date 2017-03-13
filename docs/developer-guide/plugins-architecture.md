@@ -1,3 +1,5 @@
+# Plugins Architecture
+
 MapStore2 fully embraces both ReactJS and Redux concepts, enhancing them with the **plugin** concept.
 
 A plugin in MapStore2 is a smart ReactJS component that is:
@@ -5,9 +7,10 @@ A plugin in MapStore2 is a smart ReactJS component that is:
  * **connected** to a Redux store, so that some properties are automatically wired to the standard MapStore2 state
  * **wired** to standard actions for common events
 
-In addition a plugin: 
+In addition a plugin:
 
- * declares one or more **reducers** that need to be added to the Redux store
+ * declares some **reducers** that need to be added to the Redux store, if needed
+ * declares some **epics** that need to be added to the redux-observable middleare, if needed
  * is fully **configurable** to be easily customized to a certain level
 
 ## Building an application using plugins
@@ -55,7 +58,7 @@ pluginsConfig.json:
 ```
 
 ### Declare a plugins compatible Redux Store
-Create a store that properly initializes plugins reducers (see [standardStore.js](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/stores/StandardStore.js)) :
+Create a store that properly initializes plugins reducers and epics (see [standardStore.js](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/stores/StandardStore.js)) :
 
 store.js:
 

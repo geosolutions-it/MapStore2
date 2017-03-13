@@ -70,7 +70,7 @@ const ToggleButton = require('./searchbar/ToggleButton');
  *    "withToggle": ["max-width: 768px", "min-width: 768px"]
  *  }
  * }
- * @class
+ * @class Search
  * @memberof plugins
  * @prop {object} cfg.searchOptions initial search options
  * @prop {searchService[]} cfg.searchOptions.services a list of services to perform search.
@@ -91,7 +91,7 @@ const ToggleButton = require('./searchbar/ToggleButton');
  *      "type": "wfs",
  *      "priority": 2,
  *      "displayName": "${properties.propToDisplay}",
- *      "subTitle": " (subtitle of the results from this service)",
+ *      "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
  *      "options": {
  *        "url": "/geoserver/wfs",
  *        "typeName": "workspace:layer",
@@ -100,7 +100,7 @@ const ToggleButton = require('./searchbar/ToggleButton');
  *        "srsName": "EPSG:4326",
  *        "maxFeatures": 4
  *      },
- *      "nestedPlaceholder": "Digita numero civico o località",
+ *      "nestedPlaceholder": "Write other text to refine the search...",
  *      "then": [ ... an array of services to use when one item of this service is selected]
  *  }
  * ```
@@ -114,7 +114,7 @@ const ToggleButton = require('./searchbar/ToggleButton');
  *     }
  * }
  * ```
- * **note** `searchTextTemplate` is useful to populate the search text input when a search result is selected, typically with "leaf" services.
+ * **note:** `searchTextTemplate` is useful to populate the search text input when a search result is selected, typically with "leaf" services.
  * @prop {array|boolean} cfg.withToggle when boolean, true uses a toggle to display the searchbar. When array, e.g  `["max-width: 768px", "min-width: 768px"]`, `max-width` and `min-width` are the limits where to show/hide the toggle (useful for mobile)
  */
 const SearchPlugin = connect((state) => ({
