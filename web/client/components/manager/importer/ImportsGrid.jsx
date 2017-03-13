@@ -56,7 +56,7 @@ const ImportsGrid = React.createClass({
     },
     renderLoadingImport(importObj) {
         if (importObj.loading) {
-            return <div style={{"float": "right"}}>{this.renderLoadingMessage(importObj)}<Spinner noFadeIn spinnerName="circle"/></div>;
+            return <div style={{"float": "right"}}>{this.renderLoadingMessage(importObj)}<Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle"/></div>;
         }
         return null;
     },
@@ -82,7 +82,7 @@ const ImportsGrid = React.createClass({
     },
     render() {
         if (this.props.loading && this.props.imports.length === 0) {
-            return (<Spinner noFadeIn spinnerName="circle"/>);
+            return (<Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle"/>);
         }
         return (
             <Table striped bordered condensed hover>

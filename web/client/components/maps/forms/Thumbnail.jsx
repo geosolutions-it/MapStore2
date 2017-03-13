@@ -174,7 +174,7 @@ const Thumbnail = React.createClass({
     render() {
         const withoutThumbnail = (<div className="dropzone-content-image">{this.props.message}<br/>{this.props.suggestion}</div>);
         return (
-            (this.props.loading) ? (<div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle"/></div>) :
+            (this.props.loading) ? (<div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/></div>) :
             (
                 <div className="dropzone-thumbnail-container">
                     <label className="control-label"><Message msgId="map.thumbnail"/></label>

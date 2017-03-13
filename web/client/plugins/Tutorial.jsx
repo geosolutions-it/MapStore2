@@ -104,7 +104,7 @@ const {Glyphicon} = require('react-bootstrap');
     SELECTORS
     every selector must be unique, start with # and different from '#error-tutorial'.
 
-    TRANSLATION
+    TRANSLATION - TRANSLATION HTML
     to add the title and text of the step with property translation
     insert a new object in the translation file at the tutorial section
     with title and text properties
@@ -122,6 +122,10 @@ const {Glyphicon} = require('react-bootstrap');
         {
             translation: 'mySecondStepTranslation',
             selector: '#second-selector'
+        },
+        {
+            translationHTML: 'myHTMLStepTranslation',
+            selector: '#html-translation-selector'
         }
     ]
 
@@ -141,6 +145,10 @@ const {Glyphicon} = require('react-bootstrap');
             "title": "My second step title",
             "text": "My second step description"
         },
+        "myHTMLStepTranslation": {
+            "title": "<div style="color:blue;">My html step title</div>",
+            "text": "<div style="color:red;">My html step description</div>"
+        }
         ...
     }
     ...

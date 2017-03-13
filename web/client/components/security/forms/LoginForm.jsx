@@ -84,7 +84,7 @@ const LoginForm = React.createClass({
         return this.props.loginFailedStatusMessages[error.status] || error.status;
     },
     renderLoading() {
-        return this.state.loading ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn/> : null;
+        return this.state.loading ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn overrideSpinnerClassName="spinner"/> : null;
     },
     renderSubmit() {
         if (this.props.showSubmitButton) {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -30,6 +30,15 @@ const toBbox = require('turf-bbox');
 const {generateTemplateString} = require('../utils/TemplateUtils');
 
 const {get} = require('lodash');
+
+/**
+ * Gets every `TEXT_SEARCH_STARTED` event.
+ * Dispatches the request to all the services in the action, postprocess them
+ * and updates every tume the results
+ * @param {Observable} action$ manages `TEXT_SEARCH_STARTED` and `TEXT_SEARCH_RESULTS_PURGE`, `TEXT_SEARCH_RESET`, `TEXT_SEARCH_ITEM_SELECTED` for cancellation
+ * @memberof epics.search
+ * @return {Observable}
+ */
 const searchEpic = action$ =>
   action$.ofType(TEXT_SEARCH_STARTED)
     .debounceTime(250)
@@ -51,6 +60,19 @@ const searchEpic = action$ =>
             .catch(e => Rx.Observable.from([searchResultError(e), searchTextLoading(false)]))
 
 );
+
+/**
+ * Gets every `TEXT_SEARCH_ITEM_SELECTED` event.
+ * on item selections zooms to the selected item, adds the marker to the marker layer and clear
+ * search results.
+ * If the selected item has a `__SERVICE__.then` entry, configures the search tool
+ * to manage the nested services.
+ * If the searvice has a search text template, it configures the searchText with
+ * using the template.
+ * @param {Observable} action$ stream of actions. Manages `TEXT_SEARCH_ITEM_SELECTED`
+ * @memberof epics.search
+ * @return {Observable}
+ */
 const searchItemSelected = action$ =>
     action$.ofType(TEXT_SEARCH_ITEM_SELECTED)
     .mergeMap(action => {

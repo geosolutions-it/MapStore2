@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -58,6 +58,65 @@ const SearchResultList = connect(selector, {
 
 const ToggleButton = require('./searchbar/ToggleButton');
 
+/**
+ * Search plugin. Provides search functionalities for the map.
+ * Allows to display results and place them on the map. Supports nominatim and WFS as search protocols
+ * You can configure the services and each service can trigger a nested search.
+ *
+ * @example
+ * {
+ *  "name": "Search",
+ *  "cfg": {
+ *    "withToggle": ["max-width: 768px", "min-width: 768px"]
+ *  }
+ * }
+ * @class
+ * @memberof plugins
+ * @prop {object} cfg.searchOptions initial search options
+ * @prop {searchService[]} cfg.searchOptions.services a list of services to perform search.
+ * a **nominaim** search service look like this:
+ * ```
+ * {
+ *  "type": "nominatim",
+ *  "searchTextTemplate": "${properties.display_name}", // text to use as searchText when an item is selected. Gets the result properties.
+ *  "options": {
+ *    "polygon_geojson": 1,
+ *    "limit": 3
+ *  }
+ * ```
+ *
+ * a **wfs** service look like this:
+ * ```
+ * {
+ *      "type": "wfs",
+ *      "priority": 2,
+ *      "displayName": "${properties.propToDisplay}",
+ *      "subTitle": " (subtitle of the results from this service)",
+ *      "options": {
+ *        "url": "/geoserver/wfs",
+ *        "typeName": "workspace:layer",
+ *        "queriableAttributes": ["attribute_to_query"],
+ *        "sortBy": "ID",
+ *        "srsName": "EPSG:4326",
+ *        "maxFeatures": 4
+ *      },
+ *      "nestedPlaceholder": "Digita numero civico o località",
+ *      "then": [ ... an array of services to use when one item of this service is selected]
+ *  }
+ * ```
+ * The typical nested service needs to have some additional parameters:
+ * ```
+ * {
+ *     "type": "wfs",
+ *     "filterTemplate": " AND SOMEPROP = '${properties.OLDPROP}'", // will be appended to the original filter, it gets the properties of the current selected item (of the parent service)
+ *     "options": {
+ *       ...
+ *     }
+ * }
+ * ```
+ * **note** `searchTextTemplate` is useful to populate the search text input when a search result is selected, typically with "leaf" services.
+ * @prop {array|boolean} cfg.withToggle when boolean, true uses a toggle to display the searchbar. When array, e.g  `["max-width: 768px", "min-width: 768px"]`, `max-width` and `min-width` are the limits where to show/hide the toggle (useful for mobile)
+ */
 const SearchPlugin = connect((state) => ({
     enabled: state.controls && state.controls.search && state.controls.search.enabled || false,
     selectedServices: state && state.search && state.search.selectedServices,
@@ -123,6 +182,7 @@ const SearchPlugin = connect((state) => ({
     }
 }));
 const {searchEpic, searchItemSelected} = require('../epics/search');
+
 module.exports = {
     SearchPlugin: assign(SearchPlugin, {
         OmniBar: {

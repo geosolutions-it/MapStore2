@@ -198,7 +198,7 @@ const PermissionEditor = React.createClass({
                     </thead>
                     <tbody>
                         {this.props.map && this.props.map.permissionLoading ?
-                        <tr><td colSpan="3"><div><Spinner noFadeIn spinnerName="circle" /></div></td></tr>
+                        <tr><td colSpan="3"><div><Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle" /></div></td></tr>
                         : this.renderPermissionRows()}
 
 

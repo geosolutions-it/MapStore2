@@ -1,4 +1,8 @@
-Due to the dual nature of the project (Java backend and Javascript frontend) building and developing using the MapStore 2 framework requires two distinct set of tools, [Apache Maven](https://maven.apache.org/) for Java and [NPM](https://www.npmjs.com/) for Javascript.
+#Building and developing
+
+Due to the dual nature of the project (Java backend and Javascript frontend) building and developing using the MapStore 2 framework requires two distinct set of tools
+ * [Apache Maven](https://maven.apache.org/) for Java
+ * [NPM](https://www.npmjs.com/) for Javascript.
 
 A basic knowledge of both tools is required.
 
@@ -35,6 +39,8 @@ We suggest to use one of the following:
    - linter-eslint
    - react
    - lcovinfo
+   - minimap & minimap-highlight-selected
+   - highlight-line & highlight-selected
  * [Sublime Text Editor](http://www.sublimetext.com/) with the following plugins:
    - Babel
    - Babel snippets
@@ -80,7 +86,7 @@ To create the final war, you have several options:
 # Troubleshooting
 
 ## Autowatch doesn't work on Linux.
-You should need to increase `max_user_watches` variable for inotify. 
+You should need to increase `max_user_watches` variable for inotify.
 ```
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 ```

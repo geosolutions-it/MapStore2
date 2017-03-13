@@ -157,7 +157,7 @@ const QueryBuilder = React.createClass({
                         actions={this.props.spatialFilterActions}/>
                 </div>
             </div>
-        ) : (<div style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce"/></div>);
+        ) : (<div style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce" overrideSpinnerClassName="spinner"/></div>);
     }
 });
 

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -40,6 +40,49 @@ const selector = createSelector([
     enabled, responses, requests, format, map, layers, point, showModalReverse, reverseGeocodeData
 }));
 // result panel
+
+/**
+ * Identify plugin. This plugin allows to perform getfeature info.
+ * It can be configured to have a mobile or a desktop flavor.
+ * @class Identify
+ * @memberof plugins
+ * @static
+ *
+ * @prop showIn {string[]} List of the plugins where to show the plugin
+ * @prop bodyClass {string} class to assign to the feature info panel body
+ * @prop cfg.style {object} inline css style
+ * @prop cfg.draggable {boolean} draggable info window
+ * @prop cfg.collapsible {boolean} collapsible info panel
+ * @prop cfg {object} style
+ * @prop cfg.viewerOptions {object}
+ * @prop cfg.viewerOptions.container {expression} the container of the viewer, expression from the context
+ * @prop cfg.viewerOptions.header {expression} the geader of the viewer, expression from the context{expression}
+ * @prop cfg.viewerOptions.collapsible {boolean} the single feature viewer is collapsible
+ *
+ * @example
+ * {
+ *   "name": "Identify",
+ *   "showIn": ["Settings"],
+ *   "cfg": {
+ *       "style": {
+ *           "position": "absolute",
+ *           "width": "100%",
+ *           "bottom": "0px",
+ *           "zIndex": 1023,
+ *           "maxHeight": "70%",
+ *           "marginBottom": 0
+ *       },
+ *       "draggable": false,
+ *       "collapsible": true,
+ *       "viewerOptions": {
+ *       "container": "{context.ReactSwipe}",
+ *       "header": "{context.SwipeHeader}",
+ *       "collapsible": false
+ *   },
+ *   "bodyClass": "mobile-feature-info"
+ *  }
+ * }
+ */
 const IdentifyPlugin = connect(selector, {
     sendRequest: getFeatureInfo,
     localRequest: getVectorInfo,

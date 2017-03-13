@@ -13,7 +13,7 @@ module.exports = [
         selector: '#intro-tutorial'
     },*/
     {
-        translation: 'drawerMenu',
+        translationHTML: 'drawerMenu',
         selector: '#drawer-menu-button'
     },
     {

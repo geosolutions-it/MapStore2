@@ -101,7 +101,7 @@ const Task = React.createClass({
     },
     renderLoading() {
         if (this.props.import.loading) {
-            return <div style={{"float": "left"}}><Spinner noFadeIn spinnerName="circle"/></div>;
+            return <div style={{"float": "left"}}><Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle"/></div>;
         }
     },
     renderLoadingMessage(task) {
@@ -120,7 +120,7 @@ const Task = React.createClass({
         if (task.loading) {
             return (<div style={{"float": "right"}}>
                 {this.renderLoadingMessage(task)}
-                <Spinner noFadeIn spinnerName="circle"/></div>);
+                <Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle"/></div>);
         }
         return null;
     },

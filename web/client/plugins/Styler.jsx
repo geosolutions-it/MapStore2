@@ -1,10 +1,4 @@
-/**
- * Copyright 2016, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
+
 
 const React = require('react');
 const {connect} = require('react-redux');
@@ -40,9 +34,10 @@ require('./styler/styler.css');
 const Message = require('./locale/Message');
 
 const Styler = React.createClass({
+    /** @constructor */
     propTypes: {
         canSave: React.PropTypes.oneOfType([React.PropTypes.bool, React.PropTypes.func]),
-        layers: React.PropTypes.array,
+         layers: React.PropTypes.array,
         layer: React.PropTypes.object,
         withContainer: React.PropTypes.bool,
         open: React.PropTypes.bool,
@@ -167,7 +162,7 @@ const Styler = React.createClass({
     },
     renderWait() {
         if (this.state.layer) {
-            return <Spinner spinnerName="circle" noFadeIn/>;
+            return <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/>;
         }
         return null;
     },
@@ -241,7 +236,7 @@ const Styler = React.createClass({
         }
         return null;
     },
-    /**
+    /*
      * add a incremental value as layer parameter (to force invalidation of the cache) and clear the sldbody
      */
     clearLayerStyle() {

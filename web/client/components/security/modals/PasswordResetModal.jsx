@@ -76,7 +76,7 @@ const PasswordResetModal = React.createClass({
         this.props.onPasswordChange(this.props.user, this.state.password);
     },
     renderLoading() {
-        return this.state.loading ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn/> : null;
+        return this.state.loading ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn overrideSpinnerClassName="spinner"/> : null;
     },
     getFooter() {
         return (<span role="footer"><div style={{"float": "left"}}>{this.renderLoading()}</div>

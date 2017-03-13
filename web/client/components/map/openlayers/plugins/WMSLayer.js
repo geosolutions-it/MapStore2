@@ -98,7 +98,15 @@ Layers.registerType('wms', {
                 }
                 return found;
             }, false);
-
+            if (oldOptions.srs !== newOptions.srs) {
+                const extent = ol.proj.get(CoordinatesUtils.normalizeSRS(newOptions.srs, newOptions.allowedSRS)).getExtent();
+                layer.getSource().tileGrid = new ol.tilegrid.TileGrid({
+                    extent: extent,
+                    resolutions: mapUtils.getResolutions(),
+                    tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
+                    origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
+                });
+            }
             if (changed) {
                 layer.getSource().updateParams(objectAssign(newParams, newOptions.params));
             }

@@ -6,7 +6,7 @@ Clone the repository with the --recursive option to automatically clone submodul
 
 Install NodeJS >= 4.6.1 , if needed, from [here](https://nodejs.org/en/download/releases/).
 
-Update npm to 3.x, using: 
+Update npm to 3.x, using:
 
 `npm install -g npm@3`
 
@@ -33,3 +33,4 @@ Deploy the generated mapstore.war file (in web/target) to your favourite J2EE co
  * [Building and deploying](building-and-developing)
  * [Developing with MapStore 2](developing-with-mapstore-2-intro)
  * [Configuration](configuration-files)
+ * [Migration](mapstore-migration-guide)

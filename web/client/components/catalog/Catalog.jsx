@@ -118,7 +118,7 @@ const Catalog = React.createClass({
           </Alert>);
     },
     renderLoading() {
-        return this.state.loading ? (<Spinner spinnerName="circle" noFadeIn/>) : null;
+        return this.state.loading ? (<Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/>) : null;
     },
     renderPagination() {
         let total = this.props.result.numberOfRecordsMatched;

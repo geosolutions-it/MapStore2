@@ -38,7 +38,7 @@ const PaginationToolbar = React.createClass({
         this.props.onSelect(eventKey && (eventKey - 1));
     },
     renderLoading() {
-        return (<div>Loading...<Spinner spinnerName="circle" noFadeIn/></div>);
+        return (<div>Loading...<Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/></div>);
     },
     render() {
         let {pageSize, page, total, items} = this.props;

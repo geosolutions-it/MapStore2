@@ -27,7 +27,7 @@ const GlobalSpinner = React.createClass({
     render() {
         if (this.props.loading) {
             return (
-                <div className={this.props.className} id={this.props.id}><Spinner noFadeIn spinnerName={this.props.spinner}/></div>
+                <div className={this.props.className} id={this.props.id}><Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName={this.props.spinner}/></div>
             );
         }
         return null;

@@ -36,7 +36,7 @@ const PrintSubmit = React.createClass({
         const glyph = this.props.glyph ? <Glyphicon glyph={this.props.glyph}/> : <span/>;
         return (
             <Button className="print-submit" disabled={this.props.disabled} {...this.props.buttonConfig} style={{marginTop: "10px", marginRight: "5px"}} onClick={this.props.onPrint}>
-                {this.props.loading ? <Spinner spinnerName="circle"/> : glyph} <Message msgId="print.submit"/>
+                {this.props.loading ? <Spinner spinnerName="circle" overrideSpinnerClassName="spinner" noFadeIn /> : glyph} <Message msgId="print.submit"/>
             </Button>
         );
     }
