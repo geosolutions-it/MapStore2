@@ -15,7 +15,6 @@ This is the overall framework folder structure:
 +-- .editorconfig
 +-- .travis.yml
 +-- ...
-+-- geostore (submodule)
 +-- web      (MapStore2 maven module)
     +-- pom.xml
     +-- src        (maven java webapp src folder)
@@ -27,16 +26,17 @@ This is the overall framework folder structure:
     |        +-- java
     |        +-- resources   
     +-- client
-    |   +-- index.html (demo application home page) 
+    |   +-- index.html (demo application home page)
         +-- plugins (ReactJS smart components with required reducers)
         +-- components (ReactJS dumb components)
         |   +-- category
         |   |   +-- <component>.jsx (ReactJS component)
         |   |   +-- ...
         |   |   +-- __tests__       (unit tests folder)
-        |   |       +-- <component>-test.jsx 
+        |   |       +-- <component>-test.jsx
         |   +-- ...
         +-- actions    (Redux actions)
+        +-- epics      (redux-observable epics)
         +-- reducers   (Redux reducers)
         +-- stores     (Redux stores)
         +-- translations (i18n localization files)
@@ -66,4 +66,4 @@ If you want to create an application based on MapStore2 you can use the [Project
 
 If you want to learn how to develop a simple MapStore2 based application you can follow the [tutorial](application-tutorial)
 
-If you want to learn how to develop a plugins based MapStore2 based application you can follow the [plugins tutorial](plugins-architecture#building-an-application-using-plugins)
+If you want to learn how to develop a plug-in based MapStore2 based application you can follow the [plugins tutorial](plugins-architecture#building-an-application-using-plugins)

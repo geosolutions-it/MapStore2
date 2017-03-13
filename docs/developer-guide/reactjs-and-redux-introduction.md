@@ -1,5 +1,10 @@
-# ReactJS
-[ReactJS](https://facebook.github.io/react/index.html) 0.14.x is used to develop MapStore2. The main purpose of ReactJS is to allow writing the **View** of the application, through the composition of _small components_, in a _declarative way_.
+# Main Frontend Tecnologies
+The main tecnologies used on the mapstore 2 are:
+ * ReactJS (View)
+ * Redux (state management)
+
+## ReactJS
+[ReactJS](https://facebook.github.io/react/index.html) 0.15.x is used to develop MapStore2. The main purpose of ReactJS is to allow writing the **View** of the application, through the composition of _small components_, in a _declarative way_.
 
 Components are written using a "templating" language, called [**JSX**](https://react-bootstrap.github.io/introduction.html), that is a sort of composition of HTML and Javascript code. The difference between JSX and older approaches like _JSP_ is that JSX templates are mixed with Javascript code inside javascript files.
 
@@ -18,7 +23,7 @@ Component usage:
 ```javascript
 React.render(<MyComponent title="My title"/>, document.body);
 ```
-## Properties, State and Event handlers
+### Properties, State and Event handlers
 Components can define and use **properties**, like the title one used in the example. These are immutable, and cannot be changed by component's code.
 
 Components can also use **state** that can change. When the state changes, the component is updated (re-rendered) automatically.
@@ -40,9 +45,9 @@ const MyComponent = React.createClass({
    }
 });
 ```
-In this example, the initial state includes a title property whose value is CHANGE_ME.
+In this example, the initial state includes a title property whose value is `CHANGE_ME`.
 
-When the h1 element is clicked, the state is changed so that title becomes CHANGED.
+When the h1 element is clicked, the state is changed so that title becomes `CHANGED`.
 
 The HTML page is automatically updated by ReactJS, each time the state changes (each time this.setState is called). For this reason we say that JSX allows to declaratively describe the View for each possible application state.
 
@@ -108,6 +113,7 @@ function reducer(state = {title: "CHANGE_ME"}, action) {
     }
 }
 ```
+
 ## Store
 The redux store combines different reducers to produce a global state, with a slice for each used reducer.
 
@@ -132,7 +138,61 @@ You can subscribe to the store, to be notified whenever the state changes.
 ```javascript
 store.subscribe(function handleChange() {});
 ```
-## Redux and ReactJS integration
+
+## Redux Middlewares
+Redux data flow is synchronous. To provide asynchronous functionalities (e.g. Ajax) redux needs a [middleware](http://redux.js.org/docs/advanced/Middleware.html). Actually MapStore 2 uses 2 middlewares for this purpose:
+ * Redux thunk (going to be fully replaced by redux-observable)
+ * Redux Observable
+
+### Redux thunk
+This middleware allows to perform simple asynchronous flows by returning a function from the action creator (instead of a action object).
+
+```javascript
+// action creator
+function changeTitleAsync() {
+    return (dispatch, getState) => {
+        myAsyncPromise.then( (newTitle) => {
+            dispatch({
+                type: CHANGE_TITLE,
+                title: newTitle
+            };)
+        });
+    }
+}
+```
+
+This middleware is there from the beginning of the MapStore 2 history. During the years, some better middlewares have been developed for this purpose. We want to replace it in the future with redux-observable.
+
+### Redux Observable and epics
+This middleware provides support for side-effects in MapStore 2 using rxjs. The core object of this middleware is the `epic`
+
+```javascript
+function (action$: Observable<Action>, store: Store): Observable<Action>;
+```
+
+The epic is a function that simply gets as first parameter an `Observable` (stream) emitting the actions emitted by redux. It returns another `Observable` (stream) that emits actions that will be forwarded to redux too.
+
+So there are 2 streams:
+ * Actions in
+ * Actions out
+
+A simple epic example can be the following:
+
+```javascript
+const pingEpic = action$ =>
+  action$.filter(action => action.type === 'PING')
+    .mapTo({ type: 'PONG' });
+```
+Every time a 'PING' action is emitted, the epic will emit also the 'PONG' action.
+
+See :
+ * [Introduction to RxJS for MapStore Developers](https://docs.google.com/presentation/d/1Ts-yZGc12VMr9oG8xMqwptUmMjdsKI2uZh4Mr5shYhA/edit?usp=sharing)
+ * [redux-observable site](https://redux-observable.js.org/)
+ * [rxjs Observable](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html) as a reference for methods
+ * [setting up the middleware](https://redux-observable.js.org/docs/basics/SettingUpTheMiddleware.html) to integrate epics with your store
+
+
+# Redux and ReactJS integration
 The **react-redux** library can be used to connect the Redux application state to ReactJS components.
 
 This can be done in the following way:

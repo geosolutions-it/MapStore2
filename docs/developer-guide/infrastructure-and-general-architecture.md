@@ -9,15 +9,14 @@ The backend is a suite of web services, developed in Java and deployed into a J2
 
 The frontend is based on the [ReactJS](https://facebook.github.io/react/) library and the [Redux](http://rackt.github.io/redux/) architecture, which is a specific implementation of the [Flux](http://facebook.github.io/flux/) architecture.
 
-![Flux infrastructure](https://facebook.github.io/flux/img/flux-simple-f8-diagram-with-client-action-1300w.png)
+<img src="https://facebook.github.io/flux/img/flux-simple-f8-diagram-with-client-action-1300w.png" style="max-width:500px" alt="Flux infrastructure" />
 
 It allows plugging different mapping libraries (with **Leaflet** and **OpenLayers 3** as our first implementation targets) abstracting libraries implementation details using ReactJS _web components_ and _actions based communication_.
 
 ![MapStore 2 - Frontend](https://docs.google.com/drawings/d/1k8Qja6ZFeOpoW3WqbZJvU3f7PvKpL-oTGq0vErQng44/pub?w=480&h=360)
 
-## Technologies
+## Frontend Technologies
  * [ReactJS and Redux introduction](reactjs-and-redux-introduction)
- * [ReactJS 0.14.x](react-0.14.x-migration-guide)
 
 # Backend
 

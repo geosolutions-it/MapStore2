@@ -1,4 +1,8 @@
-Due to the dual nature of the project (Java backend and Javascript frontend) building and developing using the MapStore 2 framework requires two distinct set of tools, [Apache Maven](https://maven.apache.org/) for Java and [NPM](https://www.npmjs.com/) for Javascript.
+#Building and developing
+
+Due to the dual nature of the project (Java backend and Javascript frontend) building and developing using the MapStore 2 framework requires two distinct set of tools
+ * [Apache Maven](https://maven.apache.org/) for Java
+ * [NPM](https://www.npmjs.com/) for Javascript.
 
 A basic knowledge of both tools is required.
 
