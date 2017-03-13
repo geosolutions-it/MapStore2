@@ -4,7 +4,7 @@ Your pull request must:
 
  * Follow MapStore 2's coding style.
 
- * The new components have to be tested. 
+ * The new components have to be tested.
 
  * Pass the integration tests run automatically by the Travis Continuous
    Integration system.
@@ -19,25 +19,9 @@ Your pull request must:
  * Be possible to merge automatically.
 
 
-### The `test` and `lint` build targets
-
-It is strongly recommended that you run
-
-    $ npm test
-
-    $ npm run lint
-
-before every commit.  This will catch many problems quickly, and it is much
-faster than waiting for the Travis CI integration tests to run.
-
-The `test` build target runs a number of quick tests on your code.  
-
-The `lint` build target runs ESLint checks on your code.  
-
-
 ### Follow MapStore 2's coding style
 
-MapStore 2 follows a strict coding style, enforced by [ESLint](http://eslint.org/) rules. 
+MapStore 2 follows a strict coding style, enforced by [ESLint](http://eslint.org/) rules.
 
 The set of used rules can be found in the [.eslintrc](https://github.com/geosolutions-it/MapStore2/blob/master/.eslintrc) file, in the root folder of the project.
 
@@ -51,7 +35,7 @@ In addition, take care of adding the standard file header in each javascript / c
 This is the standard file header:
 
 ```
-/**
+/*
  * Copyright <year>, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -59,6 +43,17 @@ This is the standard file header:
  * LICENSE file in the root directory of this source tree.
  */
 ```
+
+### The components have to be tested
+
+It is strongly recommended that you run
+
+    $ npm test
+
+before every commit.  This will catch many problems quickly, and it is much
+faster than waiting for the Travis CI integration tests to run.
+
+The `test` build target runs a number of quick tests on your code.  
 
 ### Configure your editor
 

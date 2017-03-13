@@ -3,8 +3,9 @@ set -e
 
 npm install
 npm run compile
+npm run cleandoc
 npm run lint
-npm run doc
 npm test
+npm run doc
 mvn clean install
 npm run cleandoc
