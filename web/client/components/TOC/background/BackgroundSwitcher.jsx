@@ -101,7 +101,7 @@ let BackgroundSwitcher = React.createClass({
     },
     render() {
         return (
-           <Grid id={this.props.id} className="BackgroundSwitcherComponent" header={this.props.name} fluid={this.props.fluid}>{this.renderBackgrounds()}</Grid>
+           <Grid id={this.props.id} className="BackgroundSwitcherComponent" fluid={this.props.fluid}>{this.renderBackgrounds()}</Grid>
         );
     },
     changeLayerVisibility(eventObj) {

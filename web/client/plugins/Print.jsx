@@ -318,7 +318,7 @@ const Print = React.createClass({
     },
     print() {
         const spec = this.props.getPrintSpecification(this.props.printSpec);
-        this.props.setPage(1);
+        this.props.setPage(0);
         this.props.onBeforePrint();
         this.props.onPrint(this.props.capabilities.createURL, spec);
     }

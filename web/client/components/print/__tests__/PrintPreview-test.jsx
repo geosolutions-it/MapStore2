@@ -48,20 +48,12 @@ describe("Test the PrintPreview component", () => {
         expect(node).toExist();
     });
 
-    it('creates component and loads pdf', (done) => {
-        const handler = (pages) => {
-            expect(pages).toBe(10);
-            done();
-        };
-        ReactDOM.render(<PrintPreview setPages={handler} url="base/web/client/test-resources/print.pdf"/>, document.getElementById("container"));
-    });
-
     it('pdf next page', (done) => {
         const handler = (page) => {
             expect(page).toBe(2);
             done();
         };
-        const cmp = ReactDOM.render(<PrintPreview pages={10} currentPage={1} setPage={handler} url="base/web/client/test-resources/print.pdf"/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<PrintPreview pages={10} currentPage={1} setPage={handler} url=""/>, document.getElementById("container"));
         expect(cmp).toExist();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[5]);
@@ -69,10 +61,10 @@ describe("Test the PrintPreview component", () => {
 
     it('pdf last page', (done) => {
         const handler = (page) => {
-            expect(page).toBe(10);
+            expect(page).toBe(9);
             done();
         };
-        const cmp = ReactDOM.render(<PrintPreview pages={10} currentPage={1} setPage={handler} url="base/web/client/test-resources/print.pdf"/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<PrintPreview pages={10} currentPage={1} setPage={handler} url=""/>, document.getElementById("container"));
         expect(cmp).toExist();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[6]);
@@ -80,10 +72,10 @@ describe("Test the PrintPreview component", () => {
 
     it('pdf first page', (done) => {
         const handler = (page) => {
-            expect(page).toBe(1);
+            expect(page).toBe(0);
             done();
         };
-        const cmp = ReactDOM.render(<PrintPreview pages={10} currentPage={10} setPage={handler} url="base/web/client/test-resources/print.pdf"/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<PrintPreview pages={10} currentPage={10} setPage={handler} url=""/>, document.getElementById("container"));
         expect(cmp).toExist();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[3]);
@@ -94,7 +86,7 @@ describe("Test the PrintPreview component", () => {
             expect(page).toBe(9);
             done();
         };
-        const cmp = ReactDOM.render(<PrintPreview pages={10} currentPage={10} setPage={handler} url="base/web/client/test-resources/print.pdf"/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<PrintPreview pages={10} currentPage={10} setPage={handler} url=""/>, document.getElementById("container"));
         expect(cmp).toExist();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[4]);
@@ -106,7 +98,7 @@ describe("Test the PrintPreview component", () => {
             done();
         };
         const cmp = ReactDOM.render(<PrintPreview zoomFactor={2.0} scale={1.0}
-            pages={10} currentPage={1} setScale={handler} url="base/web/client/test-resources/print.pdf"/>, document.getElementById("container"));
+            pages={10} currentPage={1} setScale={handler} url=""/>, document.getElementById("container"));
         expect(cmp).toExist();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[1]);
@@ -118,7 +110,7 @@ describe("Test the PrintPreview component", () => {
             done();
         };
         const cmp = ReactDOM.render(<PrintPreview zoomFactor={2.0} scale={4.0}
-            pages={10} currentPage={1} setScale={handler} url="base/web/client/test-resources/print.pdf"/>, document.getElementById("container"));
+            pages={10} currentPage={1} setScale={handler} url=""/>, document.getElementById("container"));
         expect(cmp).toExist();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[2]);
