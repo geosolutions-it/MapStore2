@@ -50,8 +50,6 @@
 
 #helpbadge-scaleBox {
     left: 0 !important;
-    background-color: #078aa3;
-    color: #ffffff;
 }
 
 #mapstore-navbar #helpbadge-search-help {
@@ -59,6 +57,4 @@
     left: -10px;
     bottom: -8px;
     z-index: 1;
-    background-color: #078aa3;
-    color: #ffffff;
 }
