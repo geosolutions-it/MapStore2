@@ -136,19 +136,20 @@ let SearchBar = React.createClass({
         );
     },
     renderAddonAfter() {
-        const remove = <Glyphicon className="searchclear" glyph="remove" onClick={this.clearSearch}/>;
+        const remove = <Glyphicon className="searchclear" glyph="remove" onClick={this.clearSearch} key="searchbar_remove_glyphicon"/>;
         var showRemove = this.props.searchText !== "" || (this.props.selectedItems && this.props.selectedItems.length > 0);
-        let addonAfter = showRemove ? [remove] : [<Glyphicon glyph="search"/>];
+        let addonAfter = showRemove ? [remove] : [<Glyphicon glyph="search" key="searchbar_search_glyphicon"/>];
         if (this.props.loading) {
             addonAfter = [<Spinner style={{
                 position: "absolute",
                 right: "14px",
                 top: "8px"
-                }} spinnerName="pulse" noFadeIn/>, addonAfter];
+                }} spinnerName="pulse" noFadeIn overrideSpinnerClassName="spinner"
+                 key="searchbar_pulse_spinner"/>, addonAfter];
         }
         if (this.props.error) {
             let tooltip = <Tooltip id="tooltip">{this.props.error && this.props.error.message || null}</Tooltip>;
-            addonAfter.push(<OverlayTrigger placement="bottom" overlay={tooltip}><Glyphicon style={{color: "#b94a48"}} className="searcherror" glyph="warning-sign" onClick={this.clearSearch}/></OverlayTrigger>);
+            addonAfter.push(<OverlayTrigger placement="bottom" overlay={tooltip} key="searchbar_error_overlaytrigger" ><Glyphicon style={{color: "#b94a48"}} className="searcherror" glyph="warning-sign" onClick={this.clearSearch}/></OverlayTrigger>);
         }
         return <span className="input-group-addon">{addonAfter}</span>;
     },

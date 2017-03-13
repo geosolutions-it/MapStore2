@@ -12,7 +12,7 @@ const {findIndex} = require('lodash');
 const HighlightFeatureSupport = React.createClass({
     propTypes: {
         map: React.PropTypes.object,
-        layer: React.PropTypes.string.isRequired,
+        layer: React.PropTypes.string,
         status: React.PropTypes.oneOf(['disabled', 'enabled', 'update']),
         updateHighlighted: React.PropTypes.func,
         selectedStyle: React.PropTypes.object,

@@ -48,7 +48,7 @@ const TransformsGrid = React.createClass({
     },
     render() {
         if (this.props.loading && this.props.transforms.length === 0) {
-            return (<Spinner noFadeIn spinnerName="circle"/>);
+            return (<Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle"/>);
         }
         return (
             <Panel {...this.props.panProps} header={<span><Message msgId="importer.task.transforms" /></span>}>

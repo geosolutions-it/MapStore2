@@ -47,9 +47,9 @@ const Task = React.createClass({
     renderLoading(element) {
         if (this.props.task.loading ) {
             if (!element) {
-                return <Spinner spinnerName="circle" />;
+                return <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/>;
             } else if (this.props.task.element === element) {
-                return <Spinner spinnerName="circle" />;
+                return <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/>;
             }
         }
     },

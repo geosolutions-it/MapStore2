@@ -196,7 +196,7 @@ let SnapshotPanel = React.createClass({
         let bingOrGoogle = this.isBingOrGoogle();
         let snapshotReady = this.isSnapshotReady();
         return ( this.props.active ) ? this.wrap(
-            <Grid role="body" header={this.props.name} className="snapshot-panel" fluid={true}>
+            <Grid role="body" className="snapshot-panel" fluid={true}>
                 <Row key="main">
                     <Col key="previewCol" xs={7} sm={7} md={7}>{this.renderPreview()}</Col>
                     <Col key="dataCol" xs={5} sm={5} md={5}>

@@ -243,7 +243,7 @@ const DockedFeatureGrid = React.createClass({
                                 width: "60px",
                                 top: "50%",
                                 left: "45%"}}>
-                                <Spinner style={{width: "60px"}} spinnerName="three-bounce" noFadeIn/>
+                                <Spinner style={{width: "60px"}} spinnerName="three-bounce" noFadeIn overrideSpinnerClassName="spinner"/>
                             </div>
                         </div> :
                         <div style={{

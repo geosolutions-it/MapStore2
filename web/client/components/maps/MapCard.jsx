@@ -101,9 +101,10 @@ const MapCard = React.createClass({
     stopPropagate(event) {
         // prevent click on parent container
         const e = event || window.event || {};
-        e.cancelBubble = true;
         if (e.stopPropagation) {
             e.stopPropagation();
+        } else {
+            e.cancelBubble = true;
         }
     },
     close() {

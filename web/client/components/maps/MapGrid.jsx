@@ -85,7 +85,7 @@ var MapGrid = React.createClass({
         });
     },
     renderLoading() {
-        return (<div style={{width: "100px", overflow: "visible", margin: "auto"}}>Loading...<Spinner spinnerName="circle" noFadeIn/></div>);
+        return (<div style={{width: "100px", overflow: "visible", margin: "auto"}}>Loading...<Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/></div>);
     },
     renderMetadataModal() {
         if (this.props.metadataModal) {

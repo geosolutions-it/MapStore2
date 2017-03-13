@@ -63,13 +63,16 @@ var Menu = React.createClass({
             const button = (<Button key={child.props.eventKey} bsSize="large" className={(child.props.buttonConfig && child.props.buttonConfig.buttonClassName) ? child.props.buttonConfig.buttonClassName : "square-button"} onClick={this.props.onChoose.bind(null, child.props.eventKey)} bsStyle={this.props.activeKey === child.props.eventKey ? 'default' : 'primary'}>
                         {child.props.glyph ? <Glyphicon glyph={child.props.glyph} /> : child.props.icon}
                     </Button>);
-            const tooltip = <Tooltip key={"tooltip." + child.props.eventKey} id={"tooltip." + child.props.eventKey}><Message msgId={child.props.buttonConfig.tooltip}/></Tooltip>;
-            return child.props.buttonConfig.tooltip ? (
-                <OverlayTrigger placement={"bottom"} key={"overlay-trigger." + child.props.eventKey}
-                    overlay={tooltip}>
-                    {button}
-                </OverlayTrigger>
-            ) : button;
+            if (child.props.buttonConfig.tooltip) {
+                const tooltip = <Tooltip key={"tooltip." + child.props.eventKey} id={"tooltip." + child.props.eventKey}><Message msgId={child.props.buttonConfig.tooltip}/></Tooltip>;
+                return (
+                    <OverlayTrigger placement={"bottom"} key={"overlay-trigger." + child.props.eventKey}
+                        overlay={tooltip}>
+                        {button}
+                    </OverlayTrigger>
+                );
+            }
+            return button;
         });
     },
     renderContent() {

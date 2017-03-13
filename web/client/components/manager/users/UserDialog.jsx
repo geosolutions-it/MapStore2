@@ -167,7 +167,7 @@ const UserDialog = React.createClass({
           created: <Message key="text" msgId="users.userCreated" />
       };
       let message = messages[status] || defaultMessage;
-      return [this.isSaving() ? <Spinner key="saving-spinner" spinnerName="circle" noFadeIn/> : null, message];
+      return [this.isSaving() ? <Spinner key="saving-spinner" spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : null, message];
   },
   renderButtons() {
       return [

@@ -10,7 +10,7 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 
-var Spinner = require('react-spinkit');
+const Spinner = require('react-spinkit');
 require('./map/css/map.css');
 
 const Message = require('../components/I18N/Message');
@@ -249,7 +249,7 @@ const MapPlugin = React.createClass({
             justifyContent: "center",
             alignItems: "center"
             }} className="mapLoadingMessage">
-                {this.props.loadingSpinner ? <Spinner spinnerName="circle" /> : null}
+                {this.props.loadingSpinner ? <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/> : null}
                 <Message msgId={this.props.mapLoadingMessage}/>
         </div>);
     },

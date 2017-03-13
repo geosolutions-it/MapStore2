@@ -118,7 +118,7 @@ const GroupDialog = React.createClass({
           created: <Message key="text" msgId="usergroups.groupCreated" />
       };
       let message = messages[status] || defaultMessage;
-      return [this.isSaving() ? <Spinner key="saving-spinner" spinnerName="circle" noFadeIn/> : null, message];
+      return [this.isSaving() ? <Spinner key="saving-spinner" spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : null, message];
   },
   renderButtons() {
       return [

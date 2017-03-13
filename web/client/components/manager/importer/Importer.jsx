@@ -131,7 +131,7 @@ const Importer = React.createClass({
     },
     renderLoading() {
         if (this.props.loading) {
-            return <div style={{"float": "right"}}><Spinner noFadeIn spinnerName="circle"/></div>;
+            return <div style={{"float": "right"}}><Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle"/></div>;
         }
         return null;
     },

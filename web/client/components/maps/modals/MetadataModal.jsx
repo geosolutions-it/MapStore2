@@ -202,7 +202,7 @@ const MetadataModal = React.createClass({
         }
     },
     renderLoading() {
-        return this.props.map && this.props.map.updating ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn/> : null;
+        return this.props.map && this.props.map.updating ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn overrideSpinnerClassName="spinner"/> : null;
     },
     render() {
         const footer = (<span role="footer"><div style={{"float": "left"}}>{this.renderLoading()}</div>

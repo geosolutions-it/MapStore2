@@ -90,10 +90,10 @@ const FileUploader = React.createClass({
     },
     render() {
         if (this.state && this.state.files) {
-            return (<div> <Spinner spinnerName="circle" />{this.props.beforeUploadMessage}{this.renderPreview()}</div>);
+            return (<div> <Spinner spinnerName="circle" overrideSpinnerClassName="spinner" />{this.props.beforeUploadMessage}{this.renderPreview()}</div>);
         } else if ( this.props && this.props.uploading && !this.state.files ) {
             return (<div>
-                <Spinner spinnerName="circle" /><Message msgId="uploader.uploadingFiles"/>
+                <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/><Message msgId="uploader.uploadingFiles"/>
                 {this.renderProgress(this.props.uploading)}
                 {this.renderPreview()}
                 </div>);
