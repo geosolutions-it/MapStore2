@@ -142,12 +142,12 @@ const MeasurementSupport = React.createClass({
         let bearing = 0;
         let sketchCoords = this.sketchFeature.getGeometry().getCoordinates();
 
-        if (this.props.measurement.geomType === 'Bearing' &&
-                sketchCoords.length > 1) {
+        if (this.props.measurement.geomType === 'Bearing' && sketchCoords.length > 1) {
             // calculate the azimuth as base for bearing information
-            bearing = CoordinatesUtils.calculateAzimuth(
-                sketchCoords[0], sketchCoords[1], this.props.projection);
+            bearing = CoordinatesUtils.calculateAzimuth(sketchCoords[0], sketchCoords[1], this.props.projection);
             if (sketchCoords.length > 2) {
+                this.drawInteraction.sketchCoords_ = [sketchCoords[0], sketchCoords[1], sketchCoords[0]];
+                this.sketchFeature.getGeometry().setCoordinates(this.drawInteraction.sketchCoords_);
                 this.drawInteraction.finishDrawing();
             }
         }
