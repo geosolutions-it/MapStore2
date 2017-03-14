@@ -51,9 +51,9 @@ function logout(redirectUrl) {
     };
 }
 
-function logoutWithReload(redirectUrl) {
+function logoutWithReload() {
     return (dispatch) => {
-        dispatch(logout(redirectUrl));
+        dispatch(logout(null));
         dispatch(loadMaps(false, ConfigUtils.getDefaults().initialMapFilter || "*"));
     };
 }
