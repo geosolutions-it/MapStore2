@@ -1,4 +1,5 @@
 var path = require("path");
+var LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 
 module.exports = {
     entry: {
@@ -10,13 +11,24 @@ module.exports = {
         filename: "myapp.js"
     },
     resolve: {
-      extensions: ["", ".js", ".jsx"]
+      extensions: [".js", ".jsx"]
     },
     module: {
-        loaders: [
-            { test: /\.jsx?$/, loader: "babel-loader", exclude: /node_modules/ }
+        rules: [
+            {
+                test: /\.jsx?$/,
+                exclude: /node_modules/,
+                use: [{
+                    loader: "babel-loader"
+                }]
+
+            }
         ]
     },
     devtool: 'inline-source-map',
-    debug: true
+    plugins: [
+        new LoaderOptionsPlugin({
+            debug: true
+        })
+    ]
 };

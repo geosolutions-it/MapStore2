@@ -180,6 +180,7 @@ module.exports = finalCreateStore(reducers, {});
 
 ```javascript
 var path = require("path");
+var LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 
 module.exports = {
     entry: {
@@ -191,16 +192,29 @@ module.exports = {
         filename: "myapp.js"
     },
     resolve: {
-      extensions: ["", ".js", ".jsx"]
+      extensions: [".js", ".jsx"]
     },
     module: {
-        loaders: [
-            { test: /\.jsx?$/, loader: "babel-loader" }
+        rules: [
+            {
+                test: /\.jsx?$/,
+                exclude: /node_modules/,
+                use: [{
+                    loader: "babel-loader"
+                }]
+
+            }
         ]
     },
     devtool: 'inline-source-map',
-    debug: true
+    plugins: [
+        new LoaderOptionsPlugin({
+            debug: true
+        })
+    ]
 };
+
+
 ```
 
 Now the application is ready, to launch it in development mode, you can use the following command (launch it from the MapStore2 main folder):

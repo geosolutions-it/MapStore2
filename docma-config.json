@@ -30,7 +30,7 @@
     "app": {
         "title": "MapStore 2 documentation",
         "base": "/mapstore/docs",
-        "entrance": "content:readme",
+        "entrance": "content:site",
         "routing": { "method": "path", "caseSensitive": true }
     },
     "template": {
