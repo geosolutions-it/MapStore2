@@ -13,7 +13,7 @@ const {Glyphicon} = require('react-bootstrap');
 
 const closeLogin = () => {
     return (dispatch) => {
-        dispatch(setControlProperty('LoginForm', 'enabled', false));
+        dispatch(setControlProperty(null, 'LoginForm', 'enabled', false, false));
         dispatch(resetError());
     };
 };
@@ -21,9 +21,9 @@ const closeLogin = () => {
 const UserMenu = connect((state) => ({
     user: state.security && state.security.user
 }), {
-    onShowLogin: setControlProperty.bind(null, "LoginForm", "enabled", true),
-    onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true),
-    onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true),
+    onShowLogin: setControlProperty.bind(null, "LoginForm", "enabled", true, true),
+    onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true, true),
+    onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true, true),
     onLogout: logoutWithReload
 })(require('../../components/security/UserMenu'));
 
@@ -31,7 +31,7 @@ const UserDetails = connect((state) => ({
     user: state.security && state.security.user,
     show: state.controls.AccountInfo && state.controls.AccountInfo.enabled}
 ), {
-    onClose: setControlProperty.bind(null, "AccountInfo", "enabled", false)
+    onClose: setControlProperty.bind(null, "AccountInfo", "enabled", false, false)
 })(require('../../components/security/modals/UserDetailsModal'));
 
 const PasswordReset = connect((state) => ({
@@ -39,7 +39,7 @@ const PasswordReset = connect((state) => ({
     show: state.controls.ResetPassword && state.controls.ResetPassword.enabled
 }), {
     onPasswordChange: (user, pass) => { return geoStoreChangePassword(user, pass); },
-    onClose: setControlProperty.bind(null, "ResetPassword", "enabled", false)
+    onClose: setControlProperty.bind(null, "ResetPassword", "enabled", false, false)
 })(require('../../components/security/modals/PasswordResetModal'));
 
 const Login = connect((state) => ({
@@ -47,7 +47,7 @@ const Login = connect((state) => ({
     user: state.security && state.security.user,
     loginError: state.security && state.security.loginError
 }), {
-    onLoginSuccess: setControlProperty.bind(null, 'LoginForm', 'enabled', false),
+    onLoginSuccess: setControlProperty.bind(null, 'LoginForm', 'enabled', false, false),
     onClose: closeLogin,
     onSubmit: geoStoreLoginSubmit,
     onError: loginFail
@@ -61,9 +61,9 @@ const LoginNav = connect((state) => ({
     bsStyle: "primary",
     className: "square-button"
 }), {
-    onShowLogin: setControlProperty.bind(null, "LoginForm", "enabled", true),
-    onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true),
-    onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true),
+    onShowLogin: setControlProperty.bind(null, "LoginForm", "enabled", true, true),
+    onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true, true),
+    onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true, true),
     onLogout: logoutWithReload
 })(require('../../components/security/UserMenu'));
 
