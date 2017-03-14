@@ -12,6 +12,8 @@ var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var assign = require('object-assign');
 var mapUtils = require('../../../utils/MapUtils');
 
+const {throttle} = require('lodash');
+
 require('./SingleClick');
 let LeafletMap = React.createClass({
     propTypes: {
@@ -115,9 +117,10 @@ let LeafletMap = React.createClass({
                 });
             }
         });
-        this.map.on('dragstart', () => { this.map.off('mousemove', this.mouseMoveEvent); });
-        this.map.on('dragend', () => { this.map.on('mousemove', this.mouseMoveEvent); });
-        this.map.on('mousemove', this.mouseMoveEvent);
+        const mouseMove = throttle(this.mouseMoveEvent, 500);
+        this.map.on('dragstart', () => { this.map.off('mousemove', mouseMove); });
+        this.map.on('dragend', () => { this.map.on('mousemove', mouseMove); });
+        this.map.on('mousemove', mouseMove);
         this.map.on('contextmenu', () => {
             if (this.props.onRightClick) {
                 this.props.onRightClick(event.containerPoint);
