@@ -97,6 +97,9 @@ const MeasurementSupport = React.createClass({
             } else if (bearingMarkers.length === 2) {
                 coords2 = [bearingMarkers[1].getLatLng().lng, bearingMarkers[1].getLatLng().lat];
             }
+            // in order to align the results between leaflet and openlayers the coords are repojected only for leaflet
+            coords1 = CoordinatesUtils.reproject(coords1, 'EPSG:4326', this.props.projection);
+            coords2 = CoordinatesUtils.reproject(coords2, 'EPSG:4326', this.props.projection);
             // calculate the azimuth as base for bearing information
             bearing = CoordinatesUtils.calculateAzimuth(coords1, coords2, this.props.projection);
         }
