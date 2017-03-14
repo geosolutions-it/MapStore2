@@ -28,7 +28,7 @@ const PrintOption = React.createClass({
         };
     },
     onChange() {
-        this.props.onChange(this.refs.input.getInputDOMNode().checked);
+        this.props.onChange(!this.refs.input.props.checked);
     },
     render() {
         return (

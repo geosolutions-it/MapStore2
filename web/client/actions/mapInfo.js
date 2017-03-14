@@ -8,7 +8,7 @@
 
 const assign = require('object-assign');
 const axios = require('axios');
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 const GeoCodingApi = require('../api/Nominatim');
 
 const LOAD_FEATURE_INFO = 'LOAD_FEATURE_INFO';
