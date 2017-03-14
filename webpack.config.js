@@ -53,7 +53,7 @@ module.exports = {
             },
             {
                 test: /\.less$/,
-                exclude: /themes\/.+\.less$/,
+                exclude: /themes[\\\/]?.+\.less$/,
                 use: [{
                     loader: 'style-loader'
                 }, {
@@ -63,7 +63,7 @@ module.exports = {
                 }]
             },
             {
-                test: /themes\/.+\.less$/,
+                test: /themes[\\\/]?.+\.less$/,
                 use: extractThemesPlugin.extract({
                         fallback: 'style-loader',
                         use: ['css-loader', 'less-loader']

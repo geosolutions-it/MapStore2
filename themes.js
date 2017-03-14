@@ -12,7 +12,7 @@ const themeEntries = () => {
     var files = glob.sync(globPath);
     return files.reduce((res, curr) => {
         var finalRes = res || {};
-        finalRes["themes/" + path.basename(curr, path.extname(curr))] = `${curr}/theme.less`;
+        finalRes["themes/" + path.basename(curr, path.extname(curr))] = path.join(__dirname, "web", "client", "themes", `${path.basename(curr, path.extname(curr))}`, "theme.less");
         return finalRes;
     }, {});
 
