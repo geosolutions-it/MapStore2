@@ -1,4 +1,6 @@
 
+
+
 ![MapStore Logo](https://github.com/geosolutions-it/MapStore2/blob/master/MapStore2.png?raw=true)
 
 **[MapStore](http://mapstore2.geo-solutions.it/)** is a framework to build _web mapping_ applications using standard mapping libraries, such as _OpenLayers 3_ and _Leaflet_.
@@ -10,6 +12,9 @@ MapStore has several example applications:
 
 
 MapStore 2 is based on OpenLayers 3, Leaflet and ReactJS, and is licensed under the GPLv3 license.
+
+[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/fold_left.svg?style=social&label=Follow%20%40mapstore2)](https://twitter.com/mapstore2)
+
 
 Quick Start
 -----------

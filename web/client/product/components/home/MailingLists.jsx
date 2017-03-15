@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var {Col, Row} = require('react-bootstrap');
+var {Col, Row, Button, Glyphicon} = require('react-bootstrap');
 var I18N = require('../../../components/I18N/I18N');
 
 const googleGroups = require('../../assets/img/groups_logo_sm.gif');
 const LinkedinGroup = require('../../assets/img/linkedin_group.png');
+const {Follow} = require('react-twitter-widgets');
 
 
 var MailingLists = React.createClass({
@@ -84,8 +85,8 @@ var MailingLists = React.createClass({
                             </tbody>
                         </table>
                     </Col>
-                    <Col sm={12} md={12}>
-                        <table style={{padding: "5px", margin: "auto"}} cellSpacing="0">
+                    <Col sm={12} md={6}>
+                        <table style={{padding: "0", margin: "10px auto"}} cellSpacing="0">
                             <tbody>
                             <tr>
                                 <td>
@@ -104,6 +105,9 @@ var MailingLists = React.createClass({
                             </tr>
                             </tbody>
                         </table>
+                    </Col>
+                    <Col sm={12} md={6} style={{padding: "50px 10px"}}>
+                        <Follow options={{size: 'large'}} username="mapstore2" />
                     </Col>
                 </Row>
 			</div>
