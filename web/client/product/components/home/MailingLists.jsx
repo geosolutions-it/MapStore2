@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var {Col, Row, Button, Glyphicon} = require('react-bootstrap');
+var {Col, Row} = require('react-bootstrap');
 var I18N = require('../../../components/I18N/I18N');
 
 const googleGroups = require('../../assets/img/groups_logo_sm.gif');
