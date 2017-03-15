@@ -135,7 +135,6 @@ const DefaultViewer = React.createClass({
                 <Container {...this.props.containerProps}
                     onChangeIndex={(index) => {this.setState({index}); }}
                     ref="container"
-                    defaultActiveKey={0}
                     index={this.state.index || 0}
                     key={"swiper"}
                     className="swipeable-view"
