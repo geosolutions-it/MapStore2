@@ -7,7 +7,7 @@ const extractThemesPlugin = new ExtractTextPlugin({
 });
 
 
-const themeEntries = () => {
+const themeEntries = (() => {
     const globPath = path.join(__dirname, "web", "client", "themes", "*");
     var files = glob.sync(globPath);
     return files.reduce((res, curr) => {
@@ -16,7 +16,7 @@ const themeEntries = () => {
         return finalRes;
     }, {});
 
-}();
+})();
 module.exports = {
     themeEntries,
     extractThemesPlugin
