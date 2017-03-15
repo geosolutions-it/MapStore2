@@ -60,7 +60,7 @@ const TestSupport = React.createClass({
 
 module.exports = TestSupport;
 ```
- * include the tool(s) in the requires section of plugins.js amd give it a **name**:
+ * include the tool(s) in the requires section of plugins.js and give it a **name**:
 
 ```js
 module.exports = {
@@ -97,3 +97,5 @@ module.exports = {
   }
 }
 ```
+
+NOTE: When using the "impl" configuration you are responsible for the correct configuration of such tool, **remember to add any other property it may require in the configuration**.
