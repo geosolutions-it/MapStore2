@@ -89,7 +89,10 @@ var MailingLists = React.createClass({
                             <tbody>
                             <tr>
                                 <td>
-                                    <img src={LinkedinGroup} height="50" width="100" alt="Linkedin Groups" />
+                                    <img style={{
+                                            background: "white",
+                                            borderRadius: "2px 2px 2px 2px"
+                                        }} src={LinkedinGroup} height="50" width="100" alt="Linkedin Groups" />
                                 </td>
                             </tr>
                             <tr>
