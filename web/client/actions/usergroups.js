@@ -325,6 +325,7 @@ module.exports = {
     deleteGroup, DELETEGROUP,
     STATUS_SUCCESS,
     STATUS_LOADING,
+    STATUS_CREATED,
     STATUS_ERROR,
     STATUS_DELETED
 };
