@@ -1,0 +1,12 @@
+{
+  "files": {
+    "included": [
+      "web/client/plugins/*.js",
+      "web/client/actions/*js",
+      "web/client/reducers/*js"
+      "web/client/epics/*js"
+      "web/client/jsapi/*js"
+    ],
+
+  }
+}
