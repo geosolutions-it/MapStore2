@@ -1,7 +1,7 @@
 {
   "files": {
     "included": [
-      "web/client/plugins/*.js",
+      "web/client/plugins/*.jsx",
       "web/client/actions/*js",
       "web/client/reducers/*js"
       "web/client/epics/*js"
