@@ -2,14 +2,15 @@
 [![Build Status](https://travis-ci.org/geosolutions-it/MapStore2.svg?branch=master)](https://travis-ci.org/geosolutions-it/MapStore2)
 [![Coverage Status](https://coveralls.io/repos/geosolutions-it/MapStore2/badge.svg?branch=master&service=github)](https://coveralls.io/github/geosolutions-it/MapStore2?branch=master)
 [![Codacy Badge](https://www.codacy.com/project/badge/1648d484427346e2877006dc287379b6)](https://www.codacy.com/app/simone-giannecchini/MapStore2)
+[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/fold_left.svg?style=social&label=Follow%20%40mapstore2)](https://twitter.com/mapstore2)
 
 MapStore 2
 ==========
 MapStore 2 is a framework to build *web mapping* applications using standard mapping libraries, such as [OpenLayers 3](http://openlayers.org/) and [Leaflet](http://leafletjs.com/).
 
-MapStore 2 has several example applications: 
+MapStore 2 has several example applications:
  * MapViewer is a simple viewer of preconfigured maps (optionally stored in a database using GeoStore)
- * MapPublisher has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents by server like OpenStreetMap, Google Maps, MapQuest or specific servers provided by your organization or third party. 
+ * MapPublisher has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents by server like OpenStreetMap, Google Maps, MapQuest or specific servers provided by your organization or third party.
  
 For more information check the [MapStore documentation](https://geosolutions-it.github.io/MapStore2/).
 
@@ -45,7 +46,7 @@ Demo Instances
 We have the following instances:
 
 1. a DEV instance, which can be accessed [here](http://dev.mapstore2.geo-solutions.it), where all the changes are deployed once they are published on the Master branch of our repo
-2. a QA instance, which can be accessed  [here](http://qa.mapstore2.geo-solutions.it), that becomes active 1 week before any release, during the hardening phase, and deploys the release branch whenever a fix is pushed onto it. 
+2. a QA instance, which can be accessed  [here](http://qa.mapstore2.geo-solutions.it), that becomes active 1 week before any release, during the hardening phase, and deploys the release branch whenever a fix is pushed onto it.
 3. a STABLE instance, which can be accessed [here](http://mapstore2.geo-solutions.it), that gets deployed on demand after each release.
 
 As a user you need to be aware of STABLE and DEV, QA is used internally before a release; for 1 Week it will diverge from STABLE as it is actually anticipating the next stable.
@@ -60,7 +61,7 @@ Clone the repository with the --recursive option to automatically clone submodul
 
 Install NodeJS >= 4.6.1 , if needed, from [here](https://nodejs.org/en/download/releases/).
 
-Update npm to 3.x, using: 
+Update npm to 3.x, using:
 
 `npm install -g npm@3`
 
