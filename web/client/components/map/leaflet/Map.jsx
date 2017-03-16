@@ -117,7 +117,7 @@ let LeafletMap = React.createClass({
                 });
             }
         });
-        const mouseMove = throttle(this.mouseMoveEvent, 500);
+        const mouseMove = throttle(this.mouseMoveEvent, 100);
         this.map.on('dragstart', () => { this.map.off('mousemove', mouseMove); });
         this.map.on('dragend', () => { this.map.on('mousemove', mouseMove); });
         this.map.on('mousemove', mouseMove);
