@@ -48,7 +48,12 @@ describe('StandardApp', () => {
     });
 
     it('creates a default router app', () => {
-        const app = ReactDOM.render(<StandardRouter/>, document.getElementById("container"));
+        const store = {
+            dispatch: () => {},
+            subscribe: () => {},
+            getState: () => ({})
+        };
+        const app = ReactDOM.render(<Provider store={store}><StandardRouter/></Provider>, document.getElementById("container"));
         expect(app).toExist();
     });
 

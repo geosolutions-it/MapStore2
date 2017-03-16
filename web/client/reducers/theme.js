@@ -12,9 +12,9 @@ const assign = require('object-assign');
 function controls(state = {}, action) {
     switch (action.type) {
         case THEME_SELECTED:
-        return assign({}, state, {
-            selectedTheme: action.theme
-        });
+            return assign({}, state, {
+                selectedTheme: action.theme
+            });
         default:
             return state;
     }
