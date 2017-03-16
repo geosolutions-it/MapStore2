@@ -10,6 +10,8 @@ const {
     USERMANAGER_GETUSERS, USERMANAGER_EDIT_USER, USERMANAGER_EDIT_USER_DATA, USERMANAGER_UPDATE_USER, USERMANAGER_DELETE_USER,
     USERMANAGER_GETGROUPS, USERS_SEARCH_TEXT_CHANGED
 } = require('../actions/users');
+
+const {UPDATEGROUP, STATUS_CREATED, DELETEGROUP, STATUS_DELETED} = require('../actions/usergroups');
 const assign = require('object-assign');
 
 const {findIndex} = require('lodash');
@@ -123,6 +125,26 @@ function users(state = {
                 groupsStatus: action.status,
                 groupsError: action.error
             });
+        }
+        case UPDATEGROUP: {
+            if (action.status === STATUS_CREATED) {
+                return assign({}, state, {
+                    groups: null,
+                    groupsStatus: null,
+                    groupsError: null
+                });
+            }
+            return state;
+        }
+        case DELETEGROUP: {
+            if (action.status === STATUS_DELETED) {
+                return assign({}, state, {
+                    groups: null,
+                    groupsStatus: null,
+                    groupsError: null
+                });
+            }
+            return state;
         }
         default:
             return state;
