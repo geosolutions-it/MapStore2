@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {FormControl, Button} = require('react-bootstrap');
+const {FormControl, FormGroup, Button} = require('react-bootstrap');
 
 
 const SaveButton = React.createClass({
@@ -40,13 +40,17 @@ const SaveButton = React.createClass({
     render() {
         const embedded = (<a href={'../api/?map=' + this.state.loadname} target="_blank">Load in embedded version!</a>);
         return (<div className="save">
-            <Button onClick={this.save} bsStyle="primary" disabled={this.state.savename === ''}>Save</Button>
-            <FormControl ref="savename" onChange={this.onChangeSaveName} type="text"/>
-            <Button onClick={this.load} bsStyle="primary" disabled={this.state.loadname === ''}>Load</Button>
-            {(this.state.loadname !== '') ? embedded : <span/>}
-            <FormControl ref="loadname" onChange={this.onChangeLoadName} componentClass="select">
-                {this.renderSaved()}
-            </FormControl>
+            <FormGroup bsSize="small">
+                <Button onClick={this.save} bsStyle="primary" disabled={this.state.savename === ''}>Save</Button>
+                <FormControl ref="savename" onChange={this.onChangeSaveName} type="text"/>
+            </FormGroup>
+            <FormGroup bsSize="small">
+                <Button onClick={this.load} bsStyle="primary" disabled={this.state.loadname === ''}>Load</Button>
+                {(this.state.loadname !== '') ? embedded : <span/>}
+                <FormControl ref="loadname" onChange={this.onChangeLoadName} componentClass="select">
+                    {this.renderSaved()}
+                </FormControl>
+            </FormGroup>
             </div>);
     },
     load() {

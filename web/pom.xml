@@ -104,6 +104,7 @@
                                     <include>**/*.html</include>
                                     <include>**/*.json</include>
                                     <include>**/img/*</include>
+                                    <include>**/*.less</include>
                                 </includes>
                             </resource>
                         </resources>

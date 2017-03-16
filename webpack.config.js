@@ -3,6 +3,8 @@ var DefinePlugin = require("webpack/lib/DefinePlugin");
 var LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 var NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
 var NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+
 const assign = require('object-assign');
 const themeEntries = require('./themes.js').themeEntries;
 const extractThemesPlugin = require('./themes.js').extractThemesPlugin;
@@ -23,8 +25,19 @@ module.exports = {
         filename: "[name].js"
     },
     plugins: [
+        new CopyWebpackPlugin([
+            { from: path.join(__dirname, 'node_modules', 'bootstrap', 'less'), to: path.join(__dirname, "web", "client", "dist", "bootstrap", "less") }
+        ]),
         new LoaderOptionsPlugin({
-            debug: true
+            debug: true,
+            options: {
+                postcss: {
+                    plugins: [
+                      require('postcss-prefix-selector')({prefix: '.ms2', exclude: ['.ms2']})
+                    ]
+                },
+                context: __dirname
+            }
         }),
         new DefinePlugin({
             "__DEVTOOLS__": true,
@@ -49,6 +62,8 @@ module.exports = {
                     loader: 'style-loader'
                 }, {
                     loader: 'css-loader'
+                }, {
+                  loader: 'postcss-loader'
                 }]
             },
             {
@@ -66,7 +81,7 @@ module.exports = {
                 test: /themes[\\\/]?.+\.less$/,
                 use: extractThemesPlugin.extract({
                         fallback: 'style-loader',
-                        use: ['css-loader', 'less-loader']
+                        use: ['css-loader', 'postcss-loader', 'less-loader']
                     })
             },
             {

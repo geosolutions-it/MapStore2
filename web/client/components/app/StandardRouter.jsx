@@ -14,17 +14,23 @@ const {Router, Route, hashHistory} = require('react-router');
 
 const Localized = require('../I18N/Localized');
 
+const Theme = connect((state) => ({
+    theme: state.theme && state.theme.selectedTheme && state.theme.selectedTheme.id
+}))(require('../theme/Theme'));
+
 const StandardRouter = React.createClass({
     propTypes: {
         plugins: React.PropTypes.object,
         locale: React.PropTypes.object,
-        pages: React.PropTypes.array
+        pages: React.PropTypes.array,
+        className: React.PropTypes.string
     },
     getDefaultProps() {
         return {
             plugins: {},
             locale: {messages: {}, current: 'en-US'},
-            pages: []
+            pages: [],
+            className: "ms2 fill"
         };
     },
     renderPages() {
@@ -40,7 +46,8 @@ const StandardRouter = React.createClass({
     render() {
         return (
 
-            <div className="fill">
+            <div className={this.props.className}>
+                <Theme/>
                 <Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                     <Router history={hashHistory}>
                         {this.renderPages()}

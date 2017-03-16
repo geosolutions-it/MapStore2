@@ -42,7 +42,7 @@ const PluginCreator = React.createClass({
     componentWillReceiveProps(newProps) {
         if (newProps.pluginCode !== this.props.pluginCode) {
             this.setState({
-                code: newProps.pluginConfig
+                code: newProps.pluginCode
             });
         }
     },

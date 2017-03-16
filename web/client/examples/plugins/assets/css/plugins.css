@@ -76,3 +76,15 @@ html, body, #container, #map {
 .checkbox {
     padding-left: 5px;
 }
+
+.theme-switcher span {
+    display: none;
+}
+
+#plugins-list ul {
+    margin-bottom: 10px;
+}
+
+#plugins-list .form-group {
+    padding-left: 0;
+}

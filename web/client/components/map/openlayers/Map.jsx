@@ -129,7 +129,7 @@ var OpenlayersMap = React.createClass({
                 });
             }
         });
-        const mouseMove = throttle(this.mouseMoveEvent, 500);
+        const mouseMove = throttle(this.mouseMoveEvent, 100);
         map.on('pointermove', mouseMove);
 
         this.updateMapInfoState();

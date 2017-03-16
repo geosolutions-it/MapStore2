@@ -6,12 +6,24 @@ var DefinePlugin = require("webpack/lib/DefinePlugin");
 var NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
 const extractThemesPlugin = require('./themes.js').extractThemesPlugin;
 var assign = require('object-assign');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 assign(webpackConfig.entry, require('./examples.js'));
 
 webpackConfig.plugins = [
+    new CopyWebpackPlugin([
+        { from: path.join(__dirname, 'node_modules', 'bootstrap', 'less'), to: path.join(__dirname, "web", "client", "dist", "bootstrap", "less") }
+    ]),
     new LoaderOptionsPlugin({
-        debug: false
+        debug: false,
+        options: {
+            postcss: {
+                plugins: [
+                  require('postcss-prefix-selector')({prefix: '.ms2', exclude: ['.ms2']})
+                ]
+            },
+            context: __dirname
+        }
     }),
     new DefinePlugin({
         "__DEVTOOLS__": false
