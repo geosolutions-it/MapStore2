@@ -31,7 +31,7 @@ const ShareEmbed = React.createClass({
   render() {
 
       const codeEmbedded = "<iframe style=\"border: none;\" height=\"400\" width=\"600\" src=\"" + this.props.shareUrl + "\"></iframe>";
-      const tooltip = (<Tooltip placement="bottom" className="in" id="tooltip-bottom">
+      const tooltip = (<Tooltip placement="bottom" className="in" id="tooltip-bottom" style={{zIndex: 2001}}>
                            {this.state.copied ? <Message msgId="share.msgCopiedUrl"/> : <Message msgId="share.msgToCopyUrl"/>}
                        </Tooltip>);
       const copyTo = (<OverlayTrigger placement="bottom" overlay={tooltip}>
