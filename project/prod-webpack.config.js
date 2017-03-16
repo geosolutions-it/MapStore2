@@ -5,10 +5,6 @@ var ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
 var DefinePlugin = require("webpack/lib/DefinePlugin");
 var NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
 
-var assign = require('object-assign');
-
-assign(webpackConfig.entry, require('./examples.js'));
-
 webpackConfig.plugins = [
     new LoaderOptionsPlugin({
         debug: false
