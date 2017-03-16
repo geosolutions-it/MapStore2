@@ -13,7 +13,7 @@ var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var ConfigUtils = require('../../../utils/ConfigUtils');
 var mapUtils = require('../../../utils/MapUtils');
 
-const {isEqual} = require('lodash');
+const {isEqual, throttle} = require('lodash');
 
 var OpenlayersMap = React.createClass({
     propTypes: {
@@ -129,27 +129,8 @@ var OpenlayersMap = React.createClass({
                 });
             }
         });
-        map.on('pointermove', (event) => {
-            if (!event.dragging && event.coordinate) {
-                let pos = event.coordinate.slice();
-                let coords = ol.proj.toLonLat(pos, this.props.projection);
-                let tLng = (( coords[0] / 360) % 1) * 360;
-                if (tLng < -180) {
-                    tLng = tLng + 360;
-                } else if (tLng > 180) {
-                    tLng = tLng - 360;
-                }
-                this.props.onMouseMove({
-                    y: coords[1] || 0.0,
-                    x: tLng || 0.0,
-                    crs: "EPSG:4326",
-                    pixel: {
-                        x: event.pixel[0],
-                        y: event.pixel[1]
-                    }
-                });
-            }
-        });
+        const mouseMove = throttle(this.mouseMoveEvent, 500);
+        map.on('pointermove', mouseMove);
 
         this.updateMapInfoState();
         this.setMousePointer(this.props.mousePointer);
@@ -278,6 +259,27 @@ var OpenlayersMap = React.createClass({
                 {children}
             </div>
         );
+    },
+    mouseMoveEvent(event) {
+        if (!event.dragging && event.coordinate) {
+            let pos = event.coordinate.slice();
+            let coords = ol.proj.toLonLat(pos, this.props.projection);
+            let tLng = (( coords[0] / 360) % 1) * 360;
+            if (tLng < -180) {
+                tLng = tLng + 360;
+            } else if (tLng > 180) {
+                tLng = tLng - 360;
+            }
+            this.props.onMouseMove({
+                y: coords[1] || 0.0,
+                x: tLng || 0.0,
+                crs: "EPSG:4326",
+                pixel: {
+                    x: event.pixel[0],
+                    y: event.pixel[1]
+                }
+            });
+        }
     },
     updateMapInfoState() {
         let view = this.map.getView();

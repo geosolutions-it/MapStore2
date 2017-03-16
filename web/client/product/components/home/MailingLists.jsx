@@ -11,6 +11,7 @@ var I18N = require('../../../components/I18N/I18N');
 
 const googleGroups = require('../../assets/img/groups_logo_sm.gif');
 const LinkedinGroup = require('../../assets/img/linkedin_group.png');
+const {Follow} = require('react-twitter-widgets');
 
 
 var MailingLists = React.createClass({
@@ -22,12 +23,12 @@ var MailingLists = React.createClass({
             <div id="mailinglists" className="container">
                 <Row>
                     <Col>
-                        <h1 className="color2" style={{align: "center", fontWeight: "bold", margin: "10px"}} align="center"><I18N.Message msgId="home.ml.title"/></h1>
+                        <h1 className="color2" style={{align: "center", fontWeight: "bold", margin: "10px" }}><I18N.Message msgId="home.ml.title"/></h1>
                     </Col>
                 </Row>
                 <Row>
-                        <Col sm={12} md={6}>
-                        <table border="0" style={{padding: "5px", margin: "auto"}} cellSpacing="0">
+                    <Col sm={12} md={6}>
+                        <table style={{padding: "5px", margin: "auto"}} cellSpacing="0">
                             <tbody>
                             <tr>
                                 <td>
@@ -48,7 +49,7 @@ var MailingLists = React.createClass({
                                 </td>
                             </tr>
                             <tr>
-                                <td align="right">
+                                <td>
                                     <a className="link-white-bg" href="https://groups.google.com/group/mapstore-users"><I18N.Message msgId="home.ml.visit_group"/></a>
                                 </td>
                             </tr>
@@ -56,7 +57,7 @@ var MailingLists = React.createClass({
                         </table>
                     </Col>
                     <Col sm={12} md={6}>
-                        <table border="0" style={{padding: "5px", margin: "auto"}} cellSpacing="0">
+                        <table style={{padding: "5px", margin: "auto"}} cellSpacing="0">
                             <tbody>
                             <tr>
                                 <td>
@@ -77,15 +78,15 @@ var MailingLists = React.createClass({
                                 </td>
                             </tr>
                             <tr>
-                                <td align="right">
+                                <td>
                                     <a className="link-white-bg" href="https://groups.google.com/group/mapstore-developers"><I18N.Message msgId="home.ml.visit_group"/></a>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
                     </Col>
-                    <Col sm={12} md={12}>
-                        <table border="0" style={{padding: "5px", margin: "auto"}} cellSpacing="0">
+                    <Col sm={12} md={6}>
+                        <table style={{padding: "0", margin: "10px auto"}} cellSpacing="0">
                             <tbody>
                             <tr>
                                 <td>
@@ -104,6 +105,9 @@ var MailingLists = React.createClass({
                             </tr>
                             </tbody>
                         </table>
+                    </Col>
+                    <Col sm={12} md={6} style={{padding: "50px 10px"}}>
+                        <Follow options={{size: 'large'}} username="mapstore2" />
                     </Col>
                 </Row>
 			</div>

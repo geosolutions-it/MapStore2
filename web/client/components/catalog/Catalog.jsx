@@ -135,11 +135,11 @@ const Catalog = React.createClass({
           maxButtons={5}
           activePage={page + 1}
           onSelect={this.handlePage} />
-        <div className="push-right">
-            <Message msgId="catalog.pageInfo" msgParams={{start, end: start + returned - 1, total}} />
-            {this.renderLoading()}
-        </div>
-  </div>);
+            <div className="push-right">
+                <Message msgId="catalog.pageInfo" msgParams={{start, end: start + returned - 1, total}} />
+                {this.renderLoading()}
+            </div>
+          </div>);
     },
     renderRecords() {
         return (<div>
@@ -166,16 +166,15 @@ const Catalog = React.createClass({
         }
     },
     renderButtons() {
-        // TODO check this part in ms2, customize for webmapper
         const buttons = [];
         if (this.props.includeSearchButton) {
             buttons.push(<Button bsStyle="primary" style={this.props.buttonStyle} onClick={this.search}
-                        className={this.props.buttonClassName}>
+                        className={this.props.buttonClassName} key="catalog_search_button">
                         {this.renderLoading()} <Message msgId="catalog.search"/>
                     </Button>);
         }
         if (this.props.includeResetButton) {
-            buttons.push(<Button style={this.props.buttonStyle} onClick={this.reset}>
+            buttons.push(<Button style={this.props.buttonStyle} onClick={this.reset} key="catalog_reset_button">
                         <Message msgId="catalog.reset"/>
                     </Button>);
         }
@@ -188,7 +187,7 @@ const Catalog = React.createClass({
         return null;
     },
     renderFormats() {
-        return this.props.formats.map((format) => <option value={format.name}>{format.label}</option>);
+        return this.props.formats.map((format) => <option value={format.name} key={format.name}>{format.label}</option>);
     },
     render() {
         const textSearch = (<FormGroup><FormControl
@@ -236,9 +235,9 @@ const Catalog = React.createClass({
     setCatalogUrl(e) {
         this.setState({catalogURL: e.target.value});
     },
-    handlePage(mouseEvent, pageEvent) {
-        if (pageEvent && pageEvent.eventKey !== undefined) {
-            let start = ((pageEvent.eventKey - 1) * this.props.pageSize) + 1;
+    handlePage(eventKey) {
+        if (eventKey) {
+            let start = ((eventKey - 1) * this.props.pageSize) + 1;
             this.props.onSearch(this.props.format, this.getCatalogUrl(), start, this.props.pageSize, this.props.searchOptions.text);
             this.setState({
                 loading: true
