@@ -235,9 +235,9 @@ const Catalog = React.createClass({
     setCatalogUrl(e) {
         this.setState({catalogURL: e.target.value});
     },
-    handlePage(mouseEvent, pageEvent) {
-        if (pageEvent && pageEvent.eventKey !== undefined) {
-            let start = ((pageEvent.eventKey - 1) * this.props.pageSize) + 1;
+    handlePage(eventKey) {
+        if (eventKey) {
+            let start = ((eventKey - 1) * this.props.pageSize) + 1;
             this.props.onSearch(this.props.format, this.getCatalogUrl(), start, this.props.pageSize, this.props.searchOptions.text);
             this.setState({
                 loading: true
