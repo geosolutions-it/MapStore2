@@ -13,6 +13,8 @@ const {
     USERMANAGER_UPDATE_USER, USERMANAGER_DELETE_USER, USERMANAGER_GETGROUPS
 } = require('../../actions/users');
 
+const {UPDATEGROUP, STATUS_CREATED, DELETEGROUP, STATUS_DELETED} = require('../../actions/usergroups');
+
 describe('Test the users reducer', () => {
     it('default loading', () => {
         let oldState = {test: "test"};
@@ -165,6 +167,34 @@ describe('Test the users reducer', () => {
         });
         expect(state.groups).toExist();
         expect(state.groupsStatus).toBe("success");
+    });
+    it('test group cache clean after group creation', () => {
+        const state = users({}, {
+            type: USERMANAGER_GETGROUPS,
+            groups: [{groupName: "group1", id: 10, description: "test"}],
+            status: "success"
+        });
+        expect(state.groups).toExist();
+        expect(state.groupsStatus).toBe("success");
+        let stateWOutgroups = users(state, {
+            type: UPDATEGROUP,
+            status: STATUS_CREATED
+        });
+        expect(stateWOutgroups.group).toBe(undefined);
+    });
+    it('test group cache clean after group delete', () => {
+        const state = users({}, {
+            type: USERMANAGER_GETGROUPS,
+            groups: [{groupName: "group1", id: 10, description: "test"}],
+            status: "success"
+        });
+        expect(state.groups).toExist();
+        expect(state.groupsStatus).toBe("success");
+        let stateWOutgroups = users(state, {
+            type: DELETEGROUP,
+            status: STATUS_DELETED
+        });
+        expect(stateWOutgroups.group).toBe(undefined);
     });
 
 });
