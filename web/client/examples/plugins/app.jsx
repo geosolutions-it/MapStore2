@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 const startApp = () => {
     const React = require('react');
     const ReactDOM = require('react-dom');
@@ -13,15 +14,28 @@ const startApp = () => {
     const ConfigUtils = require('../../utils/ConfigUtils');
     const LocaleUtils = require('../../utils/LocaleUtils');
     const PluginsUtils = require('../../utils/PluginsUtils');
+    const ThemeUtils = require('../../utils/ThemeUtils');
 
     const {changeBrowserProperties} = require('../../actions/browser');
     const {loadMapConfig} = require('../../actions/config');
     const {loadLocale} = require('../../actions/locale');
     const {loadPrintCapabilities} = require('../../actions/print');
+    const {selectTheme} = require('../../actions/theme');
 
     const PluginsContainer = connect((state) => ({
         pluginsState: state && state.controls || {}
     }))(require('../../components/plugins/PluginsContainer'));
+
+    const ThemeSwitcher = connect((state) => ({
+        selectedTheme: state.theme && state.theme.selectedTheme || 'default',
+        themes: require('../../themes')
+    }), {
+        onThemeSelected: selectTheme
+    })(require('../../components/theme/ThemeSwitcher'));
+
+    const Theme = connect((state) => ({
+        theme: state.theme && state.theme.selectedTheme && state.theme.selectedTheme.id || 'default'
+    }))(require('../../components/theme/Theme'));
 
     const {plugins} = require('./plugins');
 
@@ -32,6 +46,7 @@ const startApp = () => {
         standard: ['Map', 'Toolbar']
     };
 
+    let customStyle = null;
     let userCfg = {};
 
     const {Provider} = require('react-redux');
@@ -44,6 +59,7 @@ const startApp = () => {
 
     const assign = require('object-assign');
     const codeSample = require("raw-loader!./sample.js.raw");
+    const themeSample = require("raw-loader!./sample.less.raw");
 
     let customReducers;
 
@@ -95,6 +111,22 @@ const startApp = () => {
         callback();
     };
 
+    const applyStyle = (theme, callback) => {
+        if (theme) {
+            ThemeUtils.renderFromLess(theme, 'custom_theme', 'themes/default/', callback);
+        } else {
+            document.getElementById('custom_theme').innerText = '';
+            if (callback) {
+                callback();
+            }
+        }
+    };
+
+    const customTheme = (callback, theme) => {
+        customStyle = theme;
+        applyStyle(theme, callback);
+    };
+
     const customPlugin = (callback, code) => {
         /*eslint-disable */
         const require = context;
@@ -127,6 +159,10 @@ const startApp = () => {
     const PluginCreator = connect((state) => ({
         error: state.pluginsConfig && state.pluginsConfig.error
     }))(require('./components/PluginCreator'));
+
+    const ThemeCreator = connect((state) => ({
+        error: state.pluginsConfig && state.pluginsConfig.error
+    }))(require('./components/ThemeCreator'));
 
     const renderPlugins = (callback) => {
         return Object.keys(plugins).map((plugin) => {
@@ -165,7 +201,8 @@ const startApp = () => {
             pluginsCfg,
             userCfg,
             mapType,
-            state: state
+            state: state,
+            customStyle
         }));
         callback();
     };
@@ -177,10 +214,11 @@ const startApp = () => {
             pluginsCfg = obj.pluginsCfg;
             userCfg = obj.userCfg;
             mapType = obj.mapType || mapType;
+            customStyle = obj.customStyle || null;
             if (obj.state) {
                 store.dispatch({type: 'LOADED_STATE', state: obj.state});
             }
-            callback();
+            applyStyle(customStyle, callback);
         }
     };
 
@@ -196,15 +234,28 @@ const startApp = () => {
                         <div style={{width: "100%", height: "100%"}}>
                             <div id="plugins-list" style={{position: "absolute", zIndex: "10000", backgroundColor: "white", width: "300px", left: 0, height: "100%", overflow: "auto"}}>
                                 <h5>Configure application plugins</h5>
-                                <FormGroup bsSize="small">
-                                  <FormControl value={mapType} componentClass="select" onChange={changeMapType.bind(null, renderPage)}>
-                                      <option value="leaflet" key="leaflet">Leaflet</option>
-                                      <option value="openlayers" key="openlayer">OpenLayers</option>
-                                      <option value="cesium" key="cesium">CesiumJS</option>
-                                  </FormControl>
-                                </FormGroup>
-                                <SaveAndLoad onSave={save.bind(null, renderPage)} onLoad={load.bind(null, renderPage)}/>
                                 <ul>
+                                  <FormGroup bsSize="small">
+                                    <label>Choose a map library</label>
+                                    <FormControl value={mapType} componentClass="select" onChange={changeMapType.bind(null, renderPage)}>
+                                        <option value="leaflet" key="leaflet">Leaflet</option>
+                                        <option value="openlayers" key="openlayer">OpenLayers</option>
+                                        <option value="cesium" key="cesium">CesiumJS</option>
+                                    </FormControl>
+                                    <Theme/>
+                                    <label>Choose a theme</label>
+                                    <ThemeSwitcher style={{width: "275px", marginTop: "5px"}}/>
+                                  </FormGroup>
+                                </ul>
+                                <ul>
+                                  <ThemeCreator themeCode={customStyle || themeSample} onApplyTheme={customTheme.bind(null, renderPage)}/>
+                                </ul>
+                                <ul>
+                                  <label>Save &amp; Load</label>
+                                  <SaveAndLoad onSave={save.bind(null, renderPage)} onLoad={load.bind(null, renderPage)}/>
+                                </ul>
+                                <ul>
+                                    <label>Plugins</label>
                                     <PluginCreator pluginCode={codeSample} onApplyCode={customPlugin.bind(null, renderPage)}/>
                                     {renderPlugins(renderPage)}
                                 </ul>

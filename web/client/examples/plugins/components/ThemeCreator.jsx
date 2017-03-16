@@ -7,25 +7,25 @@
  */
 const React = require('react');
 
-const {Button, Glyphicon, Modal, Checkbox, FormGroup} = require('react-bootstrap');
+const {Button, Glyphicon, Modal, FormGroup, Checkbox} = require('react-bootstrap');
 
 const Codemirror = require('react-codemirror');
 
 
 require('codemirror/lib/codemirror.css');
 
-require('codemirror/mode/javascript/javascript');
+require('codemirror/mode/css/css');
 
-const PluginCreator = React.createClass({
+const ThemeCreator = React.createClass({
     propTypes: {
-        pluginCode: React.PropTypes.string,
+        themeCode: React.PropTypes.string,
         error: React.PropTypes.string,
-        onApplyCode: React.PropTypes.func
+        onApplyTheme: React.PropTypes.func
     },
     getDefaultProps() {
         return {
-            pluginCode: '',
-            onApplyCode: () => {}
+            themeCode: '',
+            onApplyTheme: () => {}
         };
     },
     getInitialState() {
@@ -36,13 +36,13 @@ const PluginCreator = React.createClass({
     },
     componentWillMount() {
         this.setState({
-            code: this.props.pluginCode
+            code: this.props.themeCode
         });
     },
     componentWillReceiveProps(newProps) {
-        if (newProps.pluginCode !== this.props.pluginCode) {
+        if (newProps.themeCode !== this.props.themeCode) {
             this.setState({
-                code: newProps.pluginCode
+                code: newProps.themeCode
             });
         }
     },
@@ -54,7 +54,7 @@ const PluginCreator = React.createClass({
                   disabled={true}
                   checked={true}
                   >
-                  Live edit your plugin
+                  Live edit your theme
               </Checkbox>
           </FormGroup>
             <Modal show={this.state.configVisible} bsSize="large" backdrop={false} onHide={() => {
@@ -63,11 +63,11 @@ const PluginCreator = React.createClass({
                 });
             }}>
                 <Modal.Header className="dialog-error-header-side" closeButton>
-                    <Modal.Title>Live edit your own plugin</Modal.Title>
+                    <Modal.Title>Live edit your own theme</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                   <Codemirror style={{width: '500px'}} key="code-mirror" value={this.state.code} onChange={this.updateCode} options={{
-                          mode: {name: "javascript"},
+                          mode: {name: "css"},
                           lineNumbers: true
                       }}/>
                   <Button key="apply-cfg" bsStyle="primary" onClick={this.applyCode}>Apply</Button>
@@ -82,11 +82,11 @@ const PluginCreator = React.createClass({
         });
     },
     applyCode() {
-        this.props.onApplyCode(this.state.code);
+        this.props.onApplyTheme(this.state.code);
     },
     toggleCfg() {
         this.setState({configVisible: !this.state.configVisible});
     }
 });
 
-module.exports = PluginCreator;
+module.exports = ThemeCreator;

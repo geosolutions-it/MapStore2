@@ -32,6 +32,7 @@ function init() {
         plugins: pluginsCfg,
         initialState: cfg && cfg.state && {
             defaultState: cfg.state
-        } || null
+        } || null,
+        style: cfg && cfg.customStyle
     });
 }

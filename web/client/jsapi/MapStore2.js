@@ -16,6 +16,8 @@ const {configureMap} = require('../actions/config');
 
 const url = require('url');
 
+const ThemeUtils = require('../utils/ThemeUtils');
+
 require('./mapstore2.css');
 
 const defaultConfig = {
@@ -197,6 +199,7 @@ const MapStore2 = {
         const embedded = require('../containers/Embedded');
 
         const {initialState, storeOpts} = options;
+
         const pluginsDef = require('./plugins');
         const pages = [{
             name: "embedded",
@@ -222,8 +225,17 @@ const MapStore2 = {
             appComponent: StandardRouter,
             printingEnabled: false
         };
-
-        ReactDOM.render(<StandardApp {...appConfig}/>, document.getElementById(container));
+        const className = options.className || 'ms2';
+        if (options.style) {
+            let dom = document.getElementById('custom_theme');
+            if (!dom) {
+                dom = document.createElement('style');
+                dom.id = 'custom_theme';
+                document.head.appendChild(dom);
+            }
+            ThemeUtils.renderFromLess(options.style, 'custom_theme', 'themes/default/');
+        }
+        ReactDOM.render(<StandardApp className={className + " fill"} {...appConfig}/>, document.getElementById(container));
     },
     buildPluginsCfg,
     getMapNameFromRequest,

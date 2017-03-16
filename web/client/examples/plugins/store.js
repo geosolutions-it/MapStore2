@@ -20,6 +20,7 @@ module.exports = (plugins, custom) => {
     const allReducers = combineReducers(plugins, {
         locale: require('../../reducers/locale'),
         browser: require('../../reducers/browser'),
+        theme: require('../../reducers/theme'),
         map: () => {return null; },
         mapInitialConfig: () => {return null; },
         layers: () => {return null; },
