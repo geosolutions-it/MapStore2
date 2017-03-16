@@ -9,33 +9,30 @@ const React = require('react');
 const Debug = require('../../MapStore2/web/client/components/development/Debug');
 const {connect} = require('react-redux');
 
-const Localized = require('../../MapStore2/web/client/components/I18N/Localized');
 
 const {Link} = require('react-router');
 
 const {Glyphicon} = require('react-bootstrap');
 
-const Home = (props) => (
-    <Localized messages={props.messages} locale={props.locale}>
-        <div>
-            <div className="homepage">
-                <div className="header">
-                    <div className="header-text">
-                        Title
-                    </div>
-                    <div className="header-burger">
-                        <Glyphicon glyph="glyphicon glyphicon-menu-hamburger"/>
-                    </div>
+const Home = () => (
+    (<div>
+        <div className="homepage">
+            <div className="header">
+                <div className="header-text">
+                    Title
                 </div>
-                <div className="main-home">
-                    <Link to="/main">
-                        <p><span style={{"color": "#808080", "fontSize": "16px"}}>MAIN</span></p>
-                    </Link>
+                <div className="header-burger">
+                    <Glyphicon glyph="glyphicon glyphicon-menu-hamburger"/>
                 </div>
             </div>
-            <Debug/>
+            <div className="main-home">
+                <Link to="/main">
+                    <p><span style={{"color": "#808080", "fontSize": "16px"}}>MAIN</span></p>
+                </Link>
+            </div>
         </div>
-    </Localized>
+        <Debug/>
+    </div>)
 );
 
 module.exports = connect((state) => {
