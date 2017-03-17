@@ -4,10 +4,24 @@ var LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 var ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
 var DefinePlugin = require("webpack/lib/DefinePlugin");
 var NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
+const extractThemesPlugin = require('./MapStore2/themes.js').extractThemesPlugin;
+var assign = require('object-assign');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 webpackConfig.plugins = [
+    new CopyWebpackPlugin([
+        { from: path.join(__dirname, 'node_modules', 'bootstrap', 'less'), to: path.join(__dirname, "web", "client", "dist", "bootstrap", "less") }
+    ]),
     new LoaderOptionsPlugin({
-        debug: false
+        debug: false,
+        options: {
+            postcss: {
+                plugins: [
+                  require('postcss-prefix-selector')({prefix: '.__PROJECTNAME__', exclude: ['.__PROJECTNAME__']})
+                ]
+            },
+            context: __dirname
+        }
     }),
     new DefinePlugin({
         "__DEVTOOLS__": false
@@ -27,7 +41,8 @@ webpackConfig.plugins = [
             compress: {warnings: false},
             mangle: true
         }
-    })
+    }),
+    extractThemesPlugin
 ];
 webpackConfig.devtool = undefined;
 
