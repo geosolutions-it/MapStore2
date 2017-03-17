@@ -40,7 +40,7 @@ const defaultConfig = {
             "group": "background",
             "visibility": true
         },
-          {
+        {
             "type": "tileprovider",
             "title": "NASAGIBS Night 2012",
             "provider": "NASAGIBS.ViirsEarthAtNight2012",
@@ -48,54 +48,54 @@ const defaultConfig = {
             "source": "nasagibs",
             "group": "background",
             "visibility": false
-          },
-          {
-                    "type": "wms",
-            "url": "http://213.215.135.196/reflector/open/service",
+        },
+        {
+            "type": "wms",
+            "url": "http://www.realvista.it/reflector/open/service",
             "visibility": false,
-                    "title": "e-Geos Ortofoto RealVista 1.0",
-                    "name": "rv1",
-                    "group": "background",
-                    "format": "image/png"
-                },
-          {
-                    "type": "wms",
-            "url": "http://demo.geo-solutions.it/geoserver/wms",
+            "title": "e-Geos Ortofoto RealVista 1.0",
+            "name": "rv1",
+            "group": "background",
+            "format": "image/jpeg"
+        },
+        {
+            "type": "wms",
+            "url": "https://demo.geo-solutions.it/geoserver/wms",
             "visibility": false,
-                    "title": "Natural Earth",
-                    "name": "sde:NE2_HR_LC_SR_W_DR",
-                    "group": "background",
-                    "format": "image/png"
-                },
-          {
-                    "type": "wms",
-            "url": "http://demo.geo-solutions.it/geoserver/wms",
+            "title": "Natural Earth",
+            "name": "sde:NE2_HR_LC_SR_W_DR",
+            "group": "background",
+            "format": "image/png"
+        },
+        {
+            "type": "wms",
+            "url": "https://demo.geo-solutions.it/geoserver/wms",
             "visibility": false,
-                    "title": "Hypsometric",
-                    "name": "sde:HYP_HR_SR_OB_DR",
-                    "group": "background",
-                    "format": "image/png"
-                },
-                {
-                    "type": "wms",
-            "url": "http://demo.geo-solutions.it/geoserver/wms",
+            "title": "Hypsometric",
+            "name": "sde:HYP_HR_SR_OB_DR",
+            "group": "background",
+            "format": "image/png"
+        },
+        {
+            "type": "wms",
+            "url": "https://demo.geo-solutions.it/geoserver/wms",
             "visibility": false,
-                    "title": "Gray Earth",
-                    "name": "sde:GRAY_HR_SR_OB_DR",
-                    "group": "background",
-                    "format": "image/png"
-                },
-          {
-                    "type": "wms",
-            "url": "http://demo.geo-solutions.it/geoserver/wms",
+            "title": "Gray Earth",
+            "name": "sde:GRAY_HR_SR_OB_DR",
+            "group": "background",
+            "format": "image/png"
+        },
+        {
+            "type": "wms",
+            "url": "https://demo.geo-solutions.it/geoserver/wms",
             "visibility": true,
             "opacity": 0.5,
-                    "title": "Weather data",
-                    "name": "nurc:Arc_Sample",
-                    "group": "Meteo",
-                    "format": "image/png"
-                },
-          {
+            "title": "Weather data",
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png"
+        },
+        {
             "type": "tileprovider",
             "title": "OpenTopoMap",
             "provider": "OpenTopoMap",
@@ -103,7 +103,7 @@ const defaultConfig = {
             "source": "OpenTopoMap",
             "group": "background",
             "visibility": false
-          }]
+        }]
     }
 };
 
