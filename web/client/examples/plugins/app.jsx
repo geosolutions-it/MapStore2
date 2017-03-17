@@ -242,7 +242,7 @@ const startApp = () => {
                                         <option value="openlayers" key="openlayer">OpenLayers</option>
                                         <option value="cesium" key="cesium">CesiumJS</option>
                                     </FormControl>
-                                    <Theme/>
+                                    <Theme path="../../dist/themes"/>
                                     <label>Choose a theme</label>
                                     <ThemeSwitcher style={{width: "275px", marginTop: "5px"}}/>
                                   </FormGroup>
@@ -260,7 +260,7 @@ const startApp = () => {
                                     {renderPlugins(renderPage)}
                                 </ul>
                             </div>
-                            <div style={{position: "absolute", right: 0, left: "300px", height: "100%"}}>
+                            <div style={{position: "absolute", right: 0, left: "300px", height: "100%", overflow: "hidden"}}>
                                 <PluginsContainer params={{mapType}} plugins={PluginsUtils.getPlugins(getPlugins())} pluginsConfig={getPluginsConfiguration()} mode="standard"/>
                             </div>
                             <Debug/>

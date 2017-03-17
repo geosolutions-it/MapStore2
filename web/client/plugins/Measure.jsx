@@ -7,6 +7,7 @@
  */
 const React = require('react');
 const {connect} = require('react-redux');
+const {Glyphicon} = require('react-bootstrap');
 
 const Message = require('./locale/Message');
 
@@ -53,7 +54,7 @@ module.exports = {
             wrap: true,
             help: <Message msgId="helptexts.measureComponent"/>,
             tooltip: "measureComponent.tooltip",
-            icon: <img src={lineRuleIcon} />,
+            icon: <Glyphicon glyph="1-stilo"/>,
             title: "measureComponent.title",
             priority: 1
         },
