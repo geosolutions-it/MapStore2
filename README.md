@@ -83,7 +83,7 @@ Build the deployable war:
 
 Deploy the generated mapstore.war file (in web/target) to your favourite J2EE container (e.g. Tomcat).
 
-Read more on the [documentation site](https://geosolutions-it.github.io/MapStore2/).
+Read more on the [documentation site](http://dev.mapstore2.geo-solutions.it/mapstore/docs/).
 
 Professional Support
 ---------------------
