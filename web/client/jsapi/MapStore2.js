@@ -18,6 +18,8 @@ const url = require('url');
 
 const ThemeUtils = require('../utils/ThemeUtils');
 
+const assign = require('object-assign');
+
 require('./mapstore2.css');
 
 const defaultConfig = {
@@ -225,7 +227,6 @@ const MapStore2 = {
             appComponent: StandardRouter,
             printingEnabled: false
         };
-        const className = options.className || 'ms2';
         if (options.style) {
             let dom = document.getElementById('custom_theme');
             if (!dom) {
@@ -235,7 +236,13 @@ const MapStore2 = {
             }
             ThemeUtils.renderFromLess(options.style, 'custom_theme', 'themes/default/');
         }
-        ReactDOM.render(<StandardApp className={className + " fill"} {...appConfig}/>, document.getElementById(container));
+        const defaultThemeCfg = {
+          theme: 'default',
+          prefixContainer: '#' + container
+        };
+
+        const themeCfg = options.theme && assign({}, defaultThemeCfg, options.theme) || defaultThemeCfg;
+        ReactDOM.render(<StandardApp themeCfg={themeCfg} className="fill" {...appConfig}/>, document.getElementById(container));
     },
     buildPluginsCfg,
     getMapNameFromRequest,
