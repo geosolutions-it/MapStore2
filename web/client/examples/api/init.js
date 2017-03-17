@@ -33,6 +33,9 @@ function init() {
         initialState: cfg && cfg.state && {
             defaultState: cfg.state
         } || null,
-        style: cfg && cfg.customStyle
+        style: cfg && cfg.customStyle,
+        theme: {
+            path: '../../dist/themes'
+        }
     });
 }

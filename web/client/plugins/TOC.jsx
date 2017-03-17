@@ -288,7 +288,7 @@ module.exports = {
             tooltip: "layers",
             wrap: true,
             title: 'layers',
-            icon: <img src={layersIcon}/>,
+            icon: <Glyphicon glyph="1-layer"/>,
             priority: 1
         },
         DrawerMenu: {

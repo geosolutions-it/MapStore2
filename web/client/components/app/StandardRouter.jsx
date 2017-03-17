@@ -23,14 +23,19 @@ const StandardRouter = React.createClass({
         plugins: React.PropTypes.object,
         locale: React.PropTypes.object,
         pages: React.PropTypes.array,
-        className: React.PropTypes.string
+        className: React.PropTypes.string,
+        themeCfg: React.PropTypes.object
     },
     getDefaultProps() {
         return {
             plugins: {},
             locale: {messages: {}, current: 'en-US'},
             pages: [],
-            className: "ms2 fill"
+            className: "fill",
+            themeCfg: {
+                theme: 'default',
+                path: 'dist/themes'
+            }
         };
     },
     renderPages() {
@@ -47,7 +52,7 @@ const StandardRouter = React.createClass({
         return (
 
             <div className={this.props.className}>
-                <Theme/>
+                <Theme {...this.props.themeCfg}/>
                 <Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                     <Router history={hashHistory}>
                         {this.renderPages()}

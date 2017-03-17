@@ -88,3 +88,7 @@ html, body, #container, #map {
 #plugins-list .form-group {
     padding-left: 0;
 }
+
+#plugins-list {
+  overflow-x: hidden;
+}
