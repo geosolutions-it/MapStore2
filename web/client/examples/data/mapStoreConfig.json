@@ -17,7 +17,7 @@
 			"ptype": "gxp_olsource"
 		},
 		"egeos":{
-			"url":"http://213.215.135.196/reflector/open/service?request=getCapabilities"
+			"url":"http://www.realvista.it/reflector/open/service?request=getCapabilities"
 		},
     "demo":{
         "url":"http://demo.geo-solutions.it/geoserver/wms"
@@ -45,7 +45,7 @@
 				"title": "e-Geos Ortofoto RealVista 1.0",
 				"name": "rv1",
 				"group": "background",
-				"format": "image/png"
+				"format": "image/jpeg"
 			},
       {
 				"source": "demo",

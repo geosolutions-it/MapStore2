@@ -33,7 +33,7 @@ L.TileLayer.MultipleUrlWMS = L.TileLayer.WMS.extend({
 
         for (let i in options) {
             // all keys that are not TileLayer options go to WMS params
-            if (!this.options.hasOwnProperty(i) && i !== 'crs') {
+            if (!this.options.hasOwnProperty(i) && i.toUpperCase() !== 'CRS') {
                 wmsParams[i] = options[i];
             }
         }

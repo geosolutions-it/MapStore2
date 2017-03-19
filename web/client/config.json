@@ -53,12 +53,12 @@
       },
       {
 				"type": "wms",
-        "url":"http://213.215.135.196/reflector/open/service",
+        "url":"http://www.realvista.it/reflector/open/service",
         "visibility": false,
 				"title": "e-Geos Ortofoto RealVista 1.0",
 				"name": "rv1",
 				"group": "background",
-				"format": "image/png"
+				"format": "image/jpeg"
 			},
       {
 				"type": "wms",
