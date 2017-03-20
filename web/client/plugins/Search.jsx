@@ -192,7 +192,7 @@ module.exports = {
             priority: 1
         }
     }),
-    epics: [searchEpic, searchItemSelected],
+    epics: {searchEpic, searchItemSelected},
     reducers: {
         search: require('../reducers/search'),
         mapInfo: require('../reducers/mapInfo')
