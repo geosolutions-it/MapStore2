@@ -115,14 +115,14 @@ var ConfigUtils = {
     convertFromLegacy: function(config) {
         var mapConfig = config.map;
         var sources = config.gsSources || config.sources;
-        var layers = mapConfig.layers;
+        var layers = mapConfig.layers.filter(layer => sources[layer.source]);
         var latLng = ConfigUtils.getCenter(mapConfig.center, mapConfig.projection);
         var zoom = mapConfig.zoom;
         var maxExtent = mapConfig.maxExtent || mapConfig.extent;
 
         // setup layers and sources with defaults
         this.setupSources(sources, config.defaultSourceType);
-        this.setupLayers(layers, sources, ["gxp_osmsource", "gxp_wmssource", "gxp_googlesource", "gxp_bingsource", "gxp_mapquestsource"]);
+        this.setupLayers(layers, sources, ["gxp_osmsource", "gxp_wmssource", "gxp_googlesource", "gxp_bingsource", "gxp_mapquestsource", "gxp_olsource"]);
         return ConfigUtils.normalizeConfig({
             center: latLng,
             zoom: zoom,
@@ -183,7 +183,10 @@ var ConfigUtils = {
         for (i = 0; i < layers.length; i++) {
             layer = layers[i];
             source = sources[layer.source];
-            ConfigUtils.copySourceOptions(layer, source);
+            if (source) {
+                ConfigUtils.copySourceOptions(layer, source);
+            }
+
             let type = source.ptype;
             if (type) {
                 layer.type = type.replace(/^gxp_(.*)source$/i, "$1");
@@ -191,7 +194,7 @@ var ConfigUtils = {
                 layer.type = 'unknown';
             }
             if (layer) {
-                if (supportedSourceTypes.indexOf(source.ptype) >= 0) {
+                if (supportedSourceTypes.indexOf(source && source.ptype) >= 0) {
                     if (layer.group === this.backgroundGroup) {
                         // force to false if undefined
                         layer.visibility = layer.visibility || false;
