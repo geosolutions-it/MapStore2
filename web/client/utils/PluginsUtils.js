@@ -120,7 +120,7 @@ const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, load
 const getReducers = (plugins) => Object.keys(plugins).map((name) => plugins[name].reducers)
                             .reduce((previous, current) => assign({}, previous, current), {});
 const getEpics = (plugins) => Object.keys(plugins).map((name) => plugins[name].epics)
-                            .reduce((previous = [], current = []) => [ ...previous, ...current], []);
+                            .reduce((previous, current) => assign({}, previous, current), {});
 const PluginsUtils = {
     combineReducers: (plugins, reducers) => {
         const pluginsReducers = getReducers(plugins);
@@ -128,7 +128,7 @@ const PluginsUtils = {
     },
     combineEpics: (plugins, epics = []) => {
         const pluginEpics = getEpics(plugins);
-        return combineEpics(...[ ...pluginEpics, ...epics]);
+        return combineEpics(...[ ...Object.keys(pluginEpics).map(k => pluginEpics[k]), ...epics]);
     },
     getReducers,
     filterState,
