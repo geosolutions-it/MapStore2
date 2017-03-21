@@ -33,7 +33,7 @@ const sampleCSWRecord = {
             TYPE_NAME: "DC_1_1.URI",
             protocol: "image/png",
             name: "thumbnail",
-            value: "img.jpg"
+            value: "http://sample.com/img.jpg"
         }]
     }
 };
@@ -57,7 +57,7 @@ const sampleCSWRecord2 = {
             value: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&layers=workspace:layername"
         }, {
             scheme: "WWW:LINK-1.0-http--image-thumbnail",
-            value: "img.jpg"
+            value: "http://sample.com/img.jpg"
         }]
     }
 };
@@ -66,7 +66,7 @@ const sampleRecord = {
     title: "sample title",
     tags: ["subject1", "subject2"],
     description: "sample abstract",
-    thumbnail: "http:sample.com/img.jpg",
+    thumbnail: "http://sample.com/img.jpg",
     boundingBox: {
         extent: [10.686,
                 44.931,
@@ -87,7 +87,7 @@ describe('Test csw to catalog selector', () => {
         const testState = {
             catalog: {
                 searchOptions: {
-                    catalogURL: "http:sample.com"
+                    catalogURL: "http://sample.com"
                 },
                 result: {
                     records: [sampleCSWRecord],
@@ -106,7 +106,7 @@ describe('Test csw to catalog selector', () => {
         const testState = {
             catalog: {
                 searchOptions: {
-                    catalogURL: "http:sample.com"
+                    catalogURL: "http://sample.com"
                 },
                 result: {
                     records: [sampleCSWRecord2],
