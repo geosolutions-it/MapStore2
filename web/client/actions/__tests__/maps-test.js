@@ -15,7 +15,12 @@ var {
     SAVE_MAP, saveMap,
     DISPLAY_METADATA_EDIT, onDisplayMetadataEdit,
     RESET_UPDATING, resetUpdating,
-    THUMBNAIL_ERROR, thumbnailError
+    THUMBNAIL_ERROR, thumbnailError,
+    RESET_CURRENT_MAP, resetCurrentMap,
+    MAPS_SEARCH_TEXT_CHANGED, mapsSearchTextChanged,
+    MAPS_LIST_LOAD_ERROR, loadError,
+    MAP_ERROR, mapError,
+    MAP_METADATA_UPDATED, mapMetadataUpdated
 } = require('../maps');
 
 describe('Test correctness of the maps actions', () => {
@@ -88,5 +93,32 @@ describe('Test correctness of the maps actions', () => {
         expect(retval.type).toBe(SAVE_MAP);
         expect(retval.resourceId).toBe(resourceId);
         expect(retval.map).toBe(map);
+    });
+    it('resetCurrentMap', () => {
+        const a = resetCurrentMap();
+        expect(a.type).toBe(RESET_CURRENT_MAP);
+    });
+    it('mapsSearchTextChanged', () => {
+        const a = mapsSearchTextChanged("TEXT");
+        expect(a.type).toBe(MAPS_SEARCH_TEXT_CHANGED);
+        expect(a.text).toBe("TEXT");
+    });
+    it('loadError', () => {
+        const a = loadError();
+        expect(a.type).toBe(MAPS_LIST_LOAD_ERROR);
+    });
+    it('mapError', () => {
+        const a = mapError("error");
+        expect(a.type).toBe(MAP_ERROR);
+        expect(a.error).toBe("error");
+    });
+    it('mapMetadataUpdated', () => {
+        const a = mapMetadataUpdated("resourceId", "newName", "newDescription", "result", "error");
+        expect(a.type).toBe(MAP_METADATA_UPDATED);
+        expect(a.resourceId).toBe("resourceId");
+        expect(a.newName).toBe("newName");
+        expect(a.newDescription).toBe("newDescription");
+        expect(a.result).toBe("result");
+        expect(a.error).toBe("error");
     });
 });
