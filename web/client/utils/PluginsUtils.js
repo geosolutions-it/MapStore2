@@ -122,6 +122,12 @@ const getReducers = (plugins) => Object.keys(plugins).map((name) => plugins[name
 const getEpics = (plugins) => Object.keys(plugins).map((name) => plugins[name].epics)
                             .reduce((previous, current) => assign({}, previous, current), {});
 const PluginsUtils = {
+    /**
+     * Produces the reducers from the plugins, combined with other plugins
+     * @param {array} plugins the plugins
+     * @param {array} reducers other plugins
+     * @returns {function} a reducer made from the plugins' reducers and the reducers passed as 2nd parameter
+     */
     combineReducers: (plugins, reducers) => {
         const pluginsReducers = getReducers(plugins);
         return combineReducers(assign({}, reducers, pluginsReducers));
