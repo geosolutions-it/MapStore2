@@ -234,53 +234,46 @@ const CoordinatesUtils = {
         }
         return newExtent;
     },
+    /**
+     * Calculates the extent for the geoJSON passed. It used a small buffer for points.
+     * Like turf/bbox but works only with simple geometries.
+     * @deprecated  We may replace it with turf/bbox + turf/buffer in the future, so using it with geometry is discouraged
+     * @param {geoJSON|geometry} GeoJSON or geometry
+     * @return {array} extent of the geoJSON
+     */
     getGeoJSONExtent: function(geoJSON) {
         let newExtent = [Infinity, Infinity, -Infinity, -Infinity];
-
+        const reduceCollectionExtent = (extent, collectionElement) => {
+            let ext = this.getGeoJSONExtent(collectionElement);
+            if (this.isValidExtent(ext)) {
+                return this.extendExtent(ext, extent);
+            }
+        };
         if (geoJSON.coordinates) {
-            if (geoJSON.type !== "Point" && geoJSON.type !== "GeometryCollection") {
-                const flatCoordinates = chunk(flattenDeep(geoJSON.coordinates), 2);
-                return flatCoordinates.reduce((extent, point) => {
-                    return [
-                        (point[0] < extent[0]) ? point[0] : extent[0],
-                        (point[1] < extent[1]) ? point[1] : extent[1],
-                        (point[0] > extent[2]) ? point[0] : extent[2],
-                        (point[1] > extent[3]) ? point[1] : extent[3]
-                    ];
-                }, newExtent);
-            }else if (geoJSON.type === "Point") {
+            if (geoJSON.type === "Point") {
                 let point = geoJSON.coordinates;
                 newExtent[0] = point[0] - point[0] * 0.01;
                 newExtent[1] = point[1] - point[1] * 0.01;
                 newExtent[2] = point[0] + point[0] * 0.01;
                 newExtent[3] = point[1] + point[1] * 0.01;
-            }else if (geoJSON.type === "GeometryCollection") {
-                return geoJSON.geometies.reduce((extent, geometry) => {
-                    let ext = this.getGeoJSONExtent(geometry);
-                    if (this.isValidExtent(ext)) {
-                        return [
-                            (ext[0] < extent[0]) ? ext[0] : extent[0],
-                            (ext[1] < extent[1]) ? ext[1] : extent[1],
-                            (ext[2] > extent[2]) ? ext[2] : extent[2],
-                            (ext[3] > extent[3]) ? ext[3] : extent[3]
-                        ];
-                    }
-                }, newExtent);
             }
+            // other kinds of geometry
+            const flatCoordinates = chunk(flattenDeep(geoJSON.coordinates), 2);
+            return flatCoordinates.reduce((extent, point) => {
+                return [
+                    (point[0] < extent[0]) ? point[0] : extent[0],
+                    (point[1] < extent[1]) ? point[1] : extent[1],
+                    (point[0] > extent[2]) ? point[0] : extent[2],
+                    (point[1] > extent[3]) ? point[1] : extent[3]
+                ];
+            }, newExtent);
+
+        } else if (geoJSON.type === "GeometryCollection") {
+            let geometries = geoJSON.geometries;
+            return geometries.reduce(reduceCollectionExtent, newExtent);
         } else if (geoJSON.type) {
             if (geoJSON.type === "FeatureCollection") {
-                return geoJSON.features.reduce((extent, feature) => {
-                    const ext = this.getGeoJSONExtent(feature);
-                    if (this.isValidExtent(ext)) {
-                        return [
-                            (ext[0] < extent[0]) ? ext[0] : extent[0],
-                            (ext[1] < extent[1]) ? ext[1] : extent[1],
-                            (ext[2] > extent[2]) ? ext[2] : extent[2],
-                            (ext[3] > extent[3]) ? ext[3] : extent[3]
-                        ];
-                    }
-                    return extent;
-                }, newExtent);
+                return geoJSON.features.reduce(reduceCollectionExtent, newExtent);
             } else if (geoJSON.type === "Feature" && geoJSON.geometry) {
                 return this.getGeoJSONExtent(geoJSON.geometry);
             }
