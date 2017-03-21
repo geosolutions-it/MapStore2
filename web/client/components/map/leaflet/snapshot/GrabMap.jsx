@@ -143,24 +143,40 @@ let GrabLMap = React.createClass({
         let objectPanes = mapPane && mapPane.getElementsByClassName("leaflet-objects-pane");
         let objectDiv = objectPanes && objectPanes[0];
         let svgs = objectDiv && objectDiv.getElementsByTagName("svg");
-        let svg = svgs && svgs[0];
+        let svg = svgs && svgs[0] && svgs[0].cloneNode(true);
+        let svgOffsetX;
+        let svgOffsetY;
         let svgH;
         let svgW;
         let svgString;
         if (svg && svg.outerHTML) {
+            svgOffsetX = svgs[0] ? svgs[0].getBoundingClientRect().left : 0;
+            svgOffsetY = svgs[0] ? svgs[0].getBoundingClientRect().top : 0;
             svgString = svgs[0].outerHTML;
             svgW = svg.getAttribute("width");
             svgH = svg.getAttribute("height");
+            svg.setAttribute("style", "");
         }
         let left = 0;
         if (leftString) {
             left = parseInt( leftString.replace('px', ''), 10);
         }
 
-        const tilePane = this.mapDiv.getElementsByClassName("leaflet-tile-pane");
-        if (tilePane && tilePane.length > 0) {
-            let layers = [].slice.call(tilePane[0].getElementsByClassName("leaflet-layer"), 0);
-            layers.sort(function compare(a, b) {
+        // get pan position from translate 3d
+        let leafletPane = this.mapDiv.getElementsByClassName("leaflet-map-pane");
+        let panPosition = leafletPane && leafletPane[0] && leafletPane[0].style && leafletPane[0].style.transform ? leafletPane[0].style.transform.replace(/\(|\)|translate3d/g, '').split('px, ') : ['0', '0'];
+        panPosition = [Number.parseFloat(panPosition[0]), Number.parseFloat(panPosition[1])];
+        let tilePane = this.mapDiv.getElementsByClassName("leaflet-tile-pane");
+        // clone to change style attributes
+        let tilePaneClone = tilePane && tilePane[0].cloneNode(true);
+        // bring back to hide
+        tilePaneClone.style.zIndex = -9999;
+        // append to prevent html2canvas errors
+        document.body.appendChild(tilePaneClone);
+        tilePaneClone.style.overflow = 'hidden';
+        if (tilePaneClone) {
+            let layers = [].slice.call(tilePaneClone.getElementsByClassName("leaflet-layer"), 0);
+            layers.sort(function(a, b) {
                 return Number.parseFloat(a.style.zIndex) - Number.parseFloat(b.style.zIndex);
             });
             let canvas = this.getCanvas();
@@ -169,9 +185,25 @@ let GrabLMap = React.createClass({
                 return;
             }
             context.clearRect(0, 0, canvas.width, canvas.height);
+            // remove transform style from every tile images and add left top attributes
+            let resetLayerStyles = function(l) {
+                for (let i = 0; i < l.children.length; i++) {
+                    if (l.children[i]) {
+                        for (let j = 0; j < l.children[i].children.length; j++) {
+                            if (l.children[i].children[j] && l.children[i].children[j].tagName === 'IMG') {
+                                l.children[i].children[j].style.position = 'absolute';
+                                l.children[i].children[j].style.left = l.children[i].children[j].getBoundingClientRect().left + left + panPosition[0] + 'px';
+                                l.children[i].children[j].style.top = l.children[i].children[j].getBoundingClientRect().top + panPosition[1] + 'px';
+                                l.children[i].children[j].style.transform = 'none';
+                            }
+                        }
+                    }
+                }
+            };
             let queue = layers.map((l) => {
                 let newCanvas = this.refs.canvas.cloneNode();
                 newCanvas.width = newCanvas.width + left;
+                resetLayerStyles(l);
                 return html2canvas(l, {
                         // you have to provide a canvas to avoid html2canvas to crop the image
                         canvas: newCanvas,
@@ -203,6 +235,7 @@ let GrabLMap = React.createClass({
 
                 });
                 let finialize = () => {
+                    document.body.removeChild(tilePaneClone);
                     // TODO parse map-div transform to shift all markers toghether properly
                     let markers = this.mapDiv.getElementsByClassName("leaflet-marker-pane");
                     if ( markers && markers.length > 0) {
@@ -231,13 +264,20 @@ let GrabLMap = React.createClass({
 
                 if (svg) {
                     let svgCanv = document.createElement('canvas');
-                    svgCanv.setAttribute("width", svgW);
+                    svgOffsetX = svgOffsetX ? svgOffsetX : 0;
+                    svgOffsetY = svgOffsetY ? svgOffsetY : 0;
+                    svgCanv.setAttribute("width", Number.parseFloat(svgW) + left);
                     svgCanv.setAttribute("height", svgH);
                     canvg(svgCanv, svgString, {
+                        ignoreMouse: true,
+                        ignoreAnimation: true,
+                        ignoreDimensions: true,
                         ignoreClear: true,
+                        offsetX: svgOffsetX,
+                        offsetY: svgOffsetY,
                         renderCallback: () => {
                             let ctx = finalCanvas.getContext('2d');
-                            ctx.drawImage(svgCanv, -1 * (svgW - finalCanvas.width) / 2, -1 * (svgH - finalCanvas.height) / 2);
+                            ctx.drawImage(svgCanv, -1 * left, 0);
                             finialize();
                         }
                     });
