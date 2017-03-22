@@ -74,7 +74,7 @@ const ToggleButton = require('./searchbar/ToggleButton');
  * @memberof plugins
  * @prop {object} cfg.searchOptions initial search options
  * @prop {searchService[]} cfg.searchOptions.services a list of services to perform search.
- * a **nominaim** search service look like this:
+ * a **nominatim** search service look like this:
  * ```
  * {
  *  "type": "nominatim",

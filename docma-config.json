@@ -67,6 +67,8 @@
                         { "label": "Reducers", "href": "api/reducers" },
                         { "label": "Epics", "href": "api/epics" },
                         { "separator": true },
+                        { "label": "JavaScript API", "href": "api/jsapi" },
+                        { "separator": true },
                         { "label": "Plugins", "href": "api/plugins" }
 
                     ]
@@ -110,6 +112,7 @@
            "actions" : ["web/client/actions/search.js"],
            "reducers" : ["web/client/reducers/search.js"],
             "epics": "web/client/epics/search.js",
+            "jsapi": "web/client/jsapi/MapStore2.js",
             "plugins": [
                 "web/client/plugins/Search.jsx",
                 "web/client/plugins/BackgroundSwitcher.jsx",
@@ -120,12 +123,7 @@
         "./docs/**/*md",
         {
             "readme": "./README.md",
-            "site": "./docs/index.md",
-            "developer-guide": "./docs/developer-guide/index.md",
-            "plugins-architecture": "./docs/developer-guide/plugins-architecture.md",
-            "building-and-developing": "./docs/developer-guide/plugins-architecture.md",
-            "plugins-documentation": "./docs/developer-guide/plugins-documentation.md",
-            "project-creation-script": "./docs/developer-guide/project-creation-script.md"
+            "site": "./docs/index.md"
         }
     ]
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -196,7 +196,61 @@ function buildPluginsCfg(plugins, cfg) {
     };
 }
 
+const actionListeners = {};
+let stateChangeListeners = [];
+let app;
+
+/**
+ * MapStore2 JavaScript API. Allows embedding MapStore2 functionalities into
+ * a standard HTML page.
+ * @class
+ */
 const MapStore2 = {
+    /**
+     * Instantiates an embedded MapStore2 application in the given container.
+     * @memberof MapStore2
+     * @static
+     * @param {string} container id of the DOM element that should contain the embedded MapStore2
+     * @param {object} options set of options of the embedded app
+     *
+     * The options object can contain the following properties, to configure the app UI and state:
+     *  * **plugins**: list of plugins (and the related configuration) to be included in the app
+     *    look at [Plugins documentation](./plugins-documentation) for further details
+     *  * **config**: map configuration object for the application (look at [Map Configuration](./maps-configuration) for details)
+     *  * **initialState**: allows setting the initial application state (look at [State Configuration](./app-state-configuration) for details)
+     *
+     * Styling can be configured either using a **theme**, or a complete custom **less stylesheet**, using the
+     * following options properties:
+     *  * **style**: less style to be applied
+     *  * **theme**: theme configuration options:
+     *    * path: path/url of the themes folder related to the current page
+     *    * theme: theme name to be used
+     *
+     * ```javascript
+     * {
+     *      plugins: ['Map', 'ZoomIn', 'ZoomOut'],
+     *      config: {
+     *          map: {
+     *              ...
+     *          }
+     *      },
+     *      initialState: {
+     *          defaultState: {
+     *              ...
+     *          }
+     *      },
+     *      style: '<custom style>',
+     *      theme: {
+     *          theme: 'mytheme',
+     *          path: 'dist/themes'
+     *      }
+     * }
+     * ```
+     * @example
+     * MapStore2.create('container', {
+     *      plugins: ['Map']
+     * });
+     */
     create(container, options) {
         const embedded = require('../containers/Embedded');
 
@@ -220,7 +274,7 @@ const MapStore2 = {
         const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {});
         const initialActions = options.initialState ? [] : [configureMap.bind(null, options.config || defaultConfig)];
         const appConfig = {
-            storeOpts,
+            storeOpts: assign({}, storeOpts, {notify: true}),
             appStore,
             pluginsDef,
             initialActions,
@@ -242,11 +296,84 @@ const MapStore2 = {
         };
 
         const themeCfg = options.theme && assign({}, defaultThemeCfg, options.theme) || defaultThemeCfg;
-        ReactDOM.render(<StandardApp themeCfg={themeCfg} className="fill" {...appConfig}/>, document.getElementById(container));
+        app = ReactDOM.render(<StandardApp themeCfg={themeCfg} className="fill" {...appConfig}/>, document.getElementById(container));
+        app.store.addActionListener((action) => {
+            (actionListeners[action.type] || []).concat(actionListeners['*'] || []).forEach((listener) => {
+                listener.call(null, action);
+            });
+        });
+        app.store.subscribe(() => {
+            stateChangeListeners.forEach(({listener, selector}) => {
+                listener.call(null, selector(app.store.getState()));
+            });
+        });
     },
     buildPluginsCfg,
     getMapNameFromRequest,
-    loadConfigFromStorage
+    loadConfigFromStorage,
+    /**
+     * Adds a listener that will be notified of all the MapStore2 events (**actions**), or only some of them.
+     *
+     * @memberof MapStore2
+     * @static
+     * @param {string} type type of actions to be captured (* for all)
+     * @param {function} listener function to be called for each launched action; it will receive
+     *  the action as the only argument
+     * @example
+     * MapStore2.onAction('CHANGE_MAP_VIEW', function(action) {
+     *      console.log(action.zoom);
+     * });
+     */
+    onAction: (type, listener) => {
+        const listeners = actionListeners[type] || [];
+        listeners.push(listener);
+        actionListeners[type] = listeners;
+    },
+    /**
+     * Removes an action listener.
+     *
+     * @memberof MapStore2
+     * @static
+     * @param {string} type type of actions that is captured by the listener (* for all)
+     * @param {function} listener listener to be removed
+     * @example
+     * MapStore2.offAction('CHANGE_MAP_VIEW', listener);
+     */
+    offAction: (type, listener) => {
+        const listeners = (actionListeners[type] || []).filter((l) => l !== listener);
+        actionListeners[type] = listeners;
+    },
+    /**
+     * Adds a listener that will be notified of each state update.
+     *
+     * @memberof MapStore2
+     * @static
+     * @param {function} listener function to be called for each state udpate; it will receive
+     *  the new state as the only argument
+     * @param {function} [selector] optional function that will produce a partial/derived state
+     * from the global state before calling the listeners
+     * @example
+     * MapStore2.onStateChange(function(map) {
+     *      console.log(map.zoom);
+     * }, function(state) {
+     *      return (state.map && state.map.present) || state.map || {};
+     * });
+     */
+    onStateChange: (listener, selector = (state) => state) => {
+        stateChangeListeners.push({listener, selector});
+    },
+    /**
+     * Removes a state listener.
+     *
+     * @memberof MapStore2
+     * @static
+     * @param {function} listener listener to be removed
+     * @example
+     * MapStore2.offStateChange(listener);
+     */
+    offStateChange: (listener) => {
+        stateChangeListeners = stateChangeListeners.filter((l) => l !== listener);
+    }
 };
 
 if (!global.Intl ) {

@@ -28,7 +28,6 @@ function init() {
     /*eslint-disable */
     pluginsCfg = cfg && MapStore2.buildPluginsCfg(cfg.pluginsCfg.standard, cfg.userCfg) || embeddedPlugins;
     MapStore2.create('container', {
-    /*eslint-enable */
         plugins: pluginsCfg,
         initialState: cfg && cfg.state && {
             defaultState: cfg.state
@@ -38,4 +37,13 @@ function init() {
             path: '../../dist/themes'
         }
     });
+    MapStore2.onAction('CHANGE_MAP_VIEW', function(action) {
+        console.log('ZOOM: ' + action.zoom);
+    });
+    MapStore2.onStateChange(function(map) {
+        console.log('STATE ZOOM: ' + map.zoom);
+    }, function(state) {
+        return (state.map && state.map.present) || state.map || {}
+    });
+    /*eslint-enable */
 }
