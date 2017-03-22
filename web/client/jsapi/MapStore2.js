@@ -12,7 +12,7 @@ const StandardApp = require('../components/app/StandardApp');
 const LocaleUtils = require('../utils/LocaleUtils');
 const {connect} = require('react-redux');
 
-const {configureMap} = require('../actions/config');
+const {configureMap, loadMapConfig} = require('../actions/config');
 
 const url = require('url');
 
@@ -169,7 +169,7 @@ function loadConfigFromStorage(name = 'mapstore.embedded') {
     return null;
 }
 
-function getMapNameFromRequest(paramName = 'map') {
+function getParamFromRequest(paramName) {
     const urlQuery = url.parse(window.location.href, true).query;
     return urlQuery[paramName] || null;
 }
@@ -200,6 +200,17 @@ const actionListeners = {};
 let stateChangeListeners = [];
 let app;
 
+const getInitialActions = (options) => {
+    if (!options.initialState) {
+        if (options.configUrl) {
+            return [loadMapConfig.bind(null, options.configUrl || defaultConfig)];
+        }
+        return [configureMap.bind(null, options.config || defaultConfig)];
+    }
+    return [];
+};
+
+
 /**
  * MapStore2 JavaScript API. Allows embedding MapStore2 functionalities into
  * a standard HTML page.
@@ -217,6 +228,7 @@ const MapStore2 = {
      *  * **plugins**: list of plugins (and the related configuration) to be included in the app
      *    look at [Plugins documentation](./plugins-documentation) for further details
      *  * **config**: map configuration object for the application (look at [Map Configuration](./maps-configuration) for details)
+     *  * **configUrl**: map configuration url for the application (look at [Map Configuration](./maps-configuration) for details)
      *  * **initialState**: allows setting the initial application state (look at [State Configuration](./app-state-configuration) for details)
      *
      * Styling can be configured either using a **theme**, or a complete custom **less stylesheet**, using the
@@ -234,6 +246,7 @@ const MapStore2 = {
      *              ...
      *          }
      *      },
+     *      configUrl: '...',
      *      initialState: {
      *          defaultState: {
      *              ...
@@ -272,7 +285,7 @@ const MapStore2 = {
         }))(require('../components/app/StandardRouter'));
 
         const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {});
-        const initialActions = options.initialState ? [] : [configureMap.bind(null, options.config || defaultConfig)];
+        const initialActions = getInitialActions(options);
         const appConfig = {
             storeOpts: assign({}, storeOpts, {notify: true}),
             appStore,
@@ -309,7 +322,7 @@ const MapStore2 = {
         });
     },
     buildPluginsCfg,
-    getMapNameFromRequest,
+    getParamFromRequest,
     loadConfigFromStorage,
     /**
      * Adds a listener that will be notified of all the MapStore2 events (**actions**), or only some of them.

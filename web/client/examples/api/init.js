@@ -2,11 +2,15 @@
 function init() {
 /*eslint-enable */
     var cfg;
+    var cfgUrl;
+    var theme;
     var embeddedPlugins;
     var pluginsCfg;
 
     /*eslint-disable */
-    cfg = MapStore2.loadConfigFromStorage('mapstore.example.plugins.' + MapStore2.getMapNameFromRequest());
+    cfg = MapStore2.loadConfigFromStorage('mapstore.example.plugins.' + MapStore2.getParamFromRequest('map'));
+    cfgUrl = MapStore2.getParamFromRequest('config');
+    theme = MapStore2.getParamFromRequest('theme');
     /*eslint-enable */
     embeddedPlugins = {
         "desktop": [
@@ -29,11 +33,13 @@ function init() {
     pluginsCfg = cfg && MapStore2.buildPluginsCfg(cfg.pluginsCfg.standard, cfg.userCfg) || embeddedPlugins;
     MapStore2.create('container', {
         plugins: pluginsCfg,
+        configUrl: cfgUrl,
         initialState: cfg && cfg.state && {
             defaultState: cfg.state
         } || null,
         style: cfg && cfg.customStyle,
         theme: {
+            theme,
             path: '../../dist/themes'
         }
     });
