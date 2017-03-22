@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -121,6 +121,11 @@ const getReducers = (plugins) => Object.keys(plugins).map((name) => plugins[name
                             .reduce((previous, current) => assign({}, previous, current), {});
 const getEpics = (plugins) => Object.keys(plugins).map((name) => plugins[name].epics)
                             .reduce((previous, current) => assign({}, previous, current), {});
+
+/**
+ * Utilities for plugins
+ * @class
+ */
 const PluginsUtils = {
     /**
      * Produces the reducers from the plugins, combined with other plugins
@@ -132,6 +137,12 @@ const PluginsUtils = {
         const pluginsReducers = getReducers(plugins);
         return combineReducers(assign({}, reducers, pluginsReducers));
     },
+    /**
+     * Produces the rootEpic for the plugins, combined wit other epics passed as 2nd argument
+     * @param {array} plugins the plugins
+     * @param {function[]} epics the epics to add to the plugins' ones
+     * @return {function} the rootEpic, obtained combining plugins' epics and the other epics passed as argument.
+     */
     combineEpics: (plugins, epics = []) => {
         const pluginEpics = getEpics(plugins);
         return combineEpics(...[ ...Object.keys(pluginEpics).map(k => pluginEpics[k]), ...epics]);
@@ -140,6 +151,23 @@ const PluginsUtils = {
     filterState,
     getPlugins: (plugins) => Object.keys(plugins).map((name) => plugins[name])
                                 .reduce((previous, current) => assign({}, previous, omit(current, 'reducers')), {}),
+    /**
+     * provide the pluginDescriptor for a given plugin, with a state and a configuration
+     * @param {object} state the state
+     * @param {object} plugins all the plugin definitions, as
+     * @param {array} pluginConfig the configurations of the plugins
+     * @param {object} loadedPlugins loaded plugins
+     * @return {object} a pluginDescriptor like this:
+     * ```
+     * {
+     *    id: "P1",
+     *    name: "P1",
+     *    items: // the contained items
+     *    cfg: // the configuration
+     *    impl // the real implementation
+     * }
+     * ```
+     */
     getPluginDescriptor: (state, plugins, pluginsConfig, pluginDef, loadedPlugins = {}) => {
         const name = isObject(pluginDef) ? pluginDef.name : pluginDef;
         const id = isObject(pluginDef) ? pluginDef.id : null;

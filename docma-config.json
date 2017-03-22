@@ -66,6 +66,7 @@
                         { "label": "Actions", "href": "api/actions" },
                         { "label": "Reducers", "href": "api/reducers" },
                         { "label": "Epics", "href": "api/epics" },
+                        { "label": "Utils", "href": "api/utils" },
                         { "separator": true },
                         { "label": "Plugins", "href": "api/plugins" }
 
@@ -110,6 +111,7 @@
            "actions" : ["web/client/actions/search.js"],
            "reducers" : ["web/client/reducers/search.js"],
             "epics": "web/client/epics/search.js",
+            "utils": ["web/client/utils/PluginsUtils.js"],
             "plugins": [
                 "web/client/plugins/Search.jsx",
                 "web/client/plugins/BackgroundSwitcher.jsx",
