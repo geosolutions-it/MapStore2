@@ -11,6 +11,7 @@ var {
     taskSuccess,
     taskStarted,
     taskError,
+    startTask,
     TASK_STARTED,
     TASK_SUCCESS,
     TASK_ERROR
@@ -48,5 +49,23 @@ describe('Test correctness of the tasks actions', () => {
         expect(retVal).toExist();
         expect(retVal.type).toBe(TASK_STARTED);
         expect(retVal.name).toBe(name);
+    });
+
+    it('startTask', done => {
+        let started = false;
+        let executed = false;
+        let dispatchable = startTask((payload, callback) => {executed = true; expect(payload).toBe("payload"); callback(); }, "payload", "task", "actionPayload");
+        dispatchable((action) => {
+            if (action.type === TASK_STARTED) {
+                expect(action.name).toBe("task");
+                started = true;
+            }
+            if (action.type === TASK_SUCCESS) {
+                expect(action.actionPayload).toBe("actionPayload");
+                expect(started).toBe(true);
+                expect(executed).toBe(true);
+                done();
+            }
+        });
     });
 });
