@@ -9,7 +9,7 @@
 const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY, RESET_CONTROLS} = require('../actions/controls');
 const assign = require('object-assign');
 /**
- * Manages the state the controls in MapStore2
+ * Manages the state of the controls in MapStore2
  * The root elements of the state returned by this reducers ar variable, but they have
  * this shape
  * ```
