@@ -13,7 +13,7 @@ const {Glyphicon} = require('react-bootstrap');
 
 const closeLogin = () => {
     return (dispatch) => {
-        dispatch(setControlProperty(null, 'LoginForm', 'enabled', false, false));
+        dispatch(setControlProperty('LoginForm', 'enabled', false));
         dispatch(resetError());
     };
 };
