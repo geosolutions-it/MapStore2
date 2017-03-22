@@ -37,7 +37,6 @@ const StandardRouter = React.createClass({
             pages: [],
             className: "fill",
             themeCfg: {
-                theme: 'default',
                 path: 'dist/themes'
             }
         };
