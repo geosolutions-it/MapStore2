@@ -15,6 +15,7 @@ const layers = require('../reducers/layers');
 const mapConfig = require('../reducers/config');
 
 const DebugUtils = require('../utils/DebugUtils');
+const {compose} = require('redux');
 const {combineReducers, combineEpics} = require('../utils/PluginsUtils');
 
 const LayersUtils = require('../utils/LayersUtils');
@@ -23,6 +24,7 @@ const {persistStore, autoRehydrate} = require('redux-persist');
 const {createEpicMiddleware} = require('redux-observable');
 
 const SecurityUtils = require('../utils/SecurityUtils');
+const ListenerEnhancer = require('@carnesen/redux-add-action-listener-enhancer').default;
 
 module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {}, plugins, storeOpts) => {
     const allReducers = combineReducers(plugins, {
@@ -58,11 +60,16 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         return newState;
     };
     let store;
+    let enhancer;
     if (storeOpts && storeOpts.persist) {
-        store = DebugUtils.createDebugStore(rootReducer, defaultState, [epicMiddleware], autoRehydrate());
+        enhancer = autoRehydrate();
+    }
+    if (storeOpts && storeOpts.notify) {
+        enhancer = enhancer ? compose(enhancer, ListenerEnhancer) : ListenerEnhancer;
+    }
+    store = DebugUtils.createDebugStore(rootReducer, defaultState, [epicMiddleware], enhancer);
+    if (storeOpts && storeOpts.persist) {
         persistStore(store, storeOpts.persist, storeOpts.onPersist);
-    } else {
-        store = DebugUtils.createDebugStore(rootReducer, defaultState, [epicMiddleware]);
     }
     SecurityUtils.setStore(store);
     return store;

@@ -126,7 +126,7 @@ const tocSelector = createSelector(
     [
         (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
         groupsSelector,
-        (state) => state.layers.settings || {expanded: false, options: {opacity: 1}},
+        (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}},
         (state) => state.controls && state.controls.queryPanel && state.controls.queryPanel.enabled || false
     ], (enabled, groups, settings, querypanelEnabled) => ({
         enabled,

@@ -65,6 +65,8 @@
                         { "label": "Framework", "href": "api/framework"},
 
                         { "separator": true },
+                        { "label": "JavaScript API", "href": "api/jsapi" },
+                        { "separator": true },
                         { "label": "Plugins", "href": "api/plugins" }
 
                     ]
@@ -120,6 +122,7 @@
             "web/client/utils/index.jsdoc",
             "web/client/utils/PluginsUtils.js"
           ],
+          "jsapi": "web/client/jsapi/MapStore2.js",
             "plugins": [
                 "web/client/plugins/index.jsdoc",
                 "web/client/plugins/Search.jsx",
@@ -131,12 +134,8 @@
         "./docs/**/*md",
         {
             "readme": "./README.md",
-            "site": "./docs/index.md",
             "developer-guide": "./docs/developer-guide/index.md",
-            "plugins-architecture": "./docs/developer-guide/plugins-architecture.md",
-            "building-and-developing": "./docs/developer-guide/plugins-architecture.md",
-            "plugins-documentation": "./docs/developer-guide/plugins-documentation.md",
-            "project-creation-script": "./docs/developer-guide/project-creation-script.md"
+            "site": "./docs/index.md"
         }
     ]
 }

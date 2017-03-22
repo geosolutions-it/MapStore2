@@ -75,6 +75,7 @@
   },
   "//": "replace react-sortable-items with official on npm when 0.0.10 with remove_deprecated PR in included",
   "dependencies": {
+    "@carnesen/redux-add-action-listener-enhancer": "0.0.1",
     "ag-grid": "3.3.3",
     "ag-grid-react": "3.3.1",
     "axios": "0.11.1",
