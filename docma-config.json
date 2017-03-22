@@ -112,9 +112,11 @@
 
             "web/client/actions/index.jsdoc",
             "web/client/actions/search.js",
+            "web/client/actions/controls.js",
 
             "web/client/reducers/index.jsdoc",
             "web/client/reducers/search.js",
+            "web/client/reducers/controls.js",
 
             "web/client/epics/index.jsdoc",
             "web/client/epics/search.js",
@@ -128,7 +130,8 @@
                 "web/client/plugins/Search.jsx",
                 "web/client/plugins/BackgroundSwitcher.jsx",
                 "web/client/plugins/Map.jsx",
-                "web/client/plugins/Identify.jsx"
+                "web/client/plugins/Identify.jsx",
+                "web/client/plugins/Login.jsx"
             ]
         },
         "./docs/**/*md",
