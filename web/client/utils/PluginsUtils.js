@@ -139,7 +139,7 @@ const PluginsUtils = {
         return combineReducers(assign({}, reducers, pluginsReducers));
     },
     /**
-     * Produces the rootEpic for the plugins, combined wit other epics passed as 2nd argument
+     * Produces the rootEpic for the plugins, combined with other epics passed as 2nd argument
      * @param {array} plugins the plugins
      * @param {function[]} [epics] the epics to add to the plugins' ones
      * @return {function} the rootEpic, obtained combining plugins' epics and the other epics passed as argument.
