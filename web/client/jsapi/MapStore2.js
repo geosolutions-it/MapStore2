@@ -304,7 +304,6 @@ const MapStore2 = {
             ThemeUtils.renderFromLess(options.style, 'custom_theme', 'themes/default/');
         }
         const defaultThemeCfg = {
-          theme: 'default',
           prefixContainer: '#' + container
         };
 
