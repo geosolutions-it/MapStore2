@@ -123,14 +123,15 @@ const getEpics = (plugins) => Object.keys(plugins).map((name) => plugins[name].e
                             .reduce((previous, current) => assign({}, previous, current), {});
 
 /**
- * Utilities for plugins
+ * Utilities to manage plugins
  * @class
+ * @memberof utils
  */
 const PluginsUtils = {
     /**
      * Produces the reducers from the plugins, combined with other plugins
      * @param {array} plugins the plugins
-     * @param {function[]} [reducers] other plugins
+     * @param {object} [reducers] other reducers
      * @returns {function} a reducer made from the plugins' reducers and the reducers passed as 2nd parameter
      */
     combineReducers: (plugins, reducers) => {
@@ -153,7 +154,7 @@ const PluginsUtils = {
                                 .reduce((previous, current) => assign({}, previous, omit(current, 'reducers')), {}),
     /**
      * provide the pluginDescriptor for a given plugin, with a state and a configuration
-     * @param {object} state the state
+     * @param {object} state the state. This is required to laod plugins that depend from the state itself
      * @param {object} plugins all the plugins, like this:
      * ```
      *  {
@@ -162,7 +163,7 @@ const PluginsUtils = {
      *  }
      * ```
      * @param {array} pluginConfig the configurations of the plugins
-     * @param {object} [loadedPlugins] loaded plugins
+     * @param {object} [loadedPlugins] the plugins loaded with `require.ensure`
      * @return {object} a pluginDescriptor like this:
      * ```
      * {
