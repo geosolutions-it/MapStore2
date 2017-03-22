@@ -130,7 +130,7 @@ const PluginsUtils = {
     /**
      * Produces the reducers from the plugins, combined with other plugins
      * @param {array} plugins the plugins
-     * @param {array} reducers other plugins
+     * @param {function[]} [reducers] other plugins
      * @returns {function} a reducer made from the plugins' reducers and the reducers passed as 2nd parameter
      */
     combineReducers: (plugins, reducers) => {
@@ -140,7 +140,7 @@ const PluginsUtils = {
     /**
      * Produces the rootEpic for the plugins, combined wit other epics passed as 2nd argument
      * @param {array} plugins the plugins
-     * @param {function[]} epics the epics to add to the plugins' ones
+     * @param {function[]} [epics] the epics to add to the plugins' ones
      * @return {function} the rootEpic, obtained combining plugins' epics and the other epics passed as argument.
      */
     combineEpics: (plugins, epics = []) => {
@@ -154,9 +154,15 @@ const PluginsUtils = {
     /**
      * provide the pluginDescriptor for a given plugin, with a state and a configuration
      * @param {object} state the state
-     * @param {object} plugins all the plugin definitions, as
+     * @param {object} plugins all the plugins, like this:
+     * ```
+     *  {
+     *      P1Plugin: connectdComponent1,
+     *      P2Plugin: connectdComponent2
+     *  }
+     * ```
      * @param {array} pluginConfig the configurations of the plugins
-     * @param {object} loadedPlugins loaded plugins
+     * @param {object} [loadedPlugins] loaded plugins
      * @return {object} a pluginDescriptor like this:
      * ```
      * {
