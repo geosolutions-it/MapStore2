@@ -93,4 +93,4 @@ function loadMapInfo(url, mapId) {
 }
 module.exports = {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR,
     MAP_INFO_LOAD_START, MAP_INFO_LOADED, MAP_INFO_LOAD_ERROR,
-     loadMapConfig, loadMapInfo, configureMap, configureError};
+     loadMapConfig, loadMapInfo, configureMap};

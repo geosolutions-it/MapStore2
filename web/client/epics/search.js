@@ -35,9 +35,9 @@ const {get} = require('lodash');
  * Gets every `TEXT_SEARCH_STARTED` event.
  * Dispatches the request to all the services in the action, postprocess them
  * and updates every tume the results
- * @param {external:Observable} action$ manages `TEXT_SEARCH_STARTED` and `TEXT_SEARCH_RESULTS_PURGE`, `TEXT_SEARCH_RESET`, `TEXT_SEARCH_ITEM_SELECTED` for cancellation
+ * @param {Observable} action$ manages `TEXT_SEARCH_STARTED` and `TEXT_SEARCH_RESULTS_PURGE`, `TEXT_SEARCH_RESET`, `TEXT_SEARCH_ITEM_SELECTED` for cancellation
  * @memberof epics.search
- * @return {external:Observable}
+ * @return {Observable}
  */
 const searchEpic = action$ =>
   action$.ofType(TEXT_SEARCH_STARTED)
@@ -130,10 +130,7 @@ const searchItemSelected = action$ =>
         }
         return Rx.Observable.from(actions);
     });
-    /**
-     * Actions for search
-     * @name epics.search
-     */
+
 module.exports = {
     searchEpic,
     searchItemSelected
