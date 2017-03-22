@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 const TEXT_SEARCH_STARTED = 'TEXT_SEARCH_STARTED';
 const TEXT_SEARCH_RESULTS_LOADED = 'TEXT_SEARCH_RESULTS_LOADED';
 const TEXT_SEARCH_PERFORMED = 'TEXT_SEARCH_PERFORMED';
@@ -157,10 +158,6 @@ function cancelSelectedItem(item) {
     };
 }
 
-/**
- * Actions for search
- * @name actions.search
- */
 module.exports = {
     TEXT_SEARCH_STARTED,
     TEXT_SEARCH_LOADING,
