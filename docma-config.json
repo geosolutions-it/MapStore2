@@ -134,6 +134,7 @@
         "./docs/**/*md",
         {
             "readme": "./README.md",
+            "developer-guide": "./docs/developer-guide/index.md",
             "site": "./docs/index.md"
         }
     ]
