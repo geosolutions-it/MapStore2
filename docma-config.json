@@ -62,10 +62,8 @@
                     "iconClass": "ico-mouse-pointer",
                     "label": "Reference",
                     "items": [
-                        { "label": "Components", "href": "api/components"},
-                        { "label": "Actions", "href": "api/actions" },
-                        { "label": "Reducers", "href": "api/reducers" },
-                        { "label": "Epics", "href": "api/epics" },
+                        { "label": "Framework", "href": "api/framework"},
+
                         { "separator": true },
                         { "label": "Plugins", "href": "api/plugins" }
 
@@ -106,11 +104,24 @@
     },
     "src": [
         {
-          "components" : ["web/client/components/mapcontrols/search/SearchBar.jsx"],
-           "actions" : ["web/client/actions/search.js"],
-           "reducers" : ["web/client/reducers/search.js"],
-            "epics": "web/client/epics/search.js",
+          "framework" : [
+            "web/client/components/index.jsdoc",
+            "web/client/components/mapcontrols/search/SearchBar.jsx",
+
+            "web/client/actions/index.jsdoc",
+            "web/client/actions/search.js",
+
+            "web/client/reducers/index.jsdoc",
+            "web/client/reducers/search.js",
+
+            "web/client/epics/index.jsdoc",
+            "web/client/epics/search.js",
+
+            "web/client/utils/index.jsdoc",
+            "web/client/utils/PluginsUtils.js"
+          ],
             "plugins": [
+                "web/client/plugins/index.jsdoc",
                 "web/client/plugins/Search.jsx",
                 "web/client/plugins/BackgroundSwitcher.jsx",
                 "web/client/plugins/Map.jsx",
