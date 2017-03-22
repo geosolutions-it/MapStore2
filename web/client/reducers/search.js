@@ -91,7 +91,8 @@ function search(state = null, action) {
             return assign({}, state, { results: null, error: null});
         case TEXT_SEARCH_ADD_MARKER:
             return assign({}, state, { markerPosition: action.markerPosition });
-        case TEXT_SEARCH_RESET: case RESET_CONTROLS:
+        case TEXT_SEARCH_RESET:
+        case RESET_CONTROLS:
             return null;
         case TEXT_SEARCH_NESTED_SERVICES_SELECTED:
             return assign({}, state, {
