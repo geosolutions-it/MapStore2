@@ -111,7 +111,6 @@ const Identify = React.createClass({
     componentWillMount() {
         const availableFormat = MapInfoUtils.getAvailableInfoFormat();
         const infoF = availableFormat[this.props.infoFormat] ? availableFormat[this.props.infoFormat] : availableFormat.TEXT;
-        console.log(infoF);
         this.props.setFormat(infoF);
     },
     componentWillReceiveProps(newProps) {
