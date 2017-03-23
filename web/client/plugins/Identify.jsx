@@ -13,7 +13,7 @@ const {createSelector} = require('reselect');
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
 
-const {setFeatureInfoFormat, getFeatureInfo, getVectorInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode} = require('../actions/mapInfo');
+const {getFeatureInfo, getVectorInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode} = require('../actions/mapInfo');
 const {changeMousePointer} = require('../actions/map');
 const {changeMapInfoFormat} = require('../actions/mapInfo');
 
@@ -49,7 +49,7 @@ const IdentifyPlugin = connect(selector, {
     hideMarker: hideMapinfoMarker,
     showRevGeocode: showMapinfoRevGeocode,
     hideRevGeocode: hideMapinfoRevGeocode,
-    setFormat: setFeatureInfoFormat
+    setFormat: changeMapInfoFormat
 })(require('../components/data/identify/Identify'));
 // configuration UI
 const FeatureInfoFormatSelector = connect((state) => ({
