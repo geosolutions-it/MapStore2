@@ -20,7 +20,8 @@ const {
     HIDE_MAPINFO_MARKER,
     SHOW_REVERSE_GEOCODE,
     HIDE_REVERSE_GEOCODE,
-    GET_VECTOR_INFO
+    GET_VECTOR_INFO,
+    SET_FEATURE_INFO_FORMAT
 } = require('../actions/mapInfo');
 
 const {RESET_CONTROLS} = require('../actions/controls');
@@ -134,6 +135,11 @@ function mapInfo(state = {}, action) {
                     layerMetadata: action.metadata,
                     format: 'JSON'
                 }]
+            });
+        }
+        case SET_FEATURE_INFO_FORMAT: {
+            return assign({}, state, {
+                infoFormat: action.format
             });
         }
         default:
