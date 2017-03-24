@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -11,7 +11,20 @@ const assign = require('object-assign');
 const {UserDetails, PasswordReset, UserMenu, Login, LoginNav } = require('./login/index');
 
 require('./login/login.css');
-
+/**
+  * Login Plugin. Allow to login/logout or show user info and reset password tools
+  * @class Login
+  * @memberof plugins
+  * @static
+  *
+  * @prop {string} cfg.id identifier of the Plugin, by default `"mapstore-login-menu"`
+  * @prop {object} cfg.menuStyle inline style for the menu, by defualt:
+  * ```
+  * menuStyle: {
+  *      zIndex: 30
+  * }
+  *```
+  */
 const LoginTool = React.createClass({
     propTypes: {
         id: React.PropTypes.string,

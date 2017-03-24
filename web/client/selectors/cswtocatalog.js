@@ -10,6 +10,10 @@ const assign = require('object-assign');
 const {head} = require('lodash');
 const urlUtil = require('url');
 
+
+const getBaseCatalogUrl = (url) => {
+    return url && url.substring(0, url.lastIndexOf("/"));
+};
 /**
  * Parses a csw object and returns an object with a common form.
  * records:
@@ -57,7 +61,7 @@ const cswToCatalogSelector = (catalog) => {
                 }).forEach((reference) => {
                     // a get capabilities reference should be absolute and filter by the layer name
                     let referenceUrl = reference.value.indexOf("http") === 0 ? reference.value
-                        : searchOptions.catalogURL + "/" + reference.value;
+                        : getBaseCatalogUrl(searchOptions.catalogURL || searchOptions.url) + reference.value;
                     // add the references to the final list
                     references.push({
                         type: reference.scheme,
@@ -79,7 +83,7 @@ const cswToCatalogSelector = (catalog) => {
             if (wms) {
                 let absolute = (wms.value.indexOf("http") === 0);
                 if (!absolute) {
-                    assign({}, wms, {value: searchOptions.catalogURL + "/" + wms.value} );
+                    assign({}, wms, {value: getBaseCatalogUrl(searchOptions.catalogURL || searchOptions.url) + wms.value} );
                 }
                 let wmsReference = {
                     type: wms.protocol || wms.scheme,
@@ -93,7 +97,7 @@ const cswToCatalogSelector = (catalog) => {
             if (thumbURL) {
                 let absolute = (thumbURL.indexOf("http") === 0);
                 if (!absolute) {
-                    thumbURL = searchOptions.catalogURL + "/" + thumbURL;
+                    thumbURL = getBaseCatalogUrl(searchOptions.catalogURL || searchOptions.url) + thumbURL;
                 }
             }
             // create the references array (now only wms is supported)

@@ -62,10 +62,10 @@
                     "iconClass": "ico-mouse-pointer",
                     "label": "Reference",
                     "items": [
-                        { "label": "Components", "href": "api/components"},
-                        { "label": "Actions", "href": "api/actions" },
-                        { "label": "Reducers", "href": "api/reducers" },
-                        { "label": "Epics", "href": "api/epics" },
+                        { "label": "Framework", "href": "api/framework"},
+
+                        { "separator": true },
+                        { "label": "JavaScript API", "href": "api/jsapi" },
                         { "separator": true },
                         { "label": "Plugins", "href": "api/plugins" }
 
@@ -106,26 +106,39 @@
     },
     "src": [
         {
-          "components" : ["web/client/components/mapcontrols/search/SearchBar.jsx"],
-           "actions" : ["web/client/actions/search.js"],
-           "reducers" : ["web/client/reducers/search.js"],
-            "epics": "web/client/epics/search.js",
+          "framework" : [
+            "web/client/components/index.jsdoc",
+            "web/client/components/mapcontrols/search/SearchBar.jsx",
+
+            "web/client/actions/index.jsdoc",
+            "web/client/actions/search.js",
+            "web/client/actions/controls.js",
+
+            "web/client/reducers/index.jsdoc",
+            "web/client/reducers/search.js",
+            "web/client/reducers/controls.js",
+
+            "web/client/epics/index.jsdoc",
+            "web/client/epics/search.js",
+
+            "web/client/utils/index.jsdoc",
+            "web/client/utils/PluginsUtils.js"
+          ],
+          "jsapi": "web/client/jsapi/MapStore2.js",
             "plugins": [
+                "web/client/plugins/index.jsdoc",
                 "web/client/plugins/Search.jsx",
                 "web/client/plugins/BackgroundSwitcher.jsx",
                 "web/client/plugins/Map.jsx",
-                "web/client/plugins/Identify.jsx"
+                "web/client/plugins/Identify.jsx",
+                "web/client/plugins/Login.jsx"
             ]
         },
         "./docs/**/*md",
         {
             "readme": "./README.md",
-            "site": "./docs/index.md",
             "developer-guide": "./docs/developer-guide/index.md",
-            "plugins-architecture": "./docs/developer-guide/plugins-architecture.md",
-            "building-and-developing": "./docs/developer-guide/plugins-architecture.md",
-            "plugins-documentation": "./docs/developer-guide/plugins-documentation.md",
-            "project-creation-script": "./docs/developer-guide/project-creation-script.md"
+            "site": "./docs/index.md"
         }
     ]
 }

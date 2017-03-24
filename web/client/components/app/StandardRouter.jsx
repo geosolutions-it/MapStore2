@@ -14,9 +14,13 @@ const {Router, Route, hashHistory} = require('react-router');
 
 const Localized = require('../I18N/Localized');
 
+const assign = require('object-assign');
+
 const Theme = connect((state) => ({
     theme: state.theme && state.theme.selectedTheme && state.theme.selectedTheme.id
-}))(require('../theme/Theme'));
+}), {}, (stateProps, dispatchProps, ownProps) => {
+    return assign({}, stateProps, dispatchProps, ownProps);
+})(require('../theme/Theme'));
 
 const StandardRouter = React.createClass({
     propTypes: {
@@ -33,7 +37,6 @@ const StandardRouter = React.createClass({
             pages: [],
             className: "fill",
             themeCfg: {
-                theme: 'default',
                 path: 'dist/themes'
             }
         };

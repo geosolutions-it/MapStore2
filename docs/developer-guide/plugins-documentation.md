@@ -17,7 +17,7 @@ Inside the **plugins** section, several modes can be configured (e.g. desktop or
 }
 ```
 
-Each plugin can be simply listed (and the default configuration is used): 
+Each plugin can be simply listed (and the default configuration is used):
 
 ```js
 "plugins": {
@@ -33,7 +33,6 @@ or fully configured:
   ...
   "desktop": [{
     "name": "Map",
-    "cfg": {
        ...
     }
   },
@@ -41,7 +40,4 @@ or fully configured:
   ]
 }
 ```
-Look at each plugin documentation page for a list of available configuration properties.
-
-# Plugins List:
- * [Map](map-plugin)
+Look at the [plugin reference page](./api/plugins) for a list of available configuration properties.
