@@ -5,7 +5,6 @@ var ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
 var DefinePlugin = require("webpack/lib/DefinePlugin");
 var NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
 const extractThemesPlugin = require('./MapStore2/themes.js').extractThemesPlugin;
-var assign = require('object-assign');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 webpackConfig.plugins = [
@@ -17,7 +16,7 @@ webpackConfig.plugins = [
         options: {
             postcss: {
                 plugins: [
-                  require('postcss-prefix-selector')({prefix: '.__PROJECTNAME__', exclude: ['.__PROJECTNAME__']})
+                  require('postcss-prefix-selector')({prefix: '.__PROJECTNAME__', exclude: ['.__PROJECTNAME__', '.ms2']})
                 ]
             },
             context: __dirname

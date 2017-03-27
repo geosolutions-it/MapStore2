@@ -28,7 +28,7 @@ module.exports = {
             options: {
                 postcss: {
                     plugins: [
-                      require('postcss-prefix-selector')({prefix: '.__PROJECTNAME__', exclude: ['.__PROJECTNAME__']})
+                      require('postcss-prefix-selector')({prefix: '.__PROJECTNAME__', exclude: ['.ms2', '.__PROJECTNAME__']})
                     ]
                 },
                 context: __dirname
