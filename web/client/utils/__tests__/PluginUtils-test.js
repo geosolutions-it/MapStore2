@@ -8,7 +8,7 @@
 const expect = require('expect');
 const PluginsUtils = require('../PluginsUtils');
 const assign = require('object-assign');
-const MapSearchPlugin = require('../../plugins/MapSearch')
+const MapSearchPlugin = require('../../plugins/MapSearch');
 
 describe('PluginsUtils', () => {
     beforeEach( () => {
