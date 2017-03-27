@@ -34,8 +34,8 @@ const startApp = () => {
 
     store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
 
-    store.dispatch(describeFeatureType('http://demo.geo-solutions.it/geoserver/wfs', 'topp:states'));
-    store.dispatch(loadFeature('http://demo.geo-solutions.it/geoserver/wfs', 'topp:states'));
+    store.dispatch(describeFeatureType('https://demo.geo-solutions.it/geoserver/wfs', 'topp:states'));
+    store.dispatch(loadFeature('https://demo.geo-solutions.it/geoserver/wfs', 'topp:states'));
 
     const QueryForm = require('./containers/QueryForm');
 
