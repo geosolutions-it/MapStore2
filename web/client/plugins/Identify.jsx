@@ -48,7 +48,8 @@ const IdentifyPlugin = connect(selector, {
     showMarker: showMapinfoMarker,
     hideMarker: hideMapinfoMarker,
     showRevGeocode: showMapinfoRevGeocode,
-    hideRevGeocode: hideMapinfoRevGeocode
+    hideRevGeocode: hideMapinfoRevGeocode,
+    setFormat: changeMapInfoFormat
 })(require('../components/data/identify/Identify'));
 // configuration UI
 const FeatureInfoFormatSelector = connect((state) => ({

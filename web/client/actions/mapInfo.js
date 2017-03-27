@@ -84,7 +84,6 @@ function getVectorInfo(layer, request, metadata) {
     };
 }
 
-
 /**
  * Sends a wms GetFeatureInfo request and dispatches the right action
  * in case of success, error or exceptions.
