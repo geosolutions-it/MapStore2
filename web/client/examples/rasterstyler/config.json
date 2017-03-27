@@ -63,7 +63,7 @@
                 "name": "sde:NE2_HR_LC_SR_W_DR",
                 "title": "Natural Earth",
                 "type": "wms",
-                "url": "http://demo.geo-solutions.it/geoserver/wms",
+                "url": "https://demo.geo-solutions.it/geoserver/wms",
                 "visibility": false
             },
             {
@@ -72,7 +72,7 @@
                 "name": "sde:HYP_HR_SR_OB_DR",
                 "title": "Hypsometric",
                 "type": "wms",
-                "url": "http://demo.geo-solutions.it/geoserver/wms",
+                "url": "https://demo.geo-solutions.it/geoserver/wms",
                 "visibility": false
             },
             {
@@ -81,7 +81,7 @@
                 "name": "sde:GRAY_HR_SR_OB_DR",
                 "title": "Gray Earth",
                 "type": "wms",
-                "url": "http://demo.geo-solutions.it/geoserver/wms",
+                "url": "https://demo.geo-solutions.it/geoserver/wms",
                 "visibility": false
             },
             {
@@ -101,12 +101,12 @@
                 "opacity": 1,
                 "title": "Weather data",
                 "type": "wms",
-                "url": "http://demo.geo-solutions.it/geoserver/wms",
+                "url": "https://demo.geo-solutions.it/geoserver/wms",
                 "visibility": true
             },
       {
         "type": "wms",
-        "url":"http://demo.geo-solutions.it/geoserver/wms",
+        "url":"https://demo.geo-solutions.it/geoserver/wms",
         "visibility": true,
         "opacity": 1,
         "title": "HYP_HR_SR_OB_DR",

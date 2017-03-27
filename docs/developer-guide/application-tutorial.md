@@ -163,7 +163,7 @@ module.exports = finalCreateStore(reducers, {});
       },
       {
         "type": "wms",
-        "url":"http://demo.geo-solutions.it/geoserver/wms",
+        "url":"https://demo.geo-solutions.it/geoserver/wms",
         "visibility": true,
         "opacity": 0.5,
         "title": "Weather data",
