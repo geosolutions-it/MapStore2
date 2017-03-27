@@ -8,6 +8,7 @@
 const expect = require('expect');
 const PluginsUtils = require('../PluginsUtils');
 const assign = require('object-assign');
+const MapSearchPlugin = require('../../plugins/MapSearch');
 
 describe('PluginsUtils', () => {
     beforeEach( () => {
@@ -71,6 +72,12 @@ describe('PluginsUtils', () => {
         expect(desc1.items[0].test).toBe(item.test);
         expect(desc1.items[0].cfg).toExist();
 
+    });
+    it('combineEpics', () => {
+        const plugins = {MapSearchPlugin: MapSearchPlugin};
+        const appEpics = {appEpics: (actions$) => actions$.ofType('TEST_ACTION').map({type: "NEW_ACTION_TEST"})};
+        const epics = PluginsUtils.combineEpics(plugins, appEpics);
+        expect(typeof epics ).toEqual('function');
     });
 
 });
