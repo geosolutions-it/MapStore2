@@ -284,7 +284,7 @@ const MapStore2 = {
             pages
         }))(require('../components/app/StandardRouter'));
 
-        const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {});
+        const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {}, {});
         const initialActions = getInitialActions(options);
         const appConfig = {
             storeOpts: assign({}, storeOpts, {notify: true}),

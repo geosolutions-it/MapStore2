@@ -144,9 +144,9 @@ const PluginsUtils = {
      * @param {function[]} [epics] the epics to add to the plugins' ones
      * @return {function} the rootEpic, obtained combining plugins' epics and the other epics passed as argument.
      */
-    combineEpics: (plugins, epics = []) => {
-        const pluginEpics = getEpics(plugins);
-        return combineEpics(...[ ...Object.keys(pluginEpics).map(k => pluginEpics[k]), ...epics]);
+    combineEpics: (plugins, epics = {}) => {
+        const pluginEpics = assign({}, getEpics(plugins), epics);
+        return combineEpics( ...Object.keys(pluginEpics).map(k => pluginEpics[k]));
     },
     getReducers,
     filterState,

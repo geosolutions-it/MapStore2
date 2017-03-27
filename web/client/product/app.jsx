@@ -27,7 +27,7 @@ const startApp = () => {
     const appStore = require('../stores/StandardStore').bind(null, initialState, {
         home: require('./reducers/home'),
         maps: require('../reducers/maps')
-    });
+    }, {});
 
     const initialActions = [
         () => loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*")
