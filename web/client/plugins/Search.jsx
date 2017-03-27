@@ -98,7 +98,8 @@ const ToggleButton = require('./searchbar/ToggleButton');
  *        "queriableAttributes": ["attribute_to_query"],
  *        "sortBy": "ID",
  *        "srsName": "EPSG:4326",
- *        "maxFeatures": 4
+ *        "maxFeatures": 4,
+ *        "blackist": [... an array of strings to exclude from the final search filter ]
  *      },
  *      "nestedPlaceholder": "Write other text to refine the search...",
  *      "then": [ ... an array of services to use when one item of this service is selected]
