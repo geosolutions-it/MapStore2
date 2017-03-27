@@ -1,7 +1,15 @@
-<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
-    http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
+	<!-- pick up all spring application contexts -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+            classpath*:applicationContext.xml
+        </param-value>
+	</context-param>
     <display-name>__PROJECTDESCRIPTION__ - Web App</display-name>
 	<context-param>
         <param-name>webAppRootKey</param-name>
@@ -15,19 +23,27 @@
 
     <!-- spring context loader -->
     <listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+
+	<!--
+      - Loads the root application context of this web app at startup.
+      - The application context is then available via
+      - WebApplicationContextUtils.getWebApplicationContext(servletContext).
+    -->
+	<listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
-    <servlet>
-        <servlet-name>mvc-dispatcher</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>mvc-dispatcher</servlet-name>
-        <url-pattern>/services/*</url-pattern>
-    </servlet-mapping>
+	<!-- Spring Security Servlet -->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/rest/*</url-pattern>
+	</filter-mapping>
 
     <!-- CXF Servlet -->
 	<servlet>
@@ -51,31 +67,9 @@
       <url-pattern>/proxy/*</url-pattern>
     </servlet-mapping>
 
-    <!-- pick up all spring application contexts -->
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/applicationContext.xml</param-value>
-    </context-param>
-    
-    <!-- Spring Security Servlet -->
-	<filter>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/rest/*</url-pattern>
-	</filter-mapping>
-
-    <!-- Spring Security -->
-<!--     <filter> -->
-<!--         <filter-name>springSecurityFilterChain</filter-name> -->
-<!--         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class> -->
-<!--     </filter> -->
-
-<!--     <filter-mapping> -->
-<!--         <filter-name>springSecurityFilterChain</filter-name> -->
-<!--         <url-pattern>/*</url-pattern> -->
-<!--     </filter-mapping> -->
+	<!-- Default page to serve -->
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
 
 </web-app>
