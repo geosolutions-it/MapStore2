@@ -75,7 +75,7 @@ describe('PluginsUtils', () => {
     });
     it('combineEpics', () => {
         const plugins = {MapSearchPlugin: MapSearchPlugin};
-        const appEpics = {appEpics: (actions$) => actions$};
+        const appEpics = {appEpics: (actions$) => actions$.ofType('TEST_ACTION').map({type: "NEW_ACTION_TEST"})};
         const epics = PluginsUtils.combineEpics(plugins, appEpics);
         expect(typeof epics ).toEqual('function');
     });
