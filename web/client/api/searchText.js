@@ -24,14 +24,22 @@ module.exports = {
         require('./Nominatim')
         .geocode(searchText, options)
         .then( res => GeoCodeUtils.nominatimToGeoJson(res.data)),
-    wfs: (searchText, {url, typeName, queriableAttributes, outputFormat="application/json", predicate ="ILIKE", staticFilter="", ...params }) => {
+    wfs: (searchText, {url, typeName, queriableAttributes, outputFormat="application/json", predicate ="ILIKE", staticFilter="", blacklist = [], ...params }) => {
+        // split into words and remove blacklisted words
+        let searchWords = searchText.split(" ").filter(w => w).filter( w => blacklist.indexOf(w.toLowerCase()) < 0 );
+
+        // if the searchtext is empty use the full searchText
+        if (searchWords.length === 0 ) {
+            searchWords = [searchText];
+        }
         return WFS
             .getFeatureSimple(url, assign({
                     maxFeatures: 10,
                     startIndex: 0,
                     typeName,
                     outputFormat,
-                    cql_filter: queriableAttributes.map( attr => `${attr} ${predicate} '%${searchText}%'`).join(' OR ').concat(staticFilter)
+                    // create a filter like : `(ATTR ilike  '%word1%') AND (ATTR ilike '%word2%')`
+                    cql_filter: "(".concat( searchWords.map( (w) => queriableAttributes.map( attr => `${attr} ${predicate} '%${w.replace("'", "''")}%'`).join(" OR ")).join(') AND (')).concat(")") .concat(staticFilter)
                 }, params))
             .then( response => response.features );
     }
