@@ -8,6 +8,7 @@
 const WFS = require('./WFS');
 const assign = require('object-assign');
 const GeoCodeUtils = require('../utils/GeoCodeUtils');
+const {generateTemplateString} = require('../utils/TemplateUtils');
 /*
 const toNominatim = (fc) =>
     fc.features && fc.features.map( (f) => ({
@@ -24,8 +25,9 @@ module.exports = {
         require('./Nominatim')
         .geocode(searchText, options)
         .then( res => GeoCodeUtils.nominatimToGeoJson(res.data)),
-    wfs: (searchText, {url, typeName, queriableAttributes, outputFormat="application/json", predicate ="ILIKE", staticFilter="", blacklist = [], ...params }) => {
+    wfs: (searchText, {url, typeName, queriableAttributes, outputFormat="application/json", predicate ="ILIKE", staticFilter="", blacklist = [], item, ...params }) => {
         // split into words and remove blacklisted words
+        const staticFilterParsed = generateTemplateString(staticFilter || "")(item);
         let searchWords = searchText.split(" ").filter(w => w).filter( w => blacklist.indexOf(w.toLowerCase()) < 0 );
 
         // if the searchtext is empty use the full searchText
@@ -39,7 +41,7 @@ module.exports = {
                     typeName,
                     outputFormat,
                     // create a filter like : `(ATTR ilike  '%word1%') AND (ATTR ilike '%word2%')`
-                    cql_filter: "(".concat( searchWords.map( (w) => queriableAttributes.map( attr => `${attr} ${predicate} '%${w.replace("'", "''")}%'`).join(" OR ")).join(') AND (')).concat(")") .concat(staticFilter)
+                    cql_filter: "(".concat( searchWords.map( (w) => queriableAttributes.map( attr => `${attr} ${predicate} '%${w.replace("'", "''")}%'`).join(" OR ")).join(') AND (')).concat(")") .concat(staticFilterParsed)
                 }, params))
             .then( response => response.features );
     }

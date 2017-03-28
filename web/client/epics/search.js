@@ -80,7 +80,7 @@ const searchEpic = action$ =>
  */
 const searchItemSelected = action$ =>
     action$.ofType(TEXT_SEARCH_ITEM_SELECTED)
-    .mergeMap(action => {
+    .switchMap(action => {
         const item = action.item;
 
 
@@ -117,8 +117,8 @@ const searchItemSelected = action$ =>
                 nestedServices.map((nestedService) => ({
                     ...nestedService,
                     options: {
-                        ...nestedService.options,
-                        staticFilter: generateTemplateString(nestedService.filterTemplate || "")(item)
+                        item,
+                        ...nestedService.options
                     }
                 })), {
                     text: generateTemplateString(item.__SERVICE__.displayName || "")(item),

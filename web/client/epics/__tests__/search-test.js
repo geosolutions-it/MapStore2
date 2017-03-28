@@ -82,28 +82,31 @@ describe('search Epics', () => {
 
     it('searchItemSelected epic with nested services', () => {
         let nestedService = {
-            filterTemplate: "TEST_FILTER_TEMPLATE",
             nestedPlaceholder: "TEST_NESTED_PLACEHOLDER"
         };
         const TEXT = "Dinagat Islands";
-        let action = selectSearchItem({
-          "type": "Feature",
-          "bbox": [125, 10, 126, 11],
-          "geometry": {
-            "type": "Point",
-            "coordinates": [125.6, 10.1]
-          },
-          "properties": {
-            "name": TEXT
-        },
-        "__SERVICE__": {
-            displayName: "${properties.name}",
-            type: "wfs",
-            searchTextTemplate: "${properties.name}",
-            nestedPlaceholder: "SEARCH NESTED",
-            then: [nestedService]
-        }
-        }, {
+        const item = {
+              "type": "Feature",
+              "bbox": [125, 10, 126, 11],
+              "geometry": {
+                "type": "Point",
+                "coordinates": [125.6, 10.1]
+              },
+              "properties": {
+                "name": TEXT
+            },
+            "__SERVICE__": {
+                searchTextTemplate: "${properties.name}",
+                displayName: "${properties.name}",
+                type: "wfs",
+                options: {
+                    staticFilter: "${properties.name}"
+                },
+                nestedPlaceholder: "SEARCH NESTED",
+                then: [nestedService]
+            }
+        };
+        let action = selectSearchItem(item, {
             size: {
                 width: 200,
                 height: 200
@@ -122,7 +125,7 @@ describe('search Epics', () => {
         expect(actions[4].services[0]).toEqual({
             ...nestedService,
             options: {
-                staticFilter: "TEST_FILTER_TEMPLATE"
+                item
             }
         });
         expect(actions[4].items).toEqual({
