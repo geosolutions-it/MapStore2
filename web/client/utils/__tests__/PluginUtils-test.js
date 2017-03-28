@@ -5,18 +5,23 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+const React = require('react');
+const ReactDOM = require('react-dom');
+const {Provider} = require('react-redux');
 const expect = require('expect');
 const PluginsUtils = require('../PluginsUtils');
 const assign = require('object-assign');
 const MapSearchPlugin = require('../../plugins/MapSearch');
 
 describe('PluginsUtils', () => {
-    beforeEach( () => {
-
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
     });
-    afterEach((done) => {
-        document.body.innerHTML = '';
 
+    afterEach((done) => {
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
+        document.body.innerHTML = '';
         setTimeout(done);
     });
     it('combineReducers', () => {
@@ -79,5 +84,18 @@ describe('PluginsUtils', () => {
         const epics = PluginsUtils.combineEpics(plugins, appEpics);
         expect(typeof epics ).toEqual('function');
     });
-
+    it('connect', () => {
+        const MyComponent = (props) => <div>{props.test}</div>;
+        const Connected = PluginsUtils.connect((state) => ({test: state.test}), {})(MyComponent);
+        const store = {
+            dispatch: () => {},
+            subscribe: () => {},
+            getState: () => ({
+                test: "statetest"
+            })
+        };
+        const app = ReactDOM.render(<Provider store={store}><Connected test="propstest" pluginCfg={{test: "plugintest"}}/></Provider>, document.getElementById("container"));
+        const domElement = ReactDOM.findDOMNode(app);
+        expect(domElement.innerText).toBe("plugintest");
+    });
 });

@@ -65,7 +65,7 @@ const PluginsContainer = React.createClass({
             .filter((Plugin) => !Plugin.impl.loadPlugin)
             .filter(this.filterPlugins)
             .map((Plugin) => <Plugin.impl key={Plugin.id}
-                {...this.props.params} {...Plugin.cfg} items={Plugin.items}/>);
+                {...this.props.params} {...Plugin.cfg} pluginCfg={Plugin.cfg} items={Plugin.items}/>);
     },
     render() {
         if (this.props.pluginsConfig) {
