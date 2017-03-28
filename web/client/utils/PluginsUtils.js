@@ -190,7 +190,7 @@ const PluginsUtils = {
         const pluginKey = (isObject(pluginDef) ? pluginDef.name : pluginDef) + 'Plugin';
         const impl = plugins[pluginKey];
         if (!impl) {
-            throw "the plugin \"" + pluginKey + " \"is undefinded";
+            return null;
         }
         return {
             id: id || name,

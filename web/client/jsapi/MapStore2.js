@@ -19,8 +19,7 @@ const url = require('url');
 const ThemeUtils = require('../utils/ThemeUtils');
 
 const assign = require('object-assign');
-
-require('./mapstore2.css');
+const {partialRight} = require('lodash');
 
 const defaultConfig = {
     "map": {
@@ -223,8 +222,7 @@ const MapStore2 = {
      * @static
      * @param {string} container id of the DOM element that should contain the embedded MapStore2
      * @param {object} options set of options of the embedded app
-     *
-     * The options object can contain the following properties, to configure the app UI and state:
+     *  * The options object can contain the following properties, to configure the app UI and state:
      *  * **plugins**: list of plugins (and the related configuration) to be included in the app
      *    look at [Plugins documentation](./plugins-documentation) for further details
      *  * **config**: map configuration object for the application (look at [Map Configuration](./maps-configuration) for details)
@@ -259,64 +257,67 @@ const MapStore2 = {
      *      }
      * }
      * ```
+     * @param {object} [plugins] optional plugins definition (defaults to local plugins list)
+     * @param {object} [component] optional page component (defaults to MapStore2 Embedded Page)
      * @example
      * MapStore2.create('container', {
      *      plugins: ['Map']
      * });
      */
-    create(container, options) {
+    create(container, options, plugins, component) {
         const embedded = require('../containers/Embedded');
 
         const {initialState, storeOpts} = options;
+        require.ensure([], () => {
+            const pluginsDef = plugins || require('./plugins');
+            const pages = [{
+                name: "embedded",
+                path: "/",
+                component: component || embedded,
+                pageConfig: {
+                    pluginsConfig: options.plugins || defaultPlugins
+                }
+            }];
 
-        const pluginsDef = require('./plugins');
-        const pages = [{
-            name: "embedded",
-            path: "/",
-            component: embedded,
-            pageConfig: {
-                pluginsConfig: options.plugins || defaultPlugins
+            const StandardRouter = connect((state) => ({
+                locale: state.locale || {},
+                pages
+            }))(require('../components/app/StandardRouter'));
+
+            const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {}, {});
+            const initialActions = getInitialActions(options);
+            const appConfig = {
+                storeOpts: assign({}, storeOpts, {notify: true}),
+                appStore,
+                pluginsDef,
+                initialActions,
+                appComponent: StandardRouter,
+                printingEnabled: false
+            };
+            if (options.style) {
+                let dom = document.getElementById('custom_theme');
+                if (!dom) {
+                    dom = document.createElement('style');
+                    dom.id = 'custom_theme';
+                    document.head.appendChild(dom);
+                }
+                ThemeUtils.renderFromLess(options.style, 'custom_theme', 'themes/default/');
             }
-        }];
+            const defaultThemeCfg = {
+              prefixContainer: '#' + container
+            };
 
-        const StandardRouter = connect((state) => ({
-            locale: state.locale || {},
-            pages
-        }))(require('../components/app/StandardRouter'));
-
-        const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {}, {});
-        const initialActions = getInitialActions(options);
-        const appConfig = {
-            storeOpts: assign({}, storeOpts, {notify: true}),
-            appStore,
-            pluginsDef,
-            initialActions,
-            appComponent: StandardRouter,
-            printingEnabled: false
-        };
-        if (options.style) {
-            let dom = document.getElementById('custom_theme');
-            if (!dom) {
-                dom = document.createElement('style');
-                dom.id = 'custom_theme';
-                document.head.appendChild(dom);
-            }
-            ThemeUtils.renderFromLess(options.style, 'custom_theme', 'themes/default/');
-        }
-        const defaultThemeCfg = {
-          prefixContainer: '#' + container
-        };
-
-        const themeCfg = options.theme && assign({}, defaultThemeCfg, options.theme) || defaultThemeCfg;
-        app = ReactDOM.render(<StandardApp themeCfg={themeCfg} className="fill" {...appConfig}/>, document.getElementById(container));
-        app.store.addActionListener((action) => {
-            (actionListeners[action.type] || []).concat(actionListeners['*'] || []).forEach((listener) => {
-                listener.call(null, action);
+            const themeCfg = options.theme && assign({}, defaultThemeCfg, options.theme) || defaultThemeCfg;
+            app = ReactDOM.render(<StandardApp themeCfg={themeCfg} className="fill" {...appConfig}/>, document.getElementById(container));
+            app.store.addActionListener((action) => {
+                (actionListeners[action.type] || []).concat(actionListeners['*'] || []).forEach((listener) => {
+                    listener.call(null, action);
+                });
             });
-        });
-        app.store.subscribe(() => {
-            stateChangeListeners.forEach(({listener, selector}) => {
-                listener.call(null, selector(app.store.getState()));
+            app.store.subscribe(() => {
+                stateChangeListeners.forEach(({listener, selector}) => {
+                    listener.call(null, selector(app.store.getState()));
+                });
             });
         });
     },
@@ -385,6 +386,18 @@ const MapStore2 = {
      */
     offStateChange: (listener) => {
         stateChangeListeners = stateChangeListeners.filter((l) => l !== listener);
+    },
+    /**
+     * Returns a new custom API object using the given plugins list.
+     *
+     * @memberof MapStore2
+     * @static
+     * @param {object} plugins list of included plugins
+     * @example
+     * MapStore2.withPlugins({...});
+     */
+    withPlugins: (plugins) => {
+        return assign({}, MapStore2, {create: partialRight(MapStore2.create, plugins)});
     }
 };
 
