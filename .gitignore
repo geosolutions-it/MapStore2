@@ -16,3 +16,4 @@ _site
 .jekyll-metadata
 *.lock
 docs/developer-guide/reference/
+web/client/mapstore/docs/
