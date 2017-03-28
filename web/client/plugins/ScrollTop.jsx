@@ -12,8 +12,10 @@ const {Glyphicon, Button, OverlayTrigger, Tooltip} = require('react-bootstrap');
 
 /**
  * ScrollUp Plugin. Show a button that allows to scroll to the top of the page. Only for full pages.
- * @prop style the style of the scrollUp div
+ * @prop style {object} the style of the scrollUp div
+ * @prop showUnder {number} pixels of scroll before to show the button
  * @memberof plugins
+ * @class
  * @static
  */
 const ScrollTop = React.createClass({

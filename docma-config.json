@@ -133,7 +133,7 @@
                 "web/client/plugins/Identify.jsx",
                 "web/client/plugins/Login.jsx",
 
-                "web/client/plugins/ScrollTop"
+                "web/client/plugins/ScrollTop.jsx"
             ]
         },
         "./docs/**/*md",
