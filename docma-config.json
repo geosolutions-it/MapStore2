@@ -132,7 +132,6 @@
                 "web/client/plugins/Map.jsx",
                 "web/client/plugins/Identify.jsx",
                 "web/client/plugins/Login.jsx",
-
                 "web/client/plugins/ScrollTop.jsx"
             ]
         },

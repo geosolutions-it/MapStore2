@@ -132,7 +132,7 @@
     "react-responsive": "1.1.3",
     "react-router": "2.5.2",
     "react-router-redux": "3.0.0",
-    "react-scroll-up": "^1.2.1",
+    "react-scroll-up": "1.2.1",
     "react-select": "1.0.0-rc.1",
     "react-selectize": "2.0.3",
     "react-share": "1.8.0",
