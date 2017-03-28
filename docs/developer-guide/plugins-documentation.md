@@ -67,7 +67,7 @@ When you have a monitored state, you can use it in configuration properties this
 ```js
 "cfg": {
   ...
-  "myProp": "{mapType === 'openlayers' : 1 : 2}"
+  "myProp": "{mapType === 'openlayers' ? 1 : 2}"
   ...
 }
 ```
