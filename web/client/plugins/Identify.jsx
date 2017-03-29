@@ -53,8 +53,9 @@ const selector = createSelector([
  * @prop cfg.style {object} inline css style
  * @prop cfg.draggable {boolean} draggable info window
  * @prop cfg.collapsible {boolean} collapsible info panel
- * @prop cfg {object} style
- * @prop cfg.viewerOptions {object}
+ * @prop cfg {object} configuration for the plugin element
+ * @prop cfg.infoFormat {string} default format of the feature info TEXT, HTML or JSON
+ * @prop cfg.viewerOptions {object} configuration for the viewer element
  * @prop cfg.viewerOptions.container {expression} the container of the viewer, expression from the context
  * @prop cfg.viewerOptions.header {expression} the geader of the viewer, expression from the context{expression}
  * @prop cfg.viewerOptions.collapsible {boolean} the single feature viewer is collapsible
@@ -74,13 +75,14 @@ const selector = createSelector([
  *       },
  *       "draggable": false,
  *       "collapsible": true,
+ *       "infoFormat": "HTML",
  *       "viewerOptions": {
- *       "container": "{context.ReactSwipe}",
- *       "header": "{context.SwipeHeader}",
- *       "collapsible": false
- *   },
- *   "bodyClass": "mobile-feature-info"
- *  }
+ *           "container": "{context.ReactSwipe}",
+ *           "header": "{context.SwipeHeader}",
+ *           "collapsible": false,
+ *       },
+ *       "bodyClass": "mobile-feature-info"
+ *   }
  * }
  */
 const IdentifyPlugin = connect(selector, {
