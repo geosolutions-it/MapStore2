@@ -1,4 +1,5 @@
 {
+
     "proxyUrl": {
         "url": "/mapstore/proxy/?url=",
         "useCORS": ["https://demo.geo-solutions.it/geoserver"]
@@ -263,7 +264,7 @@
             "cfg": {
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", "Language", "Attribution"],
+        }, "ManagerMenu", "Login", "Language", "Attribution", "ScrollTop"],
         "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "MapType", "ThemeSwitcher", "CreateNewMap", "Maps", "Examples", "Footer"],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }
