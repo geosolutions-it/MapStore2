@@ -25,10 +25,10 @@ This is the main structure:
     "useCORS": ["http://nominatim.openstreetmap.org", "https://nominatim.openstreetmap.org"]
   },
   // API keys for bing and mapquest services
-  "bingApiKey"
-  "mapquestApiKey"
+  "bingApiKey",
+  "mapquestApiKey",
   // path to the translation files directory (if different from default)
-  "translationsPath"
+  "translationsPath",
   // if true, every ajax and mapping request will be authenticated with the configurations if match a rule
   "useAuthenticationRules": true
   // the athentication rules to match
@@ -40,6 +40,17 @@ This is the main structure:
   }, {
     "urlPattern": "\\/geoserver.*",
     "method": "authkey"
+  },
+  // optional state initializer (it will override the one defined in appConfig.js)
+  "initialState": {
+      // default initial state for every mode (will override initialState imposed by plugins reducers)
+      "defaultState": {
+          ...
+      },
+      // mobile override (defined properties will overide default in mobile mode)
+      "mobile": {
+          ...
+      }
   }
   "plugins": {
       // plugins to load for the mobile mode
