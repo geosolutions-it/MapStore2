@@ -26,6 +26,7 @@ const Catalog = React.createClass({
         onChangeFormat: React.PropTypes.func,
         onLayerAdd: React.PropTypes.func,
         onZoomToExtent: React.PropTypes.func,
+        zoomToLayer: React.PropTypes.bool,
         onError: React.PropTypes.func,
         pageSize: React.PropTypes.number,
         displayURL: React.PropTypes.bool,
@@ -56,6 +57,7 @@ const Catalog = React.createClass({
             onChangeFormat: () => {},
             onLayerAdd: () => {},
             onZoomToExtent: () => {},
+            zoomToLayer: true,
             onError: () => {},
             chooseCatalogUrl: true,
             records: [],
@@ -148,6 +150,7 @@ const Catalog = React.createClass({
                     catalogURL={this.getCatalogUrl() }
                     onLayerAdd={this.props.onLayerAdd}
                     onZoomToExtent={this.props.onZoomToExtent}
+                    zoomToLayer={this.props.zoomToLayer}
                     onError={this.props.onError}
                     showGetCapLinks={this.props.showGetCapLinks}
                     addAuthentication={this.props.addAuthentication}
