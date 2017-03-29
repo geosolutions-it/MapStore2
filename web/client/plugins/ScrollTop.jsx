@@ -12,8 +12,9 @@ const {Glyphicon, Button, OverlayTrigger, Tooltip} = require('react-bootstrap');
 
 /**
  * ScrollUp Plugin. Show a button that allows to scroll to the top of the page. Only for full pages.
- * @prop style {object} the style of the scrollUp div
- * @prop showUnder {number} pixels of scroll before to show the button
+ * @prop cfg.style {object} the style of the scrollUp div
+ * @prop cfg.btnClassName {string} the class to set for the button
+ * @prop cfg.showUnder {number} pixels of scroll before to show the button. Default 200
  * @memberof plugins
  * @class
  * @static
@@ -21,11 +22,13 @@ const {Glyphicon, Button, OverlayTrigger, Tooltip} = require('react-bootstrap');
 const ScrollTop = React.createClass({
     propTypes: {
         style: React.PropTypes.object,
-        showUnder: React.PropTypes.number
+        showUnder: React.PropTypes.number,
+        btnClassName: React.PropTypes.string
     },
     getDefaultProps() {
         return {
             showUnder: 200,
+            btnClassName: 'square-button',
             style: {
               zIndex: 10,
               position: 'fixed',
@@ -42,7 +45,7 @@ const ScrollTop = React.createClass({
         return (
             <ScrollUp style={this.props.style} showUnder={this.props.showUnder}>
                 <OverlayTrigger placement="left" overlay={<Tooltip><Message msgId="home.scrollTop"/></Tooltip>}>
-                    <Button bsStyle="primary"><Glyphicon glyph="arrow-up"/></Button>
+                    <Button bsStyle="primary" className={this.props.btnClassName}><Glyphicon glyph="arrow-up"/></Button>
                 </OverlayTrigger>
             </ScrollUp>);
     }
