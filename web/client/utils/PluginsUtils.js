@@ -9,6 +9,8 @@
 const assign = require('object-assign');
 const {omit, isObject, head, isArray, isString} = require('lodash');
 const {combineReducers} = require('redux');
+const {connect} = require('react-redux');
+
 const {combineEpics} = require('redux-observable');
 
 const {memoize, get} = require('lodash');
@@ -122,6 +124,11 @@ const getReducers = (plugins) => Object.keys(plugins).map((name) => plugins[name
 const getEpics = (plugins) => Object.keys(plugins).map((name) => plugins[name].epics)
                             .reduce((previous, current) => assign({}, previous, current), {});
 
+const pluginsMergeProps = (stateProps, dispatchProps, ownProps) => {
+    const {pluginCfg, ...otherProps} = ownProps;
+    return assign({}, otherProps, stateProps, dispatchProps, pluginCfg || {});
+};
+
 /**
  * Utilities to manage plugins
  * @class
@@ -144,9 +151,9 @@ const PluginsUtils = {
      * @param {function[]} [epics] the epics to add to the plugins' ones
      * @return {function} the rootEpic, obtained combining plugins' epics and the other epics passed as argument.
      */
-    combineEpics: (plugins, epics = []) => {
-        const pluginEpics = getEpics(plugins);
-        return combineEpics(...[ ...Object.keys(pluginEpics).map(k => pluginEpics[k]), ...epics]);
+    combineEpics: (plugins, epics = {}) => {
+        const pluginEpics = assign({}, getEpics(plugins), epics);
+        return combineEpics( ...Object.keys(pluginEpics).map(k => pluginEpics[k]));
     },
     getReducers,
     filterState,
@@ -183,7 +190,7 @@ const PluginsUtils = {
         const pluginKey = (isObject(pluginDef) ? pluginDef.name : pluginDef) + 'Plugin';
         const impl = plugins[pluginKey];
         if (!impl) {
-            throw "the plugin \"" + pluginKey + " \"is undefinded";
+            return null;
         }
         return {
             id: id || name,
@@ -192,6 +199,19 @@ const PluginsUtils = {
             cfg: isObject(pluginDef) ? parsePluginConfig(state, plugins.requires, pluginDef.cfg) : {},
             items: getPluginItems(state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins)
         };
+    },
+    /**
+     * Custom react-redux connect function that can override state property with plugin config.
+     * The plugin config properties are taken from the **pluginCfg** property.
+
+     * @param {function} [mapStateToProps] state to properties selector
+     * @param {function} [mapDispatchToProps] dispatchable actions selector
+     * @param {function} [mergeProps] merge function, if not defined, the internal override applies
+     * @param {object} [options] connect options (look at react-redux docs for details)
+     * @returns {function} funtion to be applied to the dumb object to connect it to state / dispatchers
+     */
+    connect: (mapStateToProps, mapDispatchToProps, mergeProps, options) => {
+        return connect(mapStateToProps, mapDispatchToProps, mergeProps || pluginsMergeProps, options);
     },
     getMorePrioritizedContainer
 };

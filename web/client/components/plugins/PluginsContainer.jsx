@@ -62,10 +62,10 @@ const PluginsContainer = React.createClass({
         return plugins
             .filter((Plugin) => !Plugin.hide)
             .map(this.getPluginDescriptor)
-            .filter((Plugin) => !Plugin.impl.loadPlugin)
+            .filter((Plugin) => Plugin && !Plugin.impl.loadPlugin)
             .filter(this.filterPlugins)
             .map((Plugin) => <Plugin.impl key={Plugin.id}
-                {...this.props.params} {...Plugin.cfg} items={Plugin.items}/>);
+                {...this.props.params} {...Plugin.cfg} pluginCfg={Plugin.cfg} items={Plugin.items}/>);
     },
     render() {
         if (this.props.pluginsConfig) {
@@ -87,7 +87,7 @@ const PluginsContainer = React.createClass({
         (this.props.pluginsConfig && this.props.pluginsConfig[this.props.mode] || [])
             .map((plugin) => PluginsUtils.getPluginDescriptor(this.getState, this.props.plugins,
                 this.props.pluginsConfig[this.props.mode], plugin, this.state.loadedPlugins))
-            .filter((plugin) => plugin.impl.loadPlugin).forEach((plugin) => {
+            .filter((plugin) => plugin && plugin.impl.loadPlugin).forEach((plugin) => {
                 if (!this.state.loadedPlugins[plugin.name]) {
                     if (!plugin.impl.enabler || plugin.impl.enabler(state)) {
                         plugin.impl.loadPlugin((impl) => this.loadPlugin(plugin, impl));

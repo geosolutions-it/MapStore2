@@ -172,7 +172,7 @@
 				"cfg": {
 					"wrap": true,
 					"chooseCatalogUrl": false,
-					"initialCatalogURL": "http://demo.geo-solutions.it/geoserver/csw"
+					"initialCatalogURL": "https://demo.geo-solutions.it/geoserver/csw"
 				}
 		}, {
 			"name": "About",

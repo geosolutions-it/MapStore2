@@ -46,9 +46,14 @@ const searchEpic = action$ =>
              // create a stream of streams from array
              Rx.Observable.from((action.services || [ {type: "nominatim"} ])
              // Create an stream for each Promise
-            .map( (service) => Rx.Observable.fromPromise(services[service.type](action.searchText, service.options)
+            .map( (service) => Rx.Observable.defer(() => services[service.type](action.searchText, service.options)
                 .then( (response= []) => response.map(result => ({...result, __SERVICE__: service, __PRIORITY__: service.priority || 0})) ))
-                .retry(3)
+                .retryWhen(errors => errors.delay(200).scan((count, err) => {
+                    if ( count >= 2) {
+                        throw err;
+                    }
+                    return count + 1;
+                }, 0))
             ))
             // merge all results from the streams
             .mergeAll()
@@ -75,7 +80,7 @@ const searchEpic = action$ =>
  */
 const searchItemSelected = action$ =>
     action$.ofType(TEXT_SEARCH_ITEM_SELECTED)
-    .mergeMap(action => {
+    .switchMap(action => {
         const item = action.item;
 
 
@@ -112,8 +117,8 @@ const searchItemSelected = action$ =>
                 nestedServices.map((nestedService) => ({
                     ...nestedService,
                     options: {
-                        ...nestedService.options,
-                        staticFilter: generateTemplateString(nestedService.filterTemplate || "")(item)
+                        item,
+                        ...nestedService.options
                     }
                 })), {
                     text: generateTemplateString(item.__SERVICE__.displayName || "")(item),

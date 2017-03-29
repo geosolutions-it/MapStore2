@@ -17,6 +17,7 @@ const RecordGrid = React.createClass({
         recordItem: React.PropTypes.element,
         catalogURL: React.PropTypes.string,
         onZoomToExtent: React.PropTypes.func,
+        zoomToLayer: React.PropTypes.bool,
         onLayerAdd: React.PropTypes.func,
         onError: React.PropTypes.func,
         records: React.PropTypes.array,
@@ -30,7 +31,8 @@ const RecordGrid = React.createClass({
             records: [],
             onLayerAdd: () => {},
             onError: () => {},
-            column: {xs: 12, sm: 12, md: 6, lg: 6}
+            column: {xs: 12, sm: 12, md: 6, lg: 6},
+            zoomToLayer: true
         };
     },
     renderRecordItem(record) {
@@ -40,6 +42,7 @@ const RecordGrid = React.createClass({
                 <Item
                     onLayerAdd={this.props.onLayerAdd}
                     onZoomToExtent={this.props.onZoomToExtent}
+                    zoomToLayer={this.props.zoomToLayer}
                     onError={this.props.onError}
                     catalogURL={this.props.catalogURL}
                     record={record}
