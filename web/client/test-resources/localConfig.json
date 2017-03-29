@@ -1,1 +1,8 @@
-{}
+{
+  "initialState": {
+    "defaultState": {
+      "test": "test"
+    },
+    "mobile": {}
+  }
+}
