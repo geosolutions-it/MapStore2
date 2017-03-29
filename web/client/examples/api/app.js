@@ -6,5 +6,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const MapStore2 = require('../../jsapi/MapStore2');
+const MapStore2 = require('../../jsapi/MapStore2').withPlugins(require('./plugins'));
 window.MapStore2 = MapStore2;

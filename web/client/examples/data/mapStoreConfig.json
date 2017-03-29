@@ -20,7 +20,7 @@
 			"url":"http://www.realvista.it/reflector/open/service?request=getCapabilities"
 		},
     "demo":{
-        "url":"http://demo.geo-solutions.it/geoserver/wms"
+        "url":"https://demo.geo-solutions.it/geoserver/wms"
     }
 	},
 	"map": {
