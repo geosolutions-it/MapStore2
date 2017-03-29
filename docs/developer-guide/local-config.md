@@ -1,5 +1,5 @@
 # Application configuration
-The application load will load by Default it will load the `localConfig.js`
+The application will load by default it will load the `localConfig.js`
 
 You can load a custom configuration by passing the `localConfig` argument in query string:
 
@@ -8,9 +8,9 @@ localhost:8081/?localConfig=myConfig#/viewer/openlayers/0
 ```
 
 
-The **localConfig** file contains the mail informations about URLs to load and plugins to load in the various modes.
+The **localConfig** file contains the main information about URLs to load and plugins to load in the various modes.
 
-This is the mail structure:
+This is the main structure:
 ```
 {
   // URL of geoStore
