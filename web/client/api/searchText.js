@@ -10,8 +10,6 @@ const assign = require('object-assign');
 const GeoCodeUtils = require('../utils/GeoCodeUtils');
 const {generateTemplateString} = require('../utils/TemplateUtils');
 
-const axios = require('axios');
-const urlUtil = require('url');
 let Services = {
     nominatim: (searchText, options = {}) =>
         require('./Nominatim')
@@ -42,48 +40,6 @@ let Services = {
                 cql_filter: filter
             }, params))
             .then( response => response.features );
-    },
-    bzVie: (searchText, {pathname, lang}) => {
-        let params = assign({}, {query: searchText, lang});
-        let url = urlUtil.format({
-            pathname,
-            query: params
-        });
-        return axios.post(url).then( (res) => {
-            if (res && res.data && res.data.success) {
-                return res.data.vie.map((item) => {
-                    return {
-                        "type": "Feature",
-                        "properties": {
-                            "code": item.codice,
-                            "desc": item.descrizione
-                        }
-                    };
-                });
-            }
-            return [];
-        });
-    },
-    bzCivico: (searchText, {pathname, item}) => {
-        let params = assign({}, {query: searchText, idVia: item.properties.code});
-        let url = urlUtil.format({
-            pathname,
-            query: params
-        });
-        return axios.post(url).then( (res) => {
-            if (res && res.data && res.data.success) {
-                return res.data.vie.map((nestedItem) => {
-                    return {
-                        "type": "Feature",
-                        "properties": {
-                            "code": nestedItem.codice,
-                            "desc": nestedItem.descrizione
-                        }
-                    };
-                });
-            }
-            return [];
-        });
     }
 };
 
