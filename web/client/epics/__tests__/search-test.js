@@ -211,6 +211,6 @@ describe('search Epics', () => {
             expect(actions[5].searchText).toBe(TEXT);
             expect(actions[5].type).toBe(TEXT_SEARCH_TEXT_CHANGE);
 
-        }, 400);
+        }, 800);
     });
 });
