@@ -73,7 +73,7 @@ const ToggleButton = require('./searchbar/ToggleButton');
  * @class Search
  * @memberof plugins
  * @prop {object} cfg.searchOptions initial search options
- * @prop {bool} cfg.fitToResultsMapSize true by default, fits the result list to the mapSize (can be disabled, for custom uses)
+ * @prop {bool} cfg.fitResultsToMapSize true by default, fits the result list to the mapSize (can be disabled, for custom uses)
  * @prop {searchService[]} cfg.searchOptions.services a list of services to perform search.
  * a **nominatim** search service look like this:
  * ```
@@ -125,7 +125,7 @@ const SearchPlugin = connect((state) => ({
     selectedItems: state && state.search && state.search.selectedItems
 }))(React.createClass({
     propTypes: {
-        fitToResultsMapSize: React.PropTypes.bool,
+        fitResultsToMapSize: React.PropTypes.bool,
         searchOptions: React.PropTypes.object,
         selectedItems: React.PropTypes.array,
         selectedServices: React.PropTypes.array,
@@ -137,7 +137,7 @@ const SearchPlugin = connect((state) => ({
             searchOptions: {
                 services: [{type: "nominatim"}]
             },
-            fitToResultsMapSize: true,
+            fitResultsToMapSize: true,
             withToggle: false,
             enabled: true
         };
@@ -180,7 +180,7 @@ const SearchPlugin = connect((state) => ({
                     helpText={<Message msgId="helptexts.searchBar"/>}>
                     {this.getSearchAndToggleButton()}
                 </HelpWrapper>
-                <SearchResultList fitToMapSize={this.props.fitToResultsMapSize} searchOptions={this.props.searchOptions} key="nominatimresults"/>
+                <SearchResultList fitToMapSize={this.props.fitResultsToMapSize} searchOptions={this.props.searchOptions} key="nominatimresults"/>
             </span>
         );
     }
