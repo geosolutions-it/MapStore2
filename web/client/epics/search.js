@@ -42,32 +42,31 @@ const searchEpic = action$ =>
   action$.ofType(TEXT_SEARCH_STARTED)
     .debounceTime(250)
     .switchMap( action =>
-             // create a stream of streams from array
-            Rx.Observable.from(
-                (action.services || [ {type: "nominatim"} ])
-                 // Create an stream for each Service
-                .map((service) =>
-                    Rx.Observable.defer(() =>
-                        API.Utils.getService(service.type)(action.searchText, service.options)
-                            .then( (response= []) => response.map(result => ({...result, __SERVICE__: service, __PRIORITY__: service.priority || 0}))
-                    ))
-                    .retryWhen(errors => errors.delay(200).scan((count, err) => {
-                        if ( count >= 2) {
-                            throw err;
-                        }
-                        return count + 1;
-                    }, 0))
-                ) // map
-            ) // from
-            // merge all results from the streams
-            .mergeAll()
-            .scan( (oldRes, newRes) => [...oldRes, ...newRes].sort( (a, b) => get(b, "__PRIORITY__") - get(a, "__PRIORITY__") ) .slice(0, 15))
-            .map((results) => searchResultLoaded(results, false))
-            .takeUntil(action$.ofType([ TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ITEM_SELECTED]))
-            .startWith(searchTextLoading(true))
-            .concat([searchTextLoading(false)])
-            .catch(e => Rx.Observable.from([searchResultError(e), searchTextLoading(false)]))
-
+         // create a stream of streams from array
+        Rx.Observable.from(
+            (action.services || [ {type: "nominatim"} ])
+             // Create an stream for each Service
+            .map((service) =>
+                Rx.Observable.defer(() =>
+                    API.Utils.getService(service.type)(action.searchText, service.options)
+                        .then( (response= []) => response.map(result => ({...result, __SERVICE__: service, __PRIORITY__: service.priority || 0}))
+                ))
+                .retryWhen(errors => errors.delay(200).scan((count, err) => {
+                    if ( count >= 2) {
+                        throw err;
+                    }
+                    return count + 1;
+                }, 0))
+            ) // map
+        ) // from
+        // merge all results from the streams
+        .mergeAll()
+        .scan( (oldRes, newRes) => [...oldRes, ...newRes].sort( (a, b) => get(b, "__PRIORITY__") - get(a, "__PRIORITY__") ) .slice(0, 15))
+        .map((results) => searchResultLoaded(results, false))
+        .takeUntil(action$.ofType([ TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ITEM_SELECTED]))
+        .startWith(searchTextLoading(true))
+        .concat([searchTextLoading(false)])
+        .catch(e => Rx.Observable.from([searchResultError(e), searchTextLoading(false)]))
 );
 
 /**
@@ -86,6 +85,7 @@ const searchEpic = action$ =>
 const searchItemSelected = action$ =>
     action$.ofType(TEXT_SEARCH_ITEM_SELECTED)
     .switchMap(action => {
+        // itemSelectionStream --> emits actions for zoom and marker add
         let itemSelectionStream = Rx.Observable.of(action.item)
             .concatMap((item) => {
                 if (item && item.__SERVICE__ && item.__SERVICE__.geomService) {
