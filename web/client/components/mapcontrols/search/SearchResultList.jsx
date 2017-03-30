@@ -9,6 +9,7 @@
 var React = require('react');
 var SearchResult = require('./SearchResult');
 const I18N = require('../../I18N/I18N');
+var assign = require('object-assign');
 
 
 let SearchResultList = React.createClass({
@@ -16,6 +17,9 @@ let SearchResultList = React.createClass({
         results: React.PropTypes.array,
         searchOptions: React.PropTypes.object,
         mapConfig: React.PropTypes.object,
+        fitToMapSize: React.PropTypes.bool,
+        containerStyle: React.PropTypes.containerStyle,
+        sizeAdjustment: React.PropTypes.object,
         onItemClick: React.PropTypes.func,
         addMarker: React.PropTypes.func,
         afterItemClick: React.PropTypes.func,
@@ -23,6 +27,13 @@ let SearchResultList = React.createClass({
     },
     getDefaultProps() {
         return {
+            sizeAdjustment: {
+                width: 0,
+                height: 110
+            },
+            containerStyle: {
+                zIndex: 1000
+            },
             onItemClick: () => {},
             addMarker: () => {},
             afterItemClick: () => {}
@@ -47,13 +58,23 @@ let SearchResultList = React.createClass({
         if (!notFoundMessage) {
             notFoundMessage = <I18N.Message msgId="noresultfound" />;
         }
+        let containerStyle = this.props.containerStyle;
+        let mapSize = this.props.mapConfig && this.props.mapConfig.size;
+        if (this.props.fitToMapSize && mapSize) {
+            let maxWidth = mapSize.width - this.props.sizeAdjustment.width;
+            let maxHeight = mapSize.height - this.props.sizeAdjustment.height;
+            containerStyle = assign({}, this.props.containerStyle, {
+                maxWidth,
+                maxHeight
+            });
+        }
         if (!this.props.results) {
             return null;
         } else if (this.props.results.length === 0) {
-            return <div className="search-result-list" style={{padding: "10px", textAlign: "center"}}>{notFoundMessage}</div>;
+            return <div className="search-result-list" style={assign({padding: "10px", textAlign: "center"}, containerStyle)}>{notFoundMessage}</div>;
         }
         return (
-            <div className="search-result-list">
+            <div className="search-result-list" style={containerStyle}>
                 {this.renderResults()}
             </div>
         );

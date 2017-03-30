@@ -193,7 +193,7 @@ let SearchBar = React.createClass({
         var text = this.props.searchText;
         if ((text === undefined || text === "") && (!this.props.selectedItems || this.props.selectedItems.length === 0)) {
             this.props.onSearchReset();
-        } else {
+        } else if (text !== undefined && text !== "") {
             this.props.onSearch(text, this.props.searchOptions);
         }
 
