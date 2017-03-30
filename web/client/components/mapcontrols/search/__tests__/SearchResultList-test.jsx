@@ -38,10 +38,8 @@ describe("test the SearchResultList", () => {
     });
 
     it('test component creation', () => {
-
         const tb = ReactDOM.render(<SearchResultList results={results}/>, document.getElementById("container"));
         expect(tb).toExist();
-
     });
 
     it('create component without items', () => {
@@ -54,6 +52,20 @@ describe("test the SearchResultList", () => {
         expect(tb).toExist();
     });
 
+
+    it('test fit map Size', () => {
+        const res = Array.from(Array(100).keys()).map((i) => ({
+            id: i,
+            properties: {
+                prop: i
+            }
+        }));
+        const cmp = ReactDOM.render(<SearchResultList mapConfig={{size: {width: 200, height: 200}}} sizeAdjustment={{width: 100, height: 120}} fitToMapSize={true} results={res} notFoundMessage="not found"/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        let list = TestUtils.findRenderedDOMComponentWithClass(cmp, "search-result-list");
+        expect(list.offsetHeight).toBe(80);
+        expect(list.offsetWidth).toBe(100);
+    });
     it('get service info from internal object', () => {
         let tb = ReactDOM.render(<SearchResultList results={results} notFoundMessage="not found"/>, document.getElementById("container"));
         expect(tb).toExist();
