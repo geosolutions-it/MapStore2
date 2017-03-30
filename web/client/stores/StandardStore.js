@@ -26,7 +26,7 @@ const {createEpicMiddleware} = require('redux-observable');
 const SecurityUtils = require('../utils/SecurityUtils');
 const ListenerEnhancer = require('@carnesen/redux-add-action-listener-enhancer').default;
 
-module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {}, appEpics = {}, plugins, storeOpts) => {
+module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {}, appEpics = {}, plugins, storeOpts = {}) => {
     const allReducers = combineReducers(plugins, {
         ...appReducers,
         localConfig: require('../reducers/localConfig'),
@@ -40,8 +40,9 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         layers: () => {return null; }
     });
     const rootEpic = combineEpics(plugins, appEpics);
-    const defaultState = initialState.defaultState;
-    const mobileOverride = initialState.mobile;
+    const optsState = storeOpts.initialState || {defaultState: {}, mobile: {}};
+    const defaultState = assign({}, initialState.defaultState, optsState.defaultState);
+    const mobileOverride = assign({}, initialState.mobile, optsState.mobile);
     const epicMiddleware = createEpicMiddleware(rootEpic);
     const rootReducer = (state, action) => {
         let mapState = createHistory(LayersUtils.splitMapAndLayers(mapConfig(state, action)));
