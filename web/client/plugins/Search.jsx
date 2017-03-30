@@ -1,5 +1,5 @@
 /*
- * Copyright 2016, GeoSolutions Sas.
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -25,8 +25,7 @@ const searchSelector = createSelector([
     error: searchState && searchState.error,
     loading: searchState && searchState.loading,
     searchText: searchState ? searchState.searchText : "",
-    selectedItems: searchState && searchState.selectedItems,
-    selectedServices: searchState && searchState.selectedServices
+    selectedItems: searchState && searchState.selectedItems
 }));
 
 const SearchBar = connect(searchSelector, {
@@ -102,8 +101,11 @@ const ToggleButton = require('./searchbar/ToggleButton');
  *        "blackist": [... an array of strings to exclude from the final search filter ]
  *      },
  *      "nestedPlaceholder": "Write other text to refine the search...",
- *      "then": [ ... an array of services to use when one item of this service is selected]
+ *      "nestedPlaceholderMsgId": "id contained in the localization files i.e. search.nestedplaceholder",
+ *      "then": [ ... an array of services to use when one item of this service is selected],
+ *      "geomService": { optional service to retrieve the geometry}
  *  }
+ *
  * ```
  * The typical nested service needs to have some additional parameters:
  * ```
@@ -151,6 +153,7 @@ const SearchPlugin = connect((state) => ({
             {...this.props}
             searchOptions={this.getCurrentServices()}
             placeholder={this.getServiceOverrides("placeholder")}
+            placeholderMsgId={this.getServiceOverrides("placeholderMsgId")}
             />);
         if (this.props.withToggle === true) {
             return [<ToggleButton/>].concat(this.props.enabled ? [search] : null);

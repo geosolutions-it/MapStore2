@@ -18,6 +18,37 @@ const rootEpic = combineEpics(searchEpic, searchItemSelected);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
+const SEARCH_NESTED = 'SEARCH NESTED';
+const TEST_NESTED_PLACEHOLDER = 'TEST_NESTED_PLACEHOLDER';
+const STATE_NAME = 'STATE_NAME';
+
+const nestedService = {
+    nestedPlaceholder: TEST_NESTED_PLACEHOLDER
+};
+const TEXT = "Dinagat Islands";
+const item = {
+      "type": "Feature",
+      "bbox": [125, 10, 126, 11],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [125.6, 10.1]
+      },
+      "properties": {
+        "name": TEXT
+    },
+    "__SERVICE__": {
+        searchTextTemplate: "${properties.name}",
+        displayName: "${properties.name}",
+        type: "wfs",
+        options: {
+            staticFilter: "${properties.name}"
+        },
+        nestedPlaceholder: SEARCH_NESTED,
+        nestedPlaceholderMsgId: TEST_NESTED_PLACEHOLDER,
+        then: [nestedService]
+    }
+};
+
 describe('search Epics', () => {
     let store;
     beforeEach(() => {
@@ -36,7 +67,7 @@ describe('search Epics', () => {
                 options: {
                     url: 'base/web/client/test-resources/wfs/Wyoming.json',
                     typeName: 'topp:states',
-                    queriableAttributes: ['STATE_NAME']
+                    queriableAttributes: [STATE_NAME]
                 }
             }]
         };
@@ -81,31 +112,6 @@ describe('search Epics', () => {
     });
 
     it('searchItemSelected epic with nested services', () => {
-        let nestedService = {
-            nestedPlaceholder: "TEST_NESTED_PLACEHOLDER"
-        };
-        const TEXT = "Dinagat Islands";
-        const item = {
-              "type": "Feature",
-              "bbox": [125, 10, 126, 11],
-              "geometry": {
-                "type": "Point",
-                "coordinates": [125.6, 10.1]
-              },
-              "properties": {
-                "name": TEXT
-            },
-            "__SERVICE__": {
-                searchTextTemplate: "${properties.name}",
-                displayName: "${properties.name}",
-                type: "wfs",
-                options: {
-                    staticFilter: "${properties.name}"
-                },
-                nestedPlaceholder: "SEARCH NESTED",
-                then: [nestedService]
-            }
-        };
         let action = selectSearchItem(item, {
             size: {
                 width: 200,
@@ -129,11 +135,82 @@ describe('search Epics', () => {
             }
         });
         expect(actions[4].items).toEqual({
-            placeholder: "SEARCH NESTED",
+            placeholder: SEARCH_NESTED,
+            placeholderMsgId: TEST_NESTED_PLACEHOLDER,
             text: TEXT
         });
         expect(actions[5].type).toBe(TEXT_SEARCH_TEXT_CHANGE);
-        expect(actions[5].searchText).toBe("Dinagat Islands");
+        expect(actions[5].searchText).toBe(TEXT);
+    });
 
+    it('searchItemSelected with geomService', () => {
+        const itemWithoutGeom = {
+              "type": "Feature",
+              "bbox": [125, 10, 126, 11],
+              "properties": {
+                "name": TEXT
+            },
+            "__SERVICE__": {
+                searchTextTemplate: "${properties.name}",
+                displayName: "${properties.name}",
+                type: "wfs",
+                options: {
+                    staticFilter: "${properties.name}"
+                },
+                "geomService": {
+                    type: 'wfs',
+                    options: {
+                        url: 'base/web/client/test-resources/wfs/Wyoming.json',
+                        typeName: 'topp:states',
+                        queriableAttributes: [STATE_NAME]
+                    }
+                },
+                nestedPlaceholder: SEARCH_NESTED,
+                nestedPlaceholderMsgId: TEST_NESTED_PLACEHOLDER
+            }
+        };
+
+        let action = selectSearchItem(itemWithoutGeom, {
+            size: {
+                width: 200,
+                height: 200
+            },
+            services: [{
+                type: 'wfs',
+                options: {
+                    url: 'base/web/client/test-resources/wfs/Wyoming.json',
+                    typeName: 'topp:states',
+                    queriableAttributes: [STATE_NAME]
+                }
+            }],
+            projection: "EPSG:4326"
+        });
+
+        store.dispatch( action );
+        setTimeout(() => {
+            let actions = store.getActions();
+            expect(actions.length).toBe(6);
+            expect(actions[1].type).toBe(CHANGE_MAP_VIEW);
+            expect(actions[2].type).toBe(TEXT_SEARCH_ADD_MARKER);
+            expect(actions[3].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
+            expect(actions[4].type).toBe(TEXT_SEARCH_NESTED_SERVICES_SELECTED);
+            expect(actions[5].type).toBe(TEXT_SEARCH_TEXT_CHANGE);
+
+            expect(actions[4].services[0]).toEqual({
+                ...nestedService,
+                options: {
+                    item
+                }
+            });
+            expect(actions[4].services[0].geometry).toExist();
+            expect(actions[4].items).toEqual({
+                placeholder: SEARCH_NESTED,
+                placeholderMsgId: TEST_NESTED_PLACEHOLDER,
+                text: TEXT
+            });
+            expect(actions[5].searchText).toBe(TEXT);
+            expect(actions[5].type).toBe(TEXT_SEARCH_TEXT_CHANGE);
+
+        }, 400);
     });
 });
