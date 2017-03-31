@@ -124,12 +124,14 @@ describe('search Epics', () => {
 
         let actions = store.getActions();
         expect(actions.length).toBe(6);
-        expect(actions.filter(m => m.type === CHANGE_MAP_VIEW)[0].type).toBe(CHANGE_MAP_VIEW);
-        expect(actions.filter(m => m.type === TEXT_SEARCH_ADD_MARKER)[0].type).toBe(TEXT_SEARCH_ADD_MARKER);
-        expect(actions.filter(m => m.type === TEXT_SEARCH_RESULTS_PURGE)[0].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
+        let expectedActions = [CHANGE_MAP_VIEW, TEXT_SEARCH_ADD_MARKER, TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_TEXT_CHANGE ];
+        let actionsType = actions.map(a => a.type);
+
+        expectedActions.forEach((a) => {
+            expect(actionsType.indexOf(a)).toNotBe(-1);
+        });
 
         let testSearchNestedServicesSelectedAction = actions.filter(m => m.type === TEXT_SEARCH_NESTED_SERVICES_SELECTED)[0];
-        expect(testSearchNestedServicesSelectedAction.type).toBe(TEXT_SEARCH_NESTED_SERVICES_SELECTED);
         expect(testSearchNestedServicesSelectedAction.services[0]).toEqual({
             ...nestedService,
             options: {
@@ -141,7 +143,6 @@ describe('search Epics', () => {
             placeholderMsgId: TEST_NESTED_PLACEHOLDER,
             text: TEXT
         });
-        expect(actions.filter(m => m.type === TEXT_SEARCH_TEXT_CHANGE)[0].type).toBe(TEXT_SEARCH_TEXT_CHANGE);
         expect(actions.filter(m => m.type === TEXT_SEARCH_TEXT_CHANGE)[0].searchText).toBe(TEXT);
     });
 
