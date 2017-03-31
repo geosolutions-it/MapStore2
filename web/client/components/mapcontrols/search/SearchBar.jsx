@@ -120,7 +120,7 @@ let SearchBar = React.createClass({
         }
     },
     onFocus() {
-        if (this.props.typeAhead ) {
+        if (this.props.typeAhead && this.props.searchText ) {
             this.search();
         }
     },

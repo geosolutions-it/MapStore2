@@ -63,8 +63,8 @@ const searchEpic = action$ =>
         .mergeAll()
         .scan( (oldRes, newRes) => [...oldRes, ...newRes].sort( (a, b) => get(b, "__PRIORITY__") - get(a, "__PRIORITY__") ) .slice(0, 15))
         .map((results) => searchResultLoaded(results, false))
-        .takeUntil(action$.ofType([ TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ITEM_SELECTED]))
         .startWith(searchTextLoading(true))
+        .takeUntil(action$.ofType( TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ITEM_SELECTED))
         .concat([searchTextLoading(false)])
         .catch(e => Rx.Observable.from([searchResultError(e), searchTextLoading(false)]))
 );
@@ -144,7 +144,7 @@ const searchItemSelected = action$ =>
         let searchTextTemplate = item.__SERVICE__ && item.__SERVICE__.searchTextTemplate;
         let searchTextStream = searchTextTemplate ? Rx.Observable.of(searchTextChanged(generateTemplateString(searchTextTemplate)(item))) : Rx.Observable.empty();
 
-        return Rx.Observable.merge(itemSelectionStream, Rx.Observable.of(resultsPurge()), nestedServicesStream, searchTextStream);
+        return Rx.Observable.of(resultsPurge()).concat(itemSelectionStream, nestedServicesStream, searchTextStream);
     });
 
     /**

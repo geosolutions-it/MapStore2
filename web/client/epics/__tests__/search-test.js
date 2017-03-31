@@ -106,9 +106,9 @@ describe('search Epics', () => {
 
         let actions = store.getActions();
         expect(actions.length).toBe(4);
-        expect(actions[1].type).toBe(CHANGE_MAP_VIEW);
-        expect(actions[2].type).toBe(TEXT_SEARCH_ADD_MARKER);
-        expect(actions[3].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
+        expect(actions[1].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
+        expect(actions[2].type).toBe(CHANGE_MAP_VIEW);
+        expect(actions[3].type).toBe(TEXT_SEARCH_ADD_MARKER);
     });
 
     it('searchItemSelected epic with nested services', () => {
