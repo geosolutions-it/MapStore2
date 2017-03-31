@@ -44,6 +44,7 @@ const RecordItem = React.createClass({
     propTypes: {
         onLayerAdd: React.PropTypes.func,
         onZoomToExtent: React.PropTypes.func,
+        zoomToLayer: React.PropTypes.bool,
         record: React.PropTypes.object,
         buttonSize: React.PropTypes.string,
         onCopy: React.PropTypes.func,
@@ -57,6 +58,7 @@ const RecordItem = React.createClass({
             mapType: "leaflet",
             onLayerAdd: () => {},
             onZoomToExtent: () => {},
+            zoomToLayer: true,
             onError: () => {},
             style: {},
             buttonSize: "small",
@@ -225,7 +227,7 @@ const RecordItem = React.createClass({
                 params: params,
                 allowedSRS: allowedSRS
             });
-            if (this.props.record.boundingBox) {
+            if (this.props.record.boundingBox && this.props.zoomToLayer) {
                 let extent = this.props.record.boundingBox.extent;
                 let crs = this.props.record.boundingBox.crs;
                 this.props.onZoomToExtent(extent, crs);
@@ -259,7 +261,7 @@ const RecordItem = React.createClass({
                 params: params,
                 allowedSRS: allowedSRS
             });
-            if (this.props.record.boundingBox) {
+            if (this.props.record.boundingBox && this.props.zoomToLayer) {
                 let extent = this.props.record.boundingBox.extent;
                 let crs = this.props.record.boundingBox.crs;
                 this.props.onZoomToExtent(extent, crs);

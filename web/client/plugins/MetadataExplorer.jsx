@@ -56,7 +56,8 @@ const MetadataExplorerComponent = React.createClass({
         toggleControl: React.PropTypes.func,
         closeGlyph: React.PropTypes.string,
         buttonStyle: React.PropTypes.object,
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        zoomToLayer: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -71,11 +72,12 @@ const MetadataExplorerComponent = React.createClass({
             },
             panelClassName: "toolbar-panel",
             toggleControl: () => {},
-            closeGlyph: "1-close"
+            closeGlyph: "1-close",
+            zoomToLayer: true
         };
     },
     render() {
-        const panel = <div role="body" className="modal_window"><Catalog searchOnStartup={this.props.searchOnStartup} active={this.props.active} {...this.props}/></div>;
+        const panel = <div role="body" className="modal_window"><Catalog zoomToLayer={this.props.zoomToLayer} searchOnStartup={this.props.searchOnStartup} active={this.props.active} {...this.props}/></div>;
         if (this.props.wrap) {
             if (this.props.active) {
                 if (this.props.wrapWithPanel) {

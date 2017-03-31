@@ -8,7 +8,9 @@
 
 var React = require('react');
 
-const {Button, Glyphicon, Tooltip, OverlayTrigger} = require('react-bootstrap');
+const {Button, Glyphicon, Tooltip} = require('react-bootstrap');
+
+const OverlayTrigger = require('../misc/OverlayTrigger');
 
 const mapUtils = require('../../utils/MapUtils');
 const configUtils = require('../../utils/ConfigUtils');

@@ -218,7 +218,7 @@ describe('test DefaultLayer module component', () => {
         const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "clayer_removal_button")[0]);
         expect(tool).toExist();
         tool.click();
-        const confirmButton = document.getElementsByClassName("clayer_removal_confirm_button")[0];
+        const confirmButton = document.getElementsByClassName("btn-primary")[0];
         expect(confirmButton).toExist();
         confirmButton.click();
         expect(spy.calls.length).toBe(1);
@@ -279,7 +279,7 @@ describe('test DefaultLayer module component', () => {
         };
         // helper function to get current modals
         const getModals = function() {
-            return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
+            return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog-container');
         };
         // no modals should be available
         const element1 = {layer: {id: 'layer1', name: 'layer1'}, settings: {}};

@@ -7,7 +7,8 @@
  */
 
 const React = require('react');
-const {Modal, Button, Alert} = require('react-bootstrap');
+const {Button, Alert} = require('react-bootstrap');
+const Modal = require('../../misc/Modal');
 
 const Message = require('../../I18N/Message');
 const RuleAttributes = require('./RuleAttributes');

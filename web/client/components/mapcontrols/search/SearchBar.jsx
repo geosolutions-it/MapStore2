@@ -7,7 +7,8 @@
  */
 
 var React = require('react');
-var {FormControl, FormGroup, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
+var {FormControl, FormGroup, Glyphicon, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../../misc/OverlayTrigger');
 var LocaleUtils = require('../../../utils/LocaleUtils');
 var Spinner = require('react-spinkit');
 
@@ -40,7 +41,7 @@ require('./searchbar.css');
  * @prop {number} blurResetDelay time to wait before to trigger onPurgeResults after blur event, if `hideOnBlur` is true
  * @prop {searchText} the text to display in the component
  * @prop {object[]} selectedItems the items selected. Must have `text` property to display
- * @prop {boolean} autoFocusOnSelect if true, the comonent gets focus when items are added, or deleted but some item is still selected. Useful for continue writing after selecting an item (with nested services for instance)
+ * @prop {boolean} autoFocusOnSelect if true, the component gets focus when items are added, or deleted but some item is still selected. Useful for continue writing after selecting an item (with nested services for instance)
  * @prop {boolean} loading if true, shows the loading tool
  * @prop {object} error if not null, an error icon will be display
  * @prop {object} style css style to apply to the component
@@ -120,7 +121,7 @@ let SearchBar = React.createClass({
         }
     },
     onFocus() {
-        if (this.props.typeAhead ) {
+        if (this.props.typeAhead && this.props.searchText ) {
             this.search();
         }
     },
@@ -154,9 +155,9 @@ let SearchBar = React.createClass({
     },
     render() {
         //  const innerGlyphicon = <Button onClick={this.search}></Button>;
-        let placeholder;
+        let placeholder = "search.placeholder";
         if (!this.props.placeholder && this.context.messages) {
-            let placeholderLocMessage = LocaleUtils.getMessageById(this.context.messages, this.props.placeholderMsgId);
+            let placeholderLocMessage = LocaleUtils.getMessageById(this.context.messages, this.props.placeholderMsgId || placeholder);
             if (placeholderLocMessage) {
                 placeholder = placeholderLocMessage;
             }
@@ -193,7 +194,7 @@ let SearchBar = React.createClass({
         var text = this.props.searchText;
         if ((text === undefined || text === "") && (!this.props.selectedItems || this.props.selectedItems.length === 0)) {
             this.props.onSearchReset();
-        } else {
+        } else if (text !== undefined && text !== "") {
             this.props.onSearch(text, this.props.searchOptions);
         }
 

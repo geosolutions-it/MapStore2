@@ -7,7 +7,8 @@
  */
 const React = require('react');
 
-const {Row, Col, Button, Glyphicon, Panel, OverlayTrigger, Tooltip} = require('react-bootstrap');
+const {Row, Col, Button, Glyphicon, Panel, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../../misc/OverlayTrigger');
 
 const FilterField = require('./FilterField');
 const ComboField = require('./ComboField');

@@ -7,7 +7,9 @@
  */
 var React = require('react');
 
-var {Glyphicon, Modal} = require('react-bootstrap');
+var {Glyphicon} = require('react-bootstrap');
+const Modal = require('../../components/misc/Modal');
+
 const assign = require('object-assign');
 
 var Section = React.createClass({

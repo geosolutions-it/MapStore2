@@ -7,6 +7,7 @@
  */
 const React = require('react');
 const withSideEffect = require('react-side-effect');
+const ConfigUtils = require('../../utils/ConfigUtils');
 
 const reducePropsToState = (props) => {
     const innermostProps = props[props.length - 1];
@@ -14,7 +15,7 @@ const reducePropsToState = (props) => {
         return {
           theme: innermostProps.theme || 'default',
           themeElement: innermostProps.themeElement || 'theme_stylesheet',
-          prefix: innermostProps.prefix || 'ms2',
+          prefix: innermostProps.prefix || ConfigUtils.getConfigProp('themePrefix') || 'ms2',
           prefixContainer: innermostProps.prefixContainer && document.querySelector(innermostProps.prefixContainer) || document.body,
           path: innermostProps.path || 'dist/themes'
         };
@@ -41,6 +42,7 @@ const handleStateChangeOnClient = (themeCfg) => {
         if (!prefixContainer.className || prefixContainer.className.indexOf(prefix) === -1) {
             prefixContainer.className = prefixContainer.className + ' ' + prefix;
         }
+        prefixContainer.setAttribute('data-ms2-container', 'ms2');
     }
 };
 

@@ -76,7 +76,6 @@
                     "label": "Download",
                     "href": "index.html",
                     "items": [
-                        { "label": "<code>mvn clean install</code>" },
                         {
                             "label": "MapStore 2 Releases",
                             "href": "https://github.com/geosolutions-it/MapStore2/releases",
@@ -132,10 +131,11 @@
             "plugins": [
                 "web/client/plugins/index.jsdoc",
                 "web/client/plugins/BackgroundSwitcher.jsx",
+                "web/client/plugins/Map.jsx",
                 "web/client/plugins/FullScreen.jsx",
                 "web/client/plugins/Identify.jsx",
                 "web/client/plugins/Login.jsx",
-                "web/client/plugins/Map.jsx",
+                "web/client/plugins/ScrollTop.jsx",
                 "web/client/plugins/Search.jsx"
             ]
         },

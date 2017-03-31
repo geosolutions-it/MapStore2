@@ -99,7 +99,7 @@ My.jsx:
 
 // this is a dumb component
 const MyComponent = require('../components/MyComponent');
-const {connect} = require('react-redux');
+const {connect} = require('../utils/PluginsUtils');
 
 // let's wire it to state and actions
 const MyPlugin = connect((state) => ({

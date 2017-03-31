@@ -320,8 +320,9 @@ var OpenlayersMap = React.createClass({
                                newProps.center.x === currentCenter.x;
 
         if (!centerIsUpdated) {
-            let center = ol.proj.transform([newProps.center.x, newProps.center.y], 'EPSG:4326', newProps.projection);
-            view.setCenter(center);
+            // let center = ol.proj.transform([newProps.center.x, newProps.center.y], 'EPSG:4326', newProps.projection);
+            let center = CoordinatesUtils.reproject({x: newProps.center.x, y: newProps.center.y}, 'EPSG:4326', newProps.projection, true);
+            view.setCenter([center.x, center.y]);
         }
         if (Math.round(newProps.zoom) !== this.props.zoom) {
             view.setZoom(Math.round(newProps.zoom));
@@ -331,7 +332,8 @@ var OpenlayersMap = React.createClass({
         }
     },
     normalizeCenter: function(center) {
-        return ol.proj.transform(center, this.props.projection, 'EPSG:4326');
+        let c = CoordinatesUtils.reproject({x: center[0], y: center[1]}, this.props.projection, 'EPSG:4326', true);
+        return [c.x, c.y];
     },
     setMousePointer(pointer) {
         if (this.map) {

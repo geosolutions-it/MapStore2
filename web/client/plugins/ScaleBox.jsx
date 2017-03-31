@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {connect} = require('react-redux');
+const {connect} = require('../utils/PluginsUtils');
 const {createSelector} = require('reselect');
 
 const {mapSelector} = require('../selectors/map');

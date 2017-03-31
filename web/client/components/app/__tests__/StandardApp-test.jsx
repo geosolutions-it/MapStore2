@@ -51,19 +51,18 @@ describe('StandardApp', () => {
         expect(app).toExist();
     });
 
-    it('creates a default app with the given store creator', () => {
+    it('creates a default app with the given store creator', (done) => {
         let dispatched = 0;
         const store = () => ({
             dispatch() {
                 dispatched++;
+                done();
             }
         });
 
 
         const app = ReactDOM.render(<StandardApp appStore={store}/>, document.getElementById("container"));
         expect(app).toExist();
-
-        expect(dispatched > 0).toBe(true);
     });
 
     it('creates a default app and runs the initial actions', (done) => {
@@ -83,20 +82,49 @@ describe('StandardApp', () => {
         expect(app).toExist();
     });
 
+    it('creates a default app and reads initialState from localConfig', (done) => {
+        const store = (plugins, storeOpts) => {
+            expect(storeOpts.initialState.defaultState.test).toExist();
+            done();
+            return {
+                dispatch() {
+                }
+            };
+        };
+
+        const storeOpts = {
+            initialState: {
+                defaultState: {
+                    test: "test"
+                },
+                mobile: {}
+            }
+        };
+        const app = ReactDOM.render(<StandardApp appStore={store} storeOpts={storeOpts}/>, document.getElementById("container"));
+        expect(app).toExist();
+    });
+
     it('creates a default app and renders the given component', () => {
         const store = () => ({
             dispatch: () => {},
             subscribe: () => {},
             getState: () => ({})
         });
+        const oldLoad = ConfigUtils.loadConfiguration;
+        try {
+            ConfigUtils.loadConfiguration = () => ({
+                then: (callback) => {
+                    callback({});
+                }
+            });
+            const app = ReactDOM.render(<StandardApp appStore={store} appComponent={mycomponent}/>, document.getElementById("container"));
+            expect(app).toExist();
 
-
-        const app = ReactDOM.render(<StandardApp appStore={store} appComponent={mycomponent}/>, document.getElementById("container"));
-        expect(app).toExist();
-
-        const dom = ReactDOM.findDOMNode(app);
-
-        expect(dom.className).toBe('mycomponent');
+            const dom = ReactDOM.findDOMNode(app);
+            expect(dom.className).toBe('mycomponent');
+        } finally {
+            ConfigUtils.loadConfiguration = oldLoad;
+        }
     });
 
     it('creates a default app and configures plugins', () => {
@@ -115,12 +143,21 @@ describe('StandardApp', () => {
             subscribe: () => {},
             getState: () => ({})
         });
+        const oldLoad = ConfigUtils.loadConfiguration;
+        try {
+            ConfigUtils.loadConfiguration = () => ({
+                then: (callback) => {
+                    callback({});
+                }
+            });
 
-        const app = ReactDOM.render(<StandardApp appStore={store} appComponent={mycomponent} pluginsDef={pluginsDef}/>, document.getElementById("container"));
-        expect(app).toExist();
+            const app = ReactDOM.render(<StandardApp appStore={store} appComponent={mycomponent} pluginsDef={pluginsDef}/>, document.getElementById("container"));
+            expect(app).toExist();
 
-        const dom = ReactDOM.findDOMNode(app);
-
-        expect(dom.getElementsByClassName('MyPlugin').length).toBe(1);
+            const dom = ReactDOM.findDOMNode(app);
+            expect(dom.getElementsByClassName('MyPlugin').length).toBe(1);
+        } finally {
+            ConfigUtils.loadConfiguration = oldLoad;
+        }
     });
 });

@@ -7,7 +7,10 @@
  */
 
 var React = require('react');
-var {Button, Glyphicon, OverlayTrigger} = require('react-bootstrap');
+var {Button, Glyphicon} = require('react-bootstrap');
+
+const OverlayTrigger = require('../misc/OverlayTrigger');
+
 var ImageButton = require('./ImageButton');
 /**
  * Toggle button with tooltip and icons or image support.

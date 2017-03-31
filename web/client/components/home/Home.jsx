@@ -7,7 +7,8 @@
  */
 const React = require('react');
 
-const {Glyphicon, OverlayTrigger, Tooltip, Button} = require('react-bootstrap');
+const {Glyphicon, Tooltip, Button} = require('react-bootstrap');
+const OverlayTrigger = require('../misc/OverlayTrigger');
 const Message = require('../../components/I18N/Message');
 
 const Home = React.createClass({

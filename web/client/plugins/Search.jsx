@@ -1,5 +1,5 @@
 /*
- * Copyright 2016, GeoSolutions Sas.
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -25,8 +25,7 @@ const searchSelector = createSelector([
     error: searchState && searchState.error,
     loading: searchState && searchState.loading,
     searchText: searchState ? searchState.searchText : "",
-    selectedItems: searchState && searchState.selectedItems,
-    selectedServices: searchState && searchState.selectedServices
+    selectedItems: searchState && searchState.selectedItems
 }));
 
 const SearchBar = connect(searchSelector, {
@@ -73,6 +72,7 @@ const ToggleButton = require('./searchbar/ToggleButton');
  * @class Search
  * @memberof plugins
  * @prop {object} cfg.searchOptions initial search options
+ * @prop {bool} cfg.fitResultsToMapSize true by default, fits the result list to the mapSize (can be disabled, for custom uses)
  * @prop {searchService[]} cfg.searchOptions.services a list of services to perform search.
  * a **nominatim** search service look like this:
  * ```
@@ -98,11 +98,15 @@ const ToggleButton = require('./searchbar/ToggleButton');
  *        "queriableAttributes": ["attribute_to_query"],
  *        "sortBy": "ID",
  *        "srsName": "EPSG:4326",
- *        "maxFeatures": 4
+ *        "maxFeatures": 4,
+ *        "blackist": [... an array of strings to exclude from the final search filter ]
  *      },
  *      "nestedPlaceholder": "Write other text to refine the search...",
- *      "then": [ ... an array of services to use when one item of this service is selected]
+ *      "nestedPlaceholderMsgId": "id contained in the localization files i.e. search.nestedplaceholder",
+ *      "then": [ ... an array of services to use when one item of this service is selected],
+ *      "geomService": { optional service to retrieve the geometry}
  *  }
+ *
  * ```
  * The typical nested service needs to have some additional parameters:
  * ```
@@ -123,6 +127,7 @@ const SearchPlugin = connect((state) => ({
     selectedItems: state && state.search && state.search.selectedItems
 }))(React.createClass({
     propTypes: {
+        fitResultsToMapSize: React.PropTypes.bool,
         searchOptions: React.PropTypes.object,
         selectedItems: React.PropTypes.array,
         selectedServices: React.PropTypes.array,
@@ -134,6 +139,7 @@ const SearchPlugin = connect((state) => ({
             searchOptions: {
                 services: [{type: "nominatim"}]
             },
+            fitResultsToMapSize: true,
             withToggle: false,
             enabled: true
         };
@@ -150,6 +156,7 @@ const SearchPlugin = connect((state) => ({
             {...this.props}
             searchOptions={this.getCurrentServices()}
             placeholder={this.getServiceOverrides("placeholder")}
+            placeholderMsgId={this.getServiceOverrides("placeholderMsgId")}
             />);
         if (this.props.withToggle === true) {
             return [<ToggleButton/>].concat(this.props.enabled ? [search] : null);
@@ -176,7 +183,7 @@ const SearchPlugin = connect((state) => ({
                     helpText={<Message msgId="helptexts.searchBar"/>}>
                     {this.getSearchAndToggleButton()}
                 </HelpWrapper>
-                <SearchResultList searchOptions={this.props.searchOptions} key="nominatimresults"/>
+                <SearchResultList fitToMapSize={this.props.fitResultsToMapSize} searchOptions={this.props.searchOptions} key="nominatimresults"/>
             </span>
         );
     }

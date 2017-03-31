@@ -97,7 +97,7 @@ let plugins;
  *          }],
  *        "toolsOptions": {
  *          "test": {
- *            "label": "ciao"
+ *            "label": "Hello"
  *          }
  *          ...
  *        }

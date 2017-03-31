@@ -7,7 +7,8 @@
  */
 
 const React = require('react');
-const {Glyphicon, Button, Tooltip, OverlayTrigger} = require('react-bootstrap');
+const {Glyphicon, Button, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('./OverlayTrigger');
 const Spinner = require('react-spinkit');
 
 require('./style/gridcard.css');

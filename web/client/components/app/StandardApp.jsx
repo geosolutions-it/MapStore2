@@ -29,7 +29,8 @@ const StandardApp = React.createClass({
         storeOpts: React.PropTypes.object,
         initialActions: React.PropTypes.array,
         appComponent: React.PropTypes.func,
-        printingEnabled: React.PropTypes.bool
+        printingEnabled: React.PropTypes.bool,
+        onStoreInit: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -37,55 +38,70 @@ const StandardApp = React.createClass({
             initialActions: [],
             printingEnabled: false,
             appStore: () => ({dispatch: () => {}}),
-            appComponent: () => <span/>
+            appComponent: () => <span/>,
+            onStoreInit: () => {}
+        };
+    },
+    getInitialState() {
+        return {
+            store: null
         };
     },
     componentWillMount() {
-        const onInit = () => {
+        const onInit = (config) => {
             if (!global.Intl ) {
                 require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js'], (require) => {
                     global.Intl = require('intl');
                     require('intl/locale-data/jsonp/en.js');
                     require('intl/locale-data/jsonp/it.js');
-                    this.init();
+                    this.init(config);
                 });
             } else {
-                this.init();
+                this.init(config);
             }
         };
-        const opts = assign({}, this.props.storeOpts, {
-            onPersist: onInit
-        });
-        this.store = this.props.appStore(this.props.pluginsDef.plugins, opts);
-        if (!opts.persist) {
-            onInit();
+
+        if (urlQuery.localConfig) {
+            ConfigUtils.setLocalConfigurationFile(urlQuery.localConfig + '.json');
         }
+        ConfigUtils.loadConfiguration().then((config) => {
+            const opts = assign({}, this.props.storeOpts, {
+                onPersist: onInit.bind(null, config)
+            }, {
+                initialState: config.initialState || {defaultState: {}, mobile: {}}
+            });
+            this.store = this.props.appStore(this.props.pluginsDef.plugins, opts);
+            this.props.onStoreInit(this.store);
+            this.setState({
+                store: this.store
+            });
+
+            if (!opts.persist) {
+                onInit(config);
+            }
+        });
+
     },
     render() {
         const {plugins, requires} = this.props.pluginsDef;
         const {pluginsDef, appStore, initialActions, appComponent, ...other} = this.props;
         const App = this.props.appComponent;
-        return (
-            <Provider store={this.store}>
+        return this.state.store ? (
+            <Provider store={this.state.store}>
                 <App {...other} plugins={assign(PluginsUtils.getPlugins(plugins), {requires})}/>
             </Provider>
-        );
+        ) : null;
     },
-    init() {
+    init(config) {
         this.store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
-        if (urlQuery.localConfig) {
-            ConfigUtils.setLocalConfigurationFile(urlQuery.localConfig + '.json');
+        this.store.dispatch(localConfigLoaded(config));
+        const locale = LocaleUtils.getUserLocale();
+        this.store.dispatch(loadLocale(null, locale));
+        if (this.props.printingEnabled) {
+            this.store.dispatch(loadPrintCapabilities(ConfigUtils.getConfigProp('printUrl')));
         }
-        ConfigUtils.loadConfiguration().then((config) => {
-            this.store.dispatch(localConfigLoaded(config));
-            const locale = LocaleUtils.getUserLocale();
-            this.store.dispatch(loadLocale(null, locale));
-            if (this.props.printingEnabled) {
-                this.store.dispatch(loadPrintCapabilities(ConfigUtils.getConfigProp('printUrl')));
-            }
-            this.props.initialActions.forEach((action) => {
-                this.store.dispatch(action());
-            });
+        this.props.initialActions.forEach((action) => {
+            this.store.dispatch(action());
         });
     }
 });

@@ -90,7 +90,7 @@ module.exports = {
       }],
     "toolsOptions": {
       "test": {
-        "label": "ciao"
+        "label": "Hello"
       }
       ...
     }
