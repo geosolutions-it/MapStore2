@@ -15,8 +15,10 @@ const {changeLayerProperties, changeGroupProperties, toggleNode,
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
 const {groupsSelector} = require('../selectors/layers');
+const {mapSelector} = require('../selectors/map');
 
 const LayersUtils = require('../utils/LayersUtils');
+const mapUtils = require('../utils/MapUtils');
 
 const Message = require('./locale/Message');
 const assign = require('object-assign');
@@ -127,12 +129,18 @@ const tocSelector = createSelector(
         (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
         groupsSelector,
         (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}},
-        (state) => state.controls && state.controls.queryPanel && state.controls.queryPanel.enabled || false
-    ], (enabled, groups, settings, querypanelEnabled) => ({
+        (state) => state.controls && state.controls.queryPanel && state.controls.queryPanel.enabled || false,
+        mapSelector
+    ], (enabled, groups, settings, querypanelEnabled, map) => ({
         enabled,
         groups,
         settings,
-        querypanelEnabled
+        querypanelEnabled,
+        currentZoomLvl: map && map.zoom,
+        scales: mapUtils.getScales(
+            map && map.projection || 'EPSG:3857',
+            map && map.mapOptions && map.mapOptions.view && map.mapOptions.view.DPI || null
+        )
     })
 );
 
@@ -168,7 +176,9 @@ const LayerTree = React.createClass({
         activateQueryTool: React.PropTypes.bool,
         activateSettingsTool: React.PropTypes.bool,
         visibilityCheckType: React.PropTypes.string,
-        settingsOptions: React.PropTypes.object
+        settingsOptions: React.PropTypes.object,
+        currentZoomLvl: React.PropTypes.number,
+        scales: React.PropTypes.array
     },
     getDefaultProps() {
         return {
@@ -231,7 +241,9 @@ const LayerTree = React.createClass({
                             opacityText={<Message msgId="opacity"/>}
                             saveText={<Message msgId="save"/>}
                             closeText={<Message msgId="close"/>}
-                            groups={this.props.groups}/>);
+                            groups={this.props.groups}
+                            currentZoomLvl={this.props.currentZoomLvl}
+                            scales={this.props.scales}/>);
         return (
             <div>
                 <TOC onSort={this.props.onSort} filter={this.getNoBackgroundLayers}

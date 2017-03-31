@@ -11,7 +11,9 @@ const Legend = React.createClass({
         layer: React.PropTypes.object,
         legendHeigth: React.PropTypes.number,
         legendWidth: React.PropTypes.number,
-        legendOptions: React.PropTypes.string
+        legendOptions: React.PropTypes.string,
+        currentZoomLvl: React.PropTypes.number,
+        scales: React.PropTypes.array
     },
     getDefaultProps() {
         return {
@@ -39,10 +41,10 @@ const Legend = React.createClass({
                version: layer.version || "1.3.0",
                SLD_VERSION: "1.1.0",
                LEGEND_OPTIONS: this.props.legendOptions
-               // SCALE TODO
            }, layer.legendParams || {},
            layer.params || {},
-           layer.params && layer.params.SLD_BODY ? {SLD_BODY: layer.params.SLD_BODY} : {});
+           layer.params && layer.params.SLD_BODY ? {SLD_BODY: layer.params.SLD_BODY} : {},
+           this.props.scales && this.props.currentZoomLvl ? {SCALE: Math.round(this.props.scales[this.props.currentZoomLvl])} : {});
            SecurityUtils.addAuthenticationParameter(url, query);
 
            let legendUrl = urlUtil.format({
