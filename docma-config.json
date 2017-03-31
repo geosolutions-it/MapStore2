@@ -76,7 +76,6 @@
                     "label": "Download",
                     "href": "index.html",
                     "items": [
-                        { "label": "<code>mvn clean install</code>" },
                         {
                             "label": "MapStore 2 Releases",
                             "href": "https://github.com/geosolutions-it/MapStore2/releases",
