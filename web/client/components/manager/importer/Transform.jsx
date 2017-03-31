@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {Panel, Button, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
+const {Panel, Button, Glyphicon, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../../misc/OverlayTrigger');
 
-// const {DropdownList} = require('react-widgets');
 const {Message} = require('../../I18N/I18N');
 const transforms = require('./transforms');
 const Transform = React.createClass({

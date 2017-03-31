@@ -26,7 +26,6 @@ var About = React.createClass({
                 margin: "8px"
             },
             modalConfig: {
-                useModal: false,
                 closeGlyph: "1-close"
             }
         };

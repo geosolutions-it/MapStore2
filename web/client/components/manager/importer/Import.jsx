@@ -10,7 +10,8 @@ const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message');
 const TaskProgress = require('./TaskProgress');
 const ImporterUtils = require('../../../utils/ImporterUtils');
-const {Grid, Row, Panel, Label, Table, Button, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
+const {Grid, Row, Panel, Label, Table, Button, Glyphicon, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../../misc/OverlayTrigger');
 require("./style/importer.css");
 
 const Task = React.createClass({

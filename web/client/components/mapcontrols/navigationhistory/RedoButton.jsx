@@ -7,7 +7,8 @@
  */
 
 var React = require('react');
-var {Button, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
+var {Button, Glyphicon, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../../misc/OverlayTrigger');
 
 var RedoBtn = React.createClass({
     propTypes: {

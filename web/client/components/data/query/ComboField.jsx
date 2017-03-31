@@ -8,7 +8,9 @@
 const React = require('react');
 const assign = require('object-assign');
 
-const {OverlayTrigger, Tooltip} = require('react-bootstrap');
+const {Tooltip} = require('react-bootstrap');
+
+const OverlayTrigger = require('../../misc/OverlayTrigger');
 
 const {DropdownList, Multiselect} = require('react-widgets');
 

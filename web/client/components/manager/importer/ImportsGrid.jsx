@@ -9,7 +9,8 @@ const React = require('react');
 const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message');
 const ImporterUtils = require('../../../utils/ImporterUtils');
-const {Table, Glyphicon, Button, Label, OverlayTrigger, Tooltip} = require('react-bootstrap');
+const {Table, Glyphicon, Button, Label, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../../misc/OverlayTrigger');
 const {findIndex} = require('lodash');
 
 const ImportsGrid = React.createClass({

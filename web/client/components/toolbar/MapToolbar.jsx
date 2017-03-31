@@ -7,7 +7,8 @@
  */
 const React = require('react');
 
-const {Collapse, Panel, Button, ButtonGroup, Tooltip, OverlayTrigger} = require('react-bootstrap');
+const {Collapse, Panel, Button, ButtonGroup, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../misc/OverlayTrigger');
 
 const assign = require('object-assign');
 

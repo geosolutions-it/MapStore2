@@ -19,7 +19,7 @@ webpackConfig.plugins = [
         options: {
             postcss: {
                 plugins: [
-                  require('postcss-prefix-selector')({prefix: '.ms2', exclude: ['.ms2']})
+                  require('postcss-prefix-selector')({prefix: '.ms2', exclude: ['.ms2', '[data-ms2-container]']})
                 ]
             },
             context: __dirname

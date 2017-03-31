@@ -7,7 +7,6 @@
  */
 var React = require('react');
 var BootstrapReact = require('react-bootstrap');
-var Modal = BootstrapReact.Modal;
 var Button = BootstrapReact.Button;
 var Glyphicon = BootstrapReact.Glyphicon;
 var ImageButton = require('./ImageButton');
@@ -44,7 +43,6 @@ const InfoButton = React.createClass({
         btnSize: React.PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
         btnType: React.PropTypes.oneOf(['normal', 'image']),
         modalOptions: React.PropTypes.object,
-        useModal: React.PropTypes.bool,
         closeGlyph: React.PropTypes.string
     },
     getDefaultProps() {
@@ -59,7 +57,6 @@ const InfoButton = React.createClass({
             btnSize: 'medium',
             btnType: 'normal',
             modalOptions: {},
-            useModal: true,
             closeGlyph: ""
         };
     },
@@ -85,16 +82,7 @@ const InfoButton = React.createClass({
         return btn;
     },
     render() {
-        const dialog = this.props.useModal ? (<Modal
-            {...this.props.modalOptions}
-            show={this.state.isVisible}
-            onHide={this.close}
-            bsStyle="info">
-            <Modal.Header closeButton>
-                <Modal.Title>{this.props.title}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>{this.props.body}</Modal.Body>
-        </Modal>) : (
+        const dialog = (
             <Dialog id="mapstore-about" style={assign({}, this.props.style, {display: this.state.isVisible ? "block" : "none"})}>
                 <span role="header"><span className="about-panel-title">{this.props.title}</span><button onClick={this.close} className="about-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
                 <div role="body">{this.props.body}</div>

@@ -13,7 +13,7 @@ var ListGroupItem = BootstrapReact.ListGroupItem;
 var Button = BootstrapReact.Button;
 var Glyphicon = BootstrapReact.Glyphicon;
 var Tooltip = BootstrapReact.Tooltip;
-var OverlayTrigger = BootstrapReact.OverlayTrigger;
+const OverlayTrigger = require('../misc/OverlayTrigger');
 var {isFunction} = require('lodash');
 
 var MapItem = React.createClass({

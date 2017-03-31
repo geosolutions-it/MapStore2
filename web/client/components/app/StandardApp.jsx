@@ -29,7 +29,8 @@ const StandardApp = React.createClass({
         storeOpts: React.PropTypes.object,
         initialActions: React.PropTypes.array,
         appComponent: React.PropTypes.func,
-        printingEnabled: React.PropTypes.bool
+        printingEnabled: React.PropTypes.bool,
+        onStoreInit: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -37,7 +38,8 @@ const StandardApp = React.createClass({
             initialActions: [],
             printingEnabled: false,
             appStore: () => ({dispatch: () => {}}),
-            appComponent: () => <span/>
+            appComponent: () => <span/>,
+            onStoreInit: () => {}
         };
     },
     getInitialState() {
@@ -69,6 +71,7 @@ const StandardApp = React.createClass({
                 initialState: config.initialState || {defaultState: {}, mobile: {}}
             });
             this.store = this.props.appStore(this.props.pluginsDef.plugins, opts);
+            this.props.onStoreInit(this.store);
             this.setState({
                 store: this.store
             });

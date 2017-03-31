@@ -7,12 +7,8 @@
  */
 
 const React = require('react');
-
-const {Modal, Button, Glyphicon} = require('react-bootstrap');
-
-const Dialog = require('../../../components/misc/Dialog');
-const assign = require('object-assign');
-
+const {Button} = require('react-bootstrap');
+const Modal = require('../../misc/Modal');
 
   /**
    * A Modal window to show a confirmation dialog
@@ -25,7 +21,6 @@ const ConfirmModal = React.createClass({
         options: React.PropTypes.object,
         onConfirm: React.PropTypes.func,
         onClose: React.PropTypes.func,
-        useModal: React.PropTypes.bool,
         closeGlyph: React.PropTypes.string,
         style: React.PropTypes.object,
         buttonSize: React.PropTypes.string,
@@ -43,7 +38,6 @@ const ConfirmModal = React.createClass({
                 animation: false
             },
             className: "",
-            useModal: true,
             closeGlyph: "",
             style: {},
             includeCloseButton: true,
@@ -74,7 +68,7 @@ const ConfirmModal = React.createClass({
             onClick={this.props.onClose}>{this.props.cancelText}</Button> : <span/>}
         </span>);
         const body = this.props.body;
-        return this.props.useModal ? (
+        return (
             <Modal {...this.props.options}
                 show={this.props.show}
                 onHide={this.props.onClose}>
@@ -87,13 +81,7 @@ const ConfirmModal = React.createClass({
                 <Modal.Footer>
                   {footer}
                 </Modal.Footer>
-            </Modal>) : (
-            <Dialog id="mapstore-confirmdialog-panel" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
-                <span role="header"><span className="confirmdialog-panel-title">{this.props.titleText}</span><button onClick={this.props.onClose} className="confirmdialog-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
-                {body}
-                {footer}
-            </Dialog>
-        );
+            </Modal>);
     }
 });
 

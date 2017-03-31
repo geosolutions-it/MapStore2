@@ -15,7 +15,8 @@
 const React = require('react');
 const CopyToClipboard = require('react-copy-to-clipboard');
 const Message = require('../../components/I18N/Message');
-const {Glyphicon, FormControl, FormGroup, Tooltip, OverlayTrigger, Button} = require('react-bootstrap');
+const {Glyphicon, FormControl, FormGroup, Tooltip, Button} = require('react-bootstrap');
+const OverlayTrigger = require('../misc/OverlayTrigger');
 
 // css required
 require('./share.css');

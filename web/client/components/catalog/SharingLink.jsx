@@ -7,7 +7,8 @@
  */
 const React = require('react');
 const Message = require('../I18N/Message');
-const {FormControl, FormGroup, Button, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
+const {FormControl, FormGroup, Button, Glyphicon, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../misc/OverlayTrigger');
 const CopyToClipboard = require('react-copy-to-clipboard');
 const SecurityUtils = require('../../utils/SecurityUtils');
 

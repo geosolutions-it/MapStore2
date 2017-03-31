@@ -7,7 +7,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var {Button, Tooltip, OverlayTrigger} = require('react-bootstrap');
+var {Button, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../misc/OverlayTrigger');
 var LocaleUtils = require('../../utils/LocaleUtils');
 
 

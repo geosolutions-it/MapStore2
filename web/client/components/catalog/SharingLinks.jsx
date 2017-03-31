@@ -8,7 +8,9 @@
 const React = require('react');
 const SharingLink = require('./SharingLink');
 const Message = require('../I18N/Message');
-const {OverlayTrigger, Popover, Button, Glyphicon} = require('react-bootstrap');
+const {Popover, Button, Glyphicon} = require('react-bootstrap');
+
+const OverlayTrigger = require('../misc/OverlayTrigger');
 
 const SharingLinks = React.createClass({
     propTypes: {

@@ -7,7 +7,9 @@
  */
 const React = require('react');
 
-const {Button, Glyphicon, ButtonToolbar, Modal} = require('react-bootstrap');
+const {Button, Glyphicon, ButtonToolbar} = require('react-bootstrap');
+
+const Modal = require('../../misc/Modal');
 
 const I18N = require('../../I18N/I18N');
 

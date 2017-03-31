@@ -191,7 +191,6 @@ const LayerTree = React.createClass({
             settingsOptions: {
                 includeCloseButton: false,
                 closeGlyph: "1-close",
-                asModal: false,
                 buttonSize: "small"
             },
             querypanelEnabled: false

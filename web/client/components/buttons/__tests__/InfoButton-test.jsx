@@ -31,7 +31,7 @@ describe('This test for InfoButton', () => {
         expect(aboutDom).toExist();
         expect(aboutDom.id).toExist();
 
-        const btnList = aboutDom.getElementsByTagName('button');
+        const btnList = aboutDom.getElementsByClassName('btn-info');
         expect(btnList.length).toBe(1);
 
         const btn = btnList.item(0);
@@ -78,13 +78,13 @@ describe('This test for InfoButton', () => {
         const headerList = modalDiv.getElementsByClassName("modal-header");
         expect(headerList.length).toBe(1);
 
-        const titleList = headerList.item(0).getElementsByClassName("modal-title");
+        const titleList = headerList.item(0).getElementsByClassName("about-panel-title");
         expect(titleList.length).toBe(1);
         expect(titleList.item(0).innerHTML).toBe("Info");
 
         const bodyList = modalDiv.getElementsByClassName("modal-body");
         expect(bodyList.length).toBe(1);
-        expect(bodyList.item(0).innerHTML).toBe("");
+        expect(bodyList.item(0).firstChild.innerHTML).toBe("");
     });
 
     // test CUSTOM
@@ -152,7 +152,7 @@ describe('This test for InfoButton', () => {
 
         const modalDiv = document.getElementsByClassName("modal-content").item(0);
         const headerList = modalDiv.getElementsByClassName("modal-header");
-        const titleDom = headerList.item(0).getElementsByClassName("modal-title").item(0);
+        const titleDom = headerList.item(0).getElementsByClassName("about-panel-title").item(0);
 
         expect(titleDom.innerHTML).toBe(customTitle);
     });
@@ -167,7 +167,7 @@ describe('This test for InfoButton', () => {
         const modalDiv = document.getElementsByClassName("modal-content").item(0);
 
         const bodyList = modalDiv.getElementsByClassName("modal-body");
-        expect(bodyList.item(0).innerHTML).toBe(customBody);
+        expect(bodyList.item(0).firstChild.innerHTML).toBe(customBody);
     });
 
     it('checks the custom style', () => {
@@ -189,7 +189,7 @@ describe('This test for InfoButton', () => {
         const about = ReactDOM.render(<InfoButton btnType="image"/>, document.getElementById("container"));
         expect(about).toExist();
         const aboutDom = ReactDOM.findDOMNode(about);
-        expect(aboutDom.getElementsByTagName('button').length).toBe(0);
+        expect(aboutDom.getElementsByClassName('btn-primary').length).toBe(0);
         expect(aboutDom.getElementsByTagName('img').length).toBe(1);
     });
 });
