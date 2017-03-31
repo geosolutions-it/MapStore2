@@ -75,14 +75,16 @@ describe("test the ToggleButton", () => {
             const testHandlers = {
                 onClick: (pressed) => {return pressed; }
             };
+            const test = {test: "test"};
             const spy = expect.spyOn(testHandlers, 'onClick');
-            const tb = ReactDOM.render(<ToggleButton pressed onClick={testHandlers.onClick} btnType={btnType}/>, document.getElementById("container"));
+            const tb = ReactDOM.render(<ToggleButton pressed options={test} onClick={testHandlers.onClick} btnType={btnType}/>, document.getElementById("container"));
 
             const tbNode = ReactDOM.findDOMNode(tb);
             tbNode.click();
 
             expect(spy.calls.length).toEqual(1);
-            expect(spy.calls[0].arguments).toEqual([false]);
+            expect(spy.calls[0].arguments[0]).toEqual(false);
+            expect(spy.calls[0].arguments[1]).toEqual(test);
         };
 
         genericTest('normal');

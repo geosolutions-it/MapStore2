@@ -135,7 +135,7 @@ const FeatureGrid = React.createClass({
 
         let tools = [];
         if (this.props.toolbar.zoom) {
-            tools.push(<Button key="zoom" onClick={this.zoomToFeatures}><Glyphicon glyph="search"/></Button>);
+            tools.push(<Button key="zoom" onClick={this.zoomToFeatures}><Glyphicon glyph="zoom-in"/></Button>);
         }
 
         if (this.props.toolbar.exporter) {

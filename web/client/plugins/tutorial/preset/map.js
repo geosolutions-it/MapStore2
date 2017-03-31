@@ -39,6 +39,11 @@ module.exports = [
         position: 'top'
     },
     {
+        translation: 'fullscreen',
+        selector: '#fullscreen-btn',
+        position: 'top'
+    },
+    {
         translation: 'identifyButton',
         selector: '#identifyBar-container',
         position: 'top'

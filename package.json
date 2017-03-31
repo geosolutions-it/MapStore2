@@ -150,6 +150,7 @@
     "redux-undo": "0.5.0",
     "reselect": "2.5.1",
     "rxjs": "5.1.1",
+    "screenfull": "3.1.0",
     "shpjs": "3.3.2",
     "turf-bbox": "3.0.10",
     "turf-buffer": "3.0.10",

@@ -205,7 +205,7 @@ const Styler = React.createClass({
         if (originalLayer && originalLayer.capabilities) {
             return (<Button key="zoom-btn" style={{
                 "float": "right"
-                }}onClick={this.zoomToLayerExtent} ><Glyphicon glyph="search" />Zoom To Layer</Button>);
+            }}onClick={this.zoomToLayerExtent} ><Glyphicon glyph="zoom-in" />Zoom To Layer</Button>);
         }
     },
     renderBody() {

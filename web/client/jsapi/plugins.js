@@ -44,6 +44,7 @@ module.exports = {
         RulesManagerPlugin: require('../plugins/manager/RulesManager'),
         ManagerMenuPlugin: require('../plugins/manager/ManagerMenu'),
         SharePlugin: require('../plugins/Share'),
+        FullScreenPlugin: require('../plugins/FullScreen'),
         SavePlugin: require('../plugins/Save'),
         SaveAsPlugin: require('../plugins/SaveAs')
     },

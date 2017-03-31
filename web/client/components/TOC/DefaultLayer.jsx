@@ -167,7 +167,7 @@ var DefaultLayer = React.createClass({
                         className="toc-zoomTool"
                         ref="target"
                         style={{"float": "right", cursor: "pointer"}}
-                        glyph="1-full-screen"
+                        glyph="zoom-in"
                         onClick={(node) => this.props.onZoom(node.bbox.bounds, node.bbox.crs)}/>
                 );
         }

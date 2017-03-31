@@ -137,7 +137,8 @@ const defaultPlugins = {
           "BurgerMenu",
           "Expander",
           "Undo",
-          "Redo"
+          "Redo",
+          "FullScreen"
     ]
 };
 
