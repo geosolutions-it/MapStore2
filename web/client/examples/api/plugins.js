@@ -38,7 +38,10 @@ module.exports = {
         ManagerMenuPlugin: require('../../plugins/manager/ManagerMenu'),
         SharePlugin: require('../../plugins/Share'),
         SavePlugin: require('../../plugins/Save'),
-        SaveAsPlugin: require('../../plugins/SaveAs')
+        SaveAsPlugin: require('../../plugins/SaveAs'),
+        TOCPlugin: require('../../plugins/TOC'),
+        BackgroundSwitcherPlugin: require('../../plugins/BackgroundSwitcher'),
+        MeasurePlugin: require('../../plugins/Measure')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

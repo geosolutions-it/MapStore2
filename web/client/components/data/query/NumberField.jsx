@@ -7,7 +7,8 @@
  */
 
 const React = require('react');
-const {Tooltip, OverlayTrigger, Row, Col} = require("react-bootstrap");
+const {Tooltip, Row, Col} = require("react-bootstrap");
+const OverlayTrigger = require('../../misc/OverlayTrigger');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 numberLocalizer();

@@ -7,7 +7,8 @@
  */
 
 const React = require('react');
-const {Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
+const {Glyphicon, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../../misc/OverlayTrigger');
 const Message = require('../../I18N/Message');
 
 require("./css/layertool.css");

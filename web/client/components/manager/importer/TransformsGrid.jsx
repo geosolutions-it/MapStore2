@@ -8,7 +8,8 @@
 const React = require('react');
 const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message');
-const {Panel, Table, Button, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
+const {Panel, Table, Button, Glyphicon, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../../misc/OverlayTrigger');
 
 const TransformsGrid = React.createClass({
     propTypes: {

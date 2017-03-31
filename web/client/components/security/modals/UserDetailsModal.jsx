@@ -7,9 +7,8 @@
  */
 const React = require('react');
 
-const {Modal, Button, Table, Alert, Glyphicon} = require('react-bootstrap');
-const Dialog = require('../../../components/misc/Dialog');
-const assign = require('object-assign');
+const {Button, Table, Alert} = require('react-bootstrap');
+const Modal = require('../../../components/misc/Modal');
 const SecurityUtils = require('../../../utils/SecurityUtils');
 const Message = require('../../../components/I18N/Message');
 
@@ -24,7 +23,6 @@ const UserDetails = React.createClass({
       displayAttributes: React.PropTypes.func,
       options: React.PropTypes.object,
       onClose: React.PropTypes.func,
-      useModal: React.PropTypes.bool,
       closeGlyph: React.PropTypes.string,
       style: React.PropTypes.object,
       buttonSize: React.PropTypes.string,
@@ -40,12 +38,14 @@ const UserDetails = React.createClass({
           },
           onClose: () => {},
           options: {},
-          useModal: true,
           closeGlyph: "",
           style: {},
           buttonSize: "large",
           includeCloseButton: true
       };
+  },
+  getFooter() {
+      return (this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} bsSize="small" onClick={this.props.onClose}><Message msgId="close"/></Button> : <span/>);
   },
   renderAttributes() {
       if (this.props.user && this.props.user.attribute) {
@@ -59,10 +59,7 @@ const UserDetails = React.createClass({
       }
       return <Alert type="info"><Message msgId="user.noAttributesMessage" /></Alert>;
   },
-  getFooter() {
-      return (this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} bsSize="small" onClick={this.props.onClose}><Message msgId="close"/></Button> : <span/>);
-  },
-  renderModal() {
+  render() {
       return (<Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
               <Modal.Header key="details" closeButton>
                 <Modal.Title><Message msgId="user.details" /></Modal.Title>
@@ -74,16 +71,6 @@ const UserDetails = React.createClass({
                 {this.getFooter()}
               </Modal.Footer>
           </Modal>);
-  },
-  renderDialog() {
-      return (this.props.show) ? (<Dialog id="mapstore-user-panel" modal style={assign({}, this.props.style, {display: "block"})}>
-                  <span role="header"><span className="user-panel-title"><Message msgId="user.details" /></span><button onClick={this.props.onClose} className="login-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
-                  {this.renderAttributes()}
-                  {this.getFooter()}
-              </Dialog>) : null;
-  },
-  render() {
-      return this.props.useModal ? this.renderModal() : this.renderDialog();
   }
 
 });

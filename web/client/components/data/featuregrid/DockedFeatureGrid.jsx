@@ -3,7 +3,8 @@ const {connect} = require('react-redux');
 const {isObject} = require('lodash');
 const Dock = require('react-dock');
 
-const {Modal, Button, Glyphicon} = require('react-bootstrap');
+const {Button, Glyphicon} = require('react-bootstrap');
+const Modal = require('../../../components/misc/Modal');
 
 const FilterUtils = require('../../../utils/FilterUtils');
 
