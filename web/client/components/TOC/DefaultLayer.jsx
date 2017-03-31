@@ -186,7 +186,7 @@ var DefaultLayer = React.createClass({
                 {this.renderCollapsible()}
                 {this.renderTools()}
                 <InlineSpinner loading={this.props.node.loading}/>
-                <ConfirmModal ref="removelayer" className="clayer_removal_confirm_button" show= {this.state.showDeleteDialog} onHide={this.closeDeleteDialog} onClose={this.closeDeleteDialog} onConfirm={this.onConfirmDelete} titleText={this.props.confirmDeleteText} confirmText={this.props.confirmDeleteText} cancelText={<Message msgId="cancel" />} body={this.props.confirmDeleteMessage} />
+                <ConfirmModal ref="removelayer" show= {this.state.showDeleteDialog} onHide={this.closeDeleteDialog} onClose={this.closeDeleteDialog} onConfirm={this.onConfirmDelete} titleText={this.props.confirmDeleteText} confirmText={this.props.confirmDeleteText} cancelText={<Message msgId="cancel" />} body={this.props.confirmDeleteMessage} />
             </Node>
         );
     },

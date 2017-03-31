@@ -197,7 +197,6 @@ function buildPluginsCfg(plugins, cfg) {
 
 const actionListeners = {};
 let stateChangeListeners = [];
-let app;
 
 const getInitialActions = (options) => {
     if (!options.initialState) {
@@ -308,17 +307,20 @@ const MapStore2 = {
             };
 
             const themeCfg = options.theme && assign({}, defaultThemeCfg, options.theme) || defaultThemeCfg;
-            app = ReactDOM.render(<StandardApp themeCfg={themeCfg} className="fill" {...appConfig}/>, document.getElementById(container));
-            app.store.addActionListener((action) => {
-                (actionListeners[action.type] || []).concat(actionListeners['*'] || []).forEach((listener) => {
-                    listener.call(null, action);
+            const onStoreInit = (store) => {
+                store.addActionListener((action) => {
+                    (actionListeners[action.type] || []).concat(actionListeners['*'] || []).forEach((listener) => {
+                        listener.call(null, action);
+                    });
                 });
-            });
-            app.store.subscribe(() => {
-                stateChangeListeners.forEach(({listener, selector}) => {
-                    listener.call(null, selector(app.store.getState()));
+                store.subscribe(() => {
+                    stateChangeListeners.forEach(({listener, selector}) => {
+                        listener.call(null, selector(store.getState()));
+                    });
                 });
-            });
+            };
+            ReactDOM.render(<StandardApp onStoreInit={onStoreInit} themeCfg={themeCfg} className="fill" {...appConfig}/>, document.getElementById(container));
+
         });
     },
     buildPluginsCfg,

@@ -7,7 +7,8 @@
  */
 
 const React = require('react');
-const {Button, Glyphicon, Table, OverlayTrigger, Tooltip} = require('react-bootstrap');
+const {Button, Glyphicon, Table, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../../misc/OverlayTrigger');
 const Message = require('../../I18N/Message');
 var UsersTable = React.createClass({
     propTypes: {

@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Modal, Button, Glyphicon, Tabs, Tab} = require('react-bootstrap');
+const {Button, Glyphicon, Tabs, Tab} = require('react-bootstrap');
 
 require("./css/settingsModal.css");
 
@@ -16,7 +16,7 @@ const ConfirmButton = require('../../buttons/ConfirmButton');
 const General = require('./settings/General');
 const Display = require('./settings/Display');
 const WMSStyle = require('./settings/WMSStyle');
-const {Portal} = require('react-overlays');
+const Portal = require('../../misc/Portal');
 const assign = require('object-assign');
 const Message = require('../../I18N/Message');
 
@@ -37,7 +37,6 @@ const SettingsModal = React.createClass({
         confirmDeleteText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         closeText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         options: React.PropTypes.object,
-        asModal: React.PropTypes.bool,
         buttonSize: React.PropTypes.string,
         closeGlyph: React.PropTypes.string,
         panelStyle: React.PropTypes.object,
@@ -57,7 +56,6 @@ const SettingsModal = React.createClass({
             updateNode: () => {},
             removeNode: () => {},
             retrieveLayerData: () => {},
-            asModal: true,
             buttonSize: "large",
             closeGlyph: "",
             panelStyle: {
@@ -152,17 +150,7 @@ const SettingsModal = React.createClass({
         </span>);
 
         if (this.props.settings.expanded) {
-            return this.props.asModal ? (
-                <Modal {...this.props.options} show={this.props.settings.expanded} container={document.getElementById("body")}>
-                    <Modal.Header><Modal.Title>{this.props.titleText}</Modal.Title></Modal.Header>
-                    <Modal.Body>
-                        {tabs}
-                    </Modal.Body>
-                    <Modal.Footer>
-                        {footer}
-                    </Modal.Footer>
-                </Modal>
-            ) : (<Portal><Dialog id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
+            return (<Portal><Dialog id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
                 <span role="header">
                     <span className="layer-settings-panel-title">{this.props.titleText}</span>
                     <button onClick={this.onClose} className="layer-settings-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>

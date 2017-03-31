@@ -28,7 +28,7 @@ module.exports = {
             options: {
                 postcss: {
                     plugins: [
-                      require('postcss-prefix-selector')({prefix: '.__PROJECTNAME__', exclude: ['.ms2', '.__PROJECTNAME__']})
+                      require('postcss-prefix-selector')({prefix: '.__PROJECTNAME__', exclude: ['.ms2', '.__PROJECTNAME__', '[data-ms2-container]']})
                     ]
                 },
                 context: __dirname
@@ -104,8 +104,8 @@ module.exports = {
                         name: "[path][name].[ext]",
                         limit: 8192
                     }
-                }] 
-            }, 
+                }]
+            },
             {
                 test: /\.jsx?$/,
                 exclude: /(ol\.js)$|(Cesium\.js)$|(cesium\.js)$/,

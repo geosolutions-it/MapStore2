@@ -11,6 +11,7 @@
     "initialMapFilter": "",
     "ignoreMobileCss": true,
     "useAuthenticationRules": true,
+    "themePrefix": "ms2",
     "authenticationRules": [{
         "urlPattern": ".*geostore.*",
         "method": "basic"

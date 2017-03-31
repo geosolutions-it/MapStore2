@@ -7,7 +7,8 @@
  */
 
 var React = require('react');
-var {FormControl, FormGroup, Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
+var {FormControl, FormGroup, Glyphicon, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../../misc/OverlayTrigger');
 var LocaleUtils = require('../../../utils/LocaleUtils');
 var Spinner = require('react-spinkit');
 

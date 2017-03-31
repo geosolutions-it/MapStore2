@@ -8,7 +8,8 @@
 const React = require('react');
 const ScrollUp = require('react-scroll-up');
 const Message = require('../components/I18N/Message');
-const {Glyphicon, Button, OverlayTrigger, Tooltip} = require('react-bootstrap');
+const {Glyphicon, Button, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../components/misc/OverlayTrigger');
 
 /**
  * ScrollUp Plugin. Show a button that allows to scroll to the top of the page. Only for full pages.

@@ -7,7 +7,8 @@
  */
 
 const React = require('react');
-const {Panel, ButtonToolbar, Button, OverlayTrigger, Tooltip} = require('react-bootstrap');
+const {Panel, ButtonToolbar, Button, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../../misc/OverlayTrigger');
 const ComboField = require('./ComboField');
 const NumberField = require('./NumberField');
 const TextField = require('./TextField');

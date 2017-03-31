@@ -13,11 +13,9 @@ const PermissionEditor = require('../../security/PermissionEditor');
 
 require('./css/modals.css');
 
-const {Modal, Button, Glyphicon, Grid, Row, Col} = require('react-bootstrap');
+const {Button, Grid, Row, Col} = require('react-bootstrap');
+const Modal = require('../../misc/Modal');
 const Message = require('../../I18N/Message');
-
-const Dialog = require('../../../components/misc/Dialog');
-const assign = require('object-assign');
 
 const Spinner = require('react-spinkit');
 const LocaleUtils = require('../../../utils/LocaleUtils');
@@ -144,15 +142,6 @@ const MetadataModal = React.createClass({
             }
         }
     },
-    updateThumbnail() {
-        this.refs.thumbnail.updateThumbnail();
-    },
-    loadPermissions() {
-        this.props.loadPermissions(this.props.map.id);
-    },
-    loadAvailableGroups() {
-        this.props.loadAvailableGroups(this.props.user);
-    },
     onSave() {
         this.setState({
             saving: true
@@ -247,7 +236,7 @@ const MetadataModal = React.createClass({
         } else {
             messageIdError = "Default";
         }
-        return this.props.useModal ? (
+        return (
             <Modal {...this.props.options}
                 show={this.props.show}
                 onHide={this.props.onClose}
@@ -303,13 +292,16 @@ const MetadataModal = React.createClass({
                 <Modal.Footer>
                   {footer}
                 </Modal.Footer>
-            </Modal>) : (
-            <Dialog id="mapstore-mapmetadata-panel" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
-                <span role="header"><span className="mapmetadata-panel-title"><Message msgId="manager.editMapMetadata" /></span><button onClick={this.props.onClose} className="login-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
-                {body}
-                {footer}
-            </Dialog>
-        );
+            </Modal>);
+    },
+    loadAvailableGroups() {
+        this.props.loadAvailableGroups(this.props.user);
+    },
+    loadPermissions() {
+        this.props.loadPermissions(this.props.map.id);
+    },
+    updateThumbnail() {
+        this.refs.thumbnail.updateThumbnail();
     },
     isMetadataChanged() {
         return this.props.map && (

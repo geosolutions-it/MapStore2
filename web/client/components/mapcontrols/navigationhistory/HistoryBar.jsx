@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react');
-var {ButtonGroup, Button, Glyphicon, Tooltip, OverlayTrigger} = require('react-bootstrap');
+var {ButtonGroup, Button, Glyphicon, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../../misc/OverlayTrigger');
 var ImageButton = require('../../buttons/ImageButton');
 
 var HistoryBar = React.createClass({
