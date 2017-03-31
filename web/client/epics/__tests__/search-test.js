@@ -124,29 +124,31 @@ describe('search Epics', () => {
 
         let actions = store.getActions();
         expect(actions.length).toBe(6);
-        expect(actions[1].type).toBe(CHANGE_MAP_VIEW);
-        expect(actions[2].type).toBe(TEXT_SEARCH_ADD_MARKER);
-        expect(actions[3].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
-        expect(actions[4].type).toBe(TEXT_SEARCH_NESTED_SERVICES_SELECTED);
-        expect(actions[4].services[0]).toEqual({
+        expect(actions.filter(m => m.type === CHANGE_MAP_VIEW)[0].type).toBe(CHANGE_MAP_VIEW);
+        expect(actions.filter(m => m.type === TEXT_SEARCH_ADD_MARKER)[0].type).toBe(TEXT_SEARCH_ADD_MARKER);
+        expect(actions.filter(m => m.type === TEXT_SEARCH_RESULTS_PURGE)[0].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
+
+        let testSearchNestedServicesSelectedAction = actions.filter(m => m.type === TEXT_SEARCH_NESTED_SERVICES_SELECTED)[0];
+        expect(testSearchNestedServicesSelectedAction.type).toBe(TEXT_SEARCH_NESTED_SERVICES_SELECTED);
+        expect(testSearchNestedServicesSelectedAction.services[0]).toEqual({
             ...nestedService,
             options: {
                 item
             }
         });
-        expect(actions[4].items).toEqual({
+        expect(testSearchNestedServicesSelectedAction.items).toEqual({
             placeholder: SEARCH_NESTED,
             placeholderMsgId: TEST_NESTED_PLACEHOLDER,
             text: TEXT
         });
-        expect(actions[5].type).toBe(TEXT_SEARCH_TEXT_CHANGE);
-        expect(actions[5].searchText).toBe(TEXT);
+        expect(actions.filter(m => m.type === TEXT_SEARCH_TEXT_CHANGE)[0].type).toBe(TEXT_SEARCH_TEXT_CHANGE);
+        expect(actions.filter(m => m.type === TEXT_SEARCH_TEXT_CHANGE)[0].searchText).toBe(TEXT);
     });
 
-    it('searchItemSelected with geomService', () => {
+    it('testing the geometry service', (done) => {
+        // use the done function for asynchronus calls
         const itemWithoutGeom = {
               "type": "Feature",
-              "bbox": [125, 10, 126, 11],
               "properties": {
                 "name": TEXT
             },
@@ -164,53 +166,31 @@ describe('search Epics', () => {
                         typeName: 'topp:states',
                         queriableAttributes: [STATE_NAME]
                     }
-                },
-                nestedPlaceholder: SEARCH_NESTED,
-                nestedPlaceholderMsgId: TEST_NESTED_PLACEHOLDER
+                }
             }
         };
 
+        // needed for the changeMapView action
         let action = selectSearchItem(itemWithoutGeom, {
             size: {
                 width: 200,
                 height: 200
             },
-            services: [{
-                type: 'wfs',
-                options: {
-                    url: 'base/web/client/test-resources/wfs/Wyoming.json',
-                    typeName: 'topp:states',
-                    queriableAttributes: [STATE_NAME]
-                }
-            }],
             projection: "EPSG:4326"
         });
 
         store.dispatch( action );
+        // a set timeout is needed in order to dispatch the actions
         setTimeout(() => {
             let actions = store.getActions();
-            expect(actions.length).toBe(6);
-            expect(actions[1].type).toBe(CHANGE_MAP_VIEW);
-            expect(actions[2].type).toBe(TEXT_SEARCH_ADD_MARKER);
-            expect(actions[3].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
-            expect(actions[4].type).toBe(TEXT_SEARCH_NESTED_SERVICES_SELECTED);
-            expect(actions[5].type).toBe(TEXT_SEARCH_TEXT_CHANGE);
+            expect(actions.length).toBe(5);
+            let addMarkerAction = actions.filter(m => m.type === TEXT_SEARCH_ADD_MARKER)[0];
 
-            expect(actions[4].services[0]).toEqual({
-                ...nestedService,
-                options: {
-                    item
-                }
-            });
-            expect(actions[4].services[0].geometry).toExist();
-            expect(actions[4].items).toEqual({
-                placeholder: SEARCH_NESTED,
-                placeholderMsgId: TEST_NESTED_PLACEHOLDER,
-                text: TEXT
-            });
-            expect(actions[5].searchText).toBe(TEXT);
-            expect(actions[5].type).toBe(TEXT_SEARCH_TEXT_CHANGE);
+            expect(addMarkerAction).toExist();
+            expect(addMarkerAction.markerPosition.geometry).toExist();
 
-        }, 800);
+            done();
+            // setting 0 as delay arises script error
+        }, 100);
     });
 });

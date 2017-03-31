@@ -97,7 +97,7 @@ const searchItemSelected = action$ =>
                     );
                 }
                 return Rx.Observable.of(action.item);
-            }).mergeMap((item) => {
+            }).concatMap((item) => {
                 let bbox = item.bbox || item.properties.bbox || toBbox(item);
                 let mapSize = action.mapConfig.size;
 
