@@ -9,6 +9,7 @@
 module.exports = {
     BingLayer: require('./BingLayer'),
     OSMLayer: require('./OSMLayer'),
+    TileProviderLayer: require('./TileProviderLayer'),
     WMSLayer: require('./WMSLayer'),
     GraticuleLayer: require('./GraticuleLayer'),
     MarkerLayer: require('./MarkerLayer'),
