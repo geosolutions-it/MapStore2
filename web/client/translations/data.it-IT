@@ -389,6 +389,7 @@
                 "header": "Cerca nel dataset",
                 "dataset_header": "Dataset"
             },
+            "emptyfilter": "Nessun filtro selezionato. La ricerca potrebbe andare in timeout se il server non supporta la paginazione.",
             "attributefilter":{
                 "add_condition": " Aggiungi Condizione",
                 "add_group": " Aggiungi Gruppo",

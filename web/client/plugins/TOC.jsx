@@ -82,6 +82,8 @@ const SmartQueryForm = connect((state) => {
         params: {typeName: state.query && state.query.typeName},
         resultTitle: "Query Result",
         showGeneratedFilter: false,
+        allowEmptyFilter: true,
+        emptyFilterWarning: true,
         maxHeight: state.map && state.map.present && state.map.present.size && state.map.present.size.height
     };
 }, dispatch => {
