@@ -21,10 +21,20 @@ const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
 const {toggleControl} = require('../actions/controls');
+const Url = require('url');
+
+
+const getEmbeddedUrl = (url) => {
+    let urlParsedObj = Url.parse(url, true);
+
+    return urlParsedObj.protocol + '//' + urlParsedObj.host + urlParsedObj.path + "embedded.html#/" +
+        urlParsedObj.hash.substring(urlParsedObj.hash.lastIndexOf('/') + 1, urlParsedObj.hash.lastIndexOf('?'));
+};
 
 const Share = connect((state) => ({
     isVisible: state.controls && state.controls.share && state.controls.share.enabled,
-    shareUrl: location.href
+    shareUrl: location.href,
+    shareEmbeddedUrl: getEmbeddedUrl(location.href)
 }), {
     onClose: toggleControl.bind(null, 'share', null)
 })(require('../components/share/SharePanel'));

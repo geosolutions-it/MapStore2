@@ -193,9 +193,8 @@
                 "cfg": {
                     "tools": ["locate"]
                 }
-            }, "Help", "DrawerMenu", {
+            }, "DrawerMenu", {
                 "name": "Identify",
-                "showIn": ["Settings"],
                 "cfg": {
                     "style": {
                         "position": "absolute",
@@ -215,6 +214,13 @@
                     "bodyClass": "mobile-feature-info"
                 }
             }, {
+                "name": "ZoomAll",
+                "override": {
+                    "Toolbar": {
+                        "alwaysVisible": true
+                    }
+                }
+            }, {
                 "name": "Locate",
                 "override": {
                     "Toolbar": {
@@ -225,11 +231,6 @@
                 "name": "Settings",
                 "cfg": {
                     "wrap": true
-                }
-            }, "About", {
-                "name": "MousePosition",
-                "cfg": {
-                    "id": "mapstore-mouseposition-mobile"
                 }
             }, {
                 "name": "Search",
@@ -243,14 +244,6 @@
                     "id": "navigationBar"
                 }
             }, {
-                "name": "Toolbar",
-                "id": "IdentifyBar",
-                "stateSelector": "identify",
-                "cfg": {
-                    "id": "identifyBar"
-                },
-                "isDefault": false
-            }, {
                 "name": "MapLoading",
                 "override": {
                     "Toolbar": {
@@ -258,7 +251,7 @@
                     }
                 }
             },
-            "OmniBar", "BurgerMenu"
+            "OmniBar"
         ],
         "common": [{
             "name": "OmniBar",
