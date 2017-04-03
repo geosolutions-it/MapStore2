@@ -8,6 +8,7 @@
 const screenfull = require('screenfull');
 const {setControlProperty} = require('../actions/controls');
 const {TOGGLE_FULLSCREEN} = require('../actions/fullscreen');
+const ConfigUtils = require('../utils/ConfigUtils');
 const Rx = require('rxjs');
 
 const getFullScreenEvent = () => {
@@ -31,7 +32,7 @@ const getFullScreenEvent = () => {
  */
 const toggleFullscreenEpic = action$ =>
     action$.ofType(TOGGLE_FULLSCREEN).switchMap(action => {
-        const element = document.querySelector(action && action.querySelector || '.ms2 > div');
+        const element = document.querySelector(action && action.querySelector || ('.' + (ConfigUtils.getConfigProp('themePrefix') || 'ms2') + " > div"));
         if (element && action.enable && screenfull.enabled) {
             screenfull.request(element);
 
