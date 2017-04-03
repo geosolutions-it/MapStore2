@@ -353,6 +353,10 @@
             "zoomOutTooltip": "Decrease Zoom",
             "zoomAllTooltip": "Zoom To Max Extent"
         },
+        "fullscreen": {
+            "tooltipActivate": "Switch to Full Screen",
+            "tooltipDeactivate": "Exit full screen"
+        },
         "helptexts": {
             "scaleBox": "This is the helptext for the ScaleBox",
             "zoomToMaxExtentButton": "This is the helptext for the ZoomToMaxExtentButton",
@@ -814,6 +818,10 @@
             "zoomOutButton": {
                 "title": "Zoom Out",
                 "text": "Click to reduce the map"
+            },
+            "fullscreen": {
+                "title": "Full Screen",
+                "text": "Click to go full screen"
             },
             "identifyButton": {
                 "title": "Info",

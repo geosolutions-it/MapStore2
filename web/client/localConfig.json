@@ -91,6 +91,13 @@
                         "alwaysVisible": true
                     }
                 }
+            }, {
+                "name": "FullScreen",
+                "override": {
+                    "Toolbar": {
+                        "alwaysVisible": false
+                    }
+                }
             }, "Login",
             "OmniBar", "BurgerMenu", "Expander"
         ],
@@ -186,7 +193,7 @@
                     }
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo"
+            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen"
         ],
         "embedded": [{
                 "name": "Map",

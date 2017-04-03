@@ -353,6 +353,10 @@
             "zoomOutTooltip": "Diminuisci Zoom",
             "zoomAllTooltip": "Zoom Alla Massima Estensione"
         },
+        "fullscreen": {
+            "tooltipActivate":  "Passa a schermo intero",
+            "tooltipDeactivate": "Esci da schermo intero"
+        },
         "helptexts": {
             "scaleBox": "Questo è il testo di aiuto per ScaleBox",
             "zoomToMaxExtentButton": "Questo è il testo di aiuto per ZoomToMaxExtentButton",
@@ -814,6 +818,10 @@
                 "zoomOutButton": {
                     "title": "Zoom Out",
                     "text": "Premi per ridurre la mappa"
+                },
+                "fullscreen": {
+                    "title": "Schermo Intero",
+                    "text": "Premi per passare a schermo intero"
                 },
                 "identifyButton": {
                     "title": "Info",

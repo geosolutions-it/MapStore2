@@ -28,6 +28,7 @@ module.exports = {
         ZoomInPlugin: require('../plugins/ZoomIn'),
         ZoomOutPlugin: require('../plugins/ZoomOut'),
         ZoomAllPlugin: require('../plugins/ZoomAll'),
+        FullScreenPlugin: require('../plugins/FullScreen'),
         MapLoadingPlugin: require('../plugins/MapLoading'),
         AboutPlugin: require('./plugins/About'),
         HelpPlugin: require('../plugins/Help'),
@@ -62,7 +63,7 @@ module.exports = {
         QueryPanelPlugin: require('../plugins/QueryPanel'),
         FeatureGridPlugin: require('../plugins/FeatureGrid'),
         TutorialPlugin: require('../plugins/Tutorial'),
-        ThemeSwitchePluginr: require('../plugins/ThemeSwitcher'),
+        ThemeSwitcherPlugin: require('../plugins/ThemeSwitcher'),
         ScrollTopPlugin: require('../plugins/ScrollTop')
     },
     requires: {

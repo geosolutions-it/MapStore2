@@ -353,6 +353,10 @@
             "zoomOutTooltip": "Zoom verringern",
             "zoomAllTooltip": "Zoom auf maximale Ausdehnung"
         },
+        "fullscreen": {
+            "tooltipActivate": "Umschalten auf Vollbild",
+            "tooltipDeactivate": "Vollbild verlassen"
+        },
         "helptexts": {
             "scaleBox": "Das ist die Hilfe für die ScaleBox",
             "zoomToMaxExtentButton": "Das ist die Hilfe für den ZoomToMaxExtentButton",
@@ -814,6 +818,10 @@
             "zoomOutButton": {
                 "title": "Zoom Out",
                 "text": "Click to reduce the map"
+            },
+            "fullscreen": {
+                "title": "Vollbild",
+                "text": "Umschalten auf Vollbild"
             },
             "identifyButton": {
                 "title": "Info",

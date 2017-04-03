@@ -355,6 +355,10 @@
             "zoomOutTooltip": "Diminuer",
             "zoomAllTooltip": "Ajuster à l'extension des données"
         },
+        "fullscreen": {
+            "tooltipActivate": "Basculer en plein écran",
+            "tooltipDeactivate": "Quitter plein écran"
+        },
         "helptexts": {
             "scaleBox": "This is the helptext for the ScaleBox",
             "zoomToMaxExtentButton": "This is the helptext for the ZoomToMaxExtentButton",
@@ -816,6 +820,10 @@
             "zoomOutButton": {
                 "title": "Zoom Out",
                 "text": "Click to reduce the map"
+            },
+            "fullscreen": {
+                "title": "Basculer en plein écran",
+                "text": "Basculer en plein écran"
             },
             "identifyButton": {
                 "title": "Info",
