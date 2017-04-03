@@ -48,7 +48,9 @@ var DefaultLayer = React.createClass({
         settingsOptions: React.PropTypes.object,
         visibilityCheckType: React.PropTypes.string,
         includeDeleteButtonInSettings: React.PropTypes.bool,
-        groups: React.PropTypes.array
+        groups: React.PropTypes.array,
+        currentZoomLvl: React.PropTypes.number,
+        scales: React.PropTypes.array
     },
     getDefaultProps() {
         return {
@@ -135,7 +137,7 @@ var DefaultLayer = React.createClass({
         }
         return (<div position="collapsible" className="collapsible-toc">
              <div style={{minHeight: "35px"}}>{tools}</div>
-             <div><WMSLegend node={this.props.node}/></div>
+             <div><WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales}/></div>
         </div>);
     },
     renderTools() {
