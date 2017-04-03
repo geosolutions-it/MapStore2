@@ -393,6 +393,7 @@
                 "header": "Finde im Datensatz",
                 "dataset_header": "Datensatz"
             },
+            "emptyfilter": "Kein Filtersatz. Die Suche nach dem Timeout, wenn die Paginierung vom Server nicht unterstützt wird.",
             "attributefilter":{
                 "add_condition": " Füge Bedingung hinzu",
                 "add_group": " Füge Gruppe hinzu",

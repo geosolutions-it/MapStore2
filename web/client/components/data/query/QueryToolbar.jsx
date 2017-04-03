@@ -7,9 +7,10 @@
  */
 const React = require('react');
 
-const {Button, Glyphicon, ButtonToolbar} = require('react-bootstrap');
+const {Button, Glyphicon, ButtonToolbar, Tooltip} = require('react-bootstrap');
 
 const Modal = require('../../misc/Modal');
+const OverlayTrigger = require('../../misc/OverlayTrigger');
 
 const I18N = require('../../I18N/I18N');
 
@@ -32,7 +33,9 @@ const QueryToolbar = React.createClass({
         resultTitle: React.PropTypes.string,
         pagination: React.PropTypes.object,
         sortOptions: React.PropTypes.object,
-        hits: React.PropTypes.bool
+        hits: React.PropTypes.bool,
+        allowEmptyFilter: React.PropTypes.bool,
+        emptyFilterWarning: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -49,6 +52,8 @@ const QueryToolbar = React.createClass({
             pagination: null,
             sortOptions: null,
             hits: false,
+            allowEmptyFilter: false,
+            emptyFilterWarning: false,
             actions: {
                 onQuery: () => {},
                 onReset: () => {},
@@ -59,14 +64,24 @@ const QueryToolbar = React.createClass({
     render() {
         let fieldsExceptions = this.props.filterFields.filter((field) => field.exception).length > 0;
         // let fieldsWithoutValues = this.props.filterFields.filter((field) => !field.value).length > 0;
-        let fieldsWithValues = this.props.filterFields.filter((field) => field.value).length > 0;
+        let fieldsWithValues = this.props.filterFields.filter((field) => field.value).length > 0 || this.props.allowEmptyFilter;
 
         let queryDisabled =
             // fieldsWithoutValues ||
             fieldsExceptions ||
             !this.props.toolbarEnabled ||
             (!fieldsWithValues && !this.props.spatialField.geometry);
-
+        const tooltip = <Tooltip id="query-warning-tooltip"><I18N.Message msgId="queryform.emptyfilter"/></Tooltip>;
+        const btn = (<Button disabled={queryDisabled} bsSize="xs" id="query-toolbar-query" onClick={this.search}>
+            <Glyphicon glyph="glyphicon glyphicon-search"/>
+            <span><strong><I18N.Message msgId={"queryform.query"}/></strong></span>
+        </Button>);
+        const showTooltip = this.props.emptyFilterWarning && this.props.filterFields.filter((field) => field.value).length === 0 && !this.props.spatialField.geometry;
+        const queryButton = showTooltip ? (
+            <OverlayTrigger placement="bottom" key="query-button-tooltip" overlay={tooltip}>
+                {btn}
+            </OverlayTrigger>
+        ) : btn;
         return (
             <div className="container-fluid query-toolbar">
                 <div id="query-toolbar-title"><I18N.Message msgId={"queryform.title"}/></div>
@@ -75,10 +90,7 @@ const QueryToolbar = React.createClass({
                         <Glyphicon glyph="glyphicon glyphicon-refresh"/>
                         <span><strong><I18N.Message msgId={"queryform.reset"}/></strong></span>
                     </Button>
-                    <Button disabled={queryDisabled} bsSize="xs" id="query" onClick={this.search}>
-                        <Glyphicon glyph="glyphicon glyphicon-search"/>
-                        <span><strong><I18N.Message msgId={"queryform.query"}/></strong></span>
-                    </Button>
+                    {queryButton}
                 </ButtonToolbar>
                 <Modal show={this.props.showGeneratedFilter ? true : false} bsSize="large">
                     <Modal.Header>

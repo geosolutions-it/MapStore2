@@ -393,6 +393,7 @@
                 "header": "Find in the dataset",
                 "dataset_header": "Dataset"
             },
+            "emptyfilter": "No filter set. Searching could timeout if pagination is not supported by the server.",
             "attributefilter":{
                 "add_condition": " Add Condition",
                 "add_group": " Add Group",
