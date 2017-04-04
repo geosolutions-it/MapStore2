@@ -75,7 +75,7 @@ Layers.registerType('tileprovider', (options) => {
         const isCORS = useCORS.reduce((found, current) => found || url.indexOf(current) === 0, false);
         proxy = !isCORS && proxyUrl;
     }
-    const layer = new Cesium.UrlTemplateImageryProvider({
+    return new Cesium.UrlTemplateImageryProvider({
         url: template(url, opt),
         enablePickFeatures: false,
         subdomains: opt.subdomains,
@@ -84,5 +84,4 @@ Layers.registerType('tileprovider', (options) => {
         credit: opt.attribution,
         proxy: proxy && opt.noCors ? new TileProviderProxy(proxyUrl) : new NoProxy()
     });
-    return layer;
 });

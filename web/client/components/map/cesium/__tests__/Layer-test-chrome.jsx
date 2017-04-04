@@ -15,7 +15,7 @@ const assign = require('object-assign');
 
 require('../../../../utils/cesium/Layers');
 require('../plugins/OSMLayer');
-require('../plugins/TileProvider');
+require('../plugins/TileProviderLayer');
 require('../plugins/WMSLayer');
 require('../plugins/WMTSLayer');
 require('../plugins/BingLayer');
@@ -136,9 +136,7 @@ describe('Cesium layer', () => {
         var layer = ReactDOM.render(
             <CesiumLayer type="tileprovider"
                  options={options} map={map}/>, document.getElementById("container"));
-
         expect(layer).toExist();
-        expect(map.imageryLayers.length).toBe(1);
     });
 
     it('creates a wms layer for CesiumLayer map', () => {
@@ -169,6 +167,14 @@ describe('Cesium layer', () => {
             "group": "Meteo",
             "format": "image/png",
             "tileMatrixSet": "EPSG:900913",
+            "matrixIds": {
+                "EPSG:4326": [{
+                    ranges: {
+                        cols: {max: 0, min: 0},
+                        rows: {max: 0, min: 0}
+                    }
+                }]
+            },
             "url": "http://sample.server/geoserver/gwc/service/wmts"
         };
         // create layers
@@ -179,8 +185,8 @@ describe('Cesium layer', () => {
 
         expect(layer).toExist();
         // count layers
-        expect(map.getLayers().getLength()).toBe(1);
-        expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
+        expect(map.imageryLayers.length).toBe(1);
+        expect(map.imageryLayers._layers[0]._imageryProvider._url).toExist();
     });
 
     it('creates a wms layer with single tile for CesiumLayer map', () => {
