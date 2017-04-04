@@ -15,7 +15,7 @@ const ZoomToFeatureIcon = React.createClass({
     render() {
         const geometry = this.props.params && this.props.params.data && this.props.params.data.geometry;
         return geometry && geometry.coordinates ? (
-            <Glyphicon glyph="search" width={16}/>
+            <Glyphicon glyph="zoom-in" width={16}/>
         ) : null;
     }
 });

@@ -65,7 +65,7 @@
         "permissions": "Permessi",
         "home":{
             "open": "Apri",
-            "description": "MapStore è sviluppato per creare, salvare e condividere in modo semplice ed intuitivo mappe e mashup creati selezionando contenuti da server come Google Maps, OpenStreetMap, MapQuest o da server specifici forniti dalla propria organizzazione o da terzi. <br/> Visita la <a href=\"http://geosolutions-it.github.io/MapStore2/\">home page</a> per maggiori dettagli.",
+            "description": "MapStore è sviluppato per creare, salvare e condividere in modo semplice ed intuitivo mappe e mashup creati selezionando contenuti da server come Google Maps, OpenStreetMap, MapQuest o da server specifici forniti dalla propria organizzazione o da terzi. <br/> Visita la <a href=\"/mapstore/docs/\">home page</a> per maggiori dettagli.",
             "Applications": "Applicazioni",
             "Examples": "Esempi",
             "LinkedinGroup": "Gruppo Linkedin Mapstore",
@@ -353,6 +353,10 @@
             "zoomOutTooltip": "Diminuisci Zoom",
             "zoomAllTooltip": "Zoom Alla Massima Estensione"
         },
+        "fullscreen": {
+            "tooltipActivate":  "Passa a schermo intero",
+            "tooltipDeactivate": "Esci da schermo intero"
+        },
         "helptexts": {
             "scaleBox": "Questo è il testo di aiuto per ScaleBox",
             "zoomToMaxExtentButton": "Questo è il testo di aiuto per ZoomToMaxExtentButton",
@@ -389,6 +393,7 @@
                 "header": "Cerca nel dataset",
                 "dataset_header": "Dataset"
             },
+            "emptyfilter": "Nessun filtro selezionato. La ricerca potrebbe andare in timeout se il server non supporta la paginazione.",
             "attributefilter":{
                 "add_condition": " Aggiungi Condizione",
                 "add_group": " Aggiungi Gruppo",
@@ -814,6 +819,10 @@
                 "zoomOutButton": {
                     "title": "Zoom Out",
                     "text": "Premi per ridurre la mappa"
+                },
+                "fullscreen": {
+                    "title": "Schermo Intero",
+                    "text": "Premi per passare a schermo intero"
                 },
                 "identifyButton": {
                     "title": "Info",

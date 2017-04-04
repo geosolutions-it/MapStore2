@@ -1,5 +1,5 @@
 /**
- * Copyright 2016, GeoSolutions Sas.
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -9,7 +9,7 @@
 const React = require('react');
 const {FormControl, FormGroup, ControlLabel, Button, Alert} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
-const Message = require('../../../components/I18N/Message');
+const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
   /**
@@ -87,12 +87,13 @@ const LoginForm = React.createClass({
         return this.state.loading ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn overrideSpinnerClassName="spinner"/> : null;
     },
     renderSubmit() {
+        let submitText = LocaleUtils.getMessageById(this.context.messages, "user.signIn");
         if (this.props.showSubmitButton) {
             return (<Button
                 type="submit"
-                value={LocaleUtils.getMessageById(this.context.messages, "user.signIn")}
+                value={submitText}
                 bsStyle="primary"
-                key="submit" onClick={this.handleSubmit}/>);
+                key="submit" onClick={this.handleSubmit}>{submitText}</Button>);
         }
     },
     render() {

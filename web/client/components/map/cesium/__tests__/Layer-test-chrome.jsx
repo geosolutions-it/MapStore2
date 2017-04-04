@@ -15,7 +15,9 @@ const assign = require('object-assign');
 
 require('../../../../utils/cesium/Layers');
 require('../plugins/OSMLayer');
+require('../plugins/TileProviderLayer');
 require('../plugins/WMSLayer');
+require('../plugins/WMTSLayer');
 require('../plugins/BingLayer');
 require('../plugins/GraticuleLayer');
 require('../plugins/OverlayLayer');
@@ -117,6 +119,25 @@ describe('Cesium layer', () => {
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
     });
+    it('creates a tileProvider osm layer for cesium map', () => {
+        var options = {
+            "group": "background",
+            "source": "nasagibs",
+            "name": "Night2012",
+            "provider": "NASAGIBS.ViirsEarthAtNight2012",
+            "title": "NASAGIBS Night 2012",
+            "type": "tileprovider",
+            "visibility": false,
+            "singleTile": false,
+            "id": "Night2012__3",
+            "zIndex": 3
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <CesiumLayer type="tileprovider"
+                 options={options} map={map}/>, document.getElementById("container"));
+        expect(layer).toExist();
+    });
 
     it('creates a wms layer for CesiumLayer map', () => {
         var options = {
@@ -136,6 +157,36 @@ describe('Cesium layer', () => {
         expect(map.imageryLayers.length).toBe(1);
         expect(map.imageryLayers._layers[0]._imageryProvider._url).toBe('{s}');
         expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(1);
+    });
+
+    it('creates a wmts layer for openlayers map', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "tileMatrixSet": "EPSG:900913",
+            "matrixIds": {
+                "EPSG:4326": [{
+                    ranges: {
+                        cols: {max: 0, min: 0},
+                        rows: {max: 0, min: 0}
+                    }
+                }]
+            },
+            "url": "http://sample.server/geoserver/gwc/service/wmts"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <CesiumLayer type="wmts"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.imageryLayers.length).toBe(1);
+        expect(map.imageryLayers._layers[0]._imageryProvider._url).toExist();
     });
 
     it('creates a wms layer with single tile for CesiumLayer map', () => {

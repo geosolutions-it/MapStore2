@@ -160,7 +160,7 @@ const MapInfoUtils = {
         const widthBBox = (props && props.sizeBBox && props.sizeBBox.width) || 101;
         const size = [heightBBox, widthBBox];
         const rotation = 0;
-        const resolution = MapUtils.getCurrentResolution(props.map.zoom, 0, 21, 96);
+        const resolution = MapUtils.getCurrentResolution(Math.ceil(props.map.zoom), 0, 21, 96);
         let wrongLng = props.point.latlng.lng;
         // longitude restricted to the [-180°,+180°] range
         let lngCorrected = wrongLng - (360) * Math.floor(wrongLng / (360) + 0.5);

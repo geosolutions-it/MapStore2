@@ -94,6 +94,55 @@ describe('QueryBuilder', () => {
         expect(childNodes.length).toBe(2);
     });
 
+    it('creates the QueryBuilder component no filter set', () => {
+        const groupLevels = 5;
+
+        const groupFields = [];
+
+        const filterFields = [{
+            rowId: 100,
+            groupId: 1,
+            attribute: "",
+            operator: null,
+            value: null,
+            exception: null
+        }];
+
+        const attributes = [{
+            id: "Attribute",
+            type: "list",
+            values: [
+                "attribute1",
+                "attribute2",
+                "attribute3",
+                "attribute4",
+                "attribute5"
+            ]
+        }];
+
+        const querybuilder = ReactDOM.render(
+            <QueryBuilder
+                filterFields={filterFields}
+                attributes={attributes}
+                groupFields={groupFields}
+                groupLevels={groupLevels}
+            />,
+            document.getElementById("container")
+        );
+
+        expect(querybuilder).toExist();
+
+        const queryBuilderDOMNode = expect(ReactDOM.findDOMNode(querybuilder));
+
+        expect(queryBuilderDOMNode).toExist();
+        let childNodes = queryBuilderDOMNode.actual.childNodes;
+        expect(childNodes.length).toBe(2);
+
+        const queryButton = document.getElementById('query-toolbar-query');
+        expect(queryButton).toExist();
+        expect(queryButton.getAttribute("disabled")).toBe('');
+    });
+
     it('creates the QueryBuilder component in error state', () => {
 
         let attributeFilterActions = {
@@ -110,5 +159,62 @@ describe('QueryBuilder', () => {
 
         expect(querybuilder).toExist();
         expect(spy.calls.length).toEqual(1);
+    });
+
+    it('creates the QueryBuilder component with empty filter support', () => {
+        const groupLevels = 5;
+
+        const groupFields = [{
+            id: 1,
+            logic: "OR",
+            index: 0
+        }];
+
+        const filterFields = [{
+            rowId: 100,
+            groupId: 1,
+            attribute: "",
+            operator: null,
+            value: null,
+            exception: null
+        }, {
+            rowId: 200,
+            groupId: 1,
+            attribute: "Attribute",
+            operator: "=",
+            value: "attribute1",
+            exception: null
+        }];
+
+        const attributes = [{
+            id: "Attribute",
+            type: "list",
+            values: [
+                "attribute1",
+                "attribute2",
+                "attribute3",
+                "attribute4",
+                "attribute5"
+            ]
+        }];
+
+        const querybuilder = ReactDOM.render(
+            <QueryBuilder
+                filterFields={filterFields}
+                attributes={attributes}
+                groupFields={groupFields}
+                groupLevels={groupLevels}
+                allowEmptyFilter={true}
+            />,
+            document.getElementById("container")
+        );
+
+        expect(querybuilder).toExist();
+
+        const queryBuilderDOMNode = expect(ReactDOM.findDOMNode(querybuilder));
+        expect(queryBuilderDOMNode).toExist();
+        const queryButton = document.getElementById('query-toolbar-query');
+        expect(queryButton).toExist();
+        expect(queryButton.getAttribute("disabled")).toNotExist();
     });
 });

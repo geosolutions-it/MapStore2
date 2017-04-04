@@ -65,7 +65,7 @@
         "permissions": "Permissions",
         "home":{
             "open": "Open",
-            "description": "MapStore 2 has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on.<br/>Visit the <a href=\"http://geosolutions-it.github.io/MapStore2/\">home page</a> for more details.",
+            "description": "MapStore 2 has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on.<br/>Visit the <a href=\"/mapstore/docs/\">home page</a> for more details.",
             "Applications": "Applications",
             "Examples": "Examples",
             "LinkedinGroup": "Mapstore Linkedin Group",
@@ -353,6 +353,10 @@
             "zoomOutTooltip": "Decrease Zoom",
             "zoomAllTooltip": "Zoom To Max Extent"
         },
+        "fullscreen": {
+            "tooltipActivate": "Switch to Full Screen",
+            "tooltipDeactivate": "Exit full screen"
+        },
         "helptexts": {
             "scaleBox": "This is the helptext for the ScaleBox",
             "zoomToMaxExtentButton": "This is the helptext for the ZoomToMaxExtentButton",
@@ -389,6 +393,7 @@
                 "header": "Find in the dataset",
                 "dataset_header": "Dataset"
             },
+            "emptyfilter": "No filter set. Searching could timeout if pagination is not supported by the server.",
             "attributefilter":{
                 "add_condition": " Add Condition",
                 "add_group": " Add Group",
@@ -814,6 +819,10 @@
             "zoomOutButton": {
                 "title": "Zoom Out",
                 "text": "Click to reduce the map"
+            },
+            "fullscreen": {
+                "title": "Full Screen",
+                "text": "Click to go full screen"
             },
             "identifyButton": {
                 "title": "Info",

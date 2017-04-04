@@ -11,7 +11,7 @@ const CoordinatesUtils = require('./CoordinatesUtils');
 const {isString, isArray, isObject, head} = require('lodash');
 
 const WMTSUtils = {
-    getTileMatrixSet: (tileMatrixSet, srs, allowedSRS) => {
+    getTileMatrixSet: (tileMatrixSet, srs, allowedSRS, matrixIds = {}) => {
         if (tileMatrixSet && isString(tileMatrixSet)) {
             return tileMatrixSet;
         }
@@ -19,18 +19,14 @@ const WMTSUtils = {
             return CoordinatesUtils.getEquivalentSRS(srs, allowedSRS).reduce((previous, current) => {
                 if (isArray(tileMatrixSet)) {
                     const matching = head(tileMatrixSet.filter((matrix) => (matrix["ows:Identifier"] === current || CoordinatesUtils.getEPSGCode(matrix["ows:SupportedCRS"]) === current)));
-                    return matching && matching["ows:Identifier"] || previous;
+                    return matching && matching["ows:Identifier"] && !matrixIds[previous] ? current : previous;
                 } else if (isObject(tileMatrixSet)) {
                     return tileMatrixSet[current] || previous;
                 }
                 return previous;
             }, srs);
         }
-        if (tileMatrixSet && isArray(tileMatrixSet)) {
-            return CoordinatesUtils.getEquivalentSRS(srs, allowedSRS).reduce((previous, current) => {
-                return tileMatrixSet[current] || previous;
-            }, srs);
-        }
+
         return srs;
     }
 };

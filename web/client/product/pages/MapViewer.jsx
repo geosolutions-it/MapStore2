@@ -37,7 +37,7 @@ const MapViewerPage = React.createClass({
         };
     },
     componentWillMount() {
-        if (this.props.params.mapType && this.props.params.mapId && oldLocation !== this.props.location) {
+        if (this.props.params.mapId && oldLocation !== this.props.location) {
             oldLocation = this.props.location;
             if (!ConfigUtils.getDefaults().ignoreMobileCss) {
                 if (this.props.mode === 'mobile') {

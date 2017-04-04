@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -12,11 +12,32 @@ var {Button, Glyphicon} = require('react-bootstrap');
 const OverlayTrigger = require('../misc/OverlayTrigger');
 
 var ImageButton = require('./ImageButton');
-
+/**
+ * Toggle button with tooltip and icons or image support.
+ * @memberof components.buttons
+ * @class
+ * @prop {string} [id] an id for the html component
+ * @prop {object} [btnConfig] the configuration to pass to the bootstrap button
+ * @prop {object} [options] the options to send when toggle is clicked
+ * @prop {string|element} [text] the text to disaplay
+ * @prop {string|element} [help] the help text
+ * @prop {string} glyphicon the icon name
+ * @prop {bool} pressed the status of the button
+ * @prop {function} onClick. The method to call when clicked. the method will return as parameter the toggled `pressed` prop and the `options` object
+ * @prop {node} [tooltip] the tooltip to use on mouse hover
+ * @prop {string} [tooltipPlace] positon of the tooltip, one of: 'top', 'right', 'bottom', 'left'
+ * @prop {object} css style object for the component
+ * @prop {btnType} [btnType] one of 'normal', 'image'
+ * @prop {string} image if type is 'image', the src of the image
+ * @prop {string} pressedStyle the bootstrap style for pressedStyle
+ * @prop {string} defaultStyle the bootstrap style when not pressed
+ *
+ */
 var ToggleButton = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         btnConfig: React.PropTypes.object,
+        options: React.PropTypes.options,
         text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         help: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         glyphicon: React.PropTypes.string,
@@ -33,6 +54,7 @@ var ToggleButton = React.createClass({
     getDefaultProps() {
         return {
             onClick: () => {},
+            options: {},
             pressed: false,
             tooltipPlace: "top",
             style: {width: "100%"},
@@ -42,7 +64,7 @@ var ToggleButton = React.createClass({
         };
     },
     onClick() {
-        this.props.onClick(!this.props.pressed);
+        this.props.onClick(!this.props.pressed, this.props.options);
     },
     renderNormalButton() {
         return (
