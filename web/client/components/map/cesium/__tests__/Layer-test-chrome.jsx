@@ -15,6 +15,7 @@ const assign = require('object-assign');
 
 require('../../../../utils/cesium/Layers');
 require('../plugins/OSMLayer');
+require('../plugins/TileProvider');
 require('../plugins/WMSLayer');
 require('../plugins/WMTSLayer');
 require('../plugins/BingLayer');
@@ -113,6 +114,27 @@ describe('Cesium layer', () => {
         // create layer
         var layer = ReactDOM.render(
             <CesiumLayer type="osm"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.imageryLayers.length).toBe(1);
+    });
+    it('creates a tileProvider osm layer for cesium map', () => {
+        var options = {
+            "group": "background",
+            "source": "nasagibs",
+            "name": "Night2012",
+            "provider": "NASAGIBS.ViirsEarthAtNight2012",
+            "title": "NASAGIBS Night 2012",
+            "type": "tileprovider",
+            "visibility": false,
+            "singleTile": false,
+            "id": "Night2012__3",
+            "zIndex": 3
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <CesiumLayer type="tileprovider"
                  options={options} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
