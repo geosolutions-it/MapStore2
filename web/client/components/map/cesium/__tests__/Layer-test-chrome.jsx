@@ -16,6 +16,7 @@ const assign = require('object-assign');
 require('../../../../utils/cesium/Layers');
 require('../plugins/OSMLayer');
 require('../plugins/WMSLayer');
+require('../plugins/WMTSLayer');
 require('../plugins/BingLayer');
 require('../plugins/GraticuleLayer');
 require('../plugins/OverlayLayer');
@@ -136,6 +137,28 @@ describe('Cesium layer', () => {
         expect(map.imageryLayers.length).toBe(1);
         expect(map.imageryLayers._layers[0]._imageryProvider._url).toBe('{s}');
         expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(1);
+    });
+
+    it('creates a wmts layer for openlayers map', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "tileMatrixSet": "EPSG:900913",
+            "url": "http://sample.server/geoserver/gwc/service/wmts"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <CesiumLayer type="wmts"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
     });
 
     it('creates a wms layer with single tile for CesiumLayer map', () => {
