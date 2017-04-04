@@ -37,7 +37,7 @@ function WMTSProxy(proxy) {
 }
 
 const isValidTile = (tileMatrixSet) => (x, y, level) =>
-    tileMatrixSet[level] &&
+    tileMatrixSet && tileMatrixSet[level] &&
     x <= parseInt(get(tileMatrixSet[level], "ranges.cols.max"), 10) &&
     x >= parseInt(get(tileMatrixSet[level], "ranges.cols.min"), 10) &&
     y <= parseInt(get(tileMatrixSet[level], "ranges.rows.max"), 10) &&
@@ -56,7 +56,7 @@ NoProxy.prototype.getURL = function(resource) {
     let {url, queryString} = splitUrl(resource);
     return url + queryString;
 };
-function getMatrixIds(matrix, srs) {
+function getMatrixIds(matrix = [], srs) {
     return (isObject(matrix) && matrix[srs] || matrix).map((el) => el.identifier);
 }
 
