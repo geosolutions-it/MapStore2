@@ -12,6 +12,15 @@
     "ignoreMobileCss": true,
     "useAuthenticationRules": true,
     "themePrefix": "ms2",
+    "defaultMapOptions": {
+      "cesium": {
+          "terrainProvider": {
+              "type": "cesium",
+              "url": "https://assets.agi.com/stk-terrain/world",
+              "requestVertexNormals": true
+          }
+      }
+    },
     "authenticationRules": [{
         "urlPattern": ".*geostore.*",
         "method": "basic"
