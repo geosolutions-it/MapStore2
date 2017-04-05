@@ -37,5 +37,5 @@ module.exports = {
             priority: 1
         }
     }),
-    reducers: { zoomIn: require("../reducers/map")}
+    reducers: {}
 };
