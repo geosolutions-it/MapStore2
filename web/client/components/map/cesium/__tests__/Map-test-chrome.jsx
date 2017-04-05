@@ -5,12 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactDOM = require('react-dom');
-var CesiumMap = require('../Map.jsx');
-var CesiumLayer = require('../Layer.jsx');
-var expect = require('expect');
-var Cesium = require('../../../../libs/cesium');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const CesiumMap = require('../Map.jsx');
+const CesiumLayer = require('../Layer.jsx');
+const expect = require('expect');
+const Cesium = require('../../../../libs/cesium');
 
 require('../../../../utils/cesium/Layers');
 require('../plugins/OSMLayer');
@@ -120,6 +120,27 @@ describe('CesiumMap', () => {
                 5000000
             )
         });
+    });
+    it('check mouse click handler', (done) => {
+        const testHandlers = {
+            handler: () => {}
+        };
+        var spy = expect.spyOn(testHandlers, 'handler');
+
+        const map = ReactDOM.render(
+            <CesiumMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11}
+                onClick={testHandlers.handler}
+            />
+        , document.getElementById("container"));
+        expect(map.map).toExist();
+        map.onClick(map.map, {position: {x: 100, y: 100 }});
+        setTimeout(() => {
+            expect(spy.calls.length).toEqual(1);
+            expect(spy.calls[0].arguments.length).toEqual(1);
+            done();
+        }, 800);
     });
 
     it('check if the map changes when receive new props', () => {

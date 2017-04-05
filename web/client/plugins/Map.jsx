@@ -14,6 +14,7 @@ const Spinner = require('react-spinkit');
 require('./map/css/map.css');
 
 const Message = require('../components/I18N/Message');
+const ConfigUtils = require('../utils/ConfigUtils');
 const {isString} = require('lodash');
 let plugins;
 /**
@@ -122,6 +123,7 @@ const MapPlugin = React.createClass({
         loadingError: React.PropTypes.string,
         tools: React.PropTypes.array,
         options: React.PropTypes.object,
+        mapOptions: React.PropTypes.object,
         toolsOptions: React.PropTypes.object,
         actions: React.PropTypes.object,
         features: React.PropTypes.array
@@ -135,6 +137,7 @@ const MapPlugin = React.createClass({
             loadingSpinner: true,
             tools: ["measurement", "locate", "overview", "scalebar", "draw", "highlight"],
             options: {},
+            mapOptions: {},
             toolsOptions: {
                 measurement: {},
                 locate: {},
@@ -183,6 +186,10 @@ const MapPlugin = React.createClass({
         }
         return tool[this.props.mapType] || tool;
     },
+    getMapOptions() {
+        return this.props.mapOptions && this.props.mapOptions[this.props.mapType] ||
+            ConfigUtils.getConfigProp("defaultMapOptions") && ConfigUtils.getConfigProp("defaultMapOptions")[this.props.mapType];
+    },
     renderLayers() {
         const projection = this.props.map.projection || 'EPSG:3857';
         return this.props.layers.map((layer, index) => {
@@ -224,6 +231,7 @@ const MapPlugin = React.createClass({
             return (
                 <plugins.Map id="map"
                     {...this.props.options}
+                    mapOptions={this.getMapOptions()}
                     {...this.props.map}
                     zoomControl={this.props.zoomControl}>
                     {this.renderLayers()}
