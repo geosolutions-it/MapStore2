@@ -19,7 +19,7 @@ const url = require('url');
 const ThemeUtils = require('../utils/ThemeUtils');
 
 const assign = require('object-assign');
-const {partialRight} = require('lodash');
+const {partialRight, merge} = require('lodash');
 
 const defaultConfig = {
     "map": {
@@ -264,65 +264,62 @@ const MapStore2 = {
      *      plugins: ['Map']
      * });
      */
-    create(container, options, plugins, component) {
+    create(container, opts, pluginsDef, component) {
         const embedded = require('../containers/Embedded');
-
+        const options = merge({}, this.defaultOptions || {}, opts);
         const {initialState, storeOpts} = options;
-        require.ensure([], () => {
-            const pluginsDef = plugins || require('./plugins');
-            const pages = [{
-                name: "embedded",
-                path: "/",
-                component: component || embedded,
-                pageConfig: {
-                    pluginsConfig: options.plugins || defaultPlugins
-                }
-            }];
 
-            const StandardRouter = connect((state) => ({
-                locale: state.locale || {},
-                pages
-            }))(require('../components/app/StandardRouter'));
-
-            const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {}, {});
-            const initialActions = getInitialActions(options);
-            const appConfig = {
-                storeOpts: assign({}, storeOpts, {notify: true}),
-                appStore,
-                pluginsDef,
-                initialActions,
-                appComponent: StandardRouter,
-                printingEnabled: false
-            };
-            if (options.style) {
-                let dom = document.getElementById('custom_theme');
-                if (!dom) {
-                    dom = document.createElement('style');
-                    dom.id = 'custom_theme';
-                    document.head.appendChild(dom);
-                }
-                ThemeUtils.renderFromLess(options.style, 'custom_theme', 'themes/default/');
+        const pages = [{
+            name: "embedded",
+            path: "/",
+            component: component || embedded,
+            pageConfig: {
+                pluginsConfig: options.plugins || defaultPlugins
             }
-            const defaultThemeCfg = {
-              prefixContainer: '#' + container
-            };
+        }];
 
-            const themeCfg = options.theme && assign({}, defaultThemeCfg, options.theme) || defaultThemeCfg;
-            const onStoreInit = (store) => {
-                store.addActionListener((action) => {
-                    (actionListeners[action.type] || []).concat(actionListeners['*'] || []).forEach((listener) => {
-                        listener.call(null, action);
-                    });
-                });
-                store.subscribe(() => {
-                    stateChangeListeners.forEach(({listener, selector}) => {
-                        listener.call(null, selector(store.getState()));
-                    });
-                });
-            };
-            ReactDOM.render(<StandardApp onStoreInit={onStoreInit} themeCfg={themeCfg} className="fill" {...appConfig}/>, document.getElementById(container));
+        const StandardRouter = connect((state) => ({
+            locale: state.locale || {},
+            pages
+        }))(require('../components/app/StandardRouter'));
 
-        });
+        const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {}, {});
+        const initialActions = getInitialActions(options);
+        const appConfig = {
+            storeOpts: assign({}, storeOpts, {notify: true}),
+            appStore,
+            pluginsDef,
+            initialActions,
+            appComponent: StandardRouter,
+            printingEnabled: false
+        };
+        if (options.style) {
+            let dom = document.getElementById('custom_theme');
+            if (!dom) {
+                dom = document.createElement('style');
+                dom.id = 'custom_theme';
+                document.head.appendChild(dom);
+            }
+            ThemeUtils.renderFromLess(options.style, 'custom_theme', 'themes/default/');
+        }
+        const defaultThemeCfg = {
+          prefixContainer: '#' + container
+        };
+
+        const themeCfg = options.theme && assign({}, defaultThemeCfg, options.theme) || defaultThemeCfg;
+        const onStoreInit = (store) => {
+            store.addActionListener((action) => {
+                (actionListeners[action.type] || []).concat(actionListeners['*'] || []).forEach((listener) => {
+                    listener.call(null, action);
+                });
+            });
+            store.subscribe(() => {
+                stateChangeListeners.forEach(({listener, selector}) => {
+                    listener.call(null, selector(store.getState()));
+                });
+            });
+        };
+        ReactDOM.render(<StandardApp onStoreInit={onStoreInit} themeCfg={themeCfg} className="fill" {...appConfig}/>, document.getElementById(container));
     },
     buildPluginsCfg,
     getParamFromRequest,
@@ -396,11 +393,12 @@ const MapStore2 = {
      * @memberof MapStore2
      * @static
      * @param {object} plugins list of included plugins
+     * @param {object} [options] default options (to be overridden on create)
      * @example
      * MapStore2.withPlugins({...});
      */
-    withPlugins: (plugins) => {
-        return assign({}, MapStore2, {create: partialRight(MapStore2.create, plugins)});
+    withPlugins: (plugins, options) => {
+        return assign({}, MapStore2, {create: partialRight(MapStore2.create, partialRight.placeholder, partialRight.placeholder, plugins), defaultOptions: options || {}});
     }
 };
 
