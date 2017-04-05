@@ -29,10 +29,12 @@
     </head>
     <body onload="init()">
         <div id="container" class="ms2"></div>
-        <script id="ms2-api" src="dist/ms2-api.js"></script>
+        <script id="ms2-api" src="__BASE__URL__dist/ms2-api.js"></script>
         <script type="text/javascript">
         function init() {
-            MapStore2.create('container');
+            MapStore2.create('container',{
+                configUrl: "__CONFIG__URL__"
+            });
         }
         </script>
     </body>

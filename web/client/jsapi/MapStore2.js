@@ -10,6 +10,7 @@ const ReactDOM = require('react-dom');
 
 const StandardApp = require('../components/app/StandardApp');
 const LocaleUtils = require('../utils/LocaleUtils');
+const ConfigUtils = require('../utils/ConfigUtils');
 const {connect} = require('react-redux');
 
 const {configureMap, loadMapConfig} = require('../actions/config');
@@ -319,6 +320,14 @@ const MapStore2 = {
                 });
             });
         };
+        if (options.noLocalConfig) {
+            ConfigUtils.setLocalConfigurationFile('');
+            ConfigUtils.setConfigProp('proxyUrl', options.proxy || null);
+        }
+
+        if (options.translations) {
+            ConfigUtils.setConfigProp('translationsPath', options.translations);
+        }
         ReactDOM.render(<StandardApp onStoreInit={onStoreInit} themeCfg={themeCfg} className="fill" {...appConfig}/>, document.getElementById(container));
     },
     buildPluginsCfg,

@@ -14,6 +14,8 @@ const MapStore2 = require('../jsapi/MapStore2')
   .withPlugins(require('./apiPlugins'), {
       theme: {
           path: getScriptPath() + '/themes'
-      }
+      },
+      noLocalConfig: true,
+      translations: getScriptPath() + '/../translations'
   });
 window.MapStore2 = MapStore2;
