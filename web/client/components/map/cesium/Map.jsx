@@ -9,7 +9,9 @@ var Cesium = require('../../../libs/cesium');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var ConfigUtils = require('../../../utils/ConfigUtils');
+var ClickUtils = require('../../../utils/cesium/ClickUtils');
 var assign = require('object-assign');
+const {throttle} = require('lodash');
 
 let CesiumMap = React.createClass({
     propTypes: {
@@ -55,7 +57,7 @@ let CesiumMap = React.createClass({
             timeline: false,
             navigationHelpButton: false,
             navigationInstructionsInitiallyVisible: false
-        }, this.props.mapOptions));
+        }, this.getMapOptions(this.props.mapOptions)));
         map.imageryLayers.removeAll();
         map.camera.moveEnd.addEventListener(this.updateMapInfoState);
         this.hand = new Cesium.ScreenSpaceEventHandler(map.scene.canvas);
@@ -63,19 +65,7 @@ let CesiumMap = React.createClass({
             this.onClick(map, movement);
         }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
-        this.hand.setInputAction((movement) => {
-            if (this.props.onMouseMove && movement.endPosition) {
-                const cartesian = map.camera.pickEllipsoid(movement.endPosition, map.scene.globe.ellipsoid);
-                if (cartesian) {
-                    const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-                    this.props.onMouseMove({
-                        y: cartographic.latitude * 180.0 / Math.PI,
-                        x: cartographic.longitude * 180.0 / Math.PI,
-                        crs: "EPSG:4326"
-                    });
-                }
-            }
-        }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+        this.hand.setInputAction(throttle(this.onMouseMove.bind(this), 500), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 
         map.camera.setView({
             destination: Cesium.Cartesian3.fromDegrees(
@@ -104,21 +94,22 @@ let CesiumMap = React.createClass({
         this.map.destroy();
     },
     onClick(map, movement) {
+
         if (this.props.onClick && movement.position !== null) {
             const cartesian = map.camera.pickEllipsoid(movement.position, map.scene.globe.ellipsoid);
             if (cartesian) {
-                const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+                let cartographic = ClickUtils.getMouseXYZ(map, movement) || Cesium.Cartographic.fromCartesian(cartesian);
                 const latitude = cartographic.latitude * 180.0 / Math.PI;
                 const longitude = cartographic.longitude * 180.0 / Math.PI;
 
                 const y = ((90.0 - latitude) / 180.0) * this.props.standardHeight * (this.props.zoom + 1);
                 const x = ((180.0 + longitude) / 360.0) * this.props.standardWidth * (this.props.zoom + 1);
-
                 this.props.onClick({
                     pixel: {
                         x: x,
                         y: y
                     },
+                    height: this.props.mapOptions && this.props.mapOptions.terrainProvider ? cartographic.height : undefined,
                     latlng: {
                         lat: latitude,
                         lng: longitude
@@ -127,6 +118,34 @@ let CesiumMap = React.createClass({
                 });
             }
         }
+    },
+    onMouseMove(movement) {
+        if (this.props.onMouseMove && movement.endPosition) {
+            const cartesian = this.map.camera.pickEllipsoid(movement.endPosition, this.map.scene.globe.ellipsoid);
+            if (cartesian) {
+                const cartographic = ClickUtils.getMouseXYZ(this.map, movement) || Cesium.Cartographic.fromCartesian(cartesian);
+                this.props.onMouseMove({
+                    y: cartographic.latitude * 180.0 / Math.PI,
+                    x: cartographic.longitude * 180.0 / Math.PI,
+                    crs: "EPSG:4326"
+                });
+            }
+        }
+    },
+    getMapOptions(rawOptions) {
+        let overrides = {};
+        if (rawOptions.terrainProvider) {
+            let {type, ...tpOptions} = rawOptions.terrainProvider;
+            switch (type) {
+                case "cesium": {
+                    overrides.terrainProvider = new Cesium.CesiumTerrainProvider(tpOptions);
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+        return assign({}, rawOptions, overrides);
     },
     getCenter() {
         const center = this.map.camera.positionCartographic;

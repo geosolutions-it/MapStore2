@@ -20,6 +20,7 @@ const Viewer = React.createClass({
         // redux store slice with map configuration (bound through connect to store at the end of the file)
         map: React.PropTypes.object,
         layers: React.PropTypes.array,
+        mapOptions: React.PropTypes.object,
         // redux store dispatch func
         dispatch: React.PropTypes.func,
         textSearch: React.PropTypes.func,
@@ -55,6 +56,17 @@ const Viewer = React.createClass({
         };
 
     },
+    getDefaultProps() {
+        return {
+            mapOptions: {
+                terrainProvider: {
+                  type: "cesium",
+                  url: "https://assets.agi.com/stk-terrain/world",
+                  requestVertexNormals: true
+              }
+            }
+        };
+    },
     renderLayers(layers) {
         if (layers) {
 
@@ -80,7 +92,7 @@ const Viewer = React.createClass({
                 <Localized messages={this.props.messages} locale={this.props.locale} loadingError={this.props.localeError}>
                     <div className="fill">
                         <LMap id="map" center={this.props.map.center} zoom={this.props.map.zoom}
-                            onMapViewChanges={this.props.changeMapView} mapStateSource={this.props.mapStateSource}
+                            onMapViewChanges={this.props.changeMapView} mapStateSource={this.props.mapStateSource} mapOptions={this.props.mapOptions}
                             onMouseMove={this.props.changeMousePosition}>
                             {this.renderLayers(this.props.layers)}
                         </LMap>
