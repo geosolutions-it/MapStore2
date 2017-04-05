@@ -22,124 +22,13 @@ const ThemeUtils = require('../utils/ThemeUtils');
 const assign = require('object-assign');
 const {partialRight, merge} = require('lodash');
 
-const defaultConfig = {
-    "map": {
-        "projection": "EPSG:3857",
-        "units": "m",
-        "center": {"x": 1250000.000000, "y": 5370000.000000, "crs": "EPSG:900913"},
-        "zoom": 5,
-        "maxExtent": [
-            -20037508.34, -20037508.34,
-            20037508.34, 20037508.34
-        ],
-        "layers": [{
-            "type": "osm",
-            "title": "Open Street Map",
-            "name": "mapnik",
-            "source": "osm",
-            "group": "background",
-            "visibility": true
-        },
-        {
-            "type": "tileprovider",
-            "title": "NASAGIBS Night 2012",
-            "provider": "NASAGIBS.ViirsEarthAtNight2012",
-            "name": "Night2012",
-            "source": "nasagibs",
-            "group": "background",
-            "visibility": false
-        },
-        {
-            "type": "wms",
-            "url": "http://www.realvista.it/reflector/open/service",
-            "visibility": false,
-            "title": "e-Geos Ortofoto RealVista 1.0",
-            "name": "rv1",
-            "group": "background",
-            "format": "image/jpeg"
-        },
-        {
-            "type": "wms",
-            "url": "https://demo.geo-solutions.it/geoserver/wms",
-            "visibility": false,
-            "title": "Natural Earth",
-            "name": "sde:NE2_HR_LC_SR_W_DR",
-            "group": "background",
-            "format": "image/png"
-        },
-        {
-            "type": "wms",
-            "url": "https://demo.geo-solutions.it/geoserver/wms",
-            "visibility": false,
-            "title": "Hypsometric",
-            "name": "sde:HYP_HR_SR_OB_DR",
-            "group": "background",
-            "format": "image/png"
-        },
-        {
-            "type": "wms",
-            "url": "https://demo.geo-solutions.it/geoserver/wms",
-            "visibility": false,
-            "title": "Gray Earth",
-            "name": "sde:GRAY_HR_SR_OB_DR",
-            "group": "background",
-            "format": "image/png"
-        },
-        {
-            "type": "wms",
-            "url": "https://demo.geo-solutions.it/geoserver/wms",
-            "visibility": true,
-            "opacity": 0.5,
-            "title": "Weather data",
-            "name": "nurc:Arc_Sample",
-            "group": "Meteo",
-            "format": "image/png"
-        },
-        {
-            "type": "tileprovider",
-            "title": "OpenTopoMap",
-            "provider": "OpenTopoMap",
-            "name": "OpenTopoMap",
-            "source": "OpenTopoMap",
-            "group": "background",
-            "visibility": false
-        }]
-    }
-};
+const defaultConfig = require('json-loader!../config.json');
+
+const localConfig = require('json-loader!../localConfig.json');
 
 const defaultPlugins = {
-    "mobile": ["Map"],
-    "desktop": [
-          "Map",
-          "Help",
-          "Share",
-          "DrawerMenu",
-          "Identify",
-          "Locate",
-          "TOC",
-          "BackgroundSwitcher",
-          "Measure",
-          "MeasureResults",
-          "Print",
-          "ShapeFile",
-          "Settings",
-          "MetadataExplorer",
-          "MousePosition",
-          "Toolbar",
-          "ScaleBox",
-          "ZoomAll",
-          "MapLoading",
-          "Snapshot",
-          "ZoomIn",
-          "ZoomOut",
-          "Login",
-          "OmniBar",
-          "BurgerMenu",
-          "Expander",
-          "Undo",
-          "Redo",
-          "FullScreen"
-    ]
+  "mobile": localConfig.plugins.embedded,
+  "desktop": localConfig.plugins.embedded
 };
 
 function mergeDefaultConfig(pluginName, cfg) {
@@ -201,7 +90,7 @@ const actionListeners = {};
 let stateChangeListeners = [];
 
 const getInitialActions = (options) => {
-    if (!options.initialState) {
+    if (!options.initialState || !options.initialState.defaultState.map) {
         if (options.configUrl) {
             return [loadMapConfig.bind(null, options.configUrl || defaultConfig)];
         }

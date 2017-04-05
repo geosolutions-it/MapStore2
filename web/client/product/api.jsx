@@ -16,6 +16,7 @@ const MapStore2 = require('../jsapi/MapStore2')
           path: getScriptPath() + '/themes'
       },
       noLocalConfig: true,
+      initialState: require('./appConfigEmbedded').initialState,
       translations: getScriptPath() + '/../translations'
   });
 window.MapStore2 = MapStore2;
