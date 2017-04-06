@@ -355,7 +355,8 @@
         },
         "fullscreen": {
             "tooltipActivate":  "Passa a schermo intero",
-            "tooltipDeactivate": "Esci da schermo intero"
+            "tooltipDeactivate": "Esci da schermo intero",
+            "viewLargerMap": "Visualizza mappa più grande"
         },
         "helptexts": {
             "scaleBox": "Questo è il testo di aiuto per ScaleBox",

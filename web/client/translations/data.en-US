@@ -355,7 +355,8 @@
         },
         "fullscreen": {
             "tooltipActivate": "Switch to Full Screen",
-            "tooltipDeactivate": "Exit full screen"
+            "tooltipDeactivate": "Exit full screen",
+            "viewLargerMap": "View Larger Map"
         },
         "helptexts": {
             "scaleBox": "This is the helptext for the ScaleBox",

@@ -355,7 +355,8 @@
         },
         "fullscreen": {
             "tooltipActivate": "Umschalten auf Vollbild",
-            "tooltipDeactivate": "Vollbild verlassen"
+            "tooltipDeactivate": "Vollbild verlassen",
+            "viewLargerMap": "Größere Karte ansehen"
         },
         "helptexts": {
             "scaleBox": "Das ist die Hilfe für die ScaleBox",
