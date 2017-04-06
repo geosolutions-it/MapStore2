@@ -36,7 +36,8 @@
             "deleteLayer":"Supprimer le calque",
             "deleteLayerMessage": "Voulez-vous vraiment supprimer cette couche?",
             "confirmDelete": "Êtes-vous sûr?",
-            "featureTypeError": "Impossible de charger les attributs de calque"
+            "featureTypeError": "Impossible de charger les attributs de calque",
+            "elevation": "élévation"
         },
         "enable": "Activer",
         "background": "Fond de plan",
@@ -54,6 +55,7 @@
         "save": "Enregistrer",
         "saveAs": "Enregistrer sous",
         "opacity": "Opacité",
+        "elevation": "Elévation",
         "close": "Fermer",
         "cancel": "Annuler",
         "confirm": "Confirmer",

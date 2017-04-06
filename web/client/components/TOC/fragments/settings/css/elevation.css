@@ -1,0 +1,44 @@
+#mapstore-elevation {
+    width: 600px;
+    margin-top: -46px;
+    margin-bottom: 50px;
+}
+
+#mapstore-elevation .noUi-horizontal .noUi-handle {
+  left: -12px;
+}
+
+#mapstore-elevation .noUi-tooltip {
+  width: auto;
+}
+
+#mapstore-elevation .noUi-value {
+  text-align: right;
+  -ms-transform: rotate(270deg); /* IE 9 */
+  -webkit-transform: rotate(270deg); /* Chrome, Safari, Opera */
+  transform: rotate(270deg);
+}
+
+#mapstore-elevation .noUi-value-horizontal {
+  margin-left: -30px;
+  margin-top: 22px;
+}
+
+label#mapstore-elevation-label {
+    margin-bottom: 40px;
+}
+
+.custom-tooltip {
+    width: auto;
+    margin: 0;
+    line-height: 24px;
+    border: 1px solid #C1C1C1;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px;
+}
+.custom-tooltip  .label {
+  margin: 0;
+  color: #82CA9D;
+  font-weight: bold;
+  font-size: 16px;
+}

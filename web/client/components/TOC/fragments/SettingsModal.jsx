@@ -16,6 +16,7 @@ const ConfirmButton = require('../../buttons/ConfirmButton');
 const General = require('./settings/General');
 const Display = require('./settings/Display');
 const WMSStyle = require('./settings/WMSStyle');
+const Elevation = require('./settings/Elevation');
 const Portal = require('../../misc/Portal');
 const assign = require('object-assign');
 const Message = require('../../I18N/Message');
@@ -32,11 +33,13 @@ const SettingsModal = React.createClass({
         retrieveLayerData: React.PropTypes.func,
         titleText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         opacityText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
+        elevationText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         saveText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         deleteText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         confirmDeleteText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         closeText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         options: React.PropTypes.object,
+        chartStyle: React.PropTypes.object,
         buttonSize: React.PropTypes.string,
         closeGlyph: React.PropTypes.string,
         panelStyle: React.PropTypes.object,
@@ -44,13 +47,15 @@ const SettingsModal = React.createClass({
         includeCloseButton: React.PropTypes.bool,
         includeDeleteButton: React.PropTypes.bool,
         realtimeUpdate: React.PropTypes.bool,
-        groups: React.PropTypes.array
+        groups: React.PropTypes.array,
+        elevations: React.PropTypes.object
     },
     getDefaultProps() {
         return {
             id: "mapstore-layer-settings",
             settings: {expanded: false},
             options: {},
+            elevations: {},
             updateSettings: () => {},
             hideSettings: () => {},
             updateNode: () => {},
@@ -123,14 +128,27 @@ const SettingsModal = React.createClass({
                     o/>);
         }
     },
+    renderElevationTab() {
+        if (this.props.element.type === "wms" && this.props.element.elevations) {
+            return (<Elevation
+               elevationText={this.props.elevationText}
+               chartStyle={this.props.chartStyle}
+               element={this.props.element}
+               elevations={this.props.element.elevations}
+               appState={this.state || {}}
+               onChange={(key, value) => this.updateParams({[key]: value}, this.props.realtimeUpdate)} />);
+        }
+    },
     render() {
         const general = this.renderGeneral();
         const display = this.renderDisplay();
         const style = this.renderStyleTab();
+        const elevation = this.renderElevationTab();
         const tabs = (<Tabs defaultActiveKey={1} id="layerProperties-tabs">
             <Tab eventKey={1} title={<Message msgId="layerProperties.general" />}>{general}</Tab>
             <Tab eventKey={2} title={<Message msgId="layerProperties.display" />}>{display}</Tab>
             <Tab eventKey={3} title={<Message msgId="layerProperties.style" />} disabled={!style} >{style}</Tab>
+            <Tab eventKey={4} title={<Message msgId="layerProperties.elevation" />} disabled={!elevation} >{elevation}</Tab>
           </Tabs>);
         const footer = (<span role="footer">
             {this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} onClick={this.onClose}>{this.props.closeText}</Button> : <span/>}

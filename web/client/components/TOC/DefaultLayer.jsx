@@ -38,8 +38,10 @@ var DefaultLayer = React.createClass({
         activateSettingsTool: React.PropTypes.bool,
         activateQueryTool: React.PropTypes.bool,
         activateZoomTool: React.PropTypes.bool,
+        chartStyle: React.PropTypes.object,
         settingsText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         opacityText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
+        elevationText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         saveText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         closeText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         confirmDeleteText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
@@ -118,6 +120,8 @@ var DefaultLayer = React.createClass({
                            includeDeleteButton={this.props.includeDeleteButtonInSettings}
                            titleText={this.props.settingsText}
                            opacityText={this.props.opacityText}
+                           elevationText={this.props.elevationText}
+                           chartStyle={this.props.chartStyle}
                            saveText={this.props.saveText}
                            closeText={this.props.closeText}
                            groups={this.props.groups}/>
