@@ -520,7 +520,11 @@
             "titlePanel": "Condividi la mappa",
             "socialIntro": "Sul tuo social preferito",
             "directLinkTitle": "Con un Link diretto",
+            "social": "Social",
+            "direct": "Link",
+            "code": "Embed",
             "embeddedLinkTitle": "Con il codice embedded",
+            "apiLinkTitle": "Usando le API",
             "QRCodeLinkTitle": "Usando il QR Code",
             "msgCopiedUrl":"Copiato",
             "msgToCopyUrl":"Clicca per copiare"

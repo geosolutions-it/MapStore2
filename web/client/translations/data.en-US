@@ -521,6 +521,10 @@
             "socialIntro": "In your favourite social network",
             "directLinkTitle": "Via a direct link",
             "embeddedLinkTitle": "Via the embedded code",
+            "apiLinkTitle": "Using APIs",
+            "social": "Social",
+            "direct": "Link",
+            "code": "Embed",
             "QRCodeLinkTitle": "qr code",
             "msgCopiedUrl":"Copied",
             "msgToCopyUrl":"Click to copy"

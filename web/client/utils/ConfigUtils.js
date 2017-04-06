@@ -13,6 +13,7 @@ var axios = require('axios');
 
 const {isArray} = require('lodash');
 const assign = require('object-assign');
+const {Promise} = require('es6-promise');
 
 const epsg4326 = Proj4js ? new Proj4js.Proj('EPSG:4326') : null;
 const centerPropType = React.PropTypes.shape({
@@ -57,11 +58,16 @@ var ConfigUtils = {
         localConfigFile = file;
     },
     loadConfiguration: function() {
-        return axios.get(localConfigFile).then(response => {
-            if (typeof response.data === 'object') {
-                defaultConfig = assign({}, defaultConfig, response.data);
-            }
-            return defaultConfig;
+        if (localConfigFile) {
+            return axios.get(localConfigFile).then(response => {
+                if (typeof response.data === 'object') {
+                    defaultConfig = assign({}, defaultConfig, response.data);
+                }
+                return defaultConfig;
+            });
+        }
+        return new Promise((resolve) => {
+            resolve(defaultConfig);
         });
     },
 
