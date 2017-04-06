@@ -209,7 +209,12 @@
                 "cfg": {
                     "tools": ["locate"]
                 }
-            }, "DrawerMenu", {
+            }, {
+              "name": "DrawerMenu",
+              "cfg": {
+                "hideButton": true
+              }
+              }, {
                 "name": "Identify",
                 "cfg": {
                     "style": {

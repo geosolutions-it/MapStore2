@@ -524,6 +524,7 @@
             "socialIntro": "via votre réseau social favori",
             "directLinkTitle": "Via un lien direct",
             "embeddedLinkTitle": "Via le code intégré",
+            "forceDrawer": "Afficher la table des matières",
             "apiLinkTitle": "Via le APIs",
             "social": "Social",
             "direct": "Link",

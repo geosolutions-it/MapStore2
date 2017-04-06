@@ -522,6 +522,7 @@
             "socialIntro": "In deinem bevorzugten sozialen Netzwerk",
             "directLinkTitle": "Über einen direkten Link",
             "embeddedLinkTitle": "Über einen eingebetteten Code",
+            "forceDrawer": "Inhaltsverzeichnis anzeigen",
             "apiLinkTitle": "API verwenden",
             "social": "Social",
             "direct": "Link",
