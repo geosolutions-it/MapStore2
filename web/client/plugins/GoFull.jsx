@@ -7,11 +7,6 @@
  */
 const {connect} = require('react-redux');
 
-const {mapSelector} = require('../selectors/map');
-const {createSelector} = require('reselect');
-
-
-const mapIdSelector = createSelector([(state) => {let map = mapSelector(state); return map && map.mapId; }], mapId => ({mapId}));
 /**
  * GoFull plugin. Shows a button that opens full MapStore2 in a new tab. Try to find the `originalUrl` in configuration or tries to guess the mapId and creates the proper URL.
  * This plugins hides automatically if the originalUrl is not present in configuration and if the urlRegex do not match.
@@ -22,7 +17,7 @@ const mapIdSelector = createSelector([(state) => {let map = mapSelector(state); 
  * @memberof plugins
  * @class GoFull
  */
-const GoFullPlugin = connect(mapIdSelector)(require('../components/buttons/GoFullButton'));
+const GoFullPlugin = connect(() => ({}))(require('../components/buttons/GoFullButton'));
 
 const assign = require('object-assign');
 

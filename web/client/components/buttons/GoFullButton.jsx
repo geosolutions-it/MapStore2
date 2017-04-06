@@ -28,7 +28,6 @@ const GoFullButton = React.createClass({
         tooltip: React.PropTypes.string,
         urlRegex: React.PropTypes.string,
         urlReplaceString: React.PropTypes.string,
-        mapId: React.PropTypes.string,
         originalUrl: React.PropTypes.string
     },
     getDefaultProps() {
