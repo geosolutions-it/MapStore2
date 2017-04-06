@@ -18,7 +18,7 @@ const CHANGE_MAP_STYLE = 'CHANGE_MAP_STYLE';
 const CHANGE_ROTATION = 'CHANGE_ROTATION';
 
 
-function changeMapView(center, zoom, bbox, size, mapStateSource, projection) {
+function changeMapView(center, zoom, bbox, size, mapStateSource, projection, viewerOptions) {
     return {
         type: CHANGE_MAP_VIEW,
         center,
@@ -26,7 +26,8 @@ function changeMapView(center, zoom, bbox, size, mapStateSource, projection) {
         bbox,
         size,
         mapStateSource,
-        projection
+        projection,
+        viewerOptions
     };
 }
 
