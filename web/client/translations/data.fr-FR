@@ -357,7 +357,8 @@
         },
         "fullscreen": {
             "tooltipActivate": "Basculer en plein écran",
-            "tooltipDeactivate": "Quitter plein écran"
+            "tooltipDeactivate": "Quitter plein écran",
+            "viewLargerMap": "Agrandir le plan"
         },
         "helptexts": {
             "scaleBox": "This is the helptext for the ScaleBox",

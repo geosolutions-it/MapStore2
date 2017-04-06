@@ -18,6 +18,7 @@ module.exports = {
         LocatePlugin: require('../plugins/Locate'),
         ZoomAllPlugin: require('../plugins/ZoomAll'),
         MapLoadingPlugin: require('../plugins/MapLoading'),
+        GoFullPlugin: require('../plugins/GoFull'),
         OmniBarPlugin: require('../plugins/OmniBar')
     },
     requires: {

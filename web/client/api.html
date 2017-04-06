@@ -32,7 +32,9 @@
         <script id="ms2-api" src="dist/ms2-api.js"></script>
         <script type="text/javascript">
         function init() {
-            MapStore2.create('container');
+            MapStore2.create('container', {
+                originalUrl: "./#viewer/leaflet/0"
+            });
         }
         </script>
     </body>
