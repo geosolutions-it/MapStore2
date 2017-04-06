@@ -108,6 +108,7 @@
           "framework" : [
             "web/client/components/index.jsdoc",
             "web/client/components/buttons/FullScreenButton.jsx",
+            "web/client/components/buttons/GoFullButton.jsx",
             "web/client/components/mapcontrols/search/SearchBar.jsx",
             "web/client/components/buttons/ToggleButton.jsx",
 
