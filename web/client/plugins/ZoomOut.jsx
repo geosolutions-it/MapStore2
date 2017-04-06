@@ -38,5 +38,5 @@ module.exports = {
             priority: 1
         }
     }),
-    reducers: {zoomOut: require("../reducers/map")}
+    reducers: {}
 };

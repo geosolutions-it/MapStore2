@@ -27,7 +27,8 @@ let CesiumMap = React.createClass({
         standardWidth: React.PropTypes.number,
         standardHeight: React.PropTypes.number,
         mousePointer: React.PropTypes.string,
-        zoomToHeight: React.PropTypes.number
+        zoomToHeight: React.PropTypes.number,
+        viewerOptions: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -38,7 +39,12 @@ let CesiumMap = React.createClass({
           mapOptions: {},
           standardWidth: 512,
           standardHeight: 512,
-          zoomToHeight: 80000000
+          zoomToHeight: 80000000,
+          viewerOptions: {
+              heading: 0,
+              pitch: -1 * Math.PI / 2,
+              roll: 0
+          }
         };
     },
     getInitialState() {
@@ -190,26 +196,24 @@ let CesiumMap = React.createClass({
             if (a === undefined || b === undefined) {
                 return false;
             }
-            return ( a.toFixed(12) - (b.toFixed(12))) === 0;
+            // avoid errors like 44.40641479 !== 44.40641478999999
+            return ( a.toFixed(12) - (b.toFixed(12))) <= 0.000000000001;
         };
-        const centerIsUpdate = isNearlyEqual(newProps.center.x, currentCenter.longitude) &&
-                               isNearlyEqual(newProps.center.y, currentCenter.latitude);
+        const centerIsUpdate = !isNearlyEqual(newProps.center.x, currentCenter.longitude) ||
+                               !isNearlyEqual(newProps.center.y, currentCenter.latitude);
         const zoomChanged = newProps.zoom !== currentZoom;
 
          // Do the change at the same time, to avoid glitches
         if (centerIsUpdate || zoomChanged) {
-            this.map.camera.setView({
+            const position = {
                 destination: Cesium.Cartesian3.fromDegrees(
                     newProps.center.x,
                     newProps.center.y,
                     this.getHeightFromZoom(newProps.zoom)
                 ),
-                orientation: {
-                    heading: this.map.camera.heading,
-                    pitch: this.map.camera.pitch,
-                    roll: this.map.camera.roll
-                }
-            });
+                orientation: newProps.viewerOptions.orientation
+            };
+            this.map.camera.flyTo(position, {duration: 1});
         }
     },
 
@@ -234,7 +238,13 @@ let CesiumMap = React.createClass({
             },
             crs: 'EPSG:4326',
             rotation: 0
-        }, size, this.props.id, this.props.projection );
+        }, size, this.props.id, this.props.projection, {
+            orientation: {
+                heading: this.map.camera.heading,
+                pitch: this.map.camera.pitch,
+                roll: this.map.camera.roll
+            }
+        });
     }
 });
 

@@ -64,7 +64,8 @@ module.exports = {
         FeatureGridPlugin: require('../plugins/FeatureGrid'),
         TutorialPlugin: require('../plugins/Tutorial'),
         ThemeSwitcherPlugin: require('../plugins/ThemeSwitcher'),
-        ScrollTopPlugin: require('../plugins/ScrollTop')
+        ScrollTopPlugin: require('../plugins/ScrollTop'),
+        GoFull: require('../plugins/GoFull')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

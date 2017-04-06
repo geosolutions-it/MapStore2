@@ -35,7 +35,8 @@ const ShareApi = React.createClass({
   render() {
       const parsedCode = codeApi
         .replace('__BASE__URL__', this.props.shareUrl)
-        .replace('__CONFIG__URL__', this.props.shareConfigUrl);
+        .replace('__CONFIG__URL__', this.props.shareConfigUrl)
+        .replace('__ORIGINAL_URL__', location.href);
       const tooltip = (<Tooltip placement="bottom" className="in" id="tooltip-bottom" style={{zIndex: 2001}}>
                            {this.state.copied ? <Message msgId="share.msgCopiedUrl"/> : <Message msgId="share.msgToCopyUrl"/>}
                        </Tooltip>);

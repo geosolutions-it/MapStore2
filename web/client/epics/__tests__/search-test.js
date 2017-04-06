@@ -192,6 +192,6 @@ describe('search Epics', () => {
 
             done();
             // setting 0 as delay arises script error
-        }, 100);
+        }, 300);
     });
 });
