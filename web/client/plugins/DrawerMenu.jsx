@@ -53,7 +53,6 @@ const DrawerMenu = React.createClass({
     propTypes: {
         items: React.PropTypes.array,
         active: React.PropTypes.string,
-        hideButton: React.PropTypes.bool,
         toggleMenu: React.PropTypes.func,
         id: React.PropTypes.string,
         glyph: React.PropTypes.string,
