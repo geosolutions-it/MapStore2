@@ -211,9 +211,7 @@
                 }
             }, {
               "name": "DrawerMenu",
-              "cfg": {
-                "hideButton": true
-              }
+              "hide": "{!(request.query && request.query.forceDrawer)}"
               }, {
                 "name": "Identify",
                 "cfg": {

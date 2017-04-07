@@ -10,6 +10,7 @@ const assign = require('object-assign');
 const {omit, isObject, head, isArray, isString} = require('lodash');
 const {combineReducers} = require('redux');
 const {connect} = require('react-redux');
+const url = require('url');
 
 const {combineEpics} = require('redux-observable');
 
@@ -34,20 +35,30 @@ const isPluginConfigured = (pluginsConfig, plugin) => {
 };
 
 /*eslint-disable */
-const parseExpression = (state, requires, value) => {
+const parseExpression = (state = {}, context = {}, value) => {
     const searchExpression = /^\{(.*?)\}$/;
-    const context = requires || {};
     const expression = searchExpression.exec(value);
+    const request = url.parse(location.href, true);
     if (expression !== null) {
         return eval(expression[1]);
     }
     return value;
 };
 /*eslint-enable */
-
-const handleExpression = (state, requires, expression) => {
+/**
+ * Parses a expression string "{some javascript}" and evaluate it.
+ * The expression will be evalueted getting as parameters the state and the context and the request.
+ * @memberof utils.PluginsUtils
+ * @param  {object} state      the state context
+ * @param  {object} context    the context element
+ * @param  {string} expression the expression to parse, it's a string
+ * @return {object}            the result of the expression
+ * @example "{1===0 && request.query.queryParam1=paramValue1}"
+ * @example "{1===0 && context.el1 === 'checked'}"
+ */
+const handleExpression = (state, context, expression) => {
     if (isString(expression) && expression.indexOf('{') === 0) {
-        return parseExpression(state, requires, expression);
+        return parseExpression(state, context, expression);
     }
     return expression;
 };
@@ -213,6 +224,7 @@ const PluginsUtils = {
     connect: (mapStateToProps, mapDispatchToProps, mergeProps, options) => {
         return connect(mapStateToProps, mapDispatchToProps, mergeProps || pluginsMergeProps, options);
     },
+    handleExpression,
     getMorePrioritizedContainer
 };
 module.exports = PluginsUtils;

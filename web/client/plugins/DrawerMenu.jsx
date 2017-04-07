@@ -20,8 +20,8 @@ const {Button, Glyphicon, Panel} = require('react-bootstrap');
 const Section = require('./drawer/Section');
 
 const {partialRight} = require('lodash');
-const url = require('url');
-const query = url.parse(window.location.href, true).query;
+
+
 const Menu = connect((state) => ({
     show: state.controls.drawer && state.controls.drawer.enabled,
     activeKey: state.controls.drawer && state.controls.drawer.menu || "1",
@@ -37,8 +37,6 @@ require('./drawer/drawer.css');
 /**
  * DrawerMenu plugin. Shows a left menu with some pluins rendered inside it (typically the TOC).
  * @prop {string} cfg.glyph glyph icon to use for the button
- * @prop {boolean} cfg.hideButton. If true, the button to show the drawer menu will be hidden.
- * You can force to display it again adding forceDrawer=true in the query string. This is useful in embedded mode.
  * @prop {object} cfg.menuButtonStyle Css inline style for the button. Display property will be overridden by the hideButton/forceDrawer options.
  * @prop {string} cfg.buttonClassName class for the toggle button
  * @prop {object} cfg.menuOptions options for the drawer menu. They can be `docked`, `width.
@@ -107,12 +105,7 @@ const DrawerMenu = React.createClass({
     render() {
         return (
             <div id={this.props.id}>
-                <Button id="drawer-menu-button" style={
-                        {
-                            ...this.props.menuButtonStyle,
-                            display: this.props.hideButton && !(query && query.forceDrawer) ? "none" : this.props.menuButtonStyle && this.props.menuButtonStyle.display
-                        }
-                    } bsStyle={this.props.buttonStyle} key="menu-button" className={this.props.buttonClassName} onClick={this.props.toggleMenu} disabled={this.props.disabled}><Glyphicon glyph={this.props.glyph}/></Button>
+                <Button id="drawer-menu-button" style={this.props.menuButtonStyle} bsStyle={this.props.buttonStyle} key="menu-button" className={this.props.buttonClassName} onClick={this.props.toggleMenu} disabled={this.props.disabled}><Glyphicon glyph={this.props.glyph}/></Button>
                 <Menu single={this.props.singleSection} {...this.props.menuOptions} title={<Message msgId="menu" />} alignment="left">
                     {this.renderItems()}
                 </Menu>

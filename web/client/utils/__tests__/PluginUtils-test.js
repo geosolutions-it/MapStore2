@@ -98,4 +98,7 @@ describe('PluginsUtils', () => {
         const domElement = ReactDOM.findDOMNode(app);
         expect(domElement.innerText).toBe("plugintest");
     });
+    it('handleExpression', () => {
+        expect(PluginsUtils.handleExpression({state1: "test1"}, {context1: "test2"}, "{state.state1 + ' ' + context.context1}")).toBe("test1 test2");
+    });
 });
