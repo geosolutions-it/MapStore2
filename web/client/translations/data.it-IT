@@ -36,7 +36,8 @@
             "deleteLayer":"Elimina Livello",
             "deleteLayerMessage": "Sei sicuro di voler eliminare questo livello?",
             "confirmDelete": "Sei sicuro?",
-            "featureTypeError": "Impossibile caricare gli attributi del layer"
+            "featureTypeError": "Impossibile caricare gli attributi del layer",
+            "elevation": "Elevazione"
         },
         "background": "Sfondo",
         "language": "Lingua",
@@ -53,6 +54,7 @@
         "save": "Salva",
         "saveAs": "Salva con nome",
         "opacity": "Opacità",
+        "elevation": "Elevazione",
         "close": "Chiudi",
         "cancel": "Annulla",
         "confirm": "Conferma",

@@ -36,7 +36,8 @@
             "deleteLayer":"Delete Layer",
             "deleteLayerMessage": "Do you really want to delete this Layer?",
             "confirmDelete": "Are you sure?",
-            "featureTypeError": "Cannot load layer attributes"
+            "featureTypeError": "Cannot load layer attributes",
+            "elevation": "Elevation"
         },
         "background": "Background",
         "language": "Language",
@@ -53,6 +54,7 @@
         "save": "Save",
 		"saveAs": "Save As...",
         "opacity": "Opacity",
+        "elevation": "Elevation",
         "close": "Close",
         "cancel": "Cancel",
         "confirm": "Confirm",
