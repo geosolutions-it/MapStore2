@@ -41,9 +41,11 @@ let CesiumMap = React.createClass({
           standardHeight: 512,
           zoomToHeight: 80000000,
           viewerOptions: {
-              heading: 0,
-              pitch: -1 * Math.PI / 2,
-              roll: 0
+              orientation: {
+                  heading: 0,
+                  pitch: -1 * Math.PI / 2,
+                  roll: 0
+              }
           }
         };
     },
@@ -213,11 +215,16 @@ let CesiumMap = React.createClass({
                 ),
                 orientation: newProps.viewerOptions.orientation
             };
-            this.map.camera.flyTo(position, {duration: 1});
+            this.setView(position);
         }
     },
-
-
+    setView(position) {
+        if (this.props.mapOptions && this.props.mapOptions.flyTo) {
+            this.map.camera.flyTo(position, this.props.mapOptions.defaultFlightOptions);
+        } else {
+            this.map.camera.setView(position);
+        }
+    },
     updateMapInfoState() {
         const center = this.getCenter();
         const zoom = this.getZoomFromHeight(center.height);
