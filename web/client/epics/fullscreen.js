@@ -43,7 +43,10 @@ const toggleFullscreenEpic = action$ =>
             Rx.Observable.fromEvent(document, getFullScreenEvent())
                 .filter(() => screenfull.element !== element)
                 .map( () => setControlProperty("fullscreen", "enabled", false) ),
-            Rx.Observable.of(setControlProperty("fullscreen", "enabled", action.enable))
+            Rx.Observable.of(setControlProperty("fullscreen", "enabled", action.enable)),
+            Rx.Observable.fromEvent(window, "hashchange")
+                .do(() => screenfull.exit())
+                .map( () => setControlProperty("fullscreen", "enabled", false) )
         );
     });
 /**
