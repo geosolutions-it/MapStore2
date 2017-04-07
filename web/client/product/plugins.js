@@ -37,6 +37,7 @@ module.exports = {
         MetadataExplorerPlugin: require('../plugins/MetadataExplorer'),
         LoginPlugin: require('../plugins/Login'),
         OmniBarPlugin: require('../plugins/OmniBar'),
+        GridContainerPlugin: require('../plugins/GridContainer'),
         BurgerMenuPlugin: require('../plugins/BurgerMenu'),
         UndoPlugin: require('../plugins/History'),
         RedoPlugin: require('../plugins/History'),

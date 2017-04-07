@@ -8,6 +8,7 @@
 
 const React = require('react');
 const {connect} = require('react-redux');
+const OverlayTrigger = require('../components/misc/OverlayTrigger');
 
 const Message = require('./locale/Message');
 
@@ -15,7 +16,7 @@ const {toggleControl, setControlProperty} = require('../actions/controls');
 
 const {changeMapStyle} = require('../actions/map');
 
-const {Button, Glyphicon, Panel} = require('react-bootstrap');
+const {Button, Glyphicon, Panel, Tooltip} = require('react-bootstrap');
 
 const Section = require('./drawer/Section');
 
@@ -86,9 +87,14 @@ const DrawerMenu = React.createClass({
         });
     },
     render() {
+        let tooltip = <Tooltip key="drawerButtonTooltip" id="drawerButtonTooltip"><Message msgId={"toc.drawerButton"}/></Tooltip>;
         return (
             <div id={this.props.id}>
-                <Button id="drawer-menu-button" style={this.props.menuButtonStyle} bsStyle={this.props.buttonStyle} key="menu-button" className={this.props.buttonClassName} onClick={this.props.toggleMenu} disabled={this.props.disabled}><Glyphicon glyph={this.props.glyph}/></Button>
+                <OverlayTrigger placement="bottom" key="drawerButtonTooltip"
+                    overlay={tooltip}>
+                    <Button id="drawer-menu-button" style={this.props.menuButtonStyle} bsStyle={this.props.buttonStyle} key="menu-button" className={this.props.buttonClassName} onClick={this.props.toggleMenu} disabled={this.props.disabled}><Glyphicon glyph={this.props.glyph}/></Button>
+                </OverlayTrigger>
+
                 <Menu single={this.props.singleSection} {...this.props.menuOptions} title={<Message msgId="menu" />} alignment="left">
                     {this.renderItems()}
                 </Menu>

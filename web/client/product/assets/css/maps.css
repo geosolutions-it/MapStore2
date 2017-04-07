@@ -67,13 +67,30 @@ div#mailinglists h1 {
     font-size: 26px;
     text-align: center;
 }
+@media (min-width: 769px) {
+    div#mapstore-maptype {
+        width: 300px;
+        margin-left: auto;
+        margin-bottom: 40px;
+    }
+}
+@media (max-width: 768px) {
+    div#mapstore-maptype {
+        width: 100%;
+    }
+}
 
-div#mapstore-maptype {
-    width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 20px;
-    margin-top: -35px;
+@media (min-width: 769px) {
+     #mapstore-grid-home div.theme-switcher.form-group.form-group-sm {
+        width: 300px;
+        margin-bottom: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    #mapstore-grid-home div.theme-switcher.form-group.form-group-sm {
+        width: 100%;
+    }
 }
 .mapstore-home-examples .carousel-caption{
     background-color: rgba(0,0,0,0.4);
