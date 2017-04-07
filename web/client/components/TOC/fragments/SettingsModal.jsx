@@ -20,6 +20,7 @@ const Elevation = require('./settings/Elevation');
 const Portal = require('../../misc/Portal');
 const assign = require('object-assign');
 const Message = require('../../I18N/Message');
+const LayersUtils = require('../../../utils/LayersUtils');
 
 const SettingsModal = React.createClass({
     propTypes: {
@@ -48,14 +49,13 @@ const SettingsModal = React.createClass({
         includeDeleteButton: React.PropTypes.bool,
         realtimeUpdate: React.PropTypes.bool,
         groups: React.PropTypes.array,
-        elevations: React.PropTypes.object
+        getDimension: React.PropTypes.func
     },
     getDefaultProps() {
         return {
             id: "mapstore-layer-settings",
             settings: {expanded: false},
             options: {},
-            elevations: {},
             updateSettings: () => {},
             hideSettings: () => {},
             updateNode: () => {},
@@ -76,7 +76,8 @@ const SettingsModal = React.createClass({
             includeDeleteButton: true,
             realtimeUpdate: true,
             deleteText: <Message msgId="layerProperties.delete" />,
-            confirmDeleteText: <Message msgId="layerProperties.confirmDelete" />
+            confirmDeleteText: <Message msgId="layerProperties.confirmDelete" />,
+            getDimension: LayersUtils.getDimension
         };
     },
     getInitialState() {
@@ -129,12 +130,13 @@ const SettingsModal = React.createClass({
         }
     },
     renderElevationTab() {
-        if (this.props.element.type === "wms" && this.props.element.elevations) {
+        const elevationDim = this.props.getDimension(this.props.element.dimensions, 'elevation');
+        if (this.props.element.type === "wms" && this.props.element.dimensions && elevationDim) {
             return (<Elevation
                elevationText={this.props.elevationText}
                chartStyle={this.props.chartStyle}
                element={this.props.element}
-               elevations={this.props.element.elevations}
+               elevations={elevationDim}
                appState={this.state || {}}
                onChange={(key, value) => this.updateParams({[key]: value}, this.props.realtimeUpdate)} />);
         }
@@ -144,12 +146,11 @@ const SettingsModal = React.createClass({
         const display = this.renderDisplay();
         const style = this.renderStyleTab();
         const elevation = this.renderElevationTab();
-        const tabs = (<Tabs defaultActiveKey={1} id="layerProperties-tabs">
-            <Tab eventKey={1} title={<Message msgId="layerProperties.general" />}>{general}</Tab>
-            <Tab eventKey={2} title={<Message msgId="layerProperties.display" />}>{display}</Tab>
-            <Tab eventKey={3} title={<Message msgId="layerProperties.style" />} disabled={!style} >{style}</Tab>
-            <Tab eventKey={4} title={<Message msgId="layerProperties.elevation" />} disabled={!elevation} >{elevation}</Tab>
-          </Tabs>);
+        const availableTabs = [<Tab eventKey={1} title={<Message msgId="layerProperties.general" />}>{general}</Tab>,
+                <Tab eventKey={2} title={<Message msgId="layerProperties.display" />}>{display}</Tab>,
+                <Tab eventKey={3} title={<Message msgId="layerProperties.style" />} disabled={!style} >{style}</Tab>]
+            .concat(elevation ? [<Tab eventKey={4} title={<Message msgId="layerProperties.elevation" />}>{elevation}</Tab>] : []);
+        const tabs = <Tabs defaultActiveKey={1} id="layerProperties-tabs">{availableTabs}</Tabs>;
         const footer = (<span role="footer">
             {this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} onClick={this.onClose}>{this.props.closeText}</Button> : <span/>}
             {this.props.includeDeleteButton ?

@@ -212,6 +212,7 @@ const RecordItem = React.createClass({
                 type: "wms",
                 url: url,
                 visibility: true,
+                dimensions: this.props.record.dimensions || [],
                 name: wms.params && wms.params.name,
                 title: this.props.record.title || (wms.params && wms.params.name),
                 bbox: {
