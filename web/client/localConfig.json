@@ -209,7 +209,10 @@
                 "cfg": {
                     "tools": ["locate"]
                 }
-            }, "DrawerMenu", {
+            }, {
+              "name": "DrawerMenu",
+              "hide": "{!(request.query && request.query.forceDrawer)}"
+              }, {
                 "name": "Identify",
                 "cfg": {
                     "style": {

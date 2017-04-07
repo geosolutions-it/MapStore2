@@ -21,6 +21,7 @@ const Section = require('./drawer/Section');
 
 const {partialRight} = require('lodash');
 
+
 const Menu = connect((state) => ({
     show: state.controls.drawer && state.controls.drawer.enabled,
     activeKey: state.controls.drawer && state.controls.drawer.menu || "1",
@@ -33,6 +34,21 @@ const Menu = connect((state) => ({
 
 require('./drawer/drawer.css');
 
+/**
+ * DrawerMenu plugin. Shows a left menu with some pluins rendered inside it (typically the TOC).
+ * @prop {string} cfg.glyph glyph icon to use for the button
+ * @prop {object} cfg.menuButtonStyle Css inline style for the button. Display property will be overridden by the hideButton/forceDrawer options.
+ * @prop {string} cfg.buttonClassName class for the toggle button
+ * @prop {object} cfg.menuOptions options for the drawer menu. They can be `docked`, `width.
+ * @memberof plugins
+ * @class
+ * @example
+ * {
+ *   "name": "DrawerMenu",
+ *   "cfg": {
+ *   "hideButton": true
+ * }
+ */
 const DrawerMenu = React.createClass({
     propTypes: {
         items: React.PropTypes.array,

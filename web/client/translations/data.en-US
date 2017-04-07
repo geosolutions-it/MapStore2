@@ -526,6 +526,7 @@
             "socialIntro": "In your favourite social network",
             "directLinkTitle": "Via a direct link",
             "embeddedLinkTitle": "Via the embedded code",
+            "forceDrawer": "Show TOC",
             "apiLinkTitle": "Using APIs",
             "social": "Social",
             "direct": "Link",

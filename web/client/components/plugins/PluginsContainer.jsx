@@ -12,7 +12,20 @@ const PluginsUtils = require('../../utils/PluginsUtils');
 const assign = require('object-assign');
 
 const {get} = require('lodash');
-
+/**
+ * Container for plugins. Get's the plugin definitions (`plugins`) and configuration (`pluginsConfig`)
+ * to render the configured plugins.
+ * The plugins to render will come from the `mode` entry of the `pluginsConfig`
+ * @class
+ * @memberof components.plugins
+ * @prop {string} mode key of the pluginsConfig object to get the plugins to render
+ * @prop {string} defaultMode mode to use if mode is not defined
+ * @prop {object} params params of the current page, usually from react router. Used as state to get plugins descriptor if monitored state is not present.
+ * @prop {object} plugins the Plugins definitions
+ * @prop {object} pluginsConfig the configuration for the plugins. a map of [mode]: [{pluginCfg1}...]
+ * @prop {object} pluginsState a piece of state to use. usually controls.
+ * @prop {object} monitoredState the piece of state to monitor Used as state to get plugins descriptor.
+ */
 const PluginsContainer = React.createClass({
     propTypes: {
         mode: React.PropTypes.string,
@@ -60,7 +73,7 @@ const PluginsContainer = React.createClass({
     },
     renderPlugins(plugins) {
         return plugins
-            .filter((Plugin) => !Plugin.hide)
+            .filter((Plugin) => !PluginsUtils.handleExpression(this.props.pluginsState, this.props.plugins && this.props.plugins.requires, Plugin.hide))
             .map(this.getPluginDescriptor)
             .filter((Plugin) => Plugin && !Plugin.impl.loadPlugin)
             .filter(this.filterPlugins)
