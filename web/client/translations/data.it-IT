@@ -529,6 +529,7 @@
             "direct": "Link",
             "code": "Embed",
             "embeddedLinkTitle": "Con il codice embedded",
+            "forceDrawer": "Mostra l'indice dei livelli",
             "apiLinkTitle": "Usando le API",
             "QRCodeLinkTitle": "Usando il QR Code",
             "msgCopiedUrl":"Copiato",

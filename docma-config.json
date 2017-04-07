@@ -111,6 +111,7 @@
             "web/client/components/buttons/GoFullButton.jsx",
             "web/client/components/mapcontrols/search/SearchBar.jsx",
             "web/client/components/buttons/ToggleButton.jsx",
+            "web/client/components/plugins/PluginsContainer.jsx",
 
             "web/client/actions/index.jsdoc",
             "web/client/actions/controls.js",
@@ -132,6 +133,7 @@
             "plugins": [
                 "web/client/plugins/index.jsdoc",
                 "web/client/plugins/BackgroundSwitcher.jsx",
+                "web/client/plugins/DrawerMenu.jsx",
                 "web/client/plugins/GoFull.jsx",
                 "web/client/plugins/Map.jsx",
                 "web/client/plugins/FullScreen.jsx",

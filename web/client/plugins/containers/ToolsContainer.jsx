@@ -28,7 +28,22 @@ const {setControlProperty, toggleControl} = require('../../actions/controls');
 const {partial} = require('lodash');
 
 const assign = require('object-assign');
-
+/**
+ * A container for tools.
+ * @memberof plugins.containers.ToolsContainer
+ * @class ToolsContainer
+ * @static
+ * @prop {object[]} tools An array of tools. Each tool have this shape. the first in order wins:
+ * ```
+ * {
+ *    tool: {boolean|node} if boolean and true, renders the plugins itself, if object, renders this object as a react component,
+ *    exclusive: if true, gets a selector to make it active or not, setting active property of the tool. tool.toggleControl | tool.name is used from controls state to retrieve the status of the tool
+ *    toggle: same as above, but sets also bsStyle
+ *    action: if present, this action will be binded to the context and associated to the tool as eventSelector (default onClick)
+ * }
+ * ```
+ *
+ */
 const ToolsContainer = React.createClass({
     propTypes: {
         id: React.PropTypes.string.isRequired,
