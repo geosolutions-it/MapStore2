@@ -34,7 +34,7 @@ describe('test Layer Properties Elevation Chart component', () => {
             type: 'shapefile',
             url: 'base/web/client/test-resources/geoserver/wms',
             params: {
-              "ELEVATION": ["1.5"]
+              "ELEVATION": "1.5"
             },
             elevations: {
               name: "ELEVATION",
@@ -65,7 +65,7 @@ describe('test Layer Properties Elevation Chart component', () => {
             type: 'shapefile',
             url: 'base/web/client/test-resources/geoserver/wms',
             params: {
-              "ELEVATION": ["1.5"]
+              "ELEVATION": "1.5"
             },
             elevations: {
               name: "ELEVATION",

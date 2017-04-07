@@ -43,7 +43,27 @@ const createGroup = (groupId, groupName, layers, addLayers) => {
         });
 };
 
+const getElevationDimension = (dimensions = []) => {
+    return dimensions.reduce((previous, dim) => {
+        return (dim.name.toLowerCase() === 'elevation' || dim.name.toLowerCase() === 'depth') ?
+            assign({
+                showChart: true,
+                positive: dim.name.toLowerCase() === 'elevation'
+            }, dim, {
+                name: dim.name.toLowerCase() === 'elevation' ? dim.name : 'DIM_' + dim.name
+            }) : previous;
+    }, null);
+};
+
 var LayersUtils = {
+    getDimension: (dimensions, dimension) => {
+        switch (dimension.toLowerCase()) {
+            case 'elevation':
+                return getElevationDimension(dimensions);
+            default:
+                return null;
+        }
+    },
     getLayerId: (layerObj, layers) => {
         return layerObj && layerObj.id || (layerObj.name + "__" + layers.length);
     },
@@ -181,6 +201,7 @@ var LayersUtils = {
             allowedSRS: layer.allowedSRS,
             matrixIds: layer.matrixIds,
             tileMatrixSet: layer.tileMatrixSet,
+            dimensions: layer.dimensions || [],
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
     }
