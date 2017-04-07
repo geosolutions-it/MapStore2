@@ -90,6 +90,7 @@ const SpatialFilter = React.createClass({
                         return LocaleUtils.getMessageById(this.context.messages, opt.name);
                     })
                 }
+                placeholder={LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.combo_placeholder")}
                 fieldName="method"
                 style={{width: "140px"}}
                 fieldRowId={new Date().getUTCMilliseconds()}
@@ -118,7 +119,7 @@ const SpatialFilter = React.createClass({
         const methodSelector = this.props.spatialField.geometry ? (
             <Row className="logicHeader filter-field-row">
                 <Col xs={5}>
-                    <div><I18N.Message msgId={"queryform.spatialfilter.selection_method"}/></div>
+                    <div><I18N.Message msgId="queryform.spatialfilter.filterType"/></div>
                 </Col>
                 <Col xs={3}>
                     {methodCombo}
@@ -133,7 +134,7 @@ const SpatialFilter = React.createClass({
         ) : (
             <Row className="logicHeader filter-field-row">
                 <Col xs={5}>
-                    <div><I18N.Message msgId={"queryform.spatialfilter.selection_method"}/></div>
+                    <div><I18N.Message msgId={"queryform.spatialfilter.filterType"}/></div>
                 </Col>
                 <Col xs={7}>
                     {methodCombo}

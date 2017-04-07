@@ -21,10 +21,7 @@ const ThemeSwitcher = React.createClass({
      getDefaultProps() {
          return {
              onThemeSelected: () => {},
-             style: {
-                 width: "300px",
-                 margin: "20px auto"
-             }
+             style: {}
          };
      },
 

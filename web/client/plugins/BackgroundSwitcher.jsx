@@ -53,7 +53,8 @@ module.exports = {
             icon: <Glyphicon glyph="1-map"/>,
             title: 'background',
             buttonConfig: {
-                buttonClassName: "square-button no-border"
+                buttonClassName: "square-button no-border",
+                tooltip: "toc.backgroundSwitcher"
             },
             priority: 2
         }

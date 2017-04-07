@@ -314,7 +314,8 @@ module.exports = {
             icon: <img src={layersIcon}/>,
             title: 'layers',
             buttonConfig: {
-                buttonClassName: "square-button no-border"
+                buttonClassName: "square-button no-border",
+                tooltip: "toc.layers"
             },
             priority: 2
         }

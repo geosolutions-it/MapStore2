@@ -179,7 +179,11 @@
             "editLayerProperties": "Modifier les propriétés de la couche",
             "searchFeatures": "Recherche sur ce calque ...",
             "removeLayer": "Supprimer la couche",
-            "loadingerror": "La couche n'a pas été chargée correctement"
+            "loadingerror": "La couche n'a pas été chargée correctement",
+            "measure": "Mesurer",
+            "backgroundSwitcher": "Fond de plan",
+            "layers": "Couches",
+            "drawerButton": "Couches"
         },
         "print":{
             "paneltitle": "Impression",
@@ -396,6 +400,9 @@
             "config": {
                 "load_config_exception": "Erreur lors du chargement de la configuration"
             },
+            "comboField": {
+                "default_placeholder": "Sélectionner..."
+            },
             "form": {
                 "header": "Rechercher dans les données",
                 "dataset_header": "Ensemble des données"
@@ -406,7 +413,7 @@
                 "add_group": " Ajouter un groupe",
                 "group_label_a": "Adéquation",
                 "group_label_b": "des conditions suivantes:",
-                "combo_placeholder": "Sélectionner",
+                "combo_placeholder": "Attribut",
                 "text_placeholder": "Entrer le texte à rechercher",
                 "attribute_filter_header": "Filtre sur attribut",
                 "groupField": {
@@ -423,8 +430,9 @@
                 }
             },
             "spatialfilter": {
-                "selection_method": "Méthode de sélection",
+                "filterType": "Type de filtre",
                 "geometric_operation": "Opération géométrique",
+                "combo_placeholder": "Sélectionner...",
                 "spatial_filter_header": "Filtre spatial",
                 "draw_start_label": "Dessiner la région d'intérêt sur la carte",
                 "dwithin_label": "mètres",

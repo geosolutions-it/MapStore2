@@ -66,7 +66,8 @@ module.exports = {
             title: 'measureComponent.title',
             showPanel: false,
             buttonConfig: {
-                buttonClassName: "square-button no-border"
+                buttonClassName: "square-button no-border",
+                tooltip: "toc.measure"
             },
             priority: 2
         }

@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var {Glyphicon, Button, Tooltip} = require('react-bootstrap');
+const React = require('react');
+const {Glyphicon, Button, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../components/misc/OverlayTrigger');
-var Sidebar = require('react-sidebar').default;
-var Message = require('../../components/I18N/Message');
+const Sidebar = require('react-sidebar').default;
+const Message = require('../../components/I18N/Message');
 
-var Menu = React.createClass({
+const Menu = React.createClass({
     propTypes: {
         title: React.PropTypes.node,
         alignment: React.PropTypes.string,
