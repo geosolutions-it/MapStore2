@@ -227,6 +227,31 @@ describe('Identify', () => {
         expect(spyHideMarker.calls.length).toEqual(1);
     });
 
+    it('creates the Identify component no queryable layer', () => {
+        const testHandlers = {
+            noQueryableLayers: () => {}
+        };
+
+        const spyNoQueryableLayers = expect.spyOn(testHandlers, 'noQueryableLayers');
+
+        ReactDOM.render(
+            <Identify
+                queryableLayersFilter={() => false}
+                enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                />,
+            document.getElementById("container")
+        );
+        ReactDOM.render(
+            <Identify
+                queryableLayersFilter={() => false}
+                point={{pixel: {x: 1, y: 1}}}
+                enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                />,
+            document.getElementById("container")
+        );
+        expect(spyNoQueryableLayers.calls.length).toEqual(1);
+    });
+
     it('creates the Identify component purge results on point', () => {
         const testHandlers = {
             purgeResults: () => {}

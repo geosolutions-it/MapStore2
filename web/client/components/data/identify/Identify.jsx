@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Panel, Glyphicon} = require('react-bootstrap');
+const {Panel, Glyphicon, Modal} = require('react-bootstrap');
 const {findIndex} = require('lodash');
 
 require('./css/identify.css');
@@ -37,6 +37,8 @@ const Identify = React.createClass({
         viewerOptions: React.PropTypes.object,
         viewer: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
         purgeResults: React.PropTypes.func,
+        noQueryableLayers: React.PropTypes.func,
+        clearWarning: React.PropTypes.func,
         queryableLayersFilter: React.PropTypes.func,
         buildRequest: React.PropTypes.func,
         sendRequest: React.PropTypes.func,
@@ -59,7 +61,8 @@ const Identify = React.createClass({
         asPanel: React.PropTypes.bool,
         headerGlyph: React.PropTypes.string,
         closeGlyph: React.PropTypes.string,
-        allowMultiselection: React.PropTypes.bool
+        allowMultiselection: React.PropTypes.bool,
+        warning: React.PropTypes.string
     },
     getDefaultProps() {
         return {
@@ -78,6 +81,8 @@ const Identify = React.createClass({
             sendRequest: () => {},
             showMarker: () => {},
             hideMarker: () => {},
+            noQueryableLayers: () => {},
+            clearWarning: () => {},
             changeMousePointer: () => {},
             showRevGeocode: () => {},
             hideRevGeocode: () => {},
@@ -133,7 +138,12 @@ const Identify = React.createClass({
                 }
 
             });
-            this.props.showMarker();
+            if (queryableLayers.length === 0) {
+                this.props.noQueryableLayers();
+            } else {
+                this.props.showMarker();
+            }
+
         }
 
         if (newProps.enabled && !this.props.enabled) {
@@ -221,6 +231,20 @@ const Identify = React.createClass({
                         {this.renderContent()}
                     </Draggable>
                 ) : this.renderContent();
+        }
+        if (this.props.warning) {
+            return (<Modal show={true} bsSize="small" onHide={() => {
+                this.props.clearWarning();
+            }}>
+                <Modal.Header className="dialog-error-header-side" closeButton>
+                    <Modal.Title><Message msgId="warning"/></Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="mapstore-error"><Message msgId="identifyNoQueryableLayers"/></div>
+                </Modal.Body>
+                <Modal.Footer>
+                </Modal.Footer>
+            </Modal>);
         }
         return null;
     },

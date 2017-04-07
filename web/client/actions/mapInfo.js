@@ -23,6 +23,8 @@ const HIDE_MAPINFO_MARKER = 'HIDE_MAPINFO_MARKER';
 const SHOW_REVERSE_GEOCODE = 'SHOW_REVERSE_GEOCODE';
 const HIDE_REVERSE_GEOCODE = 'HIDE_REVERSE_GEOCODE';
 const GET_VECTOR_INFO = 'GET_VECTOR_INFO';
+const NO_QUERYABLE_LAYERS = 'NO_QUERYABLE_LAYERS';
+const CLEAR_WARNING = 'CLEAR_WARNING';
 
 /**
  * Private
@@ -64,6 +66,18 @@ function exceptionsFeatureInfo(reqId, exceptions, rParams, lMetaData) {
         exceptions: exceptions,
         requestParams: rParams,
         layerMetadata: lMetaData
+    };
+}
+
+function noQueryableLayers() {
+    return {
+        type: NO_QUERYABLE_LAYERS
+    };
+}
+
+function clearWarning() {
+    return {
+        type: CLEAR_WARNING
     };
 }
 
@@ -197,6 +211,8 @@ module.exports = {
     SHOW_REVERSE_GEOCODE,
     HIDE_REVERSE_GEOCODE,
     GET_VECTOR_INFO,
+    NO_QUERYABLE_LAYERS,
+    CLEAR_WARNING,
     getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
@@ -207,5 +223,7 @@ module.exports = {
     revGeocodeInfo,
     hideMapinfoRevGeocode,
     showMapinfoRevGeocode,
-    getVectorInfo
+    getVectorInfo,
+    noQueryableLayers,
+    clearWarning
 };
