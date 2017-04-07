@@ -56,7 +56,7 @@ module.exports = React.createClass({
         const lastVal = parseFloat(values[values.length - 1]);
         const start = this.props.element &&
                         this.props.element.params &&
-                        this.props.element.params[this.props.elevations.name][0] || values[0];
+                        this.props.element.params[this.props.elevations.name] || values[0];
         const elevationName = {};
         return (
             <div id="mapstore-elevation">

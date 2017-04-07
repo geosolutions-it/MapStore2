@@ -156,6 +156,9 @@ const converters = {
                     ],
                     crs: "EPSG:4326"
                 },
+                dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
+                    values: dim._.split(',')
+                }, dim.$ || {})),
                 references: [{
                     type: "OGC:WMS",
                     url: options.url,
