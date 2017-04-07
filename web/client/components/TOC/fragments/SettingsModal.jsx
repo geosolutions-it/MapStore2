@@ -146,12 +146,11 @@ const SettingsModal = React.createClass({
         const display = this.renderDisplay();
         const style = this.renderStyleTab();
         const elevation = this.renderElevationTab();
-        const tabs = (<Tabs defaultActiveKey={1} id="layerProperties-tabs">
-            <Tab eventKey={1} title={<Message msgId="layerProperties.general" />}>{general}</Tab>
-            <Tab eventKey={2} title={<Message msgId="layerProperties.display" />}>{display}</Tab>
-            <Tab eventKey={3} title={<Message msgId="layerProperties.style" />} disabled={!style} >{style}</Tab>
-            <Tab eventKey={4} title={<Message msgId="layerProperties.elevation" />} disabled={!elevation} >{elevation}</Tab>
-          </Tabs>);
+        const availableTabs = [<Tab eventKey={1} title={<Message msgId="layerProperties.general" />}>{general}</Tab>,
+                <Tab eventKey={2} title={<Message msgId="layerProperties.display" />}>{display}</Tab>,
+                <Tab eventKey={3} title={<Message msgId="layerProperties.style" />} disabled={!style} >{style}</Tab>]
+            .concat(elevation ? [<Tab eventKey={4} title={<Message msgId="layerProperties.elevation" />}>{elevation}</Tab>] : []);
+        const tabs = <Tabs defaultActiveKey={1} id="layerProperties-tabs">{availableTabs}</Tabs>;
         const footer = (<span role="footer">
             {this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} onClick={this.onClose}>{this.props.closeText}</Button> : <span/>}
             {this.props.includeDeleteButton ?

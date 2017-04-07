@@ -201,6 +201,7 @@ var LayersUtils = {
             allowedSRS: layer.allowedSRS,
             matrixIds: layer.matrixIds,
             tileMatrixSet: layer.tileMatrixSet,
+            dimensions: layer.dimensions || [],
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
     }
