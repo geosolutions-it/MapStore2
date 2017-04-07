@@ -20,7 +20,9 @@ const {
     HIDE_MAPINFO_MARKER,
     SHOW_REVERSE_GEOCODE,
     HIDE_REVERSE_GEOCODE,
-    GET_VECTOR_INFO
+    GET_VECTOR_INFO,
+    NO_QUERYABLE_LAYERS,
+    CLEAR_WARNING
 } = require('../actions/mapInfo');
 
 const {RESET_CONTROLS} = require('../actions/controls');
@@ -45,6 +47,14 @@ function receiveResponse(state, action, type) {
 
 function mapInfo(state = {}, action) {
     switch (action.type) {
+        case NO_QUERYABLE_LAYERS:
+            return assign({}, state, {
+                warning: 'NO_QUERYABLE_LAYERS'
+            });
+        case CLEAR_WARNING:
+            return assign({}, state, {
+                warning: null
+            });
         case CHANGE_MAPINFO_STATE:
             return assign({}, state, {
                 enabled: action.enabled

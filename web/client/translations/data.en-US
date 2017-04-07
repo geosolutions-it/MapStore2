@@ -20,6 +20,7 @@
         "about_p6": "MapStore2 is made by:",
         "enable": "Enable",
         "layers": "Layers",
+        "warning": "Warning",
         "layerProperties": {
             "windowTitle": "Layer Properties",
             "title": "Title",
@@ -218,6 +219,7 @@
         },
         "getFeatureInfoTitle": "Feature Info",
         "identifyTitle": "Feature Info",
+        "identifyNoQueryableLayers": "No active queryable layer",
         "identifyRevGeocodeHeader": "Coordinates",
         "identifyRevGeocodeModalTitle": "Address",
         "identifyRevGeocodeSubmitText": "More Info",

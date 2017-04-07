@@ -20,6 +20,7 @@
         "about_p6": "MapStore2 ist entwickelt von:",
         "enable": "Aktiviere",
         "layers": "Ebenen",
+        "warning": "Warnung",
         "layerProperties": {
             "windowTitle": "Ebenen Eigenschaften",
             "title": "Titel",
@@ -218,6 +219,7 @@
         },
         "getFeatureInfoTitle": "Feature Info",
         "identifyTitle": "Feature Info",
+        "identifyNoQueryableLayers": "Keine aktive abrufbare Ebene",
         "identifyRevGeocodeHeader": "Koordinaten",
         "identifyRevGeocodeModalTitle": "Addresse",
         "identifyRevGeocodeSubmitText": "Mehr Informationen",
