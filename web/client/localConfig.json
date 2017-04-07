@@ -108,7 +108,7 @@
                     }
                 }
             }, "Login",
-            "OmniBar", "GridContainer", "BurgerMenu", "Expander"
+            "OmniBar", "BurgerMenu", "Expander"
         ],
         "desktop": ["Map", "Help", "Share", "DrawerMenu", {
                 "name": "Identify",
@@ -202,7 +202,7 @@
                     }
                 }
             },
-            "OmniBar", "GridContainer", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen"
+            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen"
         ],
         "embedded": [{
                 "name": "Map",

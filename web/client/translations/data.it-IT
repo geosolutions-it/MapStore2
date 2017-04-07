@@ -423,8 +423,9 @@
                 }
             },
             "spatialfilter": {
-                "selection_method": "Metodo di selezione",
+                "filterType": "Tipo di filtro",
                 "geometric_operation": "Operazione Geometrica",
+                "placeholder": "Seleziona...",
                 "spatial_filter_header": "Filtro Spaziale",
                 "draw_start_label": "Disegna sulla mappa l'area di interesse",
                 "dwithin_label": "metri",
