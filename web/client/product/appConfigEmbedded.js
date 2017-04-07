@@ -12,7 +12,7 @@ module.exports = {
         path: "/:mapId",
         component: require('./pages/MapViewer')
     }],
-    pluginsDef: require('./pluginsEmbedded.js'),
+    pluginsDef: require('./apiPlugins.js'),
     initialState: {
         defaultState: {
             mode: "embedded",

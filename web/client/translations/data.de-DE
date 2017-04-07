@@ -178,7 +178,11 @@
             "editLayerProperties": "Ändere Ebenen Eigenschaften",
             "searchFeatures": "Auf dieser Ebene suchen...",
             "removeLayer": "Ebene entfernen",
-            "loadingerror": "Diese Ebene wurde nicht korrekt geladen"
+            "loadingerror": "Diese Ebene wurde nicht korrekt geladen",
+            "measure": "Messen",
+            "backgroundSwitcher": "Hintergrund",
+            "layers": "Ebenen",
+            "drawerButton": "Ebenen"
         },
         "print":{
             "paneltitle": "Drucken",
@@ -394,6 +398,9 @@
             "config": {
                 "load_config_exception": "Fehler beim Laden der Konfiguration"
             },
+            "comboField": {
+                "default_placeholder": "Wählen..."
+            },
             "form": {
                 "header": "Finde im Datensatz",
                 "dataset_header": "Datensatz"
@@ -404,7 +411,7 @@
                 "add_group": " Füge Gruppe hinzu",
                 "group_label_a": "Übereinstimmung",
                 "group_label_b": "der folgenden Bedingungen:",
-                "combo_placeholder": "Wähle",
+                "combo_placeholder": "Attribut",
                 "text_placeholder": "Gib den zu suchenden Text ein",
                 "attribute_filter_header": "Attribut Filter",
                 "groupField": {
@@ -421,9 +428,10 @@
                 }
             },
             "spatialfilter": {
-                "selection_method": "Auswahl Methode",
+                "filterType": "Filtertyp",
                 "geometric_operation": "Geometrische Operation",
                 "spatial_filter_header": "Räumlicher Filter",
+                "combo_placeholder": "Wählen...",
                 "draw_start_label": "Zeichne die Region von Interesse auf der Karte",
                 "dwithin_label": "Meter",
                 "details": {

@@ -178,7 +178,11 @@
             "editLayerProperties": "Edit layer properties",
             "searchFeatures": "Search on this layer...",
             "removeLayer": "Remove layer",
-            "loadingerror": "The layer has not been loaded correctly"
+            "loadingerror": "The layer has not been loaded correctly",
+            "measure": "Measure",
+            "backgroundSwitcher": "Backgrounds",
+            "layers": "Layers",
+            "drawerButton": "Layers"
         },
         "print":{
             "paneltitle": "Print",
@@ -394,6 +398,9 @@
             "config": {
                 "load_config_exception": "Error Loading Configuration"
             },
+            "comboField": {
+                "default_placeholder": "Select..."
+            },
             "form": {
                 "header": "Find in the dataset",
                 "dataset_header": "Dataset"
@@ -404,7 +411,7 @@
                 "add_group": " Add Group",
                 "group_label_a": "Match",
                 "group_label_b": "of the following conditions:",
-                "combo_placeholder": "Select",
+                "combo_placeholder": "Attribute",
                 "text_placeholder": "Type text to search",
                 "attribute_filter_header": "Attribute Filter",
                 "groupField": {
@@ -421,8 +428,9 @@
                 }
             },
             "spatialfilter": {
-                "selection_method": "Selection Method",
+                "filterType": "Filter Type",
                 "geometric_operation": "Geometric Operation",
+                "combo_placeholder": "Select...",
                 "spatial_filter_header": "Spatial Filter",
                 "draw_start_label": "Draw the region of interest on the map",
                 "dwithin_label": "meters",

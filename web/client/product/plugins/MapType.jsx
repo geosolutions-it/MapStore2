@@ -11,6 +11,7 @@ const Message = require('../../components/I18N/Message');
 const {compose} = require('redux');
 const {changeMapType} = require('../actions/home');
 const {connect} = require('react-redux');
+const assign = require('object-assign');
 
 const MapType = React.createClass({
     propTypes: {
@@ -47,6 +48,13 @@ const MapTypePlugin = connect((state) => ({
 })(MapType);
 
 module.exports = {
-    MapTypePlugin: MapTypePlugin,
+    MapTypePlugin: assign(MapTypePlugin, {
+        GridContainer: {
+            name: 'MapType',
+            tool: true,
+            position: 1,
+            priority: 1
+        }
+    }),
     reducers: {home: require('../reducers/home')}
 };
