@@ -20,7 +20,7 @@ const mapConfigHistory = (reducer) => {
             let mapC = assign({}, newState.present, {mapStateSource: "undoredo", style: state.present.style, resize: state.present.resize});
             unredoState = assign({}, newState, {present: mapC});
         }
-        return unredoState || newState;
+        return unredoState || {past: newState.past, present: newState.present, future: newState.future};
     };
 };
 

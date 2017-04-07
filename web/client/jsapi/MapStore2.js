@@ -117,6 +117,7 @@ const MapStore2 = {
      *    look at [Plugins documentation](./plugins-documentation) for further details
      *  * **config**: map configuration object for the application (look at [Map Configuration](./maps-configuration) for details)
      *  * **configUrl**: map configuration url for the application (look at [Map Configuration](./maps-configuration) for details)
+     *  * **originalUrl**: url of the original instance of MapStore. If present it will be linked inside the map using the "GoFull" plugin, present by default.
      *  * **initialState**: allows setting the initial application state (look at [State Configuration](./app-state-configuration) for details)
      *
      * Styling can be configured either using a **theme**, or a complete custom **less stylesheet**, using the
@@ -216,6 +217,9 @@ const MapStore2 = {
 
         if (options.translations) {
             ConfigUtils.setConfigProp('translationsPath', options.translations);
+        }
+        if (options.originalUrl) {
+            ConfigUtils.setConfigProp('originalUrl', options.originalUrl);
         }
         ReactDOM.render(<StandardApp onStoreInit={onStoreInit} themeCfg={themeCfg} className="fill" {...appConfig}/>, document.getElementById(container));
     },
