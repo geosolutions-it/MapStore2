@@ -14,6 +14,7 @@
     "themePrefix": "ms2",
     "defaultMapOptions": {
       "cesium": {
+          "flyTo": true,
           "terrainProvider": {
               "type": "cesium",
               "url": "https://assets.agi.com/stk-terrain/world",
