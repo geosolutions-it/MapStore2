@@ -36,7 +36,8 @@
             "deleteLayer":"Ebene löschen",
             "deleteLayerMessage": "Möchtest du wirklich diese Ebene löschen?",
             "confirmDelete": "Bist du sicher?",
-            "featureTypeError": "Layerattribute können nicht geladen werden"
+            "featureTypeError": "Layerattribute können nicht geladen werden",
+            "elevation": "Höhe"
         },
         "background": "Hintergrund",
         "language": "Sprache",
@@ -53,6 +54,7 @@
         "save": "Speichern",
         "saveAs": "Speichern als...",
         "opacity": "Deckkraft",
+        "elevation": "Höhe",
         "close": "Schliessen",
         "cancel": "Abbrechen",
         "confirm": "Bestätigen",
