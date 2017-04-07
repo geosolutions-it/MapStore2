@@ -271,7 +271,14 @@
                     }
                 }
             },
-            "OmniBar"
+            "OmniBar", {
+                "name": "GoFull",
+                "override": {
+                    "Toolbar": {
+                        "alwaysVisible": true
+                    }
+                }
+            }
         ],
         "common": [{
             "name": "OmniBar",
