@@ -13,7 +13,7 @@ const {createSelector} = require('reselect');
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
 
-const {getFeatureInfo, getVectorInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode} = require('../actions/mapInfo');
+const {getFeatureInfo, getVectorInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning} = require('../actions/mapInfo');
 const {changeMousePointer} = require('../actions/map');
 const {changeMapInfoFormat} = require('../actions/mapInfo');
 
@@ -34,10 +34,11 @@ const selector = createSelector([
     layersSelector,
     (state) => state.mapInfo && state.mapInfo.clickPoint,
     (state) => state.mapInfo && state.mapInfo.showModalReverse,
-    (state) => state.mapInfo && state.mapInfo.reverseGeocodeData
+    (state) => state.mapInfo && state.mapInfo.reverseGeocodeData,
+    (state) => state.mapInfo && state.mapInfo.warning
 
-], (enabled, responses, requests, format, map, layers, point, showModalReverse, reverseGeocodeData) => ({
-    enabled, responses, requests, format, map, layers, point, showModalReverse, reverseGeocodeData
+], (enabled, responses, requests, format, map, layers, point, showModalReverse, reverseGeocodeData, warning) => ({
+    enabled, responses, requests, format, map, layers, point, showModalReverse, reverseGeocodeData, warning
 }));
 // result panel
 
@@ -89,6 +90,8 @@ const IdentifyPlugin = connect(selector, {
     purgeResults: purgeMapInfoResults,
     changeMousePointer,
     showMarker: showMapinfoMarker,
+    noQueryableLayers,
+    clearWarning,
     hideMarker: hideMapinfoMarker,
     showRevGeocode: showMapinfoRevGeocode,
     hideRevGeocode: hideMapinfoRevGeocode

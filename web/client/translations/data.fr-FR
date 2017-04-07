@@ -20,6 +20,7 @@
         "about_p6": "MapStore2 est développé par:",
         "enable": "Activer",
         "layers": "Couches",
+        "warning": "Attention",
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
             "title": "Titre",
@@ -219,6 +220,7 @@
         },
         "getFeatureInfoTitle": "Informations de l'objet",
         "identifyTitle": "Informations de l'objet",
+        "identifyNoQueryableLayers": "Aucune couche active requise",
         "identifyRevGeocodeHeader": "Coordonnées",
         "identifyRevGeocodeModalTitle": "Adresse",
         "identifyRevGeocodeSubmitText": "Plus d'Informations",
