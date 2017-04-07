@@ -65,7 +65,7 @@ const ComboField = React.createClass({
             style: {
                 width: "100%"
             },
-            placeholder: <Message msgId="queryform.attributefilter.combo_placeholder"/>,
+            placeholder: <Message msgId="queryform.comboField.default_placeholder"/>,
             multivalue: false,
             disabled: false,
             valueField: null,

@@ -396,6 +396,9 @@
             "config": {
                 "load_config_exception": "Errore Caricamento Configurazione"
             },
+            "comboField": {
+                "default_placeholder": "Seleziona..."
+            },
             "form": {
                 "header": "Cerca nel dataset",
                 "dataset_header": "Dataset"
@@ -425,7 +428,7 @@
             "spatialfilter": {
                 "filterType": "Tipo di filtro",
                 "geometric_operation": "Operazione Geometrica",
-                "placeholder": "Seleziona...",
+                "combo_placeholder": "Seleziona...",
                 "spatial_filter_header": "Filtro Spaziale",
                 "draw_start_label": "Disegna sulla mappa l'area di interesse",
                 "dwithin_label": "metri",

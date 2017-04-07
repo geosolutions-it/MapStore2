@@ -398,6 +398,9 @@
             "config": {
                 "load_config_exception": "Erreur lors du chargement de la configuration"
             },
+            "comboField": {
+                "default_placeholder": "Sélectionner..."
+            },
             "form": {
                 "header": "Rechercher dans les données",
                 "dataset_header": "Ensemble des données"
@@ -427,7 +430,7 @@
             "spatialfilter": {
                 "filterType": "Type de filtre",
                 "geometric_operation": "Opération géométrique",
-                "placeholder": "Sélectionner...",
+                "combo_placeholder": "Sélectionner...",
                 "spatial_filter_header": "Filtre spatial",
                 "draw_start_label": "Dessiner la région d'intérêt sur la carte",
                 "dwithin_label": "mètres",

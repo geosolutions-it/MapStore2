@@ -10,6 +10,7 @@ const {Row, Col} = require('react-bootstrap');
 
 const ComboField = require('./ComboField');
 const assign = require('object-assign');
+const LocaleUtils = require('../../../utils/LocaleUtils');
 
 const FilterField = React.createClass({
     propTypes: {
@@ -19,6 +20,9 @@ const FilterField = React.createClass({
         onUpdateField: React.PropTypes.func,
         onUpdateExceptionField: React.PropTypes.func,
         onChangeCascadingValue: React.PropTypes.func
+    },
+    contextTypes: {
+        messages: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -68,6 +72,7 @@ const FilterField = React.createClass({
                             valueField={'id'}
                             textField={'name'}
                             fieldOptions={this.props.attributes.map((attribute) => { return {id: attribute.attribute, name: attribute.label}; })}
+                            placeholder={LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.combo_placeholder")}
                             fieldValue={this.props.filterField.attribute}
                             fieldName="attribute"
                             fieldRowId={this.props.filterField.rowId}

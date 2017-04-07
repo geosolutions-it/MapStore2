@@ -90,7 +90,7 @@ const SpatialFilter = React.createClass({
                         return LocaleUtils.getMessageById(this.context.messages, opt.name);
                     })
                 }
-                placeholder={LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.placeholder")}
+                placeholder={LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.combo_placeholder")}
                 fieldName="method"
                 style={{width: "140px"}}
                 fieldRowId={new Date().getUTCMilliseconds()}

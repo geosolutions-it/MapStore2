@@ -396,6 +396,9 @@
             "config": {
                 "load_config_exception": "Error Loading Configuration"
             },
+            "comboField": {
+                "default_placeholder": "Select..."
+            },
             "form": {
                 "header": "Find in the dataset",
                 "dataset_header": "Dataset"
@@ -425,7 +428,7 @@
             "spatialfilter": {
                 "filterType": "Filter Type",
                 "geometric_operation": "Geometric Operation",
-                "placeholder": "Select...",
+                "combo_placeholder": "Select...",
                 "spatial_filter_header": "Spatial Filter",
                 "draw_start_label": "Draw the region of interest on the map",
                 "dwithin_label": "meters",
