@@ -55,10 +55,50 @@ describe('This test for MapCard', () => {
     it('test viewer url', () => {
         const testName = "test";
         const testDescription = "testDescription";
-        var component = TestUtils.renderIntoDocument(<MapCard id={1} map={{id: 1, name: testName, description: testDescription}} mapType="leaflet" viewerUrl="viewer"/>);
-        var button = TestUtils.findRenderedDOMComponentWithTag(
+        var component = TestUtils.renderIntoDocument(<MapCard viewerUrl="viewer" id={1} map={{id: 1, name: testName, description: testDescription}} mapType="leaflet"/>);
+        const handlers = {
+            onclick: () => {}
+        };
+        const buttonLink = TestUtils.findRenderedDOMComponentWithTag(
            component, 'button'
         );
+        expect(buttonLink).toExist();
+        let spy = expect.spyOn(handlers, "onclick");
+        component = TestUtils.renderIntoDocument(<MapCard id={1} viewerUrl={handlers.onclick} map={{id: 1, name: testName, description: testDescription}} mapType="leaflet" />);
+        const button = TestUtils.findRenderedDOMComponentWithTag(
+           component, 'button'
+        );
+        TestUtils.Simulate.click(button);
         expect(button).toExist();
+        expect(spy.calls.length).toEqual(1);
+    });
+    it('test edit/delete', () => {
+        const testName = "test";
+        const testDescription = "testDescription";
+
+        const handlers = {
+            viewerUrl: () => {},
+            onEdit: () => {},
+            onMapDelete: () => {}
+        };
+
+        let spyviewerUrl = expect.spyOn(handlers, "viewerUrl");
+        let spyonEdit = expect.spyOn(handlers, "onEdit");
+        let spyonMapDelete = expect.spyOn(handlers, "onMapDelete");
+        const component = ReactDOM.render(<MapCard id={1}
+            viewerUrl={handlers.viewerUrl}
+            onMapDelete={handlers.onMapDelete}
+            onEdit={handlers.onEdit}
+            map={{canEdit: true, id: 1, name: testName, description: testDescription}} mapType="leaflet" />, document.getElementById("container"));
+        const buttons = TestUtils.scryRenderedDOMComponentsWithTag(
+           component, 'button'
+        );
+        expect(buttons.length).toBe(3);
+        buttons.forEach(b => TestUtils.Simulate.click(b));
+
+        expect(spyviewerUrl.calls.length).toEqual(1);
+        expect(spyonEdit.calls.length).toEqual(1);
+        // wait for confirm
+        expect(spyonMapDelete.calls.length).toEqual(0);
     });
 });
