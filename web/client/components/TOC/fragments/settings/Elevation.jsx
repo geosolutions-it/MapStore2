@@ -28,20 +28,12 @@ module.exports = React.createClass({
         };
     },
     shouldComponentUpdate(nextProps) {
-        if (nextProps.appState && nextProps.appState.initialState && nextProps.appState.initialState.params && nextProps.element.params) {
-            if (nextProps.appState.initialState.params[nextProps.elevations.name] !==
-                    nextProps.element.params[nextProps.elevations.name]) {
-                return false;
-            }
-            return false;
-        }
-        return true;
+        return this.props.element.id !== nextProps.element.id;
     },
     renderElevationsChart(elevations) {
         if (this.props.elevations.showChart) {
             return (
                 <ElevationChart
-                    onChange={this.props.onChange}
                     elevations={elevations}
                     chartStyle={this.props.chartStyle}/>
             );
@@ -57,7 +49,6 @@ module.exports = React.createClass({
         const start = this.props.element &&
                         this.props.element.params &&
                         this.props.element.params[this.props.elevations.name] || values[0];
-        const elevationName = {};
         return (
             <div id="mapstore-elevation">
                 <Slider
@@ -77,8 +68,9 @@ module.exports = React.createClass({
                     }}
                     tooltips={!this.props.elevations.showChart}
                     onChange={(value) => {
-                        elevationName[this.props.elevations.name] = value;
-                        this.props.onChange("params", Object.assign({}, elevationName));
+                        this.props.onChange("params", Object.assign({}, {
+                            [this.props.elevations.name]: value[0]
+                        }));
                     }}/>
             </div>
         );

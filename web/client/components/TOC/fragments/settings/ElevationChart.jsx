@@ -14,12 +14,11 @@ module.exports = React.createClass({
     propTypes: {
         elevations: React.PropTypes.object,
         chartStyle: React.PropTypes.object,
-        onChange: React.PropTypes.func
+        animated: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
             elevations: {},
-            onChange: () => {},
             chartStyle: {
                 margin: {
                     top: 5,
@@ -29,7 +28,8 @@ module.exports = React.createClass({
                 },
                 width: 600,
                 height: 200
-            }
+            },
+            animated: false
         };
     },
     renderLineChart() {
@@ -45,6 +45,7 @@ module.exports = React.createClass({
                     strokeDasharray="3 3"
                     horizontal={false}/>
                 <Line
+                    isAnimationActive={this.props.animated}
                     type="monotone"
                     dataKey="value"
                     stroke="#82ca9d"
