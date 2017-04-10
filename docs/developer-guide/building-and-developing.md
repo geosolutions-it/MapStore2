@@ -1,8 +1,8 @@
-#Building and developing
+# Building and developing
 
-Due to the dual nature of the project (Java backend and Javascript frontend) building and developing using the MapStore 2 framework requires two distinct set of tools
+Due to the dual nature of the project (Java backend and JavaScript frontend) building and developing using the MapStore 2 framework requires two distinct set of tools
  * [Apache Maven](https://maven.apache.org/) for Java
- * [NPM](https://www.npmjs.com/) for Javascript.
+ * [NPM](https://www.npmjs.com/) for JavaScript.
 
 A basic knowledge of both tools is required.
 
@@ -25,6 +25,39 @@ After a while (depending on the network bandwidth) the full set of dependencies 
 Then point your preferred browser to [http://localhost:8081](http://localhost:8081).
 
 The HomePage contains links to the available demo applications.
+
+### Building the documentation
+
+MapStore2 uses JSDoc to annotate the components, so the documentation can be automatically generated using [docma](http://onury.github.io/docma/).  
+Please see http://usejsdoc.org/ for further information about code documentation.  
+
+Refer to the existing files to follow the documentation style:
+
+* [actions](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/actions/controls.js)
+* [reducers](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/reducers/controls.js)
+* [components](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/components/buttons/FullScreenButton.jsx)
+* [epics](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/epics/fullscreen.js)
+* [plugins](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/plugins/Login.jsx)
+
+To install docma:
+
+`npm install -g docma`
+
+While developing you can generate the documentation to be accessible in the local machine by:
+
+`npm run doctest`
+
+The resulting doc will be accessible from http://localhost:8081/mapstore/docs/
+
+For the production deploy a different npm task must be used:
+
+`npm run doc`
+
+The documentation will be accessible from the */mapstore/docs/* path
+
+The generated folders can be removed with:
+
+`npm run cleandoc`
 
 ## Frontend debugging
 The development instance uses file watching and live reload, so each time a MapStore 2 file is changed, the browser will reload the updated application.
@@ -54,7 +87,7 @@ To run the MapStore 2 frontend test suite you can use:
 
 `npm test`
 
-You can also have a continuosly running watching test runner, that will execute the complete suite each time a file is changed, launching:
+You can also have a continuously running watching test runner, that will execute the complete suite each time a file is changed, launching:
 
 `npm run continuoustest`
 
@@ -82,6 +115,40 @@ To create the final war, you have several options:
  * fast build (will use the last compiled version of submodules and compiled frontend)
 
 `mvn clean install`
+
+### Changelog generation
+
+To generate the changelog for a specific release you can use [github_changelog_generator](https://github.com/skywinder/github-changelog-generator)  
+The tool will overwrite the CHANGELOG.md file.
+
+**Install (Ubuntu)**
+```
+sudo apt-get install ruby-dev
+sudo gem install rake
+sudo gem install github_changelog_generator
+```
+
+**Configure**
+ * [Generate a github token](https://github.com/settings/tokens/new?description=GitHub%20Changelog%20Generator%20token) and place it in your .bashrc this: 
+```
+ export CHANGELOG_GITHUB_TOKEN="«your-40-digit-github-token»" 
+```
+as an alternative use --token
+
+* cd to MapStore2
+* edit `.github_changelog_generator` file : 
+   * set `since-tag ` (the first tag you want to exclude) 
+   * if you are creating the changelog before creating the tag set `future-release`=YYYY.NN.mm with the release tag
+
+For example the `.github_changelog_generator` file for the changes between 2017.02.00 and 2017.03.00 release can look like the following:
+    
+    future-release=2017.03.00
+    since-tag=2017.01.00
+   
+**Run**
+```
+github_changelog_generator
+```
 
 # Troubleshooting
 

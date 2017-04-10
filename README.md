@@ -66,6 +66,10 @@ Update npm to 3.x, using:
 
 `npm install -g npm@3`
 
+Install docma to build the documentation
+
+`npm install -g docma`
+
 Start the demo locally:
 
 `npm cache clean` (this is useful to prevent errors on Windows during install)
