@@ -4,3 +4,9 @@
  * @name actions
  *
  */
+/**
+ * @typedef action redux action @see {@link http://redux.js.org/docs/basics/Actions.html|the redux documentation}
+ */
+ /**
+  * @typedef thunk a redux-thunk thunk. @see {@link https://github.com/gaearon/redux-thunk|the redux-thunk documentation}
+  */
