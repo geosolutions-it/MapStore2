@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -35,12 +35,24 @@ const PERMISSIONS_LIST_LOADED = 'PERMISSIONS_LIST_LOADED';
 const RESET_CURRENT_MAP = 'RESET_CURRENT_MAP';
 const MAPS_SEARCH_TEXT_CHANGED = 'MAPS_SEARCH_TEXT_CHANGED';
 
+/**
+ * reset current map metadata, `RESET_CURRENT_MAP`
+ * @memberof actions.maps
+ * @return {action} of type `RESET_CURRENT_MAP`
+ */
 function resetCurrentMap() {
     return {
         type: RESET_CURRENT_MAP
     };
 }
 
+/**
+ * mapsLoading action, type `MAPS_LIST_LOADING`
+ * @memberof actions.maps
+ * @param  {string} searchText text to search
+ * @param  {object} params     the params of the request
+ * @return {action}            type `MAPS_LIST_LOADING` with searchText and params
+ */
 function mapsLoading(searchText, params) {
     return {
         type: MAPS_LIST_LOADING,
@@ -49,6 +61,12 @@ function mapsLoading(searchText, params) {
     };
 }
 
+/**
+ * action to run to change search text
+ * @memberof actions.maps
+ * @param  {string} text the search text
+ * @return {action} of type `MAPS_SEARCH_TEXT_CHANGED`, with text
+ */
 function mapsSearchTextChanged(text) {
     return {
         type: MAPS_SEARCH_TEXT_CHANGED,
@@ -56,6 +74,19 @@ function mapsSearchTextChanged(text) {
     };
 }
 
+/**
+ * run when maps are loaded. The results params is an object like this:
+ * ```
+ * {
+ *    results: [{...}, {...}]
+ * }
+ * ```
+ * @memberof actions.maps
+ * @param  {object} maps       object with results
+ * @param  {object} params     params of the original request
+ * @param  {string} searchText the original search text for the request
+ * @return {action}            action of type `MAPS_LIST_LOADED` with all the arguments
+ */
 function mapsLoaded(maps, params, searchText) {
     return {
         type: MAPS_LIST_LOADED,
@@ -65,12 +96,28 @@ function mapsLoaded(maps, params, searchText) {
     };
 }
 
+/**
+ * When a error occurred during maps loading
+ * @memberof actions.maps
+ * @param  {object} e the error
+ * @return {action}   MAPS_LIST_LOAD_ERROR
+ */
 function loadError(e) {
     return {
         type: MAPS_LIST_LOAD_ERROR,
         error: e
     };
 }
+
+/**
+ * When a new map is created
+ * @memberof actions.maps
+ * @param  {number} resourceId the identifier of the new map
+ * @param  {object} metadata   metadata associated to the new resourceId
+ * @param  {object} content    the content of the new resourceId
+ * @param  {object} [error]    an error, if present
+ * @return {action}            `MAP_CREATED`, with all arguments as named
+ */
 function mapCreated(resourceId, metadata, content, error) {
     return {
         type: MAP_CREATED,
@@ -81,6 +128,12 @@ function mapCreated(resourceId, metadata, content, error) {
     };
 }
 
+/**
+ * When a map is updating
+ * @memberof actions.maps
+ * @param  {number} resourceId the id of the resource that is updating
+ * @return {action}            type `MAP_UPDATING` with the arguments as they are named
+ */
 function mapUpdating(resourceId) {
     return {
         type: MAP_UPDATING,
@@ -88,6 +141,16 @@ function mapUpdating(resourceId) {
     };
 }
 
+/**
+ * When metadata of a map are updated
+ * @memberof actions.maps
+ * @param  {number} resourceId     the id of the resourceId
+ * @param  {string} newName        the new name of the map
+ * @param  {string} newDescription the new description of the map
+ * @param  {string} result         the result, can be "success"
+ * @param  {object} [error]          an error, if any
+ * @return {action}                of type `MAP_METADATA_UPDATED` with the arguments as they are named
+ */
 function mapMetadataUpdated(resourceId, newName, newDescription, result, error) {
     return {
         type: MAP_METADATA_UPDATED,
@@ -98,6 +161,15 @@ function mapMetadataUpdated(resourceId, newName, newDescription, result, error) 
         error
     };
 }
+
+/**
+ * When permission of a map are updated
+ * @memberof actions.maps
+ *
+ * @param  {number} resourceId the id of the resourceId
+ * @param  {object} [error]      error, if any
+ * @return {action}            `PERMISSIONS_UPDATED` with the arguments as they are named
+ */
 function permissionsUpdated(resourceId, error) {
     return {
         type: PERMISSIONS_UPDATED,
@@ -106,6 +178,14 @@ function permissionsUpdated(resourceId, error) {
     };
 }
 
+/**
+ * When a map delete action have been performed
+ * @memberof actions.maps
+ * @param  {number} resourceId the identifier of the deleted map
+ * @param  {string} result     the result, can be "success"
+ * @param  {object} [error]      the error, if any
+ * @return {action}            type `MAP_DELETED`, with the arguments as they are named
+ */
 function mapDeleted(resourceId, result, error) {
     return {
         type: MAP_DELETED,
@@ -115,6 +195,14 @@ function mapDeleted(resourceId, result, error) {
     };
 }
 
+/**
+ * When deleting a map
+ * @memberof actions.maps
+ * @param  {number} resourceId the identifier of the map
+ * @param  {string} result     can be "success"
+ * @param  {object} [error]      error, if any
+ * @return {action}            type `MAP_DELETING`, with the arguments as they are named
+ */
 function mapDeleting(resourceId, result, error) {
     return {
         type: MAP_DELETING,
@@ -124,6 +212,16 @@ function mapDeleting(resourceId, result, error) {
     };
 }
 
+/**
+ * When attribute of a map has been updated
+ * @memberof actions.maps
+ * @param  {number} resourceId the identifier of the resource
+ * @param  {string} name       name of the attributeUpdated
+ * @param  {string} value      the new value of the attribute
+ * @param  {string} type       the type of the attribute
+ * @param  {object} [error]      error, if any
+ * @return {action}            type `ATTRIBUTE_UPDATED`, with the arguments as they are named
+ */
 function attributeUpdated(resourceId, name, value, type, error) {
     return {
         type: ATTRIBUTE_UPDATED,
@@ -134,6 +232,13 @@ function attributeUpdated(resourceId, name, value, type, error) {
     };
 }
 
+/**
+ * When an error saving the thumbnail occurred
+ * @memberof actions.maps
+ * @param  {number} resourceId the id of the resource
+ * @param  {object} error      the error occurred
+ * @return {action}            type `THUMBNAIL_ERROR`, with the arguments as they are named
+ */
 function thumbnailError(resourceId, error) {
     return {
         type: THUMBNAIL_ERROR,
@@ -142,6 +247,12 @@ function thumbnailError(resourceId, error) {
     };
 }
 
+/**
+ * When an error occurred on map creation
+ * @memberof actions.maps
+ * @param  {object} error the error occurred
+ * @return {action}      type `MAP_ERROR`, with the arguments as they are named
+ */
 function mapError(error) {
     return {
         type: MAP_ERROR,
@@ -149,6 +260,13 @@ function mapError(error) {
     };
 }
 
+/**
+ * Performed when a map has been saved
+ * @memberof actions.maps
+ * @param  {object} map        The map
+ * @param  {number} resourceId the identifier of the new map
+ * @return {action}            type `SAVE_MAP`, with the arguments as they are named
+ */
 function saveMap(map, resourceId) {
     return {
         type: SAVE_MAP,
@@ -157,20 +275,35 @@ function saveMap(map, resourceId) {
     };
 }
 
+/**
+ * performed when want to disaplay/hide the metadata editing window
+ * @memberof actions.maps
+ * @param  {boolean} displayMetadataEditValue true to display, false to hide
+ * @return {action}                          type `DISPLAY_METADATA_EDIT`, with the arguments as they are named
+ */
 function onDisplayMetadataEdit(displayMetadataEditValue) {
     return {
         type: DISPLAY_METADATA_EDIT,
         displayMetadataEditValue
     };
 }
-
+/**
+ * resets the updating status for a resource
+ * @memberof actions.maps
+ * @param {number} resourceId the id of the resource
+ */
 function resetUpdating(resourceId) {
     return {
         type: RESET_UPDATING,
         resourceId
     };
 }
-
+/**
+ * When the permission list is loading
+ * @memberof actions.maps
+ * @param  {number} mapId the id of the resource
+ * @return {action}       type `PERMISSIONS_LIST_LOADING`, with the arguments as they are named
+ */
 function permissionsLoading(mapId) {
     return {
         type: PERMISSIONS_LIST_LOADING,
@@ -178,6 +311,13 @@ function permissionsLoading(mapId) {
     };
 }
 
+/**
+ * When the permission list has been loaded
+ * @memberof actions.maps
+ * @param  {array} permissions  the permission
+ * @param  {number} mapId       the id of the resource
+ * @return {action}             type `PERMISSIONS_LIST_LOADED`, with the arguments as they are named
+ */
 function permissionsLoaded(permissions, mapId) {
     return {
         type: PERMISSIONS_LIST_LOADED,
@@ -186,6 +326,14 @@ function permissionsLoaded(permissions, mapId) {
     };
 }
 
+/**
+ * Perform the maps load
+ * @memberof actions.maps
+ * @param  {string} geoStoreUrl      the url of geostore
+ * @param  {String} [searchText="*"] text to search
+ * @param  {Object} [params={start:  0. limit: 20}] params for the request
+ * @return {thunk}                  dispatches mapsLoading, mapsLoaded or loadError
+ */
 function loadMaps(geoStoreUrl, searchText="*", params={start: 0, limit: 20}) {
     return (dispatch) => {
         let opts = assign({}, {params}, geoStoreUrl ? {baseURL: geoStoreUrl} : {});
@@ -198,6 +346,12 @@ function loadMaps(geoStoreUrl, searchText="*", params={start: 0, limit: 20}) {
     };
 }
 
+/**
+ * perform permission load for a mapId
+ * @memberof actions.maps
+ * @param  {number} mapId the id of the map for the permission
+ * @return {thunk}       dispatches permissionsLoaded, updateCurrentMapPermissions or loadError
+ */
 function loadPermissions(mapId) {
     if (!mapId) {
         return {
@@ -215,6 +369,12 @@ function loadPermissions(mapId) {
     };
 }
 
+/**
+ * load the available goups for a new permission rule.
+ * @memberof actions.maps
+ * @param  {object} user the current user
+ * @return {thunk}     dispatches updateCurrentMapGroups or loadError
+ */
 function loadAvailableGroups(user) {
     return (dispatch) => {
         GeoStoreApi.getAvailableGroups(user).then((response) => {
@@ -225,6 +385,14 @@ function loadAvailableGroups(user) {
     };
 }
 
+/**
+ * updates a map
+ * @memberof actions.maps
+ * @param  {number} resourceId the id of the map to update
+ * @param  {object} content    the new content
+ * @param  {object} [options]   options for the request
+ * @return {thunk}  dispatches mapUpdating or loadError
+ */
 function updateMap(resourceId, content, options) {
     return (dispatch) => {
         dispatch(mapUpdating(resourceId, content));
@@ -236,6 +404,16 @@ function updateMap(resourceId, content, options) {
     };
 }
 
+/**
+ * updates metadata for a map
+ * @memberof actions.maps
+ * @param  {number} resourceId     the id of the map to updates
+ * @param  {string} newName        the new name for the map
+ * @param  {string} newDescription the new description for the map
+ * @param  {action} [onReset]        an action to dispatch after save, if present, to reset the current map
+ * @param  {object} [options]        the request options, if any
+ * @return {thunk}  updates metadata and diepatches mapMetadataUpdated, onReset action (argument), resetCurrentMap or thumbnailError
+ */
 function updateMapMetadata(resourceId, newName, newDescription, onReset, options) {
     return (dispatch) => {
         GeoStoreApi.putResourceMetadata(resourceId, newName, newDescription, options).then(() => {
@@ -250,7 +428,13 @@ function updateMapMetadata(resourceId, newName, newDescription, onReset, options
     };
 }
 
-
+/**
+ * updates permeissions for the given map.
+ * @memberof actions.maps
+ * @param  {number} resourceId    the identifier of the map
+ * @param  {object} securityRules the new securityRules
+ * @return {thunk} performs updateResourcePermissions and dispatch permissionsUpdated loadMaps or thumbnailError
+ */
 function updatePermissions(resourceId, securityRules) {
     if (!securityRules || !securityRules.SecurityRuleList || !securityRules.SecurityRuleList.SecurityRule) {
         return {
@@ -267,6 +451,16 @@ function updatePermissions(resourceId, securityRules) {
     };
 }
 
+/**
+ * updates an attribute for a given map
+ * @memberof actions.maps
+ * @param  {number} resourceId the id of the resource
+ * @param  {string} name       the name of the attribute
+ * @param  {string} value      the value of the attribute
+ * @param  {string} [type]       the type of the attribute
+ * @param  {object} [options]    options for the request
+ * @return {thunk}  performs the update and dispatch attributeUpdated or thumbnailError
+ */
 function updateAttribute(resourceId, name, value, type, options) {
     return (dispatch) => {
         GeoStoreApi.updateResourceAttribute(resourceId, name, value, type, options).then(() => {
@@ -277,6 +471,20 @@ function updateAttribute(resourceId, name, value, type, options) {
     };
 }
 
+/**
+ * Creates the thumbnail for the map.
+ * @memberof actions.maps
+ * @param  {object} map               the map
+ * @param  {object} metadataMap       the map metadataMap
+ * @param  {string} nameThumbnail     the name for the thumbnail
+ * @param  {string} dataThumbnail     the data to save for the thumbnail
+ * @param  {string} categoryThumbnail the category for the thumbnails
+ * @param  {number} resourceIdMap     the resourceId of the map
+ * @param  {action} [onSuccess]         the action to dispatch on success
+ * @param  {action} [onReset]           the action to dispatch on reset
+ * @param  {object} [options]           options for the request
+ * @return {thunk}                   perform the thumb creation and dispatch proper actions
+ */
 function createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, onSuccess, onReset, options) {
     return (dispatch, getState) => {
         let metadata = {
@@ -320,6 +528,18 @@ function createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categor
     };
 }
 
+/**
+ * Save all the metadata and thubnail, if needed.
+ * @memberof actions.maps
+ * @param  {object} map               the map object
+ * @param  {object} metadataMap       metadata for the map
+ * @param  {string} nameThumbnail     the name for the thubnail
+ * @param  {string} dataThumbnail     the data to save for the thubnail
+ * @param  {string} categoryThumbnail the category for the thumbnails
+ * @param  {number} resourceIdMap     the id of the map
+ * @param  {object} [options]           options for the request
+ * @return {thunk}                   perform the update and dispatch proper actions
+ */
 function saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, options) {
     return (dispatch) => {
         dispatch(mapUpdating(resourceIdMap));
@@ -339,6 +559,14 @@ function saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbna
     };
 }
 
+/**
+ * Deletes a thubnail.
+ * @memberof actions.maps
+ * @param  {number} resourceId    the id of the thumbnail
+ * @param  {number} resourceIdMap the id of the map
+ * @param  {object} [options]       options for the request, if any
+ * @return {thunk}               performs thumbnail cancellation
+ */
 function deleteThumbnail(resourceId, resourceIdMap, options) {
     return (dispatch) => {
         GeoStoreApi.deleteResource(resourceId, options).then(() => {
@@ -365,7 +593,15 @@ function deleteThumbnail(resourceId, resourceIdMap, options) {
         });
     };
 }
-
+/**
+ * Creates a new map.
+ * @memberof actions.maps
+ * @param  {object} metadata  metadata for the new map
+ * @param  {object} content   the map object itself
+ * @param  {object} [thumbnail] the thumbnail
+ * @param  {object} [options]   options for the request
+ * @return {thunk}           creates the map and dispatches  createThumbnail, mapCreated and so on
+ */
 function createMap(metadata, content, thumbnail, options) {
     return (dispatch) => {
         GeoStoreApi.createResource(metadata, content, "MAP", options).then((response) => {
@@ -381,6 +617,13 @@ function createMap(metadata, content, thumbnail, options) {
     };
 }
 
+/**
+ * Deletes a map.
+ * @memberof actions.maps
+ * @param  {number} resourceId the id of the resource to delete
+ * @param  {object} options    options for the request
+ * @return {thunk}            performs the delete operations and dispatches mapDeleted and loadMaps
+ */
 function deleteMap(resourceId, options) {
     return (dispatch, getState) => {
         dispatch(mapDeleting(resourceId));
@@ -395,7 +638,10 @@ function deleteMap(resourceId, options) {
         });
     };
 }
-
+/**
+ * Actions for maps
+ * @name actions.maps
+ */
 module.exports = {
     MAPS_LIST_LOADED,
     MAPS_LIST_LOADING,
@@ -420,6 +666,11 @@ module.exports = {
     RESET_CURRENT_MAP,
     MAPS_SEARCH_TEXT_CHANGED,
     loadMaps,
+    mapsLoading,
+    mapsLoaded,
+    mapCreated,
+    mapDeleted,
+    mapDeleting,
     updateMap,
     updateMapMetadata,
     mapMetadataUpdated,
@@ -429,6 +680,8 @@ module.exports = {
     mapUpdating,
     updatePermissions,
     permissionsUpdated,
+    permissionsLoading,
+    permissionsLoaded,
     attributeUpdated,
     saveMap,
     thumbnailError,

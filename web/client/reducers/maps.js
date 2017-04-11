@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -14,7 +14,51 @@ const {
 const MAP_TYPE_CHANGED = "MAP_TYPE_CHANGED"; // NOTE: this is from home action in product. move to maps actions when finished;
 const assign = require('object-assign');
 const _ = require('lodash');
-
+/**
+ * Manages the state of the maps list search with it's results
+ * The properties represent the shape of the state
+ * @prop {boolan} loading loading state
+ * @prop {string} searchText the text used for search (or while digiting)
+ * @prop {number} start index for pagination for the current request
+ * @prop {number} limit number of results for the current request
+ * @prop {number} totalCount the number of results that match the last search on the server
+ * @prop {array}  results the results
+ * @prop {boolean} success the status of the last request
+ * @prop {array} errors the errors happended
+ *
+ * @example
+ * {
+ *   maps: {
+ *     mapType: 'leaflet',
+ *     enabled: false,
+ *     errors: [],
+ *     searchText: 'test',
+ *     loading: false,
+ *     start: 0,
+ *     limit: 12,
+ *     success: true,
+ *     totalCount: 1,
+ *     results: [
+ *       {
+ *         updating: true, // only when updating
+ *         deleting: true, // only when deleting
+ *         canDelete: true,
+ *         canEdit: true,
+ *         canCopy: true,
+ *         creation: '2017-01-16 12:16:09.538',
+ *         lastUpdate: '2017-03-17 11:51:34.428',
+ *         description: 'Simple map to test WFS search capabilities',
+ *         id: 1740,
+ *         name: 'WFS Test Map',
+ *         thumbnail: '%2Fmapstore%2Frest%2Fgeostore%2Fdata%2F1744%2Fraw%3Fdecode%3Ddatauri',
+ *         owner: 'admin'
+ *       }
+ *     ]
+ *   }
+ * }
+ *}
+ * @memberof reducers
+ */
 function maps(state = {
     mapType: "leaflet",
     enabled: false,
