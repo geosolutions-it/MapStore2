@@ -15,6 +15,9 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const CHANGE_LOCALE = 'CHANGE_LOCALE';
 const LOCALE_LOAD_ERROR = 'LOCALE_LOAD_ERROR';
 
+const {castArray, merge} = require('lodash');
+const {Promise} = require('es6-promise');
+
 function changeLocale(data) {
     return {
         type: CHANGE_LOCALE,
@@ -36,16 +39,21 @@ function loadLocale(translationFolder, language) {
         if (!locale) {
             locale = LocaleUtils.getUserLocale();
         }
-        return axios.get((translationFolder || ConfigUtils.getConfigProp('translationsPath')) + '/data.' + locale).then((response) => {
-            if (typeof response.data === "string") {
-                try {
-                    JSON.parse(response.data);
-                } catch(e) {
-                    dispatch(localeError('Locale file broken  for (' + language + '): ' + e.message));
+        const folders = castArray(translationFolder || ConfigUtils.getConfigProp('translationsPath'));
+        Promise.all(folders.map((folder) => {
+            return axios.get(folder + '/data.' + locale);
+        })).then((responses) => {
+            dispatch(changeLocale(responses.reduce((previous, response) => {
+                if (typeof response.data === "string") {
+                    try {
+                        JSON.parse(response.data);
+                    } catch(e) {
+                        dispatch(localeError('Locale file broken  for (' + language + '): ' + e.message));
+                    }
+                    return previous;
                 }
-            } else {
-                dispatch(changeLocale(response.data));
-            }
+                return merge(previous, response.data);
+            }, {})));
         }).catch((e) => {
             dispatch(localeError(e));
         });
