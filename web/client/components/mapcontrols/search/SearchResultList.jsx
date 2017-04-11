@@ -18,7 +18,7 @@ let SearchResultList = React.createClass({
         searchOptions: React.PropTypes.object,
         mapConfig: React.PropTypes.object,
         fitToMapSize: React.PropTypes.bool,
-        containerStyle: React.PropTypes.containerStyle,
+        containerStyle: React.PropTypes.object,
         sizeAdjustment: React.PropTypes.object,
         onItemClick: React.PropTypes.func,
         addMarker: React.PropTypes.func,
