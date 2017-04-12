@@ -14,10 +14,9 @@ const assign = require('object-assign');
  * this shape
  * ```
  * {
- * [action.control]: {
- *    [action.property]: action.value
- *  }
- *  }
+ *   [action.control]: {
+ *     [action.property]: action.value
+ *   }
  * }
  * ```
  * where:
