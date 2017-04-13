@@ -2,7 +2,7 @@ language: node_js
 node_js:
   - 4
 script: npm run travis
-addons:  
+addons:
   firefox: latest
 before_install:
     - export DISPLAY=:99.0
@@ -12,3 +12,4 @@ before_install:
 branches:
   only:
     - master
+    - /^\d{4}\.\d{2}.\d{2}$/
