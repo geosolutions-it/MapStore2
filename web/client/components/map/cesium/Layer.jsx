@@ -67,6 +67,9 @@ const CesiumLayer = React.createClass({
 
                 this.props.map.imageryLayers.remove(this.provider);
             }
+            if (this.refreshTimer) {
+                clearInterval(this.refreshTimer);
+            }
         }
     },
     render() {
@@ -136,12 +139,24 @@ const CesiumLayer = React.createClass({
             this.layer = newLayer;
         }
     },
+    addLayerInternal() {
+        this.provider = this.props.map.imageryLayers.addImageryProvider(this.layer);
+        this.provider._position = this.props.position;
+        if (this.props.options.opacity) {
+            this.provider.alpha = this.props.options.opacity;
+        }
+    },
     addLayer() {
         if (this.layer && !this.layer.detached) {
-            this.provider = this.props.map.imageryLayers.addImageryProvider(this.layer);
-            this.provider._position = this.props.position;
-            if (this.props.options.opacity) {
-                this.provider.alpha = this.props.options.opacity;
+            this.addLayerInternal();
+            if (this.props.options.refresh && this.layer.updateParams) {
+                let counter = 0;
+                this.refreshTimer = setInterval(() => {
+                    const newLayer = this.layer.updateParams(assign({}, this.props.options.params, {_refreshCounter: counter++}));
+                    this.removeLayer();
+                    this.layer = newLayer;
+                    this.addLayerInternal();
+                }, this.props.options.refresh);
             }
         }
     },

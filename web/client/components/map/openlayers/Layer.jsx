@@ -62,6 +62,9 @@ const OpenlayersLayer = React.createClass({
                 this.props.map.removeLayer(this.layer);
             }
         }
+        if (this.refreshTimer) {
+            clearInterval(this.refreshTimer);
+        }
         Layers.removeLayer(this.props.type, this.props.options, this.props.map, this.props.mapId, this.layer);
     },
     render() {
@@ -171,6 +174,12 @@ const OpenlayersLayer = React.createClass({
                     this.props.onLayerLoad(options.id, {error: event});
                 }
             });
+            if (options.refresh) {
+                let counter = 0;
+                this.refreshTimer = setInterval(() => {
+                    this.layer.getSource().updateParams(assign({}, options.params, {_refreshCounter: counter++}));
+                }, options.refresh);
+            }
         }
     },
     isValid() {
