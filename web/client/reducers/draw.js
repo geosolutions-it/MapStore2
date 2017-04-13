@@ -14,6 +14,7 @@ const initialState = {
     drawStatus: null,
     drawOwner: null,
     drawMethod: null,
+    stopAfterDrawing: true,
     features: []
 };
 
@@ -24,6 +25,7 @@ function draw(state = initialState, action) {
                 drawStatus: action.status,
                 drawOwner: action.owner,
                 drawMethod: action.method,
+                stopAfterDrawing: action.stopAfterDrawing,
                 features: action.features
             });
         default:

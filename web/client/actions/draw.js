@@ -1,5 +1,5 @@
-/**
- * Copyright 2016, GeoSolutions Sas.
+/*
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -9,21 +9,22 @@
 const CHANGE_DRAWING_STATUS = 'CHANGE_DRAWING_STATUS';
 const END_DRAWING = 'END_DRAWING';
 
-function changeDrawingStatus(status, method, owner, features) {
+function changeDrawingStatus(status, method, owner, features, stopAfterDrawing = true) {
     return {
         type: CHANGE_DRAWING_STATUS,
-        status: status,
-        method: method,
-        owner: owner,
-        features: features
+        status,
+        method,
+        owner,
+        features,
+        stopAfterDrawing
     };
 }
 
 function endDrawing(geometry, owner) {
     return {
         type: END_DRAWING,
-        geometry: geometry,
-        owner: owner
+        geometry,
+        owner
     };
 }
 
