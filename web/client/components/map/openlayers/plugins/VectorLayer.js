@@ -179,6 +179,7 @@ Layers.registerType('vector', {
         return new ol.layer.Vector({
             msId: options.id,
             source: source,
+            visible: options.visibility !== false,
             zIndex: options.zIndex,
             style: (options.styleName && !options.overrideOLStyle) ? (feature) => {
                 if (options.styleName === "marker") {
