@@ -166,8 +166,8 @@ var OpenlayersMap = React.createClass({
 
         if (this.map && ((this.props.projection !== newProps.projection) || this.haveResolutionsChanged(newProps))) {
             const center = CoordinatesUtils.reproject([
-                this.props.center.x,
-                this.props.center.y
+                newProps.center.x,
+                newProps.center.y
             ], 'EPSG:4326', newProps.projection);
             this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view));
             // We have to force ol to drop tile and reload
