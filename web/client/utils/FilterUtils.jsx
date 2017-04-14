@@ -390,32 +390,32 @@ const FilterUtils = {
     processOGCGeometry: function(version, geometry) {
         let ogc = '';
         switch (geometry.type) {
-                    case "Point":
+            case "Point":
                 ogc += this.getGmlPointElement(geometry.coordinates,
                     geometry.projection || "EPSG:4326", version);
                         break;
-                    case "MultiPoint":
+            case "MultiPoint":
                 ogc += '<gml:MultiPoint srsName="' + (geometry.projection || "EPSG:4326") + '">';
 
                         // //////////////////////////////////////////////////////////////////////////
                         // Coordinates of a MultiPoint are an array of positions
                         // //////////////////////////////////////////////////////////////////////////
                 geometry.coordinates.forEach((element) => {
-                            let point = element;
-                            if (point) {
-                                ogc += "<gml:pointMember>";
-                                ogc += this.getGmlPointElement(point, version);
-                                ogc += "</gml:pointMember>";
-                            }
-                        });
+                    let point = element;
+                    if (point) {
+                        ogc += "<gml:pointMember>";
+                        ogc += this.getGmlPointElement(point, version);
+                        ogc += "</gml:pointMember>";
+                    }
+                });
 
-                        ogc += '</gml:MultiPoint>';
-                        break;
-                    case "Polygon":
+                ogc += '</gml:MultiPoint>';
+                break;
+            case "Polygon":
                 ogc += this.getGmlPolygonElement(geometry.coordinates,
                     geometry.projection || "EPSG:4326", version);
                         break;
-                    case "MultiPolygon":
+            case "MultiPolygon":
                         const multyPolygonTagName = version === "2.0" ? "MultiSurface" : "MultiPolygon";
                         const polygonMemberTagName = version === "2.0" ? "surfaceMembers" : "polygonMember";
 
@@ -425,19 +425,19 @@ const FilterUtils = {
                         // Coordinates of a MultiPolygon are an array of Polygon coordinate arrays
                         // //////////////////////////////////////////////////////////////////////////
                 geometry.coordinates.forEach((element) => {
-                            let polygon = element;
-                            if (polygon) {
-                                ogc += "<gml:" + polygonMemberTagName + ">";
-                                ogc += this.getGmlPolygonElement(polygon, version);
-                                ogc += "</gml:" + polygonMemberTagName + ">";
-                            }
-                        });
+                    let polygon = element;
+                    if (polygon) {
+                        ogc += "<gml:" + polygonMemberTagName + ">";
+                        ogc += this.getGmlPolygonElement(polygon, version);
+                        ogc += "</gml:" + polygonMemberTagName + ">";
+                    }
+                });
 
-                        ogc += '</gml:' + multyPolygonTagName + '>';
+                ogc += '</gml:' + multyPolygonTagName + '>';
+                break;
+            default:
                         break;
-                    default:
-                        break;
-                }
+        }
         return ogc;
     },
     processOGCSpatialFilter: function(version, objFilter, nsplaceholder) {
