@@ -37,7 +37,7 @@ const FullScreenButton = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         btnConfig: React.PropTypes.object,
-        options: React.PropTypes.options,
+        options: React.PropTypes.object,
         text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         help: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         glyphicon: React.PropTypes.string,

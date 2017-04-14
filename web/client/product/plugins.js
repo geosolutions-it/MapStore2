@@ -32,6 +32,7 @@ module.exports = {
         MapLoadingPlugin: require('../plugins/MapLoading'),
         AboutPlugin: require('./plugins/About'),
         HelpPlugin: require('../plugins/Help'),
+        HelpLinkPlugin: require('../plugins/HelpLink'),
         HomePlugin: require('../plugins/Home'),
         MadeWithLovePlugin: require('./plugins/MadeWithLove'),
         MetadataExplorerPlugin: require('../plugins/MetadataExplorer'),
