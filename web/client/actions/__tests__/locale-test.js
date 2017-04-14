@@ -21,6 +21,21 @@ describe('Test locale related actions', () => {
         });
     });
 
+    it('does load translation files from multiple folders', (done) => {
+        loadLocale(['base/web/client/test-resources/a', 'base/web/client/test-resources/b'], 'it-IT')((e) => {
+            try {
+                expect(e).toExist();
+                expect(e.type).toBe('CHANGE_LOCALE');
+                expect(e.messages).toExist();
+                expect(e.messages.a).toExist();
+                expect(e.messages.b).toExist();
+                done();
+            } catch(ex) {
+                done(ex);
+            }
+        });
+    });
+
     it('loads an existing it-IT translation file', (done) => {
         loadLocale('base/web/client/translations', 'it-IT')((e) => {
             try {
