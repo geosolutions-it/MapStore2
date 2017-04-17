@@ -4,6 +4,8 @@
     "react"                          // https://github.com/yannickcr/eslint-plugin-react
   ],
   "env": {                           // http://eslint.org/docs/user-guide/configuring.html#specifying-environments
+    "esnext": true,                  // deprecated but still required by codacy http://jshint.com/docs/options/#esnext
+    "esversion": 6,                  // http://jshint.com/docs/options/#esnext
     "browser": true,                 // browser global variables
     "node": true                     // Node.js global variables and Node.js-specific rules
   },
