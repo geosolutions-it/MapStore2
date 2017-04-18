@@ -6,13 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
- /************** DESCRIPTION OF COMPONENT **************
- The share plugin should provide functionalities to:
- 1. Share the map on social networks: Facebook, Twitter (linkedin and Google+ is a plus)
- 2. Copy the unique link to the map.
- 3. Copy a code to embed the map in your site (using an iframe).
- 4. Using QR-Code for mobile devices.
-*/
 
 const React = require('react');
 
@@ -25,14 +18,6 @@ const ConfigUtils = require('../utils/ConfigUtils');
 
 const Url = require('url');
 
-
-const getEmbeddedUrl = (url) => {
-    let urlParsedObj = Url.parse(url, true);
-
-    return urlParsedObj.protocol + '//' + urlParsedObj.host + urlParsedObj.path + "embedded.html#/" +
-        urlParsedObj.hash.substring(urlParsedObj.hash.lastIndexOf('/') + 1, urlParsedObj.hash.lastIndexOf('?'));
-};
-
 const getApiUrl = (url) => {
     let urlParsedObj = Url.parse(url, true);
 
@@ -44,11 +29,23 @@ const getConfigUrl = (url) => {
 
     return urlParsedObj.protocol + '//' + (urlParsedObj.host + urlParsedObj.path + ConfigUtils.getConfigProp('geoStoreUrl') + 'data/' + urlParsedObj.hash.substring(urlParsedObj.hash.lastIndexOf('/') + 1, urlParsedObj.hash.lastIndexOf('?'))).replace('//', '/');
 };
-
+/**
+ * Share Plugin allows to share the current URL (location.href) in some different ways.
+ * You can share it on socials networks(facebook,twitter,google+,linkedin)
+ * copying the direct link
+ * copying the embedded code
+ * using the QR code with mobile apps
+ * @class
+ * @memberof plugins
+ * @prop {node} [title] the title of the page
+ * @prop {string} [shareUrlRegex] reqular expression to parse the shareUrl to generate the final url, using shareUrlReplaceString
+ * @prop {string} [shareUrlReplaceString] expression to be replaced by groups of the shareUrlRegex to get the final shareUrl to use for the iframe
+ * @prop {function} [onClose] function to call on close window event.
+ * @prop {getCount} [getCount] function used to get the count for social links.
+ */
 const Share = connect((state) => ({
     isVisible: state.controls && state.controls.share && state.controls.share.enabled,
     shareUrl: location.href,
-    shareEmbeddedUrl: getEmbeddedUrl(location.href),
     shareApiUrl: getApiUrl(location.href),
     shareConfigUrl: getConfigUrl(location.href)
 }), {
