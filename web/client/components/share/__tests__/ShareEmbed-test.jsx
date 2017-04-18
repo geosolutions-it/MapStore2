@@ -57,5 +57,12 @@ describe("The ShareEmbed component", () => {
         expect(textareaEmbed).toExist();
         expect(textareaEmbed.value).toEqual(iFrameStr);
     });
-
+    it('test showTOCToggle prop', () => {
+        const host = "http://localhost:8081/";
+        const hashPart = "#/abc/def/1";
+        const cmpSharePanel = ReactDOM.render(<ShareEmbed showTOCToggle={false} shareUrl={ host + hashPart }/>, document.getElementById("container"));
+        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "input");
+        let checkboxes = inputs.filter(i => i.type === "checkbox");
+        expect(checkboxes.length).toBe(0);
+    });
 });
