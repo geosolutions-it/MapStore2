@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -6,13 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
- /** DESCRIPTION
-  * SharePanel allow to share the current map in some different ways.
-  * You can share it on socials networks(facebook,twitter,google+,linkedin)
-  * copying the direct link
-  * copying the embedded code
-  * using the QR code with mobile apps
-  */
 
 const React = require('react');
 const Dialog = require('../misc/Dialog');
@@ -24,13 +17,32 @@ const ShareQRCode = require('./ShareQRCode');
 const {Glyphicon, Tabs, Tab} = require('react-bootstrap');
 const Message = require('../../components/I18N/Message');
 
+ /**
+  * SharePanel allow to share the current map in some different ways.
+  * You can share it on socials networks(facebook,twitter,google+,linkedin)
+  * copying the direct link
+  * copying the embedded code
+  * using the QR code with mobile apps
+  * @class
+  * @memberof components.share
+  * @prop {boolean} [isVisible] display or hide
+  * @prop {node} [title] the title of the page
+  * @prop {string} [shareUrl] the url to use for share. by default location.href
+  * @prop {string} [shareUrlRegex] reqular expression to parse the shareUrl to generate the final url, using shareUrlReplaceString
+  * @prop {string} [shareUrlReplaceString] expression to be replaced by groups of the shareUrlRegex to get the final shareUrl to use for the iframe
+  * @prop {string} [shareApiUrl] url for share API part
+  * @prop {string} [shareConfigUrl] the url of the config to use for shareAPI
+  * @prop {function} [onClose] function to call on close window event.
+  * @prop {getCount} [getCount] function used to get the count for social links.
+  */
 let SharePanel = React.createClass({
 
     propTypes: {
         isVisible: React.PropTypes.bool,
         title: React.PropTypes.node,
         shareUrl: React.PropTypes.string,
-        shareEmbeddedUrl: React.PropTypes.string,
+        shareUrlRegex: React.PropTypes.string,
+        shareUrlReplaceString: React.PropTypes.string,
         shareApiUrl: React.PropTypes.string,
         shareConfigUrl: React.PropTypes.string,
         onClose: React.PropTypes.func,
@@ -41,14 +53,26 @@ let SharePanel = React.createClass({
         return {
             title: <Message msgId="share.titlePanel"/>,
             onClose: () => {},
+            shareUrlRegex: "(h[^#]*)#\\/viewer\\/([^\\/]*)\\/([A-Za-z0-9]*)",
+            shareUrlReplaceString: "$1embedded.html#/$3",
             closeGlyph: "1-close"
         };
+    },
+    generateUrl(orig = location.href, pattern, replaceString) {
+        let regexp = new RegExp(pattern);
+        if (orig.match(regexp)) {
+            return orig.replace(regexp, replaceString);
+        }
+        return orig;
     },
     render() {
         // ************************ CHANGE URL PARAMATER FOR EMBED CODE ****************************
         /* if the property shareUrl is not defined it takes the url from location.href */
         const shareUrl = this.props.shareUrl || location.href;
-        const shareEmbeddedUrl = this.props.shareEmbeddedUrl || this.props.shareUrl || location.href;
+        let shareEmbeddedUrl = this.props.shareUrl || location.href;
+        if (this.props.shareUrlRegex && this.props.shareUrlReplaceString) {
+            shareEmbeddedUrl = this.generateUrl(shareEmbeddedUrl, this.props.shareUrlRegex, this.props.shareUrlReplaceString);
+        }
         const shareApiUrl = this.props.shareApiUrl || this.props.shareUrl || location.href;
         const social = <ShareSocials shareUrl={shareUrl} getCount={this.props.getCount}/>;
         const direct = (<div><ShareLink shareUrl={shareUrl}/><ShareQRCode shareUrl={shareUrl}/></div>);
