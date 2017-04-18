@@ -45,6 +45,8 @@ let SharePanel = React.createClass({
         shareUrlReplaceString: React.PropTypes.string,
         shareApiUrl: React.PropTypes.string,
         shareConfigUrl: React.PropTypes.string,
+        embedOptions: React.PropTypes.object,
+        showAPI: React.PropTypes.bool,
         onClose: React.PropTypes.func,
         getCount: React.PropTypes.func,
         closeGlyph: React.PropTypes.string
@@ -55,6 +57,8 @@ let SharePanel = React.createClass({
             onClose: () => {},
             shareUrlRegex: "(h[^#]*)#\\/viewer\\/([^\\/]*)\\/([A-Za-z0-9]*)",
             shareUrlReplaceString: "$1embedded.html#/$3",
+            embedOptions: {},
+            showAPI: true,
             closeGlyph: "1-close"
         };
     },
@@ -76,8 +80,8 @@ let SharePanel = React.createClass({
         const shareApiUrl = this.props.shareApiUrl || this.props.shareUrl || location.href;
         const social = <ShareSocials shareUrl={shareUrl} getCount={this.props.getCount}/>;
         const direct = (<div><ShareLink shareUrl={shareUrl}/><ShareQRCode shareUrl={shareUrl}/></div>);
-        const code = (<div><ShareEmbed shareUrl={shareEmbeddedUrl}/>
-        <ShareApi shareUrl={shareApiUrl} shareConfigUrl={this.props.shareConfigUrl}/></div>);
+        const code = (<div><ShareEmbed shareUrl={shareEmbeddedUrl} {...this.props.embedOptions} />
+        {this.props.showAPI ? <ShareApi shareUrl={shareApiUrl} shareConfigUrl={this.props.shareConfigUrl}/> : null}</div>);
 
         const tabs = (<Tabs defaultActiveKey={1} id="sharePanel-tabs">
             <Tab eventKey={1} title={<Message msgId="share.direct" />}>{direct}</Tab>
