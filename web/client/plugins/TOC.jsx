@@ -181,7 +181,9 @@ const LayerTree = React.createClass({
         settingsOptions: React.PropTypes.object,
         chartStyle: React.PropTypes.object,
         currentZoomLvl: React.PropTypes.number,
-        scales: React.PropTypes.array
+        scales: React.PropTypes.array,
+        layerOptions: React.PropTypes.object,
+        groupOptions: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -206,7 +208,9 @@ const LayerTree = React.createClass({
                 closeGlyph: "1-close",
                 buttonSize: "small"
             },
-            querypanelEnabled: false
+            querypanelEnabled: false,
+            layerOptions: {},
+            groupOptions: {}
         };
     },
     getNoBackgroundLayers(group) {
@@ -214,6 +218,7 @@ const LayerTree = React.createClass({
     },
     renderTOC() {
         const Group = (<DefaultGroup onSort={this.props.onSort}
+                                  {...this.props.groupOptions}
                                   propertiesChangeHandler={this.props.groupPropertiesChangeHandler}
                                   onToggle={this.props.onToggleGroup}
                                   style={this.props.groupStyle}
@@ -221,6 +226,7 @@ const LayerTree = React.createClass({
                                   visibilityCheckType={this.props.visibilityCheckType}
                                   />);
         const Layer = (<DefaultLayer
+                            {...this.props.layerOptions}
                             settingsOptions={this.props.settingsOptions}
                             onToggle={this.props.onToggleLayer}
                             onToggleQuerypanel={this.props.onToggleQuery }
