@@ -40,6 +40,9 @@ const getConfigUrl = (url) => {
  * @prop {node} [title] the title of the page
  * @prop {string} [shareUrlRegex] reqular expression to parse the shareUrl to generate the final url, using shareUrlReplaceString
  * @prop {string} [shareUrlReplaceString] expression to be replaced by groups of the shareUrlRegex to get the final shareUrl to use for the iframe
+ * @prop {object} [embedOptions] options for the iframe version of embedded share options
+ * @prop {boolean} [embedOptions.showTOCToggle] true by default, set to false to hide the "show TOC" toggle.
+ * @prop {boolean} [showAPI] default true, if false, hides the API entry of embed.
  * @prop {function} [onClose] function to call on close window event.
  * @prop {getCount} [getCount] function used to get the count for social links.
  */

@@ -24,10 +24,23 @@ require('./share.css');
 
 const ShareEmbed = React.createClass({
     propTypes: {
-        shareUrl: React.PropTypes.string
+        shareUrl: React.PropTypes.string,
+        showTOCToggle: React.PropTypes.bool
     },
-    getInitialState() {
-        return {copied: false, forceDrawer: false};
+  getInitialState() {
+      return {copied: false, forceDrawer: false};
+  },
+  getDefaultProps() {
+      return {
+          showTOCToggle: true
+      };
+  },
+  renderTools() {
+        if (this.props.showTOCToggle) {
+            return (<Checkbox checked={this.state.forceDrawer} onChange={() => this.setState({forceDrawer: !this.state.forceDrawer})}>
+                <Message msgId="share.forceDrawer"/>
+             </Checkbox>);
+        }
     },
   render() {
 
@@ -44,16 +57,12 @@ const ShareEmbed = React.createClass({
                       </OverlayTrigger>);
       return (
           <div className="input-link">
-
-
               <Grid className="embed-box" fluid={true}>
                   <Row key="title">
                         <h4>
                            <Message msgId="share.embeddedLinkTitle"/>
                         </h4>
-                        <Checkbox checked={this.state.forceDrawer} onChange={() => this.setState({forceDrawer: !this.state.forceDrawer})}>
-                            <Message msgId="share.forceDrawer"/>
-                         </Checkbox>
+                        {this.renderTools()}
                     </Row>
                     <Row key="data" className="row-button">
                         <Col key="textarea" xs={10} sm={10} md={10}><textarea name="description" rows="6" value={codeEmbedded} enabled="false" readOnly /></Col>
