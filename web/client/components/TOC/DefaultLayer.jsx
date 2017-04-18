@@ -52,7 +52,8 @@ var DefaultLayer = React.createClass({
         includeDeleteButtonInSettings: React.PropTypes.bool,
         groups: React.PropTypes.array,
         currentZoomLvl: React.PropTypes.number,
-        scales: React.PropTypes.array
+        scales: React.PropTypes.array,
+        additionalTools: React.PropTypes.array
     },
     getDefaultProps() {
         return {
@@ -74,7 +75,8 @@ var DefaultLayer = React.createClass({
             settingsOptions: {},
             confirmDeleteText: <Message msgId="layerProperties.deleteLayer" />,
             confirmDeleteMessage: <Message msgId="layerProperties.deleteLayerMessage" />,
-            visibilityCheckType: "glyph"
+            visibilityCheckType: "glyph",
+            additionalTools: []
         };
     },
     onConfirmDelete() {
@@ -87,7 +89,7 @@ var DefaultLayer = React.createClass({
         };
     },
     renderCollapsible() {
-        let tools = [];
+        let tools = this.props.additionalTools.filter((t) => t.collapsible).map((Tool) => <Tool style={{"float": "right", cursor: "pointer"}}/>);
         if (this.props.activateRemoveLayer) {
             tools.push((<LayersTool
                         node={this.props.node}
@@ -145,7 +147,7 @@ var DefaultLayer = React.createClass({
         </div>);
     },
     renderTools() {
-        const tools = [];
+        const tools = this.props.additionalTools.filter((t) => !t.collapsible).map((Tool) => <Tool style={{"float": "right", cursor: "pointer"}}/>);
         if (this.props.visibilityCheckType) {
             tools.push(
                 <VisibilityCheck key="visibilitycheck"
