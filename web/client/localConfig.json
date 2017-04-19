@@ -184,11 +184,6 @@
                     }
                 }
             }, {
-                "name": "Snapshot",
-                "cfg": {
-                    "wrap": true
-                }
-            }, {
                 "name": "ZoomIn",
                 "override": {
                     "Toolbar": {
