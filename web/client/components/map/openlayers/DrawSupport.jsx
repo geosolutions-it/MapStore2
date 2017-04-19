@@ -8,6 +8,7 @@
 
 const React = require('react');
 const ol = require('openlayers');
+const {concat} = require('lodash');
 
 const assign = require('object-assign');
 
@@ -17,7 +18,7 @@ const DrawSupport = React.createClass({
         drawOwner: React.PropTypes.string,
         drawStatus: React.PropTypes.string,
         drawMethod: React.PropTypes.string,
-        stopAfterDrawing: React.PropTypes.bool,
+        options: React.PropTypes.object,
         features: React.PropTypes.array,
         onChangeDrawingStatus: React.PropTypes.func,
         onEndDrawing: React.PropTypes.func
@@ -29,7 +30,9 @@ const DrawSupport = React.createClass({
             drawStatus: null,
             drawMethod: null,
             features: null,
-            stopAfterDrawing: true,
+            options: {
+                stopAfterDrawing: true
+            },
             onChangeDrawingStatus: () => {},
             onEndDrawing: () => {}
         };
@@ -109,11 +112,17 @@ const DrawSupport = React.createClass({
                 let geometry;
                 this.drawSource.clear();
 
-                if (geom.type === "Point") {
-                    geometry = new ol.geom.Point(geom.coordinates);
-                } else {
-                    geometry = geom.radius && geom.center ?
-                    ol.geom.Polygon.fromCircle(new ol.geom.Circle([geom.center.x, geom.center.y], geom.radius), 100) : new ol.geom.Polygon(geom.coordinates);
+                switch (geom.type) {
+                    case "Point": {
+                        geometry = new ol.geom.Point(geom.coordinates); break;
+                    }
+                    case "LineString": {
+                        geometry = new ol.geom.LineString(geom.coordinates); break;
+                    }
+                    default: {
+                        geometry = geom.radius && geom.center ?
+                        ol.geom.Polygon.fromCircle(new ol.geom.Circle([geom.center.x, geom.center.y], geom.radius), 100) : new ol.geom.Polygon(geom.coordinates);
+                    }
                 }
                 let feature = new ol.Feature({
                     geometry: geometry
@@ -134,7 +143,7 @@ const DrawSupport = React.createClass({
         if (this.drawInteraction) {
             this.removeDrawInteraction();
         }
-
+        let features = new ol.Collection();
         let drawBaseProps = {
             source: this.drawSource,
             type: /** @type {ol.geom.GeometryType} */ geometryType,
@@ -157,6 +166,7 @@ const DrawSupport = React.createClass({
                     })
                 })
             }),
+            features: features,
             condition: ol.events.condition.always
         };
 
@@ -204,7 +214,19 @@ const DrawSupport = React.createClass({
                 };
                 break;
             }
-            case "LineString":
+            case "LineString": {
+                roiProps.type = "LineString";
+                roiProps.maxPoints = newProps.options.maxPoints;
+                roiProps.geometryFunction = function(coordinates, geometry) {
+                    let geom = geometry;
+                    if (!geom) {
+                        geom = new ol.geom.LineString(null);
+                    }
+                    geom.setCoordinates(coordinates);
+                    return geom;
+                };
+                break;
+            }
             case "Polygon":
             default : return {};
         }
@@ -221,12 +243,16 @@ const DrawSupport = React.createClass({
 
         draw.on('drawend', function(evt) {
             this.sketchFeature = evt.feature;
+            let startingPoint = newProps.options.startingPoint;
             let drawnGeometry = this.sketchFeature.getGeometry();
             let radius;
             let extent = drawnGeometry.getExtent();
             let center = ol.extent.getCenter(drawnGeometry.getExtent());
             let coordinates = drawnGeometry.getCoordinates();
-
+            if (startingPoint) {
+                coordinates = concat(startingPoint, coordinates);
+                drawnGeometry.setCoordinates(coordinates);
+            }
             if (drawnGeometry.getType() === "Circle") {
                 radius = Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2));
             }
@@ -239,9 +265,15 @@ const DrawSupport = React.createClass({
                 radius: radius,
                 projection: this.props.map.getView().getProjection().getCode()
             };
-
+            /*let modifyProps = assign({}, drawProps, {
+                features: features,
+                deleteCondition: () => false,
+                condition: ol.events.condition.never // TODO customize this part to edit
+            });
+            let modify = new ol.interaction.Modify(modifyProps);
+            this.props.map.addInteraction(modify);*/
             this.props.onEndDrawing(geometry, this.props.drawOwner);
-            if (this.props.stopAfterDrawing) {
+            if (this.props.options.stopAfterDrawing) {
                 this.props.onChangeDrawingStatus('stop', this.props.drawMethod, this.props.drawOwner);
             }
         }, this);
