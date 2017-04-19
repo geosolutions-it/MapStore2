@@ -144,7 +144,7 @@ let GrabLMap = React.createClass({
         let svgString;
         if (svg) {
             // get svg translate position to avoid overlay issue on IE
-            let svgTranslate = svg.style.transform.replace(/\(|\)|translate3d|translate/g, '').split('px, ');
+            let svgTranslate = svg.style && svg.style.transform ? svg.style.transform.replace(/\(|\)|translate3d|translate/g, '').split('px, ') : ['0', '0'];
             svgTranslate = [Number.parseFloat(svgTranslate[0].replace('px', '')), Number.parseFloat(svgTranslate[1].replace('px', ''))];
             svgTranslate = svg.style.transform && svg.style.transform.substr(0, 11) === 'translate3d' ? [0, 0] : svgTranslate;
 
