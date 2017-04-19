@@ -387,6 +387,27 @@ const FilterUtils = {
         gmlPolygon += '</gml:Polygon>';
         return gmlPolygon;
     },
+    getGmlLineStringElement: function(coordinates, srsName, version) {
+        let gml = '<gml:LineString';
+
+        gml += srsName ? ' srsName="' + srsName + '">' : '>';
+
+        // ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Array of LinearRing coordinate array. The first element in the array represents the exterior ring.
+        // Any subsequent elements represent interior rings (or holes).
+        // ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        coordinates.forEach((element) => {
+            let coords = element.map((coordinate) => {
+                return coordinate[0] + (version === "1.0.0" ? "," : " ") + coordinate[1];
+            });
+            gml += (version === "1.0.0" ? '<gml:coordinates>' : '<gml:posList>') +
+                      coords.join(" ") +
+                        (version === "1.0.0" ? '</gml:coordinates>' : '</gml:posList>');
+        });
+
+        gml += '</gml:LineString>';
+        return gml;
+    },
     processOGCGeometry: function(version, geometry) {
         let ogc = '';
         switch (geometry.type) {
@@ -411,6 +432,10 @@ const FilterUtils = {
 
                 ogc += '</gml:MultiPoint>';
                 break;
+            case "LineString":
+                ogc += this.getGmlLineStringElement(geometry.coordinates,
+                  geometry.projection || "EPSG:4326", version);
+                    break;
             case "Polygon":
                 ogc += this.getGmlPolygonElement(geometry.coordinates,
                     geometry.projection || "EPSG:4326", version);
