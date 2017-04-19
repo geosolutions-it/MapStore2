@@ -111,7 +111,7 @@
             }, "Login",
             "OmniBar", "BurgerMenu", "Expander"
         ],
-        "desktop": ["Map", "Help", "Share", "DrawerMenu", {
+        "desktop": ["Map", "Help", "Share", "DrawerMenu", "BackgroundSelector", {
                 "name": "Identify",
                 "showIn": ["IdentifyBar", "Settings"],
                 "cfg": {

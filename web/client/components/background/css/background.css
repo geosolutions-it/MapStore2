@@ -1,0 +1,96 @@
+
+.background-plugin-position {
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    z-index: 9999;
+}
+
+.background-thumbnail-container {
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    margin: 5px;
+    padding: 2px;
+    width: 54px;
+    height: 54px;
+    background-color: #fff;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+
+    display: inline-block;
+}
+
+.background-thumbnail-frame {
+    overflow: hidden;
+    width: 50px;
+    height: 50px;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.background-thumbnail-container:hover {
+    width: 84px;
+    height: 84px;
+    cursor: pointer;
+}
+
+.background-thumbnail-container:hover .background-thumbnail-frame {
+    width: 80px;
+    height: 80px;
+}
+
+.background-thumbnail-frame img{
+    width: auto;
+    height: 100%;
+}
+
+.background-thumbnail-container-small {
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    margin: 5px;
+    padding: 2px;
+    width: 54px;
+    height: 54px;
+    background-color: #fff;
+
+    display: inline-block;
+}
+
+.background-thumbnail-frame-small {
+    overflow: hidden;
+    width: 50px;
+    height: 50px;
+}
+
+.background-thumbnail-container-normal {
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    margin: 5px;
+    padding: 2px;
+    width: 84px;
+    height: 84px;
+    background-color: #fff;
+
+    display: inline-block;
+}
+
+.background-thumbnail-frame-normal {
+    overflow: hidden;
+    width: 80px;
+    height: 80px;
+}
+
+/* ------- */
+
+.background-list-container {
+    overflow: hidden;
+    position: fixed;
+    bottom: 0;
+    background-color: #0f0;
+    height: 200px;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
