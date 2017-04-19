@@ -10,7 +10,6 @@ const proj4 = Proj4js;
 const assign = require('object-assign');
 const {isArray, flattenDeep, chunk, cloneDeep} = require('lodash');
 const lineIntersect = require('@turf/line-intersect');
-const inside = require('@turf/inside');
 const polygonToLinestring = require('@turf/polygon-to-linestring');
 // Checks if `list` looks like a `[x, y]`.
 function isXY(list) {
@@ -116,13 +115,7 @@ const CoordinatesUtils = {
     },
     lineIntersectPolygon: function(linestring, polygon) {
         let polygonLines = polygonToLinestring(polygon).features[0];
-        let intersected = false;
-        if (lineIntersect(linestring, polygonLines).features.length === 0) {
-            intersected = linestring.geometry.coordinates.reduce( (previous, current) => {
-                return previous || inside(current, polygon);
-            }, false);
-        }
-        return intersected;
+        return lineIntersect(linestring, polygonLines).features.length !== 0;
     },
     normalizePoint: function(point) {
         return {
