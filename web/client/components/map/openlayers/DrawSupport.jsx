@@ -119,6 +119,9 @@ const DrawSupport = React.createClass({
                     case "LineString": {
                         geometry = new ol.geom.LineString(geom.coordinates); break;
                     }
+                    case "Polygon": {
+                        geometry = new ol.geom.Polygon(geom.coordinates); break;
+                    }
                     default: {
                         geometry = geom.radius && geom.center ?
                         ol.geom.Polygon.fromCircle(new ol.geom.Circle([geom.center.x, geom.center.y], geom.radius), 100) : new ol.geom.Polygon(geom.coordinates);
@@ -227,7 +230,18 @@ const DrawSupport = React.createClass({
                 };
                 break;
             }
-            case "Polygon":
+            case "Polygon": {
+                roiProps.type = "Polygon";
+                roiProps.geometryFunction = function(coordinates, geometry) {
+                    let geom = geometry;
+                    if (!geom) {
+                        geom = new ol.geom.Polygon(null);
+                    }
+                    geom.setCoordinates(coordinates);
+                    return geom;
+                };
+                break;
+            }
             default : return {};
         }
 
@@ -247,21 +261,22 @@ const DrawSupport = React.createClass({
             let drawnGeometry = this.sketchFeature.getGeometry();
             let radius;
             let extent = drawnGeometry.getExtent();
+            let type = drawnGeometry.getType();
             let center = ol.extent.getCenter(drawnGeometry.getExtent());
             let coordinates = drawnGeometry.getCoordinates();
             if (startingPoint) {
                 coordinates = concat(startingPoint, coordinates);
                 drawnGeometry.setCoordinates(coordinates);
             }
-            if (drawnGeometry.getType() === "Circle") {
+            if (type === "Circle") {
                 radius = Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2));
             }
 
             let geometry = {
-                type: drawnGeometry.getType(),
+                type,
                 extent: extent,
                 center: center,
-                coordinates: coordinates,
+                coordinates: type === "Polygon" ? coordinates[0].concat([coordinates[0][0]]) : coordinates,
                 radius: radius,
                 projection: this.props.map.getView().getProjection().getCode()
             };
