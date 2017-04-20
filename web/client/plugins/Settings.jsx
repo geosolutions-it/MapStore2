@@ -85,7 +85,7 @@ const SettingsButton = React.createClass({
     },
     renderSettings() {
         const settingsFirst = {
-            language: <LangBar key="langSelector"/>
+            language: <span><label><Message msgId="language" /></label> <LangBar key="langSelector"/></span>
         };
         const settingsLast = {
             history: <HistoryBar
@@ -115,7 +115,6 @@ const SettingsButton = React.createClass({
     render() {
         const settings = (
             <SettingsPanel role="body" style={this.props.style}>
-                <label><Message msgId="language" /></label>
                 {this.renderSettings()}
             </SettingsPanel>
         );
