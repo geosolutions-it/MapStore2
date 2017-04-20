@@ -1,4 +1,4 @@
-# Quick Start:
+# Quick Start
 
 Clone the repository with the --recursive option to automatically clone submodules:
 
