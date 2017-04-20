@@ -14,7 +14,8 @@ const GroupChildren = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
         filter: React.PropTypes.func,
-        onSort: React.PropTypes.func
+        onSort: React.PropTypes.func,
+        level: React.PropTypes.number
     },
     statics: {
         inheritedPropTypes: ['node', 'filter', 'onSort']
@@ -23,7 +24,8 @@ const GroupChildren = React.createClass({
         return {
             node: null,
             filter: () => true,
-            onSort: null
+            onSort: null,
+            level: 1
         };
     },
     render() {
@@ -36,6 +38,7 @@ const GroupChildren = React.createClass({
                 node: node,
                 key: node.id,
                 sortData: i++,
+                level: this.props.level,
                 isDraggable: !!this.props.onSort
             })));
         }
