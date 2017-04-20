@@ -1,4 +1,5 @@
 * Create a branch (**YYYY.XX.00**)  
+* Generate the changelog with github_changelog_generator
 * Change [QA Jenkins job](http://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build/) to build the new branch, enable the job continuous deploy  
 * Test on QA [http://qa.mapstore2.geo-solutions.it/mapstore/](http://qa.mapstore2.geo-solutions.it/mapstore/)  
     * Any fix must be done on both **YYYY.XX.00** and **master** branch  
@@ -14,7 +15,6 @@
 * EITHER launch Jenkins job [MapStore2-Releaser](http://build.geo-solutions.it/jenkins/job/MapStore2-Releaser/) OR upload the war to stable  
 * Close the related milestone 
 * Merge release branch into master
-* Generate the changelog with github_changelog_generator
 * Create a blog post
 * Write to the mailing list about the current release news and the next release major changes
 
