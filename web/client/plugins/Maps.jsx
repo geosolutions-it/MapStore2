@@ -127,12 +127,14 @@ const Maps = React.createClass({
 
 module.exports = {
     MapsPlugin: connect((state) => ({
-        mapType: state.home && state.home.mapType || (state.maps && state.maps.mapType) || 'leaflet'
+        mapType: (state.maptype && state.maptype.mapType) || 'leaflet'
     }), {
         loadMaps
     })(Maps),
+    epics: require('../epics/maptype'),
     reducers: {
         maps: require('../reducers/maps'),
+        maptype: require('../reducers/maptype'),
         currentMap: require('../reducers/currentMap')
     }
 };
