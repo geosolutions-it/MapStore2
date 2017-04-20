@@ -10,7 +10,7 @@ const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const SharePanel = require('../SharePanel');
-
+const ReactTestUtils = require('react-addons-test-utils');
 
 describe("The SharePanel component", () => {
     beforeEach((done) => {
@@ -44,7 +44,22 @@ describe("The SharePanel component", () => {
         expect(cmpSharePanel).toExist();
         const cmpSharePanelDom = ReactDOM.findDOMNode(cmpSharePanel);
         expect(cmpSharePanelDom).toBeFalsy();
-
     });
+    it('test regex parsing for shareEmbeddedUrl generation', () => {
+        const cmpSharePanel = ReactDOM.render(<SharePanel getCount={()=>0} shareUrlRegex=".*" shareUrlReplaceString="ABC" shareUrl="www.geo-solutions.it" isVisible={false} />, document.getElementById("container"));
+        expect(cmpSharePanel).toExist();
+        const parsed = cmpSharePanel.generateUrl("TEST", "(TE)ST", "$1");
+        expect(parsed).toBe("TE");
+    });
+    it('test showAPI flag', () => {
+        let cmpSharePanel = ReactDOM.render(<SharePanel showAPI={false} getCount={()=>0} shareUrl="www.geo-solutions.it" isVisible={true} />, document.getElementById("container"));
+        expect(cmpSharePanel).toExist();
+        let textareaEmbed = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "textarea");
+        expect(textareaEmbed.length).toBe(1);
+        cmpSharePanel = ReactDOM.render(<SharePanel showAPI={true} getCount={()=>0} shareUrl="www.geo-solutions.it" isVisible={true} />, document.getElementById("container"));
+        textareaEmbed = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "textarea");
+        expect(textareaEmbed.length).toBe(2);
+    });
+
 
 });

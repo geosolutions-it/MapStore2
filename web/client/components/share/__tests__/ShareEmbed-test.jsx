@@ -10,6 +10,7 @@ const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const ShareEmbed = require('../ShareEmbed');
+const {head} = require('lodash');
 const ReactTestUtils = require('react-addons-test-utils');
 
 describe("The ShareEmbed component", () => {
@@ -41,5 +42,27 @@ describe("The ShareEmbed component", () => {
         expect(textareaEmbed.value).toEqual(iFrameStr);
 
     });
-
+    it('test forceDrawer', () => {
+        const host = "http://localhost:8081/";
+        const hashPart = "#/abc/def/1";
+        let expectedParam = "?forceDrawer=true";
+        const iFrameStr = "<iframe style=\"border: none;\" height=\"400\" width=\"600\" src=\"" + host + expectedParam + hashPart + "\"></iframe>";
+        const cmpSharePanel = ReactDOM.render(<ShareEmbed shareUrl={ host + hashPart }/>, document.getElementById("container"));
+        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "input");
+        let checkbox = head(inputs.filter(i => i.type === "checkbox"));
+        expect(checkbox.checked).toBe(false);
+        ReactTestUtils.Simulate.change(checkbox);
+        const textareaEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "textarea")[0]);
+        expect(checkbox.checked).toBe(true);
+        expect(textareaEmbed).toExist();
+        expect(textareaEmbed.value).toEqual(iFrameStr);
+    });
+    it('test showTOCToggle prop', () => {
+        const host = "http://localhost:8081/";
+        const hashPart = "#/abc/def/1";
+        const cmpSharePanel = ReactDOM.render(<ShareEmbed showTOCToggle={false} shareUrl={ host + hashPart }/>, document.getElementById("container"));
+        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "input");
+        let checkboxes = inputs.filter(i => i.type === "checkbox");
+        expect(checkboxes.length).toBe(0);
+    });
 });
