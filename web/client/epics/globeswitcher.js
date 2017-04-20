@@ -33,11 +33,6 @@ const updateRouteOn3dSwitch = (action$, store) =>
             }
             Rx.Observable.of(updateLast2dMapType(action.mapType));
         });
-
-module.exports = {
-    updateRouteOn3dSwitch
-};
-
 /**
  * Epics for 3d switcher functionality
  * @name epics.globeswitcher

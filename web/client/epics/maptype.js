@@ -14,6 +14,7 @@ import { UPDATE_LOCATION } from 'react-router-redux';
 
 /**
  * keep the default mapType in sync when change the URL of the map for viewer
+ * @memberof epics.maptype
  * @param  {external:Observable} action$ the stream of actions, acts on `UPDATE_LOCATION`
  * @param  {object} store   the store middleware API from redux `createMiddleware`
  * @return {external:Observable}  the stream of the actions to emit. (`changeMapType`)

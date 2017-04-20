@@ -10,7 +10,7 @@
 const TOGGLE_3D = "TOGGLE_3D";
 const UPDATE_LAST_2D_MAPTYPE = "UPDATE_LAST_2D_MAPTYPE";
 /**
- * when 3d mode have to be toggled
+ * Emitted when 3d map have to be toggled
  * @memberof actions.globeswitcher
  * @param  {boolean} enable          true for enable, false for disable
  * @return {action}                  the action of type `TOGGLE_FULLSCREEN` with enable flag and element selector.
@@ -29,7 +29,7 @@ function toggle3d(enable, originalMapType) {
     };
 }
 /**
- * saves the last 2d map
+ * Saves the last 2d map
  * @memberof actions.globeswitcher
  * @param  {string} mapType last maptype
  * @return {object}         action
