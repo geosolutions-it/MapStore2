@@ -15,20 +15,8 @@ const {Glyphicon} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
 const {toggleControl} = require('../actions/controls');
 const ConfigUtils = require('../utils/ConfigUtils');
+const ShareUtils = require('../utils/ShareUtils');
 
-const Url = require('url');
-
-const getApiUrl = (url) => {
-    let urlParsedObj = Url.parse(url, true);
-
-    return urlParsedObj.protocol + '//' + urlParsedObj.host + urlParsedObj.path;
-};
-
-const getConfigUrl = (url) => {
-    let urlParsedObj = Url.parse(url, true);
-
-    return urlParsedObj.protocol + '//' + (urlParsedObj.host + urlParsedObj.path + ConfigUtils.getConfigProp('geoStoreUrl') + 'data/' + urlParsedObj.hash.substring(urlParsedObj.hash.lastIndexOf('/') + 1, urlParsedObj.hash.lastIndexOf('?'))).replace('//', '/');
-};
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
  * You can share it on socials networks(facebook,twitter,google+,linkedin)
@@ -49,8 +37,8 @@ const getConfigUrl = (url) => {
 const Share = connect((state) => ({
     isVisible: state.controls && state.controls.share && state.controls.share.enabled,
     shareUrl: location.href,
-    shareApiUrl: getApiUrl(location.href),
-    shareConfigUrl: getConfigUrl(location.href)
+    shareApiUrl: ShareUtils.getApiUrl(location.href),
+    shareConfigUrl: ShareUtils.getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl'))
 }), {
     onClose: toggleControl.bind(null, 'share', null)
 })(require('../components/share/SharePanel'));
