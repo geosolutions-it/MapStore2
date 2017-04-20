@@ -61,7 +61,7 @@ const DrawSupport = React.createClass({
     render() {
         return null;
     },
-    addLayer: function(newProps) {
+    addLayer: function(newProps, addInteraction) {
         var source;
         var vector;
         this.geojson = new ol.format.GeoJSON();
@@ -90,27 +90,17 @@ const DrawSupport = React.createClass({
 
         this.props.map.addLayer(vector);
 
-        if (newProps.features && newProps.features > 0) {
-            for (let i = 0; i < newProps.features.length; i++) {
-                let feature = newProps.features[i];
-                if (!(feature instanceof Object)) {
-                    feature = this.geojson.readFeature(newProps.feature);
-                }
-
-                source.addFeature(feature);
-            }
-        }
-
         this.drawSource = source;
         this.drawLayer = vector;
+        if (addInteraction) {
+            this.addDrawInteraction(newProps);
+                }
+
+        this.addFeatures(newProps.features || []);
     },
-    replaceFeatures: function(newProps) {
-        if (!this.drawLayer) {
-            this.addLayer(newProps);
-        } else {
-            newProps.features.map((geom) => {
+    addFeatures(features) {
+        features.forEach((geom) => {
                 let geometry;
-                this.drawSource.clear();
 
                 switch (geom.type) {
                     case "Point": {
@@ -127,12 +117,19 @@ const DrawSupport = React.createClass({
                         ol.geom.Polygon.fromCircle(new ol.geom.Circle([geom.center.x, geom.center.y], geom.radius), 100) : new ol.geom.Polygon(geom.coordinates);
                     }
                 }
-                let feature = new ol.Feature({
-                    geometry: geometry
+            const feature = new ol.Feature({
+                geometry
                 });
 
                 this.drawSource.addFeature(feature);
             });
+    },
+    replaceFeatures: function(newProps) {
+        if (!this.drawLayer) {
+            this.addLayer(newProps, true);
+        } else {
+            this.drawSource.clear();
+            this.addFeatures(newProps.features || []);
         }
     },
     addDrawInteraction: function(newProps) {
