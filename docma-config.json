@@ -129,7 +129,8 @@
             "web/client/epics/search.js",
 
             "web/client/utils/index.jsdoc",
-            "web/client/utils/PluginsUtils.js"
+            "web/client/utils/PluginsUtils.js",
+            "web/client/utils/ShareUtils.js"
           ],
           "jsapi": "web/client/jsapi/MapStore2.js",
             "plugins": [
