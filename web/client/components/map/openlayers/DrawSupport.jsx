@@ -61,7 +61,7 @@ const DrawSupport = React.createClass({
     render() {
         return null;
     },
-    addLayer: function(newProps) {
+    addLayer: function(newProps, addInteraction) {
         var source;
         var vector;
         this.geojson = new ol.format.GeoJSON();
@@ -90,49 +90,46 @@ const DrawSupport = React.createClass({
 
         this.props.map.addLayer(vector);
 
-        if (newProps.features && newProps.features > 0) {
-            for (let i = 0; i < newProps.features.length; i++) {
-                let feature = newProps.features[i];
-                if (!(feature instanceof Object)) {
-                    feature = this.geojson.readFeature(newProps.feature);
-                }
-
-                source.addFeature(feature);
-            }
-        }
-
         this.drawSource = source;
         this.drawLayer = vector;
+        if (addInteraction) {
+            this.addDrawInteraction(newProps);
+        }
+
+        this.addFeatures(newProps.features || []);
+    },
+    addFeatures(features) {
+        features.forEach((geom) => {
+            let geometry;
+
+            switch (geom.type) {
+                case "Point": {
+                    geometry = new ol.geom.Point(geom.coordinates); break;
+                }
+                case "LineString": {
+                    geometry = new ol.geom.LineString(geom.coordinates); break;
+                }
+                case "Polygon": {
+                    geometry = new ol.geom.Polygon(geom.coordinates); break;
+                }
+                default: {
+                    geometry = geom.radius && geom.center ?
+                    ol.geom.Polygon.fromCircle(new ol.geom.Circle([geom.center.x, geom.center.y], geom.radius), 100) : new ol.geom.Polygon(geom.coordinates);
+                }
+            }
+            const feature = new ol.Feature({
+                geometry
+            });
+
+            this.drawSource.addFeature(feature);
+        });
     },
     replaceFeatures: function(newProps) {
         if (!this.drawLayer) {
-            this.addLayer(newProps);
+            this.addLayer(newProps, true);
         } else {
-            newProps.features.map((geom) => {
-                let geometry;
-                this.drawSource.clear();
-
-                switch (geom.type) {
-                    case "Point": {
-                        geometry = new ol.geom.Point(geom.coordinates); break;
-                    }
-                    case "LineString": {
-                        geometry = new ol.geom.LineString(geom.coordinates); break;
-                    }
-                    case "Polygon": {
-                        geometry = new ol.geom.Polygon(geom.coordinates); break;
-                    }
-                    default: {
-                        geometry = geom.radius && geom.center ?
-                        ol.geom.Polygon.fromCircle(new ol.geom.Circle([geom.center.x, geom.center.y], geom.radius), 100) : new ol.geom.Polygon(geom.coordinates);
-                    }
-                }
-                let feature = new ol.Feature({
-                    geometry: geometry
-                });
-
-                this.drawSource.addFeature(feature);
-            });
+            this.drawSource.clear();
+            this.addFeatures(newProps.features || []);
         }
     },
     addDrawInteraction: function(newProps) {
