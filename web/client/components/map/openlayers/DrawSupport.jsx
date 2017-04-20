@@ -94,35 +94,35 @@ const DrawSupport = React.createClass({
         this.drawLayer = vector;
         if (addInteraction) {
             this.addDrawInteraction(newProps);
-                }
+        }
 
         this.addFeatures(newProps.features || []);
     },
     addFeatures(features) {
         features.forEach((geom) => {
-                let geometry;
+            let geometry;
 
-                switch (geom.type) {
-                    case "Point": {
-                        geometry = new ol.geom.Point(geom.coordinates); break;
-                    }
-                    case "LineString": {
-                        geometry = new ol.geom.LineString(geom.coordinates); break;
-                    }
-                    case "Polygon": {
-                        geometry = new ol.geom.Polygon(geom.coordinates); break;
-                    }
-                    default: {
-                        geometry = geom.radius && geom.center ?
-                        ol.geom.Polygon.fromCircle(new ol.geom.Circle([geom.center.x, geom.center.y], geom.radius), 100) : new ol.geom.Polygon(geom.coordinates);
-                    }
+            switch (geom.type) {
+                case "Point": {
+                    geometry = new ol.geom.Point(geom.coordinates); break;
                 }
+                case "LineString": {
+                    geometry = new ol.geom.LineString(geom.coordinates); break;
+                }
+                case "Polygon": {
+                    geometry = new ol.geom.Polygon(geom.coordinates); break;
+                }
+                default: {
+                    geometry = geom.radius && geom.center ?
+                    ol.geom.Polygon.fromCircle(new ol.geom.Circle([geom.center.x, geom.center.y], geom.radius), 100) : new ol.geom.Polygon(geom.coordinates);
+                }
+            }
             const feature = new ol.Feature({
                 geometry
-                });
-
-                this.drawSource.addFeature(feature);
             });
+
+            this.drawSource.addFeature(feature);
+        });
     },
     replaceFeatures: function(newProps) {
         if (!this.drawLayer) {
