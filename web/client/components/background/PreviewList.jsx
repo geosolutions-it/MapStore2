@@ -7,25 +7,48 @@
  */
 
 const React = require('react');
-
-require('./css/previewlist.css');
+const PaginationButton = require('./PaginationButton');
 
 const PreviewList = React.createClass({
     propTypes: {
+        bottom: React.PropTypes.number,
         width: React.PropTypes.number,
-        uid: React.PropTypes.number
+        height: React.PropTypes.number,
+        length: React.PropTypes.number,
+        start: React.PropTypes.number,
+        pagination: React.PropTypes.bool,
+        vertical: React.PropTypes.bool,
+        icons: React.PropTypes.array,
+        onClick: React.PropTypes.func
     },
     getDefaultProps() {
         return {
+            bottom: 0,
             width: 0,
-            uid: 0
+            height: 0,
+            length: 0,
+            start: 0,
+            pagination: false,
+            vertical: false,
+            icons: [],
+            onClick: () => {}
         };
     },
     render() {
-        const {width, uid} = this.props;
-        console.log(this.props.children);
+        let iconButtons = [].concat(this.props.icons);
+        iconButtons = iconButtons.slice(this.props.start, this.props.start + this.props.length);
+        if (this.props.pagination) {
+            if (this.props.start !== 0) {
+                iconButtons.unshift(<PaginationButton key="pagination_0" vertical={this.props.vertical} side={this.props.vertical ? this.props.width : this.props.height} direction={false} onClick={ () => { this.props.onClick('backgroundSelector', 'start', this.props.start - 1); }} />);
+            }
+            if (this.props.start + this.props.length !== this.props.icons.length) {
+                iconButtons.push(<PaginationButton key="pagination_1" vertical={this.props.vertical} side={this.props.vertical ? this.props.width : this.props.height} direction={true} onClick={ () => { this.props.onClick('backgroundSelector', 'start', this.props.start + 1); } } />);
+            }
+        }
+        const style = this.props.vertical ? { height: this.props.pagination ? this.props.height + 50 : this.props.height, width: this.props.width, bottom: this.props.bottom} : { height: this.props.height, width: this.props.pagination ? this.props.width + 50 : this.props.width, bottom: this.props.bottom};
         return (
-            <div className="background-preview-vertical-list" style={{width, left: (width + 5) * uid, height: 55 }}>
+            <div style={style}>
+                {iconButtons}
             </div>
         );
     }

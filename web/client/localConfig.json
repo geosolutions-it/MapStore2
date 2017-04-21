@@ -32,7 +32,7 @@
                 "cfg": {
                     "tools": ["locate"]
                 }
-            }, "DrawerMenu", {
+            }, "DrawerMenu", "BackgroundSelector", {
                 "name": "Identify",
                 "showIn": ["Settings"],
                 "cfg": {
@@ -65,7 +65,7 @@
                 "cfg": {
                     "preset": "mapMobile"
                 }
-            }, "BackgroundSwitcher", {
+            }, {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true
@@ -136,7 +136,7 @@
                 "cfg": {
                     "activateQueryTool": true
                 }
-            }, "Tutorial", "BackgroundSwitcher", {
+            }, "Tutorial", {
                 "name": "Measure",
                 "cfg": {
                     "showResults": false
@@ -247,7 +247,7 @@
                         "alwaysVisible": true
                     }
                 }
-            }, "TOC", "BackgroundSwitcher", {
+            }, "TOC", {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true

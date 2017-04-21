@@ -62,7 +62,8 @@ const DrawerMenu = React.createClass({
         singleSection: React.PropTypes.bool,
         buttonClassName: React.PropTypes.string,
         menuButtonStyle: React.PropTypes.object,
-        disabled: React.PropTypes.bool
+        disabled: React.PropTypes.bool,
+        resetWidth: React.PropTypes.func
     },
     contextTypes: {
         messages: React.PropTypes.object,
@@ -78,8 +79,12 @@ const DrawerMenu = React.createClass({
             menuOptions: {},
             singleSection: true,
             buttonClassName: "square-button",
-            disabled: false
+            disabled: false,
+            resetWidth: () => {}
         };
+    },
+    componentWillUnmount() {
+        this.props.resetWidth();
     },
     renderItems() {
         return this.props.items.map((tool, index) => {
@@ -124,7 +129,8 @@ module.exports = {
         active: state.controls && state.controls.drawer && state.controls.drawer.active,
         disabled: state.controls && state.controls.drawer && state.controls.drawer.disabled
     }), {
-        toggleMenu: toggleControl.bind(null, 'drawer', null)
+        toggleMenu: toggleControl.bind(null, 'drawer', null),
+        resetWidth: setControlProperty.bind(null, 'drawer', 'width', 0)
     })(DrawerMenu),
     reducers: {}
 };
