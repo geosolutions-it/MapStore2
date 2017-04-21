@@ -13,7 +13,8 @@ Then you can check each entry on the GitHub issue when done until the release is
 
 - [ ] Create a [github release](https://github.com/geosolutions-it/MapStore2/releases) pointing to the branch **YYYY.XX.00**.  
 
-      > The Release name should follow be named YYYY.XX.mm where YYYY is the year, XX is the incremental number of the release for the current year (starting from 01) and the second number mm is an incremental value (starting from 00) to increment for minor releases. 
+  > The Release name should follow be named YYYY.XX.mm where YYYY is the year, XX is the incremental number of the release for the current year (starting from 01) and the second number mm is an incremental value (starting from 00) to increment for minor releases. 
+
 - [ ] Get the [latest mapstore.war](http://build.geo-solutions.it/jenkins/job/MapStore2-QA-Build/ws/web/target/mapstore.war) from the QA Jenkins build and upload it to github  
 - [ ] Get the [latest mapstore2-bin.zip](http://build.geo-solutions.it/jenkins/job/MapStore2-QA-Build/ws/release/target/mapstore2-1.0-SNAPSHOT-bin.zip) from the QA Jenkins build and upload it to github  
     ( from the job configuration page there is a link to access the job workspace to easily download the built WAR and binary package)
