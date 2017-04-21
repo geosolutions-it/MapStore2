@@ -11,19 +11,21 @@ require("./css/toctitle.css");
 const Title = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
-        onClick: React.PropTypes.func
+        onClick: React.PropTypes.func,
+        onContextMenu: React.PropTypes.func
     },
     statics: {
         inheritedPropTypes: ['node']
     },
     getDefaultProps() {
         return {
-            onClick: () => {}
+            onClick: () => {},
+            onContextMenu: () => {}
         };
     },
     render() {
         let expanded = (this.props.node.expanded !== undefined) ? this.props.node.expanded : true;
-        return (<span className="toc-title" onClick={() => this.props.onClick(this.props.node.id || this.props.node.name, expanded)}>{this.props.node.title || this.props.node.name}</span>);
+        return (<span className="toc-title" onClick={() => this.props.onClick(this.props.node.id || this.props.node.name, expanded)} onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu(this.props.node); }}>{this.props.node.title || this.props.node.name}</span>);
     }
 });
 

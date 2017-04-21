@@ -24,6 +24,7 @@ var DefaultLayer = React.createClass({
         propertiesChangeHandler: React.PropTypes.func,
         retrieveLayerData: React.PropTypes.func,
         onToggle: React.PropTypes.func,
+        onContextMenu: React.PropTypes.func,
         onToggleQuerypanel: React.PropTypes.func,
         onZoom: React.PropTypes.func,
         onSettings: React.PropTypes.func,
@@ -61,6 +62,7 @@ var DefaultLayer = React.createClass({
             sortableStyle: {},
             propertiesChangeHandler: () => {},
             onToggle: () => {},
+            onContextMenu: () => {},
             onZoom: () => {},
             onSettings: () => {},
             retrieveLayerData: () => {},
@@ -185,7 +187,7 @@ var DefaultLayer = React.createClass({
         let {children, propertiesChangeHandler, onToggle, ...other } = this.props;
         return (
             <Node className="toc-default-layer" sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
-                <Title onClick={this.props.onToggle}/>
+                <Title onClick={this.props.onToggle} onContextMenu={this.props.onContextMenu}/>
                 <LayersTool key="loadingerror"
                         style={{"display": this.props.node.loadingError ? "block" : "none", color: "red", cursor: "default"}}
                         glyph="ban-circle"
