@@ -9,6 +9,7 @@
 const CHANGE_LAYER_PROPERTIES = 'CHANGE_LAYER_PROPERTIES';
 const CHANGE_GROUP_PROPERTIES = 'CHANGE_GROUP_PROPERTIES';
 const TOGGLE_NODE = 'TOGGLE_NODE';
+const CONTEXT_NODE = 'CONTEXT_NODE';
 const SORT_NODE = 'SORT_NODE';
 const REMOVE_NODE = 'REMOVE_NODE';
 const UPDATE_NODE = 'UPDATE_NODE';
@@ -68,6 +69,13 @@ function toggleNode(node, type, status) {
         node: node,
         nodeType: type,
         status: !status
+    };
+}
+
+function contextNode(node) {
+    return {
+        type: CONTEXT_NODE,
+        node: node
     };
 }
 
@@ -142,9 +150,9 @@ function invalidLayer(layerType, options) {
     };
 }
 
-module.exports = {changeLayerProperties, changeGroupProperties, toggleNode, sortNode, removeNode, invalidLayer,
+module.exports = {changeLayerProperties, changeGroupProperties, toggleNode, sortNode, removeNode, invalidLayer, contextNode,
     updateNode, layerLoading, layerLoad, layerError, addLayer, removeLayer, showSettings, hideSettings, updateSettings,
     CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE,
     REMOVE_NODE, UPDATE_NODE, LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, ADD_LAYER, REMOVE_LAYER,
-    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, INVALID_LAYER
+    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, INVALID_LAYER, CONTEXT_NODE
 };

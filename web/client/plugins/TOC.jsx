@@ -10,7 +10,7 @@ const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {Button, Glyphicon} = require('react-bootstrap');
 
-const {changeLayerProperties, changeGroupProperties, toggleNode,
+const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
        sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode} = require('../actions/layers');
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
@@ -163,6 +163,7 @@ const LayerTree = React.createClass({
         layerPropertiesChangeHandler: React.PropTypes.func,
         onToggleGroup: React.PropTypes.func,
         onToggleLayer: React.PropTypes.func,
+        onContextMenu: React.PropTypes.func,
         onToggleQuery: React.PropTypes.func,
         onZoomToExtent: React.PropTypes.func,
         retrieveLayerData: React.PropTypes.func,
@@ -192,6 +193,7 @@ const LayerTree = React.createClass({
             retrieveLayerData: () => {},
             onToggleGroup: () => {},
             onToggleLayer: () => {},
+            onContextMenu: () => {},
             onToggleQuery: () => {},
             onZoomToExtent: () => {},
             onSettings: () => {},
@@ -229,6 +231,7 @@ const LayerTree = React.createClass({
                             {...this.props.layerOptions}
                             settingsOptions={this.props.settingsOptions}
                             onToggle={this.props.onToggleLayer}
+                            onContextMenu={this.props.onContextMenu}
                             onToggleQuerypanel={this.props.onToggleQuery }
                             onZoom={this.props.onZoomToExtent}
                             onSettings={this.props.onSettings}
@@ -289,6 +292,7 @@ const TOCPlugin = connect(tocSelector, {
     retrieveLayerData: getLayerCapabilities,
     onToggleGroup: LayersUtils.toggleByType('groups', toggleNode),
     onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
+    onContextMenu: contextNode,
     onToggleQuery: toggleQueryPanel,
     onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
     onSettings: showSettings,
