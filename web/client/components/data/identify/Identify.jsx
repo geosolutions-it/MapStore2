@@ -29,6 +29,8 @@ const Identify = React.createClass({
         style: React.PropTypes.object,
         point: React.PropTypes.object,
         format: React.PropTypes.string,
+        infoFormat: React.PropTypes.string,
+        setFormat: React.PropTypes.func,
         map: React.PropTypes.object,
         layers: React.PropTypes.array,
         buffer: React.PropTypes.number,
@@ -70,6 +72,8 @@ const Identify = React.createClass({
             draggable: true,
             collapsible: false,
             format: MapInfoUtils.getDefaultInfoFormatValue(),
+            infoFormat: '',
+            setFormat: () => {},
             requests: [],
             responses: [],
             buffer: 2,
@@ -122,6 +126,11 @@ const Identify = React.createClass({
             className: "square-button",
             allowMultiselection: false
         };
+    },
+    componentWillMount() {
+        const availableFormat = MapInfoUtils.getAvailableInfoFormat();
+        const infoF = availableFormat[this.props.infoFormat] ? availableFormat[this.props.infoFormat] : availableFormat.TEXT;
+        this.props.setFormat(infoF);
     },
     componentWillReceiveProps(newProps) {
         if (this.needsRefresh(newProps)) {
