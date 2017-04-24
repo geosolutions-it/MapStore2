@@ -268,7 +268,7 @@ const MapPlugin = React.createClass({
 });
 const {mapSelector} = require('../selectors/map');
 const {layerSelectorWithMarkers} = require('../selectors/layers');
-
+const {addGeometryFieldLayer, addGeometryFieldConfig} = require('../epics/layers');
 const highlightSelector = (state) => state.highlight && state.highlight.select;
 
 const selector = createSelector(
@@ -286,5 +286,6 @@ const selector = createSelector(
 );
 module.exports = {
     MapPlugin: connect(selector)(MapPlugin),
-    reducers: { draw: require('../reducers/draw') }
+    reducers: { draw: require('../reducers/draw') },
+    epics: { addGeometryFieldLayer, addGeometryFieldConfig}
 };

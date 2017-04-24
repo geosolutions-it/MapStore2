@@ -19,6 +19,7 @@ const {
     EXPAND_SPATIAL_PANEL,
     SELECT_SPATIAL_METHOD,
     SELECT_SPATIAL_OPERATION,
+    CHANGE_SPATIAL_ATTRIBUTE,
     REMOVE_SPATIAL_SELECT,
     SHOW_SPATIAL_DETAILS,
     QUERY_FORM_RESET,
@@ -166,6 +167,9 @@ function queryform(state = initialState, action) {
         }
         case SELECT_SPATIAL_OPERATION: {
             return assign({}, state, {spatialField: assign({}, state.spatialField, {[action.fieldName]: action.operation})});
+        }
+        case CHANGE_SPATIAL_ATTRIBUTE: {
+            return assign({}, state, { spatialField: assign({}, state.spatialField, {attribute: action.attribute}) });
         }
         case CHANGE_DRAWING_STATUS: {
             if (action.owner === "queryform" && action.status === "start") {
