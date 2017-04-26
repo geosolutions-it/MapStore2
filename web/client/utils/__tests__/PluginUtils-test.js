@@ -104,7 +104,7 @@ describe('PluginsUtils', () => {
     it('dispatch', () => {
         const expr = PluginsUtils.handleExpression(() => ({
             dispatch: (action) => action
-        }), {context1: "test2"}, "{dispatch(() => 'test')}");
+        }), {context1: "test2"}, "{dispatch((function() { return 'test'; }))}");
 
         expect(expr).toExist();
         expect(expr()).toBe("test");
