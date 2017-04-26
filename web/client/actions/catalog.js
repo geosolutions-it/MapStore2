@@ -12,11 +12,6 @@ var API = {
     wmts: require('../api/WMTS')
 };
 
-const {addLayer, changeLayerProperties} = require('./layers');
-
-const LayersUtils = require('../utils/LayersUtils');
-const {find} = require('lodash');
-
 const RECORD_LIST_LOADED = 'RECORD_LIST_LOADED';
 const RESET_CATALOG = 'RESET_CATALOG';
 const RECORD_LIST_LOAD_ERROR = 'RECORD_LIST_LOAD_ERROR';
@@ -87,32 +82,7 @@ function textSearch(format, url, startPosition, maxRecords, text, options) {
         });
     };
 }
-function addLayerAndDescribe(layer) {
-    return (dispatch, getState) => {
-        const state = getState();
-        const layers = state && state.layers;
-        const id = LayersUtils.getLayerId(layer, layers || []);
-        dispatch(addLayer({...layer, id}));
-        if (layer.type === 'wms') {
-            // try to describe layer
-            return API.wms.describeLayers(layer.url, layer.name).then((results) => {
-                if (results) {
-                    let description = find(results, (desc) => desc.name === layer.name );
-                    if (description && description.owsType === 'WFS') {
-                        dispatch(changeLayerProperties(id, {
-                            search: {
-                                url: description.owsURL,
-                                type: 'wfs'
-                            }
-                        }));
-                    }
-                }
 
-            });
-        }
-
-    };
-}
 function addLayerError(error) {
     return {
         type: ADD_LAYER_ERROR,
@@ -128,6 +98,5 @@ module.exports = {
     RESET_CATALOG, resetCatalog,
     getRecords,
     textSearch,
-    changeCatalogFormat,
-    addLayer: addLayerAndDescribe
+    changeCatalogFormat
 };

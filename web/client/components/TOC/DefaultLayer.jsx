@@ -141,7 +141,7 @@ var DefaultLayer = React.createClass({
                         style={{"float": "right", cursor: "pointer"}}
                         glyph="search"
                         onClick={(node) => {
-                            const geometry = this.props.node.type === 'wms' ? this.props.node.geometryField : 'the_geom';
+                            const geometry = this.props.node.type === 'wms' && this.props.node.geometryField ? this.props.node.geometryField : 'the_geom';
                             this.props.onToggleQuerypanel(node.search.url || node.url, node.name, geometry);
                         }}/>
                 );
