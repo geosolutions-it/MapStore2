@@ -51,7 +51,7 @@ const GridContainer = React.createClass({
             className={this.props.className}
             mapType={this.props.mapType}
             container={(props) => (<Grid fluid><Row>
-                        {props.children.map( item => <Col xs={12} xsOffset={0} sm={6} smOffset={3} smOffset={0}>{item}</Col>)}
+                        {props.children.map( (item, idx) => <Col key={idx} xs={12} xsOffset={0} sm={6} smOffset={3} smOffset={0}>{item}</Col>)}
                 </Row></Grid>)}
             toolStyle="primary"
             activeStyle="default"
