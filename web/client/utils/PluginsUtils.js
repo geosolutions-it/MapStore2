@@ -36,9 +36,12 @@ const isPluginConfigured = (pluginsConfig, plugin) => {
 
 /*eslint-disable */
 const parseExpression = (state = {}, context = {}, value) => {
-    const searchExpression = /^\{(.*?)\}$/;
+    const searchExpression = /^\{(.*)\}$/;
     const expression = searchExpression.exec(value);
     const request = url.parse(location.href, true);
+    const dispatch = (action) => {
+        return () => state("store").dispatch(action.apply(null, arguments));
+    };
     if (expression !== null) {
         return eval(expression[1]);
     }
