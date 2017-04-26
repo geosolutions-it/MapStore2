@@ -39,6 +39,9 @@ const PluginsContainer = React.createClass({
         monitoredState: React.PropTypes.object,
         defaultMode: React.PropTypes.string
     },
+    contextTypes: {
+        store: React.PropTypes.object
+    },
     getDefaultProps() {
         return {
             mode: 'desktop',
@@ -65,7 +68,7 @@ const PluginsContainer = React.createClass({
         this.loadPlugins(newProps.pluginsState);
     },
     getState(path) {
-        return get(this.props.monitoredState, path) || get(this.props.params, path);
+        return get(this.props.monitoredState, path) || get(this.props.params, path) || this.context[path];
     },
     getPluginDescriptor(plugin) {
         return PluginsUtils.getPluginDescriptor(this.getState, this.props.plugins,

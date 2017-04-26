@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 const React = require('react');
-const {connect} = require('react-redux');
+const {connect} = require('../../utils/PluginsUtils');
 const {geoStoreLoginSubmit, loginFail, logoutWithReload, geoStoreChangePassword, resetError} = require('../../actions/security');
 const {setControlProperty} = require('../../actions/controls');
 const {Glyphicon} = require('react-bootstrap');

@@ -101,4 +101,12 @@ describe('PluginsUtils', () => {
     it('handleExpression', () => {
         expect(PluginsUtils.handleExpression({state1: "test1"}, {context1: "test2"}, "{state.state1 + ' ' + context.context1}")).toBe("test1 test2");
     });
+    it('dispatch', () => {
+        const expr = PluginsUtils.handleExpression(() => ({
+            dispatch: (action) => action
+        }), {context1: "test2"}, "{dispatch(() => 'test')}");
+
+        expect(expr).toExist();
+        expect(expr()).toBe("test");
+    });
 });
