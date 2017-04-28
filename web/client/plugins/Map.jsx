@@ -268,7 +268,6 @@ const MapPlugin = React.createClass({
 });
 const {mapSelector} = require('../selectors/map');
 const {layerSelectorWithMarkers} = require('../selectors/layers');
-
 const highlightSelector = (state) => state.highlight && state.highlight.select;
 
 const selector = createSelector(

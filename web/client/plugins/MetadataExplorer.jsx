@@ -11,10 +11,13 @@ const {connect} = require('react-redux');
 const assign = require('object-assign');
 const {createSelector} = require("reselect");
 const {Glyphicon, Panel} = require('react-bootstrap');
-const {textSearch, changeCatalogFormat, addLayer, addLayerError, resetCatalog} = require("../actions/catalog");
+const {textSearch, changeCatalogFormat, addLayerError, resetCatalog} = require("../actions/catalog");
+const {addLayer} = require("../actions/layers");
 const {zoomToExtent} = require("../actions/map");
 const {toggleControl} = require("../actions/controls");
 const Message = require("../components/I18N/Message");
+const {getAdditionalFieldsWMSLayer} = require('../epics/layers');
+
 require('./metadataexplorer/css/style.css');
 
 const CatalogUtils = require('../utils/CatalogUtils');
@@ -134,5 +137,6 @@ module.exports = {
             doNotHide: true
         }
     }),
-    reducers: {catalog: require('../reducers/catalog')}
+    reducers: {catalog: require('../reducers/catalog')},
+    epics: {getAdditionalFieldsWMSLayer}
 };

@@ -140,7 +140,10 @@ var DefaultLayer = React.createClass({
                         ref="target"
                         style={{"float": "right", cursor: "pointer"}}
                         glyph="search"
-                        onClick={(node) => this.props.onToggleQuerypanel(node.search.url || node.url, node.name)}/>
+                        onClick={(node) => {
+                            const geometry = this.props.node.type === 'wms' && this.props.node.geometryField ? this.props.node.geometryField : 'the_geom';
+                            this.props.onToggleQuerypanel(node.search.url || node.url, node.name, geometry);
+                        }}/>
                 );
         }
         return (<div position="collapsible" className="collapsible-toc">
