@@ -52,7 +52,7 @@ const {
     zoneChange
 } = require('../actions/queryform');
 
-const {createQuery, toggleQueryPanel /*, describeFeatureType*/} = require('../actions/wfsquery');
+const {createQuery, toggleQueryPanel} = require('../actions/wfsquery');
 
 const {
     changeDrawingStatus,
