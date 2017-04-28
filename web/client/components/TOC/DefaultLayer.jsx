@@ -82,7 +82,7 @@ var DefaultLayer = React.createClass({
         };
     },
     onConfirmDelete() {
-        this.props.removeNode(this.props.node.id, "layers");
+        this.props.removeNode(this.props.node.id, "layers", this.props.node);
         this.closeDeleteDialog();
     },
     getInitialState: function() {

@@ -88,11 +88,12 @@ function sortNode(node, order, sortLayers = null) {
     };
 }
 
-function removeNode(node, type) {
+function removeNode(node, type, properties) {
     return {
         type: REMOVE_NODE,
         node: node,
-        nodeType: type
+        nodeType: type,
+        properties
     };
 }
 
