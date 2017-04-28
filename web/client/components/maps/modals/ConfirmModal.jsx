@@ -9,6 +9,7 @@
 const React = require('react');
 const {Button} = require('react-bootstrap');
 const Modal = require('../../misc/Modal');
+const Spinner = require('react-spinkit');
 
   /**
    * A Modal window to show a confirmation dialog
@@ -28,7 +29,8 @@ const ConfirmModal = React.createClass({
         body: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         titleText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         confirmText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        cancelText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element])
+        cancelText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
+        running: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -54,13 +56,14 @@ const ConfirmModal = React.createClass({
         const footer = (<span role="footer"><div style={{"float": "left"}}></div>
         <Button
             ref="confirmButton"
+            disabled={this.props.running}
             className={this.props.className}
             key="confirmButton"
             bsStyle="primary"
             bsSize={this.props.buttonSize}
             onClick={() => {
                 this.onConfirm();
-            }}>{this.props.confirmText}</Button>
+            }}>{this.props.running ? <Spinner spinnerName="circle" overrideSpinnerClassName="spinner" noFadeIn /> : null}{this.props.confirmText}</Button>
         {this.props.includeCloseButton ? <Button
             key="cancelButton"
             ref="cancelButton"
