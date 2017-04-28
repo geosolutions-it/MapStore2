@@ -17,6 +17,7 @@ const EXPAND_ATTRIBUTE_PANEL = 'EXPAND_ATTRIBUTE_PANEL';
 const EXPAND_SPATIAL_PANEL = 'EXPAND_SPATIAL_PANEL';
 const SELECT_SPATIAL_METHOD = 'SELECT_SPATIAL_METHOD';
 const SELECT_SPATIAL_OPERATION = 'SELECT_SPATIAL_OPERATION';
+const CHANGE_SPATIAL_ATTRIBUTE = 'CHANGE_SPATIAL_ATTRIBUTE';
 const REMOVE_SPATIAL_SELECT = 'REMOVE_SPATIAL_SELECT';
 const SHOW_SPATIAL_DETAILS = 'SHOW_SPATIAL_DETAILS';
 // const QUERY_FORM_SEARCH = 'QUERY_FORM_SEARCH';
@@ -133,6 +134,13 @@ function selectSpatialOperation(operation, fieldName) {
     };
 }
 
+function changeSpatialAttribute(attribute) {
+    return {
+        type: CHANGE_SPATIAL_ATTRIBUTE,
+        attribute
+    };
+}
+
 function removeSpatialSelection() {
     return {
         type: REMOVE_SPATIAL_SELECT
@@ -159,7 +167,6 @@ function changeDwithinValue(distance) {
         response: response
     };
 }
-
 function wfsLoadError(e) {
     return {
         type: WFS_LOAD_ERROR,
@@ -297,6 +304,7 @@ module.exports = {
     EXPAND_SPATIAL_PANEL,
     SELECT_SPATIAL_METHOD,
     SELECT_SPATIAL_OPERATION,
+    CHANGE_SPATIAL_ATTRIBUTE,
     REMOVE_SPATIAL_SELECT,
     SHOW_SPATIAL_DETAILS,
     // QUERY_FORM_SEARCH,
@@ -333,6 +341,7 @@ module.exports = {
     expandSpatialFilterPanel,
     selectSpatialMethod,
     selectSpatialOperation,
+    changeSpatialAttribute,
     removeSpatialSelection,
     showSpatialSelectionDetails,
     query,

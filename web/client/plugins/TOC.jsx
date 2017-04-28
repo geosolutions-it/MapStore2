@@ -52,7 +52,7 @@ const {
     zoneChange
 } = require('../actions/queryform');
 
-const {createQuery, toggleQueryPanel, describeFeatureType} = require('../actions/wfsquery');
+const {createQuery, toggleQueryPanel /*, describeFeatureType*/} = require('../actions/wfsquery');
 
 const {
     changeDrawingStatus,
@@ -92,9 +92,6 @@ const SmartQueryForm = connect((state) => {
     return {
 
         attributeFilterActions: bindActionCreators({
-            onLoadFeatureTypeConfig: (url, params) => {
-                return describeFeatureType(url, params.typeName);
-            },
             onAddGroupField: addGroupField,
             onAddFilterField: addFilterField,
             onRemoveFilterField: removeFilterField,
