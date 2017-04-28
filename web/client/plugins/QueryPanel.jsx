@@ -24,7 +24,7 @@ const LayersUtils = require('../utils/LayersUtils');
 // include application component
 const QueryBuilder = require('../components/data/query/QueryBuilder');
 
-const {addGeometryFieldEpic} = require('../epics/wfsquery');
+const {featureTypeSelectedEpic} = require('../epics/wfsquery');
 
 const {bindActionCreators} = require('redux');
 const {
@@ -237,5 +237,5 @@ module.exports = {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
     },
-    epics: {addGeometryFieldEpic}
+    epics: {featureTypeSelectedEpic}
 };

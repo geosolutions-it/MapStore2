@@ -7,9 +7,9 @@
  */
 
 const Rx = require('rxjs');
+const axios = require('../libs/ajax');
 const {changeSpatialAttribute} = require('../actions/queryform');
 const {FEATURE_TYPE_SELECTED, featureTypeLoaded, featureTypeError} = require('../actions/wfsquery');
-const axios = require('../libs/ajax');
 
 const types = {
     'xsd:string': 'string',
@@ -51,7 +51,7 @@ const extractInfo = (data) => {
     };
 };
 
-const addGeometryFieldEpic = action$ =>
+const featureTypeSelectedEpic = action$ =>
     action$.ofType(FEATURE_TYPE_SELECTED).switchMap(action => {
         return Rx.Observable.defer( () =>
             axios.get(action.url + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json'))
@@ -59,19 +59,19 @@ const addGeometryFieldEpic = action$ =>
             if (typeof response.data === 'object' && response.data.featureTypes && response.data.featureTypes[0]) {
                 const info = extractInfo(response.data);
                 const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
-                return [featureTypeLoaded(action.typeName, info), changeSpatialAttribute(geometry)];
+                return Rx.Observable.from([featureTypeLoaded(action.typeName, info), changeSpatialAttribute(geometry)]);
             }
             try {
                 JSON.parse(response.data);
             } catch(e) {
-                return [featureTypeError(action.typeName, 'Error from WFS: ' + e.message)];
+                return Rx.Observable.from([featureTypeError(action.typeName, 'Error from WFS: ' + e.message)]);
             }
-            return [featureTypeError(action.typeName, 'Error: feature types are empty')];
+            return Rx.Observable.from([featureTypeError(action.typeName, 'Error: feature types are empty')]);
         })
         .mergeAll()
         .catch(e => Rx.Observable.of(featureTypeError(action.typeName, e.message)));
     });
 
 module.exports = {
-    addGeometryFieldEpic
+    featureTypeSelectedEpic
 };
