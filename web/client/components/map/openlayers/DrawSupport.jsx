@@ -169,7 +169,6 @@ const DrawSupport = React.createClass({
             features: features,
             condition: ol.events.condition.always
         };
-
         // Prepare the properties for the BBOX drawing
         let roiProps = {};
         switch (geometryType) {
@@ -241,7 +240,6 @@ const DrawSupport = React.createClass({
             }
             default : return {};
         }
-
         let drawProps = assign({}, drawBaseProps, roiProps);
 
         // create an interaction to draw with
@@ -293,6 +291,9 @@ const DrawSupport = React.createClass({
         this.props.map.addInteraction(draw);
         this.drawInteraction = draw;
         this.drawSource.clear();
+        if (newProps.features.length > 0 ) {
+            this.addFeatures(newProps.features || []);
+        }
     },
     removeDrawInteraction: function() {
         if (this.drawInteraction !== null) {
