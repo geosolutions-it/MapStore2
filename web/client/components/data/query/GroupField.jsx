@@ -95,6 +95,9 @@ const GroupField = React.createClass({
             case "string": {
                 return ["=", "like", "ilike", "isNull"];
             }
+            case "boolean": {
+                return ["="];
+            }
             default:
                 return ["=", ">", "<", ">=", "<=", "<>", "><"];
         }
@@ -129,6 +132,10 @@ const GroupField = React.createClass({
                             <TextField
                                 operator={filterField.operator}
                                 attType="string"/>
+                            <ComboField
+                                fieldOptions={['true', 'false']}
+                                attType="boolean"
+                                comboFilter={"contains"}/>
                         </FilterField>
                     </Col>
                     <Col xs={2}>

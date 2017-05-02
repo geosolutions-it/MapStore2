@@ -132,11 +132,14 @@ module.exports = {
                 target: "http://dev.mapstore2.geo-solutions.it"
             },
             '/mapstore/proxy': {
-                target: "http://dev.mapstore2.geo-solutions.it"
+                target: "http://localhost:8082"
             },
             '/docs': {
                 target: "http://localhost:8081",
                 pathRewrite: {'/docs': '/mapstore/docs'}
+            },
+            '/geoserver': {
+                target: "http://sit.comune.bolzano.it"
             }
         }
     },
