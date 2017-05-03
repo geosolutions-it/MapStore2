@@ -76,26 +76,6 @@ function queryError(error) {
     };
 }
 
-function describeFeatureType(baseUrl, typeName) {
-    return (dispatch) => {
-        return axios.get(baseUrl + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + typeName + '&outputFormat=application/json').then((response) => {
-            if (typeof response.data === 'object') {
-                dispatch(featureTypeLoaded(typeName, response.data));
-            } else {
-                try {
-                    JSON.parse(response.data);
-                } catch(e) {
-                    dispatch(featureTypeError(typeName, 'Error from WFS: ' + e.message));
-                }
-
-            }
-
-        }).catch((e) => {
-            dispatch(featureTypeError(typeName, e));
-        });
-    };
-}
-
 function loadFeature(baseUrl, typeName) {
     return (dispatch) => {
         return axios.get(baseUrl + '?service=WFS&version=1.1.0&request=GetFeature&typeName=' + typeName + '&outputFormat=application/json').then((response) => {
@@ -196,7 +176,8 @@ module.exports = {
     QUERY_ERROR,
     RESET_QUERY,
     featureTypeSelected,
-    describeFeatureType,
+    featureTypeLoaded,
+    featureTypeError,
     loadFeature,
     createQuery,
     query,

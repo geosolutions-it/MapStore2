@@ -90,7 +90,7 @@ function textSearch(format, url, startPosition, maxRecords, text, options) {
 function addLayerAndDescribe(layer) {
     return (dispatch, getState) => {
         const state = getState();
-        const layers = state && state.layers;
+        const layers = state && state.layers && state.layers.flat;
         const id = LayersUtils.getLayerId(layer, layers || []);
         dispatch(addLayer({...layer, id}));
         if (layer.type === 'wms') {
