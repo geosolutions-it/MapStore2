@@ -13,7 +13,6 @@ const {
     mapMetadataUpdated, mapDeleting, mapDeleted, attributeUpdated, thumbnailError, permissionsLoading,
     permissionsLoaded, saveMap, permissionsUpdated, resetUpdating,
     mapsSearchTextChanged} = require('../../actions/maps');
-const MAP_TYPE_CHANGED = "MAP_TYPE_CHANGED"; // NOTE: this is from home action in product. move to maps actions when finished;
 
 const sampleMap = {
   canDelete: false,
@@ -46,10 +45,7 @@ describe('Test the maps reducer', () => {
         expect(state.enabled).toBe(false);
         expect(state.searchText).toBe("");
     });
-    it('on MAP_TYPE_CHANGED action', () => {
-        let state = maps(null, {type: MAP_TYPE_CHANGED, mapType: "cesium"});
-        expect(state.mapType).toBe("cesium");
-    });
+
     it('on mapsSearchTextChanged action', () => {
         let state = maps(null, mapsSearchTextChanged("TEST"));
         expect(state.searchText).toBe("TEST");

@@ -25,7 +25,7 @@ const startApp = () => {
     }))(require('../components/app/StandardRouter'));
 
     const appStore = require('../stores/StandardStore').bind(null, initialState, {
-        home: require('./reducers/home'),
+        maptype: require('../reducers/maptype'),
         maps: require('../reducers/maps')
     }, {});
 

@@ -87,8 +87,7 @@ const QueryBuilder = React.createClass({
                 onUpdateLogicCombo: () => {},
                 onRemoveGroupField: () => {},
                 onChangeCascadingValue: () => {},
-                onExpandAttributeFilterPanel: () => {},
-                onLoadFeatureTypeConfig: () => {}
+                onExpandAttributeFilterPanel: () => {}
             },
             spatialFilterActions: {
                 onExpandSpatialFilterPanel: () => {},
@@ -106,19 +105,6 @@ const QueryBuilder = React.createClass({
                 onChangeDrawingStatus: () => {}
             }
         };
-    },
-    componentDidMount() {
-        if (this.props.featureTypeConfigUrl && this.props.attributes.length < 1) {
-            this.props.attributeFilterActions.onLoadFeatureTypeConfig(
-                this.props.featureTypeConfigUrl, this.props.params);
-        }
-    },
-    componentWillReceiveProps(props) {
-        let url = props.featureTypeConfigUrl;
-        let params = props.params !== this.props.params ? props.params : this.props.params;
-        if (url !== this.props.featureTypeConfigUrl) {
-            this.props.attributeFilterActions.onLoadFeatureTypeConfig(url, params);
-        }
     },
     render() {
         if (this.props.featureTypeError !== "") {

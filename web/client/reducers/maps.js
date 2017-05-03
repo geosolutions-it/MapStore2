@@ -11,7 +11,6 @@ const {
     MAP_METADATA_UPDATED, MAP_DELETING, MAP_DELETED, ATTRIBUTE_UPDATED, PERMISSIONS_LIST_LOADING,
     PERMISSIONS_LIST_LOADED, SAVE_MAP, PERMISSIONS_UPDATED, THUMBNAIL_ERROR, RESET_UPDATING,
     MAPS_SEARCH_TEXT_CHANGED} = require('../actions/maps');
-const MAP_TYPE_CHANGED = "MAP_TYPE_CHANGED"; // NOTE: this is from home action in product. move to maps actions when finished;
 const assign = require('object-assign');
 const _ = require('lodash');
 /**
@@ -60,16 +59,10 @@ const _ = require('lodash');
  * @memberof reducers
  */
 function maps(state = {
-    mapType: "leaflet",
     enabled: false,
     errors: [],
     searchText: ""}, action) {
     switch (action.type) {
-        case MAP_TYPE_CHANGED: {
-            return assign({}, state, {
-                mapType: action.mapType
-            });
-        }
         case MAPS_SEARCH_TEXT_CHANGED: {
             return assign({}, state, {
                 searchText: action.text

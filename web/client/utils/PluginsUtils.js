@@ -142,13 +142,24 @@ const pluginsMergeProps = (stateProps, dispatchProps, ownProps) => {
     const {pluginCfg, ...otherProps} = ownProps;
     return assign({}, otherProps, stateProps, dispatchProps, pluginCfg || {});
 };
-
+/**
+ * default wrapper for the epics.
+ * @param epic  the epic to wrap
+ * @return the epic wrapped with error catch and re-subscribe functionalities.S
+ * @memberof utils.PluginsUtils
+ */
+const defaultEpicWrapper = epic => (...args) =>
+  epic(...args).catch((error, source) => {
+      setTimeout(() => { throw error; }, 0);
+      return source;
+  });
 /**
  * Utilities to manage plugins
  * @class
  * @memberof utils
  */
 const PluginsUtils = {
+    defaultEpicWrapper,
     /**
      * Produces the reducers from the plugins, combined with other plugins
      * @param {array} plugins the plugins
@@ -163,11 +174,12 @@ const PluginsUtils = {
      * Produces the rootEpic for the plugins, combined with other epics passed as 2nd argument
      * @param {array} plugins the plugins
      * @param {function[]} [epics] the epics to add to the plugins' ones
+     * @param {function} [epicWrapper] returns a function that wraps the epic
      * @return {function} the rootEpic, obtained combining plugins' epics and the other epics passed as argument.
      */
-    combineEpics: (plugins, epics = {}) => {
+    combineEpics: (plugins, epics = {}, epicWrapper = defaultEpicWrapper) => {
         const pluginEpics = assign({}, getEpics(plugins), epics);
-        return combineEpics( ...Object.keys(pluginEpics).map(k => pluginEpics[k]));
+        return combineEpics( ...Object.keys(pluginEpics).map(k => pluginEpics[k]).map(epicWrapper));
     },
     getReducers,
     filterState,

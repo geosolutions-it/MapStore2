@@ -126,6 +126,7 @@
     "react-dom": "15.4.2",
     "react-draggable": "2.2.3",
     "react-dropzone": "3.4.0",
+    "react-input-autosize": "1.1.0",
     "react-intl": "2.2.3",
     "react-joyride": "1.10.1",
     "react-nouislider": "1.11.0",

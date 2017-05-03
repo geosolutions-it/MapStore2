@@ -108,6 +108,7 @@
           "framework" : [
             "web/client/components/index.jsdoc",
             "web/client/components/buttons/FullScreenButton.jsx",
+            "web/client/components/buttons/GlobeViewSwitcherButton.jsx",
             "web/client/components/buttons/GoFullButton.jsx",
             "web/client/components/mapcontrols/search/SearchBar.jsx",
             "web/client/components/buttons/ToggleButton.jsx",
@@ -116,16 +117,22 @@
             "web/client/actions/index.jsdoc",
             "web/client/actions/controls.js",
             "web/client/actions/fullscreen.js",
+            "web/client/actions/globeswitcher.js",
             "web/client/actions/maps.js",
+            "web/client/actions/maptype.js",
             "web/client/actions/search.js",
 
             "web/client/reducers/index.jsdoc",
             "web/client/reducers/controls.js",
+            "web/client/reducers/globeswitcher.js",
             "web/client/reducers/maps.js",
+            "web/client/reducers/maptype.js",
             "web/client/reducers/search.js",
 
             "web/client/epics/index.jsdoc",
             "web/client/epics/fullscreen.js",
+            "web/client/epics/globeswitcher.js",
+            "web/client/epics/maptype.js",
             "web/client/epics/search.js",
 
             "web/client/utils/index.jsdoc",
@@ -137,6 +144,7 @@
                 "web/client/plugins/index.jsdoc",
                 "web/client/plugins/BackgroundSwitcher.jsx",
                 "web/client/plugins/DrawerMenu.jsx",
+                "web/client/plugins/GlobeViewSwitcher.jsx",
                 "web/client/plugins/GoFull.jsx",
                 "web/client/plugins/Map.jsx",
                 "web/client/plugins/FullScreen.jsx",
