@@ -67,7 +67,8 @@ module.exports = {
         TutorialPlugin: require('../plugins/Tutorial'),
         ThemeSwitcherPlugin: require('../plugins/ThemeSwitcher'),
         ScrollTopPlugin: require('../plugins/ScrollTop'),
-        GoFull: require('../plugins/GoFull')
+        GoFull: require('../plugins/GoFull'),
+        GlobeViewSwitcherPlugin: require('../plugins/GlobeViewSwitcher')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,
