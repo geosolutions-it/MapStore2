@@ -193,6 +193,7 @@ var LayersUtils = {
             capabilitiesURL: layer.capabilitiesURL,
             title: layer.title,
             transparent: layer.transparent,
+            tiled: layer.tiled,
             type: layer.type,
             url: layer.url,
             bbox: layer.bbox,

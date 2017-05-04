@@ -29,7 +29,7 @@
             "general": "General",
             "display": "Display",
             "style": "Style",
-            "cache": "Cache",
+            "transparent": "Transparent",
             "cached": "Use cache options",
             "styleCustom": "Use style named \"{value}\"",
             "styleListLoadError": "There was an error loading the styles list",

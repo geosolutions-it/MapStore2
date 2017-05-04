@@ -29,7 +29,7 @@
             "general": "Generale",
             "display": "Visualizzazione",
             "style": "Stile",
-            "cache": "Cache",
+            "transparent": "Trasparenza",
             "cached": "Usa la cache",
             "styleCustom": "Usa stile con nome \"{value}\"",
             "styleListLoadError": "Si è verificato un errore durante il caricamento della lista degli stili",

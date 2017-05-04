@@ -16,7 +16,6 @@ const ConfirmButton = require('../../buttons/ConfirmButton');
 const General = require('./settings/General');
 const Display = require('./settings/Display');
 const WMSStyle = require('./settings/WMSStyle');
-const Cache = require('./settings/Cache');
 const Elevation = require('./settings/Elevation');
 const Portal = require('../../misc/Portal');
 const assign = require('object-assign');
@@ -130,15 +129,6 @@ const SettingsModal = React.createClass({
                     o/>);
         }
     },
-    renderCache() {
-        if (this.props.element.type === "wms") {
-            return (<Cache
-                    element={this.props.element}
-                    key="cache"
-                    onChange={(value) => this.updateParams({tiled: value}, true)}
-                    />);
-        }
-    },
     renderElevationTab() {
         const elevationDim = this.props.getDimension(this.props.element.dimensions, 'elevation');
         if (this.props.element.type === "wms" && this.props.element.dimensions && elevationDim) {
@@ -155,13 +145,11 @@ const SettingsModal = React.createClass({
         const general = this.renderGeneral();
         const display = this.renderDisplay();
         const style = this.renderStyleTab();
-        const cache = this.renderCache();
         const elevation = this.renderElevationTab();
         const availableTabs = [<Tab eventKey={1} title={<Message msgId="layerProperties.general" />}>{general}</Tab>,
                 <Tab eventKey={2} title={<Message msgId="layerProperties.display" />}>{display}</Tab>,
-                <Tab eventKey={3} title={<Message msgId="layerProperties.style" />} disabled={!style} >{style}</Tab>,
-                <Tab eventKey={4} title={<Message msgId="layerProperties.cache" />} >{cache}</Tab>]
-            .concat(elevation ? [<Tab eventKey={5} title={<Message msgId="layerProperties.elevation" />}>{elevation}</Tab>] : []);
+                <Tab eventKey={3} title={<Message msgId="layerProperties.style" />} disabled={!style} >{style}</Tab>]
+            .concat(elevation ? [<Tab eventKey={4} title={<Message msgId="layerProperties.elevation" />}>{elevation}</Tab>] : []);
         const tabs = <Tabs defaultActiveKey={1} id="layerProperties-tabs">{availableTabs}</Tabs>;
         const footer = (<span role="footer">
             {this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} onClick={this.onClose}>{this.props.closeText}</Button> : <span/>}
