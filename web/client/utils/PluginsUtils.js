@@ -50,7 +50,7 @@ const parseExpression = (state = {}, context = {}, value) => {
 /*eslint-enable */
 /**
  * Parses a expression string "{some javascript}" and evaluate it.
- * The expression will be evalueted getting as parameters the state and the context and the request.
+ * The expression will be evaluated getting as parameters the state and the context and the request.
  * @memberof utils.PluginsUtils
  * @param  {object} state      the state context
  * @param  {object} context    the context element
