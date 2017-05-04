@@ -75,13 +75,15 @@ Layers.registerType('tileprovider', (options) => {
         const isCORS = useCORS.reduce((found, current) => found || url.indexOf(current) === 0, false);
         proxy = !isCORS && proxyUrl;
     }
+    const cr = opt.credits;
+    let credit = cr ? new Cesium.Credit(cr.text, cr.imageUrl, cr.link) : opt.attribution;
     return new Cesium.UrlTemplateImageryProvider({
         url: template(url, opt),
         enablePickFeatures: false,
         subdomains: opt.subdomains,
         maximumLevel: opt.maxZoom,
         minimumLevel: opt.minZoom,
-        credit: opt.attribution,
+        credit,
         proxy: proxy && opt.noCors ? new TileProviderProxy(proxyUrl) : new NoProxy()
     });
 });
