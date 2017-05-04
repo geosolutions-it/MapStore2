@@ -15,10 +15,10 @@ const QUERY_CREATE = 'QUERY_CREATE';
 const QUERY_RESULT = 'QUERY_RESULT';
 const QUERY_ERROR = 'QUERY_ERROR';
 const RESET_QUERY = 'RESET_QUERY';
+const QUERY = 'QUERY';
 
 const axios = require('../libs/ajax');
 const {toggleControl, setControlProperty} = require('./controls');
-const FilterUtils = require('../utils/FilterUtils');
 const {reset} = require('./queryform');
 
 function featureTypeSelected(url, typeName) {
@@ -103,6 +103,16 @@ function createQuery(searchUrl, filterObj) {
     };
 }
 
+function query(searchUrl, filterObj, retry) {
+    return {
+        type: QUERY,
+        searchUrl,
+        filterObj,
+        retry
+    };
+}
+
+/*
 function query(searchUrl, filterObj) {
     createQuery(searchUrl, filterObj);
     let data;
@@ -113,13 +123,14 @@ function query(searchUrl, filterObj) {
             FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits) :
             FilterUtils.toCQLFilter(filterObj);
     }
+    console.log(filterObj.sortOptions);
     return (dispatch, getState) => {
         let state = getState();
         if (state.controls && state.controls.queryPanel && state.controls.drawer && state.controls.drawer.enabled && state.query && state.query.open) {
             dispatch(setControlProperty('drawer', 'enabled', false));
             dispatch(setControlProperty('drawer', 'disabled', true));
         }
-        return axios.post(searchUrl + '?service=WFS&&outputFormat=json', data, {
+        return axios.post(searchUrl + '?service=WFS&outputFormat=json', data, {
           timeout: 60000,
           headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
         }).then((response) => {
@@ -129,7 +140,7 @@ function query(searchUrl, filterObj) {
         });
     };
 }
-
+*/
 function resetQuery() {
     return {
         type: RESET_QUERY
@@ -175,14 +186,18 @@ module.exports = {
     QUERY_RESULT,
     QUERY_ERROR,
     RESET_QUERY,
+    QUERY,
     featureTypeSelected,
     featureTypeLoaded,
     featureTypeError,
+    featureError,
     loadFeature,
     createQuery,
     query,
     featureClose,
     resetQuery,
     toggleQueryPanel,
-    closeResponse
+    closeResponse,
+    queryError,
+    querySearchResponse
 };
