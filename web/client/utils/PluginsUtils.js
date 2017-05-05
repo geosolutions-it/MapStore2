@@ -144,9 +144,9 @@ const pluginsMergeProps = (stateProps, dispatchProps, ownProps) => {
 };
 /**
  * default wrapper for the epics.
- * @param epic  the epic to wrap
- * @return the epic wrapped with error catch and re-subscribe functionalities.S
  * @memberof utils.PluginsUtils
+ * @param {epic} epic the epic to wrap
+ * @return {epic} epic wrapped with error catch and re-subscribe functionalities.S
  */
 const defaultEpicWrapper = epic => (...args) =>
   epic(...args).catch((error, source) => {
