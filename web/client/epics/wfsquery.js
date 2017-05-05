@@ -9,8 +9,9 @@
 const Rx = require('rxjs');
 const axios = require('../libs/ajax');
 const {changeSpatialAttribute} = require('../actions/queryform');
-const {FEATURE_TYPE_SELECTED, QUERY, featureTypeLoaded, featureTypeError, query, createQuery, querySearchResponse, queryError, featureClose} = require('../actions/wfsquery');
+const {FEATURE_TYPE_SELECTED, QUERY, featureTypeLoaded, featureTypeError, createQuery, querySearchResponse, queryError, featureClose} = require('../actions/wfsquery');
 const FilterUtils = require('../utils/FilterUtils');
+const assign = require('object-assign');
 const {isString} = require('lodash');
 const {TOGGLE_CONTROL, setControlProperty} = require('../actions/controls');
 
@@ -20,7 +21,9 @@ const types = {
     'xsd:number': 'number',
     'xsd:int': 'number'
 };
+
 const fieldConfig = {};
+
 const extractInfo = (data) => {
     return {
         geometry: data.featureTypes[0].properties
@@ -54,6 +57,55 @@ const extractInfo = (data) => {
     };
 };
 
+const getWFSFilterData = (filterObj) => {
+    let data;
+    if (typeof filterObj === 'string') {
+        data = filterObj;
+    } else {
+        data = filterObj.filterType === "OGC" ?
+            FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits) :
+            FilterUtils.toCQLFilter(filterObj);
+    }
+    return data;
+};
+
+const getWFSFeature = (searchUrl, filterObj) => {
+    const data = getWFSFilterData(filterObj);
+    return Rx.Observable.defer( () =>
+        axios.post(searchUrl + '?service=WFS&outputFormat=json', data, {
+          timeout: 60000,
+          headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
+     }));
+};
+
+const getWFSResponseException = (response, code) => {
+    const {unmarshaller} = require('../utils/ogc/WFS');
+    const json = isString(response.data) ? unmarshaller.unmarshalString(response.data) : null;
+    return json && json.value && json.value.exception && json.value.exception[0] && json.value.exception[0].TYPE_NAME === 'OWS_1_0_0.ExceptionType' && json.value.exception[0].exceptionCode === code;
+};
+
+const getFirstAttribute = (state)=> {
+    return state.query && state.query.featureTypes && state.query.featureTypes[state.query.typeName] && state.query.featureTypes[state.query.typeName].attributes && state.query.featureTypes[state.query.typeName].attributes[0] && state.query.featureTypes[state.query.typeName].attributes[0].attribute || null;
+};
+
+const getDefaultSortOptions = (attribute) => {
+    return attribute ? { sortBy: attribute, sortOrder: 'A'} : {};
+};
+
+const retryWithForcedSortOptions = (action, store) => {
+    const sortOptions = getDefaultSortOptions(getFirstAttribute(store.getState()));
+    return getWFSFeature(action.searchUrl, assign(action.filterObj, {
+            sortOptions
+        }))
+        .map((newResponse) => {
+            const newError = getWFSResponseException(newResponse, 'NoApplicableCode');
+            return !newError ? querySearchResponse(newResponse.data, action.searchUrl, action.filterObj) : queryError('No sortable request');
+        })
+        .catch((e) => {
+            return Rx.Observable.of(queryError(e));
+        });
+};
+
 const featureTypeSelectedEpic = action$ =>
     action$.ofType(FEATURE_TYPE_SELECTED).switchMap(action => {
         return Rx.Observable.defer( () =>
@@ -75,37 +127,28 @@ const featureTypeSelectedEpic = action$ =>
         .catch(e => Rx.Observable.of(featureTypeError(action.typeName, e.message)));
     });
 
+/**
+ * Gets every `QUERY` event.
+ * @param {external:Observable} action$ manages `QUERY`.
+ * @memberof epics.wfsquery
+ * @return {external:Observable} emitting {@link #actions.wfsquery.querySearchResponse} events
+ */
+
 const wfsQueryEpic = (action$, store) =>
     action$.ofType(QUERY).switchMap(action => {
-        const {unmarshaller} = require('../utils/ogc/WFS');
-        const state = store.getState();
 
-        let data;
-        if (typeof action.filterObj === 'string') {
-            data = action.filterObj;
-        } else {
-            const sortOptions = action.retry ? { sortBy: state.query.featureTypes[state.query.typeName].attributes[0].attribute, sortOrder: 'A'} : action.filterObj.sortOptions;
-            data = action.filterObj.filterType === "OGC" ?
-                FilterUtils.toOGCFilter(action.filterObj.featureTypeName, action.filterObj, action.filterObj.ogcVersion, sortOptions, action.filterObj.hits) :
-                FilterUtils.toCQLFilter(action.filterObj);
-        }
         return Rx.Observable.merge(
             Rx.Observable.of(createQuery(action.searchUrl, action.filterObj)),
             Rx.Observable.of(setControlProperty('drawer', 'enabled', false)),
-            Rx.Observable.defer( () =>
-                axios.post(action.searchUrl + '?service=WFS&outputFormat=json', data, {
-                  timeout: 60000,
-                  headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
-                }))
-            .map((response) => {
-                const json = isString(response.data) ? unmarshaller.unmarshalString(response.data) : null;
-                const error = json && json.value && json.value.exception && json.value.exception[0] && json.value.exception[0].TYPE_NAME === 'OWS_1_0_0.ExceptionType' && json.value.exception[0].exceptionCode === 'NoApplicableCode';
-
-                let obs = error ? Rx.Observable.of(query(action.searchUrl, action.filterObj, true)) : Rx.Observable.of(querySearchResponse(response.data, action.searchUrl, action.filterObj));
-                obs = action.retry && error ? Rx.Observable.of(queryError('No sortable request')) : obs;
-                return obs;
+            getWFSFeature(action.searchUrl, action.filterObj)
+            .switchMap((response) => {
+                // try to guess if it was a missing id error and try to search again with forced sortOptions
+                const error = getWFSResponseException(response, 'NoApplicableCode');
+                if (error) {
+                    return retryWithForcedSortOptions(action, store);
+                }
+                return Rx.Observable.of(querySearchResponse(response.data, action.searchUrl, action.filterObj));
             })
-            .mergeAll()
             .catch((e) => {
                 return Rx.Observable.of(queryError(e));
             })
@@ -116,6 +159,12 @@ const closeFeatureEpic = action$ =>
     action$.ofType(TOGGLE_CONTROL).switchMap(action => {
         return action.control && action.control === 'drawer' ? Rx.Observable.of(featureClose()) : Rx.Observable.empty();
     });
+
+/**
+ * Epics for wfs query functionality
+ * @name epics.wfsquery
+ * @type {Object}
+ */
 
 module.exports = {
     featureTypeSelectedEpic,
