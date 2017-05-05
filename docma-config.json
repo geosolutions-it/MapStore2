@@ -63,12 +63,10 @@
                     "label": "Reference",
                     "items": [
                         { "label": "Framework", "href": "api/framework"},
-
                         { "separator": true },
                         { "label": "JavaScript API", "href": "api/jsapi" },
                         { "separator": true },
                         { "label": "Plugins", "href": "api/plugins" }
-
                     ]
                 },
                 {
@@ -105,7 +103,7 @@
     },
     "src": [
         {
-          "framework" : [
+          "framework": [
             "web/client/components/index.jsdoc",
             "web/client/components/buttons/FullScreenButton.jsx",
             "web/client/components/buttons/GlobeViewSwitcherButton.jsx",

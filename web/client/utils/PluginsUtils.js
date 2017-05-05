@@ -50,7 +50,7 @@ const parseExpression = (state = {}, context = {}, value) => {
 /*eslint-enable */
 /**
  * Parses a expression string "{some javascript}" and evaluate it.
- * The expression will be evalueted getting as parameters the state and the context and the request.
+ * The expression will be evaluated getting as parameters the state and the context and the request.
  * @memberof utils.PluginsUtils
  * @param  {object} state      the state context
  * @param  {object} context    the context element
@@ -144,9 +144,9 @@ const pluginsMergeProps = (stateProps, dispatchProps, ownProps) => {
 };
 /**
  * default wrapper for the epics.
- * @param epic  the epic to wrap
- * @return the epic wrapped with error catch and re-subscribe functionalities.S
  * @memberof utils.PluginsUtils
+ * @param {epic} epic the epic to wrap
+ * @return {epic} epic wrapped with error catch and re-subscribe functionalities.S
  */
 const defaultEpicWrapper = epic => (...args) =>
   epic(...args).catch((error, source) => {

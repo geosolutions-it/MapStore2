@@ -3,6 +3,10 @@ const CONFIGPROVIDER = {
             url: '//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             options: {
                 maxZoom: 19,
+                credits: {
+                    text: '© OpenStreetMap, Open Street Map and contributors, CC-BY-SA',
+                    link: 'http://www.openstreetmap.org/copyright'
+                },
                 attribution:
                     '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             },
@@ -37,7 +41,11 @@ const CONFIGPROVIDER = {
         OpenSeaMap: {
             url: 'http://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
             options: {
-                attribution: 'Map data: &copy; <a href="http://www.openseamap.org">OpenSeaMap</a> contributors'
+                attribution: 'Map data: &copy; <a href="http://www.openseamap.org">OpenSeaMap</a> contributors',
+                credits: {
+                    text: 'Map data: © OpenSeaMap contributors',
+                    link: 'http://www.openseamap.org'
+                }
             }
         },
         OpenTopoMap: {
@@ -45,14 +53,21 @@ const CONFIGPROVIDER = {
             options: {
                 noCors: true,
                 maxZoom: 16,
-                attribution: 'Map data: {attribution.OpenStreetMap}, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+                attribution: 'Map data: {attribution.OpenStreetMap}, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+                credits: {
+                    text: 'Map data: OpenStreetMap contributors CC-BY-SA',
+                    link: 'https://opentopomap.org'
+                }
             }
         },
         Thunderforest: {
             url: '//{s}.tile.thunderforest.com/{variant}/{z}/{x}/{y}.png',
             options: {
-                attribution:
-                    '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, {attribution.OpenStreetMap}',
+                attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, {attribution.OpenStreetMap}',
+                credits: {
+                    text: 'Map data: OpenCycleMap contributors',
+                    link: 'http://www.opencyclemap.org'
+                },
                 variant: 'cycle'
             },
             variants: {
@@ -78,6 +93,9 @@ const CONFIGPROVIDER = {
             options: {
                 maxZoom: 20,
                 variant: 'roads',
+                credits: {
+                    text: 'MapQuest, Open Street Map and contributors, CC-BY-SA'
+                },
                 attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data {attribution.OpenStreetMap}'
             },
             variants: {
@@ -157,6 +175,9 @@ const CONFIGPROVIDER = {
                     'Map tiles by <a href="http://stamen.com">Stamen Design</a>, ' +
                     '<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; ' +
                     'Map data {attribution.OpenStreetMap}',
+                credits: {
+                    text: 'Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA'
+                },
                 subdomains: 'abcd',
                 minZoom: 0,
                 maxZoom: 20,
@@ -493,6 +514,9 @@ const CONFIGPROVIDER = {
                 attribution:
                     'Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System ' +
                     '(<a href="https://earthdata.nasa.gov">ESDIS</a>) with funding provided by NASA/HQ.',
+                credits: {
+                    text: 'Black Marble imagery courtesy NASA Earth Observatory'
+                },
                 bounds: [[-85.0511287776, -179.999999975], [85.0511287776, 179.999999975]],
                 minZoom: 1,
                 maxZoom: 9,

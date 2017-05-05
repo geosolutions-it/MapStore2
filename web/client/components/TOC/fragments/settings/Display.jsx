@@ -9,7 +9,7 @@
 const React = require('react');
 
 const Slider = require('react-nouislider');
-const {Label} = require('react-bootstrap');
+const {Label, Checkbox} = require('react-bootstrap');
 const {DropdownList} = require('react-widgets');
 const Message = require('../../../I18N/Message');
 require('react-widgets/lib/less/react-widgets.less');
@@ -45,9 +45,15 @@ module.exports = React.createClass({
             <Label key="opacity-percent" >{Math.round(this.props.settings.options.opacity * 100) + "%"}</Label>
             </div>
             {this.props.element.type === "wms" ?
-                [(<div key="transparent-check"><input type="checkbox" key="transparent" checked={this.props.element && (this.props.element.transparent === undefined ? true : this.props.element.transparent)}
-                onChange={(event) => {this.props.onChange("transparent", event.target.checked); }}/>
-            <label key="transparent-label" className="control-label">Transparent</label></div>)] : null}
+                [(<div key="transparent-check">
+                    <Checkbox key="transparent" checked={this.props.element && (this.props.element.transparent === undefined ? true : this.props.element.transparent)} onChange={(event) => {this.props.onChange("transparent", event.target.checked); }}>
+                        <Message msgId="layerProperties.transparent"/></Checkbox>
+                    <Checkbox key="cache" value="tiled" key="tiled"
+                        onChange={(e) => this.props.onChange("tiled", e.target.checked)}
+                        checked={this.props.element && this.props.element.tiled !== undefined ? this.props.element.tiled : true} >
+                        <Message msgId="layerProperties.cached"/>
+                    </Checkbox>
+                </div>)] : null}
         </div>);
     }
 });
