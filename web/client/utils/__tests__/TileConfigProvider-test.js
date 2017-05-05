@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -25,6 +25,16 @@ describe('TileConfigProvider', () => {
     it('test getLayerConfig with variant', () => {
         const config = TileConfigProvider.getLayerConfig('Thunderforest.OpenCycleMap');
         expect(config).toExist();
+    });
+    it('test getLayerConfig with variant with variant optins', () => {
+        const config = TileConfigProvider.getLayerConfig('Thunderforest.Transport');
+        expect(config).toExist();
+        expect(config.options).toExist();
+    });
+    it('test getLayerConfig forceHTTP', () => {
+        const config = TileConfigProvider.getLayerConfig('OpenStreetMap');
+        expect(config).toExist();
+        expect(config.url.indexOf('http:')).toBe(0);
     });
 
 

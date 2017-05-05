@@ -76,7 +76,7 @@ Layers.registerType('tileprovider', (options) => {
         proxy = !isCORS && proxyUrl;
     }
     const cr = opt.credits;
-    let credit = cr ? new Cesium.Credit(cr.text, cr.imageUrl, cr.link) : opt.attribution;
+    const credit = cr ? new Cesium.Credit(cr.text, cr.imageUrl, cr.link) : opt.attribution;
     return new Cesium.UrlTemplateImageryProvider({
         url: template(url, opt),
         enablePickFeatures: false,
