@@ -47,7 +47,6 @@ const getElevationDimension = (dimensions = []) => {
     return dimensions.reduce((previous, dim) => {
         return (dim.name.toLowerCase() === 'elevation' || dim.name.toLowerCase() === 'depth') ?
             assign({
-                showChart: true,
                 positive: dim.name.toLowerCase() === 'elevation'
             }, dim, {
                 name: dim.name.toLowerCase() === 'elevation' ? dim.name : 'DIM_' + dim.name
