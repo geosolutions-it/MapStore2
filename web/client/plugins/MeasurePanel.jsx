@@ -12,10 +12,8 @@ const {Glyphicon} = require('react-bootstrap');
 const Message = require('./locale/Message');
 
 const assign = require('object-assign');
-const {createSelector} = require('reselect');
 const {changeMeasurement} = require('../actions/measurement');
-const {toggleControl} = require('../actions/controls');
-const {MeasureDialog} = require('./measure');
+const {MeasureComponent} = require('./measure');
 
 const selector = (state) => {
     return {
@@ -25,40 +23,43 @@ const selector = (state) => {
         bearingMeasureEnabled: state.measurement && state.measurement.bearingMeasureEnabled || false
     };
 };
-const toggleMeasureTool = toggleControl.bind(null, 'measure', null);
 /**
- * Measure plugin. Allows to show the tool to measure dinstances, areas and bearing.
+ * MeasurePanel plugin. Shows the measure tool in the TOC. This is an old version of measure tool that will be removed soon.
  * @class
- * @name Measure
+ * @name MeasurePanel
  * @memberof plugins
- * @prop {boolean} showResults shows the measure in the panel itself.
+ * @deprecated since version 2017.03.01
+ * @prop {boolean} showResults shows the measure in the panel itself. It can be disabled if you are using a plugin like MeasureResults to show the results
  */
-const Measure = connect(
-    createSelector([
-            selector,
-            (state) => state && state.controls && state.controls.measure && state.controls.measure.enabled
-        ],
-        (measure, show) => ({
-            show,
-            ...measure
-        }
-    )),
-    {
-        toggleMeasure: changeMeasurement,
-        onClose: toggleMeasureTool
-    }, null, {pure: false})(MeasureDialog);
+const MeasurePanelPlugin = connect(selector, {
+    toggleMeasure: changeMeasurement
+}, null, {pure: false})(MeasureComponent);
 
 module.exports = {
-    MeasurePlugin: assign(Measure, {
-        BurgerMenu: {
+    MeasurePanelPlugin: assign(MeasurePanelPlugin, {
+        Toolbar: {
             name: 'measurement',
             position: 9,
-            panel: false,
+            panel: true,
+            exclusive: true,
+            wrap: true,
             help: <Message msgId="helptexts.measureComponent"/>,
             tooltip: "measureComponent.tooltip",
-            text: <Message msgId="measureComponent.Measure"/>,
             icon: <Glyphicon glyph="1-ruler"/>,
-        action: toggleMeasureTool
+            title: "measureComponent.title",
+            priority: 1
+        },
+        DrawerMenu: {
+            name: 'measurement',
+            position: 3,
+            glyph: "1-ruler",
+            title: 'measureComponent.title',
+            showPanel: false,
+            buttonConfig: {
+                buttonClassName: "square-button no-border",
+                tooltip: "toc.measure"
+            },
+            priority: 2
         }
     }),
     reducers: {measurement: require('../reducers/measurement')}
