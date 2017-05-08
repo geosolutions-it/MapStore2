@@ -12,6 +12,7 @@
     "ignoreMobileCss": true,
     "useAuthenticationRules": true,
     "themePrefix": "ms2",
+    "monitorState": [{"name": "mapType", "path": "mapType.mapType"}],
     "defaultMapOptions": {
       "cesium": {
           "flyTo": true,
@@ -126,6 +127,7 @@
             },
             "MadeWithLove", {
                 "name": "Locate",
+                "showIn": "{state('mapType') !== 'cesium' ? ['Toolbar'] : []}",
                 "override": {
                     "Toolbar": {
                         "alwaysVisible": true
@@ -137,8 +139,15 @@
                     "activateQueryTool": true
                 }
             }, "Tutorial", "BackgroundSwitcher", {
-                "name": "Measure"
-            }, "Print", "ShapeFile", {
+                "name": "Measure",
+                "showIn": "{state('mapType') !== 'cesium' ? ['BurgerMenu'] : []}"
+            }, {
+              "name": "Print",
+              "showIn": "{state('mapType') !== 'cesium' ? ['BurgerMenu'] : []}"
+            }, {
+              "name": "ShapeFile",
+              "showIn": "{state('mapType') !== 'cesium' ? ['BurgerMenu'] : []}"
+            }, {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true
@@ -173,7 +182,10 @@
                 },
                 "isDefault": false
             },
-            "ScaleBox", "ZoomAll", {
+            {
+              "name": "ScaleBox",
+              "hide": "{state('mapType') === 'cesium'}"
+            }, "ZoomAll", {
                 "name": "MapLoading",
                 "override": {
                     "Toolbar": {
@@ -182,6 +194,7 @@
                 }
             }, {
                 "name": "ZoomIn",
+                "showIn": "{state('mapType') !== 'cesium' ? ['Toolbar'] : []}",
                 "override": {
                     "Toolbar": {
                         "alwaysVisible": true
@@ -189,6 +202,7 @@
                 }
             }, {
                 "name": "ZoomOut",
+                "showIn": "{state('mapType') !== 'cesium' ? ['Toolbar'] : []}",
                 "override": {
                     "Toolbar": {
                         "alwaysVisible": true
