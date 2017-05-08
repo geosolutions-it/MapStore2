@@ -9,8 +9,8 @@
 const React = require('react');
 const {Panel, ButtonGroup, Tooltip, Glyphicon, Button} = require('react-bootstrap');
 const ToggleButton = require('../../buttons/ToggleButton');
-var NumberFormat = require('../../I18N/Number');
-var Message = require('../../I18N/Message');
+const NumberFormat = require('../../I18N/Number');
+const Message = require('../../I18N/Message');
 
 const measureUtils = require('../../../utils/MeasureUtils');
 const localeUtils = require('../../../utils/LocaleUtils');
