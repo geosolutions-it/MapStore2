@@ -20,18 +20,20 @@ module.exports = React.createClass({
         elevations: React.PropTypes.object,
         onChange: React.PropTypes.func,
         appState: React.PropTypes.object,
-        chartStyle: React.PropTypes.object
+        chartStyle: React.PropTypes.object,
+        showElevationChart: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
-            onChange: () => {}
+            onChange: () => {},
+            showElevationChart: true
         };
     },
     shouldComponentUpdate(nextProps) {
         return this.props.element.id !== nextProps.element.id;
     },
     renderElevationsChart(elevations) {
-        if (this.props.elevations.showChart) {
+        if (this.props.showElevationChart) {
             return (
                 <ElevationChart
                     elevations={elevations}
@@ -66,7 +68,7 @@ module.exports = React.createClass({
                             }
                         }
                     }}
-                    tooltips={!this.props.elevations.showChart}
+                    tooltips={!this.props.showElevationChart}
                     onChange={(value) => {
                         this.props.onChange("params", Object.assign({}, {
                             [this.props.elevations.name]: value[0]

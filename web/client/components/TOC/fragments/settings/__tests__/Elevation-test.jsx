@@ -40,7 +40,6 @@ describe('test Layer Properties Elevation component', () => {
               name: "ELEVATION",
               units: "Meters",
               positive: false,
-              showChart: true,
               values: ["1.5", "5.0", "10.0", "15.0", "20.0", "25.0", "30.0"]
             }
         };
