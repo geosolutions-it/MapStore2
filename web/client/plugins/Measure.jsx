@@ -13,6 +13,7 @@ const Message = require('./locale/Message');
 
 const assign = require('object-assign');
 const {createSelector} = require('reselect');
+const {isCesium} = require('../selectors/maptype');
 const {changeMeasurement} = require('../actions/measurement');
 const {toggleControl} = require('../actions/controls');
 const {MeasureDialog} = require('./measure');
@@ -36,7 +37,7 @@ const toggleMeasureTool = toggleControl.bind(null, 'measure', null);
 const Measure = connect(
     createSelector([
             selector,
-            (state) => state && state.controls && state.controls.measure && state.controls.measure.enabled
+            (state) => !isCesium(state) && state && state.controls && state.controls.measure && state.controls.measure.enabled
         ],
         (measure, show) => ({
             show,
@@ -52,6 +53,7 @@ module.exports = {
     MeasurePlugin: assign(Measure, {
         BurgerMenu: {
             name: 'measurement',
+            display: params => params.mapType !== "cesium",
             position: 9,
             panel: false,
             help: <Message msgId="helptexts.measureComponent"/>,

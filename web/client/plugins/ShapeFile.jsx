@@ -52,6 +52,7 @@ module.exports = {
     }, enabler: (state) => state.shapefile && state.shapefile.enabled || state.toolbar && state.toolbar.active === 'shapefile'}, {
         Toolbar: {
             name: 'shapefile',
+            display: options => options.mapType !== "cesium",
             position: 9,
             panel: true,
             help: <Message msgId="helptexts.shapefile"/>,
@@ -64,6 +65,7 @@ module.exports = {
         },
         BurgerMenu: {
             name: 'shapefile',
+            display: options => options.mapType !== "cesium",
             position: 4,
             text: <Message msgId="shapefile.title"/>,
             icon: <Glyphicon glyph="upload"/>,

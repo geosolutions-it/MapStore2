@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -9,16 +9,33 @@ const React = require('react');
 const {connect} = require('react-redux');
 
 const {changeLocateState} = require('../actions/locate');
-
+const {createSelector} = require('reselect');
+const {isCesium} = require('../selectors/maptype');
 const Message = require('./locale/Message');
 
 const {Glyphicon} = require('react-bootstrap');
 
 const assign = require('object-assign');
+const locateStateSelector = (state) => state.locate && state.locate.state || 'DISABLED';
 
-const LocatePlugin = connect((state) => ({
-    locate: state.locate && state.locate.state || 'DISABLED'
-}), {
+const selector = createSelector(locateStateSelector, isCesium, (locate, forceDisabled) => ({
+    locate: forceDisabled ? "PERMISSION_DENIED" : locate
+}));
+
+/**
+  * Locate Plugin. Provides button to locate the user's position on the map.
+  * By deafault it will follow the user until he moves the map. He can click again to
+  * restore the following mode.
+  * @class  Locate
+  * @memberof plugins
+  * @static
+  *
+  * @prop {string} cfg.style CSS to apply to the button
+  * @prop {string} cfg.text The button text, if any
+  * @prop {string} cfg.className the class name for the button
+  *
+  */
+const LocatePlugin = connect(selector, {
     onClick: changeLocateState
 })(require('../components/mapcontrols/locate/LocateBtn'));
 

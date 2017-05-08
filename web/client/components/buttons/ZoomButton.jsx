@@ -13,6 +13,7 @@ const ZoomButton = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
         style: React.PropTypes.object,
+        hide: React.PropTypes.bool,
         glyphicon: React.PropTypes.string,
         text: React.PropTypes.string,
         btnSize: React.PropTypes.oneOf(['large', 'small', 'xsmall']),
@@ -43,7 +44,7 @@ const ZoomButton = React.createClass({
         };
     },
     render() {
-        return this.addTooltip(
+        return !this.props.hide && this.addTooltip(
             <Button
                 id={this.props.id}
                 style={this.props.style}
