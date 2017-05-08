@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -25,6 +25,7 @@ const selector = (state) => {
 };
 /**
  * MeasurePanel plugin. Shows the measure tool in the TOC. This is an old version of measure tool that will be removed soon.
+ * @class
  * @name MeasurePanel
  * @memberof plugins
  * @deprecated since version 2017.03.01

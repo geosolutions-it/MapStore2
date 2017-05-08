@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -46,7 +46,8 @@ const MeasureComponent = React.createClass({
 /**
  * MeasureResults plugin. Shows the measure results. This is an old version of measure tool that will be removed soon.
  * It should be used with the MeasurePanel plugin
- * @name MeasureResultsPlugin
+ * @class
+ * @name MeasureResults
  * @memberof plugins
  * @deprecated since version 2017.03.01
  */

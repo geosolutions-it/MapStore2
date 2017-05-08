@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -28,7 +28,8 @@ const selector = (state) => {
 const toggleMeasureTool = toggleControl.bind(null, 'measure', null);
 /**
  * Measure plugin. Allows to show the tool to measure dinstances, areas and bearing.
- * @name MeasurePanel
+ * @class
+ * @name Measure
  * @memberof plugins
  * @prop {boolean} showResults shows the measure in the panel itself.
  */
