@@ -106,6 +106,13 @@ const retryWithForcedSortOptions = (action, store) => {
         });
 };
 
+/**
+ * Gets the WFS feature type attributes and geometry when the feature has been selected
+ * @param {Observable} action$ manages `FEATURE_TYPE_SELECTED`
+ * @memberof epics.wfsquery
+ * @return {Observable}
+ */
+
 const featureTypeSelectedEpic = action$ =>
     action$.ofType(FEATURE_TYPE_SELECTED).switchMap(action => {
         return Rx.Observable.defer( () =>
@@ -128,10 +135,11 @@ const featureTypeSelectedEpic = action$ =>
     });
 
 /**
- * Gets every `QUERY` event.
- * @param {external:Observable} action$ manages `QUERY`.
+ * Sends a WFS query, returns a response or handles request error
+ * in particular the NoApplicableCode WFS error with a forced sort option on the first attribute
+ * @param {Observable} action$ manages `QUERY`
  * @memberof epics.wfsquery
- * @return {external:Observable} emitting {@link #actions.wfsquery.querySearchResponse} events
+ * @return {Observable}
  */
 
 const wfsQueryEpic = (action$, store) =>
@@ -155,16 +163,23 @@ const wfsQueryEpic = (action$, store) =>
         );
     });
 
+/**
+ * Closes the feature grid when the drawer menu button has been toggled
+ * @param {Observable} action$ manages `TOGGLE_CONTROL`
+ * @memberof epics.wfsquery
+ * @return {Observable}
+ */
+
 const closeFeatureEpic = action$ =>
     action$.ofType(TOGGLE_CONTROL).switchMap(action => {
         return action.control && action.control === 'drawer' ? Rx.Observable.of(featureClose()) : Rx.Observable.empty();
     });
 
-/**
- * Epics for wfs query functionality
- * @name epics.wfsquery
- * @type {Object}
- */
+ /**
+  * Epics for WFS query requests
+  * @name epics.wfsquery
+  * @type {Object}
+  */
 
 module.exports = {
     featureTypeSelectedEpic,

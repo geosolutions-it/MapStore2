@@ -112,35 +112,6 @@ function query(searchUrl, filterObj, retry) {
     };
 }
 
-/*
-function query(searchUrl, filterObj) {
-    createQuery(searchUrl, filterObj);
-    let data;
-    if (typeof filterObj === 'string') {
-        data = filterObj;
-    } else {
-        data = filterObj.filterType === "OGC" ?
-            FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits) :
-            FilterUtils.toCQLFilter(filterObj);
-    }
-    console.log(filterObj.sortOptions);
-    return (dispatch, getState) => {
-        let state = getState();
-        if (state.controls && state.controls.queryPanel && state.controls.drawer && state.controls.drawer.enabled && state.query && state.query.open) {
-            dispatch(setControlProperty('drawer', 'enabled', false));
-            dispatch(setControlProperty('drawer', 'disabled', true));
-        }
-        return axios.post(searchUrl + '?service=WFS&outputFormat=json', data, {
-          timeout: 60000,
-          headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
-        }).then((response) => {
-            dispatch(querySearchResponse(response.data, searchUrl, filterObj));
-        }).catch((e) => {
-            dispatch(queryError(e));
-        });
-    };
-}
-*/
 function resetQuery() {
     return {
         type: RESET_QUERY
