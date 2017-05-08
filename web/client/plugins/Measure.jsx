@@ -15,7 +15,7 @@ const assign = require('object-assign');
 const {createSelector} = require('reselect');
 const {changeMeasurement} = require('../actions/measurement');
 const {toggleControl} = require('../actions/controls');
-const {MeasureDialog} = require('./measure');
+const {MeasureDialog} = require('./measure/index');
 
 const selector = (state) => {
     return {
