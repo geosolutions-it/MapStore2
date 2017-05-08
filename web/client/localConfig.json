@@ -137,11 +137,8 @@
                     "activateQueryTool": true
                 }
             }, "Tutorial", "BackgroundSwitcher", {
-                "name": "Measure",
-                "cfg": {
-                    "showResults": false
-                }
-            }, "MeasureResults", "Print", "ShapeFile", {
+                "name": "Measure"
+            }, "Print", "ShapeFile", {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true
