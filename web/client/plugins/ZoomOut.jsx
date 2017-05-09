@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -19,6 +19,16 @@ const {changeZoomLevel} = require('../actions/map');
 
 const Message = require('../components/I18N/Message');
 
+/**
+  * ZoomOut Plugin. Provides button to zoom out
+  * @class  ZoomOut
+  * @memberof plugins
+  * @static
+  *
+  * @prop {object} cfg.style CSS to apply to the button
+  * @prop {string} cfg.className the class name for the button
+  *
+  */
 const ZoomOutButton = connect(selector, {
     onZoom: changeZoomLevel
 })(require('../components/buttons/ZoomButton'));

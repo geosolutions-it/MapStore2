@@ -17,6 +17,16 @@ const {changeZoomLevel} = require('../actions/map');
 
 const Message = require('../components/I18N/Message');
 
+/**
+  * ZoomIn Plugin. Provides button to zoom in
+  * @class  ZoomIn
+  * @memberof plugins
+  * @static
+  *
+  * @prop {object} cfg.style CSS to apply to the button
+  * @prop {string} cfg.className the class name for the button
+  *
+  */
 const ZoomInButton = connect(selector, {
     onZoom: changeZoomLevel
 })(require('../components/buttons/ZoomButton'));

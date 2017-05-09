@@ -120,6 +120,10 @@
             "web/client/actions/maptype.js",
             "web/client/actions/search.js",
 
+            "web/client/selectors/index.jsdoc",
+            "web/client/selectors/map.js",
+
+
             "web/client/reducers/index.jsdoc",
             "web/client/reducers/controls.js",
             "web/client/reducers/globeswitcher.js",
@@ -150,9 +154,13 @@
                 "web/client/plugins/MeasureResults.jsx",
                 "web/client/plugins/FullScreen.jsx",
                 "web/client/plugins/Identify.jsx",
+                "web/client/plugins/Locate.jsx",
                 "web/client/plugins/Login.jsx",
+                "web/client/plugins/ScaleBox.jsx",
                 "web/client/plugins/ScrollTop.jsx",
-                "web/client/plugins/Search.jsx"
+                "web/client/plugins/Search.jsx",
+                "web/client/plugins/ZoomIn.jsx",
+                "web/client/plugins/ZoomOut.jsx"
             ]
         },
         "./docs/**/*md",
