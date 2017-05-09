@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/cesium/Layers');
-var ConfigUtils = require('../../../../utils/ConfigUtils');
-var Cesium = require('../../../../libs/cesium');
-var assign = require('object-assign');
-var {isObject, isArray} = require('lodash');
+const Layers = require('../../../../utils/cesium/Layers');
+const ConfigUtils = require('../../../../utils/ConfigUtils');
+const ProxyUtils = require('../../../../utils/ProxyUtils');
+const Cesium = require('../../../../libs/cesium');
+const assign = require('object-assign');
+const {isArray} = require('lodash');
 
 function getWMSURLs( urls ) {
     return urls.map((url) => url.split("\?")[0]);
@@ -76,17 +77,7 @@ function wmsToCesiumOptions(options) {
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
     if (proxyUrl) {
-        let useCORS = [];
-        if (isObject(proxyUrl)) {
-            useCORS = proxyUrl.useCORS || [];
-            proxyUrl = proxyUrl.url;
-        }
-        let url = options.url;
-        if (isArray(url)) {
-            url = url[0];
-        }
-        const isCORS = useCORS.reduce((found, current) => found || url.indexOf(current) === 0, false);
-        proxy = !isCORS && proxyUrl;
+        proxy = ProxyUtils.needProxy(options.url) && proxyUrl;
     }
     // NOTE: can we use opacity to manage visibility?
     return assign({
