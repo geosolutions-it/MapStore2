@@ -1,10 +1,11 @@
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 const Proj4js = require('proj4');
 const proj4 = Proj4js;
 const assign = require('object-assign');
@@ -48,7 +49,10 @@ function determineCrs(crs) {
     }
     return crs;
 }
-
+/**
+ * Utilities for Coordinates conversion.
+ * @memberof utils
+ */
 const CoordinatesUtils = {
     getUnits: function(projection) {
         const proj = new Proj4js.Proj(projection);
@@ -126,11 +130,9 @@ const CoordinatesUtils = {
     },
     /**
      * Reprojects a bounding box.
-     *
      * @param bbox {array} [minx, miny, maxx, maxy]
      * @param source {string} SRS of the given bbox
      * @param dest {string} SRS of the returned bbox
-     *
      * @return {array} [minx, miny, maxx, maxy]
      */
     reprojectBbox: function(bbox, source, dest, normalize = true) {

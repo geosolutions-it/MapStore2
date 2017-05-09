@@ -8,9 +8,8 @@
 const Url = require('url');
 
 /**
- * Utility functions for Share tools
+ * Utility functions for Share tools.
  * @memberof utils
- * @type {Object}
  */
 var ShareUtils = {
     /**

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -30,6 +30,18 @@ const selector = createSelector([mapSelector], (map) => ({
 
 require('./scalebox/scalebox.css');
 
+/**
+  * ScaleBox Plugin. Provides a selector for the scale of the map.
+  * @class  ScaleBox
+  * @memberof plugins
+  * @static
+  *
+  * @prop {object} cfg.style CSS to apply to the scalebox
+  * @prop {Boolean} cfg.readOnly the selector is readonly
+  * @prop {string} cfg.label label for the selector
+  * @prop {Boolean} cfg.useRawInput set true if you want to use an normal html input object
+  *
+  */
 const ScaleBoxPlugin = React.createClass({
     render() {
         return (<HelpWrapper id="mapstore-scalebox-container"
