@@ -155,7 +155,6 @@ const defaultEpicWrapper = epic => (...args) =>
   });
 /**
  * Utilities to manage plugins
- * @class
  * @memberof utils
  */
 const PluginsUtils = {
