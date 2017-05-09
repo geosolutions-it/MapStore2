@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -12,13 +12,30 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {mapSelector} = require('../selectors/map');
+const {isCesium} = require('../selectors/maptype');
+
 // TODO: make step and glyphicon configurable
-const selector = createSelector([mapSelector], (map) => ({currentZoom: map && map.zoom, id: "zoomout-btn", step: -1, glyphicon: "minus"}));
+const selector = createSelector([mapSelector, isCesium], (map, hide) => ({
+    currentZoom: map && map.zoom,
+    id: "zoomout-btn",
+    step: -1,
+    glyphicon: "minus",
+    hide
+}));
 
 const {changeZoomLevel} = require('../actions/map');
 
 const Message = require('../components/I18N/Message');
-
+/**
+  * ZoomOut Plugin. Provides button to zoom out
+  * @class  ZoomOut
+  * @memberof plugins
+  * @static
+  *
+  * @prop {object} cfg.style CSS to apply to the button
+  * @prop {string} cfg.className the class name for the button
+  *
+  */
 const ZoomOutButton = connect(selector, {
     onZoom: changeZoomLevel
 })(require('../components/buttons/ZoomButton'));

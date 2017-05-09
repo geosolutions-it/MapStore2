@@ -10,13 +10,30 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {mapSelector} = require('../selectors/map');
+const {isCesium} = require('../selectors/maptype');
 // TODO: make step and glyphicon configurable
-const selector = createSelector([mapSelector], (map) => ({currentZoom: map && map.zoom, id: "zoomin-btn", step: 1, glyphicon: "plus"}));
+const selector = createSelector([mapSelector, isCesium], (map, hide) => ({
+    currentZoom: map && map.zoom,
+    id: "zoomin-btn",
+    step: 1,
+    glyphicon: "plus",
+    hide
+}));
 
 const {changeZoomLevel} = require('../actions/map');
 
 const Message = require('../components/I18N/Message');
 
+/**
+  * ZoomIn Plugin. Provides button to zoom in
+  * @class  ZoomIn
+  * @memberof plugins
+  * @static
+  *
+  * @prop {object} cfg.style CSS to apply to the button
+  * @prop {string} cfg.className the class name for the button
+  *
+  */
 const ZoomInButton = connect(selector, {
     onZoom: changeZoomLevel
 })(require('../components/buttons/ZoomButton'));

@@ -21,6 +21,7 @@ const {printSubmit, printSubmitting, configurePrintMap} = require('../actions/pr
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
+const {isCesium} = require('../selectors/maptype');
 
 const {createSelector} = require('reselect');
 
@@ -325,7 +326,7 @@ const Print = React.createClass({
 });
 
 const selector = createSelector([
-    (state) => (state.controls.print && state.controls.print.enabled ) || (state.controls.toolbar && state.controls.toolbar.active === 'print'),
+    (state) => !isCesium(state) && (state.controls.print && state.controls.print.enabled ) || (state.controls.toolbar && state.controls.toolbar.active === 'print'),
     (state) => state.print && state.print.capabilities,
     (state) => state.print && state.print.spec && assign({}, state.print.spec, state.print.map || {}),
     (state) => state.print && state.print.pdfUrl,
@@ -357,6 +358,7 @@ const PrintPlugin = connect(selector, {
 module.exports = {
     PrintPlugin: assign(PrintPlugin, {
         Toolbar: {
+            display: options => options.mapType !== "cesium",
             name: 'print',
             position: 7,
             help: <Message msgId="helptexts.print"/>,
@@ -368,6 +370,7 @@ module.exports = {
         },
         BurgerMenu: {
             name: 'print',
+            display: options => options.mapType !== "cesium",
             position: 2,
             text: <Message msgId="printbutton"/>,
             icon: <Glyphicon glyph="print"/>,

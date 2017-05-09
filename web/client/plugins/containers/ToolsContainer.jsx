@@ -124,23 +124,29 @@ const ToolsContainer = React.createClass({
         })(this.props.tool);
     },
     renderTools() {
-        return this.props.tools.map((tool, i) => {
-            if (tool.element) {
-                return tool.element;
-            }
-            const help = tool.help ? <HelpBadge className="mapstore-helpbadge" helpText={tool.help}/> : <span/>;
-            const tooltip = tool.tooltip ? <Message msgId={tool.tooltip}/> : null;
+        return this.props.tools
+            .filter((tool) => {
+                if (tool.display) {
+                    return tool.display({mapType: this.props.mapType});
+                }
+                return true;
+            }).map((tool, i) => {
+                if (tool.element) {
+                    return tool.element;
+                }
+                const help = tool.help ? <HelpBadge className="mapstore-helpbadge" helpText={tool.help}/> : <span/>;
+                const tooltip = tool.tooltip ? <Message msgId={tool.tooltip}/> : null;
 
-            const Tool = this.getTool(tool);
-            const toolCfg = this.getToolConfig(tool);
+                const Tool = this.getTool(tool);
+                const toolCfg = this.getToolConfig(tool);
 
-            return this.addTooltip(
-                <Tool {...toolCfg} pluginCfg={tool.cfg} tooltip={tooltip} btnSize={this.props.toolSize} bsStyle={this.props.toolStyle} help={help} key={tool.name || ("tool" + i)} mapType={this.props.mapType}
-                    {...tool.cfg} items={tool.items || []}>
-                    {(tool.cfg && tool.cfg.glyph) ? <Glyphicon glyph={tool.cfg.glyph}/> : tool.icon}{help} {tool.text}
-                </Tool>,
-            tool);
-        });
+                return this.addTooltip(
+                    <Tool {...toolCfg} pluginCfg={tool.cfg} tooltip={tooltip} btnSize={this.props.toolSize} bsStyle={this.props.toolStyle} help={help} key={tool.name || ("tool" + i)} mapType={this.props.mapType}
+                        {...tool.cfg} items={tool.items || []}>
+                        {(tool.cfg && tool.cfg.glyph) ? <Glyphicon glyph={tool.cfg.glyph}/> : tool.icon}{help} {tool.text}
+                    </Tool>,
+                tool);
+            });
     },
     renderPanels() {
         return this.props.panels
