@@ -13,7 +13,7 @@ const expect = require('expect');
 require('../../../../utils/openlayers/Layers');
 require('../plugins/VectorLayer');
 
-describe('Openlayers layer', () => {
+describe('Test Feature', () => {
     document.body.innerHTML = '<div id="map"></div>';
     let map;
 
@@ -42,30 +42,30 @@ describe('Openlayers layer', () => {
         setTimeout(done);
     });
 
-    it('creates a vector layer for openlayers map', () => {
+    it('adding a feature to a vector layer', () => {
         var options = {
             crs: 'EPSG:4326',
             features: {
-              'type': 'FeatureCollection',
-              'crs': {
+              type: 'FeatureCollection',
+              crs: {
                 'type': 'name',
                 'properties': {
                   'name': 'EPSG:4326'
                 }
               },
-              'features': [
+              features: [
                   {
-                      'type': 'Feature',
-                      'geometry': {
-                          'type': 'Polygon',
-                          'coordinates': [[
+                     type: 'Feature',
+                      geometry: {
+                          type: 'Polygon',
+                          coordinates: [[
                               [13, 43],
                               [15, 43],
                               [15, 44],
                               [13, 44]
                           ]]
                       },
-                      'properties': {
+                      properties: {
                           'name': "some name"
                       }
                   }
@@ -82,9 +82,9 @@ describe('Openlayers layer', () => {
            visible: true,
            zIndex: 1
        });
-        const geometry = options.features[0].geometry;
-        const type = options.features[0].type;
-        const properties = options.features[0].properties;
+        const geometry = options.features.features[0].geometry;
+        const type = options.features.features[0].type;
+        const properties = options.features.features[0].properties;
 
         // create layers
         let layer = ReactDOM.render(
@@ -101,6 +101,6 @@ describe('Openlayers layer', () => {
 
         expect(layer).toExist();
         // count layers
-        expect(container.getSource().getFeatures().getLength()).toBe(1);
+        expect(container.getSource().getFeatures().length === 1 );
     });
 });
