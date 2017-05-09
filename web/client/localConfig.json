@@ -56,6 +56,7 @@
                 }
             }, {
                 "name": "Locate",
+                "showIn": "{state('mapType') !== 'cesium' ? ['NavigationBar'] : []}",
                 "override": {
                     "Toolbar": {
                         "alwaysVisible": true
@@ -127,7 +128,7 @@
             },
             "MadeWithLove", {
                 "name": "Locate",
-                "showIn": "{state('mapType') !== 'cesium' ? ['Toolbar'] : []}",
+                "showIn": "{state('mapType') !== 'cesium' ? ['NavigationBar'] : []}",
                 "override": {
                     "Toolbar": {
                         "alwaysVisible": true
@@ -194,7 +195,7 @@
                 }
             }, {
                 "name": "ZoomIn",
-                "showIn": "{state('mapType') !== 'cesium' ? ['Toolbar'] : []}",
+                "showIn": "{state('mapType') !== 'cesium' ? ['NavigationBar'] : []}",
                 "override": {
                     "Toolbar": {
                         "alwaysVisible": true
@@ -202,7 +203,7 @@
                 }
             }, {
                 "name": "ZoomOut",
-                "showIn": "{state('mapType') !== 'cesium' ? ['Toolbar'] : []}",
+                "showIn": "{state('mapType') !== 'cesium' ? ['NavigationBar'] : []}",
                 "override": {
                     "Toolbar": {
                         "alwaysVisible": true
@@ -248,6 +249,7 @@
                 }
             }, {
                 "name": "Locate",
+                "showIn": "{state('mapType') !== 'cesium' ? ['NavigationBar'] : []}",
                 "override": {
                     "Toolbar": {
                         "alwaysVisible": true
