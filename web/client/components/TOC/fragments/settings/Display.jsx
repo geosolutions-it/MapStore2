@@ -53,6 +53,11 @@ module.exports = React.createClass({
                         checked={this.props.element && this.props.element.tiled !== undefined ? this.props.element.tiled : true} >
                         <Message msgId="layerProperties.cached"/>
                     </Checkbox>
+                    <Checkbox key="singleTile" value="singleTile" key="singleTile"
+                        checked={this.props.element && (this.props.element.singleTile === undefined ? false : this.props.element.singleTile)}
+                        onChange={(e) => this.props.onChange("singleTile", e.target.checked)}>
+                        <Message msgId="layerProperties.singleTile"/>
+                    </Checkbox>
                 </div>)] : null}
         </div>);
     }

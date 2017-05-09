@@ -134,7 +134,13 @@ const LeafletLayer = React.createClass({
         }
     },
     updateLayer(newProps, oldProps) {
-        Layers.updateLayer(newProps.type, this.layer, this.generateOpts(newProps.options, newProps.position), this.generateOpts(oldProps.options, oldProps.position));
+        const newLayer = Layers.updateLayer(newProps.type, this.layer, this.generateOpts(newProps.options, newProps.position),
+            this.generateOpts(oldProps.options, oldProps.position));
+        if (newLayer) {
+            this.removeLayer();
+            this.layer = newLayer;
+            this.addLayer();
+        }
     },
     addLayer() {
         if (this.isValid()) {

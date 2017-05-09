@@ -121,13 +121,18 @@ const OpenlayersLayer = React.createClass({
                 return;
             }
         }
-        Layers.updateLayer(
+        const newLayer = Layers.updateLayer(
             this.props.type,
             this.layer,
             this.generateOpts(newProps.options, newProps.position, newProps.projection),
             this.generateOpts(oldProps.options, oldProps.position, oldProps.projection),
             this.props.map,
             this.props.mapId);
+        if (newLayer) {
+            this.props.map.removeLayer(this.layer);
+            this.layer = newLayer;
+            this.addLayer(newProps.options);
+        }
     },
     addLayer(options) {
         if (this.isValid()) {
