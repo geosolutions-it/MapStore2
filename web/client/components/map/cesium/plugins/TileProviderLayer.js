@@ -34,7 +34,7 @@ TileProviderProxy.prototype.getURL = function(resource) {
     if (url.indexOf("//") === 0) {
         url = location.protocol + url;
     }
-    return this.proxy + encodeURIComponent(url + queryString);
+    return this.proxy.url + encodeURIComponent(url + queryString);
 };
 
 function NoProxy() {
@@ -64,7 +64,7 @@ Layers.registerType('tileprovider', (options) => {
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
     if (proxyUrl) {
-        proxy = opt.noCors && ProxyUtils.needProxy(options.url) && proxyUrl;
+        proxy = opt.noCors || ProxyUtils.needProxy(url);
     }
     const cr = opt.credits;
     const credit = cr ? new Cesium.Credit(cr.text, cr.imageUrl, cr.link) : opt.attribution;
@@ -75,6 +75,6 @@ Layers.registerType('tileprovider', (options) => {
         maximumLevel: opt.maxZoom,
         minimumLevel: opt.minZoom,
         credit,
-        proxy: proxy && opt.noCors ? new TileProviderProxy(proxyUrl) : new NoProxy()
+        proxy: proxy ? new TileProviderProxy(proxyUrl) : new NoProxy()
     });
 });
