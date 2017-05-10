@@ -10,8 +10,11 @@ var ProxyUtils = require('../ProxyUtils');
 
 describe('ProxyUtils test', () => {
     it('Need Proxy', () => {
-        let res = ProxyUtils.needProxy("http:someurl.com");
-        expect(res).toBe(true);
+        expect(ProxyUtils.needProxy("http:someurl.com")).toBe(true);
+        expect(ProxyUtils.needProxy(["http:someurl.com", "http:someotherurl.com"])).toBe(true);
+        expect(ProxyUtils.needProxy("/geoserver")).toBe(false);
+        expect(ProxyUtils.needProxy(["/geoserver", "/geoserver1"])).toBe(false);
+        expect(ProxyUtils.needProxy([location.href])).toBe(false);
     });
     it('GetProxyUrl', () => {
         let res = ProxyUtils.getProxyUrl({proxyUrl: "http:someurl.com"});

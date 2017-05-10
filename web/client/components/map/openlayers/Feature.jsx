@@ -1,5 +1,5 @@
-/**
- * Copyright 2015, GeoSolutions Sas.
+/*
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -14,6 +14,7 @@ let Feature = React.createClass({
     propTypes: {
         type: React.PropTypes.string,
         properties: React.PropTypes.object,
+        crs: React.PropTypes.string,
         container: React.PropTypes.object, // TODO it must be a ol.layer.vector (maybe pass the source is more correct here?)
         geometry: React.PropTypes.object, // TODO check for geojson format for geometry
         msId: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
@@ -29,8 +30,12 @@ let Feature = React.createClass({
         const geometry = this.props.geometry && this.props.geometry.coordinates;
 
         if (this.props.container && geometry) {
-            this._feature = format.readFeatures({type: this.props.type, properties: this.props.properties, geometry: this.props.geometry, id: this.props.msId});
-            this._feature.forEach((f) => f.getGeometry().transform(this.props.featuresCrs, 'EPSG:3857'));
+            this._feature = format.readFeatures({
+                type: this.props.type,
+                properties: this.props.properties,
+                geometry: this.props.geometry,
+                id: this.props.msId});
+            this._feature.forEach((f) => f.getGeometry().transform(this.props.featuresCrs, this.props.crs || 'EPSG:3857'));
             this.props.container.getSource().addFeatures(this._feature);
         }
     },
@@ -42,7 +47,7 @@ let Feature = React.createClass({
 
             if (newProps.container && geometry) {
                 this._feature = format.readFeatures({type: newProps.type, properties: newProps.properties, geometry: newProps.geometry, id: this.props.msId});
-                this._feature.forEach((f) => f.getGeometry().transform(newProps.featuresCrs, 'EPSG:3857'));
+                this._feature.forEach((f) => f.getGeometry().transform(newProps.featuresCrs, this.props.crs || 'EPSG:3857'));
                 newProps.container.getSource().addFeatures(this._feature);
             }
         }
@@ -61,11 +66,11 @@ let Feature = React.createClass({
             if (Array.isArray(this._feature)) {
                 const layersSource = this.props.container.getSource();
                 this._feature.map((feature) => {
-                    let fetureId = feature.getId();
-                    if (fetureId === undefined) {
+                    let featureId = feature.getId();
+                    if (featureId === undefined) {
                         layersSource.removeFeature(feature);
                     }else {
-                        layersSource.removeFeature(layersSource.getFeatureById(fetureId));
+                        layersSource.removeFeature(layersSource.getFeatureById(featureId));
                     }
                 });
             } else {

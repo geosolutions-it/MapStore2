@@ -7,13 +7,15 @@
  */
 
 const ConfigUtils = require('./ConfigUtils');
-const {isObject} = require('lodash');
-
+const {isArray, isObject} = require('lodash');
 var ProxyUtils = {
     needProxy: function(uri, config = {}) {
-        var needed = false;
-        var sameOrigin = !(uri.indexOf("http") === 0);
-        var urlParts = !sameOrigin && uri.match(/([^:]*:)\/\/([^:]*:?[^@]*@)?([^:\/\?]*):?([^\/\?]*)/);
+        if ( isArray(uri) ) {
+            return uri.reduce((result, current) => ProxyUtils.needProxy(current) && result, true);
+        }
+        let needed = false;
+        let sameOrigin = !(uri.indexOf("http") === 0);
+        let urlParts = !sameOrigin && uri.match(/([^:]*:)\/\/([^:]*:?[^@]*@)?([^:\/\?]*):?([^\/\?]*)/);
         if (urlParts) {
             let location = window.location;
             sameOrigin =

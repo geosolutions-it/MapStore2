@@ -12,7 +12,7 @@ const Message = require('./locale/Message');
 
 const {changeMeasurement} = require('../actions/measurement');
 
-const {MeasureDialog} = require('./measure');
+const {MeasureDialog} = require('./measure/index');
 
 const MeasureComponent = React.createClass({
     propTypes: {
