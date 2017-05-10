@@ -72,6 +72,50 @@ const CoordinatesUtils = {
         return null;
     },
     /**
+     * Creates a bbox of size dimensions areund the center point given to it given the
+     * resolution and the rotation
+     * @param center {object} the x,y coordinate of the point
+     * @param resolution {number} the resolution of the map
+     * @param rotation {number} the optional rotation of the new bbox
+     * @param size {object} width,height of the desired bbox
+     * @return {object} the desired bbox {minx, miny, maxx, maxy}
+     */
+    getProjectedBBox: function(center, resolution, rotation = 0, size) {
+        let dx = resolution * size[0] / 2;
+        let dy = resolution * size[1] / 2;
+        let cosRotation = Math.cos(rotation);
+        let sinRotation = Math.sin(rotation);
+        let xCos = dx * cosRotation;
+        let xSin = dx * sinRotation;
+        let yCos = dy * cosRotation;
+        let ySin = dy * sinRotation;
+        let x = center.x;
+        let y = center.y;
+        let x0 = x - xCos + ySin;
+        let x1 = x - xCos - ySin;
+        let x2 = x + xCos - ySin;
+        let x3 = x + xCos + ySin;
+        let y0 = y - xSin - yCos;
+        let y1 = y - xSin + yCos;
+        let y2 = y + xSin + yCos;
+        let y3 = y + xSin - yCos;
+        let bounds = CoordinatesUtils.createBBox(
+            Math.min(x0, x1, x2, x3), Math.min(y0, y1, y2, y3),
+            Math.max(x0, x1, x2, x3), Math.max(y0, y1, y2, y3));
+        return bounds;
+    },
+    /**
+     * Returns a bounds object.
+     * @param {number} minX Minimum X.
+     * @param {number} minY Minimum Y.
+     * @param {number} maxX Maximum X.
+     * @param {number} maxY Maximum Y.
+     * @return {Object} Extent.
+     */
+    createBBox(minX, minY, maxX, maxY) {
+        return { minx: minX, miny: minY, maxx: maxX, maxy: maxY };
+    },
+    /**
      * Reprojects a geojson from a crs into another
      */
     reprojectGeoJson: function(geojson, fromParam = "EPSG:4326", toParam = "EPSG:4326") {

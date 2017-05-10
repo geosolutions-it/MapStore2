@@ -29,6 +29,17 @@ describe('CoordinatesUtils', () => {
         expect(transformed.y).toNotBe(13);
         expect(transformed.srs).toBe('EPSG:900913');
     });
+    it('it should tests the creation of a bbox given the center, resolution and size', () => {
+        let center = {x: 0, y: 0};
+        let resolution = 1;
+        let rotation = 0;
+        let size = [10, 10];
+        let bbox = CoordinatesUtils.getProjectedBBox(center, resolution, rotation, size);
+        expect(bbox).toExist();
+        expect(bbox.maxx).toBeGreaterThan(bbox.minx);
+        expect(bbox.maxy).toBeGreaterThan(bbox.miny);
+    });
+
     it('convert lat lon bbox to marcator bbox', () => {
         var bbox = [44, 12, 45, 13];
         var projbbox = CoordinatesUtils.reprojectBbox(bbox, 'EPSG:4326', 'EPSG:900913');

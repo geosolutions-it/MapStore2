@@ -8,9 +8,29 @@
 
 
 const CoordinatesUtils = require('./CoordinatesUtils');
-const {isString, isArray, isObject, head} = require('lodash');
+const {isString, isArray, isObject, head, slice} = require('lodash');
 
 const WMTSUtils = {
+    getDefaultMatrixId: (options) => {
+        let matrixIds = new Array(30);
+        for (let z = 0; z < 30; ++z) {
+            // generate matrixIds arrays for this WMTS
+            matrixIds[z] = options.tileMatrixPrefix + z;
+        }
+        return matrixIds;
+    },
+    getMatrixIds: (matrix, srs) => {
+        return (isObject(matrix) && matrix[srs] || matrix).map((el) => el.identifier);
+    },
+    limitMatrix: (matrix, len) => {
+        if (matrix.length > len) {
+            return slice(matrix, 0, len);
+        }
+        if (matrix.length < len) {
+            return matrix.concat(new Array(len - matrix.length));
+        }
+        return matrix;
+    },
     getTileMatrixSet: (tileMatrixSet, srs, allowedSRS, matrixIds = {}) => {
         if (tileMatrixSet && isString(tileMatrixSet)) {
             return tileMatrixSet;
