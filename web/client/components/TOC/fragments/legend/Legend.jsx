@@ -15,8 +15,6 @@ const Legend = React.createClass({
     },
     getDefaultProps() {
         return {
-            legendHeigth: 12,
-            legendWidth: 12,
             legendOptions: "forceLabels:on;fontSize:10"
         };
     },
@@ -32,8 +30,6 @@ const Legend = React.createClass({
                service: "WMS",
                request: "GetLegendGraphic",
                format: "image/png",
-               height: this.props.legendHeigth,
-               width: this.props.legendWidth,
                layer: layer.name,
                style: layer.style || null,
                version: layer.version || "1.3.0",
