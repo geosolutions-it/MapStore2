@@ -112,7 +112,9 @@ const createLayer = (options) => {
     return layer;
 };
 const updateLayer = (newOptions, oldOptions) => {
-    if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.tiled !== newOptions.tiled) {
+    if (oldOptions.singleTile !== newOptions.singleTile
+        || oldOptions.tiled !== newOptions.tiled
+        || oldOptions.transparent !== newOptions.transparent ) {
         let layer;
         if (newOptions.singleTile) {
             layer = new Cesium.SingleTileImageryProvider(wmsToCesiumOptionsSingleTile(newOptions));
