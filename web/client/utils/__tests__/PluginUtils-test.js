@@ -143,6 +143,25 @@ describe('PluginsUtils', () => {
     it('handleExpression', () => {
         expect(PluginsUtils.handleExpression({state1: "test1"}, {context1: "test2"}, "{state.state1 + ' ' + context.context1}")).toBe("test1 test2");
     });
+    it('filterState', () => {
+        expect(PluginsUtils.filterState({state1: "test1"}, [{name: "A", path: "state1"}]).A).toBe("test1");
+    });
+    it('filterDisabledPlugins', () => {
+        expect(PluginsUtils.filterDisabledPlugins(
+            {plugin: {
+                disablePluginIf: "{true}"
+            }},
+            {},
+            {}
+        )).toBe(false);
+    });
+    it('getMonitoredState', () => {
+        expect(PluginsUtils.getMonitoredState({maptype: {mapType: "leaflet"}}).mapType).toBe("leaflet");
+    });
+
+    it('handleExpression', () => {
+        expect(PluginsUtils.handleExpression({state1: "test1"}, {context1: "test2"}, "{state.state1 + ' ' + context.context1}")).toBe("test1 test2");
+    });
     it('dispatch', () => {
         const expr = PluginsUtils.handleExpression(() => ({
             dispatch: (action) => action

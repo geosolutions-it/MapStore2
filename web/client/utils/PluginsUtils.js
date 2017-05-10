@@ -66,12 +66,18 @@ const handleExpression = (state, context, expression) => {
     return expression;
 };
 
+const filterDisabledPlugins = (item, state = {}, plugins = {}) => {
+    const disablePluginIf = item && item.plugin && item.plugin.disablePluginIf || item.cfg.disablePluginIf;
+    if (disablePluginIf && !(item && item.cfg && item.cfg.skipAutoDisable)) {
+        return !handleExpression(state, plugins.requires, disablePluginIf);
+    }
+    return true;
+};
 const showIn = (state, requires, cfg, name, id, isDefault) => {
     return ((id && cfg.showIn && handleExpression(state, requires, cfg.showIn).indexOf(id) !== -1) ||
             (cfg.showIn && handleExpression(state, requires, cfg.showIn).indexOf(name) !== -1) ||
             (!cfg.showIn && isDefault)) &&
-            !((cfg.hideFrom && handleExpression(state, requires, cfg.hideFrom).indexOf(name) !== -1) || (id && cfg.hideFrom && handleExpression(state, requires, cfg.hideFrom).indexOf(id) !== -1))
-            && !(cfg.disablePluginIf && !handleExpression(state, requires, cfg.disablePluginIf));
+            !((cfg.hideFrom && handleExpression(state, requires, cfg.hideFrom).indexOf(name) !== -1) || (id && cfg.hideFrom && handleExpression(state, requires, cfg.hideFrom).indexOf(id) !== -1));
 };
 
 const includeLoaded = (name, loadedPlugins, plugin) => {
@@ -131,13 +137,7 @@ const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, load
                         plugin: pluginImpl,
                         items: getPluginItems(state, plugins, pluginsConfig, pluginName, null, true, loadedPlugins)
                     });
-            }).filter( item => {
-                const disablePluginIf = item.plugin.disablePluginIf || item.cfg.disablePluginIf;
-                if (disablePluginIf && !item.cfg.skipAutoDisable) {
-                    return !handleExpression(state, plugins.requires, disablePluginIf);
-                }
-                return true;
-            });
+            }).filter( (item) => filterDisabledPlugins(item, state, plugins) );
 };
 
 const getReducers = (plugins) => Object.keys(plugins).map((name) => plugins[name].reducers)
@@ -190,6 +190,7 @@ const PluginsUtils = {
     },
     getReducers,
     filterState,
+    filterDisabledPlugins,
     getMonitoredState: (state, monitorState = []) => filterState(state, defaultMonitoredState.concat(monitorState)),
     getPlugins: (plugins) => Object.keys(plugins).map((name) => plugins[name])
                                 .reduce((previous, current) => assign({}, previous, omit(current, 'reducers')), {}),
