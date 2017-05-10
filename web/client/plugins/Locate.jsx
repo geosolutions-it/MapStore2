@@ -26,6 +26,7 @@ require('./locate/locate.css');
 
 module.exports = {
     LocatePlugin: assign(LocatePlugin, {
+        disablePluginIf: "{state('mapType') === 'cesium'}",
         Toolbar: {
             name: 'locate',
             position: 2,

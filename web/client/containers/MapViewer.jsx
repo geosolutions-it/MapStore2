@@ -19,7 +19,7 @@ const PluginsContainer = connect((state) => ({
     pluginsConfig: state.plugins || ConfigUtils.getConfigProp('plugins') || null,
     mode: (urlQuery.mode || state.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop')),
     pluginsState: state && state.controls || {},
-    monitoredState: PluginsUtils.filterState(state, ConfigUtils.getConfigProp('monitorState') || [])
+    monitoredState: PluginsUtils.getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
 }))(require('../components/plugins/PluginsContainer'));
 
 const MapViewer = React.createClass({

@@ -11,7 +11,7 @@ const {omit, isObject, head, isArray, isString} = require('lodash');
 const {combineReducers} = require('redux');
 const {connect} = require('react-redux');
 const url = require('url');
-
+const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}];
 const {combineEpics} = require('redux-observable');
 
 const {memoize, get} = require('lodash');
@@ -70,7 +70,8 @@ const showIn = (state, requires, cfg, name, id, isDefault) => {
     return ((id && cfg.showIn && handleExpression(state, requires, cfg.showIn).indexOf(id) !== -1) ||
             (cfg.showIn && handleExpression(state, requires, cfg.showIn).indexOf(name) !== -1) ||
             (!cfg.showIn && isDefault)) &&
-            !((cfg.hideFrom && handleExpression(state, requires, cfg.hideFrom).indexOf(name) !== -1) || (id && cfg.hideFrom && handleExpression(state, requires, cfg.hideFrom).indexOf(id) !== -1));
+            !((cfg.hideFrom && handleExpression(state, requires, cfg.hideFrom).indexOf(name) !== -1) || (id && cfg.hideFrom && handleExpression(state, requires, cfg.hideFrom).indexOf(id) !== -1))
+            && !(cfg.disablePluginIf && !handleExpression(state, requires, cfg.disablePluginIf));
 };
 
 const includeLoaded = (name, loadedPlugins, plugin) => {
@@ -130,6 +131,12 @@ const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, load
                         plugin: pluginImpl,
                         items: getPluginItems(state, plugins, pluginsConfig, pluginName, null, true, loadedPlugins)
                     });
+            }).filter( item => {
+                const disablePluginIf = item.plugin.disablePluginIf || item.cfg.disablePluginIf;
+                if (disablePluginIf && !item.cfg.skipAutoDisable) {
+                    return !handleExpression(state, plugins.requires, disablePluginIf);
+                }
+                return true;
             });
 };
 
@@ -183,6 +190,7 @@ const PluginsUtils = {
     },
     getReducers,
     filterState,
+    getMonitoredState: (state, monitorState = []) => filterState(state, defaultMonitoredState.concat(monitorState)),
     getPlugins: (plugins) => Object.keys(plugins).map((name) => plugins[name])
                                 .reduce((previous, current) => assign({}, previous, omit(current, 'reducers')), {}),
     /**
