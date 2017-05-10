@@ -10,7 +10,7 @@ var Layers = require('../../../../utils/cesium/Layers');
 var Cesium = require('../../../../libs/cesium');
 var TileProvider = require('../../../../utils/TileConfigProvider');
 var ConfigUtils = require('../../../../utils/ConfigUtils');
-var {isObject, isArray} = require('lodash');
+const ProxyUtils = require('../../../../utils/ProxyUtils');
 
 function splitUrl(originalUrl) {
     let url = originalUrl;
@@ -64,16 +64,7 @@ Layers.registerType('tileprovider', (options) => {
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
     if (proxyUrl) {
-        let useCORS = [];
-        if (isObject(proxyUrl)) {
-            useCORS = proxyUrl.useCORS || [];
-            proxyUrl = proxyUrl.url;
-        }
-        if (isArray(url)) {
-            url = url[0];
-        }
-        const isCORS = useCORS.reduce((found, current) => found || url.indexOf(current) === 0, false);
-        proxy = !isCORS && proxyUrl;
+        proxy = opt.noCors && ProxyUtils.needProxy(options.url) && proxyUrl;
     }
     const cr = opt.credits;
     const credit = cr ? new Cesium.Credit(cr.text, cr.imageUrl, cr.link) : opt.attribution;

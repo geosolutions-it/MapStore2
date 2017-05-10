@@ -120,5 +120,22 @@ const createLayer = (options) => {
     };
     return layer;
 };
-
-Layers.registerType('wms', createLayer);
+const updateLayer = (newOptions, oldOptions) => {
+    if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.tiled !== newOptions.tiled) {
+        let layer;
+        if (newOptions.singleTile) {
+            layer = new Cesium.SingleTileImageryProvider(wmsToCesiumOptionsSingleTile(newOptions));
+        } else {
+            layer = new Cesium.WebMapServiceImageryProvider(wmsToCesiumOptions(newOptions));
+        }
+        layer.updateParams = (params) => {
+            const newOp = assign({}, newOptions, {
+                params: assign({}, newOptions.params || {}, params)
+            });
+            return createLayer(newOp);
+        };
+        return layer;
+    }
+    return null;
+};
+Layers.registerType('wms', {create: createLayer, update: updateLayer});
