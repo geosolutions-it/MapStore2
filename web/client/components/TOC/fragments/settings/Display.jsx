@@ -49,9 +49,15 @@ module.exports = React.createClass({
                     <Checkbox key="transparent" checked={this.props.element && (this.props.element.transparent === undefined ? true : this.props.element.transparent)} onChange={(event) => {this.props.onChange("transparent", event.target.checked); }}>
                         <Message msgId="layerProperties.transparent"/></Checkbox>
                     <Checkbox key="cache" value="tiled" key="tiled"
+                        disabled={!!this.props.element.singleTile}
                         onChange={(e) => this.props.onChange("tiled", e.target.checked)}
                         checked={this.props.element && this.props.element.tiled !== undefined ? this.props.element.tiled : true} >
                         <Message msgId="layerProperties.cached"/>
+                    </Checkbox>
+                    <Checkbox key="singleTile" value="singleTile" key="singleTile"
+                        checked={this.props.element && (this.props.element.singleTile !== undefined ? this.props.element.singleTile : false )}
+                        onChange={(e) => this.props.onChange("singleTile", e.target.checked)}>
+                        <Message msgId="layerProperties.singleTile"/>
                     </Checkbox>
                 </div>)] : null}
         </div>);
