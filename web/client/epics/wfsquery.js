@@ -108,72 +108,74 @@ const retryWithForcedSortOptions = (action, store) => {
 
 /**
  * Gets the WFS feature type attributes and geometry when the feature has been selected
- * @param {Observable} action$ manages `FEATURE_TYPE_SELECTED`
  * @memberof epics.wfsquery
- * @return {Observable}
+ * @param {external:Observable} action$ manages `FEATURE_TYPE_SELECTED`
+ * @return {external:Observable}
  */
 
 const featureTypeSelectedEpic = action$ =>
-    action$.ofType(FEATURE_TYPE_SELECTED).switchMap(action => {
-        return Rx.Observable.defer( () =>
-            axios.get(action.url + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json'))
-        .map((response) => {
-            if (typeof response.data === 'object' && response.data.featureTypes && response.data.featureTypes[0]) {
-                const info = extractInfo(response.data);
-                const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
-                return Rx.Observable.from([featureTypeLoaded(action.typeName, info), changeSpatialAttribute(geometry)]);
-            }
-            try {
-                JSON.parse(response.data);
-            } catch(e) {
-                return Rx.Observable.from([featureTypeError(action.typeName, 'Error from WFS: ' + e.message)]);
-            }
-            return Rx.Observable.from([featureTypeError(action.typeName, 'Error: feature types are empty')]);
-        })
-        .mergeAll()
-        .catch(e => Rx.Observable.of(featureTypeError(action.typeName, e.message)));
-    });
+    action$.ofType(FEATURE_TYPE_SELECTED)
+        .switchMap(action => {
+            return Rx.Observable.defer( () => axios.get(action.url + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json'))
+                .map((response) => {
+                    if (typeof response.data === 'object' && response.data.featureTypes && response.data.featureTypes[0]) {
+                        const info = extractInfo(response.data);
+                        const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
+                        return Rx.Observable.from([featureTypeLoaded(action.typeName, info), changeSpatialAttribute(geometry)]);
+                    }
+                    try {
+                        JSON.parse(response.data);
+                    } catch(e) {
+                        return Rx.Observable.from([featureTypeError(action.typeName, 'Error from WFS: ' + e.message)]);
+                    }
+                    return Rx.Observable.from([featureTypeError(action.typeName, 'Error: feature types are empty')]);
+                })
+                .mergeAll()
+                .catch(e => Rx.Observable.of(featureTypeError(action.typeName, e.message)));
+        });
 
 /**
  * Sends a WFS query, returns a response or handles request error
  * in particular the NoApplicableCode WFS error with a forced sort option on the first attribute
- * @param {Observable} action$ manages `QUERY`
  * @memberof epics.wfsquery
- * @return {Observable}
+ * @param {external:Observable} action$ manages `QUERY`
+ * @return {external:Observable}
  */
 
 const wfsQueryEpic = (action$, store) =>
-    action$.ofType(QUERY).switchMap(action => {
+    action$.ofType(QUERY)
+        .switchMap(action => {
 
-        return Rx.Observable.merge(
-            Rx.Observable.of(createQuery(action.searchUrl, action.filterObj)),
-            Rx.Observable.of(setControlProperty('drawer', 'enabled', false)),
-            getWFSFeature(action.searchUrl, action.filterObj)
-            .switchMap((response) => {
-                // try to guess if it was a missing id error and try to search again with forced sortOptions
-                const error = getWFSResponseException(response, 'NoApplicableCode');
-                if (error) {
-                    return retryWithForcedSortOptions(action, store);
-                }
-                return Rx.Observable.of(querySearchResponse(response.data, action.searchUrl, action.filterObj));
-            })
-            .catch((e) => {
-                return Rx.Observable.of(queryError(e));
-            })
-        );
-    });
+            return Rx.Observable.merge(
+                Rx.Observable.of(createQuery(action.searchUrl, action.filterObj)),
+                Rx.Observable.of(setControlProperty('drawer', 'enabled', false)),
+                getWFSFeature(action.searchUrl, action.filterObj)
+                    .switchMap((response) => {
+                        // try to guess if it was a missing id error and try to search again with forced sortOptions
+                        const error = getWFSResponseException(response, 'NoApplicableCode');
+                        if (error) {
+                            return retryWithForcedSortOptions(action, store);
+                        }
+                        return Rx.Observable.of(querySearchResponse(response.data, action.searchUrl, action.filterObj));
+                    })
+                    .catch((e) => {
+                        return Rx.Observable.of(queryError(e));
+                    })
+            );
+        });
 
 /**
  * Closes the feature grid when the drawer menu button has been toggled
- * @param {Observable} action$ manages `TOGGLE_CONTROL`
  * @memberof epics.wfsquery
- * @return {Observable}
+ * @param {external:Observable} action$ manages `TOGGLE_CONTROL`
+ * @return {external:Observable}
  */
 
 const closeFeatureEpic = action$ =>
-    action$.ofType(TOGGLE_CONTROL).switchMap(action => {
-        return action.control && action.control === 'drawer' ? Rx.Observable.of(featureClose()) : Rx.Observable.empty();
-    });
+    action$.ofType(TOGGLE_CONTROL)
+        .switchMap(action => {
+            return action.control && action.control === 'drawer' ? Rx.Observable.of(featureClose()) : Rx.Observable.empty();
+        });
 
  /**
   * Epics for WFS query requests
