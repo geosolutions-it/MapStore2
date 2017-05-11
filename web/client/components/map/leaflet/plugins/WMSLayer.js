@@ -79,7 +79,7 @@ function wmsToLeafletOptions(options) {
         transparent: options.transparent !== undefined ? options.transparent : true,
         tiled: options.tiled !== undefined ? options.tiled : true,
         opacity: opacity,
-        "zIndex": options.zIndex,
+        zIndex: options.zIndex,
         version: options.version || "1.3.0",
         SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
@@ -97,7 +97,7 @@ Layers.registerType('wms', {
         const queryParameters = wmsToLeafletOptions(options) || {};
         urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
         if (options.singleTile) {
-            return L.nonTiledLayer.wms(urls, queryParameters);
+            return L.nonTiledLayer.wms(urls[0], queryParameters);
         }
         return L.tileLayer.multipleUrlWMS(urls, queryParameters);
     },
@@ -118,7 +118,9 @@ Layers.registerType('wms', {
                 newLayer = L.tileLayer.multipleUrlWMS(urls, newQueryParameters);
             }
             if ( newParameters.length > 0 ) {
-                newParameters.forEach( key => newParams[key] = newQueryParameters[key] );
+                newParams = newParameters.reduce( (accumulator, currentValue) => {
+                    return objectAssign({}, accumulator, {[currentValue]: newQueryParameters[currentValue] });
+                }, newParams);
                 // set new options as parameters, merged with params
                 newLayer.setParams(objectAssign(newParams, newParams.params, newOptions.params));
             } else if (!isEqual(newOptions.params, oldOptions.params)) {
@@ -127,7 +129,9 @@ Layers.registerType('wms', {
             return newLayer;
         }
         if ( newParameters.length > 0 ) {
-            newParameters.forEach( key => newParams[key] = newQueryParameters[key] );
+            newParams = newParameters.reduce( (accumulator, currentValue) => {
+                return objectAssign({}, accumulator, {[currentValue]: newQueryParameters[currentValue] });
+            }, newParams);
             // set new options as parameters, merged with params
             layer.setParams(objectAssign(newParams, newParams.params, newOptions.params));
         } else if (!isEqual(newOptions.params, oldOptions.params)) {

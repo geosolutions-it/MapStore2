@@ -12,6 +12,7 @@ const ProxyUtils = require('../../../../utils/ProxyUtils');
 const Cesium = require('../../../../libs/cesium');
 const assign = require('object-assign');
 const {isArray} = require('lodash');
+const WMSUtils = require('../../../../utils/cesium/WMSUtils');
 
 function getWMSURLs( urls ) {
     return urls.map((url) => url.split("\?")[0]);
@@ -111,23 +112,20 @@ const createLayer = (options) => {
     };
     return layer;
 };
-const updateLayer = (newOptions, oldOptions) => {
-    if (oldOptions.singleTile !== newOptions.singleTile
-        || oldOptions.tiled !== newOptions.tiled
-        || oldOptions.transparent !== newOptions.transparent ) {
-        let layer;
-        if (newOptions.singleTile) {
-            layer = new Cesium.SingleTileImageryProvider(wmsToCesiumOptionsSingleTile(newOptions));
-        } else {
-            layer = new Cesium.WebMapServiceImageryProvider(wmsToCesiumOptions(newOptions));
-        }
-        layer.updateParams = (params) => {
-            const newOp = assign({}, newOptions, {
-                params: assign({}, newOptions.params || {}, params)
-            });
-            return createLayer(newOp);
-        };
-        return layer;
+const updateLayer = (layer, newOptions, oldOptions) => {
+    const requiresUpdate = (el) => WMSUtils.PARAM_OPTIONS.indexOf(el.toLowerCase()) >= 0;
+    const newParams = (newOptions && newOptions.params);
+    const oldParams = (oldOptions && oldOptions.params);
+    const allParams = {...newParams, ...oldParams };
+    let newParameters = Object.keys({...newOptions, ...oldOptions, ...allParams})
+        .filter(requiresUpdate)
+        .filter((key) => {
+            const oldOption = oldOptions[key] === undefined ? oldParams && oldParams[key] : oldOptions[key];
+            const newOption = newOptions[key] === undefined ? newParams && newParams[key] : newOptions[key];
+            return oldOption !== newOption;
+        });
+    if (newParameters.length > 0) {
+        return createLayer(newOptions);
     }
     return null;
 };

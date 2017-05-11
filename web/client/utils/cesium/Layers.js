@@ -35,7 +35,7 @@ var Layers = {
     updateLayer: function(type, layer, newOptions, oldOptions, map) {
         var layerCreator = layerTypes[type];
         if (layerCreator && layerCreator.update) {
-            return layerCreator.update(newOptions, oldOptions, map);
+            return layerCreator.update(layer, newOptions, oldOptions, map);
         }
     }
 };

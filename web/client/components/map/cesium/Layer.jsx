@@ -19,13 +19,13 @@ const CesiumLayer = React.createClass({
     componentDidMount() {
         this.createLayer(this.props.type, this.props.options, this.props.position, this.props.map);
         if (this.props.options && this.layer && this.props.options.visibility !== false) {
-            this.addLayer();
+            this.addLayer(this.props);
             this.updateZIndex();
         }
     },
     componentWillReceiveProps(newProps) {
         const newVisibility = newProps.options && newProps.options.visibility !== false;
-        this.setLayerVisibility(newVisibility);
+        this.setLayerVisibility(newVisibility, newProps);
 
         const newOpacity = (newProps.options && newProps.options.opacity !== undefined) ? newProps.options.opacity : 1.0;
         this.setLayerOpacity(newOpacity);
@@ -47,7 +47,7 @@ const CesiumLayer = React.createClass({
                 const oldProvider = this.provider;
                 const newLayer = this.layer.updateParams(newProps.options.params);
                 this.layer = newLayer;
-                this.addLayer();
+                this.addLayer(newProps);
                 setTimeout(() => {
                     this.removeLayer(oldProvider);
                 }, 1000);
@@ -106,11 +106,11 @@ const CesiumLayer = React.createClass({
                 });
         }
     },
-    setLayerVisibility(visibility) {
+    setLayerVisibility(visibility, newProps) {
         var oldVisibility = this.props.options && this.props.options.visibility !== false;
         if (visibility !== oldVisibility) {
             if (visibility) {
-                this.addLayer();
+                this.addLayer(newProps);
                 this.updateZIndex();
             } else {
                 this.removeLayer();
@@ -138,26 +138,26 @@ const CesiumLayer = React.createClass({
         if (newLayer) {
             this.removeLayer();
             this.layer = newLayer;
-            this.addLayer();
+            this.addLayer(newProps);
         }
     },
-    addLayerInternal() {
+    addLayerInternal(newProps) {
         this.provider = this.props.map.imageryLayers.addImageryProvider(this.layer);
         this.provider._position = this.props.position;
-        if (this.props.options.opacity) {
-            this.provider.alpha = this.props.options.opacity;
+        if (newProps.options.opacity !== undefined) {
+            this.provider.alpha = newProps.options.opacity;
         }
     },
-    addLayer() {
+    addLayer(newProps) {
         if (this.layer && !this.layer.detached) {
-            this.addLayerInternal();
+            this.addLayerInternal(newProps);
             if (this.props.options.refresh && this.layer.updateParams) {
                 let counter = 0;
                 this.refreshTimer = setInterval(() => {
                     const newLayer = this.layer.updateParams(assign({}, this.props.options.params, {_refreshCounter: counter++}));
                     this.removeLayer();
                     this.layer = newLayer;
-                    this.addLayerInternal();
+                    this.addLayerInternal(newProps);
                 }, this.props.options.refresh);
             }
         }
