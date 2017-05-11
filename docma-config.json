@@ -133,7 +133,6 @@
             "web/client/epics/maptype.js",
             "web/client/epics/search.js",
             "web/client/epics/wfsquery.js",
-            "web/client/epics/maps.js",
 
             "web/client/utils/index.jsdoc",
             "web/client/utils/CoordinatesUtils.js",

@@ -15,7 +15,6 @@ require('./map/css/map.css');
 
 const Message = require('../components/I18N/Message');
 const ConfigUtils = require('../utils/ConfigUtils');
-const {mapsEpic} = require('../epics/maps');
 const {isString} = require('lodash');
 let plugins;
 /**
@@ -289,6 +288,5 @@ const selector = createSelector(
 );
 module.exports = {
     MapPlugin: connect(selector)(MapPlugin),
-    reducers: { draw: require('../reducers/draw') },
-    epics: {mapsEpic}
+    reducers: { draw: require('../reducers/draw') }
 };
