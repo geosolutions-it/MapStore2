@@ -136,7 +136,9 @@ const CesiumLayer = React.createClass({
     updateLayer(newProps, oldProps) {
         const newLayer = Layers.updateLayer(newProps.type, this.layer, newProps.options, oldProps.options, this.props.map);
         if (newLayer) {
+            this.removeLayer();
             this.layer = newLayer;
+            this.addLayer();
         }
     },
     addLayerInternal() {

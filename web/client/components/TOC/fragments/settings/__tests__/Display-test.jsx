@@ -68,7 +68,7 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(2);
+        expect(inputs.length).toBe(3);
         inputs[0].click();
         expect(spy.calls.length).toBe(1);
     });
