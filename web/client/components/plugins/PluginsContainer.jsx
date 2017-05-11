@@ -103,6 +103,7 @@ const PluginsContainer = React.createClass({
         (this.props.pluginsConfig && this.props.pluginsConfig[this.props.mode] || [])
             .map((plugin) => PluginsUtils.getPluginDescriptor(this.getState, this.props.plugins,
                 this.props.pluginsConfig[this.props.mode], plugin, this.state.loadedPlugins))
+            .filter(plugin => PluginsUtils.filterDisabledPlugins({plugin: plugin && plugin.impl || plugin}, this.getState))
             .filter((plugin) => plugin && plugin.impl.loadPlugin).forEach((plugin) => {
                 if (!this.state.loadedPlugins[plugin.name]) {
                     if (!plugin.impl.enabler || plugin.impl.enabler(state)) {
