@@ -18,7 +18,7 @@ const Message = require('./locale/Message');
 const ScaleBox = require("../components/mapcontrols/scale/ScaleBox");
 
 const mapUtils = require('../utils/MapUtils');
-
+const assign = require('object-assign');
 
 const selector = createSelector([mapSelector], (map) => ({
     currentZoomLvl: map && map.zoom,
@@ -29,6 +29,16 @@ const selector = createSelector([mapSelector], (map) => ({
 }));
 
 require('./scalebox/scalebox.css');
+
+const ScaleBoxTool = React.createClass({
+    render() {
+        return (<HelpWrapper id="mapstore-scalebox-container"
+            key="scalebox-help"
+            helpText={<Message msgId="helptexts.scaleBox"/>}>
+                <ScaleBox key="scaleBox" {...this.props}/>
+        </HelpWrapper>);
+    }
+});
 
 /**
   * ScaleBox Plugin. Provides a selector for the scale of the map.
@@ -42,20 +52,12 @@ require('./scalebox/scalebox.css');
   * @prop {Boolean} cfg.useRawInput set true if you want to use an normal html input object
   *
   */
-const ScaleBoxPlugin = React.createClass({
-    render() {
-        return (<HelpWrapper id="mapstore-scalebox-container"
-            key="scalebox-help"
-            helpText={<Message msgId="helptexts.scaleBox"/>}>
-                <ScaleBox key="scaleBox" {...this.props}/>
-        </HelpWrapper>);
-    }
-});
-
-
+const ScaleBoxPlugin = connect(selector, {
+    onChange: changeZoomLevel
+})(ScaleBoxTool);
 module.exports = {
-    ScaleBoxPlugin: connect(selector, {
-        onChange: changeZoomLevel
-    })(ScaleBoxPlugin),
+    ScaleBoxPlugin: assign(ScaleBoxPlugin, {
+        disablePluginIf: "{state('mapType') === 'cesium'}"
+    }),
     reducers: {}
 };

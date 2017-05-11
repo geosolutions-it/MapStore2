@@ -50,6 +50,7 @@ const Measure = connect(
 
 module.exports = {
     MeasurePlugin: assign(Measure, {
+        disablePluginIf: "{state('mapType') === 'cesium'}",
         BurgerMenu: {
             name: 'measurement',
             position: 9,

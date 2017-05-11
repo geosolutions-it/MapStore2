@@ -11,7 +11,7 @@ const {omit, isObject, head, isArray, isString} = require('lodash');
 const {combineReducers} = require('redux');
 const {connect} = require('react-redux');
 const url = require('url');
-
+const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}];
 const {combineEpics} = require('redux-observable');
 
 const {memoize, get} = require('lodash');
@@ -66,6 +66,13 @@ const handleExpression = (state, context, expression) => {
     return expression;
 };
 
+const filterDisabledPlugins = (item, state = {}, plugins = {}) => {
+    const disablePluginIf = item && item.plugin && item.plugin.disablePluginIf || item.cfg.disablePluginIf;
+    if (disablePluginIf && !(item && item.cfg && item.cfg.skipAutoDisable)) {
+        return !handleExpression(state, plugins.requires, disablePluginIf);
+    }
+    return true;
+};
 const showIn = (state, requires, cfg, name, id, isDefault) => {
     return ((id && cfg.showIn && handleExpression(state, requires, cfg.showIn).indexOf(id) !== -1) ||
             (cfg.showIn && handleExpression(state, requires, cfg.showIn).indexOf(name) !== -1) ||
@@ -130,7 +137,7 @@ const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, load
                         plugin: pluginImpl,
                         items: getPluginItems(state, plugins, pluginsConfig, pluginName, null, true, loadedPlugins)
                     });
-            });
+            }).filter( (item) => filterDisabledPlugins(item, state, plugins) );
 };
 
 const getReducers = (plugins) => Object.keys(plugins).map((name) => plugins[name].reducers)
@@ -182,6 +189,8 @@ const PluginsUtils = {
     },
     getReducers,
     filterState,
+    filterDisabledPlugins,
+    getMonitoredState: (state, monitorState = []) => filterState(state, defaultMonitoredState.concat(monitorState)),
     getPlugins: (plugins) => Object.keys(plugins).map((name) => plugins[name])
                                 .reduce((previous, current) => assign({}, previous, omit(current, 'reducers')), {}),
     /**

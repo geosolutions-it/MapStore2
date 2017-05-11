@@ -17,7 +17,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const PluginsContainer = connect((state) => ({
     mode: (urlQuery.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop')),
     pluginsState: state && state.controls || {},
-    monitoredState: PluginsUtils.filterState(state, ConfigUtils.getConfigProp('monitorState') || [])
+    monitoredState: PluginsUtils.getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
 }))(require('../components/plugins/PluginsContainer'));
 
 const Embedded = React.createClass({

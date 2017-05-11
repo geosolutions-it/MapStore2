@@ -10,6 +10,7 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {mapSelector} = require('../selectors/map');
+
 // TODO: make step and glyphicon configurable
 const selector = createSelector([mapSelector], (map) => ({currentZoom: map && map.zoom, id: "zoomin-btn", step: 1, glyphicon: "plus"}));
 
@@ -38,6 +39,7 @@ const assign = require('object-assign');
 
 module.exports = {
     ZoomInPlugin: assign(ZoomInButton, {
+        disablePluginIf: "{state('mapType') === 'cesium'}",
         Toolbar: {
             name: "ZoomIn",
             position: 3,
