@@ -34,6 +34,7 @@ const PERMISSIONS_LIST_LOADING = 'PERMISSIONS_LIST_LOADING';
 const PERMISSIONS_LIST_LOADED = 'PERMISSIONS_LIST_LOADED';
 const RESET_CURRENT_MAP = 'RESET_CURRENT_MAP';
 const MAPS_SEARCH_TEXT_CHANGED = 'MAPS_SEARCH_TEXT_CHANGED';
+const METADATA_CHANGED = 'METADATA_CHANGED';
 
 /**
  * reset current map metadata, `RESET_CURRENT_MAP`
@@ -106,6 +107,21 @@ function loadError(e) {
     return {
         type: MAPS_LIST_LOAD_ERROR,
         error: e
+    };
+}
+
+/**
+ * updates metadata of the map
+ * @memberof actions.maps
+ * @param  {object} prop the name of the changed property
+ * @param  {object} name the value of the changed property
+ * @return {action} METADATA_CHANGED
+ */
+function metadataChanged(prop, value) {
+    return {
+        type: METADATA_CHANGED,
+        prop,
+        value
     };
 }
 
@@ -630,7 +646,7 @@ function deleteMap(resourceId, options) {
             dispatch(mapDeleted(resourceId, "success"));
             let state = getState && getState();
             if ( state && state.maps && state.maps.totalCount === state.maps.start) {
-                dispatch(loadMaps(false, ConfigUtils.getDefaults().initialMapFilter || "*"));
+                dispatch(loadMaps(false, state.maps.searchText || ConfigUtils.getDefaults().initialMapFilter || "*"));
             }
         }).catch((e) => {
             dispatch(mapDeleted(resourceId, "failure", e));
@@ -664,6 +680,8 @@ module.exports = {
     MAP_ERROR,
     RESET_CURRENT_MAP,
     MAPS_SEARCH_TEXT_CHANGED,
+    METADATA_CHANGED,
+    metadataChanged,
     loadMaps,
     mapsLoading,
     mapsLoaded,
