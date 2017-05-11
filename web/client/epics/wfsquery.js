@@ -12,11 +12,62 @@ const {changeSpatialAttribute} = require('../actions/queryform');
 const {FEATURE_TYPE_SELECTED, featureTypeLoaded, featureTypeError} = require('../actions/wfsquery');
 
 const types = {
+    // string
+    // 'xsd:ENTITIES': 'string',
+    // 'xsd:ENTITY': 'string',
+    // 'xsd:ID': 'string',
+    // 'xsd:IDREF': 'string',
+    // 'xsd:IDREFS': 'string',
+    // 'xsd:language': 'string',
+    // 'xsd:Name': 'string',
+    // 'xsd:NCName': 'string',
+    // 'xsd:NMTOKEN': 'string',
+    // 'xsd:NMTOKENS': 'string',
+    'xsd:normalizedString': 'string',
+    // 'xsd:QName': 'string',
     'xsd:string': 'string',
+    // 'xsd:token': 'string',
+
+    // date
+    'xsd:date': 'date',
     'xsd:dateTime': 'date',
+    // 'xsd:duration': 'date',
+    // 'xsd:gDay': 'date',
+    // 'xsd:gMonth': 'date',
+    // 'xsd:gMonthDay': 'date',
+    // 'xsd:gYear': 'date',
+    // 'xsd:gYearMonth': 'date',
+    // 'xsd:time': 'date',
+
+    // number
+    // 'xsd:byte': 'number',
+    'xsd:decimal': 'number',
+    'xsd:int': 'number',
+    'xsd:integer': 'number',
+    'xsd:long': 'number',
+    'xsd:negativeInteger': 'number',
+    'xsd:nonNegativeInteger': 'number',
+    'xsd:nonPositiveInteger': 'number',
+    'xsd:positiveInteger': 'number',
+    'xsd:short': 'number',
+    'xsd:unsignedLong': 'number',
+    'xsd:unsignedInt': 'number',
+    'xsd:unsignedShort': 'number',
+    // 'xsd:unsignedByte': 'number',
+
+    // from old object
     'xsd:number': 'number',
-    'xsd:int': 'number'
+
+    // misc
+    // 'xsd:anyURI': 'string',
+    // 'xsd:base64Binary': 'number',
+    'xsd:boolean': 'boolean',
+    'xsd:double': 'number',
+    // 'xsd:hexBinary': 'string',
+    // 'xsd:NOTATION': 'string',
+    'xsd:float': 'number'
 };
+
 const fieldConfig = {};
 const extractInfo = (data) => {
     return {
@@ -35,7 +86,7 @@ const extractInfo = (data) => {
                 return conf;
             }),
         attributes: data.featureTypes[0].properties
-            .filter((attribute) => attribute.type.indexOf('gml:') !== 0)
+            .filter((attribute) => attribute.type.indexOf('gml:') !== 0 && types[attribute.type])
             .map((attribute) => {
                 let conf = {
                     label: attribute.name,
