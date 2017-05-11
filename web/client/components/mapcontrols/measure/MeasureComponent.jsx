@@ -9,11 +9,8 @@
 const React = require('react');
 const {Panel, ButtonGroup, Tooltip, Glyphicon, Button} = require('react-bootstrap');
 const ToggleButton = require('../../buttons/ToggleButton');
-var NumberFormat = require('../../I18N/Number');
-
-const lineRuleIcon = require('./img/line-ruler.png');
-const areaRuleIcon = require('./img/area-ruler.png');
-const bearingRuleIcon = require('./img/bearing-ruler.png');
+const NumberFormat = require('../../I18N/Number');
+const Message = require('../../I18N/Message');
 
 const measureUtils = require('../../../utils/MeasureUtils');
 const localeUtils = require('../../../utils/LocaleUtils');
@@ -49,12 +46,15 @@ const MeasureComponent = React.createClass({
         lineMeasureEnabled: React.PropTypes.bool,
         areaMeasureEnabled: React.PropTypes.bool,
         bearingMeasureEnabled: React.PropTypes.bool,
+        showButtons: React.PropTypes.bool,
         showResults: React.PropTypes.bool,
         lineGlyph: React.PropTypes.string,
         areaGlyph: React.PropTypes.string,
         bearingGlyph: React.PropTypes.string,
         useButtonGroup: React.PropTypes.bool,
         withReset: React.PropTypes.bool,
+        showButtonsLabels: React.PropTypes.bool,
+        inlineGlyph: React.PropTypes.bool,
         formatLength: React.PropTypes.func,
         formatArea: React.PropTypes.func,
         formatBearing: React.PropTypes.func
@@ -64,7 +64,6 @@ const MeasureComponent = React.createClass({
     },
     getDefaultProps() {
         return {
-            icon: <img src={lineRuleIcon} />,
             columnProperties: {
                 xs: 4,
                 sm: 4,
@@ -75,12 +74,17 @@ const MeasureComponent = React.createClass({
                 length: {unit: 'm', label: 'm'},
                 area: {unit: 'sqm', label: 'm²'}
             },
+            showButtons: true,
             showResults: true,
             useButtonGroup: false,
             withReset: false,
             lineGlyph: "1-measure-lenght",
             areaGlyph: "1-measure-area",
             bearingGlyph: "1-bearing",
+            showButtonsLabels: true,
+            lengthLabel: <Message msgId="measureComponent.lengthLabel"/>,
+            areaLabel: <Message msgId="measureComponent.areaLabel"/>,
+            bearingLabel: <Message msgId="measureComponent.bearingLabel"/>,
             formatLength: (uom, value) => measureUtils.getFormattedLength(uom, value),
             formatArea: (uom, value) => measureUtils.getFormattedArea(uom, value),
             formatBearing: (value) => measureUtils.getFormattedBearingValue(round(value || 0, 6))
@@ -135,33 +139,41 @@ const MeasureComponent = React.createClass({
         }
         return null;
     },
+    renderLabel(msgId) {
+        if (this.props.showButtonsLabels) {
+            return <span className="option-text">{localeUtils.getMessageById(this.context.messages, msgId)}</span>;
+        }
+    },
+    renderText(glyph, labelId) {
+        if (glyph) {
+            return (<span>
+                <span className="option-icon"><Glyphicon glyph={glyph}/></span>
+                {this.renderLabel(labelId)}
+            </span>);
+        }
+        return this.renderLabel(labelId);
+    },
     renderButtons() {
         let {lineToolTip, areaToolTip, bearingToolTip} = this.getToolTips();
         return (
                 <div>
                     <ToggleButton
-                        text={<span>
-                            <span className="option-icon">{this.props.lineGlyph ? <Glyphicon glyph={this.props.lineGlyph}/> : <img src={lineRuleIcon}/>}</span>
-                            <span className="option-text">{localeUtils.getMessageById(this.context.messages, "measureComponent.MeasureLength")}</span>
-                            </span>}
+                        text={this.renderText(this.props.inlineGlyph && this.props.lineGlyph, "measureComponent.MeasureLength")}
+                        glyphicon={!this.props.inlineGlyph && this.props.lineGlyph}
                         style={{"width": "100%", textAlign: "left"}}
                         pressed={this.props.lineMeasureEnabled}
                         onClick={this.onLineClick}
                         tooltip={lineToolTip} />
                     <ToggleButton
-                        text={<span>
-                            <span className="option-icon">{this.props.areaGlyph ? <Glyphicon glyph={this.props.areaGlyph}/> : <img src={areaRuleIcon}/>}</span>
-                            <span className="option-text">{localeUtils.getMessageById(this.context.messages, "measureComponent.MeasureArea")}</span>
-                            </span>}
+                        text={this.renderText(this.props.inlineGlyph && this.props.areaGlyph, "measureComponent.MeasureArea")}
+                        glyphicon={!this.props.inlineGlyph && this.props.areaGlyph}
                         style={{"width": "100%", textAlign: "left"}}
                         pressed={this.props.areaMeasureEnabled}
                         onClick={this.onAreaClick}
                         tooltip={areaToolTip} />
                     <ToggleButton
-                        text={<span>
-                            <span className="option-icon">{this.props.bearingGlyph ? <Glyphicon glyph={this.props.bearingGlyph}/> : <img src={bearingRuleIcon}/>}</span>
-                            <span className="option-text">{localeUtils.getMessageById(this.context.messages, "measureComponent.MeasureBearing")}</span>
-                            </span>}
+                        text={this.renderText(this.props.inlineGlyph && this.props.bearingGlyph, "measureComponent.MeasureBearing")}
+                        glyphicon={!this.props.inlineGlyph && this.props.bearingGlyph}
                         style={{"width": "100%", textAlign: "left"}}
                         pressed={this.props.bearingMeasureEnabled}
                         onClick={this.onBearingClick}
@@ -185,7 +197,7 @@ const MeasureComponent = React.createClass({
     render() {
         return (
             <Panel id={this.props.id}>
-                {this.props.useButtonGroup ? this.renderButtonGroup() : this.renderButtons() }
+                {this.props.showButtons && (this.props.useButtonGroup ? this.renderButtonGroup() : this.renderButtons()) }
                 {this.renderPanel()}
             </Panel>
         );

@@ -29,6 +29,8 @@
             "general": "Général",
             "display": "Affichage",
             "style": "Style",
+            "transparent": "Transparent",
+            "cached": "Utiliser les options de cache",
             "styleCustom": "Utilisez un style nommé \"{value} \"",
             "styleListLoadError": "Une erreur s'est produite lors du chargement de la liste de styles",
             "stylesRefreshList": "Actualiser la liste des styles",
@@ -39,6 +41,10 @@
             "confirmDelete": "Êtes-vous sûr?",
             "featureTypeError": "Impossible de charger les attributs de calque",
             "elevation": "élévation"
+        },
+        "globeswitcher": {
+            "tooltipDeactivate": "Sortie en mode 3D",
+            "tooltipActivate": "Entrez le mode 3D"
         },
         "enable": "Activer",
         "background": "Fond de plan",

@@ -50,6 +50,7 @@ module.exports = {
             resolve(ShapeFilePlugin);
         });
     }, enabler: (state) => state.shapefile && state.shapefile.enabled || state.toolbar && state.toolbar.active === 'shapefile'}, {
+        disablePluginIf: "{state('mapType') === 'cesium'}",
         Toolbar: {
             name: 'shapefile',
             position: 9,

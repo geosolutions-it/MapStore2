@@ -34,13 +34,24 @@ describe("test the MeasureComponent", () => {
 
     it('test creation of button UIs ', () => {
         let measurement = {};
-        const mc = ReactDOM.render(<MeasureComponent measurement={measurement}/>, document.getElementById("container"));
+        const mc = ReactDOM.render(<MeasureComponent useButtonGroup={true} measurement={measurement}/>, document.getElementById("container"));
         expect(mc).toExist();
         const domNode = ReactDOM.findDOMNode(mc);
         expect(domNode).toExist();
         const domButtons = domNode.getElementsByTagName('button');
         expect(domButtons).toExist();
         expect(domButtons.length).toBe(3);
+    });
+
+    it('test creation of button UIs useButtonGroup option ', () => {
+        let measurement = {};
+        const mc = ReactDOM.render(<MeasureComponent useButtonGroup={true} measurement={measurement}/>, document.getElementById("container"));
+        expect(mc).toExist();
+        const domNode = ReactDOM.findDOMNode(mc);
+        expect(domNode).toExist();
+        const domButtons = domNode.getElementsByClassName('btn-block');
+        expect(domButtons).toExist();
+        expect(domButtons.length).toBe(1);
     });
 
     it('test creation of measurement result panel UI ', () => {
