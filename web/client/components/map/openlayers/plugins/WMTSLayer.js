@@ -67,7 +67,8 @@ Layers.registerType('wmts', {
                     ],
                     extent: extent,
                     resolutions: resolutions,
-                    matrixIds: matrixIds
+                    matrixIds: matrixIds,
+                    tileSize: options.tileSize || [256, 256]
               }),
               style: options.style || '',
               wrapX: true

@@ -81,12 +81,13 @@ const MapInfoUtils = {
             }
         ];
     },
-    getMarkerLayer(name, clickedMapPoint, styleName, otherParams) {
+    getMarkerLayer(name, clickedMapPoint, styleName, otherParams, markerLabel) {
         return {
             type: 'vector',
             visibility: true,
             name: name || "GetFeatureInfo",
             styleName: styleName || "marker",
+            label: markerLabel,
             features: MapInfoUtils.clickedPointToGeoJson(clickedMapPoint),
             ...otherParams
         };

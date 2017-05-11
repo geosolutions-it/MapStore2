@@ -21,25 +21,25 @@ const image = new ol.style.Circle({
 });
 
 const defaultStyles = {
-  'Point': [new ol.style.Style({
+  'Point': () => [new ol.style.Style({
       image: image
   })],
-  'LineString': [new ol.style.Style({
+  'LineString': () => [new ol.style.Style({
     stroke: new ol.style.Stroke({
       color: 'green',
       width: 1
     })
   })],
-  'MultiLineString': [new ol.style.Style({
+  'MultiLineString': () => [new ol.style.Style({
     stroke: new ol.style.Stroke({
       color: 'green',
       width: 1
     })
   })],
-  'MultiPoint': [new ol.style.Style({
+  'MultiPoint': () => [new ol.style.Style({
     image: image
   })],
-  'MultiPolygon': [new ol.style.Style({
+  'MultiPolygon': () => [new ol.style.Style({
     stroke: new ol.style.Stroke({
         color: 'blue',
         lineDash: [4],
@@ -49,7 +49,7 @@ const defaultStyles = {
       color: 'rgba(0, 0, 255, 0.1)'
     })
   })],
-  'Polygon': [new ol.style.Style({
+  'Polygon': () => [new ol.style.Style({
     stroke: new ol.style.Stroke({
       color: 'blue',
       lineDash: [4],
@@ -59,7 +59,7 @@ const defaultStyles = {
       color: 'rgba(0, 0, 255, 0.1)'
     })
   })],
-  'GeometryCollection': [new ol.style.Style({
+  'GeometryCollection': () => [new ol.style.Style({
     stroke: new ol.style.Stroke({
       color: 'magenta',
       width: 2
@@ -75,7 +75,7 @@ const defaultStyles = {
       })
     })
   })],
-  'Circle': [new ol.style.Style({
+  'Circle': () => [new ol.style.Style({
     stroke: new ol.style.Stroke({
       color: 'red',
       width: 2
@@ -84,25 +84,32 @@ const defaultStyles = {
       color: 'rgba(255,0,0,0.2)'
     })
 })],
-  'marker': [new ol.style.Style({
-    image: new ol.style.Icon(({
+  'marker': (options) => [new ol.style.Style({
+    image: new ol.style.Icon({
       anchor: [14, 41],
       anchorXUnits: 'pixels',
       anchorYUnits: 'pixels',
       src: markerShadow
-    }))
+    })
 }), new ol.style.Style({
-    image: new ol.style.Icon(({
+    image: new ol.style.Icon({
       anchor: [0.5, 1],
       anchorXUnits: 'fraction',
       anchorYUnits: 'fraction',
       src: markerIcon
-    }))
+    }),
+    text: new ol.style.Text({
+        text: options.label,
+        scale: 1.25,
+    offsetY: 8,
+        fill: new ol.style.Fill({color: '#000000'}),
+        stroke: new ol.style.Stroke({color: '#FFFFFF', width: 2})
+    })
     })]
 };
 
-var styleFunction = function(feature) {
-    return defaultStyles[feature.getGeometry().getType()];
+var styleFunction = function(feature, options) {
+    return defaultStyles[feature.getGeometry().getType()](options);
 };
 
 function getStyle(options) {
@@ -163,12 +170,12 @@ function getStyle(options) {
             switch (type) {
                 case "Point":
                 case "MultiPoint":
-                    return defaultStyles.marker;
+                    return defaultStyles.marker(options);
                 default:
                     break;
             }
         }
-        return defaultStyles[options.styleName];
+        return defaultStyles[options.styleName](options);
     } : style || styleFunction;
 }
 Layers.registerType('vector', {
@@ -196,6 +203,9 @@ Layers.registerType('vector', {
             layer.getSource().forEachFeature((f) => {
                 f.getGeometry().transform(oldCrs, newCrs);
             });
+        }
+        if (!newOptions.overrideOLStyle) {
+            layer.setStyle((feature) => styleFunction(feature, newOptions));
         }
         if (!isEqual(oldOptions.style, newOptions.style)) {
             layer.setStyle(getStyle(newOptions));

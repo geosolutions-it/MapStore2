@@ -266,6 +266,22 @@ function mapUpdated(oldMap, newMap) {
     return !centersEqual || (newMap.zoom !== oldMap.zoom);
 }
 
+/* Transform width and height specified in meters to the units of the specified projection */
+function transformExtent(projection, center, width, height) {
+    let units = CoordinatesUtils.getUnits(projection);
+    if (units === 'ft') {
+        return {width: width / METERS_PER_UNIT.ft, height: height / METERS_PER_UNIT.ft};
+    } else if (units === 'us-ft') {
+        return {width: width / METERS_PER_UNIT['us-ft'], height: height / METERS_PER_UNIT['us-ft']};
+    } else if (units === 'degrees') {
+        return {
+            width: width / (111132.92 - 559.82 * Math.cos(2 * center.y) + 1.175 * Math.cos(4 * center.y)),
+            height: height / (111412.84 * Math.cos(center.y) - 93.5 * Math.cos(3 * center.y))
+        };
+    }
+    return {width, height};
+}
+
 module.exports = {
     EXTENT_TO_ZOOM_HOOK,
     RESOLUTIONS_HOOK,
@@ -290,5 +306,6 @@ module.exports = {
     getScales,
     getBbox,
     mapUpdated,
-    getCurrentResolution
+    getCurrentResolution,
+    transformExtent
 };

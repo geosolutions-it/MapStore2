@@ -39,7 +39,8 @@ const ZoomButton = React.createClass({
             minZoom: 0,
             maxZoom: 28,
             onZoom: () => {},
-            bsStyle: "default"
+            bsStyle: "default",
+            style: {}
         };
     },
     render() {

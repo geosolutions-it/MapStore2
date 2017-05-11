@@ -8,7 +8,7 @@
 
 var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER,
     CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, CHANGE_MAP_SCALES, ZOOM_TO_EXTENT, PAN_TO,
-    CHANGE_MAP_STYLE, CHANGE_ROTATION} = require('../actions/map');
+    CHANGE_MAP_STYLE, CHANGE_ROTATION, ZOOM_TO_POINT} = require('../actions/map');
 const {isArray} = require('lodash');
 
 
@@ -43,7 +43,8 @@ function mapConfig(state = null, action) {
                     mapOptions: assign({}, state && state.mapOptions,
                         {
                             view: assign({}, state && state.mapOptions && state.mapOptions.view, {
-                                resolutions: resolutions
+                                resolutions: resolutions,
+                                scales: action.scales
                             })
                         })
                 });
@@ -107,6 +108,13 @@ function mapConfig(state = null, action) {
                 });
             }
             return state;
+        }
+        case ZOOM_TO_POINT: {
+            return assign({}, state, {
+                center: CoordinatesUtils.reproject(action.pos, action.crs, 'EPSG:4326'),
+                zoom: action.zoom,
+                mapStateSource: null
+            });
         }
         case PAN_TO: {
             const center = CoordinatesUtils.reproject(
