@@ -1,5 +1,5 @@
-/**
- * Copyright 2015, GeoSolutions Sas.
+/*
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -13,6 +13,7 @@ const L = require('leaflet');
 const objectAssign = require('object-assign');
 const {isArray, isEqual} = require('lodash');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
+require('leaflet.nontiledlayer');
 
 
 L.TileLayer.MultipleUrlWMS = L.TileLayer.WMS.extend({
@@ -42,7 +43,6 @@ L.TileLayer.MultipleUrlWMS = L.TileLayer.WMS.extend({
 
         L.setOptions(this, options);
     },
-
     getTileUrl: function(tilePoint) { // (Point, Number) -> String
         let map = this._map;
         let tileSize = this.options.tileSize;
@@ -79,6 +79,7 @@ function wmsToLeafletOptions(options) {
         transparent: options.transparent !== undefined ? options.transparent : true,
         tiled: options.tiled !== undefined ? options.tiled : true,
         opacity: opacity,
+        zIndex: options.zIndex,
         version: options.version || "1.3.0",
         SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
@@ -95,6 +96,9 @@ Layers.registerType('wms', {
         const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
         const queryParameters = wmsToLeafletOptions(options) || {};
         urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
+        if (options.singleTile) {
+            return L.nonTiledLayer.wms(urls[0], queryParameters);
+        }
         return L.tileLayer.multipleUrlWMS(urls, queryParameters);
     },
     update: function(layer, newOptions, oldOptions) {
@@ -103,12 +107,36 @@ Layers.registerType('wms', {
         let newQueryParameters = WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(newOptions));
         let newParameters = Object.keys(newQueryParameters).filter((key) => {return newQueryParameters[key] !== oldqueryParameters[key]; });
         let newParams = {};
+        let newLayer;
+        if (oldOptions.singleTile !== newOptions.singleTile) {
+            const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
+            urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, newQueryParameters));
+            if (newOptions.singleTile) {
+                // return the nonTiledLayer
+                newLayer = L.nonTiledLayer.wms(urls[0], newQueryParameters);
+            } else {
+                newLayer = L.tileLayer.multipleUrlWMS(urls, newQueryParameters);
+            }
+            if ( newParameters.length > 0 ) {
+                newParams = newParameters.reduce( (accumulator, currentValue) => {
+                    return objectAssign({}, accumulator, {[currentValue]: newQueryParameters[currentValue] });
+                }, newParams);
+                // set new options as parameters, merged with params
+                newLayer.setParams(objectAssign(newParams, newParams.params, newOptions.params));
+            } else if (!isEqual(newOptions.params, oldOptions.params)) {
+                newLayer.setParams(newOptions.params);
+            }
+            return newLayer;
+        }
         if ( newParameters.length > 0 ) {
-            newParameters.forEach( key => newParams[key] = newQueryParameters[key] );
+            newParams = newParameters.reduce( (accumulator, currentValue) => {
+                return objectAssign({}, accumulator, {[currentValue]: newQueryParameters[currentValue] });
+            }, newParams);
             // set new options as parameters, merged with params
             layer.setParams(objectAssign(newParams, newParams.params, newOptions.params));
         } else if (!isEqual(newOptions.params, oldOptions.params)) {
             layer.setParams(newOptions.params);
         }
+        return null;
     }
 });

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -10,7 +10,7 @@ var Layers = require('../../../../utils/cesium/Layers');
 var Cesium = require('../../../../libs/cesium');
 var TileProvider = require('../../../../utils/TileConfigProvider');
 var ConfigUtils = require('../../../../utils/ConfigUtils');
-var {isObject, isArray} = require('lodash');
+const ProxyUtils = require('../../../../utils/ProxyUtils');
 
 function splitUrl(originalUrl) {
     let url = originalUrl;
@@ -34,7 +34,7 @@ TileProviderProxy.prototype.getURL = function(resource) {
     if (url.indexOf("//") === 0) {
         url = location.protocol + url;
     }
-    return this.proxy + encodeURIComponent(url + queryString);
+    return this.proxy.url + encodeURIComponent(url + queryString);
 };
 
 function NoProxy() {
@@ -64,16 +64,7 @@ Layers.registerType('tileprovider', (options) => {
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
     if (proxyUrl) {
-        let useCORS = [];
-        if (isObject(proxyUrl)) {
-            useCORS = proxyUrl.useCORS || [];
-            proxyUrl = proxyUrl.url;
-        }
-        if (isArray(url)) {
-            url = url[0];
-        }
-        const isCORS = useCORS.reduce((found, current) => found || url.indexOf(current) === 0, false);
-        proxy = !isCORS && proxyUrl;
+        proxy = opt.noCors || ProxyUtils.needProxy(url);
     }
     const cr = opt.credits;
     const credit = cr ? new Cesium.Credit(cr.text, cr.imageUrl, cr.link) : opt.attribution;
@@ -84,6 +75,6 @@ Layers.registerType('tileprovider', (options) => {
         maximumLevel: opt.maxZoom,
         minimumLevel: opt.minZoom,
         credit,
-        proxy: proxy && opt.noCors ? new TileProviderProxy(proxyUrl) : new NoProxy()
+        proxy: proxy ? new TileProviderProxy(proxyUrl) : new NoProxy()
     });
 });

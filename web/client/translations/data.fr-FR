@@ -30,6 +30,7 @@
             "display": "Affichage",
             "style": "Style",
             "transparent": "Transparent",
+            "singleTile": "Single Tile",
             "cached": "Utiliser les options de cache",
             "styleCustom": "Utilisez un style nommé \"{value} \"",
             "styleListLoadError": "Une erreur s'est produite lors du chargement de la liste de styles",

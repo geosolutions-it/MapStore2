@@ -1,5 +1,5 @@
 /*
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -12,6 +12,7 @@ const ProxyUtils = require('../../../../utils/ProxyUtils');
 const Cesium = require('../../../../libs/cesium');
 const assign = require('object-assign');
 const {isArray} = require('lodash');
+const WMSUtils = require('../../../../utils/cesium/WMSUtils');
 
 function getWMSURLs( urls ) {
     return urls.map((url) => url.split("\?")[0]);
@@ -37,7 +38,7 @@ function WMSProxy(proxy) {
 
 WMSProxy.prototype.getURL = function(resource) {
     let {url, queryString} = splitUrl(resource);
-    return this.proxy + encodeURIComponent(url + queryString);
+    return this.proxy.url + encodeURIComponent(url + queryString);
 };
 
 function NoProxy() {
@@ -111,5 +112,21 @@ const createLayer = (options) => {
     };
     return layer;
 };
-
-Layers.registerType('wms', createLayer);
+const updateLayer = (layer, newOptions, oldOptions) => {
+    const requiresUpdate = (el) => WMSUtils.PARAM_OPTIONS.indexOf(el.toLowerCase()) >= 0;
+    const newParams = (newOptions && newOptions.params);
+    const oldParams = (oldOptions && oldOptions.params);
+    const allParams = {...newParams, ...oldParams };
+    let newParameters = Object.keys({...newOptions, ...oldOptions, ...allParams})
+        .filter(requiresUpdate)
+        .filter((key) => {
+            const oldOption = oldOptions[key] === undefined ? oldParams && oldParams[key] : oldOptions[key];
+            const newOption = newOptions[key] === undefined ? newParams && newParams[key] : newOptions[key];
+            return oldOption !== newOption;
+        });
+    if (newParameters.length > 0) {
+        return createLayer(newOptions);
+    }
+    return null;
+};
+Layers.registerType('wms', {create: createLayer, update: updateLayer});
