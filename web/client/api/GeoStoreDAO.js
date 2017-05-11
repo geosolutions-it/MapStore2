@@ -20,7 +20,12 @@ let parseAdminGroups = (groupsObj) => {
 };
 
 let parseUserGroups = (groupsObj) => {
-    if (!groupsObj || !groupsObj.User || !groupsObj.User.groups || !groupsObj.User.groups.group || !_.isArray(groupsObj.User.groups.group)) return [];
+    if (!groupsObj || !groupsObj.User || !groupsObj.User.groups || !groupsObj.User.groups.group || !_.isArray(groupsObj.User.groups.group)) {
+        if (_.has(groupsObj.User.groups.group, "id", "groupName")) {
+            return [groupsObj.User.groups.group];
+        }
+        return [];
+    }
     return groupsObj.User.groups.group.filter(obj => !!obj.id).map((obj) => _.pick(obj, ["id", "groupName", "description"]));
 };
 
