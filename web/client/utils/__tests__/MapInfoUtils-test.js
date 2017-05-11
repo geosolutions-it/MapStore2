@@ -12,10 +12,10 @@ var {
     getAvailableInfoFormatLabels,
     getAvailableInfoFormatValues,
     getDefaultInfoFormatValue,
-    createBBox,
-    getProjectedBBox,
-    buildIdentifyWMSRequest
+    buildIdentifyRequest
 } = require('../MapInfoUtils');
+
+const CoordinatesUtils = require('../CoordinatesUtils');
 
 describe('MapInfoUtils', () => {
 
@@ -66,23 +66,11 @@ describe('MapInfoUtils', () => {
     });
 
     it('it should returns a bbox', () => {
-        let results = createBBox(-10, 10, -10, 10);
+        let results = CoordinatesUtils.createBBox(-10, 10, -10, 10);
         expect(results).toExist();
         expect(results.maxx).toBe(-10);
     });
-
-    it('it should tests the creation of a bbox given the center, resolution and size', () => {
-        let center = {x: 0, y: 0};
-        let resolution = 1;
-        let rotation = 0;
-        let size = [10, 10];
-        let bbox = getProjectedBBox(center, resolution, rotation, size);
-        expect(bbox).toExist();
-        expect(bbox.maxx).toBeGreaterThan(bbox.minx);
-        expect(bbox.maxy).toBeGreaterThan(bbox.miny);
-    });
-
-    it('buildIdentifyWMSRequest should honour queryLayers', () => {
+    it('buildIdentifyRequest should honour queryLayers', () => {
         let props = {
             map: {
                 zoom: 0,
@@ -101,7 +89,7 @@ describe('MapInfoUtils', () => {
             name: "layer",
             url: "http://localhost"
         };
-        let req1 = buildIdentifyWMSRequest(layer1, props);
+        let req1 = buildIdentifyRequest(layer1, props);
         expect(req1.request).toExist();
         expect(req1.request.query_layers).toEqual("sublayer1,sublayer2");
 
@@ -110,7 +98,7 @@ describe('MapInfoUtils', () => {
             name: "layer",
             url: "http://localhost"
         };
-        let req2 = buildIdentifyWMSRequest(layer2, props);
+        let req2 = buildIdentifyRequest(layer2, props);
         expect(req2.request).toExist();
         expect(req2.request.query_layers).toEqual("layer");
 
@@ -120,8 +108,78 @@ describe('MapInfoUtils', () => {
             queryLayers: [],
             url: "http://localhost"
         };
-        let req3 = buildIdentifyWMSRequest(layer3, props);
+        let req3 = buildIdentifyRequest(layer3, props);
         expect(req3.request).toExist();
         expect(req3.request.query_layers).toEqual("");
+    });
+
+    it('buildIdentifyRequest works for wms layer', () => {
+        let props = {
+            map: {
+                zoom: 0,
+                projection: 'EPSG:4326'
+            },
+            point: {
+                latlng: {
+                    lat: 0,
+                    lng: 0
+                }
+            }
+        };
+        let layer1 = {
+            type: "wms",
+            queryLayers: ["sublayer1", "sublayer2"],
+            name: "layer",
+            url: "http://localhost"
+        };
+        let req1 = buildIdentifyRequest(layer1, props);
+        expect(req1.request).toExist();
+        expect(req1.request.service).toBe('WMS');
+    });
+
+    it('buildIdentifyRequest works for wmts layer', () => {
+        let props = {
+            map: {
+                zoom: 0,
+                projection: 'EPSG:4326'
+            },
+            point: {
+                latlng: {
+                    lat: 0,
+                    lng: 0
+                }
+            }
+        };
+        let layer1 = {
+            type: "wmts",
+            name: "layer",
+            url: "http://localhost"
+        };
+        let req1 = buildIdentifyRequest(layer1, props);
+        expect(req1.request).toExist();
+        expect(req1.request.service).toBe('WMTS');
+    });
+
+    it('buildIdentifyRequest works for vector layer', () => {
+        let props = {
+            map: {
+                zoom: 0,
+                projection: 'EPSG:4326'
+            },
+            point: {
+                latlng: {
+                    lat: 43,
+                    lng: 0
+                }
+            }
+        };
+        let layer1 = {
+            type: "vector",
+            name: "layer",
+            features: [{properties: {}}]
+        };
+        let req1 = buildIdentifyRequest(layer1, props);
+        expect(req1.request).toExist();
+        expect(req1.request.lat).toBe(43);
     });
 });
