@@ -20,10 +20,10 @@ const Rx = require('rxjs');
  * @memberof epics.maps
  * @return {external:Observable}
  */
-const mapsEpic = action$ =>
+const mapsEpic = (action$, store) =>
   action$.ofType(ATTRIBUTE_UPDATED)
     .switchMap( () =>
-        Rx.Observable.of(loadMaps(false, ConfigUtils.getDefaults().initialMapFilter || "*"))
+        Rx.Observable.of(loadMaps(false, store.getState().maps.searchText || "*"))
         .catch(e => Rx.Observable.from([thumbnailError(e)]))
 );
 
