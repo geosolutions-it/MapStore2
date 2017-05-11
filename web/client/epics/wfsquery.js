@@ -52,7 +52,9 @@ const extractInfo = (data) => {
 };
 
 const featureTypeSelectedEpic = action$ =>
-    action$.ofType(FEATURE_TYPE_SELECTED).switchMap(action => {
+    action$.ofType(FEATURE_TYPE_SELECTED)
+    .filter(action => action.url !== null)  // Axios will try to request a /null url without this filter
+    .switchMap(action => {
         return Rx.Observable.defer( () =>
             axios.get(action.url + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json'))
         .map((response) => {
