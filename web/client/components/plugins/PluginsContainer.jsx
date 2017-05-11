@@ -76,7 +76,7 @@ const PluginsContainer = React.createClass({
     },
     renderPlugins(plugins) {
         return plugins
-            .filter((Plugin) => !PluginsUtils.handleExpression(this.props.pluginsState, this.props.plugins && this.props.plugins.requires, Plugin.hide))
+            .filter((Plugin) => !PluginsUtils.handleExpression(this.getState, this.props.plugins && this.props.plugins.requires, Plugin.hide))
             .map(this.getPluginDescriptor)
             .filter((Plugin) => Plugin && !Plugin.impl.loadPlugin)
             .filter(this.filterPlugins)

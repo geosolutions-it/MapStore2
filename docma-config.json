@@ -135,7 +135,9 @@
             "web/client/epics/wfsquery.js",
 
             "web/client/utils/index.jsdoc",
+            "web/client/utils/CoordinatesUtils.js",
             "web/client/utils/PluginsUtils.js",
+            "web/client/utils/PrintUtils.js",
             "web/client/utils/ShareUtils.js"
           ],
           "jsapi": "web/client/jsapi/MapStore2.js",
@@ -146,11 +148,18 @@
                 "web/client/plugins/GlobeViewSwitcher.jsx",
                 "web/client/plugins/GoFull.jsx",
                 "web/client/plugins/Map.jsx",
+                "web/client/plugins/Measure.jsx",
+                "web/client/plugins/MeasurePanel.jsx",
+                "web/client/plugins/MeasureResults.jsx",
                 "web/client/plugins/FullScreen.jsx",
                 "web/client/plugins/Identify.jsx",
+                "web/client/plugins/Locate.jsx",
                 "web/client/plugins/Login.jsx",
+                "web/client/plugins/ScaleBox.jsx",
                 "web/client/plugins/ScrollTop.jsx",
-                "web/client/plugins/Search.jsx"
+                "web/client/plugins/Search.jsx",
+                "web/client/plugins/ZoomIn.jsx",
+                "web/client/plugins/ZoomOut.jsx"
             ]
         },
         "./docs/**/*md",

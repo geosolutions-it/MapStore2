@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -21,15 +21,55 @@ const assign = require('object-assign');
 const getGeomType = function(layer) {
     return (layer.features && layer.features[0]) ? layer.features[0].geometry.type : undefined;
 };
-
+/**
+ * Utilities for Print
+ * @memberof utils
+ */
 const PrintUtils = {
+    /**
+     * Given a static resource, returns the resource's absolute
+     * URL. Supports file paths with or without origin/protocol.
+     * @param {string} uri the uri to transform
+     * @param {string} [origin=window.location.origin] the origin to use
+     */
+    toAbsoluteURL: (uri, origin) => {
+        // Handle absolute URLs (with protocol-relative prefix)
+        // Example: //domain.com/file.png
+        if (uri.search(/^\/\//) !== -1) {
+            return window.location.protocol + uri;
+        }
+
+        // Handle absolute URLs (with explicit origin)
+        // Example: http://domain.com/file.png
+        if (uri.search(/:\/\//) !== -1) {
+            return uri;
+        }
+
+        // Handle absolute URLs (without explicit origin)
+        // Example: /file.png
+        if (uri.search(/^\//) !== -1) {
+            return (origin || window.location.origin) + uri;
+        }
+    },
+    /**
+     * Tranform the original URL configuration of the layer into a URL
+     * usable for the print service.
+     * @param  {string|array} input Original URL
+     * @return {string}       the URL modified as GeoServer requires
+     */
     normalizeUrl: (input) => {
         let result = isArray(input) ? input[0] : input;
         if (result.indexOf('?') !== -1) {
             result = result.substring(0, result.indexOf('?'));
         }
-        return result;
+        return PrintUtils.toAbsoluteURL(result);
     },
+    /**
+     * Find the layout name for the given options.
+     * The convention is: `PAGE_FORMAT + ("_2_pages_legend"|"_2_pages_legend"|"") + ("_landscape"|"")``
+     * @param  {object} spec the spec with the options
+     * @return {string}      the layout name.
+     */
     getLayoutName: (spec) => {
         let layoutName = [spec.sheet];
         if (spec.includeLegend) {
@@ -44,15 +84,33 @@ const PrintUtils = {
         }
         return layoutName.join('_');
     },
+    /**
+     * Gets the print scales allowed from the capabilities of the print service.
+     * @param  {capabilities} capabilities the capabilities of the print service
+     * @return {array}              the scales array
+     */
     getPrintScales: (capabilities) => {
         return capabilities.scales.slice(0).reverse().map((scale) => parseFloat(scale.value)) || [];
     },
+    /**
+     * Guest the nearest zoom level in the allowed scales
+     * @param  {number} zoom                      the zoom level
+     * @param  {array} scales                    the allowed scales
+     * @param  {array} [mapScales=defaultScales] the map scales
+     * @return {number}                          the index that best approximates the current map scale
+     */
     getNearestZoom: (zoom, scales, mapScales = defaultScales) => {
         const mapScale = mapScales[zoom];
         return scales.reduce((previous, current, index) => {
             return current < mapScale ? previous : index;
         }, 0);
     },
+    /**
+     * Get the mapSize for print preview, parsing the layout and limiting the width.
+     * @param  {object} layout   the layout object
+     * @param  {number} maxWidth the max width for the mapSize
+     * @return {object}          width and height of a map limited by the maxWidth and with the same ratio of the layout
+     */
     getMapSize: (layout, maxWidth) => {
         if (layout) {
             const width = layout.rotation ? layout.map.height : layout.map.width;
@@ -67,6 +125,11 @@ const PrintUtils = {
             height: 100
         };
     },
+    /**
+     * Creates the mapfish print specification from the current configuration
+     * @param  {object} spec the current configuration
+     * @return {object}      the mapfish print configuration to send to the server
+     */
     getMapfishPrintSpecification: (spec) => {
         const projectedCenter = CoordinatesUtils.reproject(spec.center, 'EPSG:4326', spec.projection);
         return {
@@ -92,6 +155,13 @@ const PrintUtils = {
            "legends": PrintUtils.getMapfishLayersSpecification(spec.layers, spec, 'legend')
        };
     },
+    /**
+     * Generate the layers (or legend) specification for print.
+     * @param  {array} layers  the layers configurations
+     * @param  {spec} spec    the print configurations
+     * @param  {string} purpose allowed values: `map|legend`. Tells which spec to generate.
+     * @return {array}         the configuration array for layers (or legend) to send to the print service.
+     */
     getMapfishLayersSpecification: (layers, spec, purpose) => {
         return layers.filter((layer) => PrintUtils.specCreators[layer.type] && PrintUtils.specCreators[layer.type][purpose])
             .map((layer) => PrintUtils.specCreators[layer.type][purpose](layer, spec));

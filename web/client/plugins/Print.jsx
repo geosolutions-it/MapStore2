@@ -356,6 +356,7 @@ const PrintPlugin = connect(selector, {
 
 module.exports = {
     PrintPlugin: assign(PrintPlugin, {
+        disablePluginIf: "{state('mapType') === 'cesium'}",
         Toolbar: {
             name: 'print',
             position: 7,

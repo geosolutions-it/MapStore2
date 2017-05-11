@@ -41,6 +41,7 @@ const SettingsModal = React.createClass({
         closeText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         options: React.PropTypes.object,
         chartStyle: React.PropTypes.object,
+        showElevationChart: React.PropTypes.bool,
         buttonSize: React.PropTypes.string,
         closeGlyph: React.PropTypes.string,
         panelStyle: React.PropTypes.object,
@@ -135,6 +136,7 @@ const SettingsModal = React.createClass({
             return (<Elevation
                elevationText={this.props.elevationText}
                chartStyle={this.props.chartStyle}
+               showElevationChart={this.props.showElevationChart}
                element={this.props.element}
                elevations={elevationDim}
                appState={this.state || {}}

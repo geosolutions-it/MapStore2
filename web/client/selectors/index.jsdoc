@@ -1,0 +1,11 @@
+/**
+ * React/Redux selectors.
+ * @see {@link https://github.com/reactjs/reselect|Reselect} for details
+ * @name selectors
+ *
+ */
+/**
+ * @external selector
+ * @see {@link https://github.com/reactjs/reselect|Reselect} for details
+ * @description A function that computes the redux state or part of it allowing the redux store to be normalized and the react components to be re-rendered only if needed.
+ */

@@ -1,12 +1,9 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
- /**
- * Plugin for Zoom out
  */
 const React = require('react');
 const {connect} = require('react-redux');
@@ -19,6 +16,16 @@ const {changeZoomLevel} = require('../actions/map');
 
 const Message = require('../components/I18N/Message');
 
+/**
+  * ZoomOut Plugin. Provides button to zoom out
+  * @class  ZoomOut
+  * @memberof plugins
+  * @static
+  *
+  * @prop {object} cfg.style CSS to apply to the button
+  * @prop {string} cfg.className the class name for the button
+  *
+  */
 const ZoomOutButton = connect(selector, {
     onZoom: changeZoomLevel
 })(require('../components/buttons/ZoomButton'));
@@ -29,6 +36,7 @@ const assign = require('object-assign');
 
 module.exports = {
     ZoomOutPlugin: assign(ZoomOutButton, {
+        disablePluginIf: "{state('mapType') === 'cesium'}",
         Toolbar: {
             name: "ZoomOut",
             position: 4,

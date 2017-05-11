@@ -172,6 +172,7 @@ const MapPlugin = React.createClass({
                     {this.props.features.map( (feature) => {
                         return (<plugins.Feature
                             key={feature.id}
+                            crs={projection}
                             type={feature.type}
                             geometry={feature.geometry}/>);
                     })}
@@ -195,18 +196,19 @@ const MapPlugin = React.createClass({
         return this.props.layers.map((layer, index) => {
             return (
                 <plugins.Layer type={layer.type} srs={projection} position={index} key={layer.id || layer.name} options={layer}>
-                    {this.renderLayerContent(layer)}
+                    {this.renderLayerContent(layer, projection)}
                 </plugins.Layer>
             );
         }).concat(this.props.features && this.props.features.length && this.getHighlightLayer(projection, this.props.layers.length) || []);
     },
-    renderLayerContent(layer) {
+    renderLayerContent(layer, projection) {
         if (layer.features && layer.type === "vector") {
             return layer.features.map( (feature) => {
                 return (
                     <plugins.Feature
                         key={feature.id}
                         type={feature.type}
+                        crs={projection}
                         geometry={feature.geometry}
                         msId={feature.id}
                         featuresCrs={ layer.featuresCrs || 'EPSG:4326' }

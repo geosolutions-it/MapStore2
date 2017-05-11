@@ -14,7 +14,6 @@ module.exports = {
         TOCPlugin: require('../plugins/TOC'),
         BackgroundSwitcherPlugin: require('../plugins/BackgroundSwitcher'),
         MeasurePlugin: require('../plugins/Measure'),
-        MeasureResultsPlugin: require('../plugins/MeasureResults'),
         MapPlugin: require('../plugins/Map'),
         ToolbarPlugin: require('../plugins/Toolbar'),
         DrawerMenuPlugin: require('../plugins/DrawerMenu'),
