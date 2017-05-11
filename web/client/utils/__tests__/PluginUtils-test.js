@@ -154,6 +154,13 @@ describe('PluginsUtils', () => {
             {},
             {}
         )).toBe(false);
+
+        // check ignore other items, if any
+        expect(PluginsUtils.filterDisabledPlugins(
+            {},
+            {},
+            {}
+        )).toBe(true);
     });
     it('getMonitoredState', () => {
         expect(PluginsUtils.getMonitoredState({maptype: {mapType: "leaflet"}}).mapType).toBe("leaflet");

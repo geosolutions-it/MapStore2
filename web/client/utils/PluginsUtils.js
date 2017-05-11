@@ -15,7 +15,19 @@ const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name
 const {combineEpics} = require('redux-observable');
 
 const {memoize, get} = require('lodash');
-
+/**
+ * Gives a reduced version of the status to check.
+ * It cached the last state to prevent re-evaluations if the input didn't change.
+ * @memberof utils.PluginsUtils
+ * @function
+ * @param {Object} state the state
+ * @param {Object[]} monitor an array of objects in the form `{name: "a", path: "b"}` used to produce the monitoredState
+ * @return {Object} the state filtered using the monitor rules
+ * @example
+ * const monitor =[{name: "a", path: "b"}`];
+ * const state = {b: "test"}
+ * filterState(state, monitor); // returns {a: "test"}
+ */
 const filterState = memoize((state, monitor) => {
     return monitor.reduce((previous, current) => {
         return assign(previous, {
@@ -65,9 +77,16 @@ const handleExpression = (state, context, expression) => {
     }
     return expression;
 };
-
+/**
+ * filters the plugins passed evaluating the dsiablePluginIf expression with the given context
+ * @memberof utils.PluginsUtils
+ * @param  {Object} item         the plugins
+ * @param  {function} [state={}]   The state to evaluate
+ * @param  {Object} [plugins={}] the plugins object to get requires
+ * @return {Boolean}             the result of the expression evaluation in the given context.
+ */
 const filterDisabledPlugins = (item, state = {}, plugins = {}) => {
-    const disablePluginIf = item && item.plugin && item.plugin.disablePluginIf || item.cfg.disablePluginIf;
+    const disablePluginIf = item && item.plugin && item.plugin.disablePluginIf || item.cfg && item.cfg.disablePluginIf;
     if (disablePluginIf && !(item && item.cfg && item.cfg.skipAutoDisable)) {
         return !handleExpression(state, plugins.requires, disablePluginIf);
     }
