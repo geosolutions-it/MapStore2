@@ -159,7 +159,7 @@ const DockedFeatureGrid = React.createClass({
             };
             this.featureLoaded = params;
             this.sortModel = params && params.sortModel;
-            this.props.onQuery(this.props.searchUrl, filterObj, this.props.params);
+            this.props.onQuery(this.props.searchUrl, filterObj);
 
         }
     },
