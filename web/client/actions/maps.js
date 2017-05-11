@@ -429,11 +429,11 @@ function updateMapMetadata(resourceId, newName, newDescription, onReset, options
 }
 
 /**
- * updates permeissions for the given map.
+ * updates permissions for the given map.
  * @memberof actions.maps
  * @param  {number} resourceId    the identifier of the map
  * @param  {object} securityRules the new securityRules
- * @return {thunk} performs updateResourcePermissions and dispatch permissionsUpdated loadMaps or thumbnailError
+ * @return {thunk} performs updateResourcePermissions and dispatch permissionsUpdated or thumbnailError
  */
 function updatePermissions(resourceId, securityRules) {
     if (!securityRules || !securityRules.SecurityRuleList || !securityRules.SecurityRuleList.SecurityRule) {
@@ -444,7 +444,6 @@ function updatePermissions(resourceId, securityRules) {
     return (dispatch) => {
         GeoStoreApi.updateResourcePermissions(resourceId, securityRules).then(() => {
             dispatch(permissionsUpdated(resourceId, "success"));
-            dispatch(loadMaps(false, ConfigUtils.getDefaults().initialMapFilter || "*"));
         }).catch((e) => {
             dispatch(thumbnailError(resourceId, e));
         });
@@ -457,8 +456,8 @@ function updatePermissions(resourceId, securityRules) {
  * @param  {number} resourceId the id of the resource
  * @param  {string} name       the name of the attribute
  * @param  {string} value      the value of the attribute
- * @param  {string} [type]       the type of the attribute
- * @param  {object} [options]    options for the request
+ * @param  {string} [type]     the type of the attribute
+ * @param  {object} [options]  options for the request
  * @return {thunk}  performs the update and dispatch attributeUpdated or thumbnailError
  */
 function updateAttribute(resourceId, name, value, type, options) {
@@ -480,9 +479,9 @@ function updateAttribute(resourceId, name, value, type, options) {
  * @param  {string} dataThumbnail     the data to save for the thumbnail
  * @param  {string} categoryThumbnail the category for the thumbnails
  * @param  {number} resourceIdMap     the resourceId of the map
- * @param  {action} [onSuccess]         the action to dispatch on success
- * @param  {action} [onReset]           the action to dispatch on reset
- * @param  {object} [options]           options for the request
+ * @param  {action} [onSuccess]       the action to dispatch on success
+ * @param  {action} [onReset]         the action to dispatch on reset
+ * @param  {object} [options]         options for the request
  * @return {thunk}                   perform the thumb creation and dispatch proper actions
  */
 function createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, onSuccess, onReset, options) {
@@ -596,11 +595,11 @@ function deleteThumbnail(resourceId, resourceIdMap, options) {
 /**
  * Creates a new map.
  * @memberof actions.maps
- * @param  {object} metadata  metadata for the new map
- * @param  {object} content   the map object itself
+ * @param  {object} metadata    metadata for the new map
+ * @param  {object} content     the map object itself
  * @param  {object} [thumbnail] the thumbnail
  * @param  {object} [options]   options for the request
- * @return {thunk}           creates the map and dispatches  createThumbnail, mapCreated and so on
+ * @return {thunk}              creates the map and dispatches  createThumbnail, mapCreated and so on
  */
 function createMap(metadata, content, thumbnail, options) {
     return (dispatch) => {
@@ -622,7 +621,7 @@ function createMap(metadata, content, thumbnail, options) {
  * @memberof actions.maps
  * @param  {number} resourceId the id of the resource to delete
  * @param  {object} options    options for the request
- * @return {thunk}            performs the delete operations and dispatches mapDeleted and loadMaps
+ * @return {thunk}             performs the delete operations and dispatches mapDeleted and loadMaps
  */
 function deleteMap(resourceId, options) {
     return (dispatch, getState) => {
