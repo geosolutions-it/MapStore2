@@ -47,7 +47,7 @@ const isValidTile = (tileMatrixSet) => (x, y, level) =>
 
 WMTSProxy.prototype.getURL = function(resource) {
     let {url, queryString} = splitUrl(resource);
-    return this.proxy + encodeURIComponent(url + queryString);
+    return ProxyUtils.getProxyUrl() + encodeURIComponent(url + queryString);
 };
 
 function NoProxy() {

@@ -38,7 +38,7 @@ function WMSProxy(proxy) {
 
 WMSProxy.prototype.getURL = function(resource) {
     let {url, queryString} = splitUrl(resource);
-    return this.proxy.url + encodeURIComponent(url + queryString);
+    return ProxyUtils.getProxyUrl() + encodeURIComponent(url + queryString);
 };
 
 function NoProxy() {

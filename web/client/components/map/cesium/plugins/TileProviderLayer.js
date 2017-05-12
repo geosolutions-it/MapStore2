@@ -34,7 +34,7 @@ TileProviderProxy.prototype.getURL = function(resource) {
     if (url.indexOf("//") === 0) {
         url = location.protocol + url;
     }
-    return this.proxy.url + encodeURIComponent(url + queryString);
+    return ProxyUtils.getProxyUrl() + encodeURIComponent(url + queryString);
 };
 
 function NoProxy() {
