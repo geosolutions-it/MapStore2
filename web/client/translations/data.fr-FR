@@ -21,6 +21,9 @@
         "enable": "Activer",
         "layers": "Couches",
         "warning": "Attention",
+        "version": {
+            "label": "Version"
+        },
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
             "title": "Titre",

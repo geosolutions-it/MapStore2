@@ -21,6 +21,9 @@
         "enable": "Abilita",
         "layers": "Livelli",
         "warning": "Attenzione",
+        "version": {
+            "label": "Versione"
+        },
         "layerProperties": {
             "windowTitle": "Proprietà del livello",
             "title": "Titolo",

@@ -21,6 +21,9 @@
         "enable": "Enable",
         "layers": "Layers",
         "warning": "Warning",
+        "version": {
+            "label": "Version"
+        },
         "layerProperties": {
             "windowTitle": "Layer Properties",
             "title": "Title",

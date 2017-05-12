@@ -14,6 +14,7 @@ const startApp = () => {
     const ConfigUtils = require('../utils/ConfigUtils');
 
     const {loadMaps} = require('../actions/maps');
+    const {loadVersion} = require('../actions/version');
 
     const StandardApp = require('../components/app/StandardApp');
 
@@ -30,7 +31,8 @@ const startApp = () => {
     }, {});
 
     const initialActions = [
-        () => loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*")
+        () => loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*"),
+        loadVersion
     ];
 
     const appConfig = {
