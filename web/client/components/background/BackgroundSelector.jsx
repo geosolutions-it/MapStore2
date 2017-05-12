@@ -105,6 +105,9 @@ const BackgroundSelector = React.createClass({
             this.props.setControlProperty('backgroundSelector', 'start', 0);
         }
     },
+    getThumb(layer) {
+        return thumbs[layer.source] && thumbs[layer.source][layer.name] || layer.thumbURL || thumbs.unknown;
+    },
     getLayer() {
         const tempLyr = isEmpty(this.props.tempLayer) ? this.props.layers.filter((layer) => { return layer.visibility === true; })[0] : this.props.tempLayer;
         const currentLyr = isEmpty(this.props.currentLayer) ? this.props.layers.filter((layer) => { return layer.visibility === true; })[0] : this.props.currentLayer;
@@ -112,7 +115,7 @@ const BackgroundSelector = React.createClass({
     },
     getIcons(side, frame, margin, vertical) {
         return this.props.enabled ? this.props.layers.map((layer, idx) => {
-            let thumb = thumbs[layer.source] && thumbs[layer.source][layer.name] || layer.thumbURL || thumbs.unknown;
+            let thumb = this.getThumb(layer);
             return <PreviewIcon vertical={vertical} key={idx} src={thumb} currentLayer={this.props.currentLayer} margin={margin} side={side} frame={frame} layer={layer} onClose={this.props.onToggle} onToggle={this.props.propertiesChangeHandler} setLayer={this.props.setControlProperty}/>;
         }) : [];
     },
@@ -142,14 +145,15 @@ const BackgroundSelector = React.createClass({
 
         const labelHeight = this.props.enabled ? sideButton - frame * 2 : 0;
         const layer = this.getLayer();
-        const src = thumbs[layer.source] && thumbs[layer.source][layer.name] || layer.thumbURL || thumbs.unknown;
+        const src = this.getThumb(layer);
         const icons = this.getIcons(side, frame, margin, false);
         let left = this.props.drawerWidth !== 0 ? this.props.drawerWidth : 300;
         left = this.props.drawerEnabled ? left : 0;
         const {pagination, listSize, visibleIconsLength} = this.getDimensions(side, frame, margin, left, this.props.size.width, icons.length);
         const buttonSize = side + frame + margin;
 
-        return visibleIconsLength <= 0 && this.props.enabled ? null : (
+        return visibleIconsLength <= 0 && this.props.enabled
+        || !this.props.enabled && this.props.size.width / 2 < left + sideButton + frame + margin * 2 ? null : (
             <div className="background-plugin-position" style={{left, bottom: this.props.bottom}}>
                 <PreviewButton src={src} side={sideButton} frame={frame} margin={margin} labelHeight={labelHeight} label={layer.title} onToggle={this.props.onToggle}/>
                 <div className="background-list-container" style={{bottom: this.props.bottom, left: left + sideButton + margin * 2 + frame, width: listSize, height: buttonSize}}>
@@ -171,7 +175,7 @@ const BackgroundSelector = React.createClass({
         const margin = mobile.margin;
 
         const layer = this.getLayer();
-        const src = thumbs[layer.source] && thumbs[layer.source][layer.name] || layer.thumbURL || thumbs.unknown;
+        const src = this.getThumb(layer);
         const icons = this.getIcons(side, frame, margin, true);
         const {pagination, listSize, visibleIconsLength} = this.getDimensions(side, frame, margin, 0, this.props.size.height, icons.length);
         const buttonSizeWithMargin = side + frame + margin * 2;

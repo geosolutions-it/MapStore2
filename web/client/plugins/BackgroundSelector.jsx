@@ -10,6 +10,35 @@ const {connect} = require('react-redux');
 const {toggleControl, setControlProperty} = require('../actions/controls');
 const {changeLayerProperties} = require('../actions/layers');
 
+/**
+  * BackgroundSelector Plugin.
+  * @class BackgroundSelector
+  * @memberof plugins
+  * @static
+  *
+  * @prop {number} cfg.bottom plugin position from bottom of the map
+  * @prop {object} cfg.desktop dimensions of buttons in desktop mode
+  * @prop {object} cfg.mobile dimensions of buttons in mobile mode
+  * @class
+  * @example
+  * {
+  *   "name": "BackgroundSelector",
+  *   "cfg": {
+  *     "mobile": {
+  *       "side": 65,
+  *       "frame": 3,
+  *       "margin": 5
+  *     },
+  *     "desktop": {
+  *       "side": 78,
+  *       "sidePreview": 104,
+  *       "frame": 3,
+  *       "margin": 5
+  *     }
+  *   }
+  * }
+  */
+
 const BackgroundSelectorPlugin = connect((state) => ({
     layers: state.layers && state.layers.flat && state.layers.flat.filter((layer) => layer.group === "background") || [],
     drawerEnabled: state.controls && state.controls.drawer && state.controls.drawer.enabled || false,
