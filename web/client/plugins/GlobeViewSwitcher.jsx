@@ -1,0 +1,49 @@
+/*
+ * Copyright 2017, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+const {connect} = require('react-redux');
+
+
+const assign = require('object-assign');
+const globeswitcher = require('../reducers/globeswitcher');
+const epics = require('../epics/globeswitcher');
+const {toggle3d} = require('../actions/globeswitcher');
+const GlobeViewSwitcherButton = require('../components/buttons/GlobeViewSwitcherButton');
+
+/**
+  * GlobeViewSwitcher Plugin. A button that toggles to 3d mode
+  * @class GlobeViewSwitcher
+  * @memberof plugins
+  * @static
+  *
+  * @prop {string} cfg.id identifier of the Plugin
+  *
+  */
+const GlobeViewSwitcher = connect( ({maptype = {}} = {}) => ({
+    active: maptype && maptype.mapType === "cesium",
+    options: {
+        originalMapType: maptype && maptype.mapType || "leaflet"
+    }
+}), {
+    onClick: (pressed, options) => toggle3d(pressed, options.originalMapType)
+})(GlobeViewSwitcherButton);
+
+module.exports = {
+    GlobeViewSwitcherPlugin: assign(GlobeViewSwitcher, {
+        Toolbar: {
+            name: '3d',
+            position: 5,
+            alwaysVisible: true,
+            tool: true,
+            priority: 1
+        }
+    }),
+    reducers: {
+        globeswitcher
+    },
+    epics
+};

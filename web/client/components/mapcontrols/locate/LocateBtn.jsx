@@ -17,6 +17,7 @@ let geoLocationAllowed = false;
 const LocateBtn = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
+        hide: React.PropTypes.bool,
         btnConfig: React.PropTypes.object,
         text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         help: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),

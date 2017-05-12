@@ -29,6 +29,9 @@
             "general": "Generell",
             "display": "Darstellung",
             "style": "Stil",
+            "transparent": "Transparent",
+            "singleTile": "Single Tile",
+            "cached": "Verwenden Sie Cache-Optionen",
             "styleCustom": "Stil \"{value}\" nutzen",
             "styleListLoadError": "Es gab einen Fehler beim Laden der Liste von Stilen",
             "stylesRefreshList": "Aktualisiere die Liste von Stilen",
@@ -39,6 +42,10 @@
             "confirmDelete": "Bist du sicher?",
             "featureTypeError": "Layerattribute können nicht geladen werden",
             "elevation": "Höhe"
+        },
+        "globeswitcher": {
+            "tooltipDeactivate": "Beenden Sie den 3D-Modus",
+            "tooltipActivate": "Geben Sie den 3D-Modus ein"
         },
         "background": "Hintergrund",
         "language": "Sprache",

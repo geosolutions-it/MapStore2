@@ -1,16 +1,18 @@
-/**
- * Copyright 2015, GeoSolutions Sas.
+/*
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/cesium/Layers');
-var ConfigUtils = require('../../../../utils/ConfigUtils');
-var Cesium = require('../../../../libs/cesium');
-var assign = require('object-assign');
-var {isObject, isArray} = require('lodash');
+const Layers = require('../../../../utils/cesium/Layers');
+const ConfigUtils = require('../../../../utils/ConfigUtils');
+const ProxyUtils = require('../../../../utils/ProxyUtils');
+const Cesium = require('../../../../libs/cesium');
+const assign = require('object-assign');
+const {isArray} = require('lodash');
+const WMSUtils = require('../../../../utils/cesium/WMSUtils');
 
 function getWMSURLs( urls ) {
     return urls.map((url) => url.split("\?")[0]);
@@ -36,7 +38,7 @@ function WMSProxy(proxy) {
 
 WMSProxy.prototype.getURL = function(resource) {
     let {url, queryString} = splitUrl(resource);
-    return this.proxy + encodeURIComponent(url + queryString);
+    return ProxyUtils.getProxyUrl() + encodeURIComponent(url + queryString);
 };
 
 function NoProxy() {
@@ -76,17 +78,7 @@ function wmsToCesiumOptions(options) {
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
     if (proxyUrl) {
-        let useCORS = [];
-        if (isObject(proxyUrl)) {
-            useCORS = proxyUrl.useCORS || [];
-            proxyUrl = proxyUrl.url;
-        }
-        let url = options.url;
-        if (isArray(url)) {
-            url = url[0];
-        }
-        const isCORS = useCORS.reduce((found, current) => found || url.indexOf(current) === 0, false);
-        proxy = !isCORS && proxyUrl;
+        proxy = ProxyUtils.needProxy(options.url) && proxyUrl;
     }
     // NOTE: can we use opacity to manage visibility?
     return assign({
@@ -120,5 +112,21 @@ const createLayer = (options) => {
     };
     return layer;
 };
-
-Layers.registerType('wms', createLayer);
+const updateLayer = (layer, newOptions, oldOptions) => {
+    const requiresUpdate = (el) => WMSUtils.PARAM_OPTIONS.indexOf(el.toLowerCase()) >= 0;
+    const newParams = (newOptions && newOptions.params);
+    const oldParams = (oldOptions && oldOptions.params);
+    const allParams = {...newParams, ...oldParams };
+    let newParameters = Object.keys({...newOptions, ...oldOptions, ...allParams})
+        .filter(requiresUpdate)
+        .filter((key) => {
+            const oldOption = oldOptions[key] === undefined ? oldParams && oldParams[key] : oldOptions[key];
+            const newOption = newOptions[key] === undefined ? newParams && newParams[key] : newOptions[key];
+            return oldOption !== newOption;
+        });
+    if (newParameters.length > 0) {
+        return createLayer(newOptions);
+    }
+    return null;
+};
+Layers.registerType('wms', {create: createLayer, update: updateLayer});

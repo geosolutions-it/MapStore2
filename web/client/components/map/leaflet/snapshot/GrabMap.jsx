@@ -136,6 +136,7 @@ let GrabLMap = React.createClass({
     doSnapshot(props) {
         // get map style shifted
         var leftString = window.getComputedStyle(this.mapDiv).getPropertyValue("left");
+        leftString = leftString === 'auto' ? 0 : leftString;
 
         // get all the informations needed to snap svg before
         let mapPanes = this.mapDiv.getElementsByClassName("leaflet-map-pane");
@@ -149,10 +150,15 @@ let GrabLMap = React.createClass({
         let svgH;
         let svgW;
         let svgString;
-        if (svg && svg.outerHTML) {
-            svgOffsetX = svgs[0] ? svgs[0].getBoundingClientRect().left : 0;
-            svgOffsetY = svgs[0] ? svgs[0].getBoundingClientRect().top : 0;
-            svgString = svgs[0].outerHTML;
+        if (svg) {
+            // get svg translate position to avoid overlay issue on IE
+            let svgTranslate = svg.style && svg.style.transform ? svg.style.transform.replace(/\(|\)|translate3d|translate/g, '').split('px, ') : ['0', '0'];
+            svgTranslate = [Number.parseFloat(svgTranslate[0].replace('px', '')), Number.parseFloat(svgTranslate[1].replace('px', ''))];
+            svgTranslate = svg.style.transform && svg.style.transform.substr(0, 11) === 'translate3d' ? [0, 0] : svgTranslate;
+
+            svgOffsetX = svgs[0] ? svgs[0].getBoundingClientRect().left - svgTranslate[0] : 0;
+            svgOffsetY = svgs[0] ? svgs[0].getBoundingClientRect().top - svgTranslate[1] : 0;
+            svgString = svgs[0].outerHTML ? svgs[0].outerHTML : this.outerHTML(svgs[0]);
             svgW = svg.getAttribute("width");
             svgH = svg.getAttribute("height");
             svg.setAttribute("style", "");
@@ -162,10 +168,10 @@ let GrabLMap = React.createClass({
             left = parseInt( leftString.replace('px', ''), 10);
         }
 
-        // get pan position from translate 3d
+        // get pan position from translate 3d or translate (IE)
         let leafletPane = this.mapDiv.getElementsByClassName("leaflet-map-pane");
-        let panPosition = leafletPane && leafletPane[0] && leafletPane[0].style && leafletPane[0].style.transform ? leafletPane[0].style.transform.replace(/\(|\)|translate3d/g, '').split('px, ') : ['0', '0'];
-        panPosition = [Number.parseFloat(panPosition[0]), Number.parseFloat(panPosition[1])];
+        let panPosition = leafletPane && leafletPane[0] && leafletPane[0].style && leafletPane[0].style.transform ? leafletPane[0].style.transform.replace(/\(|\)|translate3d|translate/g, '').split('px, ') : ['0', '0'];
+        panPosition = [Number.parseFloat(panPosition[0].replace('px', '')), Number.parseFloat(panPosition[1].replace('px', ''))];
         let tilePane = this.mapDiv.getElementsByClassName("leaflet-tile-pane");
         // clone to change style attributes
         let tilePaneClone = tilePane && tilePane[0].cloneNode(true);
@@ -306,6 +312,11 @@ let GrabLMap = React.createClass({
     },
     exportImage() {
         return this.refs.canvas.toDataURL();
+    },
+    outerHTML(node) {
+        const parent = document.createElement('div');
+        parent.appendChild(node.cloneNode(true));
+        return parent.innerHTML;
     }
 });
 

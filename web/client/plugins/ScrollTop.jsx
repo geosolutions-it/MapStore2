@@ -45,7 +45,7 @@ const ScrollTop = React.createClass({
     render() {
         return (
             <ScrollUp style={this.props.style} showUnder={this.props.showUnder}>
-                <OverlayTrigger placement="left" overlay={<Tooltip><Message msgId="home.scrollTop"/></Tooltip>}>
+                <OverlayTrigger placement="left" overlay={<Tooltip id="scrollTop-button-tooltip"><Message msgId="home.scrollTop"/></Tooltip>}>
                     <Button bsStyle="primary" className={this.props.btnClassName}><Glyphicon glyph="arrow-up"/></Button>
                 </OverlayTrigger>
             </ScrollUp>);

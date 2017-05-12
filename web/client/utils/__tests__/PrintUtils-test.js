@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -83,6 +83,50 @@ const mapFishVectorLayer = {
       ]
    }
 };
+
+const testSpec = {
+  "antiAliasing": true,
+  "iconSize": 24,
+  "legendDpi": 96,
+  "fontFamily": "Verdana",
+  "fontSize": 8,
+  "bold": false,
+  "italic": false,
+  "resolution": "96",
+  "name": "",
+  "description": "",
+  "sheet": "A2",
+  "includeLegend": true,
+  "twoPages": true,
+  "center": {
+    "x": 8.930511,
+    "y": 44.417107,
+    "crs": "EPSG:4326"
+  },
+  "zoom": 11,
+  "scaleZoom": 3,
+  "scale": 50000,
+  "layers": [
+    {
+      "group": "background",
+      "source": "osm",
+      "name": "mapnik",
+      "title": "Open Street Map",
+      "type": "osm",
+      "visibility": true,
+      "singleTile": false,
+      "dimensions": [],
+      "id": "mapnik__0",
+      "loading": false,
+      "loadingError": false
+    }
+  ],
+  "projection": "EPSG:900913",
+  "size": {
+    "height": 462,
+    "width": 368
+  }
+};
 describe('PrintUtils', () => {
 
     it('custom params are applied to wms layers', () => {
@@ -98,6 +142,11 @@ describe('PrintUtils', () => {
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].geoJson.features[0].geometry.coordinates[0], mapFishVectorLayer).toBe(mapFishVectorLayer.geoJson.features[0].geometry.coordinates[0]);
+    });
+    it('vector layer generation for legend', () => {
+        const specs = PrintUtils.getMapfishLayersSpecification([layer], {projection: "EPSG:3857"}, 'legend');
+        expect(specs).toExist();
+        expect(specs.length).toBe(1);
     });
     it('vector layer default point style', () => {
         const style = PrintUtils.getOlDefaultStyle({features: [{geometry: {type: "Point"}}]});
@@ -119,5 +168,26 @@ describe('PrintUtils', () => {
         const style = PrintUtils.getOlDefaultStyle({features: [{geometry: {type: "LineString"}}]});
         expect(style).toExist();
         expect(style.strokeWidth).toBe(3);
+    });
+    it('toAbsoluteUrl', () => {
+        const url = PrintUtils.toAbsoluteURL("/geoserver", "http://localhost:8080");
+        expect(url).toExist();
+        expect(url).toBe("http://localhost:8080/geoserver");
+        expect(PrintUtils.toAbsoluteURL("//someurl/geoserver").indexOf("http")).toBe(0);
+    });
+    it('getMapSize', () => {
+        expect(PrintUtils.getMapSize()).toExist(); // check defaults
+        expect(PrintUtils.getMapSize({map: {width: 200, height: 200}}, 150).height).toBe(150);
+        expect(PrintUtils.getMapSize({rotation: true, map: {width: 200, height: 100}}, 200).height).toBe(400);
+    });
+    it('getNearestZoom', () => {
+        const scales = [1000, 1000, 1000000, 10000000];
+        expect(PrintUtils.getNearestZoom(0, scales)).toBe(0);
+    });
+    it('getMapfishPrintSpecification', () => {
+        const printSpec = PrintUtils.getMapfishPrintSpecification(testSpec);
+        expect(printSpec).toExist();
+        expect(printSpec.dpi).toBe(96);
+        expect(printSpec.layers.length).toBe(1);
     });
 });

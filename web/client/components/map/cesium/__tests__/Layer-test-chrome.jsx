@@ -139,7 +139,7 @@ describe('Cesium layer', () => {
         expect(layer).toExist();
     });
 
-    it('creates a wms layer for CesiumLayer map', () => {
+    it('creates a wms layer for Cesium map', () => {
         var options = {
             "type": "wms",
             "visibility": true,
@@ -157,9 +157,30 @@ describe('Cesium layer', () => {
         expect(map.imageryLayers.length).toBe(1);
         expect(map.imageryLayers._layers[0]._imageryProvider._url).toBe('{s}');
         expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(1);
+        expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toExist();
+    });
+    it('check wms layer proxy skip for relative urls', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "/geoserver/wms"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <CesiumLayer type="wms"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.imageryLayers.length).toBe(1);
+        expect(map.imageryLayers._layers[0]._imageryProvider._url).toBe('{s}');
+        expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(1);
+        expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toNotExist();
     });
 
-    it('creates a wmts layer for openlayers map', () => {
+    it('creates a wmts layer for Cesium map', () => {
         var options = {
             "type": "wmts",
             "visibility": true,
@@ -187,6 +208,35 @@ describe('Cesium layer', () => {
         // count layers
         expect(map.imageryLayers.length).toBe(1);
         expect(map.imageryLayers._layers[0]._imageryProvider._url).toExist();
+        expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toExist();
+    });
+    it('check a wmts layer skips proxy config', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "tileMatrixSet": "EPSG:900913",
+            "matrixIds": {
+                "EPSG:4326": [{
+                    ranges: {
+                        cols: {max: 0, min: 0},
+                        rows: {max: 0, min: 0}
+                    }
+                }]
+            },
+            "url": "/geoserver/gwc/service/wmts"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <CesiumLayer type="wmts"
+                 options={options} map={map}/>, document.getElementById("container"));
+        expect(layer).toExist();
+        // count layers
+        expect(map.imageryLayers.length).toBe(1);
+        expect(map.imageryLayers._layers[0]._imageryProvider._url).toExist();
+        expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toNotExist();
     });
 
     it('creates a wms layer with single tile for CesiumLayer map', () => {

@@ -24,6 +24,7 @@ var DefaultLayer = React.createClass({
         propertiesChangeHandler: React.PropTypes.func,
         retrieveLayerData: React.PropTypes.func,
         onToggle: React.PropTypes.func,
+        onContextMenu: React.PropTypes.func,
         onToggleQuerypanel: React.PropTypes.func,
         onZoom: React.PropTypes.func,
         onSettings: React.PropTypes.func,
@@ -52,7 +53,8 @@ var DefaultLayer = React.createClass({
         includeDeleteButtonInSettings: React.PropTypes.bool,
         groups: React.PropTypes.array,
         currentZoomLvl: React.PropTypes.number,
-        scales: React.PropTypes.array
+        scales: React.PropTypes.array,
+        additionalTools: React.PropTypes.array
     },
     getDefaultProps() {
         return {
@@ -60,6 +62,7 @@ var DefaultLayer = React.createClass({
             sortableStyle: {},
             propertiesChangeHandler: () => {},
             onToggle: () => {},
+            onContextMenu: () => {},
             onZoom: () => {},
             onSettings: () => {},
             retrieveLayerData: () => {},
@@ -74,11 +77,12 @@ var DefaultLayer = React.createClass({
             settingsOptions: {},
             confirmDeleteText: <Message msgId="layerProperties.deleteLayer" />,
             confirmDeleteMessage: <Message msgId="layerProperties.deleteLayerMessage" />,
-            visibilityCheckType: "glyph"
+            visibilityCheckType: "glyph",
+            additionalTools: []
         };
     },
     onConfirmDelete() {
-        this.props.removeNode(this.props.node.id, "layers");
+        this.props.removeNode(this.props.node.id, "layers", this.props.node);
         this.closeDeleteDialog();
     },
     getInitialState: function() {
@@ -87,7 +91,7 @@ var DefaultLayer = React.createClass({
         };
     },
     renderCollapsible() {
-        let tools = [];
+        let tools = this.props.additionalTools.filter((t) => t.collapsible).map((Tool) => <Tool style={{"float": "right", cursor: "pointer"}}/>);
         if (this.props.activateRemoveLayer) {
             tools.push((<LayersTool
                         node={this.props.node}
@@ -145,7 +149,7 @@ var DefaultLayer = React.createClass({
         </div>);
     },
     renderTools() {
-        const tools = [];
+        const tools = this.props.additionalTools.filter((t) => !t.collapsible).map((Tool) => <Tool style={{"float": "right", cursor: "pointer"}}/>);
         if (this.props.visibilityCheckType) {
             tools.push(
                 <VisibilityCheck key="visibilitycheck"
@@ -183,7 +187,7 @@ var DefaultLayer = React.createClass({
         let {children, propertiesChangeHandler, onToggle, ...other } = this.props;
         return (
             <Node className="toc-default-layer" sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
-                <Title onClick={this.props.onToggle}/>
+                <Title onClick={this.props.onToggle} onContextMenu={this.props.onContextMenu}/>
                 <LayersTool key="loadingerror"
                         style={{"display": this.props.node.loadingError ? "block" : "none", color: "red", cursor: "default"}}
                         glyph="ban-circle"

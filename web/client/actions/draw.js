@@ -9,14 +9,14 @@
 const CHANGE_DRAWING_STATUS = 'CHANGE_DRAWING_STATUS';
 const END_DRAWING = 'END_DRAWING';
 
-function changeDrawingStatus(status, method, owner, features, stopAfterDrawing = true) {
+function changeDrawingStatus(status, method, owner, features, options) {
     return {
         type: CHANGE_DRAWING_STATUS,
         status,
         method,
         owner,
         features,
-        stopAfterDrawing
+        options
     };
 }
 

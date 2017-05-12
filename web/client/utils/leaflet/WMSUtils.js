@@ -1,5 +1,5 @@
-/**
- * Copyright 2016, GeoSolutions Sas.
+/*
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -8,7 +8,7 @@
 var objectAssign = require('object-assign');
 
 var WMSUtils = {
-    PARAM_OPTIONS: ["layers", "styles", "format", "transparent", "version", "tiled" ],
+    PARAM_OPTIONS: ["layers", "styles", "format", "transparent", "version", "tiled", "opacity", "zindex" ],
     wmsToLeafletOptions: function(options) {
         var opacity = options.opacity !== undefined ? options.opacity : 1;
         // NOTE: can we use opacity to manage visibility?

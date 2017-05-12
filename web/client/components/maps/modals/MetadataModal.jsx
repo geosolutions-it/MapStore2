@@ -31,6 +31,7 @@ const MetadataModal = React.createClass({
         authHeader: React.PropTypes.string,
         show: React.PropTypes.bool,
         options: React.PropTypes.object,
+        metadata: React.PropTypes.object,
         loadPermissions: React.PropTypes.func,
         loadAvailableGroups: React.PropTypes.func,
         onSave: React.PropTypes.func,
@@ -56,6 +57,7 @@ const MetadataModal = React.createClass({
         onUpdateCurrentMap: React.PropTypes.func,
         onNewGroupChoose: React.PropTypes.func,
         onNewPermissionChoose: React.PropTypes.func,
+        metadataChanged: React.PropTypes.func,
         displayPermissionEditor: React.PropTypes.bool,
         availablePermissions: React.PropTypes.arrayOf(React.PropTypes.string),
         availableGroups: React.PropTypes.arrayOf(React.PropTypes.object),
@@ -83,6 +85,7 @@ const MetadataModal = React.createClass({
             onDeleteThumbnail: ()=> {},
             onGroupsChange: ()=> {},
             onAddPermission: ()=> {},
+            metadataChanged: ()=> {},
             onNewGroupChoose: ()=> {},
             onNewPermissionChoose: ()=> {},
             user: {
@@ -112,26 +115,12 @@ const MetadataModal = React.createClass({
             groups: []
         };
     },
-    componentWillMount() {
-        if (this.props.map && this.props.map.name) {
-            this.setState({
-                name: this.props.map.name,
-                description: this.props.map.description || ''
-            });
-        }
-    },
     componentWillReceiveProps(nextProps) {
         if (nextProps.map && this.props.map && !nextProps.map.loading && this.state && this.state.saving) {
             this.setState({
               saving: false
             });
             this.props.onClose();
-        }
-        if (nextProps.map && nextProps.map.name) {
-            this.setState({
-                name: nextProps.map.name,
-                description: nextProps.map.description || ''
-            });
         }
     },
     componentDidUpdate(prevProps) {
@@ -149,8 +138,8 @@ const MetadataModal = React.createClass({
         let metadata = null;
 
         if ( this.isMetadataChanged() ) {
-            let name = this.state.name;
-            let description = this.state.description;
+            let name = this.props.metadata.name;
+            let description = this.props.metadata.description;
             metadata = {
                 name: name,
                 description: description
@@ -211,11 +200,7 @@ const MetadataModal = React.createClass({
             </span>);
         const body = (
             <Metadata role="body" ref="mapMetadataForm"
-                onChange={(prop, value ) => {
-                    this.setState({
-                        [prop]: value
-                    });
-                }}
+                onChange={this.props.metadataChanged}
                 map={this.props.map}
                 nameFieldText={<Message msgId="map.name" />}
                 descriptionFieldText={<Message msgId="map.description" />}
@@ -305,8 +290,8 @@ const MetadataModal = React.createClass({
     },
     isMetadataChanged() {
         return this.props.map && (
-            this.state.description !== this.props.map.description ||
-            this.state.name !== this.props.map.name
+            this.props.metadata.description !== this.props.map.description ||
+            this.props.metadata.name !== this.props.map.name
         );
     },
     isThumbnailChanged() {

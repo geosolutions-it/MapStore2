@@ -10,7 +10,7 @@ const ReactDOM = require('react-dom');
 
 const expect = require('expect');
 
-const GroupField = require('../QueryBuilder.jsx');
+const GroupField = require('../GroupField.jsx');
 
 describe('GroupField', () => {
 
@@ -114,7 +114,22 @@ describe('GroupField', () => {
         }
 
         const buttons = document.getElementsByClassName('btn btn-default');
-        expect(buttons.length).toBe(6);
+        expect(buttons.length).toBe(4);
+
+        const list = groupfield.getOperator({type: "list"});
+        expect(list).toEqual(["="]);
+        const string = groupfield.getOperator({type: "string"});
+        expect(string).toEqual(["=", "like", "ilike", "isNull"]);
+        const boolean = groupfield.getOperator({type: "boolean"});
+        expect(boolean).toEqual(["="]);
+        const noType = groupfield.getOperator();
+        expect(noType).toEqual(["=", ">", "<", ">=", "<=", "<>", "><"]);
+
+        const noSelected = groupfield.getComboValues();
+        expect(noSelected).toBe(null);
+
+        const selectedDependsOn = groupfield.getComboValues({dependson: { field: 'field'}}, attributes);
+        expect(selectedDependsOn).toBe(null);
     });
 
     it('creates the GroupField with cascading', () => {

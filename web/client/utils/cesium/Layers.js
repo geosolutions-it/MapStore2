@@ -1,5 +1,5 @@
-/**
- * Copyright 2015, GeoSolutions Sas.
+/*
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -37,7 +37,6 @@ var Layers = {
         if (layerCreator && layerCreator.update) {
             return layerCreator.update(layer, newOptions, oldOptions, map);
         }
-
     }
 };
 

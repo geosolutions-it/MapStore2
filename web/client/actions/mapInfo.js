@@ -100,28 +100,18 @@ function getVectorInfo(layer, request, metadata) {
 
 
 /**
- * Sends a wms GetFeatureInfo request and dispatches the right action
+ * Sends a GetFeatureInfo request and dispatches the right action
  * in case of success, error or exceptions.
  *
- * @param wmsBasePath {string} base path to the wms service
+ * @param basePath {string} base path to the service
  * @param requestParams {object} map of params for a getfeatureinfo request.
  */
-function getFeatureInfo(wmsBasePath, requestParams, lMetaData, options = {}) {
-    const defaultParams = assign({
-        service: 'WMS',
-        version: '1.1.1',
-        request: 'GetFeatureInfo',
-        srs: 'EPSG:4326',
-        info_format: 'application/json',
-        x: 0,
-        y: 0,
-        exceptions: 'application/json'
-    }, options);
-    const param = assign({}, defaultParams, requestParams);
+function getFeatureInfo(basePath, requestParams, lMetaData, options = {}) {
+    const param = assign({}, options, requestParams);
     const reqId = uuid.v1();
     return (dispatch) => {
         dispatch(newMapInfoRequest(reqId, param));
-        axios.get(wmsBasePath, {params: param}).then((response) => {
+        axios.get(basePath, {params: param}).then((response) => {
             if (response.data.exceptions) {
                 dispatch(exceptionsFeatureInfo(reqId, response.data.exceptions, requestParams, lMetaData));
             } else {

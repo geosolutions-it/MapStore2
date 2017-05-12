@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -11,65 +11,55 @@ const {Glyphicon} = require('react-bootstrap');
 
 const Message = require('./locale/Message');
 
-const lineRuleIcon = require('./toolbar/assets/img/line-ruler.png');
-
 const assign = require('object-assign');
-
+const {createSelector} = require('reselect');
 const {changeMeasurement} = require('../actions/measurement');
+const {toggleControl} = require('../actions/controls');
+const {MeasureDialog} = require('./measure/index');
 
-const Measure = require('../components/mapcontrols/measure/MeasureComponent');
-
-const MeasureComponent = React.createClass({
-    render() {
-        const labels = {
-            lengthButtonText: <Message msgId="measureComponent.lengthButtonText"/>,
-            areaButtonText: <Message msgId="measureComponent.areaButtonText"/>,
-            resetButtonText: <Message msgId="measureComponent.resetButtonText"/>,
-            lengthLabel: <Message msgId="measureComponent.lengthLabel"/>,
-            areaLabel: <Message msgId="measureComponent.areaLabel"/>,
-            bearingLabel: <Message msgId="measureComponent.bearingLabel"/>
-        };
-        return <Measure {...labels} {...this.props}/>;
-    }
-});
-
-const MeasurePlugin = connect((state) => {
+const selector = (state) => {
     return {
         measurement: state.measurement || {},
         lineMeasureEnabled: state.measurement && state.measurement.lineMeasureEnabled || false,
         areaMeasureEnabled: state.measurement && state.measurement.areaMeasureEnabled || false,
         bearingMeasureEnabled: state.measurement && state.measurement.bearingMeasureEnabled || false
     };
-}, {
-    toggleMeasure: changeMeasurement
-}, null, {pure: false})(MeasureComponent);
+};
+const toggleMeasureTool = toggleControl.bind(null, 'measure', null);
+/**
+ * Measure plugin. Allows to show the tool to measure dinstances, areas and bearing.
+ * @class
+ * @name Measure
+ * @memberof plugins
+ * @prop {boolean} showResults shows the measure in the panel itself.
+ */
+const Measure = connect(
+    createSelector([
+            selector,
+            (state) => state && state.controls && state.controls.measure && state.controls.measure.enabled
+        ],
+        (measure, show) => ({
+            show,
+            ...measure
+        }
+    )),
+    {
+        toggleMeasure: changeMeasurement,
+        onClose: toggleMeasureTool
+    }, null, {pure: false})(MeasureDialog);
 
 module.exports = {
-    MeasurePlugin: assign(MeasurePlugin, {
-        Toolbar: {
+    MeasurePlugin: assign(Measure, {
+        disablePluginIf: "{state('mapType') === 'cesium'}",
+        BurgerMenu: {
             name: 'measurement',
             position: 9,
-            panel: true,
-            exclusive: true,
-            wrap: true,
+            panel: false,
             help: <Message msgId="helptexts.measureComponent"/>,
             tooltip: "measureComponent.tooltip",
-            icon: <Glyphicon glyph="1-stilo"/>,
-            title: "measureComponent.title",
-            priority: 1
-        },
-        DrawerMenu: {
-            name: 'measurement',
-            position: 3,
-            glyph: "1-stilo",
-            icon: <img src={lineRuleIcon} />,
-            title: 'measureComponent.title',
-            showPanel: false,
-            buttonConfig: {
-                buttonClassName: "square-button no-border",
-                tooltip: "toc.measure"
-            },
-            priority: 2
+            text: <Message msgId="measureComponent.Measure"/>,
+            icon: <Glyphicon glyph="1-ruler"/>,
+        action: toggleMeasureTool
         }
     }),
     reducers: {measurement: require('../reducers/measurement')}

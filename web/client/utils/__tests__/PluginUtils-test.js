@@ -12,7 +12,23 @@ const expect = require('expect');
 const PluginsUtils = require('../PluginsUtils');
 const assign = require('object-assign');
 const MapSearchPlugin = require('../../plugins/MapSearch');
+const Rx = require('rxjs');
+const { ActionsObservable } = require('redux-observable');
 
+const epicTest = (epic, count, action, callback, state = {}) => {
+    const actions = new Rx.Subject();
+    const actions$ = new ActionsObservable(actions);
+    const store = { getState: () => state };
+    epic(actions$, store)
+        .take(count)
+        .toArray()
+        .subscribe(callback);
+    if (action.length) {
+        action.map(act => actions.next(act));
+    } else {
+        actions.next(action);
+    }
+};
 describe('PluginsUtils', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -80,10 +96,36 @@ describe('PluginsUtils', () => {
     });
     it('combineEpics', () => {
         const plugins = {MapSearchPlugin: MapSearchPlugin};
-        const appEpics = {appEpics: (actions$) => actions$.ofType('TEST_ACTION').map({type: "NEW_ACTION_TEST"})};
+        const appEpics = {appEpics: (actions$) => actions$.ofType('TEST_ACTION').map(() => ({type: "NEW_ACTION_TEST"}))};
         const epics = PluginsUtils.combineEpics(plugins, appEpics);
         expect(typeof epics ).toEqual('function');
     });
+    it('combineEpics with defaultEpicWrapper', (done) => {
+        const plugins = {MapSearchPlugin: MapSearchPlugin};
+        const appEpics = {
+            appEpics: (actions$) => actions$.filter( a => a.type === 'TEST_ACTION').map(() => ({type: "RESPONSE"})),
+            appEpics2: (actions$) => actions$.filter( a => a.type === 'TEST_ACTION1').map(() => {throw new Error(); })};
+        const epics = PluginsUtils.combineEpics(plugins, appEpics);
+        expect(typeof epics ).toEqual('function');
+        epicTest(epics, 1, [{type: 'TEST_ACTION1'}, {type: 'TEST_ACTION'}], actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe("RESPONSE");
+            done();
+        });
+    });
+
+    it('combineEpics with custom wrapper', (done) => {
+        const plugins = {MapSearchPlugin: MapSearchPlugin};
+        let counter = 0;
+        const appEpics = {
+            appEpics: (actions$) => actions$.filter( a => a.type === 'TEST_ACTION').map(() => ({type: "RESPONSE"}))};
+        const epics = PluginsUtils.combineEpics(plugins, appEpics, epic => (...args) => {counter++; return epic(...args); });
+        epicTest( epics, 1, [{type: 'TEST_ACTION1'}, {type: 'TEST_ACTION'}], () => {
+            expect(counter).toBe(1);
+            done();
+        });
+    });
+
     it('connect', () => {
         const MyComponent = (props) => <div>{props.test}</div>;
         const Connected = PluginsUtils.connect((state) => ({test: state.test}), {})(MyComponent);
@@ -100,5 +142,39 @@ describe('PluginsUtils', () => {
     });
     it('handleExpression', () => {
         expect(PluginsUtils.handleExpression({state1: "test1"}, {context1: "test2"}, "{state.state1 + ' ' + context.context1}")).toBe("test1 test2");
+    });
+    it('filterState', () => {
+        expect(PluginsUtils.filterState({state1: "test1"}, [{name: "A", path: "state1"}]).A).toBe("test1");
+    });
+    it('filterDisabledPlugins', () => {
+        expect(PluginsUtils.filterDisabledPlugins(
+            {plugin: {
+                disablePluginIf: "{true}"
+            }},
+            {},
+            {}
+        )).toBe(false);
+
+        // check ignore other items, if any
+        expect(PluginsUtils.filterDisabledPlugins(
+            {},
+            {},
+            {}
+        )).toBe(true);
+    });
+    it('getMonitoredState', () => {
+        expect(PluginsUtils.getMonitoredState({maptype: {mapType: "leaflet"}}).mapType).toBe("leaflet");
+    });
+
+    it('handleExpression', () => {
+        expect(PluginsUtils.handleExpression({state1: "test1"}, {context1: "test2"}, "{state.state1 + ' ' + context.context1}")).toBe("test1 test2");
+    });
+    it('dispatch', () => {
+        const expr = PluginsUtils.handleExpression(() => ({
+            dispatch: (action) => action
+        }), {context1: "test2"}, "{dispatch((function() { return 'test'; }))}");
+
+        expect(expr).toExist();
+        expect(expr()).toBe("test");
     });
 });

@@ -9,6 +9,7 @@
 var Layers = require('../../../../utils/cesium/Layers');
 var ConfigUtils = require('../../../../utils/ConfigUtils');
 const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
+const ProxyUtils = require('../../../../utils/ProxyUtils');
 const WMTSUtils = require('../../../../utils/WMTSUtils');
 var Cesium = require('../../../../libs/cesium');
 var assign = require('object-assign');
@@ -46,7 +47,7 @@ const isValidTile = (tileMatrixSet) => (x, y, level) =>
 
 WMTSProxy.prototype.getURL = function(resource) {
     let {url, queryString} = splitUrl(resource);
-    return this.proxy + encodeURIComponent(url + queryString);
+    return ProxyUtils.getProxyUrl() + encodeURIComponent(url + queryString);
 };
 
 function NoProxy() {
@@ -95,17 +96,7 @@ function wmtsToCesiumOptions(options) {
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
     if (proxyUrl) {
-        let useCORS = [];
-        if (isObject(proxyUrl)) {
-            useCORS = proxyUrl.useCORS || [];
-            proxyUrl = proxyUrl.url;
-        }
-        let url = options.url;
-        if (isArray(url)) {
-            url = url[0];
-        }
-        const isCORS = useCORS.reduce((found, current) => found || url.indexOf(current) === 0, false);
-        proxy = !isCORS && proxyUrl;
+        proxy = ProxyUtils.needProxy(options.url) && proxyUrl;
     }
     // NOTE: can we use opacity to manage visibility?
     const isValid = isValidTile(options.matrixIds && options.matrixIds[tileMatrixSet]);

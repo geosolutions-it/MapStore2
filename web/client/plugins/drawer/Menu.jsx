@@ -49,7 +49,6 @@ const Menu = React.createClass({
     renderChildren(child, index) {
         let props = {
           key: child.key ? child.key : index,
-          onHeaderClick: this.props.onChoose,
           ref: child.ref,
           open: this.props.activeKey && this.props.activeKey === child.props.eventKey,
           icon: ""

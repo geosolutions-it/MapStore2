@@ -105,8 +105,8 @@ let CesiumMap = React.createClass({
 
         if (this.props.onClick && movement.position !== null) {
             const cartesian = map.camera.pickEllipsoid(movement.position, map.scene.globe.ellipsoid);
-            if (cartesian) {
-                let cartographic = ClickUtils.getMouseXYZ(map, movement) || Cesium.Cartographic.fromCartesian(cartesian);
+            let cartographic = ClickUtils.getMouseXYZ(map, movement) || cartesian && Cesium.Cartographic.fromCartesian(cartesian);
+            if (cartographic) {
                 const latitude = cartographic.latitude * 180.0 / Math.PI;
                 const longitude = cartographic.longitude * 180.0 / Math.PI;
 
@@ -118,6 +118,7 @@ let CesiumMap = React.createClass({
                         y: y
                     },
                     height: this.props.mapOptions && this.props.mapOptions.terrainProvider ? cartographic.height : undefined,
+                    cartographic,
                     latlng: {
                         lat: latitude,
                         lng: longitude
@@ -130,8 +131,8 @@ let CesiumMap = React.createClass({
     onMouseMove(movement) {
         if (this.props.onMouseMove && movement.endPosition) {
             const cartesian = this.map.camera.pickEllipsoid(movement.endPosition, this.map.scene.globe.ellipsoid);
-            if (cartesian) {
-                const cartographic = ClickUtils.getMouseXYZ(this.map, movement) || Cesium.Cartographic.fromCartesian(cartesian);
+            let cartographic = ClickUtils.getMouseXYZ(this.map, movement) || cartesian && Cesium.Cartographic.fromCartesian(cartesian);
+            if (cartographic) {
                 this.props.onMouseMove({
                     y: cartographic.latitude * 180.0 / Math.PI,
                     x: cartographic.longitude * 180.0 / Math.PI,

@@ -29,6 +29,9 @@
             "general": "General",
             "display": "Display",
             "style": "Style",
+            "transparent": "Transparent",
+            "singleTile": "Single Tile",
+            "cached": "Use cache options",
             "styleCustom": "Use style named \"{value}\"",
             "styleListLoadError": "There was an error loading the styles list",
             "stylesRefreshList": "Refresh Styles List",
@@ -39,6 +42,10 @@
             "confirmDelete": "Are you sure?",
             "featureTypeError": "Cannot load layer attributes",
             "elevation": "Elevation"
+        },
+        "globeswitcher": {
+            "tooltipDeactivate": "Exit 3D Mode",
+            "tooltipActivate": "Enter 3D Mode"
         },
         "background": "Background",
         "language": "Language",

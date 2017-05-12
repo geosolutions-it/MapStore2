@@ -24,32 +24,6 @@ const {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
 
-const types = {
-    'xsd:string': 'string',
-    'xsd:dateTime': 'date',
-    'xsd:number': 'number',
-    'xsd:int': 'number'
-};
-const fieldConfig = {};
-const extractInfo = (featureType) => {
-    return {
-        attributes: featureType.featureTypes[0].properties
-            .filter((attribute) => attribute.type.indexOf('gml:') !== 0)
-            .map((attribute) => {
-                let conf = {
-                    label: attribute.name,
-                    attribute: attribute.name,
-                    type: types[attribute.type],
-                    valueId: "id",
-                    valueLabel: "name",
-                    values: []
-                };
-                conf = fieldConfig[attribute.name] ? {...conf, ...fieldConfig[attribute.name]} : conf;
-                return conf;
-            })
-    };
-};
-
 const extractData = (feature) => {
     return ['STATE_NAME', 'STATE_ABBR', 'SUB_REGION', 'STATE_FIPS' ].map((attribute) => ({
         attribute,
@@ -86,7 +60,7 @@ function query(state = initialState, action) {
         }
         case FEATURE_TYPE_LOADED: {
             return assign({}, state, {
-                featureTypes: assign({}, state.featureTypes, {[action.typeName]: extractInfo(action.featureType)})
+                featureTypes: assign({}, state.featureTypes, {[action.typeName]: action.featureType})
             });
         }
         case FEATURE_TYPE_ERROR: {

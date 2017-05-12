@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -39,6 +39,9 @@ const PluginsContainer = React.createClass({
         monitoredState: React.PropTypes.object,
         defaultMode: React.PropTypes.string
     },
+    contextTypes: {
+        store: React.PropTypes.object
+    },
     getDefaultProps() {
         return {
             mode: 'desktop',
@@ -65,7 +68,7 @@ const PluginsContainer = React.createClass({
         this.loadPlugins(newProps.pluginsState);
     },
     getState(path) {
-        return get(this.props.monitoredState, path) || get(this.props.params, path);
+        return get(this.props.monitoredState, path) || get(this.props.params, path) || this.context[path];
     },
     getPluginDescriptor(plugin) {
         return PluginsUtils.getPluginDescriptor(this.getState, this.props.plugins,
@@ -73,7 +76,7 @@ const PluginsContainer = React.createClass({
     },
     renderPlugins(plugins) {
         return plugins
-            .filter((Plugin) => !PluginsUtils.handleExpression(this.props.pluginsState, this.props.plugins && this.props.plugins.requires, Plugin.hide))
+            .filter((Plugin) => !PluginsUtils.handleExpression(this.getState, this.props.plugins && this.props.plugins.requires, Plugin.hide))
             .map(this.getPluginDescriptor)
             .filter((Plugin) => Plugin && !Plugin.impl.loadPlugin)
             .filter(this.filterPlugins)
@@ -100,6 +103,7 @@ const PluginsContainer = React.createClass({
         (this.props.pluginsConfig && this.props.pluginsConfig[this.props.mode] || [])
             .map((plugin) => PluginsUtils.getPluginDescriptor(this.getState, this.props.plugins,
                 this.props.pluginsConfig[this.props.mode], plugin, this.state.loadedPlugins))
+            .filter(plugin => PluginsUtils.filterDisabledPlugins({plugin: plugin && plugin.impl || plugin}, this.getState))
             .filter((plugin) => plugin && plugin.impl.loadPlugin).forEach((plugin) => {
                 if (!this.state.loadedPlugins[plugin.name]) {
                     if (!plugin.impl.enabler || plugin.impl.enabler(state)) {

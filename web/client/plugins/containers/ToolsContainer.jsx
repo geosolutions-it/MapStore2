@@ -135,7 +135,7 @@ const ToolsContainer = React.createClass({
             const toolCfg = this.getToolConfig(tool);
 
             return this.addTooltip(
-                <Tool {...toolCfg} tooltip={tooltip} btnSize={this.props.toolSize} bsStyle={this.props.toolStyle} help={help} key={tool.name || ("tool" + i)} mapType={this.props.mapType}
+                <Tool {...toolCfg} pluginCfg={tool.cfg} tooltip={tooltip} btnSize={this.props.toolSize} bsStyle={this.props.toolStyle} help={help} key={tool.name || ("tool" + i)} mapType={this.props.mapType}
                     {...tool.cfg} items={tool.items || []}>
                     {(tool.cfg && tool.cfg.glyph) ? <Glyphicon glyph={tool.cfg.glyph}/> : tool.icon}{help} {tool.text}
                 </Tool>,

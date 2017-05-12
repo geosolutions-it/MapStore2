@@ -63,12 +63,10 @@
                     "label": "Reference",
                     "items": [
                         { "label": "Framework", "href": "api/framework"},
-
                         { "separator": true },
                         { "label": "JavaScript API", "href": "api/jsapi" },
                         { "separator": true },
                         { "label": "Plugins", "href": "api/plugins" }
-
                     ]
                 },
                 {
@@ -105,9 +103,10 @@
     },
     "src": [
         {
-          "framework" : [
+          "framework": [
             "web/client/components/index.jsdoc",
             "web/client/components/buttons/FullScreenButton.jsx",
+            "web/client/components/buttons/GlobeViewSwitcherButton.jsx",
             "web/client/components/buttons/GoFullButton.jsx",
             "web/client/components/mapcontrols/search/SearchBar.jsx",
             "web/client/components/buttons/ToggleButton.jsx",
@@ -116,33 +115,51 @@
             "web/client/actions/index.jsdoc",
             "web/client/actions/controls.js",
             "web/client/actions/fullscreen.js",
+            "web/client/actions/globeswitcher.js",
             "web/client/actions/maps.js",
+            "web/client/actions/maptype.js",
             "web/client/actions/search.js",
 
             "web/client/reducers/index.jsdoc",
             "web/client/reducers/controls.js",
+            "web/client/reducers/globeswitcher.js",
             "web/client/reducers/maps.js",
+            "web/client/reducers/maptype.js",
             "web/client/reducers/search.js",
 
             "web/client/epics/index.jsdoc",
             "web/client/epics/fullscreen.js",
+            "web/client/epics/globeswitcher.js",
+            "web/client/epics/maptype.js",
             "web/client/epics/search.js",
+            "web/client/epics/wfsquery.js",
 
             "web/client/utils/index.jsdoc",
-            "web/client/utils/PluginsUtils.js"
+            "web/client/utils/CoordinatesUtils.js",
+            "web/client/utils/PluginsUtils.js",
+            "web/client/utils/PrintUtils.js",
+            "web/client/utils/ShareUtils.js"
           ],
           "jsapi": "web/client/jsapi/MapStore2.js",
             "plugins": [
                 "web/client/plugins/index.jsdoc",
                 "web/client/plugins/BackgroundSwitcher.jsx",
                 "web/client/plugins/DrawerMenu.jsx",
+                "web/client/plugins/GlobeViewSwitcher.jsx",
                 "web/client/plugins/GoFull.jsx",
                 "web/client/plugins/Map.jsx",
+                "web/client/plugins/Measure.jsx",
+                "web/client/plugins/MeasurePanel.jsx",
+                "web/client/plugins/MeasureResults.jsx",
                 "web/client/plugins/FullScreen.jsx",
                 "web/client/plugins/Identify.jsx",
+                "web/client/plugins/Locate.jsx",
                 "web/client/plugins/Login.jsx",
+                "web/client/plugins/ScaleBox.jsx",
                 "web/client/plugins/ScrollTop.jsx",
-                "web/client/plugins/Search.jsx"
+                "web/client/plugins/Search.jsx",
+                "web/client/plugins/ZoomIn.jsx",
+                "web/client/plugins/ZoomOut.jsx"
             ]
         },
         "./docs/**/*md",

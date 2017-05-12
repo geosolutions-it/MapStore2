@@ -95,7 +95,7 @@ const UserMenu = React.createClass({
           if (itemArray.length > 0) {
               itemArray.push(<MenuItem key="divider" divider />);
           }
-          itemArray.push(<MenuItem key="logout" onClick={this.props.onLogout}><Glyphicon glyph="log-out" /> <Message msgId="user.logout"/></MenuItem>);
+          itemArray.push(<MenuItem key="logout" onClick={() => this.props.onLogout()}><Glyphicon glyph="log-out" /> <Message msgId="user.logout"/></MenuItem>);
       }
       return (
       <DropDown id="loginButton" className={this.props.className} pullRight bsStyle="success" title={this.renderButtonText()} {...this.props.menuProps} >

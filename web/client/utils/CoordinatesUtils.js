@@ -1,14 +1,17 @@
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 const Proj4js = require('proj4');
 const proj4 = Proj4js;
 const assign = require('object-assign');
 const {isArray, flattenDeep, chunk, cloneDeep} = require('lodash');
+const lineIntersect = require('@turf/line-intersect');
+const polygonToLinestring = require('@turf/polygon-to-linestring');
 // Checks if `list` looks like a `[x, y]`.
 function isXY(list) {
     return list.length >= 2 &&
@@ -46,7 +49,10 @@ function determineCrs(crs) {
     }
     return crs;
 }
-
+/**
+ * Utilities for Coordinates conversion.
+ * @memberof utils
+ */
 const CoordinatesUtils = {
     getUnits: function(projection) {
         const proj = new Proj4js.Proj(projection);
@@ -64,6 +70,50 @@ const CoordinatesUtils = {
             return transformed;
         }
         return null;
+    },
+    /**
+     * Creates a bbox of size dimensions areund the center point given to it given the
+     * resolution and the rotation
+     * @param center {object} the x,y coordinate of the point
+     * @param resolution {number} the resolution of the map
+     * @param rotation {number} the optional rotation of the new bbox
+     * @param size {object} width,height of the desired bbox
+     * @return {object} the desired bbox {minx, miny, maxx, maxy}
+     */
+    getProjectedBBox: function(center, resolution, rotation = 0, size) {
+        let dx = resolution * size[0] / 2;
+        let dy = resolution * size[1] / 2;
+        let cosRotation = Math.cos(rotation);
+        let sinRotation = Math.sin(rotation);
+        let xCos = dx * cosRotation;
+        let xSin = dx * sinRotation;
+        let yCos = dy * cosRotation;
+        let ySin = dy * sinRotation;
+        let x = center.x;
+        let y = center.y;
+        let x0 = x - xCos + ySin;
+        let x1 = x - xCos - ySin;
+        let x2 = x + xCos - ySin;
+        let x3 = x + xCos + ySin;
+        let y0 = y - xSin - yCos;
+        let y1 = y - xSin + yCos;
+        let y2 = y + xSin + yCos;
+        let y3 = y + xSin - yCos;
+        let bounds = CoordinatesUtils.createBBox(
+            Math.min(x0, x1, x2, x3), Math.min(y0, y1, y2, y3),
+            Math.max(x0, x1, x2, x3), Math.max(y0, y1, y2, y3));
+        return bounds;
+    },
+    /**
+     * Returns a bounds object.
+     * @param {number} minX Minimum X.
+     * @param {number} minY Minimum Y.
+     * @param {number} maxX Maximum X.
+     * @param {number} maxY Maximum Y.
+     * @return {Object} Extent.
+     */
+    createBBox(minX, minY, maxX, maxY) {
+        return { minx: minX, miny: minY, maxx: maxX, maxy: maxY };
     },
     /**
      * Reprojects a geojson from a crs into another
@@ -111,6 +161,10 @@ const CoordinatesUtils = {
             }
         });
     },
+    lineIntersectPolygon: function(linestring, polygon) {
+        let polygonLines = polygonToLinestring(polygon).features[0];
+        return lineIntersect(linestring, polygonLines).features.length !== 0;
+    },
     normalizePoint: function(point) {
         return {
             x: point.x || 0.0,
@@ -120,11 +174,9 @@ const CoordinatesUtils = {
     },
     /**
      * Reprojects a bounding box.
-     *
      * @param bbox {array} [minx, miny, maxx, maxy]
      * @param source {string} SRS of the given bbox
      * @param dest {string} SRS of the returned bbox
-     *
      * @return {array} [minx, miny, maxx, maxy]
      */
     reprojectBbox: function(bbox, source, dest, normalize = true) {

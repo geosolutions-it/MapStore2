@@ -1,4 +1,4 @@
-/**
+/*
 * Copyright 2016, GeoSolutions Sas.
 * All rights reserved.
 *
@@ -10,11 +10,24 @@ const CoordinatesUtils = require('../utils/CoordinatesUtils');
 const MapUtils = require('../utils/MapUtils');
 const {createSelector} = require('reselect');
 
+/**
+ * get the current map configuration from state
+ * @function
+ * @memberof selectors.map
+ * @param  {object} state the state
+ * @return {object} the map configruation
+ */
 const mapSelector = (state) => (state.map && state.map.present) || (state.map) || (state.config && state.config.map) || null;
 
 const projectionSelector = createSelector([mapSelector], (map) => map && map.projection);
 
-
+/**
+ * Get the scales of the current map
+ * @function
+ * @memberof selectors.map
+ * @param  {object} state the state
+ * @return {number[]} the scales of the map
+ */
 const scalesSelector = createSelector(
     [projectionSelector],
     (projection) => {

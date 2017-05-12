@@ -8,7 +8,7 @@
 
 const React = require('react');
 const {connect} = require('react-redux');
-const {loadMaps, updateMapMetadata, deleteMap, createThumbnail, deleteThumbnail, saveMap, thumbnailError, saveAll, onDisplayMetadataEdit, resetUpdating} = require('../actions/maps');
+const {loadMaps, updateMapMetadata, deleteMap, createThumbnail, deleteThumbnail, saveMap, thumbnailError, saveAll, onDisplayMetadataEdit, resetUpdating, metadataChanged} = require('../actions/maps');
 const {editMap, updateCurrentMap, errorCurrentMap, removeThumbnail, resetCurrentMap} = require('../actions/currentMap');
 const ConfigUtils = require('../utils/ConfigUtils');
 const MapsGrid = connect((state) => {
@@ -43,13 +43,14 @@ const {setControlProperty} = require('../actions/controls');
 
 const MetadataModal = connect(
     (state = {}) => ({
+        metadata: state.maps.metadata,
         availableGroups: state.currentMap && state.currentMap.availableGroups || [ ], // TODO: add message when array is empty
         newGroup: state.controls && state.controls.permissionEditor && state.controls.permissionEditor.newGroup,
         newPermission: state.controls && state.controls.permissionEditor && state.controls.permissionEditor.newPermission || "canRead",
         user: state.security && state.security.user || {name: "Guest"}
     }),
     {
-        loadPermissions, loadAvailableGroups, updatePermissions, onGroupsChange: updateCurrentMapPermissions, onAddPermission: addCurrentMapPermission,
+        loadPermissions, loadAvailableGroups, updatePermissions, onGroupsChange: updateCurrentMapPermissions, onAddPermission: addCurrentMapPermission, metadataChanged,
         onNewGroupChoose: setControlProperty.bind(null, 'permissionEditor', 'newGroup'),
         onNewPermissionChoose: setControlProperty.bind(null, 'permissionEditor', 'newPermission')
     }, null, {withRef: true} )(require('../components/maps/modals/MetadataModal'));
@@ -127,12 +128,14 @@ const Maps = React.createClass({
 
 module.exports = {
     MapsPlugin: connect((state) => ({
-        mapType: state.home && state.home.mapType || (state.maps && state.maps.mapType) || 'leaflet'
+        mapType: (state.maptype && state.maptype.mapType) || 'leaflet'
     }), {
         loadMaps
     })(Maps),
+    epics: require('../epics/maptype'),
     reducers: {
         maps: require('../reducers/maps'),
+        maptype: require('../reducers/maptype'),
         currentMap: require('../reducers/currentMap')
     }
 };

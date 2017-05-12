@@ -10,6 +10,7 @@ var Layers = require('../../../../utils/openlayers/Layers');
 var markerIcon = require('../img/marker-icon.png');
 var markerShadow = require('../img/marker-shadow.png');
 var ol = require('openlayers');
+const {isEqual} = require('lodash');
 
 const assign = require('object-assign');
 
@@ -104,104 +105,100 @@ var styleFunction = function(feature) {
     return defaultStyles[feature.getGeometry().getType()];
 };
 
-Layers.registerType('vector', {
-    create: (options) => {
-        let features;
-        let featuresCrs = options.featuresCrs || 'EPSG:4326';
-        let layerCrs = options.crs || 'EPSG:3857';
-        if (options.features) {
-            let featureCollection = options.features;
-            if (Array.isArray(options.features)) {
-                featureCollection = { "type": "FeatureCollection", features: featureCollection};
+function getStyle(options) {
+    let style = options.nativeStyle;
+    if (!style && options.style) {
+        style = {
+            stroke: new ol.style.Stroke( options.style.stroke ? options.style.stroke : {
+                color: 'blue',
+                width: 1
+            }),
+            fill: new ol.style.Fill(options.style.fill ? options.style.fill : {
+                color: 'blue'
+            })
+        };
+
+        if (options.style.type === "Point") {
+            style = {
+                image: new ol.style.Circle(assign({}, style, {radius: options.style.radius || 5}))
+            };
+        }
+
+        if (options.style.iconUrl ) {
+            let markerStyle = [new ol.style.Style({
+                  image: new ol.style.Icon(({
+                    anchor: options.iconAnchor || [0.5, 1],
+                    anchorXUnits: ( options.iconAnchor || options.iconAnchor === 0) ? 'pixels' : 'fraction',
+                    anchorYUnits: ( options.iconAnchor || options.iconAnchor === 0) ? 'pixels' : 'fraction',
+                    src: options.style.iconUrl
+                }))
+            })];
+            if (options.style.shadowUrl) {
+                markerStyle = [new ol.style.Style({
+                      image: new ol.style.Icon(({
+                        anchor: [12, 41],
+                        anchorXUnits: 'pixels',
+                        anchorYUnits: 'pixels',
+                        src: options.style.shadowUrl || markerShadow
+                      }))
+                  }), markerStyle [0]];
             }
-            features = (new ol.format.GeoJSON()).readFeatures(featureCollection);
-            if (featuresCrs !== layerCrs) {
-                features.forEach((f) => f.getGeometry().transform(featuresCrs, layerCrs));
+            style = (feature) => {
+                const type = feature.getGeometry().getType();
+                switch (type) {
+                    case "Point":
+                    case "MultiPoint":
+                        return markerStyle;
+                    default:
+                        return styleFunction(feature);
+                }
+            };
+        } else {
+            style = new ol.style.Style(style);
+        }
+    }
+    return (options.styleName && !options.overrideOLStyle) ? (feature) => {
+        if (options.styleName === "marker") {
+            const type = feature.getGeometry().getType();
+            switch (type) {
+                case "Point":
+                case "MultiPoint":
+                    return defaultStyles.marker;
+                default:
+                    break;
             }
         }
+        return defaultStyles[options.styleName];
+    } : style || styleFunction;
+}
+Layers.registerType('vector', {
+    create: (options) => {
+        let features = [];
 
         const source = new ol.source.Vector({
             features: features
         });
 
-        let style = options.nativeStyle;
-        if (!style && options.style) {
-            style = {
-                stroke: new ol.style.Stroke( options.style.stroke ? options.style.stroke : {
-                    color: 'blue',
-                    width: 1
-                }),
-                fill: new ol.style.Fill(options.style.fill ? options.style.fill : {
-                    color: 'blue'
-                })
-            };
-
-            if (options.style.type === "Point") {
-                style = {
-                    image: new ol.style.Circle(assign({}, style, {radius: options.style.radius || 5}))
-                };
-            }
-
-            if (options.style.iconUrl ) {
-                let markerStyle = [new ol.style.Style({
-                      image: new ol.style.Icon(({
-                        anchor: options.iconAnchor || [0.5, 1],
-                        anchorXUnits: ( options.iconAnchor || options.iconAnchor === 0) ? 'pixels' : 'fraction',
-                        anchorYUnits: ( options.iconAnchor || options.iconAnchor === 0) ? 'pixels' : 'fraction',
-                        src: options.style.iconUrl
-                    }))
-                })];
-                if (options.style.shadowUrl) {
-                    markerStyle = [new ol.style.Style({
-                          image: new ol.style.Icon(({
-                            anchor: [12, 41],
-                            anchorXUnits: 'pixels',
-                            anchorYUnits: 'pixels',
-                            src: options.style.shadowUrl || markerShadow
-                          }))
-                      }), markerStyle [0]];
-                }
-                style = (feature) => {
-                    const type = feature.getGeometry().getType();
-                    switch (type) {
-                        case "Point":
-                        case "MultiPoint":
-                            return markerStyle;
-                        default:
-                            return styleFunction(feature);
-                    }
-                };
-            } else {
-                style = new ol.style.Style(style);
-            }
-        }
+        const style = getStyle(options);
 
         return new ol.layer.Vector({
             msId: options.id,
             source: source,
+            visible: options.visibility !== false,
             zIndex: options.zIndex,
-            style: (options.styleName && !options.overrideOLStyle) ? (feature) => {
-                if (options.styleName === "marker") {
-                    const type = feature.getGeometry().getType();
-                    switch (type) {
-                        case "Point":
-                        case "MultiPoint":
-                            return defaultStyles.marker;
-                        default:
-                            break;
-                    }
-                }
-                return defaultStyles[options.styleName];
-            } : style || styleFunction
+            style
         });
     },
     update: (layer, newOptions, oldOptions) => {
-        const oldCrs = oldOptions.crs || 'EPSG:3857';
-        const newCrs = newOptions.crs || 'EPSG:3857';
+        const oldCrs = oldOptions.crs || oldOptions.srs || 'EPSG:3857';
+        const newCrs = newOptions.crs || newOptions.srs || 'EPSG:3857';
         if (newCrs !== oldCrs) {
             layer.getSource().forEachFeature((f) => {
                 f.getGeometry().transform(oldCrs, newCrs);
             });
+        }
+        if (!isEqual(oldOptions.style, newOptions.style)) {
+            layer.setStyle(getStyle(newOptions));
         }
     },
     render: () => {
