@@ -453,6 +453,7 @@
                 },
                 "methods": {
                     "zone": "Zona",
+                    "viewport": "Viewport",
                     "box": "BoundingBox",
                     "buffer": "Buffer",
                     "circle": "Cerchio",

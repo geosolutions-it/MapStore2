@@ -38,6 +38,7 @@ const SpatialFilter = React.createClass({
             showDetailsPanel: false,
             withContainer: true,
             spatialMethodOptions: [
+                {id: "Viewport", name: "queryform.spatialfilter.methods.viewport"},
                 {id: "BBOX", name: "queryform.spatialfilter.methods.box"},
                 {id: "Circle", name: "queryform.spatialfilter.methods.circle"},
                 {id: "Polygon", name: "queryform.spatialfilter.methods.poly"}
@@ -57,6 +58,7 @@ const SpatialFilter = React.createClass({
                 onRemoveSpatialSelection: () => {},
                 onShowSpatialSelectionDetails: () => {},
                 onEndDrawing: () => {},
+                onSelectViewportSM: () => {},
                 onChangeDwithinValue: () => {},
                 zoneFilter: () => {},
                 zoneSearch: () => {},
@@ -314,10 +316,18 @@ const SpatialFilter = React.createClass({
 
         this.props.actions.onSelectSpatialMethod(method, name);
 
-        if (method !== "ZONE") {
-            this.changeDrawingStatus('start', method, "queryform", []);
-        } else {
-            this.changeDrawingStatus('clean', null, "queryform", []);
+        switch (method) {
+            case "ZONE": {
+                this.changeDrawingStatus('clean', null, "queryform", []); break;
+            }
+            case "Viewport": {
+                this.changeDrawingStatus('clean', null, "queryform", []);
+                this.props.actions.onSelectViewportSM();
+                break;
+            }
+            default: {
+                this.changeDrawingStatus('start', method, "queryform", []);
+            }
         }
     },
     updateSpatialOperation(id, name, value) {

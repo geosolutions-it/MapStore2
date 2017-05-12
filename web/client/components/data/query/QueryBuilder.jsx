@@ -96,6 +96,7 @@ const QueryBuilder = React.createClass({
                 onChangeDrawingStatus: () => {},
                 onRemoveSpatialSelection: () => {},
                 onShowSpatialSelectionDetails: () => {},
+                onSelectViewportSM: () => {},
                 onEndDrawing: () => {},
                 onChangeDwithinValue: () => {}
             },

@@ -27,6 +27,7 @@ const {
     CHANGE_DWITHIN_VALUE,
     ZONE_FILTER,
     ZONE_SEARCH,
+    UPDATE_GEOMETRY,
     // OPEN_MENU,
     ZONE_CHANGE,
     ZONES_RESET,
@@ -164,6 +165,9 @@ function queryform(state = initialState, action) {
         }
         case SELECT_SPATIAL_METHOD: {
             return assign({}, state, {spatialField: assign({}, state.spatialField, {[action.fieldName]: action.method, geometry: null})});
+        }
+        case UPDATE_GEOMETRY: {
+            return assign({}, state, {spatialField: assign({}, state.spatialField, {geometry: action.geometry})}, {toolbarEnabled: true});
         }
         case SELECT_SPATIAL_OPERATION: {
             return assign({}, state, {spatialField: assign({}, state.spatialField, {[action.fieldName]: action.operation})});
