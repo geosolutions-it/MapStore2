@@ -12,6 +12,8 @@ const assign = require('object-assign');
 const globeswitcher = require('../reducers/globeswitcher');
 const epics = require('../epics/globeswitcher');
 const {toggle3d} = require('../actions/globeswitcher');
+const {mapTypeSelector, isCesium} = require('../selectors/maptype');
+const {createSelector} = require('reselect');
 const GlobeViewSwitcherButton = require('../components/buttons/GlobeViewSwitcherButton');
 
 /**
@@ -23,12 +25,14 @@ const GlobeViewSwitcherButton = require('../components/buttons/GlobeViewSwitcher
   * @prop {string} cfg.id identifier of the Plugin
   *
   */
-const GlobeViewSwitcher = connect( ({maptype = {}} = {}) => ({
-    active: maptype && maptype.mapType === "cesium",
+
+let globeSelector = createSelector([mapTypeSelector, isCesium], (mapType = "leaflet", cesium) => ({
+    active: cesium,
     options: {
-        originalMapType: maptype && maptype.mapType || "leaflet"
+        originalMapType: mapType
     }
-}), {
+}));
+const GlobeViewSwitcher = connect(globeSelector, {
     onClick: (pressed, options) => toggle3d(pressed, options.originalMapType)
 })(GlobeViewSwitcherButton);
 
