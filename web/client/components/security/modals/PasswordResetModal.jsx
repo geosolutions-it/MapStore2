@@ -32,7 +32,9 @@ const PasswordResetModal = React.createClass({
         closeGlyph: React.PropTypes.string,
         style: React.PropTypes.object,
         buttonSize: React.PropTypes.string,
-        includeCloseButton: React.PropTypes.bool
+        includeCloseButton: React.PropTypes.bool,
+        changed: React.PropTypes.bool,
+        error: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -92,6 +94,7 @@ const PasswordResetModal = React.createClass({
     },
     getBody() {
         return (<PasswordReset role="body" ref="passwordResetForm"
+            changed={this.props.changed}
             onChange={(password, valid) => {
                 this.setState({passwordValid: valid, password});
             }} />);

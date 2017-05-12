@@ -483,6 +483,8 @@
             "passwordCheckFail": "Passwords do not match!",
             "username": "Username",
             "password": "Password",
+            "passwordChanged": "Password changed",
+            "passwordError": "Error changing password",
             "signIn":"Sign-in",
             "loginFail":"Login Fail",
             "loginFailedStatusMessages": {

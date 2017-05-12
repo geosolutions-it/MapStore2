@@ -30,6 +30,20 @@ describe("Test the password reset form component", () => {
         expect(cmp).toExist();
     });
 
+    it('alert for success', () => {
+        const cmp = ReactDOM.render(<PasswordReset changed={true}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        let alert = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithClass(cmp, "alert-success")[0]);
+        expect(alert).toExist();
+    });
+
+    it('alert for error', () => {
+        const cmp = ReactDOM.render(<PasswordReset error={{message: 'error'}}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        let alert = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithClass(cmp, "alert-danger")[0]);
+        expect(alert).toExist();
+    });
+
     it('test component validity', () => {
         const cmp = ReactDOM.render(<PasswordReset />, document.getElementById("container"));
         expect(cmp).toExist();

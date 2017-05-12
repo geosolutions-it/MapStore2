@@ -483,6 +483,8 @@
             "passwordCheckFail": "Passwörter sind nicht identisch!",
             "username": "Benutzername",
             "password": "Passwort",
+            "passwordChanged": "Passwort geändert",
+            "passwordError": "Fehler beim Ändern des Passworts",
             "signIn":"Anmelden",
             "loginFail":"Anmeldung gescheitert",
             "loginFailedStatusMessages": {

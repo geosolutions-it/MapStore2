@@ -22,7 +22,9 @@ const PasswordReset = React.createClass({
 
       // I18N
       newPasswordText: React.PropTypes.node,
-      passwordCheckText: React.PropTypes.node
+      passwordCheckText: React.PropTypes.node,
+      changed: React.PropTypes.bool,
+      error: React.PropTypes.object
   },
   contextTypes: {
       messages: React.PropTypes.object
@@ -69,6 +71,15 @@ const PasswordReset = React.createClass({
       }
       return null;
   },
+  renderStatus() {
+      if (this.props.changed) {
+          return <Alert bsStyle="success"><Message msgId="user.passwordChanged"/></Alert>;
+      }
+      if (this.props.error) {
+          return <Alert bsStyle="danger"><Message msgId="user.passwordError"/></Alert>;
+      }
+      return null;
+  },
   render() {
       return (<form ref="loginForm" onSubmit={this.handleSubmit}>
         <FormGroup validationState={this.getPwStyle()}>
@@ -91,6 +102,7 @@ const PasswordReset = React.createClass({
                   placeholder={LocaleUtils.getMessageById(this.context.messages, "user.retypePwd")} />
           </FormGroup>
           {this.renderWarning()}
+          {this.renderStatus()}
       </form>);
   },
   isValid(password, passwordcheck) {

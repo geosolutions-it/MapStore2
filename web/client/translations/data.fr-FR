@@ -485,6 +485,8 @@
             "passwordCheckFail": "Les deux mots de passe ne correspondent pas!",
             "username": "Nom d'utilisateur",
             "password": "Mot de passe",
+            "passwordChanged": "Mot de passe changé",
+            "passwordError": "Erreur de changement de mot de passe",
             "signIn":"S'authentifier",
             "loginFail":"Erreur d'authentification",
             "loginFailedStatusMessages": {

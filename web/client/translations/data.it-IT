@@ -483,6 +483,8 @@
             "passwordCheckFail": "Le due password non corrispondono",
             "username": "Username",
             "password": "Password",
+            "passwordChanged": "La password è stata cambiata",
+            "passwordError": "Errore nel cambio della password",
             "signIn":"Accedi",
             "loginFail":"Login Fallito",
             "loginFailedStatusMessages": {
