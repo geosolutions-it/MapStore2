@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -9,6 +9,16 @@
 const { CHANGE_VERSION } = require('../actions/version');
 const assign = require('object-assign');
 
+/**
+ * Manages the state of the version identifier
+ * @prop {string} current version identifier
+ *
+ * @example
+ *{
+ *  current: '2017.00.04'
+ *}
+ * @memberof reducers
+ */
 function version(state = null, action) {
     switch (action.type) {
         case CHANGE_VERSION: {
