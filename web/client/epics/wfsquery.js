@@ -10,7 +10,7 @@ const Rx = require('rxjs');
 const axios = require('../libs/ajax');
 const {changeSpatialAttribute, SELECT_VIEWPORT_SPATIAL_METHOD, updateGeometrySpatialField} = require('../actions/queryform');
 const {CHANGE_MAP_VIEW} = require('../actions/map');
-const {FEATURE_TYPE_SELECTED, QUERY, featureTypeLoaded, featureTypeError, createQuery, querySearchResponse, queryError, featureClose} = require('../actions/wfsquery');
+const {FEATURE_TYPE_SELECTED, QUERY, featureTypeLoaded, featureTypeError, querySearchResponse, queryError, featureClose} = require('../actions/wfsquery');
 const FilterUtils = require('../utils/FilterUtils');
 const assign = require('object-assign');
 const {isString} = require('lodash');
@@ -198,7 +198,6 @@ const wfsQueryEpic = (action$, store) =>
         .switchMap(action => {
 
             return Rx.Observable.merge(
-                Rx.Observable.of(createQuery(action.searchUrl, action.filterObj)),
                 Rx.Observable.of(setControlProperty('drawer', 'enabled', false)),
                 getWFSFeature(action.searchUrl, action.filterObj)
                     .switchMap((response) => {
