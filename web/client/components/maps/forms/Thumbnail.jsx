@@ -148,6 +148,9 @@ const Thumbnail = React.createClass({
                     this.props.onSaveAll(map, metadata, name, data, category, this.props.map.id);
                 }
                 if (!this.props.map.newThumbnail && !data && !this.refs.imgThumbnail) {
+                    if (this.props.map.thumbnail && metadata) {
+                        this.deleteThumbnail(this.props.map.thumbnail, this.props.map.id);
+                    }
                     this.props.onSaveAll(map, metadata, name, data, category, this.props.map.id);
                 }
                 return data;

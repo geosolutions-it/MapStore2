@@ -20,7 +20,7 @@ const rootEpic = combineEpics(toggleFullscreenEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
-describe('search Epics', () => {
+describe('fullscreen Epics', () => {
     let store;
     beforeEach(() => {
         store = mockStore();
@@ -31,7 +31,7 @@ describe('search Epics', () => {
         screenfull.exit();
     });
 
-    it('produces the search epic', (done) => {
+    it('produces the fullscreen epic', (done) => {
         let changed = false;
         let action = toggleFullscreen(true, "html");
         if ( screenfull.enabled ) {
