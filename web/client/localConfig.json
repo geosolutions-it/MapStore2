@@ -32,7 +32,7 @@
                 "cfg": {
                     "tools": ["locate"]
                 }
-            }, "DrawerMenu", "BackgroundSelector", {
+            }, "Version", "DrawerMenu", "BackgroundSelector", {
                 "name": "Identify",
                 "showIn": ["Settings"],
                 "cfg": {
@@ -111,7 +111,7 @@
             }, "Login",
             "OmniBar", "BurgerMenu", "Expander", "GlobeViewSwitcher"
         ],
-        "desktop": ["Map", "HelpLink", "Share", "DrawerMenu", "BackgroundSelector", {
+        "desktop": ["Map", "HelpLink", "Share", "DrawerMenu", "Version", "BackgroundSelector", {
                 "name": "Identify",
                 "showIn": ["IdentifyBar", "Settings"],
                 "cfg": {

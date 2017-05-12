@@ -21,6 +21,9 @@
         "enable": "Aktiviere",
         "layers": "Ebenen",
         "warning": "Warnung",
+        "version": {
+            "label": "Version"
+        },
         "layerProperties": {
             "windowTitle": "Ebenen Eigenschaften",
             "title": "Titel",

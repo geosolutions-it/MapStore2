@@ -120,6 +120,10 @@
             "web/client/actions/maptype.js",
             "web/client/actions/search.js",
 
+            "web/client/selectors/index.jsdoc",
+            "web/client/selectors/map.js",
+            "web/client/selectors/maptype.js",
+
             "web/client/reducers/index.jsdoc",
             "web/client/reducers/controls.js",
             "web/client/reducers/globeswitcher.js",
