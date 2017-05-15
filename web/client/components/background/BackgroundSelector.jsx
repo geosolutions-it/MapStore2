@@ -72,7 +72,8 @@ const BackgroundSelector = React.createClass({
         mobile: React.PropTypes.object,
         onToggle: React.PropTypes.func,
         propertiesChangeHandler: React.PropTypes.func,
-        setControlProperty: React.PropTypes.func
+        setLayer: React.PropTypes.func,
+        setStart: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -90,19 +91,20 @@ const BackgroundSelector = React.createClass({
             mobile: {},
             onToggle: () => {},
             propertiesChangeHandler: () => {},
-            setControlProperty: () => {}
+            setLayer: () => {},
+            setStart: () => {}
         };
     },
     componentWillUnmount() {
-        this.props.setControlProperty('backgroundSelector', 'currentLayer', {});
-        this.props.setControlProperty('backgroundSelector', 'tempLayer', {});
-        this.props.setControlProperty('backgroundSelector', 'start', 0);
+        this.props.setLayer('currentLayer', {});
+        this.props.setLayer('tempLayer', {});
+        this.props.setStart(0);
     },
     componentWillUpdate(nextProps) {
         if (this.props.size.width !== nextProps.size.width
         || this.props.size.height !== nextProps.size.height
         || this.props.drawerEnabled !== nextProps.drawerEnabled) {
-            this.props.setControlProperty('backgroundSelector', 'start', 0);
+            this.props.setStart(0);
         }
     },
     getThumb(layer) {
@@ -116,7 +118,7 @@ const BackgroundSelector = React.createClass({
     getIcons(side, frame, margin, vertical) {
         return this.props.enabled ? this.props.layers.map((layer, idx) => {
             let thumb = this.getThumb(layer);
-            return <PreviewIcon vertical={vertical} key={idx} src={thumb} currentLayer={this.props.currentLayer} margin={margin} side={side} frame={frame} layer={layer} onClose={this.props.onToggle} onToggle={this.props.propertiesChangeHandler} setLayer={this.props.setControlProperty}/>;
+            return <PreviewIcon vertical={vertical} key={idx} src={thumb} currentLayer={this.props.currentLayer} margin={margin} side={side} frame={frame} layer={layer} onClose={this.props.onToggle} onToggle={this.props.propertiesChangeHandler} setLayer={this.props.setLayer}/>;
         }) : [];
     },
     getDimensions(side, frame, margin, left, size, iconsLength) {
@@ -157,7 +159,7 @@ const BackgroundSelector = React.createClass({
             <div className="background-plugin-position" style={{left, bottom: this.props.bottom}}>
                 <PreviewButton src={src} side={sideButton} frame={frame} margin={margin} labelHeight={labelHeight} label={layer.title} onToggle={this.props.onToggle}/>
                 <div className="background-list-container" style={{bottom: this.props.bottom, left: left + sideButton + margin * 2 + frame, width: listSize, height: buttonSize}}>
-                    <PreviewList start={this.props.start} bottom={0} height={buttonSize} width={buttonSize * visibleIconsLength} icons={icons} pagination={pagination} length={visibleIconsLength} onClick={this.props.setControlProperty} />
+                    <PreviewList start={this.props.start} bottom={0} height={buttonSize} width={buttonSize * visibleIconsLength} icons={icons} pagination={pagination} length={visibleIconsLength} onClick={this.props.setStart} />
                 </div>
             </div>
         );
@@ -185,7 +187,7 @@ const BackgroundSelector = React.createClass({
             <div className="background-plugin-position" style={{bottom: this.props.bottom}}>
                 <PreviewButton showLabel={false} src={src} side={side} frame={frame} margin={margin} label={layer.title} onToggle={this.props.onToggle}/>
                 <div className="background-list-container" style={{bottom: this.props.bottom + buttonSizeWithMargin, height: listSize, width: buttonSizeWithMargin}}>
-                    <PreviewList vertical={true} start={this.props.start} bottom={0} height={buttonSize * visibleIconsLength} width={buttonSize} icons={icons} pagination={pagination} length={visibleIconsLength} onClick={this.props.setControlProperty} />
+                    <PreviewList vertical={true} start={this.props.start} bottom={0} height={buttonSize * visibleIconsLength} width={buttonSize} icons={icons} pagination={pagination} length={visibleIconsLength} onClick={this.props.setStart} />
                 </div>
             </div>
         );

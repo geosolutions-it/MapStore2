@@ -7,8 +7,30 @@
  */
 
 const {connect} = require('react-redux');
-const {toggleControl, setControlProperty} = require('../actions/controls');
+const {toggleControl} = require('../actions/controls');
 const {changeLayerProperties} = require('../actions/layers');
+const {setLayerBackground, setStartBackground} = require('../actions/background');
+
+const {createSelector} = require('reselect');
+const {layersSelector} = require('../selectors/layers');
+const {backgroundSelSelector} = require('../selectors/background');
+const mapSelector = (state) => (state.map && state.map.present) || {};
+const isMobileSelector = (state) => (state.browser && state.browser.mobile) || false;
+const drawerControlsSelector = (state) => (state.controls && state.controls.drawer && state.controls.drawer) || {};
+const backgroundControlsSelector = (state) => (state.controls && state.controls.backgroundSelector && state.controls.backgroundSelector && state.controls.backgroundSelector.enabled) || false;
+
+const backgroundSelector = createSelector([mapSelector, layersSelector, backgroundSelSelector, isMobileSelector, drawerControlsSelector, backgroundControlsSelector],
+    (map, layers, background, isMobile, drawerControls, enabled) => ({
+        size: map.size || {width: 0, height: 0},
+        layers: layers.filter((layer) => layer.group === "background") || [],
+        tempLayer: background.tempLayer || {},
+        currentLayer: background.currentLayer || {},
+        start: background.start || 0,
+        isMobile,
+        drawerEnabled: drawerControls.enabled || false,
+        drawerWidth: drawerControls.width || 0,
+        enabled
+    }));
 
 /**
   * BackgroundSelector Plugin.
@@ -39,23 +61,16 @@ const {changeLayerProperties} = require('../actions/layers');
   * }
   */
 
-const BackgroundSelectorPlugin = connect((state) => ({
-    layers: state.layers && state.layers.flat && state.layers.flat.filter((layer) => layer.group === "background") || [],
-    drawerEnabled: state.controls && state.controls.drawer && state.controls.drawer.enabled || false,
-    drawerWidth: state.controls && state.controls.drawer && state.controls.drawer.width || 0,
-    enabled: state.controls && state.controls.backgroundSelector && state.controls.backgroundSelector.enabled || false,
-    tempLayer: state.controls && state.controls.backgroundSelector && state.controls.backgroundSelector.tempLayer || {},
-    currentLayer: state.controls && state.controls.backgroundSelector && state.controls.backgroundSelector.currentLayer || {},
-    size: state.map && state.map.present && state.map.present.size || {width: 0, height: 0},
-    start: state.controls && state.controls.backgroundSelector && state.controls.backgroundSelector.start || 0,
-    isMobile: state.browser && state.browser.mobile || false
-}), {
+const BackgroundSelectorPlugin = connect(backgroundSelector, {
     onToggle: toggleControl.bind(null, 'backgroundSelector', null),
     propertiesChangeHandler: changeLayerProperties,
-    setControlProperty
+    setLayer: setLayerBackground,
+    setStart: setStartBackground
 })(require('../components/background/BackgroundSelector'));
 
 module.exports = {
     BackgroundSelectorPlugin,
-    reducers: {}
+    reducers: {
+         background: require('../reducers/background')
+    }
 };
