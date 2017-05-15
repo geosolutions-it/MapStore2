@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, CHANGE_PASSWORD_SUCCESS, RESET_ERROR } = require('../actions/security');
+const { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAIL, RESET_ERROR } = require('../actions/security');
+const { SET_CONTROL_PROPERTY } = require('../actions/controls');
 const { USERMANAGER_UPDATE_USER } = require('../actions/users');
 
 const SecurityUtils = require('../utils/SecurityUtils');
@@ -20,6 +21,14 @@ function security(state = {user: null, errorCause: null}, action) {
             if (state.user && action.user && state.user.id === action.user.id) {
                 return assign({}, state, {
                     user: cloneDeep(action.user)
+                });
+            }
+            return state;
+        case SET_CONTROL_PROPERTY:
+            if (action.control === 'ResetPassword' && action.property === 'enabled') {
+                return assign({}, state, {
+                    passwordChanged: false,
+                    passwordError: null
                 });
             }
             return state;
@@ -50,7 +59,14 @@ function security(state = {user: null, errorCause: null}, action) {
         case CHANGE_PASSWORD_SUCCESS:
             return assign({}, state, {
                 user: assign({}, state.user, assign({}, action.user, {date: new Date().getUTCMilliseconds()})),
-                authHeader: action.authHeader
+                authHeader: action.authHeader,
+                passwordChanged: true,
+                passwordError: null
+            });
+        case CHANGE_PASSWORD_FAIL:
+            return assign({}, state, {
+                passwordError: action.error,
+                passwordChanged: false
             });
         default:
             return state;

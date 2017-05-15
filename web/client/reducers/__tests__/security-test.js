@@ -7,7 +7,7 @@
  */
 var expect = require('expect');
 var security = require('../security');
-var {LOGIN_SUCCESS, LOGIN_FAIL, RESET_ERROR, LOGOUT} = require('../../actions/security');
+var {LOGIN_SUCCESS, LOGIN_FAIL, RESET_ERROR, LOGOUT, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAIL} = require('../../actions/security');
 var {USERMANAGER_UPDATE_USER} = require('../../actions/users');
 
 describe('Test the security reducer', () => {
@@ -86,5 +86,21 @@ describe('Test the security reducer', () => {
         }});
         expect(state).toExist();
         expect(state.user.name).toBe("user");
+    });
+
+    it('change password success', () => {
+        let state = security({user: testUser.User}, {type: CHANGE_PASSWORD_SUCCESS, user: {
+            id: 6,
+            password: "newpassword"
+        }});
+        expect(state).toExist();
+        expect(state.user.password).toBe("newpassword");
+        expect(state.passwordChanged).toBe(true);
+    });
+
+    it('change password fail', () => {
+        let state = security({user: testUser.User}, {type: CHANGE_PASSWORD_FAIL, error: {message: 'error'}});
+        expect(state).toExist();
+        expect(state.passwordError).toExist();
     });
 });
