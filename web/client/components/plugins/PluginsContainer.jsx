@@ -65,10 +65,11 @@ const PluginsContainer = React.createClass({
         this.loadPlugins(this.props.pluginsState);
     },
     componentWillReceiveProps(newProps) {
-        this.loadPlugins(newProps.pluginsState);
+        this.loadPlugins(newProps.pluginsState, newProps);
     },
-    getState(path) {
-        return get(this.props.monitoredState, path) || get(this.props.params, path) || this.context[path];
+    getState(path, newProps) {
+        let props = newProps || this.props;
+        return get(props.monitoredState, path) || get(this.props.params, path) || this.context[path];
     },
     getPluginDescriptor(plugin) {
         return PluginsUtils.getPluginDescriptor(this.getState, this.props.plugins,
@@ -80,6 +81,7 @@ const PluginsContainer = React.createClass({
             .map(this.getPluginDescriptor)
             .filter(plugin => PluginsUtils.filterDisabledPlugins({plugin: plugin && plugin.impl || plugin}, this.getState))
             .filter((Plugin) => Plugin && !Plugin.impl.loadPlugin)
+            .filter(plugin => PluginsUtils.filterDisabledPlugins({plugin: plugin && plugin.impl || plugin}, this.getState))
             .filter(this.filterPlugins)
             .map((Plugin) => <Plugin.impl key={Plugin.id}
                 {...this.props.params} {...Plugin.cfg} pluginCfg={Plugin.cfg} items={Plugin.items}/>);
@@ -100,11 +102,12 @@ const PluginsContainer = React.createClass({
         const container = PluginsUtils.getMorePrioritizedContainer(Plugin.impl, this.props.pluginsConfig[this.props.mode], 0);
         return !container.plugin || !container.plugin.impl || container.plugin.impl.doNotHide;
     },
-    loadPlugins(state) {
+    loadPlugins(state, newProps) {
+        const getState = (path) => this.getState(path, newProps);
         (this.props.pluginsConfig && this.props.pluginsConfig[this.props.mode] || [])
-            .map((plugin) => PluginsUtils.getPluginDescriptor(this.getState, this.props.plugins,
+            .map((plugin) => PluginsUtils.getPluginDescriptor(getState, this.props.plugins,
                 this.props.pluginsConfig[this.props.mode], plugin, this.state.loadedPlugins))
-            .filter(plugin => PluginsUtils.filterDisabledPlugins({plugin: plugin && plugin.impl || plugin}, this.getState))
+            .filter(plugin => PluginsUtils.filterDisabledPlugins({plugin: plugin && plugin.impl || plugin}, getState))
             .filter((plugin) => plugin && plugin.impl.loadPlugin).forEach((plugin) => {
                 if (!this.state.loadedPlugins[plugin.name]) {
                     if (!plugin.impl.enabler || plugin.impl.enabler(state)) {
