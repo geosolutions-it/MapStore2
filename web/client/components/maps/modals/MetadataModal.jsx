@@ -291,7 +291,9 @@ const MetadataModal = React.createClass({
     },
     isMetadataChanged() {
         return this.props.map && (
+            this.props.map.description !== undefined &&
             this.props.metadata.description !== this.props.map.description ||
+            this.props.map.name !== undefined &&
             this.props.metadata.name !== this.props.map.name
         );
     },
