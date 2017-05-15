@@ -4013,7 +4013,11 @@ define("ZoomInNavigationControl", ["inherit", "NavigationControl"], function(e, 
               , a = Cesium.Cartesian3.add(t.position, o, r);
             this.terria.scene.camera.flyTo({
                 destination: a,
-                duration: 1
+                duration: 1,
+                orientation : {
+                    direction: this.terria.scene.camera.direction,
+                    up: this.terria.scene.camera.up
+                }
             })
         }
         this.isActive = !1
@@ -4047,7 +4051,11 @@ define("ZoomOutNavigationControl", ["inherit", "NavigationControl"], function(e,
               , a = Cesium.Cartesian3.add(t.position, o, r);
             this.terria.scene.camera.flyTo({
                 destination: a,
-                duration: 1
+                duration: 1,
+                orientation : {
+                    direction: this.terria.scene.camera.direction,
+                    up: this.terria.scene.camera.up
+                }
             })
         }
         this.isActive = !1
