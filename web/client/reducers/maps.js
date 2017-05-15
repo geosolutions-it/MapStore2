@@ -77,7 +77,10 @@ function maps(state = {
         }
         case EDIT_MAP: {
             return assign({}, state, {
-                metadata: {name: action.map && action.map.name || "", description: action.map && action.map.description || ""}
+                metadata: {
+                    name: action.map && action.map.name || state && state.metadata && state.metadata.name || "",
+                    description: action.map && action.map.description || state && state.metadata && state.metadata.description || ""
+                }
             });
         }
         case RESET_CURRENT_MAP: {
