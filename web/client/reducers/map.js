@@ -103,7 +103,8 @@ function mapConfig(state = null, action) {
                     center,
                     zoom,
                     mapStateSource: action.mapStateSource,
-                    bbox: newbbox
+                    bbox: newbbox,
+                    viewerOptions: action.viewerOptions
                 });
             }
             return state;
