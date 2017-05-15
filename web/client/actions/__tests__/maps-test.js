@@ -7,6 +7,7 @@
  */
 
 var expect = require('expect');
+const assign = require('object-assign');
 var {
     // CREATE_THUMBNAIL, createThumbnail,
     MAP_UPDATING, mapUpdating,
@@ -19,12 +20,123 @@ var {
     RESET_CURRENT_MAP, resetCurrentMap,
     MAPS_SEARCH_TEXT_CHANGED, mapsSearchTextChanged,
     MAPS_LIST_LOAD_ERROR, loadError,
-    MAP_ERROR, mapError,
-    MAP_METADATA_UPDATED, mapMetadataUpdated
+    MAP_ERROR, mapError, updatePermissions,
+    MAP_METADATA_UPDATED, mapMetadataUpdated,
+    METADATA_CHANGED, metadataChanged,
+    updateAttribute, saveAll
 } = require('../maps');
+let GeoStoreDAO = require('../../api/GeoStoreDAO');
+let oldAddBaseUri = GeoStoreDAO.addBaseUrl;
 
 describe('Test correctness of the maps actions', () => {
+    beforeEach(() => {
+        GeoStoreDAO.addBaseUrl = (options) => {
+            return assign(options, {baseURL: 'base/web/client/test-resources/geostore/'});
+        };
+    });
+    afterEach(() => {
+        GeoStoreDAO.addBaseUrl = oldAddBaseUri;
+    });
+    it('updateAttribute with error', (done) => {
+        const value = "asdSADs";
+        const name = "thumbnail";
+        const resourceId = -1;
+        const type = "STRING";
+        const retFun = updateAttribute(resourceId, name, value, type, {});
+        expect(retFun).toExist();
+        retFun((action) => {
+            expect(action.type).toBe(THUMBNAIL_ERROR);
+            done();
 
+        });
+
+    });
+    it('updateAttribute', (done) => {
+        const value = "value.json";
+        const name = "thumbnail";
+        const resourceId = 1;
+        const type = "STRING";
+        const retFun = updateAttribute(resourceId, name, value, type, {});
+        expect(retFun).toExist();
+        let count = 0;
+        retFun((action) => {
+            expect(action.type).toBe(ATTRIBUTE_UPDATED);
+            count++;
+            if (count === 1) {
+                done();
+            }
+        });
+    });
+    it('saveAll - with metadataMap, without thumbnail', (done) => {
+        const resourceId = 1;
+        // saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, options)
+        const retFun = saveAll({}, {name: "name"}, null, null, null, resourceId, {});
+        expect(retFun).toExist();
+        let count = 0;
+        retFun((action) => {
+            switch (count) {
+                case 0: expect(action.type).toBe(MAP_UPDATING); break;
+                case 1: expect(action.type).toBe("NONE"); break;
+                default: done();
+            }
+            count++;
+        });
+    });
+    it('saveAll - with metadataMap, without thumbnail', (done) => {
+        const resourceId = 1;
+        // saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, options)
+        const retFun = saveAll({}, null, null, null, null, resourceId, {});
+        expect(retFun).toExist();
+        let count = 0;
+        retFun((action) => {
+            switch (count) {
+                case 0: expect(action.type).toBe(MAP_UPDATING); break;
+                case 1: expect(action.type).toBe("NONE"); break;
+                case 2: expect(action.type).toBe(RESET_UPDATING); break;
+                case 3: expect(action.type).toBe(DISPLAY_METADATA_EDIT); break;
+                default: done();
+            }
+            count++;
+        });
+    });
+    it('updatePermissions with securityRules list & without', (done) => {
+        const securityRules = {
+            SecurityRuleList: {
+                RuleCount: 1,
+                SecurityRule: [{
+                    canRead: true,
+                    canWrite: true,
+                    user: {
+                        id: 1
+                    }
+                }]
+            }
+        };
+        const resourceId = 1;
+        const retFun = updatePermissions(resourceId, securityRules);
+        expect(retFun).toExist();
+        let count = 0;
+        retFun((action) => {
+            switch (count) {
+                // TODO: this should return PERMISSIONS_UPDATED
+                case 0: expect(action.type).toBe(PERMISSIONS_UPDATED); break;
+                default: done();
+            }
+            count++;
+            done();
+        });
+        const retFun2 = updatePermissions(-1, securityRules);
+        expect(retFun).toExist();
+        let count2 = 0;
+        retFun2((action) => {
+            switch (count2) {
+                case 0: expect(action.type).toBe(THUMBNAIL_ERROR); break;
+                default: done();
+            }
+            count2++;
+            done();
+        });
+    });
     it('mapUpdating', () => {
         let resourceId = 13;
         var retval = mapUpdating(resourceId);
@@ -120,5 +232,15 @@ describe('Test correctness of the maps actions', () => {
         expect(a.newDescription).toBe("newDescription");
         expect(a.result).toBe("result");
         expect(a.error).toBe("error");
+    });
+    it('mapMetadatachanged', () => {
+        const prop = "name";
+        const value = "newName";
+        const a = metadataChanged(prop, value);
+        expect(a.type).toBe(METADATA_CHANGED);
+        expect(a.prop).toExist();
+        expect(a.value).toExist();
+        expect(a.prop).toBe(prop);
+        expect(a.value).toBe(value);
     });
 });

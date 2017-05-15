@@ -140,13 +140,15 @@ const SaveAs = React.createClass({
             description,
             attributes
         };
-        thumbComponent.getThumbnailDataUri( (data) => {
-            this.props.onMapSave(metadata, JSON.stringify(this.createV2Map()), {
-                data,
-                category: "THUMBNAIL",
-                name: thumbComponent.generateUUID()
+        if (metadata.name !== "") {
+            thumbComponent.getThumbnailDataUri( (data) => {
+                this.props.onMapSave(metadata, JSON.stringify(this.createV2Map()), {
+                    data,
+                    category: "THUMBNAIL",
+                    name: thumbComponent.generateUUID()
+                });
             });
-        });
+        }
     }
 });
 
