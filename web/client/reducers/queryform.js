@@ -193,13 +193,15 @@ function queryform(state = initialState, action) {
             return newState;
         }
         case REMOVE_SPATIAL_SELECT: {
-            return assign({}, state, {spatialField: assign({}, state.spatialField, initialState.spatialField)});
+            let spatialField = assign({}, initialState.spatialField, { attribute: state.spatialField.attribute });
+            return assign({}, state, {spatialField: assign({}, state.spatialField, spatialField)});
         }
         case SHOW_SPATIAL_DETAILS: {
             return assign({}, state, {showDetailsPanel: action.show});
         }
         case QUERY_FORM_RESET: {
-            return assign({}, state, initialState);
+            let spatialField = assign({}, initialState.spatialField, { attribute: state.spatialField.attribute });
+            return assign({}, state, initialState, {spatialField});
         }
         case SHOW_GENERATED_FILTER: {
             return assign({}, state, {showGeneratedFilter: action.data});

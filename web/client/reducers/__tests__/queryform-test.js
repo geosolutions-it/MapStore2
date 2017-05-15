@@ -503,13 +503,17 @@ describe('Test the queryform reducer', () => {
         };
 
         const initialState = {
-            test: true
+            test: true,
+            spatialField: {
+                attribute: "GEOMETRY"
+            }
         };
 
         let state = queryform(initialState, testAction);
         expect(state).toExist();
 
         expect(state.test).toEqual(true);
+        expect(state.spatialField.attribute).toEqual("GEOMETRY");
     });
 
     it('Show Generated Filter', () => {
