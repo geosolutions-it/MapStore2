@@ -128,7 +128,7 @@ function selectSpatialMethod(method, fieldName) {
     };
 }
 
-function selectViewportSM() {
+function selectViewportSpatialMethod() {
     return {
         type: SELECT_VIEWPORT_SPATIAL_METHOD
     };
@@ -339,7 +339,7 @@ module.exports = {
     SELECT_VIEWPORT_SPATIAL_METHOD,
     UPDATE_GEOMETRY,
     updateGeometrySpatialField,
-    selectViewportSM,
+    selectViewportSpatialMethod,
     resetZones,
     zoneChange,
     // openMenu,

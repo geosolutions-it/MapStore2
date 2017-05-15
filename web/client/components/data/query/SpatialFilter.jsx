@@ -58,7 +58,7 @@ const SpatialFilter = React.createClass({
                 onRemoveSpatialSelection: () => {},
                 onShowSpatialSelectionDetails: () => {},
                 onEndDrawing: () => {},
-                onSelectViewportSM: () => {},
+                onSelectViewportSpatialMethod: () => {},
                 onChangeDwithinValue: () => {},
                 zoneFilter: () => {},
                 zoneSearch: () => {},
@@ -213,7 +213,7 @@ const SpatialFilter = React.createClass({
         const selectedOperation = this.props.spatialOperations.filter((opt) => this.props.spatialField.operation === opt.id)[0];
 
         let drawLabel = (<span/>);
-        if (this.props.spatialField.method && this.props.spatialField.method !== "ZONE") {
+        if (this.props.spatialField.method && this.props.spatialField.method !== "ZONE" && this.props.spatialField.method !== "Viewport") {
             drawLabel = !this.props.spatialField.geometry ? (
                 <span>
                     <hr width="100%"/>
@@ -322,7 +322,7 @@ const SpatialFilter = React.createClass({
             }
             case "Viewport": {
                 this.changeDrawingStatus('clean', null, "queryform", []);
-                this.props.actions.onSelectViewportSM();
+                this.props.actions.onSelectViewportSpatialMethod();
                 break;
             }
             default: {
