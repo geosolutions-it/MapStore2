@@ -1,5 +1,5 @@
-/**
- * Copyright 2016, GeoSolutions Sas.
+/*
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -15,7 +15,7 @@ const Message = require('../components/I18N/Message');
 // const {toggleControl} = require('../actions/controls');
 const {loadMapInfo} = require('../actions/config');
 const MetadataModal = require('../components/maps/modals/MetadataModal');
-const {createMap, createThumbnail, onDisplayMetadataEdit} = require('../actions/maps');
+const {createMap, createThumbnail, onDisplayMetadataEdit, metadataChanged} = require('../actions/maps');
 const {editMap, updateCurrentMap, errorCurrentMap, resetCurrentMap} = require('../actions/currentMap');
 const {mapSelector} = require('../selectors/map');
 const stateSelector = state => state;
@@ -32,6 +32,7 @@ const selector = createSelector(mapSelector, stateSelector, layersSelector, (map
     map,
     user: state.security && state.security.user,
     currentMap: state.currentMap,
+    metadata: state.maps.metadata,
     layers
 }));
 
@@ -44,6 +45,7 @@ const SaveAs = React.createClass({
         mapType: React.PropTypes.string,
         layers: React.PropTypes.array,
         params: React.PropTypes.object,
+        metadata: React.PropTypes.object,
         currentMap: React.PropTypes.object,
         // CALLBACKS
         onClose: React.PropTypes.func,
@@ -53,6 +55,7 @@ const SaveAs = React.createClass({
         onSave: React.PropTypes.func,
         editMap: React.PropTypes.func,
         resetCurrentMap: React.PropTypes.func,
+        metadataChanged: React.PropTypes.func,
         onMapSave: React.PropTypes.func,
         loadMapInfo: React.PropTypes.func
     },
@@ -88,6 +91,8 @@ const SaveAs = React.createClass({
         let map = (this.state && this.state.loading) ? assign({updating: true}, this.props.currentMap) : this.props.currentMap;
         return (
             <MetadataModal ref="metadataModal"
+                metadataChanged={this.props.metadataChanged}
+                metadata={this.props.metadata}
                 displayPermissionEditor={false}
                 show={this.props.currentMap.displayMetadataEdit}
                 onEdit={this.props.editMap}
@@ -154,6 +159,7 @@ module.exports = {
         onErrorCurrentMap: errorCurrentMap,
         onMapSave: createMap,
         loadMapInfo,
+        metadataChanged,
         editMap,
         resetCurrentMap,
         onDisplayMetadataEdit,

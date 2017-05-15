@@ -91,6 +91,7 @@ const MetadataModal = React.createClass({
             user: {
                 name: "Guest"
             },
+            metadata: {name: "", description: ""},
             options: {},
             useModal: true,
             closeGlyph: "",
