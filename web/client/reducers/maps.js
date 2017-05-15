@@ -77,12 +77,12 @@ function maps(state = {
         }
         case EDIT_MAP: {
             return assign({}, state, {
-                metadata: {name: action.map.name, description: action.map.description}
+                metadata: {name: action.map && action.map.name || "", description: action.map && action.map.description || ""}
             });
         }
         case RESET_CURRENT_MAP: {
             return assign({}, state, {
-                metadata: {name: null, description: null}
+                metadata: {name: "", description: ""}
             });
         }
         case MAPS_LIST_LOADING:
