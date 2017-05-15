@@ -8,8 +8,9 @@
 
 const Rx = require('rxjs');
 const axios = require('../libs/ajax');
-const {changeSpatialAttribute} = require('../actions/queryform');
-const {FEATURE_TYPE_SELECTED, QUERY, featureTypeLoaded, featureTypeError, createQuery, querySearchResponse, queryError, featureClose} = require('../actions/wfsquery');
+const {changeSpatialAttribute, SELECT_VIEWPORT_SPATIAL_METHOD, updateGeometrySpatialField} = require('../actions/queryform');
+const {CHANGE_MAP_VIEW} = require('../actions/map');
+const {FEATURE_TYPE_SELECTED, QUERY, featureTypeLoaded, featureTypeError, querySearchResponse, queryError, featureClose} = require('../actions/wfsquery');
 const FilterUtils = require('../utils/FilterUtils');
 const assign = require('object-assign');
 const {isString} = require('lodash');
@@ -197,7 +198,6 @@ const wfsQueryEpic = (action$, store) =>
         .switchMap(action => {
 
             return Rx.Observable.merge(
-                Rx.Observable.of(createQuery(action.searchUrl, action.filterObj)),
                 Rx.Observable.of(setControlProperty('drawer', 'enabled', false)),
                 getWFSFeature(action.searchUrl, action.filterObj)
                     .switchMap((response) => {
@@ -227,6 +227,40 @@ const closeFeatureEpic = action$ =>
             return action.control && action.control === 'drawer' ? Rx.Observable.of(featureClose()) : Rx.Observable.empty();
         });
 
+function validateExtent(extent) {
+    if (extent[0] <= -180.0 || extent[2] >= 180.0) {
+        extent[0] = -180.0;
+        extent[2] = 180.0;
+    }
+    return extent;
+}
+const viewportSelectedEpic = (action$, store) =>
+    action$.ofType(SELECT_VIEWPORT_SPATIAL_METHOD, CHANGE_MAP_VIEW)
+        .switchMap((action) => {
+            // calculate new geometry from map properties only for viewport
+            const map = action.type === CHANGE_MAP_VIEW ? action : store.getState().map.present;
+            if (action.type === SELECT_VIEWPORT_SPATIAL_METHOD ||
+                action.type === CHANGE_MAP_VIEW &&
+                store.getState().queryform &&
+                store.getState().queryform.spatialField &&
+                store.getState().queryform.spatialField.method === "viewport") {
+                const bounds = Object.keys(map.bbox.bounds).reduce((p, c) => {
+                    return assign({}, p, {[c]: parseFloat(map.bbox.bounds[c])});
+                }, {});
+                const extent = validateExtent([bounds.minx, bounds.miny, bounds.maxx, bounds.maxy]);
+                const center = [(extent[0] + extent[2]) / 2, (extent[1] + extent[3]) / 2];
+                const start = [extent[0], extent[1]];
+                const end = [extent[2], extent[3]];
+                const coordinates = [[start, [start[0], end[1]], end, [end[0], start[1]], start]];
+                let geometry = {
+                    type: "Polygon", radius: 0, projection: "EPSG:4326",
+                    extent, center, coordinates
+                };
+                return Rx.Observable.of(updateGeometrySpatialField(geometry));
+            }
+            return Rx.Observable.empty();
+        });
+
  /**
   * Epics for WFS query requests
   * @name epics.wfsquery
@@ -236,5 +270,6 @@ const closeFeatureEpic = action$ =>
 module.exports = {
     featureTypeSelectedEpic,
     wfsQueryEpic,
-    closeFeatureEpic
+    closeFeatureEpic,
+    viewportSelectedEpic
 };

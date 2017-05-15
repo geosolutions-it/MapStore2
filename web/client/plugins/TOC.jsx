@@ -42,6 +42,7 @@ const {
     expandAttributeFilterPanel,
     expandSpatialFilterPanel,
     selectSpatialMethod,
+    selectViewportSpatialMethod,
     selectSpatialOperation,
     removeSpatialSelection,
     showSpatialSelectionDetails,
@@ -105,6 +106,7 @@ const SmartQueryForm = connect((state) => {
         spatialFilterActions: bindActionCreators({
             onExpandSpatialFilterPanel: expandSpatialFilterPanel,
             onSelectSpatialMethod: selectSpatialMethod,
+            onSelectViewportSpatialMethod: selectViewportSpatialMethod,
             onSelectSpatialOperation: selectSpatialOperation,
             onChangeDrawingStatus: changeDrawingStatus,
             onRemoveSpatialSelection: removeSpatialSelection,
