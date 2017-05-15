@@ -160,7 +160,7 @@ const CONFIGPROVIDER = {
             }
         },
         MapBox: {
-            url: '//api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
+            url: '//api.tiles.mapbox.com/v4/{source}/{z}/{x}/{y}.png?access_token={accessToken}',
             options: {
                 attribution:
                     'Imagery from <a href="http://mapbox.com/about/maps/">MapBox</a> &mdash; ' +
