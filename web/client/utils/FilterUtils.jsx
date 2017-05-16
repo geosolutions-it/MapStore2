@@ -368,7 +368,9 @@ const FilterUtils = {
         // Array of LinearRing coordinate array. The first element in the array represents the exterior ring.
         // Any subsequent elements represent interior rings (or holes).
         // ///////////////////////////////////////////////////////////////////////////////////////////////////////
-        coordinates.forEach((element, index) => {
+
+        const normalizedCoords = coordinates.length && isArray(coordinates[0]) && coordinates[0].length && isArray(coordinates[0][0]) ? coordinates : [coordinates];
+        normalizedCoords.forEach((element, index) => {
             let coords = element.map((coordinate) => {
                 return coordinate[0] + (version === "1.0.0" ? "," : " ") + coordinate[1];
             });

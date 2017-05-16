@@ -110,7 +110,8 @@ const DrawSupport = React.createClass({
                     geometry = new ol.geom.LineString(geom.coordinates); break;
                 }
                 case "Polygon": {
-                    geometry = new ol.geom.Polygon(geom.coordinates); break;
+                    geometry = geom.radius && geom.center ?
+                    ol.geom.Polygon.fromCircle(new ol.geom.Circle([geom.center.x, geom.center.y], geom.radius), 100) : new ol.geom.Polygon(geom.coordinates); break;
                 }
                 default: {
                     geometry = geom.radius && geom.center ?
@@ -257,13 +258,17 @@ const DrawSupport = React.createClass({
             let radius;
             let extent = drawnGeometry.getExtent();
             let type = drawnGeometry.getType();
+
             let center = ol.extent.getCenter(drawnGeometry.getExtent());
             let coordinates = drawnGeometry.getCoordinates();
+
+            let isCircleType = coordinates.length > 0 && coordinates[0] && coordinates[0].length === 101 ? true : false;
+
             if (startingPoint) {
                 coordinates = concat(startingPoint, coordinates);
                 drawnGeometry.setCoordinates(coordinates);
             }
-            if (type === "Circle") {
+            if (isCircleType) {
                 radius = Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2));
             }
 
@@ -271,7 +276,7 @@ const DrawSupport = React.createClass({
                 type,
                 extent: extent,
                 center: center,
-                coordinates: type === "Polygon" ? coordinates[0].concat([coordinates[0][0]]) : coordinates,
+                coordinates: coordinates[0].concat([coordinates[0][0]]),
                 radius: radius,
                 projection: this.props.map.getView().getProjection().getCode()
             };
@@ -282,6 +287,7 @@ const DrawSupport = React.createClass({
             });
             let modify = new ol.interaction.Modify(modifyProps);
             this.props.map.addInteraction(modify);*/
+
             this.props.onEndDrawing(geometry, this.props.drawOwner);
             if (this.props.options.stopAfterDrawing) {
                 this.props.onChangeDrawingStatus('stop', this.props.drawMethod, this.props.drawOwner);
