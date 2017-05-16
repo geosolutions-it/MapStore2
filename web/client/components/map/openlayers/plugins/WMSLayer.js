@@ -55,7 +55,8 @@ Layers.registerType('wms', {
                 zIndex: options.zIndex,
                 source: new ol.source.ImageWMS({
                     url: urls[0],
-                    params: queryParameters
+                    params: queryParameters,
+                    ratio: options.ratio
                 })
             });
         }

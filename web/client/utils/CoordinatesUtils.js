@@ -49,11 +49,20 @@ function determineCrs(crs) {
     }
     return crs;
 }
+
+let crsLabels = {
+    "EPSG:4326": "WGS 84",
+    "EPSG:3857": "WGS 84 / Pseudo Mercator"
+};
+
 /**
  * Utilities for Coordinates conversion.
  * @memberof utils
  */
 const CoordinatesUtils = {
+    setCrsLabels(labels) {
+        crsLabels = assign({}, crsLabels, labels);
+    },
     getUnits: function(projection) {
         const proj = new Proj4js.Proj(projection);
         return proj.units || 'degrees';
@@ -242,7 +251,7 @@ const CoordinatesUtils = {
         let crsList = {};
         for (let a in Proj4js.defs) {
             if (Proj4js.defs.hasOwnProperty(a)) {
-                crsList[a] = {label: a};
+                crsList[a] = {label: crsLabels[a] || a};
             }
         }
         return crsList;
