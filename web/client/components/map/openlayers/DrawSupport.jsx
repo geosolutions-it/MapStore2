@@ -262,7 +262,7 @@ const DrawSupport = React.createClass({
             let center = ol.extent.getCenter(drawnGeometry.getExtent());
             let coordinates = drawnGeometry.getCoordinates();
 
-            let isCircleType = coordinates.length > 0 && coordinates[0] && coordinates[0].length === 101 ? true : false;
+            let isCircleType = type === 'Polygon' && coordinates.length > 0 && coordinates[0] && coordinates[0].length === 101 ? true : false;
 
             if (startingPoint) {
                 coordinates = concat(startingPoint, coordinates);
@@ -276,7 +276,7 @@ const DrawSupport = React.createClass({
                 type,
                 extent: extent,
                 center: center,
-                coordinates: coordinates[0].concat([coordinates[0][0]]),
+                coordinates: type === "Polygon" ? coordinates[0].concat([coordinates[0][0]]) : coordinates,
                 radius: radius,
                 projection: this.props.map.getView().getProjection().getCode()
             };
