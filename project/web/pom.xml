@@ -199,11 +199,27 @@
                         <goal>copy-resources</goal>
                     </goals>
                     <configuration>
-                        <outputDirectory>${basedir}/target/mapstore/libs/Cesium</outputDirectory>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__/libs/Cesium</outputDirectory>
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
                                 <directory>${basedir}/libs/Cesium</directory>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>CesiumJS-navigation</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__/libs/cesium-navigation</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/../MapStore2/web/client/libs/cesium-navigation</directory>
                             </resource>
                         </resources>
                     </configuration>
