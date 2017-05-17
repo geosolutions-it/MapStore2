@@ -14,6 +14,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const {connect} = require('react-redux');
 
 const {configureMap, loadMapConfig} = require('../actions/config');
+const {generateActionTrigger} = require('../epics/jsapi');
 
 const url = require('url');
 
@@ -30,7 +31,7 @@ const defaultPlugins = {
   "mobile": localConfig.plugins.embedded,
   "desktop": localConfig.plugins.embedded
 };
-
+let triggerAction;
 function mergeDefaultConfig(pluginName, cfg) {
     var propertyName;
     var i;
@@ -123,6 +124,7 @@ const MapStore2 = {
      * Styling can be configured either using a **theme**, or a complete custom **less stylesheet**, using the
      * following options properties:
      *  * **style**: less style to be applied
+     *  * **startAction**: the actionType to wait before start triggering actions. By default CHANGE_MAP_VIEW
      *  * **theme**: theme configuration options:
      *    * path: path/url of the themes folder related to the current page
      *    * theme: theme name to be used
@@ -173,8 +175,11 @@ const MapStore2 = {
             locale: state.locale || {},
             pages
         }))(require('../components/app/StandardRouter'));
-
-        const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {}, {});
+        const actionTrigger = generateActionTrigger(options.startAction || "CHANGE_MAP_VIEW");
+        triggerAction = actionTrigger.trigger;
+        const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {}, {
+            jsAPIEpic: actionTrigger.epic
+        });
         const initialActions = getInitialActions(options);
         const appConfig = {
             storeOpts: assign({}, storeOpts, {notify: true}),
@@ -301,7 +306,23 @@ const MapStore2 = {
      */
     withPlugins: (plugins, options) => {
         return assign({}, MapStore2, {create: partialRight(MapStore2.create, partialRight.placeholder, partialRight.placeholder, plugins), defaultOptions: options || {}});
-    }
+    },
+    /**
+     * Triggers an action
+     * @param  {object} action The action to trigger.
+     * @example
+     * triggerAction({
+     *       type: 'ZOOM_TO_EXTENT',
+     *       extent: {
+     *         minx: '-124.731422',
+     *         miny: '24.955967',
+     *         maxx: '-66.969849',
+     *         maxy: '49.371735'
+     *       },
+     *       crs: 'EPSG:4326'
+     *   })
+     */
+    triggerAction: (action) => triggerAction(action)
 };
 
 if (!global.Intl ) {
