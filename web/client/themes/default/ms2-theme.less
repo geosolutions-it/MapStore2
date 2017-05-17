@@ -952,7 +952,43 @@ select.form-control option {
 	background-color: @ms2-color-primary !important;
 	color: @ms2-color-text-primary !important;
 }
-/* feauture grid */
+/* feature grid made by react-data-grid */
+.react-grid-Header{
+    background: @ms2-color-primary;
+	color: @ms2-color-text-primary;
+	font-family: @font-family-base;
+}
+.react-grid-Main .react-grid-Header .react-grid-HeaderCell{
+	background: @ms2-color-primary;
+	color: @ms2-color-text-primary;
+	font-family: @font-family-base;
+    height:55px !important;
+    text-align: center;
+    padding-top: 17px;
+}
+.react-grid-Row--even .react-grid-Cell { background-color: #f2f2f2; }
+
+.react-grid-Main, .react-grid-Container, #feature-grid-container {
+    height: 100%;
+    width: 100% !important;
+}
+.react-grid-Container {
+    width: 100% !important;
+}
+/*
+.react-grid-Canvas{
+    height: 100% !important;
+}*/
+.react-grid-Grid{
+    min-height: 100% !important;
+}
+
+.radio-custom+.radio-custom-label:before, .react-grid-checkbox+.react-grid-checkbox-label:before{
+    width: 15px;
+    height: 15px;
+}
+
+// feature grid
 .ag-fresh .ag-header,
 .ag-fresh .ag-tool-panel-container {
 	background: @ms2-color-primary !important;
@@ -960,7 +996,7 @@ select.form-control option {
 	font-family: @font-family-base;
 }
 
-.ag-fresh .ag-tool-panel-container .ag-list-selection {
+	.ag-fresh .ag-tool-panel-container .ag-list-selection {
 	color: #000000;
 }
 
