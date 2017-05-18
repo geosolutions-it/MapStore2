@@ -858,7 +858,7 @@
                 },
                 "home": {
                     "title": "Home",
-                    "text": "Vai alla homepage"
+                    "text": "Clicca per raggiungere la homepage"
                 },
                 "searchButton": {
                     "title": "Ricerca",
@@ -895,6 +895,29 @@
                 "examples": {
                     "title": "Applicazioni personalizzate",
                     "text": "Puoi utilizzare componenti e plugins di MapStore2 per costruire applicazioni personalizzate"
+                },
+                "cesium": {
+                    "title": "Interazioni con la mappa",
+                    "pan": "Vista Pan",
+                    "zoom": "Vista Zoom",
+                    "tilt": "Vista Tilt",
+                    "rotate": "Vista Rotazione",
+                    "oneDrag": "Trascina con un dito",
+                    "twoPinch": "Pinch con due dita",
+                    "twoDragSame": "Trascina con due dita nella stessa direzione",
+                    "twoDragOpposite": "Trascina con due dita in direzione opposta",
+                    "leftClick": "Click pulsante sinistro + trascina",
+                    "rightClick": "Click pulsante destro + trascina, o scroll con il pulsante centrale",
+                    "middleClick": "Click pulsante centrale + trascina, o CTRL + Click sinistro/destro + trascina"
+
+                },
+                "cesiumCompass": {
+                    "title": "Bussola",
+                    "text": "Puoi usare la bussola per orbitare intorno al globo. Trascina per ruotare la mappa"
+                },
+                "cesiumNavigation": {
+                    "title": "Navigazione",
+                    "text": "Qui puoi trovare i pulsanti per lo zoom in e out"
                 }
             }
     }

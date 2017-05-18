@@ -6,6 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const React = require('react');
+const I18N = require('../../../components/I18N/I18N');
+const CesiumTooltip = require('../../../components/tutorial/steps/CesiumTooltip');
+
 module.exports = [
     // remove comment to enable intro/autostart
     /*{
@@ -21,12 +25,16 @@ module.exports = [
         selector: '#map-search-bar'
     },
     {
-        translation: 'home',
-        selector: '#home-button'
-    },
-    {
         translation: 'burgerMenu',
         selector: '#mapstore-burger-menu'
+    },
+    {
+        translation: 'cesiumCompass',
+        selector: '#distanceLegendDiv .compass'
+    },
+    {
+        translation: 'cesiumNavigation',
+        selector: '#distanceLegendDiv .navigation-controls'
     },
     {
         translation: 'zoomInButton',
@@ -47,5 +55,15 @@ module.exports = [
         translation: 'identifyButton',
         selector: '#identifyBar-container',
         position: 'top'
+    },
+    {
+        title: <I18N.Message msgId="tutorial.cesium.title"/>,
+        text: <CesiumTooltip/>,
+        selector: '#map .cesium-viewer',
+        position: 'bottom'
+    },
+    {
+        translation: 'home',
+        selector: '#home-button'
     }
 ];
