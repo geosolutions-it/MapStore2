@@ -27,17 +27,18 @@ const ResultsProps = require('../components/mapcontrols/searchservicesconfig/Res
 const WFSOptionalProps = require('../components/mapcontrols/searchservicesconfig/WFSOptionalProps.jsx');
 
 /**
-  * Text Search Config Plugin. Allow to add and edit additional
-  * text serch service used by text search plugin. User has to
-  * save the map to persist service changes.
-  * @class SearchServicesConfigPanel
-  * @memberof plugins
-  * @static
-  *
-  * @prop {string} cfg.id identifier of the Plugin
-  * @prop {object} cfg.panelStyle inline style for the panel
-  * @prop {string} cfg.panelClassName className for the panel
-  */
+ * Text Search Services Editor Plugin. Allow to add and edit additional
+ * text serch service used by text search plugin. User has to
+ * save the map to persist service changes.
+ *
+ * @class SearchServicesConfig
+ * @memberof plugins
+ * @static
+ *
+ * @prop {string} cfg.id identifier of the Plugin
+ * @prop {object} cfg.panelStyle inline style for the panel
+ * @prop {string} cfg.panelClassName className for the panel
+ */
 const SearchServicesConfigPanel = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
@@ -120,7 +121,7 @@ const SearchServicesConfigPanel = React.createClass({
                     <Button onClick={this.prev} bsStyle="primary">
                         <Message msgId="search.prevbtn" />
                     </Button>
-                    <Button disabled={!this.canProceed()} onClick={this.update} bsStyle="primary">
+                    <Button disabled={!this.canProceed()} onClick={this.update} bsStyle="success">
                         <Message msgId="search.savebtn" />
                     </Button>
                 </span>);
@@ -151,7 +152,7 @@ const SearchServicesConfigPanel = React.createClass({
                         <span>{titleText}</span>
                         { this.isDirty() ? (
                             <ConfirmButton className="close" confirming={{
-                                text: <Message msgId="search.cancelconfirm" />, className: "btn btn-sm btn-warning services-config-editor-confirm-close"}} onConfirm={this.onClose} bsStyle="primary" text={(<Glyphicon glyph={closeGlyph}/>)}/>) : <button onClick={this.onClose} className="close">{closeGlyph ? <Glyphicon glyph={closeGlyph}/> : <span>×</span>}</button>}
+                                text: <Message msgId="search.cancelconfirm" />, className: "btn btn-sm btn-warning services-config-editor-confirm-close"}} onConfirm={this.onClose} bsStyle="primary" text={(<Glyphicon glyph={closeGlyph}/>)}/>) : (<button onClick={this.onClose} className="close">{closeGlyph ? <Glyphicon glyph={closeGlyph}/> : <span>×</span>}</button>)
                             }
                     </span>
                     <div role="body" className="services-config-editor">

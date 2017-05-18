@@ -277,7 +277,7 @@
             "cancelconfirm": "Sei sicuro?",
             "nextbtn": "Avanti",
             "prevbtn": "Precedente",
-            "savebtn": "Aggiorna",
+            "savebtn": "Salva/Aggiorna",
             "s_name": "Name",
             "s_title": "Titolo",
             "s_description": "Descrizione",
@@ -290,7 +290,8 @@
             "s_wfs_props_label" : "Proprietà WFS service",
             "s_wfs_opt_props_label" : "Proprietà facoltative",
             "s_result_props_label": "Proprietà di visualizzazione dei risultati",
-            "s_priority_info": "Usato per oridnare risultati, valori più alti vengono visualizzati per primi. Nominatim ha priorità = 5"
+            "s_priority_info": "Usato per oridnare risultati, valori più alti vengono visualizzati per primi. Nominatim ha priorità = 5",
+            "serviceslistempty": "Nessun servizio definito"
         },
         "drawLocal": {
             "draw": {

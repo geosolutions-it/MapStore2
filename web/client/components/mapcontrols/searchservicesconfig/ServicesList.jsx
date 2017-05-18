@@ -33,6 +33,11 @@ const ServicesList = React.createClass({
         };
     },
     getOptions() {
+        if (this.props.services.length === 0) {
+            return (<div className="search-serivce-name">
+            <Message msgId="search.serviceslistempty"/>
+                </div>);
+        }
         return this.props.services.map((s, idx) => {
             return (
                 <div className="search-service-item" key={idx}>

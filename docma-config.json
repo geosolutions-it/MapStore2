@@ -162,6 +162,7 @@
                 "web/client/plugins/ScaleBox.jsx",
                 "web/client/plugins/ScrollTop.jsx",
                 "web/client/plugins/Search.jsx",
+                "web/client/plugins/SearchServicesConfig.jsx",
                 "web/client/plugins/ZoomIn.jsx",
                 "web/client/plugins/ZoomOut.jsx"
             ]
