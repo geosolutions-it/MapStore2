@@ -47,7 +47,6 @@ const DockablePanel = React.createClass({
     },
     getDefaultProps() {
         return {
-            id: "dock",
             dimMode: "none",
             dockSize: 0.35,
             fluid: true,
@@ -62,11 +61,11 @@ const DockablePanel = React.createClass({
             zIndex: 1030
         };
     },
-    getAutoHeight(pos) {
-        return pos === "top" || pos === "bottom";
+    getHeight(pos) {
+        return pos === "top" || pos === "bottom" ? true : undefined;
     },
-    getAutoWidth(pos) {
-        return pos === "left" || pos === "right";
+    getWidth(pos) {
+        return pos === "left" || pos === "right" ? true : undefined;
     },
     render() {
         const WrappedComponent = this.props.wrappedComponent;
@@ -82,12 +81,11 @@ const DockablePanel = React.createClass({
                 fluid={this.props.fluid}
                 dimStyle={{ background: 'rgba(0, 0, 100, 0.2)' }}
             >
-                <div id="container-wrapped-component" style={{height: "calc(100% - " + this.props.toolbarHeight + "px)"}}>
+                <div className="dockpanel-wrapped-component" style={{height: "calc(100% - " + this.props.toolbarHeight + "px)"}}>
                     {this.props.wrappedComponent !== null ? (<WrappedComponent
                     size={{
-                        width: this.getAutoWidth(this.props.position),
-                        height: this.getAutoHeight(this.props.position),
-                        size: this.props.dockSize
+                        height: this.getHeight(this.props.position) && this.props.dockSize,
+                        width: this.getWidth(this.props.position) && this.props.dockSize
                     }}
                     />) : null }
                 </div>

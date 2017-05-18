@@ -17,13 +17,10 @@ const ReactDataGrid = require('react-data-grid');
  * @prop {number} headerRowHeight the height in pixels of the rows in the header
  * @prop {number} minHeight the min height of the grid container
  * @prop {number} minWidth the min width of the grid container
- * @prop {function} onRowsSelected. The method to call when checkbox is checked.
- * @prop {function} onRowsDeselected. The method to call when checkbox is un-checked.
  * @prop {string} refGrid the reference to the react-data-grid-component
  * @prop {number} rowHeight the height of the rows in the grid
  * @prop {string} rowKey the key used to distinguish rows
  * @prop {object} rows. The features passed to the grid
- * @prop {object} selectBy. It contains the selected rows
  * @prop {number} size. The size of the dock panel wrapping this component
  *
  */
@@ -35,14 +32,12 @@ const ResizableGrid = React.createClass({
         headerRowHeight: React.PropTypes.number,
         minHeight: React.PropTypes.number.isRequired,
         minWidth: React.PropTypes.number,
-        onRowsDeselected: React.PropTypes.func,
-        onRowsSelected: React.PropTypes.func,
         onMount: React.PropTypes.func,
         refGrid: React.PropTypes.string,
         rowHeight: React.PropTypes.number.isRequired,
         rowKey: React.PropTypes.string,
+        rowSelection: React.PropTypes.object,
         rows: React.PropTypes.array.isRequired,
-        selectBy: React.PropTypes.object,
         size: React.PropTypes.object
     },
     contextTypes: {
@@ -56,13 +51,11 @@ const ResizableGrid = React.createClass({
             headerRowHeight: 55,
             minHeight: 250,
             minWidth: null,
-            onRowsDeselected: () => {},
-            onRowsSelected: () => {},
             refGrid: "grid",
             rowHeight: 30,
             rowKey: "id",
+            rowSelection: null,
             rows: [],
-            selectBy: {keys: {values: []}},
             onMount: () => {}
         };
     },
@@ -97,13 +90,7 @@ const ResizableGrid = React.createClass({
                 rowGetter={this.rowGetter}
                 rowHeight={this.props.rowHeight}
                 rowKey={this.props.rowKey}
-                rowSelection={{
-                    showCheckbox: true,
-                    enableShiftSelect: true,
-                    onRowsSelected: this.props.onRowsSelected,
-                    onRowsDeselected: this.props.onRowsDeselected,
-                    selectBy: this.props.selectBy
-                }}
+                rowSelection={this.props.rowSelection}
                 rowsCount={this.props.rows.length}
             />
         );
