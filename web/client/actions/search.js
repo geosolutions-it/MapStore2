@@ -17,6 +17,7 @@ const TEXT_SEARCH_NESTED_SERVICES_SELECTED = 'TEXT_SEARCH_NESTED_SERVICE_SELECTE
 const TEXT_SEARCH_ERROR = 'TEXT_SEARCH_ERROR';
 const TEXT_SEARCH_CANCEL_ITEM = 'TEXT_SEARCH_CANCEL_ITEM';
 const TEXT_SEARCH_ITEM_SELECTED = 'TEXT_SEARCH_ITEM_SELECTED';
+const TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE = 'TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE';
 /**
  * updates the results of the search result loaded
  * @memberof actions.search
@@ -92,10 +93,11 @@ function resetSearch() {
  * @memberof actions.search
  * @param {object} itemPosition
  */
-function addMarker(itemPosition) {
+function addMarker(itemPosition, itemText) {
     return {
         type: TEXT_SEARCH_ADD_MARKER,
-        markerPosition: itemPosition
+        markerPosition: itemPosition,
+        markerLabel: itemText
     };
 }
 
@@ -158,6 +160,18 @@ function cancelSelectedItem(item) {
 }
 
 /**
+ * Highlights the given feature
+ * @memberof actions.search
+ * @param {object} feature the feature to highlight
+ */
+function setHighlightedFeature(feature) {
+    return {
+        type: TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE,
+        highlightedFeature: feature
+    };
+}
+
+/**
  * Actions for search
  * @name actions.search
  */
@@ -174,6 +188,7 @@ module.exports = {
     TEXT_SEARCH_ITEM_SELECTED,
     TEXT_SEARCH_NESTED_SERVICES_SELECTED,
     TEXT_SEARCH_CANCEL_ITEM,
+    TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE,
     searchTextLoading,
     searchResultError,
     searchResultLoaded,
@@ -184,5 +199,6 @@ module.exports = {
     searchTextChanged,
     selectNestedService,
     selectSearchItem,
-    cancelSelectedItem
+    cancelSelectedItem,
+    setHighlightedFeature
 };

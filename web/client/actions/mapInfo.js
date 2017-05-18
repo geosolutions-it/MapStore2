@@ -215,5 +215,7 @@ module.exports = {
     showMapinfoRevGeocode,
     getVectorInfo,
     noQueryableLayers,
-    clearWarning
+    clearWarning,
+    errorFeatureInfo,
+    loadFeatureInfo
 };

@@ -266,7 +266,32 @@
             "bearingLabel": "Richtung"
         },
         "search":{
-            "placeholder": "Suche nache einer Adresse oder gib Koordinaten ein ..."
+            "placeholder": "Suche nache einer Adresse oder gib Koordinaten ein ...",
+            "searchservicesbutton": "Konfigurations-Suchdienste konfigurieren",
+            "configpaneltitle": "Einen Suchdienst anlegen / bearbeiten",
+            "serviceslistlabel": "Verfügbare Dienstleistungen",
+            "overriedservice": "Überlastete Standarddienste",
+            "addbtn": "Hinzufügen",
+            "nextbtn": "Nächster",
+            "prevbtn": "Zurück",
+            "savebtn": "Aktualisieren",
+            "cancelbtn": "Stornieren",
+            "confirmremove": "Löschen?",
+            "cancelconfirm": "Bist du sicher?",
+            "s_name": "Name",
+            "s_title": "Titel",
+            "s_description": "Beschreibung",
+            "s_priority": "Priorität",
+            "s_url": "Service url",
+            "s_layer": "Layer",
+            "s_attributes": "Attribute",
+            "s_sort": "Sortiere nach",
+            "s_max_features": "Max. Eigenschaften",
+            "s_wfs_props_label" : "WFS-Service-Requisiten",
+            "s_wfs_opt_props_label" : "Optionale Requisiten",
+            "s_result_props_label": "Ergebnisanzeigeeigenschaften",
+            "s_priority_info": "Wird verwendet, um Suchergebnisse zu sortieren, höhere Werte zuerst. Nominatim Ergebnisse haben Priorität = 5",
+            "serviceslistempty": "Keine benutzerdefinierten Services definiert"
         },
         "drawLocal": {
             "draw": {
@@ -456,6 +481,7 @@
                 },
                 "methods": {
                     "zone": "Zone",
+                    "viewport": "Viewport",
                     "box": "BoundingBox",
                     "buffer": "Buffer",
                     "circle": "Kreis",
@@ -483,6 +509,8 @@
             "passwordCheckFail": "Passwörter sind nicht identisch!",
             "username": "Benutzername",
             "password": "Passwort",
+            "passwordChanged": "Passwort geändert",
+            "passwordError": "Fehler beim Ändern des Passworts",
             "signIn":"Anmelden",
             "loginFail":"Anmeldung gescheitert",
             "loginFailedStatusMessages": {

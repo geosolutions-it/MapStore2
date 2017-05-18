@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -103,12 +103,11 @@ function createQuery(searchUrl, filterObj) {
     };
 }
 
-function query(searchUrl, filterObj, retry) {
+function query(searchUrl, filterObj) {
     return {
         type: QUERY,
         searchUrl,
-        filterObj,
-        retry
+        filterObj
     };
 }
 
@@ -147,28 +146,18 @@ function closeResponse() {
 }
 
 module.exports = {
-    FEATURE_TYPE_SELECTED,
-    FEATURE_TYPE_LOADED,
+    FEATURE_TYPE_SELECTED, featureTypeSelected,
+    FEATURE_TYPE_LOADED, featureTypeLoaded,
+    FEATURE_TYPE_ERROR, featureTypeError,
+    FEATURE_ERROR, featureError,
+    FEATURE_CLOSE, featureClose,
+    QUERY_CREATE, createQuery,
+    QUERY_RESULT, querySearchResponse,
+    QUERY_ERROR, queryError,
+    RESET_QUERY, resetQuery,
+    QUERY, query,
     FEATURE_LOADED,
-    FEATURE_TYPE_ERROR,
-    FEATURE_ERROR,
-    FEATURE_CLOSE,
-    QUERY_CREATE,
-    QUERY_RESULT,
-    QUERY_ERROR,
-    RESET_QUERY,
-    QUERY,
-    featureTypeSelected,
-    featureTypeLoaded,
-    featureTypeError,
-    featureError,
     loadFeature,
-    createQuery,
-    query,
-    featureClose,
-    resetQuery,
     toggleQueryPanel,
-    closeResponse,
-    queryError,
-    querySearchResponse
+    closeResponse
 };

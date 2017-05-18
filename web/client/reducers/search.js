@@ -7,7 +7,7 @@
  */
 
 var {TEXT_SEARCH_RESULTS_LOADED, TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ADD_MARKER, TEXT_SEARCH_TEXT_CHANGE, TEXT_SEARCH_LOADING, TEXT_SEARCH_ERROR,
-    TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_CANCEL_ITEM} = require('../actions/search');
+    TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_CANCEL_ITEM, TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE} = require('../actions/search');
 var {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
@@ -90,7 +90,9 @@ function search(state = null, action) {
         case TEXT_SEARCH_RESULTS_PURGE:
             return assign({}, state, { results: null, error: null});
         case TEXT_SEARCH_ADD_MARKER:
-            return assign({}, state, { markerPosition: action.markerPosition });
+            return assign({}, state, { markerPosition: action.markerPosition, markerLabel: action.markerLabel });
+        case TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE:
+            return assign({}, state, {highlightedFeature: action.highlightedFeature});
         case TEXT_SEARCH_RESET:
         case RESET_CONTROLS:
             return null;

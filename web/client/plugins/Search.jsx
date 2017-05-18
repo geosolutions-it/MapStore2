@@ -124,21 +124,25 @@ const ToggleButton = require('./searchbar/ToggleButton');
 const SearchPlugin = connect((state) => ({
     enabled: state.controls && state.controls.search && state.controls.search.enabled || false,
     selectedServices: state && state.search && state.search.selectedServices,
-    selectedItems: state && state.search && state.search.selectedItems
+    selectedItems: state && state.search && state.search.selectedItems,
+    textSearchConfig: state && state.searchconfig && state.searchconfig.textSearchConfig
 }))(React.createClass({
     propTypes: {
         fitResultsToMapSize: React.PropTypes.bool,
         searchOptions: React.PropTypes.object,
         selectedItems: React.PropTypes.array,
         selectedServices: React.PropTypes.array,
+        userServices: React.PropTypes.array,
         withToggle: React.PropTypes.oneOfType([React.PropTypes.bool, React.PropTypes.array]),
-        enabled: React.PropTypes.bool
+        enabled: React.PropTypes.bool,
+        textSearchConfig: React.PropTypes.object
     },
     getDefaultProps() {
         return {
             searchOptions: {
                 services: [{type: "nominatim"}]
             },
+            userServices: [],
             fitResultsToMapSize: true,
             withToggle: false,
             enabled: true
@@ -147,8 +151,17 @@ const SearchPlugin = connect((state) => ({
     getServiceOverrides( propSelector ) {
         return this.props.selectedItems && this.props.selectedItems[this.props.selectedItems.length - 1] && get(this.props.selectedItems[this.props.selectedItems.length - 1], propSelector);
     },
+    getSearchOptions() {
+        const{ searchOptions, textSearchConfig} = this.props;
+        if (textSearchConfig && textSearchConfig.services && textSearchConfig.services.length > 0) {
+            return textSearchConfig.override ? assign({}, searchOptions, {services: textSearchConfig.services}) : assign({}, searchOptions, {services: searchOptions.services.concat(textSearchConfig.services)});
+        }
+        return searchOptions;
+    },
     getCurrentServices() {
-        return this.props.selectedServices && this.props.selectedServices.length > 0 ? assign({}, this.props.searchOptions, {services: this.props.selectedServices}) : this.props.searchOptions;
+        const {selectedServices} = this.props;
+        const searchOptions = this.getSearchOptions();
+        return selectedServices && selectedServices.length > 0 ? assign({}, searchOptions, {services: selectedServices}) : searchOptions;
     },
     getSearchAndToggleButton() {
         const search = (<SearchBar

@@ -418,19 +418,102 @@ describe('Test the queryform reducer', () => {
         expect(state.showDetailsPanel).toEqual(true);
     });
 
+    it('test UPDATE_GEOMETRY', () => {
+        const geometry = {center: [0, 1], coordinates: []};
+        let testAction = {
+            type: "UPDATE_GEOMETRY",
+            geometry
+        };
+        const initialState = { spatialField: {geometry: {}} };
+        let state = queryform(initialState, testAction);
+        expect(state).toExist();
+        expect(state.spatialField.geometry).toEqual(geometry);
+    });
+
+    it('test CHANGE_SPATIAL_ATTRIBUTE', () => {
+        const attribute = "some value";
+        let testAction = {
+            type: "CHANGE_SPATIAL_ATTRIBUTE",
+            attribute
+        };
+        const initialState = { spatialField: {attribute: {}} };
+        let state = queryform(initialState, testAction);
+        expect(state).toExist();
+        expect(state.spatialField.attribute).toEqual(attribute);
+    });
+
+    it('test CHANGE_DRAWING_STATUS', () => {
+        const initialState = { toolbarEnabled: true };
+        const testAction1 = {
+            type: "CHANGE_DRAWING_STATUS",
+            owner: "queryform",
+            status: "start"
+        };
+        const state = queryform(initialState, testAction1);
+        expect(state).toExist();
+        expect(state.toolbarEnabled).toBeFalsy();
+        const testAction2 = {
+            type: "CHANGE_DRAWING_STATUS",
+            owner: "measure",
+            status: "start"
+        };
+        const state2 = queryform(initialState, testAction2);
+        expect(state2).toExist();
+        expect(state2.toolbarEnabled).toBeTruthy();
+    });
+
+    it('test END_DRAWING', () => {
+        const geometry = {center: [0, 1], coordinates: []};
+        const initialState = { toolbarEnabled: false, spatialField: {geometry: {}} };
+        const testAction1 = {
+            type: "END_DRAWING",
+            owner: "queryform",
+            geometry
+        };
+        const state = queryform(initialState, testAction1);
+        expect(state).toExist();
+        expect(state.toolbarEnabled).toBeTruthy();
+        expect(state.spatialField.geometry).toBe(geometry);
+        const testAction2 = {
+            type: "END_DRAWING",
+            owner: "measure",
+            status: "start"
+        };
+        const state2 = queryform(initialState, testAction2);
+        expect(state2).toExist();
+        expect(state2.toolbarEnabled).toBeFalsy();
+        expect(state2.spatialField.geometry).toEqual({});
+    });
+
+    it('test CHANGE_DWITHIN_VALUE', () => {
+        const initialState = { spatialField: {geometry: { distance: {}}} };
+        const distance = 123;
+        const testAction1 = {
+            type: "CHANGE_DWITHIN_VALUE",
+            distance
+        };
+        const state = queryform(initialState, testAction1);
+        expect(state).toExist();
+        expect(state.spatialField.geometry.distance).toBe(distance);
+    });
+
     it('Query Form Reset', () => {
         let testAction = {
             type: "QUERY_FORM_RESET"
         };
 
         const initialState = {
-            test: true
+            test: true,
+            spatialField: {
+                attribute: "GEOMETRY"
+            }
         };
 
         let state = queryform(initialState, testAction);
         expect(state).toExist();
 
         expect(state.test).toEqual(true);
+        expect(state.spatialField.attribute).toEqual("GEOMETRY");
     });
 
     it('Show Generated Filter', () => {

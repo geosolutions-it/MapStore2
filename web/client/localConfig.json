@@ -15,6 +15,7 @@
     "defaultMapOptions": {
       "cesium": {
           "flyTo": true,
+          "navigationTools": true,
           "terrainProvider": {
               "type": "cesium",
               "url": "https://assets.agi.com/stk-terrain/world",
@@ -209,7 +210,7 @@
                     }
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher"
+            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig"
         ],
         "embedded": [{
                 "name": "Map",

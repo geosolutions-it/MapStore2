@@ -16,6 +16,8 @@ const CHANGE_CASCADING_VALUE = 'CHANGE_CASCADING_VALUE';
 const EXPAND_ATTRIBUTE_PANEL = 'EXPAND_ATTRIBUTE_PANEL';
 const EXPAND_SPATIAL_PANEL = 'EXPAND_SPATIAL_PANEL';
 const SELECT_SPATIAL_METHOD = 'SELECT_SPATIAL_METHOD';
+const SELECT_VIEWPORT_SPATIAL_METHOD = 'SELECT_VIEWPORT_SPATIAL_METHOD';
+const UPDATE_GEOMETRY = 'UPDATE_GEOMETRY';
 const SELECT_SPATIAL_OPERATION = 'SELECT_SPATIAL_OPERATION';
 const CHANGE_SPATIAL_ATTRIBUTE = 'CHANGE_SPATIAL_ATTRIBUTE';
 const REMOVE_SPATIAL_SELECT = 'REMOVE_SPATIAL_SELECT';
@@ -123,6 +125,18 @@ function selectSpatialMethod(method, fieldName) {
         type: SELECT_SPATIAL_METHOD,
         fieldName: fieldName,
         method: method
+    };
+}
+
+function selectViewportSpatialMethod() {
+    return {
+        type: SELECT_VIEWPORT_SPATIAL_METHOD
+    };
+}
+function updateGeometrySpatialField(geometry) {
+    return {
+        type: UPDATE_GEOMETRY,
+        geometry
     };
 }
 
@@ -322,6 +336,10 @@ module.exports = {
     ADD_SIMPLE_FILTER_FIELD,
     REMOVE_SIMPLE_FILTER_FIELD,
     REMOVE_ALL_SIMPLE_FILTER_FIELDS,
+    SELECT_VIEWPORT_SPATIAL_METHOD,
+    UPDATE_GEOMETRY,
+    updateGeometrySpatialField,
+    selectViewportSpatialMethod,
     resetZones,
     zoneChange,
     // openMenu,

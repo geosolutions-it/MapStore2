@@ -359,6 +359,16 @@ const FilterUtils = {
         }
         return filter;
     },
+    closePolygon: function(coords) {
+        if (coords.length >= 3) {
+            const first = coords[0];
+            const last = coords[coords.length - 1];
+            if ((first[0] !== last[0]) || (first[1] !== last[1])) {
+                return coords.concat([coords[0]]);
+            }
+        }
+        return coords;
+    },
     getGmlPolygonElement: function(coordinates, srsName, version) {
         let gmlPolygon = '<gml:Polygon';
 
@@ -369,7 +379,7 @@ const FilterUtils = {
         // Any subsequent elements represent interior rings (or holes).
         // ///////////////////////////////////////////////////////////////////////////////////////////////////////
         coordinates.forEach((element, index) => {
-            let coords = element.map((coordinate) => {
+            let coords = this.closePolygon(element).map((coordinate) => {
                 return coordinate[0] + (version === "1.0.0" ? "," : " ") + coordinate[1];
             });
             const exterior = (version === "1.0.0" ? "outerBoundaryIs" : "exterior");

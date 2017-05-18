@@ -27,6 +27,7 @@ const {
     CHANGE_DWITHIN_VALUE,
     ZONE_FILTER,
     ZONE_SEARCH,
+    UPDATE_GEOMETRY,
     // OPEN_MENU,
     ZONE_CHANGE,
     ZONES_RESET,
@@ -165,6 +166,9 @@ function queryform(state = initialState, action) {
         case SELECT_SPATIAL_METHOD: {
             return assign({}, state, {spatialField: assign({}, state.spatialField, {[action.fieldName]: action.method, geometry: null})});
         }
+        case UPDATE_GEOMETRY: {
+            return assign({}, state, {spatialField: assign({}, state.spatialField, {geometry: action.geometry})}, {toolbarEnabled: true});
+        }
         case SELECT_SPATIAL_OPERATION: {
             return assign({}, state, {spatialField: assign({}, state.spatialField, {[action.fieldName]: action.operation})});
         }
@@ -189,13 +193,15 @@ function queryform(state = initialState, action) {
             return newState;
         }
         case REMOVE_SPATIAL_SELECT: {
-            return assign({}, state, {spatialField: assign({}, state.spatialField, initialState.spatialField)});
+            let spatialField = assign({}, initialState.spatialField, { attribute: state.spatialField.attribute });
+            return assign({}, state, {spatialField: assign({}, state.spatialField, spatialField)});
         }
         case SHOW_SPATIAL_DETAILS: {
             return assign({}, state, {showDetailsPanel: action.show});
         }
         case QUERY_FORM_RESET: {
-            return assign({}, state, initialState);
+            let spatialField = assign({}, initialState.spatialField, { attribute: state.spatialField.attribute });
+            return assign({}, state, initialState, {spatialField});
         }
         case SHOW_GENERATED_FILTER: {
             return assign({}, state, {showGeneratedFilter: action.data});

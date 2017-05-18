@@ -87,6 +87,16 @@ let CesiumMap = React.createClass({
 
         this.map = map;
         this.forceUpdate();
+        if (this.props.mapOptions.navigationTools) {
+            this.cesiumNavigation = window.CesiumNavigation;
+            if (this.cesiumNavigation) {
+                this.cesiumNavigation.navigationInitialization(this.props.id, map, {
+                    enableZoomControls: false,
+                    enableDistanceLegend: false,
+                    enableCompassOuterRing: false
+                });
+            }
+        }
     },
     componentWillReceiveProps(newProps) {
         if (newProps.mousePointer !== this.props.mousePointer) {

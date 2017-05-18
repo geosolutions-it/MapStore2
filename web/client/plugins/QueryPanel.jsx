@@ -24,7 +24,7 @@ const LayersUtils = require('../utils/LayersUtils');
 // include application component
 const QueryBuilder = require('../components/data/query/QueryBuilder');
 
-const {featureTypeSelectedEpic, wfsQueryEpic, closeFeatureEpic} = require('../epics/wfsquery');
+const {featureTypeSelectedEpic, wfsQueryEpic, closeFeatureEpic, viewportSelectedEpic} = require('../epics/wfsquery');
 
 const {bindActionCreators} = require('redux');
 const {
@@ -40,6 +40,7 @@ const {
     expandAttributeFilterPanel,
     expandSpatialFilterPanel,
     selectSpatialMethod,
+    selectViewportSpatialMethod,
     selectSpatialOperation,
     removeSpatialSelection,
     showSpatialSelectionDetails,
@@ -95,6 +96,7 @@ const SmartQueryForm = connect((state) => {
         spatialFilterActions: bindActionCreators({
             onExpandSpatialFilterPanel: expandSpatialFilterPanel,
             onSelectSpatialMethod: selectSpatialMethod,
+            onSelectViewportSpatialMethod: selectViewportSpatialMethod,
             onSelectSpatialOperation: selectSpatialOperation,
             onChangeDrawingStatus: changeDrawingStatus,
             onRemoveSpatialSelection: removeSpatialSelection,
@@ -237,5 +239,5 @@ module.exports = {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
     },
-    epics: {featureTypeSelectedEpic, wfsQueryEpic, closeFeatureEpic}
+    epics: {featureTypeSelectedEpic, wfsQueryEpic, closeFeatureEpic, viewportSelectedEpic}
 };

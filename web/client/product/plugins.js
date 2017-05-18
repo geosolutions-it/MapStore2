@@ -69,6 +69,7 @@ module.exports = {
         GoFull: require('../plugins/GoFull'),
         GlobeViewSwitcherPlugin: require('../plugins/GlobeViewSwitcher'),
         BackgroundSelectorPlugin: require('../plugins/BackgroundSelector'),
+        SearchServicesConfigPlugin: require('../plugins/SearchServicesConfig'),
         VersionPlugin: require('../plugins/Version')
     },
     requires: {

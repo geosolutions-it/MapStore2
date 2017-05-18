@@ -711,5 +711,6 @@ module.exports = {
     resetUpdating,
     resetCurrentMap,
     mapError,
-    mapsSearchTextChanged
+    mapsSearchTextChanged,
+    updateAttribute
 };

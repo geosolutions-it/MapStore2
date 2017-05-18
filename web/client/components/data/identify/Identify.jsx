@@ -226,7 +226,7 @@ const Identify = React.createClass({
     },
     render() {
         if (this.props.enabled && this.props.requests.length !== 0) {
-            return this.props.draggable ? (
+            return this.props.draggable && this.props.asPanel ? (
                     <Draggable>
                         {this.renderContent()}
                     </Draggable>
