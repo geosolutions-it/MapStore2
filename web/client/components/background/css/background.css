@@ -2,7 +2,7 @@
 .background-plugin-position {
     bottom: 0;
     left: 0;
-    position: fixed;
+    position: absolute;
     z-index: 100;
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
@@ -11,7 +11,7 @@
 }
 
 .background-list-container {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     height: auto;
     -webkit-transition: all 0.3s;

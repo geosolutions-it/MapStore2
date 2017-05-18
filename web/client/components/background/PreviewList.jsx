@@ -19,7 +19,7 @@ const PreviewList = React.createClass({
         pagination: React.PropTypes.bool,
         vertical: React.PropTypes.bool,
         icons: React.PropTypes.array,
-        onClick: React.PropTypes.func
+        onStartChange: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -31,7 +31,7 @@ const PreviewList = React.createClass({
             pagination: false,
             vertical: false,
             icons: [],
-            onClick: () => {}
+            onStartChange: () => {}
         };
     },
     render() {
@@ -39,10 +39,10 @@ const PreviewList = React.createClass({
         iconButtons = iconButtons.slice(this.props.start, this.props.start + this.props.length);
         if (this.props.pagination) {
             if (this.props.start !== 0) {
-                iconButtons.unshift(<PaginationButton key="pagination_0" vertical={this.props.vertical} side={this.props.vertical ? this.props.width : this.props.height} direction={false} onClick={ () => { this.props.onClick(this.props.start - 1); }} />);
+                iconButtons.unshift(<PaginationButton key="pagination_0" vertical={this.props.vertical} side={this.props.vertical ? this.props.width : this.props.height} direction={false} onClick={ () => { this.props.onStartChange(this.props.start - 1); }} />);
             }
             if (this.props.start + this.props.length !== this.props.icons.length) {
-                iconButtons.push(<PaginationButton key="pagination_1" vertical={this.props.vertical} side={this.props.vertical ? this.props.width : this.props.height} direction={true} onClick={ () => { this.props.onClick(this.props.start + 1); } } />);
+                iconButtons.push(<PaginationButton key="pagination_1" vertical={this.props.vertical} side={this.props.vertical ? this.props.width : this.props.height} direction={true} onClick={ () => { this.props.onStartChange(this.props.start + 1); } } />);
             }
         }
         const style = this.props.vertical ? { height: this.props.pagination ? this.props.height + 50 : this.props.height, width: this.props.width, bottom: this.props.bottom} : { height: this.props.height, width: this.props.pagination ? this.props.width + 50 : this.props.width, bottom: this.props.bottom};

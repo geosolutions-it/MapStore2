@@ -19,9 +19,9 @@ const PreviewIcon = React.createClass({
         vertical: React.PropTypes.bool,
         layer: React.PropTypes.object,
         currentLayer: React.PropTypes.object,
+        onPropertiesChange: React.PropTypes.func,
         onToggle: React.PropTypes.func,
-        onClose: React.PropTypes.func,
-        setLayer: React.PropTypes.func
+        onLayerChange: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -32,22 +32,23 @@ const PreviewIcon = React.createClass({
             vertical: false,
             layer: {},
             currentLayer: {},
+            onPropertiesChange: () => {},
             onToggle: () => {},
-            onClose: () => {},
-            setLayer: () => {}
+            onLayerChange: () => {}
         };
     },
     render() {
         const containerClass = this.props.vertical ? 'background-preview-icon-container-vertical' : 'background-preview-icon-container-horizontal';
-        let type = this.props.layer.visibility ? containerClass + ' bg-primary' : containerClass + ' bg-body';
-        type = this.props.layer.invalid ? containerClass + ' disabled-icon bg-body' : type;
-        const click = this.props.layer.invalid ? () => {} : () => { this.props.onClose(); this.props.onToggle(this.props.layer.id, {visibility: true}); this.props.setLayer('currentLayer', this.props.layer); };
+        const type = this.props.layer.visibility ? ' bg-primary' : ' bg-body';
+        const invalid = this.props.layer.invalid ? ' disabled-icon' : '';
+
+        const click = this.props.layer.invalid ? () => {} : () => { this.props.onToggle(); this.props.onPropertiesChange(this.props.layer.id, {visibility: true}); this.props.onLayerChange('currentLayer', this.props.layer); };
         return (
-            <div className={type} style={{padding: this.props.frame / 2, marginLeft: this.props.vertical ? this.props.margin : 0, marginRight: this.props.vertical ? 0 : this.props.margin, marginBottom: this.props.margin, width: this.props.side + this.props.frame, height: this.props.side + this.props.frame}}>
+            <div className={containerClass + type + invalid} style={{padding: this.props.frame / 2, marginLeft: this.props.vertical ? this.props.margin : 0, marginRight: this.props.vertical ? 0 : this.props.margin, marginBottom: this.props.margin, width: this.props.side + this.props.frame, height: this.props.side + this.props.frame}}>
                 <div className="background-preview-icon-frame" style={{width: this.props.side, height: this.props.side}}>
                     <img
-                        onMouseOver={() => { this.props.setLayer('tempLayer', this.props.layer); }}
-                        onMouseOut={() => { this.props.setLayer('tempLayer', this.props.currentLayer); }}
+                        onMouseOver={() => { this.props.onLayerChange('tempLayer', this.props.layer); }}
+                        onMouseOut={() => { this.props.onLayerChange('tempLayer', this.props.currentLayer); }}
                         onClick={click} src={this.props.src}/>
                 </div>
             </div>

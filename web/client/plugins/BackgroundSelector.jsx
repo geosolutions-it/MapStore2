@@ -7,29 +7,65 @@
  */
 
 const {connect} = require('react-redux');
-const {toggleControl} = require('../actions/controls');
+const {toggleControl, setControlProperty} = require('../actions/controls');
 const {changeLayerProperties} = require('../actions/layers');
-const {setLayerBackground, setStartBackground} = require('../actions/background');
 
 const {createSelector} = require('reselect');
 const {layersSelector} = require('../selectors/layers');
-const {backgroundSelSelector} = require('../selectors/background');
-const mapSelector = (state) => (state.map && state.map.present) || {};
-const isMobileSelector = (state) => (state.browser && state.browser.mobile) || false;
-const drawerControlsSelector = (state) => (state.controls && state.controls.drawer && state.controls.drawer) || {};
-const backgroundControlsSelector = (state) => (state.controls && state.controls.backgroundSelector && state.controls.backgroundSelector && state.controls.backgroundSelector.enabled) || false;
 
-const backgroundSelector = createSelector([mapSelector, layersSelector, backgroundSelSelector, isMobileSelector, drawerControlsSelector, backgroundControlsSelector],
-    (map, layers, background, isMobile, drawerControls, enabled) => ({
+const mapSelector = (state) => (state.map && state.map.present) || {};
+const backgroundControlsSelector = (state) => (state.controls && state.controls.backgroundSelector) || {};
+const drawerEnabledControlSelector = (state) => (state.controls && state.controls.drawer && state.controls.drawer.enabled) || false;
+
+const HYBRID = require('./background/assets/img/HYBRID.jpg');
+const ROADMAP = require('./background/assets/img/ROADMAP.jpg');
+const TERRAIN = require('./background/assets/img/TERRAIN.jpg');
+const Aerial = require('./background/assets/img/Aerial.jpg');
+const mapnik = require('./background/assets/img/mapnik.jpg');
+const mapquestOsm = require('./background/assets/img/mapquest-osm.jpg');
+const empty = require('./background/assets/img/none.jpg');
+const unknown = require('./background/assets/img/dafault.jpg');
+const Night2012 = require('./background/assets/img/NASA_NIGHT.jpg');
+const AerialWithLabels = require('./background/assets/img/AerialWithLabels.jpg');
+const OpenTopoMap = require('./background/assets/img/OpenTopoMap.jpg');
+
+const thumbs = {
+    google: {
+        HYBRID,
+        ROADMAP,
+        TERRAIN
+    },
+    bing: {
+        Aerial,
+        AerialWithLabels
+    },
+    osm: {
+        mapnik
+    },
+    mapquest: {
+        osm: mapquestOsm
+    },
+    ol: {
+        "undefined": empty
+    },
+    nasagibs: {
+        Night2012
+    },
+    OpenTopoMap: {
+        OpenTopoMap
+    },
+    unknown
+};
+
+const backgroundSelector = createSelector([mapSelector, layersSelector, backgroundControlsSelector, drawerEnabledControlSelector],
+    (map, layers, controls, drawer) => ({
         size: map.size || {width: 0, height: 0},
         layers: layers.filter((layer) => layer.group === "background") || [],
-        tempLayer: background.tempLayer || {},
-        currentLayer: background.currentLayer || {},
-        start: background.start || 0,
-        isMobile,
-        drawerEnabled: drawerControls.enabled || false,
-        drawerWidth: drawerControls.width || 0,
-        enabled
+        tempLayer: controls.tempLayer || {},
+        currentLayer: controls.currentLayer || {},
+        start: controls.start || 0,
+        enabled: controls.enabled && !drawer,
+        thumbs
     }));
 
 /**
@@ -38,39 +74,36 @@ const backgroundSelector = createSelector([mapSelector, layersSelector, backgrou
   * @memberof plugins
   * @static
   *
+  * @prop {number} cfg.left plugin position from left of the map
   * @prop {number} cfg.bottom plugin position from bottom of the map
-  * @prop {object} cfg.desktop dimensions of buttons in desktop mode
-  * @prop {object} cfg.mobile dimensions of buttons in mobile mode
+  * @prop {object} cfg.dimensions dimensions of buttons
   * @class
   * @example
   * {
   *   "name": "BackgroundSelector",
   *   "cfg": {
-  *     "mobile": {
+  *     "dimensions": {
   *       "side": 65,
+  *       "sidePreview": 65,
   *       "frame": 3,
-  *       "margin": 5
-  *     },
-  *     "desktop": {
-  *       "side": 78,
-  *       "sidePreview": 104,
-  *       "frame": 3,
-  *       "margin": 5
+  *       "margin": 5,
+  *       "label": false,
+  *       "vertical": true
   *     }
   *   }
   * }
   */
 
 const BackgroundSelectorPlugin = connect(backgroundSelector, {
+    onPropertiesChange: changeLayerProperties,
     onToggle: toggleControl.bind(null, 'backgroundSelector', null),
-    propertiesChangeHandler: changeLayerProperties,
-    setLayer: setLayerBackground,
-    setStart: setStartBackground
+    onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
+    onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start')
 })(require('../components/background/BackgroundSelector'));
 
 module.exports = {
     BackgroundSelectorPlugin,
     reducers: {
-         background: require('../reducers/background')
+        controls: require('../reducers/controls')
     }
 };

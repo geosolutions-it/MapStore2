@@ -83,9 +83,6 @@ const DrawerMenu = React.createClass({
             resetWidth: () => {}
         };
     },
-    componentWillUnmount() {
-        this.props.resetWidth();
-    },
     renderItems() {
         return this.props.items.map((tool, index) => {
             const Plugin = tool.panel || tool.plugin;

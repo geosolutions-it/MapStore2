@@ -14,101 +14,58 @@ const PreviewButton = require('./PreviewButton');
 const PreviewList = require('./PreviewList');
 const PreviewIcon = require('./PreviewIcon');
 
-const HYBRID = require('./images/mapthumbs/HYBRID.jpg');
-const ROADMAP = require('./images/mapthumbs/ROADMAP.jpg');
-const TERRAIN = require('./images/mapthumbs/TERRAIN.jpg');
-const Aerial = require('./images/mapthumbs/Aerial.jpg');
-const mapnik = require('./images/mapthumbs/mapnik.jpg');
-const mapquestOsm = require('./images/mapthumbs/mapquest-osm.jpg');
-const empty = require('./images/mapthumbs/none.jpg');
-const unknown = require('./images/mapthumbs/dafault.jpg');
-const Night2012 = require('./images/mapthumbs/NASA_NIGHT.jpg');
-const AerialWithLabels = require('./images/mapthumbs/AerialWithLabels.jpg');
-const OpenTopoMap = require('./images/mapthumbs/OpenTopoMap.jpg');
-
-const thumbs = {
-    google: {
-        HYBRID,
-        ROADMAP,
-        TERRAIN
-    },
-    bing: {
-        Aerial,
-        AerialWithLabels
-    },
-    osm: {
-        mapnik
-    },
-    mapquest: {
-        osm: mapquestOsm
-    },
-    ol: {
-        "undefined": empty
-    },
-    nasagibs: {
-        Night2012
-    },
-    OpenTopoMap: {
-        OpenTopoMap
-    },
-    unknown
-};
-
 require('./css/background.css');
 
 const BackgroundSelector = React.createClass({
     propTypes: {
-        drawerWidth: React.PropTypes.number,
         start: React.PropTypes.number,
+        left: React.PropTypes.number,
         bottom: React.PropTypes.number,
-        isMobile: React.PropTypes.bool,
         enabled: React.PropTypes.bool,
-        drawerEnabled: React.PropTypes.bool,
         layers: React.PropTypes.array,
         currentLayer: React.PropTypes.object,
         tempLayer: React.PropTypes.object,
         size: React.PropTypes.object,
-        desktop: React.PropTypes.object,
-        mobile: React.PropTypes.object,
+        dimensions: React.PropTypes.object,
+        thumbs: React.PropTypes.object,
+        onPropertiesChange: React.PropTypes.func,
         onToggle: React.PropTypes.func,
-        propertiesChangeHandler: React.PropTypes.func,
-        setLayer: React.PropTypes.func,
-        setStart: React.PropTypes.func
+        onLayerChange: React.PropTypes.func,
+        onStartChange: React.PropTypes.func
     },
     getDefaultProps() {
         return {
-            drawerWidth: 0,
             start: 0,
             bottom: 0,
-            isMobile: false,
+            left: 0,
             enabled: false,
-            drawerEnabled: false,
             layers: [],
             currentLayer: {},
             tempLayer: {},
             size: {width: 0, height: 0},
-            desktop: {},
-            mobile: {},
+            dimensions: {},
+            thumbs: {
+                unknown: require('./img/dafault.jpg')
+            },
+            onPropertiesChange: () => {},
             onToggle: () => {},
-            propertiesChangeHandler: () => {},
-            setLayer: () => {},
-            setStart: () => {}
+            onLayerChange: () => {},
+            onStartChange: () => {}
         };
     },
     componentWillUnmount() {
-        this.props.setLayer('currentLayer', {});
-        this.props.setLayer('tempLayer', {});
-        this.props.setStart(0);
+        this.props.onLayerChange('currentLayer', {});
+        this.props.onLayerChange('tempLayer', {});
+        this.props.onStartChange(0);
     },
     componentWillUpdate(nextProps) {
         if (this.props.size.width !== nextProps.size.width
-        || this.props.size.height !== nextProps.size.height
-        || this.props.drawerEnabled !== nextProps.drawerEnabled) {
-            this.props.setStart(0);
+        || this.props.size.height !== nextProps.size.height) {
+            this.props.onStartChange(0);
         }
     },
     getThumb(layer) {
-        return thumbs[layer.source] && thumbs[layer.source][layer.name] || layer.thumbURL || thumbs.unknown;
+        return this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || layer.thumbURL || this.props.thumbs.unknown;
     },
     getLayer() {
         const tempLyr = isEmpty(this.props.tempLayer) ? this.props.layers.filter((layer) => { return layer.visibility === true; })[0] : this.props.tempLayer;
@@ -118,7 +75,7 @@ const BackgroundSelector = React.createClass({
     getIcons(side, frame, margin, vertical) {
         return this.props.enabled ? this.props.layers.map((layer, idx) => {
             let thumb = this.getThumb(layer);
-            return <PreviewIcon vertical={vertical} key={idx} src={thumb} currentLayer={this.props.currentLayer} margin={margin} side={side} frame={frame} layer={layer} onClose={this.props.onToggle} onToggle={this.props.propertiesChangeHandler} setLayer={this.props.setLayer}/>;
+            return <PreviewIcon vertical={vertical} key={idx} src={thumb} currentLayer={this.props.currentLayer} margin={margin} side={side} frame={frame} layer={layer} onToggle={this.props.onToggle} onPropertiesChange={this.props.onPropertiesChange} onLayerChange={this.props.onLayerChange}/>;
         }) : [];
     },
     getDimensions(side, frame, margin, left, size, iconsLength) {
@@ -131,72 +88,61 @@ const BackgroundSelector = React.createClass({
 
         return {pagination, listSize, visibleIconsLength};
     },
-    renderDesktop() {
-
-        const desktop = assign({
+    renerBackgroundSelector() {
+        const configuration = assign({
             side: 78,
             sidePreview: 104,
             frame: 3,
-            margin: 5
-        }, this.props.desktop);
+            margin: 5,
+            label: true,
+            vertical: false
+        }, this.props.dimensions);
 
-        const frame = desktop.frame * 2;
-        const side = desktop.side - frame;
-        const sideButton = this.props.enabled ? desktop.sidePreview - frame : side;
-        const margin = desktop.margin;
+        const frame = configuration.frame * 2;
+        const side = configuration.side - frame;
+        const sideButton = this.props.enabled ? configuration.sidePreview - frame : side;
+        const margin = configuration.margin;
 
         const labelHeight = this.props.enabled ? sideButton - frame * 2 : 0;
         const layer = this.getLayer();
         const src = this.getThumb(layer);
-        const icons = this.getIcons(side, frame, margin, false);
-        let left = this.props.drawerWidth !== 0 ? this.props.drawerWidth : 300;
-        left = this.props.drawerEnabled ? left : 0;
-        const {pagination, listSize, visibleIconsLength} = this.getDimensions(side, frame, margin, left, this.props.size.width, icons.length);
+        const icons = this.getIcons(side, frame, margin, configuration.vertical);
+
+        const {pagination, listSize, visibleIconsLength} = this.getDimensions(side, frame, margin, this.props.left, configuration.vertical ? this.props.size.height : this.props.size.width, icons.length);
         const buttonSize = side + frame + margin;
-
-        return visibleIconsLength <= 0 && this.props.enabled
-        || !this.props.enabled && this.props.size.width / 2 < left + sideButton + frame + margin * 2 ? null : (
-            <div className="background-plugin-position" style={{left, bottom: this.props.bottom}}>
-                <PreviewButton src={src} side={sideButton} frame={frame} margin={margin} labelHeight={labelHeight} label={layer.title} onToggle={this.props.onToggle}/>
-                <div className="background-list-container" style={{bottom: this.props.bottom, left: left + sideButton + margin * 2 + frame, width: listSize, height: buttonSize}}>
-                    <PreviewList start={this.props.start} bottom={0} height={buttonSize} width={buttonSize * visibleIconsLength} icons={icons} pagination={pagination} length={visibleIconsLength} onClick={this.props.setStart} />
-                </div>
-            </div>
-        );
-    },
-    renderMobile() {
-
-        const mobile = assign({
-            side: 65,
-            frame: 3,
-            margin: 5
-        }, this.props.mobile);
-
-        const frame = mobile.frame * 2;
-        const side = mobile.side - frame;
-        const margin = mobile.margin;
-
-        const layer = this.getLayer();
-        const src = this.getThumb(layer);
-        const icons = this.getIcons(side, frame, margin, true);
-        const {pagination, listSize, visibleIconsLength} = this.getDimensions(side, frame, margin, 0, this.props.size.height, icons.length);
         const buttonSizeWithMargin = side + frame + margin * 2;
-        const buttonSize = side + frame + margin;
 
-        return this.props.drawerEnabled || visibleIconsLength <= 0 && this.props.enabled ? null : (
-            <div className="background-plugin-position" style={{bottom: this.props.bottom}}>
-                <PreviewButton showLabel={false} src={src} side={side} frame={frame} margin={margin} label={layer.title} onToggle={this.props.onToggle}/>
-                <div className="background-list-container" style={{bottom: this.props.bottom + buttonSizeWithMargin, height: listSize, width: buttonSizeWithMargin}}>
-                    <PreviewList vertical={true} start={this.props.start} bottom={0} height={buttonSize * visibleIconsLength} width={buttonSize} icons={icons} pagination={pagination} length={visibleIconsLength} onClick={this.props.setStart} />
+        const listContainerStyle = configuration.vertical ? {
+            bottom: this.props.bottom + buttonSizeWithMargin,
+            left: this.props.left,
+            width: buttonSizeWithMargin,
+            height: listSize
+        } : {
+            bottom: this.props.bottom,
+            left: this.props.left + sideButton + margin * 2 + frame,
+            width: listSize,
+            height: buttonSize
+        };
+
+        const previewListStyle = configuration.vertical ? {
+            height: buttonSize * visibleIconsLength,
+            width: buttonSize
+        } : {
+            height: buttonSize,
+            width: buttonSize * visibleIconsLength
+        };
+
+        return visibleIconsLength <= 0 && this.props.enabled ? null : (
+            <div className="background-plugin-position" style={{left: this.props.left, bottom: this.props.bottom}}>
+                <PreviewButton showLabel={configuration.label} src={src} side={sideButton} frame={frame} margin={margin} labelHeight={labelHeight} label={layer.title} onToggle={this.props.onToggle}/>
+                <div className="background-list-container" style={listContainerStyle}>
+                    <PreviewList vertical={configuration.vertical} start={this.props.start} bottom={0} height={previewListStyle.height} width={previewListStyle.width} icons={icons} pagination={pagination} length={visibleIconsLength} onStartChange={this.props.onStartChange} />
                 </div>
             </div>
         );
-    },
-    checkDevice() {
-        return this.props.isMobile ? this.renderMobile() : this.renderDesktop();
     },
     render() {
-        return this.props.layers.length > 0 ? this.checkDevice() : null;
+        return this.props.layers.length > 0 ? this.renerBackgroundSelector() : null;
     }
 });
 
