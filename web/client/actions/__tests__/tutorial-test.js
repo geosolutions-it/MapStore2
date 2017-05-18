@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -14,11 +14,15 @@ var {
     UPDATE_TUTORIAL,
     DISABLE_TUTORIAL,
     RESET_TUTORIAL,
+    CLOSE_TUTORIAL,
+    TOGGLE_TUTORIAL,
     startTutorial,
     setupTutorial,
     updateTutorial,
     disableTutorial,
-    resetTutorial
+    resetTutorial,
+    closeTutorial,
+    toggleTutorial
 } = require('../tutorial');
 
 describe('Test the tutorial actions', () => {
@@ -46,13 +50,11 @@ describe('Test the tutorial actions', () => {
     it('updateTutorial', () => {
         const tour = 'tour';
         const steps = 'steps';
-        const error = 'error';
-        const retval = updateTutorial(tour, steps, error);
+        const retval = updateTutorial(tour, steps);
         expect(retval).toExist();
         expect(retval.type).toBe(UPDATE_TUTORIAL);
         expect(retval.tour).toBe(tour);
         expect(retval.steps).toBe(steps);
-        expect(retval.error).toBe(error);
     });
 
     it('disableTutorial', () => {
@@ -65,6 +67,18 @@ describe('Test the tutorial actions', () => {
         const retval = resetTutorial();
         expect(retval).toExist();
         expect(retval.type).toBe(RESET_TUTORIAL);
+    });
+
+    it('closeTutorial', () => {
+        const retval = closeTutorial();
+        expect(retval).toExist();
+        expect(retval.type).toBe(CLOSE_TUTORIAL);
+    });
+
+    it('toggleTutorial', () => {
+        const retval = toggleTutorial();
+        expect(retval).toExist();
+        expect(retval.type).toBe(TOGGLE_TUTORIAL);
     });
 
 });

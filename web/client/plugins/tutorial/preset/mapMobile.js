@@ -6,6 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const React = require('react');
+const I18N = require('../../../components/I18N/I18N');
+const CesiumTooltip = require('../CesiumTooltip');
+
 module.exports = [
     // remove comment to enable intro/autostart
     /*{
@@ -15,6 +19,12 @@ module.exports = [
     {
         translation: 'drawerMenu',
         selector: '#drawer-menu-button'
+    },
+    {
+        title: <I18N.Message msgId="tutorial.cesium.title"/>,
+        text: <CesiumTooltip touch={true}/>,
+        selector: '#map .cesium-viewer',
+        position: 'bottom'
     },
     {
         translation: 'home',

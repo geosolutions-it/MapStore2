@@ -870,6 +870,29 @@
                 "examples": {
                     "title": "Applicazioni personalizzate",
                     "text": "Puoi utilizzare componenti e plugins di MapStore2 per costruire applicazioni personalizzate"
+                },
+                "cesium": {
+                    "title": "Interactions with the Map",
+                    "pan": "Pan view",
+                    "zoom": "Zoom view",
+                    "tilt": "Tilt view",
+                    "rotate": "Rotate view",
+                    "oneDrag": "One finger drag",
+                    "twoPinch": "Two finger pinch",
+                    "twoDragSame": "Two finger drag, same direction",
+                    "twoDragOpposite": "Two finger drag, opposite direction",
+                    "leftClick": "Left click + drag",
+                    "rightClick": "Right click + drag, or Mouse wheel scroll",
+                    "middleClick": "Middle click + drag, or CTRL + Left/Right click + drag"
+
+                },
+                "cesiumCompass": {
+                    "title": "Compass",
+                    "text": "You can use the compass to orbit around the globe"
+                },
+                "cesiumNavigation": {
+                    "title": "Navigation",
+                    "text": "Here you can find the zoom in and zoom out buttons"
                 }
             }
     }

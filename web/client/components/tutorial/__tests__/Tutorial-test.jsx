@@ -91,15 +91,15 @@ describe("Test the Tutorial component", () => {
 
         const domNode = ReactDOM.findDOMNode(cmp);
         expect(domNode).toExist();
-        expect(domNode.children.length).toBe(3);
+        expect(domNode.children.length).toBe(2);
 
         const joyridePlaceholder = domNode.getElementsByClassName('tutorial-joyride-placeholder');
         expect(joyridePlaceholder).toExist();
         expect(joyridePlaceholder.length).toBe(1);
 
-        const introError = domNode.getElementsByClassName('tutorial-presentation-position');
-        expect(introError).toExist();
-        expect(introError.length).toBe(2);
+        const intro = domNode.getElementsByClassName('tutorial-presentation-position');
+        expect(intro).toExist();
+        expect(intro.length).toBe(1);
 
         cmp.componentWillUpdate();
         expect(spyClose).toNotHaveBeenCalled();
@@ -116,7 +116,7 @@ describe("Test the Tutorial component", () => {
         const spyUpdate = expect.spyOn(actions, 'onUpdate');
         const spyReset = expect.spyOn(actions, 'onReset');
 
-        const cmp = ReactDOM.render(<Tutorial introStyle={{}} error={{}} steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox={true} actions={actions}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<Tutorial introStyle={{}} steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox={true} actions={actions}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
         expect(spySetup).toHaveBeenCalled();
@@ -124,15 +124,15 @@ describe("Test the Tutorial component", () => {
 
         const domNode = ReactDOM.findDOMNode(cmp);
         expect(domNode).toExist();
-        expect(domNode.children.length).toBe(3);
+        expect(domNode.children.length).toBe(2);
 
         const joyride = domNode.getElementsByClassName('joyride');
         expect(joyride).toExist();
         expect(joyride.length).toBe(1);
 
-        const introError = domNode.getElementsByClassName('tutorial-presentation-position');
-        expect(introError).toExist();
-        expect(introError.length).toBe(2);
+        const intro = domNode.getElementsByClassName('tutorial-presentation-position');
+        expect(intro).toExist();
+        expect(intro.length).toBe(1);
 
         cmp.componentWillUpdate({toggle: true});
         expect(spyStart).toHaveBeenCalled();
@@ -140,12 +140,18 @@ describe("Test the Tutorial component", () => {
         cmp.componentWillUpdate({status: 'close'});
         expect(spyClose).toHaveBeenCalled();
 
-        cmp.onTour({type: 'step:next'});
+        cmp.onTour({type: 'step:before'});
         expect(spyUpdate).toHaveBeenCalled();
-        expect(spyUpdate).toHaveBeenCalledWith({type: 'step:next'}, presetList.test, {});
+        expect(spyUpdate).toHaveBeenCalledWith({type: 'step:before'}, presetList.test);
 
         cmp.componentWillUnmount();
         expect(spyReset).toHaveBeenCalled();
+
+        const next = cmp.checkFirstValidStep(0, 'next');
+        expect(next).toBe(-1);
+
+        const back = cmp.checkFirstValidStep(0, 'back');
+        expect(back).toBe(-1);
     });
 
     it('test component with raw steps', () => {
@@ -154,7 +160,7 @@ describe("Test the Tutorial component", () => {
         const spyStart = expect.spyOn(actions, 'onStart');
         const spyUpdate = expect.spyOn(actions, 'onUpdate');
 
-        const cmp = ReactDOM.render(<Tutorial introStyle={{}} rawSteps={rawSteps} error={{}} steps={rawSteps} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox={false} actions={actions}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<Tutorial introStyle={{}} rawSteps={rawSteps} steps={rawSteps} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox={false} actions={actions}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
         expect(spySetup).toHaveBeenCalled();
@@ -162,15 +168,15 @@ describe("Test the Tutorial component", () => {
 
         const domNode = ReactDOM.findDOMNode(cmp);
         expect(domNode).toExist();
-        expect(domNode.children.length).toBe(3);
+        expect(domNode.children.length).toBe(2);
 
         const joyride = domNode.getElementsByClassName('joyride');
         expect(joyride).toExist();
         expect(joyride.length).toBe(1);
 
-        const introError = domNode.getElementsByClassName('tutorial-presentation-position');
-        expect(introError).toExist();
-        expect(introError.length).toBe(2);
+        const intro = domNode.getElementsByClassName('tutorial-presentation-position');
+        expect(intro).toExist();
+        expect(intro.length).toBe(1);
 
         cmp.componentWillUpdate({status: 'error'});
         expect(spyStart).toHaveBeenCalled();
@@ -178,9 +184,9 @@ describe("Test the Tutorial component", () => {
         cmp.componentWillUpdate({status: 'run'});
         expect(spyClose).toNotHaveBeenCalled();
 
-        cmp.onTour({type: 'step:next'});
+        cmp.onTour({type: 'step:before'});
         expect(spyUpdate).toHaveBeenCalled();
-        expect(spyUpdate).toHaveBeenCalledWith({type: 'step:next'}, rawSteps, {});
+        expect(spyUpdate).toHaveBeenCalledWith({type: 'step:before'}, rawSteps);
     });
 
     it('test component with error on update', () => {

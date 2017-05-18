@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -11,7 +11,9 @@ const {
     SETUP_TUTORIAL,
     UPDATE_TUTORIAL,
     DISABLE_TUTORIAL,
-    RESET_TUTORIAL
+    RESET_TUTORIAL,
+    CLOSE_TUTORIAL,
+    TOGGLE_TUTORIAL
 } = require('../actions/tutorial');
 
 const assign = require('object-assign');
@@ -22,12 +24,11 @@ const initialState = {
     run: false,
     start: false,
     steps: [],
-    intro: true,
-    progress: false,
+    enabled: false,
     disabled: false,
-    skip: true,
-    nextLabel: 'start',
-    status: 'close'
+    status: 'close',
+    stepIndex: 0,
+    tourAction: 'next'
 };
 
 function tutorial(state = initialState, action) {
@@ -40,10 +41,10 @@ function tutorial(state = initialState, action) {
             });
         case SETUP_TUTORIAL:
             let setup = {};
-            setup.steps = assign([], action.steps);
+            setup.steps = [].concat(action.steps);
             setup.steps = setup.steps.filter((step) => {
-                return step.selector && step.selector.substring(0, 1) === '#';
-            }).map((step) => {
+                return step.selector && step.selector.substring(0, 1) === '#' || step.selector.substring(0, 1) === '.';
+            }).map((step, index) => {
                 let title = step.title ? step.title : '';
                 title = step.translation ? <I18N.Message msgId = {"tutorial." + step.translation + ".title"}/> : title;
                 title = step.translationHTML ? <I18N.HTML msgId = {"tutorial." + step.translationHTML + ".title"}/> : title;
@@ -55,6 +56,7 @@ function tutorial(state = initialState, action) {
                 let isFixed = (step.selector === '#intro-tutorial') ? true : step.isFixed || false;
                 assign(style, step.style);
                 return assign({}, action.defaultStep, step, {
+                    index,
                     title,
                     text,
                     style,
@@ -62,98 +64,57 @@ function tutorial(state = initialState, action) {
                 });
             });
 
+            const isDisabled = localStorage.getItem('mapstore.plugin.tutorial.disabled');
             let hasIntro = false;
-            let isDisabled = localStorage.getItem('mapstore.plugin.tutorial.disabled');
-            setup.run = false;
-            setup.start = false;
-            setup.intro = true;
-            setup.progress = false;
-            setup.skip = true;
-            setup.nextLabel = 'start';
-            setup.status = 'close';
-
-            if (setup.steps.length > 1) {
-                setup.steps.reduce(function(stepA, stepB) {
-
-                    if (stepA.selector === '#intro-tutorial') {
-                        hasIntro = true;
-                    }
-                    return stepB;
-                });
-            }else if (setup.steps.length === 1) {
-                if (setup.steps[0].selector === '#intro-tutorial') {
+            setup.steps.forEach((step) => {
+                if (step.selector === '#intro-tutorial') {
                     hasIntro = true;
                 }
-            }
+            });
 
-            if (isDisabled === 'true' || !hasIntro || setup.steps.length === 0) {
+            setup.run = true;
+            setup.start = true;
+            setup.status = 'run';
+
+            if (isDisabled === 'true' || !hasIntro) {
                 setup.steps = setup.steps.filter((step) => {
                     return step.selector !== '#intro-tutorial';
+                }).map((step, index) => {
+                    return assign(step, {index});
                 });
 
-                setup.intro = false;
-                setup.progress = true;
-                setup.skip = false;
-                setup.nextLabel = 'next';
-            } else {
-                setup.status = 'run';
-                setup.run = true;
-                setup.start = true;
+                setup.run = false;
+                setup.start = false;
+                setup.status = 'close';
             }
 
             return assign({}, state, setup);
         case UPDATE_TUTORIAL:
             let update = {};
-            update.steps = assign([], action.steps);
+            update.steps = [].concat(action.steps);
             update.run = true;
             update.start = true;
             update.status = 'run';
+            update.stepIndex = state.stepIndex;
+            update.tourAction = state.tourAction;
+
             if (action.tour) {
-                if (action.tour.action !== 'start' && state.intro) {
-                    update.intro = false;
-                    update.progress = true;
-                    update.skip = false;
-                    update.nextLabel = 'next';
-                    if (action.tour.action !== 'next') {
-                        update.run = false;
-                        update.start = false;
-                        update.status = 'close';
-                    }
-                    update.steps = update.steps.filter((step) => {
-                        return step.selector !== '#intro-tutorial';
-                    });
-                } else if (action.tour.action === 'close' || action.tour.type === 'finished') {
+                if (action.tour.action === 'close' || action.tour.type === 'finished') {
                     update.run = false;
                     update.start = false;
-                    update.steps = update.steps.filter((step) => {
-                        return step.selector !== '#error-tutorial' && step.selector !== '#intro-tutorial';
-                    });
                     update.status = 'close';
-                } else if (action.tour.type === 'error:target_not_found') {
-                    let errorStep = update.steps[action.tour.index];
-                    let text = action.error && action.error.text || '';
-                    let style = action.error && action.error.style || {};
-
                     update.steps = update.steps.filter((step) => {
-                        return step.selector !== '#error-tutorial' && step.selector !== '#intro-tutorial';
+                        return step.selector !== '#intro-tutorial';
+                    }).map((step, index) => {
+                        return assign(step, {index});
                     });
-
-                    let newErrorStep = assign({}, errorStep, {
-                        selector: '#error-tutorial',
-                        text: text,
-                        position: 'top',
-                        style: style
-                    });
-                    let index = update.steps.indexOf(errorStep);
-                    if (index > 0) {
-                        update.steps.splice(index, 1);
-                        update.steps.unshift(newErrorStep);
-                    } else {
-                        update.steps[0] = newErrorStep;
-                    }
+                } else if (action.tour.type === 'error:target_not_found') {
                     update.status = 'error';
+                    update.stepIndex = action.tour.index;
+                    update.tourAction = action.tour.action;
                 }
             }
+
             return assign({}, state, update);
         case DISABLE_TUTORIAL:
             let disabled = !state.disabled;
@@ -164,14 +125,20 @@ function tutorial(state = initialState, action) {
         case RESET_TUTORIAL:
             return assign({}, state, {
                 steps: [],
-                intro: true,
-                progress: false,
-                skip: true,
-                nextLabel: 'start',
                 run: false,
                 start: false,
-                status: 'close'
+                status: 'close',
+                enabled: false
             });
+        case CLOSE_TUTORIAL:
+            return assign({}, state, {
+                run: false,
+                start: false,
+                status: 'close',
+                enabled: false
+            });
+        case TOGGLE_TUTORIAL:
+            return assign({}, state, { enabled: !state.enabled });
         default:
             return state;
     }
