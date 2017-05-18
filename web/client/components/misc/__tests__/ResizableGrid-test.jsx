@@ -8,7 +8,7 @@
 const React = require("react");
 const expect = require('expect');
 const ReactDOM = require('react-dom');
-const FeatureDockedGrid = require('../FeatureDockedGrid');
+const ResizableGrid = require('../ResizableGrid');
 
 const state = {
     columns: [
@@ -83,13 +83,17 @@ const defaultProps = {
     rowsCount: state.features.length,
     minHeight: 250,
     minWidth: 600,
-    size: 0.3,
+    size: {
+        width: true,
+        height: false,
+        size: 0.35
+    },
     position: "bottom",
     columns: state.columns,
     selectBy: state.selectBy,
     rows: state.features
 };
-describe("Test FeatureDockedGrid Component", () => {
+describe("Test ResizableGrid Component", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -101,41 +105,44 @@ describe("Test FeatureDockedGrid Component", () => {
         setTimeout(done);
     });
 
-    it('Test FeatureDockedGrid rendering without tools', () => {
+    it('Test ResizableGrid rendering without tools', () => {
         let comp = ReactDOM.render(
-            <FeatureDockedGrid
+            <ResizableGrid
                 {...defaultProps}
                 />, document.getElementById("container"));
         expect(comp).toExist();
-        let btns = document.getElementsByTagName("button");
-        expect(btns.length).toBe(2);
     });
-    it('Test FeatureDockedGrid rendering with 1 added tool', () => {
+
+    it('Test ResizableGrid re-rendering for entering in the componentWillReceiveProps', () => {
         let comp = ReactDOM.render(
-            <FeatureDockedGrid
-                {...defaultProps}
-                toolbar={{zoom: true}}
-                />, document.getElementById("container"));
-        expect(comp).toExist();
-        let btns = document.getElementsByTagName("button");
-        expect(btns.length).toBe(3);
-    });
-    it('Test FeatureDockedGrid re-rendering for entering in the componentWillReceiveProps', () => {
-        let comp = ReactDOM.render(
-            <FeatureDockedGrid
+            <ResizableGrid
                 {...defaultProps}
                 />, document.getElementById("container"));
         expect(comp).toExist();
         let comp2 = ReactDOM.render(
-            <FeatureDockedGrid
+            <ResizableGrid
                 {...defaultProps}
                 position="right"
-                size={0.1}
+                size={{
+                    width: true,
+                    height: false,
+                    size: 0.35
+                }}
                 />, document.getElementById("container"));
         expect(comp2).toExist();
 
-        let btns = document.getElementsByTagName("button");
-        expect(btns.length).toBe(2);
+        let comp3 = ReactDOM.render(
+            <ResizableGrid
+                {...defaultProps}
+                position="bottom"
+                size={{
+                    width: true,
+                    height: false,
+                    size: 0.5
+                }}
+                />, document.getElementById("container"));
+        expect(comp3).toExist();
+
     });
 
 });

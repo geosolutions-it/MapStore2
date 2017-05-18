@@ -8,18 +8,17 @@
 const React = require("react");
 const expect = require('expect');
 const ReactDOM = require('react-dom');
-const DockedGrid = require('../DockedGrid');
-const FeatureDockedGrid = require('../FeatureDockedGrid');
+const DockablePanel = require('../DockablePanel');
 
 const defaultProps = {
     dockSize: 0.35,
-    featureDockedGrid: FeatureDockedGrid,
+    wrappedComponent: null,
     position: "bottom",
     maxDockSize: 1.0,
     minDockSize: 0.1,
     setDockSize: () => {}
 };
-describe("Test DockedGrid Component", () => {
+describe("Test DockablePanel Component", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -31,19 +30,11 @@ describe("Test DockedGrid Component", () => {
         setTimeout(done);
     });
 
-    it('Test DockedGrid rendering without tools', () => {
+    it('Test DockablePanel rendering without tools', () => {
         let comp = ReactDOM.render(
-            <DockedGrid {...defaultProps}/>, document.getElementById("container"));
+            <DockablePanel {...defaultProps}/>, document.getElementById("container"));
         expect(comp).toExist();
 
-    });
-    it('Test DockedGrid rendering with 1 added tool', () => {
-        let comp = ReactDOM.render(
-            <DockedGrid
-                {...defaultProps}
-                toolbar={{zoom: true}}
-                />, document.getElementById("container"));
-        expect(comp).toExist();
     });
 
 

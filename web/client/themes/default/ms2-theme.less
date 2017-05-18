@@ -953,12 +953,12 @@ select.form-control option {
 	color: @ms2-color-text-primary !important;
 }
 /* feature grid made by react-data-grid */
-.react-grid-Header{
+#container-wrapped-component .react-grid-Header{
     background: @ms2-color-primary;
 	color: @ms2-color-text-primary;
 	font-family: @font-family-base;
 }
-.react-grid-Main .react-grid-Header .react-grid-HeaderCell{
+#container-wrapped-component .react-grid-Main .react-grid-Header .react-grid-HeaderCell{
 	background: @ms2-color-primary;
 	color: @ms2-color-text-primary;
 	font-family: @font-family-base;
@@ -966,22 +966,36 @@ select.form-control option {
     text-align: center;
     padding-top: 17px;
 }
-.react-grid-Row--even .react-grid-Cell { background-color: #f2f2f2; }
+#container-wrapped-component .react-grid-Row--even .react-grid-Cell { background-color: #f2f2f2; }
 
-.react-grid-Main, .react-grid-Container, #feature-grid-container {
+#container-wrapped-component .react-grid-Main, .react-grid-Container {
     height: 100%;
     width: 100% !important;
 }
-.react-grid-Container {
+#container-wrapped-component .react-grid-Container {
     width: 100% !important;
 }
-/*
-.react-grid-Canvas{
-    height: 100% !important;
-}*/
-.react-grid-Grid{
+// dock panel
+#dock-toolbar #left-tools.left-tools{
+    position: absolute;
+    left: 10px;
+    bottom: 2px;
+}
+#dock-toolbar #right-tools.right-tools{
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+}
+#container-wrapped-component{
+    display: flex;
+    flex: 1 0 auto;
+    flexDirection: column;
+    width: 100%;
+}
+#container-wrapped-component .react-grid-Grid{
     min-height: 100% !important;
 }
+
 
 .radio-custom+.radio-custom-label:before, .react-grid-checkbox+.react-grid-checkbox-label:before{
     width: 15px;

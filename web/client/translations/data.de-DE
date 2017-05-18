@@ -46,6 +46,10 @@
             "featureTypeError": "Layerattribute können nicht geladen werden",
             "elevation": "Höhe"
         },
+        "dock": {
+            "row": "{rowsSelected} reihe ausgewählt",
+            "rows": "{rowsSelected} reihen ausgewählt"
+        },
         "globeswitcher": {
             "tooltipDeactivate": "Beenden Sie den 3D-Modus",
             "tooltipActivate": "Geben Sie den 3D-Modus ein"
