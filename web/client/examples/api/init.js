@@ -54,5 +54,37 @@ function init() {
     }, function(state) {
         return (state.map && state.map.present) || state.map || {}
     });
+    MapStore2.onAction("MAP_CONFIG_LOADED", function(action) {
+        var layers = action && action.config && action.config.map && action.config.map.layers;
+        var layerIndex = layers.findIndex(function(e) {
+            return e.name === "nurc:Arc_Sample";
+        });
+        if (layerIndex >= 0) {
+            var layer = layers[layerIndex];
+            document.querySelector('#ck').disabled = false;
+            document.querySelector('#ck').addEventListener('change', function(event) {
+                MapStore2.triggerAction({
+                  type: 'CHANGE_LAYER_PROPERTIES',
+                  newProperties: {
+                    visibility: event.target.checked
+                  },
+                  layer: layer.id
+                });
+            });
+        }
+
+    });
+    document.getElementById("zoomToUSA").addEventListener("click", function() {
+        MapStore2.triggerAction({
+          type: 'ZOOM_TO_EXTENT',
+          extent: {
+            minx: '-124.731422',
+            miny: '24.955967',
+            maxx: '-66.969849',
+            maxy: '49.371735'
+          },
+          crs: 'EPSG:4326'
+      });
+    });
     /*eslint-enable */
 }
