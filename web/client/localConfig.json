@@ -33,7 +33,21 @@
                 "cfg": {
                     "tools": ["locate"]
                 }
-            }, "Version", "DrawerMenu", {
+            }, "Version", "DrawerMenu",
+            {
+                "name": "BackgroundSelector",
+                "cfg": {
+                    "dimensions": {
+                    "side": 65,
+                    "sidePreview": 65,
+                    "frame": 3,
+                    "margin": 5,
+                    "label": false,
+                    "vertical": true
+                   }
+                }
+            },
+            {
                 "name": "Identify",
                 "showIn": ["Settings"],
                 "cfg": {
@@ -66,7 +80,7 @@
                 "cfg": {
                     "preset": "mapMobile"
                 }
-            }, "BackgroundSwitcher", {
+            }, {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true
@@ -112,7 +126,7 @@
             }, "Login",
             "OmniBar", "BurgerMenu", "Expander", "GlobeViewSwitcher"
         ],
-        "desktop": ["Map", "HelpLink", "Share", "DrawerMenu", "Version", {
+        "desktop": ["Map", "HelpLink", "Share", "DrawerMenu", "Version", "BackgroundSelector", {
                 "name": "Identify",
                 "showIn": ["IdentifyBar", "Settings"],
                 "cfg": {
@@ -137,7 +151,7 @@
                 "cfg": {
                     "activateQueryTool": true
                 }
-            }, "Tutorial", "BackgroundSwitcher", {
+            }, "Tutorial", {
                 "name": "Measure"
             }, "Print", "ShapeFile", {
                 "name": "Settings",
@@ -206,6 +220,18 @@
             }, {
               "name": "DrawerMenu",
               "hide": "{!(request.query && request.query.forceDrawer)}"
+              },{
+                  "name": "BackgroundSelector",
+                  "cfg": {
+                      "dimensions": {
+                      "side": 65,
+                      "sidePreview": 65,
+                      "frame": 3,
+                      "margin": 5,
+                      "label": false,
+                      "vertical": true
+                     }
+                  }
               }, {
                 "name": "Identify",
                 "cfg": {
@@ -240,7 +266,7 @@
                         "alwaysVisible": true
                     }
                 }
-            }, "TOC", "BackgroundSwitcher", {
+            }, "TOC", {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true

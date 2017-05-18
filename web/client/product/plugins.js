@@ -68,8 +68,9 @@ module.exports = {
         ScrollTopPlugin: require('../plugins/ScrollTop'),
         GoFull: require('../plugins/GoFull'),
         GlobeViewSwitcherPlugin: require('../plugins/GlobeViewSwitcher'),
-        VersionPlugin: require('../plugins/Version'),
-        SearchServicesConfigPlugin: require('../plugins/SearchServicesConfig')
+        BackgroundSelectorPlugin: require('../plugins/BackgroundSelector'),
+        SearchServicesConfigPlugin: require('../plugins/SearchServicesConfig'),
+        VersionPlugin: require('../plugins/Version')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

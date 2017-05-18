@@ -1,0 +1,52 @@
+
+.background-plugin-position {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    z-index: 100;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.background-list-container {
+    position: absolute;
+    bottom: 0;
+    height: auto;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.background-plugin-pagination-btn-horizontal {
+    cursor: pointer;
+    width: 20px;
+    margin-right: 5px;
+    float: left;
+}
+
+.background-plugin-pagination-btn-horizontal span {
+    font-size: 20px;
+    opacity: 1.0;
+}
+
+.background-plugin-pagination-btn-horizontal:hover span{
+    opacity: 0.5;
+}
+
+.background-plugin-pagination-btn-vertical {
+    cursor: pointer;
+    width: 20px;
+    margin-right: 5px;
+}
+
+.background-plugin-pagination-btn-vertical span {
+    font-size: 20px;
+    opacity: 1.0;
+}
+
+.background-plugin-pagination-btn-vertical:hover span{
+    opacity: 0.5;
+}

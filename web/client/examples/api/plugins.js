@@ -40,7 +40,7 @@ module.exports = {
         SavePlugin: require('../../plugins/Save'),
         SaveAsPlugin: require('../../plugins/SaveAs'),
         TOCPlugin: require('../../plugins/TOC'),
-        BackgroundSwitcherPlugin: require('../../plugins/BackgroundSwitcher'),
+        BackgroundSelectorPlugin: require('../../plugins/BackgroundSelector'),
         MeasurePlugin: require('../../plugins/Measure')
     },
     requires: {
