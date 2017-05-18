@@ -123,6 +123,7 @@
             "web/client/selectors/index.jsdoc",
             "web/client/selectors/map.js",
             "web/client/selectors/maptype.js",
+            "web/client/selectors/tutorial.js",
 
             "web/client/reducers/index.jsdoc",
             "web/client/reducers/controls.js",
@@ -136,6 +137,7 @@
             "web/client/epics/globeswitcher.js",
             "web/client/epics/maptype.js",
             "web/client/epics/search.js",
+            "web/client/epics/tutorial.js",
             "web/client/epics/wfsquery.js",
 
             "web/client/utils/index.jsdoc",

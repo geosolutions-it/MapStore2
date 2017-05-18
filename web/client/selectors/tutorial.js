@@ -10,7 +10,7 @@
  * selects tutorial from state
  * @memberof selectors.tutorial
  * @param  {object} state the state
- * @return {string}       the tutorial in the state
+ * @return {object}       the tutorial in the state
  */
 const tutorialSelector = (state) => state && state.tutorial;
 

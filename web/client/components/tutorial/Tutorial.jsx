@@ -86,8 +86,7 @@ const Tutorial = React.createClass({
                 title: '',
                 text: '',
                 position: 'bottom',
-                type: 'click',
-                allowClicksThruHole: false
+                type: 'click'
             },
             introStyle: defaultIntroStyle,
             tourAction: 'next',
@@ -104,7 +103,7 @@ const Tutorial = React.createClass({
             scrollToFirstStep: true,
             showBackButton: true,
             showOverlay: true,
-            allowClicksThruHole: false,
+            allowClicksThruHole: true,
             showSkipButton: true,
             showStepsProgress: false,
             tooltipOffset: 10,

@@ -833,7 +833,7 @@
             },
             "home": {
                 "title": "Home",
-                "text": "Go to homepage"
+                "text": "Click to go to homepage"
             },
             "searchButton": {
                 "title": "Search",
@@ -888,7 +888,7 @@
             },
             "cesiumCompass": {
                 "title": "Compass",
-                "text": "You can use the compass to orbit around the globe"
+                "text": "You can use the compass to orbit around the globe. Drag to rotate the map"
             },
             "cesiumNavigation": {
                 "title": "Navigation",

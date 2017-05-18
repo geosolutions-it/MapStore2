@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const I18N = require('../../components/I18N/I18N');
+const I18N = require('../../I18N/I18N');
 
 const MouseLeft = require('./assets/img/MouseLeft.svg');
 const MouseRight = require('./assets/img/MouseRight.svg');
