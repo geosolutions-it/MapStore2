@@ -88,7 +88,7 @@ const BackgroundSelector = React.createClass({
 
         return {pagination, listSize, visibleIconsLength};
     },
-    renerBackgroundSelector() {
+    renderBackgroundSelector() {
         const configuration = assign({
             side: 78,
             sidePreview: 104,
@@ -142,7 +142,7 @@ const BackgroundSelector = React.createClass({
         );
     },
     render() {
-        return this.props.layers.length > 0 ? this.renerBackgroundSelector() : null;
+        return this.props.layers.length > 0 ? this.renderBackgroundSelector() : null;
     }
 });
 
