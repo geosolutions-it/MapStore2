@@ -270,14 +270,14 @@
             "searchservicesbutton": "Configure search services",
             "configpaneltitle": "Create/edit a search service",
             "serviceslistlabel": "Available services",
-            "overriedservice": "Overried services",
+            "overriedservice": "Overried default services",
             "addbtn": "Add",
             "nextbtn": "Next",
             "prevbtn": "Back",
             "savebtn": "Update",
             "cancelbtn": "Cancel",
             "confirmremove": "Delete?",
-            "cancelconfirm": "Confirm Cancel?",
+            "cancelconfirm": "Are you sure?",
             "s_name": "Name",
             "s_title": "Title",
             "s_description": "Description",
@@ -290,7 +290,7 @@
             "s_wfs_props_label" : "WFS service props",
             "s_wfs_opt_props_label" : "Optional props",
             "s_result_props_label": "Result display properties",
-            "s_priority_info": "Used to sort search results, higher values first. Nominatim  results have priority = 5"
+            "s_priority_info": "Used to sort search results, higher values first. Nominatim results have priority = 5"
         },
         "drawLocal": {
             "draw": {

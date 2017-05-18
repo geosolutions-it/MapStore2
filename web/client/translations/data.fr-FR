@@ -267,7 +267,31 @@
             "bearingLabel": "Direction"
         },
         "search":{
-            "placeholder": "Recherche par toponyme ou coordonnées..."
+            "placeholder": "Recherche par toponyme ou coordonnées...",
+            "searchservicesbutton": "Configurer les services de recherche",
+            "configpaneltitle": "Créer / modifier un service de recherche",
+            "serviceslistlabel": "Services disponibles",
+            "overriedservice": "Services par défaut excédentaires",
+            "addbtn": "Ajouter",
+            "nextbtn": "Prochain",
+            "prevbtn": "Arrière",
+            "savebtn": "Mettre à jour",
+            "cancelbtn": "Annuler",
+            "confirmremove": "Effacer?",
+            "cancelconfirm": "Êtes-vous sûr?",
+            "s_name": "Prénom",
+            "s_title": "Titre",
+            "s_description": "La description",
+            "s_priority": "Priorité",
+            "s_url": "Url de service",
+            "s_layer": "Layer",
+            "s_attributes": "Les attributs",
+            "s_sort": "Trier par",
+            "s_max_features": "Fonctionnalités Max",
+            "s_wfs_props_label" : "WFS accessoires du service",
+            "s_wfs_opt_props_label" : "Supports optionnels",
+            "s_result_props_label": "Propriétés d'affichage des résultats",
+            "s_priority_info": "Utilisé pour trier les résultats de recherche, des valeurs plus élevées en premier. Les résultats Nominatim ont priorité = 5"
         },
         "drawLocal": {
             "draw": {

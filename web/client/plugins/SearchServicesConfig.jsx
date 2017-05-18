@@ -1,4 +1,4 @@
-/**
+/*
 * Copyright 2017, GeoSolutions Sas.
 * All rights reserved.
 *
@@ -26,7 +26,18 @@ const WFSServiceProps = require('../components/mapcontrols/searchservicesconfig/
 const ResultsProps = require('../components/mapcontrols/searchservicesconfig/ResultsProps.jsx');
 const WFSOptionalProps = require('../components/mapcontrols/searchservicesconfig/WFSOptionalProps.jsx');
 
-
+/**
+  * Text Search Config Plugin. Allow to add and edit additional
+  * text serch service used by text search plugin. User has to
+  * save the map to persist service changes.
+  * @class SearchServicesConfigPanel
+  * @memberof plugins
+  * @static
+  *
+  * @prop {string} cfg.id identifier of the Plugin
+  * @prop {object} cfg.panelStyle inline style for the panel
+  * @prop {string} cfg.panelClassName className for the panel
+  */
 const SearchServicesConfigPanel = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
@@ -52,7 +63,7 @@ const SearchServicesConfigPanel = React.createClass({
     },
     getDefaultProps() {
         return {
-            id: "SearchServicesConfigUI",
+            id: "search-services-config-editor",
             enabled: false,
             panelStyle: {
                 minWidth: "400px",
@@ -140,10 +151,10 @@ const SearchServicesConfigPanel = React.createClass({
                         <span>{titleText}</span>
                         { this.isDirty() ? (
                             <ConfirmButton className="close" confirming={{
-                                text: <Message msgId="search.cancelbtn" />, className: "btn btn-sm btn-warning confirm-close"}} onConfirm={this.onClose} bsStyle="primary" text={(<Glyphicon glyph={closeGlyph}/>)}/>) : <button onClick={this.onClose} className="close">{closeGlyph ? <Glyphicon glyph={closeGlyph}/> : <span>×</span>}</button>}
+                                text: <Message msgId="search.cancelconfirm" />, className: "btn btn-sm btn-warning services-config-editor-confirm-close"}} onConfirm={this.onClose} bsStyle="primary" text={(<Glyphicon glyph={closeGlyph}/>)}/>) : <button onClick={this.onClose} className="close">{closeGlyph ? <Glyphicon glyph={closeGlyph}/> : <span>×</span>}</button>}
                             }
                     </span>
-                    <div role="body" id="search-serivices-ui">
+                    <div role="body" className="services-config-editor">
                         <Section.Element services={textSearchConfig.services} override={textSearchConfig.override} onPropertyChange={onPropertyChange} service={service}/>
                     </div>
                     {this.renderFooter()}
