@@ -8,6 +8,7 @@
 
 const CHANGE_DRAWING_STATUS = 'CHANGE_DRAWING_STATUS';
 const END_DRAWING = 'END_DRAWING';
+const SET_CURRENT_STYLE = 'SET_CURRENT_STYLE';
 
 function changeDrawingStatus(status, method, owner, features, options) {
     return {
@@ -28,9 +29,18 @@ function endDrawing(geometry, owner) {
     };
 }
 
+function setCurrentStyle(style) {
+    return {
+          type: SET_CURRENT_STYLE,
+          currentStyle: style
+    };
+}
+
 module.exports = {
     CHANGE_DRAWING_STATUS,
     END_DRAWING,
+    SET_CURRENT_STYLE,
     changeDrawingStatus,
-    endDrawing
+    endDrawing,
+    setCurrentStyle
 };

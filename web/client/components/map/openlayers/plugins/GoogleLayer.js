@@ -40,17 +40,16 @@ Layers.registerType('google', {
             });
         }
         gmaps[mapId].setMapTypeId(layersMap[options.name]);
-        let view = map.getView();
         let mapContainer = document.getElementById(mapId + 'gmaps');
         let setCenter = function() {
             if (mapContainer.style.visibility !== 'hidden') {
-                const center = ol.proj.transform(view.getCenter(), 'EPSG:3857', 'EPSG:4326');
+                const center = ol.proj.transform(map.getView().getCenter(), 'EPSG:3857', 'EPSG:4326');
                 gmaps[mapId].setCenter(new google.maps.LatLng(center[1], center[0]));
             }
         };
         let setZoom = function() {
             if (mapContainer.style.visibility !== 'hidden') {
-                gmaps[mapId].setZoom(view.getZoom());
+                gmaps[mapId].setZoom(map.getView().getZoom());
             }
         };
 
@@ -103,18 +102,22 @@ Layers.registerType('google', {
 
         let setRotation = function() {
             if (mapContainer.style.visibility !== 'hidden') {
-                const rotation = view.getRotation() * 180 / Math.PI;
+                const rotation = map.getView().getRotation() * 180 / Math.PI;
 
                 mapContainer.style.transform = "rotate(" + rotation + "deg)";
                 google.maps.event.trigger(gmaps[mapId], "resize");
             }
         };
 
-        view.on('change:center', setCenter);
-        view.on('change:resolution', setZoom);
-        view.on('change:rotation', setRotation);
+        let setViewEventListeners = function() {
+            let view = map.getView();
+            view.on('change:center', setCenter);
+            view.on('change:resolution', setZoom);
+            view.on('change:rotation', setRotation);
+        };
+        map.on('change:view', setViewEventListeners);
 
-
+        setViewEventListeners();
         setCenter();
         setZoom();
 

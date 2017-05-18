@@ -159,7 +159,9 @@ const MeasurementSupport = React.createClass({
                     this.calculateGeodesicDistance(sketchCoords) : 0,
                 area: this.props.measurement.geomType === 'Polygon' ?
                     this.calculateGeodesicArea(this.sketchFeature.getGeometry().getLinearRing(0).getCoordinates()) : 0,
-                bearing: this.props.measurement.geomType === 'Bearing' ? bearing : 0
+                bearing: this.props.measurement.geomType === 'Bearing' ? bearing : 0,
+                lenUnit: this.props.measurement.lenUnit,
+                areaUnit: this.props.measurement.areaUnit
             }
         );
         this.props.changeMeasurementState(newMeasureState);

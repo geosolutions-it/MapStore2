@@ -12,8 +12,9 @@ const {changeMapView, clickOnMap} = require('../../actions/map');
 const {layerLoading, layerLoad, layerError, invalidLayer} = require('../../actions/layers');
 const {changeMousePosition} = require('../../actions/mousePosition');
 const {changeMeasurementState} = require('../../actions/measurement');
+const {changeSelectionState} = require('../../actions/selection');
 const {changeLocateState, onLocateError} = require('../../actions/locate');
-const {changeDrawingStatus, endDrawing} = require('../../actions/draw');
+const {changeDrawingStatus, endDrawing, setCurrentStyle} = require('../../actions/draw');
 const {updateHighlighted} = require('../../actions/highlight');
 
 const {connect} = require('react-redux');
@@ -48,7 +49,8 @@ module.exports = (mapType, actions) => {
     })(components.MeasurementSupport || Empty);
 
     const Locate = connect((state) => ({
-        status: state.locate && state.locate.state
+        status: state.locate && state.locate.state,
+        messages: state.locale && state.locale.messages ? state.locale.messages.locate : undefined
     }), {
         changeLocateState,
         onLocateError
@@ -57,11 +59,18 @@ module.exports = (mapType, actions) => {
     const DrawSupport = connect((state) => (
         state.draw || {}), {
         onChangeDrawingStatus: changeDrawingStatus,
-        onEndDrawing: endDrawing
+        onEndDrawing: endDrawing,
+        setCurrentStyle: setCurrentStyle
     })( components.DrawSupport || Empty);
 
     const HighlightSupport = connect((state) => (
         state.highlight || {}), {updateHighlighted})( components.HighlightFeatureSupport || Empty);
+
+    const SelectionSupport = connect((state) => ({
+            selection: state.selection || {}
+        }), {
+            changeSelectionState
+        })(components.SelectionSupport || Empty);
 
     require('../../components/map/' + mapType + '/plugins/index');
 
@@ -75,7 +84,8 @@ module.exports = (mapType, actions) => {
             overview: components.Overview || Empty,
             scalebar: components.ScaleBar || Empty,
             draw: DrawSupport,
-            highlight: HighlightSupport
+            highlight: HighlightSupport,
+            selection: SelectionSupport
         }
     };
 };
