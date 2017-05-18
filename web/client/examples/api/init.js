@@ -26,7 +26,19 @@ function init() {
             "Search",
             "DrawerMenu",
             "TOC",
-            "BackgroundSwitcher",
+            {
+                "name": "BackgroundSelector",
+                "cfg": {
+                    "dimensions": {
+                        "side": 65,
+                        "sidePreview": 65,
+                        "frame": 3,
+                        "margin": 5,
+                        "label": false,
+                        "vertical": true
+                    }
+                }
+            },
             "Identify",
             "FullScreen"
       ]};
