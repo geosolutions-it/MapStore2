@@ -13,7 +13,8 @@ const DEFAULT_REVERSE_URL = 'nominatim.openstreetmap.org/reverse';
 const defaultOptions = {
     format: 'json',
     bounded: 0,
-    polygon_geojson: 1
+    polygon_geojson: 1,
+    priority: 5
 };
 /**
  * API for local config
