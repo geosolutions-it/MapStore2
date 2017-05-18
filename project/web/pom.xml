@@ -59,7 +59,33 @@
     <finalName>__PROJECTNAME__</finalName>
     <plugins>
 
-
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+                <execution>
+                    <id>download-files</id>
+                    <phase>compile</phase>
+                    <goals>
+                        <goal>run</goal>
+                    </goals>
+                    <configuration>
+                        <target>
+                            <!-- download file -->
+                            <get src=" https://cesiumjs.org/releases/Cesium-1.17.zip"
+                                 dest="${basedir}/cesium.zip"
+                                 verbose="true"
+                                 usetimestamp="true"/>
+                            <mkdir dir="${basedir}/libs/Cesium"/>
+                            <unzip src="${basedir}/cesium.zip"
+                                   dest="${basedir}/libs/Cesium">
+                            </unzip>
+                        </target>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
         <plugin>
             <artifactId>maven-resources-plugin</artifactId>
             <version>2.6</version>
@@ -162,6 +188,38 @@
                                 <includes>
                                     <include>translations/*</include>
                                 </includes>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>CesiumJS</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__/libs/Cesium</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/libs/Cesium</directory>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>CesiumJS-navigation</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__/libs/cesium-navigation</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/../MapStore2/web/client/libs/cesium-navigation</directory>
                             </resource>
                         </resources>
                     </configuration>
