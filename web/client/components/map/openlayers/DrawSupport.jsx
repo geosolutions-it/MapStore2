@@ -111,7 +111,8 @@ const DrawSupport = React.createClass({
                     geometry = new ol.geom.LineString(geom.coordinates); break;
                 }
                 case "Polygon": {
-                    geometry = new ol.geom.Polygon(geom.coordinates); break;
+                    geometry = geom.radius && geom.center ?
+                    ol.geom.Polygon.fromCircle(new ol.geom.Circle([geom.center.x, geom.center.y], geom.radius), 100) : new ol.geom.Polygon(geom.coordinates);
                 }
                 default: {
                     geometry = geom.radius && geom.center ?
@@ -390,6 +391,7 @@ const DrawSupport = React.createClass({
             coordinates = concat(startingPoint, coordinates);
             geometry.setCoordinates(coordinates);
         }
+
         if (drawMethod === "Circle") {
             radius = Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2));
         }

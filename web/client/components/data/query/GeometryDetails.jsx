@@ -34,6 +34,22 @@ const GeometryDetails = React.createClass({
             onEndDrawing: () => {}
         };
     },
+    componentDidMount() {
+
+        const geometry = this.props.geometry;
+
+        if (this.props.type === "BBOX") {
+
+            this.extent = this.getBBOXDimensions(geometry);
+            this.tempExtent = assign({}, this.extent);
+
+        } else if (this.props.type === "Circle") {
+
+            this.circle = this.getCircleDimensions(geometry);
+            this.tempCircle = assign({}, this.circle);
+
+        }
+    },
     onUpdateBBOX(value, name) {
         this.tempExtent[name] = parseFloat(value);
 
@@ -147,6 +163,35 @@ const GeometryDetails = React.createClass({
 
         this.props.onShowPanel(false);
     },
+    getBBOXDimensions(geometry) {
+        const extent = geometry.projection !== 'EPSG:4326' && !this.props.useMapProjection ?
+            CoordinatesUtils.reprojectBbox(geometry.extent, geometry.projection, 'EPSG:4326') : geometry.extent;
+
+        return {
+            // minx
+            west: Math.round(extent[0] * 100) / 100,
+            // miny
+            sud: Math.round(extent[1] * 100) / 100,
+            // maxx
+            est: Math.round(extent[2] * 100) / 100,
+            // maxy
+            north: Math.round(extent[3] * 100) / 100
+        };
+    },
+    getCircleDimensions(geometry) {
+        // Show the center coordinates in 4326
+        let center = geometry.projection !== 'EPSG:4326' && !this.props.useMapProjection ?
+            CoordinatesUtils.reproject(geometry.center, geometry.projection, 'EPSG:4326') : geometry.center;
+
+        // If point isn't reprojected, it's an array cast to object.
+        center = (center.x === undefined) ? {x: center[0], y: center[1]} : center;
+
+        return {
+            x: Math.round(center.x * 100) / 100,
+            y: Math.round(center.y * 100) / 100,
+            radius: Math.round(geometry.radius * 100) / 100
+        };
+    },
     renderHeader() {
         return (
             <div className="detail-header">
@@ -184,21 +229,8 @@ const GeometryDetails = React.createClass({
         let geometry = this.props.geometry;
 
         if (this.props.type === "BBOX") {
-            let geomExtent = geometry.projection !== 'EPSG:4326' && !this.props.useMapProjection ?
-                CoordinatesUtils.reprojectBbox(geometry.extent, geometry.projection, 'EPSG:4326') : geometry.extent;
 
-            this.extent = {
-                // minx
-                "west": Math.round(geomExtent[0] * 100) / 100,
-                // miny
-                "sud": Math.round(geomExtent[1] * 100) / 100,
-                // maxx
-                "est": Math.round(geomExtent[2] * 100) / 100,
-                // maxy
-                "north": Math.round(geomExtent[3] * 100) / 100
-            };
-
-            this.tempExtent = assign({}, this.extent, {});
+            const extent = this.getBBOXDimensions(geometry);
 
             detailsContent = (
                 <div>
@@ -208,7 +240,7 @@ const GeometryDetails = React.createClass({
                                 <span/>
                             </Col>
                             <Col xs={4}>
-                                {this.renderCoordinateField(this.extent.north, "north")}
+                                {this.renderCoordinateField(extent.north, "north")}
                             </Col>
                             <Col xs={4}>
                                 <span/>
@@ -216,13 +248,13 @@ const GeometryDetails = React.createClass({
                         </Row>
                         <Row>
                             <Col xs={4}>
-                                {this.renderCoordinateField(this.extent.west, "west")}
+                                {this.renderCoordinateField(extent.west, "west")}
                             </Col>
                             <Col xs={4}>
                                 <span/>
                             </Col>
                             <Col xs={4}>
-                                {this.renderCoordinateField(this.extent.est, "est")}
+                                {this.renderCoordinateField(extent.est, "est")}
                             </Col>
                         </Row>
                         <Row>
@@ -230,7 +262,7 @@ const GeometryDetails = React.createClass({
                                 <span/>
                             </Col>
                             <Col xs={4}>
-                                {this.renderCoordinateField(this.extent.sud, "sud")}
+                                {this.renderCoordinateField(extent.sud, "sud")}
                             </Col>
                             <Col xs={4}>
                                 <span/>
@@ -254,22 +286,8 @@ const GeometryDetails = React.createClass({
                 </div>
             );
         } else if (this.props.type === "Circle") {
-            // Show the center coordinates in 4326
-            let center = geometry.projection !== 'EPSG:4326' && !this.props.useMapProjection ?
-                CoordinatesUtils.reproject(geometry.center, geometry.projection, 'EPSG:4326') : geometry.center;
 
-            // If point isn't reprojected, it's an array cast to object.
-            center = (center.x === undefined) ? {x: center[0], y: center[1]} : center;
-
-            let radius = geometry.radius;
-
-            this.circle = {
-                "x": Math.round(center.x * 100) / 100,
-                "y": Math.round(center.y * 100) / 100,
-                "radius": Math.round(radius * 100) / 100
-            };
-
-            this.tempCircle = assign({}, this.circle, {});
+            const circle = this.getCircleDimensions(geometry);
 
             detailsContent = (
                 <div>
@@ -282,7 +300,7 @@ const GeometryDetails = React.createClass({
                                 <span className="details-circle-attribute-name">{'x:'}</span>
                             </Col>
                             <Col xs={4}>
-                                {this.renderCircleField(this.circle.x, "x")}
+                                {this.renderCircleField(circle.x, "x")}
                             </Col>
                             <Col xs={4}>
                                 <span/>
@@ -296,7 +314,7 @@ const GeometryDetails = React.createClass({
                                 <span className="details-circle-attribute-name">{'y:'}</span>
                             </Col>
                             <Col xs={4}>
-                                {this.renderCircleField(this.circle.y, "y")}
+                                {this.renderCircleField(circle.y, "y")}
                             </Col>
                             <Col xs={4}>
                                 <span/>
@@ -310,7 +328,7 @@ const GeometryDetails = React.createClass({
                                 <span className="details-circle-attribute-name"><I18N.Message msgId={"queryform.spatialfilter.details.radius"}/>{':'}</span>
                             </Col>
                             <Col xs={4}>
-                                {this.renderCircleField(this.circle.radius, "radius")}
+                                {this.renderCircleField(circle.radius, "radius")}
                             </Col>
                             <Col xs={4}>
                                 <span/>
