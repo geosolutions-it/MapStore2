@@ -137,7 +137,8 @@
     height: 95px;
     fill: #68ADFE;
 }
-#distanceLegendDiv > .navigation-controls > div:nth-child(2) {
+/*#distanceLegendDiv > > div:nth-child(2) {*/
+#distanceLegendDiv .navigation-controls {
     display: none;
 }
 

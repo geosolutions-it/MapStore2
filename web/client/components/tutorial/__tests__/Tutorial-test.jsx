@@ -87,7 +87,7 @@ describe("Test the Tutorial component", () => {
         expect(cmp).toExist();
 
         expect(spySetup).toHaveBeenCalled();
-        expect(spySetup).toHaveBeenCalledWith([], {}, <div id="tutorial-intro-checkbox-container"/>, {});
+        expect(spySetup).toHaveBeenCalledWith('default', [], {}, <div id="tutorial-intro-checkbox-container"/>, {});
 
         const domNode = ReactDOM.findDOMNode(cmp);
         expect(domNode).toExist();
@@ -120,7 +120,7 @@ describe("Test the Tutorial component", () => {
         expect(cmp).toExist();
 
         expect(spySetup).toHaveBeenCalled();
-        expect(spySetup).toHaveBeenCalledWith(presetList.test, {}, <div id="tutorial-intro-checkbox-container"><input type="checkbox" id="tutorial-intro-checkbox" className="tutorial-tooltip-intro-checkbox" onChange={cmp.props.actions.onDisable}/><span><I18N.Message msgId={"tutorial.checkbox"}/></span></div>, {});
+        expect(spySetup).toHaveBeenCalledWith('default', presetList.test, {}, <div id="tutorial-intro-checkbox-container"><input type="checkbox" id="tutorial-intro-checkbox" className="tutorial-tooltip-intro-checkbox" onChange={cmp.props.actions.onDisable}/><span><I18N.Message msgId={"tutorial.checkbox"}/></span></div>, {});
 
         const domNode = ReactDOM.findDOMNode(cmp);
         expect(domNode).toExist();
@@ -164,7 +164,7 @@ describe("Test the Tutorial component", () => {
         expect(cmp).toExist();
 
         expect(spySetup).toHaveBeenCalled();
-        expect(spySetup).toHaveBeenCalledWith(rawSteps, {}, <div id="tutorial-intro-checkbox-container"/>, {});
+        expect(spySetup).toHaveBeenCalledWith('default', rawSteps, {}, <div id="tutorial-intro-checkbox-container"/>, {});
 
         const domNode = ReactDOM.findDOMNode(cmp);
         expect(domNode).toExist();

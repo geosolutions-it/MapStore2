@@ -900,6 +900,10 @@
                 "title": "Custom Application",
                 "text": "You can use components and plugins of MapStore2 to build custom applications"
             },
+            "introCesium": {
+                "title": "3D map instructions",
+                "text": "Click on next button to start the tutorial"
+            },
             "cesium": {
                 "title": "Interactions with the Map",
                 "pan": "Pan view",

@@ -11,14 +11,22 @@ const I18N = require('../../../components/I18N/I18N');
 const CesiumTooltip = require('../../../components/tutorial/steps/CesiumTooltip');
 
 module.exports = [
-    // remove comment to enable intro/autostart
-    /*{
-        translation: 'intro',
+    {
+        translation: 'introCesium',
         selector: '#intro-tutorial'
-    },*/
+    },
+    {
+        title: <I18N.Message msgId="tutorial.cesium.title"/>,
+        text: <CesiumTooltip touch={true}/>,
+        selector: '#map .cesium-viewer'
+    },
     {
         translation: 'drawerMenu',
         selector: '#drawer-menu-button'
+    },
+    {
+        translation: 'home',
+        selector: '#home-button'
     },
     {
         translation: 'searchButton',
@@ -27,15 +35,5 @@ module.exports = [
     {
         translation: 'burgerMenu',
         selector: '#mapstore-burger-menu'
-    },
-    {
-        title: <I18N.Message msgId="tutorial.cesium.title"/>,
-        text: <CesiumTooltip touch={true}/>,
-        selector: '#map .cesium-viewer',
-        position: 'bottom'
-    },
-    {
-        translation: 'home',
-        selector: '#home-button'
     }
 ];
