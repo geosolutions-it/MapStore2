@@ -70,7 +70,7 @@ function describeFeatureType(baseUrl, typeName) {
             } else {
                 try {
                     JSON.parse(response.data);
-                } catch(e) {
+                } catch (e) {
                     dispatch(featureTypeError(typeName, 'Error from WFS: ' + e.message));
                 }
 
@@ -90,7 +90,7 @@ function loadFeature(baseUrl, typeName) {
             } else {
                 try {
                     JSON.parse(response.data);
-                } catch(e) {
+                } catch (e) {
                     dispatch(featureError(typeName, 'Error from WFS: ' + e.message));
                 }
 
@@ -106,8 +106,8 @@ function query(seachURL, data) {
     const ogcQuery = FilterUtils.toOGCFilter(data.featureTypeName, data, data.ogcVersion, data.sortOptions, data.hits);
     return (dispatch) => {
         return axios.post(seachURL + '&outputFormat=json', ogcQuery, {
-          timeout: 60000,
-          headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
+            timeout: 60000,
+            headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
         }).then((response) => {
             dispatch(querySearchResponse(response.data));
         }).catch((e) => {

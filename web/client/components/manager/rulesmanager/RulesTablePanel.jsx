@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -15,32 +16,34 @@ const RulesTablePagination = require('./RulesTablePagination');
 const RulesTableControls = require('./RulesTableControls');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
-const RulesTablePanel = React.createClass({
-    propTypes: {
-        onSelectRules: React.PropTypes.func,
-        moveRules: React.PropTypes.func,
-        moveRulesToPage: React.PropTypes.func,
-        loadRules: React.PropTypes.func,
-        deleteRules: React.PropTypes.func,
-        rules: React.PropTypes.array,
-        rulesPage: React.PropTypes.number,
-        rulesCount: React.PropTypes.number,
-        selectedRules: React.PropTypes.array,
-        updateActiveRule: React.PropTypes.func,
-        error: React.PropTypes.object
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            loadRules: () => {},
-            error: {}
-        };
-    },
+class RulesTablePanel extends React.Component {
+    static propTypes = {
+        onSelectRules: PropTypes.func,
+        moveRules: PropTypes.func,
+        moveRulesToPage: PropTypes.func,
+        loadRules: PropTypes.func,
+        deleteRules: PropTypes.func,
+        rules: PropTypes.array,
+        rulesPage: PropTypes.number,
+        rulesCount: PropTypes.number,
+        selectedRules: PropTypes.array,
+        updateActiveRule: PropTypes.func,
+        error: PropTypes.object
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        loadRules: () => {},
+        error: {}
+    };
+
     componentDidMount() {
         this.props.loadRules(1, false);
-    },
+    }
+
     render() {
         return (
             <Panel header={LocaleUtils.getMessageById(this.context.messages, "rulesmanager.rules")}>
@@ -69,6 +72,6 @@ const RulesTablePanel = React.createClass({
             </Panel>
         );
     }
-});
+}
 
 module.exports = RulesTablePanel;

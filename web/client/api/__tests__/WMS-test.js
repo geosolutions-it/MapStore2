@@ -17,7 +17,7 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result.length).toBe(2);
                 expect(result[0].owsType).toBe("WFS");
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -28,7 +28,7 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result).toExist();
                 expect(result.owsType).toBe("WFS");
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -41,7 +41,7 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result.version).toBe("1.3.0");
                 expect(result.capability.layer).toExist();
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -54,7 +54,7 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result.version).toBe("1.1.1");
                 expect(result.capability.layer).toExist();
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -65,7 +65,7 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result).toExist();
                 expect(result.numberOfRecordsMatched).toBe(5);
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });

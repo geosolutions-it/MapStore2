@@ -27,7 +27,7 @@ describe('This test for Thumbnail', () => {
 
     // test DEFAULTS
     it('creates the component with defaults, loading=true', () => {
-        const thumbnailItem = ReactDOM.render(<Thumbnail loading={true}/>, document.getElementById("container"));
+        const thumbnailItem = ReactDOM.render(<Thumbnail loading/>, document.getElementById("container"));
         expect(thumbnailItem).toExist();
 
         const thumbnailItemDom = ReactDOM.findDOMNode(thumbnailItem);
@@ -154,7 +154,7 @@ describe('This test for Thumbnail', () => {
         const thumbnailItem = ReactDOM.render(<Thumbnail map={map}/>, document.getElementById("container"));
         expect(thumbnailItem).toExist();
 
-        /*let files = [{
+        /* let files = [{
             type: "image/png",
             preview: "blob:http://dev.mapstore2.geo-solutions.it/6b67787f-0654-4107-94bf-165adf386259"
         }];*/

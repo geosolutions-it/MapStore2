@@ -658,7 +658,7 @@ function() {
                 }
             }
             ),
-            f.a.f = new function() {
+            f.a.f = new (function() {
                 function t(t, o) {
                     var a = t[r];
                     if (!a || "null" === a || !i[a]) {
@@ -690,11 +690,11 @@ function() {
                         return n++ + r
                     }
                 }
-            }
+            })
             ,
             f.b("utils.domData", f.a.f),
             f.b("utils.domData.clear", f.a.f.clear),
-            f.a.C = new function() {
+            f.a.C = new (function() {
                 function t(t, n) {
                     var i = f.a.f.get(t, r);
                     return i === e && n && (i = [],
@@ -752,7 +752,7 @@ function() {
                         i && "function" == typeof i.cleanData && i.cleanData([e])
                     }
                 }
-            }
+            })
             ,
             f.S = f.a.C.S,
             f.removeNode = f.a.C.removeNode,
@@ -1846,8 +1846,7 @@ function() {
                             }
                             return i(t, n)
                         } catch (c) {
-                            throw c.message = "Unable to parse bindings.\nBindings value: " + e + "\nMessage: " + c.message,
-                            c
+                            throw (c.message = "Unable to parse bindings.\nBindings value: " + e + "\nMessage: " + c.message, c)
                         }
                     }
                 }),
@@ -1986,8 +1985,7 @@ function() {
                                     q: t
                                 })
                             } catch (s) {
-                                throw s.message = 'Unable to process binding "' + a + ": " + u[a] + '"\nMessage: ' + s.message,
-                                s
+                                throw (s.message = 'Unable to process binding "' + a + ": " + u[a] + '"\nMessage: ' + s.message, s)
                             }
                         })
                     }
@@ -3777,7 +3775,7 @@ void function(e, t, n) {
         ;
         return r(Object, o("getOwnPropertyNames", function(e) {
             var t, n = Object(e);
-            if ("[object Window]" === n.toString())
+            if (n && n.toString && "[object Window]" === n.toString())
                 try {
                     t = s(e)
                 } catch (r) {
@@ -5797,8 +5795,7 @@ define("sanitizeCaja", [], function() {}),
                     if (o)
                         return o(a, !0);
                     var c = new Error("Cannot find module '" + a + "'");
-                    throw c.code = "MODULE_NOT_FOUND",
-                    c
+                    throw (c.code = "MODULE_NOT_FOUND", c)
                 }
                 var l = n[a] = {
                     exports: {}
@@ -11229,7 +11226,7 @@ define("sanitizeCaja", [], function() {}),
         , {
             "./lib/": 10
         }]
-    }, {}, [68])(68)
+    }, {}, [68])(68);
 });
 var htmlTagRegex = /<html(.|\s)*>(.|\s)*<\/html>/im;
 define("KnockoutMarkdownBinding", ["sanitizeCaja", "MarkdownIt"], function(e, t) {

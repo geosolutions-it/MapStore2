@@ -91,7 +91,7 @@ describe("test the SearchBar", () => {
         var tb;
 
         const renderSearchBar = (testHandlers, text) => {
-            return ReactDOM.render(<SearchBar searchText={text} delay={0} typeAhead={true} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler} onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
+            return ReactDOM.render(<SearchBar searchText={text} delay={0} typeAhead onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler} onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
         };
 
         const testHandlers = {
@@ -117,7 +117,7 @@ describe("test the SearchBar", () => {
 
         const spy = expect.spyOn(testHandlers, 'onSearchHandler');
         const spyReset = expect.spyOn(testHandlers, 'onPurgeResultsHandler');
-        let tb = ReactDOM.render(<SearchBar searchText="test" delay={0} typeAhead={true} blurResetDelay={0} onSearch={testHandlers.onSearchHandler} onPurgeResults={testHandlers.onPurgeResultsHandler}/>, document.getElementById("container"));
+        let tb = ReactDOM.render(<SearchBar searchText="test" delay={0} typeAhead blurResetDelay={0} onSearch={testHandlers.onSearchHandler} onPurgeResults={testHandlers.onPurgeResultsHandler}/>, document.getElementById("container"));
         let input = TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0];
         expect(input).toExist();
         input = ReactDOM.findDOMNode(input);
@@ -133,14 +133,14 @@ describe("test the SearchBar", () => {
         }, 50);
     });
     it('test autofocus on selected items', (done) => {
-        let tb = ReactDOM.render(<SearchBar searchText="test" delay={0} typeAhead={true} blurResetDelay={0} />, document.getElementById("container"));
+        let tb = ReactDOM.render(<SearchBar searchText="test" delay={0} typeAhead blurResetDelay={0} />, document.getElementById("container"));
         let input = TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0];
         expect(input).toExist();
         let spyOnFocus = expect.spyOn(input, 'focus');
         input = ReactDOM.findDOMNode(input);
         input.value = "test";
         TestUtils.Simulate.blur(input);
-        ReactDOM.render(<SearchBar searchText="test" delay={0} typeAhead={true} blurResetDelay={0} selectedItems={[{text: "TEST"}]}/>, document.getElementById("container"));
+        ReactDOM.render(<SearchBar searchText="test" delay={0} typeAhead blurResetDelay={0} selectedItems={[{text: "TEST"}]}/>, document.getElementById("container"));
         setTimeout(() => {
             expect(spyOnFocus.calls.length).toEqual(1);
             done();
@@ -172,7 +172,7 @@ describe("test the SearchBar", () => {
         expect(spy).toHaveBeenCalledWith('test', searchOptions);
     });
     it('test error and loading status', () => {
-        const tb = ReactDOM.render(<SearchBar loading={true} error={{message: "TEST_ERROR"}}/>, document.getElementById("container"));
+        const tb = ReactDOM.render(<SearchBar loading error={{message: "TEST_ERROR"}}/>, document.getElementById("container"));
         expect(tb).toExist();
         let error = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(tb, "searcherror")[0]);
         expect(error).toExist();
@@ -184,13 +184,13 @@ describe("test the SearchBar", () => {
         };
 
         const spy = expect.spyOn(testHandlers, 'onCancelSelectedItem');
-        let tb = ReactDOM.render(<SearchBar searchText="test" delay={0} typeAhead={true} blurResetDelay={0} onCancelSelectedItem={testHandlers.onCancelSelectedItem} />, document.getElementById("container"));
+        let tb = ReactDOM.render(<SearchBar searchText="test" delay={0} typeAhead blurResetDelay={0} onCancelSelectedItem={testHandlers.onCancelSelectedItem} />, document.getElementById("container"));
         let input = TestUtils.scryRenderedDOMComponentsWithTag(tb, "input")[0];
         expect(input).toExist();
         input = ReactDOM.findDOMNode(input);
 
         // backspace with empty searchText causes trigger of onCancelSelectedItem
-        ReactDOM.render(<SearchBar searchText="" delay={0} typeAhead={true} blurResetDelay={0} onCancelSelectedItem={testHandlers.onCancelSelectedItem} selectedItems={[{text: "TEST"}]}/>, document.getElementById("container"));
+        ReactDOM.render(<SearchBar searchText="" delay={0} typeAhead blurResetDelay={0} onCancelSelectedItem={testHandlers.onCancelSelectedItem} selectedItems={[{text: "TEST"}]}/>, document.getElementById("container"));
         TestUtils.Simulate.keyDown(input, {key: "Backspace", keyCode: 8, which: 8});
         setTimeout(() => {
             expect(spy.calls.length).toEqual(1);

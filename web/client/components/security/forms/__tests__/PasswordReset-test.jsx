@@ -31,7 +31,7 @@ describe("Test the password reset form component", () => {
     });
 
     it('alert for success', () => {
-        const cmp = ReactDOM.render(<PasswordReset changed={true}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<PasswordReset changed/>, document.getElementById("container"));
         expect(cmp).toExist();
         let alert = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithClass(cmp, "alert-success")[0]);
         expect(alert).toExist();

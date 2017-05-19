@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -9,21 +10,21 @@ const React = require('react');
 const Spinner = require('react-spinkit');
 require('./css/GlobalSpinner.css');
 
-const GlobalSpinner = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        loading: React.PropTypes.bool,
-        className: React.PropTypes.string,
-        spinner: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            id: "mapstore-globalspinner",
-            loading: false,
-            className: "ms2-loading",
-            spinner: "circle"
-        };
-    },
+class GlobalSpinner extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        loading: PropTypes.bool,
+        className: PropTypes.string,
+        spinner: PropTypes.string
+    };
+
+    static defaultProps = {
+        id: "mapstore-globalspinner",
+        loading: false,
+        className: "ms2-loading",
+        spinner: "circle"
+    };
+
     render() {
         if (this.props.loading) {
             return (
@@ -32,6 +33,6 @@ const GlobalSpinner = React.createClass({
         }
         return null;
     }
-});
+}
 
 module.exports = GlobalSpinner;

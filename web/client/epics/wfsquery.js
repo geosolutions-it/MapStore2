@@ -124,9 +124,9 @@ const getWFSFeature = (searchUrl, filterObj) => {
     const data = getWFSFilterData(filterObj);
     return Rx.Observable.defer( () =>
         axios.post(searchUrl + '?service=WFS&outputFormat=json', data, {
-          timeout: 60000,
-          headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
-     }));
+            timeout: 60000,
+            headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
+        }));
 };
 
 const getWFSResponseException = (response, code) => {
@@ -146,8 +146,8 @@ const getDefaultSortOptions = (attribute) => {
 const retryWithForcedSortOptions = (action, store) => {
     const sortOptions = getDefaultSortOptions(getFirstAttribute(store.getState()));
     return getWFSFeature(action.searchUrl, assign(action.filterObj, {
-            sortOptions
-        }))
+        sortOptions
+    }))
         .map((newResponse) => {
             const newError = getWFSResponseException(newResponse, 'NoApplicableCode');
             return !newError ? querySearchResponse(newResponse.data, action.searchUrl, action.filterObj) : queryError('No sortable request');
@@ -176,7 +176,7 @@ const featureTypeSelectedEpic = action$ =>
                     }
                     try {
                         JSON.parse(response.data);
-                    } catch(e) {
+                    } catch (e) {
                         return Rx.Observable.from([featureTypeError(action.typeName, 'Error from WFS: ' + e.message)]);
                     }
                     return Rx.Observable.from([featureTypeError(action.typeName, 'Error: feature types are empty')]);

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -12,33 +13,33 @@ var GroupTitle = require('./fragments/GroupTitle');
 var GroupChildren = require('./fragments/GroupChildren');
 const VisibilityCheck = require('./fragments/VisibilityCheck');
 
-var DefaultGroup = React.createClass({
-    propTypes: {
-        node: React.PropTypes.object,
-        style: React.PropTypes.object,
-        sortableStyle: React.PropTypes.object,
-        onToggle: React.PropTypes.func,
-        level: React.PropTypes.number,
-        onSort: React.PropTypes.func,
-        propertiesChangeHandler: React.PropTypes.func,
-        groupVisibilityCheckbox: React.PropTypes.bool,
-        visibilityCheckType: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            node: {},
-            onToggle: () => {},
-            style: {
-                marginBottom: "16px",
-                cursor: "pointer"
-            },
-            sortableStyle: {},
-            propertiesChangeHandler: () => {},
-            groupVisibilityCheckbox: false,
-            visibilityCheckType: "glyph",
-            level: 1
-        };
-    },
+class DefaultGroup extends React.Component {
+    static propTypes = {
+        node: PropTypes.object,
+        style: PropTypes.object,
+        sortableStyle: PropTypes.object,
+        onToggle: PropTypes.func,
+        level: PropTypes.number,
+        onSort: PropTypes.func,
+        propertiesChangeHandler: PropTypes.func,
+        groupVisibilityCheckbox: PropTypes.bool,
+        visibilityCheckType: PropTypes.string
+    };
+
+    static defaultProps = {
+        node: {},
+        onToggle: () => {},
+        style: {
+            marginBottom: "16px",
+            cursor: "pointer"
+        },
+        sortableStyle: {},
+        propertiesChangeHandler: () => {},
+        groupVisibilityCheckbox: false,
+        visibilityCheckType: "glyph",
+        level: 1
+    };
+
     render() {
         let {children, onToggle, ...other } = this.props;
         return (
@@ -55,6 +56,6 @@ var DefaultGroup = React.createClass({
             </Node>
         );
     }
-});
+}
 
 module.exports = DefaultGroup;

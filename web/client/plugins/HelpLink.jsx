@@ -14,11 +14,11 @@ const {Glyphicon} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
 
 module.exports = {
-    HelpLinkPlugin: assign(React.createClass({
+    HelpLinkPlugin: assign(class extends React.Component {
         render() {
             return null;
         }
-    }), {
+    }, {
         BurgerMenu: {
             name: 'helplink',
             position: 1000,

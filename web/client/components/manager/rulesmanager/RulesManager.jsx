@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -13,32 +14,33 @@ const ActiveRuleModal = require('./ActiveRuleModal');
 
 require('./RulesManager.css');
 
-const RulesManager = React.createClass({
-    propTypes: {
-        onSelectRules: React.PropTypes.func,
-        moveRules: React.PropTypes.func,
-        moveRulesToPage: React.PropTypes.func,
-        loadRules: React.PropTypes.func,
-        rules: React.PropTypes.array,
-        rulesPage: React.PropTypes.number,
-        rulesCount: React.PropTypes.number,
-        selectedRules: React.PropTypes.array,
-        rulesTableError: React.PropTypes.string,
-        updateActiveRule: React.PropTypes.func,
-        deleteRules: React.PropTypes.func,
-        addRule: React.PropTypes.func,
-        updateRule: React.PropTypes.func,
-        loadRoles: React.PropTypes.func,
-        loadUsers: React.PropTypes.func,
-        loadWorkspaces: React.PropTypes.func,
-        loadLayers: React.PropTypes.func,
-        options: React.PropTypes.object,
-        services: React.PropTypes.object,
-        activeRule: React.PropTypes.object,
-        updateFiltersValues: React.PropTypes.func,
-        filtersValues: React.PropTypes.object,
-        error: React.PropTypes.object
-    },
+class RulesManager extends React.Component {
+    static propTypes = {
+        onSelectRules: PropTypes.func,
+        moveRules: PropTypes.func,
+        moveRulesToPage: PropTypes.func,
+        loadRules: PropTypes.func,
+        rules: PropTypes.array,
+        rulesPage: PropTypes.number,
+        rulesCount: PropTypes.number,
+        selectedRules: PropTypes.array,
+        rulesTableError: PropTypes.string,
+        updateActiveRule: PropTypes.func,
+        deleteRules: PropTypes.func,
+        addRule: PropTypes.func,
+        updateRule: PropTypes.func,
+        loadRoles: PropTypes.func,
+        loadUsers: PropTypes.func,
+        loadWorkspaces: PropTypes.func,
+        loadLayers: PropTypes.func,
+        options: PropTypes.object,
+        services: PropTypes.object,
+        activeRule: PropTypes.object,
+        updateFiltersValues: PropTypes.func,
+        filtersValues: PropTypes.object,
+        error: PropTypes.object
+    };
+
     render() {
         return (
             <div>
@@ -80,6 +82,6 @@ const RulesManager = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = RulesManager;

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -21,13 +22,13 @@ const OverlayTrigger = require('../misc/OverlayTrigger');
 // css required
 require('./share.css');
 
-const ShareLink = React.createClass({
-    propTypes: {
-        shareUrl: React.PropTypes.string
-    },
-    getInitialState() {
-        return {copied: false};
-    },
+class ShareLink extends React.Component {
+    static propTypes = {
+        shareUrl: PropTypes.string
+    };
+
+    state = {copied: false};
+
     render() {
         const tooltip = (<Tooltip placement="bottom" className="in" id="tooltip-bottom" style={{zIndex: 2001}}>
           {this.state.copied ? <Message msgId="share.msgCopiedUrl"/> : <Message msgId="share.msgToCopyUrl"/>}
@@ -53,6 +54,6 @@ const ShareLink = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = ShareLink;

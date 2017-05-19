@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -7,19 +8,20 @@
  */
 var React = require('react');
 
-const DefaultLayerOrGroup = React.createClass({
-    propTypes: {
-        node: React.PropTypes.object,
-        groupElement: React.PropTypes.element.isRequired,
-        layerElement: React.PropTypes.element.isRequired
-    },
+class DefaultLayerOrGroup extends React.Component {
+    static propTypes = {
+        node: PropTypes.object,
+        groupElement: PropTypes.element.isRequired,
+        layerElement: PropTypes.element.isRequired
+    };
+
     render() {
         const {groupElement: DefaultGroup, layerElement: DefaultLayer, node, ...other} = this.props;
         if (node.nodes) {
-            return React.cloneElement(DefaultGroup, {node, ...other}, (<DefaultLayerOrGroup groupElement={DefaultGroup} layerElement={DefaultLayer}/>));
+            return React.cloneElement(DefaultGroup, {node, ...other}, <DefaultLayerOrGroup groupElement={DefaultGroup} layerElement={DefaultLayer}/>);
         }
-        return (React.cloneElement(DefaultLayer, {node, ...other}));
+        return React.cloneElement(DefaultLayer, {node, ...other});
     }
-});
+}
 
 module.exports = DefaultLayerOrGroup;

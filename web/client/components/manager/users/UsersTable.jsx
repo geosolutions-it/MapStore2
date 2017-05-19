@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -10,20 +11,21 @@ const React = require('react');
 const {Button, Glyphicon, Table, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 const Message = require('../../I18N/Message');
-var UsersTable = React.createClass({
-    propTypes: {
-        users: React.PropTypes.array,
-        deleteToolTip: React.PropTypes.string,
-        onRemove: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            users: [],
-            deleteToolTip: "usergroups.removeUser",
-            onRemove: () => {}
-        };
-    },
-    render: function() {
+
+class UsersTable extends React.Component {
+    static propTypes = {
+        users: PropTypes.array,
+        deleteToolTip: PropTypes.string,
+        onRemove: PropTypes.func
+    };
+
+    static defaultProps = {
+        users: [],
+        deleteToolTip: "usergroups.removeUser",
+        onRemove: () => {}
+    };
+
+    render() {
         return (<Table striped condensed hover><tbody>{this.props.users.map((user) => {
             let tooltip = <Tooltip id="tooltip"><Message msgId={this.props.deleteToolTip} /></Tooltip>;
             return (<tr>
@@ -41,6 +43,6 @@ var UsersTable = React.createClass({
                       );
         })}</tbody></Table>);
     }
-});
+}
 
 module.exports = UsersTable;

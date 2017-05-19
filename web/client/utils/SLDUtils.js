@@ -55,7 +55,7 @@ const context = new Jsonix.Context([
 const marshall = context.createMarshaller();
 
 const rgbToHex = function({r, g, b}) {
-    return `#${r < 16 ? 0 : ''}${(r).toString(16)}${g < 16 ? 0 : ''}${(g).toString(16)}${b < 16 ? 0 : ''}${(b).toString(16)}`;
+    return `#${r < 16 ? 0 : ''}${r.toString(16)}${g < 16 ? 0 : ''}${g.toString(16)}${b < 16 ? 0 : ''}${b.toString(16)}`;
 };
 
 const convertOpacity = function(opacity) {
@@ -72,7 +72,7 @@ const convertColorMap = function(type, extended, colorMapEntry) {
 };
 const convertChannel = function(channel) {
     return {TYPE_NAME: "SLD_1_0_0.SelectedChannelType",
-                sourceChannelName: channel};
+        sourceChannelName: channel};
 };
 const convertVendorOption = function(name, value) {
 
@@ -80,32 +80,32 @@ const convertVendorOption = function(name, value) {
 };
 const convertAlgorithm = function(bandConfig) {
     return [
-            convertVendorOption("algorithm", bandConfig.algorithm),
-            convertVendorOption("minValue", bandConfig.min),
-            convertVendorOption("maxValue", bandConfig.max)
+        convertVendorOption("algorithm", bandConfig.algorithm),
+        convertVendorOption("minValue", bandConfig.min),
+        convertVendorOption("maxValue", bandConfig.max)
     ];
 };
 const convertContrast = function(bandConfig) {
     let c = {TYPE_NAME: "SLD_1_0_0.ContrastEnhancement"};
     switch (bandConfig.contrast) {
-        case 'Normalize': {
-            c.normalize = {TYPE_NAME: "SLD_1_0_0.Normalize"};
-            if (bandConfig.algorithm !== 'none') {
-                c.normalize.vendorOption = convertAlgorithm(bandConfig);
-            }
-            break;
+    case 'Normalize': {
+        c.normalize = {TYPE_NAME: "SLD_1_0_0.Normalize"};
+        if (bandConfig.algorithm !== 'none') {
+            c.normalize.vendorOption = convertAlgorithm(bandConfig);
         }
-        case 'Histogram': {
-            c.histogram = {TYPE_NAME: "SLD_1_0_0.Histogram"};
-            break;
-        }
-        case 'GammaValue': {
-            c.gammaValue = bandConfig.gammaValue;
-            break;
-        }
-        default: {
-            break;
-        }
+        break;
+    }
+    case 'Histogram': {
+        c.histogram = {TYPE_NAME: "SLD_1_0_0.Histogram"};
+        break;
+    }
+    case 'GammaValue': {
+        c.gammaValue = bandConfig.gammaValue;
+        break;
+    }
+    default: {
+        break;
+    }
     }
     return c;
 };
@@ -127,37 +127,37 @@ const convertRGBBandChannel = function(redBand, greenBand, blueBand) {
 };
 
 const getSLDObjc = function(layer, rasterSymbolizer) {
-        return {
-            "sld:StyledLayerDescriptor": {"TYPE_NAME": "SLD_1_0_0.StyledLayerDescriptor", "version": "1.0.0",
-                "namedLayerOrUserLayer": [{"TYPE_NAME": "SLD_1_0_0.NamedLayer", "name": layer.name,
-                    "namedStyleOrUserStyle": [{"TYPE_NAME": "SLD_1_0_0.UserStyle",
-                        "featureTypeStyle": [{"TYPE_NAME": "SLD_1_0_0.FeatureTypeStyle",
-                            "rule": [{"TYPE_NAME": "SLD_1_0_0.Rule", "symbolizer": [{"sld:RasterSymbolizer": rasterSymbolizer}]}]}]}]}]}};
+    return {
+        "sld:StyledLayerDescriptor": {"TYPE_NAME": "SLD_1_0_0.StyledLayerDescriptor", "version": "1.0.0",
+            "namedLayerOrUserLayer": [{"TYPE_NAME": "SLD_1_0_0.NamedLayer", "name": layer.name,
+                "namedStyleOrUserStyle": [{"TYPE_NAME": "SLD_1_0_0.UserStyle",
+                    "featureTypeStyle": [{"TYPE_NAME": "SLD_1_0_0.FeatureTypeStyle",
+                        "rule": [{"TYPE_NAME": "SLD_1_0_0.Rule", "symbolizer": [{"sld:RasterSymbolizer": rasterSymbolizer}]}]}]}]}]}};
 
-    };
+};
 const jsonToSLD = function({styletype, opacity = "1.0", state, layer} = {}) {
 
     let rasterSymbolizer = {TYPE_NAME: "SLD_1_0_0.RasterSymbolizer"};
     rasterSymbolizer.opacity = convertOpacity(opacity);
     switch (styletype) {
-        case 'pseudo': {
-            rasterSymbolizer.colorMap = convertColorMap(state.pseudocolor.type, state.pseudocolor.extended, state.pseudocolor.colorMapEntry);
-            if (state.pseudoband.band !== 'none') {
-                rasterSymbolizer.channelSelection = convertOneBandChannel(state.pseudoband, "grayChannel");
-            }
-            break;
+    case 'pseudo': {
+        rasterSymbolizer.colorMap = convertColorMap(state.pseudocolor.type, state.pseudocolor.extended, state.pseudocolor.colorMapEntry);
+        if (state.pseudoband.band !== 'none') {
+            rasterSymbolizer.channelSelection = convertOneBandChannel(state.pseudoband, "grayChannel");
         }
-        case 'gray': {
-            rasterSymbolizer.channelSelection = convertOneBandChannel(state.grayband, "grayChannel");
-            break;
-        }
-        case 'rgb': {
-            rasterSymbolizer.channelSelection = convertRGBBandChannel(state.redband, state.greenband, state.blueband);
-            break;
-        }
-        default: {
-            break;
-        }
+        break;
+    }
+    case 'gray': {
+        rasterSymbolizer.channelSelection = convertOneBandChannel(state.grayband, "grayChannel");
+        break;
+    }
+    case 'rgb': {
+        rasterSymbolizer.channelSelection = convertRGBBandChannel(state.redband, state.greenband, state.blueband);
+        break;
+    }
+    default: {
+        break;
+    }
     }
     return marshall.marshalString(getSLDObjc(layer, rasterSymbolizer));
 };
@@ -167,15 +167,15 @@ const getStroke = function({a = 1, r = 0, g = 0, b = 255, width = 1} = {}) {
             {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [`${a}`], name: "stroke-opacity"},
             {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [`${width}`], name: "stroke-width"}
 
-            ]
-        };
+    ]
+    };
 };
 const getFill = function({a = 1, r = 0, g = 0, b = 255} = {}) {
     return {cssParameter: [
             {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [rgbToHex({r, g, b})], name: "fill"},
             {"TYPE_NAME": "SLD_1_0_0.CssParameter", content: [`${a}`], name: "fill-opacity"}
-            ]
-        };
+    ]
+    };
 
 };
 const getSize = function(size) {
@@ -202,14 +202,14 @@ const getPointSymbolyzer = function(symbolyzer) {
 
 const getSymbolyzer = function(symbolyzer) {
     switch (symbolyzer.type) {
-        case "Point":
-            return {"PointSymbolizer": getPointSymbolyzer(symbolyzer)};
-        case "Line":
-            return {"LineSymbolizer": getLineSymbolyzer(symbolyzer)};
-        case "Polygon":
-            return {"PolygonSymbolizer": getPolygonSymbolyzer(symbolyzer)};
-        default:
-            return getPolygonSymbolyzer(symbolyzer);
+    case "Point":
+        return {"PointSymbolizer": getPointSymbolyzer(symbolyzer)};
+    case "Line":
+        return {"LineSymbolizer": getLineSymbolyzer(symbolyzer)};
+    case "Polygon":
+        return {"PolygonSymbolizer": getPolygonSymbolyzer(symbolyzer)};
+    default:
+        return getPolygonSymbolyzer(symbolyzer);
     }
 };
 
@@ -223,21 +223,21 @@ const getRules = function(rules) {
             den.minScaleDenominator = rule.minDenominator;
         }
         return {
-                "TYPE_NAME": "SLD_1_0_0.Rule",
-                "symbolizer": [getSymbolyzer(rule.symbol)],
-                ...den
-                };
+            "TYPE_NAME": "SLD_1_0_0.Rule",
+            "symbolizer": [getSymbolyzer(rule.symbol)],
+            ...den
+        };
     }
     );
 };
 
-const vecStyleToSLD = function({rules= [], layer = {}} = {}) {
+const vecStyleToSLD = function({rules = [], layer = {}} = {}) {
     return marshall.marshalString({
-            "sld:StyledLayerDescriptor": {"TYPE_NAME": "SLD_1_0_0.StyledLayerDescriptor", "version": "1.0.0",
-                "namedLayerOrUserLayer": [{"TYPE_NAME": "SLD_1_0_0.NamedLayer", "name": layer.name,
-                    "namedStyleOrUserStyle": [{"TYPE_NAME": "SLD_1_0_0.UserStyle",
-                        "featureTypeStyle": [{"TYPE_NAME": "SLD_1_0_0.FeatureTypeStyle",
-                            "rule": getRules(rules)}]}]}]}}
+        "sld:StyledLayerDescriptor": {"TYPE_NAME": "SLD_1_0_0.StyledLayerDescriptor", "version": "1.0.0",
+            "namedLayerOrUserLayer": [{"TYPE_NAME": "SLD_1_0_0.NamedLayer", "name": layer.name,
+                "namedStyleOrUserStyle": [{"TYPE_NAME": "SLD_1_0_0.UserStyle",
+                    "featureTypeStyle": [{"TYPE_NAME": "SLD_1_0_0.FeatureTypeStyle",
+                        "rule": getRules(rules)}]}]}]}}
                             );
 };
 

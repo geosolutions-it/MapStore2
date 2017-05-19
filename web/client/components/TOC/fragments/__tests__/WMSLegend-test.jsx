@@ -52,7 +52,7 @@ describe('test WMSLegend module component', () => {
             type: 'wms',
             url: 'fakeurl'
         };
-        const comp = ReactDOM.render(<WMSLegend node={l} showOnlyIfVisible={true} />, document.getElementById("container"));
+        const comp = ReactDOM.render(<WMSLegend node={l} showOnlyIfVisible />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toNotExist();

@@ -51,9 +51,9 @@ const IMPORTER_WORKSPACE_LOADED = 'IMPORTER_WORKSPACE_LOADED';
 const IMPORTER_WORKSPACE_CREATED = 'IMPORTER_WORKSPACE_CREATED';
 const IMPORTER_WORKSPACE_CREATION_ERROR = 'IMPORTER_WORKSPACE_CREATION_ERROR';
 const IMPORTER_WORKSPACE_STATUS_CHANGE = 'IMPORTER_WORKSPACE_STATUS_CHANGE';
-/*******************/
+/** *****************/
 /* UTILITY         */
-/*******************/
+/** *****************/
 
 /**
  * Check if task matches with the preset.
@@ -74,7 +74,7 @@ const matchPreset = function(preset, task) {
                 if (!patt.test(task.data.file)) {
                     return false;
                 }
-            } catch(e) {
+            } catch (e) {
                 return false;
             }
 
@@ -104,9 +104,9 @@ const applyPlaceholders = function(preset, model) {
     return preset;
 
 };
-/*******************/
+/** *****************/
 /* ACTION CREATORS */
-/*******************/
+/** *****************/
 
 function loading(details, isLoading = true) {
     return {
@@ -342,9 +342,9 @@ function workspaceCreationError(name, error) {
         error
     };
 }
-/*******************/
+/** *****************/
 /* DISPATCHERS     */
-/*******************/
+/** *****************/
 
 /** IMPORT **/
 function createImport(geoserverRestURL, body = {}) {
@@ -463,7 +463,7 @@ function updateUI(geoserverRestURL, importId, taskId) {
         } else if (state && state.selectedImport && state.selectedImport.id === importId) {
             dispatch(loadImport(geoserverRestURL, importId));
             dispatch(loading({importId}, false));
-        }else {
+        } else {
             dispatch(loadImports(geoserverRestURL));
             dispatch(loading({importId}, false));
         }
@@ -663,7 +663,7 @@ function uploadImportFiles(geoserverRestURL, importId, files, presets) {
                 dispatch(loadImport(geoserverRestURL, importId));
             }
             if (presets) {
-                let newPreset = presets.map((preset) => (applyPlaceholders(preset, state && state.importer && state.importer.selectedImport)));
+                let newPreset = presets.map((preset) => applyPlaceholders(preset, state && state.importer && state.importer.selectedImport));
                 dispatch(applyPresets(geoserverRestURL, importId, tasks, newPreset));
             }
             dispatch(loading({importId: importId}, false));
@@ -683,26 +683,26 @@ function loadStylerTool(geoserverRestURL, importId, taskId) {
             let importObj = getState && getState().importer && getState().importer.selectedImport;
             let workspace = importObj.targetWorkspace && importObj.targetWorkspace.workspace.name;
             let stylerMapConfig = {
-                  "version": 2,
-                  "map": {
+                "version": 2,
+                "map": {
                     "projection": "EPSG:3857",
                     "units": "m",
                     "center": {"x": 0, "y": 0, "crs": "EPSG:3857"},
                     "zoom": 2,
                     "maxExtent": [
-                      -20037508.34, -20037508.34,
-                      20037508.34, 20037508.34
+                        -20037508.34, -20037508.34,
+                        20037508.34, 20037508.34
                     ],
                     "layers": [{
-                      "type": "osm",
-                      "title": "Open Street Map",
-                      "name": "mapnik",
-                      "source": "osm",
-                      "group": "background",
-                            "visibility": true
-                        }]
-                  }
-              };
+                        "type": "osm",
+                        "title": "Open Street Map",
+                        "name": "mapnik",
+                        "source": "osm",
+                        "group": "background",
+                        "visibility": true
+                    }]
+                }
+            };
             let config = stylerMapConfig;
             config.map.layers = (config.map.layers || []).concat({
                 "type": "wms",

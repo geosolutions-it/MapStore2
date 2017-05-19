@@ -30,7 +30,7 @@ describe("Test password reset modal", () => {
     });
 
     it('creates component to show', () => {
-        const cmp = ReactDOM.render(<PRModal options={{animation: false}} show={true} />, document.getElementById("container"));
+        const cmp = ReactDOM.render(<PRModal options={{animation: false}} show />, document.getElementById("container"));
         expect(cmp).toExist();
     });
 
@@ -42,7 +42,7 @@ describe("Test password reset modal", () => {
             }
         };
         let spy = expect.spyOn(callbacks, 'onPasswordChange');
-        const cmp = ReactDOM.render(<PRModal options={{animation: false}} show={true} user={{name: "test"}} onPasswordChange={callbacks.onPasswordChange}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<PRModal options={{animation: false}} show user={{name: "test"}} onPasswordChange={callbacks.onPasswordChange}/>, document.getElementById("container"));
         expect(cmp).toExist();
         let inputs = document.getElementsByTagName("input");
         Array.prototype.forEach.call(inputs, (i) => {

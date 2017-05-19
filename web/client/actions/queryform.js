@@ -175,7 +175,7 @@ function changeDwithinValue(distance) {
     };
 }
 
-/*function querySearchResponse(response) {
+/* function querySearchResponse(response) {
     return {
         type: QUERY_FORM_SEARCH,
         response: response
@@ -193,7 +193,7 @@ function query(seachURL, data) {
         type: SHOW_GENERATED_FILTER,
         data: data
     };
-    /*return (dispatch) => {
+    /* return (dispatch) => {
         return axios.post(seachURL, data).then((response) => {
             dispatch(querySearchResponse(response.data));
         }).catch((e) => {
@@ -248,7 +248,7 @@ function zoneGetValues(url, filter, id) {
             if (typeof config !== "object") {
                 try {
                     config = JSON.parse(config);
-                } catch(e) {
+                } catch (e) {
                     dispatch(zoneSearchError('Search result broken (' + url + ":   " + filter + '): ' + e.message, id));
                 }
             }
@@ -261,7 +261,7 @@ function zoneGetValues(url, filter, id) {
     };
 }
 
-/*function openMenu(active, id) {
+/* function openMenu(active, id) {
     return {
         type: OPEN_MENU,
         active: active,

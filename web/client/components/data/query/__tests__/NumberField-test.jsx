@@ -29,17 +29,17 @@ describe('NumberField', () => {
     });
     it('create a NumberField rendering number range', () => {
         let conf = {
-                    fieldRowId: 846,
-                    groupId: 1,
-                    attribute: "FAMILIES",
-                    operator: "><",
-                    fieldValue: {
-                            upBound: 150000,
-                            lowBound: 100000
-                        },
-                    type: "number",
-                    fieldException: "p...a"
-                    };
+            fieldRowId: 846,
+            groupId: 1,
+            attribute: "FAMILIES",
+            operator: "><",
+            fieldValue: {
+                upBound: 150000,
+                lowBound: 100000
+            },
+            type: "number",
+            fieldException: "p...a"
+        };
         const cmp = ReactDOM.render(<NumberField {...conf} />, document.getElementById("container"));
         expect(cmp).toExist();
         let node = ReactDOM.findDOMNode(cmp);
@@ -53,16 +53,16 @@ describe('NumberField', () => {
     });
     it('create a NumberField with = operator', () => {
         let conf = {
-                    fieldRowId: 846,
-                    groupId: 1,
-                    attribute: "FAMILIES",
-                    operator: "=",
-                    isRequired: true,
-                    fieldValue: 20,
-                    type: "number",
-                    fieldException: "p...a",
-                    options: {min: 0, max: 100, precision: 3}
-                    };
+            fieldRowId: 846,
+            groupId: 1,
+            attribute: "FAMILIES",
+            operator: "=",
+            isRequired: true,
+            fieldValue: 20,
+            type: "number",
+            fieldException: "p...a",
+            options: {min: 0, max: 100, precision: 3}
+        };
         const cmp = ReactDOM.render(<NumberField {...conf} />, document.getElementById("container"));
         expect(cmp).toExist();
         let node = ReactDOM.findDOMNode(cmp);

@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -9,30 +10,31 @@
 var React = require('react');
 var ol = require('openlayers');
 
-var ScaleBar = React.createClass({
-    propTypes: {
-        map: React.PropTypes.object,
-        className: React.PropTypes.string,
-        minWidth: React.PropTypes.number,
-        units: React.PropTypes.oneOf(['degrees', 'imperial', 'nautical', 'metric', 'us'])
-    },
-    getDefaultProps() {
-        return {
-            map: null,
-            className: 'ol-scale-line',
-            minWidth: 64,
-            units: 'metric'
-        };
-    },
+class ScaleBar extends React.Component {
+    static propTypes = {
+        map: PropTypes.object,
+        className: PropTypes.string,
+        minWidth: PropTypes.number,
+        units: PropTypes.oneOf(['degrees', 'imperial', 'nautical', 'metric', 'us'])
+    };
+
+    static defaultProps = {
+        map: null,
+        className: 'ol-scale-line',
+        minWidth: 64,
+        units: 'metric'
+    };
+
     componentDidMount() {
         this.scalebar = new ol.control.ScaleLine(this.props);
         if (this.props.map) {
             this.props.map.addControl(this.scalebar);
         }
-    },
+    }
+
     render() {
         return null;
     }
-});
+}
 
 module.exports = ScaleBar;

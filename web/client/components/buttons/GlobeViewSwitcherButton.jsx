@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -11,6 +12,7 @@ const React = require('react');
 const ToggleButton = require('./ToggleButton');
 const {Tooltip} = require('react-bootstrap');
 const Message = require('../I18N/Message');
+
 /**
  * Toggle button for 3d. Wraps {@link #components.buttons.ToggleButton} with some defaults
  * @memberof components.buttons
@@ -33,40 +35,40 @@ const Message = require('../I18N/Message');
  * @prop {string} defaultStyle the bootstrap style when not pressed
  *
  */
-const GlobeViewSwitcherButton = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        btnConfig: React.PropTypes.object,
-        options: React.PropTypes.object,
-        text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        help: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        glyphicon: React.PropTypes.string,
-        active: React.PropTypes.bool,
-        onClick: React.PropTypes.func,
-        activeTooltip: React.PropTypes.string,
-        notActiveTooltip: React.PropTypes.string,
-        tooltipPlace: React.PropTypes.string,
-        style: React.PropTypes.object,
-        btnType: React.PropTypes.oneOf(['normal', 'image']),
-        image: React.PropTypes.string,
-        pressedStyle: React.PropTypes.string,
-        defaultStyle: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            id: 'globeviewswitcher-btn',
-            activeTooltip: 'globeswitcher.tooltipDeactivate',
-            notActiveTooltip: 'globeswitcher.tooltipActivate',
-            tooltipPlace: 'left',
-            defaultStyle: 'primary',
-            pressedStyle: 'success',
-            glyphicon: 'globe',
-            btnConfig: {
-                className: "square-button"
-            }
-        };
-    },
-    getButtonProperties() {
+class GlobeViewSwitcherButton extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        btnConfig: PropTypes.object,
+        options: PropTypes.object,
+        text: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        help: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        glyphicon: PropTypes.string,
+        active: PropTypes.bool,
+        onClick: PropTypes.func,
+        activeTooltip: PropTypes.string,
+        notActiveTooltip: PropTypes.string,
+        tooltipPlace: PropTypes.string,
+        style: PropTypes.object,
+        btnType: PropTypes.oneOf(['normal', 'image']),
+        image: PropTypes.string,
+        pressedStyle: PropTypes.string,
+        defaultStyle: PropTypes.string
+    };
+
+    static defaultProps = {
+        id: 'globeviewswitcher-btn',
+        activeTooltip: 'globeswitcher.tooltipDeactivate',
+        notActiveTooltip: 'globeswitcher.tooltipActivate',
+        tooltipPlace: 'left',
+        defaultStyle: 'primary',
+        pressedStyle: 'success',
+        glyphicon: 'globe',
+        btnConfig: {
+            className: "square-button"
+        }
+    };
+
+    getButtonProperties = () => {
         return ['id',
             'btnConfig',
             'options',
@@ -79,11 +81,12 @@ const GlobeViewSwitcherButton = React.createClass({
             'image',
             'pressedStyle',
             'defaultStyle'
-         ].reduce((result, key) => { result[key] = this.props[key]; return result; }, {});
-    },
+        ].reduce((result, key) => { result[key] = this.props[key]; return result; }, {});
+    };
+
     render() {
         return <ToggleButton {...this.getButtonProperties()} pressed={this.props.active} tooltip={<Tooltip><Message msgId={this.props.active ? this.props.activeTooltip : this.props.notActiveTooltip}/></Tooltip>} />;
     }
-});
+}
 
 module.exports = GlobeViewSwitcherButton;

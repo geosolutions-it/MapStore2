@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
 * Copyright 2016, GeoSolutions Sas.
 * All rights reserved.
@@ -20,59 +21,61 @@ require('react-select/dist/react-select.css');
 /**
 * Map permission editor
 */
-const PermissionEditor = React.createClass({
-    propTypes: {
+class PermissionEditor extends React.Component {
+    static propTypes = {
         // props
-        id: React.PropTypes.string,
-        user: React.PropTypes.object,
-        onGroupsChange: React.PropTypes.func,
-        onAddPermission: React.PropTypes.func,
-        buttonSize: React.PropTypes.string,
-        includeCloseButton: React.PropTypes.bool,
-        map: React.PropTypes.object,
-        style: React.PropTypes.object,
-        fluid: React.PropTypes.bool,
+        id: PropTypes.string,
+        user: PropTypes.object,
+        onGroupsChange: PropTypes.func,
+        onAddPermission: PropTypes.func,
+        buttonSize: PropTypes.string,
+        includeCloseButton: PropTypes.bool,
+        map: PropTypes.object,
+        style: PropTypes.object,
+        fluid: PropTypes.bool,
         // CALLBACKS
-        onErrorCurrentMap: React.PropTypes.func,
-        onUpdateCurrentMap: React.PropTypes.func,
-        onNewGroupChoose: React.PropTypes.func,
-        onNewPermissionChoose: React.PropTypes.func,
-        availablePermissions: React.PropTypes.arrayOf(React.PropTypes.string),
-        availableGroups: React.PropTypes.arrayOf(React.PropTypes.object),
-        updatePermissions: React.PropTypes.func,
-        groups: React.PropTypes.arrayOf(React.PropTypes.object),
-        newGroup: React.PropTypes.object,
-        newPermission: React.PropTypes.string
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            id: "PermissionEditor",
-            onGroupsChange: ()=> {},
-            onAddPermission: ()=> {},
-            onNewGroupChoose: ()=> {},
-            onNewPermissionChoose: ()=> {},
-            user: {
-                name: "Guest"
-            },
-            style: {},
-            buttonSize: "small",
-            // CALLBACKS
-            onErrorCurrentMap: ()=> {},
-            onUpdateCurrentMap: ()=> {},
-            availablePermissions: ["canRead", "canWrite"],
-            availableGroups: [],
-            updatePermissions: () => {},
-            groups: []
-        };
-    },
-    onNewGroupChoose(selected) {
+        onErrorCurrentMap: PropTypes.func,
+        onUpdateCurrentMap: PropTypes.func,
+        onNewGroupChoose: PropTypes.func,
+        onNewPermissionChoose: PropTypes.func,
+        availablePermissions: PropTypes.arrayOf(PropTypes.string),
+        availableGroups: PropTypes.arrayOf(PropTypes.object),
+        updatePermissions: PropTypes.func,
+        groups: PropTypes.arrayOf(PropTypes.object),
+        newGroup: PropTypes.object,
+        newPermission: PropTypes.string
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        id: "PermissionEditor",
+        onGroupsChange: ()=> {},
+        onAddPermission: ()=> {},
+        onNewGroupChoose: ()=> {},
+        onNewPermissionChoose: ()=> {},
+        user: {
+            name: "Guest"
+        },
+        style: {},
+        buttonSize: "small",
+        // CALLBACKS
+        onErrorCurrentMap: ()=> {},
+        onUpdateCurrentMap: ()=> {},
+        availablePermissions: ["canRead", "canWrite"],
+        availableGroups: [],
+        updatePermissions: () => {},
+        groups: []
+    };
+
+    onNewGroupChoose = (selected) => {
         // TODO: use _.find(this.props.availableGroups,['id', _.toInteger(id)]) when lodash will be updated to version 4
         this.props.onNewGroupChoose(_.find(this.props.availableGroups, (o)=> o.id === selected.value));
-    },
-    onAddPermission() {
+    };
+
+    onAddPermission = () => {
         // Check if the new permission will edit ad existing one
         if (this.isPermissionPresent(this.props.newGroup.groupName)) {
             this.props.onGroupsChange(
@@ -95,18 +98,19 @@ const PermissionEditor = React.createClass({
 
         } else {
             this.props.onAddPermission({
-                     canRead: true,
-                     canWrite: this.props.newPermission === "canWrite",
-                     group: this.props.newGroup
-                 });
+                canRead: true,
+                canWrite: this.props.newPermission === "canWrite",
+                group: this.props.newGroup
+            });
         }
-    },
-    onChangePermission(index, input) {
+    };
+
+    onChangePermission = (index, input) => {
         if (this.props.map.permissions) {
             this.props.onGroupsChange(
-            {
-                SecurityRuleList: {
-                    SecurityRule: this.props.map.permissions.SecurityRuleList.SecurityRule.map(
+                {
+                    SecurityRuleList: {
+                        SecurityRule: this.props.map.permissions.SecurityRuleList.SecurityRule.map(
                         function(rule) {
                             if (rule.group && rule.group.groupName === this.localGroups[index].name) {
                                 if (input === "canWrite") {
@@ -120,30 +124,34 @@ const PermissionEditor = React.createClass({
                             return rule;
                         }, this
                      ).filter(rule => rule.canRead || rule.canWrite)
-                 }
-             }
+                    }
+                }
          );
         }
-    },
-    getSelectableGroups() {
+    };
+
+    getSelectableGroups = () => {
         return this.props.availableGroups && this.props.availableGroups.filter( (group) => {
             return !this.isPermissionPresent(group.groupName);
         }).map((group) => ({label: group.groupName, value: group.id}));
-    },
-    getPermissonLabel(perm) {
+    };
+
+    getPermissonLabel = (perm) => {
         switch (perm) {
-            case "canRead":
-                return LocaleUtils.getMessageById(this.context.messages, "map.permissions.canView");
-            case "canWrite":
-                return LocaleUtils.getMessageById(this.context.messages, "map.permissions.canWrite");
-            default:
-                return perm;
+        case "canRead":
+            return LocaleUtils.getMessageById(this.context.messages, "map.permissions.canView");
+        case "canWrite":
+            return LocaleUtils.getMessageById(this.context.messages, "map.permissions.canWrite");
+        default:
+            return perm;
         }
-    },
-    getAvailablePermissions() {
+    };
+
+    getAvailablePermissions = () => {
         return this.props.availablePermissions.map((perm) => ({value: perm, label: this.getPermissonLabel(perm)}));
-    },
-    renderPermissionRows() {
+    };
+
+    renderPermissionRows = () => {
         if (this.localGroups.length === 0) {
             return <tr><td colSpan="3"><Message msgId="map.permissions.noRules" /></td></tr>;
         }
@@ -174,7 +182,8 @@ const PermissionEditor = React.createClass({
                 </tr>
             );
         });
-    },
+    };
+
     render() {
         // Hack to convert map permissions to a simpler format, TODO: remove this
         if (this.props.map && this.props.map.permissions && this.props.map.permissions.SecurityRuleList && this.props.map.permissions.SecurityRuleList.SecurityRule) {
@@ -240,11 +249,12 @@ const PermissionEditor = React.createClass({
                 </Table>
             </div>
         );
-    },
-    isPermissionPresent(group) {
+    }
+
+    isPermissionPresent = (group) => {
         return this.props.map && this.props.map.permissions && this.props.map.permissions.SecurityRuleList && this.props.map.permissions.SecurityRuleList.SecurityRule &&
             _.findIndex(this.props.map.permissions.SecurityRuleList.SecurityRule, (o) => o.group && o.group.groupName === group) >= 0;
-    }
-});
+    };
+}
 
 module.exports = PermissionEditor;

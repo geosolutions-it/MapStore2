@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -16,43 +17,44 @@ require('codemirror/lib/codemirror.css');
 
 require('codemirror/mode/javascript/javascript');
 
-const PluginCreator = React.createClass({
-    propTypes: {
-        pluginCode: React.PropTypes.string,
-        error: React.PropTypes.string,
-        onApplyCode: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            pluginCode: '',
-            onApplyCode: () => {}
-        };
-    },
-    getInitialState() {
-        return {
-            code: "",
-            configVisible: false
-        };
-    },
+class PluginCreator extends React.Component {
+    static propTypes = {
+        pluginCode: PropTypes.string,
+        error: PropTypes.string,
+        onApplyCode: PropTypes.func
+    };
+
+    static defaultProps = {
+        pluginCode: '',
+        onApplyCode: () => {}
+    };
+
+    state = {
+        code: "",
+        configVisible: false
+    };
+
     componentWillMount() {
         this.setState({
             code: this.props.pluginCode
         });
-    },
+    }
+
     componentWillReceiveProps(newProps) {
         if (newProps.pluginCode !== this.props.pluginCode) {
             this.setState({
                 code: newProps.pluginCode
             });
         }
-    },
+    }
+
     render() {
         return (<li style={{border: "solid 1px lightgrey", borderRadius: "3px", paddingLeft: "10px", paddingRight: "10px", marginBottom: "3px", marginRight: "10px"}} key="plugin-creator">
         <Button bsSize="small" bsStyle="primary" onClick={this.toggleCfg}><Glyphicon glyph={this.state.configVisible ? "minus" : "plus"}/></Button>
             <FormGroup>
               <Checkbox className="pluginEnable" name="toolscontainer"
-                  disabled={true}
-                  checked={true}
+                  disabled
+                  checked
                   >
                   Live edit your plugin
               </Checkbox>
@@ -75,18 +77,21 @@ const PluginCreator = React.createClass({
                 </Modal.Body>
             </Modal>
         </li>);
-    },
-    updateCode(newCode) {
+    }
+
+    updateCode = (newCode) => {
         this.setState({
             code: newCode
         });
-    },
-    applyCode() {
+    };
+
+    applyCode = () => {
         this.props.onApplyCode(this.state.code);
-    },
-    toggleCfg() {
+    };
+
+    toggleCfg = () => {
         this.setState({configVisible: !this.state.configVisible});
-    }
-});
+    };
+}
 
 module.exports = PluginCreator;

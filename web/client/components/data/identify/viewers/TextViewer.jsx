@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -8,16 +9,18 @@
 
 const React = require('react');
 
-const TextViewer = React.createClass({
-    propTypes: {
-        response: React.PropTypes.string
-    },
+class TextViewer extends React.Component {
+    static propTypes = {
+        response: PropTypes.string
+    };
+
     shouldComponentUpdate(nextProps) {
         return nextProps.response !== this.props.response;
-    },
-    render() {
-        return (<pre>{this.props.response}</pre>);
     }
-});
+
+    render() {
+        return <pre>{this.props.response}</pre>;
+    }
+}
 
 module.exports = TextViewer;

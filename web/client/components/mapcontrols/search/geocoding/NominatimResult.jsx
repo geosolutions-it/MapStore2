@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -9,15 +10,17 @@
 var React = require('react');
 
 
-let NominatimResult = React.createClass({
-    propTypes: {
-        item: React.PropTypes.object,
-        onItemClick: React.PropTypes.func
-    },
-    onClick() {
+class NominatimResult extends React.Component {
+    static propTypes = {
+        item: PropTypes.object,
+        onItemClick: PropTypes.func
+    };
+
+    onClick = () => {
         let item = this.props.item;
         this.props.onItemClick(item);
-    },
+    };
+
     render() {
         if (this.props.item === undefined) {
             return null;
@@ -30,6 +33,6 @@ let NominatimResult = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = NominatimResult;

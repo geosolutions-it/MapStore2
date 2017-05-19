@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -27,7 +28,7 @@ const LayersUtils = require('../utils/LayersUtils');
 const selector = createSelector(mapSelector, stateSelector, layersSelector, (map, state, layers) => ({
     currentZoomLvl: map && map.zoom,
     show: state.controls && state.controls.saveAs && state.controls.saveAs.enabled,
-    mapType: (state && ((state.home && state.home.mapType) || (state.maps && state.maps.mapType))) || "leaflet",
+    mapType: state && (state.home && state.home.mapType || state.maps && state.maps.mapType) || "leaflet",
     newMapId: state.currentMap && state.currentMap.newMapId,
     map,
     user: state.security && state.security.user,
@@ -36,59 +37,62 @@ const selector = createSelector(mapSelector, stateSelector, layersSelector, (map
     layers
 }));
 
-const SaveAs = React.createClass({
-    propTypes: {
-        show: React.PropTypes.bool,
-        newMapId: React.PropTypes.number,
-        map: React.PropTypes.object,
-        user: React.PropTypes.object,
-        mapType: React.PropTypes.string,
-        layers: React.PropTypes.array,
-        params: React.PropTypes.object,
-        metadata: React.PropTypes.object,
-        currentMap: React.PropTypes.object,
+class SaveAs extends React.Component {
+    static propTypes = {
+        show: PropTypes.bool,
+        newMapId: PropTypes.number,
+        map: PropTypes.object,
+        user: PropTypes.object,
+        mapType: PropTypes.string,
+        layers: PropTypes.array,
+        params: PropTypes.object,
+        metadata: PropTypes.object,
+        currentMap: PropTypes.object,
         // CALLBACKS
-        onClose: React.PropTypes.func,
-        onCreateThumbnail: React.PropTypes.func,
-        onUpdateCurrentMap: React.PropTypes.func,
-        onErrorCurrentMap: React.PropTypes.func,
-        onSave: React.PropTypes.func,
-        editMap: React.PropTypes.func,
-        resetCurrentMap: React.PropTypes.func,
-        metadataChanged: React.PropTypes.func,
-        onMapSave: React.PropTypes.func,
-        loadMapInfo: React.PropTypes.func
-    },
-    contextTypes: {
-        router: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            onMapSave: () => {},
-            loadMapInfo: () => {},
-            show: false
-        };
-    },
+        onClose: PropTypes.func,
+        onCreateThumbnail: PropTypes.func,
+        onUpdateCurrentMap: PropTypes.func,
+        onErrorCurrentMap: PropTypes.func,
+        onSave: PropTypes.func,
+        editMap: PropTypes.func,
+        resetCurrentMap: PropTypes.func,
+        metadataChanged: PropTypes.func,
+        onMapSave: PropTypes.func,
+        loadMapInfo: PropTypes.func
+    };
+
+    static contextTypes = {
+        router: PropTypes.object
+    };
+
+    static defaultProps = {
+        onMapSave: () => {},
+        loadMapInfo: () => {},
+        show: false
+    };
+
+    state = {
+        displayMetadataEdit: false
+    };
+
     componentWillMount() {
         this.onMissingInfo(this.props);
-    },
+    }
+
     componentWillReceiveProps(nextProps) {
         this.onMissingInfo(nextProps);
-    },
-    onMissingInfo(props) {
+    }
+
+    onMissingInfo = (props) => {
         let map = props.map;
         if (map && props.currentMap.mapId && !this.props.newMapId) {
             this.context.router.push("/viewer/" + props.mapType + "/" + props.currentMap.mapId);
             this.props.resetCurrentMap();
         }
-    },
-    getInitialState() {
-        return {
-            displayMetadataEdit: false
-        };
-    },
+    };
+
     render() {
-        let map = (this.state && this.state.loading) ? assign({updating: true}, this.props.currentMap) : this.props.currentMap;
+        let map = this.state && this.state.loading ? assign({updating: true}, this.props.currentMap) : this.props.currentMap;
         return (
             <MetadataModal ref="metadataModal"
                 metadataChanged={this.props.metadataChanged}
@@ -104,14 +108,16 @@ const SaveAs = React.createClass({
                 onSave={this.saveMap}
             />
         );
-    },
-    close() {
+    }
+
+    close = () => {
         this.props.onUpdateCurrentMap([], this.props.map && this.props.map.thumbnail);
         this.props.onErrorCurrentMap([], this.props.map && this.props.map.id);
         this.props.onClose();
-    },
+    };
+
     // this method creates the content for the Map Resource
-    createV2Map() {
+    createV2Map = () => {
         let map =
             {
                 center: this.props.map.center,
@@ -130,8 +136,9 @@ const SaveAs = React.createClass({
             map: assign({}, map, {layers})
         };
         return resultingmap;
-    },
-    saveMap(id, name, description) {
+    };
+
+    saveMap = (id, name, description) => {
         this.props.editMap(this.props.map);
         let thumbComponent = this.refs.metadataModal.refs.thumbnail;
         let attributes = {"owner": this.props.user && this.props.user.name || null};
@@ -149,36 +156,36 @@ const SaveAs = React.createClass({
                 });
             });
         }
-    }
-});
+    };
+}
 
 
 module.exports = {
     SaveAsPlugin: connect(selector,
-    {
-        onClose: () => onDisplayMetadataEdit(false),
-        onUpdateCurrentMap: updateCurrentMap,
-        onErrorCurrentMap: errorCurrentMap,
-        onMapSave: createMap,
-        loadMapInfo,
-        metadataChanged,
-        editMap,
-        resetCurrentMap,
-        onDisplayMetadataEdit,
-        onCreateThumbnail: createThumbnail
-    })(assign(SaveAs, {
-        BurgerMenu: {
-            name: 'saveAs',
-            position: 900,
-            text: <Message msgId="saveAs"/>,
-            icon: <Glyphicon glyph="floppy-open"/>,
-            action: editMap.bind(null, {}),
-            selector: (state) => {
-                if (state && state.controls && state.controls.saveAs && state.controls.saveAs.allowedRoles) {
-                    return indexOf(state.controls.saveAs.allowedRoles, state && state.security && state.security.user && state.security.user.role) !== -1 ? {} : { style: {display: "none"} };
+        {
+            onClose: () => onDisplayMetadataEdit(false),
+            onUpdateCurrentMap: updateCurrentMap,
+            onErrorCurrentMap: errorCurrentMap,
+            onMapSave: createMap,
+            loadMapInfo,
+            metadataChanged,
+            editMap,
+            resetCurrentMap,
+            onDisplayMetadataEdit,
+            onCreateThumbnail: createThumbnail
+        })(assign(SaveAs, {
+            BurgerMenu: {
+                name: 'saveAs',
+                position: 900,
+                text: <Message msgId="saveAs"/>,
+                icon: <Glyphicon glyph="floppy-open"/>,
+                action: editMap.bind(null, {}),
+                selector: (state) => {
+                    if (state && state.controls && state.controls.saveAs && state.controls.saveAs.allowedRoles) {
+                        return indexOf(state.controls.saveAs.allowedRoles, state && state.security && state.security.user && state.security.user.role) !== -1 ? {} : { style: {display: "none"} };
+                    }
+                    return state && state.security && state.security.user ? {} : { style: {display: "none"} };
                 }
-                return state && state.security && state.security.user ? {} : { style: {display: "none"} };
             }
-        }
-    }))
+        }))
 };

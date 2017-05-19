@@ -7,9 +7,10 @@
  */
 const React = require('react');
 
-const MadeWithLove = React.createClass({
+class MadeWithLove extends React.Component {
     render() {
-        return (<div className="with-love"></div>);
+        return <div className="with-love" />;
     }
-});
+}
+
 module.exports = MadeWithLove;

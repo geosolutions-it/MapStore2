@@ -43,7 +43,7 @@ describe('PaginationToolbar', () => {
     });
     // test loading
     it('creates the component loading', () => {
-        const item = ReactDOM.render(<PaginationToolbar pageSize={2} page={1} items={["a", "b"]} total={2} loading={true} />, document.getElementById("container"));
+        const item = ReactDOM.render(<PaginationToolbar pageSize={2} page={1} items={["a", "b"]} total={2} loading />, document.getElementById("container"));
         expect(item).toExist();
         const spinner = ReactDOM.findDOMNode(item).getElementsByClassName('spinner');
         expect(spinner).toExist();

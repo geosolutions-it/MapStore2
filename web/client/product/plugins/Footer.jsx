@@ -9,7 +9,7 @@ const React = require('react');
 const src = require("./attribution/geosolutions-brand.png");
 require('./footer/footer.css');
 
-const Footer = React.createClass({
+class Footer extends React.Component {
     render() {
         return (
             <div className="ms-footer col-md-12">
@@ -19,7 +19,7 @@ const Footer = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = {
     FooterPlugin: Footer

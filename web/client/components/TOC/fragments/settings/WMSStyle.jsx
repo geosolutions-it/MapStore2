@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -17,36 +18,39 @@ require('react-select/dist/react-select.css');
 /**
  * General Settings form for layer
  */
-const WMSStyle = React.createClass({
-    propTypes: {
-        retrieveLayerData: React.PropTypes.func,
-        updateSettings: React.PropTypes.func,
-        element: React.PropTypes.object,
-        groups: React.PropTypes.array
-    },
-    getDefaultProps() {
-        return {
-            element: {},
-            retrieveLayerData: () => {},
-            updateSettings: () => {}
-        };
-    },
-    renderLegend() {
+class WMSStyle extends React.Component {
+    static propTypes = {
+        retrieveLayerData: PropTypes.func,
+        updateSettings: PropTypes.func,
+        element: PropTypes.object,
+        groups: PropTypes.array
+    };
+
+    static defaultProps = {
+        element: {},
+        retrieveLayerData: () => {},
+        updateSettings: () => {}
+    };
+
+    renderLegend = () => {
         // legend can not added because of this issue
         // https://github.com/highsource/ogc-schemas/issues/183
         return null;
-    },
-    renderItemLabel(item) {
+    };
+
+    renderItemLabel = (item) => {
         return (<div>
             <div key="item-title">{item.title || item.name}</div>
             <div><small className="text-muted"key="item-key-description">{item.name}</small></div>
         </div>);
-    },
-    renderError() {
+    };
+
+    renderError = () => {
         if (this.props.element && this.props.element.capabilities && this.props.element && this.props.element.capabilities.error) {
             return <Alert bsStyle="danger"><Message msgId="layerProperties.styleListLoadError" /></Alert>;
         }
-    },
+    };
+
     render() {
         let options = [{label: "Default Style", value: ""}].concat((this.props.element.availableStyles || []).map((item) => {
             return {label: this.renderItemLabel(item), value: item.name};
@@ -81,11 +85,12 @@ const WMSStyle = React.createClass({
                 <Button bsStyle="primary" style={{"float": "right"}} onClick={() => this.props.retrieveLayerData(this.props.element)}><Glyphicon glyph="refresh" />&nbsp;<Message msgId="layerProperties.stylesRefreshList" /></Button>
                 <br />
             </form>);
-    },
-    updateEntry(key, event) {
+    }
+
+    updateEntry = (key, event) => {
         let value = event.target.value;
         this.props.updateSettings({[key]: value});
-    }
-});
+    };
+}
 
 module.exports = WMSStyle;

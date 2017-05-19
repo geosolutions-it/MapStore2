@@ -25,7 +25,7 @@ Bing.prototype.loadMetadata = function() {
         }
         _this.initMetadata();
     };
-    const urlScheme = (document.location.protocol === 'file:') ? 'https' : document.location.protocol.slice(0, -1);
+    const urlScheme = document.location.protocol === 'file:' ? 'https' : document.location.protocol.slice(0, -1);
     const url = urlScheme + '://dev.virtualearth.net/REST/v1/Imagery/Metadata/'
                 + this.options.type + '?include=ImageryProviders&jsonp=' + cbid +
                 '&key=' + this._key + '&UriScheme=' + urlScheme;

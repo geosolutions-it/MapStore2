@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var L = require('leaflet');
+const PropTypes = require('prop-types');
 var React = require('react');
 var ConfigUtils = require('../../../utils/ConfigUtils');
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
@@ -15,58 +16,58 @@ var mapUtils = require('../../../utils/MapUtils');
 const {throttle} = require('lodash');
 
 require('./SingleClick');
-let LeafletMap = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
+
+class LeafletMap extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
         center: ConfigUtils.PropTypes.center,
-        zoom: React.PropTypes.number.isRequired,
+        zoom: PropTypes.number.isRequired,
         mapStateSource: ConfigUtils.PropTypes.mapStateSource,
-        style: React.PropTypes.object,
-        projection: React.PropTypes.string,
-        onMapViewChanges: React.PropTypes.func,
-        onClick: React.PropTypes.func,
-        onRightClick: React.PropTypes.func,
-        mapOptions: React.PropTypes.object,
-        zoomControl: React.PropTypes.bool,
-        mousePointer: React.PropTypes.string,
-        onMouseMove: React.PropTypes.func,
-        onLayerLoading: React.PropTypes.func,
-        onLayerLoad: React.PropTypes.func,
-        onLayerError: React.PropTypes.func,
-        resize: React.PropTypes.number,
-        measurement: React.PropTypes.object,
-        changeMeasurementState: React.PropTypes.func,
-        registerHooks: React.PropTypes.bool,
-        interactive: React.PropTypes.bool,
-        resolutions: React.PropTypes.array,
-        onInvalidLayer: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-          id: 'map',
-          onMapViewChanges: () => {},
-          onInvalidLayer: () => {},
-          onClick: null,
-          onMouseMove: () => {},
-          zoomControl: true,
-          mapOptions: {
-              zoomAnimation: true,
-              attributionControl: true
-          },
-          projection: "EPSG:3857",
-          onLayerLoading: () => {},
-          onLayerLoad: () => {},
-          onLayerError: () => {},
-          resize: 0,
-          registerHooks: true,
-          style: {},
-          interactive: true,
-          resolutions: mapUtils.getGoogleMercatorResolutions(0, 23)
-        };
-    },
-    getInitialState() {
-        return { };
-    },
+        style: PropTypes.object,
+        projection: PropTypes.string,
+        onMapViewChanges: PropTypes.func,
+        onClick: PropTypes.func,
+        onRightClick: PropTypes.func,
+        mapOptions: PropTypes.object,
+        zoomControl: PropTypes.bool,
+        mousePointer: PropTypes.string,
+        onMouseMove: PropTypes.func,
+        onLayerLoading: PropTypes.func,
+        onLayerLoad: PropTypes.func,
+        onLayerError: PropTypes.func,
+        resize: PropTypes.number,
+        measurement: PropTypes.object,
+        changeMeasurementState: PropTypes.func,
+        registerHooks: PropTypes.bool,
+        interactive: PropTypes.bool,
+        resolutions: PropTypes.array,
+        onInvalidLayer: PropTypes.func
+    };
+
+    static defaultProps = {
+        id: 'map',
+        onMapViewChanges: () => {},
+        onInvalidLayer: () => {},
+        onClick: null,
+        onMouseMove: () => {},
+        zoomControl: true,
+        mapOptions: {
+            zoomAnimation: true,
+            attributionControl: true
+        },
+        projection: "EPSG:3857",
+        onLayerLoading: () => {},
+        onLayerLoad: () => {},
+        onLayerError: () => {},
+        resize: 0,
+        registerHooks: true,
+        style: {},
+        interactive: true,
+        resolutions: mapUtils.getGoogleMercatorResolutions(0, 23)
+    };
+
+    state = { };
+
     componentWillMount() {
         this.zoomOffset = 0;
         if (this.props.mapOptions && this.props.mapOptions.view && this.props.mapOptions.view.resolutions && this.props.mapOptions.view.resolutions.length > 0) {
@@ -79,7 +80,8 @@ let LeafletMap = React.createClass({
             });
             this.zoomOffset = Math.round(Math.log2(ratio));
         }
-    },
+    }
+
     componentDidMount() {
         let mapOptions = assign({}, this.props.interactive ? {} : {
             dragging: false,
@@ -154,7 +156,7 @@ let LeafletMap = React.createClass({
                 });
                 event.layer.on('load', (loadEvent) => { this.props.onLayerLoad(loadEvent.target.layerId, hadError); });
                 event.layer.on('tileerror', (errorEvent) => {
-                    const isError = errorEvent.target.onError ? (errorEvent.target.onError(errorEvent)) : true;
+                    const isError = errorEvent.target.onError ? errorEvent.target.onError(errorEvent) : true;
                     if (isError) {
                         hadError = true;
                         this.props.onLayerError(errorEvent.target.layerId);
@@ -168,7 +170,8 @@ let LeafletMap = React.createClass({
         if (this.props.registerHooks) {
             this.registerHooks();
         }
-    },
+    }
+
     componentWillReceiveProps(newProps) {
 
         if (newProps.mousePointer !== this.props.mousePointer) {
@@ -191,13 +194,16 @@ let LeafletMap = React.createClass({
             }, 0);
         }
         return false;
-    },
+    }
+
     componentWillUnmount() {
         this.map.remove();
-    },
-    getResolutions() {
+    }
+
+    getResolutions = () => {
         return this.props.resolutions;
-    },
+    };
+
     render() {
         const map = this.map;
         const mapProj = this.props.projection;
@@ -215,8 +221,9 @@ let LeafletMap = React.createClass({
                 {children}
             </div>
         );
-    },
-    _updateMapPositionFromNewProps(newProps) {
+    }
+
+    _updateMapPositionFromNewProps = (newProps) => {
         // current implementation will update the map only if the movement
         // between 12 decimals in the reference system to avoid rounded value
         // changes due to float mathematic operations.
@@ -224,7 +231,7 @@ let LeafletMap = React.createClass({
             if (a === undefined || b === undefined) {
                 return false;
             }
-            return ( a.toFixed(12) - (b.toFixed(12))) === 0;
+            return a.toFixed(12) - b.toFixed(12) === 0;
         };
 
         // getting all centers we need to check
@@ -237,8 +244,8 @@ let LeafletMap = React.createClass({
         // if props are the same nothing to do, otherwise
         // we need to check if the new center is equal to map center
         const centerIsNotUpdated = propsCentersEqual ||
-                                   (isNearlyEqual(newCenter.x, mapCenter.lng) &&
-                                    isNearlyEqual(newCenter.y, mapCenter.lat));
+                                   isNearlyEqual(newCenter.x, mapCenter.lng) &&
+                                    isNearlyEqual(newCenter.y, mapCenter.lat);
 
         // getting all zoom values we need to check
         const newZoom = newProps.zoom;
@@ -258,8 +265,9 @@ let LeafletMap = React.createClass({
         } else if (!centerIsNotUpdated) {
             this.map.setView([newProps.center.y, newProps.center.x]);
         }
-    },
-    updateMapInfoState() {
+    };
+
+    updateMapInfoState = () => {
         const bbox = this.map.getBounds().toBBoxString().split(',');
         const size = {
             height: this.map.getSize().y,
@@ -276,14 +284,16 @@ let LeafletMap = React.createClass({
             crs: 'EPSG:4326',
             rotation: 0
         }, size, this.props.id, this.props.projection );
-    },
-    setMousePointer(pointer) {
+    };
+
+    setMousePointer = (pointer) => {
         if (this.map) {
             const mapDiv = this.map.getContainer();
             mapDiv.style.cursor = pointer || 'auto';
         }
-    },
-    mouseMoveEvent(event) {
+    };
+
+    mouseMoveEvent = (event) => {
         let pos = event.latlng.wrap();
         this.props.onMouseMove({
             x: pos.lng || 0.0,
@@ -294,8 +304,9 @@ let LeafletMap = React.createClass({
                 y: event.containerPoint.x
             }
         });
-    },
-    registerHooks() {
+    };
+
+    registerHooks = () => {
         mapUtils.registerHook(mapUtils.EXTENT_TO_ZOOM_HOOK, (extent) => {
             var repojectedPointA = CoordinatesUtils.reproject([extent[0], extent[1]], this.props.projection, 'EPSG:4326');
             var repojectedPointB = CoordinatesUtils.reproject([extent[2], extent[3]], this.props.projection, 'EPSG:4326');
@@ -332,7 +343,7 @@ let LeafletMap = React.createClass({
             let pos = CoordinatesUtils.reproject(this.map.containerPointToLatLng(pixel), 'EPSG:4326', this.props.projection);
             return [pos.x, pos.y];
         });
-    }
-});
+    };
+}
 
 module.exports = LeafletMap;

@@ -39,7 +39,7 @@ var ShareUtils = {
         const start = urlParsedObj.hash.lastIndexOf('/') + 1;
         const end = urlParsedObj.hash.lastIndexOf('?') >= 0 ? urlParsedObj.hash.lastIndexOf('?') : urlParsedObj.hash.length;
         const mapId = urlParsedObj.hash.substring(start, end);
-        return Url.resolve(ShareUtils.getAbsoluteURL(url, geoStoreUrl), ('data/' + mapId));
+        return Url.resolve(ShareUtils.getAbsoluteURL(url, geoStoreUrl), 'data/' + mapId);
     },
     /**
      * Parses the API url to get the proper base path where to retrieve the js for the api.

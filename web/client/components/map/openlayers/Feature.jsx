@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -10,21 +11,21 @@ var React = require('react');
 var ol = require('openlayers');
 const {isEqual} = require('lodash');
 
-let Feature = React.createClass({
-    propTypes: {
-        type: React.PropTypes.string,
-        properties: React.PropTypes.object,
-        crs: React.PropTypes.string,
-        container: React.PropTypes.object, // TODO it must be a ol.layer.vector (maybe pass the source is more correct here?)
-        geometry: React.PropTypes.object, // TODO check for geojson format for geometry
-        msId: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-        featuresCrs: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            featuresCrs: "EPSG:4326"
-        };
-    },
+class Feature extends React.Component {
+    static propTypes = {
+        type: PropTypes.string,
+        properties: PropTypes.object,
+        crs: PropTypes.string,
+        container: PropTypes.object, // TODO it must be a ol.layer.vector (maybe pass the source is more correct here?)
+        geometry: PropTypes.object, // TODO check for geojson format for geometry
+        msId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        featuresCrs: PropTypes.string
+    };
+
+    static defaultProps = {
+        featuresCrs: "EPSG:4326"
+    };
+
     componentDidMount() {
         const format = new ol.format.GeoJSON();
         const geometry = this.props.geometry && this.props.geometry.coordinates;
@@ -38,7 +39,8 @@ let Feature = React.createClass({
             this._feature.forEach((f) => f.getGeometry().transform(this.props.featuresCrs, this.props.crs || 'EPSG:3857'));
             this.props.container.getSource().addFeatures(this._feature);
         }
-    },
+    }
+
     componentWillReceiveProps(newProps) {
         if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry)) {
             this.removeFromContainer();
@@ -51,17 +53,21 @@ let Feature = React.createClass({
                 newProps.container.getSource().addFeatures(this._feature);
             }
         }
-    },
+    }
+
     shouldComponentUpdate(nextProps) {
         return !isEqual(nextProps.properties, this.props.properties) || !isEqual(nextProps.geometry, this.props.geometry);
-    },
+    }
+
     componentWillUnmount() {
         this.removeFromContainer();
-    },
+    }
+
     render() {
         return null;
-    },
-    removeFromContainer() {
+    }
+
+    removeFromContainer = () => {
         if (this._feature) {
             if (Array.isArray(this._feature)) {
                 const layersSource = this.props.container.getSource();
@@ -69,7 +75,7 @@ let Feature = React.createClass({
                     let featureId = feature.getId();
                     if (featureId === undefined) {
                         layersSource.removeFeature(feature);
-                    }else {
+                    } else {
                         layersSource.removeFeature(layersSource.getFeatureById(featureId));
                     }
                 });
@@ -77,7 +83,7 @@ let Feature = React.createClass({
                 this.props.container.getSource().removeFeature(this._feature);
             }
         }
-    }
-});
+    };
+}
 
 module.exports = Feature;

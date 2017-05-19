@@ -44,7 +44,7 @@ Layers.registerType('overlay', {
         const original = document.getElementById(options.id);
         const cloned = cloneOriginalOverlay(original, options);
         document.body.appendChild(cloned);
-        const overlay = new ol.Overlay(({
+        const overlay = new ol.Overlay({
             id: options.id,
             element: cloned,
             autoPan: options.autoPan || false,
@@ -54,7 +54,7 @@ Layers.registerType('overlay', {
                 duration: options.autoPanAnimation || 250
             },
             position: [options.position.x, options.position.y]
-        }));
+        });
         map.addOverlay(overlay);
         return {
             detached: true,

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -23,45 +24,46 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 const PluginsContainer = connect((state) => ({
     pluginsConfig: state.plugins || ConfigUtils.getConfigProp('plugins') || null,
-    mode: (urlQuery.mobile || (state.browser && state.browser.touch)) ? 'mobile' : 'desktop'
+    mode: urlQuery.mobile || state.browser && state.browser.touch ? 'mobile' : 'desktop'
 }))(require('../../../components/plugins/PluginsContainer'));
 
 
-const MapViewer = React.createClass({
-    propTypes: {
-        mode: React.PropTypes.string,
-        params: React.PropTypes.object,
-        loadMapConfig: React.PropTypes.func,
-        reset: React.PropTypes.func,
-        plugins: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            mode: 'desktop'
-        };
-    },
+class MapViewer extends React.Component {
+    static propTypes = {
+        mode: PropTypes.string,
+        params: PropTypes.object,
+        loadMapConfig: PropTypes.func,
+        reset: PropTypes.func,
+        plugins: PropTypes.object
+    };
+
+    static defaultProps = {
+        mode: 'desktop'
+    };
+
     componentWillMount() {
         if (this.props.params.mapType && this.props.params.mapId) {
 
-            const mapId = (this.props.params.mapId === '0') ? null : this.props.params.mapId;
+            const mapId = this.props.params.mapId === '0' ? null : this.props.params.mapId;
             const config = urlQuery && urlQuery.config || null;
             const {configUrl} = ConfigUtils.getConfigurationOptions({mapId, config});
             this.props.reset();
             this.props.loadMapConfig(configUrl, mapId !== null);
         }
-    },
+    }
+
     render() {
         return (<PluginsContainer key="viewer" id="viewer" className="viewer"
             plugins={this.props.plugins}
             params={this.props.params}
             />);
     }
-});
+}
 
 module.exports = connect((state) => ({
-    mode: (urlQuery.mobile || (state.browser && state.browser.touch)) ? 'mobile' : 'desktop'
+    mode: urlQuery.mobile || state.browser && state.browser.touch ? 'mobile' : 'desktop'
 }),
-{
-    loadMapConfig,
-    reset: resetControls
-})(MapViewer);
+    {
+        loadMapConfig,
+        reset: resetControls
+    })(MapViewer);

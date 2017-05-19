@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -16,55 +17,57 @@ const {Alert, Panel, Accordion} = require('react-bootstrap');
 
 const DefaultHeader = require('./DefaultHeader');
 const ViewerPage = require('./viewers/ViewerPage');
-const DefaultViewer = React.createClass({
-    propTypes: {
-        format: React.PropTypes.string,
-        collapsible: React.PropTypes.bool,
-        requests: React.PropTypes.array,
-        responses: React.PropTypes.array,
-        missingResponses: React.PropTypes.number,
-        container: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
-        header: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
-        headerOptions: React.PropTypes.object,
-        validator: React.PropTypes.func,
-        viewers: React.PropTypes.object,
-        style: React.PropTypes.object,
-        containerProps: React.PropTypes.object
-    },
-    getInitialState() {
-        return {
-            index: 0
-        };
-    },
-    getDefaultProps() {
-        return {
-            format: MapInfoUtils.getDefaultInfoFormatValue(),
-            responses: [],
-            missingResponses: 0,
-            collapsible: false,
-            header: DefaultHeader,
-            headerOptions: {},
-            container: Accordion,
-            validator: MapInfoUtils.getValidator,
-            viewers: MapInfoUtils.getViewers(),
-            style: {
-                maxHeight: "500px",
-                position: "relative",
-                marginBottom: 0
-            },
-            containerProps: {}
-        };
-    },
+
+class DefaultViewer extends React.Component {
+    static propTypes = {
+        format: PropTypes.string,
+        collapsible: PropTypes.bool,
+        requests: PropTypes.array,
+        responses: PropTypes.array,
+        missingResponses: PropTypes.number,
+        container: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+        header: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+        headerOptions: PropTypes.object,
+        validator: PropTypes.func,
+        viewers: PropTypes.object,
+        style: PropTypes.object,
+        containerProps: PropTypes.object
+    };
+
+    static defaultProps = {
+        format: MapInfoUtils.getDefaultInfoFormatValue(),
+        responses: [],
+        missingResponses: 0,
+        collapsible: false,
+        header: DefaultHeader,
+        headerOptions: {},
+        container: Accordion,
+        validator: MapInfoUtils.getValidator,
+        viewers: MapInfoUtils.getViewers(),
+        style: {
+            maxHeight: "500px",
+            position: "relative",
+            marginBottom: 0
+        },
+        containerProps: {}
+    };
+
+    state = {
+        index: 0
+    };
+
     componentWillReceiveProps(nextProps) {
         // reset current page on new requests set
         if (nextProps.requests !== this.props.requests) {
             this.setState({index: 0});
         }
-    },
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         return nextProps.responses !== this.props.responses || nextProps.missingResponses !== this.props.missingResponses || nextState.index !== this.state.index;
-    },
-    renderEmptyLayers(validator) {
+    }
+
+    renderEmptyLayers = (validator) => {
         const notEmptyResponses = validator.getValidResponses(this.props.responses).length;
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
         if (this.props.missingResponses === 0 && notEmptyResponses === 0) {
@@ -83,15 +86,17 @@ const DefaultViewer = React.createClass({
             );
         }
         return null;
-    },
-    renderPage(response) {
+    };
+
+    renderPage = (response) => {
         const Viewer = this.props.viewers[this.props.format];
         if (Viewer) {
             return <Viewer response={response} />;
         }
         return null;
-    },
-    renderPages(responses) {
+    };
+
+    renderPages = (responses) => {
         if (this.props.missingResponses === 0 && responses.length === 0) {
             return (
                 <Alert bsStyle={"danger"}>
@@ -116,17 +121,19 @@ const DefaultViewer = React.createClass({
                         onPrevious={() => this.previous()}/></span>
                     }
                     style={this.props.style}>
-                    <ViewerPage response={response} format={(format && FeatureInfoUtils.INFO_FORMATS[format]) || this.props.format} viewers={this.props.viewers} />
+                    <ViewerPage response={response} format={format && FeatureInfoUtils.INFO_FORMATS[format] || this.props.format} viewers={this.props.viewers} />
                 </Panel>
             );
         });
-    },
-    renderAdditionalInfo() {
+    };
+
+    renderAdditionalInfo = () => {
         const validator = this.props.validator(this.props.format);
         if (validator) {
             return this.renderEmptyLayers(validator);
         }
-    },
+    };
+
     render() {
         const Container = this.props.container;
         const validator = this.props.validator(this.props.format);
@@ -142,15 +149,17 @@ const DefaultViewer = React.createClass({
                     {this.renderPages(validResponses)}
                 </Container>
                 {this.renderAdditionalInfo()}
-            </div>
-        );
-    },
-    next() {
-        this.setState({index: Math.min(this.props.validator(this.props.format).getValidResponses(this.props.responses).length - 1, this.state.index + 1)});
-    },
-    previous() {
-        this.setState({index: Math.max(0, this.state.index - 1) });
+            </div>)
+        ;
     }
-});
+
+    next = () => {
+        this.setState({index: Math.min(this.props.validator(this.props.format).getValidResponses(this.props.responses).length - 1, this.state.index + 1)});
+    };
+
+    previous = () => {
+        this.setState({index: Math.max(0, this.state.index - 1) });
+    };
+}
 
 module.exports = DefaultViewer;

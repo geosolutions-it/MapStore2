@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -12,30 +13,30 @@ const {Grid, Row, Col} = require('react-bootstrap');
 const RecordItem = require('./RecordItem');
 
 
-const RecordGrid = React.createClass({
-    propTypes: {
-        recordItem: React.PropTypes.element,
-        catalogURL: React.PropTypes.string,
-        onZoomToExtent: React.PropTypes.func,
-        zoomToLayer: React.PropTypes.bool,
-        onLayerAdd: React.PropTypes.func,
-        onError: React.PropTypes.func,
-        records: React.PropTypes.array,
-        style: React.PropTypes.object,
-        showGetCapLinks: React.PropTypes.bool,
-        addAuthentication: React.PropTypes.bool,
-        column: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            records: [],
-            onLayerAdd: () => {},
-            onError: () => {},
-            column: {xs: 12, sm: 12, md: 6, lg: 6},
-            zoomToLayer: true
-        };
-    },
-    renderRecordItem(record) {
+class RecordGrid extends React.Component {
+    static propTypes = {
+        recordItem: PropTypes.element,
+        catalogURL: PropTypes.string,
+        onZoomToExtent: PropTypes.func,
+        zoomToLayer: PropTypes.bool,
+        onLayerAdd: PropTypes.func,
+        onError: PropTypes.func,
+        records: PropTypes.array,
+        style: PropTypes.object,
+        showGetCapLinks: PropTypes.bool,
+        addAuthentication: PropTypes.bool,
+        column: PropTypes.object
+    };
+
+    static defaultProps = {
+        records: [],
+        onLayerAdd: () => {},
+        onError: () => {},
+        column: {xs: 12, sm: 12, md: 6, lg: 6},
+        zoomToLayer: true
+    };
+
+    renderRecordItem = (record) => {
         let Item = this.props.recordItem || RecordItem;
         return (
 			<Col {...this.props.column} key={record.identifier}>
@@ -51,12 +52,13 @@ const RecordGrid = React.createClass({
                     addAuthentication={this.props.addAuthentication}/>
 			</Col>
         );
-    },
+    };
+
     render() {
         if (this.props.records) {
             let mapsList = this.props.records instanceof Array ? this.props.records : [this.props.records];
             return (
-                <Grid className="record-grid" fluid={true} style={this.props.style}>
+                <Grid className="record-grid" fluid style={this.props.style}>
                     <Row>
 						{mapsList.map(this.renderRecordItem)}
 					</Row>
@@ -66,6 +68,6 @@ const RecordGrid = React.createClass({
 
         return null;
     }
-});
+}
 
 module.exports = RecordGrid;

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -15,38 +16,38 @@ const assign = require('object-assign');
 const Message = require('../I18N/Message');
 require('./style/dialog.css');
 
-const Dialog = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string.isRequired,
-        style: React.PropTypes.object,
-        backgroundStyle: React.PropTypes.object,
-        className: React.PropTypes.string,
-        maskLoading: React.PropTypes.bool,
-        containerClassName: React.PropTypes.string,
-        headerClassName: React.PropTypes.string,
-        bodyClassName: React.PropTypes.string,
-        footerClassName: React.PropTypes.string,
-        onClickOut: React.PropTypes.func,
-        modal: React.PropTypes.bool,
-        start: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            style: {},
-            backgroundStyle: {
-                background: "rgba(0,0,0,.5)"
-            },
-            start: {x: 0, y: 0},
-            className: "modal-dialog modal-content",
-            maskLoading: false,
-            containerClassName: "",
-            headerClassName: "modal-header",
-            bodyClassName: "modal-body",
-            footerClassName: "modal-footer",
-            modal: false
-        };
-    },
-    renderLoading() {
+class Dialog extends React.Component {
+    static propTypes = {
+        id: PropTypes.string.isRequired,
+        style: PropTypes.object,
+        backgroundStyle: PropTypes.object,
+        className: PropTypes.string,
+        maskLoading: PropTypes.bool,
+        containerClassName: PropTypes.string,
+        headerClassName: PropTypes.string,
+        bodyClassName: PropTypes.string,
+        footerClassName: PropTypes.string,
+        onClickOut: PropTypes.func,
+        modal: PropTypes.bool,
+        start: PropTypes.object
+    };
+
+    static defaultProps = {
+        style: {},
+        backgroundStyle: {
+            background: "rgba(0,0,0,.5)"
+        },
+        start: {x: 0, y: 0},
+        className: "modal-dialog modal-content",
+        maskLoading: false,
+        containerClassName: "",
+        headerClassName: "modal-header",
+        bodyClassName: "modal-body",
+        footerClassName: "modal-footer",
+        modal: false
+    };
+
+    renderLoading = () => {
         if (this.props.maskLoading) {
             return (<div style={{
                 width: "100%",
@@ -65,10 +66,12 @@ const Dialog = React.createClass({
                   transform: "translate(-50%, -40%)"
             }}><Message msgId="loading" /><Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/></div></div>);
         }
-    },
-    renderRole(role) {
+    };
+
+    renderRole = (role) => {
         return React.Children.toArray(this.props.children).filter((child) => child.props.role === role);
-    },
+    };
+
     render() {
         const dialog = (<Draggable start={this.props.start} handle=".draggable-header, .draggable-header *">
             <div id={this.props.id} style={{zIndex: 3, ...this.props.style}} className={this.props.className + " modal-dialog-container"}>
@@ -86,15 +89,16 @@ const Dialog = React.createClass({
         </Draggable>);
         let containerStyle = assign({}, this.props.style, this.props.backgroundStyle);
         return this.props.modal ?
-            (<div onClick={this.props.onClickOut} style={containerStyle} className={"fade in modal " + this.props.containerClassName} role="dialog">
+            <div onClick={this.props.onClickOut} style={containerStyle} className={"fade in modal " + this.props.containerClassName} role="dialog">
             <div onClick={(evt)=> {evt.preventDefault(); evt.stopPropagation(); }} className="modal-dialog" style={{background: "transparent"}}>
                 {dialog}
-            </div></div>) :
+            </div></div> :
             dialog;
-    },
-    hasRole(role) {
-        return React.Children.toArray(this.props.children).filter((child) => child.props.role === role).length > 0;
     }
-});
+
+    hasRole = (role) => {
+        return React.Children.toArray(this.props.children).filter((child) => child.props.role === role).length > 0;
+    };
+}
 
 module.exports = Dialog;

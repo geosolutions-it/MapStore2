@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -43,39 +44,39 @@ const Catalog = connect(catalogSelector, {
 
 const Dialog = require('../components/misc/Dialog');
 
-const MetadataExplorerComponent = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        active: React.PropTypes.bool,
-        searchOnStartup: React.PropTypes.bool,
-        formats: React.PropTypes.array,
-        wrap: React.PropTypes.bool,
-        wrapWithPanel: React.PropTypes.bool,
-        panelStyle: React.PropTypes.object,
-        panelClassName: React.PropTypes.string,
-        toggleControl: React.PropTypes.func,
-        closeGlyph: React.PropTypes.string,
-        buttonStyle: React.PropTypes.object,
-        style: React.PropTypes.object,
-        zoomToLayer: React.PropTypes.bool
-    },
-    getDefaultProps() {
-        return {
-            id: "mapstore-metadata-explorer",
-            active: false,
-            wrap: false,
-            modal: true,
-            wrapWithPanel: false,
-            panelStyle: {
-                zIndex: 100,
-                overflow: "auto"
-            },
-            panelClassName: "toolbar-panel",
-            toggleControl: () => {},
-            closeGlyph: "1-close",
-            zoomToLayer: true
-        };
-    },
+class MetadataExplorerComponent extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        active: PropTypes.bool,
+        searchOnStartup: PropTypes.bool,
+        formats: PropTypes.array,
+        wrap: PropTypes.bool,
+        wrapWithPanel: PropTypes.bool,
+        panelStyle: PropTypes.object,
+        panelClassName: PropTypes.string,
+        toggleControl: PropTypes.func,
+        closeGlyph: PropTypes.string,
+        buttonStyle: PropTypes.object,
+        style: PropTypes.object,
+        zoomToLayer: PropTypes.bool
+    };
+
+    static defaultProps = {
+        id: "mapstore-metadata-explorer",
+        active: false,
+        wrap: false,
+        modal: true,
+        wrapWithPanel: false,
+        panelStyle: {
+            zIndex: 100,
+            overflow: "auto"
+        },
+        panelClassName: "toolbar-panel",
+        toggleControl: () => {},
+        closeGlyph: "1-close",
+        zoomToLayer: true
+    };
+
     render() {
         const panel = <div role="body" className="modal_window"><Catalog zoomToLayer={this.props.zoomToLayer} searchOnStartup={this.props.searchOnStartup} active={this.props.active} {...this.props}/></div>;
         if (this.props.wrap) {
@@ -94,7 +95,8 @@ const MetadataExplorerComponent = React.createClass({
         }
         return panel;
     }
-});
+}
+
 const MetadataExplorerPlugin = connect((state) => ({
     searchOptions: state.catalog && state.catalog.searchOptions,
     formats: state.catalog && state.catalog.supportedFormats || [{name: 'csw', label: 'CSW'}, {name: 'wms', label: 'WMS'}, {name: "wmts", label: "WMTS"}],

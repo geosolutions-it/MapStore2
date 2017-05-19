@@ -6,12 +6,12 @@ module.exports = {
         myapp: path.join(__dirname, "app")
     },
     output: {
-      path: path.join(__dirname, "dist"),
+        path: path.join(__dirname, "dist"),
         publicPath: "/dist/",
         filename: "myapp.js"
     },
     resolve: {
-      extensions: [".js", ".jsx"]
+        extensions: [".js", ".jsx"]
     },
     module: {
         rules: [

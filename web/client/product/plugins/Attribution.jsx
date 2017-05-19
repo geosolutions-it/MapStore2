@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -9,22 +10,21 @@ const React = require('react');
 const src = require("./attribution/geosolutions-brand.png");
 const assign = require('object-assign');
 
-const Attribution = React.createClass({
-    propTypes: {
-        src: React.PropTypes.string,
-        style: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            src: src,
-            style: {
-                position: "absolute",
-                width: "124px",
-                left: 0,
-                bottom: 0
-            }
-        };
-    },
+class Attribution extends React.Component {
+    static propTypes = {
+        src: PropTypes.string,
+        style: PropTypes.object
+    };
+
+    static defaultProps = {
+        src: src,
+        style: {
+            position: "absolute",
+            width: "124px",
+            left: 0,
+            bottom: 0
+        }
+    };
 
     render() {
 
@@ -32,7 +32,7 @@ const Attribution = React.createClass({
                 src={this.props.src}
                 style={this.props.style} />);
     }
-});
+}
 
 module.exports = {
     AttributionPlugin: assign(Attribution, {

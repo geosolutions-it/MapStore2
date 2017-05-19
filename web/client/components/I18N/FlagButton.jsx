@@ -1,4 +1,5 @@
 
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -12,23 +13,23 @@ const OverlayTrigger = require('../misc/OverlayTrigger');
 var LocaleUtils = require('../../utils/LocaleUtils');
 
 
-var LangBar = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        lang: React.PropTypes.string,
-        code: React.PropTypes.string,
-        active: React.PropTypes.bool,
-        label: React.PropTypes.string,
-        description: React.PropTypes.string,
-        onFlagSelected: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            locales: LocaleUtils.getSupportedLocales(),
-            code: 'en-US',
-            onLanguageChange: function() {}
-        };
-    },
+class LangBar extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        lang: PropTypes.string,
+        code: PropTypes.string,
+        active: PropTypes.bool,
+        label: PropTypes.string,
+        description: PropTypes.string,
+        onFlagSelected: PropTypes.func
+    };
+
+    static defaultProps = {
+        locales: LocaleUtils.getSupportedLocales(),
+        code: 'en-US',
+        onLanguageChange: function() {}
+    };
+
     render() {
         let tooltip = <Tooltip id={"flag-button." + this.props.code}>{this.props.label}</Tooltip>;
         return (<OverlayTrigger key={"overlay-" + this.props.code} overlay={tooltip}>
@@ -39,10 +40,11 @@ var LangBar = React.createClass({
                 <img src={require('./images/flags/' + this.props.code + '.png')} alt={this.props.label}/>
             </Button>
         </OverlayTrigger>);
-    },
-    launchFlagAction(code) {
-        this.props.onFlagSelected(code);
     }
-});
+
+    launchFlagAction = (code) => {
+        this.props.onFlagSelected(code);
+    };
+}
 
 module.exports = LangBar;

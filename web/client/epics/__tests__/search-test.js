@@ -27,13 +27,13 @@ const nestedService = {
 };
 const TEXT = "Dinagat Islands";
 const item = {
-      "type": "Feature",
-      "bbox": [125, 10, 126, 11],
-      "geometry": {
+    "type": "Feature",
+    "bbox": [125, 10, 126, 11],
+    "geometry": {
         "type": "Point",
         "coordinates": [125.6, 10.1]
-      },
-      "properties": {
+    },
+    "properties": {
         "name": TEXT
     },
     "__SERVICE__": {
@@ -85,15 +85,15 @@ describe('search Epics', () => {
     });
     it('produces the selectSearchItem epic', () => {
         let action = selectSearchItem({
-          "type": "Feature",
-          "bbox": [125, 10, 126, 11],
-          "geometry": {
-            "type": "Point",
-            "coordinates": [125.6, 10.1]
-          },
-          "properties": {
-            "name": "Dinagat Islands"
-          }
+            "type": "Feature",
+            "bbox": [125, 10, 126, 11],
+            "geometry": {
+                "type": "Point",
+                "coordinates": [125.6, 10.1]
+            },
+            "properties": {
+                "name": "Dinagat Islands"
+            }
         }, {
             size: {
                 width: 200,
@@ -149,8 +149,8 @@ describe('search Epics', () => {
     it('testing the geometry service', (done) => {
         // use the done function for asynchronus calls
         const itemWithoutGeom = {
-              "type": "Feature",
-              "properties": {
+            "type": "Feature",
+            "properties": {
                 "name": TEXT
             },
             "__SERVICE__": {

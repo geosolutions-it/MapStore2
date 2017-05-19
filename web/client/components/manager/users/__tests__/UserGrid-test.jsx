@@ -56,7 +56,7 @@ describe("Test UserGrid Component", () => {
             <UserGrid users={[enabledUser, disabledUser, adminUser]}/>, document.getElementById("container"));
         expect(comp).toExist();
         comp = ReactDOM.render(
-            <UserGrid users={[enabledUser, disabledUser, adminUser]} loading={true}/>, document.getElementById("container"));
+            <UserGrid users={[enabledUser, disabledUser, adminUser]} loading/>, document.getElementById("container"));
         expect(comp).toExist();
     });
     it('Test guestUser user', () => {

@@ -16,22 +16,22 @@ const initialState = {
 
 function controls(state = initialState, action) {
     switch (action.type) {
-        case TOGGLE_GRATICULE: {
-            return assign({}, state,
-                {
-                    graticule: !state.graticule
-                }
+    case TOGGLE_GRATICULE: {
+        return assign({}, state,
+            {
+                graticule: !state.graticule
+            }
             );
-        }
-        case UPDATE_MARKER: {
-            return assign({}, state,
-                {
-                    marker: action.point
-                }
+    }
+    case UPDATE_MARKER: {
+        return assign({}, state,
+            {
+                marker: action.point
+            }
             );
-        }
-        default:
-            return state;
+    }
+    default:
+        return state;
     }
 }
 

@@ -9,38 +9,38 @@ var expect = require('expect');
 var ConfigUtils = require('../ConfigUtils');
 var lconfig = {};
 var testMap = {
-   "defaultSourceType": "gxp_wmssource",
-   "map": {
-      "center": [
-         1361886.8627049,
-         5723464.1181097
-      ],
-      "extent": [
-         -2.003750834E7,
-         -2.003750834E7,
-         2.003750834E7,
-         2.003750834E7
-      ],
-      "zoom": 10,
-      "layers": [
-         {
-            "title": "c1101031_iba",
-            "source": "gxp-source-508",
-            "visibility": true,
-            "name": "cite:c1101031_iba",
-            "opacity": 1
-         }
-      ],
-      "projection": "EPSG:900913",
-      "units": "m"
-   },
-   "sources": {
-      "gxp-source-508": {
-         "projection": "EPSG:900913",
-         "url": "http://test.org"
-      }
+    "defaultSourceType": "gxp_wmssource",
+    "map": {
+        "center": [
+            1361886.8627049,
+            5723464.1181097
+        ],
+        "extent": [
+            -2.003750834E7,
+            -2.003750834E7,
+            2.003750834E7,
+            2.003750834E7
+        ],
+        "zoom": 10,
+        "layers": [
+            {
+                "title": "c1101031_iba",
+                "source": "gxp-source-508",
+                "visibility": true,
+                "name": "cite:c1101031_iba",
+                "opacity": 1
+            }
+        ],
+        "projection": "EPSG:900913",
+        "units": "m"
+    },
+    "sources": {
+        "gxp-source-508": {
+            "projection": "EPSG:900913",
+            "url": "http://test.org"
+        }
 
-   }
+    }
 };
 function resetLConfig() {
     lconfig = {
@@ -77,44 +77,44 @@ function resetLConfig() {
                 20037508.34, 20037508.34
             ],
             "layers": [{
-                    "source": "google",
-                    "title": "Google Hybrid",
-                    "name": "HYBRID",
-                    "group": "background"
-                }, {
-                    "source": "mapquest",
-                    "title": "MapQuest OpenStreetMap",
-                    "name": "osm",
-                    "group": "background"
-                }, {
-                    "source": "osm",
-                    "title": "Open Street Map",
-                    "name": "mapnik",
-                    "group": "background",
-                    "visibility": true // this should be replaced with false
-                }, {
-                    "source": "osm",
-                    "title": "Open Street Map",
-                    "name": "mapnik",
-                    "group": "background",
-                    "visibility": true
-                }, {
-                    "source": "demo",
-                    "visibility": true,
-                    "opacity": 0.5,
-                    "title": "Weather data",
-                    "name": "nurc:Arc_Sample",
-                    "group": "Meteo",
-                    "format": "image/png"
-                }, {
-                    "source": "demo2",
-                    "visibility": true,
-                    "opacity": 0.5,
-                    "title": "Weather data 2",
-                    "name": "nurc:Arc_Sample2",
-                    "group": "Meteo",
-                    "format": "image/png"
-                }]
+                "source": "google",
+                "title": "Google Hybrid",
+                "name": "HYBRID",
+                "group": "background"
+            }, {
+                "source": "mapquest",
+                "title": "MapQuest OpenStreetMap",
+                "name": "osm",
+                "group": "background"
+            }, {
+                "source": "osm",
+                "title": "Open Street Map",
+                "name": "mapnik",
+                "group": "background",
+                "visibility": true // this should be replaced with false
+            }, {
+                "source": "osm",
+                "title": "Open Street Map",
+                "name": "mapnik",
+                "group": "background",
+                "visibility": true
+            }, {
+                "source": "demo",
+                "visibility": true,
+                "opacity": 0.5,
+                "title": "Weather data",
+                "name": "nurc:Arc_Sample",
+                "group": "Meteo",
+                "format": "image/png"
+            }, {
+                "source": "demo2",
+                "visibility": true,
+                "opacity": 0.5,
+                "title": "Weather data 2",
+                "name": "nurc:Arc_Sample2",
+                "group": "Meteo",
+                "format": "image/png"
+            }]
         }
     };
 }

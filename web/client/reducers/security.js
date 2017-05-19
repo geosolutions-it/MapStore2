@@ -17,59 +17,59 @@ const {cloneDeep, head} = require('lodash');
 
 function security(state = {user: null, errorCause: null}, action) {
     switch (action.type) {
-        case USERMANAGER_UPDATE_USER:
-            if (state.user && action.user && state.user.id === action.user.id) {
-                return assign({}, state, {
-                    user: cloneDeep(action.user)
-                });
-            }
-            return state;
-        case SET_CONTROL_PROPERTY:
-            if (action.control === 'ResetPassword' && action.property === 'enabled') {
-                return assign({}, state, {
-                    passwordChanged: false,
-                    passwordError: null
-                });
-            }
-            return state;
-        case LOGIN_SUCCESS:
-            const userAttributes = SecurityUtils.getUserAttributes(action.userDetails.User);
-            const userUuid = head(userAttributes.filter(attribute => attribute.name.toLowerCase() === 'uuid'));
+    case USERMANAGER_UPDATE_USER:
+        if (state.user && action.user && state.user.id === action.user.id) {
             return assign({}, state, {
-                user: action.userDetails.User,
-                token: userUuid && userUuid.value || '',
-                authHeader: action.authHeader,
-                loginError: null
+                user: cloneDeep(action.user)
             });
-        case LOGIN_FAIL:
+        }
+        return state;
+    case SET_CONTROL_PROPERTY:
+        if (action.control === 'ResetPassword' && action.property === 'enabled') {
             return assign({}, state, {
-                loginError: action.error
-            });
-        case RESET_ERROR:
-            return assign({}, state, {
-                loginError: null
-            });
-        case LOGOUT:
-            return assign({}, state, {
-                user: null,
-                token: null,
-                authHeader: null,
-                loginError: null
-            });
-        case CHANGE_PASSWORD_SUCCESS:
-            return assign({}, state, {
-                user: assign({}, state.user, assign({}, action.user, {date: new Date().getUTCMilliseconds()})),
-                authHeader: action.authHeader,
-                passwordChanged: true,
+                passwordChanged: false,
                 passwordError: null
             });
-        case CHANGE_PASSWORD_FAIL:
-            return assign({}, state, {
-                passwordError: action.error,
-                passwordChanged: false
-            });
-        default:
-            return state;
+        }
+        return state;
+    case LOGIN_SUCCESS:
+        const userAttributes = SecurityUtils.getUserAttributes(action.userDetails.User);
+        const userUuid = head(userAttributes.filter(attribute => attribute.name.toLowerCase() === 'uuid'));
+        return assign({}, state, {
+            user: action.userDetails.User,
+            token: userUuid && userUuid.value || '',
+            authHeader: action.authHeader,
+            loginError: null
+        });
+    case LOGIN_FAIL:
+        return assign({}, state, {
+            loginError: action.error
+        });
+    case RESET_ERROR:
+        return assign({}, state, {
+            loginError: null
+        });
+    case LOGOUT:
+        return assign({}, state, {
+            user: null,
+            token: null,
+            authHeader: null,
+            loginError: null
+        });
+    case CHANGE_PASSWORD_SUCCESS:
+        return assign({}, state, {
+            user: assign({}, state.user, assign({}, action.user, {date: new Date().getUTCMilliseconds()})),
+            authHeader: action.authHeader,
+            passwordChanged: true,
+            passwordError: null
+        });
+    case CHANGE_PASSWORD_FAIL:
+        return assign({}, state, {
+            passwordError: action.error,
+            passwordChanged: false
+        });
+    default:
+        return state;
     }
 }
 

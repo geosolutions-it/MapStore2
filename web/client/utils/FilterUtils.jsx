@@ -56,7 +56,7 @@ const FilterUtils = {
     toOGCFilter: function(ftName, json, version, sortOptions = null, hits = false, format = null, propertyNames = null) {
         let objFilter;
         try {
-            objFilter = (json instanceof Object) ? json : JSON.parse(json);
+            objFilter = json instanceof Object ? json : JSON.parse(json);
         } catch (e) {
             return e;
         }
@@ -76,7 +76,7 @@ const FilterUtils = {
                 attributeFilter = this.processOGCFilterFields(objFilter, nsplaceholder);
             }
             filters.push(attributeFilter);
-        }else if (objFilter.simpleFilterFields && objFilter.simpleFilterFields.length > 0) {
+        } else if (objFilter.simpleFilterFields && objFilter.simpleFilterFields.length > 0) {
             let ogc = "";
             ogc += ogcLogicalOperator.AND.startTag;
             objFilter.simpleFilterFields.forEach((filter) => {
@@ -117,10 +117,10 @@ const FilterUtils = {
         ogcFilter += '<wfs:Query ' + (versionOGC === "2.0" ? "typeNames" : "typeName") + '="' + ftName + '" srsName="EPSG:4326">';
         ogcFilter += filter;
         if (propertyNames) {
-            ogcFilter += propertyNames.map( name => (
+            ogcFilter += propertyNames.map( name =>
                 propertyTagReference[nsplaceholder].startTag +
                 name +
-                propertyTagReference[nsplaceholder].endTag )).join("");
+                propertyTagReference[nsplaceholder].endTag ).join("");
         }
         if (sortOptions && sortOptions.sortBy && sortOptions.sortOrder) {
             ogcFilter +=
@@ -145,7 +145,7 @@ const FilterUtils = {
         return ogcFilter;
     },
 
-    setOperatorsPlaceholders: function(placeholder, replacement= "ogc") {
+    setOperatorsPlaceholders: function(placeholder, replacement = "ogc") {
         [
             ogcLogicalOperator,
             ogcComparisonOperators,
@@ -231,7 +231,7 @@ const FilterUtils = {
                             attribute +
                         propertyTagReference[nsplaceholder].endTag +
                     ogcComparisonOperators[operator].endTag;
-            }else if (operator === "=") {
+            } else if (operator === "=") {
                 fieldFilter =
                     ogcComparisonOperators[operator].startTag +
                         propertyTagReference[nsplaceholder].startTag +
@@ -239,7 +239,7 @@ const FilterUtils = {
                         propertyTagReference[nsplaceholder].endTag +
                         "<" + nsplaceholder + ":Literal>" + value + "</" + nsplaceholder + ":Literal>" +
                     ogcComparisonOperators[operator].endTag;
-            }else {
+            } else {
                 fieldFilter =
                     ogcComparisonOperators[operator].startTag +
                         propertyTagReference[nsplaceholder].startTag +
@@ -262,14 +262,14 @@ const FilterUtils = {
                                 propertyTagReference[nsplaceholder].endTag +
                              "<" + nsplaceholder + ":Literal>" + value.lowBound + "</" + nsplaceholder + ":Literal>" +
                                         ogcComparisonOperators[">="].endTag;
-            }else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
+            } else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
                 fieldFilter = ogcComparisonOperators["<="].startTag +
                                 propertyTagReference[nsplaceholder].startTag +
                                     attribute +
                                 propertyTagReference[nsplaceholder].endTag +
                              "<" + nsplaceholder + ":Literal>" + value.upBound + "</" + nsplaceholder + ":Literal>" +
                                         ogcComparisonOperators["<="].endTag;
-            }else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
+            } else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
                 fieldFilter =
                             ogcComparisonOperators[operator].startTag +
                                 propertyTagReference[nsplaceholder].startTag +
@@ -305,20 +305,20 @@ const FilterUtils = {
             filter = fields.reduce((arr, field) => {
                 let fieldFilter;
                 switch (field.type) {
-                    case "date":
-                        fieldFilter = this.ogcDateField(field.attribute, field.operator, field.value, nsplaceholder);
-                        break;
-                    case "number":
-                        fieldFilter = this.ogcNumberField(field.attribute, field.operator, field.value, nsplaceholder);
-                        break;
-                    case "string":
-                        fieldFilter = this.ogcStringField(field.attribute, field.operator, field.value, nsplaceholder);
-                        break;
-                    case "list":
-                        fieldFilter = this.ogcListField(field.attribute, field.operator, field.value, nsplaceholder);
-                        break;
-                    default:
-                        break;
+                case "date":
+                    fieldFilter = this.ogcDateField(field.attribute, field.operator, field.value, nsplaceholder);
+                    break;
+                case "number":
+                    fieldFilter = this.ogcNumberField(field.attribute, field.operator, field.value, nsplaceholder);
+                    break;
+                case "string":
+                    fieldFilter = this.ogcStringField(field.attribute, field.operator, field.value, nsplaceholder);
+                    break;
+                case "list":
+                    fieldFilter = this.ogcListField(field.attribute, field.operator, field.value, nsplaceholder);
+                    break;
+                default:
+                    break;
                 }
                 if (fieldFilter) {
                     arr.push(fieldFilter);
@@ -335,27 +335,27 @@ const FilterUtils = {
     processOGCSimpleFilterField: function(field, nsplaceholder) {
         let filter = "";
         switch (field.type) {
-            case "date":
-                filter = this.ogcDateField(field.attribute, field.operator, field.values, nsplaceholder);
-                break;
-            case "number":
-                filter = this.ogcNumberField(field.attribute, field.operator, field.values, nsplaceholder);
-                break;
-            case "string":
-                filter = this.ogcStringField(field.attribute, field.operator, field.values, nsplaceholder);
-                break;
-            case "list": {
-                if (field.values && field.values.length > 0 ) {
-                    filter = field.values.reduce((ogc, val) => {
-                        let op = (val === null || val === "null") ? "isNull" : "=";
-                        return ogc + this.ogcStringField(field.attribute, op, val, nsplaceholder);
-                    }, ogcLogicalOperator.OR.startTag);
-                    filter += ogcLogicalOperator.OR.endTag;
-                }
-                break;
+        case "date":
+            filter = this.ogcDateField(field.attribute, field.operator, field.values, nsplaceholder);
+            break;
+        case "number":
+            filter = this.ogcNumberField(field.attribute, field.operator, field.values, nsplaceholder);
+            break;
+        case "string":
+            filter = this.ogcStringField(field.attribute, field.operator, field.values, nsplaceholder);
+            break;
+        case "list": {
+            if (field.values && field.values.length > 0 ) {
+                filter = field.values.reduce((ogc, val) => {
+                    let op = val === null || val === "null" ? "isNull" : "=";
+                    return ogc + this.ogcStringField(field.attribute, op, val, nsplaceholder);
+                }, ogcLogicalOperator.OR.startTag);
+                filter += ogcLogicalOperator.OR.endTag;
             }
-            default:
-                break;
+            break;
+        }
+        default:
+            break;
         }
         return filter;
     },
@@ -363,7 +363,7 @@ const FilterUtils = {
         if (coords.length >= 3) {
             const first = coords[0];
             const last = coords[coords.length - 1];
-            if ((first[0] !== last[0]) || (first[1] !== last[1])) {
+            if (first[0] !== last[0] || first[1] !== last[1]) {
                 return coords.concat([coords[0]]);
             }
         }
@@ -382,8 +382,8 @@ const FilterUtils = {
             let coords = this.closePolygon(element).map((coordinate) => {
                 return coordinate[0] + (version === "1.0.0" ? "," : " ") + coordinate[1];
             });
-            const exterior = (version === "1.0.0" ? "outerBoundaryIs" : "exterior");
-            const interior = (version === "1.0.0" ? "innerBoundaryIs" : "exterior");
+            const exterior = version === "1.0.0" ? "outerBoundaryIs" : "exterior";
+            const interior = version === "1.0.0" ? "innerBoundaryIs" : "exterior";
             gmlPolygon +=
                 (index < 1 ? '<gml:' + exterior + '>' : '<gml:' + interior + '>') +
                         '<gml:LinearRing>' +
@@ -421,57 +421,57 @@ const FilterUtils = {
     processOGCGeometry: function(version, geometry) {
         let ogc = '';
         switch (geometry.type) {
-            case "Point":
-                ogc += this.getGmlPointElement(geometry.coordinates,
+        case "Point":
+            ogc += this.getGmlPointElement(geometry.coordinates,
                     geometry.projection || "EPSG:4326", version);
-                        break;
-            case "MultiPoint":
-                ogc += '<gml:MultiPoint srsName="' + (geometry.projection || "EPSG:4326") + '">';
+            break;
+        case "MultiPoint":
+            ogc += '<gml:MultiPoint srsName="' + (geometry.projection || "EPSG:4326") + '">';
 
                         // //////////////////////////////////////////////////////////////////////////
                         // Coordinates of a MultiPoint are an array of positions
                         // //////////////////////////////////////////////////////////////////////////
-                geometry.coordinates.forEach((element) => {
-                    let point = element;
-                    if (point) {
-                        ogc += "<gml:pointMember>";
-                        ogc += this.getGmlPointElement(point, version);
-                        ogc += "</gml:pointMember>";
-                    }
-                });
+            geometry.coordinates.forEach((element) => {
+                let point = element;
+                if (point) {
+                    ogc += "<gml:pointMember>";
+                    ogc += this.getGmlPointElement(point, version);
+                    ogc += "</gml:pointMember>";
+                }
+            });
 
-                ogc += '</gml:MultiPoint>';
-                break;
-            case "LineString":
-                ogc += this.getGmlLineStringElement(geometry.coordinates,
+            ogc += '</gml:MultiPoint>';
+            break;
+        case "LineString":
+            ogc += this.getGmlLineStringElement(geometry.coordinates,
                   geometry.projection || "EPSG:4326", version);
-                    break;
-            case "Polygon":
-                ogc += this.getGmlPolygonElement(geometry.coordinates,
+            break;
+        case "Polygon":
+            ogc += this.getGmlPolygonElement(geometry.coordinates,
                     geometry.projection || "EPSG:4326", version);
-                        break;
-            case "MultiPolygon":
-                        const multyPolygonTagName = version === "2.0" ? "MultiSurface" : "MultiPolygon";
-                        const polygonMemberTagName = version === "2.0" ? "surfaceMembers" : "polygonMember";
+            break;
+        case "MultiPolygon":
+            const multyPolygonTagName = version === "2.0" ? "MultiSurface" : "MultiPolygon";
+            const polygonMemberTagName = version === "2.0" ? "surfaceMembers" : "polygonMember";
 
-                ogc += '<gml:' + multyPolygonTagName + ' srsName="' + (geometry.projection || "EPSG:4326") + '">';
+            ogc += '<gml:' + multyPolygonTagName + ' srsName="' + (geometry.projection || "EPSG:4326") + '">';
 
                         // //////////////////////////////////////////////////////////////////////////
                         // Coordinates of a MultiPolygon are an array of Polygon coordinate arrays
                         // //////////////////////////////////////////////////////////////////////////
-                geometry.coordinates.forEach((element) => {
-                    let polygon = element;
-                    if (polygon) {
-                        ogc += "<gml:" + polygonMemberTagName + ">";
-                        ogc += this.getGmlPolygonElement(polygon, version);
-                        ogc += "</gml:" + polygonMemberTagName + ">";
-                    }
-                });
+            geometry.coordinates.forEach((element) => {
+                let polygon = element;
+                if (polygon) {
+                    ogc += "<gml:" + polygonMemberTagName + ">";
+                    ogc += this.getGmlPolygonElement(polygon, version);
+                    ogc += "</gml:" + polygonMemberTagName + ">";
+                }
+            });
 
-                ogc += '</gml:' + multyPolygonTagName + '>';
-                break;
-            default:
-                        break;
+            ogc += '</gml:' + multyPolygonTagName + '>';
+            break;
+        default:
+            break;
         }
         return ogc;
     },
@@ -483,32 +483,32 @@ const FilterUtils = {
             propertyTagReference[nsplaceholder].endTag;
 
         switch (objFilter.spatialField.operation) {
-            case "INTERSECTS":
-            case "DWITHIN":
-            case "WITHIN":
-            case "CONTAINS": {
-                ogc += this.processOGCGeometry(version, objFilter.spatialField.geometry);
+        case "INTERSECTS":
+        case "DWITHIN":
+        case "WITHIN":
+        case "CONTAINS": {
+            ogc += this.processOGCGeometry(version, objFilter.spatialField.geometry);
 
-                if (objFilter.spatialField.operation === "DWITHIN") {
-                    ogc += '<' + nsplaceholder + ':Distance units="m">' + (objFilter.spatialField.geometry.distance || 0) + '</' + nsplaceholder + ':Distance>';
-                }
-
-                break;
+            if (objFilter.spatialField.operation === "DWITHIN") {
+                ogc += '<' + nsplaceholder + ':Distance units="m">' + (objFilter.spatialField.geometry.distance || 0) + '</' + nsplaceholder + ':Distance>';
             }
-            case "BBOX": {
-                let lowerCorner = objFilter.spatialField.geometry.extent[0] + " " + objFilter.spatialField.geometry.extent[1];
-                let upperCorner = objFilter.spatialField.geometry.extent[2] + " " + objFilter.spatialField.geometry.extent[3];
 
-                ogc +=
+            break;
+        }
+        case "BBOX": {
+            let lowerCorner = objFilter.spatialField.geometry.extent[0] + " " + objFilter.spatialField.geometry.extent[1];
+            let upperCorner = objFilter.spatialField.geometry.extent[2] + " " + objFilter.spatialField.geometry.extent[3];
+
+            ogc +=
                     '<gml:Envelope' + ' srsName="' + objFilter.spatialField.geometry.projection + '">' +
                         '<gml:lowerCorner>' + lowerCorner + '</gml:lowerCorner>' +
                         '<gml:upperCorner>' + upperCorner + '</gml:upperCorner>' +
                     '</gml:Envelope>';
 
-                break;
-            }
-            default:
-                break;
+            break;
+        }
+        default:
+            break;
         }
 
         ogc += ogcSpatialOperator[objFilter.spatialField.operation].endTag;
@@ -522,12 +522,12 @@ const FilterUtils = {
         getFeature += pagination && (pagination.startIndex || pagination.startIndex === 0) ? 'startIndex="' + pagination.startIndex + '" ' : "";
 
         switch (ver) {
-            case "1.0.0":
-                getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
+        case "1.0.0":
+            getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
 
-                getFeature = hits ? getFeature + ' resultType="hits"' : getFeature;
+            getFeature = hits ? getFeature + ' resultType="hits"' : getFeature;
 
-                getFeature += 'service="WFS" version="' + ver + '" ' +
+            getFeature += 'service="WFS" version="' + ver + '" ' +
                     'outputFormat="GML2" ' +
                     'xmlns:gml="http://www.opengis.net/gml" ' +
                     'xmlns:wfs="http://www.opengis.net/wfs" ' +
@@ -535,26 +535,26 @@ const FilterUtils = {
                     'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
                     'xsi:schemaLocation="http://www.opengis.net/wfs ' +
                         'http://schemas.opengis.net/wfs/1.0.0/WFS-basic.xsd">';
-                break;
-            case "1.1.0":
-                getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
+            break;
+        case "1.1.0":
+            getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
 
-                getFeature = hits ? getFeature + ' resultType="hits"' : getFeature;
+            getFeature = hits ? getFeature + ' resultType="hits"' : getFeature;
 
-                getFeature += 'service="WFS" version="' + ver + '" ' +
+            getFeature += 'service="WFS" version="' + ver + '" ' +
                     'xmlns:gml="http://www.opengis.net/gml" ' +
                     'xmlns:wfs="http://www.opengis.net/wfs" ' +
                     'xmlns:ogc="http://www.opengis.net/ogc" ' +
                     'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
                     'xsi:schemaLocation="http://www.opengis.net/wfs ' +
                         'http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">';
-                break;
-            default: // default is wfs 2.0
-                getFeature += pagination && pagination.maxFeatures ? 'count="' + pagination.maxFeatures + '" ' : "";
+            break;
+        default: // default is wfs 2.0
+            getFeature += pagination && pagination.maxFeatures ? 'count="' + pagination.maxFeatures + '" ' : "";
 
-                getFeature = hits && !pagination ? getFeature + ' resultType="hits"' : getFeature;
+            getFeature = hits && !pagination ? getFeature + ' resultType="hits"' : getFeature;
 
-                getFeature += 'service="WFS" version="' + ver + '" ' +
+            getFeature += 'service="WFS" version="' + ver + '" ' +
                     'xmlns:wfs="http://www.opengis.net/wfs/2.0" ' +
                     'xmlns:fes="http://www.opengis.net/fes/2.0" ' +
                     'xmlns:gml="http://www.opengis.net/gml/3.2" ' +
@@ -642,7 +642,7 @@ const FilterUtils = {
     toCQLFilter: function(json) {
         let objFilter;
         try {
-            objFilter = (json instanceof Object) ? json : JSON.parse(json);
+            objFilter = json instanceof Object ? json : JSON.parse(json);
         } catch (e) {
             return e;
         }
@@ -653,7 +653,7 @@ const FilterUtils = {
         if (objFilter.filterFields && objFilter.filterFields.length > 0) {
             attributeFilter = this.processCQLFilterGroup(objFilter.groupFields[0], objFilter);
             filters.push(attributeFilter);
-        }else if (objFilter.simpleFilterFields && objFilter.simpleFilterFields.length > 0) {
+        } else if (objFilter.simpleFilterFields && objFilter.simpleFilterFields.length > 0) {
             let simpleFilter = objFilter.simpleFilterFields.reduce((cql, field) => {
                 let tmp = cql;
                 let strFilter = this.processCQLSimpleFilterField(field);
@@ -691,17 +691,32 @@ const FilterUtils = {
         let geometry = type + "(";
 
         switch (type) {
-            case "Point":
-                geometry += coordinates.join(" ");
-                break;
-            case "MultiPoint":
-                coordinates.forEach((position, index) => {
-                    geometry += position.join(" ");
-                    geometry += index < coordinates.length - 1 ? ", " : "";
+        case "Point":
+            geometry += coordinates.join(" ");
+            break;
+        case "MultiPoint":
+            coordinates.forEach((position, index) => {
+                geometry += position.join(" ");
+                geometry += index < coordinates.length - 1 ? ", " : "";
+            });
+            break;
+        case "Polygon":
+            coordinates.forEach((element, index) => {
+                geometry += "(";
+                let coords = element.map((coordinate) => {
+                    return coordinate[0] + " " + coordinate[1];
                 });
-                break;
-            case "Polygon":
-                coordinates.forEach((element, index) => {
+
+                geometry += coords.join(", ");
+                geometry += ")";
+
+                geometry += index < coordinates.length - 1 ? ", " : "";
+            });
+            break;
+        case "MultiPolygon":
+            coordinates.forEach((polygon, idx) => {
+                geometry += "(";
+                polygon.forEach((element, index) => {
                     geometry += "(";
                     let coords = element.map((coordinate) => {
                         return coordinate[0] + " " + coordinate[1];
@@ -710,29 +725,14 @@ const FilterUtils = {
                     geometry += coords.join(", ");
                     geometry += ")";
 
-                    geometry += index < coordinates.length - 1 ? ", " : "";
+                    geometry += index < polygon.length - 1 ? ", " : "";
                 });
-                break;
-            case "MultiPolygon":
-                coordinates.forEach((polygon, idx) => {
-                    geometry += "(";
-                    polygon.forEach((element, index) => {
-                        geometry += "(";
-                        let coords = element.map((coordinate) => {
-                            return coordinate[0] + " " + coordinate[1];
-                        });
-
-                        geometry += coords.join(", ");
-                        geometry += ")";
-
-                        geometry += index < polygon.length - 1 ? ", " : "";
-                    });
-                    geometry += ")";
-                    geometry += idx < coordinates.length - 1 ? ", " : "";
-                });
-                break;
-            default:
-                break;
+                geometry += ")";
+                geometry += idx < coordinates.length - 1 ? ", " : "";
+            });
+            break;
+        default:
+            break;
         }
 
         geometry += ")";
@@ -787,7 +787,7 @@ const FilterUtils = {
         if (operator === "><") {
             if (value && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
                 fieldFilter = "(" + attribute + ">='" + value.lowBound + "')";
-            }else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
+            } else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
                 fieldFilter = "(" + attribute + "<='" + value.upBound + "')";
             } else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
                 fieldFilter = "(" + attribute + ">='" + value.lowBound +
@@ -819,20 +819,20 @@ const FilterUtils = {
                 let fieldFilter;
 
                 switch (field.type) {
-                    case "date":
-                        fieldFilter = this.cqlDateField(field.attribute, field.operator, field.value);
-                        break;
-                    case "number":
-                        fieldFilter = this.cqlNumberField(field.attribute, field.operator, field.value);
-                        break;
-                    case "string":
-                        fieldFilter = this.cqlStringField(field.attribute, field.operator, field.value);
-                        break;
-                    case "list":
-                        fieldFilter = this.cqlListField(field.attribute, field.operator, field.value);
-                        break;
-                    default:
-                        break;
+                case "date":
+                    fieldFilter = this.cqlDateField(field.attribute, field.operator, field.value);
+                    break;
+                case "number":
+                    fieldFilter = this.cqlNumberField(field.attribute, field.operator, field.value);
+                    break;
+                case "string":
+                    fieldFilter = this.cqlStringField(field.attribute, field.operator, field.value);
+                    break;
+                case "list":
+                    fieldFilter = this.cqlListField(field.attribute, field.operator, field.value);
+                    break;
+                default:
+                    break;
                 }
                 if (fieldFilter) {
                     filter.push(fieldFilter);
@@ -848,38 +848,38 @@ const FilterUtils = {
     processCQLSimpleFilterField: function(field) {
         let strFilter = false;
         switch (field.type) {
-            case "date":
-                strFilter = this.cqlDateField(field.attribute, field.operator, field.values);
-                break;
-            case "number":
-                strFilter = this.cqlNumberField(field.attribute, field.operator, field.values);
-                break;
-            case "string":
-                strFilter = this.cqlStringField(field.attribute, field.operator, field.values);
-                break;
-            case "list": {
-                if (field.values.length !== field.optionsValues.length) {
-                    let addNull = false;
-                    let filter = field.values.reduce((arr, value) => {
-                        if (value === null || value === "null") {
-                            addNull = true;
-                        } else {
-                            arr.push( "'" + value + "'");
-                        }
-                        return arr;
-                    }, []);
-                    strFilter = filter.length > 0 ? field.attribute + " IN(" + filter.join(",") + ")" : strFilter;
-                    if (addNull) {
-                        strFilter = (strFilter) ? strFilter + " OR isNull(" + field.attribute + ")=true" : "isNull(" + field.attribute + ")=true";
+        case "date":
+            strFilter = this.cqlDateField(field.attribute, field.operator, field.values);
+            break;
+        case "number":
+            strFilter = this.cqlNumberField(field.attribute, field.operator, field.values);
+            break;
+        case "string":
+            strFilter = this.cqlStringField(field.attribute, field.operator, field.values);
+            break;
+        case "list": {
+            if (field.values.length !== field.optionsValues.length) {
+                let addNull = false;
+                let filter = field.values.reduce((arr, value) => {
+                    if (value === null || value === "null") {
+                        addNull = true;
+                    } else {
+                        arr.push( "'" + value + "'");
                     }
+                    return arr;
+                }, []);
+                strFilter = filter.length > 0 ? field.attribute + " IN(" + filter.join(",") + ")" : strFilter;
+                if (addNull) {
+                    strFilter = strFilter ? strFilter + " OR isNull(" + field.attribute + ")=true" : "isNull(" + field.attribute + ")=true";
                 }
-                break;
             }
-            default:
-                break;
+            break;
+        }
+        default:
+            break;
         }
 
-        return (strFilter && strFilter.length > 0) ? strFilter : false;
+        return strFilter && strFilter.length > 0 ? strFilter : false;
     },
     getOgcAllPropertyValue: function(featureTypeName, attribute) {
         return `<wfs:GetPropertyValue service="WFS" valueReference='${attribute}'

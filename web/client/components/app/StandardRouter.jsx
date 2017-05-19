@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -22,35 +23,36 @@ const Theme = connect((state) => ({
     return assign({}, stateProps, dispatchProps, ownProps);
 })(require('../theme/Theme'));
 
-const StandardRouter = React.createClass({
-    propTypes: {
-        plugins: React.PropTypes.object,
-        locale: React.PropTypes.object,
-        pages: React.PropTypes.array,
-        className: React.PropTypes.string,
-        themeCfg: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            plugins: {},
-            locale: {messages: {}, current: 'en-US'},
-            pages: [],
-            className: "fill",
-            themeCfg: {
-                path: 'dist/themes'
-            }
-        };
-    },
-    renderPages() {
+class StandardRouter extends React.Component {
+    static propTypes = {
+        plugins: PropTypes.object,
+        locale: PropTypes.object,
+        pages: PropTypes.array,
+        className: PropTypes.string,
+        themeCfg: PropTypes.object
+    };
+
+    static defaultProps = {
+        plugins: {},
+        locale: {messages: {}, current: 'en-US'},
+        pages: [],
+        className: "fill",
+        themeCfg: {
+            path: 'dist/themes'
+        }
+    };
+
+    renderPages = () => {
         return this.props.pages.map((page) => {
             const pageConfig = page.pageConfig || {};
             const Component = connect(() => ({
                 plugins: this.props.plugins,
                 ...pageConfig
             }))(page.component);
-            return (<Route key={page.name || page.path} path={page.path} component={Component}/>);
+            return <Route key={page.name || page.path} path={page.path} component={Component}/>;
         });
-    },
+    };
+
     render() {
         return (
 
@@ -65,6 +67,6 @@ const StandardRouter = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = StandardRouter;

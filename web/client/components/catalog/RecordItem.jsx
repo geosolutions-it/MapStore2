@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -40,44 +41,44 @@ const removeParameters = (url, skip) => {
 
 require("./RecordItem.css");
 
-const RecordItem = React.createClass({
-    propTypes: {
-        onLayerAdd: React.PropTypes.func,
-        onZoomToExtent: React.PropTypes.func,
-        zoomToLayer: React.PropTypes.bool,
-        record: React.PropTypes.object,
-        buttonSize: React.PropTypes.string,
-        onCopy: React.PropTypes.func,
-        showGetCapLinks: React.PropTypes.bool,
-        addAuthentication: React.PropTypes.bool,
-        crs: React.PropTypes.string,
-        onError: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            mapType: "leaflet",
-            onLayerAdd: () => {},
-            onZoomToExtent: () => {},
-            zoomToLayer: true,
-            onError: () => {},
-            style: {},
-            buttonSize: "small",
-            onCopy: () => {},
-            showGetCapLinks: false,
-            crs: "EPSG:3857"
-        };
-    },
-    getInitialState() {
-        return {};
-    },
+class RecordItem extends React.Component {
+    static propTypes = {
+        onLayerAdd: PropTypes.func,
+        onZoomToExtent: PropTypes.func,
+        zoomToLayer: PropTypes.bool,
+        record: PropTypes.object,
+        buttonSize: PropTypes.string,
+        onCopy: PropTypes.func,
+        showGetCapLinks: PropTypes.bool,
+        addAuthentication: PropTypes.bool,
+        crs: PropTypes.string,
+        onError: PropTypes.func
+    };
+
+    static defaultProps = {
+        mapType: "leaflet",
+        onLayerAdd: () => {},
+        onZoomToExtent: () => {},
+        zoomToLayer: true,
+        onError: () => {},
+        style: {},
+        buttonSize: "small",
+        onCopy: () => {},
+        showGetCapLinks: false,
+        crs: "EPSG:3857"
+    };
+
+    state = {};
+
     componentWillMount() {
         document.addEventListener('click', this.handleClick, false);
-    },
+    }
 
     componentWillUnmount() {
         document.removeEventListener('click', this.handleClick, false);
-    },
-    getLinks(record) {
+    }
+
+    getLinks = (record) => {
         let wmsGetCap = head(record.references.filter(reference => reference.type &&
             reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
         let wfsGetCap = head(record.references.filter(reference => reference.type &&
@@ -107,8 +108,9 @@ const RecordItem = React.createClass({
             });
         }
         return links;
-    },
-    renderThumb(thumbURL, record) {
+    };
+
+    renderThumb = (thumbURL, record) => {
         let thumbSrc = thumbURL || defaultThumb;
 
         return (<Image src={thumbSrc} alt={record && record.title} style={{
@@ -118,17 +120,18 @@ const RecordItem = React.createClass({
             marginRight: "20px"
         }}/>);
 
-    },
-    renderButtons(record) {
+    };
+
+    renderButtons = (record) => {
         if (!record || !record.references) {
             // we don't have a valid record so no buttons to add
             return null;
         }
         // let's extract the references we need
         let wms = head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMS"
-            || ((reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-map") > -1)))));
+            || reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-map") > -1)));
         let wmts = head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMTS"
-            || ((reference.type.indexOf("OGC:WMTS") > -1 && reference.type.indexOf("http-get-map") > -1)))));
+            || reference.type.indexOf("OGC:WMTS") > -1 && reference.type.indexOf("http-get-map") > -1)));
         // let's create the buttons
         let buttons = [];
         if (wms) {
@@ -171,8 +174,9 @@ const RecordItem = React.createClass({
                 {buttons}
             </div>
         );
-    },
-    renderDescription(record) {
+    };
+
+    renderDescription = (record) => {
         if (!record) {
             return null;
         }
@@ -181,7 +185,8 @@ const RecordItem = React.createClass({
         } else if (Array.isArray(record.description)) {
             return record.description.join(", ");
         }
-    },
+    };
+
     render() {
         let record = this.props.record;
         return (
@@ -195,14 +200,17 @@ const RecordItem = React.createClass({
                   {this.renderButtons(record)}
             </Panel>
         );
-    },
-    isLinkCopied(key) {
+    }
+
+    isLinkCopied = (key) => {
         return this.state[key];
-    },
-    setLinkCopiedStatus(key, status) {
+    };
+
+    setLinkCopiedStatus = (key, status) => {
         this.setState({[key]: status});
-    },
-    addLayer(wms) {
+    };
+
+    addLayer = (wms) => {
         const {url, params} = removeParameters(wms.url, ["request", "layer", "service", "version"]);
         const allowedSRS = buildSRSMap(wms.SRS);
         if (wms.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
@@ -214,7 +222,7 @@ const RecordItem = React.createClass({
                 visibility: true,
                 dimensions: this.props.record.dimensions || [],
                 name: wms.params && wms.params.name,
-                title: this.props.record.title || (wms.params && wms.params.name),
+                title: this.props.record.title || wms.params && wms.params.name,
                 bbox: {
                     crs: this.props.record.boundingBox.crs,
                     bounds: {
@@ -234,8 +242,9 @@ const RecordItem = React.createClass({
                 this.props.onZoomToExtent(extent, crs);
             }
         }
-    },
-    addwmtsLayer(wmts) {
+    };
+
+    addwmtsLayer = (wmts) => {
         const {url, params} = removeParameters(wmts.url, ["request", "layer"]);
         const allowedSRS = buildSRSMap(wmts.SRS);
         if (wmts.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
@@ -246,7 +255,7 @@ const RecordItem = React.createClass({
                 url: url,
                 visibility: true,
                 name: wmts.params && wmts.params.name,
-                title: this.props.record.title || (wmts.params && wmts.params.name),
+                title: this.props.record.title || wmts.params && wmts.params.name,
                 matrixIds: this.props.record.matrixIds || [],
                 tileMatrixSet: this.props.record.tileMatrixSet || [],
                 bbox: {
@@ -268,7 +277,7 @@ const RecordItem = React.createClass({
                 this.props.onZoomToExtent(extent, crs);
             }
         }
-    }
-});
+    };
+}
 
 module.exports = RecordItem;

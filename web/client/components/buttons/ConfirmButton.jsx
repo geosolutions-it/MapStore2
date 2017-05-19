@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,71 +9,73 @@
 const React = require('react');
 const classnames = require('classnames');
 
-var ConfirmButton = React.createClass( {
-    propTypes: {
+class ConfirmButton extends React.Component {
+    static propTypes = {
         // if true, we will disable the button after confirming & disabled
         // if false || empty, we will loop around and allow click & confirm again
-        disableAfterConfirmed: React.PropTypes.bool,
-        resetOnBlur: React.PropTypes.bool,
-        onConfirm: React.PropTypes.func,
-        onDisable: React.PropTypes.func,
-        onClick: React.PropTypes.func,
+        disableAfterConfirmed: PropTypes.bool,
+        resetOnBlur: PropTypes.bool,
+        onConfirm: PropTypes.func,
+        onDisable: PropTypes.func,
+        onClick: PropTypes.func,
         // displayed normally, before confirming, while active
-        text: React.PropTypes.oneOfType([
-            React.PropTypes.string,
-            React.PropTypes.node
+        text: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.node
         ]),
-        className: React.PropTypes.string,
-        style: React.PropTypes.object,
+        className: PropTypes.string,
+        style: PropTypes.object,
         // displayed only while confirming
-        confirming: React.PropTypes.shape({
-            text: React.PropTypes.oneOfType([
-                React.PropTypes.string,
-                React.PropTypes.node
+        confirming: PropTypes.shape({
+            text: PropTypes.oneOfType([
+                PropTypes.string,
+                PropTypes.node
             ]),
-            className: React.PropTypes.string,
-            style: React.PropTypes.object,
+            className: PropTypes.string,
+            style: PropTypes.object,
             // alias for onConfirm (convenience)
-            onClick: React.PropTypes.func
+            onClick: PropTypes.func
         }),
         // displayed only after confirmed (clicked twice, disabled)
-        disabled: React.PropTypes.shape({
-            text: React.PropTypes.oneOfType([
-                React.PropTypes.string,
-                React.PropTypes.node
+        disabled: PropTypes.shape({
+            text: PropTypes.oneOfType([
+                PropTypes.string,
+                PropTypes.node
             ]),
-            className: React.PropTypes.string,
-            style: React.PropTypes.object
+            className: PropTypes.string,
+            style: PropTypes.object
         }),
         // children always displayed (optional)
-        children: React.PropTypes.node,
+        children: PropTypes.node,
         // custom props to pass into button
-        buttonProps: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            resetOnBlur: true
-        };
-    },
-    onClick() {
+        buttonProps: PropTypes.object
+    };
+
+    static defaultProps = {
+        resetOnBlur: true
+    };
+
+    state = {
+        is: 'active'
+    };
+
+    onClick = () => {
         return this.props.onClick ? this.props.onClick.bind(this) : () => {};
-    },
-    onDisable() {
-        return (this.props.onDisable ? this.props.onDisable.bind(this) : () => {});
-    },
-    onConfirm() {
+    };
+
+    onDisable = () => {
+        return this.props.onDisable ? this.props.onDisable.bind(this) : () => {};
+    };
+
+    onConfirm = () => {
         if (this.props.onConfirm) {
             return this.props.onConfirm();
         } else if (this.props.confirming && this.props.confirming.onClick) {
             return this.props.confirming.onClick();
         }
         return () => {};
-    },
-    getInitialState() {
-        return {
-            is: 'active'
-        };
-    },
+    };
+
     render() {
         const {
             // disableAfterConfirmed,
@@ -119,17 +122,21 @@ var ConfirmButton = React.createClass( {
             {text}
             </button>
         );
-    },
-    isDisabled() {
+    }
+
+    isDisabled = () => {
         return this.state.is === 'disabled';
-    },
-    isConfirming() {
+    };
+
+    isConfirming = () => {
         return this.state.is === 'confirming';
-    },
-    isActive() {
-        return (!this.isConfirming() && !this.isDisabled());
-    },
-    handleClick() {
+    };
+
+    isActive = () => {
+        return !this.isConfirming() && !this.isDisabled();
+    };
+
+    handleClick = () => {
         if (this.isConfirming() && this.props.disableAfterConfirmed) {
             // have confirmed and are now disabled
             this.onConfirm();
@@ -147,12 +154,13 @@ var ConfirmButton = React.createClass( {
         // we are clicking into the confirming state (from active)
         this.onClick();
         this.setState({ is: 'confirming' });
-    },
-    handleBlur() {
+    };
+
+    handleBlur = () => {
         // reset the button
         this.setState({ is: 'active' });
         return;
-    }
-});
+    };
+}
 
 module.exports = ConfirmButton;

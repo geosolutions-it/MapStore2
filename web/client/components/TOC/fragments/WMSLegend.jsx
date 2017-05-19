@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -9,28 +10,29 @@
 var React = require('react');
 var Legend = require('./legend/Legend');
 
-var WMSLegend = React.createClass({
-    propTypes: {
-        node: React.PropTypes.object,
-        showOnlyIfVisible: React.PropTypes.bool,
-        currentZoomLvl: React.PropTypes.number,
-        scales: React.PropTypes.array
-    },
-    getDefaultProps() {
-        return {
-            showOnlyIfVisible: false
-        };
-    },
+class WMSLegend extends React.Component {
+    static propTypes = {
+        node: PropTypes.object,
+        showOnlyIfVisible: PropTypes.bool,
+        currentZoomLvl: PropTypes.number,
+        scales: PropTypes.array
+    };
+
+    static defaultProps = {
+        showOnlyIfVisible: false
+    };
+
     render() {
         let node = this.props.node || {};
         if (this.canShow(node) && node.type === "wms" && node.group !== "background") {
             return <div style={{marginLeft: "15px"}}><Legend layer={node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales}/></div>;
         }
         return null;
-    },
-    canShow(node) {
-        return node.visibility || !this.props.showOnlyIfVisible;
     }
-});
+
+    canShow = (node) => {
+        return node.visibility || !this.props.showOnlyIfVisible;
+    };
+}
 
 module.exports = WMSLegend;

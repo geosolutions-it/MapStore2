@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -38,37 +39,37 @@ var Col = BootstrapReact.Col;
 // Here we create the store, we use Debug utils but is not necessary
 // Insteed we need to pass here map configuration
 var store = DebugUtils.createDebugStore(combineReducers({browser, mapConfig}),
-        {mapConfig: {
-            zoom: 14,
-            center: {
-                y: 48.87,
-                x: 2.32,
-                crs: "EPSG:4326"
-            },
-            projection: "EPSG:900913"
-        }, browser: {}});
+    {mapConfig: {
+        zoom: 14,
+        center: {
+            y: 48.87,
+            x: 2.32,
+            crs: "EPSG:4326"
+        },
+        projection: "EPSG:900913"
+    }, browser: {}});
 
 require('../../components/map/leaflet/plugins/TileProviderLayer');
 
-    /**
-    * Detect Browser's properties and save in app state.
-    **/
+/**
+* Detect Browser's properties and save in app state.
+**/
 store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
 const zoomLabelArray = ['-----------', '----------', '---------', '-------', '-------', '------', '-----',
-                     '----', '---', '--', '-', '+', '++', '+++', '++++', '+++++', '++++++', '+++++++', '++++++++',
-                     '+++++++++', '++++++++++', '+++++++++++' ];
+    '----', '---', '--', '-', '+', '++', '+++', '++++', '+++++', '++++++', '+++++++', '++++++++',
+    '+++++++++', '++++++++++', '+++++++++++' ];
 
-let MyMap = React.createClass({
-    propTypes: {
+class MyMap extends React.Component {
+    static propTypes = {
         mapConfig: ConfigUtils.PropTypes.config,
-        changeMapView: React.PropTypes.func,
-        changeZoomLevel: React.PropTypes.func,
-        browser: React.PropTypes.object,
-        zoom: React.PropTypes.number
-    },
-    getDefaultProps() {
-        return {};
-    },
+        changeMapView: PropTypes.func,
+        changeZoomLevel: PropTypes.func,
+        browser: PropTypes.object,
+        zoom: PropTypes.number
+    };
+
+    static defaultProps = {};
+
     render() {
         return (<div id="viewer" >
                     <LMap key="map"
@@ -112,13 +113,15 @@ let MyMap = React.createClass({
                         </Col>
                     </Row>
                 </Grid>
-          </div>
-           );
-    },
-    manageNewMapView(center, zoom, bbox, size, mapStateSource) {
-        this.props.changeMapView(center, zoom, bbox, size, mapStateSource);
+          </div>)
+           ;
     }
-});
+
+    manageNewMapView = (center, zoom, bbox, size, mapStateSource) => {
+        this.props.changeMapView(center, zoom, bbox, size, mapStateSource);
+    };
+}
+
 let App = connect((state) => {
     return {
         mapConfig: state.mapConfig,

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,13 +9,14 @@
 
 const React = require('react');
 
-const DefaultHeader = React.createClass({
-    propTypes: {
-        title: React.PropTypes.string
-    },
+class DefaultHeader extends React.Component {
+    static propTypes = {
+        title: PropTypes.string
+    };
+
     render() {
-        return (<span> <span>{this.props.title}</span> </span>);
+        return <span> <span>{this.props.title}</span> </span>;
     }
-});
+}
 
 module.exports = DefaultHeader;

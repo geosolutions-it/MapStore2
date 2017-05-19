@@ -201,14 +201,14 @@ describe('Test the tutorial reducer', () => {
         const state = tutorial({
             intro: true
         },
-        {
-            type: UPDATE_TUTORIAL,
-            steps: [],
-            error: {
-                style: {},
-                text: 'error'
-            }
-        });
+            {
+                type: UPDATE_TUTORIAL,
+                steps: [],
+                error: {
+                    style: {},
+                    text: 'error'
+                }
+            });
         expect(state.run).toBe(true);
         expect(state.start).toBe(true);
         expect(state.status).toBe('run');
@@ -218,22 +218,22 @@ describe('Test the tutorial reducer', () => {
         const state = tutorial({
             intro: false
         },
-        {
-            type: UPDATE_TUTORIAL,
-            tour: {
-                action: 'skip',
-                type: 'test'
-            },
-            steps: [{
-                title: 'test',
-                text: 'test',
-                selector: '#intro-tutorial'
-            }],
-            error: {
-                style: {},
-                text: 'error'
-            }
-        });
+            {
+                type: UPDATE_TUTORIAL,
+                tour: {
+                    action: 'skip',
+                    type: 'test'
+                },
+                steps: [{
+                    title: 'test',
+                    text: 'test',
+                    selector: '#intro-tutorial'
+                }],
+                error: {
+                    style: {},
+                    text: 'error'
+                }
+            });
         expect(state.run).toBe(true);
         expect(state.start).toBe(true);
         expect(state.status).toBe('run');
@@ -244,22 +244,22 @@ describe('Test the tutorial reducer', () => {
         const state = tutorial({
             intro: true
         },
-        {
-            type: UPDATE_TUTORIAL,
-            tour: {
-                action: 'close',
-                type: 'test'
-            },
-            steps: [{
-                title: 'test',
-                text: 'test',
-                selector: '#intro-tutorial'
-            }],
-            error: {
-                style: {},
-                text: 'error'
-            }
-        });
+            {
+                type: UPDATE_TUTORIAL,
+                tour: {
+                    action: 'close',
+                    type: 'test'
+                },
+                steps: [{
+                    title: 'test',
+                    text: 'test',
+                    selector: '#intro-tutorial'
+                }],
+                error: {
+                    style: {},
+                    text: 'error'
+                }
+            });
 
         expect(state.steps).toEqual([]);
         expect(state.run).toBe(false);
@@ -276,22 +276,22 @@ describe('Test the tutorial reducer', () => {
         const state = tutorial({
             intro: true
         },
-        {
-            type: UPDATE_TUTORIAL,
-            tour: {
-                action: 'next',
-                type: 'test'
-            },
-            steps: [{
-                title: 'test',
-                text: 'test',
-                selector: '#intro-tutorial'
-            }],
-            error: {
-                style: {},
-                text: 'error'
-            }
-        });
+            {
+                type: UPDATE_TUTORIAL,
+                tour: {
+                    action: 'next',
+                    type: 'test'
+                },
+                steps: [{
+                    title: 'test',
+                    text: 'test',
+                    selector: '#intro-tutorial'
+                }],
+                error: {
+                    style: {},
+                    text: 'error'
+                }
+            });
 
         expect(state.steps).toEqual([]);
         expect(state.run).toBe(true);
@@ -308,22 +308,22 @@ describe('Test the tutorial reducer', () => {
         const state = tutorial({
             intro: false
         },
-        {
-            type: UPDATE_TUTORIAL,
-            tour: {
-                action: 'close',
-                type: 'test'
-            },
-            steps: [{
-                title: 'test',
-                text: 'test',
-                selector: '#intro-tutorial'
-            }],
-            error: {
-                style: {},
-                text: 'error'
-            }
-        });
+            {
+                type: UPDATE_TUTORIAL,
+                tour: {
+                    action: 'close',
+                    type: 'test'
+                },
+                steps: [{
+                    title: 'test',
+                    text: 'test',
+                    selector: '#intro-tutorial'
+                }],
+                error: {
+                    style: {},
+                    text: 'error'
+                }
+            });
 
         expect(state.steps).toEqual([]);
         expect(state.run).toBe(false);
@@ -335,33 +335,33 @@ describe('Test the tutorial reducer', () => {
         const state = tutorial({
             intro: false
         },
-        {
-            type: UPDATE_TUTORIAL,
-            tour: {
-                action: 'next',
-                type: 'error:target_not_found',
-                index: 2
-            },
-            steps: [{
-                title: 'test',
-                text: 'test',
-                selector: '#intro-tutorial'
-            },
             {
-                title: 'test',
-                text: 'test',
-                selector: '#error-tutorial'
-            },
-            {
-                title: 'test',
-                text: 'test',
-                selector: '#error'
-            }],
-            error: {
-                style: {},
-                text: 'error'
-            }
-        });
+                type: UPDATE_TUTORIAL,
+                tour: {
+                    action: 'next',
+                    type: 'error:target_not_found',
+                    index: 2
+                },
+                steps: [{
+                    title: 'test',
+                    text: 'test',
+                    selector: '#intro-tutorial'
+                },
+                {
+                    title: 'test',
+                    text: 'test',
+                    selector: '#error-tutorial'
+                },
+                {
+                    title: 'test',
+                    text: 'test',
+                    selector: '#error'
+                }],
+                error: {
+                    style: {},
+                    text: 'error'
+                }
+            });
 
         expect(state.steps).toEqual([{
             title: 'test',
@@ -379,34 +379,34 @@ describe('Test the tutorial reducer', () => {
         const state = tutorial({
             intro: false
         },
-        {
-            type: UPDATE_TUTORIAL,
-            tour: {
-                action: 'next',
-                type: 'error:target_not_found',
-                index: 3
-            },
-            steps: [{
-                title: 'test',
-                text: 'test',
-                selector: '#intro-tutorial'
-            },
             {
-                title: 'test',
-                text: 'test',
-                selector: '#selector'
-            },
-            {
-                title: 'test',
-                text: 'test',
-                selector: '#error-tutorial'
-            },
-            {
-                title: 'test',
-                text: 'test',
-                selector: '#error'
-            }]
-        });
+                type: UPDATE_TUTORIAL,
+                tour: {
+                    action: 'next',
+                    type: 'error:target_not_found',
+                    index: 3
+                },
+                steps: [{
+                    title: 'test',
+                    text: 'test',
+                    selector: '#intro-tutorial'
+                },
+                {
+                    title: 'test',
+                    text: 'test',
+                    selector: '#selector'
+                },
+                {
+                    title: 'test',
+                    text: 'test',
+                    selector: '#error-tutorial'
+                },
+                {
+                    title: 'test',
+                    text: 'test',
+                    selector: '#error'
+                }]
+            });
 
         expect(state.steps).toEqual([{
             title: 'test',

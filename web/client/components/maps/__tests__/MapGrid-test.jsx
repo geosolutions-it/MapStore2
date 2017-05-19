@@ -35,7 +35,7 @@ describe('This test for MapGrid', () => {
         var map1 = {id: 1, name: "a", description: "description"};
         var map2 = {id: 2, name: "b", description: "description"};
         let currentMap = {displayMetadataEdit: true};
-        const mapList = ReactDOM.render(<MapGrid maps={[map1, map2]} currentMap={currentMap} show={true}/>, document.getElementById("container"));
+        const mapList = ReactDOM.render(<MapGrid maps={[map1, map2]} currentMap={currentMap} show/>, document.getElementById("container"));
         expect(mapList).toExist();
         const dom = ReactDOM.findDOMNode(mapList);
         expect(dom).toExist();

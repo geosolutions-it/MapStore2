@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -12,37 +13,39 @@ const Message = require("../I18N/Message");
 const Spinner = require('react-spinkit');
 require('./style/pagination-toolbar.css');
 
-const PaginationToolbar = React.createClass({
-    propTypes: {
+class PaginationToolbar extends React.Component {
+    static propTypes = {
         // from zero
-        page: React.PropTypes.number,
-        total: React.PropTypes.number,
-        pageSize: React.PropTypes.number,
-        items: React.PropTypes.array,
-        msgId: React.PropTypes.string,
-        loading: React.PropTypes.bool,
-        onSelect: React.PropTypes.func,
-        bsSize: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            page: 0,
-            pageSize: 20,
-            msgId: "pageInfo",
-            items: [],
-            onSelect: () => {}
+        page: PropTypes.number,
+        total: PropTypes.number,
+        pageSize: PropTypes.number,
+        items: PropTypes.array,
+        msgId: PropTypes.string,
+        loading: PropTypes.bool,
+        onSelect: PropTypes.func,
+        bsSize: PropTypes.string
+    };
 
-        };
-    },
-    onSelect(eventKey) {
-        this.props.onSelect(eventKey && (eventKey - 1));
-    },
-    renderLoading() {
-        return (<div>Loading...<Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/></div>);
-    },
+    static defaultProps = {
+        page: 0,
+        pageSize: 20,
+        msgId: "pageInfo",
+        items: [],
+        onSelect: () => {}
+
+    };
+
+    onSelect = (eventKey) => {
+        this.props.onSelect(eventKey && eventKey - 1);
+    };
+
+    renderLoading = () => {
+        return <div>Loading...<Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/></div>;
+    };
+
     render() {
         let {pageSize, page, total, items} = this.props;
-        let msg = <Message msgId={this.props.msgId} msgParams={{start: (page * pageSize) + 1, end: (page * pageSize) + (items && items.length), total}} />;
+        let msg = <Message msgId={this.props.msgId} msgParams={{start: page * pageSize + 1, end: page * pageSize + (items && items.length), total}} />;
         if (this.props.loading && this.props.items.length === 0) {
             return null; // no pagination
         }
@@ -58,6 +61,6 @@ const PaginationToolbar = React.createClass({
         </div>
     </div>);
     }
-});
+}
 
 module.exports = PaginationToolbar;

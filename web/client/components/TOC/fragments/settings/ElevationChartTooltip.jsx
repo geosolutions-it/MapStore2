@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,13 +9,14 @@
 
 const React = require('react');
 
-const CustomTooltip = React.createClass({
-    propTypes: {
-        type: React.PropTypes.string,
-        payload: React.PropTypes.array,
-        label: React.PropTypes.string,
-        active: React.PropTypes.bool
-    },
+class CustomTooltip extends React.Component {
+    static propTypes = {
+        type: PropTypes.string,
+        payload: PropTypes.array,
+        label: PropTypes.string,
+        active: PropTypes.bool
+    };
+
     render() {
         const {active} = this.props;
 
@@ -28,6 +30,6 @@ const CustomTooltip = React.createClass({
         }
         return null;
     }
-});
+}
 
 module.exports = CustomTooltip;

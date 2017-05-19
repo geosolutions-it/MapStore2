@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -9,25 +10,27 @@ var React = require('react');
 var Layers = require('../../../utils/cesium/Layers');
 var assign = require('object-assign');
 
-const CesiumLayer = React.createClass({
-    propTypes: {
-        map: React.PropTypes.object,
-        type: React.PropTypes.string,
-        options: React.PropTypes.object,
-        position: React.PropTypes.number
-    },
+class CesiumLayer extends React.Component {
+    static propTypes = {
+        map: PropTypes.object,
+        type: PropTypes.string,
+        options: PropTypes.object,
+        position: PropTypes.number
+    };
+
     componentDidMount() {
         this.createLayer(this.props.type, this.props.options, this.props.position, this.props.map);
         if (this.props.options && this.layer && this.props.options.visibility !== false) {
             this.addLayer(this.props);
             this.updateZIndex();
         }
-    },
+    }
+
     componentWillReceiveProps(newProps) {
         const newVisibility = newProps.options && newProps.options.visibility !== false;
         this.setLayerVisibility(newVisibility, newProps);
 
-        const newOpacity = (newProps.options && newProps.options.opacity !== undefined) ? newProps.options.opacity : 1.0;
+        const newOpacity = newProps.options && newProps.options.opacity !== undefined ? newProps.options.opacity : 1.0;
         this.setLayerOpacity(newOpacity);
 
         if (newProps.position !== this.props.position) {
@@ -55,7 +58,8 @@ const CesiumLayer = React.createClass({
             }
         }
         this.updateLayer(newProps, this.props);
-    },
+    }
+
     componentWillUnmount() {
         if (this.layer && this.props.map && !this.props.map.isDestroyed()) {
             if (this.layer.detached) {
@@ -71,7 +75,8 @@ const CesiumLayer = React.createClass({
                 clearInterval(this.refreshTimer);
             }
         }
-    },
+    }
+
     render() {
         if (this.props.children) {
             const layer = this.layer;
@@ -86,14 +91,15 @@ const CesiumLayer = React.createClass({
         }
         return Layers.renderLayer(this.props.type, this.props.options, this.props.map, this.props.map.id, this.layer);
 
-    },
-    updateZIndex(position) {
+    }
+
+    updateZIndex = (position) => {
         const layerPos = position || this.props.position;
         const actualPos = this.props.map.imageryLayers._layers.reduce((previous, current, index) => {
             return this.provider === current ? index : previous;
         }, -1);
         let newPos = this.props.map.imageryLayers._layers.reduce((previous, current, index) => {
-            return (previous === -1 && layerPos < current._position) ? index : previous;
+            return previous === -1 && layerPos < current._position ? index : previous;
         }, -1);
         if (newPos === -1) {
             newPos = actualPos;
@@ -105,8 +111,9 @@ const CesiumLayer = React.createClass({
                     this.props.map.imageryLayers[diff > 0 ? 'raise' : 'lower'](this.provider);
                 });
         }
-    },
-    setLayerVisibility(visibility, newProps) {
+    };
+
+    setLayerVisibility = (visibility, newProps) => {
         var oldVisibility = this.props.options && this.props.options.visibility !== false;
         if (visibility !== oldVisibility) {
             if (visibility) {
@@ -116,14 +123,16 @@ const CesiumLayer = React.createClass({
                 this.removeLayer();
             }
         }
-    },
-    setLayerOpacity(opacity) {
-        var oldOpacity = (this.props.options && this.props.options.opacity !== undefined) ? this.props.options.opacity : 1.0;
+    };
+
+    setLayerOpacity = (opacity) => {
+        var oldOpacity = this.props.options && this.props.options.opacity !== undefined ? this.props.options.opacity : 1.0;
         if (opacity !== oldOpacity && this.layer && this.provider) {
             this.provider.alpha = opacity;
         }
-    },
-    createLayer(type, options, position, map) {
+    };
+
+    createLayer = (type, options, position, map) => {
         if (type) {
             const opts = assign({}, options, position ? {zIndex: position} : null);
             this.layer = Layers.createLayer(type, opts, map);
@@ -132,23 +141,26 @@ const CesiumLayer = React.createClass({
                 this.layer.layerId = options.id;
             }
         }
-    },
-    updateLayer(newProps, oldProps) {
+    };
+
+    updateLayer = (newProps, oldProps) => {
         const newLayer = Layers.updateLayer(newProps.type, this.layer, newProps.options, oldProps.options, this.props.map);
         if (newLayer) {
             this.removeLayer();
             this.layer = newLayer;
             this.addLayer(newProps);
         }
-    },
-    addLayerInternal(newProps) {
+    };
+
+    addLayerInternal = (newProps) => {
         this.provider = this.props.map.imageryLayers.addImageryProvider(this.layer);
         this.provider._position = this.props.position;
         if (newProps.options.opacity !== undefined) {
             this.provider.alpha = newProps.options.opacity;
         }
-    },
-    addLayer(newProps) {
+    };
+
+    addLayer = (newProps) => {
         if (this.layer && !this.layer.detached) {
             this.addLayerInternal(newProps);
             if (this.props.options.refresh && this.layer.updateParams) {
@@ -161,13 +173,14 @@ const CesiumLayer = React.createClass({
                 }, this.props.options.refresh);
             }
         }
-    },
-    removeLayer(provider) {
+    };
+
+    removeLayer = (provider) => {
         const toRemove = provider || this.provider;
         if (toRemove) {
             this.props.map.imageryLayers.remove(toRemove);
         }
-    }
-});
+    };
+}
 
 module.exports = CesiumLayer;

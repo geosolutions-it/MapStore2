@@ -33,15 +33,15 @@ describe('globeswitcher Epics', () => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                    case "@@router/TRANSITION":
-                        expect(action.payload.method).toBe('push');
-                        expect(action.payload.args.length).toBe(1);
-                        break;
-                    case UPDATE_LAST_2D_MAPTYPE:
-                        expect(action.mapType).toBe("leaflet");
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                case "@@router/TRANSITION":
+                    expect(action.payload.method).toBe('push');
+                    expect(action.payload.args.length).toBe(1);
+                    break;
+                case UPDATE_LAST_2D_MAPTYPE:
+                    expect(action.mapType).toBe("leaflet");
+                    break;
+                default:
+                    expect(true).toBe(false);
 
                 }
             });

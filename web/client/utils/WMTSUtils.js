@@ -38,7 +38,7 @@ const WMTSUtils = {
         if (tileMatrixSet) {
             return CoordinatesUtils.getEquivalentSRS(srs, allowedSRS).reduce((previous, current) => {
                 if (isArray(tileMatrixSet)) {
-                    const matching = head(tileMatrixSet.filter((matrix) => (matrix["ows:Identifier"] === current || CoordinatesUtils.getEPSGCode(matrix["ows:SupportedCRS"]) === current)));
+                    const matching = head(tileMatrixSet.filter((matrix) => matrix["ows:Identifier"] === current || CoordinatesUtils.getEPSGCode(matrix["ows:SupportedCRS"]) === current));
                     return matching && matching["ows:Identifier"] && !matrixIds[previous] ? current : previous;
                 } else if (isObject(tileMatrixSet)) {
                     return tileMatrixSet[current] || previous;

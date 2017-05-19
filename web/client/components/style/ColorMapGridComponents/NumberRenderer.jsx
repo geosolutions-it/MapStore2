@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -14,47 +15,50 @@ numberLocalizer();
 const {NumberPicker} = require('react-widgets');
 require('./numberpicker.css');
 
-const NumberRenderer = React.createClass({
-    propTypes: {
-        params: React.PropTypes.object,
-        onChangeValue: React.PropTypes.func,
-        errorMessage: React.PropTypes.string
-    },
-    getInitialState() {
-        return {
-            displayNumberPicker: false,
-            showError: false
-        };
-    },
-    getDefaultProps() {
-        return {
-            onChangeValue: () => {},
-            errorMessage: "Value not valid"
-        };
-    },
+class NumberRenderer extends React.Component {
+    static propTypes = {
+        params: PropTypes.object,
+        onChangeValue: PropTypes.func,
+        errorMessage: PropTypes.string
+    };
+
+    static defaultProps = {
+        onChangeValue: () => {},
+        errorMessage: "Value not valid"
+    };
+
+    state = {
+        displayNumberPicker: false,
+        showError: false
+    };
+
     componentDidMount() {
         this.props.params.api.addEventListener('cellClicked', this.cellClicked);
-    },
+    }
+
     componentWillUnmount() {
         this.props.params.api.removeEventListener('cellClicked', this.cellClicked);
-    },
-    getRange() {
+    }
+
+    getRange = () => {
         let data = [];
         this.props.params.api.forEachNode((node) => {data.push(node.data); });
         let idx = this.props.params.node.childIndex;
-        let min = (data[idx - 1]) ? data[idx - 1].quantity + 0.01 : -Infinity;
-        let max = (data[idx + 1]) ? data[idx + 1].quantity - 0.01 : Infinity;
+        let min = data[idx - 1] ? data[idx - 1].quantity + 0.01 : -Infinity;
+        let max = data[idx + 1] ? data[idx + 1].quantity - 0.01 : Infinity;
         return {min: min, max: max};
-    },
+    };
+
     render() {
 
         return (
             <div onClick={ () => {
                 if (!this.state.displayNumberPicker) {
                     this.setState({displayNumberPicker: !this.state.displayNumberPicker});
-                }} }
+                }
+            } }
                 >
-                { this.state.displayNumberPicker ? (
+                { this.state.displayNumberPicker ?
                     <div>
                         <div style={{position: "fixed", top: 0, right: 0, bottom: 0, left: 0}}
                             onClick={this.stopEditing}/>
@@ -73,17 +77,19 @@ const NumberRenderer = React.createClass({
                         </Popover>
                     </Overlay>
                     </div>
-                    </div>) :
-                <span>{(this.props.params.value.toFixed) ? this.props.params.value.toFixed(2) : this.props.params.value}</span> }
+                    </div> :
+                <span>{this.props.params.value.toFixed ? this.props.params.value.toFixed(2) : this.props.params.value}</span> }
             </div>
         );
-    },
-    cellClicked(e) {
+    }
+
+    cellClicked = (e) => {
         if (this.props.params.value !== e.value && this.state.displayNumberPicker) {
             this.stopEditing();
         }
-    },
-    stopEditing() {
+    };
+
+    stopEditing = () => {
         let range = this.getRange();
         let newValue = this.state.value === undefined ? this.props.params.value : this.state.value;
         if (range.min < newValue && newValue < range.max) {
@@ -95,10 +101,11 @@ const NumberRenderer = React.createClass({
             this.setState({showError: true});
         }
 
-    },
-    changeNumber(value) {
+    };
+
+    changeNumber = (value) => {
         this.setState({value: value, showError: false});
-    }
-});
+    };
+}
 
 module.exports = NumberRenderer;

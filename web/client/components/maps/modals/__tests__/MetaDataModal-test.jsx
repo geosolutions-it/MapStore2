@@ -30,7 +30,7 @@ describe('This test for MetadataModal', () => {
         expect(metadataModalItem).toExist();
 
         const metadataModalItemDom = ReactDOM.findDOMNode(metadataModalItem);
-        expect(metadataModalItemDom).toExist();
+        expect(metadataModalItemDom).toNotExist();
 
         const getModals = function() {
             return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
@@ -49,7 +49,7 @@ describe('This test for MetadataModal', () => {
             errors: errors
         };
 
-        const metadataModalItem = ReactDOM.render(<MetadataModal show={true} useModal={true} map={map} id="MetadataModal"/>, document.getElementById("container"));
+        const metadataModalItem = ReactDOM.render(<MetadataModal show useModal map={map} id="MetadataModal"/>, document.getElementById("container"));
         expect(metadataModalItem).toExist();
 
         const modalDivList = document.getElementsByClassName("modal-content");
@@ -67,7 +67,7 @@ describe('This test for MetadataModal', () => {
             errors: errors
         };
 
-        const metadataModalItem = ReactDOM.render(<MetadataModal show={true} map={map} useModal={true} id="MetadataModal"/>, document.getElementById("container"));
+        const metadataModalItem = ReactDOM.render(<MetadataModal show map={map} useModal id="MetadataModal"/>, document.getElementById("container"));
         expect(metadataModalItem).toExist();
 
         const getModals = function() {
@@ -94,7 +94,7 @@ describe('This test for MetadataModal', () => {
             errors: errors
         };
 
-        const metadataModalItem = ReactDOM.render(<MetadataModal show={true} map={map} useModal={true} id="MetadataModal"/>, document.getElementById("container"));
+        const metadataModalItem = ReactDOM.render(<MetadataModal show map={map} useModal id="MetadataModal"/>, document.getElementById("container"));
         expect(metadataModalItem).toExist();
 
         const getModals = function() {

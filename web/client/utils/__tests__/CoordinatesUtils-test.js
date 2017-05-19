@@ -87,20 +87,20 @@ describe('CoordinatesUtils', () => {
         const testPoint = {
             type: "FeatureCollection",
             features: [
-               {
-                  type: "Feature",
-                  geometry: {
-                     type: "Point",
-                     coordinates: [
-                        -112.50042920000001,
-                        42.22829164089942
-                     ]
-                  },
-                  properties: {
-                     "serial_num": "12C324776"
-                  },
-                  id: 0
-               }
+                {
+                    type: "Feature",
+                    geometry: {
+                        type: "Point",
+                        coordinates: [
+                            -112.50042920000001,
+                            42.22829164089942
+                        ]
+                    },
+                    properties: {
+                        "serial_num": "12C324776"
+                    },
+                    id: 0
+                }
             ]
         };
         const reprojectedTestPoint = CoordinatesUtils.reprojectGeoJson(testPoint, "EPSG:4326", "EPSG:900913");
@@ -111,19 +111,19 @@ describe('CoordinatesUtils', () => {
         expect(reprojectedTestPoint.features[0].geometry.type).toBe("Point");
         // approximate values should be the same
         expect(reprojectedTestPoint.features[0].geometry.coordinates[0].toFixed(4)).toBe((-12523490.492568726).toFixed(4));
-        expect(reprojectedTestPoint.features[0].geometry.coordinates[1].toFixed(4)).toBe((5195238.005360028).toFixed(4));
+        expect(reprojectedTestPoint.features[0].geometry.coordinates[1].toFixed(4)).toBe(5195238.005360028.toFixed(4));
     });
 
     it('test geojson extent', () => {
         let geojsonPoint = {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [125.6, 10.1]
-          },
-          "properties": {
-            "name": "Dinagat Islands"
-          }
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [125.6, 10.1]
+            },
+            "properties": {
+                "name": "Dinagat Islands"
+            }
         };
         expect(CoordinatesUtils.getGeoJSONExtent(geojsonPoint)[0] <= 125.6).toBe(true);
         expect(CoordinatesUtils.getGeoJSONExtent(geojsonPoint)[1] <= 10.1).toBe(true);
@@ -131,43 +131,43 @@ describe('CoordinatesUtils', () => {
         expect(CoordinatesUtils.getGeoJSONExtent(geojsonPoint)[3] >= 10.1).toBe(true);
         let featureCollection = { "type": "FeatureCollection",
             "features": [
-              { "type": "Feature",
-                "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
-                "properties": {"prop0": "value0"}
-              },
-              { "type": "Feature",
-                "geometry": {
-                    "type": "GeometryCollection",
-                    "geometries": [{"type": "Point", "coordinates": [102.0, 0.5]}]
+                { "type": "Feature",
+                    "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
+                    "properties": {"prop0": "value0"}
                 },
-                "properties": {"prop0": "value0"}
-              },
-              { "type": "Feature",
-                "geometry": {
-                  "type": "LineString",
-                  "coordinates": [
+                { "type": "Feature",
+                    "geometry": {
+                        "type": "GeometryCollection",
+                        "geometries": [{"type": "Point", "coordinates": [102.0, 0.5]}]
+                    },
+                    "properties": {"prop0": "value0"}
+                },
+                { "type": "Feature",
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [
                     [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
-                    ]
-                  },
-                "properties": {
-                  "prop0": "value0",
-                  "prop1": 0.0
-                  }
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": 0.0
+                    }
                 },
-              { "type": "Feature",
-                 "geometry": {
-                   "type": "Polygon",
-                   "coordinates": [
-                     [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+                { "type": "Feature",
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [
+                            [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
                        [100.0, 1.0], [100.0, 0.0] ]
-                     ]
-                 },
-                 "properties": {
-                   "prop0": "value0",
-                   "prop1": {"this": "that"}
-                   }
-                 }
-               ]
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": {"this": "that"}
+                    }
+                }
+            ]
         };
         expect(CoordinatesUtils.getGeoJSONExtent(featureCollection)[0]).toBe(100.0);
         expect(CoordinatesUtils.getGeoJSONExtent(featureCollection)[1]).toBe(0.0);

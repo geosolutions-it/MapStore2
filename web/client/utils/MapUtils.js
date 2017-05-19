@@ -170,7 +170,7 @@ function defaultGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, mapReso
     const extentResolution = Math.max(xResolution, yResolution);
 
     const resolutions = mapResolutions || getResolutionsForScales(getGoogleMercatorScales(
-        minZoom, maxZoom, (dpi || DEFAULT_SCREEN_DPI)), "EPSG:3857", dpi);
+        minZoom, maxZoom, dpi || DEFAULT_SCREEN_DPI), "EPSG:3857", dpi);
 
     const {zoom, ...other} = resolutions.reduce((previous, resolution, index) => {
         const diff = Math.abs(resolution - extentResolution);
@@ -195,7 +195,7 @@ function getZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi) {
         return getHook("EXTENT_TO_ZOOM_HOOK")(extent, mapSize, minZoom, maxZoom, dpi);
     }
     const resolutions = getHook("RESOLUTIONS_HOOK") ?
-        getHook("RESOLUTIONS_HOOK")(extent, mapSize, minZoom, maxZoom, dpi, dpi2dpm((dpi || DEFAULT_SCREEN_DPI))) : null;
+        getHook("RESOLUTIONS_HOOK")(extent, mapSize, minZoom, maxZoom, dpi, dpi2dpm(dpi || DEFAULT_SCREEN_DPI)) : null;
     return defaultGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, resolutions);
 }
 
@@ -229,8 +229,8 @@ function getCenterForExtent(extent, projection) {
     var wExtent = extent[2] - extent[0];
     var hExtent = extent[3] - extent[1];
 
-    var w = (wExtent) / 2;
-    var h = (hExtent) / 2;
+    var w = wExtent / 2;
+    var h = hExtent / 2;
 
     return {
         x: extent[0] + w,
@@ -257,13 +257,13 @@ const isNearlyEqual = function(a, b) {
     if (a === undefined || b === undefined) {
         return false;
     }
-    return ( a.toFixed(12) - (b.toFixed(12))) === 0;
+    return a.toFixed(12) - b.toFixed(12) === 0;
 };
 
 function mapUpdated(oldMap, newMap) {
     const centersEqual = isNearlyEqual(newMap.center.x, oldMap.center.x) &&
                           isNearlyEqual(newMap.center.y, oldMap.center.y);
-    return !centersEqual || (newMap.zoom !== oldMap.zoom);
+    return !centersEqual || newMap.zoom !== oldMap.zoom;
 }
 
 /* Transform width and height specified in meters to the units of the specified projection */

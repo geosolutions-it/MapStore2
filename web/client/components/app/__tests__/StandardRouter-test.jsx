@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const expect = require('expect');
+const PropTypes = require('prop-types');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const {Provider} = require('react-redux');
@@ -14,24 +15,25 @@ const StandardRouter = require('../StandardRouter');
 
 const ConfigUtils = require('../../../utils/ConfigUtils');
 
-const mycomponent = React.createClass({
-    propTypes: {
-        plugins: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            plugins: {}
-        };
-    },
-    renderPlugins() {
+class mycomponent extends React.Component {
+    static propTypes = {
+        plugins: PropTypes.object
+    };
+
+    static defaultProps = {
+        plugins: {}
+    };
+
+    renderPlugins = () => {
         return Object.keys(this.props.plugins).map((plugin) => <div className={plugin}/>);
-    },
+    };
+
     render() {
         return (<div className="mycomponent">
                 {this.renderPlugins()}
                 </div>);
     }
-});
+}
 
 describe('StandardApp', () => {
     beforeEach((done) => {

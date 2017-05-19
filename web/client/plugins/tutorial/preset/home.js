@@ -9,7 +9,7 @@
 module.exports = [
     // add Tutorial plugin to homepage, "maps" in localConfig with cfg: {preset: "home"}
     // remove comment to enable intro/autostart
-    /*{
+    /* {
         translation: 'intro',
         selector: '#intro-tutorial'
     },*/

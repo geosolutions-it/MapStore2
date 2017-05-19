@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -11,47 +12,48 @@ const {Button} = require('react-bootstrap');
 const Modal = require('../../misc/Modal');
 const Spinner = require('react-spinkit');
 
-  /**
-   * A Modal window to show a confirmation dialog
-   */
-const ConfirmModal = React.createClass({
-    propTypes: {
+/**
+ * A Modal window to show a confirmation dialog
+ */
+class ConfirmModal extends React.Component {
+    static propTypes = {
         // props
-        className: React.PropTypes.string,
-        show: React.PropTypes.bool,
-        options: React.PropTypes.object,
-        onConfirm: React.PropTypes.func,
-        onClose: React.PropTypes.func,
-        closeGlyph: React.PropTypes.string,
-        style: React.PropTypes.object,
-        buttonSize: React.PropTypes.string,
-        includeCloseButton: React.PropTypes.bool,
-        body: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        titleText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        confirmText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        cancelText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        running: React.PropTypes.bool
-    },
-    getDefaultProps() {
-        return {
-            onConfirm: ()=> {},
-            onClose: () => {},
-            options: {
-                animation: false
-            },
-            className: "",
-            closeGlyph: "",
-            style: {},
-            includeCloseButton: true,
-            body: "",
-            titleText: "Confirm Delete",
-            confirmText: "Delete",
-            cancelText: "Cancel"
-        };
-    },
-    onConfirm() {
+        className: PropTypes.string,
+        show: PropTypes.bool,
+        options: PropTypes.object,
+        onConfirm: PropTypes.func,
+        onClose: PropTypes.func,
+        closeGlyph: PropTypes.string,
+        style: PropTypes.object,
+        buttonSize: PropTypes.string,
+        includeCloseButton: PropTypes.bool,
+        body: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        titleText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        confirmText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        cancelText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        running: PropTypes.bool
+    };
+
+    static defaultProps = {
+        onConfirm: ()=> {},
+        onClose: () => {},
+        options: {
+            animation: false
+        },
+        className: "",
+        closeGlyph: "",
+        style: {},
+        includeCloseButton: true,
+        body: "",
+        titleText: "Confirm Delete",
+        confirmText: "Delete",
+        cancelText: "Cancel"
+    };
+
+    onConfirm = () => {
         this.props.onConfirm();
-    },
+    };
+
     render() {
         const footer = (<span role="footer"><div style={{"float": "left"}}></div>
         <Button
@@ -86,6 +88,6 @@ const ConfirmModal = React.createClass({
                 </Modal.Footer>
             </Modal>);
     }
-});
+}
 
 module.exports = ConfirmModal;

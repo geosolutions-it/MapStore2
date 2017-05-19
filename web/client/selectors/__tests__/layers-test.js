@@ -76,16 +76,16 @@ describe('Test layers selectors', () => {
         const props = layerSelectorWithMarkers({config: {layers: [{type: "osm"}]}, search: {
             markerPosition: {
                 "type": "Feature",
-                 "geometry": {
-                   "type": "Polygon",
-                   "coordinates": [
-                     [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
                        [100.0, 1.0], [100.0, 0.0] ]
-                     ]
-                 },
-                 "properties": {
-                   "prop0": "value0"
-                 }
+                    ]
+                },
+                "properties": {
+                    "prop0": "value0"
+                }
             }
         }});
         expect(props.length).toBe(2);

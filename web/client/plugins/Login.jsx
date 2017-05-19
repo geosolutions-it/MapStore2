@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -11,6 +12,7 @@ const assign = require('object-assign');
 const {UserDetails, PasswordReset, UserMenu, Login, LoginNav } = require('./login/index');
 
 require('./login/login.css');
+
 /**
   * Login Plugin. Allow to login/logout or show user info and reset password tools
   * @class Login
@@ -25,19 +27,19 @@ require('./login/login.css');
   * }
   *```
   */
-const LoginTool = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        menuStyle: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            id: "mapstore-login-menu",
-            menuStyle: {
-                zIndex: 30
-            }
-        };
-    },
+class LoginTool extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        menuStyle: PropTypes.object
+    };
+
+    static defaultProps = {
+        id: "mapstore-login-menu",
+        menuStyle: {
+            zIndex: 30
+        }
+    };
+
     render() {
         return (<div id={this.props.id}>
             <div style={this.props.menuStyle}>
@@ -48,7 +50,8 @@ const LoginTool = React.createClass({
             <Login />
         </div>);
     }
-});
+}
+
 module.exports = {
     LoginPlugin: assign(LoginTool, {
         OmniBar: {

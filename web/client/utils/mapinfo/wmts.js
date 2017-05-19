@@ -26,7 +26,7 @@ module.exports = {
 
         const wrongLng = props.point.latlng.lng;
         // longitude restricted to the [-180°,+180°] range
-        const lngCorrected = wrongLng - (360) * Math.floor(wrongLng / (360) + 0.5);
+        const lngCorrected = wrongLng - 360 * Math.floor(wrongLng / 360 + 0.5);
         const center = {x: lngCorrected, y: props.point.latlng.lat};
         let centerProjected = CoordinatesUtils.reproject(center, 'EPSG:4326', props.map.projection);
 

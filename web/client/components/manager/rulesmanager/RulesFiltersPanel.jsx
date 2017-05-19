@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -13,28 +14,29 @@ const RuleAttributes = require('./RuleAttributes');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const Message = require('../../I18N/Message');
 
-const RulesFiltersPanel = React.createClass({
-    propTypes: {
-        loadRoles: React.PropTypes.func,
-        loadUsers: React.PropTypes.func,
-        loadWorkspaces: React.PropTypes.func,
-        loadLayers: React.PropTypes.func,
-        services: React.PropTypes.object,
-        options: React.PropTypes.object,
-        updateFiltersValues: React.PropTypes.func,
-        filtersValues: React.PropTypes.object,
-        loadRules: React.PropTypes.func,
-        error: React.PropTypes.object
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            loadRules: () => {},
-            error: {}
-        };
-    },
+class RulesFiltersPanel extends React.Component {
+    static propTypes = {
+        loadRoles: PropTypes.func,
+        loadUsers: PropTypes.func,
+        loadWorkspaces: PropTypes.func,
+        loadLayers: PropTypes.func,
+        services: PropTypes.object,
+        options: PropTypes.object,
+        updateFiltersValues: PropTypes.func,
+        filtersValues: PropTypes.object,
+        loadRules: PropTypes.func,
+        error: PropTypes.object
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        loadRules: () => {},
+        error: {}
+    };
+
     componentWillReceiveProps(newProps) {
         const newFiltersValues = newProps.filtersValues || {};
         const currentFiltersValues = this.props.filtersValues || {};
@@ -46,12 +48,14 @@ const RulesFiltersPanel = React.createClass({
             || newFiltersValues.layer !== currentFiltersValues.layer) {
             this.props.loadRules(1, false);
         }
-    },
-    getUpdateFiltersValuesHandler() {
+    }
+
+    getUpdateFiltersValuesHandler = () => {
         return function(updatedFiltersValues) {
             this.props.updateFiltersValues(updatedFiltersValues, true);
         }.bind(this);
-    },
+    };
+
     render() {
         const panelHeader = LocaleUtils.getMessageById(this.context.messages, 'rulesmanager.filters');
         return (
@@ -77,6 +81,6 @@ const RulesFiltersPanel = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = RulesFiltersPanel;

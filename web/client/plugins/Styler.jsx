@@ -1,5 +1,7 @@
 
 
+const PropTypes = require('prop-types');
+
 const React = require('react');
 const {connect} = require('react-redux');
 
@@ -33,62 +35,63 @@ require('./styler/styler.css');
 
 const Message = require('./locale/Message');
 
-const Styler = React.createClass({
+class Styler extends React.Component {
     /** @constructor */
-    propTypes: {
-        canSave: React.PropTypes.oneOfType([React.PropTypes.bool, React.PropTypes.func]),
-         layers: React.PropTypes.array,
-        layer: React.PropTypes.object,
-        withContainer: React.PropTypes.bool,
-        open: React.PropTypes.bool,
-        closeGlyph: React.PropTypes.string,
-        forceOpen: React.PropTypes.bool,
-        style: React.PropTypes.object,
-        selectVectorLayer: React.PropTypes.func,
-        selectRasterLayer: React.PropTypes.func,
-        toggleControl: React.PropTypes.func,
-        error: React.PropTypes.string,
-        changeLayerProperties: React.PropTypes.func,
-        getDescribeLayer: React.PropTypes.func,
-        getLayerCapabilities: React.PropTypes.func,
-        zoomToExtent: React.PropTypes.func,
-        saveStyle: React.PropTypes.func,
-        reset: React.PropTypes.func,
-        hideLayerSelector: React.PropTypes.bool
+    static propTypes = {
+        canSave: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+        layers: PropTypes.array,
+        layer: PropTypes.object,
+        withContainer: PropTypes.bool,
+        open: PropTypes.bool,
+        closeGlyph: PropTypes.string,
+        forceOpen: PropTypes.bool,
+        style: PropTypes.object,
+        selectVectorLayer: PropTypes.func,
+        selectRasterLayer: PropTypes.func,
+        toggleControl: PropTypes.func,
+        error: PropTypes.string,
+        changeLayerProperties: PropTypes.func,
+        getDescribeLayer: PropTypes.func,
+        getLayerCapabilities: PropTypes.func,
+        zoomToExtent: PropTypes.func,
+        saveStyle: PropTypes.func,
+        reset: PropTypes.func,
+        hideLayerSelector: PropTypes.bool
 
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getInitialState() {
-        return {
-            counter: 1
-        };
-    },
-    getDefaultProps() {
-        return {
-            canSave: true,
-            hideLayerSelector: false,
-            open: false,
-            closeGlyph: '1-close',
-            layers: [],
-            layer: null,
-            withContainer: true,
-            selectVectorLayer: () => {},
-            selectRasterLayer: () => {},
-            getDescribeLayer: () => {},
-            getLayerCapabilities: () => {},
-            toggleControl: () => {},
-            style: {},
-            saveStyle: () => {},
-            changeLayerProperties: () => {},
-            zoomToExtent: () => {},
-            reset: () => {}
-        };
-    },
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        canSave: true,
+        hideLayerSelector: false,
+        open: false,
+        closeGlyph: '1-close',
+        layers: [],
+        layer: null,
+        withContainer: true,
+        selectVectorLayer: () => {},
+        selectRasterLayer: () => {},
+        getDescribeLayer: () => {},
+        getLayerCapabilities: () => {},
+        toggleControl: () => {},
+        style: {},
+        saveStyle: () => {},
+        changeLayerProperties: () => {},
+        zoomToExtent: () => {},
+        reset: () => {}
+    };
+
+    state = {
+        counter: 1
+    };
+
     componentWillMount() {
         this.props.reset();
-    },
+    }
+
     componentWillReceiveProps(nextProps) {
         // intial setup
         if (!nextProps.layer && this.props.layers.length === 1) {
@@ -99,12 +102,13 @@ const Styler = React.createClass({
             if (!original) {
                 this.props.reset();
             }
-        } else if (nextProps.layer && this.props.layer && (nextProps.layer.name !== this.props.layer.name) ) {
+        } else if (nextProps.layer && this.props.layer && nextProps.layer.name !== this.props.layer.name ) {
             this.setLayer(nextProps.layer);
         }
 
-    },
-    getPanelStyle() {
+    }
+
+    getPanelStyle = () => {
         let size = getWindowSize();
         let maxHeight = size.maxHeight - 20;
         let maxWidth = size.maxWidth - 70;
@@ -114,8 +118,9 @@ const Styler = React.createClass({
             style.overflowY = "auto";
         }
         return style;
-    },
-    getStylerStyle() {
+    };
+
+    getStylerStyle = () => {
         let size = getWindowSize();
         let maxHeight = size.maxHeight - 170;
         let maxWidth = size.maxWidth - 70;
@@ -125,51 +130,57 @@ const Styler = React.createClass({
             style.overflowY = "auto";
         }
         return style;
-    },
-    getRestURL(url) {
+    };
+
+    getRestURL = (url) => {
         let urlParts = url.split("/geoserver/");
         if (urlParts[0] || urlParts[0] === "") {
             return urlParts[0] + "/geoserver/rest/";
         }
         return null;
-    },
-    renderError(error) {
+    };
+
+    renderError = (error) => {
         return <Alert bsStyle="danger">{error}</Alert>;
-    },
-    renderStyler() {
+    };
+
+    renderStyler = () => {
         switch (this.props.layer.describeLayer && this.props.layer.describeLayer.owsType) {
-            case 'WFS':
+        case 'WFS':
             {
                 return (
                     <div style={this.getStylerStyle()}>
-                    <Vector forceOpen={true} hideLayerSelector={true} withContainer={false} />
+                    <Vector forceOpen hideLayerSelector withContainer={false} />
                     </div>);
             }
-            case 'WCS':
+        case 'WCS':
             {
                 return (
                     <div style={this.getStylerStyle()}>
-                    <Raster forceOpen={true} hideLayerSelector={true} withContainer={false}/>
+                    <Raster forceOpen hideLayerSelector withContainer={false}/>
                     </div>);
             }
-            default: {
-                if (this.props.layer.describeLayer && this.props.layer.describeLayer.error) {
-                    return this.renderError(this.props.layer.describeLayer.error);
-                }
-                break;
+        default: {
+            if (this.props.layer.describeLayer && this.props.layer.describeLayer.error) {
+                return this.renderError(this.props.layer.describeLayer.error);
             }
+            break;
         }
-    },
-    renderWait() {
+        }
+    };
+
+    renderWait = () => {
         if (this.state.layer) {
             return <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/>;
         }
         return null;
-    },
-    renderWaitOrError() {
-        return (this.state.layer && this.state.error ? this.renderError(this.state.error) : this.renderWait());
-    },
-    renderSelector() {
+    };
+
+    renderWaitOrError = () => {
+        return this.state.layer && this.state.error ? this.renderError(this.state.error) : this.renderWait();
+    };
+
+    renderSelector = () => {
         return (<Row style={{marginBottom: "5px", marginLeft: "10px", marginRight: "10px"}}>
                     {!this.props.hideLayerSelector && !(this.props.layers.length === 1) ? (<Row>
 
@@ -182,8 +193,9 @@ const Styler = React.createClass({
 
                     </Row>) : null}
                 </Row>);
-    },
-    renderSave() {
+    };
+
+    renderSave = () => {
         let layer = this.findOriginalLayer(this.props, this.props);
 
         if (layer && layer.params && layer.params.SLD_BODY && this.props.layer && this.getRestURL(this.props.layer.url)) {
@@ -192,23 +204,26 @@ const Styler = React.createClass({
             );
         }
 
-    },
-    renderReset() {
+    };
+
+    renderReset = () => {
         if (this.props.layer) {
             return (
                 <Button key="reset-btn" onClick={this.reset}>Reset</Button>
             );
         }
-    },
-    renderZoom() {
+    };
+
+    renderZoom = () => {
         let originalLayer = this.findOriginalLayer(this.props, this.props);
         if (originalLayer && originalLayer.capabilities) {
             return (<Button key="zoom-btn" style={{
                 "float": "right"
             }}onClick={this.zoomToLayerExtent} ><Glyphicon glyph="zoom-in" />Zoom To Layer</Button>);
         }
-    },
-    renderBody() {
+    };
+
+    renderBody = () => {
 
         return (<Grid fluid>
                 {this.renderSelector()}
@@ -218,11 +233,12 @@ const Styler = React.createClass({
                     {this.renderReset()}{this.renderZoom()}
                 </Row>
                 </Grid>);
-    },
+    };
+
     render() {
         if (this.props.open || this.props.forceOpen) {
             return this.props.withContainer ?
-                (<Dialog id="wms-styler-dialog" className="mapstore-styler-panel"
+                <Dialog id="wms-styler-dialog" className="mapstore-styler-panel"
                         style={this.getPanelStyle()}
                         >
                         <span role="header"><span className="metadataexplorer-panel-title">
@@ -232,33 +248,36 @@ const Styler = React.createClass({
                             <div role="body">
                                 {this.renderBody()}
                             </div>
-                </Dialog>) : this.renderBody();
+                </Dialog> : this.renderBody();
         }
         return null;
-    },
+    }
+
     /*
      * add a incremental value as layer parameter (to force invalidation of the cache) and clear the sldbody
      */
-    clearLayerStyle() {
+    clearLayerStyle = () => {
         this.props.changeLayerProperties(this.props.layer.id, { params: assign({}, this.props.layer.params, {SLD_BODY: null, _dc: this.state.counter})});
         this.setState({counter: this.state.counter + 1});
-    },
-    reset() {
+    };
+
+    reset = () => {
         this.clearLayerStyle();
         this.props.reset();
-    },
-    setLayer(l) {
+    };
+
+    setLayer = (l) => {
         if (l.describeLayer && l.describeLayer.owsType) {
             switch (l.describeLayer && l.describeLayer.owsType) {
-                case "WFS": {
-                    this.props.selectVectorLayer(l);
-                    break;
-                }
-                case "WCS": {
-                    this.props.selectRasterLayer(l);
-                    break;
-                }
-                default:
+            case "WFS": {
+                this.props.selectVectorLayer(l);
+                break;
+            }
+            case "WCS": {
+                this.props.selectRasterLayer(l);
+                break;
+            }
+            default:
                 break;
             }
             if (!l.capabilities || !l.capabilities.error) {
@@ -268,18 +287,21 @@ const Styler = React.createClass({
             this.props.getDescribeLayer(l.url, l);
         }
 
-    },
-    findOriginalLayer(props, state) {
-        return head(props.layers.filter((l) => (l && state.layer && (l.id === state.layer.id))));
-    },
-    saveStyle() {
+    };
+
+    findOriginalLayer = (props, state) => {
+        return head(props.layers.filter((l) => l && state.layer && l.id === state.layer.id));
+    };
+
+    saveStyle = () => {
         let layer = this.findOriginalLayer(this.props, this.props);
         if (layer.params && layer.params.SLD_BODY) {
             this.props.saveStyle(this.getRestURL(layer.url), layer.name, layer.params.SLD_BODY);
             setTimeout(this.clearLayerStyle, 2000);
         }
-    },
-    zoomToLayerExtent() {
+    };
+
+    zoomToLayerExtent = () => {
         let originalLayer = this.findOriginalLayer(this.props, this.props);
         if (originalLayer && originalLayer.capabilities ) {
             let extent = originalLayer.capabilities.latLonBoundingBox;
@@ -288,10 +310,11 @@ const Styler = React.createClass({
                 this.setState({zoomed: true});
             }
         }
-    }
-});
+    };
+}
+
 const selector = createSelector([
-    (state) => (state.controls.styler && state.controls.styler.enabled === true),
+    (state) => state.controls.styler && state.controls.styler.enabled === true,
     (state) => state.vectorstyler,
     (state) => state.rasterstyler,
     (state) => state.styler && state.styler.type,
@@ -301,34 +324,34 @@ const selector = createSelector([
     return {
         open,
         layer,
-        layers: layers.filter((l) => { return (l.group !== 'background' ); })
+        layers: layers.filter((l) => { return l.group !== 'background'; })
     };
 });
 
 const StylerPlugin = connect(selector, {
-        selectVectorLayer: setVectorLayer,
-        selectRasterLayer: setRasterLayer,
-        getDescribeLayer,
-        getLayerCapabilities,
-        changeLayerProperties,
-        saveStyle: saveLayerDefaultStyle,
-        toggleControl,
-        zoomToExtent,
-        reset
-    })(Styler);
+    selectVectorLayer: setVectorLayer,
+    selectRasterLayer: setRasterLayer,
+    getDescribeLayer,
+    getLayerCapabilities,
+    changeLayerProperties,
+    saveStyle: saveLayerDefaultStyle,
+    toggleControl,
+    zoomToExtent,
+    reset
+})(Styler);
 
 module.exports = {
     StylerPlugin: assign( StylerPlugin,
         {
-        Toolbar: {
-            name: 'styler',
-            help: <Message msgId="helptexts.styler"/>,
-            tooltip: "styler.tooltip",
-            icon: <Glyphicon glyph="pencil"/>,
-            position: 9,
-            action: toggleControl.bind(null, 'styler', null)
-        }
-    }),
+            Toolbar: {
+                name: 'styler',
+                help: <Message msgId="helptexts.styler"/>,
+                tooltip: "styler.tooltip",
+                icon: <Glyphicon glyph="pencil"/>,
+                position: 9,
+                action: toggleControl.bind(null, 'styler', null)
+            }
+        }),
     reducers: {
         styler: require('../reducers/styler'),
         vectorstyler: require('../reducers/vectorstyler'),

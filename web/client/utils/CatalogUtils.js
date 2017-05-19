@@ -14,10 +14,10 @@ const {castArray} = require('lodash');
 
 const getWMSBBox = (record) => {
     let layer = record;
-    let bbox = (layer.EX_GeographicBoundingBox || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$));
+    let bbox = layer.EX_GeographicBoundingBox || layer.LatLonBoundingBox && layer.LatLonBoundingBox.$;
     while (!bbox && layer.Layer && layer.Layer.length) {
         layer = layer.Layer[0];
-        bbox = (layer.EX_GeographicBoundingBox || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$));
+        bbox = layer.EX_GeographicBoundingBox || layer.LatLonBoundingBox && layer.LatLonBoundingBox.$;
     }
     if (!bbox) {
         bbox = {
@@ -35,7 +35,7 @@ const getBaseCatalogUrl = (url) => {
 
 const getWMTSBBox = (record) => {
     let layer = record;
-    let bbox = (layer["ows:WGS84BoundingBox"]);
+    let bbox = layer["ows:WGS84BoundingBox"];
     if (!bbox) {
         bbox = {
             "ows:LowerCorner": "-180.0 -90.0",
@@ -56,7 +56,7 @@ const converters = {
                 let wms;
                 // look in URI objects for wms and thumbnail
                 if (dc && dc.URI) {
-                    const URI = isArray(dc.URI) ? dc.URI : (dc.URI && [dc.URI] || []);
+                    const URI = isArray(dc.URI) ? dc.URI : dc.URI && [dc.URI] || [];
                     let thumb = head([].filter.call(URI, (uri) => {return uri.name === "thumbnail"; }) );
                     thumbURL = thumb ? thumb.value : null;
                     wms = head([].filter.call(URI, (uri) => { return uri.protocol === "OGC:WMS-1.1.1-http-get-map"; }));
@@ -101,7 +101,7 @@ const converters = {
                 }
 
                 if (wms && wms.name) {
-                    let absolute = (wms.value.indexOf("http") === 0);
+                    let absolute = wms.value.indexOf("http") === 0;
                     if (!absolute) {
                         assign({}, wms, {value: options.catalogURL + "/" + wms.value} );
                     }
@@ -116,7 +116,7 @@ const converters = {
                     references.push(wmsReference);
                 }
                 if (thumbURL) {
-                    let absolute = (thumbURL.indexOf("http") === 0);
+                    let absolute = thumbURL.indexOf("http") === 0;
                     if (!absolute) {
                         thumbURL = (getBaseCatalogUrl(options.url) || "") + thumbURL;
                     }
@@ -141,32 +141,32 @@ const converters = {
             return records.records.map((record) => {
                 const bbox = getWMSBBox(record);
                 return {
-                title: record.Title || record.Name,
-                description: record.Abstract || record.Title || record.Name,
-                identifier: record.Name,
-                tags: "",
-                capabilities: record,
-                service: records.service,
-                boundingBox: {
-                    extent: [
+                    title: record.Title || record.Name,
+                    description: record.Abstract || record.Title || record.Name,
+                    identifier: record.Name,
+                    tags: "",
+                    capabilities: record,
+                    service: records.service,
+                    boundingBox: {
+                        extent: [
                             bbox.westBoundLongitude || bbox.minx,
                             bbox.southBoundLatitude || bbox.miny,
                             bbox.eastBoundLongitude || bbox.maxx,
                             bbox.northBoundLatitude || bbox.maxy
-                    ],
-                    crs: "EPSG:4326"
-                },
-                dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
-                    values: dim._.split(',')
-                }, dim.$ || {})),
-                references: [{
-                    type: "OGC:WMS",
-                    url: options.url,
-                    SRS: (record.SRS && (isArray(record.SRS) ? record.SRS : [record.SRS])) || [],
-                    params: {
-                        name: record.Name
-                    }
-                }]
+                        ],
+                        crs: "EPSG:4326"
+                    },
+                    dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
+                        values: dim._.split(',')
+                    }, dim.$ || {})),
+                    references: [{
+                        type: "OGC:WMS",
+                        url: options.url,
+                        SRS: record.SRS && (isArray(record.SRS) ? record.SRS : [record.SRS]) || [],
+                        params: {
+                            name: record.Name
+                        }
+                    }]
                 };
             });
         }
@@ -176,53 +176,53 @@ const converters = {
             return records.records.map((record) => {
                 const bbox = getWMTSBBox(record);
                 return {
-                title: record["ows:Title"] || record["ows:Identifier"],
-                description: record["ows:Abstract"] || record["ows:Title"] || record["ows:Identifier"],
-                identifier: record["ows:Identifier"],
-                tags: "",
-                tileMatrixSet: record.TileMatrixSet,
-                matrixIds: castArray(record.TileMatrixSetLink).reduce((previous, current) => {
-                    const tileMatrix = head(record.TileMatrixSet.filter((matrix) => matrix["ows:Identifier"] === current.TileMatrixSet));
-                    const tileMatrixSRS = CoordinatesUtils.getEPSGCode(tileMatrix["ows:SupportedCRS"]);
-                    const levels = current.TileMatrixSetLimits && current.TileMatrixSetLimits.TileMatrixLimits.map((limit) => ({
-                        identifier: limit.TileMatrix,
-                        ranges: {
-                            cols: {
-                                min: limit.MinTileCol,
-                                max: limit.MaxTileCol
-                            },
-                            rows: {
-                                min: limit.MinTileRow,
-                                max: limit.MaxTileRow
+                    title: record["ows:Title"] || record["ows:Identifier"],
+                    description: record["ows:Abstract"] || record["ows:Title"] || record["ows:Identifier"],
+                    identifier: record["ows:Identifier"],
+                    tags: "",
+                    tileMatrixSet: record.TileMatrixSet,
+                    matrixIds: castArray(record.TileMatrixSetLink).reduce((previous, current) => {
+                        const tileMatrix = head(record.TileMatrixSet.filter((matrix) => matrix["ows:Identifier"] === current.TileMatrixSet));
+                        const tileMatrixSRS = CoordinatesUtils.getEPSGCode(tileMatrix["ows:SupportedCRS"]);
+                        const levels = current.TileMatrixSetLimits && current.TileMatrixSetLimits.TileMatrixLimits.map((limit) => ({
+                            identifier: limit.TileMatrix,
+                            ranges: {
+                                cols: {
+                                    min: limit.MinTileCol,
+                                    max: limit.MaxTileCol
+                                },
+                                rows: {
+                                    min: limit.MinTileRow,
+                                    max: limit.MaxTileRow
+                                }
                             }
-                        }
-                    })) || tileMatrix.TileMatrix.map((matrix) => ({
-                        identifier: matrix["ows:Identifier"]
-                    }));
+                        })) || tileMatrix.TileMatrix.map((matrix) => ({
+                            identifier: matrix["ows:Identifier"]
+                        }));
 
-                    return assign(previous, {
-                        [tileMatrix["ows:Identifier"]]: levels,
-                        [tileMatrixSRS]: levels
-                    });
-                }, {}),
-                TileMatrixSetLink: castArray(record.TileMatrixSetLink),
-                boundingBox: {
-                    extent: [
+                        return assign(previous, {
+                            [tileMatrix["ows:Identifier"]]: levels,
+                            [tileMatrixSRS]: levels
+                        });
+                    }, {}),
+                    TileMatrixSetLink: castArray(record.TileMatrixSetLink),
+                    boundingBox: {
+                        extent: [
                             bbox["ows:LowerCorner"].split(" ")[0],
                             bbox["ows:LowerCorner"].split(" ")[1],
                             bbox["ows:UpperCorner"].split(" ")[0],
                             bbox["ows:UpperCorner"].split(" ")[1]
-                    ],
-                    crs: "EPSG:4326"
-                },
-                references: [{
-                    type: "OGC:WMTS",
-                    url: record.GetTileUrl || options.url,
-                    SRS: record.SRS || [],
-                    params: {
-                        name: record["ows:Identifier"]
-                    }
-                }]
+                        ],
+                        crs: "EPSG:4326"
+                    },
+                    references: [{
+                        type: "OGC:WMTS",
+                        url: record.GetTileUrl || options.url,
+                        SRS: record.SRS || [],
+                        params: {
+                            name: record["ows:Identifier"]
+                        }
+                    }]
                 };
             });
         }

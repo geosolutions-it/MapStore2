@@ -155,7 +155,7 @@ describe('This test for ZoomToMaxExtentButton', () => {
             var cmp = ReactDOM.render(
                 <ZoomToMaxExtentButton
                     {...actions} btnType={btnType}
-                    useInitialExtent={true}
+                    useInitialExtent
                     mapConfig={{
                         size: {
                             height: 100,

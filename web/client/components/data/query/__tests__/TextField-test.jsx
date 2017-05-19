@@ -29,13 +29,13 @@ describe('TextField', () => {
     });
     it('create a TextField with isNull operator', () => {
         let conf = {
-                    fieldRowId: 846,
-                    groupId: 1,
-                    attribute: "FAMILIES",
-                    operator: "isNull",
-                    fieldValue: '',
-                    type: "string"
-                    };
+            fieldRowId: 846,
+            groupId: 1,
+            attribute: "FAMILIES",
+            operator: "isNull",
+            fieldValue: '',
+            type: "string"
+        };
         const cmp = ReactDOM.render(<TextField {...conf} />, document.getElementById("container"));
         expect(cmp).toExist();
         let node = ReactDOM.findDOMNode(cmp);

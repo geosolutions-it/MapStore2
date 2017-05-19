@@ -12,9 +12,9 @@ var {RECORD_LIST_LOADED, ADD_LAYER_ERROR} = require('../../actions/catalog');
 const sampleRecord = {
     boundingBox: {
         extent: [10.686,
-                44.931,
-                46.693,
-                12.54],
+            44.931,
+            46.693,
+            12.54],
         crs: "EPSG:4326"
 
     },

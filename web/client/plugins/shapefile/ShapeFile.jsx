@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -17,50 +18,51 @@ const {Glyphicon, Panel} = require('react-bootstrap');
 const Dialog = require('../../components/misc/Dialog');
 
 require('./css/shapeFile.css');
-const ShapeFile = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        layers: React.PropTypes.array,
-        selected: React.PropTypes.object,
-        style: React.PropTypes.object,
-        shapeStyle: React.PropTypes.object,
-        onShapeError: React.PropTypes.func,
-        onShapeChoosen: React.PropTypes.func,
-        addShapeLayer: React.PropTypes.func,
-        shapeLoading: React.PropTypes.func,
-        onSelectLayer: React.PropTypes.func,
-        onLayerAdded: React.PropTypes.func,
-        error: React.PropTypes.string,
-        mapType: React.PropTypes.string,
-        wrap: React.PropTypes.bool,
-        wrapWithPanel: React.PropTypes.bool,
-        panelStyle: React.PropTypes.object,
-        panelClassName: React.PropTypes.string,
-        visible: React.PropTypes.bool,
-        toggleControl: React.PropTypes.func,
-        closeGlyph: React.PropTypes.string,
-        buttonSize: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            id: "mapstore-shapefile-upload",
-            wrap: true,
-            wrapWithPanel: false,
-            panelStyle: {
-                minWidth: "360px",
-                zIndex: 100,
-                position: "absolute",
-                overflow: "visible",
-                top: "100px",
-                left: "calc(50% - 150px)"
-            },
-            panelClassName: "toolbar-panel",
-            visible: false,
-            toggleControl: () => {},
-            closeGlyph: "1-close",
-            buttonSize: "small"
-        };
-    },
+
+class ShapeFile extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        layers: PropTypes.array,
+        selected: PropTypes.object,
+        style: PropTypes.object,
+        shapeStyle: PropTypes.object,
+        onShapeError: PropTypes.func,
+        onShapeChoosen: PropTypes.func,
+        addShapeLayer: PropTypes.func,
+        shapeLoading: PropTypes.func,
+        onSelectLayer: PropTypes.func,
+        onLayerAdded: PropTypes.func,
+        error: PropTypes.string,
+        mapType: PropTypes.string,
+        wrap: PropTypes.bool,
+        wrapWithPanel: PropTypes.bool,
+        panelStyle: PropTypes.object,
+        panelClassName: PropTypes.string,
+        visible: PropTypes.bool,
+        toggleControl: PropTypes.func,
+        closeGlyph: PropTypes.string,
+        buttonSize: PropTypes.string
+    };
+
+    static defaultProps = {
+        id: "mapstore-shapefile-upload",
+        wrap: true,
+        wrapWithPanel: false,
+        panelStyle: {
+            minWidth: "360px",
+            zIndex: 100,
+            position: "absolute",
+            overflow: "visible",
+            top: "100px",
+            left: "calc(50% - 150px)"
+        },
+        panelClassName: "toolbar-panel",
+        visible: false,
+        toggleControl: () => {},
+        closeGlyph: "1-close",
+        buttonSize: "small"
+    };
+
     render() {
         const stylers = {
             Polygon: <StylePolygon/>,
@@ -95,6 +97,6 @@ const ShapeFile = React.createClass({
         }
         return panel;
     }
-});
+}
 
 module.exports = ShapeFile;

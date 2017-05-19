@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -28,6 +29,7 @@ const {setControlProperty, toggleControl} = require('../../actions/controls');
 const {partial} = require('lodash');
 
 const assign = require('object-assign');
+
 /**
  * A container for tools.
  * @memberof plugins.containers.ToolsContainer
@@ -44,55 +46,57 @@ const assign = require('object-assign');
  * ```
  *
  */
-const ToolsContainer = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string.isRequired,
-        container: React.PropTypes.func,
-        tool: React.PropTypes.func,
-        className: React.PropTypes.string,
-        style: React.PropTypes.object,
-        tools: React.PropTypes.array,
-        panels: React.PropTypes.array,
-        mapType: React.PropTypes.string,
-        toolStyle: React.PropTypes.string,
-        activeStyle: React.PropTypes.string,
-        toolSize: React.PropTypes.string,
-        stateSelector: React.PropTypes.string.isRequired,
-        eventSelector: React.PropTypes.string,
-        panelStyle: React.PropTypes.object,
-        panelClassName: React.PropTypes.string,
-        activePanel: React.PropTypes.string,
-        toolCfg: React.PropTypes.object
-    },
-    contextTypes: {
-        messages: React.PropTypes.object,
-        router: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            container: Panel,
-            className: "tools-container",
-            style: {},
-            toolStyle: "default",
-            activeStyle: "primary",
-            tools: [],
-            panels: [],
-            tool: Button,
-            mapType: "leaflet",
-            eventSelector: "onClick",
-            panelStyle: {},
-            panelClassName: "tools-container-panel",
-            toolSize: null,
-            toolCfg: {}
-        };
-    },
-    getToolConfig(tool) {
+class ToolsContainer extends React.Component {
+    static propTypes = {
+        id: PropTypes.string.isRequired,
+        container: PropTypes.func,
+        tool: PropTypes.func,
+        className: PropTypes.string,
+        style: PropTypes.object,
+        tools: PropTypes.array,
+        panels: PropTypes.array,
+        mapType: PropTypes.string,
+        toolStyle: PropTypes.string,
+        activeStyle: PropTypes.string,
+        toolSize: PropTypes.string,
+        stateSelector: PropTypes.string.isRequired,
+        eventSelector: PropTypes.string,
+        panelStyle: PropTypes.object,
+        panelClassName: PropTypes.string,
+        activePanel: PropTypes.string,
+        toolCfg: PropTypes.object
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object,
+        router: PropTypes.object
+    };
+
+    static defaultProps = {
+        container: Panel,
+        className: "tools-container",
+        style: {},
+        toolStyle: "default",
+        activeStyle: "primary",
+        tools: [],
+        panels: [],
+        tool: Button,
+        mapType: "leaflet",
+        eventSelector: "onClick",
+        panelStyle: {},
+        panelClassName: "tools-container-panel",
+        toolSize: null,
+        toolCfg: {}
+    };
+
+    getToolConfig = (tool) => {
         if (tool.tool) {
             return {};
         }
         return this.props.toolCfg;
-    },
-    getTool(tool) {
+    };
+
+    getTool = (tool) => {
         // tool attribute, if boolean, tells to render directly the plugin
         // otherwise tool is the component to render inside this container
         if (tool.tool) {
@@ -122,8 +126,9 @@ const ToolsContainer = React.createClass({
                 ...stateProps
             }, dispatchProps);
         })(this.props.tool);
-    },
-    renderTools() {
+    };
+
+    renderTools = () => {
         return this.props.tools.map((tool, i) => {
             if (tool.element) {
                 return tool.element;
@@ -135,14 +140,15 @@ const ToolsContainer = React.createClass({
             const toolCfg = this.getToolConfig(tool);
 
             return this.addTooltip(
-                <Tool {...toolCfg} pluginCfg={tool.cfg} tooltip={tooltip} btnSize={this.props.toolSize} bsStyle={this.props.toolStyle} help={help} key={tool.name || ("tool" + i)} mapType={this.props.mapType}
+                <Tool {...toolCfg} pluginCfg={tool.cfg} tooltip={tooltip} btnSize={this.props.toolSize} bsStyle={this.props.toolStyle} help={help} key={tool.name || "tool" + i} mapType={this.props.mapType}
                     {...tool.cfg} items={tool.items || []}>
-                    {(tool.cfg && tool.cfg.glyph) ? <Glyphicon glyph={tool.cfg.glyph}/> : tool.icon}{help} {tool.text}
+                    {tool.cfg && tool.cfg.glyph ? <Glyphicon glyph={tool.cfg.glyph}/> : tool.icon}{help} {tool.text}
                 </Tool>,
             tool);
         });
-    },
-    renderPanels() {
+    };
+
+    renderPanels = () => {
         return this.props.panels
         .filter((panel) => !panel.panel.loadPlugin).map((panel) => {
             const ToolPanelComponent = panel.panel;
@@ -161,7 +167,8 @@ const ToolsContainer = React.createClass({
             }
             return ToolPanel;
         });
-    },
+    };
+
     render() {
         const Container = this.props.container;
         return (
@@ -172,13 +179,15 @@ const ToolsContainer = React.createClass({
                 {this.renderPanels()}
             </span>
         );
-    },
-    mergeHandlers(props, handlers) {
+    }
+
+    mergeHandlers = (props, handlers) => {
         return Object.keys(handlers).reduce((previous, event) => {
             return assign(previous, {[event]: props[event] ? compose(props[event], handlers[event]) : handlers[event]});
         }, props);
-    },
-    addTooltip(button, spec) {
+    };
+
+    addTooltip = (button, spec) => {
         if (spec.tooltip) {
             let tooltip = <Tooltip id={this.props.id + "-" + spec.name + "-tooltip"}><Message msgId={spec.tooltip}/></Tooltip>;
             return (
@@ -188,7 +197,7 @@ const ToolsContainer = React.createClass({
             );
         }
         return button;
-    }
-});
+    };
+}
 
 module.exports = ToolsContainer;

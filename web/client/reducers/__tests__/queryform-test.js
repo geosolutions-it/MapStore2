@@ -833,7 +833,7 @@ describe('Test the queryform reducer', () => {
         expect(state.simpleFilterFields.length).toBe(0);
     });
 
-    /*it('Open Zones Menu', () => {
+    /* it('Open Zones Menu', () => {
         let testAction = {
             type: "OPEN_MENU",
             active: true,

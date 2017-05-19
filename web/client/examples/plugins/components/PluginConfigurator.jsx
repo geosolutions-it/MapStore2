@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -15,62 +16,66 @@ require('codemirror/mode/javascript/javascript');
 
 const assign = require('object-assign');
 
-const PluginConfigurator = React.createClass({
-    propTypes: {
-        pluginName: React.PropTypes.string,
-        pluginsCfg: React.PropTypes.array,
-        onToggle: React.PropTypes.func,
-        onApplyCfg: React.PropTypes.func,
-        pluginConfig: React.PropTypes.string,
-        pluginImpl: React.PropTypes.object
-    },
-    getInitialState() {
-        return {
-            configVisible: false,
-            code: "{}"
-        };
-    },
+class PluginConfigurator extends React.Component {
+    static propTypes = {
+        pluginName: PropTypes.string,
+        pluginsCfg: PropTypes.array,
+        onToggle: PropTypes.func,
+        onApplyCfg: PropTypes.func,
+        pluginConfig: PropTypes.string,
+        pluginImpl: PropTypes.object
+    };
+
+    state = {
+        configVisible: false,
+        code: "{}"
+    };
+
     componentWillMount() {
         this.setState({
             code: this.props.pluginConfig
         });
-    },
+    }
+
     componentWillReceiveProps(newProps) {
         if (newProps.pluginConfig !== this.props.pluginConfig) {
             this.setState({
                 code: newProps.pluginConfig
             });
         }
-    },
-    getPropValue(type) {
-        if (type === React.PropTypes.string || type === React.PropTypes.string.isRequired) {
+    }
+
+    getPropValue = (type) => {
+        if (type === PropTypes.string || type === PropTypes.string.isRequired) {
             return '';
         }
-        if (type === React.PropTypes.number || type === React.PropTypes.number.isRequired) {
+        if (type === PropTypes.number || type === PropTypes.number.isRequired) {
             return 0;
         }
-        if (type === React.PropTypes.bool || type === React.PropTypes.bool.isRequired) {
+        if (type === PropTypes.bool || type === PropTypes.bool.isRequired) {
             return false;
         }
-        if (type === React.PropTypes.object || type === React.PropTypes.object.isRequired) {
+        if (type === PropTypes.object || type === PropTypes.object.isRequired) {
             return {};
         }
-        if (type === React.PropTypes.array || type === React.PropTypes.array.isRequired) {
+        if (type === PropTypes.array || type === PropTypes.array.isRequired) {
             return [];
         }
         return null;
-    },
-    renderCfg() {
+    };
+
+    renderCfg = () => {
         return this.state.configVisible ? [
             <label key="config-label">Enter a JSON object to configure plugin properties</label>,
             <Codemirror key="code-mirror" value={this.state.code} onChange={this.updateCode} options={{
-                    mode: {name: "javascript", json: true},
-                    lineNumbers: true
-                }}/>,
+                mode: {name: "javascript", json: true},
+                lineNumbers: true
+            }}/>,
             <Button key="apply-cfg" bsStyle="primary" onClick={this.applyCfg}>Apply</Button>,
             <Button key="help-cfg" bsStyle="primary" onClick={this.showProps}><Glyphicon glyph="question-sign"/></Button>
         ] : null;
-    },
+    };
+
     render() {
         return (<li style={{border: "solid 1px lightgrey", borderRadius: "3px", paddingLeft: "10px", paddingRight: "10px", marginBottom: "3px", marginRight: "10px"}} key={this.props.pluginName + "enable"}>
             <Button bsSize="small" bsStyle="primary" onClick={this.toggleCfg}><Glyphicon glyph={this.state.configVisible ? "minus" : "plus"}/></Button>
@@ -84,14 +89,15 @@ const PluginConfigurator = React.createClass({
             </FormGroup>
             {this.renderCfg()}
         </li>);
-    },
-    showProps() {
+    }
+
+    showProps = () => {
         if (this.props.pluginImpl) {
             const plugin = this.props.pluginImpl;
             const pluginProps = plugin.WrappedComponent && plugin.WrappedComponent.propTypes || plugin.propTypes;
 
-            const propsValues = (plugin.WrappedComponent && plugin.WrappedComponent.getDefaultProps && plugin.WrappedComponent.getDefaultProps()) ||
-                (plugin.getDefaultProps && plugin.getDefaultProps()) || {};
+            const propsValues = plugin.WrappedComponent && plugin.WrappedComponent.getDefaultProps && plugin.WrappedComponent.getDefaultProps() ||
+                plugin.getDefaultProps && plugin.getDefaultProps() || {};
 
             const props = Object.keys(pluginProps || {}).reduce((previous, current) => {
                 return assign(previous, {[current]: this.getPropValue(pluginProps[current])}, propsValues);
@@ -100,18 +106,21 @@ const PluginConfigurator = React.createClass({
                 code: JSON.stringify(props, null, 4)
             });
         }
-    },
-    updateCode(newCode) {
+    };
+
+    updateCode = (newCode) => {
         this.setState({
             code: newCode
         });
-    },
-    toggleCfg() {
+    };
+
+    toggleCfg = () => {
         this.setState({configVisible: !this.state.configVisible});
-    },
-    applyCfg() {
+    };
+
+    applyCfg = () => {
         this.props.onApplyCfg(this.state.code);
-    }
-});
+    };
+}
 
 module.exports = PluginConfigurator;

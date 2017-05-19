@@ -48,12 +48,12 @@ describe('OpenlayersMap', () => {
 
     it('creates multiple maps for different containers', () => {
         const container = ReactDOM.render(
-        (
+
             <div>
                 <div id="container1"><OpenlayersMap id="map1" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
                 <div id="container2"><OpenlayersMap id="map2" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
             </div>
-        ), document.getElementById("map"));
+        , document.getElementById("map"));
         expect(container).toExist();
 
         expect(document.getElementById('map1')).toExist();
@@ -320,7 +320,7 @@ describe('OpenlayersMap', () => {
         expect(getPixelFromCoordinates).toNotExist();
         expect(getCoordinatesFromPixel).toNotExist();
 
-        const map = ReactDOM.render(<OpenlayersMap id="mymap" center={{y: 0, x: 0}} zoom={11} registerHooks={true}/>,
+        const map = ReactDOM.render(<OpenlayersMap id="mymap" center={{y: 0, x: 0}} zoom={11} registerHooks/>,
                                     document.getElementById("map"));
         expect(map).toExist();
 

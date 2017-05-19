@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -10,28 +11,29 @@ const React = require('react');
 const defaultIcon = require('./img/spinner.gif');
 const {isFunction} = require('lodash');
 
-var InlineSpinner = React.createClass({
-    propTypes: {
-        className: React.PropTypes.string,
-        loading: React.PropTypes.oneOfType([React.PropTypes.bool, React.PropTypes.func]),
-        icon: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            loading: false,
-            icon: defaultIcon,
-            className: "inline-spinner"
-        };
-    },
-    getDisplayStyle() {
+class InlineSpinner extends React.Component {
+    static propTypes = {
+        className: PropTypes.string,
+        loading: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+        icon: PropTypes.string
+    };
+
+    static defaultProps = {
+        loading: false,
+        icon: defaultIcon,
+        className: "inline-spinner"
+    };
+
+    getDisplayStyle = () => {
         let loading;
         if (isFunction(this.props.loading)) {
             loading = this.props.loading(this.props);
         } else {
             loading = this.props.loading;
         }
-        return (loading ? 'inline-block' : 'none');
-    },
+        return loading ? 'inline-block' : 'none';
+    };
+
     render() {
         return (
             <img className={this.props.className} src={this.props.icon} style={{
@@ -43,6 +45,6 @@ var InlineSpinner = React.createClass({
             }} alt="..." />
         );
     }
-});
+}
 
 module.exports = InlineSpinner;

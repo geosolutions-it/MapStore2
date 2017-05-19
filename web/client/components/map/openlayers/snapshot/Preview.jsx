@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -9,44 +10,45 @@ const React = require('react');
 const ConfigUtils = require('../../../../utils/ConfigUtils');
 const ProxyUtils = require('../../../../utils/ProxyUtils');
 const {isEqual} = require('lodash');
+
 /**
  * Preview for OpenLayers map generate is a fast system to get the image
  * directly from the original map canvas.
  * if it is not tainted, this can be used also to generate snapshot
  * (extracting the image URL from the canvas).
  */
-let GrabLMap = React.createClass({
-    propTypes: {
-            config: ConfigUtils.PropTypes.config,
-            layers: React.PropTypes.array,
-            snapstate: React.PropTypes.object,
-            active: React.PropTypes.bool,
-            onSnapshotReady: React.PropTypes.func,
-            onStatusChange: React.PropTypes.func,
-            onSnapshotError: React.PropTypes.func,
-            allowTaint: React.PropTypes.bool,
-            browser: React.PropTypes.object,
-            canvas: React.PropTypes.node,
-            timeout: React.PropTypes.number,
-            drawCanvas: React.PropTypes.bool,
-            mapId: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            config: null,
-            layers: [],
-            snapstate: {state: "DISABLED"},
-            active: false,
-            onSnapshotReady: () => {},
-            onStatusChange: () => {},
-            onSnapshotError: () => {},
-            browser: {},
-            canvas: <canvas></canvas>,
-            drawCanvas: true,
-            mapId: "map",
-            timeout: 0
-        };
-    },
+class GrabLMap extends React.Component {
+    static propTypes = {
+        config: ConfigUtils.PropTypes.config,
+        layers: PropTypes.array,
+        snapstate: PropTypes.object,
+        active: PropTypes.bool,
+        onSnapshotReady: PropTypes.func,
+        onStatusChange: PropTypes.func,
+        onSnapshotError: PropTypes.func,
+        allowTaint: PropTypes.bool,
+        browser: PropTypes.object,
+        canvas: PropTypes.node,
+        timeout: PropTypes.number,
+        drawCanvas: PropTypes.bool,
+        mapId: PropTypes.string
+    };
+
+    static defaultProps = {
+        config: null,
+        layers: [],
+        snapstate: {state: "DISABLED"},
+        active: false,
+        onSnapshotReady: () => {},
+        onStatusChange: () => {},
+        onSnapshotError: () => {},
+        browser: {},
+        canvas: <canvas />,
+        drawCanvas: true,
+        mapId: "map",
+        timeout: 0
+    };
+
     componentDidMount() {
 
         this.proxy = null;
@@ -55,7 +57,7 @@ let GrabLMap = React.createClass({
             if ( typeof proxyUrl === 'object') {
                 proxyUrl = proxyUrl.url;
             }
-            this.proxy = (proxyUrl.indexOf("?url=") !== -1) ? proxyUrl.replace("?url=", '') : proxyUrl;
+            this.proxy = proxyUrl.indexOf("?url=") !== -1 ? proxyUrl.replace("?url=", '') : proxyUrl;
         }
         // start SHOOTING
         let mapIsLoading = this.mapIsLoading(this.props.layers);
@@ -63,7 +65,8 @@ let GrabLMap = React.createClass({
             this.props.onStatusChange("SHOTING");
             this.triggerShooting(this.props.timeout);
         }
-    },
+    }
+
     componentWillReceiveProps(nextProps) {
         if (this.previousTimeout) {
             clearTimeout(this.previousTimeout);
@@ -74,10 +77,12 @@ let GrabLMap = React.createClass({
                 this.props.onSnapshotError(null);
             }
         }
-    },
+    }
+
     shouldComponentUpdate(nextProps) {
         return this.mapChanged(nextProps) || this.props.snapstate !== nextProps.snapstate;
-    },
+    }
+
     componentDidUpdate(prevProps) {
         let mapIsLoading = this.mapIsLoading(this.props.layers);
         let mapChanged = this.mapChanged(prevProps);
@@ -88,15 +93,18 @@ let GrabLMap = React.createClass({
             this.triggerShooting(this.props.timeout);
         }
 
-    },
+    }
+
     componentWillUnmount() {
         if (this.previousTimeout) {
             clearTimeout(this.previousTimeout);
         }
-    },
-    getCanvas() {
+    }
+
+    getCanvas = () => {
         return this.refs.canvas;
-    },
+    };
+
     render() {
         return (
             <canvas
@@ -109,14 +117,17 @@ let GrabLMap = React.createClass({
                 }}
                 ref="canvas" />
         );
-    },
-    mapChanged(nextProps) {
-        return !isEqual(nextProps.layers, this.props.layers) || (nextProps.active !== this.props.active) || nextProps.config !== this.props.config;
-    },
-    mapIsLoading(layers) {
+    }
+
+    mapChanged = (nextProps) => {
+        return !isEqual(nextProps.layers, this.props.layers) || nextProps.active !== this.props.active || nextProps.config !== this.props.config;
+    };
+
+    mapIsLoading = (layers) => {
         return layers.some((layer) => { return layer.visibility && layer.loading; });
-    },
-    triggerShooting(delay) {
+    };
+
+    triggerShooting = (delay) => {
         if (this.previousTimeout) {
             clearTimeout(this.previousTimeout);
         }
@@ -124,8 +135,9 @@ let GrabLMap = React.createClass({
             this.doSnapshot();
         },
         delay);
-    },
-    doSnapshot() {
+    };
+
+    doSnapshot = () => {
         var div = document.getElementById(this.props.mapId);
         let sourceCanvas = div && div.getElementsByTagName("canvas")[0];
         if (sourceCanvas && this.getCanvas()) {
@@ -137,20 +149,22 @@ let GrabLMap = React.createClass({
             this.props.onStatusChange("READY", this.isTainted(sourceCanvas));
 
         }
-    },
-    isTainted(canv) {
+    };
+
+    isTainted = (canv) => {
         let canvas = canv || this.refs.canvas;
         let ctx = canvas.getContext("2d");
         try {
             ctx.getImageData(0, 0, 1, 1);
             return false;
-        } catch(err) {
-            return (err.code === 18);
+        } catch (err) {
+            return err.code === 18;
         }
-    },
-    exportImage() {
+    };
+
+    exportImage = () => {
         return this.refs.canvas.toDataURL();
-    }
-});
+    };
+}
 
 module.exports = GrabLMap;

@@ -29,7 +29,7 @@ function init() {
             "BackgroundSwitcher",
             "Identify",
             "FullScreen"
-      ]};
+        ]};
     /*eslint-disable */
     pluginsCfg = cfg && MapStore2.buildPluginsCfg(cfg.pluginsCfg.standard, cfg.userCfg) || embeddedPlugins;
     MapStore2.create('container', {

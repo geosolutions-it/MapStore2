@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -15,28 +16,29 @@ const ColorMapGrid = require('./ColorMapGrid');
 
 const Message = require('../I18N/Message');
 
-const PseudoColorSettings = React.createClass({
-    propTypes: {
-        type: React.PropTypes.oneOf(['ramp', 'intervals', 'values']),
-        opacity: React.PropTypes.oneOfType([React.PropTypes.number, React.PropTypes.string]),
-        selected: React.PropTypes.number,
-        colorMapEntry: React.PropTypes.array,
-        onChange: React.PropTypes.func,
-        extended: React.PropTypes.bool
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            type: 'ramp',
-            opacity: "1",
-            selected: null,
-            colorMapEntry: [],
-            onChange: () => {},
-            extended: false
-        };
-    },
+class PseudoColorSettings extends React.Component {
+    static propTypes = {
+        type: PropTypes.oneOf(['ramp', 'intervals', 'values']),
+        opacity: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        selected: PropTypes.number,
+        colorMapEntry: PropTypes.array,
+        onChange: PropTypes.func,
+        extended: PropTypes.bool
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        type: 'ramp',
+        opacity: "1",
+        selected: null,
+        colorMapEntry: [],
+        onChange: () => {},
+        extended: false
+    };
+
     render() {
         return (
             <Grid fluid>
@@ -71,35 +73,36 @@ const PseudoColorSettings = React.createClass({
                             <Message msgId="pseudocolorsettings.add"/></Button>
                         </Col>
                         <Col xs={4} style={{padding: "0px" }}>
-                            <Button disabled={(this.props.selected === null) ? true : false }
+                            <Button disabled={this.props.selected === null ? true : false }
                             onClick={this.removeEntry} style={{"float": "right"}}>
                             <Message msgId="pseudocolorsettings.remove"/></Button>
                         </Col>
                     </Row>
               </Grid>
-            );
-    },
-    addEntry() {
-        let colorMapEntry = (this.props.colorMapEntry) ? this.props.colorMapEntry.slice() : [];
-        let quantity = (colorMapEntry.length > 0) ? colorMapEntry[colorMapEntry.length - 1].quantity + 0.01 : 0;
-        let label = (quantity.toFixed) ? quantity.toFixed(2) : quantity;
+        );
+    }
+
+    addEntry = () => {
+        let colorMapEntry = this.props.colorMapEntry ? this.props.colorMapEntry.slice() : [];
+        let quantity = colorMapEntry.length > 0 ? colorMapEntry[colorMapEntry.length - 1].quantity + 0.01 : 0;
+        let label = quantity.toFixed ? quantity.toFixed(2) : quantity;
         colorMapEntry.push({color: '#AA34FF', quantity: quantity, label: label });
         this.props.onChange("colorMapEntry", colorMapEntry);
-    },
-    removeEntry() {
+    };
+
+    removeEntry = () => {
         let colorMapEntry = this.props.colorMapEntry.filter((e, idx) => {
             return idx !== this.props.selected;
         });
         this.props.onChange("selected", null);
         this.props.onChange("colorMapEntry", colorMapEntry);
-    },
-    selectEntry(id) {
+    };
+
+    selectEntry = (id) => {
         if ( id !== this.props.selected) {
             this.props.onChange("selected", id);
         }
-    }
-
-
-});
+    };
+}
 
 module.exports = PseudoColorSettings;

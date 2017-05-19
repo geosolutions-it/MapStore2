@@ -49,7 +49,7 @@ const searchEpic = action$ =>
             .map((service) =>
                 Rx.Observable.defer(() =>
                     API.Utils.getService(service.type)(action.searchText, service.options)
-                        .then( (response= []) => response.map(result => ({...result, __SERVICE__: service, __PRIORITY__: service.priority || 0}))
+                        .then( (response = []) => response.map(result => ({...result, __SERVICE__: service, __PRIORITY__: service.priority || 0}))
                 ))
                 .retryWhen(errors => errors.delay(200).scan((count, err) => {
                     if ( count >= 2) {
@@ -109,16 +109,16 @@ const searchItemSelected = action$ =>
                 let actions = [
                     changeMapView(newCenter, newZoom, {
                         bounds: {
-                           minx: bbox[0],
-                           miny: bbox[1],
-                           maxx: bbox[2],
-                           maxy: bbox[3]
+                            minx: bbox[0],
+                            miny: bbox[1],
+                            maxx: bbox[2],
+                            maxy: bbox[3]
                         },
                         crs: "EPSG:4326",
                         rotation: 0
                     }, action.mapConfig.size, null, action.mapConfig.projection),
-                     addMarker(item)
-                    ];
+                    addMarker(item)
+                ];
                 return actions;
             });
 

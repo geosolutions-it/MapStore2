@@ -114,8 +114,8 @@ const InfoWindow = (function() {
         // coordinates with origin at the top left corner
         let coordinates = Cesium.SceneTransforms.wgs84ToWindowCoordinates(this._scene, this._position);
         if (coordinates) {
-            let left = (Math.floor(coordinates.x) - this._div.clientWidth / 2) + "px";
-            let top = (Math.floor(coordinates.y) - this._div.clientHeight) + "px";
+            let left = Math.floor(coordinates.x) - this._div.clientWidth / 2 + "px";
+            let top = Math.floor(coordinates.y) - this._div.clientHeight + "px";
             this._div.tabIndex = 5;
             this._div.style.left = left;
             this._div.style.top = top;

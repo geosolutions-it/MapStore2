@@ -43,7 +43,7 @@ describe('Test correctness of the map actions', () => {
                     expect(e.reqId).toExist();
                     expect(e.request).toExist();
                     expect(e.request.p).toBe("p");
-                } catch(ex) {
+                } catch (ex) {
                     done(ex);
                 }
             } else if (e.type === LOAD_FEATURE_INFO) {
@@ -57,7 +57,7 @@ describe('Test correctness of the map actions', () => {
                     expect(e.requestParams.p).toBe("p");
                     expect(e.layerMetadata).toBe("meta");
                     done();
-                } catch(ex) {
+                } catch (ex) {
                     done(ex);
                 }
             }
@@ -77,7 +77,7 @@ describe('Test correctness of the map actions', () => {
                     expect(e.reqId).toExist();
                     expect(e.request).toExist();
                     expect(e.request.p).toBe("p");
-                } catch(ex) {
+                } catch (ex) {
                     done(ex);
                 }
             } else if (e.type === EXCEPTIONS_FEATURE_INFO) {
@@ -91,7 +91,7 @@ describe('Test correctness of the map actions', () => {
                     expect(e.requestParams.p).toBe("p");
                     expect(e.layerMetadata).toBe("meta");
                     done();
-                } catch(ex) {
+                } catch (ex) {
                     done(ex);
                 }
             }
@@ -111,7 +111,7 @@ describe('Test correctness of the map actions', () => {
                     expect(e.reqId).toExist();
                     expect(e.request).toExist();
                     expect(e.request.p).toBe("p");
-                } catch(ex) {
+                } catch (ex) {
                     done(ex);
                 }
             } else if (e.type === ERROR_FEATURE_INFO) {
@@ -125,7 +125,7 @@ describe('Test correctness of the map actions', () => {
                     expect(e.requestParams.p).toBe("p");
                     expect(e.layerMetadata).toBe("meta");
                     done();
-                } catch(ex) {
+                } catch (ex) {
                     done(ex);
                 }
             }

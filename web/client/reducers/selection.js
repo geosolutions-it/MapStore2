@@ -16,15 +16,15 @@ function selection(state = {
     geomType: null
 }, action) {
     switch (action.type) {
-        case CHANGE_SELECTION_STATE:
-            return assign({}, state, {
-                geomType: action.geomType,
-                point: action.point,
-                line: action.line,
-                polygon: action.polygon
-            });
-        default:
-            return state;
+    case CHANGE_SELECTION_STATE:
+        return assign({}, state, {
+            geomType: action.geomType,
+            point: action.point,
+            line: action.line,
+            polygon: action.polygon
+        });
+    default:
+        return state;
     }
 }
 

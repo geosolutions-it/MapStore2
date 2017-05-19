@@ -34,8 +34,8 @@ const parseUrl = (url) => {
 
 const flatLayers = (root) => {
     return root.Layer ? (isArray(root.Layer) && root.Layer || [root.Layer]).reduce((previous, current) => {
-        return previous.concat(flatLayers(current)).concat((current.Layer && current["ows:Identifier"]) ? [current] : []);
-    }, []) : (root.ows.Title && [root] || []);
+        return previous.concat(flatLayers(current)).concat(current.Layer && current["ows:Identifier"] ? [current] : []);
+    }, []) : root.ows.Title && [root] || [];
 };
 
 const getOperation = (operations, name, type) => {
@@ -50,7 +50,7 @@ const getOperation = (operations, name, type) => {
 const searchAndPaginate = (json, startPosition, maxRecords, text) => {
     const root = json.Capabilities.Contents;
     const operations = castArray(json.Capabilities["ows:OperationsMetadata"]["ows:Operation"]);
-    const TileMatrixSet = (root.TileMatrixSet) || [];
+    const TileMatrixSet = root.TileMatrixSet || [];
     let SRSList = [];
     let len = TileMatrixSet.length;
     for (let i = 0; i < len; i++) {
@@ -59,13 +59,13 @@ const searchAndPaginate = (json, startPosition, maxRecords, text) => {
     const layersObj = root.Layer;
     const layers = castArray(layersObj);
     const filteredLayers = layers
-        .filter((layer) => !text || layer["ows:Identifier"].toLowerCase().indexOf(text.toLowerCase()) !== -1 || (layer["ows:Title"] && layer["ows:Title"].toLowerCase().indexOf(text.toLowerCase()) !== -1));
+        .filter((layer) => !text || layer["ows:Identifier"].toLowerCase().indexOf(text.toLowerCase()) !== -1 || layer["ows:Title"] && layer["ows:Title"].toLowerCase().indexOf(text.toLowerCase()) !== -1);
     return {
         numberOfRecordsMatched: filteredLayers.length,
         numberOfRecordsReturned: Math.min(maxRecords, filteredLayers.length),
         nextRecord: startPosition + Math.min(maxRecords, filteredLayers.length) + 1,
         records: filteredLayers
-            .filter((layer, index) => index >= (startPosition - 1) && index < (startPosition - 1) + maxRecords)
+            .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
             .map((layer) => assign({}, layer, {SRS: SRSList, TileMatrixSet, GetTileUrl: getOperation(operations, "GetTile", "KVP")}))
     };
 };

@@ -15,7 +15,7 @@ let Services = {
         require('./Nominatim')
         .geocode(searchText, options)
         .then( res => GeoCodeUtils.nominatimToGeoJson(res.data)),
-    wfs: (searchText, {url, typeName, queriableAttributes = [], outputFormat="application/json", predicate ="ILIKE", staticFilter="", blacklist = [], item, ...params }) => {
+    wfs: (searchText, {url, typeName, queriableAttributes = [], outputFormat = "application/json", predicate = "ILIKE", staticFilter = "", blacklist = [], item, ...params }) => {
         // split into words and remove blacklisted words
         const staticFilterParsed = generateTemplateString(staticFilter || "")(item);
         let searchWords = searchText.split(" ").filter(w => w).filter( w => blacklist.indexOf(w.toLowerCase()) < 0 );

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -12,29 +13,30 @@ const ComboField = require('./ComboField');
 const assign = require('object-assign');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
-const FilterField = React.createClass({
-    propTypes: {
-        attributes: React.PropTypes.array,
-        filterField: React.PropTypes.object,
-        operatorOptions: React.PropTypes.array,
-        onUpdateField: React.PropTypes.func,
-        onUpdateExceptionField: React.PropTypes.func,
-        onChangeCascadingValue: React.PropTypes.func
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            attributes: [],
-            filterField: null,
-            operatorOptions: ["=", ">", "<", ">=", "<=", "<>", "><"],
-            onUpdateField: () => {},
-            onUpdateExceptionField: () => {},
-            onChangeCascadingValue: () => {}
-        };
-    },
-    renderOperatorField() {
+class FilterField extends React.Component {
+    static propTypes = {
+        attributes: PropTypes.array,
+        filterField: PropTypes.object,
+        operatorOptions: PropTypes.array,
+        onUpdateField: PropTypes.func,
+        onUpdateExceptionField: PropTypes.func,
+        onChangeCascadingValue: PropTypes.func
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        attributes: [],
+        filterField: null,
+        operatorOptions: ["=", ">", "<", ">=", "<=", "<>", "><"],
+        onUpdateField: () => {},
+        onUpdateExceptionField: () => {},
+        onChangeCascadingValue: () => {}
+    };
+
+    renderOperatorField = () => {
         return (
             <ComboField
                 fieldOptions= {this.props.operatorOptions}
@@ -43,8 +45,9 @@ const FilterField = React.createClass({
                 fieldValue={this.props.filterField.operator}
                 onUpdateField={this.updateFieldElement}/>
         );
-    },
-    renderValueField(selectedAttribute) {
+    };
+
+    renderValueField = (selectedAttribute) => {
         const valueElement = React.cloneElement(
             React.Children.toArray(this.props.children).filter((node) => node.props.attType === selectedAttribute.type)[0],
             assign({
@@ -60,7 +63,8 @@ const FilterField = React.createClass({
         return (
             valueElement
         );
-    },
+    };
+
     render() {
         let selectedAttribute = this.props.attributes.filter((attribute) => attribute.attribute === this.props.filterField.attribute)[0];
 
@@ -84,11 +88,13 @@ const FilterField = React.createClass({
                 </Row>
             </div>
         );
-    },
-    updateExceptionFieldElement(rowId, message) {
+    }
+
+    updateExceptionFieldElement = (rowId, message) => {
         this.props.onUpdateExceptionField(rowId, message);
-    },
-    updateFieldElement(rowId, name, value, type) {
+    };
+
+    updateFieldElement = (rowId, name, value, type) => {
         this.props.onUpdateField(rowId, name, value, type === 'boolean' ? 'string' : type);
 
         if (name === "value") {
@@ -99,7 +105,7 @@ const FilterField = React.createClass({
                 this.props.onChangeCascadingValue(dependsOnAttributes);
             }
         }
-    }
-});
+    };
+}
 
 module.exports = FilterField;

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -17,32 +18,33 @@ const PluginsUtils = require('../utils/PluginsUtils');
 
 const PluginsContainer = connect((state) => ({
     pluginsConfig: state.plugins || ConfigUtils.getConfigProp('plugins') || null,
-    mode: (urlQuery.mode || state.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop')),
+    mode: urlQuery.mode || state.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
     pluginsState: state && state.controls || {},
     monitoredState: PluginsUtils.getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
 }))(require('../components/plugins/PluginsContainer'));
 
-const MapViewer = React.createClass({
-    propTypes: {
-        params: React.PropTypes.object,
-        loadMapConfig: React.PropTypes.func,
-        plugins: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            mode: 'desktop',
-            loadMapConfig: () => {}
-        };
-    },
+class MapViewer extends React.Component {
+    static propTypes = {
+        params: PropTypes.object,
+        loadMapConfig: PropTypes.func,
+        plugins: PropTypes.object
+    };
+
+    static defaultProps = {
+        mode: 'desktop',
+        loadMapConfig: () => {}
+    };
+
     componentWillMount() {
         this.props.loadMapConfig();
-    },
+    }
+
     render() {
         return (<PluginsContainer key="viewer" id="viewer" className="viewer"
             plugins={this.props.plugins}
             params={this.props.params}
             />);
     }
-});
+}
 
 module.exports = MapViewer;

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -16,43 +17,44 @@ require('codemirror/lib/codemirror.css');
 
 require('codemirror/mode/css/css');
 
-const ThemeCreator = React.createClass({
-    propTypes: {
-        themeCode: React.PropTypes.string,
-        error: React.PropTypes.string,
-        onApplyTheme: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            themeCode: '',
-            onApplyTheme: () => {}
-        };
-    },
-    getInitialState() {
-        return {
-            code: "",
-            configVisible: false
-        };
-    },
+class ThemeCreator extends React.Component {
+    static propTypes = {
+        themeCode: PropTypes.string,
+        error: PropTypes.string,
+        onApplyTheme: PropTypes.func
+    };
+
+    static defaultProps = {
+        themeCode: '',
+        onApplyTheme: () => {}
+    };
+
+    state = {
+        code: "",
+        configVisible: false
+    };
+
     componentWillMount() {
         this.setState({
             code: this.props.themeCode
         });
-    },
+    }
+
     componentWillReceiveProps(newProps) {
         if (newProps.themeCode !== this.props.themeCode) {
             this.setState({
                 code: newProps.themeCode
             });
         }
-    },
+    }
+
     render() {
         return (<li style={{border: "solid 1px lightgrey", borderRadius: "3px", paddingLeft: "10px", paddingRight: "10px", marginBottom: "3px", marginRight: "10px"}} key="plugin-creator">
         <Button bsSize="small" bsStyle="primary" onClick={this.toggleCfg}><Glyphicon glyph={this.state.configVisible ? "minus" : "plus"}/></Button>
             <FormGroup>
               <Checkbox className="pluginEnable" name="toolscontainer"
-                  disabled={true}
-                  checked={true}
+                  disabled
+                  checked
                   >
                   Live edit your theme
               </Checkbox>
@@ -75,18 +77,21 @@ const ThemeCreator = React.createClass({
                 </Modal.Body>
             </Modal>
         </li>);
-    },
-    updateCode(newCode) {
+    }
+
+    updateCode = (newCode) => {
         this.setState({
             code: newCode
         });
-    },
-    applyCode() {
+    };
+
+    applyCode = () => {
         this.props.onApplyTheme(this.state.code);
-    },
-    toggleCfg() {
+    };
+
+    toggleCfg = () => {
         this.setState({configVisible: !this.state.configVisible});
-    }
-});
+    };
+}
 
 module.exports = ThemeCreator;

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -12,47 +13,48 @@ const Spinner = require('react-spinkit');
 
 const LocaleUtils = require('../../utils/LocaleUtils');
 
-const SelectShape = React.createClass({
-    propTypes: {
-        text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        loading: React.PropTypes.bool,
-        onShapeChoosen: React.PropTypes.func,
-        onShapeError: React.PropTypes.func,
-        error: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        errorMessage: React.PropTypes.string
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            text: "Drop or click to import a local Shape",
-            onShapeChoosen: () => {},
-            onShapeError: () => {},
-            errorMessage: "shapefile.error.select"
-        };
-    },
+class SelectShape extends React.Component {
+    static propTypes = {
+        text: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        loading: PropTypes.bool,
+        onShapeChoosen: PropTypes.func,
+        onShapeError: PropTypes.func,
+        error: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        errorMessage: PropTypes.string
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        text: "Drop or click to import a local Shape",
+        onShapeChoosen: () => {},
+        onShapeError: () => {},
+        errorMessage: "shapefile.error.select"
+    };
+
     render() {
         return (
-            (this.props.loading) ? (<div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/></div>) :
-            (<Dropzone rejectClassName="alert-danger" className="alert alert-info" onDrop={this.checkfile}>
+            this.props.loading ? <div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/></div> :
+            <Dropzone rejectClassName="alert-danger" className="alert alert-info" onDrop={this.checkfile}>
               <div className="dropzone-content" style={{textAlign: "center"}}>{this.props.text}</div>
-            </Dropzone>)
-            );
-    },
-    checkfile(files) {
-        const allZip = (files.filter((file) => { return file.type !== 'application/zip' && file.type !== 'application/x-zip-compressed'; }).length === 0 );
+            </Dropzone>
+        );
+    }
+
+    checkfile = (files) => {
+        const allZip = files.filter((file) => { return file.type !== 'application/zip' && file.type !== 'application/x-zip-compressed'; }).length === 0;
         if (allZip) {
             if (this.props.error) {
                 this.props.onShapeError(null);
             }
             this.props.onShapeChoosen(files);
-        }else {
+        } else {
             const error = LocaleUtils.getMessageById(this.context.messages, this.props.errorMessage);
             this.props.onShapeError(error);
         }
-    }
-
-});
+    };
+}
 
 module.exports = SelectShape;

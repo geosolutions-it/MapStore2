@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -12,45 +13,52 @@ const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
-  /**
-   * A Form to login menu for user details:
-   */
-const LoginForm = React.createClass({
-    propTypes: {
+/**
+ * A Form to login menu for user details:
+ */
+class LoginForm extends React.Component {
+    static propTypes = {
       // props
-      user: React.PropTypes.object,
-      onLoginSuccess: React.PropTypes.func,
-      showSubmitButton: React.PropTypes.bool,
-      loginError: React.PropTypes.object,
+        user: PropTypes.object,
+        onLoginSuccess: PropTypes.func,
+        showSubmitButton: PropTypes.bool,
+        loginError: PropTypes.object,
 
       // actions
-      onSubmit: React.PropTypes.func,
-      onError: React.PropTypes.func,
+        onSubmit: PropTypes.func,
+        onError: PropTypes.func,
 
       // localization
-      userNameText: React.PropTypes.node,
-      passwordText: React.PropTypes.node,
-      loginFailedStatusMessages: React.PropTypes.object,
-      loginFailedMessage: React.PropTypes.node
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-          onSubmit: () => {},
-          onLoginError: () => {},
-          showSubmitButton: true,
-          userNameText: <Message msgId="user.username"/>,
-          passwordText: <Message msgId="user.password"/>,
-          loginFailedMessage: <Message msgId="user.loginFail"/>,
-          loginFailedStatusMessages: {
-              0: <Message msgId="user.loginFailedStatusMessages.usernamePwdInsert"/>,
-              401: <Message msgId="user.loginFailedStatusMessages.usernamePwdIncorrect"/>
-          }
+        userNameText: PropTypes.node,
+        passwordText: PropTypes.node,
+        loginFailedStatusMessages: PropTypes.object,
+        loginFailedMessage: PropTypes.node
+    };
 
-      };
-    },
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        onSubmit: () => {},
+        onLoginError: () => {},
+        showSubmitButton: true,
+        userNameText: <Message msgId="user.username"/>,
+        passwordText: <Message msgId="user.password"/>,
+        loginFailedMessage: <Message msgId="user.loginFail"/>,
+        loginFailedStatusMessages: {
+            0: <Message msgId="user.loginFailedStatusMessages.usernamePwdInsert"/>,
+            401: <Message msgId="user.loginFailedStatusMessages.usernamePwdIncorrect"/>
+        }
+
+    };
+
+    state = {
+        loading: false,
+        username: '',
+        password: ''
+    };
+
     componentWillReceiveProps(nextProps) {
         let newUser = nextProps.user;
         let oldUser = this.props.user;
@@ -61,15 +69,9 @@ const LoginForm = React.createClass({
         this.setState({
             loading: false
         } );
-    },
-    getInitialState() {
-        return {
-            loading: false,
-            username: '',
-            password: ''
-        };
-    },
-    renderError() {
+    }
+
+    renderError = () => {
         let error = this.props.loginError;
         if (error) {
             return (
@@ -79,14 +81,17 @@ const LoginForm = React.createClass({
             );
         }
         return null;
-    },
-    renderErrorText(error) {
+    };
+
+    renderErrorText = (error) => {
         return this.props.loginFailedStatusMessages[error.status] || error.status;
-    },
-    renderLoading() {
+    };
+
+    renderLoading = () => {
         return this.state.loading ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn overrideSpinnerClassName="spinner"/> : null;
-    },
-    renderSubmit() {
+    };
+
+    renderSubmit = () => {
         let submitText = LocaleUtils.getMessageById(this.context.messages, "user.signIn");
         if (this.props.showSubmitButton) {
             return (<Button
@@ -95,7 +100,8 @@ const LoginForm = React.createClass({
                 bsStyle="primary"
                 key="submit" onClick={this.handleSubmit}>{submitText}</Button>);
         }
-    },
+    };
+
     render() {
         return (
             <form ref="loginForm">
@@ -123,28 +129,33 @@ const LoginForm = React.createClass({
                 <div style={{"float": "right"}}>{this.renderLoading()}</div>
             </form>
         );
-    },
-    setUser(e) {
+    }
+
+    setUser = (e) => {
         this.setState({
             username: e.target.value
         });
-    },
-    setPassword(e) {
+    };
+
+    setPassword = (e) => {
         this.setState({
             password: e.target.value
         });
-    },
-    handleSubmit(e) {
+    };
+
+    handleSubmit = (e) => {
         e.preventDefault();
         this.submit();
-    },
-    handleKeyPress(target) {
+    };
+
+    handleKeyPress = (target) => {
         if (target.charCode === 13) {
             this.submit();
         }
 
-    },
-    submit() {
+    };
+
+    submit = () => {
         let username = this.state.username;
         let password = this.state.password;
         if (!username || !password) {
@@ -152,7 +163,7 @@ const LoginForm = React.createClass({
         }
         this.props.onSubmit(username, password);
         this.setState({loading: true});
-    }
-});
+    };
+}
 
 module.exports = LoginForm;

@@ -40,7 +40,7 @@ describe('test GroupChildren module component', () => {
             title: "G1",
             nodes: [l1]
         };
-        const comp = ReactDOM.render(<GroupChildren node={g}><div className="layer"></div></GroupChildren>, document.getElementById("container"));
+        const comp = ReactDOM.render(<GroupChildren node={g}><div className="layer" /></GroupChildren>, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();

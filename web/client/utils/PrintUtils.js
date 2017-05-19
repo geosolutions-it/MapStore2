@@ -19,7 +19,7 @@ const defaultScales = MapUtils.getGoogleMercatorScales(0, 21);
 const assign = require('object-assign');
 
 const getGeomType = function(layer) {
-    return (layer.features && layer.features[0]) ? layer.features[0].geometry.type : undefined;
+    return layer.features && layer.features[0] ? layer.features[0].geometry.type : undefined;
 };
 /**
  * Utilities for Print
@@ -133,27 +133,27 @@ const PrintUtils = {
     getMapfishPrintSpecification: (spec) => {
         const projectedCenter = CoordinatesUtils.reproject(spec.center, 'EPSG:4326', spec.projection);
         return {
-           "units": CoordinatesUtils.getUnits(spec.projection),
-           "srs": CoordinatesUtils.normalizeSRS(spec.projection || 'EPSG:3857'),
-           "layout": PrintUtils.getLayoutName(spec),
-           "dpi": parseInt(spec.resolution, 10),
-           "outputFilename": "mapstore-print",
-           "geodetic": false,
-           "mapTitle": spec.name || '',
-           "comment": spec.description || '',
-           "layers": PrintUtils.getMapfishLayersSpecification(spec.layers, spec, 'map'),
-           "pages": [
-              {
-                 "center": [
-                    projectedCenter.x,
-                    projectedCenter.y
-                 ],
-                 "scale": spec.scale || defaultScales[spec.scaleZoom],
-                 "rotation": 0
-              }
-           ],
-           "legends": PrintUtils.getMapfishLayersSpecification(spec.layers, spec, 'legend')
-       };
+            "units": CoordinatesUtils.getUnits(spec.projection),
+            "srs": CoordinatesUtils.normalizeSRS(spec.projection || 'EPSG:3857'),
+            "layout": PrintUtils.getLayoutName(spec),
+            "dpi": parseInt(spec.resolution, 10),
+            "outputFilename": "mapstore-print",
+            "geodetic": false,
+            "mapTitle": spec.name || '',
+            "comment": spec.description || '',
+            "layers": PrintUtils.getMapfishLayersSpecification(spec.layers, spec, 'map'),
+            "pages": [
+                {
+                    "center": [
+                        projectedCenter.x,
+                        projectedCenter.y
+                    ],
+                    "scale": spec.scale || defaultScales[spec.scaleZoom],
+                    "rotation": 0
+                }
+            ],
+            "legends": PrintUtils.getMapfishLayersSpecification(spec.layers, spec, 'legend')
+        };
     },
     /**
      * Generate the layers (or legend) specification for print.
@@ -174,45 +174,45 @@ const PrintUtils = {
                 "singleTile": false,
                 "type": "WMS",
                 "layers": [
-                   layer.name
+                    layer.name
                 ],
                 "format": layer.format || "image/png",
                 "styles": [
-                   layer.style || ''
+                    layer.style || ''
                 ],
                 "customParams": assign({
-                   "TRANSPARENT": true,
-                   "TILED": true,
-                   "EXCEPTIONS": "application/vnd.ogc.se_inimage",
-                   "scaleMethod": "accurate"
-               }, layer.baseParams || {}, layer.params || {})
+                    "TRANSPARENT": true,
+                    "TILED": true,
+                    "EXCEPTIONS": "application/vnd.ogc.se_inimage",
+                    "scaleMethod": "accurate"
+                }, layer.baseParams || {}, layer.params || {})
             }),
             legend: (layer, spec) => ({
                 "name": layer.title || layer.name,
                 "classes": [
-                   {
-                      "name": "",
-                      "icons": [
-                         PrintUtils.normalizeUrl(layer.url) + url.format({
-                             query: {
-                                 TRANSPARENT: true,
-                                 EXCEPTIONS: "application/vnd.ogc.se_xml",
-                                 VERSION: "1.1.1",
-                                 SERVICE: "WMS",
-                                 REQUEST: "GetLegendGraphic",
-                                 LAYER: layer.name,
-                                 STYLE: layer.style || '',
-                                 height: spec.iconSize,
-                                 width: spec.iconSize,
-                                 minSymbolSize: spec.iconSize,
-                                 fontFamily: spec.fontFamily,
-                                 LEGEND_OPTIONS: "forceLabels:" + (spec.forceLabels ? "on" : "") + ";fontAntialiasing:" + spec.antiAliasing + ";dpi:" + spec.legendDpi + ";fontStyle:" + (spec.bold && "bold" || (spec.italic && "italic") || ''),
-                                 format: "image/png",
-                                 ...assign({}, layer.params)
-                             }
-                         })
-                      ]
-                   }
+                    {
+                        "name": "",
+                        "icons": [
+                            PrintUtils.normalizeUrl(layer.url) + url.format({
+                                query: {
+                                    TRANSPARENT: true,
+                                    EXCEPTIONS: "application/vnd.ogc.se_xml",
+                                    VERSION: "1.1.1",
+                                    SERVICE: "WMS",
+                                    REQUEST: "GetLegendGraphic",
+                                    LAYER: layer.name,
+                                    STYLE: layer.style || '',
+                                    height: spec.iconSize,
+                                    width: spec.iconSize,
+                                    minSymbolSize: spec.iconSize,
+                                    fontFamily: spec.fontFamily,
+                                    LEGEND_OPTIONS: "forceLabels:" + (spec.forceLabels ? "on" : "") + ";fontAntialiasing:" + spec.antiAliasing + ";dpi:" + spec.legendDpi + ";fontStyle:" + (spec.bold && "bold" || spec.italic && "italic" || ''),
+                                    format: "image/png",
+                                    ...assign({}, layer.params)
+                                }
+                            })
+                        ]
+                    }
                 ]
             })
         },
@@ -236,21 +236,21 @@ const PrintUtils = {
         osm: {
             map: () => ({
                 "baseURL": "http://a.tile.openstreetmap.org/",
-                 "opacity": 1,
-                 "singleTile": false,
-                 "type": "OSM",
-                 "maxExtent": [
+                "opacity": 1,
+                "singleTile": false,
+                "type": "OSM",
+                "maxExtent": [
                     -20037508.3392,
                     -20037508.3392,
                     20037508.3392,
                     20037508.3392
-                 ],
-                 "tileSize": [
+                ],
+                "tileSize": [
                     256,
                     256
-                 ],
-                 "extension": "png",
-                 "resolutions": [
+                ],
+                "extension": "png",
+                "resolutions": [
                     156543.03390625,
                     78271.516953125,
                     39135.7584765625,
@@ -270,27 +270,27 @@ const PrintUtils = {
                     2.388657133579254,
                     1.194328566789627,
                     0.5971642833948135
-                 ]
+                ]
             })
         },
         mapquest: {
             map: () => ({
                 "baseURL": "http://otile1.mqcdn.com/tiles/1.0.0/map/",
-                 "opacity": 1,
-                 "singleTile": false,
-                 "type": "OSM",
-                 "maxExtent": [
+                "opacity": 1,
+                "singleTile": false,
+                "type": "OSM",
+                "maxExtent": [
                     -20037508.3392,
                     -20037508.3392,
                     20037508.3392,
                     20037508.3392
-                 ],
-                 "tileSize": [
+                ],
+                "tileSize": [
                     256,
                     256
-                 ],
-                 "extension": "png",
-                 "resolutions": [
+                ],
+                "extension": "png",
+                "resolutions": [
                     156543.03390625,
                     78271.516953125,
                     39135.7584765625,
@@ -310,7 +310,7 @@ const PrintUtils = {
                     2.388657133579254,
                     1.194328566789627,
                     0.5971642833948135
-                 ]
+                ]
             })
         }
     },
@@ -323,16 +323,16 @@ const PrintUtils = {
         }
         // commented the available options.
         return {
-             "fillColor": style.fillColor,
-             "fillOpacity": style.fillOpacity,
+            "fillColor": style.fillColor,
+            "fillOpacity": style.fillOpacity,
              // "rotation": "30",
-             "externalGraphic": style.iconUrl,
+            "externalGraphic": style.iconUrl,
              // "graphicName": "circle",
              // "graphicOpacity": 0.4,
-             "pointRadius": style.radius,
-             "strokeColor": style.color,
-             "strokeOpacity": style.opacity,
-             "strokeWidth": style.weight
+            "pointRadius": style.radius,
+            "strokeColor": style.color,
+            "strokeOpacity": style.opacity,
+            "strokeWidth": style.weight
              // "strokeLinecap": "round",
              // "strokeDashstyle": "dot",
              // "fontColor": "#000000",
@@ -348,7 +348,7 @@ const PrintUtils = {
              // "labelRotation": "45",
              // "labelXOffset": "-25.0",
              // "labelYOffset": "-35.0"
-         };
+        };
     },
     /**
      * Provides the default style for
@@ -356,50 +356,50 @@ const PrintUtils = {
      */
     getOlDefaultStyle(layer) {
         switch (getGeomType(layer)) {
-            case 'Polygon':
-            case 'MultiPolygon': {
-                return {
-                    "fillColor": "#0000FF",
-                    "fillOpacity": 0.1,
-                    "strokeColor": "#0000FF",
-                    "strokeOpacity": 1,
-                    "strokeWidth": 3
-                };
-            }
-            case 'MultiLineString':
-            case 'LineString':
-                return {
-                    "strokeColor": "#0000FF",
-                    "strokeOpacity": 1,
-                    "strokeWidth": 3
-                };
-            case 'Point':
-            case 'MultiPoint': {
-                return layer.styleName === "marker" ? {
-                    "externalGraphic": "http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images/marker-icon.png",
-                    "graphicWidth": 25,
-                    "graphicHeight": 41,
-                    "graphicXOffset": -12, // different offset
-                    "graphicYOffset": -41
-                } : {
-                    "fillColor": "#FF0000",
-                    "fillOpacity": 0,
-                    "strokeColor": "#FF0000",
-                    "pointRadius": 5,
-                    "strokeOpacity": 1,
-                    "strokeWidth": 1
-                };
-            }
-            default: {
-                return {
-                    "fillColor": "#0000FF",
-                    "fillOpacity": 0.1,
-                    "strokeColor": "#0000FF",
-                    "pointRadius": 5,
-                    "strokeOpacity": 1,
-                    "strokeWidth": 1
-                };
-            }
+        case 'Polygon':
+        case 'MultiPolygon': {
+            return {
+                "fillColor": "#0000FF",
+                "fillOpacity": 0.1,
+                "strokeColor": "#0000FF",
+                "strokeOpacity": 1,
+                "strokeWidth": 3
+            };
+        }
+        case 'MultiLineString':
+        case 'LineString':
+            return {
+                "strokeColor": "#0000FF",
+                "strokeOpacity": 1,
+                "strokeWidth": 3
+            };
+        case 'Point':
+        case 'MultiPoint': {
+            return layer.styleName === "marker" ? {
+                "externalGraphic": "http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images/marker-icon.png",
+                "graphicWidth": 25,
+                "graphicHeight": 41,
+                "graphicXOffset": -12, // different offset
+                "graphicYOffset": -41
+            } : {
+                "fillColor": "#FF0000",
+                "fillOpacity": 0,
+                "strokeColor": "#FF0000",
+                "pointRadius": 5,
+                "strokeOpacity": 1,
+                "strokeWidth": 1
+            };
+        }
+        default: {
+            return {
+                "fillColor": "#0000FF",
+                "fillOpacity": 0.1,
+                "strokeColor": "#0000FF",
+                "pointRadius": 5,
+                "strokeOpacity": 1,
+                "strokeWidth": 1
+            };
+        }
         }
     }
 };

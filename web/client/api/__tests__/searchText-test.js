@@ -28,7 +28,7 @@ describe('Test correctness of the searchText APIs', () => {
             expect(API.Services[servName]).toExist();
             expect(API.Utils.getService(servName)).toExist();
             done();
-        } catch(ex) {
+        } catch (ex) {
             done(ex);
         }
     });

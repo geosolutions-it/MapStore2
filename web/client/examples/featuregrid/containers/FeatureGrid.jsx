@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -13,8 +14,8 @@ const agGrid = require('ag-grid');
 const FeatureGridMap = require('../components/FeatureGridMap');
 const FeatureGridComp = require('../components/SmartFeatureGrid');
 
-const FeatureGrid = (props) => (
-    <Localized messages={props.messages} locale={props.locale}>
+const FeatureGrid = (props) =>
+    (<Localized messages={props.messages} locale={props.locale}>
         <div>
             <FeatureGridMap/>
             <FeatureGridComp style={{
@@ -51,12 +52,12 @@ const FeatureGrid = (props) => (
                     }}/>
             <Debug/>
         </div>
-    </Localized>
-);
+    </Localized>)
+;
 
 FeatureGrid.propTypes = {
-    messages: React.PropTypes.object,
-    locale: React.PropTypes.string
+    messages: PropTypes.object,
+    locale: PropTypes.string
 };
 
 module.exports = connect((state) => {

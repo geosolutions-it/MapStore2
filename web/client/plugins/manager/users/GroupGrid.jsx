@@ -16,7 +16,7 @@ const mapStateToProps = (state) => {
     const usergroups = state && state.usergroups;
     return {
         groups: usergroups && state.usergroups.groups,
-        loading: usergroups && (usergroups.status === "loading"),
+        loading: usergroups && usergroups.status === "loading",
         stateProps: usergroups && usergroups.stateProps,
         start: usergroups && usergroups.start,
         limit: usergroups && usergroups.limit,

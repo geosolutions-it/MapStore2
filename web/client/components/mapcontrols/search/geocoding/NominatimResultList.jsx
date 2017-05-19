@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -13,23 +14,23 @@ const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 const I18N = require('../../../I18N/I18N');
 
 
-let ResultList = React.createClass({
-    propTypes: {
-        results: React.PropTypes.array,
-        mapConfig: React.PropTypes.object,
-        onItemClick: React.PropTypes.func,
-        addMarker: React.PropTypes.func,
-        afterItemClick: React.PropTypes.func,
-        notFoundMessage: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string])
-    },
-    getDefaultProps() {
-        return {
-            onItemClick: () => {},
-            addMarker: () => {},
-            afterItemClick: () => {}
-        };
-    },
-    onItemClick(item) {
+class ResultList extends React.Component {
+    static propTypes = {
+        results: PropTypes.array,
+        mapConfig: PropTypes.object,
+        onItemClick: PropTypes.func,
+        addMarker: PropTypes.func,
+        afterItemClick: PropTypes.func,
+        notFoundMessage: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
+    };
+
+    static defaultProps = {
+        onItemClick: () => {},
+        addMarker: () => {},
+        afterItemClick: () => {}
+    };
+
+    onItemClick = (item) => {
         // coordinates from nominatim are minY minX maxY maxX   as strings
         var nBbox = item.boundingbox.map( (elem) => {return parseFloat(elem); });
         var bbox = [nBbox[2], nBbox[0], nBbox[3], nBbox[1]];
@@ -43,20 +44,22 @@ let ResultList = React.createClass({
 
         this.props.onItemClick(newCenter, newZoom, {
             bounds: {
-               minx: bbox[0],
-               miny: bbox[1],
-               maxx: bbox[2],
-               maxy: bbox[3]
+                minx: bbox[0],
+                miny: bbox[1],
+                maxx: bbox[2],
+                maxy: bbox[3]
             },
             crs: "EPSG:4326",
-             rotation: 0
-         }, this.props.mapConfig.size, null, this.props.mapConfig.projection);
+            rotation: 0
+        }, this.props.mapConfig.size, null, this.props.mapConfig.projection);
         this.props.addMarker({lat: newCenter.y, lng: newCenter.x});
         this.props.afterItemClick();
-    },
-    renderResults() {
+    };
+
+    renderResults = () => {
         return this.props.results.map((item, idx)=> {return <NominatimResult key={item.osm_id || "res_" + idx} item={item} onItemClick={this.onItemClick}/>; });
-    },
+    };
+
     render() {
         var notFoundMessage = this.props.notFoundMessage;
         if (!notFoundMessage) {
@@ -72,10 +75,11 @@ let ResultList = React.createClass({
                 {this.renderResults()}
             </div>
         );
-    },
-    purgeResults() {
-
     }
-});
+
+    purgeResults = () => {
+
+    };
+}
 
 module.exports = ResultList;

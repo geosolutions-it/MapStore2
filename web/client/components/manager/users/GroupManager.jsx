@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -10,23 +11,23 @@ const React = require('react');
 // const Message = require('../I18N/Message');
 const {ListGroup, ListGroupItem, Button, Glyphicon} = require('react-bootstrap');
 
-const GroupManager = React.createClass({
-    propTypes: {
+class GroupManager extends React.Component {
+    static propTypes = {
         // props
-        groups: React.PropTypes.object,
-        style: React.PropTypes.object,
-        onDeleteGroup: React.PropTypes.func,
-        onCreateGroup: React.PropTypes.func,
-        user: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            groups: [],
-            onUserGroupsChange: () => {},
-            user: {}
-        };
-    },
-    render: function() {
+        groups: PropTypes.object,
+        style: PropTypes.object,
+        onDeleteGroup: PropTypes.func,
+        onCreateGroup: PropTypes.func,
+        user: PropTypes.object
+    };
+
+    static defaultProps = {
+        groups: [],
+        onUserGroupsChange: () => {},
+        user: {}
+    };
+
+    render() {
         return (
            <div key="groups-manager">
                <Button key="create-btn" bsStyle="success" bsSize="small"><Glyphicon glyph="sign-plus" />Create New Group</Button>
@@ -44,7 +45,8 @@ const GroupManager = React.createClass({
          </div>
         );
     }
-});
+}
+
 /*
 
 */

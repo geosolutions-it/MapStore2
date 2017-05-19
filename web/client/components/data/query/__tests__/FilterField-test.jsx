@@ -38,34 +38,34 @@ describe('FilterField', () => {
 
         const attributes = [
             {
-               attribute: "Attribute1",
-               label: "Attribute1",
-               type: "list",
-               values: [
+                attribute: "Attribute1",
+                label: "Attribute1",
+                type: "list",
+                values: [
                    {id: "attribute1", name: "attribute1"},
                    {id: "Attribute2", name: "attribute2"},
                    {id: "attribute3", name: "attribute3"},
                    {id: "attribute4", name: "attribute4"},
                    {id: "attribute5", name: "attribute5"}
-               ],
-               valueId: "id",
-               valueLabel: "name"
+                ],
+                valueId: "id",
+                valueLabel: "name"
             }, {
-               attribute: "Attribute2",
-               label: "Attribute2",
-               type: "list",
-               values: [
+                attribute: "Attribute2",
+                label: "Attribute2",
+                type: "list",
+                values: [
                    {id: "attribute6", name: "attribute6"},
                    {id: "Attribute7", name: "Attribute7"},
                    {id: "attribute8", name: "attribute8"},
                    {id: "attribute9", name: "attribute9"},
                    {id: "attribute10", name: "attribute10"}
-               ],
-               valueId: "id",
-               valueLabel: "name",
-               dependson: {
-                   field: "Attribute1"
-               }
+                ],
+                valueId: "id",
+                valueLabel: "name",
+                dependson: {
+                    field: "Attribute1"
+                }
             }
         ];
 
@@ -129,19 +129,19 @@ describe('FilterField', () => {
 
         const attributes = [
             {
-               attribute: "Attribute1",
-               label: "Attribute1",
-               type: "list",
-               values: [
+                attribute: "Attribute1",
+                label: "Attribute1",
+                type: "list",
+                values: [
                    {id: "attribute1", name: "attribute1"},
                    {id: "Attribute2", name: "attribute2"},
                    {id: "attribute3", name: "attribute3"},
                    {id: "attribute4", name: "attribute4"},
                    {id: "attribute5", name: "attribute5"}
-               ],
-               valueId: "id",
-               valueLabel: "name",
-               fieldOptions: {"style": {display: "none"}}
+                ],
+                valueId: "id",
+                valueLabel: "name",
+                fieldOptions: {"style": {display: "none"}}
             }
         ];
 
@@ -206,22 +206,22 @@ describe('FilterField', () => {
 
         const attributes = [
             {
-               attribute: "Attribute1",
-               label: "Attribute1",
-               type: "list",
-               values: [
+                attribute: "Attribute1",
+                label: "Attribute1",
+                type: "list",
+                values: [
                    {id: "attribute1", name: "attribute1"},
                    {id: "Attribute2", name: "attribute2"},
                    {id: "attribute3", name: "attribute3"},
                    {id: "attribute4", name: "attribute4"},
                    {id: "attribute5", name: "attribute5"}
-               ],
-               valueId: "id",
-               valueLabel: "name",
-               fieldOptions: {"style": {display: "none"}},
-               dependson: {
-                   field: "attribute"
-               }
+                ],
+                valueId: "id",
+                valueLabel: "name",
+                fieldOptions: {"style": {display: "none"}},
+                dependson: {
+                    field: "attribute"
+                }
             }
         ];
 
@@ -262,20 +262,20 @@ describe('FilterField', () => {
 
         const attributes = [
             {
-               attribute: "Attribute1",
-               label: "Attribute1",
-               type: "list",
-               values: [
+                attribute: "Attribute1",
+                label: "Attribute1",
+                type: "list",
+                values: [
                    {id: "attribute1", name: "attribute1"},
                    {id: "Attribute2", name: "attribute2"},
                    {id: "attribute3", name: "attribute3"},
                    {id: "attribute4", name: "attribute4"},
                    {id: "attribute5", name: "attribute5"}
-               ],
-               valueId: "id",
-               valueLabel: "name",
-               fieldOptions: {"style": {display: "none"}},
-               dependson: {}
+                ],
+                valueId: "id",
+                valueLabel: "name",
+                fieldOptions: {"style": {display: "none"}},
+                dependson: {}
             }
         ];
 

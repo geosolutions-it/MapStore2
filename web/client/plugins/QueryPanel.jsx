@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -129,93 +130,96 @@ const tocSelector = createSelector(
     })
 );
 
-const LayerTree = React.createClass({
-    propTypes: {
-        id: React.PropTypes.number,
-        buttonContent: React.PropTypes.node,
-        groups: React.PropTypes.array,
-        settings: React.PropTypes.object,
-        querypanelEnabled: React.PropTypes.bool,
-        groupStyle: React.PropTypes.object,
-        groupPropertiesChangeHandler: React.PropTypes.func,
-        layerPropertiesChangeHandler: React.PropTypes.func,
-        onToggleGroup: React.PropTypes.func,
-        onToggleLayer: React.PropTypes.func,
-        onToggleQuery: React.PropTypes.func,
-        onZoomToExtent: React.PropTypes.func,
-        retrieveLayerData: React.PropTypes.func,
-        onSort: React.PropTypes.func,
-        onSettings: React.PropTypes.func,
-        hideSettings: React.PropTypes.func,
-        updateSettings: React.PropTypes.func,
-        updateNode: React.PropTypes.func,
-        removeNode: React.PropTypes.func,
-        activateRemoveLayer: React.PropTypes.bool,
-        activateLegendTool: React.PropTypes.bool,
-        activateZoomTool: React.PropTypes.bool,
-        activateSettingsTool: React.PropTypes.bool,
-        visibilityCheckType: React.PropTypes.string,
-        settingsOptions: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            groupPropertiesChangeHandler: () => {},
-            layerPropertiesChangeHandler: () => {},
-            retrieveLayerData: () => {},
-            onToggleGroup: () => {},
-            onToggleLayer: () => {},
-            onToggleQuery: () => {},
-            onZoomToExtent: () => {},
-            onSettings: () => {},
-            updateNode: () => {},
-            removeNode: () => {},
-            activateLegendTool: true,
-            activateZoomTool: true,
-            activateSettingsTool: true,
-            activateRemoveLayer: true,
-            visibilityCheckType: "checkbox",
-            settingsOptions: {},
-            querypanelEnabled: false
-        };
-    },
-    getNoBackgroundLayers(group) {
+class LayerTree extends React.Component {
+    static propTypes = {
+        id: PropTypes.number,
+        buttonContent: PropTypes.node,
+        groups: PropTypes.array,
+        settings: PropTypes.object,
+        querypanelEnabled: PropTypes.bool,
+        groupStyle: PropTypes.object,
+        groupPropertiesChangeHandler: PropTypes.func,
+        layerPropertiesChangeHandler: PropTypes.func,
+        onToggleGroup: PropTypes.func,
+        onToggleLayer: PropTypes.func,
+        onToggleQuery: PropTypes.func,
+        onZoomToExtent: PropTypes.func,
+        retrieveLayerData: PropTypes.func,
+        onSort: PropTypes.func,
+        onSettings: PropTypes.func,
+        hideSettings: PropTypes.func,
+        updateSettings: PropTypes.func,
+        updateNode: PropTypes.func,
+        removeNode: PropTypes.func,
+        activateRemoveLayer: PropTypes.bool,
+        activateLegendTool: PropTypes.bool,
+        activateZoomTool: PropTypes.bool,
+        activateSettingsTool: PropTypes.bool,
+        visibilityCheckType: PropTypes.string,
+        settingsOptions: PropTypes.object
+    };
+
+    static defaultProps = {
+        groupPropertiesChangeHandler: () => {},
+        layerPropertiesChangeHandler: () => {},
+        retrieveLayerData: () => {},
+        onToggleGroup: () => {},
+        onToggleLayer: () => {},
+        onToggleQuery: () => {},
+        onZoomToExtent: () => {},
+        onSettings: () => {},
+        updateNode: () => {},
+        removeNode: () => {},
+        activateLegendTool: true,
+        activateZoomTool: true,
+        activateSettingsTool: true,
+        activateRemoveLayer: true,
+        visibilityCheckType: "checkbox",
+        settingsOptions: {},
+        querypanelEnabled: false
+    };
+
+    getNoBackgroundLayers = (group) => {
         return group.name !== 'background';
-    },
-    renderSidebar() {
+    };
+
+    renderSidebar = () => {
         return (
             <Sidebar
                 open={this.props.querypanelEnabled}
                 sidebar={this.renderQueryPanel()}
                 styles={{
-                        sidebar: {
-                            backgroundColor: 'white',
-                            zIndex: 1024,
-                            width: 600
-                        },
-                        overlay: {
-                            zIndex: 1023,
-                            width: 0
-                        },
-                         root: {
-                             right: this.props.querypanelEnabled ? 0 : 'auto',
-                             width: '0',
-                             overflow: 'visible'
-                         }
-                    }}
+                    sidebar: {
+                        backgroundColor: 'white',
+                        zIndex: 1024,
+                        width: 600
+                    },
+                    overlay: {
+                        zIndex: 1023,
+                        width: 0
+                    },
+                    root: {
+                        right: this.props.querypanelEnabled ? 0 : 'auto',
+                        width: '0',
+                        overflow: 'visible'
+                    }
+                }}
                 >
                 <div/>
             </Sidebar>
         );
-    },
-    renderQueryPanel() {
+    };
+
+    renderQueryPanel = () => {
         return (<div>
             <SmartQueryForm/>
         </div>);
-    },
+    };
+
     render() {
         return this.renderSidebar();
     }
-});
+}
 
 const QueryPanelPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,

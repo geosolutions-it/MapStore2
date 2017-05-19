@@ -28,7 +28,7 @@ describe('Test correctness of the version actions', () => {
                 expect(a.type).toBe(CHANGE_VERSION);
                 expect(a.version.indexOf('myVersion')).toBe(0);
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -13,25 +14,25 @@ const Spinner = require('react-spinkit');
 
 const Message = require('../I18N/Message');
 
-const PrintSubmit = React.createClass({
-    propTypes: {
-        loading: React.PropTypes.bool,
-        onPrint: React.PropTypes.func,
-        disabled: React.PropTypes.bool,
-        buttonConfig: React.PropTypes.object,
-        glyph: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            loading: false,
-            onPrint: () => {},
-            disabled: false,
-            buttonConfig: {
-                bsSize: "large"
-            },
-            glyph: "print"
-        };
-    },
+class PrintSubmit extends React.Component {
+    static propTypes = {
+        loading: PropTypes.bool,
+        onPrint: PropTypes.func,
+        disabled: PropTypes.bool,
+        buttonConfig: PropTypes.object,
+        glyph: PropTypes.string
+    };
+
+    static defaultProps = {
+        loading: false,
+        onPrint: () => {},
+        disabled: false,
+        buttonConfig: {
+            bsSize: "large"
+        },
+        glyph: "print"
+    };
+
     render() {
         const glyph = this.props.glyph ? <Glyphicon glyph={this.props.glyph}/> : <span/>;
         return (
@@ -40,6 +41,6 @@ const PrintSubmit = React.createClass({
             </Button>
         );
     }
-});
+}
 
 module.exports = PrintSubmit;

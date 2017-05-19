@@ -12,19 +12,19 @@ var assign = require('object-assign');
 var defaultIcon = require('../img/marker-icon.png');
 
 var icon = new ol.style.Style({
-  image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
-    anchor: [0.5, 1],
-    anchorXUnits: 'fraction',
-    anchorYUnits: 'fraction',
-    opacity: 1,
-    src: defaultIcon
-  }))
+    image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ {
+        anchor: [0.5, 1],
+        anchorXUnits: 'fraction',
+        anchorYUnits: 'fraction',
+        opacity: 1,
+        src: defaultIcon
+    })
 });
 
 const defaultStyles = {
-  'Point': [new ol.style.Style({
-    image: icon
-  })]};
+    'Point': [new ol.style.Style({
+        image: icon
+    })]};
 
 
 Layers.registerType('marker', {

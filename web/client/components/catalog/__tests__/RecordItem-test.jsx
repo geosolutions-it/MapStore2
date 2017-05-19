@@ -21,9 +21,9 @@ const sampleRecord = {
     thumbnail: "img.jpg",
     boundingBox: {
         extent: [10.686,
-                44.931,
-                46.693,
-                12.54],
+            44.931,
+            46.693,
+            12.54],
         crs: "EPSG:4326"
 
     },
@@ -43,9 +43,9 @@ const sampleRecord2 = {
     thumbnail: "img.jpg",
     boundingBox: {
         extent: [10.686,
-                44.931,
-                46.693,
-                12.54],
+            44.931,
+            46.693,
+            12.54],
         crs: "EPSG:4326"
 
     },
@@ -65,9 +65,9 @@ const sampleRecord3 = {
     thumbnail: "img.jpg",
     boundingBox: {
         extent: [10.686,
-                44.931,
-                46.693,
-                12.54],
+            44.931,
+            46.693,
+            12.54],
         crs: "EPSG:4326"
 
     },
@@ -80,16 +80,16 @@ const sampleRecord3 = {
 };
 
 const getCapRecord = assign({}, sampleRecord, {references: [{
-        type: "OGC:WMS",
-        url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
-        params: {name: "workspace:layername"}
-    }, {
-        type: "OGC:WMS-1.3.0-http-get-capabilities",
-        url: "http://wms.sample.service:80/geoserver/workspace/layername/wms?service=wms&version=1.3.0&request=GetCapabilities&"
-    }, {
-        type: "OGC:WFS-1.0.0-http-get-capabilities",
-        url: "http://wfs.sample.service:80/geoserver/workspace/layername/wfs?service=wfs&version=1.0.0&request=GetCapabilities"
-    }
+    type: "OGC:WMS",
+    url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
+    params: {name: "workspace:layername"}
+}, {
+    type: "OGC:WMS-1.3.0-http-get-capabilities",
+    url: "http://wms.sample.service:80/geoserver/workspace/layername/wms?service=wms&version=1.3.0&request=GetCapabilities&"
+}, {
+    type: "OGC:WFS-1.0.0-http-get-capabilities",
+    url: "http://wfs.sample.service:80/geoserver/workspace/layername/wfs?service=wfs&version=1.0.0&request=GetCapabilities"
+}
 ]});
 
 describe('This test for RecordItem', () => {
@@ -134,10 +134,10 @@ describe('This test for RecordItem', () => {
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
         let actionsSpy2 = expect.spyOn(actions, "onZoomToExtent");
-        const item = ReactDOM.render((<ReactItem
+        const item = ReactDOM.render(<ReactItem
             record={sampleRecord3}
             onLayerAdd={actions.onLayerAdd}
-            onZoomToExtent={actions.onZoomToExtent}/>), document.getElementById("container"));
+            onZoomToExtent={actions.onZoomToExtent}/>, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);
@@ -163,10 +163,10 @@ describe('This test for RecordItem', () => {
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
         let actionsSpy2 = expect.spyOn(actions, "onZoomToExtent");
-        const item = ReactDOM.render((<ReactItem
+        const item = ReactDOM.render(<ReactItem
             record={sampleRecord}
             onLayerAdd={actions.onLayerAdd}
-            onZoomToExtent={actions.onZoomToExtent}/>), document.getElementById("container"));
+            onZoomToExtent={actions.onZoomToExtent}/>, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);
@@ -183,7 +183,7 @@ describe('This test for RecordItem', () => {
 
     it('test create record item with no get capabilities links', () => {
         // instanciating a record item component
-        const component = ReactDOM.render(<ReactItem record={sampleRecord} showGetCapLinks={true}/>,
+        const component = ReactDOM.render(<ReactItem record={sampleRecord} showGetCapLinks/>,
             document.getElementById("container"));
         // check that the component was intanciated
         expect(component).toExist();
@@ -196,7 +196,7 @@ describe('This test for RecordItem', () => {
 
     it('test create record item with get capabilities links', () => {
         // instanciating a record item component
-        const component = ReactDOM.render(<ReactItem record={getCapRecord} showGetCapLinks={true}/>,
+        const component = ReactDOM.render(<ReactItem record={getCapRecord} showGetCapLinks/>,
             document.getElementById("container"));
         // check that the component was intanciated
         expect(component).toExist();
@@ -227,10 +227,10 @@ describe('This test for RecordItem', () => {
             }
         };
         let actionsSpy = expect.spyOn(actions, "onError");
-        const item = ReactDOM.render((<ReactItem
+        const item = ReactDOM.render(<ReactItem
             record={sampleRecord2}
             onError={actions.onError}
-            crs="EPSG:3857"/>), document.getElementById("container"));
+            crs="EPSG:3857"/>, document.getElementById("container"));
         expect(item).toExist();
 
         let button = TestUtils.findRenderedDOMComponentWithTag(
@@ -250,10 +250,10 @@ describe('This test for RecordItem', () => {
             }
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
-        const item = ReactDOM.render((<ReactItem
+        const item = ReactDOM.render(<ReactItem
             record={sampleRecord}
             onLayerAdd={actions.onLayerAdd}
-            />), document.getElementById("container"));
+            />, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);

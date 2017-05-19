@@ -71,46 +71,46 @@ const initialState = {
 
 function query(state = initialState, action) {
     switch (action.type) {
-        case FEATURE_TYPE_LOADED: {
-            return assign({}, state, {
-                featureTypes: assign({}, state.featureTypes, {[action.typeName]: extractInfo(action.featureType)})
-            });
-        }
-        case FEATURE_TYPE_ERROR: {
-            return assign({}, state, {
-                featureTypes: assign({}, state.featureTypes, {[action.typeName]: {error: action.error}})
-            });
-        }
-        case FEATURE_LOADED: {
-            return assign({}, state, {
-                data: assign({}, state.data, {[action.typeName]: extractData(action.feature)})
-            });
-        }
-        case FEATURE_ERROR: {
-            return assign({}, state, {
-                featureTypes: assign({}, state.data, {[action.typeName]: {error: action.error}})
-            });
-        }
-        case QUERY_RESULT: {
-            return assign({}, state, {
-                result: action.result,
-                resultError: null
-            });
-        }
-        case QUERY_ERROR: {
-            return assign({}, state, {
-                result: '',
-                resultError: action.error
-            });
-        }
-        case RESET_QUERY: {
-            return assign({}, state, {
-                result: '',
-                resultError: null
-            });
-        }
-        default:
-            return state;
+    case FEATURE_TYPE_LOADED: {
+        return assign({}, state, {
+            featureTypes: assign({}, state.featureTypes, {[action.typeName]: extractInfo(action.featureType)})
+        });
+    }
+    case FEATURE_TYPE_ERROR: {
+        return assign({}, state, {
+            featureTypes: assign({}, state.featureTypes, {[action.typeName]: {error: action.error}})
+        });
+    }
+    case FEATURE_LOADED: {
+        return assign({}, state, {
+            data: assign({}, state.data, {[action.typeName]: extractData(action.feature)})
+        });
+    }
+    case FEATURE_ERROR: {
+        return assign({}, state, {
+            featureTypes: assign({}, state.data, {[action.typeName]: {error: action.error}})
+        });
+    }
+    case QUERY_RESULT: {
+        return assign({}, state, {
+            result: action.result,
+            resultError: null
+        });
+    }
+    case QUERY_ERROR: {
+        return assign({}, state, {
+            result: '',
+            resultError: action.error
+        });
+    }
+    case RESET_QUERY: {
+        return assign({}, state, {
+            result: '',
+            resultError: null
+        });
+    }
+    default:
+        return state;
     }
 }
 

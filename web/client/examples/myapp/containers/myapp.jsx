@@ -1,23 +1,26 @@
+var PropTypes = require('prop-types');
 var React = require('react');
 var connect = require('react-redux').connect;
 var LMap = require('../../../components/map/leaflet/Map');
 var LLayer = require('../../../components/map/leaflet/Layer');
 
-var MyApp = React.createClass({
-    propTypes: {
+class MyApp extends React.Component {
+    static propTypes = {
         // redux store slice with map configuration (bound through connect to store at the end of the file)
-        mapConfig: React.PropTypes.object,
+        mapConfig: PropTypes.object,
         // redux store dispatch func
-        dispatch: React.PropTypes.func
-    },
-    renderLayers(layers) {
+        dispatch: PropTypes.func
+    };
+
+    renderLayers = (layers) => {
         if (layers) {
             return layers.map(function(layer) {
                 return <LLayer type={layer.type} key={layer.name} options={layer} />;
             });
         }
         return null;
-    },
+    };
+
     render() {
         // wait for loaded configuration before rendering
         if (this.props.mapConfig && this.props.mapConfig.map) {
@@ -29,7 +32,7 @@ var MyApp = React.createClass({
         }
         return null;
     }
-});
+}
 
 // include support for OSM and WMS layers
 require('../../../components/map/leaflet/plugins/OSMLayer');

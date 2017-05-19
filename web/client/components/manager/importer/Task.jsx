@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -15,36 +16,37 @@ const ImporterUtils = require('../../../utils/ImporterUtils');
 const Layer = require('./Layer');
 const TransformsGrid = require('./TransformsGrid');
 
-const Task = React.createClass({
-    propTypes: {
-        task: React.PropTypes.object,
-        panStyle: React.PropTypes.object,
-        updateTask: React.PropTypes.func,
-        deleteTask: React.PropTypes.func,
-        loadLayer: React.PropTypes.func,
-        updateLayer: React.PropTypes.func,
-        loadTransform: React.PropTypes.func,
-        deleteTransform: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            task: {},
-            panStyle: {
-                minHeight: "250px"
-            },
-            updateTask: () => {},
-            deleteTask: () => {},
-            loadLayer: () => {},
-            updateLayer: () => {},
-            loadTransform: () => {},
-            deleteTransform: () => {}
+class Task extends React.Component {
+    static propTypes = {
+        task: PropTypes.object,
+        panStyle: PropTypes.object,
+        updateTask: PropTypes.func,
+        deleteTask: PropTypes.func,
+        loadLayer: PropTypes.func,
+        updateLayer: PropTypes.func,
+        loadTransform: PropTypes.func,
+        deleteTransform: PropTypes.func
+    };
 
-        };
-    },
-    getbsStyleForState(state) {
+    static defaultProps = {
+        task: {},
+        panStyle: {
+            minHeight: "250px"
+        },
+        updateTask: () => {},
+        deleteTask: () => {},
+        loadLayer: () => {},
+        updateLayer: () => {},
+        loadTransform: () => {},
+        deleteTransform: () => {}
+
+    };
+
+    getbsStyleForState = (state) => {
         return ImporterUtils.getbsStyleForState(state);
-    },
-    renderLoading(element) {
+    };
+
+    renderLoading = (element) => {
         if (this.props.task.loading ) {
             if (!element) {
                 return <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/>;
@@ -52,19 +54,21 @@ const Task = React.createClass({
                 return <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/>;
             }
         }
-    },
-    renderErrorMessage(task) {
+    };
+
+    renderErrorMessage = (task) => {
         if (task.errorMessage && task.state === "ERROR") {
             return (
                 <Alert bsStyle="danger" style={{
                     maxHeight: "80px",
                     overflow: "auto"
-                    }}>{task.errorMessage}</Alert>);
+                }}>{task.errorMessage}</Alert>);
         }
         return null;
 
-    },
-    renderGeneral(task) {
+    };
+
+    renderGeneral = (task) => {
         let modes = this.props.task.transformChain && this.props.task.transformChain.type === "vector" ? ["CREATE"] : ["CREATE", "REPLACE"];
         return (<Panel style={this.props.panStyle} bsStyle="info" header={<span><Message msgId="importer.task.general" /></span>}>
             <dl className="dl-horizontal">
@@ -77,8 +81,9 @@ const Task = React.createClass({
                       task.updateMode}</dd>
             </dl>
         </Panel>);
-    },
-    renderDataPanel(data) {
+    };
+
+    renderDataPanel = (data) => {
         return (<Panel style={this.props.panStyle} bsStyle="info" header={<span><Message msgId="importer.task.originalData" /></span>}>
             <dl className="dl-horizontal">
               <dt><Message msgId="importer.task.file" /></dt>
@@ -87,8 +92,9 @@ const Task = React.createClass({
               <dd>{data.format}</dd>
             </dl>
         </Panel>);
-    },
-    renderTargetPanel(target) {
+    };
+
+    renderTargetPanel = (target) => {
         if (!target) {
             return null;
         }
@@ -100,7 +106,8 @@ const Task = React.createClass({
               <dd>{target.dataStore && target.dataStore.name || target.coverageStore && target.coverageStore.name}</dd>
             </dl>
         </Panel>);
-    },
+    };
+
     render() {
         return (
             <Panel header={<Message msgId="importer.task.panelTitle" msgParams={{id: this.props.task.id}} />} >
@@ -119,10 +126,10 @@ const Task = React.createClass({
                         <Layer
                             edit={this.props.task.state === "READY"}
                             panProps={{
-                            bsStyle: "info",
-                            header: <span><Message msgId="importer.task.layer" />{this.renderLoading("layer")}</span>,
-                            style: this.props.panStyle
-                        }}
+                                bsStyle: "info",
+                                header: <span><Message msgId="importer.task.layer" />{this.renderLoading("layer")}</span>,
+                                style: this.props.panStyle
+                            }}
                             layer={this.props.task.layer}
                             updateLayer={this.props.updateLayer}/>
                     </Col>
@@ -142,11 +149,13 @@ const Task = React.createClass({
             </Grid>
             </Panel>
         );
-    },
-    updateMode(value) {
+    }
+
+    updateMode = (value) => {
         this.props.updateTask({
             "updateMode": value
         });
-    }
-});
+    };
+}
+
 module.exports = Task;

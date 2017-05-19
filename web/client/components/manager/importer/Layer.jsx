@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -10,31 +11,31 @@ const {Panel, Button} = require('react-bootstrap');
 const Message = require("../../I18N/Message");
 
 
-const Layer = React.createClass({
-    propTypes: {
-        layer: React.PropTypes.object,
-        loading: React.PropTypes.bool,
-        edit: React.PropTypes.bool,
-        panProps: React.PropTypes.object,
-        updateLayer: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            layer: {},
-            edit: true,
-            loading: false,
-            updateLayer: () => {}
-        };
-    },
-    getInitialState() {
-        return {};
-    },
-    onChange(event) {
+class Layer extends React.Component {
+    static propTypes = {
+        layer: PropTypes.object,
+        loading: PropTypes.bool,
+        edit: PropTypes.bool,
+        panProps: PropTypes.object,
+        updateLayer: PropTypes.func
+    };
+
+    static defaultProps = {
+        layer: {},
+        edit: true,
+        loading: false,
+        updateLayer: () => {}
+    };
+
+    state = {};
+
+    onChange = (event) => {
         let state = {};
         state[event.target.name] = event.target.value || "";
         this.setState(state);
-    },
-    renderInput(name) {
+    };
+
+    renderInput = (name) => {
         let input;
         if (name !== "description") {
             input = (<input
@@ -58,10 +59,11 @@ const Layer = React.createClass({
                />);
         }
         return [ <dt style={{marginBottom: "10px"}} key={"title-" + name}>{name}</dt>,
-         (<dd>
+            <dd>
              {input}
-        </dd>)];
-    },
+        </dd>];
+    };
+
     render() {
         return (<Panel {...this.props.panProps}>
             <dl className="dl-horizontal">
@@ -72,18 +74,22 @@ const Layer = React.createClass({
                     <Message msgId="importer.task.update" /></Button>
             </div>
         </Panel>);
-    },
-    isValid() {
+    }
+
+    isValid = () => {
         return this.state.name !== "";
-    },
-    isModified() {
+    };
+
+    isModified = () => {
         return Object.keys(this.state).some((element) => {
             return this.state[element] !== this.props.layer[element];
 
         });
-    },
-    isUpdateEnabled() {
+    };
+
+    isUpdateEnabled = () => {
         return this.isModified() && this.isValid() && !this.props.loading;
-    }
-});
+    };
+}
+
 module.exports = Layer;

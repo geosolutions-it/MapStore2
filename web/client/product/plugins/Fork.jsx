@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const Fork = React.createClass({
+
+class Fork extends React.Component {
     render() {
         return (
             <a href="https://github.com/geosolutions-it/MapStore2">
@@ -14,7 +15,7 @@ const Fork = React.createClass({
             </a>
         );
     }
-});
+}
 
 module.exports = {
     ForkPlugin: Fork

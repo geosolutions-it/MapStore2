@@ -10,17 +10,17 @@ var {CHANGE_LOCALE, LOCALE_LOAD_ERROR} = require('../actions/locale');
 
 function locale(state = null, action) {
     switch (action.type) {
-        case CHANGE_LOCALE:
-            return {
-                messages: action.messages,
-                current: action.locale
-            };
-        case LOCALE_LOAD_ERROR:
-            return {
-                loadingError: action.error
-            };
-        default:
-            return state;
+    case CHANGE_LOCALE:
+        return {
+            messages: action.messages,
+            current: action.locale
+        };
+    case LOCALE_LOAD_ERROR:
+        return {
+            loadingError: action.error
+        };
+    default:
+        return state;
     }
 }
 

@@ -52,78 +52,78 @@ const initialState = {
 
 function query(state = initialState, action) {
     switch (action.type) {
-        case FEATURE_TYPE_SELECTED: {
-            return assign({}, state, {
-                typeName: action.typeName,
-                url: action.url
-            });
-        }
-        case FEATURE_TYPE_LOADED: {
-            return assign({}, state, {
-                featureTypes: assign({}, state.featureTypes, {[action.typeName]: action.featureType})
-            });
-        }
-        case FEATURE_TYPE_ERROR: {
-            return assign({}, state, {
-                featureTypes: assign({}, state.featureTypes, {[action.typeName]: {error: action.error}})
-            });
-        }
-        case FEATURE_LOADED: {
-            return assign({}, state, {
-                data: assign({}, state.data, {[action.typeName]: extractData(action.feature)})
-            });
-        }
-        case FEATURE_ERROR: {
-            return assign({}, state, {
-                featureTypes: assign({}, state.data, {[action.typeName]: {error: action.error}})
-            });
-        }
-        case QUERY_CREATE: {
-            return assign({}, state, {
-                open: true,
-                isNew: true,
-                searchUrl: action.searchUrl,
-                filterObj: action.filterObj
-            });
-        }
-        case QUERY_RESULT: {
-            return assign({}, state, {
-                isNew: false,
-                result: action.result,
-                searchUrl: action.searchUrl,
-                filterObj: action.filterObj,
-                resultError: null
-            });
-        }
-        case QUERY_ERROR: {
-            return assign({}, state, {
-                isNew: false,
-                result: null,
-                resultError: action.error
-            });
-        }
-        case RESET_CONTROLS:
-        case QUERY_FORM_RESET:
-            return assign({}, state, {
-                open: false,
-                isNew: false,
-                result: null,
-                filterObj: null,
-                searchUrl: null
-            });
-        case RESET_QUERY: {
-            return assign({}, state, {
-                result: null,
-                resultError: null
-            });
-        }
-        case FEATURE_CLOSE: {
-            return assign({}, state, {
-                open: false
-            });
-        }
-        default:
-            return state;
+    case FEATURE_TYPE_SELECTED: {
+        return assign({}, state, {
+            typeName: action.typeName,
+            url: action.url
+        });
+    }
+    case FEATURE_TYPE_LOADED: {
+        return assign({}, state, {
+            featureTypes: assign({}, state.featureTypes, {[action.typeName]: action.featureType})
+        });
+    }
+    case FEATURE_TYPE_ERROR: {
+        return assign({}, state, {
+            featureTypes: assign({}, state.featureTypes, {[action.typeName]: {error: action.error}})
+        });
+    }
+    case FEATURE_LOADED: {
+        return assign({}, state, {
+            data: assign({}, state.data, {[action.typeName]: extractData(action.feature)})
+        });
+    }
+    case FEATURE_ERROR: {
+        return assign({}, state, {
+            featureTypes: assign({}, state.data, {[action.typeName]: {error: action.error}})
+        });
+    }
+    case QUERY_CREATE: {
+        return assign({}, state, {
+            open: true,
+            isNew: true,
+            searchUrl: action.searchUrl,
+            filterObj: action.filterObj
+        });
+    }
+    case QUERY_RESULT: {
+        return assign({}, state, {
+            isNew: false,
+            result: action.result,
+            searchUrl: action.searchUrl,
+            filterObj: action.filterObj,
+            resultError: null
+        });
+    }
+    case QUERY_ERROR: {
+        return assign({}, state, {
+            isNew: false,
+            result: null,
+            resultError: action.error
+        });
+    }
+    case RESET_CONTROLS:
+    case QUERY_FORM_RESET:
+        return assign({}, state, {
+            open: false,
+            isNew: false,
+            result: null,
+            filterObj: null,
+            searchUrl: null
+        });
+    case RESET_QUERY: {
+        return assign({}, state, {
+            result: null,
+            resultError: null
+        });
+    }
+    case FEATURE_CLOSE: {
+        return assign({}, state, {
+            open: false
+        });
+    }
+    default:
+        return state;
     }
 }
 

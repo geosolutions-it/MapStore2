@@ -21,15 +21,15 @@ const assign = require('object-assign');
  */
 function version(state = null, action) {
     switch (action.type) {
-        case CHANGE_VERSION: {
-            return assign({}, state,
-                {
-                    current: action.version
-                }
+    case CHANGE_VERSION: {
+        return assign({}, state,
+            {
+                current: action.version
+            }
             );
-        }
-        default:
-            return state;
+    }
+    default:
+        return state;
     }
 }
 

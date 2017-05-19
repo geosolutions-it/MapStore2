@@ -25,15 +25,15 @@ module.exports = {
             const ShapeFile = require('./shapefile/ShapeFile');
 
             const ShapeFilePlugin = connect((state) => (
-            {
-                visible: state.controls && state.controls.shapefile && state.controls.shapefile.enabled,
-                layers: state.shapefile && state.shapefile.layers || null,
-                selected: state.shapefile && state.shapefile.selected || null,
-                bbox: state.shapefile && state.shapefile.bbox || null,
-                success: state.shapefile && state.shapefile.success || null,
-                error: state.shapefile && state.shapefile.error || null,
-                shapeStyle: state.style || {}
-            }
+                {
+                    visible: state.controls && state.controls.shapefile && state.controls.shapefile.enabled,
+                    layers: state.shapefile && state.shapefile.layers || null,
+                    selected: state.shapefile && state.shapefile.selected || null,
+                    bbox: state.shapefile && state.shapefile.bbox || null,
+                    success: state.shapefile && state.shapefile.success || null,
+                    error: state.shapefile && state.shapefile.error || null,
+                    shapeStyle: state.style || {}
+                }
             ), {
                 onShapeChoosen: onShapeChoosen,
                 onLayerAdded: onLayerAdded,

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -13,60 +14,67 @@ const {Table, Glyphicon, Button, Label, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 const {findIndex} = require('lodash');
 
-const ImportsGrid = React.createClass({
-    propTypes: {
-        loading: React.PropTypes.bool,
-        timeout: React.PropTypes.number,
-        loadImports: React.PropTypes.func,
-        loadImport: React.PropTypes.func,
-        deleteImport: React.PropTypes.func,
-        imports: React.PropTypes.array,
-        deleteAction: React.PropTypes.object,
-        placement: React.PropTypes.string
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-             timeout: 5000,
-            loadImports: () => {},
-            placement: "bottom",
-            deleteAction: <Message msgId="importer.import.deleteImport" />,
-            loadImport: () => {},
-            deleteImport: () => {},
-            imports: []
-        };
-    },
+class ImportsGrid extends React.Component {
+    static propTypes = {
+        loading: PropTypes.bool,
+        timeout: PropTypes.number,
+        loadImports: PropTypes.func,
+        loadImport: PropTypes.func,
+        deleteImport: PropTypes.func,
+        imports: PropTypes.array,
+        deleteAction: PropTypes.object,
+        placement: PropTypes.string
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        timeout: 5000,
+        loadImports: () => {},
+        placement: "bottom",
+        deleteAction: <Message msgId="importer.import.deleteImport" />,
+        loadImport: () => {},
+        deleteImport: () => {},
+        imports: []
+    };
+
     componentDidMount() {
         this.interval = setInterval(() => {this.update(); }, this.props.timeout);
-    },
+    }
+
     componentWillUnmount() {
         clearInterval(this.interval);
-    },
-    getbsStyleForState(state) {
+    }
+
+    getbsStyleForState = (state) => {
         return ImporterUtils.getbsStyleForState(state);
-    },
-    renderLoadingMessage(importObj) {
+    };
+
+    renderLoadingMessage = (importObj) => {
         switch (importObj.message) {
-            case "deleting":
-                return <Message msgId="importer.import.deleting" />;
-            default:
-                return null;
+        case "deleting":
+            return <Message msgId="importer.import.deleting" />;
+        default:
+            return null;
         }
-    },
-    renderLoadingImport(importObj) {
+    };
+
+    renderLoadingImport = (importObj) => {
         if (importObj.loading) {
             return <div style={{"float": "right"}}>{this.renderLoadingMessage(importObj)}<Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle"/></div>;
         }
         return null;
-    },
-    renderImportErrorMessage(imp) {
+    };
+
+    renderImportErrorMessage = (imp) => {
         if (imp && imp.error) {
             return <Label bsStyle="danger">{"Could not delete import, please try to delete all its content first"}</Label>;
         }
-    },
-    renderImport(importObj) {
+    };
+
+    renderImport = (importObj) => {
         let tooltip = <Tooltip id="import-delete-action">{this.props.deleteAction}</Tooltip>;
         return (<tr key={importObj && importObj.id}>
                 <td key="id"><a onClick={(e) => {e.preventDefault(); this.props.loadImport(importObj.id); }} >{importObj.id}</a></td>
@@ -80,10 +88,11 @@ const ImportsGrid = React.createClass({
                     </OverlayTrigger>
                 </td>
             </tr>);
-    },
+    };
+
     render() {
         if (this.props.loading && this.props.imports.length === 0) {
-            return (<Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle"/>);
+            return <Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle"/>;
         }
         return (
             <Table striped bordered condensed hover>
@@ -99,14 +108,16 @@ const ImportsGrid = React.createClass({
                 </tbody>
             </Table>
         );
-    },
-    update() {
+    }
+
+    update = () => {
         if (this.props.imports) {
             let i = findIndex(this.props.imports, (importObj) => importObj.state === "RUNNING");
             if ( i >= 0 ) {
                 this.props.loadImports();
             }
         }
-    }
-});
+    };
+}
+
 module.exports = ImportsGrid;

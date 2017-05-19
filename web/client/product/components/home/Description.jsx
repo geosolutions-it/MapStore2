@@ -10,7 +10,7 @@ var React = require('react');
 var {Panel} = require('react-bootstrap');
 var I18N = require('../../../components/I18N/I18N');
 
-var Description = React.createClass({
+class Description extends React.Component {
     render() {
         return (<Panel className="mapstore-presentation-panel">
              <p>
@@ -18,6 +18,6 @@ var Description = React.createClass({
              </p>
         </Panel>);
     }
-});
+}
 
 module.exports = Description;

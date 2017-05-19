@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -21,108 +22,108 @@ const DefaultViewer = require('./DefaultViewer');
 const GeocodeViewer = require('./GeocodeViewer');
 const Dialog = require('../../misc/Dialog');
 
-const Identify = React.createClass({
-    propTypes: {
-        enabled: React.PropTypes.bool,
-        draggable: React.PropTypes.bool,
-        collapsible: React.PropTypes.bool,
-        style: React.PropTypes.object,
-        point: React.PropTypes.object,
-        format: React.PropTypes.string,
-        map: React.PropTypes.object,
-        layers: React.PropTypes.array,
-        buffer: React.PropTypes.number,
-        requests: React.PropTypes.array,
-        responses: React.PropTypes.array,
-        viewerOptions: React.PropTypes.object,
-        viewer: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
-        purgeResults: React.PropTypes.func,
-        noQueryableLayers: React.PropTypes.func,
-        clearWarning: React.PropTypes.func,
-        queryableLayersFilter: React.PropTypes.func,
-        buildRequest: React.PropTypes.func,
-        sendRequest: React.PropTypes.func,
-        localRequest: React.PropTypes.func,
-        showMarker: React.PropTypes.func,
-        hideMarker: React.PropTypes.func,
-        changeMousePointer: React.PropTypes.func,
-        maxItems: React.PropTypes.number,
-        excludeParams: React.PropTypes.array,
-        includeOptions: React.PropTypes.array,
-        showRevGeocode: React.PropTypes.func,
-        hideRevGeocode: React.PropTypes.func,
-        showModalReverse: React.PropTypes.bool,
-        reverseGeocodeData: React.PropTypes.object,
-        enableRevGeocode: React.PropTypes.bool,
-        wrapRevGeocode: React.PropTypes.bool,
-        panelClassName: React.PropTypes.string,
-        headerClassName: React.PropTypes.string,
-        bodyClassName: React.PropTypes.string,
-        asPanel: React.PropTypes.bool,
-        headerGlyph: React.PropTypes.string,
-        closeGlyph: React.PropTypes.string,
-        allowMultiselection: React.PropTypes.bool,
-        warning: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            enabled: false,
-            draggable: true,
-            collapsible: false,
-            format: MapInfoUtils.getDefaultInfoFormatValue(),
-            requests: [],
-            responses: [],
-            buffer: 2,
-            viewerOptions: {},
-            viewer: DefaultViewer,
-            purgeResults: () => {},
-            buildRequest: MapInfoUtils.buildIdentifyRequest,
-            localRequest: () => {},
-            sendRequest: () => {},
-            showMarker: () => {},
-            hideMarker: () => {},
-            noQueryableLayers: () => {},
-            clearWarning: () => {},
-            changeMousePointer: () => {},
-            showRevGeocode: () => {},
-            hideRevGeocode: () => {},
-            containerProps: {
-                continuous: false
-            },
-            showModalReverse: false,
-            reverseGeocodeData: {},
-            enableRevGeocode: true,
-            wrapRevGeocode: false,
-            queryableLayersFilter: MapInfoUtils.defaultQueryableFilter,
-            style: {
-                position: "absolute",
-                maxWidth: "500px",
-                top: "56px",
-                left: "45px",
-                zIndex: 1023,
-                boxShadow: "2px 2px 4px #A7A7A7"
-            },
-            point: {},
-            map: {},
-            layers: [],
-            maxItems: 10,
-            excludeParams: ["SLD_BODY"],
-            includeOptions: [
-                "buffer",
-                "cql_filter",
-                "filter",
-                "propertyName"
-            ],
-            panelClassName: "modal-dialog info-panel modal-content",
-            headerClassName: "modal-header",
-            bodyClassName: "modal-body info-wrap",
-            asPanel: false,
-            headerGlyph: "",
-            closeGlyph: "1-close",
-            className: "square-button",
-            allowMultiselection: false
-        };
-    },
+class Identify extends React.Component {
+    static propTypes = {
+        enabled: PropTypes.bool,
+        draggable: PropTypes.bool,
+        collapsible: PropTypes.bool,
+        style: PropTypes.object,
+        point: PropTypes.object,
+        format: PropTypes.string,
+        map: PropTypes.object,
+        layers: PropTypes.array,
+        buffer: PropTypes.number,
+        requests: PropTypes.array,
+        responses: PropTypes.array,
+        viewerOptions: PropTypes.object,
+        viewer: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+        purgeResults: PropTypes.func,
+        noQueryableLayers: PropTypes.func,
+        clearWarning: PropTypes.func,
+        queryableLayersFilter: PropTypes.func,
+        buildRequest: PropTypes.func,
+        sendRequest: PropTypes.func,
+        localRequest: PropTypes.func,
+        showMarker: PropTypes.func,
+        hideMarker: PropTypes.func,
+        changeMousePointer: PropTypes.func,
+        maxItems: PropTypes.number,
+        excludeParams: PropTypes.array,
+        includeOptions: PropTypes.array,
+        showRevGeocode: PropTypes.func,
+        hideRevGeocode: PropTypes.func,
+        showModalReverse: PropTypes.bool,
+        reverseGeocodeData: PropTypes.object,
+        enableRevGeocode: PropTypes.bool,
+        wrapRevGeocode: PropTypes.bool,
+        panelClassName: PropTypes.string,
+        headerClassName: PropTypes.string,
+        bodyClassName: PropTypes.string,
+        asPanel: PropTypes.bool,
+        headerGlyph: PropTypes.string,
+        closeGlyph: PropTypes.string,
+        allowMultiselection: PropTypes.bool,
+        warning: PropTypes.string
+    };
+
+    static defaultProps = {
+        enabled: false,
+        draggable: true,
+        collapsible: false,
+        format: MapInfoUtils.getDefaultInfoFormatValue(),
+        requests: [],
+        responses: [],
+        buffer: 2,
+        viewerOptions: {},
+        viewer: DefaultViewer,
+        purgeResults: () => {},
+        buildRequest: MapInfoUtils.buildIdentifyRequest,
+        localRequest: () => {},
+        sendRequest: () => {},
+        showMarker: () => {},
+        hideMarker: () => {},
+        noQueryableLayers: () => {},
+        clearWarning: () => {},
+        changeMousePointer: () => {},
+        showRevGeocode: () => {},
+        hideRevGeocode: () => {},
+        containerProps: {
+            continuous: false
+        },
+        showModalReverse: false,
+        reverseGeocodeData: {},
+        enableRevGeocode: true,
+        wrapRevGeocode: false,
+        queryableLayersFilter: MapInfoUtils.defaultQueryableFilter,
+        style: {
+            position: "absolute",
+            maxWidth: "500px",
+            top: "56px",
+            left: "45px",
+            zIndex: 1023,
+            boxShadow: "2px 2px 4px #A7A7A7"
+        },
+        point: {},
+        map: {},
+        layers: [],
+        maxItems: 10,
+        excludeParams: ["SLD_BODY"],
+        includeOptions: [
+            "buffer",
+            "cql_filter",
+            "filter",
+            "propertyName"
+        ],
+        panelClassName: "modal-dialog info-panel modal-content",
+        headerClassName: "modal-header",
+        bodyClassName: "modal-body info-wrap",
+        asPanel: false,
+        headerGlyph: "",
+        closeGlyph: "1-close",
+        className: "square-button",
+        allowMultiselection: false
+    };
+
     componentWillReceiveProps(newProps) {
         if (this.needsRefresh(newProps)) {
             if (!newProps.point.modifiers || newProps.point.modifiers.ctrl !== true || !newProps.allowMultiselection) {
@@ -153,25 +154,29 @@ const Identify = React.createClass({
             this.props.hideMarker();
             this.props.purgeResults();
         }
-    },
-    onModalHiding() {
+    }
+
+    onModalHiding = () => {
         this.props.hideMarker();
         this.props.purgeResults();
-    },
-    renderHeader(missing) {
+    };
+
+    renderHeader = (missing) => {
         return (
             <span role="header">
-                { (missing !== 0 ) ? <Spinner value={missing} sSize="sp-small" /> : null }
+                { missing !== 0 ? <Spinner value={missing} sSize="sp-small" /> : null }
                 {this.props.headerGlyph ? <Glyphicon glyph={this.props.headerGlyph} /> : null}&nbsp;<Message msgId="identifyTitle" />
                 <button onClick={this.onModalHiding} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
             </span>
         );
-    },
-    renderResults(missingResponses) {
+    };
+
+    renderResults = (missingResponses) => {
         const Viewer = this.props.viewer;
-        return (<Viewer format={this.props.format} missingResponses={missingResponses} responses={this.props.responses} {...this.props.viewerOptions}/>);
-    },
-    renderReverseGeocode(latlng) {
+        return <Viewer format={this.props.format} missingResponses={missingResponses} responses={this.props.responses} {...this.props.viewerOptions}/>;
+    };
+
+    renderReverseGeocode = (latlng) => {
         if (this.props.enableRevGeocode) {
             let reverseGeocodeData = this.props.reverseGeocodeData;
             const Viewer = (<GeocodeViewer
@@ -184,21 +189,22 @@ const Identify = React.createClass({
                 identifyRevGeocodeSubmitText={<Message msgId="identifyRevGeocodeSubmitText" />}
                 identifyRevGeocodeCloseText={<Message msgId="identifyRevGeocodeCloseText" />}
                 modalOptions={{bsClass: 'mapstore-identify-modal modal'}} />);
-            return this.props.wrapRevGeocode ? (
+            return this.props.wrapRevGeocode ?
                 <Panel
                     header={<span><Glyphicon glyph="globe" />&nbsp;<Message msgId="identifyRevGeocodeHeader" /></span>}>
                     {Viewer}
                 </Panel>
-            ) : (<div id="mapstore-identify-revgeocoder">{Viewer}</div>);
+             : <div id="mapstore-identify-revgeocoder">{Viewer}</div>;
         }
         return null;
-    },
-    renderContent() {
+    };
+
+    renderContent = () => {
         let missingResponses = this.props.requests.length - this.props.responses.length;
         let latlng = this.props.point.latlng;
-        return this.props.asPanel ? (
+        return this.props.asPanel ?
             <Panel
-                defaultExpanded={true}
+                defaultExpanded
                 collapsible={this.props.collapsible}
                 id="mapstore-getfeatureinfo"
                 style={this.props.style}
@@ -209,7 +215,7 @@ const Identify = React.createClass({
                 {this.renderReverseGeocode(latlng)}
                 {this.renderResults(missingResponses)}
             </Panel>
-        ) : (
+         :
             <Dialog id="mapstore-getfeatureinfo"
                 style={this.props.style}
                 className={this.props.panelClassName}
@@ -222,18 +228,19 @@ const Identify = React.createClass({
                     {this.renderResults(missingResponses)}
                 </div>
             </Dialog>
-        );
-    },
+        ;
+    };
+
     render() {
         if (this.props.enabled && this.props.requests.length !== 0) {
-            return this.props.draggable && this.props.asPanel ? (
+            return this.props.draggable && this.props.asPanel ?
                     <Draggable>
                         {this.renderContent()}
                     </Draggable>
-                ) : this.renderContent();
+                 : this.renderContent();
         }
         if (this.props.warning) {
-            return (<Modal show={true} bsSize="small" onHide={() => {
+            return (<Modal show bsSize="small" onHide={() => {
                 this.props.clearWarning();
             }}>
                 <Modal.Header className="dialog-error-header-side" closeButton>
@@ -247,8 +254,9 @@ const Identify = React.createClass({
             </Modal>);
         }
         return null;
-    },
-    needsRefresh(props) {
+    }
+
+    needsRefresh = (props) => {
         if (props.enabled && props.point && props.point.pixel) {
             if (!this.props.point.pixel || this.props.point.pixel.x !== props.point.pixel.x ||
                     this.props.point.pixel.y !== props.point.pixel.y ) {
@@ -259,17 +267,18 @@ const Identify = React.createClass({
             }
         }
         return false;
-    },
-   filterRequestParams(layer) {
+    };
+
+    filterRequestParams = (layer) => {
         let includeOpt = this.props.includeOptions || [];
         let excludeList = this.props.excludeParams || [];
         let options = Object.keys(layer).reduce((op, next) => {
             if (next !== "params" && includeOpt.indexOf(next) !== -1) {
                 op[next] = layer[next];
-            }else if (next === "params" && excludeList.length > 0) {
+            } else if (next === "params" && excludeList.length > 0) {
                 let params = layer[next];
                 Object.keys(params).forEach((n) => {
-                    if (findIndex(excludeList, (el) => {return (el === n); }) === -1) {
+                    if (findIndex(excludeList, (el) => {return el === n; }) === -1) {
                         op[n] = params[n];
                     }
                 }, {});
@@ -277,7 +286,7 @@ const Identify = React.createClass({
             return op;
         }, {});
         return options;
-    }
-});
+    };
+}
 
 module.exports = Identify;

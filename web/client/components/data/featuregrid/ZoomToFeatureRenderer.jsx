@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,16 +9,17 @@
 const React = require('react');
 const img = require('./images/magnifier.png');
 
-const ZoomToFeatureRenderer = React.createClass({
-    propTypes: {
-        params: React.PropTypes.object
-    },
+class ZoomToFeatureRenderer extends React.Component {
+    static propTypes = {
+        params: PropTypes.object
+    };
+
     render() {
         const geometry = this.props.params && this.props.params.data && this.props.params.data.geometry;
-        return geometry && geometry.coordinates ? (
+        return geometry && geometry.coordinates ?
             <img src={img} width={16}/>
-        ) : null;
+         : null;
     }
-});
+}
 
 module.exports = ZoomToFeatureRenderer;

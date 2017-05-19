@@ -37,8 +37,8 @@ describe('Openlayers MeasurementSupport', () => {
             zoom: 5
         };
         var map = new ol.Map({
-          target: "map",
-          view: new ol.View(viewOptions)
+            target: "map",
+            view: new ol.View(viewOptions)
         });
 
         const cmp = ReactDOM.render(
@@ -60,8 +60,8 @@ describe('Openlayers MeasurementSupport', () => {
             zoom: 5
         };
         var map = new ol.Map({
-          target: "map",
-          view: new ol.View(viewOptions)
+            target: "map",
+            view: new ol.View(viewOptions)
         });
 
         let cmp = ReactDOM.render(
@@ -93,8 +93,8 @@ describe('Openlayers MeasurementSupport', () => {
             zoom: 5
         };
         var map = new ol.Map({
-          target: "map",
-          view: new ol.View(viewOptions)
+            target: "map",
+            view: new ol.View(viewOptions)
         });
 
         let cmp = ReactDOM.render(

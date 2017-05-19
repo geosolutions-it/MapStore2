@@ -27,7 +27,7 @@ describe("test the MeasureComponent", () => {
 
     it('test component creation', () => {
         let measurement = {};
-        const mc = ReactDOM.render(<MeasureDialog show={true} measurement={measurement}/>, document.getElementById("container"));
+        const mc = ReactDOM.render(<MeasureDialog show measurement={measurement}/>, document.getElementById("container"));
         expect(mc).toExist();
     });
     it('test close', () => {
@@ -36,7 +36,7 @@ describe("test the MeasureComponent", () => {
             onClose() {}
         };
         let spy = expect.spyOn(handlers, "onClose");
-        const mc = ReactDOM.render(<MeasureDialog show={true} onClose={handlers.onClose} measurement={measurement}/>, document.getElementById("container"));
+        const mc = ReactDOM.render(<MeasureDialog show onClose={handlers.onClose} measurement={measurement}/>, document.getElementById("container"));
         expect(mc).toExist();
         const dom = ReactDOM.findDOMNode(mc);
         const closeBtn = dom.getElementsByClassName('close')[0];

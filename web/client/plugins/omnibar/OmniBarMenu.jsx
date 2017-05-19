@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -11,25 +12,26 @@ const {connect} = require("react-redux");
 const {partial} = require('lodash');
 const Message = require('../locale/Message');
 
-const OmniBarMenu = React.createClass({
-    propTypes: {
-        dispatch: React.PropTypes.func,
-        items: React.PropTypes.array,
-        title: React.PropTypes.node,
-        onItemClick: React.PropTypes.func
-    },
-    contextTypes: {
-        messages: React.PropTypes.object,
-        router: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            items: [],
-            onItemClick: () => {},
-            title: <MenuItem header><Message msgId="options"/></MenuItem>
-        };
-    },
-    renderNavItem(tool) {
+class OmniBarMenu extends React.Component {
+    static propTypes = {
+        dispatch: PropTypes.func,
+        items: PropTypes.array,
+        title: PropTypes.node,
+        onItemClick: PropTypes.func
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object,
+        router: PropTypes.object
+    };
+
+    static defaultProps = {
+        items: [],
+        onItemClick: () => {},
+        title: <MenuItem header><Message msgId="options"/></MenuItem>
+    };
+
+    renderNavItem = (tool) => {
         return (<MenuItem onSelect={(e) => {
             e.preventDefault();
             if (tool.action) {
@@ -38,14 +40,15 @@ const OmniBarMenu = React.createClass({
                 this.props.onItemClick(tool);
             }
         }}>{tool.icon} {tool.text}</MenuItem>);
-    },
+    };
+
     render() {
         return (<NavDropdown noCaret pullRight bsStyle="primary" title={<Button bsStyle="primary" className="square-button"><Glyphicon glyph="menu-hamburger" /></Button>} >
                 {this.props.title}
                 {this.props.items.sort((a, b) => a.position - b.position).map(this.renderNavItem)}
-            </NavDropdown>
-            );
+            </NavDropdown>)
+            ;
     }
-});
+}
 
 module.exports = connect()(OmniBarMenu);

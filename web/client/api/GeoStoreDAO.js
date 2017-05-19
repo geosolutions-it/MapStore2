@@ -112,13 +112,13 @@ var Api = {
             if (rule.canRead || rule.canWrite) {
                 if (rule.user) {
                     payload = payload + "<SecurityRule>";
-                    payload = payload + "<canRead>" + ((rule.canRead || rule.canWrite) ? "true" : "false") + "</canRead>";
+                    payload = payload + "<canRead>" + (rule.canRead || rule.canWrite ? "true" : "false") + "</canRead>";
                     payload = payload + "<canWrite>" + (rule.canWrite ? "true" : "false") + "</canWrite>";
                     payload = payload + "<user><id>" + (rule.user.id || "") + "</id><name>" + (rule.user.name || "") + "</name></user>";
                     payload = payload + "</SecurityRule>";
                 } else if (rule.group) {
                     payload = payload + "<SecurityRule>";
-                    payload = payload + "<canRead>" + ((rule.canRead || rule.canWrite) ? "true" : "false") + "</canRead>";
+                    payload = payload + "<canRead>" + (rule.canRead || rule.canWrite ? "true" : "false") + "</canRead>";
                     payload = payload + "<canWrite>" + (rule.canWrite ? "true" : "false") + "</canWrite>";
                     payload = payload + "<group><id>" + (rule.group.id || "") + "</id><groupName>" + (rule.group.groupName || "") + "</groupName></group>";
                     payload = payload + "</SecurityRule>";
@@ -256,7 +256,7 @@ var Api = {
     updateGroupMembers: function(group, options) {
         // No GeoStore API to update group name and description. only update new users
         if (group.newUsers) {
-            let restUsers = group.users || (group.restUsers && group.restUsers.User) || [];
+            let restUsers = group.users || group.restUsers && group.restUsers.User || [];
             restUsers = Array.isArray(restUsers) ? restUsers : [restUsers];
             // old users not present in the new users list
             let toRemove = restUsers.filter( (user) => findIndex(group.newUsers, u => u.id === user.id) < 0);
@@ -266,7 +266,7 @@ var Api = {
             // create callbacks
             let removeCallbacks = toRemove.map( (user) => () => this.removeUserFromGroup(user.id, group.id, options) );
             let addCallbacks = toAdd.map( (user) => () => this.addUserToGroup(user.id, group.id), options );
-            let requests = [...(removeCallbacks.map( call => call.call(this))), ...(addCallbacks.map(call => call()))];
+            let requests = [...removeCallbacks.map( call => call.call(this)), ...addCallbacks.map(call => call())];
             return axios.all(requests).then(() => {
                 return {
                     ...group,
@@ -282,7 +282,7 @@ var Api = {
             });
         });
     },
-    deleteGroup: function(id, options={}) {
+    deleteGroup: function(id, options = {}) {
         let url = "usergroups/group/" + id;
         return axios.delete(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },

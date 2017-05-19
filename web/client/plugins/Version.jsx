@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -20,27 +21,34 @@ const Message = require('../components/I18N/Message');
   */
 const Version = connect((state) => ({
     version: state.version && state.version.current
-}))(React.createClass({
-    propTypes: {
-        version: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            version: 'DEV'
-        };
-    },
+}))(/**
+  * Version Plugin. Shows current MapStore2 version
+  * @class  Version
+  * @memberof plugins
+  * @static
+  *
+  */
+class extends React.Component {
+    static propTypes = {
+        version: PropTypes.string
+    };
+
+    static defaultProps = {
+        version: 'DEV'
+    };
+
     render() {
         return <span className="application-version"><span className="application-version-label"><Message msgId="version.label"/></span>: {this.props.version}</span>;
     }
-}));
+});
 
 const assign = require('object-assign');
 
-const Empty = React.createClass({
+class Empty extends React.Component {
     render() {
         return null;
     }
-});
+}
 
 module.exports = {
     VersionPlugin: assign(Empty, {

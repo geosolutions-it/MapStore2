@@ -72,12 +72,12 @@ const ImporterPlugin = connect(
         }, dispatch);
     }, (stateProps, dispatchProps, ownProps) => {
         return assign({}, ownProps, stateProps, dispatchProps, {
-                onMount: () => {
-                    if (!stateProps.selectedTask && !stateProps.selectedImport) {
-                        dispatchProps.loadImports(getURL(ownProps));
-                    }
+            onMount: () => {
+                if (!stateProps.selectedTask && !stateProps.selectedImport) {
+                    dispatchProps.loadImports(getURL(ownProps));
                 }
-            });
+            }
+        });
     }
 )(require("../../components/manager/importer/Importer"));
 module.exports = {

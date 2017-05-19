@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -10,13 +11,14 @@ var BootstrapReact = require('react-bootstrap');
 var Label = BootstrapReact.Label;
 var NumberFormat = require('../../I18N/Number');
 
-var MousePositionLabelYX = React.createClass({
-    propTypes: {
-        position: React.PropTypes.shape({
-            x: React.PropTypes.number,
-            y: React.PropTypes.number
+class MousePositionLabelYX extends React.Component {
+    static propTypes = {
+        position: PropTypes.shape({
+            x: PropTypes.number,
+            y: PropTypes.number
         })
-    },
+    };
+
     render() {
         let format = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 2, minimumFractionDigits: 2};
         return (
@@ -28,5 +30,6 @@ var MousePositionLabelYX = React.createClass({
                 </Label>
             </h5>);
     }
-});
+}
+
 module.exports = MousePositionLabelYX;

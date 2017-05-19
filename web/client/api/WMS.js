@@ -30,8 +30,8 @@ const parseUrl = (url) => {
 
 const flatLayers = (root) => {
     return root.Layer ? (isArray(root.Layer) && root.Layer || [root.Layer]).reduce((previous, current) => {
-        return previous.concat(flatLayers(current)).concat((current.Layer && current.Name) ? [current] : []);
-    }, []) : (root.Name && [root] || []);
+        return previous.concat(flatLayers(current)).concat(current.Layer && current.Name ? [current] : []);
+    }, []) : root.Name && [root] || [];
 };
 const getOnlineResource = (c) => {
     return c.Request && c.Request.GetMap && c.Request.GetMap.DCPType && c.Request.GetMap.DCPType.HTTP && c.Request.GetMap.DCPType.HTTP.Get && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource.$ || undefined;
@@ -39,18 +39,18 @@ const getOnlineResource = (c) => {
 const searchAndPaginate = (json, startPosition, maxRecords, text) => {
     const root = (json.WMS_Capabilities || json.WMT_MS_Capabilities).Capability;
     const onlineResource = getOnlineResource(root);
-    const SRSList = (root.Layer && (root.Layer.SRS || root.Layer.CRS)) || [];
+    const SRSList = root.Layer && (root.Layer.SRS || root.Layer.CRS) || [];
     const layersObj = flatLayers(root);
     const layers = isArray(layersObj) ? layersObj : [layersObj];
     const filteredLayers = layers
-        .filter((layer) => !text || layer.Name.toLowerCase().indexOf(text.toLowerCase()) !== -1 || (layer.Title && layer.Title.toLowerCase().indexOf(text.toLowerCase()) !== -1) || (layer.Abstract && layer.Abstract.toLowerCase().indexOf(text.toLowerCase()) !== -1));
+        .filter((layer) => !text || layer.Name.toLowerCase().indexOf(text.toLowerCase()) !== -1 || layer.Title && layer.Title.toLowerCase().indexOf(text.toLowerCase()) !== -1 || layer.Abstract && layer.Abstract.toLowerCase().indexOf(text.toLowerCase()) !== -1);
     return {
         numberOfRecordsMatched: filteredLayers.length,
         numberOfRecordsReturned: Math.min(maxRecords, filteredLayers.length),
         nextRecord: startPosition + Math.min(maxRecords, filteredLayers.length) + 1,
         service: json.WMS_Capabilities.Service,
         records: filteredLayers
-            .filter((layer, index) => index >= (startPosition - 1) && index < (startPosition - 1) + maxRecords)
+            .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
             .map((layer) => assign({}, layer, {onlineResource, SRS: SRSList}))
     };
 };
@@ -133,10 +133,10 @@ const Api = {
             decriptions = Array.isArray(decriptions) ? decriptions : [decriptions];
             // make it compatible with json format of describe layer
             return decriptions.map(desc => ({
-                ...(desc && desc.$ || {}),
+                ...desc && desc.$ || {},
                 layerName: desc.$ && desc.$.name,
                 query: {
-                    ...(desc && desc.query && desc.query.$ || {})
+                    ...desc && desc.query && desc.query.$ || {}
                 }
             }));
         });

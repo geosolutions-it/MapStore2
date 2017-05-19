@@ -16,7 +16,7 @@ const mapConfigHistory = (reducer) => {
         if (action.type === Undoable.ActionTypes.UNDO && state.past.length > 0) {
             let mapC = assign({}, newState.present, {mapStateSource: "undoredo", style: state.present.style, resize: state.present.resize});
             unredoState = assign({}, newState, {present: mapC});
-        }else if (action.type === Undoable.ActionTypes.REDO && state.future.length > 0) {
+        } else if (action.type === Undoable.ActionTypes.REDO && state.future.length > 0) {
             let mapC = assign({}, newState.present, {mapStateSource: "undoredo", style: state.present.style, resize: state.present.resize});
             unredoState = assign({}, newState, {present: mapC});
         }

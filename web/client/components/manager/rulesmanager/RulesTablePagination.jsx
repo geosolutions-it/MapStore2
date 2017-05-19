@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -9,19 +10,19 @@
 const React = require('react');
 const {Pagination} = require('react-bootstrap');
 
-const RulesTablePagination = React.createClass({
-    propTypes: {
-        loadRules: React.PropTypes.func,
-        rulesPage: React.PropTypes.number,
-        rulesCount: React.PropTypes.number
-    },
-    getDefaultProps() {
-        return {
-            loadRules: () => {},
-            rulesPage: 1,
-            rulesCount: 0
-        };
-    },
+class RulesTablePagination extends React.Component {
+    static propTypes = {
+        loadRules: PropTypes.func,
+        rulesPage: PropTypes.number,
+        rulesCount: PropTypes.number
+    };
+
+    static defaultProps = {
+        loadRules: () => {},
+        rulesPage: 1,
+        rulesCount: 0
+    };
+
     render() {
         const numberOfPages = Math.ceil(this.props.rulesCount / 10);
         return (
@@ -34,6 +35,6 @@ const RulesTablePagination = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = RulesTablePagination;

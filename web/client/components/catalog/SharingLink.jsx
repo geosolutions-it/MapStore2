@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -12,24 +13,23 @@ const OverlayTrigger = require('../misc/OverlayTrigger');
 const CopyToClipboard = require('react-copy-to-clipboard');
 const SecurityUtils = require('../../utils/SecurityUtils');
 
-const SharingLink = React.createClass({
-    propTypes: {
-        url: React.PropTypes.string.isRequired,
-        labelId: React.PropTypes.string,
-        onCopy: React.PropTypes.func,
-        bsSize: React.PropTypes.string,
-        addAuthentication: React.PropTypes.bool
-    },
-    getDefaultProps() {
-        return {
-            onCopy: () => {},
-            bsSize: 'small',
-            addAuthentication: false
-        };
-    },
-    getInitialState() {
-        return {showCopiedToolTip: false};
-    },
+class SharingLink extends React.Component {
+    static propTypes = {
+        url: PropTypes.string.isRequired,
+        labelId: PropTypes.string,
+        onCopy: PropTypes.func,
+        bsSize: PropTypes.string,
+        addAuthentication: PropTypes.bool
+    };
+
+    static defaultProps = {
+        onCopy: () => {},
+        bsSize: 'small',
+        addAuthentication: false
+    };
+
+    state = {showCopiedToolTip: false};
+
     render() {
         if (!this.props.url) {
             return null;
@@ -37,21 +37,21 @@ const SharingLink = React.createClass({
         // add authentication to the url if possible
         const url = this.props.addAuthentication ? SecurityUtils.addAuthenticationToUrl(this.props.url) : this.props.url;
         const messageId = this.state.showCopiedToolTip ? "catalog.copied" : "catalog.copyToClipboard";
-        const tooltip = (
-            <Tooltip id="tooltip">
+        const tooltip =
+            (<Tooltip id="tooltip">
                 <Message msgId={messageId}/>
-            </Tooltip>
-        );
-        const copyButton = (
-            <CopyToClipboard text={url} onCopy={this.props.onCopy}>
+            </Tooltip>)
+        ;
+        const copyButton =
+            (<CopyToClipboard text={url} onCopy={this.props.onCopy}>
                 <OverlayTrigger placement="right" overlay={tooltip} onExited={() => this.setState({showCopiedToolTip: false})}>
                     <Button bsSize={this.props.bsSize} bsStyle="primary" className="link-button" onClick={() => this.setState({showCopiedToolTip: true})}>
                         <Glyphicon glyph="paperclip"/>&nbsp;{this.props.labelId
                                 && <Message msgId={this.props.labelId}/>}
                     </Button>
                 </OverlayTrigger>
-            </CopyToClipboard>
-        );
+            </CopyToClipboard>)
+        ;
         return (
             <div className="link-sharing">
                 <FormGroup bsSize={this.props.bsSize} >
@@ -62,6 +62,6 @@ const SharingLink = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = SharingLink;

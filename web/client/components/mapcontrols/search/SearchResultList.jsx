@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -12,38 +13,38 @@ const I18N = require('../../I18N/I18N');
 var assign = require('object-assign');
 
 
-let SearchResultList = React.createClass({
-    propTypes: {
-        results: React.PropTypes.array,
-        searchOptions: React.PropTypes.object,
-        mapConfig: React.PropTypes.object,
-        fitToMapSize: React.PropTypes.bool,
-        containerStyle: React.PropTypes.object,
-        sizeAdjustment: React.PropTypes.object,
-        onItemClick: React.PropTypes.func,
-        addMarker: React.PropTypes.func,
-        afterItemClick: React.PropTypes.func,
-        notFoundMessage: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string])
-    },
-    getDefaultProps() {
-        return {
-            sizeAdjustment: {
-                width: 0,
-                height: 110
-            },
-            containerStyle: {
-                zIndex: 1000
-            },
-            onItemClick: () => {},
-            addMarker: () => {},
-            afterItemClick: () => {}
-        };
-    },
-    onItemClick(item) {
-        this.props.onItemClick(item, this.props.mapConfig);
-    },
+class SearchResultList extends React.Component {
+    static propTypes = {
+        results: PropTypes.array,
+        searchOptions: PropTypes.object,
+        mapConfig: PropTypes.object,
+        fitToMapSize: PropTypes.bool,
+        containerStyle: PropTypes.object,
+        sizeAdjustment: PropTypes.object,
+        onItemClick: PropTypes.func,
+        addMarker: PropTypes.func,
+        afterItemClick: PropTypes.func,
+        notFoundMessage: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
+    };
 
-    renderResults() {
+    static defaultProps = {
+        sizeAdjustment: {
+            width: 0,
+            height: 110
+        },
+        containerStyle: {
+            zIndex: 1000
+        },
+        onItemClick: () => {},
+        addMarker: () => {},
+        afterItemClick: () => {}
+    };
+
+    onItemClick = (item) => {
+        this.props.onItemClick(item, this.props.mapConfig);
+    };
+
+    renderResults = () => {
         return this.props.results.map((item, idx)=> {
             const service = this.findService(item) || {};
             return (<SearchResult
@@ -52,7 +53,8 @@ let SearchResultList = React.createClass({
                 displayName={service.displayName}
                 key={item.osm_id || "res_" + idx} item={item} onItemClick={this.onItemClick}/>);
         });
-    },
+    };
+
     render() {
         var notFoundMessage = this.props.notFoundMessage;
         if (!notFoundMessage) {
@@ -78,8 +80,9 @@ let SearchResultList = React.createClass({
                 {this.renderResults()}
             </div>
         );
-    },
-    findService(item) {
+    }
+
+    findService = (item) => {
         const services = this.props.searchOptions && this.props.searchOptions.services;
         if (item.__SERVICE__ !== null) {
             if (services && typeof item.__SERVICE__ === "string" ) {
@@ -98,7 +101,7 @@ let SearchResultList = React.createClass({
                 return item.__SERVICE__;
             }
         }
-    }
-});
+    };
+}
 
 module.exports = SearchResultList;

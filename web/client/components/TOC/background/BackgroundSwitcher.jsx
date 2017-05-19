@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -49,34 +50,35 @@ let thumbs = {
     unknown
 };
 
-let BackgroundSwitcher = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        name: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        layers: React.PropTypes.array,
-        columnProperties: React.PropTypes.object,
-        propertiesChangeHandler: React.PropTypes.func,
-        fluid: React.PropTypes.bool
-    },
-    getDefaultProps() {
-        return {
-            id: "background-switcher",
-            icon: <Glyphicon glyph="globe"/>,
-            fluid: true,
-            columnProperties: {
-                xs: 12,
-                sm: 12,
-                md: 12
-             }
-        };
-    },
-    renderBackgrounds() {
+class BackgroundSwitcher extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        name: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        layers: PropTypes.array,
+        columnProperties: PropTypes.object,
+        propertiesChangeHandler: PropTypes.func,
+        fluid: PropTypes.bool
+    };
+
+    static defaultProps = {
+        id: "background-switcher",
+        icon: <Glyphicon glyph="globe"/>,
+        fluid: true,
+        columnProperties: {
+            xs: 12,
+            sm: 12,
+            md: 12
+        }
+    };
+
+    renderBackgrounds = () => {
         if (!this.props.layers) {
-            return <div></div>;
+            return <div />;
         }
         return this.renderLayers(this.props.layers);
-    },
-    renderLayers(layers) {
+    };
+
+    renderLayers = (layers) => {
         let items = [];
         for (let i = 0; i < layers.length; i++) {
             let layer = layers[i];
@@ -98,17 +100,19 @@ let BackgroundSwitcher = React.createClass({
 
         }
         return items;
-    },
+    };
+
     render() {
         return (
            <Grid id={this.props.id} className="BackgroundSwitcherComponent" fluid={this.props.fluid}>{this.renderBackgrounds()}</Grid>
         );
-    },
-    changeLayerVisibility(eventObj) {
+    }
+
+    changeLayerVisibility = (eventObj) => {
         let position = parseInt(eventObj.currentTarget.dataset.position, 10);
         var layer = this.props.layers[position];
         this.props.propertiesChangeHandler(layer.id, {visibility: true});
-    }
-});
+    };
+}
 
 module.exports = BackgroundSwitcher;

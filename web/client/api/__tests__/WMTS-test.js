@@ -16,7 +16,7 @@ describe('Test correctness of the WMTS APIs', () => {
                 expect(result).toExist();
                 expect(result.numberOfRecordsMatched).toBe(3);
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 const React = require('react');
 const connect = require('react-redux').connect;
 const LMap = require('../../../components/map/cesium/Map');
@@ -15,35 +16,47 @@ const {toggleGraticule} = require('../actions/controls');
 
 const Localized = require('../../../components/I18N/Localized');
 
-const Viewer = React.createClass({
-    propTypes: {
+class Viewer extends React.Component {
+    static propTypes = {
         // redux store slice with map configuration (bound through connect to store at the end of the file)
-        map: React.PropTypes.object,
-        layers: React.PropTypes.array,
-        mapOptions: React.PropTypes.object,
+        map: PropTypes.object,
+        layers: PropTypes.array,
+        mapOptions: PropTypes.object,
         // redux store dispatch func
-        dispatch: React.PropTypes.func,
-        textSearch: React.PropTypes.func,
-        searchTextChanged: React.PropTypes.func,
-        resultsPurge: React.PropTypes.func,
-        changeMapView: React.PropTypes.func,
-        changeMousePosition: React.PropTypes.func,
-        toggleGraticule: React.PropTypes.func,
-        updateMarker: React.PropTypes.func,
-        mousePosition: React.PropTypes.object,
-        messages: React.PropTypes.object,
-        locale: React.PropTypes.string,
-        localeError: React.PropTypes.string,
-        searchResults: React.PropTypes.array,
-        mapStateSource: React.PropTypes.string,
-        showGraticule: React.PropTypes.bool,
-        marker: React.PropTypes.object,
-        searchText: React.PropTypes.string
-    },
-    onSearchClick: function(center, option) {
+        dispatch: PropTypes.func,
+        textSearch: PropTypes.func,
+        searchTextChanged: PropTypes.func,
+        resultsPurge: PropTypes.func,
+        changeMapView: PropTypes.func,
+        changeMousePosition: PropTypes.func,
+        toggleGraticule: PropTypes.func,
+        updateMarker: PropTypes.func,
+        mousePosition: PropTypes.object,
+        messages: PropTypes.object,
+        locale: PropTypes.string,
+        localeError: PropTypes.string,
+        searchResults: PropTypes.array,
+        mapStateSource: PropTypes.string,
+        showGraticule: PropTypes.bool,
+        marker: PropTypes.object,
+        searchText: PropTypes.string
+    };
+
+    static defaultProps = {
+        mapOptions: {
+            terrainProvider: {
+                type: "cesium",
+                url: "https://assets.agi.com/stk-terrain/world",
+                requestVertexNormals: true
+            }
+        }
+    };
+
+    onSearchClick = (center, option) => {
         this.props.updateMarker(center, option);
-    },
-    getMarkerPoint() {
+    };
+
+    getMarkerPoint = () => {
         let feature = this.props.marker;
         if (feature.type === "Feature") {
             feature = pointOnSurface(feature);
@@ -55,19 +68,9 @@ const Viewer = React.createClass({
             lng: feature.geometry && feature.geometry.coordinates[0]
         };
 
-    },
-    getDefaultProps() {
-        return {
-            mapOptions: {
-                terrainProvider: {
-                  type: "cesium",
-                  url: "https://assets.agi.com/stk-terrain/world",
-                  requestVertexNormals: true
-              }
-            }
-        };
-    },
-    renderLayers(layers) {
+    };
+
+    renderLayers = (layers) => {
         if (layers) {
 
             return layers.map(function(layer) {
@@ -84,7 +87,8 @@ const Viewer = React.createClass({
         }
         return null;
 
-    },
+    };
+
     render() {
         // wait for loaded configuration before rendering
         if (this.props.map && this.props.layers && this.props.messages) {
@@ -97,14 +101,14 @@ const Viewer = React.createClass({
                             {this.renderLayers(this.props.layers)}
                         </LMap>
                         <div style={{
-                                position: "absolute",
-                                zIndex: 1000,
-                                right: "20px",
-                                top: "20px",
-                                backgroundColor: "white",
-                                opacity: 0.7,
-                                padding: "10px"
-                            }}>
+                            position: "absolute",
+                            zIndex: 1000,
+                            right: "20px",
+                            top: "20px",
+                            backgroundColor: "white",
+                            opacity: 0.7,
+                            padding: "10px"
+                        }}>
                             <label>Graticule:&nbsp;&nbsp;<input type="checkbox" checked={this.props.showGraticule} onChange={this.props.toggleGraticule}/></label>
                         </div>
                         <SearchBar key="seachBar" searchText={this.props.searchText} onSearchTextChange={this.props.searchTextChanged} onSearch={this.props.textSearch} onSearchReset={this.props.resultsPurge} />
@@ -115,7 +119,7 @@ const Viewer = React.createClass({
                             mapConfig={this.props.map}/>
                             <MousePosition
                                 key="mousePosition"
-                                enabled={true}
+                                enabled
                                 mousePosition={this.props.mousePosition}
                                 crs="EPSG:4326"/>
                     </div>
@@ -124,7 +128,7 @@ const Viewer = React.createClass({
         }
         return null;
     }
-});
+}
 
 
 require('../../../components/map/cesium/plugins/index');

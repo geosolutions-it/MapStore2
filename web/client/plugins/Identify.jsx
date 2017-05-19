@@ -26,7 +26,7 @@ const assign = require('object-assign');
 require('./identify/identify.css');
 
 const selector = createSelector([
-    (state) => (state.mapInfo && state.mapInfo.enabled) || (state.controls && state.controls.info && state.controls.info.enabled) || false,
+    (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || false,
     (state) => state.mapInfo && state.mapInfo.responses || [],
     (state) => state.mapInfo && state.mapInfo.requests || [],
     (state) => state.mapInfo && state.mapInfo.infoFormat,

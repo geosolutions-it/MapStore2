@@ -65,7 +65,7 @@ const startApp = () => {
 
     const context = require('./context');
 
-    const customReducer = (state={}, action) => {
+    const customReducer = (state = {}, action) => {
         if (customReducers) {
             const newState = assign({}, state);
             Object.keys(customReducers).forEach((stateKey) => {
@@ -103,7 +103,7 @@ const startApp = () => {
         try {
             userCfg[pluginName] = JSON.parse(cfg);
             store.dispatch(savePluginConfig(pluginName, userCfg[pluginName]));
-        } catch(e) {
+        } catch (e) {
             /*eslint-disable */
             alert('Error in JSON');
             /*eslint-enable */
@@ -149,7 +149,7 @@ const startApp = () => {
             })(Template);
             store.dispatch(resetError());
             callback();
-        } catch(e) {
+        } catch (e) {
             store.dispatch(compileError(e.message));
         }
     };
@@ -228,7 +228,7 @@ const startApp = () => {
 
     const renderPage = () => {
         ReactDOM.render(
-            (
+
                 <Provider store={store}>
                     <Localized>
                         <div style={{width: "100%", height: "100%"}}>
@@ -267,7 +267,7 @@ const startApp = () => {
                         </div>
                     </Localized>
                 </Provider>
-            ),
+            ,
             document.getElementById("container"));
     };
 

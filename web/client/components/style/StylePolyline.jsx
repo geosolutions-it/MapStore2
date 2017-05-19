@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -15,19 +16,19 @@ numberLocalizer();
 const {NumberPicker} = require('react-widgets');
 require('react-widgets/lib/less/react-widgets.less');
 
-const StylePolyline = React.createClass({
-    propTypes: {
-        shapeStyle: React.PropTypes.object,
-        setStyleParameter: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            shapeStyle: {},
-            setStyleParameter: () => {}
-        };
-    },
+class StylePolyline extends React.Component {
+    static propTypes = {
+        shapeStyle: PropTypes.object,
+        setStyleParameter: PropTypes.func
+    };
+
+    static defaultProps = {
+        shapeStyle: {},
+        setStyleParameter: () => {}
+    };
+
     render() {
-        return (<Grid fluid={true}>
+        return (<Grid fluid>
                 <Row>
                     <Col xs={4} style={{padding: 0}}>
                         <StyleCanvas style={{ padding: 0, margin: "auto", display: "block"}}
@@ -53,6 +54,6 @@ const StylePolyline = React.createClass({
                 </Row>
                 </Grid>);
     }
-});
+}
 
 module.exports = StylePolyline;

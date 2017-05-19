@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -37,25 +38,25 @@ const LinkedinIcon = generateShareIcon('linkedin');
 const Message = require('../../components/I18N/Message');
 require('./share.css');
 
-const ShareSocials = React.createClass({
-    propTypes: {
-        shareUrl: React.PropTypes.string,
-         getCount: React.PropTypes.func,
-         shareTitle: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            shareTitle: 'GeoSolutions'
-        };
-    },
-  render() {
-      let countProps = {};
-      if (this.props.getCount) {
-          countProps.getCount = this.props.getCount;
-      }
-      const title = this.props.shareTitle;
+class ShareSocials extends React.Component {
+    static propTypes = {
+        shareUrl: PropTypes.string,
+        getCount: PropTypes.func,
+        shareTitle: PropTypes.string
+    };
 
-      return (
+    static defaultProps = {
+        shareTitle: 'GeoSolutions'
+    };
+
+    render() {
+        let countProps = {};
+        if (this.props.getCount) {
+            countProps.getCount = this.props.getCount;
+        }
+        const title = this.props.shareTitle;
+
+        return (
         <div className="social-links">
 
             <h4>
@@ -127,8 +128,8 @@ const ShareSocials = React.createClass({
                 </LinkedinShareCount>
               </div>
       </div>
-    );
-  }
-});
+        );
+    }
+}
 
 module.exports = ShareSocials;

@@ -7,7 +7,7 @@
  */
 var React = require('react');
 
-var Fork = React.createClass({
+class Fork extends React.Component {
     render() {
         return (
             <a href="https://github.com/geosolutions-it/MapStore2">
@@ -15,6 +15,6 @@ var Fork = React.createClass({
             </a>
         );
     }
-});
+}
 
 module.exports = Fork;

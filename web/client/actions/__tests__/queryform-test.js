@@ -308,13 +308,13 @@ describe('Test correctness of the queryform actions', () => {
             try {
                 expect(e).toExist();
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
     });
 
-    /*it('openMenu', () => {
+    /* it('openMenu', () => {
         let retval = openMenu(true, 1);
 
         expect(retval).toExist();

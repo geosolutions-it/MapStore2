@@ -10,8 +10,7 @@ var I18N = require('../../../../components/I18N/I18N');
 var gsLogo = require('../../../assets/img/geosolutions-brand.png');
 var msLogo = require('../../../assets/img/mapstore-logo-0.20.png');
 
-var About = React.createClass({
-
+class About extends React.Component {
     render() {
         return (
                 <div style={{
@@ -47,11 +46,10 @@ var About = React.createClass({
                                 margin: "auto",
                                 maxWidth: "100%"
                             }}
-                            alt="GeoSolutions S.A.S.">
-                        </img>
+                            alt="GeoSolutions S.A.S." />
                     </a>
                 </div>);
     }
-});
+}
 
 module.exports = About;

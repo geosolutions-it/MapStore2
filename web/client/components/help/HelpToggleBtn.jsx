@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -14,27 +15,28 @@ require("./help.css");
 /**
  * A toggle button class for enabling / disabling help modus
  */
-let HelpToggleBtn = React.createClass({
-    propTypes: {
-        key: React.PropTypes.string,
-        isButton: React.PropTypes.bool,
-        glyphicon: React.PropTypes.string,
-        pressed: React.PropTypes.bool,
-        changeHelpState: React.PropTypes.func,
-        changeHelpwinVisibility: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            key: 'helpButton',
-            isButton: true,
-            glyphicon: 'question-sign'
-        };
-    },
-    onClick: function() {
+class HelpToggleBtn extends React.Component {
+    static propTypes = {
+        key: PropTypes.string,
+        isButton: PropTypes.bool,
+        glyphicon: PropTypes.string,
+        pressed: PropTypes.bool,
+        changeHelpState: PropTypes.func,
+        changeHelpwinVisibility: PropTypes.func
+    };
+
+    static defaultProps = {
+        key: 'helpButton',
+        isButton: true,
+        glyphicon: 'question-sign'
+    };
+
+    onClick = () => {
         this.props.changeHelpState(!this.props.pressed);
         this.props.changeHelpwinVisibility(false);
-    },
-    render: function() {
+    };
+
+    render() {
         return (
             <ToggleButton
                 key={this.props.key}
@@ -44,6 +46,6 @@ let HelpToggleBtn = React.createClass({
                 onClick={this.onClick}/>
         );
     }
-});
+}
 
 module.exports = HelpToggleBtn;

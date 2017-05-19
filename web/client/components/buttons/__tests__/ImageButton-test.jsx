@@ -89,7 +89,7 @@ describe('ImageButton', () => {
             onclick() {}
         };
         let spy = expect.spyOn(handlers, "onclick");
-        const btn = ReactDOM.render(<ImageButton disabled={true} onClick={handlers.onclick}/>, document.getElementById("container"));
+        const btn = ReactDOM.render(<ImageButton disabled onClick={handlers.onclick}/>, document.getElementById("container"));
         expect(btn).toExist();
 
         const btnDiv = ReactDOM.findDOMNode(btn);
@@ -103,7 +103,7 @@ describe('ImageButton', () => {
             onclick() {}
         };
         let spy = expect.spyOn(handlers, "onclick");
-        const btn = ReactDOM.render(<ImageButton disabled={true} onClick={handlers.onclick}
+        const btn = ReactDOM.render(<ImageButton disabled onClick={handlers.onclick}
             style={{cursor: "none"}}/>, document.getElementById("container"));
         expect(btn).toExist();
 
