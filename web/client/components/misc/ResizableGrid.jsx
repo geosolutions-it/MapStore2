@@ -11,28 +11,24 @@ const ReactDataGrid = require('react-data-grid');
  * Component for rendering a feature grid.
  * @memberof components.ResizableGrid
  * @class
- * @prop {boolean} autoHeight if true it calculates the available height for the grid
- * @prop {boolean} autoWidth if true it sets the minWidth available width for the grid
- * @prop {object[]} columns the columns rendered in the header. Each object is composed by key,name,resizable
- * @prop {number} headerRowHeight the height in pixels of the rows in the header
- * @prop {number} minHeight the min height of the grid container
- * @prop {number} minWidth the min width of the grid container
+ * @prop {object[]} columns. The columns rendered in the header. Each object is composed by key,name,[reizable=true|false].
+ * @prop {number} headerRowHeight the height in pixels of the rows in the header. Default 55
+ * @prop {number} minHeight the min height of the grid container. Default 250
+ * @prop {number} minWidth the min width of the grid container.
  * @prop {string} refGrid the reference to the react-data-grid-component
- * @prop {number} rowHeight the height of the rows in the grid
- * @prop {string} rowKey the key used to distinguish rows
- * @prop {object} rows. The features passed to the grid
- * @prop {number} size. The size of the dock panel wrapping this component
+ * @prop {number} rowHeight the height of the rows in the grid. Default 30
+ * @prop {string} rowKey the key used to distinguish rows.
+ * @prop {object} rowSelection The object used to handle selection of rows. It puts a column of check as the first row.
+ * @prop {object[]} rows. The features passed to the grid.
+ * @prop {number} size. The size of the dock panel wrapping this component.
  *
  */
 const ResizableGrid = React.createClass({
     propTypes: {
-        autoWidth: React.PropTypes.bool,
-        autoHeight: React.PropTypes.bool,
         columns: React.PropTypes.array.isRequired,
         headerRowHeight: React.PropTypes.number,
         minHeight: React.PropTypes.number.isRequired,
         minWidth: React.PropTypes.number,
-        onMount: React.PropTypes.func,
         refGrid: React.PropTypes.string,
         rowHeight: React.PropTypes.number.isRequired,
         rowKey: React.PropTypes.string,
@@ -45,8 +41,6 @@ const ResizableGrid = React.createClass({
     },
     getDefaultProps() {
         return {
-            autoWidth: true,
-            autoHeight: true,
             columns: [],
             headerRowHeight: 55,
             minHeight: 250,
@@ -55,8 +49,7 @@ const ResizableGrid = React.createClass({
             rowHeight: 30,
             rowKey: "id",
             rowSelection: null,
-            rows: [],
-            onMount: () => {}
+            rows: []
         };
     },
     getInitialState() {
@@ -66,9 +59,14 @@ const ResizableGrid = React.createClass({
         };
     },
     componentWillReceiveProps(newProps) {
-        if (this.props.size !== newProps.size) {
+        if (this.props.size.width !== newProps.size.width ) {
             this.setState({
-                minWidth: newProps.size.width ? this.getWidth(this.refs.grid) : null,
+                minWidth: this.getWidth(this.refs.grid),
+                minHeight: this.getHeight(this.refs.grid)}
+            );
+        }
+        if (this.props.size.height !== newProps.size.height ) {
+            this.setState({
                 minHeight: this.getHeight(this.refs.grid)}
             );
         }

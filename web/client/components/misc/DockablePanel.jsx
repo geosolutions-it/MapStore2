@@ -14,14 +14,14 @@ const Dock = require('react-dock');
  * @prop {string} id. The <div> id value of the dockable panel
  * @prop {string} dimMode. If none - content is not dimmed, if transparent - pointer events are disabled (so you can click through it), if opaque - click on dim area closes the dock. Default is none
  * @prop {number} dockSize. Size of dock panel (width or height, depending on position). Is a % value [0~1]
- * @prop {bool} isVisible. If true, dock is visible
- * @prop {number} maxDockSize. The maximum extension in %
- * @prop {number} minDockSize. The minimum extension in %
+ * @prop {bool} isVisible. If true, dock is visible. Default is true.
+ * @prop {number} maxDockSize. The maximum extension in %. Default 1.0
+ * @prop {number} minDockSize. The minimum extension in %. Default 0.1
  * @prop {string} position. Side to dock (left, right, top or bottom). Default is bottom.
- * @prop {bool} fluid. If true, resize dock proportionally on window resize.
+ * @prop {bool} fluid. If true, resize dock proportionally on window resize. Default is true.
  * @prop {function} setDockSize. The metod called when the dockable panel is resized
  * @prop {object} toolbar. it contains the toolbar
- * @prop {object} toolbarHeight. the height of the toolbar in px
+ * @prop {object} toolbarHeight. the height of the toolbar in px. Default 40
  * @prop {object} wrappedComponent. A connected Component to be rendered inside the dock panel
  * @prop {number} zIndex. Positioned below dialogs, above left menu
  *
@@ -56,7 +56,7 @@ const DockablePanel = React.createClass({
             position: "bottom",
             setDockSize: () => {},
             toolbar: null,
-            toolbarHeight: 60,
+            toolbarHeight: 40,
             wrappedComponent: {},
             zIndex: 1030
         };
