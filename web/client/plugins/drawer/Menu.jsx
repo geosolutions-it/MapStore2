@@ -50,16 +50,13 @@ class Menu extends React.Component {
     }
 
     renderChildren = (child, index) => {
-        let props = {
+        const props = {
             key: child.key ? child.key : index,
             ref: child.ref,
-            open: this.props.activeKey && this.props.activeKey === child.props.eventKey,
-            icon: ""
+            open: this.props.activeKey && this.props.activeKey === child.props.eventKey
         };
-        return React.cloneElement(
-          child,
-          props
-        );
+        const {glyph, icon, buttonConfig, ...childProps} = child.props;
+        return <child.type {...props} {...childProps}></child.type>;
     };
 
     renderButtons = () => {

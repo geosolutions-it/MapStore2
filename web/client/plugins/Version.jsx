@@ -53,7 +53,7 @@ class Empty extends React.Component {
 module.exports = {
     VersionPlugin: assign(Empty, {
         Settings: {
-            tool: <Version/>,
+            tool: <Version key="version"/>,
             position: 4
         }
     }),

@@ -12,17 +12,20 @@ const {connect} = require('react-redux');
 
 require('./toolbar/assets/css/toolbar.css');
 
-const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
+const {CSSTransitionGroup} = require('react-transition-group');
 
 const assign = require('object-assign');
 
 const ToolsContainer = require('./containers/ToolsContainer');
 
-const AnimatedContainer = connect(() => ({
-    transitionName: "toolbarexpand",
-    transitionEnterTimeout: 500,
-    transitionLeaveTimeout: 300
-}))(ReactCSSTransitionGroup);
+class AnimatedContainer extends React.Component {
+    render() {
+        const {children, ...props} = this.props;
+        return (<CSSTransitionGroup {...props} transitionName="toolbarexpand" transitionEnterTimeout={500} transitionLeaveTimeout={300}>
+            {children}
+        </CSSTransitionGroup>);
+    }
+}
 
 class Toolbar extends React.Component {
     static propTypes = {

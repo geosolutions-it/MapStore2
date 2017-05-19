@@ -86,7 +86,7 @@ class SettingsButton extends React.Component {
 
     renderSettings = () => {
         const settingsFirst = {
-            language: <span><label><Message msgId="language" /></label> <LangBar key="langSelector"/></span>
+            language: <span key="language-label"><label><Message msgId="language" /></label> <LangBar key="langSelector"/></span>
         };
         const settingsLast = {
             history: <HistoryBar
