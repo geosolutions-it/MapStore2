@@ -20,9 +20,10 @@ function startTutorial() {
     };
 }
 
-function setupTutorial(steps, style, checkbox, defaultStep) {
+function setupTutorial(id, steps, style, checkbox, defaultStep) {
     return {
         type: SETUP_TUTORIAL,
+        id,
         steps,
         style,
         checkbox,

@@ -896,6 +896,10 @@
                     "title": "Applicazioni personalizzate",
                     "text": "Puoi utilizzare componenti e plugins di MapStore2 per costruire applicazioni personalizzate"
                 },
+                "introCesium": {
+                    "title": "Istruzioni della mappa 3D",
+                    "text": "Premi il pulsante avanti per aprire il tutorial"
+                },
                 "cesium": {
                     "title": "Interazioni con la mappa",
                     "pan": "Vista Pan",

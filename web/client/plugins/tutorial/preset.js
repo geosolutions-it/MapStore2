@@ -7,7 +7,9 @@
  */
 
 module.exports = {
-    map: require('./preset/map'),
-    home: require('./preset/home'),
-    mapMobile: require('./preset/mapMobile')
+    default_tutorial: require('./preset/default_tutorial'),
+    default_mobile_tutorial: require('./preset/default_mobile_tutorial'),
+    home_tutorial: require('./preset/home_tutorial'),
+    cesium_tutorial: require('./preset/cesium_tutorial'),
+    cesium_mobile_tutorial: require('./preset/cesium_mobile_tutorial')
 };
