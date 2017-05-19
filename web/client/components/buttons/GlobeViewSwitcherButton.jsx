@@ -82,7 +82,7 @@ const GlobeViewSwitcherButton = React.createClass({
          ].reduce((result, key) => { result[key] = this.props[key]; return result; }, {});
     },
     render() {
-        return <ToggleButton {...this.getButtonProperties()} pressed={this.props.active} tooltip={<Tooltip><Message msgId={this.props.active ? this.props.activeTooltip : this.props.notActiveTooltip}/></Tooltip>} />;
+        return <ToggleButton {...this.getButtonProperties()} pressed={this.props.active} tooltip={<Tooltip id="globeViewSwitcher-tooltip"><Message msgId={this.props.active ? this.props.activeTooltip : this.props.notActiveTooltip}/></Tooltip>} />;
     }
 });
 

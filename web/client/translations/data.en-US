@@ -46,6 +46,10 @@
             "featureTypeError": "Cannot load layer attributes",
             "elevation": "Elevation"
         },
+        "dock": {
+            "row": "{rowsSelected} row selected",
+            "rows": "{rowsSelected} rows selected"
+        },
         "globeswitcher": {
             "tooltipDeactivate": "Exit 3D Mode",
             "tooltipActivate": "Enter 3D Mode"

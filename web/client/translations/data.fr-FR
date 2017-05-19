@@ -46,6 +46,10 @@
             "featureTypeError": "Impossible de charger les attributs de calque",
             "elevation": "élévation"
         },
+        "dock": {
+            "row": "{rowsSelected} ligne sélectionné",
+            "rows": "{rowsSelected} lignes sélectionné"
+        },
         "globeswitcher": {
             "tooltipDeactivate": "Sortie en mode 3D",
             "tooltipActivate": "Entrez le mode 3D"

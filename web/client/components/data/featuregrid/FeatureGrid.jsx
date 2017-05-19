@@ -188,7 +188,7 @@ const FeatureGrid = React.createClass({
                 flexDirection: "column",
                 height: "100%"
             }}>
-                <div fluid={false} style={this.props.style} className="ag-fresh">
+                <div style={this.props.style} className="ag-fresh">
                     <AgGridReact
                         virtualPaging={this.props.virtualPaging}
                         columnDefs={this.setColumnDefs()}

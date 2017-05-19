@@ -46,6 +46,10 @@
             "featureTypeError": "Impossibile caricare gli attributi del layer",
             "elevation": "Elevazione"
         },
+        "dock": {
+            "row": "{rowsSelected} riga selezionata",
+            "rows": "{rowsSelected} righe selezionate"
+        },
         "globeswitcher": {
             "tooltipDeactivate": "Disattiva la modalità 3D",
             "tooltipActivate": "Attiva la modalità 3D"
