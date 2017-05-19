@@ -28,7 +28,8 @@ const initialState = {
     disabled: false,
     status: 'close',
     stepIndex: 0,
-    tourAction: 'next'
+    tourAction: 'next',
+    id: ''
 };
 
 function tutorial(state = initialState, action) {
@@ -42,6 +43,12 @@ function tutorial(state = initialState, action) {
         case SETUP_TUTORIAL:
             let setup = {};
             setup.steps = [].concat(action.steps);
+            setup.id = action.id;
+            setup.checkbox = action.checkbox ? action.checkbox : assign({}, state.checkbox);
+            setup.style = action.style ? action.style : assign({}, state.style);
+            setup.defaultStep = action.defaultStep ? action.defaultStep : assign({}, state.defaultStep);
+            setup.disabled = false;
+
             setup.steps = setup.steps.filter((step) => {
                 return step.selector && step.selector.substring(0, 1) === '#' || step.selector.substring(0, 1) === '.';
             }).map((step, index) => {
@@ -51,11 +58,11 @@ function tutorial(state = initialState, action) {
                 let text = step.text ? step.text : '';
                 text = step.translation ? <I18N.Message msgId = {"tutorial." + step.translation + ".text"}/> : text;
                 text = step.translationHTML ? <I18N.HTML msgId = {"tutorial." + step.translationHTML + ".text"}/> : text;
-                text = (step.selector === '#intro-tutorial') ? <div><div>{text}</div>{action.checkbox}</div> : text;
-                let style = (step.selector === '#intro-tutorial') ? action.style : {};
+                text = (step.selector === '#intro-tutorial') ? <div><div>{text}</div>{setup.checkbox}</div> : text;
+                let style = (step.selector === '#intro-tutorial') ? setup.style : {};
                 let isFixed = (step.selector === '#intro-tutorial') ? true : step.isFixed || false;
                 assign(style, step.style);
-                return assign({}, action.defaultStep, step, {
+                return assign({}, setup.defaultStep, step, {
                     index,
                     title,
                     text,
@@ -64,7 +71,7 @@ function tutorial(state = initialState, action) {
                 });
             });
 
-            const isDisabled = localStorage.getItem('mapstore.plugin.tutorial.disabled');
+            const isDisabled = localStorage.getItem('mapstore.plugin.tutorial.' + action.id + '.disabled');
             let hasIntro = false;
             setup.steps.forEach((step) => {
                 if (step.selector === '#intro-tutorial') {
@@ -80,7 +87,7 @@ function tutorial(state = initialState, action) {
                 setup.steps = setup.steps.filter((step) => {
                     return step.selector !== '#intro-tutorial';
                 }).map((step, index) => {
-                    return assign(step, {index});
+                    return assign({}, step, {index});
                 });
 
                 setup.run = false;
@@ -106,7 +113,7 @@ function tutorial(state = initialState, action) {
                     update.steps = update.steps.filter((step) => {
                         return step.selector !== '#intro-tutorial';
                     }).map((step, index) => {
-                        return assign(step, {index});
+                        return assign({}, step, {index});
                     });
                 } else if (action.tour.type === 'error:target_not_found') {
                     update.status = 'error';
@@ -118,7 +125,7 @@ function tutorial(state = initialState, action) {
             return assign({}, state, update);
         case DISABLE_TUTORIAL:
             let disabled = !state.disabled;
-            localStorage.setItem('mapstore.plugin.tutorial.disabled', disabled);
+            localStorage.setItem('mapstore.plugin.tutorial.' + state.id + '.disabled', disabled);
             return assign({}, state, {
                 disabled
             });

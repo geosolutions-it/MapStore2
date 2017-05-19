@@ -34,13 +34,15 @@ describe('Test the tutorial actions', () => {
     });
 
     it('setupTutorial', () => {
+        const id = 'id';
         const steps = 'steps';
         const style = 'style';
         const checkbox = 'checkbox';
         const defaultStep = 'defaultStep';
-        const retval = setupTutorial(steps, style, checkbox, defaultStep);
+        const retval = setupTutorial(id, steps, style, checkbox, defaultStep);
         expect(retval).toExist();
         expect(retval.type).toBe(SETUP_TUTORIAL);
+        expect(retval.id).toBe(id);
         expect(retval.steps).toBe(steps);
         expect(retval.style).toBe(style);
         expect(retval.checkbox).toBe(checkbox);

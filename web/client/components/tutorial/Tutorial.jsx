@@ -77,7 +77,7 @@ const Tutorial = React.createClass({
         return {
             toggle: false,
             status: 'run',
-            preset: 'map',
+            preset: 'default_tutorial',
             presetList: {},
             introPosition: (window.innerHeight - 348) / 2,
             rawSteps: [],
@@ -121,7 +121,7 @@ const Tutorial = React.createClass({
     componentWillMount() {
         let rawSteps = this.props.rawSteps.length > 0 ? this.props.rawSteps : this.props.presetList[this.props.preset] || [];
         let checkbox = this.props.showCheckbox ? <div id="tutorial-intro-checkbox-container"><input type="checkbox" id="tutorial-intro-checkbox" className="tutorial-tooltip-intro-checkbox" onChange={this.props.actions.onDisable}/><span><I18N.Message msgId={"tutorial.checkbox"}/></span></div> : <div id="tutorial-intro-checkbox-container"/>;
-        this.props.actions.onSetup(rawSteps, this.props.introStyle, checkbox, this.props.defaultStep);
+        this.props.actions.onSetup('default', rawSteps, this.props.introStyle, checkbox, this.props.defaultStep);
     },
     componentWillUpdate(newProps) {
         if (this.props.steps.length > 0) {

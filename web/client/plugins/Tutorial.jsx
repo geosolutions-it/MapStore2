@@ -16,7 +16,7 @@ const I18N = require('../components/I18N/I18N');
 const {Glyphicon} = require('react-bootstrap');
 const {createSelector} = require('reselect');
 const {tutorialSelector} = require('../selectors/tutorial');
-const {closeTutorialEpic} = require('../epics/tutorial');
+const {closeTutorialEpic, switchTutorialEpic} = require('../epics/tutorial');
 
 /*
     //////////////////////////
@@ -217,6 +217,7 @@ module.exports = {
         tutorial: require('../reducers/tutorial')
     },
     epics: {
-        closeTutorialEpic
+        closeTutorialEpic,
+        switchTutorialEpic
     }
 };

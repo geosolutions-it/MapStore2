@@ -78,7 +78,7 @@
             }, "Home", "TOC", {
                 "name": "Tutorial",
                 "cfg": {
-                    "preset": "mapMobile"
+                    "preset": "default_mobile_tutorial"
                 }
             }, {
                 "name": "Settings",
