@@ -70,10 +70,12 @@ const LocaleUtils = {
         return LocaleUtils.getLocale(url.parse(window.location.href, true).query);
     },
     getLocale: function(query) {
+        const key = Object.keys(supportedLocales)[0];
+        const defaultLocale = supportedLocales.en ? { key: 'en', locale: supportedLocales.en } : { key, locale: supportedLocales[key] };
         let locale = supportedLocales[
-            LocaleUtils.normalizeLocaleCode(query.locale || (navigator ? navigator.language || navigator.browserLanguage : "en"))
+            LocaleUtils.normalizeLocaleCode(query.locale || (navigator ? navigator.language || navigator.browserLanguage : defaultLocale.key))
         ];
-        return locale ? locale.code : "en-US";
+        return locale ? locale.code : defaultLocale.locale.code;
     },
     getSupportedLocales: function() {
         return supportedLocales;
