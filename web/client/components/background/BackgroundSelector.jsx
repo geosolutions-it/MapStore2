@@ -113,12 +113,11 @@ const BackgroundSelector = React.createClass({
         const buttonSizeWithMargin = side + frame + margin * 2;
 
         const listContainerStyle = configuration.vertical ? {
-            bottom: this.props.bottom + buttonSizeWithMargin,
+            bottom: buttonSizeWithMargin,
             left: this.props.left,
             width: buttonSizeWithMargin,
             height: listSize
         } : {
-            bottom: this.props.bottom,
             left: this.props.left + sideButton + margin * 2 + frame,
             width: listSize,
             height: buttonSize
