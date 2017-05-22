@@ -54,7 +54,8 @@ var DefaultLayer = React.createClass({
         groups: React.PropTypes.array,
         currentZoomLvl: React.PropTypes.number,
         scales: React.PropTypes.array,
-        additionalTools: React.PropTypes.array
+        additionalTools: React.PropTypes.array,
+        legendOptions: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -145,7 +146,7 @@ var DefaultLayer = React.createClass({
         }
         return (<div position="collapsible" className="collapsible-toc">
              <div style={{minHeight: "35px"}}>{tools}</div>
-             <div><WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales}/></div>
+             <div><WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales} {...this.props.legendOptions}/></div>
         </div>);
     },
     renderTools() {
