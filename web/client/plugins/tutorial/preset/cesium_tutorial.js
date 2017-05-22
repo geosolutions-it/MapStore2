@@ -26,10 +26,6 @@ module.exports = [
         selector: '#distanceLegendDiv .compass'
     },
     {
-        translation: 'cesiumNavigation',
-        selector: '#distanceLegendDiv .navigation-controls'
-    },
-    {
         translationHTML: 'drawerMenu',
         selector: '#drawer-menu-button'
     },
