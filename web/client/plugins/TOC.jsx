@@ -296,13 +296,15 @@ const LayerTree = React.createClass({
  * this example is to make the legend scrollable horizontally
  * ```
  * "layerOptions": {
- *  "legendContainerStyle": {
+ *  "legendOptions": {
+ *    "legendContainerStyle": {
  *     "overflowX": "auto"
  *    },
  *    "legendStyle": {
  *      "maxWidth": "250%"
+ *    }
  *   }
- * }
+ *  }
 ```
  */
 const TOCPlugin = connect(tocSelector, {
