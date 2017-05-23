@@ -12,6 +12,7 @@ const Legend = React.createClass({
         legendHeigth: React.PropTypes.number,
         legendWidth: React.PropTypes.number,
         legendOptions: React.PropTypes.string,
+        style: React.PropTypes.object,
         currentZoomLvl: React.PropTypes.number,
         scales: React.PropTypes.array
     },
@@ -19,7 +20,8 @@ const Legend = React.createClass({
         return {
             legendHeigth: 12,
             legendWidth: 12,
-            legendOptions: "forceLabels:on;fontSize:10"
+            legendOptions: "forceLabels:on;fontSize:10",
+            style: {maxWidth: "100%"}
         };
     },
    render() {
@@ -53,7 +55,7 @@ const Legend = React.createClass({
                pathname: urlObj.pathname,
                query: query
            });
-           return <img src={legendUrl} style={{maxWidth: "100%"}}/>;
+           return <img src={legendUrl} style={this.props.style}/>;
        }
        return null;
    }
