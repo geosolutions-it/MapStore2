@@ -38,8 +38,7 @@ module.exports = {
         ExpanderPlugin: require('../../plugins/Expander'),
         SharePlugin: require('../../plugins/Share'),
         HomePlugin: require('../../plugins/Home'),
-        LoginPlugin: require('../../plugins/Login'),
-        VectorStylerPlugin: require('../../plugins/VectorStyler')
+        LoginPlugin: require('../../plugins/Login')
     },
     requires: {}
 };
