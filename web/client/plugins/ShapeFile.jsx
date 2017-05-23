@@ -26,7 +26,7 @@ module.exports = {
 
             const ShapeFilePlugin = connect((state) => (
             {
-                visible: state.controls && state.controls.shapefile && state.controls.shapefile.enabled,
+                visible: state.controls && state.controls.shapefile && state.controls.shapefile.enabled || state.controls && state.controls.toolbar && state.controls.toolbar.active === 'shapefile',
                 layers: state.shapefile && state.shapefile.layers || null,
                 selected: state.shapefile && state.shapefile.selected || null,
                 bbox: state.shapefile && state.shapefile.bbox || null,
@@ -58,7 +58,7 @@ module.exports = {
             help: <Message msgId="helptexts.shapefile"/>,
             title: "shapefile.title",
             tooltip: "shapefile.tooltip",
-            wrap: true,
+            wrap: false,
             icon: <Glyphicon glyph="open-file"/>,
             exclusive: true,
             priority: 1
