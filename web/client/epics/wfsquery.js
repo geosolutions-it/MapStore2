@@ -238,12 +238,12 @@ const viewportSelectedEpic = (action$, store) =>
     action$.ofType(SELECT_VIEWPORT_SPATIAL_METHOD, CHANGE_MAP_VIEW)
         .switchMap((action) => {
             // calculate new geometry from map properties only for viewport
-            const map = action.type === CHANGE_MAP_VIEW ? action : store.getState().map.present;
+            const map = action.type === CHANGE_MAP_VIEW ? action : store.getState().map.present || store.getState().map;
             if (action.type === SELECT_VIEWPORT_SPATIAL_METHOD ||
                 action.type === CHANGE_MAP_VIEW &&
                 store.getState().queryform &&
                 store.getState().queryform.spatialField &&
-                store.getState().queryform.spatialField.method === "viewport") {
+                store.getState().queryform.spatialField.method === "Viewport") {
                 const bounds = Object.keys(map.bbox.bounds).reduce((p, c) => {
                     return assign({}, p, {[c]: parseFloat(map.bbox.bounds[c])});
                 }, {});

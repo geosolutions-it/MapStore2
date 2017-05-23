@@ -9,6 +9,8 @@
 var DebugUtils = require('../../../utils/DebugUtils');
 
 const {combineReducers} = require('redux');
+const {createEpicMiddleware, combineEpics} = require('redux-observable');
+const {viewportSelectedEpic} = require('../../../epics/wfsquery');
 
 // STATE_FIPS	SUB_REGION	STATE_ABBR	LAND_KM	WATER_KM	PERSONS	FAMILIES	HOUSHOLD	MALE	FEMALE	WORKERS	DRVALONE	CARPOOL	PUBTRANS	EMPLOYED	UNEMPLOY	SERVICE	MANUAL	P_MALE	P_FEMALE	SAMP_POP
 
@@ -69,5 +71,8 @@ const reducers = combineReducers({
     query: require('../reducers/query')
 });
 
+const rootEpic = combineEpics(viewportSelectedEpic);
+const epicMiddleware = createEpicMiddleware(rootEpic);
+
 // export the store with the given reducers
-module.exports = DebugUtils.createDebugStore(reducers, {queryform: initialState});
+module.exports = DebugUtils.createDebugStore(reducers, {queryform: initialState}, [epicMiddleware]);
