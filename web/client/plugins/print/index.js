@@ -119,6 +119,7 @@ const Font = connect((state) => ({
     italic: state.print && state.print.spec && state.print.spec.italic
 }), {
     onChangeFamily: setPrintParameter.bind(null, 'fontFamily'),
+    onChangeName: setPrintParameter.bind(null, 'fontName'),
     onChangeSize: setPrintParameter.bind(null, 'fontSize'),
     onChangeBold: setPrintParameter.bind(null, 'bold'),
     onChangeItalic: setPrintParameter.bind(null, 'italic')

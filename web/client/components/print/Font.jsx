@@ -15,6 +15,7 @@ const Font = React.createClass({
         fonts: React.PropTypes.array,
         label: React.PropTypes.string,
         onChangeFamily: React.PropTypes.func,
+        onChangeName: React.PropTypes.func,
         onChangeSize: React.PropTypes.func,
         onChangeBold: React.PropTypes.func,
         onChangeItalic: React.PropTypes.func,
@@ -28,6 +29,7 @@ const Font = React.createClass({
             fonts: ['Verdana', 'Serif', 'SansSerif', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman'],
             label: 'Font',
             onChangeFamily: () => {},
+            onChangeName: () => {},
             onChangeSize: () => {},
             family: '',
             size: 8,
@@ -37,9 +39,10 @@ const Font = React.createClass({
     },
     onChangeFamily(family) {
         this.props.onChangeFamily(family);
+        this.props.onChangeName(family);
     },
-    onChangeSize(size) {
-        this.props.onChangeSize(size);
+    onChangeSize(e) {
+        this.props.onChangeSize(parseFloat(e.target.value));
     },
     render() {
         return (
