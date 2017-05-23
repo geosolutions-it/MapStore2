@@ -37,6 +37,7 @@
             {
                 "name": "BackgroundSelector",
                 "cfg": {
+                    "bottom": 40,
                     "dimensions": {
                     "side": 65,
                     "sidePreview": 65,
@@ -126,7 +127,8 @@
             }, "Login",
             "OmniBar", "BurgerMenu", "Expander", "GlobeViewSwitcher"
         ],
-        "desktop": ["Map", "HelpLink", "Share", "DrawerMenu", "Version", "BackgroundSelector", {
+        "desktop": ["Map", "HelpLink", "Share", "DrawerMenu", "Version", {"name": "BackgroundSelector", "cfg": { "bottom": 40 } },
+            {
                 "name": "Identify",
                 "showIn": ["IdentifyBar", "Settings"],
                 "cfg": {
@@ -223,6 +225,7 @@
               },{
                   "name": "BackgroundSelector",
                   "cfg": {
+                      "bottom": 40,
                       "dimensions": {
                       "side": 65,
                       "sidePreview": 65,
