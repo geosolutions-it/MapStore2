@@ -13,7 +13,7 @@ const {changeLayerProperties} = require('../actions/layers');
 const {createSelector} = require('reselect');
 const {layersSelector} = require('../selectors/layers');
 
-const mapSelector = (state) => (state.map && state.map.present) || {};
+const {mapSelector} = require('../selectors/map');
 const backgroundControlsSelector = (state) => (state.controls && state.controls.backgroundSelector) || {};
 const drawerEnabledControlSelector = (state) => (state.controls && state.controls.drawer && state.controls.drawer.enabled) || false;
 
@@ -61,7 +61,7 @@ const thumbs = {
 
 const backgroundSelector = createSelector([mapSelector, layersSelector, backgroundControlsSelector, drawerEnabledControlSelector],
     (map, layers, controls, drawer) => ({
-        size: map.size || {width: 0, height: 0},
+        size: map && map.size || {width: 0, height: 0},
         layers: layers.filter((layer) => layer.group === "background") || [],
         tempLayer: controls.tempLayer || {},
         currentLayer: controls.currentLayer || {},
