@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const {isString} = require('lodash');
+
 module.exports = {
     /**
      * generates a template string to use for static replacements.
@@ -20,15 +22,17 @@ module.exports = {
             var fn = cache[template];
 
             if (!fn) {
-            // Replace ${expressions} (etc) with ${map.expressions}.
-                let sanitized = template
-                .replace(/\$\{([\s]*[^;\s\{]+[\s]*)\}/g, function(_, match) {
-                    return `\$\{map.${match.trim()}\}`;
-                })
-                // Afterwards, replace anything that's not ${map.expressions}' (etc) with a blank string.
-                .replace(/(\$\{(?!map\.)[^}]+\})/g, '');
+                fn = (map) => {
 
-                fn = Function('map', `return \`${sanitized}\``);
+                    let sanitized = template
+                    .replace(/\$\{([\s]*[^;\s\{]+[\s]*)\}/g, (_, match) => {
+                        return match.trim().split(".").reduce((a, b) => {
+                            return a && a[b];
+                        }, map);
+                    });
+
+                    return isString(sanitized) && sanitized || '';
+                };
                 cache[template] = fn;
 
             }
