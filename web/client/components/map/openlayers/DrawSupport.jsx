@@ -63,6 +63,9 @@ const DrawSupport = React.createClass({
             case ("clean"):
                 this.clean();
                 break;
+            case ("cleanAndContinueDrawing"):
+                this.cleanAndContinueDrawing();
+                break;
             default :
                 return;
         }
@@ -372,6 +375,14 @@ const DrawSupport = React.createClass({
     clean: function() {
         this.removeInteractions();
 
+        if (this.drawLayer) {
+            this.props.map.removeLayer(this.drawLayer);
+            this.geojson = null;
+            this.drawLayer = null;
+            this.drawSource = null;
+        }
+    },
+    cleanAndContinueDrawing: function() {
         if (this.drawLayer) {
             this.props.map.removeLayer(this.drawLayer);
             this.geojson = null;

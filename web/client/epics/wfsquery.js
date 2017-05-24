@@ -271,5 +271,6 @@ module.exports = {
     featureTypeSelectedEpic,
     wfsQueryEpic,
     closeFeatureEpic,
-    viewportSelectedEpic
+    viewportSelectedEpic,
+    getWFSFilterData
 };

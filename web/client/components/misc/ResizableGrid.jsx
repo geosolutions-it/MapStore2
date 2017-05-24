@@ -7,6 +7,7 @@
  */
 const React = require('react');
 const ReactDataGrid = require('react-data-grid');
+
 /**
  * Component for rendering a feature grid.
  * @memberof components.ResizableGrid
@@ -18,6 +19,7 @@ const ReactDataGrid = require('react-data-grid');
  * @prop {string} refGrid the reference to the react-data-grid-component
  * @prop {number} rowHeight the height of the rows in the grid. Default 30
  * @prop {string} rowKey the key used to distinguish rows.
+ * @prop {string} rowGetter method to render a row
  * @prop {object} rowSelection The object used to handle selection of rows. It puts a column of check as the first row.
  * @prop {object[]} rows. The features passed to the grid.
  * @prop {number} size. The size of the dock panel wrapping this component.
@@ -33,6 +35,7 @@ const ResizableGrid = React.createClass({
         rowHeight: React.PropTypes.number.isRequired,
         rowKey: React.PropTypes.string,
         rowSelection: React.PropTypes.object,
+        rowGetter: React.PropTypes.func,
         rows: React.PropTypes.array.isRequired,
         size: React.PropTypes.object
     },
@@ -48,6 +51,7 @@ const ResizableGrid = React.createClass({
             refGrid: "grid",
             rowHeight: 30,
             rowKey: "id",
+            rowGetter: (i) => this.props.rows && this.props.rows.length > 0 ? this.props.rows[i] : {},
             rowSelection: null,
             rows: []
         };
@@ -85,16 +89,13 @@ const ResizableGrid = React.createClass({
                 minHeight={this.state.minHeight || this.props.minHeight}
                 minWidth={this.state.minWidth || this.props.minWidth}
                 ref={this.props.refGrid}
-                rowGetter={this.rowGetter}
+                rowGetter={this.props.rowGetter}
                 rowHeight={this.props.rowHeight}
                 rowKey={this.props.rowKey}
                 rowSelection={this.props.rowSelection}
                 rowsCount={this.props.rows.length}
             />
         );
-    },
-    rowGetter(i) {
-        return this.props.rows[i];
     }
 });
 
