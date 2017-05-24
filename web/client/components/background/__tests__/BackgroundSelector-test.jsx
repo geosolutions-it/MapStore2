@@ -69,11 +69,6 @@ describe("test the BackgroundSelector", () => {
         const node = ReactDOM.findDOMNode(backgroundSelector);
         expect(node).toExist();
 
-        backgroundSelector.componentWillUpdate({size: {width: 1000, height: 400}, drawerEnabled: false});
-        backgroundSelector.componentWillUpdate({size: {width: 900, height: 500}, drawerEnabled: false});
-        backgroundSelector.componentWillUpdate({size: {width: 1000, height: 500}, drawerEnabled: true});
-        backgroundSelector.componentWillUpdate({size: {width: 1000, height: 500}, drawerEnabled: false});
-
         const icons = backgroundSelector.getIcons(5, 5, 5, false);
         expect(icons.length).toBeGreaterThan(0);
 
