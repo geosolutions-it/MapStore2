@@ -70,7 +70,7 @@ const QueryToolbar = React.createClass({
             // fieldsWithoutValues ||
             fieldsExceptions ||
             !this.props.toolbarEnabled ||
-            (!fieldsWithValues && !this.props.spatialField.geometry && this.props.spatialField.method !== 'Viewport');
+            (!fieldsWithValues && !this.props.spatialField.geometry);
         const tooltip = <Tooltip id="query-warning-tooltip"><I18N.Message msgId="queryform.emptyfilter"/></Tooltip>;
         const btn = (<Button disabled={queryDisabled} bsSize="xs" id="query-toolbar-query" onClick={this.search}>
             <Glyphicon glyph="glyphicon glyphicon-search"/>
