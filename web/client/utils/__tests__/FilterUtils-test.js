@@ -332,7 +332,7 @@ describe('FilterUtils', () => {
                     "geometry": {
                         "type": "Point",
                         "projection": "EPSG:4326",
-                        "coordinates": [[[1, 1]]]
+                        "coordinates": [1, 1]
                     }
                 }
         };
@@ -348,7 +348,7 @@ describe('FilterUtils', () => {
                     "geometry": {
                         "type": "Point",
                         "projection": "EPSG:4326",
-                        "coordinates": [[[1, 1]]]
+                        "coordinates": [1, 1]
                     }
                 }
         };
@@ -380,7 +380,7 @@ describe('FilterUtils', () => {
                     "geometry": {
                         "type": "Point",
                         "projection": "EPSG:4326",
-                        "coordinates": [[[1, 1]]]
+                        "coordinates": [1, 1]
                     }
                 }
         };
@@ -396,7 +396,7 @@ describe('FilterUtils', () => {
                     "geometry": {
                         "type": "Point",
                         "projection": "EPSG:4326",
-                        "coordinates": [[[1, 1]]]
+                        "coordinates": [1, 1]
                     }
                 }
         };
@@ -428,7 +428,7 @@ describe('FilterUtils', () => {
                     "geometry": {
                         "type": "Point",
                         "projection": "EPSG:4326",
-                        "coordinates": [[[1, 1]]]
+                        "coordinates": [1, 1]
                     }
                 }
         };

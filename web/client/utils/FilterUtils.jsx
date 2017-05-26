@@ -6,9 +6,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-const {isArray} = require('lodash');
-
+const {processOGCGeometry, closePolygon, pointElement, polygonElement, lineStringElement } = require("./ogc/GML");
 const normalizeVersion = (version) => {
     if (!version) {
         return "2.0";
@@ -359,124 +357,11 @@ const FilterUtils = {
         }
         return filter;
     },
-    closePolygon: function(coords) {
-        if (coords.length >= 3) {
-            const first = coords[0];
-            const last = coords[coords.length - 1];
-            if ((first[0] !== last[0]) || (first[1] !== last[1])) {
-                return coords.concat([coords[0]]);
-            }
-        }
-        return coords;
-    },
-    getGmlPolygonElement: function(coordinates, srsName, version) {
-        let gmlPolygon = '<gml:Polygon';
-
-        gmlPolygon += srsName ? ' srsName="' + srsName + '">' : '>';
-
-        // ///////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Array of LinearRing coordinate array. The first element in the array represents the exterior ring.
-        // Any subsequent elements represent interior rings (or holes).
-        // ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        const normalizedCoords = coordinates.length && isArray(coordinates[0]) && coordinates[0].length && isArray(coordinates[0][0]) ? coordinates : [coordinates];
-        normalizedCoords.forEach((element, index) => {
-            let coords = this.closePolygon(element).map((coordinate) => {
-                return coordinate[0] + (version === "1.0.0" ? "," : " ") + coordinate[1];
-            });
-            const exterior = (version === "1.0.0" ? "outerBoundaryIs" : "exterior");
-            const interior = (version === "1.0.0" ? "innerBoundaryIs" : "exterior");
-            gmlPolygon +=
-                (index < 1 ? '<gml:' + exterior + '>' : '<gml:' + interior + '>') +
-                        '<gml:LinearRing>' +
-                        (version === "1.0.0" ? '<gml:coordinates>' : '<gml:posList>') +
-                                coords.join(" ") +
-                        (version === "1.0.0" ? '</gml:coordinates>' : '</gml:posList>') +
-                        '</gml:LinearRing>' +
-                (index < 1 ? '</gml:' + exterior + '>' : '</gml:' + interior + '>');
-        });
-
-        gmlPolygon += '</gml:Polygon>';
-        return gmlPolygon;
-    },
-    getGmlLineStringElement: function(coordinates, srsName, version) {
-        let gml = '<gml:LineString';
-
-        gml += srsName ? ' srsName="' + srsName + '">' : '>';
-
-        // ///////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Array of LinearRing coordinate array. The first element in the array represents the exterior ring.
-        // Any subsequent elements represent interior rings (or holes).
-        // ///////////////////////////////////////////////////////////////////////////////////////////////////////
-        coordinates.forEach((element) => {
-            let coords = element.map((coordinate) => {
-                return coordinate[0] + (version === "1.0.0" ? "," : " ") + coordinate[1];
-            });
-            gml += (version === "1.0.0" ? '<gml:coordinates>' : '<gml:posList>') +
-                      coords.join(" ") +
-                        (version === "1.0.0" ? '</gml:coordinates>' : '</gml:posList>');
-        });
-
-        gml += '</gml:LineString>';
-        return gml;
-    },
-    processOGCGeometry: function(version, geometry) {
-        let ogc = '';
-        switch (geometry.type) {
-            case "Point":
-                ogc += this.getGmlPointElement(geometry.coordinates,
-                    geometry.projection || "EPSG:4326", version);
-                        break;
-            case "MultiPoint":
-                ogc += '<gml:MultiPoint srsName="' + (geometry.projection || "EPSG:4326") + '">';
-
-                        // //////////////////////////////////////////////////////////////////////////
-                        // Coordinates of a MultiPoint are an array of positions
-                        // //////////////////////////////////////////////////////////////////////////
-                geometry.coordinates.forEach((element) => {
-                    let point = element;
-                    if (point) {
-                        ogc += "<gml:pointMember>";
-                        ogc += this.getGmlPointElement(point, version);
-                        ogc += "</gml:pointMember>";
-                    }
-                });
-
-                ogc += '</gml:MultiPoint>';
-                break;
-            case "LineString":
-                ogc += this.getGmlLineStringElement(geometry.coordinates,
-                  geometry.projection || "EPSG:4326", version);
-                    break;
-            case "Polygon":
-                ogc += this.getGmlPolygonElement(geometry.coordinates,
-                    geometry.projection || "EPSG:4326", version);
-                        break;
-            case "MultiPolygon":
-                        const multyPolygonTagName = version === "2.0" ? "MultiSurface" : "MultiPolygon";
-                        const polygonMemberTagName = version === "2.0" ? "surfaceMembers" : "polygonMember";
-
-                ogc += '<gml:' + multyPolygonTagName + ' srsName="' + (geometry.projection || "EPSG:4326") + '">';
-
-                        // //////////////////////////////////////////////////////////////////////////
-                        // Coordinates of a MultiPolygon are an array of Polygon coordinate arrays
-                        // //////////////////////////////////////////////////////////////////////////
-                geometry.coordinates.forEach((element) => {
-                    let polygon = element;
-                    if (polygon) {
-                        ogc += "<gml:" + polygonMemberTagName + ">";
-                        ogc += this.getGmlPolygonElement(polygon, version);
-                        ogc += "</gml:" + polygonMemberTagName + ">";
-                    }
-                });
-
-                ogc += '</gml:' + multyPolygonTagName + '>';
-                break;
-            default:
-                        break;
-        }
-        return ogc;
-    },
+    closePolygon: closePolygon,
+    getGmlPointElement: pointElement,
+    getGmlPolygonElement: polygonElement,
+    getGmlLineStringElement: lineStringElement,
+    processOGCGeometry,
     processOGCSpatialFilter: function(version, objFilter, nsplaceholder) {
         let ogc = ogcSpatialOperator[objFilter.spatialField.operation].startTag;
         ogc +=
@@ -594,29 +479,6 @@ const FilterUtils = {
     *   }}
     *   }
     */
-    getGmlPointElement: function(coordinates, srsName, version) {
-        let gmlPoint = '<gml:Point srsDimension="2"';
-
-        gmlPoint += srsName ? ' srsName="' + srsName + '">' : '>';
-        const normalizedCoords = coordinates.length && isArray(coordinates[0]) ? coordinates : [coordinates];
-        // ///////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Array of LinearRing coordinate array. The first element in the array represents the exterior ring.
-        // Any subsequent elements represent interior rings (or holes).
-        // ///////////////////////////////////////////////////////////////////////////////////////////////////////
-        normalizedCoords.forEach((element) => {
-            let coords = element.map((coordinate) => {
-                return coordinate[0] + " " + coordinate[1];
-            });
-            if (version === "1.0.0") {
-                gmlPoint += '<gml:coord><X>' + element[0][0] + '</X><Y>' + element[0][1] + '</Y></gml:coord>';
-            } else {
-                gmlPoint += '<gml:pos>' + coords.join(" ") + '</gml:pos>';
-            }
-        });
-
-        gmlPoint += '</gml:Point>';
-        return gmlPoint;
-    },
     processOGCCrossLayerFilter: function(crossLayerFilter, nsplaceholderparams) {
         let ogc = ogcSpatialOperator[crossLayerFilter.operation].startTag;
         let nsplaceholder = nsplaceholderparams || "ogc";
