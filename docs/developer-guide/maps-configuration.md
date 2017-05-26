@@ -24,10 +24,8 @@ i.e.
 > ``{
     "url": "http..."
     "format": "image/png8"
-    "type": "osm",
     "title": "Open Street Map",
     "name": "mapnik",
-    "source": "osm",
     "group": "background",
     "visibility": false
 }``
