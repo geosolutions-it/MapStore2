@@ -39,6 +39,7 @@ const ResizableGrid = React.createClass({
         selectBy: React.PropTypes.object,
         rows: React.PropTypes.array.isRequired,
         size: React.PropTypes.object,
+        onCellsSelected: React.PropTypes.func,
         onRowsSelected: React.PropTypes.func,
         onRowsDeselected: React.PropTypes.func
     },
