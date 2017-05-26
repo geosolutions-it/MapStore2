@@ -36,8 +36,11 @@ const ResizableGrid = React.createClass({
         rowKey: React.PropTypes.string,
         rowSelection: React.PropTypes.object,
         rowGetter: React.PropTypes.func,
+        selectBy: React.PropTypes.object,
         rows: React.PropTypes.array.isRequired,
-        size: React.PropTypes.object
+        size: React.PropTypes.object,
+        onRowsSelected: React.PropTypes.func,
+        onRowsDeselected: React.PropTypes.func
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -51,8 +54,11 @@ const ResizableGrid = React.createClass({
             refGrid: "grid",
             rowHeight: 30,
             rowKey: "id",
-            rowGetter: (i) => this.props.rows && this.props.rows.length > 0 ? this.props.rows[i] : {},
             rowSelection: null,
+            rowGetter: null,
+            selectBy: null,
+            onRowsSelected: () => {},
+            onRowsDeselected: () => {},
             rows: []
         };
     },
@@ -89,13 +95,22 @@ const ResizableGrid = React.createClass({
                 minHeight={this.state.minHeight || this.props.minHeight}
                 minWidth={this.state.minWidth || this.props.minWidth}
                 ref={this.props.refGrid}
-                rowGetter={this.props.rowGetter}
+                rowGetter={this.props.rowGetter || this.rowGetter}
                 rowHeight={this.props.rowHeight}
                 rowKey={this.props.rowKey}
-                rowSelection={this.props.rowSelection}
+                rowSelection={{
+                    showCheckbox: this.props.rowSelection.showCheckbox,
+                    enableShiftSelect: true,
+                    onRowsSelected: this.props.onRowsSelected,
+                    onRowsDeselected: this.props.onRowsDeselected,
+                    selectBy: this.props.selectBy
+                }}
                 rowsCount={this.props.rows.length}
             />
         );
+    },
+    rowGetter(i) {
+        return this.props.rows[i];
     }
 });
 
