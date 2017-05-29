@@ -165,9 +165,9 @@
                 "cfg": {
                     "wrap": true,
                     "initialCatalogURL": {
-                        "csw": "http://demo.geo-solutions.it/geoserver/csw",
-                        "wms": "http://demo.geo-solutions.it/geoserver/wms",
-                        "wmts": "http://demo.geo-solutions.it/geoserver/gwc/service/wmts"
+                        "csw": "https://demo.geo-solutions.it/geoserver/csw",
+                        "wms": "https://demo.geo-solutions.it/geoserver/wms",
+                        "wmts": "https://demo.geo-solutions.it/geoserver/gwc/service/wmts"
                     }
                 }
             }, "About", "MousePosition", {
