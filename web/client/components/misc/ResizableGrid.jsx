@@ -7,6 +7,7 @@
  */
 const React = require('react');
 const ReactDataGrid = require('react-data-grid');
+
 /**
  * Component for rendering a feature grid.
  * @memberof components.ResizableGrid
@@ -18,6 +19,7 @@ const ReactDataGrid = require('react-data-grid');
  * @prop {string} refGrid the reference to the react-data-grid-component
  * @prop {number} rowHeight the height of the rows in the grid. Default 30
  * @prop {string} rowKey the key used to distinguish rows.
+ * @prop {string} rowGetter method to render a row
  * @prop {object} rowSelection The object used to handle selection of rows. It puts a column of check as the first row.
  * @prop {object[]} rows. The features passed to the grid.
  * @prop {number} size. The size of the dock panel wrapping this component.
@@ -33,8 +35,13 @@ const ResizableGrid = React.createClass({
         rowHeight: React.PropTypes.number.isRequired,
         rowKey: React.PropTypes.string,
         rowSelection: React.PropTypes.object,
+        rowGetter: React.PropTypes.func,
+        selectBy: React.PropTypes.object,
         rows: React.PropTypes.array.isRequired,
-        size: React.PropTypes.object
+        size: React.PropTypes.object,
+        onCellsSelected: React.PropTypes.func,
+        onRowsSelected: React.PropTypes.func,
+        onRowsDeselected: React.PropTypes.func
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -49,6 +56,10 @@ const ResizableGrid = React.createClass({
             rowHeight: 30,
             rowKey: "id",
             rowSelection: null,
+            rowGetter: null,
+            selectBy: null,
+            onRowsSelected: () => {},
+            onRowsDeselected: () => {},
             rows: []
         };
     },
@@ -85,10 +96,16 @@ const ResizableGrid = React.createClass({
                 minHeight={this.state.minHeight || this.props.minHeight}
                 minWidth={this.state.minWidth || this.props.minWidth}
                 ref={this.props.refGrid}
-                rowGetter={this.rowGetter}
+                rowGetter={this.props.rowGetter || this.rowGetter}
                 rowHeight={this.props.rowHeight}
                 rowKey={this.props.rowKey}
-                rowSelection={this.props.rowSelection}
+                rowSelection={{
+                    showCheckbox: this.props.rowSelection.showCheckbox,
+                    enableShiftSelect: true,
+                    onRowsSelected: this.props.onRowsSelected,
+                    onRowsDeselected: this.props.onRowsDeselected,
+                    selectBy: this.props.selectBy
+                }}
                 rowsCount={this.props.rows.length}
             />
         );
