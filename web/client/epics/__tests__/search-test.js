@@ -146,7 +146,7 @@ describe('search Epics', () => {
         expect(actions.filter(m => m.type === TEXT_SEARCH_TEXT_CHANGE)[0].searchText).toBe(TEXT);
     });
 
-    it('testing the geometry service', (done) => {
+    it('geometry service', (done) => {
         // use the done function for asynchronus calls
         const itemWithoutGeom = {
               "type": "Feature",
@@ -192,6 +192,6 @@ describe('search Epics', () => {
 
             done();
             // setting 0 as delay arises script error
-        }, 300);
+        }, 500);
     });
 });
