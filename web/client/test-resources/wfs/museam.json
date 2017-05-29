@@ -1,0 +1,29 @@
+{
+  "type":"FeatureCollection",
+  "totalFeatures":6,
+  "features":[
+    {
+      "type":"Feature",
+      "id":"poi.1",
+      "geometry":{
+        "type":"Point",
+        "coordinates":[
+          -74.0104611,
+          40.70758763
+        ]
+      },
+      "geometry_name":"the_geom",
+      "properties":{
+        "NAME":"museam",
+        "THUMBNAIL":"pics/22037827-Ti.jpg",
+        "MAINPAGE":"pics/22037827-L.jpg"
+      }
+    }
+  ],
+  "crs":{
+    "type":"name",
+    "properties":{
+      "name":"urn:ogc:def:crs:EPSG::4326"
+    }
+  }
+}
