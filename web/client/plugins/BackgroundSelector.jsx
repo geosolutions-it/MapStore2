@@ -13,13 +13,14 @@ const {changeLayerProperties} = require('../actions/layers');
 const {createSelector} = require('reselect');
 const {layersSelector} = require('../selectors/layers');
 
-const mapSelector = (state) => (state.map && state.map.present) || {};
+const {mapSelector} = require('../selectors/map');
 const backgroundControlsSelector = (state) => (state.controls && state.controls.backgroundSelector) || {};
 const drawerEnabledControlSelector = (state) => (state.controls && state.controls.drawer && state.controls.drawer.enabled) || false;
 
 const HYBRID = require('./background/assets/img/HYBRID.jpg');
 const ROADMAP = require('./background/assets/img/ROADMAP.jpg');
 const TERRAIN = require('./background/assets/img/TERRAIN.jpg');
+const SATELLITE = require('./background/assets/img/SATELLITE.jpg');
 const Aerial = require('./background/assets/img/Aerial.jpg');
 const mapnik = require('./background/assets/img/mapnik.jpg');
 const mapquestOsm = require('./background/assets/img/mapquest-osm.jpg');
@@ -33,7 +34,8 @@ const thumbs = {
     google: {
         HYBRID,
         ROADMAP,
-        TERRAIN
+        TERRAIN,
+        SATELLITE
     },
     bing: {
         Aerial,
@@ -59,13 +61,12 @@ const thumbs = {
 
 const backgroundSelector = createSelector([mapSelector, layersSelector, backgroundControlsSelector, drawerEnabledControlSelector],
     (map, layers, controls, drawer) => ({
-        size: map.size || {width: 0, height: 0},
+        size: map && map.size || {width: 0, height: 0},
         layers: layers.filter((layer) => layer.group === "background") || [],
         tempLayer: controls.tempLayer || {},
         currentLayer: controls.currentLayer || {},
         start: controls.start || 0,
-        enabled: controls.enabled && !drawer,
-        thumbs
+        enabled: controls.enabled && !drawer
     }));
 
 /**
@@ -99,7 +100,16 @@ const BackgroundSelectorPlugin = connect(backgroundSelector, {
     onToggle: toggleControl.bind(null, 'backgroundSelector', null),
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start')
-})(require('../components/background/BackgroundSelector'));
+}, (stateProps, dispatchProps, ownProps) => ({
+        ...stateProps,
+        ...dispatchProps,
+        ...ownProps,
+        thumbs: {
+            ...thumbs,
+            ...ownProps.thumbs
+        }
+    })
+)(require('../components/background/BackgroundSelector'));
 
 module.exports = {
     BackgroundSelectorPlugin,

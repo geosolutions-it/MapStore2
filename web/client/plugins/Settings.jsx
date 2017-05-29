@@ -31,6 +31,7 @@ const {Glyphicon} = require('react-bootstrap');
 const assign = require('object-assign');
 
 const SettingsPanel = require('./settings/SettingsPanel');
+const LocaleUtils = require('../utils/LocaleUtils');
 const {Panel} = require('react-bootstrap');
 const Dialog = require('../components/misc/Dialog');
 
@@ -85,7 +86,7 @@ const SettingsButton = React.createClass({
     },
     renderSettings() {
         const settingsFirst = {
-            language: <span><label><Message msgId="language" /></label> <LangBar key="langSelector"/></span>
+            language: <span><label><Message msgId="language" /></label> <LangBar locales={LocaleUtils.getSupportedLocales()} key="langSelector"/></span>
         };
         const settingsLast = {
             history: <HistoryBar
