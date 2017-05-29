@@ -509,6 +509,7 @@
             "retypePwd": "Confirmer le mot de passe",
             "passwordMinlenght": "Votre mot de passe doit être d'au moins {minSize} caractères",
             "passwordCheckFail": "Les deux mots de passe ne correspondent pas!",
+            "passwordInvalid": "Mot de passe incorrect",
             "username": "Nom d'utilisateur",
             "password": "Mot de passe",
             "passwordChanged": "Mot de passe changé",

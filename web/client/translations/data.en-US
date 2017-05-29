@@ -507,6 +507,7 @@
             "retypePwd": "Retype Password",
             "passwordMinlenght": "Your password must be at least {minSize} character",
             "passwordCheckFail": "Passwords do not match!",
+            "passwordInvalid": "Invalid password",
             "username": "Username",
             "password": "Password",
             "passwordChanged": "Password changed",
