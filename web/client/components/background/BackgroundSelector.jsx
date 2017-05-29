@@ -58,12 +58,6 @@ const BackgroundSelector = React.createClass({
         this.props.onLayerChange('tempLayer', {});
         this.props.onStartChange(0);
     },
-    componentWillUpdate(nextProps) {
-        if (this.props.size.width !== nextProps.size.width
-        || this.props.size.height !== nextProps.size.height) {
-            this.props.onStartChange(0);
-        }
-    },
     getThumb(layer) {
         return this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || layer.thumbURL || this.props.thumbs.unknown;
     },

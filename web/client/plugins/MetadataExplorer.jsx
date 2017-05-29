@@ -63,8 +63,8 @@ const MetadataExplorerComponent = React.createClass({
         return {
             id: "mapstore-metadata-explorer",
             active: false,
-            wrap: false,
-            modal: true,
+            wrap: true,
+            modal: false,
             wrapWithPanel: false,
             panelStyle: {
                 zIndex: 100,

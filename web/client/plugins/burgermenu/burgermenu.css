@@ -1,6 +1,7 @@
 #mapstore-burger-menu {
     position: absolute;
-    left: 200px;
+    right: 0;
+    top: 0;
 }
 
 #mapstore-navbar #mapstore-burger-menu {
