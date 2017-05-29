@@ -70,7 +70,8 @@ module.exports = {
         GlobeViewSwitcherPlugin: require('../plugins/GlobeViewSwitcher'),
         BackgroundSelectorPlugin: require('../plugins/BackgroundSelector'),
         SearchServicesConfigPlugin: require('../plugins/SearchServicesConfig'),
-        VersionPlugin: require('../plugins/Version')
+        VersionPlugin: require('../plugins/Version'),
+        NotificationsPlugin: require('../plugins/Notifications')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

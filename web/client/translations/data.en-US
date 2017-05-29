@@ -130,6 +130,11 @@
                 }
             }
         },
+        "cookiesPolicyNotification": {
+            "title": "This website uses cookies",
+            "message": "By continuing to use our website you are accepting our use of cookies.",
+            "confirm": "I Agree"
+        },
         "manager": {
             "openInANewTab":"Open map",
             "deleteMap":"Delete Map",
