@@ -3777,7 +3777,7 @@ void function(e, t, n) {
         ;
         return r(Object, o("getOwnPropertyNames", function(e) {
             var t, n = Object(e);
-            if ("[object Window]" === n.toString())
+            if (n && n.toString && "[object Window]" === n.toString())
                 try {
                     t = s(e)
                 } catch (r) {
