@@ -29,7 +29,7 @@ function notifications(state = [], action = {}) {
             const { type, ...rest } = action;
             return [
                 ...state,
-                { ...rest, uid: action.uid}
+                { ...rest}
             ];
         case HIDE_NOTIFICATION:
             return state.filter(notification => {

@@ -45,9 +45,6 @@ const NotificationContainer = React.createClass({
     componentDidMount() {
         this.updateNotifications(this.props.notifications);
     },
-    shouldComponentUpdate(nextProps) {
-        return this.props !== nextProps;
-    },
     componentDidUpdate() {
         const {notifications} = this.props || [];
         this.updateNotifications(notifications);
