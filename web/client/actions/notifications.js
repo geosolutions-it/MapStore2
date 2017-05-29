@@ -5,6 +5,16 @@ const CLEAR_NOTIFICATIONS = 'CLEAR_NOTIFICATIONS';
  * Show a notification
  * @memberof actions.notifications
  * @param  {Object} [opts={}]         the notification configuration. [Here the compete ref](https://github.com/igorprado/react-notification-system#creating-a-notification)
+ * ```
+ *  {
+ *    title: "title.translation.path" // or the message directly
+ *    message: "message.translation.path" // or the message directly
+ *    uid: "1234" // a unique identifier (if not present, current time is used),
+ *    action: {
+ *      label:  "label.translation.path" // or the message directly
+ *    }
+ *  }
+ * ```
  * @param  {String} [level='success'] The level of the notification. (one of "success"|"warning"|"info"|"error")
  * @return {object}                   action of type `SHOW_NOTIFICATION`
  */
