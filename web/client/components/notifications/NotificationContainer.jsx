@@ -8,7 +8,26 @@
 const React = require('react');
 const NotificationSystem = require('react-notification-system');
 var LocaleUtils = require('../../utils/LocaleUtils');
-
+/**
+ * Container for Notifications. Allows to display notifications by passing
+ * them in the notification property
+ * @class
+ * @memberof components.notifications
+ * @prop {object[]} notifications the notifications. Each element have this form
+ * ```
+ *  {
+ *    title: "title.translation.path" // or the message directly
+ *    message: "message.translation.path" // or the message directly
+ *    uid: "1234" // a unique identifier (if not present, current time is used),
+ *    action: {
+ *      label:  "label.translation.path" // or the message directly
+ *    }
+ *  }
+ * ```
+ * @see https://github.com/igorprado/react-notification-system#creating-a-notification for othe options
+ * @example
+ * <NotificationContainer notifications={[{uid: 1, title: "notification", level: "success"}]} />;
+ */
 const NotificationContainer = React.createClass({
     propTypes: {
         notifications: React.PropTypes.array,

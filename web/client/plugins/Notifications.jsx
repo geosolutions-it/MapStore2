@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -10,6 +10,15 @@ const {hide} = require('../actions/notifications');
 const {connect} = require('react-redux');
 
 
+/**
+  * Notifications Plugin. Provides support to show notifications
+  * @class  Notifications
+  * @memberof plugins
+  * @static
+  * @example
+  * {name: "Notifications"}
+  *
+  */
 module.exports = {
     NotificationsPlugin: connect(
         (state) => ({ notifications: state && state.notifications}),
