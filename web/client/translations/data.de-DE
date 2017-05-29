@@ -507,6 +507,7 @@
             "retypePwd": "Passwort wiederholen",
             "passwordMinlenght": "Dein Passwort muss aus mindestens {minSize} Zeichen bestehen",
             "passwordCheckFail": "Passwörter sind nicht identisch!",
+            "passwordInvalid": "Ungültiges Passwort",
             "username": "Benutzername",
             "password": "Passwort",
             "passwordChanged": "Passwort geändert",

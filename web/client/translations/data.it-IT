@@ -507,6 +507,7 @@
             "retypePwd": "Conferma Password",
             "passwordMinlenght": "La password deve essere lunga almeno {minSize} caratteri",
             "passwordCheckFail": "Le due password non corrispondono",
+            "passwordInvalid": "Password non valida",
             "username": "Username",
             "password": "Password",
             "passwordChanged": "La password è stata cambiata",
