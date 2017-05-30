@@ -24,7 +24,7 @@ const feature = (f, describeFeatureType) => `<${getTypeName(describeFeatureType)
 const features = (fs, describeFeatureType) => fs.map(f => feature(f, describeFeatureType)).join("");
 
 const insert = (fs, describeFeatureType) => '<wfs:Insert>'
-    + `${features(fs.features, describeFeatureType)}`
+    + `${features(fs.features || fs, describeFeatureType)}`
     + '</wfs:Insert>';
 
 module.exports = {
