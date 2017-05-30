@@ -136,7 +136,7 @@
         },
         "cookiesPolicyNotification": {
             "title": "Questo sito utilizza cookies",
-            "message": "Continuando a navigare sul sito accetti all'uso dei cookie",
+            "message": "Continuando a navigare sul sito acconsenti all'uso dei cookie",
             "confirm": "Acconsento"
         },
         "manager": {
