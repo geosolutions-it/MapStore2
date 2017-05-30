@@ -134,6 +134,11 @@
                 }
             }
         },
+        "cookiesPolicyNotification": {
+            "title": "Deze website maakt gebruik van cookies",
+            "message": "Door onze website te blijven gebruiken, accepteert u ons gebruik van cookies.",
+            "confirm": "Ik ben het eens"
+        },
         "manager": {
             "openInANewTab":"Karte öffnen",
             "deleteMap":"Karte löschen",
@@ -511,6 +516,7 @@
             "retypePwd": "Passwort wiederholen",
             "passwordMinlenght": "Dein Passwort muss aus mindestens {minSize} Zeichen bestehen",
             "passwordCheckFail": "Passwörter sind nicht identisch!",
+            "passwordInvalid": "Ungültiges Passwort",
             "username": "Benutzername",
             "password": "Passwort",
             "passwordChanged": "Passwort geändert",

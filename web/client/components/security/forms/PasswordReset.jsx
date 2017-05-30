@@ -52,12 +52,10 @@ const PasswordReset = React.createClass({
       if (!this.state.password) {
           return null;
       }
-      let pw = this.state.password;
-      if (pw.length === 0) {
+      if (this.state.password.length === 0) {
           return null;
       }
-      return pw.length >= this.props.minPasswordSize ? "success" : "error";
-
+      return this.isMainPasswordValid() ? "success" : "error";
   },
   renderWarning() {
       if (!this.state.password) {
@@ -66,6 +64,8 @@ const PasswordReset = React.createClass({
       let pw = this.state.password;
       if (pw !== null && pw.length < this.props.minPasswordSize && pw.length > 0) {
           return <Alert bsStyle="danger"><Message msgId="user.passwordMinlenght" msgParams={{minSize: this.props.minPasswordSize}}/></Alert>;
+      } else if (!this.isMainPasswordValid()) {
+          return <Alert bsStyle="danger"><Message msgId="user.passwordInvalid" /></Alert>;
       } else if (pw !== null && pw !== this.state.passwordcheck ) {
           return <Alert bsStyle="danger"><Message msgId="user.passwordCheckFail" /></Alert>;
       }
@@ -87,7 +87,6 @@ const PasswordReset = React.createClass({
             <FormControl ref="password"
               key="password"
               type="password"
-              hasFeedback
               onChange={this.changePassword}
               placeholder={LocaleUtils.getMessageById(this.context.messages, "user.newPwd")} />
           </FormGroup>
@@ -95,7 +94,6 @@ const PasswordReset = React.createClass({
               <ControlLabel>{this.props.passwordCheckText}</ControlLabel>
               <FormControl ref="passwordcheck"
                   key="passwordcheck"
-                  hasFeedback
                   type="password"
                   label={this.props.passwordCheckText}
                   onChange={this.changePasswordCheck}
@@ -105,13 +103,17 @@ const PasswordReset = React.createClass({
           {this.renderStatus()}
       </form>);
   },
+  isMainPasswordValid(password) {
+      let p = password || this.state.password;
+      return (p.length >= this.props.minPasswordSize) && !(/[^a-zA-Z0-9\!\@\#\$\%\&\*]/.test(p));
+  },
   isValid(password, passwordcheck) {
       let p = password || this.state.password;
       let p2 = passwordcheck || this.state.passwordcheck;
       if (!p) {
           return false;
       }
-      return p !== null && p.length >= this.props.minPasswordSize && p === p2;
+      return p !== null && this.isMainPasswordValid(p) && p === p2;
   },
   changePassword(e) {
       this.setState({

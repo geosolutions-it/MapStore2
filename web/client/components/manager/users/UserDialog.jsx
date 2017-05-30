@@ -5,13 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
- /**
-  * Copyright 2016, GeoSolutions Sas.
-  * All rights reserved.
-  *
-  * This source code is licensed under the BSD-style license found in the
-  * LICENSE file in the root directory of this source tree.
-  */
 
 const React = require('react');
 
@@ -43,7 +36,8 @@ const UserDialog = React.createClass({
       style: React.PropTypes.object,
       buttonSize: React.PropTypes.string,
       inputStyle: React.PropTypes.object,
-      attributes: React.PropTypes.array
+      attributes: React.PropTypes.array,
+      minPasswordSize: React.PropTypes.number
   },
   getDefaultProps() {
       return {
@@ -71,7 +65,8 @@ const UserDialog = React.createClass({
               marginBottom: "20px",
               padding: "5px",
               border: "1px solid #078AA3"
-          }
+          },
+          minPasswordSize: 6
       };
   },
   getAttributeValue(name) {
@@ -89,7 +84,7 @@ const UserDialog = React.createClass({
       if (pw.length === 0) {
           return null;
       }
-      return pw.length > 5 ? "success" : "warning";
+      return this.isMainPasswordValid(pw) ? "success" : "warning";
 
   },
   renderGeneral() {
@@ -103,7 +98,7 @@ const UserDialog = React.createClass({
               readOnly={this.props.user && this.props.user.id}
               style={this.props.inputStyle}
               onChange={this.handleChange}
-              value={this.props.user && this.props.user.name}/>
+              value={this.props.user && this.props.user.name || ""}/>
       </FormGroup>
       <FormGroup validationState={this.getPwStyle()}>
           <ControlLabel><Message msgId="user.password"/></ControlLabel>
@@ -115,7 +110,7 @@ const UserDialog = React.createClass({
               style={this.props.inputStyle}
               onChange={this.handleChange} />
       </FormGroup>
-      <FormGroup validationState={ (this.props.user && this.props.user.newPassword && (this.isValidPassword() ? "success" : "error")) || null}>
+      <FormGroup validationState={ (this.isValidPassword() ? "success" : "error") || null}>
           <ControlLabel><Message msgId="user.retypePwd"/></ControlLabel>
           <FormControl ref="confirmPassword"
               key="confirmPassword"
@@ -125,14 +120,14 @@ const UserDialog = React.createClass({
               style={this.props.inputStyle}
               onChange={this.handleChange} />
       </FormGroup>
-      <select name="role" style={this.props.inputStyle} onChange={this.handleChange} value={this.props.user && this.props.user.role}>
+      <select name="role" style={this.props.inputStyle} onChange={this.handleChange} value={this.props.user && this.props.user.role || ""}>
         <option value="ADMIN">ADMIN</option>
         <option value="USER">USER</option>
       </select>
       <FormGroup>
           <ControlLabel><Message msgId="users.enabled"/></ControlLabel>
           <Checkbox
-              checked={this.props.user && (this.props.user.enabled === undefined ? false : this.props.user.enabled)}
+              defaultChecked={this.props.user && (this.props.user.enabled === undefined ? false : this.props.user.enabled)}
               type="checkbox"
               key={"enabled" + (this.props.user ? this.props.user.enabled : "missing")}
               name="enabled"
@@ -141,8 +136,8 @@ const UserDialog = React.createClass({
       </div>);
   },
   renderAttributes() {
-      return this.props.attributes.map((attr) => {
-          return (<FormGroup>
+      return this.props.attributes.map((attr, index) => {
+          return (<FormGroup key={"form-n-" + index}>
               <ControlLabel>{attr.name}</ControlLabel>
               <FormControl ref={"attribute." + attr.name}
               key={"attribute." + attr.name}
@@ -150,7 +145,7 @@ const UserDialog = React.createClass({
               type="text"
               style={this.props.inputStyle}
               onChange={this.handleChange}
-              value={this.getAttributeValue(attr.name)} /></FormGroup>);
+              value={this.getAttributeValue(attr.name) || ""} /></FormGroup>);
       });
   },
   renderSaveButtonContent() {
@@ -201,7 +196,7 @@ const UserDialog = React.createClass({
               </button>
           </span>
           <div role="body">
-          <Tabs defaultActiveKey={1} key="tab-panel">
+          <Tabs defaultActiveKey={1} key="tab-panel" id="userDetails-tabs">
               <Tab eventKey={1} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle="primary"><Glyphicon glyph="user"/></Button>} >
                   {this.renderGeneral()}
               </Tab>
@@ -219,6 +214,14 @@ const UserDialog = React.createClass({
           </div>
       </Dialog>);
   },
+  isMainPasswordValid(password) {
+      let p = password || this.props.user.newPassword || "";
+      // Empty password field will signal the GeoStoreDAO not to change the password
+      if (p === "") {
+          return true;
+      }
+      return (p.length >= this.props.minPasswordSize) && !(/[^a-zA-Z0-9\!\@\#\$\%\&\*]/.test(p));
+  },
   isSaving() {
       return this.props.user && this.props.user.status === "saving";
   },
@@ -226,23 +229,12 @@ const UserDialog = React.createClass({
       return this.props.user && (this.props.user.status === "saved" || this.props.user.status === "created");
   },
   isValid() {
-      let valid = true;
       let user = this.props.user;
-      if (!user) return false;
-      valid = valid && user.name && user.status === "modified" && this.isValidPassword();
-      return valid;
+      return user && user.name && user.status === "modified" && this.isValidPassword();
   },
   isValidPassword() {
-      let valid = true;
       let user = this.props.user;
-      if (user && user.id) {
-          if (user.newPassword) {
-              valid = valid && (user.confirmPassword === user.newPassword);
-          }
-      } else {
-          valid = valid && user && user.newPassword && (user.confirmPassword === user.newPassword);
-      }
-      return valid;
+      return user && this.isMainPasswordValid(user.newPassword) && (user.confirmPassword === user.newPassword);
   },
   handleChange(event) {
       this.props.onChange(event.target.name, event.target.value);

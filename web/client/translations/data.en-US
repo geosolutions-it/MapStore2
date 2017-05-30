@@ -134,6 +134,11 @@
                 }
             }
         },
+        "cookiesPolicyNotification": {
+            "title": "This website uses cookies",
+            "message": "By continuing to use our website you are accepting our use of cookies.",
+            "confirm": "I Agree"
+        },
         "manager": {
             "openInANewTab":"Open map",
             "deleteMap":"Delete Map",
@@ -511,6 +516,7 @@
             "retypePwd": "Retype Password",
             "passwordMinlenght": "Your password must be at least {minSize} character",
             "passwordCheckFail": "Passwords do not match!",
+            "passwordInvalid": "Invalid password",
             "username": "Username",
             "password": "Password",
             "passwordChanged": "Password changed",
