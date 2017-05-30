@@ -1,3 +1,4 @@
+
 {
     "locale": "fr-FR",
     "messages": {
@@ -134,6 +135,11 @@
                     "html":"<h3>Représentation d'image</h3><p>Représenter votre couche image</p>"
                 }
             }
+        },
+        "cookiesPolicyNotification": {
+            "title": "Ce site utilise des cookies",
+            "message": "En continuant d'utiliser notre site Web, vous acceptez notre utilisation de cookies.",
+            "confirm": "Je suis d'accord"
         },
         "manager": {
             "openInANewTab":"Ouvrir la carte",
@@ -513,6 +519,7 @@
             "retypePwd": "Confirmer le mot de passe",
             "passwordMinlenght": "Votre mot de passe doit être d'au moins {minSize} caractères",
             "passwordCheckFail": "Les deux mots de passe ne correspondent pas!",
+            "passwordInvalid": "Mot de passe incorrect",
             "username": "Nom d'utilisateur",
             "password": "Mot de passe",
             "passwordChanged": "Mot de passe changé",

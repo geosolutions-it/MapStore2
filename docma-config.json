@@ -109,6 +109,7 @@
             "web/client/components/buttons/GlobeViewSwitcherButton.jsx",
             "web/client/components/buttons/GoFullButton.jsx",
             "web/client/components/mapcontrols/search/SearchBar.jsx",
+            "web/client/components/notifications/NotificationContainer.jsx",
             "web/client/components/buttons/ToggleButton.jsx",
             "web/client/components/plugins/PluginsContainer.jsx",
 
@@ -118,6 +119,7 @@
             "web/client/actions/globeswitcher.js",
             "web/client/actions/maps.js",
             "web/client/actions/maptype.js",
+            "web/client/actions/notifications.js",
             "web/client/actions/search.js",
 
             "web/client/selectors/index.jsdoc",
@@ -130,9 +132,11 @@
             "web/client/reducers/globeswitcher.js",
             "web/client/reducers/maps.js",
             "web/client/reducers/maptype.js",
+            "web/client/reducers/notifications.js",
             "web/client/reducers/search.js",
 
             "web/client/epics/index.jsdoc",
+            "web/client/epics/cookies.js",
             "web/client/epics/fullscreen.js",
             "web/client/epics/globeswitcher.js",
             "web/client/epics/maptype.js",
@@ -162,6 +166,7 @@
                 "web/client/plugins/Identify.jsx",
                 "web/client/plugins/Locate.jsx",
                 "web/client/plugins/Login.jsx",
+                "web/client/plugins/Notifications.jsx",
                 "web/client/plugins/ScaleBox.jsx",
                 "web/client/plugins/ScrollTop.jsx",
                 "web/client/plugins/Search.jsx",

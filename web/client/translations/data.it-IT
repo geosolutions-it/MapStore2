@@ -134,6 +134,11 @@
                 }
             }
         },
+        "cookiesPolicyNotification": {
+            "title": "Questo sito utilizza cookies",
+            "message": "Continuando a navigare sul sito acconsenti all'uso dei cookie",
+            "confirm": "Acconsento"
+        },
         "manager": {
             "openInANewTab":"Apri mappa",
             "deleteMap":"Elimina Mappa",
@@ -511,6 +516,7 @@
             "retypePwd": "Conferma Password",
             "passwordMinlenght": "La password deve essere lunga almeno {minSize} caratteri",
             "passwordCheckFail": "Le due password non corrispondono",
+            "passwordInvalid": "Password non valida",
             "username": "Username",
             "password": "Password",
             "passwordChanged": "La password è stata cambiata",

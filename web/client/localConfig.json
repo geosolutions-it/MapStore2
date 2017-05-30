@@ -127,7 +127,8 @@
             }, "Login",
             "OmniBar", "BurgerMenu", "Expander", "GlobeViewSwitcher"
         ],
-        "desktop": ["Map", "HelpLink", "Share", "DrawerMenu", "Version", {"name": "BackgroundSelector", "cfg": { "bottom": 40 } },
+
+        "desktop": ["Map", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", {"name": "BackgroundSelector", "cfg": { "bottom": 40 } },
             {
                 "name": "Identify",
                 "showIn": ["IdentifyBar", "Settings"],
@@ -165,9 +166,9 @@
                 "cfg": {
                     "wrap": true,
                     "initialCatalogURL": {
-                        "csw": "http://demo.geo-solutions.it/geoserver/csw",
-                        "wms": "http://demo.geo-solutions.it/geoserver/wms",
-                        "wmts": "http://demo.geo-solutions.it/geoserver/gwc/service/wmts"
+                        "csw": "https://demo.geo-solutions.it/geoserver/csw",
+                        "wms": "https://demo.geo-solutions.it/geoserver/wms",
+                        "wmts": "https://demo.geo-solutions.it/geoserver/gwc/service/wmts"
                     }
                 }
             }, "About", "MousePosition", {
@@ -307,7 +308,7 @@
             "cfg": {
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", "Language", "Attribution", "ScrollTop"],
+        }, "ManagerMenu", "Login", "Language", "Attribution", "ScrollTop", "Notifications"],
         "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "MapType", "ThemeSwitcher",  "GridContainer", "CreateNewMap", "Maps", "Examples", "Footer"],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }

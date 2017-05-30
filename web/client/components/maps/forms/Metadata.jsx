@@ -5,13 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
- /**
-  * Copyright 2016, GeoSolutions Sas.
-  * All rights reserved.
-  *
-  * This source code is licensed under the BSD-style license found in the
-  * LICENSE file in the root directory of this source tree.
-  */
 
 const React = require('react');
 const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
@@ -49,7 +42,6 @@ const Metadata = React.createClass({
               <ControlLabel>{this.props.nameFieldText}</ControlLabel>
               <FormControl ref="mapName"
                   key="mapName"
-                  hasFeedback
                   type="text"
                   onChange={this.changeName}
                   placeholder={this.props.namePlaceholderText}
@@ -59,7 +51,6 @@ const Metadata = React.createClass({
               <ControlLabel>{this.props.descriptionFieldText}</ControlLabel>
               <FormControl ref="mapDescription"
                   key="mapDescription"
-                  hasFeedback
                   type="text"
                   onChange={this.changeDescription}
                   placeholder={this.props.descriptionPlaceholderText}
