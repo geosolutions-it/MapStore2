@@ -8,14 +8,15 @@
 
 const React = require('react');
 const {Glyphicon} = require('react-bootstrap');
+const PropTypes = require('prop-types');
 
 const PaginationButton = React.createClass({
     propTypes: {
-        side: React.PropTypes.number,
-        direction: React.PropTypes.bool,
-        vertical: React.PropTypes.bool,
-        glyphs: React.PropTypes.object,
-        onClick: React.PropTypes.func
+        side: PropTypes.number,
+        direction: PropTypes.bool,
+        vertical: PropTypes.bool,
+        glyphs: PropTypes.object,
+        onClick: PropTypes.func
     },
     getDefaultProps() {
         return {

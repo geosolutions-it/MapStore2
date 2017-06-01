@@ -50,7 +50,7 @@ const React = require('react');
 
 const TestSupport = React.createClass({
     propTypes: {
-        label: React.PropTypes.string
+        label: PropTypes.string
     },
     render() {
         alert(this.props.label);

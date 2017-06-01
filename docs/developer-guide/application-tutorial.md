@@ -87,9 +87,9 @@ var LLayer = require('../../../components/map/leaflet/Layer');
 var MyApp = React.createClass({
     propTypes: {
         // redux store slice with map configuration (bound through connect to store at the end of the file)
-        mapConfig: React.PropTypes.object,
+        mapConfig: PropTypes.object,
         // redux store dispatch func
-        dispatch: React.PropTypes.func
+        dispatch: PropTypes.func
     },
     renderLayers(layers) {
         if (layers) {

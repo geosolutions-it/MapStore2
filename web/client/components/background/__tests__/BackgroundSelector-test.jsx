@@ -30,14 +30,14 @@ describe("test the BackgroundSelector", () => {
         const layers = [
             {
                 id: 'layer_0',
-                title: 'title_0'
+                title: 'title_0',
+                visibility: true
             },
             {
                 id: 'layer_1',
                 title: 'title_1'
             }
         ];
-
         const backgroundSelector = ReactDOM.render(<BackgroundSelector size={size} layers={layers}/>, document.getElementById("container"));
         expect(backgroundSelector).toExist();
         const node = ReactDOM.findDOMNode(backgroundSelector);
@@ -56,7 +56,8 @@ describe("test the BackgroundSelector", () => {
         const layers = [
             {
                 id: 'layer_0',
-                title: 'title_0'
+                title: 'title_0',
+                visibility: true
             },
             {
                 id: 'layer_1',
@@ -88,18 +89,18 @@ describe("test the BackgroundSelector", () => {
         const layers = [
             {
                 id: 'layer_0',
-                title: 'title_0'
+                title: 'title_0',
+                visibility: true
             },
             {
                 id: 'layer_1',
                 title: 'title_1'
             }
         ];
-
         const backgroundSelector = ReactDOM.render(<BackgroundSelector size={size} enabled={true} layers={layers}/>, document.getElementById("container"));
         expect(backgroundSelector).toExist();
         const node = ReactDOM.findDOMNode(backgroundSelector);
-        expect(node).toExist();
+        expect(node).toNotExist();
     });
 
     it('test BackgroundSelector on mobile', () => {
@@ -109,7 +110,8 @@ describe("test the BackgroundSelector", () => {
         const layers = [
             {
                 id: 'layer_0',
-                title: 'title_0'
+                title: 'title_0',
+                visibility: true
             },
             {
                 id: 'layer_1',
@@ -130,7 +132,8 @@ describe("test the BackgroundSelector", () => {
         const layers = [
             {
                 id: 'layer_0',
-                title: 'title_0'
+                title: 'title_0',
+                visibility: true
             },
             {
                 id: 'layer_1',
@@ -151,7 +154,8 @@ describe("test the BackgroundSelector", () => {
         const layers = [
             {
                 id: 'layer_0',
-                title: 'title_0'
+                title: 'title_0',
+                visibility: true
             },
             {
                 id: 'layer_1',
@@ -168,7 +172,8 @@ describe("test the BackgroundSelector", () => {
     it('test BackgroundSelector set layer current layer', () => {
         const backgroundSelector = ReactDOM.render(<BackgroundSelector currentLayer={{
             id: 'layer_0',
-            title: 'title_0'
+            title: 'title_0',
+            visibility: true
         }} />, document.getElementById("container"));
         expect(backgroundSelector).toExist();
         const node = ReactDOM.findDOMNode(backgroundSelector);
@@ -180,7 +185,8 @@ describe("test the BackgroundSelector", () => {
     it('test BackgroundSelector set layer temp layer', () => {
         const backgroundSelector = ReactDOM.render(<BackgroundSelector tempLayer={{
             id: 'layer_0',
-            title: 'title_0'
+            title: 'title_0',
+            visibility: true
         }} />, document.getElementById("container"));
         expect(backgroundSelector).toExist();
         const node = ReactDOM.findDOMNode(backgroundSelector);

@@ -8,18 +8,19 @@
 
 const React = require('react');
 const PaginationButton = require('./PaginationButton');
+const PropTypes = require('prop-types');
 
 const PreviewList = React.createClass({
     propTypes: {
-        bottom: React.PropTypes.number,
-        width: React.PropTypes.number,
-        height: React.PropTypes.number,
-        length: React.PropTypes.number,
-        start: React.PropTypes.number,
-        pagination: React.PropTypes.bool,
-        vertical: React.PropTypes.bool,
-        icons: React.PropTypes.array,
-        onStartChange: React.PropTypes.func
+        bottom: PropTypes.number,
+        width: PropTypes.number,
+        height: PropTypes.number,
+        length: PropTypes.number,
+        start: PropTypes.number,
+        pagination: PropTypes.bool,
+        vertical: PropTypes.bool,
+        icons: PropTypes.array,
+        onStartChange: PropTypes.func
     },
     getDefaultProps() {
         return {

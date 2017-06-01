@@ -14,24 +14,26 @@ const PreviewButton = require('./PreviewButton');
 const PreviewList = require('./PreviewList');
 const PreviewIcon = require('./PreviewIcon');
 
+const PropTypes = require('prop-types');
+
 require('./css/background.css');
 
 const BackgroundSelector = React.createClass({
     propTypes: {
-        start: React.PropTypes.number,
-        left: React.PropTypes.number,
-        bottom: React.PropTypes.number,
-        enabled: React.PropTypes.bool,
-        layers: React.PropTypes.array,
-        currentLayer: React.PropTypes.object,
-        tempLayer: React.PropTypes.object,
-        size: React.PropTypes.object,
-        dimensions: React.PropTypes.object,
-        thumbs: React.PropTypes.object,
-        onPropertiesChange: React.PropTypes.func,
-        onToggle: React.PropTypes.func,
-        onLayerChange: React.PropTypes.func,
-        onStartChange: React.PropTypes.func
+        start: PropTypes.number,
+        left: PropTypes.number,
+        bottom: PropTypes.number,
+        enabled: PropTypes.bool,
+        layers: PropTypes.array,
+        currentLayer: PropTypes.object,
+        tempLayer: PropTypes.object,
+        size: PropTypes.object,
+        dimensions: PropTypes.object,
+        thumbs: PropTypes.object,
+        onPropertiesChange: PropTypes.func,
+        onToggle: PropTypes.func,
+        onLayerChange: PropTypes.func,
+        onStartChange: PropTypes.func
     },
     getDefaultProps() {
         return {

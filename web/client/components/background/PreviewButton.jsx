@@ -7,19 +7,20 @@
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 
 require('./css/previewbutton.css');
 
 const PreviewButton = React.createClass({
     propTypes: {
-        src: React.PropTypes.string,
-        side: React.PropTypes.number,
-        frame: React.PropTypes.number,
-        margin: React.PropTypes.number,
-        labelHeight: React.PropTypes.number,
-        label: React.PropTypes.string,
-        showLabel: React.PropTypes.bool,
-        onToggle: React.PropTypes.func
+        src: PropTypes.string,
+        side: PropTypes.number,
+        frame: PropTypes.number,
+        margin: PropTypes.number,
+        labelHeight: PropTypes.number,
+        label: PropTypes.string,
+        showLabel: PropTypes.bool,
+        onToggle: PropTypes.func
     },
     getDefaultProps() {
         return {

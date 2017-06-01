@@ -11,13 +11,15 @@ const {FormGroup, ControlLabel, FormControl, Label} = require('react-bootstrap')
 const Message = require('../../I18N/Message');
 const Slider = require('react-nouislider');
 const assign = require('object-assign');
+const PropTypes = require('prop-types');
+
 function validate() {
     return true;
 }
 const WFSOptionalProps = React.createClass({
     propTypes: {
-        service: React.PropTypes.object,
-        onPropertyChange: React.PropTypes.func
+        service: PropTypes.object,
+        onPropertyChange: PropTypes.func
     },
     getDefaultProps() {
         return {

@@ -119,6 +119,12 @@ class Tutorial extends React.Component {
         }
     };
 
+    componentWillMount() {
+        let rawSteps = this.props.rawSteps.length > 0 ? this.props.rawSteps : this.props.presetList[this.props.preset] || [];
+        let checkbox = this.props.showCheckbox ? <div id="tutorial-intro-checkbox-container"><input type="checkbox" id="tutorial-intro-checkbox" className="tutorial-tooltip-intro-checkbox" onChange={this.props.actions.onDisable}/><span><I18N.Message msgId={"tutorial.checkbox"}/></span></div> : <div id="tutorial-intro-checkbox-container"/>;
+        this.props.actions.onSetup('default', rawSteps, this.props.introStyle, checkbox, this.props.defaultStep);
+    }
+
     componentWillUpdate(newProps) {
         if (this.props.steps.length > 0) {
             if (!this.props.toggle && newProps.toggle) {
@@ -144,6 +150,11 @@ class Tutorial extends React.Component {
                 this.closeTour();
             }
         }
+    }
+
+    componentWillUnmount() {
+        this.props.actions.onClose();
+        this.props.actions.onReset();
     }
 
     onTour = (tour) => {

@@ -10,6 +10,7 @@ const React = require('react');
 const {FormGroup, Checkbox, ControlLabel, Glyphicon} = require('react-bootstrap');
 const Message = require('../../I18N/Message');
 const ConfirmButton = require('../../buttons/ConfirmButton');
+const PropTypes = require('prop-types');
 
 function validate() {
     return true;
@@ -17,13 +18,13 @@ function validate() {
 
 const ServicesList = React.createClass({
     propTypes: {
-        services: React.PropTypes.array,
-        override: React.PropTypes.bool,
-        service: React.PropTypes.object,
-        onPropertyChange: React.PropTypes.func
+        services: PropTypes.array,
+        override: PropTypes.bool,
+        service: PropTypes.object,
+        onPropertyChange: PropTypes.func
     },
     contextTypes: {
-        messages: React.PropTypes.object
+        messages: PropTypes.object
     },
     getDefaultProps() {
         return {

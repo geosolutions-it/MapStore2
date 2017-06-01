@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const Dock = require('react-dock');
+const Dock = require('react-dock').default;
+const PropTypes = require('prop-types');
 /**
  * Component for rendering a dockablePanel panel.
  * @memberof components.dockablePanel
@@ -28,22 +29,22 @@ const Dock = require('react-dock');
  */
 const DockablePanel = React.createClass({
     propTypes: {
-        id: React.PropTypes.string,
-        dimMode: React.PropTypes.string,
-        dockSize: React.PropTypes.number,
-        isVisible: React.PropTypes.bool,
-        fluid: React.PropTypes.bool,
-        maxDockSize: React.PropTypes.number,
-        minDockSize: React.PropTypes.number,
-        position: React.PropTypes.string,
-        setDockSize: React.PropTypes.func,
-        toolbar: React.PropTypes.object,
-        toolbarHeight: React.PropTypes.number,
-        wrappedComponent: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
-        zIndex: React.PropTypes.number
+        id: PropTypes.string,
+        dimMode: PropTypes.string,
+        dockSize: PropTypes.number,
+        isVisible: PropTypes.bool,
+        fluid: PropTypes.bool,
+        maxDockSize: PropTypes.number,
+        minDockSize: PropTypes.number,
+        position: PropTypes.string,
+        setDockSize: PropTypes.func,
+        toolbar: PropTypes.object,
+        toolbarHeight: PropTypes.number,
+        wrappedComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+        zIndex: PropTypes.number
     },
     contextTypes: {
-        messages: React.PropTypes.object
+        messages: PropTypes.object
     },
     getDefaultProps() {
         return {

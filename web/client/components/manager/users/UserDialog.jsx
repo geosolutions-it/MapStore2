@@ -46,7 +46,7 @@ class UserDialog extends React.Component {
         buttonSize: PropTypes.string,
         inputStyle: PropTypes.object,
         attributes: PropTypes.array,
-        minPasswordSize: React.PropTypes.number
+        minPasswordSize: PropTypes.number
     };
 
     static defaultProps = {

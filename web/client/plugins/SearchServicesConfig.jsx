@@ -25,6 +25,7 @@ const ServiceList = require('../components/mapcontrols/searchservicesconfig/Serv
 const WFSServiceProps = require('../components/mapcontrols/searchservicesconfig/WFSServiceProps.jsx');
 const ResultsProps = require('../components/mapcontrols/searchservicesconfig/ResultsProps.jsx');
 const WFSOptionalProps = require('../components/mapcontrols/searchservicesconfig/WFSOptionalProps.jsx');
+const PropTypes = require('prop-types');
 
 /**
  * Text Search Services Editor Plugin. Allow to add and edit additional
@@ -41,26 +42,26 @@ const WFSOptionalProps = require('../components/mapcontrols/searchservicesconfig
  */
 const SearchServicesConfigPanel = React.createClass({
     propTypes: {
-        id: React.PropTypes.string,
-        enabled: React.PropTypes.bool,
-        panelStyle: React.PropTypes.object,
-        panelClassName: React.PropTypes.string,
-        closeGlyph: React.PropTypes.string,
-        titleText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        toggleControl: React.PropTypes.func,
-        pages: React.PropTypes.arrayOf(React.PropTypes.shape({
-                Element: React.PropTypes.func.isRequired,
-                validate: React.PropTypes.func.isRequired
+        id: PropTypes.string,
+        enabled: PropTypes.bool,
+        panelStyle: PropTypes.object,
+        panelClassName: PropTypes.string,
+        closeGlyph: PropTypes.string,
+        titleText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        toggleControl: PropTypes.func,
+        pages: PropTypes.arrayOf(PropTypes.shape({
+                Element: PropTypes.func.isRequired,
+                validate: PropTypes.func.isRequired
         })),
-        page: React.PropTypes.number,
-        service: React.PropTypes.object,
-        initServiceValues: React.PropTypes.object,
-        onPropertyChange: React.PropTypes.func,
-        newService: React.PropTypes.object.isRequired,
-        updateService: React.PropTypes.func,
-        restServiceConfig: React.PropTypes.func,
-        textSearchConfig: React.PropTypes.object,
-        editIdx: React.PropTypes.number
+        page: PropTypes.number,
+        service: PropTypes.object,
+        initServiceValues: PropTypes.object,
+        onPropertyChange: PropTypes.func,
+        newService: PropTypes.object.isRequired,
+        updateService: PropTypes.func,
+        restServiceConfig: PropTypes.func,
+        textSearchConfig: PropTypes.object,
+        editIdx: PropTypes.number
     },
     getDefaultProps() {
         return {

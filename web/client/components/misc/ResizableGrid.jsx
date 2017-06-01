@@ -7,6 +7,7 @@
  */
 const React = require('react');
 const ReactDataGrid = require('react-data-grid');
+const PropTypes = require('prop-types');
 
 /**
  * Component for rendering a feature grid.
@@ -27,24 +28,24 @@ const ReactDataGrid = require('react-data-grid');
  */
 const ResizableGrid = React.createClass({
     propTypes: {
-        columns: React.PropTypes.array.isRequired,
-        headerRowHeight: React.PropTypes.number,
-        minHeight: React.PropTypes.number.isRequired,
-        minWidth: React.PropTypes.number,
-        refGrid: React.PropTypes.string,
-        rowHeight: React.PropTypes.number.isRequired,
-        rowKey: React.PropTypes.string,
-        rowSelection: React.PropTypes.object,
-        rowGetter: React.PropTypes.func,
-        selectBy: React.PropTypes.object,
-        rows: React.PropTypes.array.isRequired,
-        size: React.PropTypes.object,
-        onCellsSelected: React.PropTypes.func,
-        onRowsSelected: React.PropTypes.func,
-        onRowsDeselected: React.PropTypes.func
+        columns: PropTypes.array.isRequired,
+        headerRowHeight: PropTypes.number,
+        minHeight: PropTypes.number.isRequired,
+        minWidth: PropTypes.number,
+        refGrid: PropTypes.string,
+        rowHeight: PropTypes.number.isRequired,
+        rowKey: PropTypes.string,
+        rowSelection: PropTypes.object,
+        rowGetter: PropTypes.func,
+        selectBy: PropTypes.object,
+        rows: PropTypes.array.isRequired,
+        size: PropTypes.object,
+        onCellsSelected: PropTypes.func,
+        onRowsSelected: PropTypes.func,
+        onRowsDeselected: PropTypes.func
     },
     contextTypes: {
-        messages: React.PropTypes.object
+        messages: PropTypes.object
     },
     getDefaultProps() {
         return {

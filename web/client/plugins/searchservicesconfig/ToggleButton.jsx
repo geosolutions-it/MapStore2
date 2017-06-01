@@ -10,10 +10,12 @@ const {connect} = require('react-redux');
 const {toggleControl} = require('../../actions/controls');
 const {FormGroup} = require('react-bootstrap');
 const ToggleBtn = require('../../components/buttons/ToggleButton');
+const PropTypes = require('prop-types');
+
 const ToggleServicesConfig = React.createClass({
     propTypes: {
-        toggleControl: React.PropTypes.func,
-        enabled: React.PropTypes.bool
+        toggleControl: PropTypes.func,
+        enabled: PropTypes.bool
     },
     onClick() {
         if (!this.props.enabled) {
@@ -39,5 +41,3 @@ module.exports = connect((state) => ({
 }), {
     toggleControl: toggleControl
 })(ToggleServicesConfig);
-
-

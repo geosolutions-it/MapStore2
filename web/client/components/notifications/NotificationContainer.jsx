@@ -7,6 +7,8 @@
  */
 const React = require('react');
 const NotificationSystem = require('react-notification-system');
+const PropTypes = require('prop-types');
+
 var LocaleUtils = require('../../utils/LocaleUtils');
 /**
  * Container for Notifications. Allows to display notifications by passing
@@ -30,11 +32,11 @@ var LocaleUtils = require('../../utils/LocaleUtils');
  */
 const NotificationContainer = React.createClass({
     propTypes: {
-        notifications: React.PropTypes.array,
-        onRemove: React.PropTypes.func
+        notifications: PropTypes.array,
+        onRemove: PropTypes.func
     },
     contextTypes: {
-        messages: React.PropTypes.object
+        messages: PropTypes.object
     },
     getDefaultProps() {
         return {

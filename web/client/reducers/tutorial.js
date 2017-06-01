@@ -121,7 +121,6 @@ function tutorial(state = initialState, action) {
                     update.stepIndex = action.tour.index;
                     update.tourAction = action.tour.action;
                 }
-                update.status = 'error';
             }
             return assign({}, state, update);
         case DISABLE_TUTORIAL:

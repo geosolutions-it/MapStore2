@@ -343,16 +343,16 @@ describe('FilterUtils', () => {
     it('Check SpatialFilterField normalizeVersion', () => {
         let filterObj = {
             spatialField: {
-                    "operation": "INTERSECTS",
-                    "attribute": "geometry",
-                    "geometry": {
-                        "type": "Point",
-                        "projection": "EPSG:4326",
-                        "coordinates": [1, 1]
-                    }
+                "operation": "INTERSECTS",
+                "attribute": "geometry",
+                "geometry": {
+                    "type": "Point",
+                    "projection": "EPSG:4326",
+                    "coordinates": [1, 1]
                 }
             }
         };
+
         let expected = '<wfs:GetFeature service="WFS" version="1.0.0" outputFormat="GML2" xmlns:gml="http://www.opengis.net/gml" xmlns:wfs="http://www.opengis.net/wfs" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.0.0/WFS-basic.xsd"><wfs:Query typeName="ft_name_test" srsName="EPSG:4326"><ogc:Filter><ogc:Intersects><ogc:PropertyName>geometry</ogc:PropertyName><gml:Point srsDimension="2" srsName="EPSG:4326"><gml:coord><X>1</X><Y>1</Y></gml:coord></gml:Point></ogc:Intersects></ogc:Filter></wfs:Query></wfs:GetFeature>';
         let filter = FilterUtils.toOGCFilter("ft_name_test", filterObj, "1.0");
         expect(filter).toEqual(expected);
@@ -375,14 +375,13 @@ describe('FilterUtils', () => {
     });
     it('Check SpatialFilterField ogc 1.1.0 Point', () => {
         let filterObj = {
-            spatialField: {
-                    "operation": "INTERSECTS",
-                    "attribute": "geometry",
-                    "geometry": {
-                        "type": "Point",
-                        "projection": "EPSG:4326",
-                        "coordinates": [1, 1]
-                    }
+        spatialField: {
+                "operation": "INTERSECTS",
+                "attribute": "geometry",
+                "geometry": {
+                    "type": "Point",
+                    "projection": "EPSG:4326",
+                    "coordinates": [1, 1]
                 }
             }
         };
@@ -393,13 +392,12 @@ describe('FilterUtils', () => {
     it('Check SpatialFilterField ogc 2.0 Point', () => {
         let filterObj = {
             spatialField: {
-                    "operation": "INTERSECTS",
-                    "attribute": "geometry",
-                    "geometry": {
-                        "type": "Point",
-                        "projection": "EPSG:4326",
-                        "coordinates": [1, 1]
-                    }
+                "operation": "INTERSECTS",
+                "attribute": "geometry",
+                "geometry": {
+                    "type": "Point",
+                    "projection": "EPSG:4326",
+                    "coordinates": [1, 1]
                 }
             }
         };
@@ -426,13 +424,12 @@ describe('FilterUtils', () => {
     it('Check SpatialFilterField ogc default version is 2.0', () => {
         let filterObj = {
             spatialField: {
-                    "operation": "INTERSECTS",
-                    "attribute": "geometry",
-                    "geometry": {
-                        "type": "Point",
-                        "projection": "EPSG:4326",
-                        "coordinates": [1, 1]
-                    }
+                "operation": "INTERSECTS",
+                "attribute": "geometry",
+                "geometry": {
+                    "type": "Point",
+                    "projection": "EPSG:4326",
+                    "coordinates": [1, 1]
                 }
             }
         };

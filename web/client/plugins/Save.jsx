@@ -44,7 +44,7 @@ class Save extends React.Component {
         map: PropTypes.object,
         layers: PropTypes.array,
         params: PropTypes.object,
-        textSearchConfig: React.PropTypes.object
+        textSearchConfig: PropTypes.object
     };
 
     static defaultProps = {

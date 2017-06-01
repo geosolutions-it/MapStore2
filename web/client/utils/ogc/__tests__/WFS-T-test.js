@@ -24,16 +24,16 @@ describe('Test WFS-T request bodies generation', () => {
     it('WFS-T transaction with insert polygon', () => {
         const result = transaction([insert(wyoming, describeStates)], featureTypeSchema(describeStates));
         expect(result).toExist();
-        expect(result + '\n').toEqual(expectedInsertWyoming);
+        expect(result).toEqual(expectedInsertWyoming.replace(/\n/g, ''));
     });
     it('WFS-T transaction with insert multypolygon', () => {
         const result = transaction([insert(wyoming, describeStates)], featureTypeSchema(describeStates));
         expect(result).toExist();
-        expect(result + '\n').toEqual(expectedInsertWyoming);
+        expect(result).toEqual(expectedInsertWyoming.replace(/\n/g, ''));
     });
     it('WFS-T transaction with insert point', () => {
         const result = transaction([insert(museam, describePois)], featureTypeSchema(describePois));
         expect(result).toExist();
-        expect(result + '\n').toEqual(expectedInsertmuseam);
+        expect(result).toEqual(expectedInsertmuseam.replace(/\n/g, ''));
     });
 });

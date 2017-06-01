@@ -54,7 +54,6 @@ class ZoneField extends React.Component {
         textField: PropTypes.string,
         onSearch: PropTypes.func,
         onFilter: PropTypes.func,
-        // onOpenMenu: React.PropTypes.func,
         onChange: PropTypes.func,
         onSelect: PropTypes.func
     };

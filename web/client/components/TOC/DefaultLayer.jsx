@@ -56,7 +56,7 @@ class DefaultLayer extends React.Component {
         currentZoomLvl: PropTypes.number,
         scales: PropTypes.array,
         additionalTools: PropTypes.array,
-        legendOptions: React.PropTypes.object
+        legendOptions: PropTypes.object
     };
 
     static defaultProps = {

@@ -9,6 +9,8 @@ const React = require('react');
 const {FormGroup, ControlLabel, FormControl} = require('react-bootstrap');
 const Message = require('../../I18N/Message');
 const assign = require('object-assign');
+const PropTypes = require('prop-types');
+
 // const weburl = new RegExp(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/);
 function validate(service = {}) {
     const {options = {}, name = ''} = service;
@@ -19,8 +21,8 @@ function validate(service = {}) {
 
 const WFSServiceProps = React.createClass({
     propTypes: {
-        service: React.PropTypes.object,
-        onPropertyChange: React.PropTypes.func
+        service: PropTypes.object,
+        onPropertyChange: PropTypes.func
     },
     getDefaultProps() {
         return {
