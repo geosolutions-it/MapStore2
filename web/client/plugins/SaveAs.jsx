@@ -34,7 +34,8 @@ const selector = createSelector(mapSelector, stateSelector, layersSelector, (map
     user: state.security && state.security.user,
     currentMap: state.currentMap,
     metadata: state.maps.metadata,
-    layers
+    layers,
+    textSearchConfig: state.searchconfig && state.searchconfig.textSearchConfig
 }));
 
 class SaveAs extends React.Component {
@@ -58,7 +59,8 @@ class SaveAs extends React.Component {
         resetCurrentMap: PropTypes.func,
         metadataChanged: PropTypes.func,
         onMapSave: PropTypes.func,
-        loadMapInfo: PropTypes.func
+        loadMapInfo: PropTypes.func,
+        textSearchConfig: PropTypes.object
     };
 
     static contextTypes = {
@@ -133,7 +135,7 @@ class SaveAs extends React.Component {
         let resultingmap = {
             version: 2,
             // layers are defined inside the map object
-            map: assign({}, map, {layers})
+            map: assign({}, map, {layers, text_serch_config: this.props.textSearchConfig})
         };
         return resultingmap;
     };

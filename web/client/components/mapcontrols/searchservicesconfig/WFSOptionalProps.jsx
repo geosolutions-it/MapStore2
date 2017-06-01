@@ -1,0 +1,67 @@
+/*
+ * Copyright 2017, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+const React = require('react');
+const {FormGroup, ControlLabel, FormControl, Label} = require('react-bootstrap');
+const Message = require('../../I18N/Message');
+const Slider = require('react-nouislider');
+const assign = require('object-assign');
+function validate() {
+    return true;
+}
+const WFSOptionalProps = React.createClass({
+    propTypes: {
+        service: React.PropTypes.object,
+        onPropertyChange: React.PropTypes.func
+    },
+    getDefaultProps() {
+        return {
+            service: {},
+            onPropertyChange: () => {}
+        };
+    },
+    render() {
+        const {service} = this.props;
+        const {options = {}} = service;
+        return (
+            <form>
+              <span className="wfs-required-props-title"><Message msgId="search.s_wfs_opt_props_label" /></span>
+                <FormGroup>
+                    <ControlLabel>
+                        <Message msgId="search.s_sort" />
+                    </ControlLabel>
+                    <FormControl
+                        value={options.sortBy}
+                        key="sortBy"
+                        type="text"
+                        onChange={this.updateProp.bind(null, "sortBy")}/>
+                </FormGroup>
+                <FormGroup>
+                    <ControlLabel>
+                        <Message msgId="search.s_max_features" />
+                    </ControlLabel>
+                    <Slider key="maxFeatures" start={[options.maxFeatures || 1]}
+                        range={{min: 1, max: 50}}
+                        onSlide={this.updateMaxFeatures}
+                        />
+                    <Label key="maxFeatures-labeel" className="slider-label" >{options.maxFeatures || 1}</Label>
+                </FormGroup>
+            </form>);
+    },
+    updateProp(prop, event) {
+        const value = event.target.value;
+        const options = assign({}, this.props.service.options, {[prop]: value});
+        this.props.onPropertyChange("service", assign({}, this.props.service, {options}));
+    },
+    updateMaxFeatures(val) {
+        const options = assign({}, this.props.service.options, {maxFeatures: parseInt(val[0], 10)});
+        this.props.onPropertyChange("service", assign({}, this.props.service, {options}));
+    }
+});
+
+module.exports = {Element: WFSOptionalProps, validate};

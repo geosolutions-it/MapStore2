@@ -39,7 +39,8 @@ const context = new Jsonix.Context([
 /*eslint-enable */
 const marshaller = context.createMarshaller();
 const unmarshaller = context.createUnmarshaller();
-const WFS = {};
+const WFS = {
+};
 
 
 module.exports = {WFS, marshaller, unmarshaller};

@@ -55,40 +55,6 @@ html, body, #container, .fill {
 	background-size:contain;
 }
 
-.leafletbottom.leafletright, .leaflet-control-minimap{
-    bottom: 47px !important;
-    right: 49px !important;
-}
-
-.leaflet-control-scale {
-    position: absolute;
-    bottom: -1px;
-    right: 47px;
-    z-index: 1000;
-}
-.leaflet-control-attribution {
-    width: 165px;
-    position: absolute;
-    right: 0;
-    bottom: 0;
-}
-
-.leaflet-bottom.leaflet-right {
-    margin-bottom: 0 !important;
-}
-
-.ol-custom-overviewmap, .ol-custom-overviewmap.ol-uncollapsible {
-    bottom: 55px !important;
-    left: auto !important;
-    right: 57px !important;
-    top: auto !important;
-}
-
-.ol-scale-line.ol-unselectable {
-    right: 58px;
-    left: auto;
-    bottom: 3px;
-}
 .modal-dialog-container {
     z-index: 2000!important;
 }

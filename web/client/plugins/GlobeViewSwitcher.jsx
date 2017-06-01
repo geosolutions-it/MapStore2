@@ -40,7 +40,7 @@ module.exports = {
     GlobeViewSwitcherPlugin: assign(GlobeViewSwitcher, {
         Toolbar: {
             name: '3d',
-            position: 5,
+            position: 10,
             alwaysVisible: true,
             tool: true,
             priority: 1

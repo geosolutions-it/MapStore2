@@ -13,6 +13,7 @@ class Legend extends React.Component {
         legendHeigth: PropTypes.number,
         legendWidth: PropTypes.number,
         legendOptions: PropTypes.string,
+        style: PropTypes.object,
         currentZoomLvl: PropTypes.number,
         scales: PropTypes.array
     };
@@ -20,7 +21,8 @@ class Legend extends React.Component {
     static defaultProps = {
         legendHeigth: 12,
         legendWidth: 12,
-        legendOptions: "forceLabels:on;fontSize:10"
+        legendOptions: "forceLabels:on;fontSize:10",
+        style: {maxWidth: "100%"}
     };
 
     render() {
@@ -54,7 +56,7 @@ class Legend extends React.Component {
                 pathname: urlObj.pathname,
                 query: query
             });
-            return <img src={legendUrl} style={{maxWidth: "100%"}}/>;
+            return <img src={legendUrl} style={this.props.style}/>;
         }
         return null;
     }

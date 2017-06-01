@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -9,12 +9,14 @@
 const React = require('react');
 const {connect} = require('react-redux');
 const {bindActionCreators} = require('redux');
-const {setupTutorial, startTutorial, updateTutorial, disableTutorial, resetTutorial} = require('../actions/tutorial');
-const {toggleControl, setControlProperty} = require('../actions/controls');
+const {setupTutorial, startTutorial, updateTutorial, disableTutorial, resetTutorial, closeTutorial, toggleTutorial} = require('../actions/tutorial');
 const presetList = require('./tutorial/preset');
 const assign = require('object-assign');
 const I18N = require('../components/I18N/I18N');
 const {Glyphicon} = require('react-bootstrap');
+const {createSelector} = require('reselect');
+const {tutorialSelector} = require('../selectors/tutorial');
+const {closeTutorialEpic, switchTutorialEpic} = require('../epics/tutorial');
 
 /*
     //////////////////////////
@@ -174,20 +176,19 @@ const {Glyphicon} = require('react-bootstrap');
     style: An object with stylesheet options.
 */
 
-const Tutorial = connect((state) => {
-    return {
-        toggle: state.controls && state.controls.tutorial && state.controls.tutorial.enabled,
-        intro: state.tutorial && state.tutorial.intro,
-        steps: state.tutorial && state.tutorial.steps,
-        run: state.tutorial && state.tutorial.run,
-        autoStart: state.tutorial && state.tutorial.start,
-        showStepsProgress: state.tutorial && state.tutorial.progress,
-        showSkipButton: state.tutorial && state.tutorial.skip,
-        nextLabel: state.tutorial && state.tutorial.nextLabel,
-        status: state.tutorial && state.tutorial.status,
-        presetList
-    };
-}, (dispatch) => {
+const tutorialPluginSelector = createSelector([tutorialSelector],
+    (tutorial) => ({
+        toggle: tutorial.enabled,
+        steps: tutorial.steps,
+        run: tutorial.run,
+        autoStart: tutorial.start,
+        status: tutorial.status,
+        presetList,
+        tourAction: tutorial.tourAction,
+        stepIndex: tutorial.stepIndex
+    }));
+
+const Tutorial = connect(tutorialPluginSelector, (dispatch) => {
     return {
         actions: bindActionCreators({
             onSetup: setupTutorial,
@@ -195,7 +196,7 @@ const Tutorial = connect((state) => {
             onUpdate: updateTutorial,
             onDisable: disableTutorial,
             onReset: resetTutorial,
-            onClose: setControlProperty.bind(null, 'tutorial', 'enabled', false)
+            onClose: closeTutorial
         }, dispatch)
     };
 })(require('../components/tutorial/Tutorial'));
@@ -207,12 +208,16 @@ module.exports = {
             position: 1000,
             text: <I18N.Message msgId="tutorial.title"/>,
             icon: <Glyphicon glyph="book"/>,
-            action: toggleControl.bind(null, 'tutorial', null),
+            action: toggleTutorial,
             priority: 2,
             doNotHide: true
         }
     }),
     reducers: {
         tutorial: require('../reducers/tutorial')
+    },
+    epics: {
+        closeTutorialEpic,
+        switchTutorialEpic
     }
 };

@@ -7,11 +7,6 @@
  */
 
 module.exports = [
-    // remove comment to enable intro/autostart
-    /* {
-        translation: 'intro',
-        selector: '#intro-tutorial'
-    },*/
     {
         translationHTML: 'drawerMenu',
         selector: '#drawer-menu-button'

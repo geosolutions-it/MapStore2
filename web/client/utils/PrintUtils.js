@@ -190,29 +190,28 @@ const PrintUtils = {
             legend: (layer, spec) => ({
                 "name": layer.title || layer.name,
                 "classes": [
-                    {
-                        "name": "",
-                        "icons": [
-                            PrintUtils.normalizeUrl(layer.url) + url.format({
-                                query: {
-                                    TRANSPARENT: true,
-                                    EXCEPTIONS: "application/vnd.ogc.se_xml",
-                                    VERSION: "1.1.1",
-                                    SERVICE: "WMS",
-                                    REQUEST: "GetLegendGraphic",
-                                    LAYER: layer.name,
-                                    STYLE: layer.style || '',
-                                    height: spec.iconSize,
-                                    width: spec.iconSize,
-                                    minSymbolSize: spec.iconSize,
-                                    fontFamily: spec.fontFamily,
-                                    LEGEND_OPTIONS: "forceLabels:" + (spec.forceLabels ? "on" : "") + ";fontAntialiasing:" + spec.antiAliasing + ";dpi:" + spec.legendDpi + ";fontStyle:" + (spec.bold && "bold" || spec.italic && "italic" || ''),
-                                    format: "image/png",
-                                    ...assign({}, layer.params)
-                                }
-                            })
-                        ]
-                    }
+                   {
+                      "name": "",
+                      "icons": [
+                         PrintUtils.normalizeUrl(layer.url) + url.format({
+                             query: {
+                                 TRANSPARENT: true,
+                                 EXCEPTIONS: "application/vnd.ogc.se_xml",
+                                 VERSION: "1.1.1",
+                                 SERVICE: "WMS",
+                                 REQUEST: "GetLegendGraphic",
+                                 LAYER: layer.name,
+                                 STYLE: layer.style || '',
+                                 height: spec.iconSize,
+                                 width: spec.iconSize,
+                                 minSymbolSize: spec.iconSize,
+                                 LEGEND_OPTIONS: "forceLabels:" + (spec.forceLabels ? "on" : "") + ";fontAntialiasing:" + spec.antiAliasing + ";dpi:" + spec.legendDpi + ";fontStyle:" + (spec.bold && "bold" || (spec.italic && "italic") || '') + ";fontName:" + spec.fontFamily + ";fontSize:" + spec.fontSize,
+                                 format: "image/png",
+                                 ...assign({}, layer.params)
+                             }
+                         })
+                      ]
+                   }
                 ]
             })
         },

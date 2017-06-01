@@ -952,7 +952,58 @@ select.form-control option {
 	background-color: @ms2-color-primary !important;
 	color: @ms2-color-text-primary !important;
 }
-/* feauture grid */
+/* feature grid made by react-data-grid */
+.dockpanel-wrapped-component .react-grid-Header{
+    background: @ms2-color-primary;
+	color: @ms2-color-text-primary;
+	font-family: @font-family-base;
+}
+.dockpanel-wrapped-component .react-grid-Main .react-grid-Header .react-grid-HeaderCell{
+	background: @ms2-color-primary;
+	color: @ms2-color-text-primary;
+	font-family: @font-family-base;
+    height:55px !important;
+    text-align: center;
+    padding-top: 17px;
+}
+.dockpanel-wrapped-component .react-grid-Row--even .react-grid-Cell { background-color: #f2f2f2; }
+.dockpanel-wrapped-component .react-grid-Row--even .react-grid-Cell.row-selected { background-color: #badffd; }
+
+.dockpanel-wrapped-component .react-grid-Main, .react-grid-Container {
+    height: 100%;
+    width: 100% !important;
+}
+.dockpanel-wrapped-component .react-grid-Container {
+    width: 100% !important;
+}
+// dock panel
+#dock-toolbar #left-tools.left-tools{
+    position: absolute;
+    left: 10px;
+    bottom: 2px;
+}
+#dock-toolbar #right-tools.right-tools{
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+}
+.dockpanel-wrapped-component{
+    display: flex;
+    flex: 1 0 auto;
+    flexDirection: column;
+    width: 100%;
+}
+.dockpanel-wrapped-component .react-grid-Grid{
+    min-height: 100% !important;
+}
+
+
+.radio-custom+.radio-custom-label:before, .react-grid-checkbox+.react-grid-checkbox-label:before{
+    width: 19px;
+    height: 19px;
+}
+
+// feature grid
 .ag-fresh .ag-header,
 .ag-fresh .ag-tool-panel-container {
 	background: @ms2-color-primary !important;
@@ -960,7 +1011,7 @@ select.form-control option {
 	font-family: @font-family-base;
 }
 
-.ag-fresh .ag-tool-panel-container .ag-list-selection {
+	.ag-fresh .ag-tool-panel-container .ag-list-selection {
 	color: #000000;
 }
 
@@ -1021,10 +1072,68 @@ select.form-control option {
 		overflow: hidden;
 }
 
+.bg-body {
+    background-color: @ms2-color-background;
+}
+
+.text-body {
+    color: @ms2-color-text;
+}
+
 .tooltip {
 	z-index: 10000;
 }
 
 .application-version-label {
 		font-weight: bold;
+}
+
+.leafletbottom.leafletright, .leaflet-control-minimap{
+    bottom: 47px !important;
+    right: 49px !important;
+}
+
+.leaflet-control-scale {
+    position: absolute;
+    bottom: -1px;
+    right: 47px;
+    z-index: 1000;
+}
+.leaflet-control-attribution {
+    width: 165px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.leaflet-bottom.leaflet-right {
+    margin-bottom: 0 !important;
+}
+
+.ol-custom-overviewmap, .ol-custom-overviewmap.ol-uncollapsible {
+    bottom: 55px !important;
+    left: auto !important;
+    right: 57px !important;
+    top: auto !important;
+}
+
+.ol-scale-line.ol-unselectable {
+    right: 58px;
+    left: auto;
+    bottom: 3px;
+}
+
+.toolbar-panel #background-switcher {
+    max-height: 600px;
+    overflow: auto;
+}
+
+#mapstore-shapefile-upload {
+    min-width: 360px;
+    z-index: 100;
+    position: absolute;
+    overflow: visible;
+    top: 100px;
+    width: 50%;
+    left: ~"calc(50% - 150px)";
 }

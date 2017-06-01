@@ -58,7 +58,7 @@ module.exports = {
             help: <Message msgId="helptexts.shapefile"/>,
             title: "shapefile.title",
             tooltip: "shapefile.tooltip",
-            wrap: true,
+            wrap: false,
             icon: <Glyphicon glyph="open-file"/>,
             exclusive: true,
             priority: 1

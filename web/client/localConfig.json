@@ -33,7 +33,22 @@
                 "cfg": {
                     "tools": ["locate"]
                 }
-            }, "Version", "DrawerMenu", {
+            }, "Version", "DrawerMenu",
+            {
+                "name": "BackgroundSelector",
+                "cfg": {
+                    "bottom": 40,
+                    "dimensions": {
+                    "side": 65,
+                    "sidePreview": 65,
+                    "frame": 3,
+                    "margin": 5,
+                    "label": false,
+                    "vertical": true
+                   }
+                }
+            },
+            {
                 "name": "Identify",
                 "showIn": ["Settings"],
                 "cfg": {
@@ -64,9 +79,9 @@
             }, "Home", "TOC", {
                 "name": "Tutorial",
                 "cfg": {
-                    "preset": "mapMobile"
+                    "preset": "default_mobile_tutorial"
                 }
-            }, "BackgroundSwitcher", {
+            }, {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true
@@ -112,7 +127,9 @@
             }, "Login",
             "OmniBar", "BurgerMenu", "Expander", "GlobeViewSwitcher"
         ],
-        "desktop": ["Map", "HelpLink", "Share", "DrawerMenu", "Version", {
+
+        "desktop": ["Map", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", {"name": "BackgroundSelector", "cfg": { "bottom": 40 } },
+            {
                 "name": "Identify",
                 "showIn": ["IdentifyBar", "Settings"],
                 "cfg": {
@@ -137,7 +154,7 @@
                 "cfg": {
                     "activateQueryTool": true
                 }
-            }, "Tutorial", "BackgroundSwitcher", {
+            }, "Tutorial", {
                 "name": "Measure"
             }, "Print", "ShapeFile", {
                 "name": "Settings",
@@ -149,9 +166,9 @@
                 "cfg": {
                     "wrap": true,
                     "initialCatalogURL": {
-                        "csw": "http://demo.geo-solutions.it/geoserver/csw",
-                        "wms": "http://demo.geo-solutions.it/geoserver/wms",
-                        "wmts": "http://demo.geo-solutions.it/geoserver/gwc/service/wmts"
+                        "csw": "https://demo.geo-solutions.it/geoserver/csw",
+                        "wms": "https://demo.geo-solutions.it/geoserver/wms",
+                        "wmts": "https://demo.geo-solutions.it/geoserver/gwc/service/wmts"
                     }
                 }
             }, "About", "MousePosition", {
@@ -196,7 +213,7 @@
                     }
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher"
+            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig"
         ],
         "embedded": [{
                 "name": "Map",
@@ -206,6 +223,19 @@
             }, {
               "name": "DrawerMenu",
               "hide": "{!(request.query && request.query.forceDrawer)}"
+              },{
+                  "name": "BackgroundSelector",
+                  "cfg": {
+                      "bottom": 40,
+                      "dimensions": {
+                      "side": 65,
+                      "sidePreview": 65,
+                      "frame": 3,
+                      "margin": 5,
+                      "label": false,
+                      "vertical": true
+                     }
+                  }
               }, {
                 "name": "Identify",
                 "cfg": {
@@ -240,7 +270,7 @@
                         "alwaysVisible": true
                     }
                 }
-            }, "TOC", "BackgroundSwitcher", {
+            }, "TOC", {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true
@@ -278,7 +308,7 @@
             "cfg": {
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", "Language", "Attribution", "ScrollTop"],
+        }, "ManagerMenu", "Login", "Language", "Attribution", "ScrollTop", "Notifications"],
         "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "MapType", "ThemeSwitcher",  "GridContainer", "CreateNewMap", "Maps", "Examples", "Footer"],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }

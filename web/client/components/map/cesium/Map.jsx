@@ -7,6 +7,7 @@
  */
 var Cesium = require('../../../libs/cesium');
 const PropTypes = require('prop-types');
+const Rx = require('rxjs');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var ConfigUtils = require('../../../utils/ConfigUtils');
@@ -69,10 +70,7 @@ class CesiumMap extends React.Component {
         map.imageryLayers.removeAll();
         map.camera.moveEnd.addEventListener(this.updateMapInfoState);
         this.hand = new Cesium.ScreenSpaceEventHandler(map.scene.canvas);
-        this.hand.setInputAction((movement) => {
-            this.onClick(map, movement);
-        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-
+        this.subscribeClickEvent(map);
         this.hand.setInputAction(throttle(this.onMouseMove.bind(this), 500), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 
         map.camera.setView({
@@ -90,11 +88,7 @@ class CesiumMap extends React.Component {
         if (this.props.mapOptions.navigationTools) {
             this.cesiumNavigation = window.CesiumNavigation;
             if (this.cesiumNavigation) {
-                this.cesiumNavigation.navigationInitialization(this.props.id, map, {
-                    enableZoomControls: false,
-                    enableDistanceLegend: false,
-                    enableCompassOuterRing: false
-                });
+                this.cesiumNavigation.navigationInitialization(this.props.id, map);
             }
         }
     }
@@ -110,12 +104,13 @@ class CesiumMap extends React.Component {
     }
 
     componentWillUnmount() {
+        this.clickStream$.complete();
+        this.pauserStream$.complete();
         this.hand.destroy();
         this.map.destroy();
     }
 
     onClick = (map, movement) => {
-
         if (this.props.onClick && movement.position !== null) {
             const cartesian = map.camera.pickEllipsoid(movement.position, map.scene.globe.ellipsoid);
             let cartographic = ClickUtils.getMouseXYZ(map, movement) || cartesian && Cesium.Cartographic.fromCartesian(cartesian);
@@ -249,6 +244,54 @@ class CesiumMap extends React.Component {
         }
     };
 
+    subscribeClickEvent = (map) => {
+        const samePosition = (m1, m2) => m1 && m2 && m1.x === m2.x && m1.y === m2.y;
+        const types = {
+            LEFT_UP: Cesium.ScreenSpaceEventType.LEFT_UP,
+            LEFT_DOWN: Cesium.ScreenSpaceEventType.LEFT_DOWN,
+            LEFT_CLICK: Cesium.ScreenSpaceEventType.LEFT_CLICK,
+            PINCH_START: Cesium.ScreenSpaceEventType.PINCH_START,
+            PINCH_END: Cesium.ScreenSpaceEventType.PINCH_END,
+            PINCH_MOVE: Cesium.ScreenSpaceEventType.PINCH_MOVE
+        };
+        const clickStream$ = new Rx.Subject();
+        const pauserStream$ = new Rx.Subject();
+        Object.keys(types).forEach((type) => this.hand.setInputAction((movement) => {
+            pauserStream$.next({type: types[type], movement});
+            clickStream$.next({type: types[type], movement});
+        }, types[type]));
+
+        /*
+         * trigger onClick only when LEFT_CLICK that follow a LEFT_DOWN at the same position.
+         * Every other mouse event before the LEFT_CLICK will not trigger the onClick function (happens with multitouch devices from cesium).
+         * If a pinch event is ended, wait to start listening left clicks. This to skip the LEFT_UP,LEFT_DOWN, LEFT_CLICK sequence that cesium triggers after a pinch end,
+         * that othewise can not be distinguished from a normal click event.
+         */
+        pauserStream$
+          .filter( ev => ev.type === types.PINCH_END )
+          .switchMap( () => Rx.Observable.of(true).concat(Rx.Observable.of(false).delay(500)))
+          .startWith(false)
+          .switchMap(paused => {
+              // pause is realized by mapping the click stream or an infinite stream
+              return paused ? Rx.Observable.never() : clickStream$;
+          })
+          .filter( ev => ev.type === types.LEFT_DOWN )
+          .switchMap(({movement}) =>
+              clickStream$
+                .filter( ev => ev.type === types.LEFT_CLICK )
+                .takeUntil(
+                    Rx.Observable.timer(500).merge(
+                        clickStream$
+                            .filter( ev =>
+                                ev.type !== types.LEFT_UP && ev.type !== types.LEFT_CLICK
+                                || ev.type === types.LEFT_UP && !samePosition(movement && movement.position, ev.movement && ev.movement.position)
+                            )
+                    )
+                )
+            ).subscribe(({movement}) => this.onClick(map, movement));
+        this.clickStream$ = clickStream$;
+        this.pauserStream$ = pauserStream$;
+    };
     updateMapInfoState = () => {
         const center = this.getCenter();
         const zoom = this.getZoomFromHeight(center.height);

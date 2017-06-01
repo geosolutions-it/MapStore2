@@ -45,7 +45,8 @@ class UserDialog extends React.Component {
         style: PropTypes.object,
         buttonSize: PropTypes.string,
         inputStyle: PropTypes.object,
-        attributes: PropTypes.array
+        attributes: PropTypes.array,
+        minPasswordSize: React.PropTypes.number
     };
 
     static defaultProps = {
@@ -73,7 +74,8 @@ class UserDialog extends React.Component {
             marginBottom: "20px",
             padding: "5px",
             border: "1px solid #078AA3"
-        }
+        },
+        minPasswordSize: 6
     };
 
     getAttributeValue = (name) => {
@@ -92,70 +94,70 @@ class UserDialog extends React.Component {
         if (pw.length === 0) {
             return null;
         }
-        return pw.length > 5 ? "success" : "warning";
+        return this.isMainPasswordValid(pw) ? "success" : "warning";
 
     };
 
     renderGeneral = () => {
         return (<div style={{clear: "both"}}>
-        <FormGroup>
-            <ControlLabel><Message msgId="user.username"/></ControlLabel>
-            <FormControl ref="name"
-                key="name"
-                type="text"
-                name="name"
-                readOnly={this.props.user && this.props.user.id}
-                style={this.props.inputStyle}
-                onChange={this.handleChange}
-                value={this.props.user && this.props.user.name}/>
-        </FormGroup>
-        <FormGroup validationState={this.getPwStyle()}>
-            <ControlLabel><Message msgId="user.password"/></ControlLabel>
-            <FormControl ref="newPassword"
-                key="newPassword"
-                type="password"
-                name="newPassword"
-                autoComplete="new-password"
-                style={this.props.inputStyle}
-                onChange={this.handleChange} />
-        </FormGroup>
-        <FormGroup validationState={ (this.props.user && this.props.user.newPassword && (this.isValidPassword() ? "success" : "error")) || null}>
-            <ControlLabel><Message msgId="user.retypePwd"/></ControlLabel>
-            <FormControl ref="confirmPassword"
-                key="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                autoComplete="new-password"
-                style={this.props.inputStyle}
-                onChange={this.handleChange} />
-        </FormGroup>
-        <select name="role" style={this.props.inputStyle} onChange={this.handleChange} value={this.props.user && this.props.user.role}>
-          <option value="ADMIN">ADMIN</option>
-          <option value="USER">USER</option>
-        </select>
-        <FormGroup>
-            <ControlLabel><Message msgId="users.enabled"/></ControlLabel>
-            <Checkbox
-                checked={this.props.user && (this.props.user.enabled === undefined ? false : this.props.user.enabled)}
-                type="checkbox"
-                key={"enabled" + (this.props.user ? this.props.user.enabled : "missing")}
-                name="enabled"
-                onClick={(evt) => {this.props.onChange("enabled", evt.target.checked ? true : false); }} />
-        </FormGroup>
-        </div>);
+      <FormGroup>
+          <ControlLabel><Message msgId="user.username"/></ControlLabel>
+          <FormControl ref="name"
+              key="name"
+              type="text"
+              name="name"
+              readOnly={this.props.user && this.props.user.id}
+              style={this.props.inputStyle}
+              onChange={this.handleChange}
+              value={this.props.user && this.props.user.name || ""}/>
+      </FormGroup>
+      <FormGroup validationState={this.getPwStyle()}>
+          <ControlLabel><Message msgId="user.password"/></ControlLabel>
+          <FormControl ref="newPassword"
+              key="newPassword"
+              type="password"
+              name="newPassword"
+              autoComplete="new-password"
+              style={this.props.inputStyle}
+              onChange={this.handleChange} />
+      </FormGroup>
+      <FormGroup validationState={ (this.isValidPassword() ? "success" : "error") || null}>
+          <ControlLabel><Message msgId="user.retypePwd"/></ControlLabel>
+          <FormControl ref="confirmPassword"
+              key="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              autoComplete="new-password"
+              style={this.props.inputStyle}
+              onChange={this.handleChange} />
+      </FormGroup>
+      <select name="role" style={this.props.inputStyle} onChange={this.handleChange} value={this.props.user && this.props.user.role || ""}>
+        <option value="ADMIN">ADMIN</option>
+        <option value="USER">USER</option>
+      </select>
+      <FormGroup>
+          <ControlLabel><Message msgId="users.enabled"/></ControlLabel>
+          <Checkbox
+              defaultChecked={this.props.user && (this.props.user.enabled === undefined ? false : this.props.user.enabled)}
+              type="checkbox"
+              key={"enabled" + (this.props.user ? this.props.user.enabled : "missing")}
+              name="enabled"
+              onClick={(evt) => {this.props.onChange("enabled", evt.target.checked ? true : false); }} />
+      </FormGroup>
+      </div>);
     };
 
     renderAttributes = () => {
-        return this.props.attributes.map((attr) => {
-            return (<FormGroup>
-                <ControlLabel>{attr.name}</ControlLabel>
-                <FormControl ref={"attribute." + attr.name}
-                key={"attribute." + attr.name}
-                name={"attribute." + attr.name}
-                type="text"
-                style={this.props.inputStyle}
-                onChange={this.handleChange}
-                value={this.getAttributeValue(attr.name)} /></FormGroup>);
+        return this.props.attributes.map((attr, index) => {
+            return (<FormGroup key={"form-n-" + index}>
+              <ControlLabel>{attr.name}</ControlLabel>
+              <FormControl ref={"attribute." + attr.name}
+              key={"attribute." + attr.name}
+              name={"attribute." + attr.name}
+              type="text"
+              style={this.props.inputStyle}
+              onChange={this.handleChange}
+              value={this.getAttributeValue(attr.name) || ""} /></FormGroup>);
         });
     };
 
@@ -178,13 +180,12 @@ class UserDialog extends React.Component {
 
     renderButtons = () => {
         return [
-            <Button key="save" bsSize={this.props.buttonSize} bsSize="small"
-                bsStyle={this.isSaved() ? "success" : "primary" }
-                onClick={() => this.props.onSave(this.props.user)}
-                disabled={!this.isValid() || this.isSaving()}>
-                {this.renderSaveButtonContent()}</Button>,
-            <Button key="close" bsSize={this.props.buttonSize} bsSize="small" onClick={this.props.onClose}><Message msgId="close"/></Button>
-
+          <Button key="save" bsSize={this.props.buttonSize} bsSize="small"
+              bsStyle={this.isSaved() ? "success" : "primary" }
+              onClick={() => this.props.onSave(this.props.user)}
+              disabled={!this.isValid() || this.isSaving()}>
+              {this.renderSaveButtonContent()}</Button>,
+          <Button key="close" bsSize={this.props.buttonSize} bsSize="small" onClick={this.props.onClose}><Message msgId="close"/></Button>
         ];
     };
 
@@ -198,37 +199,45 @@ class UserDialog extends React.Component {
             let lastError = this.props.user && this.props.user.lastError;
             return <Alert key="error" bsStyle="warning"><Message msgId="users.errorSaving" />{lastError && lastError.statusText}</Alert>;
         }
-
     };
 
     render() {
-        return (<Dialog onClickOut={this.props.onClose} modal maskLoading={this.props.user && (this.props.user.status === "loading" || this.props.user.status === "saving")} id="mapstore-user-dialog" className="user-edit-dialog" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
+        return (<Dialog onClickOut={this.props.onClose} modal={true} maskLoading={this.props.user && (this.props.user.status === "loading" || this.props.user.status === "saving")} id="mapstore-user-dialog" className="user-edit-dialog" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
 
-            <span role="header">
-                <span className="user-panel-title">{(this.props.user && this.props.user.name) || <Message msgId="users.newUser" />}</span>
-                <button onClick={this.props.onClose} className="login-panel-close close">
-                    {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}
-                </button>
-            </span>
-            <div role="body">
-            <Tabs defaultActiveKey={1} key="tab-panel">
-                <Tab eventKey={1} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle="primary"><Glyphicon glyph="user"/></Button>} >
-                    {this.renderGeneral()}
-                </Tab>
-                <Tab eventKey={2} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle="primary"><Glyphicon glyph="info-sign"/></Button>} >
-                    {this.renderAttributes()}
-                </Tab>
-                <Tab eventKey={3} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle="primary"><Glyphicon glyph="1-group"/></Button>} >
-                    {this.renderGroups()}
-                </Tab>
-            </Tabs>
-            </div>
-            <div role="footer">
-                {this.renderError()}
-                {this.renderButtons()}
-            </div>
-        </Dialog>);
+          <span role="header">
+              <span className="user-panel-title">{(this.props.user && this.props.user.name) || <Message msgId="users.newUser" />}</span>
+              <button onClick={this.props.onClose} className="login-panel-close close">
+                  {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}
+              </button>
+          </span>
+          <div role="body">
+          <Tabs defaultActiveKey={1} key="tab-panel" id="userDetails-tabs">
+              <Tab eventKey={1} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle="primary"><Glyphicon glyph="user"/></Button>} >
+                  {this.renderGeneral()}
+              </Tab>
+              <Tab eventKey={2} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle="primary"><Glyphicon glyph="info-sign"/></Button>} >
+                  {this.renderAttributes()}
+              </Tab>
+              <Tab eventKey={3} title={<Button className="square-button" bsSize={this.props.buttonSize} bsStyle="primary"><Glyphicon glyph="1-group"/></Button>} >
+                  {this.renderGroups()}
+              </Tab>
+          </Tabs>
+          </div>
+          <div role="footer">
+              {this.renderError()}
+              {this.renderButtons()}
+          </div>
+      </Dialog>);
     }
+
+    isMainPasswordValid = (password) => {
+        let p = password || this.props.user.newPassword || "";
+        // Empty password field will signal the GeoStoreDAO not to change the password
+        if (p === "") {
+            return true;
+        }
+        return (p.length >= this.props.minPasswordSize) && !(/[^a-zA-Z0-9\!\@\#\$\%\&\*]/.test(p));
+    };
 
     isSaving = () => {
         return this.props.user && this.props.user.status === "saving";
@@ -239,24 +248,13 @@ class UserDialog extends React.Component {
     };
 
     isValid = () => {
-        let valid = true;
         let user = this.props.user;
-        if (!user) return false;
-        valid = valid && user.name && user.status === "modified" && this.isValidPassword();
-        return valid;
+        return user && user.name && user.status === "modified" && this.isValidPassword();
     };
 
     isValidPassword = () => {
-        let valid = true;
         let user = this.props.user;
-        if (user && user.id) {
-            if (user.newPassword) {
-                valid = valid && user.confirmPassword === user.newPassword;
-            }
-        } else {
-            valid = valid && user && user.newPassword && user.confirmPassword === user.newPassword;
-        }
-        return valid;
+        return user && this.isMainPasswordValid(user.newPassword) && (user.confirmPassword === user.newPassword);
     };
 
     handleChange = (event) => {

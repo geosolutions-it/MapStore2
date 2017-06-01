@@ -55,7 +55,8 @@ class DefaultLayer extends React.Component {
         groups: PropTypes.array,
         currentZoomLvl: PropTypes.number,
         scales: PropTypes.array,
-        additionalTools: PropTypes.array
+        additionalTools: PropTypes.array,
+        legendOptions: React.PropTypes.object
     };
 
     static defaultProps = {
@@ -146,7 +147,7 @@ class DefaultLayer extends React.Component {
         }
         return (<div position="collapsible" className="collapsible-toc">
              <div style={{minHeight: "35px"}}>{tools}</div>
-             <div><WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales}/></div>
+             <div><WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales} {...this.props.legendOptions}/></div>
         </div>);
     };
 

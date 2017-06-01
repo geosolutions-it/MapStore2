@@ -18,7 +18,7 @@ const startApp = () => {
 
     const StandardApp = require('../components/app/StandardApp');
 
-    const {pages, pluginsDef, initialState, storeOpts} = require('./appConfig');
+    const {pages, pluginsDef, initialState, storeOpts, appEpics = {}} = require('./appConfig');
 
     const StandardRouter = connect((state) => ({
         locale: state.locale || {},
@@ -28,7 +28,7 @@ const startApp = () => {
     const appStore = require('../stores/StandardStore').bind(null, initialState, {
         maptype: require('../reducers/maptype'),
         maps: require('../reducers/maps')
-    }, {});
+    }, appEpics);
 
     const initialActions = [
         () => loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*"),
@@ -37,6 +37,7 @@ const startApp = () => {
 
     const appConfig = {
         storeOpts,
+        appEpics,
         appStore,
         pluginsDef,
         initialActions,

@@ -64,6 +64,9 @@ class DrawSupport extends React.Component {
         case "clean":
             this.clean();
             break;
+        case ("cleanAndContinueDrawing"):
+                this.cleanAndContinueDrawing();
+                break;
         default :
             return;
         }
@@ -116,7 +119,8 @@ class DrawSupport extends React.Component {
                 geometry = new ol.geom.LineString(geom.coordinates); break;
             }
             case "Polygon": {
-                geometry = new ol.geom.Polygon(geom.coordinates); break;
+                geometry = geom.radius && geom.center ?
+                    ol.geom.Polygon.fromCircle(new ol.geom.Circle([geom.center.x, geom.center.y], geom.radius), 100) : new ol.geom.Polygon(geom.coordinates);
             }
             default: {
                 geometry = geom.radius && geom.center ?
@@ -394,6 +398,15 @@ class DrawSupport extends React.Component {
         }
     };
 
+    cleanAndContinueDrawing = () => {
+        if (this.drawLayer) {
+            this.props.map.removeLayer(this.drawLayer);
+            this.geojson = null;
+            this.drawLayer = null;
+            this.drawSource = null;
+        }
+    };
+
     fromOLFeature = (feature, drawMethod, startingPoint) => {
         const geometry = feature.getGeometry();
         const extent = geometry.getExtent();
@@ -406,6 +419,7 @@ class DrawSupport extends React.Component {
             coordinates = concat(startingPoint, coordinates);
             geometry.setCoordinates(coordinates);
         }
+
         if (drawMethod === "Circle") {
             radius = Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2));
         }

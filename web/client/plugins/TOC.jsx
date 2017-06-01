@@ -1,11 +1,11 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
@@ -288,7 +288,29 @@ class LayerTree extends React.Component {
         return this.renderTOC();
     }
 }
-
+/**
+ * TOC plugins
+ * @name TOC
+ * @class
+ * @memberof plugins
+ * @prop {boolean} cfg.activateQueryTool
+ * @prop {object} cfg.layerOptions: options to pass to the layer.
+ * Some of the layerOptions are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend:
+ * For instance you can pass some stying props to the legend.
+ * this example is to make the legend scrollable horizontally
+ * ```
+ * "layerOptions": {
+ *  "legendOptions": {
+ *    "legendContainerStyle": {
+ *     "overflowX": "auto"
+ *    },
+ *    "legendStyle": {
+ *      "maxWidth": "250%"
+ *    }
+ *   }
+ *  }
+```
+ */
 const TOCPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,
     layerPropertiesChangeHandler: changeLayerProperties,

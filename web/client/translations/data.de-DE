@@ -46,6 +46,10 @@
             "featureTypeError": "Layerattribute können nicht geladen werden",
             "elevation": "Höhe"
         },
+        "dock": {
+            "row": "{rowsSelected} reihe ausgewählt",
+            "rows": "{rowsSelected} reihen ausgewählt"
+        },
         "globeswitcher": {
             "tooltipDeactivate": "Beenden Sie den 3D-Modus",
             "tooltipActivate": "Geben Sie den 3D-Modus ein"
@@ -129,6 +133,11 @@
                     "html":"<h3>Raster Styler</h3><p>Style deine Rasterebene</p>"
                 }
             }
+        },
+        "cookiesPolicyNotification": {
+            "title": "Deze website maakt gebruik van cookies",
+            "message": "Door onze website te blijven gebruiken, accepteert u ons gebruik van cookies.",
+            "confirm": "Ik ben het eens"
         },
         "manager": {
             "openInANewTab":"Karte öffnen",
@@ -266,7 +275,32 @@
             "bearingLabel": "Richtung"
         },
         "search":{
-            "placeholder": "Suche nache einer Adresse oder gib Koordinaten ein ..."
+            "placeholder": "Suche nache einer Adresse oder gib Koordinaten ein ...",
+            "searchservicesbutton": "Konfigurations-Suchdienste konfigurieren",
+            "configpaneltitle": "Einen Suchdienst anlegen / bearbeiten",
+            "serviceslistlabel": "Verfügbare Dienstleistungen",
+            "overriedservice": "Überlastete Standarddienste",
+            "addbtn": "Hinzufügen",
+            "nextbtn": "Nächster",
+            "prevbtn": "Zurück",
+            "savebtn": "Aktualisieren",
+            "cancelbtn": "Stornieren",
+            "confirmremove": "Löschen?",
+            "cancelconfirm": "Bist du sicher?",
+            "s_name": "Name",
+            "s_title": "Titel",
+            "s_description": "Beschreibung",
+            "s_priority": "Priorität",
+            "s_url": "Service url",
+            "s_layer": "Layer",
+            "s_attributes": "Attribute",
+            "s_sort": "Sortiere nach",
+            "s_max_features": "Max. Eigenschaften",
+            "s_wfs_props_label" : "WFS-Service-Requisiten",
+            "s_wfs_opt_props_label" : "Optionale Requisiten",
+            "s_result_props_label": "Ergebnisanzeigeeigenschaften",
+            "s_priority_info": "Wird verwendet, um Suchergebnisse zu sortieren, höhere Werte zuerst. Nominatim Ergebnisse haben Priorität = 5",
+            "serviceslistempty": "Keine benutzerdefinierten Services definiert"
         },
         "drawLocal": {
             "draw": {
@@ -482,6 +516,7 @@
             "retypePwd": "Passwort wiederholen",
             "passwordMinlenght": "Dein Passwort muss aus mindestens {minSize} Zeichen bestehen",
             "passwordCheckFail": "Passwörter sind nicht identisch!",
+            "passwordInvalid": "Ungültiges Passwort",
             "username": "Benutzername",
             "password": "Passwort",
             "passwordChanged": "Passwort geändert",
@@ -833,7 +868,7 @@
             },
             "home": {
                 "title": "Home",
-                "text": "Go to homepage"
+                "text": "Click to go to homepage"
             },
             "searchButton": {
                 "title": "Search",
@@ -870,6 +905,33 @@
             "examples": {
                 "title": "Custom Application",
                 "text": "You can use components and plugins of MapStore2 to build custom applications"
+            },
+            "introCesium": {
+                "title": "3D map instructions",
+                "text": "Click on next button to start the tutorial"
+            },
+            "cesium": {
+                "title": "Interactions with the Map",
+                "pan": "Pan view",
+                "zoom": "Zoom view",
+                "tilt": "Tilt view",
+                "rotate": "Rotate view",
+                "oneDrag": "One finger drag",
+                "twoPinch": "Two finger pinch",
+                "twoDragSame": "Two finger drag, same direction",
+                "twoDragOpposite": "Two finger drag, opposite direction",
+                "leftClick": "Left click + drag",
+                "rightClick": "Right click + drag, or Mouse wheel scroll",
+                "middleClick": "Middle click + drag, or CTRL + Left/Right click + drag"
+
+            },
+            "cesiumCompass": {
+                "title": "Compass",
+                "text": "You can use the compass to orbit around the globe. Drag to rotate the map"
+            },
+            "cesiumNavigation": {
+                "title": "Navigation",
+                "text": "Here you can find the zoom in and zoom out buttons"
             }
         }
     }

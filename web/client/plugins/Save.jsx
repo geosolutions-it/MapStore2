@@ -30,7 +30,8 @@ const selector = createSelector(mapSelector, stateSelector, layersSelector, (map
     show: state.controls && state.controls.save && state.controls.save.enabled,
     map,
     mapId: map && map.mapId,
-    layers
+    layers,
+    textSearchConfig: state.searchconfig && state.searchconfig.textSearchConfig
 }));
 
 class Save extends React.Component {
@@ -42,7 +43,8 @@ class Save extends React.Component {
         loadMapInfo: PropTypes.func,
         map: PropTypes.object,
         layers: PropTypes.array,
-        params: PropTypes.object
+        params: PropTypes.object,
+        textSearchConfig: React.PropTypes.object
     };
 
     static defaultProps = {
@@ -96,7 +98,7 @@ class Save extends React.Component {
                 let resultingmap = {
                     version: 2,
                     // layers are defined inside the map object
-                    map: assign({}, map, {layers})
+                    map: assign({}, map, {layers, text_serch_config: this.props.textSearchConfig})
                 };
                 this.props.onMapSave(this.props.mapId, JSON.stringify(resultingmap));
                 this.props.onClose();

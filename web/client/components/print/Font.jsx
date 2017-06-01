@@ -40,8 +40,8 @@ class Font extends React.Component {
         this.props.onChangeFamily(family);
     };
 
-    onChangeSize = (size) => {
-        this.props.onChangeSize(size);
+    onChangeSize = (e) => {
+        this.props.onChangeSize(parseFloat(e.target.value));
     };
 
     render() {

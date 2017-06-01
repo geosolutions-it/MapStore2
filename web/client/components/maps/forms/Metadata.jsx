@@ -50,7 +50,6 @@ class Metadata extends React.Component {
                 <ControlLabel>{this.props.nameFieldText}</ControlLabel>
                 <FormControl ref="mapName"
                     key="mapName"
-                    hasFeedback
                     type="text"
                     onChange={this.changeName}
                     placeholder={this.props.namePlaceholderText}
@@ -60,7 +59,6 @@ class Metadata extends React.Component {
                 <ControlLabel>{this.props.descriptionFieldText}</ControlLabel>
                 <FormControl ref="mapDescription"
                     key="mapDescription"
-                    hasFeedback
                     type="text"
                     onChange={this.changeDescription}
                     placeholder={this.props.descriptionPlaceholderText}
@@ -77,5 +75,6 @@ class Metadata extends React.Component {
         this.props.onChange('description', e.target.value);
     };
 }
+
 
 module.exports = Metadata;

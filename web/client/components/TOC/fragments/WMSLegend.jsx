@@ -13,19 +13,24 @@ var Legend = require('./legend/Legend');
 class WMSLegend extends React.Component {
     static propTypes = {
         node: PropTypes.object,
+        legendContainerStyle: PropTypes.object,
+        legendStyle: PropTypes.object,
         showOnlyIfVisible: PropTypes.bool,
         currentZoomLvl: PropTypes.number,
         scales: PropTypes.array
     };
 
     static defaultProps = {
+        legendContainerStyle: {
+            marginLeft: "15px"
+        },
         showOnlyIfVisible: false
     };
 
     render() {
         let node = this.props.node || {};
         if (this.canShow(node) && node.type === "wms" && node.group !== "background") {
-            return <div style={{marginLeft: "15px"}}><Legend layer={node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales}/></div>;
+            return <div style={this.props.legendContainerStyle}><Legend style={this.props.legendStyle} layer={node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales}/></div>;
         }
         return null;
     }
