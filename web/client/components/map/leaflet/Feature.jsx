@@ -173,7 +173,7 @@ let Feature = React.createClass({
         }
     },
     componentWillReceiveProps(newProps) {
-        if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry)) {
+        if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry) || !isEqual(newProps.style, this.props.style)) {
             this.props.container.removeLayer(this._layer);
             this._layer = geometryToLayer({
                 type: newProps.type,
