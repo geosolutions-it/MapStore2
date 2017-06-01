@@ -13,7 +13,7 @@ const {selectTheme} = require('../../actions/theme');
 
 
 describe('Test the theme reducer', () => {
-    it('should maange the THEME_SELECTED action', () => {
+    it('should manage the THEME_SELECTED action', () => {
         var state = theme({}, selectTheme({id: "default"}));
         expect(state.selectedTheme).toExist();
         expect(state.selectedTheme.id).toBe("default");

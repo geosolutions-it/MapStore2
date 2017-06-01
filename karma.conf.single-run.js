@@ -3,7 +3,7 @@ module.exports = function karmaConfig(config) {
     config.set({
 
         browsers: [ 'Chrome' ],
-
+        browserNoActivityTimeout: 30000,
         singleRun: true,
 
         frameworks: [ 'mocha' ],
