@@ -7,8 +7,14 @@
  */
 const {transaction} = require('./transaction');
 const {insert} = require('./insert');
-
+const {update, property} = require('./update');
+const {deleteFeature, deleteFeatures, deleteById} = require('./delete');
 module.exports = {
     insert,
+    update,
+    property,
+    deleteFeature,
+    deleteFeatures,
+    deleteById,
     transaction
 };
