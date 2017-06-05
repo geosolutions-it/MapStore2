@@ -97,6 +97,11 @@ const FeatureGrid = React.createClass({
             }
         };
     },
+    getInitialState() {
+        return {
+            columnsVisibility: {}
+        };
+    },
     shouldComponentUpdate(nextProps) {
         return !isEqual(nextProps, this.props);
     },
@@ -116,6 +121,13 @@ const FeatureGrid = React.createClass({
         if (this.props.highlightedFeatures) {
             this.selectHighlighted();
         }
+    },
+    onColumnVisible(event) {
+        this.setState({
+            columnsVisibility: assign({}, this.state.columnsVisibility, {
+                [event.column.colId]: event.visible
+            })
+        });
     },
     // Internal function that simulate data source getRows for in memory data
     getRows(params) {
@@ -214,6 +226,7 @@ const FeatureGrid = React.createClass({
                             first: '|<',
                             previous: '<'}}
                         onGridReady={this.onGridReady}
+                        onColumnVisible={this.onColumnVisible}
                         {...this.props.agGridOptions}
                     />
                 </div>
@@ -234,6 +247,9 @@ const FeatureGrid = React.createClass({
                 return assign({}, defaultOptions, {headerName: key, field: "properties." + key});
             });
         }
+        defs = defs.map((def) => assign({}, def, {
+            hide: def.hide === true || this.state.columnsVisibility[def.field] === false
+        }));
         return (this.props.enableZoomToFeature) ? [
         {
             onCellClicked: this.zoomToFeature,

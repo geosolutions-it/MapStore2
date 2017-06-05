@@ -222,7 +222,7 @@ var OpenlayersMap = React.createClass({
         const extent = projection.getExtent();
         const size = !extent ?
             // use an extent that can fit the whole world if need be
-            360 * ol.proj.METERS_PER_UNIT[ol.proj.Units.DEGREES] /
+            360 * ol.proj.METERS_PER_UNIT.degrees /
                 ol.proj.METERS_PER_UNIT[projection.getUnits()] :
             Math.max(ol.extent.getWidth(extent), ol.extent.getHeight(extent));
 
