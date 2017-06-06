@@ -40,8 +40,8 @@ const PropTypes = require('prop-types');
  * @prop {object} cfg.panelStyle inline style for the panel
  * @prop {string} cfg.panelClassName className for the panel
  */
-const SearchServicesConfigPanel = React.createClass({
-    propTypes: {
+class SearchServicesConfigPanel extends React.Component {
+    static propTypes = {
         id: PropTypes.string,
         enabled: PropTypes.bool,
         panelStyle: PropTypes.object,
@@ -62,52 +62,54 @@ const SearchServicesConfigPanel = React.createClass({
         restServiceConfig: PropTypes.func,
         textSearchConfig: PropTypes.object,
         editIdx: PropTypes.number
-    },
-    getDefaultProps() {
-        return {
-            id: "search-services-config-editor",
-            enabled: false,
-            panelStyle: {
-                minWidth: "400px",
-                zIndex: 2000,
-                position: "absolute",
-                // overflow: "auto",
-                top: "100px",
-                minHeight: "300px",
-                left: "calc(50% - 150px)",
-                backgroundColor: "white"
-            },
-            panelClassName: "toolbar-panel",
-            closeGlyph: "1-close",
-            titleText: <Message msgId="search.configpaneltitle" />,
-            closePanel: () => {},
-            onPropertyChange: () => {},
-            page: 0,
-            newService: {
-                type: "wfs",
-                name: "",
-                displayName: "",
-                subTitle: "",
-                priority: 1,
-                options: {
-                    url: "",
-                    typeName: "",
-                    queriableAttributes: "",
-                    sortBy: "",
-                    maxFeatures: 5,
-                    srsName: "EPSG:4326"}
-            }
-        };
-    },
-    canProceed() {
+    };
+
+    static defaultProps = {
+        id: "search-services-config-editor",
+        enabled: false,
+        panelStyle: {
+            minWidth: "400px",
+            zIndex: 2000,
+            position: "absolute",
+            // overflow: "auto",
+            top: "100px",
+            minHeight: "300px",
+            left: "calc(50% - 150px)",
+            backgroundColor: "white"
+        },
+        panelClassName: "toolbar-panel",
+        closeGlyph: "1-close",
+        titleText: <Message msgId="search.configpaneltitle" />,
+        closePanel: () => {},
+        onPropertyChange: () => {},
+        page: 0,
+        newService: {
+            type: "wfs",
+            name: "",
+            displayName: "",
+            subTitle: "",
+            priority: 1,
+            options: {
+                url: "",
+                typeName: "",
+                queriableAttributes: "",
+                sortBy: "",
+                maxFeatures: 5,
+                srsName: "EPSG:4326"}
+        }
+    };
+
+    canProceed = () => {
         const {page, pages, service} = this.props;
         return pages[page].validate(service);
-    },
-    isDirty() {
+    };
+
+    isDirty = () => {
         const {service, initServiceValues} = this.props;
         return !isEqual(service, initServiceValues);
-    },
-    renderFooter() {
+    };
+
+    renderFooter = () => {
         const {page, pages} = this.props;
         if (page === 0) {
             return (
@@ -142,7 +144,8 @@ const SearchServicesConfigPanel = React.createClass({
                     <Message msgId="search.nextbtn" />
                 </Button>
             </span>);
-    },
+    };
+
     render() {
         const {enabled, pages, page, id, panelStyle, panelClassName, titleText, closeGlyph, onPropertyChange, service, textSearchConfig = {}} = this.props;
         const Section = pages && pages[page] || null;
@@ -162,37 +165,42 @@ const SearchServicesConfigPanel = React.createClass({
                     {this.renderFooter()}
                 </Dialog>
             </Portal>) : null;
-    },
-    onClose() {
+    }
+
+    onClose = () => {
         this.props.toggleControl("searchservicesconfig");
         this.props.restServiceConfig(0);
         this.props.toggleControl("settings");
-    },
-    addService() {
+    };
+
+    addService = () => {
         const {newService} = this.props;
         this.props.onPropertyChange("init_service_values", newService);
         this.props.onPropertyChange("service", newService);
         this.props.onPropertyChange("page", 1);
-    },
-    prev() {
+    };
+
+    prev = () => {
         const {page} = this.props;
         if (page > 1) {
             this.props.onPropertyChange("page", page - 1);
         }else if (page === 1 ) {
             this.props.restServiceConfig(0);
         }
-    },
-    next() {
+    };
+
+    next = () => {
         const {page, pages} = this.props;
         if (page < pages.length - 1) {
             this.props.onPropertyChange("page", page + 1);
         }
-    },
-    update() {
+    };
+
+    update = () => {
         const {service, editIdx} = this.props;
         this.props.updateService(service, editIdx);
-    }
-});
+    };
+}
 
 const SearchServicesPlugin = connect(({controls = {}, searchconfig = {}}) => ({
     enabled: controls.searchservicesconfig && controls.searchservicesconfig.enabled || false,

@@ -11,8 +11,8 @@ const PropTypes = require('prop-types');
 
 require('./css/previewicon.css');
 
-const PreviewIcon = React.createClass({
-    propTypes: {
+class PreviewIcon extends React.Component {
+    static propTypes = {
         side: PropTypes.number,
         frame: PropTypes.number,
         margin: PropTypes.number,
@@ -23,21 +23,21 @@ const PreviewIcon = React.createClass({
         onPropertiesChange: PropTypes.func,
         onToggle: PropTypes.func,
         onLayerChange: PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            side: 50,
-            frame: 4,
-            margin: 5,
-            src: '',
-            vertical: false,
-            layer: {},
-            currentLayer: {},
-            onPropertiesChange: () => {},
-            onToggle: () => {},
-            onLayerChange: () => {}
-        };
-    },
+    };
+
+    static defaultProps = {
+        side: 50,
+        frame: 4,
+        margin: 5,
+        src: '',
+        vertical: false,
+        layer: {},
+        currentLayer: {},
+        onPropertiesChange: () => {},
+        onToggle: () => {},
+        onLayerChange: () => {}
+    };
+
     render() {
         const containerClass = this.props.vertical ? 'background-preview-icon-container-vertical' : 'background-preview-icon-container-horizontal';
         const type = this.props.layer.visibility ? ' bg-primary' : ' bg-body';
@@ -55,6 +55,6 @@ const PreviewIcon = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = PreviewIcon;

@@ -19,17 +19,17 @@ function validate(service = {}) {
     return name.length > 0 && url.length > 0 && typeName.length > 0 && queriableAttributes.length > 0;
 }
 
-const WFSServiceProps = React.createClass({
-    propTypes: {
+class WFSServiceProps extends React.Component {
+    static propTypes = {
         service: PropTypes.object,
         onPropertyChange: PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            service: {},
-            onPropertyChange: () => {}
-        };
-    },
+    };
+
+    static defaultProps = {
+        service: {},
+        onPropertyChange: () => {}
+    };
+
     render() {
         const {service} = this.props;
         const {options = {}} = service;
@@ -77,23 +77,26 @@ const WFSServiceProps = React.createClass({
                     onChange={this.updateProp.bind(null, "queriableAttributes")}/>
                 </FormGroup>
             </form>);
-    },
-    updateProp(prop, event) {
+    }
+
+    updateProp = (prop, event) => {
         let value = event.target.value;
         if (prop === "queriableAttributes") {
             value = value.split(",");
         }
         const options = assign({}, this.props.service.options, {[prop]: value} );
         this.props.onPropertyChange("service", assign({}, this.props.service, {options}));
-    },
-    updateName(event) {
+    };
+
+    updateName = (event) => {
         const value = event.target.value;
         this.props.onPropertyChange("service", assign({}, this.props.service, {name: value}));
-    },
-    updateMaxFeatures(val) {
+    };
+
+    updateMaxFeatures = (val) => {
         const options = assign({}, this.props.service.options, {maxFeatures: parseFloat(val[0], 10)});
         this.props.onPropertyChange("service", assign({}, this.props.service, {options}));
-    }
-});
+    };
+}
 
 module.exports = { Element: WFSServiceProps, validate};

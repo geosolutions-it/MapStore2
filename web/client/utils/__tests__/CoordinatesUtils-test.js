@@ -111,7 +111,7 @@ describe('CoordinatesUtils', () => {
         expect(reprojectedTestPoint.features[0].geometry.type).toBe("Point");
         // approximate values should be the same
         expect(reprojectedTestPoint.features[0].geometry.coordinates[0].toFixed(4)).toBe((-12523490.492568726).toFixed(4));
-        expect(reprojectedTestPoint.features[0].geometry.coordinates[1].toFixed(4)).toBe(5195238.005360028.toFixed(4));
+        expect(reprojectedTestPoint.features[0].geometry.coordinates[1].toFixed(4)).toBe((5195238.005360028).toFixed(4));
     });
 
     it('test geojson extent', () => {

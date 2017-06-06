@@ -12,17 +12,19 @@ const {FormGroup} = require('react-bootstrap');
 const ToggleBtn = require('../../components/buttons/ToggleButton');
 const PropTypes = require('prop-types');
 
-const ToggleServicesConfig = React.createClass({
-    propTypes: {
+class ToggleServicesConfig extends React.Component {
+    static propTypes = {
         toggleControl: PropTypes.func,
         enabled: PropTypes.bool
-    },
-    onClick() {
+    };
+
+    onClick = () => {
         if (!this.props.enabled) {
             this.props.toggleControl("settings");
             this.props.toggleControl("searchservicesconfig");
         }
-    },
+    };
+
     render() {
         return (
             <FormGroup>
@@ -30,7 +32,7 @@ const ToggleServicesConfig = React.createClass({
                     isButton={true} {...this.props} onClick={this.onClick}/>
             </FormGroup>);
     }
-});
+}
 
 module.exports = connect((state) => ({
     enabled: state.controls && state.controls.searchservicesconfig && state.controls.searchservicesconfig.enabled || false,

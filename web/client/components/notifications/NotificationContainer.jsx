@@ -10,6 +10,7 @@ const NotificationSystem = require('react-notification-system');
 const PropTypes = require('prop-types');
 
 var LocaleUtils = require('../../utils/LocaleUtils');
+
 /**
  * Container for Notifications. Allows to display notifications by passing
  * them in the notification property
@@ -30,35 +31,40 @@ var LocaleUtils = require('../../utils/LocaleUtils');
  * @example
  * <NotificationContainer notifications={[{uid: 1, title: "notification", level: "success"}]} />;
  */
-const NotificationContainer = React.createClass({
-    propTypes: {
+class NotificationContainer extends React.Component {
+    static propTypes = {
         notifications: PropTypes.array,
         onRemove: PropTypes.func
-    },
-    contextTypes: {
+    };
+
+    static contextTypes = {
         messages: PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            notifications: [],
-            onRemove: () => {}
-        };
-    },
+    };
+
+    static defaultProps = {
+        notifications: [],
+        onRemove: () => {}
+    };
+
     componentDidMount() {
         this.updateNotifications(this.props.notifications);
-    },
+    }
+
     componentDidUpdate() {
         const {notifications} = this.props || [];
         this.updateNotifications(notifications);
-    },
+    }
+
     render() {
         const {notifications, onRemove, ...rest} = this.props;
         return (<NotificationSystem ref="notify" { ...rest } />);
-    },
-    system() {
+    }
+
+    system = () => {
         return this.refs.notify;
-    },
-    updateNotifications(notifications) {
+    };
+
+    updateNotifications = (notifications) => {
         const notificationIds = notifications.map(notification => notification.uid);
         const systemNotifications = this.system().state.notifications || [];
         // Get all active notifications from react-notification-system
@@ -84,7 +90,7 @@ const NotificationContainer = React.createClass({
               });
             }
         });
-    }
-});
+    };
+}
 
 module.exports = NotificationContainer;

@@ -18,8 +18,8 @@ const PropTypes = require('prop-types');
 
 require('./css/background.css');
 
-const BackgroundSelector = React.createClass({
-    propTypes: {
+class BackgroundSelector extends React.Component {
+    static propTypes = {
         start: PropTypes.number,
         left: PropTypes.number,
         bottom: PropTypes.number,
@@ -34,47 +34,51 @@ const BackgroundSelector = React.createClass({
         onToggle: PropTypes.func,
         onLayerChange: PropTypes.func,
         onStartChange: PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            start: 0,
-            bottom: 0,
-            left: 0,
-            enabled: false,
-            layers: [],
-            currentLayer: {},
-            tempLayer: {},
-            size: {width: 0, height: 0},
-            dimensions: {},
-            thumbs: {
-                unknown: require('./img/dafault.jpg')
-            },
-            onPropertiesChange: () => {},
-            onToggle: () => {},
-            onLayerChange: () => {},
-            onStartChange: () => {}
-        };
-    },
+    };
+
+    static defaultProps = {
+        start: 0,
+        bottom: 0,
+        left: 0,
+        enabled: false,
+        layers: [],
+        currentLayer: {},
+        tempLayer: {},
+        size: {width: 0, height: 0},
+        dimensions: {},
+        thumbs: {
+            unknown: require('./img/dafault.jpg')
+        },
+        onPropertiesChange: () => {},
+        onToggle: () => {},
+        onLayerChange: () => {},
+        onStartChange: () => {}
+    };
+
     componentWillUnmount() {
         this.props.onLayerChange('currentLayer', {});
         this.props.onLayerChange('tempLayer', {});
         this.props.onStartChange(0);
-    },
-    getThumb(layer) {
+    }
+
+    getThumb = (layer) => {
         return this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || layer.thumbURL || this.props.thumbs.unknown;
-    },
-    getLayer() {
+    };
+
+    getLayer = () => {
         const tempLyr = isEmpty(this.props.tempLayer) ? this.props.layers.filter((layer) => { return layer.visibility === true; })[0] : this.props.tempLayer;
         const currentLyr = isEmpty(this.props.currentLayer) ? this.props.layers.filter((layer) => { return layer.visibility === true; })[0] : this.props.currentLayer;
         return this.props.enabled ? tempLyr : currentLyr;
-    },
-    getIcons(side, frame, margin, vertical) {
+    };
+
+    getIcons = (side, frame, margin, vertical) => {
         return this.props.enabled ? this.props.layers.map((layer, idx) => {
             let thumb = this.getThumb(layer);
             return <PreviewIcon vertical={vertical} key={idx} src={thumb} currentLayer={this.props.currentLayer} margin={margin} side={side} frame={frame} layer={layer} onToggle={this.props.onToggle} onPropertiesChange={this.props.onPropertiesChange} onLayerChange={this.props.onLayerChange}/>;
         }) : [];
-    },
-    getDimensions(side, frame, margin, left, size, iconsLength) {
+    };
+
+    getDimensions = (side, frame, margin, left, size, iconsLength) => {
         const openPreviewSize = (side + frame * 2 + margin * 2) + (side + frame * 2 + margin) * iconsLength + left;
         const minSize = (size / 2) - (side + frame * 2 + margin * 2) - left;
         const pagination = openPreviewSize > size / 2;
@@ -83,8 +87,9 @@ const BackgroundSelector = React.createClass({
         const listSize = this.props.enabled ? (side + frame + margin) * visibleIconsLength + 52 : 0;
 
         return {pagination, listSize, visibleIconsLength};
-    },
-    renderBackgroundSelector() {
+    };
+
+    renderBackgroundSelector = () => {
         const configuration = assign({
             side: 78,
             sidePreview: 104,
@@ -135,10 +140,11 @@ const BackgroundSelector = React.createClass({
                 </div>
             </div>
         );
-    },
+    };
+
     render() {
         return this.props.layers.length > 0 ? this.renderBackgroundSelector() : null;
     }
-});
+}
 
 module.exports = BackgroundSelector;

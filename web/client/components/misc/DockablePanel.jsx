@@ -8,6 +8,7 @@
 const React = require('react');
 const Dock = require('react-dock').default;
 const PropTypes = require('prop-types');
+
 /**
  * Component for rendering a dockablePanel panel.
  * @memberof components.dockablePanel
@@ -27,8 +28,8 @@ const PropTypes = require('prop-types');
  * @prop {number} zIndex. Positioned below dialogs, above left menu
  *
  */
-const DockablePanel = React.createClass({
-    propTypes: {
+class DockablePanel extends React.Component {
+    static propTypes = {
         id: PropTypes.string,
         dimMode: PropTypes.string,
         dockSize: PropTypes.number,
@@ -42,32 +43,35 @@ const DockablePanel = React.createClass({
         toolbarHeight: PropTypes.number,
         wrappedComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         zIndex: PropTypes.number
-    },
-    contextTypes: {
+    };
+
+    static contextTypes = {
         messages: PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            dimMode: "none",
-            dockSize: 0.35,
-            fluid: true,
-            isVisible: true,
-            maxDockSize: 1.0,
-            minDockSize: 0.1,
-            position: "bottom",
-            setDockSize: () => {},
-            toolbar: null,
-            toolbarHeight: 40,
-            wrappedComponent: {},
-            zIndex: 1030
-        };
-    },
-    getHeight(pos) {
+    };
+
+    static defaultProps = {
+        dimMode: "none",
+        dockSize: 0.35,
+        fluid: true,
+        isVisible: true,
+        maxDockSize: 1.0,
+        minDockSize: 0.1,
+        position: "bottom",
+        setDockSize: () => {},
+        toolbar: null,
+        toolbarHeight: 40,
+        wrappedComponent: {},
+        zIndex: 1030
+    };
+
+    getHeight = (pos) => {
         return pos === "top" || pos === "bottom" ? true : undefined;
-    },
-    getWidth(pos) {
+    };
+
+    getWidth = (pos) => {
         return pos === "left" || pos === "right" ? true : undefined;
-    },
+    };
+
     render() {
         const WrappedComponent = this.props.wrappedComponent;
         return (
@@ -93,8 +97,9 @@ const DockablePanel = React.createClass({
                 {this.props.toolbar}
             </Dock>
         );
-    },
-    limitDockHeight(size) {
+    }
+
+    limitDockHeight = (size) => {
         if (size >= this.props.maxDockSize) {
             this.props.setDockSize(this.props.maxDockSize);
         } else if (size <= this.props.minDockSize) {
@@ -102,7 +107,7 @@ const DockablePanel = React.createClass({
         } else {
             this.props.setDockSize(size);
         }
-    }
-});
+    };
+}
 
 module.exports = DockablePanel;

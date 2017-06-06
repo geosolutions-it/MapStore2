@@ -186,7 +186,7 @@ function importer(state = {}, action) {
     case IMPORTS_TASK_CREATED:
         if (action.importId === (state.selectedImport && state.selectedImport.id) ) {
             let selectedImport = assign({}, state.selectedImport, {
-                tasks: [...state.selectedImport.tasks || [], ...action.tasks]
+                tasks: [...(state.selectedImport.tasks || []), ...action.tasks]
             });
             return assign({}, state, {taskCreationError: null, selectedImport});
         }

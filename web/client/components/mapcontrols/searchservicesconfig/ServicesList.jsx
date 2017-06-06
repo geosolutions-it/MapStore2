@@ -16,24 +16,25 @@ function validate() {
     return true;
 }
 
-const ServicesList = React.createClass({
-    propTypes: {
+class ServicesList extends React.Component {
+    static propTypes = {
         services: PropTypes.array,
         override: PropTypes.bool,
         service: PropTypes.object,
         onPropertyChange: PropTypes.func
-    },
-    contextTypes: {
+    };
+
+    static contextTypes = {
         messages: PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            services: [],
-            override: false,
-            onPropertyChange: () => {}
-        };
-    },
-    getOptions() {
+    };
+
+    static defaultProps = {
+        services: [],
+        override: false,
+        onPropertyChange: () => {}
+    };
+
+    getOptions = () => {
         if (this.props.services.length === 0) {
             return (<div className="search-serivce-name">
             <Message msgId="search.serviceslistempty"/>
@@ -49,7 +50,8 @@ const ServicesList = React.createClass({
                         <Glyphicon onClick={() => this.edit(s, idx)} glyph="pencil"/>
                 </div>);
         });
-    },
+    };
+
     render() {
         const {override} = this.props;
         return (
@@ -66,22 +68,25 @@ const ServicesList = React.createClass({
                     <Message msgId="search.overriedservice" />
                 </Checkbox>
             </form>);
-    },
-    edit(s, idx) {
+    }
+
+    edit = (s, idx) => {
         this.props.onPropertyChange("init_service_values", s);
         this.props.onPropertyChange("service", s);
         this.props.onPropertyChange("editIdx", idx);
         this.props.onPropertyChange("page", 1);
-    },
-    toggleOverride() {
+    };
+
+    toggleOverride = () => {
         const {services, override} = this.props;
         this.props.onPropertyChange("textSearchConfig", {services, override: !override});
-    },
-    remove(idx) {
+    };
+
+    remove = (idx) => {
         const {services, override} = this.props;
         const newServices = services.filter((el, i) => i !== idx);
         this.props.onPropertyChange("textSearchConfig", {services: newServices, override});
-    }
-});
+    };
+}
 
 module.exports = {Element: ServicesList, validate};

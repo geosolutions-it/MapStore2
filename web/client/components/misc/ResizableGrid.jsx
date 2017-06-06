@@ -26,8 +26,8 @@ const PropTypes = require('prop-types');
  * @prop {number} size. The size of the dock panel wrapping this component.
  *
  */
-const ResizableGrid = React.createClass({
-    propTypes: {
+class ResizableGrid extends React.Component {
+    static propTypes = {
         columns: PropTypes.array.isRequired,
         headerRowHeight: PropTypes.number,
         minHeight: PropTypes.number.isRequired,
@@ -43,33 +43,33 @@ const ResizableGrid = React.createClass({
         onCellsSelected: PropTypes.func,
         onRowsSelected: PropTypes.func,
         onRowsDeselected: PropTypes.func
-    },
-    contextTypes: {
+    };
+
+    static contextTypes = {
         messages: PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            columns: [],
-            headerRowHeight: 55,
-            minHeight: 250,
-            minWidth: null,
-            refGrid: "grid",
-            rowHeight: 30,
-            rowKey: "id",
-            rowSelection: null,
-            rowGetter: null,
-            selectBy: null,
-            onRowsSelected: () => {},
-            onRowsDeselected: () => {},
-            rows: []
-        };
-    },
-    getInitialState() {
-        return {
-            minHeight: this.props.minHeight,
-            minWidth: this.props.minWidth
-        };
-    },
+    };
+
+    static defaultProps = {
+        columns: [],
+        headerRowHeight: 55,
+        minHeight: 250,
+        minWidth: null,
+        refGrid: "grid",
+        rowHeight: 30,
+        rowKey: "id",
+        rowSelection: null,
+        rowGetter: null,
+        selectBy: null,
+        onRowsSelected: () => {},
+        onRowsDeselected: () => {},
+        rows: []
+    };
+
+    state = {
+        minHeight: this.props.minHeight,
+        minWidth: this.props.minWidth
+    };
+
     componentWillReceiveProps(newProps) {
         if (this.props.size.width !== newProps.size.width ) {
             this.setState({
@@ -82,13 +82,16 @@ const ResizableGrid = React.createClass({
                 minHeight: this.getHeight(this.refs.grid)}
             );
         }
-    },
-    getHeight(element) {
+    }
+
+    getHeight = (element) => {
         return element && element.getDataGridDOMNode().clientHeight || this.props.minHeight;
-    },
-    getWidth(element) {
+    };
+
+    getWidth = (element) => {
         return element && element.getDataGridDOMNode().clientWidth || this.props.minWidth;
-    },
+    };
+
     render() {
         return (
             <ReactDataGrid
@@ -110,10 +113,11 @@ const ResizableGrid = React.createClass({
                 rowsCount={this.props.rows.length}
             />
         );
-    },
-    rowGetter(i) {
-        return this.props.rows[i];
     }
-});
+
+    rowGetter = (i) => {
+        return this.props.rows[i];
+    };
+}
 
 module.exports = ResizableGrid;
