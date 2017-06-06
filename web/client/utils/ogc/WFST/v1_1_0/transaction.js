@@ -17,7 +17,7 @@ const transaction = (operations, schemaLocation) => '<wfs:Transaction '
     + 'xsi:schemaLocation="http://www.opengis.net/wfs '
     + 'http://schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd" '
     + `${schemaLocation}>`
-    + `${operations.map((o)=> o)}`
+    + `${operations.join("")}`
     + '</wfs:Transaction>';
 module.exports = {
     transaction

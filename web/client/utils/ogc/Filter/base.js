@@ -1,6 +1,15 @@
-const fidFilter = (fid) =>
-    `<ogc:Filter><ogc:FeatureId fid="${fid}"/></ogc:Filter>`;
+/**
+ * Copyright 2017, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+const filter = (content, ns = "ogc") => `<${ns}:Filter>${Array.isArray(content) ? content.join("") : content}</${ns}:Filter>`;
+const fidFilter = (fid, ns = "ogc") =>
+    filter(`<${ns}:FeatureId fid="${fid}"/>`, ns);
 
 module.exports = {
-    fidFilter
+    fidFilter,
+    filter
 };
