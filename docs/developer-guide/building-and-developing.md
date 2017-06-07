@@ -79,6 +79,15 @@ We suggest to use one of the following:
    - Babel snippets
    - Emmet
 
+### Redux Dev Tools
+When you are running the application locally using `npm start` you can debug the application with [redux dev tools](https://github.com/gaearon/redux-devtools) using the flag ?debug=true
+```
+http://localhost:8081/?debug=true#/?_k=c51bb5
+```
+It also integrates with the [browser's extension](https://github.com/zalmoxisus/redux-devtools-extension), if installed.
+
+This way you can monitor the application's state evolution and the action triggered by your application.
+
 ## Backend services debugging
 TBD
 
