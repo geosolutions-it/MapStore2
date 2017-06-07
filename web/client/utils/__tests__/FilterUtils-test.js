@@ -481,11 +481,6 @@ describe('FilterUtils', () => {
          + '</ogc:Function></ogc:Function>'
          + "</ogc:Intersects>";
 
-        // this is a workarround for this issue : https://github.com/geosolutions-it/MapStore2/issues/1263
-        // please remove when fixed
-        FilterUtils.nsplaceholder = "ogc";
-        FilterUtils.setOperatorsPlaceholders("{namespace}");
-
         let filter = FilterUtils.processOGCCrossLayerFilter(crossLayerFilterObj);
         expect(filter).toEqual(expected);
     });
