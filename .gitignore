@@ -17,3 +17,4 @@ _site
 *.lock
 docs/developer-guide/reference/
 web/client/mapstore/docs/
+web/docs
