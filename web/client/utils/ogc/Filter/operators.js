@@ -28,7 +28,7 @@ var ogcSpatialOperators = {
     "BBOX": (ns, content) => `<${ns}:BBOX>${content}</${ns}:BBOX>`,
     "CONTAINS": (ns, content) => `<${ns}:Contains>${content}</${ns}:Contains>`,
     "DWITHIN": (ns, content) => `<${ns}:DWithin>${content}</${ns}:DWithin>`,
-    "WITHIN": (ns, content) => `<${ns}:Within>${content}</${ns}:Within`
+    "WITHIN": (ns, content) => `<${ns}:Within>${content}</${ns}:Within>`
 };
 module.exports = {
     ogcComparisonOperators,
