@@ -9,7 +9,50 @@ const {logical, spatial, comparison, literal, propertyName, valueReference, dist
 const {filter, fidFilter} = require('./filter');
 const {processOGCGeometry} = require("../GML");
 // const isValidXML = (value, {filterNS, gmlNS}) => value.indexOf(`<${filterNS}:` === 0) || value.indexOf(`<${gmlNS}:`) === 0;
-
+/**
+ * Returns OGC Filter Builder. The FilterBuilder returns the method to compose the filter.
+ * The returned element are basically the `filter`, `and`, `or` and `not` functions, plus a `property` object that allows to build the conditions
+ * for properties. Other special conditions can be passed as strings.
+ * The property object have the methods listed as properies below.
+ * The builder provides all the methods to compose the filter (filter, and, or, not, property) to compose the filter.
+ * ```
+ * const filterBuilder = require('.../FilterBuilder');
+ * const {filter, property, and, or, not} = filterBuilder({gmlVersion: "3.1.1"});
+ *      filter(
+ *          and(
+ *              property("P1").equals("v1"),
+ *              proprety("the_geom").intersects(geoJSONGeometry)
+ *          )
+ *      ),
+ *      {srsName="EPSG:4326"} // 3rd for query is optional
+ *      )
+ * {maxFeatures: 10, startIndex: 0, resultType: 'hits', outputFormat: 'application/json'} // 3rd  argument of getFeature is optional, and contains the options for the request.
+ * );
+ *
+ * ```
+ * @name FilterBuilder
+ * @constructor
+ * @memberof utils.ogc.WFS
+ * @param {Object} [options] the options to create the request builder
+ * @param  {String} [options.wfsVersion="1.1.0"] the version of WFS
+ * @param  {String} [options.gmlVersion]         gml Version ()
+ * @param  {String} [options.filterNS]           NameSpace to use for filters
+ * @return {Object}                      a filter builder.
+ * @prop {object} property is an utility object that allows to add a condition using the notation `property("propname").operator(...otherParams)`
+ * @prop {function} property.equalTo `property("P1").equals("v1")`
+ * @prop {function} property.greaterThen `property("P1").greaterThen(1)`
+ * @prop {function} property.greaterThenOrEqualTo `property("P1").greaterThenOrEqualTo(1)`
+ * @prop {function} property.lessThen `property("P1").lessThen(1)`
+ * @prop {function} property.lessThenOrEqualTo `property("P1").lessThenOrEqualTo(1)`
+ * @prop {function} property.between `property("P1").between(1, 2)`
+ * @prop {function} property.like `property("P1").like("*test", {options})`
+ * @prop {function} property.ilike `property("P1").ilike("*test", {options})`
+ * @prop {function} property.isNull `property("P1").isNull()`
+ * @prop {function} property.intersects `property("P1").intersects(geoJSONGeometry)`
+ * @prop {function} property.within `property("P1").within(geoJSONGeometry)`
+ * @prop {function} property.dwithin `property("P1").dwithin(geoJSONGeometry, 10, "m")` 2nd and 3rd params are optional
+ * @prop {function} property.contains `property("P1").contains(geoJSONGeometry)`
+ */
 module.exports = function({filterNS= "ogc", gmlVersion, wfsVersion = "1.1.0"} = {}) {
     let gmlV = gmlVersion || "3.1.1";
 
@@ -22,10 +65,59 @@ module.exports = function({filterNS= "ogc", gmlVersion, wfsVersion = "1.1.0"} = 
     };
     const propName = wfsVersion.indexOf("2.") === 0 ? valueReference : propertyName;
     return {
+        /**
+         * generates a filter with given content
+         * @memberof utils.ogc.WFS.FilterBuilder
+         * @instance
+         * @return {string} the condition generated
+         * @param {string|string[]} conditions conditions to place inside the filter
+         */
         filter: filter.bind(null, filterNS),
+        /**
+         * generates a filterby the passed featureId
+         * @memberof utils.ogc.WFS.FilterBuilder
+         * @method
+         * @instance
+         * @return {string} the condition generated
+         * @param {string} fid the featureId
+         */
         fidFilter: fidFilter.bind(null, filterNS),
+        /**
+         * generates an "and" condition between the condition passed as parameters.
+         * parameters can be passed as array or args list
+         * @memberof utils.ogc.WFS.FilterBuilder
+         * @method
+         * @instance
+         * @param {string|string[]} conditions conditions to place inside the filter
+         * @return {string} the condition generated
+         * @example
+         * and( property("a").equalTo("1"), property("b").equalTo("2"), ... )
+         * and( [property("a").equalTo("1"), property("b").equalTo("2"), ...] )
+         */
         and: logical.and.bind(null, filterNS),
+        /**
+         * generates an "or" condition between the condition passed as parameters.
+         * parameters can be passed as array or args list
+         * @memberof utils.ogc.WFS.FilterBuilder
+         * @method
+         * @instance
+         * @param {string|string[]} conditions conditions to place inside the filter
+         * @return {string} the condition generated
+         * @example
+         * or( property("a").equalTo("1"), property("b").equalTo("2"), ... )
+         * or( [property("a").equalTo("1"), property("b").equalTo("2"), ...] )
+         */
         or: logical.or.bind(null, filterNS),
+        /**
+         * generates an "not" condition to the condition passed as parameter.
+         * @memberof utils.ogc.WFS.FilterBuilder
+         * @method
+         * @instance
+         * @param {string} conditions conditions to place inside the filter
+         * @return {string} the condition generated
+         * @example
+         * not( property("a").equalTo("1") )
+         */
         not: logical.not.bind(null, filterNS),
         property: function(name) {
             return {
@@ -44,8 +136,6 @@ module.exports = function({filterNS= "ogc", gmlVersion, wfsVersion = "1.1.0"} = 
                 dwithin: (geom, dist, units="m") => spatial.dwithin(filterNS, propName(filterNS, name), getGeom(geom), distance(filterNS, dist, units)),
                 contains: (value) => spatial.contains(filterNS, propName(filterNS, name), getGeom(value))
                 // TODO bbox equals, disjoint, touches, overlaps
-
-
             };
         }
     };
