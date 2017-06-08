@@ -8,7 +8,7 @@
 
 const expect = require('expect');
 const {insert, update, property, deleteFeature, transaction} = require('../WFST');
-const {fidFilter} = require('../Filter/base');
+const {fidFilter} = require('../Filter/filter');
 const {featureTypeSchema} = require('../WFS/base');
 const describeStates = require('json-loader!../../../test-resources/wfs/describe-states.json');
 const describePois = require('json-loader!../../../test-resources/wfs/describe-pois.json');

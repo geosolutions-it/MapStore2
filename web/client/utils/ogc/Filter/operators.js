@@ -31,6 +31,7 @@ const ogcSpatialOperators = {
     "WITHIN": (ns, content) => `<${ns}:Within>${content}</${ns}:Within>`
 };
 const propertyName = (ns, name) => `<${ns}:PropertyName>${name}</${ns}:PropertyName>`;
+const valueReference = (ns, name) => `<${ns}:ValueReference>${name}</${ns}:ValueReference>`;
 const literal = (ns, value) => `<${ns}:Literal>${value}</${ns}:Literal>`;
 const multiop = (ns, op, content) => op(ns, Array.isArray(content) ? content.join("") : content);
 const logical = {
@@ -66,6 +67,7 @@ module.exports = {
     ogcLogicalOperators,
     ogcSpatialOperators,
     propertyName,
+    valueReference,
     distance,
     literal,
     logical,
