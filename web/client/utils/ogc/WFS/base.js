@@ -8,6 +8,18 @@
 
 const {head, get} = require('lodash');
 const {processOGCGeometry} = require("../GML");
+const WFS_TO_GML = {
+    "1.0.0": "2.0",
+    "1.1.0": "3.1.1",
+    "2.0": "3.2",
+    "2.0.0": "3.2"
+};
+/**
+ * retrieve default GML version from WFS version
+ * @param  {string} v WFS version
+ * @return {string}   GML version
+ */
+const wfsToGmlVersion = (v = "1.1.0") => WFS_TO_GML[v];
 /**
  * Provides the array of featureType properties
  * @param  {object} describeFeatureType the describeFeatureType object
@@ -83,5 +95,6 @@ module.exports = {
      * getTypeName({targetPrefix: "topp",featureTypes: [{typeName: "states"}]); // --> topp:states
      */
     getTypeName: (dft) => dft.targetPrefix ? dft.targetPrefix + ":" + dft.featureTypes[0].typeName : dft.featureTypes[0].typeName,
+    wfsToGmlVersion,
     processOGCGeometry
 };

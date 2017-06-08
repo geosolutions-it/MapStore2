@@ -1,5 +1,5 @@
 const {isArray} = require('lodash');
-const isGML1 = (version) => version === "1.0.0";
+const isGML2 = (version) => version.indexOf("2") === 0;
 const closePolygon = (coords) => {
     if (coords.length >= 3) {
         const first = coords[0];
@@ -12,9 +12,9 @@ const closePolygon = (coords) => {
 };
 const pointElement = (coordinates, srsName, version) => {
     let gmlPoint = '<gml:Point srsDimension="2"';
-    const gml1 = isGML1(version);
+    const gml2 = isGML2(version);
     gmlPoint += srsName ? ' srsName="' + srsName + '">' : '>';
-    if (gml1) {
+    if (gml2) {
         gmlPoint += '<gml:coord><X>' + coordinates[0] + '</X><Y>' + coordinates[1] + '</Y></gml:coord>';
     } else {
         gmlPoint += '<gml:pos>' + coordinates.join(" ") + '</gml:pos>';
@@ -26,7 +26,7 @@ const pointElement = (coordinates, srsName, version) => {
 };
 
 const polygonElement = (coordinates, srsName, version) => {
-    const gml1 = isGML1(version);
+    const gml2 = isGML2(version);
     let gmlPolygon = '<gml:Polygon';
     gmlPolygon += srsName ? ' srsName="' + srsName + '">' : '>';
 
@@ -38,16 +38,16 @@ const polygonElement = (coordinates, srsName, version) => {
     const normalizedCoords = coordinates.length && isArray(coordinates[0]) && coordinates[0].length && isArray(coordinates[0][0]) ? coordinates : [coordinates];
     normalizedCoords.forEach((element, index) => {
         let coords = closePolygon(element).map((coordinate) => {
-            return coordinate[0] + (gml1 ? "," : " ") + coordinate[1];
+            return coordinate[0] + (gml2 ? "," : " ") + coordinate[1];
         });
-        const exterior = (gml1 ? "outerBoundaryIs" : "exterior");
-        const interior = (gml1 ? "innerBoundaryIs" : "exterior");
+        const exterior = (gml2 ? "outerBoundaryIs" : "exterior");
+        const interior = (gml2 ? "innerBoundaryIs" : "exterior");
         gmlPolygon +=
             (index < 1 ? '<gml:' + exterior + '>' : '<gml:' + interior + '>') +
                     '<gml:LinearRing>' +
-                    (gml1 ? '<gml:coordinates>' : '<gml:posList>') +
+                    (gml2 ? '<gml:coordinates>' : '<gml:posList>') +
                             coords.join(" ") +
-                    (gml1 ? '</gml:coordinates>' : '</gml:posList>') +
+                    (gml2 ? '</gml:coordinates>' : '</gml:posList>') +
                     '</gml:LinearRing>' +
             (index < 1 ? '</gml:' + exterior + '>' : '</gml:' + interior + '>');
     });
@@ -56,7 +56,7 @@ const polygonElement = (coordinates, srsName, version) => {
     return gmlPolygon;
 };
 const lineStringElement = (coordinates, srsName, version) => {
-    const gml1 = isGML1(version);
+    const gml2 = isGML2(version);
     let gml = '<gml:LineString';
     gml += srsName ? ' srsName="' + srsName + '">' : '>';
 
@@ -66,11 +66,11 @@ const lineStringElement = (coordinates, srsName, version) => {
     // ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
     let coords = coordinates.map((coordinate) => {
-        return coordinate[0] + (gml1 ? "," : " ") + coordinate[1];
+        return coordinate[0] + (gml2 ? "," : " ") + coordinate[1];
     });
-    gml += (gml1 ? '<gml:coordinates>' : '<gml:posList>') +
+    gml += (gml2 ? '<gml:coordinates>' : '<gml:posList>') +
               coords.join(" ") +
-                (gml1 ? '</gml:coordinates>' : '</gml:posList>');
+                (gml2 ? '</gml:coordinates>' : '</gml:posList>');
 
     gml += '</gml:LineString>';
     return gml;
@@ -113,8 +113,8 @@ const processOGCGeometry = (version, geometry) => {
               srsName, version);
             break;
         case "MultiLineString":
-        const multyLineTagName = version === "2.0" ? "MultiCurve" : "MultiLineString";
-        const lineMemberTagName = version === "2.0" ? "curveMember" : "lineStringMember";
+        const multyLineTagName = version === "3.2" ? "MultiCurve" : "MultiLineString";
+        const lineMemberTagName = version === "3.2" ? "curveMember" : "lineStringMember";
 
         ogc += `<gml:${multyLineTagName} srsName="${srsName}">`;
 
@@ -135,8 +135,8 @@ const processOGCGeometry = (version, geometry) => {
                 srsName, version);
             break;
         case "MultiPolygon":
-            const multyPolygonTagName = version === "2.0" ? "MultiSurface" : "MultiPolygon";
-            const polygonMemberTagName = version === "2.0" ? "surfaceMembers" : "polygonMember";
+            const multyPolygonTagName = version === "3.2" ? "MultiSurface" : "MultiPolygon";
+            const polygonMemberTagName = version === "3.2" ? "surfaceMembers" : "polygonMember";
 
             ogc += `<gml:${multyPolygonTagName} srsName="${srsName}">`;
 

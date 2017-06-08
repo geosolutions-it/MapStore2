@@ -45,7 +45,7 @@ describe('Test WFS-T request bodies generation', () => {
     });
     it('WFS-T transaction with update', () => {
         const result = transaction(
-            [update([property("NAME", "newName"), fidFilter("poi.7")], describePois)
+            [update([property("NAME", "newName"), fidFilter("ogc", "poi.7")], describePois)
             ],
             featureTypeSchema(describePois));
         expect(result).toExist();
