@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -25,7 +25,37 @@ const getStaticAttributesWFS2 = (ver) => 'service="WFS" version="' + ver + '" ' 
         'http://www.opengis.net/gml/3.2 ' +
         'http://schemas.opengis.net/gml/3.2.1/gml.xsd"';
 
-module.exports = function({wfsVersion = "1.1.0", gmlVersion, filterNS, wfsNS="wfs"}) {
+/**
+ * Returns WFS Request Builder.
+ * @name RequestBuilder
+ * @method
+ * @memberof utils.ogc.WFS
+ * @param {Object} [options] the options to create the request builder
+ * @param  {String} [options.wfsVersion="1.1.0"] the version of WFS
+ * @param  {String} [options.gmlVersion]         gml Version ()
+ * @param  {String} [options.filterNS]           NameSpace to use for filters
+*  @param  {String} [options.wfsNS="wfs"]        namespace to use for WFS tags
+ * @return {Object}                      a request builder.
+ * The request builder provides all the methods to compose the request (query, filter...). You can use it this way
+ * ```
+ * const requestBuilder = require('.../RequestBuilder');
+ * const {getFeature, query, filter, property} = requestBuilder({wfsVersion: "1.0.0"});
+ * const reqBody = getFeature(query(
+ *      "workspace:layer",
+ *      filter(
+ *          and(
+ *              property("P1").equals("v1"),
+ *              proprety("the_geom").intersects(geoJSONGeometry)
+ *          )
+ *      ),
+ *      {srsName="EPSG:4326"} // 3rd for query is optional
+ *      )
+ * {maxFeatures: 10, startIndex: 0, resultType: 'hits', outputFormat: 'application/json'} // 3rd  argument of getFeature is optional, and contains the options for the request.
+ * );
+ *
+ * ```
+ */
+module.exports = function({wfsVersion = "1.1.0", gmlVersion, filterNS, wfsNS="wfs"} = {}) {
     let gmlV = gmlVersion;
     if (!gmlV && wfsVersion) {
         gmlV = wfsToGmlVersion(wfsVersion);
@@ -38,11 +68,11 @@ module.exports = function({wfsVersion = "1.1.0", gmlVersion, filterNS, wfsNS="wf
         startIndex,
         maxFeatures
     } = {}) => {
-        const getMaxFeatures = (mf) => wfsVersion.indexOf("2.") === 0 ? `count=${mf}` : `maxFeatures=${mf}`;
+        const getMaxFeatures = (mf) => wfsVersion.indexOf("2.") === 0 ? `count="${mf}"` : `maxFeatures="${mf}"`;
         return (wfsVersion.indexOf("1.") === 0 ? getStaticAttributesWFS1(wfsVersion) : getStaticAttributesWFS2(wfsVersion))
-            + (resultType ? ` resultType=${resultType}` : "")
-            + (outputFormat ? ` outputFormat=${outputFormat}` : ``)
-            + ((startIndex || startIndex === 0) ? ` startIndex=${startIndex}` : "")
+            + (resultType ? ` resultType="${resultType}"` : "")
+            + (outputFormat ? ` outputFormat="${outputFormat}"` : ``)
+            + ((startIndex || startIndex === 0) ? ` startIndex="${startIndex}"` : "")
             + ((maxFeatures || maxFeatures === 0) ? ` ${getMaxFeatures(maxFeatures)}` : "");
     };
     return {

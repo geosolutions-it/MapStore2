@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -61,5 +61,19 @@ describe('RequestBuilder Operators', () => {
                     {srsName: "EPSG:3857"}
             ))
         ).toBe(expected2);
+
+        // params
+        let geom3 = {
+            "type": "Polygon",
+            "projection": "EPSG:3857",
+            "coordinates": [[[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]]]
+        };
+        let expected3 = '<wfs:GetFeature service="WFS" version="1.1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:wfs="http://www.opengis.net/wfs" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd" outputFormat="application/json"><wfs:Query typeName="ft_name_test" srsName="EPSG:3857"><ogc:Filter><ogc:Intersects><ogc:PropertyName>geometry</ogc:PropertyName><gml:Polygon srsName="EPSG:3857"><gml:exterior><gml:LinearRing><gml:posList>1 1 1 2 2 2 2 1 1 1</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon></ogc:Intersects></ogc:Filter></wfs:Query></wfs:GetFeature>';
+        expect(
+            getFeature(query("ft_name_test",
+                    filter(property("geometry").intersects(geom3)),
+                    {srsName: "EPSG:3857"}
+            ), {outputFormat: "application/json"})
+        ).toBe(expected3);
     });
 });
