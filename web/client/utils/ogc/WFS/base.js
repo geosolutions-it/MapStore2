@@ -9,6 +9,18 @@
 const {head, get} = require('lodash');
 const {processOGCGeometry} = require("../GML");
 /**
+ * Provides the array of featureType properties
+ * @param  {object} describeFeatureType the describeFeatureType object
+ * @return {object[]}                     The array of featuretypes properties
+ */
+const getFeatureTypeProperties = (describeFeatureType) => get(describeFeatureType, "featureTypes[0].properties");
+/**
+ * Provides the first geometry type found
+ * @param  {object} describeFeatureType the describeFeatureType object
+ * @return {object}                     the featureType property
+ */
+const findGeometryProperty = (describeFeatureType) => head(getFeatureTypeProperties(describeFeatureType).filter( d => d.type.indexOf("gml:") === 0));
+/**
  * Retrives the descriptor for a property in the describeFeatureType (supports single featureTypes)
  * @memberof utils.ogc.WFS
  * @param  {string} propName            the name of the property to get
@@ -17,7 +29,7 @@ const {processOGCGeometry} = require("../GML");
  */
 const getPropertyDesciptor = (propName, describeFeatureType) =>
     head(
-        get(describeFeatureType, "featureTypes[0].properties").filter(d => d.name === propName)
+        getFeatureTypeProperties(describeFeatureType).filter(d => d.name === propName)
     );
 /**
  * @name schemaLocation
@@ -59,6 +71,8 @@ module.exports = {
         return value;
     },
     getPropertyDesciptor,
+    findGeometryProperty,
+    getFeatureTypeProperties,
     /**
      * retrives the featureTypeName from the describeFeatureType json object.
      * It prepends the targetPrefix to the first typename found in the featureTypes array.
