@@ -72,7 +72,7 @@ class ManagerMenu extends React.Component {
     getTools = () => {
         return [{element: <span key="burger-menu-title">{this.props.title}</span>}, ...this.props.entries.sort((a, b) => a.position - b.position).map((entry) => {
             return {
-                action: (context) => {context.router.push(entry.path); return this.props.itemSelected(entry.id); },
+                action: (context) => {context.router.history.push(entry.path); return this.props.itemSelected(entry.id); },
                 text: entry.msgId ? <Message msgId={entry.msgId} /> : entry.text,
                 cfg: {...entry}
             };

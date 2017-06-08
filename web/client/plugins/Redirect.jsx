@@ -34,7 +34,7 @@ class RedirectComponent extends React.Component {
 
     redirect = (props) => {
         if (!props.userDetails || !props.userDetails.user) {
-            this.context.router.push("/");
+            this.context.router.history.push("/");
         }
     };
 }

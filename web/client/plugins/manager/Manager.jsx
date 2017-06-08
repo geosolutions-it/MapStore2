@@ -50,7 +50,7 @@ class Manager extends React.Component {
                 onClick={(event) => {
                     event.preventDefault();
                     this.props.itemSelected(tool.id);
-                    this.context.router.push("/manager/" + tool.id);
+                    this.context.router.history.push("/manager/" + tool.id);
                 }}>
                     {this.renderToolIcon(tool)}
                     <span className="nav-msg">&nbsp;{tool.msgId ? <Message msgId={tool.msgId} /> : tool.title || tool.id}</span>

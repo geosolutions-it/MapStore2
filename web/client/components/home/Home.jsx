@@ -43,7 +43,7 @@ class Home extends React.Component {
     }
 
     goHome = () => {
-        this.context.router.push("/");
+        this.context.router.history.push("/");
     };
 }
 

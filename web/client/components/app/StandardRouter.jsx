@@ -11,7 +11,11 @@ const {connect} = require('react-redux');
 
 const Debug = require('../development/Debug');
 
-const {Router, Route, hashHistory} = require('react-router');
+const {Route} = require('react-router');
+const {ConnectedRouter} = require('react-router-redux');
+const createHistory = require('history/createHashHistory').default;
+const history = createHistory();
+
 
 const Localized = require('../I18N/Localized');
 
@@ -43,13 +47,13 @@ class StandardRouter extends React.Component {
     };
 
     renderPages = () => {
-        return this.props.pages.map((page) => {
+        return this.props.pages.map((page, i) => {
             const pageConfig = page.pageConfig || {};
             const Component = connect(() => ({
                 plugins: this.props.plugins,
                 ...pageConfig
             }))(page.component);
-            return <Route key={page.name || page.path} path={page.path} component={Component}/>;
+            return <Route key={(page.name || page.path) + i} exact path={page.path} component={Component}/>;
         });
     };
 
@@ -59,9 +63,11 @@ class StandardRouter extends React.Component {
             <div className={this.props.className}>
                 <Theme {...this.props.themeCfg}/>
                 <Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
-                    <Router history={hashHistory}>
-                        {this.renderPages()}
-                    </Router>
+                    <ConnectedRouter history={history}>
+                        <div>
+                            {this.renderPages()}
+                        </div>
+                    </ConnectedRouter>
                 </Localized>
                 <Debug/>
             </div>

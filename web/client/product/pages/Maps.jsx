@@ -26,7 +26,7 @@ class MapsPage extends React.Component {
     static propTypes = {
         name: PropTypes.string,
         mode: PropTypes.string,
-        params: PropTypes.object,
+        match: PropTypes.object,
         loadMaps: PropTypes.func,
         reset: PropTypes.func,
         plugins: PropTypes.object
@@ -40,7 +40,7 @@ class MapsPage extends React.Component {
     };
 
     componentWillMount() {
-        if (this.props.params.mapType && this.props.params.mapId) {
+        if (this.props.match.params.mapType && this.props.match.params.mapId) {
             if (this.props.mode === 'mobile') {
                 require('../assets/css/mobile.css');
             }
@@ -65,7 +65,7 @@ class MapsPage extends React.Component {
             pagePluginsConfig={pagePlugins}
             pluginsConfig={pluginsConfig}
             plugins={this.props.plugins}
-            params={this.props.params}
+            params={this.props.match.params}
             />);
     }
 }

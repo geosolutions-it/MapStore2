@@ -41,7 +41,7 @@ class CreateNewMap extends React.Component {
         const display = this.props.isLoggedIn ? null : "none";
         return (<Grid fluid style={{marginBottom: "30px", padding: 0, display}}>
         <Col {...this.props.colProps} >
-            <Button bsStyle="primary" onClick={() => { this.context.router.push("/viewer/" + this.props.mapType + "/new"); }}>
+            <Button bsStyle="primary" onClick={() => { this.context.router.history.push("/viewer/" + this.props.mapType + "/new"); }}>
             <Message msgId="newMap" />
             </Button>
         </Col>

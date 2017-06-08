@@ -122,7 +122,7 @@ class Maps extends React.Component {
     render() {
         return (<MapsGrid
             colProps={this.props.colProps}
-            viewerUrl={(map) => {this.context.router.push("/viewer/" + this.props.mapType + "/" + map.id); }}
+            viewerUrl={(map) => {this.context.router.history.push("/viewer/" + this.props.mapType + "/" + map.id); }}
             bottom={<PaginationToolbar />}
             metadataModal={MetadataModal}
             />);

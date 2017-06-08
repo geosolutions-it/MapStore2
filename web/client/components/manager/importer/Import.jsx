@@ -172,7 +172,7 @@ class Task extends React.Component {
     }
 
     editDefaultStyle = (taskId) => {
-        this.context.router.push("/styler/openlayers");
+        this.context.router.history.push("/styler/openlayers");
         this.props.loadStylerTool(taskId);
     };
 }

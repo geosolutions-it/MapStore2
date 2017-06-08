@@ -26,7 +26,7 @@ let oldLocation;
 class MapViewerPage extends React.Component {
     static propTypes = {
         mode: PropTypes.string,
-        params: PropTypes.object,
+        match: PropTypes.object,
         loadMapConfig: PropTypes.func,
         reset: PropTypes.func,
         plugins: PropTypes.object,
@@ -38,7 +38,7 @@ class MapViewerPage extends React.Component {
     };
 
     componentWillMount() {
-        if (this.props.params.mapId && oldLocation !== this.props.location) {
+        if (this.props.match.params.mapId && oldLocation !== this.props.location) {
             oldLocation = this.props.location;
             if (!ConfigUtils.getDefaults().ignoreMobileCss) {
                 if (this.props.mode === 'mobile') {
@@ -47,7 +47,7 @@ class MapViewerPage extends React.Component {
             }
 
             // VMap = require('../components/viewer/Map')(this.props.params.mapType);
-            let mapId = this.props.params.mapId === '0' ? null : this.props.params.mapId;
+            let mapId = this.props.match.params.mapId === '0' ? null : this.props.match.params.mapId;
             let config = urlQuery && urlQuery.config || null;
             // if mapId is a string, is the name of the config to load
             try {
@@ -69,7 +69,7 @@ class MapViewerPage extends React.Component {
     render() {
         return (<MapViewer
             plugins={this.props.plugins}
-            params={this.props.params}
+            params={this.props.match.params}
             />);
     }
 }

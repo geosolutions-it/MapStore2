@@ -88,7 +88,7 @@ class SaveAs extends React.Component {
     onMissingInfo = (props) => {
         let map = props.map;
         if (map && props.currentMap.mapId && !this.props.newMapId) {
-            this.context.router.push("/viewer/" + props.mapType + "/" + props.currentMap.mapId);
+            this.context.router.history.push("/viewer/" + props.mapType + "/" + props.currentMap.mapId);
             this.props.resetCurrentMap();
         }
     };

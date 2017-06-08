@@ -23,7 +23,7 @@ class Home extends React.Component {
     static propTypes = {
         name: PropTypes.string,
         mode: PropTypes.string,
-        params: PropTypes.object,
+        match: PropTypes.object,
         loadMaps: PropTypes.func,
         reset: PropTypes.func,
         plugins: PropTypes.object
@@ -61,7 +61,7 @@ class Home extends React.Component {
             pagePluginsConfig={pagePlugins}
             pluginsConfig={pluginsConfig}
             plugins={this.props.plugins}
-            params={this.props.params}
+            params={this.props.match.params}
             />);
     }
 }
