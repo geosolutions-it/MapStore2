@@ -54,11 +54,9 @@ module.exports = function({wfsVersion = "1.1.0", gmlVersion, filterNS, wfsNS="wf
          * @return {string}         The request body
          */
         getFeature: (content, opts) => `<${wfsNS}:GetFeature ${requestAttributes(opts)}>${Array.isArray(content) ? content.join("") : content}</${wfsNS}:GetFeature>`,
-        query: (featureName, content, ...other) =>
-            `<${wfsNS}:Query ${wfsVersion === "2.0" ? "typeNames" : "typeName"}="${featureName}" srsName="EPSG:4326">`
-            + (other && other.length > 0
-                    ? `${[Array.isArray(content) ? content.join("") : content, ...other].join("") }`
-                    : `${Array.isArray(content) ? content.join("") : content}`)
+        query: (featureName, content, {srsName ="EPSG:4326"} = {}) =>
+            `<${wfsNS}:Query ${wfsVersion === "2.0" ? "typeNames" : "typeName"}="${featureName}" srsName="${srsName}">`
+            + `${Array.isArray(content) ? content.join("") : content}`
             + `</${wfsNS}:Query>`
     };
 
