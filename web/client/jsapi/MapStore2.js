@@ -204,7 +204,7 @@ const MapStore2 = {
 
         const themeCfg = options.theme && assign({}, defaultThemeCfg, options.theme) || defaultThemeCfg;
         const onStoreInit = (store) => {
-            store.addActionListener((action) => {
+            store.addActionListener(({action = ""} ={}) => {
                 (actionListeners[action.type] || []).concat(actionListeners['*'] || []).forEach((listener) => {
                     listener.call(null, action);
                 });
