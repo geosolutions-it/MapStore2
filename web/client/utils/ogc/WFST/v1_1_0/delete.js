@@ -18,7 +18,7 @@ const {getTypeName} = require('../../WFS/base');
  */
 const deleteFeaturesByFilter = (content, typeName) =>
     `<wfs:Delete typeName="${typeName}">${content}</wfs:Delete>`;
-const deleteById = (fid, typeName) => deleteFeaturesByFilter(fidFilter(fid), typeName);
+const deleteById = (fid, typeName) => deleteFeaturesByFilter(fidFilter("ogc", fid), typeName);
 const deleteFeature = (feature, describe) => deleteById(feature.features && feature.features.length === 1 ? feature.features[0].id : feature.id, getTypeName(describe));
 module.exports = {
       deleteFeaturesByFilter,

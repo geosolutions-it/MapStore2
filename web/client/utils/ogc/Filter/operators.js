@@ -23,15 +23,54 @@ const ogcLogicalOperators = {
         "AND NOT": (ns, content) => `<${ns}:Not>${content}</${ns}:Not>`
 };
 
-var ogcSpatialOperators = {
+const ogcSpatialOperators = {
     "INTERSECTS": (ns, content) => `<${ns}:Intersects>${content}</${ns}:Intersects>`,
     "BBOX": (ns, content) => `<${ns}:BBOX>${content}</${ns}:BBOX>`,
     "CONTAINS": (ns, content) => `<${ns}:Contains>${content}</${ns}:Contains>`,
     "DWITHIN": (ns, content) => `<${ns}:DWithin>${content}</${ns}:DWithin>`,
     "WITHIN": (ns, content) => `<${ns}:Within>${content}</${ns}:Within>`
 };
+const propertyName = (ns, name) => `<${ns}:PropertyName>${name}</${ns}:PropertyName>`;
+const valueReference = (ns, name) => `<${ns}:ValueReference>${name}</${ns}:ValueReference>`;
+const literal = (ns, value) => `<${ns}:Literal>${value}</${ns}:Literal>`;
+const multiop = (ns, op, content) => op(ns, Array.isArray(content) ? content.join("") : content);
+const logical = {
+    and: (ns, content, ...other) => other && other.length > 0 ? multiop(ns, ogcLogicalOperators.AND, [content, ...other]) : multiop(ns, ogcLogicalOperators.AND, content),
+    or: (ns, content, ...other) => other && other.length > 0 ? multiop(ns, ogcLogicalOperators.OR, [content, ...other]) : multiop(ns, ogcLogicalOperators.OR, content),
+    not: (ns, content) => multiop(ns, ogcLogicalOperators["AND NOT"], content)
+};
+
+
+const spatial = {
+    intersects: (ns, ...args) => multiop(ns, ogcSpatialOperators.INTERSECTS, args),
+    within: (ns, ...args) => multiop(ns, ogcSpatialOperators.WITHIN, args),
+    bbox: (ns, ...args) => multiop(ns, ogcSpatialOperators.BBOX, args),
+    dwithin: (ns, ...args) => multiop(ns, ogcSpatialOperators.DWITHIN, args),
+    contains: (ns, ...args) => multiop(ns, ogcSpatialOperators.CONTAINS, args)
+};
+const distance = (ns, content, units="m") => `<${ns}:Distance units="${units}">${content}</${ns}:Distance>`;
+const comparison = {
+    equal: (ns, ...args) => multiop(ns, ogcComparisonOperators["="], args),
+    greater: (ns, ...args) => multiop(ns, ogcComparisonOperators[">"], args),
+    less: (ns, ...args) => multiop(ns, ogcComparisonOperators["<"], args),
+    greaterOrEqual: (ns, ...args) => multiop(ns, ogcComparisonOperators[">="], args),
+    lessOrEqual: (ns, ...args) => multiop(ns, ogcComparisonOperators["<="], args),
+    notEqual: (ns, ...args) => multiop(ns, ogcComparisonOperators["<>"], args),
+    between: (ns, ...args) => multiop(ns, ogcComparisonOperators["><"], args),
+    like: (ns, ...args) => multiop(ns, ogcComparisonOperators.like, args),
+    ilike: (ns, ...args) => multiop(ns, ogcComparisonOperators.ilike, args),
+    isNull: (ns, ...args) => multiop(ns, ogcComparisonOperators.isNull, args)
+};
+
 module.exports = {
     ogcComparisonOperators,
     ogcLogicalOperators,
-    ogcSpatialOperators
+    ogcSpatialOperators,
+    propertyName,
+    valueReference,
+    distance,
+    literal,
+    logical,
+    spatial,
+    comparison
 };
