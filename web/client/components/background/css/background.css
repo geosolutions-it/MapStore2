@@ -50,3 +50,7 @@
 .background-plugin-pagination-btn-vertical:hover span{
     opacity: 0.5;
 }
+
+.background-list-arrow-placeholder {
+    height: 26px;
+}
