@@ -11,6 +11,7 @@ const assign = require('object-assign');
 const uuidv1 = require('uuid/v1');
 const ConfigUtils = require('../utils/ConfigUtils');
 const {findIndex} = require('lodash');
+const jsesc = require('jsesc');
 
 let parseOptions = (opts) => opts;
 
@@ -99,10 +100,10 @@ var Api = {
     putResource: function(resourceId, content, options) {
         return axios.put(
             "data/" + resourceId,
-            content,
+            jsesc(content, {json: true, wrap: false, quotes: 'backtick'}),
             this.addBaseUrl(_.merge({
                 headers: {
-                    'Content-Type': "application/json"
+                    'Content-Type': "text/plain;charset=utf-8"
                 }
             }, options)));
     },
