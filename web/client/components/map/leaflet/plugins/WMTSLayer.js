@@ -21,7 +21,7 @@ L.tileLayer.wmts = function(urls, options, matrixOptions) {
 
 function wmtsToLeafletOptions(options) {
     const srs = CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
-    const tileMatrixSet = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS);
+    const tileMatrixSet = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
     return assign({
         layer: options.name,
         style: options.style || "",

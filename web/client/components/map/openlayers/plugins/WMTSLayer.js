@@ -23,7 +23,7 @@ Layers.registerType('wmts', {
     create: (options) => {
         const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
         const srs = CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
-        const tileMatrixSet = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS);
+        const tileMatrixSet = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
         const resolutions = options.resolutions || mapUtils.getResolutions();
         const matrixIds = WMTSUtils.limitMatrix(options.matrixIds && WMTSUtils.getMatrixIds(options.matrixIds, tileMatrixSet || srs) || WMTSUtils.getDefaultMatrixId(options), resolutions.length);
         const extent = options.bbox ? ol.extent.applyTransform([parseFloat(options.bbox.bounds.minx), parseFloat(options.bbox.bounds.miny), parseFloat(options.bbox.bounds.maxx), parseFloat(options.bbox.bounds.maxy)], ol.proj.getTransform(options.bbox.crs, options.srs)) : null;
