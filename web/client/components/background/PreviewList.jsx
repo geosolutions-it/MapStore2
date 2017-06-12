@@ -42,7 +42,9 @@ const PreviewList = React.createClass({
         }
         if (this.props.pagination) {
             if (this.props.start !== 0) {
-                iconButtons.shift();
+                if (this.props.vertical) {
+                    iconButtons.shift();
+                }
                 iconButtons.unshift(<PaginationButton key="pagination_0" vertical={this.props.vertical} side={this.props.vertical ? this.props.width : this.props.height} direction={false} onClick={ () => { this.props.onStartChange(this.props.start - 1); }} />);
             }
             if (this.props.start + this.props.length < this.props.icons.length) {
