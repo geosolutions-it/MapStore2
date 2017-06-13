@@ -37,7 +37,8 @@ const UserDialog = React.createClass({
       buttonSize: React.PropTypes.string,
       inputStyle: React.PropTypes.object,
       attributes: React.PropTypes.array,
-      minPasswordSize: React.PropTypes.number
+      minPasswordSize: React.PropTypes.number,
+      hidePasswordFields: React.PropTypes.bool
   },
   getDefaultProps() {
       return {
@@ -66,7 +67,8 @@ const UserDialog = React.createClass({
               padding: "5px",
               border: "1px solid #078AA3"
           },
-          minPasswordSize: 6
+          minPasswordSize: 6,
+          hidePasswordFields: false
       };
   },
   getAttributeValue(name) {
@@ -81,11 +83,33 @@ const UserDialog = React.createClass({
           return null;
       }
       let pw = this.props.user.newPassword;
-      if (pw.length === 0) {
-          return null;
-      }
       return this.isMainPasswordValid(pw) ? "success" : "warning";
-
+  },
+  renderPasswordFields() {
+      return (
+      <div>
+          <FormGroup validationState={this.getPwStyle()}>
+              <ControlLabel><Message msgId="user.password"/></ControlLabel>
+              <FormControl ref="newPassword"
+                  key="newPassword"
+                  type="password"
+                  name="newPassword"
+                  autoComplete="new-password"
+                  style={this.props.inputStyle}
+                  onChange={this.handleChange} />
+          </FormGroup>
+          <FormGroup validationState={ (this.isValidPassword() ? "success" : "error") }>
+              <ControlLabel><Message msgId="user.retypePwd"/></ControlLabel>
+              <FormControl ref="confirmPassword"
+                  key="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  autoComplete="new-password"
+                  style={this.props.inputStyle}
+                  onChange={this.handleChange} />
+          </FormGroup>
+      </div>
+      );
   },
   renderGeneral() {
       return (<div style={{clear: "both"}}>
@@ -100,26 +124,7 @@ const UserDialog = React.createClass({
               onChange={this.handleChange}
               value={this.props.user && this.props.user.name || ""}/>
       </FormGroup>
-      <FormGroup validationState={this.getPwStyle()}>
-          <ControlLabel><Message msgId="user.password"/></ControlLabel>
-          <FormControl ref="newPassword"
-              key="newPassword"
-              type="password"
-              name="newPassword"
-              autoComplete="new-password"
-              style={this.props.inputStyle}
-              onChange={this.handleChange} />
-      </FormGroup>
-      <FormGroup validationState={ (this.isValidPassword() ? "success" : "error") || null}>
-          <ControlLabel><Message msgId="user.retypePwd"/></ControlLabel>
-          <FormControl ref="confirmPassword"
-              key="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              autoComplete="new-password"
-              style={this.props.inputStyle}
-              onChange={this.handleChange} />
-      </FormGroup>
+      {this.props.hidePasswordFields ? null : this.renderPasswordFields() }
       <select name="role" style={this.props.inputStyle} onChange={this.handleChange} value={this.props.user && this.props.user.role || ""}>
         <option value="ADMIN">ADMIN</option>
         <option value="USER">USER</option>
