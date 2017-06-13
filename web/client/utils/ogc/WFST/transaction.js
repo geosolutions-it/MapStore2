@@ -7,17 +7,17 @@
  */
 
 
-const transaction = (operations, schemaLocation) => '<wfs:Transaction '
+const transaction = (operations, schemaLocation, {wfsNS = "wfs", wfsVersion = "1.1.0"} = {}) => `<${wfsNS}:Transaction `
     + 'service="WFS" '
-    + 'version="1.1.0" '
-    + 'xmlns:wfs="http://www.opengis.net/wfs" '
+    + `version="${wfsVersion}" `
+    + `xmlns:${wfsNS}="http://www.opengis.net/wfs" `
     + 'xmlns:gml="http://www.opengis.net/gml" '
     + 'xmlns:ogc="http://www.opengis.net/ogc" '
     + 'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
     + 'xsi:schemaLocation="http://www.opengis.net/wfs" '
     + `${schemaLocation}>`
-    + `${operations.join("")}`
-    + '</wfs:Transaction>';
+    + `${Array.isArray(operations) ? operations.join("") : operations}`
+    + `</${wfsNS}:Transaction>`;
 module.exports = {
     transaction
 };
