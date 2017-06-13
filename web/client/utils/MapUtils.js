@@ -153,7 +153,7 @@ function getResolutions() {
     if (getHook('RESOLUTIONS_HOOK')) {
         return getHook('RESOLUTIONS_HOOK')();
     }
-    return [];
+    return getGoogleMercatorResolutions(0, 21, DEFAULT_SCREEN_DPI);
 }
 
 function getScales(projection, dpi) {
