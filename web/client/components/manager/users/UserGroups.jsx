@@ -67,12 +67,12 @@ class UserCard extends React.Component {
     };
 
     render() {
-        return (
+        return this.props.groups ? (
            <div key="groups-page">
              <span><Message msgId="users.selectedGroups" /></span>
              {this.renderGroupsSelector()}
          </div>
-        );
+        ) : null;
     }
 }
 

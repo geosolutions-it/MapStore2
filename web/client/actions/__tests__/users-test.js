@@ -36,6 +36,7 @@ describe('Test correctness of the users actions', () => {
         retFun((action) => {
             expect(action.type).toBe(USERMANAGER_GETUSERS);
             count++;
+            // we check the second action because the first one is the "loading" one
             if (count === 2) {
                 expect(action.users).toExist();
                 expect(action.users[0]).toExist();
@@ -59,9 +60,23 @@ describe('Test correctness of the users actions', () => {
                 expect(action.users[0].groups).toExist();
                 done();
             }
-
         }, () => ({users: { searchText: "users.json"}}));
+    });
 
+    it('getUsers with empty search', (done) => {
+        const retFun = getUsers(false, {params: {start: 5, limit: 10}});
+        expect(retFun).toExist();
+        let count = 0;
+        retFun((action) => {
+            expect(action.type).toBe(USERMANAGER_GETUSERS);
+            count++;
+            if (count === 2) {
+                expect(action.searchText).toBe("*");
+                expect(action.start).toBe(5);
+                expect(action.limit).toBe(10);
+                done();
+            }
+        }, () => ({}));
     });
 
     it('getUsers error', (done) => {
@@ -75,9 +90,7 @@ describe('Test correctness of the users actions', () => {
                 expect(action.error).toExist();
                 done();
             }
-
         });
-
     });
 
     it('getUsers issue returning empty response', (done) => {

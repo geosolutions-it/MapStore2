@@ -166,6 +166,7 @@ const retryWithForcedSortOptions = (action, store) => {
 
 const featureTypeSelectedEpic = action$ =>
     action$.ofType(FEATURE_TYPE_SELECTED)
+        .filter(action => action.url && action.typeName)
         .switchMap(action => {
             return Rx.Observable.defer( () => axios.get(action.url + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json'))
                 .map((response) => {
