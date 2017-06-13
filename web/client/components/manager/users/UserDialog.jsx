@@ -46,7 +46,8 @@ class UserDialog extends React.Component {
         buttonSize: PropTypes.string,
         inputStyle: PropTypes.object,
         attributes: PropTypes.array,
-        minPasswordSize: PropTypes.number
+        minPasswordSize: PropTypes.number,
+        hidePasswordFields: PropTypes.bool
     };
 
     static defaultProps = {
@@ -75,7 +76,8 @@ class UserDialog extends React.Component {
             padding: "5px",
             border: "1px solid #078AA3"
         },
-        minPasswordSize: 6
+        minPasswordSize: 6,
+        hidePasswordFields: false
     };
 
     getAttributeValue = (name) => {
@@ -91,60 +93,64 @@ class UserDialog extends React.Component {
             return null;
         }
         let pw = this.props.user.newPassword;
-        if (pw.length === 0) {
-            return null;
-        }
         return this.isMainPasswordValid(pw) ? "success" : "warning";
+    };
 
+    renderPasswordFields = () => {
+      return (
+          <div>
+              <FormGroup validationState={this.getPwStyle()}>
+                  <ControlLabel><Message msgId="user.password"/></ControlLabel>
+                  <FormControl ref="newPassword"
+                      key="newPassword"
+                      type="password"
+                      name="newPassword"
+                      autoComplete="new-password"
+                      style={this.props.inputStyle}
+                      onChange={this.handleChange} />
+              </FormGroup>
+              <FormGroup validationState={ (this.isValidPassword() ? "success" : "error") }>
+                  <ControlLabel><Message msgId="user.retypePwd"/></ControlLabel>
+                  <FormControl ref="confirmPassword"
+                      key="confirmPassword"
+                      name="confirmPassword"
+                      type="password"
+                      autoComplete="new-password"
+                      style={this.props.inputStyle}
+                      onChange={this.handleChange} />
+              </FormGroup>
+          </div>
+      );
     };
 
     renderGeneral = () => {
         return (<div style={{clear: "both"}}>
-      <FormGroup>
-          <ControlLabel><Message msgId="user.username"/></ControlLabel>
-          <FormControl ref="name"
-              key="name"
-              type="text"
-              name="name"
-              readOnly={this.props.user && this.props.user.id}
-              style={this.props.inputStyle}
-              onChange={this.handleChange}
-              value={this.props.user && this.props.user.name || ""}/>
-      </FormGroup>
-      <FormGroup validationState={this.getPwStyle()}>
-          <ControlLabel><Message msgId="user.password"/></ControlLabel>
-          <FormControl ref="newPassword"
-              key="newPassword"
-              type="password"
-              name="newPassword"
-              autoComplete="new-password"
-              style={this.props.inputStyle}
-              onChange={this.handleChange} />
-      </FormGroup>
-      <FormGroup validationState={ (this.isValidPassword() ? "success" : "error") || null}>
-          <ControlLabel><Message msgId="user.retypePwd"/></ControlLabel>
-          <FormControl ref="confirmPassword"
-              key="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              autoComplete="new-password"
-              style={this.props.inputStyle}
-              onChange={this.handleChange} />
-      </FormGroup>
-      <select name="role" style={this.props.inputStyle} onChange={this.handleChange} value={this.props.user && this.props.user.role || ""}>
-        <option value="ADMIN">ADMIN</option>
-        <option value="USER">USER</option>
-      </select>
-      <FormGroup>
-          <ControlLabel><Message msgId="users.enabled"/></ControlLabel>
-          <Checkbox
-              defaultChecked={this.props.user && (this.props.user.enabled === undefined ? false : this.props.user.enabled)}
-              type="checkbox"
-              key={"enabled" + (this.props.user ? this.props.user.enabled : "missing")}
-              name="enabled"
-              onClick={(evt) => {this.props.onChange("enabled", evt.target.checked ? true : false); }} />
-      </FormGroup>
-      </div>);
+          <FormGroup>
+              <ControlLabel><Message msgId="user.username"/></ControlLabel>
+              <FormControl ref="name"
+                  key="name"
+                  type="text"
+                  name="name"
+                  readOnly={this.props.user && this.props.user.id}
+                  style={this.props.inputStyle}
+                  onChange={this.handleChange}
+                  value={this.props.user && this.props.user.name || ""}/>
+          </FormGroup>
+          {this.props.hidePasswordFields ? null : this.renderPasswordFields() }
+          <select name="role" style={this.props.inputStyle} onChange={this.handleChange} value={this.props.user && this.props.user.role || ""}>
+            <option value="ADMIN">ADMIN</option>
+            <option value="USER">USER</option>
+          </select>
+          <FormGroup>
+              <ControlLabel><Message msgId="users.enabled"/></ControlLabel>
+              <Checkbox
+                  defaultChecked={this.props.user && (this.props.user.enabled === undefined ? false : this.props.user.enabled)}
+                  type="checkbox"
+                  key={"enabled" + (this.props.user ? this.props.user.enabled : "missing")}
+                  name="enabled"
+                  onClick={(evt) => {this.props.onChange("enabled", evt.target.checked ? true : false); }} />
+          </FormGroup>
+          </div>);
     };
 
     renderAttributes = () => {

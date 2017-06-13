@@ -31,7 +31,7 @@ module.exports = {
         let centerProjected = CoordinatesUtils.reproject(center, 'EPSG:4326', props.map.projection);
 
         const srs = CoordinatesUtils.normalizeSRS(layer.srs || props.map.projection || 'EPSG:3857', layer.allowedSRS);
-        const tileMatrixSet = WMTSUtils.getTileMatrixSet(layer.tileMatrixSet, srs, layer.allowedSRS);
+        const tileMatrixSet = WMTSUtils.getTileMatrixSet(layer.tileMatrixSet, srs, layer.allowedSRS, layer.matrixIds);
 
         const fx = (centerProjected.x - tileOrigin[0]) / (resolution * tileSize);
         const fy = (tileOrigin[1] - centerProjected.y) / (resolution * tileSize);

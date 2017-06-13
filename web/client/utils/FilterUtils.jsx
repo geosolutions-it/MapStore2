@@ -6,7 +6,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {processOGCGeometry, closePolygon, pointElement, polygonElement, lineStringElement } = require("./ogc/GML");
+const {processOGCGeometry, pointElement, polygonElement, lineStringElement } = require("./ogc/GML");
+const {wfsToGmlVersion} = require('./ogc/WFS/base');
 const {ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators} = require("./ogc/Filter/operators");
 const normalizeVersion = (version) => {
     if (!version) {
@@ -307,11 +308,10 @@ const FilterUtils = {
     },
 
     processOGCSimpleFilterField,
-    closePolygon: closePolygon,
-    getGmlPointElement: pointElement,
-    getGmlPolygonElement: polygonElement,
-    getGmlLineStringElement: lineStringElement,
-    processOGCGeometry,
+    getGmlPointElement: (c, srs, v) => pointElement(c, srs, wfsToGmlVersion(v)),
+    getGmlPolygonElement: (c, srs, v) => polygonElement(c, srs, wfsToGmlVersion(v)),
+    getGmlLineStringElement: (c, srs, v) => lineStringElement(c, srs, wfsToGmlVersion(v)),
+    processOGCGeometry: (v, geom) => processOGCGeometry(wfsToGmlVersion(v), geom),
     processOGCSpatialFilter: function(version, objFilter, nsplaceholder) {
         let ogc =
             propertyTagReference[nsplaceholder].startTag +
@@ -319,33 +319,35 @@ const FilterUtils = {
             propertyTagReference[nsplaceholder].endTag;
 
         switch (objFilter.spatialField.operation) {
-        case "INTERSECTS":
-        case "DWITHIN":
-        case "WITHIN":
-        case "CONTAINS": {
-            ogc += this.processOGCGeometry(version, objFilter.spatialField.geometry);
+            case "INTERSECTS":
+            case "DWITHIN":
+            case "WITHIN":
+            case "CONTAINS": {
+                ogc += processOGCGeometry(wfsToGmlVersion(version), objFilter.spatialField.geometry);
 
-            if (objFilter.spatialField.operation === "DWITHIN") {
-                ogc += '<' + nsplaceholder + ':Distance units="m">' + (objFilter.spatialField.geometry.distance || 0) + '</' + nsplaceholder + ':Distance>';
+                if (objFilter.spatialField.operation === "DWITHIN") {
+                    ogc += '<' + nsplaceholder + ':Distance units="m">' + (objFilter.spatialField.geometry.distance || 0) + '</' + nsplaceholder + ':Distance>';
+                }
+
+                break;
+
             }
+            case "BBOX": {
+                let lowerCorner = objFilter.spatialField.geometry.extent[0] + " " + objFilter.spatialField.geometry.extent[1];
+                let upperCorner = objFilter.spatialField.geometry.extent[2] + " " + objFilter.spatialField.geometry.extent[3];
 
-            break;
-        }
-        case "BBOX": {
-            let lowerCorner = objFilter.spatialField.geometry.extent[0] + " " + objFilter.spatialField.geometry.extent[1];
-            let upperCorner = objFilter.spatialField.geometry.extent[2] + " " + objFilter.spatialField.geometry.extent[3];
+                ogc +=
+                        '<gml:Envelope' + ' srsName="' + objFilter.spatialField.geometry.projection + '">' +
+                            '<gml:lowerCorner>' + lowerCorner + '</gml:lowerCorner>' +
+                            '<gml:upperCorner>' + upperCorner + '</gml:upperCorner>' +
+                        '</gml:Envelope>';
 
-            ogc +=
-                    '<gml:Envelope' + ' srsName="' + objFilter.spatialField.geometry.projection + '">' +
-                        '<gml:lowerCorner>' + lowerCorner + '</gml:lowerCorner>' +
-                        '<gml:upperCorner>' + upperCorner + '</gml:upperCorner>' +
-                    '</gml:Envelope>';
+                break;
+            }
+            default:
+                break;
+        }
 
-            break;
-        }
-        default:
-            break;
-        }
         return ogcSpatialOperators[objFilter.spatialField.operation](nsplaceholder, ogc);
     },
     getGetFeatureBase: function(version, pagination, hits, format) {
