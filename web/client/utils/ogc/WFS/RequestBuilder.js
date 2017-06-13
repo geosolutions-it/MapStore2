@@ -39,8 +39,8 @@ const getStaticAttributesWFS2 = (ver) => 'service="WFS" version="' + ver + '" ' 
  * @param  {String} [options.filterNS]           NameSpace to use for filters
 *  @param  {String} [options.wfsNS="wfs"]        namespace to use for WFS tags
  * @return {Object} A request builder. it contains all the `FilterBuilder` methods, plus the getFeature, query... methods
- * The request builder provides all the methods to compose the request (query, filter...). You can use it this way
- * ```
+ * The request builder provides all the methods to compose the request (query, filter...).
+ * @example
  * const requestBuilder = require('.../RequestBuilder');
  * const {getFeature, query, filter, property} = requestBuilder({wfsVersion: "1.0.0"});
  * const reqBody = getFeature(query(
@@ -55,7 +55,13 @@ const getStaticAttributesWFS2 = (ver) => 'service="WFS" version="' + ver + '" ' 
  *      )
  * {maxFeatures: 10, startIndex: 0, resultType: 'hits', outputFormat: 'application/json'} // 3rd  argument of getFeature is optional, and contains the options for the request.
  * );
- *
+ * @prop {function} getFeature generates the getFeatureRequest, with the contained query
+ * ```
+ * getFeature(query("topp:states', filter(...)))
+ * ```
+ * @prop {function} query returns the query element
+ * ```
+ * query("layerName", filter..., {options})
  * ```
  */
 module.exports = function({wfsVersion = "1.1.0", gmlVersion, filterNS, wfsNS="wfs"} = {}) {
@@ -80,24 +86,7 @@ module.exports = function({wfsVersion = "1.1.0", gmlVersion, filterNS, wfsNS="wf
     };
     return {
         ...filterBuilder({gmlVersion: gmlV, wfsVersion, filterNS: filterNS || wfsVersion === "2.0" ? "fes" : "ogc"}),
-        /**
-         * generate a getFeature request.
-         * @memberof utils.ogc.WFS.RequestBuilder
-         * @instance
-         * @param  {object} opts    object with : `resultType` (null or 'hits'), outputFormat, startIndex, maxFeatures
-         * @param  {string|string[]} content content of the request
-         * @return {string} The request body
-         */
         getFeature: (content, opts) => `<${wfsNS}:GetFeature ${requestAttributes(opts)}>${Array.isArray(content) ? content.join("") : content}</${wfsNS}:GetFeature>`,
-        /**
-         * generate a getFeature query.
-         * @memberof utils.ogc.WFS.RequestBuilder
-         * @instance
-         * @param  {string} featureName the feature name
-         * @param  {string|string[]} content content of the request
-         * @param  {object} [options] object with attribute: `srsName`.
-         * @return {string} The request body
-         */
         query: (featureName, content, {srsName ="EPSG:4326"} = {}) =>
             `<${wfsNS}:Query ${wfsVersion === "2.0" ? "typeNames" : "typeName"}="${featureName}" srsName="${srsName}">`
             + `${Array.isArray(content) ? content.join("") : content}`
