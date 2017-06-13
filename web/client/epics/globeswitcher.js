@@ -9,7 +9,7 @@ const {TOGGLE_3D, updateLast2dMapType} = require('../actions/globeswitcher');
 
 const Rx = require('rxjs');
 const {get} = require('lodash');
-const defaultRegex = /\/(viewer)\/(\w+)\/(\d+)/;
+const defaultRegex = /\/(viewer)\/(\w+)\/(\w+)/;
 import { push } from 'react-router-redux';
 
 const replaceMapType = (path, newMapType) => {
