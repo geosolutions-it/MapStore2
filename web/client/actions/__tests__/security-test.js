@@ -6,16 +6,50 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var {
-    RESET_ERROR,
-    resetError
-} = require('../security');
+const expect = require('expect');
+const security = require('../security');
 
 describe('Test correctness of the close actions', () => {
     it('resetError', () => {
-        var retval = resetError();
-        expect(retval).toExist();
-        expect(retval.type).toBe(RESET_ERROR);
+        const retval = security.resetError();
+        expect(retval).toExist().toIncludeKey('type');
+        expect(retval.type).toBe(security.RESET_ERROR);
     });
+    it('loginSuccess', () => {
+        const retval = security.loginSuccess();
+        expect(retval).toExist().toIncludeKey('type')
+        .toIncludeKey('userDetails')
+        .toIncludeKey('authHeader')
+        .toIncludeKey('username')
+        .toIncludeKey('password')
+        .toIncludeKey('authProvider');
+        expect(retval.type).toBe(security.LOGIN_SUCCESS);
+    });
+    it('loginFail', () => {
+        const retval = security.loginFail();
+        expect(retval).toExist().toIncludeKey('type')
+        .toIncludeKey('error');
+        expect(retval.type).toBe(security.LOGIN_FAIL);
+    });
+    it('logout', () => {
+        const retval = security.logout();
+        expect(retval).toExist().toIncludeKey('type')
+        .toIncludeKey('redirectUrl');
+        expect(retval.type).toBe(security.LOGOUT);
+    });
+    /* These are not exposed by the API
+    it('changePasswordSuccess', () => {
+        const retval = security.changePasswordSuccess();
+        expect(retval).toExist().toIncludeKey('type')
+        .toIncludeKey('user')
+        .toIncludeKey('authHeader');
+        expect(retval.type).toBe(security.CHANGE_PASSWORD_SUCCESS);
+    });
+    it('changePasswordFail', () => {
+        const retval = security.changePasswordFail();
+        expect(retval).toExist().toIncludeKey('type')
+        .toIncludeKey('error');
+        expect(retval.type).toBe(security.CHANGE_PASSWORD_FAIL);
+    });
+    */
 });

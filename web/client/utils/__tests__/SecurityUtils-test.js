@@ -194,4 +194,10 @@ describe('Test security utils methods', () => {
         urlWithAuthentication = SecurityUtils.addAuthenticationToUrl('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
         expect(urlWithAuthentication).toBe('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2');
     });
+    it('test addAuthenticationParameter for authkey', () => {
+        expect.spyOn(SecurityUtils, 'getAuthenticationMethod').andReturn("authkey");
+        expect.spyOn(SecurityUtils, 'getToken').andReturn("goodtoken");
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
+        expect(SecurityUtils.addAuthenticationParameter("a test url", null)).toEqual({'authkey': 'goodtoken'});
+    });
 });

@@ -37,7 +37,7 @@ function security(state = {user: null, errorCause: null}, action) {
             const userUuid = head(userAttributes.filter(attribute => attribute.name.toLowerCase() === 'uuid'));
             return assign({}, state, {
                 user: action.userDetails.User,
-                token: userUuid && userUuid.value || '',
+                token: (userUuid && userUuid.value) || (action.userDetails && action.userDetails.access_token) || '',
                 authHeader: action.authHeader,
                 loginError: null
             });

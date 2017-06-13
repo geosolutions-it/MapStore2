@@ -35,6 +35,7 @@ let parseUserGroups = (groupsObj) => {
  * API for local config
  */
 var Api = {
+    authProviderName: "geostore",
     getData: function(id, options) {
         let url = "data/" + id;
         return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {
@@ -51,7 +52,7 @@ var Api = {
         let url = "extjs/search/category/" + category + "/*" + q + "*/thumbnail"; // comma-separated list of wanted attributes
         return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
-    basicLogin: function(username, password, options) {
+    getUserDetails: function(username, password, options) {
         let url = "users/user/details";
         return axios.get(url, this.addBaseUrl(_.merge({
             auth: {
@@ -63,6 +64,28 @@ var Api = {
             }
         }, options))).then(function(response) {
             return response.data;
+        });
+    },
+    login: function(username, password, options) {
+        let url = "session/login";
+        let authData;
+        return axios.post(url, null, this.addBaseUrl(_.merge({
+            auth: {
+                username: username,
+                password: password
+            }
+        }, options))).then((response) => {
+            authData = response.data;
+            return axios.get("users/user/details", this.addBaseUrl(_.merge({
+                headers: {
+                    'Authorization': 'Bearer ' + response.data.access_token
+                },
+                params: {
+                    includeattributes: true
+                }
+            }, options)));
+        }).then((response) => {
+            return { ...response.data, ...authData};
         });
     },
     changePassword: function(user, newPassword, options) {

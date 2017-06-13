@@ -25,7 +25,7 @@
     },
     "authenticationRules": [{
         "urlPattern": ".*geostore.*",
-        "method": "basic"
+        "method": "bearer"
     }],
     "plugins": {
         "mobile": [{

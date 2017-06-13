@@ -5,8 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-// const axios = require('axios');
-const GeoStoreAPI = require('../api/GeoStoreDAO');
+
+/**
+ * Here you can change the API to use for AuthenticationAPI
+ */
+const AuthenticationAPI = require('../api/GeoStoreDAO');
+
 const {loadMaps} = require('./maps');
 const ConfigUtils = require('../utils/ConfigUtils');
 
@@ -19,12 +23,12 @@ const CHANGE_PASSWORD_SUCCESS = 'CHANGE_PASSWORD_SUCCESS';
 const CHANGE_PASSWORD_FAIL = 'CHANGE_PASSWORD_FAIL';
 const LOGOUT = 'LOGOUT';
 
-
 function loginSuccess(userDetails, username, password, authProvider) {
     return {
         type: LOGIN_SUCCESS,
         userDetails: userDetails,
         // set here for compatibility reasons
+        // TODO: verify if the compatibility reasons still hold and remove otherwise
         authHeader: 'Basic ' + btoa(username + ':' + password),
         username: username,
         password: password,
@@ -44,6 +48,7 @@ function resetError() {
         type: RESET_ERROR
     };
 }
+
 function logout(redirectUrl) {
     return {
         type: LOGOUT,
@@ -58,10 +63,10 @@ function logoutWithReload() {
     };
 }
 
-function geoStoreLoginSubmit(username, password) {
+function login(username, password) {
     return (dispatch) => {
-        GeoStoreAPI.basicLogin(username, password).then((response) => {
-            dispatch(loginSuccess(response, username, password, 'geostore'));
+        AuthenticationAPI.login(username, password).then((response) => {
+            dispatch(loginSuccess(response, username, password, AuthenticationAPI.authProviderName));
             dispatch(loadMaps(false, ConfigUtils.getDefaults().initialMapFilter || "*"));
         }).catch((e) => {
             dispatch(loginFail(e));
@@ -83,9 +88,10 @@ function changePasswordFail(e) {
         error: e
     };
 }
-function geoStoreChangePassword(user, newPassword) {
+
+function changePassword(user, newPassword) {
     return (dispatch) => {
-        GeoStoreAPI.changePassword(user, newPassword).then(() => {
+        AuthenticationAPI.changePassword(user, newPassword).then(() => {
             dispatch(changePasswordSuccess(user, newPassword));
         }).catch((e) => {
             dispatch(changePasswordFail(e));
@@ -102,11 +108,11 @@ module.exports = {
     LOGIN_FAIL,
     RESET_ERROR,
     LOGOUT,
-    geoStoreLoginSubmit,
+    login,
     loginSuccess,
     loginFail,
     logout,
-    geoStoreChangePassword,
+    changePassword,
     logoutWithReload,
     resetError
 };

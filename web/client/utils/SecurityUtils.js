@@ -123,6 +123,16 @@ const SecurityUtils = {
     },
 
     /**
+     * Returns the authentication rule that should be used for the provided URL.
+     * We go through the authentication rules and find the first one that matchs
+     * the provided URL, if no rule matchs the provided URL undefined is returned.
+     */
+    getAuthenticationRule: function(url) {
+        return head(this.getAuthenticationRules().filter(
+            rule => rule && rule.urlPattern && url.match(new RegExp(rule.urlPattern, "i"))));
+    },
+
+    /**
      * This method will add query parameter based authentications to an url.
      */
     addAuthenticationToUrl: function(url) {
