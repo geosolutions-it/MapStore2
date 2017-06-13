@@ -39,14 +39,14 @@ describe('Test WFS-T request bodies generation', () => {
         const {insert, transaction} = requestBuilder(describeStates);
         const result = transaction(insert(wyoming));
         expect(result).toExist();
-        expect(result).toEqual(expectedInsertWyoming.replace(/[\r\n]/g, ''));
+        expect(result).toEqual(expectedInsertWyoming.replace(/[\n\r]/g, ''));
     });
 
     it('WFS-T transaction with insert point', () => {
         const {insert, transaction} = requestBuilder(describePois);
         const result = transaction([insert(museam)]);
         expect(result).toExist();
-        expect(result).toEqual(expectedInsertmuseam.replace(/[\r\n]/g, ''));
+        expect(result).toEqual(expectedInsertmuseam.replace(/[\n\r]/g, ''));
     });
 
     it('WFS-T transaction with delete', () => {
@@ -78,7 +78,7 @@ describe('Test WFS-T request bodies generation', () => {
             update(propertyChange("NAME", "newName"), fidFilter("ogc", "poi.7")),
             );
         expect(result).toExist();
-        expect(result).toEqual(expectedUpdate.replace(/[\r\n]/g, ''));
+        expect(result).toEqual(expectedUpdate.replace(/[\n\r]/g, ''));
     });
 
 });

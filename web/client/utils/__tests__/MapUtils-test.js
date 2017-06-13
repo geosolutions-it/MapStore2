@@ -20,6 +20,7 @@ var {
     getGoogleMercatorResolutions,
     getGoogleMercatorScale,
     getResolutionsForScales,
+    getResolutions,
     getZoomForExtent,
     getCenterForExtent,
     getBbox,
@@ -46,6 +47,9 @@ describe('Test the MapUtils', () => {
     });
     it('getGoogleMercatorScales', () => {
         expect(getGoogleMercatorScales(1, 1, 1).length).toBe(1);
+    });
+    it('getResolutions', () => {
+        expect(getResolutions().length > 0).toBe(true);
     });
     it('getResolutionsForScales', () => {
         // generate test scales for resolutions

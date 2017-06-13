@@ -8,7 +8,7 @@
 const {changeMapType} = require('../actions/maptype');
 const Rx = require('rxjs');
 const {get} = require('lodash');
-const defaultRegex = /\/(viewer)\/(\w+)\/(\d+)/;
+const defaultRegex = /\/(viewer)\/(\w+)\/(\w+)/;
 const findMapType = path => path.match(defaultRegex) && path.replace(defaultRegex, "$2");
 import { UPDATE_LOCATION } from 'react-router-redux';
 
