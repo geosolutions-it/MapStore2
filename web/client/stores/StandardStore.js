@@ -15,12 +15,10 @@ const layers = require('../reducers/layers');
 const mapConfig = require('../reducers/config');
 
 const DebugUtils = require('../utils/DebugUtils');
-const {compose} = require('redux');
 const {combineReducers, combineEpics} = require('../utils/PluginsUtils');
 
 const LayersUtils = require('../utils/LayersUtils');
 const {CHANGE_BROWSER_PROPERTIES} = require('../actions/browser');
-const {persistStore, autoRehydrate} = require('redux-persist');
 const {createEpicMiddleware} = require('redux-observable');
 
 const SecurityUtils = require('../utils/SecurityUtils');
@@ -67,16 +65,33 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
     };
     let store;
     let enhancer;
-    if (storeOpts && storeOpts.persist) {
-        enhancer = autoRehydrate();
-    }
     if (storeOpts && storeOpts.notify) {
-        enhancer = enhancer ? compose(enhancer, ListenerEnhancer) : ListenerEnhancer;
+        enhancer = ListenerEnhancer;
+    }
+    if (storeOpts && storeOpts.persist) {
+        storeOpts.persist.whitelist.forEach((fragment) => {
+            const fragmentState = localStorage.getItem('mapstore2.perist.' + fragment);
+            if (fragmentState) {
+                defaultState[fragment] = JSON.parse(fragmentState);
+            }
+        });
+        if (storeOpts.onPersist) {
+            setTimeout(() => {storeOpts.onPersist(); }, 0);
+        }
     }
     store = DebugUtils.createDebugStore(rootReducer, defaultState, [epicMiddleware, reduxRouterMiddleware], enhancer);
     reduxRouterMiddleware.listenForReplays(store);
     if (storeOpts && storeOpts.persist) {
-        persistStore(store, storeOpts.persist, storeOpts.onPersist);
+        const persisted = {};
+        store.subscribe(() => {
+            storeOpts.persist.whitelist.forEach((fragment) => {
+                const fragmentState = store.getState()[fragment];
+                if (fragmentState && persisted[fragment] !== fragmentState) {
+                    persisted[fragment] = fragmentState;
+                    localStorage.setItem('mapstore2.perist.' + fragment, JSON.stringify(fragmentState));
+                }
+            });
+        });
     }
     SecurityUtils.setStore(store);
     return store;
