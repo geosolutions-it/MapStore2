@@ -497,11 +497,11 @@
                     "poly": "Polygon"
                 },
                 "operations": {
-                    "intersects": "INTERSECTS",
-                    "bbox": "BBOX",
-                    "contains": "CONTAINS",
-                    "dwithin": "DWITHIN",
-                    "within": "WITHIN"
+                    "intersects": "Schneidet",
+                    "bbox": "Rechteck",
+                    "contains": "Ist beinhaltet",
+                    "dwithin": "Entfernung von",
+                    "within": "Enthält"
                 }
             }
         },
