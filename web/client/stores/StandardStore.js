@@ -70,7 +70,7 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
     }
     if (storeOpts && storeOpts.persist) {
         storeOpts.persist.whitelist.forEach((fragment) => {
-            const fragmentState = localStorage.getItem('mapstore2.perist.' + fragment);
+            const fragmentState = localStorage.getItem('mapstore2.persist.' + fragment);
             if (fragmentState) {
                 defaultState[fragment] = JSON.parse(fragmentState);
             }
@@ -88,7 +88,7 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
                 const fragmentState = store.getState()[fragment];
                 if (fragmentState && persisted[fragment] !== fragmentState) {
                     persisted[fragment] = fragmentState;
-                    localStorage.setItem('mapstore2.perist.' + fragment, JSON.stringify(fragmentState));
+                    localStorage.setItem('mapstore2.persist.' + fragment, JSON.stringify(fragmentState));
                 }
             });
         });
