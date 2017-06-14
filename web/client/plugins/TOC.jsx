@@ -183,6 +183,8 @@ const LayerTree = React.createClass({
         currentZoomLvl: React.PropTypes.number,
         scales: React.PropTypes.array,
         layerOptions: React.PropTypes.object,
+        spatialOperations: React.PropTypes.array,
+        spatialMethodOptions: React.PropTypes.array,
         groupOptions: React.PropTypes.object
     },
     getDefaultProps() {
@@ -270,6 +272,8 @@ const LayerTree = React.createClass({
             <div id="toc-query-container">
                 <Button id="toc-query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={this.props.onToggleQuery.bind(this, null, null)}><Glyphicon glyph="arrow-left"/></Button>
                 <SmartQueryForm
+                    spatialOperations={this.props.spatialOperations}
+                    spatialMethodOptions={this.props.spatialMethodOptions}
                     featureTypeErrorText={<Message msgId="layerProperties.featureTypeError"/>}/>
             </div>
         );

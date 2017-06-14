@@ -494,17 +494,17 @@
                 "methods": {
                     "zone": "Zone",
                     "viewport": "Viewport",
-                    "box": "Cadre d'objet",
+                    "box": "Rectangle",
                     "buffer": "Zone tampon",
                     "circle": "Cercle",
                     "poly": "Polygone"
                 },
                 "operations": {
-                    "intersects": "INTERSECTS",
-                    "bbox": "BBOX",
-                    "contains": "CONTAINS",
-                    "dwithin": "DWITHIN",
-                    "within": "WITHIN"
+                    "intersects": "intersecte",
+                    "bbox": "Cadre d'objet",
+                    "contains": "Est contenu",
+                    "dwithin": "Distance de",
+                    "within": "Contient"
                 }
             }
         },
