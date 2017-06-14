@@ -491,17 +491,17 @@
                 "methods": {
                     "zone": "Zone",
                     "viewport": "Viewport",
-                    "box": "BoundingBox",
+                    "box": "Rectangle",
                     "buffer": "Buffer",
                     "circle": "Circle",
                     "poly": "Polygon"
                 },
                 "operations": {
-                    "intersects": "INTERSECTS",
-                    "bbox": "BBOX",
-                    "contains": "CONTAINS",
-                    "dwithin": "DWITHIN",
-                    "within": "WITHIN"
+                    "intersects": "Intersects",
+                    "bbox": "BoundingBox",
+                    "contains": "Is contained",
+                    "dwithin": "Distance from",
+                    "within": "Contains"
                 }
             }
         },

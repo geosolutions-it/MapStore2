@@ -37,19 +37,8 @@ const SpatialFilter = React.createClass({
             spatialPanelExpanded: true,
             showDetailsPanel: false,
             withContainer: true,
-            spatialMethodOptions: [
-                {id: "Viewport", name: "queryform.spatialfilter.methods.viewport"},
-                {id: "BBOX", name: "queryform.spatialfilter.methods.box"},
-                {id: "Circle", name: "queryform.spatialfilter.methods.circle"},
-                {id: "Polygon", name: "queryform.spatialfilter.methods.poly"}
-            ],
-            spatialOperations: [
-                {id: "INTERSECTS", name: "queryform.spatialfilter.operations.intersects"},
-                {id: "BBOX", name: "queryform.spatialfilter.operations.bbox"},
-                {id: "CONTAINS", name: "queryform.spatialfilter.operations.contains"},
-                {id: "DWITHIN", name: "queryform.spatialfilter.operations.dwithin"},
-                {id: "WITHIN", name: "queryform.spatialfilter.operations.within"}
-            ],
+            spatialMethodOptions: [],
+            spatialOperations: [],
             actions: {
                 onExpandSpatialFilterPanel: () => {},
                 onSelectSpatialMethod: () => {},
@@ -331,13 +320,13 @@ const SpatialFilter = React.createClass({
         }
     },
     updateSpatialOperation(id, name, value) {
-        const opeartion = this.props.spatialOperations.filter((opt) => {
+        const operation = this.props.spatialOperations.filter((opt) => {
             if (value === LocaleUtils.getMessageById(this.context.messages, opt.name)) {
                 return opt;
             }
         })[0].id;
 
-        this.props.actions.onSelectSpatialOperation(opeartion, name);
+        this.props.actions.onSelectSpatialOperation(operation, name);
     },
     resetSpatialFilter() {
         this.changeDrawingStatus('clean', null, "queryform", []);

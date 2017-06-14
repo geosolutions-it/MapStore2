@@ -47,6 +47,8 @@ const QueryBuilder = React.createClass({
         resultTitle: React.PropTypes.string,
         pagination: React.PropTypes.object,
         sortOptions: React.PropTypes.object,
+        spatialOperations: React.PropTypes.array,
+        spatialMethodOptions: React.PropTypes.array,
         hits: React.PropTypes.bool,
         maxHeight: React.PropTypes.number,
         allowEmptyFilter: React.PropTypes.bool,
@@ -61,6 +63,8 @@ const QueryBuilder = React.createClass({
             groupFields: [],
             filterFields: [],
             attributes: [],
+            spatialMethodOptions: [],
+            spatialOperations: [],
             featureTypeError: "",
             spatialField: {},
             removeButtonIcon: "glyphicon glyphicon-remove",
@@ -145,6 +149,8 @@ const QueryBuilder = React.createClass({
                     <SpatialFilter
                         useMapProjection={this.props.useMapProjection}
                         spatialField={this.props.spatialField}
+                        spatialOperations={this.props.spatialOperations}
+                        spatialMethodOptions={this.props.spatialMethodOptions}
                         spatialPanelExpanded={this.props.spatialPanelExpanded}
                         showDetailsPanel={this.props.showDetailsPanel}
                         actions={this.props.spatialFilterActions}/>
