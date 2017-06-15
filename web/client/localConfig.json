@@ -157,7 +157,6 @@
                         {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
                         {"id": "BBOX", "name": "queryform.spatialfilter.operations.bbox"},
                         {"id": "CONTAINS", "name": "queryform.spatialfilter.operations.contains"},
-                        {"id": "DWITHIN", "name": "queryform.spatialfilter.operations.dwithin"},
                         {"id": "WITHIN", "name": "queryform.spatialfilter.operations.within"}
                     ],
                     "spatialMethodOptions": [
