@@ -50,6 +50,7 @@ const QueryBuilder = React.createClass({
         hits: React.PropTypes.bool,
         maxHeight: React.PropTypes.number,
         allowEmptyFilter: React.PropTypes.bool,
+        autocompleteEnabled: React.PropTypes.bool,
         emptyFilterWarning: React.PropTypes.bool
     },
     getDefaultProps() {
@@ -77,6 +78,7 @@ const QueryBuilder = React.createClass({
             hits: false,
             maxHeight: 830,
             allowEmptyFilter: false,
+            autocompleteEnabled: true,
             emptyFilterWarning: false,
             attributeFilterActions: {
                 onAddGroupField: () => {},
@@ -134,6 +136,7 @@ const QueryBuilder = React.createClass({
                     />
                 <div className="querypanel" style={{maxHeight: this.props.maxHeight - 170}}>
                     <GroupField
+                        autocompleteEnabled={this.props.autocompleteEnabled}
                         attributes={this.props.attributes}
                         groupLevels={this.props.groupLevels}
                         filterFields={this.props.filterFields}

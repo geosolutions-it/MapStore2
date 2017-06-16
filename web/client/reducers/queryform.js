@@ -35,7 +35,10 @@ const {
     SIMPLE_FILTER_FIELD_UPDATE,
     ADD_SIMPLE_FILTER_FIELD,
     REMOVE_SIMPLE_FILTER_FIELD,
-    REMOVE_ALL_SIMPLE_FILTER_FIELDS
+    REMOVE_ALL_SIMPLE_FILTER_FIELDS,
+    UPDATE_FILTER_FIELD_OPTIONS,
+    LOADING_FILTER_FIELD_OPTIONS,
+    SET_AUTOCOMPLETE_MODE
 } = require('../actions/queryform');
 
 const {
@@ -108,6 +111,25 @@ function queryform(state = initialState, action) {
                         f.value = null;
                     }
                     return f;
+                }
+                return field;
+            })});
+        }
+        case UPDATE_FILTER_FIELD_OPTIONS: {
+            return assign({}, state, {filterFields: state.filterFields.map((field) => {
+                if (field.rowId === action.filterField.rowId) {
+                    return assign({}, field, {options: assign({}, {...field.options}, {[field.attribute]: action.options} )} );
+                }
+                return field;
+            })});
+        }
+        case SET_AUTOCOMPLETE_MODE: {
+            return assign({}, state, {autocompleteEnabled: action.status});
+        }
+        case LOADING_FILTER_FIELD_OPTIONS: {
+            return assign({}, state, {filterFields: state.filterFields.map((field) => {
+                if (field.rowId === action.filterField.rowId) {
+                    return assign({}, field, {loading: action.status});
                 }
                 return field;
             })});

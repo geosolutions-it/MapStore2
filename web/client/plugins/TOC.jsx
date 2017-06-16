@@ -9,6 +9,7 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {Button, Glyphicon} = require('react-bootstrap');
+const autocompleteEpics = require('../epics/autocomplete');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
        sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode} = require('../actions/layers');
@@ -77,6 +78,7 @@ const SmartQueryForm = connect((state) => {
         showDetailsPanel: state.queryform.showDetailsPanel,
         toolbarEnabled: state.queryform.toolbarEnabled,
         attributePanelExpanded: state.queryform.attributePanelExpanded,
+        autocompleteEnabled: state.queryform.autocompleteEnabled,
         spatialPanelExpanded: state.queryform.spatialPanelExpanded,
         featureTypeConfigUrl: state.query && state.query.url,
         searchUrl: state.query && state.query.url,
@@ -176,6 +178,7 @@ const LayerTree = React.createClass({
         activateLegendTool: React.PropTypes.bool,
         activateZoomTool: React.PropTypes.bool,
         activateQueryTool: React.PropTypes.bool,
+        autocompleteEnabled: React.PropTypes.bool,
         activateSettingsTool: React.PropTypes.bool,
         visibilityCheckType: React.PropTypes.string,
         settingsOptions: React.PropTypes.object,
@@ -270,6 +273,7 @@ const LayerTree = React.createClass({
             <div id="toc-query-container">
                 <Button id="toc-query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={this.props.onToggleQuery.bind(this, null, null)}><Glyphicon glyph="arrow-left"/></Button>
                 <SmartQueryForm
+                    autocompleteEnabled={this.props.autocompleteEnabled}
                     featureTypeErrorText={<Message msgId="layerProperties.featureTypeError"/>}/>
             </div>
         );
@@ -354,5 +358,6 @@ module.exports = {
     reducers: {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
-    }
+    },
+    epics: autocompleteEpics
 };
