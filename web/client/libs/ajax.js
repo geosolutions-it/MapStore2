@@ -38,24 +38,17 @@ function addAuthenticationToAxios(axiosConfig) {
         return axiosConfig;
     }
     const rule = SecurityUtils.getAuthenticationRule(axiosConfig.url);
-    const method = rule && (has(rule, "method.method") ? rule.method.method : rule.method);
-    switch (method) {
+    const method = rule && (has(rule, "method.method") ? rule.method : assign({}, {method: rule.method}));
+    const methodType = rule && (has(rule, "method.method") ? rule.method.method : rule.method);
+    switch (methodType) {
         case 'authkey':
-        {
-            const token = SecurityUtils.getToken();
-            if (!token) {
-                return axiosConfig;
-            }
-            addParameterToAxiosConfig(axiosConfig, 'authkey', token);
-            return axiosConfig;
-        }
         case 'authkey-param':
         {
             const token = SecurityUtils.getToken();
             if (!token) {
                 return axiosConfig;
             }
-            addParameterToAxiosConfig(axiosConfig, rule.method.param || 'authkey', token);
+            addParameterToAxiosConfig(axiosConfig, method.param || 'authkey', token);
             return axiosConfig;
         }
         case 'basic':
