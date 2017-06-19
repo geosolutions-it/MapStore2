@@ -47,11 +47,20 @@ const SecurityUtils = {
     },
 
     /**
-     * Returns the current user token value.
+     * Returns the current user access token value.
      */
     getToken() {
         const securityInfo = this.getSecurityInfo();
         return securityInfo && securityInfo.token;
+    },
+
+    /**
+     * Returns the current user refresh token value.
+     * The refresh token is used to get a new access token.
+     */
+    getRefreshToken() {
+        const securityInfo = this.getSecurityInfo();
+        return securityInfo && securityInfo.refresh_token;
     },
 
     /**

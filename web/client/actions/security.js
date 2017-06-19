@@ -22,6 +22,7 @@ const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 const CHANGE_PASSWORD_SUCCESS = 'CHANGE_PASSWORD_SUCCESS';
 const CHANGE_PASSWORD_FAIL = 'CHANGE_PASSWORD_FAIL';
 const LOGOUT = 'LOGOUT';
+const REFRESH_ACCESS_TOKEN = 'REFRESH_ACCESS_TOKEN';
 
 function loginSuccess(userDetails, username, password, authProvider) {
     return {
@@ -99,6 +100,12 @@ function changePassword(user, newPassword) {
     };
 }
 
+function refreshAccessToken() {
+    return {
+        type: REFRESH_ACCESS_TOKEN
+    };
+}
+
 module.exports = {
     LOGIN_SUBMIT,
     CHANGE_PASSWORD,
@@ -108,11 +115,13 @@ module.exports = {
     LOGIN_FAIL,
     RESET_ERROR,
     LOGOUT,
+    REFRESH_ACCESS_TOKEN,
     login,
     loginSuccess,
     loginFail,
     logout,
     changePassword,
     logoutWithReload,
-    resetError
+    resetError,
+    refreshAccessToken
 };
