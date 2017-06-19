@@ -24,6 +24,7 @@ const QueryBuilder = React.createClass({
         featureTypeError: React.PropTypes.string,
         featureTypeErrorText: React.PropTypes.node,
         groupLevels: React.PropTypes.number,
+        maxFeaturesWPS: React.PropTypes.number,
         filterFields: React.PropTypes.array,
         groupFields: React.PropTypes.array,
         spatialField: React.PropTypes.object,
@@ -89,6 +90,7 @@ const QueryBuilder = React.createClass({
                 onUpdateLogicCombo: () => {},
                 onRemoveGroupField: () => {},
                 onChangeCascadingValue: () => {},
+                toggleMenu: () => {},
                 onExpandAttributeFilterPanel: () => {}
             },
             spatialFilterActions: {
@@ -137,6 +139,7 @@ const QueryBuilder = React.createClass({
                 <div className="querypanel" style={{maxHeight: this.props.maxHeight - 170}}>
                     <GroupField
                         autocompleteEnabled={this.props.autocompleteEnabled}
+                        maxFeaturesWPS={this.props.maxFeaturesWPS}
                         attributes={this.props.attributes}
                         groupLevels={this.props.groupLevels}
                         filterFields={this.props.filterFields}

@@ -38,7 +38,8 @@ const {
     REMOVE_ALL_SIMPLE_FILTER_FIELDS,
     UPDATE_FILTER_FIELD_OPTIONS,
     LOADING_FILTER_FIELD_OPTIONS,
-    SET_AUTOCOMPLETE_MODE
+    SET_AUTOCOMPLETE_MODE,
+    TOGGLE_AUTOCOMPLETE_MENU
 } = require('../actions/queryform');
 
 const {
@@ -68,6 +69,7 @@ const initialState = {
             index: 0
         }
     ],
+    maxFeaturesWPS: 1,
     filterFields: [],
     spatialField: {
         method: null,
@@ -91,6 +93,10 @@ function queryform(state = initialState, action) {
                 operator: "=",
                 value: null,
                 type: null,
+                fieldOptions: {
+                    valuesCount: 0,
+                    currentPage: 1
+                },
                 exception: null
             };
 
@@ -102,7 +108,7 @@ function queryform(state = initialState, action) {
         case UPDATE_FILTER_FIELD: {
             return assign({}, state, {filterFields: state.filterFields.map((field) => {
                 if (field.rowId === action.rowId) {
-                    let f = assign({}, field, {[action.fieldName]: action.fieldValue, type: action.fieldType});
+                    let f = assign({}, field, {[action.fieldName]: action.fieldValue, type: action.fieldType}, {fieldOptions: assign({}, {...field.fieldOptions}, {currentPage: action.fieldOptions.currentPage === undefined ? 1 : action.fieldOptions.currentPage})});
                     if (action.fieldName === "attribute") {
                         f.value = null;
                         f.operator = "=";
@@ -118,7 +124,15 @@ function queryform(state = initialState, action) {
         case UPDATE_FILTER_FIELD_OPTIONS: {
             return assign({}, state, {filterFields: state.filterFields.map((field) => {
                 if (field.rowId === action.filterField.rowId) {
-                    return assign({}, field, {options: assign({}, {...field.options}, {[field.attribute]: action.options} )} );
+                    return assign({}, field, {options: assign({}, {...field.options}, {[field.attribute]: action.options} )}, {fieldOptions: assign({}, {...field.fieldOptions}, {valuesCount: action.valuesCount})});
+                }
+                return field;
+            })});
+        }
+        case TOGGLE_AUTOCOMPLETE_MENU: {
+            return assign({}, state, {filterFields: state.filterFields.map((field) => {
+                if (field.rowId === action.rowId) {
+                    return assign({}, field, {openAutocompleteMenu: action.status} );
                 }
                 return field;
             })});

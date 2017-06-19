@@ -44,6 +44,7 @@ const REMOVE_ALL_SIMPLE_FILTER_FIELDS = 'REMOVE_ALL_SIMPLE_FILTER_FIELDS';
 const UPDATE_FILTER_FIELD_OPTIONS = 'UPDATE_FILTER_FIELD_OPTIONS';
 const LOADING_FILTER_FIELD_OPTIONS = 'LOADING_FILTER_FIELD_OPTIONS';
 const SET_AUTOCOMPLETE_MODE = 'SET_AUTOCOMPLETE_MODE';
+const TOGGLE_AUTOCOMPLETE_MENU = 'TOGGLE_AUTOCOMPLETE_MENU';
 
 const axios = require('../libs/ajax');
 
@@ -69,14 +70,22 @@ function removeFilterField(rowId) {
     };
 }
 
-function updateFilterField(rowId, fieldName, fieldValue, fieldType, page) {
+function toggleMenu(rowId, status) {
+    return {
+        type: TOGGLE_AUTOCOMPLETE_MENU,
+        rowId,
+        status
+    };
+}
+
+function updateFilterField(rowId, fieldName, fieldValue, fieldType, fieldOptions = {}) {
     return {
         type: UPDATE_FILTER_FIELD,
         rowId: rowId,
         fieldName: fieldName,
         fieldValue: fieldValue,
         fieldType: fieldType,
-        page
+        fieldOptions
     };
 }
 
@@ -324,12 +333,12 @@ function loadingFilterFieldOptions(status, filterField) {
     };
 }
 
-function updateFilterFieldOptions(filterField, options, value) {
+function updateFilterFieldOptions(filterField, options, valuesCount) {
     return {
         type: UPDATE_FILTER_FIELD_OPTIONS,
         filterField,
         options,
-        value
+        valuesCount
     };
 }
 
@@ -369,6 +378,7 @@ module.exports = {
     UPDATE_FILTER_FIELD_OPTIONS,
     LOADING_FILTER_FIELD_OPTIONS,
     SET_AUTOCOMPLETE_MODE,
+    TOGGLE_AUTOCOMPLETE_MENU,
     setAutocompleteMode,
     loadingFilterFieldOptions,
     updateGeometrySpatialField,
@@ -402,7 +412,8 @@ module.exports = {
     addSimpleFilterField,
     removeSimpleFilterField,
     removeAllSimpleFilterFields,
-    updateFilterFieldOptions
+    updateFilterFieldOptions,
+    toggleMenu
     // wfsLoadError,
     // querySearchResponse
 };

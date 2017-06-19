@@ -8,7 +8,7 @@
 
 const Rx = require('rxjs');
 const axios = require('../libs/ajax');
-const {UPDATE_FILTER_FIELD, updateFilterFieldOptions, loadingFilterFieldOptions, setAutocompleteMode} = require('../actions/queryform');
+const {UPDATE_FILTER_FIELD, updateFilterFieldOptions, loadingFilterFieldOptions, setAutocompleteMode, toggleMenu, updateFilterField} = require('../actions/queryform');
 const {TOGGLE_CONTROL} = require('../actions/controls');
 const {getRequestBody, getRequestBodyWithFilter} = require('../utils/ogc/WPS/autocomplete');
 // const assign = require('object-assign');
@@ -49,30 +49,38 @@ module.exports = {
             .filter( (action) => action.fieldName === "value" && action.fieldType === "string" && store.getState().queryform.autocompleteEnabled )
             .debounceTime(300)
             .switchMap((action) => {
-                const maxFeaturesWPS = 5;
                 const state = store.getState();
+                const maxFeaturesWPS = state.queryform.maxFeaturesWPS;
                 const filterField = state.queryform.filterFields.filter((f) => f.rowId === action.rowId)[0];
+
+                if (action.fieldOptions.selected === "selected") {
+                    return Rx.Observable.from([
+                        updateFilterField(action.rowId, action.fieldName, action.fieldValue, action.fieldType, action.fieldOptions),
+                        updateFilterFieldOptions(filterField, [], 0)
+                    ]);
+                }
                 const data = getWpsPayload({
                         attribute: filterField.attribute,
                         layerName: state.query.typeName,
                         maxFeatures: maxFeaturesWPS,
-                        startIndex: action.page * maxFeaturesWPS,
+                        startIndex: (action.fieldOptions.currentPage - 1) * maxFeaturesWPS,
                         value: action.fieldValue
                     });
                 return Rx.Observable.fromPromise(
                     axios.post("geoserver-test/wps?SERVICE=WPS&outputFormat=json", data, {
                         timeout: 60000,
                         headers: {'Accept': 'application/json', 'Content-Type': 'application/xml'}
-                    }).then(res => res.data.values)
-                ).switchMap((values) => {
-                    let newOptions = isArray(values) ? values : [values];
-                    return Rx.Observable.of(updateFilterFieldOptions(filterField, newOptions));
+                    }).then(response => response.data)
+                ).switchMap((res) => {
+                    let newOptions = isArray(res.values) ? res.values : [res.values];
+                    let valuesCount = res.size;
+                    return Rx.Observable.from([updateFilterFieldOptions(filterField, newOptions, valuesCount), toggleMenu(action.rowId, true)] );
                 })
                 .startWith(loadingFilterFieldOptions(true, filterField))
                 .catch( () => {
                     // console.log("error: " + e + " data:" + e.data);
                     return Rx.Observable.from([
-                        updateFilterFieldOptions(filterField, [], action.fieldValue),
+                        updateFilterFieldOptions(filterField, [], 0),
                         error({
                             title: "warning",
                             message: "warning", // TODO add tranlations
@@ -81,7 +89,7 @@ module.exports = {
                             },
                             autoDismiss: 3,
                             position: "tr"
-                        })
+                        }), toggleMenu(action.rowId, true)
                     ]);
                 })
                 .concat([loadingFilterFieldOptions(false, filterField)]);

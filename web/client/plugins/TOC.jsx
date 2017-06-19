@@ -51,7 +51,8 @@ const {
     changeDwithinValue,
     zoneGetValues,
     zoneSearch,
-    zoneChange
+    zoneChange,
+    toggleMenu
 } = require('../actions/queryform');
 
 const {createQuery, toggleQueryPanel} = require('../actions/wfsquery');
@@ -79,6 +80,7 @@ const SmartQueryForm = connect((state) => {
         toolbarEnabled: state.queryform.toolbarEnabled,
         attributePanelExpanded: state.queryform.attributePanelExpanded,
         autocompleteEnabled: state.queryform.autocompleteEnabled,
+        maxFeaturesWPS: state.queryform.maxFeaturesWPS,
         spatialPanelExpanded: state.queryform.spatialPanelExpanded,
         featureTypeConfigUrl: state.query && state.query.url,
         searchUrl: state.query && state.query.url,
@@ -103,6 +105,7 @@ const SmartQueryForm = connect((state) => {
             onUpdateLogicCombo: updateLogicCombo,
             onRemoveGroupField: removeGroupField,
             onChangeCascadingValue: changeCascadingValue,
+            toggleMenu: toggleMenu,
             onExpandAttributeFilterPanel: expandAttributeFilterPanel
         }, dispatch),
         spatialFilterActions: bindActionCreators({
@@ -181,6 +184,7 @@ const LayerTree = React.createClass({
         autocompleteEnabled: React.PropTypes.bool,
         activateSettingsTool: React.PropTypes.bool,
         visibilityCheckType: React.PropTypes.string,
+        maxFeaturesWPS: React.PropTypes.number,
         settingsOptions: React.PropTypes.object,
         chartStyle: React.PropTypes.object,
         currentZoomLvl: React.PropTypes.number,
@@ -274,6 +278,7 @@ const LayerTree = React.createClass({
                 <Button id="toc-query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={this.props.onToggleQuery.bind(this, null, null)}><Glyphicon glyph="arrow-left"/></Button>
                 <SmartQueryForm
                     autocompleteEnabled={this.props.autocompleteEnabled}
+                    maxFeaturesWPS={this.props.maxFeaturesWPS}
                     featureTypeErrorText={<Message msgId="layerProperties.featureTypeError"/>}/>
             </div>
         );
