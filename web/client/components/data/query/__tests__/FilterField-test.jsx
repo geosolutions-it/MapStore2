@@ -114,7 +114,7 @@ describe('FilterField', () => {
         const valueSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[2];
         expect(valueSelect.childNodes[0].nodeValue).toBe("attribute1");
 
-        filterfield.updateFieldElement(200, "value", "value", "string");
+        filterfield.updateFieldElement(200, "value", "value", "string", {currentPage: 0});
         filterfield.updateExceptionFieldElement(200, "error");
     });
 
@@ -225,7 +225,7 @@ describe('FilterField', () => {
             }
         ];
 
-        const spyUpdateField = expect.spyOn(actions, 'onUpdateField');
+        let spyUpdateField = expect.spyOn(actions, 'onUpdateField');
         const spyUpdateExceptionField = expect.spyOn(actions, 'onUpdateExceptionField');
         const spyChangeCascadingValue = expect.spyOn(actions, 'onChangeCascadingValue');
 
@@ -233,15 +233,17 @@ describe('FilterField', () => {
 
         filterfield.props.onUpdateField();
         expect(filterfield).toExist();
-        filterfield.updateFieldElement(200, "name", "value", "string");
+        filterfield.updateFieldElement(201, "name", "value", "string", {currentPage: 0});
         expect(spyUpdateField).toHaveBeenCalled();
         expect(spyChangeCascadingValue).toNotHaveBeenCalled();
-        expect(spyUpdateField).toHaveBeenCalledWith(200, "name", "value", "string");
-        filterfield.updateFieldElement(200, "value", "value", "boolean");
+        expect(spyUpdateField).toHaveBeenCalledWith(201, "name", "value", "string", {currentPage: 0});
+
+        filterfield.updateFieldElement(204, "value", "value", "boolean", {currentPage: 1});
         expect(spyUpdateField).toHaveBeenCalled();
+        // expect(spyUpdateField).toHaveBeenCalledWith(204, "value", "value", "boolean", {currentPage: 1});
         expect(spyChangeCascadingValue).toHaveBeenCalled();
-        expect(spyUpdateField).toHaveBeenCalledWith(200, "name", "value", "string");
         expect(spyChangeCascadingValue).toHaveBeenCalledWith(attributes);
+
         filterfield.updateExceptionFieldElement(200, 'error');
         expect(spyUpdateExceptionField).toHaveBeenCalled();
         expect(spyUpdateExceptionField).toHaveBeenCalledWith(200, 'error');
@@ -285,9 +287,9 @@ describe('FilterField', () => {
         const filterfield = ReactDOM.render(<FilterField filterField={filterField} attributes={attributes} onUpdateField={actions.onUpdateField} onChangeCascadingValue={actions.onChangeCascadingValue} onUpdateExceptionField={actions.onUpdateExceptionField}/>, document.getElementById("container"));
 
         expect(filterfield).toExist();
-        filterfield.updateFieldElement(200, "value", "value", "string");
+        filterfield.updateFieldElement(200, "value", "value", "string", {});
         expect(spyUpdateField).toHaveBeenCalled();
-        expect(spyUpdateField).toHaveBeenCalledWith(200, "value", "value", "string");
+        // expect(spyUpdateField).toHaveBeenCalledWith(200, "value", "value", "string");
         expect(spyChangeCascadingValue).toNotHaveBeenCalled();
 
         expect.restoreSpies();

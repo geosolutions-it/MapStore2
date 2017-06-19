@@ -9,6 +9,7 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {Button, Glyphicon} = require('react-bootstrap');
+const autocompleteEpics = require('../epics/autocomplete');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
        sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode} = require('../actions/layers');
@@ -50,7 +51,8 @@ const {
     changeDwithinValue,
     zoneGetValues,
     zoneSearch,
-    zoneChange
+    zoneChange,
+    toggleMenu
 } = require('../actions/queryform');
 
 const {createQuery, toggleQueryPanel} = require('../actions/wfsquery');
@@ -77,6 +79,8 @@ const SmartQueryForm = connect((state) => {
         showDetailsPanel: state.queryform.showDetailsPanel,
         toolbarEnabled: state.queryform.toolbarEnabled,
         attributePanelExpanded: state.queryform.attributePanelExpanded,
+        autocompleteEnabled: state.queryform.autocompleteEnabled,
+        maxFeaturesWPS: state.queryform.maxFeaturesWPS,
         spatialPanelExpanded: state.queryform.spatialPanelExpanded,
         featureTypeConfigUrl: state.query && state.query.url,
         searchUrl: state.query && state.query.url,
@@ -101,6 +105,7 @@ const SmartQueryForm = connect((state) => {
             onUpdateLogicCombo: updateLogicCombo,
             onRemoveGroupField: removeGroupField,
             onChangeCascadingValue: changeCascadingValue,
+            toggleMenu: toggleMenu,
             onExpandAttributeFilterPanel: expandAttributeFilterPanel
         }, dispatch),
         spatialFilterActions: bindActionCreators({
@@ -176,8 +181,10 @@ const LayerTree = React.createClass({
         activateLegendTool: React.PropTypes.bool,
         activateZoomTool: React.PropTypes.bool,
         activateQueryTool: React.PropTypes.bool,
+        autocompleteEnabled: React.PropTypes.bool,
         activateSettingsTool: React.PropTypes.bool,
         visibilityCheckType: React.PropTypes.string,
+        maxFeaturesWPS: React.PropTypes.number,
         settingsOptions: React.PropTypes.object,
         chartStyle: React.PropTypes.object,
         currentZoomLvl: React.PropTypes.number,
@@ -274,6 +281,8 @@ const LayerTree = React.createClass({
                 <SmartQueryForm
                     spatialOperations={this.props.spatialOperations}
                     spatialMethodOptions={this.props.spatialMethodOptions}
+                    autocompleteEnabled={this.props.autocompleteEnabled}
+                    maxFeaturesWPS={this.props.maxFeaturesWPS}
                     featureTypeErrorText={<Message msgId="layerProperties.featureTypeError"/>}/>
             </div>
         );
@@ -358,5 +367,6 @@ module.exports = {
     reducers: {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
-    }
+    },
+    epics: autocompleteEpics
 };

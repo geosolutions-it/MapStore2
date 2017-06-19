@@ -472,6 +472,11 @@
                 },
                 "datefield": {
                     "wrong_date_range": "La date de début doit être antérieure à la date de fin"
+                },
+                "autocomplete": {
+                    "emptyList": "Aucun résultat",
+                    "emptyFilter": "Le filtre n'a donné aucun résultat",
+                    "open": "Ouvrir le menu"
                 }
             },
             "spatialfilter": {
