@@ -479,6 +479,11 @@
                 },
                 "datefield": {
                     "wrong_date_range": "Start date must be earlier than end date"
+                },
+                "autocomplete": {
+                    "emptyList": "No results",
+                    "emptyFilter": "The filter returned no results",
+                    "open": "Open combobox"
                 }
             },
             "spatialfilter": {
@@ -501,17 +506,17 @@
                 "methods": {
                     "zone": "Zone",
                     "viewport": "Viewport",
-                    "box": "BoundingBox",
+                    "box": "Rectangle",
                     "buffer": "Buffer",
                     "circle": "Circle",
                     "poly": "Polygon"
                 },
                 "operations": {
-                    "intersects": "INTERSECTS",
-                    "bbox": "BBOX",
-                    "contains": "CONTAINS",
-                    "dwithin": "DWITHIN",
-                    "within": "WITHIN"
+                    "intersects": "Intersects",
+                    "bbox": "BoundingBox",
+                    "contains": "Is contained",
+                    "dwithin": "Distance from",
+                    "within": "Contains"
                 }
             }
         },

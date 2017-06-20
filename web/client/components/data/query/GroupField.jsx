@@ -15,6 +15,7 @@ const ComboField = require('./ComboField');
 const DateField = require('./DateField');
 const NumberField = require('./NumberField');
 const TextField = require('./TextField');
+const AutocompleteField = require('./AutocompleteField');
 
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const I18N = require('../../I18N/I18N');
@@ -22,6 +23,8 @@ const I18N = require('../../I18N/I18N');
 const GroupField = React.createClass({
     propTypes: {
         groupLevels: React.PropTypes.number,
+        autocompleteEnabled: React.PropTypes.bool,
+        maxFeaturesWPS: React.PropTypes.number,
         groupFields: React.PropTypes.array,
         filterFields: React.PropTypes.array,
         attributes: React.PropTypes.array,
@@ -37,6 +40,7 @@ const GroupField = React.createClass({
     },
     getDefaultProps() {
         return {
+            autocompleteEnabled: true,
             groupLevels: 1,
             groupFields: [],
             filterFields: [],
@@ -58,7 +62,8 @@ const GroupField = React.createClass({
                 onUpdateLogicCombo: () => {},
                 onRemoveGroupField: () => {},
                 onChangeCascadingValue: () => {},
-                onExpandAttributeFilterPanel: () => {}
+                onExpandAttributeFilterPanel: () => {},
+                toggleMenu: () => {}
             }
         };
     },
@@ -115,6 +120,8 @@ const GroupField = React.createClass({
                             filterField={filterField}
                             operatorOptions={this.getOperator(selectedAttribute)}
                             onUpdateField={this.props.actions.onUpdateFilterField}
+                            toggleMenu={this.props.actions.toggleMenu}
+                            maxFeaturesWPS={this.props.maxFeaturesWPS}
                             onUpdateExceptionField={this.props.actions.onUpdateExceptionField}
                             onChangeCascadingValue={this.props.actions.onChangeCascadingValue}>
                             <ComboField
@@ -129,9 +136,17 @@ const GroupField = React.createClass({
                             <NumberField
                                 operator={filterField.operator}
                                 attType="number"/>
-                            <TextField
-                                operator={filterField.operator}
-                                attType="string"/>
+                            {
+                                // flag to swtich from AutocompleteField to TextField
+                                this.props.autocompleteEnabled ?
+                                (<AutocompleteField
+                                    filterField={filterField}
+                                    attType="string"/>) :
+                                (<TextField
+                                    operator={filterField.operator}
+                                    attType="string"/>)
+                            }
+
                             <ComboField
                                 fieldOptions={['true', 'false']}
                                 attType="boolean"

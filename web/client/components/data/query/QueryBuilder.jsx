@@ -24,6 +24,7 @@ const QueryBuilder = React.createClass({
         featureTypeError: React.PropTypes.string,
         featureTypeErrorText: React.PropTypes.node,
         groupLevels: React.PropTypes.number,
+        maxFeaturesWPS: React.PropTypes.number,
         filterFields: React.PropTypes.array,
         groupFields: React.PropTypes.array,
         spatialField: React.PropTypes.object,
@@ -47,9 +48,12 @@ const QueryBuilder = React.createClass({
         resultTitle: React.PropTypes.string,
         pagination: React.PropTypes.object,
         sortOptions: React.PropTypes.object,
+        spatialOperations: React.PropTypes.array,
+        spatialMethodOptions: React.PropTypes.array,
         hits: React.PropTypes.bool,
         maxHeight: React.PropTypes.number,
         allowEmptyFilter: React.PropTypes.bool,
+        autocompleteEnabled: React.PropTypes.bool,
         emptyFilterWarning: React.PropTypes.bool
     },
     getDefaultProps() {
@@ -61,6 +65,8 @@ const QueryBuilder = React.createClass({
             groupFields: [],
             filterFields: [],
             attributes: [],
+            spatialMethodOptions: [],
+            spatialOperations: [],
             featureTypeError: "",
             spatialField: {},
             removeButtonIcon: "glyphicon glyphicon-remove",
@@ -77,6 +83,7 @@ const QueryBuilder = React.createClass({
             hits: false,
             maxHeight: 830,
             allowEmptyFilter: false,
+            autocompleteEnabled: true,
             emptyFilterWarning: false,
             attributeFilterActions: {
                 onAddGroupField: () => {},
@@ -87,6 +94,7 @@ const QueryBuilder = React.createClass({
                 onUpdateLogicCombo: () => {},
                 onRemoveGroupField: () => {},
                 onChangeCascadingValue: () => {},
+                toggleMenu: () => {},
                 onExpandAttributeFilterPanel: () => {}
             },
             spatialFilterActions: {
@@ -134,6 +142,8 @@ const QueryBuilder = React.createClass({
                     />
                 <div className="querypanel" style={{maxHeight: this.props.maxHeight - 170}}>
                     <GroupField
+                        autocompleteEnabled={this.props.autocompleteEnabled}
+                        maxFeaturesWPS={this.props.maxFeaturesWPS}
                         attributes={this.props.attributes}
                         groupLevels={this.props.groupLevels}
                         filterFields={this.props.filterFields}
@@ -145,6 +155,8 @@ const QueryBuilder = React.createClass({
                     <SpatialFilter
                         useMapProjection={this.props.useMapProjection}
                         spatialField={this.props.spatialField}
+                        spatialOperations={this.props.spatialOperations}
+                        spatialMethodOptions={this.props.spatialMethodOptions}
                         spatialPanelExpanded={this.props.spatialPanelExpanded}
                         showDetailsPanel={this.props.showDetailsPanel}
                         actions={this.props.spatialFilterActions}/>

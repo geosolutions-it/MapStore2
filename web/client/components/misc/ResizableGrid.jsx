@@ -55,7 +55,7 @@ const ResizableGrid = React.createClass({
             refGrid: "grid",
             rowHeight: 30,
             rowKey: "id",
-            rowSelection: null,
+            rowSelection: {},
             rowGetter: null,
             selectBy: null,
             onRowsSelected: () => {},
