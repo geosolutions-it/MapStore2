@@ -69,7 +69,7 @@ module.exports = {
         }),
     fetchAutocompleteOptionsEpic: (action$, store) =>
         action$.ofType(UPDATE_FILTER_FIELD)
-            .debounceTime(300)
+            .debounceTime(1000)
             .filter( (action) => action.fieldName === "value" && action.fieldType === "string" && store.getState().queryform.autocompleteEnabled )
             .switchMap((action) => {
                 const state = store.getState();
