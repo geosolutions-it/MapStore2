@@ -9,8 +9,8 @@
 
 const React = require('react');
 const Combobox = require('react-widgets').Combobox;
-const {Button} = require('react-bootstrap');
-require('./css/queryform.css');
+const {Glyphicon} = require('react-bootstrap');
+require('./css/queryform.less');
 const AutocompleteListItem = require('./AutocompleteListItem');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
@@ -35,6 +35,8 @@ const AutocompleteField = React.createClass({
         filterField: React.PropTypes.object,
         label: React.PropTypes.string,
         maxFeaturesWPS: React.PropTypes.number,
+        nextPage: React.PropTypes.string,
+        prevPage: React.PropTypes.string,
         onUpdateField: React.PropTypes.func,
         paginated: React.PropTypes.bool,
         textField: React.PropTypes.string,
@@ -47,6 +49,8 @@ const AutocompleteField = React.createClass({
     getDefaultProps() {
         return {
             label: null,
+            nextPage: "chevron-right",
+            prevPage: "chevron-left",
             onUpdateField: () => {},
             paginated: true,
             valueField: "value",
@@ -69,17 +73,10 @@ const AutocompleteField = React.createClass({
         return (
             <div className="autocomplete-toolbar">
                 { !firstPage &&
-                    <Button className="chevron-left"
-                        bsSize="small"
-                        onClick={() => this.props.onUpdateField(this.props.filterField.rowId, "value", this.props.filterField.value, "string", {currentPage: this.props.filterField.fieldOptions.currentPage - 1}) }>
-                        {"<"}
-                    </Button>
+                    <Glyphicon className={this.props.prevPage} glyph={this.props.prevPage} onClick={() => this.props.onUpdateField(this.props.filterField.rowId, "value", this.props.filterField.value, "string", {currentPage: this.props.filterField.fieldOptions.currentPage - 1}) }/>
                 }
                 { !lastPage &&
-                    <Button className="chevron-right"
-                        bsSize="small" onClick={() => this.props.onUpdateField(this.props.filterField.rowId, "value", this.props.filterField.value, "string", {currentPage: this.props.filterField.fieldOptions.currentPage + 1})}>
-                        {">"}
-                    </Button>
+                    <Glyphicon className={this.props.nextPage} glyph={this.props.nextPage} onClick={() => this.props.onUpdateField(this.props.filterField.rowId, "value", this.props.filterField.value, "string", {currentPage: this.props.filterField.fieldOptions.currentPage + 1})}/>
                 }
             </div>
         );

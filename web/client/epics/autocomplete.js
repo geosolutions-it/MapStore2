@@ -26,7 +26,7 @@ function getParsedUrl(url, options) {
         const parsed = urlUtil.parse(url, true);
         let newPathname = null;
         if (endsWith(parsed.pathname, "wfs") || endsWith(parsed.pathname, "wms") || endsWith(parsed.pathname, "ows")) {
-            newPathname = parsed.pathname.replace(/wfs|wms|ows/gi, "wps");
+            newPathname = parsed.pathname.replace(/(wms|ows|wfs|wps)$/, "wps");
             return urlUtil.format(assign({}, parsed, {search: null, pathname: newPathname }, {
                     query: assign({
                         service: "WPS",
