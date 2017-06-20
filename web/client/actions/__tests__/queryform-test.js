@@ -38,6 +38,10 @@ const {
     REMOVE_ALL_SIMPLE_FILTER_FIELDS,
     SELECT_VIEWPORT_SPATIAL_METHOD,
     CHANGE_SPATIAL_ATTRIBUTE,
+    TOGGLE_AUTOCOMPLETE_MENU,
+    SET_AUTOCOMPLETE_MODE,
+    setAutocompleteMode,
+    toggleMenu,
     changeDwithinValue,
     resetZones,
     zoneChange,
@@ -81,6 +85,27 @@ describe('Test correctness of the queryform actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(ADD_FILTER_FIELD);
         expect(retval.groupId).toBe(1);
+    });
+
+    it('toggleMenu', () => {
+        let status = true;
+        let rowId = 100;
+
+        var retval = toggleMenu(rowId, status);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(TOGGLE_AUTOCOMPLETE_MENU);
+        expect(retval.rowId).toBe(rowId);
+        expect(retval.status).toBe(status);
+    });
+
+    it('set autocomplete', () => {
+        let status = true;
+        var retval = setAutocompleteMode(status);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_AUTOCOMPLETE_MODE);
+        expect(retval.status).toBe(status);
     });
 
     it('addGroupField', () => {

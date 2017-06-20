@@ -469,6 +469,11 @@
                 },
                 "datefield": {
                     "wrong_date_range": "Start date must be earlier than end date"
+                },
+                "autocomplete": {
+                    "emptyList": "No results",
+                    "emptyFilter": "The filter returned no results",
+                    "open": "Open combobox"
                 }
             },
             "spatialfilter": {
