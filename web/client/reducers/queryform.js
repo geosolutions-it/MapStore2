@@ -69,7 +69,7 @@ const initialState = {
             index: 0
         }
     ],
-    maxFeaturesWPS: 1,
+    maxFeaturesWPS: 5,
     filterFields: [],
     spatialField: {
         method: null,

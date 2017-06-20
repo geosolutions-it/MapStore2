@@ -10,7 +10,7 @@
 const React = require('react');
 const Combobox = require('react-widgets').Combobox;
 const {Button} = require('react-bootstrap');
-const Message = require('../../I18N/Message');
+require('./css/queryform.css');
 const AutocompleteListItem = require('./AutocompleteListItem');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
@@ -67,20 +67,18 @@ const AutocompleteField = React.createClass({
         const firstPage = this.props.filterField.fieldOptions.currentPage === 1 || !this.props.filterField.fieldOptions.currentPage;
         const lastPage = this.props.filterField.fieldOptions.currentPage === numberOfPages || !this.props.filterField.fieldOptions.currentPage;
         return (
-            <div style={{textAlign: "center"}}>
+            <div className="autocomplete-toolbar">
                 { !firstPage &&
-                    <Button
+                    <Button className="chevron-left"
                         bsSize="small"
-                        bsStyle="link"
                         onClick={() => this.props.onUpdateField(this.props.filterField.rowId, "value", this.props.filterField.value, "string", {currentPage: this.props.filterField.fieldOptions.currentPage - 1}) }>
-                        <Message msgId="rulesmanager.previous"/>
+                        {"<"}
                     </Button>
                 }
                 { !lastPage &&
-                    <Button
-                        bsSize="small"
-                        bsStyle="link" onClick={() => this.props.onUpdateField(this.props.filterField.rowId, "value", this.props.filterField.value, "string", {currentPage: this.props.filterField.fieldOptions.currentPage + 1})}>
-                        <Message msgId="rulesmanager.next"/>
+                    <Button className="chevron-right"
+                        bsSize="small" onClick={() => this.props.onUpdateField(this.props.filterField.rowId, "value", this.props.filterField.value, "string", {currentPage: this.props.filterField.fieldOptions.currentPage + 1})}>
+                        {">"}
                     </Button>
                 }
             </div>
@@ -105,7 +103,7 @@ const AutocompleteField = React.createClass({
             emptyFilter: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyFilter")
         };
         return (
-            <div className="textField">
+            <div className="autocompleteField">
                 {label}
                 <Combobox
                     busy={this.props.filterField.loading}

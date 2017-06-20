@@ -1,0 +1,15 @@
+.autocomplete-toolbar .chevron-left {
+    float: left;
+}
+.autocomplete-toolbar .chevron-right {
+    float: right;
+}
+
+
+.autocompleteField ul li:last-child {
+    border: none !important;
+}
+.autocompleteField button {
+    border: none !important;
+    box-shadow: none;
+}

@@ -9,32 +9,55 @@
 const Rx = require('rxjs');
 const axios = require('../libs/ajax');
 const {UPDATE_FILTER_FIELD, updateFilterFieldOptions, loadingFilterFieldOptions, setAutocompleteMode, toggleMenu, updateFilterField} = require('../actions/queryform');
-const {TOGGLE_CONTROL} = require('../actions/controls');
+const {FEATURE_TYPE_SELECTED} = require('../actions/wfsquery');
 const {getRequestBody, getRequestBodyWithFilter} = require('../utils/ogc/WPS/autocomplete');
-// const assign = require('object-assign');
-const {isArray, startsWith} = require('lodash');
+const {isArray, startsWith, endsWith} = require('lodash');
 const {error} = require('../actions/notifications');
+const urlUtil = require('url');
+const assign = require('object-assign');
 
-
-// create wps request
+// create wps request body
 function getWpsPayload(options) {
     return options.value ? getRequestBodyWithFilter(options) : getRequestBody(options);
 }
- /**
-  * Epics for WFS query requests
-  * @name epics.wfsquery
-  * @type {Object}
-  */
+
+function getParsedUrl(url, options) {
+    if (url) {
+        const parsed = urlUtil.parse(url, true);
+        let newPathname = null;
+        if (endsWith(parsed.pathname, "wfs") || endsWith(parsed.pathname, "wms") || endsWith(parsed.pathname, "ows")) {
+            newPathname = parsed.pathname.replace(/wfs|wms|ows/gi, "wps");
+            return urlUtil.format(assign({}, parsed, {search: null, pathname: newPathname }, {
+                    query: assign({
+                        service: "WPS",
+                        ...options
+                    }, parsed.query)
+                }));
+        }
+    }
+    return null;
+}
+   /**
+    * Epics for WFS query requests
+    * @name epics.wfsquery
+    * @type {Object}
+    */
 
 module.exports = {
 
-    isAutoCompleteEnabled: (action$, store) =>
-    action$.ofType(TOGGLE_CONTROL)
-        .filter((action) => action.control === "queryPanel" && store.getState().controls.queryPanel.enabled && !store.getState().queryform.autocompleteEnabled)
-        .switchMap(() => {
+    isAutoCompleteEnabled: (action$) =>
+    action$.ofType(FEATURE_TYPE_SELECTED)
+        .switchMap((action) => {
+            const parsedUrl = getParsedUrl(action.url, {
+                "version": "1.0.0",
+                "REQUEST": "DescribeProcess",
+                "IDENTIFIER": "gs:PagedUnique" });
+            if (parsedUrl === null) {
+                return Rx.Observable.of(setAutocompleteMode(false));
+            }
             return Rx.Observable.fromPromise(
-                axios.post("geoserver-test/wps?SERVICE=WPS&VERSION=1.0.0&REQUEST=DescribeProcess&IDENTIFIER=gs%3APagedUnique", null, {
-                    timeout: 60000,
+                axios.post(parsedUrl, null, {
+                    timeout: 5000,
                     headers: {'Accept': 'application/json', 'Content-Type': 'application/xml'}
                 }).then(res => res.data)
             ).switchMap((data) => {
@@ -42,12 +65,12 @@ module.exports = {
                     return Rx.Observable.of(setAutocompleteMode(false));
                 }
                 return Rx.Observable.of(setAutocompleteMode(true));
-            }).catch((e) => {console.log(e); });
+            }).catch(() => { return Rx.Observable.of(setAutocompleteMode(false)); });
         }),
     fetchAutocompleteOptionsEpic: (action$, store) =>
         action$.ofType(UPDATE_FILTER_FIELD)
-            .filter( (action) => action.fieldName === "value" && action.fieldType === "string" && store.getState().queryform.autocompleteEnabled )
             .debounceTime(300)
+            .filter( (action) => action.fieldName === "value" && action.fieldType === "string" && store.getState().queryform.autocompleteEnabled )
             .switchMap((action) => {
                 const state = store.getState();
                 const maxFeaturesWPS = state.queryform.maxFeaturesWPS;
@@ -66,8 +89,12 @@ module.exports = {
                         startIndex: (action.fieldOptions.currentPage - 1) * maxFeaturesWPS,
                         value: action.fieldValue
                     });
+                const parsedUrl = getParsedUrl(state.query.url, {"outputFormat": "json"});
+                if (parsedUrl === null) {
+                    return Rx.Observable.of(setAutocompleteMode(false));
+                }
                 return Rx.Observable.fromPromise(
-                    axios.post("geoserver-test/wps?SERVICE=WPS&outputFormat=json", data, {
+                    axios.post(parsedUrl, data, {
                         timeout: 60000,
                         headers: {'Accept': 'application/json', 'Content-Type': 'application/xml'}
                     }).then(response => response.data)
