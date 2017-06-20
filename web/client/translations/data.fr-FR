@@ -203,7 +203,17 @@
             "measure": "Mesurer",
             "backgroundSwitcher": "Fond de plan",
             "layers": "Couches",
-            "drawerButton": "Couches"
+            "drawerButton": "Couches",
+            "refreshTitle": "Mise à jour des couches",
+            "refreshConfirm": "Mettre à jour",
+            "refreshMessage": "Rechargez la configuration des couches WMS à partir du(s) serveur(s)",
+            "refreshError": "Erreur lors de la mise à jour des couches: ",
+            "refreshOptions": {
+                "bbox": "Mettre à jour BBOX",
+                "search": "Mettre à jour les options de recherche",
+                "title": "Mettre à jour le titre",
+                "dimensions": "Mettre à jour les dimensions"
+            }
         },
         "print":{
             "paneltitle": "Impression",

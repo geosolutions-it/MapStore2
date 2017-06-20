@@ -201,7 +201,17 @@
             "measure": "Measure",
             "backgroundSwitcher": "Backgrounds",
             "layers": "Layers",
-            "drawerButton": "Layers"
+            "drawerButton": "Layers",
+            "refreshTitle": "Update layers",
+            "refreshConfirm": "Update",
+            "refreshMessage": "Reload WMS layers configuration from the server(s)",
+            "refreshError": "Error updating layers: ",
+            "refreshOptions": {
+                "bbox": "Update BBOX",
+                "search": "Update search options",
+                "title": "Update title",
+                "dimensions": "Update dimensions"
+            }
         },
         "print":{
             "paneltitle": "Print",

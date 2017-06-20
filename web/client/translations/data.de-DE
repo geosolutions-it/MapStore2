@@ -201,7 +201,17 @@
             "measure": "Messen",
             "backgroundSwitcher": "Hintergrund",
             "layers": "Ebenen",
-            "drawerButton": "Ebenen"
+            "drawerButton": "Ebenen",
+            "refreshTitle": "Ebenen aktualisieren",
+            "refreshConfirm": "Aktualisieren",
+            "refreshMessage": "Laden Sie die WMS-Layer-Konfiguration von dem Server(s)",
+            "refreshError": "Fehler beim Aktualisieren von Ebenen: ",
+            "refreshOptions": {
+                "bbox": "BBOX aktualisieren",
+                "search": "Suchoptionen aktualisieren",
+                "title": "Titel aktualisieren",
+                "dimensions": "Dimensionen aktualisieren"
+            }
         },
         "print":{
             "paneltitle": "Drucken",

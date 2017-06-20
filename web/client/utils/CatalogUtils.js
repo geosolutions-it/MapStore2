@@ -12,23 +12,8 @@ const urlUtil = require('url');
 const CoordinatesUtils = require('./CoordinatesUtils');
 const {castArray, isObject} = require('lodash');
 
-const getWMSBBox = (record) => {
-    let layer = record;
-    let bbox = (layer.EX_GeographicBoundingBox || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$));
-    while (!bbox && layer.Layer && layer.Layer.length) {
-        layer = layer.Layer[0];
-        bbox = (layer.EX_GeographicBoundingBox || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$));
-    }
-    if (!bbox) {
-        bbox = {
-            westBoundLongitude: -180.0,
-            southBoundLatitude: -90.0,
-            eastBoundLongitude: 180.0,
-            northBoundLatitude: 90.0
-        };
-    }
-    return bbox;
-};
+const WMS = require('../api/WMS');
+
 const getBaseCatalogUrl = (url) => {
     return url && url.replace(/\/csw$/, "/");
 };
@@ -143,7 +128,6 @@ const converters = {
     wms: (records, options) => {
         if (records && records.records) {
             return records.records.map((record) => {
-                const bbox = getWMSBBox(record);
                 return {
                 title: record.Title || record.Name,
                 description: record.Abstract || record.Title || record.Name,
@@ -151,15 +135,7 @@ const converters = {
                 tags: "",
                 capabilities: record,
                 service: records.service,
-                boundingBox: {
-                    extent: [
-                            bbox.westBoundLongitude || bbox.minx,
-                            bbox.southBoundLatitude || bbox.miny,
-                            bbox.eastBoundLongitude || bbox.maxx,
-                            bbox.northBoundLatitude || bbox.maxy
-                    ],
-                    crs: "EPSG:4326"
-                },
+                boundingBox: WMS.getBBox(record),
                 dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
                     values: dim._.split(',')
                 }, dim.$ || {})),

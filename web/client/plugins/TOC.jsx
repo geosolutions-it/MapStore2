@@ -14,7 +14,7 @@ const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
        sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode} = require('../actions/layers');
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
-const {groupsSelector} = require('../selectors/layers');
+const {groupsSelector, layersSelector} = require('../selectors/layers');
 const {mapSelector} = require('../selectors/map');
 
 const LayersUtils = require('../utils/LayersUtils');
@@ -27,6 +27,8 @@ const layersIcon = require('./toolbar/assets/img/layers.png');
 
 // include application component
 const QueryBuilder = require('../components/data/query/QueryBuilder');
+
+const {isObject} = require('lodash');
 
 const {bindActionCreators} = require('redux');
 const {
@@ -52,6 +54,10 @@ const {
     zoneSearch,
     zoneChange
 } = require('../actions/queryform');
+
+const {toggleControl, setControlProperty} = require('../actions/controls');
+
+const {refreshLayers} = require('../actions/layers');
 
 const {createQuery, toggleQueryPanel} = require('../actions/wfsquery');
 
@@ -125,6 +131,43 @@ const SmartQueryForm = connect((state) => {
     };
 })(QueryBuilder);
 
+const refreshSelector = createSelector([
+    (state) => state.controls && state.controls.RefreshLayers || {},
+    layersSelector,
+    (state) => state.layers && state.layers.refreshing || [],
+    (state) => state.layers && state.layers.refreshError || []
+], (control, layers, refreshing, error) => ({
+    show: control.enabled === true,
+    options: control.options || {},
+    layers: layers.filter((l) => l.type === 'wms' && l.group !== 'background'),
+    refreshing,
+    error
+}));
+
+const refreshLayerSelector = createSelector([
+    (state) => state.controls && state.controls.RefreshLayers || {},
+    (state) => state.layers && state.layers.refreshing || [],
+    (state) => state.layers && state.layers.refreshError || []
+], (control, layers, refreshing, error) => ({
+    show: isObject(control.enabled) || false,
+    options: control.options || {},
+    layers: [control.enabled],
+    refreshing,
+    error
+}));
+
+const RefreshLayers = connect(refreshSelector, {
+    onClose: toggleControl.bind(null, 'RefreshLayers', 'enabled'),
+    onRefresh: refreshLayers,
+    onUpdateOptions: setControlProperty.bind(null, 'RefreshLayers', 'options')
+})(require('../components/toc/fragments/RefreshLayers'));
+
+const RefreshLayer = connect(refreshLayerSelector, {
+    onClose: toggleControl.bind(null, 'RefreshLayers', 'enabled'),
+    onRefresh: refreshLayers,
+    onUpdateOptions: setControlProperty.bind(null, 'RefreshLayers', 'options')
+})(require('../components/toc/fragments/RefreshLayers'));
+
 const tocSelector = createSelector(
     [
         (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
@@ -168,6 +211,8 @@ const LayerTree = React.createClass({
         retrieveLayerData: React.PropTypes.func,
         onSort: React.PropTypes.func,
         onSettings: React.PropTypes.func,
+        onRefresh: React.PropTypes.func,
+        onRefreshLayer: React.PropTypes.func,
         hideSettings: React.PropTypes.func,
         updateSettings: React.PropTypes.func,
         updateNode: React.PropTypes.func,
@@ -177,6 +222,7 @@ const LayerTree = React.createClass({
         activateZoomTool: React.PropTypes.bool,
         activateQueryTool: React.PropTypes.bool,
         activateSettingsTool: React.PropTypes.bool,
+        activateRefreshTool: React.PropTypes.bool,
         visibilityCheckType: React.PropTypes.string,
         settingsOptions: React.PropTypes.object,
         chartStyle: React.PropTypes.object,
@@ -196,6 +242,8 @@ const LayerTree = React.createClass({
             onToggleQuery: () => {},
             onZoomToExtent: () => {},
             onSettings: () => {},
+            onRefresh: () => {},
+            onRefreshLayer: () => {},
             updateNode: () => {},
             removeNode: () => {},
             activateLegendTool: true,
@@ -203,6 +251,7 @@ const LayerTree = React.createClass({
             activateSettingsTool: true,
             activateRemoveLayer: true,
             activateQueryTool: false,
+            activateRefreshTool: true,
             visibilityCheckType: "glyph",
             settingsOptions: {
                 includeCloseButton: false,
@@ -234,6 +283,7 @@ const LayerTree = React.createClass({
                             onToggleQuerypanel={this.props.onToggleQuery }
                             onZoom={this.props.onZoomToExtent}
                             onSettings={this.props.onSettings}
+                            onRefresh={this.props.onRefreshLayer}
                             propertiesChangeHandler={this.props.layerPropertiesChangeHandler}
                             hideSettings={this.props.hideSettings}
                             settings={this.props.settings}
@@ -246,6 +296,7 @@ const LayerTree = React.createClass({
                             activateZoomTool={this.props.activateZoomTool}
                             activateQueryTool={this.props.activateQueryTool}
                             activateSettingsTool={this.props.activateSettingsTool}
+                            activateRefreshTool={this.props.activateRefreshTool}
                             retrieveLayerData={this.props.retrieveLayerData}
                             chartStyle={this.props.chartStyle}
                             settingsText={<Message msgId="layerProperties.windowTitle"/>}
@@ -257,7 +308,10 @@ const LayerTree = React.createClass({
                             currentZoomLvl={this.props.currentZoomLvl}
                             scales={this.props.scales}/>);
         return (
-            <div>
+            <div className="mapstore-toc">
+                <Button onClick={this.props.onRefresh} bsSize="xsmall"><Glyphicon glyph="refresh"/></Button>
+                <RefreshLayers/>
+                <RefreshLayer/>
                 <TOC onSort={this.props.onSort} filter={this.getNoBackgroundLayers}
                     nodes={this.props.groups}>
                     <DefaultLayerOrGroup groupElement={Group} layerElement={Layer}/>
@@ -317,12 +371,16 @@ const TOCPlugin = connect(tocSelector, {
     onToggleQuery: toggleQueryPanel,
     onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
     onSettings: showSettings,
+    onRefresh: toggleControl.bind(null, 'RefreshLayers', 'enabled'),
+    onRefreshLayer: setControlProperty.bind(null, 'RefreshLayers', 'enabled'),
     onZoomToExtent: zoomToExtent,
     hideSettings,
     updateSettings,
     updateNode,
     removeNode
 })(LayerTree);
+
+const {refresh} = require('../epics/layers');
 
 module.exports = {
     TOCPlugin: assign(TOCPlugin, {
@@ -354,5 +412,6 @@ module.exports = {
     reducers: {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
-    }
+    },
+    epics: {refresh}
 };
