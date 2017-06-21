@@ -779,6 +779,16 @@
                 "more": "viele"
             }
         },
+        "wfsdownload": {
+            "title": "Daten exportieren",
+            "format": "Datei Format",
+            "export": "Export",
+            "downloadonlycurrentpage": "Nur aktuelle Seite herunterladen",
+            "error": {
+                "title": "Fehler beim Export",
+                "invalidOutputFormat": "Das ausgewählte Exportformat ist nicht verfügbar"
+            }
+        },
         "vectorstyler": {
             "tooltip": "Erstelle und bearbeite den Vektor Ebenen Stil",
             "paneltitle": "Vektor Styler",

@@ -58,7 +58,9 @@ const DockedFeatureGrid = React.createClass({
         dockSize: React.PropTypes.number,
         minDockSize: React.PropTypes.number,
         maxDockSize: React.PropTypes.number,
-        setDockSize: React.PropTypes.func
+        setDockSize: React.PropTypes.func,
+        exportAction: React.PropTypes.func,
+        exportEnabled: React.PropTypes.bool
     },
     contextTypes: {
         messages: React.PropTypes.object
@@ -251,6 +253,7 @@ const DockedFeatureGrid = React.createClass({
                                 height: "100%"
                                 }}>
                             <FeatureGrid
+                                exportAction={this.props.exportEnabled && this.props.exportAction}
                                 useIcons={true}
                                 tools={[<Button onClick={this.props.onBackToSearch} ><Glyphicon glyph="arrow-left" /><I18N.Message msgId="featuregrid.backtosearch"/></Button>]}
                                 key={"search-results-" + (this.state && this.state.searchN)}

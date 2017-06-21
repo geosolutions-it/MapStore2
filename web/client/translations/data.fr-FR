@@ -782,6 +782,16 @@
                 "more": "plus"
             }
         },
+        "wfsdownload": {
+            "title": "Exporter des données",
+            "format": "Format de fichier",
+            "export": "Exportations",
+            "downloadonlycurrentpage": "Télécharger uniquement la page actuelle",
+            "error": {
+                "title": "Erreur lors de l'exportation",
+                "invalidOutputFormat": "Le format d'exportation sélectionné n'est pas disponible"
+            }
+        },
         "vectorstyler": {
             "tooltip": "Créer et éditer un style de couche vectorielle",
             "paneltitle": "Style de couche",
