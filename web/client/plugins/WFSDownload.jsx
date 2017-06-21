@@ -1,0 +1,63 @@
+/*
+ * Copyright 2017, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+const {connect} = require('react-redux');
+const {downloadFeatures, onDownloadOptionChange} = require('../actions/wfsdownload');
+const {toggleControl, setControlProperty} = require('../actions/controls');
+
+const {createSelector} = require('reselect');
+const {wfsURL, wfsFilter} = require('../selectors/query');
+
+const DownloadDialog = require('../components/data/download/DownloadDialog');
+/**
+ * Provides advanced export functionalities using WFS.
+ * @memberof plugins
+ * @name WFSDownload
+ * @class
+ * @prop {object[]} formats An array of name-label objects for the allowed formats available.
+ * @prop {string} closeGlyph The icon to use for close the dialog
+ * @example
+ * {
+ *  "name": "WFSDownload",
+ *  "cfg": {
+ *    "formats": [
+ *            {"name": "csv", "label": "csv"},
+ *            {"name": "shape-zip", "label": "shape-zip"},
+ *            {"name": "excel", "label": "excel"},
+ *            {"name": "excel2007", "label": "excel2007"},
+ *            {"name": "dxf-zip", "label": "dxf-zip"}
+ *    ]
+ *  }
+ * }
+ */
+module.exports = {
+    WFSDownloadPlugin: connect(createSelector(
+            wfsURL,
+            wfsFilter,
+            state => state && state.controls && state.controls.wfsdownload && state.controls.wfsdownload.enabled,
+            state => state && state.wfsdownload && state.wfsdownload.downloadOptions,
+            state => state && state.wfsdownload && state.wfsdownload.loading,
+            (url, filterObj, enabled, downloadOptions, loading) => ({
+                url,
+                filterObj,
+                enabled,
+                downloadOptions,
+                loading
+            })
+    ), {
+        onExport: downloadFeatures,
+        onDownloadOptionChange,
+        onMount: () => setControlProperty("wfsdownload", "available", true),
+        onUnmount: () => setControlProperty("wfsdownload", "available", false),
+        onClose: () => toggleControl("wfsdownload")
+    }
+)(DownloadDialog),
+    epics: require('../epics/wfsdownload'),
+    reducers: {
+        wfsdownload: require('../reducers/wfsdownload')
+    }
+};

@@ -784,6 +784,16 @@
                 "more": "more"
             }
         },
+        "wfsdownload": {
+            "title": "Export Data",
+            "format": "File Format",
+            "export": "Export",
+            "downloadonlycurrentpage": "Download only current page",
+            "error": {
+                "title": "Error during export",
+                "invalidOutputFormat": "The selected export format is not available"
+            }
+        },
         "vectorstyler": {
             "tooltip": "Create and edit vector layer style",
             "paneltitle": "Vector Styler",

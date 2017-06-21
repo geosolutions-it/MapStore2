@@ -784,6 +784,16 @@
                 "more": "molte"
             }
         },
+        "wfsdownload": {
+            "title": "Esporta Dati",
+            "format": "Formato file",
+            "export": "Esporta",
+            "downloadonlycurrentpage": "Scarica solo la pagina corrente",
+            "error": {
+                "title": "Errore durante l'esportazione",
+                "invalidOutputFormat": "Il formato selezionato non è disponibile"
+            }
+        },
         "vectorstyler": {
             "tooltip": "Crea e modifica lo stile dei layer vettoriali",
             "paneltitle": "Vector Styler",

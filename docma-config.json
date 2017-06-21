@@ -176,6 +176,7 @@
                 "web/client/plugins/Search.jsx",
                 "web/client/plugins/SearchServicesConfig.jsx",
                 "web/client/plugins/TOC.jsx",
+                "web/client/plugins/WFSDownload.jsx",
                 "web/client/plugins/ZoomIn.jsx",
                 "web/client/plugins/ZoomOut.jsx"
             ]

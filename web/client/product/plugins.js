@@ -63,6 +63,7 @@ module.exports = {
         CreateNewMapPlugin: require('../plugins/CreateNewMap'),
         QueryPanelPlugin: require('../plugins/QueryPanel'),
         FeatureGridPlugin: require('../plugins/FeatureGrid'),
+        WFSDownloadPlugin: require('../plugins/WFSDownload'),
         TutorialPlugin: require('../plugins/Tutorial'),
         ThemeSwitcherPlugin: require('../plugins/ThemeSwitcher'),
         ScrollTopPlugin: require('../plugins/ScrollTop'),

@@ -9,10 +9,12 @@ const {connect} = require('react-redux');
 const {selectFeatures, dockSizeFeatures} = require('../actions/featuregrid');
 const {query, closeResponse} = require('../actions/wfsquery');
 const {changeMapView} = require('../actions/map');
+const {toggleControl} = require('../actions/controls');
 
 module.exports = {
     FeatureGridPlugin: connect((state) => ({
         open: state.query && state.query.open,
+        exportEnabled: state && state.controls && state.controls.wfsdownload && state.controls.wfsdownload.available,
         features: state.query && state.query.result && state.query.result.features,
         filterObj: state.query && state.query.filterObj,
         searchUrl: state.query && state.query.searchUrl,
@@ -34,6 +36,7 @@ module.exports = {
     }),
     {
         selectFeatures,
+        exportAction: () => toggleControl("wfsdownload"),
         changeMapView,
         onQuery: query,
         onBackToSearch: closeResponse,

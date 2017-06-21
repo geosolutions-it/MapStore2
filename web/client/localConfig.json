@@ -149,7 +149,7 @@
                         "alwaysVisible": true
                     }
                 }
-            }, "Home", "FeatureGrid", {
+            }, "Home", "FeatureGrid", "WFSDownload", {
                 "name": "TOC",
                 "cfg": {
                     "activateQueryTool": true,
