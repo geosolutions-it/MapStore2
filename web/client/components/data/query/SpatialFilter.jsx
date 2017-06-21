@@ -84,7 +84,7 @@ const SpatialFilter = React.createClass({
                 placeholder={LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.combo_placeholder")}
                 fieldName="method"
                 style={{width: "140px"}}
-                fieldRowId={new Date().getUTCMilliseconds()}
+                fieldRowId={new Date().getTime()}
                 fieldValue={
                     LocaleUtils.getMessageById(this.context.messages, selectedMethod ? selectedMethod.name : "")
                 }
@@ -239,7 +239,7 @@ const SpatialFilter = React.createClass({
                         }
                         fieldName="operation"
                         style={{width: "140px"}}
-                        fieldRowId={new Date().getUTCMilliseconds()}
+                        fieldRowId={new Date().getTime()}
                         fieldValue={
                             LocaleUtils.getMessageById(this.context.messages, selectedOperation ? selectedOperation.name : "")
                         }
@@ -272,7 +272,7 @@ const SpatialFilter = React.createClass({
                         }
                         fieldName="operation"
                         style={{width: "140px"}}
-                        fieldRowId={new Date().getUTCMilliseconds()}
+                        fieldRowId={new Date().getTime()}
                         fieldValue={
                             LocaleUtils.getMessageById(this.context.messages, selectedOperation ? selectedOperation.name : "")
                         }

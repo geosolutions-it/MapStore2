@@ -87,7 +87,7 @@ function queryform(state = initialState, action) {
             // Calculate the key number, this should be different for each new element
             //
             const newFilterField = {
-                rowId: new Date().getUTCMilliseconds(),
+                rowId: new Date().getTime(),
                 groupId: action.groupId,
                 attribute: null,
                 operator: "=",
@@ -158,7 +158,7 @@ function queryform(state = initialState, action) {
         }
         case ADD_GROUP_FIELD: {
             const newGroupField = {
-                id: new Date().getUTCMilliseconds(),
+                id: new Date().getTime(),
                 logic: "OR",
                 groupId: action.groupId,
                 index: action.index + 1
@@ -397,7 +397,7 @@ function queryform(state = initialState, action) {
             return {...state, simpleFilterFields: newSimpleFilterFields};
         }
         case ADD_SIMPLE_FILTER_FIELD: {
-            const field = ( action.properties.fieldId) ? action.properties : {...action.properties, fieldId: new Date().getUTCMilliseconds()};
+            const field = ( action.properties.fieldId) ? action.properties : {...action.properties, fieldId: new Date().getTime()};
             const newSimpleFilterFields = (state.simpleFilterFields) ? [...state.simpleFilterFields, field] : [field];
             return {...state, simpleFilterFields: newSimpleFilterFields};
         }
