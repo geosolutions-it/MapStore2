@@ -73,10 +73,10 @@ const AutocompleteField = React.createClass({
         return (
             <div className="autocomplete-toolbar">
                 { !firstPage &&
-                    <Glyphicon className={this.props.prevPage} glyph={this.props.prevPage} onClick={() => this.props.onUpdateField(this.props.filterField.rowId, "value", this.props.filterField.value, "string", {currentPage: this.props.filterField.fieldOptions.currentPage - 1}) }/>
+                    <Glyphicon className={this.props.prevPage} glyph={this.props.prevPage} onClick={() => this.props.onUpdateField(this.props.filterField.rowId, "value", this.props.filterField.value, "string", {currentPage: this.props.filterField.fieldOptions.currentPage - 1, applyDelay: false}) }/>
                 }
                 { !lastPage &&
-                    <Glyphicon className={this.props.nextPage} glyph={this.props.nextPage} onClick={() => this.props.onUpdateField(this.props.filterField.rowId, "value", this.props.filterField.value, "string", {currentPage: this.props.filterField.fieldOptions.currentPage + 1})}/>
+                    <Glyphicon className={this.props.nextPage} glyph={this.props.nextPage} onClick={() => this.props.onUpdateField(this.props.filterField.rowId, "value", this.props.filterField.value, "string", {currentPage: this.props.filterField.fieldOptions.currentPage + 1, applyDelay: false})}/>
                 }
             </div>
         );
@@ -127,10 +127,10 @@ const AutocompleteField = React.createClass({
         if (this.selected) {
             this.selected = false;
             if (input && input.value !== "") {
-                this.props.onUpdateField(this.props.filterField.rowId, "value", input.value, "string", {currentPage: 1, selected: "selected"});
+                this.props.onUpdateField(this.props.filterField.rowId, "value", input.value, "string", {currentPage: 1, selected: "selected", applyDelay: false});
             }
         } else {
-            this.props.onUpdateField(this.props.filterField.rowId, "value", input, "string", {currentPage: 1});
+            this.props.onUpdateField(this.props.filterField.rowId, "value", input, "string", {currentPage: 1, applyDelay: true});
         }
     },
     // called before onToggle
@@ -142,7 +142,7 @@ const AutocompleteField = React.createClass({
     },
     loadWithoutfilter(options) {
         if (options.length === 0 && !this.props.filterField.value) {
-            this.props.onUpdateField(this.props.filterField.rowId, "value", "", "string", {currentPage: 1});
+            this.props.onUpdateField(this.props.filterField.rowId, "value", "", "string", {currentPage: 1, applyDelay: false});
         }
     }
 });
