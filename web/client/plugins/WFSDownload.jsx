@@ -5,25 +5,20 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
 const {connect} = require('react-redux');
-const {Button, Glyphicon} = require('react-bootstrap');
-const Spinner = require('react-spinkit');
-
 const {downloadFeatures, onDownloadOptionChange} = require('../actions/wfsdownload');
 const {toggleControl, setControlProperty} = require('../actions/controls');
 
 const {createSelector} = require('reselect');
 const {wfsURL, wfsFilter} = require('../selectors/query');
 
-const Dialog = require('../components/misc/Dialog');
-const Message = require('../components/I18N/Message');
-const DownloadOptions = require('../components/data/download/DownloadOptions');
+const DownloadDialog = require('../components/data/download/DownloadDialog');
 /**
  * Provides advanced export functionalities using WFS.
  * @memberof plugins
+ * @name WFSDownload
  * @class
- * @prop {object[]} formats An array of name-label objects for the allowed formats avaliable.
+ * @prop {object[]} formats An array of name-label objects for the allowed formats available.
  * @prop {string} closeGlyph The icon to use for close the dialog
  * @example
  * {
@@ -39,69 +34,6 @@ const DownloadOptions = require('../components/data/download/DownloadOptions');
  *  }
  * }
  */
-const WFSDownload = React.createClass({
-    propTypes: {
-        filterObj: React.PropTypes.object,
-        closeGlyph: React.PropTypes.string,
-        url: React.PropTypes.string,
-        onMount: React.PropTypes.func,
-        onUnmount: React.PropTypes.func,
-        enabled: React.PropTypes.bool,
-        loading: React.PropTypes.bool,
-        onClose: React.PropTypes.func,
-        onExport: React.PropTypes.func,
-        onDownloadOptionChange: React.PropTypes.func,
-        downloadOptions: React.PropTypes.object,
-        formats: React.PropTypes.array
-    },
-    getDefaultProps() {
-        return {
-            onExport: () => {},
-            onClose: () => {},
-            onDownloadOptionChange: () => {},
-            closeGlyph: "1-close",
-            formats: [
-                {name: "csv", label: "csv"},
-                {name: "shape-zip", label: "shape-zip"}
-            ]
-        };
-    },
-    componentDidMount() {
-        this.props.onMount();
-    },
-    componentWillUnmount() {
-        this.props.onUnmount();
-    },
-    onClose() {
-        this.props.onClose();
-    },
-    renderIcon() {
-        return this.props.loading ? <div style={{"float": "left"}}><Spinner spinnerName="circle" noFadeIn/></div> : <Glyphicon glyph="download" />;
-    },
-    render() {
-        return (<Dialog id="mapstore-export" style={{display: this.props.enabled ? "block" : "none"}}>
-            <span role="header">
-                <span className="about-panel-title"><Message msgId="wfsdownload.title" /></span>
-                <button onClick={this.props.onClose} className="settings-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
-                </span>
-            <div role="body">
-                <DownloadOptions
-                    downloadOptions={this.props.downloadOptions}
-                    onChange={this.props.onDownloadOptionChange}
-                    formats={this.props.formats}/>
-                </div>
-            <div role="footer">
-                <Button
-                    bsStyle="primary"
-                    disabled={!this.props.downloadOptions.selectedFormat || this.props.loading}
-                    onClick={() => this.props.onExport(this.props.url, this.props.filterObj, this.props.downloadOptions)}>
-                     {this.renderIcon()} <Message msgId="wfsdownload.export" />
-                </Button>
-            </div>
-        </Dialog>);
-    }
-});
-
 module.exports = {
     WFSDownloadPlugin: connect(createSelector(
             wfsURL,
@@ -119,11 +51,11 @@ module.exports = {
     ), {
         onExport: downloadFeatures,
         onDownloadOptionChange,
-        onMount: () => setControlProperty("wfsdownload", "avaliable", true),
-        onUnmount: () => setControlProperty("wfsdownload", "avaliable", false),
+        onMount: () => setControlProperty("wfsdownload", "available", true),
+        onUnmount: () => setControlProperty("wfsdownload", "available", false),
         onClose: () => toggleControl("wfsdownload")
     }
-    )(WFSDownload),
+)(DownloadDialog),
     epics: require('../epics/wfsdownload'),
     reducers: {
         wfsdownload: require('../reducers/wfsdownload')
