@@ -19,6 +19,7 @@ const QUERY = 'QUERY';
 
 const axios = require('../libs/ajax');
 const {toggleControl, setControlProperty} = require('./controls');
+const {changeDrawingStatus} = require('./draw');
 const {reset} = require('./queryform');
 
 function featureTypeSelected(url, typeName) {
@@ -123,6 +124,7 @@ function toggleQueryPanel(url, name) {
         if (getState().query.typeName !== name) {
             dispatch(reset());
         }
+        dispatch(changeDrawingStatus('clean', null, "queryform", []));
         dispatch(featureTypeSelected(url, name));
         dispatch(toggleControl('queryPanel', null));
         dispatch(setControlProperty('drawer', 'width', getState().controls.queryPanel.enabled ? 700 : 300));
