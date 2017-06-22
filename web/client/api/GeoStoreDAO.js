@@ -67,7 +67,7 @@ var Api = {
         });
     },
     login: function(username, password, options) {
-        let url = "session/login";
+        const url = "session/login";
         let authData;
         return axios.post(url, null, this.addBaseUrl(_.merge({
             auth: {

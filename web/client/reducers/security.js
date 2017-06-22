@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAIL, RESET_ERROR, REFRESH_ACCESS_TOKEN, REFRESH_SUCCESS } = require('../actions/security');
+const { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAIL, RESET_ERROR, REFRESH_SUCCESS } = require('../actions/security');
 const { SET_CONTROL_PROPERTY } = require('../actions/controls');
 const { USERMANAGER_UPDATE_USER } = require('../actions/users');
 
@@ -82,14 +82,6 @@ function security(state = {user: null, errorCause: null}, action) {
                 passwordError: action.error,
                 passwordChanged: false
             });
-        case REFRESH_ACCESS_TOKEN:
-            // TODO: NOT IMPLEMENTED
-            if (state.token) {
-                /*
-                console.log(state.token);
-                */
-            }
-            return state;
         default:
             return state;
     }
