@@ -58,7 +58,7 @@ function security(state = {user: null, errorCause: null}, action) {
             });
         case CHANGE_PASSWORD_SUCCESS:
             return assign({}, state, {
-                user: assign({}, state.user, assign({}, action.user, {date: new Date().getUTCMilliseconds()})),
+                user: assign({}, state.user, assign({}, action.user, {date: new Date().getTime()})),
                 authHeader: action.authHeader,
                 passwordChanged: true,
                 passwordError: null
