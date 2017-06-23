@@ -17,7 +17,9 @@ const CreateNewMap = React.createClass({
         mapType: React.PropTypes.string,
         onGoToMap: React.PropTypes.func,
         colProps: React.PropTypes.object,
-        isLoggedIn: React.PropTypes.bool
+        isLoggedIn: React.PropTypes.bool,
+        allowedRoles: React.PropTypes.array,
+        user: React.PropTypes.object
     },
     contextTypes: {
         router: React.PropTypes.object
@@ -25,6 +27,7 @@ const CreateNewMap = React.createClass({
     getDefaultProps() {
         return {
             mapType: "leaflet",
+            allowedRoles: ["ADMIN", "USER"],
             isLoggedIn: false,
             onGoToMap: () => {},
             colProps: {
@@ -35,9 +38,9 @@ const CreateNewMap = React.createClass({
             }
         };
     },
-
     render() {
-        const display = this.props.isLoggedIn ? null : "none";
+        const display = this.isAllowed() ? null : "none";
+
         return (<Grid fluid={true} style={{marginBottom: "30px", padding: 0, display}}>
         <Col {...this.props.colProps} >
             <Button bsStyle="primary" onClick={() => { this.context.router.push("/viewer/" + this.props.mapType + "/new"); }}>
@@ -45,12 +48,17 @@ const CreateNewMap = React.createClass({
             </Button>
         </Col>
         </Grid>);
+    },
+    isAllowed() {
+        return this.props.isLoggedIn
+            && this.props.allowedRoles.indexOf(this.props.user && this.props.user.role) >= 0;
     }
 });
 
 module.exports = {
     CreateNewMapPlugin: connect((state) => ({
         mapType: (state.maps && state.maps.mapType) || (state.home && state.home.mapType),
-        isLoggedIn: state && state.security && state.security.user && state.security.user.enabled && true || false
+        isLoggedIn: state && state.security && state.security.user && state.security.user.enabled && true || false,
+        user: state && state.security && state.security.user
     }))(CreateNewMap)
 };
