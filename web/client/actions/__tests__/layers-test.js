@@ -21,6 +21,9 @@ var {
     SHOW_SETTINGS,
     HIDE_SETTINGS,
     UPDATE_SETTINGS,
+    REFRESH_LAYERS,
+    LAYERS_REFRESHED,
+    LAYERS_REFRESH_ERROR,
     changeLayerProperties,
     toggleNode,
     sortNode,
@@ -33,7 +36,10 @@ var {
     removeLayer,
     showSettings,
     hideSettings,
-    updateSettings
+    updateSettings,
+    refreshLayers,
+    layersRefreshed,
+    layersRefreshError
 } = require('../layers');
 var {getLayerCapabilities} = require('../layerCapabilities');
 
@@ -63,6 +69,34 @@ describe('Test correctness of the layers actions', () => {
         expect(retval.type).toBe(SORT_NODE);
         expect(retval.node).toBe('group');
         expect(retval.order).toBe(order);
+    });
+
+    it('refreshLayers', () => {
+        var retval = refreshLayers(['layer'], {
+            opt: 'val'
+        });
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(REFRESH_LAYERS);
+        expect(retval.layers.length).toBe(1);
+        expect(retval.options.opt).toBe('val');
+    });
+
+    it('layersRefreshed', () => {
+        var retval = layersRefreshed(['layer']);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(LAYERS_REFRESHED);
+        expect(retval.layers.length).toBe(1);
+    });
+
+    it('layersRefreshError', () => {
+        var retval = layersRefreshError(['layer'], 'err');
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(LAYERS_REFRESH_ERROR);
+        expect(retval.layers.length).toBe(1);
+        expect(retval.error).toBe('err');
     });
 
     it('toggleNode', () => {

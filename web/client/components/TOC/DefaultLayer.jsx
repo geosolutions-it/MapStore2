@@ -29,6 +29,7 @@ class DefaultLayer extends React.Component {
         onToggleQuerypanel: PropTypes.func,
         onZoom: PropTypes.func,
         onSettings: PropTypes.func,
+        onRefresh: PropTypes.func,
         style: PropTypes.object,
         sortableStyle: PropTypes.object,
         hideSettings: PropTypes.func,
@@ -40,6 +41,7 @@ class DefaultLayer extends React.Component {
         activateSettingsTool: PropTypes.bool,
         activateQueryTool: PropTypes.bool,
         activateZoomTool: PropTypes.bool,
+        activateRefreshTool: PropTypes.bool,
         chartStyle: PropTypes.object,
         settingsText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
         opacityText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
@@ -67,6 +69,7 @@ class DefaultLayer extends React.Component {
         onContextMenu: () => {},
         onZoom: () => {},
         onSettings: () => {},
+        onRefresh: () => {},
         retrieveLayerData: () => {},
         onToggleQuerypanel: () => {},
         activateRemoveLayer: false,
@@ -74,6 +77,7 @@ class DefaultLayer extends React.Component {
         activateSettingsTool: false,
         activateQueryTool: false,
         activateZoomTool: false,
+        activateRefreshTool: false,
         includeDeleteButtonInSettings: false,
         modalOptions: {},
         settingsOptions: {},
@@ -103,6 +107,16 @@ class DefaultLayer extends React.Component {
                         tooltip="toc.removeLayer"
                         glyph="1-close"
                         />);
+        }
+        if (this.props.activateRefreshTool && this.props.node.type === 'wms') {
+            tools.push((<LayersTool
+                        node={this.props.node}
+                        key="refreshlayer"
+                        className="clayer_refresh_button"
+                        onClick={this.displayRefreshDialog}
+                        tooltip="toc.refreshConfirm"
+                        glyph="refresh"
+                        />));
         }
         tools.push(
             <LayersTool node={this.props.node} key="toolsettings"
@@ -215,6 +229,10 @@ class DefaultLayer extends React.Component {
         this.setState({
             showDeleteDialog: true
         });
+    };
+
+    displayRefreshDialog = () => {
+        this.props.onRefresh(this.props.node);
     };
 }
 

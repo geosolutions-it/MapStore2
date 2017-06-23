@@ -54,6 +54,12 @@ const getElevationDimension = (dimensions = []) => {
     }, null);
 };
 
+const addBaseParams = (url, params) => {
+    const query = Object.keys(params).map((key) => key + '=' + encodeURIComponent(params[key])).join('&');
+    return url.indexOf('?') === -1 ? (url + '?' + query) : (url + '&' + query);
+};
+
+
 var LayersUtils = {
     getDimension: (dimensions, dimension) => {
         switch (dimension.toLowerCase()) {
@@ -204,6 +210,17 @@ var LayersUtils = {
             dimensions: layer.dimensions || [],
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
+    },
+    getCapabilitiesUrl: (layer) => {
+        let reqUrl = layer.url;
+        let urlParts = reqUrl.split("/geoserver/");
+        if (urlParts.length === 2) {
+            let layerParts = layer.name.split(":");
+            if (layerParts.length === 2) {
+                reqUrl = urlParts[0] + "/geoserver/" + layerParts [0] + "/" + layerParts[1] + "/" + urlParts[1];
+            }
+        }
+        return addBaseParams(reqUrl, layer.baseParams || {});
     }
 
 };

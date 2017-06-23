@@ -324,6 +324,32 @@ describe('test DefaultLayer module component', () => {
         expect(spy.calls[0].arguments[2]).toEqual({opacity: 0.5});
     });
 
+    it('tests refresh tool', () => {
+        const l = {
+            id: 'layerId1',
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            opacity: 0.5
+        };
+        const actions = {
+            onRefresh: () => {}
+        };
+        let spy = expect.spyOn(actions, "onRefresh");
+        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" modalOptions={{animation: false}} node={l} activateRefreshTool={true} onRefresh={actions.onRefresh}/>,
+            document.getElementById("container"));
+        expect(comp).toExist();
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "glyphicon")[1]);
+        expect(tool).toExist();
+        tool.click();
+        expect(spy.calls.length).toBe(1);
+        expect(spy.calls[0].arguments.length).toBe(1);
+    });
+
     it('test that settings modal is present only if all the requirements are met', () => {
         // helper function to render layers components
         class TestRoot extends React.Component {

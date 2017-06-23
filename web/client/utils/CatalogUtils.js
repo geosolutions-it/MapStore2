@@ -12,30 +12,15 @@ const urlUtil = require('url');
 const CoordinatesUtils = require('./CoordinatesUtils');
 const {castArray, isObject} = require('lodash');
 
-const getWMSBBox = (record) => {
-    let layer = record;
-    let bbox = layer.EX_GeographicBoundingBox || layer.LatLonBoundingBox && layer.LatLonBoundingBox.$;
-    while (!bbox && layer.Layer && layer.Layer.length) {
-        layer = layer.Layer[0];
-        bbox = layer.EX_GeographicBoundingBox || layer.LatLonBoundingBox && layer.LatLonBoundingBox.$;
-    }
-    if (!bbox) {
-        bbox = {
-            westBoundLongitude: -180.0,
-            southBoundLatitude: -90.0,
-            eastBoundLongitude: 180.0,
-            northBoundLatitude: 90.0
-        };
-    }
-    return bbox;
-};
+const WMS = require('../api/WMS');
+
 const getBaseCatalogUrl = (url) => {
     return url && url.replace(/\/csw$/, "/");
 };
 
 const getWMTSBBox = (record) => {
     let layer = record;
-    let bbox = layer["ows:WGS84BoundingBox"];
+    let bbox = (layer["ows:WGS84BoundingBox"]);
     if (!bbox) {
         bbox = {
             "ows:LowerCorner": "-180.0 -90.0",
@@ -60,7 +45,7 @@ const converters = {
                 let wms;
                 // look in URI objects for wms and thumbnail
                 if (dc && dc.URI) {
-                    const URI = isArray(dc.URI) ? dc.URI : dc.URI && [dc.URI] || [];
+                    const URI = isArray(dc.URI) ? dc.URI : (dc.URI && [dc.URI] || []);
                     let thumb = head([].filter.call(URI, (uri) => {return uri.name === "thumbnail"; }) );
                     thumbURL = thumb ? thumb.value : null;
                     wms = head([].filter.call(URI, (uri) => { return uri.protocol === "OGC:WMS-1.1.1-http-get-map"; }));
@@ -105,7 +90,7 @@ const converters = {
                 }
 
                 if (wms && wms.name) {
-                    let absolute = wms.value.indexOf("http") === 0;
+                    let absolute = (wms.value.indexOf("http") === 0);
                     if (!absolute) {
                         assign({}, wms, {value: options.catalogURL + "/" + wms.value} );
                     }
@@ -120,7 +105,7 @@ const converters = {
                     references.push(wmsReference);
                 }
                 if (thumbURL) {
-                    let absolute = thumbURL.indexOf("http") === 0;
+                    let absolute = (thumbURL.indexOf("http") === 0);
                     if (!absolute) {
                         thumbURL = (getBaseCatalogUrl(options.url) || "") + thumbURL;
                     }
@@ -143,34 +128,25 @@ const converters = {
     wms: (records, options) => {
         if (records && records.records) {
             return records.records.map((record) => {
-                const bbox = getWMSBBox(record);
                 return {
-                    title: record.Title || record.Name,
-                    description: record.Abstract || record.Title || record.Name,
-                    identifier: record.Name,
-                    tags: "",
-                    capabilities: record,
-                    service: records.service,
-                    boundingBox: {
-                        extent: [
-                            bbox.westBoundLongitude || bbox.minx,
-                            bbox.southBoundLatitude || bbox.miny,
-                            bbox.eastBoundLongitude || bbox.maxx,
-                            bbox.northBoundLatitude || bbox.maxy
-                        ],
-                        crs: "EPSG:4326"
-                    },
-                    dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
-                        values: dim._.split(',')
-                    }, dim.$ || {})),
-                    references: [{
-                        type: "OGC:WMS",
-                        url: options.url,
-                        SRS: record.SRS && (isArray(record.SRS) ? record.SRS : [record.SRS]) || [],
-                        params: {
-                            name: record.Name
-                        }
-                    }]
+                title: record.Title || record.Name,
+                description: record.Abstract || record.Title || record.Name,
+                identifier: record.Name,
+                tags: "",
+                capabilities: record,
+                service: records.service,
+                boundingBox: WMS.getBBox(record),
+                dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
+                    values: dim._.split(',')
+                }, dim.$ || {})),
+                references: [{
+                    type: "OGC:WMS",
+                    url: options.url,
+                    SRS: (record.SRS && (isArray(record.SRS) ? record.SRS : [record.SRS])) || [],
+                    params: {
+                        name: record.Name
+                    }
+                }]
                 };
             });
         }
