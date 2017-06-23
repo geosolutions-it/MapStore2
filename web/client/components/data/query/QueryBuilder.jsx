@@ -135,6 +135,8 @@ class QueryBuilder extends React.Component {
                     />
                 <div className="querypanel" style={{maxHeight: this.props.maxHeight - 170}}>
                     <GroupField
+                        autocompleteEnabled={this.props.autocompleteEnabled}
+                        maxFeaturesWPS={this.props.maxFeaturesWPS}
                         attributes={this.props.attributes}
                         groupLevels={this.props.groupLevels}
                         filterFields={this.props.filterFields}
@@ -146,6 +148,8 @@ class QueryBuilder extends React.Component {
                     <SpatialFilter
                         useMapProjection={this.props.useMapProjection}
                         spatialField={this.props.spatialField}
+                        spatialOperations={this.props.spatialOperations}
+                        spatialMethodOptions={this.props.spatialMethodOptions}
                         spatialPanelExpanded={this.props.spatialPanelExpanded}
                         showDetailsPanel={this.props.showDetailsPanel}
                         actions={this.props.spatialFilterActions}/>

@@ -250,7 +250,7 @@ class SnapshotPanel extends React.Component {
 
     createSnapshot = () => {
         this.props.onCreateSnapshot({
-            key: new Date().getUTCMilliseconds(), // create a unique key for this snapshot
+            key: new Date().getTime(), // create a unique key for this snapshot
             config: this.props.map,
             layers: this.props.layers.filter((l) => {return l.visibility; }),
             snapstate: this.props.snapshot,

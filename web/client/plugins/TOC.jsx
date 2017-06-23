@@ -10,6 +10,7 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {Button, Glyphicon} = require('react-bootstrap');
+const autocompleteEpics = require('../epics/autocomplete');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
        sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode} = require('../actions/layers');
@@ -51,7 +52,8 @@ const {
     changeDwithinValue,
     zoneGetValues,
     zoneSearch,
-    zoneChange
+    zoneChange,
+    toggleMenu
 } = require('../actions/queryform');
 
 const {createQuery, toggleQueryPanel} = require('../actions/wfsquery');
@@ -78,6 +80,8 @@ const SmartQueryForm = connect((state) => {
         showDetailsPanel: state.queryform.showDetailsPanel,
         toolbarEnabled: state.queryform.toolbarEnabled,
         attributePanelExpanded: state.queryform.attributePanelExpanded,
+        autocompleteEnabled: state.queryform.autocompleteEnabled,
+        maxFeaturesWPS: state.queryform.maxFeaturesWPS,
         spatialPanelExpanded: state.queryform.spatialPanelExpanded,
         featureTypeConfigUrl: state.query && state.query.url,
         searchUrl: state.query && state.query.url,
@@ -102,6 +106,7 @@ const SmartQueryForm = connect((state) => {
             onUpdateLogicCombo: updateLogicCombo,
             onRemoveGroupField: removeGroupField,
             onChangeCascadingValue: changeCascadingValue,
+            toggleMenu: toggleMenu,
             onExpandAttributeFilterPanel: expandAttributeFilterPanel
         }, dispatch),
         spatialFilterActions: bindActionCreators({
@@ -184,6 +189,8 @@ class LayerTree extends React.Component {
         currentZoomLvl: PropTypes.number,
         scales: PropTypes.array,
         layerOptions: PropTypes.object,
+        spatialOperations: PropTypes.array,
+        spatialMethodOptions: PropTypes.array,
         groupOptions: PropTypes.object
     };
 
@@ -273,6 +280,10 @@ class LayerTree extends React.Component {
             <div id="toc-query-container">
                 <Button id="toc-query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={this.props.onToggleQuery.bind(this, null, null)}><Glyphicon glyph="arrow-left"/></Button>
                 <SmartQueryForm
+                    spatialOperations={this.props.spatialOperations}
+                    spatialMethodOptions={this.props.spatialMethodOptions}
+                    autocompleteEnabled={this.props.autocompleteEnabled}
+                    maxFeaturesWPS={this.props.maxFeaturesWPS}
                     featureTypeErrorText={<Message msgId="layerProperties.featureTypeError"/>}/>
             </div>
         );
@@ -358,5 +369,6 @@ module.exports = {
     reducers: {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
-    }
+    },
+    epics: autocompleteEpics
 };

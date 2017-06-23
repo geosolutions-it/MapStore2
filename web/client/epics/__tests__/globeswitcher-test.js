@@ -14,12 +14,12 @@ const assign = require('object-assign');
 const {updateRouteOn3dSwitch} = require('../globeswitcher');
 const {testEpic} = require('./epicTestUtils');
 describe('globeswitcher Epics', () => {
-    it('produces the search epic', (done) => {
+    it('updates maptype', (done) => {
         testEpic(updateRouteOn3dSwitch, 2, assign({hash: "/viewer/leaflet/2"}, toggle3d(true, "leaflet")), actions => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
-                case "@@router/TRANSITION":
+                case "@@router/CALL_HISTORY_METHOD":
                     expect(action.payload.method).toBe('push');
                     expect(action.payload.args.length).toBe(1);
                     break;
@@ -28,6 +28,28 @@ describe('globeswitcher Epics', () => {
                     break;
                 default:
                     expect(true).toBe(false);
+
+                }
+            });
+            done();
+        });
+
+    });
+
+    it('updates maptype on newmap', (done) => {
+        testEpic(updateRouteOn3dSwitch, 2, assign({hash: "/viewer/leaflet/new"}, toggle3d(true, "leaflet")), actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                    case "@@router/CALL_HISTORY_METHOD":
+                        expect(action.payload.method).toBe('push');
+                        expect(action.payload.args.length).toBe(1);
+                        break;
+                    case UPDATE_LAST_2D_MAPTYPE:
+                        expect(action.mapType).toBe("leaflet");
+                        break;
+                    default:
+                        expect(true).toBe(false);
 
                 }
             });

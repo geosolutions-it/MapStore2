@@ -8,7 +8,6 @@
 
 var Layers = require('../../../../utils/cesium/Layers');
 var ConfigUtils = require('../../../../utils/ConfigUtils');
-const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 const ProxyUtils = require('../../../../utils/ProxyUtils');
 const WMTSUtils = require('../../../../utils/WMTSUtils');
 var Cesium = require('../../../../libs/cesium');
@@ -38,11 +37,11 @@ function WMTSProxy(proxy) {
 }
 
 const isValidTile = (tileMatrixSet) => (x, y, level) =>
-    tileMatrixSet && tileMatrixSet[level] &&
-    x <= parseInt(get(tileMatrixSet[level], "ranges.cols.max"), 10) &&
+    tileMatrixSet && tileMatrixSet[level] && !tileMatrixSet[level].ranges ||
+    (x <= parseInt(get(tileMatrixSet[level], "ranges.cols.max"), 10) &&
     x >= parseInt(get(tileMatrixSet[level], "ranges.cols.min"), 10) &&
     y <= parseInt(get(tileMatrixSet[level], "ranges.rows.max"), 10) &&
-    y >= parseInt(get(tileMatrixSet[level], "ranges.rows.min"), 10);
+    y >= parseInt(get(tileMatrixSet[level], "ranges.rows.min"), 10));
 
 
 WMTSProxy.prototype.getURL = function(resource) {
@@ -58,7 +57,7 @@ NoProxy.prototype.getURL = function(resource) {
     return url + queryString;
 };
 function getMatrixIds(matrix = [], srs) {
-    return (isObject(matrix) && matrix[srs] || matrix).map((el) => el.identifier);
+    return ((isObject(matrix) && matrix[srs]) || isArray(matrix) && matrix || []).map((el) => el.identifier);
 }
 
 function getDefaultMatrixId(options) {
@@ -87,10 +86,22 @@ const getTilingSchema = (srs) => {
         return new Cesium.WebMercatorTilingScheme();
     }
 };
-function wmtsToCesiumOptions(options) {
-    const srs = CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:4326', options.allowedSRS);
+
+const getMatrixOptions = (options, srs) => {
     const tileMatrixSet = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
     const matrixIds = limitMatrix(options.matrixIds && getMatrixIds(options.matrixIds, srs) || getDefaultMatrixId(options));
+    return {tileMatrixSet, matrixIds};
+};
+
+function wmtsToCesiumOptions(options) {
+    let srs = 'EPSG:4326';
+    let {tileMatrixSet, matrixIds} = getMatrixOptions(options, srs);
+    if (matrixIds.length === 0) {
+        srs = 'EPSG:3857';
+        const matrixOptions = getMatrixOptions(options, srs);
+        tileMatrixSet = matrixOptions.tileMatrixSet;
+        matrixIds = matrixOptions.matrixIds;
+    }
 
     // var opacity = options.opacity !== undefined ? options.opacity : 1;
     let proxyUrl = ConfigUtils.getProxyUrl({});
@@ -111,7 +122,7 @@ function wmtsToCesiumOptions(options) {
         layer: options.name,
         style: options.style || "",
         tileMatrixLabels: matrixIds,
-        tilingScheme: getTilingSchema(srs, options.matrixIds[options.tileMatrixSet]),
+        tilingScheme: getTilingSchema(srs, options.matrixIds[tileMatrixSet]),
         proxy: proxy && new WMTSProxy(proxy) || new NoProxy(),
         enablePickFeatures: false,
         tileWidth: options.tileWidth || options.tileSize || 256,

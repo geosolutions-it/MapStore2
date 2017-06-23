@@ -469,6 +469,11 @@
                 },
                 "datefield": {
                     "wrong_date_range": "La data di inizio deve essere inferiore a quella di fine"
+                },
+                "autocomplete": {
+                    "emptyList": "Nessun risultato",
+                    "emptyFilter": "Il filtro non ha ritornato risultati",
+                    "open": "Apri il menu"
                 }
             },
             "spatialfilter": {
@@ -491,17 +496,17 @@
                 "methods": {
                     "zone": "Zona",
                     "viewport": "Viewport",
-                    "box": "BoundingBox",
+                    "box": "Rettangolo",
                     "buffer": "Buffer",
                     "circle": "Cerchio",
                     "poly": "Poligono"
                 },
                 "operations": {
-                    "intersects": "INTERSECTS",
-                    "bbox": "BBOX",
-                    "contains": "CONTAINS",
-                    "dwithin": "DWITHIN",
-                    "within": "WITHIN"
+                    "intersects": "Intersezione",
+                    "bbox": "BoundingBox",
+                    "contains": "E' contenuto",
+                    "dwithin": "Distanza da",
+                    "within": "Contiene"
                 }
             }
         },
@@ -777,6 +782,16 @@
                 "of":   "di",
                 "to":   "a",
                 "more": "molte"
+            }
+        },
+        "wfsdownload": {
+            "title": "Esporta Dati",
+            "format": "Formato file",
+            "export": "Esporta",
+            "downloadonlycurrentpage": "Scarica solo la pagina corrente",
+            "error": {
+                "title": "Errore durante l'esportazione",
+                "invalidOutputFormat": "Il formato selezionato non è disponibile"
             }
         },
         "vectorstyler": {

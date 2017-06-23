@@ -16,6 +16,7 @@ const ComboField = require('./ComboField');
 const DateField = require('./DateField');
 const NumberField = require('./NumberField');
 const TextField = require('./TextField');
+const AutocompleteField = require('./AutocompleteField');
 
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const I18N = require('../../I18N/I18N');
@@ -23,6 +24,8 @@ const I18N = require('../../I18N/I18N');
 class GroupField extends React.Component {
     static propTypes = {
         groupLevels: PropTypes.number,
+        autocompleteEnabled: PropTypes.bool,
+        maxFeaturesWPS: PropTypes.number,
         groupFields: PropTypes.array,
         filterFields: PropTypes.array,
         attributes: PropTypes.array,
@@ -39,6 +42,7 @@ class GroupField extends React.Component {
     };
 
     static defaultProps = {
+        autocompleteEnabled: true,
         groupLevels: 1,
         groupFields: [],
         filterFields: [],
@@ -60,7 +64,8 @@ class GroupField extends React.Component {
             onUpdateLogicCombo: () => {},
             onRemoveGroupField: () => {},
             onChangeCascadingValue: () => {},
-            onExpandAttributeFilterPanel: () => {}
+            onExpandAttributeFilterPanel: () => {},
+            toggleMenu: () => {}
         }
     };
 
@@ -119,6 +124,8 @@ class GroupField extends React.Component {
                             filterField={filterField}
                             operatorOptions={this.getOperator(selectedAttribute)}
                             onUpdateField={this.props.actions.onUpdateFilterField}
+                            toggleMenu={this.props.actions.toggleMenu}
+                            maxFeaturesWPS={this.props.maxFeaturesWPS}
                             onUpdateExceptionField={this.props.actions.onUpdateExceptionField}
                             onChangeCascadingValue={this.props.actions.onChangeCascadingValue}>
                             <ComboField
@@ -133,9 +140,17 @@ class GroupField extends React.Component {
                             <NumberField
                                 operator={filterField.operator}
                                 attType="number"/>
-                            <TextField
-                                operator={filterField.operator}
-                                attType="string"/>
+                            {
+                                // flag to swtich from AutocompleteField to TextField
+                                this.props.autocompleteEnabled ?
+                                (<AutocompleteField
+                                    filterField={filterField}
+                                    attType="string"/>) :
+                                (<TextField
+                                    operator={filterField.operator}
+                                    attType="string"/>)
+                            }
+
                             <ComboField
                                 fieldOptions={['true', 'false']}
                                 attType="boolean"

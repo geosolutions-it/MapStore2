@@ -16,7 +16,7 @@ const assign = require('object-assign');
 
 module.exports = {
     buildRequest: (layer, props) => {
-        const resolution = MapUtils.getCurrentResolution(Math.ceil(props.map.zoom), 0, 21, 96);
+        const resolution = MapUtils.getCurrentResolution(Math.round(props.map.zoom), 0, 21, 96);
         const resolutions = layer.resolutions || MapUtils.getResolutions();
         const tileSize = layer.tileSize || 256; // tilegrid.getTileSize(props.map.zoom);
         const tileOrigin = [
@@ -52,7 +52,7 @@ module.exports = {
                 ...assign({}, layer.baseParams, layer.params, props.params),
                 tilecol: tileCol,
                 tilerow: tileRow,
-                tilematrix: matrixIds[props.map.zoom],
+                tilematrix: matrixIds[Math.round(props.map.zoom)],
                 tilematrixset: tileMatrixSet,
                 i: tileI,
                 j: tileJ

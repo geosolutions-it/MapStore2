@@ -39,19 +39,8 @@ class SpatialFilter extends React.Component {
         spatialPanelExpanded: true,
         showDetailsPanel: false,
         withContainer: true,
-        spatialMethodOptions: [
-            {id: "Viewport", name: "queryform.spatialfilter.methods.viewport"},
-            {id: "BBOX", name: "queryform.spatialfilter.methods.box"},
-            {id: "Circle", name: "queryform.spatialfilter.methods.circle"},
-            {id: "Polygon", name: "queryform.spatialfilter.methods.poly"}
-        ],
-        spatialOperations: [
-            {id: "INTERSECTS", name: "queryform.spatialfilter.operations.intersects"},
-            {id: "BBOX", name: "queryform.spatialfilter.operations.bbox"},
-            {id: "CONTAINS", name: "queryform.spatialfilter.operations.contains"},
-            {id: "DWITHIN", name: "queryform.spatialfilter.operations.dwithin"},
-            {id: "WITHIN", name: "queryform.spatialfilter.operations.within"}
-        ],
+        spatialMethodOptions: [],
+        spatialOperations: [],
         actions: {
             onExpandSpatialFilterPanel: () => {},
             onSelectSpatialMethod: () => {},
@@ -98,7 +87,7 @@ class SpatialFilter extends React.Component {
                 placeholder={LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.combo_placeholder")}
                 fieldName="method"
                 style={{width: "140px"}}
-                fieldRowId={new Date().getUTCMilliseconds()}
+                fieldRowId={new Date().getTime()}
                 fieldValue={
                     LocaleUtils.getMessageById(this.context.messages, selectedMethod ? selectedMethod.name : "")
                 }
@@ -256,7 +245,7 @@ class SpatialFilter extends React.Component {
                         }
                         fieldName="operation"
                         style={{width: "140px"}}
-                        fieldRowId={new Date().getUTCMilliseconds()}
+                        fieldRowId={new Date().getTime()}
                         fieldValue={
                             LocaleUtils.getMessageById(this.context.messages, selectedOperation ? selectedOperation.name : "")
                         }
@@ -289,7 +278,7 @@ class SpatialFilter extends React.Component {
                         }
                         fieldName="operation"
                         style={{width: "140px"}}
-                        fieldRowId={new Date().getUTCMilliseconds()}
+                        fieldRowId={new Date().getTime()}
                         fieldValue={
                             LocaleUtils.getMessageById(this.context.messages, selectedOperation ? selectedOperation.name : "")
                         }

@@ -19,6 +19,8 @@ class FilterField extends React.Component {
         filterField: PropTypes.object,
         operatorOptions: PropTypes.array,
         onUpdateField: PropTypes.func,
+        maxFeaturesWPS: PropTypes.number,
+        toggleMenu: PropTypes.func,
         onUpdateExceptionField: PropTypes.func,
         onChangeCascadingValue: PropTypes.func
     };
@@ -32,6 +34,7 @@ class FilterField extends React.Component {
         filterField: null,
         operatorOptions: ["=", ">", "<", ">=", "<=", "<>", "><"],
         onUpdateField: () => {},
+        toggleMenu: () => {},
         onUpdateExceptionField: () => {},
         onChangeCascadingValue: () => {}
     };
@@ -56,6 +59,8 @@ class FilterField extends React.Component {
                 fieldValue: this.props.filterField.value,
                 fieldException: this.props.filterField.exception,
                 onUpdateField: this.updateFieldElement,
+                toggleMenu: this.props.toggleMenu,
+                maxFeaturesWPS: this.props.maxFeaturesWPS,
                 onUpdateExceptionField: this.updateExceptionFieldElement
             }, selectedAttribute.fieldOptions || {})
         );
@@ -94,8 +99,8 @@ class FilterField extends React.Component {
         this.props.onUpdateExceptionField(rowId, message);
     };
 
-    updateFieldElement = (rowId, name, value, type) => {
-        this.props.onUpdateField(rowId, name, value, type === 'boolean' ? 'string' : type);
+    updateFieldElement = (rowId, name, value, type, fieldOptions) => {
+        this.props.onUpdateField(rowId, name, value, type === 'boolean' ? 'string' : type, fieldOptions);
 
         if (name === "value") {
             // For cascading: filter the attributes that depends on

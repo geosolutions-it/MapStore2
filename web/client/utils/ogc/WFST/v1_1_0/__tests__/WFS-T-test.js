@@ -26,22 +26,22 @@ describe('Test WFS-T request bodies generation', () => {
     it('WFS-T transaction with insert polygon', () => {
         const result = transaction([insert(wyoming, describeStates)], featureTypeSchema(describeStates));
         expect(result).toExist();
-        expect(result).toEqual(expectedInsertWyoming.replace(/\n/g, ''));
+        expect(result).toEqual(expectedInsertWyoming.replace(/[\r\n]/g, ''));
     });
     it('WFS-T transaction with insert multypolygon', () => {
         const result = transaction([insert(wyoming, describeStates)], featureTypeSchema(describeStates));
         expect(result).toExist();
-        expect(result).toEqual(expectedInsertWyoming.replace(/\n/g, ''));
+        expect(result).toEqual(expectedInsertWyoming.replace(/[\n\r]/g, ''));
     });
     it('WFS-T transaction with insert point', () => {
         const result = transaction([insert(museam, describePois)], featureTypeSchema(describePois));
         expect(result).toExist();
-        expect(result).toEqual(expectedInsertmuseam.replace(/\n/g, ''));
+        expect(result).toEqual(expectedInsertmuseam.replace(/[\n\r]/g, ''));
     });
     it('WFS-T transaction with delete', () => {
         const result = transaction([deleteFeature(museam, describePois)], featureTypeSchema(describePois));
         expect(result).toExist();
-        expect(result + '\n').toEqual(expectedDelete);
+        expect(result).toEqual(expectedDelete.replace(/[\r\n]/g, ''));
     });
     it('WFS-T transaction with update', () => {
         const result = transaction(
@@ -49,6 +49,6 @@ describe('Test WFS-T request bodies generation', () => {
             ],
             featureTypeSchema(describePois));
         expect(result).toExist();
-        expect(result + '\n').toEqual(expectedUpdate);
+        expect(result).toEqual(expectedUpdate.replace(/[\r\n]/g, ''));
     });
 });

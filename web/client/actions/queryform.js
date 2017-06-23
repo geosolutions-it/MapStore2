@@ -41,6 +41,10 @@ const SIMPLE_FILTER_FIELD_UPDATE = 'SIMPLE_FILTER_FIELD_UPDATE';
 const ADD_SIMPLE_FILTER_FIELD = 'ADD_SIMPLE_FILTER_FIELD';
 const REMOVE_SIMPLE_FILTER_FIELD = 'REMOVE_SIMPLE_FILTER_FIELD';
 const REMOVE_ALL_SIMPLE_FILTER_FIELDS = 'REMOVE_ALL_SIMPLE_FILTER_FIELDS';
+const UPDATE_FILTER_FIELD_OPTIONS = 'UPDATE_FILTER_FIELD_OPTIONS';
+const LOADING_FILTER_FIELD_OPTIONS = 'LOADING_FILTER_FIELD_OPTIONS';
+const SET_AUTOCOMPLETE_MODE = 'SET_AUTOCOMPLETE_MODE';
+const TOGGLE_AUTOCOMPLETE_MENU = 'TOGGLE_AUTOCOMPLETE_MENU';
 
 const axios = require('../libs/ajax');
 
@@ -66,13 +70,22 @@ function removeFilterField(rowId) {
     };
 }
 
-function updateFilterField(rowId, fieldName, fieldValue, fieldType) {
+function toggleMenu(rowId, status) {
+    return {
+        type: TOGGLE_AUTOCOMPLETE_MENU,
+        rowId,
+        status
+    };
+}
+
+function updateFilterField(rowId, fieldName, fieldValue, fieldType, fieldOptions = {}) {
     return {
         type: UPDATE_FILTER_FIELD,
         rowId: rowId,
         fieldName: fieldName,
         fieldValue: fieldValue,
-        fieldType: fieldType
+        fieldType: fieldType,
+        fieldOptions
     };
 }
 
@@ -89,6 +102,13 @@ function updateLogicCombo(groupId, logic) {
         type: UPDATE_LOGIC_COMBO,
         groupId: groupId,
         logic: logic
+    };
+}
+
+function setAutocompleteMode(status) {
+    return {
+        type: SET_AUTOCOMPLETE_MODE,
+        status
     };
 }
 
@@ -305,6 +325,23 @@ function removeAllSimpleFilterFields() {
     };
 }
 
+function loadingFilterFieldOptions(status, filterField) {
+    return {
+        type: LOADING_FILTER_FIELD_OPTIONS,
+        status,
+        filterField
+    };
+}
+
+function updateFilterFieldOptions(filterField, options, valuesCount) {
+    return {
+        type: UPDATE_FILTER_FIELD_OPTIONS,
+        filterField,
+        options,
+        valuesCount
+    };
+}
+
 module.exports = {
     ADD_FILTER_FIELD,
     REMOVE_FILTER_FIELD,
@@ -338,6 +375,12 @@ module.exports = {
     REMOVE_ALL_SIMPLE_FILTER_FIELDS,
     SELECT_VIEWPORT_SPATIAL_METHOD,
     UPDATE_GEOMETRY,
+    UPDATE_FILTER_FIELD_OPTIONS,
+    LOADING_FILTER_FIELD_OPTIONS,
+    SET_AUTOCOMPLETE_MODE,
+    TOGGLE_AUTOCOMPLETE_MENU,
+    setAutocompleteMode,
+    loadingFilterFieldOptions,
     updateGeometrySpatialField,
     selectViewportSpatialMethod,
     resetZones,
@@ -368,7 +411,9 @@ module.exports = {
     simpleFilterFieldUpdate,
     addSimpleFilterField,
     removeSimpleFilterField,
-    removeAllSimpleFilterFields
+    removeAllSimpleFilterFields,
+    updateFilterFieldOptions,
+    toggleMenu
     // wfsLoadError,
     // querySearchResponse
 };

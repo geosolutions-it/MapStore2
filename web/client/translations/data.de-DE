@@ -469,6 +469,11 @@
                 },
                 "datefield": {
                     "wrong_date_range": "Das Datum des Beginns muss früher als das des Endes sein"
+                },
+                "autocomplete": {
+                    "emptyList": "Keine Ergebnisse",
+                    "emptyFilter": "Der Filter hat keine Ergebnisse zurückgegeben",
+                    "open": "Menü öffnen"
                 }
             },
             "spatialfilter": {
@@ -497,11 +502,11 @@
                     "poly": "Polygon"
                 },
                 "operations": {
-                    "intersects": "INTERSECTS",
-                    "bbox": "BBOX",
-                    "contains": "CONTAINS",
-                    "dwithin": "DWITHIN",
-                    "within": "WITHIN"
+                    "intersects": "Schneidet",
+                    "bbox": "Rechteck",
+                    "contains": "Ist beinhaltet",
+                    "dwithin": "Entfernung von",
+                    "within": "Enthält"
                 }
             }
         },
@@ -777,6 +782,16 @@
                 "of":   "von",
                 "to":   "bis",
                 "more": "viele"
+            }
+        },
+        "wfsdownload": {
+            "title": "Daten exportieren",
+            "format": "Datei Format",
+            "export": "Export",
+            "downloadonlycurrentpage": "Nur aktuelle Seite herunterladen",
+            "error": {
+                "title": "Fehler beim Export",
+                "invalidOutputFormat": "Das ausgewählte Exportformat ist nicht verfügbar"
             }
         },
         "vectorstyler": {

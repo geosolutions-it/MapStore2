@@ -38,7 +38,34 @@ const {processOGCGeometry} = require("../GML");
  * @param  {String} [options.gmlVersion]         gml Version ()
  * @param  {String} [options.filterNS]           NameSpace to use for filters
  * @return {Object}                      a filter builder.
- * @prop {object} property is an utility object that allows to add a condition using the notation `property("propname").operator(...otherParams)`
+ * @prop {function} filter creates a filter with the content Parameters can be passed as array or args list.
+ * ```
+ * filter(...content) //-> <ogc:Filter>...content<ogc:/Filter>
+ * ```
+ * @prop {function} fidFilter creates a fid condition
+ * ```
+ * fidFilter("id")` // -> <ogc:FeatureId fid="sc_cities-6.1"/>
+ * ```
+ * @prop {function} and Creates an and condition. Parameters can be passed as array or args list.
+ * ```
+ * and( property("a").equalTo("1"), property("b").equalTo("2"), ... )
+ * and( [property("a").equalTo("1"), property("b").equalTo("2"), ...] )
+ * ```
+ * @prop {function} or Creates an or condition. Parameters can be passed as array or args list.
+ * ```
+ * or( property("a").equalTo("1"), property("b").equalTo("2"), ... )
+ * or( [property("a").equalTo("1"), property("b").equalTo("2"), ...] )
+ * ```
+ * @prop {function} not creates a not condition.
+ * ```
+ * not( property("a").equalTo("1") )
+ * ```
+ * @prop {object} property is an utility object that allows to add a condition using the notation
+ * ```
+ * property("propname").operator(...otherParams)
+ * // examples
+ * property("p").equalTo("a")
+ * ```
  * @prop {function} property.equalTo `property("P1").equals("v1")`
  * @prop {function} property.greaterThen `property("P1").greaterThen(1)`
  * @prop {function} property.greaterThenOrEqualTo `property("P1").greaterThenOrEqualTo(1)`
@@ -65,59 +92,10 @@ module.exports = function({filterNS= "ogc", gmlVersion, wfsVersion = "1.1.0"} = 
     };
     const propName = wfsVersion.indexOf("2.") === 0 ? valueReference : propertyName;
     return {
-        /**
-         * generates a filter with given content
-         * @memberof utils.ogc.WFS.FilterBuilder
-         * @instance
-         * @return {string} the condition generated
-         * @param {string|string[]} conditions conditions to place inside the filter
-         */
         filter: filter.bind(null, filterNS),
-        /**
-         * generates a filterby the passed featureId
-         * @memberof utils.ogc.WFS.FilterBuilder
-         * @method
-         * @instance
-         * @return {string} the condition generated
-         * @param {string} fid the featureId
-         */
         fidFilter: fidFilter.bind(null, filterNS),
-        /**
-         * generates an "and" condition between the condition passed as parameters.
-         * parameters can be passed as array or args list
-         * @memberof utils.ogc.WFS.FilterBuilder
-         * @method
-         * @instance
-         * @param {string|string[]} conditions conditions to place inside the filter
-         * @return {string} the condition generated
-         * @example
-         * and( property("a").equalTo("1"), property("b").equalTo("2"), ... )
-         * and( [property("a").equalTo("1"), property("b").equalTo("2"), ...] )
-         */
         and: logical.and.bind(null, filterNS),
-        /**
-         * generates an "or" condition between the condition passed as parameters.
-         * parameters can be passed as array or args list
-         * @memberof utils.ogc.WFS.FilterBuilder
-         * @method
-         * @instance
-         * @param {string|string[]} conditions conditions to place inside the filter
-         * @return {string} the condition generated
-         * @example
-         * or( property("a").equalTo("1"), property("b").equalTo("2"), ... )
-         * or( [property("a").equalTo("1"), property("b").equalTo("2"), ...] )
-         */
         or: logical.or.bind(null, filterNS),
-        /**
-         * generates an "not" condition to the condition passed as parameter.
-         * @memberof utils.ogc.WFS.FilterBuilder
-         * @method
-         * @instance
-         * @param {string} conditions conditions to place inside the filter
-         * @return {string} the condition generated
-         * @example
-         * not( property("a").equalTo("1") )
-         */
         not: logical.not.bind(null, filterNS),
         property: function(name) {
             return {

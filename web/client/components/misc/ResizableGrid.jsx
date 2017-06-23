@@ -57,7 +57,7 @@ class ResizableGrid extends React.Component {
         refGrid: "grid",
         rowHeight: 30,
         rowKey: "id",
-        rowSelection: null,
+        rowSelection: {},
         rowGetter: null,
         selectBy: null,
         onRowsSelected: () => {},

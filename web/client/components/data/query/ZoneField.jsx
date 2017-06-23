@@ -194,7 +194,7 @@ class ZoneField extends React.Component {
             <div className="zone-combo">
                 {label}
                 <ComboField
-                    key={new Date().getUTCMilliseconds()}
+                    key={new Date().getTime()}
                     busy={this.props.busy}
                     disabled={this.props.disabled}
                     fieldRowId={this.props.zoneId}

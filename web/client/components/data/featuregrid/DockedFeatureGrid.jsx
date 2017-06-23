@@ -57,7 +57,9 @@ class DockedFeatureGrid extends React.Component {
         dockSize: PropTypes.number,
         minDockSize: PropTypes.number,
         maxDockSize: PropTypes.number,
-        setDockSize: PropTypes.func
+        setDockSize: PropTypes.func,
+        exportAction: PropTypes.func,
+        exportEnabled: PropTypes.bool
     };
 
     static contextTypes = {
@@ -259,6 +261,7 @@ class DockedFeatureGrid extends React.Component {
                         }}>
                             <FeatureGrid
                                 useIcons
+                                exportAction={this.props.exportEnabled && this.props.exportAction}
                                 tools={[<Button onClick={this.props.onBackToSearch} ><Glyphicon glyph="arrow-left" /><I18N.Message msgId="featuregrid.backtosearch"/></Button>]}
                                 key={"search-results-" + (this.state && this.state.searchN)}
                                 className="featureGrid"
