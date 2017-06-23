@@ -28,6 +28,7 @@ var DefaultLayer = React.createClass({
         onToggleQuerypanel: React.PropTypes.func,
         onZoom: React.PropTypes.func,
         onSettings: React.PropTypes.func,
+        onRefresh: React.PropTypes.func,
         style: React.PropTypes.object,
         sortableStyle: React.PropTypes.object,
         hideSettings: React.PropTypes.func,
@@ -39,6 +40,7 @@ var DefaultLayer = React.createClass({
         activateSettingsTool: React.PropTypes.bool,
         activateQueryTool: React.PropTypes.bool,
         activateZoomTool: React.PropTypes.bool,
+        activateRefreshTool: React.PropTypes.bool,
         chartStyle: React.PropTypes.object,
         settingsText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         opacityText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
@@ -66,6 +68,7 @@ var DefaultLayer = React.createClass({
             onContextMenu: () => {},
             onZoom: () => {},
             onSettings: () => {},
+            onRefresh: () => {},
             retrieveLayerData: () => {},
             onToggleQuerypanel: () => {},
             activateRemoveLayer: false,
@@ -73,6 +76,7 @@ var DefaultLayer = React.createClass({
             activateSettingsTool: false,
             activateQueryTool: false,
             activateZoomTool: false,
+            activateRefreshTool: false,
             includeDeleteButtonInSettings: false,
             modalOptions: {},
             settingsOptions: {},
@@ -101,6 +105,16 @@ var DefaultLayer = React.createClass({
                         onClick={this.displayDeleteDialog}
                         tooltip="toc.removeLayer"
                         glyph="1-close"
+                        />));
+        }
+        if (this.props.activateRefreshTool && this.props.node.type === 'wms') {
+            tools.push((<LayersTool
+                        node={this.props.node}
+                        key="refreshlayer"
+                        className="clayer_refresh_button"
+                        onClick={this.displayRefreshDialog}
+                        tooltip="toc.refreshConfirm"
+                        glyph="refresh"
                         />));
         }
         tools.push(
@@ -210,6 +224,9 @@ var DefaultLayer = React.createClass({
         this.setState({
             showDeleteDialog: true
         });
+    },
+    displayRefreshDialog() {
+        this.props.onRefresh(this.props.node);
     }
 });
 

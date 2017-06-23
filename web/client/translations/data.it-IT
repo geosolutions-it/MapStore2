@@ -201,7 +201,17 @@
             "measure": "Misure",
             "backgroundSwitcher": "Sfondi",
             "layers": "Livelli",
-            "drawerButton": "Livelli"
+            "drawerButton": "Livelli",
+            "refreshTitle": "Aggiorna livelli",
+            "refreshConfirm": "Aggiorna",
+            "refreshMessage": "Ricarica la configurazione dei layer WMS dai rispettivi server",
+            "refreshError": "Errore di aggiornamento sui layer: ",
+            "refreshOptions": {
+                "bbox": "Aggiorna area di zoom",
+                "search": "Aggiorna opzioni di ricerca",
+                "title": "Aggiorna il titolo del layer",
+                "dimensions": "Aggiorna le dimensioni aggiuntive"
+            }
         },
         "print":{
             "paneltitle": "Stampa",

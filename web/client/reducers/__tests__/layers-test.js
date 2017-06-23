@@ -268,6 +268,54 @@ describe('Test the layers reducer', () => {
         expect(state.flat[0].p).toEqual("property");
     });
 
+    it('refreshLayers', () => {
+        let testAction = {
+            type: "REFRESH_LAYERS",
+            layers: [{url: 'fake', layer: 'fake'}]
+        };
+
+        let state = layers({
+            flat: []
+        }, testAction);
+        expect(state).toExist();
+        expect(state.refreshing).toExist();
+        expect(state.refreshing.length).toBe(1);
+        expect(state.refreshing[0].layer).toBe('fake');
+    });
+
+    it('layers refreshed', () => {
+        let testAction = {
+            type: "LAYERS_REFRESHED",
+            layers: [{url: 'url1', layer: 'layer1'}]
+        };
+
+        let state = layers({
+            flat: [{url: 'url1', id: 'layer1'}, {url: 'url2', id: 'layer2'}],
+            refreshing: [{url: 'url1', id: 'layer1'}, {url: 'url2', id: 'layer2'}]
+        }, testAction);
+        expect(state).toExist();
+        expect(state.refreshing).toExist();
+        expect(state.refreshing.length).toBe(1);
+        expect(state.refreshing[0].id).toBe('layer2');
+    });
+
+    it('layers refresh error', () => {
+        let testAction = {
+            type: "LAYERS_REFRESH_ERROR",
+            layers: [{url: 'url1', layer: 'layer1', fullLayer: {title: 'title'}}]
+        };
+
+        let state = layers({
+            flat: [{url: 'url1', id: 'layer1'}, {url: 'url2', id: 'layer2'}],
+            refreshing: [{url: 'url1', id: 'layer1'}, {url: 'url2', id: 'layer2'}]
+        }, testAction);
+        expect(state).toExist();
+        expect(state.refreshing).toExist();
+        expect(state.refreshing.length).toBe(1);
+        expect(state.refreshing[0].id).toBe('layer2');
+        expect(state.refreshError).toExist();
+    });
+
     it('change group properties with default group', () => {
         // action targeting the Default group
         let action = {

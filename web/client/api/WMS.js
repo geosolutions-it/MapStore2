@@ -15,7 +15,7 @@ const xml2js = require('xml2js');
 
 const capabilitiesCache = {};
 
-const {isArray} = require('lodash');
+const {isArray, castArray} = require('lodash');
 
 const parseUrl = (url) => {
     const parsed = urlUtil.parse(url, true);
@@ -27,6 +27,8 @@ const parseUrl = (url) => {
         }, parsed.query)
     }));
 };
+
+const _ = require('lodash');
 
 const flatLayers = (root) => {
     return root.Layer ? (isArray(root.Layer) && root.Layer || [root.Layer]).reduce((previous, current) => {
@@ -56,7 +58,20 @@ const searchAndPaginate = (json, startPosition, maxRecords, text) => {
 };
 
 const Api = {
-    getCapabilities: function(url) {
+    flatLayers,
+    getDimensions: function(layer) {
+        return castArray(layer.Dimension || layer.dimension || []).map((dim, index) => {
+            const extent = (layer.Extent && castArray(layer.Extent)[index] || layer.extent && castArray(layer.extent)[index]);
+            return {
+                name: dim.$.name,
+                units: dim.$.units,
+                unitSymbol: dim.$.unitSymbol,
+                "default": dim.$.default || (extent && extent.$.default),
+                values: dim._ && dim._.split(',') || extent && extent._ && extent._.split(',')
+            };
+        });
+    },
+    getCapabilities: function(url, raw) {
         const parsed = urlUtil.parse(url, true);
         const getCapabilitiesUrl = urlUtil.format(assign({}, parsed, {
             query: assign({
@@ -69,6 +84,13 @@ const Api = {
             require.ensure(['../utils/ogc/WMS'], () => {
                 const {unmarshaller} = require('../utils/ogc/WMS');
                 resolve(axios.get(parseUrl(getCapabilitiesUrl)).then((response) => {
+                    if (raw) {
+                        let json;
+                        xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
+                            json = result;
+                        });
+                        return json;
+                    }
                     let json = unmarshaller.unmarshalString(response.data);
                     return json && json.value;
                 }));
@@ -143,6 +165,56 @@ const Api = {
     },
     textSearch: function(url, startPosition, maxRecords, text) {
         return Api.getRecords(url, startPosition, maxRecords, text);
+    },
+    parseLayerCapabilities: function(capabilities, layer) {
+        const layers = _.get(capabilities, "capability.layer.layer");
+        return _.head(layers.filter( ( capability ) => {
+            if (layer.name.split(":").length === 2 && capability.name && capability.name.split(":").length === 2 ) {
+                return layer.name === capability.name;
+            } else if (capability.name && capability.name.split(":").length === 2) {
+                return (layer.name === capability.name.split(":")[1]);
+            } else if (layer.name.split(":").length === 2) {
+                return layer.name.split(":")[1] === capability.name;
+            }
+            return layer.name === capability.name;
+        }));
+    },
+    getBBox: function(record, bounds) {
+        let layer = record;
+        let bbox = (layer.EX_GeographicBoundingBox || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
+        while (!bbox && layer.Layer && layer.Layer.length) {
+            layer = layer.Layer[0];
+            bbox = (layer.EX_GeographicBoundingBox || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
+        }
+        if (!bbox) {
+            bbox = {
+                westBoundLongitude: -180.0,
+                southBoundLatitude: -90.0,
+                eastBoundLongitude: 180.0,
+                northBoundLatitude: 90.0
+            };
+        }
+        const catalogBounds = {
+            extent: [
+                bbox.westBoundLongitude || bbox.minx,
+                bbox.southBoundLatitude || bbox.miny,
+                bbox.eastBoundLongitude || bbox.maxx,
+                bbox.northBoundLatitude || bbox.maxy
+            ],
+            crs: "EPSG:4326"
+        };
+        if (bounds) {
+            return {
+                crs: catalogBounds.crs,
+                bounds: {
+                    minx: catalogBounds.extent[0],
+                    miny: catalogBounds.extent[1],
+                    maxx: catalogBounds.extent[2],
+                    maxy: catalogBounds.extent[3]
+                }
+            };
+        }
+        return catalogBounds;
     }
 };
 

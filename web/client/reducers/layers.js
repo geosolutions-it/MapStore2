@@ -8,8 +8,10 @@
 
 var {LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES,
     TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, ADD_LAYER, REMOVE_LAYER,
-    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, INVALID_LAYER
+    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, INVALID_LAYER, REFRESH_LAYERS, LAYERS_REFRESH_ERROR, LAYERS_REFRESHED
     } = require('../actions/layers');
+
+const {TOGGLE_CONTROL} = require('../actions/controls');
 
 var assign = require('object-assign');
 var {isObject, isArray, head, isString} = require('lodash');
@@ -90,6 +92,11 @@ const moveNode = (groups, node, groupId, newLayers, foreground = true) => {
 
 function layers(state = [], action) {
     switch (action.type) {
+        case TOGGLE_CONTROL: {
+            if (action.control === 'RefreshLayers') {
+                return assign({}, state, {refreshError: []});
+            }
+        }
         case LAYER_LOADING: {
             const newLayers = (state.flat || []).map((layer) => {
                 return layer.id === action.layerId ? assign({}, layer, {loading: true, loadingError: false}) : layer;
@@ -107,6 +114,25 @@ function layers(state = [], action) {
                 return layer.id === action.layerId ? assign({}, layer, {loading: false, loadingError: true}) : layer;
             });
             return assign({}, state, {flat: newLayers});
+        }
+        case REFRESH_LAYERS: {
+            return assign({}, state, {refreshing: action.layers, refreshError: []});
+        }
+        case LAYERS_REFRESH_ERROR: {
+            const newLayers = (state.refreshing || []).filter((layer) => {
+                return action.layers.filter((l) => l.layer === layer.id).length === 0;
+            });
+            const errors = action.layers.map((err) => ({
+                layer: err.fullLayer.title,
+                error: action.error
+            }));
+            return assign({}, state, {refreshing: newLayers, refreshError: [...(state.refreshError || []), ...errors]});
+        }
+        case LAYERS_REFRESHED: {
+            const newLayers = (state.refreshing || []).filter((layer) => {
+                return action.layers.filter((l) => l.layer === layer.id).length === 0;
+            });
+            return assign({}, state, {refreshing: newLayers});
         }
         case CHANGE_LAYER_PROPERTIES: {
             const flatLayers = (state.flat || []);
