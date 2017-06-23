@@ -203,7 +203,14 @@
                 },
                 "isDefault": false
             },
-            "ScaleBox", "ZoomAll", {
+            "ScaleBox", {
+              "name":"ZoomAll",
+              "override": {
+                "Toolbar": {
+                  "alwaysVisible": true
+                }
+              }
+            }, {
                 "name": "MapLoading",
                 "override": {
                     "Toolbar": {
