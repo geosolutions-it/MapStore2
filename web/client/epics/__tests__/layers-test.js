@@ -17,7 +17,7 @@ const rootEpic = combineEpics(refresh);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
-describe('fullscreen Epics', () => {
+describe('layers Epics', () => {
     let store;
     beforeEach(() => {
         store = mockStore();
@@ -38,7 +38,10 @@ describe('fullscreen Epics', () => {
             title: true
         });
 
-        store.dispatch( action );
+        store.dispatch( {
+            ...action,
+            debounceTime: 0
+        } );
 
         setTimeout( () => {
             const actions = store.getActions();
@@ -61,7 +64,10 @@ describe('fullscreen Epics', () => {
             title: true
         });
 
-        store.dispatch( action );
+        store.dispatch( {
+            ...action,
+            debounceTime: 0
+        });
 
         setTimeout( () => {
             const actions = store.getActions();
