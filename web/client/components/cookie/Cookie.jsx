@@ -45,7 +45,7 @@ class Cookie extends React.Component {
 
     render() {
         return this.props.show ? (
-            <div className="mapstore-cookie-panel" style={{width: this.props.seeMore ? "55%" : "420px"}}>
+            <div className="mapstore-cookie-panel" style={{width: this.props.seeMore ? "auto" : "420px"}}>
                 <div role="body" className="cookie-body-container">
                     {!this.props.externalCookieUrl && this.props.seeMore ? (
                         <MoreDetails/>

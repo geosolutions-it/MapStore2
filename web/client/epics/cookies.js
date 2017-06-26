@@ -7,7 +7,7 @@
 */
 const Rx = require('rxjs');
 const {setCookieVisibility} = require('../actions/cookie');
-const {UPDATE_LOCATION} = require('react-router-redux');
+const {LOCATION_CHANGE} = require('react-router-redux');
 
 
 /**
@@ -19,7 +19,7 @@ const {UPDATE_LOCATION} = require('react-router-redux');
  */
 
 const cookiePolicyChecker = (action$) =>
-    action$.ofType(UPDATE_LOCATION)
+    action$.ofType(LOCATION_CHANGE )
         .take(1)
         .filter( () => !localStorage.getItem("cookies-policy-approved"))
         .switchMap(() =>
