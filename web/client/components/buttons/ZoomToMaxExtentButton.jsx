@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
@@ -25,38 +26,38 @@ const configUtils = require('../../utils/ConfigUtils');
  *  - text: {string|element}  text content for the button
  *  - btnSize: {string}       bootstrap button size ('large', 'small', 'xsmall')
  */
-var ZoomToMaxExtentButton = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        image: React.PropTypes.string,
-        glyphicon: React.PropTypes.string,
-        text: React.PropTypes.string,
-        btnSize: React.PropTypes.oneOf(['large', 'small', 'xsmall']),
-        mapConfig: React.PropTypes.object,
-        mapInitialConfig: React.PropTypes.object,
-        changeMapView: React.PropTypes.func,
-        btnType: React.PropTypes.oneOf(['normal', 'image']),
-        help: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        tooltip: React.PropTypes.element,
-        tooltipPlace: React.PropTypes.string,
-        className: React.PropTypes.string,
-        useInitialExtent: React.PropTypes.bool,
-        bsStyle: React.PropTypes.string,
-        style: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            id: "mapstore-zoomtomaxextent",
-            glyphicon: "resize-full",
-            text: undefined,
-            btnSize: 'xsmall',
-            btnType: 'normal',
-            useInitialExtent: false,
-            tooltipPlace: "left",
-            bsStyle: "default",
-            className: "square-button"
-        };
-    },
+class ZoomToMaxExtentButton extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        image: PropTypes.string,
+        glyphicon: PropTypes.string,
+        text: PropTypes.string,
+        btnSize: PropTypes.oneOf(['large', 'small', 'xsmall']),
+        mapConfig: PropTypes.object,
+        mapInitialConfig: PropTypes.object,
+        changeMapView: PropTypes.func,
+        btnType: PropTypes.oneOf(['normal', 'image']),
+        help: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        tooltip: PropTypes.element,
+        tooltipPlace: PropTypes.string,
+        className: PropTypes.string,
+        useInitialExtent: PropTypes.bool,
+        bsStyle: PropTypes.string,
+        style: PropTypes.object
+    };
+
+    static defaultProps = {
+        id: "mapstore-zoomtomaxextent",
+        glyphicon: "resize-full",
+        text: undefined,
+        btnSize: 'xsmall',
+        btnType: 'normal',
+        useInitialExtent: false,
+        tooltipPlace: "left",
+        bsStyle: "default",
+        className: "square-button"
+    };
+
     render() {
         return this.addTooltip(
             <Button
@@ -73,16 +74,18 @@ var ZoomToMaxExtentButton = React.createClass({
                 {this.props.help}
             </Button>
         );
-    },
-    addTooltip(btn) {
+    }
+
+    addTooltip = (btn) => {
         let tooltip = <Tooltip id="locate-tooltip">{this.props.tooltip}</Tooltip>;
         return (
             <OverlayTrigger placement={this.props.tooltipPlace} key={"overlay-trigger." + this.props.id} overlay={tooltip}>
                 {btn}
             </OverlayTrigger>
         );
-    },
-    zoomToMaxExtent() {
+    };
+
+    zoomToMaxExtent = () => {
         var mapConfig = this.props.mapConfig;
         var maxExtent = mapConfig.maxExtent;
         var mapSize = this.props.mapConfig.size;
@@ -111,13 +114,14 @@ var ZoomToMaxExtentButton = React.createClass({
 
         // adapt the map view by calling the corresponding action
         this.props.changeMapView(newCenter, newZoom, bbox, this.props.mapConfig.size, null, this.props.mapConfig.projection);
-    },
-    zoomToInitialExtent() {
+    };
+
+    zoomToInitialExtent = () => {
         // zooming to the initial extent based on initial map configuration
         var mapConfig = this.props.mapInitialConfig;
         let bbox = mapUtils.getBbox(mapConfig.center, mapConfig.zoom, this.props.mapConfig.size);
         this.props.changeMapView(mapConfig.center, mapConfig.zoom, bbox, this.props.mapConfig.size, null, mapConfig.projection);
-    }
-});
+    };
+}
 
 module.exports = ZoomToMaxExtentButton;

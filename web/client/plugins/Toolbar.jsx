@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -11,82 +12,89 @@ const {connect} = require('react-redux');
 
 require('./toolbar/assets/css/toolbar.css');
 
-const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
+const {CSSTransitionGroup} = require('react-transition-group');
 
 const assign = require('object-assign');
 
 const ToolsContainer = require('./containers/ToolsContainer');
 
-const AnimatedContainer = connect(() => ({
-     transitionName: "toolbarexpand",
-     transitionEnterTimeout: 500,
-     transitionLeaveTimeout: 300
-}))(ReactCSSTransitionGroup);
+class AnimatedContainer extends React.Component {
+    render() {
+        const {children, ...props} = this.props;
+        return (<CSSTransitionGroup {...props} transitionName="toolbarexpand" transitionEnterTimeout={500} transitionLeaveTimeout={300}>
+            {children}
+        </CSSTransitionGroup>);
+    }
+}
 
-const Toolbar = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        tools: React.PropTypes.array,
-        mapType: React.PropTypes.string,
-        style: React.PropTypes.object,
-        panelStyle: React.PropTypes.object,
-        panelClassName: React.PropTypes.string,
-        active: React.PropTypes.string,
-        items: React.PropTypes.array,
-        allVisible: React.PropTypes.bool,
-        layout: React.PropTypes.string,
-        stateSelector: React.PropTypes.string,
-        buttonStyle: React.PropTypes.string,
-        buttonSize: React.PropTypes.string,
-        pressedButtonStyle: React.PropTypes.string,
-        btnConfig: React.PropTypes.object
-    },
-    contextTypes: {
-        messages: React.PropTypes.object,
-        router: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            id: "mapstore-toolbar",
-            style: {},
-            panelStyle: {
-                minWidth: "300px",
-                right: "52px",
-                zIndex: 100,
-                position: "absolute",
-                overflow: "auto",
-                left: "450px"
-            },
-            panelClassName: "toolbar-panel",
-            items: [],
-            allVisible: true,
-            layout: "vertical",
-            stateSelector: "toolbar",
-            buttonStyle: 'primary',
-            buttonSize: null,
-            pressedButtonStyle: 'success',
-            btnConfig: {
-                className: "square-button"
-            }
-        };
-    },
-    getPanel(tool) {
+class Toolbar extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        tools: PropTypes.array,
+        mapType: PropTypes.string,
+        style: PropTypes.object,
+        panelStyle: PropTypes.object,
+        panelClassName: PropTypes.string,
+        active: PropTypes.string,
+        items: PropTypes.array,
+        allVisible: PropTypes.bool,
+        layout: PropTypes.string,
+        stateSelector: PropTypes.string,
+        buttonStyle: PropTypes.string,
+        buttonSize: PropTypes.string,
+        pressedButtonStyle: PropTypes.string,
+        btnConfig: PropTypes.object
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object,
+        router: PropTypes.object
+    };
+
+    static defaultProps = {
+        id: "mapstore-toolbar",
+        style: {},
+        panelStyle: {
+            minWidth: "300px",
+            right: "52px",
+            zIndex: 100,
+            position: "absolute",
+            overflow: "auto",
+            left: "450px"
+        },
+        panelClassName: "toolbar-panel",
+        items: [],
+        allVisible: true,
+        layout: "vertical",
+        stateSelector: "toolbar",
+        buttonStyle: 'primary',
+        buttonSize: null,
+        pressedButtonStyle: 'success',
+        btnConfig: {
+            className: "square-button"
+        }
+    };
+
+    getPanel = (tool) => {
         if (tool.panel === true) {
             return tool.plugin;
         }
         return tool.panel;
-    },
-    getPanels() {
+    };
+
+    getPanels = () => {
         return this.getTools()
             .filter((tool) => tool.panel)
             .map((tool) => ({name: tool.name, title: tool.title, cfg: tool.cfg, panel: this.getPanel(tool), items: tool.items, wrap: tool.wrap || false}));
-    },
-    getTools() {
+    };
+
+    getTools = () => {
         const unsorted = this.props.items
             .filter((item) => item.alwaysVisible || this.props.allVisible)
             .map((item, index) => assign({}, item, {position: item.position || index}));
         return unsorted.sort((a, b) => a.position - b.position);
-    },
+    };
+
     render() {
         return (<ToolsContainer id={this.props.id} className={"mapToolbar btn-group-" + this.props.layout}
             toolCfg={this.props.btnConfig}
@@ -104,13 +112,13 @@ const Toolbar = React.createClass({
             panelClassName={this.props.panelClassName}
             />);
     }
-});
+}
 
 module.exports = {
-    ToolbarPlugin: (stateSelector = 'toolbar') => (connect((state) => ({
+    ToolbarPlugin: (stateSelector = 'toolbar') => connect((state) => ({
         active: state.controls && state.controls[stateSelector] && state.controls[stateSelector].active,
         allVisible: state.controls && state.controls[stateSelector] && state.controls[stateSelector].expanded,
         stateSelector
-    }))(Toolbar)),
+    }))(Toolbar),
     reducers: {controls: require('../reducers/controls')}
 };

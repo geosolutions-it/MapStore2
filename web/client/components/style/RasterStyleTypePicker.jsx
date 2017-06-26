@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -11,14 +12,16 @@ const Combobox = require('react-widgets').Combobox;
 
 const LocaleUtils = require('../../utils/LocaleUtils');
 
-const RasterStyleTypePicker = React.createClass({
-    propTypes: {
-        styletype: React.PropTypes.oneOf(['rgb', 'gray', 'pseudo']),
-        onChange: React.PropTypes.func
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
+class RasterStyleTypePicker extends React.Component {
+    static propTypes = {
+        styletype: PropTypes.oneOf(['rgb', 'gray', 'pseudo']),
+        onChange: PropTypes.func
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
     render() {
         return (
             <Combobox data={[
@@ -41,8 +44,8 @@ const RasterStyleTypePicker = React.createClass({
                 groupBy="type"
                 onChange={(v) => this.props.onChange("styletype", v.value)}
                 value={this.props.styletype} />
-            );
+        );
     }
-});
+}
 
 module.exports = RasterStyleTypePicker;

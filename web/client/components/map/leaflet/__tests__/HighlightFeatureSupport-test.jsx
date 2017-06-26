@@ -31,21 +31,21 @@ let createVectorLayer = function(options) {
     });
 };
 const layer = {
-        "type": "vector",
-        "name": "Selected items",
-        "id": "featureselector",
-        "features": [],
-        "crs": "EPSG:4326",
-        "hideLoading": true,
-        "visibility": true,
-        "style": {
-            "radius": 10,
-            "weight": 3,
-            "opacity": 1,
-            "fillOpacity": 0.5,
-            "color": "blue",
-            "fillColor": "blue"
-        }
+    "type": "vector",
+    "name": "Selected items",
+    "id": "featureselector",
+    "features": [],
+    "crs": "EPSG:4326",
+    "hideLoading": true,
+    "visibility": true,
+    "style": {
+        "radius": 10,
+        "weight": 3,
+        "opacity": 1,
+        "fillOpacity": 0.5,
+        "color": "blue",
+        "fillColor": "blue"
+    }
 };
 
 describe('HighlightFeatureSupport', () => {

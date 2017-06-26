@@ -17,22 +17,22 @@ const de = require('react-intl/locale-data/de');
 addLocaleData([...en, ...it, ...fr, ...de]);
 
 let supportedLocales = {
-     "it": {
-         code: "it-IT",
-         description: "Italiano"
-     },
-     "en": {
+    "it": {
+        code: "it-IT",
+        description: "Italiano"
+    },
+    "en": {
         code: "en-US",
         description: "English"
-     },
-     "fr": {
-       code: "fr-FR",
-       description: "Français"
-     },
-     "de": {
-       code: "de-DE",
-       description: "Deutsch"
-     }
+    },
+    "fr": {
+        code: "fr-FR",
+        description: "Français"
+    },
+    "de": {
+        code: "de-DE",
+        description: "Deutsch"
+    }
 };
 
 const LocaleUtils = {

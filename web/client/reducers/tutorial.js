@@ -71,6 +71,7 @@ function tutorial(state = initialState, action) {
                 });
             });
 
+
             const isDisabled = localStorage.getItem('mapstore.plugin.tutorial.' + action.id + '.disabled');
             let hasIntro = false;
             setup.steps.forEach((step) => {
@@ -121,7 +122,6 @@ function tutorial(state = initialState, action) {
                     update.tourAction = action.tour.action;
                 }
             }
-
             return assign({}, state, update);
         case DISABLE_TUTORIAL:
             let disabled = !state.disabled;

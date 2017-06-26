@@ -11,42 +11,42 @@ const assign = require('object-assign');
 
 function catalog(state = null, action) {
     switch (action.type) {
-        case RECORD_LIST_LOADED:
-            return assign({}, state, {
-                result: action.result,
-                searchOptions: action.searchOptions,
-                loadingError: null,
-                layerError: null
-            });
-        case RESET_CATALOG:
-            return assign({}, state, {
-                result: null,
-                loadingError: null,
-                searchOptions: null/*
+    case RECORD_LIST_LOADED:
+        return assign({}, state, {
+            result: action.result,
+            searchOptions: action.searchOptions,
+            loadingError: null,
+            layerError: null
+        });
+    case RESET_CATALOG:
+        return assign({}, state, {
+            result: null,
+            loadingError: null,
+            searchOptions: null/*
                 MV: saida added but maybe they are unused,
                 at least action.format doesnt exist in the action,
 
                 format: action.format,
                 layerError: null*/
-            });
-        case RECORD_LIST_LOAD_ERROR:
-            return assign({}, state, {
-                result: null,
-                searchOptions: null,
-                loadingError: action.error,
-                layerError: null
-            });
-        case CHANGE_CATALOG_FORMAT:
-            return {
-                result: null,
-                loadingError: null,
-                format: action.format,
-                layerError: null
-            };
-        case ADD_LAYER_ERROR:
-            return assign({}, state, {layerError: action.error});
-        default:
-            return state;
+        });
+    case RECORD_LIST_LOAD_ERROR:
+        return assign({}, state, {
+            result: null,
+            searchOptions: null,
+            loadingError: action.error,
+            layerError: null
+        });
+    case CHANGE_CATALOG_FORMAT:
+        return {
+            result: null,
+            loadingError: null,
+            format: action.format,
+            layerError: null
+        };
+    case ADD_LAYER_ERROR:
+        return assign({}, state, {layerError: action.error});
+    default:
+        return state;
     }
 }
 

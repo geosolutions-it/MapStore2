@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -13,49 +14,51 @@ const LocaleUtils = require('../../../utils/LocaleUtils');
 
 require('react-select/dist/react-select.css');
 
-module.exports = React.createClass({
-    propTypes: {
-        enabled: React.PropTypes.bool,
-        status: React.PropTypes.object,
-        onStatusDismiss: React.PropTypes.func,
-        selectWorkSpace: React.PropTypes.func,
-        selectedWorkSpace: React.PropTypes.string,
-        workspaces: React.PropTypes.array,
-        loadWorkspaces: React.PropTypes.func,
-        datastoreTemplates: React.PropTypes.array,
-        createWorkspace: React.PropTypes.func
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            loadWorkspaces: () => {},
-            createWorkspace: () => {},
-            selectWorkSpace: () => {},
-            onStatusDismiss: () => {},
-            datastoreTemplates: []
-        };
-    },
-    getInitialState() {
-        return {
-            valid: false
-        };
-    },
+module.exports = class extends React.Component {
+    static propTypes = {
+        enabled: PropTypes.bool,
+        status: PropTypes.object,
+        onStatusDismiss: PropTypes.func,
+        selectWorkSpace: PropTypes.func,
+        selectedWorkSpace: PropTypes.string,
+        workspaces: PropTypes.array,
+        loadWorkspaces: PropTypes.func,
+        datastoreTemplates: PropTypes.array,
+        createWorkspace: PropTypes.func
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        loadWorkspaces: () => {},
+        createWorkspace: () => {},
+        selectWorkSpace: () => {},
+        onStatusDismiss: () => {},
+        datastoreTemplates: []
+    };
+
+    state = {
+        valid: false
+    };
+
     componentDidMount() {
         if (!this.props.workspaces) this.props.loadWorkspaces();
-    },
-    renderAlert() {
-        if (this.props.status && (this.props.status.status === "error")) {
+    }
+
+    renderAlert = () => {
+        if (this.props.status && this.props.status.status === "error") {
             return (<Alert onDismiss={this.props.onStatusDismiss} key="error" bsStyle="danger">
                         <Message msgId="importer.workspace.failure" msgParams={{statusWS: this.props.status && this.props.status.error && this.props.status.error.data}}/>
                     </Alert>);
-        } else if (this.props.status && (this.props.status.status === "success")) {
+        } else if (this.props.status && this.props.status.status === "success") {
             return (<Alert onDismiss={this.props.onStatusDismiss} key="success">
                         <Message msgId="importer.workspace.success" msgParams={{statusWS: this.props.status && this.props.status.workspace}}/>
                     </Alert>);
         }
-    },
+    };
+
     render() {
         return (<div>
             <strong><Message msgId="importer.workspace.target" /></strong>
@@ -87,21 +90,24 @@ module.exports = React.createClass({
                 {this.renderAlert()}
                 </div>
         </div>);
-    },
-    isValid(name) {
+    }
+
+    isValid = (name) => {
         // should not contain spaces
         return name.indexOf(" ") < 0 && name.length > 0;
-    },
-    validate(e) {
+    };
+
+    validate = (e) => {
         let name = e.target.value;
         let valid = this.isValid(name);
         this.setState({valid, name});
-    },
-    createWorkspace() {
+    };
+
+    createWorkspace = () => {
         let name = this.state && this.state.name;
         let valid = this.isValid(name);
         if (name && valid) {
             this.props.createWorkspace(name, this.props.datastoreTemplates);
         }
-    }
-});
+    };
+};

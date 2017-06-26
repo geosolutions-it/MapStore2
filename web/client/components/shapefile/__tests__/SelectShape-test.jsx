@@ -29,7 +29,7 @@ describe("Test the select shapefile component", () => {
     });
 
     it('creates component loading', () => {
-        const cmp = ReactDOM.render(<SelectShape loading={true} />, document.getElementById("container"));
+        const cmp = ReactDOM.render(<SelectShape loading />, document.getElementById("container"));
         expect(cmp).toExist();
         const dom = ReactDOM.findDOMNode(cmp);
         expect(dom.className.indexOf('btn') !== -1).toBe(true);
@@ -54,9 +54,9 @@ describe("Test the select shapefile component", () => {
         expect(dom.getElementsByTagName('input').length).toBe(1);
         const content = TestUtils.findRenderedDOMComponentWithClass(cmp, 'dropzone-content');
         const files = [{
-          name: 'file1.zip',
-          size: 1111,
-          type: 'application/zip'
+            name: 'file1.zip',
+            size: 1111,
+            type: 'application/zip'
         }];
         TestUtils.Simulate.drop(content, { dataTransfer: { files } });
         expect(dropped).toBe(true);
@@ -73,9 +73,9 @@ describe("Test the select shapefile component", () => {
         expect(dom.getElementsByTagName('input').length).toBe(1);
         const content = TestUtils.findRenderedDOMComponentWithClass(cmp, 'dropzone-content');
         const files = [{
-          name: 'file1.pdf',
-          size: 1111,
-          type: 'application/pdf'
+            name: 'file1.pdf',
+            size: 1111,
+            type: 'application/pdf'
         }];
         TestUtils.Simulate.drop(content, { dataTransfer: { files } });
         expect(error).toBe(true);

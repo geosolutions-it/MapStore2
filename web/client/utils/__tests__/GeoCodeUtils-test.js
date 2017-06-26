@@ -25,10 +25,10 @@ describe('GeoCodeUtils', () => {
             "osm_type": "node",
             "osm_id": "3235562176",
             "boundingbox": [
-            "33.8230805",
-            "33.8231805",
-            "-84.3109113",
-            "-84.3108113"
+                "33.8230805",
+                "33.8231805",
+                "-84.3109113",
+                "-84.3108113"
             ],
             "lat": "33.8231305",
             "lon": "-84.3108613",
@@ -37,9 +37,9 @@ describe('GeoCodeUtils', () => {
             "type": "yes",
             "importance": 0.425,
             "geojson": {
-            "type": "Point",
-            "coordinates": [-84.3108613, 33.8231305]
-        }
+                "type": "Point",
+                "coordinates": [-84.3108613, 33.8231305]
+            }
         }];
         let layer = GeoCodeUtils.nominatimToLayer("test", testNominatim);
         expect(layer).toExist();

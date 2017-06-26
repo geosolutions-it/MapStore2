@@ -122,7 +122,7 @@ const MapInfoUtils = {
     },
     defaultQueryableFilter(l) {
         return l.visibility &&
-            (MapInfoUtils.services[l.type]) &&
+            MapInfoUtils.services[l.type] &&
             (l.queryable === undefined || l.queryable) &&
             l.group !== "background"
         ;

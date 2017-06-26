@@ -23,20 +23,20 @@ Layers.registerType('google', {
         let google = window.google;
         if (!layersMap) {
             layersMap = {
-               'HYBRID': google.maps.MapTypeId.HYBRID,
-               'SATELLITE': google.maps.MapTypeId.SATELLITE,
-               'ROADMAP': google.maps.MapTypeId.ROADMAP,
-               'TERRAIN': google.maps.MapTypeId.TERRAIN
-           };
+                'HYBRID': google.maps.MapTypeId.HYBRID,
+                'SATELLITE': google.maps.MapTypeId.SATELLITE,
+                'ROADMAP': google.maps.MapTypeId.ROADMAP,
+                'TERRAIN': google.maps.MapTypeId.TERRAIN
+            };
         }
         if (!gmaps[mapId]) {
             gmaps[mapId] = new google.maps.Map(document.getElementById(mapId + 'gmaps'), {
-              disableDefaultUI: true,
-              keyboardShortcuts: false,
-              draggable: false,
-              disableDoubleClickZoom: true,
-              scrollwheel: false,
-              streetViewControl: false
+                disableDefaultUI: true,
+                keyboardShortcuts: false,
+                draggable: false,
+                disableDoubleClickZoom: true,
+                scrollwheel: false,
+                streetViewControl: false
             });
         }
         gmaps[mapId].setMapTypeId(layersMap[options.name]);
@@ -135,8 +135,8 @@ Layers.registerType('google', {
                 let size = calculateRotatedSize(-rotation, map.getSize());
                 mapContainer.style.width = size.width + 'px';
                 mapContainer.style.height = size.height + 'px';
-                mapContainer.style.left = (Math.round((map.getSize()[0] - size.width) / 2.0)) + 'px';
-                mapContainer.style.top = (Math.round((map.getSize()[1] - size.height) / 2.0)) + 'px';
+                mapContainer.style.left = Math.round((map.getSize()[0] - size.width) / 2.0) + 'px';
+                mapContainer.style.top = Math.round((map.getSize()[1] - size.height) / 2.0) + 'px';
                 google.maps.event.trigger(gmaps[mapId], "resize");
                 setCenter();
             }
@@ -184,7 +184,7 @@ Layers.registerType('google', {
             if (div) {
                 div.style.visibility = options.visibility ? 'visible' : 'hidden';
             }
-            return <div id={mapId + "gmaps"} className="fill" style={gmapsStyle}></div>;
+            return <div id={mapId + "gmaps"} className="fill" style={gmapsStyle} />;
         }
         return null;
     },

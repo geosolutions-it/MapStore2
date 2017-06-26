@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -13,24 +14,24 @@ const ToolsContainer = require('./containers/ToolsContainer');
  * GridContainerPlugin. This is a plugin that works as container
  * of other plugins displaying them in a grid
 */
-const GridContainer = React.createClass({
-    propTypes: {
-        className: React.PropTypes.string,
-        style: React.PropTypes.object,
-        items: React.PropTypes.array,
-        id: React.PropTypes.string,
-        mapType: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            items: [],
-            className: "grid-home-container",
-            style: {},
-            id: "mapstore-grid-home",
-            mapType: "leaflet"
-        };
-    },
-    getPanels() {
+class GridContainer extends React.Component {
+    static propTypes = {
+        className: PropTypes.string,
+        style: PropTypes.object,
+        items: PropTypes.array,
+        id: PropTypes.string,
+        mapType: PropTypes.string
+    };
+
+    static defaultProps = {
+        items: [],
+        className: "grid-home-container",
+        style: {},
+        id: "mapstore-grid-home",
+        mapType: "leaflet"
+    };
+
+    getPanels = () => {
         return this.props.items.filter((item) => item.tools).reduce((previous, current) => {
             return previous.concat(
                 current.tools.map((tool, index) => ({
@@ -40,10 +41,12 @@ const GridContainer = React.createClass({
                 }))
             );
         }, []);
-    },
-    getTools() {
+    };
+
+    getTools = () => {
         return this.props.items.sort((a, b) => a.position - b.position);
-    },
+    };
+
     render() {
         return (<ToolsContainer
             id={this.props.id}
@@ -61,7 +64,7 @@ const GridContainer = React.createClass({
             panels={this.getPanels()}
         />);
     }
-});
+}
 
 module.exports = {
     GridContainerPlugin: GridContainer,

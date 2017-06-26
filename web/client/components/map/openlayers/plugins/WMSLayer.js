@@ -67,15 +67,15 @@ Layers.registerType('wms', {
             visible: options.visibility !== false,
             zIndex: options.zIndex,
             source: new ol.source.TileWMS(objectAssign({
-              urls: urls,
-              params: queryParameters,
-              tileGrid: new ol.tilegrid.TileGrid({
-                  extent: extent,
-                  resolutions: mapUtils.getResolutions(),
-                  tileSize: options.tileSize ? options.tileSize : 256,
-                  origin: options.origin ? options.origin : [extent[0], extent[1]]
-              })
-            }, (options.forceProxy) ? {tileLoadFunction: proxyTileLoadFunction} : {}))
+                urls: urls,
+                params: queryParameters,
+                tileGrid: new ol.tilegrid.TileGrid({
+                    extent: extent,
+                    resolutions: mapUtils.getResolutions(),
+                    tileSize: options.tileSize ? options.tileSize : 256,
+                    origin: options.origin ? options.origin : [extent[0], extent[1]]
+                })
+            }, options.forceProxy ? {tileLoadFunction: proxyTileLoadFunction} : {}))
         });
     },
     update: (layer, newOptions, oldOptions, map) => {
@@ -136,15 +136,15 @@ Layers.registerType('wms', {
                         visible: newOptions.visibility !== false,
                         zIndex: newOptions.zIndex,
                         source: new ol.source.TileWMS(objectAssign({
-                          urls: urls,
-                          params: queryParameters,
-                          tileGrid: new ol.tilegrid.TileGrid({
-                              extent: extent,
-                              resolutions: mapUtils.getResolutions(),
-                              tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
-                              origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
-                          })
-                        }, (newOptions.forceProxy) ? {tileLoadFunction: proxyTileLoadFunction} : {}))
+                            urls: urls,
+                            params: queryParameters,
+                            tileGrid: new ol.tilegrid.TileGrid({
+                                extent: extent,
+                                resolutions: mapUtils.getResolutions(),
+                                tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
+                                origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
+                            })
+                        }, newOptions.forceProxy ? {tileLoadFunction: proxyTileLoadFunction} : {}))
                     });
                 }
                 return newLayer;

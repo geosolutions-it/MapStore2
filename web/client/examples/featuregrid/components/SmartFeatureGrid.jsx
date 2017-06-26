@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -19,14 +20,14 @@ const {bindActionCreators} = require('redux');
 
 const SmartFeatureGrid = connect((state) => {
     return {
-        map: (state.map && state.map) || (state.config && state.config.map),
+        map: state.map && state.map || state.config && state.config.map,
         features: state.featuregrid.jsonlayer.features || []
     };
 }, dispatch => {
     return bindActionCreators({
-            selectFeatures: selectFeatures,
-            changeMapView: changeMapView
-        }, dispatch);
+        selectFeatures: selectFeatures,
+        changeMapView: changeMapView
+    }, dispatch);
 })(FeatureGrid);
 
 module.exports = connect((state) => {
@@ -34,31 +35,32 @@ module.exports = connect((state) => {
         messages: state.locale ? state.locale.messages : null,
         locale: state.locale ? state.locale.current : null,
         localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined,
-        map: (state.map && state.map) || (state.config && state.config.map),
+        map: state.map && state.map || state.config && state.config.map,
         featuregrid
     };
-})(React.createClass({
-    propTypes: {
-        messages: React.PropTypes.object,
-        title: React.PropTypes.string,
-        locale: React.PropTypes.string,
-        localeError: React.PropTypes.string,
-        style: React.PropTypes.object
-    },
-    getInitialState: function() {
-        return {
-          open: false
-        };
-    },
-    renderHeader() {
+})(class extends React.Component {
+    static propTypes = {
+        messages: PropTypes.object,
+        title: PropTypes.string,
+        locale: PropTypes.string,
+        localeError: PropTypes.string,
+        style: PropTypes.object
+    };
+
+    state = {
+        open: false
+    };
+
+    renderHeader = () => {
         let isActive = this.state.open;
         return (
             <span>
                 <span>{this.props.title}</span>
-                <button onClick={ ()=> this.setState({ open: !this.state.open })} className="close"><Glyphicon glyph={(isActive) ? "glyphicon glyphicon-collapse-down" : "glyphicon glyphicon-expand"}/></button>
+                <button onClick={ ()=> this.setState({ open: !this.state.open })} className="close"><Glyphicon glyph={isActive ? "glyphicon glyphicon-collapse-down" : "glyphicon glyphicon-expand"}/></button>
             </span>
         );
-    },
+    };
+
     render() {
         return (
             <Localized messages={this.props.messages} locale={this.props.locale} loadingError={this.props.localeError}>
@@ -71,4 +73,4 @@ module.exports = connect((state) => {
             </Localized>
         );
     }
-}));
+});

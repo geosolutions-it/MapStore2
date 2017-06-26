@@ -1,11 +1,4 @@
-/**
- * Copyright 2015, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
+const PropTypes = require('prop-types');
 const React = require('react');
 const assign = require('object-assign');
 var L = require('leaflet');
@@ -14,25 +7,28 @@ var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 
 require('leaflet-draw');
 
-const MeasurementSupport = React.createClass({
-    propTypes: {
-        map: React.PropTypes.object,
-        metric: React.PropTypes.bool,
-        feet: React.PropTypes.bool,
-        projection: React.PropTypes.string,
-        measurement: React.PropTypes.object,
-        changeMeasurementState: React.PropTypes.func,
-        messages: React.PropTypes.object,
-        updateOnMouseMove: React.PropTypes.bool
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            updateOnMouseMove: false
-        };
-    },
+class MeasurementSupport extends React.Component {
+    static displayName = 'MeasurementSupport';
+
+    static propTypes = {
+        map: PropTypes.object,
+        metric: PropTypes.bool,
+        feet: PropTypes.bool,
+        projection: PropTypes.string,
+        measurement: PropTypes.object,
+        changeMeasurementState: PropTypes.func,
+        messages: PropTypes.object,
+        updateOnMouseMove: PropTypes.bool
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        updateOnMouseMove: false
+    };
+
     componentWillReceiveProps(newProps) {
         if (newProps.measurement.geomType && newProps.measurement.geomType !== this.props.measurement.geomType ) {
             this.addDrawInteraction(newProps);
@@ -41,26 +37,27 @@ const MeasurementSupport = React.createClass({
         if (!newProps.measurement.geomType) {
             this.removeDrawInteraction();
         }
-    },
-    onDraw: {
-        drawStart() {
-            this.drawing = true;
-        },
-        created(evt) {
-            this.drawing = false;
-            // let drawn geom stay on the map
-            this.props.map.addLayer(evt.layer);
-            // preserve the currently created layer to remove it later on
-            this.lastLayer = evt.layer;
+    }
 
-            if (this.props.measurement.geomType === 'Point') {
-                let pos = this.drawControl._markers.getLatLng();
-                let point = {x: pos.lng, y: pos.lat, srs: 'EPSG:4326'};
-                let newMeasureState = assign({}, this.props.measurement, {point: point});
-                this.props.changeMeasurementState(newMeasureState);
-            }
+    onDrawStart = () => {
+        this.drawing = true;
+    };
+
+    onDrawCreated = (evt) => {
+        this.drawing = false;
+        // let drawn geom stay on the map
+        this.props.map.addLayer(evt.layer);
+        // preserve the currently created layer to remove it later on
+        this.lastLayer = evt.layer;
+
+        if (this.props.measurement.geomType === 'Point') {
+            let pos = this.drawControl._markers.getLatLng();
+            let point = {x: pos.lng, y: pos.lat, srs: 'EPSG:4326'};
+            let newMeasureState = assign({}, this.props.measurement, {point: point});
+            this.props.changeMeasurementState(newMeasureState);
         }
-    },
+    };
+
     render() {
         // moved here the translations because when language changes it is forced a render of this component. (see connect of measure plugin)
         var drawingStrings = this.props.messages || (this.context.messages ? this.context.messages.drawLocal : false);
@@ -69,8 +66,9 @@ const MeasurementSupport = React.createClass({
         }
 
         return null;
-    },
-    updateMeasurementResults() {
+    }
+
+    updateMeasurementResults = () => {
         if (!this.drawing || !this.drawControl) {
             return;
         }
@@ -113,8 +111,9 @@ const MeasurementSupport = React.createClass({
             }
         );
         this.props.changeMeasurementState(newMeasureState);
-    },
-    mapClickHandler: function() {
+    };
+
+    mapClickHandler = () => {
         if (!this.drawing && this.drawControl !== null) {
             // re-enable draw control, since it is stopped after
             // every finished sketch
@@ -135,13 +134,14 @@ const MeasurementSupport = React.createClass({
                 this.updateMeasurementResults();
             }
         }
-    },
-    addDrawInteraction: function(newProps) {
+    };
+
+    addDrawInteraction = (newProps) => {
 
         this.removeDrawInteraction();
 
-        this.props.map.on('draw:created', this.onDraw.created, this);
-        this.props.map.on('draw:drawstart', this.onDraw.drawStart, this);
+        this.props.map.on('draw:created', this.onDrawCreated, this);
+        this.props.map.on('draw:drawstart', this.onDrawStart, this);
         this.props.map.on('click', this.mapClickHandler, this);
         if (this.props.updateOnMouseMove) {
             this.props.map.on('mousemove', this.updateMeasurementResults, this);
@@ -175,22 +175,23 @@ const MeasurementSupport = React.createClass({
 
         // start the draw control
         this.drawControl.enable();
-    },
-    removeDrawInteraction: function() {
+    };
+
+    removeDrawInteraction = () => {
         if (this.drawControl !== null && this.drawControl !== undefined) {
             this.drawControl.disable();
             this.drawControl = null;
             if (this.lastLayer) {
                 this.props.map.removeLayer(this.lastLayer);
             }
-            this.props.map.off('draw:created', this.onDraw.created, this);
-            this.props.map.off('draw:drawstart', this.onDraw.drawStart, this);
+            this.props.map.off('draw:created', this.onDrawCreated, this);
+            this.props.map.off('draw:drawstart', this.onDrawStart, this);
             this.props.map.off('click', this.mapClickHandler, this);
             if (this.props.updateOnMouseMove) {
                 this.props.map.off('mousemove', this.updateMeasurementResults, this);
             }
         }
-    }
-});
+    };
+}
 
 module.exports = MeasurementSupport;

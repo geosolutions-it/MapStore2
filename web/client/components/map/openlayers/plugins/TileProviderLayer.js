@@ -15,18 +15,18 @@ var CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 function template(str, data) {
 
     return str.replace(/(?!(\{?[zyx]?\}))\{*([\w_]+)*\}/g, function() {
-            let st = arguments[0];
-            let key = arguments[1] ? arguments[1] : arguments[2];
-            let value = data[key];
+        let st = arguments[0];
+        let key = arguments[1] ? arguments[1] : arguments[2];
+        let value = data[key];
 
-            if (value === undefined) {
-                throw new Error('No value provided for variable ' + st);
+        if (value === undefined) {
+            throw new Error('No value provided for variable ' + st);
 
-            } else if (typeof value === 'function') {
-                value = value(data);
-            }
-            return value;
-        });
+        } else if (typeof value === 'function') {
+            value = value(data);
+        }
+        return value;
+    });
 }
 function getUrls(opt) {
     let urls = [];
@@ -49,20 +49,20 @@ function lBoundsToOlExtent(bounds, destPrj){
 }
 /*eslint-enable */
 function tileXYZToOpenlayersOptions(options) {
-    let urls = (options.url.match(/(\{s\})/)) ? getUrls(options) : [template(options.url, options)];
+    let urls = options.url.match(/(\{s\})/) ? getUrls(options) : [template(options.url, options)];
     let sourceOpt = assign({}, {
-                urls: urls,
-                attributions: (options.attribution) ? [new ol.Attribution({ html: options.attribution})] : [],
-                maxZoom: (options.maxZoom) ? options.maxZoom : 18,
-                minZoom: (options.minZoom) ? options.minZoom : 0 // dosen't affect ol layer rendering UNSUPPORTED
-            });
+        urls: urls,
+        attributions: options.attribution ? [new ol.Attribution({ html: options.attribution})] : [],
+        maxZoom: options.maxZoom ? options.maxZoom : 18,
+        minZoom: options.minZoom ? options.minZoom : 0 // dosen't affect ol layer rendering UNSUPPORTED
+    });
     let source = new ol.source.XYZ(sourceOpt);
     let olOpt = assign({}, {
-                opacity: options.opacity !== undefined ? options.opacity : 1,
-                visible: options.visibility !== false,
-                zIndex: options.zIndex,
-                source: source
-                }, (options.bounds) ? {extent: lBoundsToOlExtent(options.bounds, options.srs ? options.srs : 'EPSG:3857')} : {} );
+        opacity: options.opacity !== undefined ? options.opacity : 1,
+        visible: options.visibility !== false,
+        zIndex: options.zIndex,
+        source: source
+    }, options.bounds ? {extent: lBoundsToOlExtent(options.bounds, options.srs ? options.srs : 'EPSG:3857')} : {} );
     return olOpt;
 }
 

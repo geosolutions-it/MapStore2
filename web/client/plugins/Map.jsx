@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -17,6 +18,7 @@ const Message = require('../components/I18N/Message');
 const ConfigUtils = require('../utils/ConfigUtils');
 const {isString} = require('lodash');
 let plugins;
+
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
  * Some are already available for the supported mapping libraries (openlayers, leaflet, cesium), but it's possible to develop new ones.
@@ -63,7 +65,7 @@ let plugins;
  * const React = require('react');
  *    const TestSupport = React.createClass({
  *     propTypes: {
- *            label: React.PropTypes.string
+ *            label: PropTypes.string
  *        },
  *        render() {
  *            alert(this.props.label);
@@ -112,62 +114,64 @@ let plugins;
  * @static
  *
  */
-const MapPlugin = React.createClass({
-    propTypes: {
-        mapType: React.PropTypes.string,
-        map: React.PropTypes.object,
-        layers: React.PropTypes.array,
-        zoomControl: React.PropTypes.bool,
-        mapLoadingMessage: React.PropTypes.string,
-        loadingSpinner: React.PropTypes.bool,
-        loadingError: React.PropTypes.string,
-        tools: React.PropTypes.array,
-        options: React.PropTypes.object,
-        mapOptions: React.PropTypes.object,
-        toolsOptions: React.PropTypes.object,
-        actions: React.PropTypes.object,
-        features: React.PropTypes.array
-    },
-    getDefaultProps() {
-        return {
-            mapType: 'leaflet',
-            actions: {},
-            zoomControl: false,
-            mapLoadingMessage: "map.loading",
-            loadingSpinner: true,
-            tools: ["measurement", "locate", "overview", "scalebar", "draw", "highlight"],
-            options: {},
-            mapOptions: {},
-            toolsOptions: {
-                measurement: {},
-                locate: {},
-                scalebar: {
-                    leaflet: {
-                      position: "bottomright"
-                    }
-                },
-                overview: {
-                    overviewOpt: {
-                        position: 'bottomright',
-                        collapsedWidth: 25,
-                        collapsedHeight: 25,
-                        zoomLevelOffset: -5,
-                        toggleDisplay: true
-                    },
-                    layers: [{type: "osm"}]
+class MapPlugin extends React.Component {
+    static propTypes = {
+        mapType: PropTypes.string,
+        map: PropTypes.object,
+        layers: PropTypes.array,
+        zoomControl: PropTypes.bool,
+        mapLoadingMessage: PropTypes.string,
+        loadingSpinner: PropTypes.bool,
+        loadingError: PropTypes.string,
+        tools: PropTypes.array,
+        options: PropTypes.object,
+        mapOptions: PropTypes.object,
+        toolsOptions: PropTypes.object,
+        actions: PropTypes.object,
+        features: PropTypes.array
+    };
+
+    static defaultProps = {
+        mapType: 'leaflet',
+        actions: {},
+        zoomControl: false,
+        mapLoadingMessage: "map.loading",
+        loadingSpinner: true,
+        tools: ["measurement", "locate", "overview", "scalebar", "draw", "highlight"],
+        options: {},
+        mapOptions: {},
+        toolsOptions: {
+            measurement: {},
+            locate: {},
+            scalebar: {
+                leaflet: {
+                    position: "bottomright"
                 }
+            },
+            overview: {
+                overviewOpt: {
+                    position: 'bottomright',
+                    collapsedWidth: 25,
+                    collapsedHeight: 25,
+                    zoomLevelOffset: -5,
+                    toggleDisplay: true
+                },
+                layers: [{type: "osm"}]
             }
-        };
-    },
+        }
+    };
+
     componentWillMount() {
         this.updatePlugins(this.props);
-    },
+    }
+
     componentWillReceiveProps(newProps) {
         if (newProps.mapType !== this.props.mapType || newProps.actions !== this.props.actions) {
             this.updatePlugins(newProps);
         }
-    },
-    getHighlightLayer(projection, index) {
+    }
+
+    getHighlightLayer = (projection, index) => {
         return (<plugins.Layer type="vector" srs={projection} position={index} key="highlight" options={{name: "highlight"}}>
                     {this.props.features.map( (feature) => {
                         return (<plugins.Feature
@@ -177,8 +181,9 @@ const MapPlugin = React.createClass({
                             geometry={feature.geometry}/>);
                     })}
                 </plugins.Layer>);
-    },
-    getTool(tool) {
+    };
+
+    getTool = (tool) => {
         if (isString(tool)) {
             return {
                 name: tool,
@@ -186,12 +191,14 @@ const MapPlugin = React.createClass({
             };
         }
         return tool[this.props.mapType] || tool;
-    },
-    getMapOptions() {
+    };
+
+    getMapOptions = () => {
         return this.props.mapOptions && this.props.mapOptions[this.props.mapType] ||
             ConfigUtils.getConfigProp("defaultMapOptions") && ConfigUtils.getConfigProp("defaultMapOptions")[this.props.mapType];
-    },
-    renderLayers() {
+    };
+
+    renderLayers = () => {
         const projection = this.props.map.projection || 'EPSG:3857';
         return this.props.layers.map((layer, index) => {
             return (
@@ -200,8 +207,9 @@ const MapPlugin = React.createClass({
                 </plugins.Layer>
             );
         }).concat(this.props.features && this.props.features.length && this.getHighlightLayer(projection, this.props.layers.length) || []);
-    },
-    renderLayerContent(layer, projection) {
+    };
+
+    renderLayerContent = (layer, projection) => {
         if (layer.features && layer.type === "vector") {
             return layer.features.map( (feature) => {
                 return (
@@ -220,15 +228,16 @@ const MapPlugin = React.createClass({
             });
         }
         return null;
-    },
+    };
 
-    renderSupportTools() {
+    renderSupportTools = () => {
         return this.props.tools.map((tool) => {
             const Tool = this.getTool(tool);
-            const options = (this.props.toolsOptions[Tool.name] && this.props.toolsOptions[Tool.name][this.props.mapType]) || this.props.toolsOptions[Tool.name] || {};
+            const options = this.props.toolsOptions[Tool.name] && this.props.toolsOptions[Tool.name][this.props.mapType] || this.props.toolsOptions[Tool.name] || {};
             return <Tool.impl key={Tool.name} {...options}/>;
         });
-    },
+    };
+
     render() {
         if (this.props.map) {
             return (
@@ -264,11 +273,13 @@ const MapPlugin = React.createClass({
                 {this.props.loadingSpinner ? <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/> : null}
                 <Message msgId={this.props.mapLoadingMessage}/>
         </div>);
-    },
-    updatePlugins(props) {
-        plugins = require('./map/index')(props.mapType, props.actions);
     }
-});
+
+    updatePlugins = (props) => {
+        plugins = require('./map/index')(props.mapType, props.actions);
+    };
+}
+
 const {mapSelector} = require('../selectors/map');
 const {layerSelectorWithMarkers} = require('../selectors/layers');
 

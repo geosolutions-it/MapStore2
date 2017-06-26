@@ -28,8 +28,8 @@ const defaultConfig = require('json-loader!../config.json');
 const localConfig = require('json-loader!../localConfig.json');
 
 const defaultPlugins = {
-  "mobile": localConfig.plugins.embedded,
-  "desktop": localConfig.plugins.embedded
+    "mobile": localConfig.plugins.embedded,
+    "desktop": localConfig.plugins.embedded
 };
 let triggerAction;
 function mergeDefaultConfig(pluginName, cfg) {
@@ -199,7 +199,7 @@ const MapStore2 = {
             ThemeUtils.renderFromLess(options.style, 'custom_theme', 'themes/default/');
         }
         const defaultThemeCfg = {
-          prefixContainer: '#' + container
+            prefixContainer: '#' + container
         };
 
         const themeCfg = options.theme && assign({}, defaultThemeCfg, options.theme) || defaultThemeCfg;

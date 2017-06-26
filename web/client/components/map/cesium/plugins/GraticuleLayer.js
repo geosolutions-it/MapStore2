@@ -188,10 +188,10 @@ var Graticule = (function() {
         let dLat = 0;
         let dLng = 0;
         // get the nearest to the calculated value
-        for (let index = 0; index < mins.length && dLat < ((extent.north - extent.south) / 10); index++) {
+        for (let index = 0; index < mins.length && dLat < (extent.north - extent.south) / 10; index++) {
             dLat = mins[index];
         }
-        for (let index = 0; index < mins.length && dLng < ((extent.east - extent.west) / 10); index++) {
+        for (let index = 0; index < mins.length && dLng < (extent.east - extent.west) / 10; index++) {
             dLng = mins[index];
         }
 

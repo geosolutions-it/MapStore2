@@ -21,27 +21,27 @@ function measurement(state = {
     bearingMeasureEnabled: false
 }, action) {
     switch (action.type) {
-        case CHANGE_MEASUREMENT_TOOL:
-            return assign({}, state, {
-                lineMeasureEnabled: ((action.geomType !== state.geomType) && (action.geomType === 'LineString')),
-                areaMeasureEnabled: ((action.geomType !== state.geomType) && (action.geomType === 'Polygon')),
-                bearingMeasureEnabled: ((action.geomType !== state.geomType) && (action.geomType === 'Bearing')),
-                geomType: (action.geomType === state.geomType) ? null : action.geomType
-            });
-        case CHANGE_MEASUREMENT_STATE:
-            return assign({}, state, {
-                lineMeasureEnabled: action.lineMeasureEnabled,
-                areaMeasureEnabled: action.areaMeasureEnabled,
-                bearingMeasureEnabled: action.bearingMeasureEnabled,
-                geomType: action.geomType,
-                point: action.point,
-                len: action.len,
-                area: action.area,
-                bearing: action.bearing,
-                lenUnit: action.lenUnit,
-                areaUnit: action.areaUnit
-            });
-        case TOGGLE_CONTROL:
+    case CHANGE_MEASUREMENT_TOOL:
+        return assign({}, state, {
+            lineMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'LineString',
+            areaMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'Polygon',
+            bearingMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'Bearing',
+            geomType: action.geomType === state.geomType ? null : action.geomType
+        });
+    case CHANGE_MEASUREMENT_STATE:
+        return assign({}, state, {
+            lineMeasureEnabled: action.lineMeasureEnabled,
+            areaMeasureEnabled: action.areaMeasureEnabled,
+            bearingMeasureEnabled: action.bearingMeasureEnabled,
+            geomType: action.geomType,
+            point: action.point,
+            len: action.len,
+            area: action.area,
+            bearing: action.bearing,
+            lenUnit: action.lenUnit,
+            areaUnit: action.areaUnit
+        });
+    case TOGGLE_CONTROL:
         {
             // TODO: remove this when the controls will be able to be mutually exclusive
             if (action.control === 'info') {
@@ -52,14 +52,14 @@ function measurement(state = {
                 };
             }
         }
-        case RESET_CONTROLS:
-            return {
-                lineMeasureEnabled: false,
-                areaMeasureEnabled: false,
-                bearingMeasureEnabled: false
-            };
-        default:
-            return state;
+    case RESET_CONTROLS:
+        return {
+            lineMeasureEnabled: false,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: false
+        };
+    default:
+        return state;
     }
 }
 

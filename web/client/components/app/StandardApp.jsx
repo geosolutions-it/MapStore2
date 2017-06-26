@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -22,31 +23,30 @@ const url = require('url');
 
 const urlQuery = url.parse(window.location.href, true).query;
 
-const StandardApp = React.createClass({
-    propTypes: {
-        appStore: React.PropTypes.func,
-        pluginsDef: React.PropTypes.object,
-        storeOpts: React.PropTypes.object,
-        initialActions: React.PropTypes.array,
-        appComponent: React.PropTypes.func,
-        printingEnabled: React.PropTypes.bool,
-        onStoreInit: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            pluginsDef: {plugins: {}, requires: {}},
-            initialActions: [],
-            printingEnabled: false,
-            appStore: () => ({dispatch: () => {}}),
-            appComponent: () => <span/>,
-            onStoreInit: () => {}
-        };
-    },
-    getInitialState() {
-        return {
-            store: null
-        };
-    },
+class StandardApp extends React.Component {
+    static propTypes = {
+        appStore: PropTypes.func,
+        pluginsDef: PropTypes.object,
+        storeOpts: PropTypes.object,
+        initialActions: PropTypes.array,
+        appComponent: PropTypes.func,
+        printingEnabled: PropTypes.bool,
+        onStoreInit: PropTypes.func
+    };
+
+    static defaultProps = {
+        pluginsDef: {plugins: {}, requires: {}},
+        initialActions: [],
+        printingEnabled: false,
+        appStore: () => ({dispatch: () => {}}),
+        appComponent: () => <span/>,
+        onStoreInit: () => {}
+    };
+
+    state = {
+        store: null
+    };
+
     componentWillMount() {
         const onInit = (config) => {
             if (!global.Intl ) {
@@ -81,18 +81,19 @@ const StandardApp = React.createClass({
             }
         });
 
-    },
+    }
+
     render() {
         const {plugins, requires} = this.props.pluginsDef;
         const {pluginsDef, appStore, initialActions, appComponent, ...other} = this.props;
         const App = this.props.appComponent;
-        return this.state.store ? (
+        return this.state.store ?
             <Provider store={this.state.store}>
                 <App {...other} plugins={assign(PluginsUtils.getPlugins(plugins), {requires})}/>
             </Provider>
-        ) : null;
-    },
-    init(config) {
+         : null;
+    }
+    init = (config) => {
         this.store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
         this.store.dispatch(localConfigLoaded(config));
         const locale = LocaleUtils.getUserLocale();
@@ -103,7 +104,7 @@ const StandardApp = React.createClass({
         this.props.initialActions.forEach((action) => {
             this.store.dispatch(action());
         });
-    }
-});
+    };
+}
 
 module.exports = StandardApp;

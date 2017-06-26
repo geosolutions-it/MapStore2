@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -13,90 +14,90 @@ const ComboField = require('./ComboField');
 
 const FilterUtils = require('../../../utils/FilterUtils');
 
-const ZoneField = React.createClass({
-    propTypes: {
-        zoneId: React.PropTypes.number,
-        url: React.PropTypes.string,
-        typeName: React.PropTypes.string,
-        wfs: React.PropTypes.string,
-        busy: React.PropTypes.bool,
-        values: React.PropTypes.array,
-        value: React.PropTypes.oneOfType([
-            React.PropTypes.object,
-            React.PropTypes.number,
-            React.PropTypes.string,
-            React.PropTypes.array
+class ZoneField extends React.Component {
+    static propTypes = {
+        zoneId: PropTypes.number,
+        url: PropTypes.string,
+        typeName: PropTypes.string,
+        wfs: PropTypes.string,
+        busy: PropTypes.bool,
+        values: PropTypes.array,
+        value: PropTypes.oneOfType([
+            PropTypes.object,
+            PropTypes.number,
+            PropTypes.string,
+            PropTypes.array
         ]),
-        label: React.PropTypes.string,
-        searchText: React.PropTypes.string,
-        searchMethod: React.PropTypes.string,
-        searchAttribute: React.PropTypes.string,
-        sort: React.PropTypes.object,
-        error: React.PropTypes.oneOfType([
-            React.PropTypes.object,
-            React.PropTypes.string
+        label: PropTypes.string,
+        searchText: PropTypes.string,
+        searchMethod: PropTypes.string,
+        searchAttribute: PropTypes.string,
+        sort: PropTypes.object,
+        error: PropTypes.oneOfType([
+            PropTypes.object,
+            PropTypes.string
         ]),
-        comboFilter: React.PropTypes.oneOfType([
-            React.PropTypes.bool,
-            React.PropTypes.string,
-            React.PropTypes.func
+        comboFilter: PropTypes.oneOfType([
+            PropTypes.bool,
+            PropTypes.string,
+            PropTypes.func
         ]),
-        groupBy: React.PropTypes.oneOfType([
-            React.PropTypes.string,
-            React.PropTypes.func
+        groupBy: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.func
         ]),
-        multivalue: React.PropTypes.bool,
-        open: React.PropTypes.bool,
-        disabled: React.PropTypes.bool,
-        dependsOn: React.PropTypes.object,
-        valueField: React.PropTypes.string,
-        textField: React.PropTypes.string,
-        onSearch: React.PropTypes.func,
-        onFilter: React.PropTypes.func,
-        // onOpenMenu: React.PropTypes.func,
-        onChange: React.PropTypes.func,
-        onSelect: React.PropTypes.func
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getInitialState() {
-        return { open: false};
-    },
-    getDefaultProps() {
-        return {
-            open: false,
-            zoneId: null,
-            url: null,
-            typeName: null,
-            wfs: "1.1.0",
-            busy: false,
-            values: [],
-            value: null,
-            valueField: null,
-            textField: null,
-            label: null,
-            disabled: false,
-            error: null,
-            searchText: "*",
-            searchMethod: "ilike",
-            searchAttribute: null,
-            comboFilter: "contains",
-            multivalue: true,
-            groupBy: null,
-            onSearch: () => {},
-            onFilter: () => {},
-            // onOpenMenu: () => {},
-            onChange: () => {},
-            onSelect: () => {}
-        };
-    },
+        multivalue: PropTypes.bool,
+        open: PropTypes.bool,
+        disabled: PropTypes.bool,
+        dependsOn: PropTypes.object,
+        valueField: PropTypes.string,
+        textField: PropTypes.string,
+        onSearch: PropTypes.func,
+        onFilter: PropTypes.func,
+        onChange: PropTypes.func,
+        onSelect: PropTypes.func
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        open: false,
+        zoneId: null,
+        url: null,
+        typeName: null,
+        wfs: "1.1.0",
+        busy: false,
+        values: [],
+        value: null,
+        valueField: null,
+        textField: null,
+        label: null,
+        disabled: false,
+        error: null,
+        searchText: "*",
+        searchMethod: "ilike",
+        searchAttribute: null,
+        comboFilter: "contains",
+        multivalue: true,
+        groupBy: null,
+        onSearch: () => {},
+        onFilter: () => {},
+        // onOpenMenu: () => {},
+        onChange: () => {},
+        onSelect: () => {}
+    };
+
+    state = { open: false};
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.values && !isEqual(this.props.values, nextProps.values) && nextProps.values.length > 0) {
             this.setState({open: true});
         }
-    },
-    getFilter(searchText = "*", operator = "=") {
+    }
+
+    getFilter = (searchText = "*", operator = "=") => {
         let filterObj = {
             filterFields: [{
                 attribute: this.props.searchAttribute,
@@ -119,10 +120,10 @@ const ZoneField = React.createClass({
 
             if (this.props.multivalue) {
                 filterObj.groupFields.push({
-                        id: 2,
-                        logic: "OR",
-                        groupId: 1,
-                        index: 1
+                    id: 2,
+                    logic: "OR",
+                    groupId: 1,
+                    index: 1
                 });
 
                 if (this.props.dependsOn.value instanceof Array) {
@@ -137,11 +138,11 @@ const ZoneField = React.createClass({
                     });
                 } else {
                     filterObj.filterFields.push({
-                       attribute: this.props.dependsOn.field,
-                       operator: this.props.dependsOn.operator || "=",
-                       value: this.props.dependsOn.value,
-                       groupId: 2,
-                       type: "list"
+                        attribute: this.props.dependsOn.field,
+                        operator: this.props.dependsOn.operator || "=",
+                        value: this.props.dependsOn.value,
+                        groupId: 2,
+                        type: "list"
                     });
                 }
             } else {
@@ -161,7 +162,8 @@ const ZoneField = React.createClass({
         });
 
         return filter;
-    },
+    };
+
     render() {
         this.values = [];
         if (this.props.values && this.props.values.length > 0) {
@@ -181,7 +183,7 @@ const ZoneField = React.createClass({
             });
         }
 
-        let label = this.props.label ? (<label>{this.props.label}</label>) : (<span/>);
+        let label = this.props.label ? <label>{this.props.label}</label> : <span/>;
 
         let error = this.props.error;
         if (error) {
@@ -192,7 +194,7 @@ const ZoneField = React.createClass({
             <div className="zone-combo">
                 {label}
                 <ComboField
-                    key={new Date().getUTCMilliseconds()}
+                    key={new Date().getTime()}
                     busy={this.props.busy}
                     disabled={this.props.disabled}
                     fieldRowId={this.props.zoneId}
@@ -220,8 +222,9 @@ const ZoneField = React.createClass({
                     }}/>
             </div>
         );
-    },
-    changeZoneValue(id, fieldName, value) {
+    }
+
+    changeZoneValue = (id, fieldName, value) => {
         this.setState({open: false});
         let val;
         if (this.props.multivalue) {
@@ -237,7 +240,7 @@ const ZoneField = React.createClass({
         }
 
         this.props.onChange(this.props.zoneId, val);
-    }
-});
+    };
+}
 
 module.exports = ZoneField;

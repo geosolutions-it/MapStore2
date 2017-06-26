@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -8,22 +9,23 @@
 var React = require('react');
 var {FormattedDate} = require('react-intl');
 
-var DateFormat = React.createClass({
-    propTypes: {
-        value: React.PropTypes.object,
-        dateParams: React.PropTypes.object
-    },
-    contextTypes: {
-      intl: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            value: new Date()
-        };
-    },
+class DateFormat extends React.Component {
+    static propTypes = {
+        value: PropTypes.object,
+        dateParams: PropTypes.object
+    };
+
+    static contextTypes = {
+        intl: PropTypes.object
+    };
+
+    static defaultProps = {
+        value: new Date()
+    };
+
     render() {
         return this.context.intl ? <FormattedDate value={this.props.value} {...this.props.dateParams}/> : <span>{this.props.value && this.props.value.toString() || ''}</span>;
     }
-});
+}
 
 module.exports = DateFormat;

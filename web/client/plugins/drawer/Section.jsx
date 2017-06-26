@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -10,35 +11,34 @@ var React = require('react');
 var {Glyphicon} = require('react-bootstrap');
 const Modal = require('../../components/misc/Modal');
 
-const assign = require('object-assign');
+class Section extends React.Component {
+    static displayName = 'Section';
 
-var Section = React.createClass({
-    propTypes: {
-        key: React.PropTypes.string,
-        eventKey: React.PropTypes.string,
-        headerClassName: React.PropTypes.string,
-        open: React.PropTypes.bool,
-        onHeaderClick: React.PropTypes.func,
-        renderInModal: React.PropTypes.bool,
-        header: React.PropTypes.node
-    },
-    getDefaultProps() {
-        return {
-            headerClassName: 'panel-heading'
-        };
-    },
-    onHeaderClick() {
+    static propTypes = {
+        key: PropTypes.string,
+        eventKey: PropTypes.string,
+        headerClassName: PropTypes.string,
+        open: PropTypes.bool,
+        onHeaderClick: PropTypes.func,
+        renderInModal: PropTypes.bool,
+        header: PropTypes.node
+    };
+
+    static defaultProps = {
+        headerClassName: 'panel-heading'
+    };
+
+    onHeaderClick = () => {
         this.props.onHeaderClick(this.props.eventKey);
-    },
-    onModalClose() {
-        this.setProps(assign(this.props, {open: false}));
-    },
-    getHeight() {
+    };
+
+    getHeight = () => {
         if (this.props.open && this.refs.sectionContent) {
             return this.refs.sectionContent.scrollHeight + 10;
         }
         return "0";
-    },
+    };
+
     render() {
         var style = {
             maxHeight: this.getHeight(),
@@ -54,15 +54,15 @@ var Section = React.createClass({
                 {!this.props.renderInModal ?
                      <div ref="sectionContent" className="sectionContent" style={style} >{this.props.children}</div>
                          :
-                     (<Modal ref="modal" show={this.props.open}
+                     <Modal ref="modal" show={this.props.open}
                          onHide={this.onHeaderClick}>
                         <Modal.Header closeButton >
                          <Modal.Title>{this.props.header}</Modal.Title>
                      </Modal.Header>
-                     <Modal.Body>{this.props.children}</Modal.Body></Modal>)}
+                     <Modal.Body>{this.props.children}</Modal.Body></Modal>}
             </div>
         );
     }
+}
 
-});
 module.exports = Section;

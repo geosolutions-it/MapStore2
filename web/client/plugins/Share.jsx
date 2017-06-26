@@ -49,7 +49,7 @@ module.exports = {
             name: 'share',
             position: 1000,
             text: <Message msgId="share.title"/>,
-        icon: <Glyphicon glyph="share-alt"/>,
+            icon: <Glyphicon glyph="share-alt"/>,
             action: toggleControl.bind(null, 'share', null)
         }
     })

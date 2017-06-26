@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -11,19 +12,20 @@ const {Glyphicon, Tooltip, Button} = require('react-bootstrap');
 const OverlayTrigger = require('../misc/OverlayTrigger');
 const Message = require('../../components/I18N/Message');
 
-const Home = React.createClass({
-    propTypes: {
-        icon: React.PropTypes.node
-    },
-    contextTypes: {
-        router: React.PropTypes.object,
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            icon: <Glyphicon glyph="home"/>
-        };
-    },
+class Home extends React.Component {
+    static propTypes = {
+        icon: PropTypes.node
+    };
+
+    static contextTypes = {
+        router: PropTypes.object,
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        icon: <Glyphicon glyph="home"/>
+    };
+
     render() {
         let tooltip = <Tooltip id="toolbar-home-button">{<Message msgId="gohome"/>}</Tooltip>;
         return (
@@ -38,9 +40,11 @@ const Home = React.createClass({
                 >{this.props.icon}</Button>
         </OverlayTrigger>
         );
-    },
-    goHome() {
-        this.context.router.push("/");
     }
-});
+
+    goHome = () => {
+        this.context.router.history.push("/");
+    };
+}
+
 module.exports = Home;

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -23,11 +24,11 @@ require('../../../components/map/' + mapType + '/plugins/index');
 const PrintMap = (props) => {
     let features = props.features;
     return props.map ?
-        (
+
             <WMap {...props.map} {...props.actions}>
                 {props.layers.map((layer, index) =>
-                    <Layer key={layer.name} position={index} type={layer.type}
-                        options={assign({}, layer, {srs: props.map.projection})}/>
+                    (<Layer key={layer.name} position={index} type={layer.type}
+                        options={assign({}, layer, {srs: props.map.projection})}/>)
                 )}
                 <Layer type="vector" position={1} options={{name: "States"}}>
                 {
@@ -40,12 +41,12 @@ const PrintMap = (props) => {
                 }
                 </Layer>
             </WMap>
-        ) : <span/>;
+         : <span/>;
 };
 
 PrintMap.propTypes = {
-    mapType: React.PropTypes.string,
-    features: React.PropTypes.array
+    mapType: PropTypes.string,
+    features: PropTypes.array
 };
 
 PrintMap.defaultProps = {
@@ -55,7 +56,7 @@ PrintMap.defaultProps = {
 
 module.exports = connect((state) => {
     return {
-        map: (state.map && state.map) || (state.config && state.config.map),
+        map: state.map && state.map || state.config && state.config.map,
         layers: state.config && state.config.layers || [],
         features: []
     };

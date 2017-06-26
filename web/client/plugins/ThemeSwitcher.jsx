@@ -12,7 +12,7 @@ const assign = require('object-assign');
 const themes = require('../themes');
 
 const ThemeSwitcherPlugin = connect((s) => ({
-    selectedTheme: (s && s.theme && s.theme.selectedTheme) || themes[0],
+    selectedTheme: s && s.theme && s.theme.selectedTheme || themes[0],
     themes
 }), {
     onThemeSelected: selectTheme

@@ -11,14 +11,14 @@ const assign = require('object-assign');
 
 function my(state = {}, action) {
     switch (action.type) {
-        case SAVE_PLUGIN_CONFIG: {
-            return assign({}, state, {[action.plugin]: action.cfg});
-        }
-        case COMPILE_ERROR: {
-            return assign({}, state, {error: action.message});
-        }
-        default:
-            return state;
+    case SAVE_PLUGIN_CONFIG: {
+        return assign({}, state, {[action.plugin]: action.cfg});
+    }
+    case COMPILE_ERROR: {
+        return assign({}, state, {error: action.message});
+    }
+    default:
+        return state;
     }
 }
 

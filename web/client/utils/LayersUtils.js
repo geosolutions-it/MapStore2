@@ -35,17 +35,17 @@ const reorderLayers = (groups, allLayers) => {
 };
 const createGroup = (groupId, groupName, layers, addLayers) => {
     return assign({}, {
-            id: groupId,
-            title: (groupName || "").replace(/\${dot}/g, "."),
-            name: groupName,
-            nodes: addLayers ? getLayersId(groupId, layers) : [],
-            expanded: true
-        });
+        id: groupId,
+        title: (groupName || "").replace(/\${dot}/g, "."),
+        name: groupName,
+        nodes: addLayers ? getLayersId(groupId, layers) : [],
+        expanded: true
+    });
 };
 
 const getElevationDimension = (dimensions = []) => {
     return dimensions.reduce((previous, dim) => {
-        return (dim.name.toLowerCase() === 'elevation' || dim.name.toLowerCase() === 'depth') ?
+        return dim.name.toLowerCase() === 'elevation' || dim.name.toLowerCase() === 'depth' ?
             assign({
                 positive: dim.name.toLowerCase() === 'elevation'
             }, dim, {
@@ -54,17 +54,23 @@ const getElevationDimension = (dimensions = []) => {
     }, null);
 };
 
+const addBaseParams = (url, params) => {
+    const query = Object.keys(params).map((key) => key + '=' + encodeURIComponent(params[key])).join('&');
+    return url.indexOf('?') === -1 ? (url + '?' + query) : (url + '&' + query);
+};
+
+
 var LayersUtils = {
     getDimension: (dimensions, dimension) => {
         switch (dimension.toLowerCase()) {
-            case 'elevation':
-                return getElevationDimension(dimensions);
-            default:
-                return null;
+        case 'elevation':
+            return getElevationDimension(dimensions);
+        default:
+            return null;
         }
     },
     getLayerId: (layerObj, layers) => {
-        return layerObj && layerObj.id || (layerObj.name + "__" + layers.length);
+        return layerObj && layerObj.id || layerObj.name + "__" + layers.length;
     },
     getLayersByGroup: (configLayers) => {
         let i = 0;
@@ -78,11 +84,11 @@ var LayersUtils = {
             name.split('.').reduce((subGroups, groupName, idx, array)=> {
                 const groupId = name.split(".", idx + 1).join('.');
                 let group = getGroup(groupId, subGroups);
-                const addLayers = (idx === array.length - 1);
+                const addLayers = idx === array.length - 1;
                 if (!group) {
                     group = createGroup(groupId, groupName, mapLayers, addLayers);
                     subGroups.push(group);
-                }else if (addLayers) {
+                } else if (addLayers) {
                     group.nodes = group.nodes.concat(getLayersId(groupId, mapLayers));
                 }
                 return group.nodes;
@@ -204,6 +210,17 @@ var LayersUtils = {
             dimensions: layer.dimensions || [],
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
+    },
+    getCapabilitiesUrl: (layer) => {
+        let reqUrl = layer.url;
+        let urlParts = reqUrl.split("/geoserver/");
+        if (urlParts.length === 2) {
+            let layerParts = layer.name.split(":");
+            if (layerParts.length === 2) {
+                reqUrl = urlParts[0] + "/geoserver/" + layerParts [0] + "/" + layerParts[1] + "/" + urlParts[1];
+            }
+        }
+        return addBaseParams(reqUrl, layer.baseParams || {});
     }
 
 };

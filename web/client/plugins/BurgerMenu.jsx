@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -24,41 +25,42 @@ const Message = require('./locale/Message');
 
 require('./burgermenu/burgermenu.css');
 
-const BurgerMenu = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        dispatch: React.PropTypes.func,
-        items: React.PropTypes.array,
-        title: React.PropTypes.node,
-        onItemClick: React.PropTypes.func,
-        controls: React.PropTypes.object,
-        mapType: React.PropTypes.string,
-        panelStyle: React.PropTypes.object,
-        panelClassName: React.PropTypes.string
-    },
-    contextTypes: {
-        messages: React.PropTypes.object,
-        router: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            id: "mapstore-burger-menu",
-            items: [],
-            onItemClick: () => {},
-            title: <MenuItem header><Message msgId="options"/></MenuItem>,
-            controls: [],
-            mapType: "leaflet",
-            panelStyle: {
-                minWidth: "300px",
-                right: "52px",
-                zIndex: 100,
-                position: "absolute",
-                overflow: "auto"
-            },
-            panelClassName: "toolbar-panel"
-        };
-    },
-    getPanels() {
+class BurgerMenu extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        dispatch: PropTypes.func,
+        items: PropTypes.array,
+        title: PropTypes.node,
+        onItemClick: PropTypes.func,
+        controls: PropTypes.object,
+        mapType: PropTypes.string,
+        panelStyle: PropTypes.object,
+        panelClassName: PropTypes.string
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object,
+        router: PropTypes.object
+    };
+
+    static defaultProps = {
+        id: "mapstore-burger-menu",
+        items: [],
+        onItemClick: () => {},
+        title: <MenuItem header><Message msgId="options"/></MenuItem>,
+        controls: [],
+        mapType: "leaflet",
+        panelStyle: {
+            minWidth: "300px",
+            right: "52px",
+            zIndex: 100,
+            position: "absolute",
+            overflow: "auto"
+        },
+        panelClassName: "toolbar-panel"
+    };
+
+    getPanels = () => {
         return this.props.items.filter((item) => item.panel)
             .map((item) => assign({}, item, {panel: item.panel === true ? item.plugin : item.panel})).concat(
                 this.props.items.filter((item) => item.tools).reduce((previous, current) => {
@@ -71,10 +73,12 @@ const BurgerMenu = React.createClass({
                     );
                 }, [])
             );
-    },
-    getTools() {
+    };
+
+    getTools = () => {
         return [{element: <span key="burger-menu-title">{this.props.title}</span>}, ...this.props.items.sort((a, b) => a.position - b.position)];
-    },
+    };
+
     render() {
         return (
             <ToolsContainer id={this.props.id} className="square-button"
@@ -91,7 +95,7 @@ const BurgerMenu = React.createClass({
                 panelClassName={this.props.panelClassName}
             />);
     }
-});
+}
 
 module.exports = {
     BurgerMenuPlugin: assign(connect((state) => ({

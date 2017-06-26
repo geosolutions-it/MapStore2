@@ -12,11 +12,11 @@ Components are written using a "templating" language, called [**JSX**](https://r
 Component definition:
 
 ```javascript
-const MyComponent = React.createClass({
-   render: function() {
+class MyComponent extends React.Component {
+   render() {
        return <h1>{this.props.title}</h1>;
    }
-});
+}
 ```
 
 Component usage:
@@ -29,21 +29,21 @@ Components can define and use **properties**, like the title one used in the exa
 Components can also use **state** that can change. When the state changes, the component is updated (re-rendered) automatically.
 
 ```javascript
-const MyComponent = React.createClass({
-   getInitialState: function() {
+class MyComponent extends React.Component {
+   state = {
       return {
          title: 'CHANGE_ME'
       };
-   },
-   changeTitle: function() {
+   };
+   changeTitle = () => {
       this.setState({
          title: 'CHANGED'
       });
-   },
-   render: function() {
+   };
+   render() {
        return <h1 onClick={this.changeTitle}>{this.state.title}</h1>;
    }
-});
+}
 ```
 In this example, the initial state includes a title property whose value is `CHANGE_ME`.
 
@@ -55,17 +55,17 @@ The HTML page is automatically updated by ReactJS, each time the state changes (
 Components can re-define some [lifecycle methods](https://facebook.github.io/react/docs/component-specs.html), to execute actions in certain moments of the component life.
 
 ```javascript
-const MyComponent = React.createClass({
+class MyComponent extends React.Component {
    ...
-   componentWillMount: function() {
+   componentWillMount() {
        console.log('not mounted yet');
-   },
-   componentDidMount: function() {
+   }
+   componentDidMount() {
        const domElement = React.findDOMNode(this);
        console.log('DOM mounted');
-   },
+   }
    ...
-});
+}
 ```
 
 # Redux

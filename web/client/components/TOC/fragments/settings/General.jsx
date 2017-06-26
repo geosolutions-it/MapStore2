@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -17,19 +18,19 @@ require('react-selectize/themes/index.css');
 /**
  * General Settings form for layer
  */
-const General = React.createClass({
-    propTypes: {
-        updateSettings: React.PropTypes.func,
-        element: React.PropTypes.object,
-        groups: React.PropTypes.array
-    },
-    getDefaultProps() {
-        return {
-            element: {},
-            updateSettings: () => {}
-        };
-    },
-    getGroups(groups, idx = 0) {
+class General extends React.Component {
+    static propTypes = {
+        updateSettings: PropTypes.func,
+        element: PropTypes.object,
+        groups: PropTypes.array
+    };
+
+    static defaultProps = {
+        element: {},
+        updateSettings: () => {}
+    };
+
+    getGroups = (groups, idx = 0) => {
         return groups.filter((group) => group.nodes).reduce((acc, g) => {
             acc.push({label: g.id.replace(/\./g, '/').replace(/\${dot}/g, '.'), value: g.id});
             if (g.nodes.length > 0) {
@@ -37,10 +38,12 @@ const General = React.createClass({
             }
             return acc;
         }, []);
-    },
-    getLabelName(groupLable = "") {
+    };
+
+    getLabelName = (groupLable = "") => {
         return groupLable.replace(/\./g, '/').replace(/\${dot}/g, '.');
-    },
+    };
+
     render() {
         return (<form ref="settings">
                 <FormGroup>
@@ -101,11 +104,12 @@ const General = React.createClass({
                         this.onChange(item ? item.value : null);
                     }}/>
             </form>);
-    },
-    updateEntry(key, event) {
+    }
+
+    updateEntry = (key, event) => {
         let value = event.target.value;
         this.props.updateSettings({[key]: value});
-    }
-});
+    };
+}
 
 module.exports = General;

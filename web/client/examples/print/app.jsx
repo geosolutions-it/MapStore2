@@ -43,14 +43,14 @@ const startApp = () => {
 
     // we spread the store to the all application
     // wrapping it with a Provider component
-    const PrintApp = React.createClass({
-     render() {
-         return (
-         <Provider store={store}>
-             <Print/>
-         </Provider>);
-     }
-    });
+    class PrintApp extends React.Component {
+        render() {
+            return (
+            <Provider store={store}>
+                <Print/>
+            </Provider>);
+        }
+    }
 
     let locale = LocaleUtils.getUserLocale();
     store.dispatch(loadLocale('../../translations', locale));

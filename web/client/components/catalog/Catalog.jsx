@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -15,94 +16,99 @@ const Spinner = require('react-spinkit');
 
 const RecordGrid = require('./RecordGrid');
 
-const Catalog = React.createClass({
-    propTypes: {
-        active: React.PropTypes.bool,
-        formats: React.PropTypes.array,
-        format: React.PropTypes.string,
-        searchOnStartup: React.PropTypes.bool,
-        onSearch: React.PropTypes.func,
-        onReset: React.PropTypes.func,
-        onChangeFormat: React.PropTypes.func,
-        onLayerAdd: React.PropTypes.func,
-        onZoomToExtent: React.PropTypes.func,
-        zoomToLayer: React.PropTypes.bool,
-        onError: React.PropTypes.func,
-        pageSize: React.PropTypes.number,
-        displayURL: React.PropTypes.bool,
-        initialCatalogURL: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
-        result: React.PropTypes.object,
-        loadingError: React.PropTypes.object,
-        layerError: React.PropTypes.string,
-        searchOptions: React.PropTypes.object,
-        chooseCatalogUrl: React.PropTypes.bool,
-        showGetCapLinks: React.PropTypes.bool,
-        addAuthentication: React.PropTypes.bool,
-        records: React.PropTypes.array,
-        gridOptions: React.PropTypes.object,
-        includeSearchButton: React.PropTypes.bool,
-        includeResetButton: React.PropTypes.bool,
-        wrapOptions: React.PropTypes.bool,
-        buttonStyle: React.PropTypes.object,
-        buttonClassName: React.PropTypes.string
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            pageSize: 6,
-            onSearch: () => {},
-            onReset: () => {},
-            onChangeFormat: () => {},
-            onLayerAdd: () => {},
-            onZoomToExtent: () => {},
-            zoomToLayer: true,
-            onError: () => {},
-            chooseCatalogUrl: true,
-            records: [],
-            formats: [{name: 'csw', label: 'CSW'}],
-            format: 'csw',
-            includeSearchButton: true,
-            includeResetButton: false,
-            wrapOptions: false,
-            buttonStyle: {
-                marginBottom: "10px"
-            },
-            buttonClassName: "search-button"
-        };
-    },
-    getInitialState() {
-        return {
-            loading: false,
-            catalogURL: null
-        };
-    },
+class Catalog extends React.Component {
+    static propTypes = {
+        active: PropTypes.bool,
+        formats: PropTypes.array,
+        format: PropTypes.string,
+        searchOnStartup: PropTypes.bool,
+        onSearch: PropTypes.func,
+        onReset: PropTypes.func,
+        onChangeFormat: PropTypes.func,
+        onLayerAdd: PropTypes.func,
+        onZoomToExtent: PropTypes.func,
+        zoomToLayer: PropTypes.bool,
+        onError: PropTypes.func,
+        pageSize: PropTypes.number,
+        displayURL: PropTypes.bool,
+        initialCatalogURL: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+        result: PropTypes.object,
+        loadingError: PropTypes.object,
+        layerError: PropTypes.string,
+        searchOptions: PropTypes.object,
+        chooseCatalogUrl: PropTypes.bool,
+        showGetCapLinks: PropTypes.bool,
+        addAuthentication: PropTypes.bool,
+        records: PropTypes.array,
+        gridOptions: PropTypes.object,
+        includeSearchButton: PropTypes.bool,
+        includeResetButton: PropTypes.bool,
+        wrapOptions: PropTypes.bool,
+        buttonStyle: PropTypes.object,
+        buttonClassName: PropTypes.string
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        pageSize: 6,
+        onSearch: () => {},
+        onReset: () => {},
+        onChangeFormat: () => {},
+        onLayerAdd: () => {},
+        onZoomToExtent: () => {},
+        zoomToLayer: true,
+        onError: () => {},
+        chooseCatalogUrl: true,
+        records: [],
+        formats: [{name: 'csw', label: 'CSW'}],
+        format: 'csw',
+        includeSearchButton: true,
+        includeResetButton: false,
+        wrapOptions: false,
+        buttonStyle: {
+            marginBottom: "10px"
+        },
+        buttonClassName: "search-button"
+    };
+
+    state = {
+        loading: false,
+        catalogURL: null
+    };
+
     componentDidMount() {
         if (this.props.searchOnStartup) {
             this.props.onSearch(this.props.format, this.getCatalogUrl(), 1, this.props.pageSize, "");
         }
-    },
+    }
+
     componentWillReceiveProps(nextProps) {
         if (nextProps !== this.props) {
             this.setState({
                 loading: false
             });
         }
-    },
-    onSearchTextChange(event) {
+    }
+
+    onSearchTextChange = (event) => {
         this.setState({searchText: event.target.value});
-    },
-    onKeyDown(event) {
+    };
+
+    onKeyDown = (event) => {
         if (event.keyCode === 13) {
             this.search();
         }
-    },
-    getCatalogUrl() {
-        return this.state.catalogURL || (this.props.searchOptions && this.props.searchOptions.url) ||
+    };
+
+    getCatalogUrl = () => {
+        return this.state.catalogURL || this.props.searchOptions && this.props.searchOptions.url ||
          (this.props.initialCatalogURL && this.props.initialCatalogURL[this.props.format] || this.props.initialCatalogURL);
-    },
-    renderResult() {
+    };
+
+    renderResult = () => {
         if (this.props.result) {
             if (this.props.result.numberOfRecordsMatched === 0) {
                 return (<div>
@@ -113,16 +119,19 @@ const Catalog = React.createClass({
         } else if (this.props.loadingError) {
             return this.renderError();
         }
-    },
-    renderError(error) {
+    };
+
+    renderError = (error) => {
         return (<Alert bsStyle="danger">
             <Message msgId={error || 'catalog.error'} />
           </Alert>);
-    },
-    renderLoading() {
-        return this.state.loading ? (<Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/>) : null;
-    },
-    renderPagination() {
+    };
+
+    renderLoading = () => {
+        return this.state.loading ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : null;
+    };
+
+    renderPagination = () => {
         let total = this.props.result.numberOfRecordsMatched;
         let returned = this.props.result.numberOfRecordsReturned;
         let start = this.props.searchOptions.startPosition;
@@ -142,8 +151,9 @@ const Catalog = React.createClass({
                 {this.renderLoading()}
             </div>
           </div>);
-    },
-    renderRecords() {
+    };
+
+    renderRecords = () => {
         return (<div>
                 <RecordGrid {...this.props.gridOptions} key="records"
                     records={this.props.records}
@@ -157,8 +167,9 @@ const Catalog = React.createClass({
                 />
                 {this.renderPagination()}
         </div>);
-    },
-    renderURLInput() {
+    };
+
+    renderURLInput = () => {
         if (!this.getCatalogUrl() || this.props.chooseCatalogUrl) {
             return (<FormGroup><FormControl
                 ref="catalogURL"
@@ -167,8 +178,9 @@ const Catalog = React.createClass({
                 onChange={this.setCatalogUrl}
                 onKeyDown={this.onKeyDown}/></FormGroup>);
         }
-    },
-    renderButtons() {
+    };
+
+    renderButtons = () => {
         const buttons = [];
         if (this.props.includeSearchButton) {
             buttons.push(<Button bsStyle="primary" style={this.props.buttonStyle} onClick={this.search}
@@ -182,16 +194,19 @@ const Catalog = React.createClass({
                     </Button>);
         }
         return buttons;
-    },
-    renderFormatChoice() {
+    };
+
+    renderFormatChoice = () => {
         if (this.props.formats.length > 1) {
             return <FormGroup><FormControl onChange={(e) => this.props.onChangeFormat(e.target.value)} value={this.props.format} componentClass="select">{this.renderFormats()}</FormControl></FormGroup>;
         }
         return null;
-    },
-    renderFormats() {
+    };
+
+    renderFormats = () => {
         return this.props.formats.map((format) => <option value={format.name} key={format.name}>{format.label}</option>);
-    },
+    };
+
     render() {
         const textSearch = (<FormGroup><FormControl
             ref="searchText"
@@ -208,9 +223,9 @@ const Catalog = React.createClass({
                      {this.renderFormatChoice()}
                      {this.renderURLInput()}
 
-                     {this.props.wrapOptions ? (<Panel collapsible defaultExpanded={false} header={LocaleUtils.getMessageById(this.context.messages, "catalog.options")}>
+                     {this.props.wrapOptions ? <Panel collapsible defaultExpanded={false} header={LocaleUtils.getMessageById(this.context.messages, "catalog.options")}>
                          {textSearch}
-                     </Panel>) : textSearch}
+                     </Panel> : textSearch}
                      {this.renderButtons()}
                  </div>
                  <div>
@@ -219,14 +234,16 @@ const Catalog = React.createClass({
                  </div>
              </div>
         );
-    },
-    search() {
+    }
+
+    search = () => {
         this.props.onSearch(this.props.format, this.getCatalogUrl(), 1, this.props.pageSize, this.state && this.state.searchText);
         this.setState({
             loading: true
         });
-    },
-    reset() {
+    };
+
+    reset = () => {
         if (this.refs.catalogURL) {
             this.refs.catalogURL.refs.input.value = '';
         }
@@ -234,19 +251,21 @@ const Catalog = React.createClass({
             this.refs.searchText.refs.input.value = '';
         }
         this.props.onReset();
-    },
-    setCatalogUrl(e) {
+    };
+
+    setCatalogUrl = (e) => {
         this.setState({catalogURL: e.target.value});
-    },
-    handlePage(eventKey) {
+    };
+
+    handlePage = (eventKey) => {
         if (eventKey) {
-            let start = ((eventKey - 1) * this.props.pageSize) + 1;
+            let start = (eventKey - 1) * this.props.pageSize + 1;
             this.props.onSearch(this.props.format, this.getCatalogUrl(), start, this.props.pageSize, this.props.searchOptions.text);
             this.setState({
                 loading: true
             });
         }
-    }
-});
+    };
+}
 
 module.exports = Catalog;

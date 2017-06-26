@@ -13,8 +13,8 @@ const ruleselctor = (state) => state.vectorstyler && state.vectorstyler.rule && 
 
 const symbolselector = createSelector([ruleselctor],
      (rule) => ({
-    shapeStyle: rule && rule.symbol || {}
-}));
+         shapeStyle: rule && rule.symbol || {}
+     }));
 
 module.exports = {
     ruleselctor,

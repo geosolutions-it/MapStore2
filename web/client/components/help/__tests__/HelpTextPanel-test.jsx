@@ -42,7 +42,7 @@ describe('Test for HelpTextPanel', () => {
         const helpPanel = ReactDOM.render(<HelpTextPanel
                         asPanel
                         id="fooid"
-                        isVisible={true}
+                        isVisible
                         title="footitle"
                         helpText="foohelptext"
                         />, document.getElementById("container"));

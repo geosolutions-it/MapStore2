@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -12,27 +13,27 @@ var ProgressBar = BootstrapReact.ProgressBar;
 var ReactIntl = require('react-intl');
 var FormattedNumber = ReactIntl.FormattedNumber;
 
-var SearchTarget = React.createClass({
-    propTypes: {
-        position: React.PropTypes.shape({
-            lng: React.PropTypes.number,
-            lat: React.PropTypes.number
+class SearchTarget extends React.Component {
+    static propTypes = {
+        position: PropTypes.shape({
+            lng: PropTypes.number,
+            lat: PropTypes.number
         }),
-        geosolutions: React.PropTypes.shape({
-            lng: React.PropTypes.number,
-            lat: React.PropTypes.number
+        geosolutions: PropTypes.shape({
+            lng: PropTypes.number,
+            lat: PropTypes.number
         })
-    },
-    getDefaultProps() {
-        return {
-            position: null,
-            geosolutions: {
-                lng: 10.298046,
-                lat: 43.883948
-            }
-        };
-    },
-    getDistanceToGaol(mPos) {
+    };
+
+    static defaultProps = {
+        position: null,
+        geosolutions: {
+            lng: 10.298046,
+            lat: 43.883948
+        }
+    };
+
+    getDistanceToGaol = (mPos) => {
         // code from http://www.movable-type.co.uk/scripts/latlong.html
         var R = 6371; // kmetres
         var φ1 = this.props.geosolutions.lat * Math.PI / 180;
@@ -43,7 +44,8 @@ var SearchTarget = React.createClass({
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         var d = R * c;
         return d;
-    },
+    };
+
     render() {
         let d = this.getDistanceToGaol(this.props.position);
         let integerFormat = {style: "decimal", minimumFractionDigits: 3, maximumFractionDigits: 3};
@@ -63,6 +65,6 @@ var SearchTarget = React.createClass({
                 </Label>
                 </h5>);
     }
-});
+}
 
 module.exports = SearchTarget;

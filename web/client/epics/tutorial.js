@@ -13,7 +13,7 @@ const {TOGGLE_3D} = require('../actions/globeswitcher');
 const preset = require('../plugins/tutorial/preset');
 const defaultRegex = /\/(viewer)\/(\w+)\/(\d+)/;
 const findMapType = path => path.match(defaultRegex) && path.replace(defaultRegex, "$2");
-import { UPDATE_LOCATION } from 'react-router-redux';
+const { LOCATION_CHANGE } = require('react-router-redux');
 
 /**
  * Closes the tutorial if 3D button has been toggled
@@ -30,12 +30,12 @@ const closeTutorialEpic = (action$) =>
 /**
  * Setup new steps based on the current maptype
  * @memberof epics.tutorial
- * @param {external:Observable} action$ manages `UPDATE_LOCATION`
+ * @param {external:Observable} action$ manages `LOCATION_CHANGE`
  * @return {external:Observable}
  */
 
 const switchTutorialEpic = (action$, store) =>
-    action$.ofType(UPDATE_LOCATION)
+    action$.ofType(LOCATION_CHANGE)
         .audit(() => action$.ofType(CHANGE_MAP_VIEW))
         .filter(action =>
             action.payload

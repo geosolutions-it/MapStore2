@@ -29,11 +29,11 @@ function styleSaved(name, style) {
 }
 function styleSaveError(layer, style, error) {
     return {
-       type: STYLE_SAVE_ERROR,
-       layer,
-       style,
-       error
-   };
+        type: STYLE_SAVE_ERROR,
+        layer,
+        style,
+        error
+    };
 }
 function reset(layer) {
     return {

@@ -66,8 +66,8 @@ describe('Test the constrols reducer', () => {
                 c2: { enabled: false},
                 c3: { idonthaveenabledfield: "whatever"}
             }, {
-            type: RESET_CONTROLS
-        });
+                type: RESET_CONTROLS
+            });
         expect(state.c1).toExist();
         expect(state.c2).toExist();
         expect(state.c3).toExist();

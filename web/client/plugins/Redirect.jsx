@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -10,28 +11,33 @@ const React = require('react');
 const assign = require('object-assign');
 const {connect} = require('react-redux');
 
-const RedirectComponent = React.createClass({
-    propTypes: {
-        userDetails: React.PropTypes.object
-    },
-    contextTypes: {
-        router: React.PropTypes.object
-    },
+class RedirectComponent extends React.Component {
+    static propTypes = {
+        userDetails: PropTypes.object
+    };
+
+    static contextTypes = {
+        router: PropTypes.object
+    };
+
     componentDidMount() {
         this.redirect(this.props);
-    },
+    }
+
     componentWillReceiveProps(nextProps) {
         this.redirect(nextProps);
-    },
+    }
+
     render() {
         return null;
-    },
-    redirect(props) {
-        if (!props.userDetails || !props.userDetails.user) {
-            this.context.router.push("/");
-        }
     }
-});
+
+    redirect = (props) => {
+        if (!props.userDetails || !props.userDetails.user) {
+            this.context.router.history.push("/");
+        }
+    };
+}
 
 const Redirect = connect((state) => ({
     userDetails: state.security || null

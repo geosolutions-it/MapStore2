@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -10,31 +11,32 @@ var {ButtonGroup, Button, Glyphicon, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 var ImageButton = require('../../buttons/ImageButton');
 
-var HistoryBar = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        undoBtnProps: React.PropTypes.object,
-        redoBtnProps: React.PropTypes.object,
-        btnType: React.PropTypes.oneOf(['normal', 'image'])
-    },
-    getDefaultProps() {
-        return {
-            id: "mapstore-historybar",
-            undoBtnProps: {onClick: function() {}},
-            redoBtnProps: {
-                    onClick: function() {},
-                    label: ""
-            },
-            btnType: 'normal'
-        };
-    },
+class HistoryBar extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        undoBtnProps: PropTypes.object,
+        redoBtnProps: PropTypes.object,
+        btnType: PropTypes.oneOf(['normal', 'image'])
+    };
+
+    static defaultProps = {
+        id: "mapstore-historybar",
+        undoBtnProps: {onClick: function() {}},
+        redoBtnProps: {
+            onClick: function() {},
+            label: ""
+        },
+        btnType: 'normal'
+    };
+
     render() {
         if (this.props.btnType === 'normal') {
             return this.getNormalButtons();
         }
         return this.getImageButtons();
-    },
-    getNormalButtons() {
+    }
+
+    getNormalButtons = () => {
         let undotooltip = <Tooltip id="undo-btn">{this.props.undoBtnProps.label}</Tooltip>;
         let redotooltip = <Tooltip id="redo-btn">{this.props.redoBtnProps.label}</Tooltip>;
         return (
@@ -59,15 +61,16 @@ var HistoryBar = React.createClass({
                     </OverlayTrigger>
                 </ButtonGroup>
         );
-    },
-    getImageButtons() {
+    };
+
+    getImageButtons = () => {
         return (
             <span id={this.props.id} style={{margin: 0, pading: 0}}>
                 <ImageButton {...this.props.undoBtnProps}/>
                 <ImageButton {...this.props.redoBtnProps}/>
             </span>
         );
-    }
-});
+    };
+}
 
 module.exports = HistoryBar;

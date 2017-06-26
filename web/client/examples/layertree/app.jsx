@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -67,7 +68,7 @@ const getGroup = (group, allLayers) => {
                     name: groupName + '.' + subGroupName,
                     title: subGroupName,
                     expanded: true,
-                    nodes: allLayers.filter((layer) => layer.group === (groupName + '.' + subGroupName)).map((layer) => layer.id)
+                    nodes: allLayers.filter((layer) => layer.group === groupName + '.' + subGroupName).map((layer) => layer.id)
                 };
             })
         ),
@@ -93,15 +94,15 @@ let groupsTree = getLayersByGroup(mapLayers);
 // Here we create the store, we use Debug utils but is not necessary
 // Insteed we need to pass here map configuration
 let store = DebugUtils.createDebugStore(combineReducers({browser, mapConfig, layers, layertree}),
-        {mapConfig: {
-            zoom: 14,
-            center: {
-                y: 43.776652415109766,
-                x: 11.256354990831623,
-                crs: "EPSG:4326"
-            },
-            projection: "EPSG:900913"
+    {mapConfig: {
+        zoom: 14,
+        center: {
+            y: 43.776652415109766,
+            x: 11.256354990831623,
+            crs: "EPSG:4326"
         },
+        projection: "EPSG:900913"
+    },
         layers: {
             flat: mapLayers,
             groups: groupsTree
@@ -114,40 +115,41 @@ require('../../components/map/leaflet/plugins/BingLayer');
 require('../../components/map/leaflet/plugins/GoogleLayer');
 require('../../components/map/leaflet/plugins/VectorLayer');
 
-    /**
-    * Detect Browser's properties and save in app state.
-    **/
+/**
+* Detect Browser's properties and save in app state.
+**/
 store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
 
-let MyMap = React.createClass({
-    propTypes: {
+class MyMap extends React.Component {
+    static propTypes = {
         mapConfig: ConfigUtils.PropTypes.config,
-        layers: React.PropTypes.object,
-        groups: React.PropTypes.array,
-        changeMapView: React.PropTypes.func,
-        changeZoomLevel: React.PropTypes.func,
-        toggleNode: React.PropTypes.func,
-        showSettings: React.PropTypes.func,
-        hideSettings: React.PropTypes.func,
-        updateOpacity: React.PropTypes.func,
-        updateNode: React.PropTypes.func,
-        removeNode: React.PropTypes.func,
-        sortNode: React.PropTypes.func,
-        changeLayerProperties: React.PropTypes.func,
-        changeGroupProperties: React.PropTypes.func,
-        browser: React.PropTypes.object,
-        controls: React.PropTypes.object,
-        zoom: React.PropTypes.number
-    },
-    getDefaultProps() {
-        return {};
-    },
-    renderLayers() {
+        layers: PropTypes.object,
+        groups: PropTypes.array,
+        changeMapView: PropTypes.func,
+        changeZoomLevel: PropTypes.func,
+        toggleNode: PropTypes.func,
+        showSettings: PropTypes.func,
+        hideSettings: PropTypes.func,
+        updateOpacity: PropTypes.func,
+        updateNode: PropTypes.func,
+        removeNode: PropTypes.func,
+        sortNode: PropTypes.func,
+        changeLayerProperties: PropTypes.func,
+        changeGroupProperties: PropTypes.func,
+        browser: PropTypes.object,
+        controls: PropTypes.object,
+        zoom: PropTypes.number
+    };
+
+    static defaultProps = {};
+
+    renderLayers = () => {
         return this.props.layers.flat.map(function(layer, index) {
             var options = assign({}, layer, {srs: "EPSG:3857"});
             return <LLayer type={layer.type} position={index} key={layer.id + ":::" + index} options={options} />;
         });
-    },
+    };
+
     render() {
         return (<div id="viewer" >
                 <LMap key="map"
@@ -199,13 +201,15 @@ let MyMap = React.createClass({
                         }}>Save changes</Button>
                     </Modal.Footer>
                 </Modal.Dialog>
-          </div>
-           );
-    },
-    manageNewMapView(center, zoom, bbox, size, mapStateSource, projection) {
-        this.props.changeMapView(center, zoom, bbox, size, mapStateSource, projection);
+          </div>)
+           ;
     }
-});
+
+    manageNewMapView = (center, zoom, bbox, size, mapStateSource, projection) => {
+        this.props.changeMapView(center, zoom, bbox, size, mapStateSource, projection);
+    };
+}
+
 let App = connect((state) => {
     return {
         mapConfig: state.mapConfig,

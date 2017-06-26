@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -17,57 +18,62 @@ const LocaleUtils = require('../../utils/LocaleUtils');
 
 require("./style/mapcard.css");
 
-const MapCard = React.createClass({
-    propTypes: {
+class MapCard extends React.Component {
+    static propTypes = {
         // props
-        style: React.PropTypes.object,
-        map: React.PropTypes.object,
-        mapType: React.PropTypes.string,
+        style: PropTypes.object,
+        map: PropTypes.object,
+        mapType: PropTypes.string,
         // CALLBACKS
-        viewerUrl: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
-        onEdit: React.PropTypes.func,
-        onMapDelete: React.PropTypes.func
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            style: {
-                backgroundImage: 'url(' + thumbUrl + ')',
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "repeat-x"
-            },
-            // CALLBACKS
-            onMapDelete: ()=> {},
-            onEdit: ()=> {}
-        };
-    },
-    onEdit: function(map) {
+        viewerUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+        onEdit: PropTypes.func,
+        onMapDelete: PropTypes.func
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        style: {
+            backgroundImage: 'url(' + thumbUrl + ')',
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "repeat-x"
+        },
+        // CALLBACKS
+        onMapDelete: ()=> {},
+        onEdit: ()=> {}
+    };
+
+    onEdit = (map) => {
         this.props.onEdit(map);
-    },
-    onConfirmDelete() {
+    };
+
+    onConfirmDelete = () => {
         this.props.onMapDelete(this.props.map.id);
         this.close();
-    },
-    onClick(evt) {
+    };
+
+    onClick = (evt) => {
         // Users can select Title and Description without triggering the click
         var selection = window.getSelection();
         if (!selection.toString()) {
             this.stopPropagate(evt);
             this.props.viewerUrl(this.props.map);
         }
-    },
-    getCardStyle() {
+    };
+
+    getCardStyle = () => {
         if (this.props.map.thumbnail) {
             return assign({}, this.props.style, {
                 backgroundImage: 'url(' + (this.props.map.thumbnail === null || this.props.map.thumbnail === "NODATA" ? thumbUrl : decodeURIComponent(this.props.map.thumbnail)) + ')'
             });
         }
         return this.props.style;
-    },
-    render: function() {
+    };
+
+    render() {
         var availableAction = [{
             onClick: (evt) => {this.stopPropagate(evt); this.props.viewerUrl(this.props.map); },
             glyph: "chevron-right",
@@ -76,18 +82,18 @@ const MapCard = React.createClass({
 
         if (this.props.map.canEdit === true) {
             availableAction.push({
-                 onClick: (evt) => {this.stopPropagate(evt); this.onEdit(this.props.map); },
-                 glyph: "wrench",
-                 disabled: this.props.map.updating,
-                 loading: this.props.map.updating,
-                 tooltip: LocaleUtils.getMessageById(this.context.messages, "manager.editMapMetadata")
-         }, {
-                 onClick: (evt) => {this.stopPropagate(evt); this.displayDeleteDialog(); },
-                 glyph: "remove-circle",
-                 disabled: this.props.map.deleting,
-                 loading: this.props.map.deleting,
-                 tooltip: LocaleUtils.getMessageById(this.context.messages, "manager.deleteMap")
-         });
+                onClick: (evt) => {this.stopPropagate(evt); this.onEdit(this.props.map); },
+                glyph: "wrench",
+                disabled: this.props.map.updating,
+                loading: this.props.map.updating,
+                tooltip: LocaleUtils.getMessageById(this.context.messages, "manager.editMapMetadata")
+            }, {
+                onClick: (evt) => {this.stopPropagate(evt); this.displayDeleteDialog(); },
+                glyph: "remove-circle",
+                disabled: this.props.map.deleting,
+                loading: this.props.map.deleting,
+                tooltip: LocaleUtils.getMessageById(this.context.messages, "manager.deleteMap")
+            });
         }
         return (
            <GridCard className="map-thumb" style={this.getCardStyle()} header={this.props.map.title || this.props.map.name}
@@ -97,8 +103,9 @@ const MapCard = React.createClass({
                <ConfirmModal ref="deleteMapModal" show={this.state ? this.state.displayDeleteDialog : false} onHide={this.close} onClose={this.close} onConfirm={this.onConfirmDelete} titleText={<Message msgId="manager.deleteMap" />} confirmText={<Message msgId="manager.deleteMap" />} cancelText={<Message msgId="cancel" />} body={<Message msgId="manager.deleteMapMessage" />} />
            </GridCard>
         );
-    },
-    stopPropagate(event) {
+    }
+
+    stopPropagate = (event) => {
         // prevent click on parent container
         const e = event || window.event || {};
         if (e.stopPropagation) {
@@ -106,18 +113,20 @@ const MapCard = React.createClass({
         } else {
             e.cancelBubble = true;
         }
-    },
-    close() {
+    };
+
+    close = () => {
         // TODO Launch an action in order to change the state
         this.setState({
             displayDeleteDialog: false
         });
-    },
-    displayDeleteDialog() {
+    };
+
+    displayDeleteDialog = () => {
         this.setState({
             displayDeleteDialog: true
         });
-    }
-});
+    };
+}
 
 module.exports = MapCard;

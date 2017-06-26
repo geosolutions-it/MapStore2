@@ -16,14 +16,14 @@ const emptyResultsState = {
 
 function featuregrid(state = emptyResultsState, action) {
     switch (action.type) {
-        case SELECT_FEATURES:
-            return assign({}, state, {select: action.features});
-        case SET_FEATURES:
-            return assign({}, state, {features: action.features});
-        case DOCK_SIZE_FEATURES:
-            return assign({}, state, {dockSize: action.dockSize});
-        default:
-            return state;
+    case SELECT_FEATURES:
+        return assign({}, state, {select: action.features});
+    case SET_FEATURES:
+        return assign({}, state, {features: action.features});
+    case DOCK_SIZE_FEATURES:
+        return assign({}, state, {dockSize: action.dockSize});
+    default:
+        return state;
     }
 }
 

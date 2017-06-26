@@ -114,8 +114,8 @@ const createLayer = (options) => {
 };
 const updateLayer = (layer, newOptions, oldOptions) => {
     const requiresUpdate = (el) => WMSUtils.PARAM_OPTIONS.indexOf(el.toLowerCase()) >= 0;
-    const newParams = (newOptions && newOptions.params);
-    const oldParams = (oldOptions && oldOptions.params);
+    const newParams = newOptions && newOptions.params;
+    const oldParams = oldOptions && oldOptions.params;
     const allParams = {...newParams, ...oldParams };
     let newParameters = Object.keys({...newOptions, ...oldOptions, ...allParams})
         .filter(requiresUpdate)

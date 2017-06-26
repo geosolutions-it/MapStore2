@@ -10,7 +10,7 @@ const GO_TO_PAGE = 'GO_TO_PAGE';
 
 function goToPage(page, router) {
     if (router) {
-        router.push(page);
+        router.history.push(page);
     }
     return {
         type: GO_TO_PAGE,

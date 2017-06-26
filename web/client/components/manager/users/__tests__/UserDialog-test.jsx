@@ -108,7 +108,7 @@ describe("Test UserDialog Component", () => {
     });
     it('Test without password fields', () => {
         let comp = ReactDOM.render(
-            <UserDialog user={enabledUser} hidePasswordFields={true}/>, document.getElementById("container"));
+            <UserDialog user={enabledUser} hidePasswordFields/>, document.getElementById("container"));
         expect(comp).toExist();
         expect(document.getElementsByName("newPassword").length).toBe(0);
         expect(document.getElementsByName("confirmPassword").length).toBe(0);

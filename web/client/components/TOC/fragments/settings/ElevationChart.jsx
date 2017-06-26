@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -10,36 +11,36 @@ const React = require('react');
 const {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip} = require('recharts');
 const ElevationChartTooltip = require('./ElevationChartTooltip');
 
-module.exports = React.createClass({
-    propTypes: {
-        elevations: React.PropTypes.object,
-        chartStyle: React.PropTypes.object,
-        animated: React.PropTypes.bool
-    },
-    getDefaultProps() {
-        return {
-            elevations: {},
-            chartStyle: {
-                margin: {
-                    top: 5,
-                    right: 20,
-                    left: 18,
-                    bottom: 45
-                },
-                width: 600,
-                height: 200
+module.exports = class extends React.Component {
+    static propTypes = {
+        elevations: PropTypes.object,
+        chartStyle: PropTypes.object,
+        animated: PropTypes.bool
+    };
+
+    static defaultProps = {
+        elevations: {},
+        chartStyle: {
+            margin: {
+                top: 5,
+                right: 20,
+                left: 18,
+                bottom: 45
             },
-            animated: false
-        };
-    },
-    renderLineChart() {
+            width: 600,
+            height: 200
+        },
+        animated: false
+    };
+
+    renderLineChart = () => {
         return (
             <LineChart margin={this.props.chartStyle.margin} width={this.props.chartStyle.width} height={this.props.chartStyle.height} data={this.formatData(this.props.elevations.values)}>
                 <XAxis
-                    hide={true}
+                    hide
                     dataKey="name"/>
                 <YAxis
-                    hide={true}/>
+                    hide/>
                 <Tooltip content={<ElevationChartTooltip/>}/>
                 <CartesianGrid
                     strokeDasharray="3 3"
@@ -52,15 +53,17 @@ module.exports = React.createClass({
                     activeDot={{r: 8}}/>
             </LineChart>
         );
-    },
+    };
+
     render() {
         return (
             <div>
                 {this.renderLineChart()}
             </div>
         );
-    },
-    formatData(values) {
+    }
+
+    formatData = (values) => {
         let data = [];
         values.map(function(o) {
             data.push(
@@ -71,5 +74,5 @@ module.exports = React.createClass({
             );
         }, this);
         return data;
-    }
-});
+    };
+};

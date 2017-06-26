@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -15,39 +16,40 @@ const MousePositionLabelYX = require('./MousePositionLabelYX');
 
 require('./mousePosition.css');
 
-let MousePosition = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        mousePosition: React.PropTypes.object,
-        crs: React.PropTypes.string,
-        enabled: React.PropTypes.bool,
-        degreesTemplate: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
-        projectedTemplate: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
-        style: React.PropTypes.object,
-        copyToClipboardEnabled: React.PropTypes.bool,
-        glyphicon: React.PropTypes.string,
-        btnSize: React.PropTypes.oneOf(["large", "medium", "small", "xsmall"]),
-        onCopy: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            id: "mapstore-mouseposition",
-            mousePosition: null,
-            crs: "EPSG:4326",
-            enabled: true,
-            degreesTemplate: MousePositionLabelDMS,
-            projectedTemplate: MousePositionLabelYX,
-            style: {},
-            copyToClipboardEnabled: false,
-            glyphicon: "paste",
-            btnSize: "xsmall",
-            onCopy: () => {}
-        };
-    },
-    getUnits(crs) {
+class MousePosition extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        mousePosition: PropTypes.object,
+        crs: PropTypes.string,
+        enabled: PropTypes.bool,
+        degreesTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+        projectedTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+        style: PropTypes.object,
+        copyToClipboardEnabled: PropTypes.bool,
+        glyphicon: PropTypes.string,
+        btnSize: PropTypes.oneOf(["large", "medium", "small", "xsmall"]),
+        onCopy: PropTypes.func
+    };
+
+    static defaultProps = {
+        id: "mapstore-mouseposition",
+        mousePosition: null,
+        crs: "EPSG:4326",
+        enabled: true,
+        degreesTemplate: MousePositionLabelDMS,
+        projectedTemplate: MousePositionLabelYX,
+        style: {},
+        copyToClipboardEnabled: false,
+        glyphicon: "paste",
+        btnSize: "xsmall",
+        onCopy: () => {}
+    };
+
+    getUnits = (crs) => {
         return proj4js.defs(crs).units;
-    },
-    getPosition() {
+    };
+
+    getPosition = () => {
         let {x, y} = this.props.mousePosition ? this.props.mousePosition : [null, null];
         if (!x && !y) {
             // if we repoject null coordinates we can end up with -0.00 instead of 0.00
@@ -60,13 +62,14 @@ let MousePosition = React.createClass({
             return {lat: y, lng: x};
         }
         return {x, y};
-    },
+    };
 
-    getTemplateComponent() {
-        return (this.getUnits(this.props.crs) === "degrees") ? this.props.degreesTemplate : this.props.projectedTemplate;
-    },
+    getTemplateComponent = () => {
+        return this.getUnits(this.props.crs) === "degrees" ? this.props.degreesTemplate : this.props.projectedTemplate;
+    };
+
     render() {
-        let Template = (this.props.mousePosition) ? this.getTemplateComponent() : null;
+        let Template = this.props.mousePosition ? this.getTemplateComponent() : null;
         if (this.props.enabled && Template) {
             const position = this.getPosition();
             return (
@@ -80,10 +83,10 @@ let MousePosition = React.createClass({
                             </CopyToClipboard>
                         }
                     </div>
-                );
+            );
         }
         return null;
     }
-});
+}
 
 module.exports = MousePosition;

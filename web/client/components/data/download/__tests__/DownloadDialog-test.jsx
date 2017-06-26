@@ -29,7 +29,7 @@ describe('Test for DownloadOptions component', () => {
         expect(cmp).toExist();
     });
     it('render with enabled', () => {
-        const cmp = ReactDOM.render(<DownloadDialog enabled={true} formats={[{name: "test"}]}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<DownloadDialog enabled formats={[{name: "test"}]}/>, document.getElementById("container"));
         expect(cmp).toExist();
         expect(TestUtils.scryRenderedDOMComponentsWithClass(cmp, "Select-value-label")).toExist();
     });

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -9,24 +10,25 @@
 const React = require('react');
 const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 
-const Choice = React.createClass({
-    propTypes: {
-        items: React.PropTypes.array,
-        label: React.PropTypes.string,
-        onChange: React.PropTypes.func,
-        selected: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            items: [],
-            label: 'Choice',
-            onChange: () => {},
-            selected: ''
-        };
-    },
-    onChange(e) {
+class Choice extends React.Component {
+    static propTypes = {
+        items: PropTypes.array,
+        label: PropTypes.string,
+        onChange: PropTypes.func,
+        selected: PropTypes.string
+    };
+
+    static defaultProps = {
+        items: [],
+        label: 'Choice',
+        onChange: () => {},
+        selected: ''
+    };
+
+    onChange = (e) => {
         this.props.onChange(e.target.value);
-    },
+    };
+
     render() {
         const options = this.props.items
             .map((item) => <option key={item.value} value={item.value}>{item.name}</option>);
@@ -39,6 +41,6 @@ const Choice = React.createClass({
             </FormGroup>
         );
     }
-});
+}
 
 module.exports = Choice;

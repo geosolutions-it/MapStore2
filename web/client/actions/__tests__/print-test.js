@@ -36,7 +36,7 @@ describe('Test correctness of the print actions', () => {
                 expect(e).toExist();
                 expect(e.type).toBe(PRINT_CAPABILITIES_LOADED);
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -48,7 +48,7 @@ describe('Test correctness of the print actions', () => {
                 expect(e).toExist();
                 expect(e.type).toBe(PRINT_CAPABILITIES_ERROR);
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -106,7 +106,7 @@ describe('Test correctness of the print actions', () => {
                 expect(e).toExist();
                 expect(e.type).toBe(PRINT_CREATED);
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -118,7 +118,7 @@ describe('Test correctness of the print actions', () => {
                 expect(e).toExist();
                 expect(e.type).toBe(PRINT_ERROR);
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });

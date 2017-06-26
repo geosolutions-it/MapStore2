@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -11,25 +12,25 @@ var AboutContent = require('./AboutContent');
 var I18N = require('../../../../components/I18N/I18N');
 var aboutImg = require('../../../assets/img/Blank.gif');
 
-var About = React.createClass({
-    propTypes: {
-        style: React.PropTypes.object,
-        modalConfig: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            style: {
-                position: "absolute",
-                zIndex: 1000,
-                bottom: "-8px",
-                right: "0px",
-                margin: "8px"
-            },
-            modalConfig: {
-                closeGlyph: "1-close"
-            }
-        };
-    },
+class About extends React.Component {
+    static propTypes = {
+        style: PropTypes.object,
+        modalConfig: PropTypes.object
+    };
+
+    static defaultProps = {
+        style: {
+            position: "absolute",
+            zIndex: 1000,
+            bottom: "-8px",
+            right: "0px",
+            margin: "8px"
+        },
+        modalConfig: {
+            closeGlyph: "1-close"
+        }
+    };
+
     render() {
         return (<InfoButton
             {...this.props.modalConfig}
@@ -41,6 +42,6 @@ var About = React.createClass({
                 <AboutContent />
             }/>);
     }
-});
+}
 
 module.exports = About;

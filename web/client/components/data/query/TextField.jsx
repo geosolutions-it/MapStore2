@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -10,52 +11,55 @@ const React = require('react');
 const {FormControl} = require('react-bootstrap');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
-const TextField = React.createClass({
-    propTypes: {
-        operator: React.PropTypes.string,
-        fieldName: React.PropTypes.string,
-        fieldRowId: React.PropTypes.number,
-        attType: React.PropTypes.string,
-        fieldValue: React.PropTypes.string,
-        label: React.PropTypes.string,
-        fieldException: React.PropTypes.oneOfType([
-            React.PropTypes.object,
-            React.PropTypes.string
+class TextField extends React.Component {
+    static propTypes = {
+        operator: PropTypes.string,
+        fieldName: PropTypes.string,
+        fieldRowId: PropTypes.number,
+        attType: PropTypes.string,
+        fieldValue: PropTypes.string,
+        label: PropTypes.string,
+        fieldException: PropTypes.oneOfType([
+            PropTypes.object,
+            PropTypes.string
         ]),
-        onUpdateField: React.PropTypes.func,
-        onUpdateExceptionField: React.PropTypes.func,
-        style: React.PropTypes.object
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            operator: "like",
-            fieldName: null,
-            fieldRowId: null,
-            attType: "string",
-            fieldValue: null,
-            label: null,
-            fieldException: null,
-            onUpdateField: () => {},
-            onUpdateExceptionField: () => {},
-            style: {}
-        };
-    },
+        onUpdateField: PropTypes.func,
+        onUpdateExceptionField: PropTypes.func,
+        style: PropTypes.object
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        operator: "like",
+        fieldName: null,
+        fieldRowId: null,
+        attType: "string",
+        fieldValue: null,
+        label: null,
+        fieldException: null,
+        onUpdateField: () => {},
+        onUpdateExceptionField: () => {},
+        style: {}
+    };
+
     componentDidMount() {
         if (this.props.operator === "isNull" && !this.props.fieldValue) {
             this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, " ", this.props.attType);
         }
-    },
+    }
+
     componentDidUpdate() {
         if (this.props.operator === "isNull" && !this.props.fieldValue) {
             this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, " ", this.props.attType);
         }
-    },
+    }
+
     render() {
         let placeholder = LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.text_placeholder");
-        let label = this.props.label ? (<label>{this.props.label}</label>) : (<span/>);
+        let label = this.props.label ? <label>{this.props.label}</label> : <span/>;
         return (
             <div className="textField">
                 {label}
@@ -67,10 +71,11 @@ const TextField = React.createClass({
                     value={this.props.fieldValue || ''}
                 />
             </div>);
-    },
-    changeText(e) {
-        this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, e.target.value, this.props.attType);
     }
-});
+
+    changeText = (e) => {
+        this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, e.target.value, this.props.attType);
+    };
+}
 
 module.exports = TextField;

@@ -47,12 +47,12 @@ describe('CesiumMap', () => {
 
     it('creates multiple maps for different containers', () => {
         const container = ReactDOM.render(
-        (
+
             <div>
                 <div id="container1"><CesiumMap id="map1" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
                 <div id="container2"><CesiumMap id="map2" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
             </div>
-        ), document.getElementById("container"));
+        , document.getElementById("container"));
         expect(container).toExist();
 
         expect(document.getElementById('map1')).toExist();

@@ -28,15 +28,15 @@ const rulesManagerSelector = createSelector([
     state => genericSelector(state, "error")
 ], (rules, options, rulesPage, rulesCount, selectedRules,
     activeRule, filtersValues, error) => ({
-    rules: rules,
-    options: options,
-    rulesPage: rulesPage,
-    rulesCount: rulesCount,
-    selectedRules: selectedRules,
-    error: error,
-    activeRule: activeRule,
-    filtersValues: filtersValues
-}));
+        rules: rules,
+        options: options,
+        rulesPage: rulesPage,
+        rulesCount: rulesCount,
+        selectedRules: selectedRules,
+        error: error,
+        activeRule: activeRule,
+        filtersValues: filtersValues
+    }));
 
 const RulesManagerPlugin = connect(rulesManagerSelector, {
     onSelectRules: rulesSelected,

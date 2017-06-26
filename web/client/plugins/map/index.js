@@ -56,21 +56,21 @@ module.exports = (mapType, actions) => {
         onLocateError
     })(components.Locate || Empty);
 
-    const DrawSupport = connect((state) => (
-        state.draw || {}), {
-        onChangeDrawingStatus: changeDrawingStatus,
-        onEndDrawing: endDrawing,
-        setCurrentStyle: setCurrentStyle
-    })( components.DrawSupport || Empty);
+    const DrawSupport = connect((state) =>
+        state.draw || {}, {
+            onChangeDrawingStatus: changeDrawingStatus,
+            onEndDrawing: endDrawing,
+            setCurrentStyle: setCurrentStyle
+        })( components.DrawSupport || Empty);
 
-    const HighlightSupport = connect((state) => (
-        state.highlight || {}), {updateHighlighted})( components.HighlightFeatureSupport || Empty);
+    const HighlightSupport = connect((state) =>
+        state.highlight || {}, {updateHighlighted})( components.HighlightFeatureSupport || Empty);
 
     const SelectionSupport = connect((state) => ({
-            selection: state.selection || {}
-        }), {
-            changeSelectionState
-        })(components.SelectionSupport || Empty);
+        selection: state.selection || {}
+    }), {
+        changeSelectionState
+    })(components.SelectionSupport || Empty);
 
     require('../../components/map/' + mapType + '/plugins/index');
 

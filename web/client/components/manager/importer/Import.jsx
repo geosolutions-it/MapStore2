@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -14,70 +15,76 @@ const {Grid, Row, Panel, Label, Table, Button, Glyphicon, Tooltip} = require('re
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 require("./style/importer.css");
 
-const Task = React.createClass({
-    propTypes: {
-        timeout: React.PropTypes.number,
-        "import": React.PropTypes.object,
-        loadImport: React.PropTypes.func,
-        loadTask: React.PropTypes.func,
-        loadStylerTool: React.PropTypes.func,
-        runImport: React.PropTypes.func,
-        updateProgress: React.PropTypes.func,
-        deleteImport: React.PropTypes.func,
-        deleteTask: React.PropTypes.func,
-        deleteAction: React.PropTypes.node,
-        editAction: React.PropTypes.node,
-        placement: React.PropTypes.string
-    },
-    contextTypes: {
-        router: React.PropTypes.object,
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            placement: "bottom",
-            deleteAction: <Message msgId="importer.task.delete"/>,
-            editAction: <Message msgId="importer.task.edit"/>,
-            timeout: 10000,
-            "import": {},
-            loadTask: () => {},
-            runImport: () => {},
-            loadImport: () => {},
-            loadStylerTool: () => {},
-            updateProgress: () => {},
-            deleteImport: () => {},
-            deleteTask: () => {}
-        };
-    },
+class Task extends React.Component {
+    static propTypes = {
+        timeout: PropTypes.number,
+        "import": PropTypes.object,
+        loadImport: PropTypes.func,
+        loadTask: PropTypes.func,
+        loadStylerTool: PropTypes.func,
+        runImport: PropTypes.func,
+        updateProgress: PropTypes.func,
+        deleteImport: PropTypes.func,
+        deleteTask: PropTypes.func,
+        deleteAction: PropTypes.node,
+        editAction: PropTypes.node,
+        placement: PropTypes.string
+    };
+
+    static contextTypes = {
+        router: PropTypes.object,
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        placement: "bottom",
+        deleteAction: <Message msgId="importer.task.delete"/>,
+        editAction: <Message msgId="importer.task.edit"/>,
+        timeout: 10000,
+        "import": {},
+        loadTask: () => {},
+        runImport: () => {},
+        loadImport: () => {},
+        loadStylerTool: () => {},
+        updateProgress: () => {},
+        deleteImport: () => {},
+        deleteTask: () => {}
+    };
+
     componentDidMount() {
         if (this.props.import.state === "RUNNING") {
             // Check if some task is running the update is not needed
             this.interval = setInterval(this.props.loadImport.bind(null, this.props.import.id), this.props.timeout);
 
         }
-    },
+    }
+
     componentWillUnmount() {
         if (this.interval) {
             clearInterval(this.interval);
         }
-    },
-    getbsStyleForState(state) {
+    }
+
+    getbsStyleForState = (state) => {
         return ImporterUtils.getbsStyleForState(state);
-    },
-    renderGeneral(importObj) {
+    };
+
+    renderGeneral = (importObj) => {
         return (<dl className="dl-horizontal">
               <dt><Message msgId="importer.import.status" /></dt>
               <dd><Label bsStyle={this.getbsStyleForState(importObj.state)}>{importObj.state}</Label></dd>
               <dt><Message msgId="importer.import.archive" /></dt>
               <dd>{importObj.archive}</dd>
             </dl>);
-    },
-    renderProgressTask(task) {
+    };
+
+    renderProgressTask = (task) => {
         if ( task.state === "RUNNING") {
             return <TaskProgress progress={task.progress} total={task.total} state={task.state} update={this.props.updateProgress.bind(null, this.props.import.id, task.id)} />;
         }
-    },
-    renderTask(task) {
+    };
+
+    renderTask = (task) => {
         let tooltipDelete = <Tooltip id="import-delete-action">{this.props.deleteAction}</Tooltip>;
         let tooltipEdit = <Tooltip id="import-edit-action">{this.props.editAction}</Tooltip>;
         return (<tr key={task && task.id}>
@@ -99,32 +106,36 @@ const Task = React.createClass({
                 : null}
             </td>
         </tr>);
-    },
-    renderLoading() {
+    };
+
+    renderLoading = () => {
         if (this.props.import.loading) {
             return <div style={{"float": "left"}}><Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle"/></div>;
         }
-    },
-    renderLoadingMessage(task) {
+    };
+
+    renderLoadingMessage = (task) => {
         switch (task.message) {
-            case "applyPresets":
-                return <Message msgId="importer.import.applyingPreset"/>;
-            case "deleting":
-                return <Message msgId="importer.import.deleting" />;
-            case "analyzing":
-                return <Message msgId="importer.import.analyzing" />;
-            default:
-                return null;
+        case "applyPresets":
+            return <Message msgId="importer.import.applyingPreset"/>;
+        case "deleting":
+            return <Message msgId="importer.import.deleting" />;
+        case "analyzing":
+            return <Message msgId="importer.import.analyzing" />;
+        default:
+            return null;
         }
-    },
-    renderLoadingTask(task) {
+    };
+
+    renderLoadingTask = (task) => {
         if (task.loading) {
             return (<div style={{"float": "right"}}>
                 {this.renderLoadingMessage(task)}
                 <Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle"/></div>);
         }
         return null;
-    },
+    };
+
     render() {
         return (
             <Panel header={<span><Message msgId="importer.importN" msgParams={{id: this.props.import.id}}/>{this.renderLoading()}</span>} >
@@ -149,8 +160,8 @@ const Task = React.createClass({
                 </Row>
                 <Row style={{"float": "right"}}>
                     {
-                        this.props.import.tasks.reduce((prev, cur) => (prev || (cur.state === "READY")), false) ?
-                        (<Button bsStyle="success" onClick={() => {this.props.runImport(this.props.import.id); }}><Message msgId="importer.import.runImport" /></Button>)
+                        this.props.import.tasks.reduce((prev, cur) => prev || cur.state === "READY", false) ?
+                        <Button bsStyle="success" onClick={() => {this.props.runImport(this.props.import.id); }}><Message msgId="importer.import.runImport" /></Button>
                         : null
                     }
                     <Button bsStyle="danger" onClick={() => {this.props.deleteImport(this.props.import.id); }}><Message msgId="importer.import.deleteImport" /></Button>
@@ -158,10 +169,12 @@ const Task = React.createClass({
             </Grid>
             </Panel>
         );
-    },
-    editDefaultStyle(taskId) {
-        this.context.router.push("/styler/openlayers");
-        this.props.loadStylerTool(taskId);
     }
-});
+
+    editDefaultStyle = (taskId) => {
+        this.context.router.history.push("/styler/openlayers");
+        this.props.loadStylerTool(taskId);
+    };
+}
+
 module.exports = Task;

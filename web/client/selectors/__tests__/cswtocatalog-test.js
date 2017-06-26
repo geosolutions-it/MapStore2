@@ -12,9 +12,9 @@ const _ = require('lodash');
 const sampleCSWRecord = {
     boundingBox: {
         extent: [10.686,
-                44.931,
-                46.693,
-                12.54],
+            44.931,
+            46.693,
+            12.54],
         crs: "EPSG:4326"
 
     },
@@ -41,9 +41,9 @@ const sampleCSWRecord = {
 const sampleCSWRecord2 = {
     boundingBox: {
         extent: [10.686,
-                44.931,
-                46.693,
-                12.54],
+            44.931,
+            46.693,
+            12.54],
         crs: "EPSG:4326"
 
     },
@@ -69,9 +69,9 @@ const sampleRecord = {
     thumbnail: "http://sample.com/img.jpg",
     boundingBox: {
         extent: [10.686,
-                44.931,
-                46.693,
-                12.54],
+            44.931,
+            46.693,
+            12.54],
         crs: "EPSG:4326"
 
     },

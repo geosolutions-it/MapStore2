@@ -41,12 +41,12 @@ describe('LeafletMap', () => {
 
     it('creates multiple maps for different containers', () => {
         const container = ReactDOM.render(
-        (
+
             <div>
                 <div id="container1"><LeafletMap id="map1" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
                 <div id="container2"><LeafletMap id="map2" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
             </div>
-        ), document.getElementById("container"));
+        , document.getElementById("container"));
         expect(container).toExist();
 
         expect(document.getElementById('map1')).toExist();
@@ -274,7 +274,7 @@ describe('LeafletMap', () => {
         expect(getPixelFromCoordinates).toNotExist();
         expect(getCoordinatesFromPixel).toNotExist();
 
-        const map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 0, x: 0}} zoom={11} registerHooks={true}/>,
+        const map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 0, x: 0}} zoom={11} registerHooks/>,
                                     document.getElementById("container"));
         expect(map).toExist();
 

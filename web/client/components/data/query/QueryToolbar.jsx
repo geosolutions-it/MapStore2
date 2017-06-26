@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -14,53 +15,53 @@ const OverlayTrigger = require('../../misc/OverlayTrigger');
 
 const I18N = require('../../I18N/I18N');
 
-const QueryToolbar = React.createClass({
-    propTypes: {
-        filterType: React.PropTypes.string,
-        params: React.PropTypes.object,
-        filterFields: React.PropTypes.array,
-        groupFields: React.PropTypes.array,
-        spatialField: React.PropTypes.object,
-        toolbarEnabled: React.PropTypes.bool,
-        searchUrl: React.PropTypes.string,
-        showGeneratedFilter: React.PropTypes.oneOfType([
-            React.PropTypes.bool,
-            React.PropTypes.string
+class QueryToolbar extends React.Component {
+    static propTypes = {
+        filterType: PropTypes.string,
+        params: PropTypes.object,
+        filterFields: PropTypes.array,
+        groupFields: PropTypes.array,
+        spatialField: PropTypes.object,
+        toolbarEnabled: PropTypes.bool,
+        searchUrl: PropTypes.string,
+        showGeneratedFilter: PropTypes.oneOfType([
+            PropTypes.bool,
+            PropTypes.string
         ]),
-        featureTypeName: React.PropTypes.string,
-        actions: React.PropTypes.object,
-        ogcVersion: React.PropTypes.string,
-        resultTitle: React.PropTypes.string,
-        pagination: React.PropTypes.object,
-        sortOptions: React.PropTypes.object,
-        hits: React.PropTypes.bool,
-        allowEmptyFilter: React.PropTypes.bool,
-        emptyFilterWarning: React.PropTypes.bool
-    },
-    getDefaultProps() {
-        return {
-            filterType: "OGC",
-            params: {},
-            groupFields: [],
-            filterFields: [],
-            spatialField: {},
-            toolbarEnabled: true,
-            searchUrl: null,
-            showGeneratedFilter: false,
-            featureTypeName: null,
-            resultTitle: "Generated Filter",
-            pagination: null,
-            sortOptions: null,
-            hits: false,
-            allowEmptyFilter: false,
-            emptyFilterWarning: false,
-            actions: {
-                onQuery: () => {},
-                onReset: () => {},
-                onChangeDrawingStatus: () => {}
-            }
-        };
-    },
+        featureTypeName: PropTypes.string,
+        actions: PropTypes.object,
+        ogcVersion: PropTypes.string,
+        resultTitle: PropTypes.string,
+        pagination: PropTypes.object,
+        sortOptions: PropTypes.object,
+        hits: PropTypes.bool,
+        allowEmptyFilter: PropTypes.bool,
+        emptyFilterWarning: PropTypes.bool
+    };
+
+    static defaultProps = {
+        filterType: "OGC",
+        params: {},
+        groupFields: [],
+        filterFields: [],
+        spatialField: {},
+        toolbarEnabled: true,
+        searchUrl: null,
+        showGeneratedFilter: false,
+        featureTypeName: null,
+        resultTitle: "Generated Filter",
+        pagination: null,
+        sortOptions: null,
+        hits: false,
+        allowEmptyFilter: false,
+        emptyFilterWarning: false,
+        actions: {
+            onQuery: () => {},
+            onReset: () => {},
+            onChangeDrawingStatus: () => {}
+        }
+    };
+
     render() {
         let fieldsExceptions = this.props.filterFields.filter((field) => field.exception).length > 0;
         // let fieldsWithoutValues = this.props.filterFields.filter((field) => !field.value).length > 0;
@@ -70,18 +71,18 @@ const QueryToolbar = React.createClass({
             // fieldsWithoutValues ||
             fieldsExceptions ||
             !this.props.toolbarEnabled ||
-            (!fieldsWithValues && !this.props.spatialField.geometry);
+            !fieldsWithValues && !this.props.spatialField.geometry;
         const tooltip = <Tooltip id="query-warning-tooltip"><I18N.Message msgId="queryform.emptyfilter"/></Tooltip>;
         const btn = (<Button disabled={queryDisabled} bsSize="xs" id="query-toolbar-query" onClick={this.search}>
             <Glyphicon glyph="glyphicon glyphicon-search"/>
             <span><strong><I18N.Message msgId={"queryform.query"}/></strong></span>
         </Button>);
         const showTooltip = this.props.emptyFilterWarning && this.props.filterFields.filter((field) => field.value).length === 0 && !this.props.spatialField.geometry;
-        const queryButton = showTooltip ? (
-            <OverlayTrigger placement="bottom" key="query-button-tooltip" overlay={tooltip}>
+        const queryButton = showTooltip ?
+            (<OverlayTrigger placement="bottom" key="query-button-tooltip" overlay={tooltip}>
                 {btn}
-            </OverlayTrigger>
-        ) : btn;
+            </OverlayTrigger>)
+         : btn;
         return (
             <div className="container-fluid query-toolbar">
                 <div id="query-toolbar-title"><I18N.Message msgId={"queryform.title"}/></div>
@@ -105,8 +106,9 @@ const QueryToolbar = React.createClass({
                 </Modal>
             </div>
         );
-    },
-    search() {
+    }
+
+    search = () => {
         let filterObj = {
             featureTypeName: this.props.featureTypeName,
             groupFields: this.props.groupFields,
@@ -119,11 +121,12 @@ const QueryToolbar = React.createClass({
             hits: this.props.hits
         };
         this.props.actions.onQuery(this.props.searchUrl, filterObj, this.props.params);
-    },
-    reset() {
+    };
+
+    reset = () => {
         this.props.actions.onChangeDrawingStatus('clean', null, "queryform", []);
         this.props.actions.onReset();
-    }
-});
+    };
+}
 
 module.exports = QueryToolbar;

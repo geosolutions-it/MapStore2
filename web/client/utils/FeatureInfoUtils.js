@@ -67,7 +67,7 @@ const Validator = {
          * Parse the TEXT to get only the NOT valid text responses
          */
         getNoValidResponses(responses) {
-            return responses.filter((res) => res.response === "" || (typeof res.response === "string" && res.response.indexOf("no features were found") === 0) || res.response && (typeof res.response === "string" && res.response.indexOf("<?xml") === 0));
+            return responses.filter((res) => res.response === "" || typeof res.response === "string" && res.response.indexOf("no features were found") === 0 || res.response && (typeof res.response === "string" && res.response.indexOf("<?xml") === 0));
         }
     },
     JSON: {

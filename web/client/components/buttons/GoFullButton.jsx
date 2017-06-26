@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -13,6 +14,7 @@ const OverlayTrigger = require('../misc/OverlayTrigger');
 const Message = require('../I18N/Message');
 
 const ConfigUtils = require('../../utils/ConfigUtils');
+
 /**
  * Button for Go to Full MapStore2.
  * @prop {string} cfg.glyph the glyph icon for the button
@@ -22,22 +24,21 @@ const ConfigUtils = require('../../utils/ConfigUtils');
  * @memberof components.buttons
  * @class
  */
-const GoFullButton = React.createClass({
-    propTypes: {
-        glyph: React.PropTypes.string,
-        tooltip: React.PropTypes.string,
-        urlRegex: React.PropTypes.string,
-        urlReplaceString: React.PropTypes.string,
-        originalUrl: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            glyph: "share",
-            tooltip: "fullscreen.viewLargerMap",
-            urlRegex: "^(.*?)embedded.html.*?#\\/(\\d?)",
-            urlReplaceString: "$1#/viewer/leaflet/$2"
-        };
-    },
+class GoFullButton extends React.Component {
+    static propTypes = {
+        glyph: PropTypes.string,
+        tooltip: PropTypes.string,
+        urlRegex: PropTypes.string,
+        urlReplaceString: PropTypes.string,
+        originalUrl: PropTypes.string
+    };
+
+    static defaultProps = {
+        glyph: "share",
+        tooltip: "fullscreen.viewLargerMap",
+        urlRegex: "^(.*?)embedded.html.*?#\\/(\\d?)",
+        urlReplaceString: "$1#/viewer/leaflet/$2"
+    };
 
     render() {
         if (!this.display()) return null;
@@ -46,21 +47,24 @@ const GoFullButton = React.createClass({
                         <Glyphicon glyph={this.props.glyph}/>
                     </Button>
                 </OverlayTrigger>);
-    },
-    display() {
+    }
+
+    display = () => {
         let regex = this.generateRegex();
         return this.props.originalUrl || ConfigUtils.getConfigProp("originalUrl") || location.href.match(regex);
-    },
-    openFull(url) {
+    };
+
+    openFull = (url) => {
         if (url) {
             window.open(url, '_blank');
         }
-    },
-    generateRegex() {
-        return new RegExp(this.props.urlRegex);
-    },
+    };
 
-    generateUrl() {
+    generateRegex = () => {
+        return new RegExp(this.props.urlRegex);
+    };
+
+    generateUrl = () => {
         let orig = this.props.originalUrl || ConfigUtils.getConfigProp("originalUrl");
         if (orig) {
             return orig;
@@ -70,7 +74,7 @@ const GoFullButton = React.createClass({
             let next = location.href;
             return next.replace(regex, this.props.urlReplaceString);
         }
-    }
-});
+    };
+}
 
 module.exports = GoFullButton;

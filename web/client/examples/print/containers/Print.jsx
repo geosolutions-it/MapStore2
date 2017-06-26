@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -16,17 +17,18 @@ const PrintPreview = require('../components/PrintPreview');
 var {changeZoomLevel} = require('../../../actions/map');
 
 const ScaleBox = connect((state) => ({
-    currentZoomLvl: (state.map && state.map.zoom) || (state.config && state.config.map && state.config.map.zoom)
+    currentZoomLvl: state.map && state.map.zoom || state.config && state.config.map && state.config.map.zoom
 }), {
     onChange: changeZoomLevel
 })(require("../../../components/mapcontrols/scale/ScaleBox"));
 
-const Print = React.createClass({
-    propTypes: {
-        messages: React.PropTypes.object,
-        locale: React.PropTypes.string,
-        enabled: React.PropTypes.bool
-    },
+class Print extends React.Component {
+    static propTypes = {
+        messages: PropTypes.object,
+        locale: PropTypes.string,
+        enabled: PropTypes.bool
+    };
+
     render() {
         return (<Localized messages={this.props.messages} locale={this.props.locale}>
             <div className="fill">
@@ -42,8 +44,8 @@ const Print = React.createClass({
             </div>
         </Localized>);
     }
+}
 
-});
 module.exports = connect((state) => {
     return {
         enabled: state.map && state.print.capabilities && true || false,

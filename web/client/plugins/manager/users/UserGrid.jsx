@@ -16,7 +16,7 @@ const mapStateToProps = (state) => {
     const users = state && state.users;
     return {
         users: users && users.users,
-        loading: users && (users.status === "loading"),
+        loading: users && users.status === "loading",
         stateProps: users && users.stateProps,
         start: users && users.start,
         limit: users && users.limit,

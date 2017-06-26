@@ -38,7 +38,7 @@ function loadMapConfig(configName, mapId) {
             } else {
                 try {
                     JSON.parse(response.data);
-                } catch(e) {
+                } catch (e) {
                     dispatch(configureError('Configuration file broken (' + configName + '): ' + e.message));
                 }
             }
@@ -81,7 +81,7 @@ function loadMapInfo(url, mapId) {
             } else {
                 try {
                     JSON.parse(response.data);
-                } catch(e) {
+                } catch (e) {
                     dispatch(mapInfoLoadError( mapId, e));
                 }
             }
@@ -93,4 +93,4 @@ function loadMapInfo(url, mapId) {
 }
 module.exports = {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR,
     MAP_INFO_LOAD_START, MAP_INFO_LOADED, MAP_INFO_LOAD_ERROR,
-     loadMapConfig, loadMapInfo, configureMap, configureError};
+    loadMapConfig, loadMapInfo, configureMap, configureError};

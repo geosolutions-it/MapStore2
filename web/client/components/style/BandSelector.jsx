@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -19,42 +20,43 @@ require('react-widgets/lib/less/react-widgets.less');
 const Message = require('../I18N/Message');
 const LocaleUtils = require('../../utils/LocaleUtils');
 
-const BandSelector = React.createClass({
-    propTypes: {
-        band: React.PropTypes.oneOfType([React.PropTypes.number, React.PropTypes.string]),
-        bands: React.PropTypes.array,
-        min: React.PropTypes.number,
-        max: React.PropTypes.number,
-        contrast: React.PropTypes.oneOf(['none', 'Normalize', 'Histogram', 'GammaValue']),
-        algorithm: React.PropTypes.oneOf(['none', 'StretchToMinimumMaximum', 'ClipToMinimumMaximum', 'ClipToZero']),
-        gammaValue: React.PropTypes.number,
-        onChange: React.PropTypes.func,
-        bandsComboOptions: React.PropTypes.object
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            band: '1',
-            contrast: "none",
-            algorithm: "none",
-            gammaValue: 1,
-            min: 0,
-            max: 255,
-            bandsComboOptions: {},
-            onChange: () => {},
-            bands: ['1', '2', '3']
-        };
-    },
+class BandSelector extends React.Component {
+    static propTypes = {
+        band: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        bands: PropTypes.array,
+        min: PropTypes.number,
+        max: PropTypes.number,
+        contrast: PropTypes.oneOf(['none', 'Normalize', 'Histogram', 'GammaValue']),
+        algorithm: PropTypes.oneOf(['none', 'StretchToMinimumMaximum', 'ClipToMinimumMaximum', 'ClipToZero']),
+        gammaValue: PropTypes.number,
+        onChange: PropTypes.func,
+        bandsComboOptions: PropTypes.object
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        band: '1',
+        contrast: "none",
+        algorithm: "none",
+        gammaValue: 1,
+        min: 0,
+        max: 255,
+        bandsComboOptions: {},
+        onChange: () => {},
+        bands: ['1', '2', '3']
+    };
+
     render() {
         return (
                 <Grid fluid>
                     <Row>
                         <Col xs={4}><label><Message msgId="bandselector.band"/></label> </Col>
                         <Col xs={4}><label><Message msgId="bandselector.enhancement"/></label></Col>
-                        {this.props.contrast === "GammaValue" ? (<Col xs={4}> <label><Message msgId="bandselector.value"/></label> </Col>) : null }
-                        {this.props.contrast === "Normalize" ? (<Col xs={4}><label><Message msgId="bandselector.algorithmTitle"/></label></Col>) : null }
+                        {this.props.contrast === "GammaValue" ? <Col xs={4}> <label><Message msgId="bandselector.value"/></label> </Col> : null }
+                        {this.props.contrast === "Normalize" ? <Col xs={4}><label><Message msgId="bandselector.algorithmTitle"/></label></Col> : null }
                     </Row>
                     <Row>
                         <Col xs={4}>
@@ -75,15 +77,15 @@ const BandSelector = React.createClass({
                             value={this.props.contrast}
                             onChange={(v) => this.props.onChange("contrast", v.value)}/>
                         </Col>
-                        { this.props.contrast === "GammaValue" ? (<Col xs={4}>
+                        { this.props.contrast === "GammaValue" ? <Col xs={4}>
                             <NumberPicker
                                 format="-#,###.##"
                                 precision={3}
                                 step={0.1}
                                 min={0}
                                 value={this.props.gammaValue}
-                                onChange={(v) => this.props.onChange("gammaValue", v)}/></Col>) : null}
-                        { this.props.contrast === "Normalize" ? (
+                                onChange={(v) => this.props.onChange("gammaValue", v)}/></Col> : null}
+                        { this.props.contrast === "Normalize" ?
                              <Col xs={4}>
                             <Combobox data={[
                             {value: "none", name: LocaleUtils.getMessageById(this.context.messages, "bandselector.algorithm.none")},
@@ -95,14 +97,14 @@ const BandSelector = React.createClass({
                             value={this.props.algorithm}
                             onChange={(v) => this.props.onChange("algorithm", v.value)}/>
                         </Col>
-                            ) : null}
+                             : null}
                     </Row>
-                        {this.props.contrast === "Normalize" && this.props.algorithm !== "none" ? (
+                        {this.props.contrast === "Normalize" && this.props.algorithm !== "none" ?
                     <Row>
                         <Col xsOffset={2} xs={4}><label><Message msgId="bandselector.min"/></label></Col>
                         <Col xs={4}><label><Message msgId="bandselector.max"/></label></Col>
-                    </Row>) : null }
-                    {this.props.contrast === "Normalize" && this.props.algorithm !== "none" ? (
+                    </Row> : null }
+                    {this.props.contrast === "Normalize" && this.props.algorithm !== "none" ?
                     <Row>
                         <Col xsOffset={2} xs={4}>
                         <NumberPicker
@@ -120,9 +122,9 @@ const BandSelector = React.createClass({
                             value={this.props.max}
                             onChange={(v) => this.props.onChange("max", v)}
                         /></Col>
-                    </Row>) : null }
+                    </Row> : null }
                 </Grid>);
     }
-});
+}
 
 module.exports = BandSelector;

@@ -26,7 +26,7 @@ describe("test the PaginationButton", () => {
     });
 
     it('test PaginationButton vertical true', () => {
-        const paginationButton = ReactDOM.render(<PaginationButton vertical={true}/>, document.getElementById("container"));
+        const paginationButton = ReactDOM.render(<PaginationButton vertical/>, document.getElementById("container"));
         expect(paginationButton).toExist();
         const node = ReactDOM.findDOMNode(paginationButton);
         expect(node).toExist();
@@ -40,7 +40,7 @@ describe("test the PaginationButton", () => {
     });
 
     it('test PaginationButton direction false and  vertical true', () => {
-        const paginationButton = ReactDOM.render(<PaginationButton vertical={true} direction={false}/>, document.getElementById("container"));
+        const paginationButton = ReactDOM.render(<PaginationButton vertical direction={false}/>, document.getElementById("container"));
         expect(paginationButton).toExist();
         const node = ReactDOM.findDOMNode(paginationButton);
         expect(node).toExist();

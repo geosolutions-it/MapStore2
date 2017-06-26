@@ -27,7 +27,7 @@ var DebugUtils = {
         if (__DEVTOOLS__ && urlQuery.debug) {
             let logger = require('redux-logger')();
             let immutable = require('redux-immutable-state-invariant')();
-            let middlewares = ([immutable, thunkMiddleware, logger]).concat(userMiddlewares || []);
+            let middlewares = [immutable, thunkMiddleware, logger].concat(userMiddlewares || []);
             const {persistState} = require('redux-devtools');
             const DevTools = require('../components/development/DevTools');
 
@@ -38,7 +38,7 @@ var DebugUtils = {
 
           )(createStore);
         } else {
-            let middlewares = ([thunkMiddleware]).concat(userMiddlewares || []);
+            let middlewares = [thunkMiddleware].concat(userMiddlewares || []);
             finalCreateStore = applyMiddleware.apply(null, middlewares)(createStore);
         }
         return finalCreateStore(reducer, initialState, enhancer);

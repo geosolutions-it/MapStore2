@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -50,42 +51,43 @@ require('./drawer/drawer.css');
  *   "hideButton": true
  * }
  */
-const DrawerMenu = React.createClass({
-    propTypes: {
-        items: React.PropTypes.array,
-        active: React.PropTypes.string,
-        toggleMenu: React.PropTypes.func,
-        id: React.PropTypes.string,
-        glyph: React.PropTypes.string,
-        buttonStyle: React.PropTypes.string,
-        menuOptions: React.PropTypes.object,
-        singleSection: React.PropTypes.bool,
-        buttonClassName: React.PropTypes.string,
-        menuButtonStyle: React.PropTypes.object,
-        disabled: React.PropTypes.bool
-    },
-    contextTypes: {
-        messages: React.PropTypes.object,
-        router: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            id: "mapstore-drawermenu",
-            items: [],
-            toggleMenu: () => {},
-            glyph: "1-layer",
-            buttonStyle: "primary",
-            menuOptions: {},
-            singleSection: true,
-            buttonClassName: "square-button",
-            disabled: false
-        };
-    },
-    renderItems() {
+class DrawerMenu extends React.Component {
+    static propTypes = {
+        items: PropTypes.array,
+        active: PropTypes.string,
+        toggleMenu: PropTypes.func,
+        id: PropTypes.string,
+        glyph: PropTypes.string,
+        buttonStyle: PropTypes.string,
+        menuOptions: PropTypes.object,
+        singleSection: PropTypes.bool,
+        buttonClassName: PropTypes.string,
+        menuButtonStyle: PropTypes.object,
+        disabled: PropTypes.bool
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object,
+        router: PropTypes.object
+    };
+
+    static defaultProps = {
+        id: "mapstore-drawermenu",
+        items: [],
+        toggleMenu: () => {},
+        glyph: "1-layer",
+        buttonStyle: "primary",
+        menuOptions: {},
+        singleSection: true,
+        buttonClassName: "square-button",
+        disabled: false
+    };
+
+    renderItems = () => {
         return this.props.items.map((tool, index) => {
             const Plugin = tool.panel || tool.plugin;
             const plugin = (<Plugin
-                isPanel={true}
+                isPanel
                 {...tool.cfg}
                 items={tool.items || []}
                 groupStyle={{style: {
@@ -93,15 +95,16 @@ const DrawerMenu = React.createClass({
                     cursor: "pointer"
                 }}}
                 />);
-            return this.props.singleSection ? (
-                <Panel icon={tool.icon} glyph={tool.glyph} buttonConfig={tool.buttonConfig} key={tool.name} header={<Message msgId={tool.title}/>} eventKey={(index + 1) + ""}>
+            return this.props.singleSection ?
+                <Panel icon={tool.icon} glyph={tool.glyph} buttonConfig={tool.buttonConfig} key={tool.name} header={<Message msgId={tool.title}/>} eventKey={index + 1 + ""}>
                     {plugin}
                 </Panel>
-            ) : (<Section key={tool.name} renderInModal={tool.renderInModal || false} eventKey={(index + 1) + ""} header={<Message msgId={tool.title} />}>
+             : <Section key={tool.name} renderInModal={tool.renderInModal || false} eventKey={index + 1 + ""} header={<Message msgId={tool.title} />}>
                 {plugin}
-            </Section>);
+            </Section>;
         });
-    },
+    };
+
     render() {
         let tooltip = <Tooltip key="drawerButtonTooltip" id="drawerButtonTooltip"><Message msgId={"toc.drawerButton"}/></Tooltip>;
         return (
@@ -117,7 +120,7 @@ const DrawerMenu = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = {
     DrawerMenuPlugin: connect((state) => ({

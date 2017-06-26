@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -15,25 +16,25 @@ const assign = require('object-assign');
 
 const CoordinatesUtils = require("../../../utils/CoordinatesUtils");
 
-const GeometryDetails = React.createClass({
-    propTypes: {
-        useMapProjection: React.PropTypes.bool,
-        geometry: React.PropTypes.object,
-        type: React.PropTypes.string,
-        onShowPanel: React.PropTypes.func,
-        onChangeDrawingStatus: React.PropTypes.func,
-        onEndDrawing: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            useMapProjection: true,
-            geometry: null,
-            type: null,
-            onShowPanel: () => {},
-            onChangeDrawingStatus: () => {},
-            onEndDrawing: () => {}
-        };
-    },
+class GeometryDetails extends React.Component {
+    static propTypes = {
+        useMapProjection: PropTypes.bool,
+        geometry: PropTypes.object,
+        type: PropTypes.string,
+        onShowPanel: PropTypes.func,
+        onChangeDrawingStatus: PropTypes.func,
+        onEndDrawing: PropTypes.func
+    };
+
+    static defaultProps = {
+        useMapProjection: true,
+        geometry: null,
+        type: null,
+        onShowPanel: () => {},
+        onChangeDrawingStatus: () => {},
+        onEndDrawing: () => {}
+    };
+
     componentDidMount() {
 
         const geometry = this.props.geometry;
@@ -49,8 +50,9 @@ const GeometryDetails = React.createClass({
             this.tempCircle = assign({}, this.circle);
 
         }
-    },
-    onUpdateBBOX(value, name) {
+    }
+
+    onUpdateBBOX = (value, name) => {
         this.tempExtent[name] = parseFloat(value);
 
         let coordinates = [];
@@ -76,14 +78,15 @@ const GeometryDetails = React.createClass({
         };
 
         this.props.onChangeDrawingStatus("replace", undefined, "queryform", [geometry]);
-    },
-    onUpdateCircle(value, name) {
+    };
+
+    onUpdateCircle = (value, name) => {
         this.tempCircle[name] = parseFloat(value);
 
         let center = !this.props.useMapProjection ?
             CoordinatesUtils.reproject([this.tempCircle.x, this.tempCircle.y], 'EPSG:4326', this.props.geometry.projection) : [this.tempCircle.x, this.tempCircle.y];
 
-        center = (center.x === undefined) ? {x: center[0], y: center[1]} : center;
+        center = center.x === undefined ? {x: center[0], y: center[1]} : center;
 
         let geometry = {
             type: this.props.geometry.type,
@@ -94,8 +97,9 @@ const GeometryDetails = React.createClass({
         };
 
         this.props.onChangeDrawingStatus("replace", undefined, "queryform", [geometry]);
-    },
-    onModifyGeometry() {
+    };
+
+    onModifyGeometry = () => {
         let geometry;
 
         // Update the geometry
@@ -134,7 +138,7 @@ const GeometryDetails = React.createClass({
             let center = !this.props.useMapProjection ?
                 CoordinatesUtils.reproject([this.tempCircle.x, this.tempCircle.y], 'EPSG:4326', this.props.geometry.projection) : [this.tempCircle.x, this.tempCircle.y];
 
-            center = (center.x === undefined) ? {x: center[0], y: center[1]} : center;
+            center = center.x === undefined ? {x: center[0], y: center[1]} : center;
 
             let extent = [
                 center.x - this.circle.radius, center.y - this.circle.radius,
@@ -153,8 +157,9 @@ const GeometryDetails = React.createClass({
 
         this.props.onEndDrawing(geometry, "queryform");
         this.props.onShowPanel(false);
-    },
-    onClosePanel() {
+    };
+
+    onClosePanel = () => {
         if (this.props.type === "BBOX") {
             this.resetBBOX();
         } else if (this.props.type === "Circle") {
@@ -162,8 +167,9 @@ const GeometryDetails = React.createClass({
         }
 
         this.props.onShowPanel(false);
-    },
-    getBBOXDimensions(geometry) {
+    };
+
+    getBBOXDimensions = (geometry) => {
         const extent = geometry.projection !== 'EPSG:4326' && !this.props.useMapProjection ?
             CoordinatesUtils.reprojectBbox(geometry.extent, geometry.projection, 'EPSG:4326') : geometry.extent;
 
@@ -177,8 +183,8 @@ const GeometryDetails = React.createClass({
             // maxy
             north: Math.round(extent[3] * 100) / 100
         };
-    },
-    getCircleDimensions(geometry) {
+    };
+    getCircleDimensions = (geometry) => {
         // Show the center coordinates in 4326
         let center = geometry.projection !== 'EPSG:4326' && !this.props.useMapProjection ?
             CoordinatesUtils.reproject(geometry.center, geometry.projection, 'EPSG:4326') : geometry.center;
@@ -191,8 +197,9 @@ const GeometryDetails = React.createClass({
             y: Math.round(center.y * 100) / 100,
             radius: Math.round(geometry.radius * 100) / 100
         };
-    },
-    renderHeader() {
+    };
+
+    renderHeader = () => {
         return (
             <div className="detail-header">
                 <span>
@@ -201,8 +208,9 @@ const GeometryDetails = React.createClass({
                 </span>
             </div>
         );
-    },
-    renderCoordinateField(value, name) {
+    };
+
+    renderCoordinateField = (value, name) => {
         return (
             <div>
                 <div className="detail-field-title">{name}</div>
@@ -214,8 +222,9 @@ const GeometryDetails = React.createClass({
                     onChange={(evt) => this.onUpdateBBOX(evt.target.value, name)}/>
             </div>
         );
-    },
-    renderCircleField(value, name) {
+    };
+
+    renderCircleField = (value, name) => {
         return (
             <FormControl
                 type="number"
@@ -223,8 +232,9 @@ const GeometryDetails = React.createClass({
                 defaultValue={value}
                 onChange={(evt) => this.onUpdateCircle(evt.target.value, name)}/>
         );
-    },
-    renderDetailsContent() {
+    };
+
+    renderDetailsContent = () => {
         let detailsContent;
         let geometry = this.props.geometry;
 
@@ -232,8 +242,8 @@ const GeometryDetails = React.createClass({
 
             const extent = this.getBBOXDimensions(geometry);
 
-            detailsContent = (
-                <div>
+            detailsContent =
+                (<div>
                     <div className="container-fluid">
                         <Row>
                             <Col xs={4}>
@@ -283,14 +293,13 @@ const GeometryDetails = React.createClass({
                         <hr width="90%"/>
                         <div ><h5><I18N.Message msgId={"queryform.spatialfilter.details.details_bbox_label"}/></h5></div>
                     </span>
-                </div>
-            );
+                </div>)
+            ;
         } else if (this.props.type === "Circle") {
-
             const circle = this.getCircleDimensions(geometry);
 
-            detailsContent = (
-                <div>
+            detailsContent =
+                (<div>
                     <div className="container-fluid">
                         <Row>
                             <Col xs={2}>
@@ -349,12 +358,13 @@ const GeometryDetails = React.createClass({
                         <hr width="90%"/>
                         <div><h5><I18N.Message msgId={"queryform.spatialfilter.details.details_circle_label"}/></h5></div>
                     </span>
-                </div>
-            );
+                </div>)
+            ;
         }
 
         return detailsContent;
-    },
+    };
+
     render() {
         return (
             <Panel className="details-panel" bsStyle="primary">
@@ -362,8 +372,9 @@ const GeometryDetails = React.createClass({
                 {this.renderDetailsContent()}
             </Panel>
         );
-    },
-    resetBBOX() {
+    }
+
+    resetBBOX = () => {
         for (let prop in this.extent) {
             if (prop) {
                 let coordinateInput = document.getElementById("queryform_bbox_" + prop);
@@ -371,8 +382,9 @@ const GeometryDetails = React.createClass({
                 this.onUpdateBBOX(coordinateInput.value, prop);
             }
         }
-    },
-    resetCircle() {
+    };
+
+    resetCircle = () => {
         let radiusInput = document.getElementById("queryform_circle_radius");
         radiusInput.value = this.circle.radius;
         this.onUpdateCircle(radiusInput.value, "radius");
@@ -384,7 +396,7 @@ const GeometryDetails = React.createClass({
         let coordinateYInput = document.getElementById("queryform_circle_y");
         coordinateYInput.value = this.circle.y;
         this.onUpdateCircle(coordinateYInput.value, "y");
-    }
-});
+    };
+}
 
 module.exports = GeometryDetails;

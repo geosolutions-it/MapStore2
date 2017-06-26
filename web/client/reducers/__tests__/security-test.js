@@ -15,30 +15,30 @@ describe('Test the security reducer', () => {
     let testUser = {
         "User": {
             "attribute": [
-               {
-                  "name": "company",
-                  "value": "Some Company"
-               },
-               {
-                  "name": "email",
-                  "value": "user@email.com"
-               },
-               {
-                  "name": "notes",
-                  "value": "some notes"
-               },
-               {
-                  "name": "UUID",
-                  "value": testToken
-               }
+                {
+                    "name": "company",
+                    "value": "Some Company"
+                },
+                {
+                    "name": "email",
+                    "value": "user@email.com"
+                },
+                {
+                    "name": "notes",
+                    "value": "some notes"
+                },
+                {
+                    "name": "UUID",
+                    "value": testToken
+                }
             ],
             "enabled": true,
             "groups": {
-               "group": {
-                  "enabled": true,
-                  "groupName": "everyone",
-                  "id": 3
-               }
+                "group": {
+                    "enabled": true,
+                    "groupName": "everyone",
+                    "id": 3
+                }
             },
             "id": 6,
             "name": "user",

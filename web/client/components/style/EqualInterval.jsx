@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -22,57 +23,62 @@ const colors = require("./EqualIntervalComponents/ExtendColorBrewer");
 
 const Message = require('../I18N/Message');
 
-const EqualInterval = React.createClass({
-    propTypes: {
-        min: React.PropTypes.number,
-        max: React.PropTypes.number,
-        classes: React.PropTypes.number,
-        onChange: React.PropTypes.func,
-        onClassify: React.PropTypes.func,
-        ramp: React.PropTypes.string,
-        error: React.PropTypes.object
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            min: 0,
-            max: 100,
-            classes: 5,
-            ramp: "Blues",
-            onChange: () => {},
-            onClassify: () => {},
-            error: null
-        };
-    },
+class EqualInterval extends React.Component {
+    static propTypes = {
+        min: PropTypes.number,
+        max: PropTypes.number,
+        classes: PropTypes.number,
+        onChange: PropTypes.func,
+        onClassify: PropTypes.func,
+        ramp: PropTypes.string,
+        error: PropTypes.object
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        min: 0,
+        max: 100,
+        classes: 5,
+        ramp: "Blues",
+        onChange: () => {},
+        onClassify: () => {},
+        error: null
+    };
+
     shouldComponentUpdate() {
         return true;
-    },
-    getColorsSchema() {
-        return (this.props.classes) ?
+    }
+
+    getColorsSchema = () => {
+        return this.props.classes ?
             colorsSchema.filter((c) => {
                 return c.max >= this.props.classes;
             }, this) : colorsSchema;
-    },
-    getRampValue() {
+    };
+
+    getRampValue = () => {
         let ramp = this.props.ramp;
         if (!colors[this.props.ramp][this.props.classes]) {
             ramp = colorsSchema.filter((color) => { return color.max >= this.props.classes; }, this)[0].name;
         }
         return ramp;
-    },
-    renderErrorPopOver() {
+    };
+
+    renderErrorPopOver = () => {
         return (
             <Overlay
             target={() => findDOMNode(this.refs[this.props.error.type])}
-                show={true} placement="top" >
+                show placement="top" >
                 <Popover>
                     <Label bsStyle="danger" > <Message msgId={this.props.error.msg}/></Label>
                 </Popover>
             </Overlay>
-            );
-    },
+        );
+    };
+
     render() {
         return (
             <Grid fluid>
@@ -89,7 +95,7 @@ const EqualInterval = React.createClass({
                                 format="-#,###.##"
                                 precision={3}
                             />
-                         {(this.props.error && this.props.error.type === 'min') ? this.renderErrorPopOver() : null}
+                         {this.props.error && this.props.error.type === 'min' ? this.renderErrorPopOver() : null}
                         </Col></Row>
                     </Col>
                     <Col xs={4}>
@@ -104,7 +110,7 @@ const EqualInterval = React.createClass({
                                 format="-#,###.##"
                                 precision={3}
                             />
-                            {(this.props.error && this.props.error.type === 'max') ? this.renderErrorPopOver() : null}
+                            {this.props.error && this.props.error.type === 'max' ? this.renderErrorPopOver() : null}
                          </Col></Row>
                     </Col>
                     <Col xs={4}>
@@ -148,21 +154,24 @@ const EqualInterval = React.createClass({
                     </Col>
                 </Row>
             </Grid>);
-    },
-    classifyDisabled() {
-        return (this.props.error && this.props.error.type) ? true : false;
-    },
-    generateEqualIntervalRamp() {
+    }
+
+    classifyDisabled = () => {
+        return this.props.error && this.props.error.type ? true : false;
+    };
+
+    generateEqualIntervalRamp = () => {
         let ramp = colors[this.getRampValue()][this.props.classes];
         let min = this.props.min;
         let max = this.props.max;
         let step = (max - min) / this.props.classes;
         let colorRamp = ramp.map((color, idx) => {
-            return {color: color, quantity: min + (idx * step)};
+            return {color: color, quantity: min + idx * step};
         });
         this.props.onClassify("colorRamp", colorRamp);
-    },
-    changeMin(value) {
+    };
+
+    changeMin = (value) => {
         if (value < this.props.max) {
             if (this.props.error) {
                 this.props.onChange("error", {});
@@ -175,20 +184,21 @@ const EqualInterval = React.createClass({
             });
         }
 
-    },
-    changeMax(value) {
+    };
+
+    changeMax = (value) => {
         if (value > this.props.min) {
             if (this.props.error) {
                 this.props.onChange("error", {});
             }
             this.props.onChange("max", value);
-        }else {
+        } else {
             this.props.onChange("error", {
                 type: "max",
                 msg: "equalinterval.maxerror"
             });
         }
-    }
-});
+    };
+}
 
 module.exports = EqualInterval;

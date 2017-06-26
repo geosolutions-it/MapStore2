@@ -116,7 +116,7 @@ describe("Test the Tutorial component", () => {
         const spyUpdate = expect.spyOn(actions, 'onUpdate');
         const spyReset = expect.spyOn(actions, 'onReset');
 
-        const cmp = ReactDOM.render(<Tutorial introStyle={{}} steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox={true} actions={actions}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<Tutorial introStyle={{}} error={{}} steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox actions={actions}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
         expect(spySetup).toHaveBeenCalled();
@@ -193,7 +193,7 @@ describe("Test the Tutorial component", () => {
         const spyClose = expect.spyOn(actions, 'onClose');
         const spyStart = expect.spyOn(actions, 'onStart');
 
-        const cmp = ReactDOM.render(<Tutorial status={'error'} error={{}} steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox={true} actions={actions}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<Tutorial status={'error'} steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox actions={actions}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
         cmp.componentWillUpdate({status: 'error'});
@@ -206,7 +206,7 @@ describe("Test the Tutorial component", () => {
         const spyClose = expect.spyOn(actions, 'onClose');
         const spyStart = expect.spyOn(actions, 'onStart');
 
-        const cmp = ReactDOM.render(<Tutorial steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox={true} actions={actions}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<Tutorial steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox actions={actions}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
         cmp.componentWillUpdate({});

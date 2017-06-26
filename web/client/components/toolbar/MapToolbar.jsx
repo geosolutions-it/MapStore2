@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -20,37 +21,37 @@ const HelpBadge = require('../help/HelpBadge');
  * toolbar with small screens, rendering the content as a modal
  * window.
  */
-let MapToolbar = React.createClass({
-    propTypes: {
-        layers: React.PropTypes.array,
-        panelStyle: React.PropTypes.object,
-        containerStyle: React.PropTypes.object,
-        propertiesChangeHandler: React.PropTypes.func,
-        onActivateItem: React.PropTypes.func,
-        activeKey: React.PropTypes.string,
-        helpEnabled: React.PropTypes.bool,
-        changeHelpText: React.PropTypes.func,
-        changeHelpwinVisibility: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            panelStyle: {
-                minWidth: "300px",
-                right: "52px",
-                position: "absolute",
-                overflow: "auto"
-            },
-            containerStyle: {
-                position: "absolute",
-                top: "5px",
-                right: "5px",
-                marginRight: "5px",
-                marginTop: "5px",
-                zIndex: 1000
-            }
-        };
-    },
-    getPanelStyle() {
+class MapToolbar extends React.Component {
+    static propTypes = {
+        layers: PropTypes.array,
+        panelStyle: PropTypes.object,
+        containerStyle: PropTypes.object,
+        propertiesChangeHandler: PropTypes.func,
+        onActivateItem: PropTypes.func,
+        activeKey: PropTypes.string,
+        helpEnabled: PropTypes.bool,
+        changeHelpText: PropTypes.func,
+        changeHelpwinVisibility: PropTypes.func
+    };
+
+    static defaultProps = {
+        panelStyle: {
+            minWidth: "300px",
+            right: "52px",
+            position: "absolute",
+            overflow: "auto"
+        },
+        containerStyle: {
+            position: "absolute",
+            top: "5px",
+            right: "5px",
+            marginRight: "5px",
+            marginTop: "5px",
+            zIndex: 1000
+        }
+    };
+
+    getPanelStyle = () => {
         var width = window.innerWidth
                 || document.documentElement.clientWidth
                 || document.body.clientWidth;
@@ -61,7 +62,8 @@ let MapToolbar = React.createClass({
         var maxHeight = height - 70; // TODO make it parametric or calculate
         var maxWidth = width - 70; // TODO make it parametric or calculate
         return assign({}, this.props.panelStyle, {maxWidth: maxWidth + "px", maxHeight: maxHeight + "px"});
-    },
+    };
+
     render() {
         var children = React.Children.map(this.props.children, (item) => {
             if (item.props.isPanel) {
@@ -84,13 +86,13 @@ let MapToolbar = React.createClass({
                             active={this.props.activeKey === item.key}
                             style={{width: "100%"}}
                             onClick={ () => this.handleSelect(item.key)}>
-                                {(item.props.helpText) ? (<HelpBadge
+                                {item.props.helpText ? <HelpBadge
                                     className="mapstore-tb-helpbadge"
                                     helpText={item.props.helpText}
                                     isVisible={this.props.helpEnabled}
                                     changeHelpText={this.props.changeHelpText}
                                     changeHelpwinVisibility={this.props.changeHelpwinVisibility}
-                                    />) : null}
+                                    /> : null}
                                 {item.props.help}
                                 {item.props.buttonContent || item.props.icon}
                         </Button>
@@ -107,15 +109,16 @@ let MapToolbar = React.createClass({
             </ButtonGroup>
             </div>);
 
-    },
+    }
 
-    handleSelect(activeKey) {
+    handleSelect = (activeKey) => {
         if (activeKey === this.props.activeKey) {
             this.props.onActivateItem();
-        }else {
+        } else {
             this.props.onActivateItem(activeKey);
         }
 
-    }
-});
+    };
+}
+
 module.exports = MapToolbar;

@@ -34,7 +34,7 @@ const userB = assign({}, userA, {
         name: "description",
         value: "admin user"
     }
-]});
+    ]});
 
 const securityInfoB = {
     user: userB,
@@ -44,16 +44,16 @@ const securityInfoB = {
 
 const authenticationRules = [
     {
-      "urlPattern": ".*geoserver.*",
-      "method": "authkey"
+        "urlPattern": ".*geoserver.*",
+        "method": "authkey"
     },
     {
-      "urlPattern": ".*not-supported.*",
-      "method": "not-supported"
+        "urlPattern": ".*not-supported.*",
+        "method": "not-supported"
     },
     {
-      "urlPattern": ".*some-site.*",
-      "method": "basic"
+        "urlPattern": ".*some-site.*",
+        "method": "basic"
     }
 ];
 
@@ -109,9 +109,9 @@ describe('Tests ajax library', () => {
 
     it('uses a custom proxy for requests on the same origin with string query param', (done) => {
         axios.get('http://fakeexternaldomain.mapstore2', {
-                proxyUrl: '/proxy/?url=',
-                params: "params"
-            })
+            proxyUrl: '/proxy/?url=',
+            params: "params"
+        })
             .then(() => {
                 done();
             })

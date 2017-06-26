@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -13,19 +14,19 @@ const Slider = require('react-nouislider');
 require("react-nouislider/example/nouislider.css");
 require("./opacitypicker.css");
 
-const OpacityPicker = React.createClass({
-    propTypes: {
-        opacity: React.PropTypes.oneOfType([React.PropTypes.number, React.PropTypes.string]),
-        onChange: React.PropTypes.func,
-        disabled: React.PropTypes.bool
-    },
-    getDefaultProps() {
-        return {
-            opacity: "1",
-            onChange: () => {},
-            disabled: false
-        };
-    },
+class OpacityPicker extends React.Component {
+    static propTypes = {
+        opacity: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        onChange: PropTypes.func,
+        disabled: PropTypes.bool
+    };
+
+    static defaultProps = {
+        opacity: "1",
+        onChange: () => {},
+        disabled: false
+    };
+
     render() {
         return (
             <div className="opacity-picker">
@@ -39,11 +40,11 @@ const OpacityPicker = React.createClass({
                         to: function( value ) {
                             return Math.round(value) + '%';
                         }
-                        }
-                        ]}
+                    }
+                    ]}
                 />
             </div>);
     }
-});
+}
 
 module.exports = OpacityPicker;

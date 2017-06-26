@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -13,49 +14,51 @@ var {LMap,
 const assign = require('object-assign');
 const ConfigUtils = require('../../../../utils/ConfigUtils');
 require("./snapshotMapStyle.css");
+
 /**
  * GrabMap for OpenLayers map generate a fake-map, hidden, and waits for the
  * layer loading end to generate the snapshot from the canvas.
  * In order to avoid cross origin issues, the allowTaint property have to be set
  * to false if you are not sure that the items come from the same orgin.
  */
-let GrabOlMap = React.createClass({
-    propTypes: {
-            id: React.PropTypes.node,
-            config: ConfigUtils.PropTypes.config,
-            layers: React.PropTypes.array,
-            snapstate: React.PropTypes.object,
-            active: React.PropTypes.bool,
-            onSnapshotReady: React.PropTypes.func,
-            onStatusChange: React.PropTypes.func,
-            onSnapshotError: React.PropTypes.func,
-            allowTaint: React.PropTypes.bool
-    },
-    getDefaultProps() {
-        return {
-            config: null,
-            layers: [],
-            snapstate: {state: "DISABLED"},
-            active: false,
-            onSnapshotReady: () => {},
-            onStatusChange: () => {},
-            onSnapshotError: () => {}
-        };
-    },
-    renderLayers(layers) {
+class GrabOlMap extends React.Component {
+    static propTypes = {
+        id: PropTypes.node,
+        config: ConfigUtils.PropTypes.config,
+        layers: PropTypes.array,
+        snapstate: PropTypes.object,
+        active: PropTypes.bool,
+        onSnapshotReady: PropTypes.func,
+        onStatusChange: PropTypes.func,
+        onSnapshotError: PropTypes.func,
+        allowTaint: PropTypes.bool
+    };
+
+    static defaultProps = {
+        config: null,
+        layers: [],
+        snapstate: {state: "DISABLED"},
+        active: false,
+        onSnapshotReady: () => {},
+        onStatusChange: () => {},
+        onSnapshotError: () => {}
+    };
+
+    renderLayers = (layers) => {
         if (layers) {
             let projection = this.props.config.projection || 'EPSG:3857';
             let me = this; // TODO find the reason why the arrow function doesn't get this object
             return layers.map((layer, index) => {
-                var options = assign({}, layer, {srs: projection}, (layer.type === "wms") ? {forceProxy: !this.props.allowTaint} : {});
+                var options = assign({}, layer, {srs: projection}, layer.type === "wms" ? {forceProxy: !this.props.allowTaint} : {});
                 return (<LLayer type={layer.type} position={index} key={layer.id || layer.name} options={options}>
                     {me.renderLayerContent(layer)}
                 </LLayer>);
             });
         }
         return null;
-    },
-    renderLayerContent(layer) {
+    };
+
+    renderLayerContent = (layer) => {
         if (layer.features && layer.type === "vector") {
             // TODO remove this DIV. What container can be used for this component.
             return layer.features.map( (feature) => {
@@ -66,10 +69,12 @@ let GrabOlMap = React.createClass({
             });
         }
         return null;
-    },
+    };
+
     shouldComponentUpdate(nextProps) {
-        return nextProps.active || (nextProps.active !== this.props.active);
-    },
+        return nextProps.active || nextProps.active !== this.props.active;
+    }
+
     componentDidUpdate() {
         if (!this.props.active) {
             this.props.onStatusChange("DISABLED");
@@ -77,9 +82,10 @@ let GrabOlMap = React.createClass({
                 this.props.onSnapshotError(null);
             }
         }
-    },
+    }
+
     render() {
-        return (this.props.active) ? (
+        return this.props.active ?
             <LMap id={"snapshot_hidden_map-" + this.props.id}
                 className="snapshot_hidden_map"
                 style={{
@@ -97,12 +103,13 @@ let GrabOlMap = React.createClass({
             >
                 {this.renderLayers(this.props.layers)}
             </LMap>
-        ) : null;
-    },
-    layerLoad() {
+         : null;
+    }
+
+    layerLoad = () => {
         this.toLoad--;
         if (this.toLoad === 0) {
-            let map = (this.refs.snapMap) ? this.refs.snapMap.map : null;
+            let map = this.refs.snapMap ? this.refs.snapMap.map : null;
             if (map) {
                 map.once('postrender', (e) => setTimeout( () => {
                     let canvas = e.map && e.map.getTargetElement() && e.map.getTargetElement().getElementsByTagName("canvas")[0];
@@ -113,37 +120,40 @@ let GrabOlMap = React.createClass({
                 // map.once('postcompose', (e) => setTimeout( () => this.createSnapshot(e.context.canvas), 100));
             }
         }
-    },
-    layerLoading() {
+    };
+
+    layerLoading = () => {
         if (this.props.snapstate.state !== "SHOTING") {
             this.props.onStatusChange("SHOTING");
 
         }
-        this.toLoad = (this.toLoad) ? this.toLoad : 0;
+        this.toLoad = this.toLoad ? this.toLoad : 0;
         this.toLoad++;
-    },
-    createSnapshot(canvas) {
+    };
+
+    createSnapshot = (canvas) => {
         this.props.onSnapshotReady(canvas, null, null, null, this.isTainted(canvas));
-    },
+    };
+
     /**
      * Check if the canvas is tainted, so if it is allowed to export images
      * from it.
      */
-    isTainted(canvas) {
+    isTainted = (canvas) => {
         if (canvas) {
             let ctx = canvas.getContext("2d");
             try {
                 // try to generate a small image
                 ctx.getImageData(0, 0, 1, 1);
                 return false;
-            } catch(err) {
+            } catch (err) {
                 // check the error code for tainted resources
-                return (err.code === 18);
+                return err.code === 18;
             }
         }
 
-    }
-});
+    };
+}
 
 require('../../../map/openlayers/plugins/index');
 

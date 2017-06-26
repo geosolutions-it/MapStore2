@@ -17,7 +17,7 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result.length).toBe(2);
                 expect(result[0].owsType).toBe("WFS");
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -28,7 +28,7 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result).toExist();
                 expect(result.owsType).toBe("WFS");
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -41,7 +41,7 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result.version).toBe("1.3.0");
                 expect(result.capability.layer).toExist();
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -54,6 +54,66 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result.version).toBe("1.1.1");
                 expect(result.capability.layer).toExist();
                 done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+    it('GetCapabilities 1.3.0 RAW', (done) => {
+        API.getCapabilities('base/web/client/test-resources/wms/GetCapabilities-1.3.0.xml', true).then((result) => {
+            try {
+                expect(result).toExist();
+                expect(result.WMS_Capabilities).toExist();
+                expect(result.WMS_Capabilities.Capability).toExist();
+                expect(result.WMS_Capabilities.$.version).toBe("1.3.0");
+                expect(result.WMS_Capabilities.Capability.Layer).toExist();
+                done();
+            } catch(ex) {
+                done(ex);
+            }
+        });
+    });
+    it('GetCapabilities 1.1.1 RAW', (done) => {
+        API.getCapabilities('base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml', true).then((result) => {
+            try {
+                expect(result).toExist();
+                expect(result.WMT_MS_Capabilities).toExist();
+                expect(result.WMT_MS_Capabilities.Capability).toExist();
+                expect(result.WMT_MS_Capabilities.$.version).toBe("1.1.1");
+                expect(result.WMT_MS_Capabilities.Capability.Layer).toExist();
+                done();
+            } catch(ex) {
+                done(ex);
+            }
+        });
+    });
+
+    it('GetBBOX', (done) => {
+        API.getCapabilities('base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml').then((result) => {
+            try {
+                expect(result).toExist();
+                expect(result.capability).toExist();
+                expect(result.capability.layer).toExist();
+                const bbox = API.getBBox(result.capability.layer);
+                expect(bbox.extent).toExist();
+                expect(bbox.crs).toExist();
+                done();
+            } catch(ex) {
+                done(ex);
+            }
+        });
+    });
+    it('GetBBOX Bounds', (done) => {
+        API.getCapabilities('base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml').then((result) => {
+            try {
+                expect(result).toExist();
+                expect(result.capability).toExist();
+                expect(result.capability.layer).toExist();
+                const bbox = API.getBBox(result.capability.layer, true);
+                expect(bbox.bounds).toExist();
+                expect(bbox.bounds.minx).toExist();
+                expect(bbox.crs).toExist();
+                done();
             } catch(ex) {
                 done(ex);
             }
@@ -65,7 +125,7 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result).toExist();
                 expect(result.numberOfRecordsMatched).toBe(5);
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });

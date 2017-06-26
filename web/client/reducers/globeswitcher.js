@@ -21,14 +21,14 @@ const {UPDATE_LAST_2D_MAPTYPE} = require('../actions/globeswitcher');
  */
 function globeswitcher(state = {last2dMapType: "leaflet"}, action) {
     switch (action.type) {
-        case MAP_TYPE_CHANGED:
-        case UPDATE_LAST_2D_MAPTYPE:
-            if (action.mapType && action.mapType !== "cesium" && action.mapType !== state.last2dMapType) {
-                return {last2dMapType: action.mapType};
-            }
-            return state;
-        default:
-            return state;
+    case MAP_TYPE_CHANGED:
+    case UPDATE_LAST_2D_MAPTYPE:
+        if (action.mapType && action.mapType !== "cesium" && action.mapType !== state.last2dMapType) {
+            return {last2dMapType: action.mapType};
+        }
+        return state;
+    default:
+        return state;
     }
 }
 

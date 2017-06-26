@@ -22,6 +22,9 @@ const REMOVE_LAYER = 'REMOVE_LAYER';
 const SHOW_SETTINGS = 'SHOW_SETTINGS';
 const HIDE_SETTINGS = 'HIDE_SETTINGS';
 const UPDATE_SETTINGS = 'UPDATE_SETTINGS';
+const REFRESH_LAYERS = 'REFRESH_LAYERS';
+const LAYERS_REFRESHED = 'LAYERS_REFRESHED';
+const LAYERS_REFRESH_ERROR = 'LAYERS_REFRESH_ERROR';
 
 function showSettings(node, nodeType, options) {
     return {
@@ -151,9 +154,33 @@ function invalidLayer(layerType, options) {
     };
 }
 
+function refreshLayers(layers, options) {
+    return {
+        type: REFRESH_LAYERS,
+        layers,
+        options
+    };
+}
+
+function layersRefreshed(layers) {
+    return {
+        type: LAYERS_REFRESHED,
+        layers
+    };
+}
+
+function layersRefreshError(layers, error) {
+    return {
+        type: LAYERS_REFRESH_ERROR,
+        layers,
+        error
+    };
+}
+
 module.exports = {changeLayerProperties, changeGroupProperties, toggleNode, sortNode, removeNode, invalidLayer, contextNode,
-    updateNode, layerLoading, layerLoad, layerError, addLayer, removeLayer, showSettings, hideSettings, updateSettings,
+    updateNode, layerLoading, layerLoad, layerError, addLayer, removeLayer, showSettings, hideSettings, updateSettings, refreshLayers,
+    layersRefreshed, layersRefreshError,
     CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE,
     REMOVE_NODE, UPDATE_NODE, LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, ADD_LAYER, REMOVE_LAYER,
-    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, INVALID_LAYER, CONTEXT_NODE
+    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, INVALID_LAYER, CONTEXT_NODE, REFRESH_LAYERS, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR
 };

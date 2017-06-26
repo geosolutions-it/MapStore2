@@ -19,7 +19,7 @@ Then you can check each entry on the GitHub issue when done until the release is
   > from the job [configuration page](http://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-Releaser/ws/) there is a link to access the job workspace to easily download the built WAR and binary package
 - [ ] Publish the release
 - [ ] Merge release branch into master
-- [ ] Create a blog post 
+- [ ] Create a blog post
 - [ ] Write to the mailing list about the current release news and the next release major changes
 - [ ] Update the release procedure if needed.
 - [ ] Close this issue

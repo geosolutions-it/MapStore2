@@ -8,27 +8,27 @@
 const assign = require('object-assign');
 
 const getColor = function(color) {
-        return `rgb(${ color.r }, ${ color.g }, ${ color.b })`;
-    };
+    return `rgb(${ color.r }, ${ color.g }, ${ color.b })`;
+};
 const getGeomType = function(layer) {
-    return (layer.features && layer.features[0]) ? layer.features[0].geometry.type : undefined;
+    return layer.features && layer.features[0] ? layer.features[0].geometry.type : undefined;
 };
 const toVectorStyle = function(layer, style) {
-        let newLayer = assign({}, layer);
-        let geomT = getGeomType(layer);
-        if (style.marker && (geomT === 'Point' || geomT === 'MultiPoint')) {
-            newLayer.styleName = "marker";
-        }else {
-            newLayer.style = {
-                weight: style.width,
-                radius: style.radius,
-                opacity: style.color.a,
-                fillOpacity: style.fill.a,
-                color: getColor(style.color),
-                fillColor: getColor(style.fill)
-            };
-        }
-        return newLayer;
-    };
+    let newLayer = assign({}, layer);
+    let geomT = getGeomType(layer);
+    if (style.marker && (geomT === 'Point' || geomT === 'MultiPoint')) {
+        newLayer.styleName = "marker";
+    } else {
+        newLayer.style = {
+            weight: style.width,
+            radius: style.radius,
+            opacity: style.color.a,
+            fillOpacity: style.fill.a,
+            color: getColor(style.color),
+            fillColor: getColor(style.fill)
+        };
+    }
+    return newLayer;
+};
 
 module.exports = toVectorStyle;

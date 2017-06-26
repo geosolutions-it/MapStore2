@@ -122,11 +122,11 @@ describe('Leaflet layer', () => {
 
     it('creates a mapquest layer for leaflet map without API key', () => {
         var options = {
-			"source": "mapquest",
-			"title": "MapQuest OpenStreetMap",
-			"name": "osm",
-			"group": "background"
-		};
+            "source": "mapquest",
+            "title": "MapQuest OpenStreetMap",
+            "name": "osm",
+            "group": "background"
+        };
         // create layer
         var layer = ReactDOM.render(
             <LeafLetLayer type="mapquest"
@@ -240,109 +240,109 @@ describe('Leaflet layer', () => {
             "group": "sample",
             "styleName": "marker",
             "features": [
-                  { "type": "Feature",
+                { "type": "Feature",
                     "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
                     "properties": {"prop0": "value0"}
-                    },
-                  { "type": "Feature",
+                },
+                { "type": "Feature",
                     "geometry": {
-                      "type": "LineString",
-                      "coordinates": [
+                        "type": "LineString",
+                        "coordinates": [
                         [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
                         ]
-                      },
-                    "properties": {
-                      "prop0": "value0",
-                      "prop1": 0.0
-                      }
                     },
-                  { "type": "Feature",
-                     "geometry": {
-                       "type": "Polygon",
-                       "coordinates": [
-                         [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": 0.0
+                    }
+                },
+                { "type": "Feature",
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [
+                            [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
                            [100.0, 1.0], [100.0, 0.0] ]
-                         ]
-                     },
-                     "properties": {
-                       "prop0": "value0",
-                       "prop1": {"this": "that"}
-                       }
-                   },
-                   { "type": "Feature",
-                      "geometry": { "type": "MultiPoint",
-                        "coordinates": [ [100.0, 0.0], [101.0, 1.0] ]
-                      },
-                      "properties": {
+                        ]
+                    },
+                    "properties": {
                         "prop0": "value0",
                         "prop1": {"this": "that"}
-                        }
-                   },
-                   { "type": "Feature",
-                      "geometry": { "type": "MultiLineString",
+                    }
+                },
+                { "type": "Feature",
+                    "geometry": { "type": "MultiPoint",
+                        "coordinates": [ [100.0, 0.0], [101.0, 1.0] ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": {"this": "that"}
+                    }
+                },
+                { "type": "Feature",
+                    "geometry": { "type": "MultiLineString",
                         "coordinates": [
                             [ [100.0, 0.0], [101.0, 1.0] ],
                             [ [102.0, 2.0], [103.0, 3.0] ]
-                          ]
-                      },
-                      "properties": {
+                        ]
+                    },
+                    "properties": {
                         "prop0": "value0",
                         "prop1": {"this": "that"}
-                        }
-                    },
-                    { "type": "Feature",
-                       "geometry": { "type": "MultiPolygon",
+                    }
+                },
+                { "type": "Feature",
+                    "geometry": { "type": "MultiPolygon",
                         "coordinates": [
                           [[[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0]]],
-                          [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]],
+                            [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]],
                            [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]
-                          ]
-                      },
-                       "properties": {
-                         "prop0": "value0",
-                         "prop1": {"this": "that"}
-                         }
-                     },
-                     { "type": "Feature",
-                        "geometry": { "type": "GeometryCollection",
-                            "geometries": [
-                              { "type": "Point",
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": {"this": "that"}
+                    }
+                },
+                { "type": "Feature",
+                    "geometry": { "type": "GeometryCollection",
+                        "geometries": [
+                            { "type": "Point",
                                 "coordinates": [100.0, 0.0]
-                                },
-                              { "type": "LineString",
+                            },
+                            { "type": "LineString",
                                 "coordinates": [ [101.0, 0.0], [102.0, 1.0] ]
-                                }
-                            ]
-                        },
-                        "properties": {
-                          "prop0": "value0",
-                          "prop1": {"this": "that"}
-                          }
-                      }
-               ]
+                            }
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": {"this": "that"}
+                    }
+                }
+            ]
         };
         // create layers
         var layer = ReactDOM.render(
-            (<LeafLetLayer type="vector"
+            <LeafLetLayer type="vector"
                  options={options} map={map}>
-                {options.features.map((feature) => (<Feature
+                {options.features.map((feature) => <Feature
                     key={feature.id}
                     type={feature.type}
                     geometry={feature.geometry}
                     msId={feature.id}
                     featuresCrs={ 'EPSG:4326' }
-                        />))}</LeafLetLayer>), document.getElementById("container"));
+                        />)}</LeafLetLayer>, document.getElementById("container"));
         expect(layer).toExist();
         let l2 = ReactDOM.render(
-            (<LeafLetLayer type="vector"
+            <LeafLetLayer type="vector"
                  options={options} map={map}>
-                {options.features.map((feature) => (<Feature
+                {options.features.map((feature) => <Feature
                     key={feature.id}
                     type={feature.type}
                     geometry={feature.geometry}
                     msId={feature.id}
                     featuresCrs={ 'EPSG:4326' }
-                        />))}</LeafLetLayer>), document.getElementById("container"));
+                        />)}</LeafLetLayer>, document.getElementById("container"));
         expect(l2).toExist();
     });
 

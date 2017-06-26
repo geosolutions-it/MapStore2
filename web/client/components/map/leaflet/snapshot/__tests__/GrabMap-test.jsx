@@ -39,19 +39,19 @@ describe("test the Leaflet GrabMap component", () => {
     });
 
     it('snapshot creation', (done) => {
-        const tb = ReactDOM.render(<GrabMap active={true} timeout={0} onSnapshotReady={() => { expect(tb.isTainted()).toBe(false); done(); }} layers={[{loading: false, visibility: true}, {loading: false}]}/>, document.getElementById("snap"));
+        const tb = ReactDOM.render(<GrabMap active timeout={0} onSnapshotReady={() => { expect(tb.isTainted()).toBe(false); done(); }} layers={[{loading: false, visibility: true}, {loading: false}]}/>, document.getElementById("snap"));
         expect(tb).toExist();
     });
     it('snapshot creation with opacity', (done) => {
-        const tb = ReactDOM.render(<GrabMap active={true} timeout={0} onSnapshotReady={() => { expect(tb.isTainted()).toBe(false); done(); }} layers={[{loading: false, opacity: 0.5, visibility: true}, {loading: false}]}/>, document.getElementById("snap"));
+        const tb = ReactDOM.render(<GrabMap active timeout={0} onSnapshotReady={() => { expect(tb.isTainted()).toBe(false); done(); }} layers={[{loading: false, opacity: 0.5, visibility: true}, {loading: false}]}/>, document.getElementById("snap"));
         expect(tb).toExist();
     });
     it('snapshot creation with only one layer', (done) => {
-        const tb = ReactDOM.render(<GrabMap active={true} timeout={0} onSnapshotReady={() => { expect(tb.isTainted()).toBe(false); done(); }} layers={[{loading: false}]}/>, document.getElementById("snap"));
+        const tb = ReactDOM.render(<GrabMap active timeout={0} onSnapshotReady={() => { expect(tb.isTainted()).toBe(false); done(); }} layers={[{loading: false}]}/>, document.getElementById("snap"));
         expect(tb).toExist();
     });
     it('snapshot creation with only one layer', (done) => {
-        const tb = ReactDOM.render(<GrabMap active={true} timeout={0} onSnapshotReady={() => { expect(tb.isTainted()).toBe(false); done(); }} layers={[{loading: false}]}/>, document.getElementById("snap"));
+        const tb = ReactDOM.render(<GrabMap active timeout={0} onSnapshotReady={() => { expect(tb.isTainted()).toBe(false); done(); }} layers={[{loading: false}]}/>, document.getElementById("snap"));
         expect(tb).toExist();
     });
 /*

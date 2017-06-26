@@ -71,12 +71,12 @@ module.exports = {
             tool: <div id="mapstore-mousepositionsettings" key="mousepositionsettings">
             <CRSSelector
                 key="crsSelector"
-                enabled={true}
+                enabled
                 label={<Message msgId="mousePositionCoordinates" />}
             />
             <MousePositionButton
                 key="mousepositionbutton"
-                isButton={true}
+                isButton
                 text={<Message msgId="showMousePositionCoordinates" />}
             />
             </div>,

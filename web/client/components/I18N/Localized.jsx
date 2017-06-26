@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -9,22 +10,25 @@ const React = require('react');
 
 const {IntlProvider} = require('react-intl');
 
-const Localized = React.createClass({
-    propTypes: {
-        locale: React.PropTypes.string,
-        messages: React.PropTypes.object,
-        loadingError: React.PropTypes.string
-    },
-    childContextTypes: {
-        locale: React.PropTypes.string,
-        messages: React.PropTypes.object
-    },
+class Localized extends React.Component {
+    static propTypes = {
+        locale: PropTypes.string,
+        messages: PropTypes.object,
+        loadingError: PropTypes.string
+    };
+
+    static childContextTypes = {
+        locale: PropTypes.string,
+        messages: PropTypes.object
+    };
+
     getChildContext() {
         return {
-           locale: this.props.locale,
-           messages: this.props.messages
+            locale: this.props.locale,
+            messages: this.props.messages
         };
-    },
+    }
+
     render() {
         let { children } = this.props;
 
@@ -43,18 +47,19 @@ const Localized = React.createClass({
             return <div className="loading-locale-error">{this.props.loadingError}</div>;
         }
         return null;
-    },
-    flattenMessages(messages, prefix = '') {
+    }
+
+    flattenMessages = (messages, prefix = '') => {
         return Object.keys(messages).reduce((previous, current) => {
-            return (typeof messages[current] === 'string') ? {
-                 [prefix + current]: messages[current],
+            return typeof messages[current] === 'string' ? {
+                [prefix + current]: messages[current],
                 ...previous
             } : {
                 ...this.flattenMessages(messages[current], prefix + current + '.'),
                 ...previous
             };
         }, {});
-    }
- });
+    };
+}
 
 module.exports = Localized;

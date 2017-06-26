@@ -1,17 +1,22 @@
-/**
- * Copyright 2015, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */
-
+var PropTypes = require('prop-types');
 var React = require('react');
 var L = require('leaflet');
 var assign = require('object-assign');
 require('leaflet.locatecontrol')();
 require('leaflet.locatecontrol/dist/L.Control.Locate.css');
+
+const defaultOpt = { // For all configuration options refer to https://github.com/Norkart/Leaflet-MiniMap
+    follow: true,  // follow with zoom and pan the user's location
+    remainActive: true,
+    stopFollowingOnDrag: true,
+    locateOptions: {
+        maximumAge: 2000,
+        enableHighAccuracy: false,
+        timeout: 10000,
+        maxZoom: Infinity,
+        watch: true  // if you overwrite this, visualization cannot be updated
+    }
+};
 
 L.Control.MSLocate = L.Control.Locate.extend({
     setMap: function(map) {
@@ -49,25 +54,27 @@ L.Control.MSLocate = L.Control.Locate.extend({
     }
 });
 
-let Locate = React.createClass({
-    propTypes: {
-        map: React.PropTypes.object,
-        status: React.PropTypes.string,
-        messages: React.PropTypes.object,
-        changeLocateState: React.PropTypes.func,
-        onLocateError: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            id: 'overview',
-            status: "DISABLED",
-            changeLocateState: () => {},
-            onLocateError: () => {}
-        };
-    },
+class Locate extends React.Component {
+    static displayName = 'Locate';
+
+    static propTypes = {
+        map: PropTypes.object,
+        status: PropTypes.string,
+        messages: PropTypes.object,
+        changeLocateState: PropTypes.func,
+        onLocateError: PropTypes.func
+    };
+
+    static defaultProps = {
+        id: 'overview',
+        status: "DISABLED",
+        changeLocateState: () => {},
+        onLocateError: () => {}
+    };
+
     componentDidMount() {
         if (this.props.map ) {
-            this.locate = new L.Control.MSLocate(this.defaultOpt);
+            this.locate = new L.Control.MSLocate(defaultOpt);
             this.locate.setMap(this.props.map);
             this.props.map.on('locatestatus', this.locateControlState);
             this.locate.options.onLocationError = this.onLocationError;
@@ -76,17 +83,18 @@ let Locate = React.createClass({
         if (this.props.status.enabled) {
             this.locate.start();
         }
-    },
+    }
+
     componentWillReceiveProps(newProps) {
         this.fol = false;
         if (newProps.status !== this.props.status) {
             if ( newProps.status === "ENABLED" && !this.locate._active) {
                 this.locate.start();
-            }else if (newProps.status === "FOLLOWING" && this.locate._active && !this.locate._following) {
+            } else if (newProps.status === "FOLLOWING" && this.locate._active && !this.locate._following) {
                 this.fol = true;
                 this.locate.stop();
                 this.locate.start();
-            }else if ( newProps.status === "DISABLED") {
+            } else if ( newProps.status === "DISABLED") {
                 this.locate._following = false;
                 this.locate.stop();
             }
@@ -97,35 +105,26 @@ let Locate = React.createClass({
                 this.locate.drawMarker(this.locate._map);
             }
         }
-    },
-    onLocationError(err) {
+    }
+
+    onLocationError = (err) => {
         this.props.onLocateError(err.message);
         this.props.changeLocateState("DISABLED");
-    },
+    };
+
     render() {
         return null;
-    },
-    defaultOpt: { // For all configuration options refer to https://github.com/Norkart/Leaflet-MiniMap
-            follow: true,  // follow with zoom and pan the user's location
-            remainActive: true,
-            stopFollowingOnDrag: true,
-            locateOptions: {
-                maximumAge: 2000,
-                enableHighAccuracy: false,
-                timeout: 10000,
-                maxZoom: Infinity,
-                watch: true  // if you overwrite this, visualization cannot be updated
-                }
-            },
-    locateControlState(state) {
+    }
+
+    locateControlState = (state) => {
         if (state.state === 'requesting' && this.props.status !== "LOCATING" ) {
             this.props.changeLocateState("LOCATING");
-        }else if (state.state === 'following' && !this.fol ) {
+        } else if (state.state === 'following' && !this.fol ) {
             this.props.changeLocateState("FOLLOWING");
-        }else if (state.state === 'active' && this.props.status !== "ENABLED" ) {
+        } else if (state.state === 'active' && this.props.status !== "ENABLED" ) {
             this.props.changeLocateState("ENABLED");
         }
-    }
-});
+    };
+}
 
 module.exports = Locate;

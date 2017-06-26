@@ -12,49 +12,49 @@ const assign = require('object-assign');
 
 function snapshot(state = null, action) {
     switch (action.type) {
-        case CHANGE_SNAPSHOT_STATE:
-            return assign({}, state, {
-                state: action.state,
-                tainted: action.tainted
-            });
-        case SNAPSHOT_READY:
-            return assign({}, state, {
-                img: {
-                    data: action.imgData,
-                    width: action.width,
-                    height: action.height,
-                    size: action.size
-                }
-            });
-        case SNAPSHOT_ERROR:
-            return assign({}, state, {
-                error: action.error
-            });
-        case SNAPSHOT_ADD_QUEUE: {
-            let queue = [];
-            if (state && state.queue !== undefined) {
-                queue = [...state.queue, action.options];
-            } else {
-                queue = [action.options];
+    case CHANGE_SNAPSHOT_STATE:
+        return assign({}, state, {
+            state: action.state,
+            tainted: action.tainted
+        });
+    case SNAPSHOT_READY:
+        return assign({}, state, {
+            img: {
+                data: action.imgData,
+                width: action.width,
+                height: action.height,
+                size: action.size
             }
-            return assign({}, state, {
-                queue: queue
-            });
+        });
+    case SNAPSHOT_ERROR:
+        return assign({}, state, {
+            error: action.error
+        });
+    case SNAPSHOT_ADD_QUEUE: {
+        let queue = [];
+        if (state && state.queue !== undefined) {
+            queue = [...state.queue, action.options];
+        } else {
+            queue = [action.options];
         }
-        case SNAPSHOT_REMOVE_QUEUE: {
-            let queue = state.queue || [];
-            queue = queue.filter((conf) => {
-                if (conf.key === action.options.key) {
-                    return false;
-                }
-                return true;
-            });
-            return assign({}, state, {
-                queue: queue
-            });
-        }
-        default:
-            return state;
+        return assign({}, state, {
+            queue: queue
+        });
+    }
+    case SNAPSHOT_REMOVE_QUEUE: {
+        let queue = state.queue || [];
+        queue = queue.filter((conf) => {
+            if (conf.key === action.options.key) {
+                return false;
+            }
+            return true;
+        });
+        return assign({}, state, {
+            queue: queue
+        });
+    }
+    default:
+        return state;
     }
 
 }

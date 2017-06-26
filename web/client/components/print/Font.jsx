@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -10,37 +11,39 @@ const React = require('react');
 const Choice = require('./Choice');
 const {Grid, Row, Col, FormControl, Button, Glyphicon} = require('react-bootstrap');
 
-const Font = React.createClass({
-    propTypes: {
-        fonts: React.PropTypes.array,
-        label: React.PropTypes.string,
-        onChangeFamily: React.PropTypes.func,
-        onChangeSize: React.PropTypes.func,
-        onChangeBold: React.PropTypes.func,
-        onChangeItalic: React.PropTypes.func,
-        family: React.PropTypes.string,
-        size: React.PropTypes.number,
-        bold: React.PropTypes.bool,
-        italic: React.PropTypes.bool
-    },
-    getDefaultProps() {
-        return {
-            fonts: ['Verdana', 'Serif', 'SansSerif', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman'],
-            label: 'Font',
-            onChangeFamily: () => {},
-            onChangeSize: () => {},
-            family: '',
-            size: 8,
-            bold: false,
-            italic: false
-        };
-    },
-    onChangeFamily(family) {
+class Font extends React.Component {
+    static propTypes = {
+        fonts: PropTypes.array,
+        label: PropTypes.string,
+        onChangeFamily: PropTypes.func,
+        onChangeSize: PropTypes.func,
+        onChangeBold: PropTypes.func,
+        onChangeItalic: PropTypes.func,
+        family: PropTypes.string,
+        size: PropTypes.number,
+        bold: PropTypes.bool,
+        italic: PropTypes.bool
+    };
+
+    static defaultProps = {
+        fonts: ['Verdana', 'Serif', 'SansSerif', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman'],
+        label: 'Font',
+        onChangeFamily: () => {},
+        onChangeSize: () => {},
+        family: '',
+        size: 8,
+        bold: false,
+        italic: false
+    };
+
+    onChangeFamily = (family) => {
         this.props.onChangeFamily(family);
-    },
-    onChangeSize(e) {
+    };
+
+    onChangeSize = (e) => {
         this.props.onChangeSize(parseFloat(e.target.value));
-    },
+    };
+
     render() {
         return (
             <Grid fluid>
@@ -66,13 +69,15 @@ const Font = React.createClass({
                 </Row>
             </Grid>
         );
-    },
-    toggleBold() {
-        this.props.onChangeBold(!this.props.bold);
-    },
-    toggleItalic() {
-        this.props.onChangeItalic(!this.props.italic);
     }
-});
+
+    toggleBold = () => {
+        this.props.onChangeBold(!this.props.bold);
+    };
+
+    toggleItalic = () => {
+        this.props.onChangeItalic(!this.props.italic);
+    };
+}
 
 module.exports = Font;

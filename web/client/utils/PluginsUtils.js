@@ -93,10 +93,10 @@ const filterDisabledPlugins = (item, state = {}, plugins = {}) => {
     return true;
 };
 const showIn = (state, requires, cfg, name, id, isDefault) => {
-    return ((id && cfg.showIn && handleExpression(state, requires, cfg.showIn).indexOf(id) !== -1) ||
-            (cfg.showIn && handleExpression(state, requires, cfg.showIn).indexOf(name) !== -1) ||
-            (!cfg.showIn && isDefault)) &&
-            !((cfg.hideFrom && handleExpression(state, requires, cfg.hideFrom).indexOf(name) !== -1) || (id && cfg.hideFrom && handleExpression(state, requires, cfg.hideFrom).indexOf(id) !== -1));
+    return (id && cfg.showIn && handleExpression(state, requires, cfg.showIn).indexOf(id) !== -1 ||
+            cfg.showIn && handleExpression(state, requires, cfg.showIn).indexOf(name) !== -1 ||
+            !cfg.showIn && isDefault) &&
+            !(cfg.hideFrom && handleExpression(state, requires, cfg.hideFrom).indexOf(name) !== -1 || id && cfg.hideFrom && handleExpression(state, requires, cfg.hideFrom).indexOf(id) !== -1);
 };
 
 const includeLoaded = (name, loadedPlugins, plugin) => {
@@ -239,7 +239,7 @@ const PluginsUtils = {
         const name = isObject(pluginDef) ? pluginDef.name : pluginDef;
         const id = isObject(pluginDef) ? pluginDef.id : null;
         const stateSelector = isObject(pluginDef) ? pluginDef.stateSelector : id || undefined;
-        const isDefault = isObject(pluginDef) ? ((typeof pluginDef.isDefault === 'undefined') && true || pluginDef.isDefault) : true;
+        const isDefault = isObject(pluginDef) ? typeof pluginDef.isDefault === 'undefined' && true || pluginDef.isDefault : true;
         const pluginKey = (isObject(pluginDef) ? pluginDef.name : pluginDef) + 'Plugin';
         const impl = plugins[pluginKey];
         if (!impl) {
@@ -248,7 +248,7 @@ const PluginsUtils = {
         return {
             id: id || name,
             name,
-            impl: includeLoaded(name, loadedPlugins, (impl.loadPlugin || impl.displayName) ? impl : impl(stateSelector)),
+            impl: includeLoaded(name, loadedPlugins, impl.loadPlugin || impl.displayName || impl.prototype.isReactComponent ? impl : impl(stateSelector)),
             cfg: isObject(pluginDef) ? parsePluginConfig(state, plugins.requires, pluginDef.cfg) : {},
             items: getPluginItems(state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins)
         };

@@ -11,6 +11,8 @@ const WMS = require('../api/WMS');
 const WFS = require('../api/WFS');
 const WCS = require('../api/WCS');
 
+const LayersUtils = require('../utils/LayersUtils');
+
 const _ = require('lodash');
 
 function getDescribeLayer(url, layer, options) {
@@ -20,7 +22,7 @@ function getDescribeLayer(url, layer, options) {
                 return WFS.describeFeatureType(url, describeLayer.name).then((describeFeatureType) => {
                     // TODO move the management of this geometryType in the proper components, getting the describeFeatureType entry:
                     let types = _.get(describeFeatureType, "complexType[0].complexContent.extension.sequence.element");
-                    let geometryType = _.head(types && types.filter( elem => (elem.name === "the_geom" || elem.type.prefix.indexOf("gml") === 0)));
+                    let geometryType = _.head(types && types.filter( elem => elem.name === "the_geom" || elem.type.prefix.indexOf("gml") === 0));
                     geometryType = geometryType && geometryType.type.localPart;
                     describeLayer.geometryType = geometryType && geometryType.split("PropertyType")[0];
                     return dispatch(updateNode(layer.id, "id", {describeLayer, describeFeatureType}));
@@ -34,7 +36,7 @@ function getDescribeLayer(url, layer, options) {
                     if (axis && typeof axis === "string") {
                         describeLayer.bands = [1 + ""];
                     } else {
-                        describeLayer.bands = axis.map((el, index) => ((index + 1) + "")); // array of 1 2 3 because the sld do not recognize the name
+                        describeLayer.bands = axis.map((el, index) => index + 1 + ""); // array of 1 2 3 because the sld do not recognize the name
                     }
 
                     dispatch(updateNode(layer.id, "id", {describeLayer, describeCoverage}));
@@ -50,33 +52,15 @@ function getDescribeLayer(url, layer, options) {
 
 function getLayerCapabilities(layer, options) {
     // geoserver's specific. TODO parse layer.capabilitiesURL.
-    let reqUrl = layer.url;
-    let urlParts = reqUrl.split("/geoserver/");
-    if (urlParts.length === 2) {
-        let layerParts = layer.name.split(":");
-        if (layerParts.length === 2) {
-            reqUrl = urlParts[0] + "/geoserver/" + layerParts [0] + "/" + layerParts[1] + "/" + urlParts[1];
-        }
-    }
+    const reqUrl = LayersUtils.getCapabilitiesUrl(layer);
     return (dispatch) => {
         // TODO, look ad current cached capabilities;
         dispatch(updateNode(layer.id, "id", {
             capabilitiesLoading: true
         }));
         return WMS.getCapabilities(reqUrl, options).then((capabilities) => {
-            let layers = _.get(capabilities, "capability.layer.layer");
-            let layerCapability;
+            const layerCapability = WMS.parseLayerCapabilities(capabilities, layer);
 
-            layerCapability = _.head(layers.filter( ( capability ) => {
-                if (layer.name.split(":").length === 2 && capability.name && capability.name.split(":").length === 2 ) {
-                    return layer.name === capability.name;
-                } else if (capability.name && capability.name.split(":").length === 2) {
-                    return (layer.name === capability.name.split(":")[1]);
-                } else if (layer.name.split(":").length === 2) {
-                    return layer.name.split(":")[1] === capability.name;
-                }
-                return layer.name === capability.name;
-            }));
             if (layerCapability) {
                 dispatch(updateNode(layer.id, "id", {
                     capabilities: layerCapability,

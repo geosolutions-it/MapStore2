@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -13,6 +14,7 @@ var ImageButton = require('./ImageButton');
 const Dialog = require('../misc/Dialog');
 require('./css/infoButton.css');
 const assign = require('object-assign');
+
 /**
  * A button to show a simple information window.
  * Component's properies:
@@ -28,44 +30,43 @@ const assign = require('object-assign');
  *
  * Note: the button will not be never empty, it will show at least the text (default or custom)
  */
-const InfoButton = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        image: React.PropTypes.string,
-        title: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        body: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        style: React.PropTypes.object,
-        className: React.PropTypes.string,
-        glyphicon: React.PropTypes.string,
-        text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        help: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        hiddenText: React.PropTypes.bool,
-        btnSize: React.PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
-        btnType: React.PropTypes.oneOf(['normal', 'image']),
-        modalOptions: React.PropTypes.object,
-        closeGlyph: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            id: "mapstore-infobutton",
-            title: "Info",
-            body: "",
-            style: undefined,
-            glyphicon: undefined,
-            text: "Info",
-            hiddenText: false,
-            btnSize: 'medium',
-            btnType: 'normal',
-            modalOptions: {},
-            closeGlyph: ""
-        };
-    },
-    getInitialState() {
-        return {
-            isVisible: false
-        };
-    },
-    getButton() {
+class InfoButton extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        image: PropTypes.string,
+        title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        body: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        style: PropTypes.object,
+        className: PropTypes.string,
+        glyphicon: PropTypes.string,
+        text: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        help: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        hiddenText: PropTypes.bool,
+        btnSize: PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
+        btnType: PropTypes.oneOf(['normal', 'image']),
+        modalOptions: PropTypes.object,
+        closeGlyph: PropTypes.string
+    };
+
+    static defaultProps = {
+        id: "mapstore-infobutton",
+        title: "Info",
+        body: "",
+        style: undefined,
+        glyphicon: undefined,
+        text: "Info",
+        hiddenText: false,
+        btnSize: 'medium',
+        btnType: 'normal',
+        modalOptions: {},
+        closeGlyph: ""
+    };
+
+    state = {
+        isVisible: false
+    };
+
+    getButton = () => {
         var btn;
         if (this.props.btnType === 'normal') {
             btn = (<Button
@@ -77,17 +78,18 @@ const InfoButton = React.createClass({
                     {!(this.props.hiddenText && this.props.glyphicon) ? (this.props.text || this.props.help) : ""}
                 </Button>);
         } else {
-            btn = (<ImageButton image={this.props.image} onClick={this.open}/>);
+            btn = <ImageButton image={this.props.image} onClick={this.open}/>;
         }
         return btn;
-    },
+    };
+
     render() {
-        const dialog = (
-            <Dialog id="mapstore-about" style={assign({}, this.props.style, {display: this.state.isVisible ? "block" : "none"})}>
+        const dialog =
+            (<Dialog id="mapstore-about" style={assign({}, this.props.style, {display: this.state.isVisible ? "block" : "none"})}>
                 <span role="header"><span className="about-panel-title">{this.props.title}</span><button onClick={this.close} className="about-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
                 <div role="body">{this.props.body}</div>
-            </Dialog>
-        );
+            </Dialog>)
+        ;
         return (
             <div
                 id={this.props.id}
@@ -97,17 +99,19 @@ const InfoButton = React.createClass({
                 {dialog}
             </div>
         );
-    },
-    close() {
+    }
+
+    close = () => {
         this.setState({
             isVisible: false
         });
-    },
-    open() {
+    };
+
+    open = () => {
         this.setState({
             isVisible: true
         });
-    }
-});
+    };
+}
 
 module.exports = InfoButton;

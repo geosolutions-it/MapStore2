@@ -41,14 +41,14 @@ const startApp = () => {
 
     // we spread the store to the all application
     // wrapping it with a Provider component
-    const QueryFormApp = React.createClass({
+    class QueryFormApp extends React.Component {
         render() {
             return (
             <Provider store={store}>
                 <QueryForm/>
             </Provider>);
         }
-    });
+    }
 
     let locale = LocaleUtils.getUserLocale();
     store.dispatch(loadLocale('../../translations', locale));

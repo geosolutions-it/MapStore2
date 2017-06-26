@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -11,24 +12,24 @@ require('./omnibar/omnibar.css');
 
 const ToolsContainer = require('./containers/ToolsContainer');
 
-const OmniBar = React.createClass({
-    propTypes: {
-        className: React.PropTypes.string,
-        style: React.PropTypes.object,
-        items: React.PropTypes.array,
-        id: React.PropTypes.string,
-        mapType: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            items: [],
-            className: "navbar-dx shadow",
-            style: {},
-            id: "mapstore-navbar",
-            mapType: "leaflet"
-        };
-    },
-    getPanels() {
+class OmniBar extends React.Component {
+    static propTypes = {
+        className: PropTypes.string,
+        style: PropTypes.object,
+        items: PropTypes.array,
+        id: PropTypes.string,
+        mapType: PropTypes.string
+    };
+
+    static defaultProps = {
+        items: [],
+        className: "navbar-dx shadow",
+        style: {},
+        id: "mapstore-navbar",
+        mapType: "leaflet"
+    };
+
+    getPanels = () => {
         return this.props.items.filter((item) => item.tools).reduce((previous, current) => {
             return previous.concat(
                 current.tools.map((tool, index) => ({
@@ -39,10 +40,12 @@ const OmniBar = React.createClass({
             );
         }, []);
 
-    },
-    getTools() {
+    };
+
+    getTools = () => {
         return this.props.items.sort((a, b) => a.position - b.position);
-    },
+    };
+
     render() {
         return (<ToolsContainer id={this.props.id}
             style={this.props.style}
@@ -57,7 +60,7 @@ const OmniBar = React.createClass({
             panels={this.getPanels()}
         />);
     }
-});
+}
 
 module.exports = {
     OmniBarPlugin: OmniBar,

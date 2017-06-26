@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -14,10 +15,11 @@ const LinkedinGroup = require('../../assets/img/linkedin_group.png');
 const {Follow} = require('react-twitter-widgets');
 
 
-var MailingLists = React.createClass({
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
+class MailingLists extends React.Component {
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
     render() {
         return (
             <div id="mailinglists" className="container">
@@ -91,9 +93,9 @@ var MailingLists = React.createClass({
                             <tr>
                                 <td>
                                     <img style={{
-                                            background: "white",
-                                            borderRadius: "2px 2px 2px 2px"
-                                        }} src={LinkedinGroup} height="50" width="100" alt="Linkedin Groups" />
+                                        background: "white",
+                                        borderRadius: "2px 2px 2px 2px"
+                                    }} src={LinkedinGroup} height="50" width="100" alt="Linkedin Groups" />
                                 </td>
                             </tr>
                             <tr>
@@ -116,6 +118,6 @@ var MailingLists = React.createClass({
 			</div>
         );
     }
-});
+}
 
 module.exports = MailingLists;

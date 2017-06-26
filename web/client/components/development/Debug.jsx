@@ -14,7 +14,7 @@ if (!global.Symbol) {
 
 const urlQuery = url.parse(window.location.href, true).query;
 
-let Debug = React.createClass({
+class Debug extends React.Component {
     render() {
         if (__DEVTOOLS__ && urlQuery.debug && !window.devToolsExtension) {
             const DevTools = require('./DevTools');
@@ -24,6 +24,6 @@ let Debug = React.createClass({
         }
         return null;
     }
-});
+}
 
 module.exports = Debug;

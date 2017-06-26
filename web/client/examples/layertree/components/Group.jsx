@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -13,31 +14,31 @@ var GroupChildren = require('../../../components/TOC/fragments/GroupChildren');
 var VisibilityCheck = require('../../../components/TOC/fragments/VisibilityCheck');
 var {Glyphicon} = require('react-bootstrap');
 
-var Group = React.createClass({
-    propTypes: {
-        node: React.PropTypes.object,
-        expanded: React.PropTypes.bool,
-        style: React.PropTypes.object,
-        onToggle: React.PropTypes.func,
-        onSort: React.PropTypes.func,
-        onRemove: React.PropTypes.func,
-        onSettings: React.PropTypes.func,
-        propertiesChangeHandler: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            node: {},
-            onToggle: () => {},
-            onRemove: () => {},
-            onSettings: () => {},
-            propertiesChangeHandler: () => {},
-            expanded: true,
-            style: {
-                marginBottom: "16px",
-                cursor: "pointer"
-            }
-        };
-    },
+class Group extends React.Component {
+    static propTypes = {
+        node: PropTypes.object,
+        expanded: PropTypes.bool,
+        style: PropTypes.object,
+        onToggle: PropTypes.func,
+        onSort: PropTypes.func,
+        onRemove: PropTypes.func,
+        onSettings: PropTypes.func,
+        propertiesChangeHandler: PropTypes.func
+    };
+
+    static defaultProps = {
+        node: {},
+        onToggle: () => {},
+        onRemove: () => {},
+        onSettings: () => {},
+        propertiesChangeHandler: () => {},
+        expanded: true,
+        style: {
+            marginBottom: "16px",
+            cursor: "pointer"
+        }
+    };
+
     render() {
         let {children, onToggle, ...other } = this.props;
         let visibilityStyle = {
@@ -49,7 +50,7 @@ var Group = React.createClass({
         return (
             <Node type="group" {...other}>
                 {this.props.node.name !== 'background' ?
-                    [<Glyphicon key="remove" style={{"float": "left", marginTop: "5px", marginLeft: "5px"}} glyph="remove-sign"
+                [<Glyphicon key="remove" style={{"float": "left", marginTop: "5px", marginLeft: "5px"}} glyph="remove-sign"
                         onClick={() => this.props.onRemove(this.props.node)}/>,
                     <VisibilityCheck key="visibility" propertiesChangeHandler={this.props.propertiesChangeHandler} style={visibilityStyle}/>] : []}
                 <GroupTitle onClick={this.props.onToggle}/>
@@ -59,6 +60,6 @@ var Group = React.createClass({
             </Node>
         );
     }
-});
+}
 
 module.exports = Group;

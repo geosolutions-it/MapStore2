@@ -20,18 +20,18 @@ describe('Test Feature', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
         map = new ol.Map({
-          layers: [
-          ],
-          controls: ol.control.defaults({
-            attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
-              collapsible: false
+            layers: [
+            ],
+            controls: ol.control.defaults({
+                attributionOptions: /** @type {olx.control.AttributionOptions} */ {
+                    collapsible: false
+                }
+            }),
+            target: 'map',
+            view: new ol.View({
+                center: [0, 0],
+                zoom: 5
             })
-          }),
-          target: 'map',
-          view: new ol.View({
-            center: [0, 0],
-            zoom: 5
-          })
         });
         setTimeout(done);
     });
@@ -46,42 +46,42 @@ describe('Test Feature', () => {
         var options = {
             crs: 'EPSG:4326',
             features: {
-              type: 'FeatureCollection',
-              crs: {
-                'type': 'name',
-                'properties': {
-                  'name': 'EPSG:4326'
-                }
-              },
-              features: [
-                  {
-                     type: 'Feature',
-                      geometry: {
-                          type: 'Polygon',
-                          coordinates: [[
+                type: 'FeatureCollection',
+                crs: {
+                    'type': 'name',
+                    'properties': {
+                        'name': 'EPSG:4326'
+                    }
+                },
+                features: [
+                    {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Polygon',
+                            coordinates: [[
                               [13, 43],
                               [15, 43],
                               [15, 44],
                               [13, 44]
-                          ]]
-                      },
-                      properties: {
-                          'name': "some name"
-                      }
-                  }
-              ]
-          }
+                            ]]
+                        },
+                        properties: {
+                            'name': "some name"
+                        }
+                    }
+                ]
+            }
         };
         const source = new ol.source.Vector({
             features: []
         });
         const msId = "some value";
         let container = new ol.layer.Vector({
-           msId,
-           source: source,
-           visible: true,
-           zIndex: 1
-       });
+            msId,
+            source: source,
+            visible: true,
+            zIndex: 1
+        });
         const geometry = options.features.features[0].geometry;
         const type = options.features.features[0].type;
         const properties = options.features.features[0].properties;

@@ -16,26 +16,26 @@ let setupEditor = (docElement, actions) => {
     return ReactDOM.render(<PermissionEditor
         {...actions}
         map={{
-        permissions: {
-            SecurityRuleList: {
-                SecurityRule: [
-                    {
-                        canRead: true,
-                        canWrite: false,
-                        group: {
-                            groupName: "everyone"
+            permissions: {
+                SecurityRuleList: {
+                    SecurityRule: [
+                        {
+                            canRead: true,
+                            canWrite: false,
+                            group: {
+                                groupName: "everyone"
+                            }
+                        }, {
+                            canRead: true,
+                            canWrite: true,
+                            group: {
+                                groupName: "g11"
+                            }
                         }
-                    }, {
-                        canRead: true,
-                        canWrite: true,
-                        group: {
-                            groupName: "g11"
-                        }
-                    }
-                ]
+                    ]
+                }
             }
-        }
-    }}
+        }}
     availableGroups = {[{
         groupName: "everyone",
         id: "1234"

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -10,21 +11,21 @@ var React = require('react');
 var {ListGroup, Panel} = require('react-bootstrap');
 var MapItem = require('./MapItem');
 
-var MapList = React.createClass({
-    propTypes: {
-        panelProps: React.PropTypes.object,
-        maps: React.PropTypes.array,
-        viewerUrl: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
-        mapType: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            onChangeMapType: function() {},
-            mapType: 'leaflet',
-            maps: []
-        };
-    },
-    renderMaps: function(maps, mapType) {
+class MapList extends React.Component {
+    static propTypes = {
+        panelProps: PropTypes.object,
+        maps: PropTypes.array,
+        viewerUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+        mapType: PropTypes.string
+    };
+
+    static defaultProps = {
+        onChangeMapType: function() {},
+        mapType: 'leaflet',
+        maps: []
+    };
+
+    renderMaps = (maps, mapType) => {
         const viewerUrl = this.props.viewerUrl;
         return maps.map((map) => {
             let children = React.Children.count(this.props.children);
@@ -32,8 +33,9 @@ var MapList = React.createClass({
                 React.cloneElement(React.Children.only(this.props.children), {viewerUrl, key: map.id, mapType, map}) :
                 <MapItem viewerUrl={viewerUrl} key={map.id} mapType={mapType} map={map} />;
         });
-    },
-    render: function() {
+    };
+
+    render() {
         return (
             <Panel {...this.props.panelProps}>
                 <ListGroup>
@@ -42,6 +44,6 @@ var MapList = React.createClass({
             </Panel>
         );
     }
-});
+}
 
 module.exports = MapList;

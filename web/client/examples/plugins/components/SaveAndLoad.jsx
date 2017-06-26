@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -9,36 +10,38 @@ const React = require('react');
 const {FormControl, FormGroup, Button} = require('react-bootstrap');
 
 
-const SaveButton = React.createClass({
-    propTypes: {
-        onSave: React.PropTypes.func,
-        onLoad: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            onSave: () => {},
-            onLoad: () => {}
-        };
-    },
-    getInitialState() {
-        return {
-            savename: '',
-            loadname: ''
-        };
-    },
-    onChangeSaveName(e) {
+class SaveButton extends React.Component {
+    static propTypes = {
+        onSave: PropTypes.func,
+        onLoad: PropTypes.func
+    };
+
+    static defaultProps = {
+        onSave: () => {},
+        onLoad: () => {}
+    };
+
+    state = {
+        savename: '',
+        loadname: ''
+    };
+
+    onChangeSaveName = (e) => {
         this.setState({savename: e.target.value});
-    },
-    onChangeLoadName(e) {
+    };
+
+    onChangeLoadName = (e) => {
         this.setState({loadname: e.target.options[e.target.selectedIndex].value});
-    },
-    renderSaved() {
+    };
+
+    renderSaved = () => {
         return [<option key="---" value="">---</option>, ...Object.keys(localStorage).filter((key) => key.indexOf('mapstore.example.plugins.') === 0)
             .map((key) => key.substring('mapstore.example.plugins.'.length))
             .map((name) => <option key={name} value={name}>{name}</option>)];
-    },
+    };
+
     render() {
-        const embedded = (<a href={'../api/?map=' + this.state.loadname} target="_blank">Load in embedded version!</a>);
+        const embedded = <a href={'../api/?map=' + this.state.loadname} target="_blank">Load in embedded version!</a>;
         return (<div className="save">
             <FormGroup bsSize="small">
                 <Button onClick={this.save} bsStyle="primary" disabled={this.state.savename === ''}>Save</Button>
@@ -52,13 +55,15 @@ const SaveButton = React.createClass({
                 </FormControl>
             </FormGroup>
             </div>);
-    },
-    load() {
-        this.props.onLoad(this.state.loadname);
-    },
-    save() {
-        this.props.onSave(this.state.savename);
     }
-});
+
+    load = () => {
+        this.props.onLoad(this.state.loadname);
+    };
+
+    save = () => {
+        this.props.onSave(this.state.savename);
+    };
+}
 
 module.exports = SaveButton;

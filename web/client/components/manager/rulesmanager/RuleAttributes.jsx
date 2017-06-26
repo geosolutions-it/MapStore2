@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -17,48 +18,51 @@ const ACCESS_TYPES = [
     'DENY'
 ];
 
-const RuleAttributes = React.createClass({
-    propTypes: {
-        loadRoles: React.PropTypes.func,
-        loadUsers: React.PropTypes.func,
-        loadWorkspaces: React.PropTypes.func,
-        loadLayers: React.PropTypes.func,
-        panelHeader: React.PropTypes.string,
-        options: React.PropTypes.object,
-        services: React.PropTypes.object,
-        updateRuleAttributes: React.PropTypes.func,
-        ruleAttributes: React.PropTypes.object,
-        showAccess: React.PropTypes.bool,
-        containerClassName: React.PropTypes.string,
-        selectClassName: React.PropTypes.string,
-        context: React.PropTypes.string
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            loadRoles: () => {},
-            loadUsers: () => {},
-            loadWorkspaces: () => {},
-            loadLayers: () => {},
-            options: {},
-            updateRuleAttributes: () => {},
-            ruleAttributes: {},
-            showAccess: false,
-            services: {}
-        };
-    },
-    getServicesNames() {
+class RuleAttributes extends React.Component {
+    static propTypes = {
+        loadRoles: PropTypes.func,
+        loadUsers: PropTypes.func,
+        loadWorkspaces: PropTypes.func,
+        loadLayers: PropTypes.func,
+        panelHeader: PropTypes.string,
+        options: PropTypes.object,
+        services: PropTypes.object,
+        updateRuleAttributes: PropTypes.func,
+        ruleAttributes: PropTypes.object,
+        showAccess: PropTypes.bool,
+        containerClassName: PropTypes.string,
+        selectClassName: PropTypes.string,
+        context: PropTypes.string
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        loadRoles: () => {},
+        loadUsers: () => {},
+        loadWorkspaces: () => {},
+        loadLayers: () => {},
+        options: {},
+        updateRuleAttributes: () => {},
+        ruleAttributes: {},
+        showAccess: false,
+        services: {}
+    };
+
+    getServicesNames = () => {
         return Object.keys(this.props.services);
-    },
-    getRequestsNames() {
+    };
+
+    getRequestsNames = () => {
         if (this.props.ruleAttributes.service) {
             return this.props.services[this.props.ruleAttributes.service];
         }
         const keys = Object.keys(this.props.services);
         return _(keys.map(key => this.props.services[key])).flatten().uniq().value();
-    },
+    };
+
     render() {
         const requestNames = this.getRequestsNames() || [];
         const selectedWorkSpace = this.props.ruleAttributes.workspace;
@@ -84,7 +88,7 @@ const RuleAttributes = React.createClass({
                     placeholderMsgId={'rulesmanager.service'}
                     options={this.getServicesNames()}
                     className={this.props.selectClassName}
-                    staticValues={true}/>
+                    staticValues/>
                 <Select
                     onValueUpdated={this.createUpdateFunction('request')}
                     selectedValue={this.props.ruleAttributes.service && this.props.ruleAttributes.request}
@@ -92,7 +96,7 @@ const RuleAttributes = React.createClass({
                     options={requestNames}
                     className={this.props.selectClassName}
                     disabled={this.isNullValue(this.props.ruleAttributes.service)}
-                    staticValues={true}/>
+                    staticValues/>
                 <Select loadOptions={() => this.props.loadWorkspaces(this.props.context)}
                     onValueUpdated={this.createUpdateFunction('workspace', 'layer')}
                     selectedValue={selectedWorkSpace}
@@ -109,7 +113,7 @@ const RuleAttributes = React.createClass({
                     options={this.props.options.layers}
                     className={this.props.selectClassName}
                     disabled={this.isNullValue(this.props.ruleAttributes.workspace)}
-                    paginated={true}
+                    paginated
                     currentPage={this.props.options.layersPage}
                     valuesCount={this.props.options.layersCount}/>
                 {
@@ -120,18 +124,20 @@ const RuleAttributes = React.createClass({
                         options={ACCESS_TYPES}
                         clearable={false}
                         className={this.props.selectClassName}
-                        staticValues={true}/>
+                        staticValues/>
                 }
             </Panel>
         );
-    },
-    filterValue(value, values) {
+    }
+
+    filterValue = (value, values) => {
         if (value && head(values.filter(existing => existing === value))) {
             return value;
         }
         return undefined;
-    },
-    createUpdateFunction(attributeName, attributeNameToReset) {
+    };
+
+    createUpdateFunction = (attributeName, attributeNameToReset) => {
         return function(attributeValue) {
             if (!attributeNameToReset) {
                 this.props.updateRuleAttributes(
@@ -139,13 +145,14 @@ const RuleAttributes = React.createClass({
             } else {
                 this.props.updateRuleAttributes(
                     {[attributeName]: attributeValue ? attributeValue.value : "*",
-                     [attributeNameToReset]: undefined});
+                        [attributeNameToReset]: undefined});
             }
         }.bind(this);
-    },
-    isNullValue(value) {
+    };
+
+    isNullValue = (value) => {
         return value === undefined || value === "*";
-    }
-});
+    };
+}
 
 module.exports = RuleAttributes;

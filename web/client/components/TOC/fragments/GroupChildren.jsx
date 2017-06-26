@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -10,37 +11,36 @@ const React = require('react');
 const Sortable = require('react-sortable-items');
 require('./css/groupchildren.css');
 
-const GroupChildren = React.createClass({
-    propTypes: {
-        node: React.PropTypes.object,
-        filter: React.PropTypes.func,
-        onSort: React.PropTypes.func,
-        level: React.PropTypes.number
-    },
-    statics: {
-        inheritedPropTypes: ['node', 'filter', 'onSort']
-    },
-    getDefaultProps() {
-        return {
-            node: null,
-            filter: () => true,
-            onSort: null,
-            level: 1
-        };
-    },
+class GroupChildren extends React.Component {
+    static propTypes = {
+        node: PropTypes.object,
+        filter: PropTypes.func,
+        onSort: PropTypes.func,
+        level: PropTypes.number
+    };
+
+    static inheritedPropTypes = ['node', 'filter', 'onSort'];
+
+    static defaultProps = {
+        node: null,
+        filter: () => true,
+        onSort: null,
+        level: 1
+    };
+
     render() {
         let content = [];
         if (this.props.children) {
             let nodes = (this.props.node.nodes || [])
                 .filter((node) => this.props.filter(node, this.props.node));
             let i = 0;
-            content = nodes.map((node) => (React.cloneElement(this.props.children, {
+            content = nodes.map((node) => React.cloneElement(this.props.children, {
                 node: node,
                 key: node.id,
                 sortData: i++,
                 level: this.props.level,
                 isDraggable: !!this.props.onSort
-            })));
+            }));
         }
         if (this.props.onSort) {
             return (
@@ -54,10 +54,11 @@ const GroupChildren = React.createClass({
         return (
             <div className="toc-group-children" >{content}</div>
         );
-    },
-    handleSort: function(reorder) {
-        this.props.onSort(this.props.node.id, reorder);
     }
-});
+
+    handleSort = (reorder) => {
+        this.props.onSort(this.props.node.id, reorder);
+    };
+}
 
 module.exports = GroupChildren;

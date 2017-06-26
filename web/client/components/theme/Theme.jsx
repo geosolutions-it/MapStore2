@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -13,11 +14,11 @@ const reducePropsToState = (props) => {
     const innermostProps = props[props.length - 1];
     if (innermostProps) {
         return {
-          theme: innermostProps.theme || 'default',
-          themeElement: innermostProps.themeElement || 'theme_stylesheet',
-          prefix: innermostProps.prefix || ConfigUtils.getConfigProp('themePrefix') || 'ms2',
-          prefixContainer: innermostProps.prefixContainer && document.querySelector(innermostProps.prefixContainer) || document.body,
-          path: innermostProps.path || 'dist/themes'
+            theme: innermostProps.theme || 'default',
+            themeElement: innermostProps.themeElement || 'theme_stylesheet',
+            prefix: innermostProps.prefix || ConfigUtils.getConfigProp('themePrefix') || 'ms2',
+            prefixContainer: innermostProps.prefixContainer && document.querySelector(innermostProps.prefixContainer) || document.body,
+            path: innermostProps.path || 'dist/themes'
         };
     }
     return null;
@@ -46,21 +47,21 @@ const handleStateChangeOnClient = (themeCfg) => {
     }
 };
 
-const Theme = React.createClass({
-    propTypes: {
-        theme: React.PropTypes.string.isRequired
-    },
-    getDefaultProps() {
-        return {
-            theme: 'default'
-        };
-    },
+class Theme extends React.Component {
+    static propTypes = {
+        theme: PropTypes.string.isRequired
+    };
+
+    static defaultProps = {
+        theme: 'default'
+    };
+
     render() {
         if (this.props.children) {
             return React.Children.only(this.props.children);
         }
         return null;
     }
-});
+}
 
 module.exports = withSideEffect(reducePropsToState, handleStateChangeOnClient)(Theme);

@@ -67,7 +67,7 @@ function printSubmit(url, spec) {
             } else {
                 try {
                     JSON.parse(response.data);
-                } catch(e) {
+                } catch (e) {
                     dispatch(printError('Error on reading print result: ' + e.data));
                 }
             }
@@ -85,7 +85,7 @@ function loadPrintCapabilities(url) {
             } else {
                 try {
                     JSON.parse(response.data);
-                } catch(e) {
+                } catch (e) {
                     dispatch(printCapabilitiesError('Print configuration broken (' + url + '): ' + e.data));
                 }
 

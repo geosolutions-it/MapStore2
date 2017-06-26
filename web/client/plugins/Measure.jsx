@@ -35,9 +35,9 @@ const toggleMeasureTool = toggleControl.bind(null, 'measure', null);
  */
 const Measure = connect(
     createSelector([
-            selector,
-            (state) => state && state.controls && state.controls.measure && state.controls.measure.enabled
-        ],
+        selector,
+        (state) => state && state.controls && state.controls.measure && state.controls.measure.enabled
+    ],
         (measure, show) => ({
             show,
             ...measure
@@ -59,7 +59,7 @@ module.exports = {
             tooltip: "measureComponent.tooltip",
             text: <Message msgId="measureComponent.Measure"/>,
             icon: <Glyphicon glyph="1-ruler"/>,
-        action: toggleMeasureTool
+            action: toggleMeasureTool
         }
     }),
     reducers: {measurement: require('../reducers/measurement')}

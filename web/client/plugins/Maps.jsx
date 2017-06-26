@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -17,7 +18,7 @@ const MapsGrid = connect((state) => {
         maps: state.maps && state.maps.results ? state.maps.results : [],
         currentMap: state.currentMap,
         loading: state.maps && state.maps.loading,
-        mapType: (state.home && state.home.mapType) || (state.maps && state.maps.mapType)
+        mapType: state.home && state.home.mapType || state.maps && state.maps.mapType
     };
 }, {
     loadMaps,
@@ -61,7 +62,7 @@ const PaginationToolbar = connect((state) => {
     }
     let {start, limit, results, loading, totalCount, searchText} = state.maps;
     const total = Math.min(totalCount || 0, limit || 0);
-    const page = (results && total && Math.ceil(start / total)) || 0;
+    const page = results && total && Math.ceil(start / total) || 0;
     return {
         page: page,
         pageSize: limit,
@@ -82,53 +83,55 @@ const PaginationToolbar = connect((state) => {
     };
 })(require('../components/misc/PaginationToolbar'));
 
-const Maps = React.createClass({
-    propTypes: {
-        mapType: React.PropTypes.string,
-        onGoToMap: React.PropTypes.func,
-        loadMaps: React.PropTypes.func,
-        maps: React.PropTypes.object,
-        colProps: React.PropTypes.object
-    },
-    contextTypes: {
-        router: React.PropTypes.object
-    },
+class Maps extends React.Component {
+    static propTypes = {
+        mapType: PropTypes.string,
+        onGoToMap: PropTypes.func,
+        loadMaps: PropTypes.func,
+        maps: PropTypes.object,
+        colProps: PropTypes.object
+    };
+
+    static contextTypes = {
+        router: PropTypes.object
+    };
+
+    static defaultProps = {
+        mapType: "leaflet",
+        onGoToMap: () => {},
+        loadMaps: () => {},
+        fluid: false,
+        colProps: {
+            xs: 12,
+            sm: 6,
+            lg: 3,
+            md: 4,
+            style: {
+                "marginBottom": "20px"
+            }
+        },
+        maps: {
+            results: []
+        }
+    };
+
     componentDidMount() {
         this.props.loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*", {start: 0, limit: 12});
-    },
-    getDefaultProps() {
-        return {
-            mapType: "leaflet",
-            onGoToMap: () => {},
-            loadMaps: () => {},
-            fluid: false,
-            colProps: {
-                xs: 12,
-                sm: 6,
-                lg: 3,
-                md: 4,
-                style: {
-                    "marginBottom": "20px"
-                }
-            },
-            maps: {
-                results: []
-            }
-        };
-    },
+    }
+
     render() {
         return (<MapsGrid
             colProps={this.props.colProps}
-            viewerUrl={(map) => {this.context.router.push("/viewer/" + this.props.mapType + "/" + map.id); }}
+            viewerUrl={(map) => {this.context.router.history.push("/viewer/" + this.props.mapType + "/" + map.id); }}
             bottom={<PaginationToolbar />}
             metadataModal={MetadataModal}
             />);
     }
-});
+}
 
 module.exports = {
     MapsPlugin: connect((state) => ({
-        mapType: (state.maptype && state.maptype.mapType) || 'leaflet'
+        mapType: state.maptype && state.maptype.mapType || 'leaflet'
     }), {
         loadMaps
     })(Maps),

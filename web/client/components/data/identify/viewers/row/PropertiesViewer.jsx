@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -8,36 +9,40 @@
 
 const React = require('react');
 
-var PropertiesViewer = React.createClass({
-    propTypes: {
-        title: React.PropTypes.string,
-        exclude: React.PropTypes.array,
-        titleStyle: React.PropTypes.object,
-        listStyle: React.PropTypes.object,
-        componentStyle: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            exclude: [],
-            titleStyle: {
-                height: "100%",
-                width: "100%",
-                padding: "4px 0px",
-                background: "rgb(240,240,240)",
-                borderRadius: "4px",
-                textAlign: "center",
-                textOverflow: "ellipsis"
-            },
-            listStyle: {
-                margin: "0px 0px 4px 0px"
-            },
-            componentStyle: {
-                padding: "0px 0px 2px 0px",
-                margin: "2px 0px 0px 0px"
-            }
-        };
-    },
-    getBodyItems() {
+const alwaysExcluded = ["exclude", "titleStyle", "listStyle", "componentStyle", "title"];
+
+class PropertiesViewer extends React.Component {
+    static displayName = 'PropertiesViewer';
+
+    static propTypes = {
+        title: PropTypes.string,
+        exclude: PropTypes.array,
+        titleStyle: PropTypes.object,
+        listStyle: PropTypes.object,
+        componentStyle: PropTypes.object
+    };
+
+    static defaultProps = {
+        exclude: [],
+        titleStyle: {
+            height: "100%",
+            width: "100%",
+            padding: "4px 0px",
+            background: "rgb(240,240,240)",
+            borderRadius: "4px",
+            textAlign: "center",
+            textOverflow: "ellipsis"
+        },
+        listStyle: {
+            margin: "0px 0px 4px 0px"
+        },
+        componentStyle: {
+            padding: "0px 0px 2px 0px",
+            margin: "2px 0px 0px 0px"
+        }
+    };
+
+    getBodyItems = () => {
         return Object.keys(this.props)
             .filter(this.toExlude)
             .map((key) => {
@@ -45,8 +50,9 @@ var PropertiesViewer = React.createClass({
                     <p key={key} style={this.props.listStyle}><b>{key}</b> {this.props[key]}</p>
                 );
             });
-    },
-    renderHeader() {
+    };
+
+    renderHeader = () => {
         if (!this.props.title) {
             return null;
         }
@@ -55,8 +61,9 @@ var PropertiesViewer = React.createClass({
                 {this.props.title}
             </div>
         );
-    },
-    renderBody() {
+    };
+
+    renderBody = () => {
         var items = this.getBodyItems();
         if (items.length === 0) {
             return null;
@@ -71,7 +78,8 @@ var PropertiesViewer = React.createClass({
                 {items}
             </div>
         );
-    },
+    };
+
     render() {
         return (
             <div style={this.props.componentStyle}>
@@ -79,13 +87,13 @@ var PropertiesViewer = React.createClass({
                 {this.renderBody()}
             </div>
         );
-    },
-    alwaysExcluded: ["exclude", "titleStyle", "listStyle", "componentStyle", "title"],
-    toExlude(propName) {
-        return this.alwaysExcluded
+    }
+
+    toExlude = (propName) => {
+        return alwaysExcluded
             .concat(this.props.exclude)
             .indexOf(propName) === -1;
-    }
-});
+    };
+}
 
 module.exports = PropertiesViewer;

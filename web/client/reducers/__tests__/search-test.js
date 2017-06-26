@@ -61,38 +61,38 @@ describe('Test the search reducer', () => {
     });
     it('search results purge', () => {
         let state = search({
-                results: ["result1", "result2"]
-            }, {
-                type: TEXT_SEARCH_RESULTS_PURGE,
-                error: {message: "M"}
+            results: ["result1", "result2"]
+        }, {
+            type: TEXT_SEARCH_RESULTS_PURGE,
+            error: {message: "M"}
         });
         expect(state.results).toBe(null);
     });
     it('nested search service selected', () => {
         let state = search({
-                results: ["result1", "result2"]
-            }, {
-                type: TEXT_SEARCH_NESTED_SERVICES_SELECTED,
-                services: [{
+            results: ["result1", "result2"]
+        }, {
+            type: TEXT_SEARCH_NESTED_SERVICES_SELECTED,
+            services: [{
 
-                }],
-                searchText: "TEST",
-                selectedItems: [{
-                    text: "text"
-                }]
+            }],
+            searchText: "TEST",
+            selectedItems: [{
+                text: "text"
+            }]
 
         });
         expect(state.selectedItems.length).toBe(1);
         expect(state.selectedServices.length).toBe(1);
         state = search(state, {
-                type: TEXT_SEARCH_NESTED_SERVICES_SELECTED,
-                services: [{
+            type: TEXT_SEARCH_NESTED_SERVICES_SELECTED,
+            services: [{
 
-                }],
-                searchText: "TEST",
-                selectedItems: [{
-                    text: "text"
-                }]
+            }],
+            searchText: "TEST",
+            selectedItems: [{
+                text: "text"
+            }]
 
         });
         expect(state.selectedItems.length).toBe(2);
@@ -101,11 +101,11 @@ describe('Test the search reducer', () => {
     it('nested search cancel item', () => {
         let itemToCacel = {text: "text2"};
         let state = search({
-                searchText: "",
-                selectedItems: [{text: "text1"}, itemToCacel]
-            }, {
-                type: TEXT_SEARCH_CANCEL_ITEM,
-                item: itemToCacel
+            searchText: "",
+            selectedItems: [{text: "text1"}, itemToCacel]
+        }, {
+            type: TEXT_SEARCH_CANCEL_ITEM,
+            item: itemToCacel
 
         });
         expect(state.searchText).toBe("text2");

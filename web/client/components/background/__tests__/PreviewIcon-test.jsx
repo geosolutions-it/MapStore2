@@ -44,7 +44,7 @@ describe("test the PreviewIcon", () => {
         const spyToggle = expect.spyOn(actions, 'onToggle');
         const spyLayerChange = expect.spyOn(actions, 'onLayerChange');
 
-        const previewIcon = ReactDOM.render(<PreviewIcon onPropertiesChange={actions.onPropertiesChange} onToggle={actions.onToggle} onLayerChange={actions.onLayerChange} vertical={true} layer={layer}/>, document.getElementById("container"));
+        const previewIcon = ReactDOM.render(<PreviewIcon onPropertiesChange={actions.onPropertiesChange} onToggle={actions.onToggle} onLayerChange={actions.onLayerChange} vertical layer={layer}/>, document.getElementById("container"));
         expect(previewIcon).toExist();
         const node = ReactDOM.findDOMNode(previewIcon);
         expect(node).toExist();

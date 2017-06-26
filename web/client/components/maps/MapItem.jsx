@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -16,13 +17,14 @@ var Tooltip = BootstrapReact.Tooltip;
 const OverlayTrigger = require('../misc/OverlayTrigger');
 var {isFunction} = require('lodash');
 
-var MapItem = React.createClass({
-    propTypes: {
-        map: React.PropTypes.object,
-        viewerUrl: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
-        mapType: React.PropTypes.string
-    },
-    renderButtons: function() {
+class MapItem extends React.Component {
+    static propTypes = {
+        map: PropTypes.object,
+        viewerUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+        mapType: PropTypes.string
+    };
+
+    renderButtons = () => {
         if (this.props.viewerUrl) {
             let button = isFunction(this.props.viewerUrl) ?
             <Button bsStyle="info" onClick={() => this.props.viewerUrl(this.props.map)}> <Glyphicon glyph={"new-window"}/></Button> :
@@ -35,12 +37,13 @@ var MapItem = React.createClass({
             </span>);
         }
         return "";
-    },
-    render: function() {
+    };
+
+    render() {
         return (
            <ListGroupItem header={this.props.map.name}>{this.props.map.description} {this.renderButtons()}</ListGroupItem>
         );
     }
-});
+}
 
 module.exports = MapItem;

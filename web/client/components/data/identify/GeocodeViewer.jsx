@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,7 +8,6 @@
  */
 
 const React = require('react');
-const PropTypes = React.PropTypes;
 const {Button} = require('react-bootstrap');
 const Modal = require('../../misc/Modal');
 
@@ -18,7 +18,7 @@ const GeocodeViewer = (props) => {
         */
         let lngCorrected = Math.round(props.latlng.lng * 100000) / 100000;
         /* the following formula apply the converion */
-        lngCorrected = lngCorrected - (360) * Math.floor(lngCorrected / (360) + 0.5);
+        lngCorrected = lngCorrected - 360 * Math.floor(lngCorrected / 360 + 0.5);
         return (
             <div>
                 <span>Lat: {Math.round(props.latlng.lat * 100000) / 100000 } - Long: { lngCorrected }</span>
@@ -50,12 +50,12 @@ GeocodeViewer.propTypes = {
     latlng: PropTypes.object.isRequired,
     showRevGeocode: PropTypes.func.isRequired,
     showModalReverse: PropTypes.bool.isRequired,
-    identifyRevGeocodeModalTitle: React.PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.object.isRequired]),
-    revGeocodeDisplayName: React.PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    identifyRevGeocodeModalTitle: PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.object.isRequired]),
+    revGeocodeDisplayName: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     hideRevGeocode: PropTypes.func.isRequired,
-    identifyRevGeocodeSubmitText: React.PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.object.isRequired]),
-    identifyRevGeocodeCloseText: React.PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.object.isRequired]),
-    modalOptions: React.PropTypes.object
+    identifyRevGeocodeSubmitText: PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.object.isRequired]),
+    identifyRevGeocodeCloseText: PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.object.isRequired]),
+    modalOptions: PropTypes.object
 };
 
 GeocodeViewer.defaultProps = {

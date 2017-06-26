@@ -16,18 +16,18 @@ describe('Openlayers ScaleBar component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
         map = new ol.Map({
-          layers: [
-          ],
-          controls: ol.control.defaults({
-            attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
-              collapsible: false
+            layers: [
+            ],
+            controls: ol.control.defaults({
+                attributionOptions: /** @type {olx.control.AttributionOptions} */ {
+                    collapsible: false
+                }
+            }),
+            target: 'map',
+            view: new ol.View({
+                center: [0, 0],
+                zoom: 5
             })
-          }),
-          target: 'map',
-          view: new ol.View({
-            center: [0, 0],
-            zoom: 5
-          })
         });
         setTimeout(done);
     });

@@ -180,7 +180,7 @@ const FilterUtils = {
     toOGCFilter: function(ftName, json, version, sortOptions = null, hits = false, format = null, propertyNames = null) {
         let objFilter;
         try {
-            objFilter = (json instanceof Object) ? json : JSON.parse(json);
+            objFilter = json instanceof Object ? json : JSON.parse(json);
         } catch (e) {
             return e;
         }
@@ -236,10 +236,10 @@ const FilterUtils = {
         ogcFilter += '<wfs:Query ' + (versionOGC === "2.0" ? "typeNames" : "typeName") + '="' + ftName + '" srsName="EPSG:4326">';
         ogcFilter += filter;
         if (propertyNames) {
-            ogcFilter += propertyNames.map( name => (
+            ogcFilter += propertyNames.map( name =>
                 propertyTagReference[nsplaceholder].startTag +
                 name +
-                propertyTagReference[nsplaceholder].endTag )).join("");
+                propertyTagReference[nsplaceholder].endTag ).join("");
         }
         if (sortOptions && sortOptions.sortBy && sortOptions.sortOrder) {
             ogcFilter +=
@@ -330,22 +330,24 @@ const FilterUtils = {
                 }
 
                 break;
+
             }
             case "BBOX": {
                 let lowerCorner = objFilter.spatialField.geometry.extent[0] + " " + objFilter.spatialField.geometry.extent[1];
                 let upperCorner = objFilter.spatialField.geometry.extent[2] + " " + objFilter.spatialField.geometry.extent[3];
 
                 ogc +=
-                    '<gml:Envelope' + ' srsName="' + objFilter.spatialField.geometry.projection + '">' +
-                        '<gml:lowerCorner>' + lowerCorner + '</gml:lowerCorner>' +
-                        '<gml:upperCorner>' + upperCorner + '</gml:upperCorner>' +
-                    '</gml:Envelope>';
+                        '<gml:Envelope' + ' srsName="' + objFilter.spatialField.geometry.projection + '">' +
+                            '<gml:lowerCorner>' + lowerCorner + '</gml:lowerCorner>' +
+                            '<gml:upperCorner>' + upperCorner + '</gml:upperCorner>' +
+                        '</gml:Envelope>';
 
                 break;
             }
             default:
                 break;
         }
+
         return ogcSpatialOperators[objFilter.spatialField.operation](nsplaceholder, ogc);
     },
     getGetFeatureBase: function(version, pagination, hits, format) {
@@ -356,12 +358,12 @@ const FilterUtils = {
         getFeature += pagination && (pagination.startIndex || pagination.startIndex === 0) ? 'startIndex="' + pagination.startIndex + '" ' : "";
 
         switch (ver) {
-            case "1.0.0":
-                getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
+        case "1.0.0":
+            getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
 
-                getFeature = hits ? getFeature + ' resultType="hits"' : getFeature;
+            getFeature = hits ? getFeature + ' resultType="hits"' : getFeature;
 
-                getFeature += 'service="WFS" version="' + ver + '" ' +
+            getFeature += 'service="WFS" version="' + ver + '" ' +
                     'outputFormat="GML2" ' +
                     'xmlns:gml="http://www.opengis.net/gml" ' +
                     'xmlns:wfs="http://www.opengis.net/wfs" ' +
@@ -369,26 +371,26 @@ const FilterUtils = {
                     'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
                     'xsi:schemaLocation="http://www.opengis.net/wfs ' +
                         'http://schemas.opengis.net/wfs/1.0.0/WFS-basic.xsd">';
-                break;
-            case "1.1.0":
-                getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
+            break;
+        case "1.1.0":
+            getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
 
-                getFeature = hits ? getFeature + ' resultType="hits"' : getFeature;
+            getFeature = hits ? getFeature + ' resultType="hits"' : getFeature;
 
-                getFeature += 'service="WFS" version="' + ver + '" ' +
+            getFeature += 'service="WFS" version="' + ver + '" ' +
                     'xmlns:gml="http://www.opengis.net/gml" ' +
                     'xmlns:wfs="http://www.opengis.net/wfs" ' +
                     'xmlns:ogc="http://www.opengis.net/ogc" ' +
                     'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
                     'xsi:schemaLocation="http://www.opengis.net/wfs ' +
                         'http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">';
-                break;
-            default: // default is wfs 2.0
-                getFeature += pagination && pagination.maxFeatures ? 'count="' + pagination.maxFeatures + '" ' : "";
+            break;
+        default: // default is wfs 2.0
+            getFeature += pagination && pagination.maxFeatures ? 'count="' + pagination.maxFeatures + '" ' : "";
 
-                getFeature = hits && !pagination ? getFeature + ' resultType="hits"' : getFeature;
+            getFeature = hits && !pagination ? getFeature + ' resultType="hits"' : getFeature;
 
-                getFeature += 'service="WFS" version="' + ver + '" ' +
+            getFeature += 'service="WFS" version="' + ver + '" ' +
                     'xmlns:wfs="http://www.opengis.net/wfs/2.0" ' +
                     'xmlns:fes="http://www.opengis.net/fes/2.0" ' +
                     'xmlns:gml="http://www.opengis.net/gml/3.2" ' +
@@ -450,7 +452,7 @@ const FilterUtils = {
     toCQLFilter: function(json) {
         let objFilter;
         try {
-            objFilter = (json instanceof Object) ? json : JSON.parse(json);
+            objFilter = json instanceof Object ? json : JSON.parse(json);
         } catch (e) {
             return e;
         }
@@ -461,7 +463,7 @@ const FilterUtils = {
         if (objFilter.filterFields && objFilter.filterFields.length > 0) {
             attributeFilter = this.processCQLFilterGroup(objFilter.groupFields[0], objFilter);
             filters.push(attributeFilter);
-        }else if (objFilter.simpleFilterFields && objFilter.simpleFilterFields.length > 0) {
+        } else if (objFilter.simpleFilterFields && objFilter.simpleFilterFields.length > 0) {
             let simpleFilter = objFilter.simpleFilterFields.reduce((cql, field) => {
                 let tmp = cql;
                 let strFilter = this.processCQLSimpleFilterField(field);
@@ -499,17 +501,32 @@ const FilterUtils = {
         let geometry = type + "(";
 
         switch (type) {
-            case "Point":
-                geometry += coordinates.join(" ");
-                break;
-            case "MultiPoint":
-                coordinates.forEach((position, index) => {
-                    geometry += position.join(" ");
-                    geometry += index < coordinates.length - 1 ? ", " : "";
+        case "Point":
+            geometry += coordinates.join(" ");
+            break;
+        case "MultiPoint":
+            coordinates.forEach((position, index) => {
+                geometry += position.join(" ");
+                geometry += index < coordinates.length - 1 ? ", " : "";
+            });
+            break;
+        case "Polygon":
+            coordinates.forEach((element, index) => {
+                geometry += "(";
+                let coords = element.map((coordinate) => {
+                    return coordinate[0] + " " + coordinate[1];
                 });
-                break;
-            case "Polygon":
-                coordinates.forEach((element, index) => {
+
+                geometry += coords.join(", ");
+                geometry += ")";
+
+                geometry += index < coordinates.length - 1 ? ", " : "";
+            });
+            break;
+        case "MultiPolygon":
+            coordinates.forEach((polygon, idx) => {
+                geometry += "(";
+                polygon.forEach((element, index) => {
                     geometry += "(";
                     let coords = element.map((coordinate) => {
                         return coordinate[0] + " " + coordinate[1];
@@ -518,29 +535,14 @@ const FilterUtils = {
                     geometry += coords.join(", ");
                     geometry += ")";
 
-                    geometry += index < coordinates.length - 1 ? ", " : "";
+                    geometry += index < polygon.length - 1 ? ", " : "";
                 });
-                break;
-            case "MultiPolygon":
-                coordinates.forEach((polygon, idx) => {
-                    geometry += "(";
-                    polygon.forEach((element, index) => {
-                        geometry += "(";
-                        let coords = element.map((coordinate) => {
-                            return coordinate[0] + " " + coordinate[1];
-                        });
-
-                        geometry += coords.join(", ");
-                        geometry += ")";
-
-                        geometry += index < polygon.length - 1 ? ", " : "";
-                    });
-                    geometry += ")";
-                    geometry += idx < coordinates.length - 1 ? ", " : "";
-                });
-                break;
-            default:
-                break;
+                geometry += ")";
+                geometry += idx < coordinates.length - 1 ? ", " : "";
+            });
+            break;
+        default:
+            break;
         }
 
         geometry += ")";
@@ -595,7 +597,7 @@ const FilterUtils = {
         if (operator === "><") {
             if (value && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
                 fieldFilter = "(" + attribute + ">='" + value.lowBound + "')";
-            }else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
+            } else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
                 fieldFilter = "(" + attribute + "<='" + value.upBound + "')";
             } else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
                 fieldFilter = "(" + attribute + ">='" + value.lowBound +
@@ -627,20 +629,20 @@ const FilterUtils = {
                 let fieldFilter;
 
                 switch (field.type) {
-                    case "date":
-                        fieldFilter = this.cqlDateField(field.attribute, field.operator, field.value);
-                        break;
-                    case "number":
-                        fieldFilter = this.cqlNumberField(field.attribute, field.operator, field.value);
-                        break;
-                    case "string":
-                        fieldFilter = this.cqlStringField(field.attribute, field.operator, field.value);
-                        break;
-                    case "list":
-                        fieldFilter = this.cqlListField(field.attribute, field.operator, field.value);
-                        break;
-                    default:
-                        break;
+                case "date":
+                    fieldFilter = this.cqlDateField(field.attribute, field.operator, field.value);
+                    break;
+                case "number":
+                    fieldFilter = this.cqlNumberField(field.attribute, field.operator, field.value);
+                    break;
+                case "string":
+                    fieldFilter = this.cqlStringField(field.attribute, field.operator, field.value);
+                    break;
+                case "list":
+                    fieldFilter = this.cqlListField(field.attribute, field.operator, field.value);
+                    break;
+                default:
+                    break;
                 }
                 if (fieldFilter) {
                     filter.push(fieldFilter);
@@ -656,38 +658,38 @@ const FilterUtils = {
     processCQLSimpleFilterField: function(field) {
         let strFilter = false;
         switch (field.type) {
-            case "date":
-                strFilter = this.cqlDateField(field.attribute, field.operator, field.values);
-                break;
-            case "number":
-                strFilter = this.cqlNumberField(field.attribute, field.operator, field.values);
-                break;
-            case "string":
-                strFilter = this.cqlStringField(field.attribute, field.operator, field.values);
-                break;
-            case "list": {
-                if (field.values.length !== field.optionsValues.length) {
-                    let addNull = false;
-                    let filter = field.values.reduce((arr, value) => {
-                        if (value === null || value === "null") {
-                            addNull = true;
-                        } else {
-                            arr.push( "'" + value + "'");
-                        }
-                        return arr;
-                    }, []);
-                    strFilter = filter.length > 0 ? field.attribute + " IN(" + filter.join(",") + ")" : strFilter;
-                    if (addNull) {
-                        strFilter = (strFilter) ? strFilter + " OR isNull(" + field.attribute + ")=true" : "isNull(" + field.attribute + ")=true";
+        case "date":
+            strFilter = this.cqlDateField(field.attribute, field.operator, field.values);
+            break;
+        case "number":
+            strFilter = this.cqlNumberField(field.attribute, field.operator, field.values);
+            break;
+        case "string":
+            strFilter = this.cqlStringField(field.attribute, field.operator, field.values);
+            break;
+        case "list": {
+            if (field.values.length !== field.optionsValues.length) {
+                let addNull = false;
+                let filter = field.values.reduce((arr, value) => {
+                    if (value === null || value === "null") {
+                        addNull = true;
+                    } else {
+                        arr.push( "'" + value + "'");
                     }
+                    return arr;
+                }, []);
+                strFilter = filter.length > 0 ? field.attribute + " IN(" + filter.join(",") + ")" : strFilter;
+                if (addNull) {
+                    strFilter = strFilter ? strFilter + " OR isNull(" + field.attribute + ")=true" : "isNull(" + field.attribute + ")=true";
                 }
-                break;
             }
-            default:
-                break;
+            break;
+        }
+        default:
+            break;
         }
 
-        return (strFilter && strFilter.length > 0) ? strFilter : false;
+        return strFilter && strFilter.length > 0 ? strFilter : false;
     },
     getOgcAllPropertyValue: function(featureTypeName, attribute) {
         return `<wfs:GetPropertyValue service="WFS" valueReference='${attribute}'

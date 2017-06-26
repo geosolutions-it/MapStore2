@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -11,54 +12,54 @@ const OverlayTrigger = require('../../components/misc/OverlayTrigger');
 const Sidebar = require('react-sidebar').default;
 const Message = require('../../components/I18N/Message');
 
-const Menu = React.createClass({
-    propTypes: {
-        title: React.PropTypes.node,
-        alignment: React.PropTypes.string,
-        activeKey: React.PropTypes.string,
-        docked: React.PropTypes.bool,
-        show: React.PropTypes.bool,
-        onToggle: React.PropTypes.func,
-        onChoose: React.PropTypes.func,
-        single: React.PropTypes.bool,
-        width: React.PropTypes.number,
-        dynamicWidth: React.PropTypes.number,
-        overlapMap: React.PropTypes.bool,
-        changeMapStyle: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            docked: false,
-            single: false,
-            width: 300,
-            overlapMap: true
-        };
-    },
+class Menu extends React.Component {
+    static propTypes = {
+        title: PropTypes.node,
+        alignment: PropTypes.string,
+        activeKey: PropTypes.string,
+        docked: PropTypes.bool,
+        show: PropTypes.bool,
+        onToggle: PropTypes.func,
+        onChoose: PropTypes.func,
+        single: PropTypes.bool,
+        width: PropTypes.number,
+        dynamicWidth: PropTypes.number,
+        overlapMap: PropTypes.bool,
+        changeMapStyle: PropTypes.func
+    };
+
+    static defaultProps = {
+        docked: false,
+        single: false,
+        width: 300,
+        overlapMap: true
+    };
+
     componentDidMount() {
         if (!this.props.overlapMap && this.props.show) {
             let style = {left: this.props.width, width: `calc(100% - ${this.props.width}px)`};
             this.props.changeMapStyle(style, "drawerMenu");
         }
-    },
+    }
+
     componentDidUpdate(prevProps) {
         if (!this.props.overlapMap && prevProps.show !== this.props.show) {
             let style = this.props.show ? {left: this.props.width, width: `calc(100% - ${this.props.width}px)`} : {};
             this.props.changeMapStyle(style, "drawerMenu");
         }
-    },
-    renderChildren(child, index) {
-        let props = {
-          key: child.key ? child.key : index,
-          ref: child.ref,
-          open: this.props.activeKey && this.props.activeKey === child.props.eventKey,
-          icon: ""
+    }
+
+    renderChildren = (child, index) => {
+        const props = {
+            key: child.key ? child.key : index,
+            ref: child.ref,
+            open: this.props.activeKey && this.props.activeKey === child.props.eventKey
         };
-        return React.cloneElement(
-          child,
-          props
-        );
-    },
-    renderButtons() {
+        const {glyph, icon, buttonConfig, ...childProps} = child.props;
+        return <child.type {...props} {...childProps}></child.type>;
+    };
+
+    renderButtons = () => {
         return this.props.children.map((child) => {
             const button = (<Button key={child.props.eventKey} bsSize="large" className={(child.props.buttonConfig && child.props.buttonConfig.buttonClassName) ? child.props.buttonConfig.buttonClassName : "square-button"} onClick={this.props.onChoose.bind(null, child.props.eventKey, this.props.activeKey === child.props.eventKey)} bsStyle={this.props.activeKey === child.props.eventKey ? 'default' : 'primary'}>
                         {child.props.glyph ? <Glyphicon glyph={child.props.glyph} /> : child.props.icon}
@@ -74,16 +75,17 @@ const Menu = React.createClass({
             }
             return button;
         });
-    },
-    renderContent() {
-        const header = this.props.single ? (
-            <div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
+    };
+
+    renderContent = () => {
+        const header = this.props.single ?
+            (<div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
                 <Glyphicon glyph="1-close" className="no-border btn-default" onClick={this.props.onToggle} style={{cursor: "pointer"}}/>
                 <div className="navButtons">
                     {this.renderButtons()}
                 </div>
-            </div>
-        ) : (<div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
+            </div>)
+         : (<div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
             <span className="title">{this.props.title}</span>
             <Glyphicon glyph="1-close" className="no-border btn-default" onClick={this.props.onToggle} style={{cursor: "pointer"}}/>
         </div>);
@@ -93,29 +95,30 @@ const Menu = React.createClass({
             {this.props.children.filter((child) => !this.props.single || this.props.activeKey === child.props.eventKey).map(this.renderChildren)}
             </div>
         </div>);
-    },
+    };
+
     render() {
         return (
             <Sidebar styles={{
-                    sidebar: {
-                        zIndex: 1022,
-                        width: this.props.dynamicWidth || this.props.width
-                    },
-                    overlay: {
-                        zIndex: 1021
-                    },
-                     root: {
-                         right: this.props.show ? 0 : 'auto',
-                         width: '0',
-                         overflow: 'visible'
-                     }
-                }} sidebarClassName="nav-menu" onSetOpen={() => {
-                    this.props.onToggle();
-                }} open={this.props.show} docked={this.props.docked} sidebar={this.renderContent()}>
-                <div></div>
+                sidebar: {
+                    zIndex: 1022,
+                    width: this.props.dynamicWidth || this.props.width
+                },
+                overlay: {
+                    zIndex: 1021
+                },
+                root: {
+                    right: this.props.show ? 0 : 'auto',
+                    width: '0',
+                    overflow: 'visible'
+                }
+            }} sidebarClassName="nav-menu" onSetOpen={() => {
+                this.props.onToggle();
+            }} open={this.props.show} docked={this.props.docked} sidebar={this.renderContent()}>
+                <div />
             </Sidebar>
         );
     }
-});
+}
 
 module.exports = Menu;

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -12,6 +13,7 @@ var {Button, Glyphicon} = require('react-bootstrap');
 const OverlayTrigger = require('../misc/OverlayTrigger');
 
 var ImageButton = require('./ImageButton');
+
 /**
  * Toggle button with tooltip and icons or image support.
  * @memberof components.buttons
@@ -33,40 +35,41 @@ var ImageButton = require('./ImageButton');
  * @prop {string} defaultStyle the bootstrap style when not pressed
  *
  */
-var ToggleButton = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        btnConfig: React.PropTypes.object,
-        options: React.PropTypes.object,
-        text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        help: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        glyphicon: React.PropTypes.string,
-        pressed: React.PropTypes.bool,
-        onClick: React.PropTypes.func,
-        tooltip: React.PropTypes.element,
-        tooltipPlace: React.PropTypes.string,
-        style: React.PropTypes.object,
-        btnType: React.PropTypes.oneOf(['normal', 'image']),
-        image: React.PropTypes.string,
-        pressedStyle: React.PropTypes.string,
-        defaultStyle: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            onClick: () => {},
-            options: {},
-            pressed: false,
-            tooltipPlace: "top",
-            style: {width: "100%"},
-            btnType: 'normal',
-            pressedStyle: 'primary',
-            defaultStyle: 'default'
-        };
-    },
-    onClick() {
+class ToggleButton extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        btnConfig: PropTypes.object,
+        options: PropTypes.object,
+        text: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        help: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        glyphicon: PropTypes.string,
+        pressed: PropTypes.bool,
+        onClick: PropTypes.func,
+        tooltip: PropTypes.element,
+        tooltipPlace: PropTypes.string,
+        style: PropTypes.object,
+        btnType: PropTypes.oneOf(['normal', 'image']),
+        image: PropTypes.string,
+        pressedStyle: PropTypes.string,
+        defaultStyle: PropTypes.string
+    };
+
+    static defaultProps = {
+        onClick: () => {},
+        options: {},
+        pressed: false,
+        tooltipPlace: "top",
+        style: {width: "100%"},
+        btnType: 'normal',
+        pressedStyle: 'primary',
+        defaultStyle: 'default'
+    };
+
+    onClick = () => {
         this.props.onClick(!this.props.pressed, this.props.options);
-    },
-    renderNormalButton() {
+    };
+
+    renderNormalButton = () => {
         return (
             <Button id={this.props.id} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.props.pressed ? this.props.pressedStyle : this.props.defaultStyle} style={this.props.style}>
                 {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
@@ -75,19 +78,22 @@ var ToggleButton = React.createClass({
                 {this.props.help}
             </Button>
         );
-    },
-    renderImageButton() {
+    };
+
+    renderImageButton = () => {
         return (
             <ImageButton id={this.props.id} image={this.props.image} onClick={this.onClick} style={this.props.style}/>
         );
-    },
-    addTooltip(btn) {
+    };
+
+    addTooltip = (btn) => {
         return (
             <OverlayTrigger placement={this.props.tooltipPlace} key={"overlay-trigger." + this.props.id} overlay={this.props.tooltip}>
                 {btn}
             </OverlayTrigger>
         );
-    },
+    };
+
     render() {
         var retval;
         var btn = this.props.btnType === 'normal' ? this.renderNormalButton() : this.renderImageButton();
@@ -99,6 +105,6 @@ var ToggleButton = React.createClass({
         return retval;
 
     }
-});
+}
 
 module.exports = ToggleButton;

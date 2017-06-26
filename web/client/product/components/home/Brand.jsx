@@ -9,7 +9,7 @@ const React = require('react');
 
 const brand = require('../../assets/img/geosolutions-brand.png');
 
-const Brand = React.createClass({
+class Brand extends React.Component {
     render() {
         return (<div>
             <a href="http://www.geo-solutions.it">
@@ -17,6 +17,6 @@ const Brand = React.createClass({
             </a>
         </div>);
     }
-});
+}
 
 module.exports = Brand;

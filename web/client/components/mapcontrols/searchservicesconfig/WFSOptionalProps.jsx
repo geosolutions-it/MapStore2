@@ -11,20 +11,23 @@ const {FormGroup, ControlLabel, FormControl, Label} = require('react-bootstrap')
 const Message = require('../../I18N/Message');
 const Slider = require('react-nouislider');
 const assign = require('object-assign');
+const PropTypes = require('prop-types');
+
 function validate() {
     return true;
 }
-const WFSOptionalProps = React.createClass({
-    propTypes: {
-        service: React.PropTypes.object,
-        onPropertyChange: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            service: {},
-            onPropertyChange: () => {}
-        };
-    },
+
+class WFSOptionalProps extends React.Component {
+    static propTypes = {
+        service: PropTypes.object,
+        onPropertyChange: PropTypes.func
+    };
+
+    static defaultProps = {
+        service: {},
+        onPropertyChange: () => {}
+    };
+
     render() {
         const {service} = this.props;
         const {options = {}} = service;
@@ -52,16 +55,18 @@ const WFSOptionalProps = React.createClass({
                     <Label key="maxFeatures-labeel" className="slider-label" >{options.maxFeatures || 1}</Label>
                 </FormGroup>
             </form>);
-    },
-    updateProp(prop, event) {
+    }
+
+    updateProp = (prop, event) => {
         const value = event.target.value;
         const options = assign({}, this.props.service.options, {[prop]: value});
         this.props.onPropertyChange("service", assign({}, this.props.service, {options}));
-    },
-    updateMaxFeatures(val) {
+    };
+
+    updateMaxFeatures = (val) => {
         const options = assign({}, this.props.service.options, {maxFeatures: parseInt(val[0], 10)});
         this.props.onPropertyChange("service", assign({}, this.props.service, {options}));
-    }
-});
+    };
+}
 
 module.exports = {Element: WFSOptionalProps, validate};

@@ -21,7 +21,7 @@ describe("Test the select shapefile component", () => {
     });
 
     it('creates component loading', () => {
-        const cmp = ReactDOM.render(<ShapefileUploadAndStyle loading={true} />, document.getElementById("container"));
+        const cmp = ReactDOM.render(<ShapefileUploadAndStyle loading />, document.getElementById("container"));
         expect(cmp).toExist();
     });
 

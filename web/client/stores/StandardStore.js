@@ -24,9 +24,13 @@ const {createEpicMiddleware} = require('redux-observable');
 const SecurityUtils = require('../utils/SecurityUtils');
 const ListenerEnhancer = require('@carnesen/redux-add-action-listener-enhancer').default;
 
-const {syncHistory, routeReducer} = require('react-router-redux');
-const {hashHistory} = require('react-router');
-const reduxRouterMiddleware = syncHistory(hashHistory);
+const {routerReducer, routerMiddleware} = require('react-router-redux');
+const routerCreateHistory = require('history/createHashHistory').default;
+const history = routerCreateHistory();
+
+// Build the middleware for intercepting and dispatching navigation actions
+const reduxRouterMiddleware = routerMiddleware(history);
+
 
 module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {}, appEpics = {}, plugins, storeOpts = {}) => {
     const allReducers = combineReducers(plugins, {
@@ -40,7 +44,7 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         map: () => {return null; },
         mapInitialConfig: () => {return null; },
         layers: () => {return null; },
-        routing: routeReducer
+        routing: routerReducer
     });
     const rootEpic = combineEpics(plugins, appEpics);
     const optsState = storeOpts.initialState || {defaultState: {}, mobile: {}};
@@ -52,9 +56,9 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         let newState = {
             ...allReducers(state, action),
             map: mapState && mapState.map ? map(mapState.map, action) : null,
-            mapInitialConfig: (mapState && mapState.mapInitialConfig) || (mapState && mapState.loadingError && {
+            mapInitialConfig: mapState && mapState.mapInitialConfig || mapState && mapState.loadingError && {
                 loadingError: mapState.loadingError
-            }) || null,
+            } || null,
             layers: mapState ? layers(mapState.layers, action) : null
         };
         if (action && action.type === CHANGE_BROWSER_PROPERTIES && newState.browser.mobile) {
@@ -80,7 +84,6 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         }
     }
     store = DebugUtils.createDebugStore(rootReducer, defaultState, [epicMiddleware, reduxRouterMiddleware], enhancer);
-    reduxRouterMiddleware.listenForReplays(store);
     if (storeOpts && storeOpts.persist) {
         const persisted = {};
         store.subscribe(() => {

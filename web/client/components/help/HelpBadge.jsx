@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -21,29 +22,31 @@ const LocaleUtils = require('../../utils/LocaleUtils');
  *  - isVisible: {bool}       flag to steer visibility of the badge
  *  - changeHelpText (func)   action to change the current help text
  */
-var HelpBadge = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        helpText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        isVisible: React.PropTypes.bool,
-        changeHelpText: React.PropTypes.func,
-        changeHelpwinVisibility: React.PropTypes.func,
-        className: React.PropTypes.string
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            helpText: '',
-            isVisible: false
-        };
-    },
-    onMouseOver() {
+class HelpBadge extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        helpText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        isVisible: PropTypes.bool,
+        changeHelpText: PropTypes.func,
+        changeHelpwinVisibility: PropTypes.func,
+        className: PropTypes.string
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        helpText: '',
+        isVisible: false
+    };
+
+    onMouseOver = () => {
         const helpText = isString(this.props.helpText) ? this.props.helpText : LocaleUtils.getMessageById(this.context.messages, this.props.helpText.props.msgId);
         this.props.changeHelpText(helpText);
         this.props.changeHelpwinVisibility(true);
-    },
+    };
+
     render() {
         return (
             <Badge
@@ -53,6 +56,6 @@ var HelpBadge = React.createClass({
             >?</Badge>
         );
     }
-});
+}
 
 module.exports = HelpBadge;

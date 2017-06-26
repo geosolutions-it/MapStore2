@@ -23,29 +23,29 @@ var initialState = {
 
 function layertree(state = initialState, action) {
     switch (action.type) {
-        case SHOW_SETTINGS: {
-            let settings = assign({}, state.Settings, {expanded: true, node: action.node, nodeType: action.nodeType, options: action.options});
+    case SHOW_SETTINGS: {
+        let settings = assign({}, state.Settings, {expanded: true, node: action.node, nodeType: action.nodeType, options: action.options});
 
-            return assign({}, state, {
-                Settings: settings
-            });
-        }
-        case HIDE_SETTINGS: {
-            let settings = assign({}, state.Settings, {expanded: false, node: null, nodeType: null, options: {}});
+        return assign({}, state, {
+            Settings: settings
+        });
+    }
+    case HIDE_SETTINGS: {
+        let settings = assign({}, state.Settings, {expanded: false, node: null, nodeType: null, options: {}});
 
-            return assign({}, state, {
-                Settings: settings
-            });
-        }
-        case UPDATE_OPACITY: {
-            let settings = assign({}, state.Settings, {options: {opacity: action.opacity / 100.0}});
+        return assign({}, state, {
+            Settings: settings
+        });
+    }
+    case UPDATE_OPACITY: {
+        let settings = assign({}, state.Settings, {options: {opacity: action.opacity / 100.0}});
 
-            return assign({}, state, {
-                Settings: settings
-            });
-        }
-        default:
-            return state;
+        return assign({}, state, {
+            Settings: settings
+        });
+    }
+    default:
+        return state;
     }
 }
 

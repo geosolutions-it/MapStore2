@@ -18,14 +18,14 @@ module.exports = {
          * we create a bbox of 101x101 pixel that wrap the point.
          * center point is repojected then is built a box of 101x101pixel around it
          */
-        const heightBBox = (props && props.sizeBBox && props.sizeBBox.height) || 101;
-        const widthBBox = (props && props.sizeBBox && props.sizeBBox.width) || 101;
+        const heightBBox = props && props.sizeBBox && props.sizeBBox.height || 101;
+        const widthBBox = props && props.sizeBBox && props.sizeBBox.width || 101;
         const size = [heightBBox, widthBBox];
         const rotation = 0;
         const resolution = MapUtils.getCurrentResolution(Math.ceil(props.map.zoom), 0, 21, 96);
         let wrongLng = props.point.latlng.lng;
         // longitude restricted to the [-180°,+180°] range
-        let lngCorrected = wrongLng - (360) * Math.floor(wrongLng / (360) + 0.5);
+        let lngCorrected = wrongLng - 360 * Math.floor(wrongLng / 360 + 0.5);
         const center = {x: lngCorrected, y: props.point.latlng.lat};
         let centerProjected = CoordinatesUtils.reproject(center, 'EPSG:4326', props.map.projection);
         let bounds = CoordinatesUtils.getProjectedBBox(centerProjected, resolution, rotation, size, null);
@@ -44,8 +44,8 @@ module.exports = {
                 layers: layer.name,
                 query_layers: queryLayers,
                 styles: layer.style,
-                x: ((widthBBox % 2) === 1) ? Math.ceil(widthBBox / 2) : widthBBox / 2,
-                y: ((widthBBox % 2) === 1) ? Math.ceil(widthBBox / 2) : widthBBox / 2,
+                x: widthBBox % 2 === 1 ? Math.ceil(widthBBox / 2) : widthBBox / 2,
+                y: widthBBox % 2 === 1 ? Math.ceil(widthBBox / 2) : widthBBox / 2,
                 height: heightBBox,
                 width: widthBBox,
                 srs: CoordinatesUtils.normalizeSRS(props.map.projection) || 'EPSG:4326',

@@ -33,4 +33,4 @@ function updateOpacity(opacity) {
 }
 
 module.exports = {SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_OPACITY,
-        showSettings, hideSettings, updateOpacity};
+    showSettings, hideSettings, updateOpacity};

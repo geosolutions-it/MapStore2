@@ -19,7 +19,7 @@ describe('Test browser related actions', () => {
             expect(e.newProperties).toExist();
             expect(e.newProperties.touch).toBe(true);
             done();
-        } catch(ex) {
+        } catch (ex) {
             done(ex);
         }
     });

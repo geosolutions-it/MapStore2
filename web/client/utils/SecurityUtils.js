@@ -145,15 +145,15 @@ const SecurityUtils = {
             return parameters;
         }
         switch (this.getAuthenticationMethod(url)) {
-            case 'authkey':
-                const token = this.getToken();
-                if (!token) {
-                    return parameters;
-                }
-                return assign(parameters || {}, {'authkey': token});
-            default:
-                // we cannot handle the required authentication method
+        case 'authkey':
+            const token = this.getToken();
+            if (!token) {
                 return parameters;
+            }
+            return assign(parameters || {}, {'authkey': token});
+        default:
+                // we cannot handle the required authentication method
+            return parameters;
         }
     }
 };

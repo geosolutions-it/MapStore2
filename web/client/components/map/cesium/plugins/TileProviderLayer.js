@@ -45,18 +45,18 @@ NoProxy.prototype.getURL = (r) => r;
 function template(str, data) {
 
     return str.replace(/(?!(\{?[zyxs]?\}))\{*([\w_]+)*\}/g, function() {
-            let st = arguments[0];
-            let key = arguments[1] ? arguments[1] : arguments[2];
-            let value = data[key];
+        let st = arguments[0];
+        let key = arguments[1] ? arguments[1] : arguments[2];
+        let value = data[key];
 
-            if (value === undefined) {
-                throw new Error('No value provided for variable ' + st);
+        if (value === undefined) {
+            throw new Error('No value provided for variable ' + st);
 
-            } else if (typeof value === 'function') {
-                value = value(data);
-            }
-            return value;
-        });
+        } else if (typeof value === 'function') {
+            value = value(data);
+        }
+        return value;
+    });
 }
 
 Layers.registerType('tileprovider', (options) => {

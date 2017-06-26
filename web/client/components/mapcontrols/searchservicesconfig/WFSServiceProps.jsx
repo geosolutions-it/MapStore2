@@ -9,6 +9,8 @@ const React = require('react');
 const {FormGroup, ControlLabel, FormControl} = require('react-bootstrap');
 const Message = require('../../I18N/Message');
 const assign = require('object-assign');
+const PropTypes = require('prop-types');
+
 // const weburl = new RegExp(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/);
 function validate(service = {}) {
     const {options = {}, name = ''} = service;
@@ -17,17 +19,17 @@ function validate(service = {}) {
     return name.length > 0 && url.length > 0 && typeName.length > 0 && queriableAttributes.length > 0;
 }
 
-const WFSServiceProps = React.createClass({
-    propTypes: {
-        service: React.PropTypes.object,
-        onPropertyChange: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            service: {},
-            onPropertyChange: () => {}
-        };
-    },
+class WFSServiceProps extends React.Component {
+    static propTypes = {
+        service: PropTypes.object,
+        onPropertyChange: PropTypes.func
+    };
+
+    static defaultProps = {
+        service: {},
+        onPropertyChange: () => {}
+    };
+
     render() {
         const {service} = this.props;
         const {options = {}} = service;
@@ -75,23 +77,26 @@ const WFSServiceProps = React.createClass({
                     onChange={this.updateProp.bind(null, "queriableAttributes")}/>
                 </FormGroup>
             </form>);
-    },
-    updateProp(prop, event) {
+    }
+
+    updateProp = (prop, event) => {
         let value = event.target.value;
         if (prop === "queriableAttributes") {
             value = value.split(",");
         }
         const options = assign({}, this.props.service.options, {[prop]: value} );
         this.props.onPropertyChange("service", assign({}, this.props.service, {options}));
-    },
-    updateName(event) {
+    };
+
+    updateName = (event) => {
         const value = event.target.value;
         this.props.onPropertyChange("service", assign({}, this.props.service, {name: value}));
-    },
-    updateMaxFeatures(val) {
+    };
+
+    updateMaxFeatures = (val) => {
         const options = assign({}, this.props.service.options, {maxFeatures: parseFloat(val[0], 10)});
         this.props.onPropertyChange("service", assign({}, this.props.service, {options}));
-    }
-});
+    };
+}
 
 module.exports = { Element: WFSServiceProps, validate};

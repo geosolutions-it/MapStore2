@@ -47,22 +47,22 @@ function setBaseOptions(describe = {}) {
 
 function rasterstyler(state = initialSpec, action) {
     switch (action.type) {
-        case SET_RASTERSTYLE_PARAMETER: {
-            return assign({}, state, {
-                [action.component]: assign({}, state[action.component], {
-                    [action.property]: action.value
-                })
-            });
-        }
-        case SET_RASTER_LAYER: {
+    case SET_RASTERSTYLE_PARAMETER: {
+        return assign({}, state, {
+            [action.component]: assign({}, state[action.component], {
+                [action.property]: action.value
+            })
+        });
+    }
+    case SET_RASTER_LAYER: {
 
-            return assign({}, setBaseOptions(action.layer.describeLayer), { layer: action.layer});
-        }
-        case STYLER_RESET: {
-            return initialSpec;
-        }
-        default:
-            return state;
+        return assign({}, setBaseOptions(action.layer.describeLayer), { layer: action.layer});
+    }
+    case STYLER_RESET: {
+        return initialSpec;
+    }
+    default:
+        return state;
     }
 }
 

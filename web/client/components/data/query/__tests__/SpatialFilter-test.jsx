@@ -45,9 +45,9 @@ describe('SpatialFilter', () => {
         const spatialfilter = ReactDOM.render(
             <SpatialFilter
                 spatialField={spatialField}
+                spatialPanelExpanded
                 spatialOperations={spatialOperations}
                 spatialMethodOptions={spatialMethodOptions}
-                spatialPanelExpanded={true}
                 showDetailsPanel={false}/>,
             document.getElementById("container")
         );

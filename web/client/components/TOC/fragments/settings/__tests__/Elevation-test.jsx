@@ -34,13 +34,13 @@ describe('test Layer Properties Elevation component', () => {
             type: 'shapefile',
             url: 'base/web/client/test-resources/geoserver/wms',
             params: {
-              "ELEVATION": "1.5"
+                "ELEVATION": "1.5"
             },
             elevations: {
-              name: "ELEVATION",
-              units: "Meters",
-              positive: false,
-              values: ["1.5", "5.0", "10.0", "15.0", "20.0", "25.0", "30.0"]
+                name: "ELEVATION",
+                units: "Meters",
+                positive: false,
+                values: ["1.5", "5.0", "10.0", "15.0", "20.0", "25.0", "30.0"]
             }
         };
         const settings = {

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -14,33 +15,35 @@ const GroupCard = require('../../../components/manager/users/GroupCard');
 const Message = require('../../../components/I18N/Message');
 const {findIndex} = require('lodash');
 
-const GroupDeleteConfirm = React.createClass({
-    propTypes: {
-        group: React.PropTypes.object,
-        deleteGroup: React.PropTypes.func,
-        deleteId: React.PropTypes.number,
-        deleteError: React.PropTypes.object,
-        deleteStatus: React.PropTypes.string
+class GroupDeleteConfirm extends React.Component {
+    static propTypes = {
+        group: PropTypes.object,
+        deleteGroup: PropTypes.func,
+        deleteId: PropTypes.number,
+        deleteError: PropTypes.object,
+        deleteStatus: PropTypes.string
 
-    },
-    getDefaultProps() {
-        return {
-            deleteGroup: () => {}
-        };
-    },
-    renderError() {
+    };
+
+    static defaultProps = {
+        deleteGroup: () => {}
+    };
+
+    renderError = () => {
         if (this.props.deleteError) {
             return <Alert bsStyle="danger"><Message msgId="usergroups.errorDelete" />{this.props.deleteError.statusText}</Alert>;
         }
-    },
-    renderConfirmButtonContent() {
+    };
+
+    renderConfirmButtonContent = () => {
         switch (this.props.deleteStatus) {
-            case "deleting":
-                return <Message msgId="users.deleting" />;
-            default:
-                return <Message msgId="users.delete" />;
+        case "deleting":
+            return <Message msgId="users.deleting" />;
+        default:
+            return <Message msgId="users.delete" />;
         }
-    },
+    };
+
     render() {
         if (!this.props.group) {
             return null;
@@ -56,7 +59,8 @@ const GroupDeleteConfirm = React.createClass({
             <div>{this.renderError()}</div>
         </Confirm>);
     }
-});
+}
+
 module.exports = connect((state) => {
     let groupsstate = state && state.usergroups;
     if (!groupsstate) return {};

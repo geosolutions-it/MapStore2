@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -10,22 +11,22 @@ var Layers = require('../../../utils/leaflet/Layers');
 var assign = require('object-assign');
 var {isEqual} = require('lodash');
 
-const LeafletLayer = React.createClass({
-    propTypes: {
-        map: React.PropTypes.object,
-        type: React.PropTypes.string,
-        srs: React.PropTypes.string,
-        options: React.PropTypes.object,
-        position: React.PropTypes.number,
-        zoomOffset: React.PropTypes.number,
-        onInvalid: React.PropTypes.func,
-        onClick: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            onInvalid: () => {}
-        };
-    },
+class LeafletLayer extends React.Component {
+    static propTypes = {
+        map: PropTypes.object,
+        type: PropTypes.string,
+        srs: PropTypes.string,
+        options: PropTypes.object,
+        position: PropTypes.number,
+        zoomOffset: PropTypes.number,
+        onInvalid: PropTypes.func,
+        onClick: PropTypes.func
+    };
+
+    static defaultProps = {
+        onInvalid: () => {}
+    };
+
     componentDidMount() {
         this.valid = true;
         this.createLayer(this.props.type, this.props.options, this.props.position);
@@ -33,40 +34,43 @@ const LeafletLayer = React.createClass({
             this.addLayer();
             this.updateZIndex();
         }
-    },
+    }
+
     componentWillReceiveProps(newProps) {
         const newVisibility = newProps.options && newProps.options.visibility !== false;
         this.setLayerVisibility(newVisibility);
 
-        const newOpacity = (newProps.options && newProps.options.opacity !== undefined) ? newProps.options.opacity : 1.0;
+        const newOpacity = newProps.options && newProps.options.opacity !== undefined ? newProps.options.opacity : 1.0;
         this.setLayerOpacity(newOpacity);
 
         if (newProps.position !== this.props.position) {
             this.updateZIndex(newProps.position);
         }
         this.updateLayer(newProps, this.props);
-    },
+    }
+
     shouldComponentUpdate(newProps) {
         // the reduce returns true when a prop is changed
         // optimizing when options are equal ignorning loading key
-        return !(["map", "type", "srs", "position", "zoomOffset", "onInvalid", "onClick", "options", "children"].reduce( (prev, p) => {
+        return !["map", "type", "srs", "position", "zoomOffset", "onInvalid", "onClick", "options", "children"].reduce( (prev, p) => {
             switch (p) {
-                case "map":
-                case "type":
-                case "srs":
-                case "position":
-                case "zoomOffset":
-                case "onInvalid":
-                case "onClick":
-                case "children":
-                    return prev && this.props[p] === newProps[p];
-                case "options":
-                    return prev && (this.props[p] === newProps[p] || isEqual({...this.props[p], loading: false}, {...newProps[p], loading: false}));
-                default:
-                    return prev;
+            case "map":
+            case "type":
+            case "srs":
+            case "position":
+            case "zoomOffset":
+            case "onInvalid":
+            case "onClick":
+            case "children":
+                return prev && this.props[p] === newProps[p];
+            case "options":
+                return prev && (this.props[p] === newProps[p] || isEqual({...this.props[p], loading: false}, {...newProps[p], loading: false}));
+            default:
+                return prev;
             }
-        }, true));
-    },
+        }, true);
+    }
+
     componentWillUnmount() {
         if (this.layer && this.props.map) {
             this.removeLayer();
@@ -74,7 +78,8 @@ const LeafletLayer = React.createClass({
                 clearInterval(this.refreshTimer);
             }
         }
-    },
+    }
+
     render() {
         if (this.props.children) {
             const layer = this.layer;
@@ -89,8 +94,9 @@ const LeafletLayer = React.createClass({
         }
         return Layers.renderLayer(this.props.type, this.props.options, this.props.map, this.props.map.id, this.layer);
 
-    },
-    setLayerVisibility(visibility) {
+    }
+
+    setLayerVisibility = (visibility) => {
         var oldVisibility = this.props.options && this.props.options.visibility !== false;
         if (visibility !== oldVisibility) {
             if (visibility) {
@@ -101,28 +107,32 @@ const LeafletLayer = React.createClass({
             this.updateZIndex();
 
         }
-    },
-    setLayerOpacity(opacity) {
-        var oldOpacity = (this.props.options && this.props.options.opacity !== undefined) ? this.props.options.opacity : 1.0;
+    };
+
+    setLayerOpacity = (opacity) => {
+        var oldOpacity = this.props.options && this.props.options.opacity !== undefined ? this.props.options.opacity : 1.0;
         if (opacity !== oldOpacity && this.layer && this.layer.setOpacity) {
             this.layer.setOpacity(opacity);
         }
-    },
-    generateOpts(options, position) {
+    };
+
+    generateOpts = (options, position) => {
         return assign({}, options, position ? {zIndex: position, srs: this.props.srs } : null, {
             zoomOffset: -this.props.zoomOffset,
             onError: () => {
                 this.props.onInvalid(this.props.type, this.props.options);
             }
         });
-    },
-    updateZIndex(position) {
+    };
+
+    updateZIndex = (position) => {
         let newPosition = position || this.props.position;
         if (newPosition && this.layer && this.layer.setZIndex) {
             this.layer.setZIndex(newPosition);
         }
-    },
-    createLayer(type, options, position) {
+    };
+
+    createLayer = (type, options, position) => {
         if (type) {
             const opts = this.generateOpts(options, position);
             this.layer = Layers.createLayer(type, opts);
@@ -132,8 +142,9 @@ const LeafletLayer = React.createClass({
             }
             this.forceUpdate();
         }
-    },
-    updateLayer(newProps, oldProps) {
+    };
+
+    updateLayer = (newProps, oldProps) => {
         const newLayer = Layers.updateLayer(newProps.type, this.layer, this.generateOpts(newProps.options, newProps.position),
             this.generateOpts(oldProps.options, oldProps.position));
         if (newLayer) {
@@ -141,8 +152,9 @@ const LeafletLayer = React.createClass({
             this.layer = newLayer;
             this.addLayer();
         }
-    },
-    addLayer() {
+    };
+
+    addLayer = () => {
         if (this.isValid()) {
             this.props.map.addLayer(this.layer);
             if (this.props.options.refresh && this.layer.setParams) {
@@ -152,13 +164,15 @@ const LeafletLayer = React.createClass({
                 }, this.props.options.refresh);
             }
         }
-    },
-    removeLayer() {
+    };
+
+    removeLayer = () => {
         if (this.isValid()) {
             this.props.map.removeLayer(this.layer);
         }
-    },
-    isValid() {
+    };
+
+    isValid = () => {
         if (this.layer) {
             const valid = Layers.isValid(this.props.type, this.layer);
             if (this.valid && !valid) {
@@ -168,7 +182,7 @@ const LeafletLayer = React.createClass({
             return valid;
         }
         return false;
-    }
-});
+    };
+}
 
 module.exports = LeafletLayer;

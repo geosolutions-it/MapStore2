@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -11,66 +12,66 @@ const {Grid, Row, Col} = require('react-bootstrap');
 const MapCard = require('./MapCard');
 const Spinner = require('react-spinkit');
 
-var MapGrid = React.createClass({
-    propTypes: {
-        panelProps: React.PropTypes.object,
-        bottom: React.PropTypes.node,
-        loading: React.PropTypes.bool,
-        maps: React.PropTypes.array,
-        currentMap: React.PropTypes.object,
-        fluid: React.PropTypes.bool,
-        viewerUrl: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
-        mapType: React.PropTypes.string,
-        colProps: React.PropTypes.object,
+class MapGrid extends React.Component {
+    static propTypes = {
+        panelProps: PropTypes.object,
+        bottom: PropTypes.node,
+        loading: PropTypes.bool,
+        maps: PropTypes.array,
+        currentMap: PropTypes.object,
+        fluid: PropTypes.bool,
+        viewerUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+        mapType: PropTypes.string,
+        colProps: PropTypes.object,
         // CALLBACKS
-        updateMapMetadata: React.PropTypes.func,
-        editMap: React.PropTypes.func,
-        saveAll: React.PropTypes.func,
-        saveMap: React.PropTypes.func,
-        onDisplayMetadataEdit: React.PropTypes.func,
-        removeThumbnail: React.PropTypes.func,
-        errorCurrentMap: React.PropTypes.func,
-        updateCurrentMap: React.PropTypes.func,
-        createThumbnail: React.PropTypes.func,
-        deleteThumbnail: React.PropTypes.func,
-        deleteMap: React.PropTypes.func,
-        resetCurrentMap: React.PropTypes.func,
-        updatePermissions: React.PropTypes.func,
-        metadataModal: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            mapType: 'leaflet',
-            bottom: "",
-            fluid: true,
-            colProps: {
-                xs: 12,
-                sm: 6,
-                style: {
-                    "marginBottom": "20px"
-                }
-            },
-            currentMap: {},
-            maps: [],
-            // CALLBACKS
-            onChangeMapType: function() {},
-            updateMapMetadata: () => {},
-            createThumbnail: () => {},
-            deleteThumbnail: () => {},
-            errorCurrentMap: () => {},
-            saveAll: () => {},
-            onDisplayMetadataEdit: () => {},
-            updateCurrentMap: () => {},
-            deleteMap: () => {},
-            saveMap: () => {},
-            removeThumbnail: () => {},
-            editMap: () => {},
-            resetCurrentMap: () => {},
-            updatePermissions: () => {},
-            groups: []
-        };
-    },
-    renderMaps: function(maps, mapType) {
+        updateMapMetadata: PropTypes.func,
+        editMap: PropTypes.func,
+        saveAll: PropTypes.func,
+        saveMap: PropTypes.func,
+        onDisplayMetadataEdit: PropTypes.func,
+        removeThumbnail: PropTypes.func,
+        errorCurrentMap: PropTypes.func,
+        updateCurrentMap: PropTypes.func,
+        createThumbnail: PropTypes.func,
+        deleteThumbnail: PropTypes.func,
+        deleteMap: PropTypes.func,
+        resetCurrentMap: PropTypes.func,
+        updatePermissions: PropTypes.func,
+        metadataModal: PropTypes.func
+    };
+
+    static defaultProps = {
+        mapType: 'leaflet',
+        bottom: "",
+        fluid: true,
+        colProps: {
+            xs: 12,
+            sm: 6,
+            style: {
+                "marginBottom": "20px"
+            }
+        },
+        currentMap: {},
+        maps: [],
+        // CALLBACKS
+        onChangeMapType: function() {},
+        updateMapMetadata: () => {},
+        createThumbnail: () => {},
+        deleteThumbnail: () => {},
+        errorCurrentMap: () => {},
+        saveAll: () => {},
+        onDisplayMetadataEdit: () => {},
+        updateCurrentMap: () => {},
+        deleteMap: () => {},
+        saveMap: () => {},
+        removeThumbnail: () => {},
+        editMap: () => {},
+        resetCurrentMap: () => {},
+        updatePermissions: () => {},
+        groups: []
+    };
+
+    renderMaps = (maps, mapType) => {
         const viewerUrl = this.props.viewerUrl;
         return maps.map((map) => {
             let children = React.Children.count(this.props.children);
@@ -83,11 +84,13 @@ var MapGrid = React.createClass({
                         onMapDelete={this.props.deleteMap}/>
                 </Col>;
         });
-    },
-    renderLoading() {
-        return (<div style={{width: "100px", overflow: "visible", margin: "auto"}}>Loading...<Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/></div>);
-    },
-    renderMetadataModal() {
+    };
+
+    renderLoading = () => {
+        return <div style={{width: "100px", overflow: "visible", margin: "auto"}}>Loading...<Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/></div>;
+    };
+
+    renderMetadataModal = () => {
         if (this.props.metadataModal) {
             let MetadataModal = this.props.metadataModal;
             return (<MetadataModal key="metadataModal" ref="metadataModal" show={this.props.currentMap && this.props.currentMap.displayMetadataEdit} onHide={this.props.resetCurrentMap}
@@ -101,8 +104,9 @@ var MapGrid = React.createClass({
                 onErrorCurrentMap={this.props.errorCurrentMap}
                 onUpdateCurrentMap={this.props.updateCurrentMap}/>);
         }
-    },
-    render: function() {
+    };
+
+    render() {
         return (
                 <Grid id="mapstore-maps-grid" fluid={this.props.fluid}>
                     <Row>
@@ -115,6 +119,6 @@ var MapGrid = React.createClass({
                 </Grid>
         );
     }
-});
+}
 
 module.exports = MapGrid;

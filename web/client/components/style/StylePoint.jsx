@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -17,24 +18,24 @@ numberLocalizer();
 const {NumberPicker} = require('react-widgets');
 require('react-widgets/lib/less/react-widgets.less');
 
-const StylePoint = React.createClass({
-    propTypes: {
-        shapeStyle: React.PropTypes.object,
-        setStyleParameter: React.PropTypes.func,
-        showMarker: React.PropTypes.bool,
-        showMarkSelector: React.PropTypes.bool
-    },
-    getDefaultProps() {
-        return {
-            shapeStyle: {},
-            showMarker: true,
-            showMarkSelector: false,
-            setStyleParameter: () => {}
-        };
-    },
+class StylePoint extends React.Component {
+    static propTypes = {
+        shapeStyle: PropTypes.object,
+        setStyleParameter: PropTypes.func,
+        showMarker: PropTypes.bool,
+        showMarkSelector: PropTypes.bool
+    };
+
+    static defaultProps = {
+        shapeStyle: {},
+        showMarker: true,
+        showMarkSelector: false,
+        setStyleParameter: () => {}
+    };
+
     render() {
         return (
-            <Grid fluid={true}>
+            <Grid fluid>
                 <Row>
                     <Col xs={4} style={{padding: 0}}>
                         <StyleCanvas style={{ padding: 0, margin: "auto", display: "block"}}
@@ -44,20 +45,20 @@ const StylePoint = React.createClass({
                         />
                     </Col>
                     <Col xs={7}>
-                        {this.props.showMarker ? (<Row>
+                        {this.props.showMarker ? <Row>
                             <Col xs={1}>
                                 <input aria-label="..." type="checkbox" defaultChecked={this.props.shapeStyle.marker} onChange={(e) => { this.props.setStyleParameter("marker", e.target.checked); }}/>
                             </Col>
                             <Col style={{paddingLeft: 0, paddingTop: 1}} xs={4}>
                                 <label>Marker</label>
                             </Col>
-                        </Row>) : null}
-                        {this.props.showMarkSelector ? (<Row style={{marginBottom: 4}}>
+                        </Row> : null}
+                        {this.props.showMarkSelector ? <Row style={{marginBottom: 4}}>
                             <Col style={{paddingTop: 7}}xs={4}><label>Mark</label></Col>
                             <Col xs={8} style={{paddingRight: 0, paddingLeft: 30}}>
                                 <MarkNameSelector onChange={this.props.setStyleParameter} markName={this.props.shapeStyle.markName}/>
                             </Col>
-                        </Row>) : null}
+                        </Row> : null}
                         <Row >
                             <Col xs={4}>
                                 <ColorPicker
@@ -88,6 +89,6 @@ const StylePoint = React.createClass({
                 </Row>
                 </Grid>);
     }
-});
+}
 
 module.exports = StylePoint;

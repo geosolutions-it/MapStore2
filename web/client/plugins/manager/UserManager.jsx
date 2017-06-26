@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -17,38 +18,40 @@ const UserDeleteConfirm = require('./users/UserDeleteConfirm');
 const Message = require('../../components/I18N/Message');
 const assign = require('object-assign');
 const {trim} = require('lodash');
-const UserManager = React.createClass({
-    propTypes: {
-        onNewUser: React.PropTypes.func,
-        className: React.PropTypes.string,
-        hideOnBlur: React.PropTypes.bool,
-        placeholderMsgId: React.PropTypes.string,
-        typeAhead: React.PropTypes.bool,
-        searchText: React.PropTypes.string,
-        onSearch: React.PropTypes.func,
-        onSearchReset: React.PropTypes.func,
-        onSearchTextChange: React.PropTypes.func,
-        start: React.PropTypes.number,
-        limit: React.PropTypes.number
-    },
-    getDefaultProps() {
-        return {
-            className: "user-search",
-            hideOnBlur: false,
-            placeholderMsgId: "users.searchUsers",
-            typeAhead: false,
-            searchText: "",
-            start: 0,
-            limit: 20,
-            onSearch: () => {},
-            onSearchReset: () => {},
-            onSearchTextChange: () => {},
-            onNewUser: () => {}
-        };
-    },
-    onNew() {
+
+class UserManager extends React.Component {
+    static propTypes = {
+        onNewUser: PropTypes.func,
+        className: PropTypes.string,
+        hideOnBlur: PropTypes.bool,
+        placeholderMsgId: PropTypes.string,
+        typeAhead: PropTypes.bool,
+        searchText: PropTypes.string,
+        onSearch: PropTypes.func,
+        onSearchReset: PropTypes.func,
+        onSearchTextChange: PropTypes.func,
+        start: PropTypes.number,
+        limit: PropTypes.number
+    };
+
+    static defaultProps = {
+        className: "user-search",
+        hideOnBlur: false,
+        placeholderMsgId: "users.searchUsers",
+        typeAhead: false,
+        searchText: "",
+        start: 0,
+        limit: 20,
+        onSearch: () => {},
+        onSearchReset: () => {},
+        onSearchTextChange: () => {},
+        onNewUser: () => {}
+    };
+
+    onNew = () => {
         this.props.onNewUser();
-    },
+    };
+
     render() {
         return (<div>
                 <SearchBar
@@ -62,7 +65,7 @@ const UserManager = React.createClass({
                     searchText={this.props.searchText}
                     start={this.props.start}
                     limit={this.props.limit} />
-                <Grid style={{marginBottom: "10px"}} fluid={true}>
+                <Grid style={{marginBottom: "10px"}} fluid>
                     <h1 className="usermanager-title"><Message msgId={"users.users"}/></h1>
                     <Button style={{marginRight: "10px"}} bsStyle="success" onClick={this.onNew}>&nbsp;<span><Glyphicon glyph="1-user-add" /><Message msgId="users.newUser" /></span></Button>
                 </Grid>
@@ -71,7 +74,8 @@ const UserManager = React.createClass({
                 <UserDeleteConfirm />
         </div>);
     }
-});
+}
+
 module.exports = {
     UserManagerPlugin: assign(
         connect((state) => {
@@ -79,38 +83,38 @@ module.exports = {
             return {
                 start: searchState && searchState.start,
                 limit: searchState && searchState.limit,
-                searchText: (searchState && searchState.searchText && trim(searchState.searchText, '*')) || ""
+                searchText: searchState && searchState.searchText && trim(searchState.searchText, '*') || ""
             };
         },
-        {
-            onNewUser: editUser.bind(null, {role: "USER", "enabled": true}),
-            onSearchTextChange: usersSearchTextChanged,
-            onSearch: getUsers
-        }, (stateProps, dispatchProps) => {
-            return {
-                ...stateProps,
-                ...dispatchProps,
-                onSearchReset: (text) => {
-                    let limit = stateProps.limit;
-                    let searchText = (text && text !== "") ? ("*" + text + "*") : "*";
-                    dispatchProps.onSearch(searchText, {params: {start: 0, limit}});
-                },
-                onSearch: (text) => {
-                    let limit = stateProps.limit;
-                    let searchText = (text && text !== "") ? ("*" + text + "*") : "*";
-                    dispatchProps.onSearch(searchText, {params: {start: 0, limit}});
-                }
-            };
-        })(UserManager), {
-    hide: true,
-    Manager: {
-        id: "usermanager",
-        name: 'usermanager',
-        position: 1,
-        priority: 1,
-        title: <Message msgId="users.manageUsers" />,
-        glyph: "1-user-mod"
-    }}),
+            {
+                onNewUser: editUser.bind(null, {role: "USER", "enabled": true}),
+                onSearchTextChange: usersSearchTextChanged,
+                onSearch: getUsers
+            }, (stateProps, dispatchProps) => {
+                return {
+                    ...stateProps,
+                    ...dispatchProps,
+                    onSearchReset: (text) => {
+                        let limit = stateProps.limit;
+                        let searchText = text && text !== "" ? "*" + text + "*" : "*";
+                        dispatchProps.onSearch(searchText, {params: {start: 0, limit}});
+                    },
+                    onSearch: (text) => {
+                        let limit = stateProps.limit;
+                        let searchText = text && text !== "" ? "*" + text + "*" : "*";
+                        dispatchProps.onSearch(searchText, {params: {start: 0, limit}});
+                    }
+                };
+            })(UserManager), {
+                hide: true,
+                Manager: {
+                    id: "usermanager",
+                    name: 'usermanager',
+                    position: 1,
+                    priority: 1,
+                    title: <Message msgId="users.manageUsers" />,
+                    glyph: "1-user-mod"
+                }}),
     reducers: {
         users: require('../../reducers/users')
     }

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -11,21 +12,21 @@ const {connect} = require('react-redux');
 const {Button, Glyphicon} = require('react-bootstrap');
 const {toggleControl} = require('../../actions/controls');
 
-const ToggleButton = React.createClass({
-    propTypes: {
-        pressed: React.PropTypes.bool,
-        onToggle: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            pressed: false,
-            onToggle: () => {}
-        };
-    },
+class ToggleButton extends React.Component {
+    static propTypes = {
+        pressed: PropTypes.bool,
+        onToggle: PropTypes.func
+    };
+
+    static defaultProps = {
+        pressed: false,
+        onToggle: () => {}
+    };
+
     render() {
         return <Button onClick={() => this.props.onToggle(this.props.pressed) } bsStyle={this.props.pressed ? "default" : "primary"} className="square-button search-toggle"><Glyphicon glyph="search" /></Button>;
     }
-});
+}
 
 module.exports = connect((state) => ({
     pressed: state.controls && state.controls.search && state.controls.search.enabled || false
