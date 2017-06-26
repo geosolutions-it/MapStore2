@@ -23,6 +23,8 @@ const CHANGE_PASSWORD_SUCCESS = 'CHANGE_PASSWORD_SUCCESS';
 const CHANGE_PASSWORD_FAIL = 'CHANGE_PASSWORD_FAIL';
 const LOGOUT = 'LOGOUT';
 const REFRESH_ACCESS_TOKEN = 'REFRESH_ACCESS_TOKEN';
+const VERIFY_SESSION = 'VERIFY_SESSION';
+const SESSION_VALID = 'SESSION_VALID';
 
 function loginSuccess(userDetails, username, password, authProvider) {
     return {
@@ -106,6 +108,24 @@ function refreshAccessToken() {
     };
 }
 
+function sessionValid(userDetails, authProvider) {
+    return {
+        type: SESSION_VALID,
+        userDetails: userDetails,
+        authProvider: authProvider
+    };
+}
+
+function verifySession() {
+    return (dispatch) => {
+        AuthenticationAPI.verifySession().then((response) => {
+            dispatch(sessionValid(response, AuthenticationAPI.authProviderName));
+        }).catch(() => {
+            dispatch(logout(null));
+        });
+    };
+}
+
 module.exports = {
     LOGIN_SUBMIT,
     CHANGE_PASSWORD,
@@ -116,6 +136,8 @@ module.exports = {
     RESET_ERROR,
     LOGOUT,
     REFRESH_ACCESS_TOKEN,
+    VERIFY_SESSION,
+    SESSION_VALID,
     login,
     loginSuccess,
     loginFail,
@@ -123,5 +145,7 @@ module.exports = {
     changePassword,
     logoutWithReload,
     resetError,
-    refreshAccessToken
+    refreshAccessToken,
+    verifySession,
+    sessionValid
 };
