@@ -579,6 +579,7 @@
           "newGroup": "New Group",
           "manageGroups": "Manage Groups",
           "description": "Description:",
+          "noDescriptionAvailable": "(No description)",
           "groupName": "Group Name",
           "groupDescription": "Description",
           "saveGroup": "Save",
