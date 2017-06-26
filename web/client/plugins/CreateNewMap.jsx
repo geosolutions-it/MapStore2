@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,6 +6,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
 
 const {Button, Grid, Col} = require('react-bootstrap');
@@ -18,7 +18,9 @@ class CreateNewMap extends React.Component {
         mapType: PropTypes.string,
         onGoToMap: PropTypes.func,
         colProps: PropTypes.object,
-        isLoggedIn: PropTypes.bool
+        isLoggedIn: PropTypes.bool,
+        allowedRoles: PropTypes.array,
+        user: PropTypes.object
     };
 
     static contextTypes = {
@@ -28,6 +30,7 @@ class CreateNewMap extends React.Component {
     static defaultProps = {
         mapType: "leaflet",
         isLoggedIn: false,
+        allowedRoles: ["ADMIN", "USER"],
         onGoToMap: () => {},
         colProps: {
             xs: 12,
@@ -36,9 +39,8 @@ class CreateNewMap extends React.Component {
             md: 12
         }
     };
-
     render() {
-        const display = this.props.isLoggedIn ? null : "none";
+        const display = this.isAllowed() ? null : "none";
         return (<Grid fluid style={{marginBottom: "30px", padding: 0, display}}>
         <Col {...this.props.colProps} >
             <Button bsStyle="primary" onClick={() => { this.context.router.history.push("/viewer/" + this.props.mapType + "/new"); }}>
@@ -47,11 +49,13 @@ class CreateNewMap extends React.Component {
         </Col>
         </Grid>);
     }
+    isAllowed = () => this.props.isLoggedIn && this.props.allowedRoles.indexOf(this.props.user && this.props.user.role) >= 0;
 }
 
 module.exports = {
     CreateNewMapPlugin: connect((state) => ({
         mapType: state.maps && state.maps.mapType || state.home && state.home.mapType,
-        isLoggedIn: state && state.security && state.security.user && state.security.user.enabled && true || false
+        isLoggedIn: state && state.security && state.security.user && state.security.user.enabled && true || false,
+        user: state && state.security && state.security.user
     }))(CreateNewMap)
 };
