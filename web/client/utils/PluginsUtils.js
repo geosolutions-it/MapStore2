@@ -7,14 +7,12 @@
  */
 
 const assign = require('object-assign');
-const {omit, isObject, head, isArray, isString} = require('lodash');
+const {omit, isObject, head, isArray, isString, memoize, get} = require('lodash');
 const {combineReducers} = require('redux');
 const {connect} = require('react-redux');
 const url = require('url');
 const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}];
 const {combineEpics} = require('redux-observable');
-
-const {memoize, get} = require('lodash');
 /**
  * Gives a reduced version of the status to check.
  * It cached the last state to prevent re-evaluations if the input didn't change.

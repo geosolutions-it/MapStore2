@@ -11,7 +11,6 @@ const React = require('react');
 const {Panel} = require('react-bootstrap');
 const _ = require('lodash');
 const Select = require('./RuleAttributeSelect');
-const {head} = require('lodash');
 
 const ACCESS_TYPES = [
     'ALLOW',
@@ -131,7 +130,7 @@ class RuleAttributes extends React.Component {
     }
 
     filterValue = (value, values) => {
-        if (value && head(values.filter(existing => existing === value))) {
+        if (value && _.head(values.filter(existing => existing === value))) {
             return value;
         }
         return undefined;

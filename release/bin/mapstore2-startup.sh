@@ -21,7 +21,7 @@ echo "Welcome to MapStore2!"
 # if not told otherwise pump up the permgen
 if [ -z "$JAVA_OPTS" ]; then
   export JAVA_OPTS="-XX:MaxPermSize=128m"
-fi 
+fi
 
 EXECUTABLE=startup.sh
 CATALINA_HOME="$PRGDIR"
@@ -36,6 +36,6 @@ fi
 sh "$CATALINA_HOME"/bin/"$EXECUTABLE" start "$@"
 echo "Waiting for Tomcat start and MapStore2 deploy..."
 sleep 4
-echo "Point you browser to: http://localhost:8082/mapstore"
+echo "Point your browser to: http://localhost:8082/mapstore"
 sleep 1
 echo "Enjoy MapStore2!"

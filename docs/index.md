@@ -23,7 +23,7 @@ You can either choose to download a standalone *binary package* or a *WAR file* 
 
 Binary package
 --------------
-Download the binary package file from the the latest release [here](https://github.com/geosolutions-it/MapStore2/releases/latest).
+Download the binary package file from the latest release [here](https://github.com/geosolutions-it/MapStore2/releases/latest).
 
 Go to the location where you saved the zip file, unzip the contents and run:
 
@@ -31,7 +31,7 @@ Windows: `mapstore2_startup.bat`
 
 Linux: `./mapstore2_startup.sh`
 
-Point you browser to: [http://localhost:8082/mapstore](http://localhost:8082/mapstore)
+Point your browser to: [http://localhost:8082/mapstore](http://localhost:8082/mapstore)
 
 To stop MapStore2 simply do:
 
@@ -42,7 +42,7 @@ Linux: `./mapstore2_shutdown.sh`
 
 WAR file
 --------
-Download the WAR file from the the latest release [here](https://github.com/geosolutions-it/MapStore2/releases/latest).
+Download the WAR file from the latest release [here](https://github.com/geosolutions-it/MapStore2/releases/latest).
 
 [All the releases](https://github.com/geosolutions-it/MapStore2/releases)
 

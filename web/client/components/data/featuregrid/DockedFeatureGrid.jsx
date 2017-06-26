@@ -1,7 +1,7 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
-const {isObject} = require('lodash');
+const {isObject, isEqual, head} = require('lodash');
 const Dock = require('react-dock').default;
 
 const {Button, Glyphicon} = require('react-bootstrap');
@@ -16,11 +16,9 @@ const FeatureGrid = connect((state) => {
     };
 }, {})(require('./FeatureGrid'));
 
-const {head} = require('lodash');
 const I18N = require('../../../components/I18N/I18N');
 const Spinner = require('react-spinkit');
 const assign = require('object-assign');
-const {isEqual} = require('lodash');
 
 require("./featuregrid.css");
 

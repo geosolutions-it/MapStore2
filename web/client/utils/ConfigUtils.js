@@ -11,7 +11,7 @@ var url = require('url');
 
 var axios = require('axios');
 
-const {isArray} = require('lodash');
+const {isArray, isObject} = require('lodash');
 const assign = require('object-assign');
 const {Promise} = require('es6-promise');
 
@@ -21,8 +21,6 @@ const centerPropType = PropTypes.shape({
     y: PropTypes.number.isRequired,
     crs: PropTypes.string
 });
-
-const {isObject} = require('lodash');
 
 const urlQuery = url.parse(window.location.href, true).query;
 
