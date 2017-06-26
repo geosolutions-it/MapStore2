@@ -85,7 +85,7 @@ let SearchBar = React.createClass({
             delay: 1000,
             blurResetDelay: 300,
             autoFocusOnSelect: true,
-            hideOnBlur: true,
+            hideOnBlur: false,
             typeAhead: true,
             searchText: ""
         };

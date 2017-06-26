@@ -45,7 +45,7 @@ let SearchResult = React.createClass({
         }
         let item = this.props.item;
         return (
-            <div key={item.osm_id} className="search-result" onClick={this.onClick}>
+            <div key={item.osm_id} className="search-result" style={item.resultCssStyle} onClick={this.onClick}>
                 <div className="icon"> <img src={item.icon} /></div>
                 <div className="text-result-title">{get(item, this.props.displayName) || generateTemplateString(this.props.displayName || "")(item) }</div>
                 <small className="text-info">{this.props.subTitle && get(item, this.props.subTitle) || generateTemplateString(this.props.subTitle || "")(item) }</small>
