@@ -9,7 +9,9 @@
 const {SET_COOKIE_VISIBILITY, SET_MORE_DETAILS_VISIBILITY, SET_DETAILS_COOKIE_HTML} = require('../actions/cookie');
 const assign = require('object-assign');
 
-function cookie(state = null, action) {
+function cookie(state = {
+    html: {}
+}, action) {
     switch (action.type) {
         case SET_COOKIE_VISIBILITY: {
             return assign({}, state, {showCookiePanel: action.status});
@@ -18,7 +20,7 @@ function cookie(state = null, action) {
             return assign({}, state, {seeMore: action.status});
         }
         case SET_DETAILS_COOKIE_HTML: {
-            return assign({}, state, {html: action.html});
+            return assign({}, state, {html: {[action.lang]: action.html}});
         }
         default:
             return state;

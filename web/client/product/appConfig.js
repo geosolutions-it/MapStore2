@@ -67,7 +67,6 @@ module.exports = {
             mousePosition: {enabled: true, crs: "EPSG:4326", showCenter: true}
         }
     },
-    appEpics: require('../epics/cookies'),
     storeOpts: {
         persist: {
             whitelist: ['security']

@@ -8,7 +8,7 @@
 const Rx = require('rxjs');
 const {setCookieVisibility, setDetailsCookieHtml} = require('../actions/cookie');
 const axios = require('../libs/ajax');
-const {CHANGE_LOCALE} = require('../actions/locale');
+const {SET_MORE_DETAILS_VISIBILITY} = require('../actions/cookie');
 const {LOCATION_CHANGE} = require('react-router-redux');
 
 
@@ -29,15 +29,15 @@ const cookiePolicyChecker = (action$) =>
         );
 
 const loadCookieDetailsPage = (action$, store) =>
-    action$.ofType(CHANGE_LOCALE )
-        .filter( () => !localStorage.getItem("cookies-policy-approved"))
+    action$.ofType(SET_MORE_DETAILS_VISIBILITY )
+        .filter( (action) => !localStorage.getItem("cookies-policy-approved") && action.status && !store.getState().cookie.html[store.getState().locale.current])
         .switchMap(() => Rx.Observable.fromPromise(
             axios.get("translations/fragments/cookie/cookieDetails-" + store.getState().locale.current + ".html", null, {
                 timeout: 60000,
                 headers: {'Accept': 'text/html', 'Content-Type': 'text/html'}
             }).then(res => res.data)
         ))
-        .switchMap(html => Rx.Observable.of(setDetailsCookieHtml(html)));
+        .switchMap(html => Rx.Observable.of(setDetailsCookieHtml(html, store.getState().locale.current )));
 
 
 /**

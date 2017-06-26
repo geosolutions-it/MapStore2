@@ -22,10 +22,11 @@ function setMoreDetailsVisibility(status) {
         status
     };
 }
-function setDetailsCookieHtml(html) {
+function setDetailsCookieHtml(html, lang) {
     return {
         type: SET_DETAILS_COOKIE_HTML,
-        html
+        html,
+        lang
     };
 }
 module.exports = {

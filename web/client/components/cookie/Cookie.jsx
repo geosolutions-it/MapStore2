@@ -7,7 +7,7 @@
 */
 const PropTypes = require('prop-types');
 const React = require('react');
-const {Button} = require('react-bootstrap');
+const {Button, Glyphicon} = require('react-bootstrap');
 const Message = require('../../components/I18N/Message');
 const MoreDetails = require('./MoreDetails');
 /**
@@ -48,6 +48,9 @@ class Cookie extends React.Component {
     render() {
         return this.props.show ? (
             <div className="mapstore-cookie-panel" style={{width: this.props.seeMore ? "auto" : "420px", height: this.props.seeMore ? "100%" : "auto"}}>
+                <div role="header" className="cookie-header" style={{height: this.props.seeMore ? "44px" : "0px"}}>
+                    {this.props.seeMore ? <Glyphicon glyph="1-close" onClick={() => this.props.onMoreDetails(false)}/> : null }
+                </div>
                 <div role="body" className="cookie-body-container">
                     {!this.props.externalCookieUrl && this.props.seeMore ? (
                         <MoreDetails html={this.props.html}/>
@@ -55,15 +58,14 @@ class Cookie extends React.Component {
                             <Message msgId="cookie.info"/>
                         </div>) }
                     <br/>
-                    <div className="cookie-action">
+                    {!this.props.seeMore ? (<div className="cookie-action">
                         <Button
                             className="cookie-button"
                             id="accept-cookie"
                             bsStyle="primary"
                             onClick={() => this.accept(true)} >
                             <Message msgId="cookie.accept"/>
-                        </Button> &nbsp;
-                        {this.props.externalCookieUrl ?
+                        </Button> &nbsp; {this.props.externalCookieUrl ?
                             (
                                 <a style={{cursor: "pointer"}}
                                     id="accept-cookie"
@@ -92,8 +94,7 @@ class Cookie extends React.Component {
                                 bsStyle="primary" >
                                 <Message msgId="cookie.leave"/>
                             </Button>
-                        </a>
-                    </div>
+                        </a></div>) : null }
                 </div>
             </div>
         ) : null;

@@ -11,7 +11,7 @@ const {setCookieVisibility, setMoreDetailsVisibility} = require('../actions/cook
 
 const Cookie = connect((state) => ({
     show: state.cookie && state.cookie.showCookiePanel,
-    html: state.cookie && state.cookie.html,
+    html: state.cookie && state.cookie.html && state.cookie.html[state.locale && state.locale.current],
     seeMore: state.cookie && state.cookie.seeMore
 }), {
     onSetCookieVisibility: setCookieVisibility,
@@ -20,5 +20,6 @@ const Cookie = connect((state) => ({
 
 module.exports = {
     CookiePlugin: Cookie,
-    reducers: {cookie: require('../reducers/cookie')}
+    reducers: {cookie: require('../reducers/cookie')},
+    epics: require('../epics/cookies')
 };

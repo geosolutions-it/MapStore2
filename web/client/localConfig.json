@@ -125,7 +125,13 @@
                     }
                 }
             }, "Login",
-            "OmniBar", "BurgerMenu", "Expander", "GlobeViewSwitcher"
+            "OmniBar", "BurgerMenu", "Expander", "GlobeViewSwitcher", {
+              "name": "Cookie",
+              "cfg": {
+                "externalCookieUrl" : "",
+                "declineUrl" : "http://www.google.com"
+              }
+            }
         ],
 
         "desktop": ["Map", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", {"name": "BackgroundSelector", "cfg": { "bottom": 40 } },
