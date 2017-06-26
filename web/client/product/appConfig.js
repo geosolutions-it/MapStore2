@@ -55,6 +55,10 @@ module.exports = {
                         title: false,
                         dimensions: false
                     }
+                },
+                cookie: {
+                    enabled: false,
+                    seeMore: false
                 }
             }
         },

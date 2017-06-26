@@ -72,6 +72,7 @@ module.exports = {
         BackgroundSelectorPlugin: require('../plugins/BackgroundSelector'),
         SearchServicesConfigPlugin: require('../plugins/SearchServicesConfig'),
         VersionPlugin: require('../plugins/Version'),
+        CookiePlugin: require('../plugins/Cookie'),
         NotificationsPlugin: require('../plugins/Notifications')
     },
     requires: {
