@@ -17,7 +17,7 @@ module.exports = [
     },
     {
         title: <I18N.Message msgId="tutorial.cesium.title"/>,
-        text: <CesiumTooltip touch={true}/>,
+        text: <CesiumTooltip touch/>,
         selector: '#map .cesium-viewer'
     },
     {

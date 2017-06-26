@@ -37,7 +37,7 @@ describe("Test the Cesium tooltip component", () => {
     });
 
     it('test default component with touch', () => {
-        const cmp = ReactDOM.render(<CesiumTooltip touch={true}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<CesiumTooltip touch/>, document.getElementById("container"));
         expect(cmp).toExist();
         const domNode = ReactDOM.findDOMNode(cmp);
         expect(domNode).toExist();

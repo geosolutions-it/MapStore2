@@ -25,6 +25,7 @@ class QueryBuilder extends React.Component {
         featureTypeError: PropTypes.string,
         featureTypeErrorText: PropTypes.node,
         groupLevels: PropTypes.number,
+        maxFeaturesWPS: React.PropTypes.number,
         filterFields: PropTypes.array,
         groupFields: PropTypes.array,
         spatialField: PropTypes.object,
@@ -48,9 +49,12 @@ class QueryBuilder extends React.Component {
         resultTitle: PropTypes.string,
         pagination: PropTypes.object,
         sortOptions: PropTypes.object,
+        spatialOperations: React.PropTypes.array,
+        spatialMethodOptions: React.PropTypes.array,
         hits: PropTypes.bool,
         maxHeight: PropTypes.number,
         allowEmptyFilter: PropTypes.bool,
+        autocompleteEnabled: React.PropTypes.bool,
         emptyFilterWarning: PropTypes.bool
     };
 
@@ -62,6 +66,8 @@ class QueryBuilder extends React.Component {
         groupFields: [],
         filterFields: [],
         attributes: [],
+        spatialMethodOptions: [],
+        spatialOperations: [],
         featureTypeError: "",
         spatialField: {},
         removeButtonIcon: "glyphicon glyphicon-remove",
@@ -78,6 +84,7 @@ class QueryBuilder extends React.Component {
         hits: false,
         maxHeight: 830,
         allowEmptyFilter: false,
+        autocompleteEnabled: true,
         emptyFilterWarning: false,
         attributeFilterActions: {
             onAddGroupField: () => {},

@@ -338,7 +338,7 @@ describe('test DefaultLayer module component', () => {
             onRefresh: () => {}
         };
         let spy = expect.spyOn(actions, "onRefresh");
-        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" modalOptions={{animation: false}} node={l} activateRefreshTool={true} onRefresh={actions.onRefresh}/>,
+        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" modalOptions={{animation: false}} node={l} activateRefreshTool onRefresh={actions.onRefresh}/>,
             document.getElementById("container"));
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);

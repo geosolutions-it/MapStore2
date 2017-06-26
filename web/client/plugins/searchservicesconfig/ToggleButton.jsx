@@ -29,7 +29,7 @@ class ToggleServicesConfig extends React.Component {
         return (
             <FormGroup>
                 <ToggleBtn key="searchservicesconfig"
-                    isButton={true} {...this.props} onClick={this.onClick}/>
+                    isButton {...this.props} onClick={this.onClick}/>
             </FormGroup>);
     }
 }

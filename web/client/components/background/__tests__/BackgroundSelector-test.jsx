@@ -65,7 +65,7 @@ describe("test the BackgroundSelector", () => {
             }
         ];
 
-        const backgroundSelector = ReactDOM.render(<BackgroundSelector size={size} enabled={true} layers={layers}/>, document.getElementById("container"));
+        const backgroundSelector = ReactDOM.render(<BackgroundSelector size={size} enabled layers={layers}/>, document.getElementById("container"));
         expect(backgroundSelector).toExist();
         const node = ReactDOM.findDOMNode(backgroundSelector);
         expect(node).toExist();
@@ -97,7 +97,7 @@ describe("test the BackgroundSelector", () => {
                 title: 'title_1'
             }
         ];
-        const backgroundSelector = ReactDOM.render(<BackgroundSelector size={size} enabled={true} layers={layers}/>, document.getElementById("container"));
+        const backgroundSelector = ReactDOM.render(<BackgroundSelector size={size} enabled layers={layers}/>, document.getElementById("container"));
         expect(backgroundSelector).toExist();
         const node = ReactDOM.findDOMNode(backgroundSelector);
         expect(node).toNotExist();
@@ -119,7 +119,7 @@ describe("test the BackgroundSelector", () => {
             }
         ];
 
-        const backgroundSelector = ReactDOM.render(<BackgroundSelector isMobile={true} size={size} layers={layers}/>, document.getElementById("container"));
+        const backgroundSelector = ReactDOM.render(<BackgroundSelector isMobile size={size} layers={layers}/>, document.getElementById("container"));
         expect(backgroundSelector).toExist();
         const node = ReactDOM.findDOMNode(backgroundSelector);
         expect(node).toExist();
@@ -141,7 +141,7 @@ describe("test the BackgroundSelector", () => {
             }
         ];
 
-        const backgroundSelector = ReactDOM.render(<BackgroundSelector isMobile={true} size={size} enabled={true} layers={layers}/>, document.getElementById("container"));
+        const backgroundSelector = ReactDOM.render(<BackgroundSelector isMobile size={size} enabled layers={layers}/>, document.getElementById("container"));
         expect(backgroundSelector).toExist();
         const node = ReactDOM.findDOMNode(backgroundSelector);
         expect(node).toExist();
@@ -163,7 +163,7 @@ describe("test the BackgroundSelector", () => {
             }
         ];
 
-        const backgroundSelector = ReactDOM.render(<BackgroundSelector isMobile={true} size={size} enabled={true} layers={layers}/>, document.getElementById("container"));
+        const backgroundSelector = ReactDOM.render(<BackgroundSelector isMobile size={size} enabled layers={layers}/>, document.getElementById("container"));
         expect(backgroundSelector).toExist();
         const node = ReactDOM.findDOMNode(backgroundSelector);
         expect(node).toExist();

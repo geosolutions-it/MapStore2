@@ -97,7 +97,7 @@ class UserDialog extends React.Component {
     };
 
     renderPasswordFields = () => {
-      return (
+        return (
           <div>
               <FormGroup validationState={this.getPwStyle()}>
                   <ControlLabel><Message msgId="user.password"/></ControlLabel>
@@ -208,7 +208,7 @@ class UserDialog extends React.Component {
     };
 
     render() {
-        return (<Dialog onClickOut={this.props.onClose} modal={true} maskLoading={this.props.user && (this.props.user.status === "loading" || this.props.user.status === "saving")} id="mapstore-user-dialog" className="user-edit-dialog" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
+        return (<Dialog onClickOut={this.props.onClose} modal maskLoading={this.props.user && (this.props.user.status === "loading" || this.props.user.status === "saving")} id="mapstore-user-dialog" className="user-edit-dialog" style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
 
           <span role="header">
               <span className="user-panel-title">{(this.props.user && this.props.user.name) || <Message msgId="users.newUser" />}</span>
