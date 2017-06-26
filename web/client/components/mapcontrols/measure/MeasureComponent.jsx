@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -19,108 +20,115 @@ const {isEqual, round} = require('lodash');
 
 require('./measure.css');
 
-const MeasureComponent = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        name: React.PropTypes.string,
-        columnProperties: React.PropTypes.object,
-        propertiesChangeHandler: React.PropTypes.func,
-        lengthButtonText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        areaButtonText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        resetButtonText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        lengthLabel: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        areaLabel: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        bearingLabel: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        uom: React.PropTypes.shape({
-            length: React.PropTypes.shape({
-                unit: React.PropTypes.string.isRequired,
-                label: React.PropTypes.string.isRequired
+class MeasureComponent extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        name: PropTypes.string,
+        columnProperties: PropTypes.object,
+        propertiesChangeHandler: PropTypes.func,
+        lengthButtonText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        areaButtonText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        resetButtonText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        lengthLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        areaLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        bearingLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        uom: PropTypes.shape({
+            length: PropTypes.shape({
+                unit: PropTypes.string.isRequired,
+                label: PropTypes.string.isRequired
             }),
-            area: React.PropTypes.shape({
-                unit: React.PropTypes.string.isRequired,
-                label: React.PropTypes.string.isRequired
+            area: PropTypes.shape({
+                unit: PropTypes.string.isRequired,
+                label: PropTypes.string.isRequired
             })
         }),
-        toggleMeasure: React.PropTypes.func,
-        measurement: React.PropTypes.object,
-        lineMeasureEnabled: React.PropTypes.bool,
-        areaMeasureEnabled: React.PropTypes.bool,
-        bearingMeasureEnabled: React.PropTypes.bool,
-        showButtons: React.PropTypes.bool,
-        showResults: React.PropTypes.bool,
-        lineGlyph: React.PropTypes.string,
-        areaGlyph: React.PropTypes.string,
-        bearingGlyph: React.PropTypes.string,
-        useButtonGroup: React.PropTypes.bool,
-        withReset: React.PropTypes.bool,
-        showButtonsLabels: React.PropTypes.bool,
-        inlineGlyph: React.PropTypes.bool,
-        formatLength: React.PropTypes.func,
-        formatArea: React.PropTypes.func,
-        formatBearing: React.PropTypes.func
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            columnProperties: {
-                xs: 4,
-                sm: 4,
-                md: 4
-            },
-            id: "measure-result-panel",
-            uom: {
-                length: {unit: 'm', label: 'm'},
-                area: {unit: 'sqm', label: 'm²'}
-            },
-            showButtons: true,
-            showResults: true,
-            useButtonGroup: false,
-            withReset: false,
-            lineGlyph: "1-measure-lenght",
-            areaGlyph: "1-measure-area",
-            bearingGlyph: "1-bearing",
-            showButtonsLabels: true,
-            lengthLabel: <Message msgId="measureComponent.lengthLabel"/>,
-            areaLabel: <Message msgId="measureComponent.areaLabel"/>,
-            bearingLabel: <Message msgId="measureComponent.bearingLabel"/>,
-            formatLength: (uom, value) => measureUtils.getFormattedLength(uom, value),
-            formatArea: (uom, value) => measureUtils.getFormattedArea(uom, value),
-            formatBearing: (value) => measureUtils.getFormattedBearingValue(round(value || 0, 6))
-        };
-    },
+        toggleMeasure: PropTypes.func,
+        measurement: PropTypes.object,
+        lineMeasureEnabled: PropTypes.bool,
+        areaMeasureEnabled: PropTypes.bool,
+        bearingMeasureEnabled: PropTypes.bool,
+        showButtons: PropTypes.bool,
+        showResults: PropTypes.bool,
+        lineGlyph: PropTypes.string,
+        areaGlyph: PropTypes.string,
+        bearingGlyph: PropTypes.string,
+        useButtonGroup: PropTypes.bool,
+        withReset: PropTypes.bool,
+        showButtonsLabels: PropTypes.bool,
+        inlineGlyph: PropTypes.bool,
+        formatLength: PropTypes.func,
+        formatArea: PropTypes.func,
+        formatBearing: PropTypes.func
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        columnProperties: {
+            xs: 4,
+            sm: 4,
+            md: 4
+        },
+        id: "measure-result-panel",
+        uom: {
+            length: {unit: 'm', label: 'm'},
+            area: {unit: 'sqm', label: 'm²'}
+        },
+        showButtons: true,
+        showResults: true,
+        useButtonGroup: false,
+        withReset: false,
+        lineGlyph: "1-measure-lenght",
+        areaGlyph: "1-measure-area",
+        bearingGlyph: "1-bearing",
+        showButtonsLabels: true,
+        lengthLabel: <Message msgId="measureComponent.lengthLabel"/>,
+        areaLabel: <Message msgId="measureComponent.areaLabel"/>,
+        bearingLabel: <Message msgId="measureComponent.bearingLabel"/>,
+        formatLength: (uom, value) => measureUtils.getFormattedLength(uom, value),
+        formatArea: (uom, value) => measureUtils.getFormattedArea(uom, value),
+        formatBearing: (value) => measureUtils.getFormattedBearingValue(round(value || 0, 6))
+    };
+
     shouldComponentUpdate(nextProps) {
         return !isEqual(nextProps, this.props);
-    },
-    onLineClick: function() {
+    }
+
+    onLineClick = () => {
         this.props.toggleMeasure({
             geomType: 'LineString'
         });
-    },
-    onAreaClick: function() {
+    };
+
+    onAreaClick = () => {
         this.props.toggleMeasure({
             geomType: 'Polygon'
         });
-    },
-    onBearingClick: function() {
+    };
+
+    onBearingClick = () => {
         this.props.toggleMeasure({
             geomType: 'Bearing'
         });
-    },
-    onResetClick: function() {
+    };
+
+    onResetClick = () => {
         this.props.toggleMeasure({
             geomType: null
         });
-    },
-    getToolTips() {
+    };
+
+    getToolTips = () => {
         return {
             lineToolTip: <Tooltip id={"tooltip-button.line"}>{this.props.lengthLabel}</Tooltip>,
             areaToolTip: <Tooltip id={"tooltip-button.area"}>{this.props.areaLabel}</Tooltip>,
             bearingToolTip: <Tooltip id={"tooltip-button.bearing"}>{this.props.bearingLabel}</Tooltip>
         };
-    },
-    renderMeasurements() {
+    };
+
+    renderMeasurements = () => {
         let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
         return (
                <div className="panel-body">
@@ -131,20 +139,23 @@ const MeasureComponent = React.createClass({
                     <p><span>{this.props.bearingLabel}: </span>
                     <span id="measure-bearing-res">{this.props.formatBearing(this.props.measurement.bearing || 0)}</span></p>
                 </div>
-            );
-    },
-    renderPanel() {
+        );
+    };
+
+    renderPanel = () => {
         if (this.props.showResults) {
-            return (this.renderMeasurements());
+            return this.renderMeasurements();
         }
         return null;
-    },
-    renderLabel(msgId) {
+    };
+
+    renderLabel = (msgId) => {
         if (this.props.showButtonsLabels) {
             return <span className="option-text">{localeUtils.getMessageById(this.context.messages, msgId)}</span>;
         }
-    },
-    renderText(glyph, labelId) {
+    };
+
+    renderText = (glyph, labelId) => {
         if (glyph) {
             return (<span>
                 <span className="option-icon"><Glyphicon glyph={glyph}/></span>
@@ -152,8 +163,9 @@ const MeasureComponent = React.createClass({
             </span>);
         }
         return this.renderLabel(labelId);
-    },
-    renderButtons() {
+    };
+
+    renderButtons = () => {
         let {lineToolTip, areaToolTip, bearingToolTip} = this.getToolTips();
         return (
                 <div>
@@ -186,14 +198,16 @@ const MeasureComponent = React.createClass({
                     </ButtonGroup> : <span/>}
                 </div>
         );
-    },
-    renderButtonGroup() {
+    };
+
+    renderButtonGroup = () => {
         return (
                 <ButtonGroup vertical block>
                     {this.renderButtons()}
                 </ButtonGroup>
         );
-    },
+    };
+
     render() {
         return (
             <Panel id={this.props.id}>
@@ -202,6 +216,6 @@ const MeasureComponent = React.createClass({
             </Panel>
         );
     }
-});
+}
 
 module.exports = MeasureComponent;

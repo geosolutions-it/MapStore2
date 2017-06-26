@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -11,52 +12,53 @@ const {Glyphicon} = require('react-bootstrap');
 const Dropzone = require('react-dropzone');
 const Spinner = require('react-spinkit');
 const Message = require('../../../components/I18N/Message');
-  /**
-   * A Dropzone area for a thumbnail.
-   */
 
-const Thumbnail = React.createClass({
-    propTypes: {
-        glyphiconRemove: React.PropTypes.string,
-        style: React.PropTypes.object,
-        loading: React.PropTypes.bool,
-        map: React.PropTypes.object,
+/**
+ * A Dropzone area for a thumbnail.
+ */
+
+class Thumbnail extends React.Component {
+    static propTypes = {
+        glyphiconRemove: PropTypes.string,
+        style: PropTypes.object,
+        loading: PropTypes.bool,
+        map: PropTypes.object,
         // CALLBACKS
-        onDrop: React.PropTypes.func,
-        onError: React.PropTypes.func,
-        onUpdate: React.PropTypes.func,
-        onSaveAll: React.PropTypes.func,
-        onCreateThumbnail: React.PropTypes.func,
-        onDeleteThumbnail: React.PropTypes.func,
-        onRemoveThumbnail: React.PropTypes.func,
+        onDrop: PropTypes.func,
+        onError: PropTypes.func,
+        onUpdate: PropTypes.func,
+        onSaveAll: PropTypes.func,
+        onCreateThumbnail: PropTypes.func,
+        onDeleteThumbnail: PropTypes.func,
+        onRemoveThumbnail: PropTypes.func,
         // I18N
-        message: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        suggestion: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element])
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            loading: false,
-            glyphiconRemove: "remove-circle",
-            // CALLBACKS
-            onDrop: () => {},
-            onError: () => {},
-            onUpdate: () => {},
-            onSaveAll: () => {},
-            onRemoveThumbnail: () => {},
-            onCreateThumbnail: () => {},
-            onDeleteThumbnail: () => {},
-            // I18N
-            message: <Message msgId="map.message"/>,
-            suggestion: <Message msgId="map.suggestion"/>
-        };
-    },
-    getInitialState() {
-        return {};
-    },
-    onRemoveThumbnail(event) {
+        message: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        suggestion: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        loading: false,
+        glyphiconRemove: "remove-circle",
+        // CALLBACKS
+        onDrop: () => {},
+        onError: () => {},
+        onUpdate: () => {},
+        onSaveAll: () => {},
+        onRemoveThumbnail: () => {},
+        onCreateThumbnail: () => {},
+        onDeleteThumbnail: () => {},
+        // I18N
+        message: <Message msgId="map.message"/>,
+        suggestion: <Message msgId="map.suggestion"/>
+    };
+
+    state = {};
+
+    onRemoveThumbnail = (event) => {
         if (event !== null) {
             event.stopPropagation();
         }
@@ -65,24 +67,28 @@ const Thumbnail = React.createClass({
         this.props.onUpdate(null, null);
         this.props.onRemoveThumbnail();
         this.props.onError([], this.props.map.id);
-    },
-    getThumbnailUrl() {
-        return (this.props.map && this.props.map.newThumbnail && this.props.map.newThumbnail !== "NODATA") ? decodeURIComponent(this.props.map.newThumbnail) : null;
-    },
-    isImage(images) {
+    };
+
+    getThumbnailUrl = () => {
+        return this.props.map && this.props.map.newThumbnail && this.props.map.newThumbnail !== "NODATA" ? decodeURIComponent(this.props.map.newThumbnail) : null;
+    };
+
+    isImage = (images) => {
         return images && images[0].type === "image/png" || images && images[0].type === "image/jpeg" || images && images[0].type === "image/jpg";
-    },
-    getDataUri(images, callback) {
+    };
+
+    getDataUri = (images, callback) => {
         let filesSelected = images;
         if (filesSelected && filesSelected.length > 0) {
             let fileToLoad = filesSelected[0];
             let fileReader = new FileReader();
-            fileReader.onload = (event) => (callback(event.target.result));
+            fileReader.onload = (event) => callback(event.target.result);
             return fileReader.readAsDataURL(fileToLoad);
         }
         return callback(null);
-    },
-    onDrop(images) {
+    };
+
+    onDrop = (images) => {
         // check formats and sizes
         const isAnImage = this.isImage(images);
         let errors = [];
@@ -106,8 +112,9 @@ const Thumbnail = React.createClass({
                 this.props.onUpdate(null, null);
             }
         });
-    },
-    generateUUID() {
+    };
+
+    generateUUID = () => {
         // TODO this function should be removed when the unique rule of name of a resource will be dropped
         // and a not unique can be associated to the new thumbnail resources
         let d = new Date().getTime();
@@ -117,12 +124,12 @@ const Thumbnail = React.createClass({
         const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             const r = (d + Math.random() * 16) % 16 | 0;
             d = Math.floor(d / 16);
-            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            return (c === 'x' ? r : r & 0x3 | 0x8).toString(16);
         });
         return uuid;
-    },
+    };
 
-    updateThumbnail(map, metadata) {
+    updateThumbnail = (map, metadata) => {
         if (!this.props.map.errors || !this.props.map.errors.length ) {
             this.getDataUri(this.files, (data) => {
                 const name = this.generateUUID(); // create new unique name
@@ -156,15 +163,17 @@ const Thumbnail = React.createClass({
                 return data;
             });
         }
-    },
-    getThumbnailDataUri(callback) {
+    };
+
+    getThumbnailDataUri = (callback) => {
         this.getDataUri(this.files, callback);
-    },
-    deleteThumbnail(thumbnail, mapId) {
+    };
+
+    deleteThumbnail = (thumbnail, mapId) => {
         if (thumbnail && thumbnail.indexOf("geostore") !== -1) {
             // this doesn't work if the URL is not encoded (because of GeoStore / Tomcat parameter encoding issues)
-            let start = (thumbnail).indexOf("data%2F") + 7;
-            let end = (thumbnail).indexOf("%2Fraw");
+            let start = thumbnail.indexOf("data%2F") + 7;
+            let end = thumbnail.indexOf("%2Fraw");
             let idThumbnail = thumbnail.slice(start, end);
 
             // delete the old thumbnail
@@ -173,29 +182,30 @@ const Thumbnail = React.createClass({
                 this.props.onDeleteThumbnail(idThumbnail, mapId);
             }
         }
-    },
+    };
+
     render() {
-        const withoutThumbnail = (<div className="dropzone-content-image">{this.props.message}<br/>{this.props.suggestion}</div>);
+        const withoutThumbnail = <div className="dropzone-content-image">{this.props.message}<br/>{this.props.suggestion}</div>;
         return (
-            (this.props.loading) ? (<div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/></div>) :
-            (
+            this.props.loading ? <div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/></div> :
+
                 <div className="dropzone-thumbnail-container">
                     <label className="control-label"><Message msgId="map.thumbnail"/></label>
                     <Dropzone multiple={false} className="dropzone alert alert-info" rejectClassName="alert-danger" onDrop={this.onDrop}>
-                    { (this.getThumbnailUrl() ) ?
-                        (<div>
+                    { this.getThumbnailUrl() ?
+                        <div>
                             <img src={this.getThumbnailUrl()} ref="imgThumbnail"/>
                             <div className="dropzone-content-image-added">{this.props.message}<br/>{this.props.suggestion}</div>
                             <div className="dropzone-remove" onClick={this.onRemoveThumbnail}>
                                 <Glyphicon glyph={this.props.glyphiconRemove} />
                             </div>
-                        </div>) : withoutThumbnail
+                        </div> : withoutThumbnail
                     }
                     </Dropzone>
                 </div>
-            )
+
         );
     }
-});
+}
 
 module.exports = Thumbnail;

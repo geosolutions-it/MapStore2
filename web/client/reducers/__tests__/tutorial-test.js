@@ -92,6 +92,7 @@ describe('Test the tutorial reducer', () => {
             style: {},
             defaultStep: {}
         });
+
         expect(state.run).toBe(false);
         expect(state.start).toBe(false);
         expect(state.status).toBe('close');

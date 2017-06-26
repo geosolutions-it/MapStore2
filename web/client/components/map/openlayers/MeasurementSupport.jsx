@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -12,19 +13,19 @@ var ol = require('openlayers');
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var wgs84Sphere = new ol.Sphere(6378137);
 
-const MeasurementSupport = React.createClass({
-    propTypes: {
-        map: React.PropTypes.object,
-        projection: React.PropTypes.string,
-        measurement: React.PropTypes.object,
-        changeMeasurementState: React.PropTypes.func,
-        updateOnMouseMove: React.PropTypes.bool
-    },
-    getDefaultProps() {
-        return {
-            updateOnMouseMove: false
-        };
-    },
+class MeasurementSupport extends React.Component {
+    static propTypes = {
+        map: PropTypes.object,
+        projection: PropTypes.string,
+        measurement: PropTypes.object,
+        changeMeasurementState: PropTypes.func,
+        updateOnMouseMove: PropTypes.bool
+    };
+
+    static defaultProps = {
+        updateOnMouseMove: false
+    };
+
     componentWillReceiveProps(newProps) {
 
         if (newProps.measurement.geomType && newProps.measurement.geomType !== this.props.measurement.geomType ) {
@@ -34,14 +35,17 @@ const MeasurementSupport = React.createClass({
         if (!newProps.measurement.geomType) {
             this.removeDrawInteraction();
         }
-    },
-    getPointCoordinate: function(coordinate) {
+    }
+
+    getPointCoordinate = (coordinate) => {
         return CoordinatesUtils.reproject(coordinate, this.props.projection, 'EPSG:4326');
-    },
+    };
+
     render() {
         return null;
-    },
-    addDrawInteraction: function(newProps) {
+    }
+
+    addDrawInteraction = (newProps) => {
         var source;
         var vector;
         var draw;
@@ -62,7 +66,7 @@ const MeasurementSupport = React.createClass({
                 }),
                 stroke: new ol.style.Stroke({
                     color: '#ffcc33',
-                  width: 2
+                    width: 2
                 }),
                 image: new ol.style.Circle({
                     radius: 7,
@@ -122,8 +126,9 @@ const MeasurementSupport = React.createClass({
         this.props.map.addInteraction(draw);
         this.drawInteraction = draw;
         this.measureLayer = vector;
-    },
-    removeDrawInteraction: function() {
+    };
+
+    removeDrawInteraction = () => {
         if (this.drawInteraction !== null) {
             this.props.map.removeInteraction(this.drawInteraction);
             this.drawInteraction = null;
@@ -134,8 +139,9 @@ const MeasurementSupport = React.createClass({
                 this.props.map.un('pointermove', this.updateMeasurementResults, this);
             }
         }
-    },
-    updateMeasurementResults() {
+    };
+
+    updateMeasurementResults = () => {
         if (!this.sketchFeature) {
             return;
         }
@@ -165,25 +171,28 @@ const MeasurementSupport = React.createClass({
             }
         );
         this.props.changeMeasurementState(newMeasureState);
-    },
-    reprojectedCoordinates: function(coordinates) {
+    };
+
+    reprojectedCoordinates = (coordinates) => {
         return coordinates.map((coordinate) => {
             let reprojectedCoordinate = CoordinatesUtils.reproject(coordinate, this.props.projection, 'EPSG:4326');
             return [reprojectedCoordinate.x, reprojectedCoordinate.y];
         });
-    },
-    calculateGeodesicDistance: function(coordinates) {
+    };
+
+    calculateGeodesicDistance = (coordinates) => {
         let reprojectedCoordinates = this.reprojectedCoordinates(coordinates);
         let length = 0;
         for (let i = 0; i < reprojectedCoordinates.length - 1; ++i) {
             length += wgs84Sphere.haversineDistance(reprojectedCoordinates[i], reprojectedCoordinates[i + 1]);
         }
         return length;
-    },
-    calculateGeodesicArea: function(coordinates) {
+    };
+
+    calculateGeodesicArea = (coordinates) => {
         let reprojectedCoordinates = this.reprojectedCoordinates(coordinates);
         return Math.abs(wgs84Sphere.geodesicArea(reprojectedCoordinates));
-    }
-});
+    };
+}
 
 module.exports = MeasurementSupport;

@@ -40,10 +40,10 @@ var WMTS = L.TileLayer.extend({
         L.setOptions(this, options);
     },
     isInRange: function(col, row, ranges) {
-        if ((col < ranges.cols.min) || (col > ranges.cols.max)) {
+        if (col < ranges.cols.min || col > ranges.cols.max) {
             return false;
         }
-        if ((row < ranges.rows.min) || (row > ranges.rows.max)) {
+        if (row < ranges.rows.min || row > ranges.rows.max) {
             return false;
         }
         return true;

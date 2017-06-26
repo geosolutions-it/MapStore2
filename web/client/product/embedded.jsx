@@ -42,6 +42,6 @@ const startApp = () => {
 if (!global.Intl ) {
     // Ensure Intl is loaded, then call the given callback
     LocaleUtils.ensureIntl(startApp);
-}else {
+} else {
     startApp();
 }

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var Proj4js = require('proj4');
-var React = require('react');
+const PropTypes = require('prop-types');
 var url = require('url');
 
 var axios = require('axios');
@@ -16,10 +16,10 @@ const assign = require('object-assign');
 const {Promise} = require('es6-promise');
 
 const epsg4326 = Proj4js ? new Proj4js.Proj('EPSG:4326') : null;
-const centerPropType = React.PropTypes.shape({
-    x: React.PropTypes.number.isRequired,
-    y: React.PropTypes.number.isRequired,
-    crs: React.PropTypes.string
+const centerPropType = PropTypes.shape({
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+    crs: PropTypes.string
 });
 
 const {isObject} = require('lodash');
@@ -45,11 +45,11 @@ var ConfigUtils = {
 
     PropTypes: {
         center: centerPropType,
-        config: React.PropTypes.shape({
+        config: PropTypes.shape({
             center: centerPropType,
-            zoom: React.PropTypes.number.isRequired
+            zoom: PropTypes.number.isRequired
         }),
-        mapStateSource: React.PropTypes.string
+        mapStateSource: PropTypes.string
     },
     getDefaults: function() {
         return defaultConfig;
@@ -290,50 +290,50 @@ var ConfigUtils = {
 
         let mobile = isMobile.any; // typeof window.orientation !== undefined + '';
         let msPointer = !window.PointerEvent && window.MSPointerEvent;
-        let pointer = (window.PointerEvent && window.navigator.pointerEnabled && window.navigator.maxTouchPoints) ||
+        let pointer = window.PointerEvent && window.navigator.pointerEnabled && window.navigator.maxTouchPoints ||
                   msPointer;
-        let retina = ('devicePixelRatio' in window && window.devicePixelRatio > 1) ||
-                 ('matchMedia' in window && window.matchMedia('(min-resolution:144dpi)') &&
-                  window.matchMedia('(min-resolution:144dpi)').matches);
+        let retina = 'devicePixelRatio' in window && window.devicePixelRatio > 1 ||
+                 'matchMedia' in window && window.matchMedia('(min-resolution:144dpi)') &&
+                  window.matchMedia('(min-resolution:144dpi)').matches;
 
         let doc = document.documentElement;
-        let ie3d = ie && ('transition' in doc.style);
-        let webkit3d = ('WebKitCSSMatrix' in window) && ('m11' in new window.WebKitCSSMatrix()) && !android23;
+        let ie3d = ie && 'transition' in doc.style;
+        let webkit3d = 'WebKitCSSMatrix' in window && 'm11' in new window.WebKitCSSMatrix() && !android23;
         let gecko3d = 'MozPerspective' in doc.style;
         let opera3d = 'OTransition' in doc.style;
         let any3d = !window.L_DISABLE_3D && (ie3d || webkit3d || gecko3d || opera3d) && !phantomjs;
 
         let touch = !window.L_NO_TOUCH && !phantomjs && (pointer || 'ontouchstart' in window ||
-        (window.DocumentTouch && document instanceof window.DocumentTouch));
+        window.DocumentTouch && document instanceof window.DocumentTouch);
 
         return {
-        ie: ie,
-        ie11: ie11,
-        ielt9: ielt9,
-        webkit: webkit,
-        gecko: gecko && !webkit && !window.opera && !ie,
+            ie: ie,
+            ie11: ie11,
+            ielt9: ielt9,
+            webkit: webkit,
+            gecko: gecko && !webkit && !window.opera && !ie,
 
-        android: android,
-        android23: android23,
+            android: android,
+            android23: android23,
 
-        chrome: chrome,
+            chrome: chrome,
 
-        ie3d: ie3d,
-        webkit3d: webkit3d,
-        gecko3d: gecko3d,
-        opera3d: opera3d,
-        any3d: any3d,
+            ie3d: ie3d,
+            webkit3d: webkit3d,
+            gecko3d: gecko3d,
+            opera3d: opera3d,
+            any3d: any3d,
 
-        mobile: mobile,
-        mobileWebkit: mobile && webkit,
-        mobileWebkit3d: mobile && webkit3d,
-        mobileOpera: mobile && window.opera,
+            mobile: mobile,
+            mobileWebkit: mobile && webkit,
+            mobileWebkit3d: mobile && webkit3d,
+            mobileOpera: mobile && window.opera,
 
-        touch: touch,
-        msPointer: msPointer,
-        pointer: pointer,
+            touch: touch,
+            msPointer: msPointer,
+            pointer: pointer,
 
-        retina: retina
+            retina: retina
         };
     },
     setApiKeys: function(layer) {

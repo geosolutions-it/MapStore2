@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -21,74 +22,79 @@ const SelectShape = require('./SelectShape');
 
 const {Promise} = require('es6-promise');
 
-const ShapeFileUploadAndStyle = React.createClass({
-    propTypes: {
-        bbox: React.PropTypes.array,
-        layers: React.PropTypes.array,
-        selected: React.PropTypes.object,
-        style: React.PropTypes.object,
-        shapeStyle: React.PropTypes.object,
-        onShapeError: React.PropTypes.func,
-        onShapeSuccess: React.PropTypes.func,
-        onShapeChoosen: React.PropTypes.func,
-        addShapeLayer: React.PropTypes.func,
-        shapeLoading: React.PropTypes.func,
-        onSelectLayer: React.PropTypes.func,
-        onLayerAdded: React.PropTypes.func,
-        onZoomSelected: React.PropTypes.func,
-        updateShapeBBox: React.PropTypes.func,
-        error: React.PropTypes.string,
-        success: React.PropTypes.string,
-        mapType: React.PropTypes.string,
-        buttonSize: React.PropTypes.string,
-        uploadMessage: React.PropTypes.object,
-        cancelMessage: React.PropTypes.object,
-        addMessage: React.PropTypes.object,
-        stylers: React.PropTypes.object,
-        uploadOptions: React.PropTypes.object,
-        createId: React.PropTypes.func
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            mapType: "leaflet",
-            buttonSize: "small",
-            uploadOptions: {},
-            createId: () => undefined,
-            bbox: null
-        };
-    },
+class ShapeFileUploadAndStyle extends React.Component {
+    static propTypes = {
+        bbox: PropTypes.array,
+        layers: PropTypes.array,
+        selected: PropTypes.object,
+        style: PropTypes.object,
+        shapeStyle: PropTypes.object,
+        onShapeError: PropTypes.func,
+        onShapeSuccess: PropTypes.func,
+        onShapeChoosen: PropTypes.func,
+        addShapeLayer: PropTypes.func,
+        shapeLoading: PropTypes.func,
+        onSelectLayer: PropTypes.func,
+        onLayerAdded: PropTypes.func,
+        onZoomSelected: PropTypes.func,
+        updateShapeBBox: PropTypes.func,
+        error: PropTypes.string,
+        success: PropTypes.string,
+        mapType: PropTypes.string,
+        buttonSize: PropTypes.string,
+        uploadMessage: PropTypes.object,
+        cancelMessage: PropTypes.object,
+        addMessage: PropTypes.object,
+        stylers: PropTypes.object,
+        uploadOptions: PropTypes.object,
+        createId: PropTypes.func
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        mapType: "leaflet",
+        buttonSize: "small",
+        uploadOptions: {},
+        createId: () => undefined,
+        bbox: null
+    };
+
+    state = {
+        useDefaultStyle: false,
+        zoomOnShapefiles: true
+    };
+
     componentWillMount() {
         StyleUtils = require('../../utils/StyleUtils')(this.props.mapType);
-    },
-    getInitialState() {
-        return {
-            useDefaultStyle: false,
-            zoomOnShapefiles: true
-        };
-    },
-    getGeomType(layer) {
+    }
+
+    getGeomType = (layer) => {
         if (layer && layer.features && layer.features[0].geometry) {
             return layer.features[0].geometry.type;
         }
-    },
-    renderError() {
+    };
+
+    renderError = () => {
         return (<Row>
                    <div style={{textAlign: "center"}} className="alert alert-danger">{this.props.error}</div>
                 </Row>);
-    },
-    renderSuccess() {
+    };
+
+    renderSuccess = () => {
         return (<Row>
                    <div style={{textAlign: "center", overflowWrap: "break-word"}} className="alert alert-success">{this.props.success}</div>
                 </Row>);
-    },
-    renderStyle() {
+    };
+
+    renderStyle = () => {
         return this.props.stylers[this.getGeomType(this.props.selected)];
-    },
-    renderDefaultStyle() {
-        return (this.props.selected) ? (
+    };
+
+    renderDefaultStyle = () => {
+        return this.props.selected ?
             <Row>
                 <Col xs={2}>
                     <input aria-label="..." type="checkbox" defaultChecked={this.state.useDefaultStyle} onChange={(e) => {this.setState({useDefaultStyle: e.target.checked}); }}/>
@@ -104,35 +110,37 @@ const ShapeFileUploadAndStyle = React.createClass({
                     <label><Message msgId="shapefile.zoom"/></label>
                 </Col>
             </Row>
-        ) : null;
-    },
+         : null;
+    };
+
     render() {
         return (
             <Grid role="body" style={{width: "300px"}} fluid>
-                {(this.props.error) ? this.renderError() : null}
-                {(this.props.success) ? this.renderSuccess() : null}
+                {this.props.error ? this.renderError() : null}
+                {this.props.success ? this.renderSuccess() : null}
             <Row style={{textAlign: "center"}}>
                 {
-            (this.props.selected) ?
+            this.props.selected ?
                 <Combobox data={this.props.layers} value={this.props.selected} onSelect={(value)=> this.props.onSelectLayer(value)} valueField={"id"} textField={"name"} /> :
                 <SelectShape {...this.props.uploadOptions} errorMessage="shapefile.error.select" text={this.props.uploadMessage} onShapeChoosen={this.addShape} onShapeError={this.props.onShapeError}/>
             }
             </Row>
             <Row style={{marginBottom: 10}}>
-                {(this.state.useDefaultStyle) ? null : this.renderStyle()}
+                {this.state.useDefaultStyle ? null : this.renderStyle()}
             </Row>
             {this.renderDefaultStyle()}
 
-                {(this.props.selected) ?
-                (<Row>
+                {this.props.selected ?
+                <Row>
                     <Col xsOffset={6} xs={3}> <Button bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={() => {this.props.onShapeChoosen(null); }}>{this.props.cancelMessage}</Button></Col>
                     <Col xs={3}> <Button bsStyle="primary" bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={this.addToMap}>{this.props.addMessage}</Button></Col>
                 </Row>
-                    ) : null }
+                     : null }
             </Grid>
         );
-    },
-    addShape(files) {
+    }
+
+    addShape = (files) => {
         this.props.shapeLoading(true);
         let queue = files.map((file) => {
             return FileUtils.readZip(file).then((buffer) => {
@@ -153,8 +161,9 @@ const ShapeFileUploadAndStyle = React.createClass({
             this.props.shapeLoading(false);
             this.props.onShapeError(e.message || e);
         });
-    },
-    addToMap() {
+    };
+
+    addToMap = () => {
         this.props.shapeLoading(true);
         let styledLayer = this.props.selected;
         if (!this.state.useDefaultStyle) {
@@ -191,8 +200,8 @@ const ShapeFileUploadAndStyle = React.createClass({
             this.props.shapeLoading(false);
             this.props.onShapeError(e.message || e);
         });
-    }
-});
+    };
+}
 
 
 module.exports = ShapeFileUploadAndStyle;

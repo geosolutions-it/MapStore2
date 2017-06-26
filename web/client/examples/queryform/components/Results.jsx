@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -15,20 +16,20 @@ const Draggable = require('react-draggable');
 
 const {resetQuery} = require('../actions/query');
 
-const Results = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        result: React.PropTypes.object,
-        onClose: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            id: "query-result-viewer",
-            onClose: () => {}
-        };
-    },
+class Results extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        result: PropTypes.object,
+        onClose: PropTypes.func
+    };
+
+    static defaultProps = {
+        id: "query-result-viewer",
+        onClose: () => {}
+    };
+
     render() {
-        return this.props.result.features.length > 0 ? (<Draggable start={{x: 670, y: 45}} handle=".handle_querypanel, .handle_querypanel *">
+        return this.props.result.features.length > 0 ? <Draggable start={{x: 670, y: 45}} handle=".handle_querypanel, .handle_querypanel *">
                     <div>
                         <Panel id={this.props.id} className="querypanel-container" header={<div className="handle_querypanel">Query Results<span onClick={this.props.onClose} className="close">x</span></div>}>
                             <div style={{maxHeight: "500px", overflow: "auto"}}>
@@ -36,9 +37,9 @@ const Results = React.createClass({
                             </div>
                         </Panel>
                     </div>
-                </Draggable>) : <span/>;
+                </Draggable> : <span/>;
     }
-});
+}
 
 module.exports = connect((state) => ({
     result: state.query.result || {features: []}

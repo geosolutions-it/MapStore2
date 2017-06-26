@@ -32,7 +32,7 @@ const getFullScreenEvent = () => {
  */
 const toggleFullscreenEpic = action$ =>
     action$.ofType(TOGGLE_FULLSCREEN).switchMap(action => {
-        const element = document.querySelector(action && action.querySelector || ('.' + (ConfigUtils.getConfigProp('themePrefix') || 'ms2') + " > div"));
+        const element = document.querySelector(action && action.querySelector || '.' + (ConfigUtils.getConfigProp('themePrefix') || 'ms2') + " > div");
         if (element && action.enable && screenfull.enabled) {
             screenfull.request(element);
 

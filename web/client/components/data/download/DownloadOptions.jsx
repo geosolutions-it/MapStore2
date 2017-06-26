@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -19,20 +20,21 @@ const Message = require('../../I18N/Message');
  * @prop {array} formats the selectable format options.
  * @prop {function} onChange the function to trigger when some option changes
  */
-module.exports = React.createClass({
-    propTypes: {
-            downloadOptions: React.PropTypes.object,
-            formats: React.PropTypes.array,
-            onChange: React.PropTypes.func
-    },
-    getSelectedFormat() {
+module.exports = class extends React.Component {
+    static propTypes = {
+            downloadOptions: PropTypes.object,
+            formats: PropTypes.array,
+            onChange: PropTypes.func
+    };
+
+    static defaultProps = {
+        downloadOptions: {}
+    };
+
+    getSelectedFormat = () => {
         return get(this.props, "downloadOptions.selectedFormat") || get(head(this.props.formats), "value");
-    },
-    getDefaultProps() {
-        return {
-            downloadOptions: {}
-        };
-    },
+    };
+
     render() {
         return (<form>
             <label><Message msgId="wfsdownload.format" /></label>
@@ -46,4 +48,4 @@ module.exports = React.createClass({
             </Checkbox>
         </form>);
     }
-});
+};

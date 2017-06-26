@@ -96,9 +96,9 @@ describe('Leaflet DrawSupport', () => {
     it('test map onClick handler created circle', () => {
         let bounds = L.latLngBounds(L.latLng(40.712, -74.227), L.latLng(40.774, -74.125));
         let layer = {
-                    getBounds: function() { return bounds; },
-                    toGeoJSON: function() {return {geometry: {coordinates: [0, 0]}}; }
-                };
+            getBounds: function() { return bounds; },
+            toGeoJSON: function() {return {geometry: {coordinates: [0, 0]}}; }
+        };
         let map = L.map("map", {
             center: [51.505, -0.09],
             zoom: 13
@@ -113,7 +113,7 @@ describe('Leaflet DrawSupport', () => {
         , msNode);
         expect(cmp).toExist();
         cmp.drawLayer = {addData: function() {return true; }};
-        cmp.onDraw.created.call(cmp, {layer: layer, layerType: "circle"});
+        cmp.onDrawCreated.call(cmp, {layer: layer, layerType: "circle"});
     });
     it('test draw replace', () => {
         let map = L.map("map", {

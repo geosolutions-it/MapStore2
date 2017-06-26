@@ -17,7 +17,7 @@ describe('Test correctness of the CSW APIs', () => {
                 expect(result.records).toExist();
                 expect(result.records.length).toBe(1);
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -28,7 +28,7 @@ describe('Test correctness of the CSW APIs', () => {
                 expect(result).toExist();
                 expect(result.error).toExist();
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -48,7 +48,7 @@ describe('Test correctness of the CSW APIs', () => {
                 expect(uri.value).toExist();
                 expect(uri.description).toExist();
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });

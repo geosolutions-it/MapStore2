@@ -75,9 +75,9 @@ describe('Test correctness of the maps actions', () => {
         let count = 0;
         retFun((action) => {
             switch (count) {
-                case 0: expect(action.type).toBe(MAP_UPDATING); break;
-                case 1: expect(action.type).toBe("NONE"); break;
-                default: done();
+            case 0: expect(action.type).toBe(MAP_UPDATING); break;
+            case 1: expect(action.type).toBe("NONE"); break;
+            default: done();
             }
             count++;
         });
@@ -90,11 +90,11 @@ describe('Test correctness of the maps actions', () => {
         let count = 0;
         retFun((action) => {
             switch (count) {
-                case 0: expect(action.type).toBe(MAP_UPDATING); break;
-                case 1: expect(action.type).toBe("NONE"); break;
-                case 2: expect(action.type).toBe(RESET_UPDATING); break;
-                case 3: expect(action.type).toBe(DISPLAY_METADATA_EDIT); break;
-                default: done();
+            case 0: expect(action.type).toBe(MAP_UPDATING); break;
+            case 1: expect(action.type).toBe("NONE"); break;
+            case 2: expect(action.type).toBe(RESET_UPDATING); break;
+            case 3: expect(action.type).toBe(DISPLAY_METADATA_EDIT); break;
+            default: done();
             }
             count++;
         });
@@ -119,8 +119,8 @@ describe('Test correctness of the maps actions', () => {
         retFun((action) => {
             switch (count) {
                 // TODO: this should return PERMISSIONS_UPDATED
-                case 0: expect(action.type).toBe(PERMISSIONS_UPDATED); break;
-                default: done();
+            case 0: expect(action.type).toBe(PERMISSIONS_UPDATED); break;
+            default: done();
             }
             count++;
             done();
@@ -130,8 +130,8 @@ describe('Test correctness of the maps actions', () => {
         let count2 = 0;
         retFun2((action) => {
             switch (count2) {
-                case 0: expect(action.type).toBe(THUMBNAIL_ERROR); break;
-                default: done();
+            case 0: expect(action.type).toBe(THUMBNAIL_ERROR); break;
+            default: done();
             }
             count2++;
             done();

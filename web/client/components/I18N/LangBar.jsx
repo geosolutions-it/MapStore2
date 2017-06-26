@@ -1,4 +1,5 @@
 
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -11,21 +12,21 @@ var {ButtonGroup} = require('react-bootstrap');
 var LocaleUtils = require('../../utils/LocaleUtils');
 var FlagButton = require('./FlagButton');
 
-var LangBar = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        locales: React.PropTypes.object,
-        currentLocale: React.PropTypes.string,
-        onLanguageChange: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            id: "mapstore-langselector",
-            locales: LocaleUtils.getSupportedLocales(),
-            currentLocale: 'en-US',
-            onLanguageChange: function() {}
-        };
-    },
+class LangBar extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        locales: PropTypes.object,
+        currentLocale: PropTypes.string,
+        onLanguageChange: PropTypes.func
+    };
+
+    static defaultProps = {
+        id: "mapstore-langselector",
+        locales: LocaleUtils.getSupportedLocales(),
+        currentLocale: 'en-US',
+        onLanguageChange: function() {}
+    };
+
     render() {
         var code;
         var label;
@@ -51,6 +52,6 @@ var LangBar = React.createClass({
                 </ButtonGroup>
         );
     }
-});
+}
 
 module.exports = LangBar;

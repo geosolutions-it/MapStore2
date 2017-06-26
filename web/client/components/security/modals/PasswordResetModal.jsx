@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -14,43 +15,49 @@ const Modal = require('../../misc/Modal');
 
 const Spinner = require('react-spinkit');
 
-  /**
-   * A Modal window to show password reset form
-   */
-const PasswordResetModal = React.createClass({
-    propTypes: {
+/**
+ * A Modal window to show password reset form
+ */
+class PasswordResetModal extends React.Component {
+    static propTypes = {
         // props
-        user: React.PropTypes.object,
-        authHeader: React.PropTypes.string,
-        show: React.PropTypes.bool,
-        options: React.PropTypes.object,
+        user: PropTypes.object,
+        authHeader: PropTypes.string,
+        show: PropTypes.bool,
+        options: PropTypes.object,
 
 
-        onPasswordChange: React.PropTypes.func,
-        onPasswordChanged: React.PropTypes.func,
-        onClose: React.PropTypes.func,
-        closeGlyph: React.PropTypes.string,
-        style: React.PropTypes.object,
-        buttonSize: React.PropTypes.string,
-        includeCloseButton: React.PropTypes.bool,
-        changed: React.PropTypes.bool,
-        error: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            user: {
-                name: "Guest"
-            },
-            onPasswordChange: () => {},
-            onPasswordChanged: () => {},
-            onClose: () => {},
-            options: {},
-            closeGlyph: "",
-            style: {},
-            buttonSize: "small",
-            includeCloseButton: true
-        };
-    },
+        onPasswordChange: PropTypes.func,
+        onPasswordChanged: PropTypes.func,
+        onClose: PropTypes.func,
+        closeGlyph: PropTypes.string,
+        style: PropTypes.object,
+        buttonSize: PropTypes.string,
+        includeCloseButton: PropTypes.bool,
+        changed: PropTypes.bool,
+        error: PropTypes.object
+    };
+
+    static defaultProps = {
+        user: {
+            name: "Guest"
+        },
+        onPasswordChange: () => {},
+        onPasswordChanged: () => {},
+        onClose: () => {},
+        options: {},
+        closeGlyph: "",
+        style: {},
+        buttonSize: "small",
+        includeCloseButton: true
+    };
+
+    state = {
+        passwordValid: false,
+        loading: false,
+        password: ''
+    };
+
     componentWillReceiveProps(nextProps) {
         let newUser = nextProps.user;
         let oldUser = this.props.user;
@@ -62,18 +69,13 @@ const PasswordResetModal = React.createClass({
                 loading: false
             });
         }
-    },
-    getInitialState() {
-        return {
-            passwordValid: false,
-            loading: false,
-            password: ''
-        };
-    },
-    onPasswordChange() {
+    }
+
+    onPasswordChange = () => {
         this.props.onPasswordChange(this.props.user, this.state.password);
-    },
-    getFooter() {
+    };
+
+    getFooter = () => {
         return (<span role="footer"><div style={{"float": "left"}}>{this.renderLoading()}</div>
         <Button
             ref="passwordChangeButton"
@@ -91,17 +93,20 @@ const PasswordResetModal = React.createClass({
             bsSize={this.props.buttonSize}
             onClick={this.props.onClose}><Message msgId="close"/></Button> : <span/>}
         </span>);
-    },
-    getBody() {
+    };
+
+    getBody = () => {
         return (<PasswordReset role="body" ref="passwordResetForm"
             changed={this.props.changed}
             onChange={(password, valid) => {
                 this.setState({passwordValid: valid, password});
             }} />);
-    },
-    renderLoading() {
+    };
+
+    renderLoading = () => {
         return this.state.loading ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn overrideSpinnerClassName="spinner"/> : null;
-    },
+    };
+
     render() {
         return (
             <Modal {...this.props.options} show={this.props.show} onHide={this.props.onClose}>
@@ -116,6 +121,6 @@ const PasswordResetModal = React.createClass({
                 </Modal.Footer>
             </Modal>);
     }
-});
+}
 
 module.exports = PasswordResetModal;

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2017, Sourcepole AG.
  * All rights reserved.
@@ -9,18 +10,18 @@
 const React = require('react');
 var ol = require('openlayers');
 
-const SelectionSupport = React.createClass({
-    propTypes: {
-        map: React.PropTypes.object,
-        projection: React.PropTypes.string,
-        selection: React.PropTypes.object,
-        changeSelectionState: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            selection: {}
-        };
-    },
+class SelectionSupport extends React.Component {
+    static propTypes = {
+        map: PropTypes.object,
+        projection: PropTypes.string,
+        selection: PropTypes.object,
+        changeSelectionState: PropTypes.func
+    };
+
+    static defaultProps = {
+        selection: {}
+    };
+
     componentWillReceiveProps(newProps) {
         if (newProps.selection.geomType && newProps.selection.geomType !== this.props.selection.geomType ) {
             this.addDrawInteraction(newProps);
@@ -29,11 +30,13 @@ const SelectionSupport = React.createClass({
         if (!newProps.selection.geomType) {
             this.removeDrawInteraction();
         }
-    },
+    }
+
     render() {
         return null;
-    },
-    addDrawInteraction: function(newProps) {
+    }
+
+    addDrawInteraction = (newProps) => {
         // cleanup old interaction
         if (this.drawInteraction) {
             this.removeDrawInteraction();
@@ -49,7 +52,7 @@ const SelectionSupport = React.createClass({
                 }),
                 stroke: new ol.style.Stroke({
                     color: '#ffcc33',
-                  width: 2
+                    width: 2
                 }),
                 image: new ol.style.Circle({
                     radius: 7,
@@ -102,8 +105,9 @@ const SelectionSupport = React.createClass({
         this.drawInteraction = draw;
         this.selectionLayer = vector;
         this.setDoubleClickZoomEnabled(false);
-    },
-    removeDrawInteraction: function() {
+    };
+
+    removeDrawInteraction = () => {
         if (this.drawInteraction !== null) {
             this.props.map.removeInteraction(this.drawInteraction);
             this.drawInteraction = null;
@@ -112,8 +116,9 @@ const SelectionSupport = React.createClass({
             // Delay execution of activation of double click zoom function
             setTimeout(() => this.setDoubleClickZoomEnabled(true), 251);
         }
-    },
-    updateSelectionState() {
+    };
+
+    updateSelectionState = () => {
         if (!this.sketchFeature) {
             return;
         }
@@ -129,8 +134,9 @@ const SelectionSupport = React.createClass({
                 this.sketchFeature.getGeometry().getLinearRing(0).getCoordinates().map(coo => [coo[0], coo[1]]) : null
         };
         this.props.changeSelectionState(newSelectionState);
-    },
-    setDoubleClickZoomEnabled(enabled) {
+    };
+
+    setDoubleClickZoomEnabled = (enabled) => {
         let interactions = this.props.map.getInteractions();
         for (let i = 0; i < interactions.getLength(); i++) {
             let interaction = interactions.item(i);
@@ -139,7 +145,7 @@ const SelectionSupport = React.createClass({
                 break;
             }
         }
-    }
-});
+    };
+}
 
 module.exports = SelectionSupport;

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,23 +9,22 @@
 const React = require('react');
 const Message = require('../../I18N/Message');
 
-const BreadCrumb = React.createClass({
-    propTypes: {
-        loading: React.PropTypes.bool,
-        loadImports: React.PropTypes.func,
-        loadImport: React.PropTypes.func,
-        loadTask: React.PropTypes.func,
-        selectedImport: React.PropTypes.object,
-        selectedTask: React.PropTypes.object,
-        selectedTransform: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            loadImports: () => {},
-            loadImport: () => {},
-            loadTask: () => {}
-        };
-    },
+class BreadCrumb extends React.Component {
+    static propTypes = {
+        loading: PropTypes.bool,
+        loadImports: PropTypes.func,
+        loadImport: PropTypes.func,
+        loadTask: PropTypes.func,
+        selectedImport: PropTypes.object,
+        selectedTask: PropTypes.object,
+        selectedTransform: PropTypes.object
+    };
+
+    static defaultProps = {
+        loadImports: () => {},
+        loadImport: () => {},
+        loadTask: () => {}
+    };
 
     render() {
         if ( this.props.selectedImport && this.props.selectedTask && this.props.selectedTransform) {
@@ -61,5 +61,6 @@ const BreadCrumb = React.createClass({
               <li className="active"><Message msgId="importer.imports" /></li>
           </ol>);
     }
-});
+}
+
 module.exports = BreadCrumb;

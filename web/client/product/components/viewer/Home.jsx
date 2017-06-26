@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -11,30 +12,31 @@ const {Glyphicon, Tooltip} = require('react-bootstrap');
 const ToggleButton = require('../../../components/buttons/ToggleButton');
 const Message = require('../../../components/I18N/Message');
 
-const Home = React.createClass({
-    propTypes: {
-        isPanel: React.PropTypes.bool,
-        buttonTooltip: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        help: React.PropTypes.object,
-        changeHelpText: React.PropTypes.func,
-        changeHelpwinVisibility: React.PropTypes.func
-    },
-    contextTypes: {
-        router: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            isPanel: false,
-            icon: <Glyphicon glyph="home"/>
-        };
-    },
+class Home extends React.Component {
+    static propTypes = {
+        isPanel: PropTypes.bool,
+        buttonTooltip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        help: PropTypes.object,
+        changeHelpText: PropTypes.func,
+        changeHelpwinVisibility: PropTypes.func
+    };
+
+    static contextTypes = {
+        router: PropTypes.object
+    };
+
+    static defaultProps = {
+        isPanel: false,
+        icon: <Glyphicon glyph="home"/>
+    };
+
     render() {
         let tooltip = <Tooltip id="toolbar-home-button">{this.props.buttonTooltip}</Tooltip>;
         return (
             <ToggleButton
                 id="home-button"
                 key="gohome"
-                isButton={true}
+                isButton
                 pressed={false}
                 glyphicon="home"
                 helpText={<Message msgId="helptexts.gohome"/>}
@@ -43,9 +45,11 @@ const Home = React.createClass({
                 tooltipPlace="left"
                 />
         );
-    },
-    goHome() {
-        this.context.router.push("/");
     }
-});
+
+    goHome = () => {
+        this.context.router.history.push("/");
+    };
+}
+
 module.exports = Home;

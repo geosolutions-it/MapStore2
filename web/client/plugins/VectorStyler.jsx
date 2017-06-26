@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -41,61 +42,63 @@ const Message = require('./locale/Message');
 
 const {vecStyleToSLD} = require("../utils/SLDUtils");
 
-const VectorStyler = React.createClass({
-    propTypes: {
-        layers: React.PropTypes.array,
-        layer: React.PropTypes.object,
-        rules: React.PropTypes.array,
-        rule: React.PropTypes.object,
-        withContainer: React.PropTypes.bool,
-        open: React.PropTypes.bool,
-        forceOpen: React.PropTypes.bool,
-        style: React.PropTypes.object,
-        selectLayer: React.PropTypes.func,
-        setVectorStyleParameter: React.PropTypes.func,
-        addRule: React.PropTypes.func,
-        removeRule: React.PropTypes.func,
-        selectRule: React.PropTypes.func,
-        setRuleParameter: React.PropTypes.func,
-        error: React.PropTypes.string,
-        changeLayerProperties: React.PropTypes.func,
-        hideLayerSelector: React.PropTypes.bool
+class VectorStyler extends React.Component {
+    static propTypes = {
+        layers: PropTypes.array,
+        layer: PropTypes.object,
+        rules: PropTypes.array,
+        rule: PropTypes.object,
+        withContainer: PropTypes.bool,
+        open: PropTypes.bool,
+        forceOpen: PropTypes.bool,
+        style: PropTypes.object,
+        selectLayer: PropTypes.func,
+        setVectorStyleParameter: PropTypes.func,
+        addRule: PropTypes.func,
+        removeRule: PropTypes.func,
+        selectRule: PropTypes.func,
+        setRuleParameter: PropTypes.func,
+        error: PropTypes.string,
+        changeLayerProperties: PropTypes.func,
+        hideLayerSelector: PropTypes.bool
 
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getInitialState() {
-        return {
+    };
 
-        };
-    },
-    getDefaultProps() {
-        return {
-            hideLayerSelector: false,
-            open: false,
-            layers: [],
-            layer: null,
-            forceOpen: false,
-            withContainer: true,
-            selectLayer: () => {},
-            setVectorStyleParameter: () => {},
-            opacity: "1.00",
-            style: {},
-            changeLayerProperties: () => {},
-            addRule: () => {},
-            removeRule: () => {},
-            selectRule: () => {},
-            setRuleParameter: () => {}
-        };
-    },
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        hideLayerSelector: false,
+        open: false,
+        layers: [],
+        layer: null,
+        forceOpen: false,
+        withContainer: true,
+        selectLayer: () => {},
+        setVectorStyleParameter: () => {},
+        opacity: "1.00",
+        style: {},
+        changeLayerProperties: () => {},
+        addRule: () => {},
+        removeRule: () => {},
+        selectRule: () => {},
+        setRuleParameter: () => {}
+    };
+
+    state = {
+
+    };
+
     componentWillMount() {
-    },
+    }
+
     componentWillUpdate(nextProps) {
         this.bands = nextProps.layer && nextProps.layer.describeLayer ? nextProps.layer.describeLayer.bands : undefined;
 
-    },
-    getPanelStyle() {
+    }
+
+    getPanelStyle = () => {
         let size = getWindowSize();
         let maxHeight = size.maxHeight - 10;
         let maxWidth = size.maxWidth - 70;
@@ -105,47 +108,52 @@ const VectorStyler = React.createClass({
             style.overflowY = "auto";
         }
         return style;
-    },
-    renderError() {
+    };
+
+    renderError = () => {
         if (this.props.error) {
             return <Row><Col xs={12}><div className="rasterstyler-error"><span>{this.props.error}</span></div></Col></Row>;
         }
         return null;
-    },
-    renderWarning(layout) {
+    };
+
+    renderWarning = (layout) => {
         if (!layout) {
             return <Row><Col xs={12}><div className="rasterstyler-warning"><span><Message msgId="print.layoutWarning"/></span></div></Col></Row>;
         }
         return null;
-    },
-    renderStyle() {
+    };
+
+    renderStyle = () => {
         switch (this.props.layer.describeLayer.geometryType) {
-            case 'Polygon':
-            case 'MultiPolygon':
-            case 'MultiSurface': {
-                return (<StylePolygon/>);
-            }
-            case 'LineString':
-            case 'MultiLineString':
-            {
-                return (<StylePolyline/>);
-            }
-            case 'Point':
-            case 'MultiPoint': {
-                return (<StylePoint showMarker={false} showMarkSelector={true}/>);
-            }
-            default: {
-                return null;
-            }
+        case 'Polygon':
+        case 'MultiPolygon':
+        case 'MultiSurface': {
+            return <StylePolygon/>;
         }
-    },
-    renderSymbolStyler() {
+        case 'LineString':
+        case 'MultiLineString':
+            {
+                return <StylePolyline/>;
+            }
+        case 'Point':
+        case 'MultiPoint': {
+            return <StylePoint showMarker={false} showMarkSelector/>;
+        }
+        default: {
+            return null;
+        }
+        }
+    };
+
+    renderSymbolStyler = () => {
         return (
             <Panel header={(<label><Message msgId="vectorstyler.symboltitle"/></label>)} eventKey="1">
            {this.renderStyle()}
        </Panel>);
-    },
-    renderLabelStyler() {
+    };
+
+    renderLabelStyler = () => {
         return (<Panel header={(<label><Message msgId="vectorstyler.labeltitle"/></label>)} eventKey="2">
                 <Grid fluid>
                      <Row>
@@ -158,15 +166,17 @@ const VectorStyler = React.createClass({
                         </Row>
                 </Grid>
                 </Panel>);
-    },
-    renderAvancedRule() {
+    };
+
+    renderAvancedRule = () => {
         return (<Panel header={(<label><Message msgId="vectorstyler.conditiontitle"/></label>)} eventKey="3">
                 <Grid fluid>
                         <ScaleDenominator minValue={this.props.rule.minDenominator} maxValue={this.props.rule.maxDenominator} onChange={this.props.setRuleParameter}/>
                 </Grid>
                 </Panel>);
-    },
-    renderSelector() {
+    };
+
+    renderSelector = () => {
         return (<Row style={{marginBottom: "22px"}}>
                     <Row>
                         {!this.props.hideLayerSelector ? (<Col sm={4} >
@@ -191,18 +201,20 @@ const VectorStyler = React.createClass({
                             </Col>) : null}
                     </Row>
                 </Row>);
-    },
-    renderVectorStyler() {
-        return this.props.layer ? (
+    };
+
+    renderVectorStyler = () => {
+        return this.props.layer ?
             <Row>
             <PanelGroup defaultActiveKey="1" accordion>
-                    {(this.props.rule) ? this.renderSymbolStyler() : null}
-                    {(this.props.rule) ? this.renderAvancedRule() : null}
+                    {this.props.rule ? this.renderSymbolStyler() : null}
+                    {this.props.rule ? this.renderAvancedRule() : null}
             </PanelGroup>
-            </Row>) : null;
-    },
-    renderApplyBtn() {
-        let disabled = (!this.props.rule);
+            </Row> : null;
+    };
+
+    renderApplyBtn = () => {
+        let disabled = !this.props.rule;
         return (
             <Row>
             <Col sm={3} style={{padding: 0}}><Button onClick={this.props.addRule}>
@@ -216,8 +228,9 @@ const VectorStyler = React.createClass({
             disabled={disabled} ><Message msgId="vectorstyler.applybtn"/></Button>
             </Col>
             </Row>);
-    },
-    renderBody() {
+    };
+
+    renderBody = () => {
 
         return (<Grid fluid>
                 {this.renderError()}
@@ -225,25 +238,28 @@ const VectorStyler = React.createClass({
                 {this.renderVectorStyler()}
                 {this.props.layer ? this.renderApplyBtn() : null}
                 </Grid>);
-    },
+    };
+
     render() {
         if (this.props.forceOpen || this.props.open) {
             return this.props.withContainer ?
-                (<Panel className="mapstore-vectorstyler-panel"
+                <Panel className="mapstore-vectorstyler-panel"
                         style={this.getPanelStyle()}
                         header={<label><Message msgId="vectorstyler.paneltitle"/></label>}>
                         {this.renderBody()}
-                </Panel>) : this.renderBody();
+                </Panel> : this.renderBody();
         }
         return null;
-    },
-    apply() {
+    }
+
+    apply = () => {
         let style = vecStyleToSLD({rules: this.props.rules, layer: this.props.layer});
         this.props.changeLayerProperties(this.props.layer.id, { params: assign({}, this.props.layer.params, {SLD_BODY: style})});
-    }
-});
+    };
+}
+
 const selector = createSelector([
-    (state) => (state.controls.toolbar && state.controls.toolbar.active === 'vectorstyler'),
+    (state) => state.controls.toolbar && state.controls.toolbar.active === 'vectorstyler',
     ruleselctor,
     (state) => state.vectorstyler && state.vectorstyler.rules,
     (state) => state.vectorstyler && state.vectorstyler.layer,
@@ -257,28 +273,28 @@ const selector = createSelector([
 }));
 
 const VectorStylerPlugin = connect(selector, {
-        setVectorStyleParameter: setVectorStyleParameter,
-        selectLayer: setVectorLayer,
-        addRule: newVectorRule,
-        removeRule: removeVectorRule,
-        selectRule: selectVectorRule,
-        changeLayerProperties: changeLayerProperties,
-        setRuleParameter: setVectorRuleParameter
-    })(VectorStyler);
+    setVectorStyleParameter: setVectorStyleParameter,
+    selectLayer: setVectorLayer,
+    addRule: newVectorRule,
+    removeRule: removeVectorRule,
+    selectRule: selectVectorRule,
+    changeLayerProperties: changeLayerProperties,
+    setRuleParameter: setVectorRuleParameter
+})(VectorStyler);
 
 module.exports = {
     VectorStylerPlugin: assign( VectorStylerPlugin,
         {
-        Toolbar: {
-            name: 'vectorstyler',
-            help: <Message msgId="helptexts.vectorstyler"/>,
-            tooltip: "vectorstyler.tooltip",
-            icon: <Glyphicon glyph="pencil"/>,
-            position: 9,
-            panel: true,
-            exclusive: true
-        }
-    }),
+            Toolbar: {
+                name: 'vectorstyler',
+                help: <Message msgId="helptexts.vectorstyler"/>,
+                tooltip: "vectorstyler.tooltip",
+                icon: <Glyphicon glyph="pencil"/>,
+                position: 9,
+                panel: true,
+                exclusive: true
+            }
+        }),
     reducers: {
         vectorstyler: require('../reducers/vectorstyler')
     }

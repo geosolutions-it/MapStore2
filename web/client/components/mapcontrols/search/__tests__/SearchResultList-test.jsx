@@ -60,7 +60,7 @@ describe("test the SearchResultList", () => {
                 prop: i
             }
         }));
-        const cmp = ReactDOM.render(<SearchResultList mapConfig={{size: {width: 200, height: 200}}} sizeAdjustment={{width: 100, height: 120}} fitToMapSize={true} results={res} notFoundMessage="not found"/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<SearchResultList mapConfig={{size: {width: 200, height: 200}}} sizeAdjustment={{width: 100, height: 120}} fitToMapSize results={res} notFoundMessage="not found"/>, document.getElementById("container"));
         expect(cmp).toExist();
         let list = TestUtils.findRenderedDOMComponentWithClass(cmp, "search-result-list");
         expect(list.offsetHeight).toBe(80);
@@ -78,7 +78,7 @@ describe("test the SearchResultList", () => {
 
     });
     it('get service info from search Options by id', () => {
-        const tb = ReactDOM.render((<SearchResultList searchOptions={{
+        const tb = ReactDOM.render(<SearchResultList searchOptions={{
             services: [{
                 id: "S1",
                 displayName: "S1",
@@ -90,7 +90,7 @@ describe("test the SearchResultList", () => {
                 prop1: 1
             },
             __SERVICE__: "S1"
-        }]} notFoundMessage="not found"/>), document.getElementById("container"));
+        }]} notFoundMessage="not found"/>, document.getElementById("container"));
         expect(tb).toExist();
 
         let title = TestUtils.findRenderedDOMComponentWithClass(tb, "text-result-title");
@@ -101,7 +101,7 @@ describe("test the SearchResultList", () => {
 
     });
     it('get service info from search Options by type', () => {
-        const tb = ReactDOM.render((<SearchResultList searchOptions={{
+        const tb = ReactDOM.render(<SearchResultList searchOptions={{
             services: [{
                 id: "S1",
                 displayName: "S1",
@@ -113,7 +113,7 @@ describe("test the SearchResultList", () => {
                 prop1: 1
             },
             __SERVICE__: "S1"
-        }]} notFoundMessage="not found"/>), document.getElementById("container"));
+        }]} notFoundMessage="not found"/>, document.getElementById("container"));
         expect(tb).toExist();
 
         let title = TestUtils.findRenderedDOMComponentWithClass(tb, "text-result-title");

@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
@@ -198,90 +199,91 @@ const DefaultGroup = require('../components/TOC/DefaultGroup');
 const DefaultLayer = require('../components/TOC/DefaultLayer');
 const DefaultLayerOrGroup = require('../components/TOC/DefaultLayerOrGroup');
 
-const LayerTree = React.createClass({
-    propTypes: {
-        id: React.PropTypes.number,
-        buttonContent: React.PropTypes.node,
-        groups: React.PropTypes.array,
-        settings: React.PropTypes.object,
-        querypanelEnabled: React.PropTypes.bool,
-        groupStyle: React.PropTypes.object,
-        groupPropertiesChangeHandler: React.PropTypes.func,
-        layerPropertiesChangeHandler: React.PropTypes.func,
-        onToggleGroup: React.PropTypes.func,
-        onToggleLayer: React.PropTypes.func,
-        onContextMenu: React.PropTypes.func,
-        onToggleQuery: React.PropTypes.func,
-        onZoomToExtent: React.PropTypes.func,
-        retrieveLayerData: React.PropTypes.func,
-        onSort: React.PropTypes.func,
-        onSettings: React.PropTypes.func,
-        onRefresh: React.PropTypes.func,
-        onRefreshLayer: React.PropTypes.func,
-        hideSettings: React.PropTypes.func,
-        updateSettings: React.PropTypes.func,
-        updateNode: React.PropTypes.func,
-        removeNode: React.PropTypes.func,
-        activateRemoveLayer: React.PropTypes.bool,
-        activateLegendTool: React.PropTypes.bool,
-        activateZoomTool: React.PropTypes.bool,
-        activateQueryTool: React.PropTypes.bool,
-        autocompleteEnabled: React.PropTypes.bool,
-        activateSettingsTool: React.PropTypes.bool,
-        activateRefreshTool: React.PropTypes.bool,
-        visibilityCheckType: React.PropTypes.string,
-        maxFeaturesWPS: React.PropTypes.number,
-        settingsOptions: React.PropTypes.object,
-        chartStyle: React.PropTypes.object,
-        currentZoomLvl: React.PropTypes.number,
-        scales: React.PropTypes.array,
-        layerOptions: React.PropTypes.object,
-        spatialOperations: React.PropTypes.array,
-        spatialMethodOptions: React.PropTypes.array,
-        groupOptions: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            groupPropertiesChangeHandler: () => {},
-            layerPropertiesChangeHandler: () => {},
-            retrieveLayerData: () => {},
-            onToggleGroup: () => {},
-            onToggleLayer: () => {},
-            onContextMenu: () => {},
-            onToggleQuery: () => {},
-            onZoomToExtent: () => {},
-            onSettings: () => {},
-            onRefresh: () => {},
-            onRefreshLayer: () => {},
-            updateNode: () => {},
-            removeNode: () => {},
-            activateLegendTool: true,
-            activateZoomTool: true,
-            activateSettingsTool: true,
-            activateRemoveLayer: true,
-            activateQueryTool: false,
-            activateRefreshTool: true,
-            visibilityCheckType: "glyph",
-            settingsOptions: {
-                includeCloseButton: false,
-                closeGlyph: "1-close",
-                buttonSize: "small"
-            },
-            querypanelEnabled: false,
-            layerOptions: {},
-            groupOptions: {}
-        };
-    },
-    getNoBackgroundLayers(group) {
+class LayerTree extends React.Component {
+    static propTypes = {
+        id: PropTypes.number,
+        buttonContent: PropTypes.node,
+        groups: PropTypes.array,
+        settings: PropTypes.object,
+        querypanelEnabled: PropTypes.bool,
+        groupStyle: PropTypes.object,
+        groupPropertiesChangeHandler: PropTypes.func,
+        layerPropertiesChangeHandler: PropTypes.func,
+        onToggleGroup: PropTypes.func,
+        onToggleLayer: PropTypes.func,
+        onContextMenu: PropTypes.func,
+        onToggleQuery: PropTypes.func,
+        onZoomToExtent: PropTypes.func,
+        retrieveLayerData: PropTypes.func,
+        onSort: PropTypes.func,
+        onSettings: PropTypes.func,
+        onRefresh: PropTypes.func,
+        onRefreshLayer: PropTypes.func,
+        hideSettings: PropTypes.func,
+        updateSettings: PropTypes.func,
+        updateNode: PropTypes.func,
+        removeNode: PropTypes.func,
+        activateRemoveLayer: PropTypes.bool,
+        activateLegendTool: PropTypes.bool,
+        activateZoomTool: PropTypes.bool,
+        activateQueryTool: PropTypes.bool,
+        autocompleteEnabled: PropTypes.bool,
+        activateSettingsTool: PropTypes.bool,
+        activateRefreshTool: PropTypes.bool,
+        visibilityCheckType: PropTypes.string,
+        maxFeaturesWPS: PropTypes.number,
+        settingsOptions: PropTypes.object,
+        chartStyle: PropTypes.object,
+        currentZoomLvl: PropTypes.number,
+        scales: PropTypes.array,
+        layerOptions: PropTypes.object,
+        spatialOperations: PropTypes.array,
+        spatialMethodOptions: PropTypes.array,
+        groupOptions: PropTypes.object
+    };
+
+    static defaultProps = {
+        groupPropertiesChangeHandler: () => {},
+        layerPropertiesChangeHandler: () => {},
+        retrieveLayerData: () => {},
+        onToggleGroup: () => {},
+        onToggleLayer: () => {},
+        onContextMenu: () => {},
+        onToggleQuery: () => {},
+        onZoomToExtent: () => {},
+        onSettings: () => {},
+        onRefresh: () => {},
+        onRefreshLayer: () => {},
+        updateNode: () => {},
+        removeNode: () => {},
+        activateLegendTool: true,
+        activateZoomTool: true,
+        activateSettingsTool: true,
+        activateRemoveLayer: true,
+        activateQueryTool: false,
+        activateRefreshTool: true,
+        visibilityCheckType: "glyph",
+        settingsOptions: {
+            includeCloseButton: false,
+            closeGlyph: "1-close",
+            buttonSize: "small"
+        },
+        querypanelEnabled: false,
+        layerOptions: {},
+        groupOptions: {}
+    };
+
+    getNoBackgroundLayers = (group) => {
         return group.name !== 'background';
-    },
-    renderTOC() {
+    };
+
+    renderTOC = () => {
         const Group = (<DefaultGroup onSort={this.props.onSort}
                                   {...this.props.groupOptions}
                                   propertiesChangeHandler={this.props.groupPropertiesChangeHandler}
                                   onToggle={this.props.onToggleGroup}
                                   style={this.props.groupStyle}
-                                  groupVisibilityCheckbox={true}
+                                  groupVisibilityCheckbox
                                   visibilityCheckType={this.props.visibilityCheckType}
                                   />);
         const Layer = (<DefaultLayer
@@ -327,8 +329,9 @@ const LayerTree = React.createClass({
                 </TOC>
             </div>
         );
-    },
-    renderQueryPanel() {
+    };
+
+    renderQueryPanel = () => {
         return (
             <div id="toc-query-container">
                 <Button id="toc-query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={this.props.onToggleQuery.bind(this, null, null)}><Glyphicon glyph="arrow-left"/></Button>
@@ -340,17 +343,18 @@ const LayerTree = React.createClass({
                     featureTypeErrorText={<Message msgId="layerProperties.featureTypeError"/>}/>
             </div>
         );
-    },
+    };
+
     render() {
         if (!this.props.groups) {
-            return <div></div>;
+            return <div />;
         }
         if (this.props.querypanelEnabled) {
             return this.renderQueryPanel();
         }
         return this.renderTOC();
     }
-});
+}
 /**
  * TOC plugins
  * @name TOC

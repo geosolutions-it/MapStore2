@@ -197,7 +197,7 @@ describe('QueryBuilder', () => {
                 attributes={attributes}
                 groupFields={groupFields}
                 groupLevels={groupLevels}
-                allowEmptyFilter={true}
+                allowEmptyFilter
             />,
             document.getElementById("container")
         );

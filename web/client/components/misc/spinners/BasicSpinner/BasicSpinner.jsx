@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -8,19 +9,19 @@
 var React = require('react');
 require("./basicSpinner.css");
 
-let BasicSpinner = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        value: React.PropTypes.number,
-        sSize: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            id: "mapstore-basicspinner",
-            value: null,
-            sSize: null
-        };
-    },
+class BasicSpinner extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        value: PropTypes.number,
+        sSize: PropTypes.string
+    };
+
+    static defaultProps = {
+        id: "mapstore-basicspinner",
+        value: null,
+        sSize: null
+    };
+
     render() {
         return (
                 <div className="spinner">
@@ -29,9 +30,8 @@ let BasicSpinner = React.createClass({
                         <div className="spinner-fg">{this.props.value}</div>
                     </div>
                 </div>
-            );
+        );
     }
-
-});
+}
 
 module.exports = BasicSpinner;

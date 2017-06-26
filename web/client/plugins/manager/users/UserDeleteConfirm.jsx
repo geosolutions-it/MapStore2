@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -14,33 +15,35 @@ const UserCard = require('../../../components/manager/users/UserCard');
 const Message = require('../../../components/I18N/Message');
 const {findIndex} = require('lodash');
 
-const UserDeleteConfirm = React.createClass({
-    propTypes: {
-        user: React.PropTypes.object,
-        deleteUser: React.PropTypes.func,
-        deleteId: React.PropTypes.number,
-        deleteError: React.PropTypes.object,
-        deleteStatus: React.PropTypes.string
+class UserDeleteConfirm extends React.Component {
+    static propTypes = {
+        user: PropTypes.object,
+        deleteUser: PropTypes.func,
+        deleteId: PropTypes.number,
+        deleteError: PropTypes.object,
+        deleteStatus: PropTypes.string
 
-    },
-    getDefaultProps() {
-        return {
-            deleteUser: () => {}
-        };
-    },
-    renderError() {
+    };
+
+    static defaultProps = {
+        deleteUser: () => {}
+    };
+
+    renderError = () => {
         if (this.props.deleteError) {
             return <Alert bsStyle="danger"><Message msgId="users.errorDelete" />{this.props.deleteError.statusText}</Alert>;
         }
-    },
-    renderConfirmButtonContent() {
+    };
+
+    renderConfirmButtonContent = () => {
         switch (this.props.deleteStatus) {
-            case "deleting":
-                return <Message msgId="users.deleting" />;
-            default:
-                return <Message msgId="users.delete" />;
+        case "deleting":
+            return <Message msgId="users.deleting" />;
+        default:
+            return <Message msgId="users.delete" />;
         }
-    },
+    };
+
     render() {
         if (!this.props.user) {
             return null;
@@ -56,7 +59,8 @@ const UserDeleteConfirm = React.createClass({
             <div>{this.renderError()}</div>
         </Confirm>);
     }
-});
+}
+
 module.exports = connect((state) => {
     let usersState = state && state.users;
     if (!usersState) return {};

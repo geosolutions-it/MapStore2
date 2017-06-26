@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -11,25 +12,25 @@ const {isFunction} = require('lodash');
 const LayersTool = require('./LayersTool');
 require("./css/visibilitycheck.css");
 
-const VisibilityCheck = React.createClass({
-    propTypes: {
-        node: React.PropTypes.object,
-        tooltip: React.PropTypes.string,
-        propertiesChangeHandler: React.PropTypes.func,
-        style: React.PropTypes.object,
-        checkType: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
-        glyphChecked: React.PropTypes.string,
-        glyphUnchecked: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            style: {},
-            checkType: "glyph",
-            glyphChecked: "eye-open",
-            tooltip: "toc.toggleLayerVisibility",
-            glyphUnchecked: "eye-close"
-        };
-    },
+class VisibilityCheck extends React.Component {
+    static propTypes = {
+        node: PropTypes.object,
+        tooltip: PropTypes.string,
+        propertiesChangeHandler: PropTypes.func,
+        style: PropTypes.object,
+        checkType: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+        glyphChecked: PropTypes.string,
+        glyphUnchecked: PropTypes.string
+    };
+
+    static defaultProps = {
+        style: {},
+        checkType: "glyph",
+        glyphChecked: "eye-open",
+        tooltip: "toc.toggleLayerVisibility",
+        glyphUnchecked: "eye-close"
+    };
+
     render() {
         if (this.props.checkType === "glyph") {
             return (<LayersTool
@@ -46,10 +47,11 @@ const VisibilityCheck = React.createClass({
             type={isFunction(this.props.checkType) ? this.props.checkType(this.props.node) : this.props.checkType}
             checked={this.props.node.visibility ? "checked" : ""}
             onChange={this.changeVisibility} />);
-    },
-    changeVisibility() {
-        this.props.propertiesChangeHandler(this.props.node.id, {visibility: !this.props.node.visibility});
     }
-});
+
+    changeVisibility = () => {
+        this.props.propertiesChangeHandler(this.props.node.id, {visibility: !this.props.node.visibility});
+    };
+}
 
 module.exports = VisibilityCheck;

@@ -23,13 +23,13 @@ const Message = require('../components/I18N/Message');
 
 require('./zoomall/zoomall.css');
 
-const ZoomAllPlugin = React.createClass({
+class ZoomAllPlugin extends React.Component {
     render() {
         return (
             <ZoomToMaxExtentButton
-                key="zoomToMaxExtent" {...this.props} useInitialExtent={true}/>);
+                key="zoomToMaxExtent" {...this.props} useInitialExtent/>);
     }
-});
+}
 
 const assign = require('object-assign');
 

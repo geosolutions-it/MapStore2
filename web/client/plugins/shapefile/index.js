@@ -11,38 +11,38 @@ const {onShapeError} = require('../../actions/shapefile');
 const {setStyleParameter} = require('../../actions/style');
 
 const ShapeFileUploadAndStyle = connect((state) => (
-        {
-            uploadOptions: {
+    {
+        uploadOptions: {
             error: state.shapefile && state.shapefile.error || null,
             loading: state.shapefile && state.shapefile.loading || false }
-            }
+    }
         ), {
-    onShapeError: onShapeError
-})(require('../../components/shapefile/ShapefileUploadAndStyle'));
+            onShapeError: onShapeError
+        })(require('../../components/shapefile/ShapefileUploadAndStyle'));
 
 const StylePolygon = connect((state) => (
-        {
-            shapeStyle: state.style || {}
-        }
+    {
+        shapeStyle: state.style || {}
+    }
         ), {
-    setStyleParameter: setStyleParameter
-})(require('../../components/style/StylePolygon'));
+            setStyleParameter: setStyleParameter
+        })(require('../../components/style/StylePolygon'));
 
 const StylePoint = connect((state) => (
-        {
-            shapeStyle: state.style || {}
-        }
+    {
+        shapeStyle: state.style || {}
+    }
         ), {
-    setStyleParameter: setStyleParameter
-})(require('../../components/style/StylePoint'));
+            setStyleParameter: setStyleParameter
+        })(require('../../components/style/StylePoint'));
 
 const StylePolyline = connect((state) => (
-        {
-            shapeStyle: state.style || {}
-        }
+    {
+        shapeStyle: state.style || {}
+    }
         ), {
-    setStyleParameter: setStyleParameter
-})(require('../../components/style/StylePolyline'));
+            setStyleParameter: setStyleParameter
+        })(require('../../components/style/StylePolyline'));
 
 module.exports = {
     ShapeFileUploadAndStyle,

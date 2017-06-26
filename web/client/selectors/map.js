@@ -17,7 +17,7 @@ const {createSelector} = require('reselect');
  * @param  {object} state the state
  * @return {object} the map configruation
  */
-const mapSelector = (state) => (state.map && state.map.present) || (state.map) || (state.config && state.config.map) || null;
+const mapSelector = (state) => state.map && state.map.present || state.map || state.config && state.config.map || null;
 
 const projectionSelector = createSelector([mapSelector], (map) => map && map.projection);
 

@@ -350,7 +350,7 @@ function permissionsLoaded(permissions, mapId) {
  * @param  {Object} [params={start:  0. limit: 20}] params for the request
  * @return {thunk}                  dispatches mapsLoading, mapsLoaded or loadError
  */
-function loadMaps(geoStoreUrl, searchText="*", params={start: 0, limit: 20}) {
+function loadMaps(geoStoreUrl, searchText = "*", params = {start: 0, limit: 20}) {
     return (dispatch) => {
         let opts = assign({}, {params}, geoStoreUrl ? {baseURL: geoStoreUrl} : {});
         dispatch(mapsLoading(searchText, params));

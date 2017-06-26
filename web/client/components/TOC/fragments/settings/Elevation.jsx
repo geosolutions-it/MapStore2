@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -13,26 +14,27 @@ const ElevationChart = require('./ElevationChart');
 require('react-widgets/lib/less/react-widgets.less');
 require("./css/elevation.css");
 
-module.exports = React.createClass({
-    propTypes: {
-        elevationText: React.PropTypes.node,
-        element: React.PropTypes.object,
-        elevations: React.PropTypes.object,
-        onChange: React.PropTypes.func,
-        appState: React.PropTypes.object,
-        chartStyle: React.PropTypes.object,
-        showElevationChart: React.PropTypes.bool
-    },
-    getDefaultProps() {
-        return {
-            onChange: () => {},
-            showElevationChart: true
-        };
-    },
+module.exports = class extends React.Component {
+    static propTypes = {
+        elevationText: PropTypes.node,
+        element: PropTypes.object,
+        elevations: PropTypes.object,
+        onChange: PropTypes.func,
+        appState: PropTypes.object,
+        chartStyle: PropTypes.object,
+        showElevationChart: PropTypes.bool
+    };
+
+    static defaultProps = {
+        onChange: () => {},
+        showElevationChart: true
+    };
+
     shouldComponentUpdate(nextProps) {
         return this.props.element.id !== nextProps.element.id;
-    },
-    renderElevationsChart(elevations) {
+    }
+
+    renderElevationsChart = (elevations) => {
         if (this.props.showElevationChart) {
             return (
                 <ElevationChart
@@ -40,8 +42,9 @@ module.exports = React.createClass({
                     chartStyle={this.props.chartStyle}/>
             );
         }
-    },
-    renderElevationsSlider(elevations) {
+    };
+
+    renderElevationsSlider = (elevations) => {
         const values = elevations.values;
         const min = 0;
         const max = values.length - 1;
@@ -54,8 +57,8 @@ module.exports = React.createClass({
         return (
             <div id="mapstore-elevation">
                 <Slider
-                    snap= {true}
-                    start={[parseFloat((start))] || [0.0]}
+                    snap
+                    start={[parseFloat(start)] || [0.0]}
                     range= {this.calculateRange(values, min, max, dif, firstVal, lastVal)}
                     behaviour= "tap"
                     pips= {{
@@ -76,7 +79,8 @@ module.exports = React.createClass({
                     }}/>
             </div>
         );
-    },
+    };
+
     render() {
         const elevations = this.props.elevations;
         return (
@@ -96,16 +100,17 @@ module.exports = React.createClass({
                 </div>
             </div>
         );
-    },
-    calculateRange(values, min, max, dif, firstVal, lastVal) {
+    }
+
+    calculateRange = (values, min, max, dif, firstVal, lastVal) => {
         let arr = [];
         let percText = "";
         let range = {min: firstVal, max: lastVal};
         values.forEach(function(currentValue, i) {
-            arr[i] = ((i - min) / dif) * 100;
+            arr[i] = (i - min) / dif * 100;
             percText = arr[i] + "%";
             range[percText] = parseFloat(currentValue);
         });
         return range;
-    }
-});
+    };
+};

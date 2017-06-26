@@ -238,7 +238,7 @@ const CoordinatesUtils = {
         return code;
     },
     normalizeSRS: function(srs, allowedSRS) {
-        const result = (srs === 'EPSG:900913' ? 'EPSG:3857' : srs);
+        const result = srs === 'EPSG:900913' ? 'EPSG:3857' : srs;
         if (allowedSRS && !allowedSRS[result]) {
             return CoordinatesUtils.getCompatibleSRS(result, allowedSRS);
         }
@@ -267,7 +267,7 @@ const CoordinatesUtils = {
         var y = Math.sin(dLon) * Math.cos(lat2);
         var x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
 
-        var azimuth = (((Math.atan2(y, x) * 180.0 / Math.PI) + 360 ) % 360 );
+        var azimuth = (Math.atan2(y, x) * 180.0 / Math.PI + 360 ) % 360;
 
         return azimuth;
     },
@@ -322,10 +322,10 @@ const CoordinatesUtils = {
             const flatCoordinates = chunk(flattenDeep(geoJSON.coordinates), 2);
             return flatCoordinates.reduce((extent, point) => {
                 return [
-                    (point[0] < extent[0]) ? point[0] : extent[0],
-                    (point[1] < extent[1]) ? point[1] : extent[1],
-                    (point[0] > extent[2]) ? point[0] : extent[2],
-                    (point[1] > extent[3]) ? point[1] : extent[3]
+                    point[0] < extent[0] ? point[0] : extent[0],
+                    point[1] < extent[1] ? point[1] : extent[1],
+                    point[0] > extent[2] ? point[0] : extent[2],
+                    point[1] > extent[3] ? point[1] : extent[3]
                 ];
             }, newExtent);
 
@@ -356,18 +356,18 @@ const CoordinatesUtils = {
         );
     },
     calculateCircleCoordinates: function(center, radius, sides, rotation) {
-        let angle = Math.PI * ((1 / sides) - (1 / 2));
+        let angle = Math.PI * (1 / sides - 1 / 2);
 
         if (rotation) {
-            angle += (rotation / 180) * Math.PI;
+            angle += rotation / 180 * Math.PI;
         }
 
         let rotatedAngle; let x; let y;
         let points = [[]];
         for (let i = 0; i < sides; i++) {
-            rotatedAngle = angle + (i * 2 * Math.PI / sides);
-            x = center.x + (radius * Math.cos(rotatedAngle));
-            y = center.y + (radius * Math.sin(rotatedAngle));
+            rotatedAngle = angle + i * 2 * Math.PI / sides;
+            x = center.x + radius * Math.cos(rotatedAngle);
+            y = center.y + radius * Math.sin(rotatedAngle);
             points[0].push([x, y]);
         }
 

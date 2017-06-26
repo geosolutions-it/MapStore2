@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -12,33 +13,35 @@ const {connect} = require('react-redux');
 const {Message} = require('../../components/I18N/I18N');
 require('./style/manager.css');
 
-const Manager = React.createClass({
-    propTypes: {
-        navStyle: React.PropTypes.object,
-        items: React.PropTypes.array,
-        itemSelected: React.PropTypes.func,
-        selectedTool: React.PropTypes.string
-    },
-    contextTypes: {
-        router: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            items: [],
-            mapType: "openlayers",
-            selectedTool: "importer",
-            itemSelected: () => {},
-            navStyle: {
-              flex: "inherit"
-            }
-        };
-    },
-    renderToolIcon(tool) {
+class Manager extends React.Component {
+    static propTypes = {
+        navStyle: PropTypes.object,
+        items: PropTypes.array,
+        itemSelected: PropTypes.func,
+        selectedTool: PropTypes.string
+    };
+
+    static contextTypes = {
+        router: PropTypes.object
+    };
+
+    static defaultProps = {
+        items: [],
+        mapType: "openlayers",
+        selectedTool: "importer",
+        itemSelected: () => {},
+        navStyle: {
+            flex: "inherit"
+        }
+    };
+
+    renderToolIcon = (tool) => {
         if (tool.glyph) {
             return <Glyphicon glyph={tool.glyph} />;
         }
-    },
-    renderNavItems() {
+    };
+
+    renderNavItems = () => {
         return this.props.items.map((tool) =>
             (<NavItem
                 eventKey={tool.id}
@@ -47,13 +50,14 @@ const Manager = React.createClass({
                 onClick={(event) => {
                     event.preventDefault();
                     this.props.itemSelected(tool.id);
-                    this.context.router.push("/manager/" + tool.id);
+                    this.context.router.history.push("/manager/" + tool.id);
                 }}>
                     {this.renderToolIcon(tool)}
                     <span className="nav-msg">&nbsp;{tool.msgId ? <Message msgId={tool.msgId} /> : tool.title || tool.id}</span>
             </NavItem>));
-    },
-    renderPlugin() {
+    };
+
+    renderPlugin = () => {
         for ( let i = 0; i < this.props.items.length; i++) {
             let tool = this.props.items[i];
             if (tool.id === this.props.selectedTool) {
@@ -62,7 +66,8 @@ const Manager = React.createClass({
         }
         return null;
 
-    },
+    };
+
     render() {
         return (<div className="Manager-Container">
             <Nav className="Manager-Tools-Nav" bsStyle="pills" stacked activeKey={this.props.selectedTool} style={this.props.navStyle}>
@@ -73,13 +78,13 @@ const Manager = React.createClass({
             }}>{this.renderPlugin()} </div>
         </div>);
     }
-});
+}
 
 module.exports = {
     ManagerPlugin: connect((state, ownProps) => ({
         selectedTool: ownProps.tool
     }),
-    {
-        itemSelected
-    })(Manager)
+        {
+            itemSelected
+        })(Manager)
 };

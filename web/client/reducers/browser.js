@@ -11,13 +11,13 @@ var assign = require('object-assign');
 
 function browser(state = null, action) {
     switch (action.type) {
-        case CHANGE_BROWSER_PROPERTIES: {
-            return assign({}, state,
+    case CHANGE_BROWSER_PROPERTIES: {
+        return assign({}, state,
                 action.newProperties
                 );
-        }
-        default:
-            return state;
+    }
+    default:
+        return state;
     }
 }
 

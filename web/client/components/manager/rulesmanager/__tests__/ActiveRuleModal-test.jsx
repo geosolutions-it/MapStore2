@@ -10,11 +10,13 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const ActiveRuleModal = require('../ActiveRuleModal.jsx');
 const expect = require('expect');
-const Wrapper = React.createClass({
+
+class Wrapper extends React.Component {
     render() {
         return this.props.children;
     }
-});
+}
+
 describe('test rule edit modal component', () => {
 
     beforeEach((done) => {

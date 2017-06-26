@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -10,56 +11,61 @@ var React = require('react');
 var {Button, Glyphicon, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 
-var UndoBtn = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        btnConfig: React.PropTypes.object,
-        text: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        help: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        onClick: React.PropTypes.func,
-        tooltip: React.PropTypes.element,
-        tooltipPlace: React.PropTypes.string,
-        style: React.PropTypes.object,
-        glyph: React.PropTypes.string,
-        buttonStyle: React.PropTypes.string,
-        disabled: React.PropTypes.bool
-    },
-    getDefaultProps() {
-        return {
-            id: "undo-btn",
-            onClick: () => {},
-            tooltipPlace: "left",
-            glyph: "1-screen-backward",
-            buttonStyle: "primary",
-            btnConfig: {
-                className: "square-button"
-            }
-        };
-    },
-    onClick() {
+class UndoBtn extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        btnConfig: PropTypes.object,
+        text: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        help: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        onClick: PropTypes.func,
+        tooltip: PropTypes.element,
+        tooltipPlace: PropTypes.string,
+        style: PropTypes.object,
+        glyph: PropTypes.string,
+        buttonStyle: PropTypes.string,
+        disabled: PropTypes.bool
+    };
+
+    static defaultProps = {
+        id: "undo-btn",
+        onClick: () => {},
+        tooltipPlace: "left",
+        glyph: "1-screen-backward",
+        buttonStyle: "primary",
+        btnConfig: {
+            className: "square-button"
+        }
+    };
+
+    onClick = () => {
         this.props.onClick();
-    },
+    };
+
     shouldComponentUpdate(nextProps) {
         return this.props.disabled !== nextProps.disabled;
-    },
-    renderButton() {
+    }
+
+    renderButton = () => {
         return (
             <Button id={this.props.id} disabled={this.props.disabled} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.props.buttonStyle} style={this.props.style}>
                 <Glyphicon glyph={this.props.glyph}/>{this.props.text}{this.props.help}
             </Button>
         );
-    },
-    addTooltip(btn) {
+    };
+
+    addTooltip = (btn) => {
         let tooltip = <Tooltip id="undo-btn-tooltip">{this.props.tooltip}</Tooltip>;
         return (
             <OverlayTrigger placement={this.props.tooltipPlace} key={"overlay-trigger." + this.props.id} overlay={tooltip}>
                 {btn}
             </OverlayTrigger>
         );
-    },
+    };
+
     componentWillMount() {
         // none
-    },
+    }
+
     render() {
         var retval;
         var btn = this.renderButton();
@@ -71,6 +77,6 @@ var UndoBtn = React.createClass({
         return retval;
 
     }
-});
+}
 
 module.exports = UndoBtn;

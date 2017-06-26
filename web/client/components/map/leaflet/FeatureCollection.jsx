@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -9,19 +10,22 @@
 var React = require('react');
 
 
-let Feature = React.createClass({
-    propTypes: {
-        type: React.PropTypes.string,
-        container: React.PropTypes.object, // TODO it must be a L.GeoJSON
-        geometry: React.PropTypes.object
-    },
+class Feature extends React.Component {
+    static propTypes = {
+        type: PropTypes.string,
+        container: PropTypes.object, // TODO it must be a L.GeoJSON
+        geometry: PropTypes.object
+    };
+
     componentDidMount() {
-    },
+    }
+
     componentWillUnmount() {
-    },
+    }
+
     render() {
         return null;
     }
-});
+}
 
 module.exports = Feature;

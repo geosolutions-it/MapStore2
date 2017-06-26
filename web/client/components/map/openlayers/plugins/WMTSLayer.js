@@ -32,12 +32,12 @@ Layers.registerType('wmts', {
             opacity: options.opacity !== undefined ? options.opacity : 1,
             zIndex: options.zIndex,
             source: new ol.source.WMTS(assign({
-              urls: urls,
-              layer: options.name,
-              version: options.version || "1.0.0",
-              matrixSet: tileMatrixSet,
-              format: options.format || 'image/png',
-              tileGrid: new ol.tilegrid.WMTS({
+                urls: urls,
+                layer: options.name,
+                version: options.version || "1.0.0",
+                matrixSet: tileMatrixSet,
+                format: options.format || 'image/png',
+                tileGrid: new ol.tilegrid.WMTS({
                     origin: [
                         options.originX || -20037508.3428,
                         options.originY || 20037508.3428
@@ -46,9 +46,9 @@ Layers.registerType('wmts', {
                     resolutions: resolutions,
                     matrixIds: matrixIds,
                     tileSize: options.tileSize || [256, 256]
-              }),
-              style: options.style || '',
-              wrapX: true
+                }),
+                style: options.style || '',
+                wrapX: true
             }))
         });
     }

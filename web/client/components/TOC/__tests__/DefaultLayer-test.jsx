@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -126,7 +127,7 @@ describe('test DefaultLayer module component', () => {
             onToggle: () => {}
         };
         let spy = expect.spyOn(actions, "onToggle");
-        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} activateLegendTool={true} onToggle={actions.onToggle}/>,
+        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} activateLegendTool onToggle={actions.onToggle}/>,
             document.getElementById("container"));
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
@@ -227,7 +228,7 @@ describe('test DefaultLayer module component', () => {
             onZoom: () => {}
         };
         let spy = expect.spyOn(actions, "onZoom");
-        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} activateZoomTool={true} onZoom={actions.onZoom}/>,
+        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} activateZoomTool onZoom={actions.onZoom}/>,
             document.getElementById("container"));
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
@@ -259,7 +260,7 @@ describe('test DefaultLayer module component', () => {
         const actions = {
             onZoom: () => {}
         };
-        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} activateZoomTool={true} onZoom={actions.onZoom}/>,
+        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} activateZoomTool onZoom={actions.onZoom}/>,
             document.getElementById("container"));
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
@@ -280,7 +281,7 @@ describe('test DefaultLayer module component', () => {
             removeNode: () => {}
         };
         let spy = expect.spyOn(actions, "removeNode");
-        const comp = ReactDOM.render(<Layer node={l} activateRemoveLayer={true} removeNode={actions.removeNode} />,
+        const comp = ReactDOM.render(<Layer node={l} activateRemoveLayer removeNode={actions.removeNode} />,
             document.getElementById("container"));
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
@@ -308,7 +309,7 @@ describe('test DefaultLayer module component', () => {
             onSettings: () => {}
         };
         let spy = expect.spyOn(actions, "onSettings");
-        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" modalOptions={{animation: false}} node={l} activateSettingsTool={true} onSettings={actions.onSettings}/>,
+        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" modalOptions={{animation: false}} node={l} activateSettingsTool onSettings={actions.onSettings}/>,
             document.getElementById("container"));
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
@@ -337,7 +338,7 @@ describe('test DefaultLayer module component', () => {
             onRefresh: () => {}
         };
         let spy = expect.spyOn(actions, "onRefresh");
-        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" modalOptions={{animation: false}} node={l} activateRefreshTool={true} onRefresh={actions.onRefresh}/>,
+        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" modalOptions={{animation: false}} node={l} activateRefreshTool onRefresh={actions.onRefresh}/>,
             document.getElementById("container"));
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
@@ -351,22 +352,24 @@ describe('test DefaultLayer module component', () => {
 
     it('test that settings modal is present only if all the requirements are met', () => {
         // helper function to render layers components
-        var TestRoot = React.createClass({
-            propTypes: {
-                elements: React.PropTypes.array
-            },
-            render: function() {
+        class TestRoot extends React.Component {
+            static propTypes = {
+                elements: PropTypes.array
+            };
+
+            render() {
                 var elements = this.props.elements.map( function(element) {
                     return (<Layer key={element.layer.id}
                                 visibilityCheckType="checkbox"
                                modalOptions={{animation: false}}
                                node={element.layer}
-                               activateSettingsTool={true}
+                               activateSettingsTool
                                settings={element.settings}/>);
                 });
                 return <div>{elements}</div>;
             }
-        });
+        }
+
         const render = function(elements) {
             ReactDOM.render(
                 <TestRoot elements={elements} />,
@@ -413,7 +416,7 @@ describe('test DefaultLayer module component', () => {
                 <Layer modalOptions={{animation: false}}
                         visibilityCheckType="checkbox"
                        node={layer}
-                       activateSettingsTool={true}
+                       activateSettingsTool
                        onSettings={actions.onSettings}/>,
                    document.getElementById("container"));
         expect(component).toExist();

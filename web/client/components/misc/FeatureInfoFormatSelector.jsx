@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -12,22 +13,22 @@ const MapInfoUtils = require('../../utils/MapInfoUtils');
 
 const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 
-var FeatureInfoFormatSelector = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        label: React.PropTypes.oneOfType([React.PropTypes.func, React.PropTypes.string, React.PropTypes.object]),
-        availableInfoFormat: React.PropTypes.object,
-        infoFormat: React.PropTypes.string,
-        onInfoFormatChange: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            id: "mapstore-feature-format-selector",
-            availableInfoFormat: MapInfoUtils.getAvailableInfoFormat(),
-            infoFormat: MapInfoUtils.getDefaultInfoFormatValue(),
-            onInfoFormatChange: function() {}
-        };
-    },
+class FeatureInfoFormatSelector extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        label: PropTypes.oneOfType([PropTypes.func, PropTypes.string, PropTypes.object]),
+        availableInfoFormat: PropTypes.object,
+        infoFormat: PropTypes.string,
+        onInfoFormatChange: PropTypes.func
+    };
+
+    static defaultProps = {
+        id: "mapstore-feature-format-selector",
+        availableInfoFormat: MapInfoUtils.getAvailableInfoFormat(),
+        infoFormat: MapInfoUtils.getDefaultInfoFormatValue(),
+        onInfoFormatChange: function() {}
+    };
+
     render() {
         var list = Object.keys(this.props.availableInfoFormat).map((infoFormat) => {
             let val = this.props.availableInfoFormat[infoFormat];
@@ -47,12 +48,13 @@ var FeatureInfoFormatSelector = React.createClass({
                 </FormControl>
             </FormGroup>
         );
-    },
-    launchChangeInfoFormatAction() {
+    }
+
+    launchChangeInfoFormatAction = () => {
         var element = ReactDOM.findDOMNode(this);
         var selectNode = element.getElementsByTagName('select').item(0);
         this.props.onInfoFormatChange(selectNode.value);
-    }
-});
+    };
+}
 
 module.exports = FeatureInfoFormatSelector;

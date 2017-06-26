@@ -17,4 +17,4 @@ function itemSelected(toolId) {
 
 module.exports = {
     MANAGER_ITEM_SELECTED, itemSelected
- };
+};

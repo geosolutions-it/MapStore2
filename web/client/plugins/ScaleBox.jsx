@@ -30,7 +30,7 @@ const selector = createSelector([mapSelector], (map) => ({
 
 require('./scalebox/scalebox.css');
 
-const ScaleBoxTool = React.createClass({
+class ScaleBoxTool extends React.Component {
     render() {
         return (<HelpWrapper id="mapstore-scalebox-container"
             key="scalebox-help"
@@ -38,7 +38,7 @@ const ScaleBoxTool = React.createClass({
                 <ScaleBox key="scaleBox" {...this.props}/>
         </HelpWrapper>);
     }
-});
+}
 
 /**
   * ScaleBox Plugin. Provides a selector for the scale of the map.

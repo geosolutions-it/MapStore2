@@ -54,7 +54,7 @@ describe('Test correctness of the layers actions', () => {
             expect(e.newProperties.visibility).toBe(true);
             expect(e.layer).toBe('layer');
             done();
-        } catch(ex) {
+        } catch (ex) {
             done(ex);
         }
 

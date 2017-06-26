@@ -13,11 +13,11 @@ var ol = require('openlayers');
 Layers.registerType('graticule', {
     create: (options, map) => {
         let graticule = new ol.Graticule({
-          strokeStyle: options.style || new ol.style.Stroke({
-            color: 'rgba(255,120,0,0.9)',
-            width: 2,
-            lineDash: [0.5, 4]
-          })
+            strokeStyle: options.style || new ol.style.Stroke({
+                color: 'rgba(255,120,0,0.9)',
+                width: 2,
+                lineDash: [0.5, 4]
+            })
         });
         graticule.setMap(map);
 

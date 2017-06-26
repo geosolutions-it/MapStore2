@@ -29,7 +29,7 @@ const USERGROUPMANAGER_DELETE_GROUP = 'USERMANAGER_DELETE_GROUP';
 const USERGROUPMANAGER_SEARCH_TEXT_CHANGED = 'USERGROUPMANAGER_SEARCH_TEXT_CHANGED';
 */
 const API = require('../api/GeoStoreDAO');
-const {get/*, assign*/} = require('lodash');
+const {get/* , assign*/} = require('lodash');
 
 function getUserGroupsLoading(text, start, limit) {
     return {
@@ -76,7 +76,7 @@ function getUserGroups(searchText, options) {
         if (state) {
             let oldText = get(state, "usergroups.searchText");
             text = searchText || oldText || "*";
-            start = ( (start !== null && start !== undefined) ? start : (get(state, "usergroups.start") || 0));
+            start = start !== null && start !== undefined ? start : get(state, "usergroups.start") || 0;
             limit = limit || get(state, "usergroups.limit") || 12;
         }
         dispatch(getUserGroupsLoading(text, start, limit));
@@ -130,7 +130,7 @@ function editNewGroup(group) {
     };
 }
 // NOTE: not support on server side now for editing groups
-function editGroup(group, options ={params: {includeattributes: true}} ) {
+function editGroup(group, options = {params: {includeattributes: true}} ) {
     return (dispatch) => {
         if (group && group.id) {
             dispatch(editGroupLoading(group));
@@ -296,7 +296,7 @@ function searchUsersError(error) {
         error
     };
 }
-function searchUsers(text ="*", start = 0, limit = 5, options = {}, jollyChar = "*") {
+function searchUsers(text = "*", start = 0, limit = 5, options = {}, jollyChar = "*") {
     return (dispatch) => {
         dispatch(searchUsersSuccessLoading(text, start, limit));
         return API.getUsers(jollyChar + text + jollyChar, {...options, params: {start, limit}}).then((response) => {

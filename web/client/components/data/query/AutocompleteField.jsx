@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -29,44 +30,46 @@ const LocaleUtils = require('../../../utils/LocaleUtils');
  * @prop {string} [valueField] the key used for the values corresponding to filterField.options[x].value
  *
  */
-const AutocompleteField = React.createClass({
-    propTypes: {
-        disabled: React.PropTypes.bool,
-        filterField: React.PropTypes.object,
-        label: React.PropTypes.string,
-        maxFeaturesWPS: React.PropTypes.number,
-        nextPage: React.PropTypes.string,
-        prevPage: React.PropTypes.string,
-        onUpdateField: React.PropTypes.func,
-        paginated: React.PropTypes.bool,
-        textField: React.PropTypes.string,
-        toggleMenu: React.PropTypes.func,
-        valueField: React.PropTypes.string
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            label: null,
-            nextPage: "chevron-right",
-            prevPage: "chevron-left",
-            onUpdateField: () => {},
-            paginated: true,
-            valueField: "value",
-            textField: "label",
-            toggleMenu: () => {}
-        };
-    },
-    getOptions() {
+class AutocompleteField extends React.Component {
+    static propTypes = {
+        disabled: PropTypes.bool,
+        filterField: PropTypes.object,
+        label: PropTypes.string,
+        maxFeaturesWPS: PropTypes.number,
+        nextPage: PropTypes.string,
+        prevPage: PropTypes.string,
+        onUpdateField: PropTypes.func,
+        paginated: PropTypes.bool,
+        textField: PropTypes.string,
+        toggleMenu: PropTypes.func,
+        valueField: PropTypes.string
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        label: null,
+        nextPage: "chevron-right",
+        prevPage: "chevron-left",
+        onUpdateField: () => {},
+        paginated: true,
+        valueField: "value",
+        textField: "label",
+        toggleMenu: () => {}
+    };
+
+    getOptions = () => {
         return this.props.filterField &&
         this.props.filterField.options &&
         this.props.filterField.options[this.props.filterField.attribute] &&
         this.props.filterField.options[this.props.filterField.attribute].map(o => {
             return { value: o, label: o };
         });
-    },
-    renderPagination() {
+    };
+
+    renderPagination = () => {
         const numberOfPages = Math.ceil(this.props.filterField.fieldOptions.valuesCount / this.props.maxFeaturesWPS);
         const firstPage = this.props.filterField.fieldOptions.currentPage === 1 || !this.props.filterField.fieldOptions.currentPage;
         const lastPage = this.props.filterField.fieldOptions.currentPage === numberOfPages || !this.props.filterField.fieldOptions.currentPage;
@@ -80,7 +83,8 @@ const AutocompleteField = React.createClass({
                 }
             </div>
         );
-    },
+    };
+
     render() {
         let label = this.props.label ? (<label>{this.props.label}</label>) : (<span/>);
         let selectedValue;
@@ -118,12 +122,14 @@ const AutocompleteField = React.createClass({
                     value={selectedValue && selectedValue.value}
                     />
             </div>);
-    },
+    }
+
     // called before onChange
-    handleSelect() {
+    handleSelect = () => {
         this.selected = true;
-    },
-    handleChange(input) {
+    };
+
+    handleChange = (input) => {
         if (this.selected) {
             this.selected = false;
             if (input && input.value !== "") {
@@ -132,19 +138,22 @@ const AutocompleteField = React.createClass({
         } else {
             this.props.onUpdateField(this.props.filterField.rowId, "value", input, "string", {currentPage: 1});
         }
-    },
+    };
+
     // called before onToggle
-    handleFocus(options) {
+    handleFocus = (options) => {
         this.loadWithoutfilter(options);
-    },
-    handleToggle() {
+    };
+
+    handleToggle = () => {
         this.props.toggleMenu(this.props.filterField.rowId, !this.props.filterField.openAutocompleteMenu);
-    },
-    loadWithoutfilter(options) {
+    };
+
+    loadWithoutfilter = (options) => {
         if (options.length === 0 && !this.props.filterField.value) {
             this.props.onUpdateField(this.props.filterField.rowId, "value", "", "string", {currentPage: 1});
         }
-    }
-});
+    };
+}
 
 module.exports = AutocompleteField;

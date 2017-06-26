@@ -30,7 +30,7 @@ describe("Test the login modal", () => {
     });
 
     it('creates empty component with error', () => {
-        const cmp = ReactDOM.render(<LoginForm options={{animation: false}} show={true} loginError={{status: 0}}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<LoginForm options={{animation: false}} show loginError={{status: 0}}/>, document.getElementById("container"));
         expect(cmp).toExist();
         let node = document.getElementsByClassName('alert-danger');
         expect(node.length).toBe(1);
@@ -48,7 +48,7 @@ describe("Test the login modal", () => {
 
         const spy = expect.spyOn(testHandlers, 'onSubmit');
         const spySuccess = expect.spyOn(testHandlers, 'onLoginSuccess');
-        const cmp = ReactDOM.render(<LoginForm options={{animation: false}} show={true} key="test" onLoginSuccess={testHandlers.onLoginSuccess} onSubmit={testHandlers.onSubmit}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<LoginForm options={{animation: false}} show key="test" onLoginSuccess={testHandlers.onLoginSuccess} onSubmit={testHandlers.onSubmit}/>, document.getElementById("container"));
         expect(cmp).toExist();
         let username = document.getElementsByTagName("input")[0];
         expect(username).toExist();
@@ -63,7 +63,7 @@ describe("Test the login modal", () => {
         let button = document.getElementsByTagName("button")[1];
         ReactTestUtils.Simulate.click(button);
         expect(spy.calls.length).toEqual(1);
-        ReactDOM.render(<LoginForm options={{animation: false}} show={true} key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} user={{name: "TEST"}} />, document.getElementById("container"));
+        ReactDOM.render(<LoginForm options={{animation: false}} show key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} user={{name: "TEST"}} />, document.getElementById("container"));
         expect(spySuccess.calls.length).toEqual(1);
 
 

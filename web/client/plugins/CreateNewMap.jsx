@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -12,45 +13,45 @@ const {Button, Grid, Col} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
 
 
-const CreateNewMap = React.createClass({
-    propTypes: {
-        mapType: React.PropTypes.string,
-        onGoToMap: React.PropTypes.func,
-        colProps: React.PropTypes.object,
-        isLoggedIn: React.PropTypes.bool
-    },
-    contextTypes: {
-        router: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            mapType: "leaflet",
-            isLoggedIn: false,
-            onGoToMap: () => {},
-            colProps: {
-                xs: 12,
-                sm: 12,
-                lg: 12,
-                md: 12
-            }
-        };
-    },
+class CreateNewMap extends React.Component {
+    static propTypes = {
+        mapType: PropTypes.string,
+        onGoToMap: PropTypes.func,
+        colProps: PropTypes.object,
+        isLoggedIn: PropTypes.bool
+    };
+
+    static contextTypes = {
+        router: PropTypes.object
+    };
+
+    static defaultProps = {
+        mapType: "leaflet",
+        isLoggedIn: false,
+        onGoToMap: () => {},
+        colProps: {
+            xs: 12,
+            sm: 12,
+            lg: 12,
+            md: 12
+        }
+    };
 
     render() {
         const display = this.props.isLoggedIn ? null : "none";
-        return (<Grid fluid={true} style={{marginBottom: "30px", padding: 0, display}}>
+        return (<Grid fluid style={{marginBottom: "30px", padding: 0, display}}>
         <Col {...this.props.colProps} >
-            <Button bsStyle="primary" onClick={() => { this.context.router.push("/viewer/" + this.props.mapType + "/new"); }}>
+            <Button bsStyle="primary" onClick={() => { this.context.router.history.push("/viewer/" + this.props.mapType + "/new"); }}>
             <Message msgId="newMap" />
             </Button>
         </Col>
         </Grid>);
     }
-});
+}
 
 module.exports = {
     CreateNewMapPlugin: connect((state) => ({
-        mapType: (state.maps && state.maps.mapType) || (state.home && state.home.mapType),
+        mapType: state.maps && state.maps.mapType || state.home && state.home.mapType,
         isLoggedIn: state && state.security && state.security.user && state.security.user.enabled && true || false
     }))(CreateNewMap)
 };

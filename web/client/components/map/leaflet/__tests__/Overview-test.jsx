@@ -17,18 +17,18 @@ describe('leaflet Overview component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
         map = L.map("map", {
-                center: [51.505, -0.09],
-                zoom: 13
-            });
+            center: [51.505, -0.09],
+            zoom: 13
+        });
         setTimeout(done);
     });
 
     afterEach((done) => {
         document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
         map = L.map("map", {
-                center: [51.505, -0.09],
-                zoom: 13
-            });
+            center: [51.505, -0.09],
+            zoom: 13
+        });
         setTimeout(done);
     });
 

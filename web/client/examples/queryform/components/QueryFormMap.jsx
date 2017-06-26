@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -29,11 +30,11 @@ const DrawSupport = require('../../../components/map/' + mapType + '/DrawSupport
 
 const QueryFormMap = (props) => {
     return props.map ?
-        (
+
             <WMap {...props.map} {...props.actions}>
                 {props.layers.map((layer, index) =>
-                    <Layer key={layer.name} position={index} type={layer.type}
-                        options={assign({}, layer, {srs: props.map.projection})}/>
+                    (<Layer key={layer.name} position={index} type={layer.type}
+                        options={assign({}, layer, {srs: props.map.projection})}/>)
                 )}
                 <DrawSupport
                     map={props.map}
@@ -44,15 +45,15 @@ const QueryFormMap = (props) => {
                     onChangeDrawingStatus={props.actions.onChangeDrawingStatus}
                     onEndDrawing={props.actions.onEndDrawing}/>
             </WMap>
-        ) : <span/>;
+         : <span/>;
 };
 
 QueryFormMap.propTypes = {
-    mapType: React.PropTypes.string,
-    drawStatus: React.PropTypes.string,
-    drawOwner: React.PropTypes.string,
-    drawMethod: React.PropTypes.string,
-    features: React.PropTypes.array
+    mapType: PropTypes.string,
+    drawStatus: PropTypes.string,
+    drawOwner: PropTypes.string,
+    drawMethod: PropTypes.string,
+    features: PropTypes.array
 };
 
 QueryFormMap.defaultProps = {
@@ -65,7 +66,7 @@ QueryFormMap.defaultProps = {
 
 module.exports = connect((state) => {
     return {
-        map: (state.map && state.map) || (state.config && state.config.map),
+        map: state.map && state.map || state.config && state.config.map,
         layers: state.config && state.config.layers || [],
         drawStatus: state.draw.drawStatus,
         drawOwner: state.draw.drawOwner,

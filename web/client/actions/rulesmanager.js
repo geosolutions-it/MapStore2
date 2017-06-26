@@ -118,7 +118,7 @@ function loadRules(page, keepSelected) {
         const state = getState().rulesmanager || {};
         const filtersValues = state.filtersValues || {};
         axios.all([GeoServerAPI.loadRules(page, filtersValues),
-                   GeoServerAPI.getRulesCount(filtersValues)])
+            GeoServerAPI.getRulesCount(filtersValues)])
             .then(axios.spread((rules, count) => {
                 dispatch(rulesLoaded(rules, count, page, keepSelected));
             })).catch(() => {

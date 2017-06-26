@@ -34,7 +34,7 @@ describe("test the MeasureComponent", () => {
 
     it('test creation of button UIs ', () => {
         let measurement = {};
-        const mc = ReactDOM.render(<MeasureComponent useButtonGroup={true} measurement={measurement}/>, document.getElementById("container"));
+        const mc = ReactDOM.render(<MeasureComponent useButtonGroup measurement={measurement}/>, document.getElementById("container"));
         expect(mc).toExist();
         const domNode = ReactDOM.findDOMNode(mc);
         expect(domNode).toExist();
@@ -45,7 +45,7 @@ describe("test the MeasureComponent", () => {
 
     it('test creation of button UIs useButtonGroup option ', () => {
         let measurement = {};
-        const mc = ReactDOM.render(<MeasureComponent useButtonGroup={true} measurement={measurement}/>, document.getElementById("container"));
+        const mc = ReactDOM.render(<MeasureComponent useButtonGroup measurement={measurement}/>, document.getElementById("container"));
         expect(mc).toExist();
         const domNode = ReactDOM.findDOMNode(mc);
         expect(domNode).toExist();
@@ -159,7 +159,7 @@ describe("test the MeasureComponent", () => {
                 toggleMeasure={(data) => {
                     newMeasureState = data;
                 }}
-                withReset={true}
+                withReset
             />, document.getElementById("container")
         );
         expect(cmp).toExist();
@@ -241,7 +241,7 @@ describe("test the MeasureComponent", () => {
 
         let testDiv = document.createElement("div");
         document.body.appendChild(testDiv);
-        let val = ReactDOM.findDOMNode(ReactDOM.render((<span><NumberFormat key="len" numberParams={decimalFormat} value={10} />km</span>), testDiv));
+        let val = ReactDOM.findDOMNode(ReactDOM.render(<span><NumberFormat key="len" numberParams={decimalFormat} value={10} />km</span>, testDiv));
         cmp = ReactDOM.render(
             <MeasureComponent uom={{
                 length: {unit: 'km', label: 'km'},
@@ -253,7 +253,7 @@ describe("test the MeasureComponent", () => {
 
         const areaSpan = document.getElementById('measure-area-res');
         expect(areaSpan).toExist();
-        val = ReactDOM.findDOMNode(ReactDOM.render((<span><NumberFormat key="len" numberParams={decimalFormat} value={1} />km²</span>), testDiv));
+        val = ReactDOM.findDOMNode(ReactDOM.render(<span><NumberFormat key="len" numberParams={decimalFormat} value={1} />km²</span>, testDiv));
         cmp = ReactDOM.render(
             <MeasureComponent uom={{
                 length: {unit: 'km', label: 'km'},

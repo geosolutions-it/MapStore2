@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -13,57 +14,57 @@ const {Glyphicon, ProgressBar, Table, Alert} = require('react-bootstrap');
 
 const Dropzone = require('react-dropzone');
 
-const FileUploader = React.createClass({
-    propTypes: {
-        dropMessage: React.PropTypes.node,
-        dropZoneStyle: React.PropTypes.object,
-        dropZoneActiveStyle: React.PropTypes.object,
-        beforeUploadMessage: React.PropTypes.node,
+class FileUploader extends React.Component {
+    static propTypes = {
+        dropMessage: PropTypes.node,
+        dropZoneStyle: PropTypes.object,
+        dropZoneActiveStyle: PropTypes.object,
+        beforeUploadMessage: PropTypes.node,
         // can be a boolean or an object like this : { progress: 0.99 }
-        uploading: React.PropTypes.oneOfType([React.PropTypes.bool, React.PropTypes.object]),
-        onBeforeUpload: React.PropTypes.func,
-        onUpload: React.PropTypes.func,
-        uploadAdditionalParams: React.PropTypes.oneOfType([React.PropTypes.array, React.PropTypes.object]),
+        uploading: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+        onBeforeUpload: PropTypes.func,
+        onUpload: PropTypes.func,
+        uploadAdditionalParams: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
         // if exists do not run before upload and start directly the upload after drag
-        allowUpload: React.PropTypes.object,
-        error: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            beforeUploadMessage: <Message msgId="uploader.beforeUpload" />,
-            dropMessage: <Message msgId="uploader.dropfile" />,
-            dropZoneStyle: {
-                borderStyle: "dashed",
-                borderWidth: "3px",
-                transition: "all 0.3s ease-in-out"
-            },
-            dropZoneActiveStyle: {
-                backgroundColor: "#eee",
-                borderWidth: "5px",
-                boxShadow: "0px 0px 25px 14px #d9edf7"
+        allowUpload: PropTypes.object,
+        error: PropTypes.object
+    };
 
-            },
-            onBeforeUpload: () => {},
-            onUpload: () => {}
-        };
-    },
-    getInitialState() {
-        return {};
-    },
+    static defaultProps = {
+        beforeUploadMessage: <Message msgId="uploader.beforeUpload" />,
+        dropMessage: <Message msgId="uploader.dropfile" />,
+        dropZoneStyle: {
+            borderStyle: "dashed",
+            borderWidth: "3px",
+            transition: "all 0.3s ease-in-out"
+        },
+        dropZoneActiveStyle: {
+            backgroundColor: "#eee",
+            borderWidth: "5px",
+            boxShadow: "0px 0px 25px 14px #d9edf7"
+
+        },
+        onBeforeUpload: () => {},
+        onUpload: () => {}
+    };
+
+    state = {};
 
     componentDidUpdate() {
         if (this.props.allowUpload && this.state && this.state.files) {
             this.uploadFiles(this.state.files);
         }
-    },
-    renderProgress(uploading) {
+    }
+
+    renderProgress = (uploading) => {
         if (uploading && uploading.progress) {
             let percent = round(uploading.progress * 100, 2);
             return <ProgressBar key="progressbar" striped now={percent} label={`${percent}%`}/>;
         }
 
-    },
-    renderPreview() {
+    };
+
+    renderPreview = () => {
         return (<Table striped bordered condensed hover>
                     <thead>
                         <tr>
@@ -82,15 +83,17 @@ const FileUploader = React.createClass({
                             <td key="last"><DateFormat value={file.lastModifiedDate} /></td>
                         </tr>) )
         }</tbody></Table>);
-    },
-    renderError() {
+    };
+
+    renderError = () => {
         if (this.props.error) {
-            return (<Alert bsStyle="danger">There was an error during the upload: {this.props.error.statusText}<div>{this.props.error.data}</div></Alert>);
+            return <Alert bsStyle="danger">There was an error during the upload: {this.props.error.statusText}<div>{this.props.error.data}</div></Alert>;
         }
-    },
+    };
+
     render() {
         if (this.state && this.state.files) {
-            return (<div> <Spinner spinnerName="circle" overrideSpinnerClassName="spinner" />{this.props.beforeUploadMessage}{this.renderPreview()}</div>);
+            return <div> <Spinner spinnerName="circle" overrideSpinnerClassName="spinner" />{this.props.beforeUploadMessage}{this.renderPreview()}</div>;
         } else if ( this.props && this.props.uploading && !this.state.files ) {
             return (<div>
                 <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/><Message msgId="uploader.uploadingFiles"/>
@@ -124,12 +127,14 @@ const FileUploader = React.createClass({
                 </div>
         </Dropzone>{this.renderError()}</div>);
 
-    },
-    humanFileSize(size) {
+    }
+
+    humanFileSize = (size) => {
         var i = Math.floor( Math.log(size) / Math.log(1024) );
         return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
-    },
-    uploadFiles(files) {
+    };
+
+    uploadFiles = (files) => {
         if (!files) return;
         if (!this.props.allowUpload) {
             this.setState({files: files, fileList: files});
@@ -138,6 +143,7 @@ const FileUploader = React.createClass({
             this.setState({files: null, fileList: files});
             this.props.onUpload(files, this.props.uploadAdditionalParams);
         }
-    }
-});
+    };
+}
+
 module.exports = FileUploader;

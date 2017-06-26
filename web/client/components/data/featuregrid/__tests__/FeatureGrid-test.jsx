@@ -37,7 +37,7 @@ describe("Test FeatureGrid Component", () => {
     });
     it('Test FeatureGrid rendering with column def', () => {
         let comp = ReactDOM.render(
-            <FeatureGrid features={data.features} columnDefs={columnDef} virtualPaging={true}/>, document.getElementById("container"));
+            <FeatureGrid features={data.features} columnDefs={columnDef} virtualPaging/>, document.getElementById("container"));
         expect(comp).toExist();
     });
     it('Test FeatureGrid rendering without column defs', () => {
@@ -47,7 +47,7 @@ describe("Test FeatureGrid Component", () => {
             projection: "EPSG:900913"
         };
         let comp = ReactDOM.render(
-            <FeatureGrid features={data.features} paging={true} map={map}/>, document.getElementById("container"));
+            <FeatureGrid features={data.features} paging map={map}/>, document.getElementById("container"));
         comp.getRows({sortModel: [{colId: "properties.STATE_NAME", sort: 'asc'}], startRow: 0, endRow: 100, successCallback: () => {}});
         comp.getRows({sortModel: [{colId: "properties.STATE_NAME", sort: 'desc'}], startRow: 0, endRow: 100, successCallback: () => {}});
         let params = {data: {geometry: {}}};
@@ -71,7 +71,7 @@ describe("Test FeatureGrid Component", () => {
         const spy = expect.spyOn(testZoomTo, 'action');
 
         let comp = ReactDOM.render(
-            <FeatureGrid features={data.features} paging={true} map={map} zoomToFeatureAction={testZoomTo.action}/>, document.getElementById("container"));
+            <FeatureGrid features={data.features} paging map={map} zoomToFeatureAction={testZoomTo.action}/>, document.getElementById("container"));
         expect(comp).toExist();
         let params = {data: {geometry: {coordinates: []}}};
         comp.zoomToFeature(params);

@@ -30,9 +30,9 @@ Layers.registerType('bing', {
             zIndex: options.zIndex,
             visible: options.visibility,
             source: new ol.source.BingMaps({
-              key: key,
-              imagerySet: options.name,
-              maxZoom: maxNativeZoom
+                key: key,
+                imagerySet: options.name,
+                maxZoom: maxNativeZoom
             })
         });
         setTimeout(checkLoaded.bind(null, layer, options), 1000);

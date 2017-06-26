@@ -27,7 +27,7 @@ describe("the OL GrabMap component", () => {
         const tb = ReactDOM.render(<GrabMap active={false}/>, document.getElementById("snap"));
         expect(tb).toExist();
     });
-    /*it('component update', () => {
+    /* it('component update', () => {
         let tb = ReactDOM.render(<GrabMap active={false}/>, document.getElementById("snap"));
         expect(tb).toExist();
         tb = ReactDOM.render(<GrabMap active={false}/>, document.getElementById("snap"));
@@ -50,12 +50,12 @@ describe("the OL GrabMap component", () => {
             }]
         }];
         let map = {projection: "EPSG:900913", units: "m", center: { x: 11.25, y: 43.40, crs: "EPSG:4326"},
-                    zoom: 5, maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
-                    bbox: {bounds: {minx: -18.6328125, miny: 31.728167146023935, maxx: 41.1328125, maxy: 53.199451902831555 },
-                     crs: "EPSG:4326", rotation: 0}, size: {height: 512, width: 512}, mapStateSource: "map"};
+            zoom: 5, maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+            bbox: {bounds: {minx: -18.6328125, miny: 31.728167146023935, maxx: 41.1328125, maxy: 53.199451902831555 },
+                crs: "EPSG:4326", rotation: 0}, size: {height: 512, width: 512}, mapStateSource: "map"};
         let tb = ReactDOM.render(<GrabMap config={map} layers={layers} snapstate={{state: "DISABLED"}} active={false} timeout={0} onSnapshotReady={() => { done(); }}/>, document.getElementById("snap"));
         expect(tb).toExist();
-        tb = ReactDOM.render(<GrabMap config={map} layers={layers} snapstate={{state: "DISABLED"}} active={true} timeout={0} onSnapshotReady={() => { done(); }}/>, document.getElementById("snap"));
+        tb = ReactDOM.render(<GrabMap config={map} layers={layers} snapstate={{state: "DISABLED"}} active timeout={0} onSnapshotReady={() => { done(); }}/>, document.getElementById("snap"));
         // emulate map load
         tb.layerLoading();
         tb.layerLoad();

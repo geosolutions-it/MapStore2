@@ -48,7 +48,7 @@ Layers.registerType('wmts', {
         urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
         const srs = CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
         return L.tileLayer.wmts(urls, queryParameters, {
-            tileMatrixPrefix: options.tileMatrixPrefix || (queryParameters.tileMatrixSet + ':') || (srs + ':'),
+            tileMatrixPrefix: options.tileMatrixPrefix || queryParameters.tileMatrixSet + ':' || srs + ':',
             originY: options.originY || 20037508.3428,
             originX: options.originX || -20037508.3428,
             ignoreErrors: options.ignoreErrors || false,

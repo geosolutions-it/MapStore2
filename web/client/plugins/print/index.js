@@ -73,7 +73,7 @@ const MultiPageOption = connect((state) => ({
 })(require('../../components/print/PrintOption'));
 
 const LandscapeOption = connect((state) => ({
-    selected: (state.print && state.print.spec && state.print.spec.landscape) ? 'landscape' : 'portrait',
+    selected: state.print && state.print.spec && state.print.spec.landscape ? 'landscape' : 'portrait',
     layouts: currentLayouts(state),
     options: [{label: 'print.alternatives.landscape', value: 'landscape'}, {label: 'print.alternatives.portrait', value: 'portrait'}]
 }), {

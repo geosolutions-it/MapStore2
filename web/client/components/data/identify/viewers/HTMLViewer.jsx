@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -13,13 +14,15 @@ const HtmlRenderer = require('../../../misc/HtmlRenderer');
 const regexpBody = /^[\s\S]*<body>([\s\S]*)<\/body>[\s\S]*$/i;
 const regexpStyle = /(<style[\s\=\w\/\"]*>[^<]*<\/style>)/i;
 
-const HTMLViewer = React.createClass({
-    propTypes: {
-        response: React.PropTypes.string
-    },
+class HTMLViewer extends React.Component {
+    static propTypes = {
+        response: PropTypes.string
+    };
+
     shouldComponentUpdate(nextProps) {
         return nextProps.response !== this.props.response;
-    },
+    }
+
     render() {
         let response = this.props.response;
         // gets css rules from the response and removes which are related to body tag.
@@ -28,8 +31,8 @@ const HTMLViewer = React.createClass({
         style = style.replace(/body[,]+/g, '');
         // gets feature info managing an eventually empty response
         let content = response.replace(regexpBody, '$1').trim();
-        return (<HtmlRenderer html={style + content} />);
+        return <HtmlRenderer html={style + content} />;
     }
-});
+}
 
 module.exports = HTMLViewer;

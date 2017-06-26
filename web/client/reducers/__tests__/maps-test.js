@@ -15,23 +15,23 @@ const {
     mapsSearchTextChanged} = require('../../actions/maps');
 
 const sampleMap = {
-  canDelete: false,
-  canEdit: false,
-  canCopy: true,
-  creation: '2017-01-16 12:16:09.538',
-  lastUpdate: '2017-03-17 11:51:34.428',
-  description: 'Simple map to test WFS search capabilities',
-  id: 1,
-  name: 'WFS Test Map',
-  thumbnail: '%2Fmapstore%2Frest%2Fgeostore%2Fdata%2F1744%2Fraw%3Fdecode%3Ddatauri',
-  owner: 'admin'
+    canDelete: false,
+    canEdit: false,
+    canCopy: true,
+    creation: '2017-01-16 12:16:09.538',
+    lastUpdate: '2017-03-17 11:51:34.428',
+    description: 'Simple map to test WFS search capabilities',
+    id: 1,
+    name: 'WFS Test Map',
+    thumbnail: '%2Fmapstore%2Frest%2Fgeostore%2Fdata%2F1744%2Fraw%3Fdecode%3Ddatauri',
+    owner: 'admin'
 };
 
 const mapsSampleResult = {
 
     results: [
-      sampleMap
-  ],
+        sampleMap
+    ],
     totalCount: 1
 };
 const SecurityRule = {canRead: true, canWrite: false};

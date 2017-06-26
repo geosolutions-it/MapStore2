@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -12,14 +13,15 @@ const {connect} = require('react-redux');
 const {LoginPlugin} = require('../../../plugins/Login');
 const {Jumbotron} = require('react-bootstrap');
 
-const Login = React.createClass({
-    propTypes: {
-        messages: React.PropTypes.object,
-        locale: React.PropTypes.string,
-        security: React.PropTypes.object,
-        enabled: React.PropTypes.bool
-    },
-    renderGroups() {
+class Login extends React.Component {
+    static propTypes = {
+        messages: PropTypes.object,
+        locale: PropTypes.string,
+        security: PropTypes.object,
+        enabled: PropTypes.bool
+    };
+
+    renderGroups = () => {
         if (!this.props.security || !this.props.security.user) {
             return null;
         }
@@ -27,7 +29,8 @@ const Login = React.createClass({
         return (<div> your groups: <ul>
             {groups.map((group) => {return <li>{group.groupName}</li>; })}
         </ul></div>);
-    },
+    };
+
     render() {
         return (<Localized messages={this.props.messages} locale={this.props.locale}>
             <div className="fill">
@@ -41,8 +44,8 @@ const Login = React.createClass({
             </div>
         </Localized>);
     }
+}
 
-});
 module.exports = connect((state) => {
     return {
         locale: state.locale && state.locale.locale,

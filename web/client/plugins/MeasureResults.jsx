@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -14,14 +15,15 @@ const {changeMeasurement} = require('../actions/measurement');
 
 const {MeasureDialog} = require('./measure/index');
 
-const MeasureComponent = React.createClass({
-    propTypes: {
-        lineMeasureEnabled: React.PropTypes.bool,
-        areaMeasureEnabled: React.PropTypes.bool,
-        bearingMeasureEnabled: React.PropTypes.bool,
-        toggleMeasure: React.PropTypes.func
-    },
-    onModalHiding() {
+class MeasureComponent extends React.Component {
+    static propTypes = {
+        lineMeasureEnabled: PropTypes.bool,
+        areaMeasureEnabled: PropTypes.bool,
+        bearingMeasureEnabled: PropTypes.bool,
+        toggleMeasure: PropTypes.func
+    };
+
+    onModalHiding = () => {
         const newMeasureState = {
             lineMeasureEnabled: false,
             areaMeasureEnabled: false,
@@ -33,7 +35,8 @@ const MeasureComponent = React.createClass({
             bearing: 0
         };
         this.props.toggleMeasure(newMeasureState);
-    },
+    };
+
     render() {
         const labels = {
             lengthLabel: <Message msgId="measureComponent.lengthLabel"/>,
@@ -42,7 +45,8 @@ const MeasureComponent = React.createClass({
         };
         return <MeasureDialog showButtons={false} onClose={this.onModalHiding} show={this.props.lineMeasureEnabled || this.props.areaMeasureEnabled || this.props.bearingMeasureEnabled} {...labels} {...this.props}/>;
     }
-});
+}
+
 /**
  * MeasureResults plugin. Shows the measure results. This is an old version of measure tool that will be removed soon.
  * It should be used with the MeasurePanel plugin

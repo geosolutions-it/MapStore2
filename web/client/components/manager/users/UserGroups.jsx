@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -17,22 +18,21 @@ require('react-select/dist/react-select.css');
 // const ConfirmModal = require('./modals/ConfirmModal');
 // const GroupManager = require('./GroupManager');
 
-const UserCard = React.createClass({
-    propTypes: {
+class UserCard extends React.Component {
+    static propTypes = {
         // props
-        groups: React.PropTypes.array,
-        onUserGroupsChange: React.PropTypes.func,
-        user: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            groups: [],
-            onUserGroupsChange: () => {},
-            user: {}
-        };
-    },
+        groups: PropTypes.array,
+        onUserGroupsChange: PropTypes.func,
+        user: PropTypes.object
+    };
 
-    onChange(values) {
+    static defaultProps = {
+        groups: [],
+        onUserGroupsChange: () => {},
+        user: {}
+    };
+
+    onChange = (values) => {
         if (values === null) {
             return;
         }
@@ -40,37 +40,42 @@ const UserCard = React.createClass({
             let index = findIndex(this.props.groups, (availableGroup)=>availableGroup.id === group.value);
             return index >= 0 ? this.props.groups[index] : null;
         }).filter(group => group));
-    },
-    getDefaultGroups() {
+    };
+
+    getDefaultGroups = () => {
         return this.props.groups.filter((group) => group.groupName === "everyone");
-    },
-    getOptions() {
+    };
+
+    getOptions = () => {
         return this.props.groups.map((group) => ({
             label: group.groupName,
             value: group.id,
             clearableValue: group.groupName !== "everyone"
         }));
-    },
-    renderGroupsSelector() {
+    };
+
+    renderGroupsSelector = () => {
         return (<Select key="groupSelector"
         clearable={false}
         isLoading={this.props.groups.length === 0 }
         name="user-groups-selector"
-        multi={true}
+        multi
         value={ (this.props.user && this.props.user.groups ? this.props.user.groups : this.getDefaultGroups() ).map(group => group.id) }
         options={this.getOptions()}
         onChange={this.onChange}
         />);
-    },
-    render: function() {
+    };
+
+    render() {
         return this.props.groups ? (
-            <div key="groups-page">
-                <span><Message msgId="users.selectedGroups" /></span>
-                {this.renderGroupsSelector()}
-            </div>
+           <div key="groups-page">
+             <span><Message msgId="users.selectedGroups" /></span>
+             {this.renderGroupsSelector()}
+         </div>
         ) : null;
     }
-});
+}
+
 /*
 
 */

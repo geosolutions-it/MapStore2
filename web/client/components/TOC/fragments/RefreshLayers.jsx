@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const PropTypes = require('prop-types');
+
 const React = require('react');
 const {Button, Glyphicon, Alert} = require('react-bootstrap');
 
@@ -19,18 +21,18 @@ const assign = require('object-assign');
 
 class RefreshLayers extends React.Component {
     static propTypes = {
-        id: React.PropTypes.string,
-        show: React.PropTypes.bool,
-        panelStyle: React.PropTypes.object,
-        panelClassName: React.PropTypes.string,
-        onClose: React.PropTypes.func,
-        onRefresh: React.PropTypes.func,
-        onUpdateOptions: React.PropTypes.func,
-        layers: React.PropTypes.array,
-        refreshing: React.PropTypes.array,
-        availableOptions: React.PropTypes.array,
-        options: React.PropTypes.object,
-        error: React.PropTypes.array
+        id: PropTypes.string,
+        show: PropTypes.bool,
+        panelStyle: PropTypes.object,
+        panelClassName: PropTypes.string,
+        onClose: PropTypes.func,
+        onRefresh: PropTypes.func,
+        onUpdateOptions: PropTypes.func,
+        layers: PropTypes.array,
+        refreshing: PropTypes.array,
+        availableOptions: PropTypes.array,
+        options: PropTypes.object,
+        error: PropTypes.array
     };
 
     static defaultProps= {

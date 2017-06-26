@@ -16,116 +16,116 @@ const layer = {
 };
 
 const vectorLayer = {
-  "type": "vector",
-  "visibility": true,
-  "group": "Local shape",
-  "id": "web2014all_mv__14",
-  "name": "web2014all_mv",
-  "hideLoading": true,
-  "features": [
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -112.50042920000001,
-          42.22829164089942
-        ]
-      },
-      "properties": {
-        "serial_num": "12C324776"
-      },
-      "id": 0
-    }
-  ],
-  "style": {
-    "weight": 3,
-    "radius": 10,
-    "opacity": 1,
-    "fillOpacity": 0.1,
-    "color": "rgb(0, 0, 255)",
-    "fillColor": "rgb(0, 0, 255)"
-  }
-};
-const mapFishVectorLayer = {
-   "type": "Vector",
-   "name": "web2014all_mv",
-   "opacity": 1,
-   "styleProperty": "ms_style",
-   "styles": {
-      "1": {
-         "fillColor": "rgb(0, 0, 255)",
-         "fillOpacity": 0.1,
-         "pointRadius": 10,
-         "strokeColor": "rgb(0, 0, 255)",
-         "strokeOpacity": 1,
-         "strokeWidth": 3
-      }
-   },
-   "geoJson": {
-      "type": "FeatureCollection",
-      "features": [
-         {
+    "type": "vector",
+    "visibility": true,
+    "group": "Local shape",
+    "id": "web2014all_mv__14",
+    "name": "web2014all_mv",
+    "hideLoading": true,
+    "features": [
+        {
             "type": "Feature",
             "geometry": {
-               "type": "Point",
-               "coordinates": [
-                  -12523490.492568726,
-                  5195238.005360028
-               ]
+                "type": "Point",
+                "coordinates": [
+                    -112.50042920000001,
+                    42.22829164089942
+                ]
             },
             "properties": {
-               "serial_num": "12C324776",
-               "ms_style": 1
+                "serial_num": "12C324776"
             },
             "id": 0
-         }
-      ]
-   }
+        }
+    ],
+    "style": {
+        "weight": 3,
+        "radius": 10,
+        "opacity": 1,
+        "fillOpacity": 0.1,
+        "color": "rgb(0, 0, 255)",
+        "fillColor": "rgb(0, 0, 255)"
+    }
+};
+const mapFishVectorLayer = {
+    "type": "Vector",
+    "name": "web2014all_mv",
+    "opacity": 1,
+    "styleProperty": "ms_style",
+    "styles": {
+        "1": {
+            "fillColor": "rgb(0, 0, 255)",
+            "fillOpacity": 0.1,
+            "pointRadius": 10,
+            "strokeColor": "rgb(0, 0, 255)",
+            "strokeOpacity": 1,
+            "strokeWidth": 3
+        }
+    },
+    "geoJson": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        -12523490.492568726,
+                        5195238.005360028
+                    ]
+                },
+                "properties": {
+                    "serial_num": "12C324776",
+                    "ms_style": 1
+                },
+                "id": 0
+            }
+        ]
+    }
 };
 
 const testSpec = {
-  "antiAliasing": true,
-  "iconSize": 24,
-  "legendDpi": 96,
-  "fontFamily": "Verdana",
-  "fontSize": 8,
-  "bold": false,
-  "italic": false,
-  "resolution": "96",
-  "name": "",
-  "description": "",
-  "sheet": "A2",
-  "includeLegend": true,
-  "twoPages": true,
-  "center": {
-    "x": 8.930511,
-    "y": 44.417107,
-    "crs": "EPSG:4326"
-  },
-  "zoom": 11,
-  "scaleZoom": 3,
-  "scale": 50000,
-  "layers": [
-    {
-      "group": "background",
-      "source": "osm",
-      "name": "mapnik",
-      "title": "Open Street Map",
-      "type": "osm",
-      "visibility": true,
-      "singleTile": false,
-      "dimensions": [],
-      "id": "mapnik__0",
-      "loading": false,
-      "loadingError": false
+    "antiAliasing": true,
+    "iconSize": 24,
+    "legendDpi": 96,
+    "fontFamily": "Verdana",
+    "fontSize": 8,
+    "bold": false,
+    "italic": false,
+    "resolution": "96",
+    "name": "",
+    "description": "",
+    "sheet": "A2",
+    "includeLegend": true,
+    "twoPages": true,
+    "center": {
+        "x": 8.930511,
+        "y": 44.417107,
+        "crs": "EPSG:4326"
+    },
+    "zoom": 11,
+    "scaleZoom": 3,
+    "scale": 50000,
+    "layers": [
+        {
+            "group": "background",
+            "source": "osm",
+            "name": "mapnik",
+            "title": "Open Street Map",
+            "type": "osm",
+            "visibility": true,
+            "singleTile": false,
+            "dimensions": [],
+            "id": "mapnik__0",
+            "loading": false,
+            "loadingError": false
+        }
+    ],
+    "projection": "EPSG:900913",
+    "size": {
+        "height": 462,
+        "width": 368
     }
-  ],
-  "projection": "EPSG:900913",
-  "size": {
-    "height": 462,
-    "width": 368
-  }
 };
 describe('PrintUtils', () => {
 

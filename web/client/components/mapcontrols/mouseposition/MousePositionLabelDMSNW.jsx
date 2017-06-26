@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -10,17 +11,18 @@ var BootstrapReact = require('react-bootstrap');
 var Label = BootstrapReact.Label;
 var NumberFormat = require('../../I18N/Number');
 
-var MousePositionLabelDMS = React.createClass({
-    propTypes: {
-        position: React.PropTypes.shape({
-            lng: React.PropTypes.number,
-            lat: React.PropTypes.number
+class MousePositionLabelDMS extends React.Component {
+    static propTypes = {
+        position: PropTypes.shape({
+            lng: PropTypes.number,
+            lat: PropTypes.number
         })
-    },
-    getPositionValues(mPos) {
-        let {lng, lat} = (mPos) ? mPos : [null, null];
-        let [latM, lngM] = [(lat % 1) * 60, (lng % 1) * 60];
-        let [latS, lngS] = [(latM % 1) * 60, (lngM % 1) * 60];
+    };
+
+    getPositionValues = (mPos) => {
+        let {lng, lat} = mPos ? mPos : [null, null];
+        let [latM, lngM] = [lat % 1 * 60, lng % 1 * 60];
+        let [latS, lngS] = [latM % 1 * 60, lngM % 1 * 60];
         return {
             lat,
             latM: Math.abs(latM),
@@ -29,7 +31,8 @@ var MousePositionLabelDMS = React.createClass({
             lngM: Math.abs(lngM),
             lngS: Math.abs(lngS)
         };
-    },
+    };
+
     render() {
         let pos = this.getPositionValues(this.props.position);
         let integerFormat = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 0};
@@ -48,6 +51,6 @@ var MousePositionLabelDMS = React.createClass({
                 </Label>
                 </h5>);
     }
-});
+}
 
 module.exports = MousePositionLabelDMS;

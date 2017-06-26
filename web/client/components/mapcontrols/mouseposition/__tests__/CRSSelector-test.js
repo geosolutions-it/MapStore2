@@ -27,7 +27,7 @@ describe('CRSSelector', () => {
 
     it('checks default', () => {
 
-        const cmp = ReactDOM.render(<CRSSelector enabled={true}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<CRSSelector enabled/>, document.getElementById("container"));
         expect(cmp).toExist();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
@@ -41,7 +41,7 @@ describe('CRSSelector', () => {
 
     it('checks if a change of the combo fires the proper action', () => {
         let newCRS;
-        const cmp = ReactDOM.render(<CRSSelector enabled={true} onCRSChange={ (crs) => {newCRS = crs; }}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<CRSSelector enabled onCRSChange={ (crs) => {newCRS = crs; }}/>, document.getElementById("container"));
         const cmpDom = ReactDOM.findDOMNode(cmp);
         const select = cmpDom.getElementsByTagName("select").item(0);
 

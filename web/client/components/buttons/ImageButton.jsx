@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -8,24 +9,24 @@
 var React = require('react');
 var assign = require('object-assign');
 
-var ImageButton = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        image: React.PropTypes.string,
-        onClick: React.PropTypes.func,
-        style: React.PropTypes.object,
-        disabled: React.PropTypes.bool,
-        tooltip: React.PropTypes.string,
-        className: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            disabled: false,
-            tooltip: null,
-            className: undefined
-        };
-    },
-    getStyle() {
+class ImageButton extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        image: PropTypes.string,
+        onClick: PropTypes.func,
+        style: PropTypes.object,
+        disabled: PropTypes.bool,
+        tooltip: PropTypes.string,
+        className: PropTypes.string
+    };
+
+    static defaultProps = {
+        disabled: false,
+        tooltip: null,
+        className: undefined
+    };
+
+    getStyle = () => {
         var cursorStyle = this.props.disabled ? "not-allowed" : "pointer";
         var finalStyle = {
             cursor: cursorStyle,
@@ -48,13 +49,14 @@ var ImageButton = React.createClass({
         }
         assign(finalStyle, this.props.style);
         return finalStyle;
-    },
+    };
+
     render() {
         return (
             <img className={this.props.className} id={this.props.id} title={this.props.tooltip} style={this.getStyle()} src={this.props.image}
-                onClick={this.props.disabled ? null : this.props.onClick}></img>
+                onClick={this.props.disabled ? null : this.props.onClick} />
         );
     }
-});
+}
 
 module.exports = ImageButton;

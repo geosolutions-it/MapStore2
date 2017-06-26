@@ -21,14 +21,14 @@ const initialState = {
 
 function highlight(state = initialState, action) {
     switch (action.type) {
-        case HIGHLIGHT_STATUS: {
-            return {...state, status: action.status};
-        }
-        case UPDATE_HIGHLIGHTED: {
-            return {...state, highlighted: action.features.length, features: action.features, status: action.status || state.status};
-        }
-        default:
-            return state;
+    case HIGHLIGHT_STATUS: {
+        return {...state, status: action.status};
+    }
+    case UPDATE_HIGHLIGHTED: {
+        return {...state, highlighted: action.features.length, features: action.features, status: action.status || state.status};
+    }
+    default:
+        return state;
     }
 }
 

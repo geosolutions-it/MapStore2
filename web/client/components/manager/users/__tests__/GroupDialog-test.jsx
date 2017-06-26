@@ -20,14 +20,14 @@ const user1 = {
     }]
 };
 const user2 = {
-     id: 101,
-     name: "ADMIN",
-     role: "ADMIN",
-     enabled: true,
-     groups: [{
-         id: 1,
-         groupName: "GROUP1"
-     }]
+    id: 101,
+    name: "ADMIN",
+    role: "ADMIN",
+    enabled: true,
+    groups: [{
+        id: 1,
+        groupName: "GROUP1"
+    }]
 };
 const group1 = {
     id: 1,
@@ -57,22 +57,22 @@ describe("Test UserDialog Component", () => {
 
     it('Test group loading', () => {
         let comp = ReactDOM.render(
-            <GroupDialog show={true} group={{...group1, status: "loading"}}/>, document.getElementById("container"));
+            <GroupDialog show group={{...group1, status: "loading"}}/>, document.getElementById("container"));
         expect(comp).toExist();
     });
     it('Test group error', () => {
         let comp = ReactDOM.render(
-            <GroupDialog show={true} group={{...group1, lastError: {statusText: "ERROR"}}}/>, document.getElementById("container"));
+            <GroupDialog show group={{...group1, lastError: {statusText: "ERROR"}}}/>, document.getElementById("container"));
         expect(comp).toExist();
     });
     it('Test group dialog with users', () => {
         let comp = ReactDOM.render(
-            <GroupDialog show={true} group={group1} availableUsers={users}/>, document.getElementById("container"));
+            <GroupDialog show group={group1} availableUsers={users}/>, document.getElementById("container"));
         expect(comp).toExist();
     });
     it('Test group dialog with new users', () => {
         let comp = ReactDOM.render(
-            <GroupDialog show={true} group={{...group1, newUsers: [user1]}} availableUsers={users}/>, document.getElementById("container"));
+            <GroupDialog show group={{...group1, newUsers: [user1]}} availableUsers={users}/>, document.getElementById("container"));
         expect(comp).toExist();
     });
 });

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -17,9 +18,9 @@ var delay = (
     function() {
         var timer = 0;
         return function(callback, ms) {
-        clearTimeout(timer);
-        timer = setTimeout(callback, ms);
-    };
+            clearTimeout(timer);
+            timer = setTimeout(callback, ms);
+        };
     })();
 
 require('./searchbar.css');
@@ -48,111 +49,119 @@ require('./searchbar.css');
  * @prop {object} options to pass to the search event
  *
  */
-let SearchBar = React.createClass({
-    propTypes: {
-        className: React.PropTypes.string,
-        onSearch: React.PropTypes.func,
-        onSearchReset: React.PropTypes.func,
-        onPurgeResults: React.PropTypes.func,
-        onSearchTextChange: React.PropTypes.func,
-        onCancelSelectedItem: React.PropTypes.func,
-        placeholder: React.PropTypes.string,
-        placeholderMsgId: React.PropTypes.string,
-        delay: React.PropTypes.number,
-        hideOnBlur: React.PropTypes.bool,
-        blurResetDelay: React.PropTypes.number,
-        typeAhead: React.PropTypes.bool,
-        searchText: React.PropTypes.string,
-        selectedItems: React.PropTypes.array,
-        autoFocusOnSelect: React.PropTypes.bool,
-        loading: React.PropTypes.bool,
-        error: React.PropTypes.object,
-        style: React.PropTypes.object,
-        searchOptions: React.PropTypes.object
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            onSearch: () => {},
-            onSearchReset: () => {},
-            onPurgeResults: () => {},
-            onSearchTextChange: () => {},
-            onCancelSelectedItem: () => {},
-            selectedItems: [],
-            placeholderMsgId: "search.placeholder",
-            delay: 1000,
-            blurResetDelay: 300,
-            autoFocusOnSelect: true,
-            hideOnBlur: true,
-            typeAhead: true,
-            searchText: ""
-        };
-    },
+class SearchBar extends React.Component {
+    static propTypes = {
+        className: PropTypes.string,
+        onSearch: PropTypes.func,
+        onSearchReset: PropTypes.func,
+        onPurgeResults: PropTypes.func,
+        onSearchTextChange: PropTypes.func,
+        onCancelSelectedItem: PropTypes.func,
+        placeholder: PropTypes.string,
+        placeholderMsgId: PropTypes.string,
+        delay: PropTypes.number,
+        hideOnBlur: PropTypes.bool,
+        blurResetDelay: PropTypes.number,
+        typeAhead: PropTypes.bool,
+        searchText: PropTypes.string,
+        selectedItems: PropTypes.array,
+        autoFocusOnSelect: PropTypes.bool,
+        loading: PropTypes.bool,
+        error: PropTypes.object,
+        style: PropTypes.object,
+        searchOptions: PropTypes.object
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        onSearch: () => {},
+        onSearchReset: () => {},
+        onPurgeResults: () => {},
+        onSearchTextChange: () => {},
+        onCancelSelectedItem: () => {},
+        selectedItems: [],
+        placeholderMsgId: "search.placeholder",
+        delay: 1000,
+        blurResetDelay: 300,
+        autoFocusOnSelect: true,
+        hideOnBlur: true,
+        typeAhead: true,
+        searchText: ""
+    };
+
     componentDidUpdate(prevProps) {
         let shouldFocus = this.props.autoFocusOnSelect && this.props.selectedItems &&
             (
-                (prevProps.selectedItems && prevProps.selectedItems.length < this.props.selectedItems.length)
-                || (!prevProps.selectedItems && this.props.selectedItems.length === 1)
+                prevProps.selectedItems && prevProps.selectedItems.length < this.props.selectedItems.length
+                || !prevProps.selectedItems && this.props.selectedItems.length === 1
             );
         if (shouldFocus) {
             this.focusToInput();
         }
-    },
-    onChange(e) {
+    }
+
+    onChange = (e) => {
         var text = e.target.value;
         this.props.onSearchTextChange(text);
         if (this.props.typeAhead) {
             delay(() => {this.search(); }, this.props.delay);
         }
-    },
-    onKeyDown(event) {
+    };
+
+    onKeyDown = (event) => {
         switch (event.keyCode) {
-            case 13:
-                this.search();
-                break;
-            case 8:
-                if (!this.props.searchText && this.props.selectedItems && this.props.selectedItems.length > 0) {
-                    this.props.onCancelSelectedItem(this.props.selectedItems[this.props.selectedItems.length - 1]);
-                }
-                break;
-            default:
+        case 13:
+            this.search();
+            break;
+        case 8:
+            if (!this.props.searchText && this.props.selectedItems && this.props.selectedItems.length > 0) {
+                this.props.onCancelSelectedItem(this.props.selectedItems[this.props.selectedItems.length - 1]);
+            }
+            break;
+        default:
         }
-    },
-    onFocus() {
+    };
+
+    onFocus = () => {
         if (this.props.typeAhead && this.props.searchText ) {
             this.search();
         }
-    },
-    onBlur() {
+    };
+
+    onBlur = () => {
         // delay this to make the click on result run anyway
         if (this.props.hideOnBlur) {
             delay(() => {this.props.onPurgeResults(); }, this.props.blurResetDelay);
         }
-    },
-    renderAddonBefore() {
+    };
+
+    renderAddonBefore = () => {
         return this.props.selectedItems && this.props.selectedItems.map((item, index) =>
             <span key={"selected-item" + index} className="input-group-addon"><div className="selectedItem-text">{item.text}</div></span>
         );
-    },
-    renderAddonAfter() {
+    };
+
+    renderAddonAfter = () => {
         const remove = <Glyphicon className="searchclear" glyph="remove" onClick={this.clearSearch} key="searchbar_remove_glyphicon"/>;
-        var showRemove = this.props.searchText !== "" || (this.props.selectedItems && this.props.selectedItems.length > 0);
+        var showRemove = this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0;
         let addonAfter = showRemove ? [remove] : [<Glyphicon glyph="search" key="searchbar_search_glyphicon"/>];
         if (this.props.loading) {
             addonAfter = [<Spinner style={{
                 position: "absolute",
                 right: "16px",
                 top: "12px"
-                }} spinnerName="pulse" noFadeIn/>, addonAfter];
+            }} spinnerName="pulse" noFadeIn/>, addonAfter];
         }
         if (this.props.error) {
             let tooltip = <Tooltip id="tooltip">{this.props.error && this.props.error.message || null}</Tooltip>;
             addonAfter.push(<OverlayTrigger placement="bottom" overlay={tooltip}><Glyphicon className="searcherror" glyph="warning-sign" onClick={this.clearSearch}/></OverlayTrigger>);
         }
         return <span className="input-group-addon">{addonAfter}</span>;
-    },
+    };
+
     render() {
         //  const innerGlyphicon = <Button onClick={this.search}></Button>;
         let placeholder = "search.placeholder";
@@ -189,8 +198,9 @@ let SearchBar = React.createClass({
                 </FormGroup>
             </div>
         );
-    },
-    search() {
+    }
+
+    search = () => {
         var text = this.props.searchText;
         if ((text === undefined || text === "") && (!this.props.selectedItems || this.props.selectedItems.length === 0)) {
             this.props.onSearchReset();
@@ -198,16 +208,18 @@ let SearchBar = React.createClass({
             this.props.onSearch(text, this.props.searchOptions);
         }
 
-    },
-    focusToInput() {
+    };
+
+    focusToInput = () => {
         let node = this.input;
         if (node && node.focus instanceof Function) {
             setTimeout( () => node.focus(), 200);
         }
-    },
-    clearSearch() {
+    };
+
+    clearSearch = () => {
         this.props.onSearchReset();
-    }
-});
+    };
+}
 
 module.exports = SearchBar;

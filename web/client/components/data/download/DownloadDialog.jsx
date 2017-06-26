@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 const React = require('react');
 const {Button, Glyphicon} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
@@ -6,47 +7,51 @@ const Dialog = require('../../misc/Dialog');
 const Message = require('../../I18N/Message');
 const DownloadOptions = require('./DownloadOptions');
 
-const DownloadDialog = React.createClass({
-    propTypes: {
-        filterObj: React.PropTypes.object,
-        closeGlyph: React.PropTypes.string,
-        url: React.PropTypes.string,
-        onMount: React.PropTypes.func,
-        onUnmount: React.PropTypes.func,
-        enabled: React.PropTypes.bool,
-        loading: React.PropTypes.bool,
-        onClose: React.PropTypes.func,
-        onExport: React.PropTypes.func,
-        onDownloadOptionChange: React.PropTypes.func,
-        downloadOptions: React.PropTypes.object,
-        formats: React.PropTypes.array
-    },
-    getDefaultProps() {
-        return {
-            onMount: () => {},
-            onUnmount: () => {},
-            onExport: () => {},
-            onClose: () => {},
-            onDownloadOptionChange: () => {},
-            closeGlyph: "1-close",
-            formats: [
-                {name: "csv", label: "csv"},
-                {name: "shape-zip", label: "shape-zip"}
-            ]
-        };
-    },
+class DownloadDialog extends React.Component {
+    static propTypes = {
+        filterObj: PropTypes.object,
+        closeGlyph: PropTypes.string,
+        url: PropTypes.string,
+        onMount: PropTypes.func,
+        onUnmount: PropTypes.func,
+        enabled: PropTypes.bool,
+        loading: PropTypes.bool,
+        onClose: PropTypes.func,
+        onExport: PropTypes.func,
+        onDownloadOptionChange: PropTypes.func,
+        downloadOptions: PropTypes.object,
+        formats: PropTypes.array
+    };
+
+    static defaultProps = {
+        onMount: () => {},
+        onUnmount: () => {},
+        onExport: () => {},
+        onClose: () => {},
+        onDownloadOptionChange: () => {},
+        closeGlyph: "1-close",
+        formats: [
+            {name: "csv", label: "csv"},
+            {name: "shape-zip", label: "shape-zip"}
+        ]
+    };
+
     componentDidMount() {
         this.props.onMount();
-    },
+    }
+
     componentWillUnmount() {
         this.props.onUnmount();
-    },
-    onClose() {
+    }
+
+    onClose = () => {
         this.props.onClose();
-    },
-    renderIcon() {
+    };
+
+    renderIcon = () => {
         return this.props.loading ? <div style={{"float": "left"}}><Spinner spinnerName="circle" noFadeIn/></div> : <Glyphicon glyph="download" />;
-    },
+    };
+
     render() {
         return (<Dialog id="mapstore-export" style={{display: this.props.enabled ? "block" : "none"}}>
             <span role="header">
@@ -70,6 +75,6 @@ const DownloadDialog = React.createClass({
             </div>
         </Dialog>);
     }
-});
+}
 
 module.exports = DownloadDialog;

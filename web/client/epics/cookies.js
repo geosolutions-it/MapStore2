@@ -8,7 +8,7 @@
 const {info, HIDE_NOTIFICATION} = require('../actions/notifications');
 const Rx = require('rxjs');
 const {head} = require('lodash');
-import { UPDATE_LOCATION } from 'react-router-redux';
+const { LOCATION_CHANGE } = require('react-router-redux');
 
 
 const COOKIE_NOTIFICATION_ID = "cookiesPolicyNotification";
@@ -16,13 +16,13 @@ const cookieNotificationSelector = (state) => state && state.notifications && he
 
 /**
  * Show the cookie policy notification
- * @param  {external:Observable} action$ triggers on "UPDATE_LOCATION"
+ * @param  {external:Observable} action$ triggers on "LOCATION_CHANGE"
  * @param  {object} store   the store, to get current notifications
  * @memberof epics.cookies
  * @return {external:Observable} the steam of actions to trigger to display the noitification.
  */
 const cookiePolicyChecker = (action$, store) =>
-    action$.ofType(UPDATE_LOCATION)
+    action$.ofType(LOCATION_CHANGE)
         .take(1)
         .filter( () => !localStorage.getItem("cookies-policy-approved") && !cookieNotificationSelector(store.getState()))
         .switchMap(() =>

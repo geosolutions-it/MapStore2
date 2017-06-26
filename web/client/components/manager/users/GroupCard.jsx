@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -17,44 +18,47 @@ const Message = require('../../../components/I18N/Message');
 
 require('./style/usercard.css');
 
-const GroupCard = React.createClass({
-    propTypes: {
+class GroupCard extends React.Component {
+    static propTypes = {
         // props
-        style: React.PropTypes.object,
-        group: React.PropTypes.object,
-        innerItemStyle: React.PropTypes.object,
-        actions: React.PropTypes.array
-    },
-    getDefaultProps() {
-        return {
-            style: {
-                position: "relative",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "repeat-x"
-            },
-            innerItemStyle: {"float": "left", margin: "10px"}
-        };
-    },
-    renderStatus() {
+        style: PropTypes.object,
+        group: PropTypes.object,
+        innerItemStyle: PropTypes.object,
+        actions: PropTypes.array
+    };
+
+    static defaultProps = {
+        style: {
+            position: "relative",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "repeat-x"
+        },
+        innerItemStyle: {"float": "left", margin: "10px"}
+    };
+
+    renderStatus = () => {
         return (<div key="status" className="user-status" style={{position: "absolute", bottom: 0, left: "10px", margin: "10px 10px 0 10px"}}>
            <div><strong><Message msgId="users.statusTitle"/></strong></div>
            {this.props.group.enabled ?
                <Glyphicon glyph="ok-sign"/> :
                <Glyphicon glyph="minus-sign"/>}
        </div>);
-    },
-    renderAvatar() {
+    };
+
+    renderAvatar = () => {
         return (<div key="avatar" style={this.props.innerItemStyle} ><Button bsStyle="primary" type="button" className="square-button">
             <Glyphicon glyph="1-group" />
             </Button></div>);
-    },
-    renderDescription() {
+    };
+
+    renderDescription = () => {
         return (<div className="group-thumb-description">
             <div><strong><Message msgId="usergroups.description" /></strong></div>
             <div>{this.props.group.description ? this.props.group.description : <Message msgId="usergroups.noDescriptionAvailable" />}</div>
         </div>);
-    },
+    };
+
     render() {
         return (
            <GridCard className="group-thumb" style={this.props.style} header={this.props.group.groupName}
@@ -66,6 +70,6 @@ const GroupCard = React.createClass({
            </GridCard>
         );
     }
-});
+}
 
 module.exports = GroupCard;

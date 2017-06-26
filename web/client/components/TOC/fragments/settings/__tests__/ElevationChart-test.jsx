@@ -34,19 +34,19 @@ describe('test Layer Properties Elevation Chart component', () => {
             type: 'shapefile',
             url: 'base/web/client/test-resources/geoserver/wms',
             params: {
-              "ELEVATION": "1.5"
+                "ELEVATION": "1.5"
             },
             elevations: {
-              name: "ELEVATION",
-              units: "Meters",
-              positive: true,
-              values: ["1.5", "5.0", "10.0", "15.0", "20.0", "25.0", "30.0"]
+                name: "ELEVATION",
+                units: "Meters",
+                positive: true,
+                values: ["1.5", "5.0", "10.0", "15.0", "20.0", "25.0", "30.0"]
             }
         };
 
         const comp = ReactDOM.render(
             <ElevationChart
-                positive={true}
+                positive
                 values={l.elevations.values}/>,
             document.getElementById("container")
         );
@@ -65,13 +65,13 @@ describe('test Layer Properties Elevation Chart component', () => {
             type: 'shapefile',
             url: 'base/web/client/test-resources/geoserver/wms',
             params: {
-              "ELEVATION": "1.5"
+                "ELEVATION": "1.5"
             },
             elevations: {
-              name: "ELEVATION",
-              units: "Meters",
-              positive: true,
-              values: ["1.5", "5.0", "10.0", "15.0", "20.0", "25.0", "30.0"]
+                name: "ELEVATION",
+                units: "Meters",
+                positive: true,
+                values: ["1.5", "5.0", "10.0", "15.0", "20.0", "25.0", "30.0"]
             }
         };
 

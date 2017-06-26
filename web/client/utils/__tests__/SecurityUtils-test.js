@@ -46,7 +46,7 @@ const userC = assign({}, userA, {
         name: "description",
         value: "admin user"
     }
-]});
+    ]});
 
 const securityInfoC = {
     user: userC,
@@ -55,16 +55,16 @@ const securityInfoC = {
 
 const authenticationRules = [
     {
-      "urlPattern": ".*geoserver.*",
-      "method": "authkey"
+        "urlPattern": ".*geoserver.*",
+        "method": "authkey"
     },
     {
-      "urlPattern": ".*not-supported.*",
-      "method": "not-supported"
+        "urlPattern": ".*not-supported.*",
+        "method": "not-supported"
     },
     {
-      "urlPattern": ".*some-site.*",
-      "method": "basic"
+        "urlPattern": ".*some-site.*",
+        "method": "basic"
     }
 ];
 

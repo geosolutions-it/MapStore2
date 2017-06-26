@@ -20,10 +20,10 @@ var {MAP_TYPE_CHANGED} = require('../actions/maptype');
  */
 function maptype(state = {mapType: "leaflet"}, action) {
     switch (action.type) {
-        case MAP_TYPE_CHANGED:
-            return {mapType: action.mapType};
-        default:
-            return state;
+    case MAP_TYPE_CHANGED:
+        return {mapType: action.mapType};
+    default:
+        return state;
     }
 }
 

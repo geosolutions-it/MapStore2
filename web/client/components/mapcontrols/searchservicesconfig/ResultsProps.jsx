@@ -11,20 +11,23 @@ const {FormGroup, ControlLabel, FormControl, Label} = require('react-bootstrap')
 const Message = require('../../I18N/Message');
 const Slider = require('react-nouislider');
 const assign = require('object-assign');
+const PropTypes = require('prop-types');
+
 function validate(service = {}) {
     return service.displayName && service.displayName.length > 0;
 }
-const ResultsProps = React.createClass({
-    propTypes: {
-        service: React.PropTypes.object,
-        onPropertyChange: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            service: {},
-            onPropertyChange: () => {}
-        };
-    },
+
+class ResultsProps extends React.Component {
+    static propTypes = {
+        service: PropTypes.object,
+        onPropertyChange: PropTypes.func
+    };
+
+    static defaultProps = {
+        service: {},
+        onPropertyChange: () => {}
+    };
+
     render() {
         const {service} = this.props;
         return (
@@ -63,14 +66,16 @@ const ResultsProps = React.createClass({
                     <span className="priority-info"><Message msgId="search.s_priority_info" /></span>
                 </FormGroup>
             </form>);
-    },
-    updateProp(prop, event) {
+    }
+
+    updateProp = (prop, event) => {
         const value = event.target.value;
         this.props.onPropertyChange("service", assign({}, this.props.service, {[prop]: value}));
-    },
-    updatePriority(val) {
+    };
+
+    updatePriority = (val) => {
         this.props.onPropertyChange("service", assign({}, this.props.service, {priority: parseFloat(val[0], 10)}));
-    }
-});
+    };
+}
 
 module.exports = { Element: ResultsProps, validate};

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -130,17 +131,18 @@ var geometryToLayer = function(geojson, options) {
     }
 };
 
-let Feature = React.createClass({
-    propTypes: {
-        msId: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-        type: React.PropTypes.string,
-        styleName: React.PropTypes.string,
-        properties: React.PropTypes.object,
-        container: React.PropTypes.object, // TODO it must be a L.GeoJSON
-        geometry: React.PropTypes.object, // TODO check for geojson format for geometry
-        style: React.PropTypes.object,
-        onClick: React.PropTypes.func
-    },
+class Feature extends React.Component {
+    static propTypes = {
+        msId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        type: PropTypes.string,
+        styleName: PropTypes.string,
+        properties: PropTypes.object,
+        container: PropTypes.object, // TODO it must be a L.GeoJSON
+        geometry: PropTypes.object, // TODO check for geojson format for geometry
+        style: PropTypes.object,
+        onClick: PropTypes.func
+    };
+
     componentDidMount() {
         if (this.props.container) {
             let style = this.props.style;
@@ -171,7 +173,8 @@ let Feature = React.createClass({
                 }
             });
         }
-    },
+    }
+
     componentWillReceiveProps(newProps) {
         if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry) || !isEqual(newProps.style, this.props.style)) {
             this.props.container.removeLayer(this._layer);
@@ -194,18 +197,21 @@ let Feature = React.createClass({
             );
             newProps.container.addLayer(this._layer);
         }
-    },
+    }
+
     shouldComponentUpdate(nextProps) {
         return !isEqual(nextProps.properties, this.props.properties) || !isEqual(nextProps.geometry, this.props.geometry);
-    },
+    }
+
     componentWillUnmount() {
         if (this._layer) {
             this.props.container.removeLayer(this._layer);
         }
-    },
+    }
+
     render() {
         return null;
     }
-});
+}
 
 module.exports = Feature;

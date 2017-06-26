@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -10,26 +11,26 @@ var ReactDOM = require('react-dom');
 var {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 
-let CRSSelector = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        label: React.PropTypes.oneOfType([React.PropTypes.func, React.PropTypes.string, React.PropTypes.object]),
-        availableCRS: React.PropTypes.object,
-        crs: React.PropTypes.string,
-        enabled: React.PropTypes.bool,
-        onCRSChange: React.PropTypes.func,
-        useRawInput: React.PropTypes.bool
-    },
-    getDefaultProps() {
-        return {
-            id: "mapstore-crsselector",
-            availableCRS: CoordinatesUtils.getAvailableCRS(),
-            crs: null,
-            onCRSChange: function() {},
-            enabled: false,
-            useRawInput: false
-        };
-    },
+class CRSSelector extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        label: PropTypes.oneOfType([PropTypes.func, PropTypes.string, PropTypes.object]),
+        availableCRS: PropTypes.object,
+        crs: PropTypes.string,
+        enabled: PropTypes.bool,
+        onCRSChange: PropTypes.func,
+        useRawInput: PropTypes.bool
+    };
+
+    static defaultProps = {
+        id: "mapstore-crsselector",
+        availableCRS: CoordinatesUtils.getAvailableCRS(),
+        crs: null,
+        onCRSChange: function() {},
+        enabled: false,
+        useRawInput: false
+    };
+
     render() {
         var val;
         var label;
@@ -67,8 +68,9 @@ let CRSSelector = React.createClass({
           </FormGroup>);
         }
         return null;
-    },
-    launchNewCRSAction(ev) {
+    }
+
+    launchNewCRSAction = (ev) => {
         if (this.props.useRawInput) {
             this.props.onCRSChange(ev.target.value);
         } else {
@@ -76,7 +78,7 @@ let CRSSelector = React.createClass({
             let selectNode = element.getElementsByTagName('select').item(0);
             this.props.onCRSChange(selectNode.value);
         }
-    }
-});
+    };
+}
 
 module.exports = CRSSelector;

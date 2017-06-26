@@ -16,16 +16,17 @@ const TouchDrag = require('./assets/img/TouchDrag.svg');
 const TouchZoom = require('./assets/img/TouchZoom.svg');
 const TouchTilt = require('./assets/img/TouchTilt.svg');
 const TouchRotate = require('./assets/img/TouchRotate.svg');
+const PropTypes = require('prop-types');
 
-const CesiumTooltip = React.createClass({
-    propTypes: {
-        touch: React.PropTypes.bool
-    },
-    getDefaultProps() {
-        return {
-            touch: false
-        };
-    },
+class CesiumTooltip extends React.Component {
+    static propTypes = {
+        touch: PropTypes.bool
+    };
+
+    static defaultProps = {
+        touch: false
+    };
+
     render() {
         return this.props.touch ? (
             <div>
@@ -111,6 +112,6 @@ const CesiumTooltip = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = CesiumTooltip;

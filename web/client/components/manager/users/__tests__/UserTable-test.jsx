@@ -19,7 +19,7 @@ const users = [{
     groups: [{
         groupName: "GROUP1"
     }]
- }, {
+}, {
     id: 3,
     name: "ADMIN",
     role: "ADMIN",
@@ -39,7 +39,7 @@ describe("Test UsersTable Component", () => {
 
     it('Test usergroup table', () => {
         let comp = ReactDOM.render(
-            <UserTable show={true} users={users}/>, document.getElementById("container"));
+            <UserTable show users={users}/>, document.getElementById("container"));
         expect(comp).toExist();
         let table = ReactTestUtils.scryRenderedDOMComponentsWithTag(comp, "table");
         expect(table.length).toBe(1);

@@ -22,7 +22,7 @@ describe('Test configuration related actions', () => {
                 expect(e).toExist();
                 expect(e.type).toBe(MAP_CONFIG_LOAD_ERROR);
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -34,7 +34,7 @@ describe('Test configuration related actions', () => {
                 expect(e).toExist();
                 expect(e.type).toBe(MAP_CONFIG_LOADED);
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -46,7 +46,7 @@ describe('Test configuration related actions', () => {
                 expect(e).toExist();
                 expect(e.type).toBe('MAP_CONFIG_LOAD_ERROR');
                 done();
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });
@@ -55,22 +55,22 @@ describe('Test configuration related actions', () => {
         loadMapInfo('base/web/client/test-resources/geostore/ShortResource.json', 1)((actionCreator) => {
             try {
                 switch (actionCreator.type) {
-                    case "MAP_INFO_LOAD_START":
-                        expect(actionCreator.mapId).toBe(1);
-                        break;
-                    case "MAP_INFO_LOADED":
-                        let resourceInfo = actionCreator.info;
-                        expect(resourceInfo).toExist();
-                        expect(resourceInfo.canEdit).toExist();
-                        expect(resourceInfo.id).toBe(1);
-                        done();
-                        break;
-                    default:
-                        done("ERROR");
-                        break;
+                case "MAP_INFO_LOAD_START":
+                    expect(actionCreator.mapId).toBe(1);
+                    break;
+                case "MAP_INFO_LOADED":
+                    let resourceInfo = actionCreator.info;
+                    expect(resourceInfo).toExist();
+                    expect(resourceInfo.canEdit).toExist();
+                    expect(resourceInfo.id).toBe(1);
+                    done();
+                    break;
+                default:
+                    done("ERROR");
+                    break;
                 }
 
-            } catch(ex) {
+            } catch (ex) {
                 done(ex);
             }
         });

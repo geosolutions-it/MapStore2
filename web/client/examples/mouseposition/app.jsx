@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -34,24 +35,24 @@ function startApp() {
 
     store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
 
-    let App = React.createClass({
-        propTypes: {
-            browser: React.PropTypes.object,
-            mousePosition: React.PropTypes.object
-        },
-        getDefaultProps() {
-            return {
-                browser: {touch: false}
-            };
-        },
-        getInitialState() {
-            return {
-                showAlert: false
-            };
-        },
-        onCopy() {
+    class App extends React.Component {
+        static propTypes = {
+            browser: PropTypes.object,
+            mousePosition: PropTypes.object
+        };
+
+        static defaultProps = {
+            browser: {touch: false}
+        };
+
+        state = {
+            showAlert: false
+        };
+
+        onCopy = () => {
             this.setState({showAlert: true});
-        },
+        };
+
         render() {
             if (this.props.browser.touch) {
                 return <div className="error">This example does not work on mobile</div>;
@@ -113,13 +114,14 @@ function startApp() {
                         <LLayer type="osm" position={0} key="osm" options={{name: "osm"}} />
                     </LMap>
               </div>
-              </Localized>
-               );
-        },
-        closeAlert() {
-            this.setState({showAlert: false});
+              </Localized>)
+               ;
         }
-    });
+
+        closeAlert = () => {
+            this.setState({showAlert: false});
+        };
+    }
 
     ReactDOM.render(<App/>, document.getElementById('container'));
     store.subscribe(() =>
@@ -134,6 +136,6 @@ if (!global.Intl ) {
         require('intl/locale-data/jsonp/it.js');
         startApp();
     });
-}else {
+} else {
     startApp();
 }

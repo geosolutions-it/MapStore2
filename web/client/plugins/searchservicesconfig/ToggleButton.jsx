@@ -10,25 +10,29 @@ const {connect} = require('react-redux');
 const {toggleControl} = require('../../actions/controls');
 const {FormGroup} = require('react-bootstrap');
 const ToggleBtn = require('../../components/buttons/ToggleButton');
-const ToggleServicesConfig = React.createClass({
-    propTypes: {
-        toggleControl: React.PropTypes.func,
-        enabled: React.PropTypes.bool
-    },
-    onClick() {
+const PropTypes = require('prop-types');
+
+class ToggleServicesConfig extends React.Component {
+    static propTypes = {
+        toggleControl: PropTypes.func,
+        enabled: PropTypes.bool
+    };
+
+    onClick = () => {
         if (!this.props.enabled) {
             this.props.toggleControl("settings");
             this.props.toggleControl("searchservicesconfig");
         }
-    },
+    };
+
     render() {
         return (
             <FormGroup>
                 <ToggleBtn key="searchservicesconfig"
-                    isButton={true} {...this.props} onClick={this.onClick}/>
+                    isButton {...this.props} onClick={this.onClick}/>
             </FormGroup>);
     }
-});
+}
 
 module.exports = connect((state) => ({
     enabled: state.controls && state.controls.searchservicesconfig && state.controls.searchservicesconfig.enabled || false,
@@ -39,5 +43,3 @@ module.exports = connect((state) => ({
 }), {
     toggleControl: toggleControl
 })(ToggleServicesConfig);
-
-

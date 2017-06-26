@@ -10,13 +10,13 @@ const React = require('react');
 const logo1 = require('../../assets/img/mapstorelogo.png');
 const logo2 = require('../../assets/img/MapStore2.png');
 
-const Logo = React.createClass({
+class Logo extends React.Component {
     render() {
         return (<div>
             <img src={logo1} className="mapstore-logo" />
             <img src={logo2} className="mapstore-logo" />
         </div>);
     }
-});
+}
 
 module.exports = Logo;

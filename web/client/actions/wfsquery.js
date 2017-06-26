@@ -85,7 +85,7 @@ function loadFeature(baseUrl, typeName) {
             } else {
                 try {
                     JSON.parse(response.data);
-                } catch(e) {
+                } catch (e) {
                     dispatch(featureError(typeName, 'Error from WFS: ' + e.message));
                 }
 

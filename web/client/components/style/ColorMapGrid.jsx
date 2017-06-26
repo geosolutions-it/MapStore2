@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -19,38 +20,42 @@ const LocaleUtils = require('../../utils/LocaleUtils');
 require("ag-grid/dist/styles/ag-grid.css");
 require("ag-grid/dist/styles/theme-blue.css");
 
-const ColorMapGrid = React.createClass({
-    propTypes: {
-        entries: React.PropTypes.array,
-        style: React.PropTypes.object,
-        selectEntry: React.PropTypes.func,
-        valueChanged: React.PropTypes.func
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            entries: [],
-            style: {height: "200px"},
-            selectEntry: () => {},
-            valueChanged: () => {}
-        };
-    },
+class ColorMapGrid extends React.Component {
+    static propTypes = {
+        entries: PropTypes.array,
+        style: PropTypes.object,
+        selectEntry: PropTypes.func,
+        valueChanged: PropTypes.func
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        entries: [],
+        style: {height: "200px"},
+        selectEntry: () => {},
+        valueChanged: () => {}
+    };
+
     shouldComponentUpdate(nextProps) {
         return !isEqual(nextProps.entries, this.props.entries);
-    },
+    }
+
     componentDidUpdate() {
         this.api.sizeColumnsToFit();
-    },
-    onGridReady(params) {
+    }
+
+    onGridReady = (params) => {
         this.api = params.api;
         this.api.sizeColumnsToFit();
         this.columnApi = params.columnApi;
-    },
+    };
+
     render() {
         return (
-            <div fluid={true} style={this.props.style} className="ag-blue">
+            <div fluid style={this.props.style} className="ag-blue">
                 <AgGridReact
                     columnDefs={[{
                         width: 50,
@@ -75,40 +80,44 @@ const ColorMapGrid = React.createClass({
                     rowSelection="single"
                     onRowSelected={this.selectEntry}
                     onCellValueChanged={this.valueChanged}
-                    enableColResize={true}
+                    enableColResize
                     showToolPanel={false}
-                    rowDeselection={true}
+                    rowDeselection
                     onGridReady={this.onGridReady}
-                    suppressCellSelection={true}
+                    suppressCellSelection
                 />
             </div>);
-    },
-    selectEntry(row) {
+    }
+
+    selectEntry = (row) => {
         if (row) {
             this.props.selectEntry(row.node.childIndex);
         }
-    },
-    valueChanged() {
+    };
+
+    valueChanged = () => {
         let newData = [];
         this.api.getModel().forEachNode((node) => {newData.push(node.data); });
         this.props.valueChanged(newData);
-    },
-    changeColor(node, colorOpacity) {
+    };
+
+    changeColor = (node, colorOpacity) => {
         let newData = [];
         this.api.getModel().forEachNode((n, idx) => {
-            let data = (idx === node.childIndex) ? assign({}, n.data, colorOpacity) : n.data;
+            let data = idx === node.childIndex ? assign({}, n.data, colorOpacity) : n.data;
             newData.push(data);
         });
         this.props.valueChanged(newData);
-    },
-    changeQuantity(node, value) {
+    };
+
+    changeQuantity = (node, value) => {
         let newData = [];
         this.api.getModel().forEachNode((n, idx) => {
-            let data = (idx === node.childIndex) ? assign({}, n.data, {quantity: value}) : n.data;
+            let data = idx === node.childIndex ? assign({}, n.data, {quantity: value}) : n.data;
             newData.push(data);
         });
         this.props.valueChanged(newData);
-    }
-});
+    };
+}
 
 module.exports = ColorMapGrid;

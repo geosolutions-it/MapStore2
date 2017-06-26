@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -13,21 +14,21 @@ const Spinner = require('react-spinkit');
 
 require('./style/gridcard.css');
 
-const GridCard = React.createClass({
-    propTypes: {
-        style: React.PropTypes.object,
-        className: React.PropTypes.string,
-        header: React.PropTypes.node,
-        actions: React.PropTypes.array,
-        onClick: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            actions: [],
-            header: ""
-        };
-    },
-    renderActions() {
+class GridCard extends React.Component {
+    static propTypes = {
+        style: PropTypes.object,
+        className: PropTypes.string,
+        header: PropTypes.node,
+        actions: PropTypes.array,
+        onClick: PropTypes.func
+    };
+
+    static defaultProps = {
+        actions: [],
+        header: ""
+    };
+
+    renderActions = () => {
         return (<div className="gridcard-tools">
             {this.props.actions.map((action, index) => {
                 let tooltip = <Tooltip id="tooltip">{action.tooltip}</Tooltip>;
@@ -38,8 +39,9 @@ const GridCard = React.createClass({
                     </OverlayTrigger>);
             })}
         </div>);
-    },
-    render: function() {
+    };
+
+    render() {
         return (<div
                style={this.props.style}
                className={"gridcard" + (this.props.className ? " " + this.props.className : "")}
@@ -47,9 +49,9 @@ const GridCard = React.createClass({
                <div className="gridcard-title bg-primary">{this.props.header}</div>
                {this.props.children}
                {this.renderActions()}
-           </div>
-        );
+           </div>)
+        ;
     }
-});
+}
 
 module.exports = GridCard;

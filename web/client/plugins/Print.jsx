@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -54,104 +55,104 @@ const {
 const PrintUtils = require('../utils/PrintUtils');
 const Message = require('../components/I18N/Message');
 
-const Print = React.createClass({
-    propTypes: {
-        map: React.PropTypes.object,
-        layers: React.PropTypes.array,
-        capabilities: React.PropTypes.object,
-        printSpec: React.PropTypes.object,
-        printSpecTemplate: React.PropTypes.object,
-        withContainer: React.PropTypes.bool,
-        withPanelAsContainer: React.PropTypes.bool,
-        open: React.PropTypes.bool,
-        pdfUrl: React.PropTypes.string,
-        title: React.PropTypes.string,
-        style: React.PropTypes.object,
-        mapWidth: React.PropTypes.number,
-        mapType: React.PropTypes.string,
-        alternatives: React.PropTypes.array,
-        toggleControl: React.PropTypes.func,
-        onBeforePrint: React.PropTypes.func,
-        setPage: React.PropTypes.func,
-        onPrint: React.PropTypes.func,
-        configurePrintMap: React.PropTypes.func,
-        getPrintSpecification: React.PropTypes.func,
-        getLayoutName: React.PropTypes.func,
-        error: React.PropTypes.string,
-        getZoomForExtent: React.PropTypes.func,
-        minZoom: React.PropTypes.number,
-        maxZoom: React.PropTypes.number,
-        usePreview: React.PropTypes.bool,
-        mapPreviewOptions: React.PropTypes.object,
-        syncMapPreview: React.PropTypes.bool,
-        useFixedScales: React.PropTypes.bool,
-        scales: React.PropTypes.array,
-        ignoreLayers: React.PropTypes.array,
-        defaultBackground: React.PropTypes.string,
-        closeGlyph: React.PropTypes.string,
-        submitConfig: React.PropTypes.object,
-        previewOptions: React.PropTypes.object
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
+class Print extends React.Component {
+    static propTypes = {
+        map: PropTypes.object,
+        layers: PropTypes.array,
+        capabilities: PropTypes.object,
+        printSpec: PropTypes.object,
+        printSpecTemplate: PropTypes.object,
+        withContainer: PropTypes.bool,
+        withPanelAsContainer: PropTypes.bool,
+        open: PropTypes.bool,
+        pdfUrl: PropTypes.string,
+        title: PropTypes.string,
+        style: PropTypes.object,
+        mapWidth: PropTypes.number,
+        mapType: PropTypes.string,
+        alternatives: PropTypes.array,
+        toggleControl: PropTypes.func,
+        onBeforePrint: PropTypes.func,
+        setPage: PropTypes.func,
+        onPrint: PropTypes.func,
+        configurePrintMap: PropTypes.func,
+        getPrintSpecification: PropTypes.func,
+        getLayoutName: PropTypes.func,
+        error: PropTypes.string,
+        getZoomForExtent: PropTypes.func,
+        minZoom: PropTypes.number,
+        maxZoom: PropTypes.number,
+        usePreview: PropTypes.bool,
+        mapPreviewOptions: PropTypes.object,
+        syncMapPreview: PropTypes.bool,
+        useFixedScales: PropTypes.bool,
+        scales: PropTypes.array,
+        ignoreLayers: PropTypes.array,
+        defaultBackground: PropTypes.string,
+        closeGlyph: PropTypes.string,
+        submitConfig: PropTypes.object,
+        previewOptions: PropTypes.object
+    };
 
-        return {
-            withContainer: true,
-            withPanelAsContainer: false,
-            title: 'print.paneltitle',
-            toggleControl: () => {},
-            onBeforePrint: () => {},
-            setPage: () => {},
-            onPrint: () => {},
-            configurePrintMap: () => {},
-            printSpecTemplate: {},
-            getPrintSpecification: PrintUtils.getMapfishPrintSpecification,
-            getLayoutName: PrintUtils.getLayoutName,
-            getZoomForExtent: MapUtils.defaultGetZoomForExtent,
-            pdfUrl: null,
-            mapWidth: 370,
-            mapType: "leaflet",
-            minZoom: 1,
-            maxZoom: 23,
-            alternatives: [{
-                name: "legend",
-                component: LegendOption,
-                regex: /legend/
-            }, {
-                name: "2pages",
-                component: MultiPageOption,
-                regex: /2_pages/
-            }, {
-                name: "landscape",
-                component: LandscapeOption,
-                regex: /landscape/
-            }],
-            usePreview: true,
-            mapPreviewOptions: {
-                enableScalebox: false,
-                enableRefresh: false
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        withContainer: true,
+        withPanelAsContainer: false,
+        title: 'print.paneltitle',
+        toggleControl: () => {},
+        onBeforePrint: () => {},
+        setPage: () => {},
+        onPrint: () => {},
+        configurePrintMap: () => {},
+        printSpecTemplate: {},
+        getPrintSpecification: PrintUtils.getMapfishPrintSpecification,
+        getLayoutName: PrintUtils.getLayoutName,
+        getZoomForExtent: MapUtils.defaultGetZoomForExtent,
+        pdfUrl: null,
+        mapWidth: 370,
+        mapType: "leaflet",
+        minZoom: 1,
+        maxZoom: 23,
+        alternatives: [{
+            name: "legend",
+            component: LegendOption,
+            regex: /legend/
+        }, {
+            name: "2pages",
+            component: MultiPageOption,
+            regex: /2_pages/
+        }, {
+            name: "landscape",
+            component: LandscapeOption,
+            regex: /landscape/
+        }],
+        usePreview: true,
+        mapPreviewOptions: {
+            enableScalebox: false,
+            enableRefresh: false
+        },
+        syncMapPreview: true,
+        useFixedScales: false,
+        scales: [],
+        ignoreLayers: ["google", "bing"],
+        defaultBackground: "osm",
+        closeGlyph: "1-close",
+        submitConfig: {
+            buttonConfig: {
+                bsSize: "small",
+                bsStyle: "primary"
             },
-            syncMapPreview: true,
-            useFixedScales: false,
-            scales: [],
-            ignoreLayers: ["google", "bing"],
-            defaultBackground: "osm",
-            closeGlyph: "1-close",
-            submitConfig: {
-                buttonConfig: {
-                  bsSize: "small",
-                  bsStyle: "primary"
-                },
-                glyph: ""
-            },
-            previewOptions: {
-                buttonStyle: "primary"
-            },
-            style: {}
-        };
-    },
+            glyph: ""
+        },
+        previewOptions: {
+            buttonStyle: "primary"
+        },
+        style: {}
+    };
+
     componentWillMount() {
         if (this.props.usePreview && !window.PDFJS) {
             const s = document.createElement("script");
@@ -160,7 +161,8 @@ const Print = React.createClass({
             document.head.appendChild(s);
         }
         this.configurePrintMap();
-    },
+    }
+
     componentWillReceiveProps(nextProps) {
         const hasBeenOpened = nextProps.open && !this.props.open;
         const mapHasChanged = this.props.open && this.props.syncMapPreview && MapUtils.mapUpdated(this.props.map, nextProps.map);
@@ -168,42 +170,49 @@ const Print = React.createClass({
         if (hasBeenOpened || mapHasChanged || specHasChanged) {
             this.configurePrintMap(nextProps.map, nextProps.printSpec);
         }
-    },
-    getMapSize(layout) {
+    }
+
+    getMapSize = (layout) => {
         const currentLayout = layout || this.getLayout();
         return {
             width: this.props.mapWidth,
             height: currentLayout && currentLayout.map.height / currentLayout.map.width * this.props.mapWidth || 270
         };
-    },
-    getLayout() {
+    };
+
+    getLayout = () => {
         const layoutName = this.props.getLayoutName(this.props.printSpec);
         return head(this.props.capabilities.layouts.filter((l) => l.name === layoutName));
-    },
-    renderLayoutsAlternatives() {
-        return this.props.alternatives.map((alternative) => (
-            <alternative.component key={"printoption_" + alternative.name}
+    };
+
+    renderLayoutsAlternatives = () => {
+        return this.props.alternatives.map((alternative) =>
+            (<alternative.component key={"printoption_" + alternative.name}
                 label={LocaleUtils.getMessageById(this.context.messages, "print.alternatives." + alternative.name)}
                 enableRegex={alternative.regex}
-            />
-        ));
-    },
-    renderPreviewPanel() {
+            />)
+        );
+    };
+
+    renderPreviewPanel = () => {
         return <PrintPreview {...this.props.previewOptions} role="body" prevPage={this.prevPage} nextPage={this.nextPage}/>;
-    },
-    renderError() {
+    };
+
+    renderError = () => {
         if (this.props.error) {
             return <Row><Col xs={12}><div className="print-error"><span>{this.props.error}</span></div></Col></Row>;
         }
         return null;
-    },
-    renderWarning(layout) {
+    };
+
+    renderWarning = (layout) => {
         if (!layout) {
             return <Row><Col xs={12}><div className="print-warning"><span><Message msgId="print.layoutWarning"/></span></div></Col></Row>;
         }
         return null;
-    },
-    renderPrintPanel() {
+    };
+
+    renderPrintPanel = () => {
         const layout = this.getLayout();
         const layoutName = this.props.getLayoutName(this.props.printSpec);
         const mapSize = this.getMapSize(layout);
@@ -248,19 +257,22 @@ const Print = React.createClass({
             </Row>
         </Grid>
         );
-    },
-    renderDownload() {
+    };
+
+    renderDownload = () => {
         if (this.props.pdfUrl && !this.props.usePreview) {
             return <iframe src={this.props.pdfUrl} style={{visibility: "hidden", display: "none"}}/>;
         }
         return null;
-    },
-    renderBody() {
+    };
+
+    renderBody = () => {
         if (this.props.pdfUrl && this.props.usePreview) {
             return this.renderPreviewPanel();
         }
         return this.renderPrintPanel();
-    },
+    };
+
     render() {
         if ((this.props.capabilities || this.props.error) && this.props.open) {
             if (this.props.withContainer) {
@@ -277,22 +289,26 @@ const Print = React.createClass({
             return this.renderBody();
         }
         return null;
-    },
-    isAllowed(layer) {
+    }
+
+    isAllowed = (layer) => {
         return this.props.ignoreLayers.indexOf(layer.type) === -1;
-    },
-    isBackgroundIgnored() {
+    };
+
+    isBackgroundIgnored = () => {
         return this.props.layers.filter((layer) => layer.visibility && !this.isAllowed(layer)).length > 0;
-    },
-    filterLayers(printSpec) {
+    };
+
+    filterLayers = (printSpec) => {
         const filtered = this.props.layers.filter((layer) => layer.visibility && this.isAllowed(layer));
         if (this.isBackgroundIgnored() && this.props.defaultBackground && printSpec.defaultBackground) {
             const defaultBackground = this.props.layers.filter((layer) => layer.type === this.props.defaultBackground)[0];
             return [assign({}, defaultBackground, {visibility: true}), ...filtered];
         }
         return filtered;
-    },
-    configurePrintMap(map, printSpec) {
+    };
+
+    configurePrintMap = (map, printSpec) => {
         const newMap = map || this.props.map;
         const newPrintSpec = printSpec || this.props.printSpec;
         if (newMap && newMap.bbox && this.props.capabilities) {
@@ -315,17 +331,18 @@ const Print = React.createClass({
                     this.filterLayers(newPrintSpec), newMap.projection);
             }
         }
-    },
-    print() {
+    };
+
+    print = () => {
         const spec = this.props.getPrintSpecification(this.props.printSpec);
         this.props.setPage(0);
         this.props.onBeforePrint();
         this.props.onPrint(this.props.capabilities.createURL, spec);
-    }
-});
+    };
+}
 
 const selector = createSelector([
-    (state) => (state.controls.print && state.controls.print.enabled ) || (state.controls.toolbar && state.controls.toolbar.active === 'print'),
+    (state) => state.controls.print && state.controls.print.enabled || state.controls.toolbar && state.controls.toolbar.active === 'print',
     (state) => state.print && state.print.capabilities,
     (state) => state.print && state.print.spec && assign({}, state.print.spec, state.print.map || {}),
     (state) => state.print && state.print.pdfUrl,

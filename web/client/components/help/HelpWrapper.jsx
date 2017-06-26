@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -19,16 +20,16 @@ require("./help.css");
  *  - helpEnabled: {bool}     flag to steer visibility of the badge
  *  - changeHelpText (func)   action to change the current help text
  */
-let HelpWrapper = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        helpText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        helpEnabled: React.PropTypes.bool,
-        changeHelpText: React.PropTypes.func,
-        changeHelpwinVisibility: React.PropTypes.func
-    },
+class HelpWrapper extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        helpText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        helpEnabled: PropTypes.bool,
+        changeHelpText: PropTypes.func,
+        changeHelpwinVisibility: PropTypes.func
+    };
 
-    render: function() {
+    render() {
         return (
             <div id={this.props.id}>
                 <HelpBadge
@@ -41,6 +42,6 @@ let HelpWrapper = React.createClass({
                 {this.props.children}
             </div>);
     }
-});
+}
 
 module.exports = HelpWrapper;

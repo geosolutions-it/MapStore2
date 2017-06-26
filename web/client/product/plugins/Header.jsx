@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,18 +8,18 @@
  */
 var React = require('react');
 
-var Header = React.createClass({
-    propTypes: {
-        style: React.PropTypes.object,
-        className: React.PropTypes.object
-    },
+class Header extends React.Component {
+    static propTypes = {
+        style: PropTypes.object,
+        className: PropTypes.object
+    };
+
     render() {
         return (
-            <div style={this.props.style} className="mapstore-header">
-            </div>
+            <div style={this.props.style} className="mapstore-header" />
         );
     }
-});
+}
 
 module.exports = {
     HeaderPlugin: Header

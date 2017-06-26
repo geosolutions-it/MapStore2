@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -48,11 +49,11 @@ const {
 
 const assign = require('object-assign');
 
-const attributesSelector = (state) => (state.query.featureTypes["topp:states"] && state.query.featureTypes["topp:states"].attributes && state.query.data["topp:states"] &&
+const attributesSelector = (state) => state.query.featureTypes["topp:states"] && state.query.featureTypes["topp:states"].attributes && state.query.data["topp:states"] &&
         state.query.featureTypes["topp:states"].attributes.map((attribute) => {
             return assign({}, attribute, {values: state.query.data["topp:states"][attribute.attribute]});
         })
-    ) || [];  //   &&
+     || [];  //   &&
 
 // connecting a Dumb component to the store
 // makes it a smart component
@@ -118,12 +119,13 @@ module.exports = connect((state) => {
         locale: state.locale ? state.locale.current : null,
         localeError: state.locale && state.locale.loadingError ? state.locale.loadingError : undefined
     };
-})(React.createClass({
-    propTypes: {
-        messages: React.PropTypes.object,
-        locale: React.PropTypes.string,
-        localeError: React.PropTypes.string
-    },
+})(class extends React.Component {
+    static propTypes = {
+        messages: PropTypes.object,
+        locale: PropTypes.string,
+        localeError: PropTypes.string
+    };
+
     render() {
         return (
             <Localized messages={this.props.messages} locale={this.props.locale} loadingError={this.props.localeError}>
@@ -131,4 +133,4 @@ module.exports = connect((state) => {
             </Localized>
         );
     }
-}));
+});

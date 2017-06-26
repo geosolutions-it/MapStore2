@@ -7,32 +7,33 @@
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 
 require('./css/previewbutton.css');
 
-const PreviewButton = React.createClass({
-    propTypes: {
-        src: React.PropTypes.string,
-        side: React.PropTypes.number,
-        frame: React.PropTypes.number,
-        margin: React.PropTypes.number,
-        labelHeight: React.PropTypes.number,
-        label: React.PropTypes.string,
-        showLabel: React.PropTypes.bool,
-        onToggle: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            src: './images/mapthumbs/none.jpg',
-            side: 50,
-            frame: 4,
-            margin: 5,
-            labelHeight: 29,
-            label: '',
-            showLabel: true,
-            onToggle: () => {}
-        };
-    },
+class PreviewButton extends React.Component {
+    static propTypes = {
+        src: PropTypes.string,
+        side: PropTypes.number,
+        frame: PropTypes.number,
+        margin: PropTypes.number,
+        labelHeight: PropTypes.number,
+        label: PropTypes.string,
+        showLabel: PropTypes.bool,
+        onToggle: PropTypes.func
+    };
+
+    static defaultProps = {
+        src: './images/mapthumbs/none.jpg',
+        side: 50,
+        frame: 4,
+        margin: 5,
+        labelHeight: 29,
+        label: '',
+        showLabel: true,
+        onToggle: () => {}
+    };
+
     render() {
         return (
             <div className="background-preview-button" style={{margin: this.props.margin}}>
@@ -45,6 +46,6 @@ const PreviewButton = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = PreviewButton;

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -13,45 +14,48 @@ const Modal = require('../../misc/Modal');
 const Message = require('../../I18N/Message');
 const RuleAttributes = require('./RuleAttributes');
 
-const ActiveRuleModal = React.createClass({
-    propTypes: {
-        updateActiveRule: React.PropTypes.func,
-        addRule: React.PropTypes.func,
-        updateRule: React.PropTypes.func,
-        loadRoles: React.PropTypes.func,
-        loadUsers: React.PropTypes.func,
-        loadWorkspaces: React.PropTypes.func,
-        loadLayers: React.PropTypes.func,
-        options: React.PropTypes.object,
-        services: React.PropTypes.object,
-        activeRule: React.PropTypes.object,
-        error: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            updateActiveRule: () => {},
-            addRule: () => {},
-            updateRule: () => {},
-            activeRule: {},
-            error: {}
-        };
-    },
-    onClose() {
+class ActiveRuleModal extends React.Component {
+    static propTypes = {
+        updateActiveRule: PropTypes.func,
+        addRule: PropTypes.func,
+        updateRule: PropTypes.func,
+        loadRoles: PropTypes.func,
+        loadUsers: PropTypes.func,
+        loadWorkspaces: PropTypes.func,
+        loadLayers: PropTypes.func,
+        options: PropTypes.object,
+        services: PropTypes.object,
+        activeRule: PropTypes.object,
+        error: PropTypes.object
+    };
+
+    static defaultProps = {
+        updateActiveRule: () => {},
+        addRule: () => {},
+        updateRule: () => {},
+        activeRule: {},
+        error: {}
+    };
+
+    onClose = () => {
         this.props.updateActiveRule({}, undefined, false);
-    },
-    getOnSubmitHandler(status) {
+    };
+
+    getOnSubmitHandler = (status) => {
         if (status === "new") {
             return this.props.addRule;
         } else if (status === "edit") {
             return this.props.updateRule;
         }
-    },
-    getUpdateRuleAttributesHandler() {
+    };
+
+    getUpdateRuleAttributesHandler = () => {
         const status = this.props.activeRule.status;
         return function(updatedAttributes) {
             this.props.updateActiveRule(updatedAttributes, status, true);
         }.bind(this);
-    },
+    };
+
     render() {
         const status = this.props.activeRule.status;
         const showModal = status === "edit" || status === "new";
@@ -77,7 +81,7 @@ const ActiveRuleModal = React.createClass({
                         services={this.props.services}
                         updateRuleAttributes={this.getUpdateRuleAttributesHandler()}
                         ruleAttributes={this.props.activeRule.rule}
-                        showAccess={true}
+                        showAccess
                         containerClassName={"modal-rules"}
                         selectClassName={"modal-rules-select"}
                         context="modal"/>
@@ -98,6 +102,6 @@ const ActiveRuleModal = React.createClass({
             </Modal>
         );
     }
-});
+}
 
 module.exports = ActiveRuleModal;

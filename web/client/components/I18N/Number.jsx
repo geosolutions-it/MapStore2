@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -8,22 +9,23 @@
 var React = require('react');
 var {FormattedNumber} = require('react-intl');
 
-var NumberFormat = React.createClass({
-    propTypes: {
-        value: React.PropTypes.object,
-        numberParams: React.PropTypes.object
-    },
-    contextTypes: {
-      intl: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            value: new Date()
-        };
-    },
+class NumberFormat extends React.Component {
+    static propTypes = {
+        value: PropTypes.object,
+        numberParams: PropTypes.object
+    };
+
+    static contextTypes = {
+        intl: PropTypes.object
+    };
+
+    static defaultProps = {
+        value: new Date()
+    };
+
     render() {
         return this.context.intl ? <FormattedNumber value={this.props.value} {...this.props.numberParams}/> : <span>{this.props.value && this.props.value.toString() || ''}</span>;
     }
-});
+}
 
 module.exports = NumberFormat;

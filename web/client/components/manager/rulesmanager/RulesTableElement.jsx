@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -12,7 +13,7 @@ const dragSource = require('react-dnd').DragSource;
 const dropTarget = require('react-dnd').DropTarget;
 
 const Types = {
-  ROW: 'row'
+    ROW: 'row'
 };
 
 const rowSource = {
@@ -50,24 +51,24 @@ var targetCollect = function(connect, monitor) {
     };
 };
 
-const Component = React.createClass({
-    propTypes: {
-        moveRules: React.PropTypes.func,
-        onSelect: React.PropTypes.func,
-        rule: React.PropTypes.object,
-        checked: React.PropTypes.bool,
-        connectDragSource: React.PropTypes.func,
-        connectDropTarget: React.PropTypes.func,
-        isOver: React.PropTypes.bool
-    },
-    getDefaultProps() {
-        return {
-            moveRules: () => {},
-            onSelect: () => {},
-            rule: () => {},
-            checked: false
-        };
-    },
+class Component extends React.Component {
+    static propTypes = {
+        moveRules: PropTypes.func,
+        onSelect: PropTypes.func,
+        rule: PropTypes.object,
+        checked: PropTypes.bool,
+        connectDragSource: PropTypes.func,
+        connectDropTarget: PropTypes.func,
+        isOver: PropTypes.bool
+    };
+
+    static defaultProps = {
+        moveRules: () => {},
+        onSelect: () => {},
+        rule: () => {},
+        checked: false
+    };
+
     render() {
         const connectDragSource = this.props.connectDragSource;
         const connectDropTarget = this.props.connectDropTarget;
@@ -91,11 +92,12 @@ const Component = React.createClass({
                 <td>{this.props.rule.access}</td>
             </tr>
         ));
-    },
-    getOnlickHandler() {
-        return () => this.props.onSelect(this.props.rule, true, this.props.checked);
     }
-});
+
+    getOnlickHandler = () => {
+        return () => this.props.onSelect(this.props.rule, true, this.props.checked);
+    };
+}
 
 const RulesTableElementTarget = dropTarget(Types.ROW, rowTarget, targetCollect)(Component);
 const RulesTableElement = dragSource(Types.ROW, rowSource, sourceCollect)(RulesTableElementTarget);

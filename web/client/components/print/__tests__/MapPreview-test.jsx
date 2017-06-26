@@ -28,7 +28,7 @@ describe("Test the MapPreview component", () => {
         expect(cmp).toExist();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toNotExist();
     });
 
     it('creates a leaflet map', () => {

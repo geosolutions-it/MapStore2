@@ -25,14 +25,14 @@ describe("test the PreviewList", () => {
     });
 
     it('test PreviewList pagination is true', () => {
-        const previewList = ReactDOM.render(<PreviewList pagination={true}/>, document.getElementById("container"));
+        const previewList = ReactDOM.render(<PreviewList pagination/>, document.getElementById("container"));
         expect(previewList).toExist();
         const node = ReactDOM.findDOMNode(previewList);
         expect(node).toExist();
     });
 
     it('test PreviewList pagination is true and start is different from 0', () => {
-        const previewList = ReactDOM.render(<PreviewList vertical={true} pagination={true} start={1} length={6}/>, document.getElementById("container"));
+        const previewList = ReactDOM.render(<PreviewList vertical pagination start={1} length={6}/>, document.getElementById("container"));
         expect(previewList).toExist();
         const node = ReactDOM.findDOMNode(previewList);
         expect(node).toExist();

@@ -22,7 +22,7 @@ function getDescribeLayer(url, layer, options) {
                 return WFS.describeFeatureType(url, describeLayer.name).then((describeFeatureType) => {
                     // TODO move the management of this geometryType in the proper components, getting the describeFeatureType entry:
                     let types = _.get(describeFeatureType, "complexType[0].complexContent.extension.sequence.element");
-                    let geometryType = _.head(types && types.filter( elem => (elem.name === "the_geom" || elem.type.prefix.indexOf("gml") === 0)));
+                    let geometryType = _.head(types && types.filter( elem => elem.name === "the_geom" || elem.type.prefix.indexOf("gml") === 0));
                     geometryType = geometryType && geometryType.type.localPart;
                     describeLayer.geometryType = geometryType && geometryType.split("PropertyType")[0];
                     return dispatch(updateNode(layer.id, "id", {describeLayer, describeFeatureType}));
@@ -36,7 +36,7 @@ function getDescribeLayer(url, layer, options) {
                     if (axis && typeof axis === "string") {
                         describeLayer.bands = [1 + ""];
                     } else {
-                        describeLayer.bands = axis.map((el, index) => ((index + 1) + "")); // array of 1 2 3 because the sld do not recognize the name
+                        describeLayer.bands = axis.map((el, index) => index + 1 + ""); // array of 1 2 3 because the sld do not recognize the name
                     }
 
                     dispatch(updateNode(layer.id, "id", {describeLayer, describeCoverage}));
@@ -60,6 +60,7 @@ function getLayerCapabilities(layer, options) {
         }));
         return WMS.getCapabilities(reqUrl, options).then((capabilities) => {
             const layerCapability = WMS.parseLayerCapabilities(capabilities, layer);
+
             if (layerCapability) {
                 dispatch(updateNode(layer.id, "id", {
                     capabilities: layerCapability,

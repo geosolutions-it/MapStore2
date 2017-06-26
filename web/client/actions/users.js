@@ -61,7 +61,7 @@ function getUsers(searchText, options) {
         if (state) {
             let oldText = get(state, "users.searchText");
             text = searchText || oldText || "*";
-            start = ( (start !== null && start !== undefined) ? start : (get(state, "users.start") || 0));
+            start = start !== null && start !== undefined ? start : get(state, "users.start") || 0;
             limit = limit || get(state, "users.limit") || 12;
         }
         dispatch(getUsersloading(text, start, limit));
@@ -152,7 +152,7 @@ function editNewUser(user) {
         user: user
     };
 }
-function editUser(user, options ={params: {includeattributes: true}} ) {
+function editUser(user, options = {params: {includeattributes: true}} ) {
     return (dispatch, getState) => {
         let state = getState && getState();
         if (state) {

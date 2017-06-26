@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -17,36 +18,36 @@ const {Row, Col} = require('react-bootstrap');
 
 require('react-widgets/lib/less/react-widgets.less');
 
-const DateField = React.createClass({
-    propTypes: {
-        timeEnabled: React.PropTypes.bool,
-        dateFormat: React.PropTypes.string,
-        operator: React.PropTypes.string,
-        fieldName: React.PropTypes.string,
-        fieldRowId: React.PropTypes.number,
-        attType: React.PropTypes.string,
-        fieldValue: React.PropTypes.object,
-        fieldException: React.PropTypes.string,
-        onUpdateField: React.PropTypes.func,
-        onUpdateExceptionField: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            timeEnabled: false,
-            dateFormat: "L",
-            operator: null,
-            fieldName: null,
-            fieldRowId: null,
-            attType: null,
-            fieldValue: null,
-            fieldException: null,
-            onUpdateField: () => {},
-            onUpdateExceptionField: () => {}
-        };
-    },
+class DateField extends React.Component {
+    static propTypes = {
+        timeEnabled: PropTypes.bool,
+        dateFormat: PropTypes.string,
+        operator: PropTypes.string,
+        fieldName: PropTypes.string,
+        fieldRowId: PropTypes.number,
+        attType: PropTypes.string,
+        fieldValue: PropTypes.object,
+        fieldException: PropTypes.string,
+        onUpdateField: PropTypes.func,
+        onUpdateExceptionField: PropTypes.func
+    };
+
+    static defaultProps = {
+        timeEnabled: false,
+        dateFormat: "L",
+        operator: null,
+        fieldName: null,
+        fieldRowId: null,
+        attType: null,
+        fieldValue: null,
+        fieldException: null,
+        onUpdateField: () => {},
+        onUpdateExceptionField: () => {}
+    };
+
     render() {
-        let dateRow = this.props.operator === "><" ? (
-                <div>
+        let dateRow = this.props.operator === "><" ?
+                (<div>
                     <Row>
                         <Col xs={6}>
                             <DateTimePicker
@@ -63,9 +64,9 @@ const DateField = React.createClass({
                                 onChange={(date) => this.updateValueState({startDate: this.props.fieldValue ? this.props.fieldValue.startDate : null, endDate: date})}/>
                         </Col>
                     </Row>
-                </div>
-            ) : (
-                <Row>
+                </div>)
+             :
+                (<Row>
                     <Col xs={12}>
                         <DateTimePicker
                             defaultValue={this.props.fieldValue ? this.props.fieldValue.startDate : null}
@@ -73,22 +74,23 @@ const DateField = React.createClass({
                             format={this.props.dateFormat}
                             onChange={(date) => this.updateValueState({startDate: date, endDate: null})}/>
                     </Col>
-                </Row>
-            );
+                </Row>)
+            ;
 
         return (
             dateRow
         );
-    },
-    updateValueState(value) {
-        if (value.startDate && value.endDate && (value.startDate > value.endDate)) {
+    }
+
+    updateValueState = (value) => {
+        if (value.startDate && value.endDate && value.startDate > value.endDate) {
             this.props.onUpdateExceptionField(this.props.fieldRowId, "queryform.attributefilter.datefield.wrong_date_range");
         } else {
             this.props.onUpdateExceptionField(this.props.fieldRowId, null);
         }
 
         this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value, this.props.attType);
-    }
-});
+    };
+}
 
 module.exports = DateField;

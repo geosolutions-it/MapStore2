@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -9,28 +10,29 @@ const React = require('react');
 const {ProgressBar} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 
-const TaskProgress = React.createClass({
-    propTypes: {
-        progress: React.PropTypes.number,
-        update: React.PropTypes.func,
-        total: React.PropTypes.number,
-        timeout: React.PropTypes.number,
-        state: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            timeout: 1000,
-            update: () => {},
-            progress: 0
-        };
-    },
+class TaskProgress extends React.Component {
+    static propTypes = {
+        progress: PropTypes.number,
+        update: PropTypes.func,
+        total: PropTypes.number,
+        timeout: PropTypes.number,
+        state: PropTypes.string
+    };
+
+    static defaultProps = {
+        timeout: 1000,
+        update: () => {},
+        progress: 0
+    };
+
     componentDidMount() {
         this.interval = setInterval(this.update.bind(this), this.props.timeout);
-    },
+    }
 
     componentWillUnmount() {
         clearInterval(this.interval);
-    },
+    }
+
     render() {
         if (this.props.total) {
             let percent = 100 * this.props.progress / this.props.total;
@@ -40,11 +42,13 @@ const TaskProgress = React.createClass({
             );
         }
         return <Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle"/>;
-    },
-    update() {
+    }
+
+    update = () => {
         if (this.props.state === "RUNNING") {
             this.props.update();
         }
-    }
-});
+    };
+}
+
 module.exports = TaskProgress;

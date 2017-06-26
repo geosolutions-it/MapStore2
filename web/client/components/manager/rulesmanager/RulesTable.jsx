@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -16,23 +17,24 @@ const LocaleUtils = require('../../../utils/LocaleUtils');
 const dragDropContext = require('react-dnd').DragDropContext;
 const html5Backend = require('react-dnd-html5-backend');
 
-const RulesTable = React.createClass({
-    propTypes: {
-        onSelectRules: React.PropTypes.func,
-        rules: React.PropTypes.array,
-        selectedRules: React.PropTypes.array,
-        moveRules: React.PropTypes.func
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            onSelectRules: () => {},
-            rules: [],
-            selectedRules: []
-        };
-    },
+class RulesTable extends React.Component {
+    static propTypes = {
+        onSelectRules: PropTypes.func,
+        rules: PropTypes.array,
+        selectedRules: PropTypes.array,
+        moveRules: PropTypes.func
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        onSelectRules: () => {},
+        rules: [],
+        selectedRules: []
+    };
+
     render() {
         const allChecked = this.props.selectedRules.length !== 0 &&
             this.props.selectedRules.length === this.props.rules.length;
@@ -66,17 +68,19 @@ const RulesTable = React.createClass({
                             checked={checked}
                             key={index}
                             sortData={index}
-                            isDraggable={true}/>);
+                            isDraggable/>);
                     })}
                 </tbody>
             </Table>
         );
-    },
-    locale(messageId) {
+    }
+
+    locale = (messageId) => {
         return LocaleUtils.getMessageById(
             this.context.messages, "rulesmanager." + messageId);
-    },
-    handleSort(sorted) {
+    };
+
+    handleSort = (sorted) => {
         return function() {
             if (!sorted) {
                 return;
@@ -89,10 +93,11 @@ const RulesTable = React.createClass({
                 }
             }
         }.bind(this);
-    },
-    isChecked(rule, selectedRules) {
+    };
+
+    isChecked = (rule, selectedRules) => {
         return _.find(selectedRules, (selectedRule) => selectedRule.id === rule.id) !== undefined;
-    }
-});
+    };
+}
 
 module.exports = dragDropContext(html5Backend)(RulesTable);

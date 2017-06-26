@@ -22,11 +22,11 @@ const initialSpec = {
 
 function style(state = initialSpec, action) {
     switch (action.type) {
-        case SET_STYLE_PARAMETER: {
-            return assign({}, state, {[action.name]: action.value});
-        }
-        default:
-            return state;
+    case SET_STYLE_PARAMETER: {
+        return assign({}, state, {[action.name]: action.value});
+    }
+    default:
+        return state;
     }
 }
 

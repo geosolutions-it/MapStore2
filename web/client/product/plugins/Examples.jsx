@@ -10,7 +10,7 @@ const {Grid, Row, Col} = require('react-bootstrap');
 const Examples = require('../components/home/Examples');
 const MailingLists = require('../components/home/MailingLists');
 
-const ExamplesPlugin = React.createClass({
+class ExamplesPlugin extends React.Component {
     render() {
         return (<Grid fluid>
             <Row className="show-grid">
@@ -21,10 +21,10 @@ const ExamplesPlugin = React.createClass({
                     <MailingLists/>
                 </Col>
             </Row>
-        </Grid>
-        );
+        </Grid>)
+        ;
     }
-});
+}
 
 module.exports = {
     ExamplesPlugin: ExamplesPlugin

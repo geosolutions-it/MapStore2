@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -9,40 +10,41 @@
 const React = require('react');
 const {Button, Glyphicon, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../misc/OverlayTrigger');
-const ZoomButton = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        style: React.PropTypes.object,
-        glyphicon: React.PropTypes.string,
-        text: React.PropTypes.string,
-        btnSize: React.PropTypes.oneOf(['large', 'small', 'xsmall']),
-        className: React.PropTypes.string,
-        help: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
-        step: React.PropTypes.number,
-        currentZoom: React.PropTypes.number,
-        minZoom: React.PropTypes.number,
-        maxZoom: React.PropTypes.number,
-        onZoom: React.PropTypes.func,
-        tooltip: React.PropTypes.element,
-        tooltipPlace: React.PropTypes.string,
-        bsStyle: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            id: "mapstore-zoom",
-            className: "square-button",
-            glyphicon: "plus",
-            btnSize: 'xsmall',
-            tooltipPlace: "left",
-            step: 1,
-            currentZoom: 3,
-            minZoom: 0,
-            maxZoom: 28,
-            onZoom: () => {},
-            bsStyle: "default",
-            style: {}
-        };
-    },
+
+class ZoomButton extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        style: PropTypes.object,
+        glyphicon: PropTypes.string,
+        text: PropTypes.string,
+        btnSize: PropTypes.oneOf(['large', 'small', 'xsmall']),
+        className: PropTypes.string,
+        help: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        step: PropTypes.number,
+        currentZoom: PropTypes.number,
+        minZoom: PropTypes.number,
+        maxZoom: PropTypes.number,
+        onZoom: PropTypes.func,
+        tooltip: PropTypes.element,
+        tooltipPlace: PropTypes.string,
+        bsStyle: PropTypes.string
+    };
+
+    static defaultProps = {
+        id: "mapstore-zoom",
+        className: "square-button",
+        glyphicon: "plus",
+        btnSize: 'xsmall',
+        tooltipPlace: "left",
+        step: 1,
+        currentZoom: 3,
+        minZoom: 0,
+        maxZoom: 28,
+        onZoom: () => {},
+        bsStyle: "default",
+        style: {}
+    };
+
     render() {
         return this.addTooltip(
             <Button
@@ -50,7 +52,7 @@ const ZoomButton = React.createClass({
                 style={this.props.style}
                 onClick={() => this.props.onZoom(this.props.currentZoom + this.props.step)}
                 className={this.props.className}
-                disabled={(this.props.currentZoom + this.props.step > this.props.maxZoom) || (this.props.currentZoom + this.props.step < this.props.minZoom)}
+                disabled={this.props.currentZoom + this.props.step > this.props.maxZoom || this.props.currentZoom + this.props.step < this.props.minZoom}
                 bsStyle={this.props.bsStyle}
                 >
                 {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
@@ -59,8 +61,9 @@ const ZoomButton = React.createClass({
                 {this.props.help}
             </Button>
         );
-    },
-    addTooltip(btn) {
+    }
+
+    addTooltip = (btn) => {
         if (!this.props.tooltip) {
             return btn;
         }
@@ -70,7 +73,7 @@ const ZoomButton = React.createClass({
                 {btn}
             </OverlayTrigger>
         );
-    }
-});
+    };
+}
 
 module.exports = ZoomButton;

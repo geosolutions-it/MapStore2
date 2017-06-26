@@ -47,12 +47,12 @@ const runAsyncTest = (url, action, tests, done, params = [], state) => {
             if (count === tests.length - 1) {
                 done();
             }
-        } catch(e) {
+        } catch (e) {
             done(e);
         }
 
 
-    }, () => (state));
+    }, () => state);
 };
 // NOTE use # to skip parameters by the API
 describe('Test correctness of the importer actions', () => {
@@ -160,17 +160,17 @@ describe('Test correctness of the importer actions', () => {
         };
         let url = 'base/web/client/test-resources/importer/task.json#';
         let state = {
-           importer: {
-              selectedImport: {
-                 id: 1,
-                 targetWorkspace: {
-                    workspace: {
-                       name: "TEST"
+            importer: {
+                selectedImport: {
+                    id: 1,
+                    targetWorkspace: {
+                        workspace: {
+                            name: "TEST"
+                        }
                     }
-                 }
-              }
-           }
-       };
+                }
+            }
+        };
         let tests = [testLoading, testLoadTask, testLoadLayer, testUpdateUI];
         runAsyncTest(url, updateTask, tests, done, [1, 2, {}], state );
 

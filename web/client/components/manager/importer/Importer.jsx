@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -18,75 +19,77 @@ const {Grid, Col, Row, Alert} = require('react-bootstrap');
 const BreadCrumb = require('./BreadCrumb');
 const {head} = require('lodash');
 
-const Importer = React.createClass({
-    propTypes: {
-        loading: React.PropTypes.bool,
-        taskCreationError: React.PropTypes.object,
-        error: React.PropTypes.object,
-        defaultPresets: React.PropTypes.string,
+class Importer extends React.Component {
+    static propTypes = {
+        loading: PropTypes.bool,
+        taskCreationError: PropTypes.object,
+        error: PropTypes.object,
+        defaultPresets: PropTypes.string,
         /**
          * Presets: {PRESET_ID: [changes: [{target: {}, layer: {}}], match: function() {...}, transforms: [{}, {}] }]}
          */
-        presets: React.PropTypes.object,
-        uploading: React.PropTypes.oneOfType([React.PropTypes.bool, React.PropTypes.object]),
-        createImport: React.PropTypes.func,
-        runImport: React.PropTypes.func,
-        loadWorkspaces: React.PropTypes.func,
-        workspaces: React.PropTypes.array,
-        selectedWorkSpace: React.PropTypes.object,
-        selectWorkSpace: React.PropTypes.func,
-        workspaceCreationStatus: React.PropTypes.object,
-        dismissWorkspaceCreationStatus: React.PropTypes.func,
-        createWorkspace: React.PropTypes.func,
-        datastoreTemplates: React.PropTypes.array,
-        deleteImport: React.PropTypes.func,
-        updateTask: React.PropTypes.func,
-        deleteTask: React.PropTypes.func,
-        loadImports: React.PropTypes.func,
-        loadImport: React.PropTypes.func,
-        loadTask: React.PropTypes.func,
-        updateProgress: React.PropTypes.func,
-        loadLayer: React.PropTypes.func,
-        updateLayer: React.PropTypes.func,
-        loadStylerTool: React.PropTypes.func,
-        loadTransform: React.PropTypes.func,
-        updateTransform: React.PropTypes.func,
-        editTransform: React.PropTypes.func,
-        deleteTransform: React.PropTypes.func,
-        uploadImportFiles: React.PropTypes.func,
-        selectedImport: React.PropTypes.object,
-        selectedTask: React.PropTypes.object,
-        selectedTransform: React.PropTypes.object,
-        imports: React.PropTypes.array,
-        onMount: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            createImport: () => {},
-            loadImport: () => {},
-            loadTask: () => {},
-            loadLayer: () => {},
-            loadTransform: () => {},
-            editTransform: () => {},
-            updateTransform: () => {},
-            loadImports: () => {},
-            updateProgress: () => {},
-            deleteTransform: () => {},
-            uploadImportFiles: () => {},
-            loadWorkspaces: () => {},
-            dismissWorkspaceCreationStatus: () => {},
-            createWorkspace: () => {},
-            onMount: () => {},
-            imports: []
-        };
-    },
+        presets: PropTypes.object,
+        uploading: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+        createImport: PropTypes.func,
+        runImport: PropTypes.func,
+        loadWorkspaces: PropTypes.func,
+        workspaces: PropTypes.array,
+        selectedWorkSpace: PropTypes.object,
+        selectWorkSpace: PropTypes.func,
+        workspaceCreationStatus: PropTypes.object,
+        dismissWorkspaceCreationStatus: PropTypes.func,
+        createWorkspace: PropTypes.func,
+        datastoreTemplates: PropTypes.array,
+        deleteImport: PropTypes.func,
+        updateTask: PropTypes.func,
+        deleteTask: PropTypes.func,
+        loadImports: PropTypes.func,
+        loadImport: PropTypes.func,
+        loadTask: PropTypes.func,
+        updateProgress: PropTypes.func,
+        loadLayer: PropTypes.func,
+        updateLayer: PropTypes.func,
+        loadStylerTool: PropTypes.func,
+        loadTransform: PropTypes.func,
+        updateTransform: PropTypes.func,
+        editTransform: PropTypes.func,
+        deleteTransform: PropTypes.func,
+        uploadImportFiles: PropTypes.func,
+        selectedImport: PropTypes.object,
+        selectedTask: PropTypes.object,
+        selectedTransform: PropTypes.object,
+        imports: PropTypes.array,
+        onMount: PropTypes.func
+    };
+
+    static defaultProps = {
+        createImport: () => {},
+        loadImport: () => {},
+        loadTask: () => {},
+        loadLayer: () => {},
+        loadTransform: () => {},
+        editTransform: () => {},
+        updateTransform: () => {},
+        loadImports: () => {},
+        updateProgress: () => {},
+        deleteTransform: () => {},
+        uploadImportFiles: () => {},
+        loadWorkspaces: () => {},
+        dismissWorkspaceCreationStatus: () => {},
+        createWorkspace: () => {},
+        onMount: () => {},
+        imports: []
+    };
+
     componentDidMount() {
         this.props.onMount();
-    },
-    getPresets() {
+    }
+
+    getPresets = () => {
         return this.props.presets && this.props.presets[this.props.defaultPresets];
-    },
-    getImportCreationDefaults() {
+    };
+
+    getImportCreationDefaults = () => {
         let presets = this.getPresets();
         if (!presets) {
             return {
@@ -102,40 +105,44 @@ const Importer = React.createClass({
             };
         } else if (this.props.selectedWorkSpace) {
             return {
-                    "import": {
-                        "targetWorkspace": {
-                            "workspace": {
-                                "name": this.props.selectedWorkSpace.value
-                            }
+                "import": {
+                    "targetWorkspace": {
+                        "workspace": {
+                            "name": this.props.selectedWorkSpace.value
                         }
+                    }
                 }
             };
         }
         return head(presets.filter((preset) => preset.import ));
-    },
-    getTargetWorkspace(selectedImport) {
+    };
+
+    getTargetWorkspace = (selectedImport) => {
         let targetWorkspace = selectedImport && selectedImport.targetWorkspace;
         if (targetWorkspace) {
             return targetWorkspace && targetWorkspace.workspace && targetWorkspace.workspace.name;
         }
         let creationDefaults = this.getImportCreationDefaults();
-        let importObj = (creationDefaults && creationDefaults.import) || (creationDefaults && creationDefaults.importCreationDefaults && creationDefaults.importCreationDefaults.import);
+        let importObj = creationDefaults && creationDefaults.import || creationDefaults && creationDefaults.importCreationDefaults && creationDefaults.importCreationDefaults.import;
         return importObj && importObj.targetWorkspace && importObj.targetWorkspace.workspace && importObj.targetWorkspace.workspace.name;
 
 
-    },
-    renderError() {
+    };
+
+    renderError = () => {
         if (this.props.error) {
-            return (<Alert bsStyle="danger">There was an error during the import list loading: {this.props.error.statusText}</Alert>);
+            return <Alert bsStyle="danger">There was an error during the import list loading: {this.props.error.statusText}</Alert>;
         }
-    },
-    renderLoading() {
+    };
+
+    renderLoading = () => {
         if (this.props.loading) {
             return <div style={{"float": "right"}}><Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName="circle"/></div>;
         }
         return null;
-    },
-    renderDetails() {
+    };
+
+    renderDetails = () => {
         let breadcrumb = (<BreadCrumb
             selectedImport={this.props.selectedImport}
             selectedTask={this.props.selectedTask}
@@ -193,7 +200,8 @@ const Importer = React.createClass({
                 loadImport={this.props.loadImport}
                 imports={this.props.imports} />
             </div>);
-    },
+    };
+
     render() {
         let message = this.props.selectedImport ? "importer.dropfileImport" : "importer.dropfile";
         return (
@@ -242,9 +250,11 @@ const Importer = React.createClass({
                     {this.renderError()}
                 </Row>
             </Grid>);
-    },
-    createUpdateFunction() {
-        return;
     }
-});
+
+    createUpdateFunction = () => {
+        return;
+    };
+}
+
 module.exports = Importer;

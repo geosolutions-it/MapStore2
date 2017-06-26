@@ -36,14 +36,14 @@ const Login = require('./containers/Login');
 
 // we spread the store to the all application
 // wrapping it with a Provider component
-const LoginApp = React.createClass({
+class LoginApp extends React.Component {
     render() {
         return (
         <Provider store={store}>
             <Login/>
         </Provider>);
     }
-});
+}
 
 let locale = LocaleUtils.getUserLocale();
 store.dispatch(loadLocale('../../translations', locale));

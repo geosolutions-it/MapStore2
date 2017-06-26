@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -13,14 +14,15 @@ const {connect} = require('react-redux');
 const {updateMapMetadata, deleteMap, createThumbnail} = require('../../../actions/maps');
 const MapGrid = connect(() => ({}), {updateMapMetadata, deleteMap, createThumbnail})(require('../../../components/maps/MapGrid'));
 
-var MapsList = React.createClass({
-    propTypes: {
-        maps: React.PropTypes.object,
-        mapType: React.PropTypes.string,
-        title: React.PropTypes.string,
-        onChangeMapType: React.PropTypes.func,
-        onGoToMap: React.PropTypes.func
-    },
+class MapsList extends React.Component {
+    static propTypes = {
+        maps: PropTypes.object,
+        mapType: PropTypes.string,
+        title: PropTypes.string,
+        onChangeMapType: PropTypes.func,
+        onGoToMap: PropTypes.func
+    };
+
     render() {
         if (this.props.maps) {
             return (
@@ -42,10 +44,10 @@ var MapsList = React.createClass({
                         defaultExpanded: true}}
                     />
              </div>
-         );
+            );
         }
         return null;
     }
-});
+}
 
 module.exports = MapsList;

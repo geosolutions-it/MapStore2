@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -12,39 +13,40 @@ const Modal = require('../../misc/Modal');
 
 const Message = require('../../I18N/Message');
 
-const RulesTableControls = React.createClass({
-    propTypes: {
-        moveRulesToPage: React.PropTypes.func,
-        updateActiveRule: React.PropTypes.func,
-        deleteRules: React.PropTypes.func,
-        selectedRules: React.PropTypes.array,
-        rulesPage: React.PropTypes.number,
-        rulesCount: React.PropTypes.number,
-        bsSize: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            moveRulesToPage: () => {},
-            updateActiveRule: () => {},
-            deleteRules: () => {},
-            selectedRules: []
-        };
-    },
-    getInitialState() {
-        return {
-            showModal: false
-        };
-    },
-    getAddRuleHandler() {
+class RulesTableControls extends React.Component {
+    static propTypes = {
+        moveRulesToPage: PropTypes.func,
+        updateActiveRule: PropTypes.func,
+        deleteRules: PropTypes.func,
+        selectedRules: PropTypes.array,
+        rulesPage: PropTypes.number,
+        rulesCount: PropTypes.number,
+        bsSize: PropTypes.string
+    };
+
+    static defaultProps = {
+        moveRulesToPage: () => {},
+        updateActiveRule: () => {},
+        deleteRules: () => {},
+        selectedRules: []
+    };
+
+    state = {
+        showModal: false
+    };
+
+    getAddRuleHandler = () => {
         return function() {
             this.props.updateActiveRule({}, "new", false);
         }.bind(this);
-    },
-    getEditRuleHandler() {
+    };
+
+    getEditRuleHandler = () => {
         return function() {
             this.props.updateActiveRule(this.props.selectedRules[0], "edit", false);
         }.bind(this);
-    },
+    };
+
     render() {
         const bsSize = this.props.bsSize;
         const numberOfPages = Math.ceil(this.props.rulesCount / 10);
@@ -113,6 +115,6 @@ const RulesTableControls = React.createClass({
             </ButtonGroup>
         );
     }
-});
+}
 
 module.exports = RulesTableControls;

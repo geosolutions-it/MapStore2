@@ -11,9 +11,9 @@ const {createSelector} = require('reselect');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const LayersUtils = require('../utils/LayersUtils');
 
-const layersSelector = state => (state.layers && state.layers.flat) || (state.layers) || (state.config && state.config.layers);
-const markerSelector = state => (state.mapInfo && state.mapInfo.showMarker && state.mapInfo.clickPoint);
-const geoColderSelector = state => (state.search && state.search);
+const layersSelector = state => state.layers && state.layers.flat || state.layers || state.config && state.config.layers;
+const markerSelector = state => state.mapInfo && state.mapInfo.showMarker && state.mapInfo.clickPoint;
+const geoColderSelector = state => state.search && state.search;
 
 // TODO currently loading flag causes a re-creation of the selector on any pan
 // to avoid this separate loading from the layer object

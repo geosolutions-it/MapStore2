@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -21,28 +22,28 @@ require("./help.css");
  *  - isVisible: {bool}       flag to steer visibility of the badge
  *  - title (string)          header text of this panel
  */
-const HelpTextPanel = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        helpText: React.PropTypes.string,
-        isVisible: React.PropTypes.bool,
-        title: React.PropTypes.string,
-        onClose: React.PropTypes.func,
-        asPanel: React.PropTypes.bool,
-        closeGlyph: React.PropTypes.string,
-        panelStyle: React.PropTypes.object,
-        panelClassName: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            id: 'mapstore-helptext-panel',
-            isVisible: false,
-            title: 'HELP',
-            onClose: () => {},
-            asPanel: false,
-            closeGlyph: "1-close"
-        };
-    },
+class HelpTextPanel extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        helpText: PropTypes.string,
+        isVisible: PropTypes.bool,
+        title: PropTypes.string,
+        onClose: PropTypes.func,
+        asPanel: PropTypes.bool,
+        closeGlyph: PropTypes.string,
+        panelStyle: PropTypes.object,
+        panelClassName: PropTypes.string
+    };
+
+    static defaultProps = {
+        id: 'mapstore-helptext-panel',
+        isVisible: false,
+        title: 'HELP',
+        onClose: () => {},
+        asPanel: false,
+        closeGlyph: "1-close"
+    };
+
     render() {
         const panel = this.props.asPanel ? (<Panel
             header={<span><span className="help-panel-title">{this.props.title}</span><span className="help-panel-close panel-close" onClick={this.props.onClose}></span></span>}>
@@ -63,6 +64,6 @@ const HelpTextPanel = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = HelpTextPanel;

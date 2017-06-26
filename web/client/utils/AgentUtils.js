@@ -20,7 +20,7 @@ const AgentUtils = {
         return {maxWidth: width, maxHeight: height};
     }
 
- };
+};
 
 
 module.exports = AgentUtils;

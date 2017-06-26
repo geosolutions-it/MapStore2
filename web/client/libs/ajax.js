@@ -37,23 +37,23 @@ function addAuthenticationToAxios(axiosConfig) {
         return axiosConfig;
     }
     switch (SecurityUtils.getAuthenticationMethod(axiosConfig.url)) {
-        case 'authkey':
-            const token = SecurityUtils.getToken();
-            if (!token) {
-                return axiosConfig;
-            }
-            addParameterToAxiosConfig(axiosConfig, 'authkey', token);
+    case 'authkey':
+        const token = SecurityUtils.getToken();
+        if (!token) {
             return axiosConfig;
-        case 'basic':
-            const basicAuthHeader = SecurityUtils.getBasicAuthHeader();
-            if (!basicAuthHeader) {
-                return axiosConfig;
-            }
-            addHeaderToAxiosConfig(axiosConfig, 'Authorization', basicAuthHeader);
+        }
+        addParameterToAxiosConfig(axiosConfig, 'authkey', token);
+        return axiosConfig;
+    case 'basic':
+        const basicAuthHeader = SecurityUtils.getBasicAuthHeader();
+        if (!basicAuthHeader) {
             return axiosConfig;
-        default:
+        }
+        addHeaderToAxiosConfig(axiosConfig, 'Authorization', basicAuthHeader);
+        return axiosConfig;
+    default:
             // we cannot handle the required authentication method
-            return axiosConfig;
+        return axiosConfig;
     }
 }
 

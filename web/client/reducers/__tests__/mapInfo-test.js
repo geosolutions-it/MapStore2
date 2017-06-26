@@ -124,17 +124,17 @@ describe('Test the mapInfo reducer', () => {
             layer: {
                 features: [{
                     "type": "Feature",
-                     "geometry": {
-                       "type": "Polygon",
-                       "coordinates": [
-                         [ [9.0, 42.0], [11.0, 42.0], [11.0, 44.0],
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [
+                            [ [9.0, 42.0], [11.0, 42.0], [11.0, 44.0],
                            [9.0, 44.0], [9.0, 42.0] ]
-                         ]
-                     },
-                     "properties": {
-                       "prop0": "value0",
-                       "prop1": {"this": "that"}
-                     }
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop1": {"this": "that"}
+                    }
                 }]
             },
             request: {

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -13,19 +14,19 @@ const {Label, Checkbox} = require('react-bootstrap');
 const {DropdownList} = require('react-widgets');
 const Message = require('../../../I18N/Message');
 require('react-widgets/lib/less/react-widgets.less');
-module.exports = React.createClass({
-    propTypes: {
-        opacityText: React.PropTypes.node,
-        element: React.PropTypes.object,
-        formats: React.PropTypes.array,
-        settings: React.PropTypes.object,
-        onChange: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            onChange: () => {}
-        };
-    },
+module.exports = class extends React.Component {
+    static propTypes = {
+        opacityText: PropTypes.node,
+        element: PropTypes.object,
+        formats: PropTypes.array,
+        settings: PropTypes.object,
+        onChange: PropTypes.func
+    };
+
+    static defaultProps = {
+        onChange: () => {}
+    };
+
     render() {
         return (<div>
             {this.props.element.type === "wms" ?
@@ -62,4 +63,4 @@ module.exports = React.createClass({
                 </div>)] : null}
         </div>);
     }
-});
+};

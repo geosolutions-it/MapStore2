@@ -11,37 +11,37 @@ var assign = require('object-assign');
 
 function tasks(state = {}, action) {
     switch (action.type) {
-        case TASK_STARTED: {
-            return assign({}, state, {
-                [action.name]: {
-                    running: true
-                }
-            });
-        }
-        case TASK_SUCCESS: {
-            return assign({}, state, {
-                [action.name]: {
-                    actionPayload: action.actionPayload,
-                    name: action.name,
-                    result: action.result,
-                    running: false,
-                    success: true
-                }
-            });
-        }
-        case TASK_ERROR: {
-            return assign({}, state, {
-                [action.name]: {
-                    actionPayload: action.actionPayload,
-                    error: action.error,
-                    name: action.name,
-                    running: false,
-                    success: false
-                }
-            });
-        }
-        default:
-            return state;
+    case TASK_STARTED: {
+        return assign({}, state, {
+            [action.name]: {
+                running: true
+            }
+        });
+    }
+    case TASK_SUCCESS: {
+        return assign({}, state, {
+            [action.name]: {
+                actionPayload: action.actionPayload,
+                name: action.name,
+                result: action.result,
+                running: false,
+                success: true
+            }
+        });
+    }
+    case TASK_ERROR: {
+        return assign({}, state, {
+            [action.name]: {
+                actionPayload: action.actionPayload,
+                error: action.error,
+                name: action.name,
+                running: false,
+                success: false
+            }
+        });
+    }
+    default:
+        return state;
     }
 }
 

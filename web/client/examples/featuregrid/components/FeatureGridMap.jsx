@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -21,13 +22,13 @@ const Feature = require('../../../components/map/' + mapType + '/Feature');
 require('../../../components/map/' + mapType + '/plugins/index');
 
 const FeatureGridMap = (props) => {
-    let features = (props.selFeatures && props.selFeatures.length > 0) ? props.selFeatures : props.features;
+    let features = props.selFeatures && props.selFeatures.length > 0 ? props.selFeatures : props.features;
     return props.map ?
-        (
+
             <WMap {...props.map} {...props.actions}>
                 {props.layers.map((layer, index) =>
-                    <Layer key={layer.name} position={index} type={layer.type}
-                        options={assign({}, layer, {srs: props.map.projection})}/>
+                    (<Layer key={layer.name} position={index} type={layer.type}
+                        options={assign({}, layer, {srs: props.map.projection})}/>)
                 )}
                 <Layer type="vector" position={1} options={{name: "States"}}>
                 {
@@ -40,13 +41,13 @@ const FeatureGridMap = (props) => {
                 }
                 </Layer>
             </WMap>
-        ) : <span/>;
+         : <span/>;
 };
 
 FeatureGridMap.propTypes = {
-    mapType: React.PropTypes.string,
-    features: React.PropTypes.array,
-    selFeatures: React.PropTypes.array
+    mapType: PropTypes.string,
+    features: PropTypes.array,
+    selFeatures: PropTypes.array
 };
 
 FeatureGridMap.defaultProps = {
@@ -57,7 +58,7 @@ FeatureGridMap.defaultProps = {
 
 module.exports = connect((state) => {
     return {
-        map: state.map || (state.config && state.config.map),
+        map: state.map || state.config && state.config.map,
         layers: state.config && state.config.layers || [],
         features: state.featuregrid.jsonlayer.features || [],
         selFeatures: state.featuregrid.select || null

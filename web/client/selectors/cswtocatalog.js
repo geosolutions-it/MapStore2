@@ -81,7 +81,7 @@ const cswToCatalogSelector = (catalog) => {
                 }
             */
             if (wms) {
-                let absolute = (wms.value.indexOf("http") === 0);
+                let absolute = wms.value.indexOf("http") === 0;
                 if (!absolute) {
                     assign({}, wms, {value: getBaseCatalogUrl(searchOptions.catalogURL || searchOptions.url) + wms.value} );
                 }
@@ -95,7 +95,7 @@ const cswToCatalogSelector = (catalog) => {
                 references.push(wmsReference);
             }
             if (thumbURL) {
-                let absolute = (thumbURL.indexOf("http") === 0);
+                let absolute = thumbURL.indexOf("http") === 0;
                 if (!absolute) {
                     thumbURL = getBaseCatalogUrl(searchOptions.catalogURL || searchOptions.url) + thumbURL;
                 }

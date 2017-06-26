@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -13,42 +14,44 @@ const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
-var GroupsGrid = React.createClass({
-    propTypes: {
-        loadGroups: React.PropTypes.func,
-        onEdit: React.PropTypes.func,
-        onDelete: React.PropTypes.func,
-        myUserId: React.PropTypes.number,
-        fluid: React.PropTypes.bool,
-        groups: React.PropTypes.array,
-        loading: React.PropTypes.bool,
-        bottom: React.PropTypes.node,
-        colProps: React.PropTypes.object
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            loadGroups: () => {},
-            onEdit: () => {},
-            onDelete: () => {},
-            fluid: true,
-            colProps: {
-                xs: 12,
-                sm: 6,
-                md: 4,
-                lg: 3,
-                style: {
-                    "marginBottom": "20px"
-                }
+class GroupsGrid extends React.Component {
+    static propTypes = {
+        loadGroups: PropTypes.func,
+        onEdit: PropTypes.func,
+        onDelete: PropTypes.func,
+        myUserId: PropTypes.number,
+        fluid: PropTypes.bool,
+        groups: PropTypes.array,
+        loading: PropTypes.bool,
+        bottom: PropTypes.node,
+        colProps: PropTypes.object
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        loadGroups: () => {},
+        onEdit: () => {},
+        onDelete: () => {},
+        fluid: true,
+        colProps: {
+            xs: 12,
+            sm: 6,
+            md: 4,
+            lg: 3,
+            style: {
+                "marginBottom": "20px"
             }
-        };
-    },
+        }
+    };
+
     componentDidMount() {
         this.props.loadGroups();
-    },
-    renderLoading() {
+    }
+
+    renderLoading = () => {
         if (this.props.loading) {
             return (<div style={{
                 width: "100%",
@@ -68,25 +71,27 @@ var GroupsGrid = React.createClass({
             }}><Message msgId="loading" /><Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/></div></div>);
         }
 
-    },
-    renderGroups(groups) {
+    };
+
+    renderGroups = (groups) => {
         return groups.map((group) => {
             let actions = [{
-                     onClick: () => {this.props.onEdit(group); },
-                     glyph: "wrench",
-                     tooltip: LocaleUtils.getMessageById(this.context.messages, "usergroups.editGroup")
-             }, {
-                     onClick: () => {this.props.onDelete(group && group.id); },
-                     glyph: "remove-circle",
-                     tooltip: LocaleUtils.getMessageById(this.context.messages, "usergroups.deleteGroup")
-             }];
+                onClick: () => {this.props.onEdit(group); },
+                glyph: "wrench",
+                tooltip: LocaleUtils.getMessageById(this.context.messages, "usergroups.editGroup")
+            }, {
+                onClick: () => {this.props.onDelete(group && group.id); },
+                glyph: "remove-circle",
+                tooltip: LocaleUtils.getMessageById(this.context.messages, "usergroups.deleteGroup")
+            }];
             if ( group && group.groupName === "everyone") {
                 actions = [];
             }
 
             return <Col key={"user-" + group.id} {...this.props.colProps}><GroupCard group={group} actions={actions}/></Col>;
         });
-    },
+    };
+
     render() {
         return (
                 <Grid style={{position: "relative"}} fluid={this.props.fluid}>
@@ -100,6 +105,6 @@ var GroupsGrid = React.createClass({
                 </Grid>
         );
     }
-});
+}
 
 module.exports = GroupsGrid;

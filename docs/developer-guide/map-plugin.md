@@ -48,15 +48,16 @@ In addition to standard tools, you can also develop your own, ad configure them 
 ```js
 const React = require('react');
 
-const TestSupport = React.createClass({
-    propTypes: {
-        label: React.PropTypes.string
-    },
+class TestSupport extends React.Component {
+    static propTypes = {
+        label: PropTypes.string
+    };
+    
     render() {
         alert(this.props.label);
         return null;
     }
-});
+}
 
 module.exports = TestSupport;
 ```

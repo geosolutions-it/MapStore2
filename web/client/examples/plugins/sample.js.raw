@@ -7,14 +7,14 @@ const Comp = connect((state) => ({
 }), {
     onClick: clickHandler
 })(
-  React.createClass({
+  class extends React.Component{
       render() {
           return (
             <div style={{position:"absolute",bottom:"100px",left:"200px"}}>
               {this.props.msg} <ToggleButton glyphicon="plus" onClick={this.props.onClick}/>
             </div>);
       }
-  })
+  }
 );
 
 module.exports = {

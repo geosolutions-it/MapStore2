@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -15,28 +16,28 @@ var VisibilityCheck = require('../../../components/TOC/fragments/VisibilityCheck
 var Title = require('../../../components/TOC/fragments/Title');
 var WMSLegend = require('../../../components/TOC/fragments/WMSLegend');
 
-var LayerOrGroup = React.createClass({
-    propTypes: {
-        node: React.PropTypes.object,
-        propertiesChangeHandler: React.PropTypes.func,
-        groupPropertiesChangeHandler: React.PropTypes.func,
-        onToggleGroup: React.PropTypes.func,
-        onSortGroup: React.PropTypes.func,
-        onRemoveGroup: React.PropTypes.func,
-        onLegend: React.PropTypes.func,
-        onSettings: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            onSortGroup: () => {},
-            onRemoveGroup: () => {},
-            onToggleGroup: () => {},
-            onLegend: () => {},
-            onSettings: () => {},
-            propertiesChangeHandler: () => {},
-            groupPropertiesChangeHandler: () => {}
-        };
-    },
+class LayerOrGroup extends React.Component {
+    static propTypes = {
+        node: PropTypes.object,
+        propertiesChangeHandler: PropTypes.func,
+        groupPropertiesChangeHandler: PropTypes.func,
+        onToggleGroup: PropTypes.func,
+        onSortGroup: PropTypes.func,
+        onRemoveGroup: PropTypes.func,
+        onLegend: PropTypes.func,
+        onSettings: PropTypes.func
+    };
+
+    static defaultProps = {
+        onSortGroup: () => {},
+        onRemoveGroup: () => {},
+        onToggleGroup: () => {},
+        onLegend: () => {},
+        onSettings: () => {},
+        propertiesChangeHandler: () => {},
+        groupPropertiesChangeHandler: () => {}
+    };
+
     render() {
         if (this.props.node) {
             let {children, onSettings, ...props} = this.props;
@@ -44,11 +45,11 @@ var LayerOrGroup = React.createClass({
                 <VisibilityCheck key="visibility" propertiesChangeHandler={this.props.propertiesChangeHandler}
                     checkType={(node) => node.group === 'background' ? 'radio' : 'checkbox'}/>,
                 <Title key="title"/>].concat(this.props.node.group !== 'background' ?
-                    [<LayersTool key="toolsettings" style={{"float": "right", cursor: "pointer"}} glyph="adjust"
+                [<LayersTool key="toolsettings" style={{"float": "right", cursor: "pointer"}} glyph="adjust"
                         onClick={(node) => this.props.onSettings(node, "layers", {opacity: parseFloat(node.opacity) || 1.0})}/>,
                     <LayersTool key="toollegend" ref="target" glyph="list"
                     onClick={(node) => this.props.onLegend(node)}/>,
-                <WMSLegend key="wmslegend" position="collapsible"/>] : [])
+                    <WMSLegend key="wmslegend" position="collapsible"/>] : [])
             ;
             if (this.props.node.type === 'group') {
                 return (
@@ -68,6 +69,6 @@ var LayerOrGroup = React.createClass({
         }
         return null;
     }
-});
+}
 
 module.exports = LayerOrGroup;

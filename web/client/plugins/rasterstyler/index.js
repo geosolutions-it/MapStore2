@@ -29,9 +29,9 @@ const GrayBandSelector = connect((state) => { return state.rasterstyler.grayband
         onChange: setRasterStyleParameter.bind(null, 'grayband')
     })(require('../../components/style/BandSelector'));
 const PseudoBandSelector = connect((state) => { return state.rasterstyler.pseudoband || {}; },
-{
-    onChange: setRasterStyleParameter.bind(null, 'pseudoband')
-})(require('../../components/style/BandSelector'));
+    {
+        onChange: setRasterStyleParameter.bind(null, 'pseudoband')
+    })(require('../../components/style/BandSelector'));
 
 const RasterStyleTypePicker = connect((state) => { return state.rasterstyler.typepicker || {}; },
     {

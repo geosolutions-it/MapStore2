@@ -38,7 +38,7 @@ describe("Test GroupGrid Component", () => {
             <GroupGrid groups={[group1]}/>, document.getElementById("container"));
         expect(comp).toExist();
         comp = ReactDOM.render(
-            <GroupGrid groups={[group1]} loading={true}/>, document.getElementById("container"));
+            <GroupGrid groups={[group1]} loading/>, document.getElementById("container"));
         expect(comp).toExist();
         let domNode = ReactDOM.findDOMNode(comp);
         expect(domNode.className).toBe("container-fluid");
@@ -61,7 +61,7 @@ describe("Test GroupGrid Component", () => {
     });
     it('Test everyone\'s group rendering in grid', () => {
         let comp = ReactDOM.render(
-            <GroupGrid groups={[{id: 999, groupName: "everyone"}]} loading={true}/>, document.getElementById("container"));
+            <GroupGrid groups={[{id: 999, groupName: "everyone"}]} loading/>, document.getElementById("container"));
         expect(comp).toExist();
         let domNode = ReactDOM.findDOMNode(comp);
         expect(domNode.className).toBe("container-fluid");

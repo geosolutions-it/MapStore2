@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -16,70 +17,74 @@ let PMap;
 let Layer;
 let Feature;
 
-const MapPreview = React.createClass({
-    propTypes: {
-        map: React.PropTypes.object,
-        layers: React.PropTypes.array,
-        style: React.PropTypes.object,
-        scales: React.PropTypes.array,
-        onChangeZoomLevel: React.PropTypes.func,
-        onMapViewChanges: React.PropTypes.func,
-        onMapRefresh: React.PropTypes.func,
-        height: React.PropTypes.number,
-        width: React.PropTypes.number,
-        mapType: React.PropTypes.string,
-        enableRefresh: React.PropTypes.bool,
-        enableScalebox: React.PropTypes.bool,
-        resolutions: React.PropTypes.array,
-        printRatio: React.PropTypes.number,
-        layout: React.PropTypes.string,
-        layoutSize: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            map: null,
-            layers: [],
-            mapType: "leaflet",
-            style: {display: "block", border: "1px solid black", position: "relative"},
-            onChangeZoomLevel: () => {},
-            onMapViewChanges: () => {},
-            onMapRefresh: () => {},
-            width: 370,
-            height: 270,
-            enableRefresh: true,
-            enableScalebox: true,
-            printRatio: 96.0 / 72.0
-        };
-    },
+class MapPreview extends React.Component {
+    static propTypes = {
+        map: PropTypes.object,
+        layers: PropTypes.array,
+        style: PropTypes.object,
+        scales: PropTypes.array,
+        onChangeZoomLevel: PropTypes.func,
+        onMapViewChanges: PropTypes.func,
+        onMapRefresh: PropTypes.func,
+        height: PropTypes.number,
+        width: PropTypes.number,
+        mapType: PropTypes.string,
+        enableRefresh: PropTypes.bool,
+        enableScalebox: PropTypes.bool,
+        resolutions: PropTypes.array,
+        printRatio: PropTypes.number,
+        layout: PropTypes.string,
+        layoutSize: PropTypes.object
+    };
+
+    static defaultProps = {
+        map: null,
+        layers: [],
+        mapType: "leaflet",
+        style: {display: "block", border: "1px solid black", position: "relative"},
+        onChangeZoomLevel: () => {},
+        onMapViewChanges: () => {},
+        onMapRefresh: () => {},
+        width: 370,
+        height: 270,
+        enableRefresh: true,
+        enableScalebox: true,
+        printRatio: 96.0 / 72.0
+    };
+
     componentWillMount() {
         PMap = require('../map/' + this.props.mapType + '/Map');
         Layer = require('../map/' + this.props.mapType + '/Layer');
         require('../map/' + this.props.mapType + '/plugins/index');
         Feature = require('../map/' + this.props.mapType + '/index').Feature;
-    },
-    getRatio() {
+    }
+
+    getRatio = () => {
         if (this.props.width && this.props.layoutSize && this.props.resolutions) {
             return this.props.layoutSize.width / this.props.width * this.props.printRatio;
         }
         return 1;
-    },
-    getResolutions() {
+    };
+
+    getResolutions = () => {
         if (this.props.width && this.props.layoutSize && this.props.resolutions) {
             return this.props.resolutions.map((resolution) => resolution * this.getRatio());
         }
         return this.props.resolutions;
-    },
-    adjustResolution(layer) {
+    };
+
+    adjustResolution = (layer) => {
         const ratio = this.getRatio();
-        const dpi = Math.round((96.0 / ratio));
+        const dpi = Math.round(96.0 / ratio);
         return assign({}, layer, {
             params: assign({}, layer.params, {
                 "format_options": "dpi:" + dpi,
                 "MAP.RESOLUTION": dpi
             })
         });
-    },
-    renderLayerContent(layer) {
+    };
+
+    renderLayerContent = (layer) => {
         if (layer.features && layer.type === "vector") {
             return layer.features.map( (feature) => {
                 return (
@@ -94,7 +99,8 @@ const MapPreview = React.createClass({
             });
         }
         return null;
-    },
+    };
+
     render() {
         const style = assign({}, this.props.style, {
             width: this.props.width + "px",
@@ -104,7 +110,7 @@ const MapPreview = React.createClass({
         const mapOptions = resolutions ? {view: {resolutions}} : {};
         const projection = this.props.map.projection || 'EPSG:3857';
         return this.props.map && this.props.map.center ?
-        (
+
                 <div className="print-map-preview"><PMap
                 ref="mappa"
                 {...this.props.map}
@@ -120,10 +126,10 @@ const MapPreview = React.createClass({
                 mapOptions={mapOptions}
                 >
                 {this.props.layers.map((layer, index) =>
-                    <Layer key={layer.id || layer.name} position={index} type={layer.type}
+                    (<Layer key={layer.id || layer.name} position={index} type={layer.type}
                         options={assign({}, this.adjustResolution(layer), {srs: projection})}>
                         {this.renderLayerContent(layer)}
-                    </Layer>
+                    </Layer>)
 
                 )}
                 </PMap>
@@ -134,8 +140,8 @@ const MapPreview = React.createClass({
                     /> : null}
                 {this.props.enableRefresh ? <Button bsStyle="primary" onClick={this.props.onMapRefresh} className="print-mappreview-refresh"><Glyphicon glyph="refresh"/></Button> : null}
                 </div>
-        ) : <span/>;
+         : <span/>;
     }
-});
+}
 
 module.exports = MapPreview;

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -15,26 +16,26 @@ const PluginsUtils = require('../utils/PluginsUtils');
 const ConfigUtils = require('../utils/ConfigUtils');
 
 const PluginsContainer = connect((state) => ({
-    mode: (urlQuery.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop')),
+    mode: urlQuery.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
     pluginsState: state && state.controls || {},
     monitoredState: PluginsUtils.getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
 }))(require('../components/plugins/PluginsContainer'));
 
-const Embedded = React.createClass({
-    propTypes: {
-        params: React.PropTypes.object,
-        plugins: React.PropTypes.object,
-        pluginsConfig: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            mode: 'desktop',
-            pluginsConfig: {
-                desktop: [],
-                mobile: []
-            }
-        };
-    },
+class Embedded extends React.Component {
+    static propTypes = {
+        params: PropTypes.object,
+        plugins: PropTypes.object,
+        pluginsConfig: PropTypes.object
+    };
+
+    static defaultProps = {
+        mode: 'desktop',
+        pluginsConfig: {
+            desktop: [],
+            mobile: []
+        }
+    };
+
     render() {
         return (<PluginsContainer key="embedded" id="mapstore2-embedded" className="mapstore2-embedded"
             pluginsConfig={this.props.pluginsConfig}
@@ -42,6 +43,6 @@ const Embedded = React.createClass({
             params={this.props.params}
             />);
     }
-});
+}
 
 module.exports = Embedded;

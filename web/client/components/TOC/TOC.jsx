@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -9,21 +10,21 @@
 var React = require('react');
 var Sortable = require('react-sortable-items');
 require('./css/toc.css');
-const TOC = React.createClass({
-    propTypes: {
-        filter: React.PropTypes.func,
-        nodes: React.PropTypes.array,
-        id: React.PropTypes.string,
-        onSort: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            filter() {return true; },
-            nodes: [],
-            id: 'mapstore-layers',
-            onSort: null
-        };
-    },
+
+class TOC extends React.Component {
+    static propTypes = {
+        filter: PropTypes.func,
+        nodes: PropTypes.array,
+        id: PropTypes.string,
+        onSort: PropTypes.func
+    };
+
+    static defaultProps = {
+        filter() {return true; },
+        nodes: [],
+        id: 'mapstore-layers',
+        onSort: null
+    };
 
     render() {
         var content = [];
@@ -47,10 +48,11 @@ const TOC = React.createClass({
             );
         }
         return <div id={this.props.id}>{content}</div>;
-    },
-    handleSort: function(reorder) {
-        this.props.onSort('root', reorder);
     }
-});
+
+    handleSort = (reorder) => {
+        this.props.onSort('root', reorder);
+    };
+}
 
 module.exports = TOC;

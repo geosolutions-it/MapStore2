@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -13,33 +14,35 @@ const Message = require('../../I18N/Message');
 const Dialog = require('../../misc/Dialog');
 
 
-const MeasureDialog = React.createClass({
-    propTypes: {
-        show: React.PropTypes.bool,
-        closeGlyph: React.PropTypes.string,
-        onClose: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            show: false,
-            closeGlyph: "1-close"
-        };
-    },
-    onClose() {
+class MeasureDialog extends React.Component {
+    static propTypes = {
+        show: PropTypes.bool,
+        closeGlyph: PropTypes.string,
+        onClose: PropTypes.func
+    };
+
+    static defaultProps = {
+        show: false,
+        closeGlyph: "1-close"
+    };
+
+    onClose = () => {
         this.props.onClose(false);
-    },
+    };
+
     render() {
-        return this.props.show ? (<Dialog>
+        return this.props.show ? <Dialog>
             <div key="header" role="header">
                 <Glyphicon glyph="1-ruler"/>&nbsp;<Message key="title" msgId="measureComponent.Measure"/>
                 <button key="close" onClick={this.onClose} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
             </div>
             <div key="body" className="panel-body" role="body">
             <MeasureComponent id="measure-panel" style={{
-                    minWidth: "500px"
-                }}{...this.props}/>
+                minWidth: "500px"
+            }}{...this.props}/>
             </div>
-        </Dialog>) : null;
+        </Dialog> : null;
     }
-});
+}
+
 module.exports = MeasureDialog;

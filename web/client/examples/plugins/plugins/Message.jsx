@@ -10,7 +10,7 @@ const {connect} = require('react-redux');
 
 const MessagePlugin = connect((state) => ({
     content: state.my.content
-}))((props) => (props.content ? <div className="myMessage" style={props.style}>{props.content}</div> : <span/>));
+}))((props) => props.content ? <div className="myMessage" style={props.style}>{props.content}</div> : <span/>);
 
 module.exports = {
     MessagePlugin,

@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -15,54 +16,56 @@ const LocaleUtils = require('../../../utils/LocaleUtils');
 
 require('react-select/dist/react-select.css');
 
-const RuleAttributeSelect = React.createClass({
-    propTypes: {
-        loadOptions: React.PropTypes.func,
-        onInputChange: React.PropTypes.func,
-        onValueUpdated: React.PropTypes.func,
-        options: React.PropTypes.array,
-        placeholderMsgId: React.PropTypes.string,
-        selectedValue: React.PropTypes.string,
-        className: React.PropTypes.string,
-        disabled: React.PropTypes.bool,
-        paginated: React.PropTypes.bool,
-        currentPage: React.PropTypes.number,
-        valuesCount: React.PropTypes.number,
-        clearable: React.PropTypes.bool,
-        staticValues: React.PropTypes.bool
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getInitialState() {
-        return {
-            loading: false
-        };
-    },
-    getDefaultProps() {
-        return {
-            loadOptions: () => {},
-            onInputChange: () => {},
-            onValueUpdated: () => {},
-            options: [],
-            disabled: false,
-            paginated: false,
-            paginationInfo: {},
-            currentPage: 0,
-            valuesCount: 0,
-            clearable: true,
-            staticValues: false
-        };
-    },
+class RuleAttributeSelect extends React.Component {
+    static propTypes = {
+        loadOptions: PropTypes.func,
+        onInputChange: PropTypes.func,
+        onValueUpdated: PropTypes.func,
+        options: PropTypes.array,
+        placeholderMsgId: PropTypes.string,
+        selectedValue: PropTypes.string,
+        className: PropTypes.string,
+        disabled: PropTypes.bool,
+        paginated: PropTypes.bool,
+        currentPage: PropTypes.number,
+        valuesCount: PropTypes.number,
+        clearable: PropTypes.bool,
+        staticValues: PropTypes.bool
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        loadOptions: () => {},
+        onInputChange: () => {},
+        onValueUpdated: () => {},
+        options: [],
+        disabled: false,
+        paginated: false,
+        paginationInfo: {},
+        currentPage: 0,
+        valuesCount: 0,
+        clearable: true,
+        staticValues: false
+    };
+
+    state = {
+        loading: false
+    };
+
     componentWillReceiveProps() {
         this.setState({loading: false});
-    },
-    getOptions() {
+    }
+
+    getOptions = () => {
         return this.props.options.map(option => {
             return { value: option, label: option };
         });
-    },
-    renderPagination() {
+    };
+
+    renderPagination = () => {
         const numberOfPages = Math.ceil(this.props.valuesCount / 10);
         const firstPage = this.props.currentPage === 1 || !this.props.currentPage;
         const lastPage = this.props.currentPage === numberOfPages || !this.props.currentPage;
@@ -85,13 +88,16 @@ const RuleAttributeSelect = React.createClass({
                 }
             </div>
         );
-    },
-    renderOption(option) {
+    };
+
+    renderOption = (option) => {
         return <span>{option.label} {option.pagination}</span>;
-    },
-    renderValue(option) {
+    };
+
+    renderValue = (option) => {
         return <strong>{option.label}</strong>;
-    },
+    };
+
     render() {
         let selectedValue;
         if (this.props.selectedValue && this.props.selectedValue !== "*") {
@@ -114,7 +120,7 @@ const RuleAttributeSelect = React.createClass({
                     }
                     this.props.loadOptions();
                 }}
-                searchable={true}
+                searchable
                 matchPos="any"
                 matchProp="any"
                 clearable={this.props.clearable}
@@ -132,6 +138,6 @@ const RuleAttributeSelect = React.createClass({
                     this.props.placeholderMsgId || "")}/>
         );
     }
-});
+}
 
 module.exports = RuleAttributeSelect;

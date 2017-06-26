@@ -8,33 +8,34 @@
 
 const React = require('react');
 const {Glyphicon} = require('react-bootstrap');
+const PropTypes = require('prop-types');
 
-const PaginationButton = React.createClass({
-    propTypes: {
-        side: React.PropTypes.number,
-        direction: React.PropTypes.bool,
-        vertical: React.PropTypes.bool,
-        glyphs: React.PropTypes.object,
-        onClick: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            side: 0,
-            direction: true,
-            vertical: false,
-            glyphs: {
-                horizontal: {
-                    next: 'chevron-right',
-                    back: 'chevron-left'
-                },
-                vertical: {
-                    next: 'chevron-down',
-                    back: 'chevron-up'
-                }
+class PaginationButton extends React.Component {
+    static propTypes = {
+        side: PropTypes.number,
+        direction: PropTypes.bool,
+        vertical: PropTypes.bool,
+        glyphs: PropTypes.object,
+        onClick: PropTypes.func
+    };
+
+    static defaultProps = {
+        side: 0,
+        direction: true,
+        vertical: false,
+        glyphs: {
+            horizontal: {
+                next: 'chevron-right',
+                back: 'chevron-left'
             },
-            onClick: () => {}
-        };
-    },
+            vertical: {
+                next: 'chevron-down',
+                back: 'chevron-up'
+            }
+        },
+        onClick: () => {}
+    };
+
     render() {
         const glyph = this.props.glyphs[this.props.vertical ? 'vertical' : 'horizontal'][this.props.direction ? 'next' : 'back'];
         const paginationClass = this.props.vertical ? 'background-plugin-pagination-btn-vertical text-center' : 'background-plugin-pagination-btn-horizontal';
@@ -45,6 +46,6 @@ const PaginationButton = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = PaginationButton;

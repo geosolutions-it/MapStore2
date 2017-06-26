@@ -1,4 +1,5 @@
 
+var PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -10,21 +11,21 @@ var React = require('react');
 var {FormControl} = require('react-bootstrap');
 var LocaleUtils = require('../../utils/LocaleUtils');
 
-var LangSelector = React.createClass({
-    propTypes: {
-        id: React.PropTypes.string,
-        locales: React.PropTypes.object,
-        currentLocale: React.PropTypes.string,
-        onLanguageChange: React.PropTypes.func
-    },
-    getDefaultProps() {
-        return {
-            id: "mapstore-langselector",
-            locales: LocaleUtils.getSupportedLocales(),
-            currentLocale: 'en-US',
-            onLanguageChange: function() {}
-        };
-    },
+class LangSelector extends React.Component {
+    static propTypes = {
+        id: PropTypes.string,
+        locales: PropTypes.object,
+        currentLocale: PropTypes.string,
+        onLanguageChange: PropTypes.func
+    };
+
+    static defaultProps = {
+        id: "mapstore-langselector",
+        locales: LocaleUtils.getSupportedLocales(),
+        currentLocale: 'en-US',
+        onLanguageChange: function() {}
+    };
+
     render() {
         var val;
         var label;
@@ -41,10 +42,11 @@ var LangSelector = React.createClass({
                     {list}
                 </FormControl>
         );
-    },
-    launchNewLangAction(e) {
-        this.props.onLanguageChange(e.target.value);
     }
-});
+
+    launchNewLangAction = (e) => {
+        this.props.onLanguageChange(e.target.value);
+    };
+}
 
 module.exports = LangSelector;

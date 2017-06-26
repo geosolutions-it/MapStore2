@@ -14,9 +14,9 @@ let expect = require('expect');
 describe('leaflet Locate component', () => {
     document.body.innerHTML = '<div id="map"></div>';
     let map = L.map("map", {
-            center: [51.505, -0.09],
-            zoom: 13
-        });
+        center: [51.505, -0.09],
+        zoom: 13
+    });
 
     afterEach((done) => {
         document.body.innerHTML = '<div id="map"></div>';

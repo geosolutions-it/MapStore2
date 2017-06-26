@@ -12,15 +12,15 @@ const GeoCodeUtils = {
     // so:          0 --> 1,  1 --> 3.  2 --> 0,  3 --> 2
     nominiatimIndexToBboxIndex: (index) => {
         switch (index) {
-            case 0:
-                return 1;
-            case 1:
-                return 3;
-            case 2:
-                return 0;
-            case 3:
-                return 2;
-            default:
+        case 0:
+            return 1;
+        case 1:
+            return 3;
+        case 2:
+            return 0;
+        case 3:
+            return 2;
+        default:
         }
     },
     /**
@@ -46,7 +46,7 @@ const GeoCodeUtils = {
                 }
             };
         });
-    },// see http://wiki.openstreetmap.org/wiki/Bounding_Box
+    }, // see http://wiki.openstreetmap.org/wiki/Bounding_Box
 
     nominatimToLayer(name, searchResults) {
         return {

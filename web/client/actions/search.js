@@ -25,7 +25,7 @@ const TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE = 'TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE
  * @param {boolean} append [false] tells to append the result to existing ones or not
  * @param {object[]} servies services intrested to use for the next search
  */
-function searchResultLoaded(results, append=false, services) {
+function searchResultLoaded(results, append = false, services) {
     return {
         type: TEXT_SEARCH_RESULTS_LOADED,
         results: results,

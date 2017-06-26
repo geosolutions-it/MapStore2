@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -10,10 +11,11 @@ const Draggable = require('react-draggable');
 
 const {PrintPlugin} = require('../../../plugins/Print');
 
-const PrintPreview = React.createClass({
-    propTypes: {
-        style: React.PropTypes.object
-    },
+class PrintPreview extends React.Component {
+    static propTypes = {
+        style: PropTypes.object
+    };
+
     render() {
         return (
            <Draggable start={{x: 0, y: 0}} handle=".panel-heading, .panel-heading *">
@@ -24,6 +26,6 @@ const PrintPreview = React.createClass({
            </Draggable>
         );
     }
-});
+}
 
 module.exports = PrintPreview;

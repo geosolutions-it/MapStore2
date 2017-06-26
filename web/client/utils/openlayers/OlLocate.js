@@ -15,51 +15,51 @@ var OlLocate = function(map, optOptions) {
     ol.Object.call(this, {state: "DISABLED"});
     this.map = map;
     let defOptions = {
-            drawCircle: true,// draw accuracy circle
-            follow: true,// follow with zoom and pan the user's location
-            stopFollowingOnDrag: false, // if follow is true, stop following when map is dragged (deprecated)
+        drawCircle: true, // draw accuracy circle
+        follow: true, // follow with zoom and pan the user's location
+        stopFollowingOnDrag: false, // if follow is true, stop following when map is dragged (deprecated)
             // if true locate control remains active on click even if the user's location is in view.
             // clicking control will just pan to location not implemented
-            remainActive: true,
-            locateStyle: this._getDefaultStyles(),
-            metric: true,
-            onLocationError: this.onLocationError,
+        remainActive: true,
+        locateStyle: this._getDefaultStyles(),
+        metric: true,
+        onLocationError: this.onLocationError,
             // keep the current map zoom level when displaying the user's location. (if 'false', use maxZoom)
-            keepCurrentZoomLevel: false,
-            showPopup: true, // display a popup when the user click on the inner marker
-            strings: {
-                metersUnit: "meters",
-                feetUnit: "feet",
-                popup: "You are within {distance} {unit} from this point"
-            },
-            locateOptions: {
-                maximumAge: 2000,
-                enableHighAccuracy: false,
-                timeout: 10000,
-                maxZoom: 18
-            }
-        };
+        keepCurrentZoomLevel: false,
+        showPopup: true, // display a popup when the user click on the inner marker
+        strings: {
+            metersUnit: "meters",
+            feetUnit: "feet",
+            popup: "You are within {distance} {unit} from this point"
+        },
+        locateOptions: {
+            maximumAge: 2000,
+            enableHighAccuracy: false,
+            timeout: 10000,
+            maxZoom: 18
+        }
+    };
 
     this.options = assign({}, defOptions, optOptions || {} );
     this.geolocate = new ol.Geolocation({
-                        projection: this.map.getView().getProjection(),
-                        trackingOptions: this.options.locateOptions
-                    });
+        projection: this.map.getView().getProjection(),
+        trackingOptions: this.options.locateOptions
+    });
     this.geolocate.on('change:position', this._updatePosFt, this);
     this.popup = popUp;
     this.popup.hidden = true;
     this.popCnt = popUp.getElementsByClassName("ol-popup-cnt")[0];
     this.overlay = new ol.Overlay({
-                        element: this.popup,
-                        positioning: 'top-center',
-                        stopEvent: false
-                    });
+        element: this.popup,
+        positioning: 'top-center',
+        stopEvent: false
+    });
     this.layer = new ol.layer.Vector({
-                    source: new ol.source.Vector({useSpatialIndex: false})});
+        source: new ol.source.Vector({useSpatialIndex: false})});
     this.posFt = new ol.Feature({
-                    geometry: this.geolocate.getAccuracyGeometry(),
-                    name: 'position',
-                    id: '_locate-pos'});
+        geometry: this.geolocate.getAccuracyGeometry(),
+        name: 'position',
+        id: '_locate-pos'});
     this.posFt.setStyle(this.options.locateStyle);
     this.layer.getSource().addFeature(this.posFt);
 };
@@ -81,7 +81,7 @@ OlLocate.prototype.start = function() {
     }
     if (!this.p) {
         this.set("state", "LOCATING");
-    }else {
+    } else {
         this._updatePosFt();
     }
 };
@@ -119,7 +119,7 @@ OlLocate.prototype.stopFollow = function() {
 
 OlLocate.prototype._updatePosFt = function() {
     let state = this.get("state");
-    let nState = (this.follow) ? "FOLLOWING" : "ENABLED";
+    let nState = this.follow ? "FOLLOWING" : "ENABLED";
     if (nState !== state) {
         this.set("state", nState);
     }
@@ -186,14 +186,14 @@ OlLocate.prototype.mapClick = function(evt) {
 
 OlLocate.prototype._getDefaultStyles = function() {
     return new ol.style.Style({
-                image: new ol.style.Circle({
-                        radius: 6,
-                        fill: new ol.style.Fill({color: 'rgba(42,147,238,0.7)'}),
-                        stroke: new ol.style.Stroke({color: 'rgba(19,106,236,1)', width: 2})
-                }),
-                fill: new ol.style.Fill({color: 'rgba(19,106,236,0.15)'}),
-                stroke: new ol.style.Stroke({color: 'rgba(19,106,236,1)', width: 2})
-        });
+        image: new ol.style.Circle({
+            radius: 6,
+            fill: new ol.style.Fill({color: 'rgba(42,147,238,0.7)'}),
+            stroke: new ol.style.Stroke({color: 'rgba(19,106,236,1)', width: 2})
+        }),
+        fill: new ol.style.Fill({color: 'rgba(19,106,236,0.15)'}),
+        stroke: new ol.style.Stroke({color: 'rgba(19,106,236,1)', width: 2})
+    });
 };
 
 OlLocate.prototype.setStrings = function(newStrings) {

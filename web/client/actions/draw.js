@@ -31,8 +31,8 @@ function endDrawing(geometry, owner) {
 
 function setCurrentStyle(style) {
     return {
-          type: SET_CURRENT_STYLE,
-          currentStyle: style
+        type: SET_CURRENT_STYLE,
+        currentStyle: style
     };
 }
 

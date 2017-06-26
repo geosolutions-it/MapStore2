@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -23,102 +24,107 @@ const LocaleUtils = require('../../../utils/LocaleUtils');
 require("ag-grid/dist/styles/ag-grid.css");
 require("ag-grid/dist/styles/theme-fresh.css");
 
-const FeatureGrid = React.createClass({
-    propTypes: {
-        features: React.PropTypes.oneOfType([React.PropTypes.array, React.PropTypes.func]),
-        select: React.PropTypes.array,
-        columnDefs: React.PropTypes.array,
-        changeMapView: React.PropTypes.func,
-        selectFeatures: React.PropTypes.func,
-        highlightedFeatures: React.PropTypes.array,
-        style: React.PropTypes.object,
-        virtualPaging: React.PropTypes.bool,
-        paging: React.PropTypes.bool,
-        pageSize: React.PropTypes.number,
-        overflowSize: React.PropTypes.number,
-        agGridOptions: React.PropTypes.object,
-        columnDefaultOptions: React.PropTypes.object,
-        excludeFields: React.PropTypes.array,
-        map: React.PropTypes.object,
-        enableZoomToFeature: React.PropTypes.bool,
-        srs: React.PropTypes.string,
-        maxZoom: React.PropTypes.number,
-        zoom: React.PropTypes.number,
-        toolbar: React.PropTypes.object,
-        dataSource: React.PropTypes.object,
-        selectAll: React.PropTypes.func,
-        selectAllActive: React.PropTypes.bool,
-        zoomToFeatureAction: React.PropTypes.func,
-        exportAction: React.PropTypes.func,
-        tools: React.PropTypes.array,
-        useIcons: React.PropTypes.bool
-    },
-    contextTypes: {
-        messages: React.PropTypes.object
-    },
-    getDefaultProps() {
-        return {
-            highlightedFeatures: null,
-            features: null,
-            select: [],
-            columnDefs: null,
-            changeMapView: () => {},
-            selectFeatures: () => {},
-            style: {
-                height: "400px",
-                width: "800px"
-            },
-            virtualPaging: false,
-            paging: false,
-            overflowSize: 10,
-            pageSize: 10,
-            agGridOptions: {},
-            columnDefaultOptions: {
-                width: 125
-            },
-            excludeFields: [],
-            map: {},
-            zoom: null,
-            enableZoomToFeature: true,
-            srs: "EPSG:4326",
-            tools: [],
-            toolbar: {
-                zoom: true,
-                exporter: true,
-                toolPanel: true,
-                selectAll: true
-            },
-            dataSource: null,
-            selectAllActive: false,
-            exportAction: (api) => {
-                if ( api) {
-                    api.exportDataAsCsv();
-                }
+class FeatureGrid extends React.Component {
+    static propTypes = {
+        features: PropTypes.oneOfType([PropTypes.array, PropTypes.func]),
+        select: PropTypes.array,
+        columnDefs: PropTypes.array,
+        changeMapView: PropTypes.func,
+        selectFeatures: PropTypes.func,
+        highlightedFeatures: PropTypes.array,
+        style: PropTypes.object,
+        virtualPaging: PropTypes.bool,
+        paging: PropTypes.bool,
+        pageSize: PropTypes.number,
+        overflowSize: PropTypes.number,
+        agGridOptions: PropTypes.object,
+        columnDefaultOptions: PropTypes.object,
+        excludeFields: PropTypes.array,
+        map: PropTypes.object,
+        enableZoomToFeature: PropTypes.bool,
+        srs: PropTypes.string,
+        maxZoom: PropTypes.number,
+        zoom: PropTypes.number,
+        toolbar: PropTypes.object,
+        dataSource: PropTypes.object,
+        selectAll: PropTypes.func,
+        selectAllActive: PropTypes.bool,
+        zoomToFeatureAction: PropTypes.func,
+        exportAction: PropTypes.func,
+        tools: PropTypes.array,
+        useIcons: PropTypes.bool
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
+    static defaultProps = {
+        highlightedFeatures: null,
+        features: null,
+        select: [],
+        columnDefs: null,
+        changeMapView: () => {},
+        selectFeatures: () => {},
+        style: {
+            height: "400px",
+            width: "800px"
+        },
+        virtualPaging: false,
+        paging: false,
+        overflowSize: 10,
+        pageSize: 10,
+        agGridOptions: {},
+        columnDefaultOptions: {
+            width: 125
+        },
+        excludeFields: [],
+        map: {},
+        zoom: null,
+        enableZoomToFeature: true,
+        srs: "EPSG:4326",
+        tools: [],
+        toolbar: {
+            zoom: true,
+            exporter: true,
+            toolPanel: true,
+            selectAll: true
+        },
+        dataSource: null,
+        selectAllActive: false,
+        exportAction: (api) => {
+            if ( api) {
+                api.exportDataAsCsv();
             }
-        };
-    },
+        }
+    };
+
     shouldComponentUpdate(nextProps) {
         return !isEqual(nextProps, this.props);
-    },
+    }
+
     componentWillUpdate(nextProps) {
-        if (!isEqual(nextProps.features, this.props.features) && (this.api.getSelectedNodes().length > 0)) {
+        if (!isEqual(nextProps.features, this.props.features) && this.api.getSelectedNodes().length > 0) {
             this.suppresSelectionEvent = true;
         }
-    },
+    }
+
     componentDidUpdate() {
         if (this.props.highlightedFeatures) {
             this.selectHighlighted();
         }
-    },
-    onGridReady(params) {
+    }
+
+    onGridReady = (params) => {
         this.api = params.api;
         this.columnApi = params.columnApi;
         if (this.props.highlightedFeatures) {
             this.selectHighlighted();
         }
-    },
+    };
+
     // Internal function that simulate data source getRows for in memory data
-    getRows(params) {
+    getRows = (params) => {
         let data = this.props.features;
         if (params.sortModel && params.sortModel.length > 0) {
             data = this.sortData(params.sortModel, data);
@@ -129,9 +135,10 @@ const FeatureGrid = React.createClass({
             lastRow = data.length;
         }
         params.successCallback(rowsThisPage, lastRow);
-    },
+    };
+
     render() {
-        let isPagingOrVirtual = (this.props.virtualPaging || this.props.paging);
+        let isPagingOrVirtual = this.props.virtualPaging || this.props.paging;
 
         let tools = [];
         if (this.props.toolbar.zoom) {
@@ -159,7 +166,7 @@ const FeatureGrid = React.createClass({
             let allSelected = false;
             if (this.props.selectAll) {
                 allSelected = this.props.selectAllActive;
-            }else {
+            } else {
                 allSelected = !(this.props.select.length < nOfFeatures);
             }
             tools.push(<Button key="allrowsselection" onClick={() => {
@@ -173,11 +180,11 @@ const FeatureGrid = React.createClass({
                 }
             }}><Glyphicon glyph="check"/>
                 {
-                    (!allSelected) ? (
+                    !allSelected ?
                         <I18N.Message msgId={"featuregrid.selectall"}/>
-                    ) : (
+                     :
                         <I18N.Message msgId={"featuregrid.deselectall"}/>
-                    )
+
                 }
             </Button>);
         }
@@ -192,18 +199,18 @@ const FeatureGrid = React.createClass({
                     <AgGridReact
                         virtualPaging={this.props.virtualPaging}
                         columnDefs={this.setColumnDefs()}
-                        rowData={(!isPagingOrVirtual) ? this.props.features : null}
-                        datasource={(isPagingOrVirtual) ? this.setDataSource() : null}
+                        rowData={!isPagingOrVirtual ? this.props.features : null}
+                        datasource={isPagingOrVirtual ? this.setDataSource() : null}
                         enableServerSideSorting={(isPagingOrVirtual)}
                         // or provide props the old way with no binding
                         onSelectionChanged={this.selectFeatures}
                         rowSelection="multiple"
-                        enableColResize={true}
+                        enableColResize
                         enableSorting={(!isPagingOrVirtual)}
-                        toolPanelSuppressValues={true}
-                        toolPanelSuppressGroups={true}
+                        toolPanelSuppressValues
+                        toolPanelSuppressGroups
                         showToolPanel={false}
-                        rowDeselection={true}
+                        rowDeselection
                         localeText={{
                             page: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.page") || 'Page',
                             of: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.of") || 'of',
@@ -221,9 +228,10 @@ const FeatureGrid = React.createClass({
                     {tools.map((tool) => tool)}
                 </ButtonToolbar>
             </div>);
-    },
+    }
+
     // If props.columnDefs is missing try to generate from features, add zoomTo as first column
-    setColumnDefs() {
+    setColumnDefs = () => {
         let defs = this.props.columnDefs;
         let defaultOptions = this.props.columnDefaultOptions;
         let exclude = this.props.excludeFields;
@@ -234,29 +242,31 @@ const FeatureGrid = React.createClass({
                 return assign({}, defaultOptions, {headerName: key, field: "properties." + key});
             });
         }
-        return (this.props.enableZoomToFeature) ? [
-        {
-            onCellClicked: this.zoomToFeature,
-            headerName: '',
-            cellRenderer: reactCellRendererFactory(this.props.useIcons ? ZoomToFeatureIcon : ZoomToFeatureRenderer),
-            suppressSorting: true,
-            suppressMenu: true,
-            pinned: true,
-            width: 25,
-            suppressResize: true
-        }].concat(defs) : defs;
+        return this.props.enableZoomToFeature ? [
+            {
+                onCellClicked: this.zoomToFeature,
+                headerName: '',
+                cellRenderer: reactCellRendererFactory(this.props.useIcons ? ZoomToFeatureIcon : ZoomToFeatureRenderer),
+                suppressSorting: true,
+                suppressMenu: true,
+                pinned: true,
+                width: 25,
+                suppressResize: true
+            }].concat(defs) : defs;
 
-    },
+    };
+
     // Generate datasource for pagination or virtual paging and infinite scrolling
-    setDataSource() {
-        return (this.props.dataSource) ? this.props.dataSource : {
-            rowCount: (isFunction(this.props.features)) ? -1 : this.props.features.length,
-            getRows: (isFunction(this.props.features)) ? this.props.features : this.getRows,
+    setDataSource = () => {
+        return this.props.dataSource ? this.props.dataSource : {
+            rowCount: isFunction(this.props.features) ? -1 : this.props.features.length,
+            getRows: isFunction(this.props.features) ? this.props.features : this.getRows,
             pageSize: this.props.pageSize,
             overflowSize: this.props.overflowSize
         };
-    },
-    zoomToFeature(params) {
+    };
+
+    zoomToFeature = (params) => {
         let geometry = params.data.geometry;
         if (geometry.coordinates) {
 
@@ -266,8 +276,9 @@ const FeatureGrid = React.createClass({
                 this.changeMapView([geometry], this.props.zoom);
             }
         }
-    },
-    zoomToFeatures() {
+    };
+
+    zoomToFeatures = () => {
         let geometries = [];
 
         let getGeoms = function(nodes) {
@@ -286,7 +297,7 @@ const FeatureGrid = React.createClass({
         model.forEachNode(function(node) {
             if (node.group) {
                 geometries = geometries.concat(getGeoms(node.children));
-            }else {
+            } else {
                 geometries.push(node.data.geometry);
             }
         });
@@ -296,8 +307,9 @@ const FeatureGrid = React.createClass({
         if (geometries.length > 0) {
             this.changeMapView(geometries);
         }
-    },
-    changeMapView(geometries, zoom) {
+    };
+
+    changeMapView = (geometries, zoom) => {
         let extent = geometries.reduce((prev, next) => {
             return CoordinateUtils.extendExtent(prev, CoordinateUtils.getGeoJSONExtent(next));
         }, CoordinateUtils.getGeoJSONExtent(geometries[0]));
@@ -308,10 +320,10 @@ const FeatureGrid = React.createClass({
         const proj = this.props.map.projection || "EPSG:3857";
 
         if (extent) {
-            extent = (this.props.srs !== proj) ? CoordinateUtils.reprojectBbox(extent, this.props.srs, proj) : extent;
+            extent = this.props.srs !== proj ? CoordinateUtils.reprojectBbox(extent, this.props.srs, proj) : extent;
             // zoom by the max. extent defined in the map's config
             newZoom = zoom ? zoom : mapUtils.getZoomForExtent(extent, mapSize, 0, 21);
-            newZoom = (this.props.maxZoom && newZoom > this.props.maxZoom) ? this.props.maxZoom : newZoom;
+            newZoom = this.props.maxZoom && newZoom > this.props.maxZoom ? this.props.maxZoom : newZoom;
 
             // center by the max. extent defined in the map's config
             newCenter = mapUtils.getCenterForExtent(extent, proj);
@@ -325,23 +337,26 @@ const FeatureGrid = React.createClass({
             this.props.changeMapView(newCenter, newZoom,
                 this.props.map.bbox, this.props.map.size, null, proj);
         }
-    },
-    selectAllRows(select) {
+    };
+
+    selectAllRows = (select) => {
         // this.props.selectFeatures(this.props.features.slice());
         if (select === true) {
             this.api.selectAll();
         } else {
             this.api.deselectAll();
         }
-    },
-    selectFeatures(params) {
+    };
+
+    selectFeatures = (params) => {
         if (!this.suppresSelectionEvent) {
             this.props.selectFeatures(params.selectedRows.slice());
-        }else {
+        } else {
             this.suppresSelectionEvent = false;
         }
-    },
-    sortData(sortModel, data) {
+    };
+
+    sortData = (sortModel, data) => {
         // do an in memory sort of the data, across all the fields
         let resultOfSort = data.slice();
         resultOfSort.sort(function(a, b) {
@@ -361,28 +376,29 @@ const FeatureGrid = React.createClass({
                     continue;
                 }
                 let sortDirection = sortColModel.sort === 'asc' ? 1 : -1;
-                return (valueA > valueB) ? sortDirection : sortDirection * -1;
+                return valueA > valueB ? sortDirection : sortDirection * -1;
 
             }
             // no filters found a difference
             return 0;
         });
         return resultOfSort;
-    },
+    };
+
     // If highlighted features are passed we try to select corresponding row
     // using geojson feature id
-    selectHighlighted() {
+    selectHighlighted = () => {
         let selectedId = this.props.highlightedFeatures;
         let me = this;
         this.api.forEachNode((n) => {
             if (selectedId.indexOf(n.data.id) !== -1) {
                 me.api.selectNode(n, true, true);
-            }else if (me.api.isNodeSelected(n)) {
+            } else if (me.api.isNodeSelected(n)) {
                 me.suppresSelectionEvent = true;
                 me.api.deselectNode(n);
             }
         });
-    }
-});
+    };
+}
 
 module.exports = FeatureGrid;

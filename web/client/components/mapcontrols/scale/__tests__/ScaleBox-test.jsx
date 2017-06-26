@@ -38,7 +38,7 @@ describe('ScaleBox', () => {
         expect(comboItems.reduce((pre, cur, i) => {
             const scale = parseInt(cur.innerHTML.replace(/1\s\:\s/i, ''), 10);
             const testScale = Math.round(mapUtils.getGoogleMercatorScale(i));
-            return pre && (scale === testScale);
+            return pre && scale === testScale;
         }, true)).toBe(true);
 
         expect(comboItems.reduce((pre, cur, i) => {

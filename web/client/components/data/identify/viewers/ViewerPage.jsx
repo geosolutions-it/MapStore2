@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,20 +9,21 @@
 
 const React = require('react');
 
-module.exports = React.createClass({
-    propTypes: {
-        format: React.PropTypes.string,
-        viewers: React.PropTypes.object,
-        response: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object, React.PropTypes.node])
-    },
+module.exports = class extends React.Component {
+    static propTypes = {
+        format: PropTypes.string,
+        viewers: PropTypes.object,
+        response: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.node])
+    };
 
-    onTouchStart(event) {
+    onTouchStart = (event) => {
         const touch = event.touches[0];
         this.startX = touch.pageX;
         this.startY = touch.pageY;
         this.setState({scrolling: false});
-    },
-    onTouchMove(event) {
+    };
+
+    onTouchMove = (event) => {
         const touch = event.touches[0];
         const div = event.currentTarget;
         if (this.state.scrolling) {
@@ -42,23 +44,26 @@ module.exports = React.createClass({
             this.setState({scrolling: true});
             event.stopPropagation();
 
-        } else if (div && dir === "right" && (div.clientWidth + div.scrollLeft !== div.scrollWidth) ) {
+        } else if (div && dir === "right" && div.clientWidth + div.scrollLeft !== div.scrollWidth ) {
             // right border not reached
             this.setState({scrolling: true});
             event.stopPropagation();
         }
 
-    },
-    onTouchEnd() {
+    };
+
+    onTouchEnd = () => {
         this.setState({scrolling: false});
-    },
-    renderPage(response) {
+    };
+
+    renderPage = (response) => {
         const Viewer = this.props.viewers[this.props.format];
         if (Viewer) {
             return <Viewer response={response} />;
         }
         return null;
-    },
+    };
+
     render() {
         return (<div
             style={{width: "100%", height: "100%", overflow: "auto"}}
@@ -68,4 +73,4 @@ module.exports = React.createClass({
                 {this.renderPage(this.props.response)}
         </div>);
     }
-});
+};

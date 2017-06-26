@@ -24,7 +24,7 @@ describe('Test for HelpWrapper', () => {
 
     // test DEFAULTS
     it('wraps child component properly', () => {
-        const helpWrapper = ReactDOM.render(<HelpWrapper><div id="child-div" key="child-key"></div></HelpWrapper>, document.getElementById("container"));
+        const helpWrapper = ReactDOM.render(<HelpWrapper><div id="child-div" key="child-key" /></HelpWrapper>, document.getElementById("container"));
         expect(helpWrapper).toExist();
 
         const helpWrapperDom = ReactDOM.findDOMNode(helpWrapper);

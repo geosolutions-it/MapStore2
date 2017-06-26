@@ -19,48 +19,48 @@ const assign = require('object-assign');
 const {isObject, findIndex} = require('lodash');
 const baseStyle = {
     Point: {
-            type: "Point",
-            color: { r: 0, g: 0, b: 255, a: 1 },
-            width: 3,
-            fill: { r: 0, g: 0, b: 255, a: 0.1 },
-            radius: 10,
-            marker: false,
-            markName: "circle"
-            },
+        type: "Point",
+        color: { r: 0, g: 0, b: 255, a: 1 },
+        width: 3,
+        fill: { r: 0, g: 0, b: 255, a: 0.1 },
+        radius: 10,
+        marker: false,
+        markName: "circle"
+    },
     Line: {
-            type: "Line",
-            color: { r: 0, g: 0, b: 255, a: 1 },
-            width: 3
-            },
+        type: "Line",
+        color: { r: 0, g: 0, b: 255, a: 1 },
+        width: 3
+    },
     Polygon: {
-            type: "Polygon",
-            color: { r: 0, g: 0, b: 255, a: 1 },
-            width: 3,
-            fill: { r: 0, g: 0, b: 255, a: 0.1 }
+        type: "Polygon",
+        color: { r: 0, g: 0, b: 255, a: 1 },
+        width: 3,
+        fill: { r: 0, g: 0, b: 255, a: 0.1 }
     }
 
 };
 
 const initialSpec = {
-        rules: []
+    rules: []
 };
 function getType(layer) {
     switch (layer.describeLayer.geometryType) {
-        case 'Polygon':
-        case 'MultiPolygon': {
-            return "Polygon";
-        }
-        case 'MultiLineString':
-        case 'LineString': {
-            return "Line";
-        }
-        case 'Point':
-        case 'MultiPoint': {
-            return "Point";
-        }
-        default: {
-            return "Polygon";
-        }
+    case 'Polygon':
+    case 'MultiPolygon': {
+        return "Polygon";
+    }
+    case 'MultiLineString':
+    case 'LineString': {
+        return "Line";
+    }
+    case 'Point':
+    case 'MultiPoint': {
+        return "Point";
+    }
+    default: {
+        return "Polygon";
+    }
     }
 }
 
@@ -80,55 +80,55 @@ function getRuleIdx(rules, id) {
 
 function vectorstyler(state = initialSpec, action) {
     switch (action.type) {
-        case NEW_VECTOR_RULE: {
-            const newRule = {
-                id: action.id,
-                symbol: getBaseSymbol(getType(state.layer)),
-                name: 'New Rule'
-            };
+    case NEW_VECTOR_RULE: {
+        const newRule = {
+            id: action.id,
+            symbol: getBaseSymbol(getType(state.layer)),
+            name: 'New Rule'
+        };
 
-            return assign({}, state, {rule: newRule.id, rules: (state.rules ? [...state.rules, newRule] : [newRule])});
+        return assign({}, state, {rule: newRule.id, rules: state.rules ? [...state.rules, newRule] : [newRule]});
 
-        }
-        case SELECT_VECTOR_RULE: {
-            return assign({}, state, {rule: action.id});
+    }
+    case SELECT_VECTOR_RULE: {
+        return assign({}, state, {rule: action.id});
 
+    }
+    case REMOVE_VECTOR_RULE: {
+        const idx = getRuleIdx(state.rules, action.id);
+        let newSelected = state.rules[idx - 1] ? state.rules[idx - 1].id : undefined;
+        if (newSelected === undefined) {
+            newSelected = state.rules[idx + 1] ? state.rules[idx + 1].id : undefined;
         }
-        case REMOVE_VECTOR_RULE: {
-            const idx = getRuleIdx(state.rules, action.id);
-            let newSelected = (state.rules[idx - 1]) ? state.rules[idx - 1].id : undefined;
-            if (newSelected === undefined) {
-                newSelected = (state.rules[idx + 1]) ? state.rules[idx + 1].id : undefined;
-            }
-            return assign({}, state, {rule: newSelected, rules: state.rules.filter((rule) => rule.id !== action.id)});
-        }
-        case SET_VECTOR_RULE_PARAMETER: {
-            let newRules = state.rules.slice();
-            const ruleIdx = getRuleIdx(newRules, state.rule);
-            const activeRule = newRules[ruleIdx];
-            newRules[ruleIdx] = assign({}, activeRule, {[action.property]: action.value});
-            return assign({}, state, {rules: newRules});
-        }
-        case SET_VECTORSTYLE_PARAMETER: {
-            let newRules = state.rules.slice();
-            const ruleIdx = getRuleIdx(newRules, state.rule);
-            const activeRule = newRules[ruleIdx];
-            newRules[ruleIdx] = assign( {}, activeRule, {
-                [action.component]: assign({}, activeRule[action.component], {
-                    [action.property]: action.value
-                })
-            });
-            return assign({}, state, {rules: newRules});
+        return assign({}, state, {rule: newSelected, rules: state.rules.filter((rule) => rule.id !== action.id)});
+    }
+    case SET_VECTOR_RULE_PARAMETER: {
+        let newRules = state.rules.slice();
+        const ruleIdx = getRuleIdx(newRules, state.rule);
+        const activeRule = newRules[ruleIdx];
+        newRules[ruleIdx] = assign({}, activeRule, {[action.property]: action.value});
+        return assign({}, state, {rules: newRules});
+    }
+    case SET_VECTORSTYLE_PARAMETER: {
+        let newRules = state.rules.slice();
+        const ruleIdx = getRuleIdx(newRules, state.rule);
+        const activeRule = newRules[ruleIdx];
+        newRules[ruleIdx] = assign( {}, activeRule, {
+            [action.component]: assign({}, activeRule[action.component], {
+                [action.property]: action.value
+            })
+        });
+        return assign({}, state, {rules: newRules});
 
-        }
-        case SET_VECTOR_LAYER: {
-            return assign({}, initialSpec, { layer: action.layer});
-        }
-        case STYLER_RESET: {
-            return initialSpec;
-        }
-        default:
-            return state;
+    }
+    case SET_VECTOR_LAYER: {
+        return assign({}, initialSpec, { layer: action.layer});
+    }
+    case STYLER_RESET: {
+        return initialSpec;
+    }
+    default:
+        return state;
     }
 }
 

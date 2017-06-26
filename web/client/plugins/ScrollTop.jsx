@@ -1,3 +1,4 @@
+const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -6,7 +7,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const ScrollUp = require('react-scroll-up');
+const ScrollUp = require('react-scroll-up').default;
 const Message = require('../components/I18N/Message');
 const {Glyphicon, Button, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../components/misc/OverlayTrigger');
@@ -20,28 +21,28 @@ const OverlayTrigger = require('../components/misc/OverlayTrigger');
  * @class
  * @static
  */
-const ScrollTop = React.createClass({
-    propTypes: {
-        style: React.PropTypes.object,
-        showUnder: React.PropTypes.number,
-        btnClassName: React.PropTypes.string
-    },
-    getDefaultProps() {
-        return {
-            showUnder: 200,
-            btnClassName: 'square-button',
-            style: {
-              zIndex: 10,
-              position: 'fixed',
-              bottom: 50,
-              right: 30,
-              cursor: 'pointer',
-              transitionDuration: '0.2s',
-              transitionTimingFunction: 'linear',
-              transitionDelay: '0s'
-            }
-        };
-    },
+class ScrollTop extends React.Component {
+    static propTypes = {
+        style: PropTypes.object,
+        showUnder: PropTypes.number,
+        btnClassName: PropTypes.string
+    };
+
+    static defaultProps = {
+        showUnder: 200,
+        btnClassName: 'square-button',
+        style: {
+            zIndex: 10,
+            position: 'fixed',
+            bottom: 50,
+            right: 30,
+            cursor: 'pointer',
+            transitionDuration: '0.2s',
+            transitionTimingFunction: 'linear',
+            transitionDelay: '0s'
+        }
+    };
+
     render() {
         return (
             <ScrollUp style={this.props.style} showUnder={this.props.showUnder}>
@@ -50,7 +51,7 @@ const ScrollTop = React.createClass({
                 </OverlayTrigger>
             </ScrollUp>);
     }
-});
+}
 
 
 module.exports = {

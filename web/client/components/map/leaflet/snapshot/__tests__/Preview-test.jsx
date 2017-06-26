@@ -37,7 +37,7 @@ describe("test the Leaflet Preview component", () => {
         expect(status).toEqual("DISABLED");
     });
     it('snapshot creation', (done) => {
-        const tb = ReactDOM.render(<GrabMap active={true} timeout={0} onSnapshotReady={() => { expect(tb.isTainted()).toBe(false); done(); }} layers={[{loading: false, visibility: true}, {loading: false}]}/>, document.getElementById("snap"));
+        const tb = ReactDOM.render(<GrabMap active timeout={0} onSnapshotReady={() => { expect(tb.isTainted()).toBe(false); done(); }} layers={[{loading: false, visibility: true}, {loading: false}]}/>, document.getElementById("snap"));
         expect(tb).toExist();
     });
 });

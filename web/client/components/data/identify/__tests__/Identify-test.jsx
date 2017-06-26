@@ -36,7 +36,7 @@ describe('Identify', () => {
 
     it('creates the Identify component with available requests', () => {
         const identify = ReactDOM.render(
-            <Identify enabled={true} requests={[{}]}/>,
+            <Identify enabled requests={[{}]}/>,
             document.getElementById("container")
         );
 
@@ -47,7 +47,7 @@ describe('Identify', () => {
 
     it('creates the Identify component with missing responses', () => {
         const identify = ReactDOM.render(
-            <Identify enabled={true} requests={[{}]}/>,
+            <Identify enabled requests={[{}]}/>,
             document.getElementById("container")
         );
 
@@ -58,7 +58,7 @@ describe('Identify', () => {
 
     it('creates the Identify component with no missing responses', () => {
         const identify = ReactDOM.render(
-            <Identify enabled={true} requests={[{}]} responses={[{}]}/>,
+            <Identify enabled requests={[{}]} responses={[{}]}/>,
             document.getElementById("container")
         );
 
@@ -80,7 +80,7 @@ describe('Identify', () => {
             document.getElementById("container")
         );
         ReactDOM.render(
-            <Identify changeMousePointer={testHandlers.changeMousePointer} enabled={true}/>,
+            <Identify changeMousePointer={testHandlers.changeMousePointer} enabled/>,
             document.getElementById("container")
         );
         expect(spyMousePointer.calls.length).toEqual(1);
@@ -101,7 +101,7 @@ describe('Identify', () => {
         ReactDOM.render(
             <Identify
                 queryableLayersFilter={() => true}
-                enabled={true} layers={[{}, {}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
+                enabled layers={[{}, {}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
                 />,
             document.getElementById("container")
         );
@@ -109,7 +109,7 @@ describe('Identify', () => {
             <Identify
                 queryableLayersFilter={() => true}
                 point={{pixel: {x: 1, y: 1}}}
-                enabled={true} layers={[{}, {}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
+                enabled layers={[{}, {}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
                 />,
             document.getElementById("container")
         );
@@ -126,7 +126,7 @@ describe('Identify', () => {
         ReactDOM.render(
             <Identify
                 queryableLayersFilter={() => true}
-                enabled={true} layers={[{}, {}]} localRequest={testHandlers.sendRequest} buildRequest={() => ({url: ""})}
+                enabled layers={[{}, {}]} localRequest={testHandlers.sendRequest} buildRequest={() => ({url: ""})}
                 />,
             document.getElementById("container")
         );
@@ -134,7 +134,7 @@ describe('Identify', () => {
             <Identify
                 queryableLayersFilter={() => true}
                 point={{pixel: {x: 1, y: 1}}}
-                enabled={true} layers={[{}, {}]} localRequest={testHandlers.sendRequest} buildRequest={() => ({url: ""})}
+                enabled layers={[{}, {}]} localRequest={testHandlers.sendRequest} buildRequest={() => ({url: ""})}
                 />,
             document.getElementById("container")
         );
@@ -176,7 +176,7 @@ describe('Identify', () => {
         ReactDOM.render(
             <Identify
                 queryableLayersFilter={(layer) => layer.type === "wms"}
-                enabled={true} layers={[{type: "wms"}, {type: "osm"}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
+                enabled layers={[{type: "wms"}, {type: "osm"}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
                 />,
             document.getElementById("container")
         );
@@ -184,7 +184,7 @@ describe('Identify', () => {
             <Identify
                 queryableLayersFilter={(layer) => layer.type === "wms"}
                 point={{pixel: {x: 1, y: 1}}}
-                enabled={true} layers={[{type: "wms"}, {type: "osm"}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
+                enabled layers={[{type: "wms"}, {type: "osm"}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
                 />,
             document.getElementById("container")
         );
@@ -203,7 +203,7 @@ describe('Identify', () => {
         ReactDOM.render(
             <Identify
                 queryableLayersFilter={() => true}
-                enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
                 />,
             document.getElementById("container")
         );
@@ -211,7 +211,7 @@ describe('Identify', () => {
             <Identify
                 queryableLayersFilter={() => true}
                 point={{pixel: {x: 1, y: 1}}}
-                enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
                 />,
             document.getElementById("container")
         );
@@ -237,7 +237,7 @@ describe('Identify', () => {
         ReactDOM.render(
             <Identify
                 queryableLayersFilter={() => false}
-                enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
                 />,
             document.getElementById("container")
         );
@@ -245,7 +245,7 @@ describe('Identify', () => {
             <Identify
                 queryableLayersFilter={() => false}
                 point={{pixel: {x: 1, y: 1}}}
-                enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
                 />,
             document.getElementById("container")
         );
@@ -262,7 +262,7 @@ describe('Identify', () => {
         ReactDOM.render(
             <Identify
                 queryableLayersFilter={() => true}
-                enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
                 />,
             document.getElementById("container")
         );
@@ -270,7 +270,7 @@ describe('Identify', () => {
             <Identify
                 queryableLayersFilter={() => true}
                 point={{pixel: {x: 1, y: 1}}}
-                enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
                 />,
             document.getElementById("container")
         );
@@ -296,8 +296,8 @@ describe('Identify', () => {
         ReactDOM.render(
             <Identify
                 queryableLayersFilter={() => true}
-                enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
-                multiSelection={true}
+                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                multiSelection
                 />,
             document.getElementById("container")
         );
@@ -306,8 +306,8 @@ describe('Identify', () => {
                 queryableLayersFilter={() => true}
                 point={{pixel: {x: 1, y: 1}}}
                 modifiers={{ctrl: false}}
-                enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
-                multiSelection={true}
+                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                multiSelection
                 />,
             document.getElementById("container")
         );
@@ -317,8 +317,8 @@ describe('Identify', () => {
                 queryableLayersFilter={() => true}
                 point={{pixel: {x: 1, y: 1}}}
                 modifiers={{ctrl: true}}
-                enabled={true} layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
-                multiSelection={true}
+                enabled layers={[{}, {}]} {...testHandlers} buildRequest={() => ({})}
+                multiSelection
                 />,
             document.getElementById("container")
         );
@@ -332,7 +332,7 @@ describe('Identify', () => {
                 queryableLayersFilter={() => true}
                 viewer={Viewer}
                 requests={[{}]}
-                enabled={true} layers={[{}, {}]} responses={[{}, {}]} buildRequest={() => ({})}
+                enabled layers={[{}, {}]} responses={[{}, {}]} buildRequest={() => ({})}
                 />,
             document.getElementById("container")
         );
@@ -346,11 +346,11 @@ describe('Identify', () => {
         const Viewer = (props) => <span className="myviewer">{props.responses.length}</span>;
         const identify = ReactDOM.render(
             <Identify
-                enableRevGeocode={true}
+                enableRevGeocode
                 queryableLayersFilter={() => true}
                 point={{latlng: {lat: 40, lng: 10}}}
                 viewer={Viewer}
-                enabled={true}
+                enabled
                 layers={[{}, {}]}
                 sendRequest={[{}, {}]}
                 buildRequest={() => ({})}
@@ -369,18 +369,18 @@ describe('Identify', () => {
             INTERNAL_OPTION: true,
             WMS_OPTION: true,
             params: {
-            ONLY_GETMAP: true,
-            WMS_PARAMETER_TO_SHARE: true
-        }};
+                ONLY_GETMAP: true,
+                WMS_PARAMETER_TO_SHARE: true
+            }};
         const identify = ReactDOM.render(
             <Identify
                 excludeParams={["ONLY_GETMAP"]}
                 includeOptions={["WMS_PARAMETER_TO_SHARE", "WMS_OPTION"]}
-                enableRevGeocode={true}
+                enableRevGeocode
                 queryableLayersFilter={() => true}
                 point={{latlng: {lat: 40, lng: 10}}}
                 viewer={Viewer}
-                enabled={true}
+                enabled
                 layers={[layer]}
                 sendRequest={[{}, {}]}
                 buildRequest={() => ({})}

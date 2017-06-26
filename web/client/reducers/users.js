@@ -35,119 +35,119 @@ function users(state = {
     limit: 12
 }, action) {
     switch (action.type) {
-        case USERMANAGER_GETUSERS:
+    case USERMANAGER_GETUSERS:
+        return assign({}, state, {
+            searchText: action.searchText,
+            status: action.status,
+            users: action.status === "loading" ? state.users : action.users,
+            start: action.start,
+            limit: action.limit,
+            totalCount: action.status === "loading" ? state.totalCount : action.totalCount
+        });
+    case USERS_SEARCH_TEXT_CHANGED: {
+        return assign({}, state, {
+            searchText: action.text
+        });
+    }
+    case USERMANAGER_EDIT_USER: {
+        let newUser = action.status ? {
+            status: action.status,
+            ...action.user
+        } : action.user;
+        if (state.currentUser && action.user && state.currentUser.id === action.user.id ) {
             return assign({}, state, {
-                searchText: action.searchText,
-                status: action.status,
-                users: action.status === "loading" ? state.users : action.users,
-                start: action.start,
-                limit: action.limit,
-                totalCount: action.status === "loading" ? state.totalCount : action.totalCount
-            });
-        case USERS_SEARCH_TEXT_CHANGED: {
-            return assign({}, state, {
-                searchText: action.text
-            });
-        }
-        case USERMANAGER_EDIT_USER: {
-            let newUser = action.status ? {
-                status: action.status,
-                ...action.user
-            } : action.user;
-            if (state.currentUser && action.user && (state.currentUser.id === action.user.id) ) {
-                return assign({}, state, {
-                    currentUser: assign({}, state.currentUser, {
-                        status: action.status,
-                        ...action.user
-                    })}
+                currentUser: assign({}, state.currentUser, {
+                    status: action.status,
+                    ...action.user
+                })}
                 );
             // this to catch user loaded but window already closed
         } else if (action.status === "loading" || action.status === "new" || !action.status) {
             return assign({}, state, {
-                    currentUser: newUser
-                });
+                currentUser: newUser
+            });
         }
-            return state;
+        return state;
 
-        }
-        case USERMANAGER_EDIT_USER_DATA: {
-            let k = action.key;
-            let currentUser = state.currentUser;
-            if ( k.indexOf("attribute") === 0) {
-                let attrs = (currentUser.attribute || []).concat();
-                let attrName = k.split(".")[1];
-                let attrIndex = findIndex(attrs, (att) => att.name === attrName);
-                if (attrIndex >= 0) {
-                    attrs[attrIndex] = {name: attrName, value: action.newValue};
-                } else {
-                    attrs.push({name: attrName, value: action.newValue});
-                }
-
-                currentUser = assign({}, currentUser, {
-                    attribute: attrs
-                });
+    }
+    case USERMANAGER_EDIT_USER_DATA: {
+        let k = action.key;
+        let currentUser = state.currentUser;
+        if ( k.indexOf("attribute") === 0) {
+            let attrs = (currentUser.attribute || []).concat();
+            let attrName = k.split(".")[1];
+            let attrIndex = findIndex(attrs, (att) => att.name === attrName);
+            if (attrIndex >= 0) {
+                attrs[attrIndex] = {name: attrName, value: action.newValue};
             } else {
-                currentUser = assign({}, currentUser, {[k]: action.newValue} );
+                attrs.push({name: attrName, value: action.newValue});
             }
-            return assign({}, state, {
-                currentUser: assign({}, {...currentUser, status: "modified"})
-            });
-        }
-        case USERMANAGER_UPDATE_USER: {
-            let currentUser = state.currentUser;
 
-            return assign({}, state, {
-               currentUser: assign({}, {
-                   ...currentUser,
-                   ...action.user,
-                   status: action.status,
-                   lastError: action.error
-               })
-           });
+            currentUser = assign({}, currentUser, {
+                attribute: attrs
+            });
+        } else {
+            currentUser = assign({}, currentUser, {[k]: action.newValue} );
         }
-        case USERMANAGER_DELETE_USER: {
-            if (action.status === "deleted" || action.status === "cancelled") {
-                return assign({}, state, {
-                    deletingUser: null
-                });
-            }
+        return assign({}, state, {
+            currentUser: assign({}, {...currentUser, status: "modified"})
+        });
+    }
+    case USERMANAGER_UPDATE_USER: {
+        let currentUser = state.currentUser;
+
+        return assign({}, state, {
+            currentUser: assign({}, {
+                ...currentUser,
+                ...action.user,
+                status: action.status,
+                lastError: action.error
+            })
+        });
+    }
+    case USERMANAGER_DELETE_USER: {
+        if (action.status === "deleted" || action.status === "cancelled") {
             return assign({}, state, {
-                deletingUser: {
-                    id: action.id,
-                    status: action.status,
-                    error: action.error
-                }
+                deletingUser: null
             });
         }
-        case USERMANAGER_GETGROUPS: {
+        return assign({}, state, {
+            deletingUser: {
+                id: action.id,
+                status: action.status,
+                error: action.error
+            }
+        });
+    }
+    case USERMANAGER_GETGROUPS: {
+        return assign({}, state, {
+            groups: action.groups,
+            groupsStatus: action.status,
+            groupsError: action.error
+        });
+    }
+    case UPDATEGROUP: {
+        if (action.status === STATUS_CREATED) {
             return assign({}, state, {
-                groups: action.groups,
-                groupsStatus: action.status,
-                groupsError: action.error
+                groups: null,
+                groupsStatus: null,
+                groupsError: null
             });
         }
-        case UPDATEGROUP: {
-            if (action.status === STATUS_CREATED) {
-                return assign({}, state, {
-                    groups: null,
-                    groupsStatus: null,
-                    groupsError: null
-                });
-            }
-            return state;
+        return state;
+    }
+    case DELETEGROUP: {
+        if (action.status === STATUS_DELETED) {
+            return assign({}, state, {
+                groups: null,
+                groupsStatus: null,
+                groupsError: null
+            });
         }
-        case DELETEGROUP: {
-            if (action.status === STATUS_DELETED) {
-                return assign({}, state, {
-                    groups: null,
-                    groupsStatus: null,
-                    groupsError: null
-                });
-            }
-            return state;
-        }
-        default:
-            return state;
+        return state;
+    }
+    default:
+        return state;
     }
 }
 module.exports = users;
