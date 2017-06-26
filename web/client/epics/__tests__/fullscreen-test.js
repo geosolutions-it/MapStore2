@@ -40,10 +40,10 @@ describe('fullscreen Epics', () => {
         store.dispatch( action );
 
         const actions = store.getActions();
-        expect(actions.length).toBe(2);
-        expect(actions[1].type).toBe(SET_CONTROL_PROPERTY);
 
         setTimeout( () => {
+            expect(actions.length).toBe(2);
+            expect(actions[1].type).toBe(SET_CONTROL_PROPERTY);
             // emulate user exit by hitting esc
             if ( screenfull.enabled ) {
                 screenfull.exit();
@@ -56,9 +56,9 @@ describe('fullscreen Epics', () => {
                     expect(changed).toBe(true);
                 }
                 done();
-            }, 10);
+            }, 50);
 
-        }, 10);
+        }, 50);
 
     });
 });
