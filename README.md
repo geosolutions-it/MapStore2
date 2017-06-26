@@ -17,7 +17,7 @@ For more information check the [MapStore documentation](https://dev.mapstore2.ge
 
 Download
 ------------
-You can download the WAR file from the the latest release [here](https://github.com/geosolutions-it/MapStore2/releases/latest).
+You can download the WAR file from the latest release [here](https://github.com/geosolutions-it/MapStore2/releases/latest).
 
 [All the releases](https://github.com/geosolutions-it/MapStore2/releases)
 
@@ -35,7 +35,7 @@ Use the default credentials (admin / admin) to login and start creating your map
 
 Documentation
 -------------
-You can find more documentaion about how to build, install or develop with MapStore 2 on the [documentation site](https://dev.mapstore2.geo-solutions.it/mapstore/docs/).
+You can find more documentation about how to build, install or develop with MapStore 2 on the [documentation site](https://dev.mapstore2.geo-solutions.it/mapstore/docs/).
 
 License
 ------------

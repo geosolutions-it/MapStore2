@@ -10,9 +10,8 @@ const React = require('react');
 const SharingLinks = require('./SharingLinks');
 const Message = require('../I18N/Message');
 const {Image, Panel, Button, Glyphicon} = require('react-bootstrap');
-const {head} = require('lodash');
+const {head, memoize} = require('lodash');
 const assign = require('object-assign');
-const {memoize} = require('lodash');
 
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 

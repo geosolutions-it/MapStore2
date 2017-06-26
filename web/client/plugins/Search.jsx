@@ -16,7 +16,7 @@ const assign = require('object-assign');
 const HelpWrapper = require('./help/HelpWrapper');
 const Message = require('./locale/Message');
 
-const {get} = require('lodash');
+const {get, isArray} = require('lodash');
 
 const {resultsPurge, resetSearch, addMarker, searchTextChanged, textSearch, selectSearchItem, cancelSelectedItem} = require("../actions/search");
 
@@ -39,7 +39,6 @@ const SearchBar = connect(searchSelector, {
 })(require("../components/mapcontrols/search/SearchBar"));
 
 const {mapSelector} = require('../selectors/map');
-const {isArray} = require('lodash');
 
 const MediaQuery = require('react-responsive');
 

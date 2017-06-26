@@ -7,10 +7,9 @@
  */
 
 const assign = require('object-assign');
-const {head, isArray, isString} = require('lodash');
+const {head, isArray, isString, castArray, isObject} = require('lodash');
 const urlUtil = require('url');
 const CoordinatesUtils = require('./CoordinatesUtils');
-const {castArray, isObject} = require('lodash');
 
 const WMS = require('../api/WMS');
 

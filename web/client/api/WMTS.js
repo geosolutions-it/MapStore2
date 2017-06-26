@@ -15,9 +15,7 @@ const xml2js = require('xml2js');
 
 const capabilitiesCache = {};
 
-const {isArray, head} = require('lodash');
-
-const {castArray} = require('lodash');
+const {isArray, head, castArray} = require('lodash');
 
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
 
