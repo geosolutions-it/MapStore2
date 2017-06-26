@@ -46,6 +46,10 @@ module.exports = {
                 drawer: {
                     enabled: false,
                     menu: "1"
+                },
+                cookie: {
+                    enabled: false,
+                    seeMore: false
                 }
             }
         },
