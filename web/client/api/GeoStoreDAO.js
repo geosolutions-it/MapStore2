@@ -35,7 +35,7 @@ let parseUserGroups = (groupsObj) => {
 var Api = {
     authProviderName: "geostore",
     addBaseUrl: function(options) {
-        return assign(options, {baseURL: ConfigUtils.getDefaults().geoStoreUrl});
+        return assign(options || {}, {baseURL: ConfigUtils.getDefaults().geoStoreUrl});
     },
     getData: function(id, options) {
         const url = "data/" + id;
@@ -316,13 +316,20 @@ var Api = {
         const url = "/usergroups/group/" + userId + "/" + groupId + "/";
         return axios.delete(url, this.addBaseUrl(parseOptions(options)));
     },
-    verifySession: function(accessToken, options) {
+    verifySession: function(options) {
         const url = "users/user/details";
         return axios.get(url, this.addBaseUrl(_.merge({
             params: {
                 includeattributes: true
             }
         }, options))).then(function(response) {
+            return response.data;
+        });
+    },
+    refreshToken: function(accessToken, refreshToken, options) {
+        // accessToken is actually the sessionID
+        const url = "session/refresh/" + accessToken + "/" + refreshToken;
+        return axios.post(url, null, this.addBaseUrl(parseOptions(options))).then(function(response) {
             return response.data;
         });
     }

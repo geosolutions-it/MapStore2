@@ -7,13 +7,13 @@
  */
 const expect = require('expect');
 const security = require('../security');
-const {LOGIN_SUCCESS, LOGIN_FAIL, RESET_ERROR, LOGOUT, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAIL} = require('../../actions/security');
+const {LOGIN_SUCCESS, LOGIN_FAIL, RESET_ERROR, LOGOUT, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAIL, REFRESH_SUCCESS, SESSION_VALID} = require('../../actions/security');
 const { SET_CONTROL_PROPERTY } = require('../../actions/controls');
 const {USERMANAGER_UPDATE_USER} = require('../../actions/users');
 
 describe('Test the security reducer', () => {
-    let testToken = "260a670e-4dc0-4719-8bc9-85555d7dcbe1";
-    let testUser = {
+    const testToken = "260a670e-4dc0-4719-8bc9-85555d7dcbe1";
+    const testUser = {
         "User": {
             "attribute": [
                 {
@@ -46,7 +46,7 @@ describe('Test the security reducer', () => {
             "role": "USER"
         }
     };
-    let userWithSecurityToken = {
+    const userWithSecurityToken = {
         "User": {
             "attribute": [
                {
@@ -60,10 +60,23 @@ describe('Test the security reducer', () => {
             "name": "secured",
             "role": "USER"
         },
-        "access_token": "1234567890"
+        "access_token": "1234567890",
+        "expires": 86400,
+        "refresh_token": "abcdef"
     };
-    let testAuthHeader = "Basic dGVzdDp0ZXN0"; // test:test
-    let testError = {state: 0};
+    const securityTokenState = {
+        "User": {
+            "enabled": true,
+            "id": 6,
+            "name": "sec2",
+            "role": "USER"
+        },
+        "access_token": "1234567890",
+        "refresh_token": "abcdef"
+    };
+
+    const testAuthHeader = "Basic dGVzdDp0ZXN0"; // test:test
+    const testError = {state: 0};
     it('login state', () => {
         let state = security({}, {type: LOGIN_SUCCESS, userDetails: testUser, authHeader: testAuthHeader});
         expect(state).toExist();
@@ -157,5 +170,37 @@ describe('Test the security reducer', () => {
     it('do not change state by default', () => {
         let inputstate = {foo: "bar"};
         expect(security(inputstate, {type: "aaa"})).toEqual(inputstate);
+    });
+
+    it('refresh success', () => {
+        const now = new Date() / 1000 | 0;
+        let state = security(undefined, {type: REFRESH_SUCCESS, userDetails: userWithSecurityToken});
+        expect(state).toExist()
+        .toIncludeKey("token");
+        expect(state.token).toBe("1234567890");
+        expect(state.expires).toBeGreaterThanOrEqualTo(now + 86400);
+        expect(state.refresh_token).toBe("abcdef");
+    });
+
+    it('refresh success without expire', () => {
+        const now = new Date() / 1000 | 0;
+        let state = security(undefined, {type: REFRESH_SUCCESS, userDetails: securityTokenState});
+        expect(state).toExist()
+        .toIncludeKey("token");
+        expect(state.token).toBe("1234567890");
+        expect(state.expires).toBeGreaterThanOrEqualTo(now + 48 * 60 * 60);
+        expect(state.refresh_token).toBe("abcdef");
+    });
+
+    it('valid session may only update the user', () => {
+        let state = security(
+            {user: userWithSecurityToken.User, token: "aaa", refresh_token: "bbb"},
+            {type: SESSION_VALID, userDetails: securityTokenState}
+        );
+        expect(state).toExist()
+        .toIncludeKey("token");
+        expect(state.token).toBe("aaa");
+        expect(state.refresh_token).toBe("bbb");
+        expect(state.user.name).toBe("sec2");
     });
 });

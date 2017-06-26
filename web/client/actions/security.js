@@ -10,6 +10,7 @@
  * Here you can change the API to use for AuthenticationAPI
  */
 const AuthenticationAPI = require('../api/GeoStoreDAO');
+const SecurityUtils = require('../utils/SecurityUtils');
 
 const {loadMaps} = require('./maps');
 const ConfigUtils = require('../utils/ConfigUtils');
@@ -22,8 +23,7 @@ const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 const CHANGE_PASSWORD_SUCCESS = 'CHANGE_PASSWORD_SUCCESS';
 const CHANGE_PASSWORD_FAIL = 'CHANGE_PASSWORD_FAIL';
 const LOGOUT = 'LOGOUT';
-const REFRESH_ACCESS_TOKEN = 'REFRESH_ACCESS_TOKEN';
-const VERIFY_SESSION = 'VERIFY_SESSION';
+const REFRESH_SUCCESS = 'REFRESH_SUCCESS';
 const SESSION_VALID = 'SESSION_VALID';
 
 function loginSuccess(userDetails, username, password, authProvider) {
@@ -102,9 +102,23 @@ function changePassword(user, newPassword) {
     };
 }
 
-function refreshAccessToken() {
+function refreshSuccess(userDetails, authProvider) {
     return {
-        type: REFRESH_ACCESS_TOKEN
+        type: REFRESH_SUCCESS,
+        userDetails: userDetails,
+        authProvider: authProvider
+    };
+}
+
+function refreshAccessToken() {
+    return (dispatch) => {
+        const accessToken = SecurityUtils.getToken();
+        const refreshToken = SecurityUtils.getRefreshToken();
+        AuthenticationAPI.refreshToken(accessToken, refreshToken).then((response) => {
+            dispatch(refreshSuccess(response, AuthenticationAPI.authProviderName));
+        }).catch(() => {
+            dispatch(logout(null));
+        });
     };
 }
 
@@ -135,8 +149,7 @@ module.exports = {
     LOGIN_FAIL,
     RESET_ERROR,
     LOGOUT,
-    REFRESH_ACCESS_TOKEN,
-    VERIFY_SESSION,
+    REFRESH_SUCCESS,
     SESSION_VALID,
     login,
     loginSuccess,

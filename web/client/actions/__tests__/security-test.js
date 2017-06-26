@@ -52,4 +52,14 @@ describe('Test correctness of the close actions', () => {
         expect(retval.type).toBe(security.CHANGE_PASSWORD_FAIL);
     });
     */
+    it('sessionValid', () => {
+        const retval = security.sessionValid("aaa", "bbb");
+        expect(retval).toExist().toIncludeKey('type')
+        .toIncludeKey('userDetails')
+        .toIncludeKey('authProvider');
+        expect(retval.type).toBe(security.SESSION_VALID);
+        expect(retval.userDetails).toBe("aaa");
+        expect(retval.authProvider).toBe("bbb");
+    });
+
 });
