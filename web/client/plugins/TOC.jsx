@@ -166,13 +166,13 @@ const RefreshLayers = connect(refreshSelector, {
     onClose: toggleControl.bind(null, 'RefreshLayers', 'enabled'),
     onRefresh: refreshLayers,
     onUpdateOptions: setControlProperty.bind(null, 'RefreshLayers', 'options')
-})(require('../components/toc/fragments/RefreshLayers'));
+})(require('../components/TOC/fragments/RefreshLayers'));
 
 const RefreshLayer = connect(refreshLayerSelector, {
     onClose: toggleControl.bind(null, 'RefreshLayers', 'enabled'),
     onRefresh: refreshLayers,
     onUpdateOptions: setControlProperty.bind(null, 'RefreshLayers', 'options')
-})(require('../components/toc/fragments/RefreshLayers'));
+})(require('../components/TOC/fragments/RefreshLayers'));
 
 const tocSelector = createSelector(
     [
