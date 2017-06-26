@@ -39,7 +39,7 @@ const removeWorkspace = (layer) => {
 
 const refresh = action$ =>
     action$.ofType(REFRESH_LAYERS)
-        .debounceTime(250)
+        .debounce(({debounceTime = 500} = {}) => Rx.Observable.timer(debounceTime) )
         .switchMap(action => {
             return Rx.Observable.from(
                 action.layers.map((layer) =>
