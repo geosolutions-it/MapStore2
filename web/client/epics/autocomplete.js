@@ -69,7 +69,9 @@ module.exports = {
         }),
     fetchAutocompleteOptionsEpic: (action$, store) =>
         action$.ofType(UPDATE_FILTER_FIELD)
-            .debounceTime(1000)
+            .debounce((action) => {
+                return action.fieldOptions.applyDelay ? Rx.Observable.interval(1000).take(1) : Rx.Observable.interval(0).take(1);
+            })
             .filter( (action) => action.fieldName === "value" && action.fieldType === "string" && store.getState().queryform.autocompleteEnabled )
             .switchMap((action) => {
                 const state = store.getState();
@@ -77,8 +79,10 @@ module.exports = {
                 const filterField = state.queryform.filterFields.filter((f) => f.rowId === action.rowId)[0];
 
                 if (action.fieldOptions.selected === "selected") {
+                    let fieldOptions = action.fieldOptions;
+                    fieldOptions.selected = "";
                     return Rx.Observable.from([
-                        updateFilterField(action.rowId, action.fieldName, action.fieldValue, action.fieldType, action.fieldOptions),
+                        updateFilterField(action.rowId, action.fieldName, action.fieldValue, action.fieldType, fieldOptions),
                         updateFilterFieldOptions(filterField, [], 0)
                     ]);
                 }
