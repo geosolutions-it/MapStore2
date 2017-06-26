@@ -19,8 +19,8 @@ class CreateNewMap extends React.Component {
         onGoToMap: PropTypes.func,
         colProps: PropTypes.object,
         isLoggedIn: PropTypes.bool,
-        allowedRoles: React.PropTypes.array,
-        user: React.PropTypes.object
+        allowedRoles: PropTypes.array,
+        user: PropTypes.object
     };
 
     static contextTypes = {
