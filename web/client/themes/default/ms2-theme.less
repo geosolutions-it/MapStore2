@@ -742,13 +742,17 @@ div.ol-scale-line-inner {
 }
 
 .mapstore-toc > button {
-	border: none;
+    border: none;
     box-shadow: none;
-    width: 100%;
+    width: auto;
+    float: right;
+    position: relative;
+    top: -50px;
+    right: -10px;
 }
 
-.mapstore-toc > button.btn span.glyphicon {
-	float: right;
+#mapstore-drawermenu .mapstore-toc > button.btn span.glyphicon {
+    font-size: 20px;
 }
 
 #mapstore-refresh-layers input {
