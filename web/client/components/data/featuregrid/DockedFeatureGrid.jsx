@@ -2,7 +2,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
 const {isObject} = require('lodash');
-const Dock = require('react-dock');
+const Dock = require('react-dock').default;
 
 const {Button, Glyphicon} = require('react-bootstrap');
 const Modal = require('../../../components/misc/Modal');
