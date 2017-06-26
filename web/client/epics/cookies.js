@@ -6,7 +6,9 @@
  * LICENSE file in the root directory of this source tree.
 */
 const Rx = require('rxjs');
-const {setCookieVisibility} = require('../actions/cookie');
+const {setCookieVisibility, setDetailsCookieHtml} = require('../actions/cookie');
+const axios = require('../libs/ajax');
+const {CHANGE_LOCALE} = require('../actions/locale');
 const {LOCATION_CHANGE} = require('react-router-redux');
 
 
@@ -26,11 +28,24 @@ const cookiePolicyChecker = (action$) =>
             Rx.Observable.of(setCookieVisibility(true))
         );
 
+const loadCookieDetailsPage = (action$, store) =>
+    action$.ofType(CHANGE_LOCALE )
+        .filter( () => !localStorage.getItem("cookies-policy-approved"))
+        .switchMap(() => Rx.Observable.fromPromise(
+            axios.get("translations/fragments/cookie/cookieDetails-" + store.getState().locale.current + ".html", null, {
+                timeout: 60000,
+                headers: {'Accept': 'text/html', 'Content-Type': 'text/html'}
+            }).then(res => res.data)
+        ))
+        .switchMap(html => Rx.Observable.of(setDetailsCookieHtml(html)));
+
+
 /**
  * Epics for cookies policy informations
  * @name epics.cookies
  * @type {Object}
  */
 module.exports = {
-    cookiePolicyChecker
+    cookiePolicyChecker,
+    loadCookieDetailsPage
 };

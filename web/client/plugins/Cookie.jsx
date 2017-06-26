@@ -11,6 +11,7 @@ const {setCookieVisibility, setMoreDetailsVisibility} = require('../actions/cook
 
 const Cookie = connect((state) => ({
     show: state.cookie && state.cookie.showCookiePanel,
+    html: state.cookie && state.cookie.html,
     seeMore: state.cookie && state.cookie.seeMore
 }), {
     onSetCookieVisibility: setCookieVisibility,

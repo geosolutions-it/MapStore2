@@ -1162,24 +1162,26 @@ select.form-control option {
 
 
 .mapstore-cookie-panel {
+    height: 100%;
+    overflow: auto;
+    display: grid;
     font-family: inherit;
     position: fixed;
     width: auto;
-    padding: 0px 10px 10px;
+    box-shadow: 0 0 5px 1px #5e5e5e;
     z-index: 9998;
     box-sizing: border-box;
-    height: auto;
     top: auto;
     bottom: 0px;
     left: 0px;
     right: auto;
 }
 .cookie-body-container{
+    height: 100%;
     position: relative;
     width: 100%;
     border-radius: 2px;
     font-size: 13px;
-    margin: 10px 0px 0px;
     padding: 10px;
     display: block;
     box-sizing: border-box;
@@ -1188,7 +1190,6 @@ select.form-control option {
     transform: translate3d(0px, 0px, 0px);
     will-change: transform, opacity;
     background-color: white;
-	box-shadow: 0 0 5px 1px #5e5e5e;
     left: 0px;
     text-align: justify;
 }

@@ -9,7 +9,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const Cookie = require('../Cookie');
 const expect = require('expect');
-const TestUtils = require('react-test-renderer/shallow');
+const TestUtils = require('react-dom/test-utils');
 
 describe('Test for Cookie component', () => {
     beforeEach((done) => {

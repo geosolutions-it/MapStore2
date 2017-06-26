@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const {SET_COOKIE_VISIBILITY, SET_MORE_DETAILS_VISIBILITY} = require('../actions/cookie');
+const {SET_COOKIE_VISIBILITY, SET_MORE_DETAILS_VISIBILITY, SET_DETAILS_COOKIE_HTML} = require('../actions/cookie');
 const assign = require('object-assign');
 
 function cookie(state = null, action) {
@@ -16,6 +16,9 @@ function cookie(state = null, action) {
         }
         case SET_MORE_DETAILS_VISIBILITY: {
             return assign({}, state, {seeMore: action.status});
+        }
+        case SET_DETAILS_COOKIE_HTML: {
+            return assign({}, state, {html: action.html});
         }
         default:
             return state;

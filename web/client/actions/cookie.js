@@ -8,6 +8,7 @@
 
 const SET_COOKIE_VISIBILITY = 'SET_COOKIE_VISIBILITY';
 const SET_MORE_DETAILS_VISIBILITY = 'SET_MORE_DETAILS_VISIBILITY';
+const SET_DETAILS_COOKIE_HTML = 'SET_DETAILS_COOKIE_HTML';
 
 function setCookieVisibility(status) {
     return {
@@ -21,7 +22,14 @@ function setMoreDetailsVisibility(status) {
         status
     };
 }
+function setDetailsCookieHtml(html) {
+    return {
+        type: SET_DETAILS_COOKIE_HTML,
+        html
+    };
+}
 module.exports = {
     SET_COOKIE_VISIBILITY, setCookieVisibility,
-    SET_MORE_DETAILS_VISIBILITY, setMoreDetailsVisibility
+    SET_MORE_DETAILS_VISIBILITY, setMoreDetailsVisibility,
+    SET_DETAILS_COOKIE_HTML, setDetailsCookieHtml
 };

@@ -15,6 +15,7 @@ const MoreDetails = require('./MoreDetails');
   * @class Cookies
   * @memberof components
   * @prop {string} declineUrl The url associated with the leave button
+  * @prop {string} locale the language used, default browser's one
   * @prop {string} externalCookieUrl if provided then it link to that url otherwise it will opens a section with more details.
   * @prop {function} onSetCookieVisibility to change the visibility of the cookie panel
   * @prop {function} onMoreDetails to toggle the more details section
@@ -27,6 +28,7 @@ class Cookie extends React.Component {
     static propTypes = {
         declineUrl: PropTypes.string,
         externalCookieUrl: PropTypes.string,
+        locale: PropTypes.string,
         onMoreDetails: PropTypes.func,
         onSetCookieVisibility: PropTypes.func,
         seeMore: PropTypes.bool,
@@ -45,10 +47,10 @@ class Cookie extends React.Component {
 
     render() {
         return this.props.show ? (
-            <div className="mapstore-cookie-panel" style={{width: this.props.seeMore ? "auto" : "420px"}}>
+            <div className="mapstore-cookie-panel" style={{width: this.props.seeMore ? "auto" : "420px", height: this.props.seeMore ? "100%" : "auto"}}>
                 <div role="body" className="cookie-body-container">
                     {!this.props.externalCookieUrl && this.props.seeMore ? (
-                        <MoreDetails/>
+                        <MoreDetails html={this.props.html}/>
                     ) : (<div className="cookie-message">
                             <Message msgId="cookie.info"/>
                         </div>) }
@@ -96,10 +98,10 @@ class Cookie extends React.Component {
             </div>
         ) : null;
     }
-    moreDetails() {
+    moreDetails = () => {
         this.props.onMoreDetails(!this.props.seeMore);
     }
-    accept() {
+    accept = () => {
         localStorage.setItem("cookies-policy-approved", true);
         this.props.onSetCookieVisibility(false);
     }
