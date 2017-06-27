@@ -37,9 +37,9 @@ module.exports = {
     /**
      * action for change download options
      * @memberof actions.wfsdownload
-     * @param  {string} key   the value key to change. e.g. selectedFormat
-     * @param  {string|boolean} value the value of the option
-     * @return {action}       the action of type `DOWNLOAD_OPTIONS_CHANGE`
+     * @param  {string} key             the value key to change. e.g. selectedFormat
+     * @param  {string|boolean} value   the value of the option
+     * @return {action}                 the action of type `DOWNLOAD_OPTIONS_CHANGE`
      */
     onDownloadOptionChange: (key, value) => ({
         type: DOWNLOAD_OPTIONS_CHANGE,

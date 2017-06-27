@@ -1,4 +1,5 @@
 const {DOWNLOAD_FEATURES, onDownloadFinished} = require('../actions/wfsdownload');
+const {TOGGLE_CONTROL, toggleControl} = require('../actions/controls');
 const {error} = require('../actions/notifications');
 const Rx = require('rxjs');
 const {get} = require('lodash');
@@ -64,5 +65,9 @@ module.exports = {
                     onDownloadFinished())
                 )
 
-        )
+        ),
+    closeExportDownload: (action$, store) =>
+        action$.ofType(TOGGLE_CONTROL)
+        .filter((a) => a.control === "queryPanel" && !store.getState().controls.queryPanel.enabled && store.getState().controls.wfsdownload.enabled)
+        .switchMap( () => Rx.Observable.of(toggleControl("wfsdownload")))
 };
