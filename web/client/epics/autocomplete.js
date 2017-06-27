@@ -79,8 +79,6 @@ module.exports = {
                 const filterField = state.queryform.filterFields.filter((f) => f.rowId === action.rowId)[0];
 
                 if (action.fieldOptions.selected === "selected") {
-                    let fieldOptions = action.fieldOptions;
-                    fieldOptions.selected = "";
                     return Rx.Observable.from([
                         updateFilterFieldOptions(filterField, [], 0)
                     ]);
