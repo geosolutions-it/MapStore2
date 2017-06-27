@@ -70,7 +70,7 @@ module.exports = {
     fetchAutocompleteOptionsEpic: (action$, store) =>
         action$.ofType(UPDATE_FILTER_FIELD)
             .debounce((action) => {
-                return action.fieldOptions.applyDelay ? Rx.Observable.interval(1000).take(1) : Rx.Observable.interval(0).take(1);
+                return Rx.Observable.timer(action.fieldOptions.delayDebounce || 0);
             })
             .filter( (action) => action.fieldName === "value" && action.fieldType === "string" && store.getState().queryform.autocompleteEnabled )
             .switchMap((action) => {
