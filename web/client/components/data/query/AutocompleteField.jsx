@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -8,10 +7,10 @@ const PropTypes = require('prop-types');
 */
 
 
+const PropTypes = require('prop-types');
 const React = require('react');
 const Combobox = require('react-widgets').Combobox;
 const {Glyphicon} = require('react-bootstrap');
-require('./css/queryform.less');
 const AutocompleteListItem = require('./AutocompleteListItem');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
@@ -23,6 +22,8 @@ const LocaleUtils = require('../../../utils/LocaleUtils');
  * @prop {object} [filterField] the filterField values
  * @prop {string} [label] the label of the combobox
  * @prop {number} [maxFeaturesWPS] the max number of features for any page
+ * @prop {string} [nextPage] the icon for the next page tool
+ * @prop {string} [prevPage] the icon for the prev page tool
  * @prop {function} [onUpdateField] updated the filterfield values in the state
  * @prop {bool} [paginated] if true it displays the pagination if there is more than one page
  * @prop {string} [textField] the key used for the labes corresponding to filterField.options[x].label
@@ -76,10 +77,10 @@ class AutocompleteField extends React.Component {
         return (
             <div className="autocomplete-toolbar">
                 { !firstPage &&
-                    <Glyphicon className={this.props.prevPage} glyph={this.props.prevPage} onClick={() => this.props.onUpdateField(this.props.filterField.rowId, "value", this.props.filterField.value, "string", {currentPage: this.props.filterField.fieldOptions.currentPage - 1}) }/>
+                    <Glyphicon className={this.props.prevPage} glyph={this.props.prevPage} onClick={() => this.props.onUpdateField(this.props.filterField.rowId, "value", this.props.filterField.value, "string", {currentPage: this.props.filterField.fieldOptions.currentPage - 1, delayDebounce: 0}) }/>
                 }
                 { !lastPage &&
-                    <Glyphicon className={this.props.nextPage} glyph={this.props.nextPage} onClick={() => this.props.onUpdateField(this.props.filterField.rowId, "value", this.props.filterField.value, "string", {currentPage: this.props.filterField.fieldOptions.currentPage + 1})}/>
+                    <Glyphicon className={this.props.nextPage} glyph={this.props.nextPage} onClick={() => this.props.onUpdateField(this.props.filterField.rowId, "value", this.props.filterField.value, "string", {currentPage: this.props.filterField.fieldOptions.currentPage + 1, delayDebounce: 0})}/>
                 }
             </div>
         );
@@ -133,10 +134,10 @@ class AutocompleteField extends React.Component {
         if (this.selected) {
             this.selected = false;
             if (input && input.value !== "") {
-                this.props.onUpdateField(this.props.filterField.rowId, "value", input.value, "string", {currentPage: 1, selected: "selected"});
+                this.props.onUpdateField(this.props.filterField.rowId, "value", input.value, "string", {currentPage: 1, selected: "selected", delayDebounce: 0});
             }
         } else {
-            this.props.onUpdateField(this.props.filterField.rowId, "value", input, "string", {currentPage: 1});
+            this.props.onUpdateField(this.props.filterField.rowId, "value", input, "string", {currentPage: 1, delayDebounce: 1000});
         }
     };
 
@@ -151,7 +152,7 @@ class AutocompleteField extends React.Component {
 
     loadWithoutfilter = (options) => {
         if (options.length === 0 && !this.props.filterField.value) {
-            this.props.onUpdateField(this.props.filterField.rowId, "value", "", "string", {currentPage: 1});
+            this.props.onUpdateField(this.props.filterField.rowId, "value", "", "string", {currentPage: 1, delayDebounce: 0});
         }
     };
 }
