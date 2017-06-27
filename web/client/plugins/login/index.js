@@ -7,7 +7,7 @@
 */
 const React = require('react');
 const {connect} = require('../../utils/PluginsUtils');
-const {geoStoreLoginSubmit, loginFail, logoutWithReload, geoStoreChangePassword, resetError} = require('../../actions/security');
+const {login, loginFail, logoutWithReload, changePassword, resetError} = require('../../actions/security');
 const {setControlProperty} = require('../../actions/controls');
 const {Glyphicon} = require('react-bootstrap');
 
@@ -40,7 +40,7 @@ const PasswordReset = connect((state) => ({
     changed: state.security && state.security.passwordChanged && true || false,
     error: state.security && state.security.passwordError
 }), {
-    onPasswordChange: (user, pass) => { return geoStoreChangePassword(user, pass); },
+    onPasswordChange: (user, pass) => { return changePassword(user, pass); },
     onClose: setControlProperty.bind(null, "ResetPassword", "enabled", false, false)
 })(require('../../components/security/modals/PasswordResetModal'));
 
@@ -51,7 +51,7 @@ const Login = connect((state) => ({
 }), {
     onLoginSuccess: setControlProperty.bind(null, 'LoginForm', 'enabled', false, false),
     onClose: closeLogin,
-    onSubmit: geoStoreLoginSubmit,
+    onSubmit: login,
     onError: loginFail
 })(require('../../components/security/modals/LoginModal'));
 

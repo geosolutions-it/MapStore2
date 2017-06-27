@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var axios = require('axios');
-var ConfigUtils = require('../utils/ConfigUtils');
-var toString = Object.prototype.toString;
+const axios = require('axios');
+const ConfigUtils = require('../utils/ConfigUtils');
 
 const SecurityUtils = require('../utils/SecurityUtils');
 const assign = require('object-assign');
+const {has, isObject} = require('lodash');
+const urlUtil = require('url');
 
 /**
  * Internal helper that adds an extra paramater to an axios configuration.
@@ -36,103 +37,40 @@ function addAuthenticationToAxios(axiosConfig) {
     if (!axiosConfig || !axiosConfig.url || !SecurityUtils.isAuthenticationActivated()) {
         return axiosConfig;
     }
-    switch (SecurityUtils.getAuthenticationMethod(axiosConfig.url)) {
-    case 'authkey':
-        const token = SecurityUtils.getToken();
-        if (!token) {
+    const rule = SecurityUtils.getAuthenticationRule(axiosConfig.url);
+    const method = rule && (has(rule, "method.method") ? rule.method : assign({}, {method: rule.method}));
+    const methodType = rule && (has(rule, "method.method") ? rule.method.method : rule.method);
+    switch (methodType) {
+        case 'authkey':
+        case 'authkey-param':
+        {
+            const token = SecurityUtils.getToken();
+            if (!token) {
+                return axiosConfig;
+            }
+            addParameterToAxiosConfig(axiosConfig, method.param || 'authkey', token);
             return axiosConfig;
         }
-        addParameterToAxiosConfig(axiosConfig, 'authkey', token);
-        return axiosConfig;
-    case 'basic':
-        const basicAuthHeader = SecurityUtils.getBasicAuthHeader();
-        if (!basicAuthHeader) {
+        case 'basic':
+            const basicAuthHeader = SecurityUtils.getBasicAuthHeader();
+            if (!basicAuthHeader) {
+                return axiosConfig;
+            }
+            addHeaderToAxiosConfig(axiosConfig, 'Authorization', basicAuthHeader);
+            return axiosConfig;
+        case 'bearer':
+        {
+            const token = SecurityUtils.getToken();
+            if (!token) {
+                return axiosConfig;
+            }
+            addHeaderToAxiosConfig(axiosConfig, 'Authorization', "Bearer " + token);
             return axiosConfig;
         }
-        addHeaderToAxiosConfig(axiosConfig, 'Authorization', basicAuthHeader);
-        return axiosConfig;
-    default:
+        default:
             // we cannot handle the required authentication method
         return axiosConfig;
     }
-}
-
-function isArray(val) {
-    return toString.call(val) === '[object Array]';
-}
-function isObject(val) {
-    return val !== null && typeof val === 'object';
-}
-function isDate(val) {
-    return toString.call(val) === '[object Date]';
-}
-function isArguments(val) {
-    return toString.call(val) === '[object Arguments]';
-}
-function forEach(arg, fn) {
-    var obj;
-
-    // Check if arg is array-like
-    const isArrayLike = isArray(arg) || isArguments(arg);
-
-    // Force an array if not already something iterable
-    if (typeof arg !== 'object' && !isArrayLike) {
-        obj = [arg];
-    } else {
-        obj = arg;
-    }
-
-    // Iterate over array values
-    if (isArrayLike) {
-        for (let i = 0, l = obj.length; i < l; i++) {
-            fn.call(null, obj[i], i, obj);
-        }
-    } else { // Iterate over object keys
-        for (let key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                fn.call(null, obj[key], key, obj);
-            }
-        }
-    }
-}
-function buildUrl(argUrl, params) {
-    var url = argUrl;
-    var parts = [];
-
-    if (!params) {
-        return url;
-    }
-
-    forEach(params, function(argVal, argKey) {
-        var val = argVal;
-        var key = argKey;
-        if (val === null || typeof val === 'undefined') {
-            return;
-        }
-
-        if (isArray(val)) {
-            key = key + '[]';
-        }
-
-        if (!isArray(val)) {
-            val = [val];
-        }
-
-        forEach(val, function(argV) {
-            var v = argV;
-            if (isDate(v)) {
-                v = v.toISOString();
-            } else if (isObject(v)) {
-                v = JSON.stringify(v);
-            }
-            parts.push(encodeURI(key) + '=' + encodeURIComponent(v));
-        });
-    });
-
-    if (parts.length > 0) {
-        url += (url.indexOf('?') === -1 ? '?' : '&') + parts.join('&');
-    }
-    return url;
 }
 
 axios.interceptors.request.use(config => {
@@ -162,7 +100,15 @@ axios.interceptors.request.use(config => {
             }
             const isCORS = useCORS.reduce((found, current) => found || uri.indexOf(current) === 0, false);
             if (!isCORS) {
-                config.url = proxyUrl + encodeURIComponent(buildUrl(uri, config.params));
+                const parsedUri = urlUtil.parse(uri, true, true);
+                config.url = proxyUrl + encodeURIComponent(
+                    urlUtil.format(
+                        assign({}, parsedUri, {
+                            search: null,
+                            query: assign({}, parsedUri.query, config.params )
+                        })
+                    )
+                );
                 config.params = undefined;
             }
         }

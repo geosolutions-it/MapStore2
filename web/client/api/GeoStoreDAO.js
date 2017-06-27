@@ -10,7 +10,6 @@ const _ = require('lodash');
 const assign = require('object-assign');
 const uuidv1 = require('uuid/v1');
 const ConfigUtils = require('../utils/ConfigUtils');
-const {findIndex} = require('lodash');
 const jsesc = require('jsesc');
 
 let parseOptions = (opts) => opts;
@@ -30,13 +29,16 @@ let parseUserGroups = (groupsObj) => {
     return groupsObj.User.groups.group.filter(obj => !!obj.id).map((obj) => _.pick(obj, ["id", "groupName", "description"]));
 };
 
-
 /**
  * API for local config
  */
 var Api = {
+    authProviderName: "geostore",
+    addBaseUrl: function(options) {
+        return assign(options || {}, {baseURL: ConfigUtils.getDefaults().geoStoreUrl});
+    },
     getData: function(id, options) {
-        let url = "data/" + id;
+        const url = "data/" + id;
         return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {
             return response.data;
         });
@@ -47,12 +49,12 @@ var Api = {
             this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
     getResourcesByCategory: function(category, query, options) {
-        let q = query || "*";
-        let url = "extjs/search/category/" + category + "/*" + q + "*/thumbnail"; // comma-separated list of wanted attributes
+        const q = query || "*";
+        const url = "extjs/search/category/" + category + "/*" + q + "*/thumbnail"; // comma-separated list of wanted attributes
         return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
-    basicLogin: function(username, password, options) {
-        let url = "users/user/details";
+    getUserDetails: function(username, password, options) {
+        const url = "users/user/details";
         return axios.get(url, this.addBaseUrl(_.merge({
             auth: {
                 username: username,
@@ -65,6 +67,28 @@ var Api = {
             return response.data;
         });
     },
+    login: function(username, password, options) {
+        const url = "session/login";
+        let authData;
+        return axios.post(url, null, this.addBaseUrl(_.merge({
+            auth: {
+                username: username,
+                password: password
+            }
+        }, options))).then((response) => {
+            authData = response.data;
+            return axios.get("users/user/details", this.addBaseUrl(_.merge({
+                headers: {
+                    'Authorization': 'Bearer ' + response.data.access_token
+                },
+                params: {
+                    includeattributes: true
+                }
+            }, options)));
+        }).then((response) => {
+            return { ...response.data, ...authData};
+        });
+    },
     changePassword: function(user, newPassword, options) {
         return axios.put(
             "users/user/" + user.id, "<User><newPassword>" + newPassword + "</newPassword></User>",
@@ -73,9 +97,6 @@ var Api = {
                     'Content-Type': "application/xml"
                 }
             }, options)));
-    },
-    addBaseUrl: function(options) {
-        return assign(options, {baseURL: ConfigUtils.getDefaults().geoStoreUrl});
     },
     updateResourceAttribute: function(resourceId, name, value, type, options) {
         return axios.put(
@@ -139,14 +160,14 @@ var Api = {
             }));
     },
     createResource: function(metadata, data, category, options) {
-        let name = metadata.name;
-        let description = metadata.description || "";
+        const name = metadata.name;
+        const description = metadata.description || "";
         // filter attributes from the metadata object excluding the default ones
-        let attributes = metadata.attributes || _.pick(metadata, Object.keys(metadata).filter(function(key) {
+        const attributes = metadata.attributes || _.pick(metadata, Object.keys(metadata).filter(function(key) {
             return key !== "name" && key !== "description" && key !== "id";
         }));
 
-        let xmlAttrs = Object.keys(attributes).map((key) => {
+        const xmlAttrs = Object.keys(attributes).map((key) => {
             return "<attribute><name>" + key + "</name><value>" + attributes[key] + "</value><type>STRING</type></attribute>";
         });
         let attributesSection = "";
@@ -172,13 +193,13 @@ var Api = {
             }, options)));
     },
     getUserGroups: function(options) {
-        let url = "usergroups/";
+        const url = "usergroups/";
         return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {
             return response.data;
         });
     },
     getPermissions: function(mapId, options) {
-        let url = "resources/resource/" + mapId + "/permissions";
+        const url = "resources/resource/" + mapId + "/permissions";
         return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
     getAvailableGroups: function(user) {
@@ -204,24 +225,24 @@ var Api = {
             });
     },
     getUsers: function(textSearch, options = {}) {
-        let url = "extjs/search/users" + (textSearch ? "/" + textSearch : "");
+        const url = "extjs/search/users" + (textSearch ? "/" + textSearch : "");
         return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
     getUser: function(id, options = {params: {includeattributes: true}}) {
-        let url = "users/user/" + id;
+        const url = "users/user/" + id;
         return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
     updateUser: function(id, user, options) {
-        let url = "users/user/" + id;
-        let postUser = assign({}, user);
+        const url = "users/user/" + id;
+        const postUser = assign({}, user);
         if (postUser.newPassword === "") {
             delete postUser.newPassword;
         }
         return axios.put(url, {User: postUser}, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
     createUser: function(user, options) {
-        let url = "users/";
-        let postUser = assign({}, user);
+        const url = "users/";
+        const postUser = assign({}, user);
         if (postUser.newPassword) {
             postUser.password = postUser.newPassword;
         }
@@ -230,15 +251,15 @@ var Api = {
         return axios.post(url, {User: postUser}, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
     deleteUser: function(id, options = {}) {
-        let url = "users/user/" + id;
+        const url = "users/user/" + id;
         return axios.delete(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
     getGroups: function(textSearch, options = {}) {
-        let url = "extjs/search/groups" + (textSearch ? "/" + textSearch : "");
+        const url = "extjs/search/groups" + (textSearch ? "/" + textSearch : "");
         return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
     getGroup: function(id, options = {}) {
-        let url = "usergroups/group/" + id;
+        const url = "usergroups/group/" + id;
         return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {
             let groupLoaded = response.data.UserGroup;
             let users = groupLoaded && groupLoaded.restUsers && groupLoaded.restUsers.User;
@@ -246,7 +267,7 @@ var Api = {
         });
     },
     createGroup: function(group, options) {
-        let url = "usergroups/";
+        const url = "usergroups/";
         let groupId;
         return axios.post(url, {UserGroup: {...group}}, this.addBaseUrl(parseOptions(options)))
             .then(function(response) {
@@ -260,9 +281,9 @@ var Api = {
             let restUsers = group.users || group.restUsers && group.restUsers.User || [];
             restUsers = Array.isArray(restUsers) ? restUsers : [restUsers];
             // old users not present in the new users list
-            let toRemove = restUsers.filter( (user) => findIndex(group.newUsers, u => u.id === user.id) < 0);
+            let toRemove = restUsers.filter( (user) => _.findIndex(group.newUsers, u => u.id === user.id) < 0);
             // new users not present in the old users list
-            let toAdd = group.newUsers.filter( (user) => findIndex(restUsers, u => u.id === user.id) < 0);
+            let toAdd = group.newUsers.filter( (user) => _.findIndex(restUsers, u => u.id === user.id) < 0);
 
             // create callbacks
             let removeCallbacks = toRemove.map( (user) => () => this.removeUserFromGroup(user.id, group.id, options) );
@@ -284,18 +305,34 @@ var Api = {
         });
     },
     deleteGroup: function(id, options = {}) {
-        let url = "usergroups/group/" + id;
+        const url = "usergroups/group/" + id;
         return axios.delete(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
     addUserToGroup(userId, groupId, options = {}) {
-        let url = "/usergroups/group/" + userId + "/" + groupId + "/";
+        const url = "/usergroups/group/" + userId + "/" + groupId + "/";
         return axios.post(url, null, this.addBaseUrl(parseOptions(options)));
     },
     removeUserFromGroup(userId, groupId, options = {}) {
-        let url = "/usergroups/group/" + userId + "/" + groupId + "/";
+        const url = "/usergroups/group/" + userId + "/" + groupId + "/";
         return axios.delete(url, this.addBaseUrl(parseOptions(options)));
+    },
+    verifySession: function(options) {
+        const url = "users/user/details";
+        return axios.get(url, this.addBaseUrl(_.merge({
+            params: {
+                includeattributes: true
+            }
+        }, options))).then(function(response) {
+            return response.data;
+        });
+    },
+    refreshToken: function(accessToken, refreshToken, options) {
+        // accessToken is actually the sessionID
+        const url = "session/refresh/" + accessToken + "/" + refreshToken;
+        return axios.post(url, null, this.addBaseUrl(parseOptions(options))).then(function(response) {
+            return response.data;
+        });
     }
-
 };
 
 module.exports = Api;

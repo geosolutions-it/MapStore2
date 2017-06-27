@@ -47,11 +47,20 @@ const SecurityUtils = {
     },
 
     /**
-     * Returns the current user token value.
+     * Returns the current user access token value.
      */
     getToken() {
         const securityInfo = this.getSecurityInfo();
         return securityInfo && securityInfo.token;
+    },
+
+    /**
+     * Returns the current user refresh token value.
+     * The refresh token is used to get a new access token.
+     */
+    getRefreshToken() {
+        const securityInfo = this.getSecurityInfo();
+        return securityInfo && securityInfo.refresh_token;
     },
 
     /**
@@ -120,6 +129,16 @@ const SecurityUtils = {
         const foundRule = head(this.getAuthenticationRules().filter(
             rule => rule && rule.urlPattern && url.match(new RegExp(rule.urlPattern, "i"))));
         return foundRule ? foundRule.method : undefined;
+    },
+
+    /**
+     * Returns the authentication rule that should be used for the provided URL.
+     * We go through the authentication rules and find the first one that matchs
+     * the provided URL, if no rule matchs the provided URL undefined is returned.
+     */
+    getAuthenticationRule: function(url) {
+        return head(this.getAuthenticationRules().filter(
+            rule => rule && rule.urlPattern && url.match(new RegExp(rule.urlPattern, "i"))));
     },
 
     /**
