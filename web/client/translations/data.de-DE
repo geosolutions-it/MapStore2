@@ -54,6 +54,12 @@
             "tooltipDeactivate": "Beenden Sie den 3D-Modus",
             "tooltipActivate": "Geben Sie den 3D-Modus ein"
         },
+        "cookie":{
+            "info": "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.",
+            "moreDetailsButton": "More Details",
+            "leave": "Leave",
+            "accept": "Accept"
+        },
         "background": "Hintergrund",
         "language": "Sprache",
         "mousePositionCoordinates": "Koordinatenanzeige",

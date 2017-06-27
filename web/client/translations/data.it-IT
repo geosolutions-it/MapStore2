@@ -54,6 +54,12 @@
             "tooltipDeactivate": "Disattiva la modalità 3D",
             "tooltipActivate": "Attiva la modalità 3D"
         },
+        "cookie":{
+            "info": "Questo sito web usa i cookie per migliorare la tua esperienza. Assumiamo che sei d'accordo sul loro utilizzo, ma puoi lasciare il sito se sei contrario.",
+            "moreDetailsButton": "Più dettagli",
+            "leave": "Lascia il sito",
+            "accept": "Accetto"
+        },
         "background": "Sfondo",
         "language": "Lingua",
         "mousePositionCoordinates": "Indicatore di coordinate",

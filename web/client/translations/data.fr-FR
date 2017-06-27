@@ -55,6 +55,12 @@
             "tooltipDeactivate": "Sortie en mode 3D",
             "tooltipActivate": "Entrez le mode 3D"
         },
+        "cookie":{
+            "info": "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.",
+            "moreDetailsButton": "More Details",
+            "leave": "Leave",
+            "accept": "Accept"
+        },
         "enable": "Activer",
         "background": "Fond de plan",
         "language": "langue",

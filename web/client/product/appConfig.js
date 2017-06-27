@@ -55,6 +55,10 @@ module.exports = {
                         title: false,
                         dimensions: false
                     }
+                },
+                cookie: {
+                    enabled: false,
+                    seeMore: false
                 }
             }
         },
@@ -63,7 +67,6 @@ module.exports = {
             mousePosition: {enabled: true, crs: "EPSG:4326", showCenter: true}
         }
     },
-    appEpics: require('../epics/cookies'),
     storeOpts: {
         persist: {
             whitelist: ['security']

@@ -125,7 +125,13 @@
                     }
                 }
             }, "Login",
-            "OmniBar", "BurgerMenu", "Expander", "GlobeViewSwitcher"
+            "OmniBar", "BurgerMenu", "Expander", "GlobeViewSwitcher", {
+              "name": "Cookie",
+              "cfg": {
+                "externalCookieUrl" : "",
+                "declineUrl" : "http://www.google.com"
+              }
+            }
         ],
 
         "desktop": ["Map", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", {"name": "BackgroundSelector", "cfg": { "bottom": 40 } },
@@ -231,6 +237,12 @@
                         "alwaysVisible": true
                     }
                 }
+            }, {
+              "name": "Cookie",
+              "cfg": {
+                "externalCookieUrl" : "",
+                "declineUrl" : "http://www.google.com"
+              }
             },
             "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig"
         ],
@@ -312,7 +324,7 @@
                         "alwaysVisible": true
                     }
                 }
-            },
+            }, "Cookie",
             "OmniBar", {
                 "name": "GoFull",
                 "override": {
@@ -328,7 +340,13 @@
                 "className": "navbar shadow navbar-home"
             }
         }, "ManagerMenu", "Login", "Language", "Attribution", "ScrollTop", "Notifications"],
-        "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "MapType", "ThemeSwitcher",  "GridContainer", "CreateNewMap", "Maps", "Examples", "Footer"],
+        "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "MapType", "ThemeSwitcher",  "GridContainer", "CreateNewMap", "Maps", "Examples", "Footer", {
+          "name": "Cookie",
+          "cfg": {
+            "externalCookieUrl" : "",
+            "declineUrl" : "http://www.google.com"
+          }
+        }],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }
 }

@@ -54,6 +54,12 @@
             "tooltipDeactivate": "Exit 3D Mode",
             "tooltipActivate": "Enter 3D Mode"
         },
+        "cookie":{
+            "info": "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.",
+            "moreDetailsButton": "More Details",
+            "leave": "Leave",
+            "accept": "Accept"
+        },
         "background": "Background",
         "language": "Language",
         "mousePositionCoordinates": "Coordinates indicator",
