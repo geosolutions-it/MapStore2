@@ -8,7 +8,7 @@
 
 const Rx = require('rxjs');
 const axios = require('../libs/ajax');
-const {UPDATE_FILTER_FIELD, updateFilterFieldOptions, loadingFilterFieldOptions, setAutocompleteMode, toggleMenu, updateFilterField} = require('../actions/queryform');
+const {UPDATE_FILTER_FIELD, updateFilterFieldOptions, loadingFilterFieldOptions, setAutocompleteMode, toggleMenu} = require('../actions/queryform');
 const {FEATURE_TYPE_SELECTED} = require('../actions/wfsquery');
 const {getRequestBody, getRequestBodyWithFilter} = require('../utils/ogc/WPS/autocomplete');
 const {isArray, startsWith, endsWith} = require('lodash');
