@@ -87,7 +87,7 @@ class Cookie extends React.Component {
                                 </Button>
                             )
                         } &nbsp;
-                        <a href={this.props.declineUrl} target="_blank" style={{cursor: "pointer"}}>
+                        <a href={this.props.declineUrl} target="_self" style={{cursor: "pointer"}}>
                             <Button
                                 className="cookie-button"
                                 id="decline-cookie"
