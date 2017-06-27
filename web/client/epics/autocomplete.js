@@ -8,7 +8,7 @@
 
 const Rx = require('rxjs');
 const axios = require('../libs/ajax');
-const {UPDATE_FILTER_FIELD, updateFilterFieldOptions, loadingFilterFieldOptions, setAutocompleteMode, toggleMenu, updateFilterField} = require('../actions/queryform');
+const {UPDATE_FILTER_FIELD, updateFilterFieldOptions, loadingFilterFieldOptions, setAutocompleteMode, toggleMenu} = require('../actions/queryform');
 const {FEATURE_TYPE_SELECTED} = require('../actions/wfsquery');
 const {getRequestBody, getRequestBodyWithFilter} = require('../utils/ogc/WPS/autocomplete');
 const {isArray, startsWith, endsWith} = require('lodash');
@@ -69,7 +69,9 @@ module.exports = {
         }),
     fetchAutocompleteOptionsEpic: (action$, store) =>
         action$.ofType(UPDATE_FILTER_FIELD)
-            .debounceTime(1000)
+            .debounce((action) => {
+                return Rx.Observable.timer(action.fieldOptions.delayDebounce || 0);
+            })
             .filter( (action) => action.fieldName === "value" && action.fieldType === "string" && store.getState().queryform.autocompleteEnabled )
             .switchMap((action) => {
                 const state = store.getState();
@@ -78,7 +80,6 @@ module.exports = {
 
                 if (action.fieldOptions.selected === "selected") {
                     return Rx.Observable.from([
-                        updateFilterField(action.rowId, action.fieldName, action.fieldValue, action.fieldType, action.fieldOptions),
                         updateFilterFieldOptions(filterField, [], 0)
                     ]);
                 }
