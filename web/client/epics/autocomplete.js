@@ -82,7 +82,6 @@ module.exports = {
                     let fieldOptions = action.fieldOptions;
                     fieldOptions.selected = "";
                     return Rx.Observable.from([
-                        updateFilterField(action.rowId, action.fieldName, action.fieldValue, action.fieldType, fieldOptions),
                         updateFilterFieldOptions(filterField, [], 0)
                     ]);
                 }
