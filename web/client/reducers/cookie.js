@@ -20,7 +20,7 @@ function cookie(state = {
             return assign({}, state, {seeMore: action.status});
         }
         case SET_DETAILS_COOKIE_HTML: {
-            return assign({}, state, {html: {[action.lang]: action.html}});
+            return assign({}, state, {html: { ...state.html, [action.lang]: action.html}});
         }
         default:
             return state;
