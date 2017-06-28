@@ -9,7 +9,7 @@
 
 const React = require('react');
 
-const {connect} = require('react-redux');
+const {connect} = require('../utils/PluginsUtils');
 const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
@@ -45,6 +45,7 @@ const Share = connect((state) => ({
 
 module.exports = {
     SharePlugin: assign(Share, {
+        disablePluginIf: "{state('routing').endsWith('new')}",
         BurgerMenu: {
             name: 'share',
             position: 1000,
