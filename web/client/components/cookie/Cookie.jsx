@@ -47,7 +47,8 @@ class Cookie extends React.Component {
 
     render() {
         return this.props.show ? (
-            <div className="mapstore-cookie-panel" style={{width: this.props.seeMore ? "auto" : "420px", height: this.props.seeMore ? "100%" : "auto"}}>
+            <div className="mapstore-cookie-panel"
+                 style={this.props.seeMore ? {width: "50%", left: "25%", height: "100%" } : {width: "420px", left: "auto", height: "auto"}}>
                 <div role="header" className="cookie-header" style={{height: this.props.seeMore ? "44px" : "0px"}}>
                     {this.props.seeMore ? <Glyphicon glyph="1-close" onClick={() => this.props.onMoreDetails(false)}/> : null }
                 </div>
