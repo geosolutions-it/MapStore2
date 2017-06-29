@@ -21,6 +21,7 @@ class OpenlayersLayer extends React.Component {
         options: PropTypes.object,
         onLayerLoading: PropTypes.func,
         onLayerError: PropTypes.func,
+        onErrorBackground: PropTypes.func,
         onLayerLoad: PropTypes.func,
         position: PropTypes.number,
         observables: PropTypes.array,
@@ -32,6 +33,7 @@ class OpenlayersLayer extends React.Component {
         onLayerLoading: () => {},
         onLayerLoad: () => {},
         onLayerError: () => {},
+        onErrorBackground: () => {},
         onInvalid: () => {}
     };
 
@@ -105,7 +107,11 @@ class OpenlayersLayer extends React.Component {
         return assign({}, options, _.isNumber(position) ? {zIndex: position} : null, {
             srs,
             onError: () => {
-                this.props.onInvalid(this.props.type, options);
+                if (options.group === "background") {
+                    this.props.onErrorBackground(options);
+                } else {
+                    this.props.onInvalid(this.props.type, options);
+                }
             }
         });
     };

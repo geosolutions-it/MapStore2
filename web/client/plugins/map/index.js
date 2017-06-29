@@ -1,5 +1,5 @@
-/**
-* Copyright 2016, GeoSolutions Sas.
+/*
+* Copyright 2017, GeoSolutions Sas.
 * All rights reserved.
 *
 * This source code is licensed under the BSD-style license found in the
@@ -9,7 +9,7 @@
 const React = require('react');
 
 const {changeMapView, clickOnMap} = require('../../actions/map');
-const {layerLoading, layerLoad, layerError, invalidLayer} = require('../../actions/layers');
+const {layerLoading, layerLoad, layerError, invalidLayer, backgroundHasError} = require('../../actions/layers');
 const {changeMousePosition} = require('../../actions/mousePosition');
 const {changeMeasurementState} = require('../../actions/measurement');
 const {changeSelectionState} = require('../../actions/selection');
@@ -29,6 +29,7 @@ module.exports = (mapType, actions) => {
     const LMap = connect((state) => ({
         mousePosition: state.mousePosition || {enabled: false}
     }), assign({}, {
+        onErrorBackground: backgroundHasError,
         onMapViewChanges: changeMapView,
         onClick: clickOnMap,
         onMouseMove: changeMousePosition,

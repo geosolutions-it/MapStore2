@@ -46,6 +46,10 @@
             "featureTypeError": "Layerattribute können nicht geladen werden",
             "elevation": "Höhe"
         },
+        "notification": {
+            "backgroundLayerNotSupported": "Der zuvor gewählte Hintergrund wird nicht für diese Art von Karte unterstützt. Der erste verfügbare wird dann verwendet.",
+            "noBackgroundLayerSupported": "Es gibt keine unterstützten Hintergrundschichten für diese Art von Karte."
+        },
         "dock": {
             "row": "{rowsSelected} reihe ausgewählt",
             "rows": "{rowsSelected} reihen ausgewählt"

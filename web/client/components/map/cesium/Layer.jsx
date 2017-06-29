@@ -15,6 +15,7 @@ class CesiumLayer extends React.Component {
         map: PropTypes.object,
         type: PropTypes.string,
         options: PropTypes.object,
+        onErrorBackground: PropTypes.func,
         position: PropTypes.number
     };
 
@@ -136,10 +137,15 @@ class CesiumLayer extends React.Component {
         if (type) {
             const opts = assign({}, options, position ? {zIndex: position} : null);
             this.layer = Layers.createLayer(type, opts, map);
+
             if (this.layer) {
                 this.layer.layerName = options.name;
                 this.layer.layerId = options.id;
             }
+            if (this.layer === null && options.group === "background") {
+                this.props.onErrorBackground(options);
+            }
+
         }
     };
 

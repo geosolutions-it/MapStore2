@@ -20,11 +20,13 @@ class LeafletLayer extends React.Component {
         position: PropTypes.number,
         zoomOffset: PropTypes.number,
         onInvalid: PropTypes.func,
+        onErrorBackground: PropTypes.func,
         onClick: PropTypes.func
     };
 
     static defaultProps = {
-        onInvalid: () => {}
+        onInvalid: () => {},
+        onErrorBackground: () => {}
     };
 
     componentDidMount() {
@@ -120,7 +122,11 @@ class LeafletLayer extends React.Component {
         return assign({}, options, position ? {zIndex: position, srs: this.props.srs } : null, {
             zoomOffset: -this.props.zoomOffset,
             onError: () => {
-                this.props.onInvalid(this.props.type, this.props.options);
+                if (options.group === "background") {
+                    this.props.onErrorBackground(options);
+                } else {
+                    this.props.onInvalid(this.props.type, this.props.options);
+                }
             }
         });
     };
@@ -139,6 +145,9 @@ class LeafletLayer extends React.Component {
             if (this.layer) {
                 this.layer.layerName = options.name;
                 this.layer.layerId = options.id;
+            }
+            if (!this.layer && options.group === "background") {
+                this.props.onErrorBackground(options);
             }
             this.forceUpdate();
         }

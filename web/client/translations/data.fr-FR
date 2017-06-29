@@ -47,6 +47,10 @@
             "featureTypeError": "Impossible de charger les attributs de calque",
             "elevation": "élévation"
         },
+        "notification": {
+            "backgroundLayerNotSupported": "L'arrière-plan précédemment sélectionné est pas pris en charge pour ce type de carte. Le premier disponible est ensuite utilisée.",
+            "noBackgroundLayerSupported": "Il n'y a pas de couches de fond supportées pour ce type de carte."
+        },
         "dock": {
             "row": "{rowsSelected} ligne sélectionné",
             "rows": "{rowsSelected} lignes sélectionné"

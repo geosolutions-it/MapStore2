@@ -221,6 +221,13 @@ var LayersUtils = {
             }
         }
         return addBaseParams(reqUrl, layer.baseParams || {});
+    },
+    checkSupportedLayer(layer, maptype) {
+        const Layers = require('./' + maptype + '/Layers');
+        if (layer.type === "mapquest" || layer.type === "bing") {
+            return Layers.isSupported(layer.type) && layer.apiKey && layer.apiKey !== "__API_KEY_MAPQUEST__" ? layer : assign({}, layer, {invalid: true});
+        }
+        return Layers.isSupported(layer.type) ? layer : assign({}, layer, {invalid: true});
     }
 
 };

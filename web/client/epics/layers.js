@@ -8,9 +8,12 @@
 
 const Rx = require('rxjs');
 const Api = require('../api/WMS');
-const {REFRESH_LAYERS, layersRefreshed, updateNode, layersRefreshError} = require('../actions/layers');
+const {REFRESH_LAYERS, layersRefreshed, updateNode, layersRefreshError, BACKGROUND_HAS_ERROR, changeLayerProperties} = require('../actions/layers');
+const {currentBackgroundLayerSelector, allBackgroundLayerSelector} = require('../selectors/layers');
 
 const LayersUtils = require('../utils/LayersUtils');
+const {setControlProperty} = require('../actions/controls');
+const {warning} = require('../actions/notifications');
 
 const assign = require('object-assign');
 const {isArray, head} = require('lodash');
@@ -87,7 +90,41 @@ const refresh = action$ =>
             .mergeAll();
         });
 
+const handleBackgroundError = (action$, store) =>
+    action$.ofType(BACKGROUND_HAS_ERROR)
+    .filter(a => a.options.id === currentBackgroundLayerSelector(store.getState()).id)
+    .switchMap(() => {
+        const Layers = require('../utils/' + store.getState().maptype.mapType + '/Layers');
+        const firstSupportedBackgroundLayer = head(allBackgroundLayerSelector(store.getState()).filter(l => {
+            if (l.type === "mapquest" || l.type === "bing" ) {
+                return Layers.isSupported(l.type) && l.apiKey && l.apiKey !== "__API_KEY_MAPQUEST__";
+            }
+            return Layers.isSupported(l.type);
+        }));
+        return !!firstSupportedBackgroundLayer ?
+        Rx.Observable.from([
+            changeLayerProperties(firstSupportedBackgroundLayer.id, {visibility: true}),
+            setControlProperty('backgroundSelector', 'currentLayer', firstSupportedBackgroundLayer),
+            setControlProperty('backgroundSelector', 'tempLayer', firstSupportedBackgroundLayer),
+            warning({
+                title: "warning",
+                message: "notification.backgroundLayerNotSupported",
+                action: {
+                    label: "close"
+                },
+                position: "tc"
+            })
+        ]) : Rx.Observable.of(warning({
+            title: "warning",
+            message: "notification.noBackgroundLayerSupported",
+            action: {
+                label: "close"
+            },
+            position: "tc"
+        }));
+    });
 
 module.exports = {
-    refresh
+    refresh,
+    handleBackgroundError
 };

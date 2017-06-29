@@ -41,6 +41,7 @@ class LeafletMap extends React.Component {
         registerHooks: PropTypes.bool,
         interactive: PropTypes.bool,
         resolutions: PropTypes.array,
+        onErrorBackground: PropTypes.func,
         onInvalidLayer: PropTypes.func
     };
 
@@ -48,6 +49,7 @@ class LeafletMap extends React.Component {
         id: 'map',
         onMapViewChanges: () => {},
         onInvalidLayer: () => {},
+        onErrorBackground: () => {},
         onClick: null,
         onMouseMove: () => {},
         zoomControl: true,
@@ -213,6 +215,7 @@ class LeafletMap extends React.Component {
                 projection: mapProj,
                 zoomOffset: this.zoomOffset,
                 onInvalid: this.props.onInvalidLayer,
+                onErrorBackground: this.props.onErrorBackground,
                 onClick: this.props.onClick
             }) : null;
         }) : null;
