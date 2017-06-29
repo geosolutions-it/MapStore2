@@ -50,7 +50,7 @@ const switchTutorialEpic = (action$, store) =>
             const defaultName = path ? 'default' : action.payload;
             return !isEmpty(presetList) ? Rx.Observable.of(presetList[path + mobile + '_tutorial'] ?
                 setupTutorial(path + mobile, presetList[path + mobile + '_tutorial']) :
-                setupTutorial(defaultName + 'default' + mobile, presetList['default' + mobile + '_tutorial'])
+                setupTutorial(defaultName + mobile, presetList['default' + mobile + '_tutorial'])
             ) : Rx.Observable.empty();
         });
 
