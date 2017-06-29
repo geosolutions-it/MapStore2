@@ -14,6 +14,7 @@ const {TOGGLE_3D} = require('../actions/globeswitcher');
 const defaultRegex = /\/(viewer)\/(\w+)\/(\d+)/;
 const findMapType = path => path.match(defaultRegex) && path.replace(defaultRegex, "$2");
 const { LOCATION_CHANGE } = require('react-router-redux');
+const {isEmpty} = require('lodash');
 
 /**
  * Closes the tutorial if 3D button has been toggled
@@ -46,10 +47,10 @@ const switchTutorialEpic = (action$, store) =>
             const presetList = state.tutorial && state.tutorial.presetList || {};
             const browser = state.browser;
             const mobile = browser && browser.mobile ? '_mobile' : '';
-            return Rx.Observable.of(presetList[path + mobile + '_tutorial'] ?
+            return !isEmpty(presetList) ? Rx.Observable.of(presetList[path + mobile + '_tutorial'] ?
                 setupTutorial(path + mobile, presetList[path + mobile + '_tutorial']) :
                 setupTutorial('default' + mobile, presetList['default' + mobile + '_tutorial'])
-            );
+            ) : Rx.Observable.empty();
         });
 
 /**
