@@ -9,7 +9,7 @@
 const React = require('react');
 const {connect} = require('react-redux');
 const {bindActionCreators} = require('redux');
-const {setupTutorial, startTutorial, updateTutorial, disableTutorial, resetTutorial, closeTutorial, toggleTutorial} = require('../actions/tutorial');
+const {initTutorial, startTutorial, updateTutorial, disableTutorial, resetTutorial, closeTutorial, toggleTutorial} = require('../actions/tutorial');
 const presetList = require('./tutorial/preset');
 const assign = require('object-assign');
 const I18N = require('../components/I18N/I18N');
@@ -183,7 +183,6 @@ const tutorialPluginSelector = createSelector([tutorialSelector],
         run: tutorial.run,
         autoStart: tutorial.start,
         status: tutorial.status,
-        presetList,
         tourAction: tutorial.tourAction,
         stepIndex: tutorial.stepIndex
     }));
@@ -191,7 +190,7 @@ const tutorialPluginSelector = createSelector([tutorialSelector],
 const Tutorial = connect(tutorialPluginSelector, (dispatch) => {
     return {
         actions: bindActionCreators({
-            onSetup: setupTutorial,
+            onSetup: initTutorial,
             onStart: startTutorial,
             onUpdate: updateTutorial,
             onDisable: disableTutorial,
@@ -199,7 +198,15 @@ const Tutorial = connect(tutorialPluginSelector, (dispatch) => {
             onClose: closeTutorial
         }, dispatch)
     };
-})(require('../components/tutorial/Tutorial'));
+}, (stateProps, dispatchProps, ownProps) => ({
+        ...stateProps,
+        ...dispatchProps,
+        ...ownProps,
+        presetList: {
+            ...presetList,
+            ...ownProps.presetList
+        }
+}))(require('../components/tutorial/Tutorial'));
 
 module.exports = {
     TutorialPlugin: assign(Tutorial, {
