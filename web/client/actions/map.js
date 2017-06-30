@@ -17,7 +17,14 @@ const CHANGE_MAP_CRS = 'CHANGE_MAP_CRS';
 const CHANGE_MAP_SCALES = 'CHANGE_MAP_SCALES';
 const CHANGE_MAP_STYLE = 'CHANGE_MAP_STYLE';
 const CHANGE_ROTATION = 'CHANGE_ROTATION';
+const CREATION_ERROR_LAYER = 'CREATION_ERROR_LAYER';
 
+function creationError(options) {
+    return {
+        type: CREATION_ERROR_LAYER,
+        options
+    };
+}
 function zoomToPoint(pos, zoom, crs) {
     return {
         type: ZOOM_TO_POINT,
@@ -118,6 +125,7 @@ module.exports = {
     CHANGE_MAP_STYLE,
     CHANGE_ROTATION,
     ZOOM_TO_POINT,
+    CREATION_ERROR_LAYER,
     changeMapView,
     clickOnMap,
     changeMousePointer,
@@ -128,5 +136,6 @@ module.exports = {
     panTo,
     changeMapStyle,
     changeRotation,
-    zoomToPoint
+    zoomToPoint,
+    creationError
 };

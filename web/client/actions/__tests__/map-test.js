@@ -16,6 +16,8 @@ var {
     CHANGE_MAP_SCALES,
     CHANGE_MAP_STYLE,
     CHANGE_ROTATION,
+    CREATION_ERROR_LAYER,
+    creationError,
     changeMapView,
     clickOnMap,
     changeMousePointer,
@@ -52,6 +54,15 @@ describe('Test correctness of the map actions', () => {
         expect(retval.type).toBe(CLICK_ON_MAP);
         expect(retval.point).toExist();
         expect(retval.point).toBe(testVal);
+    });
+
+    it('manage creation layer error', () => {
+        const options = {type: "tileprovider"};
+        const retval = creationError(options);
+
+        expect(retval.type).toBe(CREATION_ERROR_LAYER);
+        expect(retval.options).toExist();
+        expect(retval.options).toBe(options);
     });
 
     it('set a new mouse pointer', () => {

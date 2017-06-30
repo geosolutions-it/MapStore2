@@ -9,7 +9,6 @@
 const Rx = require('rxjs');
 const Api = require('../api/WMS');
 const {REFRESH_LAYERS, layersRefreshed, updateNode, layersRefreshError} = require('../actions/layers');
-
 const LayersUtils = require('../utils/LayersUtils');
 
 const assign = require('object-assign');

@@ -44,6 +44,9 @@ var Layers = {
             return layerCreator.isValid(layer);
         }
         return true;
+    },
+    isSupported(type) {
+        return !!layerTypes[type];
     }
 };
 

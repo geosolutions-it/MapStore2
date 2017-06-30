@@ -46,6 +46,10 @@
             "featureTypeError": "Impossibile caricare gli attributi del layer",
             "elevation": "Elevazione"
         },
+        "notification": {
+            "backgroundLayerNotSupported": "Lo sfondo precedentemente caricato non è supportato per questo tipo di mappa. E' stato pertanto selezionato il primo disponibile.",
+            "noBackgroundLayerSupported": "Non ci sono sfondi supportati per questo tipo di mappa."
+        },
         "dock": {
             "row": "{rowsSelected} riga selezionata",
             "rows": "{rowsSelected} righe selezionate"

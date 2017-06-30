@@ -46,6 +46,10 @@
             "featureTypeError": "Cannot load layer attributes",
             "elevation": "Elevation"
         },
+        "notification": {
+            "backgroundLayerNotSupported": "The previously selected background is not supported for this type of map. The first one available is then used.",
+            "noBackgroundLayerSupported": "There are no supported background layers for this type of map."
+        },
         "dock": {
             "row": "{rowsSelected} row selected",
             "rows": "{rowsSelected} rows selected"

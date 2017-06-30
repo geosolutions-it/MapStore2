@@ -59,8 +59,14 @@ const addBaseParams = (url, params) => {
     return url.indexOf('?') === -1 ? (url + '?' + query) : (url + '&' + query);
 };
 
-
-var LayersUtils = {
+const isSupportedLayer = (layer, maptype) => {
+    const Layers = require('./' + maptype + '/Layers');
+    if (layer.type === "mapquest" || layer.type === "bing") {
+        return Layers.isSupported(layer.type) && layer.apiKey && layer.apiKey !== "__API_KEY_MAPQUEST__" && !layer.invalid;
+    }
+    return Layers.isSupported(layer.type) && !layer.invalid;
+};
+const LayersUtils = {
     getDimension: (dimensions, dimension) => {
         switch (dimension.toLowerCase()) {
         case 'elevation':
@@ -221,6 +227,12 @@ var LayersUtils = {
             }
         }
         return addBaseParams(reqUrl, layer.baseParams || {});
+    },
+    invalidateUnsupportedLayer(layer, maptype) {
+        return isSupportedLayer(layer, maptype) ? layer : assign({}, layer, {invalid: true});
+    },
+    isSupportedLayer(layer, maptype) {
+        return isSupportedLayer(layer, maptype);
     }
 
 };

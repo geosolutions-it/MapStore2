@@ -21,10 +21,10 @@ class OpenlayersLayer extends React.Component {
         options: PropTypes.object,
         onLayerLoading: PropTypes.func,
         onLayerError: PropTypes.func,
+        onCreationError: PropTypes.func,
         onLayerLoad: PropTypes.func,
         position: PropTypes.number,
-        observables: PropTypes.array,
-        onInvalid: PropTypes.func
+        observables: PropTypes.array
     };
 
     static defaultProps = {
@@ -32,7 +32,7 @@ class OpenlayersLayer extends React.Component {
         onLayerLoading: () => {},
         onLayerLoad: () => {},
         onLayerError: () => {},
-        onInvalid: () => {}
+        onCreationError: () => {}
     };
 
     componentDidMount() {
@@ -105,7 +105,7 @@ class OpenlayersLayer extends React.Component {
         return assign({}, options, _.isNumber(position) ? {zIndex: position} : null, {
             srs,
             onError: () => {
-                this.props.onInvalid(this.props.type, options);
+                this.props.onCreationError(options);
             }
         });
     };
@@ -200,9 +200,6 @@ class OpenlayersLayer extends React.Component {
 
     isValid = () => {
         const valid = Layers.isValid(this.props.type, this.layer);
-        if (this.valid && !valid) {
-            this.props.onInvalid(this.props.type, this.props.options);
-        }
         this.valid = valid;
         return valid;
     };

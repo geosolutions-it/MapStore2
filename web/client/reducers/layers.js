@@ -8,7 +8,7 @@
 
 var {LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES,
     TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, ADD_LAYER, REMOVE_LAYER,
-    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, INVALID_LAYER, REFRESH_LAYERS, LAYERS_REFRESH_ERROR, LAYERS_REFRESHED
+    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, REFRESH_LAYERS, LAYERS_REFRESH_ERROR, LAYERS_REFRESHED
     } = require('../actions/layers');
 
 const {TOGGLE_CONTROL} = require('../actions/controls');
@@ -211,17 +211,6 @@ function layers(state = [], action) {
                     groups: newGroups
                 });
             }
-            return assign({}, state, {flat: newLayers});
-        }
-        case INVALID_LAYER: {
-            const flatLayers = (state.flat || []);
-
-            const newLayers = flatLayers.map((layer) => {
-                if (layer.id === action.options.id) {
-                    return assign({}, layer, {invalid: true});
-                }
-                return assign({}, layer);
-            });
             return assign({}, state, {flat: newLayers});
         }
         case REMOVE_NODE: {

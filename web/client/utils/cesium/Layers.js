@@ -37,6 +37,9 @@ var Layers = {
         if (layerCreator && layerCreator.update) {
             return layerCreator.update(layer, newOptions, oldOptions, map);
         }
+    },
+    isSupported(type) {
+        return !!layerTypes[type];
     }
 };
 

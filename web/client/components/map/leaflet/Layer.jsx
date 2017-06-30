@@ -19,12 +19,12 @@ class LeafletLayer extends React.Component {
         options: PropTypes.object,
         position: PropTypes.number,
         zoomOffset: PropTypes.number,
-        onInvalid: PropTypes.func,
+        onCreationError: PropTypes.func,
         onClick: PropTypes.func
     };
 
     static defaultProps = {
-        onInvalid: () => {}
+        onCreationError: () => {}
     };
 
     componentDidMount() {
@@ -52,14 +52,13 @@ class LeafletLayer extends React.Component {
     shouldComponentUpdate(newProps) {
         // the reduce returns true when a prop is changed
         // optimizing when options are equal ignorning loading key
-        return !["map", "type", "srs", "position", "zoomOffset", "onInvalid", "onClick", "options", "children"].reduce( (prev, p) => {
+        return !["map", "type", "srs", "position", "zoomOffset", "onClick", "options", "children"].reduce( (prev, p) => {
             switch (p) {
             case "map":
             case "type":
             case "srs":
             case "position":
             case "zoomOffset":
-            case "onInvalid":
             case "onClick":
             case "children":
                 return prev && this.props[p] === newProps[p];
@@ -120,7 +119,7 @@ class LeafletLayer extends React.Component {
         return assign({}, options, position ? {zIndex: position, srs: this.props.srs } : null, {
             zoomOffset: -this.props.zoomOffset,
             onError: () => {
-                this.props.onInvalid(this.props.type, this.props.options);
+                this.props.onCreationError(options);
             }
         });
     };
@@ -140,6 +139,9 @@ class LeafletLayer extends React.Component {
                 this.layer.layerName = options.name;
                 this.layer.layerId = options.id;
             }
+            /*if (!this.layer && options.group === "background") {
+                this.props.onCreationError(options);
+            }*/
             this.forceUpdate();
         }
     };
@@ -175,9 +177,6 @@ class LeafletLayer extends React.Component {
     isValid = () => {
         if (this.layer) {
             const valid = Layers.isValid(this.props.type, this.layer);
-            if (this.valid && !valid) {
-                this.props.onInvalid(this.props.type, this.props.options);
-            }
             this.valid = valid;
             return valid;
         }

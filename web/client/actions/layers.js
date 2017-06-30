@@ -16,7 +16,6 @@ const UPDATE_NODE = 'UPDATE_NODE';
 const LAYER_LOADING = 'LAYER_LOADING';
 const LAYER_LOAD = 'LAYER_LOAD';
 const LAYER_ERROR = 'LAYER_ERROR';
-const INVALID_LAYER = 'INVALID_LAYER';
 const ADD_LAYER = 'ADD_LAYER';
 const REMOVE_LAYER = 'REMOVE_LAYER';
 const SHOW_SETTINGS = 'SHOW_SETTINGS';
@@ -146,14 +145,6 @@ function removeLayer(layerId) {
     };
 }
 
-function invalidLayer(layerType, options) {
-    return {
-        type: INVALID_LAYER,
-        layerType,
-        options
-    };
-}
-
 function refreshLayers(layers, options) {
     return {
         type: REFRESH_LAYERS,
@@ -177,10 +168,10 @@ function layersRefreshError(layers, error) {
     };
 }
 
-module.exports = {changeLayerProperties, changeGroupProperties, toggleNode, sortNode, removeNode, invalidLayer, contextNode,
+module.exports = {changeLayerProperties, changeGroupProperties, toggleNode, sortNode, removeNode, contextNode,
     updateNode, layerLoading, layerLoad, layerError, addLayer, removeLayer, showSettings, hideSettings, updateSettings, refreshLayers,
     layersRefreshed, layersRefreshError,
     CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE,
     REMOVE_NODE, UPDATE_NODE, LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, ADD_LAYER, REMOVE_LAYER,
-    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, INVALID_LAYER, CONTEXT_NODE, REFRESH_LAYERS, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR
+    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, CONTEXT_NODE, REFRESH_LAYERS, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR
 };

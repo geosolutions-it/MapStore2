@@ -10,8 +10,12 @@ const {createSelector} = require('reselect');
 
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const LayersUtils = require('../utils/LayersUtils');
+const {head} = require('lodash');
 
 const layersSelector = state => state.layers && state.layers.flat || state.layers || state.config && state.config.layers;
+const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l.visibility && l.group === "background"));
+const getLayerFromId = (state, id) => head(layersSelector(state).filter(l => l.id === id));
+const allBackgroundLayerSelector = state => layersSelector(state).filter(l => l.group === "background");
 const markerSelector = state => state.mapInfo && state.mapInfo.showMarker && state.mapInfo.clickPoint;
 const geoColderSelector = state => state.search && state.search;
 
@@ -50,5 +54,8 @@ const groupsSelector = (state) => state.layers && state.layers.flat && state.lay
 module.exports = {
     layersSelector,
     layerSelectorWithMarkers,
-    groupsSelector
+    groupsSelector,
+    currentBackgroundLayerSelector,
+    allBackgroundLayerSelector,
+    getLayerFromId
 };

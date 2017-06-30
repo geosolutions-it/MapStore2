@@ -12,6 +12,8 @@ const {changeLayerProperties} = require('../actions/layers');
 
 const {createSelector} = require('reselect');
 const {layersSelector} = require('../selectors/layers');
+const {mapTypeSelector} = require('../selectors/maptype');
+const {invalidateUnsupportedLayer} = require('../utils/LayersUtils');
 
 const {mapSelector} = require('../selectors/map');
 const backgroundControlsSelector = (state) => (state.controls && state.controls.backgroundSelector) || {};
@@ -59,10 +61,10 @@ const thumbs = {
     unknown
 };
 
-const backgroundSelector = createSelector([mapSelector, layersSelector, backgroundControlsSelector, drawerEnabledControlSelector],
-    (map, layers, controls, drawer) => ({
+const backgroundSelector = createSelector([mapSelector, layersSelector, backgroundControlsSelector, drawerEnabledControlSelector, mapTypeSelector],
+    (map, layers, controls, drawer, maptype) => ({
         size: map && map.size || {width: 0, height: 0},
-        layers: layers.filter((layer) => layer.group === "background") || [],
+        layers: layers.filter((l) => l.group === "background").map((l) => invalidateUnsupportedLayer(l, maptype)) || [],
         tempLayer: controls.tempLayer || {},
         currentLayer: controls.currentLayer || {},
         start: controls.start || 0,

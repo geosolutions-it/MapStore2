@@ -41,13 +41,13 @@ class LeafletMap extends React.Component {
         registerHooks: PropTypes.bool,
         interactive: PropTypes.bool,
         resolutions: PropTypes.array,
-        onInvalidLayer: PropTypes.func
+        onCreationError: PropTypes.func
     };
 
     static defaultProps = {
         id: 'map',
         onMapViewChanges: () => {},
-        onInvalidLayer: () => {},
+        onCreationError: () => {},
         onClick: null,
         onMouseMove: () => {},
         zoomControl: true,
@@ -212,7 +212,7 @@ class LeafletMap extends React.Component {
                 map: map,
                 projection: mapProj,
                 zoomOffset: this.zoomOffset,
-                onInvalid: this.props.onInvalidLayer,
+                onCreationError: this.props.onCreationError,
                 onClick: this.props.onClick
             }) : null;
         }) : null;
