@@ -8,8 +8,10 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-const {FormControl} = require('react-bootstrap');
+const {FormControl, Tooltip} = require('react-bootstrap');
 const LocaleUtils = require('../../../utils/LocaleUtils');
+const OverlayTrigger = require('../../../components/misc/OverlayTrigger');
+const HTML = require('../../../components/I18N/HTML');
 
 class TextField extends React.Component {
     static propTypes = {
@@ -44,35 +46,40 @@ class TextField extends React.Component {
         onUpdateExceptionField: () => {},
         style: {}
     };
-
     componentDidMount() {
         if (this.props.operator === "isNull" && !this.props.fieldValue) {
             this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, " ", this.props.attType);
         }
     }
-
     componentDidUpdate() {
         if (this.props.operator === "isNull" && !this.props.fieldValue) {
             this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, " ", this.props.attType);
         }
     }
-
-    render() {
+    renderField = () => {
         let placeholder = LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.text_placeholder");
+        let tooltip = <Tooltip id={"textField-tooltip" + this.props.fieldRowId}><HTML msgId="queryform.attributefilter.tooltipTextField"/></Tooltip>;
+        let field = (<FormControl
+            disabled={this.props.operator === "isNull"}
+            placeholder={placeholder}
+            onChange={this.changeText}
+            type="text"
+            value={this.props.fieldValue || ''}
+        />);
+
+        return this.props.operator === "isNull" ? field :
+        (<OverlayTrigger key={"textField-overlay" + this.props.fieldRowId} placement="top" overlay={tooltip}>
+            {field}
+        </OverlayTrigger>);
+    }
+    render() {
         let label = this.props.label ? <label>{this.props.label}</label> : <span/>;
         return (
             <div className="textField">
                 {label}
-                <FormControl
-                    disabled={this.props.operator === "isNull"}
-                    placeholder={placeholder}
-                    onChange={this.changeText}
-                    type="text"
-                    value={this.props.fieldValue || ''}
-                />
+                {this.renderField()}
             </div>);
     }
-
     changeText = (e) => {
         this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, e.target.value, this.props.attType);
     };
