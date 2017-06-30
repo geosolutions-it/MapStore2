@@ -15,7 +15,7 @@ const {setControlProperty} = require('../actions/controls');
 const {warning} = require('../actions/notifications');
 const {head} = require('lodash');
 
-const handleCreationLayerError = (action$, store) =>
+const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
     .filter(a => a.options.id === currentBackgroundLayerSelector(store.getState()).id && a.options.group === "background")
     .switchMap((a) => {
@@ -30,7 +30,6 @@ const handleCreationLayerError = (action$, store) =>
 
         return !!firstSupportedBackgroundLayer ?
         Rx.Observable.from([
-            changeLayerProperties(a.options.id, {invalid: true}),
             changeLayerProperties(firstSupportedBackgroundLayer.id, {visibility: true}),
             setControlProperty('backgroundSelector', 'currentLayer', firstSupportedBackgroundLayer),
             setControlProperty('backgroundSelector', 'tempLayer', firstSupportedBackgroundLayer),
@@ -51,14 +50,22 @@ const handleCreationLayerError = (action$, store) =>
             position: "tc"
         }));
     });
-
-const resetInvalidLayersEpic = action$ =>
-    action$.ofType(MAP_TYPE_CHANGED)
-    .switchMap(() => {
-        return Rx.Observable.of(resetInvalidLayers());
+const handleCreationLayerError = (action$, store) =>
+    action$.ofType(CREATION_ERROR_LAYER)
+    .switchMap((a) => {
+        const Layers = require('../utils/' + store.getState().maptype.mapType + '/Layers');
+        let isSupportedLayer;
+        if (a.options.type === "mapquest" || a.options.type === "bing" ) {
+            isSupportedLayer = Layers.isSupported(a.options.type) && a.options.apiKey && a.options.apiKey !== "__API_KEY_MAPQUEST__";
+        } else {
+            isSupportedLayer = Layers.isSupported(a.options.type);
+        }
+        return isSupportedLayer ? Rx.Observable.from([
+            changeLayerProperties(a.options.id, {invalid: true})
+        ]) : Rx.Observable.empty();
     });
 
 module.exports = {
     handleCreationLayerError,
-    resetInvalidLayersEpic
+    handleCreationBackgroundError
 };
