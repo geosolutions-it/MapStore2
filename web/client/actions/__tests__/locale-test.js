@@ -72,6 +72,18 @@ describe('Test locale related actions', () => {
         });
     });
 
+    it('loads an existing es-ES translation file', (done) => {
+        loadLocale('base/web/client/translations', 'es-ES')((e) => {
+            try {
+                expect(e).toExist();
+                expect(e.type).toBe('CHANGE_LOCALE');
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+
     it('loads an existing it-IT or en-US or fr-FR translation file', (done) => {
         loadLocale('base/web/client/translations')((e) => {
             try {
