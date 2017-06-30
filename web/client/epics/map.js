@@ -10,6 +10,7 @@ const Rx = require('rxjs');
 const {changeLayerProperties} = require('../actions/layers');
 const {CREATION_ERROR_LAYER} = require('../actions/map');
 const {currentBackgroundLayerSelector, allBackgroundLayerSelector, getLayerFromId} = require('../selectors/layers');
+const {mapTypeSelector} = require('../selectors/maptype');
 const {setControlProperty} = require('../actions/controls');
 const {isSupportedLayer} = require('../utils/LayersUtils');
 const {warning} = require('../actions/notifications');
@@ -19,7 +20,7 @@ const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
     .filter(a => a.options.id === currentBackgroundLayerSelector(store.getState()).id && a.options.group === "background")
     .switchMap((a) => {
-        const maptype = store.getState().maptype.mapType;
+        const maptype = mapTypeSelector(store.getState());
         // consider only the supported backgrounds, removing the layer that generated an error on creation
         const firstSupportedBackgroundLayer = head(allBackgroundLayerSelector(store.getState()).filter(l => {
             return isSupportedLayer(l, maptype) && l.id !== a.options.id;
@@ -50,7 +51,7 @@ const handleCreationBackgroundError = (action$, store) =>
 const handleCreationLayerError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
     .switchMap((a) => {
-        const maptype = store.getState().maptype.mapType;
+        const maptype = mapTypeSelector(store.getState());
         return isSupportedLayer(getLayerFromId(store.getState(), maptype)) ? Rx.Observable.from([
             changeLayerProperties(a.options.id, {invalid: true})
         ]) : Rx.Observable.empty();
