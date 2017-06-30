@@ -10,7 +10,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const Message = require('../I18N/Message');
 const GridCard = require('../misc/GridCard');
-const thumbUrl = require('./style/default.png');
+const thumbUrl = require('./style/default.jpg');
 const assign = require('object-assign');
 
 const ConfirmModal = require('./modals/ConfirmModal');
