@@ -9,8 +9,9 @@
 const Rx = require('rxjs');
 const {changeLayerProperties} = require('../actions/layers');
 const {CREATION_ERROR_LAYER} = require('../actions/map');
-const {currentBackgroundLayerSelector, allBackgroundLayerSelector} = require('../selectors/layers');
+const {currentBackgroundLayerSelector, allBackgroundLayerSelector, getLayerFromId} = require('../selectors/layers');
 const {setControlProperty} = require('../actions/controls');
+const {isSupportedLayer} = require('../utils/LayersUtils');
 const {warning} = require('../actions/notifications');
 const {head} = require('lodash');
 
@@ -18,13 +19,10 @@ const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
     .filter(a => a.options.id === currentBackgroundLayerSelector(store.getState()).id && a.options.group === "background")
     .switchMap((a) => {
-        const Layers = require('../utils/' + store.getState().maptype.mapType + '/Layers');
+        const maptype = store.getState().maptype.mapType;
         // consider only the supported backgrounds, removing the layer that generated an error on creation
         const firstSupportedBackgroundLayer = head(allBackgroundLayerSelector(store.getState()).filter(l => {
-            if (l.type === "mapquest" || l.type === "bing" ) {
-                return Layers.isSupported(l.type) && l.id !== a.options.id && l.apiKey && l.apiKey !== "__API_KEY_MAPQUEST__";
-            }
-            return Layers.isSupported(l.type) && l.id !== a.options.id;
+            return isSupportedLayer(l, maptype) && l.id !== a.options.id;
         }));
 
         return !!firstSupportedBackgroundLayer ?
@@ -52,14 +50,8 @@ const handleCreationBackgroundError = (action$, store) =>
 const handleCreationLayerError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
     .switchMap((a) => {
-        const Layers = require('../utils/' + store.getState().maptype.mapType + '/Layers');
-        let isSupportedLayer;
-        if (a.options.type === "mapquest" || a.options.type === "bing" ) {
-            isSupportedLayer = Layers.isSupported(a.options.type) && a.options.apiKey && a.options.apiKey !== "__API_KEY_MAPQUEST__";
-        } else {
-            isSupportedLayer = Layers.isSupported(a.options.type);
-        }
-        return isSupportedLayer ? Rx.Observable.from([
+        const maptype = store.getState().maptype.mapType;
+        return isSupportedLayer(getLayerFromId(store.getState(), maptype)) ? Rx.Observable.from([
             changeLayerProperties(a.options.id, {invalid: true})
         ]) : Rx.Observable.empty();
     });
