@@ -37,22 +37,24 @@ const closeTutorialEpic = (action$) =>
 
 const switchTutorialEpic = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
-        .audit(() => action$.ofType(MAPS_LIST_LOADED, CHANGE_MAP_VIEW))
         .filter(action =>
             action.payload
             && action.payload.pathname)
-        .switchMap( (action) => {
-            const path = findMapType(action.payload.pathname);
-            const state = store.getState();
-            const presetList = state.tutorial && state.tutorial.presetList || {};
-            const browser = state.browser;
-            const mobile = browser && browser.mobile ? '_mobile' : '';
-            const defaultName = path ? 'default' : action.payload && action.payload.pathname || 'default';
-            return !isEmpty(presetList) ? Rx.Observable.of(presetList[path + mobile + '_tutorial'] ?
-                setupTutorial(path + mobile, presetList[path + mobile + '_tutorial']) :
-                setupTutorial(defaultName + mobile, presetList['default' + mobile + '_tutorial'])
-            ) : Rx.Observable.empty();
-        });
+        .switchMap( (action) =>
+            action$.ofType(MAPS_LIST_LOADED, CHANGE_MAP_VIEW)
+                .switchMap( () => {
+                    const path = findMapType(action.payload.pathname);
+                    const state = store.getState();
+                    const presetList = state.tutorial && state.tutorial.presetList || {};
+                    const browser = state.browser;
+                    const mobile = browser && browser.mobile ? '_mobile' : '';
+                    const defaultName = path ? 'default' : action.payload && action.payload.pathname || 'default';
+                    return !isEmpty(presetList) ? Rx.Observable.of(presetList[path + mobile + '_tutorial'] ?
+                        setupTutorial(path + mobile, presetList[path + mobile + '_tutorial']) :
+                        setupTutorial(defaultName + mobile, presetList['default' + mobile + '_tutorial'])
+                    ) : Rx.Observable.empty();
+                })
+        );
 
 /**
  * Epics for Tutorial

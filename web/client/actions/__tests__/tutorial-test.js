@@ -11,12 +11,14 @@ var expect = require('expect');
 var {
     START_TUTORIAL,
     SETUP_TUTORIAL,
+    INIT_TUTORIAL,
     UPDATE_TUTORIAL,
     DISABLE_TUTORIAL,
     RESET_TUTORIAL,
     CLOSE_TUTORIAL,
     TOGGLE_TUTORIAL,
     startTutorial,
+    initTutorial,
     setupTutorial,
     updateTutorial,
     disableTutorial,
@@ -31,6 +33,24 @@ describe('Test the tutorial actions', () => {
         const retval = startTutorial();
         expect(retval).toExist();
         expect(retval.type).toBe(START_TUTORIAL);
+    });
+
+    it('initTutorial', () => {
+        const id = 'id';
+        const steps = 'steps';
+        const style = 'style';
+        const checkbox = 'checkbox';
+        const defaultStep = 'defaultStep';
+        const presetList = 'presetList';
+        const retval = initTutorial(id, steps, style, checkbox, defaultStep, presetList);
+        expect(retval).toExist();
+        expect(retval.type).toBe(INIT_TUTORIAL);
+        expect(retval.id).toBe(id);
+        expect(retval.steps).toBe(steps);
+        expect(retval.style).toBe(style);
+        expect(retval.checkbox).toBe(checkbox);
+        expect(retval.defaultStep).toBe(defaultStep);
+        expect(retval.presetList).toBe(presetList);
     });
 
     it('setupTutorial', () => {
