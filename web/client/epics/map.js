@@ -7,8 +7,9 @@
 */
 
 const Rx = require('rxjs');
-const {changeLayerProperties} = require('../actions/layers');
+const {changeLayerProperties, resetInvalidLayers} = require('../actions/layers');
 const {CREATION_ERROR_LAYER} = require('../actions/map');
+const {MAP_TYPE_CHANGED} = require('../actions/maptype');
 const {currentBackgroundLayerSelector, allBackgroundLayerSelector} = require('../selectors/layers');
 const {setControlProperty} = require('../actions/controls');
 const {warning} = require('../actions/notifications');
@@ -29,7 +30,7 @@ const handleCreationLayerError = (action$, store) =>
 
         return !!firstSupportedBackgroundLayer ?
         Rx.Observable.from([
-            // changeLayerProperties(a.options.id, {invalid: true}),
+            changeLayerProperties(a.options.id, {invalid: true}),
             changeLayerProperties(firstSupportedBackgroundLayer.id, {visibility: true}),
             setControlProperty('backgroundSelector', 'currentLayer', firstSupportedBackgroundLayer),
             setControlProperty('backgroundSelector', 'tempLayer', firstSupportedBackgroundLayer),
@@ -51,7 +52,13 @@ const handleCreationLayerError = (action$, store) =>
         }));
     });
 
+const resetInvalidLayersEpic = action$ =>
+    action$.ofType(MAP_TYPE_CHANGED)
+    .switchMap(() => {
+        return Rx.Observable.of(resetInvalidLayers());
+    });
 
 module.exports = {
-    handleCreationLayerError
+    handleCreationLayerError,
+    resetInvalidLayersEpic
 };
