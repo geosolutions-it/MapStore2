@@ -1,0 +1,33 @@
+{?template.options.navbar}
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="{?boxed}container container-boxed{:else}container-fluid{/boxed}">
+            <div class="nav navbar-left nav-left">
+                <div class="navbar-brand">
+                    <b>{template.options.title}</b>
+                </div>
+            </div>
+
+            {@gt key=template.options.navItems.length value=0}
+            <ul class="nav navbar-nav">
+                {#template.options.navItems}
+                    {?items}
+                    <li class="dropdown">
+                        <a href="{?href}{href}{:else}#{/href}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="ico {iconClass}" aria-hidden="true"></i>&nbsp;&nbsp;{label}&nbsp;<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            {#items}
+                                {>"navitem":./}
+                            {/items}
+                        </ul>
+                    </li>
+                    {:else}
+                        {>"navitem":./}
+                    {/items}
+                {/template.options.navItems}
+            </ul>
+            {/gt}
+
+        </div>
+    </nav>
+{/template.options.navbar}

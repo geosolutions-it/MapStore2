@@ -1,0 +1,22 @@
+{?$members}
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Enumeration</th>
+                <th>Type</th>
+                <th>Value</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {#$members}
+                <tr>
+                    <td><code>{.|$longname|s|$dot_prop}</code></td>
+                    <td><code>{.|$type}</code></td>
+                    <td><code>{.|$val}</code></td>
+                    <td>{.|s|$desc}</td>
+                </tr>
+            {/$members}
+        </tbody>
+    </table>
+{/$members}

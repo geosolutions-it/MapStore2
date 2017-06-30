@@ -1,0 +1,22 @@
+{?params}
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Param</th>
+                <th>Type</th>
+                <th>Default</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {#params}
+                <tr>
+                    <td><code>{name|s|$dot_prop}</code></td>
+                    <td><code>{.|$type}</code></td>
+                    <td>{?optional}<code>{.|$def}</code>{/optional}</td>
+                    <td>{.|s|$param_desc}</td>
+                </tr>
+            {/params}
+        </tbody>
+    </table>
+{/params}

@@ -1,0 +1,513 @@
+// main: styles.less
+// modified by Onur Y.
+
+@font-face {
+    font-family: 'icomoon';
+    src:
+        url('../fonts/icomoon.ttf?bbmz2l') format('truetype'),
+        url('../fonts/icomoon.woff?bbmz2l') format('woff'),
+        url('../fonts/icomoon.svg?bbmz2l#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="ico-"], [class*=" ico-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    vertical-align: text-bottom;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// icon sizes
+.ico-xxs { font-size: 0.60em; }
+.ico-xs { font-size: 0.72em; }
+.ico-sm { font-size: 0.87em; }
+.ico-1x { font-size: 1.1em; }
+.ico-md { font-size: 1.22em; }
+.ico-ml { font-size: 1.30em; }
+.ico-lg { font-size: 1.45em; }
+.ico-l2 { font-size: 1.52em; }
+.ico-xl { font-size: 1.65em; }
+.ico-xxl { font-size: 1.83em; }
+.ico-2x { font-size: 2em; }
+.ico-2hx { font-size: 2.5em; }
+.ico-3x { font-size: 3em; }
+.ico-4x { font-size: 4em; }
+.ico-5x { font-size: 5em; }
+.ico-6x { font-size: 6em; }
+.ico-7x { font-size: 7em; }
+.ico-8x { font-size: 8em; }
+.ico-9x { font-size: 9em; }
+.ico-10x { font-size: 10em; }
+.ico-15x { font-size: 15em; }
+.ico-20x { font-size: 20em; }
+
+
+.ico-alignment-align:before {
+    content: "\f08a";
+}
+.ico-alignment-aligned-to:before {
+    content: "\f08e";
+}
+.ico-bug2:before {
+    content: "\f091";
+}
+.ico-markdown:before {
+    content: "\f0c9";
+}
+.ico-milestone:before {
+    content: "\f075";
+}
+.ico-pin:before {
+    content: "\f041";
+}
+.ico-plug:before {
+    content: "\f0d4";
+}
+.ico-pulse:before {
+    content: "\f085";
+}
+.ico-puzzle:before {
+    content: "\f0c0";
+}
+.ico-steps:before {
+    content: "\f0c7";
+}
+.ico-terminal:before {
+    content: "\f0c8";
+}
+.ico-cog2:before {
+    content: "\e900";
+}
+.ico-pin2:before {
+    content: "\e901";
+}
+.ico-target:before {
+    content: "\e902";
+}
+.ico-switch:before {
+    content: "\e903";
+}
+.ico-file:before {
+    content: "\e904";
+}
+.ico-search:before {
+    content: "\e905";
+}
+.ico-target2:before {
+    content: "\e906";
+}
+.ico-bug3:before {
+    content: "\e907";
+}
+.ico-console:before {
+    content: "\e908";
+}
+.ico-target3:before {
+    content: "\e909";
+}
+.ico-target4:before {
+    content: "\e90a";
+}
+.ico-code:before {
+    content: "\e90b";
+}
+.ico-book:before {
+    content: "\e90c";
+}
+.ico-file-empty:before {
+    content: "\e90d";
+}
+.ico-files-empty:before {
+    content: "\e90e";
+}
+.ico-file-text2:before {
+    content: "\e90f";
+}
+.ico-file-zip:before {
+    content: "\e910";
+}
+.ico-location:before {
+    content: "\e911";
+}
+.ico-location2:before {
+    content: "\e912";
+}
+.ico-map:before {
+    content: "\e913";
+}
+.ico-clock:before {
+    content: "\e914";
+}
+.ico-clock2:before {
+    content: "\e915";
+}
+.ico-alarm:before {
+    content: "\e916";
+}
+.ico-stopwatch:before {
+    content: "\e917";
+}
+.ico-display:before {
+    content: "\e918";
+}
+.ico-laptop:before {
+    content: "\e919";
+}
+.ico-mobile:before {
+    content: "\e91a";
+}
+.ico-mobile2:before {
+    content: "\e91b";
+}
+.ico-tablet:before {
+    content: "\e91c";
+}
+.ico-tv:before {
+    content: "\e91d";
+}
+.ico-download:before {
+    content: "\e91e";
+}
+.ico-upload:before {
+    content: "\e91f";
+}
+.ico-database:before {
+    content: "\e920";
+}
+.ico-spinner2:before {
+    content: "\e921";
+}
+.ico-spinner4:before {
+    content: "\e922";
+}
+.ico-spinner6:before {
+    content: "\e923";
+}
+.ico-key:before {
+    content: "\e924";
+}
+.ico-cog:before {
+    content: "\e925";
+}
+.ico-cogs:before {
+    content: "\e926";
+}
+.ico-shield:before {
+    content: "\e927";
+}
+.ico-power-cord:before {
+    content: "\e928";
+}
+.ico-clipboard:before {
+    content: "\e929";
+}
+.ico-eye:before {
+    content: "\e92a";
+}
+.ico-eye-blocked:before {
+    content: "\e92b";
+}
+.ico-bookmark:before {
+    content: "\e92c";
+}
+.ico-bookmarks:before {
+    content: "\e92d";
+}
+.ico-embed:before {
+    content: "\e92e";
+}
+.ico-embed2:before {
+    content: "\e92f";
+}
+.ico-google:before {
+    content: "\e930";
+}
+.ico-google2:before {
+    content: "\e931";
+}
+.ico-google3:before {
+    content: "\e932";
+}
+.ico-github:before {
+    content: "\e933";
+}
+.ico-yahoo:before {
+    content: "\e934";
+}
+.ico-yahoo2:before {
+    content: "\e935";
+}
+.ico-tux:before {
+    content: "\e936";
+}
+.ico-appleinc:before {
+    content: "\e937";
+}
+.ico-android:before {
+    content: "\e938";
+}
+.ico-windows8:before {
+    content: "\e939";
+}
+.ico-hackernews:before {
+    content: "\e93a";
+}
+.ico-stackoverflow:before {
+    content: "\e93b";
+}
+.ico-chrome:before {
+    content: "\e93c";
+}
+.ico-firefox:before {
+    content: "\e93d";
+}
+.ico-IE:before {
+    content: "\e93e";
+}
+.ico-edge:before {
+    content: "\e93f";
+}
+.ico-safari:before {
+    content: "\e940";
+}
+.ico-opera:before {
+    content: "\e941";
+}
+.ico-libreoffice:before {
+    content: "\e942";
+}
+.ico-html-five:before {
+    content: "\e943";
+}
+.ico-html-five2:before {
+    content: "\e944";
+}
+.ico-css3:before {
+    content: "\e945";
+}
+.ico-codepen:before {
+    content: "\e946";
+}
+.ico-star:before {
+    content: "\f005";
+}
+.ico-star-o:before {
+    content: "\f006";
+}
+.ico-download2:before {
+    content: "\f019";
+}
+.ico-chevron-left:before {
+    content: "\f053";
+}
+.ico-chevron-right:before {
+    content: "\f054";
+}
+.ico-expand:before {
+    content: "\f065";
+}
+.ico-compress:before {
+    content: "\f066";
+}
+.ico-chevron-up:before {
+    content: "\f077";
+}
+.ico-chevron-down:before {
+    content: "\f078";
+}
+.ico-key2:before {
+    content: "\f084";
+}
+.ico-github-square:before {
+    content: "\f092";
+}
+.ico-wrench:before {
+    content: "\f0ad";
+}
+.ico-chain:before {
+    content: "\f0c1";
+}
+.ico-link:before {
+    content: "\f0c1";
+}
+.ico-flask:before {
+    content: "\f0c3";
+}
+.ico-h-square:before {
+    content: "\f0fd";
+}
+.ico-angle-double-left:before {
+    content: "\f100";
+}
+.ico-angle-double-right:before {
+    content: "\f101";
+}
+.ico-angle-double-up:before {
+    content: "\f102";
+}
+.ico-angle-double-down:before {
+    content: "\f103";
+}
+.ico-angle-left:before {
+    content: "\f104";
+}
+.ico-angle-right:before {
+    content: "\f105";
+}
+.ico-angle-up:before {
+    content: "\f106";
+}
+.ico-angle-down:before {
+    content: "\f107";
+}
+.ico-github-alt:before {
+    content: "\f113";
+}
+.ico-bug:before {
+    content: "\f188";
+}
+.ico-slack:before {
+    content: "\f198";
+}
+.ico-file-code-o:before {
+    content: "\f1c9";
+}
+.ico-git-square:before {
+    content: "\f1d2";
+}
+.ico-wifi:before {
+    content: "\f1eb";
+}
+.ico-copyright:before {
+    content: "\f1f9";
+}
+.ico-at:before {
+    content: "\f1fa";
+}
+.ico-paint-brush:before {
+    content: "\f1fc";
+}
+.ico-toggle-off:before {
+    content: "\f204";
+}
+.ico-toggle-on:before {
+    content: "\f205";
+}
+.ico-user-secret:before {
+    content: "\f21b";
+}
+.ico-mouse-pointer:before {
+    content: "\f245";
+}
+.ico-sticky-note:before {
+    content: "\f249";
+}
+.ico-map-signs:before {
+    content: "\f277";
+}
+.ico-shopping-basket:before {
+    content: "\f291";
+}
+.ico-hashtag:before {
+    content: "\f292";
+}
+.ico-percent:before {
+    content: "\f295";
+}
+.ico-checkmark:before {
+    content: "\e947";
+}
+.ico-checkmark2:before {
+    content: "\e948";
+}
+.ico-cancel:before {
+    content: "\e949";
+}
+.ico-cancel2:before {
+    content: "\e94a";
+}
+.ico-plus:before {
+    content: "\e94b";
+}
+.ico-plus2:before {
+    content: "\e94c";
+}
+.ico-minus:before {
+    content: "\e94d";
+}
+.ico-minus2:before {
+    content: "\e94e";
+}
+.ico-notice:before {
+    content: "\e94f";
+}
+.ico-notice2:before {
+    content: "\e950";
+}
+.ico-cassette:before {
+    content: "\e951";
+}
+.ico-checkmark3:before {
+    content: "\e952";
+}
+.ico-cancel3:before {
+    content: "\e953";
+}
+.ico-direction:before {
+    content: "\e954";
+}
+.ico-3dglasses:before {
+    content: "\e955";
+}
+.ico-cord:before {
+    content: "\e956";
+}
+.ico-locked:before {
+    content: "\e957";
+}
+.ico-unlocked:before {
+    content: "\e958";
+}
+.ico-stack:before {
+    content: "\e959";
+}
+.ico-stack2:before {
+    content: "\e95a";
+}
+.ico-stack3:before {
+    content: "\e95b";
+}
+.ico-lamp:before {
+    content: "\e95c";
+}
+.ico-lamp2:before {
+    content: "\e95d";
+}
+.ico-rotate:before {
+    content: "\e95e";
+}
+.ico-rotate2:before {
+    content: "\e95f";
+}
+.ico-reply:before {
+    content: "\e960";
+}
+.ico-forward:before {
+    content: "\e961";
+}
+.ico-heart:before {
+    content: "\e962";
+}
+.ico-info:before {
+    content: "\e963";
+}
