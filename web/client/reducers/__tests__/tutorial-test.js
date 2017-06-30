@@ -12,6 +12,7 @@ const tutorial = require('../tutorial');
 
 const {
     START_TUTORIAL,
+    INIT_TUTORIAL,
     SETUP_TUTORIAL,
     UPDATE_TUTORIAL,
     DISABLE_TUTORIAL,
@@ -40,6 +41,20 @@ describe('Test the tutorial reducer', () => {
         expect(state.run).toBe(true);
         expect(state.start).toBe(true);
         expect(state.status).toBe('run');
+    });
+
+    it('setup the tutorial with intro', () => {
+        const state = tutorial({}, {
+            type: INIT_TUTORIAL,
+            style: 'style',
+            defaultStep: 'defaultStep',
+            checkbox: 'checkbox',
+            presetList: 'presetList'
+        });
+        expect(state.style).toBe('style');
+        expect(state.defaultStep).toBe('defaultStep');
+        expect(state.checkbox).toBe('checkbox');
+        expect(state.presetList).toBe('presetList');
     });
 
     it('setup the tutorial with intro', () => {

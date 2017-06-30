@@ -9,6 +9,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const Joyride = require('react-joyride').default;
 const I18N = require('../I18N/I18N');
+const assign = require('object-assign');
 
 require('react-joyride/lib/react-joyride-compiled.css');
 require('./style/tutorial.css');
@@ -49,7 +50,6 @@ class Tutorial extends React.Component {
         presetList: PropTypes.object,
         intro: PropTypes.bool,
         introPosition: PropTypes.number,
-        rawSteps: PropTypes.array,
         showCheckbox: PropTypes.bool,
         defaultStep: PropTypes.object,
         introStyle: PropTypes.object,
@@ -81,7 +81,6 @@ class Tutorial extends React.Component {
         preset: 'default_tutorial',
         presetList: {},
         introPosition: (window.innerHeight - 348) / 2,
-        rawSteps: [],
         showCheckbox: true,
         defaultStep: {
             title: '',
@@ -120,9 +119,9 @@ class Tutorial extends React.Component {
     };
 
     componentWillMount() {
-        let rawSteps = this.props.rawSteps.length > 0 ? this.props.rawSteps : this.props.presetList[this.props.preset] || [];
+        let defaultSteps = this.props.presetList[this.props.preset] || [];
         let checkbox = this.props.showCheckbox ? <div id="tutorial-intro-checkbox-container"><input type="checkbox" id="tutorial-intro-checkbox" className="tutorial-tooltip-intro-checkbox" onChange={this.props.actions.onDisable}/><span><I18N.Message msgId={"tutorial.checkbox"}/></span></div> : <div id="tutorial-intro-checkbox-container"/>;
-        this.props.actions.onSetup('default', rawSteps, this.props.introStyle, checkbox, this.props.defaultStep);
+        this.props.actions.onSetup('default', defaultSteps, this.props.introStyle, checkbox, this.props.defaultStep, assign({}, this.props.presetList, {default_tutorial: defaultSteps}));
     }
 
     componentWillUpdate(newProps) {

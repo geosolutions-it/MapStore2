@@ -8,6 +8,7 @@
 
 const {
     START_TUTORIAL,
+    INIT_TUTORIAL,
     SETUP_TUTORIAL,
     UPDATE_TUTORIAL,
     DISABLE_TUTORIAL,
@@ -29,7 +30,8 @@ const initialState = {
     status: 'close',
     stepIndex: 0,
     tourAction: 'next',
-    id: ''
+    id: '',
+    presetList: {}
 };
 
 function tutorial(state = initialState, action) {
@@ -39,6 +41,13 @@ function tutorial(state = initialState, action) {
                 run: true,
                 start: true,
                 status: 'run'
+            });
+        case INIT_TUTORIAL:
+            return assign({}, state, {
+                style: action.style,
+                defaultStep: action.defaultStep,
+                checkbox: action.checkbox,
+                presetList: action.presetList
             });
         case SETUP_TUTORIAL:
             let setup = {};

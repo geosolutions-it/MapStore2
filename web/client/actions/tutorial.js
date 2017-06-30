@@ -7,6 +7,7 @@
  */
 
 const START_TUTORIAL = 'START_TUTORIAL';
+const INIT_TUTORIAL = 'INIT_TUTORIAL';
 const SETUP_TUTORIAL = 'SETUP_TUTORIAL';
 const UPDATE_TUTORIAL = 'UPDATE_TUTORIAL';
 const DISABLE_TUTORIAL = 'DISABLE_TUTORIAL';
@@ -17,6 +18,18 @@ const TOGGLE_TUTORIAL = 'TOGGLE_TUTORIAL';
 function startTutorial() {
     return {
         type: START_TUTORIAL
+    };
+}
+
+function initTutorial(id, steps, style, checkbox, defaultStep, presetList) {
+    return {
+        type: INIT_TUTORIAL,
+        id,
+        steps,
+        style,
+        checkbox,
+        defaultStep,
+        presetList
     };
 }
 
@@ -66,6 +79,7 @@ function toggleTutorial() {
 
 module.exports = {
     START_TUTORIAL,
+    INIT_TUTORIAL,
     SETUP_TUTORIAL,
     UPDATE_TUTORIAL,
     DISABLE_TUTORIAL,
@@ -73,6 +87,7 @@ module.exports = {
     CLOSE_TUTORIAL,
     TOGGLE_TUTORIAL,
     startTutorial,
+    initTutorial,
     setupTutorial,
     updateTutorial,
     disableTutorial,

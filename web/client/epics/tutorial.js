@@ -9,11 +9,12 @@
 const Rx = require('rxjs');
 const {START_TUTORIAL, closeTutorial, setupTutorial} = require('../actions/tutorial');
 const {CHANGE_MAP_VIEW} = require('../actions/map');
+const {MAPS_LIST_LOADED} = require('../actions/maps');
 const {TOGGLE_3D} = require('../actions/globeswitcher');
-const preset = require('../plugins/tutorial/preset');
 const defaultRegex = /\/(viewer)\/(\w+)\/(\d+)/;
 const findMapType = path => path.match(defaultRegex) && path.replace(defaultRegex, "$2");
 const { LOCATION_CHANGE } = require('react-router-redux');
+const {isEmpty} = require('lodash');
 
 /**
  * Closes the tutorial if 3D button has been toggled
@@ -36,20 +37,24 @@ const closeTutorialEpic = (action$) =>
 
 const switchTutorialEpic = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
-        .audit(() => action$.ofType(CHANGE_MAP_VIEW))
         .filter(action =>
             action.payload
-            && action.payload.pathname
-            && action.payload.pathname.match(defaultRegex))
-        .switchMap( (action) => {
-            const path = findMapType(action.payload.pathname);
-            const browser = store.getState().browser;
-            const mobile = browser && browser.mobile ? '_mobile' : '';
-            return Rx.Observable.of(preset[path + mobile + '_tutorial'] ?
-                setupTutorial(path + mobile, preset[path + mobile + '_tutorial']) :
-                setupTutorial('default' + mobile, preset['default' + mobile + '_tutorial'])
-            );
-        });
+            && action.payload.pathname)
+        .switchMap( (action) =>
+            action$.ofType(MAPS_LIST_LOADED, CHANGE_MAP_VIEW)
+                .switchMap( () => {
+                    const path = findMapType(action.payload.pathname);
+                    const state = store.getState();
+                    const presetList = state.tutorial && state.tutorial.presetList || {};
+                    const browser = state.browser;
+                    const mobile = browser && browser.mobile ? '_mobile' : '';
+                    const defaultName = path ? 'default' : action.payload && action.payload.pathname || 'default';
+                    return !isEmpty(presetList) ? Rx.Observable.of(presetList[path + mobile + '_tutorial'] ?
+                        setupTutorial(path + mobile, presetList[path + mobile + '_tutorial']) :
+                        setupTutorial(defaultName + mobile, presetList['default' + mobile + '_tutorial'])
+                    ) : Rx.Observable.empty();
+                })
+        );
 
 /**
  * Epics for Tutorial
