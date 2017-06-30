@@ -47,7 +47,7 @@ const switchTutorialEpic = (action$, store) =>
             const presetList = state.tutorial && state.tutorial.presetList || {};
             const browser = state.browser;
             const mobile = browser && browser.mobile ? '_mobile' : '';
-            const defaultName = path ? 'default' : action.payload;
+            const defaultName = path ? 'default' : action.payload && action.payload.pathname || 'default';
             return !isEmpty(presetList) ? Rx.Observable.of(presetList[path + mobile + '_tutorial'] ?
                 setupTutorial(path + mobile, presetList[path + mobile + '_tutorial']) :
                 setupTutorial(defaultName + mobile, presetList['default' + mobile + '_tutorial'])
