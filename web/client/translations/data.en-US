@@ -295,7 +295,7 @@
             "searchservicesbutton": "Configure search services",
             "configpaneltitle": "Create/edit a search service",
             "serviceslistlabel": "Available services",
-            "overriedservice": "Overried default services",
+            "overriedservice": "Override default services",
             "addbtn": "Add",
             "nextbtn": "Next",
             "prevbtn": "Back",

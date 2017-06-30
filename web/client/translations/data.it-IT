@@ -303,7 +303,7 @@
             "nextbtn": "Avanti",
             "prevbtn": "Precedente",
             "savebtn": "Salva/Aggiorna",
-            "s_name": "Name",
+            "s_name": "Nome",
             "s_title": "Titolo",
             "s_description": "Descrizione",
             "s_priority": "Priorità",
@@ -311,8 +311,8 @@
             "s_layer": "Nome layer",
             "s_attributes": "Attributi",
             "s_sort": "Ordina per",
-            "s_max_features": "Max features",
-            "s_wfs_props_label" : "Proprietà WFS service",
+            "s_max_features": "Numero massimo di risultati (Max features)",
+            "s_wfs_props_label" : "Proprietà del servizio WFS",
             "s_wfs_opt_props_label" : "Proprietà facoltative",
             "s_result_props_label": "Proprietà di visualizzazione dei risultati",
             "s_priority_info": "Usato per ordinare i risultati, i valori più alti vengono visualizzati per primi. Nominatim ha priorità = 5",
@@ -383,7 +383,7 @@
                             "text": "Salva"
                         },
                         "cancel": {
-                            "title": "Annulla e scarca tutti i cambiamenti.",
+                            "title": "Annulla e scarta tutti i cambiamenti.",
                             "text": "Annulla"
                         }
                     },
@@ -442,7 +442,7 @@
             "locateBtn": "Questo è il testo di aiuto per LocateBtn",
             "snapshot": "Questo è il testo di aiuto per Snapshot",
             "print": "Questo è il testo di aiuto per Print",
-            "shapefile": "Seleziona lo shapfile compresso, setta lo style ed importa il nuovo layer locale",
+            "shapefile": "Seleziona lo shapefile compresso, setta lo style ed importa il nuovo layer locale",
             "rasterstyler": "Imposta min, max, numero delle classi e colorRamp e genera una nuova classificazione per il raster layer selezionato",
             "expandToolbar": "Questo è il testo di aiuto per Espandi / Collassa",
             "historyundo": "Usa questo pulsante per tornare alla vista della mappa precedente",
@@ -708,7 +708,7 @@
                 "storeType": "Tipo di Destinazione",
                 "storeName": "Nome Destinazione",
                 "layer": "Layer",
-                "transforms": "Catena di transformazioni",
+                "transforms": "Catena di trasformazioni",
                 "update": "Aggiorna",
                 "run": "Importa questo package",
                 "edit": "Modifica lo stile di default",
@@ -832,7 +832,7 @@
             "none": "Ignora"
         },
         "markNameSelector": {
-            "circle": "Ciroconferenza",
+            "circle": "Circonferenza",
             "square": "Quadrato",
             "triangle": "Triangolo",
             "star": "Stella",
