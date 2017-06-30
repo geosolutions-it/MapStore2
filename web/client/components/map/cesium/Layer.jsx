@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -9,13 +8,14 @@ const PropTypes = require('prop-types');
 var React = require('react');
 var Layers = require('../../../utils/cesium/Layers');
 var assign = require('object-assign');
+const PropTypes = require('prop-types');
 
 class CesiumLayer extends React.Component {
     static propTypes = {
         map: PropTypes.object,
         type: PropTypes.string,
         options: PropTypes.object,
-        onErrorBackground: PropTypes.func,
+        onCreationError: PropTypes.func,
         position: PropTypes.number
     };
 
@@ -142,8 +142,8 @@ class CesiumLayer extends React.Component {
                 this.layer.layerName = options.name;
                 this.layer.layerId = options.id;
             }
-            if (this.layer === null && options.group === "background") {
-                this.props.onErrorBackground(options);
+            if (this.layer === null) {
+                this.props.onCreationError(options);
             }
 
         }

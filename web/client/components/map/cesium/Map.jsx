@@ -23,7 +23,7 @@ class CesiumMap extends React.Component {
         mapStateSource: ConfigUtils.PropTypes.mapStateSource,
         projection: PropTypes.string,
         onMapViewChanges: PropTypes.func,
-        onErrorBackground: PropTypes.func,
+        onCreationError: PropTypes.func,
         onClick: PropTypes.func,
         onMouseMove: PropTypes.func,
         mapOptions: PropTypes.object,
@@ -38,7 +38,7 @@ class CesiumMap extends React.Component {
         id: 'map',
         onMapViewChanges: () => {},
         onClick: () => {},
-        onErrorBackground: () => {},
+        onCreationError: () => {},
         projection: "EPSG:3857",
         mapOptions: {},
         standardWidth: 512,
@@ -190,7 +190,7 @@ class CesiumMap extends React.Component {
         const map = this.map;
         const mapProj = this.props.projection;
         const children = map ? React.Children.map(this.props.children, child => {
-            return child ? React.cloneElement(child, {map: map, projection: mapProj, onErrorBackground: this.props.onErrorBackground}) : null;
+            return child ? React.cloneElement(child, {map: map, projection: mapProj, onCreationError: this.props.onCreationError}) : null;
         }) : null;
         return (
             <div id={this.props.id}>

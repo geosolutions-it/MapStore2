@@ -38,16 +38,14 @@ class OpenlayersMap extends React.Component {
         changeMeasurementState: PropTypes.func,
         registerHooks: PropTypes.bool,
         interactive: PropTypes.bool,
-        onInvalidLayer: PropTypes.func,
-        onErrorBackground: PropTypes.func,
+        onCreationError: PropTypes.func,
         bbox: PropTypes.object
     };
 
     static defaultProps = {
         id: 'map',
         onMapViewChanges: () => {},
-        onInvalidLayer: () => {},
-        onErrorBackground: () => {},
+        onCreationError: () => {},
         onClick: null,
         onMouseMove: () => {},
         mapOptions: {},
@@ -257,8 +255,7 @@ class OpenlayersMap extends React.Component {
                 onLayerError: this.props.onLayerError,
                 onLayerLoad: this.props.onLayerLoad,
                 projection: this.props.projection,
-                onInvalid: this.props.onInvalidLayer,
-                onErrorBackground: this.props.onErrorBackground
+                onCreationError: this.props.onCreationError
             }) : null;
         }) : null;
 
