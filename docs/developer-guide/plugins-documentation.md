@@ -63,11 +63,11 @@ Where:
  * **path** is a javascript object path to the state fragment to be monitored (e.g. map.present.zoom)
 
 When you have a monitored state, you can use it in configuration properties this way:
-
+Be sure to write a valid javascript expression.
 ```js
 "cfg": {
   ...
-  "myProp": "{mapType === 'openlayers' ? 1 : 2}"
+  "myProp": "{state('mapType') === 'openlayers' ? 1 : 2}"
   ...
 }
 ```
