@@ -7,9 +7,8 @@
 */
 
 const Rx = require('rxjs');
-const {changeLayerProperties, resetInvalidLayers} = require('../actions/layers');
+const {changeLayerProperties} = require('../actions/layers');
 const {CREATION_ERROR_LAYER} = require('../actions/map');
-const {MAP_TYPE_CHANGED} = require('../actions/maptype');
 const {currentBackgroundLayerSelector, allBackgroundLayerSelector} = require('../selectors/layers');
 const {setControlProperty} = require('../actions/controls');
 const {warning} = require('../actions/notifications');
