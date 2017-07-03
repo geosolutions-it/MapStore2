@@ -10,10 +10,11 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const Combobox = require('react-widgets').Combobox;
-const {Glyphicon} = require('react-bootstrap');
+const {Glyphicon, Tooltip} = require('react-bootstrap');
 const AutocompleteListItem = require('./AutocompleteListItem');
 const LocaleUtils = require('../../../utils/LocaleUtils');
-
+const OverlayTrigger = require('../../../components/misc/OverlayTrigger');
+const HTML = require('../../../components/I18N/HTML');
 /**
  * Combobox with remote autocomplete functionality.
  * @memberof components.query
@@ -85,9 +86,7 @@ class AutocompleteField extends React.Component {
             </div>
         );
     };
-
-    render() {
-        let label = this.props.label ? (<label>{this.props.label}</label>) : (<span/>);
+    renderField = () => {
         let selectedValue;
         if (this.props.filterField && this.props.filterField.value && this.props.filterField.value !== "*") {
             selectedValue = {
@@ -104,24 +103,33 @@ class AutocompleteField extends React.Component {
             open: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.open"),
             emptyFilter: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyFilter")
         };
+        const tooltip = (<Tooltip id={"autocompleteField-tooltip" + (this.props.filterField && this.props.filterField.rowId)}>
+            <HTML msgId="queryform.attributefilter.tooltipTextField"/></Tooltip>);
+        const field = (<Combobox
+            busy={this.props.filterField.loading}
+            data={this.props.filterField.loading ? [] : options}
+            disabled={this.props.filterField.operator === "isNull"}
+            itemComponent={AutocompleteListItem}
+            messages={messages}
+            open={this.props.filterField.openAutocompleteMenu}
+            onChange={(value) => this.handleChange(value)}
+            onFocus={() => {this.handleFocus(options); }}
+            onSelect={this.handleSelect}
+            onToggle={() => {this.handleToggle(options); }}
+            textField={this.props.textField}
+            valueField={this.props.valueField}
+            value={selectedValue && selectedValue.value}
+            />);
+        return (<OverlayTrigger key={"autocompleteField-overlay" + (this.props.filterField && this.props.filterField.rowId)} placement="top" overlay={tooltip}>
+        {field}
+    </OverlayTrigger>);
+    }
+    render() {
+        let label = this.props.label ? (<label>{this.props.label}</label>) : (<span/>);
         return (
             <div className="autocompleteField">
                 {label}
-                <Combobox
-                    busy={this.props.filterField.loading}
-                    data={this.props.filterField.loading ? [] : options}
-                    disabled={this.props.filterField.operator === "isNull"}
-                    itemComponent={AutocompleteListItem}
-                    messages={messages}
-                    open={this.props.filterField.openAutocompleteMenu}
-                    onChange={(value) => this.handleChange(value)}
-                    onFocus={() => {this.handleFocus(options); }}
-                    onSelect={this.handleSelect}
-                    onToggle={() => {this.handleToggle(options); }}
-                    textField={this.props.textField}
-                    valueField={this.props.valueField}
-                    value={selectedValue && selectedValue.value}
-                    />
+                {this.renderField()}
             </div>);
     }
 

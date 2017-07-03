@@ -477,6 +477,7 @@
                 "combo_placeholder": "Atributo",
                 "text_placeholder": "Introduza el texto para buscar",
                 "attribute_filter_header": "Filtro por atributo",
+                "tooltipTextField": "utiliza <b>*</b> para cualquier carácter</br>utiliza <b>.</b> para un solo carácter</br>utiliza <b>!</b> para caracteres especiales (* y .)</br>",
                 "groupField": {
                     "any": "alguno",
                     "all": "todos",
