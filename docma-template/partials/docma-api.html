@@ -1,0 +1,32 @@
+{>"navbar"/}
+
+{?template.options.sidebar}
+<div class="sidebar-toggle">
+    <span class="glyphicon glyphicon-menu-hamburger"></span>
+</div>
+{/template.options.sidebar}
+
+<div id="wrapper">
+
+    {?template.options.sidebar}
+    <div id="sidebar-wrapper">
+        {>"sidebar"/}
+    </div>
+    {/template.options.sidebar}
+
+    <div id="page-content-wrapper">
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    {#documentation}
+                        {>"symbol" symbol=. template=template/}
+                    {/documentation}
+                </div>
+            </div>
+            <br />
+            <span class="docma-info">Documentation built with <b><a target="_blank" href="https://github.com/onury/docma">Docma</a></b>.</span>
+        </div>
+    </div>
+
+</div>

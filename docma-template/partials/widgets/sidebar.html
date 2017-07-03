@@ -1,0 +1,25 @@
+<div class="sidebar-header">
+    <div class="sidebar-title">
+        <span><b>{template.options.title}</b></span>
+    </div>
+    {?template.options.search}
+    <div class="sidebar-search">
+        <input id="txt-search" type="search" class="form-control" placeholder="Search..." />
+        <div class="sidebar-search-clean">
+            <span class="glyphicon glyphicon-remove-circle"></span>
+        </div>
+    </div>
+    {/template.options.search}
+</div>
+
+<div class="sidebar-nav-container">
+    <ul class="sidebar-nav">
+        {#symbols}
+            <li>
+                <!-- a.sidebar-item -->
+                {.|s|$menuitem}
+            </li>
+        {/symbols}
+    </ul>
+    <div class="sidebar-nav-space"></div>
+</div>

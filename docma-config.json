@@ -34,7 +34,7 @@
         "routing": { "method": "path", "caseSensitive": true }
     },
     "template": {
-        "path": "default",
+        "path": "./docma-template",
         "options": {
             "title": "MapStore 2",
             "sidebar": true,

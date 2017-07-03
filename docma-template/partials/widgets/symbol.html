@@ -1,0 +1,155 @@
+<div id="{.|$id}" class="symbol-container">
+
+    <div class="symbol-heading">
+        <div class="symbol">
+            <a href="#{.|$id}">
+                <span class="glyphicon glyphicon-link color-gray-light" aria-hidden="true"></span>
+                <code class="symbol-name">{symbol|s|$longname_params}</code>
+                <span class="symbol-sep">{symbol|$type_sep}</span>
+                <code class="symbol-type">{symbol|$type}</code>
+            </a>
+
+            {symbol|s|$tags}
+        </div>
+
+        {?symbol.augments}
+            <p class="space-left-sm">
+                <b>Extends:</b> {symbol|s|$extends}
+            </p>
+        {/symbol.augments}
+
+        {?symbol.alias}
+        <p class="space-left-sm">
+            <b>Alias:</b> <code>{symbol.alias|s|$dot_prop}</code>
+        </p>
+        {/symbol.alias}
+
+    </div>
+
+    <div class="symbol-definition">
+        {?symbol.classdesc}
+            <table>
+                {?symbol.version}
+                <tr>
+                    <td><b>Version:</b>&nbsp;&nbsp;&nbsp;</td><td>{symbol.version|s}</td>
+                </tr>
+                {/symbol.version}
+
+                {?symbol.copyright}
+                <tr>
+                    <td><b>Copyright:</b>&nbsp;&nbsp;&nbsp;</td><td>{symbol.copyright|s}</td>
+                </tr>
+                {/symbol.copyright}
+
+                {?symbol.author}
+                <tr>
+                    <td><b>Author:</b>&nbsp;&nbsp;&nbsp;</td><td>{symbol.author|s|$author}</td>
+                </tr>
+                {/symbol.author}
+
+                {?symbol.license}
+                <tr>
+                    <td><b>License:</b>&nbsp;&nbsp;&nbsp;</td><td>{symbol.license|s}</td>
+                </tr>
+                {/symbol.license}
+            </table>
+            <br />
+        {/symbol.classdesc}
+
+        {symbol|s|$desc}
+
+        {?symbol.see}
+        <p>
+            <b>See</b>
+            {@gt key=symbol.see.length value=1}
+                <ul>
+                {#symbol.see}<li>{.|s|$pl}</li>{/symbol.see}
+                </ul>
+            {:else}
+                {#symbol.see}&nbsp;{.|s|$pl}{/symbol.see}
+            {/gt}
+        </p>
+        <br />
+        {/symbol.see}
+
+        <!--  don't list params for class declarations since we already list
+        constructor and its params separately, if this is a class declaration.  -->
+        {@eq key=symbol.meta.code.type value="ClassDeclaration"}
+            {?symbol.isEnum}{:else}
+                {>"properties":symbol/}
+            {/symbol.isEnum}
+        {:else}
+            {>"params":symbol/}
+            {?symbol.isEnum}{:else}
+                {>"properties":symbol/}
+            {/symbol.isEnum}
+        {/eq}
+
+        {?symbol.returns}
+            {@gt key=symbol.returns.length value="1" type="number"}
+                <b>Returns:</b>
+                <p class="pad-left">
+                    {symbol|s|$returns}
+                </p>
+            {:else}
+                <p>
+                    <b>Returns:</b>&nbsp;&nbsp;{symbol|s|$returns}
+                </p>
+            {/gt}
+        {/symbol.returns}
+
+        {?symbol.exceptions}
+            {@gt key=symbol.exceptions.length value="1" type="number"}
+                <b>Throws:</b>
+                <p class="pad-left">
+                    {symbol|s|$exceptions}
+                </p>
+            {:else}
+                <p>
+                    <b>Throws:</b>&nbsp;&nbsp;{symbol|s|$exceptions}
+                </p>
+            {/gt}
+        {/symbol.exceptions}
+
+        <!-- if this is an enumeration symbol, list the members in a table -->
+        {?symbol.isEnum}
+            {>"enums":symbol/}
+        {/symbol.isEnum}
+
+        {?symbol.examples}
+            <p><b>Example</b></p>
+            {#symbol.examples}
+            <pre><code>{.|$nt}</code></pre>
+            {/symbol.examples}
+        {/symbol.examples}
+
+        {?template.options.symbolMeta}
+        {?symbol.meta.lineno}
+        <p class="symbol-meta">
+            {?symbol.meta.filename}<b>File:</b> {symbol.meta.filename}&nbsp;&nbsp;{/symbol.meta.filename}
+            {?symbol.meta.lineno}<b>Line:</b> {symbol.meta.lineno}&nbsp;&nbsp;{/symbol.meta.lineno}
+        </p>
+        {/symbol.meta.lineno}
+        {/template.options.symbolMeta}
+
+    </div>
+
+</div>
+<hr />
+
+<!--  don't list params for class declarations since we already list
+constructor and its params separately, if this is a class declaration.  -->
+{@eq key=symbol.meta.code.type value="ClassDeclaration"}
+    {?symbol.$constructor}
+        {>"symbol" symbol=symbol.$constructor template=template/}
+    {/symbol.$constructor}
+{/eq}
+
+<!-- if not an enumeration symbol -->
+{?symbol.isEnum}
+{:else}
+    <!-- recurse as symbol section -->
+    {#symbol.$members}
+        {>"symbol" symbol=. template=template/}
+    {/symbol.$members}
+{/symbol.isEnum}
