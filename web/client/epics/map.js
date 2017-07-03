@@ -18,6 +18,8 @@ const {head} = require('lodash');
 
 const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
+    // added delay because the CREATION_ERROR_LAYER needs to be initialized after MAP_CONFIG_LOADED
+    .delay(500)
     .filter(a => a.options.id === currentBackgroundLayerSelector(store.getState()).id && a.options.group === "background")
     .switchMap((a) => {
         const maptype = mapTypeSelector(store.getState());
@@ -50,9 +52,11 @@ const handleCreationBackgroundError = (action$, store) =>
     });
 const handleCreationLayerError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
+    // added delay because the CREATION_ERROR_LAYER needs to be initialized after MAP_CONFIG_LOADED
+    .delay(500)
     .switchMap((a) => {
         const maptype = mapTypeSelector(store.getState());
-        return isSupportedLayer(getLayerFromId(store.getState(), maptype)) ? Rx.Observable.from([
+        return isSupportedLayer(getLayerFromId(store.getState(), a.options.id), maptype) ? Rx.Observable.from([
             changeLayerProperties(a.options.id, {invalid: true})
         ]) : Rx.Observable.empty();
     });
