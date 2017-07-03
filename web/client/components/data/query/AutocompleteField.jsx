@@ -13,6 +13,7 @@ const Combobox = require('react-widgets').Combobox;
 const {Glyphicon, Tooltip} = require('react-bootstrap');
 const AutocompleteListItem = require('./AutocompleteListItem');
 const LocaleUtils = require('../../../utils/LocaleUtils');
+const {isLikeOrIlike} = require('../../../utils/FilterUtils');
 const OverlayTrigger = require('../../../components/misc/OverlayTrigger');
 const HTML = require('../../../components/I18N/HTML');
 /**
@@ -120,9 +121,9 @@ class AutocompleteField extends React.Component {
             valueField={this.props.valueField}
             value={selectedValue && selectedValue.value}
             />);
-        return (<OverlayTrigger key={"autocompleteField-overlay" + (this.props.filterField && this.props.filterField.rowId)} placement="top" overlay={tooltip}>
-        {field}
-    </OverlayTrigger>);
+        return isLikeOrIlike(this.props.filterField.operator) ? (<OverlayTrigger key={"autocompleteField-overlay" + (this.props.filterField && this.props.filterField.rowId)} placement="top" overlay={tooltip}>
+        { field }
+    </OverlayTrigger>) : field;
     }
     render() {
         let label = this.props.label ? (<label>{this.props.label}</label>) : (<span/>);
