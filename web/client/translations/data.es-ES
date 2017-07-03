@@ -117,7 +117,7 @@
                     "html":"<h3>Controlador de position del puntero</h3><p>Exemple particulier</p>"
                 },
                 "scalebar":{
-                    "html":"<h3>Controlador de escala</h3><p>Ejemplo particular</p>"
+                    "html":"<h3>Controlador de escala</h3><p>Ejemplo personalizado</p>"
                 },
                 "layertree":{
                     "html":"<h3>Árbol de mapas avanzado</h3><p>Ejemplo personalizado</p>"
