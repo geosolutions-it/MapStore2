@@ -295,6 +295,9 @@ const FilterUtils = {
                     default:
                         break;
                 }
+                if (field.operator === "isNull") {
+                    fieldFilter = ogcStringField(field.attribute, field.operator, field.operator, nsplaceholder);
+                }
                 if (fieldFilter) {
                     arr.push(fieldFilter);
                 }

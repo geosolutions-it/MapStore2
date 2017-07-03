@@ -24,10 +24,12 @@ describe('OGC Operators', () => {
     it('ogcLogicalOperators object', () => {
         const AND = "AND";
         const OR = "OR";
-        const AND_NOT = "AND NOT";
+        const NOT = "NOT";
+        const NOR = "NOR";
         expect(ogcLogicalOperators[AND]("ogc", "TEST")).toBe("<ogc:And>TEST</ogc:And>");
         expect(ogcLogicalOperators[OR]("ogc", "TEST")).toBe("<ogc:Or>TEST</ogc:Or>");
-        expect(ogcLogicalOperators[AND_NOT]("ogc", "TEST")).toBe("<ogc:Not>TEST</ogc:Not>");
+        expect(ogcLogicalOperators[NOT]("ogc", "TEST")).toBe("<ogc:Not>TEST</ogc:Not>");
+        expect(ogcLogicalOperators[NOR]("ogc", "TEST")).toBe("<ogc:Not><ogc:Or>TEST</ogc:Or></ogc:Not>");
     });
     it('ogcSpatialOperators object', () => {
         const INTERSECTS = "INTERSECTS";

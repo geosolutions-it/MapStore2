@@ -53,7 +53,7 @@ class GroupField extends React.Component {
         logicComboOptions: [
             {logic: "OR", name: "queryform.attributefilter.groupField.any"},
             {logic: "AND", name: "queryform.attributefilter.groupField.all"},
-            {logic: "AND NOT", name: "queryform.attributefilter.groupField.none"}
+            {logic: "NOR", name: "queryform.attributefilter.groupField.none"}
         ],
         actions: {
             onAddGroupField: () => {},

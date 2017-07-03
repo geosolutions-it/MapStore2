@@ -20,7 +20,8 @@ const ogcComparisonOperators = {
 const ogcLogicalOperators = {
         "AND": (ns, content) => `<${ns}:And>${content}</${ns}:And>`,
         "OR": (ns, content) => `<${ns}:Or>${content}</${ns}:Or>`,
-        "AND NOT": (ns, content) => `<${ns}:Not>${content}</${ns}:Not>`
+        "NOR": (ns, content) => `<${ns}:Not><${ns}:Or>${content}</${ns}:Or></${ns}:Not>`,
+        "NOT": (ns, content) => `<${ns}:Not>${content}</${ns}:Not>`
 };
 
 const ogcSpatialOperators = {
@@ -37,7 +38,8 @@ const multiop = (ns, op, content) => op(ns, Array.isArray(content) ? content.joi
 const logical = {
     and: (ns, content, ...other) => other && other.length > 0 ? multiop(ns, ogcLogicalOperators.AND, [content, ...other]) : multiop(ns, ogcLogicalOperators.AND, content),
     or: (ns, content, ...other) => other && other.length > 0 ? multiop(ns, ogcLogicalOperators.OR, [content, ...other]) : multiop(ns, ogcLogicalOperators.OR, content),
-    not: (ns, content) => multiop(ns, ogcLogicalOperators["AND NOT"], content)
+    not: (ns, content) => multiop(ns, ogcLogicalOperators.NOT, content),
+    nor: (ns, content, ...other) => other && other.length > 0 ? multiop(ns, ogcLogicalOperators.NOR, [content, ...other]) : multiop(ns, ogcLogicalOperators.NOR, content)
 };
 
 
