@@ -48,7 +48,7 @@ module.exports = {
       extensions: [".js", ".jsx"]
     },
     module: {
-		noParse: [/html2canvas/],
+        noParse: [/html2canvas/],
         rules: [
             {
                 test: /\.css$/,

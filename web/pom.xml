@@ -57,33 +57,6 @@
     <finalName>mapstore</finalName>
     <plugins>
         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <version>1.6</version>
-            <executions>
-                <execution>
-                    <id>download-files</id>
-                    <phase>compile</phase>
-                    <goals>
-                        <goal>run</goal>
-                    </goals>
-                    <configuration>
-                        <target unless="skipcesiumdownload">
-                            <!-- download file -->
-                            <get src=" https://cesiumjs.org/releases/Cesium-1.17.zip"
-                                 dest="${basedir}/cesium.zip"
-                                 verbose="true"
-                                 usetimestamp="true"/>
-                            <mkdir dir="${basedir}/client/libs/Cesium"/>
-                            <unzip src="${basedir}/cesium.zip"
-                                   dest="${basedir}/client/libs/Cesium">
-                            </unzip>
-                        </target>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-        <plugin>
             <artifactId>maven-resources-plugin</artifactId>
             <version>2.6</version>
             <executions>
@@ -125,6 +98,10 @@
                                     <include>**/img/*</include>
                                     <include>**/*.less</include>
                                 </includes>
+                                <excludes>
+                                    <exclude>**/libs/Cesium/**/*</exclude>
+                                    <exclude>**/test-resources/*</exclude>
+                                </excludes>
                             </resource>
                         </resources>
                     </configuration>
@@ -214,22 +191,6 @@
                         <resources>
                             <resource>
                                 <directory>${basedir}/docs</directory>
-                            </resource>
-                        </resources>
-                    </configuration>
-                </execution>
-                <execution>
-                    <id>CesiumJS</id>
-                    <phase>process-classes</phase>
-                    <goals>
-                        <goal>copy-resources</goal>
-                    </goals>
-                    <configuration>
-                        <outputDirectory>${basedir}/target/mapstore/libs/Cesium</outputDirectory>
-                        <encoding>UTF-8</encoding>
-                        <resources>
-                            <resource>
-                                <directory>${basedir}/client/libs/Cesium</directory>
                             </resource>
                         </resources>
                     </configuration>
