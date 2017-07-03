@@ -42,6 +42,7 @@ const switchTutorialEpic = (action$, store) =>
             && action.payload.pathname)
         .switchMap( (action) =>
             action$.ofType(MAPS_LIST_LOADED, CHANGE_MAP_VIEW)
+                .take(1)
                 .switchMap( () => {
                     const path = findMapType(action.payload.pathname);
                     const state = store.getState();
