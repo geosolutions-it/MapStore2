@@ -20,7 +20,7 @@ const ogcComparisonOperators = {
 const ogcLogicalOperators = {
         "AND": (ns, content) => `<${ns}:And>${content}</${ns}:And>`,
         "OR": (ns, content) => `<${ns}:Or>${content}</${ns}:Or>`,
-        "AND NOT": (ns, content) => `<${ns}:Not>${content}</${ns}:Not>`
+        "AND NOT": (ns, content) => `<${ns}:Not><${ns}:Or>${content}</${ns}:Or></${ns}:Not>`
 };
 
 const ogcSpatialOperators = {
