@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -12,6 +11,8 @@ const {FormControl, Tooltip} = require('react-bootstrap');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const OverlayTrigger = require('../../../components/misc/OverlayTrigger');
 const HTML = require('../../../components/I18N/HTML');
+const PropTypes = require('prop-types');
+const {isLikeOrIlike} = require('../../../utils/FilterUtils');
 
 class TextField extends React.Component {
     static propTypes = {
@@ -67,10 +68,9 @@ class TextField extends React.Component {
             value={this.props.fieldValue || ''}
         />);
 
-        return this.props.operator === "isNull" ? field :
-        (<OverlayTrigger key={"textField-overlay" + this.props.fieldRowId} placement="top" overlay={tooltip}>
+        return isLikeOrIlike(this.props.operator) ? (<OverlayTrigger key={"textField-overlay" + this.props.fieldRowId} placement="top" overlay={tooltip}>
             {field}
-        </OverlayTrigger>);
+        </OverlayTrigger>) : field;
     }
     render() {
         let label = this.props.label ? <label>{this.props.label}</label> : <span/>;
