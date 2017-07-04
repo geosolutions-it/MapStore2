@@ -23,6 +23,7 @@ const Section = require('./drawer/Section');
 
 const {partialRight} = require('lodash');
 
+const assign = require('object-assign');
 
 const Menu = connect((state) => ({
     show: state.controls.drawer && state.controls.drawer.enabled,
@@ -83,8 +84,14 @@ class DrawerMenu extends React.Component {
         disabled: false
     };
 
+    getTools = () => {
+        const unsorted = this.props.items
+            .map((item, index) => assign({}, item, {position: item.position || index}));
+        return unsorted.sort((a, b) => a.position - b.position);
+    };
+
     renderItems = () => {
-        return this.props.items.map((tool, index) => {
+        return this.getTools().map((tool, index) => {
             const Plugin = tool.panel || tool.plugin;
             const plugin = (<Plugin
                 isPanel
