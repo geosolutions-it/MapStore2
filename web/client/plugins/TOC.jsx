@@ -227,11 +227,9 @@ class LayerTree extends React.Component {
         activateLegendTool: PropTypes.bool,
         activateZoomTool: PropTypes.bool,
         activateQueryTool: PropTypes.bool,
-        autocompleteEnabled: PropTypes.bool,
         activateSettingsTool: PropTypes.bool,
         activateRefreshTool: PropTypes.bool,
         visibilityCheckType: PropTypes.string,
-        maxFeaturesWPS: PropTypes.number,
         settingsOptions: PropTypes.object,
         chartStyle: PropTypes.object,
         currentZoomLvl: PropTypes.number,
@@ -270,7 +268,19 @@ class LayerTree extends React.Component {
         },
         querypanelEnabled: false,
         layerOptions: {},
-        groupOptions: {}
+        groupOptions: {},
+        spatialOperations: [
+            {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
+            {"id": "BBOX", "name": "queryform.spatialfilter.operations.bbox"},
+            {"id": "CONTAINS", "name": "queryform.spatialfilter.operations.contains"},
+            {"id": "WITHIN", "name": "queryform.spatialfilter.operations.within"}
+        ],
+        spatialMethodOptions: [
+            {"id": "Viewport", "name": "queryform.spatialfilter.methods.viewport"},
+            {"id": "BBOX", "name": "queryform.spatialfilter.methods.box"},
+            {"id": "Circle", "name": "queryform.spatialfilter.methods.circle"},
+            {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
+        ]
     };
 
     getNoBackgroundLayers = (group) => {
@@ -338,8 +348,6 @@ class LayerTree extends React.Component {
                 <SmartQueryForm
                     spatialOperations={this.props.spatialOperations}
                     spatialMethodOptions={this.props.spatialMethodOptions}
-                    autocompleteEnabled={this.props.autocompleteEnabled}
-                    maxFeaturesWPS={this.props.maxFeaturesWPS}
                     featureTypeErrorText={<Message msgId="layerProperties.featureTypeError"/>}/>
             </div>
         );
