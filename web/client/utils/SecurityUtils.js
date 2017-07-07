@@ -169,11 +169,17 @@ const SecurityUtils = {
             if (!token) {
                 return parameters;
             }
-            return assign(parameters || {}, {'authkey': token});
+            const authParam = this.getAuthKeyParameter(url);
+            return assign(parameters || {}, {[authParam]: token});
         default:
                 // we cannot handle the required authentication method
             return parameters;
         }
+    },
+    getAuthKeyParameter: function(url) {
+        const foundRule = head(this.getAuthenticationRules().filter(
+            rule => rule && rule.urlPattern && url.match(new RegExp(rule.urlPattern, "i"))));
+        return foundRule && foundRule.authkeyParamName ? foundRule.authkeyParamName : 'authkey';
     }
 };
 
