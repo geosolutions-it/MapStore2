@@ -1,0 +1,44 @@
+/* Leaflet minimap style */
+.leaflet-control-minimap {
+	border: solid @ms2-color-primary 4px !important;
+}
+
+.leaflet-control-minimap a {
+	background-color: @ms2-color-primary !important;
+}
+
+.leaflet-control-minimap-toggle-display {
+	background-image: url("../img/toggle.svg") !important;
+}
+
+.leaflet-oldie .leaflet-control-minimap-toggle-display {
+	background-image: url("../img/toggle.png") !important;
+}
+
+/* scale bar */
+.leaflet-control-scale-line {
+	background-color: @ms2-color-primary;
+	color: @ms2-color-text-primary;
+}
+
+.leafletbottom.leafletright, .leaflet-control-minimap{
+    bottom: 47px !important;
+    right: 49px !important;
+}
+
+.leaflet-control-scale {
+    position: absolute;
+    bottom: -1px;
+    right: 47px;
+    z-index: 1000;
+}
+.leaflet-control-attribution {
+    width: 165px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.leaflet-bottom.leaflet-right {
+    margin-bottom: 0 !important;
+}

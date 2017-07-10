@@ -1,0 +1,55 @@
+.shadow {
+	-webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
+	-moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
+}
+
+.shadow-soft {
+    -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12);
+	-moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12);
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+.no-border {
+	border: none;
+}
+
+.no-border:active,
+.no-border:active:focus,
+.no-border:focus,
+.no-border:hover {
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	outline: none;
+}
+
+.option-icon {
+	font-size: @font-size-base;
+	margin-right: @padding-left-square;
+	color: @ms2-color-primary;
+}
+
+.bg-body {
+    background-color: @ms2-color-background;
+}
+
+.text-body {
+    color: @ms2-color-text;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+}
+
+.btn {
+    outline: none !important;
+}
+
+textarea {
+    background-color: darken(@ms2-color-background, 5%);
+    color: @ms2-color-text;
+    border-color: @ms2-color-shade-lighter;
+    outline: none !important;
+}
