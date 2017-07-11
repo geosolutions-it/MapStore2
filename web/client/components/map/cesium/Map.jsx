@@ -5,14 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var Cesium = require('../../../libs/cesium');
+const Cesium = require('../../../libs/cesium');
 const PropTypes = require('prop-types');
 const Rx = require('rxjs');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var ConfigUtils = require('../../../utils/ConfigUtils');
-var ClickUtils = require('../../../utils/cesium/ClickUtils');
-var assign = require('object-assign');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const ConfigUtils = require('../../../utils/ConfigUtils');
+const ClickUtils = require('../../../utils/cesium/ClickUtils');
+const assign = require('object-assign');
 const {throttle} = require('lodash');
 
 class CesiumMap extends React.Component {

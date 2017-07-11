@@ -2,7 +2,7 @@
     "clean": "rimraf dist",
     "compile": "npm run clean && mkdirp ./dist && webpack --config prod-webpack.config.js",
     "start": "webpack-dev-server --progress --colors --port 8081 --hot --inline --content-base .",
-    "postinstall": "node checkCesium.js && mkdirp ./libs/Cesium && download --extract --out ./libs/Cesium https://cesiumjs.org/releases/Cesium-1.17.zip || echo Cesium already installed",
+    "postinstall": "node checkCesium.js",
     "test": "karma start ./karma.conf.single-run.js",
     "continuoustest": "karma start ./karma.conf.continuous-test.js",
     "mvntest": "karma start ./karma.conf.single-run.js --reporters junit,dots,coverage",
