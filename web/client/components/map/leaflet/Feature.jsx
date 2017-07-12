@@ -7,9 +7,9 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var L = require('leaflet');
-const {isEqual} = require('lodash');
+const React = require('react');
+const L = require('leaflet');
+const {isEqual, isFunction} = require('lodash');
 
 var coordsToLatLngF = function(coords) {
     return new L.LatLng(coords[1], coords[0], coords[2]);
@@ -46,6 +46,13 @@ var getPointLayer = function(pointToLayer, geojson, latlng, options) {
                     shadowAnchor: options.style.shadowAnchor,
                     popupAnchor: options.style.popupAnchor
                 })
+            });
+    }
+    if (options && options.style && options.style.html) {
+        return L.marker(
+            latlng,
+            {
+                icon: L.divIcon(isFunction(options.style.html) ? options.style.html(geojson) : options.style.html)
             });
     }
     return L.marker(latlng);
@@ -149,6 +156,7 @@ class Feature extends React.Component {
             this._layer = geometryToLayer({
                 type: this.props.type,
                 geometry: this.props.geometry,
+                properties: this.props.properties,
                 id: this.props.msId
             }, {
                 style: style,
@@ -181,6 +189,7 @@ class Feature extends React.Component {
             this._layer = geometryToLayer({
                 type: newProps.type,
                 geometry: newProps.geometry,
+                properties: newProps.properties,
                 msId: this.props.msId
             }, {
                 style: newProps.style,
