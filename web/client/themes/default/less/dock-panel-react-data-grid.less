@@ -79,10 +79,6 @@
     border-bottom: 1px solid @ms2-color-shade-lighter;
 }
 
-.react-grid-Canvas, .react-grid-Grid {
-    background-color: @ms2-color-background;
-}
-
 .react-grid-Row.row-context-menu .react-grid-Cell, .react-grid-Row:hover .react-grid-Cell {
     background-color: @ms2-color-shade-lighter;
 	cursor: pointer;
@@ -144,4 +140,16 @@
 
 .react-grid-Cell:focus {
     outline: 2px solid @ms2-color-text;
+}
+
+.react-grid-Row .react-grid-Cell.modified,
+.react-grid-Row.row-selected .react-grid-Cell.modified,
+.react-grid-Row.row-selected:active .react-grid-Cell.modified,
+.react-grid-Row:hover .react-grid-Cell.modified {
+    background-color: @ms2-color-warning-active;
+}
+
+.react-grid-Row.row-selected:active .react-grid-Cell.modified,
+.react-grid-Row:hover .react-grid-Cell.modified {
+    background-color: @ms2-color-warning-active;
 }
