@@ -373,6 +373,15 @@ const CoordinatesUtils = {
 
         points[0].push(points[0][0]);
         return points;
+    },
+    mergeToPolyGeom(features) {
+        if (features.length === 1) {
+            return features[0].geometry;
+        }
+        return {
+            type: "GeometryCollection",
+            geometries: features.map( ({geometry}) => geometry)
+        };
     }
 };
 
