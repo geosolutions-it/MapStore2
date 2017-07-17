@@ -1,0 +1,56 @@
+.square-button {
+    height: @square-btn-size;
+    width: @square-btn-size;
+    padding: 0 @padding-left-square - 1;
+    outline: 0 !important;
+
+    .glyphicon {
+        font-size: @icon-size;
+    }
+}
+
+.btn-group-vertical > .square-button {
+    width: @square-btn-size;
+}
+
+.square-button-md {
+    height: @square-btn-medium-size;
+    width: @square-btn-medium-size;
+    padding: 0 @padding-left-square-md - 1;
+    outline: 0 !important;
+
+    .glyphicon {
+        font-size: @icon-size-md;
+    }
+}
+
+.square-button-sm {
+    height: @square-btn-small-size;
+    width: @square-btn-small-size;
+    padding: 0 @padding-left-square-sm - 1;
+    outline: 0 !important;
+
+    .glyphicon {
+        font-size: @icon-size-sm;
+    }
+}
+
+.square-button,
+.square-button-md,
+.square-button-sm {
+    &.disabled,
+    &[disabled],
+    fieldset[disabled] & {
+        &,
+        &.active,
+        &.focus,
+        &:active,
+        &:focus,
+        &:hover {
+            background-color: @ms2-color-disabled;
+            border-color: @ms2-color-disabled;
+            color: @ms2-color-text-disabled;
+            opacity: 1.0;
+        }
+    }
+}

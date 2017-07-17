@@ -1,0 +1,67 @@
+.mapstore-cookie-panel {
+    height: 100%;
+    overflow: auto;
+    display: block;
+    font-family: inherit;
+    position: fixed;
+    width: auto;
+    box-shadow: 0 0 5px 1px #5e5e5e;
+    z-index: 9998;
+    background-color: white;
+    box-sizing: border-box;
+    top: auto;
+    bottom: 0px;
+    left: 0px;
+    right: auto;
+}
+
+.cookie-body-container {
+    height: 100%;
+    position: relative;
+    width: 100%;
+    border-radius: 2px;
+    font-size: 13px;
+    padding: 10px;
+    display: block;
+    box-sizing: border-box;
+    opacity: 1;
+    transition: 0.3s ease-in-out;
+    transform: translate3d(0px, 0px, 0px);
+    will-change: transform, opacity;
+    background-color: white;
+    left: 0px;
+    text-align: justify;
+}
+
+.cookie-title {
+    font-size: 14px;
+    margin: 0px 0px 5px;
+    padding: 0px;
+    font-weight: bold;
+    color: @ms2-color-primary;
+}
+
+.cookie-action, .cookie-message {
+    margin: 0px;
+    padding: 0px;
+}
+
+.cookie-button {
+    border-radius: 2px;
+    padding: 6px 20px;
+    font-weight: bold;
+    margin: 10px 0px 0px;
+    border: 0px;
+}
+
+.cookie-header {
+    color: @ms2-color-primary;
+    height: 44px;
+}
+
+.cookie-header > span {
+    float: right;
+    cursor: pointer;
+    font-size: 40px;
+    width: 44px;
+}
