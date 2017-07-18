@@ -13,6 +13,7 @@ const AuthenticationAPI = require('../api/GeoStoreDAO');
 const SecurityUtils = require('../utils/SecurityUtils');
 
 const {loadMaps} = require('./maps');
+const {loadMapInfo} = require('./config');
 const ConfigUtils = require('../utils/ConfigUtils');
 
 const LOGIN_SUBMIT = 'LOGIN_SUBMIT';
@@ -67,10 +68,15 @@ function logoutWithReload() {
 }
 
 function login(username, password) {
-    return (dispatch) => {
-        AuthenticationAPI.login(username, password).then((response) => {
+    return (dispatch, state) => {
+        return AuthenticationAPI.login(username, password).then((response) => {
             dispatch(loginSuccess(response, username, password, AuthenticationAPI.authProviderName));
             dispatch(loadMaps(false, ConfigUtils.getDefaults().initialMapFilter || "*"));
+            let s = state();
+            let id = s.map && s.map.present && s.map.present.mapId;
+            if (id) {
+                dispatch(loadMapInfo(ConfigUtils.getConfigProp("geoStoreUrl") + "extjs/resource/" + id, id));
+            }
         }).catch((e) => {
             dispatch(loginFail(e));
         });
