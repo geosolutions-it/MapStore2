@@ -206,6 +206,7 @@ class LayerTree extends React.Component {
         groups: PropTypes.array,
         settings: PropTypes.object,
         querypanelEnabled: PropTypes.bool,
+        refreshMapEnabled: PropTypes.bool,
         groupStyle: PropTypes.object,
         groupPropertiesChangeHandler: PropTypes.func,
         layerPropertiesChangeHandler: PropTypes.func,
@@ -267,6 +268,7 @@ class LayerTree extends React.Component {
             buttonSize: "small"
         },
         querypanelEnabled: false,
+        refreshMapEnabled: false,
         layerOptions: {},
         groupOptions: {},
         spatialOperations: [
@@ -285,6 +287,16 @@ class LayerTree extends React.Component {
 
     getNoBackgroundLayers = (group) => {
         return group.name !== 'background';
+    };
+
+    renderRefreshMap = () => {
+        return (
+            <div>
+                <Button onClick={this.props.onRefresh} bsSize="xsmall"><Glyphicon glyph="refresh"/></Button>
+                <RefreshLayers/>
+                <RefreshLayer/>
+            </div>
+        );
     };
 
     renderTOC = () => {
@@ -330,13 +342,7 @@ class LayerTree extends React.Component {
                             scales={this.props.scales}/>);
         return (
             <div className="mapstore-toc">
-                {this.props.activateRefreshTool ?
-                    <div>
-                        <Button onClick={this.props.onRefresh} bsSize="xsmall"><Glyphicon glyph="refresh"/></Button>
-                        <RefreshLayers/>
-                        <RefreshLayer/>
-                    </div> : null
-                }
+                {this.props.refreshMapEnabled ? this.renderRefreshMap() : null}
                 <TOC onSort={this.props.onSort} filter={this.getNoBackgroundLayers}
                     nodes={this.props.groups}>
                     <DefaultLayerOrGroup groupElement={Group} layerElement={Layer}/>

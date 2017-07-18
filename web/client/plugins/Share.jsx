@@ -45,7 +45,7 @@ const Share = connect((state) => ({
 
 module.exports = {
     SharePlugin: assign(Share, {
-        disablePluginIf: "{state('routing').endsWith('new')}",
+        disablePluginIf: "{state('routing') && state('routing').endsWith('new')}",
         BurgerMenu: {
             name: 'share',
             position: 1000,
