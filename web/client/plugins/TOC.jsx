@@ -259,7 +259,7 @@ class LayerTree extends React.Component {
         activateSettingsTool: true,
         activateRemoveLayer: true,
         activateQueryTool: false,
-        activateRefreshTool: true,
+        activateRefreshTool: false,
         visibilityCheckType: "glyph",
         settingsOptions: {
             includeCloseButton: false,
@@ -330,9 +330,13 @@ class LayerTree extends React.Component {
                             scales={this.props.scales}/>);
         return (
             <div className="mapstore-toc">
-                <Button onClick={this.props.onRefresh} bsSize="xsmall"><Glyphicon glyph="refresh"/></Button>
-                <RefreshLayers/>
-                <RefreshLayer/>
+                {this.props.activateRefreshTool ?
+                    <div>
+                        <Button onClick={this.props.onRefresh} bsSize="xsmall"><Glyphicon glyph="refresh"/></Button>
+                        <RefreshLayers/>
+                        <RefreshLayer/>
+                    </div> : null
+                }
                 <TOC onSort={this.props.onSort} filter={this.getNoBackgroundLayers}
                     nodes={this.props.groups}>
                     <DefaultLayerOrGroup groupElement={Group} layerElement={Layer}/>

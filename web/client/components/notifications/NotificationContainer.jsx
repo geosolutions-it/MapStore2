@@ -34,7 +34,8 @@ var LocaleUtils = require('../../utils/LocaleUtils');
 class NotificationContainer extends React.Component {
     static propTypes = {
         notifications: PropTypes.array,
-        onRemove: PropTypes.func
+        onRemove: PropTypes.func,
+        onDispatch: PropTypes.func
     };
 
     static contextTypes = {
@@ -43,7 +44,8 @@ class NotificationContainer extends React.Component {
 
     static defaultProps = {
         notifications: [],
-        onRemove: () => {}
+        onRemove: () => {},
+        onDispatch: () => {}
     };
 
     componentDidMount() {
@@ -81,7 +83,8 @@ class NotificationContainer extends React.Component {
                   title: LocaleUtils.getMessageById(this.context.messages, notification.title) || notification.title,
                   message: LocaleUtils.getMessageById(this.context.messages, notification.message) || notification.message,
                   action: notification.action && {
-                      label: LocaleUtils.getMessageById(this.context.messages, notification.action.label) || notification.action.label
+                      label: LocaleUtils.getMessageById(this.context.messages, notification.action.label) || notification.action.label,
+                      callback: notification.action.dispatch ? () => { this.props.onDispatch(notification.action.dispatch); } : notification.action.callback
                   },
                   onRemove: () => {
                       this.props.onRemove(notification.uid);
