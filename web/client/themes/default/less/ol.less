@@ -1,0 +1,65 @@
+/* OpenLayers minimap style */
+.ol-custom-overviewmap button {
+	background-color: @ms2-color-primary !important;
+}
+
+.ol-custom-overviewmap .ol-control button:focus,
+.ol-custom-overviewmap button:hover {
+	background-color: @ms2-color-primary !important;
+}
+
+.ol-custom-overviewmap:not(.ol-collapsed) {
+	background: @ms2-color-primary !important;
+	border-radius: 3px !important;
+}
+
+.ol-custom-overviewmap .ol-overviewmap-map {
+	height: 133px !important;
+}
+
+.ol-custom-overviewmap {
+	margin-bottom: 3px;
+}
+
+div.ol-scale-line.ol-unselectable {
+	border: 2px solid @ms2-color-shade-darker;
+	border-top: none;
+	line-height: 1.0;
+	border-radius: 0;
+	bottom: 5px;
+	left: auto;
+	right: 57px;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	overflow: hidden;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+div.ol-scale-line-inner {
+	border: 0;
+	border-top: 0;
+	color: @ms2-color-background;
+	font-size: 11px;
+	text-align: left;
+	margin: 0;
+}
+
+.ol-custom-overviewmap, .ol-custom-overviewmap.ol-uncollapsible {
+    bottom: 55px !important;
+    left: auto !important;
+    right: 57px !important;
+    top: auto !important;
+}
+
+.ol-scale-line.ol-unselectable {
+    right: 58px;
+    left: auto;
+    bottom: 3px;
+}
+
+.ol-scale-line {
+	background-color: @ms2-color-primary !important;
+	color: @ms2-color-text-primary !important;
+}
