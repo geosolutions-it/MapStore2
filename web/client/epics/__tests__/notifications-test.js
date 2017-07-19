@@ -17,7 +17,7 @@ const rootEpic = combineEpics(clearNotificationOnLocationChange);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
-describe('automapupdate Epics', () => {
+describe('notifications Epics', () => {
     let store;
     beforeEach(() => {
         store = mockStore();
@@ -27,7 +27,7 @@ describe('automapupdate Epics', () => {
         epicMiddleware.replaceEpic(rootEpic);
     });
 
-    it('update map', (done) => {
+    it('test clear notifications on location change', (done) => {
 
         store.dispatch({type: '@@router/LOCATION_CHANGE'});
 
