@@ -7,6 +7,7 @@
  */
 
 const {hide} = require('../actions/notifications');
+const {clearNotificationOnLocationChange} = require('../epics/notifications');
 const {connect} = require('react-redux');
 
 
@@ -26,5 +27,8 @@ module.exports = {
     )(require('../components/notifications/NotificationContainer')),
     reducers: {
         notifications: require('../reducers/notifications')
+    },
+    epics: {
+        clearNotificationOnLocationChange
     }
 };
