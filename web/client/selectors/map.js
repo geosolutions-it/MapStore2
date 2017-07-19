@@ -41,7 +41,10 @@ const scalesSelector = createSelector(
     }
 );
 
+const mapIdSelector = (state) => state.map && state.map.present && state.map.present.mapId || null;
+
 module.exports = {
     mapSelector,
-    scalesSelector
+    scalesSelector,
+    mapIdSelector
 };

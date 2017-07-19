@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -8,6 +7,7 @@ const PropTypes = require('prop-types');
 */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 const {ProgressBar, Col, Row} = require('react-bootstrap');
 const Message = require('../../../../components/I18N/Message');
 require('./css/overlayprogressbar.css');

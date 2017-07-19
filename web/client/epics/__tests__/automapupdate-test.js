@@ -11,14 +11,15 @@ var expect = require('expect');
 const configureMockStore = require('redux-mock-store').default;
 const {createEpicMiddleware, combineEpics } = require('redux-observable');
 const {configureMap, mapInfoLoaded} = require('../../actions/config');
+const {loginSuccess} = require('../../actions/security');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 
-const {manageAutoMapUpdate} = require('../automapupdate');
-const rootEpic = combineEpics(manageAutoMapUpdate);
+const {manageAutoMapUpdate, updateMapInfoOnLogin} = require('../automapupdate');
+const rootEpic = combineEpics(manageAutoMapUpdate, updateMapInfoOnLogin);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
-describe('autorefresh Epics', () => {
+describe('automapupdate Epics', () => {
     let store;
     beforeEach(() => {
         store = mockStore();
@@ -28,7 +29,7 @@ describe('autorefresh Epics', () => {
         epicMiddleware.replaceEpic(rootEpic);
     });
 
-    it('refreshes map', (done) => {
+    it('update map', (done) => {
 
         let configuration = configureMap({}, "id");
 
@@ -52,7 +53,7 @@ describe('autorefresh Epics', () => {
 
     });
 
-    it('refreshes map without login', (done) => {
+    it('update map without login', (done) => {
 
         let configuration = configureMap({
             version: 2
@@ -64,6 +65,26 @@ describe('autorefresh Epics', () => {
 
         store.dispatch(configuration);
         store.dispatch(information);
+
+        setTimeout( () => {
+            try {
+                const actions = store.getActions();
+                expect(actions.length).toBe(2);
+            } catch (e) {
+                return done(e);
+            }
+            done();
+        }, 500);
+
+    });
+
+    it('update map info on login success no id', (done) => {
+
+        let login = loginSuccess("userDetails", "username", "password", "authProvider");
+        let configuration = configureMap({}, "id");
+
+        store.dispatch(configuration);
+        store.dispatch(login);
 
         setTimeout( () => {
             try {

@@ -10,6 +10,11 @@ const {refreshLayers, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR} = require('../acti
 const {MAP_CONFIG_LOADED, MAP_INFO_LOADED} = require('../actions/config');
 const {warning, success} = require('../actions/notifications');
 const {toggleControl} = require('../actions/controls');
+const {loadMapInfo} = require('../actions/config');
+const {LOGIN_SUCCESS} = require('../actions/security');
+const ConfigUtils = require('../utils/ConfigUtils');
+const {mapIdSelector} = require('../selectors/map');
+const { LOCATION_CHANGE } = require('react-router-redux');
 
 /**
  * When map has been loaded, it sends a notification if the version is less than 2 and users has write permission.
@@ -59,7 +64,24 @@ const manageAutoMapUpdate = action$ =>
                                     return Rx.Observable.of(notification, toggleControl('save'));
                                 }))
                     : Rx.Observable.empty();
-                }));
+                }).takeUntil(action$.ofType(LOCATION_CHANGE)));
+/**
+ * Reload information of map on LOGIN_SUCCESS.
+ * @param {external:Observable} action$ manages `LOGIN_SUCCESS`.
+ * @memberof epics.automapupdate
+ * @return {external:Observable}
+ */
+const updateMapInfoOnLogin = (action$, store) =>
+    action$.ofType(MAP_CONFIG_LOADED)
+        .switchMap(() =>
+            action$.ofType(LOGIN_SUCCESS)
+                .filter(() => !!mapIdSelector(store.getState()))
+                .switchMap(() => {
+                    const id = mapIdSelector(store.getState());
+                    return Rx.Observable.of(
+                        loadMapInfo(ConfigUtils.getConfigProp("geoStoreUrl") + "extjs/resource/" + id, id)
+                    );
+                }).takeUntil(action$.ofType(LOCATION_CHANGE)));
 
 /**
  * Epics for update old map
@@ -68,5 +90,6 @@ const manageAutoMapUpdate = action$ =>
  */
 
 module.exports = {
-    manageAutoMapUpdate
+    manageAutoMapUpdate,
+    updateMapInfoOnLogin
 };

@@ -7,7 +7,7 @@
 */
 
 const {connect} = require('react-redux');
-const {manageAutoMapUpdate} = require('../epics/automapupdate');
+const {manageAutoMapUpdate, updateMapInfoOnLogin} = require('../epics/automapupdate');
 const {autoMapUpdateSelector} = require('../selectors/automapupdate');
 
 /**
@@ -22,5 +22,5 @@ const AutoMapUpdatePlugin = connect(autoMapUpdateSelector)(require('../component
 module.exports = {
     AutoMapUpdatePlugin,
     reducers: {},
-    epics: {manageAutoMapUpdate}
+    epics: {manageAutoMapUpdate, updateMapInfoOnLogin}
 };

@@ -73,8 +73,8 @@ describe('Test correctness of the notifications actions', () => {
                 type: 'CUSTOM_ACTION'
             };
         };
-        const action = dispatchAction(customAction);
-        expect(action().type).toBe('CUSTOM_ACTION');
+        const action = dispatchAction(customAction());
+        expect(action.type).toBe('CUSTOM_ACTION');
     });
 
 
