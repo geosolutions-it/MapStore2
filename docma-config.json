@@ -142,6 +142,7 @@
             "web/client/epics/fullscreen.js",
             "web/client/epics/globeswitcher.js",
             "web/client/epics/maptype.js",
+            "web/client/epics/notifications.js",
             "web/client/epics/search.js",
             "web/client/epics/tutorial.js",
             "web/client/epics/wfsquery.js",
