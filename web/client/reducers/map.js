@@ -123,7 +123,8 @@ function mapConfig(state = null, action) {
                 action.center.crs,
                 'EPSG:4326');
         return assign({}, state, {
-            center
+            center,
+            mapStateSource: null
         });
     }
     case CHANGE_MAP_STYLE: {
