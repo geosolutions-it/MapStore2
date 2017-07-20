@@ -53,31 +53,6 @@ describe('automapupdate Epics', () => {
 
     });
 
-    it('update map without login', (done) => {
-
-        let configuration = configureMap({
-            version: 2
-        }, "id");
-
-        let information = mapInfoLoaded({
-            canEdit: true
-        }, "id");
-
-        store.dispatch(configuration);
-        store.dispatch(information);
-
-        setTimeout( () => {
-            try {
-                const actions = store.getActions();
-                expect(actions.length).toBe(2);
-            } catch (e) {
-                return done(e);
-            }
-            done();
-        }, 500);
-
-    });
-
     it('update map info on login success no id', (done) => {
 
         let login = loginSuccess("userDetails", "username", "password", "authProvider");

@@ -22,7 +22,7 @@ function mapConfig(state = null, action) {
             // we get from the configuration what will be used as the initial state
         let mapState = action.legacy && !hasVersion ? ConfigUtils.convertFromLegacy(action.config) : ConfigUtils.normalizeConfig(action.config.map);
 
-        mapState.map = assign({}, mapState.map, {mapId: action.mapId, size});
+        mapState.map = assign({}, mapState.map, {mapId: action.mapId, size, version: hasVersion ? action.config.version : 1});
             // we store the map initial state for future usage
         return assign({}, mapState, {mapInitialConfig: mapState.map});
     case MAP_CONFIG_LOAD_ERROR:

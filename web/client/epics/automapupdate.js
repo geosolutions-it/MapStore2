@@ -12,8 +12,9 @@ const {warning, success} = require('../actions/notifications');
 const {toggleControl} = require('../actions/controls');
 const {loadMapInfo} = require('../actions/config');
 const {LOGIN_SUCCESS} = require('../actions/security');
+const {updateVersion} = require('../actions/map');
 const ConfigUtils = require('../utils/ConfigUtils');
-const {mapIdSelector} = require('../selectors/map');
+const {mapIdSelector, mapVersionSelector} = require('../selectors/map');
 const { LOCATION_CHANGE } = require('react-router-redux');
 
 /**
@@ -23,12 +24,12 @@ const { LOCATION_CHANGE } = require('react-router-redux');
  * @return {external:Observable}
  */
 
-const manageAutoMapUpdate = action$ =>
+const manageAutoMapUpdate = (action$, store) =>
     action$.ofType(MAP_CONFIG_LOADED)
         .switchMap((mapConfigLoaded) =>
             action$.ofType(MAP_INFO_LOADED)
                 .switchMap((mapInfoLoaded) => {
-                    const version = mapConfigLoaded.config && mapConfigLoaded.config.version || 1;
+                    const version = mapVersionSelector(store.getState());
                     const canEdit = mapInfoLoaded.info && mapInfoLoaded.info.canEdit || false;
                     let layers = mapConfigLoaded.config && mapConfigLoaded.config.map && mapConfigLoaded.config.map.layers && mapConfigLoaded.config.map.layers.filter((l) => l.type === 'wms' && l.group !== 'background') || [];
                     const options = {bbox: true, search: true, dimensions: true, title: false};
@@ -61,7 +62,7 @@ const manageAutoMapUpdate = action$ =>
                                             autoDismiss: 6,
                                             position: "tc"
                                         });
-                                    return Rx.Observable.of(notification, toggleControl('save'));
+                                    return Rx.Observable.of(notification, toggleControl('save'), updateVersion(2));
                                 }))
                     : Rx.Observable.empty();
                 }).takeUntil(action$.ofType(LOCATION_CHANGE)));
