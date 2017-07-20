@@ -8,6 +8,7 @@
 
 const Rx = require('rxjs');
 const axios = require('../libs/ajax');
+const Url = require('url');
 const {changeSpatialAttribute, SELECT_VIEWPORT_SPATIAL_METHOD, updateGeometrySpatialField} = require('../actions/queryform');
 const {CHANGE_MAP_VIEW} = require('../actions/map');
 const {FEATURE_TYPE_SELECTED, QUERY, featureTypeLoaded, featureTypeError, querySearchResponse, queryError, featureClose} = require('../actions/wfsquery');
@@ -122,8 +123,10 @@ const getWFSFilterData = (filterObj) => {
 
 const getWFSFeature = (searchUrl, filterObj) => {
     const data = getWFSFilterData(filterObj);
+    const urlParsedObj = Url.parse(searchUrl);
+    const parsedUrl = urlParsedObj.protocol + '//' + urlParsedObj.host + urlParsedObj.pathname;
     return Rx.Observable.defer( () =>
-        axios.post(searchUrl + '?service=WFS&outputFormat=json', data, {
+        axios.post(parsedUrl + '?service=WFS&outputFormat=json', data, {
             timeout: 60000,
             headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
         }));
@@ -197,7 +200,6 @@ const featureTypeSelectedEpic = action$ =>
 const wfsQueryEpic = (action$, store) =>
     action$.ofType(QUERY)
         .switchMap(action => {
-
             return Rx.Observable.merge(
                 Rx.Observable.of(setControlProperty('drawer', 'enabled', false)),
                 getWFSFeature(action.searchUrl, action.filterObj)
