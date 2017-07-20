@@ -232,7 +232,7 @@ const startApp = () => {
                 <Provider store={store}>
                     <Localized>
                         <div style={{width: "100%", height: "100%"}}>
-                            <div id="plugins-list" style={{position: "absolute", zIndex: "10000", backgroundColor: "white", width: "300px", left: 0, height: "100%", overflow: "auto"}}>
+                            <div id="plugins-list" style={{position: "absolute", zIndex: "10000", width: "300px", left: 0, height: "100%", overflow: "auto"}}>
                                 <h5>Configure application plugins</h5>
                                 <ul>
                                   <FormGroup bsSize="small">

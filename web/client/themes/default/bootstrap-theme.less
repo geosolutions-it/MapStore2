@@ -5,7 +5,7 @@
  */
 @bootstrap-path: "~bootstrap/less/";
 // Core variables and mixins
-@import "@{bootstrap-path}variables.less";
+// @import "@{bootstrap-path}variables.less";
 @import "@{bootstrap-path}mixins.less";
 // Reset and dependencies
 @import "@{bootstrap-path}normalize.less";
@@ -50,15 +50,13 @@
 @import "@{bootstrap-path}utilities.less";
 @import "@{bootstrap-path}responsive-utilities.less";
 
-.modal-header {
-    background-color: @ms2-color-primary;
-    color: @ms2-color-text-primary;
-}
+// Custom theme
 
+// Button
 button.close {
     opacity: 1.0;
 }
-// Mixin for generating new styles
+
 .btn-styles(@btn-color-hover) {
 
     &:hover {
@@ -84,4 +82,28 @@ button.close {
 
 .btn-danger {
     .btn-styles(@ms2-color-danger-hover);
+}
+
+// Modal
+.modal-dialog {
+    width: 290px;
+    margin: auto;
+}
+
+.modal-header {
+    background-color: @ms2-color-primary;
+    color: @ms2-color-text-primary;
+}
+
+@media (min-width: @screen-sm-min) {
+    .modal-dialog {
+        width: @modal-md;
+        margin: auto;
+        margin-top: 150px;
+    }
+}
+
+// Dropdown
+.dropdown-menu {
+    padding: 0;
 }

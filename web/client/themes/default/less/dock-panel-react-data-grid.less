@@ -153,3 +153,10 @@
 .react-grid-Row:hover .react-grid-Cell.modified {
     background-color: @ms2-color-warning-active;
 }
+
+.react-grid-Row .react-grid-Cell.modified.invalid,
+.react-grid-Row .react-grid-Cell.invalid,
+.react-grid-Row.row-selected .react-grid-Cell.invalid,
+.react-grid-Row.row-selected .react-grid-Cell.modified.invalid {
+    background-color: @ms2-color-danger-active;
+}

@@ -1,7 +1,7 @@
 .square-button {
     height: @square-btn-size;
     width: @square-btn-size;
-    padding: 0 @padding-left-square - 1;
+    padding: floor((@padding-left-square - 1) / 1.230769231 /* font ratio height/width */) (@padding-left-square - 1);
     outline: 0 !important;
 
     .glyphicon {
