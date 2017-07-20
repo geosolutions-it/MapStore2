@@ -34,13 +34,13 @@ class OverlayProgressBar extends React.Component {
             <div className="overlay-spinner-container">
                 <div>
                     <Row>
-                        <Col xs="12" className="text-center overlay-spinner-label"><h3><Message msgId={this.props.label}/></h3></Col>
+                        <Col xs={12} className="text-center overlay-spinner-label"><h3><Message msgId={this.props.label}/></h3></Col>
                     </Row>
                     <Row>
-                        <Col xs="12"><ProgressBar active now={100 * this.props.count / this.props.length} /></Col>
+                        <Col xs={12}><ProgressBar active now={100 * this.props.count / this.props.length} /></Col>
                     </Row>
                     <Row>
-                        <Col xs="12" className="text-center overlay-spinner-label"><h3>{this.props.count + ' '} <Message msgId="autorefresh.of"/>{ ' ' + this.props.length + ' '}<Message msgId={this.props.unit}/></h3></Col>
+                        <Col xs={12} className="text-center overlay-spinner-label"><h3>{this.props.count + ' '} <Message msgId="autorefresh.of"/>{ ' ' + this.props.length + ' '}<Message msgId={this.props.unit}/></h3></Col>
                     </Row>
                 </div>
             </div>
