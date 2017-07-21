@@ -80,7 +80,7 @@ class PropertiesViewer extends React.Component {
             </div>
         );
     };
-    
+
     renderProperty = (prop) => {
         if (isString(prop)) {
             return prop;
