@@ -123,10 +123,16 @@ const getWFSFilterData = (filterObj) => {
 
 const getWFSFeature = (searchUrl, filterObj) => {
     const data = getWFSFilterData(filterObj);
+
     const urlParsedObj = Url.parse(searchUrl);
     const parsedUrl = urlParsedObj.protocol + '//' + urlParsedObj.host + urlParsedObj.pathname;
+
+    const additionalParams = isString(urlParsedObj.query) ? urlParsedObj.query.split('&').filter((q) => q.substring(0, 7) !== 'service' && q.substring(0, 12) !== 'outputFormat' && q !== '') : [];
+    const additionalParamsString = additionalParams.length > 0 ? additionalParams.reduce((a, b) => a + '&' + b, '') : '';
+    const params = '?service=WFS&outputFormat=json' + additionalParamsString;
+
     return Rx.Observable.defer( () =>
-        axios.post(parsedUrl + '?service=WFS&outputFormat=json', data, {
+        axios.post(parsedUrl + params, data, {
             timeout: 60000,
             headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
         }));
