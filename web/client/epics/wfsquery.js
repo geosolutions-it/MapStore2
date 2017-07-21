@@ -14,8 +14,9 @@ const {CHANGE_MAP_VIEW} = require('../actions/map');
 const {FEATURE_TYPE_SELECTED, QUERY, featureTypeLoaded, featureTypeError, querySearchResponse, queryError, featureClose} = require('../actions/wfsquery');
 const FilterUtils = require('../utils/FilterUtils');
 const assign = require('object-assign');
-const {isString} = require('lodash');
+const {isString, isObject} = require('lodash');
 const {TOGGLE_CONTROL, setControlProperty} = require('../actions/controls');
+const querystring = require('querystring');
 
 const types = {
     // string
@@ -124,15 +125,15 @@ const getWFSFilterData = (filterObj) => {
 const getWFSFeature = (searchUrl, filterObj) => {
     const data = getWFSFilterData(filterObj);
 
-    const urlParsedObj = Url.parse(searchUrl);
-    const parsedUrl = urlParsedObj.protocol + '//' + urlParsedObj.host + urlParsedObj.pathname;
-
-    const additionalParams = isString(urlParsedObj.query) ? urlParsedObj.query.split('&').filter((q) => q.substring(0, 7) !== 'service' && q.substring(0, 12) !== 'outputFormat' && q !== '') : [];
-    const additionalParamsString = additionalParams.length > 0 ? additionalParams.reduce((a, b) => a + '&' + b, '') : '';
-    const params = '?service=WFS&outputFormat=json' + additionalParamsString;
+    const urlParsedObj = Url.parse(searchUrl, true);
+    const parsedUrl = urlParsedObj.protocol + '//' + urlParsedObj.host + urlParsedObj.pathname + '?';
+    let params = isObject(urlParsedObj.query) ? urlParsedObj.query : {};
+    params.service = 'WFS';
+    params.outputFormat = 'json';
+    const paramsString = querystring.stringify(params);
 
     return Rx.Observable.defer( () =>
-        axios.post(parsedUrl + params, data, {
+        axios.post(parsedUrl + paramsString, data, {
             timeout: 60000,
             headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
         }));
