@@ -26,7 +26,11 @@ function wmsToOpenlayersOptions(options) {
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         TILED: options.tiled || false,
         VERSION: options.version || "1.3.0"
-    }, options.params || {});
+    }, objectAssign(
+        {},
+        (options._v_ ? {_v_: options._v_} : {}),
+        (options.params || {})
+    ));
 }
 
 function getWMSURLs( urls ) {
@@ -93,7 +97,7 @@ Layers.registerType('wms', {
             }
             let oldParams = wmsToOpenlayersOptions(oldOptions);
             let newParams = wmsToOpenlayersOptions(newOptions);
-            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION" ].reduce((found, param) => {
+            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_" ].reduce((found, param) => {
                 if (oldParams[param] !== newParams[param]) {
                     return true;
                 }

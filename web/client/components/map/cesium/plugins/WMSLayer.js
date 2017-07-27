@@ -92,7 +92,11 @@ function wmsToCesiumOptions(options) {
             format: options.format || 'image/png',
             transparent: options.transparent !== undefined ? options.transparent : true,
             opacity: opacity
-        }, options.params || {})
+        }, assign(
+            {},
+            (options._v_ ? {_v_: options._v_} : {}),
+            (options.params || {})
+        ))
     });
 }
 

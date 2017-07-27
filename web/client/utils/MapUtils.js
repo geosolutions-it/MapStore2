@@ -282,6 +282,22 @@ function transformExtent(projection, center, width, height) {
     return {width, height};
 }
 
+function isSimpleGeomType(geomType) {
+    switch (geomType) {
+        case "MultiPoint": case "MultiLineString": case "MultiPolygon": return false;
+        case "Point": case "LineString": case "Polygon": case "Circle": default: return true;
+    }
+}
+function getSimpleGeomType(geomType = "Point") {
+    switch (geomType) {
+        case "Point": case "LineString": case "Polygon": case "Circle": return geomType;
+        case "MultiPoint": return "Point";
+        case "MultiLineString": return "LineString";
+        case "MultiPolygon": return "Polygon";
+        default: return geomType;
+    }
+}
+
 module.exports = {
     EXTENT_TO_ZOOM_HOOK,
     RESOLUTIONS_HOOK,
@@ -307,5 +323,7 @@ module.exports = {
     getBbox,
     mapUpdated,
     getCurrentResolution,
-    transformExtent
+    transformExtent,
+    isSimpleGeomType,
+    getSimpleGeomType
 };

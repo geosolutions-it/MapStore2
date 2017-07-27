@@ -43,5 +43,6 @@ const scalesSelector = createSelector(
 
 module.exports = {
     mapSelector,
-    scalesSelector
+    scalesSelector,
+    projectionSelector
 };

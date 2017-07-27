@@ -8,7 +8,12 @@
 
 
 const expect = require('expect');
-const {mapTypeSelector, isCesium} = require('../maptype');
+const {
+    mapTypeSelector,
+    isCesium,
+    isOpenlayers,
+    isLeaflet
+} = require('../maptype');
 
 describe('Test maptype', () => {
     it('test mapTypeSelector', () => {
@@ -23,5 +28,19 @@ describe('Test maptype', () => {
         expect(bool).toExist();
         expect(bool).toBe(true);
         expect(isCesium({maptype: {mapType: "leaflet"}})).toBe(false);
+    });
+
+    it('test isLeaflet', () => {
+        const bool = isLeaflet({maptype: {mapType: "leaflet"}});
+        expect(bool).toExist();
+        expect(bool).toBe(true);
+        expect(isLeaflet({maptype: {mapType: "cesium"}})).toBe(false);
+    });
+
+    it('test isOpenlayers', () => {
+        const bool = isOpenlayers({maptype: {mapType: "openlayers"}});
+        expect(bool).toExist();
+        expect(bool).toBe(true);
+        expect(isOpenlayers({maptype: {mapType: "cesium"}})).toBe(false);
     });
 });

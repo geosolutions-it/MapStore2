@@ -792,17 +792,44 @@
             "single": "Banda simple"
         },
         "featuregrid": {
+            "columns": "Columnas",
             "header": "Lista de resultados de búsqueda",
             "tools": "Panel de herramientas",
             "export": "Exportar",
             "selectall": "Seleccionar todos",
             "deselectall": "Deseleccionar todos",
             "backtosearch": "Volver a la búsqueda",
+            "resultInfo": "{total, plural, =0 {nada} =1 {{total} de {total}} other {{start}-{end} de {total}}}",
+            "pageInfo": "{totalPages, plural, =0 {ningúna Página} =1 {Página {totalPages} de {totalPages}} other {Seite {page} de {totalPages}}}",
             "pagination": {
                 "page": "Página",
                 "of":   "de",
                 "to":   "hasta",
                 "more": "más"
+            },
+            "noFeaturesAvailable": "No hay resultados disponibles",
+            "errorSaving": "Se ha producido un error al guardar la operación",
+            "yesButton": "Si",
+            "noButton": "No",
+            "deleteButton": "Borrar",
+            "clear": "Seguro que desea deshacer todos los cambios realizados?",
+            "featureClose": "Realmente desea cerrar la parrilla?",
+            "delete": "Confirmar para eliminar los elementos?",
+            "toolbar": {
+                "editMode": "Modo de edición",
+                "quitEditMode": "Salir del modo de edición",
+                "addNewFeatures": "Añadir nueva función",
+                "editFeature": "Función de edición",
+                "drawGeom": "Dibujar un elemento",
+                "stopDrawGeom": "Cancelar la creación de geometría",
+                "addGeom": "Añadir un elemento a la geometría existente",
+                "deleteSelectedFeatures": "Eliminar los elementos seleccionadas",
+                "saveChanges": "Guardar cambios",
+                "saving": "guardando...",
+                "cancelChanges": "Cancelar cambios",
+                "deleteGeometry": "Eliminar geometría",
+                "downloadGridData": "Descargar datos",
+                "hideShowColumns": "Ocultar / mostrar columnas"
             }
         },
         "wfsdownload": {

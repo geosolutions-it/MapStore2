@@ -84,7 +84,11 @@ function wmsToLeafletOptions(options) {
         SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         tileSize: options.tileSize || 256
-    }, options.params || {});
+    }, objectAssign(
+        {},
+        (options._v_ ? {_v_: options._v_} : {}),
+        (options.params || {})
+    ));
 }
 
 function getWMSURLs( urls ) {

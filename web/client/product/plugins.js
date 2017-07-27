@@ -73,7 +73,8 @@ module.exports = {
         SearchServicesConfigPlugin: require('../plugins/SearchServicesConfig'),
         VersionPlugin: require('../plugins/Version'),
         CookiePlugin: require('../plugins/Cookie'),
-        NotificationsPlugin: require('../plugins/Notifications')
+        NotificationsPlugin: require('../plugins/Notifications'),
+        FeatureEditorPlugin: require('../plugins/FeatureEditor')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

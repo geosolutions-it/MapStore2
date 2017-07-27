@@ -174,4 +174,55 @@ describe('CoordinatesUtils', () => {
         expect(CoordinatesUtils.getGeoJSONExtent(featureCollection)[2]).toBe(105.0);
         expect(CoordinatesUtils.getGeoJSONExtent(featureCollection)[3]).toBe(1.0);
     });
+    it('test coordsOLtoLeaflet on point', () => {
+        let geojsonPoint = {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [125.6, 10.1]
+            }
+        };
+        expect(CoordinatesUtils.coordsOLtoLeaflet(geojsonPoint.geometry)).toBe(geojsonPoint.geometry.coordinates.reverse());
+    });
+    it('test coordsOLtoLeaflet on LineString', () => {
+        let geojsonPoint = {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[1, 2], [3, 4]]
+            }
+        };
+        const reversedPoint = {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": geojsonPoint.geometry.coordinates.map(point => point.reverse())
+            }
+        };
+
+        expect(CoordinatesUtils.coordsOLtoLeaflet(geojsonPoint.geometry)[0]).toBe(reversedPoint.geometry.coordinates[0]);
+        expect(CoordinatesUtils.coordsOLtoLeaflet(geojsonPoint.geometry)[1]).toBe(reversedPoint.geometry.coordinates[1]);
+    });
+    it('test coordsOLtoLeaflet on Polygon', () => {
+        let geojsonPoint = {
+            "type": "Feature",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[[1, 2], [3, 4], [5, 6], [1, 2]]]
+            }
+        };
+        const reversedPoint = {
+            "type": "Feature",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": geojsonPoint.geometry.coordinates[0].map(point => point.reverse())
+            }
+        };
+
+        expect(CoordinatesUtils.coordsOLtoLeaflet(geojsonPoint.geometry)[0][0]).toBe(reversedPoint.geometry.coordinates[0]);
+        expect(CoordinatesUtils.coordsOLtoLeaflet(geojsonPoint.geometry)[0][1]).toBe(reversedPoint.geometry.coordinates[1]);
+        expect(CoordinatesUtils.coordsOLtoLeaflet(geojsonPoint.geometry)[0][2]).toBe(reversedPoint.geometry.coordinates[2]);
+        expect(CoordinatesUtils.coordsOLtoLeaflet(geojsonPoint.geometry)[0][3]).toBe(reversedPoint.geometry.coordinates[3]);
+    });
+
 });

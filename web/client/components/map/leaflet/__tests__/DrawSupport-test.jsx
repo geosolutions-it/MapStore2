@@ -51,6 +51,7 @@ describe('Leaflet DrawSupport', () => {
             <DrawSupport
                 map={map}
                 drawOwner="me"
+                options={{stopAfterDrawing: true}}
             />
         , msNode);
         expect(cmp).toExist();
@@ -61,6 +62,7 @@ describe('Leaflet DrawSupport', () => {
                 drawStatus="start"
                 drawMethod="Circle"
                 drawOwner="me"
+                options={{stopAfterDrawing: true}}
             />
         , msNode);
 
@@ -124,8 +126,8 @@ describe('Leaflet DrawSupport', () => {
             <DrawSupport
                 map={map}
                 drawOwner="me"
-                drawStatus="start"
-                drawMethod="Circle"
+                drawStatus="create"
+                drawMethod="LineString"
             />
         , msNode);
         expect(cmp).toExist();
@@ -134,13 +136,13 @@ describe('Leaflet DrawSupport', () => {
                 map={map}
                 drawOwner="me"
                 drawStatus="replace"
-                drawMethod="Circle"
+                drawMethod="LineString"
                 features={[{
                     projection: "EPSG:4326",
-                    coordinates: [ -21150.703250721977, 5855989.620460],
-                    radius: 122631.43,
-                    type: "Polygon"}
+                    coordinates: [[ -21150.703250721977, 5855989.620460]],
+                    type: "LineString"}
                 ]}
+                options={{featureProjection: "EPSG:4326"}}
             />
         , msNode);
     });

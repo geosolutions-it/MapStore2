@@ -10,6 +10,7 @@ const {
     FEATURE_TYPE_SELECTED,
     FEATURE_TYPE_LOADED,
     FEATURE_TYPE_ERROR,
+    FEATURE_LOADING,
     FEATURE_LOADED,
     FEATURE_ERROR,
     QUERY_CREATE,
@@ -68,13 +69,20 @@ function query(state = initialState, action) {
             featureTypes: assign({}, state.featureTypes, {[action.typeName]: {error: action.error}})
         });
     }
+    case FEATURE_LOADING: {
+        return assign({}, state, {
+            featureLoading: action.isLoading
+        });
+    }
     case FEATURE_LOADED: {
         return assign({}, state, {
+            featureLoading: false,
             data: assign({}, state.data, {[action.typeName]: extractData(action.feature)})
         });
     }
     case FEATURE_ERROR: {
         return assign({}, state, {
+            featureLoading: false,
             featureTypes: assign({}, state.data, {[action.typeName]: {error: action.error}})
         });
     }

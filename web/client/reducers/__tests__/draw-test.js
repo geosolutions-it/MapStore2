@@ -7,6 +7,7 @@
  */
 const expect = require('expect');
 const draw = require('../draw');
+const {GEOMETRY_CHANGED, SET_CURRENT_STYLE} = require('../../actions/draw');
 
 
 describe('Test the draw reducer', () => {
@@ -47,5 +48,35 @@ describe('Test the draw reducer', () => {
         expect(state.drawOwner).toBe("queryform");
         expect(state.drawMethod).toBe("Circle");
         expect(state.features.length).toBe(0);
+    });
+
+    it('FeatureGrid GEOMETRY_CHANGED', () => {
+        const style = {
+            fill: {
+                color: "red"
+            }
+        };
+        let testAction = {
+            type: SET_CURRENT_STYLE,
+            currentStyle: style
+        };
+        let state = draw({}, testAction);
+        expect(state.currentStyle).toExist();
+        expect(state.currentStyle).toBe(style);
+    });
+    it('FeatureGrid GEOMETRY_CHANGED', () => {
+        const feature = {
+            geometry: {
+                type: "Point",
+                coordinates: []
+            }
+        };
+        let testAction = {
+            type: GEOMETRY_CHANGED,
+            features: [feature]
+        };
+        let state = draw({}, testAction);
+        expect(state.tempFeatures).toExist();
+        expect(state.tempFeatures[0]).toBe(feature);
     });
 });

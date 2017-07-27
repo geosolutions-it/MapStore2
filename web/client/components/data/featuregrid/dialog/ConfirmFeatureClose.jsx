@@ -1,0 +1,16 @@
+const React = require('react');
+const Confirm = require('../../../misc/ConfirmDialog');
+const Message = require('../../../I18N/Message');
+module.exports = ({
+    onClose = () => {},
+    saving = false,
+    onConfirm = () => {}
+} = {}) => (<Confirm
+    show
+    onClose={onClose}
+    onConfirm={onConfirm}
+    confirmButtonContent={<Message msgId="featuregrid.yesButton" />}
+    confirmButtonDisabled={saving}
+    closeText={<Message msgId="featuregrid.noButton" />}>
+    <Message msgId="featuregrid.featureClose"/>
+    </Confirm>);

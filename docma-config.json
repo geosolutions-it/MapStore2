@@ -112,6 +112,7 @@
             "web/client/components/notifications/NotificationContainer.jsx",
             "web/client/components/buttons/ToggleButton.jsx",
             "web/client/components/data/query/AutocompleteField.jsx",
+            "web/client/components/map/leaflet/DrawSupport.jsx",
             "web/client/components/plugins/PluginsContainer.jsx",
 
             "web/client/actions/index.jsdoc",

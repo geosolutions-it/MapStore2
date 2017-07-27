@@ -1,23 +1,24 @@
-/**
- * Copyright 2016, GeoSolutions Sas.
+/*
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require("react");
-const expect = require('expect');
-const ReactDOM = require('react-dom');
-const FeatureGrid = require('../FeatureGrid');
-const data = require("json-loader!../../../../test-resources/featureGrid-test-data.json");
+var React = require('react');
+var ReactDOM = require('react-dom');
+var expect = require('expect');
+const TestUtils = require('react-dom/test-utils');
+var FeatureGrid = require('../FeatureGrid');
 
-const columnDef = [
-    {headerName: "Name", field: "properties.NAME_STATE", width: 150, pinned: true}
-];
+const spyOn = expect.spyOn;
+const museam = require('json-loader!../../../../test-resources/wfs/museam.json');
+const describePois = require('json-loader!../../../../test-resources/wfs/describe-pois.json');
 
-describe("Test FeatureGrid Component", () => {
+// TODO FIX ALL THESE TESTS (recompose)
+describe('Test for FeatureGrid component', () => {
     beforeEach((done) => {
-        document.body.innerHTML = '<div id="container"></div>';
+        document.body.innerHTML = '<div id="container" style="height:500px"></div>';
         setTimeout(done);
     });
 
@@ -26,56 +27,94 @@ describe("Test FeatureGrid Component", () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-
-    it('Test FeatureGrid rendering', () => {
-        let comp = ReactDOM.render(
-            <FeatureGrid features={data.features}/>, document.getElementById("container"));
-        expect(comp).toExist();
-        let btns = document.getElementsByTagName("button");
-        btns[btns.length - 1].click();
-        // comp.setProps({paging: true, features: function() { return data.features; }, columnDefs: columnDef});
+    it('render with defaults', () => {
+        ReactDOM.render(<FeatureGrid/>, document.getElementById("container"));
+        expect(document.getElementsByClassName('react-grid-Container').length).toBe(1);
     });
-    it('Test FeatureGrid rendering with column def', () => {
-        let comp = ReactDOM.render(
-            <FeatureGrid features={data.features} columnDefs={columnDef} virtualPaging/>, document.getElementById("container"));
-        expect(comp).toExist();
+    it('render sample features', () => {
+        ReactDOM.render(<FeatureGrid describeFeatureType={describePois} features={museam.features}/>, document.getElementById("container"));
+        expect(document.getElementsByClassName('react-grid-HeaderCell').length).toBe(3);
+        expect(document.getElementsByClassName('react-grid-Row').length).toBe(1);
     });
-    it('Test FeatureGrid rendering without column defs', () => {
-        let map = {
-            size: {width: 1360, height: 685},
-            center: {x: -98, y: 26, crs: "EPSG:4326"},
-            projection: "EPSG:900913"
+    it('render sample features with a tool', () => {
+        const tool = {
+            key: "test_tool",
+            name: '',
+            width: 35,
+            locked: true,
+            events: {
+                onClick: () => {}
+            },
+            formatter: () => <div className="test-grid-tool" />
         };
-        let comp = ReactDOM.render(
-            <FeatureGrid features={data.features} paging map={map}/>, document.getElementById("container"));
-        comp.getRows({sortModel: [{colId: "properties.STATE_NAME", sort: 'asc'}], startRow: 0, endRow: 100, successCallback: () => {}});
-        comp.getRows({sortModel: [{colId: "properties.STATE_NAME", sort: 'desc'}], startRow: 0, endRow: 100, successCallback: () => {}});
-        let params = {data: {geometry: {}}};
-        comp.zoomToFeature(params);
-        comp.zoomToFeatures();
-        params = {selectedRows: []};
-        comp.selectFeatures(params);
-        expect(comp).toExist();
+        spyOn(tool.events, "onClick");
+        ReactDOM.render(<FeatureGrid describeFeatureType={describePois} features={museam.features} tools={[tool]}/>, document.getElementById("container"));
+        expect(document.getElementsByClassName('react-grid-HeaderCell').length).toBe(4);
+        expect(document.getElementsByClassName('react-grid-Row').length).toBe(1);
+        document.getElementsByClassName('test-grid-tool')[0].click();
+        expect(tool.events.onClick).toHaveBeenCalled();
     });
-    it('Test FeatureGrid custom zoomToFeatures', () => {
-        let map = {
-            size: {width: 1360, height: 685},
-            center: {x: -98, y: 26, crs: "EPSG:4326"},
-            projection: "EPSG:900913"
+    it('hide columns features', () => {
+        ReactDOM.render(<FeatureGrid describeFeatureType={describePois} features={museam.features} columnSettings={{NAME: {hide: true}}}/>, document.getElementById("container"));
+        expect(document.getElementsByClassName('react-grid-HeaderCell').length).toBe(2);
+    });
+    it('sort event', () => {
+        const events = {
+            onSort: () => {}
         };
-        const testZoomTo = {
-            action: () => {
-                return true;
+        spyOn(events, "onSort");
+        ReactDOM.render(<FeatureGrid gridEvents={{onGridSort: events.onSort}} describeFeatureType={describePois} features={museam.features}/>, document.getElementById("container"));
+        document.getElementsByClassName('react-grid-HeaderCell-sortable')[0].click();
+        expect(events.onSort).toHaveBeenCalled();
+    });
+    //
+    // ROW SELECTION EVENTS
+    //
+    it('row selection event without checkbox', () => {
+        const events = {
+            onRowsToggled: () => {}
+        };
+        spyOn(events, "onRowsToggled");
+        ReactDOM.render(<FeatureGrid gridEvents={{onRowsToggled: events.onRowsToggled}} gridOpts= {{rowSelection: {
+            showCheckbox: false,
+            selectBy: {
+                keys: {
+                    rowKey: 'id',
+                    values: []
+                }
             }
+        }}} describeFeatureType={describePois} features={museam.features}/>, document.getElementById("container"));
+        // TODO click on a row
+        document.getElementsByClassName('react-grid-Cell')[0].click();
+        expect(events.onRowsToggled).toHaveBeenCalled();
+    });
+    it('row selection event with checkboxes', () => {
+        const events = {
+            onRowsSelected: () => {},
+            onRowsDeselected: () => {},
+            onRowsToggled: () => {}
         };
-        const spy = expect.spyOn(testZoomTo, 'action');
-
-        let comp = ReactDOM.render(
-            <FeatureGrid features={data.features} paging map={map} zoomToFeatureAction={testZoomTo.action}/>, document.getElementById("container"));
-        expect(comp).toExist();
-        let params = {data: {geometry: {coordinates: []}}};
-        comp.zoomToFeature(params);
-        expect(spy).toHaveBeenCalled();
-        expect(spy).toHaveBeenCalledWith(params.data);
+        spyOn(events, "onRowsSelected");
+        spyOn(events, "onRowsDeselected");
+        spyOn(events, "onRowsToggled");
+        ReactDOM.render(<FeatureGrid
+            gridEvents={events}
+            mode="EDIT"
+            describeFeatureType={describePois}
+            features={museam.features}
+            />, document.getElementById("container"));
+        let domNode = document.getElementsByClassName('react-grid-checkbox')[1];
+        TestUtils.Simulate.click(domNode);
+        expect(events.onRowsSelected).toHaveBeenCalled();
+        ReactDOM.render(<FeatureGrid
+            gridEvents={events}
+            mode="EDIT"
+            describeFeatureType={describePois}
+            features={museam.features}
+            select={[{id: museam.features[0].id}]}
+            />, document.getElementById("container"));
+        domNode = document.getElementsByClassName('react-grid-checkbox')[1];
+        TestUtils.Simulate.click(domNode);
+        expect(events.onRowsDeselected).toHaveBeenCalled();
     });
 });
