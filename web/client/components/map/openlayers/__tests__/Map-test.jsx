@@ -28,10 +28,9 @@ describe('OpenlayersMap', () => {
         setTimeout(done);
     });
 
-    afterEach((done) => {
+    afterEach(() => {
         ReactDOM.unmountComponentAtNode(document.getElementById("map"));
         document.body.innerHTML = '';
-        setTimeout(done);
     });
 
     it('creates a div for openlayers map with given id', () => {
