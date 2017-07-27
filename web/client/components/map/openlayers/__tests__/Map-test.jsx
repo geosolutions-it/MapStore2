@@ -23,9 +23,8 @@ describe('OpenlayersMap', () => {
         return parseFloat(f.toFixed(places));
     };
 
-    beforeEach((done) => {
+    beforeEach(() => {
         document.body.innerHTML = '<div id="map"></div>';
-        setTimeout(done);
     });
 
     afterEach(() => {
