@@ -43,14 +43,14 @@ describe('layers Epics', () => {
             debounceTime: 0
         } );
 
-        setTimeout( () => {
+        store.subscribe(() => {
             const actions = store.getActions();
-            expect(actions.length).toBe(3);
-            expect(actions[1].type).toBe(LAYERS_REFRESHED);
-            expect(actions[2].type).toBe(UPDATE_NODE);
-            done();
-        }, 500);
-
+            if (actions.length === 3) {
+                expect(actions[1].type).toBe(LAYERS_REFRESHED);
+                expect(actions[2].type).toBe(UPDATE_NODE);
+                done();
+            }
+        });
     });
 
     it('refreshes layers with error', (done) => {
@@ -69,12 +69,12 @@ describe('layers Epics', () => {
             debounceTime: 0
         });
 
-        setTimeout( () => {
+        store.subscribe(() => {
             const actions = store.getActions();
-            expect(actions.length).toBe(2);
-            expect(actions[1].type).toBe(LAYERS_REFRESH_ERROR);
-            done();
-        }, 500);
-
+            if (actions.length === 2) {
+                expect(actions[1].type).toBe(LAYERS_REFRESH_ERROR);
+                done();
+            }
+        });
     });
 });
