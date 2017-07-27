@@ -68,7 +68,7 @@ function logoutWithReload() {
 
 function login(username, password) {
     return (dispatch) => {
-        AuthenticationAPI.login(username, password).then((response) => {
+        return AuthenticationAPI.login(username, password).then((response) => {
             dispatch(loginSuccess(response, username, password, AuthenticationAPI.authProviderName));
             dispatch(loadMaps(false, ConfigUtils.getDefaults().initialMapFilter || "*"));
         }).catch((e) => {

@@ -135,7 +135,7 @@
             }
         ],
 
-        "desktop": ["Map", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", {"name": "BackgroundSelector", "cfg": { "bottom": 40 } },
+        "desktop": ["Map", "AutoMapUpdate", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", {"name": "BackgroundSelector", "cfg": { "bottom": 40 } },
             {
                 "name": "Identify",
                 "showIn": ["IdentifyBar", "Settings"],
