@@ -17,7 +17,8 @@ var {
     error,
     info,
     hide,
-    clear
+    clear,
+    dispatchAction
 } = require('../notifications');
 
 describe('Test correctness of the notifications actions', () => {
@@ -65,6 +66,15 @@ describe('Test correctness of the notifications actions', () => {
         expect(action.title).toBe('test');
         expect(action.level).toBe('info');
         expect(action.uid).toExist();
+    });
+    it('dispatchAction', () => {
+        const customAction = () => {
+            return {
+                type: 'CUSTOM_ACTION'
+            };
+        };
+        const action = dispatchAction(customAction());
+        expect(action.type).toBe('CUSTOM_ACTION');
     });
 
 
