@@ -10,7 +10,7 @@ const LayerSelector = ({layers = [], selectedLayerId, onLayerSelect= () => {}} =
         top: "10px",
         left: "10px",
         width: "250px",
-        height: "600px",
+        height: "250px",
         zIndex: 3000
     }} header="Select a layer">
         <h4>Manhattan (New York)</h4>
