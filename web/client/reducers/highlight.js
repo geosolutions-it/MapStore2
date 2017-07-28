@@ -8,12 +8,9 @@
 
 const {
     HIGHLIGHT_STATUS,
-    UPDATE_HIGHLIGHTED
+    UPDATE_HIGHLIGHTED,
+    SET_HIGHLIGHT_FEATURES_PATH
 } = require('../actions/highlight');
-const {
-    TOGGLE_MODE,
-    MODES
-} = require('../actions/featuregrid');
 
 const assign = require('object-assign');
 
@@ -28,9 +25,9 @@ const initialState = {
 
 function highlight(state = initialState, action) {
     switch (action.type) {
-        case TOGGLE_MODE: {
+        case SET_HIGHLIGHT_FEATURES_PATH: {
             return assign({}, state, {
-                featuresPath: action.mode === MODES.VIEW ? "featuregrid.select" : "highlight.emptyFeatures"
+                featuresPath: action.featuresPath || "highlight.emptyFeatures"
             });
         }
         case HIGHLIGHT_STATUS: {

@@ -1,17 +1,16 @@
-/**
- * Copyright 2016, GeoSolutions Sas.
+/*
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 
 const expect = require('expect');
 const {
-    HIGHLIGHT_STATUS,
-    UPDATE_HIGHLIGHTED,
-    highlightStatus,
-    updateHighlighted
+    HIGHLIGHT_STATUS, highlightStatus,
+    UPDATE_HIGHLIGHTED, updateHighlighted,
+    SET_HIGHLIGHT_FEATURES_PATH, setHighlightFeaturesPath
 } = require('../highlight');
 
 describe('Test correctness of the highlight actions', () => {
@@ -24,6 +23,15 @@ describe('Test correctness of the highlight actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(HIGHLIGHT_STATUS);
         expect(retval.status).toBe("enabled");
+    });
+    it('highlightStatus', () => {
+        let path = "my.path";
+
+        let retval = setHighlightFeaturesPath(path);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_HIGHLIGHT_FEATURES_PATH);
+        expect(retval.featuresPath).toBe(path);
     });
 
     it('updateHighlighted', () => {

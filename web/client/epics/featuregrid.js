@@ -25,8 +25,10 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE, CLOSE_GRID, closeFeatureGrid, CLEAR_AND_CLOSE, CLOSE_DIALOG_AND_DRAWER} = require('../actions/featuregrid');
 
 const {TOGGLE_CONTROL} = require('../actions/controls');
+const {setHighlightFeaturesPath} = require('../actions/highlight');
 const {refreshLayerVersion} = require('../actions/layers');
 const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector, selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector} = require('../selectors/featuregrid');
+const {isFeatureEditorOpen} = require('../selectors/controls');
 const {error} = require('../actions/notifications');
 const {describeSelector, getFeatureById, wfsURL, wfsFilter} = require('../selectors/query');
 const drawSupportReset = () => changeDrawingStatus("clean", "", "featureGrid", [], {});
@@ -137,7 +139,8 @@ module.exports = {
         action$.ofType(QUERY_CREATE)
             .switchMap(() => Rx.Observable.of(
                 toggleControl("featuregrid", "open", true),
-                changePage(0)
+                changePage(0),
+                toggleViewMode()
             )),
     featureGridSort: (action$, store) =>
         action$.ofType(SORT_BY).switchMap( ({sortBy, sortOrder}) =>
@@ -290,10 +293,16 @@ module.exports = {
             let useOriginal = a.type === CLEAR_CHANGES;
             return setupDrawSupport(state, useOriginal);
         }),
-    stopDrawSupport: (action$) => action$.ofType(TOGGLE_MODE, CREATE_NEW_FEATURE)
-        .filter(a => a.type === TOGGLE_MODE ? a.mode === MODES.VIEW : true )
+    stopDrawSupport: (action$) => action$.ofType(CREATE_NEW_FEATURE)
         .switchMap( () => {
             return Rx.Observable.of(drawSupportReset());
+        }),
+    setHighlightFeaturesPath: (action$) => action$.ofType(TOGGLE_MODE)
+        .switchMap( (a) => {
+            if (a.mode === MODES.VIEW) {
+                return Rx.Observable.of(drawSupportReset(), setHighlightFeaturesPath("featuregrid.select"));
+            }
+            return Rx.Observable.of(setHighlightFeaturesPath());
         }),
     /**
      * Closes the feature grid when the drawer menu button has been toggled
@@ -301,18 +310,18 @@ module.exports = {
      * @param {external:Observable} action$ manages `TOGGLE_CONTROL`
      * @return {external:Observable}
      */
-    autoCloseFeatureGridEpicOnDrowerOpen: action$ =>
-        action$.ofType(TOGGLE_CONTROL)
-        .switchMap(action => action.control && action.control === 'drawer' ? Rx.Observable.of(closeFeatureGrid()) : Rx.Observable.empty()),
+    autoCloseFeatureGridEpicOnDrowerOpen: (action$, store) => action$.ofType(TOGGLE_CONTROL)
+        .filter(action => action.control && action.control === 'drawer' && isFeatureEditorOpen(store.getState()))
+        .switchMap(() => Rx.Observable.of(closeFeatureGrid())),
     askChangesConfirmOnFeatureGridClose: (action$, store) => action$.ofType(CLOSE_GRID).switchMap( () => {
         const state = store.getState();
         if (hasChangesSelector(state) || hasNewFeaturesSelector(state)) {
             return Rx.Observable.of(toggleTool("featureCloseConfirm", true));
         }
-        return Rx.Observable.of(closeResponse());
+        return Rx.Observable.of(closeResponse(), setControlProperty("featuregrid", "open", false));
     }),
     clearAndClose: (action$) => action$.ofType(CLEAR_AND_CLOSE, FEATURE_CLOSE)
-        .switchMap( () => Rx.Observable.of(clearChanges(), toggleTool("clearConfirm", false))),
+        .switchMap( () => Rx.Observable.of(clearChanges(), toggleTool("clearConfirm", false), setControlProperty("featuregrid", "open", false))),
     closeDialogAndDrawer: (action$) => action$.ofType(CLOSE_DIALOG_AND_DRAWER)
         .switchMap( () => {
             return Rx.Observable.of(setControlProperty("drawer", "enabled", false), toggleTool("featureCloseConfirm", false));
