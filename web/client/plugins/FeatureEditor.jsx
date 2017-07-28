@@ -18,7 +18,7 @@ const { toChangesMap} = require('../utils/FeatureGridUtils');
 const {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView} = require('./featuregrid/panels/index');
 const BorderLayout = require('../components/layout/BorderLayout');
 const EMPTY_ARR = [];
-const EMPTY_OBJ = [];
+const EMPTY_OBJ = {};
 const {gridTools, gridEvents, pageEvents, toolbarEvents} = require('./featuregrid/index');
 
 const FeatureDock = (props = {

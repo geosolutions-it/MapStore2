@@ -19,7 +19,7 @@ const {toggleControl, setControlProperty} = require('../actions/controls');
 const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_CLOSE, closeResponse} = require('../actions/wfsquery');
 const {parseString} = require('xml2js');
 const {stripPrefix} = require('xml2js/lib/processors');
-const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURES, featureSaving,
+const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURES, featureSaving, changePage,
     saveSuccess, saveError, clearChanges, setLayer, clearSelection, toggleViewMode, toggleTool,
     CLEAR_CHANGES, START_EDITING_FEATURE, TOGGLE_MODE, MODES, geometryChanged, DELETE_GEOMETRY, deleteGeometryFeature,
     SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE, CLOSE_GRID, closeFeatureGrid, CLEAR_AND_CLOSE, CLOSE_DIALOG_AND_DRAWER} = require('../actions/featuregrid');
@@ -133,13 +133,11 @@ module.exports = {
         action$.ofType(LAYER_SELECTED_FOR_SEARCH)
             .switchMap( a => Rx.Observable.of(setLayer(a.id))),
     featureGridSelectionClearOnClose: (action$) => action$.ofType(FEATURE_CLOSE).switchMap(() => Rx.Observable.of(clearSelection(), toggleTool("featureCloseConfirm", false), toggleViewMode())),
-    featureGridStartupQuery: (action$, store) =>
+    featureGridStartupQuery: (action$) =>
         action$.ofType(QUERY_CREATE)
-            .switchMap(action => Rx.Observable.of(
+            .switchMap(() => Rx.Observable.of(
                 toggleControl("featuregrid", "open", true),
-                query(action.searchUrl,
-                    addPagination(action.filterObj, getPagination(store.getState())
-                ))
+                changePage(0)
             )),
     featureGridSort: (action$, store) =>
         action$.ofType(SORT_BY).switchMap( ({sortBy, sortOrder}) =>

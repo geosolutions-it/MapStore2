@@ -10,7 +10,13 @@ const changesSelector = state => state && state.featuregrid && state.featuregrid
 const newFeaturesSelector = state => state && state.featuregrid && state.featuregrid.newFeatures;
 const selectedFeatureSelector = state => head(selectedFeaturesSelector(state));
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
-const geomTypeSelectedFeatureSelector = state => findGeometryProperty(state.query.featureTypes[state.query.filterObj.featureTypeName].original).localType;
+const geomTypeSelectedFeatureSelector = state => {
+    let desc = get(state, `query.featureTypes.${get(state, "query.filterObj.featureTypeName")}.original`);
+    if (desc) {
+        const geomDesc = findGeometryProperty(desc);
+        return geomDesc && geomDesc.localType;
+    }
+};
 const {isSimpleGeomType} = require('../utils/MapUtils');
 const {toChangesMap} = require('../utils/FeatureGridUtils');
 

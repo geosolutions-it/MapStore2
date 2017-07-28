@@ -1,0 +1,29 @@
+{
+    "geoStoreUrl": "/mapstore/rest/geostore/",
+    "plugins": {
+        "desktop": [
+            {
+              "name":"Map",
+              "cfg": {
+                "tools": ["draw", "highlight"]
+              }
+            },
+            "FeatureEditor",
+            "WFSDownload",
+            "LayerSelector"
+        ],
+        "mobile": [
+            {
+                "cfg": {
+                    "zoomControl": false
+                },
+                "name": "Map"
+            },
+            "FeatureEditor",
+            "WFSDownload"
+        ]
+    },
+    "printUrl": "https://demo.geo-solutions.it/geoserver/pdf/info.json",
+    "proxyUrl": "/mapstore/proxy/?url=",
+    "translationsPath": "../../translations"
+}

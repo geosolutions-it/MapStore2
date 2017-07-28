@@ -1,17 +1,69 @@
 {
-  "map": {
-    "projection": "EPSG:900913",
-		"units": "m",
-		"center": {"x": -10976101, "y": 4251421, "crs": "EPSG:900913"},
-    "zoom":4,
-    "layers": [
-      {
-        "type": "osm",
-        "title": "Open Street Map",
-        "name": "mapnik",
-        "group": "background",
-        "visibility": true
-      }
-    ]
-  }
+    "map": {
+       "center": {"x": -8232108.5906099, "y": 4979998.6532879, "crs": "EPSG:900913"},
+        "layers": [
+            {
+                "group": "background",
+                "name": "mapnik",
+                "source": "osm",
+                "title": "Open Street Map",
+                "type": "osm",
+                "visibility": true
+            },
+            {
+                "describeLayer": {
+                    "owsType": "WFS",
+                    "geometryType": "LineString"
+                },
+                "format": "image/png",
+                "group": "Vector",
+                "id": "tiger:poly_landmarks",
+                "name": "tiger:poly_landmarks",
+                "opacity": 1,
+                "title": "Landmarks",
+                "type": "wms",
+                "url": "https://demo.geo-solutions.it/geoserver/wms",
+                "visibility": true
+            },
+            {
+                "describeLayer": {
+                    "owsType": "WFS",
+                    "geometryType": "Point"
+                },
+                "id": "tiger:tiger_roads",
+                "format": "image/png",
+                "group": "Vector",
+                "name": "tiger:tiger_roads",
+                "opacity": 1,
+                "title": "Roads",
+                "type": "wms",
+                "url": "https://demo.geo-solutions.it/geoserver/wms",
+                "visibility": true
+            },
+            {
+                "describeLayer": {
+                    "owsType": "WFS",
+                    "geometryType": "Point"
+                },
+                "id": "tiger:poi",
+                "format": "image/png",
+                "group": "Vector",
+                "name": "tiger:poi",
+                "opacity": 1,
+                "title": "Points of Interest",
+                "type": "wms",
+                "url": "https://demo.geo-solutions.it/geoserver/wms",
+                "visibility": true
+            }
+        ],
+        "maxExtent": [
+            -20037508.34,
+            -20037508.34,
+            20037508.34,
+            20037508.34
+        ],
+        "projection": "EPSG:900913",
+        "units": "m",
+        "zoom": 12
+    }
 }

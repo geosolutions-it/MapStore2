@@ -37,7 +37,7 @@ const getFeatureTypeProperties = (describeFeatureType) => get(describeFeatureTyp
  * @param  {object} describeFeatureType the describeFeatureType object
  * @return {object}                     the featureType property
  */
-const findGeometryProperty = (describeFeatureType) => head(getFeatureTypeProperties(describeFeatureType).filter( d => d.type.indexOf("gml:") === 0));
+const findGeometryProperty = (describeFeatureType) => head((getFeatureTypeProperties(describeFeatureType) || []).filter( d => d.type.indexOf("gml:") === 0));
 /**
  * Retrives the descriptor for a property in the describeFeatureType (supports single featureTypes)
  * @memberof utils.ogc.WFS
