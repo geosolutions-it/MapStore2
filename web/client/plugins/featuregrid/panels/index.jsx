@@ -3,7 +3,7 @@ const {connect} = require('react-redux');
 const {bindActionCreators} = require('redux');
 const {createSelector, createStructuredSelector} = require('reselect');
 const {paginationInfo, featureLoadingSelector} = require('../../../selectors/query');
-const {getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector} = require('../../../selectors/featuregrid');
+const {getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector} = require('../../../selectors/featuregrid');
 const {isAdminUserSelector} = require('../../../selectors/security');
 const {deleteFeatures, toggleTool, clearAndClose, closeDialogAndDrawer} = require('../../../actions/featuregrid');
 const {closeResponse} = require('../../../actions/wfsquery');
@@ -23,7 +23,7 @@ const Toolbar = connect(
         isDrawing: isDrawingSelector,
         isSimpleGeom: isSimpleGeomSelector,
         selectedCount: selectedFeaturesCount,
-        isEditingAllowed: isAdminUserSelector
+        isEditingAllowed: (state) => isAdminUserSelector(state) || canEditSelector(state)
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
 )(require('../../../components/data/featuregrid/toolbars/Toolbar'));

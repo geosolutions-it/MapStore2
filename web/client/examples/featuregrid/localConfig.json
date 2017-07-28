@@ -10,7 +10,8 @@
             },
             "FeatureEditor",
             "WFSDownload",
-            "LayerSelector"
+            "LayerSelector",
+            "Notifications"
         ],
         "mobile": [
             {
@@ -20,7 +21,8 @@
                 "name": "Map"
             },
             "FeatureEditor",
-            "WFSDownload"
+            "WFSDownload",
+            "Notifications"
         ]
     },
     "printUrl": "https://demo.geo-solutions.it/geoserver/pdf/info.json",

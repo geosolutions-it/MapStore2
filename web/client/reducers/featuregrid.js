@@ -28,7 +28,8 @@ const {
     MODES,
     GEOMETRY_CHANGED,
     DELETE_GEOMETRY_FEATURE,
-    START_DRAWING_FEATURE
+    START_DRAWING_FEATURE,
+    SET_PERMISSION
 } = require('../actions/featuregrid');
 const{
     FEATURE_TYPE_LOADED,
@@ -40,6 +41,7 @@ const{
 const uuid = require('uuid');
 
 const emptyResultsState = {
+    canEdit: false,
     focusOnEdit: true,
     mode: MODES.VIEW,
     changes: [],
@@ -240,6 +242,11 @@ function featuregrid(state = emptyResultsState, action) {
             select: []
         });
     }
+    case SET_PERMISSION: {
+        return assign({}, state, {
+            canEdit: action.permission.canEdit
+        });
+    }
     case CHANGE_DRAWING_STATUS: {
         if (action.status === "clean") {
             return assign({}, state, {
@@ -248,6 +255,7 @@ function featuregrid(state = emptyResultsState, action) {
         }
         return state;
     }
+
     default:
         return state;
     }

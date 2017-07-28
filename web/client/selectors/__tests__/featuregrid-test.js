@@ -23,7 +23,8 @@ const {
     isSimpleGeomSelector,
     getCustomizedAttributes,
     isSavingSelector,
-    isSavedSelector
+    isSavedSelector,
+    canEditSelector
 } = require('../featuregrid');
 
 const idFt1 = "idFt1";
@@ -413,6 +414,10 @@ describe('Test featuregrid selectors', () => {
     it('test isSavedSelector', () => {
         expect(isSavedSelector(initialState)).toBe(false);
         expect(isSavedSelector({...initialState, featuregrid: { saved: true}})).toBe(true);
+    });
+    it('test canEditSelector', () => {
+        expect(canEditSelector(initialState)).toBeFalsy();
+        expect(canEditSelector({featuregrid: {canEdit: true}})).toBe(true);
     });
 
 });

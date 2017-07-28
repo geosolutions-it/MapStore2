@@ -29,7 +29,8 @@ module.exports = class extends React.Component {
     };
 
     static defaultProps = {
-        downloadOptions: {}
+        downloadOptions: {},
+        formats: []
     };
 
     getSelectedFormat = () => {

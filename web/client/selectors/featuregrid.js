@@ -80,5 +80,6 @@ module.exports = {
     isDrawingSelector: state => state && state.featuregrid && state.featuregrid.drawing,
     geomTypeSelectedFeatureSelector,
     hasNewFeaturesOrChanges: state => hasNewFeaturesSelector(state) || hasChangesSelector(state),
-    isSimpleGeomSelector: state => isSimpleGeomType(geomTypeSelectedFeatureSelector(state))
+    isSimpleGeomSelector: state => isSimpleGeomType(geomTypeSelectedFeatureSelector(state)),
+    canEditSelector: state => state && state.featuregrid && state.featuregrid.canEdit
 };

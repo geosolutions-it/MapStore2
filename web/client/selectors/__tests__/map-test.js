@@ -7,7 +7,7 @@
 */
 
 const expect = require('expect');
-const {mapSelector, projectionSelector, mapVersionSelector} = require('../map');
+const {mapSelector, projectionSelector, mapVersionSelector, mapIdSelector} = require('../map');
 const center = {x: 1, y: 1};
 let state = {map: {center: center}};
 

@@ -11,7 +11,8 @@ module.exports = {
         LayerSelectorPlugin: require('./plugins/LayerSelector'),
         MapPlugin: require('../../plugins/Map'),
         WFSDownload: require('../../plugins/WFSDownload'),
-        FeatureEditor: require('../../plugins/FeatureEditor')
+        FeatureEditor: require('../../plugins/FeatureEditor'),
+        Notifications: require('../../plugins/Notifications')
     },
     requires: {
     }

@@ -36,6 +36,7 @@ const CUSTOMIZE_ATTRIBUTE = 'FEATUREGRID:CUSTOMIZE_ATTRIBUTE';
 const CLOSE_GRID = 'FEATUREGRID:CLOSE_GRID';
 const CLEAR_AND_CLOSE = 'FEATUREGRID:CLEAR_AND_CLOSE';
 const CLOSE_DIALOG_AND_DRAWER = 'FEATUREGRID:CLOSE_DIALOG_AND_DRAWER';
+const SET_PERMISSION = 'FEATUREGRID:SET_PERMISSION';
 const MODES = {
     EDIT: "EDIT",
     VIEW: "VIEW"
@@ -223,6 +224,13 @@ function closeFeatureGrid() {
         type: CLOSE_GRID
     };
 }
+function setPermission(permission) {
+    return {
+        type: SET_PERMISSION,
+        permission
+    };
+}
+
 module.exports = {
     SELECT_FEATURES,
     DESELECT_FEATURES,
@@ -247,6 +255,7 @@ module.exports = {
     TOGGLE_MODE,
     MODES,
     SAVING,
+    SET_PERMISSION, setPermission,
     START_EDITING_FEATURE, startEditingFeature,
     START_DRAWING_FEATURE, startDrawingFeature,
     GEOMETRY_CHANGED, geometryChanged,

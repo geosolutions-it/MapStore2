@@ -9,8 +9,9 @@
 const Rx = require('rxjs');
 const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic} = require('../../../epics/wfsquery');
 const {getLayerFromId} = require('../../../selectors/layers');
-const {createQuery, featureTypeSelected, layerSelectedForSearch, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED} = require('../../../actions/wfsquery');
-const {clearChanges} = require('../../../actions/featuregrid');
+const {createQuery, featureTypeSelected, layerSelectedForSearch, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, FEATURE_CLOSE} = require('../../../actions/wfsquery');
+const {clearChanges, setPermission, toggleTool} = require('../../../actions/featuregrid');
+const {hasChangesSelector, hasNewFeaturesSelector} = require('../../../selectors/featuregrid');
 module.exports = (plugins) => {
     var reducers = {
         map: require('../../../reducers/map'),
@@ -22,11 +23,24 @@ module.exports = (plugins) => {
     };
     return require('../../../stores/StandardStore')({}, reducers, {
         featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic,
-        initLoadFeatureGridDemo: action$ => action$.ofType('MAP_CONFIG_LOADED', "FEATUREGRID_SAMPLE::SELECT_LAYER").switchMap(({id = 'tiger:poly_landmarks'} = {}) => Rx.Observable.of(
-                layerSelectedForSearch(id),
-                featureTypeSelected( 'http://demo.geo-solutions.it:80/geoserver/wfs', id),
-            )
-        ),
+        initLoadFeatureGridDemo: (action$, store) =>
+            action$.ofType('MAP_CONFIG_LOADED', "FEATUREGRID_SAMPLE::SELECT_LAYER")
+                .switchMap(({id = 'tiger:poly_landmarks'} = {}) => {
+                    const state = store.getState();
+                    if (hasChangesSelector(state) || hasNewFeaturesSelector(state)) {
+                        return Rx.Observable.of(toggleTool("featureCloseConfirm", true))
+                            .merge(action$.ofType(FEATURE_CLOSE).switchMap( () => Rx.Observable.of(
+                                layerSelectedForSearch(id),
+                                setPermission({canEdit: true}),
+                                featureTypeSelected( 'http://demo.geo-solutions.it:80/geoserver/wfs', id),
+                            )));
+                    }
+                    return Rx.Observable.of(
+                        layerSelectedForSearch(id),
+                        setPermission({canEdit: true}),
+                        featureTypeSelected( 'http://demo.geo-solutions.it:80/geoserver/wfs', id),
+                    );
+                }),
         createFeatureGridDemoQuery: (action$, store) =>
             Rx.Observable.zip(
                 action$.ofType(LAYER_SELECTED_FOR_SEARCH),
