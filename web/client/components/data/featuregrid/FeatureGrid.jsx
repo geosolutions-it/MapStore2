@@ -45,9 +45,9 @@ class FeatureGrid extends React.PureComponent {
         gridEvents: PropTypes.object
     };
     static childContextTypes = {
-        isModified: React.PropTypes.func,
-        isValid: React.PropTypes.func,
-        isProperty: React.PropTypes.func
+        isModified: PropTypes.func,
+        isValid: PropTypes.func,
+        isProperty: PropTypes.func
     };
     static defaultProps = {
         gridComponent: AdaptiveGrid,

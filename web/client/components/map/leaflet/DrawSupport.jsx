@@ -189,7 +189,7 @@ class DrawSupport extends React.Component {
             }
         });
         this.props.map.addLayer(vector);
-        // Immediatly draw passed features
+        // Immediately draw passed features
         if (newProps.features && newProps.features.length > 0) {
             vector.addData(this.convertFeaturesPolygonToPoint(newProps.features, this.props.drawMethod));
         }
