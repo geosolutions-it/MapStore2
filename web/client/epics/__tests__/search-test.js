@@ -73,15 +73,15 @@ describe('search Epics', () => {
         };
 
         store.dispatch( action );
-
-        setTimeout(() => {
-            let actions = store.getActions();
-            expect(actions.length).toBe(4);
-            expect(actions[1].type).toBe(TEXT_SEARCH_LOADING);
-            expect(actions[2].type).toBe(TEXT_SEARCH_RESULTS_LOADED);
-            expect(actions[3].type).toBe(TEXT_SEARCH_LOADING);
-            done();
-        }, 400);
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length === 4) {
+                expect(actions[1].type).toBe(TEXT_SEARCH_LOADING);
+                expect(actions[2].type).toBe(TEXT_SEARCH_RESULTS_LOADED);
+                expect(actions[3].type).toBe(TEXT_SEARCH_LOADING);
+                done();
+            }
+        });
     });
     it('produces the selectSearchItem epic', () => {
         let action = selectSearchItem({
@@ -181,17 +181,17 @@ describe('search Epics', () => {
         });
 
         store.dispatch( action );
-        // a set timeout is needed in order to dispatch the actions
-        setTimeout(() => {
-            let actions = store.getActions();
-            expect(actions.length).toBe(5);
-            let addMarkerAction = actions.filter(m => m.type === TEXT_SEARCH_ADD_MARKER)[0];
 
-            expect(addMarkerAction).toExist();
-            expect(addMarkerAction.markerPosition.geometry).toExist();
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length === 5) {
+                const addMarkerAction = actions.filter(m => m.type === TEXT_SEARCH_ADD_MARKER)[0];
 
-            done();
-            // setting 0 as delay arises script error
-        }, 500);
+                expect(addMarkerAction).toExist();
+                expect(addMarkerAction.markerPosition.geometry).toExist();
+
+                done();
+            }
+        });
     });
 });

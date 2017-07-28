@@ -17,6 +17,7 @@ var {
     CHANGE_MAP_STYLE,
     CHANGE_ROTATION,
     CREATION_ERROR_LAYER,
+    UPDATE_VERSION,
     creationError,
     changeMapView,
     clickOnMap,
@@ -25,7 +26,8 @@ var {
     changeMapCrs,
     changeMapScales,
     changeMapStyle,
-    changeRotation
+    changeRotation,
+    updateVersion
 } = require('../map');
 
 describe('Test correctness of the map actions', () => {
@@ -120,5 +122,13 @@ describe('Test correctness of the map actions', () => {
         expect(retval.type).toEqual(CHANGE_ROTATION);
         expect(retval.rotation).toEqual(angle);
         expect(retval.mapStateSource).toEqual(mapStateSource);
+    });
+
+    it('updateVersion', () => {
+        const version = 2;
+        const retval = updateVersion(version);
+        expect(retval).toExist();
+        expect(retval.type).toEqual(UPDATE_VERSION);
+        expect(retval.version).toEqual(2);
     });
 });

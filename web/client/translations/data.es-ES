@@ -25,6 +25,11 @@
         "version": {
             "label": "Versión"
         },
+        "autorefresh": {
+            "of": "of",
+            "updating": "Updating...",
+            "layers": "layers"
+        },
         "layerProperties": {
             "windowTitle": "Propiedades de la capa",
             "title": "Título",
@@ -46,6 +51,16 @@
             "confirmDelete": "Está seguro?",
             "featureTypeError": "Imposible cargar los atributos del mapa",
             "elevation": "Elevación"
+        },
+        "notification": {
+            "update": "Update",
+            "warning": "Warning",
+            "success": "Success",
+            "backgroundLayerNotSupported": "The previously selected background is not supported for this type of map. The first one available is then used.",
+            "noBackgroundLayerSupported": "There are no supported background layers for this type of map.",
+            "updateOldMap": "This is an old map, thus not all the functionalities can be enabled. Click on update button in order to update the map or simply dismiss this notification if you don't want to update it.",
+            "warningSaveUpdatedMap": "Some layers haven't been updated correctly",
+            "saveUpdatedMap": "All the layers have been successfully updated"
         },
         "dock": {
             "row": "{rowsSelected} fila selecccionada",
