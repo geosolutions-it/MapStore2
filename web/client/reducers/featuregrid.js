@@ -234,6 +234,8 @@ function featuregrid(state = emptyResultsState, action) {
                 page: 0,
                 size: state.pagination.size
             },
+            mode: MODES.VIEW,
+            tools: {},
             saved: false,
             deleteConfirm: false,
             drawing: false,

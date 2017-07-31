@@ -34,22 +34,22 @@ const DOCK_SIZE_FEATURES = 'DOCK_SIZE_FEATURES';
 const TOGGLE_TOOL = 'FEATUREGRID:TOGGLE_TOOL';
 const CUSTOMIZE_ATTRIBUTE = 'FEATUREGRID:CUSTOMIZE_ATTRIBUTE';
 const CLOSE_GRID = 'FEATUREGRID:CLOSE_GRID';
-const CLEAR_AND_CLOSE = 'FEATUREGRID:CLEAR_AND_CLOSE';
-const CLOSE_DIALOG_AND_DRAWER = 'FEATUREGRID:CLOSE_DIALOG_AND_DRAWER';
+const CLEAR_CHANGES_CONFIRMED = 'FEATUREGRID:CLEAR_CHANGES_CONFIRMED';
+const FEATURE_GRID_CLOSE_CONFIRMED = 'FEATUREGRID:FEATURE_GRID_CLOSE_CONFIRMED';
 const SET_PERMISSION = 'FEATUREGRID:SET_PERMISSION';
 const MODES = {
     EDIT: "EDIT",
     VIEW: "VIEW"
 };
 
-function clearAndClose() {
+function clearChangeConfirmed() {
     return {
-        type: CLEAR_AND_CLOSE
+        type: CLEAR_CHANGES_CONFIRMED
     };
 }
-function closeDialogAndDrawer() {
+function closeFeatureGridConfirmed() {
     return {
-        type: CLOSE_DIALOG_AND_DRAWER
+        type: FEATURE_GRID_CLOSE_CONFIRMED
     };
 }
 function selectFeatures(features, append) {
@@ -261,9 +261,9 @@ module.exports = {
     GEOMETRY_CHANGED, geometryChanged,
     DELETE_GEOMETRY, deleteGeometry,
     DELETE_GEOMETRY_FEATURE, deleteGeometryFeature,
-    CLEAR_AND_CLOSE, clearAndClose,
+    CLEAR_CHANGES_CONFIRMED, clearChangeConfirmed,
     CLOSE_GRID, closeFeatureGrid,
-    CLOSE_DIALOG_AND_DRAWER, closeDialogAndDrawer,
+    FEATURE_GRID_CLOSE_CONFIRMED, closeFeatureGridConfirmed,
     setLayer,
     selectFeatures,
     deselectFeatures,

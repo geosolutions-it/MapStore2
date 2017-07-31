@@ -7,6 +7,7 @@
  */
 const Rx = require('rxjs');
 const {get, head, isEmpty} = require('lodash');
+const { LOCATION_CHANGE } = require('react-router-redux');
 const axios = require('../libs/ajax');
 const {fidFilter} = require('../utils/ogc/Filter/filter');
 const {getDefaultFeatureProjection} = require('../utils/FeatureGridUtils');
@@ -15,20 +16,23 @@ const assign = require('object-assign');
 const {changeDrawingStatus, GEOMETRY_CHANGED} = require('../actions/draw');
 const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
-const {toggleControl, setControlProperty} = require('../actions/controls');
-const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_CLOSE, closeResponse} = require('../actions/wfsquery');
+const {setControlProperty} = require('../actions/controls');
+const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, closeResponse} = require('../actions/wfsquery');
 const {parseString} = require('xml2js');
 const {stripPrefix} = require('xml2js/lib/processors');
 const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURES, featureSaving, changePage,
     saveSuccess, saveError, clearChanges, setLayer, clearSelection, toggleViewMode, toggleTool,
     CLEAR_CHANGES, START_EDITING_FEATURE, TOGGLE_MODE, MODES, geometryChanged, DELETE_GEOMETRY, deleteGeometryFeature,
-    SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE, CLOSE_GRID, closeFeatureGrid, CLEAR_AND_CLOSE, CLOSE_DIALOG_AND_DRAWER} = require('../actions/featuregrid');
+    SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE, CLOSE_GRID, closeFeatureGrid,
+    CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED} = require('../actions/featuregrid');
 
 const {TOGGLE_CONTROL} = require('../actions/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
 const {refreshLayerVersion} = require('../actions/layers');
-const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector, selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector} = require('../selectors/featuregrid');
-const {isFeatureEditorOpen} = require('../selectors/controls');
+const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector,
+    selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector,
+    isFeatureGridOpen} = require('../selectors/featuregrid');
+
 const {error} = require('../actions/notifications');
 const {describeSelector, getFeatureById, wfsURL, wfsFilter} = require('../selectors/query');
 const drawSupportReset = () => changeDrawingStatus("clean", "", "featureGrid", [], {});
@@ -130,18 +134,26 @@ const createDeleteFlow = (features, describeFeatureType, url) => save(
     url,
     createDeleteTransaction(features, requestBuilder(describeFeatureType))
 );
+
 module.exports = {
-    featureLayerSelectionInitialization: (action$) =>
+    /**
+     * Intercepts layer selection to set it's id in the status and retrieve it later
+     */
+    featureGridLayerSelectionInitialization: (action$) =>
         action$.ofType(LAYER_SELECTED_FOR_SEARCH)
             .switchMap( a => Rx.Observable.of(setLayer(a.id))),
-    featureGridSelectionClearOnClose: (action$) => action$.ofType(FEATURE_CLOSE).switchMap(() => Rx.Observable.of(clearSelection(), toggleTool("featureCloseConfirm", false), toggleViewMode())),
+    /**
+     * Intercepts query creation to perform the real query, setting page to 0
+     */
     featureGridStartupQuery: (action$) =>
         action$.ofType(QUERY_CREATE)
             .switchMap(() => Rx.Observable.of(
-                toggleControl("featuregrid", "open", true),
                 changePage(0),
                 toggleViewMode()
             )),
+    /**
+     * Create sorted queries on sort action
+     */
     featureGridSort: (action$, store) =>
         action$.ofType(SORT_BY).switchMap( ({sortBy, sortOrder}) =>
             Rx.Observable.of( query(
@@ -154,6 +166,9 @@ module.exports = {
                     )
             ))
         ),
+    /**
+     * perform paginated query on page change
+     */
     featureGridChangePage: (action$, store) =>
         action$.ofType(CHANGE_PAGE).switchMap( ({page, size} = {}) =>
             Rx.Observable.of( query(
@@ -165,6 +180,11 @@ module.exports = {
                     )
             ))
         ),
+    /**
+     * Reload the page on save success.
+     * NOTE: The page is in the action.
+     * ( e.g. for delete the page may be reset to 0)
+     */
     featureGridReloadPageOnSaveSuccess: (action$, store) =>
         action$.ofType(SAVE_SUCCESS).switchMap( ({page, size} = {}) =>
             Rx.Observable.of(
@@ -182,6 +202,9 @@ module.exports = {
                 action$.ofType(QUERY_RESULT).map(() => clearChanges())
             )
         ),
+    /**
+     * trigger WFS transaction stream on SAVE_CHANGES action
+     */
     savePendingFeatureGridChanges: (action$, store) =>
         action$.ofType(SAVE_CHANGES).switchMap( () =>
             Rx.Observable.of(featureSaving())
@@ -202,6 +225,9 @@ module.exports = {
 
 
         ),
+    /**
+     * trigger WFS transaction stream on DELETE_SELECTED_FEATURES action
+     */
     deleteSelectedFeatureGridFeatures: (action$, store) =>
         action$.ofType(DELETE_SELECTED_FEATURES).switchMap( () =>
             Rx.Observable.of(featureSaving())
@@ -222,6 +248,9 @@ module.exports = {
                       ))
                 )
         ),
+    /**
+     * Enable and manage editing draw support
+     */
     handleEditFeature: (action$, store) => action$.ofType(START_EDITING_FEATURE)
         .switchMap( () => {
             const state = store.getState();
@@ -241,6 +270,9 @@ module.exports = {
             }
             return Rx.Observable.of(changeDrawingStatus("drawOrEdit", geomType, "featureGrid", [feature], drawOptions));
         }),
+    /**
+     * handle drawing actions on START_DRAWING_FEATURE action
+     */
     handleDrawFeature: (action$, store) => action$.ofType(START_DRAWING_FEATURE)
         .switchMap( () => {
             const state = store.getState();
@@ -263,7 +295,11 @@ module.exports = {
             };
             return Rx.Observable.of(changeDrawingStatus("drawOrEdit", geomType, "featureGrid", [feature], drawOptions));
         }),
-    saveChangedGeometries: (action$, store) => action$.ofType(GEOMETRY_CHANGED)
+    /**
+     * intercept geomertry changed events in draw support to update current
+     * modified geometry in featuregrid
+     */
+    onFeatureGridGeometryEditing: (action$, store) => action$.ofType(GEOMETRY_CHANGED)
         .filter(a => a.owner === "featureGrid")
         .switchMap( (a) => {
             const state = store.getState();
@@ -278,6 +314,9 @@ module.exports = {
             let enableEdit = a.enableEdit === "enterEditMode" ? Rx.Observable.of(changeDrawingStatus("drawOrEdit", feature.geometry.type, "featureGrid", [feature], drawOptions)) : Rx.Observable.empty();
             return Rx.Observable.of(geometryChanged([feature])).concat(enableEdit);
         }),
+    /**
+     * Manage delete geometry action flow
+     */
     deleteGeometryFeature: (action$, store) => action$.ofType(DELETE_GEOMETRY)
         .switchMap( () => {
             const state = store.getState();
@@ -286,6 +325,9 @@ module.exports = {
                 drawSupportReset()
             ]);
         }),
+    /**
+     * triggers draw support events on selection changes.
+     */
     triggerDrawSupportOnSelectionChange: (action$, store) => action$.ofType(SELECT_FEATURES, DESELECT_FEATURES, CLEAR_CHANGES, TOGGLE_MODE)
         .filter(() => modeSelector(store.getState()) === MODES.EDIT)
         .switchMap( (a) => {
@@ -293,10 +335,16 @@ module.exports = {
             let useOriginal = a.type === CLEAR_CHANGES;
             return setupDrawSupport(state, useOriginal);
         }),
-    stopDrawSupport: (action$) => action$.ofType(CREATE_NEW_FEATURE)
+    /**
+     * Proerly resets draw support on create new feature
+     */
+    onFeatureGridCreateNewFeature: (action$) => action$.ofType(CREATE_NEW_FEATURE)
         .switchMap( () => {
             return Rx.Observable.of(drawSupportReset());
         }),
+    /**
+     * control highlight support on view mode.
+     */
     setHighlightFeaturesPath: (action$) => action$.ofType(TOGGLE_MODE)
         .switchMap( (a) => {
             if (a.mode === MODES.VIEW) {
@@ -305,24 +353,29 @@ module.exports = {
             return Rx.Observable.of(setHighlightFeaturesPath());
         }),
     /**
+     * Restores the view mode on location change.
+     * This forces to view mode and turn all tools to initial state.
+     */
+    resetGridOnLocationChange: action$ =>
+        action$.ofType(LOCATION_CHANGE).switchMap( () =>Rx.Observable.of(
+            closeResponse()
+        )),
+    /**
      * Closes the feature grid when the drawer menu button has been toggled
-     * @memberof epics.featuregrid
-     * @param {external:Observable} action$ manages `TOGGLE_CONTROL`
-     * @return {external:Observable}
      */
     autoCloseFeatureGridEpicOnDrowerOpen: (action$, store) => action$.ofType(TOGGLE_CONTROL)
-        .filter(action => action.control && action.control === 'drawer' && isFeatureEditorOpen(store.getState()))
+        .filter(action => action.control && action.control === 'drawer' && isFeatureGridOpen(store.getState()))
         .switchMap(() => Rx.Observable.of(closeFeatureGrid())),
     askChangesConfirmOnFeatureGridClose: (action$, store) => action$.ofType(CLOSE_GRID).switchMap( () => {
         const state = store.getState();
         if (hasChangesSelector(state) || hasNewFeaturesSelector(state)) {
             return Rx.Observable.of(toggleTool("featureCloseConfirm", true));
         }
-        return Rx.Observable.of(closeResponse(), setControlProperty("featuregrid", "open", false));
+        return Rx.Observable.of(closeResponse());
     }),
-    clearAndClose: (action$) => action$.ofType(CLEAR_AND_CLOSE, FEATURE_CLOSE)
-        .switchMap( () => Rx.Observable.of(clearChanges(), toggleTool("clearConfirm", false), setControlProperty("featuregrid", "open", false))),
-    closeDialogAndDrawer: (action$) => action$.ofType(CLOSE_DIALOG_AND_DRAWER)
+    onClearChangeConfirmedFeatureGrid: (action$) => action$.ofType(CLEAR_CHANGES_CONFIRMED)
+        .switchMap( () => Rx.Observable.of(clearChanges(), toggleTool("clearConfirm", false))),
+    onCloseFeatureGridConfirmed: (action$) => action$.ofType(FEATURE_GRID_CLOSE_CONFIRMED)
         .switchMap( () => {
             return Rx.Observable.of(setControlProperty("drawer", "enabled", false), toggleTool("featureCloseConfirm", false));
         })

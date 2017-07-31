@@ -26,9 +26,9 @@ const {
     startDrawingFeature, START_DRAWING_FEATURE,
     deleteGeometry, DELETE_GEOMETRY,
     deleteGeometryFeature, DELETE_GEOMETRY_FEATURE,
-    clearAndClose, CLEAR_AND_CLOSE,
+    clearChangeConfirmed, CLEAR_CHANGES_CONFIRMED,
     deleteFeaturesConfirm, DELETE_SELECTED_FEATURES_CONFIRM,
-    closeDialogAndDrawer, CLOSE_DIALOG_AND_DRAWER
+    closeFeatureGridConfirmed, FEATURE_GRID_CLOSE_CONFIRMED
 } = require('../featuregrid');
 
 const idFeature = "2135";
@@ -59,15 +59,15 @@ describe('Test correctness of featurgrid actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(DELETE_GEOMETRY);
     });
-    it('Test closeDialogAndDrawer action creator', () => {
-        const retval = closeDialogAndDrawer();
+    it('Test closeFeatureGridConfirmed action creator', () => {
+        const retval = closeFeatureGridConfirmed();
         expect(retval).toExist();
-        expect(retval.type).toBe(CLOSE_DIALOG_AND_DRAWER);
+        expect(retval.type).toBe(FEATURE_GRID_CLOSE_CONFIRMED);
     });
-    it('Test clearAndClose action creator', () => {
-        const retval = clearAndClose();
+    it('Test clearChangeConfirmed action creator', () => {
+        const retval = clearChangeConfirmed();
         expect(retval).toExist();
-        expect(retval.type).toBe(CLEAR_AND_CLOSE);
+        expect(retval.type).toBe(CLEAR_CHANGES_CONFIRMED);
     });
     it('Test startDrawingFeature action creator', () => {
         const retval = startDrawingFeature();

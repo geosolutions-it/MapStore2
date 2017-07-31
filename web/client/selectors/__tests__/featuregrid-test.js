@@ -9,6 +9,7 @@
 const expect = require('expect');
 const assign = require('object-assign');
 const {
+    isFeatureGridOpen,
     hasChangesSelector,
     getTitleSelector,
     newFeaturesSelector,
@@ -317,6 +318,10 @@ describe('Test featuregrid selectors', () => {
               }
             }
         });
+    });
+    it('isFeatureGridOpen', () => {
+        let isOpen = isFeatureGridOpen(initialState);
+        expect(isOpen).toBe(true);
     });
     it('test feature changes', () => {
         let hasChanges = hasChangesSelector(initialState);
