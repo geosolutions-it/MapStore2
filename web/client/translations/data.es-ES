@@ -830,6 +830,7 @@
             "clear": "Seguro que desea deshacer todos los cambios realizados?",
             "featureClose": "Realmente desea cerrar la parrilla?",
             "delete": "Confirmar para eliminar los elementos?",
+            "missingGeometry": "Missing geometry",
             "toolbar": {
                 "editMode": "Modo de edición",
                 "quitEditMode": "Salir del modo de edición",

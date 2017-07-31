@@ -830,6 +830,7 @@
             "clear": "Etes-vous sûr de vouloir annuler toutes les modifications apportées?",
             "featureClose":"Vraiment, vous voulez fermer la grille?",
             "delete": "Valider pour supprimer les éléments?",
+            "missingGeometry": "Missing geometry",
             "toolbar": {
                 "editMode": "Mode édition",
                 "quitEditMode": "Quitter le mode d'édition",

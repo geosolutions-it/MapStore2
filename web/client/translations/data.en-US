@@ -827,6 +827,7 @@
             "clear": "Are you sure to cancel all changes you have done?",
             "featureClose": "Are you sure to close the feature grid?",
             "delete": "Do you confirm to delete {count} features?",
+            "missingGeometry": "Missing geometry",
             "toolbar": {
                 "editMode": "Edit mode",
                 "quitEditMode": "Quit edit mode",

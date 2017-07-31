@@ -827,6 +827,7 @@
             "clear": "Sei sicuro di voler annullare tutte le modifiche fatte?",
             "featureClose": "Sicuro di voler chiudere la griglia?",
             "delete": "Confermi di cancellare {count} feature?",
+            "missingGeometry": "Geometria mancante",
             "toolbar": {
                 "editMode": "Entra in modalità editing",
                 "quitEditMode": "Esci dalla modalità editing",

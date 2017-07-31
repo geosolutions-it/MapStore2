@@ -10,6 +10,8 @@ module.exports = ({
     show
     onClose={onClose}
     onConfirm={onConfirm}
+    confirmButtonBSStyle="default"
+    closeGlyph="1-close"
     confirmButtonContent={<Message msgId="featuregrid.deleteButton" />}
     confirmButtonDisabled={saving}>
     <Message msgId="featuregrid.delete" msgParams={{count: count}}/>

@@ -1,7 +1,8 @@
 const React = require('react');
 const bbox = require('@turf/bbox');
 const {zoomToExtent} = require('../../actions/map');
-const {Glyphicon} = require('react-bootstrap');
+const Message = require('../../components/I18N/Message');
+const {Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
 module.exports = [{
         name: '',
         key: "geometry",
@@ -12,5 +13,8 @@ module.exports = [{
                 return p.geometry ? zoomToExtent(bbox(p), crs || "EPSG:4326") : {type: "NONE"};
             }
         },
-        formatter: ({value} = {}) => value ? <Glyphicon glyph="zoom-to" /> : <Glyphicon glyph="plus" />
+        formatter: ({value} = {}) => value ? <Glyphicon glyph="zoom-to" /> :
+        <OverlayTrigger placement="top" overlay={<Tooltip id="fe-save-features"><Message msgId="featuregrid.missingGeometry"/></Tooltip>}>
+            <Glyphicon glyph="exclamation-mark" />
+        </OverlayTrigger>
 }];
