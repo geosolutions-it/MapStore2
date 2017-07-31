@@ -16,7 +16,6 @@ const FilterUtils = require('../utils/FilterUtils');
 const assign = require('object-assign');
 const {isString, isObject} = require('lodash');
 const {TOGGLE_CONTROL, setControlProperty} = require('../actions/controls');
-const querystring = require('querystring');
 
 const types = {
     // string
@@ -126,14 +125,18 @@ const getWFSFeature = (searchUrl, filterObj) => {
     const data = getWFSFilterData(filterObj);
 
     const urlParsedObj = Url.parse(searchUrl, true);
-    const parsedUrl = urlParsedObj.protocol + '//' + urlParsedObj.host + urlParsedObj.pathname + '?';
     let params = isObject(urlParsedObj.query) ? urlParsedObj.query : {};
     params.service = 'WFS';
     params.outputFormat = 'json';
-    const paramsString = querystring.stringify(params);
+    const queryString = Url.format({
+        protocol: urlParsedObj.protocol,
+        host: urlParsedObj.host,
+        pathname: urlParsedObj.pathname,
+        query: params
+    });
 
     return Rx.Observable.defer( () =>
-        axios.post(parsedUrl + paramsString, data, {
+        axios.post(queryString, data, {
             timeout: 60000,
             headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
         }));
