@@ -24,6 +24,11 @@
         "version": {
             "label": "Versione"
         },
+        "autorefresh": {
+            "of": "di",
+            "updating": "In aggiornamento...",
+            "layers": "layers"
+        },
         "layerProperties": {
             "windowTitle": "Proprietà del livello",
             "title": "Titolo",
@@ -49,8 +54,14 @@
             "groupProperties": "Group properties"
         },
         "notification": {
+            "update": "Aggiorna",
+            "warning": "Attenzione",
+            "success": "Aggiornamento completo",
             "backgroundLayerNotSupported": "Lo sfondo precedentemente caricato non è supportato per questo tipo di mappa. E' stato pertanto selezionato il primo disponibile.",
-            "noBackgroundLayerSupported": "Non ci sono sfondi supportati per questo tipo di mappa."
+            "noBackgroundLayerSupported": "Non ci sono sfondi supportati per questo tipo di mappa.",
+            "updateOldMap": "Questa è una vecchia mappa perciò non tutte le funzionalità sono abilitate. Clicca su Aggiorna per aggiornare la mappa o semplicemnte chiudi la notifica se non desideri aggiornarla",
+            "warningSaveUpdatedMap": "Alcuni layer non sono stati aggiornati correttamente",
+            "saveUpdatedMap": "Tutti i layer sono stati aggiornati con successo"
         },
         "dock": {
             "row": "{rowsSelected} riga selezionata",

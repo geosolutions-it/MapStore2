@@ -7,7 +7,7 @@
 */
 
 const expect = require('expect');
-const {mapSelector} = require('../map');
+const {mapSelector, mapIdSelector, mapVersionSelector} = require('../map');
 
 describe('Test map selectors', () => {
     it('test mapSelector from config', () => {
@@ -35,5 +35,15 @@ describe('Test map selectors', () => {
         const props = mapSelector({config: null});
 
         expect(props).toNotExist();
+    });
+
+    it('test mapIdSelector', () => {
+        const props = mapIdSelector({map: {present: {mapId: "id"}}});
+        expect(props).toBe("id");
+    });
+
+    it('test mapVersionSelector', () => {
+        const props = mapVersionSelector({map: {present: {version: 2}}});
+        expect(props).toBe(2);
     });
 });

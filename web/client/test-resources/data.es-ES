@@ -117,7 +117,7 @@
                     "html":"<h3>Controlador de position del puntero</h3><p>Exemple particulier</p>"
                 },
                 "scalebar":{
-                    "html":"<h3>Controlador de escala</h3><p>Ejemplo particular</p>"
+                    "html":"<h3>Controlador de escala</h3><p>Ejemplo personalizado</p>"
                 },
                 "layertree":{
                     "html":"<h3>Árbol de mapas avanzado</h3><p>Ejemplo personalizado</p>"
@@ -212,7 +212,7 @@
             "drawerButton": "Capas",
             "refreshTitle": "Refreascar capas",
             "refreshConfirm": "Refrescar",
-            "refreshMessage": "Recague la configuración de las capas WMS a partir del/delos servidor(es)",
+            "refreshMessage": "Recargue la configuración de las capas WMS a partir del/delos servidor(es)",
             "refreshError": "Error refrescando los mapas: ",
             "refreshOptions": {
                 "bbox": "Refrecar BBOX",
@@ -279,7 +279,7 @@
         },
         "infoFormatLbl": "Indentificar el formato de respuesta",
         "measureComponent": {
-            "Measure": "Mediadas",
+            "Measure": "Medidas",
             "MeasureLength": "Medias de distancia",
             "MeasureArea": "Medidas de área",
             "MeasureBearing": "Medias de rumbo",
@@ -578,10 +578,10 @@
             "selectedGroups": "GRUPOS SELECCIONADOS"
         },
         "usergroups": {
-          "searchGroups": "rechercher des groupes...",
-          "groups": "Groupes",
-          "nameLimit": "Le nom est limité à 255 caractères.",
-          "descLimit": "La description est limité à 255 caractères.",
+          "searchGroups": "buscar grupo ...",
+          "groups": "Grupos",
+          "nameLimit": "El nombre está limitado a 255 caracteres.",
+          "descLimit": "La descripción está limitada a 255 caracteres.",
           "editGroup": "Modificar",
           "deleteGroup": "Borrar",
           "removeUser": "borrar usuario",

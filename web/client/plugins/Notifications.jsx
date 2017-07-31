@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {hide} = require('../actions/notifications');
+const {hide, dispatchAction} = require('../actions/notifications');
 const {clearNotificationOnLocationChange} = require('../epics/notifications');
+
 const {connect} = require('react-redux');
 
 
@@ -23,7 +24,10 @@ const {connect} = require('react-redux');
 module.exports = {
     NotificationsPlugin: connect(
         (state) => ({ notifications: state && state.notifications}),
-        {onRemove: hide}
+        {
+            onRemove: hide,
+            onDispatch: dispatchAction
+        }
     )(require('../components/notifications/NotificationContainer')),
     reducers: {
         notifications: require('../reducers/notifications')

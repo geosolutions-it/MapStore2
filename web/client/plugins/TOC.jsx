@@ -264,7 +264,7 @@ class LayerTree extends React.Component {
         activateSettingsTool: true,
         activateRemoveLayer: true,
         activateQueryTool: false,
-        activateRefreshTool: true,
+        activateRefreshTool: false,
         visibilityCheckType: "glyph",
         settingsOptions: {
             includeCloseButton: false,
@@ -272,7 +272,7 @@ class LayerTree extends React.Component {
             buttonSize: "small"
         },
         querypanelEnabled: false,
-        refreshMapEnabled: true,
+        refreshMapEnabled: false,
         layerOptions: {},
         groupOptions: {},
         spatialOperations: [
