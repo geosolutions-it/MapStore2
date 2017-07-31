@@ -342,3 +342,12 @@
 #mapstore-layer-settings .noUi-handle:before, #mapstore-layer-settings .noUi-handle:after {
     background: none;
 }
+
+.portal-dialog {
+    position: absolute;
+    left: calc(50% - 315px);
+    top: 100px;
+    min-width: 400px;
+    max-width: 630px;
+    background-color: #fff;
+}

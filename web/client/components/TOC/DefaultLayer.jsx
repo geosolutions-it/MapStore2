@@ -58,7 +58,8 @@ class DefaultLayer extends React.Component {
         currentZoomLvl: PropTypes.number,
         scales: PropTypes.array,
         additionalTools: PropTypes.array,
-        legendOptions: PropTypes.object
+        legendOptions: PropTypes.object,
+        currentLocale: PropTypes.string
     };
 
     static defaultProps = {
@@ -84,7 +85,8 @@ class DefaultLayer extends React.Component {
         confirmDeleteText: <Message msgId="layerProperties.deleteLayer" />,
         confirmDeleteMessage: <Message msgId="layerProperties.deleteLayerMessage" />,
         visibilityCheckType: "glyph",
-        additionalTools: []
+        additionalTools: [],
+        currentLocale: 'en-US'
     };
 
     state = {
@@ -205,7 +207,7 @@ class DefaultLayer extends React.Component {
         let {children, propertiesChangeHandler, onToggle, ...other } = this.props;
         return (
             <Node className="toc-default-layer" sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
-                <Title onClick={this.props.onToggle} onContextMenu={this.props.onContextMenu}/>
+                <Title currentLocale={this.props.currentLocale} onClick={this.props.onToggle} onContextMenu={this.props.onContextMenu}/>
                 <LayersTool key="loadingerror"
                         style={{"display": this.props.node.loadingError ? "block" : "none", color: "red", cursor: "default"}}
                         glyph="ban-circle"

@@ -10,7 +10,7 @@ const MapUtils = require('../MapUtils');
 const CoordinatesUtils = require('../CoordinatesUtils');
 const WMTSUtils = require('../WMTSUtils');
 
-const {isArray} = require('lodash');
+const {isArray, isObject} = require('lodash');
 
 const assign = require('object-assign');
 
@@ -58,7 +58,7 @@ module.exports = {
                 j: tileJ
             },
             metadata: {
-                title: layer.title,
+                title: isObject(layer.title) ? layer.title.default : layer.title,
                 regex: layer.featureInfoRegex
             },
             url: isArray(layer.url) ?

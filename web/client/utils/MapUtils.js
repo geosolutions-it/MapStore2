@@ -30,6 +30,9 @@ const GET_COORDINATES_FROM_PIXEL_HOOK = 'GET_COORDINATES_FROM_PIXEL_HOOK';
 
 var hooks = {};
 var CoordinatesUtils = require('./CoordinatesUtils');
+const LayersUtils = require('./LayersUtils');
+const {isObject} = require('lodash');
+const assign = require('object-assign');
 
 function registerHook(name, hook) {
     hooks[name] = hook;
@@ -282,6 +285,33 @@ function transformExtent(projection, center, width, height) {
     return {width, height};
 }
 
+function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSearchConfig) {
+
+    const map = {
+        center: currentMap.center,
+        maxExtent: currentMap.maxExtent,
+        projection: currentMap.projection,
+        units: currentMap.units,
+        zoom: currentMap.zoom
+    };
+
+    const layers = currentLayers.map((layer) => {
+        return LayersUtils.saveLayer(layer);
+    });
+
+    // filter groups with title as object
+    // title object contains translations
+    const groups = currentGroups
+        .filter((group) => isObject(group.title))
+        .map((group) => { return {id: group.id, title: group.title}; });
+
+    return {
+        version: 2,
+        // layers are defined inside the map object
+        map: assign({}, map, {layers, groups, text_serch_config: textSearchConfig})
+    };
+}
+
 module.exports = {
     EXTENT_TO_ZOOM_HOOK,
     RESOLUTIONS_HOOK,
@@ -307,5 +337,6 @@ module.exports = {
     getBbox,
     mapUpdated,
     getCurrentResolution,
-    transformExtent
+    transformExtent,
+    saveMapConfiguration
 };

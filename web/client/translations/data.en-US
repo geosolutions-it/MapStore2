@@ -44,7 +44,9 @@
             "deleteLayerMessage": "Do you really want to delete this Layer?",
             "confirmDelete": "Are you sure?",
             "featureTypeError": "Cannot load layer attributes",
-            "elevation": "Elevation"
+            "elevation": "Elevation",
+            "titleTranslations": "Title translations",
+            "groupProperties": "Group properties"
         },
         "notification": {
             "backgroundLayerNotSupported": "The previously selected background is not supported for this type of map. The first one available is then used.",

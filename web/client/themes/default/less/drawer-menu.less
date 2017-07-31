@@ -35,7 +35,7 @@
 /* toc */
 #mapstore-drawermenu #mapstore-layers .toc-group-title,
 #mapstore-drawermenu #mapstore-layers .toc-title {
-	position: relative;
+	// position: relative;
 }
 /* visibility check */
 #mapstore-drawermenu #mapstore-layers .glyphicon,
@@ -49,13 +49,13 @@
 	font-size: @icon-size-md;
 	margin-top: 0;
 }
-
+/*
 #mapstore-drawermenu #mapstore-layers .toc-default-group > .visibility-check.glyphicon.visibility-check {
 	color: @ms2-color-primary;
 	margin: 5px 8px 0 8px;
 	width: @icon-size-md;
 	font-size: @icon-size-md;
-}
+}*/
 /* group */
 #mapstore-drawermenu #mapstore-layers .group-expanded,
 .group-collapsed {
@@ -74,6 +74,7 @@
 	height: @icon-size-md;
 	width: @icon-size-md;
 	display: block;
+    overflow: visible;
 }
 
 #mapstore-drawermenu #mapstore-layers .toc-group-title .glyphicon-folder-close,
@@ -140,4 +141,19 @@
 .toolbar-panel #background-switcher {
     max-height: 600px;
     overflow: auto;
+}
+
+#mapstore-drawermenu #mapstore-layers .toc-default-group > .glyphicon {
+    cursor: pointer;
+    width: @icon-size-md;
+	font-size: @icon-size-md;
+    float: left;
+    margin: 4px 0 4px 8px;
+    color: @ms2-color-primary;
+    overflow: visible;
+}
+
+#mapstore-drawermenu #mapstore-layers .toc-default-group > .toc-group-title .glyphicon {
+    margin: 4px 0 4px 8px;
+    cursor: pointer;
 }

@@ -159,7 +159,15 @@ const LayersUtils = {
     },
     splitMapAndLayers: (mapState) => {
         if (mapState && isArray(mapState.layers)) {
-            const groups = LayersUtils.getLayersByGroup(mapState.layers);
+            let groups = LayersUtils.getLayersByGroup(mapState.layers);
+            // additional params from saved configuration
+            if (isArray(mapState.groups)) {
+                groups = groups.map((group) => {
+                    const params = head(mapState.groups.filter((stateGroup) => stateGroup.id === group.id));
+                    return params ? assign({}, group, params) : group;
+                });
+            }
+
             return assign({}, mapState, {
                 layers: {
                     flat: LayersUtils.reorder(groups, mapState.layers),

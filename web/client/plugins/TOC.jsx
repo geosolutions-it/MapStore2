@@ -18,6 +18,7 @@ const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
 const {groupsSelector, layersSelector} = require('../selectors/layers');
 const {mapSelector} = require('../selectors/map');
+const {currentLocaleSelector} = require("../selectors/locale");
 
 const LayersUtils = require('../utils/LayersUtils');
 const mapUtils = require('../utils/MapUtils');
@@ -180,8 +181,9 @@ const tocSelector = createSelector(
         groupsSelector,
         (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}},
         (state) => state.controls && state.controls.queryPanel && state.controls.queryPanel.enabled || false,
-        mapSelector
-    ], (enabled, groups, settings, querypanelEnabled, map) => ({
+        mapSelector,
+        currentLocaleSelector
+    ], (enabled, groups, settings, querypanelEnabled, map, currentLocale) => ({
         enabled,
         groups,
         settings,
@@ -190,7 +192,8 @@ const tocSelector = createSelector(
         scales: mapUtils.getScales(
             map && map.projection || 'EPSG:3857',
             map && map.mapOptions && map.mapOptions.view && map.mapOptions.view.DPI || null
-        )
+        ),
+        currentLocale
     })
 );
 
@@ -238,7 +241,8 @@ class LayerTree extends React.Component {
         layerOptions: PropTypes.object,
         spatialOperations: PropTypes.array,
         spatialMethodOptions: PropTypes.array,
-        groupOptions: PropTypes.object
+        groupOptions: PropTypes.object,
+        currentLocale: PropTypes.string
     };
 
     static defaultProps = {
@@ -282,7 +286,8 @@ class LayerTree extends React.Component {
             {"id": "BBOX", "name": "queryform.spatialfilter.methods.box"},
             {"id": "Circle", "name": "queryform.spatialfilter.methods.circle"},
             {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
-        ]
+        ],
+        currentLocale: 'en-US'
     };
 
     getNoBackgroundLayers = (group) => {
@@ -304,9 +309,15 @@ class LayerTree extends React.Component {
                                   {...this.props.groupOptions}
                                   propertiesChangeHandler={this.props.groupPropertiesChangeHandler}
                                   onToggle={this.props.onToggleGroup}
+                                  settings={this.props.settings}
+                                  updateSettings={this.props.updateSettings}
+                                  updateNode={this.props.updateNode}
+                                  onSettings={this.props.onSettings}
+                                  hideSettings={this.props.hideSettings}
                                   style={this.props.groupStyle}
                                   groupVisibilityCheckbox
                                   visibilityCheckType={this.props.visibilityCheckType}
+                                  currentLocale={this.props.currentLocale}
                                   />);
         const Layer = (<DefaultLayer
                             {...this.props.layerOptions}
@@ -339,7 +350,8 @@ class LayerTree extends React.Component {
                             closeText={<Message msgId="close"/>}
                             groups={this.props.groups}
                             currentZoomLvl={this.props.currentZoomLvl}
-                            scales={this.props.scales}/>);
+                            scales={this.props.scales}
+                            currentLocale={this.props.currentLocale}/>);
         return (
             <div className="mapstore-toc">
                 {this.props.refreshMapEnabled ? this.renderRefreshMap() : null}
