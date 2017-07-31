@@ -1,6 +1,6 @@
 {
     "map": {
-       "center": {"x": -8232108.5906099, "y": 4979998.6532879, "crs": "EPSG:900913"},
+       "center": {"x": -2712465.14, "y": 3678603.57, "crs": "EPSG:900913"},
         "layers": [
             {
                 "group": "background",
@@ -13,42 +13,54 @@
             {
                 "describeLayer": {
                     "owsType": "WFS",
-                    "geometryType": "LineString"
+                    "geometryType": "Point"
                 },
+                "id": "atlantis:island",
                 "format": "image/png",
                 "group": "Vector",
-                "id": "tiger:poly_landmarks",
-                "name": "tiger:poly_landmarks",
+                "name": "atlantis:island",
                 "opacity": 1,
-                "title": "Landmarks",
+                "title": "Atlantis Islands",
                 "type": "wms",
                 "url": "https://demo.geo-solutions.it/geoserver/wms",
                 "visibility": true
-            },
-            {
+            },{
                 "describeLayer": {
                     "owsType": "WFS",
                     "geometryType": "Point"
                 },
-                "id": "tiger:tiger_roads",
+                "id": "atlantis:landmarks",
                 "format": "image/png",
                 "group": "Vector",
-                "name": "tiger:tiger_roads",
+                "name": "atlantis:landmarks",
+                "opacity": 1,
+                "title": "Lakes, Mountains and Forests",
+                "type": "wms",
+                "url": "https://demo.geo-solutions.it/geoserver/wms",
+                "visibility": true
+            },{
+                "describeLayer": {
+                    "owsType": "WFS",
+                    "geometryType": "Point"
+                },
+                "id": "atlantis:roads",
+                "format": "image/png",
+                "group": "Vector",
+                "name": "atlantis:roads",
                 "opacity": 1,
                 "title": "Roads",
                 "type": "wms",
                 "url": "https://demo.geo-solutions.it/geoserver/wms",
                 "visibility": true
-            },
-            {
+            },{
                 "describeLayer": {
                     "owsType": "WFS",
                     "geometryType": "Point"
                 },
-                "id": "tiger:poi",
+                "id": "atlantis:poi",
                 "format": "image/png",
                 "group": "Vector",
-                "name": "tiger:poi",
+                "name": "atlantis:poi",
                 "opacity": 1,
                 "title": "Points of Interest",
                 "type": "wms",
@@ -64,6 +76,6 @@
         ],
         "projection": "EPSG:900913",
         "units": "m",
-        "zoom": 12
+        "zoom": 6
     }
 }

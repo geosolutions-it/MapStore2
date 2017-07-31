@@ -10,9 +10,9 @@ const LayerSelector = ({layers = [], selectedLayerId, onLayerSelect= () => {}} =
         top: "10px",
         left: "10px",
         width: "250px",
-        height: "250px"
+        height: "300px"
     }} header="Select a layer">
-        <h4>Manhattan (New York)</h4>
+        <h4>Atlantis</h4>
         <Nav bsStyle="pills" activeKey={selectedLayerId} stacked onSelect={onLayerSelect}>
             {layers.map(l => <NavItem eventKey={l.id} >{l.title}</NavItem>)}
         </Nav>

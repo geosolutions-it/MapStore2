@@ -25,7 +25,7 @@ module.exports = (plugins) => {
         featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic,
         initLoadFeatureGridDemo: (action$, store) =>
             action$.ofType('MAP_CONFIG_LOADED', "FEATUREGRID_SAMPLE::SELECT_LAYER")
-                .switchMap(({id = 'tiger:poly_landmarks'} = {}) => {
+                .switchMap(({id = 'atlantis:poi'} = {}) => {
                     const state = store.getState();
                     if (hasChangesSelector(state) || hasNewFeaturesSelector(state)) {
                         return Rx.Observable.of(toggleTool("featureCloseConfirm", true))
