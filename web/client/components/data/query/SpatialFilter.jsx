@@ -313,28 +313,28 @@ class SpatialFilter extends React.Component {
         this.props.actions.onSelectSpatialMethod(method, name);
 
         switch (method) {
-        case "ZONE": {
-            this.changeDrawingStatus('clean', null, "queryform", []); break;
-        }
-        case "Viewport": {
-            this.changeDrawingStatus('clean', null, "queryform", []);
-            this.props.actions.onSelectViewportSpatialMethod();
-            break;
-        }
-        default: {
-            this.changeDrawingStatus('start', method, "queryform", []);
-        }
+            case "ZONE": {
+                this.changeDrawingStatus('clean', null, "queryform", []); break;
+            }
+            case "Viewport": {
+                this.changeDrawingStatus('clean', null, "queryform", []);
+                this.props.actions.onSelectViewportSpatialMethod();
+                break;
+            }
+            default: {
+                this.changeDrawingStatus('start', method, "queryform", [], {stopAfterDrawing: true});
+            }
         }
     };
 
     updateSpatialOperation = (id, name, value) => {
-        const opeartion = this.props.spatialOperations.filter((opt) => {
+        const operation = this.props.spatialOperations.filter((opt) => {
             if (value === LocaleUtils.getMessageById(this.context.messages, opt.name)) {
                 return opt;
             }
         })[0].id;
 
-        this.props.actions.onSelectSpatialOperation(opeartion, name);
+        this.props.actions.onSelectSpatialOperation(operation, name);
     };
 
     resetSpatialFilter = () => {
@@ -343,12 +343,13 @@ class SpatialFilter extends React.Component {
         this.props.actions.onShowSpatialSelectionDetails(false);
     };
 
-    changeDrawingStatus = (status, method, owner, features) => {
+    changeDrawingStatus = (status, method, owner, features, options) => {
         this.props.actions.onChangeDrawingStatus(
             status,
             method !== undefined ? method : this.props.spatialField.method,
             owner,
-            features);
+            features,
+            options);
     };
 }
 

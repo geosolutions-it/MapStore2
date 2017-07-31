@@ -26,7 +26,7 @@ describe('Openlayers layer', () => {
     document.body.innerHTML = '<div id="map"></div>';
     let map;
 
-    beforeEach((done) => {
+    beforeEach(() => {
         document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
         map = new ol.Map({
             layers: [
@@ -42,13 +42,11 @@ describe('Openlayers layer', () => {
                 zoom: 5
             })
         });
-        setTimeout(done);
     });
 
-    afterEach((done) => {
+    afterEach(() => {
         map.setTarget(null);
         document.body.innerHTML = '';
-        setTimeout(done);
     });
 
     it('missing layer', () => {

@@ -307,9 +307,9 @@ class DockedFeatureGrid extends React.Component {
         }
     };
 
-    selectFeatures = (features) => {
+    selectFeatures = (features, proj) => {
         this.props.selectAllToggle();
-        this.props.selectFeatures(features);
+        this.props.selectFeatures(features, proj);
     };
 
     limitDockHeight = (size) => {

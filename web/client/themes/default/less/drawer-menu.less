@@ -12,7 +12,7 @@
 	display: block;
 	height: @square-btn-size;
 	width: @square-btn-size;
-	padding: @padding-left-square 0 0 @padding-left-square;
+	padding: floor((@padding-left-square - 1) / 1.230769231) 0 0 (@padding-left-square - 1);
 }
 
 #mapstore-drawermenu .navHeader .glyphicon-remove {

@@ -91,6 +91,15 @@ function clear() {
 }
 
 /**
+ * Dispatch a custom action on callback
+ * @memberof actions.notifications
+ * @returns {object}     action
+ */
+function dispatchAction(action) {
+    return action;
+}
+
+/**
  * actions for notifications
  * @name notifications
  * @memberof actions
@@ -105,5 +114,6 @@ module.exports = {
     error,
     info,
     hide,
-    clear
+    clear,
+    dispatchAction
 };

@@ -7,6 +7,7 @@
  */
 const expect = require('expect');
 const highlight = require('../highlight');
+const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
 
 
 describe('Test the highlight reducer', () => {
@@ -61,6 +62,18 @@ describe('Test the highlight reducer', () => {
         expect(state.layer).toBe("featureselector");
         expect(state.highlighted).toBe(4);
         expect(state.features[1]).toBe(1);
+
+    });
+    it('Change the SET_HIGHLIGHT_FEATURES_PATH ', () => {
+        let path = "store.my.path";
+        let testAction = {
+            type: SET_HIGHLIGHT_FEATURES_PATH,
+            featuresPath: path
+        };
+        let state = highlight( undefined, testAction);
+        expect(state).toExist();
+
+        expect(state.featuresPath).toBe(path);
 
     });
 });

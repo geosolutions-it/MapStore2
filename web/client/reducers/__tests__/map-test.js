@@ -212,4 +212,14 @@ describe('Test the map reducer', () => {
         expect(state.bbox.rotation).toEqual(rotation);
         expect(state.mapStateSource).toBe("test");
     });
+
+    it('change map version', () => {
+        let version = 2;
+        const action = {
+            type: 'UPDATE_VERSION',
+            version
+        };
+        let state = mapConfig({}, action);
+        expect(state.version).toEqual(version);
+    });
 });

@@ -25,7 +25,7 @@ const LayersUtils = require('../utils/LayersUtils');
 // include application component
 const QueryBuilder = require('../components/data/query/QueryBuilder');
 
-const {featureTypeSelectedEpic, wfsQueryEpic, closeFeatureEpic, viewportSelectedEpic} = require('../epics/wfsquery');
+const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic} = require('../epics/wfsquery');
 
 const {bindActionCreators} = require('redux');
 const {
@@ -243,5 +243,5 @@ module.exports = {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
     },
-    epics: {featureTypeSelectedEpic, wfsQueryEpic, closeFeatureEpic, viewportSelectedEpic}
+    epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic}
 };

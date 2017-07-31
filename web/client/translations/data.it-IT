@@ -24,6 +24,11 @@
         "version": {
             "label": "Versione"
         },
+        "autorefresh": {
+            "of": "di",
+            "updating": "In aggiornamento...",
+            "layers": "layers"
+        },
         "layerProperties": {
             "windowTitle": "Proprietà del livello",
             "title": "Titolo",
@@ -47,8 +52,14 @@
             "elevation": "Elevazione"
         },
         "notification": {
+            "update": "Aggiorna",
+            "warning": "Attenzione",
+            "success": "Aggiornamento completo",
             "backgroundLayerNotSupported": "Lo sfondo precedentemente caricato non è supportato per questo tipo di mappa. E' stato pertanto selezionato il primo disponibile.",
-            "noBackgroundLayerSupported": "Non ci sono sfondi supportati per questo tipo di mappa."
+            "noBackgroundLayerSupported": "Non ci sono sfondi supportati per questo tipo di mappa.",
+            "updateOldMap": "Questa è una vecchia mappa perciò non tutte le funzionalità sono abilitate. Clicca su Aggiorna per aggiornare la mappa o semplicemnte chiudi la notifica se non desideri aggiornarla",
+            "warningSaveUpdatedMap": "Alcuni layer non sono stati aggiornati correttamente",
+            "saveUpdatedMap": "Tutti i layer sono stati aggiornati con successo"
         },
         "dock": {
             "row": "{rowsSelected} riga selezionata",
@@ -793,17 +804,45 @@
             "single": "Banda Singola"
         },
         "featuregrid": {
+            "columns": "Colonne",
             "header": "Elenco risultati ricerca",
             "tools": "Gestione tabella",
             "export": "Esporta risultati",
             "selectall": "Seleziona tutti",
             "deselectall": "Deseleziona tutti",
             "backtosearch": "Ritorna alla ricerca",
+            "resultInfo": "{total, plural, =0 {Nessun elemento} =1 {{total} di {total}} other {{start}-{end} di {total}}}",
+            "pageInfo": "{totalPages, plural, =0 {Nessuna pagina} =1 {Pagina {totalPages} di {totalPages}} other {Pagina {page} di {totalPages}}}",
             "pagination": {
                 "page": "Pagina",
                 "of":   "di",
                 "to":   "a",
                 "more": "molte"
+            },
+            "noFeaturesAvailable": "Nessun risultato disponibile",
+            "errorSaving": "C'è stato un errore durante il salvataggio",
+            "yesButton": "Si",
+            "noButton": "No",
+            "deleteButton": "Elimina",
+            "clear": "Sei sicuro di voler annullare tutte le modifiche fatte?",
+            "featureClose": "Sicuro di voler chiudere la griglia?",
+            "delete": "Confermi di cancellare {count} feature?",
+            "missingGeometry": "Geometria mancante",
+            "toolbar": {
+                "editMode": "Entra in modalità editing",
+                "quitEditMode": "Esci dalla modalità editing",
+                "addNewFeatures": "Aggiungi una nuova feature",
+                "editFeature": "Modifica la feature",
+                "drawGeom": "Disegna sulla mappa una nuova geometria",
+                "stopDrawGeom": "Annulla la creazione della geometria",
+                "addGeom": "Aggiungi un elemento alla geometria esistente",
+                "deleteSelectedFeatures": "Elimina le feature selezionate",
+                "saveChanges": "Salva i cambiamenti",
+                "saving": "Salvataggio...",
+                "cancelChanges": "Annulla i cambiamenti",
+                "deleteGeometry": "Elimina la geometria",
+                "downloadGridData": "Esporta i dati della griglia",
+                "hideShowColumns": "Nascondi/mostra colonne"
             }
         },
         "wfsdownload": {

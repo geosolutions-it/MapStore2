@@ -260,7 +260,7 @@ class LayerTree extends React.Component {
         activateSettingsTool: true,
         activateRemoveLayer: true,
         activateQueryTool: false,
-        activateRefreshTool: true,
+        activateRefreshTool: false,
         visibilityCheckType: "glyph",
         settingsOptions: {
             includeCloseButton: false,
@@ -268,7 +268,7 @@ class LayerTree extends React.Component {
             buttonSize: "small"
         },
         querypanelEnabled: false,
-        refreshMapEnabled: true,
+        refreshMapEnabled: false,
         layerOptions: {},
         groupOptions: {},
         spatialOperations: [
@@ -354,7 +354,7 @@ class LayerTree extends React.Component {
     renderQueryPanel = () => {
         return (
             <div id="toc-query-container">
-                <Button id="toc-query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={this.props.onToggleQuery.bind(this, null, null)}><Glyphicon glyph="arrow-left"/></Button>
+                <Button id="toc-query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={() => this.props.onToggleQuery()}><Glyphicon glyph="arrow-left"/></Button>
                 <SmartQueryForm
                     spatialOperations={this.props.spatialOperations}
                     spatialMethodOptions={this.props.spatialMethodOptions}

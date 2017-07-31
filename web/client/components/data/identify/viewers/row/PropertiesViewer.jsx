@@ -8,6 +8,7 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
+const {isString} = require('lodash');
 
 const alwaysExcluded = ["exclude", "titleStyle", "listStyle", "componentStyle", "title"];
 
@@ -47,7 +48,7 @@ class PropertiesViewer extends React.Component {
             .filter(this.toExlude)
             .map((key) => {
                 return (
-                    <p key={key} style={this.props.listStyle}><b>{key}</b> {this.props[key]}</p>
+                    <p key={key} style={this.props.listStyle}><b>{key}</b> {this.renderProperty(this.props[key])}</p>
                 );
             });
     };
@@ -80,6 +81,12 @@ class PropertiesViewer extends React.Component {
         );
     };
 
+    renderProperty = (prop) => {
+        if (isString(prop)) {
+            return prop;
+        }
+        return JSON.stringify(prop);
+    };
     render() {
         return (
             <div style={this.props.componentStyle}>

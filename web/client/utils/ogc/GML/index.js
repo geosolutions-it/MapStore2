@@ -101,7 +101,7 @@ const processOGCGeometry = (version, geometry) => {
                 let point = element;
                 if (point) {
                     ogc += "<gml:pointMember>";
-                    ogc += pointElement(point, version);
+                    ogc += pointElement(point, srsName, version);
                     ogc += "</gml:pointMember>";
                 }
             });

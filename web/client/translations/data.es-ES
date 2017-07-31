@@ -25,6 +25,11 @@
         "version": {
             "label": "Versión"
         },
+        "autorefresh": {
+            "of": "of",
+            "updating": "Updating...",
+            "layers": "layers"
+        },
         "layerProperties": {
             "windowTitle": "Propiedades de la capa",
             "title": "Título",
@@ -46,6 +51,16 @@
             "confirmDelete": "Está seguro?",
             "featureTypeError": "Imposible cargar los atributos del mapa",
             "elevation": "Elevación"
+        },
+        "notification": {
+            "update": "Update",
+            "warning": "Warning",
+            "success": "Success",
+            "backgroundLayerNotSupported": "The previously selected background is not supported for this type of map. The first one available is then used.",
+            "noBackgroundLayerSupported": "There are no supported background layers for this type of map.",
+            "updateOldMap": "This is an old map, thus not all the functionalities can be enabled. Click on update button in order to update the map or simply dismiss this notification if you don't want to update it.",
+            "warningSaveUpdatedMap": "Some layers haven't been updated correctly",
+            "saveUpdatedMap": "All the layers have been successfully updated"
         },
         "dock": {
             "row": "{rowsSelected} fila selecccionada",
@@ -117,7 +132,7 @@
                     "html":"<h3>Controlador de position del puntero</h3><p>Exemple particulier</p>"
                 },
                 "scalebar":{
-                    "html":"<h3>Controlador de escala</h3><p>Ejemplo particular</p>"
+                    "html":"<h3>Controlador de escala</h3><p>Ejemplo personalizado</p>"
                 },
                 "layertree":{
                     "html":"<h3>Árbol de mapas avanzado</h3><p>Ejemplo personalizado</p>"
@@ -212,7 +227,7 @@
             "drawerButton": "Capas",
             "refreshTitle": "Refreascar capas",
             "refreshConfirm": "Refrescar",
-            "refreshMessage": "Recague la configuración de las capas WMS a partir del/delos servidor(es)",
+            "refreshMessage": "Recargue la configuración de las capas WMS a partir del/delos servidor(es)",
             "refreshError": "Error refrescando los mapas: ",
             "refreshOptions": {
                 "bbox": "Refrecar BBOX",
@@ -279,7 +294,7 @@
         },
         "infoFormatLbl": "Indentificar el formato de respuesta",
         "measureComponent": {
-            "Measure": "Mediadas",
+            "Measure": "Medidas",
             "MeasureLength": "Medias de distancia",
             "MeasureArea": "Medidas de área",
             "MeasureBearing": "Medias de rumbo",
@@ -579,10 +594,10 @@
             "selectedGroups": "GRUPOS SELECCIONADOS"
         },
         "usergroups": {
-          "searchGroups": "rechercher des groupes...",
-          "groups": "Groupes",
-          "nameLimit": "Le nom est limité à 255 caractères.",
-          "descLimit": "La description est limité à 255 caractères.",
+          "searchGroups": "buscar grupo ...",
+          "groups": "Grupos",
+          "nameLimit": "El nombre está limitado a 255 caracteres.",
+          "descLimit": "La descripción está limitada a 255 caracteres.",
           "editGroup": "Modificar",
           "deleteGroup": "Borrar",
           "removeUser": "borrar usuario",
@@ -792,17 +807,45 @@
             "single": "Banda simple"
         },
         "featuregrid": {
+            "columns": "Columnas",
             "header": "Lista de resultados de búsqueda",
             "tools": "Panel de herramientas",
             "export": "Exportar",
             "selectall": "Seleccionar todos",
             "deselectall": "Deseleccionar todos",
             "backtosearch": "Volver a la búsqueda",
+            "resultInfo": "{total, plural, =0 {nada} =1 {{total} de {total}} other {{start}-{end} de {total}}}",
+            "pageInfo": "{totalPages, plural, =0 {ningúna Página} =1 {Página {totalPages} de {totalPages}} other {Seite {page} de {totalPages}}}",
             "pagination": {
                 "page": "Página",
                 "of":   "de",
                 "to":   "hasta",
                 "more": "más"
+            },
+            "noFeaturesAvailable": "No hay resultados disponibles",
+            "errorSaving": "Se ha producido un error al guardar la operación",
+            "yesButton": "Si",
+            "noButton": "No",
+            "deleteButton": "Borrar",
+            "clear": "Seguro que desea deshacer todos los cambios realizados?",
+            "featureClose": "Realmente desea cerrar la parrilla?",
+            "delete": "Confirmar para eliminar los elementos?",
+            "missingGeometry": "Missing geometry",
+            "toolbar": {
+                "editMode": "Modo de edición",
+                "quitEditMode": "Salir del modo de edición",
+                "addNewFeatures": "Añadir nueva función",
+                "editFeature": "Función de edición",
+                "drawGeom": "Dibujar un elemento",
+                "stopDrawGeom": "Cancelar la creación de geometría",
+                "addGeom": "Añadir un elemento a la geometría existente",
+                "deleteSelectedFeatures": "Eliminar los elementos seleccionadas",
+                "saveChanges": "Guardar cambios",
+                "saving": "guardando...",
+                "cancelChanges": "Cancelar cambios",
+                "deleteGeometry": "Eliminar geometría",
+                "downloadGridData": "Descargar datos",
+                "hideShowColumns": "Ocultar / mostrar columnas"
             }
         },
         "wfsdownload": {

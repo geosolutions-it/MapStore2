@@ -24,6 +24,11 @@
         "version": {
             "label": "Version"
         },
+        "autorefresh": {
+            "of": "of",
+            "updating": "Updating...",
+            "layers": "layers"
+        },
         "layerProperties": {
             "windowTitle": "Layer Properties",
             "title": "Title",
@@ -47,8 +52,14 @@
             "elevation": "Elevation"
         },
         "notification": {
+            "update": "Update",
+            "warning": "Warning",
+            "success": "Success",
             "backgroundLayerNotSupported": "The previously selected background is not supported for this type of map. The first one available is then used.",
-            "noBackgroundLayerSupported": "There are no supported background layers for this type of map."
+            "noBackgroundLayerSupported": "There are no supported background layers for this type of map.",
+            "updateOldMap": "This is an old map, thus not all the functionalities can be enabled. Click on update button in order to update the map or simply dismiss this notification if you don't want to update it.",
+            "warningSaveUpdatedMap": "Some layers haven't been updated correctly",
+            "saveUpdatedMap": "All the layers have been successfully updated"
         },
         "dock": {
             "row": "{rowsSelected} row selected",
@@ -793,17 +804,45 @@
             "single": "Single Band"
         },
         "featuregrid": {
+            "columns": "Columns",
             "header": "Search results list",
             "tools": "Tool Panel",
             "export": "Export",
             "selectall": "Select All",
             "deselectall": "Clear Selection",
             "backtosearch": "Back to search",
+            "resultInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{start}-{end} of {total}}}",
+            "pageInfo": "{totalPages, plural, =0 {No pages} =1 {Page {totalPages} of {totalPages}} other {Page {page} of {totalPages}}}",
             "pagination": {
                 "page": "Page",
                 "of":   "of",
                 "to":   "to",
                 "more": "more"
+            },
+            "noFeaturesAvailable": "No Features Available",
+            "errorSaving": "An error occured with saving operation",
+            "yesButton": "Yes",
+            "noButton": "No",
+            "deleteButton": "Delete",
+            "clear": "Are you sure to cancel all changes you have done?",
+            "featureClose": "Are you sure to close the feature grid?",
+            "delete": "Do you confirm to delete {count} features?",
+            "missingGeometry": "Missing geometry",
+            "toolbar": {
+                "editMode": "Edit mode",
+                "quitEditMode": "Quit edit mode",
+                "addNewFeatures": "Add New feature",
+                "editFeature": "Edit feature",
+                "drawGeom": "Draw feature",
+                "stopDrawGeom": "Cancel geometry cration",
+                "addGeom": "Add a shape to the existing geometry",
+                "deleteSelectedFeatures": "Delete selected features",
+                "saveChanges": "Save changes",
+                "saving": "Saving...",
+                "cancelChanges": "Cancel changes",
+                "deleteGeometry": "Delete geometry",
+                "downloadGridData": "Download grid data",
+                "hideShowColumns": "Hide/show columns"
             }
         },
         "wfsdownload": {

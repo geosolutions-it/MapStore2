@@ -11,12 +11,29 @@ const axios = require('../libs/ajax');
 const Url = require('url');
 const {changeSpatialAttribute, SELECT_VIEWPORT_SPATIAL_METHOD, updateGeometrySpatialField} = require('../actions/queryform');
 const {CHANGE_MAP_VIEW} = require('../actions/map');
-const {FEATURE_TYPE_SELECTED, QUERY, featureTypeLoaded, featureTypeError, querySearchResponse, queryError, featureClose} = require('../actions/wfsquery');
+const {FEATURE_TYPE_SELECTED, QUERY, featureLoading, featureTypeLoaded, featureTypeError, querySearchResponse, queryError} = require('../actions/wfsquery');
+const {paginationInfo} = require('../selectors/query');
 const FilterUtils = require('../utils/FilterUtils');
 const assign = require('object-assign');
-const {isString, isObject} = require('lodash');
-const {TOGGLE_CONTROL, setControlProperty} = require('../actions/controls');
 
+const {isString, isObject} = require('lodash');
+const {setControlProperty} = require('../actions/controls');
+// this is a workaround for https://osgeo-org.atlassian.net/browse/GEOS-7233. can be removed when fixed
+const workaroundGEOS7233 = ({totalFeatures, features, ...rest}, {startIndex, maxFeatures}, originalSize) => {
+    if (originalSize > totalFeatures && originalSize === startIndex + features.length && totalFeatures === features.length) {
+        return {
+            ...rest,
+            features,
+            totalFeatures: originalSize
+        };
+    }
+    return {
+        ...rest,
+        features,
+        totalFeatures
+    };
+
+};
 const types = {
     // string
     // 'xsd:ENTITIES': 'string',
@@ -92,6 +109,7 @@ const extractInfo = (data) => {
                 conf = fieldConfig[attribute.name] ? {...conf, ...fieldConfig[attribute.name]} : conf;
                 return conf;
             }),
+        original: data,
         attributes: data.featureTypes[0].properties
             .filter((attribute) => attribute.type.indexOf('gml:') !== 0 && types[attribute.type])
             .map((attribute) => {
@@ -163,7 +181,9 @@ const retryWithForcedSortOptions = (action, store) => {
     }))
         .map((newResponse) => {
             const newError = getWFSResponseException(newResponse, 'NoApplicableCode');
-            return !newError ? querySearchResponse(newResponse.data, action.searchUrl, action.filterObj) : queryError('No sortable request');
+            const state = store.getState();
+            const data = workaroundGEOS7233(newResponse.data, action.filterObj.pagination, paginationInfo.totalFeatures(state));
+            return !newError ? querySearchResponse(data, action.searchUrl, action.filterObj) : queryError('No sortable request');
         })
         .catch((e) => {
             return Rx.Observable.of(queryError(e));
@@ -219,25 +239,16 @@ const wfsQueryEpic = (action$, store) =>
                         if (error) {
                             return retryWithForcedSortOptions(action, store);
                         }
-                        return Rx.Observable.of(querySearchResponse(response.data, action.searchUrl, action.filterObj));
+                        const state = store.getState();
+                        const data = workaroundGEOS7233(response.data, action.filterObj.pagination, paginationInfo.totalFeatures(state));
+                        return Rx.Observable.of(querySearchResponse(data, action.searchUrl, action.filterObj));
                     })
+                    .startWith(featureLoading(true))
                     .catch((e) => {
                         return Rx.Observable.of(queryError(e));
                     })
+                    .concat(Rx.Observable.of(featureLoading(false)))
             );
-        });
-
-/**
- * Closes the feature grid when the drawer menu button has been toggled
- * @memberof epics.wfsquery
- * @param {external:Observable} action$ manages `TOGGLE_CONTROL`
- * @return {external:Observable}
- */
-
-const closeFeatureEpic = action$ =>
-    action$.ofType(TOGGLE_CONTROL)
-        .switchMap(action => {
-            return action.control && action.control === 'drawer' ? Rx.Observable.of(featureClose()) : Rx.Observable.empty();
         });
 
 function validateExtent(extent) {
@@ -283,7 +294,6 @@ const viewportSelectedEpic = (action$, store) =>
 module.exports = {
     featureTypeSelectedEpic,
     wfsQueryEpic,
-    closeFeatureEpic,
     viewportSelectedEpic,
     getWFSFilterData
 };

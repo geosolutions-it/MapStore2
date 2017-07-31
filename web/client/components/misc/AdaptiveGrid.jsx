@@ -18,10 +18,12 @@ const ContainerDimensions = require('react-container-dimensions').default;
  */
 module.exports = (props) => (<ContainerDimensions>
             { ({ width, height }) =>
-            <Grid
-                {...props}
-                minHeight={height}
-                minWidth={width}
-            />
+            <div className={props.className}>
+                <Grid
+                    {...props}
+                    minHeight={height}
+                    minWidth={width}
+                    />
+            </div>
             }
         </ContainerDimensions>);

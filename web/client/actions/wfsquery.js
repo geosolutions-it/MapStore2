@@ -5,9 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+const LAYER_SELECTED_FOR_SEARCH = 'LAYER_SELECTED_FOR_SEARCH';
 const FEATURE_TYPE_SELECTED = 'FEATURE_TYPE_SELECTED';
 const FEATURE_TYPE_LOADED = 'FEATURE_TYPE_LOADED';
 const FEATURE_LOADED = 'FEATURE_LOADED';
+const FEATURE_LOADING = 'FEATURE_LOADING';
 const FEATURE_TYPE_ERROR = 'FEATURE_TYPE_ERROR';
 const FEATURE_ERROR = 'FEATURE_ERROR';
 const FEATURE_CLOSE = 'FEATURE_CLOSE';
@@ -22,6 +24,12 @@ const {toggleControl, setControlProperty} = require('./controls');
 const {changeDrawingStatus} = require('./draw');
 const {reset} = require('./queryform');
 
+function layerSelectedForSearch(id) {
+    return {
+        type: LAYER_SELECTED_FOR_SEARCH,
+        id
+    };
+}
 function featureTypeSelected(url, typeName) {
     return {
         type: FEATURE_TYPE_SELECTED,
@@ -45,6 +53,12 @@ function featureTypeError(typeName, error) {
     };
 }
 
+function featureLoading(isLoading) {
+    return {
+        type: FEATURE_LOADING,
+        isLoading
+    };
+}
 function featureLoaded(typeName, feature) {
     return {
         type: FEATURE_LOADED,
@@ -119,7 +133,7 @@ function resetQuery() {
 }
 
 
-function toggleQueryPanel(url, name) {
+function toggleQueryPanel(url, name, id) {
     return (dispatch, getState) => {
         if (getState().query.typeName !== name) {
             dispatch(reset());
@@ -127,6 +141,7 @@ function toggleQueryPanel(url, name) {
         dispatch(changeDrawingStatus('clean', null, "queryform", []));
         dispatch(featureTypeSelected(url, name));
         dispatch(toggleControl('queryPanel', null));
+        dispatch(layerSelectedForSearch(id));
         dispatch(setControlProperty('drawer', 'width', getState().controls.queryPanel.enabled ? 700 : 300));
     };
 }
@@ -148,6 +163,7 @@ function closeResponse() {
 }
 
 module.exports = {
+    LAYER_SELECTED_FOR_SEARCH, layerSelectedForSearch,
     FEATURE_TYPE_SELECTED, featureTypeSelected,
     FEATURE_TYPE_LOADED, featureTypeLoaded,
     FEATURE_TYPE_ERROR, featureTypeError,
@@ -158,7 +174,8 @@ module.exports = {
     QUERY_ERROR, queryError,
     RESET_QUERY, resetQuery,
     QUERY, query,
-    FEATURE_LOADED,
+    FEATURE_LOADING, featureLoading,
+    FEATURE_LOADED, featureLoaded,
     loadFeature,
     toggleQueryPanel,
     closeResponse

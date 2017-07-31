@@ -56,10 +56,12 @@ const handleCreationLayerError = (action$, store) =>
     .delay(500)
     .switchMap((a) => {
         const maptype = mapTypeSelector(store.getState());
-        return isSupportedLayer(getLayerFromId(store.getState(), a.options.id), maptype) ? Rx.Observable.from([
+        const layer = getLayerFromId(store.getState(), a.options.id);
+        return !!layer && isSupportedLayer(layer, maptype) ? Rx.Observable.from([
             changeLayerProperties(a.options.id, {invalid: true})
         ]) : Rx.Observable.empty();
     });
+
 
 module.exports = {
     handleCreationLayerError,

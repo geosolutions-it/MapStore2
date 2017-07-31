@@ -151,7 +151,7 @@ class Feature extends React.Component {
     };
 
     componentDidMount() {
-        if (this.props.container) {
+        if (this.props.container && this.props.geometry) {
             let style = this.props.style;
             this._layer = geometryToLayer({
                 type: this.props.type,
@@ -175,7 +175,10 @@ class Feature extends React.Component {
             this._layer.on('click', (event) => {
                 if (this.props.onClick) {
                     this.props.onClick({
-                        pixel: event.containerPoint,
+                        pixel: {
+                            x: event.originalEvent && event.originalEvent.x,
+                            y: event.originalEvent && event.originalEvent.y
+                        },
                         latlng: event.latlng
                     });
                 }
