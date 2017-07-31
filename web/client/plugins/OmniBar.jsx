@@ -9,7 +9,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 
 require('./omnibar/omnibar.css');
-
+const assign = require('object-assign');
 const ToolsContainer = require('./containers/ToolsContainer');
 
 class OmniBar extends React.Component {
@@ -63,6 +63,7 @@ class OmniBar extends React.Component {
 }
 
 module.exports = {
-    OmniBarPlugin: OmniBar,
+    OmniBarPlugin: assign(OmniBar, {disablePluginIf: "{state('featuregridmode') === 'EDIT'}"}),
+
     reducers: {}
 };

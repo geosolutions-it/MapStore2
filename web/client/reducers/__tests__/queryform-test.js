@@ -10,6 +10,7 @@ const queryform = require('../queryform');
 
 const {featureCollection} = require('../../test-resources/featureCollectionZone.js');
 const {UPDATE_FILTER_FIELD_OPTIONS, SET_AUTOCOMPLETE_MODE, TOGGLE_AUTOCOMPLETE_MENU} = require('../../actions/queryform');
+const {END_DRAWING, CHANGE_DRAWING_STATUS} = require('../../actions/draw');
 
 describe('Test the queryform reducer', () => {
 
@@ -492,7 +493,7 @@ describe('Test the queryform reducer', () => {
     it('test CHANGE_DRAWING_STATUS', () => {
         const initialState = { toolbarEnabled: true };
         const testAction1 = {
-            type: "CHANGE_DRAWING_STATUS",
+            type: CHANGE_DRAWING_STATUS,
             owner: "queryform",
             status: "start"
         };
@@ -500,7 +501,7 @@ describe('Test the queryform reducer', () => {
         expect(state).toExist();
         expect(state.toolbarEnabled).toBeFalsy();
         const testAction2 = {
-            type: "CHANGE_DRAWING_STATUS",
+            type: CHANGE_DRAWING_STATUS,
             owner: "measure",
             status: "start"
         };
@@ -513,7 +514,7 @@ describe('Test the queryform reducer', () => {
         const geometry = {center: [0, 1], coordinates: []};
         const initialState = { toolbarEnabled: false, spatialField: {geometry: {}} };
         const testAction1 = {
-            type: "END_DRAWING",
+            type: END_DRAWING,
             owner: "queryform",
             geometry
         };
@@ -522,7 +523,7 @@ describe('Test the queryform reducer', () => {
         expect(state.toolbarEnabled).toBeTruthy();
         expect(state.spatialField.geometry).toBe(geometry);
         const testAction2 = {
-            type: "END_DRAWING",
+            type: END_DRAWING,
             owner: "measure",
             status: "start"
         };

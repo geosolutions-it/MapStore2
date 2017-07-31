@@ -1,11 +1,11 @@
+/*
+* Copyright 2017, GeoSolutions Sas.
+* All rights reserved.
+*
+* This source code is licensed under the BSD-style license found in the
+* LICENSE file in the root directory of this source tree.
+*/
 const PropTypes = require('prop-types');
-/**
- * Copyright 2016, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
 
 const React = require('react');
 const {connect} = require('react-redux');
@@ -120,7 +120,7 @@ module.exports = {
                 text: <Message msgId="save"/>,
                 icon: <Glyphicon glyph="floppy-open"/>,
                 action: toggleControl.bind(null, 'save', null),
-            // display the BurgerMenu button only if the map can be edited
+                // display the BurgerMenu button only if the map can be edited
                 selector: (state) => {
                     let map = state.map && state.map.present || state.map || state.config && state.config.map || null;
                     if (map && map.mapId && state && state.security && state.security.user) {

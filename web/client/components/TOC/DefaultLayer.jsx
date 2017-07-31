@@ -156,7 +156,7 @@ class DefaultLayer extends React.Component {
                         ref="target"
                         style={{"float": "right", cursor: "pointer"}}
                         glyph="search"
-                        onClick={(node) => this.props.onToggleQuerypanel(node.search.url || node.url, node.name)}/>
+                        onClick={(node) => this.props.onToggleQuerypanel(node.search.url || node.url, node.name, node.id)}/>
                 );
         }
         return (<div position="collapsible" className="collapsible-toc">

@@ -62,6 +62,7 @@ const handleCreationLayerError = (action$, store) =>
         ]) : Rx.Observable.empty();
     });
 
+
 module.exports = {
     handleCreationLayerError,
     handleCreationBackgroundError

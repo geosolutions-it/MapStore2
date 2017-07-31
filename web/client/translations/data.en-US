@@ -804,17 +804,45 @@
             "single": "Single Band"
         },
         "featuregrid": {
+            "columns": "Columns",
             "header": "Search results list",
             "tools": "Tool Panel",
             "export": "Export",
             "selectall": "Select All",
             "deselectall": "Clear Selection",
             "backtosearch": "Back to search",
+            "resultInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{start}-{end} of {total}}}",
+            "pageInfo": "{totalPages, plural, =0 {No pages} =1 {Page {totalPages} of {totalPages}} other {Page {page} of {totalPages}}}",
             "pagination": {
                 "page": "Page",
                 "of":   "of",
                 "to":   "to",
                 "more": "more"
+            },
+            "noFeaturesAvailable": "No Features Available",
+            "errorSaving": "An error occured with saving operation",
+            "yesButton": "Yes",
+            "noButton": "No",
+            "deleteButton": "Delete",
+            "clear": "Are you sure to cancel all changes you have done?",
+            "featureClose": "Are you sure to close the feature grid?",
+            "delete": "Do you confirm to delete {count} features?",
+            "missingGeometry": "Missing geometry",
+            "toolbar": {
+                "editMode": "Edit mode",
+                "quitEditMode": "Quit edit mode",
+                "addNewFeatures": "Add New feature",
+                "editFeature": "Edit feature",
+                "drawGeom": "Draw feature",
+                "stopDrawGeom": "Cancel geometry cration",
+                "addGeom": "Add a shape to the existing geometry",
+                "deleteSelectedFeatures": "Delete selected features",
+                "saveChanges": "Save changes",
+                "saving": "Saving...",
+                "cancelChanges": "Cancel changes",
+                "deleteGeometry": "Delete geometry",
+                "downloadGridData": "Download grid data",
+                "hideShowColumns": "Hide/show columns"
             }
         },
         "wfsdownload": {

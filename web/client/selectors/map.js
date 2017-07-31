@@ -47,6 +47,7 @@ const mapVersionSelector = (state) => state.map && state.map.present && state.ma
 module.exports = {
     mapSelector,
     scalesSelector,
+    projectionSelector,
     mapIdSelector,
     mapVersionSelector
 };

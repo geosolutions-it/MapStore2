@@ -804,17 +804,45 @@
             "single": "Single Band"
         },
         "featuregrid": {
+            "columns": "Spalten",
             "header": "Suchresultate",
             "tools": "Werkzeugpalette",
             "export": "Export",
             "selectall": "Alle auswählen",
             "deselectall": "Auswahl aufheben",
             "backtosearch": "Zurück zur suche",
+            "resultInfo": "{total, plural, =0 {Keine Artikel} =1 {{total} von {total}} other {{start}-{end} von {total}}}",
+            "pageInfo": "{totalPages, plural, =0 {keine Seite} =1 {Seite {totalPages} von {totalPages}} other {Seite {page} von {totalPages}}}",
             "pagination": {
                 "page": "Seite",
                 "of":   "von",
                 "to":   "bis",
                 "more": "viele"
+            },
+            "noFeaturesAvailable": "Keine features verfügbar",
+            "errorSaving": "Beim Speichern des Vorgangs ist ein Fehler aufgetreten",
+            "yesButton": "ein",
+            "noButton": "nein",
+            "deleteButton": "Löschen",
+            "clear": "Sind Sie sicher, dass Sie alle vorgenommenen Änderungen rückgängig zu machen?",
+            "featureClose": "Wirklich wollen Sie das Raster schließen?",
+            "delete": "Überprüfen Sie die Elemente entfernen?",
+            "missingGeometry": "Missing geometry",
+            "toolbar": {
+                "editMode": "Bearbeitungsmodus",
+                "quitEditMode": "Beenden Sie den Bearbeitungsmodus",
+                "addNewFeatures": "Neue Funktion hinzufügen",
+                "editFeature": "Bearbeiten Sie die Funktion",
+                "drawGeom": "Zeichen zeichnen",
+                "stopDrawGeom": "Geometrieerstellung abbrechen",
+                "addGeom": "Fügen Sie ein Element an die vorhandene Geometrie",
+                "deleteSelectedFeatures": "Ausgewählte Funktionen löschen",
+                "saveChanges": "Änderungen speichern",
+                "saving": "Speichern...",
+                "cancelChanges": "Änderungen abbrechen",
+                "deleteGeometry": "Geometrie löschen",
+                "downloadGridData": "Daten herunterladen",
+                "hideShowColumns": "Spalten ausblenden / anzeigen"
             }
         },
         "wfsdownload": {

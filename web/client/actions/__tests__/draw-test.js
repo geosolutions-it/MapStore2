@@ -1,17 +1,18 @@
-/**
- * Copyright 2016, GeoSolutions Sas.
+/*
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 
 const expect = require('expect');
 const {
-    CHANGE_DRAWING_STATUS,
-    END_DRAWING,
-    changeDrawingStatus,
-    endDrawing
+    CHANGE_DRAWING_STATUS, changeDrawingStatus,
+    END_DRAWING, endDrawing,
+    geometryChanged, GEOMETRY_CHANGED,
+    drawStopped, DRAW_SUPPORT_STOPPED,
+    setCurrentStyle, SET_CURRENT_STYLE
 } = require('../draw');
 
 describe('Test correctness of the draw actions', () => {
@@ -42,5 +43,32 @@ describe('Test correctness of the draw actions', () => {
         expect(retval.type).toBe(END_DRAWING);
         expect(retval.geometry).toBe("geometry");
         expect(retval.owner).toBe("queryform");
+    });
+
+    it('Test geometryChanged action creator', () => {
+        const features = [{
+            geometry: {
+                type: "Point",
+                coordinates: []
+            }
+        }];
+
+        const retval = geometryChanged(features);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(GEOMETRY_CHANGED);
+        expect(retval.features).toExist();
+        expect(retval.features).toBe(features);
+    });
+    it('Test drawStopped action creator', () => {
+        const retval = drawStopped();
+        expect(retval).toExist();
+        expect(retval.type).toBe(DRAW_SUPPORT_STOPPED);
+    });
+    it('Test setCurrentStyle action creator', () => {
+        const retval = setCurrentStyle("somestyle");
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_CURRENT_STYLE);
+        expect(retval.currentStyle).toBe("somestyle");
     });
 });

@@ -17,7 +17,7 @@ const carouselImages = {
     scalebar: require('../../assets/img/ScaleBar.png'),
     layertree: require('../../assets/img/LayerTree.png'),
     queryform: require('../../assets/img/QueryForm.png'),
-    featuregrid: require('../../assets/img/FeatureGrid.png'),
+    featuregrid: require('../../assets/img/FeatureGrid.jpg'),
     print: require('../../assets/img/Print.png'),
     plugins: require('../../assets/img/Plugins.png'),
     api: require('../../assets/img/Api.png'),

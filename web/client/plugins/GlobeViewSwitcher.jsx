@@ -38,6 +38,7 @@ const GlobeViewSwitcher = connect(globeSelector, {
 
 module.exports = {
     GlobeViewSwitcherPlugin: assign(GlobeViewSwitcher, {
+        disablePluginIf: "{state('featuregridmode') === 'EDIT'}",
         Toolbar: {
             name: '3d',
             position: 10,
