@@ -373,6 +373,22 @@ const CoordinatesUtils = {
 
         points[0].push(points[0][0]);
         return points;
+    },
+    coordsOLtoLeaflet: ({coordinates, type}) => {
+        switch (type) {
+            case "Polygon": {
+                return coordinates.map(c => {
+                    return c.map(point => point.reverse());
+                });
+            }
+            case "LineString": {
+                return coordinates.map(point => point.reverse());
+            }
+            case "Point": {
+                return coordinates.reverse();
+            }
+            default: return [];
+        }
     }
 };
 

@@ -144,7 +144,15 @@ function removeLayer(layerId) {
         layerId: layerId
     };
 }
-
+function refreshLayerVersion(layer, version) {
+    return {
+        type: CHANGE_LAYER_PROPERTIES,
+        layer,
+        newProperties: {
+            _v_: version || new Date().getTime()
+        }
+    };
+}
 function refreshLayers(layers, options) {
     return {
         type: REFRESH_LAYERS,
@@ -170,7 +178,7 @@ function layersRefreshError(layers, error) {
 
 module.exports = {changeLayerProperties, changeGroupProperties, toggleNode, sortNode, removeNode, contextNode,
     updateNode, layerLoading, layerLoad, layerError, addLayer, removeLayer, showSettings, hideSettings, updateSettings, refreshLayers,
-    layersRefreshed, layersRefreshError,
+    layersRefreshed, layersRefreshError, refreshLayerVersion,
     CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE,
     REMOVE_NODE, UPDATE_NODE, LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, ADD_LAYER, REMOVE_LAYER,
     SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, CONTEXT_NODE, REFRESH_LAYERS, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR

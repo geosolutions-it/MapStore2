@@ -62,7 +62,6 @@ module.exports = {
         SaveAsPlugin: require('../plugins/SaveAs'),
         CreateNewMapPlugin: require('../plugins/CreateNewMap'),
         QueryPanelPlugin: require('../plugins/QueryPanel'),
-        FeatureGridPlugin: require('../plugins/FeatureGrid'),
         WFSDownloadPlugin: require('../plugins/WFSDownload'),
         TutorialPlugin: require('../plugins/Tutorial'),
         ThemeSwitcherPlugin: require('../plugins/ThemeSwitcher'),
@@ -74,7 +73,9 @@ module.exports = {
         VersionPlugin: require('../plugins/Version'),
         CookiePlugin: require('../plugins/Cookie'),
         NotificationsPlugin: require('../plugins/Notifications'),
+        FeatureEditorPlugin: require('../plugins/FeatureEditor'),
         AutoMapUpdatePlugin: require('../plugins/AutoMapUpdate')
+
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

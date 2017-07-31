@@ -7,6 +7,12 @@
  */
 
 const {head, get} = require('lodash');
+// TODO missing escape of cdata entries (you should split the ]]> and put the two parts of it in adjacent CDATA sections).
+// e.g.
+// <![CDATA[Certain tokens like ]]> can be difficult and <invalid>]]>
+// should be written as
+// <![CDATA[Certain tokens like ]]]]><![CDATA[> can be difficult and <valid>]]>
+const toCData = (value) => /[<>&'"]/.test(value) ? `<![CDATA[${value}]]>` : value;
 const {processOGCGeometry} = require("../GML");
 const WFS_TO_GML = {
     "1.0.0": "2.0",
@@ -31,7 +37,7 @@ const getFeatureTypeProperties = (describeFeatureType) => get(describeFeatureTyp
  * @param  {object} describeFeatureType the describeFeatureType object
  * @return {object}                     the featureType property
  */
-const findGeometryProperty = (describeFeatureType) => head(getFeatureTypeProperties(describeFeatureType).filter( d => d.type.indexOf("gml:") === 0));
+const findGeometryProperty = (describeFeatureType) => head((getFeatureTypeProperties(describeFeatureType) || []).filter( d => d.type.indexOf("gml:") === 0));
 /**
  * Retrives the descriptor for a property in the describeFeatureType (supports single featureTypes)
  * @memberof utils.ogc.WFS
@@ -50,7 +56,9 @@ const getPropertyDesciptor = (propName, describeFeatureType) =>
  * @return {string}   url of the schemaLocation
  */
 const schemaLocation = (d) => d.targetNamespace;
-
+const isGeometryType = (pd) => pd.type.indexOf("gml:") === 0;
+const isValidValue = (v, pd) => pd.nillable || (v !== undefined && v !== null); // TODO validate type
+const isValidProperty = ({geom, properties} = {}, pd) => isValidValue(isGeometryType(pd) ? geom : properties[pd.name], pd);
 /**
  * Base utilities for WFS.
  * @name WFS
@@ -58,6 +66,7 @@ const schemaLocation = (d) => d.targetNamespace;
  */
 module.exports = {
     schemaLocation,
+    isGeometryType,
     /**
      * retrieves the featureTypeSchema entry for XML from describeFeatureType
      * @param  {object} d describeFeatureType
@@ -73,12 +82,17 @@ module.exports = {
      */
     getValue: (value, key, describeFeatureType, version = "1.1.0") => {
         // TODO implement normal attributes;
-        const isGeometryType = getPropertyDesciptor(key, describeFeatureType).type.indexOf("gml:") === 0;
-        if (isGeometryType) {
-            return processOGCGeometry(version, {
+        const isGeom = isGeometryType(getPropertyDesciptor(key, describeFeatureType));
+        if (isGeom) {
+            return value ? processOGCGeometry(version, {
                     type: value.type,
                     coordinates: value.coordinates
-              });
+              }) : "";
+        }
+        if (value === null || value === undefined) {
+            return "";
+        } if (typeof value === 'string') {
+            return toCData(value);
         }
         return value;
     },
@@ -96,5 +110,10 @@ module.exports = {
      */
     getTypeName: (dft) => dft.targetPrefix ? dft.targetPrefix + ":" + dft.featureTypes[0].typeName : dft.featureTypes[0].typeName,
     wfsToGmlVersion,
-    processOGCGeometry
+    processOGCGeometry,
+    isValid: (f, describe) => getFeatureTypeProperties(describe)
+        .map( pd => isValidProperty(f, pd)),
+    isValidProperty,
+    isValidValueForPropertyName: (v, name, desc) => isValidValue(v, getPropertyDesciptor(name, desc)),
+    isValidValue
 };
