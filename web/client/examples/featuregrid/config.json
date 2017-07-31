@@ -76,6 +76,6 @@
         ],
         "projection": "EPSG:900913",
         "units": "m",
-        "zoom": 6
+        "zoom": 5
     }
 }
