@@ -120,7 +120,6 @@ class DrawerMenu extends React.Component {
                     overlay={tooltip}>
                     <Button id="drawer-menu-button" style={this.props.menuButtonStyle} bsStyle={this.props.buttonStyle} key="menu-button" className={this.props.buttonClassName} onClick={this.props.toggleMenu} disabled={this.props.disabled}><Glyphicon glyph={this.props.glyph}/></Button>
                 </OverlayTrigger>
-
                 <Menu single={this.props.singleSection} {...this.props.menuOptions} title={<Message msgId="menu" />} alignment="left">
                     {this.renderItems()}
                 </Menu>
@@ -135,6 +134,6 @@ module.exports = {
         disabled: state.controls && state.controls.drawer && state.controls.drawer.disabled
     }), {
         toggleMenu: toggleControl.bind(null, 'drawer', null)
-    })(DrawerMenu),
+    })(assign(DrawerMenu, {disablePluginIf: "{state('featuregridmode') === 'EDIT'}"})),
     reducers: {}
 };

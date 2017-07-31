@@ -27,7 +27,9 @@
         "urlPattern": ".*geostore.*",
         "method": "bearer"
     }],
-    "monitorState": [{"name": "routing", "path": "routing.location.pathname"}],
+    "monitorState": [
+      {"name": "routing", "path": "routing.location.pathname"},
+      {"name": "featuregridmode", "path": "featuregrid.mode"}],
     "plugins": {
         "mobile": [{
                 "name": "Map",
