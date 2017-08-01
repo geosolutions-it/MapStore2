@@ -34,7 +34,7 @@ module.exports = {
             queryLayers = layer.queryLayers.join(",");
         }
 
-        const locale = head(props.currentLocale.split('-'));
+        const locale = props.currentLocale ? head(props.currentLocale.split('-')) : null;
         const ENV = locale ? 'locale:' + locale : '';
 
         return {
