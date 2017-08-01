@@ -8,18 +8,19 @@
 
 const Rx = require('rxjs');
 const axios = require('../libs/ajax');
+const Url = require('url');
 const {changeSpatialAttribute, SELECT_VIEWPORT_SPATIAL_METHOD, updateGeometrySpatialField} = require('../actions/queryform');
 const {CHANGE_MAP_VIEW} = require('../actions/map');
 const {FEATURE_TYPE_SELECTED, QUERY, featureLoading, featureTypeLoaded, featureTypeError, querySearchResponse, queryError} = require('../actions/wfsquery');
 const {paginationInfo} = require('../selectors/query');
 const FilterUtils = require('../utils/FilterUtils');
 const assign = require('object-assign');
-const {isString} = require('lodash');
+
+const {isString, isObject} = require('lodash');
 const {setControlProperty} = require('../actions/controls');
 // this is a workaround for https://osgeo-org.atlassian.net/browse/GEOS-7233. can be removed when fixed
 const workaroundGEOS7233 = ({totalFeatures, features, ...rest}, {startIndex, maxFeatures}, originalSize) => {
     if (originalSize > totalFeatures && originalSize === startIndex + features.length && totalFeatures === features.length) {
-
         return {
             ...rest,
             features,
@@ -140,8 +141,20 @@ const getWFSFilterData = (filterObj) => {
 
 const getWFSFeature = (searchUrl, filterObj) => {
     const data = getWFSFilterData(filterObj);
+
+    const urlParsedObj = Url.parse(searchUrl, true);
+    let params = isObject(urlParsedObj.query) ? urlParsedObj.query : {};
+    params.service = 'WFS';
+    params.outputFormat = 'json';
+    const queryString = Url.format({
+        protocol: urlParsedObj.protocol,
+        host: urlParsedObj.host,
+        pathname: urlParsedObj.pathname,
+        query: params
+    });
+
     return Rx.Observable.defer( () =>
-        axios.post(searchUrl + '?service=WFS&outputFormat=json', data, {
+        axios.post(queryString, data, {
             timeout: 60000,
             headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
         }));
@@ -217,7 +230,6 @@ const featureTypeSelectedEpic = action$ =>
 const wfsQueryEpic = (action$, store) =>
     action$.ofType(QUERY)
         .switchMap(action => {
-
             return Rx.Observable.merge(
                 Rx.Observable.of(setControlProperty('drawer', 'enabled', false)),
                 getWFSFeature(action.searchUrl, action.filterObj)
