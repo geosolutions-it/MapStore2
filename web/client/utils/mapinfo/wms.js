@@ -8,7 +8,7 @@
 
 const MapUtils = require('../MapUtils');
 const CoordinatesUtils = require('../CoordinatesUtils');
-const {isArray, isObject} = require('lodash');
+const {isArray, isObject, head} = require('lodash');
 
 const assign = require('object-assign');
 
@@ -34,6 +34,9 @@ module.exports = {
             queryLayers = layer.queryLayers.join(",");
         }
 
+        const locale = head(props.currentLocale.split('-'));
+        const ENV = locale ? 'locale:' + locale : '';
+
         return {
             request: {
                 service: 'WMS',
@@ -55,10 +58,11 @@ module.exports = {
                       bounds.maxy,
                 feature_count: props.maxItems,
                 info_format: props.format || 'application/json',
+                ENV,
                 ...assign({}, layer.baseParams, layer.params, props.params)
             },
             metadata: {
-                title: isObject(layer.title) ? layer.title.default : layer.title,
+                title: isObject(layer.title) ? layer.title[props.currentLocale] || layer.title.default : layer.title,
                 regex: layer.featureInfoRegex
             },
             url: isArray(layer.url) ?

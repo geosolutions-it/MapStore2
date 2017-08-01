@@ -63,7 +63,8 @@ class Identify extends React.Component {
         headerGlyph: PropTypes.string,
         closeGlyph: PropTypes.string,
         allowMultiselection: PropTypes.bool,
-        warning: PropTypes.string
+        warning: PropTypes.string,
+        currentLocale: PropTypes.string
     };
 
     static defaultProps = {
@@ -121,7 +122,8 @@ class Identify extends React.Component {
         headerGlyph: "",
         closeGlyph: "1-close",
         className: "square-button",
-        allowMultiselection: false
+        allowMultiselection: false,
+        currentLocale: 'en-US'
     };
 
     componentWillReceiveProps(newProps) {

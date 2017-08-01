@@ -1,5 +1,7 @@
 const React = require('react');
 const {Button, Grid, Row, Col, Glyphicon} = require('react-bootstrap');
+const {isObject} = require('lodash');
+
 module.exports = (props = {
     onDownloadToggle: () => {}
 }) => {
@@ -9,7 +11,7 @@ module.exports = (props = {
                 {props.children}
             </Col>
             <Col xs={4}>
-                <div className="text-center text-primary"><strong>{props.title}</strong></div>
+                <div className="text-center text-primary"><strong>{isObject(props.title) ? props.title[props.currentLocale] || props.title.default || '' : props.title}</strong></div>
             </Col>
             <Col xs={4}>
                 <Button onClick={props.onClose} style={{"float": "right"}} className="square-button no-border featuregrid-top-toolbar-margin">

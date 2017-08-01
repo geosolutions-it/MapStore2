@@ -58,7 +58,7 @@ module.exports = {
                 j: tileJ
             },
             metadata: {
-                title: isObject(layer.title) ? layer.title.default : layer.title,
+                title: isObject(layer.title) ? layer.title[props.currentLocale] || layer.title.default : layer.title,
                 regex: layer.featureInfoRegex
             },
             url: isArray(layer.url) ?

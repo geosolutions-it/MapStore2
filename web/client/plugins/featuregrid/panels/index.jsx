@@ -8,6 +8,7 @@ const {isAdminUserSelector} = require('../../../selectors/security');
 const {deleteFeatures, toggleTool, clearChangeConfirmed, closeFeatureGridConfirmed} = require('../../../actions/featuregrid');
 const {closeResponse} = require('../../../actions/wfsquery');
 const {toolbarEvents, pageEvents} = require('../index');
+const {currentLocaleSelector} = require('../../../selectors/locale');
 
 const EmptyRowsView = connect(createStructuredSelector({
     loading: featureLoadingSelector
@@ -32,7 +33,8 @@ const Toolbar = connect(
 const Header = connect(
     createSelector(
         getTitleSelector,
-        (title) => ({title})),
+        currentLocaleSelector,
+        (title, currentLocale) => ({title, currentLocale})),
     {
         onClose: toolbarEvents.onClose
     }
