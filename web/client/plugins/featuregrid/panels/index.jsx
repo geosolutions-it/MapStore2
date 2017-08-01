@@ -23,6 +23,8 @@ const Toolbar = connect(
         isDrawing: isDrawingSelector,
         isSimpleGeom: isSimpleGeomSelector,
         selectedCount: selectedFeaturesCount,
+        isDownloadOpen: state => state && state.controls && state.controls.wfsdownload && state.controls.wfsdownload.enabled,
+        isColumnsOpen: state => state && state.featuregrid && state.featuregrid.tools && state.featuregrid.tools.settings,
         isEditingAllowed: (state) => isAdminUserSelector(state) || canEditSelector(state)
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})

@@ -215,6 +215,11 @@ describe('Featuregrid toolbar component', () => {
         expect(isVisibleButton(button)).toBe(true);
         button.click();
         expect(events.settings).toHaveBeenCalled();
+        ReactDOM.render(<Toolbar events={events} mode="VIEW" selectedCount={0} isColumnsOpen/>, document.getElementById("container"));
+        button = document.getElementById("fg-grid-settings");
+        expect(isVisibleButton(button)).toBe(true);
+        expect(button.className).toExist();
+        expect(button.className.indexOf("success") >= 0).toBe(true);
         ReactDOM.render(<Toolbar events={events} mode="EDIT" selectedCount={1} />, document.getElementById("container"));
         button = document.getElementById("fg-grid-settings");
         expect(isVisibleButton(button)).toBe(false);
@@ -228,6 +233,4 @@ describe('Featuregrid toolbar component', () => {
         button = document.getElementById("fg-grid-settings");
         expect(isVisibleButton(button)).toBe(false);
     });
-
-
 });

@@ -24,7 +24,7 @@ const getSaveMessageId = ({saving, saved}) => {
     return "featuregrid.toolbar.saveChanges";
 };
 
-module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeometry, hasNewFeatures, isSimpleGeom, isDrawing = false, isEditingAllowed, saving = false, saved = false} = {}) =>
+module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeometry, hasNewFeatures, isSimpleGeom, isDrawing = false, isEditingAllowed, saving = false, saved = false, isDownloadOpen, isColumnsOpen} = {}) =>
     (<ButtonGroup id="featuregrid-toolbar" className="featuregrid-toolbar featuregrid-toolbar-margin">
         <OverlayTrigger placement="top" overlay={<Tooltip id="fe-edit-mode"><Message msgId="featuregrid.toolbar.editMode"/></Tooltip>}>
             <Button key="edit-mode" bsStyle="primary" id="fg-edit-mode" style={getStyle(mode === "VIEW" && isEditingAllowed)} className="square-button" onClick={events.switchEditMode}><Glyphicon glyph="pencil"/></Button>
@@ -52,9 +52,9 @@ module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeo
             <Button key="delete-geometry" bsStyle="primary" id="fg-delete-geometry" style={getStyle(mode === "EDIT" && hasGeometry && selectedCount === 1)} className="square-button" onClick={events.deleteGeometry}><Glyphicon glyph="polygon-trash"/></Button>
         </OverlayTrigger>
         <OverlayTrigger placement="top" overlay={<Tooltip id="fe-download-grid"><Message msgId="featuregrid.toolbar.downloadGridData"/></Tooltip>}>
-            <Button key="download-grid" bsStyle="primary" id="fg-download-grid" style={getStyle(mode === "VIEW")} className="square-button" onClick={events.download}><Glyphicon glyph="features-grid-download"/></Button>
+            <Button key="download-grid" bsStyle="primary" id="fg-download-grid" bsStyle={isDownloadOpen ? "success" : "primary"} style={getStyle(mode === "VIEW")} className="square-button" onClick={events.download}><Glyphicon glyph="features-grid-download"/></Button>
         </OverlayTrigger>
         <OverlayTrigger placement="top" overlay={<Tooltip id="fe-grid-settings"><Message msgId="featuregrid.toolbar.hideShowColumns"/></Tooltip>}>
-            <Button key="grid-settings" bsStyle="primary" id="fg-grid-settings" className="square-button" style={getStyle(selectedCount <= 1 && mode === "VIEW")} onClick={events.settings}><Glyphicon glyph="features-grid-set"/></Button>
+            <Button key="grid-settings" bsStyle="primary" id="fg-grid-settings" bsStyle={isColumnsOpen ? "success" : "primary"} className="square-button" style={getStyle(selectedCount <= 1 && mode === "VIEW")} onClick={events.settings}><Glyphicon glyph="features-grid-set"/></Button>
         </OverlayTrigger>
     </ButtonGroup>);
