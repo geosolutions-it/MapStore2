@@ -389,6 +389,15 @@ const CoordinatesUtils = {
             }
             default: return [];
         }
+    },
+    mergeToPolyGeom(features) {
+        if (features.length === 1) {
+            return features[0].geometry;
+        }
+        return {
+            type: "GeometryCollection",
+            geometries: features.map( ({geometry}) => geometry)
+        };
     }
 };
 

@@ -11,7 +11,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 
 const SecurityUtils = require('../utils/SecurityUtils');
 const assign = require('object-assign');
-const {has, isObject} = require('lodash');
+const {isObject} = require('lodash');
 const urlUtil = require('url');
 
 /**
@@ -38,17 +38,15 @@ function addAuthenticationToAxios(axiosConfig) {
         return axiosConfig;
     }
     const rule = SecurityUtils.getAuthenticationRule(axiosConfig.url);
-    const method = rule && (has(rule, "method.method") ? rule.method : assign({}, {method: rule.method}));
-    const methodType = rule && (has(rule, "method.method") ? rule.method.method : rule.method);
-    switch (methodType) {
+
+    switch (rule && rule.method) {
         case 'authkey':
-        case 'authkey-param':
         {
             const token = SecurityUtils.getToken();
             if (!token) {
                 return axiosConfig;
             }
-            addParameterToAxiosConfig(axiosConfig, method.param || 'authkey', token);
+            addParameterToAxiosConfig(axiosConfig, rule.authkeyParamName || 'authkey', token);
             return axiosConfig;
         }
         case 'basic':
