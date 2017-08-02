@@ -32,4 +32,43 @@ describe('Test for TopToolbar component', () => {
         const el = document.getElementsByClassName("data-grid-top-toolbar")[0];
         expect(el).toExist();
     });
+    it('render with title as object without currentLocale', () => {
+
+        const title = {
+            'default': 'Layer',
+            'it-IT': 'Livello'
+        };
+
+        ReactDOM.render(<Header title={title}/>, document.getElementById("container"));
+        const el = document.getElementsByClassName("data-grid-top-toolbar")[0];
+        expect(el).toExist();
+        const strong = document.getElementsByTagName("STRONG")[0];
+        expect(strong.innerHTML).toBe(title.default);
+    });
+    it('render with title as object with currentLocale', () => {
+
+        const title = {
+            'default': 'Layer',
+            'it-IT': 'Livello'
+        };
+
+        ReactDOM.render(<Header title={title} currentLocale="it-IT"/>, document.getElementById("container"));
+        const el = document.getElementsByClassName("data-grid-top-toolbar")[0];
+        expect(el).toExist();
+        const strong = document.getElementsByTagName("STRONG")[0];
+        expect(strong.innerHTML).toBe(title['it-IT']);
+    });
+    it('render with title as object with missing currentLocale', () => {
+
+        const title = {
+            'default': 'Layer',
+            'it-IT': 'Livello'
+        };
+
+        ReactDOM.render(<Header title={title} currentLocale="en-US"/>, document.getElementById("container"));
+        const el = document.getElementsByClassName("data-grid-top-toolbar")[0];
+        expect(el).toExist();
+        const strong = document.getElementsByTagName("STRONG")[0];
+        expect(strong.innerHTML).toBe(title.default);
+    });
 });
