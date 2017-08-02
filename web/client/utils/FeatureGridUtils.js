@@ -1,5 +1,7 @@
+const get = require('lodash');
+
 const {getFeatureTypeProperties, isGeometryType, isValid, isValidValueForPropertyName, findGeometryProperty, getPropertyDesciptor} = require('./ogc/WFS/base');
-const getGeometryName = (describe) => findGeometryProperty(describe).name;
+const getGeometryName = (describe) => get(findGeometryProperty(describe), "name");
 const getPropertyName = (name, describe) => name === "geometry" ? getGeometryName(describe) : name;
 
 const getRow = (i, rows) => rows[i];

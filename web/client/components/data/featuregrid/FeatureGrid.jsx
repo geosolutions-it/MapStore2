@@ -70,7 +70,7 @@ class FeatureGrid extends React.PureComponent {
                     this.props.changes[id].hasOwnProperty(key);
             },
             isProperty: (k) => k === "geometry" || isProperty(k, this.props.describeFeatureType),
-            isValid: (val, key) => isValidValueForPropertyName(val, key, this.props.describeFeatureType)
+            isValid: (val, key) => this.props.describeFeatureType ? isValidValueForPropertyName(val, key, this.props.describeFeatureType) : true
         };
     }
     render() {
