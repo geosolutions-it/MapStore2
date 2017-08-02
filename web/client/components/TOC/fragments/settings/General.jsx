@@ -133,7 +133,11 @@ class General extends React.Component {
     };
 
     updateTranslation = (key, event) => {
-        this.props.updateSettings({title: assign({}, isString(this.props.element.title) ? {'default': this.props.element.title || ''} : this.props.element.title, {[key]: event.target.value})});
+        if (key === 'default' && isString(this.props.element.title)) {
+            this.props.updateSettings({title: event.target.value});
+        } else {
+            this.props.updateSettings({title: assign({}, isObject(this.props.element.title) ? this.props.element.title : {'default': this.props.element.title || ''}, {[key]: event.target.value})});
+        }
     };
 }
 

@@ -29,8 +29,8 @@ class Title extends React.Component {
 
     render() {
         let expanded = this.props.node.expanded !== undefined ? this.props.node.expanded : true;
-        const translation = isObject(this.props.node.title) ? this.props.node.title[this.props.currentLocale] || this.props.node.title.default : null;
-        return <span className="toc-title" onClick={() => this.props.onClick(this.props.node.id || this.props.node.name, expanded)} onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu(this.props.node); }}>{translation || this.props.node.title || this.props.node.name}</span>;
+        const translation = isObject(this.props.node.title) ? this.props.node.title[this.props.currentLocale] || this.props.node.title.default : this.props.node.title;
+        return <span className="toc-title" onClick={() => this.props.onClick(this.props.node.id || this.props.node.name, expanded)} onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu(this.props.node); }}>{translation || this.props.node.name}</span>;
     }
 }
 
