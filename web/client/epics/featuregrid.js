@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const Rx = require('rxjs');
-const {get, head, isEmpty} = require('lodash');
+const {get, head, isEmpty, find} = require('lodash');
 const { LOCATION_CHANGE } = require('react-router-redux');
 const axios = require('../libs/ajax');
 const {fidFilter} = require('../utils/ogc/Filter/filter');
@@ -68,6 +68,13 @@ const setupDrawSupport = (state, original) => {
         let changes = changesMapSelector(state);
         if (changes[feature.id] && (changes[feature.id].geometry || changes[feature.id].geometry === null)) {
             feature.geometry = changes[feature.id].geometry;
+        }
+        if (feature._new && !feature.geometry) {
+            const stateNewFeature = find(newFeaturesSelector(state), {id: feature.id});
+            if (stateNewFeature && stateNewFeature.geometry ) {
+                feature.geometry = stateNewFeature.geometry;
+            }
+
         }
         if (original) {
             feature.geometry = getFeatureById(state, feature.id) ? getFeatureById(state, feature.id).geometry : null;
