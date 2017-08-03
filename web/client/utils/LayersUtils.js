@@ -241,6 +241,9 @@ const LayersUtils = {
     },
     isSupportedLayer(layer, maptype) {
         return isSupportedLayer(layer, maptype);
+    },
+    getLayerTitleTranslations: (capabilities) => {
+        return capabilities.Title;
     }
 
 };
