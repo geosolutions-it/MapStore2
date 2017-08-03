@@ -29,7 +29,8 @@ const {
     GEOMETRY_CHANGED,
     DELETE_GEOMETRY_FEATURE,
     START_DRAWING_FEATURE,
-    SET_PERMISSION
+    SET_PERMISSION,
+    DISABLE_TOOLBAR
 } = require('../actions/featuregrid');
 const{
     FEATURE_TYPE_LOADED,
@@ -244,6 +245,11 @@ function featuregrid(state = emptyResultsState, action) {
             select: []
         });
     }
+    case DISABLE_TOOLBAR: {
+        return assign({}, state, {
+            disableToolbar: action.disabled
+        });
+    }
     case SET_PERMISSION: {
         return assign({}, state, {
             canEdit: action.permission.canEdit
@@ -257,7 +263,6 @@ function featuregrid(state = emptyResultsState, action) {
         }
         return state;
     }
-
     default:
         return state;
     }

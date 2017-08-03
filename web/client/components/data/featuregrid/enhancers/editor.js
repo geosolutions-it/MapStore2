@@ -47,7 +47,9 @@ const featuresToGrid = compose(
                     editable: props.mode === "EDIT",
                     sortable: !props.isFocused
                 }, {
-                    getEditor: ({localType=""} = {}) => props.editors[localType]
+                    getEditor: ({localType=""} = {}) => props.editors(localType, {
+                        onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges
+                    })
                 }))
             })
     ),
@@ -60,6 +62,7 @@ const featuresToGrid = compose(
                 onRowsSelected = () => {},
                 onRowsDeselected = () => {},
                 onRowsToggled = () => {},
+                hasTemporaryChanges = () => {},
                 ...gridEvents} = getGridEvents(props.gridEvents, props.rowGetter, props.describeFeatureType, props.actionOpts);
 
             // setup gridOpts setting app selection events binded

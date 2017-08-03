@@ -37,6 +37,7 @@ const CLOSE_GRID = 'FEATUREGRID:CLOSE_GRID';
 const CLEAR_CHANGES_CONFIRMED = 'FEATUREGRID:CLEAR_CHANGES_CONFIRMED';
 const FEATURE_GRID_CLOSE_CONFIRMED = 'FEATUREGRID:FEATURE_GRID_CLOSE_CONFIRMED';
 const SET_PERMISSION = 'FEATUREGRID:SET_PERMISSION';
+const DISABLE_TOOLBAR = 'FEATUREGRID:DISABLE_TOOLBAR';
 const MODES = {
     EDIT: "EDIT",
     VIEW: "VIEW"
@@ -224,6 +225,13 @@ function closeFeatureGrid() {
         type: CLOSE_GRID
     };
 }
+
+function disableToolbar(disabled) {
+    return {
+        type: DISABLE_TOOLBAR,
+        disabled
+    };
+}
 function setPermission(permission) {
     return {
         type: SET_PERMISSION,
@@ -264,6 +272,7 @@ module.exports = {
     CLEAR_CHANGES_CONFIRMED, clearChangeConfirmed,
     CLOSE_GRID, closeFeatureGrid,
     FEATURE_GRID_CLOSE_CONFIRMED, closeFeatureGridConfirmed,
+    DISABLE_TOOLBAR, disableToolbar,
     setLayer,
     selectFeatures,
     deselectFeatures,
