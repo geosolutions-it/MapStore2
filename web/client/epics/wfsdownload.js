@@ -9,7 +9,7 @@ const FilterUtils = require('../utils/FilterUtils');
 const {getByOutputFormat} = require('../utils/FileFormatUtils');
 
 const getWFSFeature = ({url, filterObj = {}, downloadOptions= {}} = {}) => {
-    const data = FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion);
+    const data = FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions);
     return Rx.Observable.defer( () =>
         axios.post(url + `?service=WFS&outputFormat=${downloadOptions.selectedFormat}`, data, {
           timeout: 60000,
@@ -25,6 +25,12 @@ const getFileName = action => {
     }
     return name;
 };
+const getDefaultSortOptions = (attribute) => {
+    return attribute ? { sortBy: attribute, sortOrder: 'A'} : {};
+};
+const getFirstAttribute = (state)=> {
+    return state.query && state.query.featureTypes && state.query.featureTypes[state.query.typeName] && state.query.featureTypes[state.query.typeName].attributes && state.query.featureTypes[state.query.typeName].attributes[0] && state.query.featureTypes[state.query.typeName].attributes[0].attribute || null;
+};
 /*
 const str2bytes = (str) => {
     var bytes = new Uint8Array(str.length);
@@ -35,7 +41,7 @@ const str2bytes = (str) => {
 };
 */
 module.exports = {
-    startFeatureExportDownload: action$ =>
+    startFeatureExportDownload: (action$, store) =>
         action$.ofType(DOWNLOAD_FEATURES).switchMap(action =>
             getWFSFeature({
                     url: action.url,
@@ -52,6 +58,26 @@ module.exports = {
                             throw xml;
                         }
                     }
+                })
+                .catch( () => {
+                    return getWFSFeature({
+                            url: action.url,
+                            downloadOptions: action.downloadOptions,
+                            filterObj: {
+                                ...action.filterObj,
+                                pagination: get(action, "downloadOptions.singlePage") ? action.filterObj.pagination : null,
+                                sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState()))
+                            }
+                        }).do(({data, headers}) => {
+                            if (headers["content-type"] === "application/xml") { // TODO add expected mimetypes in the case you want application/dxf
+                                let xml = String.fromCharCode.apply(null, new Uint8Array(data));
+                                if (xml.indexOf("<ows:ExceptionReport") === 0 ) {
+                                    throw xml;
+                                }
+                            }
+                            saveAs(new Blob([data], {type: headers && headers["content-type"]}), getFileName(action));
+                        });
+                }).do(({data, headers}) => {
                     saveAs(new Blob([data], {type: headers && headers["content-type"]}), getFileName(action));
                 })
                 .map( () => onDownloadFinished() )

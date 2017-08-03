@@ -93,7 +93,7 @@ const searchItemSelected = action$ =>
                     // retrieve geometry from geomService or pass the item directly
                     return Rx.Observable.fromPromise(
                         API.Utils.getService(item.__SERVICE__.geomService.type)("", assign( {}, item.__SERVICE__.geomService.options, { staticFilter } ))
-                            .then(res => assign({}, item, {geometry: res[0].geometry} ) )
+                            .then(res => assign({}, item, {geometry: CoordinatesUtils.mergeToPolyGeom(res)} ) )
                     );
                 }
                 return Rx.Observable.of(action.item);

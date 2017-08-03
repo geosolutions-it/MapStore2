@@ -50,10 +50,8 @@ const authenticationRules = [
     },
     {
       "urlPattern": ".*youhavetouseacustomone.*",
-      "method": {
-          "method": "authkey-param",
-          "param": "mario"
-      }
+      "authkeyParamName": "mario",
+      "method": "authkey"
     },
     {
       "urlPattern": ".*thisismissingtheparam.*",
@@ -268,20 +266,6 @@ describe('Tests ajax library', () => {
         });
     });
 
-    it('falls back to standard authkey if the custom one is misconfigured', (done) => {
-        // mocking the authentication rules and user info
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoB);
-        const theExpectedString = 'authkey%3D' + securityInfoB.token;
-        axios.get('http://non-existent.mapstore2/thisismissingtheparam?parameter1=value1&par2=v2').then(() => {
-            done("Axios actually reached the fake url");
-        }).catch((exception) => {
-            expect(exception.config).toExist().toIncludeKey('url');
-            expect(exception.config.url.indexOf(theExpectedString)).toBeGreaterThan(-1);
-            done();
-        });
-    });
 
     it('does not add autkeys if the configuration is wrong', (done) => {
         // mocking the authentication rules and user info

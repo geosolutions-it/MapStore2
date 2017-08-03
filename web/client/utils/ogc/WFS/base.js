@@ -47,7 +47,7 @@ const findGeometryProperty = (describeFeatureType) => head((getFeatureTypeProper
  */
 const getPropertyDesciptor = (propName, describeFeatureType) =>
     head(
-        getFeatureTypeProperties(describeFeatureType).filter(d => d.name === propName)
+        (getFeatureTypeProperties(describeFeatureType) || []).filter(d => d.name === propName)
     );
 /**
  * @name schemaLocation
@@ -57,7 +57,11 @@ const getPropertyDesciptor = (propName, describeFeatureType) =>
  */
 const schemaLocation = (d) => d.targetNamespace;
 const isGeometryType = (pd) => pd.type.indexOf("gml:") === 0;
-const isValidValue = (v, pd) => pd.nillable || (v !== undefined && v !== null); // TODO validate type
+const isValidValue = (v, pd) =>
+    pd === undefined
+    || pd === null
+    || pd && pd.nillable === true
+    || pd && pd.nillable === false && v !== undefined && v !== null; // TODO validate type
 const isValidProperty = ({geom, properties} = {}, pd) => isValidValue(isGeometryType(pd) ? geom : properties[pd.name], pd);
 /**
  * Base utilities for WFS.
