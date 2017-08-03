@@ -12,6 +12,8 @@ const getWMSLayers = (state) => state.layers && state.layers.flat && state.layer
 
 const refreshingLayers = (state) => state.layers && state.layers.refreshing || [];
 
+const mapUpdateOptions = (state) => state.controls && state.controls.mapUpdate && state.controls.mapUpdate.options || {bbox: true, search: true, dimensions: true, title: false};
+
 const autoMapUpdateSelector = createSelector([
      getWMSLayers,
      refreshingLayers
@@ -24,5 +26,6 @@ const autoMapUpdateSelector = createSelector([
 module.exports = {
     getWMSLayers,
     refreshingLayers,
-    autoMapUpdateSelector
+    autoMapUpdateSelector,
+    mapUpdateOptions
 };

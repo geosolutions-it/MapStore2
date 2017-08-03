@@ -66,6 +66,9 @@ const isSupportedLayer = (layer, maptype) => {
     }
     return Layers.isSupported(layer.type) && !layer.invalid;
 };
+
+const LayerCustomUtils = {};
+
 const LayersUtils = {
     getDimension: (dimensions, dimension) => {
         switch (dimension.toLowerCase()) {
@@ -243,9 +246,11 @@ const LayersUtils = {
         return isSupportedLayer(layer, maptype);
     },
     getLayerTitleTranslations: (capabilities) => {
-        return capabilities.Title;
+        return !!LayerCustomUtils.getLayerTitleTranslations ? LayerCustomUtils.getLayerTitleTranslations(capabilities) : capabilities.Title;
+    },
+    setCustomUtils(type, fun) {
+        LayerCustomUtils[type] = fun;
     }
-
 };
 
 module.exports = LayersUtils;

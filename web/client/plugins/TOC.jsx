@@ -427,8 +427,6 @@ const TOCPlugin = connect(tocSelector, {
     removeNode
 })(LayerTree);
 
-const {refresh} = require('../epics/layers');
-
 module.exports = {
     TOCPlugin: assign(TOCPlugin, {
         Toolbar: {
@@ -460,5 +458,5 @@ module.exports = {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
     },
-    epics: assign({}, {refresh}, autocompleteEpics)
+    epics: assign({}, autocompleteEpics)
 };
