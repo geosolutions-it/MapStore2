@@ -7,7 +7,7 @@ Then you can check each entry on the GitHub issue when done until the release is
 - [ ] Create a branch (**YYYY.XX.mm**)  
 - [ ] Change [QA Jenkins job](http://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build/) to build the new branch, enable the job continuous deploy
 - [ ] Test on QA [http://qa.mapstore2.geo-solutions.it/mapstore/](http://qa.mapstore2.geo-solutions.it/mapstore/)  
-    * Any fix must be done on both **YYYY.XX.mm** and **master** branch  
+    * Any fix must be done on **YYYY.XX.mm**. The fixes will be manually merged on master
     * Test **everything**, not only the new features
 - [ ] Generate the changelog with github_changelog_generator
 - [ ] Commit the changelog to the release branch
