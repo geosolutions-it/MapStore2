@@ -16,9 +16,7 @@ const {
     QUERY_CREATE,
     QUERY_RESULT,
     QUERY_ERROR,
-    RESET_QUERY,
-    QUERY_OPEN,
-    QUERY_CLOSE
+    RESET_QUERY
 } = require('../actions/wfsquery');
 
 const {QUERY_FORM_RESET} = require('../actions/queryform');
