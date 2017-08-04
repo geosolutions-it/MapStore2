@@ -47,7 +47,7 @@ const featuregrid = require('../featuregrid');
 const {setFeatures, dockSizeFeatures, setLayer, toggleTool, customizeAttribute, selectFeatures, deselectFeatures, createNewFeatures,
     featureSaving, toggleSelection, clearSelection, MODES, toggleEditMode, toggleViewMode, saveSuccess, clearChanges, saveError, startDrawingFeature,
     deleteGeometryFeature, geometryChanged, setSelectionOptions, changePage, featureModified, setPermission, disableToolbar} = require('../../actions/featuregrid');
-const {featureTypeLoaded, closeFeatureGrid} = require('../../actions/wfsquery');
+const {featureTypeLoaded} = require('../../actions/wfsquery');
 const {changeDrawingStatus} = require('../../actions/draw');
 
 const museam = require('json-loader!../../test-resources/wfs/museam.json');
@@ -219,15 +219,7 @@ describe('Test the featuregrid reducer', () => {
         let state = featuregrid( {}, setPermission({canEdit: true}));
         expect(state.canEdit).toBe(true);
     });
-    it('closeFeatureGrid', () => {
-        let state = featuregrid( {pagination: {size: 3}}, closeFeatureGrid());
-        expect(state.drawing).toBe(false);
-        expect(state.deleteConfirm).toBe(false);
-        expect(state.pagination.size).toBe(3);
-        expect(state.newFeatures.length).toBe(0);
-        expect(state.changes.length).toBe(0);
-        expect(state.select.length).toBe(0);
-    });
+
     it('CHANGE_DRAWING_STATUS', () => {
         let state = featuregrid( {}, changeDrawingStatus("clean"));
         expect(state.drawing).toBe(false);

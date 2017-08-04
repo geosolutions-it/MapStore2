@@ -9,7 +9,8 @@
 const Rx = require('rxjs');
 const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic} = require('../../../epics/wfsquery');
 const {getLayerFromId} = require('../../../selectors/layers');
-const {createQuery, featureTypeSelected, layerSelectedForSearch, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, CLOSE_FEATURE_GRID} = require('../../../actions/wfsquery');
+const {featureTypeSelected, layerSelectedForSearch, LAYER_SELECTED_FOR_SEARCH, CLOSE_FEATURE_GRID} = require('../../../actions/wfsquery');
+const {browseData} = require('../../../actions/layers');
 const {clearChanges, setPermission, toggleTool} = require('../../../actions/featuregrid');
 const {hasChangesSelector, hasNewFeaturesSelector} = require('../../../selectors/featuregrid');
 module.exports = (plugins) => {
@@ -42,26 +43,13 @@ module.exports = (plugins) => {
                     );
                 }),
         createFeatureGridDemoQuery: (action$, store) =>
-            Rx.Observable.zip(
-                action$.ofType(LAYER_SELECTED_FOR_SEARCH),
-                action$.ofType(FEATURE_TYPE_LOADED)
-            ).switchMap(([layer]) => Rx.Observable.of(
-            clearChanges(),
-            createQuery("http://demo.geo-solutions.it:80/geoserver/wfs", {
-                        featureTypeName: getLayerFromId(store.getState(), layer.id).name,
-                        groupFields: [
-
-                        ],
-                        filterFields: [],
-                        pagination: {
-                            maxFeatures: 20,
-                            startIndex: 0
-                        },
-                        filterType: 'OGC',
-                        ogcVersion: '1.1.0',
-                        sortOptions: null,
-                        hits: false
-                      })
+            action$.ofType(LAYER_SELECTED_FOR_SEARCH)
+                .switchMap((layer) => Rx.Observable.of(
+                    clearChanges(),
+                    browseData({
+                        ...getLayerFromId(store.getState(), layer.id),
+                        url: 'http://demo.geo-solutions.it:80/geoserver/wfs'
+                    })
         ))
     }, plugins);
 };
