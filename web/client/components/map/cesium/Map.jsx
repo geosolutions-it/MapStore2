@@ -91,6 +91,7 @@ let CesiumMap = React.createClass({
         this.forceUpdate();
     },
     componentWillReceiveProps(newProps) {
+
         if (newProps.mousePointer !== this.props.mousePointer) {
             this.setMousePointer(newProps.mousePointer);
         }
@@ -144,6 +145,9 @@ let CesiumMap = React.createClass({
     },
     render() {
         const map = this.map;
+        if (this.map) {
+            this.map.scene.globe.baseColor = Cesium.Color.WHITE;
+        }
         const mapProj = this.props.projection;
         const children = map ? React.Children.map(this.props.children, child => {
             return child ? React.cloneElement(child, {map: map, projection: mapProj}) : null;
