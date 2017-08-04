@@ -31,7 +31,8 @@ class AutoMapUpdate extends React.Component {
         length: PropTypes.number,
         label: PropTypes.string,
         unit: PropTypes.string,
-        onUpdateOptions: PropTypes.func
+        onUpdateOptions: PropTypes.func,
+        spinner: PropTypes.string
     };
 
     static defaultProps = {
@@ -60,7 +61,8 @@ class AutoMapUpdate extends React.Component {
                 count={this.props.count}
                 length={this.props.length}
                 label={this.props.label}
-                unit={this.props.unit}/>
+                unit={this.props.unit}
+                spinner={this.props.spinner}/>
         );
     }
 }
