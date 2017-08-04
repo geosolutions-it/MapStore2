@@ -64,8 +64,8 @@ const FeatureDock = (props = {
                 describeFeatureType={props.describe}
                 features={props.features}
                 minHeight={600}
-                tools={props.gridTools}/
-        ></BorderLayout> }
+                tools={props.gridTools}/>
+        </BorderLayout> }
 
         </ContainerDimensions>
         }
