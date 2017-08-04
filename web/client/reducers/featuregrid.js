@@ -271,6 +271,7 @@ function featuregrid(state = emptyResultsState, action) {
         }
         return state;
     }
+
     default:
         return state;
     }

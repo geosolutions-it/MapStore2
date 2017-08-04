@@ -1,16 +1,8 @@
 const React = require('react');
-const {Button, ButtonGroup, Glyphicon, Tooltip, OverlayTrigger} = require('react-bootstrap');
+const {ButtonGroup} = require('react-bootstrap');
 require("./toolbar.css");
-const hideStyle = {
-    width: 0,
-    padding: 0,
-    borderWidth: 0
-};
-const normalStyle = {
-};
 const Message = require('../../../I18N/Message');
-
-const getStyle = (visible) => visible ? normalStyle : hideStyle;
+const TButton = require("./TButton");
 const getDrawFeatureTooltip = (isDrawing, isSimpleGeom) => {
     if (isDrawing) {
         return "featuregrid.toolbar.stopDrawGeom";
@@ -24,37 +16,80 @@ const getSaveMessageId = ({saving, saved}) => {
     return "featuregrid.toolbar.saveChanges";
 };
 
-module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeometry, hasNewFeatures, isSimpleGeom, isDrawing = false, isEditingAllowed, saving = false, saved = false, isDownloadOpen, isColumnsOpen} = {}) =>
+module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeometry, hasNewFeatures, isSimpleGeom, isDrawing = false, isEditingAllowed, saving = false, saved = false, isDownloadOpen, isColumnsOpen, disableToolbar} = {}) =>
     (<ButtonGroup id="featuregrid-toolbar" className="featuregrid-toolbar featuregrid-toolbar-margin">
-        <OverlayTrigger placement="top" overlay={<Tooltip id="fe-edit-mode"><Message msgId="featuregrid.toolbar.editMode"/></Tooltip>}>
-            <Button key="edit-mode" bsStyle="primary" id="fg-edit-mode" style={getStyle(mode === "VIEW" && isEditingAllowed)} className="square-button" onClick={events.switchEditMode}><Glyphicon glyph="pencil"/></Button>
-        </OverlayTrigger>
-        <OverlayTrigger placement="top" overlay={<Tooltip id="fe-back-view"><Message msgId="featuregrid.toolbar.quitEditMode"/></Tooltip>}>
-            <Button key="back-view" bsStyle="primary" id="fg-back-view" style={getStyle(mode === "EDIT" && !hasChanges && !hasNewFeatures)} className="square-button" onClick={events.switchViewMode}><Glyphicon glyph="arrow-left"/></Button>
-        </OverlayTrigger>
-        <OverlayTrigger placement="top" overlay={<Tooltip id="fe-add-feature"><Message msgId="featuregrid.toolbar.addNewFeatures"/></Tooltip>}>
-            <Button key="add-feature" bsStyle="primary" id="fg-add-feature" style={getStyle(mode === "EDIT" && !hasNewFeatures && !hasChanges)} className="square-button" onClick={events.createFeature}><Glyphicon glyph="row-add"/></Button>
-        </OverlayTrigger>
-        <OverlayTrigger placement="top" overlay={<Tooltip id="fe-draw-feature"><Message msgId={getDrawFeatureTooltip(isDrawing, isSimpleGeom)}/></Tooltip>}>
-            <Button key="draw-feature" bsStyle="primary" id="fg-draw-feature" style={getStyle(mode === "EDIT" && selectedCount === 1 && (!hasGeometry || hasGeometry && !isSimpleGeom))} className={ isDrawing ? "square-button btn-success" : "square-button"} onClick={events.startDrawingFeature}><Glyphicon glyph="pencil-add"/></Button>
-        </OverlayTrigger>
-        <OverlayTrigger placement="top" overlay={<Tooltip id="fe-remove-features"><Message msgId="featuregrid.toolbar.deleteSelectedFeatures"/></Tooltip>}>
-            <Button key="remove-features" bsStyle="primary" id="fg-remove-features" style={getStyle(mode === "EDIT" && selectedCount > 0 && !hasChanges && !hasNewFeatures)} className="square-button" onClick={events.deleteFeatures}><Glyphicon glyph="trash-square"/></Button>
-        </OverlayTrigger>
-        <OverlayTrigger placement="top" overlay={<Tooltip id="fe-save-features"><Message msgId={getSaveMessageId({saving, saved})}/></Tooltip>}>
-            <Button key="save-feature" bsStyle="primary" disabled={saving || saved} bsStyle={saved ? "success" : "primary"} id="fg-save-features" style={getStyle(mode === "EDIT" && hasChanges || hasNewFeatures)} className="square-button" onClick={events.saveChanges}><Glyphicon glyph="floppy-disk"/></Button>
-        </OverlayTrigger>
-        <OverlayTrigger placement="top" overlay={<Tooltip id="fe-cancel-editing"><Message msgId="featuregrid.toolbar.cancelChanges"/></Tooltip>}>
-            <Button key="cancel-editing" bsStyle="primary" id="fg-cancel-editing" style={getStyle(mode === "EDIT" && hasChanges || hasNewFeatures)}
-                className="square-button" onClick={events.clearFeatureEditing}><Glyphicon glyph="remove-square"/></Button>
-        </OverlayTrigger>
-        <OverlayTrigger placement="top" overlay={<Tooltip id="fe-delete-geometry"><Message msgId="featuregrid.toolbar.deleteGeometry"/></Tooltip>}>
-            <Button key="delete-geometry" bsStyle="primary" id="fg-delete-geometry" style={getStyle(mode === "EDIT" && hasGeometry && selectedCount === 1)} className="square-button" onClick={events.deleteGeometry}><Glyphicon glyph="polygon-trash"/></Button>
-        </OverlayTrigger>
-        <OverlayTrigger placement="top" overlay={<Tooltip id="fe-download-grid"><Message msgId="featuregrid.toolbar.downloadGridData"/></Tooltip>}>
-            <Button key="download-grid" bsStyle="primary" id="fg-download-grid" bsStyle={isDownloadOpen ? "success" : "primary"} style={getStyle(mode === "VIEW")} className="square-button" onClick={events.download}><Glyphicon glyph="features-grid-download"/></Button>
-        </OverlayTrigger>
-        <OverlayTrigger placement="top" overlay={<Tooltip id="fe-grid-settings"><Message msgId="featuregrid.toolbar.hideShowColumns"/></Tooltip>}>
-            <Button key="grid-settings" bsStyle="primary" id="fg-grid-settings" bsStyle={isColumnsOpen ? "success" : "primary"} className="square-button" style={getStyle(selectedCount <= 1 && mode === "VIEW")} onClick={events.settings}><Glyphicon glyph="features-grid-set"/></Button>
-        </OverlayTrigger>
+        <TButton
+            id="edit-mode"
+            tooltip={<Message msgId="featuregrid.toolbar.editMode"/>}
+            disabled={disableToolbar}
+            visible={mode === "VIEW" && isEditingAllowed}
+            onClick={events.switchEditMode}
+            glyph="pencil"/>
+        <TButton
+            id="back-view"
+            tooltip={<Message msgId="featuregrid.toolbar.quitEditMode"/>}
+            disabled={disableToolbar}
+            visible={mode === "EDIT" && !hasChanges && !hasNewFeatures}
+            onClick={events.switchViewMode}
+            glyph="arrow-left"/>
+        <TButton
+            id="add-feature"
+            tooltip={<Message msgId="featuregrid.toolbar.addNewFeatures"/>}
+            disabled={disableToolbar}
+            visible={mode === "EDIT" && !hasNewFeatures && !hasChanges}
+            onClick={events.createFeature}
+            glyph="row-add"/>
+        <TButton
+            id="draw-feature"
+            tooltip={<Message msgId={getDrawFeatureTooltip(isDrawing, isSimpleGeom)}/>}
+            disabled={disableToolbar}
+            visible={mode === "EDIT" && selectedCount === 1 && (!hasGeometry || hasGeometry && !isSimpleGeom)}
+            onClick={events.startDrawingFeature}
+            active={isDrawing}
+            glyph="pencil-add"/>
+        <TButton
+            id="remove-features"
+            tooltip={<Message msgId="featuregrid.toolbar.deleteSelectedFeatures"/>}
+            disabled={disableToolbar}
+            visible={mode === "EDIT" && selectedCount > 0 && !hasChanges && !hasNewFeatures}
+            onClick={events.deleteFeatures}
+            glyph="trash-square"/>
+        <TButton
+            id="save-feature"
+            tooltip={<Message msgId={getSaveMessageId({saving, saved})}/>}
+            disabled={saving || saved || disableToolbar}
+            visible={mode === "EDIT" && hasChanges || hasNewFeatures}
+            active={saved}
+            onClick={events.saveChanges}
+            glyph="floppy-disk"/>
+        <TButton
+            id="cancel-editing"
+            tooltip={<Message msgId="featuregrid.toolbar.cancelChanges"/>}
+            disabled={disableToolbar}
+            visible={mode === "EDIT" && hasChanges || hasNewFeatures}
+            onClick={events.clearFeatureEditing}
+            glyph="remove-square"/>
+        <TButton
+            id="delete-geometry"
+            tooltip={<Message msgId="featuregrid.toolbar.deleteGeometry"/>}
+            disabled={disableToolbar}
+            visible={mode === "EDIT" && hasGeometry && selectedCount === 1}
+            onClick={events.deleteGeometry}
+            glyph="polygon-trash"/>
+        <TButton
+            id="download-grid"
+            tooltip={<Message msgId="featuregrid.toolbar.downloadGridData"/>}
+            disabled={disableToolbar}
+            active={isDownloadOpen}
+            visible={mode === "VIEW"}
+            onClick={events.download}
+            glyph="features-grid-download"/>
+        <TButton
+            id="grid-settings"
+            tooltip={<Message msgId="featuregrid.toolbar.hideShowColumns"/>}
+            disabled={disableToolbar}
+            active={isColumnsOpen}
+            visible={selectedCount <= 1 && mode === "VIEW"}
+            onClick={events.settings}
+            glyph="features-grid-set"/>
     </ButtonGroup>);
