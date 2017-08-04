@@ -144,10 +144,9 @@ function toggleQueryPanel(url, name, id) {
 
     };
 }
-
 function closeResponse() {
     return (dispatch, getState) => {
-        dispatch(featureClose());
+        // dispatch(featureClose());
         let state = getState();
         if (state.controls && state.controls.queryPanel && state.controls.drawer && !state.controls.drawer.enabled) {
             dispatch(setControlProperty('drawer', 'enabled', true));

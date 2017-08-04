@@ -218,6 +218,7 @@
             "displayLegendAndTools": "Mostrar la leyenda y las herramientas",
             "zoomToLayerExtent": "Zoom sobre la extensión del mapa",
             "editLayerProperties": "Modificar las propiedades de la capa",
+            "browseData": "Abrir la tabla de atributos",
             "searchFeatures": "Buscar en el  mapa ...",
             "removeLayer": "Borrar la capa",
             "loadingerror": "La capa se ha cargado correctamente",
@@ -833,6 +834,7 @@
             "missingGeometry": "Missing geometry",
             "toolbar": {
                 "editMode": "Modo de edición",
+                "advancedFilter": "Búsqueda avanzada",
                 "quitEditMode": "Salir del modo de edición",
                 "addNewFeatures": "Añadir nueva función",
                 "editFeature": "Función de edición",

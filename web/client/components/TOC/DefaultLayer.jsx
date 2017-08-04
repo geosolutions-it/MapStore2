@@ -150,7 +150,7 @@ class DefaultLayer extends React.Component {
         if (this.props.activateQueryTool && this.props.node.search) {
             tools.push(
                 <LayersTool key="toolquery"
-                        tooltip="toc.browseFeatures"
+                        tooltip="toc.browseData"
                         className="toc-queryTool"
                         node={this.props.node}
                         ref="target"

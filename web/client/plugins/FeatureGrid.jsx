@@ -7,7 +7,7 @@
  */
 const {connect} = require('react-redux');
 const {selectFeatures, dockSizeFeatures} = require('../actions/featuregrid');
-const {query, closeResponse} = require('../actions/wfsquery');
+const {query, queryClose} = require('../actions/wfsquery');
 const {changeMapView} = require('../actions/map');
 const {toggleControl} = require('../actions/controls');
 
@@ -39,7 +39,7 @@ module.exports = {
         exportAction: () => toggleControl("wfsdownload"),
         changeMapView,
         onQuery: query,
-        onBackToSearch: closeResponse,
+        onBackToSearch: queryClose,
         setDockSize: dockSizeFeatures
     })(require('../components/data/featuregrid_ag/DockedFeatureGrid')),
     reducers: {

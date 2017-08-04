@@ -216,6 +216,7 @@
             "displayLegendAndTools": "Visualizza legenda e strumenti aggiuntivi",
             "zoomToLayerExtent": "Zoom all' estensione del livello",
             "editLayerProperties": "Modifica proprietà dal livello",
+            "browseData": "Apri tabella degli attributi",
             "searchFeatures": "Effettua una ricerca su questo livello...",
             "removeLayer": "Rimuovi livello",
             "loadingerror": "Il livello non è stato caricato correttamente",
@@ -830,6 +831,7 @@
             "missingGeometry": "Geometria mancante",
             "toolbar": {
                 "editMode": "Entra in modalità editing",
+                "advancedFilter": "Ricerca avanzata",
                 "quitEditMode": "Esci dalla modalità editing",
                 "addNewFeatures": "Aggiungi una nuova feature",
                 "editFeature": "Modifica la feature",

@@ -18,6 +18,7 @@ const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const {setControlProperty} = require('../actions/controls');
 const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, featureTypeSelected, createQuery} = require('../actions/wfsquery');
+const {reset} = require('../actions/queryform');
 const {BROWSE_DATA} = require('../actions/layers');
 const {parseString} = require('xml2js');
 const {stripPrefix} = require('xml2js/lib/processors');
@@ -26,7 +27,7 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     CLEAR_CHANGES, START_EDITING_FEATURE, TOGGLE_MODE, MODES, geometryChanged, DELETE_GEOMETRY, deleteGeometryFeature,
     SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE,
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
-    openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM} = require('../actions/featuregrid');
+    openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH} = require('../actions/featuregrid');
 
 const {TOGGLE_CONTROL} = require('../actions/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
@@ -180,6 +181,11 @@ module.exports = {
                 openFeatureGrid()
             ).merge(
                 createInitialQueryFlow(action$, store, layer)
+            ).merge(
+                get(store.getState(), "query.typeName") !== name
+                    ? Rx.Observable.of(reset())
+                    : Rx.Observable.empty()
+
             )
         ),
     /**
@@ -405,8 +411,13 @@ module.exports = {
         action$.ofType(OPEN_FEATURE_GRID).switchMap( () =>
             action$.ofType(LOCATION_CHANGE)
                 .take(1)
-                .map(() => toggleViewMode())
-                .takeUntil(CLOSE_FEATURE_GRID)
+                .switchMap(() =>
+                    Rx.Observable.of(
+                        toggleViewMode(),
+                        closeFeatureGrid()
+                    )
+                )
+                .takeUntil(action$.ofType(CLOSE_FEATURE_GRID))
         ),
     /**
      * Closes the feature grid when the drawer menu button has been toggled
@@ -416,7 +427,7 @@ module.exports = {
             action$.ofType(TOGGLE_CONTROL)
                 .filter(action => action.control && action.control === 'drawer' && isFeatureGridOpen(store.getState()))
                 .switchMap(() => Rx.Observable.of(closeFeatureGrid()))
-                .takeUntil(CLOSE_FEATURE_GRID, LOCATION_CHANGE)
+                .takeUntil(action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE))
         ),
     askChangesConfirmOnFeatureGridClose: (action$, store) => action$.ofType(CLOSE_FEATURE_GRID_CONFIRM).switchMap( () => {
         const state = store.getState();
@@ -430,5 +441,19 @@ module.exports = {
     onCloseFeatureGridConfirmed: (action$) => action$.ofType(FEATURE_GRID_CLOSE_CONFIRMED)
         .switchMap( () => {
             return Rx.Observable.of(setControlProperty("drawer", "enabled", false), toggleTool("featureCloseConfirm", false));
-        })
+        }),
+    onOpenAdvancedSearch: action$ =>
+        action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() =>
+            Rx.Observable.of(
+                setControlProperty('queryPanel', "enabled", true),
+                closeFeatureGrid()
+            ).merge(
+                action$.ofType(QUERY_CREATE).switchMap(() =>
+                    Rx.Observable.of(
+                        setControlProperty('queryPanel', "enabled", false),
+                        openFeatureGrid()
+                    )
+                )
+            )
+        )
 };
