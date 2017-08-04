@@ -1,6 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const { editors } = require('react-data-grid');
+const AttributeEditor = require('./AttributeEditor');
 const nanToNull = v => isNaN(v) ? null : v;
 const processValue = (obj, func) => Object.keys(obj).reduce((acc, curr) => ({
     ...acc,
@@ -10,7 +10,7 @@ const parsers = {
     "int": v => parseInt(v, 10),
     "number": v => parseFloat(v, 10)
 };
-class NumberEditor extends editors.EditorBase {
+class NumberEditor extends AttributeEditor {
     static propTypes = {
       value: PropTypes.oneOfType([
           PropTypes.string,

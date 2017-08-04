@@ -46,7 +46,7 @@ const expect = require('expect');
 const featuregrid = require('../featuregrid');
 const {setFeatures, dockSizeFeatures, setLayer, toggleTool, customizeAttribute, selectFeatures, deselectFeatures, createNewFeatures,
     featureSaving, toggleSelection, clearSelection, MODES, toggleEditMode, toggleViewMode, saveSuccess, clearChanges, saveError, startDrawingFeature,
-    deleteGeometryFeature, geometryChanged, setSelectionOptions, changePage, featureModified, setPermission} = require('../../actions/featuregrid');
+    deleteGeometryFeature, geometryChanged, setSelectionOptions, changePage, featureModified, setPermission, disableToolbar} = require('../../actions/featuregrid');
 const {featureTypeLoaded, featureClose} = require('../../actions/wfsquery');
 const {changeDrawingStatus} = require('../../actions/draw');
 
@@ -249,6 +249,16 @@ describe('Test the featuregrid reducer', () => {
         expect(state.newFeatures.length).toBe(0);
         state = featuregrid( state, geometryChanged([feature1]));
         expect(state.changes.length).toBe(2);
+
+    });
+    it('DISABLE_TOOLBAR', () => {
+        let state = featuregrid({}, {type: "UNKNOWN"});
+        expect(state.disableToolbar).toBeFalsy();
+        state = featuregrid({}, disableToolbar(true));
+        expect(state.disableToolbar).toBe(true);
+
+        state = featuregrid({}, disableToolbar(false));
+        expect(state.disableToolbar).toBe(false);
 
     });
     it('featureTypeLoaded', () => {
