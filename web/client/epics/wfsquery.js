@@ -17,7 +17,6 @@ const FilterUtils = require('../utils/FilterUtils');
 const assign = require('object-assign');
 
 const {isString, isObject} = require('lodash');
-const {setControlProperty} = require('../actions/controls');
 // this is a workaround for https://osgeo-org.atlassian.net/browse/GEOS-7233. can be removed when fixed
 const workaroundGEOS7233 = ({totalFeatures, features, ...rest}, {startIndex, maxFeatures}, originalSize) => {
     if (originalSize > totalFeatures && originalSize === startIndex + features.length && totalFeatures === features.length) {
@@ -231,7 +230,6 @@ const wfsQueryEpic = (action$, store) =>
     action$.ofType(QUERY)
         .switchMap(action => {
             return Rx.Observable.merge(
-                Rx.Observable.of(setControlProperty('drawer', 'enabled', false)),
                 getWFSFeature(action.searchUrl, action.filterObj)
                     .switchMap((response) => {
                         // try to guess if it was a missing id error and try to search again with forced sortOptions

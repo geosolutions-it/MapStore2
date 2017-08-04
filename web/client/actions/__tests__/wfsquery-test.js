@@ -19,7 +19,6 @@ var {
     QUERY_CREATE,
     QUERY,
     RESET_QUERY,
-    FEATURE_CLOSE,
     layerSelectedForSearch,
     featureTypeSelected,
     featureTypeError,
@@ -30,8 +29,7 @@ var {
     queryError,
     createQuery,
     query,
-    resetQuery,
-    featureClose
+    resetQuery
 } = require('../wfsquery');
 
 describe('wfsquery actions', () => {
@@ -96,9 +94,5 @@ describe('wfsquery actions', () => {
     it('resetQuery', () => {
         let {type} = resetQuery();
         expect(type).toBe(RESET_QUERY);
-    });
-    it('featureClose', () => {
-        let {type} = featureClose();
-        expect(type).toBe(FEATURE_CLOSE);
     });
 });

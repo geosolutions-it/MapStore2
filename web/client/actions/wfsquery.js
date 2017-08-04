@@ -12,7 +12,6 @@ const FEATURE_LOADED = 'FEATURE_LOADED';
 const FEATURE_LOADING = 'FEATURE_LOADING';
 const FEATURE_TYPE_ERROR = 'FEATURE_TYPE_ERROR';
 const FEATURE_ERROR = 'FEATURE_ERROR';
-const FEATURE_CLOSE = 'FEATURE_CLOSE';
 const QUERY_CREATE = 'QUERY_CREATE';
 const QUERY_RESULT = 'QUERY_RESULT';
 const QUERY_ERROR = 'QUERY_ERROR';
@@ -132,7 +131,6 @@ function resetQuery() {
     };
 }
 
-
 function toggleQueryPanel(url, name, id) {
     return (dispatch, getState) => {
         if (getState().query.typeName !== name) {
@@ -141,13 +139,9 @@ function toggleQueryPanel(url, name, id) {
         dispatch(changeDrawingStatus('clean', null, "queryform", []));
         dispatch(featureTypeSelected(url, name));
         dispatch(toggleControl('queryPanel', null));
-        dispatch(layerSelectedForSearch(id));
         dispatch(setControlProperty('drawer', 'width', getState().controls.queryPanel.enabled ? 700 : 300));
-    };
-}
-function featureClose() {
-    return {
-        type: FEATURE_CLOSE
+        dispatch(layerSelectedForSearch(id));
+
     };
 }
 
@@ -168,7 +162,6 @@ module.exports = {
     FEATURE_TYPE_LOADED, featureTypeLoaded,
     FEATURE_TYPE_ERROR, featureTypeError,
     FEATURE_ERROR, featureError,
-    FEATURE_CLOSE, featureClose,
     QUERY_CREATE, createQuery,
     QUERY_RESULT, querySearchResponse,
     QUERY_ERROR, queryError,

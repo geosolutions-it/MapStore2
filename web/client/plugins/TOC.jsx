@@ -13,7 +13,7 @@ const {Button, Glyphicon} = require('react-bootstrap');
 const autocompleteEpics = require('../epics/autocomplete');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
-       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode} = require('../actions/layers');
+       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode, browseData} = require('../actions/layers');
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
 const {groupsSelector, layersSelector} = require('../selectors/layers');
@@ -62,7 +62,7 @@ const {toggleControl, setControlProperty} = require('../actions/controls');
 
 const {refreshLayers} = require('../actions/layers');
 
-const {createQuery, toggleQueryPanel} = require('../actions/wfsquery');
+const {createQuery} = require('../actions/wfsquery');
 
 const {
     changeDrawingStatus,
@@ -213,7 +213,7 @@ class LayerTree extends React.Component {
         onToggleGroup: PropTypes.func,
         onToggleLayer: PropTypes.func,
         onContextMenu: PropTypes.func,
-        onToggleQuery: PropTypes.func,
+        onBrowseData: PropTypes.func,
         onZoomToExtent: PropTypes.func,
         retrieveLayerData: PropTypes.func,
         onSort: PropTypes.func,
@@ -313,7 +313,7 @@ class LayerTree extends React.Component {
                             settingsOptions={this.props.settingsOptions}
                             onToggle={this.props.onToggleLayer}
                             onContextMenu={this.props.onContextMenu}
-                            onToggleQuerypanel={this.props.onToggleQuery }
+                            onBrowseData={this.props.onBrowseData}
                             onZoom={this.props.onZoomToExtent}
                             onSettings={this.props.onSettings}
                             onRefresh={this.props.onRefreshLayer}
@@ -354,7 +354,6 @@ class LayerTree extends React.Component {
     renderQueryPanel = () => {
         return (
             <div id="toc-query-container">
-                <Button id="toc-query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={() => this.props.onToggleQuery()}><Glyphicon glyph="arrow-left"/></Button>
                 <SmartQueryForm
                     spatialOperations={this.props.spatialOperations}
                     spatialMethodOptions={this.props.spatialMethodOptions}
@@ -403,7 +402,7 @@ const TOCPlugin = connect(tocSelector, {
     onToggleGroup: LayersUtils.toggleByType('groups', toggleNode),
     onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
     onContextMenu: contextNode,
-    onToggleQuery: toggleQueryPanel,
+    onBrowseData: browseData,
     onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
     onSettings: showSettings,
     onRefresh: toggleControl.bind(null, 'RefreshLayers', 'enabled'),

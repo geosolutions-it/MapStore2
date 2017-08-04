@@ -9,7 +9,7 @@
 const Rx = require('rxjs');
 const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic} = require('../../../epics/wfsquery');
 const {getLayerFromId} = require('../../../selectors/layers');
-const {createQuery, featureTypeSelected, layerSelectedForSearch, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, FEATURE_CLOSE} = require('../../../actions/wfsquery');
+const {createQuery, featureTypeSelected, layerSelectedForSearch, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, CLOSE_FEATURE_GRID} = require('../../../actions/wfsquery');
 const {clearChanges, setPermission, toggleTool} = require('../../../actions/featuregrid');
 const {hasChangesSelector, hasNewFeaturesSelector} = require('../../../selectors/featuregrid');
 module.exports = (plugins) => {
@@ -29,7 +29,7 @@ module.exports = (plugins) => {
                     const state = store.getState();
                     if (hasChangesSelector(state) || hasNewFeaturesSelector(state)) {
                         return Rx.Observable.of(toggleTool("featureCloseConfirm", true))
-                            .merge(action$.ofType(FEATURE_CLOSE).switchMap( () => Rx.Observable.of(
+                            .merge(action$.ofType(CLOSE_FEATURE_GRID).switchMap( () => Rx.Observable.of(
                                 layerSelectedForSearch(id),
                                 setPermission({canEdit: true}),
                                 featureTypeSelected( 'http://demo.geo-solutions.it:80/geoserver/wfs', id),

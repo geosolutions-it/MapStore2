@@ -33,7 +33,9 @@ const GEOMETRY_CHANGED = 'FEATUREGRID:GEOMETRY_CHANGED';
 const DOCK_SIZE_FEATURES = 'DOCK_SIZE_FEATURES';
 const TOGGLE_TOOL = 'FEATUREGRID:TOGGLE_TOOL';
 const CUSTOMIZE_ATTRIBUTE = 'FEATUREGRID:CUSTOMIZE_ATTRIBUTE';
-const CLOSE_GRID = 'FEATUREGRID:CLOSE_GRID';
+const CLOSE_FEATURE_GRID_CONFIRM = 'ASK_CLOSE_FEATURE_GRID_CONFIRM';
+const OPEN_FEATURE_GRID = 'FEATUREGRID:OPEN_GRID';
+const CLOSE_FEATURE_GRID = 'FEATUREGRID:CLOSE_GRID';
 const CLEAR_CHANGES_CONFIRMED = 'FEATUREGRID:CLEAR_CHANGES_CONFIRMED';
 const FEATURE_GRID_CLOSE_CONFIRMED = 'FEATUREGRID:FEATURE_GRID_CLOSE_CONFIRMED';
 const SET_PERMISSION = 'FEATUREGRID:SET_PERMISSION';
@@ -219,9 +221,19 @@ function saveError() {
         type: SAVE_ERROR
     };
 }
+function closeFeatureGridConfirm() {
+    return {
+        type: CLOSE_FEATURE_GRID_CONFIRM
+    };
+}
 function closeFeatureGrid() {
     return {
-        type: CLOSE_GRID
+        type: CLOSE_FEATURE_GRID
+    };
+}
+function openFeatureGrid() {
+    return {
+        type: OPEN_FEATURE_GRID
     };
 }
 function setPermission(permission) {
@@ -262,7 +274,9 @@ module.exports = {
     DELETE_GEOMETRY, deleteGeometry,
     DELETE_GEOMETRY_FEATURE, deleteGeometryFeature,
     CLEAR_CHANGES_CONFIRMED, clearChangeConfirmed,
-    CLOSE_GRID, closeFeatureGrid,
+    CLOSE_FEATURE_GRID, closeFeatureGrid,
+    OPEN_FEATURE_GRID, openFeatureGrid,
+    CLOSE_FEATURE_GRID_CONFIRM, closeFeatureGridConfirm,
     FEATURE_GRID_CLOSE_CONFIRMED, closeFeatureGridConfirmed,
     setLayer,
     selectFeatures,
