@@ -127,3 +127,43 @@
     }
 
 }
+
+.data-grid-top-toolbar {
+    height: 62px;
+    overflow: hidden;
+}
+
+.data-grid-bottom-toolbar {
+    background-color: @ms2-color-background;
+    z-index: 1;
+    height: 32px;
+    overflow: hidden;
+}
+
+@media all and (max-width: 1024px) {
+    .data-grid-bottom-toolbar .col-md-3 {
+        width: 0;
+        display: none;
+    }
+
+    .data-grid-bottom-toolbar .col-md-6 {
+        width: 100%;
+    }
+
+    .data-grid-top-toolbar > .flex-center .col-xs-4:nth-child(1) {
+        width: ~"calc(100% - @{square-btn-size})";
+        padding: 0;
+        margin-left: 5px;
+    }
+
+    .data-grid-top-toolbar > .flex-center .col-xs-4:nth-child(2) {
+        width: 0;
+        display: none;
+    }
+
+    .data-grid-top-toolbar > .flex-center .col-xs-4:nth-child(3) {
+        width: @square-btn-size + 10;
+        padding: 0;
+        margin-right: 5px;
+    }
+}
