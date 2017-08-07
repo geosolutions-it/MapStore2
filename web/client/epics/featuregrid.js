@@ -18,7 +18,7 @@ const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const {setControlProperty} = require('../actions/controls');
 const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, featureTypeSelected, createQuery} = require('../actions/wfsquery');
-const {reset} = require('../actions/queryform');
+const {reset, QUERY_FORM_RESET} = require('../actions/queryform');
 const {BROWSE_DATA} = require('../actions/layers');
 const {parseString} = require('xml2js');
 const {stripPrefix} = require('xml2js/lib/processors');
@@ -165,7 +165,7 @@ const createInitialQueryFlow = (action$, store, {url, name} = {}) => {
     });
 
     if (isDescribeLoaded(store.getState(), name)) {
-        return Rx.Observable.of(createInitialQuery());
+        return Rx.Observable.of(createInitialQuery(), featureTypeSelected(url, name));
     }
     return Rx.Observable.of(featureTypeSelected(url, name)).merge(
         action$.ofType(FEATURE_TYPE_LOADED).filter(({typeName} = {}) => typeName === name)
@@ -442,18 +442,35 @@ module.exports = {
         .switchMap( () => {
             return Rx.Observable.of(setControlProperty("drawer", "enabled", false), toggleTool("featureCloseConfirm", false));
         }),
-    onOpenAdvancedSearch: action$ =>
+    onOpenAdvancedSearch: (action$, store) =>
         action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() =>
             Rx.Observable.of(
                 setControlProperty('queryPanel', "enabled", true),
                 closeFeatureGrid()
             ).merge(
-                action$.ofType(QUERY_CREATE).switchMap(() =>
-                    Rx.Observable.of(
-                        setControlProperty('queryPanel', "enabled", false),
-                        openFeatureGrid()
+                action$.ofType(QUERY_FORM_RESET) // ON RESET YOU HAVE TO PERFORM A SEARCH AGAIN WHEN BACK
+                    .switchMap(() => action$.ofType(TOGGLE_CONTROL)
+                    .filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled"))
+                    .switchMap( () => createInitialQueryFlow(action$, store, {
+                        url: get(store.getState(), "query.url"),
+                        name: get(store.getState(), "query.typeName")
+                    }))))
+            .merge(
+                Rx.Observable.race(
+                    action$.ofType(QUERY_CREATE).mergeMap(() =>
+                        Rx.Observable.of(
+                            setControlProperty('queryPanel', "enabled", false),
+                            openFeatureGrid()
+                        )
+                    ),
+                    action$.ofType(TOGGLE_CONTROL)
+                        .filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled"))
+                        .mergeMap(() =>
+                            Rx.Observable.of(
+                                openFeatureGrid()
+                            )
                     )
-                )
+                ).takeUntil(action$.ofType(OPEN_FEATURE_GRID, LOCATION_CHANGE))
             )
         )
 };

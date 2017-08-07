@@ -32,14 +32,12 @@ module.exports = (plugins) => {
                         return Rx.Observable.of(toggleTool("featureCloseConfirm", true))
                             .merge(action$.ofType(CLOSE_FEATURE_GRID).switchMap( () => Rx.Observable.of(
                                 layerSelectedForSearch(id),
-                                setPermission({canEdit: true}),
-                                featureTypeSelected( 'http://demo.geo-solutions.it:80/geoserver/wfs', id),
+                                setPermission({canEdit: true})
                             )));
                     }
                     return Rx.Observable.of(
                         layerSelectedForSearch(id),
-                        setPermission({canEdit: true}),
-                        featureTypeSelected( 'http://demo.geo-solutions.it:80/geoserver/wfs', id),
+                        setPermission({canEdit: true})
                     );
                 }),
         createFeatureGridDemoQuery: (action$, store) =>

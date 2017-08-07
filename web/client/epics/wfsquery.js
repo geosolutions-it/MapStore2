@@ -12,7 +12,7 @@ const Url = require('url');
 const {changeSpatialAttribute, SELECT_VIEWPORT_SPATIAL_METHOD, updateGeometrySpatialField} = require('../actions/queryform');
 const {CHANGE_MAP_VIEW} = require('../actions/map');
 const {FEATURE_TYPE_SELECTED, QUERY, featureLoading, featureTypeLoaded, featureTypeError, querySearchResponse, queryError} = require('../actions/wfsquery');
-const {paginationInfo} = require('../selectors/query');
+const {paginationInfo, isDescribeLoaded, describeSelector} = require('../selectors/query');
 const FilterUtils = require('../utils/FilterUtils');
 const assign = require('object-assign');
 
@@ -196,10 +196,16 @@ const retryWithForcedSortOptions = (action, store) => {
  * @return {external:Observable}
  */
 
-const featureTypeSelectedEpic = action$ =>
+const featureTypeSelectedEpic = (action$, store) =>
     action$.ofType(FEATURE_TYPE_SELECTED)
         .filter(action => action.url && action.typeName)
         .switchMap(action => {
+            const state = store.getState();
+            if (isDescribeLoaded(state, action.typeName)) {
+                const info = extractInfo(describeSelector(state));
+                const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
+                return Rx.Observable.of(changeSpatialAttribute(geometry));
+            }
             return Rx.Observable.defer( () => axios.get(action.url + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json'))
                 .map((response) => {
                     if (typeof response.data === 'object' && response.data.featureTypes && response.data.featureTypes[0]) {

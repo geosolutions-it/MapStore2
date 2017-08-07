@@ -19,9 +19,6 @@ const RESET_QUERY = 'RESET_QUERY';
 const QUERY = 'QUERY';
 
 const axios = require('../libs/ajax');
-const {toggleControl, setControlProperty} = require('./controls');
-const {changeDrawingStatus} = require('./draw');
-const {reset} = require('./queryform');
 
 function layerSelectedForSearch(id) {
     return {
@@ -131,30 +128,6 @@ function resetQuery() {
     };
 }
 
-function toggleQueryPanel(url, name, id) {
-    return (dispatch, getState) => {
-        if (getState().query.typeName !== name) {
-            dispatch(reset());
-        }
-        dispatch(changeDrawingStatus('clean', null, "queryform", []));
-        dispatch(featureTypeSelected(url, name));
-        dispatch(toggleControl('queryPanel', null));
-        dispatch(setControlProperty('drawer', 'width', getState().controls.queryPanel.enabled ? 700 : 300));
-        dispatch(layerSelectedForSearch(id));
-
-    };
-}
-function closeResponse() {
-    return (dispatch, getState) => {
-        // dispatch(featureClose());
-        let state = getState();
-        if (state.controls && state.controls.queryPanel && state.controls.drawer && !state.controls.drawer.enabled) {
-            dispatch(setControlProperty('drawer', 'enabled', true));
-            dispatch(setControlProperty('drawer', 'disabled', false));
-        }
-    };
-}
-
 module.exports = {
     LAYER_SELECTED_FOR_SEARCH, layerSelectedForSearch,
     FEATURE_TYPE_SELECTED, featureTypeSelected,
@@ -168,7 +141,5 @@ module.exports = {
     QUERY, query,
     FEATURE_LOADING, featureLoading,
     FEATURE_LOADED, featureLoaded,
-    loadFeature,
-    toggleQueryPanel,
-    closeResponse
+    loadFeature
 };

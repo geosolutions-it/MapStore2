@@ -8,6 +8,7 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 const {connect} = require('react-redux');
+const {Button, Glyphicon} = require('react-bootstrap');
 const Sidebar = require('react-sidebar').default;
 const {createSelector} = require('reselect');
 const {changeLayerProperties, changeGroupProperties, toggleNode,
@@ -27,7 +28,7 @@ const LayersUtils = require('../utils/LayersUtils');
 const QueryBuilder = require('../components/data/query/QueryBuilder');
 
 const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic} = require('../epics/wfsquery');
-
+const autocompleteEpics = require('../epics/autocomplete');
 const {bindActionCreators} = require('redux');
 const {
     // QueryBuilder action functions
@@ -225,6 +226,7 @@ class QueryPanel extends React.Component {
 
     renderQueryPanel = () => {
         return (<div>
+            <Button id="toc-query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={() => this.props.onToggleQuery()}><Glyphicon glyph="arrow-left"/></Button>
             <SmartQueryForm
                 spatialOperations={this.props.spatialOperations}
                 spatialMethodOptions={this.props.spatialMethodOptions}
@@ -259,5 +261,5 @@ module.exports = {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
     },
-    epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic}
+    epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, ...autocompleteEpics}
 };

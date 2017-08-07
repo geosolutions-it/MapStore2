@@ -10,7 +10,6 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {Button, Glyphicon} = require('react-bootstrap');
-const autocompleteEpics = require('../epics/autocomplete');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
        sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode, browseData} = require('../actions/layers');
@@ -325,5 +324,5 @@ module.exports = {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
     },
-    epics: assign({}, {refresh}, autocompleteEpics)
+    epics: assign({}, {refresh})
 };
