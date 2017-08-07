@@ -46,7 +46,7 @@ const expect = require('expect');
 const featuregrid = require('../featuregrid');
 const {setFeatures, dockSizeFeatures, setLayer, toggleTool, customizeAttribute, selectFeatures, deselectFeatures, createNewFeatures,
     featureSaving, toggleSelection, clearSelection, MODES, toggleEditMode, toggleViewMode, saveSuccess, clearChanges, saveError, startDrawingFeature,
-    deleteGeometryFeature, geometryChanged, setSelectionOptions, changePage, featureModified, setPermission, disableToolbar} = require('../../actions/featuregrid');
+    deleteGeometryFeature, geometryChanged, setSelectionOptions, changePage, featureModified, setPermission, disableToolbar, openFeatureGrid, closeFeatureGrid} = require('../../actions/featuregrid');
 const {featureTypeLoaded} = require('../../actions/wfsquery');
 const {changeDrawingStatus} = require('../../actions/draw');
 
@@ -63,6 +63,17 @@ describe('Test the featuregrid reducer', () => {
         expect(state.pagination).toExist();
         expect(state.select).toExist();
         expect(state.features).toExist();
+    });
+    it('openFeatureGrid', () => {
+        let state = featuregrid(undefined, openFeatureGrid());
+        expect(state).toExist();
+        expect(state.open).toBe(true);
+    });
+    it('closeFeatureGrid', () => {
+        let state = featuregrid(undefined, closeFeatureGrid());
+        expect(state).toExist();
+        expect(state.open).toBe(false);
+        expect(state.mode).toBe(MODES.VIEW);
     });
 
     it('selectFeature', () => {

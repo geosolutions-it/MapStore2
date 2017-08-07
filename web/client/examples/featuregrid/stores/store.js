@@ -9,7 +9,7 @@
 const Rx = require('rxjs');
 const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic} = require('../../../epics/wfsquery');
 const {getLayerFromId} = require('../../../selectors/layers');
-const {featureTypeSelected, layerSelectedForSearch, LAYER_SELECTED_FOR_SEARCH, CLOSE_FEATURE_GRID} = require('../../../actions/wfsquery');
+const {layerSelectedForSearch, LAYER_SELECTED_FOR_SEARCH, CLOSE_FEATURE_GRID} = require('../../../actions/wfsquery');
 const {browseData} = require('../../../actions/layers');
 const {clearChanges, setPermission, toggleTool} = require('../../../actions/featuregrid');
 const {hasChangesSelector, hasNewFeaturesSelector} = require('../../../selectors/featuregrid');
