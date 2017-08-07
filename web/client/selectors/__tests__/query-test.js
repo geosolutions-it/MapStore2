@@ -11,6 +11,7 @@ const {
     wfsURL,
     wfsFilter,
     resultsSelector,
+    featureCollectionResultSelector,
     paginationInfo,
     featureLoadingSelector,
     isDescribeLoaded,
@@ -338,6 +339,11 @@ describe('Test query selectors', () => {
         expect(attr.length).toBe(1);
         expect(attr[0].label).toBe("name");
         expect(attr[0].valueId).toBe("id");
+    });
+    it('test featureCollectionResultSelector selector', () => {
+        const fc = featureCollectionResultSelector(initialState);
+        expect(fc).toExist();
+        expect(fc.features.length).toBe(4);
     });
 
 

@@ -33,6 +33,13 @@ module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeo
             onClick={events.showQueryPanel}
             glyph="filter"/>
         <TButton
+            id="zoom-all"
+            tooltip={<Message msgId="featuregrid.toolbar.zoomAll"/>}
+            disabled={disableToolbar}
+            visible={mode === "VIEW"}
+            onClick={events.zoomAll}
+            glyph="zoom-to"/>
+        <TButton
             id="back-view"
             tooltip={<Message msgId="featuregrid.toolbar.quitEditMode"/>}
             disabled={disableToolbar}

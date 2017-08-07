@@ -8,7 +8,8 @@ const {toggleTool,
     startEditingFeature,
     startDrawingFeature,
     deleteGeometry,
-    openAdvancedSearch
+    openAdvancedSearch,
+    zoomAll
 } = require('../../actions/featuregrid');
 
 module.exports = {
@@ -24,5 +25,6 @@ module.exports = {
     startDrawingFeature: () => startDrawingFeature(),
     switchViewMode: () => toggleViewMode(),
     onClose: () => closeFeatureGridConfirm(),
-    showQueryPanel: () => openAdvancedSearch()
+    showQueryPanel: () => openAdvancedSearch(),
+    zoomAll: () => zoomAll()
 };
