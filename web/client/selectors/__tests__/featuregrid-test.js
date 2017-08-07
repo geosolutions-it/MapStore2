@@ -282,6 +282,7 @@ let initialState = {
         featureLoading: false
       },
       featuregrid: {
+          open: true,
           selectedLayer: "TEST_LAYER",
           mode: modeEdit,
           select: [feature1, feature2],
