@@ -24,6 +24,7 @@ var {
     REFRESH_LAYERS,
     LAYERS_REFRESHED,
     LAYERS_REFRESH_ERROR,
+    BROWSE_DATA,
     changeLayerProperties,
     toggleNode,
     sortNode,
@@ -39,7 +40,8 @@ var {
     updateSettings,
     refreshLayers,
     layersRefreshed,
-    layersRefreshError
+    layersRefreshError,
+    browseData
 } = require('../layers');
 var {getLayerCapabilities} = require('../layerCapabilities');
 
@@ -222,5 +224,11 @@ describe('Test correctness of the layers actions', () => {
                 done();
             }
         });
+    });
+    it('browseData', () => {
+        const layer = {id: "TEST", name: "test", url: "test"};
+        const action = browseData(layer);
+        expect(action.type).toBe(BROWSE_DATA);
+        expect(action.layer).toBe(layer);
     });
 });

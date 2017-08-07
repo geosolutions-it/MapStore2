@@ -12,6 +12,7 @@ module.exports = {
         MapPlugin: require('../../plugins/Map'),
         WFSDownload: require('../../plugins/WFSDownload'),
         FeatureEditor: require('../../plugins/FeatureEditor'),
+        QueryPanel: require('../../plugins/QueryPanel'),
         Notifications: require('../../plugins/Notifications')
     },
     requires: {

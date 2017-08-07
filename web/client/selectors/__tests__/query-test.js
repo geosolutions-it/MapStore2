@@ -13,6 +13,7 @@ const {
     resultsSelector,
     paginationInfo,
     featureLoadingSelector,
+    isDescribeLoaded,
     describeSelector,
     getFeatureById,
     attributesSelector
@@ -321,6 +322,10 @@ describe('Test query selectors', () => {
     it('test describeSelector selector', () => {
         const describe = describeSelector(initialState);
         expect(describe.elementFormDefault).toBe("qualified");
+    });
+    it('test isDescribeLoaded', () => {
+        const isLoaded = isDescribeLoaded(initialState, "editing:polygons");
+        expect(isLoaded).toBe(true);
     });
     it('test getFeatureById selector', () => {
         const ft = getFeatureById(initialState, "poligoni.7");

@@ -44,7 +44,7 @@ class QueryForm extends React.Component {
                     <Draggable start={{x: 670, y: 15}} handle=".handle_querypanel, .handle_querypanel *">
                         <div>
                             <Panel className="querypanel-container" header={this.renderHeader()} bsStyle="primary">
-                                <SmartQueryForm/>
+                                <SmartQueryForm />
                             </Panel>
                         </div>
                     </Draggable>

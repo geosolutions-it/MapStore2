@@ -14,6 +14,7 @@ module.exports = {
         resultSize: (state) =>get(state, "query.result.features.length"),
         totalFeatures: (state) => get(state, "query.result.totalFeatures")
     },
+    isDescribeLoaded: (state, name) => !!get(state, `query.featureTypes.${name}`),
     describeSelector: (state) => get(state, `query.featureTypes.${get(state, "query.filterObj.featureTypeName")}.original`),
     featureLoadingSelector: (state) => get(state, "query.featureLoading")
 };

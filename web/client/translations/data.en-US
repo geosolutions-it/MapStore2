@@ -216,7 +216,7 @@
             "displayLegendAndTools": "Display legend and tools",
             "zoomToLayerExtent": "Zoom to layer extent",
             "editLayerProperties": "Edit layer properties",
-            "searchFeatures": "Search on this layer...",
+            "browseData": "Open Attribute Table",
             "removeLayer": "Remove layer",
             "loadingerror": "The layer has not been loaded correctly",
             "measure": "Measure",
@@ -830,6 +830,7 @@
             "missingGeometry": "Missing geometry",
             "toolbar": {
                 "editMode": "Edit mode",
+                "advancedFilter": "Advanced Search",
                 "quitEditMode": "Quit edit mode",
                 "addNewFeatures": "Add New feature",
                 "editFeature": "Edit feature",

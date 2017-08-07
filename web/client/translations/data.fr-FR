@@ -218,6 +218,7 @@
             "displayLegendAndTools": "Afficher la légende et les outils",
             "zoomToLayerExtent": "Zoomer sur l'étendue du calque",
             "editLayerProperties": "Modifier les propriétés de la couche",
+            "browseData": "Ouvrir la table d'attribut",
             "searchFeatures": "Recherche sur ce calque ...",
             "removeLayer": "Supprimer la couche",
             "loadingerror": "La couche n'a pas été chargée correctement",
@@ -833,6 +834,7 @@
             "missingGeometry": "Missing geometry",
             "toolbar": {
                 "editMode": "Mode édition",
+                "advancedFilter": "Recherche Avancée",
                 "quitEditMode": "Quitter le mode d'édition",
                 "addNewFeatures": "Ajouter un nouvel élément",
                 "editFeature": "Élément d'édition",

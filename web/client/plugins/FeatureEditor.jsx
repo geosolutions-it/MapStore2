@@ -64,7 +64,7 @@ const FeatureDock = (props = {
     </Dock>);
 };
 const selector = createSelector(
-    state => get(state, "query.open"),
+    state => get(state, "featuregrid.open"),
     resultsSelector,
     describeSelector,
     state => get(state, "featuregrid.attributes"),

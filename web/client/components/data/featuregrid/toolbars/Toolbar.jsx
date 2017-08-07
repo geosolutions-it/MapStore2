@@ -26,6 +26,13 @@ module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeo
             onClick={events.switchEditMode}
             glyph="pencil"/>
         <TButton
+            id="search"
+            tooltip={<Message msgId="featuregrid.toolbar.advancedFilter"/>}
+            disabled={disableToolbar}
+            visible={mode === "VIEW"}
+            onClick={events.showQueryPanel}
+            glyph="filter"/>
+        <TButton
             id="back-view"
             tooltip={<Message msgId="featuregrid.toolbar.quitEditMode"/>}
             disabled={disableToolbar}
