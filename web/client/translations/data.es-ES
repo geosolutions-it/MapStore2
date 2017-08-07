@@ -847,7 +847,8 @@
                 "cancelChanges": "Cancelar cambios",
                 "deleteGeometry": "Eliminar geometría",
                 "downloadGridData": "Descargar datos",
-                "hideShowColumns": "Ocultar / mostrar columnas"
+                "hideShowColumns": "Ocultar / mostrar columnas",
+                "zoomAll": "Zoom a la extensión de la página"
             }
         },
         "wfsdownload": {

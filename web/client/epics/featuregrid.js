@@ -9,6 +9,7 @@ const Rx = require('rxjs');
 const {get, head, isEmpty, find} = require('lodash');
 const { LOCATION_CHANGE } = require('react-router-redux');
 const axios = require('../libs/ajax');
+const bbox = require('@turf/bbox');
 const {fidFilter} = require('../utils/ogc/Filter/filter');
 const {getDefaultFeatureProjection} = require('../utils/FeatureGridUtils');
 const {isSimpleGeomType} = require('../utils/MapUtils');
@@ -19,6 +20,7 @@ const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const {setControlProperty} = require('../actions/controls');
 const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, featureTypeSelected, createQuery} = require('../actions/wfsquery');
 const {reset, QUERY_FORM_RESET} = require('../actions/queryform');
+const {zoomToExtent} = require('../actions/map');
 const {BROWSE_DATA} = require('../actions/layers');
 const {parseString} = require('xml2js');
 const {stripPrefix} = require('xml2js/lib/processors');
@@ -27,7 +29,7 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     CLEAR_CHANGES, START_EDITING_FEATURE, TOGGLE_MODE, MODES, geometryChanged, DELETE_GEOMETRY, deleteGeometryFeature,
     SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE,
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
-    openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH} = require('../actions/featuregrid');
+    openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL} = require('../actions/featuregrid');
 
 const {TOGGLE_CONTROL} = require('../actions/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
@@ -37,7 +39,7 @@ const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasCha
     isFeatureGridOpen} = require('../selectors/featuregrid');
 
 const {error} = require('../actions/notifications');
-const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter} = require('../selectors/query');
+const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector} = require('../selectors/query');
 const drawSupportReset = () => changeDrawingStatus("clean", "", "featureGrid", [], {});
 /**
  * Intercept OGC Exception (200 response with exceptionReport) to throw error in the stream
@@ -472,5 +474,9 @@ module.exports = {
                     )
                 ).takeUntil(action$.ofType(OPEN_FEATURE_GRID, LOCATION_CHANGE))
             )
-        )
+        ),
+    onFeatureGridZoomAll: (action$, store) =>
+        action$.ofType(ZOOM_ALL).switchMap(() =>
+            Rx.Observable.of(zoomToExtent(bbox(featureCollectionResultSelector(store.getState())), "EPSG:4326"))
+    )
 };

@@ -41,6 +41,7 @@ const FEATURE_GRID_CLOSE_CONFIRMED = 'FEATUREGRID:FEATURE_GRID_CLOSE_CONFIRMED';
 const SET_PERMISSION = 'FEATUREGRID:SET_PERMISSION';
 const DISABLE_TOOLBAR = 'FEATUREGRID:DISABLE_TOOLBAR';
 const OPEN_ADVANCED_SEARCH = 'FEATUREGRID:ADVANCED_SEARCH';
+const ZOOM_ALL = 'FEATUREGRID:ZOOM_ALL';
 const MODES = {
     EDIT: "EDIT",
     VIEW: "VIEW"
@@ -256,7 +257,11 @@ function openAdvancedSearch() {
         type: OPEN_ADVANCED_SEARCH
     };
 }
-
+function zoomAll() {
+    return {
+        type: ZOOM_ALL
+    };
+}
 module.exports = {
     SELECT_FEATURES,
     DESELECT_FEATURES,
@@ -294,6 +299,7 @@ module.exports = {
     FEATURE_GRID_CLOSE_CONFIRMED, closeFeatureGridConfirmed,
     DISABLE_TOOLBAR, disableToolbar,
     OPEN_ADVANCED_SEARCH, openAdvancedSearch,
+    ZOOM_ALL, zoomAll,
     setLayer,
     selectFeatures,
     deselectFeatures,

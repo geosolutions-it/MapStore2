@@ -31,7 +31,8 @@ const {
     openFeatureGrid, OPEN_FEATURE_GRID,
     closeFeatureGrid, CLOSE_FEATURE_GRID,
     closeFeatureGridConfirm, CLOSE_FEATURE_GRID_CONFIRM,
-    closeFeatureGridConfirmed, FEATURE_GRID_CLOSE_CONFIRMED
+    closeFeatureGridConfirmed, FEATURE_GRID_CLOSE_CONFIRMED,
+    zoomAll, ZOOM_ALL
 } = require('../featuregrid');
 
 const idFeature = "2135";
@@ -197,6 +198,11 @@ describe('Test correctness of featurgrid actions', () => {
         const retval = saveError();
         expect(retval).toExist();
         expect(retval.type).toBe(SAVE_ERROR);
+    });
+    it('Test zoomAll', () => {
+        const retval = zoomAll();
+        expect(retval).toExist();
+        expect(retval.type).toBe(ZOOM_ALL);
     });
 
 });

@@ -844,7 +844,8 @@
                 "cancelChanges": "Änderungen abbrechen",
                 "deleteGeometry": "Geometrie löschen",
                 "downloadGridData": "Daten herunterladen",
-                "hideShowColumns": "Spalten ausblenden / anzeigen"
+                "hideShowColumns": "Spalten ausblenden / anzeigen",
+                "zoomAll": "Zoom zur Erweterung der Seite"
             }
         },
         "wfsdownload": {

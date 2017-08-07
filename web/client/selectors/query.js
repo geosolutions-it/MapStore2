@@ -4,6 +4,7 @@ module.exports = {
     wfsFilter: state => state && state.query && state.query.filterObj,
     attributesSelector: state => get(state, `query.featureTypes.${get(state, "query.filterObj.featureTypeName")}.attributes`),
     resultsSelector: (state) => get(state, "query.result.features"),
+    featureCollectionResultSelector: state => get(state, "query.result"),
     getFeatureById: (state, id) => {
         let features = state && state.query && state.query.result && state.query.result.features;
         return head(features.filter(f => f.id === id));

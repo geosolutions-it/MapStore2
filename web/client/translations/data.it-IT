@@ -844,7 +844,8 @@
                 "cancelChanges": "Annulla i cambiamenti",
                 "deleteGeometry": "Elimina la geometria",
                 "downloadGridData": "Esporta i dati della griglia",
-                "hideShowColumns": "Nascondi/mostra colonne"
+                "hideShowColumns": "Nascondi/mostra colonne",
+                "zoomAll": "Zoom all'estensione della pagina"
             }
         },
         "wfsdownload": {
