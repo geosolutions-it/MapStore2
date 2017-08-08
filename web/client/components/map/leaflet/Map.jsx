@@ -340,7 +340,8 @@ class LeafletMap extends React.Component {
             return [pixel.x, pixel.y];
         });
         mapUtils.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
-            let pos = CoordinatesUtils.reproject(this.map.containerPointToLatLng(pixel), 'EPSG:4326', this.props.projection);
+            const point = this.map.containerPointToLatLng(pixel);
+            let pos = CoordinatesUtils.reproject([point.lng, point.lat], 'EPSG:4326', this.props.projection);
             return [pos.x, pos.y];
         });
     };
