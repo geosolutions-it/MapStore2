@@ -141,6 +141,7 @@ function featuregrid(state = emptyResultsState, action) {
         });
     case TOGGLE_MODE: {
         return assign({}, state, {
+            tools: action.mode === MODES.EDIT ? {} : state.tools,
             mode: action.mode,
             multiselect: action.mode === MODES.EDIT,
             drawing: false
