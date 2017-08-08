@@ -216,6 +216,9 @@ class QueryPanel extends React.Component {
                         right: this.props.querypanelEnabled ? 0 : 'auto',
                         width: '0',
                         overflow: 'visible'
+                    },
+                    content: {
+                        overflowY: 'auto'
                     }
                 }}
                 >
