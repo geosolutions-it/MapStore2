@@ -31,7 +31,7 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
     openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL} = require('../actions/featuregrid');
 
-const {TOGGLE_CONTROL} = require('../actions/controls');
+const {TOGGLE_CONTROL, resetControls} = require('../actions/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
 const {refreshLayerVersion} = require('../actions/layers');
 const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector,
@@ -478,5 +478,11 @@ module.exports = {
     onFeatureGridZoomAll: (action$, store) =>
         action$.ofType(ZOOM_ALL).switchMap(() =>
             Rx.Observable.of(zoomToExtent(bbox(featureCollectionResultSelector(store.getState())), "EPSG:4326"))
-    )
+    ),
+    /**
+     * reset controls on edit mode switch
+     */
+    resetControlsOnEnterInEditMode: (action$) =>
+        action$.ofType(TOGGLE_MODE)
+        .filter(a => a.mode === MODES.EDIT).map(() => resetControls(["query"]))
 };
