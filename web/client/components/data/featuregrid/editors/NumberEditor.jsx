@@ -51,7 +51,6 @@ class NumberEditor extends AttributeEditor {
             {...this.props.inputProps}
             ref={(node) => this.input = node}
             type="number"
-            onBlur={this.props.onBlur}
             className="form-control"
             defaultValue={this.props.value}
              />);
