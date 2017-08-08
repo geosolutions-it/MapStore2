@@ -22,8 +22,7 @@ const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYP
 const {reset, QUERY_FORM_RESET} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
 const {BROWSE_DATA} = require('../actions/layers');
-const {parseString} = require('xml2js');
-const {stripPrefix} = require('xml2js/lib/processors');
+
 const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURES, featureSaving, changePage,
     saveSuccess, saveError, clearChanges, setLayer, clearSelection, toggleViewMode, toggleTool,
     CLEAR_CHANGES, START_EDITING_FEATURE, TOGGLE_MODE, MODES, geometryChanged, DELETE_GEOMETRY, deleteGeometryFeature,
@@ -41,27 +40,7 @@ const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasCha
 const {error} = require('../actions/notifications');
 const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector} = require('../selectors/query');
 const drawSupportReset = () => changeDrawingStatus("clean", "", "featureGrid", [], {});
-/**
- * Intercept OGC Exception (200 response with exceptionReport) to throw error in the stream
- * @param  {observable} observable The observable that emits the server response
- * @return {observable}            The observable that returns the response or throws the error.
- */
-const interceptOGCError = (observable) => observable.switchMap(response => {
-    if (typeof response.data === "string") {
-        if (response.data.indexOf("ExceptionReport") > 0) {
-            return Rx.Observable.bindNodeCallback( (data, callback) => parseString(data, {
-                 tagNameProcessors: [stripPrefix],
-                 explicitArray: false,
-                 mergeAttrs: true
-            }, callback))(response.data).map(data => {
-                throw get(data, "ExceptionReport.Exception.ExceptionText") || "Undefined OGC Service Error";
-            });
-
-        }
-    }
-    return Rx.Observable.of(response);
-});
-
+const {interceptOGCError} = require('../utils/ObservableUtils');
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
     let drawOptions; let geomType;
@@ -260,7 +239,7 @@ module.exports = {
                     ).map(() => saveSuccess())
                     .catch((e) => Rx.Observable.of(saveError(), error({
                         title: "featuregrid.errorSaving",
-                        message: e,
+                        message: e.message || "Unknown Exception",
                         uid: "saveError",
                         autoDismiss: 5
                       })))
@@ -283,7 +262,7 @@ module.exports = {
                     // close window
                     .catch((e) => Rx.Observable.of(saveError(), error({
                         title: "featuregrid.errorSaving",
-                        message: e,
+                        message: e.message || "Unknown Exception",
                         uid: "saveError"
                       }))).concat(Rx.Observable.of(
                           toggleTool("deleteConfirm"),
