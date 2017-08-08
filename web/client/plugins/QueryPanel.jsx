@@ -202,6 +202,7 @@ class QueryPanel extends React.Component {
             <Sidebar
                 open={this.props.querypanelEnabled}
                 sidebar={this.renderQueryPanel()}
+                sidebarClassName="query-form-panel-container"
                 styles={{
                     sidebar: {
                         backgroundColor: 'white',
