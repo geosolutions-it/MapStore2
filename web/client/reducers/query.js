@@ -110,6 +110,9 @@ function query(state = initialState, action) {
     }
     case RESET_CONTROLS:
     case QUERY_FORM_RESET:
+        if (action.skip && action.skip.indexOf("query") >= 0) {
+            return state;
+        }
         return assign({}, state, {
             isNew: false,
             result: null,

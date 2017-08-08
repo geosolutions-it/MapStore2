@@ -148,12 +148,13 @@ describe('Test the featuregrid reducer', () => {
         let state = featuregrid( {}, dockSizeFeatures(200));
         expect(state.dockSize).toBe(200);
     });
-    it('toggleEditMode', () => {
+    it('toggleEditMode edit', () => {
         let state = featuregrid( {}, toggleEditMode());
         expect(state.multiselect).toBeTruthy();
         expect(state.mode).toBe(MODES.EDIT);
+        expect(state.tools.settings).toBeFalsy();
     });
-    it('toggleViewMode', () => {
+    it('toggleViewMode view', () => {
         let state = featuregrid( {}, toggleViewMode());
         expect(state.multiselect).toBeFalsy();
         expect(state.mode).toBe(MODES.VIEW);
