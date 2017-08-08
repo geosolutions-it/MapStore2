@@ -111,6 +111,9 @@ class Menu extends React.Component {
                     right: this.props.show ? 0 : 'auto',
                     width: '0',
                     overflow: 'visible'
+                },
+                content: {
+                    overflowY: 'auto'
                 }
             }} sidebarClassName="nav-menu" onSetOpen={() => {
                 this.props.onToggle();

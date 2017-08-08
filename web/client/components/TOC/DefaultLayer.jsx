@@ -198,7 +198,7 @@ class DefaultLayer extends React.Component {
                         className="toc-zoomTool"
                         ref="target"
                         style={{"float": "right", cursor: "pointer"}}
-                        glyph="zoom-in"
+                        glyph="zoom-to"
                         onClick={(node) => this.props.onZoom(node.bbox.bounds, node.bbox.crs)}/>
                 );
         }
