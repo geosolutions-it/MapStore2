@@ -1,5 +1,67 @@
 # Change Log
 
+## [2017.04.00](https://github.com/geosolutions-it/MapStore2/tree/2017.04.00) (2017-08-08)
+[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/2017.03.02...2017.04.00)
+
+**Implemented enhancements:**
+
+- Connect drawsupport with feature grid [\#2038](https://github.com/geosolutions-it/MapStore2/issues/2038)
+- Trigger notification if a map is an old one asking for updating it [\#2031](https://github.com/geosolutions-it/MapStore2/issues/2031)
+- Update theme and icons for editing workflow [\#2015](https://github.com/geosolutions-it/MapStore2/issues/2015)
+- Support for WFS-T [\#1885](https://github.com/geosolutions-it/MapStore2/issues/1885)
+- Extend drawsupport for editing [\#1819](https://github.com/geosolutions-it/MapStore2/issues/1819)
+- Home Page Mobile layout [\#383](https://github.com/geosolutions-it/MapStore2/issues/383)
+- New MapStore2 HomePage for the MapStore2 product application [\#381](https://github.com/geosolutions-it/MapStore2/issues/381)
+- Add single tile option to WMS layers [\#369](https://github.com/geosolutions-it/MapStore2/issues/369)
+- Create translation files for Spanish [\#93](https://github.com/geosolutions-it/MapStore2/issues/93)
+
+**Fixed bugs:**
+
+- Plugins example is broken [\#2067](https://github.com/geosolutions-it/MapStore2/issues/2067)
+- Layer opacity setting in Leaflet [\#2063](https://github.com/geosolutions-it/MapStore2/issues/2063)
+- Tests failing on TravisCI [\#2060](https://github.com/geosolutions-it/MapStore2/issues/2060)
+- Glyphicon class missing from new icons [\#2058](https://github.com/geosolutions-it/MapStore2/issues/2058)
+- Query panel issues two identical requests on search. [\#2043](https://github.com/geosolutions-it/MapStore2/issues/2043)
+- After back to homepage or change map, notifications don't clear [\#2040](https://github.com/geosolutions-it/MapStore2/issues/2040)
+- Add cookie details for spanish language [\#2026](https://github.com/geosolutions-it/MapStore2/issues/2026)
+
+**Closed issues:**
+
+- How to set a Google API key when using the API? [\#1996](https://github.com/geosolutions-it/MapStore2/issues/1996)
+- replace agGrid with react-data-grid [\#1812](https://github.com/geosolutions-it/MapStore2/issues/1812)
+- Support for Editing [\#1102](https://github.com/geosolutions-it/MapStore2/issues/1102)
+
+**Merged pull requests:**
+
+- Fixed bundle inclusion of ogc-schemas [\#2093](https://github.com/geosolutions-it/MapStore2/pull/2093) ([offtherailz](https://github.com/offtherailz))
+- Fixed Leaflet hooks [\#2092](https://github.com/geosolutions-it/MapStore2/pull/2092) ([kappu72](https://github.com/kappu72))
+- Disable grid tools on edit [\#2091](https://github.com/geosolutions-it/MapStore2/pull/2091) ([offtherailz](https://github.com/offtherailz))
+- Add zoom to page extent button [\#2090](https://github.com/geosolutions-it/MapStore2/pull/2090) ([offtherailz](https://github.com/offtherailz))
+- Fix \#2049 Drawer Menu shows a scroll bar in Edge and IE [\#2088](https://github.com/geosolutions-it/MapStore2/pull/2088) ([allyoucanmap](https://github.com/allyoucanmap))
+- Fix \#2081 Feature grid style messed up on Firefox and EDGE [\#2087](https://github.com/geosolutions-it/MapStore2/pull/2087) ([allyoucanmap](https://github.com/allyoucanmap))
+- Direct access to the grid from the toc [\#2085](https://github.com/geosolutions-it/MapStore2/pull/2085) ([offtherailz](https://github.com/offtherailz))
+- Disable toolbar buttons when editing [\#2080](https://github.com/geosolutions-it/MapStore2/pull/2080) ([offtherailz](https://github.com/offtherailz))
+- Changed cesium background color to white [\#2078](https://github.com/geosolutions-it/MapStore2/pull/2078) ([MV88](https://github.com/MV88))
+- Optimized sample images [\#2077](https://github.com/geosolutions-it/MapStore2/pull/2077) ([offtherailz](https://github.com/offtherailz))
+- Porting of minor fixes [\#2076](https://github.com/geosolutions-it/MapStore2/pull/2076) ([offtherailz](https://github.com/offtherailz))
+- Prevent errors for missing DescribeFeatureType [\#2074](https://github.com/geosolutions-it/MapStore2/pull/2074) ([offtherailz](https://github.com/offtherailz))
+- Fixed featuregrid toolbar buttons status  [\#2072](https://github.com/geosolutions-it/MapStore2/pull/2072) ([offtherailz](https://github.com/offtherailz))
+- Fix feature grid example style [\#2071](https://github.com/geosolutions-it/MapStore2/pull/2071) ([allyoucanmap](https://github.com/allyoucanmap))
+- Fixes \#2067: plugins example broken [\#2070](https://github.com/geosolutions-it/MapStore2/pull/2070) ([mbarto](https://github.com/mbarto))
+- Arp43b fixe translations [\#2068](https://github.com/geosolutions-it/MapStore2/pull/2068) ([mbarto](https://github.com/mbarto))
+- Fixes \#2060: tests failing on TravisCI [\#2066](https://github.com/geosolutions-it/MapStore2/pull/2066) ([mbarto](https://github.com/mbarto))
+- Implemented Feature Editor Plugin [\#2064](https://github.com/geosolutions-it/MapStore2/pull/2064) ([offtherailz](https://github.com/offtherailz))
+- Fix \#2058 Glyphicon class missing from new icons [\#2059](https://github.com/geosolutions-it/MapStore2/pull/2059) ([allyoucanmap](https://github.com/allyoucanmap))
+- Fixes and improvements to identify on vector layers [\#2051](https://github.com/geosolutions-it/MapStore2/pull/2051) ([mbarto](https://github.com/mbarto))
+- Removed additional '?' in WFS request [\#2048](https://github.com/geosolutions-it/MapStore2/pull/2048) ([allyoucanmap](https://github.com/allyoucanmap))
+- Fix \#2015 Update theme and icons for editing workflow [\#2046](https://github.com/geosolutions-it/MapStore2/pull/2046) ([allyoucanmap](https://github.com/allyoucanmap))
+- Fixed panTo action, adding "mapStateSource: null" to reducer [\#2045](https://github.com/geosolutions-it/MapStore2/pull/2045) ([kappu72](https://github.com/kappu72))
+- Fix \#2040 After back to homepage or change map, notifications don't clear [\#2044](https://github.com/geosolutions-it/MapStore2/pull/2044) ([allyoucanmap](https://github.com/allyoucanmap))
+- Fix \#2031 Trigger notification if a map is an old one asking for updating it [\#2039](https://github.com/geosolutions-it/MapStore2/pull/2039) ([allyoucanmap](https://github.com/allyoucanmap))
+- Fix \#2015 Update theme and icons for editing workflow [\#2032](https://github.com/geosolutions-it/MapStore2/pull/2032) ([allyoucanmap](https://github.com/allyoucanmap))
+- Add resources to Developer Guide [\#1985](https://github.com/geosolutions-it/MapStore2/pull/1985) ([Gnafu](https://github.com/Gnafu))
+
+
 ## [2017.03.01](https://github.com/geosolutions-it/MapStore2/tree/2017.03.01) (2017-05-30)
 [Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/2017.03.00...2017.03.01)
 

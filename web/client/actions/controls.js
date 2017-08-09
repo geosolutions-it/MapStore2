@@ -44,13 +44,15 @@ function setControlProperty(control, property, value, toggle) {
 }
 
 /**
- * reset all the controls
+ * Reset all the controls
  * @memberof actions.controls
+ * @param {string[]} [skip=[]] a list of tools to skip
  * @return {object} action of type `RESET_CONTROLS`
  */
-function resetControls() {
+function resetControls(skip = []) {
     return {
-        type: RESET_CONTROLS
+        type: RESET_CONTROLS,
+        skip
     };
 }
 /**

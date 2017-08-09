@@ -2,12 +2,14 @@ const {toggleControl} = require('../../actions/controls');
 const {toggleTool,
     toggleEditMode,
     toggleViewMode,
-    closeFeatureGrid,
+    closeFeatureGridConfirm,
     saveChanges,
     createNewFeatures,
     startEditingFeature,
     startDrawingFeature,
-    deleteGeometry
+    deleteGeometry,
+    openAdvancedSearch,
+    zoomAll
 } = require('../../actions/featuregrid');
 
 module.exports = {
@@ -22,5 +24,7 @@ module.exports = {
     startEditingFeature: () => startEditingFeature(),
     startDrawingFeature: () => startDrawingFeature(),
     switchViewMode: () => toggleViewMode(),
-    onClose: () => closeFeatureGrid()
+    onClose: () => closeFeatureGridConfirm(),
+    showQueryPanel: () => openAdvancedSearch(),
+    zoomAll: () => zoomAll()
 };

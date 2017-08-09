@@ -28,7 +28,11 @@ const {
     deleteGeometryFeature, DELETE_GEOMETRY_FEATURE,
     clearChangeConfirmed, CLEAR_CHANGES_CONFIRMED,
     deleteFeaturesConfirm, DELETE_SELECTED_FEATURES_CONFIRM,
-    closeFeatureGridConfirmed, FEATURE_GRID_CLOSE_CONFIRMED
+    openFeatureGrid, OPEN_FEATURE_GRID,
+    closeFeatureGrid, CLOSE_FEATURE_GRID,
+    closeFeatureGridConfirm, CLOSE_FEATURE_GRID_CONFIRM,
+    closeFeatureGridConfirmed, FEATURE_GRID_CLOSE_CONFIRMED,
+    zoomAll, ZOOM_ALL
 } = require('../featuregrid');
 
 const idFeature = "2135";
@@ -175,10 +179,30 @@ describe('Test correctness of featurgrid actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(DELETE_SELECTED_FEATURES_CONFIRM);
     });
+    it('Test openFeatureGrid', () => {
+        const retval = openFeatureGrid();
+        expect(retval).toExist();
+        expect(retval.type).toBe(OPEN_FEATURE_GRID);
+    });
+    it('Test closeFeatureGrid', () => {
+        const retval = closeFeatureGrid();
+        expect(retval).toExist();
+        expect(retval.type).toBe(CLOSE_FEATURE_GRID);
+    });
+    it('Test closeFeatureGridConfirm', () => {
+        const retval = closeFeatureGridConfirm();
+        expect(retval).toExist();
+        expect(retval.type).toBe(CLOSE_FEATURE_GRID_CONFIRM);
+    });
     it('Test saveError', () => {
         const retval = saveError();
         expect(retval).toExist();
         expect(retval.type).toBe(SAVE_ERROR);
+    });
+    it('Test zoomAll', () => {
+        const retval = zoomAll();
+        expect(retval).toExist();
+        expect(retval.type).toBe(ZOOM_ALL);
     });
 
 });

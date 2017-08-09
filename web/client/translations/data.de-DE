@@ -216,6 +216,7 @@
             "displayLegendAndTools": "Legende und Werkzeuge zeigen",
             "zoomToLayerExtent": "Zoome auf Ausdehung der Ebene",
             "editLayerProperties": "Ändere Ebenen Eigenschaften",
+            "browseData": "öffnen Sie die Attributtabelle",
             "searchFeatures": "Auf dieser Ebene suchen...",
             "removeLayer": "Ebene entfernen",
             "loadingerror": "Diese Ebene wurde nicht korrekt geladen",
@@ -830,6 +831,7 @@
             "missingGeometry": "Missing geometry",
             "toolbar": {
                 "editMode": "Bearbeitungsmodus",
+                "advancedFilter": "Erweiterte Suche",
                 "quitEditMode": "Beenden Sie den Bearbeitungsmodus",
                 "addNewFeatures": "Neue Funktion hinzufügen",
                 "editFeature": "Bearbeiten Sie die Funktion",
@@ -842,7 +844,8 @@
                 "cancelChanges": "Änderungen abbrechen",
                 "deleteGeometry": "Geometrie löschen",
                 "downloadGridData": "Daten herunterladen",
-                "hideShowColumns": "Spalten ausblenden / anzeigen"
+                "hideShowColumns": "Spalten ausblenden / anzeigen",
+                "zoomAll": "Zoom zur Erweterung der Seite"
             }
         },
         "wfsdownload": {

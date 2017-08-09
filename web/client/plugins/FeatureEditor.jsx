@@ -20,6 +20,7 @@ const BorderLayout = require('../components/layout/BorderLayout');
 const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
 const {gridTools, gridEvents, pageEvents, toolbarEvents} = require('./featuregrid/index');
+const ContainerDimensions = require('react-container-dimensions').default;
 
 const FeatureDock = (props = {
     tools: EMPTY_OBJ,
@@ -40,8 +41,12 @@ const FeatureDock = (props = {
     // columns={[<aside style={{backgroundColor: "red", flex: "0 0 12em"}}>column-selector</aside>]}
     return (<Dock {...dockProps} >
         {props.open &&
+        <ContainerDimensions>
+        { ({ height }) =>
+            // added height to solve resize issue in firefox, edge and ie
         <BorderLayout
             key={"feature-grid-container"}
+            height={height - (62 + 32)}
             header={getHeader()}
             columns={getPanels(props.tools)}
             footer={getFooter(props)}>
@@ -59,12 +64,15 @@ const FeatureDock = (props = {
                 describeFeatureType={props.describe}
                 features={props.features}
                 minHeight={600}
-                tools={props.gridTools}
-         /></BorderLayout>}
+                tools={props.gridTools}/>
+        </BorderLayout> }
+
+        </ContainerDimensions>
+        }
     </Dock>);
 };
 const selector = createSelector(
-    state => get(state, "query.open"),
+    state => get(state, "featuregrid.open"),
     resultsSelector,
     describeSelector,
     state => get(state, "featuregrid.attributes"),

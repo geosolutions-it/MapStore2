@@ -12,12 +12,12 @@ const Url = require('url');
 const {changeSpatialAttribute, SELECT_VIEWPORT_SPATIAL_METHOD, updateGeometrySpatialField} = require('../actions/queryform');
 const {CHANGE_MAP_VIEW} = require('../actions/map');
 const {FEATURE_TYPE_SELECTED, QUERY, featureLoading, featureTypeLoaded, featureTypeError, querySearchResponse, queryError} = require('../actions/wfsquery');
-const {paginationInfo} = require('../selectors/query');
+const {paginationInfo, isDescribeLoaded, describeSelector} = require('../selectors/query');
 const FilterUtils = require('../utils/FilterUtils');
 const assign = require('object-assign');
 
-const {isString, isObject} = require('lodash');
-const {setControlProperty} = require('../actions/controls');
+const {isObject} = require('lodash');
+const {interceptOGCError} = require('../utils/ObservableUtils');
 // this is a workaround for https://osgeo-org.atlassian.net/browse/GEOS-7233. can be removed when fixed
 const workaroundGEOS7233 = ({totalFeatures, features, ...rest}, {startIndex, maxFeatures}, originalSize) => {
     if (originalSize > totalFeatures && originalSize === startIndex + features.length && totalFeatures === features.length) {
@@ -160,12 +160,6 @@ const getWFSFeature = (searchUrl, filterObj) => {
         }));
 };
 
-const getWFSResponseException = (response, code) => {
-    const {unmarshaller} = require('../utils/ogc/WFS');
-    const json = isString(response.data) ? unmarshaller.unmarshalString(response.data) : null;
-    return json && json.value && json.value.exception && json.value.exception[0] && json.value.exception[0].TYPE_NAME === 'OWS_1_0_0.ExceptionType' && json.value.exception[0].exceptionCode === code;
-};
-
 const getFirstAttribute = (state)=> {
     return state.query && state.query.featureTypes && state.query.featureTypes[state.query.typeName] && state.query.featureTypes[state.query.typeName].attributes && state.query.featureTypes[state.query.typeName].attributes[0] && state.query.featureTypes[state.query.typeName].attributes[0].attribute || null;
 };
@@ -179,11 +173,11 @@ const retryWithForcedSortOptions = (action, store) => {
     return getWFSFeature(action.searchUrl, assign(action.filterObj, {
         sortOptions
     }))
+        .let(interceptOGCError)
         .map((newResponse) => {
-            const newError = getWFSResponseException(newResponse, 'NoApplicableCode');
             const state = store.getState();
             const data = workaroundGEOS7233(newResponse.data, action.filterObj.pagination, paginationInfo.totalFeatures(state));
-            return !newError ? querySearchResponse(data, action.searchUrl, action.filterObj) : queryError('No sortable request');
+            return querySearchResponse(data, action.searchUrl, action.filterObj);
         })
         .catch((e) => {
             return Rx.Observable.of(queryError(e));
@@ -197,10 +191,16 @@ const retryWithForcedSortOptions = (action, store) => {
  * @return {external:Observable}
  */
 
-const featureTypeSelectedEpic = action$ =>
+const featureTypeSelectedEpic = (action$, store) =>
     action$.ofType(FEATURE_TYPE_SELECTED)
         .filter(action => action.url && action.typeName)
         .switchMap(action => {
+            const state = store.getState();
+            if (isDescribeLoaded(state, action.typeName)) {
+                const info = extractInfo(describeSelector(state));
+                const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
+                return Rx.Observable.of(changeSpatialAttribute(geometry));
+            }
             return Rx.Observable.defer( () => axios.get(action.url + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json'))
                 .map((response) => {
                     if (typeof response.data === 'object' && response.data.featureTypes && response.data.featureTypes[0]) {
@@ -231,21 +231,19 @@ const wfsQueryEpic = (action$, store) =>
     action$.ofType(QUERY)
         .switchMap(action => {
             return Rx.Observable.merge(
-                Rx.Observable.of(setControlProperty('drawer', 'enabled', false)),
                 getWFSFeature(action.searchUrl, action.filterObj)
+                    .let(interceptOGCError)
                     .switchMap((response) => {
-                        // try to guess if it was a missing id error and try to search again with forced sortOptions
-                        const error = getWFSResponseException(response, 'NoApplicableCode');
-                        if (error) {
-                            return retryWithForcedSortOptions(action, store);
-                        }
                         const state = store.getState();
                         const data = workaroundGEOS7233(response.data, action.filterObj.pagination, paginationInfo.totalFeatures(state));
                         return Rx.Observable.of(querySearchResponse(data, action.searchUrl, action.filterObj));
                     })
                     .startWith(featureLoading(true))
-                    .catch((e) => {
-                        return Rx.Observable.of(queryError(e));
+                    .catch((error) => {
+                        if (error.name === "OGCError" && error.code === 'NoApplicableCode') {
+                            return retryWithForcedSortOptions(action, store);
+                        }
+                        return Rx.Observable.of(queryError(error));
                     })
                     .concat(Rx.Observable.of(featureLoading(false)))
             );

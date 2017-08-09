@@ -11,8 +11,10 @@ const {
     wfsURL,
     wfsFilter,
     resultsSelector,
+    featureCollectionResultSelector,
     paginationInfo,
     featureLoadingSelector,
+    isDescribeLoaded,
     describeSelector,
     getFeatureById,
     attributesSelector
@@ -322,6 +324,10 @@ describe('Test query selectors', () => {
         const describe = describeSelector(initialState);
         expect(describe.elementFormDefault).toBe("qualified");
     });
+    it('test isDescribeLoaded', () => {
+        const isLoaded = isDescribeLoaded(initialState, "editing:polygons");
+        expect(isLoaded).toBe(true);
+    });
     it('test getFeatureById selector', () => {
         const ft = getFeatureById(initialState, "poligoni.7");
         expect(ft).toExist();
@@ -333,6 +339,11 @@ describe('Test query selectors', () => {
         expect(attr.length).toBe(1);
         expect(attr[0].label).toBe("name");
         expect(attr[0].valueId).toBe("id");
+    });
+    it('test featureCollectionResultSelector selector', () => {
+        const fc = featureCollectionResultSelector(initialState);
+        expect(fc).toExist();
+        expect(fc.features.length).toBe(4);
     });
 
 

@@ -250,7 +250,6 @@ let initialState = {
           }
         },
         resultError: null,
-        open: true,
         isNew: false,
         filterObj: {
           featureTypeName: 'editing:polygons',
@@ -283,6 +282,7 @@ let initialState = {
         featureLoading: false
       },
       featuregrid: {
+          open: true,
           selectedLayer: "TEST_LAYER",
           mode: modeEdit,
           select: [feature1, feature2],
@@ -304,6 +304,7 @@ describe('Test featuregrid selectors', () => {
     afterEach(() => {
         initialState = assign({}, initialState, {
             featuregrid: {
+                open: true,
                 saving: false,
                 saved: false,
                 selectedLayer: "TEST_LAYER",

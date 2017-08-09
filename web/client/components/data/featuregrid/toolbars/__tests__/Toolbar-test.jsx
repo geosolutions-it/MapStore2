@@ -54,6 +54,38 @@ describe('Featuregrid toolbar component', () => {
         editButton = document.getElementById("fg-edit-mode");
         expect(isVisibleButton(editButton)).toBe(false);
     });
+    it('check search button', () => {
+        const events = {
+            showQueryPanel: () => {}
+        };
+        spyOn(events, "showQueryPanel");
+        ReactDOM.render(<Toolbar events={events} mode="VIEW" />, document.getElementById("container"));
+        const el = document.getElementsByClassName("featuregrid-toolbar")[0];
+        expect(el).toExist();
+        let editButton = document.getElementById("fg-search");
+        expect(isVisibleButton(editButton)).toBe(true);
+        editButton.click();
+        expect(events.showQueryPanel).toHaveBeenCalled();
+        ReactDOM.render(<Toolbar events={events} mode="EDIT" isEditingAllowed/>, document.getElementById("container"));
+        editButton = document.getElementById("fg-search");
+        expect(isVisibleButton(editButton)).toBe(false);
+    });
+    it('check zoom-all button', () => {
+        const events = {
+            zoomAll: () => {}
+        };
+        spyOn(events, "zoomAll");
+        ReactDOM.render(<Toolbar events={events} mode="VIEW" />, document.getElementById("container"));
+        const el = document.getElementsByClassName("featuregrid-toolbar")[0];
+        expect(el).toExist();
+        let editButton = document.getElementById("fg-zoom-all");
+        expect(isVisibleButton(editButton)).toBe(true);
+        editButton.click();
+        expect(events.zoomAll).toHaveBeenCalled();
+        ReactDOM.render(<Toolbar events={events} mode="EDIT" isEditingAllowed/>, document.getElementById("container"));
+        editButton = document.getElementById("fg-zoom-all");
+        expect(isVisibleButton(editButton)).toBe(false);
+    });
     it('check back-view button', () => {
         const events = {
             switchViewMode: () => {}

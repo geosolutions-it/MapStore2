@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 const assign = require("object-assign");
-const {head} = require("lodash");
+const {head, get} = require("lodash");
 const {
     SELECT_FEATURES,
     DESELECT_FEATURES,
@@ -29,11 +29,13 @@ const {
     GEOMETRY_CHANGED,
     DELETE_GEOMETRY_FEATURE,
     START_DRAWING_FEATURE,
-    SET_PERMISSION
+    SET_PERMISSION,
+    DISABLE_TOOLBAR,
+    OPEN_FEATURE_GRID,
+    CLOSE_FEATURE_GRID
 } = require('../actions/featuregrid');
 const{
-    FEATURE_TYPE_LOADED,
-    FEATURE_CLOSE
+    FEATURE_TYPE_LOADED
 } = require('../actions/wfsquery');
 const{
     CHANGE_DRAWING_STATUS
@@ -41,6 +43,7 @@ const{
 const uuid = require('uuid');
 
 const emptyResultsState = {
+    open: false,
     canEdit: false,
     focusOnEdit: true,
     mode: MODES.VIEW,
@@ -138,6 +141,7 @@ function featuregrid(state = emptyResultsState, action) {
         });
     case TOGGLE_MODE: {
         return assign({}, state, {
+            tools: action.mode === MODES.EDIT ? {} : state.tools,
             mode: action.mode,
             multiselect: action.mode === MODES.EDIT,
             drawing: false
@@ -220,7 +224,7 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case FEATURE_TYPE_LOADED: {
         return assign({}, state, {
-            localType: action.featureType.original.featureTypes[0].properties[1].localType
+            localType: get(action, "featureType.original.featureTypes[0].properties[1].localType")
         });
     }
     case START_DRAWING_FEATURE: {
@@ -228,8 +232,14 @@ function featuregrid(state = emptyResultsState, action) {
             drawing: !state.drawing
         });
     }
-    case FEATURE_CLOSE: {
+    case OPEN_FEATURE_GRID: {
         return assign({}, state, {
+            open: true
+        });
+    }
+    case CLOSE_FEATURE_GRID: {
+        return assign({}, state, {
+            open: false,
             pagination: {
                 page: 0,
                 size: state.pagination.size
@@ -242,6 +252,11 @@ function featuregrid(state = emptyResultsState, action) {
             newFeatures: [],
             changes: [],
             select: []
+        });
+    }
+    case DISABLE_TOOLBAR: {
+        return assign({}, state, {
+            disableToolbar: action.disabled
         });
     }
     case SET_PERMISSION: {

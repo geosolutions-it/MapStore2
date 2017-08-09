@@ -11,17 +11,17 @@ const I18N = require('../../../components/I18N/I18N');
 const {Panel, Button, Carousel, CarouselItem} = require('react-bootstrap');
 
 const carouselImages = {
-    viewer: require('../../assets/img/Viewer.png'),
-    "3dviewer": require('../../assets/img/3DViewer.png'),
-    mouseposition: require('../../assets/img/MousePosition.png'),
-    scalebar: require('../../assets/img/ScaleBar.png'),
-    layertree: require('../../assets/img/LayerTree.png'),
-    queryform: require('../../assets/img/QueryForm.png'),
+    viewer: require('../../assets/img/Viewer.jpg'),
+    "3dviewer": require('../../assets/img/3DViewer.jpg'),
+    mouseposition: require('../../assets/img/MousePosition.jpg'),
+    scalebar: require('../../assets/img/ScaleBar.jpg'),
+    layertree: require('../../assets/img/LayerTree.jpg'),
+    queryform: require('../../assets/img/QueryForm.jpg'),
     featuregrid: require('../../assets/img/FeatureGrid.jpg'),
-    print: require('../../assets/img/Print.png'),
-    plugins: require('../../assets/img/Plugins.png'),
-    api: require('../../assets/img/Api.png'),
-    rasterstyler: require('../../assets/img/rasterstyler.png')
+    print: require('../../assets/img/Print.jpg'),
+    plugins: require('../../assets/img/Plugins.jpg'),
+    api: require('../../assets/img/Api.jpg'),
+    rasterstyler: require('../../assets/img/rasterstyler.jpg')
 };
 
 class Examples extends React.Component {
