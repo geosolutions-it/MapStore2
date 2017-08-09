@@ -46,8 +46,8 @@ const expect = require('expect');
 const featuregrid = require('../featuregrid');
 const {setFeatures, dockSizeFeatures, setLayer, toggleTool, customizeAttribute, selectFeatures, deselectFeatures, createNewFeatures,
     featureSaving, toggleSelection, clearSelection, MODES, toggleEditMode, toggleViewMode, saveSuccess, clearChanges, saveError, startDrawingFeature,
-    deleteGeometryFeature, geometryChanged, setSelectionOptions, changePage, featureModified, setPermission} = require('../../actions/featuregrid');
-const {featureTypeLoaded, featureClose} = require('../../actions/wfsquery');
+    deleteGeometryFeature, geometryChanged, setSelectionOptions, changePage, featureModified, setPermission, disableToolbar, openFeatureGrid, closeFeatureGrid} = require('../../actions/featuregrid');
+const {featureTypeLoaded} = require('../../actions/wfsquery');
 const {changeDrawingStatus} = require('../../actions/draw');
 
 const museam = require('json-loader!../../test-resources/wfs/museam.json');
@@ -63,6 +63,17 @@ describe('Test the featuregrid reducer', () => {
         expect(state.pagination).toExist();
         expect(state.select).toExist();
         expect(state.features).toExist();
+    });
+    it('openFeatureGrid', () => {
+        let state = featuregrid(undefined, openFeatureGrid());
+        expect(state).toExist();
+        expect(state.open).toBe(true);
+    });
+    it('closeFeatureGrid', () => {
+        let state = featuregrid(undefined, closeFeatureGrid());
+        expect(state).toExist();
+        expect(state.open).toBe(false);
+        expect(state.mode).toBe(MODES.VIEW);
     });
 
     it('selectFeature', () => {
@@ -137,12 +148,13 @@ describe('Test the featuregrid reducer', () => {
         let state = featuregrid( {}, dockSizeFeatures(200));
         expect(state.dockSize).toBe(200);
     });
-    it('toggleEditMode', () => {
+    it('toggleEditMode edit', () => {
         let state = featuregrid( {}, toggleEditMode());
         expect(state.multiselect).toBeTruthy();
         expect(state.mode).toBe(MODES.EDIT);
+        expect(state.tools.settings).toBeFalsy();
     });
-    it('toggleViewMode', () => {
+    it('toggleViewMode view', () => {
         let state = featuregrid( {}, toggleViewMode());
         expect(state.multiselect).toBeFalsy();
         expect(state.mode).toBe(MODES.VIEW);
@@ -219,15 +231,7 @@ describe('Test the featuregrid reducer', () => {
         let state = featuregrid( {}, setPermission({canEdit: true}));
         expect(state.canEdit).toBe(true);
     });
-    it('featureClose', () => {
-        let state = featuregrid( {pagination: {size: 3}}, featureClose());
-        expect(state.drawing).toBe(false);
-        expect(state.deleteConfirm).toBe(false);
-        expect(state.pagination.size).toBe(3);
-        expect(state.newFeatures.length).toBe(0);
-        expect(state.changes.length).toBe(0);
-        expect(state.select.length).toBe(0);
-    });
+
     it('CHANGE_DRAWING_STATUS', () => {
         let state = featuregrid( {}, changeDrawingStatus("clean"));
         expect(state.drawing).toBe(false);
@@ -249,6 +253,16 @@ describe('Test the featuregrid reducer', () => {
         expect(state.newFeatures.length).toBe(0);
         state = featuregrid( state, geometryChanged([feature1]));
         expect(state.changes.length).toBe(2);
+
+    });
+    it('DISABLE_TOOLBAR', () => {
+        let state = featuregrid({}, {type: "UNKNOWN"});
+        expect(state.disableToolbar).toBeFalsy();
+        state = featuregrid({}, disableToolbar(true));
+        expect(state.disableToolbar).toBe(true);
+
+        state = featuregrid({}, disableToolbar(false));
+        expect(state.disableToolbar).toBe(false);
 
     });
     it('featureTypeLoaded', () => {

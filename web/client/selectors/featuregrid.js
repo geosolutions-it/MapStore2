@@ -46,7 +46,7 @@ const hasGeometrySelectedFeature = (state) => {
 const hasChangesSelector = state => changesSelector(state) && changesSelector(state).length > 0;
 const hasNewFeaturesSelector = state => newFeaturesSelector(state) && newFeaturesSelector(state).length > 0;
 module.exports = {
-  isFeatureGridOpen: state => state && state.query && state.query.open, // TODO move open in featuregrid from query reducer
+  isFeatureGridOpen: state => state && state.featuregrid && state.featuregrid.open,
   selectedLayerIdSelector,
   getTitleSelector: state => getTitle(
     getLayerById(

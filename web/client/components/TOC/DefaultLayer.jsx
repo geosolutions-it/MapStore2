@@ -26,7 +26,7 @@ class DefaultLayer extends React.Component {
         retrieveLayerData: PropTypes.func,
         onToggle: PropTypes.func,
         onContextMenu: PropTypes.func,
-        onToggleQuerypanel: PropTypes.func,
+        onBrowseData: PropTypes.func,
         onZoom: PropTypes.func,
         onSettings: PropTypes.func,
         onRefresh: PropTypes.func,
@@ -72,7 +72,7 @@ class DefaultLayer extends React.Component {
         onSettings: () => {},
         onRefresh: () => {},
         retrieveLayerData: () => {},
-        onToggleQuerypanel: () => {},
+        onBrowseData: () => {},
         activateRemoveLayer: false,
         activateLegendTool: false,
         activateSettingsTool: false,
@@ -152,13 +152,17 @@ class DefaultLayer extends React.Component {
         if (this.props.activateQueryTool && this.props.node.search) {
             tools.push(
                 <LayersTool key="toolquery"
-                        tooltip="toc.searchFeatures"
+                        tooltip="toc.browseData"
                         className="toc-queryTool"
                         node={this.props.node}
                         ref="target"
                         style={{"float": "right", cursor: "pointer"}}
-                        glyph="search"
-                        onClick={(node) => this.props.onToggleQuerypanel(node.search.url || node.url, node.name, node.id)}/>
+                        glyph="features-grid"
+                        onClick={(node) => this.props.onBrowseData({
+                            url: node.search.url || node.url,
+                            name: node.name,
+                            id: node.id
+                        })}/>
                 );
         }
         return (<div position="collapsible" className="collapsible-toc">
@@ -196,7 +200,7 @@ class DefaultLayer extends React.Component {
                         className="toc-zoomTool"
                         ref="target"
                         style={{"float": "right", cursor: "pointer"}}
-                        glyph="zoom-in"
+                        glyph="zoom-to"
                         onClick={(node) => this.props.onZoom(node.bbox.bounds, node.bbox.crs)}/>
                 );
         }

@@ -5,8 +5,7 @@ const {createSelector, createStructuredSelector} = require('reselect');
 const {paginationInfo, featureLoadingSelector} = require('../../../selectors/query');
 const {getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector} = require('../../../selectors/featuregrid');
 const {isAdminUserSelector} = require('../../../selectors/security');
-const {deleteFeatures, toggleTool, clearChangeConfirmed, closeFeatureGridConfirmed} = require('../../../actions/featuregrid');
-const {closeResponse} = require('../../../actions/wfsquery');
+const {deleteFeatures, toggleTool, clearChangeConfirmed, closeFeatureGridConfirmed, closeFeatureGrid} = require('../../../actions/featuregrid');
 const {toolbarEvents, pageEvents} = require('../index');
 const {currentLocaleSelector} = require('../../../selectors/locale');
 
@@ -24,6 +23,7 @@ const Toolbar = connect(
         isDrawing: isDrawingSelector,
         isSimpleGeom: isSimpleGeomSelector,
         selectedCount: selectedFeaturesCount,
+        disableToolbar: state => state && state.featuregrid && state.featuregrid.disableToolbar,
         isDownloadOpen: state => state && state.controls && state.controls.wfsdownload && state.controls.wfsdownload.enabled,
         isColumnsOpen: state => state && state.featuregrid && state.featuregrid.tools && state.featuregrid.tools.settings,
         isEditingAllowed: (state) => isAdminUserSelector(state) || canEditSelector(state)
@@ -66,7 +66,7 @@ const ClearDialog = connect(
 const FeatureCloseDialog = connect(() => {}
     , {
     onClose: () => closeFeatureGridConfirmed(),
-    onConfirm: () => closeResponse()
+    onConfirm: () => closeFeatureGrid()
 })(require('../../../components/data/featuregrid/dialog/ConfirmFeatureClose'));
 
 const panels = {
@@ -80,7 +80,7 @@ const dialogs = {
 };
 const panelDefaultProperties = {
     settings: {
-        style: { padding: '0 12px', overflow: "auto", flex: "0 0 14em", boxShadow: "inset 0px 0px 10px rgba(0, 0, 0, 0.4)"}
+        style: { padding: '0 12px', overflow: "auto", flex: "0 0 14em", boxShadow: "inset 0px 0px 10px rgba(0, 0, 0, 0.4)", height: "100%", minWidth: 195}
     }
 };
 

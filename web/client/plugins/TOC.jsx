@@ -10,10 +10,9 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {Button, Glyphicon} = require('react-bootstrap');
-const autocompleteEpics = require('../epics/autocomplete');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
-       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode} = require('../actions/layers');
+       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode, browseData} = require('../actions/layers');
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
 const {groupsSelector, layersSelector} = require('../selectors/layers');
@@ -28,115 +27,11 @@ const assign = require('object-assign');
 
 const layersIcon = require('./toolbar/assets/img/layers.png');
 
-// include application component
-const QueryBuilder = require('../components/data/query/QueryBuilder');
-
 const {isObject} = require('lodash');
-
-const {bindActionCreators} = require('redux');
-const {
-    // QueryBuilder action functions
-    addGroupField,
-    addFilterField,
-    removeFilterField,
-    updateFilterField,
-    updateExceptionField,
-    updateLogicCombo,
-    removeGroupField,
-    changeCascadingValue,
-    expandAttributeFilterPanel,
-    expandSpatialFilterPanel,
-    selectSpatialMethod,
-    selectViewportSpatialMethod,
-    selectSpatialOperation,
-    removeSpatialSelection,
-    showSpatialSelectionDetails,
-    reset,
-    changeDwithinValue,
-    zoneGetValues,
-    zoneSearch,
-    zoneChange,
-    toggleMenu
-} = require('../actions/queryform');
 
 const {toggleControl, setControlProperty} = require('../actions/controls');
 
 const {refreshLayers} = require('../actions/layers');
-
-const {createQuery, toggleQueryPanel} = require('../actions/wfsquery');
-
-const {
-    changeDrawingStatus,
-    endDrawing
-} = require('../actions/draw');
-
-// connecting a Dumb component to the store
-// makes it a smart component
-// we both connect state => props
-// and actions to event handlers
-const SmartQueryForm = connect((state) => {
-    return {
-        // QueryBuilder props
-        useMapProjection: state.queryform.useMapProjection,
-        groupLevels: state.queryform.groupLevels,
-        groupFields: state.queryform.groupFields,
-        filterFields: state.queryform.filterFields,
-        attributes: state.query && state.query.typeName && state.query.featureTypes && state.query.featureTypes[state.query.typeName] && state.query.featureTypes[state.query.typeName].attributes,
-        featureTypeError: state.query && state.query.typeName && state.query.featureTypes && state.query.featureTypes[state.query.typeName] && state.query.featureTypes[state.query.typeName].error,
-        spatialField: state.queryform.spatialField,
-        showDetailsPanel: state.queryform.showDetailsPanel,
-        toolbarEnabled: state.queryform.toolbarEnabled,
-        attributePanelExpanded: state.queryform.attributePanelExpanded,
-        autocompleteEnabled: state.queryform.autocompleteEnabled,
-        maxFeaturesWPS: state.queryform.maxFeaturesWPS,
-        spatialPanelExpanded: state.queryform.spatialPanelExpanded,
-        featureTypeConfigUrl: state.query && state.query.url,
-        searchUrl: state.query && state.query.url,
-        featureTypeName: state.query && state.query.typeName,
-        ogcVersion: "1.1.0",
-        params: {typeName: state.query && state.query.typeName},
-        resultTitle: "Query Result",
-        showGeneratedFilter: false,
-        allowEmptyFilter: true,
-        emptyFilterWarning: true,
-        maxHeight: state.map && state.map.present && state.map.present.size && state.map.present.size.height
-    };
-}, dispatch => {
-    return {
-
-        attributeFilterActions: bindActionCreators({
-            onAddGroupField: addGroupField,
-            onAddFilterField: addFilterField,
-            onRemoveFilterField: removeFilterField,
-            onUpdateFilterField: updateFilterField,
-            onUpdateExceptionField: updateExceptionField,
-            onUpdateLogicCombo: updateLogicCombo,
-            onRemoveGroupField: removeGroupField,
-            onChangeCascadingValue: changeCascadingValue,
-            toggleMenu: toggleMenu,
-            onExpandAttributeFilterPanel: expandAttributeFilterPanel
-        }, dispatch),
-        spatialFilterActions: bindActionCreators({
-            onExpandSpatialFilterPanel: expandSpatialFilterPanel,
-            onSelectSpatialMethod: selectSpatialMethod,
-            onSelectViewportSpatialMethod: selectViewportSpatialMethod,
-            onSelectSpatialOperation: selectSpatialOperation,
-            onChangeDrawingStatus: changeDrawingStatus,
-            onRemoveSpatialSelection: removeSpatialSelection,
-            onShowSpatialSelectionDetails: showSpatialSelectionDetails,
-            onEndDrawing: endDrawing,
-            onChangeDwithinValue: changeDwithinValue,
-            zoneFilter: zoneGetValues,
-            zoneSearch,
-            zoneChange
-        }, dispatch),
-        queryToolbarActions: bindActionCreators({
-            onQuery: createQuery,
-            onReset: reset,
-            onChangeDrawingStatus: changeDrawingStatus
-        }, dispatch)
-    };
-})(QueryBuilder);
 
 const refreshSelector = createSelector([
     (state) => state.controls && state.controls.RefreshLayers || {},
@@ -180,14 +75,12 @@ const tocSelector = createSelector(
         (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
         groupsSelector,
         (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}},
-        (state) => state.controls && state.controls.queryPanel && state.controls.queryPanel.enabled || false,
         mapSelector,
         currentLocaleSelector
-    ], (enabled, groups, settings, querypanelEnabled, map, currentLocale) => ({
+    ], (enabled, groups, settings, map, currentLocale) => ({
         enabled,
         groups,
         settings,
-        querypanelEnabled,
         currentZoomLvl: map && map.zoom,
         scales: mapUtils.getScales(
             map && map.projection || 'EPSG:3857',
@@ -208,7 +101,6 @@ class LayerTree extends React.Component {
         buttonContent: PropTypes.node,
         groups: PropTypes.array,
         settings: PropTypes.object,
-        querypanelEnabled: PropTypes.bool,
         refreshMapEnabled: PropTypes.bool,
         groupStyle: PropTypes.object,
         groupPropertiesChangeHandler: PropTypes.func,
@@ -216,7 +108,7 @@ class LayerTree extends React.Component {
         onToggleGroup: PropTypes.func,
         onToggleLayer: PropTypes.func,
         onContextMenu: PropTypes.func,
-        onToggleQuery: PropTypes.func,
+        onBrowseData: PropTypes.func,
         onZoomToExtent: PropTypes.func,
         retrieveLayerData: PropTypes.func,
         onSort: PropTypes.func,
@@ -271,7 +163,6 @@ class LayerTree extends React.Component {
             closeGlyph: "1-close",
             buttonSize: "small"
         },
-        querypanelEnabled: false,
         refreshMapEnabled: false,
         layerOptions: {},
         groupOptions: {},
@@ -324,7 +215,7 @@ class LayerTree extends React.Component {
                             settingsOptions={this.props.settingsOptions}
                             onToggle={this.props.onToggleLayer}
                             onContextMenu={this.props.onContextMenu}
-                            onToggleQuerypanel={this.props.onToggleQuery }
+                            onBrowseData={this.props.onBrowseData}
                             onZoom={this.props.onZoomToExtent}
                             onSettings={this.props.onSettings}
                             onRefresh={this.props.onRefreshLayer}
@@ -363,24 +254,9 @@ class LayerTree extends React.Component {
         );
     };
 
-    renderQueryPanel = () => {
-        return (
-            <div id="toc-query-container">
-                <Button id="toc-query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={() => this.props.onToggleQuery()}><Glyphicon glyph="arrow-left"/></Button>
-                <SmartQueryForm
-                    spatialOperations={this.props.spatialOperations}
-                    spatialMethodOptions={this.props.spatialMethodOptions}
-                    featureTypeErrorText={<Message msgId="layerProperties.featureTypeError"/>}/>
-            </div>
-        );
-    };
-
     render() {
         if (!this.props.groups) {
             return <div />;
-        }
-        if (this.props.querypanelEnabled) {
-            return this.renderQueryPanel();
         }
         return this.renderTOC();
     }
@@ -415,7 +291,7 @@ const TOCPlugin = connect(tocSelector, {
     onToggleGroup: LayersUtils.toggleByType('groups', toggleNode),
     onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
     onContextMenu: contextNode,
-    onToggleQuery: toggleQueryPanel,
+    onBrowseData: browseData,
     onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
     onSettings: showSettings,
     onRefresh: toggleControl.bind(null, 'RefreshLayers', 'enabled'),
@@ -457,6 +333,5 @@ module.exports = {
     reducers: {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
-    },
-    epics: assign({}, autocompleteEpics)
+    }
 };
