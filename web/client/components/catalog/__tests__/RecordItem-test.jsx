@@ -11,7 +11,7 @@ const ReactItem = require('../RecordItem.jsx');
 const expect = require('expect');
 const assign = require('object-assign');
 
-const TestUtils = require('react-addons-test-utils');
+const TestUtils = require('react-dom/test-utils');
 
 const sampleRecord = {
     identifier: "test-identifier",

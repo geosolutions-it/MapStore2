@@ -11,7 +11,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var PrintSubmit = require('../PrintSubmit');
 
-var ReactTestUtils = require('react-addons-test-utils');
+var ReactTestUtils = require('react-dom/test-utils');
 
 describe("Test the PrintSubmit component", () => {
     beforeEach((done) => {

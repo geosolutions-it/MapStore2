@@ -10,7 +10,7 @@ var expect = require('expect');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var LangSelector = require('../LangSelector');
-const TestUtils = require('react-addons-test-utils');
+const TestUtils = require('react-dom/test-utils');
 
 describe('LangSelector', () => {
     beforeEach((done) => {

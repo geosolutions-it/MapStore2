@@ -3,7 +3,7 @@ const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const PreviewIcon = require('../PreviewIcon');
-const ReactTestUtils = require('react-addons-test-utils');
+const ReactTestUtils = require('react-dom/test-utils');
 
 describe("test the PreviewIcon", () => {
     beforeEach((done) => {

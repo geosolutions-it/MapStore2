@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var Group = require('../DefaultGroup');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const Group = require('../DefaultGroup');
 
-var expect = require('expect');
+const expect = require('expect');
 
 describe('test Group module component', () => {
     beforeEach((done) => {

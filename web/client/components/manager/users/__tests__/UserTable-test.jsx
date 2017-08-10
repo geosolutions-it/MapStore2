@@ -9,7 +9,7 @@ const React = require("react");
 const expect = require('expect');
 const ReactDOM = require('react-dom');
 const UserTable = require('../UsersTable');
-var ReactTestUtils = require('react-addons-test-utils');
+var ReactTestUtils = require('react-dom/test-utils');
 
 const users = [{
     id: 2,

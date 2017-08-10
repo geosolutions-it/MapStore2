@@ -8,7 +8,7 @@
 
 var React = require('react');
 var ReactDOM = require('react-dom');
-var ReactTestUtils = require('react-addons-test-utils');
+var ReactTestUtils = require('react-dom/test-utils');
 var Display = require('../Display');
 
 var expect = require('expect');

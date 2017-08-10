@@ -10,7 +10,7 @@ const ReactDOM = require('react-dom');
 const NotificationContainer = require('../NotificationContainer.jsx');
 const expect = require('expect');
 
-const TestUtils = require('react-addons-test-utils');
+const TestUtils = require('react-dom/test-utils');
 const N1 = {
     uid: "1",
     title: "test 1",

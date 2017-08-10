@@ -6,15 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var React = require('react');
-var ReactDOM = require('react-dom');
+const expect = require('expect');
+const React = require('react');
+const ReactDOM = require('react-dom');
 
-var TOC = require('../TOC');
-var Group = require('../DefaultGroup');
-var Layer = require('../DefaultLayer');
+const TOC = require('../TOC');
+const Group = require('../DefaultGroup');
+const Layer = require('../DefaultLayer');
 
-let testData = [
+const testData = [
     {
         name: "G0",
         title: "G0",
@@ -66,7 +66,7 @@ let testData = [
     }
 ];
 
-let layers = [
+const layers = [
     {
         group: 'G2',
         name: 'L5',

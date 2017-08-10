@@ -12,7 +12,7 @@ var Title = require('../Title');
 
 var expect = require('expect');
 
-var ReactTestUtils = require('react-addons-test-utils');
+var ReactTestUtils = require('react-dom/test-utils');
 
 describe('test Title module component', () => {
     beforeEach((done) => {

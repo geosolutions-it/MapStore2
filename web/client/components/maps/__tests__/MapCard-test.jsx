@@ -10,7 +10,7 @@ var ReactDOM = require('react-dom');
 var MapCard = require('../MapCard.jsx');
 var expect = require('expect');
 
-const TestUtils = require('react-addons-test-utils');
+const TestUtils = require('react-dom/test-utils');
 
 describe('This test for MapCard', () => {
     beforeEach((done) => {

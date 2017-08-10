@@ -9,7 +9,7 @@ const React = require("react");
 const expect = require('expect');
 const ReactDOM = require('react-dom');
 const GroupCard = require('../GroupCard');
-var ReactTestUtils = require('react-addons-test-utils');
+var ReactTestUtils = require('react-dom/test-utils');
 const group1 = {
     id: 1,
     groupName: "GROUP1",

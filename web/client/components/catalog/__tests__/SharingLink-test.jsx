@@ -11,7 +11,7 @@ const SharingLink = require('../SharingLink');
 const Localized = require('../../I18N/Localized');
 const expect = require('expect');
 
-const TestUtils = require('react-addons-test-utils');
+const TestUtils = require('react-dom/test-utils');
 
 describe('Tests for SharingLink', () => {
 

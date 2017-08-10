@@ -10,7 +10,7 @@ const ReactDOM = require('react-dom');
 const RecordGrid = require('../RecordGrid.jsx');
 const expect = require('expect');
 
-const TestUtils = require('react-addons-test-utils');
+const TestUtils = require('react-dom/test-utils');
 const sampleCatalogURL = "http://test.com/catalog";
 const sampleRecord = {
     identifier: "test-identifier",
