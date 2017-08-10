@@ -33,6 +33,7 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
 const {TOGGLE_CONTROL, resetControls} = require('../actions/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
 const {refreshLayerVersion} = require('../actions/layers');
+const {spatialFieldSelector, spatialFieldGeomTypeSelector, spatialFieldGeomCoordSelector, spatialFieldGeomSelector, spatialFieldGeomProjSelector} = require('../selectors/queryform');
 const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector,
     selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector,
     isFeatureGridOpen} = require('../selectors/featuregrid');
@@ -424,9 +425,21 @@ module.exports = {
             return Rx.Observable.of(setControlProperty("drawer", "enabled", false), toggleTool("featureCloseConfirm", false));
         }),
     onOpenAdvancedSearch: (action$, store) =>
-        action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() =>
-            Rx.Observable.of(
+        action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
+            const state = store.getState();
+            const spatialField = spatialFieldSelector(state);
+            const feature = {
+                type: "Feature",
+                geometry: {
+                    type: spatialFieldGeomTypeSelector(state),
+                    coordinates: spatialFieldGeomCoordSelector(state)
+                }
+            };
+            let drawSpatialFilter = spatialFieldGeomSelector(state) ? changeDrawingStatus("drawOrEdit", spatialField.method, "queryform", [feature], {featureProjection: spatialFieldGeomProjSelector(state), drawEnabled: false, editEnabled: false}) : changeDrawingStatus("clean", spatialField.method, "queryform", [], {drawEnabled: false, editEnabled: false});
+
+            return Rx.Observable.of(
                 setControlProperty('queryPanel', "enabled", true),
+                drawSpatialFilter, // if a geometry is present it will redraw the spatial field
                 closeFeatureGrid()
             ).merge(
                 action$.ofType(QUERY_FORM_RESET) // ON RESET YOU HAVE TO PERFORM A SEARCH AGAIN WHEN BACK
@@ -452,8 +465,8 @@ module.exports = {
                             )
                     )
                 ).takeUntil(action$.ofType(OPEN_FEATURE_GRID, LOCATION_CHANGE))
-            )
-        ),
+            );
+        }),
     onFeatureGridZoomAll: (action$, store) =>
         action$.ofType(ZOOM_ALL).switchMap(() =>
             Rx.Observable.of(zoomToExtent(bbox(featureCollectionResultSelector(store.getState())), "EPSG:4326"))
