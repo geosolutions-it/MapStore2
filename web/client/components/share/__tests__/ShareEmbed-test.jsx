@@ -11,7 +11,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const ShareEmbed = require('../ShareEmbed');
 const {head} = require('lodash');
-const ReactTestUtils = require('react-addons-test-utils');
+const ReactTestUtils = require('react-dom/test-utils');
 
 describe("The ShareEmbed component", () => {
     beforeEach((done) => {

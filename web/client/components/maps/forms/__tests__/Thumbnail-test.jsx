@@ -9,7 +9,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var Thumbnail = require('../Thumbnail.jsx');
 var expect = require('expect');
-const TestUtils = require('react-addons-test-utils');
+const TestUtils = require('react-dom/test-utils');
 
 describe('This test for Thumbnail', () => {
 

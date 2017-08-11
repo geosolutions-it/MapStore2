@@ -7,13 +7,13 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var Layer = require('../DefaultLayer');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const Layer = require('../DefaultLayer');
 // var ConfirmButton = require('../../buttons/ConfirmButton');
-var expect = require('expect');
+const expect = require('expect');
 
-const TestUtils = require('react-addons-test-utils');
+const TestUtils = require('react-dom/test-utils');
 const assign = require('object-assign');
 
 describe('test DefaultLayer module component', () => {

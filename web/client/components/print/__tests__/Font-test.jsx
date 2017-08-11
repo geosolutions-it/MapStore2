@@ -11,7 +11,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var Font = require('../Font');
 
-var ReactTestUtils = require('react-addons-test-utils');
+var ReactTestUtils = require('react-dom/test-utils');
 
 const fonts = ['Font1', 'Font2'];
 

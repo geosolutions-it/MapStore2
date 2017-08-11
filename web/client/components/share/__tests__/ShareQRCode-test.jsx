@@ -10,7 +10,7 @@ const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const ShareQRCode = require('../ShareQRCode');
-const ReactTestUtils = require('react-addons-test-utils');
+const ReactTestUtils = require('react-dom/test-utils');
 
 describe("The ShareQRCode component", () => {
     beforeEach((done) => {

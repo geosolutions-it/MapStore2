@@ -9,7 +9,7 @@
 const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-addons-test-utils');
+const ReactTestUtils = require('react-dom/test-utils');
 const PasswordReset = require('../PasswordReset');
 
 

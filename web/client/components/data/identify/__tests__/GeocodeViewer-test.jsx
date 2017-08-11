@@ -12,7 +12,7 @@ const GeocodeViewer = require('../GeocodeViewer.jsx');
 
 const expect = require('expect');
 
-const TestUtils = require('react-addons-test-utils');
+const TestUtils = require('react-dom/test-utils');
 
 class Wrapper extends React.Component {
     render() {

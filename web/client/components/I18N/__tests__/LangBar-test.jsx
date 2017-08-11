@@ -11,7 +11,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var LangBar = require('../LangBar');
 var LocaleUtils = require('../../../utils/LocaleUtils');
-const TestUtils = require('react-addons-test-utils');
+const TestUtils = require('react-dom/test-utils');
 
 describe('LangBar', () => {
     beforeEach((done) => {

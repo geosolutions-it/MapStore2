@@ -9,7 +9,7 @@ var expect = require('expect');
 
 var React = require('react');
 var ReactDOM = require('react-dom');
-var ReactTestUtils = require('react-addons-test-utils');
+var ReactTestUtils = require('react-dom/test-utils');
 var SnapshotPanel = require('../SnapshotPanel');
 
 describe("test the SnapshotPanel", () => {

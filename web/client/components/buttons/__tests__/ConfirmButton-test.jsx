@@ -34,7 +34,7 @@ describe("test the ConfirmButton", () => {
         expect(tb).toExist();
         const tbNode = ReactDOM.findDOMNode(tb);
         expect(tbNode).toExist();
-        const ReactTestUtils = require('react-addons-test-utils');
+        const ReactTestUtils = require('react-dom/test-utils');
         ReactTestUtils.Simulate.click(tbNode);
         expect(tb).toExist();
         const txt = tbNode.textContent || tbNode.innerText;
@@ -49,7 +49,7 @@ describe("test the ConfirmButton", () => {
         expect(tb).toExist();
         const tbNode = ReactDOM.findDOMNode(tb);
         expect(tbNode).toExist();
-        const ReactTestUtils = require('react-addons-test-utils');
+        const ReactTestUtils = require('react-dom/test-utils');
         ReactTestUtils.Simulate.click(tbNode);
         expect(tb).toExist();
         ReactTestUtils.Simulate.click(tbNode);
@@ -64,7 +64,7 @@ describe("test the ConfirmButton", () => {
         expect(tb).toExist();
         const tbNode = ReactDOM.findDOMNode(tb);
         expect(tbNode).toExist();
-        const ReactTestUtils = require('react-addons-test-utils');
+        const ReactTestUtils = require('react-dom/test-utils');
         ReactTestUtils.Simulate.click(tbNode);
         ReactTestUtils.Simulate.focus(tbNode);
         ReactTestUtils.Simulate.blur(tbNode);
@@ -81,7 +81,7 @@ describe("test the ConfirmButton", () => {
         expect(tb).toExist();
         const tbNode = ReactDOM.findDOMNode(tb);
         expect(tbNode).toExist();
-        const ReactTestUtils = require('react-addons-test-utils');
+        const ReactTestUtils = require('react-dom/test-utils');
         ReactTestUtils.Simulate.click(tbNode);
         ReactTestUtils.Simulate.click(tbNode);
         expect(tbNode.disabled).toBe(true);

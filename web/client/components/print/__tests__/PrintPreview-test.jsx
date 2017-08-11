@@ -11,7 +11,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var PrintPreview = require('../PrintPreview');
 
-var ReactTestUtils = require('react-addons-test-utils');
+var ReactTestUtils = require('react-dom/test-utils');
 
 window.PDFJS = {
     getDocument: () => ({

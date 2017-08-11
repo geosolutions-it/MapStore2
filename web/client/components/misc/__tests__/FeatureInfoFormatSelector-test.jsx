@@ -11,7 +11,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var FeatureInfoFormatSelector = require('../FeatureInfoFormatSelector');
 
-const TestUtils = require('react-addons-test-utils');
+const TestUtils = require('react-dom/test-utils');
 
 describe('FeatureInfoFormatSelector', () => {
     const data = {

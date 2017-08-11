@@ -11,7 +11,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var LocateBtn = require('../LocateBtn');
 
-const ReactTestUtils = require('react-addons-test-utils');
+const ReactTestUtils = require('react-dom/test-utils');
 
 describe("test the Locate Button", () => {
     beforeEach((done) => {

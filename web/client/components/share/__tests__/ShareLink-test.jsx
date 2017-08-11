@@ -10,7 +10,7 @@ const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const ShareLink = require('../ShareLink');
-const ReactTestUtils = require('react-addons-test-utils');
+const ReactTestUtils = require('react-dom/test-utils');
 
 describe("The ShareLink component", () => {
     const url = location.href;

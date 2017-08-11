@@ -12,7 +12,7 @@ var ReactDOM = require('react-dom');
 var ScaleBox = require('../ScaleBox');
 var mapUtils = require('../../../../utils/MapUtils');
 
-const TestUtils = require('react-addons-test-utils');
+const TestUtils = require('react-dom/test-utils');
 
 describe('ScaleBox', () => {
     beforeEach((done) => {

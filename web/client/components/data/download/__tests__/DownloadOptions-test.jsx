@@ -10,7 +10,7 @@ var ReactDOM = require('react-dom');
 var DownloadOptions = require('../DownloadOptions');
 var expect = require('expect');
 const spyOn = expect.spyOn;
-const TestUtils = require('react-addons-test-utils');
+const TestUtils = require('react-dom/test-utils');
 
 describe('Test for DownloadOptions component', () => {
     beforeEach((done) => {

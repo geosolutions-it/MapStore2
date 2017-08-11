@@ -10,7 +10,7 @@ const ReactDOM = require('react-dom');
 const GridCard = require('../GridCard.jsx');
 const expect = require('expect');
 
-const TestUtils = require('react-addons-test-utils');
+const TestUtils = require('react-dom/test-utils');
 
 describe('This test for GridCard', () => {
     beforeEach((done) => {

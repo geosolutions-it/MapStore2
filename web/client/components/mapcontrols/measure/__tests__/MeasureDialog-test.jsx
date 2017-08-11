@@ -9,7 +9,7 @@ var expect = require('expect');
 
 var React = require('react');
 var ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-addons-test-utils');
+const ReactTestUtils = require('react-dom/test-utils');
 var MeasureDialog = require('../MeasureDialog');
 
 

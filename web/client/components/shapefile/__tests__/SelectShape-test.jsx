@@ -3,7 +3,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const SelectShape = require('../SelectShape');
 
-const TestUtils = require('react-addons-test-utils');
+const TestUtils = require('react-dom/test-utils');
 
 global.window.URL = {
     createObjectURL: function createObjectURL(arg) {

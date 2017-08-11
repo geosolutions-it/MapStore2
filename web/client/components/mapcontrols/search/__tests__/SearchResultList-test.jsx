@@ -11,7 +11,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const SearchResultList = require('../SearchResultList');
 const SearchResult = require('../SearchResult');
-const TestUtils = require('react-addons-test-utils');
+const TestUtils = require('react-dom/test-utils');
 
 const results = [{
     id: "ID",
