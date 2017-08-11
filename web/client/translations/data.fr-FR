@@ -141,7 +141,7 @@
                     "html":"<h3>Constructeur de requête</h3><p>Exemple particulier</p>"
                 },
                 "featuregrid":{
-                    "html":"<h3>Grilles d'objets</h3><p>Exemple particulier</p>"
+                    "html":"<h3>Éditeur d'objets</h3><p>Exemple particulier</p>"
                 },
                 "print":{
                     "html":"<h3>Impression</h3><p>Exemple particulier</p>"
