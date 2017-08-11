@@ -139,7 +139,7 @@
                     "html":"<h3>Query Builder</h3><p>Esempi personalizzati</p>"
                 },
                 "featuregrid":{
-                    "html":"<h3>Feature Grid</h3><p>Esempi personalizzati</p>"
+                    "html":"<h3>Feature Editor</h3><p>Esempi personalizzati</p>"
                 },
                 "print":{
                     "html":"<h3>Printing</h3><p>Esempi personalizzati</p>"

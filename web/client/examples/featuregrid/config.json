@@ -2,14 +2,16 @@
     "map": {
        "center": {"x": -2712465.14, "y": 3678603.57, "crs": "EPSG:900913"},
         "layers": [
-            {
-                "group": "background",
-                "name": "mapnik",
-                "source": "osm",
-                "title": "Open Street Map",
-                "type": "osm",
-                "visibility": true
-            },
+          {
+                  "group": "background",
+                  "name": "Watercolor",
+                  "provider": "Stamen.Watercolor",
+                  "title": "Watercolor",
+                  "type": "tileprovider",
+                  "visibility": true,
+                  "singleTile": false,
+                  "id": "Night2012__3"
+              },
             {
                 "describeLayer": {
                     "owsType": "WFS",

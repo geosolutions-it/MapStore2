@@ -141,7 +141,7 @@
                     "html":"<h3>Constructor de consultas</h3><p>Ejemplo personalizado</p>"
                 },
                 "featuregrid":{
-                    "html":"<h3>Rejilla de  features</h3><p>Ejemplo personalizado</p>"
+                    "html":"<h3>Editor de features</h3><p>Ejemplo personalizado</p>"
                 },
                 "print":{
                     "html":"<h3>Impresión</h3><p>Ejemplo personalizado</p>"
