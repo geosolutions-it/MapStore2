@@ -58,6 +58,6 @@ describe('test GroupTitle module component', () => {
         const comp = ReactDOM.render(<GroupTitle node={{}} currentLocale="it-IT"/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
-        expect(domNode.innerHTML).toBe(getInnerHTML('Default'));
+        expect(domNode.innerHTML).toBe('<span class="glyphicon glyphicon-folder-open" style="margin-right: 8px;"></span>');
     });
 });

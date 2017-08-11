@@ -7,7 +7,6 @@ const {getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector
 const {isAdminUserSelector} = require('../../../selectors/security');
 const {deleteFeatures, toggleTool, clearChangeConfirmed, closeFeatureGridConfirmed, closeFeatureGrid} = require('../../../actions/featuregrid');
 const {toolbarEvents, pageEvents} = require('../index');
-const {currentLocaleSelector} = require('../../../selectors/locale');
 
 const EmptyRowsView = connect(createStructuredSelector({
     loading: featureLoadingSelector
@@ -35,8 +34,7 @@ const Toolbar = connect(
 const Header = connect(
     createSelector(
         getTitleSelector,
-        currentLocaleSelector,
-        (title, currentLocale) => ({title, currentLocale})),
+        (title) => ({title})),
     {
         onClose: toolbarEvents.onClose
     }

@@ -32,7 +32,7 @@ class GroupTitle extends React.Component {
 
     render() {
         let expanded = this.props.node.expanded !== undefined ? this.props.node.expanded : true;
-        let groupTitle = isObject(this.props.node.title) ? this.props.node.title[this.props.currentLocale] || this.props.node.title.default : this.props.node.title || 'Default';
+        const groupTitle = isObject(this.props.node.title) ? this.props.node.title[this.props.currentLocale] || this.props.node.title.default || this.props.node.name : this.props.node.title || this.props.node.name;
         return (
             <div className="toc-group-title" onClick={() => this.props.onClick(this.props.node.id, expanded)} style={this.props.style}>
                 <StatusIcon expanded={expanded} node={this.props.node}/>{groupTitle}

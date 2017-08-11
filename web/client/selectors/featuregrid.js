@@ -1,4 +1,4 @@
-const {head, get} = require('lodash');
+const {head, get, isObject} = require('lodash');
 const {layersSelector} = require('./layers');
 const getLayerById = (state, id) => head(layersSelector(state).filter(l => l.id === id));
 const getTitle = (layer = {}) => layer.title || layer.name;
@@ -10,6 +10,7 @@ const changesSelector = state => state && state.featuregrid && state.featuregrid
 const newFeaturesSelector = state => state && state.featuregrid && state.featuregrid.newFeatures;
 const selectedFeatureSelector = state => head(selectedFeaturesSelector(state));
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
+const {currentLocaleSelector} = require('../selectors/locale');
 const geomTypeSelectedFeatureSelector = state => {
     let desc = get(state, `query.featureTypes.${get(state, "query.filterObj.featureTypeName")}.original`);
     if (desc) {
@@ -48,11 +49,10 @@ const hasNewFeaturesSelector = state => newFeaturesSelector(state) && newFeature
 module.exports = {
   isFeatureGridOpen: state => state && state.featuregrid && state.featuregrid.open,
   selectedLayerIdSelector,
-  getTitleSelector: state => getTitle(
-    getLayerById(
-        state,
-        selectedLayerIdSelector(state)
-    )),
+  getTitleSelector: state => {
+      const title = getTitle(getLayerById(state, selectedLayerIdSelector(state)));
+      return isObject(title) ? title[currentLocaleSelector(state)] || title.default || '' : title;
+  },
     getCustomizedAttributes: state => {
         return (attributesSelector(state) || []).map(att => {
             const custom = getCustomAttributeSettings(state, att);
