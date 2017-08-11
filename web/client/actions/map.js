@@ -19,6 +19,7 @@ const CHANGE_MAP_STYLE = 'CHANGE_MAP_STYLE';
 const CHANGE_ROTATION = 'CHANGE_ROTATION';
 const CREATION_ERROR_LAYER = 'CREATION_ERROR_LAYER';
 const UPDATE_VERSION = 'UPDATE_VERSION';
+const INIT_MAP = 'INIT_MAP';
 
 function creationError(options) {
     return {
@@ -121,6 +122,12 @@ function updateVersion(version) {
     };
 }
 
+function initMap() {
+    return {
+        type: INIT_MAP
+    };
+}
+
 module.exports = {
     CHANGE_MAP_VIEW,
     CLICK_ON_MAP,
@@ -135,6 +142,7 @@ module.exports = {
     ZOOM_TO_POINT,
     CREATION_ERROR_LAYER,
     UPDATE_VERSION,
+    INIT_MAP,
     changeMapView,
     clickOnMap,
     changeMousePointer,
@@ -147,5 +155,6 @@ module.exports = {
     changeRotation,
     zoomToPoint,
     creationError,
-    updateVersion
+    updateVersion,
+    initMap
 };
