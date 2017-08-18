@@ -216,7 +216,7 @@ function layers(state = [], action) {
         case REMOVE_NODE: {
             if (action.nodeType === 'groups') {
                 const newGroups = deepRemove(state.groups, action.node);
-                const newLayers = state.flat.filter((layer) => layer.group !== action.node && layer.group.indexOf(action.node + '.') !== 0);
+                const newLayers = state.flat.filter((layer) => !layer.group || layer.group !== action.node && layer.group.indexOf(action.node + '.') !== 0);
 
                 return {
                     flat: newLayers,
