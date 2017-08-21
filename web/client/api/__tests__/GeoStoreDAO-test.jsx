@@ -20,4 +20,11 @@ describe('Test correctness of the GeoStore APIs', () => {
         .toIncludeKey('otherOption');
         expect(result2.baseURL).toNotBe(null);
     });
+
+    it('check the content encoding', () => {
+        const result = API.encodeContent(JSON.stringify({
+            title: "With quotes'"
+        }));
+        expect(API.encodeContent(result).indexOf('\\')).toBe(-1);
+    });
 });

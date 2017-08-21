@@ -29,6 +29,10 @@ let parseUserGroups = (groupsObj) => {
     return groupsObj.User.groups.group.filter(obj => !!obj.id).map((obj) => _.pick(obj, ["id", "groupName", "description"]));
 };
 
+const encodeContent = function(content) {
+    return jsesc(content, {json: true, wrap: false, quotes: 'backtick'});
+};
+
 /**
  * API for local config
  */
@@ -118,10 +122,11 @@ var Api = {
                 }
             }, options)));
     },
+    encodeContent,
     putResource: function(resourceId, content, options) {
         return axios.put(
             "data/" + resourceId,
-            jsesc(content, {json: true, wrap: false, quotes: 'backtick'}),
+            encodeContent(content),
             this.addBaseUrl(_.merge({
                 headers: {
                     'Content-Type': "text/plain;charset=utf-8"
