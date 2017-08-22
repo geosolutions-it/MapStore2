@@ -22,8 +22,10 @@ class MousePosition extends React.Component {
         mousePosition: PropTypes.object,
         crs: PropTypes.string,
         enabled: PropTypes.bool,
+        showCRS: PropTypes.bool,
         degreesTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         projectedTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+        crsTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         style: PropTypes.object,
         copyToClipboardEnabled: PropTypes.bool,
         glyphicon: PropTypes.string,
@@ -36,8 +38,10 @@ class MousePosition extends React.Component {
         mousePosition: null,
         crs: "EPSG:4326",
         enabled: true,
+        showCRS: false,
         degreesTemplate: MousePositionLabelDMS,
         projectedTemplate: MousePositionLabelYX,
+        crsTemplate: crs => <span className="mouseposition-crs">{crs}</span>,
         style: {},
         copyToClipboardEnabled: false,
         glyphicon: "paste",
@@ -82,6 +86,7 @@ class MousePosition extends React.Component {
                                 </Button>
                             </CopyToClipboard>
                         }
+                        {this.props.showCRS ? this.props.crsTemplate(this.props.crs) : null}
                     </div>
             );
         }

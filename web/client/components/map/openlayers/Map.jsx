@@ -88,9 +88,11 @@ class OpenlayersMap extends React.Component {
         }
         let controls = ol.control.defaults(assign({
             zoom: this.props.zoomControl,
-            attributionOptions: {
+            attributionOptions: assign({
                 collapsible: false
-            }
+            }, this.props.mapOptions.attribution && this.props.mapOptions.attribution.container ? {
+                target: document.querySelector(this.props.mapOptions.attribution.container)
+            } : {})
         }, this.props.mapOptions.controls));
         let map = new ol.Map({
             layers: [],
@@ -184,6 +186,9 @@ class OpenlayersMap extends React.Component {
     }
 
     componentWillUnmount() {
+        if (this.props.mapOptions.attribution && this.props.mapOptions.attribution.container) {
+            document.querySelector(this.props.mapOptions.attribution.container).removeChild(document.querySelector('.ol-attribution'));
+        }
         this.map.setTarget(null);
     }
 

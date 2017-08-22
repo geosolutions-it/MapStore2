@@ -105,14 +105,6 @@
                 "cfg": {
                     "id": "navigationBar"
                 }
-            }, {
-                "name": "Toolbar",
-                "id": "IdentifyBar",
-                "stateSelector": "identify",
-                "cfg": {
-                    "id": "identifyBar"
-                },
-                "isDefault": false
             }, "ZoomAll", {
                 "name": "MapLoading",
                 "override": {
@@ -137,10 +129,31 @@
             }
         ],
 
-        "desktop": ["Map", "AutoMapUpdate", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", {"name": "BackgroundSelector", "cfg": { "bottom": 40 } },
+        "desktop": [
+          {
+            "name": "Map",
+            "cfg": {
+              "mapOptions": {
+                "openlayers": {
+                  "attribution": {
+                    "container": "#container"
+                  }
+                },
+                "leaflet": {
+                  "attribution": {
+                    "container": "#container"
+                  }
+                }
+              },
+              "toolsOptions": {
+                "scalebar": {
+                  "container" : "#container"
+                }
+              }
+            }
+          }, "AutoMapUpdate", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", {"name": "BackgroundSelector", "cfg": { "bottom": 70 } },
             {
                 "name": "Identify",
-                "showIn": ["IdentifyBar", "Settings"],
                 "cfg": {
                     "viewerOptions": {
                         "container": "{context.ReactSwipe}",
@@ -149,6 +162,11 @@
                             "useButtons": true
                         }
                     }
+                },
+                "override": {
+                  "Toolbar": {
+                    "position": 11
+                  }
                 }
             },
             "MadeWithLove", {
@@ -211,7 +229,12 @@
                         "wmts": "https://demo.geo-solutions.it/geoserver/gwc/service/wmts"
                     }
                 }
-            }, "About", "MousePosition", {
+            }, "About", {
+              "name": "MousePosition",
+              "cfg": {
+                "showCRS": true
+              }
+            }, {
                 "name": "Search",
                 "cfg": {
                     "withToggle": ["max-width: 768px", "min-width: 768px"]
@@ -222,14 +245,6 @@
                 "cfg": {
                     "id": "navigationBar"
                 }
-            }, {
-                "name": "Toolbar",
-                "id": "IdentifyBar",
-                "stateSelector": "identify",
-                "cfg": {
-                    "id": "identifyBar"
-                },
-                "isDefault": false
             },
             "ScaleBox", {
               "name":"ZoomAll",
