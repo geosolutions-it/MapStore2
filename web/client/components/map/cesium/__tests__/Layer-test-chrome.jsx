@@ -159,6 +159,28 @@ describe('Cesium layer', () => {
         expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(1);
         expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toExist();
     });
+    it('creates a wms layer with caching for Cesium map', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "tiled": true,
+            "url": "http://demo.geo-solutions.it/geoserver/wms"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <CesiumLayer type="wms"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.imageryLayers.length).toBe(1);
+        expect(map.imageryLayers._layers[0]._imageryProvider._url).toBe('{s}');
+        expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(1);
+        expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toExist();
+        expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._url.toLowerCase().indexOf('tiled=true') !== -1).toBe(true);
+    });
     it('check wms layer proxy skip for relative urls', () => {
         var options = {
             "type": "wms",
@@ -279,7 +301,7 @@ describe('Cesium layer', () => {
         expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(2);
     });
 
-    it('creates a bing layer for leaflet map', () => {
+    it('creates a bing layer for cesium map', () => {
         var options = {
             "type": "bing",
             "title": "Bing Aerial",
