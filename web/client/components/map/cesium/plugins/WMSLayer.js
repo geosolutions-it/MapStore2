@@ -99,7 +99,8 @@ function wmsToCesiumOptions(options) {
             styles: options.style || "",
             format: options.format || 'image/png',
             transparent: options.transparent !== undefined ? options.transparent : true,
-            opacity: opacity
+            opacity: opacity,
+            tiled: options.tiled !== undefined ? options.tiled : true
         }, options.params || {})
     });
 }
