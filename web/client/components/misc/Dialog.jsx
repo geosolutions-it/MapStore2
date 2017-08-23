@@ -89,15 +89,19 @@ class Dialog extends React.Component {
         </Draggable>);
         let containerStyle = assign({}, this.props.style, this.props.backgroundStyle);
         return this.props.modal ?
-            <div onClick={this.props.onClickOut} style={containerStyle} className={"fade in modal " + this.props.containerClassName} role="dialog">
-            <div onClick={(evt)=> {evt.preventDefault(); evt.stopPropagation(); }} className="modal-dialog" style={{background: "transparent"}}>
+            <div ref={(mask) => { this.mask = mask; }} onClick={this.onClickOut} style={containerStyle} className={"fade in modal " + this.props.containerClassName} role="dialog">
                 {dialog}
-            </div></div> :
+            </div> :
             dialog;
     }
 
     hasRole = (role) => {
         return React.Children.toArray(this.props.children).filter((child) => child.props.role === role).length > 0;
+    };
+    onClickOut = (e) => {
+        if (this.props.onClickOut && this.mask === e.target) {
+            this.props.onClickOut();
+        }
     };
 }
 
