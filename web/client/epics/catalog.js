@@ -9,6 +9,9 @@
 const Rx = require('rxjs');
 const {ADD_SERVICE, addCatalogService} = require('../actions/catalog');
 const {error, warning, success} = require('../actions/notifications');
+const {newServiceSelector} = require('../selectors/catalog');
+const axios = require('../libs/ajax');
+
 const API = {
     csw: require('../api/CSW'),
     wms: require('../api/WMS'),
@@ -26,20 +29,20 @@ module.exports = {
     action$.ofType(ADD_SERVICE)
         .switchMap(() => {
             const state = store.getState();
-            const newService = state.catalog.newService;
-            let notification = null;
-            let addNewService = null;
+            const newService = newServiceSelector(state);
             const warningMessage = warning({
-                    title: "notification.warning",
-                    message: "catalog.notification.warningAddCatalogService",
-                    autoDismiss: 6,
-                    position: "tc"
-                });
+                title: "notification.warning",
+                message: "catalog.notification.warningAddCatalogService",
+                autoDismiss: 6,
+                position: "tc"
+            });
+            let notification = warningMessage;
+            let addNewService = null;
             return Rx.Observable.fromPromise(
-                API[newService.type].getRecords(newService.url, 0, 2, "", undefined)
+                axios.head(API[newService.type].parseUrl(newService.url))
                 .then((result) => {
                     if (result.error) {
-                        return {notification: warningMessage};
+                        return {notification};
                     }
                     if (newService.title !== "") {
                         notification = success({
@@ -49,14 +52,16 @@ module.exports = {
                             position: "tc"
                         });
                         addNewService = addCatalogService(newService);
-                    } else {
-                        notification = warningMessage;
                     }
                     return {notification, addNewService};
                 }))
                 .switchMap((actions) => {
                     return actions.addNewService !== null ? Rx.Observable.of(actions.notification, actions.addNewService) : Rx.Observable.of(actions.notification);
-                }).catch(() => {
+                }).catch((e) => {
+                    /*eslint-disable*/
+                    console.log("error fetching getCapabilites of " + API[newService.type].parseUrl(newService.url) + " \nthe error is:\n");
+                    console.log(e);
+                    /*eslint-enable*/
                     return Rx.Observable.of(error({
                             title: "notification.warning",
                             message: "catalog.notification.errorServiceUrl",

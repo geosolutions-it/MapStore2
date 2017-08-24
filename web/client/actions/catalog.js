@@ -27,6 +27,7 @@ const CHANGE_CATALOG_MODE = 'CATALOG:CHANGE_CATALOG_MODE';
 const ADD_CATALOG_SERVICE = 'CATALOG:ADD_CATALOG_SERVICE';
 const CHANGE_NEW_TITLE = 'CATALOG:CHANGE_NEW_TITLE';
 const CHANGE_NEW_TYPE = 'CATALOG:CHANGE_NEW_TYPE';
+const FOCUS_SERVICES_LIST = 'CATALOG:FOCUS_SERVICES_LIST';
 const CHANGE_NEW_URL = 'CATALOG:CHANGE_NEW_URL';
 const ADD_SERVICE = 'CATALOG:ADD_SERVICE';
 function recordsLoaded(options, result) {
@@ -49,10 +50,17 @@ function changeSelectedService(service) {
         service
     };
 }
-function changeCatalogMode(mode) {
+function focusServicesList(status) {
+    return {
+        type: FOCUS_SERVICES_LIST,
+        status
+    };
+}
+function changeCatalogMode(mode, isNew) {
     return {
         type: CHANGE_CATALOG_MODE,
-        mode
+        mode,
+        isNew
     };
 }
 function changeNewTitle(title) {
@@ -113,6 +121,9 @@ function getRecords(format, url, startPosition = 1, maxRecords, filter, options)
             }
         }).catch((e) => {
             dispatch(recordsLoadError(e));
+            /*eslint-disable*/
+            console.log(e)
+            /*eslint-enable*/
         });
     };
 }
@@ -132,6 +143,9 @@ function textSearch(format, url, startPosition, maxRecords, text, options) {
             }
         }).catch((e) => {
             dispatch(recordsLoadError(e));
+            /*eslint-disable*/
+            console.log(e)
+            /*eslint-enable*/
         });
     };
 }
@@ -180,6 +194,7 @@ module.exports = {
     CHANGE_NEW_TITLE, changeNewTitle,
     CHANGE_NEW_TYPE, changeNewType,
     CHANGE_NEW_URL, changeNewUrl,
+    FOCUS_SERVICES_LIST, focusServicesList,
     ADD_CATALOG_SERVICE, addCatalogService,
     getRecords,
     textSearch,

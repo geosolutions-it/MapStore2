@@ -26,6 +26,7 @@ const parseUrl = (url) => {
  * API for local config
  */
 var Api = {
+    parseUrl,
     getRecords: function(url, startPosition, maxRecords, filter) {
         return new Promise((resolve) => {
             require.ensure(['../utils/ogc/CSW', '../utils/ogc/Filter'], () => {

@@ -17,13 +17,15 @@ const {
     CHANGE_NEW_TITLE,
     CHANGE_NEW_TYPE,
     CHANGE_NEW_URL,
+    FOCUS_SERVICES_LIST,
     ADD_CATALOG_SERVICE
 } = require('../actions/catalog');
 const assign = require('object-assign');
 const emptyService = {
     title: "",
     type: "wms",
-    url: ""
+    url: "",
+    isNew: true
 };
 
 function catalog(state = {
@@ -66,11 +68,13 @@ function catalog(state = {
         return assign({}, state, {layerError: action.error});
     case CHANGE_CATALOG_MODE:
         return assign({}, state, {
-            newService: emptyService,
+            newService: action.isNew ? emptyService : assign({}, state.services[state.selectedService], {oldService: state.selectedService}),
             mode: action.mode,
             result: null,
             loadingError: null,
             layerError: null});
+    case FOCUS_SERVICES_LIST:
+        return assign({}, state, {openCatalogServiceList: action.status});
     case CHANGE_NEW_TITLE:
         return assign({}, state, {newService: assign({}, state.newService, {title: action.title})});
     case CHANGE_NEW_URL:
@@ -78,7 +82,14 @@ function catalog(state = {
     case CHANGE_NEW_TYPE:
         return assign({}, state, {newService: assign({}, state.newService, {type: action.newType.toLowerCase()})});
     case ADD_CATALOG_SERVICE:
-        let newServices = assign({}, state.services, {[action.service.title]: action.service});
+        let newServices;
+        if (action.service.isNew) {
+            newServices = assign({}, state.services, {[action.service.title]: action.service});
+        } else {
+            let services = assign({}, state.services);
+            delete services[action.service.oldService];
+            newServices = assign({}, services, {[action.service.title]: action.service});
+        }
         return action.service.title !== "" && action.service.url !== "" ?
             assign({}, state, {
                 services: newServices,

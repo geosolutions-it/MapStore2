@@ -62,6 +62,7 @@ module.exports = {
                 }
             },
             catalog: {
+                "selectedService": "",
                 "services": {
                     "Basic CSW Service": {
                         "url": "https://demo.geo-solutions.it/geoserver/csw",
