@@ -125,6 +125,7 @@
     "react": "15.5.4",
     "react-addons-css-transition-group": "15.5.2",
     "react-addons-shallow-compare": "15.5.2",
+    "react-autocomplete": "1.7.1",
     "react-bootstrap": "0.31.0",
     "react-codemirror": "1.0.0",
     "react-color": "2.11.3",

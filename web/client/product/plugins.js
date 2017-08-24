@@ -34,7 +34,7 @@ module.exports = {
         HelpLinkPlugin: require('../plugins/HelpLink'),
         HomePlugin: require('../plugins/Home'),
         MadeWithLovePlugin: require('./plugins/MadeWithLove'),
-        MetadataExplorerPlugin: require('../plugins/MetadataExplorer'),
+        MetadataExplorerPlugin: require('../plugins/MetadataExplorer_rework'),
         LoginPlugin: require('../plugins/Login'),
         OmniBarPlugin: require('../plugins/OmniBar'),
         GridContainerPlugin: require('../plugins/GridContainer'),

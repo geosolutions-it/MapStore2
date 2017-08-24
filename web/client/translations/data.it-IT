@@ -671,7 +671,13 @@
             "search": "Cerca",
             "reset": "Reset",
             "options": "Opzioni",
-            "srs_not_allowed": "Il sistema di coordinate della mappa non è supportato da questo servizio"
+            "srs_not_allowed": "Il sistema di coordinate della mappa non è supportato da questo servizio",
+            "add": "Aggiungi",
+            "notification": {
+                "warningAddCatalogService": "Inserisci un url e titolo validi.",
+                "addCatalogService": "Servizio aggiunto corretamente.",
+                "errorServiceUrl": "Servizio non disponibile. Verifica l'url inserito."
+            }
         },
         "uploader": {
             "filename": "File Name",

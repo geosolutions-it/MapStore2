@@ -670,7 +670,13 @@
             "search": "Search",
             "reset": "Clear",
             "options": "Options",
-            "srs_not_allowed": "The map coordinate system is not supported by this service"
+            "srs_not_allowed": "The map coordinate system is not supported by this service",
+            "add": "Add",
+            "notification": {
+                "warningAddCatalogService": "Insert a valid url and title",
+                "addCatalogService": "Service added correctly",
+                "errorServiceUrl": "Service not available. Please, check the provided url"
+            }
         },
         "uploader": {
             "filename": "File Name",

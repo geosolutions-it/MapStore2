@@ -32,7 +32,7 @@ class RecordGrid extends React.Component {
         records: [],
         onLayerAdd: () => {},
         onError: () => {},
-        column: {xs: 12, sm: 12, md: 6, lg: 6},
+        column: {xs: 12},
         zoomToLayer: true
     };
 

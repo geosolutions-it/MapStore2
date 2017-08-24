@@ -60,6 +60,30 @@ module.exports = {
                     enabled: false,
                     seeMore: false
                 }
+            },
+            catalog: {
+                "services": {
+                    "Basic CSW Service": {
+                        "url": "https://demo.geo-solutions.it/geoserver/csw",
+                        "type": "csw",
+                        "title": "Basic CSW Service"
+                    },
+                    "Basic WMS Service": {
+                        "url": "https://demo.geo-solutions.it/geoserver/wms",
+                        "type": "wms",
+                        "title": "Basic WMS Service"
+                    },
+                    "Basic WMTS Service": {
+                        "url": "https://demo.geo-solutions.it/geoserver/gwc/service/wmts",
+                        "type": "wmts",
+                        "title": "Basic WMTS Service"
+                    }
+                },
+                newService: {
+                    title: "",
+                    type: "wms",
+                    url: ""
+                }
             }
         },
         mobile: {

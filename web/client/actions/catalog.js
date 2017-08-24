@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -22,6 +22,13 @@ const RESET_CATALOG = 'RESET_CATALOG';
 const RECORD_LIST_LOAD_ERROR = 'RECORD_LIST_LOAD_ERROR';
 const CHANGE_CATALOG_FORMAT = 'CHANGE_CATALOG_FORMAT';
 const ADD_LAYER_ERROR = 'ADD_LAYER_ERROR';
+const CHANGE_SELECTED_SERVICE = 'CATALOG:CHANGE_SELECTED_SERVICE';
+const CHANGE_CATALOG_MODE = 'CATALOG:CHANGE_CATALOG_MODE';
+const ADD_CATALOG_SERVICE = 'CATALOG:ADD_CATALOG_SERVICE';
+const CHANGE_NEW_TITLE = 'CATALOG:CHANGE_NEW_TITLE';
+const CHANGE_NEW_TYPE = 'CATALOG:CHANGE_NEW_TYPE';
+const CHANGE_NEW_URL = 'CATALOG:CHANGE_NEW_URL';
+const ADD_SERVICE = 'CATALOG:ADD_SERVICE';
 function recordsLoaded(options, result) {
     return {
         type: RECORD_LIST_LOADED,
@@ -34,6 +41,47 @@ function changeCatalogFormat(format) {
     return {
         type: CHANGE_CATALOG_FORMAT,
         format
+    };
+}
+function changeSelectedService(service) {
+    return {
+        type: CHANGE_SELECTED_SERVICE,
+        service
+    };
+}
+function changeCatalogMode(mode) {
+    return {
+        type: CHANGE_CATALOG_MODE,
+        mode
+    };
+}
+function changeNewTitle(title) {
+    return {
+        type: CHANGE_NEW_TITLE,
+        title
+    };
+}
+function changeNewType(newType) {
+    return {
+        type: CHANGE_NEW_TYPE,
+        newType
+    };
+}
+function changeNewUrl(url) {
+    return {
+        type: CHANGE_NEW_URL,
+        url
+    };
+}
+function addService() {
+    return {
+        type: ADD_SERVICE
+    };
+}
+function addCatalogService(service) {
+    return {
+        type: ADD_CATALOG_SERVICE,
+        service
     };
 }
 
@@ -126,6 +174,13 @@ module.exports = {
     CHANGE_CATALOG_FORMAT,
     ADD_LAYER_ERROR, addLayerError,
     RESET_CATALOG, resetCatalog,
+    CHANGE_SELECTED_SERVICE, changeSelectedService,
+    CHANGE_CATALOG_MODE, changeCatalogMode,
+    ADD_SERVICE, addService,
+    CHANGE_NEW_TITLE, changeNewTitle,
+    CHANGE_NEW_TYPE, changeNewType,
+    CHANGE_NEW_URL, changeNewUrl,
+    ADD_CATALOG_SERVICE, addCatalogService,
     getRecords,
     textSearch,
     changeCatalogFormat,

@@ -671,7 +671,13 @@
             "search": "Suche",
             "reset": "Zurücksetzen",
             "options": "Optionen",
-            "srs_not_allowed": "Das Koordinatensystem der Karte wird von dieser Anwendung nicht unterstützt"
+            "srs_not_allowed": "Das Koordinatensystem der Karte wird von dieser Anwendung nicht unterstützt",
+            "add": "Hinzufügen",
+            "notification": {
+                "warningAddCatalogService": "Geben Sie eine gültige URL und einen Titel ein",
+                "addCatalogService": "Service wurde korrekt hinzugefügt",
+                "errorServiceUrl": "Service nicht verfügbar. Bitte überprüfen Sie die angegebene URL"
+            }
         },
         "uploader": {
             "filename": "Datei Name",
