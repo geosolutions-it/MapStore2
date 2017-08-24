@@ -78,20 +78,6 @@ html, body, #container, .fill {
     right: 310px !important;
 }
 
-.ol-attribution.ol-uncollapsible {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    border-radius: 4px 0 0;
-    height: initial;
-    line-height: 1em;
-    text-align: left;
-    background-color: #EEE;
-    max-width: 50%;
-    max-height: 30px;
-    overflow: hidden;
-}
-
 #mapstore-mouseposition {
     width: auto !important;
     right: 5px !important;
@@ -112,8 +98,4 @@ html, body, #container, .fill {
     font-size: 90%;
     margin-left: 5px;
     font-weight: bold;
-}
-
-.leaflet-control-attribution {
-    font-size: 11px;
 }
