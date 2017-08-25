@@ -1,21 +1,24 @@
-const PropTypes = require('prop-types');
-/**
- * Copyright 2016, GeoSolutions Sas.
+/*
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 const React = require('react');
+const PropTypes = require('prop-types');
 const SharingLinks = require('./SharingLinks');
 const Message = require('../I18N/Message');
 const {Image, Panel, Button, Glyphicon} = require('react-bootstrap');
-const {head, memoize} = require('lodash');
+const {head, memoize, truncate} = require('lodash');
 const assign = require('object-assign');
 
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 
 const defaultThumb = require('./img/default.jpg');
+const truncateOptions = {
+    length: 34
+};
 
 const buildSRSMap = memoize((srs) => {
     return srs.reduce((previous, current) => {
@@ -51,7 +54,8 @@ class RecordItem extends React.Component {
         showGetCapLinks: PropTypes.bool,
         addAuthentication: PropTypes.bool,
         crs: PropTypes.string,
-        onError: PropTypes.func
+        onError: PropTypes.func,
+        truncateStyle: PropTypes.object
     };
 
     static defaultProps = {
@@ -64,7 +68,8 @@ class RecordItem extends React.Component {
         buttonSize: "small",
         onCopy: () => {},
         showGetCapLinks: false,
-        crs: "EPSG:3857"
+        crs: "EPSG:3857",
+        truncateStyle: {textOverflow: "ellipsis", overflow: "hidden"}
     };
 
     state = {};
@@ -180,20 +185,20 @@ class RecordItem extends React.Component {
             return null;
         }
         if (typeof record.description === "string") {
-            return record.description;
+            return truncate(record.description, truncateOptions);
         } else if (Array.isArray(record.description)) {
-            return record.description.join(", ");
+            return truncate(record.description.join(", "), truncateOptions);
         }
     };
 
     render() {
         let record = this.props.record;
         return (
-            <Panel className="record-item">
+            <Panel className="record-item" style={{padding: 0}}>
                 {this.renderThumb(record && record.thumbnail, record)}
                 <div>
-                    <h4>{record && record.title}</h4>
-                    <h4><small>{record && record.identifier}</small></h4>
+                    <h4 style={{wordBreak: "break-all"}}>{record && truncate(record.title, {length: 27})}</h4>
+                    <h4><small>{record && truncate(record.identifier, {length: 38})}</small></h4>
                     <p className="record-item-description">{this.renderDescription(record)}</p>
                 </div>
                   {this.renderButtons(record)}

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -17,11 +17,19 @@ const {addLayer, changeLayerProperties} = require('./layers');
 const LayersUtils = require('../utils/LayersUtils');
 const {find} = require('lodash');
 
-const RECORD_LIST_LOADED = 'RECORD_LIST_LOADED';
-const RESET_CATALOG = 'RESET_CATALOG';
-const RECORD_LIST_LOAD_ERROR = 'RECORD_LIST_LOAD_ERROR';
-const CHANGE_CATALOG_FORMAT = 'CHANGE_CATALOG_FORMAT';
-const ADD_LAYER_ERROR = 'ADD_LAYER_ERROR';
+const RECORD_LIST_LOADED = 'CATALOG:RECORD_LIST_LOADED';
+const RESET_CATALOG = 'CATALOG:RESET_CATALOG';
+const RECORD_LIST_LOAD_ERROR = 'CATALOG:RECORD_LIST_LOAD_ERROR';
+const CHANGE_CATALOG_FORMAT = 'CATALOG:CHANGE_CATALOG_FORMAT';
+const ADD_LAYER_ERROR = 'CATALOG:ADD_LAYER_ERROR';
+const CHANGE_SELECTED_SERVICE = 'CATALOG:CHANGE_SELECTED_SERVICE';
+const CHANGE_CATALOG_MODE = 'CATALOG:CHANGE_CATALOG_MODE';
+const ADD_CATALOG_SERVICE = 'CATALOG:ADD_CATALOG_SERVICE';
+const CHANGE_NEW_TITLE = 'CATALOG:CHANGE_NEW_TITLE';
+const CHANGE_NEW_TYPE = 'CATALOG:CHANGE_NEW_TYPE';
+const FOCUS_SERVICES_LIST = 'CATALOG:FOCUS_SERVICES_LIST';
+const CHANGE_NEW_URL = 'CATALOG:CHANGE_NEW_URL';
+const ADD_SERVICE = 'CATALOG:ADD_SERVICE';
 function recordsLoaded(options, result) {
     return {
         type: RECORD_LIST_LOADED,
@@ -34,6 +42,54 @@ function changeCatalogFormat(format) {
     return {
         type: CHANGE_CATALOG_FORMAT,
         format
+    };
+}
+function changeSelectedService(service) {
+    return {
+        type: CHANGE_SELECTED_SERVICE,
+        service
+    };
+}
+function focusServicesList(status) {
+    return {
+        type: FOCUS_SERVICES_LIST,
+        status
+    };
+}
+function changeCatalogMode(mode, isNew) {
+    return {
+        type: CHANGE_CATALOG_MODE,
+        mode,
+        isNew
+    };
+}
+function changeNewTitle(title) {
+    return {
+        type: CHANGE_NEW_TITLE,
+        title
+    };
+}
+function changeNewType(newType) {
+    return {
+        type: CHANGE_NEW_TYPE,
+        newType
+    };
+}
+function changeNewUrl(url) {
+    return {
+        type: CHANGE_NEW_URL,
+        url
+    };
+}
+function addService() {
+    return {
+        type: ADD_SERVICE
+    };
+}
+function addCatalogService(service) {
+    return {
+        type: ADD_CATALOG_SERVICE,
+        service
     };
 }
 
@@ -123,11 +179,18 @@ function addLayerError(error) {
 module.exports = {
     RECORD_LIST_LOADED,
     RECORD_LIST_LOAD_ERROR,
-    CHANGE_CATALOG_FORMAT,
+    CHANGE_CATALOG_FORMAT, changeCatalogFormat,
     ADD_LAYER_ERROR, addLayerError,
     RESET_CATALOG, resetCatalog,
+    CHANGE_SELECTED_SERVICE, changeSelectedService,
+    CHANGE_CATALOG_MODE, changeCatalogMode,
+    ADD_SERVICE, addService,
+    CHANGE_NEW_TITLE, changeNewTitle,
+    CHANGE_NEW_TYPE, changeNewType,
+    CHANGE_NEW_URL, changeNewUrl,
+    FOCUS_SERVICES_LIST, focusServicesList,
+    ADD_CATALOG_SERVICE, addCatalogService,
     getRecords,
     textSearch,
-    changeCatalogFormat,
     addLayer: addLayerAndDescribe
 };

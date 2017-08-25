@@ -669,12 +669,25 @@
             "share": "Compartir",
             "copyToClipboard": "Copiar en el portapapeles",
             "copied": "!Copiado!",
-            "catalogUrlPlaceholder": "Introduzca la URL del catalogo ...",
             "textSearchPlaceholder": "texto a buscar...",
             "search": "Buscar",
             "reset": "Reset",
             "options": "Opciones",
-            "srs_not_allowed": "Este servicio no soporta el sistema de coordernadas geográficas del mapa"
+            "srs_not_allowed": "Este servicio no soporta el sistema de coordernadas geográficas del mapa",
+            "add": "Añadir",
+            "servicePlaceholder": "escribe un servicio",
+            "service": "Servicio",
+            "url": "Url",
+            "urlPlaceholder": "escribe la URL",
+            "type": "Tipo",
+            "serviceTitle": "Título",
+            "serviceTitlePlaceholder": "escribe un título",
+            "notification": {
+                "warningAddCatalogService": "Insertar una url y un título válidos",
+                "addCatalogService": "Servicio añadido correctamente",
+                "duplicatedServiceTitle": "Ya existe un servicio con ese título, Por favor, cambie el título",
+                "errorServiceUrl": "Servicio no disponible. Por favor, compruebe la url proporcionada"
+            }
         },
         "uploader": {
             "filename": "Nombre del fichero",

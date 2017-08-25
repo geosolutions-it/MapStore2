@@ -669,12 +669,25 @@
             "share": "Partager",
             "copyToClipboard": "Copier dans le presse-papier",
             "copied": "Copié!",
-            "catalogUrlPlaceholder": "Entrez catalogue URL...",
             "textSearchPlaceholder": "texte à rechercher...",
             "search": "Chercher",
             "reset": "Effacer",
             "options": "Options",
-            "srs_not_allowed": "Ce service ne supporte pas le systéme de coordonnées géographique de la carte"
+            "srs_not_allowed": "Ce service ne supporte pas le systéme de coordonnées géographique de la carte",
+            "add": "Ajouter",
+            "service": "Service",
+            "servicePlaceholder": "Tapez un service",
+            "url": "Url",
+            "urlPlaceholder": "tapez une url",
+            "type": "type",
+            "serviceTitle": "Titre",
+            "serviceTitlePlaceholder": "tapez un titre",
+            "notification": {
+                "warningAddCatalogService": "Insérer une URL et un titre valides",
+                "addCatalogService": "Service ajouté correctement",
+                "duplicatedServiceTitle": "Un service avec ce titre existe déjà, veuillez modifier le titre",
+                "errorServiceUrl": "Service non disponible. Veuillez vérifier l'URL fournie"
+            }
         },
         "uploader": {
             "filename": "File Name",

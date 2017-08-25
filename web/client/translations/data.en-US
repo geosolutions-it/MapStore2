@@ -665,12 +665,25 @@
             "share": "Share",
             "copyToClipboard": "Copy to clipboard",
             "copied": "Copied!",
-            "catalogUrlPlaceholder": "Enter catalog URL...",
             "textSearchPlaceholder": "text to search...",
             "search": "Search",
             "reset": "Clear",
             "options": "Options",
-            "srs_not_allowed": "The map coordinate system is not supported by this service"
+            "srs_not_allowed": "The map coordinate system is not supported by this service",
+            "add": "Add",
+            "service": "Service",
+            "servicePlaceholder": "type a service",
+            "url": "Url",
+            "urlPlaceholder": "type a URL",
+            "type": "type",
+            "serviceTitle": "Title",
+            "serviceTitlePlaceholder": "type a title",
+            "notification": {
+                "warningAddCatalogService": "Insert a valid url and title",
+                "addCatalogService": "Service added correctly",
+                "duplicatedServiceTitle": "A service with that title already exists. Please, change title",
+                "errorServiceUrl": "Service not available. Please, check the provided url"
+            }
         },
         "uploader": {
             "filename": "File Name",

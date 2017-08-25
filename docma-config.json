@@ -139,6 +139,7 @@
 
             "web/client/epics/index.jsdoc",
             "web/client/epics/automapupdate.js",
+            "web/client/epics/catalog.js",
             "web/client/epics/cookies.js",
             "web/client/epics/fullscreen.js",
             "web/client/epics/globeswitcher.js",

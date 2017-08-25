@@ -30,6 +30,35 @@
     "monitorState": [
       {"name": "routing", "path": "routing.location.pathname"},
       {"name": "featuregridmode", "path": "featuregrid.mode"}],
+    "initialState": {
+      "defaultState": {
+        "catalog":{
+          "selectedService": "",
+          "services": {
+              "Basic CSW Service": {
+                  "url": "https://demo.geo-solutions.it/geoserver/csw",
+                  "type": "csw",
+                  "title": "Basic CSW Service"
+              },
+              "Basic WMS Service": {
+                  "url": "https://demo.geo-solutions.it/geoserver/wms",
+                  "type": "wms",
+                  "title": "Basic WMS Service"
+              },
+              "Basic WMTS Service": {
+                  "url": "https://demo.geo-solutions.it/geoserver/gwc/service/wmts",
+                  "type": "wmts",
+                  "title": "Basic WMTS Service"
+              }
+          },
+          "newService": {
+              "title": "",
+              "type": "wms",
+              "url": ""
+          }
+        }
+      }
+    },
     "plugins": {
         "mobile": [{
                 "name": "Map",
