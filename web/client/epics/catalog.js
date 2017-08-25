@@ -9,7 +9,7 @@
 const Rx = require('rxjs');
 const {ADD_SERVICE, addCatalogService} = require('../actions/catalog');
 const {error, warning, success} = require('../actions/notifications');
-const {newServiceSelector} = require('../selectors/catalog');
+const {newServiceSelector, servicesSelector} = require('../selectors/catalog');
 const axios = require('../libs/ajax');
 
 const API = {
@@ -30,6 +30,7 @@ module.exports = {
         .switchMap(() => {
             const state = store.getState();
             const newService = newServiceSelector(state);
+            const services = servicesSelector(state);
             const warningMessage = warning({
                 title: "notification.warning",
                 message: "catalog.notification.warningAddCatalogService",
@@ -45,13 +46,22 @@ module.exports = {
                         return {notification};
                     }
                     if (newService.title !== "") {
-                        notification = success({
-                            title: "notification.success",
-                            message: "catalog.notification.addCatalogService",
-                            autoDismiss: 6,
-                            position: "tc"
-                        });
-                        addNewService = addCatalogService(newService);
+                        if (!services[newService.title]) {
+                            notification = success({
+                                title: "notification.success",
+                                message: "catalog.notification.addCatalogService",
+                                autoDismiss: 6,
+                                position: "tc"
+                            });
+                            addNewService = addCatalogService(newService);
+                        } else {
+                            notification = warning({
+                                title: "notification.warning",
+                                message: "catalog.notification.duplicatedServiceTitle",
+                                autoDismiss: 6,
+                                position: "tc"
+                            });
+                        }
                     }
                     return {notification, addNewService};
                 }))

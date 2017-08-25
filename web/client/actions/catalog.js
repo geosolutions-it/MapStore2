@@ -185,7 +185,7 @@ function addLayerError(error) {
 module.exports = {
     RECORD_LIST_LOADED,
     RECORD_LIST_LOAD_ERROR,
-    CHANGE_CATALOG_FORMAT,
+    CHANGE_CATALOG_FORMAT, changeCatalogFormat,
     ADD_LAYER_ERROR, addLayerError,
     RESET_CATALOG, resetCatalog,
     CHANGE_SELECTED_SERVICE, changeSelectedService,
@@ -198,6 +198,5 @@ module.exports = {
     ADD_CATALOG_SERVICE, addCatalogService,
     getRecords,
     textSearch,
-    changeCatalogFormat,
     addLayer: addLayerAndDescribe
 };

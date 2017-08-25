@@ -685,6 +685,7 @@
             "notification": {
                 "warningAddCatalogService": "Insérer une URL et un titre valides",
                 "addCatalogService": "Service ajouté correctement",
+                "duplicatedServiceTitle": "Un service avec ce titre existe déjà, veuillez modifier le titre",
                 "errorServiceUrl": "Service non disponible. Veuillez vérifier l'URL fournie"
             }
         },
