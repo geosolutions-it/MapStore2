@@ -33,7 +33,7 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
 const {TOGGLE_CONTROL, resetControls} = require('../actions/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
 const {refreshLayerVersion} = require('../actions/layers');
-const {spatialFieldSelector, spatialFieldGeomTypeSelector, spatialFieldGeomCoordSelector, spatialFieldGeomSelector, spatialFieldGeomProjSelector} = require('../selectors/queryform');
+
 const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector,
     selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector,
     isFeatureGridOpen} = require('../selectors/featuregrid');
@@ -426,21 +426,9 @@ module.exports = {
         }),
     onOpenAdvancedSearch: (action$, store) =>
         action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
-            const state = store.getState();
-            const spatialField = spatialFieldSelector(state);
-            const feature = {
-                type: "Feature",
-                geometry: {
-                    type: spatialFieldGeomTypeSelector(state),
-                    coordinates: spatialFieldGeomCoordSelector(state)
-                }
-            };
-            let drawSpatialFilter = spatialFieldGeomSelector(state) ? changeDrawingStatus("drawOrEdit", spatialField.method, "queryform", [feature], {featureProjection: spatialFieldGeomProjSelector(state), drawEnabled: false, editEnabled: false}) : changeDrawingStatus("clean", spatialField.method, "queryform", [], {drawEnabled: false, editEnabled: false});
-
             return Rx.Observable.of(
-                setControlProperty('queryPanel', "enabled", true),
-                drawSpatialFilter, // if a geometry is present it will redraw the spatial field
-                closeFeatureGrid()
+                closeFeatureGrid(),
+                setControlProperty('queryPanel', "enabled", true)
             ).merge(
                 action$.ofType(QUERY_FORM_RESET) // ON RESET YOU HAVE TO PERFORM A SEARCH AGAIN WHEN BACK
                     .switchMap(() => action$.ofType(TOGGLE_CONTROL)
