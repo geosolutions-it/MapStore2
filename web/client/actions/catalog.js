@@ -17,11 +17,11 @@ const {addLayer, changeLayerProperties} = require('./layers');
 const LayersUtils = require('../utils/LayersUtils');
 const {find} = require('lodash');
 
-const RECORD_LIST_LOADED = 'RECORD_LIST_LOADED';
-const RESET_CATALOG = 'RESET_CATALOG';
-const RECORD_LIST_LOAD_ERROR = 'RECORD_LIST_LOAD_ERROR';
-const CHANGE_CATALOG_FORMAT = 'CHANGE_CATALOG_FORMAT';
-const ADD_LAYER_ERROR = 'ADD_LAYER_ERROR';
+const RECORD_LIST_LOADED = 'CATALOG:RECORD_LIST_LOADED';
+const RESET_CATALOG = 'CATALOG:RESET_CATALOG';
+const RECORD_LIST_LOAD_ERROR = 'CATALOG:RECORD_LIST_LOAD_ERROR';
+const CHANGE_CATALOG_FORMAT = 'CATALOG:CHANGE_CATALOG_FORMAT';
+const ADD_LAYER_ERROR = 'CATALOG:ADD_LAYER_ERROR';
 const CHANGE_SELECTED_SERVICE = 'CATALOG:CHANGE_SELECTED_SERVICE';
 const CHANGE_CATALOG_MODE = 'CATALOG:CHANGE_CATALOG_MODE';
 const ADD_CATALOG_SERVICE = 'CATALOG:ADD_CATALOG_SERVICE';
@@ -121,9 +121,6 @@ function getRecords(format, url, startPosition = 1, maxRecords, filter, options)
             }
         }).catch((e) => {
             dispatch(recordsLoadError(e));
-            /*eslint-disable*/
-            console.log(e)
-            /*eslint-enable*/
         });
     };
 }
@@ -143,9 +140,6 @@ function textSearch(format, url, startPosition, maxRecords, text, options) {
             }
         }).catch((e) => {
             dispatch(recordsLoadError(e));
-            /*eslint-disable*/
-            console.log(e)
-            /*eslint-enable*/
         });
     };
 }

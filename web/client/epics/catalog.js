@@ -76,11 +76,7 @@ module.exports = {
                 }))
                 .switchMap((actions) => {
                     return actions.addNewService !== null ? Rx.Observable.of(actions.notification, actions.addNewService) : Rx.Observable.of(actions.notification);
-                }).catch((e) => {
-                    /*eslint-disable*/
-                    console.log("error fetching getCapabilites of " + API[newService.type].parseUrl(newService.url) + " \nthe error is:\n");
-                    console.log(e);
-                    /*eslint-enable*/
+                }).catch(() => {
                     return Rx.Observable.of(error({
                             title: "notification.warning",
                             message: "catalog.notification.errorServiceUrl",

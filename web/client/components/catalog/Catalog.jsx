@@ -59,7 +59,6 @@ class Catalog extends React.Component {
         searchOptions: PropTypes.object,
         selectedService: PropTypes.string,
         services: PropTypes.object,
-        serviceComboboxMessages: PropTypes.object,
         showGetCapLinks: PropTypes.bool,
         wrapOptions: PropTypes.bool,
         zoomToLayer: PropTypes.bool
@@ -105,11 +104,6 @@ class Catalog extends React.Component {
         pageSize: 4,
         records: [],
         services: {},
-        serviceComboboxMessages: {
-            emptyList: <Message msgId="queryform.attributefilter.autocomplete.emptyList"/>,
-            open: <Message msgId="queryform.attributefilter.autocomplete.open"/>,
-            emptyFilter: <Message msgId="queryform.attributefilter.autocomplete.emptyFilter"/>
-        },
         wrapOptions: false,
         zoomToLayer: true
     };
@@ -179,7 +173,7 @@ class Catalog extends React.Component {
         let pageSize = this.props.pageSize;
         let page = Math.floor( start / pageSize);
         let pageN = Math.ceil(total / pageSize);
-        return (<div style={{textAlign: "center"}}><Pagination
+        return (<div className="catalog-pagination"><Pagination
           prev next first last ellipsis boundaryLinks
           bsSize="small"
           items={pageN}
@@ -282,6 +276,11 @@ class Catalog extends React.Component {
         const services = Object.keys(this.props.services).map(s => {
             return assign({}, this.props.services[s], {label: this.props.services[s].title});
         });
+        const serviceComboboxMessages = {
+            emptyList: <Message msgId="queryform.attributefilter.autocomplete.emptyList"/>,
+            open: <Message msgId="queryform.attributefilter.autocomplete.open"/>,
+            emptyFilter: <Message msgId="queryform.attributefilter.autocomplete.emptyFilter"/>
+    };
         return (
             <div>
                 <div>
@@ -294,7 +293,7 @@ class Catalog extends React.Component {
                             <InputGroup>
                                 <ComboboxReact
                                     data={services}
-                                    messages={this.props.serviceComboboxMessages}
+                                    messages={serviceComboboxMessages}
                                     value={this.props.selectedService}
                                     open={this.props.openCatalogServiceList}
                                     onFocus={(e) => {
