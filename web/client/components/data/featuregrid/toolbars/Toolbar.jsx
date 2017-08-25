@@ -16,19 +16,19 @@ const getSaveMessageId = ({saving, saved}) => {
     return "featuregrid.toolbar.saveChanges";
 };
 
-module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeometry, hasNewFeatures, isSimpleGeom, isDrawing = false, isEditingAllowed, saving = false, saved = false, isDownloadOpen, isColumnsOpen, disableToolbar, isCesium} = {}) =>
+module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeometry, hasNewFeatures, isSimpleGeom, isDrawing = false, isEditingAllowed, saving = false, saved = false, isDownloadOpen, isColumnsOpen, disableToolbar, isSearchAllowed} = {}) =>
     (<ButtonGroup id="featuregrid-toolbar" className="featuregrid-toolbar featuregrid-toolbar-margin">
         <TButton
             id="edit-mode"
             tooltip={<Message msgId="featuregrid.toolbar.editMode"/>}
-            disabled={disableToolbar || isCesium}
+            disabled={disableToolbar}
             visible={mode === "VIEW" && isEditingAllowed}
             onClick={events.switchEditMode}
             glyph="pencil"/>
         <TButton
             id="search"
             tooltip={<Message msgId="featuregrid.toolbar.advancedFilter"/>}
-            disabled={disableToolbar || isCesium}
+            disabled={disableToolbar || !isSearchAllowed}
             visible={mode === "VIEW"}
             onClick={events.showQueryPanel}
             glyph="filter"/>

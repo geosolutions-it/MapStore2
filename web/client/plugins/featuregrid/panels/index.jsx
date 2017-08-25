@@ -26,8 +26,8 @@ const Toolbar = connect(
         disableToolbar: state => state && state.featuregrid && state.featuregrid.disableToolbar,
         isDownloadOpen: state => state && state.controls && state.controls.wfsdownload && state.controls.wfsdownload.enabled,
         isColumnsOpen: state => state && state.featuregrid && state.featuregrid.tools && state.featuregrid.tools.settings,
-        isCesium,
-        isEditingAllowed: (state) => isAdminUserSelector(state) || canEditSelector(state)
+        isSearchAllowed: (state) => !isCesium(state),
+        isEditingAllowed: (state) => (isAdminUserSelector(state) || canEditSelector(state)) && !isCesium(state)
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
 )(require('../../../components/data/featuregrid/toolbars/Toolbar'));
