@@ -16,7 +16,7 @@ const {paginationInfo, isDescribeLoaded, describeSelector} = require('../selecto
 const FilterUtils = require('../utils/FilterUtils');
 const assign = require('object-assign');
 const {spatialFieldSelector, spatialFieldGeomTypeSelector, spatialFieldGeomCoordSelector, spatialFieldGeomSelector, spatialFieldGeomProjSelector} = require('../selectors/queryform');
-const {changeDrawingStatus, CHANGE_DRAWING_STATUS} = require('../actions/draw');
+const {changeDrawingStatus} = require('../actions/draw');
 const {SET_CONTROL_PROPERTY} = require('../actions/controls');
 
 const {isObject} = require('lodash');
