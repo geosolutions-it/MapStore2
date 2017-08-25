@@ -328,7 +328,7 @@ module.exports = {
 
     ),
     /**
-     * intercept geomertry changed events in draw support to update current
+     * intercept geometry changed events in draw support to update current
      * modified geometry in featuregrid
      */
     onFeatureGridGeometryEditing: (action$, store) => action$.ofType(GEOMETRY_CHANGED)
@@ -400,6 +400,11 @@ module.exports = {
                 )
                 .takeUntil(action$.ofType(CLOSE_FEATURE_GRID))
         ),
+    resetQueryPanel: (action$, store) =>
+        action$.ofType(LOCATION_CHANGE).switchMap( () => {
+            return store.getState().controls.queryPanel.enabled ? Rx.Observable.of(setControlProperty('queryPanel', "enabled", false))
+        : Rx.Observable.empty(); }
+    ),
     /**
      * Closes the feature grid when the drawer menu button has been toggled
      */
