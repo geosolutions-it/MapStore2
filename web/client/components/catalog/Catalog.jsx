@@ -9,7 +9,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const Message = require('../I18N/Message');
 const LocaleUtils = require('../../utils/LocaleUtils');
-const ComboBoxListItem = require('../misc/ComboBoxListItem');
+const AutocompleteListItem = require('../data/query/AutocompleteListItem');
 const ComboboxReact = require('react-widgets').Combobox;
 const assign = require('object-assign');
 
@@ -310,7 +310,7 @@ class Catalog extends React.Component {
                                     }}
                                     onChange={(val) => this.props.onChangeSelectedService(val.title ? val.title : val)}
                                     onSelect={(service) => this.props.onChangeSelectedService(service.title)}
-                                    itemComponent={ComboBoxListItem}
+                                    itemComponent={AutocompleteListItem}
                                     valueField="title"
                                     textField="title"
                                     filter="contains"

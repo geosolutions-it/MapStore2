@@ -25,6 +25,15 @@ const API = {
     */
 
 module.exports = {
+    /**
+     * Gets every `ADD_SERVICE` event.
+     * It performs a head request in order to check if the server is up. (a better validation should be handled when research is performed).
+     * If it is adding a new service and the title is a duplicate, it triggers a notification. Other notification are triggered if the title is empty or the head request fails.
+     * It dispatches an action that actually add or update a service for the catalog.
+     * @param {Observable} action$ the actions triggered
+     * @memberof epics.catalog
+     * @return {external:Observable}
+    */
     newCatalogServiceAdded: (action$, store) =>
     action$.ofType(ADD_SERVICE)
         .switchMap(() => {

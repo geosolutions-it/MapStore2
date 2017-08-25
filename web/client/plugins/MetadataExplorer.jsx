@@ -20,7 +20,11 @@ const {addService, textSearch, changeCatalogFormat, changeCatalogMode,
 const {zoomToExtent} = require("../actions/map");
 const {newCatalogServiceAdded} = require("../epics/catalog");
 const {toggleControl} = require("../actions/controls");
-const {resultSelector, serviceListOpenSelector, newServiceSelector, newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector} = require("../selectors/catalog");
+const {resultSelector, serviceListOpenSelector, newServiceSelector,
+    newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector,
+    servicesSelector, formatsSelector, loadingErrorSelector, selectedServiceSelector,
+    modeSelector, layerErrorSelector, activeSelector
+} = require("../selectors/catalog");
 const Message = require("../components/I18N/Message");
 require('./metadataexplorer/css/style.css');
 
@@ -138,15 +142,15 @@ class MetadataExplorerComponent extends React.Component {
 }
 
 const MetadataExplorerPlugin = connect((state) => ({
-    searchOptions: state.catalog && state.catalog.searchOptions,
-    formats: state.catalog && state.catalog.supportedFormats || [{name: 'csw', label: 'CSW'}, {name: 'wms', label: 'WMS'}, {name: "wmts", label: "WMTS"}],
-    result: state.catalog && state.catalog.result,
-    loadingError: state.catalog && state.catalog.loadingError,
-    selectedService: state.catalog && state.catalog.selectedService,
-    mode: state.catalog && state.catalog.mode,
-    services: state.catalog && state.catalog.services,
-    layerError: state.catalog && state.catalog.layerError,
-    active: state.controls && state.controls.toolbar && state.controls.toolbar.active === "metadataexplorer" || state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled
+    searchOptions: searchOptionsSelector(state),
+    formats: formatsSelector(state),
+    result: resultSelector(state),
+    loadingError: loadingErrorSelector(state),
+    selectedService: selectedServiceSelector(state),
+    mode: modeSelector(state),
+    services: servicesSelector(state),
+    layerError: layerErrorSelector(state),
+    active: activeSelector(state)
 }), {
     onSearch: textSearch,
     onLayerAdd: addLayer,
