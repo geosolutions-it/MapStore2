@@ -17,7 +17,7 @@ const FilterUtils = require('../utils/FilterUtils');
 const assign = require('object-assign');
 const {spatialFieldSelector, spatialFieldGeomTypeSelector, spatialFieldGeomCoordSelector, spatialFieldGeomSelector, spatialFieldGeomProjSelector} = require('../selectors/queryform');
 const {changeDrawingStatus} = require('../actions/draw');
-const {SET_CONTROL_PROPERTY} = require('../actions/controls');
+const {INIT_QUERY_PANEL} = require('../actions/wfsquery');
 
 const {isObject} = require('lodash');
 const {interceptOGCError} = require('../utils/ObservableUtils');
@@ -286,8 +286,9 @@ const viewportSelectedEpic = (action$, store) =>
             return Rx.Observable.empty();
         });
 
-const redrawSpatialFilterEpic = (action$, store) => action$.ofType(SET_CONTROL_PROPERTY)
-    .filter(action => action.control && action.control === 'queryPanel' && action.value)
+
+const redrawSpatialFilterEpic = (action$, store) =>
+    action$.ofType(INIT_QUERY_PANEL)
     .switchMap(() => {
         const state = store.getState();
         const spatialField = spatialFieldSelector(state);

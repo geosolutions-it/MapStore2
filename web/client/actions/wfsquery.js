@@ -17,6 +17,7 @@ const QUERY_RESULT = 'QUERY_RESULT';
 const QUERY_ERROR = 'QUERY_ERROR';
 const RESET_QUERY = 'RESET_QUERY';
 const QUERY = 'QUERY';
+const INIT_QUERY_PANEL = 'INIT_QUERY_PANEL';
 
 const axios = require('../libs/ajax');
 
@@ -24,6 +25,11 @@ function layerSelectedForSearch(id) {
     return {
         type: LAYER_SELECTED_FOR_SEARCH,
         id
+    };
+}
+function initQueryPanel() {
+    return {
+        type: INIT_QUERY_PANEL
     };
 }
 function featureTypeSelected(url, typeName) {
@@ -141,5 +147,6 @@ module.exports = {
     QUERY, query,
     FEATURE_LOADING, featureLoading,
     FEATURE_LOADED, featureLoaded,
+    INIT_QUERY_PANEL, initQueryPanel,
     loadFeature
 };
