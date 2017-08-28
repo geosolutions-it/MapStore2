@@ -29,18 +29,19 @@
     height: initial;
     line-height: 1em;
     text-align: left;
-    background-color: #EEE;
+    background-color: @ms2-color-background;
+    color: @ms2-color-text;
     max-width: 50%;
     max-height: 30px;
     overflow: hidden;
 }
 
 div.ol-scale-line.ol-unselectable {
-	border: 2px solid @ms2-color-shade-darker;
+	border: 2px solid @ms2-color-text;
 	border-top: none;
 	line-height: 1.0;
 	border-radius: 0;
-	bottom: 5px;
+	bottom: 8px;
 	left: auto;
 	right: 465px;
 	padding: 2px 5px 1px;
@@ -51,12 +52,17 @@ div.ol-scale-line.ol-unselectable {
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+.ol-attribution ul {
+    color: @ms2-color-text;
+    text-shadow: none;
+}
+
 div.ol-scale-line-inner {
 	border: 0;
 	border-top: 0;
-	color: @ms2-color-background;
+	color: @ms2-color-text;
 	font-size: 11px;
-	text-align: left;
+	text-align: center;
 	margin: 0;
 }
 
@@ -74,6 +80,6 @@ div.ol-scale-line-inner {
 }
 
 .ol-scale-line {
-	background-color: @ms2-color-primary !important;
-	color: @ms2-color-text-primary !important;
+	background-color: @ms2-color-background !important;
+	color: @ms2-color-text !important;
 }
