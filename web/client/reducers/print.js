@@ -20,6 +20,7 @@ const {
 } = require('../actions/print');
 
 const {TOGGLE_CONTROL} = require('../actions/controls');
+const {isObject} = require('lodash');
 
 const assign = require('object-assign');
 
@@ -70,13 +71,18 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
             );
     }
     case CONFIGURE_PRINT_MAP: {
+
+        const layers = action.layers.map((layer) => {
+            return layer.title ? assign({}, layer, {title: isObject(layer.title) ? layer.title.default : layer.title}) : layer;
+        });
+
         return assign({}, state, {
             map: {
                 center: action.center,
                 zoom: action.zoom,
                 scaleZoom: action.scaleZoom,
                 scale: action.scale,
-                layers: action.layers,
+                layers,
                 projection: action.projection
             },
             error: null

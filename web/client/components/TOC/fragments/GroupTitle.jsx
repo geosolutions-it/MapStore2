@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -8,20 +7,24 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 const StatusIcon = require('./StatusIcon');
+const {isObject} = require('lodash');
 require("./css/grouptitle.css");
 
 class GroupTitle extends React.Component {
     static propTypes = {
         node: PropTypes.object,
         onClick: PropTypes.func,
-        style: PropTypes.object
+        style: PropTypes.object,
+        currentLocale: PropTypes.string
     };
 
     static inheritedPropTypes = ['node'];
 
     static defaultProps = {
         onClick: () => {},
+        currentLocale: 'en-US',
         style: {
 
         }
@@ -29,7 +32,7 @@ class GroupTitle extends React.Component {
 
     render() {
         let expanded = this.props.node.expanded !== undefined ? this.props.node.expanded : true;
-        let groupTitle = this.props.node && this.props.node.title || 'Default';
+        const groupTitle = isObject(this.props.node.title) ? this.props.node.title[this.props.currentLocale] || this.props.node.title.default || this.props.node.name : this.props.node.title || this.props.node.name;
         return (
             <div className="toc-group-title" onClick={() => this.props.onClick(this.props.node.id, expanded)} style={this.props.style}>
                 <StatusIcon expanded={expanded} node={this.props.node}/>{groupTitle}

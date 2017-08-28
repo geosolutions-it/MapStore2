@@ -45,7 +45,9 @@ class Catalog extends React.Component {
         includeResetButton: PropTypes.bool,
         wrapOptions: PropTypes.bool,
         buttonStyle: PropTypes.object,
-        buttonClassName: PropTypes.string
+        buttonClassName: PropTypes.string,
+        currentLocale: PropTypes.string,
+        recordItem: PropTypes.element
     };
 
     static contextTypes = {
@@ -71,7 +73,8 @@ class Catalog extends React.Component {
         buttonStyle: {
             marginBottom: "10px"
         },
-        buttonClassName: "search-button"
+        buttonClassName: "search-button",
+        currentLocale: 'en-US'
     };
 
     state = {
@@ -164,6 +167,8 @@ class Catalog extends React.Component {
                     onError={this.props.onError}
                     showGetCapLinks={this.props.showGetCapLinks}
                     addAuthentication={this.props.addAuthentication}
+                    currentLocale={this.props.currentLocale}
+                    recordItem={this.props.recordItem}
                 />
                 {this.renderPagination()}
         </div>);

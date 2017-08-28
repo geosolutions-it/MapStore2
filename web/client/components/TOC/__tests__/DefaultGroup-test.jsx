@@ -52,9 +52,9 @@ describe('test Group module component', () => {
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
         const children = domNode.children;
-        expect(children.length).toBe(2);
+        expect(children.length).toBe(3);
 
-        const container = children.item(0);
+        const container = children.item(1);
         expect(container.children.length).toBe(1);
     });
 
@@ -87,9 +87,9 @@ describe('test Group module component', () => {
         expect(domNode).toExist();
 
         const children = domNode.children;
-        expect(children.length).toBe(2);
+        expect(children.length).toBe(3);
 
-        const container = children.item(1);
+        const container = children.item(2);
         expect(container.children.length).toBe(1);
     });
 

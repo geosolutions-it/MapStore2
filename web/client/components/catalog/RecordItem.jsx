@@ -10,7 +10,7 @@ const React = require('react');
 const SharingLinks = require('./SharingLinks');
 const Message = require('../I18N/Message');
 const {Image, Panel, Button, Glyphicon} = require('react-bootstrap');
-const {head, memoize} = require('lodash');
+const {head, memoize, isObject} = require('lodash');
 const assign = require('object-assign');
 
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
@@ -51,7 +51,8 @@ class RecordItem extends React.Component {
         showGetCapLinks: PropTypes.bool,
         addAuthentication: PropTypes.bool,
         crs: PropTypes.string,
-        onError: PropTypes.func
+        onError: PropTypes.func,
+        currentLocale: PropTypes.string
     };
 
     static defaultProps = {
@@ -64,7 +65,8 @@ class RecordItem extends React.Component {
         buttonSize: "small",
         onCopy: () => {},
         showGetCapLinks: false,
-        crs: "EPSG:3857"
+        crs: "EPSG:3857",
+        currentLocale: 'en-US'
     };
 
     state = {};
@@ -109,10 +111,14 @@ class RecordItem extends React.Component {
         return links;
     };
 
+    getTitle = (title) => {
+        return isObject(title) ? title[this.props.currentLocale] || title.default : title || '';
+    };
+
     renderThumb = (thumbURL, record) => {
         let thumbSrc = thumbURL || defaultThumb;
 
-        return (<Image src={thumbSrc} alt={record && record.title} style={{
+        return (<Image src={thumbSrc} alt={record && this.getTitle(record.title)} style={{
             "float": "left",
             width: "150px",
             maxHeight: "150px",
@@ -192,7 +198,7 @@ class RecordItem extends React.Component {
             <Panel className="record-item">
                 {this.renderThumb(record && record.thumbnail, record)}
                 <div>
-                    <h4>{record && record.title}</h4>
+                    <h4>{record && this.getTitle(record.title)}</h4>
                     <h4><small>{record && record.identifier}</small></h4>
                     <p className="record-item-description">{this.renderDescription(record)}</p>
                 </div>

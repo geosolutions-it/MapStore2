@@ -18,3 +18,15 @@
 .overlay-spinner-label {
     color: #fff;
 }
+
+.overlay-spinner-container .spinner {
+    float: none;
+    clear: both;
+    margin: auto;
+    width: 52px;
+    height: 52px;
+}
+
+.overlay-spinner-container .spinner .sk-circle:before {
+    background-color: #fff;
+}

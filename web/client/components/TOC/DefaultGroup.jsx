@@ -12,23 +12,32 @@ var Node = require('./Node');
 var GroupTitle = require('./fragments/GroupTitle');
 var GroupChildren = require('./fragments/GroupChildren');
 const VisibilityCheck = require('./fragments/VisibilityCheck');
+const {Glyphicon} = require('react-bootstrap');
+const GroupSettingsModal = require('./fragments/GroupSettingsModal');
 
 class DefaultGroup extends React.Component {
     static propTypes = {
         node: PropTypes.object,
         style: PropTypes.object,
+        settings: PropTypes.object,
         sortableStyle: PropTypes.object,
         onToggle: PropTypes.func,
         level: PropTypes.number,
         onSort: PropTypes.func,
         propertiesChangeHandler: PropTypes.func,
         groupVisibilityCheckbox: PropTypes.bool,
-        visibilityCheckType: PropTypes.string
+        visibilityCheckType: PropTypes.string,
+        onSettings: PropTypes.func,
+        updateSettings: PropTypes.func,
+        updateNode: PropTypes.func,
+        hideSettings: PropTypes.func,
+        currentLocale: PropTypes.string
     };
 
     static defaultProps = {
         node: {},
         onToggle: () => {},
+        settings: {},
         style: {
             marginBottom: "16px",
             cursor: "pointer"
@@ -37,8 +46,24 @@ class DefaultGroup extends React.Component {
         propertiesChangeHandler: () => {},
         groupVisibilityCheckbox: false,
         visibilityCheckType: "glyph",
-        level: 1
+        level: 1,
+        onSettings: () => {},
+        updateSettings: () => {},
+        updateNode: () => {},
+        hideSettings: () => {},
+        currentLocale: 'en-US'
     };
+
+    renderModal() {
+        return this.props.settings.expanded && this.props.settings.node === this.props.node.id ? (
+            <GroupSettingsModal
+                updateNode={this.props.updateNode}
+                updateSettings={this.props.updateSettings}
+                hideSettings={this.props.hideSettings}
+                settings={this.props.settings}
+                element={this.props.node}/>
+            ) : null;
+    }
 
     render() {
         let {children, onToggle, ...other } = this.props;
@@ -49,7 +74,9 @@ class DefaultGroup extends React.Component {
                             key="visibility"
                             checkType={this.props.visibilityCheckType}
                             propertiesChangeHandler={this.props.propertiesChangeHandler}/>}
-                <GroupTitle onClick={this.props.onToggle}/>
+                <Glyphicon className=" text-primary" glyph="cog" onClick={() => this.props.onSettings(this.props.node.id, "groups", {})}/>
+                {this.renderModal()}
+                <GroupTitle currentLocale={this.props.currentLocale} onClick={this.props.onToggle}/>
                 <GroupChildren level={this.props.level + 1} onSort={this.props.onSort} position="collapsible">
                     {this.props.children}
                 </GroupChildren>

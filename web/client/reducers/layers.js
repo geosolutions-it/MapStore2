@@ -182,8 +182,21 @@ function layers(state = [], action) {
             }
         }
         case UPDATE_NODE: {
-            const flatLayers = (state.flat || []);
+
             const selector = action.nodeType === 'groups' ? 'group' : 'id';
+
+            if (selector === 'group') {
+                const groups = state.groups ? [].concat(state.groups) : [];
+                const newGroups = groups.map((group) => {
+                    if (group.id === action.node) {
+                        return assign({}, group, action.options);
+                    }
+                    return assign({}, group);
+                });
+                return assign({}, state, {groups: newGroups});
+            }
+
+            const flatLayers = (state.flat || []);
 
             // const newGroups = action.options && action.options.group && action.options.group !== layer;
             let sameGroup = action.options.hasOwnProperty("group") ? false : true;

@@ -15,6 +15,7 @@ const {Glyphicon, Panel} = require('react-bootstrap');
 const {textSearch, changeCatalogFormat, addLayer, addLayerError, resetCatalog} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
 const {toggleControl} = require("../actions/controls");
+const {currentLocaleSelector} = require("../selectors/locale");
 const Message = require("../components/I18N/Message");
 require('./metadataexplorer/css/style.css');
 
@@ -23,10 +24,12 @@ const CatalogUtils = require('../utils/CatalogUtils');
 const catalogSelector = createSelector([
     (state) => state && state.catalog && state.catalog.result,
     (state) => state && state.catalog && state.catalog.format || 'csw',
-    (state) => state && state.catalog && state.catalog.searchOptions
-], (result, format, options) =>({
+    (state) => state && state.catalog && state.catalog.searchOptions,
+    currentLocaleSelector
+], (result, format, options, currentLocale) =>({
     format,
-    records: CatalogUtils.getCatalogRecords(format, result, options)
+    records: CatalogUtils.getCatalogRecords(format, result, options),
+    currentLocale
 }));
 
 const catalogClose = () => {

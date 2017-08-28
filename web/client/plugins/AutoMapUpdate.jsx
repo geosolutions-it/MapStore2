@@ -6,9 +6,15 @@
  * LICENSE file in the root directory of this source tree.
 */
 
+const React = require('react');
+const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
 const {manageAutoMapUpdate, updateMapInfoOnLogin} = require('../epics/automapupdate');
 const {autoMapUpdateSelector} = require('../selectors/automapupdate');
+const {setControlProperty} = require('../actions/controls');
+const {refresh} = require('../epics/layers');
+
+const OverlayProgressBar = require('../components/misc/progressbars/OverlayProgressBar/OverlayProgressBar');
 
 /**
   * AutoMapUpdate Plugin. It sends a notification to update old maps (version < 2)
@@ -17,10 +23,56 @@ const {autoMapUpdateSelector} = require('../selectors/automapupdate');
   * @static
   */
 
-const AutoMapUpdatePlugin = connect(autoMapUpdateSelector)(require('../components/misc/progressbars/OverlayProgressBar/OverlayProgressBar'));
+class AutoMapUpdate extends React.Component {
+    static propTypes = {
+        options: PropTypes.array,
+        loading: PropTypes.bool,
+        count: PropTypes.number,
+        length: PropTypes.number,
+        label: PropTypes.string,
+        unit: PropTypes.string,
+        onUpdateOptions: PropTypes.func,
+        spinner: PropTypes.string
+    };
+
+    static defaultProps = {
+        loading: false,
+        count: 0,
+        length: 0,
+        label: 'autorefresh.updating',
+        unit: 'autorefresh.layers',
+        options: {
+            bbox: true,
+            search: true,
+            dimensions: true,
+            title: false
+        },
+        onUpdateOptions: () => {}
+    };
+
+    componentWillMount() {
+        this.props.onUpdateOptions(this.props.options);
+    }
+
+    render() {
+        return (
+            <OverlayProgressBar
+                loading={this.props.loading}
+                count={this.props.count}
+                length={this.props.length}
+                label={this.props.label}
+                unit={this.props.unit}
+                spinner={this.props.spinner}/>
+        );
+    }
+}
+
+const AutoMapUpdatePlugin = connect(autoMapUpdateSelector, {
+    onUpdateOptions: setControlProperty.bind(null, 'mapUpdate', 'options')
+})(AutoMapUpdate);
 
 module.exports = {
     AutoMapUpdatePlugin,
     reducers: {},
-    epics: {manageAutoMapUpdate, updateMapInfoOnLogin}
+    epics: {manageAutoMapUpdate, updateMapInfoOnLogin, refresh}
 };

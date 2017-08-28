@@ -1,5 +1,6 @@
 const React = require('react');
 const {Button, Grid, Row, Col, Glyphicon} = require('react-bootstrap');
+
 module.exports = (props = {
     onDownloadToggle: () => {}
 }) => {

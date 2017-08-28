@@ -25,7 +25,8 @@ class RecordGrid extends React.Component {
         style: PropTypes.object,
         showGetCapLinks: PropTypes.bool,
         addAuthentication: PropTypes.bool,
-        column: PropTypes.object
+        column: PropTypes.object,
+        currentLocale: PropTypes.string
     };
 
     static defaultProps = {
@@ -33,7 +34,8 @@ class RecordGrid extends React.Component {
         onLayerAdd: () => {},
         onError: () => {},
         column: {xs: 12, sm: 12, md: 6, lg: 6},
-        zoomToLayer: true
+        zoomToLayer: true,
+        currentLocale: 'en-US'
     };
 
     renderRecordItem = (record) => {
@@ -49,7 +51,8 @@ class RecordGrid extends React.Component {
                     record={record}
                     style={{height: "215px", maxHeight: "215px"}}
                     showGetCapLinks={this.props.showGetCapLinks}
-                    addAuthentication={this.props.addAuthentication}/>
+                    addAuthentication={this.props.addAuthentication}
+                    currentLocale={this.props.currentLocale}/>
 			</Col>
         );
     };

@@ -64,4 +64,54 @@ describe('test Title module component', () => {
         ReactTestUtils.Simulate.contextMenu(domNode);
         expect(spy.calls.length).toBe(1);
     });
+
+    it('tests Title attribute title as object without currentLocale', () => {
+        const l = {
+            name: 'layer00',
+            title: {
+                'default': 'Layer',
+                'it-IT': 'Livello'
+            },
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const comp = ReactDOM.render(<Title node={l} currentLocale="en-US"/>, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        expect(domNode.innerHTML).toBe(l.title.default);
+    });
+
+    it('tests Title attribute title as object with currentLocale', () => {
+        const l = {
+            name: 'layer00',
+            title: {
+                'default': 'Layer',
+                'it-IT': 'Livello'
+            },
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const comp = ReactDOM.render(<Title node={l} currentLocale="it-IT"/>, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        expect(domNode.innerHTML).toBe(l.title['it-IT']);
+    });
+
+    it('tests Title without title', () => {
+        const l = {
+            name: 'layer00',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const comp = ReactDOM.render(<Title node={l} currentLocale="it-IT"/>, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        expect(domNode.innerHTML).toBe(l.name);
+    });
 });

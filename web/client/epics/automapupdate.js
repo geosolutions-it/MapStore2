@@ -15,6 +15,7 @@ const {LOGIN_SUCCESS} = require('../actions/security');
 const {updateVersion} = require('../actions/map');
 const ConfigUtils = require('../utils/ConfigUtils');
 const {mapIdSelector, mapVersionSelector} = require('../selectors/map');
+const {mapUpdateOptions} = require('../selectors/automapupdate');
 const { LOCATION_CHANGE } = require('react-router-redux');
 
 /**
@@ -32,7 +33,7 @@ const manageAutoMapUpdate = (action$, store) =>
                     const version = mapVersionSelector(store.getState());
                     const canEdit = mapInfoLoaded.info && mapInfoLoaded.info.canEdit || false;
                     let layers = mapConfigLoaded.config && mapConfigLoaded.config.map && mapConfigLoaded.config.map.layers && mapConfigLoaded.config.map.layers.filter((l) => l.type === 'wms' && l.group !== 'background') || [];
-                    const options = {bbox: true, search: true, dimensions: true, title: false};
+                    const options = mapUpdateOptions(store.getState());
                     return version < 2 && canEdit ?
                         Rx.Observable.of(warning({
                             title: "notification.warning",

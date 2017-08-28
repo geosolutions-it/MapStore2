@@ -9,6 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {ProgressBar, Col, Row} = require('react-bootstrap');
+const Spinner = require('react-spinkit');
 const Message = require('../../../../components/I18N/Message');
 require('./css/overlayprogressbar.css');
 
@@ -18,7 +19,8 @@ class OverlayProgressBar extends React.Component {
         count: PropTypes.number,
         length: PropTypes.number,
         label: PropTypes.string,
-        unit: PropTypes.string
+        unit: PropTypes.string,
+        spinner: PropTypes.string
     };
 
     static defaultProps = {
@@ -37,7 +39,14 @@ class OverlayProgressBar extends React.Component {
                         <Col xs={12} className="text-center overlay-spinner-label"><h3><Message msgId={this.props.label}/></h3></Col>
                     </Row>
                     <Row>
-                        <Col xs={12}><ProgressBar active now={100 * this.props.count / this.props.length} /></Col>
+                        <Col xs={12}>
+                        {
+                        this.props.spinner ?
+                            <Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName={this.props.spinner}/>
+                            :
+                            <ProgressBar active now={100 * this.props.count / this.props.length} />
+                        }
+                        </Col>
                     </Row>
                     <Row>
                         <Col xs={12} className="text-center overlay-spinner-label"><h3>{this.props.count + ' '} <Message msgId="autorefresh.of"/>{ ' ' + this.props.length + ' '}<Message msgId={this.props.unit}/></h3></Col>

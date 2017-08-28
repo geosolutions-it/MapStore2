@@ -66,6 +66,9 @@ const isSupportedLayer = (layer, maptype) => {
     }
     return Layers.isSupported(layer.type) && !layer.invalid;
 };
+
+const LayerCustomUtils = {};
+
 const LayersUtils = {
     getDimension: (dimensions, dimension) => {
         switch (dimension.toLowerCase()) {
@@ -159,7 +162,15 @@ const LayersUtils = {
     },
     splitMapAndLayers: (mapState) => {
         if (mapState && isArray(mapState.layers)) {
-            const groups = LayersUtils.getLayersByGroup(mapState.layers);
+            let groups = LayersUtils.getLayersByGroup(mapState.layers);
+            // additional params from saved configuration
+            if (isArray(mapState.groups)) {
+                groups = groups.map((group) => {
+                    const params = head(mapState.groups.filter((stateGroup) => stateGroup.id === group.id));
+                    return params ? assign({}, group, params) : group;
+                });
+            }
+
             return assign({}, mapState, {
                 layers: {
                     flat: LayersUtils.reorder(groups, mapState.layers),
@@ -233,8 +244,13 @@ const LayersUtils = {
     },
     isSupportedLayer(layer, maptype) {
         return isSupportedLayer(layer, maptype);
+    },
+    getLayerTitleTranslations: (capabilities) => {
+        return !!LayerCustomUtils.getLayerTitleTranslations ? LayerCustomUtils.getLayerTitleTranslations(capabilities) : capabilities.Title;
+    },
+    setCustomUtils(type, fun) {
+        LayerCustomUtils[type] = fun;
     }
-
 };
 
 module.exports = LayersUtils;

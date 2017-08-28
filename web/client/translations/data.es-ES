@@ -50,7 +50,9 @@
             "deleteLayerMessage": "Está totalmente seguro de querer borrar este mapa?",
             "confirmDelete": "Está seguro?",
             "featureTypeError": "Imposible cargar los atributos del mapa",
-            "elevation": "Elevación"
+            "elevation": "Elevación",
+            "titleTranslations": "Title translations",
+            "groupProperties": "Group properties"
         },
         "notification": {
             "update": "Update",

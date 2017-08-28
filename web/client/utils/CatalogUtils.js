@@ -10,6 +10,7 @@ const assign = require('object-assign');
 const {head, isArray, isString, castArray, isObject} = require('lodash');
 const urlUtil = require('url');
 const CoordinatesUtils = require('./CoordinatesUtils');
+const LayersUtils = require('./LayersUtils');
 
 const WMS = require('../api/WMS');
 
@@ -128,7 +129,7 @@ const converters = {
         if (records && records.records) {
             return records.records.map((record) => {
                 return {
-                title: record.Title || record.Name,
+                title: LayersUtils.getLayerTitleTranslations(record) || record.Name,
                 description: record.Abstract || record.Title || record.Name,
                 identifier: record.Name,
                 tags: "",

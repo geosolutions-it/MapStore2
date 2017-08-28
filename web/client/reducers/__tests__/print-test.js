@@ -72,6 +72,31 @@ describe('Test the print reducer', () => {
         expect(state.map.projection).toBe('EPSG:4326');
     });
 
+    it('configure print map title', () => {
+        const state = print({capabilities: {}, spec: {}}, {
+            type: CONFIGURE_PRINT_MAP,
+            center: {x: 1, y: 1},
+            zoom: 5,
+            scaleZoom: 6,
+            scale: 10000,
+            layers: [{
+                title: {
+                    'default': 'Layer',
+                    'it-IT': 'Livello'
+                }
+            }],
+            projection: 'EPSG:4326'
+        });
+        expect(state.map).toExist();
+        expect(state.map.center).toExist();
+        expect(state.map.center.x).toBe(1);
+        expect(state.map.zoom).toBe(5);
+        expect(state.map.scale).toBe(10000);
+        expect(state.map.layers.length).toBe(1);
+        expect(state.map.layers[0].title).toBe('Layer');
+        expect(state.map.projection).toBe('EPSG:4326');
+    });
+
     it('change print zoom level', () => {
         const state = print({capabilities: {}, spec: {}, map: {
             zoom: 5,
