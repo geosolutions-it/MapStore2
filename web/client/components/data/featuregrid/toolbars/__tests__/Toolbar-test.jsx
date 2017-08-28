@@ -59,7 +59,7 @@ describe('Featuregrid toolbar component', () => {
             showQueryPanel: () => {}
         };
         spyOn(events, "showQueryPanel");
-        ReactDOM.render(<Toolbar events={events} mode="VIEW" />, document.getElementById("container"));
+        ReactDOM.render(<Toolbar events={events} mode="VIEW" isSearchAllowed/>, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
         expect(el).toExist();
         let editButton = document.getElementById("fg-search");
