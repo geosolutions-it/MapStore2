@@ -8,12 +8,14 @@
 
 const Rx = require('rxjs');
 const {changeLayerProperties} = require('../actions/layers');
-const {CREATION_ERROR_LAYER} = require('../actions/map');
+const {CREATION_ERROR_LAYER, INIT_MAP} = require('../actions/map');
 const {currentBackgroundLayerSelector, allBackgroundLayerSelector, getLayerFromId} = require('../selectors/layers');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {setControlProperty} = require('../actions/controls');
 const {isSupportedLayer} = require('../utils/LayersUtils');
 const {warning} = require('../actions/notifications');
+const {resetControls} = require('../actions/controls');
+const {clearLayers} = require('../actions/layers');
 const {head} = require('lodash');
 
 const handleCreationBackgroundError = (action$, store) =>
@@ -62,8 +64,11 @@ const handleCreationLayerError = (action$, store) =>
         ]) : Rx.Observable.empty();
     });
 
+const resetMapOnInit = action$ =>
+    action$.ofType(INIT_MAP).switchMap(() => Rx.Observable.of(resetControls(), clearLayers()));
 
 module.exports = {
     handleCreationLayerError,
-    handleCreationBackgroundError
+    handleCreationBackgroundError,
+    resetMapOnInit
 };

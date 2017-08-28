@@ -18,6 +18,7 @@ var {
     CHANGE_ROTATION,
     CREATION_ERROR_LAYER,
     UPDATE_VERSION,
+    INIT_MAP,
     creationError,
     changeMapView,
     clickOnMap,
@@ -27,7 +28,8 @@ var {
     changeMapScales,
     changeMapStyle,
     changeRotation,
-    updateVersion
+    updateVersion,
+    initMap
 } = require('../map');
 
 describe('Test correctness of the map actions', () => {
@@ -130,5 +132,11 @@ describe('Test correctness of the map actions', () => {
         expect(retval).toExist();
         expect(retval.type).toEqual(UPDATE_VERSION);
         expect(retval.version).toEqual(2);
+    });
+
+    it('initMap', () => {
+        const retval = initMap();
+        expect(retval).toExist();
+        expect(retval.type).toEqual(INIT_MAP);
     });
 });

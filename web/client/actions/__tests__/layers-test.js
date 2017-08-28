@@ -25,6 +25,7 @@ var {
     LAYERS_REFRESHED,
     LAYERS_REFRESH_ERROR,
     BROWSE_DATA,
+    CLEAR_LAYERS,
     changeLayerProperties,
     toggleNode,
     sortNode,
@@ -41,7 +42,8 @@ var {
     refreshLayers,
     layersRefreshed,
     layersRefreshError,
-    browseData
+    browseData,
+    clearLayers
 } = require('../layers');
 var {getLayerCapabilities} = require('../layerCapabilities');
 
@@ -230,5 +232,10 @@ describe('Test correctness of the layers actions', () => {
         const action = browseData(layer);
         expect(action.type).toBe(BROWSE_DATA);
         expect(action.layer).toBe(layer);
+    });
+
+    it('clear layers', () => {
+        const action = clearLayers();
+        expect(action.type).toBe(CLEAR_LAYERS);
     });
 });

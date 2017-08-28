@@ -17,7 +17,7 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 const ConfigUtils = require('../../utils/ConfigUtils');
 const {loadMapConfig} = require('../../actions/config');
-const {resetControls} = require('../../actions/controls');
+const {initMap} = require('../../actions/map');
 
 const MapViewer = require('../../containers/MapViewer');
 
@@ -28,7 +28,7 @@ class MapViewerPage extends React.Component {
         mode: PropTypes.string,
         match: PropTypes.object,
         loadMapConfig: PropTypes.func,
-        reset: PropTypes.func,
+        onInit: PropTypes.func,
         plugins: PropTypes.object,
         location: PropTypes.object
     };
@@ -61,7 +61,7 @@ class MapViewerPage extends React.Component {
                 mapId = null;
             }
             const {configUrl} = ConfigUtils.getConfigurationOptions({mapId, config});
-            this.props.reset();
+            this.props.onInit();
             this.props.loadMapConfig(configUrl, mapId);
         }
     }
@@ -79,5 +79,5 @@ module.exports = connect((state) => ({
 }),
     {
         loadMapConfig,
-        reset: resetControls
+        onInit: initMap
     })(MapViewerPage);
