@@ -486,5 +486,17 @@ describe('Test the layers reducer', () => {
         expect(state.settings.options).toEqual({opacity: 0.8, size: 450});
     });
 
+    it('clear layers', () => {
+        const action = {
+            type: "LAYERS:CLEAR_LAYERS"
+        };
+        const state = layers({flat: [{id: "layer"}], groups: [{id: "group"}]}, action);
+        expect(state).toExist();
+        expect(state.flat).toExist();
+        expect(state.flat).toEqual([]);
+        expect(state.groups).toExist();
+        expect(state.groups).toEqual([]);
+    });
+
 
 });
