@@ -17,8 +17,10 @@
 
 /* scale bar */
 .leaflet-control-scale-line {
-	background-color: @ms2-color-primary;
-	color: @ms2-color-text-primary;
+    border-color: @ms2-color-text;
+	background-color: @ms2-color-background;
+	color: @ms2-color-text;
+    text-align: center;
 }
 
 .leafletbottom.leafletright, .leaflet-control-minimap{
@@ -39,6 +41,9 @@
     bottom: 0;
     height: 30px;
     font-size: 11px;
+    background-color: @ms2-color-background;
+    color: @ms2-color-text;
+    overflow: hidden;
 }
 
 .leaflet-bottom.leaflet-right {

@@ -100,13 +100,19 @@ select {
 
 #mapstore-scalebox {
     select {
-        background-color: #fff;
-        color: #222;
+        background-color: darken(@ms2-color-background, 10%);
+        color: @ms2-color-text;
         border: none;
     }
 
     option {
-        background-color: #fff;
-        color: #222;
+        background-color: @ms2-color-background;
+        color: @ms2-color-text;
     }
+
+	.form-control {
+		height: 25px;
+		padding: 0 0 0 4px;
+		margin-bottom: 17px;
+	}
 }
