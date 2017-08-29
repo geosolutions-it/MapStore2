@@ -40,7 +40,7 @@
             {
                 "name": "BackgroundSelector",
                 "cfg": {
-                    "bottom": 40,
+                    "bottom": 5,
                     "dimensions": {
                     "side": 65,
                     "sidePreview": 65,
@@ -89,7 +89,7 @@
                 "cfg": {
                     "wrap": true
                 }
-            }, "About", {
+            }, {
                 "name": "MousePosition",
                 "cfg": {
                     "id": "mapstore-mouseposition-mobile"
@@ -151,7 +151,7 @@
                 }
               }
             }
-          }, "AutoMapUpdate", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", {"name": "BackgroundSelector", "cfg": { "bottom": 70 } },
+          }, "AutoMapUpdate", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", {"name": "BackgroundSelector", "cfg": { "bottom": 40 } },
             {
                 "name": "Identify",
                 "cfg": {
@@ -169,7 +169,7 @@
                   }
                 }
             },
-            "MadeWithLove", {
+            {
                 "name": "Locate",
                 "override": {
                     "Toolbar": {
@@ -229,10 +229,13 @@
                         "wmts": "https://demo.geo-solutions.it/geoserver/gwc/service/wmts"
                     }
                 }
-            }, "About", {
+            }, {
+              "name": "About",
+              "showIn": ["BurgerMenu"]
+            }, {
               "name": "MousePosition",
               "cfg": {
-                "showCRS": true
+                "editCRS": true
               }
             }, {
                 "name": "Search",

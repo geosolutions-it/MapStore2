@@ -97,3 +97,17 @@
         color: white;
         font-size: 90%;
 }
+
+#mapstore-mouseposition .form-group {
+    float: right;
+}
+
+#mapstore-mouseposition .form-group .control-label {
+    display: none;
+}
+
+#mapstore-mouseposition .form-group select {
+    width: 90px;
+    font-size: 11px;
+    padding: 2px;
+}

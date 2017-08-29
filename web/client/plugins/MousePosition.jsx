@@ -63,7 +63,9 @@ const MousePositionButton = connect((state) => ({
     onClick: changeMousePositionState
 })(require('../components/buttons/ToggleButton'));
 
-const MousePositionPlugin = connect(selector)(require('../components/mapcontrols/mouseposition/MousePosition'));
+const MousePositionPlugin = connect(selector, {
+    onCRSChange: changeMousePositionCrs
+})(require('../components/mapcontrols/mouseposition/MousePosition'));
 
 module.exports = {
     MousePositionPlugin: assign(MousePositionPlugin, {

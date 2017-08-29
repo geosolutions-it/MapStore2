@@ -13,6 +13,7 @@ const CopyToClipboard = require('react-copy-to-clipboard');
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 const MousePositionLabelDMS = require('./MousePositionLabelDMS');
 const MousePositionLabelYX = require('./MousePositionLabelYX');
+const CRSSelector = require('./CRSSelector');
 
 require('./mousePosition.css');
 
@@ -23,6 +24,7 @@ class MousePosition extends React.Component {
         crs: PropTypes.string,
         enabled: PropTypes.bool,
         showCRS: PropTypes.bool,
+        editCRS: PropTypes.bool,
         degreesTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         projectedTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         crsTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
@@ -30,7 +32,8 @@ class MousePosition extends React.Component {
         copyToClipboardEnabled: PropTypes.bool,
         glyphicon: PropTypes.string,
         btnSize: PropTypes.oneOf(["large", "medium", "small", "xsmall"]),
-        onCopy: PropTypes.func
+        onCopy: PropTypes.func,
+        onCRSChange: PropTypes.func
     };
 
     static defaultProps = {
@@ -39,6 +42,7 @@ class MousePosition extends React.Component {
         crs: "EPSG:4326",
         enabled: true,
         showCRS: false,
+        editCRS: false,
         degreesTemplate: MousePositionLabelDMS,
         projectedTemplate: MousePositionLabelYX,
         crsTemplate: crs => <span className="mouseposition-crs">{crs}</span>,
@@ -46,7 +50,8 @@ class MousePosition extends React.Component {
         copyToClipboardEnabled: false,
         glyphicon: "paste",
         btnSize: "xsmall",
-        onCopy: () => {}
+        onCopy: () => {},
+        onCRSChange: function() {}
     };
 
     getUnits = (crs) => {
@@ -87,6 +92,7 @@ class MousePosition extends React.Component {
                             </CopyToClipboard>
                         }
                         {this.props.showCRS ? this.props.crsTemplate(this.props.crs) : null}
+                        {this.props.editCRS ? <CRSSelector crs={this.props.crs} enabled onCRSChange={this.props.onCRSChange}/> : null}
                     </div>
             );
         }
