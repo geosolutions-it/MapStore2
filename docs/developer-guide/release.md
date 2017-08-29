@@ -2,6 +2,40 @@
 Below you can find the release procedure as a checklist. On each release it can be updated (if needed), copied and pasted into a GitHub issue, of course changing the release name.
 Then you can check each entry on the GitHub issue when done until the release is end.
 
+## Changelog generation
+
+To generate the changelog for a specific release you can use [github_changelog_generator](https://github.com/skywinder/github-changelog-generator)  
+The tool will overwrite the CHANGELOG.md file.
+
+**Install (Ubuntu)**
+```
+sudo apt-get install ruby-dev
+sudo gem install rake
+sudo gem install github_changelog_generator
+```
+
+**Configure**
+ * [Generate a github token](https://github.com/settings/tokens/new?description=GitHub%20Changelog%20Generator%20token) and place it in your .bashrc this:
+```
+ export CHANGELOG_GITHUB_TOKEN="«your-40-digit-github-token»"
+```
+as an alternative use --token
+
+* cd to MapStore2
+* edit `.github_changelog_generator` file :
+   * set `since-tag ` (the first tag you want to exclude)
+   * if you are creating the changelog before creating the tag set `future-release`=YYYY.NN.mm with the release tag
+
+For example the `.github_changelog_generator` file for the changes between 2017.02.00 and 2017.03.00 release can look like the following:
+
+    future-release=2017.03.00
+    since-tag=2017.01.00
+
+**Run**
+```
+github_changelog_generator
+```
+
 ## Release Checklist
 - [ ] Create an issue with this checklist in the release milestone.
 - [ ] Create a branch (**YYYY.XX.mm**)  

@@ -15,9 +15,6 @@ It allows plugging different mapping libraries (with **Leaflet** and **OpenLayer
 
 ![MapStore 2 - Frontend](https://docs.google.com/drawings/d/1k8Qja6ZFeOpoW3WqbZJvU3f7PvKpL-oTGq0vErQng44/pub?w=480&h=360)
 
-## Frontend Technologies
- * [ReactJS and Redux introduction](reactjs-and-redux-introduction)
-
 # Backend
 
 Backend services include at least (but not only) these ones:
