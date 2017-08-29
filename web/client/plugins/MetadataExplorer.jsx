@@ -14,11 +14,11 @@ const assign = require('object-assign');
 const {createSelector} = require("reselect");
 const {Glyphicon, Panel} = require('react-bootstrap');
 
-const {addService, textSearch, changeCatalogFormat, changeCatalogMode,
-    changeNewUrl, changeNewTitle, changeNewType, changeSelectedService,
+const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalogMode,
+    changeUrl, changeTitle, changeAutoload, changeType, changeSelectedService,
     addLayer, addLayerError, resetCatalog, focusServicesList} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
-const {newCatalogServiceAdded} = require("../epics/catalog");
+const {newCatalogServiceAdded, deleteCatalogServiceEpic} = require("../epics/catalog");
 const {toggleControl} = require("../actions/controls");
 const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector,
@@ -108,7 +108,7 @@ class MetadataExplorerComponent extends React.Component {
             </div>);
         const panelHeader = (<span><Glyphicon glyph="folder-open"/> <span className="metadataexplorer-panel-title"><Message msgId="catalog.title"/></span><span className="shapefile-panel-close panel-close" onClick={ toggleControl.bind(null, 'styler', null)}></span><button onClick={this.props.toggleControl} className="catalog-close close no-border btn-default">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph} /> : <span>×</span>}</button></span>);
 
-        return (<Sidebar
+        return this.props.active ? (<Sidebar
                 pullRight
                 open={this.props.active}
                 docked
@@ -137,7 +137,7 @@ class MetadataExplorerComponent extends React.Component {
                     {panel}
                 </Panel>}>
                 <div style={{display: "none"}} />
-            </Sidebar>);
+            </Sidebar>) : null;
     }
 }
 
@@ -156,12 +156,14 @@ const MetadataExplorerPlugin = connect((state) => ({
     onLayerAdd: addLayer,
     toggleControl: catalogClose,
     onChangeFormat: changeCatalogFormat,
-    onChangeNewUrl: changeNewUrl,
-    onChangeNewType: changeNewType,
-    onChangeNewTitle: changeNewTitle,
+    onChangeUrl: changeUrl,
+    onChangeType: changeType,
+    onChangeTitle: changeTitle,
+    onChangeAutoload: changeAutoload,
     onChangeSelectedService: changeSelectedService,
     onChangeCatalogMode: changeCatalogMode,
     onAddService: addService,
+    onDeleteService: deleteService,
     onError: addLayerError
 })(MetadataExplorerComponent);
 
@@ -190,5 +192,5 @@ module.exports = {
         }
     }),
     reducers: {catalog: require('../reducers/catalog')},
-    epics: {newCatalogServiceAdded}
+    epics: {newCatalogServiceAdded, deleteCatalogServiceEpic}
 };

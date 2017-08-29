@@ -658,6 +658,7 @@
         },
         "catalog": {
             "title": "Catálogo",
+            "autoload": "Buscar en la selección de servicios",
             "tooltip": "Buscar en el catálogo",
             "addToMap": "Añadir al mapa",
             "getWMSLink": "Enlace WMS",
@@ -671,6 +672,7 @@
             "copied": "!Copiado!",
             "textSearchPlaceholder": "texto a buscar...",
             "search": "Buscar",
+            "delete": "Borrar",
             "reset": "Reset",
             "options": "Opciones",
             "srs_not_allowed": "Este servicio no soporta el sistema de coordernadas geográficas del mapa",
@@ -686,6 +688,7 @@
                 "warningAddCatalogService": "Insertar una url y un título válidos",
                 "addCatalogService": "Servicio añadido correctamente",
                 "duplicatedServiceTitle": "Ya existe un servicio con ese título, Por favor, cambie el título",
+                "serviceDeletedCorrectly": "El servicio se ha eliminado correctamente",
                 "errorServiceUrl": "Servicio no disponible. Por favor, compruebe la url proporcionada"
             }
         },

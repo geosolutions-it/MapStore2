@@ -655,6 +655,7 @@
         },
         "catalog": {
             "title": "Katalog",
+            "autoload": "Suche nach Serviceauswahl",
             "tooltip": "Katalog durchsuchen",
             "addToMap": "Zur Karte hinzufügen",
             "getWMSLink": "WMS Link erhalten",
@@ -668,6 +669,7 @@
             "copied": "Kopiert!",
             "textSearchPlaceholder": "Zu suchender Text...",
             "search": "Suche",
+            "delete": "Löschen",
             "reset": "Zurücksetzen",
             "options": "Optionen",
             "srs_not_allowed": "Das Koordinatensystem der Karte wird von dieser Anwendung nicht unterstützt",
@@ -683,6 +685,7 @@
                 "warningAddCatalogService": "Geben Sie eine gültige URL und einen Titel ein",
                 "addCatalogService": "Service wurde korrekt hinzugefügt",
                 "duplicatedServiceTitle": "Ein Service mit diesem Titel existiert bereits, bitte ändere den Titel",
+                "serviceDeletedCorrectly": "Der Service wurde korrekt gelöscht",
                 "errorServiceUrl": "Service nicht verfügbar. Bitte überprüfen Sie die angegebene URL"
             }
         },

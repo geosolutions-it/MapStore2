@@ -24,12 +24,15 @@ const CHANGE_CATALOG_FORMAT = 'CATALOG:CHANGE_CATALOG_FORMAT';
 const ADD_LAYER_ERROR = 'CATALOG:ADD_LAYER_ERROR';
 const CHANGE_SELECTED_SERVICE = 'CATALOG:CHANGE_SELECTED_SERVICE';
 const CHANGE_CATALOG_MODE = 'CATALOG:CHANGE_CATALOG_MODE';
-const ADD_CATALOG_SERVICE = 'CATALOG:ADD_CATALOG_SERVICE';
-const CHANGE_NEW_TITLE = 'CATALOG:CHANGE_NEW_TITLE';
-const CHANGE_NEW_TYPE = 'CATALOG:CHANGE_NEW_TYPE';
+const CHANGE_TITLE = 'CATALOG:CHANGE_TITLE';
+const CHANGE_TYPE = 'CATALOG:CHANGE_TYPE';
+const CHANGE_AUTOLOAD = 'CATALOG:CHANGE_AUTOLOAD';
 const FOCUS_SERVICES_LIST = 'CATALOG:FOCUS_SERVICES_LIST';
-const CHANGE_NEW_URL = 'CATALOG:CHANGE_NEW_URL';
+const CHANGE_URL = 'CATALOG:CHANGE_URL';
+const ADD_CATALOG_SERVICE = 'CATALOG:ADD_CATALOG_SERVICE';
+const DELETE_CATALOG_SERVICE = 'CATALOG:DELETE_CATALOG_SERVICE';
 const ADD_SERVICE = 'CATALOG:ADD_SERVICE';
+const DELETE_SERVICE = 'CATALOG:DELETE_SERVICE';
 function recordsLoaded(options, result) {
     return {
         type: RECORD_LIST_LOADED,
@@ -63,21 +66,27 @@ function changeCatalogMode(mode, isNew) {
         isNew
     };
 }
-function changeNewTitle(title) {
+function changeTitle(title) {
     return {
-        type: CHANGE_NEW_TITLE,
+        type: CHANGE_TITLE,
         title
     };
 }
-function changeNewType(newType) {
+function changeAutoload(autoload) {
     return {
-        type: CHANGE_NEW_TYPE,
+        type: CHANGE_AUTOLOAD,
+        autoload
+    };
+}
+function changeType(newType) {
+    return {
+        type: CHANGE_TYPE,
         newType
     };
 }
-function changeNewUrl(url) {
+function changeUrl(url) {
     return {
-        type: CHANGE_NEW_URL,
+        type: CHANGE_URL,
         url
     };
 }
@@ -90,6 +99,17 @@ function addCatalogService(service) {
     return {
         type: ADD_CATALOG_SERVICE,
         service
+    };
+}
+function deleteCatalogService(service) {
+    return {
+        type: DELETE_CATALOG_SERVICE,
+        service
+    };
+}
+function deleteService() {
+    return {
+        type: DELETE_SERVICE
     };
 }
 
@@ -185,11 +205,14 @@ module.exports = {
     CHANGE_SELECTED_SERVICE, changeSelectedService,
     CHANGE_CATALOG_MODE, changeCatalogMode,
     ADD_SERVICE, addService,
-    CHANGE_NEW_TITLE, changeNewTitle,
-    CHANGE_NEW_TYPE, changeNewType,
-    CHANGE_NEW_URL, changeNewUrl,
+    CHANGE_AUTOLOAD, changeAutoload,
+    CHANGE_TITLE, changeTitle,
+    CHANGE_TYPE, changeType,
+    CHANGE_URL, changeUrl,
     FOCUS_SERVICES_LIST, focusServicesList,
     ADD_CATALOG_SERVICE, addCatalogService,
+    DELETE_CATALOG_SERVICE, deleteCatalogService,
+    DELETE_SERVICE, deleteService,
     getRecords,
     textSearch,
     addLayer: addLayerAndDescribe

@@ -22,6 +22,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
 const stateSelector = state => state;
+const {servicesSelector, selectedServiceSelector} = require('../selectors/catalog');
 
 const LayersUtils = require('../utils/LayersUtils');
 
@@ -29,6 +30,8 @@ const selector = createSelector(mapSelector, stateSelector, layersSelector, (map
     currentZoomLvl: map && map.zoom,
     show: state.controls && state.controls.save && state.controls.save.enabled,
     map,
+    catalogServices: servicesSelector(state),
+    selectedService: selectedServiceSelector(state),
     mapId: map && map.mapId,
     layers,
     textSearchConfig: state.searchconfig && state.searchconfig.textSearchConfig
@@ -36,6 +39,8 @@ const selector = createSelector(mapSelector, stateSelector, layersSelector, (map
 
 class Save extends React.Component {
     static propTypes = {
+        catalogServices: PropTypes.object,
+        selectedService: PropTypes.string,
         show: PropTypes.bool,
         mapId: PropTypes.string,
         onClose: PropTypes.func,
@@ -98,7 +103,11 @@ class Save extends React.Component {
                 let resultingmap = {
                     version: 2,
                     // layers are defined inside the map object
-                    map: assign({}, map, {layers, text_serch_config: this.props.textSearchConfig})
+                    map: assign({}, map, {layers, text_serch_config: this.props.textSearchConfig}),
+                    catalogServices: {
+                        services: this.props.catalogServices,
+                        selectedService: this.props.selectedService
+                    }
                 };
                 this.props.onMapSave(this.props.mapId, JSON.stringify(resultingmap));
                 this.props.onClose();

@@ -30,7 +30,7 @@ const serviceNew = {
 };
 var catalog = require('../catalog');
 var {RECORD_LIST_LOADED, ADD_LAYER_ERROR, RESET_CATALOG, RECORD_LIST_LOAD_ERROR, CHANGE_CATALOG_FORMAT, CHANGE_CATALOG_MODE,
-    FOCUS_SERVICES_LIST, CHANGE_NEW_TITLE, CHANGE_NEW_URL, CHANGE_NEW_TYPE, CHANGE_SELECTED_SERVICE, ADD_CATALOG_SERVICE} = require('../../actions/catalog');
+    FOCUS_SERVICES_LIST, CHANGE_TITLE, CHANGE_URL, CHANGE_TYPE, CHANGE_SELECTED_SERVICE, ADD_CATALOG_SERVICE} = require('../../actions/catalog');
 const sampleRecord = {
     boundingBox: {
         extent: [10.686,
@@ -88,17 +88,17 @@ describe('Test the catalog reducer', () => {
         const state = catalog({}, {type: FOCUS_SERVICES_LIST, status});
         expect(state.openCatalogServiceList).toBe(status);
     });
-    it('CHANGE_NEW_TITLE', () => {
-        const state = catalog({}, {type: CHANGE_NEW_TITLE, title});
+    it('CHANGE_TITLE', () => {
+        const state = catalog({}, {type: CHANGE_TITLE, title});
         expect(state.newService.title).toBe(title);
     });
-    it('CHANGE_NEW_TYPE', () => {
+    it('CHANGE_TYPE', () => {
         let newType = "some type";
-        const state = catalog({}, {type: CHANGE_NEW_TYPE, newType});
+        const state = catalog({}, {type: CHANGE_TYPE, newType});
         expect(state.newService.type).toBe(newType);
     });
-    it('CHANGE_NEW_URL', () => {
-        const state = catalog({}, {type: CHANGE_NEW_URL, url});
+    it('CHANGE_URL', () => {
+        const state = catalog({}, {type: CHANGE_URL, url});
         expect(state.newService.url).toBe(url);
     });
     it('CHANGE_CATALOG_FORMAT', () => {

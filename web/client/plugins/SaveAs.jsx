@@ -21,6 +21,7 @@ const {editMap, updateCurrentMap, errorCurrentMap, resetCurrentMap} = require('.
 const {mapSelector} = require('../selectors/map');
 const stateSelector = state => state;
 const {layersSelector} = require('../selectors/layers');
+const {servicesSelector, selectedServiceSelector} = require('../selectors/catalog');
 const {indexOf} = require('lodash');
 
 const LayersUtils = require('../utils/LayersUtils');
@@ -31,6 +32,8 @@ const selector = createSelector(mapSelector, stateSelector, layersSelector, (map
     mapType: state && (state.home && state.home.mapType || state.maps && state.maps.mapType) || "leaflet",
     newMapId: state.currentMap && state.currentMap.newMapId,
     map,
+    catalogServices: servicesSelector(state),
+    selectedService: selectedServiceSelector(state),
     user: state.security && state.security.user,
     currentMap: state.currentMap,
     metadata: state.maps.metadata,
@@ -40,6 +43,8 @@ const selector = createSelector(mapSelector, stateSelector, layersSelector, (map
 
 class SaveAs extends React.Component {
     static propTypes = {
+        catalogServices: PropTypes.object,
+        selectedService: PropTypes.string,
         show: PropTypes.bool,
         newMapId: PropTypes.number,
         map: PropTypes.object,
@@ -135,7 +140,11 @@ class SaveAs extends React.Component {
         let resultingmap = {
             version: 2,
             // layers are defined inside the map object
-            map: assign({}, map, {layers, text_serch_config: this.props.textSearchConfig})
+            map: assign({}, map, {layers, text_serch_config: this.props.textSearchConfig}),
+            catalogServices: {
+                services: this.props.catalogServices,
+                selectedService: this.props.selectedService
+            }
         };
         return resultingmap;
     };

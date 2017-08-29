@@ -654,6 +654,7 @@
         },
         "catalog": {
             "title": "Catalog",
+            "autoload": "Search on service selection",
             "tooltip": "Browse Catalog",
             "addToMap": "Add To Map",
             "getWMSLink": "Get WMS Link",
@@ -667,6 +668,7 @@
             "copied": "Copied!",
             "textSearchPlaceholder": "text to search...",
             "search": "Search",
+            "delete": "Delete",
             "reset": "Clear",
             "options": "Options",
             "srs_not_allowed": "The map coordinate system is not supported by this service",
@@ -675,13 +677,14 @@
             "servicePlaceholder": "type a service",
             "url": "Url",
             "urlPlaceholder": "type a URL",
-            "type": "type",
+            "type": "Type",
             "serviceTitle": "Title",
             "serviceTitlePlaceholder": "type a title",
             "notification": {
                 "warningAddCatalogService": "Insert a valid url and title",
                 "addCatalogService": "Service added correctly",
                 "duplicatedServiceTitle": "A service with that title already exists. Please, change title",
+                "serviceDeletedCorrectly": "The service was deleted correctly",
                 "errorServiceUrl": "Service not available. Please, check the provided url"
             }
         },

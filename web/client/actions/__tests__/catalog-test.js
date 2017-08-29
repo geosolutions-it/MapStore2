@@ -16,8 +16,8 @@ const service = {
 const expect = require('expect');
 const LayersUtils = require('../../utils/LayersUtils');
 const {getRecords, addLayerError, addLayer, ADD_LAYER_ERROR, changeCatalogFormat, CHANGE_CATALOG_FORMAT, changeSelectedService, CHANGE_SELECTED_SERVICE,
-     focusServicesList, FOCUS_SERVICES_LIST, changeCatalogMode, CHANGE_CATALOG_MODE, changeNewTitle, CHANGE_NEW_TITLE,
-    changeNewUrl, CHANGE_NEW_URL, changeNewType, CHANGE_NEW_TYPE, addService, ADD_SERVICE, addCatalogService, ADD_CATALOG_SERVICE, resetCatalog, RESET_CATALOG} = require('../catalog');
+     focusServicesList, FOCUS_SERVICES_LIST, changeCatalogMode, CHANGE_CATALOG_MODE, changeTitle, CHANGE_TITLE,
+    changeUrl, CHANGE_URL, changeType, CHANGE_TYPE, addService, ADD_SERVICE, addCatalogService, ADD_CATALOG_SERVICE, resetCatalog, RESET_CATALOG} = require('../catalog');
 const {CHANGE_LAYER_PROPERTIES, ADD_LAYER} = require('../layers');
 describe('Test correctness of the catalog actions', () => {
 
@@ -51,26 +51,26 @@ describe('Test correctness of the catalog actions', () => {
         expect(retval.type).toBe(CHANGE_CATALOG_MODE);
         expect(retval.mode).toBe(mode);
     });
-    it('changeNewTitle', () => {
-        var retval = changeNewTitle(title);
+    it('changeTitle', () => {
+        var retval = changeTitle(title);
 
         expect(retval).toExist();
-        expect(retval.type).toBe(CHANGE_NEW_TITLE);
+        expect(retval.type).toBe(CHANGE_TITLE);
         expect(retval.title).toBe(title);
     });
-    it('changeNewUrl', () => {
-        var retval = changeNewUrl(url);
+    it('changeUrl', () => {
+        var retval = changeUrl(url);
 
         expect(retval).toExist();
-        expect(retval.type).toBe(CHANGE_NEW_URL);
+        expect(retval.type).toBe(CHANGE_URL);
         expect(retval.url).toBe(url);
     });
-    it('changeNewType', () => {
+    it('changeType', () => {
         const newType = "wms";
-        var retval = changeNewType(newType);
+        var retval = changeType(newType);
 
         expect(retval).toExist();
-        expect(retval.type).toBe(CHANGE_NEW_TYPE);
+        expect(retval.type).toBe(CHANGE_TYPE);
         expect(retval.newType).toBe(newType);
     });
     it('addService', () => {

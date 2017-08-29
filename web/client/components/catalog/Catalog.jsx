@@ -12,8 +12,9 @@ const LocaleUtils = require('../../utils/LocaleUtils');
 const AutocompleteListItem = require('../data/query/AutocompleteListItem');
 const ComboboxReact = require('react-widgets').Combobox;
 const assign = require('object-assign');
+const BorderLayout = require('../layout/BorderLayout');
 
-const {FormControl, FormGroup, Alert, Pagination, Button, Panel, Form, Col, InputGroup, ControlLabel, Glyphicon} = require('react-bootstrap');
+const {FormControl, FormGroup, Alert, Pagination, Checkbox, Button, Panel, Form, Col, InputGroup, ControlLabel, Glyphicon} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 
 const RecordGrid = require('./RecordGrid');
@@ -39,12 +40,14 @@ class Catalog extends React.Component {
         mode: PropTypes.string,
         newService: PropTypes.object,
         onAddService: PropTypes.func,
+        onChangeAutoload: PropTypes.func,
         onChangeCatalogMode: PropTypes.func,
         onChangeFormat: PropTypes.func,
-        onChangeNewTitle: PropTypes.func,
-        onChangeNewType: PropTypes.func,
-        onChangeNewUrl: PropTypes.func,
+        onChangeTitle: PropTypes.func,
+        onChangeType: PropTypes.func,
+        onChangeUrl: PropTypes.func,
         onChangeSelectedService: PropTypes.func,
+        onDeleteService: PropTypes.func,
         onError: PropTypes.func,
         onFocusServicesList: PropTypes.func,
         onLayerAdd: PropTypes.func,
@@ -88,12 +91,14 @@ class Catalog extends React.Component {
             url: ""
         },
         onAddService: () => {},
+        onChangeAutoload: () => {},
         onChangeCatalogMode: () => {},
         onChangeFormat: () => {},
-        onChangeNewTitle: () => {},
-        onChangeNewType: () => {},
-        onChangeNewUrl: () => {},
+        onChangeTitle: () => {},
+        onChangeType: () => {},
+        onChangeUrl: () => {},
         onChangeSelectedService: () => {},
+        onDeleteService: () => {},
         onError: () => {},
         onFocusServicesList: () => {},
         onLayerAdd: () => {},
@@ -114,8 +119,10 @@ class Catalog extends React.Component {
     };
 
     componentDidMount() {
-        if (this.props.searchOnStartup) {
-            this.props.onSearch(this.props.format, this.getCatalogUrl(), 1, this.props.pageSize, "");
+        if (this.props.selectedService &&
+            this.props.services[this.props.selectedService] &&
+            this.props.services[this.props.selectedService].autoload) {
+            this.search({services: this.props.services, selectedService: this.props.selectedService});
         }
     }
 
@@ -124,6 +131,12 @@ class Catalog extends React.Component {
             this.setState({
                 loading: false
             });
+            if (nextProps.selectedService !== this.props.selectedService &&
+                nextProps.selectedService &&
+                nextProps.services[nextProps.selectedService] &&
+                nextProps.services[nextProps.selectedService].autoload) {
+                this.search({services: nextProps.services, selectedService: nextProps.selectedService});
+            }
         }
     }
 
@@ -133,7 +146,7 @@ class Catalog extends React.Component {
 
     onKeyDown = (event) => {
         if (event.keyCode === 13) {
-            this.search();
+            this.search({services: this.props.services, selectedService: this.props.selectedService});
         }
     };
 
@@ -166,25 +179,28 @@ class Catalog extends React.Component {
     };
 
     renderPagination = () => {
-        let total = this.props.result.numberOfRecordsMatched;
-        let returned = this.props.result.numberOfRecordsReturned;
-        let start = this.props.searchOptions.startPosition;
-        // let next = this.props.result.nextRecord;
-        let pageSize = this.props.pageSize;
-        let page = Math.floor( start / pageSize);
-        let pageN = Math.ceil(total / pageSize);
-        return (<div className="catalog-pagination"><Pagination
-          prev next first last ellipsis boundaryLinks
-          bsSize="small"
-          items={pageN}
-          maxButtons={5}
-          activePage={page + 1}
-          onSelect={this.handlePage} />
+        if (this.props.result) {
+            let total = this.props.result.numberOfRecordsMatched;
+            let returned = this.props.result.numberOfRecordsReturned;
+            let start = this.props.searchOptions.startPosition;
+            // let next = this.props.result.nextRecord;
+            let pageSize = this.props.pageSize;
+            let page = Math.floor( start / pageSize);
+            let pageN = Math.ceil(total / pageSize);
+            return (<div className="catalog-pagination"><Pagination
+                prev next first last ellipsis boundaryLinks
+                bsSize="small"
+                items={pageN}
+                maxButtons={5}
+                activePage={page + 1}
+                onSelect={this.handlePage} />
             <div className="push-right">
                 <Message msgId="catalog.pageInfo" msgParams={{start, end: start + returned - 1, total}} />
                 {this.renderLoading()}
             </div>
-          </div>);
+        </div>);
+        }
+        return null;
     };
 
     renderRecords = () => {
@@ -199,7 +215,6 @@ class Catalog extends React.Component {
                     showGetCapLinks={this.props.showGetCapLinks}
                     addAuthentication={this.props.addAuthentication}
                 />
-                {this.renderPagination()}
         </div>);
     };
 
@@ -219,7 +234,7 @@ class Catalog extends React.Component {
         const buttons = [];
         if (this.props.mode === "view" ) {
             if (this.props.includeSearchButton) {
-                buttons.push(<Button bsStyle="primary" style={this.props.buttonStyle} onClick={this.search}
+                buttons.push(<Button bsStyle="primary" style={this.props.buttonStyle} onClick={() => this.search({services: this.props.services, selectedService: this.props.selectedService})}
                             className={this.props.buttonClassName} key="catalog_search_button" disabled={!this.isValidServiceSelected()}>
                             {this.renderLoading()} <Message msgId="catalog.search"/>
                         </Button>);
@@ -234,6 +249,11 @@ class Catalog extends React.Component {
             buttons.push(<Button style={this.props.buttonStyle} onClick={() => this.props.onAddService()} key="catalog_add_service_button">
                         <Message msgId="save"/>
                     </Button>);
+            if (!this.props.newService.isNew) {
+                buttons.push(<Button style={this.props.buttonStyle} onClick={() => this.props.onDeleteService()} key="catalog_delete_service_button">
+                            <Message msgId="catalog.delete"/>
+                        </Button>);
+            }
             buttons.push(<Button style={this.props.buttonStyle} onClick={() => this.props.onChangeCatalogMode("view")} key="catalog_back_view_button">
                         <Message msgId="cancel"/>
                     </Button>);
@@ -277,64 +297,73 @@ class Catalog extends React.Component {
             return assign({}, this.props.services[s], {label: this.props.services[s].title});
         });
         const serviceComboboxMessages = {
-            emptyList: <Message msgId="queryform.attributefilter.autocomplete.emptyList"/>,
-            open: <Message msgId="queryform.attributefilter.autocomplete.open"/>,
-            emptyFilter: <Message msgId="queryform.attributefilter.autocomplete.emptyFilter"/>
-    };
+            emptyList: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyList"),
+            open: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.open"),
+            emptyFilter: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyFilter")
+        };
         return (
-            <div>
-                <div>
-                {this.isViewMode(this.props.mode) ? (
-                    <Form>
-                        <FormGroup controlId="labelService" key="labelService">
-                            <ControlLabel><Message msgId="catalog.service"/></ControlLabel>
-                        </FormGroup>
-                        <FormGroup controlId="service" key="service">
-                            <InputGroup>
-                                <ComboboxReact
-                                    data={services}
-                                    messages={serviceComboboxMessages}
-                                    value={this.props.selectedService}
-                                    open={this.props.openCatalogServiceList}
-                                    onFocus={(e) => {
-                                        if (!(e.target instanceof Node && e.target.nodeName === 'BUTTON')) {
-                                            this.props.onFocusServicesList(true);
-                                        }
-                                    }}
-                                    onToggle={() => this.props.onFocusServicesList(!this.props.openCatalogServiceList)}
-                                    onBlur={(e) => {
-                                        if (!this.props.services[e.target.value]) {
-                                            this.props.onChangeSelectedService("");
-                                        }
-                                    }}
-                                    onChange={(val) => this.props.onChangeSelectedService(val.title ? val.title : val)}
-                                    onSelect={(service) => this.props.onChangeSelectedService(service.title)}
-                                    itemComponent={AutocompleteListItem}
-                                    valueField="title"
-                                    textField="title"
-                                    filter="contains"
-                                    placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.servicePlaceholder")}
-                                    />
-
-                              <InputGroup.Addon onClick={() => this.props.onChangeCatalogMode("edit", this.isServiceEmpty())}>
-                                    <Glyphicon glyph={this.isServiceEmpty() ? "pencil-add" : "pencil"}/>
-                                </InputGroup.Addon>
-                            </InputGroup>
-                        </FormGroup>
-                        <FormGroup controlId="searchText" key="searchText">
-                            {this.renderTextSearch()}
-                        </FormGroup>
-                        <FormGroup controlId="buttons" key="buttons">
-                            {this.renderButtons()}
-                        </FormGroup>
-                    </Form>
+            <div id="outerDiv">
+                { this.isViewMode(this.props.mode) ? (
+                        <BorderLayout
+                            key="catalog-BorderLayout"
+                            header={(<Form>
+                                        <FormGroup controlId="labelService" key="labelService">
+                                            <ControlLabel><Message msgId="catalog.service"/></ControlLabel>
+                                        </FormGroup>
+                                        <FormGroup controlId="service" key="service">
+                                            <InputGroup>
+                                                <ComboboxReact
+                                                    data={services}
+                                                    messages={serviceComboboxMessages}
+                                                    value={this.props.selectedService}
+                                                    open={this.props.openCatalogServiceList}
+                                                    onFocus={(e) => {
+                                                        if (!(e.target instanceof Node && e.target.nodeName === 'BUTTON')) {
+                                                            this.props.onFocusServicesList(true);
+                                                        }
+                                                    }}
+                                                    onToggle={() => this.props.onFocusServicesList(!this.props.openCatalogServiceList)}
+                                                    onBlur={(e) => {
+                                                        if (!this.props.services[e.target.value]) {
+                                                            this.props.onChangeSelectedService("");
+                                                        }
+                                                    }}
+                                                    onChange={(val) => this.props.onChangeSelectedService(val.title ? val.title : val)}
+                                                    onSelect={(service) => this.props.onChangeSelectedService(service.title)}
+                                                    itemComponent={AutocompleteListItem}
+                                                    valueField="title"
+                                                    textField="title"
+                                                    filter="contains"
+                                                    placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.servicePlaceholder")}
+                                                    />
+                                                {this.props.services[this.props.selectedService] ? (<InputGroup.Addon onClick={() => this.props.onChangeCatalogMode("edit", false)}>
+                                                    <Glyphicon glyph="pencil"/>
+                                                </InputGroup.Addon>) : null}
+                                                <InputGroup.Addon onClick={() => this.props.onChangeCatalogMode("edit", true)}>
+                                                    <Glyphicon glyph="plus"/>
+                                                </InputGroup.Addon>
+                                            </InputGroup>
+                                        </FormGroup>
+                                        <FormGroup controlId="searchText" key="searchText">
+                                            {this.renderTextSearch()}
+                                        </FormGroup>
+                                        <FormGroup controlId="buttons" key="buttons">
+                                            {this.renderButtons()}
+                                        </FormGroup>
+                                    </Form>)}
+                            footer={this.renderPagination()}>
+                                    <div>
+                                        {this.renderResult()}
+                                        {this.props.layerError ? this.renderError(this.props.layerError) : null}
+                                    </div>
+                                </BorderLayout>
                 ) : (
                         <Form horizontal >
                             <FormGroup>
                                 <Col xs={12} sm={3} md={3}>
                                     <ControlLabel><Message msgId="catalog.type"/></ControlLabel>
                                     <FormControl
-                                        onChange={(e) => this.props.onChangeNewType(e.target.value)}
+                                        onChange={(e) => this.props.onChangeType(e.target.value)}
                                         value={this.props.newService && this.props.newService.type}
                                         componentClass="select">
                                         {this.renderFormats()}
@@ -350,8 +379,7 @@ class Catalog extends React.Component {
                                     }}
                                     placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.urlPlaceholder")}
                                     value={this.props.newService && this.props.newService.url}
-                                    onChange={(e) => this.props.onChangeNewUrl(e.target.value)}
-                                    onKeyDown={this.onKeyDown}/>
+                                    onChange={(e) => this.props.onChangeUrl(e.target.value)}/>
                                 </Col>
                             </FormGroup>
                             <FormGroup controlId="title" key="title">
@@ -365,8 +393,14 @@ class Catalog extends React.Component {
                                     }}
                                     placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.serviceTitlePlaceholder")}
                                     value={this.props.newService && this.props.newService.title}
-                                    onChange={(e) => this.props.onChangeNewTitle(e.target.value)}
-                                    onKeyDown={this.onKeyDown}/>
+                                    onChange={(e) => this.props.onChangeTitle(e.target.value)}/>
+                                </Col>
+                            </FormGroup>
+                            <FormGroup controlId="autoload" key="autoload">
+                                <Col xs={12}>
+                                    <Checkbox value="autoload" onChange={(e) => this.props.onChangeAutoload(e.target.checked)} checked={this.props.newService.autoload}>
+                                      <Message msgId="catalog.autoload"/>
+                                    </Checkbox>
                                 </Col>
                             </FormGroup>
                             <FormGroup controlId="buttons" key="butStons">
@@ -376,11 +410,6 @@ class Catalog extends React.Component {
                             </FormGroup>
                         </Form>
                     )}
-                    </div>
-                <div>
-                    {this.renderResult()}
-                    {this.props.layerError ? this.renderError(this.props.layerError) : null}
-                </div>
             </div>
         );
     }
@@ -392,10 +421,10 @@ class Catalog extends React.Component {
     isValidServiceSelected = () => {
         return this.props.services[this.props.selectedService] !== undefined;
     };
-    search = () => {
-        const url = this.props.services[this.props.selectedService].url;
-        const type = this.props.services[this.props.selectedService].type;
-        this.props.onSearch(type, url, 1, this.props.pageSize, this.state && this.state.searchText || "");
+    search = ({services, selectedService, start = 1}) => {
+        const url = services[selectedService].url;
+        const type = services[selectedService].type;
+        this.props.onSearch(type, url, start, this.props.pageSize, this.state && this.state.searchText || "");
         this.setState({
             loading: true
         });
@@ -422,7 +451,7 @@ class Catalog extends React.Component {
     handlePage = (eventKey) => {
         if (eventKey) {
             let start = (eventKey - 1) * this.props.pageSize + 1;
-            this.props.onSearch(this.props.format, this.getCatalogUrl(), start, this.props.pageSize, this.props.searchOptions.text);
+            this.search({services: this.props.services, selectedService: this.props.selectedService, start});
             this.setState({
                 loading: true
             });

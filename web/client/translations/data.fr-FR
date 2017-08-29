@@ -658,6 +658,7 @@
         },
         "catalog": {
             "title": "Catalogue",
+            "autoload": "Recherche sur la sélection du service",
             "tooltip": "Parcourir le catalogue",
             "addToMap": "Ajouter à la carte",
             "getWMSLink": "Lien WMS",
@@ -670,6 +671,7 @@
             "copyToClipboard": "Copier dans le presse-papier",
             "copied": "Copié!",
             "textSearchPlaceholder": "texte à rechercher...",
+            "delete": "Effacer",
             "search": "Chercher",
             "reset": "Effacer",
             "options": "Options",
@@ -679,13 +681,14 @@
             "servicePlaceholder": "Tapez un service",
             "url": "Url",
             "urlPlaceholder": "tapez une url",
-            "type": "type",
+            "type": "Type",
             "serviceTitle": "Titre",
             "serviceTitlePlaceholder": "tapez un titre",
             "notification": {
                 "warningAddCatalogService": "Insérer une URL et un titre valides",
                 "addCatalogService": "Service ajouté correctement",
                 "duplicatedServiceTitle": "Un service avec ce titre existe déjà, veuillez modifier le titre",
+                "serviceDeletedCorrectly": "Le service a été correctement effacé",
                 "errorServiceUrl": "Service non disponible. Veuillez vérifier l'URL fournie"
             }
         },

@@ -7,9 +7,9 @@
 */
 
 const Rx = require('rxjs');
-const {ADD_SERVICE, addCatalogService} = require('../actions/catalog');
+const {ADD_SERVICE, DELETE_SERVICE, deleteCatalogService, addCatalogService} = require('../actions/catalog');
 const {error, warning, success} = require('../actions/notifications');
-const {newServiceSelector, servicesSelector} = require('../selectors/catalog');
+const {newServiceSelector, selectedServiceSelector, servicesSelector} = require('../selectors/catalog');
 const axios = require('../libs/ajax');
 
 const API = {
@@ -55,7 +55,7 @@ module.exports = {
                         return {notification};
                     }
                     if (newService.title !== "") {
-                        if (!services[newService.title]) {
+                        if (!services[newService.title] || services[newService.title] && newService.oldService === newService.title) {
                             notification = success({
                                 title: "notification.success",
                                 message: "catalog.notification.addCatalogService",
@@ -84,5 +84,25 @@ module.exports = {
                             position: "tc"
                         }));
                 });
-        })
+        }),
+        deleteCatalogServiceEpic: (action$, store) =>
+            action$.ofType(DELETE_SERVICE)
+            .switchMap(() => {
+                const state = store.getState();
+                let selectedService = selectedServiceSelector(state);
+                const services = servicesSelector(state);
+                let notification = services[selectedService] ? success({
+                    title: "notification.warning",
+                    message: "catalog.notification.serviceDeletedCorrectly",
+                    autoDismiss: 6,
+                    position: "tc"
+                }) : warning({
+                    title: "notification.warning",
+                    message: "catalog.notification.impossibleDeleteService",
+                    autoDismiss: 6,
+                    position: "tc"
+                });
+                let deleteServiceAction = deleteCatalogService(selectedService);
+                return services[selectedService] ? Rx.Observable.of(notification, deleteServiceAction) : Rx.Observable.of(notification);
+            })
 };
