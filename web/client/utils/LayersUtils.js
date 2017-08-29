@@ -64,7 +64,15 @@ const isSupportedLayer = (layer, maptype) => {
     if (layer.type === "mapquest" || layer.type === "bing") {
         return Layers.isSupported(layer.type) && layer.apiKey && layer.apiKey !== "__API_KEY_MAPQUEST__" && !layer.invalid;
     }
+    // type 'ol' represents 'No background' layer
+    if (layer.type === 'ol') {
+        return maptype === 'openlayers' || maptype === 'leaflet';
+    }
     return Layers.isSupported(layer.type) && !layer.invalid;
+};
+
+const checkInvalidParam = (layer) => {
+    return layer && layer.invalid ? assign({}, layer, {invalid: false}) : layer;
 };
 
 const LayerCustomUtils = {};
@@ -240,7 +248,7 @@ const LayersUtils = {
         return addBaseParams(reqUrl, layer.baseParams || {});
     },
     invalidateUnsupportedLayer(layer, maptype) {
-        return isSupportedLayer(layer, maptype) ? layer : assign({}, layer, {invalid: true});
+        return isSupportedLayer(layer, maptype) ? checkInvalidParam(layer) : assign({}, layer, {invalid: true});
     },
     isSupportedLayer(layer, maptype) {
         return isSupportedLayer(layer, maptype);
