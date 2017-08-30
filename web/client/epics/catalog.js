@@ -8,7 +8,7 @@
 
 const Rx = require('rxjs');
 const {ADD_SERVICE, DELETE_SERVICE, deleteCatalogService, addCatalogService, savingService} = require('../actions/catalog');
-const {error, warning, success} = require('../actions/notifications');
+const {error, success} = require('../actions/notifications');
 const {SET_CONTROL_PROPERTY} = require('../actions/controls');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {newServiceSelector, selectedServiceSelector, servicesSelector} = require('../selectors/catalog');
@@ -42,21 +42,31 @@ module.exports = {
             const state = store.getState();
             const newService = newServiceSelector(state);
             const services = servicesSelector(state);
-            const warningMessage = warning({
+            const errorMessage = error({
+                title: "notification.warning",
+                message: "catalog.notification.errorServiceUrl",
+                autoDismiss: 6,
+                position: "tc"
+            });
+            const warningMessage = error({
                 title: "notification.warning",
                 message: "catalog.notification.warningAddCatalogService",
                 autoDismiss: 6,
                 position: "tc"
             });
-            let notification = warningMessage;
+            let notification = errorMessage;
             let addNewService = null;
             return Rx.Observable.fromPromise(
                 axios.get(API[newService.type].parseUrl(newService.url))
                 .then((result) => {
-                    if (result.error || result.data === "") {
-                        return {notification, addNewService};
+                    if (newService.title === "" || newService.url === "") {
+                        notification = warningMessage;
                     }
-                    if (newService.title !== "") {
+                    if (result.error || result.data === "") {
+                        return {notification: errorMessage, addNewService};
+                    }
+                    if (newService.title !== "" && newService.url !== "") {
+                        notification = warningMessage;
                         if (!services[newService.title] || services[newService.title] && newService.oldService === newService.title) {
                             notification = success({
                                 title: "notification.success",
@@ -66,7 +76,7 @@ module.exports = {
                             });
                             addNewService = addCatalogService(newService);
                         } else {
-                            notification = warning({
+                            notification = error({
                                 title: "notification.warning",
                                 message: "catalog.notification.duplicatedServiceTitle",
                                 autoDismiss: 6,
@@ -83,7 +93,7 @@ module.exports = {
                 .catch(() => {
                     return Rx.Observable.of(error({
                             title: "notification.warning",
-                            message: "catalog.notification.errorServiceUrl",
+                            message: "catalog.notification.warningAddCatalogService",
                             autoDismiss: 6,
                             position: "tc"
                         }));
@@ -101,7 +111,7 @@ module.exports = {
                     message: "catalog.notification.serviceDeletedCorrectly",
                     autoDismiss: 6,
                     position: "tc"
-                }) : warning({
+                }) : error({
                     title: "notification.warning",
                     message: "catalog.notification.impossibleDeleteService",
                     autoDismiss: 6,

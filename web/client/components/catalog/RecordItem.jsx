@@ -203,9 +203,9 @@ class RecordItem extends React.Component {
             <Panel className="record-item" style={{padding: 0}}>
                 {this.renderThumb(record && record.thumbnail, record)}
                 <div>
-                    <h4 style={{wordBreak: "break-all"}}>{record && truncate(this.getTitle(record.title), {length: 27})}</h4>
-                    <h4><small>{record && truncate(record.identifier, {length: 38})}</small></h4>
-                    <p className="record-item-description">{this.renderDescription(record)}</p>
+                    <h4 style={{wordBreak: "break-all", ...this.props.truncateStyle}}>{record && truncate(this.getTitle(record.title), {length: 27})}</h4>
+                    <h4 style={{...this.props.truncateStyle}}><small>{record && truncate(record.identifier, {length: 38})}</small></h4>
+                    <p style={{...this.props.truncateStyle}} className="record-item-description">{this.renderDescription(record)}</p>
                 </div>
                   {this.renderButtons(record)}
             </Panel>
