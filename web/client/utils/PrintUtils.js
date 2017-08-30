@@ -93,7 +93,7 @@ const PrintUtils = {
         return capabilities.scales.slice(0).reverse().map((scale) => parseFloat(scale.value)) || [];
     },
     /**
-     * Guest the nearest zoom level in the allowed scales
+     * Guess the nearest zoom level in the allowed scales
      * @param  {number} zoom                      the zoom level
      * @param  {array} scales                    the allowed scales
      * @param  {array} [mapScales=defaultScales] the map scales
@@ -104,6 +104,19 @@ const PrintUtils = {
         return scales.reduce((previous, current, index) => {
             return current < mapScale ? previous : index;
         }, 0);
+    },
+    /**
+     * Guess the map zoom level from print scale
+     * @param  {number} zoom                      the zoom level
+     * @param  {array} scales                    the allowed scales
+     * @param  {array} [mapScales=defaultScales] the map scales
+     * @return {number}                          the index that best approximates the current map scale
+     */
+    getMapZoom: (scaleZoom, scales, mapScales = defaultScales) => {
+        const scale = scales[scaleZoom];
+        return mapScales.reduce((previous, current, index) => {
+            return current < scale ? previous : index;
+        }, 0) + 1;
     },
     /**
      * Get the mapSize for print preview, parsing the layout and limiting the width.

@@ -13,6 +13,8 @@ const assign = require('object-assign');
 const ScaleBox = require("../mapcontrols/scale/ScaleBox");
 const {Button, Glyphicon} = require('react-bootstrap');
 
+const PrintUtils = require('../../utils/PrintUtils');
+
 let PMap;
 let Layer;
 let Feature;
@@ -119,7 +121,7 @@ class MapPreview extends React.Component {
                 interactive={false}
                 onMapViewChanges={this.props.onMapViewChanges}
                 zoomControl={false}
-                zoom={this.props.map.zoom}
+                zoom={this.props.scales ? PrintUtils.getMapZoom(this.props.map.scaleZoom, this.props.scales) : this.props.map.zoom}
                 center={this.props.map.center}
                 id="print_preview"
                 registerHooks={false}

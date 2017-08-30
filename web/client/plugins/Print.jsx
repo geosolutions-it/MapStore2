@@ -247,7 +247,7 @@ class Print extends React.Component {
                         onMapRefresh={() => this.configurePrintMap()}
                         layout={layoutName}
                         layoutSize={layout && layout.map || {width: 10, height: 10}}
-                        resolutions={this.props.useFixedScales ? null : MapUtils.getResolutions()}
+                        resolutions={MapUtils.getResolutions()}
                         {...this.props.mapPreviewOptions}
                         />
                     {this.isBackgroundIgnored() ? <DefaultBackgroundOption label={LocaleUtils.getMessageById(this.context.messages, "print.defaultBackground")}/> : null}
