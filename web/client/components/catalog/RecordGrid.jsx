@@ -30,12 +30,12 @@ class RecordGrid extends React.Component {
     };
 
     static defaultProps = {
-        records: [],
+        column: {xs: 12},
+        currentLocale: 'en-US',
         onLayerAdd: () => {},
         onError: () => {},
-        column: {xs: 12, sm: 12, md: 6, lg: 6},
-        zoomToLayer: true,
-        currentLocale: 'en-US'
+        records: [],
+        zoomToLayer: true
     };
 
     renderRecordItem = (record) => {

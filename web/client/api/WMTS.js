@@ -69,6 +69,7 @@ const searchAndPaginate = (json, startPosition, maxRecords, text) => {
 };
 
 const Api = {
+    parseUrl,
     getRecords: function(url, startPosition, maxRecords, text) {
         const cached = capabilitiesCache[url];
         if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {

@@ -1,17 +1,125 @@
-/**
- * Copyright 2016, GeoSolutions Sas.
+/*
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
-
+*/
+const url = "some url";
+const title = "some title";
+const type = "wms";
+const service = {
+    title,
+    url,
+    type
+};
 const expect = require('expect');
 const LayersUtils = require('../../utils/LayersUtils');
-const {getRecords, addLayerError, addLayer, ADD_LAYER_ERROR} = require('../catalog');
+const {getRecords, addLayerError, addLayer, ADD_LAYER_ERROR, changeCatalogFormat, CHANGE_CATALOG_FORMAT, changeSelectedService, CHANGE_SELECTED_SERVICE,
+     focusServicesList, FOCUS_SERVICES_LIST, changeCatalogMode, CHANGE_CATALOG_MODE, changeTitle, CHANGE_TITLE,
+    changeUrl, CHANGE_URL, changeType, CHANGE_TYPE, addService, ADD_SERVICE, addCatalogService, ADD_CATALOG_SERVICE, resetCatalog, RESET_CATALOG,
+    changeAutoload, CHANGE_AUTOLOAD, deleteCatalogService, DELETE_CATALOG_SERVICE, deleteService, DELETE_SERVICE, savingService, SAVING_SERVICE} = require('../catalog');
 const {CHANGE_LAYER_PROPERTIES, ADD_LAYER} = require('../layers');
 describe('Test correctness of the catalog actions', () => {
 
+    it('deleteCatalogService', () => {
+        var retval = deleteCatalogService(service);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(DELETE_CATALOG_SERVICE);
+        expect(retval.service).toBe(service);
+    });
+    it('deleteService', () => {
+        var retval = deleteService(status);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(DELETE_SERVICE);
+    });
+    it('changeAutoload', () => {
+        let status = true;
+        var retval = changeAutoload(status);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_AUTOLOAD);
+        expect(retval.autoload).toBe(status);
+    });
+    it('savingService', () => {
+        let status = true;
+        var retval = savingService(status);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(SAVING_SERVICE);
+        expect(retval.status).toBe(status);
+    });
+    it('changeCatalogFormat', () => {
+        var retval = changeCatalogFormat(type);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_CATALOG_FORMAT);
+        expect(retval.format).toBe(type);
+    });
+    it('changeSelectedService', () => {
+        var retval = changeSelectedService(service);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_SELECTED_SERVICE);
+        expect(retval.service).toBe(service);
+    });
+    it('focusServicesList', () => {
+        const status = true;
+        var retval = focusServicesList(status);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(FOCUS_SERVICES_LIST);
+        expect(retval.status).toBe(status);
+    });
+    it('changeCatalogMode', () => {
+        const mode = "edit";
+        var retval = changeCatalogMode(mode);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_CATALOG_MODE);
+        expect(retval.mode).toBe(mode);
+    });
+    it('changeTitle', () => {
+        var retval = changeTitle(title);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_TITLE);
+        expect(retval.title).toBe(title);
+    });
+    it('changeUrl', () => {
+        var retval = changeUrl(url);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_URL);
+        expect(retval.url).toBe(url);
+    });
+    it('changeType', () => {
+        const newType = "wms";
+        var retval = changeType(newType);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_TYPE);
+        expect(retval.newType).toBe(newType);
+    });
+    it('addService', () => {
+        var retval = addService();
+        expect(retval).toExist();
+        expect(retval.type).toBe(ADD_SERVICE);
+    });
+    it('addCatalogService', () => {
+        var retval = addCatalogService(service);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(ADD_CATALOG_SERVICE);
+        expect(retval.service).toBe(service);
+    });
+    it('resetCatalog', () => {
+        var retval = resetCatalog();
+        expect(retval).toExist();
+        expect(retval.type).toBe(RESET_CATALOG);
+    });
     it('getRecords ISO Metadata Profile', (done) => {
         getRecords('csw', 'base/web/client/test-resources/csw/getRecordsResponseISO.xml', 1, 1)((actionResult) => {
             try {

@@ -450,7 +450,7 @@
             "zoomIn": "Das ist die Hilfe für ZoomIn",
             "zoomOut": "Das ist die Hilfe für ZoomOut",
             "searchBar": "Gib eine Adresse eines Ortes ein bspw. 'Brandenburger Tor, Berlin'. Du kannst auch Koordinaten im folgenden Format eingeben: 43.87, 10.20",
-            "metadataExplorer": "Das ist die Hilfe für den MetadataExplorer",
+            "metadataexplorer": "Das ist die Hilfe für den MetadataExplorer",
             "settingsPanel": "Das ist die Hilfe für das SettingsPanel",
             "gohome": "Das ist die Hilfe für Home",
             "measureComponent": "Das ist die Hilfe für MeasureComponent",
@@ -657,6 +657,9 @@
         },
         "catalog": {
             "title": "Katalog",
+            "autoload": "Suche nach Serviceauswahl",
+            "clearValueText": "Klare Auswahl",
+            "noResultsText": "keine Ergebnisse gefunden",
             "tooltip": "Katalog durchsuchen",
             "addToMap": "Zur Karte hinzufügen",
             "getWMSLink": "WMS Link erhalten",
@@ -668,12 +671,27 @@
             "share": "Teilen",
             "copyToClipboard": "In die Zwischenablage kopieren",
             "copied": "Kopiert!",
-            "catalogUrlPlaceholder": "Gib eine Katalog URL ein...",
             "textSearchPlaceholder": "Zu suchender Text...",
             "search": "Suche",
+            "delete": "Löschen",
             "reset": "Zurücksetzen",
             "options": "Optionen",
-            "srs_not_allowed": "Das Koordinatensystem der Karte wird von dieser Anwendung nicht unterstützt"
+            "srs_not_allowed": "Das Koordinatensystem der Karte wird von dieser Anwendung nicht unterstützt",
+            "add": "Hinzufügen",
+            "service": "Service",
+            "servicePlaceholder": "Geben Sie einen Service ein",
+            "url": "Url",
+            "urlPlaceholder": "Geben Sie eine URL ein",
+            "type": "Typ",
+            "serviceTitle": "Titel",
+            "serviceTitlePlaceholder": "Geben Sie einen Titel ein",
+            "notification": {
+                "warningAddCatalogService": "Geben Sie eine gültige URL und einen Titel ein",
+                "addCatalogService": "Service wurde korrekt hinzugefügt",
+                "duplicatedServiceTitle": "Ein Service mit diesem Titel existiert bereits, bitte ändere den Titel",
+                "serviceDeletedCorrectly": "Der Service wurde korrekt gelöscht",
+                "errorServiceUrl": "Service nicht verfügbar. Bitte überprüfen Sie die angegebene URL"
+            }
         },
         "uploader": {
             "filename": "Datei Name",

@@ -36,6 +36,7 @@ const {refreshLayerVersion} = require('../actions/layers');
 const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector,
     selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector,
     isFeatureGridOpen} = require('../selectors/featuregrid');
+const {queryPanelSelector} = require('../selectors/controls');
 
 const {error} = require('../actions/notifications');
 const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector} = require('../selectors/query');
@@ -402,7 +403,7 @@ module.exports = {
         ),
     resetQueryPanel: (action$, store) =>
         action$.ofType(LOCATION_CHANGE).switchMap( () => {
-            return store.getState().controls.queryPanel.enabled ? Rx.Observable.of(setControlProperty('queryPanel', "enabled", false))
+            return queryPanelSelector(store.getState()) ? Rx.Observable.of(setControlProperty('queryPanel', "enabled", false))
         : Rx.Observable.empty(); }
     ),
     /**

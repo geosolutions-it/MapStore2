@@ -21,6 +21,7 @@ const {editMap, updateCurrentMap, errorCurrentMap, resetCurrentMap} = require('.
 const {mapSelector} = require('../selectors/map');
 const stateSelector = state => state;
 const {layersSelector, groupsSelector} = require('../selectors/layers');
+const {servicesSelector, selectedServiceSelector} = require('../selectors/catalog');
 const {indexOf} = require('lodash');
 
 const MapUtils = require('../utils/MapUtils');
@@ -31,6 +32,8 @@ const selector = createSelector(mapSelector, stateSelector, layersSelector, grou
     mapType: state && (state.home && state.home.mapType || state.maps && state.maps.mapType) || "leaflet",
     newMapId: state.currentMap && state.currentMap.newMapId,
     map,
+    catalogServices: servicesSelector(state),
+    selectedService: selectedServiceSelector(state),
     user: state.security && state.security.user,
     currentMap: state.currentMap,
     metadata: state.maps.metadata,
@@ -41,6 +44,8 @@ const selector = createSelector(mapSelector, stateSelector, layersSelector, grou
 
 class SaveAs extends React.Component {
     static propTypes = {
+        catalogServices: PropTypes.object,
+        selectedService: PropTypes.string,
         show: PropTypes.bool,
         newMapId: PropTypes.number,
         map: PropTypes.object,
@@ -122,7 +127,11 @@ class SaveAs extends React.Component {
 
     // this method creates the content for the Map Resource
     createV2Map = () => {
-        return MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig);
+        let catalogServices = {
+            services: this.props.catalogServices,
+            selectedService: this.props.selectedService
+        };
+        return MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, catalogServices);
     };
 
     saveMap = (id, name, description) => {
