@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -6,6 +5,7 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
 const {Button, Glyphicon} = require('react-bootstrap');
@@ -27,7 +27,7 @@ const LayersUtils = require('../utils/LayersUtils');
 // include application component
 const QueryBuilder = require('../components/data/query/QueryBuilder');
 
-const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic} = require('../epics/wfsquery');
+const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic} = require('../epics/wfsquery');
 const autocompleteEpics = require('../epics/autocomplete');
 const {bindActionCreators} = require('redux');
 const {
@@ -55,7 +55,7 @@ const {
     toggleMenu
 } = require('../actions/queryform');
 
-const {createQuery} = require('../actions/wfsquery');
+const {createQuery, initQueryPanel} = require('../actions/wfsquery');
 
 const {
     changeDrawingStatus,
@@ -160,6 +160,7 @@ class QueryPanel extends React.Component {
         onZoomToExtent: PropTypes.func,
         retrieveLayerData: PropTypes.func,
         onSort: PropTypes.func,
+        onInit: PropTypes.func,
         onSettings: PropTypes.func,
         hideSettings: PropTypes.func,
         updateSettings: PropTypes.func,
@@ -182,6 +183,7 @@ class QueryPanel extends React.Component {
         onToggleQuery: () => {},
         onZoomToExtent: () => {},
         onSettings: () => {},
+        onInit: () => {},
         updateNode: () => {},
         removeNode: () => {},
         activateLegendTool: true,
@@ -193,6 +195,11 @@ class QueryPanel extends React.Component {
         querypanelEnabled: false
     };
 
+    componentWillReceiveProps(newProps) {
+        if (newProps.querypanelEnabled === true && this.props.querypanelEnabled === false) {
+            this.props.onInit();
+        }
+    }
     getNoBackgroundLayers = (group) => {
         return group.name !== 'background';
     };
@@ -251,6 +258,7 @@ const QueryPanelPlugin = connect(tocSelector, {
     onToggleQuery: toggleControl.bind(null, 'queryPanel', null),
     onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
     onSettings: showSettings,
+    onInit: initQueryPanel,
     onZoomToExtent: zoomToExtent,
     hideSettings,
     updateSettings,
@@ -264,5 +272,5 @@ module.exports = {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
     },
-    epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, ...autocompleteEpics}
+    epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic, ...autocompleteEpics}
 };

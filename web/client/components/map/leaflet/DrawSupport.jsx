@@ -118,6 +118,7 @@ class DrawSupport extends React.Component {
         // let drawn geom stay on the map
         let geoJesonFt = layer.toGeoJSON();
         let bounds;
+        let tempCoordinates;
         if (evt.layerType === "marker") {
             bounds = L.latLngBounds(geoJesonFt.geometry.coordinates, geoJesonFt.geometry.coordinates);
         } else {
@@ -140,6 +141,11 @@ class DrawSupport extends React.Component {
             center = CoordinatesUtils.reproject(center, "EPSG:4326", projection);
             geoJesonFt.radius = radius;
             coordinates = CoordinatesUtils.calculateCircleCoordinates(center, radius, 100);
+            extent = CoordinatesUtils.reprojectBbox(extent, projection, "EPSG:4326");
+            center = CoordinatesUtils.reproject(center, projection, "EPSG:4326");
+            tempCoordinates = CoordinatesUtils.reprojectGeoJson({type: "Feature", geometry: {type: "Polygon", coordinates}}, projection, "EPSG:4326");
+            projection = "EPSG:4326";
+            coordinates = tempCoordinates.geometry.coordinates;
             center = [center.x, center.y];
             type = "Polygon";
         }
@@ -147,12 +153,12 @@ class DrawSupport extends React.Component {
         this.drawLayer.addData(geoJesonFt);
         // Geometry respect query form panel needs
         let geometry = {
-            type: type,
-            extent: extent,
-            center: center,
-            coordinates: coordinates,
-            radius: radius,
-            projection: projection
+            type,
+            extent,
+            center,
+            coordinates,
+            radius,
+            projection
         };
         if (this.props.options && this.props.options.stopAfterDrawing) {
             this.props.onChangeDrawingStatus('stop', this.props.drawMethod, this.props.drawOwner);
@@ -304,6 +310,12 @@ class DrawSupport extends React.Component {
             newFeature = {type: "FeatureCollection", features: newFeatures};
         }
         const props = assign({}, newProps, {features: [newFeature ? newFeature : {}]});
+        if (!this.drawLayer) {
+            this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326"});
+        } else {
+            this.drawLayer.clearLayers();
+            this.drawLayer.addData(this.convertFeaturesPolygonToPoint(props.features, props.drawMethod));
+        }
         if (newProps.options.editEnabled) {
             this.addEditInteraction(props);
         }
@@ -321,7 +333,9 @@ class DrawSupport extends React.Component {
         allLayers.forEach(l => {
             l.on('edit', (e) => this.onUpdateGeom(e.target, newProps));
             l.on('moveend', (e) => this.onUpdateGeom(e.target, newProps));
-            l.editing.enable();
+            if (l.editing) {
+                l.editing.enable();
+            }
         });
 
         this.editControl = new L.Control.Draw({
@@ -367,7 +381,9 @@ class DrawSupport extends React.Component {
             allLayers.forEach(l => {
                 l.off('edit');
                 l.off('moveend');
-                l.editing.disable();
+                if (l.editing) {
+                    l.editing.disable();
+                }
             });
             this.editControl = null;
         }

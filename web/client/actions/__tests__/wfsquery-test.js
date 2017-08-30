@@ -19,6 +19,7 @@ var {
     QUERY_CREATE,
     QUERY,
     RESET_QUERY,
+    INIT_QUERY_PANEL, initQueryPanel,
     layerSelectedForSearch,
     featureTypeSelected,
     featureTypeError,
@@ -37,6 +38,10 @@ describe('wfsquery actions', () => {
         let {type, id} = layerSelectedForSearch(1);
         expect(type).toBe(LAYER_SELECTED_FOR_SEARCH);
         expect(id).toBe(1);
+    });
+    it('layerSelectedForSearch', () => {
+        let {type} = initQueryPanel();
+        expect(type).toBe(INIT_QUERY_PANEL);
     });
     it('featureTypeSelected', () => {
         let {type, url, typeName} = featureTypeSelected("/geoserver/", "topp:states");

@@ -7,7 +7,7 @@
  */
 
 const Rx = require('rxjs');
-const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic} = require('../../../epics/wfsquery');
+const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic} = require('../../../epics/wfsquery');
 const {getLayerFromId} = require('../../../selectors/layers');
 const {layerSelectedForSearch, LAYER_SELECTED_FOR_SEARCH, CLOSE_FEATURE_GRID} = require('../../../actions/wfsquery');
 const {browseData} = require('../../../actions/layers');
@@ -23,7 +23,7 @@ module.exports = (plugins) => {
         query: require('../../../reducers/query')
     };
     return require('../../../stores/StandardStore')({}, reducers, {
-        featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic,
+        featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic,
         initLoadFeatureGridDemo: (action$, store) =>
             action$.ofType('MAP_CONFIG_LOADED', "FEATUREGRID_SAMPLE::SELECT_LAYER")
                 .switchMap(({id = 'atlantis:poi'} = {}) => {

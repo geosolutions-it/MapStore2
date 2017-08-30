@@ -33,6 +33,7 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
 const {TOGGLE_CONTROL, resetControls} = require('../actions/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
 const {refreshLayerVersion} = require('../actions/layers');
+
 const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector,
     selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector,
     isFeatureGridOpen} = require('../selectors/featuregrid');
@@ -429,10 +430,10 @@ module.exports = {
             return Rx.Observable.of(setControlProperty("drawer", "enabled", false), toggleTool("featureCloseConfirm", false));
         }),
     onOpenAdvancedSearch: (action$, store) =>
-        action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() =>
-            Rx.Observable.of(
-                setControlProperty('queryPanel', "enabled", true),
-                closeFeatureGrid()
+        action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
+            return Rx.Observable.of(
+                closeFeatureGrid(),
+                setControlProperty('queryPanel', "enabled", true)
             ).merge(
                 action$.ofType(QUERY_FORM_RESET) // ON RESET YOU HAVE TO PERFORM A SEARCH AGAIN WHEN BACK
                     .switchMap(() => action$.ofType(TOGGLE_CONTROL)
@@ -457,8 +458,8 @@ module.exports = {
                             )
                     )
                 ).takeUntil(action$.ofType(OPEN_FEATURE_GRID, LOCATION_CHANGE))
-            )
-        ),
+            );
+        }),
     onFeatureGridZoomAll: (action$, store) =>
         action$.ofType(ZOOM_ALL).switchMap(() =>
             Rx.Observable.of(zoomToExtent(bbox(featureCollectionResultSelector(store.getState())), "EPSG:4326"))
