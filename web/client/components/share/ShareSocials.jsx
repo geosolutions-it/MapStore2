@@ -8,6 +8,7 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
+const LocaleUtils = require('../../utils/LocaleUtils');
 
 const {
   ShareButtons,
@@ -42,11 +43,15 @@ class ShareSocials extends React.Component {
     static propTypes = {
         shareUrl: PropTypes.string,
         getCount: PropTypes.func,
-        shareTitle: PropTypes.string
+        sharedTitle: PropTypes.string
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
     };
 
     static defaultProps = {
-        shareTitle: 'GeoSolutions'
+        sharedTitle: ""
     };
 
     render() {
@@ -54,7 +59,7 @@ class ShareSocials extends React.Component {
         if (this.props.getCount) {
             countProps.getCount = this.props.getCount;
         }
-        const title = this.props.shareTitle;
+        const title = this.props.sharedTitle || LocaleUtils.getMessageById(this.context.messages, "share.sharedTitle");
 
         return (
         <div className="social-links">

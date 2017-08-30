@@ -622,15 +622,16 @@
             "titlePanel": "Teile die Karte",
             "socialIntro": "In deinem bevorzugten sozialen Netzwerk",
             "directLinkTitle": "Über einen direkten Link",
-            "embeddedLinkTitle": "Über einen eingebetteten Code",
-            "forceDrawer": "Inhaltsverzeichnis anzeigen",
-            "apiLinkTitle": "API verwenden",
             "social": "Social",
             "direct": "Link",
             "code": "Embed",
+            "embeddedLinkTitle": "Über einen eingebetteten Code",
+            "forceDrawer": "Inhaltsverzeichnis anzeigen",
+            "apiLinkTitle": "API verwenden",
             "QRCodeLinkTitle": "QR code",
-            "msgCopiedUrl":"Kopiert",
-            "msgToCopyUrl":"Klicke um zu kopieren"
+            "msgCopiedUrl": "Kopiert",
+            "msgToCopyUrl": "Klicke um zu kopieren",
+            "sharedTitle": "Schau dir meine neue Karte an: "
         },
         "snapshot": {
             "title": "Snapshot Vorschau",
