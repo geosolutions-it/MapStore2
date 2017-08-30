@@ -447,7 +447,7 @@
             "zoomIn": "This is the helptext for the ZoomIn",
             "zoomOut": "This is the helptext for the ZoomOut",
             "searchBar": "Write the address of a place to find. e.g.  '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20",
-            "metadataExplorer": "This is the helptext for the MetadataExplorer",
+            "metadataexplorer": "This is the helptext for the MetadataExplorer",
             "settingsPanel": "This is the helptext for the SettingsPanel",
             "gohome": "This is the helptext for Home",
             "measureComponent": "This is the helptext for the MeasureComponent",
@@ -655,6 +655,8 @@
         "catalog": {
             "title": "Catalog",
             "autoload": "Search on service selection",
+            "clearValueText": "Clear selection",
+            "noResultsText": "",
             "tooltip": "Browse Catalog",
             "addToMap": "Add To Map",
             "getWMSLink": "Get WMS Link",

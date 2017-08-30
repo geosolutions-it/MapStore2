@@ -9,21 +9,22 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
-const Sidebar = require('react-sidebar').default;
 const assign = require('object-assign');
 const {createSelector} = require("reselect");
 const {Glyphicon, Panel} = require('react-bootstrap');
+const ContainerDimensions = require('react-container-dimensions').default;
+const Dock = require('react-dock').default;
 
 const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalogMode,
     changeUrl, changeTitle, changeAutoload, changeType, changeSelectedService,
     addLayer, addLayerError, resetCatalog, focusServicesList} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
-const {newCatalogServiceAdded, deleteCatalogServiceEpic} = require("../epics/catalog");
-const {toggleControl} = require("../actions/controls");
+const {newCatalogServiceAdded, deleteCatalogServiceEpic, closeFeatureGridEpic} = require("../epics/catalog");
+const {setControlProperty, toggleControl} = require("../actions/controls");
 const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector,
     servicesSelector, formatsSelector, loadingErrorSelector, selectedServiceSelector,
-    modeSelector, layerErrorSelector, activeSelector
+    modeSelector, layerErrorSelector, activeSelector, savingSelector
 } = require("../selectors/catalog");
 const Message = require("../components/I18N/Message");
 require('./metadataexplorer/css/style.css');
@@ -32,12 +33,14 @@ const CatalogUtils = require('../utils/CatalogUtils');
 
 const catalogSelector = createSelector([
     (state) => resultSelector(state),
+    (state) => savingSelector(state),
     (state) => serviceListOpenSelector(state),
     (state) => newServiceSelector(state),
     (state) => newServiceTypeSelector(state),
     (state) => selectedServiceTypeSelector(state),
     (state) => searchOptionsSelector(state)
-], (result, openCatalogServiceList, newService, newformat, selectedFormat, options) =>({
+], (result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options) =>({
+    saving,
     openCatalogServiceList,
     format: newformat,
     newService,
@@ -46,7 +49,7 @@ const catalogSelector = createSelector([
 
 const catalogClose = () => {
     return (dispatch) => {
-        dispatch(toggleControl('metadataexplorer'));
+        dispatch(setControlProperty('metadataexplorer', "enabled", false));
         dispatch(resetCatalog());
     };
 };
@@ -76,6 +79,7 @@ class MetadataExplorerComponent extends React.Component {
         services: PropTypes.object,
         selectedService: PropTypes.string,
         style: PropTypes.object,
+        dockProps: PropTypes.object,
         zoomToLayer: PropTypes.bool,
 
         // side panel properties
@@ -99,45 +103,30 @@ class MetadataExplorerComponent extends React.Component {
         zoomToLayer: true,
 
         // side panel properties
-        width: "500px"
+        width: "500px",
+        dockProps: {
+            dimMode: "none",
+            size: 0.30,
+            fluid: true,
+            position: "right",
+            zIndex: 1030
+        }
     };
 
     render() {
-        const panel = (<div role="body" className="modal_window">
-                <Catalog zoomToLayer={this.props.zoomToLayer} searchOnStartup={this.props.searchOnStartup} active={this.props.active} {...this.props}/>
-            </div>);
-        const panelHeader = (<span><Glyphicon glyph="folder-open"/> <span className="metadataexplorer-panel-title"><Message msgId="catalog.title"/></span><span className="shapefile-panel-close panel-close" onClick={ toggleControl.bind(null, 'styler', null)}></span><button onClick={this.props.toggleControl} className="catalog-close close no-border btn-default">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph} /> : <span>×</span>}</button></span>);
-
-        return this.props.active ? (<Sidebar
-                pullRight
-                open={this.props.active}
-                docked
-                styles={{
-                    sidebar: {
-                        zIndex: 1022,
-                        position: this.props.active ? "fixed" : "absolute",
-                        width: this.props.width
-                    },
-                    overlay: {
-                        zIndex: 1021
-                    },
-                    root: {
-                        right: this.props.active ? 0 : 'auto',
-                        overflow: 'visible',
-                        width: 0
-                    },
-                    content: {
-                        overflowY: 'auto'
-                    }
-            }}
-            sidebarClassName="catalog-sidebar nav-menu"
-            rootClassName="catalog-root"
-            sidebar={<Panel id={this.props.id} header={panelHeader}
-                style={this.props.panelStyle} className={this.props.panelClassName}>
-                    {panel}
-                </Panel>}>
-                <div style={{display: "none"}} />
-            </Sidebar>) : null;
+        const panel = <Catalog zoomToLayer={this.props.zoomToLayer} searchOnStartup={this.props.searchOnStartup} active={this.props.active} {...this.props}/>;
+        const panelHeader = (<span><Glyphicon glyph="folder-open"/> <span className="metadataexplorer-panel-title"><Message msgId="catalog.title"/></span><span className="shapefile-panel-close panel-close" onClick={ toggleControl.bind(null, 'styler', null)}></span><button onClick={this.props.toggleControl} className="catalog-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph} /> : <span>×</span>}</button></span>);
+        return this.props.active ? (
+            <ContainerDimensions>
+            { ({ width }) =>
+                <Dock {...this.props.dockProps} isVisible={this.props.active} size={500 / width > 1 ? 1 : 500 / width} >
+                    <Panel id={this.props.id} header={panelHeader}
+                        style={this.props.panelStyle} className={this.props.panelClassName}>
+                            {panel}
+                        </Panel>
+                </Dock>}
+            </ContainerDimensions>
+        ) : null;
     }
 }
 
@@ -177,7 +166,7 @@ module.exports = {
             tooltip: "catalog.tooltip",
             wrap: true,
             title: 'catalog.title',
-            help: <Message msgId="helptexts.metadataExplorer"/>,
+            help: <Message msgId="helptexts.metadataexplorer"/>,
             icon: <Glyphicon glyph="folder-open" />,
             priority: 1
         },
@@ -186,11 +175,11 @@ module.exports = {
             position: 5,
             text: <Message msgId="catalog.title"/>,
             icon: <Glyphicon glyph="folder-open"/>,
-            action: toggleControl.bind(null, 'metadataexplorer', null),
+            action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
             priority: 2,
             doNotHide: true
         }
     }),
     reducers: {catalog: require('../reducers/catalog')},
-    epics: {newCatalogServiceAdded, deleteCatalogServiceEpic}
+    epics: {newCatalogServiceAdded, deleteCatalogServiceEpic, closeFeatureGridEpic}
 };

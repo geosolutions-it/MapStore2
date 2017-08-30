@@ -7,8 +7,10 @@
 */
 
 const Rx = require('rxjs');
-const {ADD_SERVICE, DELETE_SERVICE, deleteCatalogService, addCatalogService} = require('../actions/catalog');
+const {ADD_SERVICE, DELETE_SERVICE, deleteCatalogService, addCatalogService, savingService} = require('../actions/catalog');
 const {error, warning, success} = require('../actions/notifications');
+const {SET_CONTROL_PROPERTY} = require('../actions/controls');
+const {closeFeatureGrid} = require('../actions/featuregrid');
 const {newServiceSelector, selectedServiceSelector, servicesSelector} = require('../selectors/catalog');
 const axios = require('../libs/ajax');
 
@@ -49,7 +51,7 @@ module.exports = {
             let notification = warningMessage;
             let addNewService = null;
             return Rx.Observable.fromPromise(
-                axios.head(API[newService.type].parseUrl(newService.url))
+                axios.get(API[newService.type].parseUrl(newService.url))
                 .then((result) => {
                     if (result.error) {
                         return {notification};
@@ -76,14 +78,17 @@ module.exports = {
                 }))
                 .switchMap((actions) => {
                     return actions.addNewService !== null ? Rx.Observable.of(actions.notification, actions.addNewService) : Rx.Observable.of(actions.notification);
-                }).catch(() => {
+                })
+                .startWith(savingService(true))
+                .catch(() => {
                     return Rx.Observable.of(error({
                             title: "notification.warning",
                             message: "catalog.notification.errorServiceUrl",
                             autoDismiss: 6,
                             position: "tc"
                         }));
-                });
+                })
+                .concat(Rx.Observable.of(savingService(false)));
         }),
         deleteCatalogServiceEpic: (action$, store) =>
             action$.ofType(DELETE_SERVICE)
@@ -104,5 +109,11 @@ module.exports = {
                 });
                 let deleteServiceAction = deleteCatalogService(selectedService);
                 return services[selectedService] ? Rx.Observable.of(notification, deleteServiceAction) : Rx.Observable.of(notification);
+            }),
+        closeFeatureGridEpic: (action$) =>
+            action$.ofType(SET_CONTROL_PROPERTY)
+            .filter((action) => action.control === "metadataexplorer" && action.value)
+            .switchMap(() => {
+                return Rx.Observable.of(closeFeatureGrid());
             })
 };

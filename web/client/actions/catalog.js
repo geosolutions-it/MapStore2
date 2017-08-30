@@ -33,6 +33,8 @@ const ADD_CATALOG_SERVICE = 'CATALOG:ADD_CATALOG_SERVICE';
 const DELETE_CATALOG_SERVICE = 'CATALOG:DELETE_CATALOG_SERVICE';
 const ADD_SERVICE = 'CATALOG:ADD_SERVICE';
 const DELETE_SERVICE = 'CATALOG:DELETE_SERVICE';
+const SAVING_SERVICE = 'CATALOG:SAVING_SERVICE';
+
 function recordsLoaded(options, result) {
     return {
         type: RECORD_LIST_LOADED,
@@ -40,11 +42,16 @@ function recordsLoaded(options, result) {
         result: result
     };
 }
-
 function changeCatalogFormat(format) {
     return {
         type: CHANGE_CATALOG_FORMAT,
         format
+    };
+}
+function savingService(status) {
+    return {
+        type: SAVING_SERVICE,
+        status
     };
 }
 function changeSelectedService(service) {
@@ -209,6 +216,7 @@ module.exports = {
     CHANGE_TITLE, changeTitle,
     CHANGE_TYPE, changeType,
     CHANGE_URL, changeUrl,
+    SAVING_SERVICE, savingService,
     FOCUS_SERVICES_LIST, focusServicesList,
     ADD_CATALOG_SERVICE, addCatalogService,
     DELETE_CATALOG_SERVICE, deleteCatalogService,

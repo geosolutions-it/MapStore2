@@ -20,7 +20,8 @@ const {
     CHANGE_URL,
     FOCUS_SERVICES_LIST,
     ADD_CATALOG_SERVICE,
-    DELETE_CATALOG_SERVICE
+    DELETE_CATALOG_SERVICE,
+    SAVING_SERVICE
 } = require('../actions/catalog');
 const {
     MAP_CONFIG_LOADED
@@ -34,10 +35,12 @@ const emptyService = {
     autoload: false
 };
 
-function catalog(state = {
-    newService: emptyService
-}, action) {
+function catalog(state = {}, action) {
     switch (action.type) {
+    case SAVING_SERVICE:
+        return assign({}, state, {
+            saving: action.status
+        });
     case RECORD_LIST_LOADED:
         return assign({}, state, {
             result: action.result,
@@ -116,13 +119,17 @@ function catalog(state = {
                 layerError: null
             }) : state;
     }
-    case CHANGE_SELECTED_SERVICE:
-        return assign({}, state, {
-            selectedService: action.service,
-            result: null,
-            loadingError: null,
-            layerError: null
-        });
+    case CHANGE_SELECTED_SERVICE: {
+        if (action.service !== state.selectedService) {
+            return assign({}, state, {
+                selectedService: action.service,
+                result: null,
+                loadingError: null,
+                layerError: null
+            });
+        }
+        return state;
+    }
     case DELETE_CATALOG_SERVICE: {
         let newServices;
         let selectedService = "";

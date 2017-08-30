@@ -17,10 +17,40 @@ const expect = require('expect');
 const LayersUtils = require('../../utils/LayersUtils');
 const {getRecords, addLayerError, addLayer, ADD_LAYER_ERROR, changeCatalogFormat, CHANGE_CATALOG_FORMAT, changeSelectedService, CHANGE_SELECTED_SERVICE,
      focusServicesList, FOCUS_SERVICES_LIST, changeCatalogMode, CHANGE_CATALOG_MODE, changeTitle, CHANGE_TITLE,
-    changeUrl, CHANGE_URL, changeType, CHANGE_TYPE, addService, ADD_SERVICE, addCatalogService, ADD_CATALOG_SERVICE, resetCatalog, RESET_CATALOG} = require('../catalog');
+    changeUrl, CHANGE_URL, changeType, CHANGE_TYPE, addService, ADD_SERVICE, addCatalogService, ADD_CATALOG_SERVICE, resetCatalog, RESET_CATALOG,
+    changeAutoload, CHANGE_AUTOLOAD, deleteCatalogService, DELETE_CATALOG_SERVICE, deleteService, DELETE_SERVICE, savingService, SAVING_SERVICE} = require('../catalog');
 const {CHANGE_LAYER_PROPERTIES, ADD_LAYER} = require('../layers');
 describe('Test correctness of the catalog actions', () => {
 
+    it('deleteCatalogService', () => {
+        var retval = deleteCatalogService(service);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(DELETE_CATALOG_SERVICE);
+        expect(retval.service).toBe(service);
+    });
+    it('deleteService', () => {
+        var retval = deleteService(status);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(DELETE_SERVICE);
+    });
+    it('changeAutoload', () => {
+        let status = true;
+        var retval = changeAutoload(status);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_AUTOLOAD);
+        expect(retval.autoload).toBe(status);
+    });
+    it('savingService', () => {
+        let status = true;
+        var retval = savingService(status);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(SAVING_SERVICE);
+        expect(retval.status).toBe(status);
+    });
     it('changeCatalogFormat', () => {
         var retval = changeCatalogFormat(type);
 

@@ -448,7 +448,7 @@
             "zoomIn": "Das ist die Hilfe für ZoomIn",
             "zoomOut": "Das ist die Hilfe für ZoomOut",
             "searchBar": "Gib eine Adresse eines Ortes ein bspw. 'Brandenburger Tor, Berlin'. Du kannst auch Koordinaten im folgenden Format eingeben: 43.87, 10.20",
-            "metadataExplorer": "Das ist die Hilfe für den MetadataExplorer",
+            "metadataexplorer": "Das ist die Hilfe für den MetadataExplorer",
             "settingsPanel": "Das ist die Hilfe für das SettingsPanel",
             "gohome": "Das ist die Hilfe für Home",
             "measureComponent": "Das ist die Hilfe für MeasureComponent",
@@ -656,6 +656,8 @@
         "catalog": {
             "title": "Katalog",
             "autoload": "Suche nach Serviceauswahl",
+            "clearValueText": "Klare Auswahl",
+            "noResultsText": "keine Ergebnisse gefunden",
             "tooltip": "Katalog durchsuchen",
             "addToMap": "Zur Karte hinzufügen",
             "getWMSLink": "WMS Link erhalten",

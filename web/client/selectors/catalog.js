@@ -1,6 +1,7 @@
 const {get} = require('lodash');
 
 module.exports = {
+    savingSelector: (state) => get(state, "catalog.saving"),
     resultSelector: (state) => get(state, "catalog.result"),
     serviceListOpenSelector: (state) => get(state, "catalog.openCatalogServiceList"),
     newServiceSelector: (state) => get(state, "catalog.newService"),

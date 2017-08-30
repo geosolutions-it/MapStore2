@@ -7,6 +7,7 @@
  */
 
 const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY, RESET_CONTROLS} = require('../actions/controls');
+const {OPEN_FEATURE_GRID} = require('../actions/featuregrid');
 const assign = require('object-assign');
 /**
  * Manages the state of the controls in MapStore2
@@ -75,6 +76,9 @@ function controls(state = {}, action) {
             });
         }, {});
         return assign({}, state, resetted);
+    }
+    case OPEN_FEATURE_GRID: {
+        return assign({}, state, {metadataexplorer: assign({}, state.metadataexplorer, {enabled: false})});
     }
     default:
         return state;
