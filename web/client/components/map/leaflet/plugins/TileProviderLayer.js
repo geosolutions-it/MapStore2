@@ -11,6 +11,7 @@ var L = require('leaflet');
 var TileProvider = require('../../../../utils/TileConfigProvider');
 
 Layers.registerType('tileprovider', (options) => {
-    let [url, opt] = TileProvider.getLayerConfig(options.provider, options);
+    let [url, opt] = TileProvider.getLayerConfig(options.provider, {...options, maxNativeZoom: options.maxNativeZoom || 18,
+    maxZoom: options.maxZoom || 22});
     return L.tileLayer(url, opt);
 });
