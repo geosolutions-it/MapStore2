@@ -625,15 +625,16 @@
             "titlePanel": "Partager la carte",
             "socialIntro": "via votre réseau social favori",
             "directLinkTitle": "Via un lien direct",
-            "embeddedLinkTitle": "Via le code intégré",
-            "forceDrawer": "Afficher la table des matières",
-            "apiLinkTitle": "Via le APIs",
             "social": "Social",
             "direct": "Link",
             "code": "Embed",
+            "embeddedLinkTitle": "Via le code intégré",
+            "forceDrawer": "Afficher la table des matières",
+            "apiLinkTitle": "Via le APIs",
             "QRCodeLinkTitle": "qr code",
             "msgCopiedUrl":"Copié",
-            "msgToCopyUrl":"Cliquer pour copier"
+            "msgToCopyUrl":"Cliquer pour copier",
+            "sharedTitle": "Regardez ma nouvelle carte: "
         },
         "snapshot": {
             "title": "Prévisualisation de la capture de la carte",

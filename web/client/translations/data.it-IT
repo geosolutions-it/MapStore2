@@ -617,7 +617,7 @@
           "errorDelete": "Si è verificato un errore rimuovendo questo utente:",
           "confirmDeleteGroup": "Sei sicuro di voler cancellare questo gruppo?"
         },
-        "share":{
+        "share": {
             "title": "Condividi",
             "titlePanel": "Condividi la mappa",
             "socialIntro": "Sul tuo social preferito",
@@ -629,8 +629,9 @@
             "forceDrawer": "Mostra l'indice dei livelli",
             "apiLinkTitle": "Usando le API",
             "QRCodeLinkTitle": "Usando il QR Code",
-            "msgCopiedUrl":"Copiato",
-            "msgToCopyUrl":"Clicca per copiare"
+            "msgCopiedUrl": "Copiato",
+            "msgToCopyUrl": "Clicca per copiare",
+            "sharedTitle": "Guarda la mia nuova mappa: "
         },
         "snapshot": {
             "title": "Istantanea",

@@ -621,15 +621,16 @@
             "titlePanel": "Share the map",
             "socialIntro": "In your favourite social network",
             "directLinkTitle": "Via a direct link",
-            "embeddedLinkTitle": "Via the embedded code",
-            "forceDrawer": "Show TOC",
-            "apiLinkTitle": "Using APIs",
             "social": "Social",
             "direct": "Link",
             "code": "Embed",
+            "embeddedLinkTitle": "Via the embedded code",
+            "forceDrawer": "Show TOC",
+            "apiLinkTitle": "Using APIs",
             "QRCodeLinkTitle": "qr code",
-            "msgCopiedUrl":"Copied",
-            "msgToCopyUrl":"Click to copy"
+            "msgCopiedUrl": "Copied",
+            "msgToCopyUrl": "Click to copy",
+            "sharedTitle": "Check out my new map: "
         },
         "snapshot": {
             "title": "Snapshot Preview",

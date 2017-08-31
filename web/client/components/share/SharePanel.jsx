@@ -40,6 +40,7 @@ class SharePanel extends React.Component {
     static propTypes = {
         isVisible: PropTypes.bool,
         title: PropTypes.node,
+        sharedTitle: PropTypes.string,
         shareUrl: PropTypes.string,
         shareUrlRegex: PropTypes.string,
         shareUrlReplaceString: PropTypes.string,
@@ -79,7 +80,7 @@ class SharePanel extends React.Component {
             shareEmbeddedUrl = this.generateUrl(shareEmbeddedUrl, this.props.shareUrlRegex, this.props.shareUrlReplaceString);
         }
         const shareApiUrl = this.props.shareApiUrl || this.props.shareUrl || location.href;
-        const social = <ShareSocials shareUrl={shareUrl} getCount={this.props.getCount}/>;
+        const social = <ShareSocials sharedTitle={this.props.sharedTitle} shareUrl={shareUrl} getCount={this.props.getCount}/>;
         const direct = <div><ShareLink shareUrl={shareUrl}/><ShareQRCode shareUrl={shareUrl}/></div>;
         const code = (<div><ShareEmbed shareUrl={shareEmbeddedUrl} {...this.props.embedOptions} />
         {this.props.showAPI ? <ShareApi shareUrl={shareApiUrl} shareConfigUrl={this.props.shareConfigUrl}/> : null}</div>);
