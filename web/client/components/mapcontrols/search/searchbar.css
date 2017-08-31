@@ -13,6 +13,13 @@
     box-shadow: 2px 2px 4px #A7A7A7;
     border-radius: 4px;
 }
+
+/* hide the clearing x in IE 11 and Edge */
+.MapSearchBar input::-ms-clear,
+.MapSearchBar input::-ms-reveal {
+    display: none;
+}
+
 /*.searchclear {
     top:0;
     bottom:0;
