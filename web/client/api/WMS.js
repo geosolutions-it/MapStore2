@@ -59,6 +59,7 @@ const searchAndPaginate = (json, startPosition, maxRecords, text) => {
 
 const Api = {
     flatLayers,
+    parseUrl,
     getDimensions: function(layer) {
         return castArray(layer.Dimension || layer.dimension || []).map((dim, index) => {
             const extent = (layer.Extent && castArray(layer.Extent)[index] || layer.extent && castArray(layer.extent)[index]);

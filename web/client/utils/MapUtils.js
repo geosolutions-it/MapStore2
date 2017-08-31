@@ -285,7 +285,7 @@ function transformExtent(projection, center, width, height) {
     return {width, height};
 }
 
-function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSearchConfig) {
+function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSearchConfig, catalogServices) {
 
     const map = {
         center: currentMap.center,
@@ -308,7 +308,8 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
     return {
         version: 2,
         // layers are defined inside the map object
-        map: assign({}, map, {layers, groups, text_serch_config: textSearchConfig})
+        map: assign({}, map, {layers, groups, text_serch_config: textSearchConfig}),
+        catalogServices
     };
 }
 

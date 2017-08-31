@@ -1,5 +1,6 @@
 .record-buttons .record-button {
     margin-right: 6px;
+    margin-bottom: 5px;
 }
 
 .record-buttons .links-popover {
@@ -19,4 +20,24 @@
 
 .link-button {
     min-width: 70px;
+}
+
+.record-item .truncateText{
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.record-item .preview{
+    float: left;
+    width: 150px;
+    max-height: 150px;
+    margin-right: 20px;
+    padding-top: 5px;
+    padding-left: 5px;
+}
+
+@media(max-width:500px) {
+    .record-item .preview {
+        display: none;
+    }
 }

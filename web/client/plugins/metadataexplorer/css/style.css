@@ -1,22 +1,14 @@
 div.record-grid {
-    max-height: 400px;
     overflow-x: hidden;
-    overflow-y: auto;
-}
-
-div.record-grid:after {
-    content:"";
-    position: absolute;
-    bottom:110px;
-    left:0;
-    height:40px;
-    width:100%;
-    background: -webkit-linear-gradient(#fff, #fff);
-    background: linear-gradient(rgba(0,0,0,0), #fff);
+    padding-left: 0;
+    padding-right: 0;
 }
 
 div.record-grid .record-item{
     height: auto;
+}
+div.record-grid .record-item .panel-body{
+    padding: 0;
 }
 
 div.record-grid .record-item .record-item-description {
@@ -28,23 +20,32 @@ div.record-grid .record-item .record-item-description {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    height: 115px;
-}
-
-div.record-grid .record-item .record-buttons {
-    position: absolute;
-    bottom: 30px;
-    right: 30px;
+    height: 17px;
 }
 
 #mapstore-catalog-panel button.search-button {
     margin-bottom: 10px;
 }
-.catalog_window .modal-dialog {
-    width: 98%;
-    margin-top: 10px;
-}
 
 #mapstore-catalog-panel .record-item {
     min-height: 150px;
 }
+
+/*
+!important is needed because the library we used
+use inline style which cannot be overridden unless
+we use !important*/
+@media (max-width: 500px) {
+    div .catalog-sidebar.nav-menu {
+        width: 100% !important
+    }
+}
+
+#mapstore-metadata-explorer{
+    margin-bottom: 0
+}
+/*
+
+.catalog-root {
+    z-index: 1
+}*/

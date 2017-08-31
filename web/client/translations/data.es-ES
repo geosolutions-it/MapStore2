@@ -453,7 +453,7 @@
             "zoomIn": "Esta es la ayuda para ZoomIn",
             "zoomOut": "Esta es la ayuda para ZoomOut",
             "searchBar": "Escriba la dirección de un lugar para encontrar. pe:  '1st avenue, new york'. A si mismo, puede introduccir las coordenadas en este formato: 43.87,10.20",
-            "metadataExplorer": "Esta es la ayuda para  MetadataExplorer",
+            "metadataexplorer": "Esta es la ayuda para  MetadataExplorer",
             "settingsPanel": "Esta es la ayuda para SettingsPanel",
             "gohome": "Esta es la ayuda Home",
             "measureComponent": " MeasureComponent",
@@ -660,6 +660,9 @@
         },
         "catalog": {
             "title": "Catálogo",
+            "autoload": "Buscar en la selección de servicios",
+            "clearValueText": "Borrar selección",
+            "noResultsText": "No se encontraron resultados",
             "tooltip": "Buscar en el catálogo",
             "addToMap": "Añadir al mapa",
             "getWMSLink": "Enlace WMS",
@@ -671,12 +674,27 @@
             "share": "Compartir",
             "copyToClipboard": "Copiar en el portapapeles",
             "copied": "!Copiado!",
-            "catalogUrlPlaceholder": "Introduzca la URL del catalogo ...",
             "textSearchPlaceholder": "texto a buscar...",
             "search": "Buscar",
+            "delete": "Borrar",
             "reset": "Reset",
             "options": "Opciones",
-            "srs_not_allowed": "Este servicio no soporta el sistema de coordernadas geográficas del mapa"
+            "srs_not_allowed": "Este servicio no soporta el sistema de coordernadas geográficas del mapa",
+            "add": "Añadir",
+            "servicePlaceholder": "escribe un servicio",
+            "service": "Servicio",
+            "url": "Url",
+            "urlPlaceholder": "escribe la URL",
+            "type": "Tipo",
+            "serviceTitle": "Título",
+            "serviceTitlePlaceholder": "escribe un título",
+            "notification": {
+                "warningAddCatalogService": "Insertar una url y un título válidos",
+                "addCatalogService": "Servicio añadido correctamente",
+                "duplicatedServiceTitle": "Ya existe un servicio con ese título, Por favor, cambie el título",
+                "serviceDeletedCorrectly": "El servicio se ha eliminado correctamente",
+                "errorServiceUrl": "Servicio no disponible. Por favor, compruebe la url proporcionada"
+            }
         },
         "uploader": {
             "filename": "Nombre del fichero",

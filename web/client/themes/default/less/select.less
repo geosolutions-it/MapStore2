@@ -36,10 +36,11 @@
 .Select-placeholder {
     background-color: @ms2-color-background;
     border: 1px solid @ms2-color-shade-lighter;
-    color: @ms2-color-text-placeholder !important;
+    color: @text-color !important;
 }
 
 .Select-control {
+    color: @text-color !important;
     background-color: @ms2-color-background !important;
     border: 1px solid @ms2-color-shade-lighter !important;
 }
@@ -54,13 +55,32 @@
 }
 
 .Select-option {
-    background-color: darken(@ms2-color-background, 5%) !important;
-    color: @ms2-color-text-placeholder !important;
-
+    color: @text-color !important;
+    background-color: @ms2-color-background !important;
+}
+.Select-option {
+    &:focus {
+        color: @text-color !important;
+        background-color: @ms2-color-background !important;
+    }
 	&:hover {
 	    background-color: @ms2-color-primary !important;
 	    color: @ms2-color-background !important;
 	}
+}/*
+.Select-option.is-selected{
+    color: @ms2-color-text-primary !important;
+    background-color: darken(@ms2-color-primary, 10%) !important;
+}*/
+.Select-option.is-focused{
+    background-color: @ms2-color-primary !important;
+    color: @ms2-color-background !important;
+}
+
+.Select-value-label{
+    color: @text-color !important;
+    background-color: @ms2-color-background !important;
+
 }
 
 .Select--multi {
@@ -69,6 +89,7 @@
         border: 1px solid @text-color !important;
         color: @text-color !important;
     }
+
 
     .Select-value-icon {
         border-right: 1px solid @text-color !important;
