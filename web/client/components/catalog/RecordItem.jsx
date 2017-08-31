@@ -10,15 +10,12 @@ const PropTypes = require('prop-types');
 const SharingLinks = require('./SharingLinks');
 const Message = require('../I18N/Message');
 const {Image, Panel, Button, Glyphicon} = require('react-bootstrap');
-const {head, memoize, isObject, truncate} = require('lodash');
+const {head, memoize, isObject} = require('lodash');
 const assign = require('object-assign');
 
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 
 const defaultThumb = require('./img/default.jpg');
-const truncateOptions = {
-    length: 34
-};
 
 const buildSRSMap = memoize((srs) => {
     return srs.reduce((previous, current) => {
@@ -54,7 +51,6 @@ class RecordItem extends React.Component {
         onLayerAdd: PropTypes.func,
         onZoomToExtent: PropTypes.func,
         record: PropTypes.object,
-        truncateStyle: PropTypes.object,
         showGetCapLinks: PropTypes.bool,
         zoomToLayer: PropTypes.bool
     };
@@ -70,8 +66,7 @@ class RecordItem extends React.Component {
         onZoomToExtent: () => {},
         style: {},
         showGetCapLinks: false,
-        zoomToLayer: true,
-        truncateStyle: {textOverflow: "ellipsis", overflow: "hidden"}
+        zoomToLayer: true
     };
 
     state = {};
@@ -123,12 +118,7 @@ class RecordItem extends React.Component {
     renderThumb = (thumbURL, record) => {
         let thumbSrc = thumbURL || defaultThumb;
 
-        return (<Image src={thumbSrc} alt={record && this.getTitle(record.title)} style={{
-            "float": "left",
-            width: "150px",
-            maxHeight: "150px",
-            marginRight: "20px"
-        }}/>);
+        return (<Image className="preview" src={thumbSrc} alt={record && this.getTitle(record.title)}/>);
 
     };
 
@@ -149,7 +139,7 @@ class RecordItem extends React.Component {
                 <Button
                     key="wms-button"
                     className="record-button"
-                    bsStyle="success"
+                    bsStyle="primary"
                     bsSize={this.props.buttonSize}
                     onClick={() => { this.addLayer(wms); }}
                     key="addlayer">
@@ -162,7 +152,7 @@ class RecordItem extends React.Component {
                 <Button
                     key="wmts-button"
                     className="record-button"
-                    bsStyle="success"
+                    bsStyle="primary"
                     bsSize={this.props.buttonSize}
                     onClick={() => { this.addwmtsLayer(wmts); }}
                     key="addwmtsLayer">
@@ -191,9 +181,9 @@ class RecordItem extends React.Component {
             return null;
         }
         if (typeof record.description === "string") {
-            return truncate(record.description, truncateOptions);
+            return record.description;
         } else if (Array.isArray(record.description)) {
-            return truncate(record.description.join(", "), truncateOptions);
+            return record.description.join(", ");
         }
     };
 
@@ -203,9 +193,9 @@ class RecordItem extends React.Component {
             <Panel className="record-item" style={{padding: 0}}>
                 {this.renderThumb(record && record.thumbnail, record)}
                 <div>
-                    <h4 style={{wordBreak: "break-all", ...this.props.truncateStyle}}>{record && truncate(this.getTitle(record.title), {length: 27})}</h4>
-                    <h4 style={{...this.props.truncateStyle}}><small>{record && truncate(record.identifier, {length: 38})}</small></h4>
-                    <p style={{...this.props.truncateStyle}} className="record-item-description">{this.renderDescription(record)}</p>
+                    <h4 className="truncateText">{record && this.getTitle(record.title)}</h4>
+                    <h4 className="truncateText"><small>{record && record.identifier}</small></h4>
+                    <p className="truncateText record-item-description">{this.renderDescription(record)}</p>
                 </div>
                   {this.renderButtons(record)}
             </Panel>

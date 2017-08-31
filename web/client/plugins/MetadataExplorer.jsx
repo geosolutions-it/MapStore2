@@ -53,6 +53,7 @@ const catalogSelector = createSelector([
 const catalogClose = () => {
     return (dispatch) => {
         dispatch(setControlProperty('metadataexplorer', "enabled", false));
+        dispatch(changeCatalogMode("view"));
         dispatch(resetCatalog());
     };
 };
@@ -106,7 +107,7 @@ class MetadataExplorerComponent extends React.Component {
         zoomToLayer: true,
 
         // side panel properties
-        width: "500px",
+        width: 660,
         dockProps: {
             dimMode: "none",
             size: 0.30,
@@ -122,7 +123,7 @@ class MetadataExplorerComponent extends React.Component {
         return this.props.active ? (
             <ContainerDimensions>
             { ({ width }) =>
-                <Dock {...this.props.dockProps} isVisible={this.props.active} size={500 / width > 1 ? 1 : 500 / width} >
+                <Dock {...this.props.dockProps} isVisible={this.props.active} size={this.props.width / width > 1 ? 1 : this.props.width / width} >
                     <Panel id={this.props.id} header={panelHeader}
                         style={this.props.panelStyle} className={this.props.panelClassName}>
                             {panel}
