@@ -38,7 +38,7 @@ class BackgroundSelector extends React.Component {
 
     static defaultProps = {
         start: 0,
-        bottom: 0,
+        bottom: 35,
         left: 0,
         enabled: false,
         layers: [],

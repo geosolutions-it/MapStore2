@@ -100,9 +100,17 @@ select {
 
 #mapstore-scalebox {
     select {
-        background-color: darken(@ms2-color-background, 10%);
+        margin-top: 2px;
+        background-color: darken(@ms2-color-background, 20%);
         color: @ms2-color-text;
         border: none;
+    }
+
+    label {
+        height: 30px;
+        font-weight: normal;
+        font-size: @font-size-small;
+        margin-right: 5px;
     }
 
     option {
