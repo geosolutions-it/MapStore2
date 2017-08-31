@@ -14,6 +14,7 @@ const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 const MousePositionLabelDMS = require('./MousePositionLabelDMS');
 const MousePositionLabelYX = require('./MousePositionLabelYX');
 const CRSSelector = require('./CRSSelector');
+const Message = require('../../I18N/Message');
 
 require('./mousePosition.css');
 
@@ -34,7 +35,9 @@ class MousePosition extends React.Component {
         btnSize: PropTypes.oneOf(["large", "medium", "small", "xsmall"]),
         onCopy: PropTypes.func,
         onCRSChange: PropTypes.func,
-        toggle: PropTypes.object
+        toggle: PropTypes.object,
+        showLabels: PropTypes.bool,
+        showToggle: PropTypes.bool
     };
 
     static defaultProps = {
@@ -53,7 +56,9 @@ class MousePosition extends React.Component {
         btnSize: "xsmall",
         onCopy: () => {},
         onCRSChange: function() {},
-        toggle: <div></div>
+        toggle: <div></div>,
+        showLabels: false,
+        showToggle: false
     };
 
     getUnits = (crs) => {
@@ -85,7 +90,8 @@ class MousePosition extends React.Component {
             const position = this.getPosition();
             return (
                     <div id={this.props.id} style={this.props.style}>
-                        <span className="mapstore-mouse-coordinates"><label>{'Coordinates: '}</label>
+                        <span className="mapstore-mouse-coordinates">
+                            {this.props.showLabels ? <label><Message msgId="mouseCoordinates"/></label> : null}
                             {Template ? <Template position={position} /> :
                                 <h5>
                                     <Label bsSize="lg" bsStyle="info">{'...'}<span/></Label>
@@ -100,12 +106,12 @@ class MousePosition extends React.Component {
                             </CopyToClipboard>
                         }
                         {this.props.showCRS ? this.props.crsTemplate(this.props.crs) : null}
-                        {this.props.editCRS ? <CRSSelector label={'CRS: '} crs={this.props.crs} enabled onCRSChange={this.props.onCRSChange}/> : null}
-                        {this.props.toggle}
+                        {this.props.editCRS ? <CRSSelector label={this.props.showLabels ? <label><Message msgId="mousePositionCRS"/></label> : null} crs={this.props.crs} enabled onCRSChange={this.props.onCRSChange}/> : null}
+                        {this.props.showToggle ? this.props.toggle : null}
                     </div>
             );
         }
-        return <div id={this.props.id} style={this.props.style}>{this.props.toggle}</div>;
+        return this.props.showToggle ? <div id={this.props.id} style={this.props.style}>{this.props.toggle}</div> : null;
     }
 }
 

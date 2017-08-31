@@ -20,7 +20,7 @@ class ScaleBox extends React.Component {
         currentZoomLvl: PropTypes.number,
         onChange: PropTypes.func,
         readOnly: PropTypes.bool,
-        label: PropTypes.string,
+        label: PropTypes.oneOfType([PropTypes.func, PropTypes.string, PropTypes.object]),
         template: PropTypes.func,
         useRawInput: PropTypes.bool
     };
