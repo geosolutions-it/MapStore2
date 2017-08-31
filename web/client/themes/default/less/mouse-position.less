@@ -1,30 +1,85 @@
 
 #mapstore-mouseposition {
 
+    position: static !important;
+
     span {
         font-size: @font-size-small;
         color: @ms2-color-text;
         font-weight: normal;
     }
 
-    h5 {
-        margin: 0 !important;
-        width: 217px;
+
+    label {
         height: 25px;
-        float: left;
-        background-color: darken(@ms2-color-background, 10%);
-        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-        padding: 4px;
-        text-align: center;
+        font-weight: normal;
+        font-size: @font-size-small;
+        margin-right: 5px;
     }
 
+    .mapstore-mouse-coordinates {
+        float: left;
+
+        & > span {
+            display: inline-block;
+        }
+
+        h5 {
+            display: inline-block;
+            margin: 0 !important;
+            width: 250px;
+            height: 25px;
+            background-color: darken(@ms2-color-background, 20%);
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            padding: 4px;
+            text-align: center;
+        }
+    }
+
+    button {
+        float: left;
+        height: 25px;
+        width: 25px !important;
+        padding: 0;
+        margin-left: 5px;
+        margin-right: 5px;
+        span {
+            color: @ms2-color-text-primary;
+        }
+    }
+
+    .form-group {
+		height: 25px;
+		padding: 0 0 0 4px;
+        float: left !important;
+        border: none;
+        .control-label {
+            display: inline-block !important;
+        }
+
+        select {
+            display: inline-block;
+            background-color: darken(@ms2-color-background, 20%);
+            color: @ms2-color-text;
+            border: none;
+            margin-bottom: 0;
+            width: 95px !important;
+            height: 25px;
+        }
+
+        option {
+            background-color: @ms2-color-background;
+            color: @ms2-color-text;
+        }
+	}
+
     .mouseposition-crs {
-        width: 80px;
+        width: 95px;
         height: 25px;
         font-weight: normal !important;
         display: block;
-        float: left;
+
         background-color: darken(@ms2-color-background, 10%);
         color: @ms2-color-text;
         -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);

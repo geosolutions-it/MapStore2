@@ -20,7 +20,7 @@ html, body, #container, .fill {
     position:absolute;
     width: 100%;
     top: 0;
-    bottom: 32px;
+    bottom: 0;
     height: auto;
     overflow: hidden;
 }
@@ -75,7 +75,7 @@ html, body, #container, .fill {
 
 #mapstore-scalebox-container {
     bottom: -36px !important;
-    right: 310px !important;
+    right: 323px !important;
 }
 
 #mapstore-mouseposition {

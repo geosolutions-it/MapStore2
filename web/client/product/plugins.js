@@ -74,8 +74,8 @@ module.exports = {
         CookiePlugin: require('../plugins/Cookie'),
         NotificationsPlugin: require('../plugins/Notifications'),
         FeatureEditorPlugin: require('../plugins/FeatureEditor'),
-        AutoMapUpdatePlugin: require('../plugins/AutoMapUpdate')
-
+        AutoMapUpdatePlugin: require('../plugins/AutoMapUpdate'),
+        MapFooterPlugin: require('../plugins/MapFooter')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

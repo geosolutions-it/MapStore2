@@ -8,7 +8,7 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 const proj4js = require('proj4');
-const {Glyphicon, Button} = require('react-bootstrap');
+const {Glyphicon, Button, Label} = require('react-bootstrap');
 const CopyToClipboard = require('react-copy-to-clipboard');
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 const MousePositionLabelDMS = require('./MousePositionLabelDMS');
@@ -33,7 +33,8 @@ class MousePosition extends React.Component {
         glyphicon: PropTypes.string,
         btnSize: PropTypes.oneOf(["large", "medium", "small", "xsmall"]),
         onCopy: PropTypes.func,
-        onCRSChange: PropTypes.func
+        onCRSChange: PropTypes.func,
+        toggle: PropTypes.object
     };
 
     static defaultProps = {
@@ -51,7 +52,8 @@ class MousePosition extends React.Component {
         glyphicon: "paste",
         btnSize: "xsmall",
         onCopy: () => {},
-        onCRSChange: function() {}
+        onCRSChange: function() {},
+        toggle: <div></div>
     };
 
     getUnits = (crs) => {
@@ -79,11 +81,17 @@ class MousePosition extends React.Component {
 
     render() {
         let Template = this.props.mousePosition ? this.getTemplateComponent() : null;
-        if (this.props.enabled && Template) {
+        if (this.props.enabled) {
             const position = this.getPosition();
             return (
                     <div id={this.props.id} style={this.props.style}>
-                        <Template position={position} />
+                        <span className="mapstore-mouse-coordinates"><label>{'Coordinates: '}</label>
+                            {Template ? <Template position={position} /> :
+                                <h5>
+                                    <Label bsSize="lg" bsStyle="info">{'...'}<span/></Label>
+                                </h5>
+                            }
+                        </span>
                         {this.props.copyToClipboardEnabled &&
                             <CopyToClipboard text={JSON.stringify(position)} onCopy={this.props.onCopy}>
                                 <Button bsSize={this.props.btnSize}>
@@ -92,11 +100,12 @@ class MousePosition extends React.Component {
                             </CopyToClipboard>
                         }
                         {this.props.showCRS ? this.props.crsTemplate(this.props.crs) : null}
-                        {this.props.editCRS ? <CRSSelector crs={this.props.crs} enabled onCRSChange={this.props.onCRSChange}/> : null}
+                        {this.props.editCRS ? <CRSSelector label={'CRS: '} crs={this.props.crs} enabled onCRSChange={this.props.onCRSChange}/> : null}
+                        {this.props.toggle}
                     </div>
             );
         }
-        return null;
+        return <div id={this.props.id} style={this.props.style}>{this.props.toggle}</div>;
     }
 }
 

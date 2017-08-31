@@ -29,7 +29,7 @@
     height: initial;
     line-height: 1em;
     text-align: left;
-    background-color: @ms2-color-background;
+    background-color: transparent;
     color: @ms2-color-text;
     max-width: 50%;
     max-height: 30px;
@@ -42,14 +42,17 @@ div.ol-scale-line.ol-unselectable {
 	line-height: 1.0;
 	border-radius: 0;
 	bottom: 8px;
-	left: auto;
-	right: 465px;
+	right: auto;
 	padding: 2px 5px 1px;
 	white-space: nowrap;
 	overflow: hidden;
 	-moz-box-sizing: content-box;
 	box-sizing: content-box;
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    left: 50%;
+    -ms-transform: translate(-50%, 0);
+    -webkit-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
 }
 
 .ol-attribution ul {
@@ -80,6 +83,6 @@ div.ol-scale-line-inner {
 }
 
 .ol-scale-line {
-	background-color: @ms2-color-background !important;
+	background-color: transparent !important;
 	color: @ms2-color-text !important;
 }
