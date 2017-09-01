@@ -52,7 +52,8 @@ describe('MousePosition', () => {
         expect(cmp).toExist();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toNotExist();
+        expect(cmpDom).toExist();
+        expect(cmpDom.innerText.indexOf('...') !== -1).toBe(true);
     });
 
     it('checks default templates degrees', () => {
