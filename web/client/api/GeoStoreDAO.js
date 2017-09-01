@@ -10,7 +10,7 @@ const _ = require('lodash');
 const assign = require('object-assign');
 const uuidv1 = require('uuid/v1');
 const ConfigUtils = require('../utils/ConfigUtils');
-const jsesc = require('jsesc');
+const {utfEncode} = require('../utils/EncodeUtils');
 
 let parseOptions = (opts) => opts;
 
@@ -30,7 +30,7 @@ let parseUserGroups = (groupsObj) => {
 };
 
 const encodeContent = function(content) {
-    return jsesc(content, {json: true, wrap: false, quotes: 'backtick'});
+    return utfEncode(content);
 };
 
 /**
