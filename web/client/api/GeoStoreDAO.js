@@ -10,7 +10,7 @@ const _ = require('lodash');
 const assign = require('object-assign');
 const uuidv1 = require('uuid/v1');
 const ConfigUtils = require('../utils/ConfigUtils');
-const jsesc = require('jsesc');
+const {utfEncode} = require('../utils/EncodeUtils');
 
 let parseOptions = (opts) => opts;
 
@@ -27,6 +27,10 @@ let parseUserGroups = (groupsObj) => {
         return [];
     }
     return groupsObj.User.groups.group.filter(obj => !!obj.id).map((obj) => _.pick(obj, ["id", "groupName", "description"]));
+};
+
+const encodeContent = function(content) {
+    return utfEncode(content);
 };
 
 /**
@@ -118,10 +122,11 @@ var Api = {
                 }
             }, options)));
     },
+    encodeContent,
     putResource: function(resourceId, content, options) {
         return axios.put(
             "data/" + resourceId,
-            jsesc(content, {json: true, wrap: false, quotes: 'backtick'}),
+            encodeContent(content),
             this.addBaseUrl(_.merge({
                 headers: {
                     'Content-Type': "text/plain;charset=utf-8"
