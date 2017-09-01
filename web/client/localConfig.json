@@ -136,18 +136,18 @@
               "mapOptions": {
                 "openlayers": {
                   "attribution": {
-                    "container": "#container"
+                    "container": "#mapstore-map-footer-container"
                   }
                 },
                 "leaflet": {
                   "attribution": {
-                    "container": "#container"
+                    "container": "#mapstore-map-footer-container"
                   }
                 }
               },
               "toolsOptions": {
                 "scalebar": {
-                  "container" : "#container"
+                  "container" : "#mapstore-map-footer-container"
                 }
               }
             }

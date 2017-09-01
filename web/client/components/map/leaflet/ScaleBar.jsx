@@ -45,8 +45,12 @@ class ScaleBar extends React.Component {
     }
 
     componentWillUnmount() {
-        if (this.props.container) {
-            document.querySelector(this.props.container).removeChild(this.scalebar.getContainer());
+        if (this.props.container && this.scalebar.getContainer()) {
+            try {
+                document.querySelector(this.props.container).removeChild(this.scalebar.getContainer());
+            } catch(e) {
+                // nothing to do
+            }
         }
     }
 

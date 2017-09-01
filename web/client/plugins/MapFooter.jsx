@@ -27,6 +27,10 @@ class MapFooter extends React.Component {
         mapType: "leaflet"
     };
 
+    shouldComponentUpdate() {
+        return false;
+    }
+
     getPanels = () => {
         return this.props.items.filter((item) => item.tools).reduce((previous, current) => {
             return previous.concat(
