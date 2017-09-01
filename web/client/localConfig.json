@@ -235,7 +235,9 @@
             }, {
               "name": "MousePosition",
               "cfg": {
-                "editCRS": true
+                "editCRS": true,
+                "showLabels": true,
+                "showToggle": true
               }
             }, {
                 "name": "Search",
