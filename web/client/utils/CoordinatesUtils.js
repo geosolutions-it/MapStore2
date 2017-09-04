@@ -12,6 +12,7 @@ const assign = require('object-assign');
 const {isArray, flattenDeep, chunk, cloneDeep} = require('lodash');
 const lineIntersect = require('@turf/line-intersect');
 const polygonToLinestring = require('@turf/polygon-to-linestring');
+
 // Checks if `list` looks like a `[x, y]`.
 function isXY(list) {
     return list.length >= 2 &&
@@ -247,6 +248,15 @@ const CoordinatesUtils = {
     isAllowedSRS(srs, allowedSRS) {
         return allowedSRS[CoordinatesUtils.getCompatibleSRS(srs, allowedSRS)];
     },
+    addProjections: function(code, extent, worldExtent) {
+        const ol = window.ol;
+        ol.proj.addProjection(new ol.proj.Projection({
+            code,
+            extent,
+            worldExtent
+            })
+        );
+    },
     getAvailableCRS: function() {
         let crsList = {};
         for (let a in Proj4js.defs) {
@@ -255,6 +265,12 @@ const CoordinatesUtils = {
             }
         }
         return crsList;
+    },
+    filterCRSList: (availableCRS, filterAllowedCRS, additionalCRS ) => {
+        let crs = Object.keys(availableCRS).reduce( (p, c) => {
+            return assign({}, filterAllowedCRS.indexOf(c) === -1 ? p : {...p, [c]: availableCRS[c]});
+        }, {});
+        return assign({}, crs, additionalCRS);
     },
     calculateAzimuth: function(p1, p2, pj) {
         var p1proj = CoordinatesUtils.reproject(p1, pj, 'EPSG:4326');

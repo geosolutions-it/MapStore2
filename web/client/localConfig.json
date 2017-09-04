@@ -155,7 +155,12 @@
             }, {
                 "name": "MousePosition",
                 "cfg": {
-                    "id": "mapstore-mouseposition-mobile"
+                    "id": "mapstore-mouseposition-mobile",
+                    "editCRS": true,
+                    "showLabels": true,
+                    "showToggle": true,
+                    "filterAllowedCRS": ["EPSG:4326", "EPSG:3857", "EPSG:4629", "EPSG:102113"],
+                    "additionalCRS": {}
                 }
             }, {
                 "name": "Search",
@@ -300,7 +305,9 @@
               "cfg": {
                 "editCRS": true,
                 "showLabels": true,
-                "showToggle": true
+                "showToggle": true,
+                "filterAllowedCRS": ["EPSG:4326", "EPSG:3857", "EPSG:4629", "EPSG:102113"],
+                "additionalCRS": {}
               }
             }, {
                 "name": "Search",
