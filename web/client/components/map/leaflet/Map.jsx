@@ -53,7 +53,7 @@ class LeafletMap extends React.Component {
         zoomControl: true,
         mapOptions: {
             zoomAnimation: true,
-            attributionControl: true
+            attributionControl: false
         },
         projection: "EPSG:3857",
         onLayerLoading: () => {},
@@ -97,6 +97,15 @@ class LeafletMap extends React.Component {
 
         this.map = map;
 
+
+        this.attribution = L.control.attribution();
+        this.attribution.addTo(this.map);
+        if (this.props.mapOptions.attribution && this.props.mapOptions.attribution.container) {
+            document.querySelector(this.props.mapOptions.attribution.container).appendChild(this.attribution.getContainer());
+            if (document.querySelector('.leaflet-control-container .leaflet-control-attribution')) {
+                document.querySelector('.leaflet-control-container .leaflet-control-attribution').parentNode.removeChild(document.querySelector('.leaflet-control-container .leaflet-control-attribution'));
+            }
+        }
 
         this.map.on('moveend', this.updateMapInfoState);
         // this uses the hook defined in ./SingleClick.js for leaflet 0.7.*
@@ -197,6 +206,9 @@ class LeafletMap extends React.Component {
     }
 
     componentWillUnmount() {
+        if (this.props.mapOptions.attribution && this.props.mapOptions.attribution.container) {
+            document.querySelector(this.props.mapOptions.attribution.container).removeChild(this.attribution.getContainer());
+        }
         this.map.remove();
     }
 

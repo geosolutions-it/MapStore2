@@ -33,4 +33,14 @@ describe('leaflet ScaleBar component', () => {
         const scaleBars = domMap.getElementsByClassName('leaflet-control-scale-line');
         expect(scaleBars.length).toBe(1);
     });
+
+    it('create ScaleBar with container', () => {
+        const sb = ReactDOM.render(<ScaleBar map={map} container="#container"/>, document.getElementById("container"));
+        expect(sb).toExist();
+        const domMap = map.getContainer();
+        let scaleBars = domMap.getElementsByClassName('leaflet-control-scale-line');
+        expect(scaleBars.length).toBe(0);
+        scaleBars = document.body.getElementsByClassName('leaflet-control-scale-line');
+        expect(scaleBars.length).toBe(1);
+    });
 });

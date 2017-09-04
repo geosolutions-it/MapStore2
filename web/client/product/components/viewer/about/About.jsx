@@ -6,16 +6,22 @@ var PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var InfoButton = require('../../../../components/buttons/InfoButton');
-var AboutContent = require('./AboutContent');
-var I18N = require('../../../../components/I18N/I18N');
-var aboutImg = require('../../../assets/img/Blank.gif');
+const React = require('react');
+const InfoButton = require('../../../../components/buttons/InfoButton');
+const Dialog = require('../../../../components/misc/Dialog');
+const AboutContent = require('./AboutContent');
+const I18N = require('../../../../components/I18N/I18N');
+const aboutImg = require('../../../assets/img/Blank.gif');
+const assign = require('object-assign');
+const {Glyphicon} = require('react-bootstrap');
 
 class About extends React.Component {
     static propTypes = {
         style: PropTypes.object,
-        modalConfig: PropTypes.object
+        modalConfig: PropTypes.object,
+        withButton: PropTypes.bool,
+        enabled: PropTypes.bool,
+        onClose: PropTypes.func
     };
 
     static defaultProps = {
@@ -28,19 +34,25 @@ class About extends React.Component {
         },
         modalConfig: {
             closeGlyph: "1-close"
-        }
+        },
+        withButton: true,
+        enabled: false,
+        onClose: () => {}
     };
 
     render() {
-        return (<InfoButton
+        return this.props.withButton ? (<InfoButton
             {...this.props.modalConfig}
             image={aboutImg}
             title={<I18N.Message msgId="about_title"/>}
             btnType="image"
             className="map-logo"
             body={
-                <AboutContent />
-            }/>);
+                <AboutContent/>
+            }/>) : (<Dialog id="mapstore-about" style={assign({}, {display: this.props.enabled ? "block" : "none"})}>
+                <span role="header"><span className="about-panel-title"><I18N.Message msgId="about_title"/></span><button onClick={this.props.onClose} className="about-panel-close close">{this.props.modalConfig.closeGlyph ? <Glyphicon glyph={this.props.modalConfig.closeGlyph}/> : <span>×</span>}</button></span>
+                <div role="body"><AboutContent/></div>
+            </Dialog>);
     }
 }
 

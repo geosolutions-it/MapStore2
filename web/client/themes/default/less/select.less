@@ -121,13 +121,27 @@ select {
 
 #mapstore-scalebox {
     select {
-        background-color: #fff;
-        color: #222;
+        margin-top: 2px;
+        background-color: darken(@ms2-color-background, 20%);
+        color: @ms2-color-text;
         border: none;
     }
 
-    option {
-        background-color: #fff;
-        color: #222;
+    label {
+        height: 30px;
+        font-weight: normal;
+        font-size: @font-size-small;
+        margin-right: 5px;
     }
+
+    option {
+        background-color: @ms2-color-background;
+        color: @ms2-color-text;
+    }
+
+	.form-control {
+		height: 25px;
+		padding: 0 0 0 4px;
+		margin-bottom: 17px;
+	}
 }

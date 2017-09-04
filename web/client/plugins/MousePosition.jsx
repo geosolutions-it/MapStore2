@@ -44,43 +44,40 @@ const selector = createSelector([
     crs: mousePosition.crs || map && map.projection || 'EPSG:3857'
 }));
 
-const Message = require('./locale/Message');
-
-const CRSSelector = connect((state) => ({
-    crs: state.mousePosition && state.mousePosition.crs || state.map && state.map.present && state.map.present.projection || 'EPSG:3857'
-}), {
-    onCRSChange: changeMousePositionCrs
-})(require('../components/mapcontrols/mouseposition/CRSSelector'));
-
 const MousePositionButton = connect((state) => ({
     pressed: state.mousePosition && state.mousePosition.enabled,
     active: state.mousePosition && state.mousePosition.enabled,
-    pressedStyle: "default",
+    pressedStyle: "success active",
     defaultStyle: "primary",
+    glyphicon: "mouse",
     btnConfig: {
         bsSize: "small"}
 }), {
     onClick: changeMousePositionState
 })(require('../components/buttons/ToggleButton'));
 
-const MousePositionPlugin = connect(selector)(require('../components/mapcontrols/mouseposition/MousePosition'));
+const MousePositionComponent = require('../components/mapcontrols/mouseposition/MousePosition');
+
+class MousePosition extends React.Component {
+    render() {
+        return (
+            <MousePositionComponent toggle={<MousePositionButton/>} {...this.props}/>
+        );
+    }
+}
+
+
+const MousePositionPlugin = connect(selector, {
+    onCRSChange: changeMousePositionCrs
+})(MousePosition);
 
 module.exports = {
     MousePositionPlugin: assign(MousePositionPlugin, {
-        Settings: {
-            tool: <div id="mapstore-mousepositionsettings" key="mousepositionsettings">
-            <CRSSelector
-                key="crsSelector"
-                enabled
-                label={<Message msgId="mousePositionCoordinates" />}
-            />
-            <MousePositionButton
-                key="mousepositionbutton"
-                isButton
-                text={<Message msgId="showMousePositionCoordinates" />}
-            />
-            </div>,
-            position: 2
+        MapFooter: {
+            name: 'mousePosition',
+            position: 2,
+            tool: true,
+            priority: 1
         }
     }),
     reducers: {mousePosition: require('../reducers/mousePosition')}

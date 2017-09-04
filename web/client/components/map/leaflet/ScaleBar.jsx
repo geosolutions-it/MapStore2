@@ -17,7 +17,8 @@ class ScaleBar extends React.Component {
         maxWidth: PropTypes.number,
         metric: PropTypes.bool,
         imperial: PropTypes.bool,
-        updateWhenIdle: PropTypes.bool
+        updateWhenIdle: PropTypes.bool,
+        container: PropTypes.string
     };
 
     static defaultProps = {
@@ -33,6 +34,23 @@ class ScaleBar extends React.Component {
         this.scalebar = L.control.scale(this.props);
         if (this.props.map) {
             this.scalebar.addTo(this.props.map);
+            if (this.props.container) {
+                document.querySelector(this.props.container).appendChild(this.scalebar.getContainer());
+                const mainControl = document.querySelector('.leaflet-control-container .leaflet-control-scale-line');
+                if (mainControl && mainControl.parentNode) {
+                    mainControl.parentNode.removeChild(mainControl);
+                }
+            }
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.props.container && this.scalebar.getContainer()) {
+            try {
+                document.querySelector(this.props.container).removeChild(this.scalebar.getContainer());
+            } catch(e) {
+                // nothing to do
+            }
         }
     }
 

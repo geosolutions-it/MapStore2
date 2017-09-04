@@ -47,27 +47,27 @@
 
 
 #mapstore-mouseposition .label-info {
-    white-space: normal !important;
-    color: black !important;
+    white-space: normal;
+    color: black;
     font-size: 110%;
-    padding: 0 !important;
+    padding: 0;
 }
 
 #mapstore-mouseposition {
-    bottom: 5px !important;
-    right: 264px !important;
-    top: auto !important;
-    margin: 0 !important;
-    text-shadow: none !important;
-    background-color: white !important;
-    width: 160px !important;
-    height: 46px !important;
+    bottom: 5px;
+    right: 264px;
+    top: auto;
+    margin: 0;
+    text-shadow: none;
+    background-color: white;
+    width: 160px;
+    height: 46px;
     padding-left: 5px;
     padding-top: 2px;
 }
 
 #mapstore-mouseposition h5 {
-    margin-top: 5px !important;
+    margin-top: 5px;
 }
 
 .mouseposition-separator {
@@ -96,4 +96,18 @@
         background-color:rgba(91,192,222,0);
         color: white;
         font-size: 90%;
+}
+
+#mapstore-mouseposition .form-group {
+    float: right;
+}
+
+#mapstore-mouseposition .form-group .control-label {
+    display: none;
+}
+
+#mapstore-mouseposition .form-group select {
+    width: 90px;
+    font-size: 11px;
+    padding: 2px;
 }

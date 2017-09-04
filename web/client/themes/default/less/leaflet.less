@@ -17,8 +17,10 @@
 
 /* scale bar */
 .leaflet-control-scale-line {
-	background-color: @ms2-color-primary;
-	color: @ms2-color-text-primary;
+    border-color: @ms2-color-text;
+	background-color: transparent;
+	color: @ms2-color-text;
+    text-align: center;
 }
 
 .leafletbottom.leafletright, .leaflet-control-minimap{
@@ -27,16 +29,23 @@
 }
 
 .leaflet-control-scale {
-    position: absolute;
-    bottom: -1px;
-    right: 47px;
+    top: 10px;
+	right: 10px;
+	clear: none;
     z-index: 1000;
 }
+
 .leaflet-control-attribution {
-    width: 165px;
+    width: 50%;
     position: absolute;
-    right: 0;
+    left: 0;
     bottom: 0;
+    height: 30px;
+    font-size: 11px;
+    background-color: transparent;
+    color: @ms2-color-text;
+    overflow: hidden;
+    padding-right: 100px;
 }
 
 .leaflet-bottom.leaflet-right {

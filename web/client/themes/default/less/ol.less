@@ -21,28 +21,48 @@
 	margin-bottom: 3px;
 }
 
+.ol-attribution.ol-uncollapsible {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-radius: 4px 0 0;
+    height: initial;
+    line-height: 1em;
+    text-align: left;
+    background-color: transparent;
+    color: @ms2-color-text;
+    max-width: 50%;
+    max-height: 30px;
+    overflow: hidden;
+}
+
 div.ol-scale-line.ol-unselectable {
-	border: 2px solid @ms2-color-shade-darker;
+	border: 2px solid @ms2-color-text;
 	border-top: none;
 	line-height: 1.0;
 	border-radius: 0;
-	bottom: 5px;
-	left: auto;
-	right: 57px;
+	right: 10px;
 	padding: 2px 5px 1px;
 	white-space: nowrap;
 	overflow: hidden;
 	-moz-box-sizing: content-box;
 	box-sizing: content-box;
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	top: 10px;
+	position: relative;
+}
+
+.ol-attribution ul {
+    color: @ms2-color-text;
+    text-shadow: none;
 }
 
 div.ol-scale-line-inner {
 	border: 0;
 	border-top: 0;
-	color: @ms2-color-background;
+	color: @ms2-color-text;
 	font-size: 11px;
-	text-align: left;
+	text-align: center;
 	margin: 0;
 }
 
@@ -60,6 +80,6 @@ div.ol-scale-line-inner {
 }
 
 .ol-scale-line {
-	background-color: @ms2-color-primary !important;
-	color: @ms2-color-text-primary !important;
+	background-color: transparent !important;
+	color: @ms2-color-text !important;
 }

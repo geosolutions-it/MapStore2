@@ -6,12 +6,22 @@ html, body, #container, .fill {
     padding: 0;
 }
 
-.viewer, #map {
+.viewer {
     position:absolute;
     width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
+    overflow: hidden;
+    background-color: #EEE;
+}
+
+#map {
+    position:absolute;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    height: auto;
     overflow: hidden;
 }
 
@@ -28,7 +38,7 @@ html, body, #container, .fill {
 	position:absolute;
 	width:90px;
 	height:27px;
-	bottom:5px;
+	bottom:36px;
 	left:5px;
 	background-image:url(../img/mapstore2_logo.png);
 	background-repeat:no-repeat;
@@ -46,7 +56,7 @@ html, body, #container, .fill {
     position:absolute;
 	width:90px;
 	height:27px;
-	bottom:5px;
+	bottom:35px;
 	margin-left:auto;
 	margin-right:auto;
 	left:0;
@@ -57,4 +67,35 @@ html, body, #container, .fill {
 
 .modal-dialog-container {
     z-index: 2000!important;
+}
+
+#navigationBar .mapToolbar {
+    bottom: 35px !important;
+}
+
+#mapstore-scalebox-container {
+    bottom: -36px !important;
+    right: 323px !important;
+}
+
+#mapstore-mouseposition {
+    width: auto !important;
+    right: 5px !important;
+    background-color: transparent !important;
+    height: 25px !important;
+}
+
+#mapstore-mouseposition .mouseposition-separator {
+    display: inline !important;
+}
+
+#mapstore-mouseposition .label {
+    font-size: 90% !important;
+}
+
+
+#mapstore-mouseposition .mouseposition-crs {
+    font-size: 90%;
+    margin-left: 5px;
+    font-weight: bold;
 }

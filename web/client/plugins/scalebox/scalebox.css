@@ -1,18 +1,18 @@
 #mapstore-scalebox {
-    z-index: 10;
+    /*z-index: 10;
     bottom: 6px;
     left: -2px;
     position: absolute;
     margin: 8px;
-    width: 148px;
+    width: 148px;*/
 }
 
 #mapstore-scalebox-container {
-    z-index: 10;
-    bottom: -16px !important;
+    /*z-index: 10;
+    bottom: -16px;
     right: 55px;
-    left: auto !important;
+    left: auto;
     position: absolute;
     margin: 8px;
-    width: 148px;
+    width: 148px;*/
 }

@@ -35,7 +35,7 @@ class ScaleBoxTool extends React.Component {
         return (<HelpWrapper id="mapstore-scalebox-container"
             key="scalebox-help"
             helpText={<Message msgId="helptexts.scaleBox"/>}>
-                <ScaleBox key="scaleBox" {...this.props}/>
+                <ScaleBox key="scaleBox" label={<Message msgId="mapScale"/>} {...this.props}/>
         </HelpWrapper>);
     }
 }
@@ -58,6 +58,13 @@ const ScaleBoxPlugin = connect(selector, {
 module.exports = {
     ScaleBoxPlugin: assign(ScaleBoxPlugin, {
         disablePluginIf: "{state('mapType') === 'cesium'}"
+    }, {
+        MapFooter: {
+            name: 'scale',
+            position: 1,
+            tool: true,
+            priority: 1
+        }
     }),
     reducers: {}
 };

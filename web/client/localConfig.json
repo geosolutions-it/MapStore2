@@ -9,7 +9,7 @@
     "bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
     "mapquestApiKey": "__API_KEY_MAPQUEST__",
     "initialMapFilter": "",
-    "ignoreMobileCss": true,
+    "ignoreMobileCss": false,
     "useAuthenticationRules": true,
     "themePrefix": "ms2",
     "defaultMapOptions": {
@@ -103,7 +103,7 @@
             {
                 "name": "BackgroundSelector",
                 "cfg": {
-                    "bottom": 40,
+                    "bottom": 5,
                     "dimensions": {
                     "side": 65,
                     "sidePreview": 65,
@@ -152,7 +152,7 @@
                 "cfg": {
                     "wrap": true
                 }
-            }, "About", {
+            }, {
                 "name": "MousePosition",
                 "cfg": {
                     "id": "mapstore-mouseposition-mobile"
@@ -168,14 +168,6 @@
                 "cfg": {
                     "id": "navigationBar"
                 }
-            }, {
-                "name": "Toolbar",
-                "id": "IdentifyBar",
-                "stateSelector": "identify",
-                "cfg": {
-                    "id": "identifyBar"
-                },
-                "isDefault": false
             }, "ZoomAll", {
                 "name": "MapLoading",
                 "override": {
@@ -200,10 +192,31 @@
             }
         ],
 
-        "desktop": ["Map", "AutoMapUpdate", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", {"name": "BackgroundSelector", "cfg": { "bottom": 40 } },
+        "desktop": [
+          {
+            "name": "Map",
+            "cfg": {
+              "mapOptions": {
+                "openlayers": {
+                  "attribution": {
+                    "container": "#mapstore-map-footer-container"
+                  }
+                },
+                "leaflet": {
+                  "attribution": {
+                    "container": "#mapstore-map-footer-container"
+                  }
+                }
+              },
+              "toolsOptions": {
+                "scalebar": {
+                  "container" : "#mapstore-map-footer-container"
+                }
+              }
+            }
+          }, "AutoMapUpdate", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", "BackgroundSelector",
             {
                 "name": "Identify",
-                "showIn": ["IdentifyBar", "Settings"],
                 "cfg": {
                     "viewerOptions": {
                         "container": "{context.ReactSwipe}",
@@ -212,9 +225,14 @@
                             "useButtons": true
                         }
                     }
+                },
+                "override": {
+                  "Toolbar": {
+                    "position": 11
+                  }
                 }
             },
-            "MadeWithLove", {
+            {
                 "name": "Locate",
                 "override": {
                     "Toolbar": {
@@ -257,7 +275,7 @@
                         {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
                     ]
                 }
-            }, "Tutorial", {
+            }, "Tutorial", "MapFooter", {
                 "name": "Measure"
             }, "Print", "ShapeFile", {
                 "name": "Settings",
@@ -274,7 +292,17 @@
                         "wmts": "https://demo.geo-solutions.it/geoserver/gwc/service/wmts"
                     }
                 }
-            }, "About", "MousePosition", {
+            }, {
+              "name": "About",
+              "showIn": ["BurgerMenu"]
+            }, {
+              "name": "MousePosition",
+              "cfg": {
+                "editCRS": true,
+                "showLabels": true,
+                "showToggle": true
+              }
+            }, {
                 "name": "Search",
                 "cfg": {
                     "withToggle": ["max-width: 768px", "min-width: 768px"]
@@ -285,14 +313,6 @@
                 "cfg": {
                     "id": "navigationBar"
                 }
-            }, {
-                "name": "Toolbar",
-                "id": "IdentifyBar",
-                "stateSelector": "identify",
-                "cfg": {
-                    "id": "identifyBar"
-                },
-                "isDefault": false
             },
             "ScaleBox", {
               "name":"ZoomAll",

@@ -8,7 +8,7 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
+const {Form, FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 const mapUtils = require('../../../utils/MapUtils');
 const {isEqual} = require('lodash');
 
@@ -20,7 +20,7 @@ class ScaleBox extends React.Component {
         currentZoomLvl: PropTypes.number,
         onChange: PropTypes.func,
         readOnly: PropTypes.bool,
-        label: PropTypes.string,
+        label: PropTypes.oneOfType([PropTypes.func, PropTypes.string, PropTypes.object]),
         template: PropTypes.func,
         useRawInput: PropTypes.bool
     };
@@ -66,12 +66,12 @@ class ScaleBox extends React.Component {
             ;
         } else {
             control =
-                (<FormGroup bsSize="small">
+                (<Form inline><FormGroup bsSize="small">
                     <ControlLabel>{this.props.label}</ControlLabel>
                     <FormControl componentClass="select" onChange={this.onComboChange} value={this.props.currentZoomLvl || ""}>
                         {this.getOptions()}
                     </FormControl>
-                </FormGroup>)
+                </FormGroup></Form>)
             ;
         }
         return (
