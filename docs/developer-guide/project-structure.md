@@ -55,15 +55,3 @@ This is the overall framework folder structure:
              |   +-- ...
              +-- ...
 ```
-
-## Code conventions
-
-An empty React state has to be set as NULL (null), empty objects ({}) are not valid empty states.
-
-## Useful references
-
-If you want to create an application based on MapStore2 you can use the [Project Creation Script](project-creation-script).
-
-If you want to learn how to develop a simple MapStore2 based application you can follow the [tutorial](application-tutorial)
-
-If you want to learn how to develop a plug-in based MapStore2 based application you can follow the [plugins tutorial](plugins-architecture#building-an-application-using-plugins)
