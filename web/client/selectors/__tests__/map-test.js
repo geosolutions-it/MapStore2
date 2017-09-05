@@ -42,7 +42,7 @@ describe('Test map selectors', () => {
     });
 
     it('test projectionDefsSelector ', () => {
-        const props = projectionDefsSelector({map: {projectionDefs: [{}, {}]}});
+        const props = projectionDefsSelector({localconfig: {projectionDefs: [{code: "some"}, {code: "another"}]}});
 
         expect(props.length).toBe(2);
     });
