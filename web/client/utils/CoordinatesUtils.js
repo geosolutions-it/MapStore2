@@ -53,7 +53,7 @@ function determineCrs(crs) {
 
 let crsLabels = {
     "EPSG:4326": "WGS 84",
-    "EPSG:3857": "WGS 84 / Pseudo Mercator"
+    "EPSG:3857": "EPSG:3857"
 };
 
 /**
@@ -247,15 +247,6 @@ const CoordinatesUtils = {
     },
     isAllowedSRS(srs, allowedSRS) {
         return allowedSRS[CoordinatesUtils.getCompatibleSRS(srs, allowedSRS)];
-    },
-    addProjections: function(code, extent, worldExtent) {
-        const ol = window.ol;
-        ol.proj.addProjection(new ol.proj.Projection({
-            code,
-            extent,
-            worldExtent
-            })
-        );
     },
     getAvailableCRS: function() {
         let crsList = {};

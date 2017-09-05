@@ -18,6 +18,7 @@ const {createSelector} = require('reselect');
  * @return {object} the map configruation
  */
 const mapSelector = (state) => state.map && state.map.present || state.map || state.config && state.config.map || null;
+const projectionDefsSelector = (state) => state.localConfig && state.localConfig.projectionDefs || [];
 
 const projectionSelector = createSelector([mapSelector], (map) => map && map.projection);
 
@@ -49,5 +50,6 @@ module.exports = {
     scalesSelector,
     projectionSelector,
     mapIdSelector,
+    projectionDefsSelector,
     mapVersionSelector
 };

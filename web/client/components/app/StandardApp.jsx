@@ -47,6 +47,15 @@ class StandardApp extends React.Component {
         store: null
     };
 
+    addProjDefinitions(config) {
+        if (config.projectionDefs && config.projectionDefs.length) {
+            config.projectionDefs.forEach((proj) => {
+                window.proj4.defs(proj.code, proj.def);
+            });
+
+        }
+    }
+
     componentWillMount() {
         const onInit = (config) => {
             if (!global.Intl ) {
@@ -55,9 +64,11 @@ class StandardApp extends React.Component {
                     require('intl/locale-data/jsonp/en.js');
                     require('intl/locale-data/jsonp/it.js');
                     this.init(config);
+                    this.addProjDefinitions(config);
                 });
             } else {
                 this.init(config);
+                this.addProjDefinitions(config);
             }
         };
 
