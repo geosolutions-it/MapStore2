@@ -1,21 +1,24 @@
-var PropTypes = require('prop-types');
-/**
- * Copyright 2015, GeoSolutions Sas.
+/*
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactDOM = require('react-dom');
-var {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
-var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const PropTypes = require('prop-types');
+const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
+const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 
 class CRSSelector extends React.Component {
     static propTypes = {
         id: PropTypes.string,
         label: PropTypes.oneOfType([PropTypes.func, PropTypes.string, PropTypes.object]),
         availableCRS: PropTypes.object,
+        filterAllowedCRS: PropTypes.array,
+        projectionDefs: PropTypes.array,
+        additionalCRS: PropTypes.object,
         crs: PropTypes.string,
         enabled: PropTypes.bool,
         onCRSChange: PropTypes.func,
@@ -35,13 +38,18 @@ class CRSSelector extends React.Component {
         var val;
         var label;
         var list = [];
-        for (let crs in this.props.availableCRS) {
-            if (this.props.availableCRS.hasOwnProperty(crs)) {
+        let availableCRS = {};
+        if (Object.keys(this.props.availableCRS).length) {
+            availableCRS = CoordinatesUtils.filterCRSList(this.props.availableCRS, this.props.filterAllowedCRS, this.props.additionalCRS, this.props.projectionDefs );
+        }
+        for (let crs in availableCRS) {
+            if (availableCRS.hasOwnProperty(crs)) {
                 val = crs;
-                label = this.props.availableCRS[crs].label;
+                label = availableCRS[crs].label;
                 list.push(<option value={val} key={val}>{label}</option>);
             }
         }
+
         if (this.props.enabled && this.props.useRawInput) {
             return (
                 <select

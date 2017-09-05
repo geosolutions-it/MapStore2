@@ -12,6 +12,7 @@ const assign = require('object-assign');
 const {isArray, flattenDeep, chunk, cloneDeep} = require('lodash');
 const lineIntersect = require('@turf/line-intersect');
 const polygonToLinestring = require('@turf/polygon-to-linestring');
+
 // Checks if `list` looks like a `[x, y]`.
 function isXY(list) {
     return list.length >= 2 &&
@@ -52,7 +53,7 @@ function determineCrs(crs) {
 
 let crsLabels = {
     "EPSG:4326": "WGS 84",
-    "EPSG:3857": "WGS 84 / Pseudo Mercator"
+    "EPSG:3857": "EPSG:3857"
 };
 
 /**
@@ -255,6 +256,16 @@ const CoordinatesUtils = {
             }
         }
         return crsList;
+    },
+    filterCRSList: (availableCRS, filterAllowedCRS, additionalCRS, projDefs ) => {
+        let crs = Object.keys(availableCRS).reduce( (p, c) => {
+            return assign({}, filterAllowedCRS.indexOf(c) === -1 ? p : {...p, [c]: availableCRS[c]});
+        }, {});
+        const codeProjections = projDefs.map(p => p.code);
+        let newAdditionalCRS = Object.keys(additionalCRS).reduce( (p, c) => {
+            return assign({}, codeProjections.indexOf(c) === -1 ? p : {...p, [c]: additionalCRS[c]});
+        }, {});
+        return assign({}, crs, newAdditionalCRS);
     },
     calculateAzimuth: function(p1, p2, pj) {
         var p1proj = CoordinatesUtils.reproject(p1, pj, 'EPSG:4326');

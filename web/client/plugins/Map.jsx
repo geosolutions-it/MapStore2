@@ -128,6 +128,7 @@ class MapPlugin extends React.Component {
         tools: PropTypes.array,
         options: PropTypes.object,
         mapOptions: PropTypes.object,
+        projectionDefs: PropTypes.array,
         toolsOptions: PropTypes.object,
         actions: PropTypes.object,
         features: PropTypes.array
@@ -246,6 +247,7 @@ class MapPlugin extends React.Component {
                 <plugins.Map id="map"
                     {...this.props.options}
                     mapOptions={this.getMapOptions()}
+                    projectionDefs={this.props.projectionDefs}
                     {...this.props.map}
                     zoomControl={this.props.zoomControl}>
                     {this.renderLayers()}
@@ -282,16 +284,18 @@ class MapPlugin extends React.Component {
     };
 }
 
-const {mapSelector} = require('../selectors/map');
+const {mapSelector, projectionDefsSelector} = require('../selectors/map');
 const {layerSelectorWithMarkers} = require('../selectors/layers');
 const {selectedFeatures} = require('../selectors/highlight');
 const selector = createSelector(
     [
+        projectionDefsSelector,
         mapSelector,
         layerSelectorWithMarkers,
         selectedFeatures,
         (state) => state.mapInitialConfig && state.mapInitialConfig.loadingError && state.mapInitialConfig.loadingError.data
-    ], (map, layers, features, loadingError) => ({
+    ], (projectionDefs, map, layers, features, loadingError) => ({
+        projectionDefs,
         map,
         layers,
         features,

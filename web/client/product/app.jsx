@@ -12,10 +12,8 @@ const LocaleUtils = require('../utils/LocaleUtils');
 
 const startApp = () => {
     const ConfigUtils = require('../utils/ConfigUtils');
-
     const {loadMaps} = require('../actions/maps');
     const {loadVersion} = require('../actions/version');
-
     const StandardApp = require('../components/app/StandardApp');
 
     const {pages, pluginsDef, initialState, storeOpts, appEpics = {}} = require('./appConfig');

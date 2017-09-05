@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -8,6 +7,8 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 const {Provider} = require('react-redux');
+const PropTypes = require('prop-types');
+const proj4 = require('proj4');
 
 const {changeBrowserProperties} = require('../../actions/browser');
 const {loadLocale} = require('../../actions/locale');
@@ -46,6 +47,15 @@ class StandardApp extends React.Component {
     state = {
         store: null
     };
+
+    addProjDefinitions(config) {
+        if (config.projectionDefs && config.projectionDefs.length) {
+            config.projectionDefs.forEach((proj) => {
+                proj4.defs(proj.code, proj.def);
+            });
+
+        }
+    }
 
     componentWillMount() {
         const onInit = (config) => {
@@ -96,6 +106,7 @@ class StandardApp extends React.Component {
     init = (config) => {
         this.store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
         this.store.dispatch(localConfigLoaded(config));
+        this.addProjDefinitions(config);
         const locale = LocaleUtils.getUserLocale();
         this.store.dispatch(loadLocale(null, locale));
         if (this.props.printingEnabled) {

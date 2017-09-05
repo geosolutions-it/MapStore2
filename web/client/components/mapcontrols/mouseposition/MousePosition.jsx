@@ -1,11 +1,11 @@
+/*
+* Copyright 2017, GeoSolutions Sas.
+* All rights reserved.
+*
+* This source code is licensed under the BSD-style license found in the
+* LICENSE file in the root directory of this source tree.
+*/
 const PropTypes = require('prop-types');
-/**
- * Copyright 2015, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
 const React = require('react');
 const proj4js = require('proj4');
 const {Glyphicon, Button, Label} = require('react-bootstrap');
@@ -17,7 +17,14 @@ const CRSSelector = require('./CRSSelector');
 const Message = require('../../I18N/Message');
 
 require('./mousePosition.css');
-
+/**
+ * MousePosition is a component that shows the coordinate of the mouse position in a selected crs.
+ * @class
+ * @memberof components.mousePosition
+ * @prop {string[]} filterAllowedCRS list of allowed crs in the combobox list
+ * @prop {object[]} projectionDefs list of additional project definitions
+ * @prop {object} additionalCRS additional crs to be added to the list
+ */
 class MousePosition extends React.Component {
     static propTypes = {
         id: PropTypes.string,
@@ -26,6 +33,9 @@ class MousePosition extends React.Component {
         enabled: PropTypes.bool,
         showCRS: PropTypes.bool,
         editCRS: PropTypes.bool,
+        filterAllowedCRS: PropTypes.array,
+        projectionDefs: PropTypes.array,
+        additionalCRS: PropTypes.object,
         degreesTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         projectedTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         crsTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
@@ -106,7 +116,11 @@ class MousePosition extends React.Component {
                             </CopyToClipboard>
                         }
                         {this.props.showCRS ? this.props.crsTemplate(this.props.crs) : null}
-                        {this.props.editCRS ? <CRSSelector label={this.props.showLabels ? <label><Message msgId="mousePositionCRS"/></label> : null} crs={this.props.crs} enabled onCRSChange={this.props.onCRSChange}/> : null}
+                        {this.props.editCRS ?
+                            <CRSSelector projectionDefs={this.props.projectionDefs}
+                                filterAllowedCRS={this.props.filterAllowedCRS}
+                                additionalCRS={this.props.additionalCRS} label={this.props.showLabels ? <label><Message msgId="mousePositionCRS"/></label> : null}
+                                crs={this.props.crs} enabled onCRSChange={this.props.onCRSChange}/> : null}
                         {this.props.showToggle ? this.props.toggle : null}
                     </div>
             );

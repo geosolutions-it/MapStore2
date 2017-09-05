@@ -30,6 +30,7 @@
     "monitorState": [
       {"name": "routing", "path": "routing.location.pathname"},
       {"name": "featuregridmode", "path": "featuregrid.mode"}],
+    "projectionDefs": [],
     "initialState": {
       "defaultState": {
         "catalog":{
@@ -155,7 +156,12 @@
             }, {
                 "name": "MousePosition",
                 "cfg": {
-                    "id": "mapstore-mouseposition-mobile"
+                    "id": "mapstore-mouseposition-mobile",
+                    "editCRS": true,
+                    "showLabels": true,
+                    "showToggle": true,
+                    "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
+                    "additionalCRS": {}
                 }
             }, {
                 "name": "Search",
@@ -300,7 +306,9 @@
               "cfg": {
                 "editCRS": true,
                 "showLabels": true,
-                "showToggle": true
+                "showToggle": true,
+                "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
+                "additionalCRS": {}
               }
             }, {
                 "name": "Search",

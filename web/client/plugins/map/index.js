@@ -20,6 +20,7 @@ const {updateHighlighted} = require('../../actions/highlight');
 
 const {connect} = require('react-redux');
 const assign = require('object-assign');
+const {projectionDefsSelector} = require('../../selectors/map');
 
 const Empty = () => { return <span/>; };
 
@@ -28,6 +29,7 @@ module.exports = (mapType, actions) => {
     const components = require('./' + mapType + '/index');
 
     const LMap = connect((state) => ({
+        projectionDefs: projectionDefsSelector(state),
         mousePosition: state.mousePosition || {enabled: false}
     }), assign({}, {
         onCreationError: creationError,
