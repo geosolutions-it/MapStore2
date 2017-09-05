@@ -83,10 +83,13 @@ function catalog(state = {}, action) {
             loadingError: null,
             layerError: null});
     case MAP_CONFIG_LOADED: {
-        if (action.config && action.config.catalogServices) {
-            return assign({}, state, {services: action.config.catalogServices.services, selectedService: action.config.catalogServices.selectedService });
+        if (state && state.default) {
+            if (action.config && action.config.catalogServices) {
+                return assign({}, state, {services: action.config.catalogServices.services, selectedService: action.config.catalogServices.selectedService });
+            }
+            return assign({}, state, {services: state.default.services, selectedService: state.default.selectedService });
         }
-        return assign({}, state, {services: state.default.services, selectedService: state.default.selectedService });
+        return state;
     }
     case FOCUS_SERVICES_LIST:
         return assign({}, state, {openCatalogServiceList: action.status});

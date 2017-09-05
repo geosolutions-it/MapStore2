@@ -74,11 +74,11 @@ describe('Test the catalog reducer', () => {
     });
     it('MAP_CONFIG_LOADED', () => {
         const titleCustom = "savedService";
-        const state = catalog({services: {
+        const state = catalog({"default": {services: {
             [titleCustom]: {
                 service
             }
-        }}, {type: MAP_CONFIG_LOADED, config: {catalogServices: {services: {[titleCustom]: {title: titleCustom}}, selectedService: titleCustom}}});
+        }, selectedService: {}}}, {type: MAP_CONFIG_LOADED, config: {catalogServices: {services: {[titleCustom]: {title: titleCustom}}, selectedService: titleCustom}}});
         expect(state.selectedService).toBe(titleCustom);
         expect(state.services[titleCustom].title).toBe(titleCustom);
     });
