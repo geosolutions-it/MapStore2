@@ -42,7 +42,7 @@ describe('Test map selectors', () => {
     });
 
     it('test projectionDefsSelector ', () => {
-        const props = mapSelector({map: {projectionDefs: [{}, {}]}});
+        const props = projectionDefsSelector({map: {projectionDefs: [{}, {}]}});
 
         expect(props.length).toBe(2);
     });

@@ -11,7 +11,6 @@ var React = require('react');
 var assign = require('object-assign');
 
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
-var projUtils = require('../../../utils/openlayers/projUtils');
 var ConfigUtils = require('../../../utils/ConfigUtils');
 var mapUtils = require('../../../utils/MapUtils');
 
