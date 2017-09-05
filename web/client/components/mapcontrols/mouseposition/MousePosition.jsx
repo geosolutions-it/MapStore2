@@ -17,7 +17,14 @@ const CRSSelector = require('./CRSSelector');
 const Message = require('../../I18N/Message');
 
 require('./mousePosition.css');
-
+/**
+ * MousePosition is a component that shows the coordinate of the mouse position in a selected crs.
+ * @class
+ * @memberof components.mousePosition
+ * @prop {string[]} filterAllowedCRS list of allowed crs in the combobox list
+ * @prop {object[]} projectionDefs list of additional project definitions
+ * @prop {object} additionalCRS additional crs to be added to the list
+ */
 class MousePosition extends React.Component {
     static propTypes = {
         id: PropTypes.string,

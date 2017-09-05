@@ -60,6 +60,7 @@ const MousePositionButton = connect((state) => ({
 
 const MousePositionComponent = require('../components/mapcontrols/mouseposition/MousePosition');
 
+
 class MousePosition extends React.Component {
     render() {
         return (
@@ -68,7 +69,34 @@ class MousePosition extends React.Component {
     }
 }
 
-
+/**
+  * MousePositionPlugin is a plugin that shows the coordinate of the mouse position in a selected crs.
+  * it gets displayed into the mapFooter plugin
+  * @name MousePositionPlugin
+  * @class
+  * @prop {string[]} cfg.filterAllowedCRS list of allowed crs in the combobox list to used as filter for the one of retrieved proj4.defs()
+  * @prop {object[]} cfg.projectionDefs list of additional project definitions
+  * @prop {object} cfg.additionalCRS additional crs to be added to the list
+  * If you want to add some crs you need to provide a definition and adding it in the additionalCRS property
+  * example
+  *
+  * ```
+  * inside the localconfig put
+  * "projectionDefs": [{
+  *            "code": "EPSG:3003",
+  *            "def": "+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl
+  *                    +towgs84=-104.1,-49.1,-9.9,0.971,-2.917,0.714,-11.68 +units=m +no_defs",
+  *            "extent": [1241482.0019, 973563.1609, 1830078.9331, 5215189.0853],
+  *            "worldExtent": [6.6500, 8.8000, 12.0000, 47.0500]
+  *        },{...},{...}]
+  *
+  * and inside mouseposition cfg put:
+  *  "additionalCRS": {
+  *    "EPSG:3003": { "label": "EPSG:3003" }
+  *  },
+  *  "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
+ ```
+*/
 const MousePositionPlugin = connect(selector, {
     onCRSChange: changeMousePositionCrs
 })(MousePosition);
