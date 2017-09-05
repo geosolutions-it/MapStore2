@@ -12,12 +12,6 @@ const LocaleUtils = require('../utils/LocaleUtils');
 
 const startApp = () => {
     const ConfigUtils = require('../utils/ConfigUtils');
-    const CoordinatesUtils = require('../utils/CoordinatesUtils');
-    const projectionsDefs = require('./utils/projectionsDefs');
-    projectionsDefs().forEach((proj) => {
-        window.proj4.defs(proj.code, proj.def);
-        CoordinatesUtils.addProjections(proj.code, proj.extent, proj.worldExtent);
-    });
     const {loadMaps} = require('../actions/maps');
     const {loadVersion} = require('../actions/version');
     const StandardApp = require('../components/app/StandardApp');

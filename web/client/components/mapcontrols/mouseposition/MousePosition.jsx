@@ -27,6 +27,7 @@ class MousePosition extends React.Component {
         showCRS: PropTypes.bool,
         editCRS: PropTypes.bool,
         filterAllowedCRS: PropTypes.array,
+        projectionDefs: PropTypes.array,
         additionalCRS: PropTypes.object,
         degreesTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         projectedTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
@@ -108,7 +109,11 @@ class MousePosition extends React.Component {
                             </CopyToClipboard>
                         }
                         {this.props.showCRS ? this.props.crsTemplate(this.props.crs) : null}
-                        {this.props.editCRS ? <CRSSelector filterAllowedCRS={this.props.filterAllowedCRS} additionalCRS={this.props.additionalCRS} label={this.props.showLabels ? <label><Message msgId="mousePositionCRS"/></label> : null} crs={this.props.crs} enabled onCRSChange={this.props.onCRSChange}/> : null}
+                        {this.props.editCRS ?
+                            <CRSSelector projectionDefs={this.props.projectionDefs}
+                                filterAllowedCRS={this.props.filterAllowedCRS}
+                                additionalCRS={this.props.additionalCRS} label={this.props.showLabels ? <label><Message msgId="mousePositionCRS"/></label> : null}
+                                crs={this.props.crs} enabled onCRSChange={this.props.onCRSChange}/> : null}
                         {this.props.showToggle ? this.props.toggle : null}
                     </div>
             );

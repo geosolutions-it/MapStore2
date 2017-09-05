@@ -8,7 +8,7 @@
 const React = require('react');
 
 const {connect} = require('react-redux');
-const {mapSelector} = require('../selectors/map');
+const {mapSelector, projectionDefsSelector} = require('../selectors/map');
 const {createSelector} = require('reselect');
 
 const assign = require('object-assign');
@@ -35,13 +35,15 @@ const getDesiredPosition = (map, mousePosition, mapInfo) => {
 };
 
 const selector = createSelector([
+    (state) => state,
     mapSelector,
     (state) => state.mousePosition || {},
     (state) => state.mapInfo || {}
-], (map, mousePosition, mapInfo) => ({
+], (state, map, mousePosition, mapInfo) => ({
     enabled: mousePosition.enabled,
     mousePosition: getDesiredPosition(map, mousePosition, mapInfo),
-    crs: mousePosition.crs || map && map.projection || 'EPSG:4326'
+    projectionDefs: projectionDefsSelector(state),
+    crs: mousePosition.crs || 'EPSG:4326'
 }));
 
 const MousePositionButton = connect((state) => ({

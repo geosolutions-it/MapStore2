@@ -12,7 +12,14 @@ var ReactDOM = require('react-dom');
 var CRSSelector = require('../CRSSelector');
 
 const TestUtils = require('react-dom/test-utils');
-
+const crsOptions = {
+    availableCRS: {
+        "EPSG:4326": {label: "EPSG:4326"}
+    },
+    filterAllowedCRS: ["EPSG:4326"],
+    additionalCRS: {},
+    projectionDefs: []
+};
 describe('CRSSelector', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -27,7 +34,7 @@ describe('CRSSelector', () => {
 
     it('checks default', () => {
 
-        const cmp = ReactDOM.render(<CRSSelector enabled/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<CRSSelector enabled {...crsOptions}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
@@ -35,13 +42,13 @@ describe('CRSSelector', () => {
 
         const select = cmpDom.getElementsByTagName("select").item(0);
         const opts = select.childNodes;
-        expect(opts.length).toBeGreaterThan(3);
+        expect(opts.length).toBe(1);
 
     });
 
     it('checks if a change of the combo fires the proper action', () => {
         let newCRS;
-        const cmp = ReactDOM.render(<CRSSelector enabled onCRSChange={ (crs) => {newCRS = crs; }}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<CRSSelector enabled {...crsOptions} onCRSChange={ (crs) => {newCRS = crs; }}/>, document.getElementById("container"));
         const cmpDom = ReactDOM.findDOMNode(cmp);
         const select = cmpDom.getElementsByTagName("select").item(0);
 

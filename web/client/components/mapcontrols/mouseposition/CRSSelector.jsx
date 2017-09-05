@@ -17,6 +17,7 @@ class CRSSelector extends React.Component {
         label: PropTypes.oneOfType([PropTypes.func, PropTypes.string, PropTypes.object]),
         availableCRS: PropTypes.object,
         filterAllowedCRS: PropTypes.array,
+        projectionDefs: PropTypes.array,
         additionalCRS: PropTypes.object,
         crs: PropTypes.string,
         enabled: PropTypes.bool,
@@ -37,7 +38,10 @@ class CRSSelector extends React.Component {
         var val;
         var label;
         var list = [];
-        const availableCRS = CoordinatesUtils.filterCRSList(this.props.availableCRS, this.props.filterAllowedCRS, this.props.additionalCRS );
+        let availableCRS = {};
+        if (Object.keys(this.props.availableCRS).length) {
+            availableCRS = CoordinatesUtils.filterCRSList(this.props.availableCRS, this.props.filterAllowedCRS, this.props.additionalCRS, this.props.projectionDefs );
+        }
         for (let crs in availableCRS) {
             if (availableCRS.hasOwnProperty(crs)) {
                 val = crs;

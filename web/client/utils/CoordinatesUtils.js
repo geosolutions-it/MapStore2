@@ -257,11 +257,15 @@ const CoordinatesUtils = {
         }
         return crsList;
     },
-    filterCRSList: (availableCRS, filterAllowedCRS, additionalCRS ) => {
+    filterCRSList: (availableCRS, filterAllowedCRS, additionalCRS, projDefs ) => {
         let crs = Object.keys(availableCRS).reduce( (p, c) => {
             return assign({}, filterAllowedCRS.indexOf(c) === -1 ? p : {...p, [c]: availableCRS[c]});
         }, {});
-        return assign({}, crs, additionalCRS);
+        const codeProjections = projDefs.map(p => p.code);
+        let newAdditionalCRS = Object.keys(additionalCRS).reduce( (p, c) => {
+            return assign({}, codeProjections.indexOf(c) === -1 ? p : {...p, [c]: additionalCRS[c]});
+        }, {});
+        return assign({}, crs, newAdditionalCRS);
     },
     calculateAzimuth: function(p1, p2, pj) {
         var p1proj = CoordinatesUtils.reproject(p1, pj, 'EPSG:4326');

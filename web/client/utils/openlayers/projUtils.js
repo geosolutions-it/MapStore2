@@ -6,6 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 const projUtils = {
+
+    /**
+    * function needed in openlayer for adding new projection
+    */
     addProjections: function(code, extent, worldExtent) {
         const ol = window.ol;
         ol.proj.addProjection(new ol.proj.Projection({
