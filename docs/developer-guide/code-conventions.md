@@ -24,7 +24,9 @@ When a selector retrieves data from more than one state slices, you should place
 If you don't work on a core functionality, where the state is shared between many components, defining the selector directly in the plug-in is not denied (e.g. examples).
 
 ## Prefer `initialState` over plugin configuration
-In the past we had a plug-in configuration and initial state. The plug-in configuration is now considered a bad practice. Use the `initialState` to configure the application.
+In the past we had a plug-in configuration and initial state. 
+The plug-in configuration can be used only for not-shared and constant configurations of the plugin (e.g. a flag that enables a functionality that is present only in the plugin). If you are not in one of these 2 cases, you should prefer the state. 
+Use the `initialState` in localConfig to configure the application.
 
 **note**: An empty React state has to be set as NULL (null), empty objects ({}) are not valid empty states.
 
