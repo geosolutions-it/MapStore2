@@ -207,7 +207,8 @@
                 },
                 "override": {
                   "Toolbar": {
-                    "position": 11
+                    "position": 11,
+                    "alwaysVisible": true
                   }
                 }
             },
