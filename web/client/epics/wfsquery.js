@@ -264,12 +264,12 @@ const viewportSelectedEpic = (action$, store) =>
                 const bounds = Object.keys(map.bbox.bounds).reduce((p, c) => {
                     return assign({}, p, {[c]: parseFloat(map.bbox.bounds[c])});
                 }, {});
-                let extent = [bounds.minx, bounds.miny, bounds.maxx, bounds.maxy];
+                const extent = [bounds.minx, bounds.miny, bounds.maxx, bounds.maxy];
                 const center = [(extent[0] + extent[2]) / 2, (extent[1] + extent[3]) / 2];
                 const start = [extent[0], extent[1]];
                 const end = [extent[2], extent[3]];
                 const coordinates = [[start, [start[0], end[1]], end, [end[0], start[1]], start]];
-                let geometry = {
+                const geometry = {
                     type: "Polygon",
                     radius: 0,
                     projection: map.projection,
