@@ -83,7 +83,7 @@
         "mouseCoordinates": "Coordinate:",
         "mousePositionCRS": "CRS:",
         "mapScale": "Scala:",
-        "showMousePositionCoordinates": "Mostra Coordinate",
+        "showMousePositionCoordinates": "Mostra/Nascondi Coordinate",
         "menu": "Menu",
         "options": "Opzioni",
         "settings": "Impostazioni",

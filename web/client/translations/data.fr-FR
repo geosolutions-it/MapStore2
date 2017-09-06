@@ -85,7 +85,7 @@
         "mouseCoordinates": "Coordonnées:",
         "mousePositionCRS": "CRS:",
         "mapScale": "Échelle:",
-        "showMousePositionCoordinates": "Montrer les Coordonnées",
+        "showMousePositionCoordinates": "Montrer/cacher les Coordonnées",
         "menu": "Menu",
         "options": "Options",
         "settings": "Réglages",
