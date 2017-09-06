@@ -1,7 +1,9 @@
-const spatialFieldGeomSelector = state => state && state.queryform && state.queryform.spatialField && state.queryform.spatialField.geometry;
+const {get} = require('lodash');
+const spatialFieldGeomSelector = state => get(state, "queryform.spatialField.geometry");
 
 module.exports = {
-    spatialFieldSelector: state => state && state.queryform && state.queryform.spatialField,
+    spatialFieldSelector: state => get(state, "queryform.spatialField"),
+    spatialFieldMethodSelector: state => get(state, "queryform.spatialField.method"),
     spatialFieldGeomSelector,
     spatialFieldGeomTypeSelector: state => spatialFieldGeomSelector(state) && spatialFieldGeomSelector(state).type || "Polygon",
     spatialFieldGeomProjSelector: state => spatialFieldGeomSelector(state) && spatialFieldGeomSelector(state).projection || "EPSG:4326",

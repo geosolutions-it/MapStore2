@@ -12,7 +12,8 @@ const {
     spatialFieldGeomSelector,
     spatialFieldGeomTypeSelector,
     spatialFieldGeomProjSelector,
-    spatialFieldGeomCoordSelector
+    spatialFieldGeomCoordSelector,
+    spatialFieldMethodSelector
 } = require('../queryform');
 
 const circle = "Circle";
@@ -94,11 +95,16 @@ describe('Test query selectors', () => {
         expect(geomProj).toExist();
         expect(geomProj).toBe(projection);
     });
-    it(' 5)- spatialFieldGeomCoordSelector', () => {
+    it(' 5) - spatialFieldGeomCoordSelector', () => {
         const geomCoord = spatialFieldGeomCoordSelector(initialState);
         expect(geomCoord).toExist();
         expect(geomCoord.length).toBe(1);
         expect(geomCoord[0].length).toBe(6);
+    });
+    it(' 6) - spatialFieldMethodSelector', () => {
+        const method = spatialFieldMethodSelector(initialState);
+        expect(method).toExist();
+        expect(method).toBe(circle);
     });
 
 });

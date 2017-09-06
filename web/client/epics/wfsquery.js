@@ -13,9 +13,10 @@ const {changeSpatialAttribute, SELECT_VIEWPORT_SPATIAL_METHOD, updateGeometrySpa
 const {CHANGE_MAP_VIEW} = require('../actions/map');
 const {FEATURE_TYPE_SELECTED, QUERY, featureLoading, featureTypeLoaded, featureTypeError, querySearchResponse, queryError} = require('../actions/wfsquery');
 const {paginationInfo, isDescribeLoaded, describeSelector} = require('../selectors/query');
+const {mapSelector} = require('../selectors/map');
 const FilterUtils = require('../utils/FilterUtils');
 const assign = require('object-assign');
-const {spatialFieldSelector, spatialFieldGeomTypeSelector, spatialFieldGeomCoordSelector, spatialFieldGeomSelector, spatialFieldGeomProjSelector} = require('../selectors/queryform');
+const {spatialFieldMethodSelector, spatialFieldSelector, spatialFieldGeomTypeSelector, spatialFieldGeomCoordSelector, spatialFieldGeomSelector, spatialFieldGeomProjSelector} = require('../selectors/queryform');
 const {changeDrawingStatus} = require('../actions/draw');
 const {INIT_QUERY_PANEL} = require('../actions/wfsquery');
 
@@ -252,33 +253,26 @@ const wfsQueryEpic = (action$, store) =>
             );
         });
 
-function validateExtent(extent) {
-    if (extent[0] <= -180.0 || extent[2] >= 180.0) {
-        extent[0] = -180.0;
-        extent[2] = 180.0;
-    }
-    return extent;
-}
 const viewportSelectedEpic = (action$, store) =>
     action$.ofType(SELECT_VIEWPORT_SPATIAL_METHOD, CHANGE_MAP_VIEW)
         .switchMap((action) => {
             // calculate new geometry from map properties only for viewport
-            const map = action.type === CHANGE_MAP_VIEW ? action : store.getState().map.present || store.getState().map;
+            const map = action.type === CHANGE_MAP_VIEW ? action : mapSelector(store.getState());
             if (action.type === SELECT_VIEWPORT_SPATIAL_METHOD ||
-                action.type === CHANGE_MAP_VIEW &&
-                store.getState().queryform &&
-                store.getState().queryform.spatialField &&
-                store.getState().queryform.spatialField.method === "Viewport") {
+                action.type === CHANGE_MAP_VIEW && spatialFieldMethodSelector(store.getState()) === "Viewport") {
+
                 const bounds = Object.keys(map.bbox.bounds).reduce((p, c) => {
                     return assign({}, p, {[c]: parseFloat(map.bbox.bounds[c])});
                 }, {});
-                const extent = validateExtent([bounds.minx, bounds.miny, bounds.maxx, bounds.maxy]);
+                let extent = [bounds.minx, bounds.miny, bounds.maxx, bounds.maxy];
                 const center = [(extent[0] + extent[2]) / 2, (extent[1] + extent[3]) / 2];
                 const start = [extent[0], extent[1]];
                 const end = [extent[2], extent[3]];
                 const coordinates = [[start, [start[0], end[1]], end, [end[0], start[1]], start]];
                 let geometry = {
-                    type: "Polygon", radius: 0, projection: "EPSG:4326",
+                    type: "Polygon",
+                    radius: 0,
+                    projection: map.projection,
                     extent, center, coordinates
                 };
                 return Rx.Observable.of(updateGeometrySpatialField(geometry));
