@@ -7,7 +7,7 @@
 */
 const PropTypes = require('prop-types');
 const React = require('react');
-const {Button, Glyphicon, Row, Col} = require('react-bootstrap');
+const {Button, Glyphicon, Col} = require('react-bootstrap');
 const Message = require('../../components/I18N/Message');
 const MoreDetails = require('./MoreDetails');
 /**
@@ -104,17 +104,19 @@ class Cookie extends React.Component {
                     <br/>
                     {!this.props.seeMore ?
                     (<div className="cookie-action">
-                        <Row>
-                            <Col xs={6} sm={4} className="action-button">
-                                {this.renderAcceptButton()}
-                            </Col>
-                            <Col xs={6} sm={4} className="action-button">
-                                {this.renderMoreDetails()}
-                            </Col>
-                            <Col xs={6} sm={4} className="action-button">
-                                {this.renderLeaveButton()}
-                            </Col>
-                        </Row>
+
+                        <Col xs={6} sm={4} className="action-button">
+                            {this.renderAcceptButton()}
+                        </Col>
+                        <Col xs={6} sm={4} className="action-button">
+                            {this.renderMoreDetails()}
+                        </Col>
+                        <Col xs={6} sm={4} className="action-button">
+                            {this.renderLeaveButton()}
+                        </Col>
+                        <Col xs={12}>
+                            <br></br>
+                        </Col>
                     </div>) : null }
                 </div>
             </div>
