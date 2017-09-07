@@ -80,6 +80,8 @@ function wmsToLeafletOptions(options) {
         tiled: options.tiled !== undefined ? options.tiled : true,
         opacity: opacity,
         zIndex: options.zIndex,
+        maxNativeZoom: options.maxNativeZoom || 18,
+        maxZoom: options.maxZoom || 22,
         version: options.version || "1.3.0",
         SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),

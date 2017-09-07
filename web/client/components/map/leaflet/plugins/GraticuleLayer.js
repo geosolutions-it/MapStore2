@@ -17,7 +17,9 @@ Layers.registerType('graticule', {
         const graticuleOptions = assign({
             interval: 20,
             showOriginLabel: true,
-            redraw: 'move'
+            redraw: 'move',
+            maxZoom: 22,
+            maxNativeZoom: 18
         }, options);
         if (SimpleGraticule) {
             return new SimpleGraticule(graticuleOptions);
