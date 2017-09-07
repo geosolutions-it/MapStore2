@@ -89,6 +89,8 @@ class Maps extends React.Component {
         onGoToMap: PropTypes.func,
         loadMaps: PropTypes.func,
         maps: PropTypes.object,
+        searchText: PropTypes.string,
+        mapsOptions: PropTypes.object,
         colProps: PropTypes.object
     };
 
@@ -101,6 +103,7 @@ class Maps extends React.Component {
         onGoToMap: () => {},
         loadMaps: () => {},
         fluid: false,
+        mapsOptions: {start: 0, limit: 12},
         colProps: {
             xs: 12,
             sm: 6,
@@ -116,7 +119,8 @@ class Maps extends React.Component {
     };
 
     componentDidMount() {
-        this.props.loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*", {start: 0, limit: 12});
+        // if there is a change in the search text it uses that before the initialMapFilter
+        this.props.loadMaps(ConfigUtils.getDefaults().geoStoreUrl, this.props.searchText || ConfigUtils.getDefaults().initialMapFilter || "*", this.props.mapsOptions);
     }
 
     render() {
@@ -131,7 +135,8 @@ class Maps extends React.Component {
 
 module.exports = {
     MapsPlugin: connect((state) => ({
-        mapType: state.maptype && state.maptype.mapType || 'leaflet'
+        mapType: state.maptype && state.maptype.mapType || 'leaflet',
+        searchText: state.maps && state.maps.searchText
     }), {
         loadMaps
     })(Maps),
