@@ -127,16 +127,6 @@
                     "wrap": true
                 }
             }, {
-                "name": "MousePosition",
-                "cfg": {
-                    "id": "mapstore-mouseposition-mobile",
-                    "showCRS": false,
-                    "showLabels": false,
-                    "showToggle": false,
-                    "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
-                    "additionalCRS": {}
-                }
-            }, {
                 "name": "Search",
                 "cfg": {
                     "withToggle": ["max-width: 768px", "min-width: 768px"]
