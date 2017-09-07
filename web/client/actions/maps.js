@@ -347,10 +347,10 @@ function permissionsLoaded(permissions, mapId) {
  * @memberof actions.maps
  * @param  {string} geoStoreUrl      the url of geostore
  * @param  {String} [searchText="*"] text to search
- * @param  {Object} [params={start:  0. limit: 20}] params for the request
+ * @param  {Object} [params={start:  0. limit: 12}] params for the request
  * @return {thunk}                  dispatches mapsLoading, mapsLoaded or loadError
  */
-function loadMaps(geoStoreUrl, searchText = "*", params = {start: 0, limit: 20}) {
+function loadMaps(geoStoreUrl, searchText = "*", params = {start: 0, limit: 12}) {
     return (dispatch) => {
         let opts = assign({}, {params}, geoStoreUrl ? {baseURL: geoStoreUrl} : {});
         dispatch(mapsLoading(searchText, params));
