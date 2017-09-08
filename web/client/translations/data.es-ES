@@ -878,6 +878,7 @@
         "wfsdownload": {
             "title": "Exportar los datos",
             "format": "Formato de fichero",
+            "srs": "Sistema de referencia espacial",
             "export": "Exportaciones",
             "downloadonlycurrentpage": "Descargar la página actual",
             "error": {

@@ -874,6 +874,7 @@
         "wfsdownload": {
             "title": "Export Data",
             "format": "File Format",
+            "srs":  "Spatial Reference System",
             "export": "Export",
             "downloadonlycurrentpage": "Download only current page",
             "error": {
