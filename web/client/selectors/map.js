@@ -9,6 +9,7 @@
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
 const MapUtils = require('../utils/MapUtils');
 const {createSelector} = require('reselect');
+const {get} = require('lodash');
 
 /**
  * get the current map configuration from state
@@ -21,6 +22,7 @@ const mapSelector = (state) => state.map && state.map.present || state.map || st
 const projectionDefsSelector = (state) => state.localConfig && state.localConfig.projectionDefs || [];
 
 const projectionSelector = createSelector([mapSelector], (map) => map && map.projection);
+const mapIdSelector = (state) => get(state, "mapInitialConfig.mapId");
 
 /**
  * Get the scales of the current map
@@ -42,7 +44,6 @@ const scalesSelector = createSelector(
     }
 );
 
-const mapIdSelector = (state) => state.map && state.map.present && state.map.present.mapId || null;
 const mapVersionSelector = (state) => state.map && state.map.present && state.map.present.version || 1;
 
 module.exports = {

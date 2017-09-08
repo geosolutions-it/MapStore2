@@ -118,7 +118,7 @@ class SettingsButton extends React.Component {
 
     render() {
         const settings =
-            (<SettingsPanel role="body" style={this.props.style}>
+            (<SettingsPanel key="SettingsPanel" role="body" style={this.props.style}>
                 {this.renderSettings()}
             </SettingsPanel>)
         ;

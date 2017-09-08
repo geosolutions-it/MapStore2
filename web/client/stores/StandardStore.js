@@ -57,7 +57,8 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
             ...allReducers(state, action),
             map: mapState && mapState.map ? map(mapState.map, action) : null,
             mapInitialConfig: mapState && mapState.mapInitialConfig || mapState && mapState.loadingError && {
-                loadingError: mapState.loadingError
+                loadingError: mapState.loadingError,
+                mapId: mapState.loadingError.mapId
             } || null,
             layers: mapState ? layers(mapState.layers, action) : null
         };

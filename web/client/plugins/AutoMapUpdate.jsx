@@ -25,7 +25,7 @@ const OverlayProgressBar = require('../components/misc/progressbars/OverlayProgr
 
 class AutoMapUpdate extends React.Component {
     static propTypes = {
-        options: PropTypes.array,
+        options: PropTypes.object,
         loading: PropTypes.bool,
         count: PropTypes.number,
         length: PropTypes.number,
