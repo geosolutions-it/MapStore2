@@ -66,7 +66,7 @@ function layers(state = [], action) {
         }
         case LAYER_LOADING: {
             const newLayers = (state.flat || []).map((layer) => {
-                return layer.id === action.layerId ? assign({}, layer, {loading: true, loadingError: false}) : layer;
+                return layer.id === action.layerId ? assign({}, layer, {loading: true, reload: false}) : layer;
             });
             return assign({}, state, {flat: newLayers});
         }
@@ -78,7 +78,7 @@ function layers(state = [], action) {
         }
         case LAYER_ERROR: {
             const newLayers = (state.flat || []).map((layer) => {
-                return layer.id === action.layerId ? assign({}, layer, {loading: false, loadingError: true, visibility: false}) : layer;
+                return layer.id === action.layerId ? assign({}, layer, {loadingError: true, visibility: false}) : layer;
             });
             return assign({}, state, {flat: newLayers});
         }

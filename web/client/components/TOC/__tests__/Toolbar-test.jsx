@@ -175,7 +175,7 @@ describe('TOC Toolbar', () => {
         const btn = el.getElementsByClassName("btn");
         expect(btn.length).toBe(2);
         TestUtils.Simulate.click(btn[1]);
-        expect(spyReload).toHaveBeenCalledWith('l001', {visibility: true});
+        expect(spyReload).toHaveBeenCalledWith('l001', {visibility: true, reload: true});
 
         TestUtils.Simulate.click(btn[0]);
         const removeModal = document.getElementsByClassName('modal-dialog').item(0);

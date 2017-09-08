@@ -49,6 +49,10 @@ class OpenlayersLayer extends React.Component {
         const newOpacity = newProps.options && newProps.options.opacity !== undefined ? newProps.options.opacity : 1.0;
         this.setLayerOpacity(newOpacity);
 
+        if (newProps.options && newProps.options.reload) {
+            this.layer.getSource().updateParams({'_reload': Date.now()});
+        }
+
         if (newProps.position !== this.props.position && this.layer.setZIndex) {
             this.layer.setZIndex(newProps.position);
         }

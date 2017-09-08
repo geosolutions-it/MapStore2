@@ -101,6 +101,10 @@ class Toolbar extends React.Component {
         return head(splitIdGroups.reduce((a, b) => a[0] === b[0] ? b : [false], splitIdGroups[0]));
     }
 
+    isLoading = () => {
+        return head(this.props.selectedLayers.filter(l => l.loading));
+    }
+
     getStatus = () => {
         const {selectedLayers, selectedGroups} = this.props;
         const isSingleGroup = this.isNestedGroup();
@@ -196,7 +200,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                {status === 'LAYERS_LOAD_ERROR' ?
+                {!this.isLoading() && status === 'LAYERS_LOAD_ERROR' ?
                     <OverlayTrigger
                         key="reload"
                         placement="top"
@@ -271,7 +275,7 @@ class Toolbar extends React.Component {
 
     reload = () => {
         this.props.selectedLayers.forEach((layer) => {
-            this.props.onToolsActions.onReload(layer.id, {visibility: true});
+            this.props.onToolsActions.onReload(layer.id, {reload: true, visibility: true});
         });
     }
 

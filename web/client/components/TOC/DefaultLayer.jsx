@@ -84,9 +84,9 @@ class DefaultLayer extends React.Component {
                 propertiesChangeHandler={this.props.propertiesChangeHandler}/>);
     }
 
-    renderSpinner = () => {
-        return this.props.node.loading ?
-                (<div className="toc-inline-loader"></div>)
+    renderToolsLegend = () => {
+        return this.props.node.loadingError ?
+                null
                 :
                 (<LayersTool
                     node={this.props.node}
@@ -105,7 +105,7 @@ class DefaultLayer extends React.Component {
                     {grab}
                     {this.renderVisibility()}
                     <Title filterText={this.props.filterText} node={this.props.node} currentLocale={this.props.currentLocale} onClick={this.props.onSelect} onContextMenu={this.props.onContextMenu}/>
-                    {this.props.node.loadingError ? null : this.renderSpinner()}
+                    {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend()}
                 </div>
                 {this.renderCollapsible()}
             </Node>
