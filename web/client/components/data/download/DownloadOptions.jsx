@@ -25,18 +25,23 @@ module.exports = class extends React.Component {
     static propTypes = {
             downloadOptions: PropTypes.object,
             formats: PropTypes.array,
-            onChange: PropTypes.func
+            srsList: PropTypes.array,
+            onChange: PropTypes.func,
+            defaultSrs: PropTypes.string
     };
 
     static defaultProps = {
         downloadOptions: {},
-        formats: []
+        formats: [],
+        srsList: []
     };
 
     getSelectedFormat = () => {
-        return get(this.props, "downloadOptions.selectedFormat") || get(head(this.props.formats), "value");
+        return get(this.props, "downloadOptions.selectedFormat");
     };
-
+    getSelectedSRS = () => {
+        return get(this.props, "downloadOptions.selectedSrs") || this.props.defaultSrs || get(head(this.props.srsList), "name");
+    };
     render() {
         return (<form>
             <label><Message msgId="wfsdownload.format" /></label>
@@ -45,6 +50,12 @@ module.exports = class extends React.Component {
                 value={this.getSelectedFormat()}
                 onChange={(sel) => this.props.onChange("selectedFormat", sel.value)}
                 options={this.props.formats.map(f => ({value: f.name, label: f.label || f.name}))} />
+            <label><Message msgId="wfsdownload.srs" /></label>
+            <Select
+                clearable={false}
+                value={this.getSelectedSRS()}
+                onChange={(sel) => this.props.onChange("selectedSrs", sel.value)}
+                options={this.props.srsList.map(f => ({value: f.name, label: f.label || f.name}))} />
             <Checkbox checked={this.props.downloadOptions.singlePage} onChange={() => this.props.onChange("singlePage", !this.props.downloadOptions.singlePage ) }>
                 <Message msgId="wfsdownload.downloadonlycurrentpage" />
             </Checkbox>

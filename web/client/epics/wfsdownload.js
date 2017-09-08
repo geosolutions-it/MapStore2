@@ -9,7 +9,7 @@ const FilterUtils = require('../utils/FilterUtils');
 const {getByOutputFormat} = require('../utils/FileFormatUtils');
 
 const getWFSFeature = ({url, filterObj = {}, downloadOptions= {}} = {}) => {
-    const data = FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions);
+    const data = FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, false, null, null, downloadOptions.selectedSrs);
     return Rx.Observable.defer( () =>
         axios.post(url + `?service=WFS&outputFormat=${downloadOptions.selectedFormat}`, data, {
           timeout: 60000,

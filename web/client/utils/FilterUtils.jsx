@@ -177,7 +177,7 @@ const processOGCSimpleFilterField = (field, nsplaceholder) => {
 };
 const FilterUtils = {
 
-    toOGCFilter: function(ftName, json, version, sortOptions = null, hits = false, format = null, propertyNames = null) {
+    toOGCFilter: function(ftName, json, version, sortOptions = null, hits = false, format = null, propertyNames = null, srsName = "EPSG:4326") {
         let objFilter;
         try {
             objFilter = json instanceof Object ? json : JSON.parse(json);
@@ -232,8 +232,9 @@ const FilterUtils = {
         }
 
         filter += "</" + nsplaceholder + ":Filter>";
+        // If srsName === native,  srsName param is omitted!
+        ogcFilter += `<wfs:Query ${versionOGC === "2.0" ? "typeNames" : "typeName"}="${ftName}" ${srsName !== 'native' && `srsName="${srsName}"` || ''}>`;
 
-        ogcFilter += '<wfs:Query ' + (versionOGC === "2.0" ? "typeNames" : "typeName") + '="' + ftName + '" srsName="EPSG:4326">';
         ogcFilter += filter;
         if (propertyNames) {
             ogcFilter += propertyNames.map( name =>

@@ -6,6 +6,7 @@ const Spinner = require('react-spinkit');
 const Dialog = require('../../misc/Dialog');
 const Message = require('../../I18N/Message');
 const DownloadOptions = require('./DownloadOptions');
+const assign = require('object-assign');
 
 class DownloadDialog extends React.Component {
     static propTypes = {
@@ -20,7 +21,9 @@ class DownloadDialog extends React.Component {
         onExport: PropTypes.func,
         onDownloadOptionChange: PropTypes.func,
         downloadOptions: PropTypes.object,
-        formats: PropTypes.array
+        formats: PropTypes.array,
+        srsList: PropTypes.array,
+        defaultSrs: PropTypes.string
     };
 
     static defaultProps = {
@@ -33,6 +36,10 @@ class DownloadDialog extends React.Component {
         formats: [
             {name: "csv", label: "csv"},
             {name: "shape-zip", label: "shape-zip"}
+        ],
+        srsList: [
+            {name: "native", label: "Native"},
+            {name: "EPSG:4326", label: "WGS84"}
         ]
     };
 
@@ -62,18 +69,25 @@ class DownloadDialog extends React.Component {
                 <DownloadOptions
                     downloadOptions={this.props.downloadOptions}
                     onChange={this.props.onDownloadOptionChange}
-                    formats={this.props.formats}/>
+                    formats={this.props.formats}
+                    srsList={this.props.srsList}
+                    defaultSrs={this.props.defaultSrs}/>
                 </div>
             <div role="footer">
                 <Button
                     bsStyle="primary"
                     className="download-button"
                     disabled={!this.props.downloadOptions.selectedFormat || this.props.loading}
-                    onClick={() => this.props.onExport(this.props.url, this.props.filterObj, this.props.downloadOptions)}>
+                    onClick={this.handelExport}>
                      {this.renderIcon()} <Message msgId="wfsdownload.export" />
                 </Button>
             </div>
         </Dialog>);
+    }
+    handelExport = () => {
+        const {url, filterObj, downloadOptions, defaultSrs, srsList, onExport} = this.props;
+        const selectedSrs = downloadOptions && downloadOptions.selectedSrs || defaultSrs || (srsList[0] || {}).name;
+        onExport(url, filterObj, assign({}, downloadOptions, {selectedSrs}));
     }
 }
 

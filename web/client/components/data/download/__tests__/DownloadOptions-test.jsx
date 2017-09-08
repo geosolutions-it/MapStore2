@@ -33,6 +33,11 @@ describe('Test for DownloadOptions component', () => {
         expect(cmp).toExist();
         expect(TestUtils.scryRenderedDOMComponentsWithClass(cmp, "Select-value-label")).toExist();
     });
+    it('render with srs list element selected', () => {
+        const cmp = ReactDOM.render(<DownloadOptions downloadOptions={{selectedSrs: "test"}} srsList={[{name: "test"}]}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        expect(TestUtils.scryRenderedDOMComponentsWithClass(cmp, "Select-value-label")).toExist();
+    });
     it('singlePage checkbox events', () => {
         const events = {
             onChange: () => {}
