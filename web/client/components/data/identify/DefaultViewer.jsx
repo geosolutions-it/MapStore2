@@ -138,7 +138,7 @@ class DefaultViewer extends React.Component {
         const Container = this.props.container;
         const validator = this.props.validator(this.props.format);
         const validResponses = validator.getValidResponses(this.props.responses);
-        return (<div>
+        return (<div className="mapstore-identify-viewer">
                 <Container {...this.props.containerProps}
                     onChangeIndex={(index) => {this.setState({index}); }}
                     ref="container"

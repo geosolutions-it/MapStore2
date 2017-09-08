@@ -223,6 +223,7 @@ class Identify extends React.Component {
                 className={this.props.panelClassName}
                 headerClassName={this.props.headerClassName}
                 bodyClassName={this.props.bodyClassName}
+                draggable={this.props.draggable}
                 >
                 {this.renderHeader(missingResponses)}
                 <div role="body">
