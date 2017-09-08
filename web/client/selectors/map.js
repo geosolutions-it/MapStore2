@@ -44,6 +44,7 @@ const scalesSelector = createSelector(
 
 const mapIdSelector = (state) => state.map && state.map.present && state.map.present.mapId || null;
 const mapVersionSelector = (state) => state.map && state.map.present && state.map.present.version || 1;
+const mapNameSelector = (state) => state.map && state.map.present && state.map.present.info && state.map.present.info.name || '';
 
 module.exports = {
     mapSelector,
@@ -51,5 +52,6 @@ module.exports = {
     projectionSelector,
     mapIdSelector,
     projectionDefsSelector,
-    mapVersionSelector
+    mapVersionSelector,
+    mapNameSelector
 };

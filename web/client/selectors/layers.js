@@ -51,11 +51,18 @@ const layerSelectorWithMarkers = createSelector(
 
 const groupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups && LayersUtils.denormalizeGroups(state.layers.flat, state.layers.groups).groups || [];
 
+const selectedNodesSelector = (state) => state.layers && state.layers.selected || [];
+const layerFilterSelector = (state) => state.layers && state.layers.filter || '';
+const layerSettingSelector = (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}};
+
 module.exports = {
     layersSelector,
     layerSelectorWithMarkers,
     groupsSelector,
     currentBackgroundLayerSelector,
     allBackgroundLayerSelector,
-    getLayerFromId
+    getLayerFromId,
+    selectedNodesSelector,
+    layerFilterSelector,
+    layerSettingSelector
 };

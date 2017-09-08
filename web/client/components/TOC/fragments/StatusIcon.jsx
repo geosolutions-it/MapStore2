@@ -1,5 +1,4 @@
-var PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,8 +6,10 @@ var PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var {Glyphicon} = require('react-bootstrap');
+const React = require('react');
+const PropTypes = require('prop-types');
+const {Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
+const Message = require('../../I18N/Message');
 
 class StatusIcon extends React.Component {
     static propTypes = {
@@ -24,9 +25,13 @@ class StatusIcon extends React.Component {
     };
 
     render() {
-        let expanded = this.props.node.expanded !== undefined ? this.props.node.expanded : true;
+        const expanded = this.props.node.expanded !== undefined ? this.props.node.expanded : true;
         return (
-            <Glyphicon style={{marginRight: "8px"}} glyph={expanded ? "folder-open" : "folder-close"} />
+            <OverlayTrigger
+                placement="bottom"
+                overlay={<Tooltip id="toc-status-icon">{<Message msgId={expanded ? 'toc.statusIconOpen' : 'toc.statusIconClose'} />}</Tooltip>}>
+                <Glyphicon onClick={this.props.onClick} className="toc-status-icon" glyph={expanded ? "folder-open" : "folder-close"} />
+            </OverlayTrigger>
         );
     }
 }

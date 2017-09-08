@@ -44,7 +44,8 @@ describe('test Group module component', () => {
         const group = {
             name: 'grp',
             title: 'Group',
-            nodes: layers
+            nodes: layers,
+            showComponent: true
         };
         const comp = ReactDOM.render(<Group node={group}><div/></Group>, document.getElementById("container"));
         expect(comp).toExist();
@@ -52,7 +53,7 @@ describe('test Group module component', () => {
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
         const children = domNode.children;
-        expect(children.length).toBe(3);
+        expect(children.length).toBe(2);
 
         const container = children.item(1);
         expect(container.children.length).toBe(1);
@@ -78,7 +79,8 @@ describe('test Group module component', () => {
         const group = {
             name: 'grp',
             title: 'Group',
-            nodes: layers
+            nodes: layers,
+            showComponent: true
         };
         const comp = ReactDOM.render(<Group node={group} filter={(layer, node) => layer.group === node.name}><div/></Group>, document.getElementById("container"));
         expect(comp).toExist();
@@ -87,9 +89,9 @@ describe('test Group module component', () => {
         expect(domNode).toExist();
 
         const children = domNode.children;
-        expect(children.length).toBe(3);
+        expect(children.length).toBe(2);
 
-        const container = children.item(2);
+        const container = children.item(1);
         expect(container.children.length).toBe(1);
     });
 
@@ -114,7 +116,8 @@ describe('test Group module component', () => {
             name: 'grp',
             title: 'Group',
             nodes: layers,
-            expanded: false
+            expanded: false,
+            showComponent: true
         };
         const comp = ReactDOM.render(<Group node={group} filter={(layer, node) => layer.group === node.name}><div className="layer"/></Group>, document.getElementById("container"));
         expect(comp).toExist();
@@ -146,7 +149,8 @@ describe('test Group module component', () => {
         const group = {
             name: 'grp',
             title: 'Group',
-            nodes: layers
+            nodes: layers,
+            showComponent: true
         };
         const comp = ReactDOM.render(<Group node={group} expanded filter={(layer, node) => layer.group === node.name}><div className="layer"/></Group>, document.getElementById("container"));
         expect(comp).toExist();
@@ -170,7 +174,8 @@ describe('test Group module component', () => {
         const group = {
             name: 'grp',
             title: 'Group',
-            nodes: layers
+            nodes: layers,
+            showComponent: true
         };
         const actions = {
             propertiesChangeHandler: () => {}
@@ -199,7 +204,8 @@ describe('test Group module component', () => {
         const group = {
             name: 'grp',
             title: 'Group',
-            nodes: layers
+            nodes: layers,
+            showComponent: true
         };
         const actions = {
             propertiesChangeHandler: () => {}

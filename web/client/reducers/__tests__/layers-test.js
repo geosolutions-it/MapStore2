@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -496,6 +496,88 @@ describe('Test the layers reducer', () => {
         expect(state.flat).toEqual([]);
         expect(state.groups).toExist();
         expect(state.groups).toEqual([]);
+    });
+
+    it('filter layers', () => {
+        const action = {
+            type: "LAYERS:FILTER_LAYERS",
+            text: 'text'
+        };
+
+        const state = layers({}, action);
+        expect(state).toExist();
+        expect(state.filter).toExist();
+        expect(state.filter).toEqual('text');
+    });
+
+    it('select layer nodes', () => {
+        const action = {
+            type: "LAYERS:SELECT_NODE",
+            id: 'layer',
+            nodeType: 'layer',
+            ctrlKey: false
+        };
+
+        const state = layers({flat: [{id: "layer"}], groups: [{id: "group"}]}, action);
+        expect(state).toExist();
+        expect(state.selected).toExist();
+        expect(state.selected).toEqual(['layer']);
+    });
+
+    it('select group nodes', () => {
+        const action = {
+            type: "LAYERS:SELECT_NODE",
+            id: 'group',
+            nodeType: 'group',
+            ctrlKey: false
+        };
+
+        const state = layers({flat: [{id: "layer"}], groups: [{id: "group", nodes: ["layer"]}]}, action);
+        expect(state).toExist();
+        expect(state.selected).toExist();
+        expect(state.selected).toEqual(['layer', 'group']);
+    });
+
+    it('select nested groups nodes', () => {
+        const action = {
+            type: "LAYERS:SELECT_NODE",
+            id: 'group',
+            nodeType: 'group',
+            ctrlKey: false
+        };
+
+        const state = layers({flat: [{id: "layer"}, {id: "layer2"}, {id: "layer3"}], groups: [{id: "group", nodes: ["layer", {id: 'group001', nodes: ["layer2"]}]}]}, action);
+        expect(state).toExist();
+        expect(state.selected).toExist();
+        expect(state.selected).toEqual(['layer', 'layer2', 'group001', 'group' ]);
+    });
+
+    it('select multiple layer nodes', () => {
+        const action = {
+            type: "LAYERS:SELECT_NODE",
+            id: 'layer',
+            nodeType: 'layer',
+            ctrlKey: true
+        };
+
+        const state = layers({flat: [{id: "layer"}, {id: "layer2"}], groups: [{id: "group"}], selected: ['layer2']}, action);
+        expect(state).toExist();
+        expect(state.selected).toExist();
+        expect(state.selected).toEqual(['layer2', 'layer']);
+    });
+
+    it('select multiple groups nodes', () => {
+        const action = {
+            type: "LAYERS:SELECT_NODE",
+            id: 'group',
+            nodeType: 'group',
+            ctrlKey: true
+        };
+
+        const state = layers({flat: [{id: "layer"}, {id: "layer2"}, {id: "layer3"}], groups: [{id: "group", nodes: ["layer", {id: 'group001', nodes: ["layer2"]}]}], selected: ['layer2', 'group2']}, action);
+        expect(state).toExist();
+        expect(state.selected).toExist();
+        expect(state.selected).toEqual(['layer2', 'group2', 'layer', 'layer2', 'group001', 'group']);
     });
 
 

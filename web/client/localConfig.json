@@ -242,6 +242,7 @@
                 "name": "TOC",
                 "cfg": {
                     "activateQueryTool": true,
+                    "activateAddLayerButton": true,
                     "spatialOperations": [
                         {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
                         {"id": "BBOX", "name": "queryform.spatialfilter.operations.bbox"},

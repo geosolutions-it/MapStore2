@@ -345,9 +345,19 @@
 
 .portal-dialog {
     position: absolute;
-    left: calc(50% - 315px);
-    top: 100px;
-    min-width: 400px;
-    max-width: 630px;
-    background-color: #fff;
+}
+
+@media all and (min-width: 635px) {
+    .portal-dialog {
+        left: calc(50% - 315px);
+        top: 100px;
+        max-width: 630px;
+        background-color: #fff;
+    }
+}
+
+@media all and (max-width: 634px) {
+    .portal-dialog {
+        width: 100%;
+    }
 }

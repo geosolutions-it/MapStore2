@@ -12,9 +12,6 @@ const {Glyphicon, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 const Message = require('../../I18N/Message');
 
-require("./css/layertool.css");
-
-
 class LayersTool extends React.Component {
     static propTypes = {
         node: PropTypes.object,

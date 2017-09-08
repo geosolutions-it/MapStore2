@@ -7,7 +7,7 @@
 */
 
 const expect = require('expect');
-const {layersSelector, layerSelectorWithMarkers, groupsSelector} = require('../layers');
+const {layersSelector, layerSelectorWithMarkers, groupsSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector} = require('../layers');
 
 describe('Test layers selectors', () => {
     it('test layersSelector from config', () => {
@@ -118,4 +118,36 @@ describe('Test layers selectors', () => {
         expect(props[0].nodes[0]).toNotBeA('string');
         expect(props[1].nodes[0]).toNotBeA('string');
     });
+
+    it('test selectedNodesSelector', () => {
+        const props = selectedNodesSelector({layers: {selected: ['layer']}});
+        expect(props.length).toBe(1);
+        expect(props[0]).toBe('layer');
+    });
+
+    it('test selectedNodesSelector no state', () => {
+        const props = selectedNodesSelector({});
+        expect(props.length).toBe(0);
+    });
+
+    it('test layerFilterSelector', () => {
+        const props = layerFilterSelector({layers: {filter: 'test'}});
+        expect(props).toBe('test');
+    });
+
+    it('test layerFilterSelector no state', () => {
+        const props = layerFilterSelector({});
+        expect(props).toBe('');
+    });
+
+    it('test layerSettingSelector', () => {
+        const props = layerSettingSelector({layers: {settings: {expanded: true}}});
+        expect(props).toEqual({expanded: true});
+    });
+
+    it('test layerSettingSelector no state', () => {
+        const props = layerSettingSelector({});
+        expect(props).toEqual({expanded: false, options: {opacity: 1}});
+    });
+
 });
