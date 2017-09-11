@@ -3,6 +3,7 @@ const CONFIGPROVIDER = {
         url: '//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         options: {
             maxZoom: 19,
+            maxNativeZoom: 19,
             credits: {
                 text: '© OpenStreetMap, Open Street Map and contributors, CC-BY-SA',
                 link: 'http://www.openstreetmap.org/copyright'
@@ -15,13 +16,15 @@ const CONFIGPROVIDER = {
             BlackAndWhite: {
                 url: 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
                 options: {
-                    maxZoom: 18
+                    maxZoom: 18,
+                    maxNativeZoom: 18
                 }
             },
             DE: {
                 url: 'http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png',
                 options: {
-                    maxZoom: 18
+                    maxZoom: 18,
+                    maxNativeZoom: 18
                 }
             },
             France: {
@@ -41,6 +44,7 @@ const CONFIGPROVIDER = {
     OpenSeaMap: {
         url: 'http://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
         options: {
+            maxNativeZoom: 18,
             attribution: 'Map data: &copy; <a href="http://www.openseamap.org">OpenSeaMap</a> contributors',
             credits: {
                 text: 'Map data: © OpenSeaMap contributors',
@@ -53,6 +57,7 @@ const CONFIGPROVIDER = {
         options: {
             noCors: true,
             maxZoom: 16,
+            maxNativeZoom: 16,
             attribution: 'Map data: {attribution.OpenStreetMap}, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
             credits: {
                 text: 'Map data: OpenStreetMap contributors CC-BY-SA',
@@ -63,6 +68,7 @@ const CONFIGPROVIDER = {
     Thunderforest: {
         url: '//{s}.tile.thunderforest.com/{variant}/{z}/{x}/{y}.png',
         options: {
+            maxNativeZoom: 18,
             attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, {attribution.OpenStreetMap}',
             credits: {
                 text: 'Map data: OpenCycleMap contributors',
@@ -75,13 +81,15 @@ const CONFIGPROVIDER = {
             Transport: {
                 options: {
                     variant: 'transport',
-                    maxZoom: 19
+                    maxZoom: 19,
+                    maxNativeZoom: 19
                 }
             },
             TransportDark: {
                 options: {
                     variant: 'transport-dark',
-                    maxZoom: 19
+                    maxZoom: 19,
+                    maxNativeZoom: 19
                 }
             },
             Landscape: 'landscape',
@@ -92,6 +100,7 @@ const CONFIGPROVIDER = {
         url: 'http://openmapsurfer.uni-hd.de/tiles/{variant}/x={x}&y={y}&z={z}',
         options: {
             maxZoom: 20,
+            maxNativeZoom: 20,
             variant: 'roads',
             credits: {
                 text: 'MapQuest, Open Street Map and contributors, CC-BY-SA'
@@ -103,13 +112,15 @@ const CONFIGPROVIDER = {
             AdminBounds: {
                 options: {
                     variant: 'adminb',
-                    maxZoom: 19
+                    maxZoom: 19,
+                    maxNativeZoom: 19
                 }
             },
             Grayscale: {
                 options: {
                     variant: 'roadsg',
-                    maxZoom: 19
+                    maxZoom: 19,
+                    maxNativeZoom: 19
                 }
             }
         }
@@ -117,6 +128,7 @@ const CONFIGPROVIDER = {
     Hydda: {
         url: 'http://{s}.tile.openstreetmap.se/hydda/{variant}/{z}/{x}/{y}.png',
         options: {
+            maxNativeZoom: 18,
             variant: 'full',
             attribution: 'Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a> &mdash; Map data {attribution.OpenStreetMap}'
         },
@@ -133,6 +145,7 @@ const CONFIGPROVIDER = {
              */
         url: 'http://otile{s}.mqcdn.com/tiles/1.0.0/{type}/{z}/{x}/{y}.{ext}',
         options: {
+            maxNativeZoom: 18,
             type: 'map',
             ext: 'jpg',
             attribution:
@@ -162,6 +175,7 @@ const CONFIGPROVIDER = {
     MapBox: {
         url: '//api.tiles.mapbox.com/v4/{source}/{z}/{x}/{y}.png?access_token={accessToken}',
         options: {
+            maxNativeZoom: 18,
             attribution:
                     'Imagery from <a href="http://mapbox.com/about/maps/">MapBox</a> &mdash; ' +
                     'Map data {attribution.OpenStreetMap}',
@@ -181,6 +195,7 @@ const CONFIGPROVIDER = {
             subdomains: 'abcd',
             minZoom: 0,
             maxZoom: 20,
+            maxNativeZoom: 20,
             variant: 'toner',
             ext: 'png'
         },
@@ -195,7 +210,8 @@ const CONFIGPROVIDER = {
                 options: {
                     variant: 'watercolor',
                     minZoom: 1,
-                    maxZoom: 16
+                    maxZoom: 16,
+                    maxNativeZoom: 16
                 }
             },
             Terrain: {
@@ -203,6 +219,7 @@ const CONFIGPROVIDER = {
                     variant: 'terrain',
                     minZoom: 4,
                     maxZoom: 18,
+                    maxNativeZoom: 18,
                     bounds: [[22, -132], [70, -56]]
                 }
             },
@@ -211,6 +228,7 @@ const CONFIGPROVIDER = {
                     variant: 'terrain-background',
                     minZoom: 4,
                     maxZoom: 18,
+                    maxNativeZoom: 18,
                     bounds: [[22, -132], [70, -56]]
                 }
             },
@@ -233,6 +251,7 @@ const CONFIGPROVIDER = {
     Esri: {
         url: '//server.arcgisonline.com/ArcGIS/rest/services/{variant}/MapServer/tile/{z}/{y}/{x}',
         options: {
+            maxNativeZoom: 18,
             variant: 'World_Street_Map',
             attribution: 'Tiles &copy; Esri'
         },
@@ -249,6 +268,7 @@ const CONFIGPROVIDER = {
                     variant: 'Specialty/DeLorme_World_Base_Map',
                     minZoom: 1,
                     maxZoom: 11,
+                    maxNativeZoom: 11,
                     attribution: '{attribution.Esri} &mdash; Copyright: &copy;2012 DeLorme'
                 }
             },
@@ -272,6 +292,7 @@ const CONFIGPROVIDER = {
                 options: {
                     variant: 'World_Terrain_Base',
                     maxZoom: 13,
+                    maxNativeZoom: 13,
                     attribution:
                             '{attribution.Esri} &mdash; ' +
                             'Source: USGS, Esri, TANA, DeLorme, and NPS'
@@ -281,6 +302,7 @@ const CONFIGPROVIDER = {
                 options: {
                     variant: 'World_Shaded_Relief',
                     maxZoom: 13,
+                    maxNativeZoom: 13,
                     attribution: '{attribution.Esri} &mdash; Source: Esri'
                 }
             },
@@ -288,6 +310,7 @@ const CONFIGPROVIDER = {
                 options: {
                     variant: 'World_Physical_Map',
                     maxZoom: 8,
+                    maxNativeZoom: 8,
                     attribution: '{attribution.Esri} &mdash; Source: US National Park Service'
                 }
             },
@@ -295,6 +318,7 @@ const CONFIGPROVIDER = {
                 options: {
                     variant: 'Ocean_Basemap',
                     maxZoom: 13,
+                    maxNativeZoom: 13,
                     attribution: '{attribution.Esri} &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri'
                 }
             },
@@ -302,6 +326,7 @@ const CONFIGPROVIDER = {
                 options: {
                     variant: 'NatGeo_World_Map',
                     maxZoom: 16,
+                    maxNativeZoom: 16,
                     attribution: '{attribution.Esri} &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC'
                 }
             },
@@ -309,6 +334,7 @@ const CONFIGPROVIDER = {
                 options: {
                     variant: 'Canvas/World_Light_Gray_Base',
                     maxZoom: 16,
+                    maxNativeZoom: 16,
                     attribution: '{attribution.Esri} &mdash; Esri, DeLorme, NAVTEQ'
                 }
             }
@@ -318,6 +344,7 @@ const CONFIGPROVIDER = {
         url: 'http://{s}.tile.openweathermap.org/map/{variant}/{z}/{x}/{y}.png',
         options: {
             maxZoom: 19,
+            maxNativeZoom: 19,
             attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>',
             opacity: 0.5
         },
@@ -358,7 +385,8 @@ const CONFIGPROVIDER = {
             'app_code': '<insert your app_code here>',
             base: 'base',
             variant: 'normal.day',
-            maxZoom: 20
+            maxZoom: 20,
+            maxNativeZoom: 20
         },
         variants: {
             normalDay: 'normal.day',
@@ -416,6 +444,7 @@ const CONFIGPROVIDER = {
             subdomains: '0123',
             minZoom: 2,
             maxZoom: 18,
+            maxNativeZoom: 18,
             variant: 'acetate-base'
         },
         variants: {
@@ -433,6 +462,7 @@ const CONFIGPROVIDER = {
         options: {
             minZoom: 8,
             maxZoom: 16,
+            maxNativeZoom: 16,
             subdomains: '1234',
             bounds: [[47.204642, 15.996093], [49.830896, 22.576904]],
             attribution:
@@ -442,6 +472,7 @@ const CONFIGPROVIDER = {
     MtbMap: {
         url: 'http://tile.mtbmap.cz/mtbmap_tiles/{z}/{x}/{y}.png',
         options: {
+            maxNativeZoom: 18,
             attribution:
                     '{attribution.OpenStreetMap} &amp; USGS'
         }
@@ -452,6 +483,7 @@ const CONFIGPROVIDER = {
             attribution: '{attribution.OpenStreetMap} &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
             subdomains: 'abcd',
             maxZoom: 19,
+            maxNativeZoom: 19,
             variant: 'light_all'
         },
         variants: {
@@ -467,6 +499,7 @@ const CONFIGPROVIDER = {
         url: 'http://{s}.tiles.wmflabs.org/{variant}/{z}/{x}/{y}.png',
         options: {
             maxZoom: 19,
+            maxNativeZoom: 19,
             attribution: '{attribution.OpenStreetMap}',
             variant: 'hikebike'
         },
@@ -475,6 +508,7 @@ const CONFIGPROVIDER = {
             HillShading: {
                 options: {
                     maxZoom: 15,
+                    maxNativeZoom: 15,
                     variant: 'hillshading'
                 }
             }
@@ -484,6 +518,7 @@ const CONFIGPROVIDER = {
         url: '//maps{s}.wien.gv.at/basemap/{variant}/normal/google3857/{z}/{y}/{x}.{format}',
         options: {
             maxZoom: 19,
+            maxNativeZoom: 19,
             attribution: 'Datenquelle: <a href="www.basemap.at">basemap.at</a>',
             subdomains: ['', '1', '2', '3', '4'],
             format: 'png',
@@ -509,7 +544,7 @@ const CONFIGPROVIDER = {
         }
     },
     NASAGIBS: {
-        url: '//map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}{maxZoom}/{z}/{y}/{x}.{format}',
+        url: '//map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}9/{z}/{y}/{x}.{format}',
         options: {
             attribution:
                     'Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System ' +
@@ -520,6 +555,7 @@ const CONFIGPROVIDER = {
             bounds: [[-85.0511287776, -179.999999975], [85.0511287776, 179.999999975]],
             minZoom: 1,
             maxZoom: 9,
+            maxNativeZoom: 9,
             format: 'jpg',
             time: '',
             tilematrixset: 'GoogleMapsCompatible_Level'
@@ -528,40 +564,50 @@ const CONFIGPROVIDER = {
             ModisTerraTrueColorCR: 'MODIS_Terra_CorrectedReflectance_TrueColor',
             ModisTerraBands367CR: 'MODIS_Terra_CorrectedReflectance_Bands367',
             ViirsEarthAtNight2012: {
+                url: '//map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}8/{z}/{y}/{x}.{format}',
                 options: {
                     variant: 'VIIRS_CityLights_2012',
-                    maxZoom: 8
+                    maxZoom: 8,
+                    maxNativeZoom: 8
                 }
             },
             ModisTerraLSTDay: {
+                url: '//map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}7/{z}/{y}/{x}.{format}',
                 options: {
                     variant: 'MODIS_Terra_Land_Surface_Temp_Day',
                     format: 'png',
                     maxZoom: 7,
+                    maxNativeZoom: 7,
                     opacity: 0.75
                 }
             },
             ModisTerraSnowCover: {
+                url: '//map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}8/{z}/{y}/{x}.{format}',
                 options: {
                     variant: 'MODIS_Terra_Snow_Cover',
                     format: 'png',
                     maxZoom: 8,
+                    maxNativeZoom: 8,
                     opacity: 0.75
                 }
             },
             ModisTerraAOD: {
+                url: '//map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}6/{z}/{y}/{x}.{format}',
                 options: {
                     variant: 'MODIS_Terra_Aerosol',
                     format: 'png',
                     maxZoom: 6,
+                    maxNativeZoom: 6,
                     opacity: 0.75
                 }
             },
             ModisTerraChlorophyll: {
+                url: '//map1.vis.earthdata.nasa.gov/wmts-webmerc/{variant}/default/{time}/{tilematrixset}7/{z}/{y}/{x}.{format}',
                 options: {
                     variant: 'MODIS_Terra_Chlorophyll_A',
                     format: 'png',
                     maxZoom: 7,
+                    maxNativeZoom: 7,
                     opacity: 0.75
                 }
             }
@@ -575,6 +621,7 @@ const CONFIGPROVIDER = {
             bounds: [[49.6, -12], [61.7, 3]],
             minZoom: 1,
             maxZoom: 18,
+            maxNativeZoom: 18,
             subdomains: '0123'
         },
         variants: {
@@ -592,7 +639,8 @@ const CONFIGPROVIDER = {
             'OS_opendata': {
                 url: 'http://geo.nls.uk/maps/opendata/{z}/{x}/{y}.png',
                 options: {
-                    maxZoom: 16
+                    maxZoom: 16,
+                    maxNativeZoom: 16
                 }
             },
                 // OS six inch, 1843 - 1882
@@ -602,6 +650,7 @@ const CONFIGPROVIDER = {
                     tms: true,
                     minZoom: 6,
                     maxZoom: 16,
+                    maxNativeZoom: 16,
                     bounds: [[49.86261, -8.66444], [60.89421, 1.7785]]
                 }
             },
@@ -615,7 +664,8 @@ const CONFIGPROVIDER = {
                 options: {
                     tms: true,
                     minZoom: 3,
-                    maxZoom: 15
+                    maxZoom: 15,
+                    maxNativeZoom: 15
                 }
             },
                 // OS one inch, 1952 - 1961
@@ -625,6 +675,7 @@ const CONFIGPROVIDER = {
                 options: {
                     variant: 'London_1056',
                     minZoom: 9,
+                    maxNativeZoom: 9,
                     bounds: [[51.177621, -0.708618], [51.618016, 0.355682]]
                 }
             },
@@ -634,6 +685,7 @@ const CONFIGPROVIDER = {
                     tms: true,
                     minZoom: 5,
                     maxZoom: 15,
+                    maxNativeZoom: 15,
                     bounds: [[51.371780, -10.810546], [55.422779, -5.262451]]
                 }
             }

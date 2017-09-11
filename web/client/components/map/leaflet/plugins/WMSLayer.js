@@ -31,14 +31,12 @@ L.TileLayer.MultipleUrlWMS = L.TileLayer.WMS.extend({
         } else {
             wmsParams.width = wmsParams.height = tileSize;
         }
-
         for (let i in options) {
             // all keys that are not TileLayer options go to WMS params
-            if (!this.options.hasOwnProperty(i) && i.toUpperCase() !== 'CRS') {
+            if (!this.options.hasOwnProperty(i) && i.toUpperCase() !== 'CRS' && i !== "maxNativeZoom") {
                 wmsParams[i] = options[i];
             }
         }
-
         this.wmsParams = wmsParams;
 
         L.setOptions(this, options);
@@ -83,9 +81,10 @@ function wmsToLeafletOptions(options) {
         version: options.version || "1.3.0",
         SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
-        tileSize: options.tileSize || 256
+        tileSize: options.tileSize || 256,
+        maxZoom: options.maxZoom || 23,
+        maxNativeZoom: options.maxNativeZoom || 18
     }, objectAssign(
-        {},
         (options._v_ ? {_v_: options._v_} : {}),
         (options.params || {})
     ));

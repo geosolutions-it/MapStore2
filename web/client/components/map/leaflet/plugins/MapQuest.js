@@ -12,7 +12,8 @@ const MQ = require('../../../../libs/mapquest');
 Layers.registerType('mapquest', {
     create: (options) => {
         if (MQ) {
-            return MQ.mapLayer(options);
+            return MQ.mapLayer({
+            maxZoom: 23, ...options});
         }
         if (options && options.onError) {
             options.onError();
