@@ -55,6 +55,11 @@ class CesiumMap extends React.Component {
 
     state = { };
 
+    componentWillMount() {
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+    }
     componentDidMount() {
         var map = new Cesium.Viewer(this.props.id, assign({
             baseLayerPicker: false,
@@ -109,6 +114,7 @@ class CesiumMap extends React.Component {
         this.clickStream$.complete();
         this.pauserStream$.complete();
         this.hand.destroy();
+        document.removeEventListener('gesturestart', function() {});
         this.map.destroy();
     }
 

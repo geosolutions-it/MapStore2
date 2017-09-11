@@ -152,7 +152,7 @@
                     }
                 }
             }, "Login",
-            "OmniBar", "BurgerMenu", "Expander", {
+            "OmniBar", "BurgerMenu", "Expander", "GlobeViewSwitcher", {
               "name": "Cookie",
               "cfg": {
                 "externalCookieUrl" : "",
