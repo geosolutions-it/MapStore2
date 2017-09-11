@@ -26,14 +26,17 @@ const FullScreenButton = require('../components/buttons/FullScreenButton');
   *
   */
 const FullScreen = connect( ({controls = {}} = {}) => ({
-    active: controls.fullscreen && controls.fullscreen.enabled,
-    hide: controls.fullscreen && controls.fullscreen.hide
+    active: controls.fullscreen && controls.fullscreen.enabled
 }), {
     onClick: (pressed, options) => toggleFullscreen(pressed, options.querySelector)
 })(FullScreenButton);
 
+// removed because it is not supported yet
+// http://caniuse.com/#feat=fullscreen
+
 module.exports = {
     FullScreenPlugin: assign(FullScreen, {
+        disablePluginIf: "{state('browser') && state('browser').safari}",
         Toolbar: {
             name: 'fullscreen',
             position: 5,

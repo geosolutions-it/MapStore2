@@ -29,6 +29,7 @@
     }],
     "monitorState": [
       {"name": "routing", "path": "routing.location.pathname"},
+      {"name": "browser", "path": "browser"},
       {"name": "featuregridmode", "path": "featuregrid.mode"}],
     "projectionDefs": [],
     "initialState": {

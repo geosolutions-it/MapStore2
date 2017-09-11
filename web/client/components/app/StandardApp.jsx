@@ -13,7 +13,6 @@ const proj4 = require('proj4');
 const {changeBrowserProperties} = require('../../actions/browser');
 const {loadLocale} = require('../../actions/locale');
 const {localConfigLoaded} = require('../../actions/localConfig');
-const {setControlProperty} = require('../../actions/controls');
 const {loadPrintCapabilities} = require('../../actions/print');
 
 const ConfigUtils = require('../../utils/ConfigUtils');
@@ -106,11 +105,6 @@ class StandardApp extends React.Component {
     }
     init = (config) => {
         this.store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
-        if (navigator.userAgent.indexOf('Safari') !== -1 && navigator.userAgent.indexOf('Chrome') === -1) {
-            // removed because it is not supported yet
-            // http://caniuse.com/#feat=fullscreen
-            this.store.dispatch(setControlProperty("fullscreen", "hide", true));
-        }
         this.store.dispatch(localConfigLoaded(config));
         this.addProjDefinitions(config);
         const locale = LocaleUtils.getUserLocale();
