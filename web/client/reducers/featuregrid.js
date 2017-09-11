@@ -43,6 +43,7 @@ const{
 const uuid = require('uuid');
 
 const emptyResultsState = {
+    enableColumnFilters: true,
     open: false,
     canEdit: false,
     focusOnEdit: true,

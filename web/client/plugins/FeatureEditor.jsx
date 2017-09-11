@@ -52,6 +52,7 @@ const FeatureDock = (props = {
             footer={getFooter(props)}>
             {getDialogs(props.tools)}
             <Grid
+                enableColumnFilters={props.enableColumnFilters}
                 emptyRowsView={getEmptyRowsView()}
                 focusOnEdit={props.focusOnEdit}
                 newFeatures={props.newFeatures}
@@ -83,7 +84,8 @@ const selector = createSelector(
     newFeaturesSelector,
     hasChangesSelector,
     state => get(state, 'featuregrid.focusOnEdit') || [],
-    (open, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit) => ({
+    state => get(state, 'featuregrid.enableColumnFilters'),
+    (open, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters) => ({
         open,
         hasChanges,
         newFeatures,
@@ -94,6 +96,7 @@ const selector = createSelector(
         select,
         mode,
         focusOnEdit,
+        enableColumnFilters,
         changes: toChangesMap(changes)
     })
 );

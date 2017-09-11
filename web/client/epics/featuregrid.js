@@ -18,7 +18,7 @@ const {changeDrawingStatus, GEOMETRY_CHANGED} = require('../actions/draw');
 const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const {setControlProperty} = require('../actions/controls');
-const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, featureTypeSelected, createQuery} = require('../actions/wfsquery');
+const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery} = require('../actions/wfsquery');
 const {reset, QUERY_FORM_RESET} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
 const {BROWSE_DATA} = require('../actions/layers');
@@ -28,7 +28,7 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     CLEAR_CHANGES, START_EDITING_FEATURE, TOGGLE_MODE, MODES, geometryChanged, DELETE_GEOMETRY, deleteGeometryFeature,
     SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE,
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
-    openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL} = require('../actions/featuregrid');
+    openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL, UPDATE_FILTER} = require('../actions/featuregrid');
 
 const {TOGGLE_CONTROL, resetControls} = require('../actions/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
@@ -43,6 +43,7 @@ const {error} = require('../actions/notifications');
 const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector} = require('../selectors/query');
 const drawSupportReset = () => changeDrawingStatus("clean", "", "featureGrid", [], {});
 const {interceptOGCError} = require('../utils/ObservableUtils');
+const {gridUpdateToQueryUpdate} = require('../utils/FeatureGridUtils');
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
     let drawOptions; let geomType;
@@ -133,7 +134,7 @@ const createLoadPageFlow = (store) => ({page, size} = {}) => {
     return Rx.Observable.of( query(
             wfsURL(state),
             addPagination({
-                    ...wfsFilter(state)
+                    ...(wfsFilter(state))
                 },
                 getPagination(state, {page, size})
             )
@@ -200,10 +201,20 @@ module.exports = {
             ))
         ),
     /**
+     * Performs the query when the text filter is updated
+     */
+    featureGridUpdateFilter: (action$, store) => action$.ofType(QUERY_CREATE).switchMap( () =>
+        action$.ofType(UPDATE_FILTER)
+            .map( ({update = {}} = {}) => updateQuery(gridUpdateToQueryUpdate(update, wfsFilter(store.getState()))))
+    ),
+
+    /**
      * perform paginated query on page change
      */
     featureGridChangePage: (action$, store) =>
-        action$.ofType(CHANGE_PAGE).switchMap(createLoadPageFlow(store)),
+        action$.ofType(CHANGE_PAGE)
+            .merge(action$.ofType(UPDATE_QUERY).debounceTime(500).map(action => ({...action, page: 0})))
+            .switchMap(createLoadPageFlow(store)),
     /**
      * Reload the page on save success.
      * NOTE: The page is in the action.

@@ -16,7 +16,8 @@ const {
     QUERY_CREATE,
     QUERY_RESULT,
     QUERY_ERROR,
-    RESET_QUERY
+    RESET_QUERY,
+    UPDATE_QUERY
 } = require('../actions/wfsquery');
 
 const {QUERY_FORM_RESET} = require('../actions/queryform');
@@ -90,6 +91,11 @@ function query(state = initialState, action) {
             isNew: true,
             searchUrl: action.searchUrl,
             filterObj: action.filterObj
+        });
+    }
+    case UPDATE_QUERY: {
+        return assign({}, state, {
+            filterObj: assign({}, state.filterObj, action.updates)
         });
     }
     case QUERY_RESULT: {

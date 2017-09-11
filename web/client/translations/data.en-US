@@ -852,6 +852,18 @@
             "featureClose": "Are you sure to close the feature grid?",
             "delete": "Do you confirm to delete {count} features?",
             "missingGeometry": "Missing geometry",
+            "filter": {
+                "placeholders": {
+                    "default": "Search...",
+                    "string": "Type text to filter...",
+                    "number": "Type number or expression..."
+                },
+                "tooltips": {
+                    "default": "Search...",
+                    "string": "Type text to filter...",
+                    "number": "Type a number or an expression. Examples: 10, > 2, < 10"
+                }
+            },
             "toolbar": {
                 "editMode": "Edit mode",
                 "advancedFilter": "Advanced Search",

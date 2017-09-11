@@ -28,6 +28,7 @@ const DELETE_SELECTED_FEATURES_CONFIRM = "FEATUREGRID:DELETE_SELECTED_FEATURES_C
 const SET_FEATURES = 'SET_FEATURES';
 const SORT_BY = 'FEATUREGRID:SORT_BY';
 const SET_LAYER = 'FEATUREGRID:SET_LAYER';
+const UPDATE_FILTER = 'QUERY:UPDATE_FILTER';
 const CHANGE_PAGE = 'FEATUREGRID:CHANGE_PAGE';
 const GEOMETRY_CHANGED = 'FEATUREGRID:GEOMETRY_CHANGED';
 const DOCK_SIZE_FEATURES = 'DOCK_SIZE_FEATURES';
@@ -147,6 +148,13 @@ function setLayer(id) {
     return {
         type: SET_LAYER,
         id
+    };
+}
+function updateFilter(update) {
+    return {
+        type: UPDATE_FILTER,
+        update
+
     };
 }
 function toggleTool(tool, value) {
@@ -300,6 +308,7 @@ module.exports = {
     DISABLE_TOOLBAR, disableToolbar,
     OPEN_ADVANCED_SEARCH, openAdvancedSearch,
     ZOOM_ALL, zoomAll,
+    UPDATE_FILTER, updateFilter,
     setLayer,
     selectFeatures,
     deselectFeatures,

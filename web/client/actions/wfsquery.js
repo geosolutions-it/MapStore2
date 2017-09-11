@@ -13,6 +13,7 @@ const FEATURE_LOADING = 'FEATURE_LOADING';
 const FEATURE_TYPE_ERROR = 'FEATURE_TYPE_ERROR';
 const FEATURE_ERROR = 'FEATURE_ERROR';
 const QUERY_CREATE = 'QUERY_CREATE';
+const UPDATE_QUERY = 'QUERY:UPDATE_QUERY';
 const QUERY_RESULT = 'QUERY_RESULT';
 const QUERY_ERROR = 'QUERY_ERROR';
 const RESET_QUERY = 'RESET_QUERY';
@@ -85,14 +86,18 @@ function querySearchResponse(result, searchUrl, filterObj) {
         result
     };
 }
-
 function queryError(error) {
     return {
         type: QUERY_ERROR,
         error
     };
 }
-
+function updateQuery(updates) {
+    return {
+        type: UPDATE_QUERY,
+        updates
+    };
+}
 function loadFeature(baseUrl, typeName) {
     return (dispatch) => {
         return axios.get(baseUrl + '?service=WFS&version=1.1.0&request=GetFeature&typeName=' + typeName + '&outputFormat=application/json').then((response) => {
@@ -145,6 +150,7 @@ module.exports = {
     QUERY_ERROR, queryError,
     RESET_QUERY, resetQuery,
     QUERY, query,
+    UPDATE_QUERY, updateQuery,
     FEATURE_LOADING, featureLoading,
     FEATURE_LOADED, featureLoaded,
     INIT_QUERY_PANEL, initQueryPanel,

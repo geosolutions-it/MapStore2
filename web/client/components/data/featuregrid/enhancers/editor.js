@@ -2,17 +2,23 @@ const {featureTypeToGridColumns, getToolColumns, getRow, getGridEvents, applyAll
 const {compose, withPropsOnChange, withHandlers, defaultProps} = require('recompose');
 const featuresToGrid = compose(
     defaultProps({
+        enableColumnFilters: false,
         columns: [],
         features: [],
         newFeatures: [],
         select: [],
         changes: {},
         focusOnEdit: true,
-        editors: require('../editors')
+        editors: require('../editors'),
+        filterRenderers: require('../filterRenderers')
     }),
     withPropsOnChange("showDragHandle", ({showDragHandle = false} = {}) => ({
         className: showDragHandle ? 'feature-grid-drag-handle-show' : 'feature-grid-drag-handle-hide'
     })),
+    withPropsOnChange(
+        ["enableColumnFilters", "mode"],
+        props => ({displayFilters: props.enableColumnFilters && props.mode !== "EDIT"})
+    ),
     withPropsOnChange(
         ["features", "newFeatures", "changes"],
         props => ({
@@ -48,6 +54,9 @@ const featuresToGrid = compose(
                     sortable: !props.isFocused
                 }, {
                     getEditor: ({localType=""} = {}) => props.editors(localType, {
+                        onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges
+                    }),
+                    getFilterRenderer: ({localType=""} = {}) => props.filterRenderers(localType, {
                         onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges
                     })
                 }))
