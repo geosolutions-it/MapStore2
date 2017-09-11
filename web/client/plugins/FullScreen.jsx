@@ -26,7 +26,8 @@ const FullScreenButton = require('../components/buttons/FullScreenButton');
   *
   */
 const FullScreen = connect( ({controls = {}} = {}) => ({
-    active: controls.fullscreen && controls.fullscreen.enabled
+    active: controls.fullscreen && controls.fullscreen.enabled,
+    hide: controls.fullscreen && controls.fullscreen.hide
 }), {
     onClick: (pressed, options) => toggleFullscreen(pressed, options.querySelector)
 })(FullScreenButton);

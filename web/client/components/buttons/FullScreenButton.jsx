@@ -24,6 +24,7 @@ const Message = require('../I18N/Message');
  * @prop {string|element} [help] the help text
  * @prop {string} glyphicon the icon name
  * @prop {bool} active the status of the button
+ * @prop {bool} hide if true th button is hidden
  * @prop {function} onClick. The method to call when clicked. the method will return as parameter the toggled `pressed` prop and the `options` object
  * @prop {node} [activeTooltip] the tooltip to use on mouse hover
  * @prop {node} [notActiveTooltip] the tooltip to use on mouse hover when the button is active
@@ -44,6 +45,7 @@ class FullScreenButton extends React.Component {
         help: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
         glyphicon: PropTypes.string,
         active: PropTypes.bool,
+        hide: PropTypes.bool,
         onClick: PropTypes.func,
         activeTooltip: PropTypes.string,
         notActiveTooltip: PropTypes.string,
@@ -62,6 +64,7 @@ class FullScreenButton extends React.Component {
         tooltipPlace: 'left',
         defaultStyle: 'primary',
         pressedStyle: 'success',
+        hide: false,
         glyphicon: '1-full-screen',
         btnConfig: {
             className: "square-button"
@@ -85,7 +88,7 @@ class FullScreenButton extends React.Component {
     };
 
     render() {
-        return <ToggleButton {...this.getButtonProperties()} pressed={this.props.active} tooltip={<Tooltip id="full-screen-button-tip"><Message msgId={this.props.active ? this.props.activeTooltip : this.props.notActiveTooltip}/></Tooltip>} />;
+        return !this.props.hide ? (<ToggleButton {...this.getButtonProperties()} pressed={this.props.active} tooltip={<Tooltip id="full-screen-button-tip"><Message msgId={this.props.active ? this.props.activeTooltip : this.props.notActiveTooltip}/></Tooltip>} />) : null;
     }
 }
 
