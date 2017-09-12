@@ -361,12 +361,20 @@ class LayerTree extends React.Component {
         return this.renderTOC();
     }
 }
+
 /**
  * TOC plugins
  * @name TOC
  * @class
  * @memberof plugins
- * @prop {boolean} cfg.activateQueryTool
+ * @prop {boolean} cfg.activateFilterLayer: activate filter layers tool, default `true`
+ * @prop {boolean} cfg.activateMapTitle: show map title, default `true`
+ * @prop {boolean} cfg.activateToolsContainer: activate layers and group global toolbar, default `true`
+ * @prop {boolean} cfg.activateLegendTool: show legend in collapsible panel, default `true`
+ * @prop {boolean} cfg.activateZoomTool: activate zoom to extension tool, default `true`
+ * @prop {boolean} cfg.activateSettingsTool: activate settings of layers and groups, default `true`
+ * @prop {boolean} cfg.activateRemoveLayer: activate remove layer tool, default `true`
+ * @prop {boolean} cfg.activateQueryTool: activate query tool options, default `false`
  * @prop {object} cfg.layerOptions: options to pass to the layer.
  * Some of the layerOptions are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend:
  * For instance you can pass some stying props to the legend.
