@@ -1,3 +1,11 @@
+#mapstore-layer-settings {
+    z-index: 1022 !important;
+}
+
+#mapstore-layer-groups-settings {
+    z-index: 1022 !important;
+}
+
 .mapstore-toc-head {
     overflow: hidden;
 
@@ -194,7 +202,7 @@
         overflow: hidden;
         width: @icon-size-md/2;
         height: @icon-size-md;
-        margin: floor((@square-btn-size - @icon-size-md) / 2) 5px 0 5px;
+        margin: 0 5px;
     }
 
     .toc-grab.glyphicon {
@@ -206,7 +214,7 @@
     .glyphicon {
         float: left;
         font-size: @icon-size-md;
-        margin: floor((@square-btn-size - @icon-size-md) / 2) 5px 0 5px;
+        margin: 0 5px;
     }
 
     .glyphicon {
@@ -240,12 +248,13 @@
     .toc-default-group-head {
         height: @square-btn-size;
         width: 100%;
+        padding: floor((@square-btn-size - @icon-size-md) / 2) 0;
 
         .toc-group-title {
             overflow: hidden;
             float: left;
             height: @font-size-base * 1.4;
-            margin: floor((@square-btn-size - @font-size-base * 1.4) / 2) 5px 0 5px;
+            margin: 0 5px;
             width: 140px;
             cursor: pointer;
             &:hover {
@@ -318,12 +327,13 @@
             color: @ms2-color-text;
             background-color: @ms2-color-background;
             margin-bottom: 10px;
+            padding: floor((@square-btn-size - @icon-size-md) / 2) 0;
 
             .toc-title {
                 overflow: hidden;
                 float: left;
                 height: @font-size-base * 1.4;
-                margin: floor((@square-btn-size - @font-size-base * 1.4) / 2) 5px 0 5px;
+                margin: 0 5px;
                 width: 140px;
                 cursor: pointer;
                 &:hover {
@@ -334,7 +344,7 @@
 
             .toc-inline-loader {
                 float: right;
-                margin: floor((@square-btn-size - @icon-size-md) / 2) 10px 0 5px;
+                margin: 0 5px;
                 .mapstore-circle-loader(@icon-size-md/10, @icon-size-md, @ms2-color-primary);
             }
         }
