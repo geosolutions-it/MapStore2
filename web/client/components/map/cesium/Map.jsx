@@ -62,10 +62,9 @@ class CesiumMap extends React.Component {
          won't allow you to disable pinch to zoom with the user-scalable attribute.
          see https://stackoverflow.com/questions/4389932/how-do-you-disable-viewport-zooming-on-mobile-safari/39711930#39711930
          */
-        document.addEventListener('gesturestart', function(e) {
-            e.preventDefault();
-        });
+        document.addEventListener('gesturestart', this.gestureStartListener );
     }
+
     componentDidMount() {
         var map = new Cesium.Viewer(this.props.id, assign({
             baseLayerPicker: false,
@@ -121,7 +120,7 @@ class CesiumMap extends React.Component {
         this.pauserStream$.complete();
         this.hand.destroy();
         // see comment in componentWillMount
-        document.removeEventListener('gesturestart', function() {});
+        document.removeEventListener('gesturestart', this.gestureStartListener );
         this.map.destroy();
     }
 
@@ -210,6 +209,10 @@ class CesiumMap extends React.Component {
                 {children}
             </div>
         );
+    }
+
+    gestureStartListener = (e) => {
+        e.preventDefault();
     }
 
     setMousePointer = (pointer) => {
