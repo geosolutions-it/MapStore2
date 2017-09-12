@@ -12,7 +12,7 @@ const {createSelector} = require('reselect');
 const {Glyphicon} = require('react-bootstrap');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
-       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode, browseData, selectNode, filterLayers} = require('../actions/layers');
+       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode, browseData, selectNode, filterLayers, refreshLayerVersion} = require('../actions/layers');
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
 const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector} = require('../selectors/layers');
@@ -92,7 +92,7 @@ const tocSelector = createSelector(
             },
             {
                 options: {loadingError: true},
-                func: (node) => head(node.nodes.filter(n => n.loadingError))
+                func: (node) => head(node.nodes.filter(n => n.loadingError && n.loadingError !== 'Warning'))
             },
             {
                 options: {expanded: true, showComponent: true},
@@ -162,7 +162,8 @@ class LayerTree extends React.Component {
         noFilterResults: PropTypes.bool,
         onAddLayer: PropTypes.func,
         activateAddLayerButton: PropTypes.bool,
-        catalogActive: PropTypes.bool
+        catalogActive: PropTypes.bool,
+        refreshLayerVersion: PropTypes.func
     };
 
     static defaultProps = {
@@ -217,7 +218,8 @@ class LayerTree extends React.Component {
         noFilterResults: false,
         onAddLayer: () => {},
         activateAddLayerButton: false,
-        catalogActive: false
+        catalogActive: false,
+        refreshLayerVersion: () => {}
     };
 
     getNoBackgroundLayers = (group) => {
@@ -333,8 +335,9 @@ class LayerTree extends React.Component {
                                 onUpdateSettings: this.props.updateSettings,
                                 onRetrieveLayerData: this.props.retrieveLayerData,
                                 onHideSettings: this.props.hideSettings,
-                                onReload: this.props.layerPropertiesChangeHandler,
-                                onAddLayer: this.props.onAddLayer}}/>
+                                onReload: this.props.refreshLayerVersion,
+                                onAddLayer: this.props.onAddLayer,
+                                onShow: this.props.layerPropertiesChangeHandler}}/>
                     }/>
                 <div className={'mapstore-toc' + bodyClass}>
                     {this.props.noFilterResults && this.props.filterText ?
@@ -398,7 +401,8 @@ const TOCPlugin = connect(tocSelector, {
     removeNode,
     onSelectNode: selectNode,
     onFilter: filterLayers,
-    onAddLayer: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true)
+    onAddLayer: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
+    refreshLayerVersion
 })(LayerTree);
 
 module.exports = {

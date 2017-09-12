@@ -72,20 +72,21 @@ class DefaultLayer extends React.Component {
     };
 
     renderVisibility = () => {
-        return this.props.node.loadingError ?
+        return this.props.node.loadingError === 'Error' ?
             (<LayersTool key="loadingerror"
                 glyph="exclamation-mark text-danger"
                 tooltip="toc.loadingerror"
                 className="toc-error"/>)
             :
             (<VisibilityCheck key="visibilitycheck"
+                tooltip={this.props.node.loadingError === 'Warning' ? 'toc.toggleLayerVisibilityWarning' : 'toc.toggleLayerVisibility'}
                 node={this.props.node}
                 checkType={this.props.visibilityCheckType}
                 propertiesChangeHandler={this.props.propertiesChangeHandler}/>);
     }
 
     renderToolsLegend = () => {
-        return this.props.node.loadingError ?
+        return this.props.node.loadingError === 'Error' ?
                 null
                 :
                 (<LayersTool
@@ -98,9 +99,9 @@ class DefaultLayer extends React.Component {
                     onClick={(node) => this.props.onToggle(node.id, node.expanded)}/>);
     }
 
-    renderNode = (grab, hide, selected, error, other) => {
+    renderNode = (grab, hide, selected, error, warning, other) => {
         return (
-            <Node className={'toc-default-layer' + hide + selected + error} sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
+            <Node className={'toc-default-layer' + hide + selected + error + warning} sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
                 <div className="toc-default-layer-head">
                     {grab}
                     {this.renderVisibility()}
@@ -117,11 +118,12 @@ class DefaultLayer extends React.Component {
 
         const hide = !this.props.node.visibility || this.props.node.invalid ? ' visibility' : '';
         const selected = this.props.selectedNodes.filter((s) => s === this.props.node.id).length > 0 ? ' selected' : '';
-        const error = this.props.node.loadingError ? ' layer-error' : '';
+        const error = this.props.node.loadingError === 'Error' ? ' layer-error' : '';
+        const warning = this.props.node.loadingError === 'Warning' ? ' layer-warning' : '';
         const grab = other.isDraggable ? <LayersTool key="grabTool" tooltip="toc.grabLayerIcon" className="toc-grab" ref="target" glyph="menu-hamburger"/> : <span className="toc-layer-tool toc-grab"/>;
-        const filteredNode = this.filterLayers(this.props.node) ? this.renderNode(grab, hide, selected, error, other) : null;
+        const filteredNode = this.filterLayers(this.props.node) ? this.renderNode(grab, hide, selected, error, warning, other) : null;
 
-        return !this.props.filterText ? this.renderNode(grab, hide, selected, error, other) : filteredNode;
+        return !this.props.filterText ? this.renderNode(grab, hide, selected, error, warning, other) : filteredNode;
     }
 
     filterLayers = (layer) => {

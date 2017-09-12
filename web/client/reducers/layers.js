@@ -66,7 +66,7 @@ function layers(state = [], action) {
         }
         case LAYER_LOADING: {
             const newLayers = (state.flat || []).map((layer) => {
-                return layer.id === action.layerId ? assign({}, layer, {loading: true, reload: false}) : layer;
+                return layer.id === action.layerId ? assign({}, layer, {loading: true}) : layer;
             });
             return assign({}, state, {flat: newLayers});
         }
@@ -77,8 +77,9 @@ function layers(state = [], action) {
             return assign({}, state, {flat: newLayers});
         }
         case LAYER_ERROR: {
+            const isWarning = action.percentage && action.percentage < 50;
             const newLayers = (state.flat || []).map((layer) => {
-                return layer.id === action.layerId ? assign({}, layer, {loadingError: true, visibility: false}) : layer;
+                return layer.id === action.layerId ? assign({}, layer, {loadingError: isWarning ? 'Warning' : 'Error', visibility: isWarning}) : layer;
             });
             return assign({}, state, {flat: newLayers});
         }

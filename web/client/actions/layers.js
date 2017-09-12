@@ -127,10 +127,11 @@ function layerLoad(layerId, error) {
     };
 }
 
-function layerError(layerId) {
+function layerError(layerId, percentage) {
     return {
         type: LAYER_ERROR,
-        layerId: layerId
+        layerId: layerId,
+        percentage
     };
 }
 

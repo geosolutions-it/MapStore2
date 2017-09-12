@@ -44,7 +44,8 @@ class Toolbar extends React.Component {
             onRetrieveLayerData: () => {},
             onHideSettings: () => {},
             onReload: () => {},
-            onAddLayer: () => {}
+            onAddLayer: () => {},
+            onShow: () => {}
         },
         text: {
             settingsText: '',
@@ -113,7 +114,7 @@ class Toolbar extends React.Component {
         status = isSingleGroup ? 'GROUP' : status;
         status = selectedLayers.length > 1 & selectedGroups.length === 0 ? 'LAYERS' : status;
         status = selectedGroups.length > 1 && !isSingleGroup ? 'GROUPS' : status;
-        status = this.props.selectedLayers.length > 0 && this.props.selectedLayers.filter(l => l.loadingError).length === this.props.selectedLayers.length ? 'LAYERS_LOAD_ERROR' : status;
+        status = this.props.selectedLayers.length > 0 && this.props.selectedLayers.filter(l => l.loadingError === 'Error').length === this.props.selectedLayers.length ? 'LAYERS_LOAD_ERROR' : status;
         return status;
     }
 
@@ -275,7 +276,8 @@ class Toolbar extends React.Component {
 
     reload = () => {
         this.props.selectedLayers.forEach((layer) => {
-            this.props.onToolsActions.onReload(layer.id, {reload: true, visibility: true});
+            this.props.onToolsActions.onShow(layer.id, {visibility: true});
+            this.props.onToolsActions.onReload(layer.id);
         });
     }
 

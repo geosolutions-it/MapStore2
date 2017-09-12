@@ -24,7 +24,8 @@ const onToolsActions = {
     onRetrieveLayerData: () => {},
     onHideSettings: () => {},
     onReload: () => {},
-    onAddLayer: () => {}
+    onAddLayer: () => {},
+    onShow: () => {}
 };
 
 describe('TOC Toolbar', () => {
@@ -149,12 +150,12 @@ describe('TOC Toolbar', () => {
 
     it('layer single selection (loading error)', () => {
         const spyReload = expect.spyOn(onToolsActions, 'onReload');
-
+        const spyShow = expect.spyOn(onToolsActions, 'onShow');
         const selectedLayers = [{
             id: 'l001',
             title: 'layer001',
             name: 'layer001name',
-            loadingError: true,
+            loadingError: 'Error',
             bbox: {
                 bounds: {
                     maxx: 10,
@@ -175,7 +176,8 @@ describe('TOC Toolbar', () => {
         const btn = el.getElementsByClassName("btn");
         expect(btn.length).toBe(2);
         TestUtils.Simulate.click(btn[1]);
-        expect(spyReload).toHaveBeenCalledWith('l001', {visibility: true, reload: true});
+        expect(spyReload).toHaveBeenCalled();
+        expect(spyShow).toHaveBeenCalledWith('l001', {visibility: true});
 
         TestUtils.Simulate.click(btn[0]);
         const removeModal = document.getElementsByClassName('modal-dialog').item(0);

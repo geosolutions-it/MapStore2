@@ -12,6 +12,7 @@ var ConfigUtils = require('../../../utils/ConfigUtils');
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var assign = require('object-assign');
 var mapUtils = require('../../../utils/MapUtils');
+const Rx = require('rxjs');
 
 const {throttle} = require('lodash');
 
@@ -155,23 +156,51 @@ class LeafletMap extends React.Component {
             if (event && event.layer && event.layer.on ) {
                 // TODO check event.layer.on is a function
                 // Needed to fix GeoJSON Layer neverending loading
-                let hadError = false;
+
                 if (!(event.layer.options && event.layer.options.hideLoading)) {
                     this.props.onLayerLoading(event.layer.layerId);
                 }
+
+                let layerLoadingStream$ = new Rx.Subject();
+                let layerLoadStream$ = new Rx.Subject();
+                let layerErrorStream$ = new Rx.Subject();
+
                 event.layer.on('loading', (loadingEvent) => {
-                    hadError = false;
                     this.props.onLayerLoading(loadingEvent.target.layerId);
+                    layerLoadingStream$.next(loadingEvent);
                 });
-                event.layer.on('load', (loadEvent) => { this.props.onLayerLoad(loadEvent.target.layerId, hadError); });
-                event.layer.on('tileerror', (errorEvent) => {
-                    const isError = errorEvent.target.onError ? errorEvent.target.onError(errorEvent) : true;
-                    if (isError) {
-                        hadError = true;
-                        this.props.onLayerError(errorEvent.target.layerId);
-                    }
+                event.layer.on('load', (loadEvent) => {
+                    this.props.onLayerLoad(loadEvent.target.layerId);
+                    layerLoadStream$.next(loadEvent);
                 });
+                event.layer.on('tileerror', (errorEvent) => { layerErrorStream$.next(errorEvent); });
+
+                layerErrorStream$
+                    .bufferToggle(
+                        layerLoadingStream$,
+                        () => layerLoadStream$)
+                    .subscribe({
+                        next: (errorEvent) => {
+                            const tileCount = errorEvent && errorEvent[0] && errorEvent[0].target && errorEvent[0].target._tiles && Object.keys(errorEvent[0].target._tiles).length || 0;
+                            if (tileCount > 0 && errorEvent && errorEvent.length > 0) {
+                                this.props.onLayerError(errorEvent[0].target.layerId, (errorEvent.length * 100) / tileCount);
+                            }
+                        }
+                    });
+
+                event.layer.layerLoadingStream$ = layerLoadingStream$;
+                event.layer.layerLoadStream$ = layerLoadStream$;
+                event.layer.layerErrorStream$ = layerErrorStream$;
             }
+        });
+
+        this.map.on('layerremove', (event) => {
+            if (event.layer.layerLoadingStream$) {
+                event.layer.layerLoadingStream$.complete();
+                event.layer.layerLoadStream$.complete();
+                event.layer.layerErrorStream$.complete();
+            }
+            event.layer.clearAllEventListeners();
         });
 
         this.drawControl = null;

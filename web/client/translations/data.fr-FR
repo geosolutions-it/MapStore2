@@ -240,6 +240,7 @@
             "statusIconClose": "Open group",
             "grabLayerIcon": "Grab and sort layer",
             "grabGroupIcon": "Grab and sort group",
+            "toggleLayerVisibilityWarning": "Toggle layer visibility, Warning: layer didn't load correctly",
 
             "editLayerProperties": "Modifier les propriétés de la couche",
             "browseData": "Ouvrir la table d'attribut",

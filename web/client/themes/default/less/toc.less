@@ -175,7 +175,7 @@
 
 .toc-default-group {
 
-    background-color: darken(@ms2-color-background, 10%);
+    background-color: @ms2-color-background;
     border-bottom: 1px solid @ms2-color-shade-light;
 
     .toc-default-group {
@@ -184,6 +184,7 @@
 
         .toc-default-group-head {
             margin-top: 10px;
+            border-top: 1px solid @ms2-color-shade-lighter;
         }
     }
 
@@ -260,7 +261,7 @@
     }
 
     &.visibility {
-        opacity: 0.5;
+        opacity: 0.6;
     }
 
     &.selected {
@@ -288,18 +289,13 @@
     &.group-error {
         opacity: 1.0;
         .toc-default-group-head {
-            .glyphicon {
-                color: @ms2-color-text;
-            }
             .toc-error {
                 color: @ms2-color-danger;
             }
+
         }
 
         &.selected {
-            .glyphicon {
-                color: @ms2-color-text-primary;
-            }
             .toc-error {
                 color: @ms2-color-danger;
             }
@@ -311,7 +307,10 @@
         padding: 0;
         margin-top: 10px;
         background-color: #fff;
-        .shadow-soft;
+
+        -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
+    	-moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
+    	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
 
         .toc-default-layer-head {
             height: @square-btn-size;
@@ -340,6 +339,17 @@
             }
         }
 
+        &.layer-warning {
+            .visibility-check:after {
+                content: 'o';
+                font-family: "mapstore2";
+                position: absolute;
+
+                font-size: @icon-size-md * (2/3);
+                color: @ms2-color-danger;
+            }
+        }
+
         .collapsible-toc {
             padding: 10px;
             .row {
@@ -353,7 +363,7 @@
         }
 
         &.visibility {
-            opacity: 0.5;
+            opacity: 0.6;
         }
 
         &.selected {
@@ -387,9 +397,9 @@
 
         &.layer-error {
             opacity: 1.0;
-            background-color: darken(@ms2-color-background, 5%);
+            background-color: darken(@ms2-color-background, 2%);
             .toc-default-layer-head {
-                background-color: darken(@ms2-color-background, 5%);
+                background-color: darken(@ms2-color-background, 2%);
             }
             .glyphicon {
                 color: @ms2-color-text;
@@ -416,7 +426,7 @@
                     -moz-box-sizing: border-box;
                     -webkit-box-sizing: border-box;
                     border: 1px solid @ms2-color-danger;
-                    background-color: darken(@ms2-color-background, 5%);
+                    background-color: darken(@ms2-color-background, 2%);
 
                     .toc-inline-loader {
                         .mapstore-circle-loader(@icon-size-md/10, @icon-size-md, @ms2-color-danger);
@@ -441,7 +451,7 @@
     border-radius: @border-radius-base !important;
     opacity: 0.8;
     .toc-default-layer-head {
-        background-color: darken(@ms2-color-background, 10%);
+        background-color: @ms2-color-background;
         color: @ms2-color-primary;
 
         .glyphicon {
@@ -472,16 +482,16 @@
 
 .SortableItem.is-dragging.toc-default-group,
 .SortableItem.is-dragging.toc-default-group.selected {
-    background-color: darken(@ms2-color-background, 10%) !important;
+    background-color: @ms2-color-background !important;
     border: 1px dashed @ms2-color-primary !important;
     height: @square-btn-size !important;
     overflow: hidden;
     border-radius: @border-radius-base !important;
     opacity: 0.8;
     .toc-default-group-head {
-        background-color: darken(@ms2-color-background, 10%);
+        background-color: @ms2-color-background;
         color: @ms2-color-primary;
-
+        margin-top: 0;
         .glyphicon {
             color: @ms2-color-primary;
         }
@@ -494,7 +504,7 @@
 
 .SortableItem.is-placeholder.toc-default-group,
 .SortableItem.is-placeholder.toc-default-group.selected {
-    background-color: darken(@ms2-color-background, 10%) !important;
+    background-color: @ms2-color-background !important;
     border: none !important;
     border-bottom:  1px solid @ms2-color-primary !important;
     height: @square-btn-size + 5 !important;
