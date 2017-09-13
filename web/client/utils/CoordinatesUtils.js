@@ -131,6 +131,9 @@ const CoordinatesUtils = {
     reprojectGeoJson: function(geojson, fromParam = "EPSG:4326", toParam = "EPSG:4326") {
         let from = fromParam;
         let to = toParam;
+        if (from === to) {
+            return geojson;
+        }
         if (typeof from === 'string') {
             from = determineCrs(from);
         }
