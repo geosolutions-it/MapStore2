@@ -102,12 +102,9 @@ const getGroupNodes = (node) => {
                 nodes = a.concat(getGroupNodes(b));
             }
             if (isString(b)) {
-                nodes.push(b);
-            } else {
-                nodes.push(b.id);
+                return [...nodes, b];
             }
-
-            return nodes;
+            return [...nodes, b.id];
         }, []);
     }
     return [];

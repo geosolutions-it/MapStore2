@@ -32,11 +32,9 @@ class Title extends React.Component {
 
         return this.props.filterText ? splitTitle.reduce((a, b, idx) => {
             if (idx === splitTitle.length - 1) {
-                a.push(b);
-            } else {
-                a.push(b, <strong key={idx}>{this.props.filterText.toLowerCase()}</strong>);
+                return [...a, b];
             }
-            return a;
+            return [...a, b, <strong key={idx}>{this.props.filterText.toLowerCase()}</strong>];
         }, []) : title;
     }
 

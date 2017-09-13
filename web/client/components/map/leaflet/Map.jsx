@@ -183,7 +183,7 @@ class LeafletMap extends React.Component {
                         next: (errorEvent) => {
                             const tileCount = errorEvent && errorEvent[0] && errorEvent[0].target && errorEvent[0].target._tiles && Object.keys(errorEvent[0].target._tiles).length || 0;
                             if (tileCount > 0 && errorEvent && errorEvent.length > 0) {
-                                this.props.onLayerError(errorEvent[0].target.layerId, (errorEvent.length * 100) / tileCount);
+                                this.props.onLayerError(errorEvent[0].target.layerId, tileCount, errorEvent.length);
                             }
                         }
                     });

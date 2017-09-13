@@ -188,7 +188,7 @@ class OpenlayersLayer extends React.Component {
                         const errors = tileEvents.filter(e => e.type === 'tileloaderror');
                         if (errors.length > 0) {
                             this.props.onLayerLoad(options.id, {error: true});
-                            this.props.onLayerError(options.id, errors.length * 100 / tileEvents.length);
+                            this.props.onLayerError(options.id, tileEvents.length, errors.length);
                         } else {
                             this.props.onLayerLoad(options.id);
                         }
@@ -231,7 +231,7 @@ class OpenlayersLayer extends React.Component {
                         const errors = imageEvents.filter(e => e.type === 'imageloaderror');
                         if (errors.length > 0) {
                             this.props.onLayerLoad(options.id, {error: true});
-                            this.props.onLayerError(options.id, errors.length * 100 / imageEvents.length);
+                            this.props.onLayerError(options.id, imageEvents.length, errors.length);
                         } else {
                             this.props.onLayerLoad(options.id);
                         }

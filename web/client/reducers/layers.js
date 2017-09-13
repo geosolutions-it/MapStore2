@@ -77,9 +77,9 @@ function layers(state = [], action) {
             return assign({}, state, {flat: newLayers});
         }
         case LAYER_ERROR: {
-            const isWarning = action.percentage && action.percentage < 50;
+            const isError = action.tilesCount === action.tilesErrorCount;
             const newLayers = (state.flat || []).map((layer) => {
-                return layer.id === action.layerId ? assign({}, layer, {loadingError: isWarning ? 'Warning' : 'Error', visibility: isWarning}) : layer;
+                return layer.id === action.layerId ? assign({}, layer, {loadingError: isError ? 'Error' : 'Warning', visibility: !isError}) : layer;
             });
             return assign({}, state, {flat: newLayers});
         }
