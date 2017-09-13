@@ -112,7 +112,7 @@ class QueryToolbar extends React.Component {
         let filterObj = {
             featureTypeName: this.props.featureTypeName,
             groupFields: this.props.groupFields,
-            filterFields: this.props.filterFields.filter((field) => field.value || field.operator === "isNull"),
+            filterFields: this.props.filterFields.filter((field) => (field.value === 0 || field.value) || field.operator === "isNull"),
             spatialField: this.props.spatialField,
             pagination: this.props.pagination,
             filterType: this.props.filterType,

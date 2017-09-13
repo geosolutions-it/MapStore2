@@ -60,7 +60,7 @@ const ogcDateField = (attribute, operator, value, nsplaceholder) => {
 
 const ogcListField = (attribute, operator, value, nsplaceholder) => {
     let fieldFilter;
-    if (value) {
+    if ((value !== undefined || value !== null)) {
         fieldFilter =
             ogcComparisonOperators[operator](nsplaceholder,
                 propertyTagReference[nsplaceholder].startTag +
@@ -74,7 +74,7 @@ const ogcListField = (attribute, operator, value, nsplaceholder) => {
 
 const ogcStringField = (attribute, operator, value, nsplaceholder) => {
     let fieldFilter;
-    if (value) {
+    if (value !== undefined || value !== null) {
         if (operator === "isNull") {
             fieldFilter =
                 ogcComparisonOperators[operator](nsplaceholder,
@@ -106,21 +106,21 @@ const ogcStringField = (attribute, operator, value, nsplaceholder) => {
 const ogcNumberField = (attribute, operator, value, nsplaceholder) => {
     let fieldFilter;
     if (operator === "><") {
-        if (value && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
+        if ((value !== undefined || value !== null) && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
             fieldFilter = ogcComparisonOperators[">="](nsplaceholder,
                             propertyTagReference[nsplaceholder].startTag +
                                 attribute +
                             propertyTagReference[nsplaceholder].endTag +
                          "<" + nsplaceholder + ":Literal>" + value.lowBound + "</" + nsplaceholder + ":Literal>"
                         );
-        }else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
+        }else if ((value !== undefined || value !== null) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
             fieldFilter = ogcComparisonOperators["<="](nsplaceholder,
                             propertyTagReference[nsplaceholder].startTag +
                                 attribute +
                             propertyTagReference[nsplaceholder].endTag +
                          "<" + nsplaceholder + ":Literal>" + value.upBound + "</" + nsplaceholder + ":Literal>"
                      );
-        }else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
+        }else if ((value !== undefined || value !== null) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
             fieldFilter =
                         ogcComparisonOperators[operator](nsplaceholder,
                             propertyTagReference[nsplaceholder].startTag +
@@ -135,8 +135,8 @@ const ogcNumberField = (attribute, operator, value, nsplaceholder) => {
                         );
         }
     } else {
-        let val = value && (value.lowBound !== null && value.lowBound !== undefined) ? value.lowBound : value;
-        if (val) {
+        let val = (value !== undefined || value !== null) && (value.lowBound !== null && value.lowBound !== undefined) ? value.lowBound : value;
+        if (val !== undefined || val !== null) {
             fieldFilter = ogcComparisonOperators[operator](nsplaceholder,
                             propertyTagReference[nsplaceholder].startTag +
                                 attribute +
@@ -218,20 +218,22 @@ const FilterUtils = {
                 filters.push(this.processOGCCrossLayerFilter(crossLayerFilter, nsplaceholder));
             }
         }
-
-        let filter = "<" + nsplaceholder + ":Filter>";
+        let filter = "";
 
         if (filters.length > 1) {
+            filter = "<" + nsplaceholder + ":Filter>";
             filter += "<" + nsplaceholder + ":And>";
             filters.forEach((subFilter) => {
                 filter += subFilter;
             });
             filter += "</" + nsplaceholder + ":And>";
-        } else {
+            filter += "</" + nsplaceholder + ":Filter>";
+        } else if (filters.length === 1) {
+            filter = "<" + nsplaceholder + ":Filter>";
             filter += filters[0];
+            filter += "</" + nsplaceholder + ":Filter>";
         }
 
-        filter += "</" + nsplaceholder + ":Filter>";
         // If srsName === native,  srsName param is omitted!
         ogcFilter += `<wfs:Query ${versionOGC === "2.0" ? "typeNames" : "typeName"}="${ftName}" ${srsName !== 'native' && `srsName="${srsName}"` || ''}>`;
 
@@ -579,7 +581,7 @@ const FilterUtils = {
 
     cqlStringField: function(attribute, operator, value) {
         let fieldFilter;
-        if (value) {
+        if (value !== undefined || value !== null) {
             if (operator === "isNull") {
                 fieldFilter = "isNull(" + attribute + ")=true";
             } else if (operator === "=") {
@@ -599,16 +601,16 @@ const FilterUtils = {
     cqlNumberField: function(attribute, operator, value) {
         let fieldFilter;
         if (operator === "><") {
-            if (value && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
+            if ((value !== undefined || value !== null) && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
                 fieldFilter = "(" + attribute + ">='" + value.lowBound + "')";
-            } else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
+            } else if ((value !== undefined || value !== null) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
                 fieldFilter = "(" + attribute + "<='" + value.upBound + "')";
-            } else if (value && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
+            } else if ((value !== undefined || value !== null) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
                 fieldFilter = "(" + attribute + ">='" + value.lowBound +
                     "' AND " + attribute + "<='" + value.upBound + "')";
             }
         } else {
-            let val = value && (value.lowBound !== null && value.lowBound !== undefined) ? value.lowBound : value;
+            let val = (value !== undefined || value !== null) && (value.lowBound !== null && value.lowBound !== undefined) ? value.lowBound : value;
             if (val ) {
                 fieldFilter = attribute + operator + "'" + val + "'";
             }
