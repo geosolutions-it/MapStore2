@@ -60,17 +60,17 @@ function logout(redirectUrl) {
 }
 
 function logoutWithReload() {
-    return (dispatch) => {
+    return (dispatch, getState) => {
         dispatch(logout(null));
-        dispatch(loadMaps(false, ConfigUtils.getDefaults().initialMapFilter || "*"));
+        dispatch(loadMaps(false, getState().maps && getState().maps.searchText || ConfigUtils.getDefaults().initialMapFilter || "*"));
     };
 }
 
 function login(username, password) {
-    return (dispatch) => {
+    return (dispatch, getState) => {
         return AuthenticationAPI.login(username, password).then((response) => {
             dispatch(loginSuccess(response, username, password, AuthenticationAPI.authProviderName));
-            dispatch(loadMaps(false, ConfigUtils.getDefaults().initialMapFilter || "*"));
+            dispatch(loadMaps(false, getState().maps && getState().maps.searchText || ConfigUtils.getDefaults().initialMapFilter || "*"));
         }).catch((e) => {
             dispatch(loginFail(e));
         });

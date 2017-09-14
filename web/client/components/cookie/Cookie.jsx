@@ -7,7 +7,7 @@
 */
 const PropTypes = require('prop-types');
 const React = require('react');
-const {Button, Glyphicon} = require('react-bootstrap');
+const {Button, Glyphicon, Col} = require('react-bootstrap');
 const Message = require('../../components/I18N/Message');
 const MoreDetails = require('./MoreDetails');
 /**
@@ -45,10 +45,53 @@ class Cookie extends React.Component {
         show: false
     };
 
+    renderAcceptButton = () => {
+        return (
+            <Button
+                className="cookie-button"
+                id="accept-cookie"
+                bsStyle="primary"
+                onClick={() => this.accept(true)} >
+                <Message msgId="cookie.accept"/>
+            </Button>);
+    }
+
+    renderMoreDetails = () => {
+        return this.props.externalCookieUrl ?
+            (
+                <a style={{cursor: "pointer"}}
+                    id="accept-cookie"
+                    href={this.props.externalCookieUrl}>
+                    <Button
+                        className="cookie-button"
+                        id="decline-cookie"
+                        bsStyle="primary" >
+                        <Message msgId="cookie.moreDetailsButton"/>
+                    </Button>
+                </a>
+            ) : (
+                <Button
+                    onClick={() => this.moreDetails()}
+                    className="cookie-button"
+                    id="decline-cookie"
+                    bsStyle="primary" >
+                    <Message msgId="cookie.moreDetailsButton"/>
+                </Button>
+            );
+    }
+    renderLeaveButton = () => {
+        return (<a href={this.props.declineUrl} target="_self" style={{cursor: "pointer"}}>
+            <Button
+                className="cookie-button"
+                id="decline-cookie"
+                bsStyle="primary" >
+                <Message msgId="cookie.leave"/>
+            </Button>
+        </a>);
+    }
     render() {
         return this.props.show ? (
-            <div className="mapstore-cookie-panel"
-                 style={this.props.seeMore ? {width: "50%", left: "25%", height: "100%" } : {width: "420px", left: "auto", height: "auto"}}>
+            <div className={this.props.seeMore ? "mapstore-cookie-panel see-more" : "mapstore-cookie-panel not-see-more"}>
                 <div role="header" className="cookie-header" style={{height: this.props.seeMore ? "44px" : "0px"}}>
                     {this.props.seeMore ? <Glyphicon glyph="1-close" onClick={() => this.props.onMoreDetails(false)}/> : null }
                 </div>
@@ -59,43 +102,22 @@ class Cookie extends React.Component {
                             <Message msgId="cookie.info"/>
                         </div>) }
                     <br/>
-                    {!this.props.seeMore ? (<div className="cookie-action">
-                        <Button
-                            className="cookie-button"
-                            id="accept-cookie"
-                            bsStyle="primary"
-                            onClick={() => this.accept(true)} >
-                            <Message msgId="cookie.accept"/>
-                        </Button> &nbsp; {this.props.externalCookieUrl ?
-                            (
-                                <a style={{cursor: "pointer"}}
-                                    id="accept-cookie"
-                                    href={this.props.externalCookieUrl}>
-                                    <Button
-                                        className="cookie-button"
-                                        id="decline-cookie"
-                                        bsStyle="primary" >
-                                        <Message msgId="cookie.moreDetailsButton"/>
-                                    </Button>
-                                </a>
-                            ) : (
-                                <Button
-                                    onClick={() => this.moreDetails()}
-                                    className="cookie-button"
-                                    id="decline-cookie"
-                                    bsStyle="primary" >
-                                    <Message msgId="cookie.moreDetailsButton"/>
-                                </Button>
-                            )
-                        } &nbsp;
-                        <a href={this.props.declineUrl} target="_self" style={{cursor: "pointer"}}>
-                            <Button
-                                className="cookie-button"
-                                id="decline-cookie"
-                                bsStyle="primary" >
-                                <Message msgId="cookie.leave"/>
-                            </Button>
-                        </a></div>) : null }
+                    {!this.props.seeMore ?
+                    (<div className="cookie-action">
+
+                        <Col xs={6} sm={4} className="action-button">
+                            {this.renderAcceptButton()}
+                        </Col>
+                        <Col xs={6} sm={4} className="action-button">
+                            {this.renderMoreDetails()}
+                        </Col>
+                        <Col xs={6} sm={4} className="action-button">
+                            {this.renderLeaveButton()}
+                        </Col>
+                        <Col xs={12}>
+                            <br></br>
+                        </Col>
+                    </div>) : null }
                 </div>
             </div>
         ) : null;

@@ -19,6 +19,8 @@ const DownloadDialog = require('../components/data/download/DownloadDialog');
  * @name WFSDownload
  * @class
  * @prop {object[]} formats An array of name-label objects for the allowed formats available.
+ * @prop {object[]} srsList An array of name-label objects for the allowed srs available. Use name:'native' to omit srsName param in wfs filter
+ * @prop {string} defaultSrs Deafult selected srs
  * @prop {string} closeGlyph The icon to use for close the dialog
  * @example
  * {
@@ -30,7 +32,12 @@ const DownloadDialog = require('../components/data/download/DownloadDialog');
  *            {"name": "excel", "label": "excel"},
  *            {"name": "excel2007", "label": "excel2007"},
  *            {"name": "dxf-zip", "label": "dxf-zip"}
- *    ]
+ *    ],
+ *     "srsList": [
+ *            {"name": "native", "label": "Native"},
+ *            {"name": "EPSG:4326", "label": "WGS84"}
+ *    ],
+ *     "defaultSrs": "native"
  *  }
  * }
  */

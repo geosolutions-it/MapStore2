@@ -288,6 +288,8 @@ const LayersUtils = {
             matrixIds: layer.matrixIds,
             tileMatrixSet: layer.tileMatrixSet,
             dimensions: layer.dimensions || [],
+            maxZoom: layer.maxZoom,
+            maxNativeZoom: layer.maxNativeZoom,
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
     },

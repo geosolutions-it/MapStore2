@@ -51,7 +51,7 @@ const selector = createSelector([
 const MousePositionButton = connect((state) => ({
     pressed: state.mousePosition && state.mousePosition.enabled,
     active: state.mousePosition && state.mousePosition.enabled,
-    tooltip: <Tooltip><Message msgId="showMousePositionCoordinates"/></Tooltip>,
+    tooltip: <Tooltip id="showMousePositionCoordinates"><Message msgId="showMousePositionCoordinates"/></Tooltip>,
     tooltipPlace: 'left',
     pressedStyle: "success active",
     defaultStyle: "primary",

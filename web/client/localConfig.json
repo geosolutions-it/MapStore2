@@ -127,16 +127,6 @@
                     "wrap": true
                 }
             }, {
-                "name": "MousePosition",
-                "cfg": {
-                    "id": "mapstore-mouseposition-mobile",
-                    "showCRS": false,
-                    "showLabels": false,
-                    "showToggle": false,
-                    "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
-                    "additionalCRS": {}
-                }
-            }, {
                 "name": "Search",
                 "cfg": {
                     "withToggle": ["max-width: 768px", "min-width: 768px"]
@@ -453,7 +443,16 @@
                 "className": "navbar shadow navbar-home"
             }
         }, "ManagerMenu", "Login", "Language", "Attribution", "ScrollTop", "Notifications"],
-        "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "MapType", "ThemeSwitcher",  "GridContainer", "CreateNewMap", "Maps", "Examples", "Footer", {
+        "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "MapType", "ThemeSwitcher",  "GridContainer", "CreateNewMap",
+          {
+            "name": "Maps",
+            "cfg": {
+              "mapsOptions": {
+                "start": 0,
+                "limit": 12
+              }
+            }
+          }, "Examples", "Footer", {
           "name": "Cookie",
           "cfg": {
             "externalCookieUrl" : "",

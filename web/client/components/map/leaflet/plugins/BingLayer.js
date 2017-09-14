@@ -50,7 +50,9 @@ Layers.registerType('bing', {
             type: options.name,
             attribution: 'Bing',
             culture: '',
-            onError: options.onError
+            onError: options.onError,
+            maxNativeZoom: options.maxNativeZoom || 19,
+            maxZoom: options.maxZoom || 23
         };
         if (options.zoomOffset) {
             layerOptions = assign({}, layerOptions, {

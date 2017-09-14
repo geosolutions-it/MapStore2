@@ -47,20 +47,11 @@ class MapViewerPage extends React.Component {
             }
 
             // VMap = require('../components/viewer/Map')(this.props.params.mapType);
+
+            // TODO let's put this into a utils since it will be needed in login section
             let mapId = this.props.match.params.mapId === '0' ? null : this.props.match.params.mapId;
             let config = urlQuery && urlQuery.config || null;
-            // if mapId is a string, is the name of the config to load
-            try {
-                let mapIdNumber = parseInt(mapId, 10);
-                if (isNaN(mapIdNumber)) {
-                    config = mapId;
-                    mapId = null;
-                }
-            } catch (e) {
-                config = mapId;
-                mapId = null;
-            }
-            const {configUrl} = ConfigUtils.getConfigurationOptions({mapId, config});
+            const {configUrl} = ConfigUtils.getConfigUrl({mapId, config});
             this.props.onInit();
             this.props.loadMapConfig(configUrl, mapId);
         }

@@ -91,7 +91,7 @@ class GroupDialog extends React.Component {
                 style={this.props.inputStyle}
                 onChange={this.handleChange}
                 maxLength={this.props.nameLimit}
-                value={this.props.group && this.props.group.groupName}/>
+                value={this.props.group && this.props.group.groupName || ""}/>
         </FormGroup>
         <FormGroup>
             <ControlLabel><Message msgId="usergroups.groupDescription"/></ControlLabel>

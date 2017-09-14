@@ -220,7 +220,7 @@ module.exports = {
     SearchServicesConfigPlugin: assign(SearchServicesPlugin, {
         Settings: {
             tool:
-                <SearchServicesButton
+                <SearchServicesButton key="searchservices"
                 text={<Message msgId="search.searchservicesbutton" />}
             />,
             position: 4

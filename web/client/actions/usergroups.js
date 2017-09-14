@@ -30,6 +30,7 @@ const USERGROUPMANAGER_SEARCH_TEXT_CHANGED = 'USERGROUPMANAGER_SEARCH_TEXT_CHANG
 */
 const API = require('../api/GeoStoreDAO');
 const {get/* , assign*/} = require('lodash');
+const assign = require('object-assign');
 
 function getUserGroupsLoading(text, start, limit) {
     return {
@@ -203,22 +204,26 @@ function createError(group, error) {
 }
 function saveGroup(group, options = {}) {
     return (dispatch) => {
-        if (group && group.id) {
-            dispatch(savingGroup(group));
-            return API.updateGroupMembers(group, options).then((groupDetails) => {
+        let newGroup = assign({}, {...group});
+        if (newGroup && newGroup.lastError) {
+            delete newGroup.lastError;
+        }
+        if (newGroup && newGroup.id) {
+            dispatch(savingGroup(newGroup));
+            return API.updateGroupMembers(newGroup, options).then((groupDetails) => {
                 dispatch(savedGroup(groupDetails));
                 dispatch(getUserGroups());
             }).catch((error) => {
-                dispatch(saveError(group, error));
+                dispatch(saveError(newGroup, error));
             });
         }
         // create Group
-        dispatch(creatingGroup(group));
-        return API.createGroup(group, options).then((id) => {
-            dispatch(groupCreated(id, group));
+        dispatch(creatingGroup(newGroup));
+        return API.createGroup(newGroup, options).then((id) => {
+            dispatch(groupCreated(id, newGroup));
             dispatch(getUserGroups());
         }).catch((error) => {
-            dispatch(createError(group, error));
+            dispatch(createError(newGroup, error));
         });
 
     };

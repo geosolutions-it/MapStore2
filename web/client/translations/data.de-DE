@@ -895,6 +895,7 @@
         "wfsdownload": {
             "title": "Daten exportieren",
             "format": "Datei Format",
+            "srs": "Räumliches Bezugssystem",
             "export": "Export",
             "downloadonlycurrentpage": "Nur aktuelle Seite herunterladen",
             "error": {

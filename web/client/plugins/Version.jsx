@@ -21,13 +21,7 @@ const Message = require('../components/I18N/Message');
   */
 const Version = connect((state) => ({
     version: state.version && state.version.current
-}))(/**
-  * Version Plugin. Shows current MapStore2 version
-  * @class  Version
-  * @memberof plugins
-  * @static
-  *
-  */
+}))(
 class extends React.Component {
     static propTypes = {
         version: PropTypes.string

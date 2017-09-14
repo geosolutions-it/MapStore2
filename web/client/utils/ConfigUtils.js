@@ -37,6 +37,20 @@ let defaultConfig = {
     mapquestApiKey: null
 };
 
+const getConfigurationOptions = function(query, defaultName, extension, geoStoreBase) {
+    const mapId = query.mapId;
+    let configUrl;
+    if (mapId) {
+        configUrl = ( geoStoreBase || defaultConfig.geoStoreUrl ) + "data/" + mapId;
+    } else {
+        configUrl = (query.config || defaultName || 'config') + '.' + (extension || 'json');
+    }
+    return {
+        configUrl: configUrl,
+        legacy: !!mapId
+    };
+};
+
 var ConfigUtils = {
     defaultSourceType: "gxp_wmssource",
     backgroundGroup: "background",
@@ -100,22 +114,25 @@ var ConfigUtils = {
         };
     },
     getUserConfiguration: function(defaultName, extension, geoStoreBase) {
-        return ConfigUtils.getConfigurationOptions(urlQuery, defaultName, extension, geoStoreBase);
+        return getConfigurationOptions(urlQuery, defaultName, extension, geoStoreBase);
     },
-    getConfigurationOptions: function(query, defaultName, extension, geoStoreBase) {
-        const mapId = query.mapId;
-        let configUrl;
-        if (mapId) {
-            configUrl = ( geoStoreBase || defaultConfig.geoStoreUrl ) + "data/" + mapId;
-        } else {
-            configUrl = (query.config || defaultName || 'config') + '.' + (extension || 'json');
+    getConfigurationOptions,
+    getConfigUrl: ({mapId, config}) => {
+        let id = mapId;
+        let configUrl = config;
+        // if mapId is a string, is the name of the config to load
+        try {
+            let mapIdNumber = parseInt(id, 10);
+            if (isNaN(mapIdNumber)) {
+                configUrl = mapId;
+                id = null;
+            }
+        } catch (e) {
+            configUrl = mapId;
+            id = null;
         }
-        return {
-            configUrl: configUrl,
-            legacy: !!mapId
-        };
+        return getConfigurationOptions({mapId: id, config: configUrl});
     },
-
     convertFromLegacy: function(config) {
         var mapConfig = config.map;
         var sources = config.gsSources || config.sources;

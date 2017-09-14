@@ -10,7 +10,7 @@ class CellRenderer extends React.Component {
     };
     static contextTypes = {
       isModified: PropTypes.func,
-      isProperty: React.PropTypes.func,
+      isProperty: PropTypes.func,
       isValid: PropTypes.func
     };
     constructor(props) {
