@@ -273,11 +273,7 @@ function layers(state = [], action) {
         case SELECT_NODE: {
             let selected = state.selected ? [].concat(state.selected) : [];
 
-            if (!action.id) {
-                selected = [];
-            }
-
-            if (action.nodeType === 'group') {
+            if (action.id && action.nodeType === 'group') {
                 const groups = [].concat(state.groups);
                 const group = LayersUtils.getNode(groups, action.id);
                 const nodes = LayersUtils.getGroupNodes(group);
@@ -298,9 +294,7 @@ function layers(state = [], action) {
                         selected = [];
                     }
                 }
-            }
-
-            if (action.nodeType === 'layer') {
+            } else if (action.id && action.nodeType === 'layer') {
                 if (action.ctrlKey) {
                     if (selected.filter(s => s === action.id).length === 0) {
                         selected.push(action.id);
@@ -314,6 +308,8 @@ function layers(state = [], action) {
                         selected = selected.length > 1 ? [action.id] : [];
                     }
                 }
+            } else {
+                selected = [];
             }
 
             return assign({}, state, {
@@ -328,7 +324,7 @@ function layers(state = [], action) {
         }
         case FILTER_LAYERS: {
             return assign({}, state, {
-                filter: action.text
+                filter: action.text || ''
             });
         }
         default:

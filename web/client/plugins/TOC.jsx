@@ -375,6 +375,7 @@ class LayerTree extends React.Component {
  * @prop {boolean} cfg.activateSettingsTool: activate settings of layers and groups, default `true`
  * @prop {boolean} cfg.activateRemoveLayer: activate remove layer tool, default `true`
  * @prop {boolean} cfg.activateQueryTool: activate query tool options, default `false`
+ * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `false`
  * @prop {object} cfg.layerOptions: options to pass to the layer.
  * Some of the layerOptions are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend:
  * For instance you can pass some stying props to the legend.

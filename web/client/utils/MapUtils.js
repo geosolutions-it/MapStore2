@@ -313,7 +313,7 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
 
     const groups = flatGroupId.map(g => {
         const node = LayersUtils.getNode(currentGroups, g);
-        return node.nodes ? groupSaveFormatted(node) : null;
+        return node && node.nodes ? groupSaveFormatted(node) : null;
     }).filter(g => g);
 
     return {

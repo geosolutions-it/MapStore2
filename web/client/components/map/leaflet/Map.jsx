@@ -157,23 +157,9 @@ class LeafletMap extends React.Component {
                 // TODO check event.layer.on is a function
                 // Needed to fix GeoJSON Layer neverending loading
 
-                if (!(event.layer.options && event.layer.options.hideLoading)) {
-                    this.props.onLayerLoading(event.layer.layerId);
-                }
-
                 let layerLoadingStream$ = new Rx.Subject();
                 let layerLoadStream$ = new Rx.Subject();
                 let layerErrorStream$ = new Rx.Subject();
-
-                event.layer.on('loading', (loadingEvent) => {
-                    this.props.onLayerLoading(loadingEvent.target.layerId);
-                    layerLoadingStream$.next(loadingEvent);
-                });
-                event.layer.on('load', (loadEvent) => {
-                    this.props.onLayerLoad(loadEvent.target.layerId);
-                    layerLoadStream$.next(loadEvent);
-                });
-                event.layer.on('tileerror', (errorEvent) => { layerErrorStream$.next(errorEvent); });
 
                 layerErrorStream$
                     .bufferToggle(
@@ -187,6 +173,23 @@ class LeafletMap extends React.Component {
                             }
                         }
                     });
+
+                if (!(event.layer.options && event.layer.options.hideLoading)) {
+                    this.props.onLayerLoading(event.layer.layerId);
+                    layerLoadingStream$.next();
+                }
+
+                event.layer.on('loading', (loadingEvent) => {
+                    this.props.onLayerLoading(loadingEvent.target.layerId);
+                    layerLoadingStream$.next();
+                });
+
+                event.layer.on('load', (loadEvent) => {
+                    this.props.onLayerLoad(loadEvent.target.layerId);
+                    layerLoadStream$.next();
+                });
+
+                event.layer.on('tileerror', (errorEvent) => { layerErrorStream$.next(errorEvent); });
 
                 event.layer.layerLoadingStream$ = layerLoadingStream$;
                 event.layer.layerLoadStream$ = layerLoadStream$;

@@ -209,7 +209,8 @@ describe('Test the layers reducer', () => {
 
         const action2 = {
             type: 'LAYER_LOAD',
-            layerId: "layer2"
+            layerId: "layer2",
+            error: true
         };
 
         var originalLoadingLayers = {flat: [{id: "layer1", name: "layer1", loading: true}, {id: "layer2", name: "layer2", loading: true}]};
@@ -223,6 +224,7 @@ describe('Test the layers reducer', () => {
         expect(state.flat.filter((layer) => layer.name === 'layer1')[0].loading).toBe(false);
         expect(state.flat.filter((layer) => layer.name === 'layer2')[0].loading).toBe(false);
         expect(state.flat.filter((layer) => layer.loading).length).toBe(0);
+        expect(state.flat.filter((layer) => layer.loadingError === 'Error').length).toBe(1);
     });
 
     it('a layer load ends with error, loadingError flag is updated', () => {
@@ -241,12 +243,41 @@ describe('Test the layers reducer', () => {
 
         expect(state.flat.filter((layer) => layer.name === 'layer1')[0].loading).toBe(true);
         expect(state.flat.filter((layer) => layer.name === 'layer2')[0].loading).toBe(true);
-        expect(state.flat.filter((layer) => layer.loadingError).length).toBe(1);
+        expect(state.flat.filter((layer) => layer.loadingError === 'Error').length).toBe(1);
 
         state = layers(state, action2);
         expect(state.flat.filter((layer) => layer.name === 'layer1')[0].loading).toBe(true);
         expect(state.flat.filter((layer) => layer.name === 'layer2')[0].loading).toBe(true);
         expect(state.flat.filter((layer) => layer.loadingError).length).toBe(2);
+    });
+
+    it('a layer load ends with error, loadingError flag is updated, with tile count error', () => {
+        const action1 = {
+            type: 'LAYER_ERROR',
+            layerId: "layer1",
+            tilesCount: 25,
+            tilesErrorCount: 25
+        };
+
+        const action2 = {
+            type: 'LAYER_ERROR',
+            layerId: "layer2",
+            tilesCount: 25,
+            tilesErrorCount: 2
+        };
+
+        var originalLoadingLayers = {flat: [{id: "layer1", name: "layer1", loading: true}, {id: "layer2", name: "layer2", loading: true}]};
+        var state = layers(originalLoadingLayers, action1);
+
+        expect(state.flat.filter((layer) => layer.name === 'layer1')[0].loading).toBe(true);
+        expect(state.flat.filter((layer) => layer.name === 'layer2')[0].loading).toBe(true);
+        expect(state.flat.filter((layer) => layer.loadingError === 'Error').length).toBe(1);
+
+        state = layers(state, action2);
+        expect(state.flat.filter((layer) => layer.name === 'layer1')[0].loading).toBe(true);
+        expect(state.flat.filter((layer) => layer.name === 'layer2')[0].loading).toBe(true);
+        expect(state.flat.filter((layer) => layer.loadingError === 'Error').length).toBe(1);
+        expect(state.flat.filter((layer) => layer.loadingError === 'Warning').length).toBe(1);
     });
 
     it('change group properties', () => {
@@ -508,6 +539,16 @@ describe('Test the layers reducer', () => {
         expect(state.filter).toEqual('text');
     });
 
+    it('filter layers with no text', () => {
+        const action = {
+            type: "LAYERS:FILTER_LAYERS"
+        };
+
+        const state = layers({}, action);
+        expect(state).toExist();
+        expect(state.filter).toEqual('');
+    });
+
     it('select layer nodes', () => {
         const action = {
             type: "LAYERS:SELECT_NODE",
@@ -576,6 +617,17 @@ describe('Test the layers reducer', () => {
         expect(state).toExist();
         expect(state.selected).toExist();
         expect(state.selected).toEqual(['layer2', 'group2', 'layer', 'layer2', 'group001', 'group']);
+    });
+
+    it('select node with no id', () => {
+        const action = {
+            type: "LAYERS:SELECT_NODE"
+        };
+
+        const state = layers({flat: [{id: "layer"}, {id: "layer2"}, {id: "layer3"}], groups: [{id: "group", nodes: ["layer", {id: 'group001', nodes: ["layer2"]}]}], selected: ['layer2', 'group2']}, action);
+        expect(state).toExist();
+        expect(state.selected).toExist();
+        expect(state.selected).toEqual([]);
     });
 
 
