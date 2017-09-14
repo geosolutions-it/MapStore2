@@ -295,6 +295,52 @@ describe('FilterUtils', () => {
         let filter = FilterUtils.toOGCFilter("ft_name_test", filterObj);
         expect(filter).toEqual(expected);
     });
+    it('Test checkOperatorValidity', () => {
+        let filterObj = {
+            filterFields: [{
+                attribute: "attributeNull",
+                groupId: 1,
+                exception: null,
+                operator: "=",
+                rowId: "1",
+                type: "string",
+                value: null
+            }, {
+                attribute: "attributeUndefined",
+                groupId: 1,
+                exception: null,
+                operator: "=",
+                rowId: "2",
+                type: "string",
+                value: undefined
+            }, {
+                attribute: "attributeNull2",
+                groupId: 1,
+                exception: null,
+                operator: "isNull",
+                rowId: "3",
+                type: "string",
+                value: undefined
+            }, {
+                attribute: "attributeUndefined2",
+                groupId: 1,
+                exception: null,
+                operator: "isNull",
+                rowId: "4",
+                type: "string",
+                value: null // valid value for isnull operator
+            }]
+        };
+
+        filterObj.filterFields.forEach((f, i) => {
+            let valid = FilterUtils.checkOperatorValidity(f.value, f.operator);
+            if (i <= 2) {
+                expect(valid).toEqual(false);
+            } else {
+                expect(valid).toEqual(true);
+            }
+        });
+    });
     it('Check for undefined or null values for string and number and list in ogc filter', () => {
         let filterObj = {
             filterFields: [{

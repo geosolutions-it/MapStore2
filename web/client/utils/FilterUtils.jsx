@@ -182,7 +182,7 @@ const processOGCSimpleFilterField = (field, nsplaceholder) => {
     return filter;
 };
 const FilterUtils = {
-
+    checkOperatorValidity,
     toOGCFilter: function(ftName, json, version, sortOptions = null, hits = false, format = null, propertyNames = null, srsName = "EPSG:4326") {
         let objFilter;
         try {
