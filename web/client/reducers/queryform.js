@@ -110,7 +110,7 @@ function queryform(state = initialState, action) {
                 if (field.rowId === action.rowId) {
                     let f = assign({}, field, {[action.fieldName]: action.fieldValue, type: action.fieldType}, {fieldOptions: assign({}, {...field.fieldOptions}, {currentPage: action.fieldOptions.currentPage === undefined ? 1 : action.fieldOptions.currentPage})});
                     if (action.fieldName === "attribute") {
-                        f.value = null;
+                        f.value = action.fieldType === "string" ? '' : null;
                         f.operator = "=";
                     }
                     if (action.fieldName === "operator") {

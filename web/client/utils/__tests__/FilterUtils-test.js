@@ -279,6 +279,22 @@ describe('FilterUtils', () => {
         expect(filter.indexOf('maxFeatures="20"') !== -1).toBe(false);
         expect(filter.indexOf('startIndex="1"') !== -1).toBe(false);
     });
+    it('Check for empty string', () => {
+        let filterObj = {
+            filterFields: [{
+                attribute: "attributeEmpty",
+                groupId: 1,
+                exception: null,
+                operator: "=",
+                rowId: "1",
+                type: "string",
+                value: ''
+            }]
+        };
+        let expected = '<wfs:GetFeature service="WFS" version="2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd"><wfs:Query typeNames="ft_name_test" srsName="EPSG:4326"><fes:Filter><fes:PropertyIsEqualTo><fes:ValueReference>attributeEmpty</fes:ValueReference><fes:Literal></fes:Literal></fes:PropertyIsEqualTo></fes:Filter></wfs:Query></wfs:GetFeature>';
+        let filter = FilterUtils.toOGCFilter("ft_name_test", filterObj);
+        expect(filter).toEqual(expected);
+    });
     it('Check for undefined or null values for string and number and list in ogc filter', () => {
         let filterObj = {
             filterFields: [{

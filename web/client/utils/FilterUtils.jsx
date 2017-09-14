@@ -11,7 +11,7 @@ const {wfsToGmlVersion} = require('./ogc/WFS/base');
 const {ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators} = require("./ogc/Filter/operators");
 const {isNil, isUndefined} = require('lodash');
 
-const checkValidityValue = (value, operator) => {
+const checkOperatorValidity = (value, operator) => {
     return (!isNil(value) && operator !== "isNull" || !isUndefined(value) && operator === "isNull");
 };
 
@@ -80,7 +80,7 @@ const ogcListField = (attribute, operator, value, nsplaceholder) => {
 
 const ogcStringField = (attribute, operator, value, nsplaceholder) => {
     let fieldFilter;
-    if (checkValidityValue(value, operator)) {
+    if (checkOperatorValidity(value, operator)) {
         if (operator === "isNull") {
             fieldFilter =
                 ogcComparisonOperators[operator](nsplaceholder,
@@ -288,8 +288,8 @@ const FilterUtils = {
 
     processOGCFilterFields: function(group, objFilter, nsplaceholder) {
         let fields = group ? objFilter.filterFields.filter((field) =>
-            field.groupId === group.id && (checkValidityValue(field.value, field.operator))) :
-            objFilter.filterFields.filter(field => checkValidityValue(field.value, field.operator));
+            field.groupId === group.id && (checkOperatorValidity(field.value, field.operator))) :
+            objFilter.filterFields.filter(field => checkOperatorValidity(field.value, field.operator));
         let filter = [];
 
         if (fields.length) {
