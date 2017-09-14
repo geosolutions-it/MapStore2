@@ -9,6 +9,12 @@
 const {processOGCGeometry, pointElement, polygonElement, lineStringElement } = require("./ogc/GML");
 const {wfsToGmlVersion} = require('./ogc/WFS/base');
 const {ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators} = require("./ogc/Filter/operators");
+const {isNil, isUndefined} = require('lodash');
+
+const checkValidityValue = (value, operator) => {
+    return (!isNil(value) && operator !== "isNull" || !isUndefined(value) && operator === "isNull");
+};
+
 const normalizeVersion = (version) => {
     if (!version) {
         return "2.0";
@@ -60,7 +66,7 @@ const ogcDateField = (attribute, operator, value, nsplaceholder) => {
 
 const ogcListField = (attribute, operator, value, nsplaceholder) => {
     let fieldFilter;
-    if ((value !== undefined || value !== null)) {
+    if (isNil(value)) {
         fieldFilter =
             ogcComparisonOperators[operator](nsplaceholder,
                 propertyTagReference[nsplaceholder].startTag +
@@ -74,7 +80,7 @@ const ogcListField = (attribute, operator, value, nsplaceholder) => {
 
 const ogcStringField = (attribute, operator, value, nsplaceholder) => {
     let fieldFilter;
-    if (value !== undefined || value !== null) {
+    if (checkValidityValue(value, operator)) {
         if (operator === "isNull") {
             fieldFilter =
                 ogcComparisonOperators[operator](nsplaceholder,
@@ -106,21 +112,21 @@ const ogcStringField = (attribute, operator, value, nsplaceholder) => {
 const ogcNumberField = (attribute, operator, value, nsplaceholder) => {
     let fieldFilter;
     if (operator === "><") {
-        if ((value !== undefined || value !== null) && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
+        if (!isNil(value) && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
             fieldFilter = ogcComparisonOperators[">="](nsplaceholder,
                             propertyTagReference[nsplaceholder].startTag +
                                 attribute +
                             propertyTagReference[nsplaceholder].endTag +
                          "<" + nsplaceholder + ":Literal>" + value.lowBound + "</" + nsplaceholder + ":Literal>"
                         );
-        }else if ((value !== undefined || value !== null) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
+        }else if (!isNil(value) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
             fieldFilter = ogcComparisonOperators["<="](nsplaceholder,
                             propertyTagReference[nsplaceholder].startTag +
                                 attribute +
                             propertyTagReference[nsplaceholder].endTag +
                          "<" + nsplaceholder + ":Literal>" + value.upBound + "</" + nsplaceholder + ":Literal>"
                      );
-        }else if ((value !== undefined || value !== null) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
+        }else if (!isNil(value) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
             fieldFilter =
                         ogcComparisonOperators[operator](nsplaceholder,
                             propertyTagReference[nsplaceholder].startTag +
@@ -135,8 +141,8 @@ const ogcNumberField = (attribute, operator, value, nsplaceholder) => {
                         );
         }
     } else {
-        let val = (value !== undefined || value !== null) && (value.lowBound !== null && value.lowBound !== undefined) ? value.lowBound : value;
-        if (val !== undefined || val !== null) {
+        let val = !isNil(value) && (value.lowBound !== null && value.lowBound !== undefined) ? value.lowBound : value;
+        if (!isNil(val)) {
             fieldFilter = ogcComparisonOperators[operator](nsplaceholder,
                             propertyTagReference[nsplaceholder].startTag +
                                 attribute +
@@ -196,9 +202,11 @@ const FilterUtils = {
             if (objFilter.groupFields && objFilter.groupFields.length > 0) {
                 attributeFilter = this.processOGCFilterGroup(objFilter.groupFields[0], objFilter, nsplaceholder);
             } else {
-                attributeFilter = this.processOGCFilterFields(objFilter, nsplaceholder);
+                attributeFilter = this.processOGCFilterFields(null, objFilter, nsplaceholder);
             }
-            filters.push(attributeFilter);
+            if (attributeFilter !== "") {
+                filters.push(attributeFilter);
+            }
         }else if (objFilter.simpleFilterFields && objFilter.simpleFilterFields.length > 0) {
             const OP = "AND";
             const ogc = ogcLogicalOperators[OP](nsplaceholder, objFilter.simpleFilterFields.map( (f) => processOGCSimpleFilterField(f, nsplaceholder)).join("") );
@@ -220,17 +228,17 @@ const FilterUtils = {
         }
         let filter = "";
 
-        if (filters.length > 1) {
+        if (filters.length > 0) {
             filter = "<" + nsplaceholder + ":Filter>";
-            filter += "<" + nsplaceholder + ":And>";
-            filters.forEach((subFilter) => {
-                filter += subFilter;
-            });
-            filter += "</" + nsplaceholder + ":And>";
-            filter += "</" + nsplaceholder + ":Filter>";
-        } else if (filters.length === 1) {
-            filter = "<" + nsplaceholder + ":Filter>";
-            filter += filters[0];
+            if (filters.length === 1) {
+                filter += filters[0];
+            } else {
+                filter += "<" + nsplaceholder + ":And>";
+                filters.forEach((subFilter) => {
+                    filter += subFilter;
+                });
+                filter += "</" + nsplaceholder + ":And>";
+            }
             filter += "</" + nsplaceholder + ":Filter>";
         }
 
@@ -272,14 +280,19 @@ const FilterUtils = {
                 ogc += this.processOGCFilterGroup(subGroup, objFilter, nsplaceholder);
             });
         }
-        return ogcLogicalOperators[root.logic](nsplaceholder, ogc);
+        if (ogc !== "") {
+            return ogcLogicalOperators[root.logic](nsplaceholder, ogc);
+        }
+        return "";
     },
 
     processOGCFilterFields: function(group, objFilter, nsplaceholder) {
-        let fields = group ? objFilter.filterFields.filter((field) => field.groupId === group.id) : objFilter.filterFields;
+        let fields = group ? objFilter.filterFields.filter((field) =>
+            field.groupId === group.id && (checkValidityValue(field.value, field.operator))) :
+            objFilter.filterFields.filter(field => checkValidityValue(field.value, field.operator));
         let filter = [];
 
-        if (fields) {
+        if (fields.length) {
             filter = fields.reduce((arr, field) => {
                 let fieldFilter;
                 switch (field.type) {
@@ -307,10 +320,9 @@ const FilterUtils = {
                 return arr;
             }, []);
 
-            filter = filter.join("");
+            return filter.join("");
         }
-
-        return filter;
+        return "";
     },
 
     processOGCSimpleFilterField,
@@ -581,7 +593,7 @@ const FilterUtils = {
 
     cqlStringField: function(attribute, operator, value) {
         let fieldFilter;
-        if (value !== undefined || value !== null) {
+        if (!isNil(value)) {
             if (operator === "isNull") {
                 fieldFilter = "isNull(" + attribute + ")=true";
             } else if (operator === "=") {
@@ -601,16 +613,16 @@ const FilterUtils = {
     cqlNumberField: function(attribute, operator, value) {
         let fieldFilter;
         if (operator === "><") {
-            if ((value !== undefined || value !== null) && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
+            if (!isNil(value) && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
                 fieldFilter = "(" + attribute + ">='" + value.lowBound + "')";
-            } else if ((value !== undefined || value !== null) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
+            } else if (!isNil(value) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
                 fieldFilter = "(" + attribute + "<='" + value.upBound + "')";
-            } else if ((value !== undefined || value !== null) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
+            } else if (!isNil(value) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
                 fieldFilter = "(" + attribute + ">='" + value.lowBound +
                     "' AND " + attribute + "<='" + value.upBound + "')";
             }
         } else {
-            let val = (value !== undefined || value !== null) && (value.lowBound !== null && value.lowBound !== undefined) ? value.lowBound : value;
+            let val = (!isNil(value)) && (value.lowBound !== null && value.lowBound !== undefined) ? value.lowBound : value;
             if (val ) {
                 fieldFilter = attribute + operator + "'" + val + "'";
             }
