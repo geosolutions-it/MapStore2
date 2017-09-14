@@ -74,8 +74,8 @@ class GroupSettingsModal extends React.Component {
                 <Dialog id="mapstore-layer-groups-settings" className="portal-dialog">
                     <div role="header">
                         <span>{<Message msgId="layerProperties.groupProperties" />}</span>
-                        <button className="close">
-                            <Glyphicon glyph="1-close" onClick={this.onClose}/>
+                        <button className="close" onClick={this.onClose}>
+                            <Glyphicon glyph="1-close"/>
                         </button>
                     </div>
                     <div role="body">

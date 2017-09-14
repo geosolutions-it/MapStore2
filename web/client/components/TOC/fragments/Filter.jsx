@@ -10,6 +10,8 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const {FormGroup, FormControl, Glyphicon, InputGroup, OverlayTrigger, Tooltip} = require('react-bootstrap');
 
+require('./css/filter.css');
+
 class Filter extends React.Component {
 
     static propTypes = {
@@ -48,7 +50,7 @@ class Filter extends React.Component {
                 <Glyphicon glyph="1-close" className="text-primary close-filter" onClick={this.onClear}/>
             </OverlayTrigger>;
         return (
-            <FormGroup>
+            <FormGroup className="mapstore-filter">
                 <InputGroup>
                     <FormControl
                         value={this.props.filterText}
