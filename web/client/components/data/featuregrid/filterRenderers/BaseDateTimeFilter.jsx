@@ -15,6 +15,7 @@ class DateFilter extends AttributeFilter {
     };
     static propTypes = {
         type: PropTypes.string,
+        disabled: PropTypes.boolean,
         onChange: PropTypes.func
     };
     static contextTypes = {
@@ -51,6 +52,7 @@ class DateFilter extends AttributeFilter {
         let inputKey = 'header-filter-' + this.props.column.key;
         return (<DateTimePicker
             key={inputKey}
+            disabled={this.props.disabled}
             format={this.getFormat()}
             placeholder={placeholder}
             value={this.props.value ? this.getDateValue() : null}
@@ -83,5 +85,4 @@ class DateFilter extends AttributeFilter {
     }
 }
 
-const {nest} = require('recompose');
-module.exports = nest(DateFilter, );
+module.exports = DateFilter;

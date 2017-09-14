@@ -1,10 +1,7 @@
 const AttributeFilter = require('./AttributeFilter');
-const {compose, withState, withHandlers, defaultProps} = require('recompose');
+const {compose, withHandlers, defaultProps} = require('recompose');
 
 module.exports = compose(
-    withState("value", "onValueChange", d => {
-        return d.value;
-    }),
     withHandlers({
         onChange: props => ({value, attribute} = {}) => {
             props.onValueChange(value);
@@ -19,15 +16,12 @@ module.exports = compose(
             } else { // handle normal values
                 newVal = parseInt(value, 10);
             }
-
             props.onChange({
                 value: newVal,
                 operator,
                 type: 'number',
                 attribute
             });
-
-
         }
     }),
     defaultProps({

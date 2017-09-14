@@ -62,7 +62,7 @@ module.exports = {
                 editable,
                 filterable,
                 editor: getEditor(desc),
-                filterRenderer: getFilterRenderer(desc)
+                filterRenderer: getFilterRenderer(desc, desc.name)
         })),
     getRow,
     /**

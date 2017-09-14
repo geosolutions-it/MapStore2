@@ -1,11 +1,8 @@
-const {compose, withState, withHandlers, defaultProps} = require('recompose');
+const {compose, withHandlers, defaultProps} = require('recompose');
 const BaseDateTimeFilter = require('./BaseDateTimeFilter');
 module.exports = compose(
     defaultProps({
         value: null
-    }),
-    withState("value", "onValueChange", d => {
-        return d.value;
     }),
     withHandlers({
         onChange: props => ({value, attribute} = {}) => {

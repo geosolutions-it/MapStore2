@@ -5,6 +5,7 @@ const {OverlayTrigger, Tooltip} = require('react-bootstrap');
 
 class AttributeFilter extends React.PureComponent {
     static propTypes = {
+        disabled: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
         value: PropTypes.any,
         column: PropTypes.object,
@@ -20,14 +21,13 @@ class AttributeFilter extends React.PureComponent {
         value: '',
         placeholderMsgId: "featuregrid.filter.placeholders.default"
     };
-
     renderInput = () => {
         if (this.props.column.filterable === false) {
             return <span/>;
         }
         const placeholder = LocaleUtils.getMessageById(this.context.messages, this.props.placeholderMsgId) || "Search";
         let inputKey = 'header-filter-' + this.props.column.key;
-        return (<input key={inputKey} type="text" className="form-control input-sm" placeholder={placeholder} value={this.props.value} onChange={this.handleChange}/>);
+        return (<input disabled={this.props.disabled} key={inputKey} type="text" className="form-control input-sm" placeholder={placeholder} value={this.props.value} onChange={this.handleChange}/>);
     }
     renderTooltip = (cmp) => {
         if (this.props.tooltipId && LocaleUtils.getMessageById(this.context.messages, this.props.tooltipId)) {
@@ -37,13 +37,13 @@ class AttributeFilter extends React.PureComponent {
         }
         return cmp;
     }
+
     render() {
+        let inputKey = 'header-filter--' + this.props.column.key;
         return (
-          <div>
-            <div className="form-group">
+            <div key={inputKey} className="form-group">
               {this.renderTooltip(this.renderInput())}
             </div>
-          </div>
         );
     }
     handleChange = (e) => {

@@ -16,8 +16,8 @@ const featuresToGrid = compose(
         className: showDragHandle ? 'feature-grid-drag-handle-show' : 'feature-grid-drag-handle-hide'
     })),
     withPropsOnChange(
-        ["enableColumnFilters", "mode"],
-        props => ({displayFilters: props.enableColumnFilters && props.mode !== "EDIT"})
+        ["enableColumnFilters"],
+        props => ({displayFilters: props.enableColumnFilters})
     ),
     withPropsOnChange(
         ["features", "newFeatures", "changes"],
@@ -56,8 +56,8 @@ const featuresToGrid = compose(
                     getEditor: ({localType=""} = {}) => props.editors(localType, {
                         onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges
                     }),
-                    getFilterRenderer: ({localType=""} = {}) => props.filterRenderers(localType, {
-                        onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges
+                    getFilterRenderer: ({localType=""} = {}, name) => props.filterRenderers(localType, {
+                        disabled: props.mode === "EDIT"
                     })
                 }))
             })
