@@ -24,10 +24,10 @@ function mapConfig(state = null, action) {
 
         mapState.map = assign({}, mapState.map, {mapId: action.mapId, size, version: hasVersion ? action.config.version : 1});
             // we store the map initial state for future usage
-        return assign({}, mapState, {mapInitialConfig: mapState.map});
+        return assign({}, mapState, {mapInitialConfig: {...mapState.map, mapId: action.mapId}});
     case MAP_CONFIG_LOAD_ERROR:
         return {
-            loadingError: action.error
+            loadingError: {...action.error, mapId: action.mapId}
         };
     case MAP_INFO_LOAD_START:
         map = state && state.map && state.map.present ? state.map.present : state && state.map;

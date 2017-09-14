@@ -7,6 +7,7 @@
  */
 
 const regexWhitelist = /[ !#-&\(-\[\]-~]/;
+const regexSingleEscape = /["'\\\b\f\n\r\t]/;
 
 const EncodeUtils = {
     /**
@@ -27,6 +28,12 @@ const EncodeUtils = {
             if (regexWhitelist.test(character) || character === '"' || character === '`' || character === '\'') {
                 // It’s a printable ASCII character
                 // so don’t escape it.
+                result += character;
+                continue;
+            }
+
+            if (regexSingleEscape.test(character)) {
+                // no need for a `hasOwnProperty` check here
                 result += character;
                 continue;
             }

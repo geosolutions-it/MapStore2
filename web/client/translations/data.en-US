@@ -83,7 +83,7 @@
         "mouseCoordinates": "Coordinates:",
         "mousePositionCRS": "CRS:",
         "mapScale": "Scale:",
-        "showMousePositionCoordinates": "Show Coordinates",
+        "showMousePositionCoordinates": "Show/Hide Coordinates",
         "menu": "Menu",
         "options": "Options",
         "settings": "Settings",
@@ -886,6 +886,7 @@
         "wfsdownload": {
             "title": "Export Data",
             "format": "File Format",
+            "srs":  "Spatial Reference System",
             "export": "Export",
             "downloadonlycurrentpage": "Download only current page",
             "error": {

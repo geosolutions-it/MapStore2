@@ -239,28 +239,33 @@ function createError(user, error) {
 
 function saveUser(user, options = {}) {
     return (dispatch) => {
-        if (user && user.id) {
-            dispatch(savingUser(user));
-            return API.updateUser(user.id, {...user, groups: { group: user.groups}}, options).then((userDetails) => {
+        // remove lastError before save
+        let newUser = assign({}, {...user});
+        if (newUser && newUser.lastError) {
+            delete newUser.lastError;
+        }
+        if (newUser && newUser.id) {
+            dispatch(savingUser(newUser));
+            return API.updateUser(newUser.id, {...newUser, groups: { group: newUser.groups}}, options).then((userDetails) => {
                 dispatch(savedUser(userDetails));
                 dispatch(getUsers());
             }).catch((error) => {
-                dispatch(saveError(user, error));
+                dispatch(saveError(newUser, error));
             });
         }
         // createUser
-        dispatch(creatingUser(user));
-        let userToPost = {...user};
-        if (user && user.groups) {
-            userToPost = {...user, groups: { group: user.groups.filter((g) => {
+        dispatch(creatingUser(newUser));
+        let userToPost = {...newUser};
+        if (newUser && newUser.groups) {
+            userToPost = {...newUser, groups: { group: newUser.groups.filter((g) => {
                 return g.groupName !== "everyone"; // see:https://github.com/geosolutions-it/geostore/issues/149
             })}};
         }
         return API.createUser(userToPost, options).then((id) => {
-            dispatch(userCreated(id, user));
+            dispatch(userCreated(id, newUser));
             dispatch(getUsers());
         }).catch((error) => {
-            dispatch(createError(user, error));
+            dispatch(createError(newUser, error));
         });
 
     };

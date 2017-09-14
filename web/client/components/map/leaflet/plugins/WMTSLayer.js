@@ -29,7 +29,9 @@ function wmtsToLeafletOptions(options) {
         tileMatrixSet: tileMatrixSet,
         version: options.version || "1.0.0",
         tileSize: options.tileSize || 256,
-        CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS)
+        CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
+        maxZoom: options.maxZoom || 23,
+        maxNativeZoom: options.maxNativeZoom || 18
     }, options.params || {});
 }
 
