@@ -203,7 +203,9 @@ class LeafletMap extends React.Component {
                 event.layer.layerLoadStream$.complete();
                 event.layer.layerErrorStream$.complete();
             }
-            event.layer.clearAllEventListeners();
+            if (event.layer.clearAllEventListeners) {
+                event.layer.clearAllEventListeners();
+            }
         });
 
         this.drawControl = null;
