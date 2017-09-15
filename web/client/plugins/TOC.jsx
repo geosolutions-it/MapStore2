@@ -255,7 +255,8 @@ class LayerTree extends React.Component {
                 scales={this.props.scales}
                 currentLocale={this.props.currentLocale}
                 selectedNodes={this.props.selectedNodes}
-                filterText={this.props.filterText}/>);
+                filterText={this.props.filterText}
+                onUpdateNode={this.props.updateNode}/>);
     }
 
     renderTOC = () => {

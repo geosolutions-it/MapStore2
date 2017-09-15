@@ -135,4 +135,47 @@ describe('test DefaultLayer module component', () => {
         expect(spy.calls.length).toBe(1);
     });
 
+    it('tests opacity tool', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms'
+        };
+
+        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} activateLegendTool/>,
+            document.getElementById("container"));
+        expect(comp).toExist();
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        const opacity = domNode.getElementsByClassName("toc-full-title")[1];
+        expect(opacity.innerHTML).toBe('100 %');
+        const tool = domNode.getElementsByClassName("noUi-target")[0];
+        expect(tool).toExist();
+        expect(tool.getAttribute('disabled')).toBe(null);
+    });
+
+    it('tests opacity tool no visibility', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: false,
+            storeIndex: 9,
+            type: 'wms',
+            opacity: 0.5
+        };
+
+        const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} activateLegendTool/>,
+            document.getElementById("container"));
+        expect(comp).toExist();
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        const opacity = domNode.getElementsByClassName("toc-full-title")[1];
+        expect(opacity.innerHTML).toBe('50 %');
+        const tool = domNode.getElementsByClassName("noUi-target")[0];
+        expect(tool).toExist();
+        expect(tool.getAttribute('disabled')).toBe('true');
+    });
+
 });

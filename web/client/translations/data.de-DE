@@ -217,6 +217,9 @@
             }
         },
         "toc": {
+            "fullTitle": "Full title",
+            "opacity": "Opacity",
+            "legend": "Legend",
             "toggleLayerVisibility": "Ändere die Ebenen Sichtbarkeit",
             "displayLegendAndTools": "Legende und Werkzeuge zeigen",
             "zoomToLayerExtent": "Zoome auf Ausdehung der Ebene",

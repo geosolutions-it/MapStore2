@@ -9,12 +9,14 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Node = require('./Node');
-const {isObject} = require('lodash');
+const {isObject, isArray} = require('lodash');
 const {Grid, Row, Col} = require('react-bootstrap');
 const VisibilityCheck = require('./fragments/VisibilityCheck');
 const Title = require('./fragments/Title');
 const WMSLegend = require('./fragments/WMSLegend');
 const LayersTool = require('./fragments/LayersTool');
+const Slider = require('react-nouislider');
+const Message = require('../I18N/Message');
 
 class DefaultLayer extends React.Component {
     static propTypes = {
@@ -33,7 +35,8 @@ class DefaultLayer extends React.Component {
         legendOptions: PropTypes.object,
         currentLocale: PropTypes.string,
         selectedNodes: PropTypes.array,
-        filterText: PropTypes.string
+        filterText: PropTypes.string,
+        onUpdateNode: PropTypes.func
     };
 
     static defaultProps = {
@@ -48,25 +51,44 @@ class DefaultLayer extends React.Component {
         additionalTools: [],
         currentLocale: 'en-US',
         selectedNodes: [],
-        filterText: ''
+        filterText: '',
+        onUpdateNode: () => {}
     };
 
     renderCollapsible = () => {
         const translation = isObject(this.props.node.title) ? this.props.node.title[this.props.currentLocale] || this.props.node.title.default : this.props.node.title;
         const title = translation || this.props.node.name;
+        const layerOpacity = this.props.node.opacity !== undefined ? Math.round(this.props.node.opacity * 100) : 100;
         return (
             <div key="legend" position="collapsible" className="collapsible-toc">
                 <Grid fluid>
                     <Row>
                         <Col xs={12}>
+                            <div className="toc-collapse-desc"><Message msgId="toc.fullTitle" />:</div>
                             <div className="toc-full-title">{title}</div>
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={12}>
-                            {this.props.activateLegendTool && <WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales} {...this.props.legendOptions}/>}
+                        <Col xs={12} className="slider-opacity">
+                            <div className="toc-collapse-desc"><Message msgId="toc.opacity" />:</div>
+                            <div className="toc-full-title">{layerOpacity + ' %'}</div>
+                            <Slider start={[layerOpacity]}
+                                disabled={!this.props.node.visibility}
+                                range={{min: 0, max: 100}}
+                                onChange={(opacity) => {
+                                    if (isArray(opacity) && opacity[0]) {
+                                        this.props.onUpdateNode(this.props.node.id, 'layers', {opacity: opacity[0] / 100});
+                                    }
+                                }}/>
                         </Col>
                     </Row>
+                    {this.props.activateLegendTool ?
+                    <Row>
+                        <Col xs={12}>
+                            <div className="toc-collapse-desc"><Message msgId="toc.legend" />:</div>
+                            <WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales} {...this.props.legendOptions}/>
+                        </Col>
+                    </Row> : null}
                 </Grid>
             </div>);
     };

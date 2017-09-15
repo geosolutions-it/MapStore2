@@ -40,9 +40,11 @@ module.exports = class extends React.Component {
                 }} />)] : null}
             <div key="opacity">
             <label key="opacity-label" className="control-label">{this.props.opacityText}</label>
-            <Slider key="opacity-slider" start={[Math.round(this.props.settings.options.opacity * 100)]}
-                range={{min: 0, max: 100}}
-                onChange={(opacity) => {this.props.onChange("opacity", opacity / 100); }}/>
+            <span className="slider-opacity">
+                <Slider key="opacity-slider" start={[Math.round(this.props.settings.options.opacity * 100)]}
+                    range={{min: 0, max: 100}}
+                    onChange={(opacity) => {this.props.onChange("opacity", opacity / 100); }}/>
+            </span>
             <Label key="opacity-percent" >{Math.round(this.props.settings.options.opacity * 100) + "%"}</Label>
             </div>
             {this.props.element.type === "wms" ?

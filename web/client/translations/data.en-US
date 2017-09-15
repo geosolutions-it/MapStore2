@@ -217,6 +217,9 @@
             }
         },
         "toc": {
+            "fullTitle": "Full title",
+            "opacity": "Opacity",
+            "legend": "Legend",
             "toggleLayerVisibility": "Toggle layer visibility",
             "displayLegendAndTools": "Display legend and tools",
             "zoomToLayerExtent": "Zoom to layer extent",
