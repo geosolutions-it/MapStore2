@@ -34,7 +34,11 @@ class MapViewerPage extends React.Component {
     };
 
     static defaultProps = {
-        mode: 'desktop'
+        mode: 'desktop',
+        plugins: {},
+        match: {
+            params: {}
+        }
     };
 
     componentWillMount() {
@@ -52,6 +56,8 @@ class MapViewerPage extends React.Component {
             let mapId = this.props.match.params.mapId === '0' ? null : this.props.match.params.mapId;
             let config = urlQuery && urlQuery.config || null;
             const {configUrl} = ConfigUtils.getConfigUrl({mapId, config});
+            mapId = this.props.match.params.mapId === 'new' ? null : mapId;
+
             this.props.onInit();
             this.props.loadMapConfig(configUrl, mapId);
         }
