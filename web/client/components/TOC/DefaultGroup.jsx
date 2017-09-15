@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,19 +6,18 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var Node = require('./Node');
-var GroupTitle = require('./fragments/GroupTitle');
-var GroupChildren = require('./fragments/GroupChildren');
+const React = require('react');
+const Node = require('./Node');
+const PropTypes = require('prop-types');
+const GroupTitle = require('./fragments/GroupTitle');
+const GroupChildren = require('./fragments/GroupChildren');
 const VisibilityCheck = require('./fragments/VisibilityCheck');
-const {Glyphicon} = require('react-bootstrap');
-const GroupSettingsModal = require('./fragments/GroupSettingsModal');
+const LayersTool = require('./fragments/LayersTool');
 
 class DefaultGroup extends React.Component {
     static propTypes = {
         node: PropTypes.object,
         style: PropTypes.object,
-        settings: PropTypes.object,
         sortableStyle: PropTypes.object,
         onToggle: PropTypes.func,
         level: PropTypes.number,
@@ -27,17 +25,14 @@ class DefaultGroup extends React.Component {
         propertiesChangeHandler: PropTypes.func,
         groupVisibilityCheckbox: PropTypes.bool,
         visibilityCheckType: PropTypes.string,
-        onSettings: PropTypes.func,
-        updateSettings: PropTypes.func,
-        updateNode: PropTypes.func,
-        hideSettings: PropTypes.func,
-        currentLocale: PropTypes.string
+        currentLocale: PropTypes.string,
+        selectedNodes: PropTypes.array,
+        onSelect: PropTypes.func
     };
 
     static defaultProps = {
         node: {},
         onToggle: () => {},
-        settings: {},
         style: {
             marginBottom: "16px",
             cursor: "pointer"
@@ -47,41 +42,43 @@ class DefaultGroup extends React.Component {
         groupVisibilityCheckbox: false,
         visibilityCheckType: "glyph",
         level: 1,
-        onSettings: () => {},
-        updateSettings: () => {},
-        updateNode: () => {},
-        hideSettings: () => {},
-        currentLocale: 'en-US'
+        currentLocale: 'en-US',
+        selectedNodes: [],
+        onSelect: () => {}
     };
 
-    renderModal() {
-        return this.props.settings.expanded && this.props.settings.node === this.props.node.id ? (
-            <GroupSettingsModal
-                updateNode={this.props.updateNode}
-                updateSettings={this.props.updateSettings}
-                hideSettings={this.props.hideSettings}
-                settings={this.props.settings}
-                element={this.props.node}/>
-            ) : null;
+    renderVisibility = (error) => {
+        return this.props.groupVisibilityCheckbox && !error ?
+            (<VisibilityCheck
+                node={this.props.node}
+                key="visibility"
+                checkType={this.props.visibilityCheckType}
+                propertiesChangeHandler={this.props.propertiesChangeHandler}/>)
+            :
+            (<LayersTool key="loadingerror"
+                glyph="exclamation-mark text-danger"
+                tooltip="toc.loadingerror"
+                className="toc-error"/>);
     }
 
     render() {
         let {children, onToggle, ...other } = this.props;
-        return (
-            <Node className={"toc-default-group toc-group-" + this.props.level} sortableStyle={this.props.sortableStyle} style={this.props.style} type="group" {...other}>
-                { this.props.groupVisibilityCheckbox &&
-                  <VisibilityCheck
-                            key="visibility"
-                            checkType={this.props.visibilityCheckType}
-                            propertiesChangeHandler={this.props.propertiesChangeHandler}/>}
-                <Glyphicon className=" text-primary" glyph="cog" onClick={() => this.props.onSettings(this.props.node.id, "groups", {})}/>
-                {this.renderModal()}
-                <GroupTitle currentLocale={this.props.currentLocale} onClick={this.props.onToggle}/>
+        const selected = this.props.selectedNodes.filter((s) => s === this.props.node.id).length > 0 ? ' selected' : '';
+        const error = this.props.node.loadingError ? ' group-error' : '';
+        const grab = other.isDraggable ? <LayersTool key="grabTool" tooltip="toc.grabGroupIcon" className="toc-grab" ref="target" glyph="menu-hamburger"/> : <span className="toc-layer-tool toc-grab"/>;
+
+        return this.props.node.showComponent ? (
+            <Node className={"toc-default-group toc-group-" + this.props.level + selected + error} sortableStyle={this.props.sortableStyle} style={this.props.style} type="group" {...other}>
+                <div className="toc-default-group-head">
+                    {grab}
+                    {this.renderVisibility(error)}
+                    <GroupTitle node={this.props.node} currentLocale={this.props.currentLocale} onClick={this.props.onToggle} onSelect={this.props.onSelect}/>
+                </div>
                 <GroupChildren level={this.props.level + 1} onSort={this.props.onSort} position="collapsible">
                     {this.props.children}
                 </GroupChildren>
             </Node>
-        );
+        ) : null;
     }
 }
 

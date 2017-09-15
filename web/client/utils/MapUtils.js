@@ -31,8 +31,8 @@ const GET_COORDINATES_FROM_PIXEL_HOOK = 'GET_COORDINATES_FROM_PIXEL_HOOK';
 var hooks = {};
 var CoordinatesUtils = require('./CoordinatesUtils');
 const LayersUtils = require('./LayersUtils');
-const {isObject} = require('lodash');
 const assign = require('object-assign');
+const {isObject, head} = require('lodash');
 
 function registerHook(name, hook) {
     hooks[name] = hook;
@@ -285,6 +285,13 @@ function transformExtent(projection, center, width, height) {
     return {width, height};
 }
 
+const groupSaveFormatted = (node) => {
+    if (isObject(node.title) && head(Object.keys(node.title).filter(t => node.title[t]))) {
+        return {id: node.id, title: node.title, expanded: node.expanded};
+    }
+    return {id: node.id, expanded: node.expanded};
+};
+
 function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSearchConfig, catalogServices) {
 
     const map = {
@@ -299,11 +306,15 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
         return LayersUtils.saveLayer(layer);
     });
 
-    // filter groups with title as object
-    // title object contains translations
-    const groups = currentGroups
-        .filter((group) => isObject(group.title))
-        .map((group) => { return {id: group.id, title: group.title}; });
+    const flatGroupId = currentGroups.reduce((a, b) => {
+        const flatGroups = a.concat(LayersUtils.getGroupNodes(b));
+        return flatGroups;
+    }, [].concat(currentGroups.map(g => g.id)));
+
+    const groups = flatGroupId.map(g => {
+        const node = LayersUtils.getNode(currentGroups, g);
+        return node && node.nodes ? groupSaveFormatted(node) : null;
+    }).filter(g => g);
 
     return {
         version: 2,

@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,8 +6,9 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var Sortable = require('react-sortable-items');
+const React = require('react');
+const PropTypes = require('prop-types');
+const Sortable = require('react-sortable-items');
 require('./css/toc.css');
 
 class TOC extends React.Component {
@@ -40,14 +40,14 @@ class TOC extends React.Component {
         }
         if (this.props.onSort) {
             return (
-                <div id={this.props.id}>
+                <div id={this.props.id} className="mapstore-layers-container">
                     <Sortable minDragDistance={5} onSort={this.handleSort}>
                         {content}
                     </Sortable>
                 </div>
             );
         }
-        return <div id={this.props.id}>{content}</div>;
+        return <div id={this.props.id} className="mapstore-layers-container">{content}</div>;
     }
 
     handleSort = (reorder) => {

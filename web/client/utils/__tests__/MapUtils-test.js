@@ -24,7 +24,8 @@ var {
     getZoomForExtent,
     getCenterForExtent,
     getBbox,
-    getCurrentResolution
+    getCurrentResolution,
+    saveMapConfiguration
 } = require('../MapUtils');
 
 describe('Test the MapUtils', () => {
@@ -138,4 +139,183 @@ describe('Test the MapUtils', () => {
         let resolution2 = getCurrentResolution(2, 0, 21, 96);
         expect(resolution2).toEqual(resolution);
     });
+
+    it('save map configuration', () => {
+
+        const flat = [
+            {
+                allowedSRS: {},
+                bbox: {},
+                dimensions: [],
+                id: "layer001",
+                loading: true,
+                name: "layer001",
+                params: {},
+                search: {},
+                singleTile: false,
+                title: "layer001",
+                type: "wms",
+                url: "",
+                visibility: true
+            },
+            {
+                allowedSRS: {},
+                bbox: {},
+                dimensions: [],
+                id: "layer002",
+                loading: true,
+                name: "layer002",
+                params: {},
+                search: {},
+                singleTile: false,
+                title: "layer002",
+                type: "wms",
+                url: "",
+                visibility: true
+            },
+            {
+                allowedSRS: {},
+                bbox: {},
+                dimensions: [],
+                id: "layer003",
+                loading: true,
+                name: "layer003",
+                params: {},
+                search: {},
+                singleTile: false,
+                title: "layer003",
+                type: "wms",
+                url: "",
+                visibility: true
+            }
+        ];
+
+        const groups = [
+            {expanded: true, id: 'Default', name: 'Default', title: 'Default', nodes: ['layer001', 'layer002']},
+            {expanded: false, id: 'custom', name: 'custom', title: 'custom',
+                nodes: [{expanded: true, id: 'custom.nested001', name: 'nested001', title: 'nested001', nodes: ['layer003']}
+            ]}
+        ];
+
+        const mapConfig = {
+            center: {x: 0, y: 0, crs: 'EPSG:4326'},
+            maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+            projection: 'EPSG:900913',
+            units: 'm',
+            zoom: 10
+        };
+
+        const saved = saveMapConfiguration(mapConfig, flat, groups, '', {});
+
+        expect(saved).toEqual({
+            catalogServices: {},
+            map: {
+                center: {crs: 'EPSG:4326', x: 0, y: 0},
+                groups: [{
+                    id: 'Default',
+                    expanded: true
+                }, {
+                    id: 'custom',
+                    expanded: false
+                }, {
+                    id: 'custom.nested001',
+                    expanded: true
+                }],
+                layers: [{
+                    allowedSRS: {},
+                    availableStyles: undefined,
+                    bbox: {},
+                    capabilitiesURL: undefined,
+                    dimensions: [],
+                    features: undefined,
+                    format: undefined,
+                    group: undefined,
+                    matrixIds: undefined,
+                    maxZoom: undefined,
+                    maxNativeZoom: undefined,
+                    name: "layer001",
+                    opacity: undefined,
+                    params: {},
+                    provider: undefined,
+                    search: {},
+                    singleTile: false,
+                    source: undefined,
+                    style: undefined,
+                    styles: undefined,
+                    tileMatrixSet: undefined,
+                    tiled: undefined,
+                    title: "layer001",
+                    transparent: undefined,
+                    type: "wms",
+                    url: "",
+                    visibility: true
+                },
+                {
+                    allowedSRS: {},
+                    availableStyles: undefined,
+                    bbox: {},
+                    capabilitiesURL: undefined,
+                    dimensions: [],
+                    features: undefined,
+                    format: undefined,
+                    group: undefined,
+                    matrixIds: undefined,
+                    maxZoom: undefined,
+                    maxNativeZoom: undefined,
+                    name: "layer002",
+                    opacity: undefined,
+                    params: {},
+                    provider: undefined,
+                    search: {},
+                    singleTile: false,
+                    source: undefined,
+                    style: undefined,
+                    styles: undefined,
+                    tileMatrixSet: undefined,
+                    tiled: undefined,
+                    title: "layer002",
+                    transparent: undefined,
+                    type: "wms",
+                    url: "",
+                    visibility: true
+                },
+                {
+                    allowedSRS: {},
+                    availableStyles: undefined,
+                    bbox: {},
+                    capabilitiesURL: undefined,
+                    dimensions: [],
+                    features: undefined,
+                    format: undefined,
+                    group: undefined,
+                    matrixIds: undefined,
+                    maxZoom: undefined,
+                    maxNativeZoom: undefined,
+                    name: "layer003",
+                    opacity: undefined,
+                    params: {},
+                    provider: undefined,
+                    search: {},
+                    singleTile: false,
+                    source: undefined,
+                    style: undefined,
+                    styles: undefined,
+                    tileMatrixSet: undefined,
+                    tiled: undefined,
+                    title: "layer003",
+                    transparent: undefined,
+                    type: "wms",
+                    url: "",
+                    visibility: true
+                }],
+                maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+                projection: 'EPSG:900913',
+                text_serch_config: '',
+                units: 'm',
+                zoom: 10
+            },
+            version: 2
+        });
+    });
+
 });

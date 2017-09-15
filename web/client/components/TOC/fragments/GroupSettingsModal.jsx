@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -43,12 +43,18 @@ class GroupSettingsModal extends React.Component {
         this.setState({initialState: this.props.element});
     }
 
+    componentWillUpdate(newProps, newState) {
+        if (this.props.settings.expanded && !newProps.settings.expanded && !newState.save) {
+            this.props.updateNode(
+                this.props.settings.node,
+                this.props.settings.nodeType,
+                assign({}, this.props.settings.options, this.state.originalSettings)
+            );
+        }
+    }
+
     onClose = () => {
-        this.props.updateNode(
-            this.props.settings.node,
-            this.props.settings.nodeType,
-            assign({}, this.props.settings.options, this.state.originalSettings)
-        );
+        this.setState({save: false});
         this.props.hideSettings();
     };
 
@@ -63,13 +69,13 @@ class GroupSettingsModal extends React.Component {
     };
 
     render() {
-        return (
+        return this.props.settings.expanded ? (
             <Portal>
                 <Dialog id="mapstore-layer-groups-settings" className="portal-dialog">
                     <div role="header">
                         <span>{<Message msgId="layerProperties.groupProperties" />}</span>
-                        <button className="close">
-                            <Glyphicon glyph="1-close" onClick={this.onClose}/>
+                        <button className="close" onClick={this.onClose}>
+                            <Glyphicon glyph="1-close"/>
                         </button>
                     </div>
                     <div role="body">
@@ -80,13 +86,13 @@ class GroupSettingsModal extends React.Component {
                         </Tabs>
                     </div>
                     <div role="footer">
-                        <Button bsSize="sm" bsStyle="primary" onClick={this.props.hideSettings}>
+                        <Button bsSize="sm" bsStyle="primary" onClick={() => { this.props.hideSettings(); this.setState({save: true}); }}>
                             {<Message msgId="save"/>}
                         </Button>
                     </div>
                 </Dialog>
             </Portal>
-        );
+        ) : null;
     }
 
     updateParams = (newParams, updateNode = true) => {

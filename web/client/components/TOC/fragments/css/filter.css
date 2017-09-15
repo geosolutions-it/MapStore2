@@ -1,0 +1,4 @@
+.mapstore-filter input::-ms-clear,
+.mapstore-filter input::-ms-reveal {
+  display: none;
+}

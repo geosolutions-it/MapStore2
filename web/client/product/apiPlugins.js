@@ -19,7 +19,8 @@ module.exports = {
         ZoomAllPlugin: require('../plugins/ZoomAll'),
         MapLoadingPlugin: require('../plugins/MapLoading'),
         GoFullPlugin: require('../plugins/GoFull'),
-        OmniBarPlugin: require('../plugins/OmniBar')
+        OmniBarPlugin: require('../plugins/OmniBar'),
+        MapFooterPlugin: require('../plugins/MapFooter')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

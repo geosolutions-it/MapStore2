@@ -233,6 +233,7 @@
                 "name": "TOC",
                 "cfg": {
                     "activateQueryTool": true,
+                    "activateAddLayerButton": true,
                     "spatialOperations": [
                         {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
                         {"id": "BBOX", "name": "queryform.spatialfilter.operations.bbox"},
@@ -327,7 +328,24 @@
         "embedded": [{
                 "name": "Map",
                 "cfg": {
-                    "tools": ["locate"]
+                    "tools": ["locate"],
+                  "mapOptions": {
+                    "openlayers": {
+                      "attribution": {
+                        "container": "#mapstore-map-footer-container"
+                      }
+                    },
+                    "leaflet": {
+                      "attribution": {
+                        "container": "#mapstore-map-footer-container"
+                      }
+                    }
+                  },
+                  "toolsOptions": {
+                    "scalebar": {
+                      "container" : "#mapstore-map-footer-container"
+                    }
+                  }
                 }
             }, {
               "name": "DrawerMenu",
@@ -379,7 +397,15 @@
                         "alwaysVisible": true
                     }
                 }
-            }, "TOC", {
+            }, {
+                "name": "TOC",
+                "cfg": {
+                    "activateMapTitle": false,
+                    "activateSettingsTool": false,
+                    "activateRemoveLayer": false
+                }
+
+            }, "MapFooter", {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true

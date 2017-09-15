@@ -64,7 +64,7 @@ class SettingsModal extends React.Component {
         removeNode: () => {},
         retrieveLayerData: () => {},
         buttonSize: "large",
-        closeGlyph: "",
+        closeGlyph: "1-close",
         panelStyle: {},
         panelClassName: "toolbar-panel portal-dialog",
         includeCloseButton: true,
@@ -84,6 +84,16 @@ class SettingsModal extends React.Component {
         this.setState({initialState: this.props.element});
     }
 
+    componentWillUpdate(newProps, newState) {
+        if (this.props.settings.expanded && !newProps.settings.expanded && !newState.save) {
+            this.props.updateNode(
+                this.props.settings.node,
+                this.props.settings.nodeType,
+                assign({}, this.props.settings.options, this.state.originalSettings)
+            );
+        }
+    }
+
     onDelete = () => {
         this.props.removeNode(
             this.props.settings.node,
@@ -93,11 +103,7 @@ class SettingsModal extends React.Component {
     };
 
     onClose = () => {
-        this.props.updateNode(
-            this.props.settings.node,
-            this.props.settings.nodeType,
-            assign({}, this.props.settings.options, this.state.originalSettings)
-        );
+        this.setState({save: false});
         this.props.hideSettings();
     };
 
@@ -165,6 +171,7 @@ class SettingsModal extends React.Component {
             <Button bsSize={this.props.buttonSize} bsStyle="primary" onClick={() => {
                 this.updateParams(this.props.settings.options.opacity, true);
                 this.props.hideSettings();
+                this.setState({save: true});
             }}>{this.props.saveText}</Button>
         </span>);
 

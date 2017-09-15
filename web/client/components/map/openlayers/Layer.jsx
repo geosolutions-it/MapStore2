@@ -11,6 +11,7 @@ var Layers = require('../../../utils/openlayers/Layers');
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var assign = require('object-assign');
 const _ = require('lodash');
+const Rx = require('rxjs');
 
 class OpenlayersLayer extends React.Component {
     static propTypes = {
@@ -59,6 +60,12 @@ class OpenlayersLayer extends React.Component {
 
     componentWillUnmount() {
         if (this.layer && this.props.map) {
+            if (this.tileLoadEndStream$) {
+                this.tileLoadEndStream$.complete();
+                this.tileStopStream$.complete();
+                this.imageLoadEndStream$.complete();
+                this.imageStopStream$.complete();
+            }
             if (this.layer.detached) {
                 this.layer.remove();
             } else {
@@ -147,6 +154,10 @@ class OpenlayersLayer extends React.Component {
     addLayer = (options) => {
         if (this.isValid()) {
             this.props.map.addLayer(this.layer);
+
+            const tileLoadEndStream$ = new Rx.Subject();
+            const tileStopStream$ = new Rx.Subject();
+
             this.layer.getSource().on('tileloadstart', () => {
                 if (this.tilestoload === 0) {
                     this.props.onLayerLoading(options.id);
@@ -156,18 +167,40 @@ class OpenlayersLayer extends React.Component {
                 }
             });
             this.layer.getSource().on('tileloadend', () => {
+                tileLoadEndStream$.next({type: 'tileloadend'});
                 this.tilestoload--;
                 if (this.tilestoload === 0) {
-                    this.props.onLayerLoad(options.id);
+                    tileStopStream$.next();
                 }
             });
             this.layer.getSource().on('tileloaderror', (event) => {
+                tileLoadEndStream$.next({type: 'tileloaderror', event});
                 this.tilestoload--;
-                this.props.onLayerError(options.id);
                 if (this.tilestoload === 0) {
-                    this.props.onLayerLoad(options.id, {error: event});
+                    tileStopStream$.next();
                 }
             });
+
+            tileLoadEndStream$
+                .bufferWhen(() => tileStopStream$)
+                .subscribe({
+                    next: (tileEvents) => {
+                        const errors = tileEvents.filter(e => e.type === 'tileloaderror');
+                        if (errors.length > 0) {
+                            this.props.onLayerLoad(options.id, {error: true});
+                            this.props.onLayerError(options.id, tileEvents.length, errors.length);
+                        } else {
+                            this.props.onLayerLoad(options.id);
+                        }
+                    }
+                });
+
+            this.tileLoadEndStream$ = tileLoadEndStream$;
+            this.tileStopStream$ = tileStopStream$;
+
+            const imageLoadEndStream$ = new Rx.Subject();
+            const imageStopStream$ = new Rx.Subject();
+
             this.layer.getSource().on('imageloadstart', () => {
                 if (this.imagestoload === 0) {
                     this.props.onLayerLoading(options.id);
@@ -178,17 +211,36 @@ class OpenlayersLayer extends React.Component {
             });
             this.layer.getSource().on('imageloadend', () => {
                 this.imagestoload--;
+                imageLoadEndStream$.next({type: 'imageloadend'});
                 if (this.imagestoload === 0) {
-                    this.props.onLayerLoad(options.id);
+                    imageStopStream$.next();
                 }
             });
             this.layer.getSource().on('imageloaderror', (event) => {
                 this.imagestoload--;
-                this.props.onLayerError(options.id);
+                imageLoadEndStream$.next({type: 'imageloaderror', event});
                 if (this.imagestoload === 0) {
-                    this.props.onLayerLoad(options.id, {error: event});
+                    imageStopStream$.next();
                 }
             });
+
+            imageLoadEndStream$
+                .bufferWhen(() => imageStopStream$)
+                .subscribe({
+                    next: (imageEvents) => {
+                        const errors = imageEvents.filter(e => e.type === 'imageloaderror');
+                        if (errors.length > 0) {
+                            this.props.onLayerLoad(options.id, {error: true});
+                            this.props.onLayerError(options.id, imageEvents.length, errors.length);
+                        } else {
+                            this.props.onLayerLoad(options.id);
+                        }
+                    }
+                });
+
+            this.imageLoadEndStream$ = imageLoadEndStream$;
+            this.imageStopStream$ = imageStopStream$;
+
             if (options.refresh) {
                 let counter = 0;
                 this.refreshTimer = setInterval(() => {

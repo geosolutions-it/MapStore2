@@ -1,6 +1,50 @@
 /* drawer menu */
 #drawer-menu-button {
     .shadow;
+    left: 0;
+    top: 0;
+}
+
+#mapstore-drawermenu {
+
+    .nav-body {
+        overflow: hidden;
+    }
+
+    .panel-heading {
+        border: none;
+        padding: 0;
+    }
+
+    .panel-body {
+        border: none;
+        padding: 0;
+    }
+
+    .navHeader {
+        & > .glyphicon {
+            display: block;
+            float: left;
+            background-color: transparent;
+            font-size: @icon-size;
+            margin: floor((@padding-left-square - 1) / 1.230769231 /* font ratio height/width */) (@padding-left-square - 1);
+            &:hover {
+                background-color: transparent;
+                color: darken(@ms2-color-primary, 10%);
+            }
+        }
+    }
+}
+
+.toolbar-panel #background-switcher {
+    max-height: 600px;
+    overflow: auto;
+}
+
+
+/*
+.nav-menu > div.nav-content .panel-body {
+    padding: 0px;
 }
 
 #mapstore-drawermenu .glyphicon {
@@ -24,7 +68,7 @@
 	font-weight: bold;
 	background: transparent;
 }
-/* nav buttons */
+
 #mapstore-drawermenu .navButtons .btn.square-button {
 	font-size: @icon-size;
 }
@@ -32,9 +76,7 @@
 #mapstore-drawermenu .navButtons .btn.square-button .glyphicon {
 	font-size: @icon-size;
 }
-/* toc */
 
-/* visibility check */
 #mapstore-drawermenu #mapstore-layers .glyphicon,
 #mapstore-drawermenu #mapstore-layers .visibility-check.glyphicon {
 	font-size: @icon-size-md;
@@ -47,7 +89,6 @@
 	margin-top: 0;
 }
 
-/* group */
 #mapstore-drawermenu #mapstore-layers .group-expanded,
 .group-collapsed {
 	padding: 5px 0;
@@ -81,7 +122,7 @@
 #mapstore-drawermenu #mapstore-layers .toc-group-children {
 	margin-left: 24px;
 }
-/* layer */
+
 #mapstore-drawermenu #mapstore-layers .toc-default-layer {
 	padding: 10px 0;
 }
@@ -129,11 +170,6 @@
     margin-top: 2px;
 }
 
-.toolbar-panel #background-switcher {
-    max-height: 600px;
-    overflow: auto;
-}
-
 #mapstore-drawermenu #mapstore-layers .toc-default-group > .glyphicon {
     cursor: pointer;
     width: @icon-size-md;
@@ -148,7 +184,4 @@
     margin: 0 0 4px 8px;
     cursor: pointer;
 }
-
-.nav-menu > div.nav-content .panel-body {
-    padding: 0px;
-}
+*/
