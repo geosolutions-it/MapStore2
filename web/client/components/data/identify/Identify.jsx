@@ -96,14 +96,7 @@ class Identify extends React.Component {
         enableRevGeocode: true,
         wrapRevGeocode: false,
         queryableLayersFilter: MapInfoUtils.defaultQueryableFilter,
-        style: {
-            position: "absolute",
-            maxWidth: "500px",
-            top: "56px",
-            left: "45px",
-            zIndex: 1023,
-            boxShadow: "2px 2px 4px #A7A7A7"
-        },
+        style: {},
         point: {},
         map: {},
         layers: [],

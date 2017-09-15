@@ -8,11 +8,21 @@
 
 #mapstore-getfeatureinfo {
     max-width: 100%;
+    position: absolute;
+    max-width: 500px;
+    z-index: 1023;
+    box-shadow: 2px 2px 4px #A7A7A7;
 }
 
 @media (min-width: 500px) {
     #mapstore-getfeatureinfo {
-        min-width: 500px !important;
+        min-width: 500px;
+    }
+}
+
+@media (min-width: 768px) {
+    #mapstore-getfeatureinfo {
+        min-width: 660px;
     }
 }
 
