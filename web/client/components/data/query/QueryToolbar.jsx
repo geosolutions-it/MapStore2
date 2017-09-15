@@ -11,6 +11,7 @@ const React = require('react');
 const {Button, Glyphicon, ButtonToolbar, Tooltip} = require('react-bootstrap');
 
 const Modal = require('../../misc/Modal');
+const {checkOperatorValidity} = require('../../../utils/FilterUtils');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 
 const I18N = require('../../I18N/I18N');
@@ -112,7 +113,7 @@ class QueryToolbar extends React.Component {
         let filterObj = {
             featureTypeName: this.props.featureTypeName,
             groupFields: this.props.groupFields,
-            filterFields: this.props.filterFields.filter((field) => field.value || field.operator === "isNull"),
+            filterFields: this.props.filterFields.filter(field => checkOperatorValidity(field.value, field.operator)),
             spatialField: this.props.spatialField,
             pagination: this.props.pagination,
             filterType: this.props.filterType,

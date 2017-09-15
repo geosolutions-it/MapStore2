@@ -83,6 +83,7 @@ class FilterField extends React.Component {
                             fieldOptions={this.props.attributes.map((attribute) => { return {id: attribute.attribute, name: attribute.label}; })}
                             placeholder={LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.combo_placeholder")}
                             fieldValue={this.props.filterField.attribute}
+                            attType={selectedAttribute && selectedAttribute.type}
                             fieldName="attribute"
                             fieldRowId={this.props.filterField.rowId}
                             onUpdateField={this.updateFieldElement}
@@ -100,7 +101,14 @@ class FilterField extends React.Component {
     };
 
     updateFieldElement = (rowId, name, value, type, fieldOptions) => {
-        this.props.onUpdateField(rowId, name, value, type === 'boolean' ? 'string' : type, fieldOptions);
+        let selectedAttribute;
+        if (name === "attribute") {
+            selectedAttribute = this.props.attributes.filter((attribute) => attribute.attribute === value)[0];
+            this.props.onUpdateField(rowId, name, value, selectedAttribute && selectedAttribute.type || type, fieldOptions);
+        } else {
+            this.props.onUpdateField(rowId, name, value, type === 'boolean' ? 'string' : type, fieldOptions);
+
+        }
 
         if (name === "value") {
             // For cascading: filter the attributes that depends on
