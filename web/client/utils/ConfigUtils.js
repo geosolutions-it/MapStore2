@@ -298,6 +298,7 @@ var ConfigUtils = {
         let ua = navigator.userAgent.toLowerCase();
         let webkit = ua.indexOf('webkit') !== -1;
         let chrome = ua.indexOf('chrome') !== -1;
+        let safari = ua.indexOf('safari') !== -1 && ua.indexOf('chrome') === -1;
         let phantomjs = ua.indexOf('phantom') !== -1;
         let android = ua.indexOf('android') !== -1;
         let android23 = ua.search('android [23]') !== -1;
@@ -332,6 +333,8 @@ var ConfigUtils = {
             android23: android23,
 
             chrome: chrome,
+
+            safari,
 
             ie3d: ie3d,
             webkit3d: webkit3d,
