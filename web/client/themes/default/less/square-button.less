@@ -16,7 +16,7 @@
 .square-button-md {
     height: @square-btn-medium-size;
     width: @square-btn-medium-size;
-    padding: 0 @padding-left-square-md - 1;
+    padding: floor((@padding-left-square-md)/1.230769231) (@padding-left-square-md);
     outline: 0 !important;
 
     .glyphicon {

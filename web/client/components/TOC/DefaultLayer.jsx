@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,59 +6,34 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var Node = require('./Node');
-var VisibilityCheck = require('./fragments/VisibilityCheck');
-var Title = require('./fragments/Title');
-var InlineSpinner = require('../misc/spinners/InlineSpinner/InlineSpinner');
-var WMSLegend = require('./fragments/WMSLegend');
-const ConfirmModal = require('../maps/modals/ConfirmModal');
+const React = require('react');
+const PropTypes = require('prop-types');
+const Node = require('./Node');
+const {isObject} = require('lodash');
+const {Grid, Row, Col} = require('react-bootstrap');
+const VisibilityCheck = require('./fragments/VisibilityCheck');
+const Title = require('./fragments/Title');
+const WMSLegend = require('./fragments/WMSLegend');
 const LayersTool = require('./fragments/LayersTool');
-const SettingsModal = require('./fragments/SettingsModal');
-const Message = require('../I18N/Message');
 
 class DefaultLayer extends React.Component {
     static propTypes = {
         node: PropTypes.object,
-        settings: PropTypes.object,
         propertiesChangeHandler: PropTypes.func,
-        retrieveLayerData: PropTypes.func,
         onToggle: PropTypes.func,
         onContextMenu: PropTypes.func,
-        onBrowseData: PropTypes.func,
-        onZoom: PropTypes.func,
-        onSettings: PropTypes.func,
-        onRefresh: PropTypes.func,
+        onSelect: PropTypes.func,
         style: PropTypes.object,
         sortableStyle: PropTypes.object,
-        hideSettings: PropTypes.func,
-        updateSettings: PropTypes.func,
-        updateNode: PropTypes.func,
-        removeNode: PropTypes.func,
         activateLegendTool: PropTypes.bool,
-        activateRemoveLayer: PropTypes.bool,
-        activateSettingsTool: PropTypes.bool,
-        activateQueryTool: PropTypes.bool,
-        activateZoomTool: PropTypes.bool,
-        activateRefreshTool: PropTypes.bool,
-        chartStyle: PropTypes.object,
-        settingsText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-        opacityText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-        elevationText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-        saveText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-        closeText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-        confirmDeleteText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-        confirmDeleteMessage: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-        modalOptions: PropTypes.object,
-        settingsOptions: PropTypes.object,
         visibilityCheckType: PropTypes.string,
-        includeDeleteButtonInSettings: PropTypes.bool,
-        groups: PropTypes.array,
         currentZoomLvl: PropTypes.number,
         scales: PropTypes.array,
         additionalTools: PropTypes.array,
         legendOptions: PropTypes.object,
-        currentLocale: PropTypes.string
+        currentLocale: PropTypes.string,
+        selectedNodes: PropTypes.array,
+        filterText: PropTypes.string
     };
 
     static defaultProps = {
@@ -68,178 +42,95 @@ class DefaultLayer extends React.Component {
         propertiesChangeHandler: () => {},
         onToggle: () => {},
         onContextMenu: () => {},
-        onZoom: () => {},
-        onSettings: () => {},
-        onRefresh: () => {},
-        retrieveLayerData: () => {},
-        onBrowseData: () => {},
-        activateRemoveLayer: false,
+        onSelect: () => {},
         activateLegendTool: false,
-        activateSettingsTool: false,
-        activateQueryTool: false,
-        activateZoomTool: false,
-        activateRefreshTool: false,
-        includeDeleteButtonInSettings: false,
-        modalOptions: {},
-        settingsOptions: {},
-        confirmDeleteText: <Message msgId="layerProperties.deleteLayer" />,
-        confirmDeleteMessage: <Message msgId="layerProperties.deleteLayerMessage" />,
         visibilityCheckType: "glyph",
         additionalTools: [],
-        currentLocale: 'en-US'
-    };
-
-    state = {
-        showDeleteDialog: false
-    };
-
-    onConfirmDelete = () => {
-        this.props.removeNode(this.props.node.id, "layers", this.props.node);
-        this.closeDeleteDialog();
+        currentLocale: 'en-US',
+        selectedNodes: [],
+        filterText: ''
     };
 
     renderCollapsible = () => {
-        let tools = this.props.additionalTools.filter((t) => t.collapsible).map((Tool) => <Tool style={{"float": "right", cursor: "pointer"}}/>);
-        if (this.props.activateRemoveLayer) {
-            tools.push(<LayersTool
-                        node={this.props.node}
-                        key="removelayer"
-                        className="clayer_removal_button"
-                        onClick={this.displayDeleteDialog}
-                        tooltip="toc.removeLayer"
-                        glyph="1-close"
-                        />);
-        }
-        if (this.props.activateRefreshTool && this.props.node.type === 'wms') {
-            tools.push((<LayersTool
-                        node={this.props.node}
-                        key="refreshlayer"
-                        className="clayer_refresh_button"
-                        onClick={this.displayRefreshDialog}
-                        tooltip="toc.refreshConfirm"
-                        glyph="refresh"
-                        />));
-        }
-        tools.push(
-            <LayersTool node={this.props.node} key="toolsettings"
-                    tooltip="toc.editLayerProperties"
-                    glyph="cog"
-                    onClick={(node) => this.props.onSettings(node.id, "layers",
-                        {opacity: parseFloat(node.opacity !== undefined ? node.opacity : 1)})}/>
-        );
-        if (this.props.settings && this.props.settings.node === this.props.node.id) {
-            tools.push(<SettingsModal
-                            node={this.props.node}
-                            key="toolsettingsmodal" options={this.props.modalOptions}
-                           {...this.props.settingsOptions}
-                           retrieveLayerData={this.props.retrieveLayerData}
-                           hideSettings={this.props.hideSettings}
-                           settings={this.props.settings}
-                           element={this.props.node}
-                           updateSettings={this.props.updateSettings}
-                           updateNode={this.props.updateNode}
-                           removeNode={this.props.removeNode}
-                           includeDeleteButton={this.props.includeDeleteButtonInSettings}
-                           titleText={this.props.settingsText}
-                           opacityText={this.props.opacityText}
-                           elevationText={this.props.elevationText}
-                           chartStyle={this.props.chartStyle}
-                           saveText={this.props.saveText}
-                           closeText={this.props.closeText}
-                           groups={this.props.groups}/>
-               );
-        }
-        if (this.props.activateQueryTool && this.props.node.search) {
-            tools.push(
-                <LayersTool key="toolquery"
-                        tooltip="toc.browseData"
-                        className="toc-queryTool"
-                        node={this.props.node}
-                        ref="target"
-                        style={{"float": "right", cursor: "pointer"}}
-                        glyph="features-grid"
-                        onClick={(node) => this.props.onBrowseData({
-                            url: node.search.url || node.url,
-                            name: node.name,
-                            id: node.id
-                        })}/>
-                );
-        }
-        return (<div position="collapsible" className="collapsible-toc">
-             <div style={{minHeight: "35px"}}>{tools}</div>
-             <div><WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales} {...this.props.legendOptions}/></div>
-        </div>);
-    };
-
-    renderTools = () => {
-        const tools = this.props.additionalTools.filter((t) => !t.collapsible).map((Tool) => <Tool style={{"float": "right", cursor: "pointer"}}/>);
-        if (this.props.visibilityCheckType) {
-            tools.push(
-                <VisibilityCheck key="visibilitycheck"
-                   checkType={this.props.visibilityCheckType}
-                   propertiesChangeHandler={this.props.propertiesChangeHandler}
-                   style={{"float": "right", cursor: "pointer"}}/>
-            );
-        }
-        if (this.props.activateLegendTool) {
-            tools.push(
-                <LayersTool
-                        tooltip="toc.displayLegendAndTools"
-                        key="toollegend"
-                        className="toc-legendTool"
-                        ref="target"
-                        style={{"float": "right", cursor: "pointer"}}
-                        glyph="1-menu-manage"
-                        onClick={(node) => this.props.onToggle(node.id, node.expanded)}/>
-                );
-        }
-        if (this.props.activateZoomTool && this.props.node.bbox && !this.props.node.loadingError) {
-            tools.push(
-                <LayersTool key="toolzoom"
-                        tooltip="toc.zoomToLayerExtent"
-                        className="toc-zoomTool"
-                        ref="target"
-                        style={{"float": "right", cursor: "pointer"}}
-                        glyph="zoom-to"
-                        onClick={(node) => this.props.onZoom(node.bbox.bounds, node.bbox.crs)}/>
-                );
-        }
-        return tools;
-    };
-
-    render() {
-        let {children, propertiesChangeHandler, onToggle, ...other } = this.props;
+        const translation = isObject(this.props.node.title) ? this.props.node.title[this.props.currentLocale] || this.props.node.title.default : this.props.node.title;
+        const title = translation || this.props.node.name;
         return (
-            <Node className="toc-default-layer" sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
-                <Title currentLocale={this.props.currentLocale} onClick={this.props.onToggle} onContextMenu={this.props.onContextMenu}/>
-                <LayersTool key="loadingerror"
-                        style={{"display": this.props.node.loadingError ? "block" : "none", color: "red", cursor: "default"}}
-                        glyph="ban-circle"
-                        tooltip="toc.loadingerror"
-                        />
+            <div key="legend" position="collapsible" className="collapsible-toc">
+                <Grid fluid>
+                    <Row>
+                        <Col xs={12}>
+                            <div className="toc-full-title">{title}</div>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={12}>
+                            {this.props.activateLegendTool && <WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales} {...this.props.legendOptions}/>}
+                        </Col>
+                    </Row>
+                </Grid>
+            </div>);
+    };
+
+    renderVisibility = () => {
+        return this.props.node.loadingError === 'Error' ?
+            (<LayersTool key="loadingerror"
+                glyph="exclamation-mark text-danger"
+                tooltip="toc.loadingerror"
+                className="toc-error"/>)
+            :
+            (<VisibilityCheck key="visibilitycheck"
+                tooltip={this.props.node.loadingError === 'Warning' ? 'toc.toggleLayerVisibilityWarning' : 'toc.toggleLayerVisibility'}
+                node={this.props.node}
+                checkType={this.props.visibilityCheckType}
+                propertiesChangeHandler={this.props.propertiesChangeHandler}/>);
+    }
+
+    renderToolsLegend = () => {
+        return this.props.node.loadingError === 'Error' ?
+                null
+                :
+                (<LayersTool
+                    node={this.props.node}
+                    tooltip="toc.displayLegendAndTools"
+                    key="toollegend"
+                    className="toc-legend"
+                    ref="target"
+                    glyph="chevron-left"
+                    onClick={(node) => this.props.onToggle(node.id, node.expanded)}/>);
+    }
+
+    renderNode = (grab, hide, selected, error, warning, other) => {
+        return (
+            <Node className={'toc-default-layer' + hide + selected + error + warning} sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
+                <div className="toc-default-layer-head">
+                    {grab}
+                    {this.renderVisibility()}
+                    <Title filterText={this.props.filterText} node={this.props.node} currentLocale={this.props.currentLocale} onClick={this.props.onSelect} onContextMenu={this.props.onContextMenu}/>
+                    {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend()}
+                </div>
                 {this.renderCollapsible()}
-                {this.renderTools()}
-                <InlineSpinner loading={this.props.node.loading}/>
-                <ConfirmModal ref="removelayer" show= {this.state.showDeleteDialog} onHide={this.closeDeleteDialog} onClose={this.closeDeleteDialog} onConfirm={this.onConfirmDelete} titleText={this.props.confirmDeleteText} confirmText={this.props.confirmDeleteText} cancelText={<Message msgId="cancel" />} body={this.props.confirmDeleteMessage} />
             </Node>
         );
     }
 
-    closeDeleteDialog = () => {
-        this.setState({
-            showDeleteDialog: false
-        });
-    };
+    render() {
+        let {children, propertiesChangeHandler, onToggle, ...other } = this.props;
 
-    displayDeleteDialog = () => {
-        this.setState({
-            showDeleteDialog: true
-        });
-    };
+        const hide = !this.props.node.visibility || this.props.node.invalid ? ' visibility' : '';
+        const selected = this.props.selectedNodes.filter((s) => s === this.props.node.id).length > 0 ? ' selected' : '';
+        const error = this.props.node.loadingError === 'Error' ? ' layer-error' : '';
+        const warning = this.props.node.loadingError === 'Warning' ? ' layer-warning' : '';
+        const grab = other.isDraggable ? <LayersTool key="grabTool" tooltip="toc.grabLayerIcon" className="toc-grab" ref="target" glyph="menu-hamburger"/> : <span className="toc-layer-tool toc-grab"/>;
+        const filteredNode = this.filterLayers(this.props.node) ? this.renderNode(grab, hide, selected, error, warning, other) : null;
 
-    displayRefreshDialog = () => {
-        this.props.onRefresh(this.props.node);
-    };
+        return !this.props.filterText ? this.renderNode(grab, hide, selected, error, warning, other) : filteredNode;
+    }
+
+    filterLayers = (layer) => {
+        const translation = isObject(layer.title) ? layer.title[this.props.currentLocale] || layer.title.default : layer.title;
+        const title = translation || layer.name;
+        return title.toLowerCase().includes(this.props.filterText.toLowerCase());
+    }
 }
 
 module.exports = DefaultLayer;

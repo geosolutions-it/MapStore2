@@ -358,7 +358,7 @@ const selector = createSelector([
     pdfUrl,
     error,
     map,
-    layers,
+    layers: layers.filter(l => !l.loadingError),
     scales,
     usePreview
 }));

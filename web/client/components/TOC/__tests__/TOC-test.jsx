@@ -18,6 +18,7 @@ const testData = [
     {
         name: "G0",
         title: "G0",
+        showComponent: true,
         nodes: [
             {
                 group: 'G0',
@@ -33,6 +34,7 @@ const testData = [
     {
         name: "G1",
         title: "G1",
+        showComponent: true,
         nodes: [
             {
                 group: 'G1',
@@ -48,6 +50,7 @@ const testData = [
     {
         name: "G2",
         title: "G2",
+        showComponent: true,
         nodes: [
             {
                 group: 'G2',

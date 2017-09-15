@@ -76,7 +76,7 @@ var Node = createReactClass({
         let expanded = this.props.node.expanded !== undefined ? this.props.node.expanded : true;
         let prefix = this.props.type;
         const nodeStyle = assign({}, this.props.style, this.props.styler(this.props.node));
-        let collapsible = expanded ? this.renderChildren((child) => child && child.props.position === 'collapsible') : [];
+        let collapsible = expanded && this.props.node.loadingError !== 'Error' ? this.renderChildren((child) => child && child.props.position === 'collapsible') : [];
         if (this.props.animateCollapse) {
             collapsible = <CSSTransitionGroup transitionName="TOC-Node" transitionEnterTimeout={250} transitionLeaveTimeout={250}>{collapsible}</CSSTransitionGroup>;
         }

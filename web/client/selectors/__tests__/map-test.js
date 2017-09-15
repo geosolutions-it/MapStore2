@@ -7,7 +7,7 @@
 */
 
 const expect = require('expect');
-const {mapSelector, projectionSelector, mapVersionSelector, mapIdSelector, projectionDefsSelector} = require('../map');
+const {mapSelector, projectionSelector, mapVersionSelector, mapIdSelector, projectionDefsSelector, mapNameSelector} = require('../map');
 const center = {x: 1, y: 1};
 let state = {
         map: {center: center},
@@ -66,5 +66,15 @@ describe('Test map selectors', () => {
     it('test mapVersionSelector', () => {
         const props = mapVersionSelector({map: {present: {version: 2}}});
         expect(props).toBe(2);
+    });
+
+    it('test mapNameSelector', () => {
+        const props = mapNameSelector({map: {present: {info: { name: 'map name' }}}});
+        expect(props).toBe('map name');
+    });
+
+    it('test mapNameSelector no state', () => {
+        const props = mapNameSelector({});
+        expect(props).toBe('');
     });
 });

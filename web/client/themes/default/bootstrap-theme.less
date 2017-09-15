@@ -55,6 +55,17 @@
 // Button
 button.close {
     opacity: 1.0;
+
+    &:first-child {
+        font-family: "mapstore2";
+        font-size: 0;
+        .glyphicon;
+    }
+
+    &:first-child:before {
+        content: "\0055";
+        font-size: (@font-size-base * 1.5);
+    }
 }
 
 .btn-styles(@btn-color-hover) {
@@ -66,22 +77,47 @@ button.close {
 
 .btn-primary {
     .btn-styles(@ms2-color-primary-hover);
+    &:focus,
+    &.focus {
+        background-color: @ms2-color-primary;
+        border-color: @btn-primary-border;
+    }
 }
 
 .btn-success {
     .btn-styles(@ms2-color-success-hover);
+    &:focus,
+    &.focus {
+        background-color: @ms2-color-success;
+        border-color: @btn-success-border;
+    }
 }
 
 .btn-info {
     .btn-styles(@ms2-color-info-hover);
+    &:focus,
+    &.focus {
+        background-color: @ms2-color-info;
+        border-color: @btn-info-border;
+    }
 }
 
 .btn-warning {
     .btn-styles(@ms2-color-warning-hover);
+    &:focus,
+    &.focus {
+        background-color: @ms2-color-warning;
+        border-color: @btn-warning-border;
+    }
 }
 
 .btn-danger {
     .btn-styles(@ms2-color-danger-hover);
+    &:focus,
+    &.focus {
+        background-color: @ms2-color-danger;
+        border-color: @btn-danger-border;
+    }
 }
 
 // Modal

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -16,21 +16,32 @@ class Title extends React.Component {
         node: PropTypes.object,
         onClick: PropTypes.func,
         onContextMenu: PropTypes.func,
-        currentLocale: PropTypes.string
+        currentLocale: PropTypes.string,
+        filterText: PropTypes.string
     };
-
-    static inheritedPropTypes = ['node'];
 
     static defaultProps = {
         onClick: () => {},
         onContextMenu: () => {},
-        currentLocale: 'en-US'
+        currentLocale: 'en-US',
+        filterText: ''
     };
 
+    getFilteredTitle = (title) => {
+        const splitTitle = title.toLowerCase().split(this.props.filterText.toLowerCase());
+
+        return this.props.filterText ? splitTitle.reduce((a, b, idx) => {
+            if (idx === splitTitle.length - 1) {
+                return [...a, b];
+            }
+            return [...a, b, <strong key={idx}>{this.props.filterText.toLowerCase()}</strong>];
+        }, []) : title;
+    }
+
     render() {
-        let expanded = this.props.node.expanded !== undefined ? this.props.node.expanded : true;
         const translation = isObject(this.props.node.title) ? this.props.node.title[this.props.currentLocale] || this.props.node.title.default : this.props.node.title;
-        return <span className="toc-title" onClick={() => this.props.onClick(this.props.node.id || this.props.node.name, expanded)} onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu(this.props.node); }}>{translation || this.props.node.name}</span>;
+        const title = translation || this.props.node.name;
+        return <div className="toc-title" onClick={this.props.onClick ? (e) => this.props.onClick(this.props.node.id, 'layer', e.ctrlKey) : () => {}} onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu(this.props.node); }}>{this.getFilteredTitle(title)}</div>;
     }
 }
 

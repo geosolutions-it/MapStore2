@@ -1,5 +1,4 @@
-var PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,8 +6,9 @@ var PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var Legend = require('./legend/Legend');
+const React = require('react');
+const PropTypes = require('prop-types');
+const Legend = require('./legend/Legend');
 
 class WMSLegend extends React.Component {
     static propTypes = {
@@ -21,9 +21,7 @@ class WMSLegend extends React.Component {
     };
 
     static defaultProps = {
-        legendContainerStyle: {
-            marginLeft: "15px"
-        },
+        legendContainerStyle: {},
         showOnlyIfVisible: false
     };
 
