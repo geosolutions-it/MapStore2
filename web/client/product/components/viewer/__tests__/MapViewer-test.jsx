@@ -14,6 +14,15 @@ const MapViewerPage = require('../MapViewer');
 const configureStore = require('redux-mock-store').default;
 const thunkMiddleware = require('redux-thunk');
 const mockStore = configureStore([thunkMiddleware]);
+const store = mockStore({});
+const location = document.location;
+
+const renderMapViewerComp = (mapViewerPros) => {
+    return ReactDOM.render(
+        <Provider store={store}>
+            <MapViewerPage {...mapViewerPros}/>
+        </Provider>, document.getElementById("container"));
+};
 
 describe("The MapViewerPage component", () => {
     beforeEach((done) => {
@@ -26,39 +35,57 @@ describe("The MapViewerPage component", () => {
         done();
     });
 
-    it('testing creation with mapId = new', (done) => {
-        /*  setting props */
-        const location = document.location;
-        const match = {params: {mapId: "new"}};
-        const store = mockStore({});
-        const mapViewerPros = { match, onInit: () => {}, loadMapConfig: (cfgUrl, mapId) => {
-            expect(cfgUrl).toBe("new.json");
-            expect(mapId).toBe(null);
-        },
-        location};
-        const cmpMapViewerPage = ReactDOM.render(
-            <Provider store={store}>
-                <MapViewerPage {...mapViewerPros}/>
-            </Provider>, document.getElementById("container"));
+    it('testing creation with defaults', (done) => {
+        const mapViewerPros = {};
+        const cmpMapViewerPage = renderMapViewerComp(mapViewerPros);
         expect(cmpMapViewerPage).toExist();
         done();
+    });
 
+    it('testing creation with mapId = new', (done) => {
+        const match = {params: {mapId: "new"}};
+        const mapViewerPros = { match, location, onInit: () => {},
+            loadMapConfig: (cfgUrl, mapId) => {
+                expect(cfgUrl).toBe("new.json");
+                expect(mapId).toBe(null);
+            }};
+        const cmpMapViewerPage = renderMapViewerComp(mapViewerPros);
+        expect(cmpMapViewerPage).toExist();
+        done();
+    });
+
+    it('testing creation with mapId = anyString', (done) => {
+        const match = {params: {mapId: "anyString"}};
+        const mapViewerPros = { match, location, onInit: () => {},
+            loadMapConfig: (cfgUrl, mapId) => {
+                expect(cfgUrl).toBe("anyString.json");
+                expect(mapId).toBe(null);
+            }};
+        const cmpMapViewerPage = renderMapViewerComp(mapViewerPros);
+        expect(cmpMapViewerPage).toExist();
+        done();
     });
 
     it('testing creation with mapId = 0', (done) => {
-
-        const location = document.location;
         const match = {params: {mapId: 0}};
-        const store = mockStore({});
-        const mapViewerPros = { match, onInit: () => {}, loadMapConfig: (cfgUrl, mapId) => {
-            expect(cfgUrl).toBe("config.json");
-            expect(mapId).toBe(null);
-        },
-        location};
-        const component = ReactDOM.render(
-            <Provider store={store}>
-                <MapViewerPage {...mapViewerPros}/>
-            </Provider>, document.getElementById("container"));
+        const mapViewerPros = { match, location, onInit: () => {},
+            loadMapConfig: (cfgUrl, mapId) => {
+                expect(cfgUrl).toBe("config.json");
+                expect(mapId).toBe(null);
+            }};
+        const component = renderMapViewerComp(mapViewerPros);
+        expect(component).toExist();
+        done();
+    });
+
+    it('testing creation with mapId = 1', (done) => {
+        const match = {params: {mapId: 1}};
+        const mapViewerPros = { match, location, onInit: () => {},
+            loadMapConfig: (cfgUrl, mapId) => {
+                expect(cfgUrl).toBe("/mapstore/rest/geostore/data/1");
+                expect(mapId).toBe(1);
+            }};
+        const component = renderMapViewerComp(mapViewerPros);
         expect(component).toExist();
         done();
     });
