@@ -32,7 +32,9 @@ const {
     closeFeatureGrid, CLOSE_FEATURE_GRID,
     closeFeatureGridConfirm, CLOSE_FEATURE_GRID_CONFIRM,
     closeFeatureGridConfirmed, FEATURE_GRID_CLOSE_CONFIRMED,
-    zoomAll, ZOOM_ALL
+    updateFilter, UPDATE_FILTER,
+    zoomAll, ZOOM_ALL,
+    openAdvancedSearch, OPEN_ADVANCED_SEARCH
 } = require('../featuregrid');
 
 const idFeature = "2135";
@@ -203,6 +205,18 @@ describe('Test correctness of featurgrid actions', () => {
         const retval = zoomAll();
         expect(retval).toExist();
         expect(retval.type).toBe(ZOOM_ALL);
+    });
+    it('Test openAdvancedSearch', () => {
+        const retval = openAdvancedSearch();
+        expect(retval).toExist();
+        expect(retval.type).toBe(OPEN_ADVANCED_SEARCH);
+    });
+    it('Test updateFilter', () => {
+        const update = {name: "A"};
+        const retval = updateFilter(update);
+        expect(retval).toExist();
+        expect(retval.type).toBe(UPDATE_FILTER);
+        expect(retval.update).toBe(update);
     });
 
 });

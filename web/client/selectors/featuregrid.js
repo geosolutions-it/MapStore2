@@ -46,9 +46,13 @@ const hasGeometrySelectedFeature = (state) => {
 };
 const hasChangesSelector = state => changesSelector(state) && changesSelector(state).length > 0;
 const hasNewFeaturesSelector = state => newFeaturesSelector(state) && newFeaturesSelector(state).length > 0;
+const getAttributeFilters = state => state && state.featuregrid && state.featuregrid.filters;
 module.exports = {
   isFeatureGridOpen: state => state && state.featuregrid && state.featuregrid.open,
+  getAttributeFilters,
+  getAttributeFilter: (state, name) => get(getAttributeFilters(state), name),
   selectedLayerIdSelector,
+  getCustomAttributeSettings,
   getTitleSelector: state => {
       const title = getTitle(getLayerById(state, selectedLayerIdSelector(state)));
       return isObject(title) ? title[currentLocaleSelector(state)] || title.default || '' : title;

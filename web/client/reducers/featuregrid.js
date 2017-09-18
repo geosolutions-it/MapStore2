@@ -32,10 +32,12 @@ const {
     SET_PERMISSION,
     DISABLE_TOOLBAR,
     OPEN_FEATURE_GRID,
-    CLOSE_FEATURE_GRID
+    CLOSE_FEATURE_GRID,
+    UPDATE_FILTER
 } = require('../actions/featuregrid');
 const{
-    FEATURE_TYPE_LOADED
+    FEATURE_TYPE_LOADED,
+    QUERY_CREATE
 } = require('../actions/wfsquery');
 const{
     CHANGE_DRAWING_STATUS
@@ -43,6 +45,7 @@ const{
 const uuid = require('uuid');
 
 const emptyResultsState = {
+    filters: {},
     enableColumnFilters: true,
     open: false,
     canEdit: false,
@@ -273,7 +276,24 @@ function featuregrid(state = emptyResultsState, action) {
         }
         return state;
     }
-
+    case UPDATE_FILTER : {
+        const {attribute} = (action.update || {});
+        if (attribute) {
+            return assign({}, state, {
+                filters: {
+                    ...state.filters,
+                    [attribute]: action.update
+                }
+            });
+        }
+        return state;
+    }
+    case QUERY_CREATE : {
+        return assign({}, state, {
+            filters: {
+            }
+        });
+    }
     default:
         return state;
     }

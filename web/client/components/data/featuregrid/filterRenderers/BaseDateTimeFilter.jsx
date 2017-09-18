@@ -1,3 +1,11 @@
+ /**
+  * Copyright 2017, GeoSolutions Sas.
+  * All rights reserved.
+  *
+  * This source code is licensed under the BSD-style license found in the
+  * LICENSE file in the root directory of this source tree.
+  */
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const LocaleUtils = require('../../../../utils/LocaleUtils');
@@ -11,6 +19,8 @@ const AttributeFilter = require('./AttributeFilter');
 class DateFilter extends AttributeFilter {
     static defaultProps = {
         value: null,
+        type: "datetime",
+        column: {},
         placeholderMsgId: "featuregrid.filter.placeholders.default"
     };
     static propTypes = {
@@ -60,7 +70,6 @@ class DateFilter extends AttributeFilter {
             calendar={this.props.type === 'date-time' || this.props.type === 'date'}
             format={this.props.dateFormat}
             onChange={(date, stringDate) => this.handleChange(date, stringDate)}/>);
-        // return (<input key={inputKey} type="text" className="form-control input-sm" placeholder={placeholder} value={"CIAO"} onChange={this.handleChange}/>);
     }
     handleChange = (date, stringDate) => {
         var tzoffset = (new Date()).getTimezoneOffset() * 60000; // offset in milliseconds

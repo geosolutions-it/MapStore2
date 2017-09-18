@@ -15,7 +15,7 @@ const Grid = require('../components/data/featuregrid/FeatureGrid');
 const {resultsSelector, describeSelector} = require('../selectors/query');
 const {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedFeaturesSelector} = require('../selectors/featuregrid');
 const { toChangesMap} = require('../utils/FeatureGridUtils');
-const {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView} = require('./featuregrid/panels/index');
+const {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} = require('./featuregrid/panels/index');
 const BorderLayout = require('../components/layout/BorderLayout');
 const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
@@ -52,6 +52,7 @@ const FeatureDock = (props = {
             footer={getFooter(props)}>
             {getDialogs(props.tools)}
             <Grid
+                filterRenderers={getFilterRenderers(props.describe)}
                 enableColumnFilters={props.enableColumnFilters}
                 emptyRowsView={getEmptyRowsView()}
                 focusOnEdit={props.focusOnEdit}

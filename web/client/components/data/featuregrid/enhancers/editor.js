@@ -1,5 +1,7 @@
 const {featureTypeToGridColumns, getToolColumns, getRow, getGridEvents, applyAllChanges, createNewAndEditingFilter} = require('../../../../utils/FeatureGridUtils');
 const {compose, withPropsOnChange, withHandlers, defaultProps} = require('recompose');
+const {getFilterRenderer} = require('../filterRenderers');
+const {manageFilterRendererState} = require('../enhancers/filterRenderers');
 const featuresToGrid = compose(
     defaultProps({
         enableColumnFilters: false,
@@ -9,8 +11,7 @@ const featuresToGrid = compose(
         select: [],
         changes: {},
         focusOnEdit: true,
-        editors: require('../editors'),
-        filterRenderers: require('../filterRenderers')
+        editors: require('../editors')
     }),
     withPropsOnChange("showDragHandle", ({showDragHandle = false} = {}) => ({
         className: showDragHandle ? 'feature-grid-drag-handle-show' : 'feature-grid-drag-handle-hide'
@@ -56,9 +57,12 @@ const featuresToGrid = compose(
                     getEditor: ({localType=""} = {}) => props.editors(localType, {
                         onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges
                     }),
-                    getFilterRenderer: ({localType=""} = {}, name) => props.filterRenderers(localType, {
-                        disabled: props.mode === "EDIT"
-                    })
+                    getFilterRenderer: ({localType=""} = {}, name) => {
+                        if (props.filterRenderers && props.filterRenderers[name]) {
+                            return props.filterRenderers[name];
+                        }
+                        return manageFilterRendererState(getFilterRenderer(localType));
+                    }
                 }))
             })
     ),

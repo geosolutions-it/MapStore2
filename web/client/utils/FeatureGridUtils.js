@@ -1,4 +1,12 @@
-const {get, findIndex} = require('lodash');
+ /**
+  * Copyright 2017, GeoSolutions Sas.
+  * All rights reserved.
+  *
+  * This source code is licensed under the BSD-style license found in the
+  * LICENSE file in the root directory of this source tree.
+  */
+
+const {get, findIndex, isNil} = require('lodash');
 
 const {getFeatureTypeProperties, isGeometryType, isValid, isValidValueForPropertyName, findGeometryProperty, getPropertyDesciptor} = require('./ogc/WFS/base');
 const getGeometryName = (describe) => get(findGeometryProperty(describe), "name");
@@ -47,13 +55,15 @@ const upsertFilterField = (filterFields = [], filter, newObject) => {
     }
     return [...filterFields, newObject];
 };
+const getAttributeFields = (describe) => (getFeatureTypeProperties(describe) || []).filter( e => !isGeometryType(e));
 module.exports = {
+    getAttributeFields,
     featureTypeToGridColumns: (
             describe,
             columnSettings = {},
             {editable=false, sortable=true, resizable=true, filterable = true} = {},
             {getEditor = () => {}, getFilterRenderer = () => {}} = {}) =>
-        (getFeatureTypeProperties(describe) || []).filter( e => !isGeometryType(e)).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map( (desc) => ({
+        getAttributeFields(describe).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map( (desc) => ({
                 sortable,
                 key: desc.name,
                 width: columnSettings[desc.name] && columnSettings[desc.name].width || 200,
@@ -107,7 +117,7 @@ module.exports = {
                 logic: "AND",
                 index: 0
             }],
-            filterFields: (value && value !== 0)
+            filterFields: !isNil(value)
                 ? upsertFilterField((oldFilterObj.filterFields || []), {attribute: attribute}, {
                     attribute,
                     rowId: Date.now(),
