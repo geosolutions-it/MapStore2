@@ -873,6 +873,19 @@
             "featureClose": "Wirklich wollen Sie das Raster schließen?",
             "delete": "Überprüfen Sie die Elemente entfernen?",
             "missingGeometry": "Missing geometry",
+            "filter": {
+                "placeholders": {
+                    "default": "Beispiele...",
+                    "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "number": "Geben Sie eine Zahl oder einen Ausdruck ein..."
+                },
+                "tooltips": {
+                    "editMode": "Die Schnellsuche ist im Bearbeitungsmodus nicht verfügbar",
+                    "default": "Beispiele...",
+                    "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "number": "Geben Sie eine Zahl oder einen Ausdruck ein. Examples: 10, > 2, < 10"
+                }
+            },
             "toolbar": {
                 "editMode": "Bearbeitungsmodus",
                 "advancedFilter": "Erweiterte Suche",
