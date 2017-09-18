@@ -32,12 +32,13 @@ class DateFilter extends AttributeFilter {
         locale: PropTypes.string
     };
     getDateValue = () => {
-        if (this.props.type === "time" && this.props.value) {
-            return new Date(`1970-01-01T${this.props.value}`);
-        } else if (this.props.type === "date" && this.props.value) {
-            return new Date(`${this.props.value}`);
-        } else if (this.props.value) {
-            return new Date(this.props.value);
+        const val = this.props.value && this.props.value.startDate || this.props.value;
+        if (this.props.type === "time" && val) {
+            return new Date(`1970-01-01T${val}`);
+        } else if (this.props.type === "date" && val) {
+            return new Date(`${val}`);
+        } else if (val) {
+            return new Date(val);
         }
         return null;
     }
@@ -63,7 +64,6 @@ class DateFilter extends AttributeFilter {
         return (<DateTimePicker
             key={inputKey}
             disabled={this.props.disabled}
-            format={this.getFormat()}
             placeholder={placeholder}
             value={this.props.value ? this.getDateValue() : null}
             time={this.props.type === 'date-time' || this.props.type === 'time'}
