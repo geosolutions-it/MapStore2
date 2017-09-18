@@ -48,7 +48,7 @@ module.exports = {
                     downloadOptions: action.downloadOptions,
                     filterObj: {
                         ...action.filterObj,
-                        pagination: get(action, "downloadOptions.singlePage") ? action.filterObj.pagination : null
+                        pagination: get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null
                     }
                 })
                 .do(({data, headers}) => {
@@ -65,7 +65,7 @@ module.exports = {
                             downloadOptions: action.downloadOptions,
                             filterObj: {
                                 ...action.filterObj,
-                                pagination: get(action, "downloadOptions.singlePage") ? action.filterObj.pagination : null,
+                                pagination: get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
                                 sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState()))
                             }
                         }).do(({data, headers}) => {
