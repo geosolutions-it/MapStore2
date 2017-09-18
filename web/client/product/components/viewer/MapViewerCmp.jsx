@@ -8,10 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const url = require('url');
-const urlQuery = url.parse(window.location.href, true).query;
 const ConfigUtils = require('../../../utils/ConfigUtils');
-const MapViewer = require('../../../containers/MapViewer');
 require('../../assets/css/viewer.css');
 let oldLocation;
 
@@ -22,6 +19,7 @@ class MapViewerComponent extends React.Component {
         loadMapConfig: PropTypes.func,
         onInit: PropTypes.func,
         plugins: PropTypes.object,
+        wrappedContainer: PropTypes.object,
         location: PropTypes.object
     };
     static defaultProps = {
@@ -39,6 +37,8 @@ class MapViewerComponent extends React.Component {
                     require('../../assets/css/mobile.css');
                 }
             }
+            const url = require('url');
+            const urlQuery = url.parse(window.location.href, true).query;
             // if 0 it loads config.json
             // if mapId is a string it loads mapId.json
             // if it is a number it loads the config from geostore
@@ -51,7 +51,8 @@ class MapViewerComponent extends React.Component {
         }
     }
     render() {
-        return (<MapViewer
+        const WrappedContainer = this.props.wrappedContainer;
+        return (<WrappedContainer
             plugins={this.props.plugins}
             params={this.props.match.params}
             />);

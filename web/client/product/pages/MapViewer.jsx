@@ -10,9 +10,10 @@ const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
-const MapViewer = require('../components/viewer/MapViewer');
+const MapViewerCmp = require('../components/viewer/MapViewerCmp');
 const {loadMapConfig} = require('../../actions/config');
 const {initMap} = require('../../actions/map');
+const MapViewerContainer = require('../../containers/MapViewer');
 
 class MapViewerPage extends React.Component {
     static propTypes = {
@@ -21,6 +22,7 @@ class MapViewerPage extends React.Component {
         loadMapConfig: PropTypes.func,
         onInit: PropTypes.func,
         plugins: PropTypes.object,
+        wrappedComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         location: PropTypes.object
     };
 
@@ -29,11 +31,12 @@ class MapViewerPage extends React.Component {
         plugins: {},
         match: {
             params: {}
-        }
+        },
+        wrappedContainer: MapViewerContainer
     };
 
     render() {
-        return (<MapViewer {...this.props} loadMapConfig={this.props.loadMapConfig} />);
+        return (<MapViewerCmp {...this.props} />);
     }
 }
 
