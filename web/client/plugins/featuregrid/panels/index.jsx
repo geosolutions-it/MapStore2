@@ -123,7 +123,7 @@ module.exports = {
                         };
                         const editProps = {
                             disabled: true,
-                            tooltipId: "featuregrid.filter.tooltips.editMode"
+                            tooltipMsgId: "featuregrid.filter.tooltips.editMode"
                         };
                         return mode === "EDIT" ? {...props, ...editProps} : props;
                     }

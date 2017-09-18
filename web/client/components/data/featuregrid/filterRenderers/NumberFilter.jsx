@@ -38,6 +38,6 @@ module.exports = compose(
     }),
     defaultProps({
         placeholderMsgId: "featuregrid.filter.placeholders.number",
-        tooltipId: "featuregrid.filter.tooltips.number"
+        tooltipMsgId: "featuregrid.filter.tooltips.number"
     })
 )(AttributeFilter);

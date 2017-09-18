@@ -880,7 +880,7 @@
                 "placeholders": {
                     "default": "Buscar...",
                     "string": "Escribe texto para filtrar...",
-                    "number": "Escriba el número o la expresión...."
+                    "number": "Escriba el número o la expresión..."
                 },
                 "tooltips": {
                     "editMode": "La búsqueda rápida no está disponible en modo de edición",

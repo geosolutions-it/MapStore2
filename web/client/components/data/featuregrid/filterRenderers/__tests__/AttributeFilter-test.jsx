@@ -34,7 +34,7 @@ describe('Test for AttributeFilter component', () => {
         expect(document.getElementsByTagName("input").length).toBe(0);
     });
     it('check tooltip', () => {
-        const cmp = ReactDOM.render(<Localized locale="en-US" messages={{test: "TEST"}}><AttributeFilter tooltipId="test"/></Localized>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<Localized locale="en-US" messages={{test: "TEST"}}><AttributeFilter tooltipMsgId="test"/></Localized>, document.getElementById("container"));
         expect(cmp).toExist();
         const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();

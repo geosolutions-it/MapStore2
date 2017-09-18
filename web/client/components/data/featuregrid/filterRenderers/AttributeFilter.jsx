@@ -18,7 +18,7 @@ class AttributeFilter extends React.PureComponent {
         value: PropTypes.any,
         column: PropTypes.object,
         placeholderMsgId: PropTypes.string,
-        tooltipId: PropTypes.string
+        tooltipMsgId: PropTypes.string
     };
 
     static contextTypes = {
@@ -40,8 +40,8 @@ class AttributeFilter extends React.PureComponent {
         return (<input disabled={this.props.disabled} key={inputKey} type="text" className="form-control input-sm" placeholder={placeholder} value={this.props.value} onChange={this.handleChange}/>);
     }
     renderTooltip = (cmp) => {
-        if (this.props.tooltipId && LocaleUtils.getMessageById(this.context.messages, this.props.tooltipId)) {
-            return (<OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{LocaleUtils.getMessageById(this.context.messages, this.props.tooltipId)}</Tooltip>}>
+        if (this.props.tooltipMsgId && LocaleUtils.getMessageById(this.context.messages, this.props.tooltipMsgId)) {
+            return (<OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{LocaleUtils.getMessageById(this.context.messages, this.props.tooltipMsgId)}</Tooltip>}>
               {cmp}
           </OverlayTrigger>);
         }
