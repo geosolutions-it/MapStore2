@@ -1,5 +1,18 @@
+ /**
+  * Copyright 2017, GeoSolutions Sas.
+  * All rights reserved.
+  *
+  * This source code is licensed under the BSD-style license found in the
+  * LICENSE file in the root directory of this source tree.
+  */
+
 const {head, get, isObject} = require('lodash');
 const {layersSelector} = require('./layers');
+const {findGeometryProperty} = require('../utils/ogc/WFS/base');
+const {currentLocaleSelector} = require('../selectors/locale');
+const {isSimpleGeomType} = require('../utils/MapUtils');
+const {toChangesMap} = require('../utils/FeatureGridUtils');
+
 const getLayerById = (state, id) => head(layersSelector(state).filter(l => l.id === id));
 const getTitle = (layer = {}) => layer.title || layer.name;
 const selectedLayerIdSelector = state => get(state, "featuregrid.selectedLayer");
@@ -9,8 +22,7 @@ const selectedFeaturesSelector = state => state && state.featuregrid && state.fe
 const changesSelector = state => state && state.featuregrid && state.featuregrid.changes;
 const newFeaturesSelector = state => state && state.featuregrid && state.featuregrid.newFeatures;
 const selectedFeatureSelector = state => head(selectedFeaturesSelector(state));
-const {findGeometryProperty} = require('../utils/ogc/WFS/base');
-const {currentLocaleSelector} = require('../selectors/locale');
+
 const geomTypeSelectedFeatureSelector = state => {
     let desc = get(state, `query.featureTypes.${get(state, "query.filterObj.featureTypeName")}.original`);
     if (desc) {
@@ -18,8 +30,7 @@ const geomTypeSelectedFeatureSelector = state => {
         return geomDesc && geomDesc.localType;
     }
 };
-const {isSimpleGeomType} = require('../utils/MapUtils');
-const {toChangesMap} = require('../utils/FeatureGridUtils');
+
 
 const hasGeometrySelectedFeature = (state) => {
     let ft = selectedFeatureSelector(state);
@@ -47,12 +58,37 @@ const hasGeometrySelectedFeature = (state) => {
 const hasChangesSelector = state => changesSelector(state) && changesSelector(state).length > 0;
 const hasNewFeaturesSelector = state => newFeaturesSelector(state) && newFeaturesSelector(state).length > 0;
 const getAttributeFilters = state => state && state.featuregrid && state.featuregrid.filters;
+
+/**
+ * selects featuregrid state
+ * @name featuregrid
+ * @memberof selectors
+ * @static
+ */
 module.exports = {
+  /**
+   * selects the state of featuregrid open
+   * @param  {object}  state applications state
+   * @return {Boolean}       true if the featuregrid is open, false otherwise
+   */
   isFeatureGridOpen: state => state && state.featuregrid && state.featuregrid.open,
   getAttributeFilters,
+  /**
+   * get a filter for an attribute
+   * @memberof selectors.featuregrid
+   * @param  {object} state Application's state
+   * @param  {string} name  The name of the attribute
+   * @return {object}       The filter for the attribute
+   */
   getAttributeFilter: (state, name) => get(getAttributeFilters(state), name),
   selectedLayerIdSelector,
   getCustomAttributeSettings,
+  /**
+   * Get's the title of the selected layer
+   * @memberof selectors.featuregrid
+   * @param  {object} state the application's state
+   * @return {startDrawingFeature} the title of the current selected layer
+   */
   getTitleSelector: state => {
       const title = getTitle(getLayerById(state, selectedLayerIdSelector(state)));
       return isObject(title) ? title[currentLocaleSelector(state)] || title.default || '' : title;

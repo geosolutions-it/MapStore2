@@ -110,6 +110,15 @@ const EditorPlugin = connect(selector, (dispatch) => ({
         events: bindActionCreators(t.events, dispatch)
     }))
 }))(FeatureDock);
+
+
+/**
+  * FeatureEditor Plugin. Provides functionalities to browse/edit data via WFS.
+  * @class  FeatureEditor
+  * @memberof plugins
+  * @static
+  *
+  */
 module.exports = {
      FeatureEditorPlugin: EditorPlugin,
      epics: require('../epics/featuregrid'),

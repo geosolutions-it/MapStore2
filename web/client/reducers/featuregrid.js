@@ -85,7 +85,43 @@ const applyUpdate = (f, updates, updatesGeom) => {
 };
 const applyNewChanges = (features, changedFeatures, updates, updatesGeom) =>
     features.map(f => isPresent(f, changedFeatures) ? applyUpdate(f, updates, updatesGeom) : f);
-
+/**
+ * Manages the state of the featuregrid
+ * The properties represent the shape of the state
+ * @prop {object} filters filters for quick search. `{attribute: "name", value: "filter_value", opeartor: "=", rawValue: "the fitler raw value"}`
+ * @prop {boolan} enableColumnFilters enables column filter. [configurable]
+ * @prop {boolean} open feature grid open or close
+ * @prop {string} mode `VIEW` or `EDIT`
+ * @prop {array} changes list of current changes in editing
+ * @prop {object} pagination object containing current page and page size of the feature grid.
+ * @prop {array} select A list of the selected features ids
+ * @prop {boolean} multiselect enables multiselect (edit mode by default allows multiselect)
+ * @prop {boolean} drawing flag set during drawing
+ * @prop {array} newFeatures array of new features created in editing
+ * @prop {array} features list of the features currently loaded in the feature grid
+ * @example
+ *  {
+ *     filters: {},
+ *     enableColumnFilters: true,
+ *     open: false,
+ *     canEdit: false,
+ *     focusOnEdit: true,
+ *     mode: MODES.VIEW,
+ *     changes: [],
+ *     pagination: {
+ *         page: 0,
+ *         size: 20
+ *     },
+ *     select: [],
+ *     multiselect: false,
+ *     drawing: false,
+ *     newFeatures: [],
+ *     features: [],
+ *     dockSize: 0.35
+ * }
+ *
+ * @memberof reducers
+ */
 function featuregrid(state = emptyResultsState, action) {
     switch (action.type) {
     case CHANGE_PAGE: {
