@@ -33,7 +33,5 @@ describe('Test for DateTimeFilter component', () => {
         ReactDOM.render(<DateTimeFilter value={"2017-01-05Z"}/>, document.getElementById("container"));
         const el = document.getElementsByTagName("input")[0];
         expect(el).toExist();
-        const input = document.getElementsByTagName("input")[0];
-        expect(input.value.indexOf(5) > 0).toBe(true);
     });
 });
