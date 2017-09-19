@@ -33,9 +33,11 @@ describe('Test for BaseDateTimeFilter component', () => {
         ReactDOM.render(<BaseDateTimeFilter type="date" value={"2017-01-05Z"}/>, document.getElementById("container"));
         const el = document.getElementsByTagName("input")[0];
         expect(el).toExist();
+        const input = document.getElementsByTagName("input")[0];
+        expect(input.value.indexOf(5) > 0).toBe(true);
         ReactDOM.render(<BaseDateTimeFilter type="time" value={"04:04:04Z"}/>, document.getElementById("container"));
         expect(el).toExist();
-        ReactDOM.render(<BaseDateTimeFilter type="datetime" value={"2017-01-05T04:04:04.000Z"}/>, document.getElementById("container"));
+        ReactDOM.render(<BaseDateTimeFilter type="datetime" value={"2017-01-05T04:04:04Z"}/>, document.getElementById("container"));
         expect(el).toExist();
 
     });
@@ -44,9 +46,9 @@ describe('Test for BaseDateTimeFilter component', () => {
             onChange: () => {}
         };
         const spyonChange = expect.spyOn(actions, 'onChange');
-        const cmp = ReactDOM.render(<BaseDateTimeFilter type="date" value="2017-01-05T04:04:04.000Z" onChange={actions.onChange} />, document.getElementById("container"));
+        const cmp = ReactDOM.render(<BaseDateTimeFilter type="date" onChange={actions.onChange} />, document.getElementById("container"));
 
-        cmp.handleChange(new Date("2017-01-05T04:04:04.000Z"), "2017-01-05T04:04:04.000Z");
+        cmp.handleChange(new Date("2017-01-05T00:00:00Z"), "2017-01-05Z");
         expect(spyonChange).toHaveBeenCalled();
     });
 });
