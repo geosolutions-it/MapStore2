@@ -22,6 +22,7 @@ const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYP
 const {reset, QUERY_FORM_RESET} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
 const {BROWSE_DATA} = require('../actions/layers');
+const {purgeMapInfoResults} = require('../actions/mapInfo');
 
 const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURES, featureSaving, changePage,
     saveSuccess, saveError, clearChanges, setLayer, clearSelection, toggleViewMode, toggleTool,
@@ -329,6 +330,11 @@ module.exports = {
                     .switchMap(() => Rx.Observable.of(drawSupportReset())))
 
     ),
+    closeCatalogOnFeatureGridOpen: (action$) =>
+        action$.ofType(OPEN_FEATURE_GRID)
+            .switchMap( () => {
+                return Rx.Observable.of(setControlProperty('metadataexplorer', 'enabled', false));
+            }),
     /**
      * intercept geometry changed events in draw support to update current
      * modified geometry in featuregrid
@@ -470,5 +476,10 @@ module.exports = {
      */
     resetControlsOnEnterInEditMode: (action$) =>
         action$.ofType(TOGGLE_MODE)
-        .filter(a => a.mode === MODES.EDIT).map(() => resetControls(["query"]))
+        .filter(a => a.mode === MODES.EDIT).map(() => resetControls(["query"])),
+    closeIdentifyEpic: (action$) =>
+        action$.ofType(OPEN_FEATURE_GRID)
+        .switchMap(() => {
+            return Rx.Observable.of(purgeMapInfoResults());
+        })
 };
