@@ -33,18 +33,14 @@ class DateFilter extends AttributeFilter {
     };
     getDateValue = (val) => {
         if (this.props.type === "time" && val) {
-            console.log(`1970-01-01T${val}`);
             return new Date(`1970-01-01T${val}`);
         } else if (this.props.type === "date" && val) {
             let dateParts = val.split("Z");
             if (dateParts.length > 1) {
-                console.log(`${dateParts[0]}T00:00:00Z`);
                 return new Date(`${dateParts[0]}T00:00:00Z`);
             }
-            console.log(`${dateParts[0]}T00:00:00`);
             return new Date(`${dateParts[0]}T00:00:00`);
         } else if (val) {
-            console.log(val);
             return new Date(val);
         }
         return null;
