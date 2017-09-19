@@ -5,13 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 const React = require('react');
 const ReactDOM = require('react-dom');
 
 const SettingsModal = require('../SettingsModal');
 const expect = require('expect');
-
-// const TestUtils = require('react-dom/test-utils');
 
 describe('TOC SettingsModal', () => {
     beforeEach((done) => {
@@ -26,10 +25,9 @@ describe('TOC SettingsModal', () => {
     });
 
     it('render component', () => {
-
-        const cmp = ReactDOM.render(<SettingsModal/>, document.getElementById("container"));
-        const el = ReactDOM.findDOMNode(cmp);
+        const cmp = ReactDOM.render(<SettingsModal element={{id: 'layer001'}} settings={{expanded: true}}/>, document.getElementById("container"));
+        expect(cmp.state).toEqual({ initialState: { id: 'layer001' }, originalSettings: { id: 'layer001' }});
+        const el = document.getElementById('mapstore-layer-settings');
         expect(el).toExist();
-
     });
 });

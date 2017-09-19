@@ -5,15 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 const React = require('react');
 const ReactDOM = require('react-dom');
 
-const GroupSettingsMadal = require('../GroupSettingsMadal');
+const GroupSettingsModal = require('../GroupSettingsModal');
 const expect = require('expect');
 
-// const TestUtils = require('react-dom/test-utils');
-
-describe('TOC GroupSettingsMadal', () => {
+describe('TOC GroupSettingsModal', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -26,11 +25,9 @@ describe('TOC GroupSettingsMadal', () => {
     });
 
     it('render component', () => {
-
-        const cmp = ReactDOM.render(<GroupSettingsMadal />, document.getElementById("container"));
-        const el = ReactDOM.findDOMNode(cmp);
+        const cmp = ReactDOM.render(<GroupSettingsModal element={{id: 'group001'}} settings={{expanded: true}}/>, document.getElementById("container"));
+        expect(cmp.state).toEqual({ initialState: { id: 'group001' }, originalSettings: { id: 'group001' }});
+        const el = document.getElementById('mapstore-layer-groups-settings');
         expect(el).toExist();
-
-
     });
 });
