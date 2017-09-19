@@ -188,9 +188,14 @@
             {
                 "name": "Identify",
                 "cfg": {
+                    "panelClassName": "mapstore-right-panel modal-content",
+                    "draggable": false,
+                    "collapsible": true,
                     "viewerOptions": {
                         "container": "{context.ReactSwipe}",
                         "header": "{context.SwipeHeader}",
+                        "draggable": false,
+                        "collapsible": false,
                         "headerOptions": {
                             "useButtons": true
                         }
