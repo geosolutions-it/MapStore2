@@ -1,14 +1,23 @@
+ /**
+  * Copyright 2017, GeoSolutions Sas.
+  * All rights reserved.
+  *
+  * This source code is licensed under the BSD-style license found in the
+  * LICENSE file in the root directory of this source tree.
+  */
+
 const React = require('react');
 const {connect} = require('react-redux');
 const {bindActionCreators} = require('redux');
 const {createSelector, createStructuredSelector} = require('reselect');
 const {paginationInfo, featureLoadingSelector} = require('../../../selectors/query');
-const {getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector} = require('../../../selectors/featuregrid');
+const {getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector, getAttributeFilter} = require('../../../selectors/featuregrid');
 const {isAdminUserSelector} = require('../../../selectors/security');
 const {isCesium} = require('../../../selectors/maptype');
 const {deleteFeatures, toggleTool, clearChangeConfirmed, closeFeatureGridConfirmed, closeFeatureGrid} = require('../../../actions/featuregrid');
 const {toolbarEvents, pageEvents} = require('../index');
-
+const {getAttributeFields} = require('../../../utils/FeatureGridUtils');
+const {getFilterRenderer} = require('../../../components/data/featuregrid/filterRenderers');
 const EmptyRowsView = connect(createStructuredSelector({
     loading: featureLoadingSelector
 }))(require('../../../components/data/featuregrid/EmptyRowsView'));
@@ -101,6 +110,25 @@ module.exports = {
     getEmptyRowsView: () => {
         return EmptyRowsView;
     },
+    getFilterRenderers: (describe) =>
+        describe ? getAttributeFields(describe).reduce( (out, cur) => ({
+            ...out,
+            [cur.name]: connect(
+                createSelector(
+                    (state) => getAttributeFilter(state, cur.name),
+                    modeSelector,
+                    (filter, mode) => {
+                        const props = {
+                            value: filter && (filter.rawValue || filter.value)
+                        };
+                        const editProps = {
+                            disabled: true,
+                            tooltipMsgId: "featuregrid.filter.tooltips.editMode"
+                        };
+                        return mode === "EDIT" ? {...props, ...editProps} : props;
+                    }
+        ))(getFilterRenderer(cur.localType, {name: cur.name}))
+        }), {}) : {},
     getDialogs: (tools = {}) => {
         return Object.keys(tools)
             .filter(t => tools[t] && dialogs[t])

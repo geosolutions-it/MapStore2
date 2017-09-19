@@ -40,7 +40,11 @@ let supportedLocales = {
         description: "Español"
     }
 };
-
+const DATE_FORMATS = {
+    "default": "yyyy/MM/dd",
+    "en-US": "MM/dd/yyyy",
+    "it-IT": "dd/MM/yyyy"
+};
 const LocaleUtils = {
     ensureIntl(callback) {
         require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js', 'intl/locale-data/jsonp/fr.js', 'intl/locale-data/jsonp/de.js', 'intl/locale-data/jsonp/es.js'], (require) => {
@@ -76,7 +80,7 @@ const LocaleUtils = {
     getUserLocale: function() {
         return LocaleUtils.getLocale(url.parse(window.location.href, true).query);
     },
-    getLocale: function(query) {
+    getLocale: function(query = {}) {
         const key = Object.keys(supportedLocales)[0];
         const defaultLocale = supportedLocales.en ? { key: 'en', locale: supportedLocales.en } : { key, locale: supportedLocales[key] };
         let locale = supportedLocales[
@@ -86,6 +90,9 @@ const LocaleUtils = {
     },
     getSupportedLocales: function() {
         return supportedLocales;
+    },
+    getDateFormat(locale) {
+        return DATE_FORMATS[locale] || DATE_FORMATS.default;
     },
     getMessageById: function(messages, msgId) {
         var message = messages;

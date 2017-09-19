@@ -876,6 +876,19 @@
             "featureClose":"Vraiment, vous voulez fermer la grille?",
             "delete": "Valider pour supprimer les éléments?",
             "missingGeometry": "Missing geometry",
+            "filter": {
+                "placeholders": {
+                    "default": "Recherche...",
+                    "string": "Tapez le texte à filtrer...",
+                    "number": "Tapez un nombre ou une expression..."
+                },
+                "tooltips": {
+                    "editMode": "La recherche rapide n'est pas disponible en mode édition",
+                    "default": "Recherche...",
+                    "string": "Tapez le texte à filtrer...",
+                    "number": "Tapez un nombre ou une expression..."
+                }
+            },
             "toolbar": {
                 "editMode": "Mode édition",
                 "advancedFilter": "Recherche Avancée",

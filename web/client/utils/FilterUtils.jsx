@@ -37,27 +37,30 @@ const ogcDateField = (attribute, operator, value, nsplaceholder) => {
     let fieldFilter;
     if (operator === "><") {
         if (value.startDate && value.endDate) {
+            const startIso = value.startDate.toISOString ? value.startDate.toISOString() : value.startDate; // for Compatibility reasons. We should use ISO string to store data.
+            const endIso = value.startDate.toISOString ? value.startDate.toISOString() : value.startDate; // for Compatibility reasons. We should use ISO string to store data.
             fieldFilter =
                         ogcComparisonOperators[operator](nsplaceholder,
                             propertyTagReference[nsplaceholder].startTag +
                                 attribute +
                             propertyTagReference[nsplaceholder].endTag +
                             "<" + nsplaceholder + ":LowerBoundary>" +
-                                "<" + nsplaceholder + ":Literal>" + value.startDate.toISOString() + "</" + nsplaceholder + ":Literal>" +
+                                "<" + nsplaceholder + ":Literal>" + startIso + "</" + nsplaceholder + ":Literal>" +
                             "</" + nsplaceholder + ":LowerBoundary>" +
                             "<" + nsplaceholder + ":UpperBoundary>" +
-                                "<" + nsplaceholder + ":Literal>" + value.endDate.toISOString() + "</" + nsplaceholder + ":Literal>" +
+                                "<" + nsplaceholder + ":Literal>" + endIso + "</" + nsplaceholder + ":Literal>" +
                             "</" + nsplaceholder + ":UpperBoundary>"
                         );
         }
     } else {
         if (value.startDate) {
+            const startIso = value.startDate.toISOString ? value.startDate.toISOString() : value.startDate; // for Compatibility reasons. We should use ISO string to store data.
             fieldFilter =
                         ogcComparisonOperators[operator](nsplaceholder,
                             propertyTagReference[nsplaceholder].startTag +
                                 attribute +
                             propertyTagReference[nsplaceholder].endTag +
-                            "<" + nsplaceholder + ":Literal>" + value.startDate.toISOString() + "</" + nsplaceholder + ":Literal>"
+                            "<" + nsplaceholder + ":Literal>" + startIso + "</" + nsplaceholder + ":Literal>"
                         );
         }
     }
@@ -297,6 +300,8 @@ const FilterUtils = {
                 let fieldFilter;
                 switch (field.type) {
                     case "date":
+                    case "date-time":
+                    case "time":
                         fieldFilter = ogcDateField(field.attribute, field.operator, field.value, nsplaceholder);
                         break;
                     case "number":
@@ -580,12 +585,15 @@ const FilterUtils = {
         let fieldFilter;
         if (operator === "><") {
             if (value.startDate && value.endDate) {
-                fieldFilter = "(" + attribute + ">='" + value.startDate.toISOString() +
-                    "' AND " + attribute + "<='" + value.endDate.toISOString() + "')";
+                const startIso = value.startDate.toISOString ? value.startDate.toISOString() : value.startDate; // for Compatibility reasons. We should use ISO string to store data.
+                const endIso = value.startDate.toISOString ? value.startDate.toISOString() : value.startDate; // for Compatibility reasons. We should use ISO string to store data.
+                fieldFilter = "(" + attribute + ">='" + startIso +
+                    "' AND " + attribute + "<='" + endIso + "')";
             }
         } else {
             if (value.startDate) {
-                fieldFilter = attribute + operator + "'" + value.startDate.toISOString() + "'";
+                const startIso = value.startDate.toISOString ? value.startDate.toISOString() : value.startDate; // for Compatibility reasons. We should use ISO string to store data.
+                fieldFilter = attribute + operator + "'" + startIso + "'";
             }
         }
         return fieldFilter;
@@ -648,6 +656,8 @@ const FilterUtils = {
 
                 switch (field.type) {
                 case "date":
+                case "time":
+                case "date-time":
                     fieldFilter = this.cqlDateField(field.attribute, field.operator, field.value);
                     break;
                 case "number":

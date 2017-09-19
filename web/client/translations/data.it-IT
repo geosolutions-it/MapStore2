@@ -873,6 +873,19 @@
             "featureClose": "Sicuro di voler chiudere la griglia?",
             "delete": "Confermi di cancellare {count} feature?",
             "missingGeometry": "Geometria mancante",
+            "filter": {
+                "placeholders": {
+                    "default": "Cerca...",
+                    "string": "Digita testo da cercare...",
+                    "number": "Digita numero o espressione..."
+                },
+                "tooltips": {
+                    "editMode": "La ricerca veloce non è disponibile in modalità editing",
+                    "default": "Cerca...",
+                    "string": "Digita il testo da cercare...",
+                    "number": "Digita un numero o un espression. Esempi: 10, > 2, < 10"
+                }
+            },
             "toolbar": {
                 "editMode": "Entra in modalità editing",
                 "advancedFilter": "Ricerca avanzata",

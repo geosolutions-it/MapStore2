@@ -1,4 +1,12 @@
-const get = require('lodash');
+ /**
+  * Copyright 2017, GeoSolutions Sas.
+  * All rights reserved.
+  *
+  * This source code is licensed under the BSD-style license found in the
+  * LICENSE file in the root directory of this source tree.
+  */
+
+const {get, findIndex, isNil} = require('lodash');
 
 const {getFeatureTypeProperties, isGeometryType, isValid, isValidValueForPropertyName, findGeometryProperty, getPropertyDesciptor} = require('./ogc/WFS/base');
 const getGeometryName = (describe) => get(findGeometryProperty(describe), "name");
@@ -33,16 +41,38 @@ const applyChanges = (feature, changes) => {
     };
 };
 /* eslint-enable */
+/**
+ * Updates or insert in the array a new object.
+ * @param  {Array}  [filterFields=[]] The array to update
+ * @param  {object} filter             the filter to use for replace
+ * @param  {object} newObject         the new object to insert
+ * @return {Array}                   The new array with the modified/new element.
+ */
+const upsertFilterField = (filterFields = [], filter, newObject) => {
+    const index = findIndex(filterFields, filter);
+    if ( index >= 0) {
+        return filterFields.map((f, i) => i === index ? newObject : f);
+    }
+    return [...filterFields, newObject];
+};
+const getAttributeFields = (describe) => (getFeatureTypeProperties(describe) || []).filter( e => !isGeometryType(e));
 module.exports = {
-    featureTypeToGridColumns: (describe, columnSettings = {}, {editable=false, sortable=true, resizable=true} = {}, {getEditor = () => {}} = {}) =>
-        (getFeatureTypeProperties(describe) || []).filter( e => !isGeometryType(e)).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map( (desc) => ({
+    getAttributeFields,
+    featureTypeToGridColumns: (
+            describe,
+            columnSettings = {},
+            {editable=false, sortable=true, resizable=true, filterable = true} = {},
+            {getEditor = () => {}, getFilterRenderer = () => {}} = {}) =>
+        getAttributeFields(describe).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map( (desc) => ({
                 sortable,
                 key: desc.name,
                 width: columnSettings[desc.name] && columnSettings[desc.name].width || 200,
                 name: desc.name,
                 resizable,
                 editable,
-                editor: getEditor(desc)
+                filterable,
+                editor: getEditor(desc),
+                filterRenderer: getFilterRenderer(desc, desc.name)
         })),
     getRow,
     /**
@@ -78,5 +108,26 @@ module.exports = {
     createNewAndEditingFilter: (hasChanges, newFeatures, changes) => f => newFeatures.length > 0 ? f._new : !hasChanges || hasChanges && !!changes[f.id],
     hasValidNewFeatures: (newFeatures=[], describeFeatureType) => newFeatures.map(f => isValid(f, describeFeatureType)).reduce((acc, cur) => cur && acc, true),
     applyAllChanges: (orig, changes = {}) => applyChanges(orig, changes[orig.id] || {}),
-    applyChanges
+    applyChanges,
+    gridUpdateToQueryUpdate: ({attribute, operator, value, type} = {}, oldFilterObj = {}) => {
+        return {
+            ...oldFilterObj,
+            groupFields: [{
+                id: 1,
+                logic: "AND",
+                index: 0
+            }],
+            filterFields: !isNil(value)
+                ? upsertFilterField((oldFilterObj.filterFields || []), {attribute: attribute}, {
+                    attribute,
+                    rowId: Date.now(),
+                    type,
+                    groupId: 1,
+                    operator,
+                    value
+
+                })
+                : (oldFilterObj.filterFields || []).filter(field => field.attribute !== (attribute))
+        };
+    }
 };
