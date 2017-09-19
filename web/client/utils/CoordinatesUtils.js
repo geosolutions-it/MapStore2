@@ -12,6 +12,7 @@ const assign = require('object-assign');
 const {isArray, flattenDeep, chunk, cloneDeep} = require('lodash');
 const lineIntersect = require('@turf/line-intersect');
 const polygonToLinestring = require('@turf/polygon-to-linestring');
+const {head} = require('lodash');
 
 // Checks if `list` looks like a `[x, y]`.
 function isXY(list) {
@@ -56,6 +57,100 @@ let crsLabels = {
     "EPSG:3857": "EPSG:3857"
 };
 
+const normalizePoint = (point) => {
+    return {
+        x: point.x || 0.0,
+        y: point.y || 0.0,
+        srs: point.srs || 'EPSG:4326'
+    };
+};
+
+const reproject = (point, source, dest, normalize = true) => {
+    const sourceProj = Proj4js.defs(source) ? new Proj4js.Proj(source) : null;
+    const destProj = Proj4js.defs(dest) ? new Proj4js.Proj(dest) : null;
+    if (sourceProj && destProj) {
+        let p = isArray(point) ? Proj4js.toPoint(point) : Proj4js.toPoint([point.x, point.y]);
+        const transformed = assign({}, source === dest ? p : Proj4js.transform(sourceProj, destProj, p), {srs: dest});
+        if (normalize) {
+            return normalizePoint(transformed);
+        }
+        return transformed;
+    }
+    return null;
+};
+
+const supportedSplitExtentEPSG = [
+    'EPSG:900913',
+    'EPSG:4326',
+    'EPSG:3857'
+];
+
+const normalizeExtent = (bounds, projection) => {
+    const extent = projection !== 'EPSG:4326' ? [
+        reproject([bounds.minx, bounds.miny], projection, 'EPSG:4326'),
+        reproject([bounds.maxx, bounds.maxy], projection, 'EPSG:4326')
+    ].reduce((a, b) => [...a, b.x, b.y], [])
+    : [bounds.minx, bounds.miny, bounds.maxx, bounds.maxy];
+
+    let isWorldView = false;
+    if (projection === 'EPSG:4326') {
+        isWorldView = Math.abs(bounds.maxx - bounds.minx) > 360;
+    } else if (projection === 'EPSG:900913' || projection === 'EPSG:3857') {
+        isWorldView = Math.abs(bounds.maxx - bounds.minx) > 20037508.342789244 * 2;
+    }
+
+    return isWorldView ? [0, extent[1], 360, extent[3]] :
+    [(extent[0] + 180) % 360, extent[1], (extent[2] + 180) % 360, extent[3]].map((e, i) => {
+        if (i % 2 === 0) {
+            return e < 0 ? 360 + e : e;
+        }
+        return e;
+    });
+};
+
+const reprojectExtent = (extent, projection, isIDL) => {
+    if (projection === 'EPSG:4326') {
+        return extent;
+    }
+    return !isIDL ? [
+        reproject([extent[0], extent[1]], 'EPSG:4326', projection),
+        reproject([extent[2], extent[3]], 'EPSG:4326', projection)
+    ].reduce((a, b) => [...a, b.x, b.y], [])
+    : extent.map(ext => [
+        reproject([ext[0], ext[1]], 'EPSG:4326', projection),
+        reproject([ext[2], ext[3]], 'EPSG:4326', projection)
+    ].reduce((a, b) => [...a, b.x, b.y], []));
+};
+
+const getExtentFromNormalized = (bounds, projection) => {
+    const normalizedXExtent = normalizeExtent(bounds, projection);
+    const isIDL = normalizedXExtent[2] < normalizedXExtent[0];
+
+    if (isIDL) {
+        return {
+            extent: reprojectExtent([[
+                -180,
+                normalizedXExtent[1],
+                normalizedXExtent[2] - 180,
+                normalizedXExtent[3]
+            ], [
+                normalizedXExtent[0] - 180,
+                normalizedXExtent[1],
+                180,
+                normalizedXExtent[3]
+            ]], projection, isIDL),
+            isIDL};
+    }
+    return {
+        extent: reprojectExtent([
+            normalizedXExtent[0] - 180,
+            normalizedXExtent[1],
+            normalizedXExtent[2] - 180,
+            normalizedXExtent[3]
+        ], projection, isIDL),
+        isIDL};
+};
+
 /**
  * Utilities for Coordinates conversion.
  * @memberof utils
@@ -68,19 +163,7 @@ const CoordinatesUtils = {
         const proj = new Proj4js.Proj(projection);
         return proj.units || 'degrees';
     },
-    reproject: function(point, source, dest, normalize = true) {
-        const sourceProj = Proj4js.defs(source) ? new Proj4js.Proj(source) : null;
-        const destProj = Proj4js.defs(dest) ? new Proj4js.Proj(dest) : null;
-        if (sourceProj && destProj) {
-            let p = isArray(point) ? Proj4js.toPoint(point) : Proj4js.toPoint([point.x, point.y]);
-            const transformed = assign({}, source === dest ? p : Proj4js.transform(sourceProj, destProj, p), {srs: dest});
-            if (normalize) {
-                return CoordinatesUtils.normalizePoint(transformed);
-            }
-            return transformed;
-        }
-        return null;
-    },
+    reproject,
     /**
      * Creates a bbox of size dimensions areund the center point given to it given the
      * resolution and the rotation
@@ -175,13 +258,7 @@ const CoordinatesUtils = {
         let polygonLines = polygonToLinestring(polygon).features[0];
         return lineIntersect(linestring, polygonLines).features.length !== 0;
     },
-    normalizePoint: function(point) {
-        return {
-            x: point.x || 0.0,
-            y: point.y || 0.0,
-            srs: point.srs || 'EPSG:4326'
-        };
-    },
+    normalizePoint,
     /**
      * Reprojects a bounding box.
      * @param bbox {array} [minx, miny, maxx, maxy]
@@ -408,6 +485,58 @@ const CoordinatesUtils = {
         return {
             type: "GeometryCollection",
             geometries: features.map( ({geometry}) => geometry)
+        };
+    },
+    getViewportGeometry: (bounds, projection) => {
+        if (head(supportedSplitExtentEPSG.filter(epsg => epsg === projection))) {
+            const {extent, isIDL} = getExtentFromNormalized(bounds, projection);
+
+            const extentToCoordinates = isIDL ? extent : [extent];
+
+            const coordinates = extentToCoordinates.map(ext => {
+                const start = [ext[0], ext[1]];
+                const end = [ext[2], ext[3]];
+                return [[start, [start[0], end[1]], end, [end[0], start[1]], start]];
+            });
+
+            if (isIDL) {
+
+                let centerX = extent[1][0] + (Math.abs(extent[0][0] - extent[0][2]) + Math.abs(extent[1][0] - extent[1][2])) / 2;
+                centerX = centerX > 180 ? centerX - 360 : centerX;
+
+                return {
+                    type: 'MultiPolygon',
+                    radius: 0,
+                    projection,
+                    coordinates,
+                    extent,
+                    center: [centerX, (extent[0][1] + extent[0][3]) / 2]
+                };
+            }
+
+            return {
+                type: 'Polygon',
+                radius: 0,
+                projection,
+                coordinates: coordinates[0],
+                extent,
+                center: [(extent[0] + extent[2]) / 2, (extent[1] + extent[3]) / 2]
+            };
+        }
+
+        const extent = [bounds.minx, bounds.miny, bounds.maxx, bounds.maxy];
+        const center = [(extent[0] + extent[2]) / 2, (extent[1] + extent[3]) / 2];
+        const start = [extent[0], extent[1]];
+        const end = [extent[2], extent[3]];
+        const coordinates = [[start, [start[0], end[1]], end, [end[0], start[1]], start]];
+
+        return {
+            type: 'Polygon',
+            radius: 0,
+            projection,
+            coordinates,
+            extent,
+            center
         };
     }
 };

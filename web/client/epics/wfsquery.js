@@ -13,8 +13,10 @@ const {changeSpatialAttribute, SELECT_VIEWPORT_SPATIAL_METHOD, updateGeometrySpa
 const {CHANGE_MAP_VIEW} = require('../actions/map');
 const {FEATURE_TYPE_SELECTED, QUERY, featureLoading, featureTypeLoaded, featureTypeError, querySearchResponse, queryError} = require('../actions/wfsquery');
 const {paginationInfo, isDescribeLoaded, describeSelector} = require('../selectors/query');
+const {isLeaflet} = require('../selectors/maptype');
 const {mapSelector} = require('../selectors/map');
 const FilterUtils = require('../utils/FilterUtils');
+const CoordinatesUtils = require('../utils/CoordinatesUtils');
 const assign = require('object-assign');
 const {spatialFieldMethodSelector, spatialFieldSelector, spatialFieldGeomTypeSelector, spatialFieldGeomCoordSelector, spatialFieldGeomSelector, spatialFieldGeomProjSelector} = require('../selectors/queryform');
 const {changeDrawingStatus} = require('../actions/draw');
@@ -261,21 +263,11 @@ const viewportSelectedEpic = (action$, store) =>
             if (action.type === SELECT_VIEWPORT_SPATIAL_METHOD ||
                 action.type === CHANGE_MAP_VIEW && spatialFieldMethodSelector(store.getState()) === "Viewport") {
 
+                const projection = isLeaflet(store.getState()) ? 'EPSG:4326' : map.projection;
                 const bounds = Object.keys(map.bbox.bounds).reduce((p, c) => {
                     return assign({}, p, {[c]: parseFloat(map.bbox.bounds[c])});
                 }, {});
-                const extent = [bounds.minx, bounds.miny, bounds.maxx, bounds.maxy];
-                const center = [(extent[0] + extent[2]) / 2, (extent[1] + extent[3]) / 2];
-                const start = [extent[0], extent[1]];
-                const end = [extent[2], extent[3]];
-                const coordinates = [[start, [start[0], end[1]], end, [end[0], start[1]], start]];
-                const geometry = {
-                    type: "Polygon",
-                    radius: 0,
-                    projection: map.projection,
-                    extent, center, coordinates
-                };
-                return Rx.Observable.of(updateGeometrySpatialField(geometry));
+                return Rx.Observable.of(updateGeometrySpatialField(CoordinatesUtils.getViewportGeometry(bounds, projection)));
             }
             return Rx.Observable.empty();
         });
