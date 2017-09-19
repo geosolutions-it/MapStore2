@@ -39,10 +39,6 @@ class GroupSettingsModal extends React.Component {
         originalSettings: {}
     };
 
-    componentWillMount() {
-        this.setState({initialState: this.props.element});
-    }
-
     componentWillUpdate(newProps, newState) {
         if (this.props.settings.expanded && !newProps.settings.expanded && !newState.save) {
             this.props.updateNode(
@@ -50,6 +46,14 @@ class GroupSettingsModal extends React.Component {
                 this.props.settings.nodeType,
                 assign({}, this.props.settings.options, this.state.originalSettings)
             );
+        }
+
+        if (!this.props.settings.expanded && newProps.settings.expanded) {
+            // update initial and original settings on show modal
+            this.setState({
+                initialState: this.props.element,
+                originalSettings: this.props.element
+            });
         }
     }
 

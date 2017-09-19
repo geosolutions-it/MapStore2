@@ -117,7 +117,13 @@
                         "alwaysVisible": true
                     }
                 }
-            }, "Home", "TOC", {
+            }, "Home", {
+                "name": "TOC",
+                "cfg": {
+                    "activateMapTitle": false,
+                    "activateSortLayer": false
+                }
+            }, {
                 "name": "Tutorial",
                 "cfg": {
                     "preset": "default_mobile_tutorial"
