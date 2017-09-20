@@ -279,6 +279,7 @@ const CoordinatesUtils = {
         let polygonLines = polygonToLinestring(polygon).features[0];
         return lineIntersect(linestring, polygonLines).features.length !== 0;
     },
+    normalizePoint,
     normalizeLng: (lng) => {
         let tLng = lng / 360 % 1 * 360;
         if (tLng < -180) {
@@ -288,7 +289,6 @@ const CoordinatesUtils = {
         }
         return tLng;
     },
-    normalizePoint,
     /**
      * Reprojects a bounding box.
      * @param bbox {array} [minx, miny, maxx, maxy]

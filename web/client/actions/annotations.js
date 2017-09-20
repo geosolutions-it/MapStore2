@@ -14,6 +14,9 @@ const CANCEL_REMOVE_ANNOTATION = 'ANNOTATIONS:CANCEL_REMOVE';
 const CANCEL_EDIT_ANNOTATION = 'ANNOTATIONS:CANCEL_EDIT';
 const SAVE_ANNOTATION = 'ANNOTATIONS:SAVE';
 const TOGGLE_ADD = 'ANNOTATIONS:TOGGLE_ADD';
+const TOGGLE_STYLE = 'ANNOTATIONS:TOGGLE_STYLE';
+const SET_STYLE = 'ANNOTATIONS:SET_STYLE';
+const RESTORE_STYLE = 'ANNOTATIONS:RESTORE_STYLE';
 const UPDATE_ANNOTATION_GEOMETRY = 'ANNOTATIONS:UPDATE_GEOMETRY';
 const VALIDATION_ERROR = 'ANNOTATIONS:VALIDATION_ERROR';
 
@@ -60,18 +63,38 @@ function cancelEditAnnotation() {
     };
 }
 
-function saveAnnotation(id, fields, geometry) {
+function saveAnnotation(id, fields, geometry, style) {
     return {
         type: SAVE_ANNOTATION,
         id,
         fields,
-        geometry
+        geometry,
+        style
     };
 }
 
 function toggleAdd() {
     return {
         type: TOGGLE_ADD
+    };
+}
+
+function toggleStyle() {
+    return {
+        type: TOGGLE_STYLE
+    };
+}
+
+function restoreStyle() {
+    return {
+        type: RESTORE_STYLE
+    };
+}
+
+function setStyle(style) {
+    return {
+        type: SET_STYLE,
+        style
     };
 }
 
@@ -100,6 +123,9 @@ module.exports = {
     UPDATE_ANNOTATION_GEOMETRY,
     VALIDATION_ERROR,
     REMOVE_ANNOTATION_GEOMETRY,
+    TOGGLE_STYLE,
+    SET_STYLE,
+    RESTORE_STYLE,
     editAnnotation,
     removeAnnotation,
     confirmRemoveAnnotation,
@@ -109,5 +135,8 @@ module.exports = {
     toggleAdd,
     updateAnnotationGeometry,
     validationError,
-    removeAnnotationGeometry
+    removeAnnotationGeometry,
+    toggleStyle,
+    setStyle,
+    restoreStyle
 };

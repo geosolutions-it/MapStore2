@@ -206,7 +206,9 @@ class DrawSupport extends React.Component {
 
     addGeojsonLayer = ({features, projection, style}) => {
         this.clean();
-        let geoJsonLayerGroup = L.geoJson(features, {style: style, pointToLayer: (f, latLng) => {
+        let geoJsonLayerGroup = L.geoJson(features, {style: (f) => {
+            return f.style || style;
+        }, pointToLayer: (f, latLng) => {
             let center = CoordinatesUtils.reproject({x: latLng.lng, y: latLng.lat}, projection, "EPSG:4326");
             return VectorUtils.pointToLayer(L.latLng(center.y, center.x), f, style);
         }});
@@ -219,6 +221,10 @@ class DrawSupport extends React.Component {
             this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style});
         } else {
             this.drawLayer.clearLayers();
+            this.drawLayer.options.pointToLayer = (f, latLng) => {
+                let center = CoordinatesUtils.reproject({x: latLng.lng, y: latLng.lat}, newProps.options && newProps.options.featureProjection || "EPSG:4326", "EPSG:4326");
+                return VectorUtils.pointToLayer(L.latLng(center.y, center.x), f, newProps.style);
+            };
             this.drawLayer.addData(this.convertFeaturesPolygonToPoint(newProps.features, this.props.drawMethod));
         }
     };

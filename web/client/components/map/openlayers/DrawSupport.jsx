@@ -132,8 +132,12 @@ class DrawSupport extends React.Component {
 
     addFeatures = ({features, drawMethod, options}) => {
         features.forEach((g) => {
+            let geometry = g;
+            if (geometry.geometry) {
+                geometry = reprojectGeoJson(geometry, this.props.options.featureProjection, this.props.map.getView().getProjection().getCode()).geometry;
+            }
             const feature = new ol.Feature({
-                geometry: this.createOLGeometry(g)
+                geometry: this.createOLGeometry(geometry)
             });
             this.drawSource.addFeature(feature);
         });
@@ -151,6 +155,9 @@ class DrawSupport extends React.Component {
         } else {
             this.drawSource.clear();
             this.addFeatures(newProps);
+            if (newProps.style) {
+                this.drawLayer.setStyle(this.toOlStyle(newProps.style));
+            }
         }
     };
 
@@ -243,10 +250,11 @@ class DrawSupport extends React.Component {
             this.props.onGeometryChanged([newFeature], this.props.drawOwner, this.props.options && this.props.options.stopAfterDrawing ? "enterEditMode" : "");
 
             this.props.onEndDrawing(feature, this.props.drawOwner);
+            const newFeatures = isSimpleGeomType(this.props.drawMethod) ? this.props.features.concat([feature]) : [feature];
             if (this.props.options.stopAfterDrawing) {
-                this.props.onChangeDrawingStatus('stop', this.props.drawMethod, this.props.drawOwner, this.props.features.concat([feature]));
+                this.props.onChangeDrawingStatus('stop', this.props.drawMethod, this.props.drawOwner, newFeatures);
             } else {
-                this.props.onChangeDrawingStatus('replace', this.props.drawMethod, this.props.drawOwner, this.props.features.concat([feature]));
+                this.props.onChangeDrawingStatus('replace', this.props.drawMethod, this.props.drawOwner, newFeatures, this.props.options);
             }
             if (this.selectInteraction) {
                 // TODO update also the selected features
