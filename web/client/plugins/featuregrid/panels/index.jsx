@@ -10,7 +10,7 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {bindActionCreators} = require('redux');
 const {createSelector, createStructuredSelector} = require('reselect');
-const {paginationInfo, featureLoadingSelector} = require('../../../selectors/query');
+const {paginationInfo, featureLoadingSelector, resultsSelector} = require('../../../selectors/query');
 const {getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector, getAttributeFilter} = require('../../../selectors/featuregrid');
 const {isAdminUserSelector} = require('../../../selectors/security');
 const {isCesium} = require('../../../selectors/maptype');
@@ -33,6 +33,7 @@ const Toolbar = connect(
         isSimpleGeom: isSimpleGeomSelector,
         selectedCount: selectedFeaturesCount,
         disableToolbar: state => state && state.featuregrid && state.featuregrid.disableToolbar,
+        disableDownload: state => (resultsSelector(state) || []).length === 0,
         isDownloadOpen: state => state && state.controls && state.controls.wfsdownload && state.controls.wfsdownload.enabled,
         isColumnsOpen: state => state && state.featuregrid && state.featuregrid.tools && state.featuregrid.tools.settings,
         isSearchAllowed: (state) => !isCesium(state),
