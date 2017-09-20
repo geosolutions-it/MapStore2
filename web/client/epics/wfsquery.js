@@ -254,6 +254,13 @@ const wfsQueryEpic = (action$, store) =>
             );
         });
 
+/**
+ * Generate a spatial filter geometry from the view bounds
+ * @memberof epics.wfsquery
+ * @param {external:Observable} action$ manages `SELECT_VIEWPORT_SPATIAL_METHOD` and `CHANGE_MAP_VIEW`
+ * @return {external:Observable}
+ */
+
 const viewportSelectedEpic = (action$, store) =>
     action$.ofType(SELECT_VIEWPORT_SPATIAL_METHOD, CHANGE_MAP_VIEW)
         .switchMap((action) => {

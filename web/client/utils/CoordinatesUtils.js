@@ -85,6 +85,13 @@ const supportedSplitExtentEPSG = [
     'EPSG:3857'
 ];
 
+/**
+ * Return an extent array normalized from EPSG:4326 reprojection
+ * @param bounds {object} bounds {minx, miny, maxx, maxy}
+ * @param projection {string} the projection of bounds coordinates
+ * @return {array} extent with x values normalized from 0 to 360
+ */
+
 const normalizeExtent = (bounds, projection) => {
     const extent = projection !== 'EPSG:4326' ? [
         reproject([bounds.minx, bounds.miny], projection, 'EPSG:4326'),
@@ -108,6 +115,13 @@ const normalizeExtent = (bounds, projection) => {
     });
 };
 
+/**
+ * Reproject extent from EPSG different from 'EPSG:4326'
+ * @param extent {array} array of bounds [minx, miny, maxx, maxy] or isIDL `true` [[..bounds], [..bounds]]
+ * @param projection {string} the projection of extent coordinates
+ * @param isIDL {boolean} intersect the international date line
+ * @return {array} extent
+ */
 const reprojectExtent = (extent, projection, isIDL) => {
     if (projection === 'EPSG:4326') {
         return extent;
@@ -122,6 +136,13 @@ const reprojectExtent = (extent, projection, isIDL) => {
     ].reduce((a, b) => [...a, b.x, b.y], []));
 };
 
+/**
+ * Reproject extent to verify the intersection with the international date line (isIDL)
+ * if on IDL return double extent array
+ * @param bounds {object} {minx, miny, maxx, maxy}
+ * @param projection {string} the projection of bounds
+ * @return {object} {extent, isIDL}
+ */
 const getExtentFromNormalized = (bounds, projection) => {
     const normalizedXExtent = normalizeExtent(bounds, projection);
     const isIDL = normalizedXExtent[2] < normalizedXExtent[0];
@@ -487,6 +508,12 @@ const CoordinatesUtils = {
             geometries: features.map( ({geometry}) => geometry)
         };
     },
+    /**
+     * Return the viewport geometry from the view bounds
+     * @param bounds {object} bounds {minx, miny, maxx, maxy}
+     * @param projection {string} the projection of bounds coordinates
+     * @return {object} geomtry {type, radius, projection, coordinates, extent, center}
+     */
     getViewportGeometry: (bounds, projection) => {
         if (head(supportedSplitExtentEPSG.filter(epsg => epsg === projection))) {
             const {extent, isIDL} = getExtentFromNormalized(bounds, projection);
