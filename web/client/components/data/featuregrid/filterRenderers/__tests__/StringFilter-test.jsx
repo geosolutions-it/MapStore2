@@ -45,4 +45,18 @@ describe('Test for StringFilter component', () => {
         ReactTestUtils.Simulate.change(input);
         expect(spyonChange).toHaveBeenCalled();
     });
+    it('Test StringFilter space trim', () => {
+        const actions = {
+            onChange: () => {}
+        };
+        const spyonChange = expect.spyOn(actions, 'onChange');
+        ReactDOM.render(<StringFilter onChange={actions.onChange} />, document.getElementById("container"));
+        const input = document.getElementsByClassName("form-control input-sm")[0];
+        input.value = "test  ";
+        ReactTestUtils.Simulate.change(input);
+        expect(spyonChange).toHaveBeenCalled();
+        const args = spyonChange.calls[0].arguments[0];
+        expect(args.value).toBe("test");
+        expect(args.rawValue).toBe( "test  ");
+    });
 });

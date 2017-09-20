@@ -1,6 +1,6 @@
 const AttributeFilter = require('./AttributeFilter');
 const {compose, withHandlers, defaultProps} = require('recompose');
-
+const {trim} = require('lodash');
 module.exports = compose(
     defaultProps({
         onValueChange: () => {},
@@ -10,7 +10,8 @@ module.exports = compose(
         onChange: props => ({value, attribute} = {}) => {
             props.onValueChange(value);
             props.onChange({
-                value,
+                rawValue: value,
+                value: trim(value),
                 operator: "ilike",
                 type: 'string',
                 attribute

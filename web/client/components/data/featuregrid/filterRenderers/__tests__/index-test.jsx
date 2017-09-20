@@ -28,7 +28,7 @@ describe('Test for filterRenderer function', () => {
         Cmp = getFilterRenderer("string");
         expect(Cmp).toExist();
         ReactDOM.render(<Cmp />, document.getElementById("container"));
-        Cmp = getFilterRenderer("integer");
+        Cmp = getFilterRenderer("int");
         expect(Cmp).toExist();
         ReactDOM.render(<Cmp />, document.getElementById("container"));
         Cmp = getFilterRenderer("number");

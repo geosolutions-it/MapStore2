@@ -46,6 +46,17 @@ describe('Test for NumberFilter component', () => {
         ReactTestUtils.Simulate.change(input);
         expect(spyonChange).toHaveBeenCalled();
     });
+    it('Test NumberFilter validity check', () => {
+        const actions = {
+            onChange: () => {}
+        };
+        ReactDOM.render(<NumberFilter onChange={actions.onChange} />, document.getElementById("container"));
+
+        const input = document.getElementsByTagName("input")[0];
+        input.value = "ZZZ 2";
+        ReactTestUtils.Simulate.change(input);
+        expect( document.getElementsByClassName("has-error").length > 0).toBe(true);
+    });
     it('Test NumberFilter expression', () => {
         const actions = {
             onChange: () => {},
