@@ -1,7 +1,9 @@
 ## Description
-A few sentences describing the overall goals of the pull request's commits.
+A few sentences describing the overall goals of the pull request' s commits.
 
-## Closed issues
+## Issues
+ - Fix #<issue>
+ - ...
 
 **Please check if the PR fulfills these requirements**
 - [ ] The commit message follows our guidelines: https://github.com/geosolutions-it/MapStore2/blob/master/CONTRIBUTING.md
@@ -9,7 +11,7 @@ A few sentences describing the overall goals of the pull request's commits.
 - [ ] Docs have been added / updated (for bug fixes / features)
 
 
-**What kind of change does this PR introduce?** (check one with "x")
+**What kind of change does this PR introduce?** (check one with "x", remove the others)
 
  - [ ] Bugfix
  - [ ] Feature
@@ -26,12 +28,11 @@ A few sentences describing the overall goals of the pull request's commits.
 **What is the new behavior?**
 
 
-**Does this PR introduce a breaking change?** (check one with "x")
+**Does this PR introduce a breaking change?** (check one with "x", remove the other)
 
  - [ ] Yes
  - [ ] No
 
 If this PR contains a breaking change, please describe the impact and migration path for existing applications: ...
-
 
 **Other information**:
