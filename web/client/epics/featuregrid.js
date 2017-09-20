@@ -21,7 +21,8 @@ const {setControlProperty} = require('../actions/controls');
 const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery} = require('../actions/wfsquery');
 const {reset, QUERY_FORM_RESET} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
-const {BROWSE_DATA} = require('../actions/layers');
+
+const {BROWSE_DATA, changeLayerProperties} = require('../actions/layers');
 const {purgeMapInfoResults} = require('../actions/mapInfo');
 
 const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURES, featureSaving, changePage,
@@ -29,9 +30,11 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     CLEAR_CHANGES, START_EDITING_FEATURE, TOGGLE_MODE, MODES, geometryChanged, DELETE_GEOMETRY, deleteGeometryFeature,
     SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE,
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
-    openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL, UPDATE_FILTER} = require('../actions/featuregrid');
 
-const {TOGGLE_CONTROL, resetControls} = require('../actions/controls');
+    openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL, UPDATE_FILTER, START_SYNC_WMS,
+    STOP_SYNC_WMS} = require('../actions/featuregrid');
+
+const {TOGGLE_CONTROL, RESET_CONTROLS, resetControls, toggleControl} = require('../actions/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
 const {refreshLayerVersion} = require('../actions/layers');
 
@@ -44,6 +47,7 @@ const {error} = require('../actions/notifications');
 const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector} = require('../selectors/query');
 const drawSupportReset = () => changeDrawingStatus("clean", "", "featureGrid", [], {});
 const {interceptOGCError} = require('../utils/ObservableUtils');
+
 const {gridUpdateToQueryUpdate} = require('../utils/FeatureGridUtils');
 
 
@@ -160,6 +164,15 @@ const createInitialQueryFlow = (action$, store, {url, name} = {}) => {
     );
 };
 
+// sync wms filter selector
+const isSyncWmsActive = (state) => get(state, "controls.syncwmsfilter.enabled", false);
+// Create action to add filter to wms layer
+const addFilterToWMSLayer = (layer, filter) => {
+    return changeLayerProperties(layer, {filter});
+};
+const removeFilterFromWMSLayer = ({featuregrid: f} = {}) => {
+    return changeLayerProperties(f.selectedLayer, {filter: undefined});
+};
 
 /**
  * Epìcs for feature grid
@@ -470,6 +483,17 @@ module.exports = {
         .switchMap( () => {
             return Rx.Observable.of(setControlProperty("drawer", "enabled", false), toggleTool("featureCloseConfirm", false));
         }),
+    /**
+     * Close sync filter wms control on faturegrid close,
+     * not on advanced search open
+     */
+     toggleSyncControl: (action$, store) =>
+         action$.ofType(OPEN_ADVANCED_SEARCH, CLOSE_FEATURE_GRID)
+            .filter(() => isSyncWmsActive(store.getState()))
+            .scan((acc, cur) => {
+                return cur.type === CLOSE_FEATURE_GRID && acc.type !== OPEN_ADVANCED_SEARCH ? toggleControl("syncwmsfilter") : cur;
+            }, {type: ''})
+            .filter((a) => a.type === TOGGLE_CONTROL),
     onOpenAdvancedSearch: (action$, store) =>
         action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
             return Rx.Observable.of(
@@ -510,10 +534,39 @@ module.exports = {
      */
     resetControlsOnEnterInEditMode: (action$) =>
         action$.ofType(TOGGLE_MODE)
-        .filter(a => a.mode === MODES.EDIT).map(() => resetControls(["query"])),
+        .filter(a => a.mode === MODES.EDIT).map(() => resetControls(["query", "syncwmsfilter"])),
     closeIdentifyEpic: (action$) =>
         action$.ofType(OPEN_FEATURE_GRID)
         .switchMap(() => {
             return Rx.Observable.of(purgeMapInfoResults());
-        })
+        }),
+    /**
+     * start sync
+     */
+     startSync: (action$, store) =>
+        action$.ofType(TOGGLE_CONTROL)
+        .filter( a => (a.control === "syncwmsfilter" || a.type === OPEN_FEATURE_GRID ) && isSyncWmsActive(store.getState()))
+        .switchMap(() => Rx.Observable.of({type: START_SYNC_WMS})),
+    /**
+     * stop sync
+     */
+     stopSync: (action$, store) =>
+        action$.ofType(TOGGLE_CONTROL, RESET_CONTROLS)
+        .filter(a => (a.control === "syncwmsfilter" || (a.type === RESET_CONTROLS && a.skip.indexOf("syncwmsfilter") !== -1)) && !isSyncWmsActive(store.getState()))
+        .switchMap(() => Rx.Observable.from([removeFilterFromWMSLayer(store.getState()), {type: STOP_SYNC_WMS}])),
+    /**
+     * Sync map with filter
+     */
+     syncMap: (action$, store) =>
+        action$.ofType(QUERY_CREATE, UPDATE_QUERY).
+            filter((a) => {
+                const {disableQuickFilterSync} = (store.getState()).featuregrid;
+                return a.type === QUERY_CREATE || !disableQuickFilterSync;
+            })
+            .switchMap(() => {
+                const {query: q, featuregrid: f} = store.getState();
+                const filter = (q || {}).filterObj;
+                const layer = (f || {}).selectedLayer;
+                return Rx.Observable.merge(Rx.Observable.of(isSyncWmsActive(store.getState())).filter(a => a), action$.ofType(START_SYNC_WMS)).map(() => addFilterToWMSLayer(layer, filter));
+            })
 };

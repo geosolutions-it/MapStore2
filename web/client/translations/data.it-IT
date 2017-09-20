@@ -902,7 +902,8 @@
                 "deleteGeometry": "Elimina la geometria",
                 "downloadGridData": "Esporta i dati della griglia",
                 "hideShowColumns": "Nascondi/mostra colonne",
-                "zoomAll": "Zoom all'estensione della pagina"
+                "zoomAll": "Zoom all'estensione della pagina",
+                "syncOnMap": "Sincronizza la mappa con i filtri"
             }
         },
         "wfsdownload": {

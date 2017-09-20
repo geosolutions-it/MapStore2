@@ -905,7 +905,8 @@
                 "deleteGeometry": "Eliminar geometría",
                 "downloadGridData": "Descargar datos",
                 "hideShowColumns": "Ocultar / mostrar columnas",
-                "zoomAll": "Zoom a la extensión de la página"
+                "zoomAll": "Zoom a la extensión de la página",
+                "syncOnMap": "Sincronizar mapa con filtro"
             }
         },
         "wfsdownload": {

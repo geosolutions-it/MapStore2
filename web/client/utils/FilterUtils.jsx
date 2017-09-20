@@ -745,7 +745,8 @@ const FilterUtils = {
     ogcDateField,
     ogcListField,
     ogcStringField,
-    isLikeOrIlike: (operator) => operator === "ilike" || operator === "like"
+    isLikeOrIlike: (operator) => operator === "ilike" || operator === "like",
+    isFilterValid: (f = {}) => (f.filterFields && f.filterFields.length > 0) || (f.simpleFilterFields && f.simpleFilterFields.length > 0) || (f.spatialField && f.spatialField.geometry && f.spatialField.operation)
 };
 
 module.exports = FilterUtils;

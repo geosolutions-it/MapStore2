@@ -26,5 +26,6 @@ module.exports = {
     switchViewMode: () => toggleViewMode(),
     onClose: () => closeFeatureGridConfirm(),
     showQueryPanel: () => openAdvancedSearch(),
-    zoomAll: () => zoomAll()
+    zoomAll: () => zoomAll(),
+    sync: () => toggleControl("syncwmsfilter")
 };

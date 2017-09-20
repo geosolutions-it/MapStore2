@@ -901,7 +901,8 @@
                 "deleteGeometry": "Delete geometry",
                 "downloadGridData": "Download grid data",
                 "hideShowColumns": "Hide/show columns",
-                "zoomAll": "Zoom to page extent"
+                "zoomAll": "Zoom to page extent",
+                "syncOnMap": "Sync map with fitler"
             }
         },
         "wfsdownload": {
