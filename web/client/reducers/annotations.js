@@ -26,14 +26,14 @@ function annotations(state = { validationErrors: {} }, action) {
             });
         case EDIT_ANNOTATION:
             return assign({}, state, {
-            editing: assign({}, action.feature, {
-                style: action.feature.style || {
-                    iconGlyph: 'comment',
-                    iconColor: 'blue',
-                    iconShape: 'square'
-                }
-            }),
-            originalStyle: null
+                editing: assign({}, action.feature, {
+                    style: action.feature.style || {
+                        iconGlyph: 'comment',
+                        iconColor: 'blue',
+                        iconShape: 'square'
+                    }
+                }),
+                originalStyle: null
             });
         case CONFIRM_REMOVE_ANNOTATION:
             return assign({}, state, {
