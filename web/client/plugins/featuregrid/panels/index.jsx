@@ -37,7 +37,7 @@ const Toolbar = connect(
         isDownloadOpen: state => state && state.controls && state.controls.wfsdownload && state.controls.wfsdownload.enabled,
         isSyncActive: state => state && state.controls && state.controls.syncwmsfilter && state.controls.syncwmsfilter.enabled,
         isColumnsOpen: state => state && state.featuregrid && state.featuregrid.tools && state.featuregrid.tools.settings,
-        isSearchAllowed: (state) => true || !isCesium(state),
+        isSearchAllowed: (state) => !isCesium(state),
         isEditingAllowed: (state) => (isAdminUserSelector(state) || canEditSelector(state)) && !isCesium(state)
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
