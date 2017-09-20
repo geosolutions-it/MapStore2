@@ -9,7 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
-const {manageAutoMapUpdate, updateMapInfoOnLogin} = require('../epics/automapupdate');
+const {manageAutoMapUpdate} = require('../epics/automapupdate');
 const {autoMapUpdateSelector} = require('../selectors/automapupdate');
 const {setControlProperty} = require('../actions/controls');
 const {refresh} = require('../epics/layers');
@@ -74,5 +74,5 @@ const AutoMapUpdatePlugin = connect(autoMapUpdateSelector, {
 module.exports = {
     AutoMapUpdatePlugin,
     reducers: {},
-    epics: {manageAutoMapUpdate, updateMapInfoOnLogin, refresh}
+    epics: {manageAutoMapUpdate, refresh}
 };
