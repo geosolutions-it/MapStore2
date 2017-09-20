@@ -9,13 +9,17 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 const L = require('leaflet');
-const {isEqual, isFunction} = require('lodash');
+const {isEqual} = require('lodash');
+require('leaflet-extra-markers');
+require('leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css');
 
-var coordsToLatLngF = function(coords) {
+const VectorUtils = require('../../../utils/leaflet/Vector');
+
+const coordsToLatLngF = function(coords) {
     return new L.LatLng(coords[1], coords[0], coords[2]);
 };
 
-var coordsToLatLngs = function(coords, levelsDeep, coordsToLatLng) {
+const coordsToLatLngs = function(coords, levelsDeep, coordsToLatLng) {
     var latlngs = [];
     var len = coords.length;
     for (let i = 0, latlng; i < len; i++) {
@@ -29,36 +33,14 @@ var coordsToLatLngs = function(coords, levelsDeep, coordsToLatLng) {
     return latlngs;
 };
 // Create a new Leaflet layer with custom icon marker or circleMarker
-var getPointLayer = function(pointToLayer, geojson, latlng, options) {
+const getPointLayer = function(pointToLayer, geojson, latlng, options) {
     if (pointToLayer) {
         return pointToLayer(geojson, latlng);
     }
-    if (options && options.style && options.style.iconUrl) {
-        return L.marker(
-            latlng,
-            {
-                icon: L.icon({
-                    iconUrl: options.style.iconUrl,
-                    shadowUrl: options.style.shadowUrl,
-                    iconSize: options.style.iconSize,
-                    shadowSize: options.style.shadowSize,
-                    iconAnchor: options.style.iconAnchor,
-                    shadowAnchor: options.style.shadowAnchor,
-                    popupAnchor: options.style.popupAnchor
-                })
-            });
-    }
-    if (options && options.style && options.style.html) {
-        return L.marker(
-            latlng,
-            {
-                icon: L.divIcon(isFunction(options.style.html) ? options.style.html(geojson) : options.style.html)
-            });
-    }
-    return L.marker(latlng);
+    return VectorUtils.pointToLayer(latlng, geojson, options.style);
 };
 
-var geometryToLayer = function(geojson, options) {
+const geometryToLayer = function(geojson, options) {
 
     var geometry = geojson.type === 'Feature' ? geojson.geometry : geojson;
     var coords = geometry ? geometry.coordinates : null;
@@ -147,67 +129,20 @@ class Feature extends React.Component {
         container: PropTypes.object, // TODO it must be a L.GeoJSON
         geometry: PropTypes.object, // TODO check for geojson format for geometry
         style: PropTypes.object,
-        onClick: PropTypes.func
+        onClick: PropTypes.func,
+        options: PropTypes.object
     };
 
     componentDidMount() {
         if (this.props.container && this.props.geometry) {
-            let style = this.props.style;
-            this._layer = geometryToLayer({
-                type: this.props.type,
-                geometry: this.props.geometry,
-                properties: this.props.properties,
-                id: this.props.msId
-            }, {
-                style: style,
-                pointToLayer: this.props.styleName !== "marker" ? function(feature, latlng) {
-                    return L.circleMarker(latlng, style || {
-                        radius: 5,
-                        color: "red",
-                        weight: 1,
-                        opacity: 1,
-                        fillOpacity: 0
-                    });
-                } : null
-            }
-            );
-            this.props.container.addLayer(this._layer);
-            this._layer.on('click', (event) => {
-                if (this.props.onClick) {
-                    this.props.onClick({
-                        pixel: {
-                            x: event.originalEvent && event.originalEvent.x,
-                            y: event.originalEvent && event.originalEvent.y
-                        },
-                        latlng: event.latlng
-                    });
-                }
-            });
+            this.createLayer(this.props);
         }
     }
 
     componentWillReceiveProps(newProps) {
         if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry) || !isEqual(newProps.style, this.props.style)) {
             this.props.container.removeLayer(this._layer);
-            this._layer = geometryToLayer({
-                type: newProps.type,
-                geometry: newProps.geometry,
-                properties: newProps.properties,
-                msId: this.props.msId
-            }, {
-                style: newProps.style,
-                pointToLayer: newProps.styleName !== "marker" ? function(feature, latlng) {
-                    return L.circleMarker(latlng, newProps.style || {
-                        radius: 5,
-                        color: "red",
-                        weight: 1,
-                        opacity: 1,
-                        fillOpacity: 0
-                    });
-                } : null
-            }
-            );
-            newProps.container.addLayer(this._layer);
+            this.createLayer(newProps);
         }
     }
 
@@ -224,6 +159,40 @@ class Feature extends React.Component {
     render() {
         return null;
     }
+
+    createLayer = (props) => {
+        this._layer = geometryToLayer({
+            type: props.type,
+            geometry: props.geometry,
+            properties: props.properties,
+            msId: props.msId
+        }, {
+            style: props.style,
+            pointToLayer: !props.style && props.styleName !== "marker" ? function(feature, latlng) {
+                return L.circleMarker(latlng, props.style || {
+                    radius: 5,
+                    color: "red",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0
+                });
+            } : null
+        }
+        );
+        props.container.addLayer(this._layer);
+
+        this._layer.on('click', (event) => {
+            if (props.onClick) {
+                props.onClick({
+                    pixel: {
+                        x: event.originalEvent && event.originalEvent.x,
+                        y: event.originalEvent && event.originalEvent.y
+                    },
+                    latlng: event.latlng
+                }, this.props.options.handleClickOnLayer ? this.props.options.id : null);
+            }
+        });
+    };
 }
 
 module.exports = Feature;

@@ -83,7 +83,8 @@ class LeafletLayer extends React.Component {
         if (this.props.children) {
             const layer = this.layer;
             const children = layer ? React.Children.map(this.props.children, child => {
-                return child ? React.cloneElement(child, {container: layer, styleName: this.props.options && this.props.options.styleName, onClick: this.props.onClick}) : null;
+                return child ? React.cloneElement(child, {container: layer, styleName: this.props.options && this.props.options.styleName, onClick: this.props.onClick,
+                options: this.props.options || {}}) : null;
             }) : null;
             return (
                 <noscript>

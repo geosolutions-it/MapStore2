@@ -26,14 +26,15 @@ function drawStopped() {
     };
 }
 
-function changeDrawingStatus(status, method, owner, features, options) {
+function changeDrawingStatus(status, method, owner, features, options, style) {
     return {
         type: CHANGE_DRAWING_STATUS,
         status,
         method,
         owner,
         features,
-        options
+        options,
+        style
     };
 }
 

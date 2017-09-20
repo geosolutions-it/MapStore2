@@ -91,6 +91,7 @@
         "gohome": "Go home",
         "back": "Back to the Importer",
         "printbutton": "Print",
+        "annotationsbutton": "Annotations",
         "noresultfound": "No Result found",
         "save": "Save",
 		"saveAs": "Save As...",
@@ -588,6 +589,22 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Please insert username and password",
                 "usernamePwdIncorrect":"Username or password incorrect"
+            }
+        },
+        "annotations": {
+            "edit": "Edit",
+            "remove": "Delete",
+            "save": "Save",
+            "cancel": "Cancel",
+            "addMarker": "Add a new point on the map",
+            "styleGeometry": "Choose a different style for points",
+            "deleteGeometry": "Remove existing points",
+            "removeannotation": "Do you want to remove the annotation?",
+            "removegeometry": "Do you want to remove all annotation points?",
+            "confirm": "Confirm",
+            "field": {
+                "title": "Title",
+                "description": "Description"
             }
         },
         "users": {

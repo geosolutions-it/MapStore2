@@ -16,6 +16,16 @@ var mapUtils = require('../../../utils/MapUtils');
 
 const {isEqual, throttle} = require('lodash');
 
+const normalizeLng = (lng) => {
+    let tLng = lng / 360 % 1 * 360;
+    if (tLng < -180) {
+        tLng = tLng + 360;
+    } else if (tLng > 180) {
+        tLng = tLng - 360;
+    }
+    return tLng;
+};
+
 class OpenlayersMap extends React.Component {
     static propTypes = {
         id: PropTypes.string,
@@ -103,18 +113,35 @@ class OpenlayersMap extends React.Component {
         });
 
         this.map = map;
-
+        const oldOn = this.map.on;
+        this.map.disabledListeners = {};
+        this.map.on = (event, handler) => {
+            oldOn.call(this.map, event, (e) => {
+                if (!this.map.disabledListeners[event]) {
+                    handler(e);
+                }
+            });
+        };
+        this.map.disableEventListener = (event) => {
+            this.map.disabledListeners[event] = true;
+        };
+        this.map.enableEventListener = (event) => {
+            delete this.map.disabledListeners[event];
+        };
         map.on('moveend', this.updateMapInfoState);
         map.on('singleclick', (event) => {
             if (this.props.onClick) {
                 let pos = event.coordinate.slice();
                 let coords = ol.proj.toLonLat(pos, this.props.projection);
-                let tLng = coords[0] / 360 % 1 * 360;
-                if (tLng < -180) {
-                    tLng = tLng + 360;
-                } else if (tLng > 180) {
-                    tLng = tLng - 360;
-                }
+                let tLng = normalizeLng(coords[0]);
+                let layerInfo;
+                map.forEachFeatureAtPixel(event.pixel, (feature, layer) => {
+                    if (layer.get('handleClickOnLayer')) {
+                        layerInfo = layer.get('msId');
+                    }
+                    coords = ol.proj.toLonLat(feature.getGeometry().getFirstCoordinate(), this.props.projection);
+                    tLng = normalizeLng(coords[0]);
+                });
                 this.props.onClick({
                     pixel: {
                         x: event.pixel[0],
@@ -129,7 +156,7 @@ class OpenlayersMap extends React.Component {
                         ctrl: event.originalEvent.ctrlKey,
                         shift: event.originalEvent.shiftKey
                     }
-                });
+                }, layerInfo);
             }
         });
         const mouseMove = throttle(this.mouseMoveEvent, 100);

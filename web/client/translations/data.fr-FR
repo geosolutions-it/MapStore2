@@ -93,6 +93,7 @@
         "gohome": "Retour",
         "back": "Back to the Importer",
         "printbutton": "Imprimer",
+        "annotationsbutton": "Annotations",
         "noresultfound": "Aucun résultat trouvé",
         "save": "Enregistrer",
         "saveAs": "Enregistrer sous",
@@ -569,6 +570,22 @@
                     "dwithin": "Distance de",
                     "within": "Contient"
                 }
+            }
+        },
+        "annotations": {
+            "edit": "Modifier",
+            "remove": "Effacer",
+            "save": "Enregistrer",
+            "cancel": "Annuler",
+            "addMarker": "Ajouter un nouveau point sur la carte",
+            "styleGeometry": "Choisissez un style différent pour les points",
+            "deleteGeometry": "Supprimer les points existants",
+            "removeannotation": "Voulez-vous supprimer l'annotation?",
+            "removegeometry": "Voulez-vous supprimer tous les points d'annotation?",
+            "confirm": "confirmer",
+            "field": {
+                "title": "titre",
+                "description": "Description"
             }
         },
         "user":{

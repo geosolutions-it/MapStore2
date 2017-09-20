@@ -130,7 +130,8 @@ describe('Leaflet DrawSupport', () => {
             />
         , msNode);
         expect(cmp).toExist();
-        cmp.drawLayer = {addData: function() {return true; }};
+        let featureData;
+        cmp.drawLayer = {addData: function(data) {featureData = data; return true; }, toGeoJSON: function() { return featureData; }};
         cmp.onDrawCreated.call(cmp, {layer: layer, layerType: "circle"});
     });
     it('test draw replace', () => {

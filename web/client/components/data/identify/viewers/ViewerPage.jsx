@@ -13,7 +13,8 @@ module.exports = class extends React.Component {
     static propTypes = {
         format: PropTypes.string,
         viewers: PropTypes.object,
-        response: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.node])
+        response: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.node]),
+        layer: PropTypes.object
     };
 
     onTouchStart = (event) => {
@@ -56,10 +57,10 @@ module.exports = class extends React.Component {
         this.setState({scrolling: false});
     };
 
-    renderPage = (response) => {
+    renderPage = () => {
         const Viewer = this.props.viewers[this.props.format];
         if (Viewer) {
-            return <Viewer response={response} />;
+            return <Viewer response={this.props.response} layer={this.props.layer}/>;
         }
         return null;
     };
@@ -70,7 +71,7 @@ module.exports = class extends React.Component {
             onTouchMove={this.onTouchMove}
             onTouchStart={this.onTouchStart}
             onTouchEnd={this.onTouchEnd}>
-                {this.renderPage(this.props.response)}
+                {this.renderPage()}
         </div>);
     }
 };

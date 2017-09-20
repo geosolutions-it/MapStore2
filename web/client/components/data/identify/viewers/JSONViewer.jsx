@@ -13,6 +13,7 @@ var PropertiesViewer = require('./row/PropertiesViewer');
 class JSONViewer extends React.Component {
     static propTypes = {
         response: PropTypes.object,
+        layer: PropTypes.object,
         rowViewer: PropTypes.object
     };
 
@@ -21,8 +22,8 @@ class JSONViewer extends React.Component {
     }
 
     render() {
-        const RowViewer = this.props.rowViewer || PropertiesViewer;
-        return (<div style={{maxHeight: "250px"}}>
+        const RowViewer = (this.props.layer && this.props.layer.rowViewer) || this.props.rowViewer || PropertiesViewer;
+        return (<div className="mapstore-json-viewer">
                 {(this.props.response.features || []).map((feature, i) => {
                     return <RowViewer key={i} title={feature.id} exclude={["bbox"]} {...feature.properties}/>;
                 })}

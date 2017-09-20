@@ -34,13 +34,14 @@ const selector = createSelector([
     mapSelector,
     layersSelector,
     (state) => state.mapInfo && state.mapInfo.clickPoint,
+    (state) => state.mapInfo && state.mapInfo.clickLayer,
     (state) => state.mapInfo && state.mapInfo.showModalReverse,
     (state) => state.mapInfo && state.mapInfo.reverseGeocodeData,
     (state) => state.mapInfo && state.mapInfo.warning,
     currentLocaleSelector
 
-], (enabled, responses, requests, format, map, layers, point, showModalReverse, reverseGeocodeData, warning, currentLocale) => ({
-    enabled, responses, requests, format, map, layers, point, showModalReverse, reverseGeocodeData, warning, currentLocale
+], (enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale) => ({
+    enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale
 }));
 // result panel
 
