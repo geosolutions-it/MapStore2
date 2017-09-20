@@ -13,7 +13,6 @@ const {changeSpatialAttribute, SELECT_VIEWPORT_SPATIAL_METHOD, updateGeometrySpa
 const {CHANGE_MAP_VIEW} = require('../actions/map');
 const {FEATURE_TYPE_SELECTED, QUERY, featureLoading, featureTypeLoaded, featureTypeError, querySearchResponse, queryError} = require('../actions/wfsquery');
 const {paginationInfo, isDescribeLoaded, describeSelector} = require('../selectors/query');
-const {isLeaflet} = require('../selectors/maptype');
 const {mapSelector} = require('../selectors/map');
 const FilterUtils = require('../utils/FilterUtils');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
@@ -260,14 +259,13 @@ const viewportSelectedEpic = (action$, store) =>
         .switchMap((action) => {
             // calculate new geometry from map properties only for viewport
             const map = action.type === CHANGE_MAP_VIEW ? action : mapSelector(store.getState());
-            if (action.type === SELECT_VIEWPORT_SPATIAL_METHOD ||
-                action.type === CHANGE_MAP_VIEW && spatialFieldMethodSelector(store.getState()) === "Viewport") {
-
-                const projection = isLeaflet(store.getState()) ? 'EPSG:4326' : map.projection;
+            if ((action.type === SELECT_VIEWPORT_SPATIAL_METHOD
+            || action.type === CHANGE_MAP_VIEW && spatialFieldMethodSelector(store.getState()) === "Viewport")
+            && map.bbox && map.bbox.bounds && map.bbox.crs) {
                 const bounds = Object.keys(map.bbox.bounds).reduce((p, c) => {
                     return assign({}, p, {[c]: parseFloat(map.bbox.bounds[c])});
                 }, {});
-                return Rx.Observable.of(updateGeometrySpatialField(CoordinatesUtils.getViewportGeometry(bounds, projection)));
+                return Rx.Observable.of(updateGeometrySpatialField(CoordinatesUtils.getViewportGeometry(bounds, map.bbox.crs)));
             }
             return Rx.Observable.empty();
         });
