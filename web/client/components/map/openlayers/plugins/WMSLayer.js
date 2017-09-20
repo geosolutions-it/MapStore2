@@ -17,7 +17,7 @@ const SecurityUtils = require('../../../../utils/SecurityUtils');
 const mapUtils = require('../../../../utils/MapUtils');
 
 function wmsToOpenlayersOptions(options) {
-    const CQL_FILTER = FilterUtils.isFilterValid(options.filter) && FilterUtils.toCQLFilter(options.filter);
+    const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
     // NOTE: can we use opacity to manage visibility?
     return objectAssign({}, options.baseParams, {
         LAYERS: options.name,

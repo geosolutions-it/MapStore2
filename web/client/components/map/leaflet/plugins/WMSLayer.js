@@ -105,7 +105,7 @@ L.tileLayer.multipleUrlWMS = function(urls, options) {
 
 function wmsToLeafletOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
-    const CQL_FILTER = FilterUtils.isFilterValid(options.filter) && FilterUtils.toCQLFilter(options.filter);
+    const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
     // NOTE: can we use opacity to manage visibility?
     return objectAssign({}, options.baseParams, {
         layers: options.name,

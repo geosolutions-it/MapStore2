@@ -19,6 +19,13 @@ const QUERY_ERROR = 'QUERY_ERROR';
 const RESET_QUERY = 'RESET_QUERY';
 const QUERY = 'QUERY';
 const INIT_QUERY_PANEL = 'INIT_QUERY_PANEL';
+const TOGGLE_SYNC_WMS = 'QUERY:TOGGLE_SYNC_WMS';
+
+function toggleSyncWms() {
+    return {
+        type: TOGGLE_SYNC_WMS
+    };
+}
 
 const axios = require('../libs/ajax');
 
@@ -154,5 +161,6 @@ module.exports = {
     FEATURE_LOADING, featureLoading,
     FEATURE_LOADED, featureLoaded,
     INIT_QUERY_PANEL, initQueryPanel,
-    loadFeature
+    loadFeature,
+    TOGGLE_SYNC_WMS, toggleSyncWms
 };

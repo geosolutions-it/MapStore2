@@ -7,7 +7,7 @@
  */
 
 const WMSUtils = {
-    PARAM_OPTIONS: ["layers", "styles", "style", "format", "transparent", "version", "tiled", "opacity", "zindex", "srs", "singletile", "_v_", "filter" ]
+    PARAM_OPTIONS: ["layers", "styles", "style", "format", "transparent", "version", "tiled", "opacity", "zindex", "srs", "singletile", "_v_", "filterObj" ]
 };
 
 module.exports = WMSUtils;

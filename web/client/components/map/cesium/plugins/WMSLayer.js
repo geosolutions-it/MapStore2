@@ -56,7 +56,7 @@ function getQueryString(parameters) {
 
 function wmsToCesiumOptionsSingleTile(options) {
     const opacity = options.opacity !== undefined ? options.opacity : 1;
-    const CQL_FILTER = FilterUtils.isFilterValid(options.filter) && FilterUtils.toCQLFilter(options.filter);
+    const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
     const parameters = assign({
         styles: options.style || "",
         format: options.format || 'image/png',
@@ -77,7 +77,7 @@ function wmsToCesiumOptionsSingleTile(options) {
 
 function wmsToCesiumOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
-    const CQL_FILTER = FilterUtils.isFilterValid(options.filter) && FilterUtils.toCQLFilter(options.filter);
+    const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
     if (proxyUrl) {
