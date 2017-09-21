@@ -168,30 +168,4 @@ describe("test the BackgroundSelector", () => {
         const node = ReactDOM.findDOMNode(backgroundSelector);
         expect(node).toExist();
     });
-
-    it('test BackgroundSelector set layer current layer', () => {
-        const backgroundSelector = ReactDOM.render(<BackgroundSelector currentLayer={{
-            id: 'layer_0',
-            title: 'title_0',
-            visibility: true
-        }} />, document.getElementById("container"));
-        expect(backgroundSelector).toExist();
-        const node = ReactDOM.findDOMNode(backgroundSelector);
-        expect(node).toBe(null);
-
-        backgroundSelector.getLayer();
-    });
-
-    it('test BackgroundSelector set layer temp layer', () => {
-        const backgroundSelector = ReactDOM.render(<BackgroundSelector tempLayer={{
-            id: 'layer_0',
-            title: 'title_0',
-            visibility: true
-        }} />, document.getElementById("container"));
-        expect(backgroundSelector).toExist();
-        const node = ReactDOM.findDOMNode(backgroundSelector);
-        expect(node).toBe(null);
-
-        backgroundSelector.getLayer();
-    });
 });
