@@ -163,13 +163,6 @@ const createInitialQueryFlow = (action$, store, {url, name} = {}) => {
     );
 };
 
-const featureGridIsClosed = ( action$ ) =>
- action$.ofType(ASK_CLOSE_FEATURE_GRID_CONFIRM)
-      .switchMap(() =>
-         action$.ofype(CLOSE_FEATURE_GRID)
-             .takeUntil(action$.ofype(FEATURE_GRID_CLOSE_CONFIRMED))
-             .take(1));
-
 // Create action to add filter to wms layer
 const addFilterToWMSLayer = (layer, filter) => {
     return changeLayerProperties(layer, {filterObj: filter});
@@ -539,17 +532,6 @@ module.exports = {
         action$.ofType(OPEN_FEATURE_GRID)
         .switchMap(() => {
             return Rx.Observable.of(purgeMapInfoResults());
-        }),
-    /**
-     * Close sync filter wms control on faturegrid close,
-     * not on advanced search open
-     */
-    disableSyncWmsOnGridClose: (action$, store) =>
-        action$.ofType(OPEN_FEATURE_GRID).
-        switchMap(() => {
-            return action$.let(featureGridIsClosed)
-            .filter(() => isSyncWmsActive(store.getState()))
-            .map(() => removeFilterFromWMSLayer(store.getState()));
         }),
     /**
      * start sync filter with wms layer
