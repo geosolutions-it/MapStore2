@@ -738,4 +738,73 @@ describe('FilterUtils', () => {
         let filter = FilterUtils.processOGCCrossLayerFilter(crossLayerFilterObj);
         expect(filter).toEqual(expected);
     });
+
+    it('Check if toOGCFilter generate double bbox', () => {
+        const filterObj = {
+            featureTypeName: 'feature',
+            filterFields: [],
+            filterType: 'OGC',
+            groupFields: [{id: 1, index: 0, logic: 'OR'}],
+            hits: false,
+            ogcVersion: '1.1.0',
+            pagination: {
+                maxFeatures: 20,
+                startIndex: 0
+            },
+            sortOptions: null,
+            spatialField: {
+                attribute: 'the_geom',
+                geometry: {
+                    center: [174.19921875, 24.04052578726085],
+                    coordinates: [
+                        [[[-180, -10.228437266155943], [-180, 58.309488840677645], [-125.33203125, 58.309488840677645], [-125.33203125, -10.228437266155943], [-180, -10.228437266155943]]],
+                        [[[113.73046875, -10.228437266155943], [113.73046875, 58.309488840677645], [180, 58.309488840677645], [180, -10.228437266155943], [113.73046875, -10.228437266155943]]]
+                    ],
+                    extent: [
+                        [-180, 23.200960808078566, -134.47265625, 54.39335222384589],
+                        [160.400390625, 23.200960808078566, 180, 54.39335222384589]
+                    ],
+                    projection: 'EPSG:4326',
+                    radius: 0,
+                    type: 'MultiPolygon'
+                },
+                method: 'Viewport',
+                operation: 'BBOX'
+            }
+        };
+
+        const expected = '<wfs:GetFeature ' +
+          'startIndex="0" ' +
+          'maxFeatures="20" ' +
+          'service="WFS" ' +
+          'version="1.1.0" ' +
+          'xmlns:gml="http://www.opengis.net/gml" ' +
+          'xmlns:wfs="http://www.opengis.net/wfs" ' +
+          'xmlns:ogc="http://www.opengis.net/ogc" ' +
+          'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+          'xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">' +
+          '<wfs:Query typeName="feature" srsName="EPSG:4326">' +
+            '<ogc:Filter>' +
+              '<ogc:Or>' +
+                '<ogc:BBOX>' +
+                  '<ogc:PropertyName>the_geom</ogc:PropertyName>' +
+                  '<gml:Envelope srsName="EPSG:4326">' +
+                    '<gml:lowerCorner>-180 23.200960808078566</gml:lowerCorner>' +
+                    '<gml:upperCorner>-134.47265625 54.39335222384589</gml:upperCorner>' +
+                  '</gml:Envelope>' +
+                '</ogc:BBOX>' +
+                '<ogc:BBOX>' +
+                  '<ogc:PropertyName>the_geom</ogc:PropertyName>' +
+                  '<gml:Envelope srsName="EPSG:4326">' +
+                    '<gml:lowerCorner>160.400390625 23.200960808078566</gml:lowerCorner>' +
+                    '<gml:upperCorner>180 54.39335222384589</gml:upperCorner>' +
+                  '</gml:Envelope>' +
+                '</ogc:BBOX>' +
+              '</ogc:Or>' +
+            '</ogc:Filter>' +
+          '</wfs:Query>' +
+        '</wfs:GetFeature>';
+
+        expect(FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits)).toEqual(expected);
+    });
 });
