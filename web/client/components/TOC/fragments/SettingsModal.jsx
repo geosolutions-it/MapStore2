@@ -58,6 +58,7 @@ class SettingsModal extends React.Component {
         id: "mapstore-layer-settings",
         settings: {expanded: false},
         options: {},
+        element: {},
         updateSettings: () => {},
         hideSettings: () => {},
         updateNode: () => {},
@@ -81,7 +82,10 @@ class SettingsModal extends React.Component {
     };
 
     componentWillMount() {
-        this.setState({initialState: this.props.element});
+        this.setState({
+            initialState: this.props.element,
+            originalSettings: this.props.element
+        });
     }
 
     componentWillUpdate(newProps, newState) {
@@ -91,6 +95,14 @@ class SettingsModal extends React.Component {
                 this.props.settings.nodeType,
                 assign({}, this.props.settings.options, this.state.originalSettings)
             );
+        }
+
+        if (!this.props.settings.expanded && newProps.settings.expanded) {
+            // update initial and original settings on show modal
+            this.setState({
+                initialState: this.props.element,
+                originalSettings: this.props.element
+            });
         }
     }
 
