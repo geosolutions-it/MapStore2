@@ -14,6 +14,7 @@ const assign = require('object-assign');
 const uuid = require('uuid');
 const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
 const {reprojectGeoJson} = require('../../../utils/CoordinatesUtils');
+const VectorStyle = require('./VectorStyle');
 
 /**
  * Component that allows to draw and edit geometries as (Point, LineString, Polygon, Rectangle, Circle, MultiGeometries)
@@ -42,7 +43,8 @@ class DrawSupport extends React.Component {
         onChangeDrawingStatus: PropTypes.func,
         onGeometryChanged: PropTypes.func,
         onDrawStopped: PropTypes.func,
-        onEndDrawing: PropTypes.func
+        onEndDrawing: PropTypes.func,
+        style: PropTypes.object
     };
 
     static defaultProps = {
@@ -157,7 +159,7 @@ class DrawSupport extends React.Component {
             this.removeDrawInteraction();
         }
         this.drawInteraction = new ol.interaction.Draw(this.drawPropertiesForGeometryType(drawMethod, maxPoints, this.drawSource));
-
+        this.props.map.disableEventListener('singleclick');
         this.drawInteraction.on('drawstart', function(evt) {
             this.sketchFeature = evt.feature;
             if (this.selectInteraction) {
@@ -165,7 +167,6 @@ class DrawSupport extends React.Component {
                 this.selectInteraction.setActive(false);
             }
         }, this);
-
         this.drawInteraction.on('drawend', function(evt) {
             this.sketchFeature = evt.feature;
             this.sketchFeature.set('id', uuid.v1());
@@ -186,11 +187,18 @@ class DrawSupport extends React.Component {
         this.setDoubleClickZoomEnabled(false);
     };
 
+    toMulti = (geometry) => {
+        if (geometry.getType() === 'Point') {
+            return new ol.geom.MultiPoint([geometry.getCoordinates()]);
+        }
+        return geometry;
+    };
     handleDrawAndEdit = (drawMethod, startingPoint, maxPoints) => {
         if (this.drawInteraction) {
             this.removeDrawInteraction();
         }
         this.drawInteraction = new ol.interaction.Draw(this.drawPropertiesForGeometryType(getSimpleGeomType(drawMethod), maxPoints, isSimpleGeomType(drawMethod) ? this.drawSource : null ));
+        this.props.map.disableEventListener('singleclick');
         this.drawInteraction.on('drawstart', function(evt) {
             this.sketchFeature = evt.feature;
             if (this.selectInteraction) {
@@ -201,16 +209,15 @@ class DrawSupport extends React.Component {
         this.drawInteraction.on('drawend', function(evt) {
             this.sketchFeature = evt.feature;
             this.sketchFeature.set('id', uuid.v1());
-            const feature = this.fromOLFeature(this.sketchFeature, startingPoint);
 
             if (!isSimpleGeomType(this.props.drawMethod)) {
                 let geom = evt.feature.getGeometry();
                 let g;
                 let features = head(this.drawSource.getFeatures());
                 if (features === undefined) {
-                    g = this.createOLGeometry({type: drawMethod, coordinates: null});
+                    g = this.toMulti(this.createOLGeometry({type: drawMethod, coordinates: null}));
                 } else {
-                    g = head(this.drawSource.getFeatures()).getGeometry();
+                    g = this.toMulti(head(this.drawSource.getFeatures()).getGeometry());
                 }
                 switch (this.props.drawMethod) {
                     case "MultiPoint": g.appendPoint(geom); break;
@@ -226,6 +233,7 @@ class DrawSupport extends React.Component {
                 }
                 this.sketchFeature.setGeometry(g);
             }
+            const feature = this.fromOLFeature(this.sketchFeature, startingPoint);
             // this.addModifyInteraction();
             const geojsonFormat = new ol.format.GeoJSON();
             let newFeature = reprojectGeoJson(geojsonFormat.writeFeatureObject(this.sketchFeature.clone()), this.props.map.getView().getProjection().getCode(), this.props.options.featureProjection);
@@ -237,6 +245,8 @@ class DrawSupport extends React.Component {
             this.props.onEndDrawing(feature, this.props.drawOwner);
             if (this.props.options.stopAfterDrawing) {
                 this.props.onChangeDrawingStatus('stop', this.props.drawMethod, this.props.drawOwner, this.props.features.concat([feature]));
+            } else {
+                this.props.onChangeDrawingStatus('replace', this.props.drawMethod, this.props.drawOwner, this.props.features.concat([feature]));
             }
             if (this.selectInteraction) {
                 // TODO update also the selected features
@@ -403,6 +413,7 @@ class DrawSupport extends React.Component {
         }
         if (newProps.options.editEnabled) {
             this.addModifyInteraction();
+            this.addTranslateInteraction();
         }
         if (newProps.options.drawEnabled) {
             this.handleDrawAndEdit(newProps.drawMethod, newProps.options.startingPoint, newProps.options.maxPoints);
@@ -434,6 +445,7 @@ class DrawSupport extends React.Component {
 
     removeDrawInteraction = () => {
         if (this.drawInteraction) {
+            this.props.map.enableEventListener('singleclick');
             this.props.map.removeInteraction(this.drawInteraction);
             this.drawInteraction = null;
             this.sketchFeature = null;
@@ -445,6 +457,7 @@ class DrawSupport extends React.Component {
         this.removeDrawInteraction();
 
         if (this.selectInteraction) {
+            this.props.map.enableEventListener('singleclick');
             this.props.map.removeInteraction(this.drawInteraction);
         }
 
@@ -539,6 +552,12 @@ class DrawSupport extends React.Component {
             strokeColor = '#4a90e2';
         }
 
+        if (style.iconUrl || style.iconGlyph) {
+            return VectorStyle.getMarkerStyle({
+                style
+            });
+        }
+
         return new ol.style.Style({
             fill: new ol.style.Fill({
                 color: color
@@ -596,6 +615,25 @@ class DrawSupport extends React.Component {
             this.props.onGeometryChanged(features, this.props.drawOwner);
         });
         this.props.map.addInteraction(this.modifyInteraction);
+    }
+
+    addTranslateInteraction = () => {
+        if (this.translateInteraction) {
+            this.props.map.removeInteraction(this.translateInteraction);
+        }
+        this.translateInteraction = new ol.interaction.Translate({
+                features: new ol.Collection(this.drawLayer.getSource().getFeatures())
+            });
+        this.translateInteraction.on('translateend', (e) => {
+
+            const geojsonFormat = new ol.format.GeoJSON();
+            let features = e.features.getArray().map((f) => {
+                return reprojectGeoJson(geojsonFormat.writeFeatureObject(f.clone()), this.props.map.getView().getProjection().getCode(), this.props.options.featureProjection);
+            });
+
+            this.props.onGeometryChanged(features, this.props.drawOwner);
+        });
+        this.props.map.addInteraction(this.translateInteraction);
     }
 
     createOLGeometry = ({type, coordinates, radius, center}) => {

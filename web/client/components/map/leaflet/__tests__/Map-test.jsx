@@ -11,7 +11,6 @@ var LeafletMap = require('../Map.jsx');
 var LeafLetLayer = require('../Layer.jsx');
 var expect = require('expect');
 var mapUtils = require('../../../../utils/MapUtils');
-const L = require('leaflet');
 require('leaflet-draw');
 
 require('../../../../utils/leaflet/Layers');
@@ -295,27 +294,4 @@ describe('LeafletMap', () => {
         attributions = document.body.getElementsByClassName('leaflet-control-attribution');
         expect(attributions.length).toBe(1);
     });
-
-    it('check if clearAllEventListeners exist when drawer has been enabled', () => {
-
-        const map = ReactDOM.render(<LeafletMap id="mapId" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
-
-        let drawControl = new L.Draw.Polyline(map.map, {
-            shapeOptions: {
-                color: '#ffcc33',
-                weight: 2
-            },
-            metric: true,
-            feet: false,
-            repeatMode: false
-        });
-        drawControl.enable();
-        drawControl.disable();
-        drawControl = null;
-
-        map.map.eachLayer(function(layer) {
-            map.map.removeLayer(layer);
-        });
-    });
-
 });

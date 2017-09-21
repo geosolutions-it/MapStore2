@@ -206,7 +206,6 @@ describe('Test the MapUtils', () => {
         };
 
         const saved = saveMapConfiguration(mapConfig, flat, groups, '', {});
-
         expect(saved).toEqual({
             catalogServices: {},
             map: {
@@ -230,6 +229,8 @@ describe('Test the MapUtils', () => {
                     features: undefined,
                     format: undefined,
                     group: undefined,
+                    hideLoading: false,
+                    id: "layer001",
                     matrixIds: undefined,
                     maxZoom: undefined,
                     maxNativeZoom: undefined,
@@ -241,6 +242,7 @@ describe('Test the MapUtils', () => {
                     singleTile: false,
                     source: undefined,
                     style: undefined,
+                    styleName: undefined,
                     styles: undefined,
                     tileMatrixSet: undefined,
                     tiled: undefined,
@@ -259,6 +261,8 @@ describe('Test the MapUtils', () => {
                     features: undefined,
                     format: undefined,
                     group: undefined,
+                    hideLoading: false,
+                    id: "layer002",
                     matrixIds: undefined,
                     maxZoom: undefined,
                     maxNativeZoom: undefined,
@@ -270,6 +274,7 @@ describe('Test the MapUtils', () => {
                     singleTile: false,
                     source: undefined,
                     style: undefined,
+                    styleName: undefined,
                     styles: undefined,
                     tileMatrixSet: undefined,
                     tiled: undefined,
@@ -288,6 +293,8 @@ describe('Test the MapUtils', () => {
                     features: undefined,
                     format: undefined,
                     group: undefined,
+                    hideLoading: false,
+                    id: "layer003",
                     matrixIds: undefined,
                     maxZoom: undefined,
                     maxNativeZoom: undefined,
@@ -299,6 +306,7 @@ describe('Test the MapUtils', () => {
                     singleTile: false,
                     source: undefined,
                     style: undefined,
+                    styleName: undefined,
                     styles: undefined,
                     tileMatrixSet: undefined,
                     tiled: undefined,

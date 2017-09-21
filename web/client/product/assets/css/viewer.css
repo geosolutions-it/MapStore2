@@ -114,17 +114,41 @@ html, body, #container, .fill {
     bottom: 0;
     top: 51px;
     width: 100%;
+    padding: 0;
 }
 
 .mapstore-right-panel .mapstore-identify-viewer {
     position: absolute;
     top: 60px;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
 }
 
-.mapstore-right-panel div[role=body], .mapstore-right-panel .react-swipeable-view-container, .mapstore-right-panel .swipeable-view {
-    height: 100%;
-    position: relative;
+.mapstore-right-panel div[role=body], .mapstore-right-panel .react-swipeable-view-container {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+}
+
+.mapstore-right-panel .swipeable-view {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 70px;
+    position: absolute;
+}
+
+.mapstore-right-panel .alert-info {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.mapstore-right-panel #mapstore-identify-revgeocoder {
+    padding: 15px;
 }

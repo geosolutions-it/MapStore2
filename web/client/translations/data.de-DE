@@ -91,6 +91,7 @@
         "gohome": "Gehe zur Startseite",
         "back": "Zurück zum Import",
         "printbutton": "Drucken",
+        "annotationsbutton": "Annotationen",
         "noresultfound": "Keine Resulte gefunden",
         "save": "Speichern",
         "saveAs": "Speichern als...",
@@ -589,6 +590,22 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Bitte gib Benutzernamen und Password ein",
                 "usernamePwdIncorrect":"Benutzername oder Passwort inkorrekt"
+            }
+        },
+        "annotations": {
+            "edit": "Bearbeiten",
+            "remove": "Löschen",
+            "save": "Speichern",
+            "cancel": "Abbrechen",
+            "addMarker": "Einen neuen Punkt auf der Karte hinzufügen",
+            "styleGeometry": "Wählen Sie einen anderen Stil für Punkte",
+            "deleteGeometry": "Bestehende Punkte entfernen",
+            "removeannotation": "Möchten Sie die Annotation entfernen?",
+            "removegeometry": "Möchten Sie alle Annotationspunkte entfernen?",
+            "confirm": "bestätigen",
+            "field": {
+                "title": "Titel",
+                "description": "Beschreibung"
             }
         },
         "users": {

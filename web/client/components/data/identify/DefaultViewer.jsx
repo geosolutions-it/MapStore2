@@ -121,7 +121,7 @@ class DefaultViewer extends React.Component {
                         onPrevious={() => this.previous()}/></span>
                     }
                     style={this.props.style}>
-                    <ViewerPage response={response} format={format && FeatureInfoUtils.INFO_FORMATS[format] || this.props.format} viewers={this.props.viewers} />
+                    <ViewerPage response={response} format={format && FeatureInfoUtils.INFO_FORMATS[format] || this.props.format} viewers={this.props.viewers} layer={layerMetadata}/>
                 </Panel>
             );
         });

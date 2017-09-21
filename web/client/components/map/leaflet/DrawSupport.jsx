@@ -15,17 +15,7 @@ const assign = require('object-assign');
 
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 
-const defaultStyle = {
-    color: '#ffcc33',
-    opacity: 1,
-    weight: 3,
-    fillColor: '#ffffff',
-    fillOpacity: 0.2,
-    clickable: false,
-    editing: {
-        fill: 1
-    }
-};
+const VectorUtils = require('../../../utils/leaflet/Vector');
 
 /**
  * Component that allows to draw and edit geometries as (Point, LineString, Polygon, Rectangle, Circle, MultiGeometries)
@@ -57,7 +47,8 @@ class DrawSupport extends React.Component {
         onGeometryChanged: PropTypes.func,
         onDrawStopped: PropTypes.func,
         onEndDrawing: PropTypes.func,
-        messages: PropTypes.object
+        messages: PropTypes.object,
+        style: PropTypes.object
     };
 
     static defaultProps = {
@@ -72,7 +63,18 @@ class DrawSupport extends React.Component {
         onChangeDrawingStatus: () => {},
         onGeometryChanged: () => {},
         onDrawStopped: () => {},
-        onEndDrawing: () => {}
+        onEndDrawing: () => {},
+        style: {
+            color: '#ffcc33',
+            opacity: 1,
+            weight: 3,
+            fillColor: '#ffffff',
+            fillOpacity: 0.2,
+            clickable: false,
+            editing: {
+                fill: 1
+            }
+        }
     };
 
     /**
@@ -94,7 +96,7 @@ class DrawSupport extends React.Component {
         }
         if (this.props.drawStatus !== newProps.drawStatus || newProps.drawStatus === "replace" || this.props.drawMethod !== newProps.drawMethod || this.props.features !== newProps.features) {
             switch (newProps.drawStatus) {
-            case "create": this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326"}); break;
+            case "create": this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style}); break;
             case "start": this.addDrawInteraction(newProps); break;
             case "drawOrEdit": this.addDrawOrEditInteractions(newProps); break;
             case "stop": {
@@ -163,14 +165,14 @@ class DrawSupport extends React.Component {
         if (this.props.options && this.props.options.stopAfterDrawing) {
             this.props.onChangeDrawingStatus('stop', this.props.drawMethod, this.props.drawOwner);
         }
-        const newGeoJsonFt = this.convertFeaturesToGeoJson(evt.layer, this.props);
+        const newGeoJsonFt = this.convertFeaturesToGeoJson(this.drawLayer, this.props);
         this.props.onEndDrawing(geometry, this.props.drawOwner);
-        this.props.onGeometryChanged([newGeoJsonFt], this.props.drawOwner, this.props.options && this.props.options.stopAfterDrawing ? "enterEditMode" : "");
+        this.props.onGeometryChanged(newGeoJsonFt.features, this.props.drawOwner, this.props.options && this.props.options.stopAfterDrawing ? "enterEditMode" : "");
     };
 
-    onUpdateGeom = (feature, props) => {
-        const newGeoJsonFt = this.convertFeaturesToGeoJson(feature, props);
-        props.onGeometryChanged([newGeoJsonFt], props.drawOwner);
+    onUpdateGeom = (features, props) => {
+        const newGeoJsonFt = this.convertFeaturesToGeoJson(features, props);
+        props.onGeometryChanged(newGeoJsonFt.features, props.drawOwner);
     };
 
     render() {
@@ -202,11 +204,11 @@ class DrawSupport extends React.Component {
         this.drawLayer = vector;
     };
 
-    addGeojsonLayer = ({features, projection}) => {
+    addGeojsonLayer = ({features, projection, style}) => {
         this.clean();
-        let geoJsonLayerGroup = L.geoJson(features, {style: defaultStyle, pointToLayer: (f, latLng) => {
+        let geoJsonLayerGroup = L.geoJson(features, {style: style, pointToLayer: (f, latLng) => {
             let center = CoordinatesUtils.reproject({x: latLng.lng, y: latLng.lat}, projection, "EPSG:4326");
-            return L.marker(L.latLng(center.y, center.x));
+            return VectorUtils.pointToLayer(L.latLng(center.y, center.x), f, style);
         }});
         this.drawLayer = geoJsonLayerGroup.addTo(this.props.map);
     };
@@ -214,7 +216,7 @@ class DrawSupport extends React.Component {
 
     replaceFeatures = (newProps) => {
         if (!this.drawLayer) {
-            this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326"});
+            this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style});
         } else {
             this.drawLayer.clearLayers();
             this.drawLayer.addData(this.convertFeaturesPolygonToPoint(newProps.features, this.props.drawMethod));
@@ -224,7 +226,7 @@ class DrawSupport extends React.Component {
     addDrawInteraction = (newProps) => {
         this.removeAllInteractions();
         if (newProps.drawMethod === "Point" || newProps.drawMethod === "MultiPoint") {
-            this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326"});
+            this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style});
         } else {
             this.addLayer(newProps);
         }
@@ -311,7 +313,7 @@ class DrawSupport extends React.Component {
         }
         const props = assign({}, newProps, {features: [newFeature ? newFeature : {}]});
         if (!this.drawLayer) {
-            this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326"});
+            this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style});
         } else {
             this.drawLayer.clearLayers();
             this.drawLayer.addData(this.convertFeaturesPolygonToPoint(props.features, props.drawMethod));
@@ -327,12 +329,12 @@ class DrawSupport extends React.Component {
     addEditInteraction = (newProps) => {
         this.clean();
 
-        this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326"});
+        this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style});
 
         let allLayers = this.drawLayer.getLayers();
         allLayers.forEach(l => {
-            l.on('edit', (e) => this.onUpdateGeom(e.target, newProps));
-            l.on('moveend', (e) => this.onUpdateGeom(e.target, newProps));
+            l.on('edit', () => this.onUpdateGeom(this.drawLayer, newProps));
+            l.on('moveend', () => this.onUpdateGeom(this.drawLayer, newProps));
             if (l.editing) {
                 l.editing.enable();
             }
