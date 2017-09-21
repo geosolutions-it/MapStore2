@@ -7,19 +7,13 @@
 }
 
 #navigationBar .mapToolbar {
-    bottom: 5px !important;
+    bottom: 25px !important;
 }
 
 .leaflet-control-attribution {
-    width: 165px;
-    right: 0;
-    left: auto;
+    background-color: transparent;
 }
 
 .ol-attribution.ol-uncollapsible {
-    position: absolute;
-    bottom: 0;
-    right: 45px;
-    left: auto;
-    width: 30%;
+    background-color: transparent;
 }

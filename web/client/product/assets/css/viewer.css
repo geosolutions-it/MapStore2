@@ -70,7 +70,7 @@ html, body, #container, .fill {
 }
 
 #navigationBar .mapToolbar {
-    bottom: 35px !important;
+    bottom: 50px !important;
 }
 
 #mapstore-scalebox-container {

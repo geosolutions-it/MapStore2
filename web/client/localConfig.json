@@ -78,7 +78,7 @@
             {
                 "name": "BackgroundSelector",
                 "cfg": {
-                    "bottom": 5,
+                    "bottom": 25,
                     "dimensions": {
                     "side": 65,
                     "sidePreview": 65,
