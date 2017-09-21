@@ -49,6 +49,12 @@ describe('Test for AttributeFilter component', () => {
         const input = ReactTestUtils.findRenderedDOMComponentWithTag(cmp, "input");
         expect(input.value).toBe("TEST");
     });
+    it('render invalid', () => {
+        const cmp = ReactDOM.render(<AttributeFilter value={"TEST"} valid={false}/>, document.getElementById("container"));
+        const input = ReactTestUtils.findRenderedDOMComponentWithTag(cmp, "input");
+        expect(input.value).toBe("TEST");
+        expect( document.getElementsByClassName("has-error").length > 0).toBe(true);
+    });
     it('Test AttributeFilter onChange', () => {
         const actions = {
             onChange: () => {}

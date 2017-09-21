@@ -7,12 +7,14 @@
   */
 
 const AttributeFilter = require('./AttributeFilter');
-const {compose, withHandlers, defaultProps} = require('recompose');
+const {trim} = require('lodash');
+const {compose, withHandlers, withState, defaultProps} = require('recompose');
 
 module.exports = compose(
     defaultProps({
         onValueChange: () => {}
     }),
+    withState("valid", "setValid", true),
     withHandlers({
         onChange: props => ({value, attribute} = {}) => {
             props.onValueChange(value);
@@ -26,6 +28,11 @@ module.exports = compose(
                 operator = "<";
             } else { // handle normal values
                 newVal = parseFloat(value, 10);
+            }
+            if (isNaN(newVal) && trim(value) !== "") {
+                props.setValid(false);
+            } else {
+                props.setValid(true);
             }
             props.onChange({
                 value: isNaN(newVal) ? undefined : newVal,

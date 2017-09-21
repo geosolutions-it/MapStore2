@@ -16,7 +16,7 @@ const types = {
     "defaultFilter": (type) => withProps(() =>({type: type}))(DefaultFilter),
     "string": () => StringFilter,
     "number": () => NumberFilter,
-    "integer": () => NumberFilter,
+    "int": () => NumberFilter,
     "date": () => withProps(() =>({type: "date"}))(DateTimeFilter),
     "time": () => withProps(() =>({type: "time"}))(DateTimeFilter),
     "date-time": () => withProps(() =>({type: "date-time"}))(DateTimeFilter)

@@ -13,6 +13,7 @@ const {OverlayTrigger, Tooltip} = require('react-bootstrap');
 
 class AttributeFilter extends React.PureComponent {
     static propTypes = {
+        valid: PropTypes.bool,
         disabled: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
         value: PropTypes.any,
@@ -27,6 +28,7 @@ class AttributeFilter extends React.PureComponent {
 
     static defaultProps = {
         value: '',
+        valid: true,
         onChange: () => {},
         column: {},
         placeholderMsgId: "featuregrid.filter.placeholders.default"
@@ -51,7 +53,7 @@ class AttributeFilter extends React.PureComponent {
     render() {
         let inputKey = 'header-filter--' + this.props.column.key;
         return (
-            <div key={inputKey} className="form-group">
+            <div key={inputKey} className={`form-group${(this.props.valid ? "" : " has-error")}`}>
               {this.renderTooltip(this.renderInput())}
             </div>
         );
