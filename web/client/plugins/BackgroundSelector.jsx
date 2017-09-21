@@ -9,15 +9,14 @@
 const {connect} = require('react-redux');
 const {toggleControl, setControlProperty} = require('../actions/controls');
 const {changeLayerProperties} = require('../actions/layers');
-const {head, isEmpty} = require('lodash');
 
 const {createSelector} = require('reselect');
-const {layersSelector} = require('../selectors/layers');
+const {layersSelector, backgroundControlsSelector, currentBackgroundSelector, tempBackgroundSelector} = require('../selectors/layers');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {invalidateUnsupportedLayer} = require('../utils/LayersUtils');
 
 const {mapSelector} = require('../selectors/map');
-const backgroundControlsSelector = (state) => (state.controls && state.controls.backgroundSelector) || {};
+
 const drawerEnabledControlSelector = (state) => (state.controls && state.controls.drawer && state.controls.drawer.enabled) || false;
 
 const HYBRID = require('./background/assets/img/HYBRID.jpg');
@@ -62,12 +61,12 @@ const thumbs = {
     unknown
 };
 
-const backgroundSelector = createSelector([mapSelector, layersSelector, backgroundControlsSelector, drawerEnabledControlSelector, mapTypeSelector],
-    (map, layers, controls, drawer, maptype) => ({
+const backgroundSelector = createSelector([mapSelector, layersSelector, backgroundControlsSelector, drawerEnabledControlSelector, mapTypeSelector, currentBackgroundSelector, tempBackgroundSelector],
+    (map, layers, controls, drawer, maptype, currentLayer, tempLayer) => ({
         size: map && map.size || {width: 0, height: 0},
         layers: layers.filter((l) => l && l.group === "background").map((l) => invalidateUnsupportedLayer(l, maptype)) || [],
-        tempLayer: controls.tempLayer && !isEmpty(controls.tempLayer) ? controls.tempLayer : head(layers.filter((l) => l.visibility)) || {},
-        currentLayer: controls.currentLayer && !isEmpty(controls.currentLayer) ? controls.currentLayer : head(layers.filter((l) => l.visibility)) || {},
+        tempLayer,
+        currentLayer,
         start: controls.start || 0,
         enabled: controls.enabled && !drawer
     }));

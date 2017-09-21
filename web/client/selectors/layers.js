@@ -1,4 +1,4 @@
-/**
+/*
 * Copyright 2016, GeoSolutions Sas.
 * All rights reserved.
 *
@@ -10,9 +10,9 @@ const {createSelector} = require('reselect');
 
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const LayersUtils = require('../utils/LayersUtils');
-const {head} = require('lodash');
+const {head, isEmpty} = require('lodash');
 
-const layersSelector = state => state.layers && state.layers.flat || state.layers || state.config && state.config.layers;
+const layersSelector = state => state.layers && state.layers.flat || state.layers || state.config && state.config.layers || [];
 const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
 const getLayerFromId = (state, id) => head(layersSelector(state).filter(l => l.id === id));
 const allBackgroundLayerSelector = state => layersSelector(state).filter(l => l.group === "background");
@@ -55,6 +55,18 @@ const selectedNodesSelector = (state) => state.layers && state.layers.selected |
 const layerFilterSelector = (state) => state.layers && state.layers.filter || '';
 const layerSettingSelector = (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}};
 
+const backgroundControlsSelector = (state) => (state.controls && state.controls.backgroundSelector) || {};
+const currentBackgroundSelector = (state) => {
+    const controls = backgroundControlsSelector(state);
+    const layers = allBackgroundLayerSelector(state) || [];
+    return controls.currentLayer && !isEmpty(controls.currentLayer) ? controls.currentLayer : head(layers.filter((l) => l.visibility)) || {};
+};
+const tempBackgroundSelector = (state) => {
+    const controls = backgroundControlsSelector(state);
+    const layers = allBackgroundLayerSelector(state) || [];
+    return controls.tempLayer && !isEmpty(controls.tempLayer) ? controls.tempLayer : head(layers.filter((l) => l.visibility)) || {};
+};
+
 module.exports = {
     layersSelector,
     layerSelectorWithMarkers,
@@ -64,5 +76,8 @@ module.exports = {
     getLayerFromId,
     selectedNodesSelector,
     layerFilterSelector,
-    layerSettingSelector
+    layerSettingSelector,
+    backgroundControlsSelector,
+    currentBackgroundSelector,
+    tempBackgroundSelector
 };
