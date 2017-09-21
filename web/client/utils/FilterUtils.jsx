@@ -9,7 +9,7 @@
 const {processOGCGeometry, pointElement, polygonElement, lineStringElement } = require("./ogc/GML");
 const {wfsToGmlVersion} = require('./ogc/WFS/base');
 const {ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators} = require("./ogc/Filter/operators");
-const {isNil, isUndefined} = require('lodash');
+const {isNil, isUndefined, isArray} = require('lodash');
 
 const checkOperatorValidity = (value, operator) => {
     return (!isNil(value) && operator !== "isNull" || !isUndefined(value) && operator === "isNull");
@@ -218,7 +218,20 @@ const FilterUtils = {
 
         let spatialFilter;
         if (objFilter.spatialField && objFilter.spatialField.geometry && objFilter.spatialField.operation) {
-            spatialFilter = this.processOGCSpatialFilter(versionOGC, objFilter, nsplaceholder);
+            if (objFilter.spatialField.operation === 'BBOX' && isArray(objFilter.spatialField.geometry.extent[0])) {
+                const OP = "OR";
+                const bBoxFilter = objFilter.spatialField.geometry.extent.reduce((a, extent) => {
+                    let filter = Object.assign({}, objFilter);
+                    filter.spatialField.geometry.extent = extent;
+                    return a + this.processOGCSpatialFilter(versionOGC, filter, nsplaceholder);
+                }, '');
+
+                spatialFilter = ogcLogicalOperators[OP](nsplaceholder, bBoxFilter);
+
+            } else {
+                spatialFilter = this.processOGCSpatialFilter(versionOGC, objFilter, nsplaceholder);
+            }
+
             filters.push(spatialFilter);
         }
         if (objFilter.crossLayerFilter) {
