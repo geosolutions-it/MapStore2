@@ -11,7 +11,7 @@ module.exports = compose(
             props.onValueChange(value);
             props.onChange({
                 rawValue: value,
-                value: trim(value),
+                value: trim(value) ? trim(value) : undefined,
                 operator: "ilike",
                 type: 'string',
                 attribute

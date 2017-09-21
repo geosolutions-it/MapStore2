@@ -59,4 +59,26 @@ describe('Test for StringFilter component', () => {
         expect(args.value).toBe("test");
         expect(args.rawValue).toBe( "test  ");
     });
+    it('Test empty string trigger none', () => {
+        const actions = {
+            onChange: () => {}
+        };
+        const spyonChange = expect.spyOn(actions, 'onChange');
+        ReactDOM.render(<StringFilter onChange={actions.onChange} />, document.getElementById("container"));
+        const input = document.getElementsByClassName("form-control input-sm")[0];
+        input.value = "test";
+        ReactTestUtils.Simulate.change(input);
+        expect(spyonChange).toHaveBeenCalled();
+
+        input.value = " ";
+        ReactTestUtils.Simulate.change(input);
+        const args = spyonChange.calls[1].arguments[0];
+        expect(args.value).toBe(undefined);
+        expect(args.rawValue).toBe(" ");
+        input.value = "";
+        ReactTestUtils.Simulate.change(input);
+        const args2 = spyonChange.calls[2].arguments[0];
+        expect(args2.value).toBe(undefined);
+        expect(args2.rawValue).toBe("");
+    });
 });
