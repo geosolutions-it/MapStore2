@@ -11,11 +11,10 @@ var expect = require('expect');
 const configureMockStore = require('redux-mock-store').default;
 const {createEpicMiddleware, combineEpics } = require('redux-observable');
 const {configureMap, mapInfoLoaded} = require('../../actions/config');
-const {loginSuccess} = require('../../actions/security');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 
-const {manageAutoMapUpdate, updateMapInfoOnLogin} = require('../automapupdate');
-const rootEpic = combineEpics(manageAutoMapUpdate, updateMapInfoOnLogin);
+const {manageAutoMapUpdate} = require('../automapupdate');
+const rootEpic = combineEpics(manageAutoMapUpdate);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
@@ -29,7 +28,7 @@ describe('automapupdate Epics', () => {
         epicMiddleware.replaceEpic(rootEpic);
     });
 
-    it('update map', (done) => {
+    it('trigger update map', (done) => {
 
         let configuration = configureMap({}, "id");
 
@@ -45,31 +44,18 @@ describe('automapupdate Epics', () => {
                 const actions = store.getActions();
                 expect(actions.length).toBe(3);
                 expect(actions[2].type).toBe(SHOW_NOTIFICATION);
+                expect(actions[2].level).toBe('warning');
+                expect(actions[2].action.dispatch).toEqual({
+                    type: 'REFRESH_LAYERS',
+                    options: {bbox: true, dimensions: true, search: true, title: false},
+                    layers: []
+                });
+
             } catch (e) {
                 return done(e);
             }
             done();
-        }, 500);
-
-    });
-
-    it('update map info on login success no id', (done) => {
-
-        let login = loginSuccess("userDetails", "username", "password", "authProvider");
-        let configuration = configureMap({}, "id");
-
-        store.dispatch(configuration);
-        store.dispatch(login);
-
-        setTimeout( () => {
-            try {
-                const actions = store.getActions();
-                expect(actions.length).toBe(2);
-            } catch (e) {
-                return done(e);
-            }
-            done();
-        }, 500);
+        }, 1000);
 
     });
 });
