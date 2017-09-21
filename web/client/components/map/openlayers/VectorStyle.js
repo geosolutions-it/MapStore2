@@ -217,14 +217,14 @@ function getStyle(options) {
         if (options.style.iconUrl || options.style.iconGlyph) {
             const markerStyle = getMarkerStyle(options);
 
-            style = (feature) => {
-                const type = feature.getGeometry().getType();
+            style = function() {
+                const type = this.getGeometry().getType();
                 switch (type) {
                     case "Point":
                     case "MultiPoint":
                         return markerStyle;
                     default:
-                        return styleFunction(feature);
+                        return styleFunction(this);
                 }
             };
         } else {

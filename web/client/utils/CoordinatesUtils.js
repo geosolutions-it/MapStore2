@@ -182,6 +182,15 @@ const CoordinatesUtils = {
             srs: point.srs || 'EPSG:4326'
         };
     },
+    normalizeLng: (lng) => {
+        let tLng = lng / 360 % 1 * 360;
+        if (tLng < -180) {
+            tLng = tLng + 360;
+        } else if (tLng > 180) {
+            tLng = tLng - 360;
+        }
+        return tLng;
+    },
     /**
      * Reprojects a bounding box.
      * @param bbox {array} [minx, miny, maxx, maxy]

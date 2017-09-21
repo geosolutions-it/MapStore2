@@ -142,6 +142,7 @@ class AnnotationsInfoViewer extends React.Component {
                                 tooltip={<Message msgId="annotations.addMarker"/>}
                                 onClick={this.props.onAddGeometry}
                                 visible
+                                className="square-button-md"
                                 active={this.props.drawing}
                                 glyph="pencil-add"/>
                             <TButton
@@ -149,17 +150,21 @@ class AnnotationsInfoViewer extends React.Component {
                                 tooltip={<Message msgId="annotations.styleGeometry"/>}
                                 onClick={this.props.onStyleGeometry}
                                 visible
+                                className="square-button-md"
                                 glyph="1-stilo"/>
                             <TButton
                                 id="delete-annotation-geometry"
                                 tooltip={<Message msgId="annotations.deleteGeometry"/>}
                                 onClick={this.props.onDeleteGeometry}
                                 visible
+                                className="square-button-md"
                                 glyph="trash"/>
                         </Col>
                         <Col xs={5}>
-                            <Button bsStyle="primary" onClick={this.save}><Glyphicon glyph="floppy-disk"/>&nbsp;<Message msgId="annotations.save"/></Button>
-                            <Button bsStyle="primary" onClick={this.cancelEdit}><Glyphicon glyph="remove"/>&nbsp;<Message msgId="annotations.cancel"/></Button>
+                            <ButtonGroup id="mapstore-annotations-info-viewer-edit-buttons">
+                                <Button bsStyle="primary" onClick={this.save}><Glyphicon glyph="floppy-disk"/>&nbsp;<Message msgId="annotations.save"/></Button>
+                                <Button bsStyle="primary" onClick={this.cancelEdit}><Glyphicon glyph="remove"/>&nbsp;<Message msgId="annotations.cancel"/></Button>
+                            </ButtonGroup>
                         </Col>
             </Row>
         </Grid>);

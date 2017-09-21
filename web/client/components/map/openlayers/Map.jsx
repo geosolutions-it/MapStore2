@@ -5,26 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var ol = require('openlayers');
+const ol = require('openlayers');
 const PropTypes = require('prop-types');
-var React = require('react');
-var assign = require('object-assign');
+const React = require('react');
+const assign = require('object-assign');
 
-var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
-var ConfigUtils = require('../../../utils/ConfigUtils');
-var mapUtils = require('../../../utils/MapUtils');
+const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
+const ConfigUtils = require('../../../utils/ConfigUtils');
+const mapUtils = require('../../../utils/MapUtils');
 
 const {isEqual, throttle} = require('lodash');
-
-const normalizeLng = (lng) => {
-    let tLng = lng / 360 % 1 * 360;
-    if (tLng < -180) {
-        tLng = tLng + 360;
-    } else if (tLng > 180) {
-        tLng = tLng - 360;
-    }
-    return tLng;
-};
 
 class OpenlayersMap extends React.Component {
     static propTypes = {
@@ -133,14 +123,14 @@ class OpenlayersMap extends React.Component {
             if (this.props.onClick) {
                 let pos = event.coordinate.slice();
                 let coords = ol.proj.toLonLat(pos, this.props.projection);
-                let tLng = normalizeLng(coords[0]);
+                let tLng = CoordinatesUtils.normalizeLng(coords[0]);
                 let layerInfo;
                 map.forEachFeatureAtPixel(event.pixel, (feature, layer) => {
                     if (layer.get('handleClickOnLayer')) {
                         layerInfo = layer.get('msId');
                     }
                     coords = ol.proj.toLonLat(feature.getGeometry().getFirstCoordinate(), this.props.projection);
-                    tLng = normalizeLng(coords[0]);
+                    tLng = CoordinatesUtils.normalizeLng(coords[0]);
                 });
                 this.props.onClick({
                     pixel: {

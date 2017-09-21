@@ -145,6 +145,12 @@ class LeafletMap extends React.Component {
         this.forceUpdate();
 
         this.map.on('layeradd', (event) => {
+            // we want to run init code only the first time a layer is added to the map
+            if (event.layer._ms2Added) {
+                return;
+            }
+            event.layer._ms2Added = true;
+
             // avoid binding if not possible, e.g. for measurement vector layers
             if (!event.layer.layerId) {
                 return;
@@ -202,9 +208,6 @@ class LeafletMap extends React.Component {
                 event.layer.layerLoadingStream$.complete();
                 event.layer.layerLoadStream$.complete();
                 event.layer.layerErrorStream$.complete();
-            }
-            if (event.layer.clearAllEventListeners) {
-                event.layer.clearAllEventListeners();
             }
         });
 

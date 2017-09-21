@@ -160,6 +160,10 @@ class Feature extends React.Component {
         return null;
     }
 
+    isMarker = (props) => {
+        return props.styleName === "marker" || (props.style && (props.style.iconUrl || props.style.iconGlyph));
+    };
+
     createLayer = (props) => {
         this._layer = geometryToLayer({
             type: props.type,
@@ -168,7 +172,7 @@ class Feature extends React.Component {
             msId: props.msId
         }, {
             style: props.style,
-            pointToLayer: !props.style && props.styleName !== "marker" ? function(feature, latlng) {
+            pointToLayer: !this.isMarker(props) ? function(feature, latlng) {
                 return L.circleMarker(latlng, props.style || {
                     radius: 5,
                     color: "red",
