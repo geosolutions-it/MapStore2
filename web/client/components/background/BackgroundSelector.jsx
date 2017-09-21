@@ -8,7 +8,6 @@
 
 const React = require('react');
 const assign = require('object-assign');
-const {isEmpty} = require('lodash');
 
 const PreviewButton = require('./PreviewButton');
 const PreviewList = require('./PreviewList');
@@ -38,7 +37,7 @@ class BackgroundSelector extends React.Component {
 
     static defaultProps = {
         start: 0,
-        bottom: 35,
+        bottom: 50,
         left: 0,
         enabled: false,
         layers: [],
@@ -63,12 +62,6 @@ class BackgroundSelector extends React.Component {
 
     getThumb = (layer) => {
         return this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || layer.thumbURL || this.props.thumbs.unknown;
-    };
-
-    getLayer = () => {
-        const tempLyr = isEmpty(this.props.tempLayer) ? this.props.layers.filter((layer) => { return layer.visibility === true; })[0] : this.props.tempLayer;
-        const currentLyr = isEmpty(this.props.currentLayer) ? this.props.layers.filter((layer) => { return layer.visibility === true; })[0] : this.props.currentLayer;
-        return this.props.enabled ? tempLyr : currentLyr;
     };
 
     getIcons = (side, frame, margin, vertical) => {
@@ -105,7 +98,7 @@ class BackgroundSelector extends React.Component {
         const margin = configuration.margin;
 
         const labelHeight = this.props.enabled ? sideButton - frame * 2 : 0;
-        const layer = this.getLayer();
+        const layer = this.props.enabled ? this.props.tempLayer : this.props.currentLayer;
         const src = this.getThumb(layer);
         const icons = this.getIcons(side, frame, margin, configuration.vertical);
 

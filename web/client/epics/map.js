@@ -22,7 +22,10 @@ const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
     // added delay because the CREATION_ERROR_LAYER needs to be initialized after MAP_CONFIG_LOADED
     .delay(500)
-    .filter(a => a.options.id === currentBackgroundLayerSelector(store.getState()).id && a.options.group === "background")
+    .filter(a => {
+        const currentBackground = currentBackgroundLayerSelector(store.getState());
+        return currentBackground && a.options.id === currentBackground.id && a.options.group === "background";
+    })
     .switchMap((a) => {
         const maptype = mapTypeSelector(store.getState());
         // consider only the supported backgrounds, removing the layer that generated an error on creation
