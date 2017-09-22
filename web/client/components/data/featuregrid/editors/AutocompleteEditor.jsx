@@ -92,7 +92,7 @@ class AutocompleteEditor extends AttributeEditor {
                         layerName: p.typeName,
                         maxFeatures: p.maxFeaturesWPS,
                         startIndex: (p.currentPage - 1) * p.maxFeaturesWPS,
-                        value: p.autocompleteProps.value
+                        value: p.value
                     });
                 return Rx.Observable.fromPromise(
                     axios.post(p.url, data, {
@@ -100,32 +100,54 @@ class AutocompleteEditor extends AttributeEditor {
                         headers: {'Accept': 'application/json', 'Content-Type': 'application/xml'}
                     }).then(response => { return {fetchedData: response.data, props: p}; }));
             }).startWith({values: {}});
-            const timeElapsed$ = Rx.Observable.interval(2000).map((time) => ({busy: time % 4 === 0})).startWith({busy: false});
+            const timeElapsed$ = Rx.Observable.interval(2000).take(1).map((time) => ({busy: time % 4 === 0})).startWith({busy: true});
 
-            return fetchingData.combineLatest(timeElapsed$, (data, {busy}) => ({
+            return fetchingData.combineLatest(timeElapsed$, (data, {}) => ({
                 data: isArray(data && data.fetchedData && data.fetchedData.values) ? data.fetchedData.values.map(v => {return {label: v, value: v}; }) : [],
                 valuesCount: data && data.fetchedData && data.fetchedData.size,
                 currentPage: data && data.props && data.props.currentPage,
                 prevValue: data && data.props && data.props.autocompleteProps && data.props.autocompleteProps.value,
-                busy
+                maxFeatures: data && data.props && data.props.maxFeaturesWPS,
+                increment: data && data.props && data.props.increment,
+                select: data && data.props && data.props.select,
+                decrement: data && data.props && data.props.decrement,
+                change: data && data.props && data.props.change,
+                selected: data && data.props && data.props.selected,
+                value: data && data.props && data.props.value,
+                busy: false
             }));
         });
 
-        // component enhanced with propsform stream, store, and from local state
-        const AutocompleteEnhanced = autocompleteEnhancer(({increment, onFocus, currentPage, busy, data, prevValue, loading = false }) => {
-            return (<PagedCombobox pagination={{firstPage: currentPage === 1, paginated: true}}
-                onFocus={onFocus} busy={busy} dropUp={false} data={data} onFocus={increment} selectedValue={data[0] && data[0].value || prevValue} loading={loading}/>);
+        // component enhanced with props from stream, store, and local state
+        const AutocompleteEnhanced = autocompleteEnhancer(({select, increment, decrement, change, value, valuesCount, maxFeatures, currentPage, busy, data, loading = false }) => {
+            const numberOfPages = Math.ceil(valuesCount / maxFeatures);
+            return (<PagedCombobox
+                pagination={{firstPage: currentPage === 1, lastPage: currentPage === numberOfPages, paginated: true,
+                    nextPageIcon: "chevron-right", prevPageIcon: "chevron-left",
+                    loadPrevPage: () => {}, loadNextPage: () => {}}}
+                busy={busy} dropUp={false} data={data}
+                onFocus={decrement} onToggle={increment} onChange={change} onSelect={select}
+                selectedValue={value} loading={loading}/>);
         });
         // state enhancer for local props
         const addCounting = compose(
             withState('currentPage', 'setCounter', 1),
+            withState('value', 'setValue', this.props.value),
+            withState('selected', 'setSelected', false),
             withHandlers({
                 increment: ({ setCounter }) => () => setCounter(n => n + 1),
+                change: (props) => (n) => {
+                    if (props.selected) {
+                        props.setSelected(() => false);
+                        props.setValue(() => n);
+                    }
+
+                },
+                select: (props) => () => props.setSelected(() => true),
                 decrement: ({ setCounter }) => () => setCounter(n => n - 1)
           })
         );
-        // connected an "state enhanced" Autocomplete component
-
+        // connecting a "state enhanced" Autocomplete component to the store
         const ConnectedPagedCombobox = connect(autocompleteEditorSelector, {},
             (stateProps, dispatchProps, ownProps) => ({
                 ...stateProps,

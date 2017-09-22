@@ -12,6 +12,8 @@ const Combobox = require('react-widgets').Combobox;
 const {Glyphicon, Tooltip} = require('react-bootstrap');
 const LocaleUtils = require('../../utils/LocaleUtils');
 const OverlayTrigger = require('./OverlayTrigger');
+const AutocompleteListItem = require('../data/query/AutocompleteListItem');
+
 /**
  * Combobox with remote autocomplete functionality.
  * @memberof components.query
@@ -52,6 +54,7 @@ class PagedCombobox extends React.Component {
 
     static defaultProps = {
         dropUp: false,
+        itemComponent: AutocompleteListItem,
         loading: false,
         label: null,
         pagination: {
