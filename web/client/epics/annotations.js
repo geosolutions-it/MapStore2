@@ -85,9 +85,7 @@ module.exports = (viewer) => ({
                     handleClickOnLayer: true
                 }));
             }
-            return Rx.Observable.of(updateNode(
-                'annotations', 'layer', { rowViewer: viewer }
-            ));
+            return Rx.Observable.of(updateNode('annotations', 'layer', { rowViewer: viewer }));
         }),
     editAnnotationEpic: (action$, store) =>
         action$.ofType(EDIT_ANNOTATION)
@@ -119,8 +117,8 @@ module.exports = (viewer) => ({
                 updateNode('annotations', 'layer', {
                     features: head(store.getState().layers.flat.filter(l => l.id === 'annotations')).features.map(f => assign({}, f, {
                         properties: f.properties.id === action.id ? assign({}, f.properties, action.fields) : f.properties,
-                        geometry: f.properties.id === action.id ? action.geometry : f.geometry,
-                        style: f.properties.id === action.id ? action.style : f.style
+                            geometry: f.properties.id === action.id ? action.geometry : f.geometry,
+                            style: f.properties.id === action.id ? action.style : f.style
                     }))
                 }),
                 changeDrawingStatus("clean", 'MultiPoint', "annotations", [], {}),

@@ -12,7 +12,8 @@ const annotations = require('../annotations');
 const {
     REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION,
     EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION, SAVE_ANNOTATION, TOGGLE_ADD,
-    UPDATE_ANNOTATION_GEOMETRY, VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY
+    UPDATE_ANNOTATION_GEOMETRY, VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY,
+    TOGGLE_STYLE, SET_STYLE
  } = require('../../actions/annotations');
 
 describe('Test the annotations reducer', () => {
@@ -136,5 +137,27 @@ describe('Test the annotations reducer', () => {
             type: REMOVE_ANNOTATION_GEOMETRY
         });
         expect(state.removing).toBe('geometry');
+    });
+
+    it('toggle style off ', () => {
+        const state = annotations({styling: true}, {
+            type: TOGGLE_STYLE
+        });
+        expect(state.styling).toBe(false);
+    });
+
+    it('toggle style on ', () => {
+        const state = annotations({styling: false, editing: {}}, {
+            type: TOGGLE_STYLE
+        });
+        expect(state.styling).toBe(true);
+    });
+
+    it('set style ', () => {
+        const state = annotations({styling: false, editing: {}}, {
+            type: SET_STYLE,
+            style: {}
+        });
+        expect(state.editing.style).toExist();
     });
 });
