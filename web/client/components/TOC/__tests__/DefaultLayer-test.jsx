@@ -149,7 +149,7 @@ describe('test DefaultLayer module component', () => {
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
-        const opacity = domNode.getElementsByClassName("toc-full-title")[1];
+        const opacity = domNode.getElementsByClassName("noUi-tooltip")[0];
         expect(opacity.innerHTML).toBe('100 %');
         const tool = domNode.getElementsByClassName("noUi-target")[0];
         expect(tool).toExist();
@@ -171,7 +171,7 @@ describe('test DefaultLayer module component', () => {
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
-        const opacity = domNode.getElementsByClassName("toc-full-title")[1];
+        const opacity = domNode.getElementsByClassName("noUi-tooltip")[0];
         expect(opacity.innerHTML).toBe('50 %');
         const tool = domNode.getElementsByClassName("noUi-target")[0];
         expect(tool).toExist();
