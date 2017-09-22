@@ -8,6 +8,7 @@
 
 const Layers = require('../../../../utils/leaflet/Layers');
 const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
+const FilterUtils = require('../../../../utils/FilterUtils');
 const WMSUtils = require('../../../../utils/leaflet/WMSUtils');
 const L = require('leaflet');
 const objectAssign = require('object-assign');
@@ -15,6 +16,34 @@ const {isArray, isEqual} = require('lodash');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 require('leaflet.nontiledlayer');
 
+L.NonTiledLayer.WMSCustom = L.NonTiledLayer.WMS.extend({
+    initialize: function(url, options) { // (String, Object)
+        this._wmsUrl = url;
+
+        let wmsParams = L.extend({}, this.defaultWmsParams);
+
+            // all keys that are not NonTiledLayer options go to WMS params
+        for (let i in options) {
+            if (!this.options.hasOwnProperty(i) && i.toUpperCase() !== 'CRS' && i !== "maxNativeZoom") {
+                wmsParams[i] = options[i];
+            }
+        }
+
+        this.wmsParams = wmsParams;
+
+        L.setOptions(this, options);
+    },
+    removeParams: function(params = [], noRedraw) {
+        params.forEach( key => delete this.wmsParams[key]);
+        if (!noRedraw) {
+            this.redraw();
+        }
+        return this;
+    }
+});
+L.nonTiledLayer.wmsCustom = function(url, options) {
+    return new L.NonTiledLayer.WMSCustom(url, options);
+};
 
 L.TileLayer.MultipleUrlWMS = L.TileLayer.WMS.extend({
     initialize: function(urls, options) {
@@ -60,6 +89,13 @@ L.TileLayer.MultipleUrlWMS = L.TileLayer.WMS.extend({
         const url = L.Util.template(this._urls[this._urlsIndex], {s: this._getSubdomain(tilePoint)});
 
         return url + L.Util.getParamString(this.wmsParams, url, true) + '&BBOX=' + bbox;
+    },
+    removeParams: function(params = [], noRedraw) {
+        params.forEach( key => delete this.wmsParams[key]);
+        if (!noRedraw) {
+            this.redraw();
+        }
+        return this;
     }
 });
 
@@ -69,6 +105,7 @@ L.tileLayer.multipleUrlWMS = function(urls, options) {
 
 function wmsToLeafletOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
+    const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
     // NOTE: can we use opacity to manage visibility?
     return objectAssign({}, options.baseParams, {
         layers: options.name,
@@ -85,6 +122,7 @@ function wmsToLeafletOptions(options) {
         maxZoom: options.maxZoom || 23,
         maxNativeZoom: options.maxNativeZoom || 18
     }, objectAssign(
+        (CQL_FILTER ? {CQL_FILTER} : {}),
         (options._v_ ? {_v_: options._v_} : {}),
         (options.params || {})
     ));
@@ -100,7 +138,7 @@ Layers.registerType('wms', {
         const queryParameters = wmsToLeafletOptions(options) || {};
         urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
         if (options.singleTile) {
-            return L.nonTiledLayer.wms(urls[0], queryParameters);
+            return L.nonTiledLayer.wmsCustom(urls[0], queryParameters);
         }
         return L.tileLayer.multipleUrlWMS(urls, queryParameters);
     },
@@ -109,6 +147,7 @@ Layers.registerType('wms', {
         let oldqueryParameters = WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(oldOptions));
         let newQueryParameters = WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(newOptions));
         let newParameters = Object.keys(newQueryParameters).filter((key) => {return newQueryParameters[key] !== oldqueryParameters[key]; });
+        let removeParams = Object.keys(oldqueryParameters).filter((key) => { return oldqueryParameters[key] !== newQueryParameters[key]; });
         let newParams = {};
         let newLayer;
         if (oldOptions.singleTile !== newOptions.singleTile) {
@@ -116,7 +155,7 @@ Layers.registerType('wms', {
             urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, newQueryParameters));
             if (newOptions.singleTile) {
                 // return the nonTiledLayer
-                newLayer = L.nonTiledLayer.wms(urls[0], newQueryParameters);
+                newLayer = L.nonTiledLayer.wmsCustom(urls[0], newQueryParameters);
             } else {
                 newLayer = L.tileLayer.multipleUrlWMS(urls, newQueryParameters);
             }
@@ -130,6 +169,9 @@ Layers.registerType('wms', {
                 newLayer.setParams(newOptions.params);
             }
             return newLayer;
+        }
+        if (removeParams.length > 0) {
+            layer.removeParams(removeParams, newParameters.length > 0);
         }
         if ( newParameters.length > 0 ) {
             newParams = newParameters.reduce( (accumulator, currentValue) => {

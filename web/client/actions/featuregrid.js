@@ -48,6 +48,9 @@ const MODES = {
     EDIT: "EDIT",
     VIEW: "VIEW"
 };
+const START_SYNC_WMS = 'FEATUREGRID:START_SYNC_WMS';
+const STOP_SYNC_WMS = 'FEATUREGRID:STOP_SYNC_WMS';
+
 
 function clearChangeConfirmed() {
     return {
@@ -332,5 +335,7 @@ module.exports = {
     toggleTool,
     customizeAttribute,
     toggleEditMode,
-    toggleViewMode
+    toggleViewMode,
+    START_SYNC_WMS,
+    STOP_SYNC_WMS
 };

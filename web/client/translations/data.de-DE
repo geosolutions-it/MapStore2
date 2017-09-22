@@ -919,7 +919,8 @@
                 "deleteGeometry": "Geometrie löschen",
                 "downloadGridData": "Daten herunterladen",
                 "hideShowColumns": "Spalten ausblenden / anzeigen",
-                "zoomAll": "Zoom zur Erweterung der Seite"
+                "zoomAll": "Zoom zur Erweterung der Seite",
+                "syncOnMap": "Karte mit Filter synchronisieren"
             }
         },
         "wfsdownload": {

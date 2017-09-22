@@ -17,7 +17,8 @@ const {
     QUERY_RESULT,
     QUERY_ERROR,
     RESET_QUERY,
-    UPDATE_QUERY
+    UPDATE_QUERY,
+    TOGGLE_SYNC_WMS
 } = require('../actions/wfsquery');
 
 const {QUERY_FORM_RESET} = require('../actions/queryform');
@@ -48,7 +49,8 @@ const initialState = {
     featureTypes: {},
     data: {},
     result: null,
-    resultError: null
+    resultError: null,
+    syncWmsFilter: false
 };
 
 function query(state = initialState, action) {
@@ -131,6 +133,8 @@ function query(state = initialState, action) {
             resultError: null
         });
     }
+    case TOGGLE_SYNC_WMS:
+        return assign({}, state, {syncWmsFilter: !state.syncWmsFilter});
     default:
         return state;
     }

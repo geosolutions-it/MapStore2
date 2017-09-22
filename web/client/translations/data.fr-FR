@@ -923,7 +923,8 @@
                 "deleteGeometry": "Supprimer la géométrie",
                 "downloadGridData": "Télécharger les données",
                 "hideShowColumns": "Masquer / afficher les colonnes",
-                "zoomAll": "Zoom sur la page"
+                "zoomAll": "Zoom sur la page",
+                "syncOnMap": "Synchroniser la carte avec un filtre"
             }
         },
         "wfsdownload": {
