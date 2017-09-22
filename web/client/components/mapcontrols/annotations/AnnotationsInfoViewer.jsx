@@ -236,18 +236,18 @@ class AnnotationsInfoViewer extends React.Component {
                 return <div className={"mapstore-annotations-info-viewer-marker-group mapstore-annotations-info-viewer-marker-" + prefix + marker.name}>{this.renderMarkers(marker.markers, marker.name + '-')}</div>;
             }
             return (<div onClick={() => this.selectStyle(marker)} className={"mapstore-annotations-info-viewer-marker mapstore-annotations-info-viewer-marker-" + prefix + marker.name + (this.isCurrentStyle(marker) ? " mapstore-annotations-info-viewer-marker-selected" : "")} style={{
-                    backgroundImage: "url(" + this.props.markerIcon + ")",
-                    width: marker.width + "px",
-                    height: marker.height + "px",
-                    backgroundPositionX: marker.offsets[0],
-                    backgroundPositionY: marker.offsets[1],
-                    cursor: "pointer"
-                }}/>);
+                backgroundImage: "url(" + this.props.markerIcon + ")",
+                width: marker.width + "px",
+                height: marker.height + "px",
+                backgroundPositionX: marker.offsets[0],
+                backgroundPositionY: marker.offsets[1],
+                cursor: "pointer"
+            }}/>);
         });
     };
 
     renderStyler = () => {
-        const glyphRenderer = (option) => (<div><span className={"fa fa-" + option.value}></span><span> {option.label}</span></div>);
+        const glyphRenderer = (option) => (<div><span className={"fa fa-" + option.value}/><span> {option.label}</span></div>);
         return (<div className="mapstore-annotations-info-viewer-styler">
             <div className="mapstore-annotations-info-viewer-markers">{this.renderMarkers(this.props.markers)}</div>
             <Select

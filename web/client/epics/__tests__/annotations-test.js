@@ -19,8 +19,8 @@ const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnota
 
 const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
     cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawMarkerEpic, setStyleEpic, restoreStyleEpic} = require('../annotations')({});
-const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, setStyleEpic, cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawMarkerEpic,
-restoreStyleEpic);
+const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
+    setStyleEpic, cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawMarkerEpic, restoreStyleEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 

@@ -15,7 +15,8 @@ const {Glyphicon} = require('react-bootstrap');
 const {toggleControl} = require('../actions/controls');
 
 const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, removeAnnotation, cancelEditAnnotation,
-        saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry, toggleStyle, setStyle, restoreStyle} = require('../actions/annotations');
+    saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry, toggleStyle, setStyle, restoreStyle} =
+    require('../actions/annotations');
 /**
   * Annotations Plugin. Implements annotations handling on maps.
   * Adds:

@@ -86,9 +86,7 @@ module.exports = (viewer) => ({
                 }));
             }
             return Rx.Observable.of(updateNode(
-                'annotations', 'layer', {
-                    rowViewer: viewer
-                }
+                'annotations', 'layer', { rowViewer: viewer }
             ));
         }),
     editAnnotationEpic: (action$, store) =>
