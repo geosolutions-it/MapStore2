@@ -126,7 +126,7 @@ class OpenlayersMap extends React.Component {
                 let tLng = CoordinatesUtils.normalizeLng(coords[0]);
                 let layerInfo;
                 map.forEachFeatureAtPixel(event.pixel, (feature, layer) => {
-                    if (layer.get('handleClickOnLayer')) {
+                    if (layer && layer.get('handleClickOnLayer')) {
                         layerInfo = layer.get('msId');
                     }
                     coords = ol.proj.toLonLat(feature.getGeometry().getFirstCoordinate(), this.props.projection);

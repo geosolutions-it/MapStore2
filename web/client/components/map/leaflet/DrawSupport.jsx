@@ -165,9 +165,9 @@ class DrawSupport extends React.Component {
         if (this.props.options && this.props.options.stopAfterDrawing) {
             this.props.onChangeDrawingStatus('stop', this.props.drawMethod, this.props.drawOwner);
         }
-        const newGeoJsonFt = this.convertFeaturesToGeoJson(this.drawLayer, this.props);
+        const newGeoJsonFt = this.convertFeaturesToGeoJson(evt.layer, this.props);
         this.props.onEndDrawing(geometry, this.props.drawOwner);
-        this.props.onGeometryChanged(newGeoJsonFt.features, this.props.drawOwner, this.props.options && this.props.options.stopAfterDrawing ? "enterEditMode" : "");
+        this.props.onGeometryChanged([newGeoJsonFt], this.props.drawOwner, this.props.options && this.props.options.stopAfterDrawing ? "enterEditMode" : "");
     };
 
     onUpdateGeom = (features, props) => {

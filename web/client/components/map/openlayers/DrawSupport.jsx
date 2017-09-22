@@ -560,7 +560,7 @@ class DrawSupport extends React.Component {
             strokeColor = '#4a90e2';
         }
 
-        if (style.iconUrl || style.iconGlyph) {
+        if (style && (style.iconUrl || style.iconGlyph)) {
             return VectorStyle.getMarkerStyle({
                 style
             });
