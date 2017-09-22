@@ -10,33 +10,13 @@ const Rx = require('rxjs');
 const axios = require('../libs/ajax');
 const {UPDATE_FILTER_FIELD, updateFilterFieldOptions, loadingFilterFieldOptions, setAutocompleteMode, toggleMenu} = require('../actions/queryform');
 const {FEATURE_TYPE_SELECTED} = require('../actions/wfsquery');
-const {getRequestBody, getRequestBodyWithFilter} = require('../utils/ogc/WPS/autocomplete');
-const {isArray, startsWith, endsWith} = require('lodash');
+const {getWpsPayload} = require('../utils/ogc/WPS/autocomplete');
+const {isArray, startsWith} = require('lodash');
 const {error} = require('../actions/notifications');
-const urlUtil = require('url');
-const assign = require('object-assign');
+const {typeNameSelector} = require('../selectors/query');
+const {maxFeaturesWPSSelector} = require('../selectors/queryform');
+const {getParsedUrl} = require('../utils/ConfigUtils');
 
-// create wps request body
-function getWpsPayload(options) {
-    return options.value ? getRequestBodyWithFilter(options) : getRequestBody(options);
-}
-
-function getParsedUrl(url, options) {
-    if (url) {
-        const parsed = urlUtil.parse(url, true);
-        let newPathname = null;
-        if (endsWith(parsed.pathname, "wfs") || endsWith(parsed.pathname, "wms") || endsWith(parsed.pathname, "ows")) {
-            newPathname = parsed.pathname.replace(/(wms|ows|wfs|wps)$/, "wps");
-            return urlUtil.format(assign({}, parsed, {search: null, pathname: newPathname }, {
-                    query: assign({
-                        service: "WPS",
-                        ...options
-                    }, parsed.query)
-                }));
-        }
-    }
-    return null;
-}
    /**
     * Epics for WFS query requests
     * @name epics.wfsquery
@@ -75,8 +55,8 @@ module.exports = {
             .filter( (action) => action.fieldName === "value" && action.fieldType === "string" && store.getState().queryform.autocompleteEnabled )
             .switchMap((action) => {
                 const state = store.getState();
-                const maxFeaturesWPS = state.queryform.maxFeaturesWPS;
-                const filterField = state.queryform.filterFields.filter((f) => f.rowId === action.rowId)[0];
+                const maxFeaturesWPS = maxFeaturesWPSSelector(state);
+                const filterField = state.queryform && state.queryform.filterFields && state.queryform.filterFields.filter((f) => f.rowId === action.rowId)[0];
 
                 if (action.fieldOptions.selected === "selected") {
                     return Rx.Observable.from([
@@ -85,7 +65,7 @@ module.exports = {
                 }
                 const data = getWpsPayload({
                         attribute: filterField.attribute,
-                        layerName: state.query.typeName,
+                        layerName: typeNameSelector(state),
                         maxFeatures: maxFeaturesWPS,
                         startIndex: (action.fieldOptions.currentPage - 1) * maxFeaturesWPS,
                         value: action.fieldValue

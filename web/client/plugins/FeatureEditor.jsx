@@ -52,6 +52,7 @@ const FeatureDock = (props = {
             footer={getFooter(props)}>
             {getDialogs(props.tools)}
             <Grid
+                autocompleteEnabled={props.autocompleteEnabled}
                 filterRenderers={getFilterRenderers(props.describe)}
                 enableColumnFilters={props.enableColumnFilters}
                 emptyRowsView={getEmptyRowsView()}
@@ -75,6 +76,7 @@ const FeatureDock = (props = {
 };
 const selector = createSelector(
     state => get(state, "featuregrid.open"),
+    state => get(state, "queryform.autocompleteEnabled"),
     resultsSelector,
     describeSelector,
     state => get(state, "featuregrid.attributes"),
@@ -86,8 +88,9 @@ const selector = createSelector(
     hasChangesSelector,
     state => get(state, 'featuregrid.focusOnEdit') || [],
     state => get(state, 'featuregrid.enableColumnFilters'),
-    (open, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters) => ({
+    (open, autocompleteEnabled, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters) => ({
         open,
+        autocompleteEnabled,
         hasChanges,
         newFeatures,
         features,
