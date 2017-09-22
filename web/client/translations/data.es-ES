@@ -220,9 +220,6 @@
             }
         },
         "toc": {
-            "fullTitle": "Full title",
-            "opacity": "Opacity",
-            "legend": "Legend",
             "toggleLayerVisibility": "Activar / desactivar la visibilidad del mapa",
             "displayLegendAndTools": "Mostrar la leyenda y las herramientas",
             "zoomToLayerExtent": "Zoom sobre la extensión del mapa",

@@ -218,9 +218,6 @@
             }
         },
         "toc": {
-            "fullTitle": "Titolo completo",
-            "opacity": "Opacità",
-            "legend": "Legenda",
             "toggleLayerVisibility": "Attiva o disattiva la visibilità del livello",
             "displayLegendAndTools": "Visualizza legenda e strumenti aggiuntivi",
             "zoomToLayerExtent": "Zoom all' estensione del livello",

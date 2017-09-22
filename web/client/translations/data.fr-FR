@@ -220,9 +220,6 @@
             }
         },
         "toc": {
-            "fullTitle": "Full title",
-            "opacity": "Opacity",
-            "legend": "Legend",
             "toggleLayerVisibility": "Activer / désactiver la visibilité du calque",
             "displayLegendAndTools": "Afficher la légende et les outils",
             "zoomToLayerExtent": "Zoomer sur l'étendue du calque",

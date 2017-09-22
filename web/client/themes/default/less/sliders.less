@@ -1,37 +1,58 @@
 .noUi-target {
     height: 4px !important;
-    margin: 10px 0 !important;
+    margin: 10px 0;
     border-color: none !important;
-    cursor: pointer !important;
-    background-color: lighten(@ms2-color-primary, 10%) !important;
+    cursor: pointer;
+    background-color: lighten(@ms2-color-primary, 10%);
     &.noUi-horizontal {
-        border-radius: 0 !important;
-        border: none !important;
+        border-radius: 0;
+        border: none;
         .noUi-base {
             .noUi-origin {
-                background-color: @ms2-color-shade-lighter !important;
+                background-color: @ms2-color-shade-lighter;
                 .noUi-handle {
                     width: @square-btn-small-size !important;
                     height: @square-btn-small-size !important;
                     left: - (@square-btn-small-size - 4) !important;
                     top: -((@square-btn-small-size - 4) / 2) !important;
-                    -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24) !important;
-        	       -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24) !important;
-        	       box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24) !important;
-                    border: none !important;
-                    background-color: @ms2-color-primary !important;
+                    -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
+        	        -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
+        	        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
+                    border: none;
+                    background-color: @ms2-color-primary;
                     cursor: pointer !important;
-                    border-radius: 0 !important;
+                    border-radius: @border-radius-base !important;
+                    .noUi-tooltip {
+                        top: 0;
+                        left: @square-btn-small-size / 2;
+                        transform: translate(-50%, 0);
+                        padding: 0;
+                        font-size: @font-size-small;
+                        border: none;
+                        border-radius: @border-radius-base;
+                        background-color: @ms2-color-primary;
+                        color: @ms2-color-text-primary;
+                        height: @square-btn-small-size;
+                        line-height: @square-btn-small-size;
+                        -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
+            	        -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
+            	        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
+                        cursor: pointer;
+                        &:hover {
+                            background-color: darken(@ms2-color-primary, 10%);
+                        }
+                    }
+
                     &:hover {
-                        background-color: darken(@ms2-color-primary, 10%) !important;
+                        background-color: darken(@ms2-color-primary, 10%);
                     }
                     &:before,
                     &:after {
-                        height: @square-btn-small-size !important;
-                        width: @square-btn-small-size !important;
-                        background: transparent !important;
-                        left: 0 !important;
-                        top: 0 !important;
+                        height: @square-btn-small-size;
+                        width: @square-btn-small-size;
+                        background: transparent;
+                        left: 0;
+                        top: 0;
                     }
                     &:before {
                         font-family: 'mapstore2';
@@ -45,20 +66,21 @@
 }
 
 .noUi-target[disabled="true"] {
-    background-color: lighten(@ms2-color-shade-light, 5%) !important;
-    cursor: not-allowed !important;
+    cursor: not-allowed;
     &.noUi-horizontal {
         .noUi-base {
             .noUi-origin {
-                background-color: @ms2-color-shade-lighter !important;
                 .noUi-handle {
                     cursor: not-allowed !important;
-                    background-color: @ms2-color-shade-light !important;
-                    &:hover {
-                        background-color: @ms2-color-shade-light !important;
+                    .noUi-tooltip {
+                        &:hover {
+                            cursor: not-allowed;
+                            background-color: @ms2-color-primary;
+                        }
                     }
-                    &:before {
-                        color: @ms2-color-text-primary;
+                    &:hover {
+                        cursor: not-allowed;
+                        background-color: @ms2-color-primary;
                     }
                 }
             }
@@ -66,10 +88,23 @@
     }
 }
 
-.slider-opacity {
-    .noUi-handle {
-        &:before {
-            content: "\00a3" !important;
+.mapstore-slider {
+    &.with-tooltip {
+        .noUi-handle {
+            -webkit-box-shadow: none !important;
+            -moz-box-shadow: none !important;
+            box-shadow: none !important;
+            &:before,
+            &:after {
+                display: none;
+            }
+        }
+    }
+    &.slider-opacity {
+        .noUi-handle {
+            &:before {
+                content: "\00a3";
+            }
         }
     }
 }
