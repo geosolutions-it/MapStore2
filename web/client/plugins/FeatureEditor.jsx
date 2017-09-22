@@ -15,7 +15,7 @@ const Grid = require('../components/data/featuregrid/FeatureGrid');
 const {resultsSelector, describeSelector} = require('../selectors/query');
 const {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedFeaturesSelector} = require('../selectors/featuregrid');
 const { toChangesMap} = require('../utils/FeatureGridUtils');
-const {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView} = require('./featuregrid/panels/index');
+const {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} = require('./featuregrid/panels/index');
 const BorderLayout = require('../components/layout/BorderLayout');
 const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
@@ -52,6 +52,8 @@ const FeatureDock = (props = {
             footer={getFooter(props)}>
             {getDialogs(props.tools)}
             <Grid
+                filterRenderers={getFilterRenderers(props.describe)}
+                enableColumnFilters={props.enableColumnFilters}
                 emptyRowsView={getEmptyRowsView()}
                 focusOnEdit={props.focusOnEdit}
                 newFeatures={props.newFeatures}
@@ -83,7 +85,8 @@ const selector = createSelector(
     newFeaturesSelector,
     hasChangesSelector,
     state => get(state, 'featuregrid.focusOnEdit') || [],
-    (open, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit) => ({
+    state => get(state, 'featuregrid.enableColumnFilters'),
+    (open, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters) => ({
         open,
         hasChanges,
         newFeatures,
@@ -94,6 +97,7 @@ const selector = createSelector(
         select,
         mode,
         focusOnEdit,
+        enableColumnFilters,
         changes: toChangesMap(changes)
     })
 );
@@ -106,6 +110,15 @@ const EditorPlugin = connect(selector, (dispatch) => ({
         events: bindActionCreators(t.events, dispatch)
     }))
 }))(FeatureDock);
+
+
+/**
+  * FeatureEditor Plugin. Provides functionalities to browse/edit data via WFS.
+  * @class  FeatureEditor
+  * @memberof plugins
+  * @static
+  *
+  */
 module.exports = {
      FeatureEditorPlugin: EditorPlugin,
      epics: require('../epics/featuregrid'),

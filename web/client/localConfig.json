@@ -78,7 +78,7 @@
             {
                 "name": "BackgroundSelector",
                 "cfg": {
-                    "bottom": 5,
+                    "bottom": 25,
                     "dimensions": {
                     "side": 65,
                     "sidePreview": 65,
@@ -117,7 +117,13 @@
                         "alwaysVisible": true
                     }
                 }
-            }, "Home", "TOC", {
+            }, "Home", {
+                "name": "TOC",
+                "cfg": {
+                    "activateMapTitle": false,
+                    "activateSortLayer": false
+                }
+            }, {
                 "name": "Tutorial",
                 "cfg": {
                     "preset": "default_mobile_tutorial"
@@ -184,13 +190,18 @@
                 }
               }
             }
-          }, "AutoMapUpdate", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", "BackgroundSelector",
+          }, "AutoMapUpdate", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Annotations",
             {
                 "name": "Identify",
                 "cfg": {
+                    "panelClassName": "mapstore-right-panel modal-content",
+                    "draggable": false,
+                    "collapsible": true,
                     "viewerOptions": {
                         "container": "{context.ReactSwipe}",
                         "header": "{context.SwipeHeader}",
+                        "draggable": false,
+                        "collapsible": false,
                         "headerOptions": {
                             "useButtons": true
                         }

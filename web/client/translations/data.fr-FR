@@ -93,6 +93,7 @@
         "gohome": "Retour",
         "back": "Back to the Importer",
         "printbutton": "Imprimer",
+        "annotationsbutton": "Annotations",
         "noresultfound": "Aucun résultat trouvé",
         "save": "Enregistrer",
         "saveAs": "Enregistrer sous",
@@ -574,6 +575,22 @@
                 }
             }
         },
+        "annotations": {
+            "edit": "Modifier",
+            "remove": "Effacer",
+            "save": "Enregistrer",
+            "cancel": "Annuler",
+            "addMarker": "Ajouter un nouveau point sur la carte",
+            "styleGeometry": "Choisissez un style différent pour les points",
+            "deleteGeometry": "Supprimer les points existants",
+            "removeannotation": "Voulez-vous supprimer l'annotation?",
+            "removegeometry": "Voulez-vous supprimer tous les points d'annotation?",
+            "confirm": "confirmer",
+            "field": {
+                "title": "titre",
+                "description": "Description"
+            }
+        },
         "user":{
             "login": "Login",
             "logout": "Logout",
@@ -879,6 +896,19 @@
             "featureClose":"Vraiment, vous voulez fermer la grille?",
             "delete": "Valider pour supprimer les éléments?",
             "missingGeometry": "Missing geometry",
+            "filter": {
+                "placeholders": {
+                    "default": "Recherche...",
+                    "string": "Tapez le texte à filtrer...",
+                    "number": "Tapez un nombre ou une expression..."
+                },
+                "tooltips": {
+                    "editMode": "La recherche rapide n'est pas disponible en mode édition",
+                    "default": "Recherche...",
+                    "string": "Tapez le texte à filtrer...",
+                    "number": "Tapez un nombre ou une expression..."
+                }
+            },
             "toolbar": {
                 "editMode": "Mode édition",
                 "advancedFilter": "Recherche Avancée",
@@ -896,7 +926,8 @@
                 "deleteGeometry": "Supprimer la géométrie",
                 "downloadGridData": "Télécharger les données",
                 "hideShowColumns": "Masquer / afficher les colonnes",
-                "zoomAll": "Zoom sur la page"
+                "zoomAll": "Zoom sur la page",
+                "syncOnMap": "Synchroniser la carte avec un filtre"
             }
         },
         "wfsdownload": {

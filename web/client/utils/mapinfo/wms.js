@@ -9,7 +9,7 @@
 const MapUtils = require('../MapUtils');
 const CoordinatesUtils = require('../CoordinatesUtils');
 const {isArray, isObject, head} = require('lodash');
-
+const FilterUtils = require('../FilterUtils');
 const assign = require('object-assign');
 
 module.exports = {
@@ -36,7 +36,7 @@ module.exports = {
 
         const locale = props.currentLocale ? head(props.currentLocale.split('-')) : null;
         const ENV = locale ? 'locale:' + locale : '';
-
+        const CQL_FILTER = FilterUtils.isFilterValid(layer.filterObj) && FilterUtils.toCQLFilter(layer.filterObj);
         return {
             request: {
                 service: 'WMS',
@@ -59,7 +59,7 @@ module.exports = {
                 feature_count: props.maxItems,
                 info_format: props.format || 'application/json',
                 ENV,
-                ...assign({}, layer.baseParams, layer.params, props.params)
+                ...assign({}, (CQL_FILTER ? {CQL_FILTER} : {}), layer.baseParams, layer.params, props.params)
             },
             metadata: {
                 title: isObject(layer.title) ? layer.title[props.currentLocale] || layer.title.default : layer.title,

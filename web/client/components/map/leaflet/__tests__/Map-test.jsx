@@ -11,6 +11,7 @@ var LeafletMap = require('../Map.jsx');
 var LeafLetLayer = require('../Layer.jsx');
 var expect = require('expect');
 var mapUtils = require('../../../../utils/MapUtils');
+require('leaflet-draw');
 
 require('../../../../utils/leaflet/Layers');
 require('../plugins/OSMLayer');
@@ -293,5 +294,4 @@ describe('LeafletMap', () => {
         attributions = document.body.getElementsByClassName('leaflet-control-attribution');
         expect(attributions.length).toBe(1);
     });
-
 });

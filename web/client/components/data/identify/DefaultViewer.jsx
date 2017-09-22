@@ -121,7 +121,7 @@ class DefaultViewer extends React.Component {
                         onPrevious={() => this.previous()}/></span>
                     }
                     style={this.props.style}>
-                    <ViewerPage response={response} format={format && FeatureInfoUtils.INFO_FORMATS[format] || this.props.format} viewers={this.props.viewers} />
+                    <ViewerPage response={response} format={format && FeatureInfoUtils.INFO_FORMATS[format] || this.props.format} viewers={this.props.viewers} layer={layerMetadata}/>
                 </Panel>
             );
         });
@@ -138,7 +138,7 @@ class DefaultViewer extends React.Component {
         const Container = this.props.container;
         const validator = this.props.validator(this.props.format);
         const validResponses = validator.getValidResponses(this.props.responses);
-        return (<div>
+        return (<div className="mapstore-identify-viewer">
                 <Container {...this.props.containerProps}
                     onChangeIndex={(index) => {this.setState({index}); }}
                     ref="container"

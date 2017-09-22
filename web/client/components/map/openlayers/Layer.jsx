@@ -158,6 +158,9 @@ class OpenlayersLayer extends React.Component {
             const tileLoadEndStream$ = new Rx.Subject();
             const tileStopStream$ = new Rx.Subject();
 
+            if (options.handleClickOnLayer) {
+                this.layer.set("handleClickOnLayer", true);
+            }
             this.layer.getSource().on('tileloadstart', () => {
                 if (this.tilestoload === 0) {
                     this.props.onLayerLoading(options.id);

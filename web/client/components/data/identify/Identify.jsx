@@ -29,6 +29,7 @@ class Identify extends React.Component {
         collapsible: PropTypes.bool,
         style: PropTypes.object,
         point: PropTypes.object,
+        layer: PropTypes.string,
         format: PropTypes.string,
         map: PropTypes.object,
         layers: PropTypes.array,
@@ -96,15 +97,9 @@ class Identify extends React.Component {
         enableRevGeocode: true,
         wrapRevGeocode: false,
         queryableLayersFilter: MapInfoUtils.defaultQueryableFilter,
-        style: {
-            position: "absolute",
-            maxWidth: "500px",
-            top: "56px",
-            left: "45px",
-            zIndex: 1023,
-            boxShadow: "2px 2px 4px #A7A7A7"
-        },
+        style: {},
         point: {},
+        layer: null,
         map: {},
         layers: [],
         maxItems: 10,
@@ -131,7 +126,9 @@ class Identify extends React.Component {
             if (!newProps.point.modifiers || newProps.point.modifiers.ctrl !== true || !newProps.allowMultiselection) {
                 this.props.purgeResults();
             }
-            const queryableLayers = newProps.layers.filter(newProps.queryableLayersFilter);
+            const queryableLayers = newProps.layers
+                .filter(newProps.queryableLayersFilter)
+                .filter(newProps.layer ? l => l.id === newProps.layer : () => true);
             queryableLayers.forEach((layer) => {
                 const {url, request, metadata} = this.props.buildRequest(layer, newProps);
                 if (url) {
@@ -144,7 +141,11 @@ class Identify extends React.Component {
             if (queryableLayers.length === 0) {
                 this.props.noQueryableLayers();
             } else {
-                this.props.showMarker();
+                if (!newProps.layer) {
+                    this.props.showMarker();
+                } else {
+                    this.props.hideMarker();
+                }
             }
 
         }
@@ -223,6 +224,7 @@ class Identify extends React.Component {
                 className={this.props.panelClassName}
                 headerClassName={this.props.headerClassName}
                 bodyClassName={this.props.bodyClassName}
+                draggable={this.props.draggable}
                 >
                 {this.renderHeader(missingResponses)}
                 <div role="body">

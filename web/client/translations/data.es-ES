@@ -93,6 +93,7 @@
         "gohome": "Volver al inicio",
         "back": "Volver al Importador",
         "printbutton": "Imprimir",
+        "annotationsbutton": "Anotaciones",
         "noresultfound": "Ningún resultado encontrado",
         "save": "Guardar",
         "saveAs": "Guardar como",
@@ -597,6 +598,22 @@
                 "usernamePwdIncorrect":"Ususario o clave incorrectos"
             }
         },
+        "annotations": {
+            "edit": "Editar",
+            "remove": "Borrar",
+            "save": "Guardar",
+            "cancel": "Cancelar",
+            "addMarker": "Añadir un nuevo punto en el mapa",
+            "styleGeometry": "Elige un estilo diferente para los puntos",
+            "deleteGeometry": "Eliminar puntos existentes",
+            "removeannotation": "¿Desea eliminar la anotación?",
+            "removegeometry": "¿Desea eliminar todos los puntos de anotación?",
+            "confirm": "Confirmar",
+            "field": {
+                "title": "Título",
+                "description": "Descripción"
+            }
+        },
         "users": {
             "title": "Administrador de cuentas de usuario",
             "users": "Usuarios",
@@ -879,6 +896,19 @@
             "featureClose": "Realmente desea cerrar la parrilla?",
             "delete": "Confirmar para eliminar los elementos?",
             "missingGeometry": "Missing geometry",
+            "filter": {
+                "placeholders": {
+                    "default": "Buscar...",
+                    "string": "Escribe texto para filtrar...",
+                    "number": "Escriba el número o la expresión..."
+                },
+                "tooltips": {
+                    "editMode": "La búsqueda rápida no está disponible en modo de edición",
+                    "default": "Buscar...",
+                    "string": "Escribe texto para filtrar...",
+                    "number": "Escriba el número o la expresión. Ejemplos: 10, > 2, < 10"
+                }
+            },
             "toolbar": {
                 "editMode": "Modo de edición",
                 "advancedFilter": "Búsqueda avanzada",
@@ -895,7 +925,8 @@
                 "deleteGeometry": "Eliminar geometría",
                 "downloadGridData": "Descargar datos",
                 "hideShowColumns": "Ocultar / mostrar columnas",
-                "zoomAll": "Zoom a la extensión de la página"
+                "zoomAll": "Zoom a la extensión de la página",
+                "syncOnMap": "Sincronizar mapa con filtro"
             }
         },
         "wfsdownload": {

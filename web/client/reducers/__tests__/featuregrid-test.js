@@ -44,10 +44,11 @@ let newfeature3 = {
  };
 const expect = require('expect');
 const featuregrid = require('../featuregrid');
-const {setFeatures, dockSizeFeatures, setLayer, toggleTool, customizeAttribute, selectFeatures, deselectFeatures, createNewFeatures,
+const {setFeatures, dockSizeFeatures, setLayer, toggleTool, customizeAttribute, selectFeatures, deselectFeatures, createNewFeatures, updateFilter,
     featureSaving, toggleSelection, clearSelection, MODES, toggleEditMode, toggleViewMode, saveSuccess, clearChanges, saveError, startDrawingFeature,
     deleteGeometryFeature, geometryChanged, setSelectionOptions, changePage, featureModified, setPermission, disableToolbar, openFeatureGrid, closeFeatureGrid} = require('../../actions/featuregrid');
-const {featureTypeLoaded} = require('../../actions/wfsquery');
+const {featureTypeLoaded, createQuery} = require('../../actions/wfsquery');
+
 const {changeDrawingStatus} = require('../../actions/draw');
 
 const museam = require('json-loader!../../test-resources/wfs/museam.json');
@@ -263,6 +264,17 @@ describe('Test the featuregrid reducer', () => {
 
         state = featuregrid({}, disableToolbar(false));
         expect(state.disableToolbar).toBe(false);
+
+    });
+    it('UPDATE_FILTER', () => {
+        const update = {attribute: "ATTRIBUTE", opeartor: "OPERATOR", value: "VAL", rawValue: "RAWVAL"};
+        let state = featuregrid({}, updateFilter(update));
+        expect(state.filters).toExist();
+        expect(state.filters[update.attribute]).toExist();
+        expect(state.filters[update.attribute].value).toBe(update.value);
+        state = featuregrid({}, createQuery("url", {}));
+        expect(state.filters).toExist();
+        expect(state.filters[update.attribute]).toNotExist();
 
     });
     it('featureTypeLoaded', () => {

@@ -10,13 +10,9 @@ const {refreshLayers, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR} = require('../acti
 const {MAP_CONFIG_LOADED, MAP_INFO_LOADED} = require('../actions/config');
 const {warning, success} = require('../actions/notifications');
 const {toggleControl} = require('../actions/controls');
-const {loadMapInfo} = require('../actions/config');
-const {LOGIN_SUCCESS} = require('../actions/security');
 const {updateVersion} = require('../actions/map');
-const ConfigUtils = require('../utils/ConfigUtils');
-const {mapIdSelector, mapVersionSelector} = require('../selectors/map');
+const {mapVersionSelector} = require('../selectors/map');
 const {mapUpdateOptions} = require('../selectors/automapupdate');
-const { LOCATION_CHANGE } = require('react-router-redux');
 
 /**
  * When map has been loaded, it sends a notification if the version is less than 2 and users has write permission.
@@ -29,6 +25,7 @@ const manageAutoMapUpdate = (action$, store) =>
     action$.ofType(MAP_CONFIG_LOADED)
         .switchMap((mapConfigLoaded) =>
             action$.ofType(MAP_INFO_LOADED)
+                .take(1)
                 .switchMap((mapInfoLoaded) => {
                     const version = mapVersionSelector(store.getState());
                     const canEdit = mapInfoLoaded.info && mapInfoLoaded.info.canEdit || false;
@@ -66,24 +63,7 @@ const manageAutoMapUpdate = (action$, store) =>
                                     return Rx.Observable.of(notification, toggleControl('save'), updateVersion(2));
                                 }))
                     : Rx.Observable.empty();
-                }).takeUntil(action$.ofType(LOCATION_CHANGE)));
-/**
- * Reload information of map on LOGIN_SUCCESS.
- * @param {external:Observable} action$ manages `LOGIN_SUCCESS`.
- * @memberof epics.automapupdate
- * @return {external:Observable}
- */
-const updateMapInfoOnLogin = (action$, store) =>
-    action$.ofType(MAP_CONFIG_LOADED)
-        .switchMap(() =>
-            action$.ofType(LOGIN_SUCCESS)
-                .filter(() => !!mapIdSelector(store.getState()))
-                .switchMap(() => {
-                    const id = mapIdSelector(store.getState());
-                    return Rx.Observable.of(
-                        loadMapInfo(ConfigUtils.getConfigProp("geoStoreUrl") + "extjs/resource/" + id, id)
-                    );
-                }).takeUntil(action$.ofType(LOCATION_CHANGE)));
+                }));
 
 /**
  * Epics for update old map
@@ -92,6 +72,5 @@ const updateMapInfoOnLogin = (action$, store) =>
  */
 
 module.exports = {
-    manageAutoMapUpdate,
-    updateMapInfoOnLogin
+    manageAutoMapUpdate
 };

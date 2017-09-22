@@ -91,6 +91,7 @@
         "gohome": "Go home",
         "back": "Back to the Importer",
         "printbutton": "Print",
+        "annotationsbutton": "Annotations",
         "noresultfound": "No Result found",
         "save": "Save",
 		"saveAs": "Save As...",
@@ -593,6 +594,22 @@
                 "usernamePwdIncorrect":"Username or password incorrect"
             }
         },
+        "annotations": {
+            "edit": "Edit",
+            "remove": "Delete",
+            "save": "Save",
+            "cancel": "Cancel",
+            "addMarker": "Add a new point on the map",
+            "styleGeometry": "Choose a different style for points",
+            "deleteGeometry": "Remove existing points",
+            "removeannotation": "Do you want to remove the annotation?",
+            "removegeometry": "Do you want to remove all annotation points?",
+            "confirm": "Confirm",
+            "field": {
+                "title": "Title",
+                "description": "Description"
+            }
+        },
         "users": {
             "title": "Manage Accounts",
             "users": "Users",
@@ -875,6 +892,19 @@
             "featureClose": "Are you sure to close the feature grid?",
             "delete": "Do you confirm to delete {count} features?",
             "missingGeometry": "Missing geometry",
+            "filter": {
+                "placeholders": {
+                    "default": "Search...",
+                    "string": "Type text to filter...",
+                    "number": "Type number or expression..."
+                },
+                "tooltips": {
+                    "editMode": "Quick search is not available in edit mode",
+                    "default": "Search...",
+                    "string": "Type text to filter...",
+                    "number": "Type a number or an expression. Examples: 10, > 2, < 10"
+                }
+            },
             "toolbar": {
                 "editMode": "Edit mode",
                 "advancedFilter": "Advanced Search",
@@ -891,7 +921,8 @@
                 "deleteGeometry": "Delete geometry",
                 "downloadGridData": "Download grid data",
                 "hideShowColumns": "Hide/show columns",
-                "zoomAll": "Zoom to page extent"
+                "zoomAll": "Zoom to page extent",
+                "syncOnMap": "Sync map with fitler"
             }
         },
         "wfsdownload": {

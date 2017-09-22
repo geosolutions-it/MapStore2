@@ -9,7 +9,7 @@
 const {processOGCGeometry, pointElement, polygonElement, lineStringElement } = require("./ogc/GML");
 const {wfsToGmlVersion} = require('./ogc/WFS/base');
 const {ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators} = require("./ogc/Filter/operators");
-const {isNil, isUndefined} = require('lodash');
+const {isNil, isUndefined, isArray} = require('lodash');
 
 const checkOperatorValidity = (value, operator) => {
     return (!isNil(value) && operator !== "isNull" || !isUndefined(value) && operator === "isNull");
@@ -37,27 +37,30 @@ const ogcDateField = (attribute, operator, value, nsplaceholder) => {
     let fieldFilter;
     if (operator === "><") {
         if (value.startDate && value.endDate) {
+            const startIso = value.startDate.toISOString ? value.startDate.toISOString() : value.startDate; // for Compatibility reasons. We should use ISO string to store data.
+            const endIso = value.startDate.toISOString ? value.startDate.toISOString() : value.startDate; // for Compatibility reasons. We should use ISO string to store data.
             fieldFilter =
                         ogcComparisonOperators[operator](nsplaceholder,
                             propertyTagReference[nsplaceholder].startTag +
                                 attribute +
                             propertyTagReference[nsplaceholder].endTag +
                             "<" + nsplaceholder + ":LowerBoundary>" +
-                                "<" + nsplaceholder + ":Literal>" + value.startDate.toISOString() + "</" + nsplaceholder + ":Literal>" +
+                                "<" + nsplaceholder + ":Literal>" + startIso + "</" + nsplaceholder + ":Literal>" +
                             "</" + nsplaceholder + ":LowerBoundary>" +
                             "<" + nsplaceholder + ":UpperBoundary>" +
-                                "<" + nsplaceholder + ":Literal>" + value.endDate.toISOString() + "</" + nsplaceholder + ":Literal>" +
+                                "<" + nsplaceholder + ":Literal>" + endIso + "</" + nsplaceholder + ":Literal>" +
                             "</" + nsplaceholder + ":UpperBoundary>"
                         );
         }
     } else {
         if (value.startDate) {
+            const startIso = value.startDate.toISOString ? value.startDate.toISOString() : value.startDate; // for Compatibility reasons. We should use ISO string to store data.
             fieldFilter =
                         ogcComparisonOperators[operator](nsplaceholder,
                             propertyTagReference[nsplaceholder].startTag +
                                 attribute +
                             propertyTagReference[nsplaceholder].endTag +
-                            "<" + nsplaceholder + ":Literal>" + value.startDate.toISOString() + "</" + nsplaceholder + ":Literal>"
+                            "<" + nsplaceholder + ":Literal>" + startIso + "</" + nsplaceholder + ":Literal>"
                         );
         }
     }
@@ -215,7 +218,20 @@ const FilterUtils = {
 
         let spatialFilter;
         if (objFilter.spatialField && objFilter.spatialField.geometry && objFilter.spatialField.operation) {
-            spatialFilter = this.processOGCSpatialFilter(versionOGC, objFilter, nsplaceholder);
+            if (objFilter.spatialField.operation === 'BBOX' && isArray(objFilter.spatialField.geometry.extent[0])) {
+                const OP = "OR";
+                const bBoxFilter = objFilter.spatialField.geometry.extent.reduce((a, extent) => {
+                    let filter = Object.assign({}, objFilter);
+                    filter.spatialField.geometry.extent = extent;
+                    return a + this.processOGCSpatialFilter(versionOGC, filter, nsplaceholder);
+                }, '');
+
+                spatialFilter = ogcLogicalOperators[OP](nsplaceholder, bBoxFilter);
+
+            } else {
+                spatialFilter = this.processOGCSpatialFilter(versionOGC, objFilter, nsplaceholder);
+            }
+
             filters.push(spatialFilter);
         }
         if (objFilter.crossLayerFilter) {
@@ -297,6 +313,8 @@ const FilterUtils = {
                 let fieldFilter;
                 switch (field.type) {
                     case "date":
+                    case "date-time":
+                    case "time":
                         fieldFilter = ogcDateField(field.attribute, field.operator, field.value, nsplaceholder);
                         break;
                     case "number":
@@ -580,12 +598,15 @@ const FilterUtils = {
         let fieldFilter;
         if (operator === "><") {
             if (value.startDate && value.endDate) {
-                fieldFilter = "(" + attribute + ">='" + value.startDate.toISOString() +
-                    "' AND " + attribute + "<='" + value.endDate.toISOString() + "')";
+                const startIso = value.startDate.toISOString ? value.startDate.toISOString() : value.startDate; // for Compatibility reasons. We should use ISO string to store data.
+                const endIso = value.startDate.toISOString ? value.startDate.toISOString() : value.startDate; // for Compatibility reasons. We should use ISO string to store data.
+                fieldFilter = "(" + attribute + ">='" + startIso +
+                    "' AND " + attribute + "<='" + endIso + "')";
             }
         } else {
             if (value.startDate) {
-                fieldFilter = attribute + operator + "'" + value.startDate.toISOString() + "'";
+                const startIso = value.startDate.toISOString ? value.startDate.toISOString() : value.startDate; // for Compatibility reasons. We should use ISO string to store data.
+                fieldFilter = attribute + operator + "'" + startIso + "'";
             }
         }
         return fieldFilter;
@@ -648,6 +669,8 @@ const FilterUtils = {
 
                 switch (field.type) {
                 case "date":
+                case "time":
+                case "date-time":
                     fieldFilter = this.cqlDateField(field.attribute, field.operator, field.value);
                     break;
                 case "number":
@@ -735,7 +758,8 @@ const FilterUtils = {
     ogcDateField,
     ogcListField,
     ogcStringField,
-    isLikeOrIlike: (operator) => operator === "ilike" || operator === "like"
+    isLikeOrIlike: (operator) => operator === "ilike" || operator === "like",
+    isFilterValid: (f = {}) => (f.filterFields && f.filterFields.length > 0) || (f.simpleFilterFields && f.simpleFilterFields.length > 0) || (f.spatialField && f.spatialField.geometry && f.spatialField.operation)
 };
 
 module.exports = FilterUtils;

@@ -33,11 +33,11 @@ const {setControlProperty} = require('../actions/controls');
 
 const {activeSelector} = require("../selectors/catalog");
 
-const addFiteredAttributesGroups = (nodes, filters) => {
+const addFilteredAttributesGroups = (nodes, filters) => {
     return nodes.reduce((newNodes, currentNode) => {
         let node = assign({}, currentNode);
         if (node.nodes) {
-            node = assign({}, node, {nodes: addFiteredAttributesGroups(node.nodes, filters)});
+            node = assign({}, node, {nodes: addFilteredAttributesGroups(node.nodes, filters)});
         }
         filters.forEach(filter => {
             if (node.nodes && filter.func(node)) {
@@ -85,7 +85,7 @@ const tocSelector = createSelector(
         noFilterResults: layers.filter((l) => filterLayersByTitle(l, filterText, currentLocale)).length === 0,
         selectedGroups: selectedNodes.map(n => LayersUtils.getNode(groups, n)).filter(n => n && n.nodes),
         mapName,
-        filteredGroups: addFiteredAttributesGroups(groups, [
+        filteredGroups: addFilteredAttributesGroups(groups, [
             {
                 options: {showComponent: true},
                 func: () => !filterText
@@ -135,9 +135,10 @@ class LayerTree extends React.Component {
         updateSettings: PropTypes.func,
         updateNode: PropTypes.func,
         removeNode: PropTypes.func,
-        activateFilterLayer: PropTypes.func,
-        activateMapTitle: PropTypes.func,
-        activateToolsContainer: PropTypes.func,
+        activateSortLayer: PropTypes.bool,
+        activateFilterLayer: PropTypes.bool,
+        activateMapTitle: PropTypes.bool,
+        activateToolsContainer: PropTypes.bool,
         activateRemoveLayer: PropTypes.bool,
         activateLegendTool: PropTypes.bool,
         activateZoomTool: PropTypes.bool,
@@ -181,6 +182,7 @@ class LayerTree extends React.Component {
         removeNode: () => {},
         onSelectNode: () => {},
         selectedNodes: [],
+        activateSortLayer: true,
         activateFilterLayer: true,
         activateMapTitle: true,
         activateToolsContainer: true,
@@ -229,7 +231,7 @@ class LayerTree extends React.Component {
     getDefaultGroup = () => {
         return (
             <DefaultGroup
-                onSort={this.props.filterText ? null : this.props.onSort}
+                onSort={!this.props.filterText && this.props.activateSortLayer ? this.props.onSort : null}
                 {...this.props.groupOptions}
                 propertiesChangeHandler={this.props.groupPropertiesChangeHandler}
                 onToggle={this.props.onToggleGroup}
@@ -346,7 +348,7 @@ class LayerTree extends React.Component {
                             <div className="toc-filter-no-results"><Message msgId="toc.noFilteredResults" /></div>
                         </div>
                         :
-                        <TOC onSort={this.props.filterText ? null : this.props.onSort} filter={this.getNoBackgroundLayers} nodes={this.props.filteredGroups}>
+                        <TOC onSort={!this.props.filterText && this.props.activateSortLayer ? this.props.onSort : null} filter={this.getNoBackgroundLayers} nodes={this.props.filteredGroups}>
                             <DefaultLayerOrGroup groupElement={Group} layerElement={Layer}/>
                         </TOC>
                     }
@@ -376,6 +378,7 @@ class LayerTree extends React.Component {
  * @prop {boolean} cfg.activateSettingsTool: activate settings of layers and groups, default `true`
  * @prop {boolean} cfg.activateRemoveLayer: activate remove layer tool, default `true`
  * @prop {boolean} cfg.activateQueryTool: activate query tool options, default `false`
+ * @prop {boolean} cfg.activateSortLayer: activate drag and drob to sort layers, default `true`
  * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `false`
  * @prop {object} cfg.layerOptions: options to pass to the layer.
  * Some of the layerOptions are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend:

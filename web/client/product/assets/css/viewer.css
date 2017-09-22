@@ -70,7 +70,7 @@ html, body, #container, .fill {
 }
 
 #navigationBar .mapToolbar {
-    bottom: 35px !important;
+    bottom: 50px !important;
 }
 
 #mapstore-scalebox-container {
@@ -98,4 +98,57 @@ html, body, #container, .fill {
     font-size: 90%;
     margin-left: 5px;
     font-weight: bold;
+}
+
+#mapstore-getfeatureinfo.mapstore-right-panel {
+    position: absolute;
+    height: 100%;
+    right: 0;
+    left: auto;
+    top: 0;
+    margin-top: 0;
+}
+
+.mapstore-right-panel .info-wrap {
+    position: absolute;
+    bottom: 0;
+    top: 51px;
+    width: 100%;
+    padding: 0;
+}
+
+.mapstore-right-panel .mapstore-identify-viewer {
+    position: absolute;
+    top: 60px;
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+}
+
+.mapstore-right-panel div[role=body], .mapstore-right-panel .react-swipeable-view-container {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+}
+
+.mapstore-right-panel .swipeable-view {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 70px;
+    position: absolute;
+}
+
+.mapstore-right-panel .alert-info {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.mapstore-right-panel #mapstore-identify-revgeocoder {
+    padding: 15px;
 }

@@ -28,6 +28,7 @@ const DELETE_SELECTED_FEATURES_CONFIRM = "FEATUREGRID:DELETE_SELECTED_FEATURES_C
 const SET_FEATURES = 'SET_FEATURES';
 const SORT_BY = 'FEATUREGRID:SORT_BY';
 const SET_LAYER = 'FEATUREGRID:SET_LAYER';
+const UPDATE_FILTER = 'QUERY:UPDATE_FILTER';
 const CHANGE_PAGE = 'FEATUREGRID:CHANGE_PAGE';
 const GEOMETRY_CHANGED = 'FEATUREGRID:GEOMETRY_CHANGED';
 const DOCK_SIZE_FEATURES = 'DOCK_SIZE_FEATURES';
@@ -42,10 +43,14 @@ const SET_PERMISSION = 'FEATUREGRID:SET_PERMISSION';
 const DISABLE_TOOLBAR = 'FEATUREGRID:DISABLE_TOOLBAR';
 const OPEN_ADVANCED_SEARCH = 'FEATUREGRID:ADVANCED_SEARCH';
 const ZOOM_ALL = 'FEATUREGRID:ZOOM_ALL';
+
 const MODES = {
     EDIT: "EDIT",
     VIEW: "VIEW"
 };
+const START_SYNC_WMS = 'FEATUREGRID:START_SYNC_WMS';
+const STOP_SYNC_WMS = 'FEATUREGRID:STOP_SYNC_WMS';
+
 
 function clearChangeConfirmed() {
     return {
@@ -147,6 +152,13 @@ function setLayer(id) {
     return {
         type: SET_LAYER,
         id
+    };
+}
+function updateFilter(update) {
+    return {
+        type: UPDATE_FILTER,
+        update
+
     };
 }
 function toggleTool(tool, value) {
@@ -300,6 +312,7 @@ module.exports = {
     DISABLE_TOOLBAR, disableToolbar,
     OPEN_ADVANCED_SEARCH, openAdvancedSearch,
     ZOOM_ALL, zoomAll,
+    UPDATE_FILTER, updateFilter,
     setLayer,
     selectFeatures,
     deselectFeatures,
@@ -322,5 +335,7 @@ module.exports = {
     toggleTool,
     customizeAttribute,
     toggleEditMode,
-    toggleViewMode
+    toggleViewMode,
+    START_SYNC_WMS,
+    STOP_SYNC_WMS
 };

@@ -527,4 +527,27 @@ describe('Leaflet layer', () => {
                  options={options} map={map} position={2}/>, document.getElementById("container"));
         expect(layer.layer.options.zIndex).toBe(2);
     });
+
+    it('creates a wms layer singleTile  for leaflet map', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "singleTile": true
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <LeafLetLayer type="wms"
+                 options={options} map={map}/>, document.getElementById("container"));
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+
+    });
 });

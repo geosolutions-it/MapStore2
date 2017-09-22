@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const Grid = require('react-data-grid');
+const Grid = require('../data/grid/DataGrid');
 const ContainerDimensions = require('react-container-dimensions').default;
 
 /**
