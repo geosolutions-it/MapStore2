@@ -262,12 +262,7 @@
             }, {
                 "name": "MetadataExplorer",
                 "cfg": {
-                    "wrap": true,
-                    "initialCatalogURL": {
-                        "csw": "https://demo.geo-solutions.it/geoserver/csw",
-                        "wms": "https://demo.geo-solutions.it/geoserver/wms",
-                        "wmts": "https://demo.geo-solutions.it/geoserver/gwc/service/wmts"
-                    }
+                    "wrap": true
                 }
             }, {
               "name": "About",

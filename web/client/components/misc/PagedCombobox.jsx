@@ -42,6 +42,8 @@ class PagedCombobox extends React.Component {
         onToggle: PropTypes.func,
         open: PropTypes.bool,
         pagination: PropTypes.object,
+        nextPageIcon: PropTypes.string,
+        prevPageIcon: PropTypes.string,
         selectedValue: PropTypes.string,
         textField: PropTypes.string,
         tooltip: PropTypes.object,
@@ -61,11 +63,11 @@ class PagedCombobox extends React.Component {
             paginated: true,
             firstPage: false,
             lastPage: false,
-            nextPageIcon: "chevron-right",
-            prevPageIcon: "chevron-left",
             loadPrevPage: () => {},
             loadNextPage: () => {}
         },
+        nextPageIcon: "chevron-right",
+        prevPageIcon: "chevron-left",
         onFocus: () => {},
         onToggle: () => {},
         onChange: () => {},
@@ -102,10 +104,10 @@ class PagedCombobox extends React.Component {
         return (
             <div className="autocomplete-toolbar">
                 { !firstPage &&
-                    <Glyphicon className={this.props.pagination.prevPageIcon} glyph={this.props.pagination.prevPageIcon} onClick={() => this.props.pagination.loadPrevPage() }/>
+                    <Glyphicon className={this.props.prevPageIcon} glyph={this.props.prevPageIcon} onClick={() => this.props.pagination.loadPrevPage() }/>
                 }
                 { !lastPage &&
-                    <Glyphicon className={this.props.pagination.nextPageIcon} glyph={this.props.pagination.nextPageIcon} onClick={() => this.props.pagination.loadNextPage()}/>
+                    <Glyphicon className={this.props.nextPageIcon} glyph={this.props.nextPageIcon} onClick={() => this.props.pagination.loadNextPage()}/>
                 }
             </div>
         );
@@ -134,8 +136,8 @@ class PagedCombobox extends React.Component {
             messages={this.props.messages || messages}
             open={this.props.open}
             onChange={(val) => this.props.onChange(val)}
-            onFocus={() => this.props.onFocus()}
-            onSelect={() => this.props.onSelect()}
+            onFocus={() => this.props.onFocus(this.props.data)}
+            onSelect={(v) => this.props.onSelect(v)}
             onToggle={() => this.props.onToggle()}
             textField={this.props.textField}
             valueField={this.props.valueField}
