@@ -3,6 +3,8 @@ const Editor = require('./AttributeEditor');
 const NumberEditor = require('./NumberEditor');
 const AutocompleteEditor = require('./AutocompleteEditor');
 
+// TODO add stream to autocompleteEditor for fetching data
+
 const types = {
     "defaultEditor": (props) => <Editor {...props}/>,
     "int": (props) => <NumberEditor dataType="int" inputProps={{step: 1, type: "number"}} {...props}/>,

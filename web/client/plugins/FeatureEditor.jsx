@@ -12,7 +12,7 @@ const {bindActionCreators} = require('redux');
 const {get} = require('lodash');
 const Dock = require('react-dock').default;
 const Grid = require('../components/data/featuregrid/FeatureGrid');
-const {resultsSelector, describeSelector} = require('../selectors/query');
+const {resultsSelector, describeSelector, wfsURLSelector, typeNameSelector} = require('../selectors/query');
 const {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedFeaturesSelector} = require('../selectors/featuregrid');
 const { toChangesMap} = require('../utils/FeatureGridUtils');
 const {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} = require('./featuregrid/panels/index');
@@ -21,6 +21,7 @@ const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
 const {gridTools, gridEvents, pageEvents, toolbarEvents} = require('./featuregrid/index');
 const ContainerDimensions = require('react-container-dimensions').default;
+const {getParsedUrl} = require('../utils/ConfigUtils');
 
 const FeatureDock = (props = {
     tools: EMPTY_OBJ,
@@ -53,6 +54,8 @@ const FeatureDock = (props = {
             {getDialogs(props.tools)}
             <Grid
                 autocompleteEnabled={props.autocompleteEnabled}
+                url={props.url}
+                typeName={props.typeName}
                 filterRenderers={getFilterRenderers(props.describe)}
                 enableColumnFilters={props.enableColumnFilters}
                 emptyRowsView={getEmptyRowsView()}
@@ -77,6 +80,8 @@ const FeatureDock = (props = {
 const selector = createSelector(
     state => get(state, "featuregrid.open"),
     state => get(state, "queryform.autocompleteEnabled"),
+    state => wfsURLSelector(state),
+    state => typeNameSelector(state),
     resultsSelector,
     describeSelector,
     state => get(state, "featuregrid.attributes"),
@@ -88,9 +93,11 @@ const selector = createSelector(
     hasChangesSelector,
     state => get(state, 'featuregrid.focusOnEdit') || [],
     state => get(state, 'featuregrid.enableColumnFilters'),
-    (open, autocompleteEnabled, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters) => ({
+    (open, autocompleteEnabled, url, typeName, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters) => ({
         open,
         autocompleteEnabled,
+        url: getParsedUrl(url, {"outputFormat": "json"}),
+        typeName,
         hasChanges,
         newFeatures,
         features,

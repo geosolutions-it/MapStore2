@@ -3,35 +3,17 @@ const PropTypes = require('prop-types');
 const {isArray} = require('lodash');
 const AttributeEditor = require('./AttributeEditor');
 const PagedCombobox = require('../../../misc/PagedCombobox');
-const axios = require('../../../../libs/ajax');
-const {wfsURLSelector, typeNameSelector} = require('../../../../selectors/query');
-const {maxFeaturesWPSSelector} = require('../../../../selectors/queryform');
-const {connect} = require('react-redux');
-const {setObservableConfig, mapPropsStreamWithConfig, compose, withStateHandlers/*, createEventHandler*/} = require('recompose');
+const {setObservableConfig, mapPropsStreamWithConfig, compose, withStateHandlers} = require('recompose');
 const rxjsConfig = require('recompose/rxjsObservableConfig').default;
+setObservableConfig(rxjsConfig);
 const mapPropsStream = mapPropsStreamWithConfig(rxjsConfig);
-
-const Rx = require('rxjs');
-
-const {getParsedUrl} = require('../../../../utils/ConfigUtils');
-const {getWpsPayload} = require('../../../../utils/ogc/WPS/autocomplete');
+const {createPagedUniqueAutompleteStream} = require('../../../../observables/autocomplete');
 
 const parsers = {
     "int": v => valueOf(v),
     "number": v => valueOf(v),
     "string": v => v
 };
-
-const {createSelector} = require("reselect");
-const autocompleteEditorSelector = createSelector([
-    (state) => wfsURLSelector(state),
-    (state) => maxFeaturesWPSSelector(state),
-    (state) => typeNameSelector(state)
-], (url, wps, typeName) => ({
-    url: getParsedUrl(url, {"outputFormat": "json"}),
-    maxFeaturesWPS: wps,
-    typeName
-}));
 
 class AutocompleteEditor extends AttributeEditor {
     static propTypes = {
@@ -41,6 +23,7 @@ class AutocompleteEditor extends AttributeEditor {
         isValid: PropTypes.func,
         onBlur: PropTypes.func,
         url: PropTypes.string,
+        typeName: PropTypes.string,
         value: PropTypes.string
     };
     static defaultProps = {
@@ -68,35 +51,14 @@ class AutocompleteEditor extends AttributeEditor {
     hoc per passare valore da render a get value???????????
     */
     render() {
-        setObservableConfig(rxjsConfig);
         // fetch data from wps service
         const autocompleteEnhancer = mapPropsStream(props$ => {
-            // const rxjsProps$ = Rx.Observable.from(props$);
-            // MAKE THIS PLUGGABLE and call it
-            const createPagedUniqueAutompleteStream = props$.debounce(props => Rx.Observable.timer(props.delayDebounce || 0))
-                .switchMap(p => {
-                    if (p.performFetch) {
-                        const data = getWpsPayload({
-                                attribute: p.autocompleteProps.attribute,
-                                layerName: p.typeName,
-                                maxFeatures: p.maxFeaturesWPS,
-                                startIndex: (p.currentPage - 1) * p.maxFeaturesWPS,
-                                value: p.value
-                            });
-                        return Rx.Observable.fromPromise(
-                            axios.post(p.url, data, {
-                                timeout: 60000,
-                                headers: {'Accept': 'application/json', 'Content-Type': 'application/xml'}
-                            }).then(response => { return {fetchedData: response.data, props: p, busy: false}; })).startWith({busy: true});
-                    }
-                    return Rx.Observable.of({fetchedData: {values: [], size: 0}, props: p, busy: false});
-                }).startWith({});
-
-            return createPagedUniqueAutompleteStream.combineLatest(props$, (data, {value, open}) => ({
+            const fetcherStream = createPagedUniqueAutompleteStream(props$);
+            return fetcherStream.combineLatest(props$, (data, {value, open}) => ({
                 data: isArray(data && data.fetchedData && data.fetchedData.values) ? data.fetchedData.values.map(v => {return {label: v, value: v}; }) : [],
                 valuesCount: data && data.fetchedData && data.fetchedData.size,
                 currentPage: data && data.props && data.props.currentPage,
-                maxFeatures: data && data.props && data.props.maxFeaturesWPS,
+                maxFeatures: data && data.props && data.props.maxFeatures,
                 select: data && data.props && data.props.select,
                 focus: data && data.props && data.props.focus,
                 loadNextPage: data && data.props && data.props.loadNextPage,
@@ -122,6 +84,7 @@ class AutocompleteEditor extends AttributeEditor {
                     onFocus={focus} onToggle={toggle} onChange={change} onSelect={select}
                     selectedValue={value} loading={loading}/>);
             });
+
         // state enhancer for local props
         const addStateHandlers = compose(
             withStateHandlers((props) => ({
@@ -129,21 +92,39 @@ class AutocompleteEditor extends AttributeEditor {
                 performFetch: false,
                 open: false,
                 currentPage: 1,
-                value: props.autocompleteProps.value
+                maxFeatures: 5,
+                url: this.props.url,
+                typeName: this.props.typeName,
+                value: this.props.value,
+                attribute: this.props.column && this.props.column.key,
+                props
             }), {
                 select: (state) => () => ({
                     ...state,
                     selected: true
                 }),
-                change: (state) => (v) => ({
-                    ...state,
-                    delayDebounce: state.selected ? 0 : 1000,
-                    selected: false,
-                    changingPage: false,
-                    performFetch: state.selected && !state.changingPage ? false : true,
-                    value: state.selected ? v.value : v,
-                    currentPage: !state.changingPage ? 1 : state.currentPage
-                }),
+                change: (state) => (v) => {
+                    if (state.selected && state.changingPage) {
+                        return ({
+                            ...state,
+                            delayDebounce: state.selected ? 0 : 1000,
+                            selected: false,
+                            changingPage: false,
+                            performFetch: state.selected && !state.changingPage ? false : true,
+                            value: state.value,
+                            currentPage: !state.changingPage ? 1 : state.currentPage
+                        });
+                    }
+                    return ({
+                        ...state,
+                        delayDebounce: state.selected ? 0 : 1000,
+                        selected: false,
+                        changingPage: false,
+                        performFetch: state.selected && !state.changingPage ? false : true,
+                        value: state.selected ? v.value : v,
+                        currentPage: !state.changingPage ? 1 : state.currentPage
+                    });
+                },
                 focus: (state) => (options) => {
                     if (options && options.length === 0 && state.value === "") {
                         return ({
@@ -152,15 +133,6 @@ class AutocompleteEditor extends AttributeEditor {
                             currentPage: 1,
                             performFetch: true,
                             isToggled: false,
-                            open: true
-                        });
-                    }
-                    if (options && options.length === 0 && state.value !== "") {
-                        return ({
-                            ...state,
-                            delayDebounce: 0,
-                            currentPage: 1,
-                            performFetch: true,
                             open: true
                         });
                     }
@@ -176,7 +148,7 @@ class AutocompleteEditor extends AttributeEditor {
                     performFetch: true,
                     changingPage: true,
                     delayDebounce: 0,
-                    value: ""
+                    value: state.value
                 }),
                 loadPrevPage: (state) => () => ({
                     ...state,
@@ -184,23 +156,12 @@ class AutocompleteEditor extends AttributeEditor {
                     performFetch: true,
                     changingPage: true,
                     delayDebounce: 0,
-                    value: ""
+                    value: state.value
                 })
             })
         );
-        // connecting a "state enhanced" Autocomplete component to the store
-        const ConnectedPagedCombobox = connect(autocompleteEditorSelector, {},
-            (stateProps, dispatchProps, ownProps) => ({
-                ...stateProps,
-                ...dispatchProps,
-                ...ownProps,
-                autocompleteProps: {
-                    attribute: this.props.column && this.props.column.key,
-                    value: this.props.value
-                }
-            }))(addStateHandlers(AutocompleteEnhanced));
-
-        return <ConnectedPagedCombobox/>;
+        const EnhancedPagedCombobox = addStateHandlers(AutocompleteEnhanced);
+        return <EnhancedPagedCombobox/>;
     }
 }
 
