@@ -247,13 +247,8 @@ var Api = {
     },
     createUser: function(user, options) {
         const url = "users/";
-        const postUser = assign({}, user);
-        if (postUser.newPassword) {
-            postUser.password = postUser.newPassword;
-        }
-        // uuid is time-based
-        postUser.attribute = {name: "uuid", value: uuidv1()};
-        return axios.post(url, {User: postUser}, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
+
+        return axios.post(url, {User: Api.utils.initUser(user)}, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
     deleteUser: function(id, options = {}) {
         const url = "users/user/" + id;
@@ -337,6 +332,25 @@ var Api = {
         return axios.post(url, null, this.addBaseUrl(parseOptions(options))).then(function(response) {
             return response.data;
         });
+    },
+    utils: {
+        /**
+         * initialize User with newPassword and UUID
+         * @param  {object} user The user object
+         * @return {object}      The user object adapted for creation (newPassword, UUID)
+         */
+        initUser: (user) => {
+            const postUser = assign({}, user);
+            if (postUser.newPassword) {
+                postUser.password = postUser.newPassword;
+            }
+            // uuid is time-based
+            const uuidAttr = {
+                name: "UUID", value: uuidv1()
+            };
+            postUser.attribute = postUser.attribute && postUser.attribute.length > 0 ? [...postUser.attribute, uuidAttr] : [uuidAttr];
+            return postUser;
+        }
     }
 };
 
