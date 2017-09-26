@@ -50,7 +50,7 @@ const loadGlyphs = (font) => {
 const extraMarkers = {
     size: [36, 46],
     colors: ['red', 'orange-dark', 'orange', 'yellow', 'blue-dark', 'blue', 'cyan', 'purple', 'violet',
-        'pink', 'green-dark', 'green', 'green-light', 'black', 'white'],
+        'pink', 'green-dark', 'green', 'green-light', 'black'],
     shapes: ['circle', 'square', 'star', 'penta'],
     icons: [require('../components/mapcontrols/annotations/img/markers_default.png'), require('../components/mapcontrols/annotations/img/markers_shadow.png')]
 };

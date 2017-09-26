@@ -133,7 +133,7 @@ function getMarkerStyle(options) {
     } else {
         markerStyle = [new ol.style.Style({
               image: new ol.style.Icon(({
-                anchor: [markers.size[0] / 2, markers.size[1]],
+                anchor: [12, 12],
                 anchorXUnits: 'pixels',
                 anchorYUnits: 'pixels',
                 src: extraMarkerShadow

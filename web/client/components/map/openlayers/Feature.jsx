@@ -61,7 +61,7 @@ class Feature extends React.Component {
                 this._feature = format.readFeatures({type: newProps.type, properties: newProps.properties, geometry: newProps.geometry, id: this.props.msId});
                 this._feature.forEach((f) => f.getGeometry().transform(newProps.featuresCrs, this.props.crs || 'EPSG:3857'));
                 this._feature.forEach((f) => {
-                    if ((newProps.style !== this.props.style) && (newProps.layerStyle !== newProps.style)) {
+                    if (newProps.layerStyle !== newProps.style) {
                         f.setStyle(getStyle({style: newProps.style}));
                     }
                 });
