@@ -9,14 +9,25 @@
 const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
+const {isEmpty} = require('lodash');
+const assign = require('object-assign');
 const {createPagedUniqueAutompleteStream} = require('../autocomplete');
 const AutocompleteEditor = require('../../components/data/featuregrid/editors/AutocompleteEditor');
 const rxjsConfig = require('recompose/rxjsObservableConfig').default;
 const {setObservableConfig, mapPropsStreamWithConfig} = require('recompose');
 setObservableConfig(rxjsConfig);
 const mapPropsStream = mapPropsStreamWithConfig(rxjsConfig);
-
-describe('autocomplete Observables', () => {
+const props = {
+    attribute: "STATE_NAME",
+    performFetch: false,
+    typeName: "topp:states",
+    maxFeatures: 5,
+    currentPage: 1,
+    value: "",
+    url: "base/web/client/test-resources/wps/pageUniqueResponse.json",
+    delayDebounce: 0
+};
+describe('\nautocomplete Observables', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -28,27 +39,49 @@ describe('autocomplete Observables', () => {
         setTimeout(done);
     });
 
-    it('test with fake stream, no result', () => {
-
-        const props = {
-            attribute: "STATE_NAME",
-            performFetch: false,
-            typeName: "topp:states",
-            maxFeatures: 5,
-            currentPage: 1,
-            value: "",
-            url: "/fakeResponse.json",
-            delayDebounce: 0
-        };
-
-        /*const ReactItem = mapPropsStream(props$ =>
-            props$.map(({ n }) => ({ children: n * 2 }))
-        )('div');*/
-
+    it('test with fake stream, performFetch=false', (done) => {
         const ReactItem = mapPropsStream(props$ =>
-            createPagedUniqueAutompleteStream(props$)
+            createPagedUniqueAutompleteStream(props$).map(p => {
+                if (!isEmpty(p) && p.fetchedData !== undefined) {
+                    expect(p.fetchedData.values.length).toBe(0);
+                    expect(p.fetchedData.size).toBe(0);
+                    expect(p.busy).toBe(false);
+                    done();
+                }
+            })
         )(AutocompleteEditor);
-        const item = ReactDOM.render(<ReactItem {...props}/>, document.getElementById("container"));
+        const item = ReactDOM.render(<ReactItem {...assign({}, props)}/>, document.getElementById("container"));
+        expect(item).toExist();
+    });
+
+    it('test with fake stream, performFetch=true', (done) => {
+        const ReactItem = mapPropsStream(props$ =>
+            createPagedUniqueAutompleteStream(props$).map(p => {
+                if (!isEmpty(p) && p.fetchedData !== undefined ) {
+                    expect(p.fetchedData.values.length).toBe(2);
+                    expect(p.fetchedData.values[0]).toBe("value1");
+                    expect(p.fetchedData.size).toBe(2);
+                    expect(p.busy).toBe(false);
+                    done();
+                }
+            })
+        )(AutocompleteEditor);
+        const item = ReactDOM.render(<ReactItem {...assign({}, props, {performFetch: true})}/>, document.getElementById("container"));
+        expect(item).toExist();
+    });
+
+    it('test a failure case intercepted into catch statement ', (done) => {
+        const ReactItem = mapPropsStream(props$ =>
+            createPagedUniqueAutompleteStream(props$).map(p => {
+                if (!isEmpty(p) && p.fetchedData !== undefined ) {
+                    expect(p.fetchedData.values.length).toBe(0);
+                    expect(p.fetchedData.size).toBe(0);
+                    expect(p.busy).toBe(false);
+                    done();
+                }
+            })
+        )(AutocompleteEditor);
+        const item = ReactDOM.render(<ReactItem {...assign({}, props, {performFetch: true, url: "wrong"})}/>, document.getElementById("container"));
         expect(item).toExist();
     });
 });

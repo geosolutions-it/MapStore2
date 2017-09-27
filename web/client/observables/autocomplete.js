@@ -35,12 +35,12 @@ const createPagedUniqueAutompleteStream = (props$) => props$.debounce(props => R
                 axios.post(p.url, data, {
                     timeout: 60000,
                     headers: {'Accept': 'application/json', 'Content-Type': 'application/xml'}
-                }).then(response => { return {fetchedData: response.data, props: p, busy: false}; }))
+                }).then(response => { return {fetchedData: response.data, busy: false}; }))
                 .catch(() => {
-                    return Rx.Observable.of({fetchedData: {values: [], size: 0}, props: p, busy: false});
+                    return Rx.Observable.of({fetchedData: {values: [], size: 0}, busy: false});
                 }).startWith({busy: true});
         }
-        return Rx.Observable.of({fetchedData: {values: [], size: 0}, props: p, busy: false});
+        return Rx.Observable.of({fetchedData: {values: [], size: 0}, busy: false});
     }).startWith({});
 
 
