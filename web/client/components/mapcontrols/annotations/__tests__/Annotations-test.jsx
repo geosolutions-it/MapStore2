@@ -86,4 +86,104 @@ describe("test the Annotations Panel", () => {
         expect(spyConfirm.calls.length).toEqual(0);
         expect(spyCancel.calls.length).toEqual(1);
     });
+
+    it('test rendering list mode', () => {
+        const annotationsList = [{
+            properties: {
+                title: 'a',
+                description: 'b'
+            },
+            style: {
+                iconShape: 'square',
+                iconColor: 'blue'
+            }
+        }, {
+            properties: {
+                title: 'a',
+                description: 'b'
+            },
+            style: {
+                iconShape: 'square',
+                iconColor: 'blue'
+            }
+        }];
+
+        const annotations = ReactDOM.render(<Annotations mode="list" annotations={annotationsList}/>, document.getElementById("container"));
+        expect(annotations).toExist();
+        expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card").length).toBe(2);
+    });
+
+    it('test rendering list mode with filter', () => {
+        const annotationsList = [{
+            properties: {
+                title: 'a',
+                description: 'b'
+            },
+            style: {
+                iconShape: 'square',
+                iconColor: 'blue'
+            }
+        }, {
+            properties: {
+                title: 'c',
+                description: 'd'
+            },
+            style: {
+                iconShape: 'square',
+                iconColor: 'blue'
+            }
+        }];
+
+        const annotations = ReactDOM.render(<Annotations mode="list" filter="b" annotations={annotationsList}/>, document.getElementById("container"));
+        expect(annotations).toExist();
+        expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card").length).toBe(1);
+    });
+
+    it('test rendering detail mode', () => {
+        const annotationsList = [{
+            properties: {
+                id: '1',
+                title: 'a',
+                description: 'b'
+            },
+            style: {
+                iconShape: 'square',
+                iconColor: 'blue'
+            }
+        }, {
+            properties: {
+                id: '2',
+                title: 'a',
+                description: 'b'
+            },
+            style: {
+                iconShape: 'square',
+                iconColor: 'blue'
+            }
+        }];
+
+        const Editor = () => <div className="myeditor"/>;
+        const annotations = ReactDOM.render(<Annotations mode="detail" editor={Editor} current="1" annotations={annotationsList}/>, document.getElementById("container"));
+        expect(annotations).toExist();
+        expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card").length).toBe(0);
+        expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "myeditor").length).toBe(1);
+    });
+
+    it('test rendering editing mode', () => {
+        const Editor = () => <div className="myeditor"/>;
+        const annotations = ReactDOM.render(<Annotations mode="editing" editor={Editor} editing={{
+            properties: {
+                id: '1',
+                title: 'a',
+                description: 'b'
+            },
+            style: {
+                iconShape: 'square',
+                iconColor: 'blue'
+            }
+        }}/>, document.getElementById("container"));
+        expect(annotations).toExist();
+        expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card").length).toBe(0);
+        expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "myeditor").length).toBe(1);
+    });
 });

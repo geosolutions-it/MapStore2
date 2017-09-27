@@ -9,10 +9,18 @@
 const assign = require('object-assign');
 
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
+const {TOGGLE_CONTROL} = require('../actions/controls');
 const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION,
         EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION, SAVE_ANNOTATION, TOGGLE_ADD,
     UPDATE_ANNOTATION_GEOMETRY, VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY, TOGGLE_STYLE,
-    SET_STYLE} = require('../actions/annotations');
+    SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION, FILTER_ANNOTATIONS} = require('../actions/annotations');
+
+const uuid = require('uuid');
+const defaultMarker = {
+    iconGlyph: 'comment',
+    iconColor: 'blue',
+    iconShape: 'square'
+};
 
 function annotations(state = { validationErrors: {} }, action) {
     switch (action.type) {
@@ -26,18 +34,32 @@ function annotations(state = { validationErrors: {} }, action) {
             });
         case EDIT_ANNOTATION:
             return assign({}, state, {
-            editing: assign({}, action.feature, {
-                style: action.feature.style || {
-                    iconGlyph: 'comment',
-                    iconColor: 'blue',
-                    iconShape: 'square'
-                }
-            }),
-            originalStyle: null
+                editing: assign({}, action.feature, {
+                    style: action.feature.style || defaultMarker
+                }),
+                originalStyle: null,
+                featureType: action.featureType
+            });
+        case NEW_ANNOTATION:
+            const id = uuid.v1();
+            return assign({}, state, {
+                editing: {
+                    type: "Feature",
+                    id,
+                    geometry: null,
+                    newFeature: true,
+                    properties: {
+                        id
+                    },
+                    style: defaultMarker
+                },
+                originalStyle: null,
+                featureType: action.featureType
             });
         case CONFIRM_REMOVE_ANNOTATION:
             return assign({}, state, {
                 removing: null,
+                current: null,
                 editing: state.editing ? assign({}, state.editing, {
                     geometry: null
                 }) : null
@@ -68,7 +90,8 @@ function annotations(state = { validationErrors: {} }, action) {
                 validationErrors: {},
                 styling: false,
                 drawing: false,
-                originalStyle: null
+                originalStyle: null,
+                filter: null
             });
         case UPDATE_ANNOTATION_GEOMETRY:
             return assign({}, state, {
@@ -84,7 +107,9 @@ function annotations(state = { validationErrors: {} }, action) {
             return assign({}, state, {
                 styling: !state.styling
             }, !state.styling ? {
-                originalStyle: assign({}, state.editing.style)
+                originalStyle: assign({}, state.editing.style, {
+                    highlight: false
+                })
             } : {});
         case VALIDATION_ERROR:
             return assign({}, state, {
@@ -96,7 +121,32 @@ function annotations(state = { validationErrors: {} }, action) {
                     style: assign({}, state.editing.style || {}, action.style)
                 })
             });
-
+        case SHOW_ANNOTATION:
+            return assign({}, state, {
+                current: action.id
+            });
+        case CANCEL_SHOW_ANNOTATION:
+            return assign({}, state, {
+                current: null
+            });
+        case TOGGLE_CONTROL:
+            if (action.control === 'annotations') {
+                return assign({}, state, {
+                    current: null,
+                    editing: null,
+                    removing: null,
+                    validationErrors: {},
+                    styling: false,
+                    drawing: false,
+                    filter: null,
+                    originalStyle: null
+                });
+            }
+            return state;
+        case FILTER_ANNOTATIONS:
+            return assign({}, state, {
+                filter: action.filter
+            });
         default:
             return state;
 

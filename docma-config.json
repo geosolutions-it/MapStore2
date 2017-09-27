@@ -116,7 +116,8 @@
             "web/client/components/map/leaflet/DrawSupport.jsx",
             "web/client/components/plugins/PluginsContainer.jsx",
             "web/client/components/mapcontrols/annotations/Annotations.jsx",
-            "web/client/components/mapcontrols/annotations/AnnotationsInfoViewer.jsx",
+            "web/client/components/mapcontrols/annotations/AnnotationsEditor.jsx",
+            "web/client/components/mapcontrols/annotations/AnnotationsConfig.js",
 
             "web/client/actions/index.jsdoc",
             "web/client/actions/controls.js",

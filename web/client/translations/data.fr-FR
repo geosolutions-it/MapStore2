@@ -577,12 +577,18 @@
             "remove": "Effacer",
             "save": "Enregistrer",
             "cancel": "Annuler",
+            "back": "Arrière",
             "addMarker": "Ajouter un nouveau point sur la carte",
             "styleGeometry": "Choisissez un style différent pour les points",
             "deleteGeometry": "Supprimer les points existants",
             "removeannotation": "Voulez-vous supprimer l'annotation?",
             "removegeometry": "Voulez-vous supprimer tous les points d'annotation?",
             "confirm": "confirmer",
+            "title": "Annotations",
+            "mandatory": "champ obligatoire",
+            "emptygeometry": "La géométrie ne peut pas être vide",
+            "add": "Nouvelle",
+            "filter": "Filtrer les annotations...",
             "field": {
                 "title": "titre",
                 "description": "Description"

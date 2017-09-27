@@ -9,11 +9,11 @@ const expect = require('expect');
 
 const React = require('react');
 const ReactDOM = require('react-dom');
-const AnnotationsInfoViewer = require('../AnnotationsInfoViewer');
+const AnnotationsEditor = require('../AnnotationsEditor');
 
 const TestUtils = require('react-dom/test-utils');
 
-describe("test the AnnotationsInfoViewer Panel", () => {
+describe("test the AnnotationsEditor Panel", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -26,7 +26,7 @@ describe("test the AnnotationsInfoViewer Panel", () => {
     });
 
     it('test default properties', () => {
-        const viewer = ReactDOM.render(<AnnotationsInfoViewer/>, document.getElementById("container"));
+        const viewer = ReactDOM.render(<AnnotationsEditor/>, document.getElementById("container"));
         expect(viewer).toExist();
         const viewerNode = ReactDOM.findDOMNode(viewer);
         expect(viewerNode).toExist();
@@ -38,7 +38,7 @@ describe("test the AnnotationsInfoViewer Panel", () => {
             title: 'mytitle',
             description: '<span><i>desc</i></span>'
         };
-        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} />, document.getElementById("container"));
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} />, document.getElementById("container"));
         expect(viewer).toExist();
 
         const viewerNode = ReactDOM.findDOMNode(viewer);
@@ -53,7 +53,7 @@ describe("test the AnnotationsInfoViewer Panel", () => {
             title: 'mytitle',
             description: '<span><i>desc</i></span>'
         };
-        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} editing={{
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} editing={{
             properties: feature
         }}/>, document.getElementById("container"));
         expect(viewer).toExist();
@@ -76,7 +76,7 @@ describe("test the AnnotationsInfoViewer Panel", () => {
         const spyEdit = expect.spyOn(testHandlers, 'onEditHandler');
         const spyRemove = expect.spyOn(testHandlers, 'onRemoveHandler');
 
-        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} onEdit={testHandlers.onEditHandler}
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} onEdit={testHandlers.onEditHandler}
             onRemove={testHandlers.onRemoveHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();
 
@@ -104,7 +104,7 @@ describe("test the AnnotationsInfoViewer Panel", () => {
         const spyEdit = expect.spyOn(testHandlers, 'onEditHandler');
         const spyRemove = expect.spyOn(testHandlers, 'onRemoveHandler');
 
-        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} onEdit={testHandlers.onEditHandler}
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} onEdit={testHandlers.onEditHandler}
             onRemove={testHandlers.onRemoveHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();
 
@@ -132,7 +132,7 @@ describe("test the AnnotationsInfoViewer Panel", () => {
         const spyAdd = expect.spyOn(testHandlers, 'onAddHandler');
         const spyRemove = expect.spyOn(testHandlers, 'onRemoveHandler');
 
-        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} editing={{
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} editing={{
             properties: feature
         }} onAddGeometry={testHandlers.onAddHandler}
            onDeleteGeometry={testHandlers.onRemoveHandler}/>, document.getElementById("container"));
@@ -162,7 +162,7 @@ describe("test the AnnotationsInfoViewer Panel", () => {
         const spyAdd = expect.spyOn(testHandlers, 'onAddHandler');
         const spyRemove = expect.spyOn(testHandlers, 'onRemoveHandler');
 
-        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} editing={{
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} editing={{
             properties: feature
         }} onAddGeometry={testHandlers.onAddHandler}
            onDeleteGeometry={testHandlers.onRemoveHandler}/>, document.getElementById("container"));
@@ -192,7 +192,7 @@ describe("test the AnnotationsInfoViewer Panel", () => {
         const spySave = expect.spyOn(testHandlers, 'onSaveHandler');
         const spyCancel = expect.spyOn(testHandlers, 'onCancelHandler');
 
-        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} editing={{
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} editing={{
             properties: feature,
             geometry: {}
         }} onSave={testHandlers.onSaveHandler}
@@ -223,7 +223,7 @@ describe("test the AnnotationsInfoViewer Panel", () => {
         const spySave = expect.spyOn(testHandlers, 'onSaveHandler');
         const spyCancel = expect.spyOn(testHandlers, 'onCancelHandler');
 
-        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} editing={{
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} editing={{
             properties: feature,
             geometry: {}
         }} onSave={testHandlers.onSaveHandler}
@@ -254,7 +254,7 @@ describe("test the AnnotationsInfoViewer Panel", () => {
         const spySave = expect.spyOn(testHandlers, 'onSaveHandler');
         const spyError = expect.spyOn(testHandlers, 'onErrorHandler');
 
-        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} editing={{
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} editing={{
             properties: feature,
             geometry: {}
         }} onSave={testHandlers.onSaveHandler}
@@ -286,7 +286,7 @@ describe("test the AnnotationsInfoViewer Panel", () => {
         const spySave = expect.spyOn(testHandlers, 'onSaveHandler');
         const spyError = expect.spyOn(testHandlers, 'onErrorHandler');
 
-        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} editing={{
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} editing={{
             properties: feature
         }} onSave={testHandlers.onSaveHandler}
            onError={testHandlers.onErrorHandler}/>, document.getElementById("container"));
@@ -309,7 +309,7 @@ describe("test the AnnotationsInfoViewer Panel", () => {
             description: '<span><i>desc</i></span>'
         };
 
-        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} editing={{
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} editing={{
             properties: feature
         }}/>, document.getElementById("container"));
         expect(viewer).toExist();
@@ -328,7 +328,7 @@ describe("test the AnnotationsInfoViewer Panel", () => {
             description: '<span><i>desc</i></span>'
         };
 
-        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} editing={{
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} editing={{
             properties: feature
         }} errors={{
             title: 'myerror'
@@ -345,7 +345,7 @@ describe("test the AnnotationsInfoViewer Panel", () => {
             description: '<span><i>desc</i></span>'
         };
 
-        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} styling editing={{
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} styling editing={{
             properties: feature,
             style: {
                 iconGlyph: 'comment',
@@ -371,7 +371,7 @@ describe("test the AnnotationsInfoViewer Panel", () => {
 
         const spySetStyle = expect.spyOn(testHandlers, 'onSetStyle');
 
-        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} editing={{
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} editing={{
             properties: feature,
             style: {
                 iconGlyph: 'comment',
@@ -402,7 +402,7 @@ describe("test the AnnotationsInfoViewer Panel", () => {
 
         const spySetStyle = expect.spyOn(testHandlers, 'onSetStyle');
 
-        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} editing={{
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} editing={{
             properties: feature,
             style: {
                 iconGlyph: 'comment',

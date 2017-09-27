@@ -7,44 +7,32 @@
  */
 
 const L = require('leaflet');
-const {isFunction} = require('lodash');
+const Icons = require('./Icons');
 
-
-const getIcon = (style) => {
-    if (style.iconGlyph) {
-        const prefix = style.iconPrefix || 'fa';
-        return L.ExtraMarkers.icon({
-            icon: prefix + '-' + style.iconGlyph,
-            markerColor: style.iconColor || 'blue',
-            shape: style.iconShape || 'circle',
-            prefix
-        });
+const getIcon = (style, geojson) => {
+    if (style && style.iconGlyph) {
+        const iconLibrary = style.iconLibrary || 'extra';
+        if (Icons[iconLibrary]) {
+            return Icons[iconLibrary].getIcon(style);
+        }
     }
-    return L.icon({
-        iconUrl: style.iconUrl,
-        shadowUrl: style.shadowUrl,
-        iconSize: style.iconSize,
-        shadowSize: style.shadowSize,
-        iconAnchor: style.iconAnchor,
-        shadowAnchor: style.shadowAnchor,
-        popupAnchor: style.popupAnchor
-    });
+    if (style && style.html && geojson) {
+        return Icons.html.getIcon(style, geojson);
+    }
+    if (style && style.iconUrl) {
+        return Icons.standard.getIcon(style);
+    }
+
 };
 
 module.exports = {
     pointToLayer: (latlng, geojson, style) => {
-        if (style && (style.iconUrl || style.iconGlyph)) {
+        const icon = getIcon(style, geojson);
+        if (icon) {
             return L.marker(
                 latlng,
                 {
-                    icon: getIcon(style)
-                });
-        }
-        if (style && style.html && geojson) {
-            return L.marker(
-                latlng,
-                {
-                    icon: L.divIcon(isFunction(style.html) ? style.html(geojson) : style.html)
+                    icon
                 });
         }
         return L.marker(latlng);
