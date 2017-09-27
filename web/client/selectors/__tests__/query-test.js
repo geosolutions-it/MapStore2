@@ -9,7 +9,9 @@
 const expect = require('expect');
 const {
     wfsURL,
+    wfsURLSelector,
     wfsFilter,
+    typeNameSelector,
     resultsSelector,
     featureCollectionResultSelector,
     paginationInfo,
@@ -17,7 +19,8 @@ const {
     isDescribeLoaded,
     describeSelector,
     getFeatureById,
-    attributesSelector
+    attributesSelector,
+    isSyncWmsActive
 } = require('../query');
 
 const idFt1 = "idFt1";
@@ -271,6 +274,7 @@ const initialState = {
     },
     searchUrl: 'http://localhost:8081/geoserver/wfs?',
     typeName: 'editing:polygons',
+    syncWmsFilter: true,
     url: 'http://localhost:8081/geoserver/wfs?',
     featureLoading: false
   },
@@ -289,6 +293,21 @@ describe('Test query selectors', () => {
         const searchUrl = wfsURL(initialState);
         expect(searchUrl).toExist();
         expect(searchUrl).toBe("http://localhost:8081/geoserver/wfs?");
+    });
+    it('test wfsURLSelector selector', () => {
+        const url = wfsURLSelector(initialState);
+        expect(url).toExist();
+        expect(url).toBe("http://localhost:8081/geoserver/wfs?");
+    });
+    it('test typeNameSelector selector', () => {
+        const typename = typeNameSelector(initialState);
+        expect(typename).toExist();
+        expect(typename).toBe("editing:polygons");
+    });
+    it('test isSyncWmsActive selector', () => {
+        const sync = isSyncWmsActive(initialState);
+        expect(sync).toExist();
+        expect(sync).toBe(true);
     });
     it('test wfsFilter selector', () => {
         const filterObj = wfsFilter(initialState);

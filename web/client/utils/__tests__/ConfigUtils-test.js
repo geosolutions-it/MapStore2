@@ -245,6 +245,23 @@ describe('ConfigUtils', () => {
         expect(retval.configUrl).toBe(testval.configUrl);
         expect(retval.legacy).toBe(testval.legacy);
     });
+    it('getParsedUrl with valid url ending with wfs', () => {
+        const url = "http://somepath/wfs";
+        const testval = "http://somepath/wps?service=WPS";
+        const retval = ConfigUtils.getParsedUrl(url, {});
+        expect(retval).toExist();
+        expect(retval).toBe(testval);
+    });
+    it('getParsedUrl with valid url ending with asd return null', () => {
+        const url = "http://somepath/asd";
+        const retval = ConfigUtils.getParsedUrl(url, {});
+        expect(retval).toBe(null);
+    });
+    it('getParsedUrl with not valid url', () => {
+        const url = null;
+        const retval = ConfigUtils.getParsedUrl(url, {});
+        expect(retval).toBe(null);
+    });
 
     it('loadConfiguration', (done) => {
         var retval = ConfigUtils.loadConfiguration();
