@@ -8,7 +8,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const AttributeEditor = require('./AttributeEditor');
-const {AutocompleteCombobox} = require('./AutocompleteCombobox');
+const {AutocompleteCombobox} = require('../../../misc/AutocompleteCombobox');
 const {createPagedUniqueAutompleteStream} = require('../../../../observables/autocomplete');
 
 class AutocompleteEditor extends AttributeEditor {
