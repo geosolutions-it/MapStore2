@@ -4,6 +4,9 @@ const {getFilterRenderer} = require('../filterRenderers');
 const {manageFilterRendererState} = require('../enhancers/filterRenderers');
 const featuresToGrid = compose(
     defaultProps({
+        autocompleteEnabled: false,
+        url: "",
+        typeName: "",
         enableColumnFilters: false,
         columns: [],
         features: [],
@@ -19,6 +22,18 @@ const featuresToGrid = compose(
     withPropsOnChange(
         ["enableColumnFilters"],
         props => ({displayFilters: props.enableColumnFilters})
+    ),
+    withPropsOnChange(
+        ["autocompleteEnabled"],
+        props => ({autocompleteEnabled: props.autocompleteEnabled})
+    ),
+    withPropsOnChange(
+        ["url"],
+        props => ({url: props.url})
+    ),
+    withPropsOnChange(
+        ["typeName"],
+        props => ({typeName: props.typeName})
     ),
     withPropsOnChange(
         ["features", "newFeatures", "changes"],
@@ -55,7 +70,10 @@ const featuresToGrid = compose(
                     sortable: !props.isFocused
                 }, {
                     getEditor: ({localType=""} = {}) => props.editors(localType, {
-                        onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges
+                        onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges,
+                        autocompleteEnabled: props.autocompleteEnabled,
+                        url: props.url,
+                        typeName: props.typeName
                     }),
                     getFilterRenderer: ({localType=""} = {}, name) => {
                         if (props.filterRenderers && props.filterRenderers[name]) {

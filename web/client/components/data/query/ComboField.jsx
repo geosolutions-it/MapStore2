@@ -23,7 +23,7 @@ class ComboField extends React.Component {
         style: PropTypes.object,
         valueField: PropTypes.string,
         textField: PropTypes.string,
-        placeholder: PropTypes.string,
+        placeholder: PropTypes.object,
         fieldOptions: PropTypes.array,
         fieldName: PropTypes.string,
         fieldRowId: PropTypes.number,

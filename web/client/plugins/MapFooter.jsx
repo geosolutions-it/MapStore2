@@ -66,6 +66,6 @@ class MapFooter extends React.Component {
 }
 
 module.exports = {
-    MapFooterPlugin: assign(MapFooter, {disablePluginIf: "{state('featuregridmode') === 'EDIT'}"}),
+    MapFooterPlugin: assign(MapFooter, {}),
     reducers: {}
 };
