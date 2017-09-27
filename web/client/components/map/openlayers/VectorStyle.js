@@ -1,52 +1,15 @@
 var markerIcon = require('./img/marker-icon.png');
 var markerShadow = require('./img/marker-shadow.png');
-var extraMarker = require('./img/markers_default.png');
-var extraMarkerShadow = require('./img/markers_shadow.png');
 var ol = require('openlayers');
 
 const assign = require('object-assign');
 
-const csstree = require('css-tree');
-const css = require('raw-loader!./font-awesome.txt');
+const MarkerUtils = require('../../../utils/MarkerUtils');
+const markers = MarkerUtils.extraMarkers;
+const extraMarker = markers.icons[0];
+const extraMarkerShadow = markers.icons[1];
 
-const getNodeOfType = (node, condition) => {
-    if (condition(node)) {
-        return node;
-    }
-    if (node.children) {
-        return node.children.reduce((previous, current) => {
-            const result = getNodeOfType(current, condition);
-            return result || previous;
-        }, null);
-    }
-    return null;
-};
-
-const parsedCss = csstree.toPlainObject(csstree.parse(css));
-
-const glyphs = parsedCss.children.reduce((previous, rule) => {
-    if (rule.prelude) {
-        const classSelector = getNodeOfType(rule.prelude, (node) => node.type === 'ClassSelector');
-        const pseudoClassSelector = getNodeOfType(rule.prelude, (node) => node.type === 'PseudoClassSelector');
-        if (classSelector && classSelector.name && classSelector.name.indexOf('fa-') === 0 && pseudoClassSelector && pseudoClassSelector.name === 'before') {
-            const text = getNodeOfType(getNodeOfType(rule.block, (node) => node.type === 'Declaration' && node.property === 'content').value, (node) => node.type === 'String').value;
-            /* eslint-disable */
-            return assign(previous, {
-                [classSelector.name.substring(3)]: eval("'\\u" + text.substring(2, text.length - 1) + "'")
-            });
-            /* eslint-enable */
-        }
-    }
-    return previous;
-}, {});
-
-
-const markers = {
-    size: [36, 46],
-    colors: ['red', 'orange-dark', 'orange', 'yellow', 'blue-dark', 'blue', 'cyan', 'purple', 'violet', 'pink', 'green-dark', 'green',
-    'green-light', 'black', 'white'],
-    shapes: ['circle', 'square', 'star', 'penta']
-};
+const glyphs = MarkerUtils.getGlyphs('fontawesome');
 
 const image = new ol.style.Circle({
   radius: 5,
@@ -170,7 +133,7 @@ function getMarkerStyle(options) {
     } else {
         markerStyle = [new ol.style.Style({
               image: new ol.style.Icon(({
-                anchor: [markers.size[0] / 2, markers.size[1]],
+                anchor: [12, 12],
                 anchorXUnits: 'pixels',
                 anchorYUnits: 'pixels',
                 src: extraMarkerShadow
@@ -188,8 +151,7 @@ function getMarkerStyle(options) {
                 text: glyphs[options.style.iconGlyph],
                 font: '14px FontAwesome',
                 offsetY: -markers.size[1] * 2 / 3,
-                fill: new ol.style.Fill({color: '#FFFFFF'}),
-                stroke: new ol.style.Stroke({color: '#FFFFFF', width: 2})
+                fill: new ol.style.Fill({color: '#FFFFFF'})
             })
         })];
     }

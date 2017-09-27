@@ -20,6 +20,9 @@ const {
     UPDATE_ANNOTATION_GEOMETRY,
     VALIDATION_ERROR,
     REMOVE_ANNOTATION_GEOMETRY,
+    TOGGLE_STYLE,
+    SET_STYLE,
+    RESTORE_STYLE,
     editAnnotation,
     removeAnnotation,
     confirmRemoveAnnotation,
@@ -29,7 +32,10 @@ const {
     toggleAdd,
     updateAnnotationGeometry,
     validationError,
-    removeAnnotationGeometry
+    removeAnnotationGeometry,
+    toggleStyle,
+    setStyle,
+    restoreStyle
 } = require('../annotations');
 
 describe('Test correctness of the annotations actions', () => {
@@ -82,16 +88,33 @@ describe('Test correctness of the annotations actions', () => {
     it('save annotation', () => {
         const result = saveAnnotation('1', {
             name: 'changed'
-        }, {});
+        }, {}, {});
         expect(result.type).toEqual(SAVE_ANNOTATION);
         expect(result.id).toEqual('1');
         expect(result.fields.name).toEqual('changed');
         expect(result.geometry).toExist();
+        expect(result.style).toExist();
     });
 
     it('toggle add', () => {
         const result = toggleAdd();
         expect(result.type).toEqual(TOGGLE_ADD);
+    });
+
+    it('toggle style', () => {
+        const result = toggleStyle();
+        expect(result.type).toEqual(TOGGLE_STYLE);
+    });
+
+    it('restore style', () => {
+        const result = restoreStyle();
+        expect(result.type).toEqual(RESTORE_STYLE);
+    });
+
+    it('set style', () => {
+        const result = setStyle({});
+        expect(result.type).toEqual(SET_STYLE);
+        expect(result.style).toExist();
     });
 
     it('update annotation geometry', () => {

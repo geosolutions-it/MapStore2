@@ -337,4 +337,88 @@ describe("test the AnnotationsInfoViewer Panel", () => {
         const viewerNode = ReactDOM.findDOMNode(viewer);
         expect(viewerNode.innerText.indexOf('myerror') !== -1).toBe(true);
     });
+
+    it('test styling', () => {
+        const feature = {
+            id: "1",
+            title: 'mytitle',
+            description: '<span><i>desc</i></span>'
+        };
+
+        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} styling editing={{
+            properties: feature,
+            style: {
+                iconGlyph: 'comment',
+                iconColor: 'red',
+                iconShape: 'square'
+            }
+        }}/>, document.getElementById("container"));
+        expect(viewer).toExist();
+        const viewerNode = ReactDOM.findDOMNode(viewer);
+        expect(viewerNode.className).toBe('mapstore-annotations-info-viewer-styler');
+    });
+
+    it('test styler click on marker', () => {
+        const feature = {
+            id: "1",
+            title: 'mytitle',
+            description: '<span><i>desc</i></span>'
+        };
+
+        const testHandlers = {
+            onSetStyle: (style) => { return style; }
+        };
+
+        const spySetStyle = expect.spyOn(testHandlers, 'onSetStyle');
+
+        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} editing={{
+            properties: feature,
+            style: {
+                iconGlyph: 'comment',
+                iconColor: 'red',
+                iconShape: 'square'
+            }
+        }} onSetStyle={testHandlers.onSetStyle} styling/>, document.getElementById("container"));
+        expect(viewer).toExist();
+        let marker = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(viewer, "mapstore-annotations-info-viewer-marker")[0]);
+
+        expect(marker).toExist();
+        TestUtils.Simulate.click(marker);
+
+        expect(spySetStyle.calls.length).toEqual(1);
+        expect(spySetStyle.calls[0].arguments[0]).toExist();
+    });
+
+    it('test styler select glyph', () => {
+        const feature = {
+            id: "1",
+            title: 'mytitle',
+            description: '<span><i>desc</i></span>'
+        };
+
+        const testHandlers = {
+            onSetStyle: (style) => { return style; }
+        };
+
+        const spySetStyle = expect.spyOn(testHandlers, 'onSetStyle');
+
+        const viewer = ReactDOM.render(<AnnotationsInfoViewer {...feature} editing={{
+            properties: feature,
+            style: {
+                iconGlyph: 'comment',
+                iconColor: 'red',
+                iconShape: 'square'
+            }
+        }} onSetStyle={testHandlers.onSetStyle} styling/>, document.getElementById("container"));
+        expect(viewer).toExist();
+
+        let select = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(viewer, "Select-control")[0]);
+
+        expect(select).toExist();
+        TestUtils.Simulate.keyDown(select, { keyCode: 40, key: 'ArrowDown' });
+        TestUtils.Simulate.keyDown(select, { keyCode: 13, key: 'Enter' });
+
+        expect(spySetStyle.calls.length).toEqual(1);
+        expect(spySetStyle.calls[0].arguments[0]).toExist();
+    });
 });

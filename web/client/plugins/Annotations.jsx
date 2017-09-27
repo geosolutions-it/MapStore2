@@ -15,13 +15,15 @@ const {Glyphicon} = require('react-bootstrap');
 const {toggleControl} = require('../actions/controls');
 
 const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, removeAnnotation, cancelEditAnnotation,
-        saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry} = require('../actions/annotations');
+    saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry, toggleStyle, setStyle, restoreStyle} =
+    require('../actions/annotations');
 /**
   * Annotations Plugin. Implements annotations handling on maps.
   * Adds:
   *  - a new vector layer, with id 'annotations', to show user created annotations on the map
   *  - a new menu in the BurgerMenu to handle current annotations (still to be implemented)
   *  - a custom template for Identify applied to annotations geometries that also allows editing {@link components.mapControls.annotations.AnnotationsInfoViewer}
+  *  - styling of the annotation
   * Annotations are geometries (currently only markers are supported) with a set of properties. By default a title and
   * a description are managed, but you can configure a different set of fields, using initialState in localConfig.json:
   * @example
@@ -56,7 +58,8 @@ const AnnotationsPlugin = connect((state) => ({
 const AnnotationsInfoViewer = connect((state) => ({
     fields: state.annotations && state.annotations.fields,
     editing: state.annotations && state.annotations.editing,
-    drawing: state.annotations && state.annotations.drawing,
+    drawing: state.annotations && !!state.annotations.drawing,
+    styling: state.annotations && !!state.annotations.styling,
     errors: state.annotations.validationErrors
 }),
 {
@@ -66,6 +69,10 @@ const AnnotationsInfoViewer = connect((state) => ({
     onSave: saveAnnotation,
     onRemove: removeAnnotation,
     onAddGeometry: toggleAdd,
+    onStyleGeometry: toggleStyle,
+    onCancelStyle: restoreStyle,
+    onSaveStyle: toggleStyle,
+    onSetStyle: setStyle,
     onDeleteGeometry: removeAnnotationGeometry
 })(require('../components/mapcontrols/annotations/AnnotationsInfoViewer'));
 

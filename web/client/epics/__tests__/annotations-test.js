@@ -14,13 +14,13 @@ const {ADD_LAYER, UPDATE_NODE, CHANGE_LAYER_PROPERTIES} = require('../../actions
 const {CHANGE_DRAWING_STATUS, geometryChanged} = require('../../actions/draw');
 const {HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
 const {configureMap} = require('../../actions/config');
-const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnotation,
+const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnotation, setStyle,
     toggleAdd, UPDATE_ANNOTATION_GEOMETRY} = require('../../actions/annotations');
 
 const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
-    cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawMarkerEpic} = require('../annotations')({});
+    cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawMarkerEpic, setStyleEpic, restoreStyleEpic} = require('../annotations')({});
 const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
-    cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawMarkerEpic);
+    setStyleEpic, cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawMarkerEpic, restoreStyleEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
@@ -28,7 +28,12 @@ describe('annotations Epics', () => {
     let store;
     beforeEach(() => {
         store = mockStore({
-            annotations: {},
+            annotations: {
+                editing: {
+                    style: {}
+                },
+                originalStyle: {}
+            },
             layers: {
                 flat: [{
                     id: 'annotations',
@@ -169,4 +174,17 @@ describe('annotations Epics', () => {
         const action = geometryChanged([], 'annotations', false);
         store.dispatch(action);
     });
+
+    it('set style', (done) => {
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                done();
+            }
+        });
+        const action = setStyle({});
+        store.dispatch(action);
+    });
+
 });

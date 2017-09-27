@@ -1,5 +1,5 @@
-/**
- * Copyright 2015, GeoSolutions Sas.
+/*
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -23,7 +23,27 @@ const {isFunction} = require('lodash');
 
 const assign = require('object-assign');
 
+const Select = require('react-select');
+
 const PluginsUtils = require('../../../utils/PluginsUtils');
+const MarkerUtils = require('../../../utils/MarkerUtils');
+
+const defaultIcon = MarkerUtils.extraMarkers.icons[0];
+const defaultMarkers = MarkerUtils.extraMarkers.shapes.map((s) => ({
+    name: s,
+    markers: MarkerUtils.extraMarkers.colors.map((m) => ({
+        name: m,
+        width: MarkerUtils.extraMarkers.size[0],
+        height: MarkerUtils.extraMarkers.size[1],
+        offsets: MarkerUtils.extraMarkers.getOffsets(m, s),
+        style: {
+            color: m,
+            shape: s
+        }
+    }))
+}));
+
+const glyphs = Object.keys(MarkerUtils.getGlyphs('fontawesome'));
 
 /**
  * Identify Viewer customized for Annotations.
@@ -40,15 +60,20 @@ const PluginsUtils = require('../../../utils/PluginsUtils');
  *  - validateError: id for translations of the validation error to show in case of failed validation
  * @prop {object} editing feature object of the feature under editing (when editing mode is enabled, null otherwise)
  * @prop {boolean} drawing flag to state status of drawing during editing
+ * @prop {boolean} styling flag to state status of styling during editing
  * @prop {object} errors key/value set of validation errors (field_name: error_id)
+ * @prop {object[]} markers list of markers to be used for styling (defaults to using the extra-markers lib {@link https://github.com/coryasilva/Leaflet.ExtraMarkers})
+ * @prop {string} markerIcon default marker icon image (sprite), defaults to image from the extra-markers lib {@link https://github.com/coryasilva/Leaflet.ExtraMarkers}
  * @prop {function} onEdit triggered when the user clicks on the edit button
  * @prop {function} onCancelEdit triggered when the user cancels current editing session
+ * @prop {function} onCancelStyle triggered when the user cancels style selection
  * @prop {function} onRemove triggered when the user clicks on the remove button
  * @prop {function} onSave triggered when the user clicks on the save button
  * @prop {function} onError triggered when a validation error occurs
  * @prop {function} onAddGeometry triggered when the user clicks on the add point button
  * @prop {function} onDeleteGeometry triggered when the user clicks on the remove points button
  * @prop {function} onStyleGeometry triggered when the user clicks on the style button
+ * @prop {function} onSetStyle triggered when the user changes a style property
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property.
  */
@@ -59,16 +84,22 @@ class AnnotationsInfoViewer extends React.Component {
         id: PropTypes.string,
         onEdit: PropTypes.func,
         onCancelEdit: PropTypes.func,
+        onCancelStyle: PropTypes.func,
         onRemove: PropTypes.func,
         onSave: PropTypes.func,
+        onSaveStyle: PropTypes.func,
         onError: PropTypes.func,
         onAddGeometry: PropTypes.func,
         onDeleteGeometry: PropTypes.func,
         onStyleGeometry: PropTypes.func,
+        onSetStyle: PropTypes.func,
         fields: PropTypes.array,
         editing: PropTypes.object,
         drawing: PropTypes.bool,
-        errors: PropTypes.object
+        styling: PropTypes.bool,
+        errors: PropTypes.object,
+        markers: PropTypes.array,
+        markerIcon: PropTypes.string
     };
 
     static defaultProps = {
@@ -88,6 +119,8 @@ class AnnotationsInfoViewer extends React.Component {
                 editable: true
             }
         ],
+        markers: defaultMarkers,
+        markerIcon: defaultIcon,
         errors: {}
     };
 
@@ -197,8 +230,41 @@ class AnnotationsInfoViewer extends React.Component {
         return <div className="annotations-edit-error"><Message msgId={this.props.errors[field]}/></div>;
     };
 
+    renderMarkers = (markers, prefix = '') => {
+        return markers.map((marker) => {
+            if (marker.markers) {
+                return <div className={"mapstore-annotations-info-viewer-marker-group mapstore-annotations-info-viewer-marker-" + prefix + marker.name}>{this.renderMarkers(marker.markers, marker.name + '-')}</div>;
+            }
+            return (<div onClick={() => this.selectStyle(marker)} className={"mapstore-annotations-info-viewer-marker mapstore-annotations-info-viewer-marker-" + prefix + marker.name + (this.isCurrentStyle(marker) ? " mapstore-annotations-info-viewer-marker-selected" : "")} style={{
+                backgroundImage: "url(" + this.props.markerIcon + ")",
+                width: marker.width + "px",
+                height: marker.height + "px",
+                backgroundPositionX: marker.offsets[0],
+                backgroundPositionY: marker.offsets[1],
+                cursor: "pointer"
+            }}/>);
+        });
+    };
+
+    renderStyler = () => {
+        const glyphRenderer = (option) => (<div><span className={"fa fa-" + option.value}/><span> {option.label}</span></div>);
+        return (<div className="mapstore-annotations-info-viewer-styler">
+            <div className="mapstore-annotations-info-viewer-markers">{this.renderMarkers(this.props.markers)}</div>
+            <Select
+                options={glyphs.map(g => ({
+                    label: g,
+                    value: g
+                }))}
+                optionRenderer={glyphRenderer}
+                valueRenderer={glyphRenderer}
+                value={this.props.editing.style.iconGlyph}
+                onChange={this.selectGlyph}/>
+            <div className="mapstore-annotations-info-viewer-styler-buttons"><Button bsStyle="primary" onClick={this.props.onSaveStyle}><Glyphicon glyph="floppy-disk"/>&nbsp;<Message msgId="annotations.save"/></Button><Button bsStyle="primary" onClick={this.props.onCancelStyle}><Glyphicon glyph="remove"/>&nbsp;<Message msgId="annotations.cancel"/></Button></div>
+        </div>);
+    };
+
     renderBody = (editing) => {
-        var items = this.getBodyItems(editing);
+        const items = this.getBodyItems(editing);
         if (items.length === 0) {
             return null;
         }
@@ -214,6 +280,10 @@ class AnnotationsInfoViewer extends React.Component {
     };
 
     render() {
+        if (this.props.styling) {
+            return this.renderStyler();
+        }
+
         const editing = this.props.editing && (this.props.editing.properties.id === this.props.id);
         return (
             <div className="mapstore-annotations-info-viewer">
@@ -239,6 +309,22 @@ class AnnotationsInfoViewer extends React.Component {
         });
     };
 
+    isCurrentStyle = (m) => {
+        return MarkerUtils.extraMarkers.matches(this.props.editing.style, m.style);
+    };
+
+    selectStyle = (marker) => {
+        return this.props.onSetStyle(assign(MarkerUtils.extraMarkers.getStyle(marker.style), {
+            iconGlyph: this.props.editing.style.iconGlyph
+        }));
+    };
+
+    selectGlyph = (option) => {
+        return this.props.onSetStyle(assign({}, this.props.editing.style, {
+            iconGlyph: option.value
+        }));
+    };
+
     validate = () => {
         return assign(this.props.fields.filter(field => field.editable).reduce((previous, field) => {
             const value = this.state.editedFields[field.name] === undefined ? this.props[field.name] : this.state.editedFields[field.name];
@@ -257,7 +343,8 @@ class AnnotationsInfoViewer extends React.Component {
     save = () => {
         const errors = this.validate();
         if (Object.keys(errors).length === 0) {
-            this.props.onSave(this.props.id, assign({}, this.state.editedFields), this.props.editing.geometry);
+            this.props.onSave(this.props.id, assign({}, this.state.editedFields),
+                this.props.editing.geometry, this.props.editing.style);
         } else {
             this.props.onError(errors);
         }

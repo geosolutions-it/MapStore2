@@ -13,3 +13,60 @@
 .mapstore-annotations-info-viewer .ql-snow .ql-picker {
     color: @ms2-color-text;
 }
+
+.mapstore-annotations-info-viewer-marker {
+    float: left;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.mapstore-annotations-info-viewer-marker-selected {
+    border: solid red 2px;
+}
+
+.mapstore-annotations-info-viewer-styler {
+    min-height: 600px;
+}
+
+.mapstore-annotations-info-viewer-styler .Select {
+    clear: both;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mapstore-annotations-info-viewer-marker-group {
+    clear: both;
+}
+
+.mapstore-right-panel .ql-tooltip {
+    left: 0 !important;
+    top: 0 !important;
+}
+
+.mapstore-annotations-info-viewer-items {
+    height: ~'calc(100% - 50px)';
+    overflow: auto;
+}
+
+.mapstore-right-panel .react-swipeable-view-container > div {
+    position: relative;
+    height: 100%;
+}
+
+.mapstore-right-panel .react-swipeable-view-container .panel.panel-default {
+    max-height: 100% !important;
+    height: 100%;
+    position: absolute;
+}
+.mapstore-right-panel .react-swipeable-view-container .panel.panel-default .panel-body {
+    height: ~'calc(100% - 60px)';
+}
+
+.mapstore-right-panel .mapstore-json-viewer, .mapstore-right-panel .mapstore-annotations-info-viewer {
+    height: 100%;
+}
