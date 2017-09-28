@@ -21,7 +21,10 @@ const {getWpsPayload} = require('../utils/ogc/WPS/autocomplete');
  * @memberof observables.autocomplete
  * @return {external:Observable} the stream used for fetching data for the autocomplete editor
 */
-const createPagedUniqueAutompleteStream = (props$) => props$.debounce(props => Rx.Observable.timer(props.delayDebounce || 0))
+const createPagedUniqueAutompleteStream = (props$) => props$
+    .distinctUntilChanged( ({value, currentPage}, newProps = {}) => !(newProps.value !== value || newProps.currentPage !== currentPage))
+    .throttle(props => Rx.Observable.timer(props.delayDebounce || 0))
+    .merge(props$.debounce(props => Rx.Observable.timer(props.delayDebounce || 0))).distinctUntilChanged()
     .switchMap((p) => {
         if (p.performFetch) {
             const data = getWpsPayload({

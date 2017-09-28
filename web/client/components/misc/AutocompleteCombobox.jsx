@@ -72,7 +72,7 @@ const addStateHandlers = compose(
             if (state.selected && state.changingPage) {
                 return ({
                     ...state,
-                    delayDebounce: state.selected ? 0 : 1000,
+                    delayDebounce: state.selected ? 0 : 500,
                     selected: false,
                     changingPage: false,
                     performFetch: state.selected && !state.changingPage ? false : true,
@@ -80,13 +80,14 @@ const addStateHandlers = compose(
                     currentPage: !state.changingPage ? 1 : state.currentPage
                 });
             }
+            const value = typeof v === "string" ? v : v.value;
             return ({
                 ...state,
-                delayDebounce: state.selected ? 0 : 1000,
+                delayDebounce: state.selected ? 0 : 500,
                 selected: false,
                 changingPage: false,
                 performFetch: state.selected && !state.changingPage ? false : true,
-                value: state.selected ? v.value : v,
+                value: value,
                 currentPage: !state.changingPage ? 1 : state.currentPage
             });
         },

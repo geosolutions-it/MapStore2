@@ -124,7 +124,7 @@ class AutocompleteFieldHOC extends React.Component {
                 this.props.onUpdateField(this.props.filterField.rowId, "value", input.value, "string", {currentPage: 1, selected: "selected", delayDebounce: 0});
             }
         } else {
-            this.props.onUpdateField(this.props.filterField.rowId, "value", input, "string", {currentPage: 1, delayDebounce: 1000});
+            this.props.onUpdateField(this.props.filterField.rowId, "value", typeof input === "string" ? input : input.value, "string", {currentPage: 1, delayDebounce: 1000});
         }
     };
 
