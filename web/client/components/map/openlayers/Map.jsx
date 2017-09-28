@@ -203,8 +203,10 @@ class OpenlayersMap extends React.Component {
     }
 
     componentWillUnmount() {
-        if (this.props.mapOptions.attribution && this.props.mapOptions.attribution.container) {
-            document.querySelector(this.props.mapOptions.attribution.container).removeChild(document.querySelector('.ol-attribution'));
+        const attributionContainer = this.props.mapOptions.attribution && this.props.mapOptions.attribution.container
+        && document.querySelector(this.props.mapOptions.attribution.container);
+        if (attributionContainer && attributionContainer.querySelector('.ol-attribution')) {
+            attributionContainer.removeChild(document.querySelector('.ol-attribution'));
         }
         this.map.setTarget(null);
     }
