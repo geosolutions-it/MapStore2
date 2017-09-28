@@ -88,7 +88,7 @@ module.exports = {
     /**
      * Allow multiGeometry or not (MultiPoint on a single annotation).
      */
-    multiGeometry: true,
+    multiGeometry: false,
     /**
      * Available glyphs list (used by the markers styler).
      */

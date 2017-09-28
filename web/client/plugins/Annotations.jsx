@@ -13,21 +13,19 @@ const Message = require('../components/I18N/Message');
 const PropTypes = require('prop-types');
 
 const {Glyphicon} = require('react-bootstrap');
-const {toggleControl} = require('../actions/controls');
-const {head} = require('lodash');
+const {on, toggleControl} = require('../actions/controls');
+
+const {createSelector} = require('reselect');
 
 const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnotation, removeAnnotation, cancelEditAnnotation,
     saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry, toggleStyle, setStyle, restoreStyle,
-    highlight, cleanHighlight, showAnnotation, cancelShowAnnotation, filterAnnotations} =
+    highlight, cleanHighlight, showAnnotation, cancelShowAnnotation, filterAnnotations, closeAnnotations,
+    cancelCloseAnnotations, confirmCloseAnnotations} =
     require('../actions/annotations');
 
-const AnnotationsEditor = connect((state) => ({
-    config: state.annotations && state.annotations.config,
-    editing: state.annotations && state.annotations.editing,
-    drawing: state.annotations && !!state.annotations.drawing,
-    styling: state.annotations && !!state.annotations.styling,
-    errors: state.annotations.validationErrors
-}),
+const {annotationsInfoSelector, annotationsListSelector} = require('../selectors/annotations');
+
+const AnnotationsEditor = connect(annotationsInfoSelector,
 {
     onEdit: editAnnotation,
     onCancelEdit: cancelEditAnnotation,
@@ -43,13 +41,7 @@ const AnnotationsEditor = connect((state) => ({
     onDeleteGeometry: removeAnnotationGeometry
 })(require('../components/mapcontrols/annotations/AnnotationsEditor'));
 
-const AnnotationsInfoViewer = connect((state) => ({
-    config: state.annotations && state.annotations.config,
-    editing: state.annotations && state.annotations.editing,
-    drawing: state.annotations && !!state.annotations.drawing,
-    styling: state.annotations && !!state.annotations.styling,
-    errors: state.annotations.validationErrors
-}),
+const AnnotationsInfoViewer = connect(annotationsInfoSelector,
 {
     onEdit: editAnnotation,
     onCancelEdit: cancelEditAnnotation,
@@ -64,18 +56,16 @@ const AnnotationsInfoViewer = connect((state) => ({
     onDeleteGeometry: removeAnnotationGeometry
 })(require('../components/mapcontrols/annotations/AnnotationsEditor'));
 
-const Annotations = connect((state) => ({
-    removing: state.annotations && state.annotations.removing,
-    mode: state.annotations && state.annotations.editing && 'editing' || (state.annotations && state.annotations.current && 'detail' || 'list'),
-    editor: AnnotationsEditor,
-    config: state.annotations && state.annotations.config,
-    annotations: state.layers && state.layers.flat && head(state.layers.flat.filter(l => l.id === 'annotations')) && head(state.layers.flat.filter(l => l.id === 'annotations')).features || [],
-    current: state.annotations && state.annotations.current || null,
-    editing: state.annotations && state.annotations.editing,
-    filter: state.annotations && state.annotations.filter || ''
-}), {
+const panelSelector = createSelector([annotationsListSelector], (list) => ({
+    ...list,
+    editor: AnnotationsEditor
+}));
+
+const Annotations = connect(panelSelector, {
     onCancelRemove: cancelRemoveAnnotation,
     onConfirmRemove: confirmRemoveAnnotation,
+    onCancelClose: cancelCloseAnnotations,
+    onConfirmClose: confirmCloseAnnotations,
     onAdd: newAnnotation,
     onHighlight: highlight,
     onCleanHighlight: cleanHighlight,
@@ -148,6 +138,10 @@ class AnnotationsPanel extends React.Component {
     }
 }
 
+const conditionalToggle = on.bind(null, toggleControl('annotations', null), (state) =>
+    !(state.controls && state.controls.annotations && state.controls.annotations.enabled && state.annotations && state.annotations.editing)
+, closeAnnotations);
+
 /**
   * Annotations Plugin. Implements annotations handling on maps.
   * Adds:
@@ -164,9 +158,9 @@ class AnnotationsPanel extends React.Component {
   * @static
   */
 const AnnotationsPlugin = connect((state) => ({
-    active: state.controls && state.controls.annotations && state.controls.annotations.enabled || false
+    active: (state.controls && state.controls.annotations && state.controls.annotations.enabled) || (state.annotations && state.annotations.closing) || false
 }), {
-    toggleControl: toggleControl.bind(null, 'annotations', null)
+    toggleControl: conditionalToggle
 })(AnnotationsPanel);
 
 module.exports = {
@@ -176,7 +170,7 @@ module.exports = {
             position: 2000,
             text: <Message msgId="annotationsbutton"/>,
             icon: <Glyphicon glyph="comment"/>,
-            action: toggleControl.bind(null, 'annotations', null),
+            action: conditionalToggle,
             priority: 2,
             doNotHide: true
         }
@@ -184,5 +178,6 @@ module.exports = {
     reducers: {
         annotations: require('../reducers/annotations')
     },
-    epics: require('../epics/annotations')(AnnotationsInfoViewer)
+    epics: assign({}, require('../epics/annotations')(AnnotationsInfoViewer),
+        require('../epics/controls'))
 };

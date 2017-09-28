@@ -12,8 +12,10 @@ const {createSelector} = require('reselect');
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
+const {on} = require('../actions/controls');
 
 const {getFeatureInfo, getVectorInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning} = require('../actions/mapInfo');
+const {closeAnnotations} = require('../actions/annotations');
 const {changeMousePointer} = require('../actions/map');
 const {changeMapInfoFormat} = require('../actions/mapInfo');
 const {currentLocaleSelector} = require('../selectors/locale');
@@ -44,6 +46,10 @@ const selector = createSelector([
     enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale
 }));
 // result panel
+
+const conditionalToggle = on.bind(null, purgeMapInfoResults(), (state) =>
+    !(state.annotations && state.annotations.editing)
+, closeAnnotations);
 
 /**
  * Identify plugin. This plugin allows to perform getfeature info.
@@ -90,7 +96,7 @@ const selector = createSelector([
 const IdentifyPlugin = connect(selector, {
     sendRequest: getFeatureInfo,
     localRequest: getVectorInfo,
-    purgeResults: purgeMapInfoResults,
+    purgeResults: conditionalToggle,
     changeMousePointer,
     showMarker: showMapinfoMarker,
     noQueryableLayers,

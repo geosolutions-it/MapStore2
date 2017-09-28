@@ -14,7 +14,7 @@ const {
     EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION, SAVE_ANNOTATION, TOGGLE_ADD,
     UPDATE_ANNOTATION_GEOMETRY, VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY,
     TOGGLE_STYLE, SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION,
-    FILTER_ANNOTATIONS
+    FILTER_ANNOTATIONS, CLOSE_ANNOTATIONS, CONFIRM_CLOSE_ANNOTATIONS, CANCEL_CLOSE_ANNOTATIONS
  } = require('../../actions/annotations');
 
 describe('Test the annotations reducer', () => {
@@ -190,5 +190,26 @@ describe('Test the annotations reducer', () => {
             filter: '1'
         });
         expect(state.filter).toBe('1');
+    });
+
+    it('close annotations', () => {
+        const state = annotations({}, {
+            type: CLOSE_ANNOTATIONS
+        });
+        expect(state.closing).toBe(true);
+    });
+
+    it('confirm close annotations', () => {
+        const state = annotations({}, {
+            type: CONFIRM_CLOSE_ANNOTATIONS
+        });
+        expect(state.closing).toBe(false);
+    });
+
+    it('cancel close annotations', () => {
+        const state = annotations({}, {
+            type: CANCEL_CLOSE_ANNOTATIONS
+        });
+        expect(state.closing).toBe(false);
     });
 });

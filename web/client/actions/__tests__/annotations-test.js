@@ -14,6 +14,9 @@ const {
     REMOVE_ANNOTATION,
     CONFIRM_REMOVE_ANNOTATION,
     CANCEL_REMOVE_ANNOTATION,
+    CLOSE_ANNOTATIONS,
+    CONFIRM_CLOSE_ANNOTATIONS,
+    CANCEL_CLOSE_ANNOTATIONS,
     CANCEL_EDIT_ANNOTATION,
     SAVE_ANNOTATION,
     TOGGLE_ADD,
@@ -47,7 +50,10 @@ const {
     newAnnotation,
     highlight,
     cleanHighlight,
-    filterAnnotations
+    filterAnnotations,
+    closeAnnotations,
+    confirmCloseAnnotations,
+    cancelCloseAnnotations
 } = require('../annotations');
 
 describe('Test correctness of the annotations actions', () => {
@@ -182,5 +188,20 @@ describe('Test correctness of the annotations actions', () => {
         const result = filterAnnotations('1');
         expect(result.type).toEqual(FILTER_ANNOTATIONS);
         expect(result.filter).toEqual('1');
+    });
+
+    it('close annotations', () => {
+        const result = closeAnnotations();
+        expect(result.type).toEqual(CLOSE_ANNOTATIONS);
+    });
+
+    it('confirm close annotations', () => {
+        const result = confirmCloseAnnotations();
+        expect(result.type).toEqual(CONFIRM_CLOSE_ANNOTATIONS);
+    });
+
+    it('cancel close annotations', () => {
+        const result = cancelCloseAnnotations();
+        expect(result.type).toEqual(CANCEL_CLOSE_ANNOTATIONS);
     });
 });

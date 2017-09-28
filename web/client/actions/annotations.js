@@ -25,6 +25,9 @@ const VALIDATION_ERROR = 'ANNOTATIONS:VALIDATION_ERROR';
 const HIGHLIGHT = 'ANNOTATIONS:HIGHLIGHT';
 const CLEAN_HIGHLIGHT = 'ANNOTATIONS:CLEAN_HIGHLIGHT';
 const FILTER_ANNOTATIONS = 'ANNOTATIONS:FILTER';
+const CLOSE_ANNOTATIONS = 'ANNOTATIONS:CLOSE';
+const CONFIRM_CLOSE_ANNOTATIONS = 'ANNOTATIONS:CONFIRM_CLOSE';
+const CANCEL_CLOSE_ANNOTATIONS = 'ANNOTATIONS:CANCEL_CLOSE';
 
 const {head} = require('lodash');
 
@@ -160,6 +163,24 @@ function filterAnnotations(filter) {
     };
 }
 
+function closeAnnotations() {
+    return {
+        type: CLOSE_ANNOTATIONS
+    };
+}
+
+function confirmCloseAnnotations() {
+    return {
+        type: CONFIRM_CLOSE_ANNOTATIONS
+    };
+}
+
+function cancelCloseAnnotations() {
+    return {
+        type: CANCEL_CLOSE_ANNOTATIONS
+    };
+}
+
 module.exports = {
     SHOW_ANNOTATION,
     EDIT_ANNOTATION,
@@ -180,6 +201,9 @@ module.exports = {
     CLEAN_HIGHLIGHT,
     CANCEL_SHOW_ANNOTATION,
     FILTER_ANNOTATIONS,
+    CLOSE_ANNOTATIONS,
+    CONFIRM_CLOSE_ANNOTATIONS,
+    CANCEL_CLOSE_ANNOTATIONS,
     editAnnotation,
     newAnnotation,
     removeAnnotation,
@@ -198,5 +222,8 @@ module.exports = {
     cleanHighlight,
     showAnnotation,
     cancelShowAnnotation,
-    filterAnnotations
+    filterAnnotations,
+    closeAnnotations,
+    confirmCloseAnnotations,
+    cancelCloseAnnotations
 };

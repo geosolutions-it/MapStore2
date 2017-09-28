@@ -8,19 +8,21 @@
 
 const Rx = require('rxjs');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
-const {TOGGLE_CONTROL} = require('../actions/controls');
-const {addLayer, updateNode, changeLayerProperties} = require('../actions/layers');
+const {TOGGLE_CONTROL, toggleControl} = require('../actions/controls');
+const {addLayer, updateNode, changeLayerProperties, removeLayer} = require('../actions/layers');
 const {hideMapinfoMarker, purgeMapInfoResults} = require('../actions/mapInfo');
 
 const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAdd,
     CONFIRM_REMOVE_ANNOTATION, SAVE_ANNOTATION, EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION,
-    TOGGLE_ADD, SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT} = require('../actions/annotations');
+    TOGGLE_ADD, SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS} = require('../actions/annotations');
 
 const {GEOMETRY_CHANGED} = require('../actions/draw');
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 
 const {head} = require('lodash');
 const assign = require('object-assign');
+
+const {annotationsLayerSelector} = require('../selectors/annotations');
 
 const annotationsStyle = {
     iconGlyph: 'comment',
@@ -84,7 +86,7 @@ module.exports = (viewer) => ({
     addAnnotationsLayerEpic: (action$, store) =>
     action$.ofType(MAP_CONFIG_LOADED)
         .switchMap(() => {
-            const annotationsLayer = head(store.getState().layers.flat.filter(l => l.id === 'annotations'));
+            const annotationsLayer = annotationsLayerSelector(store.getState());
             if (annotationsLayer) {
                 return Rx.Observable.of(updateNode('annotations', 'layer', {
                     rowViewer: viewer
@@ -105,22 +107,26 @@ module.exports = (viewer) => ({
         action$.ofType(CONFIRM_REMOVE_ANNOTATION)
         .switchMap((action) => {
             if (action.id === 'geometry') {
-                return Rx.Observable.of(changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [store.getState().annotations.editing], {}));
+                return Rx.Observable.from([
+                    changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [store.getState().annotations.editing], {}),
+                    toggleDrawOrEdit(store.getState())
+            ]);
             }
+            const newFeatures = annotationsLayerSelector(store.getState()).features.filter(f => f.properties.id !== action.id);
             return Rx.Observable.from([
                 updateNode('annotations', 'layer', {
-                    features: head(store.getState().layers.flat.filter(l => l.id === 'annotations')).features.filter(f => f.properties.id !== action.id)
+                    features: newFeatures
                 }),
                 hideMapinfoMarker(),
                 purgeMapInfoResults()
-            ]);
+            ].concat(newFeatures.length === 0 ? [removeLayer('annotations')] : []));
         }),
     saveAnnotationEpic: (action$, store) =>
         action$.ofType(SAVE_ANNOTATION)
         .switchMap((action) => {
             const annotationsLayer = head(store.getState().layers.flat.filter(l => l.id === 'annotations'));
             return Rx.Observable.from((annotationsLayer ? [updateNode('annotations', 'layer', {
-                features: head(store.getState().layers.flat.filter(l => l.id === 'annotations')).features.map(f => assign({}, f, {
+                features: annotationsLayerSelector(store.getState()).features.map(f => assign({}, f, {
                     properties: f.properties.id === action.id ? assign({}, f.properties, action.fields) : f.properties,
                         geometry: f.properties.id === action.id ? action.geometry : f.geometry,
                         style: f.properties.id === action.id ? action.style : f.style
@@ -185,7 +191,7 @@ module.exports = (viewer) => ({
         .switchMap((action) => {
             return Rx.Observable.of(
                 updateNode('annotations', 'layer', {
-                    features: head(store.getState().layers.flat.filter(l => l.id === 'annotations')).features.map(f => f.properties.id === action.id ? assign({}, f, {
+                    features: annotationsLayerSelector(store.getState()).features.map(f => f.properties.id === action.id ? assign({}, f, {
                         style: assign({}, f.style, {
                             highlight: true
                         })
@@ -197,7 +203,7 @@ module.exports = (viewer) => ({
         .switchMap(() => {
             return Rx.Observable.of(
                 updateNode('annotations', 'layer', {
-                    features: head(store.getState().layers.flat.filter(l => l.id === 'annotations')).features.map(f =>
+                    features: annotationsLayerSelector(store.getState()).features.map(f =>
                     assign({}, f, {
                         style: assign({}, f.style, {
                             highlight: false
@@ -214,5 +220,9 @@ module.exports = (viewer) => ({
                 changeDrawingStatus("clean", store.getState().annotations.featureType, "annotations", [], {}),
                 changeLayerProperties('annotations', {visibility: true})
             ]);
-        })
+        }),
+    confirmCloseAnnotationsEpic: (action$, store) => action$.ofType(CONFIRM_CLOSE_ANNOTATIONS)
+    .switchMap(() => {
+        return Rx.Observable.from((store.getState().controls.annotations && store.getState().controls.annotations.enabled ? [toggleControl('annotations')] : []).concat([purgeMapInfoResults()]));
+    })
 });

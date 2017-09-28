@@ -34,6 +34,7 @@ const defaultConfig = require('./AnnotationsConfig');
  * It also handles removal confirmation modals
  * @memberof components.mapControls.annotations
  * @class
+ * @prop {boolean} closing user asked for closing panel when editing
  * @prop {object} editing annotation object currently under editing (null if we are not in editing mode)
  * @prop {object} removing object to remove, it is also a flag that means we are currently asking for removing an annotation / geometry. Toggles visibility of the confirm dialog
  * @prop {string} mode current mode of operation (list, editing, detail)
@@ -44,6 +45,8 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {string} filter current filter entered by the user
  * @prop {function} onCancelRemove triggered when the user cancels removal
  * @prop {function} onConfirmRemove triggered when the user confirms removal
+ * @prop {function} onCancelClose triggered when the user cancels closing
+ * @prop {function} onConfirmClose triggered when the user confirms closing
  * @prop {function} onAdd triggered when the user clicks on the new annotation button
  * @prop {function} onHighlight triggered when the mouse hovers an annotation card
  * @prop {function} onCleanHighlight triggered when the mouse is out of any annotation card
@@ -52,10 +55,13 @@ const defaultConfig = require('./AnnotationsConfig');
  */
 class Annotations extends React.Component {
     static propTypes = {
+        closing: PropTypes.bool,
         editing: PropTypes.object,
         removing: PropTypes.object,
         onCancelRemove: PropTypes.func,
         onConfirmRemove: PropTypes.func,
+        onCancelClose: PropTypes.func,
+        onConfirmClose: PropTypes.func,
         onAdd: PropTypes.func,
         onHighlight: PropTypes.func,
         onCleanHighlight: PropTypes.func,
@@ -134,6 +140,19 @@ class Annotations extends React.Component {
     };
 
     render() {
+        if (this.props.closing) {
+            return (<ConfirmDialog
+                show
+                modal
+                onClose={this.props.onCancelClose}
+                onConfirm={this.props.onConfirmClose}
+                confirmButtonBSStyle="default"
+                closeGlyph="1-close"
+                confirmButtonContent={<Message msgId="annotations.confirm" />}
+                closeText={<Message msgId="annotations.cancel" />}>
+                <Message msgId="annotations.undo"/>
+                </ConfirmDialog>);
+        }
         if (this.props.removing) {
             return (<ConfirmDialog
                 show

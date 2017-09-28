@@ -608,6 +608,7 @@
             "emptygeometry": "La geometria non può essere vuota",
             "add": "Nuova",
             "filter": "Filtra le annotazioni...",
+            "undo": "Sei sicuro di voler abbandonare la modifica in corso?",
             "title": "Annotazioni",
             "field": {
                 "title": "Titolo",

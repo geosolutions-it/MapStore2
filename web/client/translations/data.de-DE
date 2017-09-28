@@ -609,6 +609,7 @@
             "emptygeometry": "geometrie kann nicht leer sein",
             "add": "Neue",
             "filter": "Filtern die annotationen...",
+            "undo": "Sind Sie sicher, dass Sie die Annotationsbearbeitungssitzung aufgeben möchten?",
             "field": {
                 "title": "Titel",
                 "description": "Beschreibung"

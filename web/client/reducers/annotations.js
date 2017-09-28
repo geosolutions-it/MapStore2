@@ -10,7 +10,8 @@ const assign = require('object-assign');
 
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 const {TOGGLE_CONTROL} = require('../actions/controls');
-const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION,
+const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, CLOSE_ANNOTATIONS,
+        CONFIRM_CLOSE_ANNOTATIONS, CANCEL_CLOSE_ANNOTATIONS,
         EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION, SAVE_ANNOTATION, TOGGLE_ADD,
     UPDATE_ANNOTATION_GEOMETRY, VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY, TOGGLE_STYLE,
     SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION, FILTER_ANNOTATIONS} = require('../actions/annotations');
@@ -68,12 +69,22 @@ function annotations(state = { validationErrors: {} }, action) {
             return assign({}, state, {
                 removing: null
             });
+        case CLOSE_ANNOTATIONS:
+            return assign({}, state, {
+                closing: true
+            });
+        case CONFIRM_CLOSE_ANNOTATIONS:
+        case CANCEL_CLOSE_ANNOTATIONS:
+            return assign({}, state, {
+                closing: false
+            });
         case CANCEL_EDIT_ANNOTATION:
             return assign({}, state, {
                 editing: null,
                 drawing: false,
                 styling: false,
-                originalStyle: null
+                originalStyle: null,
+                validationErrors: {}
             });
         case SAVE_ANNOTATION:
             return assign({}, state, {
