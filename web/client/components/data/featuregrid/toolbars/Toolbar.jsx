@@ -16,7 +16,7 @@ const getSaveMessageId = ({saving, saved}) => {
     return "featuregrid.toolbar.saveChanges";
 };
 
-module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeometry, hasNewFeatures, isSimpleGeom, isDrawing = false, isEditingAllowed, saving = false, saved = false, isDownloadOpen, isColumnsOpen, disableToolbar, isSearchAllowed, disableDownload, isSyncActive = false} = {}) =>
+module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeometry, hasNewFeatures, isSimpleGeom, isDrawing = false, isEditingAllowed, saving = false, saved = false, isDownloadOpen, isColumnsOpen, disableToolbar, isSearchAllowed, disableDownload, isSyncActive = false, hasSupportedGeometry} = {}) =>
 
     (<ButtonGroup id="featuregrid-toolbar" className="featuregrid-toolbar featuregrid-toolbar-margin">
         <TButton
@@ -51,14 +51,14 @@ module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeo
             id="add-feature"
             tooltip={<Message msgId="featuregrid.toolbar.addNewFeatures"/>}
             disabled={disableToolbar}
-            visible={mode === "EDIT" && !hasNewFeatures && !hasChanges}
+            visible={mode === "EDIT" && !hasNewFeatures && !hasChanges && hasSupportedGeometry}
             onClick={events.createFeature}
             glyph="row-add"/>
         <TButton
             id="draw-feature"
             tooltip={<Message msgId={getDrawFeatureTooltip(isDrawing, isSimpleGeom)}/>}
             disabled={disableToolbar}
-            visible={mode === "EDIT" && selectedCount === 1 && (!hasGeometry || hasGeometry && !isSimpleGeom)}
+            visible={mode === "EDIT" && selectedCount === 1 && (!hasGeometry || hasGeometry && !isSimpleGeom) && hasSupportedGeometry}
             onClick={events.startDrawingFeature}
             active={isDrawing}
             glyph="pencil-add"/>
@@ -88,7 +88,7 @@ module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeo
             id="delete-geometry"
             tooltip={<Message msgId="featuregrid.toolbar.deleteGeometry"/>}
             disabled={disableToolbar}
-            visible={mode === "EDIT" && hasGeometry && selectedCount === 1}
+            visible={mode === "EDIT" && hasGeometry && selectedCount === 1 && hasSupportedGeometry}
             onClick={events.deleteGeometry}
             glyph="polygon-trash"/>
         <TButton
@@ -108,11 +108,11 @@ module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeo
             onClick={events.settings}
             glyph="features-grid-set"/>
         <TButton
-            id="grid-settings"
+            id="grid-map-filter"
             tooltip={<Message msgId="featuregrid.toolbar.syncOnMap"/>}
             disabled={disableToolbar}
             active={isSyncActive}
             visible={mode === "VIEW"}
             onClick={events.sync}
-            glyph="globe"/>
+            glyph="map-filter"/>
     </ButtonGroup>);

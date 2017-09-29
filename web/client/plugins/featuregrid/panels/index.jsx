@@ -11,7 +11,7 @@ const {connect} = require('react-redux');
 const {bindActionCreators} = require('redux');
 const {createSelector, createStructuredSelector} = require('reselect');
 const {paginationInfo, featureLoadingSelector, resultsSelector, isSyncWmsActive} = require('../../../selectors/query');
-const {getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector, getAttributeFilter} = require('../../../selectors/featuregrid');
+const {getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector, getAttributeFilter, hasSupportedGeometry} = require('../../../selectors/featuregrid');
 const {isAdminUserSelector} = require('../../../selectors/security');
 const {isCesium} = require('../../../selectors/maptype');
 const {deleteFeatures, toggleTool, clearChangeConfirmed, closeFeatureGridConfirmed, closeFeatureGrid} = require('../../../actions/featuregrid');
@@ -38,7 +38,8 @@ const Toolbar = connect(
         isSyncActive: isSyncWmsActive,
         isColumnsOpen: state => state && state.featuregrid && state.featuregrid.tools && state.featuregrid.tools.settings,
         isSearchAllowed: (state) => !isCesium(state),
-        isEditingAllowed: (state) => (isAdminUserSelector(state) || canEditSelector(state)) && !isCesium(state)
+        isEditingAllowed: (state) => (isAdminUserSelector(state) || canEditSelector(state)) && !isCesium(state),
+        hasSupportedGeometry
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
 )(require('../../../components/data/featuregrid/toolbars/Toolbar'));
