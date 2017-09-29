@@ -78,7 +78,7 @@ const copyTemplates = (level, path, callback) => {
 const copyStaticFiles = () => {
     console.log('Copying static files...');
     let copied = 0;
-    ['.editorconfig', '.eslintrc', '.eslintignore', 'LICENSE', '.babelrc'].map(function(fileName) {
+    ['.editorconfig', '.eslintrc', '.eslintignore', 'LICENSE.txt', '.babelrc'].map(function(fileName) {
         const toWrite = fs.createWriteStream(outFolder + '/' + fileName);
         fs.createReadStream(fileName).pipe(toWrite);
         console.log('Copied ' + fileName);

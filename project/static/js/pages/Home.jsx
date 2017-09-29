@@ -10,7 +10,7 @@ const Debug = require('../../MapStore2/web/client/components/development/Debug')
 const {connect} = require('react-redux');
 
 
-const {Link} = require('react-router');
+const {Link} = require('react-router-dom');
 
 const {Glyphicon} = require('react-bootstrap');
 
