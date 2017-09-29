@@ -16,7 +16,7 @@ const ComboField = require('./ComboField');
 const DateField = require('./DateField');
 const NumberField = require('./NumberField');
 const TextField = require('./TextField');
-const AutocompleteField = require('./AutocompleteField');
+const AutocompleteField = require('./AutocompleteFieldHOC');
 
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const I18N = require('../../I18N/I18N');
