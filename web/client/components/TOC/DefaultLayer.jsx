@@ -27,6 +27,7 @@ class DefaultLayer extends React.Component {
         style: PropTypes.object,
         sortableStyle: PropTypes.object,
         activateLegendTool: PropTypes.bool,
+        activateOpacityTool: PropTypes.bool,
         visibilityCheckType: PropTypes.string,
         currentZoomLvl: PropTypes.number,
         scales: PropTypes.array,
@@ -46,6 +47,7 @@ class DefaultLayer extends React.Component {
         onContextMenu: () => {},
         onSelect: () => {},
         activateLegendTool: false,
+        activateOpacityTool: true,
         visibilityCheckType: "glyph",
         additionalTools: [],
         currentLocale: 'en-US',
@@ -59,6 +61,7 @@ class DefaultLayer extends React.Component {
         return (
             <div key="legend" position="collapsible" className="collapsible-toc">
                 <Grid fluid>
+                    {this.props.activateOpacityTool ?
                     <Row>
                         <Col xs={12} className="mapstore-slider with-tooltip">
                             <Slider start={[layerOpacity]}
@@ -75,7 +78,7 @@ class DefaultLayer extends React.Component {
                                     }
                                 }}/>
                         </Col>
-                    </Row>
+                    </Row> : null}
                     {this.props.activateLegendTool ?
                     <Row>
                         <Col xs={12}>
@@ -100,8 +103,8 @@ class DefaultLayer extends React.Component {
                 propertiesChangeHandler={this.props.propertiesChangeHandler}/>);
     }
 
-    renderToolsLegend = () => {
-        return this.props.node.loadingError === 'Error' ?
+    renderToolsLegend = (isEmpty) => {
+        return this.props.node.loadingError === 'Error' || isEmpty ?
                 null
                 :
                 (<LayersTool
@@ -115,15 +118,16 @@ class DefaultLayer extends React.Component {
     }
 
     renderNode = (grab, hide, selected, error, warning, other) => {
+        const isEmpty = !this.props.activateLegendTool && !this.props.activateOpacityTool;
         return (
             <Node className={'toc-default-layer' + hide + selected + error + warning} sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
                 <div className="toc-default-layer-head">
                     {grab}
                     {this.renderVisibility()}
                     <Title filterText={this.props.filterText} node={this.props.node} currentLocale={this.props.currentLocale} onClick={this.props.onSelect} onContextMenu={this.props.onContextMenu}/>
-                    {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend()}
+                    {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend(isEmpty)}
                 </div>
-                {this.renderCollapsible()}
+                {isEmpty ? null : this.renderCollapsible()}
             </Node>
         );
     }

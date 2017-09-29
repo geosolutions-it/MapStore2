@@ -23,8 +23,8 @@ module.exports = class extends React.Component {
         chartStyle: {
             margin: {
                 top: 5,
-                right: 20,
-                left: 18,
+                right: 5,
+                left: 5,
                 bottom: 45
             },
             width: 600,

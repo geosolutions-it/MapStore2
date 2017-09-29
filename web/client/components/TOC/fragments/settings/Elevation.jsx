@@ -89,7 +89,7 @@ module.exports = class extends React.Component {
                     id="mapstore-elevation-label"
                     key="elevation-label"
                     className="control-label"
-                    style={this.props.elevations.showChart ? {marginBottom: "10px"} : {marginBottom: "90px"}}>
+                    style={this.props.showElevationChart ? {marginBottom: "10px"} : {marginBottom: "90px"}}>
                     {this.props.elevationText}: ({this.props.elevations.units})
                 </label>
                 {this.renderElevationsChart(elevations)}

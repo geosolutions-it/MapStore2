@@ -135,6 +135,7 @@ class LayerTree extends React.Component {
         updateSettings: PropTypes.func,
         updateNode: PropTypes.func,
         removeNode: PropTypes.func,
+        activateOpacityTool: PropTypes.bool,
         activateSortLayer: PropTypes.bool,
         activateFilterLayer: PropTypes.bool,
         activateMapTitle: PropTypes.bool,
@@ -182,6 +183,7 @@ class LayerTree extends React.Component {
         removeNode: () => {},
         onSelectNode: () => {},
         selectedNodes: [],
+        activateOpacityTool: true,
         activateSortLayer: true,
         activateFilterLayer: true,
         activateMapTitle: true,
@@ -248,6 +250,7 @@ class LayerTree extends React.Component {
             <DefaultLayer
                 {...this.props.layerOptions}
                 onToggle={this.props.onToggleLayer}
+                activateOpacityTool={this.props.activateOpacityTool}
                 onContextMenu={this.props.onContextMenu}
                 propertiesChangeHandler={this.props.layerPropertiesChangeHandler}
                 onSelect={this.props.activateToolsContainer ? this.props.onSelectNode : null}
@@ -372,6 +375,7 @@ class LayerTree extends React.Component {
  * @memberof plugins
  * @prop {boolean} cfg.activateFilterLayer: activate filter layers tool, default `true`
  * @prop {boolean} cfg.activateMapTitle: show map title, default `true`
+ * @prop {boolean} cfg.activateOpacityTool: show opacity slider in collapsible panel of layer, default `true`
  * @prop {boolean} cfg.activateToolsContainer: activate layers and group global toolbar, default `true`
  * @prop {boolean} cfg.activateLegendTool: show legend in collapsible panel, default `true`
  * @prop {boolean} cfg.activateZoomTool: activate zoom to extension tool, default `true`
