@@ -32,9 +32,12 @@ module.exports = {
             return L.marker(
                 latlng,
                 {
-                    icon
+                    icon,
+                    opacity: style.opacity || 1
                 });
         }
-        return L.marker(latlng);
+        return L.marker(latlng, {
+            opacity: style.opacity || 1
+        });
     }
 };
