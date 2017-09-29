@@ -1,7 +1,7 @@
 
 const Rx = require('rxjs');
-const { ActionsObservable } = require('redux-observable');
-
+const { ActionsObservable, combineEpics } = require('redux-observable');
+const TEST_TIMEOUT = "EPICTEST:TIMEOUT";
 module.exports = {
     /**
      * Utility to test an epic
@@ -24,5 +24,16 @@ module.exports = {
         } else {
             actions.next(action);
         }
-    }
+    },
+    /**
+     * The action emitted by the addTimeoutEpic
+     * @type {string}
+     */
+    TEST_TIMEOUT,
+    /**
+     * Combine the epic with another than emits TEST_TIMEOUT action.
+     * @param {function} epic         The epic to combine
+     * @param {Number} [timeout=1000] milliseconds to wait after emit the TEST_TIMEOUT action.
+     */
+    addTimeoutEpic: (epic, timeout = 1000) => combineEpics(epic, () => Rx.Observable.timer(timeout).map(() => ({type: TEST_TIMEOUT, timeout})))
 };

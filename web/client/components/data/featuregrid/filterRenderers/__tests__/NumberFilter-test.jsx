@@ -10,6 +10,35 @@ const ReactDOM = require('react-dom');
 const ReactTestUtils = require('react-dom/test-utils');
 const NumberFilter = require('../NumberFilter');
 const expect = require('expect');
+const EXPRESSION_TESTS = [
+    ["2", "=", 2],
+    ["2.", "=", 2],
+    ["2.1", "=", 2.1],
+    [" 2.1 ", "=", 2.1],
+    ["> 2", ">", 2],
+    [">= 2", ">=", 2],
+    ["< 2", "<", 2],
+    ["<= 2", "<=", 2],
+    ["=2", "=", 2],
+    ["==2", "=", 2],
+    ["=== 2", "=", 2],
+    ["!== 2", "<>", 2],
+    ["!= 2", "<>", 2],
+    ["<> 2", "<>", 2],
+    ["", "=", undefined],
+    [" ", "=", undefined],
+    ["ZZZ", "=", undefined]
+];
+const testExperssion = (spyonChange, spyonValueChange, rawValue, expectedOperator, expectedValue) => {
+    const input = document.getElementsByTagName("input")[0];
+    input.value = rawValue;
+    ReactTestUtils.Simulate.change(input);
+    const args = spyonChange.calls[spyonChange.calls.length - 1].arguments[0];
+    const valueArgs = spyonValueChange.calls[spyonValueChange.calls.length - 1].arguments[0];
+    expect(args.value).toBe(expectedValue);
+    expect(args.operator).toBe(expectedOperator);
+    expect(valueArgs).toBe(rawValue);
+};
 
 describe('Test for NumberFilter component', () => {
     beforeEach((done) => {
@@ -57,7 +86,7 @@ describe('Test for NumberFilter component', () => {
         ReactTestUtils.Simulate.change(input);
         expect( document.getElementsByClassName("has-error").length > 0).toBe(true);
     });
-    it('Test NumberFilter expression', () => {
+    it('Test NumberFilter expressions', () => {
         const actions = {
             onChange: () => {},
             onValueChange: () => {}
@@ -65,19 +94,6 @@ describe('Test for NumberFilter component', () => {
         const spyonChange = expect.spyOn(actions, 'onChange');
         const spyonValueChange = expect.spyOn(actions, 'onValueChange');
         ReactDOM.render(<NumberFilter onChange={actions.onChange} onValueChange={actions.onValueChange} />, document.getElementById("container"));
-
-        const input = document.getElementsByTagName("input")[0];
-        input.value = "> 2";
-        ReactTestUtils.Simulate.change(input);
-        const args = spyonChange.calls[0].arguments[0];
-        expect(args.value).toBe(2);
-        expect(args.operator).toBe(">");
-        expect(spyonValueChange).toHaveBeenCalled();
-        expect(spyonValueChange).toHaveBeenCalledWith("> 2");
-        input.value = "< 2";
-        ReactTestUtils.Simulate.change(input);
-        const args2 = spyonChange.calls[1].arguments[0];
-        expect(args2.value).toBe(2);
-        expect(args2.operator).toBe("<");
+        EXPRESSION_TESTS.map( params => testExperssion(spyonChange, spyonValueChange, ...params));
     });
 });
