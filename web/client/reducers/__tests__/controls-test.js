@@ -10,7 +10,17 @@ const expect = require('expect');
 const controls = require('../controls');
 const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY, RESET_CONTROLS} = require('../../actions/controls');
 
-describe('Test the constrols reducer', () => {
+describe('Test the controls reducer', () => {
+    it('default case', () => {
+        const state = controls({
+            mycontrol: {
+                enabled: true
+            }
+        }, {});
+        expect(state.mycontrol).toExist();
+        expect(state.mycontrol.enabled).toBe(true);
+    });
+
     it('toggles a control the first time', () => {
         const state = controls({}, {
             type: TOGGLE_CONTROL,
@@ -58,15 +68,32 @@ describe('Test the constrols reducer', () => {
         expect(state.mycontrol.prop).toBe('val');
     });
 
+    it('set a control property with toggle', () => {
+        const state = controls({
+            mycontrol: {
+                enabled: true,
+                prop: "val"
+            }
+        }, {
+            type: SET_CONTROL_PROPERTY,
+            control: 'mycontrol',
+            property: 'prop',
+            value: 'val',
+            toggle: true
+        });
+        expect(state.mycontrol).toExist();
+        expect(state.mycontrol.prop).toBe(undefined);
+    });
 
-    it('reset the controls', () => {
+    it('reset the controls without skip ', () => {
         const state = controls(
             {
                 c1: { enabled: true},
                 c2: { enabled: false},
                 c3: { idonthaveenabledfield: "whatever"}
             }, {
-                type: RESET_CONTROLS
+                type: RESET_CONTROLS,
+                skip: []
             });
         expect(state.c1).toExist();
         expect(state.c2).toExist();
@@ -74,5 +101,27 @@ describe('Test the constrols reducer', () => {
         expect(state.c1.enabled).toBe(false);
         expect(state.c2.enabled).toBe(false);
         expect(state.c3.enabled).toNotExist();
+        expect(state.c3.idonthaveenabledfield).toExist();
+        expect(state.c3.idonthaveenabledfield).toBe("whatever");
+    });
+
+    it('reset the controls with skip c1,c3', () => {
+        const state = controls(
+            {
+                c1: { enabled: true},
+                c2: { enabled: true},
+                c3: { idonthaveenabledfield: "whatever"}
+            }, {
+                type: RESET_CONTROLS,
+                skip: ["c1", "c3"]
+            });
+        expect(state.c1).toExist();
+        expect(state.c2).toExist();
+        expect(state.c3).toExist();
+        expect(state.c1.enabled).toBe(true);
+        expect(state.c2.enabled).toBe(false);
+        expect(state.c3.enabled).toNotExist();
+        expect(state.c3.idonthaveenabledfield).toExist();
+        expect(state.c3.idonthaveenabledfield).toBe("whatever");
     });
 });
