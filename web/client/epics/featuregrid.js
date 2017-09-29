@@ -42,7 +42,7 @@ const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasCha
     isFeatureGridOpen, hasSupportedGeometry} = require('../selectors/featuregrid');
 const {queryPanelSelector} = require('../selectors/controls');
 
-const {error} = require('../actions/notifications');
+const {error, warning} = require('../actions/notifications');
 const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector, isSyncWmsActive} = require('../selectors/query');
 const drawSupportReset = () => changeDrawingStatus("clean", "", "featureGrid", [], {});
 const {interceptOGCError} = require('../utils/ObservableUtils');
@@ -430,8 +430,16 @@ module.exports = {
      */
     setHighlightFeaturesPath: (action$, store) => action$.ofType(TOGGLE_MODE)
         .switchMap( (a) => {
-            if (a.mode === MODES.VIEW || a.mode === MODES.EDIT && !hasSupportedGeometry(store.getState())) {
+            if (a.mode === MODES.VIEW) {
                 return Rx.Observable.of(drawSupportReset(), setHighlightFeaturesPath("featuregrid.select"));
+            }
+            if (a.mode === MODES.EDIT && !hasSupportedGeometry(store.getState())) {
+                return Rx.Observable.of(drawSupportReset(), setHighlightFeaturesPath("featuregrid.select"), warning({
+                    title: "featuregrid.notSupportedGeometryTitle",
+                    message: "featuregrid.notSupportedGeometry",
+                    uid: "unsupportedGeometryWarning",
+                    autoDismiss: 5
+                }));
             }
             return Rx.Observable.of(setHighlightFeaturesPath());
         }),

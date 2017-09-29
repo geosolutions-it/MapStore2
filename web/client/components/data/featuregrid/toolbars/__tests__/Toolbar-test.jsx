@@ -266,16 +266,16 @@ describe('Featuregrid toolbar component', () => {
         button = document.getElementById("fg-grid-settings");
         expect(isVisibleButton(button)).toBe(false);
     });
-    it('check gml:Geometry in EDIT mode', () => {
+    it('check not supported geometry in EDIT mode', () => {
 
-        ReactDOM.render(<Toolbar mode="EDIT" selectedCount={0} hasSupportedGeometry />, document.getElementById("container"));
+        ReactDOM.render(<Toolbar mode="EDIT" selectedCount={0} hasSupportedGeometry={false} />, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
         expect(el).toExist();
         expect(filter(document.getElementsByClassName("square-button"), function(b) { return isVisibleButton(b); }).length).toBe(1);
         expect(isVisibleButton(document.getElementById("fg-add-feature"))).toBe(false);
         expect(isVisibleButton(document.getElementById("fg-back-view"))).toBe(true);
 
-        ReactDOM.render(<Toolbar mode="EDIT" selectedCount={1} hasSupportedGeometry />, document.getElementById("container"));
+        ReactDOM.render(<Toolbar mode="EDIT" selectedCount={1} hasSupportedGeometry={false} />, document.getElementById("container"));
         expect(filter(document.getElementsByClassName("square-button"), function(b) { return isVisibleButton(b); }).length).toBe(2);
         expect(isVisibleButton(document.getElementById("fg-add-feature"))).toBe(false);
         expect(isVisibleButton(document.getElementById("fg-draw-feature"))).toBe(false);
@@ -284,7 +284,7 @@ describe('Featuregrid toolbar component', () => {
         expect(isVisibleButton(document.getElementById("fg-back-view"))).toBe(true);
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
 
-        ReactDOM.render(<Toolbar mode="EDIT" selectedCount={1} hasSupportedGeometry hasChanges/>, document.getElementById("container"));
+        ReactDOM.render(<Toolbar mode="EDIT" selectedCount={1} hasSupportedGeometry={false} hasChanges/>, document.getElementById("container"));
         expect(filter(document.getElementsByClassName("square-button"), function(b) { return isVisibleButton(b); }).length).toBe(2);
         expect(isVisibleButton(document.getElementById("fg-draw-feature"))).toBe(false);
         expect(isVisibleButton(document.getElementById("fg-delete-geometry"))).toBe(false);
