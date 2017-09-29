@@ -31,6 +31,7 @@ require("./featuregrid.css");
  */
 class FeatureGrid extends React.PureComponent {
     static propTypes = {
+        autocompleteEnabled: PropTypes.bool,
         gridOpts: PropTypes.object,
         changes: PropTypes.object,
         selectBy: PropTypes.object,
@@ -50,6 +51,7 @@ class FeatureGrid extends React.PureComponent {
         isProperty: PropTypes.func
     };
     static defaultProps = {
+        autocompleteEnabled: false,
         gridComponent: AdaptiveGrid,
         changes: {},
         gridEvents: {},

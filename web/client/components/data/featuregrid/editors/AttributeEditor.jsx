@@ -18,7 +18,7 @@ class AttributeEditor extends editors.SimpleTextEditor {
         // Otherwise this will trigger before other events out of the editors
         // and so the tempChanges seems to be not present.
         if (this.props.onTemporaryChanges) {
-            setTimeout( () => this.props.onTemporaryChanges(false), 300);
+            setTimeout( () => this.props.onTemporaryChanges(false), 500);
         }
     }
 }

@@ -10,8 +10,7 @@ const PropTypes = require('prop-types');
 var url = require('url');
 
 var axios = require('axios');
-
-const {isArray, isObject} = require('lodash');
+const {isArray, isObject, endsWith} = require('lodash');
 const assign = require('object-assign');
 const {Promise} = require('es6-promise');
 
@@ -62,6 +61,22 @@ var ConfigUtils = {
             zoom: PropTypes.number.isRequired
         }),
         mapStateSource: PropTypes.string
+    },
+    getParsedUrl: (urlToParse, options) => {
+        if (urlToParse) {
+            const parsed = url.parse(urlToParse, true);
+            let newPathname = null;
+            if (endsWith(parsed.pathname, "wfs") || endsWith(parsed.pathname, "wms") || endsWith(parsed.pathname, "ows")) {
+                newPathname = parsed.pathname.replace(/(wms|ows|wfs|wps)$/, "wps");
+                return url.format(assign({}, parsed, {search: null, pathname: newPathname }, {
+                        query: assign({
+                            service: "WPS",
+                            ...options
+                        }, parsed.query)
+                    }));
+            }
+        }
+        return null;
     },
     getDefaults: function() {
         return defaultConfig;
