@@ -19,6 +19,17 @@ var defaultStyle = {
 
 const assign = require('object-assign');
 
+const setOpacity = (layer, opacity) => {
+    if (layer.eachLayer) {
+        layer.eachLayer(l => {
+            if (l.setOpacity) {
+                l.setOpacity(opacity);
+            }
+            setOpacity(l, opacity);
+        });
+    }
+};
+
 var createVectorLayer = function(options) {
     const {hideLoading} = options;
     const layer = L.geoJson([]/* options.features */, {
@@ -31,6 +42,7 @@ var createVectorLayer = function(options) {
     layer.setOpacity = (opacity) => {
         const style = assign({}, layer.options.style || defaultStyle, {opacity: opacity, fillOpacity: opacity});
         layer.setStyle(style);
+        setOpacity(layer, opacity);
     };
     return layer;
 };

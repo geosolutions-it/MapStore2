@@ -9,7 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {Grid, Row, Col, Glyphicon} = require('react-bootstrap');
-const Filter = require('./fragments/Filter');
+const Filter = require('../misc/Filter');
 class Header extends React.Component {
 
     static propTypes = {

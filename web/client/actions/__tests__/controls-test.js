@@ -10,7 +10,8 @@ var expect = require('expect');
 var {
     TOGGLE_CONTROL, toggleControl,
     SET_CONTROL_PROPERTY, setControlProperty,
-    RESET_CONTROLS, resetControls
+    RESET_CONTROLS, resetControls,
+    on
 } = require('../controls');
 
 describe('Test correctness of the controls actions', () => {
@@ -41,6 +42,19 @@ describe('Test correctness of the controls actions', () => {
         expect(retval.type).toBe(TOGGLE_CONTROL);
         expect(retval.control).toBe(testControl);
         expect(retval.property).toBe(testProperty);
+    });
+
+    it('conditional toggle', () => {
+        const testControl = 'test';
+        var retval = on(toggleControl(testControl), () => {}, {});
+
+        expect(retval).toExist();
+        expect(retval.type).toBe('IF:' + TOGGLE_CONTROL);
+        expect(retval.action).toExist();
+        expect(retval.action.control).toBe(testControl);
+        expect(retval.action.property).toNotExist();
+        expect(retval.condition).toExist();
+        expect(retval.elseAction).toExist();
     });
 
     it('setControlProperty', () => {

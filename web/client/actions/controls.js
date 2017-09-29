@@ -24,6 +24,15 @@ function toggleControl(control, property) {
     };
 }
 
+function on(action, condition, elseAction) {
+    return {
+        type: 'IF:' + action.type,
+        condition,
+        elseAction,
+        action
+    };
+}
+
 /**
  * Sets a property in a more detailed way
  * @memberof actions.controls
@@ -61,4 +70,4 @@ function resetControls(skip = []) {
  * @name actions.controls
  */
 module.exports = {TOGGLE_CONTROL, SET_CONTROL_PROPERTY, RESET_CONTROLS,
-    toggleControl, setControlProperty, resetControls};
+    toggleControl, on, setControlProperty, resetControls};

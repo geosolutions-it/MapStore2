@@ -172,7 +172,7 @@ class DrawSupport extends React.Component {
 
     onUpdateGeom = (features, props) => {
         const newGeoJsonFt = this.convertFeaturesToGeoJson(features, props);
-        props.onGeometryChanged(newGeoJsonFt.features, props.drawOwner);
+        props.onGeometryChanged([newGeoJsonFt], props.drawOwner);
     };
 
     render() {
@@ -339,8 +339,8 @@ class DrawSupport extends React.Component {
 
         let allLayers = this.drawLayer.getLayers();
         allLayers.forEach(l => {
-            l.on('edit', () => this.onUpdateGeom(this.drawLayer, newProps));
-            l.on('moveend', () => this.onUpdateGeom(this.drawLayer, newProps));
+            l.on('edit', (e) => this.onUpdateGeom(e.target, newProps));
+            l.on('moveend', (e) => this.onUpdateGeom(e.target, newProps));
             if (l.editing) {
                 l.editing.enable();
             }

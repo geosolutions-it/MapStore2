@@ -14,13 +14,15 @@ const {ADD_LAYER, UPDATE_NODE, CHANGE_LAYER_PROPERTIES} = require('../../actions
 const {CHANGE_DRAWING_STATUS, geometryChanged} = require('../../actions/draw');
 const {HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
 const {configureMap} = require('../../actions/config');
-const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnotation, setStyle,
+const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnotation, setStyle, highlight, cleanHighlight,
     toggleAdd, UPDATE_ANNOTATION_GEOMETRY} = require('../../actions/annotations');
 
 const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
-    cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawMarkerEpic, setStyleEpic, restoreStyleEpic} = require('../annotations')({});
+    cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawMarkerEpic, setStyleEpic, restoreStyleEpic, highlighAnnotationEpic,
+    cleanHighlightAnnotationEpic} = require('../annotations')({});
 const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
-    setStyleEpic, cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawMarkerEpic, restoreStyleEpic);
+    setStyleEpic, cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawMarkerEpic, restoreStyleEpic, highlighAnnotationEpic,
+    cleanHighlightAnnotationEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
@@ -51,13 +53,19 @@ describe('annotations Epics', () => {
         epicMiddleware.replaceEpic(rootEpic);
     });
 
-    it('add annotations layer', (done) => {
+    it('add annotations layer on first save', (done) => {
         store = mockStore({
+            annotations: {
+                editing: {
+                    style: {}
+                },
+                originalStyle: {}
+            },
             layers: {
                 flat: []
             }
         });
-        let action = configureMap({});
+        let action = saveAnnotation('1', {}, {});
 
         store.subscribe(() => {
             const actions = store.getActions();
@@ -184,6 +192,30 @@ describe('annotations Epics', () => {
             }
         });
         const action = setStyle({});
+        store.dispatch(action);
+    });
+
+    it('highlight', (done) => {
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(UPDATE_NODE);
+                done();
+            }
+        });
+        const action = highlight('1');
+        store.dispatch(action);
+    });
+
+    it('clean highlight', (done) => {
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(UPDATE_NODE);
+                done();
+            }
+        });
+        const action = cleanHighlight('1');
         store.dispatch(action);
     });
 

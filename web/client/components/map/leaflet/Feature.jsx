@@ -10,8 +10,6 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const L = require('leaflet');
 const {isEqual} = require('lodash');
-require('leaflet-extra-markers');
-require('leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css');
 
 const VectorUtils = require('../../../utils/leaflet/Vector');
 

@@ -10,7 +10,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const {FormGroup, FormControl, Glyphicon, InputGroup, OverlayTrigger, Tooltip} = require('react-bootstrap');
 
-require('./css/filter.css');
+require('./style/filter.css');
 
 class Filter extends React.Component {
 
