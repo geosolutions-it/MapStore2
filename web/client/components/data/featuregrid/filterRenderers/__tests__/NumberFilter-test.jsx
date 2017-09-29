@@ -25,6 +25,7 @@ const EXPRESSION_TESTS = [
     ["!== 2", "<>", 2],
     ["!= 2", "<>", 2],
     ["<> 2", "<>", 2],
+    ["<> -2", "<>", -2],
     ["", "=", undefined],
     [" ", "=", undefined],
     ["ZZZ", "=", undefined]
