@@ -33,11 +33,11 @@ module.exports = {
                 latlng,
                 {
                     icon,
-                    opacity: style.opacity || 1
+                    opacity: style && style.opacity || 1
                 });
         }
         return L.marker(latlng, {
-            opacity: style.opacity || 1
+            opacity: style && style.opacity || 1
         });
     }
 };
