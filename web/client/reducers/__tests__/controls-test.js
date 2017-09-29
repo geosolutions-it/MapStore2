@@ -109,7 +109,7 @@ describe('Test the controls reducer', () => {
         const state = controls(
             {
                 c1: { enabled: true},
-                c2: { enabled: false},
+                c2: { enabled: true},
                 c3: { idonthaveenabledfield: "whatever"}
             }, {
                 type: RESET_CONTROLS,

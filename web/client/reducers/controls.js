@@ -67,10 +67,7 @@ function controls(state = {}, action) {
             })
         });
     case RESET_CONTROLS: {
-        let newControls = Object.keys(state);
-        if (action && action.skip && action.skip.length) {
-            newControls = Object.keys(state).filter(c => action.skip.indexOf(c) === -1);
-        }
+        const newControls = Object.keys(state).filter(c => (action.skip || []).indexOf(c) === -1);
         const resetted = newControls.reduce((previous, controlName) => {
             return assign(previous, {
                 [controlName]: assign({}, state[controlName], state[controlName].enabled === true ? {
