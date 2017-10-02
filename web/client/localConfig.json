@@ -34,7 +34,7 @@
     "projectionDefs": [],
     "initialState": {
       "defaultState": {
-        "catalog":{
+        "catalog": {
           "default": {
             "newService": {
                 "url": "",
@@ -221,7 +221,32 @@
                         "alwaysVisible": true
                     }
                 }
-            }, "Home", "FeatureEditor", "WFSDownload",
+            }, "Home", {
+              "name":"FeatureEditor",
+              "cfg": {
+                "customEditorsOptions": {
+                  "rules": [{
+                    "regex": {
+                      "attribute": "STATE_NAME"
+                    },
+                    "editor": "My_Custom_Editor_1",
+                    "editorProps": {
+                      "values": ["Opt1", "Opt2"],
+                      "forceSelection": true
+                    }
+                  }, {
+                    "regex": {
+                      "attribute": "STATE_NAME_2"
+                    },
+                    "editor": "My_Custom_Editor_1",
+                    "editorProps": {
+                      "values": ["Opt1", "Opt2"],
+                      "forceSelection": true
+                    }
+                  }]
+                }
+              }
+            }, "WFSDownload",
             {
               "name": "QueryPanel",
               "cfg": {

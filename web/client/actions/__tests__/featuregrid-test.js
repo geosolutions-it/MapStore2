@@ -34,7 +34,8 @@ const {
     closeFeatureGridConfirmed, FEATURE_GRID_CLOSE_CONFIRMED,
     updateFilter, UPDATE_FILTER,
     zoomAll, ZOOM_ALL,
-    openAdvancedSearch, OPEN_ADVANCED_SEARCH
+    openAdvancedSearch, OPEN_ADVANCED_SEARCH,
+    setupCustomEditors, SETUP_CUSTOM_EDITORS
 } = require('../featuregrid');
 
 const idFeature = "2135";
@@ -217,6 +218,13 @@ describe('Test correctness of featurgrid actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(UPDATE_FILTER);
         expect(retval.update).toBe(update);
+    });
+    it('Test setupCustomEditors', () => {
+        const editors = {name: "A"};
+        const retval = setupCustomEditors(editors);
+        expect(retval).toExist();
+        expect(retval.type).toBe(SETUP_CUSTOM_EDITORS);
+        expect(retval.editors).toBe(editors);
     });
 
 });

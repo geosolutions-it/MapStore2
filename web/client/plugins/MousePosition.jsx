@@ -77,6 +77,7 @@ class MousePosition extends React.Component {
   * MousePositionPlugin is a plugin that shows the coordinate of the mouse position in a selected crs.
   * it gets displayed into the mapFooter plugin
   * @name MousePositionPlugin
+  * @memberof plugins
   * @class
   * @prop {string[]} cfg.filterAllowedCRS list of allowed crs in the combobox list to used as filter for the one of retrieved proj4.defs()
   * @prop {object[]} cfg.projectionDefs list of additional project definitions

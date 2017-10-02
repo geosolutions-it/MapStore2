@@ -23,6 +23,17 @@ const {gridTools, gridEvents, pageEvents, toolbarEvents} = require('./featuregri
 const ContainerDimensions = require('react-container-dimensions').default;
 const {getParsedUrl} = require('../utils/ConfigUtils');
 
+/**
+  * FeatureEditorPlugin is a plugin that manage operation like search and filter and
+  * edit of features displaying them in an adaptive grid. It can be configured passing custom editors
+  *
+  * @name FeatureEditorPlugin
+  * @memberof plugins
+  * @class
+  *
+  * ```
+  * ```
+*/
 const FeatureDock = (props = {
     tools: EMPTY_OBJ,
     dialogs: EMPTY_OBJ,
@@ -53,6 +64,7 @@ const FeatureDock = (props = {
             footer={getFooter(props)}>
             {getDialogs(props.tools)}
             <Grid
+                customEditorsOptions={props.customEditorsOptions}
                 autocompleteEnabled={props.autocompleteEnabled}
                 url={props.url}
                 typeName={props.typeName}

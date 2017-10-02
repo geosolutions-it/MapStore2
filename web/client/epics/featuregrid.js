@@ -12,6 +12,7 @@ const axios = require('../libs/ajax');
 const bbox = require('@turf/bbox');
 const {fidFilter} = require('../utils/ogc/Filter/filter');
 const {getDefaultFeatureProjection} = require('../utils/FeatureGridUtils');
+const EditorUtils = require('../utils/EditorUtils');
 const {isSimpleGeomType} = require('../utils/MapUtils');
 const assign = require('object-assign');
 const {changeDrawingStatus, GEOMETRY_CHANGED} = require('../actions/draw');
@@ -22,7 +23,7 @@ const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYP
 const {reset, QUERY_FORM_RESET} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
 
-const {BROWSE_DATA, changeLayerProperties} = require('../actions/layers');
+const {BROWSE_DATA, changeLayerProperties, refreshLayerVersion} = require('../actions/layers');
 const {purgeMapInfoResults} = require('../actions/mapInfo');
 
 const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURES, featureSaving, changePage,
@@ -31,11 +32,10 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE,
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
     openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL, UPDATE_FILTER, START_SYNC_WMS,
-    STOP_SYNC_WMS} = require('../actions/featuregrid');
+    STOP_SYNC_WMS, SETUP_CUSTOM_EDITORS} = require('../actions/featuregrid');
 
 const {TOGGLE_CONTROL, resetControls} = require('../actions/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
-const {refreshLayerVersion} = require('../actions/layers');
 
 const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector,
     selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector,
@@ -543,14 +543,14 @@ module.exports = {
     /**
      * stop sync filter with wms layer
      */
-     stopSyncWmsFilter: (action$, store) =>
+    stopSyncWmsFilter: (action$, store) =>
         action$.ofType(TOGGLE_SYNC_WMS)
         .filter( () => !isSyncWmsActive(store.getState()))
         .switchMap(() => Rx.Observable.from([removeFilterFromWMSLayer(store.getState()), {type: STOP_SYNC_WMS}])),
     /**
      * Sync map with filter
      */
-     syncMapWmsFilter: (action$, store) =>
+    syncMapWmsFilter: (action$, store) =>
         action$.ofType(QUERY_CREATE, UPDATE_QUERY).
             filter((a) => {
                 const {disableQuickFilterSync} = (store.getState()).featuregrid;
@@ -561,5 +561,19 @@ module.exports = {
                 const filter = (q || {}).filterObj;
                 const layer = (f || {}).selectedLayer;
                 return Rx.Observable.merge(Rx.Observable.of(isSyncWmsActive(store.getState())).filter(a => a), action$.ofType(START_SYNC_WMS)).map(() => addFilterToWMSLayer(layer, filter));
-            })
+            }),
+    /**
+     * addCustomEditors epic
+     * it extends the list of custom editors used in the feature grid editing
+     * and fetched by some regex rule placed in the localconfig - FeatureEditor
+     */
+    addCustomEditors: (action$) =>
+        action$.ofType(SETUP_CUSTOM_EDITORS)
+        .switchMap((action) => {
+            EditorUtils.cleanEditors();
+            Object.keys(action.editors).forEach(ed => {
+                EditorUtils.setEditor({name: ed, editors: action.editors[ed]});
+            });
+            return Rx.Observable.empty();
+        })
 };
