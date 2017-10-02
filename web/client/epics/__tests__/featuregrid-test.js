@@ -8,7 +8,7 @@
 
 const expect = require('expect');
 const assign = require('object-assign');
-const {toggleEditMode, toggleViewMode, openFeatureGrid, SET_LAYER, DELETE_GEOMETRY_FEATURE, deleteGeometry, createNewFeatures, CLOSE_FEATURE_GRID, TOGGLE_MODE, MODES, closeFeatureGridConfirm, clearChangeConfirmed, CLEAR_CHANGES, TOGGLE_TOOL, closeFeatureGridConfirmed, zoomAll, START_SYNC_WMS, STOP_SYNC_WMS, startDrawingFeature, startEditingFeature, closeFeatureGrid} = require('../../actions/featuregrid');
+const {toggleEditMode, toggleViewMode, openFeatureGrid, SET_LAYER, DELETE_GEOMETRY_FEATURE, deleteGeometry, createNewFeatures, CLOSE_FEATURE_GRID, TOGGLE_MODE, MODES, closeFeatureGridConfirm, clearChangeConfirmed, CLEAR_CHANGES, TOGGLE_TOOL, closeFeatureGridConfirmed, zoomAll, START_SYNC_WMS, STOP_SYNC_WMS, startDrawingFeature, startEditingFeature, closeFeatureGrid, GEOMETRY_CHANGED} = require('../../actions/featuregrid');
 const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
 const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
@@ -17,10 +17,11 @@ const {ZOOM_TO_EXTENT} = require('../../actions/map');
 const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
 const {toggleSyncWms} = require('../../actions/wfsquery');
 const {CHANGE_LAYER_PROPERTIES} = require('../../actions/layers');
+const {geometryChanged} = require('../../actions/draw');
 
 const {layerSelectedForSearch} = require('../../actions/wfsquery');
 
-const {setHighlightFeaturesPath, triggerDrawSupportOnSelectionChange, featureGridLayerSelectionInitialization, closeCatalogOnFeatureGridOpen, deleteGeometryFeature, onFeatureGridCreateNewFeature, resetGridOnLocationChange, resetQueryPanel, autoCloseFeatureGridEpicOnDrowerOpen, askChangesConfirmOnFeatureGridClose, onClearChangeConfirmedFeatureGrid, onCloseFeatureGridConfirmed, onFeatureGridZoomAll, resetControlsOnEnterInEditMode, closeIdentifyEpic, startSyncWmsFilter, stopSyncWmsFilter, handleDrawFeature, handleEditFeature, resetEditingOnFeatureGridClose} = require('../featuregrid');
+const {setHighlightFeaturesPath, triggerDrawSupportOnSelectionChange, featureGridLayerSelectionInitialization, closeCatalogOnFeatureGridOpen, deleteGeometryFeature, onFeatureGridCreateNewFeature, resetGridOnLocationChange, resetQueryPanel, autoCloseFeatureGridEpicOnDrowerOpen, askChangesConfirmOnFeatureGridClose, onClearChangeConfirmedFeatureGrid, onCloseFeatureGridConfirmed, onFeatureGridZoomAll, resetControlsOnEnterInEditMode, closeIdentifyEpic, startSyncWmsFilter, stopSyncWmsFilter, handleDrawFeature, handleEditFeature, resetEditingOnFeatureGridClose, onFeatureGridGeometryEditing} = require('../featuregrid');
 const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
 
 const state = {
@@ -994,4 +995,85 @@ describe('featuregrid Epics', () => {
             done();
         }, newState);
     });
+
+    it('test onFeatureGridGeometryEditing', (done) => {
+        const stateFeaturegrid = {
+            featuregrid: {
+                open: true,
+                selectedLayer: "TEST_LAYER",
+                mode: 'EDIT',
+                select: [{id: 'poligoni.1', _new: 'poligoni._new'}],
+                changes: []
+            }
+        };
+        const newState = assign({}, state, stateFeaturegrid);
+
+        testEpic(onFeatureGridGeometryEditing, 1, [geometryChanged([{id: 'poligoni.1', geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]}, geometry_name: 'geometry' }], 'featureGrid', '')], actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case GEOMETRY_CHANGED:
+                        expect(action.features).toEqual([{
+                            id: 'poligoni.1',
+                            type: 'Feature',
+                            _new: 'poligoni._new',
+                            geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]},
+                            geometry_name: 'geometry'
+                        }]);
+
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        }, newState);
+    });
+
+    it('test onFeatureGridGeometryEditing with', (done) => {
+        const stateFeaturegrid = {
+            featuregrid: {
+                open: true,
+                selectedLayer: "TEST_LAYER",
+                mode: 'EDIT',
+                select: [{id: 'poligoni.1', _new: 'poligoni._new'}],
+                changes: []
+            }
+        };
+        const newState = assign({}, state, stateFeaturegrid);
+
+        testEpic(onFeatureGridGeometryEditing, 2, [geometryChanged([{id: 'poligoni.1', geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]}, geometry_name: 'geometry' }], 'featureGrid', 'enterEditMode')], actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                    case GEOMETRY_CHANGED:
+                        expect(action.features).toEqual([{
+                            id: 'poligoni.1',
+                            type: 'Feature',
+                            _new: 'poligoni._new',
+                            geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]},
+                            geometry_name: 'geometry'
+                        }]);
+                        break;
+                    case CHANGE_DRAWING_STATUS:
+                        expect(action.status).toBe("drawOrEdit");
+                        expect(action.method).toBe("Polygon");
+                        expect(action.owner).toBe("featureGrid");
+                        expect(action.features).toEqual([{
+                            id: 'poligoni.1',
+                            type: 'Feature',
+                            _new: 'poligoni._new',
+                            geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]},
+                            geometry_name: 'geometry'
+                        }]);
+                        expect(action.style).toBe(undefined);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        }, newState);
+    });
+
 });
