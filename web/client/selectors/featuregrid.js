@@ -72,6 +72,7 @@ const getAttributeFilters = state => state && state.featuregrid && state.feature
 module.exports = {
   /**
    * selects the state of featuregrid open
+   * @memberof selectors.featuregrid
    * @param  {object}  state applications state
    * @return {Boolean}       true if the featuregrid is open, false otherwise
    */
@@ -127,5 +128,12 @@ module.exports = {
     hasNewFeaturesOrChanges: state => hasNewFeaturesSelector(state) || hasChangesSelector(state),
     isSimpleGeomSelector: state => isSimpleGeomType(geomTypeSelectedFeatureSelector(state)),
     canEditSelector: state => state && state.featuregrid && state.featuregrid.canEdit,
+    /**
+     * check if the feature geometry is supported for editing
+     * @function
+     * @memberof selectors.featuregrid
+     * @param  {object}  state applications state
+     * @return {boolean}       true if the geometry is supported, false otherwise
+     */
     hasSupportedGeometry
 };

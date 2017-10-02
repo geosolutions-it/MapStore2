@@ -437,7 +437,7 @@ module.exports = {
                 return Rx.Observable.of(drawSupportReset(), setHighlightFeaturesPath("featuregrid.select"), warning({
                     title: "featuregrid.notSupportedGeometryTitle",
                     message: "featuregrid.notSupportedGeometry",
-                    uid: "unsupportedGeometryWarning",
+                    uid: "notSupportedGeometryWarning",
                     autoDismiss: 5
                 }));
             }

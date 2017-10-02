@@ -7,6 +7,13 @@
 */
 
 /**
+ * selects maptype state
+ * @name maptype
+ * @memberof selectors
+ * @static
+ */
+
+/**
  * selects maptype from state
  * @memberof selectors.maptype
  * @param  {object} state the state
