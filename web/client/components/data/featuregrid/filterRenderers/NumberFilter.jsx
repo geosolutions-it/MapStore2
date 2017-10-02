@@ -9,7 +9,7 @@
 const AttributeFilter = require('./AttributeFilter');
 const {trim} = require('lodash');
 const {compose, withHandlers, withState, defaultProps} = require('recompose');
-
+const EXPRESSION_REGEX = /\s*(!==|!=|<>|<=|>=|===|==|=|<|>)?\s*(-?\d*\.?\d*)\s*/;
 module.exports = compose(
     defaultProps({
         onValueChange: () => {}
@@ -20,15 +20,20 @@ module.exports = compose(
             props.onValueChange(value);
             let operator = "=";
             let newVal;
-            if (value.indexOf('>') > -1) { // handle greater then
-                newVal = parseFloat(value.split('>')[1], 10);
-                operator = ">";
-            } else if (value.indexOf('<') > -1) { // handle less then
-                newVal = parseFloat(value.split('<')[1], 10);
-                operator = "<";
-            } else { // handle normal values
+            const match = EXPRESSION_REGEX.exec(value);
+            if (match) {
+                operator = match[1] || "=";
+                // replace with standard opeartors
+                if (operator === "!==" | operator === "!=") {
+                    operator = "<>";
+                } else if (operator === "===" | operator === "==") {
+                    operator = "=";
+                }
+                newVal = parseFloat(match[2]);
+            } else {
                 newVal = parseFloat(value, 10);
             }
+
             if (isNaN(newVal) && trim(value) !== "") {
                 props.setValid(false);
             } else {

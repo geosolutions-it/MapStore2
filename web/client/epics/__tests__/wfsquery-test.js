@@ -11,8 +11,10 @@ var expect = require('expect');
 const {UPDATE_GEOMETRY} = require('../../actions/queryform');
 const {changeMapView} = require('../../actions/map');
 
-const {testEpic} = require('./epicTestUtils');
-const {viewportSelectedEpic} = require('../wfsquery');
+const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
+const {QUERY_RESULT, FEATURE_LOADING, query, updateQuery} = require('../../actions/wfsquery');
+const {viewportSelectedEpic, wfsQueryEpic} = require('../wfsquery');
+
 
 describe('wfsquery Epics', () => {
 
@@ -41,5 +43,43 @@ describe('wfsquery Epics', () => {
             });
             done();
         }, {queryform: { spatialField: {method: 'Viewport'}}});
+    });
+    it('wfsQueryEpic', (done) => {
+        const expectedResult = require('json-loader!../../test-resources/wfs/museam.json');
+        testEpic(wfsQueryEpic, 2, query("base/web/client/test-resources/wfs/museam.json", {pagination: {} }), actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                    case QUERY_RESULT:
+                        expect(action.result).toEqual(expectedResult);
+                        break;
+                    case FEATURE_LOADING:
+                        break;
+                    default:
+                        expect(false).toBe(true);
+                }
+            });
+            done();
+        }, {});
+    });
+    // this avoids race condition of state changes when update query is performed
+    it('wfsQueryEpic stop on update query', (done) => {
+        testEpic(addTimeoutEpic(wfsQueryEpic), 2, [
+            query("base/web/client/test-resources/wfs/museam.json", {pagination: {} }),
+            updateQuery()
+            ], actions => {
+                expect(actions.length).toBe(2);
+                actions.map((action) => {
+                    switch (action.type) {
+                        case TEST_TIMEOUT:
+                            break;
+                        case FEATURE_LOADING:
+                            break;
+                        default:
+                            expect(false).toBe(true);
+                    }
+                });
+                done();
+            }, {});
     });
 });
