@@ -26,44 +26,19 @@ const assign = require('object-assign');
 const Select = require('react-select');
 
 const PluginsUtils = require('../../../utils/PluginsUtils');
-const MarkerUtils = require('../../../utils/MarkerUtils');
-
-const defaultIcon = MarkerUtils.extraMarkers.icons[0];
-const defaultMarkers = MarkerUtils.extraMarkers.shapes.map((s) => ({
-    name: s,
-    markers: MarkerUtils.extraMarkers.colors.map((m) => ({
-        name: m,
-        width: MarkerUtils.extraMarkers.size[0],
-        height: MarkerUtils.extraMarkers.size[1],
-        offsets: MarkerUtils.extraMarkers.getOffsets(m, s),
-        style: {
-            color: m,
-            shape: s
-        }
-    }))
-}));
-
-const glyphs = Object.keys(MarkerUtils.getGlyphs('fontawesome'));
+const defaultConfig = require('./AnnotationsConfig');
 
 /**
- * Identify Viewer customized for Annotations.
+ * (Default) Viewer / Editor for Annotations.
  * @memberof components.mapControls.annotations
  * @class
  * @prop {string} id identifier of the current annotation feature
- * @prop {object[]} fields (configurable) list of fields managed by the annotations viewer / editor; each element is an
- * object with the following properties:
- *  - name: name of the property in the underlying feature object
- *  - type: type of value, chooses the type of rendering and editing component (currently supported types are text and html)
- *  - showLabel: (true/false) wether we have to show the label or only the value
- *  - editable: wether the user can edit the field or not
- *  - validator: function that returns true if the current field value is valid
- *  - validateError: id for translations of the validation error to show in case of failed validation
+ * @prop {object} config configuration object, where overridable stuff is stored (fields config for annotations, marker library, etc.) {@link #components.mapControls.annotations.AnnotationsConfig}
  * @prop {object} editing feature object of the feature under editing (when editing mode is enabled, null otherwise)
  * @prop {boolean} drawing flag to state status of drawing during editing
  * @prop {boolean} styling flag to state status of styling during editing
  * @prop {object} errors key/value set of validation errors (field_name: error_id)
- * @prop {object[]} markers list of markers to be used for styling (defaults to using the extra-markers lib {@link https://github.com/coryasilva/Leaflet.ExtraMarkers})
- * @prop {string} markerIcon default marker icon image (sprite), defaults to image from the extra-markers lib {@link https://github.com/coryasilva/Leaflet.ExtraMarkers}
+ * @prop {bool} showBack shows / hides the back button
  * @prop {function} onEdit triggered when the user clicks on the edit button
  * @prop {function} onCancelEdit triggered when the user cancels current editing session
  * @prop {function} onCancelStyle triggered when the user cancels style selection
@@ -77,14 +52,15 @@ const glyphs = Object.keys(MarkerUtils.getGlyphs('fontawesome'));
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property.
  */
-class AnnotationsInfoViewer extends React.Component {
-    static displayName = 'AnnotationsInfoViewer';
+class AnnotationsEditor extends React.Component {
+    static displayName = 'AnnotationsEditor';
 
     static propTypes = {
         id: PropTypes.string,
         onEdit: PropTypes.func,
         onCancelEdit: PropTypes.func,
         onCancelStyle: PropTypes.func,
+        onCancel: PropTypes.func,
         onRemove: PropTypes.func,
         onSave: PropTypes.func,
         onSaveStyle: PropTypes.func,
@@ -93,35 +69,18 @@ class AnnotationsInfoViewer extends React.Component {
         onDeleteGeometry: PropTypes.func,
         onStyleGeometry: PropTypes.func,
         onSetStyle: PropTypes.func,
-        fields: PropTypes.array,
         editing: PropTypes.object,
         drawing: PropTypes.bool,
         styling: PropTypes.bool,
         errors: PropTypes.object,
-        markers: PropTypes.array,
-        markerIcon: PropTypes.string
+        showBack: PropTypes.bool,
+        config: PropTypes.object
     };
 
     static defaultProps = {
-        fields: [
-            {
-                name: 'title',
-                type: 'text',
-                validator: (val) => val,
-                validateError: 'annotations.mandatory',
-                showLabel: false,
-                editable: true
-            },
-            {
-                name: 'description',
-                type: 'html',
-                showLabel: true,
-                editable: true
-            }
-        ],
-        markers: defaultMarkers,
-        markerIcon: defaultIcon,
-        errors: {}
+        config: defaultConfig,
+        errors: {},
+        showBack: false
     };
 
     state = {
@@ -136,17 +95,22 @@ class AnnotationsInfoViewer extends React.Component {
         }
     }
 
+    getConfig = () => {
+        return assign({}, defaultConfig, this.props.config);
+    };
+
     getBodyItems = (editing) => {
-        return this.props.fields
+        return this.getConfig().fields
             .filter((field) => !editing || field.editable)
             .map((field) => {
                 const isError = editing && this.props.errors[field.name];
                 const additionalCls = isError ? 'field-error' : '';
                 return (
                     <span><p key={field.name} className={"mapstore-annotations-info-viewer-item mapstore-annotations-info-viewer-" + field.name + ' ' + additionalCls}>
-                        {field.showLabel ? <b><Message msgId={"annotations.field." + field.name}/></b> : null} {this.renderProperty(field, this.props[field.name], editing)}
+                        {field.showLabel ? <label><Message msgId={"annotations.field." + field.name}/></label> : null}
+                        {isError ? this.renderErrorOn(field.name) : ''}
+                        {this.renderProperty(field, this.props[field.name], editing)}
                     </p>
-                    {isError ? this.renderErrorOn(field.name) : ''}
                     </span>
                 );
             });
@@ -160,14 +124,15 @@ class AnnotationsInfoViewer extends React.Component {
     };
 
     renderViewButtons = () => {
-        return (<ButtonGroup id="mapstore-annotations-info-viewer-buttons">
-                <Button bsStyle="primary" onClick={() => this.props.onEdit(this.props.id)}><Glyphicon glyph="pencil"/>&nbsp;<Message msgId="annotations.edit"/></Button>
+        return (<ButtonGroup className="mapstore-annotations-info-viewer-buttons">
+                <Button bsStyle="primary" onClick={() => this.props.onEdit(this.props.id, this.props.config.multiGeometry ? 'MultiPoint' : 'Point')}><Glyphicon glyph="pencil"/>&nbsp;<Message msgId="annotations.edit"/></Button>
                 <Button bsStyle="primary" onClick={() => this.props.onRemove(this.props.id)}><Glyphicon glyph="ban-circle"/>&nbsp;<Message msgId="annotations.remove"/></Button>
+                {this.props.showBack ? <Button bsStyle="primary" onClick={() => this.props.onCancel()}><Glyphicon glyph="back"/>&nbsp;<Message msgId="annotations.back"/></Button> : null }
             </ButtonGroup>);
     };
 
     renderEditingButtons = () => {
-        return (<Grid fluid>
+        return (<Grid className="mapstore-annotations-info-viewer-buttons" fluid>
                     <Row>
                         <Col xs={7}>
                             <TButton
@@ -175,6 +140,7 @@ class AnnotationsInfoViewer extends React.Component {
                                 tooltip={<Message msgId="annotations.addMarker"/>}
                                 onClick={this.props.onAddGeometry}
                                 visible
+                                disabled={!this.props.config.multiGeometry && this.props.editing && this.props.editing.geometry}
                                 className="square-button-md"
                                 active={this.props.drawing}
                                 glyph="pencil-add"/>
@@ -212,9 +178,9 @@ class AnnotationsInfoViewer extends React.Component {
         if (editing) {
             switch (field.type) {
                 case 'html':
-                    return <ReactQuill value={fieldValue} onChange={(val) => this.change(field.name, val)}/>;
+                    return <ReactQuill readOnly={this.props.drawing} value={fieldValue || ''} onChange={(val) => this.change(field.name, val)}/>;
                 default:
-                    return <FormControl value={fieldValue} onChange={(e) => this.change(field.name, e.target.value)}/>;
+                    return <FormControl disabled={this.props.drawing} value={fieldValue || ''} onChange={(e) => this.change(field.name, e.target.value)}/>;
             }
 
         }
@@ -233,25 +199,27 @@ class AnnotationsInfoViewer extends React.Component {
     renderMarkers = (markers, prefix = '') => {
         return markers.map((marker) => {
             if (marker.markers) {
-                return <div className={"mapstore-annotations-info-viewer-marker-group mapstore-annotations-info-viewer-marker-" + prefix + marker.name}>{this.renderMarkers(marker.markers, marker.name + '-')}</div>;
+                return (<div className={"mapstore-annotations-info-viewer-marker-group mapstore-annotations-info-viewer-marker-" + prefix + marker.name}>
+                    {this.renderMarkers(marker.markers, marker.name + '-')}
+                </div>);
             }
-            return (<div onClick={() => this.selectStyle(marker)} className={"mapstore-annotations-info-viewer-marker mapstore-annotations-info-viewer-marker-" + prefix + marker.name + (this.isCurrentStyle(marker) ? " mapstore-annotations-info-viewer-marker-selected" : "")} style={{
-                backgroundImage: "url(" + this.props.markerIcon + ")",
-                width: marker.width + "px",
-                height: marker.height + "px",
-                backgroundPositionX: marker.offsets[0],
-                backgroundPositionY: marker.offsets[1],
-                cursor: "pointer"
-            }}/>);
+            return (
+                <div onClick={() => this.selectStyle(marker)}
+                    className={"mapstore-annotations-info-viewer-marker mapstore-annotations-info-viewer-marker-" + prefix + marker.name +
+                        (this.isCurrentStyle(marker) ? " mapstore-annotations-info-viewer-marker-selected" : "")} style={marker.thumbnailStyle}/>);
         });
     };
 
     renderStyler = () => {
         const glyphRenderer = (option) => (<div><span className={"fa fa-" + option.value}/><span> {option.label}</span></div>);
         return (<div className="mapstore-annotations-info-viewer-styler">
-            <div className="mapstore-annotations-info-viewer-markers">{this.renderMarkers(this.props.markers)}</div>
+            <div className="mapstore-annotations-info-viewer-styler-buttons">
+                <Button bsStyle="primary" onClick={this.props.onSaveStyle}><Glyphicon glyph="floppy-disk"/>&nbsp;<Message msgId="annotations.save"/></Button>
+                <Button bsStyle="primary" onClick={this.props.onCancelStyle}><Glyphicon glyph="remove"/>&nbsp;<Message msgId="annotations.cancel"/></Button>
+            </div>
+            <div className="mapstore-annotations-info-viewer-markers">{this.renderMarkers(this.getConfig().markers)}</div>
             <Select
-                options={glyphs.map(g => ({
+                options={this.getConfig().glyphs.map(g => ({
                     label: g,
                     value: g
                 }))}
@@ -259,7 +227,6 @@ class AnnotationsInfoViewer extends React.Component {
                 valueRenderer={glyphRenderer}
                 value={this.props.editing.style.iconGlyph}
                 onChange={this.selectGlyph}/>
-            <div className="mapstore-annotations-info-viewer-styler-buttons"><Button bsStyle="primary" onClick={this.props.onSaveStyle}><Glyphicon glyph="floppy-disk"/>&nbsp;<Message msgId="annotations.save"/></Button><Button bsStyle="primary" onClick={this.props.onCancelStyle}><Glyphicon glyph="remove"/>&nbsp;<Message msgId="annotations.cancel"/></Button></div>
         </div>);
     };
 
@@ -276,7 +243,8 @@ class AnnotationsInfoViewer extends React.Component {
     };
 
     renderError = (editing) => {
-        return editing ? Object.keys(this.props.errors).filter(field => this.props.fields.filter(f => f.name === field).length === 0).map(field => this.renderErrorOn(field)) : null;
+        return editing ? (Object.keys(this.props.errors)
+            .filter(field => this.getConfig().fields.filter(f => f.name === field).length === 0).map(field => this.renderErrorOn(field))) : null;
     };
 
     render() {
@@ -287,9 +255,9 @@ class AnnotationsInfoViewer extends React.Component {
         const editing = this.props.editing && (this.props.editing.properties.id === this.props.id);
         return (
             <div className="mapstore-annotations-info-viewer">
-                {this.renderBody(editing)}
-                {this.renderError(editing)}
                 {this.renderButtons(editing)}
+                {this.renderError(editing)}
+                {this.renderBody(editing)}
             </div>
         );
     }
@@ -310,11 +278,11 @@ class AnnotationsInfoViewer extends React.Component {
     };
 
     isCurrentStyle = (m) => {
-        return MarkerUtils.extraMarkers.matches(this.props.editing.style, m.style);
+        return this.getConfig().markersConfig.matches(this.props.editing.style, m.style);
     };
 
     selectStyle = (marker) => {
-        return this.props.onSetStyle(assign(MarkerUtils.extraMarkers.getStyle(marker.style), {
+        return this.props.onSetStyle(assign(this.getConfig().markersConfig.getStyle(marker.style), {
             iconGlyph: this.props.editing.style.iconGlyph
         }));
     };
@@ -326,7 +294,7 @@ class AnnotationsInfoViewer extends React.Component {
     };
 
     validate = () => {
-        return assign(this.props.fields.filter(field => field.editable).reduce((previous, field) => {
+        return assign(this.getConfig().fields.filter(field => field.editable).reduce((previous, field) => {
             const value = this.state.editedFields[field.name] === undefined ? this.props[field.name] : this.state.editedFields[field.name];
             if (field.validator && !this.getValidator(field.validator)(value)) {
                 return assign(previous, {
@@ -344,11 +312,11 @@ class AnnotationsInfoViewer extends React.Component {
         const errors = this.validate();
         if (Object.keys(errors).length === 0) {
             this.props.onSave(this.props.id, assign({}, this.state.editedFields),
-                this.props.editing.geometry, this.props.editing.style);
+                this.props.editing.geometry, this.props.editing.style, this.props.editing.newFeature || false);
         } else {
             this.props.onError(errors);
         }
     };
 }
 
-module.exports = AnnotationsInfoViewer;
+module.exports = AnnotationsEditor;

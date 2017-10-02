@@ -4,18 +4,13 @@ var ol = require('openlayers');
 
 const assign = require('object-assign');
 
-const MarkerUtils = require('../../../utils/MarkerUtils');
-const markers = MarkerUtils.extraMarkers;
-const extraMarker = markers.icons[0];
-const extraMarkerShadow = markers.icons[1];
-
-const glyphs = MarkerUtils.getGlyphs('fontawesome');
-
 const image = new ol.style.Circle({
   radius: 5,
   fill: null,
   stroke: new ol.style.Stroke({color: 'red', width: 1})
 });
+
+const Icons = require('../../../utils/openlayers/Icons');
 
 const defaultStyles = {
   'Point': () => [new ol.style.Style({
@@ -110,52 +105,14 @@ var styleFunction = function(feature, options) {
 };
 
 function getMarkerStyle(options) {
-    let markerStyle;
     if (options.style.iconUrl) {
-        markerStyle = [new ol.style.Style({
-              image: new ol.style.Icon(({
-                anchor: options.iconAnchor || [0.5, 1],
-                anchorXUnits: ( options.iconAnchor || options.iconAnchor === 0) ? 'pixels' : 'fraction',
-                anchorYUnits: ( options.iconAnchor || options.iconAnchor === 0) ? 'pixels' : 'fraction',
-                src: options.style.iconUrl
-            }))
-        })];
-        if (options.style.shadowUrl) {
-            markerStyle = [new ol.style.Style({
-                  image: new ol.style.Icon(({
-                    anchor: [12, 41],
-                    anchorXUnits: 'pixels',
-                    anchorYUnits: 'pixels',
-                    src: options.style.shadowUrl || markerShadow
-                  }))
-              }), markerStyle [0]];
-        }
-    } else {
-        markerStyle = [new ol.style.Style({
-              image: new ol.style.Icon(({
-                anchor: [12, 12],
-                anchorXUnits: 'pixels',
-                anchorYUnits: 'pixels',
-                src: extraMarkerShadow
-            }))
-        }), new ol.style.Style({
-            image: new ol.style.Icon(({
-                src: extraMarker,
-                anchor: [markers.size[0] / 2, markers.size[1]],
-                anchorXUnits: 'pixels',
-                anchorYUnits: 'pixels',
-                size: markers.size,
-                offset: [markers.colors.indexOf(options.style.iconColor || 'blue') * markers.size[0], markers.shapes.indexOf(options.style.iconShape || 'circle') * markers.size[1]]
-            })),
-            text: new ol.style.Text({
-                text: glyphs[options.style.iconGlyph],
-                font: '14px FontAwesome',
-                offsetY: -markers.size[1] * 2 / 3,
-                fill: new ol.style.Fill({color: '#FFFFFF'})
-            })
-        })];
+        return Icons.standard.getIcon(options);
     }
-    return markerStyle;
+    const iconLibrary = options.style.iconLibrary || 'extra';
+    if (Icons[iconLibrary]) {
+        return Icons[iconLibrary].getIcon(options);
+    }
+    return null;
 }
 
 function getStyle(options) {
@@ -179,14 +136,15 @@ function getStyle(options) {
         if (options.style.iconUrl || options.style.iconGlyph) {
             const markerStyle = getMarkerStyle(options);
 
-            style = function() {
-                const type = this.getGeometry().getType();
+            style = function(f) {
+                var feature = this || f;
+                const type = feature.getGeometry().getType();
                 switch (type) {
                     case "Point":
                     case "MultiPoint":
                         return markerStyle;
                     default:
-                        return styleFunction(this);
+                        return styleFunction(feature);
                 }
             };
         } else {

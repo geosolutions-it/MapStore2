@@ -1,8 +1,10 @@
 const {get, head} = require('lodash');
 module.exports = {
     wfsURL: state => state && state.query && state.query.searchUrl,
+    wfsURLSelector: state => state && state.query && state.query.url,
     wfsFilter: state => state && state.query && state.query.filterObj,
     attributesSelector: state => get(state, `query.featureTypes.${get(state, "query.filterObj.featureTypeName")}.attributes`),
+    typeNameSelector: state => get(state, "query.typeName"),
     resultsSelector: (state) => get(state, "query.result.features"),
     featureCollectionResultSelector: state => get(state, "query.result"),
     getFeatureById: (state, id) => {

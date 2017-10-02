@@ -55,11 +55,13 @@ const extraMarkers = {
     icons: [require('../components/mapcontrols/annotations/img/markers_default.png'), require('../components/mapcontrols/annotations/img/markers_shadow.png')]
 };
 
+const getOffsets = (color, shape) => {
+    return [-extraMarkers.colors.indexOf(color) * extraMarkers.size[0] - 2, -extraMarkers.shapes.indexOf(shape) * extraMarkers.size[1]];
+};
+
 const MarkerUtils = {
     extraMarkers: assign({}, extraMarkers, {
-        getOffsets: (color, shape) => {
-            return [-extraMarkers.colors.indexOf(color) * extraMarkers.size[0] - 2, -extraMarkers.shapes.indexOf(shape) * extraMarkers.size[1]];
-        },
+        getOffsets,
         matches: (style, marker) => {
             return style.iconColor === marker.color && style.iconShape === marker.shape;
         },
@@ -68,6 +70,29 @@ const MarkerUtils = {
                 iconColor: marker.color,
                 iconShape: marker.shape
             };
+        },
+        getGrid: () => {
+            return extraMarkers.shapes.map((s) => ({
+                name: s,
+                markers: extraMarkers.colors.map((m) => ({
+                    name: m,
+                    width: extraMarkers.size[0],
+                    height: extraMarkers.size[1],
+                    offsets: getOffsets(m, s),
+                    style: {
+                        color: m,
+                        shape: s
+                    },
+                    thumbnailStyle: {
+                        backgroundImage: "url(" + extraMarkers.icons[0] + ")",
+                        width: extraMarkers.size[0] + "px",
+                        height: extraMarkers.size[1] + "px",
+                        backgroundPositionX: getOffsets(m, s)[0],
+                        backgroundPositionY: getOffsets(m, s)[1],
+                        cursor: "pointer"
+                    }
+                }))
+            }));
         }
     }),
     getGlyphs: (font) => {
@@ -78,5 +103,8 @@ const MarkerUtils = {
     }
 };
 
+MarkerUtils.markers = {
+    'extra': MarkerUtils.extraMarkers
+};
 
 module.exports = MarkerUtils;
