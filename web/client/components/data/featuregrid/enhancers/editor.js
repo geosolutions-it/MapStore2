@@ -1,5 +1,5 @@
 const {featureTypeToGridColumns, getToolColumns, getRow, getGridEvents, applyAllChanges, createNewAndEditingFilter} = require('../../../../utils/FeatureGridUtils');
-const EditorUtils = require('../../../../utils/EditorUtils');
+const EditorRegister = require('../../../../utils/featuregrid/EditorRegister');
 const {compose, withPropsOnChange, withHandlers, defaultProps} = require('recompose');
 const {getFilterRenderer} = require('../filterRenderers');
 const {manageFilterRendererState} = require('../enhancers/filterRenderers');
@@ -74,36 +74,25 @@ const featuresToGrid = compose(
                 }, {
                     getEditor: (desc) => {
                         // if configured it return the custom editor depending on the localtype of the present column
-                        const editor = EditorUtils.getCustomEditor({attribute: desc.name, url: props.url, typeName: props.typeName}, props.customEditorsOptions && props.customEditorsOptions.rules || []);
-                        if ( editor && !!editor[desc.localType] ) {
-                            if (!!editor.defaultEditor) {
-                                // if a custom default editor is set, it is going to be used
-                                return editor[desc.localType] ? editor[desc.localType]({
-                                    onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges,
-                                    autocompleteEnabled: props.autocompleteEnabled,
-                                    url: props.url,
-                                    typeName: props.typeName
-                                }) : editor.defaultEditor({
-                                    onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges,
-                                    autocompleteEnabled: props.autocompleteEnabled,
-                                    url: props.url,
-                                    typeName: props.typeName
-                                });
-                            }
-                            return editor[desc.localType]({
-                                onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges,
-                                autocompleteEnabled: props.autocompleteEnabled,
-                                url: props.url,
-                                typeName: props.typeName
-                            });
-                        }
-                        // if no custom editor is defined it will use the default ones.
-                        return props.editors(desc.localType, {
+                        const editorProps = {
                             onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges,
                             autocompleteEnabled: props.autocompleteEnabled,
                             url: props.url,
                             typeName: props.typeName
-                    }); },
+                        };
+                        const editor = EditorRegister.getCustomEditor({attribute: desc.name, url: props.url, typeName: props.typeName}, props.customEditorsOptions && props.customEditorsOptions.rules || []);
+                        if ( editor && !!editor[desc.localType] ) {
+                            if (!!editor.defaultEditor) {
+                                // if a custom default editor is set, it is going to be used
+                                return editor[desc.localType] ? editor[desc.localType](editorProps) : editor.defaultEditor(editorProps);
+                            }
+                            return editor[desc.localType](editorProps);
+                        }
+                        // if no custom editor is defined it will use the default ones.
+                        return props.editors.default({})[desc.localType] ?
+                            props.editors.default({})[desc.localType](props) :
+                            props.editors.default({}).defaultEditor(props);
+                    },
                     getFilterRenderer: ({localType=""} = {}, name) => {
                         if (props.filterRenderers && props.filterRenderers[name]) {
                             return props.filterRenderers[name];

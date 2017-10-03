@@ -25,8 +25,25 @@
                   ]
               }
 
+            }, {
+              "name":"FeatureEditor",
+              "cfg": {
+                "customEditorsOptions": {
+                  "rules": [{
+                    "regex": {
+                      "attribute": "type",
+                      "typeName": "atlantis:landmarks"
+                    },
+                    "editor": "DropDownEditor",
+                    "editorProps": {
+                      "values": ["FOREST", "MOUNTAIN", "DESERT", "LAKE"],
+                      "forceSelection": true,
+                      "defaultOption": "FOREST"
+                    }
+                  }]
+                }
+              }
             },
-            "FeatureEditor",
             "WFSDownload",
             "LayerSelector",
             "Notifications"

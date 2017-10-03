@@ -48,7 +48,7 @@ const {getParsedUrl} = require('../utils/ConfigUtils');
   *           "url": "regex to match a specific url",
   *           "typeName": "layerName"
   *         },
-  *         "editor": "My_Custom_Editor_1",
+  *         "editor": "DropDownEditor",
   *         "editorProps": {
   *           "values": ["Opt1", "Opt2"],
   *           "forceSelection": true

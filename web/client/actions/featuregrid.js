@@ -42,7 +42,6 @@ const FEATURE_GRID_CLOSE_CONFIRMED = 'FEATUREGRID:FEATURE_GRID_CLOSE_CONFIRMED';
 const SET_PERMISSION = 'FEATUREGRID:SET_PERMISSION';
 const DISABLE_TOOLBAR = 'FEATUREGRID:DISABLE_TOOLBAR';
 const OPEN_ADVANCED_SEARCH = 'FEATUREGRID:ADVANCED_SEARCH';
-const SETUP_CUSTOM_EDITORS = 'FEATUREGRID:SETUP_CUSTOM_EDITORS';
 const ZOOM_ALL = 'FEATUREGRID:ZOOM_ALL';
 
 const MODES = {
@@ -270,12 +269,6 @@ function openAdvancedSearch() {
         type: OPEN_ADVANCED_SEARCH
     };
 }
-function setupCustomEditors(editors) {
-    return {
-        type: SETUP_CUSTOM_EDITORS,
-        editors
-    };
-}
 function zoomAll() {
     return {
         type: ZOOM_ALL
@@ -318,7 +311,6 @@ module.exports = {
     FEATURE_GRID_CLOSE_CONFIRMED, closeFeatureGridConfirmed,
     DISABLE_TOOLBAR, disableToolbar,
     OPEN_ADVANCED_SEARCH, openAdvancedSearch,
-    SETUP_CUSTOM_EDITORS, setupCustomEditors,
     ZOOM_ALL, zoomAll,
     UPDATE_FILTER, updateFilter,
     setLayer,

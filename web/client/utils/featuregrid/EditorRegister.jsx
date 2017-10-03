@@ -6,30 +6,14 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const Editor = require('../components/data/featuregrid/editors/AttributeEditor');
-const NumberEditor = require('../components/data/featuregrid/editors/NumberEditor');
-const AutocompleteEditor = require('../components/data/featuregrid/editors/AutocompleteEditor');
 const {find} = require('lodash');
 const assign = require('object-assign');
+const defaultEditors = require('../../components/data/featuregrid/editors');
+let Editors = assign({}, require('../../components/data/featuregrid/editors/basic'));
 
-let defaultEditors = {
-    "default": (editorProps) => {
-        return {
-        "defaultEditor": (props) => <Editor {...assign({}, props, editorProps)}/>,
-        "int": (props) => <NumberEditor dataType="int" inputProps={{step: 1, type: "number"}} {...assign({}, props, editorProps)}/>,
-        "number": (props) => <NumberEditor dataType="number" inputProps={{step: 1, type: "number"}} {...assign({}, props, editorProps)}/>,
-        "string": (props) => props.autocompleteEnabled ?
-            <AutocompleteEditor dataType="string" {...assign({}, props, editorProps)}/> :
-            <Editor dataType="string" {...assign({}, props, editorProps)}/>
-        };
-    }
-};
-let Editors = {};
 const isPresent = (editorName) => {
     return Object.keys(Editors).indexOf(editorName) !== -1;
 };
-
 const testRule = (rule = {}, values = {}) => {
     if (Object.keys(rule).length > 0) {
         return Object.keys(rule).reduce( (p, c) => {
@@ -40,12 +24,12 @@ const testRule = (rule = {}, values = {}) => {
     return false;
 };
 module.exports = {
-    getDefaultEditors: () => defaultEditors.default({}),
-    getEditors: () => Editors,
-    setEditor: ({name, editors = defaultEditors.default}) => {
+    getDefault: () => defaultEditors.default({}),
+    get: () => Editors,
+    register: ({name, editors = defaultEditors.default}) => {
         Editors[name] = editors;
     },
-    removeEditor: (name) => {
+    remove: (name) => {
         if (isPresent(name)) {
             try {
                 delete Editors[name];
@@ -56,7 +40,7 @@ module.exports = {
         }
         return false;
     },
-    cleanEditors: () => {
+    clean: () => {
         Editors = {};
     },
     getCustomEditor: ({attribute, url, typeName}, rules = []) => {
