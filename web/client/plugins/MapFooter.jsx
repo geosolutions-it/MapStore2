@@ -7,7 +7,6 @@
  */
 const React = require('react');
 const PropTypes = require('prop-types');
-const assign = require('object-assign');
 const ToolsContainer = require('./containers/ToolsContainer');
 
 class MapFooter extends React.Component {
@@ -66,6 +65,6 @@ class MapFooter extends React.Component {
 }
 
 module.exports = {
-    MapFooterPlugin: assign(MapFooter, {}),
+    MapFooterPlugin: MapFooter,
     reducers: {}
 };

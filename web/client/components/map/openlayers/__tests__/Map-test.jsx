@@ -368,4 +368,16 @@ describe('OpenlayersMap', () => {
         attributions = document.body.getElementsByClassName('ol-attribution');
         expect(attributions.length).toBe(1);
     });
+
+    it('remove attribution from container', () => {
+        let map = ReactDOM.render(<OpenlayersMap center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{attribution: {container: 'body'}}}/>, document.getElementById("map"));
+        expect(map).toExist();
+        const domMap = document.getElementById('map');
+        let attributions = domMap.getElementsByClassName('ol-attribution');
+        expect(attributions.length).toBe(0);
+        attributions = document.body.getElementsByClassName('ol-attribution');
+        document.body.removeChild(attributions[0]);
+        attributions = document.body.getElementsByClassName('ol-attribution');
+        expect(attributions.length).toBe(0);
+    });
 });

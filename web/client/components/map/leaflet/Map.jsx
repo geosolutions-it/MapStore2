@@ -243,8 +243,9 @@ class LeafletMap extends React.Component {
     }
 
     componentWillUnmount() {
-        if (this.props.mapOptions.attribution && this.props.mapOptions.attribution.container) {
-            document.querySelector(this.props.mapOptions.attribution.container).removeChild(this.attribution.getContainer());
+        const attributionContainer = this.props.mapOptions.attribution && this.props.mapOptions.attribution.container && document.querySelector(this.props.mapOptions.attribution.container);
+        if (attributionContainer && attributionContainer.querySelector('.leaflet-control-attribution')) {
+            attributionContainer.removeChild(this.attribution.getContainer());
         }
         this.map.remove();
     }
