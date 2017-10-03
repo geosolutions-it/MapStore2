@@ -11,6 +11,7 @@ const {head, isArray, isString, castArray, isObject} = require('lodash');
 const urlUtil = require('url');
 const CoordinatesUtils = require('./CoordinatesUtils');
 const LayersUtils = require('./LayersUtils');
+const WMTSUtils = require('./WMTSUtils');
 
 const WMS = require('../api/WMS');
 
@@ -32,6 +33,10 @@ const getWMTSBBox = (record) => {
 
 const getNodeText = (node) => {
     return isObject(node) && node._ || node;
+};
+
+const filterOnMatrix = (SRS, matrixIds) => {
+    return SRS.filter(srs => WMTSUtils.getTileMatrixSet(matrixIds, srs, SRS, matrixIds, null));
 };
 
 const converters = {
@@ -154,14 +159,7 @@ const converters = {
     wmts: (records, options) => {
         if (records && records.records) {
             return records.records.map((record) => {
-                const bbox = getWMTSBBox(record);
-                return {
-                title: getNodeText(record["ows:Title"] || record["ows:Identifier"]),
-                description: getNodeText(record["ows:Abstract"] || record["ows:Title"] || record["ows:Identifier"]),
-                identifier: getNodeText(record["ows:Identifier"]),
-                tags: "",
-                tileMatrixSet: record.TileMatrixSet,
-                matrixIds: castArray(record.TileMatrixSetLink || []).reduce((previous, current) => {
+                const matrixIds = castArray(record.TileMatrixSetLink || []).reduce((previous, current) => {
                     const tileMatrix = head((record.TileMatrixSet || []).filter((matrix) => matrix["ows:Identifier"] === current.TileMatrixSet));
                     const tileMatrixSRS = tileMatrix && CoordinatesUtils.getEPSGCode(tileMatrix["ows:SupportedCRS"]);
                     const levels = current.TileMatrixSetLimits && (current.TileMatrixSetLimits.TileMatrixLimits || []).map((limit) => ({
@@ -179,12 +177,20 @@ const converters = {
                     })) || tileMatrix.TileMatrix.map((matrix) => ({
                         identifier: matrix["ows:Identifier"]
                     }));
-
                     return assign(previous, {
                         [tileMatrix["ows:Identifier"]]: levels,
                         [tileMatrixSRS]: levels
                     });
-                }, {}),
+                }, {});
+
+                const bbox = getWMTSBBox(record);
+                return {
+                title: getNodeText(record["ows:Title"] || record["ows:Identifier"]),
+                description: getNodeText(record["ows:Abstract"] || record["ows:Title"] || record["ows:Identifier"]),
+                identifier: getNodeText(record["ows:Identifier"]),
+                tags: "",
+                tileMatrixSet: record.TileMatrixSet,
+                matrixIds,
                 TileMatrixSetLink: castArray(record.TileMatrixSetLink),
                 boundingBox: {
                     extent: [
@@ -198,7 +204,7 @@ const converters = {
                 references: [{
                     type: "OGC:WMTS",
                     url: record.GetTileUrl || options.url,
-                    SRS: record.SRS || [],
+                    SRS: filterOnMatrix(record.SRS || [], matrixIds),
                     params: {
                         name: record["ows:Identifier"]
                     }
