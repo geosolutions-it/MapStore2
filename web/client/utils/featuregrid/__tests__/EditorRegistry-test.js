@@ -15,7 +15,7 @@ const {
     get,
     getCustomEditor,
     remove
-} = require('../EditorRegister');
+} = require('../EditorRegistry');
 const attribute = "STATE_NAME";
 const url = "https://demo.geo-solutions.it/geoserver/wfs";
 const typeName = "topp:states";
@@ -29,7 +29,7 @@ const rules = [{
         "forceSelection": true
     }
 }];
-describe('EditorRegister tests ', () => {
+describe('EditorRegistry tests ', () => {
     beforeEach(() => {
         document.body.innerHTML = '<div id="container"></div>';
         clean();
