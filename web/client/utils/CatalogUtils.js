@@ -137,7 +137,7 @@ const converters = {
                 service: records.service,
                 boundingBox: WMS.getBBox(record),
                 dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
-                    values: dim._.split(',')
+                    values: dim._ && dim._.split(',') || []
                 }, dim.$ || {})),
                 references: [{
                     type: "OGC:WMS",
@@ -161,10 +161,10 @@ const converters = {
                 identifier: getNodeText(record["ows:Identifier"]),
                 tags: "",
                 tileMatrixSet: record.TileMatrixSet,
-                matrixIds: castArray(record.TileMatrixSetLink).reduce((previous, current) => {
-                    const tileMatrix = head(record.TileMatrixSet.filter((matrix) => matrix["ows:Identifier"] === current.TileMatrixSet));
-                    const tileMatrixSRS = CoordinatesUtils.getEPSGCode(tileMatrix["ows:SupportedCRS"]);
-                    const levels = current.TileMatrixSetLimits && current.TileMatrixSetLimits.TileMatrixLimits.map((limit) => ({
+                matrixIds: castArray(record.TileMatrixSetLink || []).reduce((previous, current) => {
+                    const tileMatrix = head((record.TileMatrixSet || []).filter((matrix) => matrix["ows:Identifier"] === current.TileMatrixSet));
+                    const tileMatrixSRS = tileMatrix && CoordinatesUtils.getEPSGCode(tileMatrix["ows:SupportedCRS"]);
+                    const levels = current.TileMatrixSetLimits && (current.TileMatrixSetLimits.TileMatrixLimits || []).map((limit) => ({
                         identifier: limit.TileMatrix,
                         ranges: {
                             cols: {
