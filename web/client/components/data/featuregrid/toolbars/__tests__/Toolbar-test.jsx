@@ -9,6 +9,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var Toolbar = require('../Toolbar');
 var expect = require('expect');
+const {filter} = require('lodash');
 const spyOn = expect.spyOn;
 
 const isVisibleButton = (el) => {
@@ -264,5 +265,30 @@ describe('Featuregrid toolbar component', () => {
         ReactDOM.render(<Toolbar events={events} mode="VIEW" selectedCount={2} />, document.getElementById("container"));
         button = document.getElementById("fg-grid-settings");
         expect(isVisibleButton(button)).toBe(false);
+    });
+    it('check not supported geometry in EDIT mode', () => {
+
+        ReactDOM.render(<Toolbar mode="EDIT" selectedCount={0} hasSupportedGeometry={false} />, document.getElementById("container"));
+        const el = document.getElementsByClassName("featuregrid-toolbar")[0];
+        expect(el).toExist();
+        expect(filter(document.getElementsByClassName("square-button"), function(b) { return isVisibleButton(b); }).length).toBe(1);
+        expect(isVisibleButton(document.getElementById("fg-add-feature"))).toBe(false);
+        expect(isVisibleButton(document.getElementById("fg-back-view"))).toBe(true);
+
+        ReactDOM.render(<Toolbar mode="EDIT" selectedCount={1} hasSupportedGeometry={false} />, document.getElementById("container"));
+        expect(filter(document.getElementsByClassName("square-button"), function(b) { return isVisibleButton(b); }).length).toBe(2);
+        expect(isVisibleButton(document.getElementById("fg-add-feature"))).toBe(false);
+        expect(isVisibleButton(document.getElementById("fg-draw-feature"))).toBe(false);
+        expect(isVisibleButton(document.getElementById("fg-delete-geometry"))).toBe(false);
+        expect(isVisibleButton(document.getElementById("fg-remove-features"))).toBe(true);
+        expect(isVisibleButton(document.getElementById("fg-back-view"))).toBe(true);
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
+
+        ReactDOM.render(<Toolbar mode="EDIT" selectedCount={1} hasSupportedGeometry={false} hasChanges/>, document.getElementById("container"));
+        expect(filter(document.getElementsByClassName("square-button"), function(b) { return isVisibleButton(b); }).length).toBe(2);
+        expect(isVisibleButton(document.getElementById("fg-draw-feature"))).toBe(false);
+        expect(isVisibleButton(document.getElementById("fg-delete-geometry"))).toBe(false);
+        expect(isVisibleButton(document.getElementById("fg-save-feature"))).toBe(true);
+        expect(isVisibleButton(document.getElementById("fg-cancel-editing"))).toBe(true);
     });
 });

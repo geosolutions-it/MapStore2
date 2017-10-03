@@ -890,6 +890,8 @@
             },
             "noFeaturesAvailable": "Keine features verfügbar",
             "errorSaving": "Beim Speichern des Vorgangs ist ein Fehler aufgetreten",
+            "notSupportedGeometryTitle": "Geometry type not supported ",
+            "notSupportedGeometry": "Current layer geometry type is not supported by editing but you can still edit attributes",
             "yesButton": "ein",
             "noButton": "nein",
             "deleteButton": "Löschen",

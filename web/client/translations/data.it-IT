@@ -890,6 +890,8 @@
             },
             "noFeaturesAvailable": "Nessun risultato disponibile",
             "errorSaving": "C'è stato un errore durante il salvataggio",
+            "notSupportedGeometryTitle": "Tipo di geometria non supportato",
+            "notSupportedGeometry": "Il tipo di geometria del layer corrente non è supportato dall'editing ma è ancora possibile modificare gli attributi",
             "yesButton": "Si",
             "noButton": "No",
             "deleteButton": "Elimina",

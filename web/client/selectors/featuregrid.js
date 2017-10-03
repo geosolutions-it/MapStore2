@@ -55,6 +55,10 @@ const hasGeometrySelectedFeature = (state) => {
     }
     return false;
 };
+
+const notSupportedGeometries = ['Geometry'];
+
+const hasSupportedGeometry = state => head(notSupportedGeometries.filter(g => geomTypeSelectedFeatureSelector(state) === g)) ? false : true;
 const hasChangesSelector = state => changesSelector(state) && changesSelector(state).length > 0;
 const hasNewFeaturesSelector = state => newFeaturesSelector(state) && newFeaturesSelector(state).length > 0;
 const getAttributeFilters = state => state && state.featuregrid && state.featuregrid.filters;
@@ -68,6 +72,7 @@ const getAttributeFilters = state => state && state.featuregrid && state.feature
 module.exports = {
   /**
    * selects the state of featuregrid open
+   * @memberof selectors.featuregrid
    * @param  {object}  state applications state
    * @return {Boolean}       true if the featuregrid is open, false otherwise
    */
@@ -122,5 +127,13 @@ module.exports = {
     geomTypeSelectedFeatureSelector,
     hasNewFeaturesOrChanges: state => hasNewFeaturesSelector(state) || hasChangesSelector(state),
     isSimpleGeomSelector: state => isSimpleGeomType(geomTypeSelectedFeatureSelector(state)),
-    canEditSelector: state => state && state.featuregrid && state.featuregrid.canEdit
+    canEditSelector: state => state && state.featuregrid && state.featuregrid.canEdit,
+    /**
+     * check if the feature geometry is supported for editing
+     * @function
+     * @memberof selectors.featuregrid
+     * @param  {object}  state applications state
+     * @return {boolean}       true if the geometry is supported, false otherwise
+     */
+    hasSupportedGeometry
 };

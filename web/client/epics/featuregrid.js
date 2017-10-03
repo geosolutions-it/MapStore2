@@ -39,10 +39,10 @@ const {refreshLayerVersion} = require('../actions/layers');
 
 const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector,
     selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector,
-    isFeatureGridOpen} = require('../selectors/featuregrid');
+    isFeatureGridOpen, hasSupportedGeometry} = require('../selectors/featuregrid');
 const {queryPanelSelector} = require('../selectors/controls');
 
-const {error} = require('../actions/notifications');
+const {error, warning} = require('../actions/notifications');
 const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector, isSyncWmsActive} = require('../selectors/query');
 const drawSupportReset = () => changeDrawingStatus("clean", "", "featureGrid", [], {});
 const {interceptOGCError} = require('../utils/ObservableUtils');
@@ -411,7 +411,7 @@ module.exports = {
      * @memberof epics.featuregrid
      */
     triggerDrawSupportOnSelectionChange: (action$, store) => action$.ofType(SELECT_FEATURES, DESELECT_FEATURES, CLEAR_CHANGES, TOGGLE_MODE)
-        .filter(() => modeSelector(store.getState()) === MODES.EDIT)
+        .filter(() => modeSelector(store.getState()) === MODES.EDIT && hasSupportedGeometry(store.getState()))
         .switchMap( (a) => {
             const state = store.getState();
             let useOriginal = a.type === CLEAR_CHANGES;
@@ -428,10 +428,18 @@ module.exports = {
      * control highlight support on view mode.
      * @memberof epics.featuregrid
      */
-    setHighlightFeaturesPath: (action$) => action$.ofType(TOGGLE_MODE)
+    setHighlightFeaturesPath: (action$, store) => action$.ofType(TOGGLE_MODE)
         .switchMap( (a) => {
             if (a.mode === MODES.VIEW) {
                 return Rx.Observable.of(drawSupportReset(), setHighlightFeaturesPath("featuregrid.select"));
+            }
+            if (a.mode === MODES.EDIT && !hasSupportedGeometry(store.getState())) {
+                return Rx.Observable.of(drawSupportReset(), setHighlightFeaturesPath("featuregrid.select"), warning({
+                    title: "featuregrid.notSupportedGeometryTitle",
+                    message: "featuregrid.notSupportedGeometry",
+                    uid: "notSupportedGeometryWarning",
+                    autoDismiss: 5
+                }));
             }
             return Rx.Observable.of(setHighlightFeaturesPath());
         }),

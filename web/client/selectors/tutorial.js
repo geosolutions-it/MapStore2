@@ -7,6 +7,13 @@
 */
 
 /**
+ * selects tutorial state
+ * @name tutorial
+ * @memberof selectors
+ * @static
+ */
+
+/**
  * selects tutorial from state
  * @memberof selectors.tutorial
  * @param  {object} state the state

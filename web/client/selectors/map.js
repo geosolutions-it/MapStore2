@@ -12,6 +12,13 @@ const {createSelector} = require('reselect');
 const {get} = require('lodash');
 
 /**
+ * selects map state
+ * @name map
+ * @memberof selectors
+ * @static
+ */
+
+/**
  * get the current map configuration from state
  * @function
  * @memberof selectors.map

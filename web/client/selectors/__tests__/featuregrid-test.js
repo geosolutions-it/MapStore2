@@ -25,7 +25,8 @@ const {
     getCustomizedAttributes,
     isSavingSelector,
     isSavedSelector,
-    canEditSelector
+    canEditSelector,
+    hasSupportedGeometry
 } = require('../featuregrid');
 
 const idFt1 = "idFt1";
@@ -426,4 +427,11 @@ describe('Test featuregrid selectors', () => {
         expect(canEditSelector({featuregrid: {canEdit: true}})).toBe(true);
     });
 
+    it('test hasSupportedGeometry', () => {
+        expect(hasSupportedGeometry(initialState)).toBe(true);
+        let initialStateWithGmlGeometry = assign({}, initialState);
+        initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].type = 'gml:Geometry';
+        initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].localType = 'Geometry';
+        expect(hasSupportedGeometry(initialStateWithGmlGeometry)).toBe(false);
+    });
 });
