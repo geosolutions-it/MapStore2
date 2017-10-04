@@ -10,6 +10,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const {AutocompleteCombobox} = require('../AutocompleteCombobox');
 const {createPagedUniqueAutompleteStream} = require('../../../observables/autocomplete');
+const ReactTestUtils = require('react-dom/test-utils');
 
 describe("This test for AutocompleteCombobox component", () => {
     beforeEach((done) => {
