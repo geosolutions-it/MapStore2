@@ -122,9 +122,9 @@ describe('EditorRegistry tests ', () => {
         const IntEditor = getCustomEditor({attribute, url, typeName}, rules, {type: "int", props: {}});
         expect(IntEditor).toExist();
 
-        /*const NumbEditor = getCustomEditor({attribute, url, typeName}, rules, {type: "number", props: {}});
+        const NumbEditor = getCustomEditor({attribute, url, typeName}, rules, {type: "number", props: {}});
         expect(NumbEditor).toExist();
-*/
+
     });
 
 });

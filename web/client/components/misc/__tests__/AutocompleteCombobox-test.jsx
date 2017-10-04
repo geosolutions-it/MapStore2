@@ -10,6 +10,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const {AutocompleteCombobox} = require('../AutocompleteCombobox');
 const {createPagedUniqueAutompleteStream} = require('../../../observables/autocomplete');
+const ReactTestUtils = require('react-dom/test-utils');
 
 describe("This test for AutocompleteCombobox component", () => {
     beforeEach((done) => {
@@ -24,6 +25,14 @@ describe("This test for AutocompleteCombobox component", () => {
     it('creates AutocompleteCombobox with defaults', () => {
         const comp = ReactDOM.render(<AutocompleteCombobox autocompleteStreamFactory={createPagedUniqueAutompleteStream}/>, document.getElementById("container"));
         expect(comp).toExist();
+    });
+
+    it('creates AutocompleteCombobox with change', () => {
+        const comp = ReactDOM.render(<AutocompleteCombobox value="old" autocompleteStreamFactory={createPagedUniqueAutompleteStream}/>, document.getElementById("container"));
+        expect(comp).toExist();
+        const input = document.getElementsByTagName("input")[0];
+        input.value = "newValue";
+
     });
 
 });
