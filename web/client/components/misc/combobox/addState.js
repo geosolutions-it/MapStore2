@@ -1,6 +1,6 @@
 const {compose, withStateHandlers} = require('recompose');
 
-const basicEnhancement = compose(
+const addState = compose(
     withStateHandlers((props) => ({
         open: false,
         currentPage: 1,
@@ -50,13 +50,5 @@ const basicEnhancement = compose(
     })
 );
 
-const forceSelection = ( {oldValue, changedValue, data, allowEmpty}) => {
-    if (allowEmpty && changedValue === "") {
-        return "";
-    }
-    return data.indexOf(changedValue) !== -1 ? changedValue : oldValue;
-};
-module.exports = {
-    basicEnhancement,
-    forceSelection
-};
+
+module.exports = addState;

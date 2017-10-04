@@ -9,7 +9,7 @@
 const {find} = require('lodash');
 const assign = require('object-assign');
 const defaultEditors = require('../../components/data/featuregrid/editors');
-let Editors = assign({}, require('../../components/data/featuregrid/editors/basic'));
+let Editors = assign({}, require('../../components/data/featuregrid/editors/customEditors'));
 
 const isPresent = (editorName) => {
     return Object.keys(Editors).indexOf(editorName) !== -1;
@@ -23,11 +23,24 @@ const testRule = (rule = {}, values = {}) => {
     }
     return false;
 };
+const getEditor = (type, name, props) => {
+    if (Editors[name]) {
+        if (Editors[name][type]) {
+            return Editors[name][type](props);
+        }
+        if (Editors[name].defaultEditor) {
+            return Editors[name].defaultEditor(props);
+        }
+    }
+    return null;
+};
 module.exports = {
-    getDefault: () => defaultEditors.default({}),
+    getDefault: () => defaultEditors,
     get: () => Editors,
-    register: ({name, editors = defaultEditors.default}) => {
-        Editors[name] = editors;
+    register: ({name, editors}) => {
+        if (!!editors) {
+            Editors[name] = editors;
+        }
     },
     remove: (name) => {
         if (isPresent(name)) {
@@ -43,11 +56,17 @@ module.exports = {
     clean: () => {
         Editors = {};
     },
-    getCustomEditor: ({attribute, url, typeName}, rules = []) => {
+    getCustomEditor: ({attribute, url, typeName}, rules = [], {type, props}) => {
         const editor = find(rules, (r) => testRule(r.regex, {attribute, url, typeName }));
         if (!!editor) {
-            return Editors[editor.editor](editor.editorProps);
+            return getEditor(type, editor.editor, {...props, ...editor.editorProps || {}});
         }
         return null;
+    },
+    forceSelection: ( {oldValue, changedValue, data, allowEmpty}) => {
+        if (allowEmpty && changedValue === "") {
+            return "";
+        }
+        return data.indexOf(changedValue) !== -1 ? changedValue : oldValue;
     }
 };

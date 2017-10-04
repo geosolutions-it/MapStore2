@@ -8,12 +8,11 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const AttributeEditor = require('./AttributeEditor');
-const {ComboboxWithForceSelection} = require('../../../misc/ComboboxWithEnhancer');
+const ControlledCombobox = require('../../../misc/combobox/ControlledCombobox');
 const {head} = require('lodash');
 const assign = require('object-assign');
-const {forceSelection} = require('../../../misc/enhancers/basic');
 
-class DropDownEditor extends AttributeEditor{
+class DropDownEditor extends AttributeEditor {
     static propTypes = {
         column: PropTypes.object,
         dataType: PropTypes.string,
@@ -46,6 +45,7 @@ class DropDownEditor extends AttributeEditor{
         };
         this.getValue = () => {
             const updated = super.getValue();
+            const {forceSelection} = require('../../../../utils/featuregrid/EditorRegistry');
 
             if (this.props.forceSelection) {
                 return {[this.props.column.key]: forceSelection({
@@ -72,7 +72,7 @@ class DropDownEditor extends AttributeEditor{
             data,
             defaultOption: this.props.defaultOption || head(this.props.values)
         });
-        return <ComboboxWithForceSelection {...props}/>;
+        return <ControlledCombobox {...props} filter="contains"/>;
     }
 }
 

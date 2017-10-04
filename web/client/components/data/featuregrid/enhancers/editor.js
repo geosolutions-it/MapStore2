@@ -1,6 +1,7 @@
 const {featureTypeToGridColumns, getToolColumns, getRow, getGridEvents, applyAllChanges, createNewAndEditingFilter} = require('../../../../utils/FeatureGridUtils');
 const EditorRegistry = require('../../../../utils/featuregrid/EditorRegistry');
 const {compose, withPropsOnChange, withHandlers, defaultProps} = require('recompose');
+const {isNil} = require('lodash');
 const {getFilterRenderer} = require('../filterRenderers');
 const {manageFilterRendererState} = require('../enhancers/filterRenderers');
 
@@ -73,25 +74,21 @@ const featuresToGrid = compose(
                     sortable: !props.isFocused
                 }, {
                     getEditor: (desc) => {
-                        // if configured it return the custom editor depending on the localtype of the present column
-                        const editorProps = {
+                        const generalProps = {
                             onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges,
                             autocompleteEnabled: props.autocompleteEnabled,
                             url: props.url,
                             typeName: props.typeName
                         };
-                        const editor = EditorRegistry.getCustomEditor({attribute: desc.name, url: props.url, typeName: props.typeName}, props.customEditorsOptions && props.customEditorsOptions.rules || []);
-                        if ( editor && !!editor[desc.localType] ) {
-                            if (!!editor.defaultEditor) {
-                                // if a custom default editor is set, it is going to be used
-                                return editor[desc.localType] ? editor[desc.localType](editorProps) : editor.defaultEditor(editorProps);
-                            }
-                            return editor[desc.localType](editorProps);
+                        const regexProps = {attribute: desc.name, url: props.url, typeName: props.typeName};
+                        const rules = props.customEditorsOptions && props.customEditorsOptions.rules || [];
+                        const editorProps = {type: desc.localType, props};
+                        const editor = EditorRegistry.getCustomEditor(regexProps, rules, editorProps);
+
+                        if (!isNil(editor)) {
+                            return editor;
                         }
-                        // if no custom editor is defined it will use the default ones.
-                        return props.editors.default({})[desc.localType] ?
-                            props.editors.default({})[desc.localType](props) :
-                            props.editors.default({}).defaultEditor(props);
+                        return props.editors(desc.localType, generalProps);
                     },
                     getFilterRenderer: ({localType=""} = {}, name) => {
                         if (props.filterRenderers && props.filterRenderers[name]) {
