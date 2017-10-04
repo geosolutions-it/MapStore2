@@ -38,7 +38,8 @@
                     "editorProps": {
                       "values": ["FOREST", "MOUNTAIN", "DESERT", "LAKE"],
                       "forceSelection": true,
-                      "defaultOption": "FOREST"
+                      "defaultOption": "FOREST",
+                      "allowEmpty": true
                     }
                   }]
                 }

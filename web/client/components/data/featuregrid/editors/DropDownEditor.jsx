@@ -8,15 +8,18 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const AttributeEditor = require('./AttributeEditor');
-const {ComboboxWithEnhancer} = require('../../../misc/ComboboxWithEnhancer');
+const {ComboboxWithForceSelection} = require('../../../misc/ComboboxWithEnhancer');
+const {head} = require('lodash');
 const assign = require('object-assign');
+const {forceSelection} = require('../../../misc/enhancers/basic');
 
 class DropDownEditor extends AttributeEditor{
     static propTypes = {
         column: PropTypes.object,
         dataType: PropTypes.string,
         defaultOption: PropTypes.string,
-        forceselection: PropTypes.bool,
+        forceSelection: PropTypes.bool,
+        allowEmpty: PropTypes.bool,
         inputProps: PropTypes.object,
         isValid: PropTypes.func,
         onBlur: PropTypes.func,
@@ -29,7 +32,8 @@ class DropDownEditor extends AttributeEditor{
         isValid: () => true,
         dataType: "string",
         values: [],
-        forceSelection: false
+        forceSelection: true,
+        allowEmpty: true
     };
     constructor(props) {
         super(props);
@@ -42,7 +46,23 @@ class DropDownEditor extends AttributeEditor{
         };
         this.getValue = () => {
             const updated = super.getValue();
-            return updated;
+
+            if (this.props.forceSelection) {
+                return {[this.props.column.key]: forceSelection({
+                    oldValue: this.props.defaultOption,
+                    changedValue: updated[this.props.column && this.props.column.key],
+                    data: this.props.values,
+                    allowEmpty: this.props.allowEmpty})};
+            }
+            if (this.props.allowEmpty) {
+                return updated;
+            }
+            // this case is only when forceSelection and allowEmpty are falsy, but this is contractidtory!! so the default option is used
+            return {[this.props.column.key]: forceSelection({
+                oldValue: this.props.defaultOption,
+                changedValue: updated[this.props.column && this.props.column.key],
+                data: this.props.values,
+                allowEmpty: this.props.allowEmpty})};
         };
     }
     render() {
@@ -50,9 +70,9 @@ class DropDownEditor extends AttributeEditor{
 
         const props = assign({}, {...this.props}, {
             data,
-            value: this.props.defaultOption
+            defaultOption: this.props.defaultOption || head(this.props.values)
         });
-        return <ComboboxWithEnhancer {...props}/>;
+        return <ComboboxWithForceSelection {...props}/>;
     }
 }
 

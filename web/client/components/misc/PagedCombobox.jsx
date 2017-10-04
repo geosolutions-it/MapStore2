@@ -35,6 +35,7 @@ class PagedCombobox extends React.Component {
         itemComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         label: PropTypes.string,
         loading: PropTypes.bool,
+        filter: PropTypes.string,
         messages: PropTypes.object,
         onChange: PropTypes.func,
         onFocus: PropTypes.func,
@@ -59,6 +60,7 @@ class PagedCombobox extends React.Component {
         itemComponent: AutocompleteListItem,
         loading: false,
         label: null,
+        filter: "",
         pagination: {
             paginated: true,
             firstPage: false,
@@ -135,6 +137,7 @@ class PagedCombobox extends React.Component {
             itemComponent={this.props.itemComponent}
             messages={this.props.messages || messages}
             open={this.props.open}
+            filter={this.props.filter}
             onChange={(val) => this.props.onChange(val)}
             onFocus={() => this.props.onFocus(this.props.data)}
             onSelect={(v) => this.props.onSelect(v)}
