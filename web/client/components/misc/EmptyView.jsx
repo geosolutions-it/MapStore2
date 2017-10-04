@@ -16,24 +16,26 @@ const FullWidthIcon = require('./FullWidthGlyph');
  *
  * @class EmptyView
  * @memberof components.misc
- * @param  {Number} [opacity=0.45]      The opactity
+ * @param  {object} [mainViewStyle]     Style for the main view
+ * @param  {object} [contentStyle]      Style for the container view
  * @param  {String} [glyph="info-sign"] The icon glyph
  * @param  {string|node} [title]               The title of the advice to display
  * @param  {string|node} [description]         The description to display
  * @param  {string|node} [content]             Additional content for the empty view (e.g. buttons...)
  */
 module.exports = ({
-        opacity= 0.45,
+        mainViewStyle,
+        contentStyle,
         glyph="info-sign",
         title,
         description,
         content
     } = {}) =>
-        (<div style={{textAlign: "center", position: "absolute", width: "100%"}} >
-            <div key="empty-main-view" style={{opacity}}>
-                {glyph ? <div key="glyph" style={{width: "40%", "marginLeft": "30%", textAlign: "center"}}><FullWidthIcon glyph={glyph} /></div> : null}
+        (<div className="empty-state-container">
+            <div key="main-view" className="empty-state-main-view" style={mainViewStyle}>
+                {glyph ? <div key="glyph" className="empty-state-image"><FullWidthIcon glyph={glyph} /></div> : null}
                 {title ? <h1 key="title" >{title}</h1> : null}
                 {description ? <p key="description">{description}</p> : null}
             </div>
-            <div key="content">{content}</div>
+            <div key="content" className="empty-state-content" style={contentStyle}>{content}</div>
         </div>);

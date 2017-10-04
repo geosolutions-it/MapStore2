@@ -11,14 +11,13 @@ const DefaultEmptyComponent = require("../EmptyView");
 
 
 /**
-* Empty State enhancer. Enhances an object adding a (localizable) tooltip.
-* It is applied only if props contains `tooltip` or `tooltipId`. It have to be applied to a React (functional) component
+* Empty State enhancer. Enhances an object displaying an empty state view under a given condition
 * @type {function}
 * @name emptyState
 * @memberof components.misc.enhancers
 * @param {function} test The test for the properties. If it is true, use empty view
-* @param {object} [emptyComponentProps] parameters for the empty components. The structure must reflect the props of the EmptyComponent parameter (or its default @see [EmptyView](#components.misc.EmptyView))
-* @param {Component} [EmptyComponent=EmptyView] the component to use for empty view. By default components.misc.EmptyView
+* @param {object} [emptyComponentProps] parameters for the empty components. The structure must reflect the props of the EmptyComponent(3rd) parameter (or its default @see [EmptyView](#components.misc.EmptyView))
+* @param {Component} [EmptyComponent=EmptyView] the component to use for empty view. By default [EmptyView](#components.misc.EmptyView)
 * @example
 * emptyState(({data=[]}) => data.length === 0)(ComponentToEnhance);
 *
