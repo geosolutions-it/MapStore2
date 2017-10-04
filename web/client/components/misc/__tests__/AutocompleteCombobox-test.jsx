@@ -26,4 +26,12 @@ describe("This test for AutocompleteCombobox component", () => {
         expect(comp).toExist();
     });
 
+    it('creates AutocompleteCombobox with change', () => {
+        const comp = ReactDOM.render(<AutocompleteCombobox value="old" autocompleteStreamFactory={createPagedUniqueAutompleteStream}/>, document.getElementById("container"));
+        expect(comp).toExist();
+        const input = document.getElementsByTagName("input")[0];
+        input.value = "newValue";
+
+    });
+
 });
