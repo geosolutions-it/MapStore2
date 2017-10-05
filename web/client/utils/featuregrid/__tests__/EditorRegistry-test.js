@@ -16,6 +16,7 @@ const {
     clean,
     get,
     getCustomEditor,
+    forceSelection,
     remove
 } = require('../EditorRegistry');
 const attribute = "STATE_NAME";
@@ -31,8 +32,8 @@ const rules = [{
         "forceSelection": true
     }
 }];
-const Editor = require('../../../components/data/featuregrid/editors//AttributeEditor');
-const NumberEditor = require('../../../components/data/featuregrid/editors//NumberEditor');
+const Editor = require('../../../components/data/featuregrid/editors/AttributeEditor');
+const NumberEditor = require('../../../components/data/featuregrid/editors/NumberEditor');
 const testEditors = {
     "defaultEditor": (props) => <Editor {...props}/>,
     "string": (props) => <DropDownEditor dataType="string" {...props}/>,
@@ -93,6 +94,21 @@ describe('EditorRegistry tests ', () => {
         const editor = getCustomEditor({attribute, url, typeName}, rules, {type: "string", props: {}});
         expect(editor).toExist();
     });
+    it('getCustomEditor with positive match but not supported type, i.e. default editor', () => {
+        const name = "DropDownEditor";
+        const customEditors = assign({}, testEditors);
+        register({name, editors: customEditors});
+        const editor = getCustomEditor({attribute, url, typeName}, rules, {type: "varchar", props: {}});
+        expect(editor).toExist();
+    });
+    it('getCustomEditor with positive match but not supported type, return null', () => {
+        const name = "DropDownEditor";
+        let customEditors = assign({}, testEditors);
+        delete customEditors.defaultEditor;
+        register({name, editors: customEditors});
+        const editor = getCustomEditor({attribute, url, typeName}, rules, {type: "varchar", props: {}});
+        expect(editor).toBe(null);
+    });
     it('getCustomEditor with negative match', () => {
         const attr = "STAsTE_NAME";
         const name = "DropDownEditor";
@@ -127,4 +143,36 @@ describe('EditorRegistry tests ', () => {
 
     });
 
+    it('forceSelection allowEmpty=true', () => {
+        const oldValue = "old";
+        const changedValue = "new";
+        const data = ["new", "old", "agile"];
+        const allowEmpty = true;
+        const newVal = forceSelection({oldValue, changedValue, data, allowEmpty});
+        expect(newVal).toBe("new");
+    });
+    it('forceSelection allowEmpty=true with "" value', () => {
+        const oldValue = "old";
+        const changedValue = "";
+        const data = ["new", "old", "agile"];
+        const allowEmpty = true;
+        const newVal = forceSelection({oldValue, changedValue, data, allowEmpty});
+        expect(newVal).toBe("");
+    });
+    it('forceSelection allowEmpty=false with "" value', () => {
+        const oldValue = "old";
+        const changedValue = "";
+        const data = ["new", "old", "agile"];
+        const allowEmpty = false;
+        const newVal = forceSelection({oldValue, changedValue, data, allowEmpty});
+        expect(newVal).toBe("old");
+    });
+    it('forceSelection allowEmpty=false with "agile" value', () => {
+        const oldValue = "old";
+        const changedValue = "agile";
+        const data = ["new", "old", "agile"];
+        const allowEmpty = false;
+        const newVal = forceSelection({oldValue, changedValue, data, allowEmpty});
+        expect(newVal).toBe("agile");
+    });
 });

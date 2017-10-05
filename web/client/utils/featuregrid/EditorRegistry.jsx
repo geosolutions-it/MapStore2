@@ -8,7 +8,6 @@
 
 const {find} = require('lodash');
 const assign = require('object-assign');
-const defaultEditors = require('../../components/data/featuregrid/editors');
 let Editors = assign({}, require('../../components/data/featuregrid/editors/customEditors'));
 
 const isPresent = (editorName) => {
@@ -35,7 +34,6 @@ const getEditor = (type, name, props) => {
     return null;
 };
 module.exports = {
-    getDefault: () => defaultEditors,
     get: () => Editors,
     register: ({name, editors}) => {
         if (!!editors) {
