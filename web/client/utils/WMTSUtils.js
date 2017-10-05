@@ -20,7 +20,7 @@ const WMTSUtils = {
         return matrixIds;
     },
     getMatrixIds: (matrix, srs) => {
-        return (isObject(matrix) && matrix[srs] || matrix).map((el) => el.identifier);
+        return ((isObject(matrix) && matrix[srs]) || isArray(matrix) || []).map((el) => el.identifier);
     },
     limitMatrix: (matrix, len) => {
         if (matrix.length > len) {
@@ -31,7 +31,7 @@ const WMTSUtils = {
         }
         return matrix;
     },
-    getTileMatrixSet: (tileMatrixSet, srs, allowedSRS, matrixIds = {}) => {
+    getTileMatrixSet: (tileMatrixSet, srs, allowedSRS, matrixIds = {}, defaultMatrix = srs) => {
         if (tileMatrixSet && isString(tileMatrixSet)) {
             return tileMatrixSet;
         }
@@ -44,10 +44,10 @@ const WMTSUtils = {
                     return tileMatrixSet[current] || previous;
                 }
                 return previous;
-            }, srs);
+            }, defaultMatrix);
         }
 
-        return srs;
+        return defaultMatrix;
     }
 };
 

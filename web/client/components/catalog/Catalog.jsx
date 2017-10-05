@@ -303,12 +303,12 @@ class Catalog extends React.Component {
                                 </FormGroup>
                                 <FormGroup controlId="buttons" key="buttons">
                                     {this.renderButtons()}
+                                    {this.props.layerError ? this.renderError(this.props.layerError) : null}
                                 </FormGroup>
                             </Form>)}
                     footer={this.renderPagination()}>
                             <div>
                                 {this.renderResult()}
-                                {this.props.layerError ? this.renderError(this.props.layerError) : null}
                             </div>
                         </BorderLayout>
             ) : (
