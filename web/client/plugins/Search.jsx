@@ -126,70 +126,7 @@ const SearchPlugin = connect((state) => ({
     selectedServices: state && state.search && state.search.selectedServices,
     selectedItems: state && state.search && state.search.selectedItems,
     textSearchConfig: state && state.searchconfig && state.searchconfig.textSearchConfig
-}))(/**
- * Search plugin. Provides search functionalities for the map.
- * Allows to display results and place them on the map. Supports nominatim and WFS as search protocols
- * You can configure the services and each service can trigger a nested search.
- *
- * @example
- * {
- *  "name": "Search",
- *  "cfg": {
- *    "withToggle": ["max-width: 768px", "min-width: 768px"]
- *  }
- * }
- * @class Search
- * @memberof plugins
- * @prop {object} cfg.searchOptions initial search options
- * @prop {bool} cfg.fitResultsToMapSize true by default, fits the result list to the mapSize (can be disabled, for custom uses)
- * @prop {searchService[]} cfg.searchOptions.services a list of services to perform search.
- * a **nominatim** search service look like this:
- * ```
- * {
- *  "type": "nominatim",
- *  "searchTextTemplate": "${properties.display_name}", // text to use as searchText when an item is selected. Gets the result properties.
- *  "options": {
- *    "polygon_geojson": 1,
- *    "limit": 3
- *  }
- * ```
- *
- * a **wfs** service look like this:
- * ```
- * {
- *      "type": "wfs",
- *      "priority": 2,
- *      "displayName": "${properties.propToDisplay}",
- *      "subTitle": " (a subtitle for the results coming from this service [ can contain expressions like ${properties.propForSubtitle}])",
- *      "options": {
- *        "url": "/geoserver/wfs",
- *        "typeName": "workspace:layer",
- *        "queriableAttributes": ["attribute_to_query"],
- *        "sortBy": "ID",
- *        "srsName": "EPSG:4326",
- *        "maxFeatures": 4,
- *        "blackist": [... an array of strings to exclude from the final search filter ]
- *      },
- *      "nestedPlaceholder": "Write other text to refine the search...",
- *      "nestedPlaceholderMsgId": "id contained in the localization files i.e. search.nestedplaceholder",
- *      "then": [ ... an array of services to use when one item of this service is selected],
- *      "geomService": { optional service to retrieve the geometry}
- *  }
- *
- * ```
- * The typical nested service needs to have some additional parameters:
- * ```
- * {
- *     "type": "wfs",
- *     "filterTemplate": " AND SOMEPROP = '${properties.OLDPROP}'", // will be appended to the original filter, it gets the properties of the current selected item (of the parent service)
- *     "options": {
- *       ...
- *     }
- * }
- * ```
- * **note:** `searchTextTemplate` is useful to populate the search text input when a search result is selected, typically with "leaf" services.
- * @prop {array|boolean} cfg.withToggle when boolean, true uses a toggle to display the searchbar. When array, e.g  `["max-width: 768px", "min-width: 768px"]`, `max-width` and `min-width` are the limits where to show/hide the toggle (useful for mobile)
- */
+}))(
 class extends React.Component {
     static propTypes = {
         fitResultsToMapSize: PropTypes.bool,

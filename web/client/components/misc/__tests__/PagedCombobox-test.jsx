@@ -8,7 +8,7 @@
 const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
-const PagedCombobox = require('../PagedCombobox');
+const PagedCombobox = require('../combobox/PagedCombobox');
 const TestUtils = require('react-dom/test-utils');
 const {Tooltip} = require('react-bootstrap');
 

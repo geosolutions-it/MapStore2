@@ -8,7 +8,7 @@
 
 const React = require('react');
 const {isArray} = require('lodash');
-const PagedCombobox = require('./PagedCombobox');
+const PagedCombobox = require('./combobox/PagedCombobox');
 const {setObservableConfig, mapPropsStreamWithConfig, compose, withStateHandlers} = require('recompose');
 const rxjsConfig = require('recompose/rxjsObservableConfig').default;
 setObservableConfig(rxjsConfig);

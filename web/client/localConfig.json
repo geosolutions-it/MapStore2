@@ -34,7 +34,7 @@
     "projectionDefs": [],
     "initialState": {
       "defaultState": {
-        "catalog":{
+        "catalog": {
           "default": {
             "newService": {
                 "url": "",

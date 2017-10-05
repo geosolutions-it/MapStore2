@@ -35,6 +35,7 @@ class FeatureGrid extends React.PureComponent {
         gridOpts: PropTypes.object,
         changes: PropTypes.object,
         selectBy: PropTypes.object,
+        customEditorsOptions: PropTypes.object,
         features: PropTypes.array,
         showDragHandle: PropTypes.bool,
         gridComponent: PropTypes.func,
