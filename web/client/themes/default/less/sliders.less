@@ -1,0 +1,128 @@
+@import (less) "~react-nouislider/example/nouislider.css";
+
+.noUi-target {
+    border-color: none;
+    cursor: pointer;
+    background-color: lighten(@ms2-color-primary, 10%);
+    &.noUi-horizontal {
+        height: 4px;
+        margin: 10px 0;
+        border-radius: 0;
+        border: none;
+        .noUi-base {
+            .noUi-origin {
+                background-color: @ms2-color-shade-lighter;
+                .noUi-handle {
+                    width: @square-btn-small-size;
+                    height: @square-btn-small-size;
+                    left: -(@square-btn-small-size)/2;
+                    top: -((@square-btn-small-size - 4) / 2);
+                    -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
+        	        -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
+        	        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
+                    border: none;
+                    background-color: @ms2-color-primary;
+                    cursor: pointer;
+                    border-radius: @border-radius-base;
+                    .noUi-tooltip {
+                        top: 0;
+                        left: @square-btn-small-size / 2;
+                        transform: translate(-50%, 0);
+                        padding: 0;
+                        font-size: @font-size-small;
+                        border: none;
+                        border-radius: @border-radius-base;
+                        background-color: @ms2-color-primary;
+                        color: @ms2-color-text-primary;
+                        height: @square-btn-small-size;
+                        width: 45px;
+                        line-height: @square-btn-small-size;
+                        -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
+            	        -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
+            	        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
+                        cursor: pointer;
+                        &:hover {
+                            background-color: darken(@ms2-color-primary, 10%);
+                        }
+                    }
+
+                    &:hover {
+                        background-color: darken(@ms2-color-primary, 10%);
+                    }
+                    &:before,
+                    &:after {
+                        height: @square-btn-small-size;
+                        width: @square-btn-small-size;
+                        background: transparent;
+                        left: 0;
+                        top: 0;
+                    }
+                    &:before {
+                        font-family: 'mapstore2';
+                        text-align: center;
+                        color: @ms2-color-text-primary;
+                    }
+                }
+            }
+        }
+        .noUi-pips {
+            &.noUi-pips-horizontal {
+                .noUi-value {
+                    text-align: right;
+                    -ms-transform: rotate(270deg); // IE 9
+                    -webkit-transform: rotate(270deg); // Chrome, Safari, Opera
+                    transform: rotate(270deg);
+                    &.noUi-value-horizontal {
+                        margin-left: -30px;
+                        margin-top: 22px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.noUi-target[disabled="true"] {
+    cursor: not-allowed;
+    &.noUi-horizontal {
+        .noUi-base {
+            .noUi-origin {
+                .noUi-handle {
+                    cursor: not-allowed;
+                    .noUi-tooltip {
+                        &:hover {
+                            cursor: not-allowed;
+                            background-color: @ms2-color-primary;
+                        }
+                    }
+                    &:hover {
+                        cursor: not-allowed;
+                        background-color: @ms2-color-primary;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.mapstore-slider {
+    &.with-tooltip {
+        .noUi-target {
+            &.noUi-horizontal {
+                .noUi-base {
+                    .noUi-origin {
+                        .noUi-handle {
+                            -webkit-box-shadow: none;
+                            -moz-box-shadow: none;
+                            box-shadow: none;
+                            &:before,
+                            &:after {
+                                display: none;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

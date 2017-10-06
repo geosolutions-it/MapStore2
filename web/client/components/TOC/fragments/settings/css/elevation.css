@@ -1,31 +1,12 @@
 #mapstore-elevation {
     width: 600px;
     margin-top: -46px;
-    margin-bottom: 50px;
-}
-
-#mapstore-elevation .noUi-horizontal .noUi-handle {
-  left: -12px;
-}
-
-#mapstore-elevation .noUi-tooltip {
-  width: auto;
-}
-
-#mapstore-elevation .noUi-value {
-  text-align: right;
-  -ms-transform: rotate(270deg); /* IE 9 */
-  -webkit-transform: rotate(270deg); /* Chrome, Safari, Opera */
-  transform: rotate(270deg);
-}
-
-#mapstore-elevation .noUi-value-horizontal {
-  margin-left: -30px;
-  margin-top: 22px;
+    height: 80px;
+    padding: 0 5px;
 }
 
 label#mapstore-elevation-label {
-    margin-bottom: 40px;
+    margin-top: 10px;
 }
 
 .custom-tooltip {
