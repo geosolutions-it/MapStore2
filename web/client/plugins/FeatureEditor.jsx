@@ -21,7 +21,6 @@ const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
 const {gridTools, gridEvents, pageEvents, toolbarEvents} = require('./featuregrid/index');
 const ContainerDimensions = require('react-container-dimensions').default;
-const {getParsedUrl} = require('../utils/ConfigUtils');
 
 /**
   * @name FeatureEditor
@@ -133,7 +132,7 @@ const selector = createSelector(
     (open, autocompleteEnabled, url, typeName, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters) => ({
         open,
         autocompleteEnabled,
-        url: getParsedUrl(url, {"outputFormat": "json"}),
+        url,
         typeName,
         hasChanges,
         newFeatures,

@@ -10,27 +10,30 @@ const assign = require('object-assign');
 const GeoCodeUtils = require('../utils/GeoCodeUtils');
 const {generateTemplateString} = require('../utils/TemplateUtils');
 
+const defaultTextIntoFilter = ({searchText, staticFilter, blacklist, item, queriableAttributes, predicate} ) => {
+    // split into words and remove blacklisted words
+    const staticFilterParsed = generateTemplateString(staticFilter || "")(item);
+    let searchWords = searchText.split(" ").filter(w => w).filter( w => blacklist.indexOf(w.toLowerCase()) < 0 );
+
+    // if the array searchWords is empty, then use the full searchText
+    if (searchWords.length === 0 ) {
+        searchWords = !!searchText ? [searchText] : [];
+    }
+    let filter;
+    if (searchWords.length > 0 ) {
+        filter = "(".concat( searchWords.map( (w) => queriableAttributes.map( attr => `${attr} ${predicate} '%${w.replace("'", "''")}%'`).join(" OR ")).join(') AND (')).concat(")");
+    }
+
+    filter = filter ? filter.concat(staticFilterParsed) : staticFilterParsed || null;
+    return filter;
+};
 let Services = {
     nominatim: (searchText, options = {}) =>
         require('./Nominatim')
         .geocode(searchText, options)
         .then( res => GeoCodeUtils.nominatimToGeoJson(res.data)),
-    wfs: (searchText, {url, typeName, queriableAttributes = [], outputFormat = "application/json", predicate = "ILIKE", staticFilter = "", blacklist = [], item, ...params }) => {
-        // split into words and remove blacklisted words
-        const staticFilterParsed = generateTemplateString(staticFilter || "")(item);
-        let searchWords = searchText.split(" ").filter(w => w).filter( w => blacklist.indexOf(w.toLowerCase()) < 0 );
-
-        // if the array searchWords is empty, then use the full searchText
-        if (searchWords.length === 0 ) {
-            searchWords = !!searchText ? [searchText] : [];
-        }
-        let filter;
-        if (searchWords.length > 0 ) {
-            filter = "(".concat( searchWords.map( (w) => queriableAttributes.map( attr => `${attr} ${predicate} '%${w.replace("'", "''")}%'`).join(" OR ")).join(') AND (')).concat(")");
-        }
-
-        filter = filter ? filter.concat(staticFilterParsed) : staticFilterParsed || null;
-
+    wfs: (searchText, {url, typeName, queriableAttributes = [], outputFormat = "application/json", predicate = "ILIKE", staticFilter = "", blacklist = [], item, textIntoFilter = defaultTextIntoFilter, ...params }) => {
+        const filter = textIntoFilter({searchText, staticFilter, blacklist, item, queriableAttributes, predicate});
         return WFS
             .getFeatureSimple(url, assign({
                 maxFeatures: 10,

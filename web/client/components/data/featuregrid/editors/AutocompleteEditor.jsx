@@ -9,6 +9,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const AttributeEditor = require('./AttributeEditor');
 const {AutocompleteCombobox} = require('../../../misc/AutocompleteCombobox');
+const {getParsedUrl} = require('../../../../utils/ConfigUtils');
 const {createPagedUniqueAutompleteStream} = require('../../../../observables/autocomplete');
 
 class AutocompleteEditor extends AttributeEditor {
@@ -42,7 +43,7 @@ class AutocompleteEditor extends AttributeEditor {
         };
     }
     render() {
-        return <AutocompleteCombobox {...this.props} autocompleteStreamFactory={createPagedUniqueAutompleteStream}/>;
+        return <AutocompleteCombobox {...this.props} url={getParsedUrl(this.props.url, {"outputFormat": "json"})} filter="contains" autocompleteStreamFactory={createPagedUniqueAutompleteStream}/>;
     }
 }
 
