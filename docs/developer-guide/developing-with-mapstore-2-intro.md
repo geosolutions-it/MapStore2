@@ -8,13 +8,14 @@ This section is about developing your own application using the MapStore2 framew
  * [Building and Deploying](building-and-deploying)
  * [Code Conventions](code-conventions)
  * [Developers FAQ](dev-faq)
- * [How to customize the Theme](customize-theme.md)
- 
+ * [How to customize the Theme](customize-theme)
+ * [How to add a new language](add-new-language)
+
 ## Developing using plugins
 
  * [Plugins architecture](plugins-architecture)
  * [Plugins documentation](plugins-documentation)
- 
+
 ## Useful references
 
 If you want to create an application based on MapStore2 you can use the [Project Creation Script](project-creation-script).
