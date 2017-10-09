@@ -10,7 +10,7 @@ const assign = require('object-assign');
 const GeoCodeUtils = require('../utils/GeoCodeUtils');
 const {generateTemplateString} = require('../utils/TemplateUtils');
 
-const defaultTextIntoFilter = ({searchText, staticFilter, blacklist, item, queriableAttributes, predicate} ) => {
+const defaultFromTextToFilter = ({searchText, staticFilter, blacklist, item, queriableAttributes, predicate} ) => {
     // split into words and remove blacklisted words
     const staticFilterParsed = generateTemplateString(staticFilter || "")(item);
     let searchWords = searchText.split(" ").filter(w => w).filter( w => blacklist.indexOf(w.toLowerCase()) < 0 );
@@ -32,14 +32,14 @@ let Services = {
         require('./Nominatim')
         .geocode(searchText, options)
         .then( res => GeoCodeUtils.nominatimToGeoJson(res.data)),
-    wfs: (searchText, {url, typeName, queriableAttributes = [], outputFormat = "application/json", predicate = "ILIKE", staticFilter = "", blacklist = [], item, textIntoFilter = defaultTextIntoFilter, ...params }) => {
-        const filter = textIntoFilter({searchText, staticFilter, blacklist, item, queriableAttributes, predicate});
+    wfs: (searchText, {url, typeName, queriableAttributes = [], outputFormat = "application/json", predicate = "ILIKE", staticFilter = "", blacklist = [], item, fromTextToFilter = defaultFromTextToFilter, ...params }) => {
+        const filter = fromTextToFilter({searchText, staticFilter, blacklist, item, queriableAttributes, predicate});
         return WFS
             .getFeatureSimple(url, assign({
                 maxFeatures: 10,
                 typeName,
                 outputFormat,
-                // create a filter like : `(ATTR ilike  '%word1%') AND (ATTR ilike '%word2%')`
+                // create a filter like : `(ATTR ilike '%word1%') AND (ATTR ilike '%word2%')`
                 cql_filter: filter
             }, params))
             .then( response => response.features );
