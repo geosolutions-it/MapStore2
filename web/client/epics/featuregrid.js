@@ -22,7 +22,7 @@ const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYP
 const {reset, QUERY_FORM_RESET} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
 
-const {BROWSE_DATA, changeLayerProperties} = require('../actions/layers');
+const {BROWSE_DATA, changeLayerProperties, refreshLayerVersion} = require('../actions/layers');
 const {purgeMapInfoResults} = require('../actions/mapInfo');
 
 const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURES, featureSaving, changePage,
@@ -35,7 +35,6 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
 
 const {TOGGLE_CONTROL, resetControls} = require('../actions/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
-const {refreshLayerVersion} = require('../actions/layers');
 
 const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector,
     selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector,
@@ -551,14 +550,14 @@ module.exports = {
     /**
      * stop sync filter with wms layer
      */
-     stopSyncWmsFilter: (action$, store) =>
+    stopSyncWmsFilter: (action$, store) =>
         action$.ofType(TOGGLE_SYNC_WMS)
         .filter( () => !isSyncWmsActive(store.getState()))
         .switchMap(() => Rx.Observable.from([removeFilterFromWMSLayer(store.getState()), {type: STOP_SYNC_WMS}])),
     /**
      * Sync map with filter
      */
-     syncMapWmsFilter: (action$, store) =>
+    syncMapWmsFilter: (action$, store) =>
         action$.ofType(QUERY_CREATE, UPDATE_QUERY).
             filter((a) => {
                 const {disableQuickFilterSync} = (store.getState()).featuregrid;
