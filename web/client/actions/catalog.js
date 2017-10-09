@@ -22,6 +22,7 @@ const RESET_CATALOG = 'CATALOG:RESET_CATALOG';
 const RECORD_LIST_LOAD_ERROR = 'CATALOG:RECORD_LIST_LOAD_ERROR';
 const CHANGE_CATALOG_FORMAT = 'CATALOG:CHANGE_CATALOG_FORMAT';
 const ADD_LAYER_ERROR = 'CATALOG:ADD_LAYER_ERROR';
+const DESCRIBE_ERROR = "CATALOG:DESCRIBE_ERROR";
 const CHANGE_SELECTED_SERVICE = 'CATALOG:CHANGE_SELECTED_SERVICE';
 const CHANGE_CATALOG_MODE = 'CATALOG:CHANGE_CATALOG_MODE';
 const CHANGE_TITLE = 'CATALOG:CHANGE_TITLE';
@@ -170,6 +171,13 @@ function textSearch(format, url, startPosition, maxRecords, text, options) {
         });
     };
 }
+function describeError(layer, error) {
+    return {
+        type: DESCRIBE_ERROR,
+        layer,
+        error
+    };
+}
 function addLayerAndDescribe(layer) {
     return (dispatch, getState) => {
         const state = getState();
@@ -191,7 +199,7 @@ function addLayerAndDescribe(layer) {
                     }
                 }
 
-            });
+            }).catch((e) => dispatch(describeError(layer, e)));
         }
 
     };
@@ -203,11 +211,13 @@ function addLayerError(error) {
     };
 }
 
+
 module.exports = {
     RECORD_LIST_LOADED,
     RECORD_LIST_LOAD_ERROR,
     CHANGE_CATALOG_FORMAT, changeCatalogFormat,
     ADD_LAYER_ERROR, addLayerError,
+    DESCRIBE_ERROR,
     RESET_CATALOG, resetCatalog,
     CHANGE_SELECTED_SERVICE, changeSelectedService,
     CHANGE_CATALOG_MODE, changeCatalogMode,
