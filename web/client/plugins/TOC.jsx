@@ -279,7 +279,7 @@ class LayerTree extends React.Component {
                     onClear={() => { this.props.onSelectNode(); }}
                     onFilter={this.props.onFilter}
                     filterTooltipClear={<Message msgId="toc.clearFilter" />}
-                    filterPlaceholder={'Filter layers'}
+                    filterPlaceholder={this.props.filterPlaceholder}
                     filterText={this.props.filterText}
                     toolbar={
                         <Toolbar
