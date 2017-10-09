@@ -108,8 +108,8 @@ const GaugeChart = ({data, xAxis = {}, color, series = [], width=500, height = 5
                 const pieProps = {
                     startAngle: 180,
                     endAngle: 0,
-                    cx: centers[i].cx || 0,
-                    cy: centers[i].cy || 0
+                    cx: centers[i] && centers[i].cx || 0,
+                    cy: centers[i] && centers[i].cy || 0
                 };
 
                 const pieRadius = {
