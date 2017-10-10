@@ -19,7 +19,7 @@ class AutocompleteListItem extends React.Component {
     render() {
         const option = this.props.item;
         return (
-            <span>{option[this.props.textField]} {option.pagination} </span>
+            !!option.pagination ? <span>{option[this.props.textField]} {option.pagination} </span> : <span>{option[this.props.textField]}</span>
         );
     }
 }
