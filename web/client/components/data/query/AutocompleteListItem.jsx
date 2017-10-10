@@ -8,9 +8,20 @@
 
 
 const React = require('react');
+const PropTypes = require('prop-types');
+class AutocompleteListItem extends React.Component {
+    static propTypes = {
+        item: PropTypes.object,
+        textField: PropTypes.string,
+        valueField: PropTypes.string
+    };
 
-const AutocompleteListItem = ({item, textField}) => (
-    <span>{item[textField]} {item.pagination} </span>
-    );
+    render() {
+        const option = this.props.item;
+        return (
+            <span>{option[this.props.textField]} {option.pagination} </span>
+        );
+    }
+}
 
 module.exports = AutocompleteListItem;
