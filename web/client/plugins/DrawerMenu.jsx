@@ -49,7 +49,8 @@ require('./drawer/drawer.css');
  * {
  *   "name": "DrawerMenu",
  *   "cfg": {
- *   "hideButton": true
+ *     "hideButton": true
+ *   }
  * }
  */
 class DrawerMenu extends React.Component {

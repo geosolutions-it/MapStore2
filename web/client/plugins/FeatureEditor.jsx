@@ -23,6 +23,42 @@ const {gridTools, gridEvents, pageEvents, toolbarEvents} = require('./featuregri
 const ContainerDimensions = require('react-container-dimensions').default;
 const {getParsedUrl} = require('../utils/ConfigUtils');
 
+/**
+  * @name FeatureEditor
+  * @memberof plugins
+  * @class
+  * @prop {object} cfg.customEditorsOptions Set of options used to connect the custom editors to the featuregrid
+  * @classdesc
+  * FeatureEditor Plugin Provides functionalities to browse/edit data via WFS. It can be configured passing custom editors
+  * <br/>Rules are applied in order and the first rule that match the regex wins.
+  * <br/>That means that for those conditions it is used the custom editor specified in the editor param.
+  * <br/>All the conditions inside a rule must match to apply the editor.
+  * <br/>If no rule is applied then it will be used the default editor based on the dataType of that column.
+  * <br/>At least one of the three kind of regex must be specified.
+  * <br/>Editor props are optionally.
+  * <br/>Inside localConfig you can specify different rules in an array.
+  * @example
+  * {
+  *   "name": "FeatureEditor",
+  *   "cfg": {
+  *     "customEditorsOptions": {
+  *       "rules": [{
+  *         "regex": {
+  *           "attribute": "NAME_OF_THE_ATTRIBUTE",
+  *           "url": "regex to match a specific url",
+  *           "typeName": "layerName"
+  *         },
+  *         "editor": "DropDownEditor",
+  *         "editorProps": {
+  *           "values": ["Opt1", "Opt2"],
+  *           "forceSelection": true
+  *         }
+  *       }]
+  *     }
+  *   }
+  * }
+  *
+*/
 const FeatureDock = (props = {
     tools: EMPTY_OBJ,
     dialogs: EMPTY_OBJ,
@@ -53,6 +89,7 @@ const FeatureDock = (props = {
             footer={getFooter(props)}>
             {getDialogs(props.tools)}
             <Grid
+                customEditorsOptions={props.customEditorsOptions}
                 autocompleteEnabled={props.autocompleteEnabled}
                 url={props.url}
                 typeName={props.typeName}
@@ -121,14 +158,6 @@ const EditorPlugin = connect(selector, (dispatch) => ({
     }))
 }))(FeatureDock);
 
-
-/**
-  * FeatureEditor Plugin. Provides functionalities to browse/edit data via WFS.
-  * @class  FeatureEditor
-  * @memberof plugins
-  * @static
-  *
-  */
 module.exports = {
      FeatureEditorPlugin: EditorPlugin,
      epics: require('../epics/featuregrid'),

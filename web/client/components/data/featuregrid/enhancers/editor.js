@@ -1,7 +1,11 @@
 const {featureTypeToGridColumns, getToolColumns, getRow, getGridEvents, applyAllChanges, createNewAndEditingFilter} = require('../../../../utils/FeatureGridUtils');
+const EditorRegistry = require('../../../../utils/featuregrid/EditorRegistry');
 const {compose, withPropsOnChange, withHandlers, defaultProps} = require('recompose');
+const {isNil} = require('lodash');
 const {getFilterRenderer} = require('../filterRenderers');
 const {manageFilterRendererState} = require('../enhancers/filterRenderers');
+
+const editors = require('../editors');
 const featuresToGrid = compose(
     defaultProps({
         autocompleteEnabled: false,
@@ -14,7 +18,7 @@ const featuresToGrid = compose(
         select: [],
         changes: {},
         focusOnEdit: true,
-        editors: require('../editors')
+        editors
     }),
     withPropsOnChange("showDragHandle", ({showDragHandle = false} = {}) => ({
         className: showDragHandle ? 'feature-grid-drag-handle-show' : 'feature-grid-drag-handle-hide'
@@ -69,12 +73,23 @@ const featuresToGrid = compose(
                     editable: props.mode === "EDIT",
                     sortable: !props.isFocused
                 }, {
-                    getEditor: ({localType=""} = {}) => props.editors(localType, {
-                        onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges,
-                        autocompleteEnabled: props.autocompleteEnabled,
-                        url: props.url,
-                        typeName: props.typeName
-                    }),
+                    getEditor: (desc) => {
+                        const generalProps = {
+                            onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges,
+                            autocompleteEnabled: props.autocompleteEnabled,
+                            url: props.url,
+                            typeName: props.typeName
+                        };
+                        const regexProps = {attribute: desc.name, url: props.url, typeName: props.typeName};
+                        const rules = props.customEditorsOptions && props.customEditorsOptions.rules || [];
+                        const editorProps = {type: desc.localType, props};
+                        const editor = EditorRegistry.getCustomEditor(regexProps, rules, editorProps);
+
+                        if (!isNil(editor)) {
+                            return editor;
+                        }
+                        return props.editors(desc.localType, generalProps);
+                    },
                     getFilterRenderer: ({localType=""} = {}, name) => {
                         if (props.filterRenderers && props.filterRenderers[name]) {
                             return props.filterRenderers[name];

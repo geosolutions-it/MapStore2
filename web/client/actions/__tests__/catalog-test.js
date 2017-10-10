@@ -18,7 +18,7 @@ const LayersUtils = require('../../utils/LayersUtils');
 const {getRecords, addLayerError, addLayer, ADD_LAYER_ERROR, changeCatalogFormat, CHANGE_CATALOG_FORMAT, changeSelectedService, CHANGE_SELECTED_SERVICE,
      focusServicesList, FOCUS_SERVICES_LIST, changeCatalogMode, CHANGE_CATALOG_MODE, changeTitle, CHANGE_TITLE,
     changeUrl, CHANGE_URL, changeType, CHANGE_TYPE, addService, ADD_SERVICE, addCatalogService, ADD_CATALOG_SERVICE, resetCatalog, RESET_CATALOG,
-    changeAutoload, CHANGE_AUTOLOAD, deleteCatalogService, DELETE_CATALOG_SERVICE, deleteService, DELETE_SERVICE, savingService, SAVING_SERVICE} = require('../catalog');
+    changeAutoload, CHANGE_AUTOLOAD, deleteCatalogService, DELETE_CATALOG_SERVICE, deleteService, DELETE_SERVICE, savingService, SAVING_SERVICE, DESCRIBE_ERROR} = require('../catalog');
 const {CHANGE_LAYER_PROPERTIES, ADD_LAYER} = require('../layers');
 describe('Test correctness of the catalog actions', () => {
 
@@ -176,13 +176,33 @@ describe('Test correctness of the catalog actions', () => {
                 expect(action.layer).toExist();
                 expect(action.newProperties).toExist();
                 expect(action.newProperties.search).toExist();
-                expect(action.newProperties.search.type ).toBe('wfs');
+                expect(action.newProperties.search.type).toBe('wfs');
                 expect(action.newProperties.search.url).toBe("http://some.geoserver.org:80/geoserver/wfs?");
                 done();
             }
         };
         const callback = addLayer({
             url: 'base/web/client/test-resources/wms/DescribeLayers.xml',
+            type: 'wms',
+            name: 'workspace:vector_layer'
+        });
+        callback(verify, () => ({ layers: []}));
+    });
+    it('add layer with no describe layer', (done) => {
+        const verify = (action) => {
+            if (action.type === ADD_LAYER) {
+                expect(action.layer).toExist();
+                const layer = action.layer;
+                expect(layer.id).toExist();
+                expect(layer.id).toBe(LayersUtils.getLayerId(action.layer, []));
+            } else if (action.type === DESCRIBE_ERROR) {
+                expect(action.layer).toExist();
+                expect(action.error).toExist();
+                done();
+            }
+        };
+        const callback = addLayer({
+            url: 'base/web/client/test-resources/wms/Missing.xml',
             type: 'wms',
             name: 'workspace:vector_layer'
         });

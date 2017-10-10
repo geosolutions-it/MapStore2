@@ -118,6 +118,11 @@
             "web/client/components/mapcontrols/annotations/Annotations.jsx",
             "web/client/components/mapcontrols/annotations/AnnotationsEditor.jsx",
             "web/client/components/mapcontrols/annotations/AnnotationsConfig.js",
+            "web/client/components/misc/enhancers/emptyState.jsx",
+            "web/client/components/misc/enhancers/tooltip.jsx",
+            "web/client/components/misc/sidebar/Sidebar.jsx",
+            "web/client/components/misc/toolbar/Toolbar.jsx",
+            "web/client/components/misc/EmptyView.jsx",
 
             "web/client/actions/index.jsdoc",
             "web/client/actions/controls.js",

@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const assign = require('object-assign');
 const AutocompleteListItem = require('./AutocompleteListItem');
-const PagedCombobox = require('../../misc/PagedCombobox');
+const PagedCombobox = require('../../misc/combobox/PagedCombobox');
 const {isLikeOrIlike} = require('../../../utils/FilterUtils');
 const HTML = require('../../../components/I18N/HTML');
 
