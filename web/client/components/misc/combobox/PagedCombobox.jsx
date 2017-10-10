@@ -134,7 +134,7 @@ class PagedCombobox extends React.Component {
             busy={this.props.busy}
             data={data}
             disabled={this.props.disabled}
-            itemComponent={this.props.itemComponent}
+            itemComponent={(other) => this.props.itemComponent({textField: this.props.textField, valueField: this.props.valueField, ...other})}
             messages={this.props.messages || messages}
             open={this.props.open}
             filter={this.props.filter}

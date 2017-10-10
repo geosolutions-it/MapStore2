@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -10,17 +9,8 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 
-class AutocompleteListItem extends React.Component {
-    static propTypes = {
-        item: PropTypes.object
-    };
-
-    render() {
-        const option = this.props.item;
-        return (
-            <span>{option.label} {option.pagination} </span>
-        );
-    }
-}
+const AutocompleteListItem = ({item, textField}) => (
+    <span>{item[textField]} {item.pagination} </span>
+    );
 
 module.exports = AutocompleteListItem;
