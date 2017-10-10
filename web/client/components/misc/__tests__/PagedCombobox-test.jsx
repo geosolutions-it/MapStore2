@@ -11,6 +11,7 @@ const ReactDOM = require('react-dom');
 const PagedCombobox = require('../combobox/PagedCombobox');
 const TestUtils = require('react-dom/test-utils');
 const {Tooltip} = require('react-bootstrap');
+const AutocompleteListItem = require('../../data/query/AutocompleteListItem');
 
 describe("This test for PagedCombobox component", () => {
     beforeEach((done) => {
@@ -46,6 +47,27 @@ describe("This test for PagedCombobox component", () => {
         };
         const comp = ReactDOM.render(<PagedCombobox tooltip={tooltip}/>, document.getElementById("container"));
         expect(comp).toExist();
+    });
+
+    it('creates PagedCombobox with functional itemComponent', () => {
+        const AutocompleteListItemFunctional = ({item, textField}) => (
+        !!item.pagination ? <span>{item[textField]} {item.pagination} </span> : <span>{item[textField]}</span>
+        );
+        const comp = ReactDOM.render(<PagedCombobox pagination={{paginated: false}} itemComponent={AutocompleteListItemFunctional} textField="label" data={[{value: "value", label: "label"}]} />, document.getElementById("container"));
+        expect(comp).toExist();
+        const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-i rw-i-caret-down")[0]);
+        tool.click();
+        const option1 = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-list-option")[0]);
+        expect(option1.textContent).toBe("label");
+
+    });
+    it('creates PagedCombobox with class itemComponent', () => {
+        const comp = ReactDOM.render(<PagedCombobox pagination={{paginated: false}} itemComponent={AutocompleteListItem} textField="label" data={[{value: "value", label: "label"}]}/>, document.getElementById("container"));
+        expect(comp).toExist();
+        const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-i rw-i-caret-down")[0]);
+        tool.click();
+        const option1 = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-list-option")[0]);
+        expect(option1.textContent).toBe("label");
     });
     it('creates PagedCombobox with defaults and with customized tooltip', () => {
         const tooltip = <Tooltip id={"wonderfulId"}>"a message for the tooltip"</Tooltip>;
