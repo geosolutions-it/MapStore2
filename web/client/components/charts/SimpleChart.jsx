@@ -18,12 +18,20 @@ const charts = {
 };
 
 const AUTOCOLOR_DEFAULTS = {
-    base: 180,
-    range: 360,
-    s: 0.67,
-    v: 0.67
+    base: 190,
+    range: 0,
+    s: 0.95,
+    v: 0.63
 };
-
+/**
+ * Wraps common charts into a single component.
+ * @param {boolean} isAnimationActive
+ * @param {String} [type="line"]                         Type of the chart. One of "line", "pie", "bar", "gauge"
+ * @param {Object} [tooltip={}]                          false to disable tooltip. TooltipOptions otherwise
+ * @param {Object} [legend={}]                           false to disable legend. Legend options otherwise
+ * @param {Object} [autoColorOptions] [description]      Optiopns to generate colors for the chart
+ * @param {[type]} props                                 [description]
+ */
 const SimpleChart = ({type="line", tooltip = {}, legend = {}, autoColorOptions = AUTOCOLOR_DEFAULTS, ...props} = {}) => {
     const Component = charts[type];
     const {base, range, ...opts} = autoColorOptions;

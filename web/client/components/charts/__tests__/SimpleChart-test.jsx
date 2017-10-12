@@ -57,10 +57,12 @@ describe('SimpleChart component', () => {
         const el = container.querySelector('div');
         expect(el).toExist();
     });
+    /*
     it('test gauge chart', () => {
         ReactDOM.render(<SimpleChart data={data} type="gauge" xAxis={{dataKey: "name"}} series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('div');
         expect(el).toExist();
     });
+    */
 });
