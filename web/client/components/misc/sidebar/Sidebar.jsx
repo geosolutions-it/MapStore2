@@ -16,7 +16,7 @@ const Sidebar = require('react-sidebar').default;
  * @param  {Number} [width=600] Width of the sidebar
  * @param  {node} children      Content
  */
-module.exports = ({open, width = 600, children} = {}) => (<Sidebar
+module.exports = ({open, width = 600, children, ...props} = {}) => (<Sidebar
    open={open}
    sidebarClassName="sidepanel-content"
    sidebar={children}
@@ -38,6 +38,7 @@ module.exports = ({open, width = 600, children} = {}) => (<Sidebar
            overflowY: 'auto'
        }
    }}
+   {...props}
    >
    <div/>
 </Sidebar>);
