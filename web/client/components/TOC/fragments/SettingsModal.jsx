@@ -18,6 +18,7 @@ const General = require('./settings/General');
 const Display = require('./settings/Display');
 const WMSStyle = require('./settings/WMSStyle');
 const Elevation = require('./settings/Elevation');
+const FeatureInfoFormat = require('./settings/FeatureInfoFormat');
 const Portal = require('../../misc/Portal');
 const assign = require('object-assign');
 const Message = require('../../I18N/Message');
@@ -159,14 +160,25 @@ class SettingsModal extends React.Component {
         }
     };
 
+    renderFeatureInfoTab = () => {
+        if (this.props.element.type === "wms") {
+            return (<FeatureInfoFormat
+               label= {<Message msgId="infoFormatLbl"/>}
+               element={this.props.element}
+               onInfoFormatChange={(key, value) => this.updateParams({[key]: value}, this.props.realtimeUpdate)} />);
+        }
+    };
+
     render() {
         const general = this.renderGeneral();
         const display = this.renderDisplay();
         const style = this.renderStyleTab();
         const elevation = this.renderElevationTab();
+        const featurePopup = this.renderFeatureInfoTab();
         const availableTabs = [<Tab key={1} eventKey={1} title={<Message msgId="layerProperties.general" />}>{general}</Tab>,
             <Tab key={2} eventKey={2} title={<Message msgId="layerProperties.display" />}>{display}</Tab>,
-            <Tab key={3} eventKey={3} title={<Message msgId="layerProperties.style" />} disabled={!style} >{style}</Tab>]
+            <Tab key={3} eventKey={3} title={<Message msgId="layerProperties.style" />} disabled={!style} >{style}</Tab>,
+            <Tab key={4} eventKey={4} title={<Message msgId="layerProperties.featureInfo" />} disabled={false} >{featurePopup}</Tab>]
             .concat(elevation ? [<Tab key={4} eventKey={4} title={<Message msgId="layerProperties.elevation" />}>{elevation}</Tab>] : []);
         const tabs = <Tabs defaultActiveKey={1} id="layerProperties-tabs">{availableTabs}</Tabs>;
         const footer = (<span role="footer">

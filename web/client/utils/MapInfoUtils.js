@@ -50,6 +50,17 @@ const MapInfoUtils = {
     getDefaultInfoFormatValue() {
         return INFO_FORMATS[MapInfoUtils.AVAILABLE_FORMAT[0]];
     },
+    /**
+     * @return {string} the info format value from layer, otherwise the info format in settings
+     */
+    getDefaultInfoFormatValueFromLayer(layer, props) {
+        if (layer.featureInfo
+            && layer.featureInfo.format
+            && this.getAvailableInfoFormat()[layer.featureInfo.format]) {
+            return this.getAvailableInfoFormat()[layer.featureInfo.format];
+        }
+        return props.format || 'application/json';
+    },
     clickedPointToGeoJson(clickedPoint) {
         if (!clickedPoint) {
             return [];
@@ -89,7 +100,7 @@ const MapInfoUtils = {
     },
     buildIdentifyRequest(layer, props) {
         if (MapInfoUtils.services[layer.type]) {
-            return MapInfoUtils.services[layer.type].buildRequest(layer, props);
+            return MapInfoUtils.services[layer.type].buildRequest(layer, props, MapInfoUtils);
         }
         return {};
     },
@@ -101,13 +112,21 @@ const MapInfoUtils = {
         return {
             getValidResponses: (responses) => {
                 return responses.reduce((previous, current) => {
-                    const valid = (FeatureInfoUtils.Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getValidResponses([current]);
+                    let infoFormat;
+                    if (current.queryParams && current.queryParams.hasOwnProperty('info_format')) {
+                        infoFormat = current.queryParams.info_format;
+                    }
+                    const valid = (FeatureInfoUtils.Validator[INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getValidResponses([current]);
                     return [...previous, ...valid];
                 }, []);
             },
             getNoValidResponses: (responses) => {
                 return responses.reduce((previous, current) => {
-                    const valid = (FeatureInfoUtils.Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getNoValidResponses([current]);
+                    let infoFormat;
+                    if (current.queryParams && current.queryParams.hasOwnProperty('info_format')) {
+                        infoFormat = current.queryParams.info_format;
+                    }
+                    const valid = (FeatureInfoUtils.Validator[INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getNoValidResponses([current]);
                     return [...previous, ...valid];
                 }, []);
             }

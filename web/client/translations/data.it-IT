@@ -51,7 +51,9 @@
             "featureTypeError": "Impossibile caricare gli attributi del layer",
             "elevation": "Elevazione",
             "titleTranslations": "Title translations",
-            "groupProperties": "Group properties"
+            "groupProperties": "Group properties",
+            "featureInfo": "Feature Info",
+            "featureInfoFormatLbl": "Formato risposta interrogazioni su mappa"
         },
         "notification": {
             "update": "Aggiorna",
