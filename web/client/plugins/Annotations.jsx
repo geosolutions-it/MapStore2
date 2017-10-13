@@ -178,6 +178,6 @@ module.exports = {
     reducers: {
         annotations: require('../reducers/annotations')
     },
-    epics: assign({}, require('../epics/annotations')(AnnotationsInfoViewer),
-        require('../epics/controls'))
+    epics: require('../epics/annotations'
+)(AnnotationsInfoViewer)
 };
