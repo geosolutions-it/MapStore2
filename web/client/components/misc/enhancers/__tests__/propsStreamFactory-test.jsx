@@ -11,7 +11,6 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var propsStreamFactory = require('../propsStreamFactory');
 
-const {Button} = require('react-bootstrap');
 describe("propsStreamFactory enhancer", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

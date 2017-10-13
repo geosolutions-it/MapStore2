@@ -6,8 +6,6 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-
-
 const React = require('react');
 const ReactDOM = require('react-dom');
 const Rx = require('rxjs');
