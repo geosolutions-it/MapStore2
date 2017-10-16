@@ -24,10 +24,10 @@ module.exports = {
             return {hideButtons};
         }),
         withHandlers({
-            nextPage: ({step, setPage = () => {}}) => () => {
+            onNextPage: ({step, setPage = () => {}}) => () => {
                 setPage(step + 1);
             },
-            prevPage: ({step, setPage = () => {}}) => () => {
+            onPrevPage: ({step, setPage = () => {}}) => () => {
                 setPage(Math.max(step - 1, 0));
             }
         }),
