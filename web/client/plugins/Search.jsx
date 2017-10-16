@@ -100,16 +100,13 @@ const ToggleButton = require('./searchbar/ToggleButton');
  *        "sortBy": "ID",
  *        "srsName": "EPSG:4326",
  *        "maxFeatures": 4,
- *        "blackist": [... an array of strings to exclude from the final search filter ],
- *        "returnFullResponse": false
+ *        "blacklist": [... an array of strings to exclude from the final search filter ]
  *      },
  *      "nestedPlaceholder": "Write other text to refine the search...",
  *      "nestedPlaceholderMsgId": "id contained in the localization files i.e. search.nestedplaceholder",
  *      "then": [ ... an array of services to use when one item of this service is selected],
  *      "geomService": { optional service to retrieve the geometry}
  *  }
- *
- * **returnFullResponse** if true it returns the full response otherwise an array of fetched data
  *
  * ```
  * The typical nested service needs to have some additional parameters:

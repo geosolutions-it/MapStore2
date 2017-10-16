@@ -27,7 +27,11 @@ const defaultFromTextToFilter = ({searchText, staticFilter, blacklist, item, que
     filter = filter ? filter.concat(staticFilterParsed) : staticFilterParsed || null;
     return filter;
 };
-
+/*
+ * The API returns a promise for each search service.
+ * These search services have a particular option that specify how the response is returned.
+ * 'returnFullResponse' is a boolean option that if true a the full reponse is returned, otherwise an array o fearures.
+*/
 let Services = {
     nominatim: (searchText, options = {
         returnFullResponse: false
