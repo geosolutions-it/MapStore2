@@ -15,14 +15,14 @@ const DefaultEmptyComponent = require("../EmptyView");
 * @type {function}
 * @name emptyState
 * @memberof components.misc.enhancers
-* @param {function} test The test for the properties. If it is true, use empty view
+* @param {function} isEmpty The test function for the properties. If it returns true, use empty view
 * @param {object} [emptyComponentProps] parameters for the empty components. The structure must reflect the props of the EmptyComponent(3rd) parameter (or its default @see [EmptyView](#components.misc.EmptyView))
 * @param {Component} [EmptyComponent=EmptyView] the component to use for empty view. By default [EmptyView](#components.misc.EmptyView)
 * @example
 * emptyState(({data=[]}) => data.length === 0)(ComponentToEnhance);
 *
 */
-module.exports = (test, emptyComponentProps, EmptyComponent = DefaultEmptyComponent) => branch(
-    test,
+module.exports = (isEmpty, emptyComponentProps, EmptyComponent = DefaultEmptyComponent) => branch(
+    isEmpty,
    // TODO return proper HOC
    () => () => <EmptyComponent {...emptyComponentProps} />);
