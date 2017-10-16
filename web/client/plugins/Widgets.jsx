@@ -30,6 +30,7 @@ const W1 = {
     width: 500,
     height: 200
 };
+/*
 const W2 = {
     title: "chart",
     description: "description",
@@ -47,10 +48,11 @@ const W2 = {
     width: 500,
     height: 200
 };
+*/
 
 
 // const WIDGETS = [{data, loading: true, title: "chart", description: "description", series: SERIES, yAxis: {}, xAxis: {dataKey: "name"} }];
-const WIDGETS = [ W1, W2 ];
+const WIDGETS = [ W1 ];
 
 
 class Widgets extends React.Component {
@@ -77,19 +79,7 @@ class Widgets extends React.Component {
          position: "right"
      };
     render() {
-        return (<Dock
-            id={this.props.id}
-            zIndex={this.props.zIndex}
-            position={this.props.position}
-            size={this.props.dockSize}
-            dimMode={this.props.dimMode}
-            isVisible={this.props.enabled}
-            onSizeChange={this.limitDockHeight}
-            fluid={this.props.fluid}
-            dimStyle={{ background: 'rgba(0, 0, 100, 0.2)' }}
-        >
-            <WidgetsView widgets={WIDGETS}/>
-        </Dock>);
+        return (<WidgetsView widgets={WIDGETS}/>);
 
     }
 }

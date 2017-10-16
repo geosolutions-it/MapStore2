@@ -29,7 +29,7 @@ class SideBarComponent extends React.Component {
      static defaultProps = {
          id: "widgets-plugin",
          enabled: true,
-         dockSize: 600,
+         dockSize: 200,
          limitDockHeight: true,
          zIndex: 10000,
          fluid: false,
