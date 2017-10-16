@@ -13,8 +13,7 @@ const {sameToneRangeColors} = require('../../utils/ColorUtils');
 const charts = {
    line: require('./Line'),
    pie: require('./Pie'),
-   bar: require('./Bar'),
-   gauge: require('./Gauge')
+   bar: require('./Bar')
 };
 
 const AUTOCOLOR_DEFAULTS = {
