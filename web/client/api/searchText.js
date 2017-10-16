@@ -27,12 +27,15 @@ const defaultFromTextToFilter = ({searchText, staticFilter, blacklist, item, que
     filter = filter ? filter.concat(staticFilterParsed) : staticFilterParsed || null;
     return filter;
 };
+
 let Services = {
-    nominatim: (searchText, options = {}) =>
+    nominatim: (searchText, options = {
+        returnFullResponse: false
+    }) =>
         require('./Nominatim')
         .geocode(searchText, options)
-        .then( res => GeoCodeUtils.nominatimToGeoJson(res.data)),
-    wfs: (searchText, {url, typeName, queriableAttributes = [], outputFormat = "application/json", predicate = "ILIKE", staticFilter = "", blacklist = [], item, fromTextToFilter = defaultFromTextToFilter, ...params }) => {
+        .then( res => {return options.returnFullResponse ? res : GeoCodeUtils.nominatimToGeoJson(res.data); }),
+    wfs: (searchText, {url, typeName, queriableAttributes = [], outputFormat = "application/json", predicate = "ILIKE", staticFilter = "", blacklist = [], item, fromTextToFilter = defaultFromTextToFilter, returnFullResponse = false, ...params }) => {
         const filter = fromTextToFilter({searchText, staticFilter, blacklist, item, queriableAttributes, predicate});
         return WFS
             .getFeatureSimple(url, assign({
@@ -42,7 +45,7 @@ let Services = {
                 // create a filter like : `(ATTR ilike '%word1%') AND (ATTR ilike '%word2%')`
                 cql_filter: filter
             }, params))
-            .then( response => response.features );
+            .then( response => {return returnFullResponse ? response : response.features; } );
     }
 };
 

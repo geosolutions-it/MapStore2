@@ -126,7 +126,7 @@ class PagedCombobox extends React.Component {
         }
 
         if (this.props.pagination && this.props.pagination.paginated && options.length > 0) {
-            options.push({ label: '', value: '', disabled: true, pagination: this.renderPagination() });
+            options.push({ [this.props.textField]: '', [this.props.valueField]: '', disabled: true, pagination: this.renderPagination() });
         }
         const data = this.props.loading ? [] : options;
         const field = (<Combobox

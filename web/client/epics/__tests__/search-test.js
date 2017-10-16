@@ -67,7 +67,8 @@ describe('search Epics', () => {
                 options: {
                     url: 'base/web/client/test-resources/wfs/Wyoming.json',
                     typeName: 'topp:states',
-                    queriableAttributes: [STATE_NAME]
+                    queriableAttributes: [STATE_NAME],
+                    returnFullResponse: false
                 }
             }]
         };
@@ -165,7 +166,8 @@ describe('search Epics', () => {
                     options: {
                         url: 'base/web/client/test-resources/wfs/Wyoming.json',
                         typeName: 'topp:states',
-                        queriableAttributes: [STATE_NAME]
+                        queriableAttributes: [STATE_NAME],
+                        returnFullResponse: false
                     }
                 }
             }
