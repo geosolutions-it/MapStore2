@@ -77,24 +77,24 @@ describe('WizardContainer component', () => {
         const finish = container.querySelector('.ms-wizard-finish');
         expect(finish).toNotExist();
     });
-    it('Test WizardContainer nextPage', () => {
+    it('Test WizardContainer onNextPage', () => {
         const actions = {
             nextPage: () => {}
         };
         const spynextPage = expect.spyOn(actions, 'nextPage');
-        ReactDOM.render(<WizardContainer nextPage={actions.nextPage} ><div id="step-1">STEP1</div><div id="step-2">STEP2</div></WizardContainer>, document.getElementById("container"));
+        ReactDOM.render(<WizardContainer onNextPage={actions.nextPage} ><div id="step-1">STEP1</div><div id="step-2">STEP2</div></WizardContainer>, document.getElementById("container"));
         const container = document.getElementById('container');
         const next = container.querySelector('.ms-wizard-next');
         expect(next).toExist();
         ReactTestUtils.Simulate.click(next);
         expect(spynextPage).toHaveBeenCalled();
     });
-    it('Test WizardContainer prevPage', () => {
+    it('Test WizardContainer onPrevPage', () => {
         const actions = {
             prevPage: () => {}
         };
         const spyPrevPage = expect.spyOn(actions, 'prevPage');
-        ReactDOM.render(<WizardContainer step={1} prevPage={actions.prevPage} ><div id="step-1">STEP1</div><div id="step-2">STEP2</div></WizardContainer>, document.getElementById("container"));
+        ReactDOM.render(<WizardContainer step={1} onPrevPage={actions.prevPage} ><div id="step-1">STEP1</div><div id="step-2">STEP2</div></WizardContainer>, document.getElementById("container"));
         const container = document.getElementById('container');
         const prev = container.querySelector('.ms-wizard-prev');
         expect(prev).toExist();
@@ -114,21 +114,21 @@ describe('WizardContainer component', () => {
         expect(spyOnFinish).toHaveBeenCalled();
     });
     it('Test WizardContainer nested components calls', () => {
-        const Step1 = ({nextPage = () => {}}) => <div onClick={() => nextPage()} id="step-1">STEP1</div>;
-        const Step2 = ({prevPage = () => {}}) => <div onClick={() => prevPage()} id="step-2">STEP1</div>;
+        const Step1 = ({onNextPage = () => {}}) => <div onClick={() => onNextPage()} id="step-1">STEP1</div>;
+        const Step2 = ({onPrevPage = () => {}}) => <div onClick={() => onPrevPage()} id="step-2">STEP1</div>;
         const actions = {
             nextPage: () => {},
             prevPage: () => {}
         };
         const spynextPage = expect.spyOn(actions, 'nextPage');
         const spyPrevPage = expect.spyOn(actions, 'prevPage');
-        ReactDOM.render(<WizardContainer nextPage={actions.nextPage} ><Step1 /><Step2 /></WizardContainer>, document.getElementById("container"));
+        ReactDOM.render(<WizardContainer onNextPage={actions.nextPage} onPrevPage={actions.prevPage}><Step1 /><Step2 /></WizardContainer>, document.getElementById("container"));
         const container = document.getElementById('container');
         const step1 = container.querySelector('#step-1');
         expect(step1).toExist();
         ReactTestUtils.Simulate.click(step1);
         expect(spynextPage).toHaveBeenCalled();
-        ReactDOM.render(<WizardContainer step={1} prevPage={actions.prevPage} ><Step1 /><Step2 /></WizardContainer>, document.getElementById("container"));
+        ReactDOM.render(<WizardContainer step={1} onNextPage={actions.nextPage} onPrevPage={actions.prevPage} ><Step1 /><Step2 /></WizardContainer>, document.getElementById("container"));
         const step2 = container.querySelector('#step-2');
         expect(step2).toExist();
         ReactTestUtils.Simulate.click(step2);
