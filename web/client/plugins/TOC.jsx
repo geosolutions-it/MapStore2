@@ -197,7 +197,8 @@ class LayerTree extends React.Component {
         settingsOptions: {
             includeCloseButton: false,
             closeGlyph: "1-close",
-            buttonSize: "small"
+            buttonSize: "small",
+            showFeatureInfoTab: true
         },
         layerOptions: {},
         groupOptions: {},

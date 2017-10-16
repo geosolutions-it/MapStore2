@@ -56,8 +56,8 @@ const MapInfoUtils = {
     getDefaultInfoFormatValueFromLayer(layer, props) {
         if (layer.featureInfo
             && layer.featureInfo.format
-            && this.getAvailableInfoFormat()[layer.featureInfo.format]) {
-            return this.getAvailableInfoFormat()[layer.featureInfo.format];
+            && MapInfoUtils.getAvailableInfoFormat()[layer.featureInfo.format]) {
+            return MapInfoUtils.getAvailableInfoFormat()[layer.featureInfo.format];
         }
         return props.format || 'application/json';
     },
@@ -100,7 +100,8 @@ const MapInfoUtils = {
     },
     buildIdentifyRequest(layer, props) {
         if (MapInfoUtils.services[layer.type]) {
-            return MapInfoUtils.services[layer.type].buildRequest(layer, props, MapInfoUtils);
+            let infoFormat = MapInfoUtils.getDefaultInfoFormatValueFromLayer(layer, props);
+            return MapInfoUtils.services[layer.type].buildRequest(layer, props, infoFormat);
         }
         return {};
     },
