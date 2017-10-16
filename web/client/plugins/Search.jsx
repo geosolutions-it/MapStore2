@@ -72,6 +72,7 @@ const ToggleButton = require('./searchbar/ToggleButton');
  * @class Search
  * @memberof plugins
  * @prop {object} cfg.searchOptions initial search options
+
  * @prop {bool} cfg.fitResultsToMapSize true by default, fits the result list to the mapSize (can be disabled, for custom uses)
  * @prop {searchService[]} cfg.searchOptions.services a list of services to perform search.
  * a **nominatim** search service look like this:
@@ -99,7 +100,7 @@ const ToggleButton = require('./searchbar/ToggleButton');
  *        "sortBy": "ID",
  *        "srsName": "EPSG:4326",
  *        "maxFeatures": 4,
- *        "blackist": [... an array of strings to exclude from the final search filter ]
+ *        "blacklist": [... an array of strings to exclude from the final search filter ]
  *      },
  *      "nestedPlaceholder": "Write other text to refine the search...",
  *      "nestedPlaceholderMsgId": "id contained in the localization files i.e. search.nestedplaceholder",
