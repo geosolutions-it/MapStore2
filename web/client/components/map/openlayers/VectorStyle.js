@@ -117,18 +117,21 @@ function getMarkerStyle(options) {
 
 function getStyle(options) {
     let style = options.nativeStyle;
+    const geomType = (options.style && options.style.type) || (options.features && options.features[0] ? options.features[0].geometry.type : undefined);
     if (!style && options.style) {
         style = {
             stroke: new ol.style.Stroke( options.style.stroke ? options.style.stroke : {
-                color: 'blue',
-                width: 1
+                color: options.style.color || 'blue',
+                width: options.style.weight || 1,
+                opacity: options.style.opacity || 1
             }),
             fill: new ol.style.Fill(options.style.fill ? options.style.fill : {
-                color: 'blue'
+                color: options.style.fillColor || 'blue',
+                opacity: options.style.fillOpacity || 1
             })
         };
 
-        if (options.style.type === "Point") {
+        if (geomType === "Point") {
             style = {
                 image: new ol.style.Circle(assign({}, style, {radius: options.style.radius || 5}))
             };
