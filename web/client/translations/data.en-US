@@ -51,7 +51,9 @@
             "featureTypeError": "Cannot load layer attributes",
             "elevation": "Elevation",
             "titleTranslations": "Title translations",
-            "groupProperties": "Group properties"
+            "groupProperties": "Group properties",
+            "featureInfo": "Feature Info",
+            "featureInfoFormatLbl": "Identify response format"
         },
         "notification": {
             "update": "Update",

@@ -52,7 +52,9 @@
             "featureTypeError": "Imposible cargar los atributos del mapa",
             "elevation": "Elevación",
             "titleTranslations": "Title translations",
-            "groupProperties": "Group properties"
+            "groupProperties": "Group properties",
+            "featureInfo": "Feature Info",
+            "featureInfoFormatLbl": "Indentificar el formato de respuesta"
         },
         "notification": {
             "update": "Update",
