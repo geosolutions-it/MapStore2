@@ -52,7 +52,9 @@
             "featureTypeError": "Impossible de charger les attributs de calque",
             "elevation": "élévation",
             "titleTranslations": "Title translations",
-            "groupProperties": "Group properties"
+            "groupProperties": "Group properties",
+            "featureInfo": "Feature Info",
+            "featureInfoFormatLbl": "Information, format de la réponse"
         },
         "notification": {
             "update": "Update",

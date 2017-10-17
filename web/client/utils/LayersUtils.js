@@ -294,6 +294,7 @@ const LayersUtils = {
             maxNativeZoom: layer.maxNativeZoom,
             hideLoading: layer.hideLoading || false,
             handleClickOnLayer: layer.handleClickOnLayer || false,
+            featureInfo: layer.featureInfo,
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
     },

@@ -18,6 +18,7 @@ const General = require('./settings/General');
 const Display = require('./settings/Display');
 const WMSStyle = require('./settings/WMSStyle');
 const Elevation = require('./settings/Elevation');
+const FeatureInfoFormat = require('./settings/FeatureInfoFormat');
 const Portal = require('../../misc/Portal');
 const assign = require('object-assign');
 const Message = require('../../I18N/Message');
@@ -51,7 +52,8 @@ class SettingsModal extends React.Component {
         includeDeleteButton: PropTypes.bool,
         realtimeUpdate: PropTypes.bool,
         groups: PropTypes.array,
-        getDimension: PropTypes.func
+        getDimension: PropTypes.func,
+        showFeatureInfoTab: PropTypes.bool
     };
 
     static defaultProps = {
@@ -64,16 +66,17 @@ class SettingsModal extends React.Component {
         updateNode: () => {},
         removeNode: () => {},
         retrieveLayerData: () => {},
-        buttonSize: "large",
+        buttonSize: "small",
         closeGlyph: "1-close",
         panelStyle: {},
         panelClassName: "toolbar-panel portal-dialog",
-        includeCloseButton: true,
+        includeCloseButton: false,
         includeDeleteButton: true,
         realtimeUpdate: true,
         deleteText: <Message msgId="layerProperties.delete" />,
         confirmDeleteText: <Message msgId="layerProperties.confirmDelete" />,
-        getDimension: LayersUtils.getDimension
+        getDimension: LayersUtils.getDimension,
+        showFeatureInfoTab: true
     };
 
     state = {
@@ -159,15 +162,28 @@ class SettingsModal extends React.Component {
         }
     };
 
+    renderFeatureInfoTab = () => {
+        if (this.props.showFeatureInfoTab) {
+            if (this.props.element.type === "wms") {
+                return (<FeatureInfoFormat
+                   label= {<Message msgId="layerProperties.featureInfoFormatLbl"/>}
+                   element={this.props.element}
+                   onInfoFormatChange={(key, value) => this.updateParams({[key]: value}, this.props.realtimeUpdate)} />);
+            }
+        }
+    };
+
     render() {
         const general = this.renderGeneral();
         const display = this.renderDisplay();
         const style = this.renderStyleTab();
         const elevation = this.renderElevationTab();
+        const featurePopup = this.renderFeatureInfoTab();
         const availableTabs = [<Tab key={1} eventKey={1} title={<Message msgId="layerProperties.general" />}>{general}</Tab>,
             <Tab key={2} eventKey={2} title={<Message msgId="layerProperties.display" />}>{display}</Tab>,
             <Tab key={3} eventKey={3} title={<Message msgId="layerProperties.style" />} disabled={!style} >{style}</Tab>]
-            .concat(elevation ? [<Tab key={4} eventKey={4} title={<Message msgId="layerProperties.elevation" />}>{elevation}</Tab>] : []);
+            .concat(featurePopup ? [<Tab key={4} eventKey={4} title={<Message msgId="layerProperties.featureInfo" />} disabled={!featurePopup} >{featurePopup}</Tab>] : [])
+            .concat(elevation ? [<Tab key={5} eventKey={5} title={<Message msgId="layerProperties.elevation" />}>{elevation}</Tab>] : []);
         const tabs = <Tabs defaultActiveKey={1} id="layerProperties-tabs">{availableTabs}</Tabs>;
         const footer = (<span role="footer">
             {this.props.includeCloseButton ? <Button bsSize={this.props.buttonSize} onClick={this.onClose}>{this.props.closeText}</Button> : <span/>}
