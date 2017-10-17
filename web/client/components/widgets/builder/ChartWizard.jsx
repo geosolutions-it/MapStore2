@@ -12,6 +12,7 @@ const Wizard = controlledWizard(require('../../misc/wizard/WizardContainer'));
 const ChartType = require('./wizard/chart/ChartType');
 const wfsChartOptions = require('./wizard/chart/wfsChartOptions');
 const ChartOptions = wfsChartOptions(require('./wizard/chart/ChartOptions'));
+const WidgetOptions = wfsChartOptions(require('./wizard/chart/WidgetOptions'));
 
 const dataHolder = require('../enhancers/dataHolder');
 const layerOpts = {url: "http://demo.geo-solutions.it/geoserver/wfs", layer: {name: "topp:states"}};
@@ -27,7 +28,7 @@ const sampleProps = {
         align: "left",
         verticalAlign: "middle"
     },
-    width: 500,
+    width: 400,
     height: 200
 };
 const isChartOptionsValid = options => options.aggregateFunction && options.aggregationAttribute && options.groupByAttributes;
@@ -38,6 +39,27 @@ module.exports = dataHolder(({onChange = () => {}, data}) =>
             onChange("type", i);
         }}/>
     <ChartOptions
+        data={data}
+        onChange={onChange}
+        {...layerOpts}
+        sampleChart={
+            isChartOptionsValid(data)
+            ? (<PreviewChart
+                key="preview-chart"
+                isAnimationActive={false}
+                {...sampleProps}
+                type={data.type}
+                url={"http://demo.geo-solutions.it/geoserver/wfs"}
+                layer={{name: "top:states"}}
+                options={data}
+                />)
+            : (<SampleChart
+                isAnimationActive={false}
+                {...sampleProps}
+                type={data.type} />)
+            }
+    />
+    <WidgetOptions
         data={data}
         onChange={onChange}
         {...layerOpts}

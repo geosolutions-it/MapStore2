@@ -9,6 +9,7 @@ const React = require('react');
 
 const TableView = require('./TableView');
 const ChartView = require('./ChartView');
+const InfoPopover = require('./InfoPopover');
 const {
      Glyphicon,
      ButtonToolbar,
@@ -33,7 +34,7 @@ module.exports = ({
                     : null}
                 {props.showTable
                     ? <Glyphicon onClick={() => {toggleTableView(); }} glyph="arrow-left pull-left"/>
-                        : null}
+                : <InfoPopover placement="top" title={title} text={'layer: Layer Title, description:' + description}/>}
                 {title}
                 <span className="mapstore-widget-options">
 
@@ -48,20 +49,9 @@ module.exports = ({
                     </ButtonToolbar>}
                 </span>
             </div>
-            <div className="mapstore-widget-layer">
-                Layer Title
-            </div>
-            <div className="mapstore-widget-description">
-                {description}
-            </div>
-            {description
-                ? <div className="mapstore-widget-description">
-                        {'Attribute: ' + description}
-                    </div>
-                : null}
         </div>
         {props.showTable
             ? <TableView data={data} />
-        : <ChartView isAnimationActive={!loading} data={data} series={series} {...props}/>}
+        : <ChartView isAnimationActive={!loading} data={data} series={series} {...props} legend={false}/>}
     </div>
 );

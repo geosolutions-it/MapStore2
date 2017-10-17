@@ -5,6 +5,7 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
+const {isEqual} = require('lodash');
 const {compose, withProps} = require('recompose');
 const wpsAggregate = require('../../../observables/wps/aggregate');
 const propsStreamFactory = require('../../misc/enhancers/propsStreamFactory');
@@ -13,14 +14,20 @@ const wpsAggregateToChartData = ({AggregationResults = [], GroupByAttributes = [
         ...GroupByAttributes.reduce( (a, p, i) => ({...a, [p]: res[i]}), {}),
         [AggregationAttribute]: res[res.length - 1]
     }));
+
+const sameOptions = (o1 = {}, o2 = {}) =>
+    o1.aggregateFunction === o2.aggregateFunction
+    && o1.aggregationAttribute === o2.aggregationAttribute
+    && o1.groupByAttributes === o2.groupByAttributes;
+    // && isEqual(o1.fitler. o2.filter);
 const dataStreamFactory = ($props) =>
     $props
         .filter(({url, layer, options}) => url && layer && layer.name && options && options.aggregateFunction && options.aggregationAttribute && options.groupByAttributes)
         .distinctUntilChanged(
-            ({url, layer={}, options}, newProps) =>
+            ({url, layer={}, options = {}}, newProps) =>
                 url === newProps.url
                 && (newProps.layer && layer.name === newProps.layer.name)
-                && options === newProps.options)
+                && sameOptions(options, newProps.options))
         .switchMap(
             ({url, layer={}, options, filter}) =>
             wpsAggregate(url, {featureType: layer.name, ...options, filter})

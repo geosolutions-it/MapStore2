@@ -10,22 +10,23 @@ const {Row, Col, Form, FormGroup, ControlLabel} = require('react-bootstrap');
 const Message = require('../../../../I18N/Message');
 const Select = require('react-select');
 const StepHeader = require('../../../../misc/wizard/StepHeader');
+const SwitchButton = require('../../../../misc/switch/SwitchButton');
 
 
 module.exports = ({data = {}, onChange = () => {}, options=[], aggregationOptions = [], sampleChart}) => (<Row>
-        <StepHeader title={"Select attirbutes"} description="Select attrbutes and aggregations" />
+        <StepHeader title={<Message msgId={`widgets.chartOptionsTitle`} />} />
           <Col xs={12}>
-              <div>
+              <div style={{marginBottom: "30px"}}>
                   {sampleChart}
               </div>
               </Col>
           <Col xs={12}>
               <Form horizontal>
         <FormGroup controlId="groupByAttributes">
-          <Col componentClass={ControlLabel} sm={4}>
+          <Col componentClass={ControlLabel} sm={6}>
             <Message msgId={`widgets.groupByAttributes.${data.type}`} />
           </Col>
-          <Col sm={8}>
+          <Col sm={6}>
               <Select
                   value={data.groupByAttributes}
                   options={options}
@@ -38,10 +39,10 @@ module.exports = ({data = {}, onChange = () => {}, options=[], aggregationOption
         </FormGroup>
 
         <FormGroup controlId="aggregationAttribute">
-            <Col componentClass={ControlLabel} sm={4}>
+            <Col componentClass={ControlLabel} sm={6}>
               <Message msgId={`widgets.aggregationAttribute.${data.type}`} />
             </Col>
-          <Col sm={8}>
+          <Col sm={6}>
               <Select
                   value={data.aggregationAttribute}
                   options={options}
@@ -53,16 +54,42 @@ module.exports = ({data = {}, onChange = () => {}, options=[], aggregationOption
           </Col>
         </FormGroup>
         <FormGroup controlId="aggregateFunction">
-            <Col componentClass={ControlLabel} sm={4}>
+            <Col componentClass={ControlLabel} sm={6}>
               <Message msgId={`widgets.aggregateFunction.${data.type}`} />
             </Col>
-          <Col sm={8}>
+          <Col sm={6}>
               <Select
                   value={data.aggregateFunction}
                   options={aggregationOptions}
                   placeholder={'Select attribute'}
                   onChange={(val) => {
                       onChange("aggregateFunction", val && val.value);
+                  }}
+                  />
+          </Col>
+        </FormGroup>
+        <FormGroup controlId="aggregateFunction">
+            <Col componentClass={ControlLabel} sm={6}>
+              <Message msgId={`widgets.mapSync.${data.type}`} />
+            </Col>
+          <Col sm={6}>
+              <SwitchButton
+                  checked={data.mapSync}
+                  onChange={(val) => {
+                      onChange("mapSync", val);
+                  }}
+                  />
+          </Col>
+        </FormGroup>
+        <FormGroup controlId="aggregateFunction">
+            <Col componentClass={ControlLabel} sm={6}>
+              <Message msgId={`widgets.displayLegend.${data.type}`} />
+            </Col>
+          <Col sm={6}>
+              <SwitchButton
+                  checked={data.legend}
+                  onChange={(val) => {
+                      onChange("legend", val);
                   }}
                   />
           </Col>

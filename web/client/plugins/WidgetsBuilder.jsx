@@ -8,10 +8,17 @@
 
 const React = require('react');
 const Dock = require('react-dock').default;
-
+const {createSelector} = require('reselect');
 const {connect} = require('react-redux');
+const {widgetBulderSelector} = require('../selectors/controls');
+const {setControlProperty} = require('../actions/controls');
 const PropTypes = require('prop-types');
 const WidgetsBuilder = require('../components/widgets/builder/WidgetsBuilder');
+
+
+const BuilderHeader = connect(() => {}, {
+    onClose: setControlProperty("widgetBulder", "enabled", false, false)
+})(require('../components/widgets/builder/BuilderHeader'));
 
 class SideBarComponent extends React.Component {
      static propTypes = {
@@ -28,8 +35,8 @@ class SideBarComponent extends React.Component {
      };
      static defaultProps = {
          id: "widgets-plugin",
-         enabled: true,
-         dockSize: 200,
+         enabled: false,
+         dockSize: 500,
          limitDockHeight: true,
          zIndex: 10000,
          fluid: false,
@@ -48,14 +55,20 @@ class SideBarComponent extends React.Component {
             fluid={this.props.fluid}
             dimStyle={{ background: 'rgba(0, 0, 100, 0.2)' }}
         >
+            <BuilderHeader />
             <WidgetsBuilder />
         </Dock>);
 
     }
 }
 
-
-const Plugin = connect(() => ({}))(SideBarComponent);
+const Plugin = connect(
+    createSelector(
+        widgetBulderSelector,
+        (enabled) => ({
+            enabled
+    }))
+)(SideBarComponent);
 module.exports = {
     WidgetsBuilderPlugin: Plugin
 };

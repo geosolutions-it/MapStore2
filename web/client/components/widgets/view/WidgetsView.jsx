@@ -6,9 +6,6 @@
   * LICENSE file in the root directory of this source tree.
   */
 const React = require('react');
-
-const {Panel} = require('react-bootstrap');
-const WidgetGridHeader = require('./WidgetGridHeader');
 const enhanceChartWidget = require('../enhancers/chartWidget');
 const wpsChart = require('../enhancers/wpsChart');
 
@@ -23,20 +20,21 @@ const ChartWidget = wpsChart(enhanceChartWidget(require('../widget/ChartWidget')
 // const StreamWidget = propsStreamFactory((props) => <ChartWidget {...props} />);
 
 
-module.exports = ({widgets=[]}={}) => (<Panel header={<WidgetGridHeader />}>
-    <ResponsiveReactGridLayout
-        style={{left: '500px', bottom: 30, minHeight: '552px', width: 'calc(100% - 552px)', position: 'absolute', zIndex: 2}}
-        className="layout"
+module.exports = ({widgets=[]}={}) =>
+    (<ResponsiveReactGridLayout
+        style={{left: 0, bottom: 30, minHeight: '440px', width: 'calc(100% - 50px)', position: 'absolute', zIndex: 50}}
+        containerPadding={[10, 10]}
+        className="widget-card-on-map"
         rowHeight={208}
-        compactVertical={false}
-        compactType={'horizontal'}
+        autoSize={false}
+        compactType={'vertical'}
+        verticalCompact={false}
         breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-        cols={{lg: 7, md: 6, sm: 5, xs: 4, xxs: 4}}>
+        cols={{lg: 6, md: 4, sm: 2, xs: 1, xxs: 1}}>
 
      {widgets.map((w, i) => {
          return (<div key={'wg' + i} className="widget-card-on-map" >
-              <ChartWidget key={i} {...w} />;
+              <ChartWidget key={i} {...w} />
          </div>);
      })}
-   </ResponsiveReactGridLayout>
-</Panel>);
+   </ResponsiveReactGridLayout>);

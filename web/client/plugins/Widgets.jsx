@@ -52,7 +52,7 @@ const W2 = {
 
 
 // const WIDGETS = [{data, loading: true, title: "chart", description: "description", series: SERIES, yAxis: {}, xAxis: {dataKey: "name"} }];
-const WIDGETS = [ W1 ];
+const WIDGETS = [ W1, {...W1, type: 'pie'}, {...W1, type: 'bar'} ];
 
 
 class Widgets extends React.Component {

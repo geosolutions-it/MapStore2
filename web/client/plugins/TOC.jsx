@@ -131,6 +131,7 @@ class LayerTree extends React.Component {
         onSort: PropTypes.func,
         onSettings: PropTypes.func,
         onRefreshLayer: PropTypes.func,
+        onNewWidget: PropTypes.func,
         hideSettings: PropTypes.func,
         updateSettings: PropTypes.func,
         updateNode: PropTypes.func,
@@ -145,6 +146,7 @@ class LayerTree extends React.Component {
         activateZoomTool: PropTypes.bool,
         activateQueryTool: PropTypes.bool,
         activateSettingsTool: PropTypes.bool,
+        activateWidgetTool: PropTypes.bool,
         visibilityCheckType: PropTypes.string,
         settingsOptions: PropTypes.object,
         chartStyle: PropTypes.object,
@@ -179,6 +181,7 @@ class LayerTree extends React.Component {
         onZoomToExtent: () => {},
         onSettings: () => {},
         onRefreshLayer: () => {},
+        onNewWidget: () => {},
         updateNode: () => {},
         removeNode: () => {},
         onSelectNode: () => {},
@@ -193,6 +196,7 @@ class LayerTree extends React.Component {
         activateSettingsTool: true,
         activateRemoveLayer: true,
         activateQueryTool: false,
+        activateWidgetTool: true,
         visibilityCheckType: "glyph",
         settingsOptions: {
             includeCloseButton: false,
@@ -295,7 +299,8 @@ class LayerTree extends React.Component {
                                 activateQueryTool: this.props.activateQueryTool,
                                 activateSettingsTool: this.props.activateSettingsTool,
                                 activateAddLayer: this.props.activateAddLayerButton && !this.props.catalogActive,
-                                includeDeleteButtonInSettings: false
+                                includeDeleteButtonInSettings: false,
+                                activateWidgetTool: this.props.activateWidgetTool
                             }}
                             options={{
                                 modalOptions: {},
@@ -334,6 +339,7 @@ class LayerTree extends React.Component {
                             }}
                             onToolsActions={{
                                 onZoom: this.props.onZoomToExtent,
+                                onNewWidget: this.props.onNewWidget,
                                 onBrowseData: this.props.onBrowseData,
                                 onUpdate: this.props.updateNode,
                                 onRemove: this.props.removeNode,
@@ -420,6 +426,7 @@ const TOCPlugin = connect(tocSelector, {
     onSelectNode: selectNode,
     onFilter: filterLayers,
     onAddLayer: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
+    onNewWidget: setControlProperty.bind(null, "widgetBulder", "enabled", true, true),
     refreshLayerVersion
 })(LayerTree);
 
