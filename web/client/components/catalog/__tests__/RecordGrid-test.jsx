@@ -71,4 +71,31 @@ describe('This test for Record Grid', () => {
         expect(img).toExist();
         expect(img.src).toBe(sampleRecord.thumbnail);
     });
+
+    // test non-array configuration
+    it('creates the component with non-array data', () => {
+        const item = ReactDOM.render(<RecordGrid records={sampleRecord} catalogURL={sampleCatalogURL}/>, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        expect(itemDom.className).toBe("record-grid container-fluid");
+
+        // check the thumbnail as a to verify thtat the url is really loaded into the component
+        let img = TestUtils.findRenderedDOMComponentWithTag(
+           item, 'img'
+        );
+        expect(img).toExist();
+        expect(img.src).toBe(sampleRecord.thumbnail);
+    });
+
+    // test empty configuration
+    it('creates the component with no data', () => {
+        const item = ReactDOM.render(<RecordGrid records={false} catalogURL={sampleCatalogURL}/>, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toNotExist();
+    });
+
 });
