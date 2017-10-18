@@ -75,14 +75,14 @@ class AnnotationsEditor extends React.Component {
         errors: PropTypes.object,
         showBack: PropTypes.bool,
         config: PropTypes.object,
-        readOnly: PropTypes.bool
+        feature: PropTypes.object
     };
 
     static defaultProps = {
         config: defaultConfig,
         errors: {},
         showBack: false,
-        readOnly: false
+        feature: {}
     };
 
     state = {
@@ -272,7 +272,7 @@ class AnnotationsEditor extends React.Component {
         const editing = this.props.editing && (this.props.editing.properties.id === this.props.id);
         return (
             <div className="mapstore-annotations-info-viewer">
-                {this.props.readOnly ? null : this.renderButtons(editing)}
+                {this.props.feature.readOnly ? null : this.renderButtons(editing)}
                 {this.renderError(editing)}
                 {this.renderBody(editing)}
             </div>
