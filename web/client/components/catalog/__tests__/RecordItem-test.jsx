@@ -269,4 +269,66 @@ describe('This test for RecordItem', () => {
         expect(actionsSpy.calls[0].arguments[0].bbox.crs).toExist();
         expect(actionsSpy.calls[0].arguments[0].bbox.bounds).toExist();
     });
+
+    // test title localization
+    const noTitleRecord = {
+        identifier: "test-identifier",
+        tags: ["subject1", "subject2"],
+        description: "sample abstract",
+        thumbnail: "img.jpg",
+        boundingBox: {
+            extent: [10.686, 44.931, 46.693, 12.54],
+            crs: "EPSG:4326"
+        },
+        references: [{
+            type: "OGC:WMS",
+            url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
+            SRS: [],
+            params: {name: "workspace:layername"}
+        }]
+    };
+
+    const localizedRecord = assign({}, noTitleRecord,
+        {
+            title: {
+                "default": "deftitle",
+                "en-US": "english"
+            }
+        });
+
+    it('uses the correct localization', () => {
+        // Default localization is en-US
+        const item = ReactDOM.render(<ReactItem record={localizedRecord}/>, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        const titleAndIdentifier = itemDom.getElementsByTagName('h4');
+        expect(titleAndIdentifier.length).toBe(2);
+        expect(titleAndIdentifier.item(0).innerText).toBe('english');
+    });
+
+    it('uses the default localization', () => {
+        // Default localization is en-US
+        const item = ReactDOM.render(<ReactItem record={localizedRecord} currentLocale="it-IT"/>, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        const titleAndIdentifier = itemDom.getElementsByTagName('h4');
+        expect(titleAndIdentifier.length).toBe(2);
+        expect(titleAndIdentifier.item(0).innerText).toBe('deftitle');
+    });
+
+    it('has not title', () => {
+        // Default localization is en-US
+        const item = ReactDOM.render(<ReactItem record={noTitleRecord} currentLocale="it-IT"/>, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        const titleAndIdentifier = itemDom.getElementsByTagName('h4');
+        expect(titleAndIdentifier.length).toBe(2);
+        expect(titleAndIdentifier.item(0).innerText).toBe('');
+    });
 });
