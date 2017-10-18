@@ -7,52 +7,22 @@
  */
 
 const React = require('react');
-const Dock = require('react-dock').default;
+const {connect} = require('react-redux');
+const {createSelector} = require('reselect');
+const {getFloatingWidgets} = require('../selectors/widgets');
 
 const assign = require('object-assign');
 const PropTypes = require('prop-types');
-const WidgetsView = require('../components/widgets/view/WidgetsView');
+const WidgetsView = connect(
+    createSelector(
+        getFloatingWidgets,
+        (widgets) => ({
+            widgets
+        })
+    ), {
 
-const W1 = {
-    title: "chart",
-    description: "description",
-    type: "line",
-    layer: {
-        name: "topp:states"
-    },
-    url: "http://demo.geo-solutions.it/geoserver/wfs",
-    options: {aggregateFunction: "Count", aggregationAttribute: "STATE_NAME", groupByAttributes: "SUB_REGION"},
-    legend: {
-        layout: "vertical",
-        align: "left",
-        verticalAlign: "middle"
-    },
-    width: 500,
-    height: 200
-};
-/*
-const W2 = {
-    title: "chart",
-    description: "description",
-    type: "pie",
-    layer: {
-        name: "SITGEO:V_INDUSTRIE"
-    },
-    url: "/geoserver-test/wfs",
-    options: {aggregateFunction: "Count", aggregationAttribute: "AZIENDA", groupByAttributes: "TIPOSEDE"},
-    legend: {
-        layout: "vertical",
-        align: "left",
-        verticalAlign: "middle"
-    },
-    width: 500,
-    height: 200
-};
-*/
-
-
-// const WIDGETS = [{data, loading: true, title: "chart", description: "description", series: SERIES, yAxis: {}, xAxis: {dataKey: "name"} }];
-const WIDGETS = [ W1, {...W1, type: 'pie'}, {...W1, type: 'bar'} ];
+    }
+)(require('../components/widgets/view/WidgetsView'));
 
 
 class Widgets extends React.Component {
@@ -79,7 +49,7 @@ class Widgets extends React.Component {
          position: "right"
      };
     render() {
-        return (<WidgetsView widgets={WIDGETS}/>);
+        return (<WidgetsView />);
 
     }
 }
@@ -87,5 +57,8 @@ class Widgets extends React.Component {
 module.exports = {
     WidgetsPlugin: assign(Widgets, {
 
-    })
+    }),
+    reducers: {
+        widgets: require('../reducers/widgets')
+    }
 };

@@ -12,8 +12,13 @@ const {createSelector} = require('reselect');
 const {connect} = require('react-redux');
 const {widgetBulderSelector} = require('../selectors/controls');
 const {setControlProperty} = require('../actions/controls');
+const {insertWidget} = require('../actions/widgets');
 const PropTypes = require('prop-types');
-const WidgetsBuilder = require('../components/widgets/builder/WidgetsBuilder');
+const WidgetsBuilder = connect(
+    () => {}, {
+        insertWidget
+    }
+)(require('../components/widgets/builder/WidgetsBuilder'));
 
 
 const BuilderHeader = connect(() => {}, {
