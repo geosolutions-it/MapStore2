@@ -433,5 +433,12 @@ describe('Test featuregrid selectors', () => {
         initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].type = 'gml:Geometry';
         initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].localType = 'Geometry';
         expect(hasSupportedGeometry(initialStateWithGmlGeometry)).toBe(false);
+        initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].type = 'gml:GeometryCollection';
+        initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].localType = 'GeometryCollection';
+        expect(hasSupportedGeometry(initialStateWithGmlGeometry)).toBe(false);
+        initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].type = 'gml:Polygon';
+        initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].localType = 'Polygon';
+        expect(hasSupportedGeometry(initialStateWithGmlGeometry)).toBe(true);
+
     });
 });
