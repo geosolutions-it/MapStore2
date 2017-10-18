@@ -56,7 +56,7 @@ const hasGeometrySelectedFeature = (state) => {
     return false;
 };
 
-const notSupportedGeometries = ['Geometry'];
+const notSupportedGeometries = ['Geometry', 'GeometryCollection'];
 
 const hasSupportedGeometry = state => head(notSupportedGeometries.filter(g => geomTypeSelectedFeatureSelector(state) === g)) ? false : true;
 const hasChangesSelector = state => changesSelector(state) && changesSelector(state).length > 0;

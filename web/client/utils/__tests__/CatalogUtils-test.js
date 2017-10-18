@@ -77,6 +77,82 @@ describe('Test the CatalogUtils', () => {
 
     });
 
+    it('wmts with tilematrix filtered', () => {
+        const records = CatalogUtils.getCatalogRecords('wmts', {
+            records: [{
+                "ows:WGS84BoundingBox": {
+                    "ows:LowerCorner": "-180.0 -90.0",
+                    "ows:UpperCorner": "180.0 90.0"
+                },
+                TileMatrixSetLink: [{
+                    TileMatrixSet: 'EPSG:4326',
+                    TileMatrixSetLimits: {
+                        TileMatrixSetLimits: [{
+                            TileMatrix: 'EPSG:4326:0',
+                            MinTileCol: 0,
+                            MaxTileCol: 10,
+                            MinTileRow: 0,
+                            MaxTileRow: 10
+                        }]
+                    }
+                }],
+                TileMatrixSet: [{
+                    "ows:Identifier": "EPSG:4326",
+                    "ows:SupportedCRS": "EPSG:4326"
+                }],
+                SRS: ['EPSG:4326', 'EPSG:3857']
+            }]
+        }, {});
+        expect(records.length).toBe(1);
+        expect(records[0].references.length).toBe(1);
+        expect(records[0].references[0].SRS.length).toBe(1);
+    });
+
+    it('wmts with tilematrix not filtered', () => {
+        const records = CatalogUtils.getCatalogRecords('wmts', {
+            records: [{
+                "ows:WGS84BoundingBox": {
+                    "ows:LowerCorner": "-180.0 -90.0",
+                    "ows:UpperCorner": "180.0 90.0"
+                },
+                TileMatrixSetLink: [{
+                    TileMatrixSet: 'EPSG:4326',
+                    TileMatrixSetLimits: {
+                        TileMatrixSetLimits: [{
+                            TileMatrix: 'EPSG:4326:0',
+                            MinTileCol: 0,
+                            MaxTileCol: 10,
+                            MinTileRow: 0,
+                            MaxTileRow: 10
+                        }]
+                    }
+                }, {
+                    TileMatrixSet: 'EPSG:3857',
+                    TileMatrixSetLimits: {
+                        TileMatrixSetLimits: [{
+                            TileMatrix: 'EPSG:3857:0',
+                            MinTileCol: 0,
+                            MaxTileCol: 10,
+                            MinTileRow: 0,
+                            MaxTileRow: 10
+                        }]
+                    }
+                }],
+                TileMatrixSet: [{
+                    "ows:Identifier": "EPSG:4326",
+                    "ows:SupportedCRS": "EPSG:4326"
+                }, {
+                    "ows:Identifier": "EPSG:3857",
+                    "ows:SupportedCRS": "EPSG:3857"
+                }],
+                SRS: ['EPSG:4326', 'EPSG:3857']
+            }]
+        }, {});
+        expect(records.length).toBe(1);
+        expect(records[0].references.length).toBe(1);
+        expect(records[0].references[0].SRS.length).toBe(2);
+    });
+
     it('csw empty', () => {
         const records = CatalogUtils.getCatalogRecords('csw', {
             records: [{}]

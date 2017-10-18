@@ -13,7 +13,7 @@ const assign = require('object-assign');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const WMTSUtils = require('../../../../utils/WMTSUtils');
 const WMTS = require('../../../../utils/leaflet/WMTS');
-const {isObject, isArray} = require('lodash');
+const {isArray, isObject} = require('lodash');
 
 L.tileLayer.wmts = function(urls, options, matrixOptions) {
     return new WMTS(urls, options, matrixOptions);

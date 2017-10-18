@@ -103,4 +103,102 @@ describe('Test Feature', () => {
         // count layers
         expect(container.getSource().getFeatures().length === 1 );
     });
+
+    it('updating a feature', () => {
+        var options = {
+            crs: 'EPSG:4326',
+            features: {
+                type: 'FeatureCollection',
+                crs: {
+                    'type': 'name',
+                    'properties': {
+                        'name': 'EPSG:4326'
+                    }
+                },
+                features: [
+                    {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Polygon',
+                            coordinates: [[
+                              [13, 43],
+                              [15, 43],
+                              [15, 44],
+                              [13, 44]
+                            ]]
+                        },
+                        properties: {
+                            'name': "some name"
+                        }
+                    }
+                ]
+            }
+        };
+        const source = new ol.source.Vector({
+            features: []
+        });
+        const msId = "some value";
+        let container = new ol.layer.Vector({
+            msId,
+            source: source,
+            visible: true,
+            zIndex: 1
+        });
+        const geometry = options.features.features[0].geometry;
+        const type = options.features.features[0].type;
+        const properties = options.features.features[0].properties;
+
+        // create layers
+        let layer = ReactDOM.render(
+            <Feature type="vector"
+                 options={options}
+                 geometry={geometry}
+                 type={type}
+                 properties={properties}
+                 msId={msId}
+                 container={container}
+                 featuresCrs={"EPSG:4326"}
+                 crs={"EPSG:4326"}
+                 />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        // count layers
+        expect(container.getSource().getFeatures().length === 1 );
+
+        let style = layer._feature[0].getStyle();
+        expect(style).toNotExist();
+
+        options.features.features[0].properties.name = 'other name';
+
+        layer = ReactDOM.render(
+            <Feature type="vector"
+                 options={options}
+                 geometry={geometry}
+                 type={type}
+                 properties={properties}
+                 msId={msId}
+                 container={container}
+                 featuresCrs={"EPSG:4326"}
+                 crs={"EPSG:4326"}
+                 />, document.getElementById("container"));
+
+        style = layer._feature[0].getStyle();
+        expect(style).toNotExist();
+
+        layer = ReactDOM.render(
+            <Feature type="vector"
+                 options={options}
+                 geometry={geometry}
+                 type={type}
+                 properties={properties}
+                 msId={msId}
+                 container={container}
+                 featuresCrs={"EPSG:4326"}
+                 crs={"EPSG:4326"}
+                 style={{}}
+                 />, document.getElementById("container"));
+
+        style = layer._feature[0].getStyle();
+        expect(style).toExist();
+    });
 });
