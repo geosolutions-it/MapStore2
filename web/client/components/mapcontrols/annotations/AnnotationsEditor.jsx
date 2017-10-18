@@ -74,13 +74,15 @@ class AnnotationsEditor extends React.Component {
         styling: PropTypes.bool,
         errors: PropTypes.object,
         showBack: PropTypes.bool,
-        config: PropTypes.object
+        config: PropTypes.object,
+        readOnly: PropTypes.bool
     };
 
     static defaultProps = {
         config: defaultConfig,
         errors: {},
-        showBack: false
+        showBack: false,
+        readOnly: false
     };
 
     state = {
@@ -88,9 +90,24 @@ class AnnotationsEditor extends React.Component {
     };
 
     componentWillReceiveProps(newProps) {
+
         if (newProps.id !== this.props.id) {
             this.setState({
                 editedFields: {}
+            });
+        }
+    }
+
+    componentWillUpdate(newProps) {
+        const editing = this.props.editing && (this.props.editing.properties.id === this.props.id);
+        const newEditing = newProps.editing && (newProps.editing.properties.id === newProps.id);
+
+        if (!editing && newEditing) {
+            this.setState({
+                editedFields: this.getConfig().fields
+                    .reduce((a, field) => {
+                        return assign({}, a, { [field.name]: this.props[field.name]});
+                    }, {})
             });
         }
     }
@@ -255,7 +272,7 @@ class AnnotationsEditor extends React.Component {
         const editing = this.props.editing && (this.props.editing.properties.id === this.props.id);
         return (
             <div className="mapstore-annotations-info-viewer">
-                {this.renderButtons(editing)}
+                {this.props.readOnly ? null : this.renderButtons(editing)}
                 {this.renderError(editing)}
                 {this.renderBody(editing)}
             </div>
