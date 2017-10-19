@@ -31,7 +31,6 @@
 @import "./less/settings.less";
 @import "./less/shapefile-upload.less";
 @import "./less/share.less";
-@import "./less/switch.less";
 @import "./less/square-button.less";
 @import "./less/toc.less";
 @import "./less/tutorial.less";
@@ -395,47 +394,9 @@ padding-right: 10px !important;
     height: 18px;
 
 }
-.widget-card-on-map {
-    .mapstore-widget-card {
-        overflow: visible;
-        .mapstore-widget-title {
-            height: 32px;
-
-            .mapstore-info-popover .glyphicon {
-                margin-top: 15px;
-                position: absolute;
-                left: 24px;
-                font-size: 14px;
-                color: @ms2-color-primary;
-            }
-
-            .m-title {
-                font-size: 14px;
-            }
-        }
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        margin: 0;
-        .mapstore-widget-chart {
-            height: 134px;
-        }
-        .mapstore-widget-table {
-            height: 134px;
-            overflow: auto;
-        }
-
-    }
-}
 
 .mapstore-widget-loader::after {
     border-radius: 50%;
     width: 18px;
     height: 18px;
-}
-.react-grid-layout {
-    pointer-events: none;
-}
-.react-grid-layout * {
-    pointer-events: auto;
 }
