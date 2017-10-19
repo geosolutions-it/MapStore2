@@ -221,13 +221,7 @@
                         "alwaysVisible": true
                     }
                 }
-            }, "Home",
-            {
-              "name": "FeatureEditor",
-              "cfg": {
-                "editingAllowedRoles": ["ADMIN"]
-              }
-            },
+            }, "Home", "FeatureEditor",
             "WFSDownload",
             {
               "name": "QueryPanel",
