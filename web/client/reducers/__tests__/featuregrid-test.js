@@ -46,7 +46,7 @@ const expect = require('expect');
 const featuregrid = require('../featuregrid');
 const {setFeatures, dockSizeFeatures, setLayer, toggleTool, customizeAttribute, selectFeatures, deselectFeatures, createNewFeatures, updateFilter,
     featureSaving, toggleSelection, clearSelection, MODES, toggleEditMode, toggleViewMode, saveSuccess, clearChanges, saveError, startDrawingFeature,
-    deleteGeometryFeature, geometryChanged, setSelectionOptions, changePage, featureModified, setPermission, disableToolbar, openFeatureGrid, closeFeatureGrid} = require('../../actions/featuregrid');
+    deleteGeometryFeature, geometryChanged, setSelectionOptions, changePage, featureModified, setPermission, disableToolbar, openFeatureGrid, closeFeatureGrid, initPlugin} = require('../../actions/featuregrid');
 const {featureTypeLoaded, createQuery} = require('../../actions/wfsquery');
 
 const {changeDrawingStatus} = require('../../actions/draw');
@@ -64,6 +64,14 @@ describe('Test the featuregrid reducer', () => {
         expect(state.pagination).toExist();
         expect(state.select).toExist();
         expect(state.features).toExist();
+    });
+    it('initPlugin', () => {
+        const someValue = "someValue";
+        const editingAllowedRoles = [someValue];
+        let state = featuregrid({}, initPlugin({editingAllowedRoles}));
+        expect(state).toExist();
+        expect(state.editingAllowedRoles.length).toBe(1);
+        expect(state.editingAllowedRoles[0]).toBe(someValue);
     });
     it('openFeatureGrid', () => {
         let state = featuregrid(undefined, openFeatureGrid());

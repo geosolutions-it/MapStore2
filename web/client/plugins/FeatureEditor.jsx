@@ -89,7 +89,7 @@ const FeatureDock = (props = {
             footer={getFooter(props)}>
             {getDialogs(props.tools)}
             <Grid
-                allowedRoles={props.allowedRoles}
+                editingAllowedRoles={props.editingAllowedRoles}
                 initPlugin={props.initPlugin}
                 customEditorsOptions={props.customEditorsOptions}
                 autocompleteEnabled={props.autocompleteEnabled}
@@ -153,7 +153,7 @@ const selector = createSelector(
 const EditorPlugin = connect(selector, (dispatch) => ({
     gridEvents: bindActionCreators(gridEvents, dispatch),
     pageEvents: bindActionCreators(pageEvents, dispatch),
-    initPlugin: bindActionCreators((allowedRoles) => initPlugin(allowedRoles), dispatch),
+    initPlugin: bindActionCreators((options) => initPlugin(options), dispatch),
     toolbarEvents: bindActionCreators(toolbarEvents, dispatch),
     gridTools: gridTools.map((t) => ({
         ...t,

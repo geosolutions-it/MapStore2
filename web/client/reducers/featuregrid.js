@@ -47,7 +47,7 @@ const uuid = require('uuid');
 
 const emptyResultsState = {
     filters: {},
-    allowedRoles: ["ADMIN"],
+    editingAllowedRoles: ["ADMIN"],
     enableColumnFilters: true,
     open: false,
     canEdit: false,
@@ -90,7 +90,7 @@ const applyNewChanges = (features, changedFeatures, updates, updatesGeom) =>
 /**
  * Manages the state of the featuregrid
  * The properties represent the shape of the state
- * @prop {string[]} allowedRoles array of user roles allowed to enter in edit mode
+ * @prop {string[]} editingAllowedRoles array of user roles allowed to enter in edit mode
  * @prop {boolean} canEdit flag used to enable editing on the feature grid
  * @prop {object} filters filters for quick search. `{attribute: "name", value: "filter_value", opeartor: "=", rawValue: "the fitler raw value"}`
  * @prop {boolan} enableColumnFilters enables column filter. [configurable]
@@ -105,7 +105,7 @@ const applyNewChanges = (features, changedFeatures, updates, updatesGeom) =>
  * @prop {array} features list of the features currently loaded in the feature grid
  * @example
  *  {
- *     allowedRoles: ["ADMIN"],
+ *     editingAllowedRoles: ["ADMIN"],
  *     filters: {},
  *     enableColumnFilters: true,
  *     open: false,
@@ -131,7 +131,7 @@ function featuregrid(state = emptyResultsState, action) {
     switch (action.type) {
     case INIT_PLUGIN: {
         return assign({}, state, {
-            allowedRoles: action.options.allowedRoles || state.allowedRoles || ["ADMIN"]
+            editingAllowedRoles: action.options.editingAllowedRoles || state.editingAllowedRoles || ["ADMIN"]
         });
     }
     case CHANGE_PAGE: {

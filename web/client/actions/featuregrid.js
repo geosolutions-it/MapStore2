@@ -53,7 +53,7 @@ const START_SYNC_WMS = 'FEATUREGRID:START_SYNC_WMS';
 const STOP_SYNC_WMS = 'FEATUREGRID:STOP_SYNC_WMS';
 
 
-function initPlugin(options) {
+function initPlugin(options = {}) {
     return {
         type: INIT_PLUGIN,
         options

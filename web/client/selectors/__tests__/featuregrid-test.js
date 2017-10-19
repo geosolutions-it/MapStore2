@@ -22,6 +22,7 @@ const {
     changesSelector,
     isDrawingSelector,
     isSimpleGeomSelector,
+    editingAllowedRolesSelector,
     getCustomizedAttributes,
     isSavingSelector,
     isSavedSelector,
@@ -417,6 +418,11 @@ describe('Test featuregrid selectors', () => {
     it('test isSavingSelector', () => {
         expect(isSavingSelector(initialState)).toBe(false);
         expect(isSavingSelector({...initialState, featuregrid: { saving: true}})).toBe(true);
+    });
+    it('test editingAllowedRolesSelector', () => {
+        expect(editingAllowedRolesSelector(initialState).length).toBe(1);
+        expect(editingAllowedRolesSelector(initialState)[0]).toBe("ADMIN");
+        expect(editingAllowedRolesSelector({...initialState, featuregrid: { editingAllowedRoles: ["USER", "ADMIN"]}}).length).toBe(2);
     });
     it('test isSavedSelector', () => {
         expect(isSavedSelector(initialState)).toBe(false);

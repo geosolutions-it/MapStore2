@@ -225,7 +225,7 @@
             {
               "name": "FeatureEditor",
               "cfg": {
-                "allowedRoles": ["ADMIN", "USER"]
+                "editingAllowedRoles": ["ADMIN"]
               }
             },
             "WFSDownload",
