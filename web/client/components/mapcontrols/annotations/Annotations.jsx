@@ -112,14 +112,16 @@ class Annotations extends React.Component {
     };
 
     renderCard = (annotation) => {
-        return (<div className="mapstore-annotations-panel-card" onMouseOver={() => this.props.onHighlight(annotation.properties.id)} onMouseOut={this.props.onCleanHighlight} onClick={() => this.props.onDetail(annotation.properties.id)}>
+        const readOnly = annotation.readOnly ? ' m-read-only' : '';
+        return (<div className={"mapstore-annotations-panel-card" + readOnly} onMouseOver={() => this.props.onHighlight(annotation.properties.id)} onMouseOut={this.props.onCleanHighlight} onClick={annotation.readOnly ? () => {} : () => this.props.onDetail(annotation.properties.id)}>
             <span className="mapstore-annotations-panel-card-thumbnail">{this.renderThumbnail(annotation.style)}</span>
             {this.getConfig().fields.map(f => this.renderField(f, annotation))}
         </div>);
     };
 
     renderCards = () => {
-        if (this.props.mode === 'list') {
+        const annotation = this.props.annotations && head(this.props.annotations.filter(a => a.properties.id === this.props.current));
+        if (this.props.mode === 'list' || (!annotation && !this.props.editing)) {
             return [<ButtonGroup id="mapstore-annotations-panel-buttons">
                 <Button bsStyle="primary" onClick={() => this.props.onAdd(this.props.config.multiGeometry ? 'MultiPoint' : 'Point')}><Glyphicon glyph="plus"/>&nbsp;<Message msgId="annotations.add"/></Button>
             </ButtonGroup>,
@@ -131,8 +133,7 @@ class Annotations extends React.Component {
             ];
         }
         const Editor = this.props.editor;
-        if (this.props.mode === 'detail') {
-            const annotation = head(this.props.annotations.filter(a => a.properties.id === this.props.current));
+        if (this.props.mode === 'detail' && annotation && annotation.properties) {
             return <Editor showBack id={this.props.current} {...annotation.properties}/>;
         }
         // mode = editing

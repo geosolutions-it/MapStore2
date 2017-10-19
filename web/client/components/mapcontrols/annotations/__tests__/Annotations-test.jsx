@@ -186,4 +186,47 @@ describe("test the Annotations Panel", () => {
         expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card").length).toBe(0);
         expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "myeditor").length).toBe(1);
     });
+
+    it('test rendering in read only', () => {
+        const annotationsList = [{
+            readOnly: true,
+            properties: {
+                title: 'a',
+                description: 'b'
+            },
+            style: {
+                iconShape: 'square',
+                iconColor: 'blue'
+            }
+        }, {
+            readOnly: true,
+            properties: {
+                title: 'c',
+                description: 'd'
+            },
+            style: {
+                iconShape: 'square',
+                iconColor: 'blue'
+            }
+        }];
+
+        const testHandlers = {
+            onDetail: () => {}
+        };
+
+        const spyDetail = expect.spyOn(testHandlers, 'onDetail');
+
+        const annotations = ReactDOM.render(<Annotations mode="list" onDetail={testHandlers.onDetail} annotations={annotationsList} />, document.getElementById("container"));
+
+        expect(annotations).toExist();
+
+        const cards = TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card m-read-only");
+        expect(cards.length).toBe(2);
+
+        TestUtils.Simulate.click(ReactDOM.findDOMNode(cards[0]));
+        TestUtils.Simulate.click(ReactDOM.findDOMNode(cards[1]));
+
+        expect(spyDetail).toNotHaveBeenCalled();
+
+    });
 });
