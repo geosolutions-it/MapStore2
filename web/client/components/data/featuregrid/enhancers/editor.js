@@ -9,6 +9,8 @@ const editors = require('../editors');
 const featuresToGrid = compose(
     defaultProps({
         autocompleteEnabled: false,
+        allowedRoles: [],
+        initPlugin: () => {},
         url: "",
         typeName: "",
         enableColumnFilters: false,
@@ -26,6 +28,13 @@ const featuresToGrid = compose(
     withPropsOnChange(
         ["enableColumnFilters"],
         props => ({displayFilters: props.enableColumnFilters})
+    ),
+    withPropsOnChange(
+        ["allowedRoles"],
+        props => ({
+            allowedRoles: props.allowedRoles,
+            initPlugin: props.initPlugin
+        })
     ),
     withPropsOnChange(
         ["autocompleteEnabled"],

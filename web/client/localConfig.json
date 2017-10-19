@@ -221,7 +221,14 @@
                         "alwaysVisible": true
                     }
                 }
-            }, "Home", "FeatureEditor", "WFSDownload",
+            }, "Home",
+            {
+              "name": "FeatureEditor",
+              "cfg": {
+                "allowedRoles": ["ADMIN", "USER"]
+              }
+            },
+            "WFSDownload",
             {
               "name": "QueryPanel",
               "cfg": {

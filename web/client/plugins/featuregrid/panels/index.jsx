@@ -12,12 +12,16 @@ const {bindActionCreators} = require('redux');
 const {createSelector, createStructuredSelector} = require('reselect');
 const {paginationInfo, featureLoadingSelector, resultsSelector, isSyncWmsActive} = require('../../../selectors/query');
 const {getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector, getAttributeFilter, hasSupportedGeometry} = require('../../../selectors/featuregrid');
-const {isAdminUserSelector} = require('../../../selectors/security');
+const {userRoleSelector} = require('../../../selectors/security');
 const {isCesium} = require('../../../selectors/maptype');
 const {deleteFeatures, toggleTool, clearChangeConfirmed, closeFeatureGridConfirmed, closeFeatureGrid} = require('../../../actions/featuregrid');
 const {toolbarEvents, pageEvents} = require('../index');
 const {getAttributeFields} = require('../../../utils/FeatureGridUtils');
 const {getFilterRenderer} = require('../../../components/data/featuregrid/filterRenderers');
+
+const filterAllowedUser = (role, allowedRoles = ["ADMIN"]) => {
+    return allowedRoles.indexOf(role) !== -1;
+};
 const EmptyRowsView = connect(createStructuredSelector({
     loading: featureLoadingSelector
 }))(require('../../../components/data/featuregrid/EmptyRowsView'));
@@ -38,7 +42,7 @@ const Toolbar = connect(
         isSyncActive: isSyncWmsActive,
         isColumnsOpen: state => state && state.featuregrid && state.featuregrid.tools && state.featuregrid.tools.settings,
         isSearchAllowed: (state) => !isCesium(state),
-        isEditingAllowed: (state) => (isAdminUserSelector(state) || canEditSelector(state)) && !isCesium(state),
+        isEditingAllowed: (state) => (filterAllowedUser(userRoleSelector(state), state && state.featuregrid && state.featuregrid.allowedRoles) || canEditSelector(state)) && !isCesium(state),
         hasSupportedGeometry
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})

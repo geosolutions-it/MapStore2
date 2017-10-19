@@ -43,6 +43,7 @@ const SET_PERMISSION = 'FEATUREGRID:SET_PERMISSION';
 const DISABLE_TOOLBAR = 'FEATUREGRID:DISABLE_TOOLBAR';
 const OPEN_ADVANCED_SEARCH = 'FEATUREGRID:ADVANCED_SEARCH';
 const ZOOM_ALL = 'FEATUREGRID:ZOOM_ALL';
+const INIT_PLUGIN = 'FEATUREGRID:INIT_PLUGIN';
 
 const MODES = {
     EDIT: "EDIT",
@@ -52,6 +53,12 @@ const START_SYNC_WMS = 'FEATUREGRID:START_SYNC_WMS';
 const STOP_SYNC_WMS = 'FEATUREGRID:STOP_SYNC_WMS';
 
 
+function initPlugin(options) {
+    return {
+        type: INIT_PLUGIN,
+        options
+    };
+}
 function clearChangeConfirmed() {
     return {
         type: CLEAR_CHANGES_CONFIRMED
@@ -336,6 +343,7 @@ module.exports = {
     customizeAttribute,
     toggleEditMode,
     toggleViewMode,
+    initPlugin, INIT_PLUGIN,
     START_SYNC_WMS,
     STOP_SYNC_WMS
 };

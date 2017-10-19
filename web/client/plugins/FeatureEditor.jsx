@@ -20,6 +20,7 @@ const BorderLayout = require('../components/layout/BorderLayout');
 const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
 const {gridTools, gridEvents, pageEvents, toolbarEvents} = require('./featuregrid/index');
+const {initPlugin} = require('../actions/featuregrid');
 const ContainerDimensions = require('react-container-dimensions').default;
 
 /**
@@ -88,6 +89,8 @@ const FeatureDock = (props = {
             footer={getFooter(props)}>
             {getDialogs(props.tools)}
             <Grid
+                allowedRoles={props.allowedRoles}
+                initPlugin={props.initPlugin}
                 customEditorsOptions={props.customEditorsOptions}
                 autocompleteEnabled={props.autocompleteEnabled}
                 url={props.url}
@@ -150,6 +153,7 @@ const selector = createSelector(
 const EditorPlugin = connect(selector, (dispatch) => ({
     gridEvents: bindActionCreators(gridEvents, dispatch),
     pageEvents: bindActionCreators(pageEvents, dispatch),
+    initPlugin: bindActionCreators((allowedRoles) => initPlugin(allowedRoles), dispatch),
     toolbarEvents: bindActionCreators(toolbarEvents, dispatch),
     gridTools: gridTools.map((t) => ({
         ...t,
