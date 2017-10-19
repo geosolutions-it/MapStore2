@@ -20,6 +20,7 @@ const BorderLayout = require('../components/layout/BorderLayout');
 const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
 const {gridTools, gridEvents, pageEvents, toolbarEvents} = require('./featuregrid/index');
+const {initPlugin} = require('../actions/featuregrid');
 const ContainerDimensions = require('react-container-dimensions').default;
 
 /**
@@ -27,6 +28,7 @@ const ContainerDimensions = require('react-container-dimensions').default;
   * @memberof plugins
   * @class
   * @prop {object} cfg.customEditorsOptions Set of options used to connect the custom editors to the featuregrid
+  * @prop {object} cfg.editingAllowedRoles array of user roles allowed to enter in edit mode
   * @classdesc
   * FeatureEditor Plugin Provides functionalities to browse/edit data via WFS. It can be configured passing custom editors
   * <br/>Rules are applied in order and the first rule that match the regex wins.
@@ -36,6 +38,24 @@ const ContainerDimensions = require('react-container-dimensions').default;
   * <br/>At least one of the three kind of regex must be specified.
   * <br/>Editor props are optionally.
   * <br/>Inside localConfig you can specify different rules in an array.
+  * <br/> <li> editor: name of the editor used</li>
+  * <br/> editorProps are props passed to the custom editor and used also to create a custom cqlFilter:
+  * <ul>
+  *     <li> values: force an editor to use a specific list of values </li>
+  *     <li> forceSelection: force the editor to use a defaultOption as value </li>
+  *     <li> defaultOption: value used as default if forceSelection is true </li>
+  *     <li> allowEmpty: if true it accept empty string as value </li>
+  *     <li> filterProps: </li>
+  *     <ul>
+  *         <li> blacklist: array used to exclude some word for the wfs call </li>
+  *         <li> maxFeatures:max number of features fetched for each wfs request </li>
+  *         <li> queriableAttributes: attributes used to create the cql filter </li>
+  *         <li> predicate: predicate used to create the cql_filter </li>
+  *         <li> typeName: layer on which the wfs search is performed </li>
+  *         <li> valueField: property used as value based on the data passed to the editors (from stream)
+  *         <li> returnFullData: if true it returns the full data given from the response </li>
+  *     </ul>
+  * </ul>
   * @example
   * {
   *   "name": "FeatureEditor",
@@ -50,10 +70,22 @@ const ContainerDimensions = require('react-container-dimensions').default;
   *         "editor": "DropDownEditor",
   *         "editorProps": {
   *           "values": ["Opt1", "Opt2"],
-  *           "forceSelection": true
+  *           "forceSelection": false,
+  *           "defaultOption": "Opt1",
+  *           "allowEmpty": true,
+  *           "filterProps": {
+  *             "blacklist": ["via", "piazza", "viale"],
+  *             "maxFeatures": 3,
+  *             "queriableAttributes": ["ATTRIBUTE1"],
+  *             "predicate": "ILIKE",
+  *             "typeName": "WORKSPACE:LAYER",
+  *             "valueField": "VALUE",
+  *             "returnFullData": true
+  *           }
   *         }
   *       }]
-  *     }
+  *     },
+  *   "editingAllowedRoles": ["ADMIN"]
   *   }
   * }
   *
@@ -88,6 +120,8 @@ const FeatureDock = (props = {
             footer={getFooter(props)}>
             {getDialogs(props.tools)}
             <Grid
+                editingAllowedRoles={props.editingAllowedRoles}
+                initPlugin={props.initPlugin}
                 customEditorsOptions={props.customEditorsOptions}
                 autocompleteEnabled={props.autocompleteEnabled}
                 url={props.url}
@@ -150,6 +184,7 @@ const selector = createSelector(
 const EditorPlugin = connect(selector, (dispatch) => ({
     gridEvents: bindActionCreators(gridEvents, dispatch),
     pageEvents: bindActionCreators(pageEvents, dispatch),
+    initPlugin: bindActionCreators((options) => initPlugin(options), dispatch),
     toolbarEvents: bindActionCreators(toolbarEvents, dispatch),
     gridTools: gridTools.map((t) => ({
         ...t,

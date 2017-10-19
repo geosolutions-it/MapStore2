@@ -7,6 +7,7 @@
  */
 
 const expect = require('expect');
+const {isEmpty, isEqual} = require('lodash');
 const {
     SELECT_FEATURES, selectFeatures,
     changePage, CHANGE_PAGE,
@@ -34,7 +35,8 @@ const {
     closeFeatureGridConfirmed, FEATURE_GRID_CLOSE_CONFIRMED,
     updateFilter, UPDATE_FILTER,
     zoomAll, ZOOM_ALL,
-    openAdvancedSearch, OPEN_ADVANCED_SEARCH
+    openAdvancedSearch, OPEN_ADVANCED_SEARCH,
+    initPlugin, INIT_PLUGIN
 } = require('../featuregrid');
 
 const idFeature = "2135";
@@ -64,6 +66,20 @@ describe('Test correctness of featurgrid actions', () => {
         const retval = deleteGeometry();
         expect(retval).toExist();
         expect(retval.type).toBe(DELETE_GEOMETRY);
+    });
+    it('Test initPlugin action creator', () => {
+        const someOption = "someValue";
+        const retval = initPlugin({someOption});
+        expect(retval).toExist();
+        expect(retval.type).toBe(INIT_PLUGIN);
+        expect(retval.options.someOption).toBe(someOption);
+
+        // test with empty value, returns empty options
+        const retval2 = initPlugin();
+        expect(retval2).toExist();
+        expect(retval2.type).toBe(INIT_PLUGIN);
+        expect(isEmpty(retval2.options)).toBe(true);
+        expect(isEqual(retval2.options, {})).toBe(true);
     });
     it('Test closeFeatureGridConfirmed action creator', () => {
         const retval = closeFeatureGridConfirmed();

@@ -32,6 +32,7 @@ require("./featuregrid.css");
 class FeatureGrid extends React.PureComponent {
     static propTypes = {
         autocompleteEnabled: PropTypes.bool,
+        editingAllowedRoles: PropTypes.array,
         gridOpts: PropTypes.object,
         changes: PropTypes.object,
         selectBy: PropTypes.object,
@@ -43,6 +44,7 @@ class FeatureGrid extends React.PureComponent {
         columnSettings: PropTypes.object,
         gridOptions: PropTypes.object,
         actionOpts: PropTypes.object,
+        initPlugin: PropTypes.func,
         tools: PropTypes.array,
         gridEvents: PropTypes.object
     };
@@ -52,6 +54,7 @@ class FeatureGrid extends React.PureComponent {
         isProperty: PropTypes.func
     };
     static defaultProps = {
+        editingAllowedRoles: ["ADMIN"],
         autocompleteEnabled: false,
         gridComponent: AdaptiveGrid,
         changes: {},
@@ -65,6 +68,9 @@ class FeatureGrid extends React.PureComponent {
     };
     constructor(props) {
         super(props);
+    }
+    componentDidMount() {
+        this.props.initPlugin({editingAllowedRoles: this.props.editingAllowedRoles});
     }
     getChildContext() {
         return {

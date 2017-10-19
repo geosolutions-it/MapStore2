@@ -122,6 +122,7 @@ module.exports = {
     newFeaturesSelector,
     hasNewFeaturesSelector,
     isSavingSelector: state => state && state.featuregrid && state.featuregrid.saving,
+    editingAllowedRolesSelector: state => get(state, "featuregrid.editingAllowedRoles", ["ADMIN"]),
     isSavedSelector: state => state && state.featuregrid && state.featuregrid.saved,
     isDrawingSelector: state => state && state.featuregrid && state.featuregrid.drawing,
     geomTypeSelectedFeatureSelector,
