@@ -421,4 +421,38 @@ describe("test the AnnotationsEditor Panel", () => {
         expect(spySetStyle.calls.length).toEqual(1);
         expect(spySetStyle.calls[0].arguments[0]).toExist();
     });
+
+    it('test faeture read only', () => {
+        const feature = {
+            id: "1",
+            title: 'mytitle',
+            description: '<span><i>desc</i></span>'
+        };
+
+        const viewer = ReactDOM.render(<AnnotationsEditor feature={{
+            readOnly: true
+        }} {...feature} editing={{
+            readOnly: true,
+            properties: feature,
+            style: {
+                iconGlyph: 'comment',
+                iconColor: 'red',
+                iconShape: 'square'
+            }
+        }}/>, document.getElementById("container"));
+        expect(viewer).toExist();
+
+        const editingBtnLength = TestUtils.scryRenderedDOMComponentsWithClass(viewer, "mapstore-annotations-info-viewer-buttons").length;
+        expect(editingBtnLength).toBe(0);
+
+        const viewBtnLength = TestUtils.scryRenderedDOMComponentsWithClass(viewer, "mapstore-annotations-info-viewer-buttons").length;
+        expect(viewBtnLength).toBe(0);
+
+    });
+
+    it('test faeture update editing', () => {
+        const viewer = ReactDOM.render(<AnnotationsEditor id="1"/>, document.getElementById("container"));
+        viewer.componentWillUpdate({id: '2', editing: {properties: {id: '2'}}, description: '<p>desc</p>', title: 'title'});
+        expect(viewer.state).toEqual({ editedFields: { description: '<p>desc</p>', title: 'title' } });
+    });
 });

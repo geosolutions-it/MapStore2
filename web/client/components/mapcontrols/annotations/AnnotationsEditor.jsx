@@ -90,7 +90,6 @@ class AnnotationsEditor extends React.Component {
     };
 
     componentWillReceiveProps(newProps) {
-
         if (newProps.id !== this.props.id) {
             this.setState({
                 editedFields: {}
@@ -103,10 +102,11 @@ class AnnotationsEditor extends React.Component {
         const newEditing = newProps.editing && (newProps.editing.properties.id === newProps.id);
 
         if (!editing && newEditing) {
+            const newConfig = assign({}, defaultConfig, newProps.config);
             this.setState({
-                editedFields: this.getConfig().fields
+                editedFields: newConfig.fields
                     .reduce((a, field) => {
-                        return assign({}, a, { [field.name]: this.props[field.name]});
+                        return assign({}, a, { [field.name]: newProps[field.name]});
                     }, {})
             });
         }

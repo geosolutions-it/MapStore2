@@ -120,7 +120,7 @@ class Annotations extends React.Component {
     };
 
     renderCards = () => {
-        const annotation = head(this.props.annotations.filter(a => a.properties.id === this.props.current));
+        const annotation = this.props.annotations && head(this.props.annotations.filter(a => a.properties.id === this.props.current));
         if (this.props.mode === 'list' || (!annotation && !this.props.editing)) {
             return [<ButtonGroup id="mapstore-annotations-panel-buttons">
                 <Button bsStyle="primary" onClick={() => this.props.onAdd(this.props.config.multiGeometry ? 'MultiPoint' : 'Point')}><Glyphicon glyph="plus"/>&nbsp;<Message msgId="annotations.add"/></Button>
