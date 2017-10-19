@@ -53,7 +53,7 @@ const ContainerDimensions = require('react-container-dimensions').default;
   *         <li> predicate: predicate used to create the cql_filter </li>
   *         <li> typeName: layer on which the wfs search is performed </li>
   *         <li> valueField: property used as value based on the data passed to the editors (from stream)
-  *         <li> returnFullResponse: if true it returns the full data given from the response </li>
+  *         <li> returnFullData: if true it returns the full data given from the response </li>
   *     </ul>
   * </ul>
   * @example
@@ -76,11 +76,11 @@ const ContainerDimensions = require('react-container-dimensions').default;
   *           "filterProps": {
   *             "blacklist": ["via", "piazza", "viale"],
   *             "maxFeatures": 3,
-  *             "queriableAttributes": ["DESVIA"],
+  *             "queriableAttributes": ["ATTRIBUTE1"],
   *             "predicate": "ILIKE",
-  *             "typeName": "SITGEO:CIVICI_COD_TOPON",
-  *             "valueField": "CODICE_CONTROLLO",
-  *             "returnFullResponse": true
+  *             "typeName": "WORKSPACE:LAYER",
+  *             "valueField": "VALUE",
+  *             "returnFullData": true
   *           }
   *         }
   *       }]
