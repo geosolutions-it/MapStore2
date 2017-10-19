@@ -57,7 +57,36 @@ It also integrates with the [browser's extension](https://github.com/zalmoxisus/
 This way you can monitor the application's state evolution and the action triggered by your application.
 
 ## Backend services debugging
-TBD
+
+By default `npm start` runs a dev server connected to the mapstore 2 online demo as back-end.
+
+If you want to use your own local test back-end you have to:
+1. run `mvn jetty:run` - it makes run the mapstore back-end locally (port 8080), ìn memory db - By default 2 users
+  - `admin` password `admin`
+  - `user` with password `user`
+
+2. Setup client to use the local back-end, apply this changes to webpack.config.js (at the devServer configuration)
+```Javascript
+devServer: {
+    proxy: {
+        '/mapstore/rest/': {
+            target: "http://localhost:8080",
+            pathRewrite: {'/mapstore/rest/': '/rest/'}
+        },
+        '/mapstore/proxy': {
+            target: "http://localhost:8080",
+            pathRewrite: {'/mapstore/proxy': '/proxy'}
+        },
+        '/docs': {
+            target: "http://localhost:8081",
+            pathRewrite: {'/docs': '/mapstore/docs'}
+        }
+    }
+},
+```
+3. You have to run npm start to run mapstore client on port 8081, that is now connected to the local test back-end
+
+You can even run geostore and http-proxy separately and debug them with your own IDE. See the documentation about them in their own repositories.
 
 ## Frontend testing
 To run the MapStore 2 frontend test suite you can use:
