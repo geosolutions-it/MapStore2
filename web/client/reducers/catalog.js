@@ -26,6 +26,7 @@ const {
 const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
+const {isNil} = require('lodash');
 const assign = require('object-assign');
 const emptyService = {
     url: "",
@@ -35,7 +36,16 @@ const emptyService = {
     autoload: false
 };
 
-function catalog(state = {}, action) {
+function catalog(state = {
+    "default": {
+        services: {},
+        selectedService: "",
+        newService: {}
+    },
+    services: {},
+    selectedService: "",
+    newService: {}
+}, action) {
     switch (action.type) {
     case SAVING_SERVICE:
         return assign({}, state, {
@@ -77,14 +87,14 @@ function catalog(state = {}, action) {
         return assign({}, state, {layerError: action.error});
     case CHANGE_CATALOG_MODE:
         return assign({}, state, {
-            newService: action.isNew ? emptyService : assign({}, state.services[state.selectedService], {oldService: state.selectedService}),
+            newService: action.isNew ? emptyService : assign({}, state.services && state.services[state.selectedService || ""] || {}, {oldService: state.selectedService || ""}),
             mode: action.mode,
             result: null,
             loadingError: null,
             layerError: null});
     case MAP_CONFIG_LOADED: {
-        if (state && state.default) {
-            if (action.config && action.config.catalogServices) {
+        if (state && !isNil(state.default)) {
+            if (action.config && !isNil(action.config.catalogServices)) {
                 return assign({}, state, {services: action.config.catalogServices.services, selectedService: action.config.catalogServices.selectedService });
             }
             return assign({}, state, {services: state.default.services, selectedService: state.default.selectedService });
