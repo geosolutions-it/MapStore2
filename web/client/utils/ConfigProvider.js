@@ -182,6 +182,13 @@ const CONFIGPROVIDER = {
             subdomains: 'abcd'
         }
     },
+    MapBoxStyle: {
+        url: 'https://api.mapbox.com/styles/v1/mapbox/{source}/tiles/{z}/{x}/{y}?access_token={accessToken}',
+        options: {
+            attribution: 'Imagery from <a href="http://mapbox.com/about/maps/">MapBox</a>',
+            subdomains: 'abcd'
+        }
+    },
     Stamen: {
         url: '//stamen-tiles-{s}.a.ssl.fastly.net/{variant}/{z}/{x}/{y}.{ext}',
         options: {
