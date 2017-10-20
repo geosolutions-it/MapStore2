@@ -397,4 +397,13 @@ describe('Identify', () => {
         expect(params.WMS_OPTION).toBe(true);
 
     });
+
+    it('test need refresh with null point', () => {
+        const identify = ReactDOM.render(
+            <Identify point={null}/>,
+            document.getElementById("container")
+        );
+        expect(identify).toExist();
+        expect(identify.needsRefresh({ enabled: true, point: { pixel: {x: 0, y: 0}}})).toBe(true);
+    });
 });
